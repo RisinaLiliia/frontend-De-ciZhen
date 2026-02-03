@@ -1,18 +1,21 @@
 // src/app/layout.tsx
-import "../styles/globals.css";
-import { AppThemeProvider } from "@/lib/theme/ThemeProvider";
-import { QueryProvider } from "@/lib/query/QueryProvider";
-import { AppToaster } from "@/components/ui/Toaster";
+import '../styles/globals.css';
+import { AppThemeProvider } from '@/lib/theme/ThemeProvider';
+import { QueryProvider } from '@/lib/query/QueryProvider';
+import { AppToaster } from '@/components/ui/Toaster';
+import { I18nProvider } from '@/lib/i18n/I18nProvider';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de" suppressHydrationWarning>
       <body>
         <AppThemeProvider>
-          <QueryProvider>
-            {children}
-            <AppToaster />
-          </QueryProvider>
+          <I18nProvider>
+            <QueryProvider>
+              {children}
+              <AppToaster />
+            </QueryProvider>
+          </I18nProvider>
         </AppThemeProvider>
       </body>
     </html>

@@ -7,8 +7,8 @@ export function Spinner({ size = 18 }: { size?: number }) {
       style={{
         width: size,
         height: size,
-        border: "2px solid var(--c-border)",
-        borderTopColor: "var(--c-primary)",
+        border: '2px solid var(--c-border)',
+        borderTopColor: 'var(--c-primary)',
       }}
     />
   );

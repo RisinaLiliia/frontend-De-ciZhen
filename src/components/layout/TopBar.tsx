@@ -1,5 +1,5 @@
 // src/components/layout/TopBar.tsx
-import Link from "next/link";
+import Link from 'next/link';
 
 type Props = {
   title?: string;
@@ -9,7 +9,7 @@ type Props = {
 
 export function TopBar({ title, left, right }: Props) {
   return (
-    <header className="h-14 flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur">
+    <header className="topbar">
       <div className="flex items-center gap-2 min-w-0">
         {left}
         {title ? (

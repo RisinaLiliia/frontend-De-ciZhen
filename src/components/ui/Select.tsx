@@ -1,11 +1,11 @@
 // src/components/ui/Select.tsx
-"use client";
+'use client';
 
-import * as React from "react";
-import * as SelectPrimitive from "@radix-ui/react-select";
-import { cn } from "@/lib/utils/cn";
+import * as React from 'react';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { cn } from '@/lib/utils/cn';
 
-export type Option = { value: string; label: string };
+export type Option = { value: string; label: string; key?: string };
 
 type Props = {
   options: Option[];
@@ -15,7 +15,7 @@ type Props = {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-  "aria-label"?: string;
+  'aria-label'?: string;
 };
 
 export function Select({
@@ -23,12 +23,12 @@ export function Select({
   value,
   defaultValue,
   onChange,
-  placeholder = "Auswählen…",
+  placeholder = 'Auswählen…',
   disabled,
   className,
   ...a11y
 }: Props) {
-  const items = React.useMemo(() => options.filter((o) => o.value !== ""), [options]);
+  const items = React.useMemo(() => options.filter((o) => o.value !== ''), [options]);
 
   return (
     <SelectPrimitive.Root
@@ -37,10 +37,7 @@ export function Select({
       onValueChange={onChange}
       disabled={disabled}
     >
-      <SelectPrimitive.Trigger
-        className={cn("field dc-select-trigger", className)}
-        {...a11y}
-      >
+      <SelectPrimitive.Trigger className={cn('field dc-select-trigger', className)} {...a11y}>
         <SelectPrimitive.Value placeholder={placeholder} />
       </SelectPrimitive.Trigger>
 
@@ -54,8 +51,12 @@ export function Select({
           collisionPadding={12}
         >
           <SelectPrimitive.Viewport className="dc-select-viewport">
-            {items.map((o) => (
-              <SelectPrimitive.Item key={o.value} value={o.value} className="dc-select-item">
+            {items.map((o, index) => (
+              <SelectPrimitive.Item
+                key={o.key ?? o.value ?? String(index)}
+                value={o.value}
+                className="dc-select-item"
+              >
                 <SelectPrimitive.ItemText>{o.label}</SelectPrimitive.ItemText>
               </SelectPrimitive.Item>
             ))}

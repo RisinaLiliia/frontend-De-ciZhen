@@ -1,10 +1,23 @@
 // src/lib/i18n/de.ts
 export const de = {
+  common: {
+    retry: "Erneut versuchen",
+    refreshing: "Aktualisiere…",
+    loadError: "Fehler beim Laden der Daten. Bitte später erneut versuchen.",
+    loadErrorShort: "Daten konnten nicht geladen werden.",
+    emptyData: "Zurzeit sind keine Services oder Orte verfügbar.",
+    selectServiceCity: "Bitte Service und Ort auswählen.",
+    themeLabel: "Theme",
+    themeLight: "Hell",
+    themeDark: "Dunkel",
+  },
   home: {
     title: "Finde zuverlässige Hilfe",
     subtitle: "Haushalt & Services in deiner Nähe",
     servicePlaceholder: "Was suchst du?",
     cityPlaceholder: "Stadt oder PLZ",
+    serviceAria: "Service",
+    cityAria: "Ort",
     whenPlaceholder: "Wann? (optional)",
     cta: "Anfrage erstellen",
     trust: {
@@ -13,6 +26,39 @@ export const de = {
       rated: "Bewertet",
     },
     popularTitle: "Beliebte Services",
+  },
+  request: {
+    whenModeLabel: "Wann Modus",
+    modeOnce: "Einmalig",
+    modeRecurring: "Regelmäßig",
+    frequencyLabel: "Frequenz",
+    frequencyWeekly: "Jede Woche",
+    frequencyBiweekly: "Alle 2 Wochen",
+    timesPerWeekLabel: "Häufigkeit",
+    timesPerWeek1: "1× pro Woche",
+    timesPerWeek2: "2× pro Woche",
+    timesPerWeek3: "3× pro Woche",
+    weekdaysLabel: "Bevorzugte Wochentage",
+    datePlaceholder: "Datum wählen",
+    startDatePlaceholder: "Startdatum wählen",
+    weekdays: {
+      mo: "Mo",
+      tu: "Di",
+      we: "Mi",
+      th: "Do",
+      fr: "Fr",
+      sa: "Sa",
+      su: "So",
+    },
+  },
+  dateField: {
+    ariaLabel: "Wann",
+    placeholder: "Datum auswählen",
+    single: "Ein Datum",
+    range: "Zeitraum",
+    hintWeek: "Mo–So",
+    hintLocale: "Deutsch",
+    hintEsc: "Esc schließt",
   },
 } as const;
 

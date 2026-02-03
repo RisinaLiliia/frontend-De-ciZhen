@@ -1,19 +1,26 @@
 // src/components/ui/Popover.tsx
-"use client";
+'use client';
 
-import * as React from "react";
-import { cn } from "@/lib/utils/cn";
+import * as React from 'react';
+import { cn } from '@/lib/utils/cn';
 
 type Props = {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  align?: "start" | "end";
+  align?: 'start' | 'end';
   trigger: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 };
 
-export function Popover({ open, onOpenChange, align = "start", trigger, children, className }: Props) {
+export function Popover({
+  open,
+  onOpenChange,
+  align = 'start',
+  trigger,
+  children,
+  className,
+}: Props) {
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
@@ -25,23 +32,23 @@ export function Popover({ open, onOpenChange, align = "start", trigger, children
     };
 
     const onEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onOpenChange(false);
+      if (e.key === 'Escape') onOpenChange(false);
     };
 
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("keydown", onEsc);
+    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('keydown', onEsc);
     return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onEsc);
+      document.removeEventListener('mousedown', onDoc);
+      document.removeEventListener('keydown', onEsc);
     };
   }, [open, onOpenChange]);
 
   return (
-    <div ref={ref} className={cn("dc-popover", className)}>
+    <div ref={ref} className={cn('dc-popover', className)}>
       <div
         onClick={() => onOpenChange(!open)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") onOpenChange(!open);
+          if (e.key === 'Enter' || e.key === ' ') onOpenChange(!open);
         }}
         role="button"
         tabIndex={0}
