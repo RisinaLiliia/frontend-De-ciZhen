@@ -1,11 +1,11 @@
 // src/lib/i18n/t.ts
-import { de } from './de';
+import { de, type DeDictionary } from './de';
 import { en } from './en';
 import type { I18nKey } from './keys';
 
 export type Locale = 'de' | 'en';
 
-type Dictionary = typeof de;
+type Dictionary = DeDictionary;
 
 const dictionaries: Record<Locale, Dictionary> = {
   de,

@@ -62,4 +62,8 @@ export const de = {
   },
 } as const;
 
-export type DeDictionary = typeof de;
+export type DictionaryShape<T> = {
+  [K in keyof T]: T[K] extends object ? DictionaryShape<T[K]> : string;
+};
+
+export type DeDictionary = DictionaryShape<typeof de>;
