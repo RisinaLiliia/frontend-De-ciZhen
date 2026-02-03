@@ -6,7 +6,7 @@ export type HttpErrorDto = {
   timestamp: string;
   path: string;
   requestId?: string;
-  stack?: string; 
+  stack?: string;
 };
 
 export class ApiError extends Error {
@@ -15,7 +15,7 @@ export class ApiError extends Error {
 
   constructor(message: string, status: number, data?: HttpErrorDto) {
     super(message);
-    this.name = "ApiError";
+    this.name = 'ApiError';
     this.status = status;
     this.data = data;
   }

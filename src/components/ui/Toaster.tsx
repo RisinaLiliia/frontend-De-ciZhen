@@ -1,7 +1,7 @@
 // src/components/ui/Toaster.tsx
-"use client";
+'use client';
 
-import { Toaster } from "sonner";
+import { Toaster } from 'sonner';
 
 export function AppToaster() {
   return (
@@ -11,9 +11,9 @@ export function AppToaster() {
       closeButton
       toastOptions={{
         style: {
-          background: "var(--c-surface)",
-          color: "var(--c-text)",
-          border: "1px solid var(--c-border)",
+          background: 'var(--c-surface)',
+          color: 'var(--c-text)',
+          border: '1px solid var(--c-border)',
         },
       }}
     />

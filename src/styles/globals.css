@@ -1,58 +1,9 @@
 /* src/styles/globals.css */
 @config "../../tailwind.config.ts";
-@import "tailwindcss";
+@import 'tailwindcss';
+@import './themes.css';
 
 @layer base {
-  :root {
-
-    --c-bg: #f9fafb;
-    --c-surface: #ffffff;
-    --c-text: #111827;
-    --c-muted: #6b7280;
-    --c-border: #e5e7eb;
-
-    --c-primary: #1f3c88;
-    --c-accent: #f59e0b;
-
-    --space-1: 4px;
-    --space-2: 8px;
-    --space-3: 12px;
-    --space-4: 16px;
-    --space-6: 24px;
-    --space-8: 32px;
-
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-
-    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-    --font-sans: Inter, system-ui, sans-serif;
-
-    --transition-fast: 150ms;
-    --transition: 220ms;
-
-    --fs-h1: 28px;
-    --fs-h2: 22px;
-    --fs-h3: 18px;
-    --fs-body: 15px;
-    --fs-small: 13px;
-
-    --lh-tight: 1.15;
-    --lh-title: 1.25;
-    --lh-body: 1.5;
-  }
-
-  .dark {
-    --c-bg: #030712;
-    --c-surface: #111827;
-    --c-text: #f9fafb;
-    --c-muted: #9ca3af;
-    --c-border: #1f2937;
-
-    --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.22);
-  }
-
   html {
     font-family: var(--font-sans);
   }
@@ -104,6 +55,12 @@
     @apply max-w-md mx-auto px-4;
   }
 
+  .topbar {
+    @apply h-14 flex items-center justify-between px-4 backdrop-blur;
+    background: color-mix(in oklab, var(--c-surface) 85%, transparent);
+    border-bottom: 1px solid var(--c-border);
+  }
+
   .card {
     @apply w-full;
     background: var(--c-surface);
@@ -119,7 +76,9 @@
     border: 1px solid var(--c-border);
     border-radius: var(--radius-md);
     padding: 0 14px;
-    transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+    transition:
+      box-shadow var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .field:focus {
@@ -132,8 +91,10 @@
     @apply w-full h-12 font-semibold inline-flex items-center justify-center;
     border-radius: var(--radius-md);
     background: var(--c-accent);
-    color: white;
-    transition: transform var(--transition-fast), opacity var(--transition-fast);
+    color: var(--c-accent-contrast);
+    transition:
+      transform var(--transition-fast),
+      opacity var(--transition-fast);
   }
 
   .btn-primary:active {
@@ -143,6 +104,20 @@
   .btn-primary:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  .icon-button {
+    background: transparent;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .icon-button:hover {
+    background: color-mix(in oklab, var(--c-border) 55%, transparent);
+  }
+
+  .icon-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
   }
 
   .typo-h1 {
@@ -260,7 +235,7 @@
     background: color-mix(in oklab, var(--c-accent) 18%, transparent);
   }
 
-  .dc-select-item[data-state="checked"] {
+  .dc-select-item[data-state='checked'] {
     background: color-mix(in oklab, var(--c-accent) 26%, transparent);
   }
 
@@ -281,7 +256,7 @@
     padding: 12px;
   }
 
-  .dc-popover-panel[data-align="end"] {
+  .dc-popover-panel[data-align='end'] {
     left: auto;
     right: 0;
   }
@@ -322,7 +297,9 @@
     border: 1px solid var(--c-border);
     background: var(--c-surface);
     color: var(--c-text);
-    transition: background var(--transition-fast), transform var(--transition-fast);
+    transition:
+      background var(--transition-fast),
+      transform var(--transition-fast);
   }
 
   .dc-calendar .rdp-nav_button:hover {
@@ -354,7 +331,9 @@
     background: transparent;
     color: var(--c-text);
     font-size: 14px;
-    transition: background var(--transition-fast), border-color var(--transition-fast);
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .dc-calendar .rdp-day:hover {
@@ -432,7 +411,9 @@
     border: 1px solid var(--c-border);
     background: var(--c-surface);
     color: var(--c-text);
-    transition: background var(--transition-fast), border-color var(--transition-fast);
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .dc-date .rdp-nav button:focus-visible {
@@ -465,7 +446,9 @@
     border: 1px solid transparent;
     color: var(--c-text);
     background: transparent;
-    transition: background var(--transition-fast), border-color var(--transition-fast);
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .dc-date .rdp-day:focus-visible {
@@ -516,5 +499,4 @@
       border-spacing: 5px;
     }
   }
-
 }

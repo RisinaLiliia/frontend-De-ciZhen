@@ -1,22 +1,41 @@
 // src/lib/i18n/t.ts
-import { de } from "./de";
+import { de, type DeDictionary } from './de';
+import { en } from './en';
+import type { I18nKey } from './keys';
 
-type Dictionary = typeof de;
+export type Locale = 'de' | 'en';
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
+type Dictionary = DeDictionary;
+
+const dictionaries: Record<Locale, Dictionary> = {
+  de,
+  en,
+};
+
+let currentLocale: Locale = 'de';
+
+export function setCurrentLocale(locale: Locale) {
+  currentLocale = locale;
 }
 
-export function t(path: string): string {
-  const parts = path.split(".");
-  let cur: unknown = de as Dictionary;
+export function getCurrentLocale(): Locale {
+  return currentLocale;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+export function t<K extends I18nKey>(path: K, locale: Locale = currentLocale): string {
+  const parts = String(path).split('.');
+  let cur: unknown = dictionaries[locale] as Dictionary;
 
   for (const p of parts) {
     if (!isRecord(cur)) {
-      return path;
+      return String(path);
     }
     cur = cur[p];
   }
 
-  return typeof cur === "string" ? cur : path;
+  return typeof cur === 'string' ? cur : String(path);
 }

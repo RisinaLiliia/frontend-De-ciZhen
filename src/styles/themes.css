@@ -1,1 +1,56 @@
 /* src/styles/themes.css */
+:root {
+  --c-bg: #f9fafb;
+  --c-surface: #ffffff;
+  --c-text: #111827;
+  --c-muted: #6b7280;
+  --c-border: #e5e7eb;
+
+  --c-primary: #1f3c88;
+  --c-primary-contrast: #ffffff;
+  --c-accent: #f59e0b;
+  --c-accent-contrast: #111827;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  --font-sans: Inter, system-ui, sans-serif;
+
+  --transition-fast: 150ms;
+  --transition: 220ms;
+
+  --fs-h1: 28px;
+  --fs-h2: 22px;
+  --fs-h3: 18px;
+  --fs-body: 15px;
+  --fs-small: 13px;
+
+  --lh-tight: 1.15;
+  --lh-title: 1.25;
+  --lh-body: 1.5;
+}
+
+.dark {
+  --c-bg: #030712;
+  --c-surface: #111827;
+  --c-text: #f9fafb;
+  --c-muted: #9ca3af;
+  --c-border: #1f2937;
+
+  --c-primary: #7aa2ff;
+  --c-primary-contrast: #0b1220;
+  --c-accent: #f8b84a;
+  --c-accent-contrast: #111827;
+
+  --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.22);
+}

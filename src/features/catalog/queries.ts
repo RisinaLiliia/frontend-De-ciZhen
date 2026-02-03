@@ -1,9 +1,9 @@
 // src/features/catalog/queries.ts
-import { useQuery } from "@tanstack/react-query";
-import { qk } from "@/lib/query/keys";
-import { listCities, listServiceCategories, listServices } from "@/lib/api/catalog";
-import { mapCity, mapCategory, mapService } from "./mappers";
-import type { City, Service, ServiceCategory } from "./model";
+import { useQuery } from '@tanstack/react-query';
+import { qk } from '@/lib/query/keys';
+import { listCities, listServiceCategories, listServices } from '@/lib/api/catalog';
+import { mapCity, mapCategory, mapService } from './mappers';
+import type { City, Service, ServiceCategory } from './model';
 
 export function useCities(countryCode: string) {
   return useQuery<City[]>({
@@ -21,7 +21,6 @@ export function useServiceCategories() {
   });
 }
 
-
 export function useServices(categoryKey?: string) {
   return useQuery<Service[]>({
     queryKey: qk.services(categoryKey),
@@ -29,4 +28,3 @@ export function useServices(categoryKey?: string) {
     staleTime: 60_000,
   });
 }
-
