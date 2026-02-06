@@ -1,0 +1,64 @@
+// src/lib/api/dto/auth.ts
+export type UserRole = 'client' | 'provider' | 'admin';
+
+export type SafeUserDto = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  city?: string;
+  language?: string;
+  createdAt?: string;
+};
+
+export type AvatarDto = {
+  url: string;
+  isDefault: boolean;
+};
+
+export type MeResponseDto = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  city?: string;
+  language?: string;
+  phone?: string;
+  avatar?: AvatarDto;
+  acceptedPrivacyPolicy: boolean;
+  acceptedPrivacyPolicyAt?: string | null;
+  isBlocked: boolean;
+  blockedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AuthResponseDto = {
+  user: SafeUserDto;
+  accessToken: string;
+  expiresIn: number;
+};
+
+export type RefreshResponseDto = {
+  accessToken: string;
+  expiresIn: number;
+};
+
+export type LogoutResponseDto = {
+  ok: boolean;
+};
+
+export type RegisterDto = {
+  name: string;
+  email: string;
+  password: string;
+  city?: string;
+  language?: string;
+  role?: UserRole;
+  acceptPrivacyPolicy: boolean;
+};
+
+export type LoginDto = {
+  email: string;
+  password: string;
+};

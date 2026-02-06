@@ -4,6 +4,8 @@
 import { useTheme } from "next-themes";
 import { useT } from "@/lib/i18n/useT";
 import { I18N_KEYS } from "@/lib/i18n/keys";
+import { IconButton } from "@/components/ui/IconButton";
+import { IconMoon, IconSun } from "@/components/ui/icons/icons";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -11,15 +13,12 @@ export function ThemeToggle() {
   const next = resolvedTheme === "dark" ? "light" : "dark";
 
   return (
-    <button
-      type="button"
-      className="h-9 px-3 rounded-md border text-sm"
+    <IconButton
+      label={t(I18N_KEYS.common.themeLabel)}
       onClick={() => setTheme(next)}
-      aria-label={t(I18N_KEYS.common.themeLabel)}
+      className="h-9 w-9"
     >
-      {resolvedTheme === "dark"
-        ? t(I18N_KEYS.common.themeDark)
-        : t(I18N_KEYS.common.themeLight)}
-    </button>
+      {resolvedTheme === "dark" ? <IconMoon /> : <IconSun />}
+    </IconButton>
   );
 }

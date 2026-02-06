@@ -5,7 +5,7 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   label: string;
 };
 
-export function IconButton({ className, label, ...props }: Props) {
+export function IconButton({ className, label, children, ...props }: Props) {
   return (
     <button
       aria-label={label}
@@ -14,6 +14,8 @@ export function IconButton({ className, label, ...props }: Props) {
         className,
       )}
       {...props}
-    />
+    >
+      {children}
+    </button>
   );
 }

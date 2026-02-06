@@ -1,5 +1,6 @@
 // src/components/layout/TopBar.tsx
 import Link from 'next/link';
+import Image from 'next/image';
 
 type Props = {
   title?: string;
@@ -15,8 +16,9 @@ export function TopBar({ title, left, right }: Props) {
         {title ? (
           <h1 className="text-base font-semibold truncate">{title}</h1>
         ) : (
-          <Link href="/" className="text-base font-semibold tracking-tight">
-            De’ciZhen
+          <Link href="/" className="brand">
+            <Image src="/logo.svg" alt="De’ciZhen" className="brand__logo" width={26} height={26} />
+            <span className="brand__text">De’ciZhen</span>
           </Link>
         )}
       </div>

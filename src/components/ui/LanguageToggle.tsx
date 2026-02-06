@@ -2,18 +2,16 @@
 "use client";
 
 import { useI18n } from "@/lib/i18n/I18nProvider";
+import { IconButton } from "@/components/ui/IconButton";
+import { IconGlobe } from "@/components/ui/icons/icons";
 
 export function LanguageToggle() {
   const { locale, setLocale } = useI18n();
   const next = locale === "de" ? "en" : "de";
 
   return (
-    <button
-      type="button"
-      className="h-9 px-3 rounded-md border text-sm"
-      onClick={() => setLocale(next)}
-    >
-      {locale.toUpperCase()}
-    </button>
+    <IconButton label="Language" onClick={() => setLocale(next)} className="h-9 w-9">
+      <IconGlobe />
+    </IconButton>
   );
 }
