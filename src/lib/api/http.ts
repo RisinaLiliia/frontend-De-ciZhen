@@ -1,12 +1,9 @@
 // src/lib/api/http.ts
 import { ApiError, type HttpErrorDto } from './http-error';
-
-export const API_URL = '/api';
-
-function joinUrl(base: string, path: string) {
-  const p = path.startsWith('/') ? path : `/${path}`;
-  return `${base}${p}`;
-}
+import { buildApiUrl } from './url';
+import { getAccessToken, setAccessToken } from '@/lib/auth/token';
+import { clearAuth } from '@/features/auth/store';
+import { refreshAccessToken } from '@/lib/auth/session';
 
 async function parseError(res: Response): Promise<{ message: string; data?: HttpErrorDto }> {
   const contentType = res.headers.get('content-type') ?? '';
@@ -22,23 +19,41 @@ async function parseError(res: Response): Promise<{ message: string; data?: Http
   return { message: text || `Request failed: ${res.status}` };
 }
 
-export async function apiGet<T>(path: string, init?: RequestInit): Promise<T> {
-  if (!API_URL) {
-    throw new Error('Missing NEXT_PUBLIC_API_URL');
-  }
+type ApiInit = RequestInit & {
+  skipAuthRefresh?: boolean;
+};
 
-  const url = joinUrl(API_URL, path);
+async function apiRequest<T>(
+  method: string,
+  path: string,
+  body?: unknown,
+  init?: ApiInit,
+  retry = true,
+): Promise<T> {
+  const url = buildApiUrl(path);
+  const accessToken = getAccessToken();
 
   const res = await fetch(url, {
     ...init,
-    method: 'GET',
+    method,
     headers: {
       ...(init?.headers ?? {}),
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    cache: 'no-store',
+    body: body === undefined ? undefined : JSON.stringify(body),
   });
+
+  if (res.status === 401 && retry && !init?.skipAuthRefresh) {
+    const refreshed = await refreshAccessToken();
+    if (refreshed) {
+      setAccessToken(refreshed);
+      return apiRequest<T>(method, path, body, init, false);
+    }
+    setAccessToken(null);
+    clearAuth();
+  }
 
   if (!res.ok) {
     const { message, data } = await parseError(res);
@@ -48,32 +63,22 @@ export async function apiGet<T>(path: string, init?: RequestInit): Promise<T> {
   return (await res.json()) as T;
 }
 
+export async function apiGet<T>(path: string, init?: RequestInit): Promise<T> {
+  return apiRequest<T>('GET', path, undefined, { ...init, cache: 'no-store' });
+}
+
 export async function apiPost<TReq, TRes>(
   path: string,
-  body: TReq,
-  init?: RequestInit,
+  body?: TReq,
+  init?: ApiInit,
 ): Promise<TRes> {
-  if (!API_URL) {
-    throw new Error('Missing NEXT_PUBLIC_API_URL');
-  }
+  return apiRequest<TRes>('POST', path, body, init);
+}
 
-  const url = joinUrl(API_URL, path);
-
-  const res = await fetch(url, {
-    ...init,
-    method: 'POST',
-    headers: {
-      ...(init?.headers ?? {}),
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    const { message, data } = await parseError(res);
-    throw new ApiError(message, res.status, data);
-  }
-
-  return (await res.json()) as TRes;
+export async function apiPatch<TReq, TRes>(
+  path: string,
+  body?: TReq,
+  init?: ApiInit,
+): Promise<TRes> {
+  return apiRequest<TRes>('PATCH', path, body, init);
 }

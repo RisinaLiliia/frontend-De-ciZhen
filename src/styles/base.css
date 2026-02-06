@@ -1,0 +1,48 @@
+@layer base {
+  html {
+    font-family: var(--font-sans);
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--c-bg);
+    background-image: var(--c-bg-gradient);
+    background-attachment: fixed;
+    color: var(--c-text);
+  }
+
+  h1 {
+    font-size: var(--fs-h1);
+    line-height: var(--lh-tight);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  h2 {
+    font-size: var(--fs-h2);
+    line-height: var(--lh-title);
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: var(--fs-h3);
+    line-height: var(--lh-title);
+    font-weight: 600;
+  }
+
+  p {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  select.field {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none;
+  }
+
+  select.field::-ms-expand {
+    display: none;
+  }
+}
