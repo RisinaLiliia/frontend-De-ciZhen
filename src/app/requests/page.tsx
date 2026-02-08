@@ -39,7 +39,7 @@ const SORT_OPTIONS: SortOption[] = [
   { value: 'price_desc', labelKey: I18N_KEYS.requestsPage.sortPriceDesc },
 ];
 
-export default function RequestsPage() {
+function RequestsPageContent() {
   const t = useT();
   const { locale } = useI18n();
   const authStatus = useAuthStatus();
@@ -365,5 +365,13 @@ export default function RequestsPage() {
         </aside>
       </div>
     </PageShell>
+  );
+}
+
+export default function RequestsPage() {
+  return (
+    <React.Suspense fallback={null}>
+      <RequestsPageContent />
+    </React.Suspense>
   );
 }
