@@ -173,7 +173,7 @@ export default function HomePage() {
               if (selectedCategory) params.set('category', selectedCategory);
               if (query) params.set('q', query);
               const suffix = params.toString();
-              router.push(`/providers${suffix ? `?${suffix}` : ''}`);
+              router.push(`/requests${suffix ? `?${suffix}` : ''}`);
             }}
           />
           <HomePopularServicesPanel

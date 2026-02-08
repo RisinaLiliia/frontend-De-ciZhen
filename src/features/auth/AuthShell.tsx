@@ -13,13 +13,15 @@ export function AuthShell({
 }) {
   return (
     <PageShell right={null}>
-      <section className="card stack-lg">
-        <header className="text-center stack-sm">
-          <h1 className="typo-h1">{title}</h1>
-          {subtitle ? <p className="typo-muted">{subtitle}</p> : null}
-        </header>
-        {children}
-      </section>
+      <div className="container-mobile auth-shell">
+        <section className="card stack-lg">
+          <header className="text-center stack-sm">
+            <h1 className="typo-h1">{title}</h1>
+            {subtitle ? <p className="typo-muted">{subtitle}</p> : null}
+          </header>
+          {children}
+        </section>
+      </div>
     </PageShell>
   );
 }

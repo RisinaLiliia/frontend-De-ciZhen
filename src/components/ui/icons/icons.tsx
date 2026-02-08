@@ -53,6 +53,37 @@ export function IconChevronDown() {
   );
 }
 
+export function IconSettings() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M12 8.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4Z"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <path
+        d="M4 13.2v-2.4l2.2-.8.4-1.2-1.2-1.9 1.7-1.7 1.9 1.2 1.2-.4.8-2.2h2.4l.8 2.2 1.2.4 1.9-1.2 1.7 1.7-1.2 1.9.4 1.2 2.2.8v2.4l-2.2.8-.4 1.2 1.2 1.9-1.7 1.7-1.9-1.2-1.2.4-.8 2.2h-2.4l-.8-2.2-1.2-.4-1.9 1.2-1.7-1.7 1.2-1.9-.4-1.2-2.2-.8Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconFilter() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M4 6h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M4 12h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="9" cy="6" r="2" stroke="currentColor" strokeWidth="2" />
+      <circle cx="15" cy="12" r="2" stroke="currentColor" strokeWidth="2" />
+      <circle cx="7" cy="18" r="2" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
 export function IconCheck() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

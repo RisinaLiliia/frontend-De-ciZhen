@@ -22,6 +22,11 @@ export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || '/';
+  const role = searchParams.get('role');
+  const registerHref = `/auth/register?next=${encodeURIComponent(next)}${
+    role ? `&role=${encodeURIComponent(role)}` : ''
+  }`;
+  const showNextHint = next && next !== '/';
 
   const login = useAuthLogin();
   const status = useAuthStatus();
@@ -91,7 +96,11 @@ export function LoginForm() {
         {t(I18N_KEYS.auth.loginCta)}
       </Button>
 
-      <Link href="/auth/register" className="typo-small text-center link-accent">
+      {showNextHint ? (
+        <p className="typo-small text-center">{t(I18N_KEYS.auth.nextHint)}</p>
+      ) : null}
+
+      <Link href={registerHref} className="typo-small text-center link-accent">
         {t(I18N_KEYS.auth.toRegister)}
       </Link>
     </form>

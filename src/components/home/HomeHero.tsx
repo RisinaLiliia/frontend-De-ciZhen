@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { IconBriefcase, IconUser } from '@/components/ui/Icons';
+import { HeroSection } from '@/components/ui/HeroSection';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 
@@ -9,24 +8,22 @@ type HomeHeroProps = {
 
 export function HomeHero({ t }: HomeHeroProps) {
   return (
-    <>
-      <section className="text-center stack-sm">
-        <h2 className="typo-h2">{t(I18N_KEYS.homePublic.title)}</h2>
-        <p className="typo-muted">{t(I18N_KEYS.homePublic.subtitle)}</p>
-      </section>
-
-      <section>
-        <div className="action-row">
-          <Link href="/providers" className="btn-secondary btn-icon">
-            <IconUser className="h-4 w-4" />
-            {t(I18N_KEYS.homePublic.findSpecialist)}
-          </Link>
-          <Link href="/provider/requests" className="btn-primary btn-icon">
-            <IconBriefcase className="h-4 w-4" />
-            {t(I18N_KEYS.homePublic.findJob)}
-          </Link>
-        </div>
-      </section>
-    </>
+    <HeroSection
+      title={t(I18N_KEYS.homePublic.title)}
+      subtitle={t(I18N_KEYS.homePublic.subtitle)}
+      ctas={[
+        {
+          href: '/providers',
+          label: t(I18N_KEYS.homePublic.findSpecialist),
+          variant: 'secondary',
+        },
+        {
+          href: '/requests',
+          label: t(I18N_KEYS.homePublic.findJob),
+          variant: 'primary',
+        },
+      ]}
+      mediaSrc="/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg"
+    />
   );
 }

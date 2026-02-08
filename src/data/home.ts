@@ -1,15 +1,5 @@
-import type { ComponentType, SVGProps } from 'react';
-import {
-  IconBolt,
-  IconBucket,
-  IconFaucet,
-  IconTruck,
-  IconWrench,
-} from '@/components/ui/Icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
-
-export type IconType = ComponentType<SVGProps<SVGSVGElement>>;
 
 export const HOME_CATEGORIES: Array<{ key: string; labelKey: I18nKey }> = [
   { key: 'cleaning', labelKey: I18N_KEYS.homePublic.serviceCleaning },
@@ -23,37 +13,37 @@ export const HOME_SERVICES: Array<{
   key: string;
   href: string;
   labelKey: I18nKey;
-  Icon: IconType;
+  imageSrc: string;
 }> = [
   {
     key: 'cleaning',
-    href: '/services/cleaning',
+    href: '/requests',
     labelKey: I18N_KEYS.homePublic.serviceCleaning,
-    Icon: IconBucket,
+    imageSrc: '/Reinigung im modernen Wohnzimmer.jpg',
   },
   {
     key: 'electric',
-    href: '/services/electric',
+    href: '/requests',
     labelKey: I18N_KEYS.homePublic.serviceElectric,
-    Icon: IconBolt,
+    imageSrc: '/Elektriker bei der Arbeit an Schaltschrank.jpg',
   },
   {
     key: 'plumbing',
-    href: '/services/plumbing',
+    href: '/requests',
     labelKey: I18N_KEYS.homePublic.servicePlumbing,
-    Icon: IconFaucet,
+    imageSrc: '/Freundlicher Klempner bei der Arbeit.jpg',
   },
   {
     key: 'repair',
-    href: '/services/repair',
+    href: '/requests',
     labelKey: I18N_KEYS.homePublic.serviceRepair,
-    Icon: IconWrench,
+    imageSrc: '/Techniker repariert Smartphone in Werkstatt.jpg',
   },
   {
     key: 'moving',
-    href: '/services/moving',
+    href: '/requests',
     labelKey: I18N_KEYS.homePublic.serviceMoving,
-    Icon: IconTruck,
+    imageSrc: '/Lädt Kisten aus einem Transporter.jpg',
   },
 ];
 
@@ -126,7 +116,7 @@ export const HOME_NEARBY_ITEMS: Array<{
     cadenceKey: I18N_KEYS.homePublic.nearbyItem1Cadence,
     priceKey: I18N_KEYS.homePublic.nearbyItem1Price,
     actionKey: I18N_KEYS.homePublic.nearbyItem1Action,
-    href: '/provider/requests',
+    href: '/requests',
   },
   {
     id: 'nearby-2',
@@ -142,7 +132,7 @@ export const HOME_NEARBY_ITEMS: Array<{
     cadenceKey: I18N_KEYS.homePublic.nearbyItem2Cadence,
     priceKey: I18N_KEYS.homePublic.nearbyItem2Price,
     actionKey: I18N_KEYS.homePublic.nearbyItem2Action,
-    href: '/provider/requests',
+    href: '/requests',
   },
   {
     id: 'nearby-3',
@@ -158,7 +148,7 @@ export const HOME_NEARBY_ITEMS: Array<{
     cadenceKey: I18N_KEYS.homePublic.nearbyItem3Cadence,
     priceKey: I18N_KEYS.homePublic.nearbyItem3Price,
     actionKey: I18N_KEYS.homePublic.nearbyItem3Action,
-    href: '/provider/requests',
+    href: '/requests',
   },
 ];
 

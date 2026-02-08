@@ -39,10 +39,15 @@ async function apiRequest<T>(
     headers: {
       ...(init?.headers ?? {}),
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-      'Content-Type': 'application/json',
+      ...(body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
     },
     credentials: 'include',
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body:
+      body === undefined
+        ? undefined
+        : body instanceof FormData
+          ? body
+          : JSON.stringify(body),
   });
 
   if (res.status === 401 && retry && !init?.skipAuthRefresh) {
@@ -72,6 +77,10 @@ export async function apiPost<TReq, TRes>(
   body?: TReq,
   init?: ApiInit,
 ): Promise<TRes> {
+  return apiRequest<TRes>('POST', path, body, init);
+}
+
+export async function apiPostForm<TRes>(path: string, body: FormData, init?: ApiInit) {
   return apiRequest<TRes>('POST', path, body, init);
 }
 

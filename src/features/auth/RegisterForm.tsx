@@ -24,12 +24,16 @@ export function RegisterForm() {
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || '/';
   const roleFromQuery = searchParams.get('role') as RegisterValues['role'] | null;
+  const loginHref = `/auth/login?next=${encodeURIComponent(next)}${
+    roleFromQuery ? `&role=${encodeURIComponent(roleFromQuery)}` : ''
+  }`;
   const roleHint =
     roleFromQuery === 'provider'
       ? t(I18N_KEYS.landing.providerDesc)
       : roleFromQuery === 'client'
         ? t(I18N_KEYS.landing.clientDesc)
         : '';
+  const showNextHint = next && next !== '/';
 
   const registerUser = useAuthRegister();
   const status = useAuthStatus();
@@ -157,9 +161,13 @@ export function RegisterForm() {
         {t(I18N_KEYS.auth.registerCta)}
       </Button>
 
+      {showNextHint ? (
+        <p className="typo-small text-center">{t(I18N_KEYS.auth.nextHint)}</p>
+      ) : null}
+
       {roleHint ? <p className="typo-small text-center">{roleHint}</p> : null}
 
-      <Link href="/auth/login" className="typo-small text-center link-accent">
+      <Link href={loginHref} className="typo-small text-center link-accent">
         {t(I18N_KEYS.auth.toLogin)}
       </Link>
     </form>
