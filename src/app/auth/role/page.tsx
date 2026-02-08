@@ -13,7 +13,7 @@ export default function RolePage() {
     <AuthShell title={t(I18N_KEYS.auth.roleTitle)} subtitle={t(I18N_KEYS.auth.roleSubtitle)}>
       <div className="stack-md">
         <Link
-          href="/providers"
+          href="/requests"
           className="stack-sm rounded-lg border border-(--c-border) p-4 transition hover:border-(--c-primary)"
         >
           <h2 className="typo-h2">{t(I18N_KEYS.auth.roleClient)}</h2>

@@ -75,7 +75,7 @@ export function RequestForm() {
   const canSubmit = Boolean(serviceKey && cityId);
   const scheduleParam = serializeSchedule(schedule);
   const href =
-    `/request/new?service=${encodeURIComponent(serviceKey)}` +
+    `/request/create?service=${encodeURIComponent(serviceKey)}` +
     `&city=${encodeURIComponent(cityId)}` +
     `&schedule=${scheduleParam}`;
 

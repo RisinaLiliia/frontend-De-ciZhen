@@ -1,4 +1,4 @@
-// src/app/request/new/page.tsx
+// src/app/request/create/page.tsx
 import { CreateRequestPage } from '@/features/request/CreateRequestPage';
 
 export default CreateRequestPage;

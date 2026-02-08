@@ -26,6 +26,10 @@ export default function ProviderRequestsPage() {
     queryKey: ['provider-requests'],
     queryFn: () => listPublicRequests(),
   });
+  const items = React.useMemo(
+    () => (Array.isArray(data) ? data : data?.items ?? []),
+    [data],
+  );
 
   const onRespond = async (requestId: string) => {
     try {
@@ -47,11 +51,11 @@ export default function ProviderRequestsPage() {
           {isLoading ? <p className="typo-muted">{t(I18N_KEYS.common.refreshing)}</p> : null}
 
         <div className="stack-md">
-          {(data ?? []).length === 0 && !isLoading ? (
+          {items.length === 0 && !isLoading ? (
             <p className="typo-muted text-center">{t(I18N_KEYS.provider.feedEmpty)}</p>
           ) : null}
 
-            {(data ?? []).map((item) => {
+            {items.map((item) => {
               const city = cities?.find((c) => c.id === item.cityId);
               const service = services?.find((s) => s.key === item.serviceKey);
               const cityLabel = city ? pickI18n(city.i18n, locale) : item.cityId;

@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { useRandomActiveIndex } from '@/hooks/useRandomActiveIndex';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
+import { OrderCard } from '@/components/orders/OrderCard';
 
 type NearbyItem = {
   id: string;
@@ -28,51 +28,32 @@ export function HomeNearbyPanel({ t, items }: HomeNearbyPanelProps) {
   return (
     <section className="panel hide-mobile">
       <div className="panel-header">
-        <p className="section-title">{t(I18N_KEYS.homePublic.nearby)}</p>
+        <div className="section-heading">
+          <p className="section-title">{t(I18N_KEYS.homePublic.nearby)}</p>
+          <p className="section-subtitle">{t(I18N_KEYS.homePublic.nearbySubtitle)}</p>
+        </div>
       </div>
-      <p className="section-subtitle">{t(I18N_KEYS.homePublic.nearbySubtitle)}</p>
       <div className="nearby-list">
         {items.map((item, index) => (
-          <Link
+          <OrderCard
             key={item.id}
             href={item.href}
-            aria-label={t(item.actionKey)}
-            className={`order-card order-card-link ${
-              index === activeIndex ? 'is-active' : ''
-            }`}
-          >
-            <div className="order-top">
-              <span className="order-date">
-                <span className="order-live-dot" aria-hidden="true" />
-                {t(item.dateKey)}
-              </span>
-              <div className="order-badges">
-                {item.badgeKeys.map((badgeKey) => (
-                  <span key={badgeKey} className="order-badge">
-                    {t(badgeKey)}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="order-category">{t(item.categoryKey)}</div>
-            <div className="order-title">{t(item.descKey)}</div>
-            <div className="order-meta">
-              <span className="meta-item">{t(item.cityKey)}</span>
-              <span className="meta-item">{t(item.distanceKey)}</span>
-            </div>
-            <div className="order-bottom">
-              <span className="meta-item">{t(item.cadenceKey)}</span>
-              <span className="proof-price">{t(item.priceKey)}</span>
-            </div>
-            <span className="order-inline-cta" aria-hidden="true">
-              {t(I18N_KEYS.homePublic.nearbyInlineCta)}
-            </span>
-          </Link>
+            ariaLabel={t(item.actionKey)}
+            isActive={index === activeIndex}
+            dateLabel={t(item.dateKey)}
+            badges={item.badgeKeys.map((badgeKey) => t(badgeKey))}
+            category={t(item.categoryKey)}
+            title={t(item.descKey)}
+            meta={[t(item.cityKey), t(item.distanceKey)]}
+            bottomMeta={[t(item.cadenceKey)]}
+            priceLabel={t(item.priceKey)}
+            inlineCta={t(I18N_KEYS.homePublic.nearbyInlineCta)}
+          />
         ))}
       </div>
 
       <div className="mt-3 flex justify-center">
-        <MoreDotsLink href="/provider/requests" label={t(I18N_KEYS.homePublic.nearbyCta)} />
+        <MoreDotsLink href="/requests" label={t(I18N_KEYS.homePublic.nearbyCta)} />
       </div>
     </section>
   );
