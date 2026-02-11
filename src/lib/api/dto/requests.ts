@@ -33,6 +33,14 @@ export type RequestResponseDto = {
   photos?: string[] | null;
   imageUrl?: string | null;
   tags?: string[] | null;
+  clientId?: string | null;
+  clientName?: string | null;
+  clientAvatarUrl?: string | null;
+  clientCity?: string | null;
+  clientRatingAvg?: number | null;
+  clientRatingCount?: number | null;
+  clientIsOnline?: boolean | null;
+  clientLastSeenAt?: string | null;
   status: RequestStatus;
   createdAt: string;
 };

@@ -5,6 +5,7 @@ import { QueryProvider } from '@/lib/query/QueryProvider';
 import { AppToaster } from '@/components/ui/Toaster';
 import { I18nProvider } from '@/lib/i18n/I18nProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
+import { PresenceProvider } from '@/lib/presence/PresenceProvider';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +14,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AppThemeProvider>
           <I18nProvider>
             <QueryProvider>
-              <AuthProvider>{children}</AuthProvider>
+              <AuthProvider>
+                <PresenceProvider />
+                {children}
+              </AuthProvider>
               <AppToaster />
             </QueryProvider>
           </I18nProvider>

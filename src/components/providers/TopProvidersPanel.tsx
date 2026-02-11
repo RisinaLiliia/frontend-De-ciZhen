@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
+import { StatusDot } from '@/components/ui/StatusDot';
 
 export type TopProviderItem = {
   id: string;
@@ -56,18 +58,31 @@ export function TopProvidersPanel({
             ) : null}
             <div className="provider-info">
               <div className="provider-avatar-wrap">
-                <span className="provider-avatar">
-                  {provider.avatarUrl ? (
-                    <img src={provider.avatarUrl} alt={provider.name} loading="lazy" />
-                  ) : (
-                    provider.avatarLetter
-                  )}
-                </span>
-                <span
-                  className={`provider-status-dot provider-status--${provider.status}`}
-                  data-status-label={provider.statusLabel}
-                  aria-label={provider.statusLabel}
-                />
+                {(() => {
+                  const avatarSrc =
+                    provider.avatarUrl && provider.avatarUrl.startsWith("http")
+                      ? provider.avatarUrl
+                      : null;
+                  return (
+                    <span
+                      className={`provider-avatar ${
+                        avatarSrc ? "" : "provider-avatar--placeholder"
+                      }`}
+                    >
+                      {avatarSrc ? (
+                        <Image
+                          src={avatarSrc}
+                          alt={provider.name}
+                          width={52}
+                          height={52}
+                        />
+                      ) : (
+                        provider.avatarLetter
+                      )}
+                    </span>
+                  );
+                })()}
+                <StatusDot status={provider.status} label={provider.statusLabel} />
               </div>
               <div className="provider-main">
                 <p className="provider-name">{provider.name}</p>

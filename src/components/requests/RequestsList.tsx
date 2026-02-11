@@ -1,8 +1,8 @@
 // src/components/requests/RequestsList.tsx
 'use client';
 
-import Link from 'next/link';
 import { IconCalendar, IconPin } from '@/components/ui/icons/icons';
+import { OrderCard } from '@/components/orders/OrderCard';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { pickI18n } from '@/lib/i18n/helpers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
@@ -104,51 +104,35 @@ export function RequestsList({
         const tags = item.tags ?? [];
 
         return (
-          <Link
+          <OrderCard
             key={item.id}
             href={`/requests/${item.id}`}
-            className="request-card request-card--link"
-            aria-label={t(I18N_KEYS.requestsPage.openRequest)}
-          >
-            <div className="request-card__media">
-              <img src={imageSrc} alt={categoryLabel} loading="lazy" />
-            </div>
-            <div className="request-card__body">
-              <h3 className="request-card__title">{title}</h3>
-              <div className="request-card__meta">
-                <span className="request-meta-item">
-                  <IconPin />
-                  {cityLabel}
-                </span>
-                <span className="request-meta-item">
-                  <IconCalendar />
-                  {formatDate.format(new Date(item.preferredDate))}
-                </span>
-              </div>
-              <div className="request-card__price">
-                <span className="proof-price">{priceLabel}</span>
-                <span className="request-card__divider" aria-hidden="true">
-                  ·
-                </span>
-                <span className="request-card__sub">
-                  {propertyLabel} · {item.area} m²
-                </span>
-              </div>
-              <div className="request-card__tags">
-                <span className="request-tag">{categoryLabel}</span>
-                <span className="request-tag">{serviceLabel}</span>
-                {tags.slice(0, 2).map((tag) => (
-                  <span key={`${item.id}-${tag}`} className="request-tag">
-                    {tag}
-                  </span>
-                ))}
-                <span className="request-tag">{recurringLabel}</span>
-              </div>
-              <span className="request-card__cta">
-                {t(I18N_KEYS.requestsPage.detailsCta)} →
-              </span>
-            </div>
-          </Link>
+            ariaLabel={t(I18N_KEYS.requestsPage.openRequest)}
+            imageSrc={imageSrc}
+            imageAlt={categoryLabel}
+            dateLabel={formatDate.format(new Date(item.preferredDate))}
+            badges={[t(I18N_KEYS.requestsPage.badgeToday), recurringLabel]}
+            category={categoryLabel}
+            title={title}
+            meta={[
+              <>
+                <IconPin />
+                {cityLabel}
+              </>,
+              <>
+                <IconCalendar />
+                {formatDate.format(new Date(item.preferredDate))}
+              </>,
+            ]}
+            bottomMeta={[`${propertyLabel} · ${item.area} m²`]}
+            priceLabel={priceLabel}
+            tags={[
+              categoryLabel,
+              serviceLabel,
+              ...tags.slice(0, 2),
+            ]}
+            inlineCta={t(I18N_KEYS.requestsPage.detailsCta)}
+          />
         );
       })}
     </>

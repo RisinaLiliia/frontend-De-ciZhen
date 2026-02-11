@@ -4,6 +4,7 @@
 @import './themes.css';
 @import './base.css';
 @import './components.css';
+@import './order-card.css';
 @import './home.css';
 @import './requests.css';
 @import './overlays.css';

@@ -198,6 +198,22 @@ export const en: DeDictionary = {
     badgeTopClient: "Top client",
     badgeToday: "Today"
   },
+  requestDetails: {
+    about: "Request details",
+    descriptionFallback: "No description has been provided yet.",
+    priceOnRequest: "Price on request",
+    ctaApply: "Send offer",
+    ctaChat: "Start chat",
+    ctaSave: "Save",
+    saved: "Saved to favorites",
+    clientTitle: "Client",
+    clientRating: "Rating",
+    clientReviews: "Reviews",
+    clientOnline: "Online",
+    clientActive: "Active recently",
+    clientUnknown: "Client",
+    similar: "Similar requests"
+  },
   request: {
     whenModeLabel: "When mode",
     modeOnce: "One-time",

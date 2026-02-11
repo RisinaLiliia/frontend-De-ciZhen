@@ -196,6 +196,22 @@ export const de = {
     badgeTopClient: "Top Kunde",
     badgeToday: "Heute"
   },
+  requestDetails: {
+    about: "Auftragsbeschreibung",
+    descriptionFallback: "Zu diesem Auftrag liegt noch keine Beschreibung vor.",
+    priceOnRequest: "VB",
+    ctaApply: "Angebot abgeben",
+    ctaChat: "Chat starten",
+    ctaSave: "Speichern",
+    saved: "In Favoriten gespeichert",
+    clientTitle: "Auftraggeber",
+    clientRating: "Bewertung",
+    clientReviews: "Bewertungen",
+    clientOnline: "Online",
+    clientActive: "Kürzlich aktiv",
+    clientUnknown: "Auftraggeber",
+    similar: "Ähnliche Aufträge"
+  },
   request: {
     whenModeLabel: "Wann Modus",
     modeOnce: "Einmalig",

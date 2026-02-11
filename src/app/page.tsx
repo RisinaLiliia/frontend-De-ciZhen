@@ -15,7 +15,6 @@ import { HomeStatsPanel } from '@/components/home/HomeStatsPanel';
 import { HomeTopProvidersPanel } from '@/components/home/HomeTopProvidersPanel';
 import {
   HOME_CATEGORIES,
-  HOME_NEARBY_ITEMS,
   HOME_PROOF_CASES,
   HOME_SERVICES,
   HOME_TOP_PROVIDERS,
@@ -186,7 +185,7 @@ export default function HomePage() {
         </div>
 
         <aside className="stack-md">
-          <HomeNearbyPanel t={t} items={HOME_NEARBY_ITEMS} />
+          <HomeNearbyPanel t={t} />
           <HomeTopProvidersPanel t={t} providers={HOME_TOP_PROVIDERS} />
 
 
