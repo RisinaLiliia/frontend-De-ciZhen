@@ -699,6 +699,147 @@
     gap: var(--space-8);
   }
 
+  .location-picker {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .location-picker--compact {
+    font-size: 11px;
+  }
+
+  .location-picker-label {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 10px;
+  }
+
+  .location-picker-value {
+    color: var(--c-text);
+    font-weight: 600;
+  }
+
+  .location-picker-radius {
+    color: var(--c-text-muted);
+  }
+
+  .location-picker-change {
+    border: 0;
+    background: transparent;
+    color: var(--c-accent);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .location-picker-popover .dc-popover-panel {
+    width: min(360px, calc(100vw - 24px));
+  }
+
+  .location-picker-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .location-picker-actions {
+    display: grid;
+    gap: 8px;
+  }
+
+  .location-picker-divider {
+    height: 1px;
+    background: color-mix(in oklab, var(--c-border) 70%, transparent);
+  }
+
+  .location-picker-section {
+    display: grid;
+    gap: 8px;
+  }
+
+  .location-picker-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+
+  .location-picker-results {
+    display: grid;
+    gap: 6px;
+    max-height: 180px;
+    overflow: auto;
+    padding-right: 4px;
+  }
+
+  .location-picker-result {
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 85%, transparent);
+    border-radius: var(--radius-md);
+    padding: 8px 10px;
+    text-align: left;
+    display: grid;
+    gap: 4px;
+    transition: border-color var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .location-picker-result:hover {
+    border-color: color-mix(in oklab, var(--c-primary) 40%, var(--c-border) 60%);
+    transform: translateY(-1px);
+  }
+
+  .location-picker-result-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+
+  .location-picker-result-meta {
+    font-size: 11px;
+    color: var(--c-text-muted);
+  }
+
+  .location-picker-muted {
+    font-size: 11px;
+    color: var(--c-text-muted);
+  }
+
+  .location-picker-radius-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .location-picker-radius-btn {
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 85%, transparent);
+    border-radius: var(--radius-md);
+    padding: 6px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-text);
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .location-picker-radius-btn:hover {
+    border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 18%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .location-picker-radius-btn.is-active {
+    border-color: color-mix(in oklab, var(--c-accent) 45%, var(--c-border) 55%);
+    background: color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%);
+    color: var(--c-accent);
+  }
+
   .sr-only {
     position: absolute;
     width: 1px;

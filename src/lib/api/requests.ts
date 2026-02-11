@@ -76,6 +76,10 @@ export async function listPublicRequests(filter: PublicRequestsFilter = {}) {
   return response;
 }
 
+export function getPublicRequestById(requestId: string) {
+  return apiGet<RequestResponseDto>(`/requests/public/${requestId}`);
+}
+
 export function listMyRequests(params?: {
   status?: string;
   from?: string;

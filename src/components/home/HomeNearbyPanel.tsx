@@ -1,30 +1,75 @@
+'use client';
+
+import * as React from 'react';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
-import { useRandomActiveIndex } from '@/hooks/useRandomActiveIndex';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
-import { OrderCard } from '@/components/orders/OrderCard';
-
-type NearbyItem = {
-  id: string;
-  dateKey: I18nKey;
-  badgeKeys: I18nKey[];
-  categoryKey: I18nKey;
-  descKey: I18nKey;
-  cityKey: I18nKey;
-  distanceKey: I18nKey;
-  cadenceKey: I18nKey;
-  priceKey: I18nKey;
-  actionKey: I18nKey;
-  href: string;
-};
+import { useGeoRegion } from '@/hooks/useGeoRegion';
+import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
+import { useCatalogIndex } from '@/hooks/useCatalogIndex';
+import { useI18n } from '@/lib/i18n/I18nProvider';
+import { useQuery } from '@tanstack/react-query';
+import { listPublicRequests } from '@/lib/api/requests';
+import { RequestsList } from '@/components/requests/RequestsList';
+import type { RequestResponseDto } from '@/lib/api/dto/requests';
 
 type HomeNearbyPanelProps = {
   t: (key: I18nKey) => string;
-  items: ReadonlyArray<NearbyItem>;
 };
 
-export function HomeNearbyPanel({ t, items }: HomeNearbyPanelProps) {
-  const activeIndex = useRandomActiveIndex(items.length, { intervalMs: 5200 });
+
+export function HomeNearbyPanel({ t }: HomeNearbyPanelProps) {
+  const { locale } = useI18n();
+  const region = useGeoRegion();
+  const { data: cities = [] } = useCities('DE');
+  const { data: categories = [] } = useServiceCategories();
+  const { data: services = [] } = useServices();
+
+  const cityId = React.useMemo(() => {
+    if (!region) return undefined;
+    const target = region.trim().toLowerCase();
+    const match = cities.find((city) =>
+      Object.values(city.i18n ?? {}).some((name) => name.trim().toLowerCase() === target),
+    );
+    return match?.id;
+  }, [cities, region]);
+
+  const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
+    services,
+    categories,
+    cities,
+  });
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['home-nearby-requests', cityId],
+    queryFn: () =>
+      listPublicRequests({
+        cityId,
+        sort: 'date_desc',
+        limit: 3,
+      }),
+  });
+
+
+
+  const requests: RequestResponseDto[] = data?.items ?? [];
+  const formatDate = React.useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
+        day: '2-digit',
+        month: 'short',
+      }),
+    [locale],
+  );
+  const formatPrice = React.useMemo(
+    () =>
+      new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US', {
+        style: 'currency',
+        currency: 'EUR',
+        maximumFractionDigits: 0,
+      }),
+    [locale],
+  );
   return (
     <section className="panel hide-mobile">
       <div className="panel-header">
@@ -34,22 +79,18 @@ export function HomeNearbyPanel({ t, items }: HomeNearbyPanelProps) {
         </div>
       </div>
       <div className="nearby-list">
-        {items.map((item, index) => (
-          <OrderCard
-            key={item.id}
-            href={item.href}
-            ariaLabel={t(item.actionKey)}
-            isActive={index === activeIndex}
-            dateLabel={t(item.dateKey)}
-            badges={item.badgeKeys.map((badgeKey) => t(badgeKey))}
-            category={t(item.categoryKey)}
-            title={t(item.descKey)}
-            meta={[t(item.cityKey), t(item.distanceKey)]}
-            bottomMeta={[t(item.cadenceKey)]}
-            priceLabel={t(item.priceKey)}
-            inlineCta={t(I18N_KEYS.homePublic.nearbyInlineCta)}
-          />
-        ))}
+        <RequestsList
+          t={t}
+          locale={locale}
+          requests={requests}
+          isLoading={isLoading}
+          isError={isError}
+          serviceByKey={serviceByKey}
+          categoryByKey={categoryByKey}
+          cityById={cityById}
+          formatDate={formatDate}
+          formatPrice={formatPrice}
+        />
       </div>
 
       <div className="mt-3 flex justify-center">

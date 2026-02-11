@@ -89,68 +89,6 @@ export const HOME_PROOF_CASES: Array<{
   },
 ];
 
-export const HOME_NEARBY_ITEMS: Array<{
-  id: string;
-  dateKey: I18nKey;
-  badgeKeys: I18nKey[];
-  categoryKey: I18nKey;
-  descKey: I18nKey;
-  cityKey: I18nKey;
-  distanceKey: I18nKey;
-  cadenceKey: I18nKey;
-  priceKey: I18nKey;
-  actionKey: I18nKey;
-  href: string;
-}> = [
-  {
-    id: 'nearby-1',
-    dateKey: I18N_KEYS.homePublic.nearbyItem1Date,
-    badgeKeys: [
-      I18N_KEYS.homePublic.nearbyItem1Badge1,
-      I18N_KEYS.homePublic.nearbyItem1Badge2,
-    ],
-    categoryKey: I18N_KEYS.homePublic.nearbyItem1Category,
-    descKey: I18N_KEYS.homePublic.nearbyItem1Desc,
-    cityKey: I18N_KEYS.homePublic.nearbyItem1City,
-    distanceKey: I18N_KEYS.homePublic.nearbyItem1Distance,
-    cadenceKey: I18N_KEYS.homePublic.nearbyItem1Cadence,
-    priceKey: I18N_KEYS.homePublic.nearbyItem1Price,
-    actionKey: I18N_KEYS.homePublic.nearbyItem1Action,
-    href: '/requests',
-  },
-  {
-    id: 'nearby-2',
-    dateKey: I18N_KEYS.homePublic.nearbyItem2Date,
-    badgeKeys: [
-      I18N_KEYS.homePublic.nearbyItem2Badge1,
-      I18N_KEYS.homePublic.nearbyItem2Badge2,
-    ],
-    categoryKey: I18N_KEYS.homePublic.nearbyItem2Category,
-    descKey: I18N_KEYS.homePublic.nearbyItem2Desc,
-    cityKey: I18N_KEYS.homePublic.nearbyItem2City,
-    distanceKey: I18N_KEYS.homePublic.nearbyItem2Distance,
-    cadenceKey: I18N_KEYS.homePublic.nearbyItem2Cadence,
-    priceKey: I18N_KEYS.homePublic.nearbyItem2Price,
-    actionKey: I18N_KEYS.homePublic.nearbyItem2Action,
-    href: '/requests',
-  },
-  {
-    id: 'nearby-3',
-    dateKey: I18N_KEYS.homePublic.nearbyItem3Date,
-    badgeKeys: [
-      I18N_KEYS.homePublic.nearbyItem3Badge1,
-      I18N_KEYS.homePublic.nearbyItem3Badge2,
-    ],
-    categoryKey: I18N_KEYS.homePublic.nearbyItem3Category,
-    descKey: I18N_KEYS.homePublic.nearbyItem3Desc,
-    cityKey: I18N_KEYS.homePublic.nearbyItem3City,
-    distanceKey: I18N_KEYS.homePublic.nearbyItem3Distance,
-    cadenceKey: I18N_KEYS.homePublic.nearbyItem3Cadence,
-    priceKey: I18N_KEYS.homePublic.nearbyItem3Price,
-    actionKey: I18N_KEYS.homePublic.nearbyItem3Action,
-    href: '/requests',
-  },
-];
 
 export const HOME_TOP_PROVIDERS: Array<{
   id: string;

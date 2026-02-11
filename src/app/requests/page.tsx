@@ -44,7 +44,7 @@ function RequestsPageContent() {
   const { locale } = useI18n();
   const authStatus = useAuthStatus();
 
-  const { data: cities = [], isLoading: isCitiesLoading } = useCities('DE');
+  const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
   const { data: services = [], isLoading: isServicesLoading } = useServices();
 
@@ -110,7 +110,7 @@ function RequestsPageContent() {
       { value: ALL_OPTION_KEY, label: t(I18N_KEYS.requestsPage.cityAll) },
       ...cities
         .slice()
-        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .sort((a, b) => pickI18n(a.i18n, locale).localeCompare(pickI18n(b.i18n, locale), locale))
         .map((city) => ({
           value: city.id,
           label: pickI18n(city.i18n, locale),
@@ -242,6 +242,7 @@ function RequestsPageContent() {
 
             <RequestsFilters
               t={t}
+              locale={locale}
               categoryOptions={categoryOptions}
               serviceOptions={serviceOptions}
               cityOptions={cityOptions}
@@ -253,7 +254,6 @@ function RequestsPageContent() {
               totalResults={formatNumber.format(totalResults)}
               isCategoriesLoading={isCategoriesLoading}
               isServicesLoading={isServicesLoading}
-              isCitiesLoading={isCitiesLoading}
               onCategoryChange={onCategoryChange}
               onSubcategoryChange={onSubcategoryChange}
               onCityChange={onCityChange}

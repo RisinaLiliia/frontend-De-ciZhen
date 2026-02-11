@@ -2,8 +2,9 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
@@ -27,6 +28,11 @@ import {
   createRequestSchema,
   type CreateRequestValues,
 } from '@/features/request/create.schema';
+
+// import type { Resolver } from 'react-hook-form';
+
+// import { useLocationStore } from '@/features/location/store';
+
 
 function CreateRequestContent() {
   const t = useT();
@@ -54,7 +60,7 @@ function CreateRequestContent() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<CreateRequestValues>({
     resolver: zodResolver(createRequestSchema),
@@ -73,10 +79,12 @@ function CreateRequestContent() {
     },
   });
 
-  const serviceKey = watch('serviceKey');
-  const cityId = watch('cityId');
-  const titleValue = watch('title') ?? '';
-  const descriptionValue = watch('description') ?? '';
+  const serviceKey = useWatch({ control, name: 'serviceKey' });
+  const cityId = useWatch({ control, name: 'cityId' });
+  const titleValue = useWatch({ control, name: 'title' }) ?? '';
+  const descriptionValue = useWatch({ control, name: 'description' }) ?? '';
+  const propertyType = useWatch({ control, name: 'propertyType' });
+  const isRecurringValue = useWatch({ control, name: 'isRecurring' });
 
   const [photoItems, setPhotoItems] = React.useState<
     Array<{ file: File; previewUrl: string }>
@@ -89,11 +97,6 @@ function CreateRequestContent() {
   }, [tags, setValue]);
 
   const [categoryKey, setCategoryKey] = React.useState('');
-
-  const selectedService = React.useMemo(
-    () => (services ?? []).find((service) => service.key === serviceKey),
-    [services, serviceKey],
-  );
 
   React.useEffect(() => {
     if (categoryKey) return;
@@ -187,7 +190,7 @@ function CreateRequestContent() {
       return false;
     }
     const url = URL.createObjectURL(file);
-    const img = new Image();
+    const img = new window.Image();
     const loaded = await new Promise<boolean>((resolve) => {
       img.onload = () => resolve(true);
       img.onerror = () => resolve(false);
@@ -213,7 +216,6 @@ function CreateRequestContent() {
     const nextFiles = incoming.slice(0, availableSlots);
     const validated: Array<{ file: File; previewUrl: string }> = [];
     for (const file of nextFiles) {
-      // eslint-disable-next-line no-await-in-loop
       const ok = await validateImage(file);
       if (!ok) continue;
       const previewUrl = URL.createObjectURL(file);
@@ -341,7 +343,14 @@ function CreateRequestContent() {
                 <div className="request-photos">
                   {photoItems.map((item, index) => (
                     <div key={item.previewUrl} className="request-photo">
-                      <img src={item.previewUrl} alt="" loading="lazy" />
+                      <Image
+                        src={item.previewUrl}
+                        alt=""
+                        fill
+                        className="request-photo__img"
+                        sizes="(min-width: 768px) 33vw, 50vw"
+                        unoptimized
+                      />
                       <button
                         type="button"
                         className="request-photo__remove"
@@ -371,6 +380,11 @@ function CreateRequestContent() {
               <Field leftIcon={<IconPin />} rightIcon={<IconChevronDown />}>
                 <Select
                   value={cityId}
+
+                  // onChange={(value) => {
+                  //   setValue('cityId', value);
+                  // }}
+
                   onChange={(value) => setValue('cityId', value)}
                   options={cityOptions}
                   aria-label={t(I18N_KEYS.home.cityAria)}
@@ -414,10 +428,10 @@ function CreateRequestContent() {
                     <label className="typo-small">{t(I18N_KEYS.request.propertyType)}</label>
                     <Field rightIcon={<IconChevronDown />}>
                       <Select
-                        value={watch('propertyType')}
-                        onChange={(value) =>
-                          setValue('propertyType', value as CreateRequestValues['propertyType'])
-                        }
+                      value={propertyType}
+                      onChange={(value) =>
+                        setValue('propertyType', value as CreateRequestValues['propertyType'])
+                      }
                         options={[
                           { value: 'apartment', label: t(I18N_KEYS.request.propertyApartment) },
                           { value: 'house', label: t(I18N_KEYS.request.propertyHouse) },
@@ -444,7 +458,7 @@ function CreateRequestContent() {
                   <label className="typo-small">{t(I18N_KEYS.request.recurring)}</label>
                   <Field rightIcon={<IconChevronDown />}>
                     <Select
-                      value={watch('isRecurring') ? 'recurring' : 'once'}
+                      value={isRecurringValue ? 'recurring' : 'once'}
                       onChange={(value) => setValue('isRecurring', value === 'recurring')}
                       options={[
                         { value: 'once', label: t(I18N_KEYS.request.modeOnce) },
