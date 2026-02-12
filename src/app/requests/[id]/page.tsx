@@ -2,45 +2,47 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { PageShell } from "@/components/layout/PageShell";
 import { AuthActions } from "@/components/layout/AuthActions";
-import { OrderCard } from "@/components/orders/OrderCard";
 import {
-  IconCalendar,
-  IconCheck,
-  IconChat,
-  IconHeart,
-  IconPin,
-} from "@/components/ui/icons/icons";
-import { StatusDot } from "@/components/ui/StatusDot";
+  RequestDetailAbout,
+  RequestDetailAside,
+  RequestDetailClient,
+  RequestDetailError,
+  RequestDetailGallery,
+  RequestDetailHeader,
+  RequestDetailLoading,
+  RequestDetailMobileCta,
+  RequestDetailSimilar,
+} from "@/components/requests/details";
 import { getPublicRequestById, listPublicRequests } from "@/lib/api/requests";
-import type { RequestResponseDto } from "@/lib/api/dto/requests";
+import { respondToRequest } from "@/lib/api/responses";
+import { useAuthStatus } from "@/hooks/useAuthSnapshot";
+import { listMyProviderResponses } from "@/lib/api/responses";
 import { I18N_KEYS } from "@/lib/i18n/keys";
 import { useI18n } from "@/lib/i18n/I18nProvider";
 import { useT } from "@/lib/i18n/useT";
+import { buildRequestImageList } from "@/lib/requests/images";
+import {
+  buildRequestDetailsViewModel,
+  type RequestDetailsViewModel,
+} from "@/features/requests/details/viewModel";
 
-const SIMILAR_LIMIT = 3;
+const SIMILAR_LIMIT = 2;
 
 export default function RequestDetailsPage() {
   const t = useT();
   const { locale } = useI18n();
+  const authStatus = useAuthStatus();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const params = useParams();
   const requestId = Array.isArray(params?.id) ? params.id[0] : params?.id;
-  const [isSaved, setIsSaved] = React.useState(false);
-  const handleToggleSave = React.useCallback(() => {
-    setIsSaved((prev) => {
-      const next = !prev;
-      if (next) {
-        toast.success(t(I18N_KEYS.requestDetails.saved));
-      }
-      return next;
-    });
-  }, [t]);
+  const actionHandledRef = React.useRef(false);
 
   const {
     data: request,
@@ -65,11 +67,78 @@ export default function RequestDetailsPage() {
     queryFn: () =>
       listPublicRequests({
         categoryKey: request?.categoryKey ?? undefined,
-        subcategoryKey: request?.serviceKey ?? undefined,
         sort: "date_desc",
-        limit: 12,
+        limit: 20,
       }),
   });
+
+  const {
+    data: myResponses,
+  } = useQuery({
+    queryKey: ["responses-my"],
+    enabled: authStatus === 'authenticated',
+    queryFn: () => listMyProviderResponses(),
+  });
+
+  const [isSaved, setIsSaved] = React.useState(false);
+  const isAlreadyResponded = React.useMemo(() => {
+    if (!request || !myResponses) return false;
+    return myResponses.some((response) => response.requestId === request.id);
+  }, [myResponses, request]);
+
+  const buildNextUrl = React.useCallback(
+    (action: string) => {
+      const nextParams = new URLSearchParams(searchParams?.toString());
+      nextParams.set('action', action);
+      const qs = nextParams.toString();
+      return `${pathname}${qs ? `?${qs}` : ''}`;
+    },
+    [pathname, searchParams],
+  );
+
+  const requireAuth = React.useCallback(
+    (action: string) => {
+      const nextUrl = buildNextUrl(action);
+      router.push(`/auth/login?next=${encodeURIComponent(nextUrl)}`);
+      toast.message(t(I18N_KEYS.requestDetails.loginRequired));
+    },
+    [buildNextUrl, router, t],
+  );
+
+  const handleApply = React.useCallback(async () => {
+    if (!request) return;
+    if (authStatus !== 'authenticated') {
+      requireAuth('respond');
+      return;
+    }
+    if (isAlreadyResponded) {
+      toast.message(t(I18N_KEYS.requestDetails.responseAlready));
+      return;
+    }
+    try {
+      await respondToRequest({ requestId: request.id });
+      toast.success(t(I18N_KEYS.requestDetails.responseSent));
+    } catch {
+      toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+    }
+  }, [authStatus, isAlreadyResponded, request, requireAuth, t]);
+
+  const handleChat = React.useCallback(() => {
+    if (authStatus !== 'authenticated') {
+      requireAuth('chat');
+      return;
+    }
+    toast.message(t(I18N_KEYS.requestDetails.chatSoon));
+  }, [authStatus, requireAuth, t]);
+
+  const handleFavorite = React.useCallback(() => {
+    if (authStatus !== 'authenticated') {
+      requireAuth('favorite');
+      return;
+    }
+    setIsSaved((prev) => !prev);
+    toast.message(t(I18N_KEYS.requestDetails.favoritesSoon));
+  }, [authStatus, requireAuth, t]);
 
   const localeTag = locale === "de" ? "de-DE" : "en-US";
   const formatPrice = React.useMemo(
@@ -94,7 +163,7 @@ export default function RequestDetailsPage() {
   const similar = React.useMemo(() => {
     if (!request) return [];
     const items = similarData?.items ?? [];
-    return items
+    const filtered = items
       .filter(
         (item) =>
           item.id !== request.id &&
@@ -102,7 +171,44 @@ export default function RequestDetailsPage() {
             item.serviceKey === request.serviceKey),
       )
       .slice(0, SIMILAR_LIMIT);
+    if (filtered.length) return filtered;
+    return items.filter((item) => item.id !== request.id).slice(0, SIMILAR_LIMIT);
   }, [request, similarData]);
+
+  const {
+    data: latestData,
+  } = useQuery({
+    queryKey: ["requests-latest"],
+    enabled: Boolean(request?.id) && similar.length === 0,
+    queryFn: () =>
+      listPublicRequests({
+        sort: "date_desc",
+        limit: 12,
+      }),
+  });
+
+  const latest = React.useMemo(() => {
+    if (!request) return [];
+    const items = latestData?.items ?? [];
+    return items.filter((item) => item.id !== request.id).slice(0, SIMILAR_LIMIT);
+  }, [latestData, request]);
+
+  const similarFallbackMessage =
+    similar.length === 0 && latest.length
+      ? t(I18N_KEYS.requestDetails.noSimilarMessage)
+      : undefined;
+  const similarTitle =
+    similar.length === 0 && latest.length
+      ? t(I18N_KEYS.requestDetails.latestTitle)
+      : t(I18N_KEYS.requestDetails.similar);
+  const similarHref = React.useMemo(() => {
+    const params = new URLSearchParams();
+    if (request?.categoryKey) params.set('categoryKey', request.categoryKey);
+    if (request?.serviceKey) params.set('subcategoryKey', request.serviceKey);
+    const qs = params.toString();
+    return `/requests${qs ? `?${qs}` : ''}`;
+  }, [request]);
+  const similarForRender = similar.length ? similar : latest;
 
   const [isClientOnline, setIsClientOnline] = React.useState(false);
 
@@ -124,344 +230,124 @@ export default function RequestDetailsPage() {
   }, [request]);
 
 
+  const viewModel = React.useMemo<RequestDetailsViewModel | null>(() => {
+    if (!request) return null;
+    return buildRequestDetailsViewModel({
+      request,
+      t,
+      formatPrice: (value) => formatPrice.format(value),
+      formatDate: (value) => formatDate.format(value),
+      isClientOnline,
+    });
+  }, [formatDate, formatPrice, isClientOnline, request, t]);
+
+  React.useEffect(() => {
+    if (actionHandledRef.current) return;
+    if (!request || authStatus !== 'authenticated') return;
+    const action = searchParams?.get('action');
+    if (!action) return;
+    actionHandledRef.current = true;
+    if (action === 'respond') {
+      void respondToRequest({ requestId: request.id })
+        .then(() => toast.success(t(I18N_KEYS.requestDetails.responseSent)))
+        .catch(() => toast.error(t(I18N_KEYS.requestDetails.responseFailed)));
+    } else if (action === 'chat') {
+      toast.message(t(I18N_KEYS.requestDetails.chatSoon));
+    } else if (action === 'favorite') {
+      toast.message(t(I18N_KEYS.requestDetails.favoritesSoon));
+    }
+    const nextParams = new URLSearchParams(searchParams?.toString());
+    nextParams.delete('action');
+    const nextQs = nextParams.toString();
+    router.replace(`${pathname}${nextQs ? `?${nextQs}` : ''}`);
+  }, [authStatus, pathname, request, router, searchParams, t]);
+
   if (isLoading) {
-    return (
-      <PageShell right={<AuthActions />} showBack mainClassName="py-6">
-        <div className="request-detail request-detail--loading">
-          <section className="panel request-detail__panel">
-            <div className="skeleton h-7 w-3/4" />
-            <div className="skeleton h-4 w-1/2" />
-            <div className="request-detail__gallery">
-              {Array.from({ length: 4 }).map((_, index) => (
-                <div key={`photo-${index}`} className="request-detail__photo skeleton" />
-              ))}
-            </div>
-            <div className="skeleton h-20 w-full" />
-          </section>
-          <aside className="panel request-detail__panel request-detail__aside">
-            <div className="skeleton h-6 w-2/3" />
-            <div className="skeleton h-10 w-full" />
-            <div className="skeleton h-10 w-full" />
-          </aside>
-        </div>
-      </PageShell>
-    );
+    return <RequestDetailLoading />;
   }
 
-  if (isError || !request) {
-    return (
-      <PageShell right={<AuthActions />} showBack mainClassName="py-6">
-        <section className="panel text-center">
-          <p className="typo-muted">{t(I18N_KEYS.requestsPage.error)}</p>
-        </section>
-      </PageShell>
-    );
+  if (isError || !request || !viewModel) {
+    return <RequestDetailError message={t(I18N_KEYS.requestsPage.error)} />;
   }
-
-  const title = request.title?.trim() || request.subcategoryName || request.serviceKey;
-  const description =
-    request.description?.trim() || t(I18N_KEYS.requestDetails.descriptionFallback);
-  const categoryLabel = request.categoryName ?? request.categoryKey ?? "";
-  const serviceLabel = request.subcategoryName ?? request.serviceKey;
-  const tags = (request.tags ?? []).filter(Boolean);
-  const tagList = tags.length ? tags : [categoryLabel, serviceLabel].filter(Boolean);
-  const priceLabel =
-    request.price != null
-      ? formatPrice.format(request.price)
-      : t(I18N_KEYS.requestDetails.priceOnRequest);
-  const preferredDate =
-    request.preferredDate && !Number.isNaN(new Date(request.preferredDate).getTime())
-      ? new Date(request.preferredDate)
-      : null;
-  const images = buildImageList(request);
-  const clientProfileHref = request.clientId ? `/clients/${request.clientId}` : null;
-  const clientName = request.clientName ?? t(I18N_KEYS.requestDetails.clientUnknown);
-  const clientAvatarUrl =
-    request.clientAvatarUrl && request.clientAvatarUrl.startsWith("http")
-      ? request.clientAvatarUrl
-      : undefined;
-  const hasClientAvatar = Boolean(clientAvatarUrl);
-  const hasClientInfo = Boolean(request.clientId || request.clientName);
-  const clientStatusLabel = isClientOnline
-    ? t(I18N_KEYS.requestDetails.clientOnline)
-    : t(I18N_KEYS.requestDetails.clientActive);
-  const clientStatus = isClientOnline ? "online" : "offline";
-  const clientRatingAvgRaw =
-    typeof request.clientRatingAvg === "number"
-      ? request.clientRatingAvg
-      : request.clientRatingAvg != null
-        ? Number(request.clientRatingAvg)
-        : null;
-  const clientRatingAvg =
-    typeof clientRatingAvgRaw === "number" && Number.isFinite(clientRatingAvgRaw)
-      ? clientRatingAvgRaw
-      : null;
-  const clientRatingCountRaw =
-    typeof request.clientRatingCount === "number"
-      ? request.clientRatingCount
-      : request.clientRatingCount != null
-        ? Number(request.clientRatingCount)
-        : null;
-  const clientRatingCount =
-    typeof clientRatingCountRaw === "number" && Number.isFinite(clientRatingCountRaw)
-      ? clientRatingCountRaw
-      : null;
-  const finalRatingAvg = clientRatingAvg ?? 0;
-  const finalRatingCount = clientRatingCount ?? 0;
-  const clientRatingText = finalRatingAvg.toFixed(1);
 
   return (
     <PageShell right={<AuthActions />} showBack mainClassName="py-6">
       <div className="request-detail">
         <section className="panel request-detail__panel">
-          <header className="request-detail__header">
-            <div className="request-detail__title-row">
-              <div className="request-detail__title-wrap">
-                <h1 className="request-detail__title">{title}</h1>
-              </div>
-              <div className="request-detail__price">
-                <span className="proof-price">{priceLabel}</span>
-              </div>
-            </div>
-            <div className="request-detail__tags">
-              {tagList.map((tag) => (
-                <span key={tag} className="request-tag">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </header>
-
-          <div className="request-detail__gallery">
-            {images.map((src, index) => (
-              <div key={`${src}-${index}`} className="request-detail__photo">
-                <Image
-                  src={src}
-                  alt={title}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 180px"
-                  className="request-detail__photo-img"
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="request-detail__section">
-            <h2 className="request-detail__section-title">
-              {t(I18N_KEYS.requestDetails.about)}
-            </h2>
-            <p className="request-detail__text">{description}</p>
-          </div>
-
-          {hasClientInfo ? (
-            <div className="request-detail__section request-detail__client">
-              <h3 className="request-detail__section-title">
-                {t(I18N_KEYS.requestDetails.clientTitle)}
-              </h3>
-              <div className="request-detail__client-card">
-                {clientProfileHref ? (
-                  <Link href={clientProfileHref} className="request-detail__client-link">
-                    <div className="request-detail__client-avatar-wrap">
-                      <div
-                        className={`request-detail__client-avatar ${
-                          hasClientAvatar ? "" : "request-detail__client-avatar--placeholder"
-                        }`}
-                      >
-                        {clientAvatarUrl ? (
-                          <Image
-                            src={clientAvatarUrl}
-                            alt={clientName}
-                            fill
-                            sizes="56px"
-                            className="request-detail__client-img"
-                          />
-                        ) : (
-                          <span className="request-detail__client-initial">
-                            {clientName.slice(0, 1).toUpperCase()}
-                          </span>
-                        )}
-                      </div>
-                      <StatusDot status={clientStatus} label={clientStatusLabel} />
-                    </div>
-                    <div className="request-detail__client-body">
-                      <div className="request-detail__client-name">{clientName}</div>
-                      <div className="request-detail__client-meta" aria-hidden="true" />
-                    </div>
-                  </Link>
-                ) : (
-                  <>
-                    <div className="request-detail__client-avatar-wrap">
-                      <div
-                        className={`request-detail__client-avatar ${
-                          hasClientAvatar ? "" : "request-detail__client-avatar--placeholder"
-                        }`}
-                      >
-                        {clientAvatarUrl ? (
-                          <Image
-                            src={clientAvatarUrl}
-                            alt={clientName}
-                            fill
-                            sizes="56px"
-                            className="request-detail__client-img"
-                          />
-                        ) : (
-                          <span className="request-detail__client-initial">
-                            {clientName.slice(0, 1).toUpperCase()}
-                          </span>
-                        )}
-                      </div>
-                      <StatusDot status={clientStatus} label={clientStatusLabel} />
-                    </div>
-                    <div className="request-detail__client-body">
-                      <div className="request-detail__client-name">{clientName}</div>
-                      <div className="request-detail__client-meta" aria-hidden="true" />
-                    </div>
-                  </>
-                )}
-                <div className="request-detail__client-rating">
-                  <span className="provider-rating">
-                    ★★★★★ {clientRatingText}
-                  </span>
-                  <span className="provider-reviews">
-                    {finalRatingCount ?? 0}{" "}
-                    {t(I18N_KEYS.requestDetails.clientReviews)}
-                  </span>
-                </div>
-              </div>
-            </div>
+          <RequestDetailHeader
+            title={viewModel.title}
+            priceLabel={viewModel.priceLabel}
+            tags={viewModel.tagList}
+          />
+          <RequestDetailGallery images={viewModel.images} title={viewModel.title} />
+          <RequestDetailAbout
+            title={t(I18N_KEYS.requestDetails.about)}
+            description={viewModel.description}
+          />
+          {viewModel.hasClientInfo ? (
+            <RequestDetailClient
+              title={t(I18N_KEYS.requestDetails.clientTitle)}
+              profileHref={viewModel.clientProfileHref}
+              name={viewModel.clientName}
+              avatarUrl={viewModel.clientAvatarUrl}
+              status={viewModel.clientStatus}
+              statusLabel={viewModel.clientStatusLabel}
+              ratingText={viewModel.clientRatingText}
+              ratingCount={viewModel.clientRatingCount}
+              reviewsLabel={t(I18N_KEYS.requestDetails.clientReviews)}
+            />
           ) : null}
-
         </section>
-
-        <aside className="panel request-detail__panel request-detail__aside">
-          <div className="request-detail__meta">
-            <div className="request-detail__meta-item">
-              <IconPin />
-              <span>{request.cityName ?? request.cityId}</span>
-            </div>
-            <div className="request-detail__meta-item">
-              <IconCalendar />
-              <span>{preferredDate ? formatDate.format(preferredDate) : "—"}</span>
-            </div>
-          </div>
-
-          <div className="request-detail__cta">
-            <Link
-              href={`/auth/login?next=/requests/${request.id}`}
-              className="btn-primary request-detail__cta-btn"
-            >
-              <span>{t(I18N_KEYS.requestDetails.ctaApply)}</span>
-              <IconCheck />
-            </Link>
-            <Link
-              href={`/auth/login?next=/requests/${request.id}`}
-              className="btn-secondary request-detail__cta-btn"
-            >
-              <span>{t(I18N_KEYS.requestDetails.ctaChat)}</span>
-              <IconChat />
-            </Link>
-            <button
-              type="button"
-              className={`btn-ghost is-primary request-detail__save ${
-                isSaved ? "is-saved" : ""
-              }`}
-              onClick={handleToggleSave}
-            >
-              <span>{t(I18N_KEYS.requestDetails.ctaSave)}</span>
-              <IconHeart className="icon-heart" />
-            </button>
-          </div>
-
-          {similar.length ? (
-            <div className="request-detail__section request-detail__similar">
-              <h3 className="request-detail__section-title">
-                {t(I18N_KEYS.requestDetails.similar)}
-              </h3>
-              <div className="request-detail__similar-list">
-                {similar.map((item) => {
-                  const itemTitle =
-                    item.title?.trim() || item.subcategoryName || item.serviceKey;
-                  const itemPrice =
-                    item.price != null
-                      ? formatPrice.format(item.price)
-                      : t(I18N_KEYS.requestDetails.priceOnRequest);
-                  const imageSrc = buildImageList(item)[0];
-                  const similarDate =
-                    item.preferredDate && !Number.isNaN(new Date(item.preferredDate).getTime())
-                      ? formatDate.format(new Date(item.preferredDate))
-                      : "—";
-                  return (
-                    <OrderCard
-                      key={item.id}
-                      href={`/requests/${item.id}`}
-                      ariaLabel={t(I18N_KEYS.requestsPage.openRequest)}
-                      imageSrc={imageSrc}
-                      imageAlt={itemTitle}
-                      dateLabel={similarDate}
-                      badges={[
-                        t(I18N_KEYS.requestsPage.badgeToday),
-                        item.isRecurring
-                          ? t(I18N_KEYS.client.recurringLabel)
-                          : t(I18N_KEYS.client.onceLabel),
-                      ]}
-                      category={item.categoryName ?? item.categoryKey ?? ""}
-                      title={itemTitle}
-                      meta={[item.cityName ?? item.cityId]}
-                      bottomMeta={[item.subcategoryName ?? item.serviceKey]}
-                      priceLabel={itemPrice}
-                      inlineCta={t(I18N_KEYS.requestsPage.detailsCta)}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          ) : null}
-        </aside>
+        <RequestDetailAside
+          cityLabel={viewModel.cityLabel}
+          dateLabel={viewModel.preferredDateLabel}
+          ctaApplyLabel={
+            authStatus === 'authenticated' && isAlreadyResponded
+              ? t(I18N_KEYS.requestDetails.responseAlready)
+              : t(I18N_KEYS.requestDetails.ctaApply)
+          }
+          ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
+          ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
+          isSaved={isSaved}
+          onApply={handleApply}
+          onChat={handleChat}
+          onToggleSave={handleFavorite}
+          applyDisabled={authStatus === 'authenticated' && isAlreadyResponded}
+          applyState={authStatus === 'authenticated' && isAlreadyResponded ? 'done' : 'default'}
+        >
+          <RequestDetailSimilar
+            title={similarTitle}
+            message={similarFallbackMessage}
+            items={similarForRender}
+            footerLabel={t(I18N_KEYS.requestDetails.showAll)}
+            footerHref={similarHref}
+            formatDate={(value) => formatDate.format(value)}
+            formatPrice={(value) => formatPrice.format(value)}
+            badgeTodayLabel={t(I18N_KEYS.requestsPage.badgeToday)}
+            recurringLabel={t(I18N_KEYS.client.recurringLabel)}
+            onceLabel={t(I18N_KEYS.client.onceLabel)}
+            openRequestLabel={t(I18N_KEYS.requestsPage.openRequest)}
+            detailsCtaLabel={t(I18N_KEYS.requestsPage.detailsCta)}
+            priceOnRequestLabel={t(I18N_KEYS.requestDetails.priceOnRequest)}
+            getImage={(item) => buildRequestImageList(item)[0]}
+          />
+        </RequestDetailAside>
       </div>
-      <div className="request-detail__mobile-cta">
-        <Link
-          href={`/auth/login?next=/requests/${request.id}`}
-          className="btn-primary request-detail__cta-btn"
-        >
-          <span>{t(I18N_KEYS.requestDetails.ctaApply)}</span>
-          <IconCheck />
-        </Link>
-        <Link
-          href={`/auth/login?next=/requests/${request.id}`}
-          className="btn-secondary request-detail__cta-btn"
-        >
-          <span>{t(I18N_KEYS.requestDetails.ctaChat)}</span>
-          <IconChat />
-        </Link>
-        <button
-          type="button"
-          className={`btn-ghost is-primary ${isSaved ? "is-saved" : ""}`}
-          onClick={handleToggleSave}
-        >
-          <span>{t(I18N_KEYS.requestDetails.ctaSave)}</span>
-          <IconHeart className="icon-heart" />
-        </button>
-      </div>
+      <RequestDetailMobileCta
+        ctaApplyLabel={
+          authStatus === 'authenticated' && isAlreadyResponded
+            ? t(I18N_KEYS.requestDetails.responseAlready)
+            : t(I18N_KEYS.requestDetails.ctaApply)
+        }
+        ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
+        ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
+        isSaved={isSaved}
+        onApply={handleApply}
+        onChat={handleChat}
+        onToggleSave={handleFavorite}
+        applyDisabled={authStatus === 'authenticated' && isAlreadyResponded}
+        applyState={authStatus === 'authenticated' && isAlreadyResponded ? 'done' : 'default'}
+      />
     </PageShell>
   );
-}
-
-function buildImageList(request: RequestResponseDto) {
-  const photos = request.photos ?? [];
-  const image = request.imageUrl ? [request.imageUrl] : [];
-  const list = [...photos, ...image].filter(Boolean);
-  const unique = Array.from(new Set(list));
-  if (unique.length) return unique.slice(0, 4);
-  return [pickRequestImage(request.categoryKey ?? "")];
-}
-
-function pickRequestImage(categoryKey: string) {
-  const map: Record<string, string> = {
-    cleaning: "/Reinigung im modernen Wohnzimmer.jpg",
-    electric: "/Elektriker bei der Arbeit an Schaltschrank.jpg",
-    plumbing: "/Freundlicher Klempner bei der Arbeit.jpg",
-    repair: "/Techniker repariert Smartphone in Werkstatt.jpg",
-    moving: "/Lädt Kisten aus einem Transporter.jpg",
-  };
-  return map[categoryKey] ?? "/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg";
 }
