@@ -210,7 +210,16 @@ export const de = {
     clientOnline: "Online",
     clientActive: "Kürzlich aktiv",
     clientUnknown: "Auftraggeber",
-    similar: "Ähnliche Aufträge"
+    similar: "Ähnliche Aufträge",
+    noSimilarMessage: "Keine ähnlichen Aufträge. Vielleicht interessieren Sie diese.",
+    latestTitle: "Neueste Aufträge",
+    showAll: "Alle Aufträge zeigen",
+    loginRequired: "Bitte melden Sie sich an oder registrieren Sie sich, um fortzufahren.",
+    responseSent: "Ihre Anfrage wurde gesendet.",
+    responseFailed: "Ihre Anfrage konnte nicht gesendet werden. Bitte erneut versuchen.",
+    responseAlready: "Sie haben bereits auf diese Anfrage geantwortet.",
+    chatSoon: "Chat ist nach dem Login verfügbar.",
+    favoritesSoon: "Favoriten sind nach dem Login verfügbar."
   },
   request: {
     whenModeLabel: "Wann Modus",

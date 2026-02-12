@@ -212,7 +212,16 @@ export const en: DeDictionary = {
     clientOnline: "Online",
     clientActive: "Active recently",
     clientUnknown: "Client",
-    similar: "Similar requests"
+    similar: "Similar requests",
+    noSimilarMessage: "No similar requests. You might be interested in these.",
+    latestTitle: "Latest requests",
+    showAll: "Show all requests",
+    loginRequired: "Please log in or register to continue.",
+    responseSent: "Your response has been sent.",
+    responseFailed: "Could not send your response. Please try again.",
+    responseAlready: "You already responded to this request.",
+    chatSoon: "Chat will be available after login.",
+    favoritesSoon: "Favorites will be available after login."
   },
   request: {
     whenModeLabel: "When mode",
