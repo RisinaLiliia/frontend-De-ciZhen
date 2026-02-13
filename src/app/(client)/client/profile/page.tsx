@@ -9,7 +9,7 @@ import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { useAuthUser } from '@/hooks/useAuthSnapshot';
 import { listMyRequests } from '@/lib/api/requests';
-import { listMyClientResponses } from '@/lib/api/responses';
+import { listMyClientOffers } from '@/lib/api/offers';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -24,18 +24,18 @@ export default function ClientProfilePage() {
     queryFn: () => listMyRequests(),
   });
 
-  const { data: responses } = useQuery({
+  const { data: offers } = useQuery({
     queryKey: ['client-offers'],
-    queryFn: () => listMyClientResponses(),
+    queryFn: () => listMyClientOffers(),
   });
 
-  const responsesByRequest = React.useMemo(() => {
+  const offersByRequest = React.useMemo(() => {
     const map = new Map<string, number>();
-    (responses ?? []).forEach((r) => {
+    (offers ?? []).forEach((r) => {
       map.set(r.requestId, (map.get(r.requestId) ?? 0) + 1);
     });
     return map;
-  }, [responses]);
+  }, [offers]);
 
   return (
       <PageShell right={<AuthActions />} withSpacer={false}>
@@ -76,7 +76,7 @@ export default function ClientProfilePage() {
                 <div className="text-right">
                   <span className="badge">{item.status}</span>
                   <p className="typo-small">
-                    {t(I18N_KEYS.client.responsesLabel)}: {responsesByRequest.get(item.id) ?? 0}
+                    {t(I18N_KEYS.client.responsesLabel)}: {offersByRequest.get(item.id) ?? 0}
                   </p>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export default function ClientProfilePage() {
             </Link>
           </div>
           <div className="stack-sm">
-            {(responses ?? []).slice(0, 3).map((item) => (
+            {(offers ?? []).slice(0, 3).map((item) => (
               <div key={item.id} className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold">
@@ -106,7 +106,7 @@ export default function ClientProfilePage() {
                 <span className="badge">{item.status}</span>
               </div>
             ))}
-            {(responses ?? []).length === 0 ? (
+            {(offers ?? []).length === 0 ? (
               <p className="typo-muted">{t(I18N_KEYS.client.offersEmpty)}</p>
             ) : null}
           </div>

@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { Button } from '@/components/ui/Button';
-import { listMyClientResponses, acceptResponse } from '@/lib/api/responses';
+import { listMyClientOffers, acceptOffer } from '@/lib/api/offers';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import Link from 'next/link';
@@ -28,12 +28,12 @@ export default function ClientOffersPage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['client-offers'],
-    queryFn: () => listMyClientResponses(),
+    queryFn: () => listMyClientOffers(),
   });
 
   const onAccept = async (id: string) => {
     try {
-      await acceptResponse(id);
+      await acceptOffer(id);
       toast.success(t(I18N_KEYS.offers.accepted));
       await qc.invalidateQueries({ queryKey: ['client-offers'] });
     } catch (error) {

@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { Button } from '@/components/ui/Button';
-import { listResponsesByRequest, acceptResponse } from '@/lib/api/responses';
+import { listOffersByRequest, acceptOffer } from '@/lib/api/offers';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
@@ -35,7 +35,7 @@ export default function OffersPage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['offers', requestId],
-    queryFn: () => listResponsesByRequest(requestId),
+    queryFn: () => listOffersByRequest(requestId),
     enabled: Boolean(requestId),
   });
 
@@ -48,7 +48,7 @@ export default function OffersPage() {
   const onAccept = async (id: string) => {
     try {
       if (!ensureAuth(`/offers/${requestId}`)) return;
-      await acceptResponse(id);
+      await acceptOffer(id);
       toast.success(t(I18N_KEYS.offers.accepted));
       await qc.invalidateQueries({ queryKey: ['offers', requestId] });
     } catch (error) {

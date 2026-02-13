@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { listMyRequests } from '@/lib/api/requests';
-import { listMyClientResponses } from '@/lib/api/responses';
+import { listMyClientOffers } from '@/lib/api/offers';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import Link from 'next/link';
@@ -19,18 +19,18 @@ export default function ClientRequestsPage() {
     queryFn: () => listMyRequests(),
   });
 
-  const { data: responses } = useQuery({
+  const { data: offers } = useQuery({
     queryKey: ['client-offers'],
-    queryFn: () => listMyClientResponses(),
+    queryFn: () => listMyClientOffers(),
   });
 
-  const responsesByRequest = React.useMemo(() => {
+  const offersByRequest = React.useMemo(() => {
     const map = new Map<string, number>();
-    (responses ?? []).forEach((r) => {
+    (offers ?? []).forEach((r) => {
       map.set(r.requestId, (map.get(r.requestId) ?? 0) + 1);
     });
     return map;
-  }, [responses]);
+  }, [offers]);
 
   const statusLabel = (status: string) => {
     switch (status) {
@@ -64,7 +64,7 @@ export default function ClientRequestsPage() {
           ) : null}
 
             {(data ?? []).map((item) => {
-              const responsesCount = responsesByRequest.get(item.id) ?? 0;
+              const offersCount = offersByRequest.get(item.id) ?? 0;
               return (
                 <div key={item.id} className="card stack-sm">
                   <div className="flex items-start justify-between gap-3">
@@ -83,7 +83,7 @@ export default function ClientRequestsPage() {
                     <div className="text-right">
                       <span className="badge">{statusLabel(item.status)}</span>
                       <p className="typo-small">
-                        {t(I18N_KEYS.client.responsesLabel)}: {responsesCount}
+                        {t(I18N_KEYS.client.responsesLabel)}: {offersCount}
                       </p>
                     </div>
                   </div>

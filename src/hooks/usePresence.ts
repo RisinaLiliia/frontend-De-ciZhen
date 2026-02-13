@@ -2,8 +2,9 @@
 'use client';
 
 import * as React from 'react';
+import { io, type Socket } from 'socket.io-client';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
-import { buildPresenceWsUrl, pingPresence } from '@/lib/api/presence';
+import { getPresenceSocketUrl, pingPresence } from '@/lib/api/presence';
 import { getAccessToken } from '@/lib/auth/token';
 
 const PING_INTERVAL_MS = 60_000;
@@ -12,8 +13,7 @@ const RECONNECT_DELAY_MS = 5_000;
 
 export function usePresence() {
   const status = useAuthStatus();
-  const wsRef = React.useRef<WebSocket | null>(null);
-  const reconnectRef = React.useRef<number | null>(null);
+  const socketRef = React.useRef<Socket | null>(null);
   const intervalRef = React.useRef<number | null>(null);
   const lastPingRef = React.useRef(0);
 
@@ -29,53 +29,31 @@ export function usePresence() {
   }, []);
 
   const closeSocket = React.useCallback(() => {
-    if (wsRef.current) {
-      wsRef.current.onopen = null;
-      wsRef.current.onclose = null;
-      wsRef.current.onerror = null;
-      wsRef.current.close();
-      wsRef.current = null;
+    if (socketRef.current) {
+      socketRef.current.removeAllListeners();
+      socketRef.current.disconnect();
+      socketRef.current = null;
     }
   }, []);
 
   const connectSocket = React.useCallback(() => {
     if (status !== 'authenticated') return;
-    if (!getAccessToken()) return;
-    const wsUrl = buildPresenceWsUrl();
-    if (!wsUrl) return;
+    const token = getAccessToken();
+    if (!token) return;
+    const socketUrl = getPresenceSocketUrl();
+    if (!socketUrl) return;
     closeSocket();
-    try {
-      const ws = new WebSocket(wsUrl);
-      wsRef.current = ws;
-      ws.onopen = () => {
-        void doPing();
-      };
-      ws.onclose = () => {
-        wsRef.current = null;
-        if (reconnectRef.current == null) {
-          reconnectRef.current = window.setTimeout(() => {
-            reconnectRef.current = null;
-            connectSocket();
-          }, RECONNECT_DELAY_MS);
-        }
-      };
-      ws.onerror = () => {
-        wsRef.current = null;
-        if (reconnectRef.current == null) {
-          reconnectRef.current = window.setTimeout(() => {
-            reconnectRef.current = null;
-            connectSocket();
-          }, RECONNECT_DELAY_MS);
-        }
-      };
-    } catch {
-      if (reconnectRef.current == null) {
-        reconnectRef.current = window.setTimeout(() => {
-          reconnectRef.current = null;
-          connectSocket();
-        }, RECONNECT_DELAY_MS);
-      }
-    }
+    const socket = io(socketUrl, {
+      transports: ['websocket'],
+      auth: { token: `Bearer ${token}` },
+      withCredentials: true,
+      reconnection: true,
+      reconnectionDelay: RECONNECT_DELAY_MS,
+    });
+    socket.on('connect', () => {
+      void doPing();
+    });
+    socketRef.current = socket;
   }, [closeSocket, doPing, status]);
 
   React.useEffect(() => {
@@ -84,10 +62,6 @@ export function usePresence() {
       if (intervalRef.current != null) {
         window.clearInterval(intervalRef.current);
         intervalRef.current = null;
-      }
-      if (reconnectRef.current != null) {
-        window.clearTimeout(reconnectRef.current);
-        reconnectRef.current = null;
       }
       return;
     }
@@ -121,10 +95,6 @@ export function usePresence() {
       if (intervalRef.current != null) {
         window.clearInterval(intervalRef.current);
         intervalRef.current = null;
-      }
-      if (reconnectRef.current != null) {
-        window.clearTimeout(reconnectRef.current);
-        reconnectRef.current = null;
       }
     };
   }, [closeSocket, connectSocket, doPing, status]);
