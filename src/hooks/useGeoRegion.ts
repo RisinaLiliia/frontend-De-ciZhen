@@ -9,7 +9,6 @@ type GeoRegionOptions = {
 };
 
 const DEFAULT_CACHE_KEY = 'dc_geo_region';
-const DEFAULT_CACHE_TS_KEY = 'dc_geo_region_ts';
 const DEFAULT_TTL = 24 * 60 * 60 * 1000;
 const DEFAULT_ENDPOINT = 'https://ipapi.co/json/';
 

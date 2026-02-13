@@ -3,11 +3,31 @@ export type OfferStatus = 'sent' | 'accepted' | 'declined' | 'withdrawn';
 
 export type CreateOfferDto = {
   requestId: string;
+  amount: number;
   message?: string;
-  amount?: number;
   priceType?: 'fixed' | 'estimate' | 'hourly';
   availableAt?: string;
   availabilityNote?: string;
+};
+
+export type CreateOfferResponseDto = {
+  offer: OfferDto;
+  providerProfile: {
+    id: string;
+    userId: string;
+    displayName?: string | null;
+    bio?: string | null;
+    companyName?: string | null;
+    vatId?: string | null;
+    cityId?: string | null;
+    serviceKeys: string[];
+    basePrice?: number | null;
+    status: 'draft' | 'active' | 'suspended';
+    isBlocked: boolean;
+    blockedAt?: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
 };
 
 export type OfferDto = {

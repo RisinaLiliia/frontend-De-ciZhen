@@ -35,7 +35,7 @@ const now = () => new Date().toISOString();
 
 export const useLocationStore = create<LocationState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       mode: 'ip',
       label: '',
       cityId: undefined,

@@ -48,7 +48,7 @@ export function RequestForm() {
       toast.error(t(I18N_KEYS.common.loadError));
     }
     if (!hasError) hasToastedRef.current = false;
-  }, [hasError]);
+  }, [hasError, t]);
 
   const serviceOptions = React.useMemo(
     () => [
@@ -58,7 +58,7 @@ export function RequestForm() {
         label: pickI18n(s.i18n, locale),
       })),
     ],
-    [services, locale],
+    [services, locale, t],
   );
 
   const cityOptions = React.useMemo(
@@ -69,7 +69,7 @@ export function RequestForm() {
         label: pickI18n(c.i18n, locale),
       })),
     ],
-    [cities, locale],
+    [cities, locale, t],
   );
 
   const canSubmit = Boolean(serviceKey && cityId);

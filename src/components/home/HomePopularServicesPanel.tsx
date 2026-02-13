@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -33,16 +34,15 @@ export function HomePopularServicesPanel({
         {services.map((service) => (
           <Link key={service.key} href={service.href} className="service-tile service-link">
             <span className="service-tile__image-wrap">
-              <img
+              <Image
                 src={service.imageSrc}
                 alt={service.label}
                 className="service-tile__image"
-                loading="lazy"
+                fill
+                sizes="(max-width: 768px) 50vw, 220px"
               />
             </span>
-            <span className="badge-pill service-tile__badge">
-              {categoryCounts[service.key]}
-            </span>
+            <span className="badge-pill service-tile__badge">{categoryCounts[service.key]}</span>
             {service.label}
           </Link>
         ))}

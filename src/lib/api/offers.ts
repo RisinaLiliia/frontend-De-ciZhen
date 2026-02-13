@@ -3,6 +3,7 @@ import { apiGet, apiPatch, apiPost } from '@/lib/api/http';
 import type {
   AcceptOfferResultDto,
   CreateOfferDto,
+  CreateOfferResponseDto,
   DeclineOfferResultDto,
   OfferDto,
 } from '@/lib/api/dto/offers';
@@ -29,7 +30,7 @@ export function listMyProviderOffers(params?: { status?: string }) {
 }
 
 export function createOffer(payload: CreateOfferDto) {
-  return apiPost<CreateOfferDto, OfferDto>('/offers', payload);
+  return apiPost<CreateOfferDto, CreateOfferResponseDto>('/offers', payload);
 }
 
 export function acceptOffer(id: string) {

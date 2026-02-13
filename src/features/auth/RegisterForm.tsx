@@ -4,7 +4,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
@@ -42,7 +42,7 @@ export function RegisterForm() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
@@ -68,7 +68,7 @@ export function RegisterForm() {
   };
 
   const loading = isSubmitting || status === 'loading';
-  const role = watch('role');
+  const role = useWatch({ control, name: 'role' });
 
   React.useEffect(() => {
     if (status === 'authenticated') {
@@ -110,9 +110,7 @@ export function RegisterForm() {
             {...register('password')}
           />
         </Field>
-        {errors.password ? (
-          <p className="text-red-600 text-sm">{errors.password.message}</p>
-        ) : null}
+        {errors.password ? <p className="text-red-600 text-sm">{errors.password.message}</p> : null}
       </div>
 
       <div className="form-group">
@@ -146,11 +144,7 @@ export function RegisterForm() {
       </div>
 
       <label className="flex items-start gap-3 text-sm">
-        <input
-          type="checkbox"
-          className="mt-1"
-          {...register('acceptPrivacyPolicy')}
-        />
+        <input type="checkbox" className="mt-1" {...register('acceptPrivacyPolicy')} />
         <span>{t(I18N_KEYS.auth.acceptPolicy)}</span>
       </label>
       {errors.acceptPrivacyPolicy ? (
@@ -161,9 +155,7 @@ export function RegisterForm() {
         {t(I18N_KEYS.auth.registerCta)}
       </Button>
 
-      {showNextHint ? (
-        <p className="typo-small text-center">{t(I18N_KEYS.auth.nextHint)}</p>
-      ) : null}
+      {showNextHint ? <p className="typo-small text-center">{t(I18N_KEYS.auth.nextHint)}</p> : null}
 
       {roleHint ? <p className="typo-small text-center">{roleHint}</p> : null}
 

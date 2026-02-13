@@ -2,6 +2,8 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -18,11 +20,13 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { listMyProviderOffers } from '@/lib/api/offers';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
-import Link from 'next/link';
 
 export default function ProviderProfilePage() {
   const t = useT();
   const qc = useQueryClient();
+  const searchParams = useSearchParams();
+  const highlightOffer = searchParams?.get('highlight') === 'offer';
+
   const { data: cities } = useCities('DE');
   const { data: services } = useServices();
 
@@ -71,7 +75,6 @@ export default function ProviderProfilePage() {
       });
     }
   }, [data, reset]);
-
 
   const onSubmit = async (values: ProfileFormValues) => {
     try {
@@ -130,84 +133,93 @@ export default function ProviderProfilePage() {
         </div>
       </section>
 
+      {highlightOffer ? (
+        <section className="card stack-sm provider-profile-highlight">
+          <p className="typo-small">{t(I18N_KEYS.requestDetails.responseSuccessBody)}</p>
+        </section>
+      ) : null}
+
       <section className="text-center stack-sm">
         <h2 className="typo-h3">{t(I18N_KEYS.provider.profileSubtitle)}</h2>
       </section>
 
       {isLoading ? <p className="typo-muted">{t(I18N_KEYS.common.refreshing)}</p> : null}
 
-      <form className="card stack-md" onSubmit={handleSubmit(onSubmit)}>
-            <div className="stack-sm">
-              <label className="typo-small">{t(I18N_KEYS.provider.displayName)}</label>
-              <Field>
-                <Input {...register('displayName')} />
-              </Field>
-            </div>
+      <form
+        className={`card stack-md ${highlightOffer ? 'provider-profile-form--highlight' : ''}`.trim()}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="stack-sm">
+          <label className="typo-small">{t(I18N_KEYS.provider.displayName)}</label>
+          <Field>
+            <Input {...register('displayName')} />
+          </Field>
+        </div>
 
-            <div className="stack-sm">
-              <label className="typo-small">{t(I18N_KEYS.provider.bio)}</label>
-              <Field>
-                <Input {...register('bio')} />
-              </Field>
-            </div>
+        <div className="stack-sm">
+          <label className="typo-small">{t(I18N_KEYS.provider.bio)}</label>
+          <Field>
+            <Input {...register('bio')} />
+          </Field>
+        </div>
 
-            <div className="stack-sm">
-              <label className="typo-small">{t(I18N_KEYS.provider.companyName)}</label>
-              <Field>
-                <Input {...register('companyName')} />
-              </Field>
-            </div>
+        <div className="stack-sm">
+          <label className="typo-small">{t(I18N_KEYS.provider.companyName)}</label>
+          <Field>
+            <Input {...register('companyName')} />
+          </Field>
+        </div>
 
-            <div className="stack-sm">
-              <label className="typo-small">{t(I18N_KEYS.provider.vatId)}</label>
-              <Field>
-                <Input {...register('vatId')} />
-              </Field>
-            </div>
+        <div className="stack-sm">
+          <label className="typo-small">{t(I18N_KEYS.provider.vatId)}</label>
+          <Field>
+            <Input {...register('vatId')} />
+          </Field>
+        </div>
 
-            <div className="stack-sm">
-              <label className="typo-small">{t(I18N_KEYS.provider.city)}</label>
-              <Field>
-                <select className="field" {...register('cityId')}>
-                  <option value="">—</option>
-                  {(cities ?? []).map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.i18n?.de || c.i18n?.en || c.key}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-            </div>
+        <div className="stack-sm">
+          <label className="typo-small">{t(I18N_KEYS.provider.city)}</label>
+          <Field>
+            <select className="field" {...register('cityId')}>
+              <option value="">—</option>
+              {(cities ?? []).map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.i18n?.de || c.i18n?.en || c.key}
+                </option>
+              ))}
+            </select>
+          </Field>
+        </div>
 
-            <div className="stack-sm">
-              <label className="typo-small">{t(I18N_KEYS.provider.basePrice)}</label>
-              <Field>
-                <Input type="number" min={10} {...register('basePrice')} />
-              </Field>
-            </div>
+        <div className="stack-sm">
+          <label className="typo-small">{t(I18N_KEYS.provider.basePrice)}</label>
+          <Field>
+            <Input type="number" min={10} {...register('basePrice')} />
+          </Field>
+        </div>
 
-            <div className="stack-sm">
-              <label className="typo-small">{t(I18N_KEYS.provider.services)}</label>
-              <div className="stack-sm">
-                <div className="flex flex-wrap gap-2">
-                  {(services ?? [])
-                    .filter((s) => (data?.serviceKeys || []).includes(s.key))
-                    .map((s) => (
-                      <span key={s.key} className="badge">
-                        {s.i18n?.de || s.i18n?.en || s.key}
-                      </span>
-                    ))}
-                </div>
-                {(services ?? []).map((s) => (
-                  <label key={s.key} className="flex items-center gap-2 text-sm">
-                    <input type="checkbox" value={s.key} {...register('serviceKeys')} />
-                    <span>{s.i18n?.de || s.i18n?.en || s.key}</span>
-                  </label>
+        <div className="stack-sm">
+          <label className="typo-small">{t(I18N_KEYS.provider.services)}</label>
+          <div className="stack-sm">
+            <div className="flex flex-wrap gap-2">
+              {(services ?? [])
+                .filter((s) => (data?.serviceKeys || []).includes(s.key))
+                .map((s) => (
+                  <span key={s.key} className="badge">
+                    {s.i18n?.de || s.i18n?.en || s.key}
+                  </span>
                 ))}
-              </div>
             </div>
+            {(services ?? []).map((s) => (
+              <label key={s.key} className="flex items-center gap-2 text-sm">
+                <input type="checkbox" value={s.key} {...register('serviceKeys')} />
+                <span>{s.i18n?.de || s.i18n?.en || s.key}</span>
+              </label>
+            ))}
+          </div>
+        </div>
 
-            <Button type="submit">{t(I18N_KEYS.provider.save)}</Button>
+        <Button type="submit">{t(I18N_KEYS.provider.save)}</Button>
       </form>
     </PageShell>
   );

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 type HeroCta = {
@@ -14,13 +15,7 @@ type HeroSectionProps = {
   mediaAlt?: string;
 };
 
-export function HeroSection({
-  title,
-  subtitle,
-  ctas,
-  mediaSrc,
-  mediaAlt = '',
-}: HeroSectionProps) {
+export function HeroSection({ title, subtitle, ctas, mediaSrc, mediaAlt = '' }: HeroSectionProps) {
   return (
     <section className="hero">
       <div className="hero__copy">
@@ -31,7 +26,9 @@ export function HeroSection({
             <Link
               key={cta.href + cta.label}
               href={cta.href}
-              className={cta.variant === 'primary' ? 'btn-primary btn-icon' : 'btn-secondary btn-icon'}
+              className={
+                cta.variant === 'primary' ? 'btn-primary btn-icon' : 'btn-secondary btn-icon'
+              }
             >
               {cta.label}
             </Link>
@@ -40,7 +37,13 @@ export function HeroSection({
       </div>
       {mediaSrc ? (
         <div className="hero__media" aria-hidden="true">
-          <img src={mediaSrc} alt={mediaAlt} loading="eager" />
+          <Image
+            src={mediaSrc}
+            alt={mediaAlt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 680px"
+            priority
+          />
         </div>
       ) : null}
     </section>
