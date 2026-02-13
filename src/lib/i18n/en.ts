@@ -417,7 +417,8 @@ export const en: DeDictionary = {
   },
   chat: {
     title: "Chat",
-    placeholder: "Chat will be available soon."
+    placeholder: "Type a message",
+    sendCta: "Send"
   },
   app: {
     errorTitle: "Something went wrong",

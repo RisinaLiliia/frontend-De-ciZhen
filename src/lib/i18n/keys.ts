@@ -451,6 +451,7 @@ export const I18N_KEYS = {
   chat: {
     title: "chat.title",
     placeholder: "chat.placeholder",
+    sendCta: "chat.sendCta",
   },
 } as const;
 

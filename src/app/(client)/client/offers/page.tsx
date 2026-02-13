@@ -10,6 +10,7 @@ import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { Button } from '@/components/ui/Button';
 import { listMyClientOffers, acceptOffer } from '@/lib/api/offers';
+import { createThread } from '@/lib/api/chat';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import Link from 'next/link';
@@ -105,9 +106,25 @@ export default function ClientOffersPage() {
                       <Link href={`/providers/${item.providerUserId}`} className="badge">
                         {t(I18N_KEYS.offers.profileCta)}
                       </Link>
-                      <Link href={`/chat/${item.id}`} className="badge">
+                      <button
+                        type="button"
+                        className="badge"
+                        onClick={async () => {
+                          try {
+                            const thread = await createThread({
+                              requestId: item.requestId,
+                              providerUserId: item.providerUserId ?? '',
+                              offerId: item.id,
+                            });
+                            router.push(`/chat/${thread.id}`);
+                          } catch (error) {
+                            const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+                            toast.error(message);
+                          }
+                        }}
+                      >
                         {t(I18N_KEYS.offers.chatCta)}
-                      </Link>
+                      </button>
                       <Button type="button" onClick={() => onAccept(item.id)}>
                         {t(I18N_KEYS.offers.acceptCta)}
                       </Button>

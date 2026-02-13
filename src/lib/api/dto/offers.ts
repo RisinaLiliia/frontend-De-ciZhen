@@ -32,7 +32,7 @@ export type OfferDto = {
   requestServiceKey?: string | null;
   requestCityId?: string | null;
   requestPreferredDate?: string | null;
-  requestStatus?: 'draft' | 'published' | 'matched' | 'closed' | 'cancelled' | null;
+  requestStatus?: 'draft' | 'published' | 'paused' | 'matched' | 'closed' | 'cancelled' | null;
 };
 
 export type AcceptOfferResultDto = {

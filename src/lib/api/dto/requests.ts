@@ -1,5 +1,5 @@
 // src/lib/api/dto/requests.ts
-export type RequestStatus = 'draft' | 'published' | 'closed' | 'cancelled' | 'matched';
+export type RequestStatus = 'draft' | 'published' | 'paused' | 'closed' | 'cancelled' | 'matched';
 
 export type CreateRequestDto = {
   title: string;

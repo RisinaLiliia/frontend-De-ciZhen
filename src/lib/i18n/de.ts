@@ -416,7 +416,8 @@ export const de = {
   },
   chat: {
     title: "Chat",
-    placeholder: "Chat wird bald verfügbar sein."
+    placeholder: "Nachricht eingeben",
+    sendCta: "Senden"
   },
   app: {
     errorTitle: "Etwas ist schiefgelaufen",
