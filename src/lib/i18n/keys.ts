@@ -19,6 +19,9 @@ export const I18N_KEYS = {
     notFoundTitle: 'app.notFoundTitle',
     notFoundMessage: 'app.notFoundMessage',
     notFoundCta: 'app.notFoundCta',
+    modeLabel: 'app.modeLabel',
+    modeClient: 'app.modeClient',
+    modeProvider: 'app.modeProvider',
   },
   pages: {
     servicesTitle: 'pages.servicesTitle',
@@ -400,6 +403,15 @@ export const I18N_KEYS = {
     responded: 'provider.responded',
     profileTitle: 'provider.profileTitle',
     profileSubtitle: 'provider.profileSubtitle',
+    onboardingTitle: 'provider.onboardingTitle',
+    onboardingSubtitle: 'provider.onboardingSubtitle',
+    onboardingPitchTitle: 'provider.onboardingPitchTitle',
+    onboardingPitch1: 'provider.onboardingPitch1',
+    onboardingPitch2: 'provider.onboardingPitch2',
+    onboardingPitch3: 'provider.onboardingPitch3',
+    onboardingCta: 'provider.onboardingCta',
+    onboardingCancel: 'provider.onboardingCancel',
+    onboardingSkip: 'provider.onboardingSkip',
     displayName: 'provider.displayName',
     bio: 'provider.bio',
     companyName: 'provider.companyName',
@@ -413,6 +425,7 @@ export const I18N_KEYS = {
     viewRequests: 'provider.viewRequests',
     contractsTitle: 'provider.contractsTitle',
     contractsEmpty: 'provider.contractsEmpty',
+    chatsTitle: 'provider.chatsTitle',
   },
   client: {
     requestsTitle: 'client.requestsTitle',
@@ -437,6 +450,7 @@ export const I18N_KEYS = {
     contractsTitle: 'client.contractsTitle',
     contractsSubtitle: 'client.contractsSubtitle',
     contractsEmpty: 'client.contractsEmpty',
+    chatsTitle: 'client.chatsTitle',
   },
   offers: {
     title: 'offers.title',
@@ -472,6 +486,9 @@ export const I18N_KEYS = {
     title: 'chat.title',
     placeholder: 'chat.placeholder',
     sendCta: 'chat.sendCta',
+    inboxTitle: 'chat.inboxTitle',
+    threadTitle: 'chat.threadTitle',
+    empty: 'chat.empty',
   },
 } as const;
 

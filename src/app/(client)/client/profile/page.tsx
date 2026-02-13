@@ -10,6 +10,8 @@ import { AuthActions } from '@/components/layout/AuthActions';
 import { useAuthUser } from '@/hooks/useAuthSnapshot';
 import { listMyRequests } from '@/lib/api/requests';
 import { listMyClientOffers } from '@/lib/api/offers';
+import { listMyContracts } from '@/lib/api/contracts';
+import { listInbox } from '@/lib/api/chat';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -29,6 +31,16 @@ export default function ClientProfilePage() {
     queryFn: () => listMyClientOffers(),
   });
 
+  const { data: contracts } = useQuery({
+    queryKey: ['client-contracts'],
+    queryFn: () => listMyContracts({ role: 'client' }),
+  });
+
+  const { data: inbox } = useQuery({
+    queryKey: ['chat-inbox', 'client'],
+    queryFn: () => listInbox('client'),
+  });
+
   const offersByRequest = React.useMemo(() => {
     const map = new Map<string, number>();
     (offers ?? []).forEach((r) => {
@@ -36,6 +48,11 @@ export default function ClientProfilePage() {
     });
     return map;
   }, [offers]);
+
+  const unreadCount = React.useMemo(
+    () => (inbox ?? []).reduce((sum, thread) => sum + (thread.unreadClientCount || 0), 0),
+    [inbox],
+  );
 
   return (
       <PageShell right={<AuthActions />} withSpacer={false}>
@@ -54,6 +71,32 @@ export default function ClientProfilePage() {
           <div className="flex items-center justify-between">
             <span className="typo-small">{t(I18N_KEYS.auth.languageLabel)}</span>
             <LanguageToggle />
+          </div>
+        </section>
+
+        <section className="card stack-sm">
+          <div className="flex items-center justify-between">
+            <h2 className="typo-h3">{t(I18N_KEYS.client.chatsTitle)}</h2>
+            <Link href="/chat" className="typo-small">
+              {t(I18N_KEYS.client.viewAll)}
+            </Link>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="typo-small">{t(I18N_KEYS.chat.inboxTitle)}</span>
+            {unreadCount > 0 ? <span className="badge">{unreadCount}</span> : <span className="badge">0</span>}
+          </div>
+        </section>
+
+        <section className="card stack-sm">
+          <div className="flex items-center justify-between">
+            <h2 className="typo-h3">{t(I18N_KEYS.client.contractsTitle)}</h2>
+            <Link href="/client/contracts" className="typo-small">
+              {t(I18N_KEYS.client.viewAll)}
+            </Link>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="typo-small">{t(I18N_KEYS.client.contractsSubtitle)}</span>
+            <span className="badge">{(contracts ?? []).length}</span>
           </div>
         </section>
 

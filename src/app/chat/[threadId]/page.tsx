@@ -1,4 +1,4 @@
-// src/app/chat/[responseId]/page.tsx
+// src/app/chat/[threadId]/page.tsx
 'use client';
 
 import * as React from 'react';
@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/Input';
 export default function ChatPage() {
   const t = useT();
   const params = useParams();
-  const threadId = params?.responseId as string;
+  const threadId = params?.threadId as string;
   const qc = useQueryClient();
   const [text, setText] = React.useState('');
 

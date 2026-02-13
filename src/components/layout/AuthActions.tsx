@@ -8,6 +8,7 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { IconButton } from '@/components/ui/IconButton';
 import { IconLogin, IconLogout, IconUser, IconUserPlus } from '@/components/ui/icons/icons';
+import { ModeSwitch } from '@/components/layout/ModeSwitch';
 
 export function AuthActions() {
   const t = useT();
@@ -25,6 +26,7 @@ export function AuthActions() {
     const profileHref = user.role === 'provider' ? '/provider/profile' : '/client/profile';
     return (
       <div className="flex items-center gap-2">
+        <ModeSwitch />
         <Link
           href={profileHref}
           aria-label={t(I18N_KEYS.auth.profileLabel)}
