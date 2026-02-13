@@ -3,7 +3,7 @@
 
 import * as React from "react";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { PageShell } from "@/components/layout/PageShell";
 import { AuthActions } from "@/components/layout/AuthActions";
@@ -19,13 +19,20 @@ import {
   RequestDetailSimilar,
 } from "@/components/requests/details";
 import { getPublicRequestById, listPublicRequests } from "@/lib/api/requests";
-import { respondToRequest } from "@/lib/api/responses";
-import { useAuthStatus } from "@/hooks/useAuthSnapshot";
-import { listMyProviderResponses } from "@/lib/api/responses";
+import { createOffer } from "@/lib/api/offers";
+import {
+  addFavoriteRequest,
+  listFavoriteRequests,
+  removeFavoriteRequest,
+} from "@/lib/api/favorites";
+import { ApiError } from "@/lib/api/http-error";
+import { useAuthStatus, useAuthUser } from "@/hooks/useAuthSnapshot";
+import { listMyProviderOffers } from "@/lib/api/offers";
 import { I18N_KEYS } from "@/lib/i18n/keys";
 import { useI18n } from "@/lib/i18n/I18nProvider";
 import { useT } from "@/lib/i18n/useT";
 import { buildRequestImageList } from "@/lib/requests/images";
+import type { RequestResponseDto } from "@/lib/api/dto/requests";
 import {
   buildRequestDetailsViewModel,
   type RequestDetailsViewModel,
@@ -37,6 +44,8 @@ export default function RequestDetailsPage() {
   const t = useT();
   const { locale } = useI18n();
   const authStatus = useAuthStatus();
+  const authUser = useAuthUser();
+  const qc = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -75,16 +84,62 @@ export default function RequestDetailsPage() {
   const {
     data: myResponses,
   } = useQuery({
-    queryKey: ["responses-my"],
-    enabled: authStatus === 'authenticated',
-    queryFn: () => listMyProviderResponses(),
+    queryKey: ["offers-my"],
+    enabled: authStatus === 'authenticated' && authUser?.role === 'provider',
+    queryFn: () => listMyProviderOffers(),
   });
 
-  const [isSaved, setIsSaved] = React.useState(false);
+  const {
+    data: favoriteRequests,
+  } = useQuery({
+    queryKey: ["favorite-requests"],
+    enabled: authStatus === 'authenticated' && authUser?.role === 'provider',
+    queryFn: () => listFavoriteRequests(),
+  });
+
   const isAlreadyResponded = React.useMemo(() => {
-    if (!request || !myResponses) return false;
+    if (!request || !myResponses || authUser?.role !== 'provider') return false;
     return myResponses.some((response) => response.requestId === request.id);
-  }, [myResponses, request]);
+  }, [authUser?.role, myResponses, request]);
+
+  const isSaved = React.useMemo(() => {
+    if (!request || !favoriteRequests) return false;
+    return favoriteRequests.some((item) => item.id === request.id);
+  }, [favoriteRequests, request]);
+
+  const updateFavoritesCache = React.useCallback(
+    (nextSaved: boolean) => {
+      if (!request) return;
+      qc.setQueryData<RequestResponseDto[]>(["favorite-requests"], (prev) => {
+        const list = prev ? [...prev] : [];
+        const exists = list.some((item) => item.id === request.id);
+        if (nextSaved && !exists) return [request, ...list];
+        if (!nextSaved && exists) return list.filter((item) => item.id !== request.id);
+        return list;
+      });
+    },
+    [qc, request],
+  );
+
+  const setFavorite = React.useCallback(
+    async (nextSaved: boolean) => {
+      if (!request) return;
+      updateFavoritesCache(nextSaved);
+      try {
+        if (nextSaved) {
+          await addFavoriteRequest(request.id);
+          toast.success(t(I18N_KEYS.requestDetails.saved));
+        } else {
+          await removeFavoriteRequest(request.id);
+          toast.message(t(I18N_KEYS.requestDetails.favoritesRemoved));
+        }
+      } catch {
+        updateFavoritesCache(!nextSaved);
+        toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
+      }
+    },
+    [request, t, updateFavoritesCache],
+  );
 
   const buildNextUrl = React.useCallback(
     (action: string) => {
@@ -111,17 +166,27 @@ export default function RequestDetailsPage() {
       requireAuth('respond');
       return;
     }
+    if (authUser?.role !== 'provider') {
+      toast.message(t(I18N_KEYS.requestDetails.responseFailed));
+      return;
+    }
     if (isAlreadyResponded) {
       toast.message(t(I18N_KEYS.requestDetails.responseAlready));
       return;
     }
     try {
-      await respondToRequest({ requestId: request.id });
+      await createOffer({ requestId: request.id });
       toast.success(t(I18N_KEYS.requestDetails.responseSent));
-    } catch {
-      toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+    } catch (error) {
+      const message =
+        error instanceof ApiError &&
+        error.status === 403 &&
+        error.data?.message === 'Provider profile is not active'
+          ? t(I18N_KEYS.requestDetails.responseProfileInactive)
+          : t(I18N_KEYS.requestDetails.responseFailed);
+      toast.error(message);
     }
-  }, [authStatus, isAlreadyResponded, request, requireAuth, t]);
+  }, [authStatus, authUser?.role, isAlreadyResponded, request, requireAuth, t]);
 
   const handleChat = React.useCallback(() => {
     if (authStatus !== 'authenticated') {
@@ -132,13 +197,17 @@ export default function RequestDetailsPage() {
   }, [authStatus, requireAuth, t]);
 
   const handleFavorite = React.useCallback(() => {
+    if (!request) return;
     if (authStatus !== 'authenticated') {
       requireAuth('favorite');
       return;
     }
-    setIsSaved((prev) => !prev);
-    toast.message(t(I18N_KEYS.requestDetails.favoritesSoon));
-  }, [authStatus, requireAuth, t]);
+    if (authUser?.role !== 'provider') {
+      toast.message(t(I18N_KEYS.requestDetails.favoritesProviderOnly));
+      return;
+    }
+    void setFavorite(!isSaved);
+  }, [authStatus, authUser?.role, isSaved, request, requireAuth, setFavorite, t]);
 
   const localeTag = locale === "de" ? "de-DE" : "en-US";
   const formatPrice = React.useMemo(
@@ -248,19 +317,49 @@ export default function RequestDetailsPage() {
     if (!action) return;
     actionHandledRef.current = true;
     if (action === 'respond') {
-      void respondToRequest({ requestId: request.id })
-        .then(() => toast.success(t(I18N_KEYS.requestDetails.responseSent)))
-        .catch(() => toast.error(t(I18N_KEYS.requestDetails.responseFailed)));
+      if (authUser?.role === 'provider') {
+        void createOffer({ requestId: request.id })
+          .then(() => toast.success(t(I18N_KEYS.requestDetails.responseSent)))
+          .catch((error) => {
+            const message =
+              error instanceof ApiError &&
+              error.status === 403 &&
+              error.data?.message === 'Provider profile is not active'
+                ? t(I18N_KEYS.requestDetails.responseProfileInactive)
+                : t(I18N_KEYS.requestDetails.responseFailed);
+            toast.error(message);
+          });
+      } else {
+        toast.message(t(I18N_KEYS.requestDetails.responseFailed));
+      }
     } else if (action === 'chat') {
       toast.message(t(I18N_KEYS.requestDetails.chatSoon));
     } else if (action === 'favorite') {
-      toast.message(t(I18N_KEYS.requestDetails.favoritesSoon));
+      if (authUser?.role === 'provider') {
+        if (!isSaved) {
+          void setFavorite(true);
+        } else {
+          toast.success(t(I18N_KEYS.requestDetails.saved));
+        }
+      } else {
+        toast.message(t(I18N_KEYS.requestDetails.favoritesProviderOnly));
+      }
     }
     const nextParams = new URLSearchParams(searchParams?.toString());
     nextParams.delete('action');
     const nextQs = nextParams.toString();
     router.replace(`${pathname}${nextQs ? `?${nextQs}` : ''}`);
-  }, [authStatus, pathname, request, router, searchParams, t]);
+  }, [
+    authStatus,
+    authUser?.role,
+    isSaved,
+    pathname,
+    request,
+    router,
+    searchParams,
+    setFavorite,
+    t,
+  ]);
 
   if (isLoading) {
     return <RequestDetailLoading />;

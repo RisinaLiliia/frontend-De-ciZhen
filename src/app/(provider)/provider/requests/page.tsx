@@ -9,7 +9,7 @@ import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { Button } from '@/components/ui/Button';
 import { listPublicRequests } from '@/lib/api/requests';
-import { respondToRequest } from '@/lib/api/responses';
+import { createOffer } from '@/lib/api/offers';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useCities, useServices } from '@/features/catalog/queries';
@@ -33,7 +33,7 @@ export default function ProviderRequestsPage() {
 
   const onRespond = async (requestId: string) => {
     try {
-      await respondToRequest({ requestId });
+      await createOffer({ requestId });
       toast.success(t(I18N_KEYS.provider.responded));
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);

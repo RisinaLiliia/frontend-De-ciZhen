@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
         source: '/api/:path*',
         destination: `${API_BASE}/:path*`,
       },
+      {
+        source: '/presence/:path*',
+        destination: `${API_BASE}/presence/:path*`,
+      },
     ];
   },
 };

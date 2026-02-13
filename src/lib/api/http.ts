@@ -91,3 +91,7 @@ export async function apiPatch<TReq, TRes>(
 ): Promise<TRes> {
   return apiRequest<TRes>('PATCH', path, body, init);
 }
+
+export async function apiDelete<TRes>(path: string, init?: ApiInit): Promise<TRes> {
+  return apiRequest<TRes>('DELETE', path, undefined, init);
+}

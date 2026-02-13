@@ -15,7 +15,7 @@ import { getMyProviderProfile, updateMyProviderProfile } from '@/lib/api/provide
 import { useCities, useServices } from '@/features/catalog/queries';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import { listMyProviderResponses } from '@/lib/api/responses';
+import { listMyProviderOffers } from '@/lib/api/offers';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import Link from 'next/link';
@@ -31,9 +31,9 @@ export default function ProviderProfilePage() {
     queryFn: () => getMyProviderProfile(),
   });
 
-  const { data: responses } = useQuery({
-    queryKey: ['provider-responses'],
-    queryFn: () => listMyProviderResponses(),
+  const { data: offers } = useQuery({
+    queryKey: ['provider-offers'],
+    queryFn: () => listMyProviderOffers(),
   });
 
   type ProfileFormValues = {
@@ -115,7 +115,7 @@ export default function ProviderProfilePage() {
           </Link>
         </div>
         <div className="stack-sm">
-          {(responses ?? []).slice(0, 3).map((item) => (
+          {(offers ?? []).slice(0, 3).map((item) => (
             <div key={item.id} className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-semibold">{item.requestServiceKey || item.requestId}</p>
@@ -124,7 +124,7 @@ export default function ProviderProfilePage() {
               <span className="badge">{item.status}</span>
             </div>
           ))}
-          {(responses ?? []).length === 0 ? (
+          {(offers ?? []).length === 0 ? (
             <p className="typo-muted">{t(I18N_KEYS.provider.responsesEmpty)}</p>
           ) : null}
         </div>
