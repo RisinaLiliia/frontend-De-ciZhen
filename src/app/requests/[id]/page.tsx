@@ -2,6 +2,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -24,6 +25,7 @@ import { addFavorite, listFavorites, removeFavorite } from "@/lib/api/favorites"
 import { ApiError } from "@/lib/api/http-error";
 import { useAuthStatus, useAuthUser } from "@/hooks/useAuthSnapshot";
 import { listMyProviderOffers } from "@/lib/api/offers";
+import { getMyProviderProfile } from "@/lib/api/providers";
 import { I18N_KEYS } from "@/lib/i18n/keys";
 import { useI18n } from "@/lib/i18n/I18nProvider";
 import { useT } from "@/lib/i18n/useT";
@@ -48,6 +50,11 @@ export default function RequestDetailsPage() {
   const params = useParams();
   const requestId = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const actionHandledRef = React.useRef(false);
+  const [mode, setMode] = React.useState<'client' | 'provider'>(
+    authUser?.role === 'provider' ? 'provider' : 'client',
+  );
+  const isAuthed = authStatus === 'authenticated';
+  const isProviderUser = authUser?.role === 'provider';
 
   const {
     data: request,
@@ -86,12 +93,41 @@ export default function RequestDetailsPage() {
   });
 
   const {
+    data: providerProfile,
+  } = useQuery({
+    queryKey: ["provider-profile"],
+    enabled: isAuthed && isProviderUser,
+    queryFn: () => getMyProviderProfile(),
+  });
+
+  const {
     data: favoriteRequests,
   } = useQuery({
     queryKey: ["favorite-requests"],
     enabled: authStatus === 'authenticated' && authUser?.role === 'provider',
     queryFn: () => listFavorites('request'),
   });
+
+  React.useEffect(() => {
+    if (!isAuthed) return;
+    if (!isProviderUser) {
+      setMode('client');
+      return;
+    }
+    const stored = typeof window !== 'undefined' ? window.localStorage.getItem('dc_last_mode') : null;
+    if (stored === 'client' || stored === 'provider') {
+      setMode(stored);
+    } else {
+      setMode('provider');
+    }
+  }, [isAuthed, isProviderUser]);
+
+  const setModeWithStore = React.useCallback((next: 'client' | 'provider') => {
+    setMode(next);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('dc_last_mode', next);
+    }
+  }, []);
 
   const isAlreadyResponded = React.useMemo(() => {
     if (!request || !myResponses || authUser?.role !== 'provider') return false;
@@ -137,6 +173,18 @@ export default function RequestDetailsPage() {
     [request, t, updateFavoritesCache],
   );
 
+  const isOwner = isAuthed && Boolean(request?.clientId) && request?.clientId === authUser?.id;
+  const isProviderMode = isAuthed && mode === 'provider';
+  const isClientMode = !isAuthed || mode === 'client';
+  const canProvide =
+    isProviderUser && providerProfile?.status === 'active' && !providerProfile?.isBlocked;
+  const showOfferGated = isProviderMode && !isOwner && !canProvide;
+  const showOfferCta = (isAuthed ? isProviderMode : true) && !isOwner && !showOfferGated;
+  const showChatCta = (isAuthed ? isProviderMode : true) && !isOwner && !showOfferGated;
+  const showFavoriteCta = (isAuthed ? isProviderMode : true) && !isOwner;
+  const showClientModeSwitch = isAuthed && isClientMode && !isOwner && isProviderUser;
+  const showOwnerBadge = isAuthed && isOwner;
+
   const buildNextUrl = React.useCallback(
     (action: string) => {
       const nextParams = new URLSearchParams(searchParams?.toString());
@@ -162,6 +210,18 @@ export default function RequestDetailsPage() {
       requireAuth('respond');
       return;
     }
+    if (isOwner) {
+      toast.message(t(I18N_KEYS.requestDetails.selfBidError));
+      return;
+    }
+    if (mode !== 'provider') {
+      toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
+      return;
+    }
+    if (!canProvide) {
+      toast.message(t(I18N_KEYS.requestDetails.providerGateTitle));
+      return;
+    }
     if (authUser?.role !== 'provider') {
       toast.message(t(I18N_KEYS.requestDetails.responseFailed));
       return;
@@ -182,15 +242,27 @@ export default function RequestDetailsPage() {
           : t(I18N_KEYS.requestDetails.responseFailed);
       toast.error(message);
     }
-  }, [authStatus, authUser?.role, isAlreadyResponded, request, requireAuth, t]);
+  }, [authStatus, authUser?.role, canProvide, isAlreadyResponded, isOwner, mode, request, requireAuth, t]);
 
   const handleChat = React.useCallback(() => {
     if (authStatus !== 'authenticated') {
       requireAuth('chat');
       return;
     }
+    if (isOwner) {
+      toast.message(t(I18N_KEYS.requestDetails.ownerHint));
+      return;
+    }
+    if (mode !== 'provider') {
+      toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
+      return;
+    }
+    if (!canProvide) {
+      toast.message(t(I18N_KEYS.requestDetails.providerGateTitle));
+      return;
+    }
     toast.message(t(I18N_KEYS.requestDetails.chatSoon));
-  }, [authStatus, requireAuth, t]);
+  }, [authStatus, canProvide, isOwner, mode, requireAuth, t]);
 
   const handleFavorite = React.useCallback(() => {
     if (!request) return;
@@ -198,12 +270,20 @@ export default function RequestDetailsPage() {
       requireAuth('favorite');
       return;
     }
+    if (mode !== 'provider') {
+      toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
+      return;
+    }
+    if (isOwner) {
+      toast.message(t(I18N_KEYS.requestDetails.ownerHint));
+      return;
+    }
     if (authUser?.role !== 'provider') {
       toast.message(t(I18N_KEYS.requestDetails.favoritesProviderOnly));
       return;
     }
     void setFavorite(!isSaved);
-  }, [authStatus, authUser?.role, isSaved, request, requireAuth, setFavorite, t]);
+  }, [authStatus, authUser?.role, isOwner, isSaved, mode, request, requireAuth, setFavorite, t]);
 
   const localeTag = locale === "de" ? "de-DE" : "en-US";
   const formatPrice = React.useMemo(
@@ -247,6 +327,7 @@ export default function RequestDetailsPage() {
     enabled: Boolean(request?.id) && similar.length === 0,
     queryFn: () =>
       listPublicRequests({
+        cityId: request?.cityId ?? undefined,
         sort: "date_desc",
         limit: 12,
       }),
@@ -313,7 +394,13 @@ export default function RequestDetailsPage() {
     if (!action) return;
     actionHandledRef.current = true;
     if (action === 'respond') {
-      if (authUser?.role === 'provider') {
+      if (isOwner) {
+        toast.message(t(I18N_KEYS.requestDetails.selfBidError));
+      } else if (mode !== 'provider') {
+        toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
+      } else if (!canProvide) {
+        toast.message(t(I18N_KEYS.requestDetails.providerGateTitle));
+      } else if (authUser?.role === 'provider') {
         void createOffer({ requestId: request.id })
           .then(() => toast.success(t(I18N_KEYS.requestDetails.responseSent)))
           .catch((error) => {
@@ -329,9 +416,21 @@ export default function RequestDetailsPage() {
         toast.message(t(I18N_KEYS.requestDetails.responseFailed));
       }
     } else if (action === 'chat') {
-      toast.message(t(I18N_KEYS.requestDetails.chatSoon));
+      if (isOwner) {
+        toast.message(t(I18N_KEYS.requestDetails.ownerHint));
+      } else if (mode !== 'provider') {
+        toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
+      } else if (!canProvide) {
+        toast.message(t(I18N_KEYS.requestDetails.providerGateTitle));
+      } else {
+        toast.message(t(I18N_KEYS.requestDetails.chatSoon));
+      }
     } else if (action === 'favorite') {
-      if (authUser?.role === 'provider') {
+      if (isOwner) {
+        toast.message(t(I18N_KEYS.requestDetails.ownerHint));
+      } else if (mode !== 'provider') {
+        toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
+      } else if (authUser?.role === 'provider') {
         if (!isSaved) {
           void setFavorite(true);
         } else {
@@ -348,7 +447,10 @@ export default function RequestDetailsPage() {
   }, [
     authStatus,
     authUser?.role,
+    canProvide,
+    isOwner,
     isSaved,
+    mode,
     pathname,
     request,
     router,
@@ -373,6 +475,7 @@ export default function RequestDetailsPage() {
             title={viewModel.title}
             priceLabel={viewModel.priceLabel}
             tags={viewModel.tagList}
+            badgeLabel={showOwnerBadge ? t(I18N_KEYS.requestDetails.ownerBadge) : undefined}
           />
           <RequestDetailGallery images={viewModel.images} title={viewModel.title} />
           <RequestDetailAbout
@@ -409,6 +512,52 @@ export default function RequestDetailsPage() {
           onToggleSave={handleFavorite}
           applyDisabled={authStatus === 'authenticated' && isAlreadyResponded}
           applyState={authStatus === 'authenticated' && isAlreadyResponded ? 'done' : 'default'}
+          showApply={showOfferCta}
+          showChat={showChatCta}
+          showSave={showFavoriteCta}
+          notice={
+            showOfferGated ? (
+              <>
+                <div className="request-detail__notice-title">
+                  {t(I18N_KEYS.requestDetails.providerGateTitle)}
+                </div>
+                <div className="request-detail__notice-text">
+                  {t(I18N_KEYS.requestDetails.providerGateBody)}
+                </div>
+                <Link
+                  href={`/provider/onboarding?next=${encodeURIComponent(
+                    `/requests/${request.id}`,
+                  )}`}
+                  className="btn-secondary request-detail__cta-btn"
+                >
+                  {t(I18N_KEYS.requestDetails.providerGateCta)}
+                </Link>
+              </>
+            ) : showClientModeSwitch ? (
+              <>
+                <div className="request-detail__notice-title">
+                  {t(I18N_KEYS.requestDetails.clientModeHint)}
+                </div>
+                <button
+                  type="button"
+                  className="btn-secondary request-detail__cta-btn"
+                  onClick={() => setModeWithStore('provider')}
+                >
+                  {t(I18N_KEYS.requestDetails.switchToProvider)}
+                </button>
+              </>
+            ) : null
+          }
+          extraActions={
+            showOwnerBadge ? (
+              <Link
+                href={`/offers/${request.id}`}
+                className="btn-secondary request-detail__cta-btn"
+              >
+                {t(I18N_KEYS.requestDetails.viewOffers)}
+              </Link>
+            ) : null
+          }
         >
           <RequestDetailSimilar
             title={similarTitle}
@@ -442,6 +591,52 @@ export default function RequestDetailsPage() {
         onToggleSave={handleFavorite}
         applyDisabled={authStatus === 'authenticated' && isAlreadyResponded}
         applyState={authStatus === 'authenticated' && isAlreadyResponded ? 'done' : 'default'}
+        showApply={showOfferCta}
+        showChat={showChatCta}
+        showSave={showFavoriteCta}
+        notice={
+          showOfferGated ? (
+            <>
+              <div className="request-detail__notice-title">
+                {t(I18N_KEYS.requestDetails.providerGateTitle)}
+              </div>
+              <div className="request-detail__notice-text">
+                {t(I18N_KEYS.requestDetails.providerGateBody)}
+              </div>
+              <Link
+                href={`/provider/onboarding?next=${encodeURIComponent(
+                  `/requests/${request.id}`,
+                )}`}
+                className="btn-secondary request-detail__cta-btn"
+              >
+                {t(I18N_KEYS.requestDetails.providerGateCta)}
+              </Link>
+            </>
+          ) : showClientModeSwitch ? (
+            <>
+              <div className="request-detail__notice-title">
+                {t(I18N_KEYS.requestDetails.clientModeHint)}
+              </div>
+              <button
+                type="button"
+                className="btn-secondary request-detail__cta-btn"
+                onClick={() => setModeWithStore('provider')}
+              >
+                {t(I18N_KEYS.requestDetails.switchToProvider)}
+              </button>
+            </>
+          ) : null
+        }
+        extraActions={
+          showOwnerBadge ? (
+            <Link
+              href={`/offers/${request.id}`}
+              className="btn-secondary request-detail__cta-btn"
+            >
+              {t(I18N_KEYS.requestDetails.viewOffers)}
+            </Link>
+          ) : null
+        }
       />
     </PageShell>
   );

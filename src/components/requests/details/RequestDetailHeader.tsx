@@ -3,13 +3,20 @@ type RequestDetailHeaderProps = {
   title: string;
   priceLabel: string;
   tags: string[];
+  badgeLabel?: string;
 };
 
-export function RequestDetailHeader({ title, priceLabel, tags }: RequestDetailHeaderProps) {
+export function RequestDetailHeader({
+  title,
+  priceLabel,
+  tags,
+  badgeLabel,
+}: RequestDetailHeaderProps) {
   return (
     <header className="request-detail__header">
       <div className="request-detail__title-row">
         <div className="request-detail__title-wrap">
+          {badgeLabel ? <span className="badge request-detail__badge">{badgeLabel}</span> : null}
           <h1 className="request-detail__title">{title}</h1>
         </div>
         <div className="request-detail__price">

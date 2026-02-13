@@ -14,6 +14,11 @@ type RequestDetailAsideProps = {
   onToggleSave: () => void;
   applyDisabled?: boolean;
   applyState?: 'default' | 'done';
+  showApply?: boolean;
+  showChat?: boolean;
+  showSave?: boolean;
+  notice?: ReactNode;
+  extraActions?: ReactNode;
   children?: ReactNode;
 };
 
@@ -29,6 +34,11 @@ export function RequestDetailAside({
   onToggleSave,
   applyDisabled,
   applyState = 'default',
+  showApply = true,
+  showChat = true,
+  showSave = true,
+  notice,
+  extraActions,
   children,
 }: RequestDetailAsideProps) {
   return (
@@ -44,34 +54,43 @@ export function RequestDetailAside({
         </div>
       </div>
 
+      {notice ? <div className="request-detail__notice">{notice}</div> : null}
+
       <div className="request-detail__cta">
-        <button
-          type="button"
-          className={`btn-primary request-detail__cta-btn ${
-            applyState === 'done' ? 'is-done' : ''
-          }`.trim()}
-          onClick={onApply}
-          disabled={applyDisabled}
-        >
-          <span>{ctaApplyLabel}</span>
-          <IconCheck />
-        </button>
-        <button
-          type="button"
-          className="btn-secondary request-detail__cta-btn"
-          onClick={onChat}
-        >
-          <span>{ctaChatLabel}</span>
-          <IconChat />
-        </button>
-        <button
-          type="button"
-          className={`btn-ghost is-primary request-detail__save ${isSaved ? 'is-saved' : ''}`}
-          onClick={onToggleSave}
-        >
-          <span>{ctaSaveLabel}</span>
-          <IconHeart className="icon-heart" />
-        </button>
+        {extraActions}
+        {showApply ? (
+          <button
+            type="button"
+            className={`btn-primary request-detail__cta-btn ${
+              applyState === 'done' ? 'is-done' : ''
+            }`.trim()}
+            onClick={onApply}
+            disabled={applyDisabled}
+          >
+            <span>{ctaApplyLabel}</span>
+            <IconCheck />
+          </button>
+        ) : null}
+        {showChat ? (
+          <button
+            type="button"
+            className="btn-secondary request-detail__cta-btn"
+            onClick={onChat}
+          >
+            <span>{ctaChatLabel}</span>
+            <IconChat />
+          </button>
+        ) : null}
+        {showSave ? (
+          <button
+            type="button"
+            className={`btn-ghost is-primary request-detail__save ${isSaved ? 'is-saved' : ''}`}
+            onClick={onToggleSave}
+          >
+            <span>{ctaSaveLabel}</span>
+            <IconHeart className="icon-heart" />
+          </button>
+        ) : null}
       </div>
       <div className="request-detail__aside-spacer" />
       {children}
