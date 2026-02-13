@@ -150,7 +150,7 @@ export default function ClientContractsPage() {
                     <Button type="button" onClick={() => onConfirm(item)}>
                       {t(I18N_KEYS.contracts.confirmCta)}
                     </Button>
-                    <Button type="button" variant="ghost" onClick={() => onCancel(item)}>
+                    <Button type="button" className="btn-ghost" onClick={() => onCancel(item)}>
                       {t(I18N_KEYS.contracts.cancelCta)}
                     </Button>
                   </div>
@@ -162,7 +162,7 @@ export default function ClientContractsPage() {
                   <Button type="button" onClick={() => onComplete(item)}>
                     {t(I18N_KEYS.contracts.completeCta)}
                   </Button>
-                  <Button type="button" variant="ghost" onClick={() => onCancel(item)}>
+                  <Button type="button" className="btn-ghost" onClick={() => onCancel(item)}>
                     {t(I18N_KEYS.contracts.cancelCta)}
                   </Button>
                 </div>
