@@ -245,6 +245,34 @@
   .request-detail__title-wrap {
     width: 100%;
     max-width: 68%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .request-detail__badge {
+    align-self: flex-start;
+  }
+
+  .request-detail__notice {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--c-border);
+    background: color-mix(in oklab, var(--c-surface) 85%, transparent);
+  }
+
+  .request-detail__notice-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+
+  .request-detail__notice-text {
+    font-size: 13px;
+    color: var(--c-text-muted);
   }
 
   @media (min-width: 1024px) {
