@@ -1,13 +1,13 @@
 //src/app/requests/[id]/page.tsx
-"use client";
+'use client';
 
-import * as React from "react";
-import Link from "next/link";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { PageShell } from "@/components/layout/PageShell";
-import { AuthActions } from "@/components/layout/AuthActions";
+import * as React from 'react';
+import Link from 'next/link';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { PageShell } from '@/components/layout/PageShell';
+import { AuthActions } from '@/components/layout/AuthActions';
 import {
   RequestDetailAbout,
   RequestDetailAside,
@@ -18,23 +18,24 @@ import {
   RequestDetailLoading,
   RequestDetailMobileCta,
   RequestDetailSimilar,
-} from "@/components/requests/details";
-import { getPublicRequestById, listPublicRequests } from "@/lib/api/requests";
-import { createOffer } from "@/lib/api/offers";
-import { addFavorite, listFavorites, removeFavorite } from "@/lib/api/favorites";
-import { ApiError } from "@/lib/api/http-error";
-import { useAuthStatus, useAuthUser } from "@/hooks/useAuthSnapshot";
-import { listMyProviderOffers } from "@/lib/api/offers";
-import { getMyProviderProfile } from "@/lib/api/providers";
-import { I18N_KEYS } from "@/lib/i18n/keys";
-import { useI18n } from "@/lib/i18n/I18nProvider";
-import { useT } from "@/lib/i18n/useT";
-import { buildRequestImageList } from "@/lib/requests/images";
-import type { RequestResponseDto } from "@/lib/api/dto/requests";
+} from '@/components/requests/details';
+import { getPublicRequestById, listPublicRequests } from '@/lib/api/requests';
+import { createOffer, listMyProviderOffers } from '@/lib/api/offers';
+import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
+import { ApiError } from '@/lib/api/http-error';
+import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
+import { getMyProviderProfile } from '@/lib/api/providers';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { useI18n } from '@/lib/i18n/I18nProvider';
+import { useT } from '@/lib/i18n/useT';
+import { buildRequestImageList } from '@/lib/requests/images';
+import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import {
   buildRequestDetailsViewModel,
   type RequestDetailsViewModel,
-} from "@/features/requests/details/viewModel";
+} from '@/features/requests/details/viewModel';
 
 const SIMILAR_LIMIT = 2;
 
@@ -50,9 +51,16 @@ export default function RequestDetailsPage() {
   const params = useParams();
   const requestId = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const actionHandledRef = React.useRef(false);
+
   const [mode, setMode] = React.useState<'client' | 'provider'>(
     authUser?.role === 'provider' ? 'provider' : 'client',
   );
+  const [isOfferFormOpen, setIsOfferFormOpen] = React.useState(false);
+  const [offerAmount, setOfferAmount] = React.useState('');
+  const [offerComment, setOfferComment] = React.useState('');
+  const [isSubmittingOffer, setIsSubmittingOffer] = React.useState(false);
+  const [submittedOfferAmount, setSubmittedOfferAmount] = React.useState<number | null>(null);
+
   const isAuthed = authStatus === 'authenticated';
   const isProviderUser = authUser?.role === 'provider';
 
@@ -61,49 +69,36 @@ export default function RequestDetailsPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["request-detail", requestId],
+    queryKey: ['request-detail', requestId],
     enabled: Boolean(requestId),
     queryFn: () => getPublicRequestById(String(requestId)),
   });
 
-  const {
-    data: similarData,
-  } = useQuery({
-    queryKey: [
-      "request-similar",
-      request?.id,
-      request?.categoryKey,
-      request?.serviceKey,
-    ],
+  const { data: similarData } = useQuery({
+    queryKey: ['request-similar', request?.id, request?.categoryKey, request?.serviceKey],
     enabled: Boolean(request?.id),
     queryFn: () =>
       listPublicRequests({
         categoryKey: request?.categoryKey ?? undefined,
-        sort: "date_desc",
+        sort: 'date_desc',
         limit: 20,
       }),
   });
 
-  const {
-    data: myResponses,
-  } = useQuery({
-    queryKey: ["offers-my"],
+  const { data: myResponses } = useQuery({
+    queryKey: ['offers-my'],
     enabled: authStatus === 'authenticated' && authUser?.role === 'provider',
     queryFn: () => listMyProviderOffers(),
   });
 
-  const {
-    data: providerProfile,
-  } = useQuery({
-    queryKey: ["provider-profile"],
+  const { data: providerProfile } = useQuery({
+    queryKey: ['provider-profile'],
     enabled: isAuthed && isProviderUser,
     queryFn: () => getMyProviderProfile(),
   });
 
-  const {
-    data: favoriteRequests,
-  } = useQuery({
-    queryKey: ["favorite-requests"],
+  const { data: favoriteRequests } = useQuery({
+    queryKey: ['favorite-requests'],
     enabled: authStatus === 'authenticated' && authUser?.role === 'provider',
     queryFn: () => listFavorites('request'),
   });
@@ -114,7 +109,8 @@ export default function RequestDetailsPage() {
       setMode('client');
       return;
     }
-    const stored = typeof window !== 'undefined' ? window.localStorage.getItem('dc_last_mode') : null;
+    const stored =
+      typeof window !== 'undefined' ? window.localStorage.getItem('dc_last_mode') : null;
     if (stored === 'client' || stored === 'provider') {
       setMode(stored);
     } else {
@@ -129,10 +125,12 @@ export default function RequestDetailsPage() {
     }
   }, []);
 
-  const isAlreadyResponded = React.useMemo(() => {
-    if (!request || !myResponses || authUser?.role !== 'provider') return false;
-    return myResponses.some((response) => response.requestId === request.id);
+  const existingResponse = React.useMemo(() => {
+    if (!request || !myResponses || authUser?.role !== 'provider') return null;
+    return myResponses.find((response) => response.requestId === request.id) ?? null;
   }, [authUser?.role, myResponses, request]);
+
+  const isAlreadyResponded = Boolean(existingResponse);
 
   const isSaved = React.useMemo(() => {
     if (!request || !favoriteRequests) return false;
@@ -142,7 +140,7 @@ export default function RequestDetailsPage() {
   const updateFavoritesCache = React.useCallback(
     (nextSaved: boolean) => {
       if (!request) return;
-      qc.setQueryData<RequestResponseDto[]>(["favorite-requests"], (prev) => {
+      qc.setQueryData<RequestResponseDto[]>(['favorite-requests'], (prev) => {
         const list = prev ? [...prev] : [];
         const exists = list.some((item) => item.id === request.id);
         if (nextSaved && !exists) return [request, ...list];
@@ -178,6 +176,9 @@ export default function RequestDetailsPage() {
   const isClientMode = !isAuthed || mode === 'client';
   const canProvide =
     isProviderUser && providerProfile?.status === 'active' && !providerProfile?.isBlocked;
+  const respondedAmount = submittedOfferAmount ?? existingResponse?.amount ?? null;
+  const showOfferSuccess =
+    isProviderMode && !isOwner && (isAlreadyResponded || submittedOfferAmount !== null);
   const showOfferGated = isProviderMode && !isOwner && !canProvide;
   const showOfferCta = (isAuthed ? isProviderMode : true) && !isOwner && !showOfferGated;
   const showChatCta = (isAuthed ? isProviderMode : true) && !isOwner && !showOfferGated;
@@ -204,7 +205,14 @@ export default function RequestDetailsPage() {
     [buildNextUrl, router, t],
   );
 
-  const handleApply = React.useCallback(async () => {
+  const openOfferForm = React.useCallback(() => {
+    setIsOfferFormOpen(true);
+    if (!offerAmount && request?.price) {
+      setOfferAmount(String(Math.max(1, Math.round(request.price))));
+    }
+  }, [offerAmount, request?.price]);
+
+  const handleApply = React.useCallback(() => {
     if (!request) return;
     if (authStatus !== 'authenticated') {
       requireAuth('respond');
@@ -230,19 +238,55 @@ export default function RequestDetailsPage() {
       toast.message(t(I18N_KEYS.requestDetails.responseAlready));
       return;
     }
-    try {
-      await createOffer({ requestId: request.id });
-      toast.success(t(I18N_KEYS.requestDetails.responseSent));
-    } catch (error) {
-      const message =
-        error instanceof ApiError &&
-        error.status === 403 &&
-        error.data?.message === 'Provider profile is not active'
-          ? t(I18N_KEYS.requestDetails.responseProfileInactive)
-          : t(I18N_KEYS.requestDetails.responseFailed);
-      toast.error(message);
+    openOfferForm();
+  }, [
+    authStatus,
+    authUser?.role,
+    canProvide,
+    isAlreadyResponded,
+    isOwner,
+    mode,
+    openOfferForm,
+    request,
+    requireAuth,
+    t,
+  ]);
+
+  const handleOfferSubmit = React.useCallback(async () => {
+    if (!request || authUser?.role !== 'provider') return;
+    const parsedAmount = Number(offerAmount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
+      return;
     }
-  }, [authStatus, authUser?.role, canProvide, isAlreadyResponded, isOwner, mode, request, requireAuth, t]);
+
+    setIsSubmittingOffer(true);
+    try {
+      const response = await createOffer({
+        requestId: request.id,
+        amount: parsedAmount,
+        message: offerComment.trim() || undefined,
+      });
+      setSubmittedOfferAmount(response.offer.amount ?? parsedAmount);
+      setOfferComment('');
+      setIsOfferFormOpen(false);
+      toast.success(t(I18N_KEYS.requestDetails.responseSent));
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ['offers-my'] }),
+        qc.invalidateQueries({ queryKey: ['provider-profile'] }),
+      ]);
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 409) {
+        setSubmittedOfferAmount(parsedAmount);
+        setIsOfferFormOpen(false);
+        toast.message(t(I18N_KEYS.requestDetails.responseAlready));
+      } else {
+        toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+      }
+    } finally {
+      setIsSubmittingOffer(false);
+    }
+  }, [authUser?.role, offerAmount, offerComment, qc, request, t]);
 
   const handleChat = React.useCallback(() => {
     if (authStatus !== 'authenticated') {
@@ -285,12 +329,12 @@ export default function RequestDetailsPage() {
     void setFavorite(!isSaved);
   }, [authStatus, authUser?.role, isOwner, isSaved, mode, request, requireAuth, setFavorite, t]);
 
-  const localeTag = locale === "de" ? "de-DE" : "en-US";
+  const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const formatPrice = React.useMemo(
     () =>
       new Intl.NumberFormat(localeTag, {
-        style: "currency",
-        currency: "EUR",
+        style: 'currency',
+        currency: 'EUR',
         maximumFractionDigits: 0,
       }),
     [localeTag],
@@ -298,9 +342,9 @@ export default function RequestDetailsPage() {
   const formatDate = React.useMemo(
     () =>
       new Intl.DateTimeFormat(localeTag, {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
       }),
     [localeTag],
   );
@@ -312,23 +356,20 @@ export default function RequestDetailsPage() {
       .filter(
         (item) =>
           item.id !== request.id &&
-          (item.categoryKey === request.categoryKey ||
-            item.serviceKey === request.serviceKey),
+          (item.categoryKey === request.categoryKey || item.serviceKey === request.serviceKey),
       )
       .slice(0, SIMILAR_LIMIT);
     if (filtered.length) return filtered;
     return items.filter((item) => item.id !== request.id).slice(0, SIMILAR_LIMIT);
   }, [request, similarData]);
 
-  const {
-    data: latestData,
-  } = useQuery({
-    queryKey: ["requests-latest"],
+  const { data: latestData } = useQuery({
+    queryKey: ['requests-latest'],
     enabled: Boolean(request?.id) && similar.length === 0,
     queryFn: () =>
       listPublicRequests({
         cityId: request?.cityId ?? undefined,
-        sort: "date_desc",
+        sort: 'date_desc',
         limit: 12,
       }),
   });
@@ -347,34 +388,32 @@ export default function RequestDetailsPage() {
     similar.length === 0 && latest.length
       ? t(I18N_KEYS.requestDetails.latestTitle)
       : t(I18N_KEYS.requestDetails.similar);
+
   const similarHref = React.useMemo(() => {
-    const params = new URLSearchParams();
-    if (request?.categoryKey) params.set('categoryKey', request.categoryKey);
-    if (request?.serviceKey) params.set('subcategoryKey', request.serviceKey);
-    const qs = params.toString();
+    const nextParams = new URLSearchParams();
+    if (request?.categoryKey) nextParams.set('categoryKey', request.categoryKey);
+    if (request?.serviceKey) nextParams.set('subcategoryKey', request.serviceKey);
+    const qs = nextParams.toString();
     return `/requests${qs ? `?${qs}` : ''}`;
   }, [request]);
-  const similarForRender = similar.length ? similar : latest;
 
+  const similarForRender = similar.length ? similar : latest;
   const [isClientOnline, setIsClientOnline] = React.useState(false);
 
   React.useEffect(() => {
     if (!request) return;
-    if (typeof request.clientIsOnline === "boolean") {
+    if (typeof request.clientIsOnline === 'boolean') {
       setIsClientOnline(request.clientIsOnline);
       return;
     }
     if (request.clientLastSeenAt) {
       const lastSeen = new Date(request.clientLastSeenAt).getTime();
-      const isRecent = Number.isFinite(lastSeen)
-        ? Date.now() - lastSeen < 5 * 60 * 1000
-        : false;
+      const isRecent = Number.isFinite(lastSeen) ? Date.now() - lastSeen < 5 * 60 * 1000 : false;
       setIsClientOnline(isRecent);
       return;
     }
     setIsClientOnline(false);
   }, [request]);
-
 
   const viewModel = React.useMemo<RequestDetailsViewModel | null>(() => {
     if (!request) return null;
@@ -392,6 +431,7 @@ export default function RequestDetailsPage() {
     if (!request || authStatus !== 'authenticated') return;
     const action = searchParams?.get('action');
     if (!action) return;
+
     actionHandledRef.current = true;
     if (action === 'respond') {
       if (isOwner) {
@@ -401,17 +441,7 @@ export default function RequestDetailsPage() {
       } else if (!canProvide) {
         toast.message(t(I18N_KEYS.requestDetails.providerGateTitle));
       } else if (authUser?.role === 'provider') {
-        void createOffer({ requestId: request.id })
-          .then(() => toast.success(t(I18N_KEYS.requestDetails.responseSent)))
-          .catch((error) => {
-            const message =
-              error instanceof ApiError &&
-              error.status === 403 &&
-              error.data?.message === 'Provider profile is not active'
-                ? t(I18N_KEYS.requestDetails.responseProfileInactive)
-                : t(I18N_KEYS.requestDetails.responseFailed);
-            toast.error(message);
-          });
+        openOfferForm();
       } else {
         toast.message(t(I18N_KEYS.requestDetails.responseFailed));
       }
@@ -440,6 +470,7 @@ export default function RequestDetailsPage() {
         toast.message(t(I18N_KEYS.requestDetails.favoritesProviderOnly));
       }
     }
+
     const nextParams = new URLSearchParams(searchParams?.toString());
     nextParams.delete('action');
     const nextQs = nextParams.toString();
@@ -451,6 +482,7 @@ export default function RequestDetailsPage() {
     isOwner,
     isSaved,
     mode,
+    openOfferForm,
     pathname,
     request,
     router,
@@ -466,6 +498,65 @@ export default function RequestDetailsPage() {
   if (isError || !request || !viewModel) {
     return <RequestDetailError message={t(I18N_KEYS.requestsPage.error)} />;
   }
+
+  const offerForm = (
+    <div className="request-detail__offer-form">
+      <div className="request-detail__offer-form-title">
+        {t(I18N_KEYS.requestDetails.responseFormTitle)}
+      </div>
+      <label className="typo-small">{t(I18N_KEYS.requestDetails.responseAmountLabel)}</label>
+      <Input
+        type="number"
+        min={1}
+        step="1"
+        value={offerAmount}
+        onChange={(event) => setOfferAmount(event.target.value)}
+        placeholder="120"
+      />
+      <label className="typo-small">{t(I18N_KEYS.requestDetails.responseCommentLabel)}</label>
+      <Textarea
+        value={offerComment}
+        onChange={(event) => setOfferComment(event.target.value)}
+        placeholder={t(I18N_KEYS.requestDetails.responseCommentPlaceholder)}
+        rows={3}
+      />
+      <button
+        type="button"
+        className="btn-primary request-detail__cta-btn"
+        onClick={handleOfferSubmit}
+        disabled={isSubmittingOffer}
+      >
+        <span>{t(I18N_KEYS.requestDetails.responseSubmit)}</span>
+      </button>
+    </div>
+  );
+
+  const successNotice = (
+    <>
+      <div className="request-detail__notice-title">
+        {t(I18N_KEYS.requestDetails.responseSuccessTitle)}
+      </div>
+      <div className="request-detail__notice-text">
+        {t(I18N_KEYS.requestDetails.responseSuccessBody)}
+      </div>
+      {respondedAmount ? (
+        <div className="request-detail__success-price">
+          {t(I18N_KEYS.requestDetails.responseYourPrice)} {formatPrice.format(respondedAmount)}
+        </div>
+      ) : null}
+      <div className="request-detail__success-actions">
+        <Link
+          href={`/provider/profile?highlight=offer&next=${encodeURIComponent(`/requests/${request.id}`)}`}
+          className="btn-secondary request-detail__cta-btn"
+        >
+          {t(I18N_KEYS.requestDetails.responseProfileCta)}
+        </Link>
+        <Link href="/requests" className="btn-secondary request-detail__cta-btn">
+          {t(I18N_KEYS.requestDetails.responseBackToList)}
+        </Link>
+      </div>
+    </>
+  );
 
   return (
     <PageShell right={<AuthActions />} showBack mainClassName="py-6">
@@ -496,6 +587,7 @@ export default function RequestDetailsPage() {
             />
           ) : null}
         </section>
+
         <RequestDetailAside
           cityLabel={viewModel.cityLabel}
           dateLabel={viewModel.preferredDateLabel}
@@ -516,7 +608,9 @@ export default function RequestDetailsPage() {
           showChat={showChatCta}
           showSave={showFavoriteCta}
           notice={
-            showOfferGated ? (
+            showOfferSuccess ? (
+              successNotice
+            ) : showOfferGated ? (
               <>
                 <div className="request-detail__notice-title">
                   {t(I18N_KEYS.requestDetails.providerGateTitle)}
@@ -525,9 +619,7 @@ export default function RequestDetailsPage() {
                   {t(I18N_KEYS.requestDetails.providerGateBody)}
                 </div>
                 <Link
-                  href={`/provider/onboarding?next=${encodeURIComponent(
-                    `/requests/${request.id}`,
-                  )}`}
+                  href={`/provider/onboarding?next=${encodeURIComponent(`/requests/${request.id}`)}`}
                   className="btn-secondary request-detail__cta-btn"
                 >
                   {t(I18N_KEYS.requestDetails.providerGateCta)}
@@ -556,6 +648,8 @@ export default function RequestDetailsPage() {
               >
                 {t(I18N_KEYS.requestDetails.viewOffers)}
               </Link>
+            ) : isOfferFormOpen ? (
+              offerForm
             ) : null
           }
         >
@@ -577,6 +671,7 @@ export default function RequestDetailsPage() {
           />
         </RequestDetailAside>
       </div>
+
       <RequestDetailMobileCta
         ctaApplyLabel={
           authStatus === 'authenticated' && isAlreadyResponded
@@ -595,7 +690,9 @@ export default function RequestDetailsPage() {
         showChat={showChatCta}
         showSave={showFavoriteCta}
         notice={
-          showOfferGated ? (
+          showOfferSuccess ? (
+            successNotice
+          ) : showOfferGated ? (
             <>
               <div className="request-detail__notice-title">
                 {t(I18N_KEYS.requestDetails.providerGateTitle)}
@@ -604,9 +701,7 @@ export default function RequestDetailsPage() {
                 {t(I18N_KEYS.requestDetails.providerGateBody)}
               </div>
               <Link
-                href={`/provider/onboarding?next=${encodeURIComponent(
-                  `/requests/${request.id}`,
-                )}`}
+                href={`/provider/onboarding?next=${encodeURIComponent(`/requests/${request.id}`)}`}
                 className="btn-secondary request-detail__cta-btn"
               >
                 {t(I18N_KEYS.requestDetails.providerGateCta)}
@@ -629,12 +724,11 @@ export default function RequestDetailsPage() {
         }
         extraActions={
           showOwnerBadge ? (
-            <Link
-              href={`/offers/${request.id}`}
-              className="btn-secondary request-detail__cta-btn"
-            >
+            <Link href={`/offers/${request.id}`} className="btn-secondary request-detail__cta-btn">
               {t(I18N_KEYS.requestDetails.viewOffers)}
             </Link>
+          ) : isOfferFormOpen ? (
+            offerForm
           ) : null
         }
       />
