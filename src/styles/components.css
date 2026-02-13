@@ -48,6 +48,34 @@
     font-size: 18px;
   }
 
+  .mode-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-panel) 75%, transparent);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+  }
+
+  .mode-switch__btn {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-text-muted);
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .mode-switch__btn.is-active {
+    background: var(--c-primary);
+    color: var(--c-primary-contrast);
+    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-primary) 35%, transparent);
+  }
+
   .card {
     @apply w-full;
     background: var(--c-panel);

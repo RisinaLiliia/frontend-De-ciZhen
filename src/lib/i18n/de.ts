@@ -430,7 +430,10 @@ export const de = {
     errorRetry: "Erneut versuchen",
     notFoundTitle: "Seite nicht gefunden",
     notFoundMessage: "Die gesuchte Seite existiert nicht.",
-    notFoundCta: "Zur Startseite"
+    notFoundCta: "Zur Startseite",
+    modeLabel: "Modus",
+    modeClient: "Hilfe suchen",
+    modeProvider: "Aufträge finden"
   },
   pages: {
     servicesTitle: "Services",

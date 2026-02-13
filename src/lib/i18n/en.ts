@@ -431,7 +431,10 @@ export const en: DeDictionary = {
     errorRetry: "Try again",
     notFoundTitle: "Page not found",
     notFoundMessage: "The page you are looking for does not exist.",
-    notFoundCta: "Go home"
+    notFoundCta: "Go home",
+    modeLabel: "Mode",
+    modeClient: "Hilfe suchen",
+    modeProvider: "Aufträge finden"
   },
   pages: {
     servicesTitle: "Services",
