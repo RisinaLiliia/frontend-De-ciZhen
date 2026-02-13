@@ -359,7 +359,8 @@ export const en: DeDictionary = {
     responsesEmpty: "No offers yet.",
     viewRequests: "View requests",
     contractsTitle: "My contracts",
-    contractsEmpty: "No contracts yet."
+    contractsEmpty: "No contracts yet.",
+    chatsTitle: "Chats"
   },
   client: {
     requestsTitle: "My requests",
@@ -383,7 +384,8 @@ export const en: DeDictionary = {
     statusPaused: "Paused",
     contractsTitle: "My contracts",
     contractsSubtitle: "Confirm details and track progress",
-    contractsEmpty: "No contracts yet."
+    contractsEmpty: "No contracts yet.",
+    chatsTitle: "Chats"
   },
   offers: {
     title: "Offers",
@@ -418,7 +420,10 @@ export const en: DeDictionary = {
   chat: {
     title: "Chat",
     placeholder: "Type a message",
-    sendCta: "Send"
+    sendCta: "Send",
+    inboxTitle: "Inbox",
+    threadTitle: "Chat thread",
+    empty: "No chats yet."
   },
   app: {
     errorTitle: "Something went wrong",

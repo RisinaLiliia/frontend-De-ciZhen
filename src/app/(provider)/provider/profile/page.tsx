@@ -16,6 +16,8 @@ import { useCities, useServices } from '@/features/catalog/queries';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { listMyProviderOffers } from '@/lib/api/offers';
+import { listMyContracts } from '@/lib/api/contracts';
+import { listInbox } from '@/lib/api/chat';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import Link from 'next/link';
@@ -34,6 +36,16 @@ export default function ProviderProfilePage() {
   const { data: offers } = useQuery({
     queryKey: ['provider-offers'],
     queryFn: () => listMyProviderOffers(),
+  });
+
+  const { data: contracts } = useQuery({
+    queryKey: ['provider-contracts'],
+    queryFn: () => listMyContracts({ role: 'provider' }),
+  });
+
+  const { data: inbox } = useQuery({
+    queryKey: ['chat-inbox', 'provider'],
+    queryFn: () => listInbox('provider'),
   });
 
   type ProfileFormValues = {
@@ -72,6 +84,11 @@ export default function ProviderProfilePage() {
     }
   }, [data, reset]);
 
+  const unreadCount = React.useMemo(
+    () => (inbox ?? []).reduce((sum, thread) => sum + (thread.unreadProviderCount || 0), 0),
+    [inbox],
+  );
+
 
   const onSubmit = async (values: ProfileFormValues) => {
     try {
@@ -104,6 +121,32 @@ export default function ProviderProfilePage() {
         <div className="flex items-center justify-between">
           <span className="typo-small">{t(I18N_KEYS.auth.languageLabel)}</span>
           <LanguageToggle />
+        </div>
+      </section>
+
+      <section className="card stack-sm">
+        <div className="flex items-center justify-between">
+          <h2 className="typo-h3">{t(I18N_KEYS.provider.chatsTitle)}</h2>
+          <Link href="/chat" className="typo-small">
+            {t(I18N_KEYS.client.viewAll)}
+          </Link>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="typo-small">{t(I18N_KEYS.chat.inboxTitle)}</span>
+          {unreadCount > 0 ? <span className="badge">{unreadCount}</span> : <span className="badge">0</span>}
+        </div>
+      </section>
+
+      <section className="card stack-sm">
+        <div className="flex items-center justify-between">
+          <h2 className="typo-h3">{t(I18N_KEYS.provider.contractsTitle)}</h2>
+          <Link href="/provider/contracts" className="typo-small">
+            {t(I18N_KEYS.client.viewAll)}
+          </Link>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="typo-small">{t(I18N_KEYS.provider.contractsTitle)}</span>
+          <span className="badge">{(contracts ?? []).length}</span>
         </div>
       </section>
 

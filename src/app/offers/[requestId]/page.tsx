@@ -137,7 +137,7 @@ export default function OffersPage() {
                         type="button"
                         className="badge"
                         onClick={() => {
-                          if (!ensureAuth(`/chat/${item.id}`)) return;
+                          if (!ensureAuth(`/chat`)) return;
                           createThread({
                             requestId: item.requestId,
                             providerUserId: item.providerUserId ?? '',

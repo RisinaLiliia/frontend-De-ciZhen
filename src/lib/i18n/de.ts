@@ -358,7 +358,8 @@ export const de = {
     responsesEmpty: "Noch keine Angebote.",
     viewRequests: "Anfragen ansehen",
     contractsTitle: "Meine Verträge",
-    contractsEmpty: "Noch keine Verträge."
+    contractsEmpty: "Noch keine Verträge.",
+    chatsTitle: "Chats"
   },
   client: {
     requestsTitle: "Meine Anfragen",
@@ -382,7 +383,8 @@ export const de = {
     statusPaused: "Pausiert",
     contractsTitle: "Meine Verträge",
     contractsSubtitle: "Details bestätigen und Fortschritt verfolgen",
-    contractsEmpty: "Noch keine Verträge."
+    contractsEmpty: "Noch keine Verträge.",
+    chatsTitle: "Chats"
   },
   offers: {
     title: "Angebote",
@@ -417,7 +419,10 @@ export const de = {
   chat: {
     title: "Chat",
     placeholder: "Nachricht eingeben",
-    sendCta: "Senden"
+    sendCta: "Senden",
+    inboxTitle: "Posteingang",
+    threadTitle: "Chatverlauf",
+    empty: "Noch keine Chats."
   },
   app: {
     errorTitle: "Etwas ist schiefgelaufen",

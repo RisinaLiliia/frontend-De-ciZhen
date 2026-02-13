@@ -393,6 +393,7 @@ export const I18N_KEYS = {
     viewRequests: "provider.viewRequests",
     contractsTitle: "provider.contractsTitle",
     contractsEmpty: "provider.contractsEmpty",
+    chatsTitle: "provider.chatsTitle",
   },
   client: {
     requestsTitle: "client.requestsTitle",
@@ -417,6 +418,7 @@ export const I18N_KEYS = {
     contractsTitle: "client.contractsTitle",
     contractsSubtitle: "client.contractsSubtitle",
     contractsEmpty: "client.contractsEmpty",
+    chatsTitle: "client.chatsTitle",
   },
   offers: {
     title: "offers.title",
@@ -452,6 +454,9 @@ export const I18N_KEYS = {
     title: "chat.title",
     placeholder: "chat.placeholder",
     sendCta: "chat.sendCta",
+    inboxTitle: "chat.inboxTitle",
+    threadTitle: "chat.threadTitle",
+    empty: "chat.empty",
   },
 } as const;
 
