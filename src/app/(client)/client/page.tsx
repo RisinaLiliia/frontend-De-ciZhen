@@ -27,6 +27,9 @@ export default function ClientHome() {
           <Link href="/client/offers" className="badge">
             {t(I18N_KEYS.client.offersTitle)}
           </Link>
+          <Link href="/client/contracts" className="badge">
+            {t(I18N_KEYS.client.contractsTitle)}
+          </Link>
         </div>
 
         <RequestForm />

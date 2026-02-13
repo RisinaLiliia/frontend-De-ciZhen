@@ -44,6 +44,8 @@ export default function ClientRequestsPage() {
         return t(I18N_KEYS.client.statusCancelled);
       case 'draft':
         return t(I18N_KEYS.client.statusDraft);
+      case 'paused':
+        return t(I18N_KEYS.client.statusPaused);
       default:
         return status;
     }

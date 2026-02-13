@@ -356,7 +356,10 @@ export const de = {
     profileSaved: "Profil gespeichert",
     myResponsesTitle: "Meine Angebote",
     responsesEmpty: "Noch keine Angebote.",
-    viewRequests: "Anfragen ansehen"
+    viewRequests: "Anfragen ansehen",
+    contractsTitle: "Meine Verträge",
+    contractsEmpty: "Noch keine Verträge.",
+    chatsTitle: "Chats"
   },
   client: {
     requestsTitle: "Meine Anfragen",
@@ -376,7 +379,12 @@ export const de = {
     statusMatched: "In Arbeit",
     statusClosed: "Geschlossen",
     statusCancelled: "Storniert",
-    statusDraft: "Entwurf"
+    statusDraft: "Entwurf",
+    statusPaused: "Pausiert",
+    contractsTitle: "Meine Verträge",
+    contractsSubtitle: "Details bestätigen und Fortschritt verfolgen",
+    contractsEmpty: "Noch keine Verträge.",
+    chatsTitle: "Chats"
   },
   offers: {
     title: "Angebote",
@@ -393,9 +401,28 @@ export const de = {
     profileCta: "Profil",
     chatCta: "Chat"
   },
+  contracts: {
+    title: "Verträge",
+    subtitle: "Vertragsdetails und Status verwalten",
+    pending: "Ausstehend",
+    confirmed: "Bestätigt",
+    cancelled: "Storniert",
+    completed: "Abgeschlossen",
+    confirmCta: "Bestätigen",
+    cancelCta: "Stornieren",
+    completeCta: "Abschließen",
+    startAtLabel: "Startdatum & Uhrzeit",
+    durationLabel: "Dauer (Min.)",
+    noteLabel: "Notiz",
+    priceLabel: "Preis"
+  },
   chat: {
     title: "Chat",
-    placeholder: "Chat wird bald verfügbar sein."
+    placeholder: "Nachricht eingeben",
+    sendCta: "Senden",
+    inboxTitle: "Posteingang",
+    threadTitle: "Chatverlauf",
+    empty: "Noch keine Chats."
   },
   app: {
     errorTitle: "Etwas ist schiefgelaufen",

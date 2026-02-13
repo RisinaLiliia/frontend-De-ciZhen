@@ -357,7 +357,10 @@ export const en: DeDictionary = {
     profileSaved: "Profile saved",
     myResponsesTitle: "My offers",
     responsesEmpty: "No offers yet.",
-    viewRequests: "View requests"
+    viewRequests: "View requests",
+    contractsTitle: "My contracts",
+    contractsEmpty: "No contracts yet.",
+    chatsTitle: "Chats"
   },
   client: {
     requestsTitle: "My requests",
@@ -377,7 +380,12 @@ export const en: DeDictionary = {
     statusMatched: "In progress",
     statusClosed: "Closed",
     statusCancelled: "Cancelled",
-    statusDraft: "Draft"
+    statusDraft: "Draft",
+    statusPaused: "Paused",
+    contractsTitle: "My contracts",
+    contractsSubtitle: "Confirm details and track progress",
+    contractsEmpty: "No contracts yet.",
+    chatsTitle: "Chats"
   },
   offers: {
     title: "Offers",
@@ -394,9 +402,28 @@ export const en: DeDictionary = {
     profileCta: "Profile",
     chatCta: "Chat"
   },
+  contracts: {
+    title: "Contracts",
+    subtitle: "Manage contract details and status",
+    pending: "Pending",
+    confirmed: "Confirmed",
+    cancelled: "Cancelled",
+    completed: "Completed",
+    confirmCta: "Confirm",
+    cancelCta: "Cancel",
+    completeCta: "Complete",
+    startAtLabel: "Start date & time",
+    durationLabel: "Duration (min)",
+    noteLabel: "Note",
+    priceLabel: "Price"
+  },
   chat: {
     title: "Chat",
-    placeholder: "Chat will be available soon."
+    placeholder: "Type a message",
+    sendCta: "Send",
+    inboxTitle: "Inbox",
+    threadTitle: "Chat thread",
+    empty: "No chats yet."
   },
   app: {
     errorTitle: "Something went wrong",

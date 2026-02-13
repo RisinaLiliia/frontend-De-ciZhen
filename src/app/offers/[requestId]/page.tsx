@@ -11,6 +11,7 @@ import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { Button } from '@/components/ui/Button';
 import { listOffersByRequest, acceptOffer } from '@/lib/api/offers';
+import { createThread } from '@/lib/api/chat';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
@@ -51,6 +52,8 @@ export default function OffersPage() {
       await acceptOffer(id);
       toast.success(t(I18N_KEYS.offers.accepted));
       await qc.invalidateQueries({ queryKey: ['offers', requestId] });
+      await qc.invalidateQueries({ queryKey: ['client-contracts'] });
+      router.push('/client/contracts');
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
@@ -134,8 +137,17 @@ export default function OffersPage() {
                         type="button"
                         className="badge"
                         onClick={() => {
-                          if (!ensureAuth(`/chat/${item.id}`)) return;
-                          router.push(`/chat/${item.id}`);
+                          if (!ensureAuth(`/chat`)) return;
+                          createThread({
+                            requestId: item.requestId,
+                            providerUserId: item.providerUserId ?? '',
+                            offerId: item.id,
+                          })
+                            .then((thread) => router.push(`/chat/${thread.id}`))
+                            .catch((error) => {
+                              const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+                              toast.error(message);
+                            });
                         }}
                       >
                         {t(I18N_KEYS.offers.chatCta)}

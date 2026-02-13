@@ -20,11 +20,7 @@ import {
 } from "@/components/requests/details";
 import { getPublicRequestById, listPublicRequests } from "@/lib/api/requests";
 import { createOffer } from "@/lib/api/offers";
-import {
-  addFavoriteRequest,
-  listFavoriteRequests,
-  removeFavoriteRequest,
-} from "@/lib/api/favorites";
+import { addFavorite, listFavorites, removeFavorite } from "@/lib/api/favorites";
 import { ApiError } from "@/lib/api/http-error";
 import { useAuthStatus, useAuthUser } from "@/hooks/useAuthSnapshot";
 import { listMyProviderOffers } from "@/lib/api/offers";
@@ -94,7 +90,7 @@ export default function RequestDetailsPage() {
   } = useQuery({
     queryKey: ["favorite-requests"],
     enabled: authStatus === 'authenticated' && authUser?.role === 'provider',
-    queryFn: () => listFavoriteRequests(),
+    queryFn: () => listFavorites('request'),
   });
 
   const isAlreadyResponded = React.useMemo(() => {
@@ -127,10 +123,10 @@ export default function RequestDetailsPage() {
       updateFavoritesCache(nextSaved);
       try {
         if (nextSaved) {
-          await addFavoriteRequest(request.id);
+          await addFavorite('request', request.id);
           toast.success(t(I18N_KEYS.requestDetails.saved));
         } else {
-          await removeFavoriteRequest(request.id);
+          await removeFavorite('request', request.id);
           toast.message(t(I18N_KEYS.requestDetails.favoritesRemoved));
         }
       } catch {
