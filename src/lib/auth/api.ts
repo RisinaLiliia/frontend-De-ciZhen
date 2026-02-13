@@ -3,10 +3,10 @@ import { ApiError, type HttpErrorDto } from '@/lib/api/http-error';
 import { buildApiUrl } from '@/lib/api/url';
 import { getAccessToken } from '@/lib/auth/token';
 import type {
+  AppMeDto,
   AuthResponseDto,
   LoginDto,
   LogoutResponseDto,
-  MeResponseDto,
   RegisterDto,
 } from '@/lib/api/dto/auth';
 
@@ -73,5 +73,5 @@ export function logout() {
 }
 
 export function getMe() {
-  return authGet<MeResponseDto>('/users/me');
+  return authGet<AppMeDto>('/users/me');
 }

@@ -1,5 +1,6 @@
 // src/lib/api/dto/auth.ts
 export type UserRole = 'client' | 'provider' | 'admin';
+export type UserMode = 'client' | 'provider';
 
 export type SafeUserDto = {
   id: string;
@@ -31,6 +32,22 @@ export type MeResponseDto = {
   blockedAt?: string | null;
   createdAt: string;
   updatedAt: string;
+};
+
+export type CapabilitiesDto = {
+  canProvide?: boolean;
+};
+
+export type ProfileRefDto = {
+  id?: string;
+  status?: string;
+};
+
+export type AppMeDto = MeResponseDto & {
+  capabilities?: CapabilitiesDto | null;
+  lastMode?: UserMode | null;
+  providerProfile?: ProfileRefDto | null;
+  clientProfile?: ProfileRefDto | null;
 };
 
 export type AuthResponseDto = {

@@ -19,6 +19,9 @@ export const I18N_KEYS = {
     notFoundTitle: "app.notFoundTitle",
     notFoundMessage: "app.notFoundMessage",
     notFoundCta: "app.notFoundCta",
+    modeLabel: "app.modeLabel",
+    modeClient: "app.modeClient",
+    modeProvider: "app.modeProvider",
   },
   pages: {
     servicesTitle: "pages.servicesTitle",
