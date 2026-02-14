@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -43,7 +43,7 @@ export function ProviderOnboardingClient() {
     queryFn: () => getMyProviderProfile(),
   });
 
-  const { register, handleSubmit, reset, watch } = useForm<ProfileFormValues>({
+  const { control, register, handleSubmit, reset } = useForm<ProfileFormValues>({
     defaultValues: {
       displayName: '',
       bio: '',
@@ -70,7 +70,7 @@ export function ProviderOnboardingClient() {
     return '/provider/requests';
   }, [searchParams]);
 
-  const selectedServiceKeys = watch('serviceKeys');
+  const selectedServiceKeys = useWatch({ control, name: 'serviceKeys' });
 
   const onSubmit = async (values: ProfileFormValues) => {
     if (!values.serviceKeys || values.serviceKeys.length === 0) {

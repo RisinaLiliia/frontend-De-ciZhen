@@ -283,6 +283,56 @@
       box-shadow var(--transition-fast);
   }
 
+  .request-meta-inline {
+    display: grid;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+  }
+
+  .request-meta-inline__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .request-meta-inline__title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .request-meta-inline__price {
+    font-size: 16px;
+    font-weight: 700;
+    color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
+    white-space: nowrap;
+  }
+
+  .request-meta-inline__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .request-meta-inline__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--c-text-muted);
+  }
+
+  .request-meta-inline__item svg {
+    width: 14px;
+    height: 14px;
+    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
+  }
+
   .btn-ghost:hover {
     border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
     background: color-mix(in oklab, var(--c-panel) 82%, var(--c-border) 18%);

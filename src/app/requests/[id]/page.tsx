@@ -17,16 +17,16 @@ import {
   RequestDetailHeader,
   RequestDetailLoading,
   RequestDetailMobileCta,
+  RequestOfferSheet,
   RequestDetailSimilar,
 } from '@/components/requests/details';
+import { RequestStatusBadge } from '@/components/ui/RequestStatusBadge';
 import { getPublicRequestById, listPublicRequests } from '@/lib/api/requests';
-import { createOffer, listMyProviderOffers } from '@/lib/api/offers';
+import { createOffer, deleteOffer, listMyProviderOffers, updateOffer } from '@/lib/api/offers';
 import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
-import { ApiError } from '@/lib/api/http-error';
-import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { getMyProviderProfile } from '@/lib/api/providers';
-import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
+import { ApiError } from '@/lib/api/http-error';
+import { useAuthMe, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
@@ -44,6 +44,7 @@ export default function RequestDetailsPage() {
   const { locale } = useI18n();
   const authStatus = useAuthStatus();
   const authUser = useAuthUser();
+  const authMe = useAuthMe();
   const qc = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();
@@ -55,9 +56,10 @@ export default function RequestDetailsPage() {
   const [mode, setMode] = React.useState<'client' | 'provider'>(
     authUser?.role === 'provider' ? 'provider' : 'client',
   );
-  const [isOfferFormOpen, setIsOfferFormOpen] = React.useState(false);
   const [offerAmount, setOfferAmount] = React.useState('');
   const [offerComment, setOfferComment] = React.useState('');
+  const [offerAvailability, setOfferAvailability] = React.useState('');
+  const [offerSheetMode, setOfferSheetMode] = React.useState<'form' | 'success'>('form');
   const [isSubmittingOffer, setIsSubmittingOffer] = React.useState(false);
   const [submittedOfferAmount, setSubmittedOfferAmount] = React.useState<number | null>(null);
 
@@ -87,13 +89,13 @@ export default function RequestDetailsPage() {
 
   const { data: myResponses } = useQuery({
     queryKey: ['offers-my'],
-    enabled: authStatus === 'authenticated' && authUser?.role === 'provider',
+    enabled: authStatus === 'authenticated',
     queryFn: () => listMyProviderOffers(),
   });
 
   const { data: providerProfile } = useQuery({
     queryKey: ['provider-profile'],
-    enabled: isAuthed && isProviderUser,
+    enabled: authStatus === 'authenticated',
     queryFn: () => getMyProviderProfile(),
   });
 
@@ -126,11 +128,9 @@ export default function RequestDetailsPage() {
   }, []);
 
   const existingResponse = React.useMemo(() => {
-    if (!request || !myResponses || authUser?.role !== 'provider') return null;
+    if (!isAuthed || !request || !myResponses) return null;
     return myResponses.find((response) => response.requestId === request.id) ?? null;
-  }, [authUser?.role, myResponses, request]);
-
-  const isAlreadyResponded = Boolean(existingResponse);
+  }, [isAuthed, myResponses, request]);
 
   const isSaved = React.useMemo(() => {
     if (!request || !favoriteRequests) return false;
@@ -174,17 +174,22 @@ export default function RequestDetailsPage() {
   const isOwner = isAuthed && Boolean(request?.clientId) && request?.clientId === authUser?.id;
   const isProviderMode = isAuthed && mode === 'provider';
   const isClientMode = !isAuthed || mode === 'client';
-  const canProvide =
-    isProviderUser && providerProfile?.status === 'active' && !providerProfile?.isBlocked;
-  const respondedAmount = submittedOfferAmount ?? existingResponse?.amount ?? null;
-  const showOfferSuccess =
-    isProviderMode && !isOwner && (isAlreadyResponded || submittedOfferAmount !== null);
-  const showOfferGated = isProviderMode && !isOwner && !canProvide;
-  const showOfferCta = (isAuthed ? isProviderMode : true) && !isOwner && !showOfferGated;
-  const showChatCta = (isAuthed ? isProviderMode : true) && !isOwner && !showOfferGated;
+  const isOfferSheetOpen = searchParams?.get('offer') === '1';
+  const isOfferAccepted = existingResponse?.status === 'accepted';
+  const hasOffer = isAuthed && Boolean(existingResponse || submittedOfferAmount !== null);
+  const showOfferCta = !isOwner;
+  const showChatCta = (isAuthed ? isProviderMode : true) && !isOwner;
   const showFavoriteCta = (isAuthed ? isProviderMode : true) && !isOwner;
   const showClientModeSwitch = isAuthed && isClientMode && !isOwner && isProviderUser;
   const showOwnerBadge = isAuthed && isOwner;
+
+  React.useEffect(() => {
+    if (isAuthed) return;
+    setSubmittedOfferAmount(null);
+    setOfferAmount('');
+    setOfferComment('');
+    setOfferAvailability('');
+  }, [isAuthed]);
 
   const buildNextUrl = React.useCallback(
     (action: string) => {
@@ -205,12 +210,39 @@ export default function RequestDetailsPage() {
     [buildNextUrl, router, t],
   );
 
+  const setOfferSheetInUrl = React.useCallback(
+    (open: boolean) => {
+      const nextParams = new URLSearchParams(searchParams?.toString());
+      if (open) {
+        nextParams.set('offer', '1');
+      } else {
+        nextParams.delete('offer');
+      }
+      const qs = nextParams.toString();
+      router.replace(`${pathname}${qs ? `?${qs}` : ''}`);
+    },
+    [pathname, router, searchParams],
+  );
+
   const openOfferForm = React.useCallback(() => {
-    setIsOfferFormOpen(true);
-    if (!offerAmount && request?.price) {
-      setOfferAmount(String(Math.max(1, Math.round(request.price))));
+    if (existingResponse) {
+      setOfferAmount(
+        typeof existingResponse.amount === 'number'
+          ? String(Math.max(1, Math.round(existingResponse.amount)))
+          : '',
+      );
+      setOfferComment(existingResponse.message ?? '');
+      setOfferAvailability(existingResponse.availabilityNote ?? existingResponse.availableAt ?? '');
+    } else {
+      if (!offerAmount && request?.price) {
+        setOfferAmount(String(Math.max(1, Math.round(request.price))));
+      }
+      setOfferComment('');
+      setOfferAvailability('');
     }
-  }, [offerAmount, request?.price]);
+    setOfferSheetMode('form');
+    setOfferSheetInUrl(true);
+  }, [existingResponse, offerAmount, request?.price, setOfferSheetInUrl]);
 
   const handleApply = React.useCallback(() => {
     if (!request) return;
@@ -222,38 +254,24 @@ export default function RequestDetailsPage() {
       toast.message(t(I18N_KEYS.requestDetails.selfBidError));
       return;
     }
-    if (mode !== 'provider') {
-      toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
-      return;
-    }
-    if (!canProvide) {
-      toast.message(t(I18N_KEYS.requestDetails.providerGateTitle));
-      return;
-    }
-    if (authUser?.role !== 'provider') {
-      toast.message(t(I18N_KEYS.requestDetails.responseFailed));
-      return;
-    }
-    if (isAlreadyResponded) {
-      toast.message(t(I18N_KEYS.requestDetails.responseAlready));
+    if (isOfferAccepted) {
+      router.push('/provider/contracts');
       return;
     }
     openOfferForm();
   }, [
     authStatus,
-    authUser?.role,
-    canProvide,
-    isAlreadyResponded,
+    isOfferAccepted,
     isOwner,
-    mode,
     openOfferForm,
     request,
     requireAuth,
+    router,
     t,
   ]);
 
   const handleOfferSubmit = React.useCallback(async () => {
-    if (!request || authUser?.role !== 'provider') return;
+    if (!request || authStatus !== 'authenticated') return;
     const parsedAmount = Number(offerAmount);
     if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
       toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
@@ -262,23 +280,35 @@ export default function RequestDetailsPage() {
 
     setIsSubmittingOffer(true);
     try {
-      const response = await createOffer({
-        requestId: request.id,
+      const payload = {
         amount: parsedAmount,
         message: offerComment.trim() || undefined,
-      });
+        availabilityNote: offerAvailability.trim() || undefined,
+      };
+      const response =
+        existingResponse?.id
+          ? await updateOffer(existingResponse.id, payload)
+          : await createOffer({
+              requestId: request.id,
+              ...payload,
+            });
       setSubmittedOfferAmount(response.offer.amount ?? parsedAmount);
-      setOfferComment('');
-      setIsOfferFormOpen(false);
-      toast.success(t(I18N_KEYS.requestDetails.responseSent));
+      if (existingResponse?.id) {
+        setOfferSheetInUrl(false);
+        toast.success(t(I18N_KEYS.requestDetails.responseUpdated));
+      } else {
+        setOfferSheetMode('success');
+      }
       await Promise.all([
         qc.invalidateQueries({ queryKey: ['offers-my'] }),
         qc.invalidateQueries({ queryKey: ['provider-profile'] }),
       ]);
     } catch (error) {
-      if (error instanceof ApiError && error.status === 409) {
+      if (error instanceof ApiError && (error.status === 404 || error.status === 405)) {
+        toast.message(t(I18N_KEYS.requestDetails.responseEditUnavailable));
+      } else if (error instanceof ApiError && error.status === 409) {
         setSubmittedOfferAmount(parsedAmount);
-        setIsOfferFormOpen(false);
+        setOfferSheetInUrl(false);
         toast.message(t(I18N_KEYS.requestDetails.responseAlready));
       } else {
         toast.error(t(I18N_KEYS.requestDetails.responseFailed));
@@ -286,7 +316,57 @@ export default function RequestDetailsPage() {
     } finally {
       setIsSubmittingOffer(false);
     }
-  }, [authUser?.role, offerAmount, offerComment, qc, request, t]);
+  }, [
+    authStatus,
+    existingResponse?.id,
+    offerAmount,
+    offerAvailability,
+    offerComment,
+    qc,
+    request,
+    setOfferSheetInUrl,
+    t,
+  ]);
+
+  const handleOfferCancel = React.useCallback(async () => {
+    if (isSubmittingOffer) return;
+
+    if (!existingResponse?.id) {
+      setOfferSheetMode('form');
+      setSubmittedOfferAmount(null);
+      setOfferAmount('');
+      setOfferComment('');
+      setOfferAvailability('');
+      setOfferSheetInUrl(false);
+      return;
+    }
+
+    setIsSubmittingOffer(true);
+    try {
+      await deleteOffer(existingResponse.id);
+      setOfferSheetMode('form');
+      setSubmittedOfferAmount(null);
+      setOfferAmount('');
+      setOfferComment('');
+      setOfferAvailability('');
+      setOfferSheetInUrl(false);
+      toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ['offers-my'] }),
+        qc.invalidateQueries({ queryKey: ['provider-profile'] }),
+      ]);
+    } catch {
+      toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+    } finally {
+      setIsSubmittingOffer(false);
+    }
+  }, [
+    existingResponse?.id,
+    isSubmittingOffer,
+    qc,
+    setOfferSheetInUrl,
+    t,
+  ]);
 
   const handleChat = React.useCallback(() => {
     if (authStatus !== 'authenticated') {
@@ -301,12 +381,8 @@ export default function RequestDetailsPage() {
       toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
       return;
     }
-    if (!canProvide) {
-      toast.message(t(I18N_KEYS.requestDetails.providerGateTitle));
-      return;
-    }
     toast.message(t(I18N_KEYS.requestDetails.chatSoon));
-  }, [authStatus, canProvide, isOwner, mode, requireAuth, t]);
+  }, [authStatus, isOwner, mode, requireAuth, t]);
 
   const handleFavorite = React.useCallback(() => {
     if (!request) return;
@@ -436,22 +512,16 @@ export default function RequestDetailsPage() {
     if (action === 'respond') {
       if (isOwner) {
         toast.message(t(I18N_KEYS.requestDetails.selfBidError));
-      } else if (mode !== 'provider') {
-        toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
-      } else if (!canProvide) {
-        toast.message(t(I18N_KEYS.requestDetails.providerGateTitle));
-      } else if (authUser?.role === 'provider') {
-        openOfferForm();
+      } else if (isOfferAccepted) {
+        router.push('/provider/contracts');
       } else {
-        toast.message(t(I18N_KEYS.requestDetails.responseFailed));
+        openOfferForm();
       }
     } else if (action === 'chat') {
       if (isOwner) {
         toast.message(t(I18N_KEYS.requestDetails.ownerHint));
       } else if (mode !== 'provider') {
         toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
-      } else if (!canProvide) {
-        toast.message(t(I18N_KEYS.requestDetails.providerGateTitle));
       } else {
         toast.message(t(I18N_KEYS.requestDetails.chatSoon));
       }
@@ -478,7 +548,7 @@ export default function RequestDetailsPage() {
   }, [
     authStatus,
     authUser?.role,
-    canProvide,
+    isOfferAccepted,
     isOwner,
     isSaved,
     mode,
@@ -499,64 +569,45 @@ export default function RequestDetailsPage() {
     return <RequestDetailError message={t(I18N_KEYS.requestsPage.error)} />;
   }
 
-  const offerForm = (
-    <div className="request-detail__offer-form">
-      <div className="request-detail__offer-form-title">
-        {t(I18N_KEYS.requestDetails.responseFormTitle)}
-      </div>
-      <label className="typo-small">{t(I18N_KEYS.requestDetails.responseAmountLabel)}</label>
-      <Input
-        type="number"
-        min={1}
-        step="1"
-        value={offerAmount}
-        onChange={(event) => setOfferAmount(event.target.value)}
-        placeholder="120"
-      />
-      <label className="typo-small">{t(I18N_KEYS.requestDetails.responseCommentLabel)}</label>
-      <Textarea
-        value={offerComment}
-        onChange={(event) => setOfferComment(event.target.value)}
-        placeholder={t(I18N_KEYS.requestDetails.responseCommentPlaceholder)}
-        rows={3}
-      />
-      <button
-        type="button"
-        className="btn-primary request-detail__cta-btn"
-        onClick={handleOfferSubmit}
-        disabled={isSubmittingOffer}
-      >
-        <span>{t(I18N_KEYS.requestDetails.responseSubmit)}</span>
-      </button>
-    </div>
-  );
+  const applyLabel = isOfferAccepted
+    ? t(I18N_KEYS.requestDetails.responseViewContract)
+    : hasOffer
+      ? t(I18N_KEYS.requestDetails.responseEditCta)
+      : t(I18N_KEYS.requestDetails.ctaApply);
+  const applyState = isOfferAccepted ? 'accepted' : hasOffer ? 'edit' : 'default';
+  const applyTitle = hasOffer ? t(I18N_KEYS.requestDetails.responseEditTooltip) : undefined;
+  const requestStatusView =
+    request.status === 'matched'
+      ? {
+          tone: 'progress' as const,
+          label: t(I18N_KEYS.requestDetails.statusInProgress),
+        }
+      : request.status === 'closed'
+        ? {
+            tone: 'accepted' as const,
+            label: t(I18N_KEYS.requestDetails.statusAccepted),
+          }
+        : request.status === 'cancelled'
+          ? {
+              tone: 'review' as const,
+              label: t(I18N_KEYS.requestDetails.statusCancelled),
+            }
+          : {
+              tone: 'review' as const,
+              label: t(I18N_KEYS.requestDetails.statusReview),
+          };
 
-  const successNotice = (
-    <>
-      <div className="request-detail__notice-title">
-        {t(I18N_KEYS.requestDetails.responseSuccessTitle)}
-      </div>
-      <div className="request-detail__notice-text">
-        {t(I18N_KEYS.requestDetails.responseSuccessBody)}
-      </div>
-      {respondedAmount ? (
-        <div className="request-detail__success-price">
-          {t(I18N_KEYS.requestDetails.responseYourPrice)} {formatPrice.format(respondedAmount)}
-        </div>
-      ) : null}
-      <div className="request-detail__success-actions">
-        <Link
-          href={`/provider/profile?highlight=offer&next=${encodeURIComponent(`/requests/${request.id}`)}`}
-          className="btn-secondary request-detail__cta-btn"
-        >
-          {t(I18N_KEYS.requestDetails.responseProfileCta)}
-        </Link>
-        <Link href="/requests" className="btn-secondary request-detail__cta-btn">
-          {t(I18N_KEYS.requestDetails.responseBackToList)}
-        </Link>
-      </div>
-    </>
-  );
+  const isProviderProfileComplete = (() => {
+    if (!providerProfile) return false;
+    const hasServices =
+      Array.isArray(providerProfile.serviceKeys) && providerProfile.serviceKeys.length > 0;
+    const hasBasePrice =
+      typeof providerProfile.basePrice === 'number' && providerProfile.basePrice > 0;
+    const hasIdentity =
+      Boolean(providerProfile.displayName?.trim()) && Boolean(providerProfile.cityId?.trim());
+    const isActive = providerProfile.status === 'active' && !providerProfile.isBlocked;
+    return hasServices && hasBasePrice && hasIdentity && isActive;
+  })();
 
   return (
     <PageShell right={<AuthActions />} showBack mainClassName="py-6">
@@ -567,6 +618,12 @@ export default function RequestDetailsPage() {
             priceLabel={viewModel.priceLabel}
             tags={viewModel.tagList}
             badgeLabel={showOwnerBadge ? t(I18N_KEYS.requestDetails.ownerBadge) : undefined}
+            statusBadge={
+              <RequestStatusBadge
+                tone={requestStatusView.tone}
+                label={requestStatusView.label}
+              />
+            }
           />
           <RequestDetailGallery images={viewModel.images} title={viewModel.title} />
           <RequestDetailAbout
@@ -591,41 +648,20 @@ export default function RequestDetailsPage() {
         <RequestDetailAside
           cityLabel={viewModel.cityLabel}
           dateLabel={viewModel.preferredDateLabel}
-          ctaApplyLabel={
-            authStatus === 'authenticated' && isAlreadyResponded
-              ? t(I18N_KEYS.requestDetails.responseAlready)
-              : t(I18N_KEYS.requestDetails.ctaApply)
-          }
+          ctaApplyLabel={applyLabel}
           ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
           ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
           isSaved={isSaved}
           onApply={handleApply}
           onChat={handleChat}
           onToggleSave={handleFavorite}
-          applyDisabled={authStatus === 'authenticated' && isAlreadyResponded}
-          applyState={authStatus === 'authenticated' && isAlreadyResponded ? 'done' : 'default'}
+          applyState={applyState}
+          applyTitle={applyTitle}
           showApply={showOfferCta}
           showChat={showChatCta}
           showSave={showFavoriteCta}
           notice={
-            showOfferSuccess ? (
-              successNotice
-            ) : showOfferGated ? (
-              <>
-                <div className="request-detail__notice-title">
-                  {t(I18N_KEYS.requestDetails.providerGateTitle)}
-                </div>
-                <div className="request-detail__notice-text">
-                  {t(I18N_KEYS.requestDetails.providerGateBody)}
-                </div>
-                <Link
-                  href={`/provider/onboarding?next=${encodeURIComponent(`/requests/${request.id}`)}`}
-                  className="btn-secondary request-detail__cta-btn"
-                >
-                  {t(I18N_KEYS.requestDetails.providerGateCta)}
-                </Link>
-              </>
-            ) : showClientModeSwitch ? (
+            showClientModeSwitch ? (
               <>
                 <div className="request-detail__notice-title">
                   {t(I18N_KEYS.requestDetails.clientModeHint)}
@@ -648,8 +684,6 @@ export default function RequestDetailsPage() {
               >
                 {t(I18N_KEYS.requestDetails.viewOffers)}
               </Link>
-            ) : isOfferFormOpen ? (
-              offerForm
             ) : null
           }
         >
@@ -673,41 +707,20 @@ export default function RequestDetailsPage() {
       </div>
 
       <RequestDetailMobileCta
-        ctaApplyLabel={
-          authStatus === 'authenticated' && isAlreadyResponded
-            ? t(I18N_KEYS.requestDetails.responseAlready)
-            : t(I18N_KEYS.requestDetails.ctaApply)
-        }
+        ctaApplyLabel={applyLabel}
         ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
         ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
         isSaved={isSaved}
         onApply={handleApply}
         onChat={handleChat}
         onToggleSave={handleFavorite}
-        applyDisabled={authStatus === 'authenticated' && isAlreadyResponded}
-        applyState={authStatus === 'authenticated' && isAlreadyResponded ? 'done' : 'default'}
+        applyState={applyState}
+        applyTitle={applyTitle}
         showApply={showOfferCta}
         showChat={showChatCta}
         showSave={showFavoriteCta}
         notice={
-          showOfferSuccess ? (
-            successNotice
-          ) : showOfferGated ? (
-            <>
-              <div className="request-detail__notice-title">
-                {t(I18N_KEYS.requestDetails.providerGateTitle)}
-              </div>
-              <div className="request-detail__notice-text">
-                {t(I18N_KEYS.requestDetails.providerGateBody)}
-              </div>
-              <Link
-                href={`/provider/onboarding?next=${encodeURIComponent(`/requests/${request.id}`)}`}
-                className="btn-secondary request-detail__cta-btn"
-              >
-                {t(I18N_KEYS.requestDetails.providerGateCta)}
-              </Link>
-            </>
-          ) : showClientModeSwitch ? (
+          showClientModeSwitch ? (
             <>
               <div className="request-detail__notice-title">
                 {t(I18N_KEYS.requestDetails.clientModeHint)}
@@ -727,10 +740,78 @@ export default function RequestDetailsPage() {
             <Link href={`/offers/${request.id}`} className="btn-secondary request-detail__cta-btn">
               {t(I18N_KEYS.requestDetails.viewOffers)}
             </Link>
-          ) : isOfferFormOpen ? (
-            offerForm
           ) : null
         }
+      />
+
+      <RequestOfferSheet
+        isOpen={isOfferSheetOpen}
+        mode={offerSheetMode}
+        title={
+          offerSheetMode === 'success'
+            ? t(I18N_KEYS.requestDetails.responseSuccessTitle)
+            : hasOffer
+            ? t(I18N_KEYS.requestDetails.responseEditTitle)
+            : t(I18N_KEYS.requestDetails.responseFormTitle)
+        }
+        previewTitle={viewModel.title}
+        previewCity={viewModel.cityLabel}
+        previewDate={viewModel.preferredDateLabel}
+        previewPrice={viewModel.priceLabel}
+        amountLabel={t(I18N_KEYS.requestDetails.responseAmountLabel)}
+        amountValue={offerAmount}
+        amountPlaceholder="120"
+        commentLabel={t(I18N_KEYS.requestDetails.responseCommentLabel)}
+        commentValue={offerComment}
+        commentPlaceholder={t(I18N_KEYS.requestDetails.responseCommentPlaceholder)}
+        availabilityLabel={t(I18N_KEYS.requestDetails.responseAvailabilityLabel)}
+        availabilityValue={offerAvailability}
+        availabilityPlaceholder={t(I18N_KEYS.requestDetails.responseAvailabilityPlaceholder)}
+        submitLabel={
+          hasOffer
+            ? t(I18N_KEYS.requestDetails.responseEditSubmit)
+            : t(I18N_KEYS.requestDetails.responseSubmit)
+        }
+        submitKind={hasOffer ? 'edit' : 'submit'}
+        closeLabel={t(I18N_KEYS.requestDetails.responseClose)}
+        successTitle={t(I18N_KEYS.requestDetails.responseSuccessTitle)}
+        successBody={t(I18N_KEYS.requestDetails.responseSuccessBody)}
+        successSubline={t(I18N_KEYS.requestDetails.responseSuccessSubline)}
+        successTipTitle={t(I18N_KEYS.requestDetails.responseSuccessTipTitle)}
+        successTipCardTitle={t(I18N_KEYS.requestDetails.responseSuccessTipCardTitle)}
+        successTipCardBody={t(I18N_KEYS.requestDetails.responseSuccessTipCardBody)}
+        successProfileCta={t(I18N_KEYS.requestDetails.responseProfileCta)}
+        successContinueCta={t(I18N_KEYS.requestDetails.responseContinueCta)}
+        successProfileHref={`/provider/profile?highlight=offer&next=${encodeURIComponent(`/requests/${request.id}`)}`}
+        showProfileAdvice={!isProviderProfileComplete}
+        profileAvatarUrl={authMe?.avatar?.url ?? null}
+        profileName={authMe?.name ?? authUser?.name ?? null}
+        profileOnline={authStatus === 'authenticated'}
+        profileStatusLabel={
+          authStatus === 'authenticated'
+            ? t(I18N_KEYS.requestDetails.clientOnline)
+            : t(I18N_KEYS.requestDetails.clientActive)
+        }
+        isSubmitting={isSubmittingOffer}
+        onAmountChange={setOfferAmount}
+        onCommentChange={setOfferComment}
+        onAvailabilityChange={setOfferAvailability}
+        onClose={() => {
+          setOfferSheetMode('form');
+          setOfferSheetInUrl(false);
+        }}
+        cancelLabel={
+          existingResponse?.id
+            ? t(I18N_KEYS.requestDetails.responseCancel)
+            : t(I18N_KEYS.common.back)
+        }
+        cancelKind={existingResponse?.id ? 'delete' : 'back'}
+        onCancel={handleOfferCancel}
+        onSuccessBack={() => {
+          setOfferSheetMode('form');
+          setOfferSheetInUrl(false);
+        }}
+        onSubmit={handleOfferSubmit}
       />
     </PageShell>
   );

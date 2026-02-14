@@ -255,6 +255,13 @@
     align-self: flex-start;
   }
 
+  .request-detail__badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
   .request-detail__notice {
     display: flex;
     flex-direction: column;
@@ -391,9 +398,30 @@
   }
 
   .request-detail__cta-btn.is-done {
-    background: color-mix(in oklab, var(--c-success, #16a34a) 80%, #0b1220 20%);
-    border-color: color-mix(in oklab, var(--c-success, #16a34a) 70%, transparent);
+    background: color-mix(in oklab, var(--c-primary) 78%, #0b1220 22%);
+    border-color: color-mix(in oklab, var(--c-primary) 66%, transparent);
     color: #ffffff;
+  }
+
+  .request-detail__cta-btn.is-edit {
+    background: color-mix(in oklab, var(--c-accent) 22%, var(--c-panel) 78%);
+    border: 1px solid color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
+    color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 20%, transparent);
+  }
+
+  .request-detail__cta-btn.is-edit:hover {
+    filter: none;
+    background: color-mix(in oklab, var(--c-accent) 30%, var(--c-panel) 70%);
+    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-accent) 28%, transparent);
+  }
+
+  .request-detail__cta-subtext {
+    margin-top: -4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: color-mix(in oklab, var(--c-accent) 72%, var(--c-text) 28%);
+    text-align: center;
   }
 
   .request-detail__save.is-saved,
@@ -595,6 +623,99 @@
     right: 14px;
   }
 
+  .offer-action-btn {
+    position: relative;
+  }
+
+  .offer-action-btn__icon {
+    position: absolute;
+    right: 14px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .offer-action-btn__icon svg {
+    position: static;
+  }
+
+  .offer-action-btn--delete {
+    border-color: color-mix(in oklab, var(--c-danger, #dc2626) 45%, var(--c-border) 55%);
+    color: color-mix(in oklab, var(--c-danger, #dc2626) 78%, var(--c-text) 22%);
+  }
+
+  .offer-action-btn--delete:hover {
+    background: color-mix(in oklab, var(--c-danger, #dc2626) 12%, var(--c-panel) 88%);
+  }
+
+  .request-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+  }
+
+  .request-status-badge__icon {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .request-status-badge__icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .request-status-badge--review {
+    color: color-mix(in oklab, var(--c-primary) 72%, var(--c-text) 28%);
+    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+    border-color: color-mix(in oklab, var(--c-primary) 30%, transparent);
+  }
+
+  .request-status-badge--progress {
+    color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
+    background: color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%);
+    border-color: color-mix(in oklab, var(--c-accent) 34%, transparent);
+  }
+
+  .request-status-badge--accepted {
+    color: color-mix(in oklab, var(--c-primary) 84%, #0b1220 16%);
+    background: color-mix(in oklab, var(--c-primary) 20%, var(--c-panel) 80%);
+    border-color: color-mix(in oklab, var(--c-primary) 46%, transparent);
+  }
+
+  .request-detail__icon-wrap {
+    position: absolute;
+    right: 14px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .request-detail__icon-wrap svg {
+    position: static;
+  }
+
+  .request-detail__icon-wrap[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    min-width: max-content;
+    max-width: 220px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: color-mix(in oklab, var(--c-text) 88%, #000000 12%);
+    color: #ffffff;
+    font-size: 12px;
+    line-height: 1.2;
+    box-shadow: 0 8px 20px color-mix(in oklab, #0b1220 22%, transparent);
+    pointer-events: none;
+    z-index: 2;
+    white-space: nowrap;
+  }
+
   .request-detail__cta-btn span,
   .request-detail__cta .btn-ghost span,
   .request-detail__mobile-cta .btn-ghost span {
@@ -777,30 +898,164 @@
 }
 
 @layer components {
-  .request-detail__offer-form {
+  .request-offer-sheet__panel {
+    gap: 20px;
+    padding: 24px;
+  }
+
+  .request-offer-sheet__header {
     display: grid;
-    gap: 8px;
-    padding: 12px;
-    border-radius: var(--radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    gap: 10px;
+    position: relative;
+  }
+
+  .request-offer-sheet__preview {
+    color: var(--c-text-muted);
+    padding-right: 32px;
+    border-top: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
+    padding-block: 14px;
+  }
+
+  .request-offer-sheet__close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 68%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
+    color: var(--c-text);
+    font-size: 14px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .request-offer-sheet__close:hover {
+    background: color-mix(in oklab, var(--c-panel) 72%, var(--c-border) 28%);
+  }
+
+  .request-offer-sheet__success {
+    display: grid;
+    gap: 20px;
+  }
+
+  .request-offer-sheet__success-main {
+    display: grid;
+    gap: 12px;
+    text-align: center;
+    justify-items: center;
+    padding-top: 8px;
+  }
+
+  .request-offer-sheet__success-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .request-offer-sheet__success-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: color-mix(in oklab, var(--c-primary) 82%, #0b1220 18%);
+    background: color-mix(in oklab, var(--c-primary) 22%, var(--c-panel) 78%);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 44%, transparent);
+  }
+
+  .request-offer-sheet__success-tip {
+    display: grid;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+  }
+
+  .request-offer-sheet__success-tip-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 14px;
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
   }
 
-  .request-detail__offer-form-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--c-text);
+  .request-offer-sheet__success-tip-avatar-wrap {
+    position: relative;
+    display: inline-flex;
   }
 
-  .request-detail__success-price {
-    font-size: 13px;
-    font-weight: 600;
-    color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
-  }
-
-  .request-detail__success-actions {
+  .request-offer-sheet__success-tip-copy {
     display: grid;
     gap: 8px;
+    align-content: start;
+  }
+
+  .request-offer-sheet__success-tip-title {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .request-offer-sheet__success-advice {
+    color: var(--c-text);
+    margin: 0;
+  }
+
+  .request-offer-sheet__success-subline {
+    margin-top: 0;
+  }
+
+  .request-offer-sheet__profile-cta {
+    justify-content: center;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .request-offer-sheet__profile-cta.request-detail__cta-btn svg {
+    position: static;
+    right: auto;
+    flex: 0 0 auto;
+  }
+
+  .request-offer-sheet__profile-cta.request-detail__cta-btn span {
+    width: auto;
+    text-align: left;
+  }
+
+  .request-offer-sheet__body {
+    display: grid;
+    gap: 12px;
+  }
+
+  .request-offer-sheet__actions {
+    display: grid;
+    gap: 12px;
+  }
+
+  .request-offer-sheet__actions--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    .request-offer-sheet__actions {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .request-offer-sheet__panel {
+      padding: 18px 16px 20px;
+      gap: 16px;
+    }
   }
 
   .provider-requests-list {

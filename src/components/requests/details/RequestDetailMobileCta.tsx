@@ -1,5 +1,6 @@
 // src/components/requests/details/RequestDetailMobileCta.tsx
-import { IconCheck, IconChat, IconHeart } from '@/components/ui/icons/icons';
+import { IconChat, IconHeart } from '@/components/ui/icons/icons';
+import { OfferActionButton } from '@/components/ui/OfferActionButton';
 
 type RequestDetailMobileCtaProps = {
   ctaApplyLabel: string;
@@ -10,7 +11,9 @@ type RequestDetailMobileCtaProps = {
   onChat: () => void;
   onToggleSave: () => void;
   applyDisabled?: boolean;
-  applyState?: 'default' | 'done';
+  applyState?: 'default' | 'done' | 'edit' | 'accepted';
+  applyTitle?: string;
+  applyHint?: string;
   showApply?: boolean;
   showChat?: boolean;
   showSave?: boolean;
@@ -28,30 +31,46 @@ export function RequestDetailMobileCta({
   onToggleSave,
   applyDisabled,
   applyState = 'default',
+  applyTitle,
+  applyHint,
   showApply = true,
   showChat = true,
   showSave = true,
   notice,
   extraActions,
 }: RequestDetailMobileCtaProps) {
+  const isEditState = applyState === 'edit';
+  const isAcceptedState = applyState === 'accepted';
+
   return (
     <div className="request-detail__mobile-cta">
       {notice ? <div className="request-detail__notice">{notice}</div> : null}
       <div className="request-detail__cta">
         {extraActions}
         {showApply ? (
-          <button
-            type="button"
-            className={`btn-primary request-detail__cta-btn ${
-              applyState === 'done' ? 'is-done' : ''
-            }`.trim()}
-            onClick={onApply}
-            disabled={applyDisabled}
-          >
-            <span>{ctaApplyLabel}</span>
-            <IconCheck />
-          </button>
+          isAcceptedState ? (
+            <button
+              type="button"
+              className="btn-secondary request-detail__cta-btn is-accepted"
+              onClick={onApply}
+              disabled={applyDisabled}
+            >
+              <span>{ctaApplyLabel}</span>
+            </button>
+          ) : (
+            <OfferActionButton
+              kind={isEditState ? 'edit' : 'submit'}
+              label={ctaApplyLabel}
+              className={`request-detail__cta-btn ${
+                applyState === 'done' ? 'is-done' : ''
+              } ${isEditState ? 'is-edit' : ''}`.trim()}
+              onClick={onApply}
+              disabled={applyDisabled}
+              title={isEditState ? applyTitle : undefined}
+            />
+          )
         ) : null}
+        {showApply && applyHint ? <p className="request-detail__cta-subtext">{applyHint}</p> : null}
         {showChat ? (
           <button
             type="button"
