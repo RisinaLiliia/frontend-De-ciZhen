@@ -7,3 +7,4 @@ export { RequestDetailClient } from './RequestDetailClient';
 export { RequestDetailAside } from './RequestDetailAside';
 export { RequestDetailSimilar } from './RequestDetailSimilar';
 export { RequestDetailMobileCta } from './RequestDetailMobileCta';
+export { RequestOfferSheet } from './RequestOfferSheet';

@@ -326,4 +326,61 @@
       border-spacing: 5px;
     }
   }
+
+  .dc-modal {
+    --dc-modal-max-width: 620px;
+    --dc-modal-max-height: min(88vh, 760px);
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+
+  .dc-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: color-mix(in oklab, #0b1220 52%, transparent);
+  }
+
+  .dc-modal__panel {
+    position: relative;
+    z-index: 1;
+    width: min(var(--dc-modal-max-width), 100%);
+    max-height: var(--dc-modal-max-height);
+    overflow: auto;
+    display: grid;
+    gap: 16px;
+    padding: 18px;
+    border-radius: 18px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 64%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 97%, var(--c-border) 3%);
+    box-shadow:
+      0 24px 56px color-mix(in oklab, #0b1220 34%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--c-border) 55%, transparent);
+  }
+
+  .dc-modal__panel--compact {
+    --dc-modal-max-width: 540px;
+  }
+
+  .dc-modal__panel--wide {
+    --dc-modal-max-width: 720px;
+  }
+
+  @media (max-width: 768px) {
+    .dc-modal {
+      align-items: end;
+      padding: 0;
+    }
+
+    .dc-modal__panel {
+      width: 100%;
+      max-height: 90vh;
+      border-radius: 18px 18px 0 0;
+      padding: 16px;
+    }
+  }
 }

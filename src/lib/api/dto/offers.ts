@@ -10,6 +10,14 @@ export type CreateOfferDto = {
   availabilityNote?: string;
 };
 
+export type UpdateOfferDto = {
+  amount: number;
+  message?: string;
+  priceType?: 'fixed' | 'estimate' | 'hourly';
+  availableAt?: string;
+  availabilityNote?: string;
+};
+
 export type CreateOfferResponseDto = {
   offer: OfferDto;
   providerProfile: {
@@ -63,4 +71,9 @@ export type AcceptOfferResultDto = {
 export type DeclineOfferResultDto = {
   ok: boolean;
   rejectedOfferId: string;
+};
+
+export type DeleteOfferResultDto = {
+  ok: boolean;
+  deletedOfferId: string;
 };
