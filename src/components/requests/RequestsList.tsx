@@ -1,13 +1,19 @@
 // src/components/requests/RequestsList.tsx
 'use client';
 
-import { IconCalendar, IconPin } from '@/components/ui/icons/icons';
+import * as React from 'react';
+import { IconCalendar, IconHeart, IconPin } from '@/components/ui/icons/icons';
 import { OrderCard } from '@/components/orders/OrderCard';
+import { OfferActions } from '@/components/requests/OfferActions';
+import { OfferStatusBadge } from '@/components/requests/OfferStatusBadge';
+import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { pickI18n } from '@/lib/i18n/helpers';
+import { resolveOfferCardState } from '@/features/requests/uiState';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import type { OfferDto } from '@/lib/api/dto/offers';
 
 type RequestsListProps = {
   t: (key: I18nKey) => string;
@@ -20,6 +26,16 @@ type RequestsListProps = {
   cityById: Map<string, { i18n: Record<string, string> }>;
   formatDate: Intl.DateTimeFormat;
   formatPrice: Intl.NumberFormat;
+  isProviderPersonalized?: boolean;
+  offersByRequest?: Map<string, OfferDto>;
+  favoriteRequestIds?: Set<string>;
+  onToggleFavorite?: (requestId: string) => void;
+  onSendOffer?: (requestId: string) => void;
+  onEditOffer?: (requestId: string) => void;
+  onWithdrawOffer?: (offerId: string) => void;
+  pendingOfferRequestId?: string | null;
+  pendingFavoriteRequestIds?: Set<string>;
+  showStaticFavoriteIcon?: boolean;
 };
 
 export function RequestsList({
@@ -33,6 +49,16 @@ export function RequestsList({
   cityById,
   formatDate,
   formatPrice,
+  isProviderPersonalized = false,
+  offersByRequest,
+  favoriteRequestIds,
+  onToggleFavorite,
+  onSendOffer,
+  onEditOffer,
+  onWithdrawOffer,
+  pendingOfferRequestId = null,
+  pendingFavoriteRequestIds,
+  showStaticFavoriteIcon = false,
 }: RequestsListProps) {
   if (isLoading) {
     return (
@@ -102,16 +128,37 @@ export function RequestsList({
           pickRequestImage(item.categoryKey ?? '');
         const title = item.title?.trim() || item.description?.trim() || serviceLabel;
         const tags = item.tags ?? [];
+        const detailsHref = `/requests/${item.id}`;
+        const itemOffer = isProviderPersonalized ? offersByRequest?.get(item.id) : undefined;
+        const offerCardState = resolveOfferCardState(itemOffer);
+        const badgeStatus =
+          offerCardState === 'none' ? null : offerCardState;
+        const statusLabel =
+          offerCardState === 'accepted'
+            ? t(I18N_KEYS.requestDetails.statusAccepted)
+            : offerCardState === 'declined'
+              ? t(I18N_KEYS.requestDetails.statusDeclined)
+              : offerCardState === 'sent'
+                ? t(I18N_KEYS.requestDetails.statusReview)
+                : null;
+        const isFavorite = favoriteRequestIds?.has(item.id) ?? false;
+        const isFavoritePending = pendingFavoriteRequestIds?.has(item.id) ?? false;
+        const isSentState = offerCardState === 'sent';
+        const isPendingWithdraw = pendingOfferRequestId === item.id;
 
         return (
           <OrderCard
             key={item.id}
-            href={`/requests/${item.id}`}
+            href={detailsHref}
             ariaLabel={t(I18N_KEYS.requestsPage.openRequest)}
             imageSrc={imageSrc}
             imageAlt={categoryLabel}
             dateLabel={formatDate.format(new Date(item.preferredDate))}
-            badges={[t(I18N_KEYS.requestsPage.badgeToday), recurringLabel]}
+            badges={
+              isProviderPersonalized
+                ? []
+                : [t(I18N_KEYS.requestsPage.badgeToday), recurringLabel]
+            }
             category={categoryLabel}
             title={title}
             meta={[
@@ -132,6 +179,104 @@ export function RequestsList({
               ...tags.slice(0, 2),
             ]}
             inlineCta={t(I18N_KEYS.requestsPage.detailsCta)}
+            mode={isProviderPersonalized ? 'static' : 'link'}
+            statusSlot={
+              offerCardState === 'none' ? (
+                <span className="request-card__status-actions">
+                  <OfferActionButton
+                    kind="submit"
+                    label={t(I18N_KEYS.requestDetails.ctaApply)}
+                    ariaLabel={t(I18N_KEYS.requestDetails.ctaApply)}
+                    title={t(I18N_KEYS.requestDetails.ctaApply)}
+                    iconOnly
+                    className="request-card__status-action request-card__status-action--submit"
+                    onClick={() => onSendOffer?.(item.id)}
+                  />
+                </span>
+              ) : statusLabel && badgeStatus ? (
+                <span className="request-card__status-actions">
+                  <OfferStatusBadge
+                    status={badgeStatus}
+                    label={statusLabel}
+                    title={
+                      badgeStatus === 'sent'
+                        ? t(I18N_KEYS.requestDetails.responseSentHint)
+                        : statusLabel
+                    }
+                  />
+                  {isSentState ? (
+                    <>
+                      <OfferActionButton
+                        kind="edit"
+                        label={t(I18N_KEYS.requestDetails.responseEditCta)}
+                        ariaLabel={t(I18N_KEYS.requestDetails.responseEditTooltip)}
+                        title={t(I18N_KEYS.requestDetails.responseEditTooltip)}
+                        iconOnly
+                        className="request-card__status-action request-card__status-action--edit"
+                        onClick={() => onEditOffer?.(item.id)}
+                      />
+                      <OfferActionButton
+                        kind="delete"
+                        label={t(I18N_KEYS.requestDetails.responseCancel)}
+                        ariaLabel={t(I18N_KEYS.requestDetails.responseCancel)}
+                        title={t(I18N_KEYS.requestDetails.responseCancel)}
+                        iconOnly
+                        className="request-card__status-action request-card__status-action--danger"
+                        onClick={() => itemOffer?.id && onWithdrawOffer?.(itemOffer.id)}
+                        disabled={isPendingWithdraw}
+                      />
+                    </>
+                  ) : null}
+                  {offerCardState === 'declined' ? (
+                    <OfferActionButton
+                      kind="submit"
+                      label={t(I18N_KEYS.requestDetails.ctaApply)}
+                      ariaLabel={t(I18N_KEYS.requestDetails.ctaApply)}
+                      title={t(I18N_KEYS.requestDetails.ctaApply)}
+                      iconOnly
+                      className="request-card__status-action request-card__status-action--submit"
+                      onClick={() => onSendOffer?.(item.id)}
+                    />
+                  ) : null}
+                </span>
+              ) : null
+            }
+            overlaySlot={
+              isProviderPersonalized || showStaticFavoriteIcon ? (
+                <button
+                  type="button"
+                  className={`btn-ghost is-primary request-detail__save request-card__favorite-btn ${
+                    isFavorite ? 'is-saved is-active' : ''
+                  } ${isFavoritePending ? 'is-pending' : ''}`.trim()}
+                  onClick={() => onToggleFavorite?.(item.id)}
+                  aria-label={t(I18N_KEYS.requestDetails.ctaSave)}
+                  title={t(I18N_KEYS.requestDetails.ctaSave)}
+                  disabled={isFavoritePending || !onToggleFavorite}
+                >
+                  <IconHeart className="icon-heart" />
+                </button>
+              ) : null
+            }
+            actionSlot={
+              isProviderPersonalized && offerCardState === 'accepted' ? (
+                <OfferActions
+                  state={offerCardState}
+                  sendLabel={t(I18N_KEYS.requestDetails.ctaApply)}
+                  editLabel={t(I18N_KEYS.requestDetails.responseEditCta)}
+                  withdrawLabel={t(I18N_KEYS.requestDetails.responseCancel)}
+                  contractLabel={t(I18N_KEYS.requestDetails.responseViewContract)}
+                  chatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
+                  browseLabel={t(I18N_KEYS.requestDetails.showAll)}
+                  detailsLabel={t(I18N_KEYS.requestsPage.detailsCta)}
+                  detailsHref={detailsHref}
+                  chatHref={itemOffer ? `/chat/${itemOffer.id}` : undefined}
+                  onSend={() => onSendOffer?.(item.id)}
+                  onEdit={() => onEditOffer?.(item.id)}
+                  onWithdraw={() => itemOffer?.id && onWithdrawOffer?.(itemOffer.id)}
+                  isWorking={isPendingWithdraw}
+                />
+              ) : null
+            }
           />
         );
       })}

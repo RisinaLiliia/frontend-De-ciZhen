@@ -58,6 +58,12 @@
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
   }
 
+  .mode-switch--help-active {
+    background: linear-gradient(180deg, #3e5da3 0%, #2a4380 100%);
+    border-color: color-mix(in oklab, #1f2f58 80%, var(--c-border) 20%);
+    box-shadow: 0 8px 18px rgba(46, 78, 140, 0.35);
+  }
+
   .mode-switch__btn {
     padding: 6px 12px;
     border-radius: 999px;
@@ -74,6 +80,40 @@
     background: var(--c-primary);
     color: var(--c-primary-contrast);
     box-shadow: 0 6px 16px color-mix(in oklab, var(--c-primary) 35%, transparent);
+  }
+
+  .mode-switch--help-active .mode-switch__btn.is-active:not(.mode-switch__btn--cta) {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: #ffffff;
+  }
+
+  .mode-switch__btn--cta {
+    border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+    color: var(--c-text-muted);
+    box-shadow: none;
+  }
+
+  .mode-switch__btn--cta:hover {
+    border-color: color-mix(in oklab, var(--c-accent) 38%, var(--c-border) 62%);
+    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+  }
+
+  .mode-switch__btn--cta:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--c-accent) 32%, transparent),
+      0 8px 18px color-mix(in oklab, var(--c-accent) 30%, transparent);
+  }
+
+  .mode-switch__btn--cta.is-active {
+    background: linear-gradient(180deg, #ffbf3f 0%, #f2a21c 100%);
+    color: var(--c-accent-contrast);
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--c-accent) 45%, transparent),
+      0 8px 18px color-mix(in oklab, var(--c-accent) 34%, transparent);
   }
 
   .card {
@@ -751,6 +791,30 @@
   .badge:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+  }
+
+  .count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-accent) 36%, var(--c-border) 64%);
+    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
+    color: var(--c-accent);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-accent) 18%, transparent);
+  }
+
+  .count-badge--sm {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    font-size: 12px;
   }
 
   .section-stack {

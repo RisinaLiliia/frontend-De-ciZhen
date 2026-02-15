@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { CategoryCounts } from '@/types/home';
+import { CountBadge } from '@/components/ui/CountBadge';
 
 type ServiceItem = {
   key: string;
@@ -42,7 +43,10 @@ export function HomePopularServicesPanel({
                 sizes="(max-width: 768px) 50vw, 220px"
               />
             </span>
-            <span className="badge-pill service-tile__badge">{categoryCounts[service.key]}</span>
+            <CountBadge
+              className="service-tile__badge"
+              value={categoryCounts[service.key] ?? 0}
+            />
             {service.label}
           </Link>
         ))}

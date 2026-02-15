@@ -17,6 +17,10 @@ export type OrderCardProps = {
   imageSrc?: string | null;
   imageAlt?: string;
   tags?: Array<React.ReactNode>;
+  mode?: 'link' | 'static';
+  statusSlot?: React.ReactNode;
+  overlaySlot?: React.ReactNode;
+  actionSlot?: React.ReactNode;
 };
 
 export function OrderCard({
@@ -33,17 +37,21 @@ export function OrderCard({
   ariaLabel,
   imageSrc,
   imageAlt,
+  mode = 'link',
+  statusSlot,
+  overlaySlot,
+  actionSlot,
 }: OrderCardProps) {
   const hasImage = Boolean(imageSrc);
   const safeImageSrc = imageSrc ?? '';
-  return (
-    <Link
-      href={href}
-      aria-label={ariaLabel ?? title}
-      className={`request-card request-card--link request-card--media-right order-card-link ${
-        !hasImage ? 'request-card--no-media' : ''
-      } ${isActive ? 'is-active' : ''}`}
-    >
+  const cardClassName = `request-card request-card--media-right order-card-link ${
+    !hasImage ? 'request-card--no-media' : ''
+  } ${isActive ? 'is-active' : ''}`.trim();
+  const isLinkMode = mode === 'link';
+
+  const cardContent = (
+    <>
+      {overlaySlot ? <div className="request-card__overlay">{overlaySlot}</div> : null}
       {badges.length ? (
         <div className="order-badges order-badges--edge" aria-hidden="true">
           {badges.map((badge) => (
@@ -70,6 +78,7 @@ export function OrderCard({
             <span className="order-live-dot" aria-hidden="true" />
             {dateLabel}
           </span>
+          {statusSlot ? <span className="order-top__status">{statusSlot}</span> : null}
         </div>
 
         <div className="order-category">{category}</div>
@@ -102,12 +111,34 @@ export function OrderCard({
           ) : null}
         </div>
 
+        {actionSlot ? <div className="request-card__actions">{actionSlot}</div> : null}
+
         {inlineCta ? (
-          <span className="request-card__cta" aria-hidden="true">
-            {inlineCta} →
-          </span>
+          isLinkMode ? (
+            <span className="request-card__cta" aria-hidden="true">
+              {inlineCta} →
+            </span>
+          ) : (
+            <Link href={href} className="request-card__cta">
+              {inlineCta} →
+            </Link>
+          )
         ) : null}
       </div>
-    </Link>
+    </>
+  );
+
+  if (isLinkMode) {
+    return (
+      <Link href={href} aria-label={ariaLabel ?? title} className={`${cardClassName} request-card--link`}>
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <article className={cardClassName} aria-label={ariaLabel ?? title}>
+      {cardContent}
+    </article>
   );
 }

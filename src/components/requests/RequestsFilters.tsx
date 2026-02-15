@@ -3,8 +3,9 @@
 
 import * as React from 'react';
 import { Select } from '@/components/ui/Select';
+import { CountBadge } from '@/components/ui/CountBadge';
 // import { Input } from '@/components/ui/Input';
-import { IconFilter } from '@/components/ui/icons/icons';
+import { IconFilter, IconPin } from '@/components/ui/icons/icons';
 import * as keys from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -75,13 +76,18 @@ export function RequestsFilters({
             onChange={(e) => setCityQuery(e.target.value)}
             placeholder={t(I18N_KEYS.home.cityPlaceholder)}
           /> */}
-          <Select
-            options={filteredCityOptions}
-            value={cityId}
-            onChange={onCityChange}
-            className="requests-select is-city"
-            aria-label={t(keys.I18N_KEYS.requestsPage.cityLabel)}
-          />
+          <div className="requests-select-wrap">
+            <span className="requests-select-icon requests-select-icon--city" aria-hidden="true">
+              <IconPin />
+            </span>
+            <Select
+              options={filteredCityOptions}
+              value={cityId}
+              onChange={onCityChange}
+              className="requests-select is-city"
+              aria-label={t(keys.I18N_KEYS.requestsPage.cityLabel)}
+            />
+          </div>
         </div>
         <button type="button" className="btn-ghost is-primary requests-clear" onClick={onReset}>
           <IconFilter />
@@ -121,7 +127,7 @@ export function RequestsFilters({
       </div>
       <div className="requests-results">
         <span className="typo-small">{t(keys.I18N_KEYS.requestsPage.countLabel)}</span>
-        <strong>{totalResults}</strong>
+        <CountBadge as="strong" value={totalResults} />
       </div>
     </div>
   );

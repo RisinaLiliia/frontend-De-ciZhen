@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { StatusDot } from '@/components/ui/StatusDot';
+import { RatingSummary } from '@/components/ui/RatingSummary';
 
 type RequestDetailClientProps = {
   title: string;
@@ -90,12 +91,12 @@ export function RequestDetailClient({
             </div>
           </>
         )}
-        <div className="request-detail__client-rating">
-          <span className="provider-rating">★★★★★ {ratingText}</span>
-          <span className="provider-reviews">
-            {ratingCount} {reviewsLabel}
-          </span>
-        </div>
+        <RatingSummary
+          className="request-detail__client-rating"
+          rating={ratingText}
+          reviewsCount={ratingCount}
+          reviewsLabel={reviewsLabel}
+        />
       </div>
     </div>
   );

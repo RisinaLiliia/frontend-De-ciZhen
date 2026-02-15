@@ -7,7 +7,7 @@ import { useAuthLogout, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapsh
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { IconButton } from '@/components/ui/IconButton';
-import { IconLogin, IconLogout, IconUser, IconUserPlus } from '@/components/ui/icons/icons';
+import { IconChat, IconLogin, IconLogout, IconUser, IconUserPlus } from '@/components/ui/icons/icons';
 import { ModeSwitch } from '@/components/layout/ModeSwitch';
 
 export function AuthActions() {
@@ -27,6 +27,13 @@ export function AuthActions() {
     return (
       <div className="flex items-center gap-2">
         <ModeSwitch />
+        <Link
+          href="/chat"
+          aria-label={t(I18N_KEYS.requestsPage.navChat)}
+          className="icon-button h-10 w-10 inline-flex items-center justify-center rounded-md"
+        >
+          <IconChat />
+        </Link>
         <Link
           href={profileHref}
           aria-label={t(I18N_KEYS.auth.profileLabel)}

@@ -1,9 +1,14 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
+import { PersonalNavSection } from '@/components/layout/PersonalNavSection';
 import { HeroSection } from '@/components/ui/HeroSection';
 import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
@@ -12,15 +17,18 @@ import {
   type PublicRequestsSort,
 } from '@/lib/api/requests';
 import { listPublicProviders } from '@/lib/api/providers';
+import { deleteOffer, listMyProviderOffers } from '@/lib/api/offers';
+import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
-import { useAuthStatus } from '@/hooks/useAuthSnapshot';
+import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
+import { IconBriefcase, IconSend, IconUser } from '@/components/ui/icons/icons';
 import type { I18nKey } from '@/lib/i18n/keys';
 
 const ALL_OPTION_KEY = 'all';
@@ -39,10 +47,17 @@ const SORT_OPTIONS: SortOption[] = [
   { value: 'price_desc', labelKey: I18N_KEYS.requestsPage.sortPriceDesc },
 ];
 
+const NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX = 'dc_requests_new_seen_total_v1';
+
 function RequestsPageContent() {
+  const router = useRouter();
+  const qc = useQueryClient();
   const t = useT();
   const { locale } = useI18n();
-  const authStatus = useAuthStatus();
+  const auth = useAuthSnapshot();
+  const authStatus = auth.status;
+  const isAuthed = authStatus === 'authenticated';
+  const isProviderMode = isAuthed && (auth.lastMode ?? auth.role) !== 'client';
 
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
@@ -138,6 +153,35 @@ function RequestsPageContent() {
     queryFn: () => listPublicRequests(filter),
   });
 
+  const { data: allRequestsSummary } = useQuery({
+    queryKey: ['requests-public-summary-total'],
+    enabled: isAuthed,
+    queryFn: () =>
+      listPublicRequests({
+        sort: 'date_desc',
+        page: 1,
+        limit: 1,
+      }),
+  });
+
+  const { data: myOffers = [] } = useQuery({
+    queryKey: ['offers-my'],
+    enabled: isProviderMode,
+    queryFn: () => listMyProviderOffers(),
+  });
+
+  const { data: favoriteRequests = [] } = useQuery({
+    queryKey: ['favorite-requests'],
+    enabled: isProviderMode,
+    queryFn: () => listFavorites('request'),
+  });
+
+  const { data: favoriteProviders = [] } = useQuery({
+    queryKey: ['favorite-providers'],
+    enabled: isProviderMode,
+    queryFn: () => listFavorites('provider'),
+  });
+
   const {
     data: providers = [],
     isLoading: isProvidersLoading,
@@ -153,6 +197,7 @@ function RequestsPageContent() {
 
   const requests = publicRequests?.items ?? [];
   const totalResults = publicRequests?.total ?? requests.length;
+  const totalAllRequests = allRequestsSummary?.total ?? totalResults;
   const totalPages = Math.max(1, Math.ceil(totalResults / limit));
 
   const topProviders = React.useMemo(() => {
@@ -177,6 +222,7 @@ function RequestsPageContent() {
         name,
         role: jobsLabel,
         rating,
+        reviewsCount: provider.ratingCount,
         reviewsLabel,
         ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
         profileHref: `/providers/${provider.id}`,
@@ -184,6 +230,113 @@ function RequestsPageContent() {
       };
     });
   }, [providers, t]);
+
+  const favoriteRequestIds = React.useMemo(
+    () => new Set(favoriteRequests.map((item) => item.id)),
+    [favoriteRequests],
+  );
+  const favoriteProviderIds = React.useMemo(
+    () => new Set(favoriteProviders.map((item) => item.id)),
+    [favoriteProviders],
+  );
+  const offersByRequest = React.useMemo(() => {
+    const map = new Map<string, (typeof myOffers)[number]>();
+    myOffers.forEach((offer) => {
+      if (!map.has(offer.requestId) || offer.updatedAt > (map.get(offer.requestId)?.updatedAt ?? '')) {
+        map.set(offer.requestId, offer);
+      }
+    });
+    return map;
+  }, [myOffers]);
+
+  const [pendingOfferRequestId, setPendingOfferRequestId] = React.useState<string | null>(null);
+  const [pendingFavoriteRequestIds, setPendingFavoriteRequestIds] = React.useState<Set<string>>(
+    () => new Set(),
+  );
+
+  const onToggleRequestFavorite = React.useCallback(
+    async (requestId: string) => {
+      if (pendingFavoriteRequestIds.has(requestId)) return;
+      const isSaved = favoriteRequestIds.has(requestId);
+      setPendingFavoriteRequestIds((prev) => {
+        const next = new Set(prev);
+        next.add(requestId);
+        return next;
+      });
+      try {
+        if (isSaved) {
+          await removeFavorite('request', requestId);
+          toast.message(t(I18N_KEYS.requestDetails.favoritesRemoved));
+        } else {
+          await addFavorite('request', requestId);
+          toast.success(t(I18N_KEYS.requestDetails.saved));
+        }
+        await qc.invalidateQueries({ queryKey: ['favorite-requests'] });
+      } catch {
+        toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
+      } finally {
+        setPendingFavoriteRequestIds((prev) => {
+          const next = new Set(prev);
+          next.delete(requestId);
+          return next;
+        });
+      }
+    },
+    [favoriteRequestIds, pendingFavoriteRequestIds, qc, t],
+  );
+
+  const onToggleProviderFavorite = React.useCallback(
+    async (providerId: string) => {
+      const isSaved = favoriteProviderIds.has(providerId);
+      try {
+        if (isSaved) {
+          await removeFavorite('provider', providerId);
+          toast.message(t(I18N_KEYS.requestDetails.favoritesRemoved));
+        } else {
+          await addFavorite('provider', providerId);
+          toast.success(t(I18N_KEYS.requestDetails.saved));
+        }
+        await qc.invalidateQueries({ queryKey: ['favorite-providers'] });
+      } catch {
+        toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
+      }
+    },
+    [favoriteProviderIds, qc, t],
+  );
+
+  const onOpenOfferSheet = React.useCallback(
+    (requestId: string) => {
+      router.push(`/requests/${requestId}?offer=1`);
+    },
+    [router],
+  );
+
+  const onWithdrawOffer = React.useCallback(
+    async (offerId: string) => {
+      const offer = myOffers.find((item) => item.id === offerId);
+      if (!offer) return;
+      setPendingOfferRequestId(offer.requestId);
+      try {
+        await deleteOffer(offerId);
+        toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
+        await qc.invalidateQueries({ queryKey: ['offers-my'] });
+      } catch {
+        toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+      } finally {
+        setPendingOfferRequestId(null);
+      }
+    },
+    [myOffers, qc, t],
+  );
+
+  const sentCount = React.useMemo(
+    () => myOffers.filter((offer) => offer.status === 'sent').length,
+    [myOffers],
+  );
+  const acceptedCount = React.useMemo(
+    () => myOffers.filter((offer) => offer.status === 'accepted').length,
+    [myOffers],
+  );
 
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const formatNumber = React.useMemo(() => new Intl.NumberFormat(localeTag), [localeTag]);
@@ -209,25 +362,165 @@ function RequestsPageContent() {
     if (page > totalPages) setPage(totalPages);
   }, [page, totalPages, setPage]);
 
-  const createRequestHref =
-    authStatus === 'authenticated'
-      ? '/request/create'
-      : '/auth/login?next=/request/create&role=client';
+  const createRequestHref = '/auth/login?next=/request/create&role=client';
+  const [seenTotal, setSeenTotal] = React.useState(0);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || !isAuthed) return;
+    const storageKey = `${NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
+    const raw = window.localStorage.getItem(storageKey);
+    const parsed = raw ? Number(raw) : 0;
+    setSeenTotal(Number.isFinite(parsed) ? parsed : 0);
+  }, [auth.user?.id, isAuthed]);
+
+  React.useEffect(() => {
+    if (!isAuthed || totalAllRequests <= 0 || typeof window === 'undefined') return;
+    if (seenTotal > totalAllRequests) {
+      const storageKey = `${NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
+      window.localStorage.setItem(storageKey, String(totalAllRequests));
+      setSeenTotal(totalAllRequests);
+    }
+  }, [auth.user?.id, isAuthed, seenTotal, totalAllRequests]);
+
+  const markNewOrdersSeen = React.useCallback(() => {
+    if (typeof window === 'undefined' || !isAuthed) return;
+    const storageKey = `${NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
+    window.localStorage.setItem(storageKey, String(totalAllRequests));
+    setSeenTotal(totalAllRequests);
+  }, [auth.user?.id, isAuthed, totalAllRequests]);
+
+  const newOrdersCount = Math.max(0, totalAllRequests - seenTotal);
+  const resolvedName = auth.user?.name?.trim() || 'User';
+  const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${resolvedName}!`;
+  const completedMonthly = acceptedCount;
+  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${completedMonthly} ${t(
+    I18N_KEYS.requestsPage.navInsightClosedSuffix,
+  )} ${t(I18N_KEYS.requestsPage.navInsightDelta)}`;
+  const activityBase = sentCount + acceptedCount;
+  const activityProgress = activityBase > 0 ? Math.round((acceptedCount / activityBase) * 100) : 12;
+  const navRatingValue = providers[0]?.ratingAvg?.toFixed(1) ?? '4.9';
+  const navReviewsCount = providers[0]?.ratingCount ?? 0;
+  const personalNavItems = React.useMemo(
+    () =>
+      isProviderMode
+        ? [
+            {
+              key: 'new-orders',
+              href: '/requests',
+              label: t(I18N_KEYS.requestsPage.navNewOrders),
+              icon: <IconBriefcase />,
+              value: newOrdersCount,
+              hint: t(I18N_KEYS.requestsPage.resultsLabel),
+              onClick: markNewOrdersSeen,
+              match: 'prefix' as const,
+            },
+            {
+              key: 'my-orders',
+              href: '/provider/contracts',
+              label: t(I18N_KEYS.requestsPage.navMyOrders),
+              icon: <IconBriefcase />,
+              value: acceptedCount,
+              hint: t(I18N_KEYS.requestsPage.summaryAccepted),
+              match: 'prefix' as const,
+            },
+            {
+              key: 'my-offers',
+              href: '/provider',
+              label: t(I18N_KEYS.requestsPage.navMyOffers),
+              icon: <IconSend />,
+              value: sentCount,
+              hint: t(I18N_KEYS.requestsPage.summarySent),
+              match: 'prefix' as const,
+            },
+            {
+              key: 'reviews',
+              href: '/provider/profile',
+              label: t(I18N_KEYS.requestsPage.navReviews),
+              icon: <IconUser />,
+              rating: {
+                value: navRatingValue,
+                reviewsCount: navReviewsCount,
+                reviewsLabel: t(I18N_KEYS.homePublic.reviews),
+              },
+              match: 'prefix' as const,
+            },
+          ]
+        : [
+            {
+              key: 'new-orders',
+              href: '/requests',
+              label: t(I18N_KEYS.requestsPage.navNewOrders),
+              icon: <IconBriefcase />,
+              value: newOrdersCount,
+              hint: t(I18N_KEYS.requestsPage.resultsLabel),
+              onClick: markNewOrdersSeen,
+              match: 'prefix' as const,
+            },
+            {
+              key: 'my-orders',
+              href: '/client/contracts',
+              label: t(I18N_KEYS.requestsPage.navMyOrders),
+              icon: <IconBriefcase />,
+              hint: t(I18N_KEYS.requestsPage.summaryAccepted),
+              match: 'prefix' as const,
+            },
+            {
+              key: 'my-offers',
+              href: '/client/requests',
+              label: t(I18N_KEYS.requestsPage.navMyOffers),
+              icon: <IconSend />,
+              hint: t(I18N_KEYS.requestsPage.summarySent),
+              match: 'prefix' as const,
+            },
+            {
+              key: 'reviews',
+              href: '/client/profile',
+              label: t(I18N_KEYS.requestsPage.navReviews),
+              icon: <IconUser />,
+              rating: {
+                value: navRatingValue,
+                reviewsCount: navReviewsCount,
+                reviewsLabel: t(I18N_KEYS.homePublic.reviews),
+              },
+              match: 'prefix' as const,
+            },
+          ],
+    [
+      acceptedCount,
+      isProviderMode,
+      markNewOrdersSeen,
+      navRatingValue,
+      navReviewsCount,
+      newOrdersCount,
+      sentCount,
+      t,
+    ],
+  );
 
   return (
-    <PageShell right={<AuthActions />} showBack={false} mainClassName="py-6 requests-screen">
-      <HeroSection
-        title={t(I18N_KEYS.requestsPage.heroTitle)}
-        subtitle={t(I18N_KEYS.requestsPage.heroSubtitle)}
-        ctas={[
-          {
-            href: createRequestHref,
-            label: t(I18N_KEYS.requestsPage.heroPrimaryCta),
-            variant: 'primary',
-          },
-        ]}
-        mediaSrc="/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg"
-      />
+    <PageShell right={<AuthActions />} showBack={isAuthed} mainClassName="py-6 requests-screen">
+      {isAuthed ? (
+        <PersonalNavSection
+          title={navTitle}
+          items={personalNavItems}
+          insightText={insightText}
+          progressPercent={activityProgress}
+        />
+      ) : null}
+      {!isAuthed ? (
+        <HeroSection
+          title={t(I18N_KEYS.requestsPage.heroTitle)}
+          subtitle={t(I18N_KEYS.requestsPage.heroSubtitle)}
+          ctas={[
+            {
+              href: createRequestHref,
+              label: t(I18N_KEYS.requestsPage.heroPrimaryCta),
+              variant: 'primary',
+            },
+          ]}
+          mediaSrc="/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg"
+        />
+      ) : null}
 
       <div className="requests-grid">
         <div className="stack-md">
@@ -274,6 +567,16 @@ function RequestsPageContent() {
               cityById={cityById}
               formatDate={formatDate}
               formatPrice={formatPrice}
+              isProviderPersonalized={isProviderMode}
+              offersByRequest={offersByRequest}
+              favoriteRequestIds={favoriteRequestIds}
+              onToggleFavorite={onToggleRequestFavorite}
+              onSendOffer={onOpenOfferSheet}
+              onEditOffer={onOpenOfferSheet}
+              onWithdrawOffer={onWithdrawOffer}
+              pendingOfferRequestId={pendingOfferRequestId}
+              pendingFavoriteRequestIds={pendingFavoriteRequestIds}
+              showStaticFavoriteIcon={!isProviderMode}
             />
           </section>
 
@@ -302,6 +605,21 @@ function RequestsPageContent() {
         </div>
 
         <aside className="stack-md hide-mobile">
+          {isProviderMode ? (
+            <section className="panel requests-provider-summary requests-provider-summary--aside">
+              <div className="requests-provider-summary__stats">
+                <span>
+                  <strong>{sentCount}</strong> {t(I18N_KEYS.requestsPage.summarySent)}
+                </span>
+                <span>
+                  <strong>{acceptedCount}</strong> {t(I18N_KEYS.requestsPage.summaryAccepted)}
+                </span>
+              </div>
+              <Link href="/requests#requests-list" className="btn-ghost is-primary">
+                {t(I18N_KEYS.requestsPage.summaryCta)}
+              </Link>
+            </section>
+          ) : null}
           {isProvidersLoading ? (
             <section className="panel hide-mobile top-providers-panel">
               <div className="panel-header">
@@ -360,6 +678,8 @@ function RequestsPageContent() {
               ctaLabel={t(I18N_KEYS.homePublic.topProvidersCta)}
               ctaHref="/requests"
               providers={topProviders}
+              favoriteProviderIds={favoriteProviderIds}
+              onToggleFavorite={isProviderMode ? onToggleProviderFavorite : undefined}
             />
           )}
         </aside>

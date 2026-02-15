@@ -338,6 +338,7 @@ export default function RequestDetailsPage() {
       setOfferComment('');
       setOfferAvailability('');
       setOfferSheetInUrl(false);
+      router.push('/requests');
       return;
     }
 
@@ -364,6 +365,7 @@ export default function RequestDetailsPage() {
     existingResponse?.id,
     isSubmittingOffer,
     qc,
+    router,
     setOfferSheetInUrl,
     t,
   ]);
@@ -610,7 +612,13 @@ export default function RequestDetailsPage() {
   })();
 
   return (
-    <PageShell right={<AuthActions />} showBack mainClassName="py-6">
+    <PageShell
+      right={<AuthActions />}
+      showBack
+      backHref="/requests"
+      forceBackHref
+      mainClassName="py-6"
+    >
       <div className="request-detail">
         <section className="panel request-detail__panel">
           <RequestDetailHeader
@@ -810,6 +818,7 @@ export default function RequestDetailsPage() {
         onSuccessBack={() => {
           setOfferSheetMode('form');
           setOfferSheetInUrl(false);
+          router.push('/requests');
         }}
         onSubmit={handleOfferSubmit}
       />
