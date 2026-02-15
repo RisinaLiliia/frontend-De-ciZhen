@@ -57,7 +57,7 @@ function RequestsPageContent() {
   const auth = useAuthSnapshot();
   const authStatus = auth.status;
   const isAuthed = authStatus === 'authenticated';
-  const isProviderMode = isAuthed && (auth.lastMode ?? auth.role) !== 'client';
+  const isPersonalized = isAuthed;
 
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
@@ -166,20 +166,50 @@ function RequestsPageContent() {
 
   const { data: myOffers = [] } = useQuery({
     queryKey: ['offers-my'],
-    enabled: isProviderMode,
-    queryFn: () => listMyProviderOffers(),
+    enabled: isAuthed,
+    queryFn: async () => {
+      try {
+        return await listMyProviderOffers();
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return [];
+        }
+        throw error;
+      }
+    },
   });
 
   const { data: favoriteRequests = [] } = useQuery({
     queryKey: ['favorite-requests'],
-    enabled: isProviderMode,
-    queryFn: () => listFavorites('request'),
+    enabled: isAuthed,
+    queryFn: async () => {
+      try {
+        return await listFavorites('request');
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return [];
+        }
+        throw error;
+      }
+    },
   });
 
   const { data: favoriteProviders = [] } = useQuery({
     queryKey: ['favorite-providers'],
-    enabled: isProviderMode,
-    queryFn: () => listFavorites('provider'),
+    enabled: isAuthed,
+    queryFn: async () => {
+      try {
+        return await listFavorites('provider');
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return [];
+        }
+        throw error;
+      }
+    },
   });
 
   const {
@@ -402,7 +432,7 @@ function RequestsPageContent() {
   const navReviewsCount = providers[0]?.ratingCount ?? 0;
   const personalNavItems = React.useMemo(
     () =>
-      isProviderMode
+      isPersonalized
         ? [
             {
               key: 'new-orders',
@@ -487,7 +517,7 @@ function RequestsPageContent() {
           ],
     [
       acceptedCount,
-      isProviderMode,
+      isPersonalized,
       markNewOrdersSeen,
       navRatingValue,
       navReviewsCount,
@@ -567,7 +597,7 @@ function RequestsPageContent() {
               cityById={cityById}
               formatDate={formatDate}
               formatPrice={formatPrice}
-              isProviderPersonalized={isProviderMode}
+              isProviderPersonalized={isPersonalized}
               offersByRequest={offersByRequest}
               favoriteRequestIds={favoriteRequestIds}
               onToggleFavorite={onToggleRequestFavorite}
@@ -576,7 +606,7 @@ function RequestsPageContent() {
               onWithdrawOffer={onWithdrawOffer}
               pendingOfferRequestId={pendingOfferRequestId}
               pendingFavoriteRequestIds={pendingFavoriteRequestIds}
-              showStaticFavoriteIcon={!isProviderMode}
+              showStaticFavoriteIcon={!isAuthed}
             />
           </section>
 
@@ -605,7 +635,7 @@ function RequestsPageContent() {
         </div>
 
         <aside className="stack-md hide-mobile">
-          {isProviderMode ? (
+          {isAuthed ? (
             <section className="panel requests-provider-summary requests-provider-summary--aside">
               <div className="requests-provider-summary__stats">
                 <span>
@@ -679,7 +709,7 @@ function RequestsPageContent() {
               ctaHref="/requests"
               providers={topProviders}
               favoriteProviderIds={favoriteProviderIds}
-              onToggleFavorite={isProviderMode ? onToggleProviderFavorite : undefined}
+              onToggleFavorite={isAuthed ? onToggleProviderFavorite : undefined}
             />
           )}
         </aside>

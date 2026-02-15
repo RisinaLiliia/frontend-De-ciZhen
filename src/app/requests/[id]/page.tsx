@@ -53,9 +53,6 @@ export default function RequestDetailsPage() {
   const requestId = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const actionHandledRef = React.useRef(false);
 
-  const [mode, setMode] = React.useState<'client' | 'provider'>(
-    authUser?.role === 'provider' ? 'provider' : 'client',
-  );
   const [offerAmount, setOfferAmount] = React.useState('');
   const [offerComment, setOfferComment] = React.useState('');
   const [offerAvailability, setOfferAvailability] = React.useState('');
@@ -64,7 +61,6 @@ export default function RequestDetailsPage() {
   const [submittedOfferAmount, setSubmittedOfferAmount] = React.useState<number | null>(null);
 
   const isAuthed = authStatus === 'authenticated';
-  const isProviderUser = authUser?.role === 'provider';
 
   const {
     data: request,
@@ -90,42 +86,50 @@ export default function RequestDetailsPage() {
   const { data: myResponses } = useQuery({
     queryKey: ['offers-my'],
     enabled: authStatus === 'authenticated',
-    queryFn: () => listMyProviderOffers(),
+    queryFn: async () => {
+      try {
+        return await listMyProviderOffers();
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return [];
+        }
+        throw error;
+      }
+    },
   });
 
   const { data: providerProfile } = useQuery({
     queryKey: ['provider-profile'],
     enabled: authStatus === 'authenticated',
-    queryFn: () => getMyProviderProfile(),
+    queryFn: async () => {
+      try {
+        return await getMyProviderProfile();
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return null;
+        }
+        throw error;
+      }
+    },
   });
 
   const { data: favoriteRequests } = useQuery({
     queryKey: ['favorite-requests'],
-    enabled: authStatus === 'authenticated' && authUser?.role === 'provider',
-    queryFn: () => listFavorites('request'),
+    enabled: authStatus === 'authenticated',
+    queryFn: async () => {
+      try {
+        return await listFavorites('request');
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return [];
+        }
+        throw error;
+      }
+    },
   });
-
-  React.useEffect(() => {
-    if (!isAuthed) return;
-    if (!isProviderUser) {
-      setMode('client');
-      return;
-    }
-    const stored =
-      typeof window !== 'undefined' ? window.localStorage.getItem('dc_last_mode') : null;
-    if (stored === 'client' || stored === 'provider') {
-      setMode(stored);
-    } else {
-      setMode('provider');
-    }
-  }, [isAuthed, isProviderUser]);
-
-  const setModeWithStore = React.useCallback((next: 'client' | 'provider') => {
-    setMode(next);
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem('dc_last_mode', next);
-    }
-  }, []);
 
   const existingResponse = React.useMemo(() => {
     if (!isAuthed || !request || !myResponses) return null;
@@ -172,15 +176,12 @@ export default function RequestDetailsPage() {
   );
 
   const isOwner = isAuthed && Boolean(request?.clientId) && request?.clientId === authUser?.id;
-  const isProviderMode = isAuthed && mode === 'provider';
-  const isClientMode = !isAuthed || mode === 'client';
   const isOfferSheetOpen = searchParams?.get('offer') === '1';
   const isOfferAccepted = existingResponse?.status === 'accepted';
   const hasOffer = isAuthed && Boolean(existingResponse || submittedOfferAmount !== null);
   const showOfferCta = !isOwner;
-  const showChatCta = (isAuthed ? isProviderMode : true) && !isOwner;
-  const showFavoriteCta = (isAuthed ? isProviderMode : true) && !isOwner;
-  const showClientModeSwitch = isAuthed && isClientMode && !isOwner && isProviderUser;
+  const showChatCta = !isOwner;
+  const showFavoriteCta = !isOwner;
   const showOwnerBadge = isAuthed && isOwner;
 
   React.useEffect(() => {
@@ -379,12 +380,8 @@ export default function RequestDetailsPage() {
       toast.message(t(I18N_KEYS.requestDetails.ownerHint));
       return;
     }
-    if (mode !== 'provider') {
-      toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
-      return;
-    }
     toast.message(t(I18N_KEYS.requestDetails.chatSoon));
-  }, [authStatus, isOwner, mode, requireAuth, t]);
+  }, [authStatus, isOwner, requireAuth, t]);
 
   const handleFavorite = React.useCallback(() => {
     if (!request) return;
@@ -392,20 +389,12 @@ export default function RequestDetailsPage() {
       requireAuth('favorite');
       return;
     }
-    if (mode !== 'provider') {
-      toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
-      return;
-    }
     if (isOwner) {
       toast.message(t(I18N_KEYS.requestDetails.ownerHint));
       return;
     }
-    if (authUser?.role !== 'provider') {
-      toast.message(t(I18N_KEYS.requestDetails.favoritesProviderOnly));
-      return;
-    }
     void setFavorite(!isSaved);
-  }, [authStatus, authUser?.role, isOwner, isSaved, mode, request, requireAuth, setFavorite, t]);
+  }, [authStatus, isOwner, isSaved, request, requireAuth, setFavorite, t]);
 
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const formatPrice = React.useMemo(
@@ -522,24 +511,18 @@ export default function RequestDetailsPage() {
     } else if (action === 'chat') {
       if (isOwner) {
         toast.message(t(I18N_KEYS.requestDetails.ownerHint));
-      } else if (mode !== 'provider') {
-        toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
       } else {
         toast.message(t(I18N_KEYS.requestDetails.chatSoon));
       }
     } else if (action === 'favorite') {
       if (isOwner) {
         toast.message(t(I18N_KEYS.requestDetails.ownerHint));
-      } else if (mode !== 'provider') {
-        toast.message(t(I18N_KEYS.requestDetails.clientModeHint));
-      } else if (authUser?.role === 'provider') {
+      } else {
         if (!isSaved) {
           void setFavorite(true);
         } else {
           toast.success(t(I18N_KEYS.requestDetails.saved));
         }
-      } else {
-        toast.message(t(I18N_KEYS.requestDetails.favoritesProviderOnly));
       }
     }
 
@@ -549,11 +532,9 @@ export default function RequestDetailsPage() {
     router.replace(`${pathname}${nextQs ? `?${nextQs}` : ''}`);
   }, [
     authStatus,
-    authUser?.role,
     isOfferAccepted,
     isOwner,
     isSaved,
-    mode,
     openOfferForm,
     pathname,
     request,
@@ -668,22 +649,6 @@ export default function RequestDetailsPage() {
           showApply={showOfferCta}
           showChat={showChatCta}
           showSave={showFavoriteCta}
-          notice={
-            showClientModeSwitch ? (
-              <>
-                <div className="request-detail__notice-title">
-                  {t(I18N_KEYS.requestDetails.clientModeHint)}
-                </div>
-                <button
-                  type="button"
-                  className="btn-secondary request-detail__cta-btn"
-                  onClick={() => setModeWithStore('provider')}
-                >
-                  {t(I18N_KEYS.requestDetails.switchToProvider)}
-                </button>
-              </>
-            ) : null
-          }
           extraActions={
             showOwnerBadge ? (
               <Link
@@ -727,22 +692,6 @@ export default function RequestDetailsPage() {
         showApply={showOfferCta}
         showChat={showChatCta}
         showSave={showFavoriteCta}
-        notice={
-          showClientModeSwitch ? (
-            <>
-              <div className="request-detail__notice-title">
-                {t(I18N_KEYS.requestDetails.clientModeHint)}
-              </div>
-              <button
-                type="button"
-                className="btn-secondary request-detail__cta-btn"
-                onClick={() => setModeWithStore('provider')}
-              >
-                {t(I18N_KEYS.requestDetails.switchToProvider)}
-              </button>
-            </>
-          ) : null
-        }
         extraActions={
           showOwnerBadge ? (
             <Link href={`/offers/${request.id}`} className="btn-secondary request-detail__cta-btn">

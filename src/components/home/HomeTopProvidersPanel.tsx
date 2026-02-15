@@ -24,6 +24,19 @@ type HomeTopProvidersPanelProps = {
 
 export function HomeTopProvidersPanel({ t, providers }: HomeTopProvidersPanelProps) {
   const mappedProviders = providers.map((provider) => ({
+    ...(() => {
+      const reviewsText = t(provider.reviewsKey).trim();
+      const countMatch = reviewsText.match(/\d+/);
+      const reviewsCount = countMatch ? Number(countMatch[0]) : 0;
+      const reviewsLabel = reviewsText
+        .replace(/\d+/g, '')
+        .trim()
+        .replace(/^\s+|\s+$/g, '');
+      return {
+        reviewsCount,
+        reviewsLabel,
+      };
+    })(),
     id: provider.id,
     badges: provider.badgeKeys.map((badge) => t(badge)),
     status: provider.status,
@@ -32,7 +45,6 @@ export function HomeTopProvidersPanel({ t, providers }: HomeTopProvidersPanelPro
     name: t(provider.nameKey),
     role: t(provider.roleKey),
     rating: t(provider.ratingKey),
-    reviewsLabel: t(provider.reviewsKey),
     ctaLabel: t(provider.ctaKey),
     profileHref: provider.profileHref,
     reviewsHref: provider.reviewsHref,
