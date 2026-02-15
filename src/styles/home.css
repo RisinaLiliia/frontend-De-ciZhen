@@ -401,6 +401,32 @@
       border-color var(--transition);
   }
 
+  .provider-card__favorite {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 72%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    color: var(--c-text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+
+  .provider-card__favorite.is-active {
+    color: var(--c-accent);
+    border-color: color-mix(in oklab, var(--c-accent) 55%, var(--c-border) 45%);
+    background: color-mix(in oklab, var(--c-accent) 22%, var(--c-panel) 78%);
+  }
+
+  .provider-card.has-favorite-toggle .provider-badges--corner {
+    right: 44px;
+  }
+
   .provider-card:hover {
     transform: translateY(-2px);
     border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
@@ -512,39 +538,8 @@
     gap: 4px;
   }
 
-  .provider-rating-row {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .rating-stars {
-    font-size: 12px;
-    color: var(--c-accent);
-    letter-spacing: 1px;
-    animation: star-glow 2.6s ease-in-out infinite;
-  }
-
-  .provider-rating {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--c-text);
-  }
-
-  .provider-reviews {
-    font-size: 11px;
-    color: var(--c-primary);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .provider-reviews:hover {
-    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text) 30%);
-  }
-
-  .provider-reviews:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 30%, transparent);
+  .provider-rating-summary {
+    margin-top: 2px;
   }
 
   .provider-badges {

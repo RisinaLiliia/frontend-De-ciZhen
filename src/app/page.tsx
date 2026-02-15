@@ -19,7 +19,7 @@ import {
   HOME_SERVICES,
   HOME_TOP_PROVIDERS,
 } from '@/data/home';
-import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
+import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { useMockCategoryCounts } from '@/hooks/useMockCategoryCounts';
 import { useGeoRegion } from '@/hooks/useGeoRegion';
 import { useMockLiveStats } from '@/hooks/useMockLiveStats';
@@ -34,7 +34,6 @@ export default function HomePage() {
   const { locale } = useI18n();
   const router = useRouter();
   const status = useAuthStatus();
-  const user = useAuthUser();
   const isDemo = process.env.NEXT_PUBLIC_DEMO !== 'false';
   const [query, setQuery] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
@@ -87,13 +86,6 @@ export default function HomePage() {
     intervalMs: 5200,
     holdMs: 600,
   });
-
-  React.useEffect(() => {
-    if (status === 'authenticated' && user?.role) {
-      const target = user.role === 'provider' ? '/provider' : '/client';
-      router.replace(target);
-    }
-  }, [status, user, router]);
 
   if (status === 'loading' || status === 'idle') {
     return (

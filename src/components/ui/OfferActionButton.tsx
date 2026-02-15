@@ -9,8 +9,10 @@ type OfferActionButtonProps = {
   onClick?: () => void;
   disabled?: boolean;
   title?: string;
+  ariaLabel?: string;
   className?: string;
   type?: 'button' | 'submit';
+  iconOnly?: boolean;
 };
 
 export function OfferActionButton({
@@ -19,8 +21,10 @@ export function OfferActionButton({
   onClick,
   disabled,
   title,
+  ariaLabel,
   className,
   type = 'button',
+  iconOnly = false,
 }: OfferActionButtonProps) {
   const baseClass =
     kind === 'delete'
@@ -33,12 +37,13 @@ export function OfferActionButton({
   return (
     <button
       type={type}
-      className={`${baseClass} ${className ?? ''}`.trim()}
+      className={`${baseClass} ${iconOnly ? 'offer-action-btn--icon-only' : ''} ${className ?? ''}`.trim()}
       onClick={onClick}
       disabled={disabled}
       title={title}
+      aria-label={ariaLabel ?? label}
     >
-      <span>{label}</span>
+      {iconOnly ? null : <span>{label}</span>}
       <i className="offer-action-btn__icon">{icon}</i>
     </button>
   );

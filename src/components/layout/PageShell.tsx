@@ -9,6 +9,8 @@ type Props = {
   title?: string;
   right?: React.ReactNode;
   showBack?: boolean;
+  backHref?: string;
+  forceBackHref?: boolean;
   withSpacer?: boolean;
   mainClassName?: string;
   children: React.ReactNode;
@@ -18,6 +20,8 @@ export function PageShell({
   title,
   right,
   showBack = true,
+  backHref,
+  forceBackHref = false,
   withSpacer = false,
   mainClassName,
   children,
@@ -34,7 +38,7 @@ export function PageShell({
       >
         {showBack ? (
           <div className="flex items-center">
-            <BackButton />
+            <BackButton fallbackHref={backHref} forceFallback={forceBackHref} />
           </div>
         ) : null}
         {children}

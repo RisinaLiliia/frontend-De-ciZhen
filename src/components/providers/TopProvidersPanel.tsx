@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import { StatusDot } from '@/components/ui/StatusDot';
+import { IconHeart } from '@/components/ui/icons/icons';
+import { RatingSummary } from '@/components/ui/RatingSummary';
 
 export type TopProviderItem = {
   id: string;
@@ -13,6 +15,7 @@ export type TopProviderItem = {
   name: string;
   role: string;
   rating: string;
+  reviewsCount: number;
   reviewsLabel: string;
   ctaLabel: string;
   profileHref: string;
@@ -26,6 +29,8 @@ type TopProvidersPanelProps = {
   ctaHref: string;
   providers: ReadonlyArray<TopProviderItem>;
   className?: string;
+  favoriteProviderIds?: Set<string>;
+  onToggleFavorite?: (providerId: string) => void;
 };
 
 export function TopProvidersPanel({
@@ -35,6 +40,8 @@ export function TopProvidersPanel({
   ctaHref,
   providers,
   className,
+  favoriteProviderIds,
+  onToggleFavorite,
 }: TopProvidersPanelProps) {
   return (
     <section className={`panel hide-mobile top-providers-panel ${className ?? ''}`.trim()}>
@@ -46,7 +53,20 @@ export function TopProvidersPanel({
       </div>
       <div className="provider-list">
         {providers.map((provider) => (
-          <div key={provider.id} className="provider-card">
+          <div
+            key={provider.id}
+            className={`provider-card ${onToggleFavorite ? 'has-favorite-toggle' : ''}`.trim()}
+          >
+            {onToggleFavorite ? (
+              <button
+                type="button"
+                className={`provider-card__favorite ${favoriteProviderIds?.has(provider.id) ? 'is-active' : ''}`}
+                aria-label={provider.name}
+                onClick={() => onToggleFavorite(provider.id)}
+              >
+                <IconHeart />
+              </button>
+            ) : null}
             {provider.badges.length ? (
               <div className="provider-badges provider-badges--corner">
                 {provider.badges.map((badge, index) => (
@@ -87,13 +107,13 @@ export function TopProvidersPanel({
               <div className="provider-main">
                 <p className="provider-name">{provider.name}</p>
                 <p className="provider-sub">{provider.role}</p>
-                <div className="provider-rating-row">
-                  <span className="rating-stars">★★★★★</span>
-                  <span className="provider-rating">{provider.rating}</span>
-                </div>
-                <Link href={provider.reviewsHref} className="provider-reviews">
-                  {provider.reviewsLabel}
-                </Link>
+                <RatingSummary
+                  rating={provider.rating}
+                  reviewsCount={provider.reviewsCount}
+                  reviewsLabel={provider.reviewsLabel}
+                  href={provider.reviewsHref}
+                  className="provider-rating-summary"
+                />
               </div>
             </div>
             <Link href={provider.profileHref} className="btn-ghost is-primary w-full provider-cta">
