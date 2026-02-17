@@ -14,6 +14,8 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { listMyContracts, confirmContract, cancelContract, completeContract } from '@/lib/api/contracts';
 import type { ContractDto } from '@/lib/api/dto/contracts';
+import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
+import { getStatusBadgeClass } from '@/lib/statusBadge';
 
 type FormState = {
   startAt: string;
@@ -87,89 +89,92 @@ export default function ClientContractsPage() {
         <p className="typo-muted">{t(I18N_KEYS.client.contractsSubtitle)}</p>
       </section>
 
-      {isLoading ? <p className="typo-muted">{t(I18N_KEYS.common.refreshing)}</p> : null}
-
       <div className="stack-md">
-        {(data ?? []).length === 0 && !isLoading ? (
-          <p className="typo-muted text-center">{t(I18N_KEYS.client.contractsEmpty)}</p>
-        ) : null}
-
-        {(data ?? []).map((item) => {
-          const form = getForm(item.id);
-          return (
-            <div key={item.id} className="card stack-md">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold">{t(I18N_KEYS.contracts.title)}</p>
-                  <p className="typo-small">{item.requestId}</p>
+        <WorkspaceContentState
+          isLoading={isLoading}
+          isEmpty={(data ?? []).length === 0}
+          emptyTitle={t(I18N_KEYS.client.contractsEmpty)}
+          emptyHint={t(I18N_KEYS.client.contractsSubtitle)}
+          emptyCtaLabel={t(I18N_KEYS.requestsPage.navMyOffers)}
+          emptyCtaHref="/requests?tab=my-offers"
+        >
+          {(data ?? []).map((item) => {
+            const form = getForm(item.id);
+            return (
+              <div key={item.id} className="card stack-md workspace-list-item">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold">{t(I18N_KEYS.contracts.title)}</p>
+                    <p className="typo-small">{item.requestId}</p>
+                  </div>
+                  <span className={`${getStatusBadgeClass(item.status)} capitalize`}>{item.status}</span>
                 </div>
-                <span className="badge capitalize">{item.status}</span>
-              </div>
 
-              <div className="flex flex-wrap gap-2">
-                <span className="badge">
-                  {t(I18N_KEYS.contracts.priceLabel)}: {item.priceAmount ? `€ ${item.priceAmount}` : '—'}
-                </span>
-              </div>
+                <div className="flex flex-wrap gap-2">
+                  <span className="badge">
+                    {t(I18N_KEYS.contracts.priceLabel)}: {item.priceAmount ? `€ ${item.priceAmount}` : '—'}
+                  </span>
+                </div>
 
-              {item.status === 'pending' ? (
-                <div className="stack-sm">
-                  <div className="grid gap-3 md:grid-cols-3">
-                    <div className="stack-xs">
-                      <label className="typo-small">{t(I18N_KEYS.contracts.startAtLabel)}</label>
-                      <Field>
-                        <Input
-                          type="datetime-local"
-                          value={form.startAt}
-                          onChange={(e) => setForm(item.id, { ...form, startAt: e.target.value })}
-                        />
-                      </Field>
+                {item.status === 'pending' ? (
+                  <div className="stack-sm">
+                    <div className="grid gap-3 md:grid-cols-3">
+                      <div className="stack-xs">
+                        <label className="typo-small">{t(I18N_KEYS.contracts.startAtLabel)}</label>
+                        <Field>
+                          <Input
+                            type="datetime-local"
+                            value={form.startAt}
+                            onChange={(e) => setForm(item.id, { ...form, startAt: e.target.value })}
+                          />
+                        </Field>
+                      </div>
+                      <div className="stack-xs">
+                        <label className="typo-small">{t(I18N_KEYS.contracts.durationLabel)}</label>
+                        <Field>
+                          <Input
+                            type="number"
+                            min={15}
+                            value={form.durationMin}
+                            onChange={(e) => setForm(item.id, { ...form, durationMin: e.target.value })}
+                          />
+                        </Field>
+                      </div>
+                      <div className="stack-xs">
+                        <label className="typo-small">{t(I18N_KEYS.contracts.noteLabel)}</label>
+                        <Field>
+                          <Input
+                            value={form.note}
+                            onChange={(e) => setForm(item.id, { ...form, note: e.target.value })}
+                          />
+                        </Field>
+                      </div>
                     </div>
-                    <div className="stack-xs">
-                      <label className="typo-small">{t(I18N_KEYS.contracts.durationLabel)}</label>
-                      <Field>
-                        <Input
-                          type="number"
-                          min={15}
-                          value={form.durationMin}
-                          onChange={(e) => setForm(item.id, { ...form, durationMin: e.target.value })}
-                        />
-                      </Field>
-                    </div>
-                    <div className="stack-xs">
-                      <label className="typo-small">{t(I18N_KEYS.contracts.noteLabel)}</label>
-                      <Field>
-                        <Input
-                          value={form.note}
-                          onChange={(e) => setForm(item.id, { ...form, note: e.target.value })}
-                        />
-                      </Field>
+                    <div className="flex flex-wrap gap-2">
+                      <Button type="button" onClick={() => onConfirm(item)}>
+                        {t(I18N_KEYS.contracts.confirmCta)}
+                      </Button>
+                      <Button type="button" className="btn-ghost" onClick={() => onCancel(item)}>
+                        {t(I18N_KEYS.contracts.cancelCta)}
+                      </Button>
                     </div>
                   </div>
+                ) : null}
+
+                {item.status === 'confirmed' ? (
                   <div className="flex flex-wrap gap-2">
-                    <Button type="button" onClick={() => onConfirm(item)}>
-                      {t(I18N_KEYS.contracts.confirmCta)}
+                    <Button type="button" onClick={() => onComplete(item)}>
+                      {t(I18N_KEYS.contracts.completeCta)}
                     </Button>
                     <Button type="button" className="btn-ghost" onClick={() => onCancel(item)}>
                       {t(I18N_KEYS.contracts.cancelCta)}
                     </Button>
                   </div>
-                </div>
-              ) : null}
-
-              {item.status === 'confirmed' ? (
-                <div className="flex flex-wrap gap-2">
-                  <Button type="button" onClick={() => onComplete(item)}>
-                    {t(I18N_KEYS.contracts.completeCta)}
-                  </Button>
-                  <Button type="button" className="btn-ghost" onClick={() => onCancel(item)}>
-                    {t(I18N_KEYS.contracts.cancelCta)}
-                  </Button>
-                </div>
-              ) : null}
-            </div>
-          );
-        })}
+                ) : null}
+              </div>
+            );
+          })}
+        </WorkspaceContentState>
       </div>
     </PageShell>
   );

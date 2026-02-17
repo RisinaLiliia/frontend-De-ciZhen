@@ -17,6 +17,8 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import Link from 'next/link';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
+import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
+import { getStatusBadgeClass } from '@/lib/statusBadge';
 
 export default function OffersPage() {
   const params = useParams();
@@ -73,17 +75,19 @@ export default function OffersPage() {
           </div>
         ) : null}
 
-        {isLoading ? <p className="typo-muted">{t(I18N_KEYS.common.refreshing)}</p> : null}
-
         <div className="stack-md">
-          {(data ?? []).length === 0 && !isLoading ? (
-            <p className="typo-muted text-center">{t(I18N_KEYS.offers.empty)}</p>
-          ) : null}
-
+          <WorkspaceContentState
+            isLoading={isLoading}
+            isEmpty={(data ?? []).length === 0}
+            emptyTitle={t(I18N_KEYS.offers.empty)}
+            emptyHint={t(I18N_KEYS.offers.subtitle)}
+            emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
+            emptyCtaHref="/requests?tab=new-orders"
+          >
           {(data ?? []).map((item) => {
             const displayName = item.providerDisplayName || t(I18N_KEYS.offers.unnamed);
             return (
-              <div key={item.id} className="card stack-md">
+              <div key={item.id} className="card stack-md workspace-list-item">
                 <div className="flex items-start gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
@@ -95,7 +99,7 @@ export default function OffersPage() {
                         reviewsCount={item.providerRatingCount ?? 0}
                         reviewsLabel={t(I18N_KEYS.homePublic.reviews)}
                       />
-                      <span className="badge capitalize">{item.status}</span>
+                      <span className={`${getStatusBadgeClass(item.status)} capitalize`}>{item.status}</span>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <span className="badge">
@@ -137,6 +141,7 @@ export default function OffersPage() {
               </div>
             );
           })}
+          </WorkspaceContentState>
         </div>
     </PageShell>
   );

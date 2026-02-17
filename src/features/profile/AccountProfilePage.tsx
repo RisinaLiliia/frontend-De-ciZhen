@@ -23,6 +23,8 @@ import { listInbox } from '@/lib/api/chat';
 import { listMyRequests } from '@/lib/api/requests';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
+import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
+import { getStatusBadgeClass } from '@/lib/statusBadge';
 
 type ProfileFormValues = {
   displayName: string;
@@ -61,12 +63,12 @@ export function AccountProfilePage() {
     queryFn: () => with403Fallback(() => getMyProviderProfile(), null),
   });
 
-  const { data: myRequests = [] } = useQuery({
+  const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery({
     queryKey: ['requests-my'],
     queryFn: () => with403Fallback(() => listMyRequests(), []),
   });
 
-  const { data: providerOffers = [] } = useQuery({
+  const { data: providerOffers = [], isLoading: isProviderOffersLoading } = useQuery({
     queryKey: ['offers-my'],
     queryFn: () => with403Fallback(() => listMyProviderOffers(), []),
   });
@@ -187,19 +189,27 @@ export function AccountProfilePage() {
           <Link href="/requests" className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="stack-sm">
-          {myRequests.slice(0, 3).map((item) => (
-            <div key={item.id} className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold">{item.serviceKey}</p>
-                <p className="typo-small">{item.propertyType} · {item.area} m²</p>
+          <WorkspaceContentState
+            isLoading={isMyRequestsLoading}
+            isEmpty={myRequests.length === 0}
+            emptyTitle={t(I18N_KEYS.client.requestsEmpty)}
+            emptyHint={t(I18N_KEYS.client.requestsTitle)}
+            emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
+            emptyCtaHref="/requests?tab=new-orders"
+          >
+            {myRequests.slice(0, 3).map((item) => (
+              <div key={item.id} className="flex items-center justify-between workspace-list-item">
+                <div>
+                  <p className="text-sm font-semibold">{item.serviceKey}</p>
+                  <p className="typo-small">{item.propertyType} · {item.area} m²</p>
+                </div>
+                <div className="text-right">
+                  <span className={getStatusBadgeClass(item.status)}>{item.status}</span>
+                  <p className="typo-small">{t(I18N_KEYS.client.responsesLabel)}: {offersByRequest.get(item.id) ?? 0}</p>
+                </div>
               </div>
-              <div className="text-right">
-                <span className="badge">{item.status}</span>
-                <p className="typo-small">{t(I18N_KEYS.client.responsesLabel)}: {offersByRequest.get(item.id) ?? 0}</p>
-              </div>
-            </div>
-          ))}
-          {myRequests.length === 0 ? <p className="typo-muted">{t(I18N_KEYS.client.requestsEmpty)}</p> : null}
+            ))}
+          </WorkspaceContentState>
         </div>
       </section>
 
@@ -209,16 +219,24 @@ export function AccountProfilePage() {
           <Link href="/requests" className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="stack-sm">
-          {providerOffers.slice(0, 3).map((item) => (
-            <div key={item.id} className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold">{item.requestServiceKey || item.requestId}</p>
-                <p className="typo-small">{item.requestPreferredDate ?? ''}</p>
+          <WorkspaceContentState
+            isLoading={isProviderOffersLoading}
+            isEmpty={providerOffers.length === 0}
+            emptyTitle={t(I18N_KEYS.provider.responsesEmpty)}
+            emptyHint={t(I18N_KEYS.provider.myResponsesTitle)}
+            emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
+            emptyCtaHref="/requests?tab=new-orders"
+          >
+            {providerOffers.slice(0, 3).map((item) => (
+              <div key={item.id} className="flex items-center justify-between workspace-list-item">
+                <div>
+                  <p className="text-sm font-semibold">{item.requestServiceKey || item.requestId}</p>
+                  <p className="typo-small">{item.requestPreferredDate ?? ''}</p>
+                </div>
+                <span className={getStatusBadgeClass(item.status)}>{item.status}</span>
               </div>
-              <span className="badge">{item.status}</span>
-            </div>
-          ))}
-          {providerOffers.length === 0 ? <p className="typo-muted">{t(I18N_KEYS.provider.responsesEmpty)}</p> : null}
+            ))}
+          </WorkspaceContentState>
         </div>
       </section>
 
@@ -247,10 +265,15 @@ export function AccountProfilePage() {
         <h2 className="typo-h3">{t(I18N_KEYS.provider.profileSubtitle)}</h2>
       </section>
 
-      {isProviderLoading ? <p className="typo-muted">{t(I18N_KEYS.common.refreshing)}</p> : null}
-
+      <WorkspaceContentState
+        isLoading={isProviderLoading}
+        isEmpty={false}
+        emptyTitle=""
+        emptyHint=""
+        skeletonCount={1}
+      >
       <form
-        className={`card stack-md ${highlightOffer ? 'provider-profile-form--highlight' : ''}`.trim()}
+        className={`card stack-md workspace-list-item ${highlightOffer ? 'provider-profile-form--highlight' : ''}`.trim()}
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="stack-sm">
@@ -325,6 +348,7 @@ export function AccountProfilePage() {
 
         <Button type="submit">{t(I18N_KEYS.provider.save)}</Button>
       </form>
+      </WorkspaceContentState>
     </PageShell>
   );
 }

@@ -1,9 +1,10 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
@@ -13,7 +14,9 @@ import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
+import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import {
+  deleteMyRequest,
   listMyRequests,
   listPublicRequests,
   type PublicRequestsSort,
@@ -22,6 +25,7 @@ import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
 import { listMyContracts } from '@/lib/api/contracts';
 import { deleteOffer, listMyProviderOffers } from '@/lib/api/offers';
 import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
+import { listMyReviews } from '@/lib/api/reviews';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -32,6 +36,8 @@ import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { IconBriefcase, IconCheck, IconHeart, IconSend, IconUser } from '@/components/ui/icons/icons';
+import { trackUXEvent } from '@/lib/analytics';
+import { getStatusBadgeClass } from '@/lib/statusBadge';
 import type { I18nKey } from '@/lib/i18n/keys';
 
 const ALL_OPTION_KEY = 'all';
@@ -52,9 +58,50 @@ const SORT_OPTIONS: SortOption[] = [
 
 const NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX = 'dc_requests_new_seen_total_v1';
 
+type WorkspaceTab = 'new-orders' | 'my-requests' | 'my-offers' | 'completed-jobs' | 'favorites' | 'reviews';
+type WorkspaceStatusFilter = 'all' | 'open' | 'in_progress' | 'completed';
+
+const WORKSPACE_TABS: WorkspaceTab[] = [
+  'new-orders',
+  'my-requests',
+  'my-offers',
+  'completed-jobs',
+  'favorites',
+  'reviews',
+];
+
+function resolveWorkspaceTab(value: string | null): WorkspaceTab {
+  return value && WORKSPACE_TABS.includes(value as WorkspaceTab) ? (value as WorkspaceTab) : 'new-orders';
+}
+
+function resolveStatusFilter(value: string | null): WorkspaceStatusFilter {
+  return value === 'open' || value === 'in_progress' || value === 'completed' ? value : 'all';
+}
+
+function mapRequestStatusToFilter(status?: string): WorkspaceStatusFilter {
+  if (!status) return 'all';
+  if (status === 'completed') return 'completed';
+  if (status === 'in_progress' || status === 'assigned' || status === 'matched') return 'in_progress';
+  return 'open';
+}
+
+function mapOfferStatusToFilter(status?: string): WorkspaceStatusFilter {
+  if (!status) return 'all';
+  if (status === 'accepted') return 'in_progress';
+  if (status === 'declined') return 'completed';
+  return 'open';
+}
+
+function mapContractStatusToFilter(status?: string): WorkspaceStatusFilter {
+  if (!status) return 'all';
+  if (status === 'completed') return 'completed';
+  return 'in_progress';
+}
+
 function RequestsPageContent() {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const qc = useQueryClient();
   const t = useT();
   const { locale } = useI18n();
@@ -62,6 +109,14 @@ function RequestsPageContent() {
   const authStatus = auth.status;
   const isAuthed = authStatus === 'authenticated';
   const isPersonalized = isAuthed;
+  const activeWorkspaceTab = React.useMemo(
+    () => resolveWorkspaceTab(searchParams.get('tab')),
+    [searchParams],
+  );
+  const activeStatusFilter = React.useMemo(
+    () => resolveStatusFilter(searchParams.get('status')),
+    [searchParams],
+  );
 
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
@@ -168,7 +223,7 @@ function RequestsPageContent() {
       }),
   });
 
-  const { data: myOffers = [] } = useQuery({
+  const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery({
     queryKey: ['offers-my'],
     enabled: isAuthed,
     queryFn: async () => {
@@ -184,7 +239,7 @@ function RequestsPageContent() {
     },
   });
 
-  const { data: favoriteRequests = [] } = useQuery({
+  const { data: favoriteRequests = [], isLoading: isFavoriteRequestsLoading } = useQuery({
     queryKey: ['favorite-requests'],
     enabled: isAuthed,
     queryFn: async () => {
@@ -200,7 +255,7 @@ function RequestsPageContent() {
     },
   });
 
-  const { data: favoriteProviders = [] } = useQuery({
+  const { data: favoriteProviders = [], isLoading: isFavoriteProvidersLoading } = useQuery({
     queryKey: ['favorite-providers'],
     enabled: isAuthed,
     queryFn: async () => {
@@ -216,7 +271,23 @@ function RequestsPageContent() {
     },
   });
 
-  const { data: myRequests = [] } = useQuery({
+  const { data: myReviews = [], isLoading: isMyReviewsLoading } = useQuery({
+    queryKey: ['reviews-my', 'all'],
+    enabled: isAuthed,
+    queryFn: async () => {
+      try {
+        return await listMyReviews({ role: 'all' });
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return [];
+        }
+        throw error;
+      }
+    },
+  });
+
+  const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery({
     queryKey: ['requests-my'],
     enabled: isAuthed,
     queryFn: async () => {
@@ -232,7 +303,7 @@ function RequestsPageContent() {
     },
   });
 
-  const { data: myProviderContracts = [] } = useQuery({
+  const { data: myProviderContracts = [], isLoading: isProviderContractsLoading } = useQuery({
     queryKey: ['contracts-my-provider'],
     enabled: isAuthed,
     queryFn: async () => {
@@ -248,7 +319,7 @@ function RequestsPageContent() {
     },
   });
 
-  const { data: myClientContracts = [] } = useQuery({
+  const { data: myClientContracts = [], isLoading: isClientContractsLoading } = useQuery({
     queryKey: ['contracts-my-client'],
     enabled: isAuthed,
     queryFn: async () => {
@@ -348,6 +419,7 @@ function RequestsPageContent() {
   }, [myOffers]);
 
   const [pendingOfferRequestId, setPendingOfferRequestId] = React.useState<string | null>(null);
+  const [pendingDeleteRequestId, setPendingDeleteRequestId] = React.useState<string | null>(null);
   const [pendingFavoriteRequestIds, setPendingFavoriteRequestIds] = React.useState<Set<string>>(
     () => new Set(),
   );
@@ -427,6 +499,24 @@ function RequestsPageContent() {
     [myOffers, qc, t],
   );
 
+  const onDeleteMyRequest = React.useCallback(
+    async (requestId: string) => {
+      if (pendingDeleteRequestId === requestId) return;
+      setPendingDeleteRequestId(requestId);
+      try {
+        await deleteMyRequest(requestId);
+        toast.success('Anfrage entfernt');
+        await qc.invalidateQueries({ queryKey: ['requests-my'] });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+      } finally {
+        setPendingDeleteRequestId(null);
+      }
+    },
+    [pendingDeleteRequestId, qc, t],
+  );
+
   const sentCount = React.useMemo(
     () => myOffers.filter((offer) => offer.status === 'sent').length,
     [myOffers],
@@ -499,6 +589,29 @@ function RequestsPageContent() {
     setSeenTotal(totalAllRequests);
   }, [auth.user?.id, isAuthed, totalAllRequests]);
 
+  const setWorkspaceTab = React.useCallback(
+    (tab: WorkspaceTab) => {
+      const next = new URLSearchParams(searchParams.toString());
+      next.set('tab', tab);
+      next.set('status', 'all');
+      const query = next.toString();
+      trackUXEvent('workspace_tab_change', { tab });
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+  const setStatusFilter = React.useCallback(
+    (status: WorkspaceStatusFilter) => {
+      const next = new URLSearchParams(searchParams.toString());
+      next.set('tab', activeWorkspaceTab);
+      next.set('status', status);
+      const query = next.toString();
+      trackUXEvent('workspace_status_filter_change', { tab: activeWorkspaceTab, status });
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    },
+    [activeWorkspaceTab, pathname, router, searchParams],
+  );
+
   const newOrdersCount = Math.max(0, totalAllRequests - seenTotal);
   const resolvedName = auth.user?.name?.trim() || 'User';
   const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${resolvedName}!`;
@@ -514,62 +627,131 @@ function RequestsPageContent() {
 
   const navRatingValue = myProviderRating.avg.toFixed(1);
   const navReviewsCount = myProviderRating.count;
+  const allMyContracts = React.useMemo(
+    () =>
+      [...myProviderContracts, ...myClientContracts].sort((a, b) =>
+        a.updatedAt < b.updatedAt ? 1 : -1,
+      ),
+    [myClientContracts, myProviderContracts],
+  );
+  const filteredMyRequests = React.useMemo(
+    () =>
+      myRequests.filter(
+        (item) =>
+          activeStatusFilter === 'all' || mapRequestStatusToFilter(item.status) === activeStatusFilter,
+      ),
+    [activeStatusFilter, myRequests],
+  );
+  const filteredMyOffers = React.useMemo(
+    () =>
+      myOffers.filter(
+        (item) => activeStatusFilter === 'all' || mapOfferStatusToFilter(item.status) === activeStatusFilter,
+      ),
+    [activeStatusFilter, myOffers],
+  );
+  const filteredContracts = React.useMemo(
+    () =>
+      allMyContracts.filter(
+        (item) =>
+          activeStatusFilter === 'all' || mapContractStatusToFilter(item.status) === activeStatusFilter,
+      ),
+    [activeStatusFilter, allMyContracts],
+  );
+  const statusFilters = React.useMemo(
+    () =>
+      activeWorkspaceTab === 'new-orders' || activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews'
+        ? []
+        : [
+            { key: 'all' as const, label: 'Alle' },
+            { key: 'open' as const, label: 'Offen' },
+            { key: 'in_progress' as const, label: 'In Arbeit' },
+            { key: 'completed' as const, label: 'Abgeschlossen' },
+          ],
+    [activeWorkspaceTab],
+  );
+  const primaryAction = React.useMemo(() => {
+    if (activeWorkspaceTab === 'my-requests') {
+      return { label: 'Neue Anfrage erstellen', href: '/request/create' };
+    }
+    if (activeWorkspaceTab === 'my-offers') {
+      return { label: 'Neue Auftraege finden', href: '/requests?tab=new-orders' };
+    }
+    if (activeWorkspaceTab === 'completed-jobs') {
+      return { label: 'Aktive Auftraege', href: '/requests?tab=my-offers&status=in_progress' };
+    }
+    if (activeWorkspaceTab === 'favorites') {
+      return { label: 'Neue Favoriten', href: '/requests?tab=new-orders' };
+    }
+    if (activeWorkspaceTab === 'reviews') {
+      return { label: 'Meine Auftraege', href: '/requests?tab=my-offers' };
+    }
+    return { label: 'Neue Anfrage erstellen', href: '/request/create' };
+  }, [activeWorkspaceTab]);
   const personalNavItems = React.useMemo(
     () =>
       isPersonalized
         ? [
             {
               key: 'new-orders',
-              href: '/requests',
+              href: '/requests?tab=new-orders',
               label: t(I18N_KEYS.requestsPage.navNewOrders),
               icon: <IconBriefcase />,
               value: newOrdersCount,
               hint: t(I18N_KEYS.requestsPage.resultsLabel),
-              onClick: markNewOrdersSeen,
-              forceActive: false,
-              match: 'prefix' as const,
+              onClick: () => {
+                markNewOrdersSeen();
+                setWorkspaceTab('new-orders');
+              },
+              forceActive: activeWorkspaceTab === 'new-orders',
+              match: 'exact' as const,
             },
             {
               key: 'my-orders',
-              href: '/provider/contracts',
-              label: t(I18N_KEYS.requestsPage.navMyOrders),
+              href: '/requests?tab=my-requests',
+              label: 'Meine Auftraege',
               icon: <IconBriefcase />,
-              value: acceptedCount,
+              value: myRequests.length,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
-              match: 'prefix' as const,
+              onClick: () => setWorkspaceTab('my-requests'),
+              forceActive: activeWorkspaceTab === 'my-requests',
+              match: 'exact' as const,
             },
             {
               key: 'my-offers',
-              href: '/requests',
+              href: '/requests?tab=my-offers',
               label: t(I18N_KEYS.requestsPage.navMyOffers),
               icon: <IconSend />,
               value: sentCount,
               hint: t(I18N_KEYS.requestsPage.summarySent),
-              forceActive: pathname === '/requests',
-              match: 'prefix' as const,
+              onClick: () => setWorkspaceTab('my-offers'),
+              forceActive: activeWorkspaceTab === 'my-offers',
+              match: 'exact' as const,
             },
             {
               key: 'completed-jobs',
-              href: '/provider/contracts',
+              href: '/requests?tab=completed-jobs',
               label: 'Abgeschlossene Jobs',
               icon: <IconCheck />,
               value: completedJobsCount,
               hint: t(I18N_KEYS.provider.jobs),
-              match: 'prefix' as const,
+              onClick: () => setWorkspaceTab('completed-jobs'),
+              forceActive: activeWorkspaceTab === 'completed-jobs',
+              match: 'exact' as const,
             },
             {
               key: 'my-favorites',
-              href: '/requests',
+              href: '/requests?tab=favorites',
               label: 'Meine Favoriten',
               icon: <IconHeart />,
               value: favoriteRequestIds.size,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
-              forceActive: false,
-              match: 'prefix' as const,
+              onClick: () => setWorkspaceTab('favorites'),
+              forceActive: activeWorkspaceTab === 'favorites',
+              match: 'exact' as const,
             },
             {
               key: 'reviews',
-              href: '/profile/workspace',
+              href: '/requests?tab=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -577,39 +759,59 @@ function RequestsPageContent() {
                 reviewsCount: navReviewsCount,
                 reviewsLabel: t(I18N_KEYS.homePublic.reviews),
               },
-              match: 'prefix' as const,
+              onClick: () => setWorkspaceTab('reviews'),
+              forceActive: activeWorkspaceTab === 'reviews',
+              match: 'exact' as const,
             },
           ]
         : [
             {
               key: 'new-orders',
-              href: '/requests',
+              href: '/requests?tab=new-orders',
               label: t(I18N_KEYS.requestsPage.navNewOrders),
               icon: <IconBriefcase />,
               value: newOrdersCount,
               hint: t(I18N_KEYS.requestsPage.resultsLabel),
-              onClick: markNewOrdersSeen,
-              match: 'prefix' as const,
+              onClick: () => {
+                markNewOrdersSeen();
+                setWorkspaceTab('new-orders');
+              },
+              forceActive: activeWorkspaceTab === 'new-orders',
+              match: 'exact' as const,
             },
             {
               key: 'my-orders',
-              href: '/client/contracts',
-              label: t(I18N_KEYS.requestsPage.navMyOrders),
+              href: '/requests?tab=my-requests',
+              label: 'Meine Auftraege',
               icon: <IconBriefcase />,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
-              match: 'prefix' as const,
+              onClick: () => setWorkspaceTab('my-requests'),
+              forceActive: activeWorkspaceTab === 'my-requests',
+              match: 'exact' as const,
             },
             {
               key: 'my-offers',
-              href: '/client/requests',
+              href: '/requests?tab=my-offers',
               label: t(I18N_KEYS.requestsPage.navMyOffers),
               icon: <IconSend />,
               hint: t(I18N_KEYS.requestsPage.summarySent),
-              match: 'prefix' as const,
+              onClick: () => setWorkspaceTab('my-offers'),
+              forceActive: activeWorkspaceTab === 'my-offers',
+              match: 'exact' as const,
+            },
+            {
+              key: 'my-favorites',
+              href: '/requests?tab=favorites',
+              label: 'Meine Favoriten',
+              icon: <IconHeart />,
+              hint: t(I18N_KEYS.requestDetails.ctaSave),
+              onClick: () => setWorkspaceTab('favorites'),
+              forceActive: activeWorkspaceTab === 'favorites',
+              match: 'exact' as const,
             },
             {
               key: 'reviews',
-              href: '/profile/workspace',
+              href: '/requests?tab=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -617,19 +819,22 @@ function RequestsPageContent() {
                 reviewsCount: navReviewsCount,
                 reviewsLabel: t(I18N_KEYS.homePublic.reviews),
               },
-              match: 'prefix' as const,
+              onClick: () => setWorkspaceTab('reviews'),
+              forceActive: activeWorkspaceTab === 'reviews',
+              match: 'exact' as const,
             },
           ],
     [
-      acceptedCount,
+      activeWorkspaceTab,
       completedJobsCount,
       favoriteRequestIds.size,
       isPersonalized,
       markNewOrdersSeen,
-      pathname,
+      myRequests.length,
       navRatingValue,
       navReviewsCount,
       newOrdersCount,
+      setWorkspaceTab,
       sentCount,
       t,
     ],
@@ -935,83 +1140,309 @@ function RequestsPageContent() {
             />
           ) : null}
           {/* <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} /> */}
-          <section className="panel requests-panel">
+          <section className="panel requests-panel" aria-labelledby="workspace-section-title">
             <div className="requests-header">
               <div className="section-heading">
-                <p className="section-title">{t(I18N_KEYS.requestsPage.title)}</p>
-                <p className="section-subtitle">{t(I18N_KEYS.requestsPage.subtitle)}</p>
+                <p id="workspace-section-title" className="section-title">
+                  {activeWorkspaceTab === 'new-orders'
+                    ? t(I18N_KEYS.requestsPage.title)
+                    : activeWorkspaceTab === 'my-requests'
+                      ? 'Meine Auftraege'
+                      : activeWorkspaceTab === 'my-offers'
+                        ? 'Meine Angebote'
+                        : activeWorkspaceTab === 'completed-jobs'
+                          ? 'Abgeschlossene Jobs'
+                          : activeWorkspaceTab === 'favorites'
+                            ? 'Meine Favoriten'
+                            : 'Bewertungen'}
+                </p>
+                <p id="workspace-section-subtitle" className="section-subtitle">
+                  {activeWorkspaceTab === 'new-orders'
+                    ? t(I18N_KEYS.requestsPage.subtitle)
+                    : 'Workspace-Ansicht fuer deine eigenen Daten und Aktionen.'}
+                </p>
               </div>
+              <Link
+                href={primaryAction.href}
+                className="btn-primary requests-primary-cta"
+                onClick={() => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab })}
+              >
+                {primaryAction.label}
+              </Link>
             </div>
 
-            <RequestsFilters
-              t={t}
-              locale={locale}
-              categoryOptions={categoryOptions}
-              serviceOptions={serviceOptions}
-              cityOptions={cityOptions}
-              sortOptions={sortOptions}
-              categoryKey={categoryKey}
-              subcategoryKey={subcategoryKey}
-              cityId={cityId}
-              sortBy={sortBy}
-              totalResults={formatNumber.format(totalResults)}
-              isCategoriesLoading={isCategoriesLoading}
-              isServicesLoading={isServicesLoading}
-              onCategoryChange={onCategoryChange}
-              onSubcategoryChange={onSubcategoryChange}
-              onCityChange={onCityChange}
-              onSortChange={onSortChange}
-              onReset={onReset}
-            />
+            {activeWorkspaceTab === 'new-orders' ? (
+              <RequestsFilters
+                t={t}
+                locale={locale}
+                categoryOptions={categoryOptions}
+                serviceOptions={serviceOptions}
+                cityOptions={cityOptions}
+                sortOptions={sortOptions}
+                categoryKey={categoryKey}
+                subcategoryKey={subcategoryKey}
+                cityId={cityId}
+                sortBy={sortBy}
+                totalResults={formatNumber.format(totalResults)}
+                isCategoriesLoading={isCategoriesLoading}
+                isServicesLoading={isServicesLoading}
+                onCategoryChange={onCategoryChange}
+                onSubcategoryChange={onSubcategoryChange}
+                onCityChange={onCityChange}
+                onSortChange={onSortChange}
+                onReset={onReset}
+              />
+            ) : null}
+            {statusFilters.length > 0 ? (
+              <div className="chip-row" role="tablist" aria-label="Statusfilter">
+                {statusFilters.map((filterItem) => (
+                  <button
+                    key={filterItem.key}
+                    type="button"
+                    className={`chip ${activeStatusFilter === filterItem.key ? 'is-active' : ''}`.trim()}
+                    onClick={() => setStatusFilter(filterItem.key)}
+                    aria-pressed={activeStatusFilter === filterItem.key}
+                  >
+                    {filterItem.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </section>
 
-          <section id="requests-list" className="requests-list">
-            <RequestsList
-              t={t}
-              locale={locale}
-              requests={requests}
-              isLoading={isLoading}
-              isError={isError}
-              serviceByKey={serviceByKey}
-              categoryByKey={categoryByKey}
-              cityById={cityById}
-              formatDate={formatDate}
-              formatPrice={formatPrice}
-              isProviderPersonalized={isPersonalized}
-              offersByRequest={offersByRequest}
-              favoriteRequestIds={favoriteRequestIds}
-              onToggleFavorite={onToggleRequestFavorite}
-              onSendOffer={onOpenOfferSheet}
-              onEditOffer={onOpenOfferSheet}
-              onWithdrawOffer={onWithdrawOffer}
-              pendingOfferRequestId={pendingOfferRequestId}
-              pendingFavoriteRequestIds={pendingFavoriteRequestIds}
-              showStaticFavoriteIcon={!isAuthed}
-            />
+          <section
+            id="requests-list"
+            className="requests-list"
+            role="tabpanel"
+            aria-labelledby="workspace-section-title"
+            aria-describedby="workspace-section-subtitle"
+            aria-live="polite"
+          >
+            {activeWorkspaceTab === 'new-orders' ? (
+              <RequestsList
+                t={t}
+                locale={locale}
+                requests={requests}
+                isLoading={isLoading}
+                isError={isError}
+                serviceByKey={serviceByKey}
+                categoryByKey={categoryByKey}
+                cityById={cityById}
+                formatDate={formatDate}
+                formatPrice={formatPrice}
+                isProviderPersonalized={isPersonalized}
+                offersByRequest={offersByRequest}
+                favoriteRequestIds={favoriteRequestIds}
+                onToggleFavorite={onToggleRequestFavorite}
+                onSendOffer={onOpenOfferSheet}
+                onEditOffer={onOpenOfferSheet}
+                onWithdrawOffer={onWithdrawOffer}
+                pendingOfferRequestId={pendingOfferRequestId}
+                pendingFavoriteRequestIds={pendingFavoriteRequestIds}
+                showStaticFavoriteIcon={!isAuthed}
+              />
+            ) : null}
+
+            {activeWorkspaceTab === 'my-requests' ? (
+              <div className="stack-sm">
+                <Link href="/request/create" className="card stack-xs no-underline">
+                  <p className="text-2xl font-semibold leading-none">+</p>
+                  <p className="text-sm font-semibold">Neue Anfrage erstellen</p>
+                  <p className="typo-small">Kostenlos · mehrere Angebote</p>
+                </Link>
+                <WorkspaceContentState
+                  isLoading={isMyRequestsLoading}
+                  isEmpty={filteredMyRequests.length === 0}
+                  emptyTitle="Noch keine passenden Anfragen."
+                  emptyHint="Erstelle eine neue Anfrage oder wechsle den Statusfilter."
+                  emptyCtaLabel="Neue Anfrage erstellen"
+                  emptyCtaHref="/request/create"
+                >
+                  {filteredMyRequests.map((item) => (
+                    <article key={item.id} className="card stack-xs workspace-list-item">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold truncate">{item.title || item.serviceKey}</p>
+                          <p className="typo-small">{item.cityName || item.cityId}</p>
+                        </div>
+                        <span className={`${getStatusBadgeClass(item.status)} capitalize`}>{item.status}</span>
+                      </div>
+                      <p className="typo-small">
+                        Erstellt: {new Date(item.createdAt).toLocaleDateString(localeTag)}
+                      </p>
+                      <div className="offer-actions">
+                        <Link href={`/requests/${item.id}`} className="badge offer-actions__btn" aria-label={`Anfrage ${item.title || item.serviceKey} ansehen`}>Ansehen</Link>
+                        <Link href={`/requests/${item.id}`} className="badge offer-actions__btn" aria-label={`Anfrage ${item.title || item.serviceKey} bearbeiten`}>Bearbeiten</Link>
+                        <button
+                          type="button"
+                          className="btn-ghost offer-actions__btn"
+                          onClick={() => {
+                            void onDeleteMyRequest(item.id);
+                          }}
+                          disabled={pendingDeleteRequestId === item.id}
+                          aria-label={`Anfrage ${item.title || item.serviceKey} loeschen`}
+                        >
+                          {pendingDeleteRequestId === item.id ? 'Loeschen...' : 'Loeschen'}
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </WorkspaceContentState>
+              </div>
+            ) : null}
+
+            {activeWorkspaceTab === 'my-offers' ? (
+              <div className="stack-sm">
+                <WorkspaceContentState
+                  isLoading={isMyOffersLoading}
+                  isEmpty={filteredMyOffers.length === 0}
+                  emptyTitle="Noch keine passenden Angebote."
+                  emptyHint="Noch keine Angebote. Anfrage erstellen oder offene Auftraege ansehen."
+                  emptyCtaLabel="Auftraege ansehen"
+                  emptyCtaHref="/requests?tab=new-orders"
+                >
+                  {filteredMyOffers.map((item) => (
+                    <article key={item.id} className="card stack-xs workspace-list-item">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold truncate">{item.requestTitle || item.requestServiceKey}</p>
+                          <p className="typo-small">{item.requestCityId ?? '—'}</p>
+                        </div>
+                        <span className={`${getStatusBadgeClass(item.status)} capitalize`}>{item.status}</span>
+                      </div>
+                      <p className="typo-small">{typeof item.amount === 'number' ? `€ ${item.amount}` : '€ —'}</p>
+                      <div className="offer-actions">
+                        <Link href={`/requests/${item.requestId}`} className="badge offer-actions__btn" aria-label="Zugehoerige Anfrage ansehen">Anfrage</Link>
+                        <button
+                          type="button"
+                          className="badge offer-actions__btn"
+                          onClick={() => onOpenOfferSheet(item.requestId)}
+                          disabled={item.status !== 'sent'}
+                          aria-label="Angebot bearbeiten"
+                        >
+                          Bearbeiten
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-ghost offer-actions__btn"
+                          onClick={() => {
+                            void onWithdrawOffer(item.id);
+                          }}
+                          disabled={item.status !== 'sent' || pendingOfferRequestId === item.requestId}
+                          aria-label="Angebot zurueckziehen"
+                        >
+                          Zurueckziehen
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </WorkspaceContentState>
+              </div>
+            ) : null}
+
+            {activeWorkspaceTab === 'completed-jobs' ? (
+              <div className="stack-sm">
+                <WorkspaceContentState
+                  isLoading={isProviderContractsLoading || isClientContractsLoading}
+                  isEmpty={filteredContracts.length === 0}
+                  emptyTitle="Noch keine passenden Vertraege."
+                  emptyHint="Sobald ein Angebot angenommen wird, erscheint es hier."
+                  emptyCtaLabel="Meine Angebote"
+                  emptyCtaHref="/requests?tab=my-offers"
+                >
+                  {filteredContracts.map((item) => (
+                    <article key={item.id} className="card stack-xs workspace-list-item">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-sm font-semibold truncate">Contract #{item.id.slice(-6)}</p>
+                        <span className={`${getStatusBadgeClass(item.status)} capitalize`}>{item.status}</span>
+                      </div>
+                      <p className="typo-small">
+                        {item.priceAmount != null ? `€ ${item.priceAmount}` : 'Preis folgt'} ·
+                        {' '}
+                        {new Date(item.updatedAt).toLocaleDateString(localeTag)}
+                      </p>
+                      <Link href="/requests?tab=completed-jobs" className="badge offer-actions__btn" aria-label="Vertragsdetails ansehen">Details</Link>
+                    </article>
+                  ))}
+                </WorkspaceContentState>
+              </div>
+            ) : null}
+
+            {activeWorkspaceTab === 'favorites' ? (
+              <div className="stack-sm">
+                <WorkspaceContentState
+                  isLoading={isFavoriteRequestsLoading || isFavoriteProvidersLoading}
+                  isEmpty={favoriteRequests.length + favoriteProviders.length === 0}
+                  emptyTitle="Noch keine Favoriten gespeichert."
+                  emptyHint="Speichere interessante Anfragen oder Anbieter fuer schnellen Zugriff."
+                  emptyCtaLabel="Anfragen entdecken"
+                  emptyCtaHref="/requests?tab=new-orders"
+                >
+                  {favoriteRequests.map((item) => (
+                    <article key={`fav-request-${item.id}`} className="card stack-xs workspace-list-item">
+                      <p className="text-sm font-semibold truncate">{item.title || item.serviceKey}</p>
+                      <Link href={`/requests/${item.id}`} className="badge offer-actions__btn">Anfrage ansehen</Link>
+                    </article>
+                  ))}
+                  {favoriteProviders.map((item) => (
+                    <article key={`fav-provider-${item.id}`} className="card stack-xs workspace-list-item">
+                      <p className="text-sm font-semibold truncate">{item.displayName || 'Provider'}</p>
+                      <Link href={`/providers/${item.id}`} className="badge offer-actions__btn">Profil ansehen</Link>
+                    </article>
+                  ))}
+                </WorkspaceContentState>
+              </div>
+            ) : null}
+
+            {activeWorkspaceTab === 'reviews' ? (
+              <div className="stack-sm">
+                <WorkspaceContentState
+                  isLoading={isMyReviewsLoading}
+                  isEmpty={myReviews.length === 0}
+                  emptyTitle="Noch keine Bewertungen vorhanden."
+                  emptyHint="Nach abgeschlossenen Auftraegen erscheinen Bewertungen hier."
+                  emptyCtaLabel="Auftraege verwalten"
+                  emptyCtaHref="/requests?tab=completed-jobs"
+                >
+                  {myReviews.map((item) => (
+                    <article key={item.id} className="card stack-xs workspace-list-item">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-sm font-semibold">{item.rating?.toFixed(1) ?? '—'} ★</p>
+                        <span className="badge capitalize">{item.targetRole ?? 'all'}</span>
+                      </div>
+                      <p className="typo-small">{item.text || item.comment || 'Kein Kommentar'}</p>
+                      <p className="typo-small">{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '—'}</p>
+                    </article>
+                  ))}
+                </WorkspaceContentState>
+              </div>
+            ) : null}
           </section>
 
-          <div className="requests-pagination">
-            <button
-              type="button"
-              className="btn-ghost"
-              onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-              disabled={page <= 1}
-            >
-              ←
-            </button>
-            <span className="typo-small">
-              {t(I18N_KEYS.requestsPage.resultsLabel)} {formatNumber.format(totalResults)} •{' '}
-              {page}/{totalPages}
-            </span>
-            <button
-              type="button"
-              className="btn-ghost"
-              onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
-              disabled={page >= totalPages}
-            >
-              →
-            </button>
-          </div>
+          {activeWorkspaceTab === 'new-orders' ? (
+            <div className="requests-pagination">
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                disabled={page <= 1}
+              >
+                ←
+              </button>
+              <span className="typo-small">
+                {t(I18N_KEYS.requestsPage.resultsLabel)} {formatNumber.format(totalResults)} •{' '}
+                {page}/{totalPages}
+              </span>
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                disabled={page >= totalPages}
+              >
+                →
+              </button>
+            </div>
+          ) : null}
         </div>
 
         <aside className="stack-md hide-mobile">
@@ -1074,6 +1505,17 @@ function RequestsPageContent() {
           )}
         </aside>
       </div>
+      {isAuthed ? (
+        <div className="workspace-mobile-action">
+          <Link
+            href={primaryAction.href}
+            className="btn-primary workspace-mobile-action__btn"
+            onClick={() => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab, mobile: true })}
+          >
+            {primaryAction.label}
+          </Link>
+        </div>
+      ) : null}
     </PageShell>
   );
 }

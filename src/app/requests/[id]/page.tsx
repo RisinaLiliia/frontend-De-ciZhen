@@ -20,7 +20,7 @@ import {
   RequestOfferSheet,
   RequestDetailSimilar,
 } from '@/components/requests/details';
-import { RequestStatusBadge } from '@/components/ui/RequestStatusBadge';
+import { getStatusBadgeClass } from '@/lib/statusBadge';
 import { getPublicRequestById, listPublicRequests } from '@/lib/api/requests';
 import { createOffer, deleteOffer, listMyProviderOffers, updateOffer } from '@/lib/api/offers';
 import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
@@ -564,21 +564,21 @@ export default function RequestDetailsPage() {
   const requestStatusView =
     request.status === 'matched'
       ? {
-          tone: 'progress' as const,
+          token: 'in_progress',
           label: t(I18N_KEYS.requestDetails.statusInProgress),
         }
       : request.status === 'closed'
         ? {
-            tone: 'accepted' as const,
+            token: 'completed',
             label: t(I18N_KEYS.requestDetails.statusAccepted),
           }
         : request.status === 'cancelled'
           ? {
-              tone: 'review' as const,
+              token: 'cancelled',
               label: t(I18N_KEYS.requestDetails.statusCancelled),
             }
           : {
-              tone: 'review' as const,
+              token: 'sent',
               label: t(I18N_KEYS.requestDetails.statusReview),
           };
 
@@ -610,10 +610,7 @@ export default function RequestDetailsPage() {
             tags={viewModel.tagList}
             badgeLabel={showOwnerBadge ? t(I18N_KEYS.requestDetails.ownerBadge) : undefined}
             statusBadge={
-              <RequestStatusBadge
-                tone={requestStatusView.tone}
-                label={requestStatusView.label}
-              />
+              <span className={getStatusBadgeClass(requestStatusView.token)}>{requestStatusView.label}</span>
             }
           />
           <RequestDetailGallery images={viewModel.images} title={viewModel.title} />

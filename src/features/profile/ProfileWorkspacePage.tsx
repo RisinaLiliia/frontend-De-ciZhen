@@ -2,37 +2,29 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { listMyRequests } from '@/lib/api/requests';
-import { acceptOffer, declineOffer, listMyProviderOffers, listMyClientOffers } from '@/lib/api/offers';
+import { listMyProviderOffers, listMyClientOffers } from '@/lib/api/offers';
 import { listMyContracts } from '@/lib/api/contracts';
-import { createThread, listInbox } from '@/lib/api/chat';
+import { listInbox } from '@/lib/api/chat';
 import { listFavorites } from '@/lib/api/favorites';
 import { listPublicProviders } from '@/lib/api/providers';
-import { updateMe, uploadMyAvatar } from '@/lib/api/users';
+import { changeMyPassword, updateMe, uploadMyAvatar } from '@/lib/api/users';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import type { OfferDto } from '@/lib/api/dto/offers';
-import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { useAuthMe, useHasProviderProfile } from '@/hooks/useAuthSnapshot';
 import { useAuthStore } from '@/features/auth/store';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
-import { RatingSummary } from '@/components/ui/RatingSummary';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
-
-type WorkspaceTab = 'requests' | 'offers' | 'contracts' | 'chat' | 'favorites' | 'settings';
-const WORKSPACE_TABS: WorkspaceTab[] = ['requests', 'offers', 'contracts', 'chat', 'favorites', 'settings'];
-
-function isWorkspaceTab(value: string | null): value is WorkspaceTab {
-  return Boolean(value && WORKSPACE_TABS.includes(value as WorkspaceTab));
-}
+import { IconEye, IconEyeOff } from '@/components/ui/icons/icons';
+import { buildApiUrl } from '@/lib/api/url';
 
 async function with403Fallback<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {
@@ -53,26 +45,43 @@ export default function ProfileWorkspacePage() {
   const setMe = useAuthStore((s) => s.setMe);
   const { locale, setLocale } = useI18n();
   const { resolvedTheme, setTheme } = useTheme();
-  const qc = useQueryClient();
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = React.useState<WorkspaceTab>('requests');
-  const [offersDrawerRequest, setOffersDrawerRequest] = React.useState<RequestResponseDto | null>(null);
-  const [providerDrawerOffer, setProviderDrawerOffer] = React.useState<OfferDto | null>(null);
-  const [pendingOfferId, setPendingOfferId] = React.useState<string | null>(null);
+
   const [isSavingProfile, setIsSavingProfile] = React.useState(false);
+  const [isProfileEditing, setIsProfileEditing] = React.useState(false);
+  const [isSecurityEditing, setIsSecurityEditing] = React.useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = React.useState(false);
   const [isSavingBio, setIsSavingBio] = React.useState(false);
   const [isBioEditing, setIsBioEditing] = React.useState(false);
+  const [isSavingPassword, setIsSavingPassword] = React.useState(false);
   const [bioDraft, setBioDraft] = React.useState('');
-  const [profileForm, setProfileForm] = React.useState({
-    name: '',
-    city: '',
-    phone: '',
+  const [profileForm, setProfileForm] = React.useState({ name: '', city: '' });
+  const [avatarFileName, setAvatarFileName] = React.useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
+  const [showNewPassword, setShowNewPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [passwordForm, setPasswordForm] = React.useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
   });
 
-  const { data: myRequests = [], isLoading: isRequestsLoading } = useQuery({
+  const passwordChecks = React.useMemo(() => {
+    const value = passwordForm.newPassword;
+    return {
+      length: value.length >= 8,
+      upper: /[A-ZА-ЯЁ]/.test(value),
+      lower: /[a-zа-яё]/.test(value),
+      digit: /\d/.test(value),
+      symbol: /[^A-Za-zА-Яа-яЁё0-9]/.test(value),
+    };
+  }, [passwordForm.newPassword]);
+
+  const isPasswordStrong = Object.values(passwordChecks).every(Boolean);
+  const passwordsMatch =
+    passwordForm.confirmPassword.length > 0 &&
+    passwordForm.confirmPassword === passwordForm.newPassword;
+
+  const { data: myRequests = [] } = useQuery({
     queryKey: ['requests-my'],
     queryFn: () => with403Fallback(() => listMyRequests(), []),
   });
@@ -100,15 +109,6 @@ export default function ProfileWorkspacePage() {
     queryKey: ['favorite-providers'],
     queryFn: () => with403Fallback(() => listFavorites('provider'), []),
   });
-  const selectedProviderUserId = providerDrawerOffer?.providerUserId ?? null;
-  const { data: selectedProvider } = useQuery({
-    queryKey: ['provider-public', selectedProviderUserId],
-    enabled: Boolean(selectedProviderUserId),
-    queryFn: async () => {
-      const list = await listPublicProviders();
-      return list.find((item) => item.id === selectedProviderUserId) ?? null;
-    },
-  });
   const { data: myProviderPublic } = useQuery({
     queryKey: ['provider-public-self', authMe?.id],
     enabled: Boolean(authMe?.id),
@@ -118,83 +118,58 @@ export default function ProfileWorkspacePage() {
     },
   });
 
-  const offersByRequest = React.useMemo(() => {
-    const map = new Map<string, OfferDto[]>();
-    clientOffers.forEach((offer) => {
-      const current = map.get(offer.requestId) ?? [];
-      current.push(offer);
-      map.set(offer.requestId, current);
+  React.useEffect(() => {
+    setProfileForm({
+      name: authMe?.name ?? '',
+      city: authMe?.city ?? '',
     });
-    map.forEach((value, key) => {
-      const sorted = [...value].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
-      map.set(key, sorted);
-    });
-    return map;
-  }, [clientOffers]);
+    setBioDraft(authMe?.bio ?? '');
+    setIsBioEditing(false);
+    setIsProfileEditing(false);
+    setIsSecurityEditing(false);
+  }, [authMe?.name, authMe?.city, authMe?.bio]);
 
-  const offerStatusLabel = (status: OfferDto['status']) => {
-    if (status === 'accepted') return t(I18N_KEYS.offers.accepted);
-    if (status === 'declined') return t(I18N_KEYS.requestDetails.statusDeclined);
-    if (status === 'withdrawn') return 'Withdrawn';
-    return status;
-  };
+  const isProfileDirty = React.useMemo(
+    () =>
+      isProfileEditing &&
+      (profileForm.name !== (authMe?.name ?? '') || profileForm.city !== (authMe?.city ?? '')),
+    [authMe?.city, authMe?.name, isProfileEditing, profileForm.city, profileForm.name],
+  );
+  const isBioDirty = React.useMemo(
+    () => isBioEditing && bioDraft !== (authMe?.bio ?? ''),
+    [authMe?.bio, bioDraft, isBioEditing],
+  );
+  const isSecurityDirty = React.useMemo(
+    () =>
+      isSecurityEditing &&
+      (passwordForm.currentPassword.length > 0 ||
+        passwordForm.newPassword.length > 0 ||
+        passwordForm.confirmPassword.length > 0),
+    [isSecurityEditing, passwordForm.confirmPassword.length, passwordForm.currentPassword.length, passwordForm.newPassword.length],
+  );
+  const hasUnsavedChanges = isProfileDirty || isBioDirty || isSecurityDirty;
 
-  const requestStatusLabel = (status: RequestResponseDto['status'], offersCount: number) => {
-    if (status === 'cancelled') return 'cancelled';
-    if (status === 'closed') return 'completed';
-    if (status === 'matched') return 'assigned';
-    if (status === 'published' && offersCount > 0) return 'has_offers';
-    return 'open';
-  };
+  React.useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', onBeforeUnload);
+    return () => window.removeEventListener('beforeunload', onBeforeUnload);
+  }, [hasUnsavedChanges]);
 
-  const handleAccept = async (offerId: string) => {
-    setPendingOfferId(offerId);
-    try {
-      await acceptOffer(offerId);
-      toast.success(t(I18N_KEYS.offers.accepted));
-      await Promise.all([
-        qc.invalidateQueries({ queryKey: ['offers-my-client'] }),
-        qc.invalidateQueries({ queryKey: ['requests-my'] }),
-        qc.invalidateQueries({ queryKey: ['contracts-my-all'] }),
-      ]);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    } finally {
-      setPendingOfferId(null);
-    }
-  };
-
-  const handleDecline = async (offerId: string) => {
-    setPendingOfferId(offerId);
-    try {
-      await declineOffer(offerId);
-      toast.success(t(I18N_KEYS.requestDetails.statusDeclined));
-      await Promise.all([
-        qc.invalidateQueries({ queryKey: ['offers-my-client'] }),
-        qc.invalidateQueries({ queryKey: ['requests-my'] }),
-      ]);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    } finally {
-      setPendingOfferId(null);
-    }
-  };
-
-  const handleChat = async (offer: OfferDto) => {
-    try {
-      const thread = await createThread({
-        requestId: offer.requestId,
-        providerUserId: offer.providerUserId,
-        offerId: offer.id,
-      });
-      router.push(`/chat/${thread.id}`);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    }
-  };
+  const guardNavigation = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      if (!hasUnsavedChanges) return;
+      const shouldLeave = window.confirm('Du hast ungespeicherte Aenderungen. Seite wirklich verlassen?');
+      if (!shouldLeave) {
+        event.preventDefault();
+        return;
+      }
+    },
+    [hasUnsavedChanges],
+  );
 
   const offersTotal = providerOffers.length + clientOffers.length;
   const unreadTotal = inbox.reduce(
@@ -215,32 +190,17 @@ export default function ProfileWorkspacePage() {
     [authMe?.id, contracts, myRequests.length, providerOffers.length],
   );
 
-  React.useEffect(() => {
-    setProfileForm({
-      name: authMe?.name ?? '',
-      city: authMe?.city ?? '',
-      phone: authMe?.phone ?? '',
-    });
-    setBioDraft(authMe?.bio ?? '');
-    setIsBioEditing(false);
-  }, [authMe?.name, authMe?.city, authMe?.phone, authMe?.bio]);
-
-  React.useEffect(() => {
-    const tabFromUrl = searchParams.get('tab');
-    if (!isWorkspaceTab(tabFromUrl)) return;
-    setActiveTab((prev) => (prev === tabFromUrl ? prev : tabFromUrl));
-  }, [searchParams]);
-
-  const setWorkspaceTab = React.useCallback(
-    (tab: WorkspaceTab) => {
-      setActiveTab(tab);
-      const next = new URLSearchParams(searchParams.toString());
-      next.set('tab', tab);
-      const query = next.toString();
-      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-    },
-    [pathname, router, searchParams],
-  );
+  const profileCompleteness = React.useMemo(() => {
+    const checks = [
+      Boolean(authMe?.name?.trim()),
+      Boolean(authMe?.city?.trim()),
+      Boolean(authMe?.phone?.trim()),
+      Boolean(authMe?.bio?.trim()),
+      Boolean(avatarUrl),
+    ];
+    const done = checks.filter(Boolean).length;
+    return Math.round((done / checks.length) * 100);
+  }, [authMe?.bio, authMe?.city, authMe?.name, authMe?.phone, avatarUrl]);
 
   const handleSaveProfile = async () => {
     const name = profileForm.name.trim();
@@ -254,9 +214,9 @@ export default function ProfileWorkspacePage() {
       const updated = await updateMe({
         name,
         city: profileForm.city.trim(),
-        phone: profileForm.phone.trim(),
       });
       setMe(updated);
+      setIsProfileEditing(false);
       toast.success('Profil aktualisiert');
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
@@ -286,6 +246,7 @@ export default function ProfileWorkspacePage() {
   const handleAvatarSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    setAvatarFileName(file.name);
 
     setIsUploadingAvatar(true);
     try {
@@ -301,14 +262,51 @@ export default function ProfileWorkspacePage() {
     }
   };
 
-  const tabs: Array<{ key: WorkspaceTab; label: string; count?: number }> = [
-    { key: 'requests', label: t(I18N_KEYS.client.requestsTitle), count: myRequests.length },
-    { key: 'offers', label: t(I18N_KEYS.requestsPage.navMyOffers), count: offersTotal },
-    { key: 'contracts', label: t(I18N_KEYS.client.contractsTitle), count: contracts.length },
-    { key: 'chat', label: t(I18N_KEYS.chat.inboxTitle), count: unreadTotal },
-    { key: 'favorites', label: 'Favoriten', count: favoritesTotal },
-    { key: 'settings', label: t(I18N_KEYS.client.settingsTitle) },
+  const handleSavePassword = async () => {
+    if (!isPasswordStrong) {
+      toast.error('Passwort: mind. 8 Zeichen, Gross/Klein, Zahl und Sonderzeichen');
+      return;
+    }
+    if (!passwordsMatch) {
+      toast.error('Passwoerter stimmen nicht ueberein');
+      return;
+    }
+    setIsSavingPassword(true);
+    try {
+      await changeMyPassword({
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
+      });
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setIsSecurityEditing(false);
+      toast.success('Passwort geaendert');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+      toast.error(message);
+    } finally {
+      setIsSavingPassword(false);
+    }
+  };
+
+  const overview = [
+    { label: 'Meine Anfragen', value: myRequests.length, href: '/requests?tab=my-requests' },
+    { label: 'Meine Angebote', value: offersTotal, href: '/requests?tab=my-offers' },
+    { label: 'Vertraege', value: contracts.length, href: '/requests?tab=completed-jobs' },
+    { label: 'Posteingang', value: unreadTotal, href: '/chat' },
   ];
+
+  const avatarInitial = (authMe?.name?.trim()?.charAt(0) || 'U').toUpperCase();
+  const avatarPreviewUrl = (() => {
+    const raw = avatarUrl?.trim();
+    if (!raw) return null;
+    if (raw === '/avatars/default.png' || raw.endsWith('/avatars/default.png')) return null;
+    if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('data:image/')) return raw;
+    if (raw.startsWith('/')) return raw.startsWith('/api/') ? raw : buildApiUrl(raw);
+    return raw;
+  })();
+  const localeIsDe = locale === 'de';
+  const fileButtonLabel = localeIsDe ? 'Datei auswaehlen' : 'Choose file';
+  const noFileLabel = localeIsDe ? 'Keine Datei ausgewaehlt' : 'No file selected';
 
   return (
     <PageShell right={<AuthActions />} withSpacer={false}>
@@ -335,9 +333,7 @@ export default function ProfileWorkspacePage() {
           <textarea
             className={`input profile-bio__textarea ${isBioEditing ? '' : 'profile-bio__textarea--readonly'}`.trim()}
             value={bioDraft}
-            onChange={(event) =>
-              setBioDraft(event.target.value)
-            }
+            onChange={(event) => setBioDraft(event.target.value)}
             maxLength={2000}
             placeholder="Erzaehle kurz ueber dich, deine Erfahrung oder Arbeitsweise."
             readOnly={!isBioEditing}
@@ -388,169 +384,95 @@ export default function ProfileWorkspacePage() {
         </article>
       </section>
 
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            className={`card stack-xs text-left transition ${
-              activeTab === tab.key
-                ? 'border-[var(--c-primary)] shadow-[0_0_0_2px_color-mix(in_oklab,var(--c-primary)_25%,transparent)]'
-                : ''
-            }`.trim()}
-            onClick={() => setWorkspaceTab(tab.key)}
-          >
-            <p className="typo-small">{tab.label}</p>
-            <p className="typo-h3">{tab.count ?? '—'}</p>
-          </button>
-        ))}
-      </section>
+      <section className="card profile-settings">
+        <header className="profile-settings__header">
+          <h2 className="typo-h3">Einstellungen</h2>
+          <p className="typo-small">Konto, Sicherheit und App-Einstellungen</p>
+        </header>
 
-      <section className="card stack-sm">
-        {activeTab === 'requests' ? (
-          <>
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="typo-h3">{t(I18N_KEYS.client.requestsTitle)}</h2>
-            </div>
-            {isRequestsLoading ? <p className="typo-muted">{t(I18N_KEYS.common.refreshing)}</p> : null}
-            <div className="stack-sm">
-              {myRequests.map((item) => {
-                const requestOffers = offersByRequest.get(item.id) ?? [];
-                return (
-                  <article key={item.id} className="rounded-xl border border-[var(--c-border)] p-3 stack-sm">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate">{item.title || item.serviceKey}</p>
-                        <p className="typo-small">
-                          {item.propertyType} · {item.area} m² · {item.cityName || item.cityId}
-                        </p>
-                        <p className="typo-small">{new Date(item.preferredDate).toLocaleDateString()}</p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <span className="badge">{requestStatusLabel(item.status, requestOffers.length)}</span>
-                        <p className="typo-small">
-                          {t(I18N_KEYS.client.responsesLabel)}: {requestOffers.length}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <button type="button" className="badge" onClick={() => setOffersDrawerRequest(item)}>
-                        {t(I18N_KEYS.client.viewOffersCta)}
-                      </button>
-                      <Link href={`/requests/${item.id}`} className="badge">
-                        {t(I18N_KEYS.requestsPage.detailsCta)}
-                      </Link>
-                    </div>
-                  </article>
-                );
-              })}
-              {myRequests.length === 0 ? <p className="typo-muted">{t(I18N_KEYS.client.requestsEmpty)}</p> : null}
-            </div>
-          </>
-        ) : null}
-
-        {activeTab === 'offers' ? (
-          <>
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="typo-h3">{t(I18N_KEYS.requestsPage.navMyOffers)}</h2>
-              <div className="flex gap-2">
-                <Link href="/client/offers" className="badge">
-                  {t(I18N_KEYS.client.offersTitle)}
-                </Link>
-                <Link href="/requests" className="badge">
-                  {t(I18N_KEYS.requestsPage.title)}
-                </Link>
+        <div className="profile-settings__grid">
+          <article className="profile-settings__card profile-settings__card--full stack-sm">
+            <header className="profile-settings__card-head">
+              <p className="text-sm font-semibold">Profilfoto</p>
+            </header>
+            <div className="stack-xs">
+              <div className="profile-settings__avatar-row">
+                <span
+                  className={`profile-settings__avatar ${avatarPreviewUrl ? '' : 'profile-settings__avatar--placeholder'}`.trim()}
+                >
+                  {avatarPreviewUrl ? (
+                    <Image src={avatarPreviewUrl} alt={authMe?.name ?? 'Avatar'} width={64} height={64} />
+                  ) : (
+                    avatarInitial
+                  )}
+                  <label className="profile-settings__avatar-edit">
+                    <OfferActionButton
+                      kind="edit"
+                      label="Avatar bearbeiten"
+                      ariaLabel="Avatar bearbeiten"
+                      title="Avatar bearbeiten"
+                      iconOnly
+                      className="request-card__status-action request-card__status-action--edit"
+                    />
+                    <input
+                      className="sr-only"
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) => {
+                        void handleAvatarSelected(event);
+                      }}
+                      disabled={isUploadingAvatar}
+                    />
+                  </label>
+                </span>
+                <div className="profile-settings__avatar-file">
+                  <p className="typo-small">{isUploadingAvatar ? 'Foto wird hochgeladen...' : 'JPG/PNG bis 10MB'}</p>
+                  <p className="typo-small">{fileButtonLabel}: {avatarFileName || noFileLabel}</p>
+                </div>
               </div>
             </div>
-            <p className="typo-small">
-              {t(I18N_KEYS.client.offersTitle)}: {clientOffers.length} · {t(I18N_KEYS.provider.myResponsesTitle)}:{' '}
-              {providerOffers.length}
-            </p>
-          </>
-        ) : null}
+          </article>
 
-        {activeTab === 'contracts' ? (
-          <>
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="typo-h3">{t(I18N_KEYS.client.contractsTitle)}</h2>
-              <div className="flex gap-2">
-                <Link href="/client/contracts" className="badge">
-                  Client
-                </Link>
-                <Link href="/provider/contracts" className="badge">
-                  Provider
-                </Link>
-              </div>
-            </div>
-            <p className="typo-small">{contracts.length} contracts</p>
-          </>
-        ) : null}
-
-        {activeTab === 'chat' ? (
-          <>
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="typo-h3">{t(I18N_KEYS.chat.inboxTitle)}</h2>
-              <Link href="/chat" className="badge">
-                {t(I18N_KEYS.client.viewAll)}
-              </Link>
-            </div>
-            <p className="typo-small">Unread: {unreadTotal}</p>
-          </>
-        ) : null}
-
-        {activeTab === 'favorites' ? (
-          <>
-            <h2 className="typo-h3">Favoriten</h2>
-            <p className="typo-small">
-              Requests: {favoriteRequests.length} · Providers: {favoriteProviders.length}
-            </p>
-            <Link href="/requests" className="badge">
-              {t(I18N_KEYS.requestsPage.title)}
-            </Link>
-          </>
-        ) : null}
-
-        {activeTab === 'settings' ? (
-          <>
-            <h2 className="typo-h3">{t(I18N_KEYS.client.settingsTitle)}</h2>
-            <p className="typo-small">Kontodaten, Sicherheit und App-Einstellungen</p>
-
-            <div className="grid gap-3 lg:grid-cols-2">
-              <article className="rounded-xl border border-[var(--c-border)] p-3 stack-sm">
-                <p className="text-sm font-semibold">Persoenliche Daten</p>
-                <label className="stack-xs">
-                  <span className="typo-small">{t(I18N_KEYS.auth.nameLabel)}</span>
-                  <input
-                    className="input"
-                    value={profileForm.name}
-                    onChange={(event) =>
-                      setProfileForm((prev) => ({ ...prev, name: event.target.value }))
-                    }
-                  />
-                </label>
-                <label className="stack-xs">
-                  <span className="typo-small">{t(I18N_KEYS.auth.cityLabel)}</span>
-                  <input
-                    className="input"
-                    value={profileForm.city}
-                    onChange={(event) =>
-                      setProfileForm((prev) => ({ ...prev, city: event.target.value }))
-                    }
-                  />
-                </label>
-                <label className="stack-xs">
-                  <span className="typo-small">Telefon</span>
-                  <input
-                    className="input"
-                    value={profileForm.phone}
-                    onChange={(event) =>
-                      setProfileForm((prev) => ({ ...prev, phone: event.target.value }))
-                    }
-                  />
-                </label>
+          <article className="profile-settings__card stack-sm">
+            <header className="profile-settings__card-head">
+              <p className="text-sm font-semibold">Persoenliche Daten</p>
+              <OfferActionButton
+                kind="edit"
+                label="Profil bearbeiten"
+                ariaLabel="Profil bearbeiten"
+                title="Profil bearbeiten"
+                iconOnly
+                className="request-card__status-action request-card__status-action--edit"
+                onClick={() => setIsProfileEditing((prev) => !prev)}
+              />
+            </header>
+            <label className="profile-settings__row">
+              <span className="typo-small profile-settings__row-label">Vollstaendiger Name</span>
+              <input
+                className="input"
+                value={profileForm.name}
+                onChange={(event) => setProfileForm((prev) => ({ ...prev, name: event.target.value }))}
+                readOnly={!isProfileEditing}
+              />
+            </label>
+            <label className="profile-settings__row">
+              <span className="typo-small profile-settings__row-label">Stadt (optional)</span>
+              <input
+                className="input"
+                value={profileForm.city}
+                onChange={(event) => setProfileForm((prev) => ({ ...prev, city: event.target.value }))}
+                readOnly={!isProfileEditing}
+              />
+            </label>
+            <label className="profile-settings__row">
+              <span className="typo-small profile-settings__row-label">Email</span>
+              <input className="input" value={authMe?.email ?? ''} readOnly />
+            </label>
+            {isProfileEditing ? (
+              <div className="profile-settings__inline-actions">
                 <button
                   type="button"
-                  className="btn-primary"
+                  className="btn-primary profile-settings__save-btn"
                   onClick={() => {
                     void handleSaveProfile();
                   }}
@@ -558,237 +480,227 @@ export default function ProfileWorkspacePage() {
                 >
                   {isSavingProfile ? t(I18N_KEYS.common.refreshing) : 'Speichern'}
                 </button>
-              </article>
-
-              <article className="rounded-xl border border-[var(--c-border)] p-3 stack-sm">
-                <p className="text-sm font-semibold">Login und Sicherheit</p>
-                <label className="stack-xs">
-                  <span className="typo-small">Login</span>
-                  <input className="input" value={authMe?.email ?? ''} disabled />
-                </label>
-                <label className="stack-xs">
-                  <span className="typo-small">{t(I18N_KEYS.auth.passwordLabel)}</span>
-                  <input className="input" value="••••••••" disabled />
-                </label>
-                <button type="button" className="btn-ghost" disabled>
-                  Passwort ändern (API folgt)
+                <button
+                  type="button"
+                  className="btn-ghost profile-settings__text-action"
+                  onClick={() => {
+                    setProfileForm({
+                      name: authMe?.name ?? '',
+                      city: authMe?.city ?? '',
+                    });
+                    setIsProfileEditing(false);
+                  }}
+                  disabled={isSavingProfile}
+                >
+                  Abbrechen
                 </button>
-                <label className="stack-xs">
-                  <span className="typo-small">Profilfoto</span>
+              </div>
+            ) : null}
+          </article>
+
+          <article className="profile-settings__card stack-sm">
+            <header className="profile-settings__card-head">
+              <p className="text-sm font-semibold">Login und Sicherheit</p>
+              <OfferActionButton
+                kind="edit"
+                label="Sicherheit bearbeiten"
+                ariaLabel="Sicherheit bearbeiten"
+                title="Sicherheit bearbeiten"
+                iconOnly
+                className="request-card__status-action request-card__status-action--edit"
+                onClick={() => setIsSecurityEditing((prev) => !prev)}
+              />
+            </header>
+            <label className="profile-settings__row">
+              <span className="typo-small profile-settings__row-label">Login</span>
+              <input className="input" value={authMe?.email ?? ''} disabled />
+            </label>
+            <label className="profile-settings__row">
+              <span className="typo-small profile-settings__row-label">Aktuelles Passwort</span>
+              {isSecurityEditing ? (
+                <span className="profile-settings__password-field">
                   <input
                     className="input"
-                    type="file"
-                    accept="image/*"
-                    onChange={(event) => {
-                      void handleAvatarSelected(event);
-                    }}
-                    disabled={isUploadingAvatar}
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    value={passwordForm.currentPassword}
+                    onChange={(event) =>
+                      setPasswordForm((prev) => ({ ...prev, currentPassword: event.target.value }))
+                    }
+                    autoComplete="current-password"
                   />
-                </label>
-                <p className="typo-small">
-                  {isUploadingAvatar ? 'Foto wird hochgeladen...' : 'JPG/PNG bis 10MB'}
-                </p>
-              </article>
-
-              <article className="rounded-xl border border-[var(--c-border)] p-3 stack-sm">
-                <p className="text-sm font-semibold">Darstellung</p>
-                <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    className={`badge ${resolvedTheme === 'light' ? '' : 'btn-ghost'}`.trim()}
-                    onClick={() => setTheme('light')}
+                    className="profile-settings__password-toggle"
+                    onClick={() => setShowCurrentPassword((prev) => !prev)}
+                    aria-label={showCurrentPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+                    title={showCurrentPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
                   >
-                    Light
+                    {showCurrentPassword ? <IconEye /> : <IconEyeOff />}
                   </button>
+                </span>
+              ) : (
+                <input className="input" type="password" value="••••••••••••" readOnly />
+              )}
+            </label>
+            {isSecurityEditing ? (
+              <label className="profile-settings__row">
+                <span className="typo-small profile-settings__row-label">Neues Passwort</span>
+                <span className="profile-settings__password-field profile-settings__password-field--accent">
+                  <input
+                    className={`input ${passwordForm.newPassword.length > 0 && !isPasswordStrong ? 'is-error' : ''}`.trim()}
+                    type={showNewPassword ? 'text' : 'password'}
+                    value={passwordForm.newPassword}
+                    onChange={(event) =>
+                      setPasswordForm((prev) => ({ ...prev, newPassword: event.target.value }))
+                    }
+                    autoComplete="new-password"
+                  />
                   <button
                     type="button"
-                    className={`badge ${resolvedTheme === 'dark' ? '' : 'btn-ghost'}`.trim()}
-                    onClick={() => setTheme('dark')}
+                    className="profile-settings__password-toggle"
+                    onClick={() => setShowNewPassword((prev) => !prev)}
+                    aria-label={showNewPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+                    title={showNewPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
                   >
-                    Dark
+                    {showNewPassword ? <IconEye /> : <IconEyeOff />}
                   </button>
-                </div>
-              </article>
-
-              <article className="rounded-xl border border-[var(--c-border)] p-3 stack-sm">
-                <p className="text-sm font-semibold">Sprache</p>
-                <div className="flex flex-wrap gap-2">
+                </span>
+              </label>
+            ) : null}
+            {isSecurityEditing ? (
+              <label className="profile-settings__row">
+                <span className="typo-small profile-settings__row-label">Passwort wiederholen</span>
+                <span className="profile-settings__password-field profile-settings__password-field--accent">
+                  <input
+                    className={`input ${passwordForm.confirmPassword.length > 0 && !passwordsMatch ? 'is-error' : ''}`.trim()}
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={passwordForm.confirmPassword}
+                    onChange={(event) =>
+                      setPasswordForm((prev) => ({ ...prev, confirmPassword: event.target.value }))
+                    }
+                    autoComplete="new-password"
+                  />
                   <button
                     type="button"
-                    className={`badge ${locale === 'de' ? '' : 'btn-ghost'}`.trim()}
-                    onClick={() => setLocale('de')}
+                    className="profile-settings__password-toggle"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    aria-label={showConfirmPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+                    title={showConfirmPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
                   >
-                    Deutsch
+                    {showConfirmPassword ? <IconEye /> : <IconEyeOff />}
                   </button>
-                  <button
-                    type="button"
-                    className={`badge ${locale === 'en' ? '' : 'btn-ghost'}`.trim()}
-                    onClick={() => setLocale('en')}
-                  >
-                    English
-                  </button>
-                </div>
-                <p className="typo-small">Aktuell: {locale.toUpperCase()}</p>
-              </article>
-            </div>
-          </>
-        ) : null}
-      </section>
-
-      {offersDrawerRequest ? (
-        <div className="fixed inset-0 z-50">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/45"
-            onClick={() => setOffersDrawerRequest(null)}
-            aria-label="Close offers drawer"
-          />
-          <aside className="absolute right-0 top-0 h-full w-full max-w-xl border-l border-[var(--c-border)] bg-[var(--c-panel)] p-5 overflow-y-auto stack-md">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="typo-h3">{offersDrawerRequest.title || offersDrawerRequest.serviceKey}</h2>
-                <p className="typo-small">{t(I18N_KEYS.client.responsesLabel)}</p>
+                </span>
+              </label>
+            ) : null}
+            {isSecurityEditing ? (
+              <div className="profile-settings__password-hint">
+                <span className={passwordChecks.length ? 'is-ok' : ''}>8+ Zeichen</span>
+                <span className={passwordChecks.upper ? 'is-ok' : ''}>Grossbuchstabe</span>
+                <span className={passwordChecks.lower ? 'is-ok' : ''}>Kleinbuchstabe</span>
+                <span className={passwordChecks.digit ? 'is-ok' : ''}>Zahl</span>
+                <span className={passwordChecks.symbol ? 'is-ok' : ''}>Sonderzeichen</span>
               </div>
-              <button type="button" className="btn-ghost" onClick={() => setOffersDrawerRequest(null)}>
-                ×
-              </button>
-            </div>
-
-            <div className="stack-sm">
-              {(offersByRequest.get(offersDrawerRequest.id) ?? []).map((offer) => {
-                const isPending = pendingOfferId === offer.id;
-                const canDecide = offer.status === 'sent';
-                return (
-                  <div key={offer.id} className="rounded-xl border border-[var(--c-border)] p-3 stack-sm">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate">
-                          {offer.providerDisplayName || t(I18N_KEYS.offers.unnamed)}
-                        </p>
-                        <RatingSummary
-                          rating={offer.providerRatingAvg?.toFixed(1) ?? '—'}
-                          reviewsCount={offer.providerRatingCount ?? 0}
-                          reviewsLabel={t(I18N_KEYS.homePublic.reviews)}
-                        />
-                        <p className="typo-small">{t(I18N_KEYS.offers.jobs)}: {offer.providerCompletedJobs ?? '—'}</p>
-                        {offer.message ? <p className="typo-small">{offer.message}</p> : null}
-                      </div>
-                      <span className="badge capitalize">{offerStatusLabel(offer.status)}</span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      <span className="inline-flex items-center rounded-full border border-[var(--c-border)] px-2.5 py-1 text-xs">
-                        {offer.amount ? `€ ${offer.amount}` : '€ —'}
-                      </span>
-                      <span className="inline-flex items-center rounded-full border border-[var(--c-border)] px-2.5 py-1 text-xs">
-                        {offer.availableAt ? new Date(offer.availableAt).toLocaleString() : 'Availability not set'}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      {canDecide ? (
-                        <>
-                          <button
-                            type="button"
-                            className="btn-primary"
-                            onClick={() => {
-                              void handleAccept(offer.id);
-                            }}
-                            disabled={isPending}
-                          >
-                            {t(I18N_KEYS.offers.acceptCta)}
-                          </button>
-                          <button
-                            type="button"
-                            className="btn-ghost"
-                            onClick={() => {
-                              void handleDecline(offer.id);
-                            }}
-                            disabled={isPending}
-                          >
-                            {t(I18N_KEYS.offers.declineCta)}
-                          </button>
-                        </>
-                      ) : null}
-                      <button
-                        type="button"
-                        className="badge"
-                        onClick={() => {
-                          void handleChat(offer);
-                        }}
-                      >
-                        {t(I18N_KEYS.offers.chatCta)}
-                      </button>
-                      <button type="button" className="badge" onClick={() => setProviderDrawerOffer(offer)}>
-                        {t(I18N_KEYS.offers.profileCta)}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-              {(offersByRequest.get(offersDrawerRequest.id) ?? []).length === 0 ? (
-                <p className="typo-muted">{t(I18N_KEYS.client.offersEmpty)}</p>
-              ) : null}
-            </div>
-          </aside>
-        </div>
-      ) : null}
-
-      {providerDrawerOffer ? (
-        <div className="fixed inset-0 z-[60]">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/45"
-            onClick={() => setProviderDrawerOffer(null)}
-            aria-label="Close provider drawer"
-          />
-          <aside className="absolute right-0 top-0 h-full w-full max-w-md border-l border-[var(--c-border)] bg-[var(--c-panel)] p-5 overflow-y-auto stack-md">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="typo-h3">{providerDrawerOffer.providerDisplayName || t(I18N_KEYS.offers.unnamed)}</h2>
-                <p className="typo-small">{t(I18N_KEYS.provider.profileTitle)}</p>
+            ) : null}
+            {isSecurityEditing ? (
+              <div className="profile-settings__inline-actions">
+                <button
+                  type="button"
+                  className="btn-primary profile-settings__save-btn"
+                  onClick={() => {
+                    void handleSavePassword();
+                  }}
+                  disabled={isSavingPassword}
+                >
+                  {isSavingPassword ? t(I18N_KEYS.common.refreshing) : 'Speichern'}
+                </button>
+                <button
+                  type="button"
+                  className="btn-ghost profile-settings__text-action"
+                  onClick={() => {
+                    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                    setIsSecurityEditing(false);
+                    setShowCurrentPassword(false);
+                    setShowNewPassword(false);
+                    setShowConfirmPassword(false);
+                  }}
+                  disabled={isSavingPassword}
+                >
+                  Abbrechen
+                </button>
               </div>
-              <button type="button" className="btn-ghost" onClick={() => setProviderDrawerOffer(null)}>
-                ×
-              </button>
-            </div>
+            ) : null}
+          </article>
 
-            <section className="card stack-sm">
-              <RatingSummary
-                rating={selectedProvider?.ratingAvg?.toFixed(1) ?? providerDrawerOffer.providerRatingAvg?.toFixed(1) ?? '—'}
-                reviewsCount={selectedProvider?.ratingCount ?? providerDrawerOffer.providerRatingCount ?? 0}
-                reviewsLabel={t(I18N_KEYS.homePublic.reviews)}
-              />
-              <p className="typo-small">
-                {t(I18N_KEYS.offers.jobs)}: {selectedProvider?.completedJobs ?? providerDrawerOffer.providerCompletedJobs ?? '—'}
-              </p>
-              <p className="typo-small">
-                {t(I18N_KEYS.provider.basePrice)}: {selectedProvider?.basePrice ? `€ ${selectedProvider.basePrice}` : '—'}
-              </p>
-            </section>
-
-            <div className="flex flex-wrap gap-2">
-              <Link
-                href={`/providers/${providerDrawerOffer.providerUserId}`}
-                className="btn-primary"
-                onClick={() => setProviderDrawerOffer(null)}
-              >
-                {t(I18N_KEYS.offers.profileCta)}
-              </Link>
+          <article className="profile-settings__card stack-sm">
+            <header className="profile-settings__card-head">
+              <p className="text-sm font-semibold">Darstellung</p>
+              <p className="typo-small">Waehle das Theme fuer deine Oberflaeche.</p>
+            </header>
+            <div className="profile-settings__choices">
               <button
                 type="button"
-                className="btn-ghost"
-                onClick={() => {
-                  void handleChat(providerDrawerOffer);
-                  setProviderDrawerOffer(null);
-                }}
+                className={`profile-settings__choice ${resolvedTheme === 'light' ? 'is-active' : ''}`.trim()}
+                onClick={() => setTheme('light')}
               >
-                {t(I18N_KEYS.offers.chatCta)}
+                Light
+              </button>
+              <button
+                type="button"
+                className={`profile-settings__choice ${resolvedTheme === 'dark' ? 'is-active' : ''}`.trim()}
+                onClick={() => setTheme('dark')}
+              >
+                Dark
               </button>
             </div>
-          </aside>
+          </article>
+
+          <article className="profile-settings__card stack-sm">
+            <header className="profile-settings__card-head">
+              <p className="text-sm font-semibold">Sprache</p>
+              <p className="typo-small">Steuere Lokalisierung und Interface-Sprache.</p>
+            </header>
+            <div className="profile-settings__choices">
+              <button
+                type="button"
+                className={`profile-settings__choice ${locale === 'de' ? 'is-active' : ''}`.trim()}
+                onClick={() => setLocale('de')}
+              >
+                Deutsch
+              </button>
+              <button
+                type="button"
+                className={`profile-settings__choice ${locale === 'en' ? 'is-active' : ''}`.trim()}
+                onClick={() => setLocale('en')}
+              >
+                English
+              </button>
+            </div>
+            <div className="profile-settings__meta">
+              <p className="typo-small">Aktuell: {locale.toUpperCase()}</p>
+              <p className="typo-small">Favoriten gesamt: {favoritesTotal}</p>
+            </div>
+          </article>
         </div>
-      ) : null}
+      </section>
+
+      <section className="card stack-sm">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="typo-h3">Kurzueberblick</h2>
+          <span className="badge">Profil: {profileCompleteness}%</span>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {overview.map((item) => (
+            <Link key={item.label} href={item.href} className="card stack-xs no-underline" onClick={guardNavigation}>
+              <p className="typo-small">{item.label}</p>
+              <p className="typo-h3">{item.value}</p>
+              <p className="typo-small">Alle ansehen</p>
+            </Link>
+          ))}
+        </div>
+        <Link href="/requests?tab=new-orders" className="btn-primary w-fit" onClick={guardNavigation}>
+          Profil vervollstaendigen
+        </Link>
+      </section>
     </PageShell>
   );
 }

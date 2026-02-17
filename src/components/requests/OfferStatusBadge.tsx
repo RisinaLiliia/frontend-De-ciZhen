@@ -1,4 +1,4 @@
-import { IconCheck, IconClock } from '@/components/ui/icons/icons';
+import { getStatusBadgeClass } from '@/lib/statusBadge';
 
 export type OfferCardStatus = 'sent' | 'accepted' | 'declined';
 
@@ -10,15 +10,6 @@ type OfferStatusBadgeProps = {
 
 export function OfferStatusBadge({ status, label, title }: OfferStatusBadgeProps) {
   return (
-    <span
-      className={`offer-status-badge offer-status-badge--${status}`}
-      title={title}
-      aria-label={title ?? label}
-    >
-      <i className="offer-status-badge__icon">
-        {status === 'accepted' ? <IconCheck /> : status === 'sent' ? <IconClock /> : <span>✕</span>}
-      </i>
-      <span>{label}</span>
-    </span>
+    <span className={`${getStatusBadgeClass(status)} capitalize`} title={title} aria-label={title ?? label}>{label}</span>
   );
 }

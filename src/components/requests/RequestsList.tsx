@@ -5,11 +5,11 @@ import * as React from 'react';
 import Link from 'next/link';
 import { IconBriefcase, IconCalendar, IconChat, IconHeart, IconPin } from '@/components/ui/icons/icons';
 import { OrderCard } from '@/components/orders/OrderCard';
-import { OfferStatusBadge } from '@/components/requests/OfferStatusBadge';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { resolveOfferCardState } from '@/features/requests/uiState';
+import { getStatusBadgeClass } from '@/lib/statusBadge';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -195,15 +195,12 @@ export function RequestsList({
                 </span>
               ) : statusLabel && badgeStatus ? (
                 <span className="request-card__status-actions">
-                  <OfferStatusBadge
-                    status={badgeStatus}
-                    label={statusLabel}
-                    title={
-                      badgeStatus === 'sent'
-                        ? t(I18N_KEYS.requestDetails.responseSentHint)
-                        : statusLabel
-                    }
-                  />
+                  <span
+                    className={`${getStatusBadgeClass(badgeStatus)} capitalize`}
+                    title={badgeStatus === 'sent' ? t(I18N_KEYS.requestDetails.responseSentHint) : statusLabel}
+                  >
+                    {statusLabel}
+                  </span>
                   {isSentState ? (
                     <>
                       <OfferActionButton
