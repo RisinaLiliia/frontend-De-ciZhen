@@ -18,11 +18,13 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { ApiError } from '@/lib/api/http-error';
 
+const DEFAULT_AUTH_NEXT = '/requests?sort=date_desc&page=1&limit=20';
+
 export function RegisterForm() {
   const t = useT();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get('next') || '/';
+  const next = searchParams.get('next') || DEFAULT_AUTH_NEXT;
   const roleFromQuery = searchParams.get('role') as RegisterValues['role'] | null;
   const loginHref = `/auth/login?next=${encodeURIComponent(next)}${
     roleFromQuery ? `&role=${encodeURIComponent(roleFromQuery)}` : ''
@@ -33,7 +35,7 @@ export function RegisterForm() {
       : roleFromQuery === 'client'
         ? t(I18N_KEYS.landing.clientDesc)
         : '';
-  const showNextHint = next && next !== '/';
+  const showNextHint = next && next !== DEFAULT_AUTH_NEXT;
 
   const registerUser = useAuthRegister();
   const status = useAuthStatus();
