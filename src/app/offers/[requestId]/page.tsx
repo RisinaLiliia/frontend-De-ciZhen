@@ -47,7 +47,7 @@ export default function OffersPage() {
       toast.success(t(I18N_KEYS.offers.accepted));
       await qc.invalidateQueries({ queryKey: ['offers', requestId] });
       await qc.invalidateQueries({ queryKey: ['client-contracts'] });
-      router.push('/client/contracts');
+      router.push('/requests?tab=completed-jobs');
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);

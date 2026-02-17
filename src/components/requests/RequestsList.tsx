@@ -227,7 +227,7 @@ export function RequestsList({
                   {offerCardState === 'accepted' ? (
                     <>
                       <Link
-                        href="/provider/contracts"
+                        href="/requests?tab=completed-jobs"
                         className="btn-primary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--contract"
                         aria-label={t(I18N_KEYS.requestDetails.responseViewContract)}
                         title={t(I18N_KEYS.requestDetails.responseViewContract)}

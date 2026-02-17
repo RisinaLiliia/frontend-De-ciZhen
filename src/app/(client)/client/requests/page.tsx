@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
 export default function ClientRequestsLegacyPage() {
-  redirect('/profile/workspace');
+  redirect('/requests?tab=my-requests');
 }

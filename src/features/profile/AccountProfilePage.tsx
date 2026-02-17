@@ -243,7 +243,7 @@ export function AccountProfilePage() {
       <section className="card stack-sm">
         <div className="flex items-center justify-between">
           <h2 className="typo-h3">{t(I18N_KEYS.client.contractsTitle)}</h2>
-          <Link href="/provider/contracts" className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
+          <Link href="/requests?tab=completed-jobs" className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="flex items-center justify-between">
           <span className="typo-small">{t(I18N_KEYS.provider.contractsTitle)}</span>

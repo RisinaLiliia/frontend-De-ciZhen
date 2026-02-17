@@ -256,7 +256,7 @@ export default function RequestDetailsPage() {
       return;
     }
     if (isOfferAccepted) {
-      router.push('/provider/contracts');
+      router.push('/requests?tab=completed-jobs');
       return;
     }
     openOfferForm();
@@ -506,7 +506,7 @@ export default function RequestDetailsPage() {
       if (isOwner) {
         toast.message(t(I18N_KEYS.requestDetails.selfBidError));
       } else if (isOfferAccepted) {
-        router.push('/provider/contracts');
+        router.push('/requests?tab=completed-jobs');
       } else {
         openOfferForm();
       }

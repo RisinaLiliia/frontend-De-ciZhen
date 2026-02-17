@@ -1,4 +1,5 @@
-// src/app/request/new/page.tsx
-import { CreateRequestPage } from '@/features/request/CreateRequestPage';
+import { redirect } from 'next/navigation';
 
-export default CreateRequestPage;
+export default function RequestNewLegacyPage() {
+  redirect('/request/create');
+}

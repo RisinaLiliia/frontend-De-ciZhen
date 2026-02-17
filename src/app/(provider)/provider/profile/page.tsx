@@ -1,5 +1,5 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import { AccountProfilePage } from '@/features/profile/AccountProfilePage';
-
-export default AccountProfilePage;
+export default function ProviderProfileLegacyPage() {
+  redirect('/profile/workspace');
+}
