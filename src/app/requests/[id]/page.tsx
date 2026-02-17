@@ -38,6 +38,8 @@ import {
 } from '@/features/requests/details/viewModel';
 
 const SIMILAR_LIMIT = 2;
+const WORKSPACE_MY_REQUESTS_URL = '/orders?tab=my-requests&sort=date_desc&page=1&limit=20';
+const WORKSPACE_NEW_ORDERS_URL = '/orders?tab=new-orders&sort=date_desc&page=1&limit=20';
 
 export default function RequestDetailsPage() {
   const t = useT();
@@ -256,7 +258,7 @@ export default function RequestDetailsPage() {
       return;
     }
     if (isOfferAccepted) {
-      router.push('/requests?tab=completed-jobs');
+      router.push('/orders?tab=completed-jobs');
       return;
     }
     openOfferForm();
@@ -341,7 +343,7 @@ export default function RequestDetailsPage() {
       setOfferComment('');
       setOfferAvailability('');
       setOfferSheetInUrl(false);
-      router.push('/requests');
+      router.push(authStatus === 'authenticated' ? WORKSPACE_NEW_ORDERS_URL : '/requests');
       return;
     }
 
@@ -365,6 +367,7 @@ export default function RequestDetailsPage() {
       setIsSubmittingOffer(false);
     }
   }, [
+    authStatus,
     existingResponse?.id,
     isSubmittingOffer,
     qc,
@@ -460,11 +463,15 @@ export default function RequestDetailsPage() {
 
   const similarHref = React.useMemo(() => {
     const nextParams = new URLSearchParams();
+    if (authStatus === 'authenticated') nextParams.set('tab', 'new-orders');
     if (request?.categoryKey) nextParams.set('categoryKey', request.categoryKey);
     if (request?.serviceKey) nextParams.set('subcategoryKey', request.serviceKey);
+    nextParams.set('sort', 'date_desc');
+    nextParams.set('page', '1');
+    nextParams.set('limit', '20');
     const qs = nextParams.toString();
-    return `/requests${qs ? `?${qs}` : ''}`;
-  }, [request]);
+    return `${authStatus === 'authenticated' ? '/orders' : '/requests'}${qs ? `?${qs}` : ''}`;
+  }, [authStatus, request]);
 
   const similarForRender = similar.length ? similar : latest;
   const [isClientOnline, setIsClientOnline] = React.useState(false);
@@ -506,7 +513,7 @@ export default function RequestDetailsPage() {
       if (isOwner) {
         toast.message(t(I18N_KEYS.requestDetails.selfBidError));
       } else if (isOfferAccepted) {
-        router.push('/requests?tab=completed-jobs');
+        router.push('/orders?tab=completed-jobs');
       } else {
         openOfferForm();
       }
@@ -598,7 +605,7 @@ export default function RequestDetailsPage() {
     <PageShell
       right={<AuthActions />}
       showBack
-      backHref="/requests"
+      backHref={isAuthed ? WORKSPACE_MY_REQUESTS_URL : '/requests'}
       forceBackHref
       mainClassName="py-6"
     >

@@ -2,10 +2,11 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { buildPublicRequestsQuery, type PublicRequestsSort } from '@/lib/api/requests';
 
 const ALL_OPTION_KEY = 'all';
+const FILTER_QUERY_KEYS = new Set(['cityId', 'categoryKey', 'subcategoryKey', 'serviceKey', 'sort', 'page', 'limit']);
 
 type UseRequestsFiltersArgs<TService extends { key: string; categoryKey: string }> = {
   services: TService[];
@@ -17,6 +18,7 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
   defaultSort,
 }: UseRequestsFiltersArgs<TService>) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const initialCategoryKey = searchParams.get('categoryKey') ?? ALL_OPTION_KEY;
@@ -74,11 +76,25 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
   );
 
   React.useEffect(() => {
-    const next = buildPublicRequestsQuery(filter);
-    if (next !== searchParams.toString()) {
-      router.replace(`/requests?${next}`);
+    const current = new URLSearchParams(searchParams.toString());
+    const nextFilter = new URLSearchParams(buildPublicRequestsQuery(filter));
+    const merged = new URLSearchParams();
+
+    current.forEach((value, key) => {
+      if (!FILTER_QUERY_KEYS.has(key)) {
+        merged.append(key, value);
+      }
+    });
+
+    nextFilter.forEach((value, key) => {
+      merged.set(key, value);
+    });
+
+    const nextQuery = merged.toString();
+    if (nextQuery !== searchParams.toString()) {
+      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname);
     }
-  }, [filter, router, searchParams]);
+  }, [filter, pathname, router, searchParams]);
 
   const onCategoryChange = React.useCallback((value: string) => {
     setCategoryKey(value);

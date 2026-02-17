@@ -17,7 +17,7 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { ApiError } from '@/lib/api/http-error';
 
-const DEFAULT_AUTH_NEXT = '/requests?sort=date_desc&page=1&limit=20';
+const DEFAULT_AUTH_NEXT = '/orders?tab=my-requests&sort=date_desc&page=1&limit=20';
 
 export function LoginForm() {
   const t = useT();
