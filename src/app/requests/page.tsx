@@ -1305,7 +1305,7 @@ function RequestsPageContent() {
                     <article key={item.id} className="card stack-xs workspace-list-item">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold truncate">{item.requestTitle || item.requestServiceKey}</p>
+                          <p className="text-sm font-semibold truncate">{item.requestServiceKey || item.requestId}</p>
                           <p className="typo-small">{item.requestCityId ?? '—'}</p>
                         </div>
                         <span className={`${getStatusBadgeClass(item.status)} capitalize`}>{item.status}</span>
