@@ -1,4 +1,4 @@
-import { IconBriefcase, IconCheck, IconClock } from '@/components/ui/icons/icons';
+import { getStatusBadgeClass } from '@/lib/statusBadge';
 
 type RequestStatusTone = 'review' | 'progress' | 'accepted';
 
@@ -8,14 +8,10 @@ type RequestStatusBadgeProps = {
 };
 
 export function RequestStatusBadge({ tone, label }: RequestStatusBadgeProps) {
-  const icon =
-    tone === 'progress' ? <IconBriefcase /> : tone === 'accepted' ? <IconCheck /> : <IconClock />;
+  const status =
+    tone === 'progress' ? 'in_progress' : tone === 'accepted' ? 'completed' : 'sent';
 
   return (
-    <span className={`request-status-badge request-status-badge--${tone}`}>
-      <i className="request-status-badge__icon">{icon}</i>
-      <span>{label}</span>
-    </span>
+    <span className={getStatusBadgeClass(status)}>{label}</span>
   );
 }
-

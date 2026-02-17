@@ -14,6 +14,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { listMessages, markThreadRead, sendMessage } from '@/lib/api/chat';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 
 export default function ChatPage() {
   const t = useT();
@@ -50,14 +51,21 @@ export default function ChatPage() {
     <RequireAuth>
       <PageShell right={<AuthActions />} title={t(I18N_KEYS.chat.title)} withSpacer={true}>
         <div className="card stack-md">
-          {isLoading ? <p className="typo-muted">{t(I18N_KEYS.common.refreshing)}</p> : null}
-          <div className="stack-sm">
-            {(data ?? []).slice().reverse().map((msg) => (
-              <div key={msg.id} className="card stack-xs">
-                <p className="typo-small">{msg.text}</p>
-                <p className="typo-muted text-xs">{new Date(msg.createdAt).toLocaleString()}</p>
-              </div>
-            ))}
+          <div className="stack-sm" role="log" aria-live="polite" aria-relevant="additions text">
+            <WorkspaceContentState
+              isLoading={isLoading}
+              isEmpty={(data ?? []).length === 0}
+              emptyTitle={t(I18N_KEYS.chat.empty)}
+              emptyHint={t(I18N_KEYS.chat.placeholder)}
+              skeletonCount={4}
+            >
+              {(data ?? []).slice().reverse().map((msg) => (
+                <div key={msg.id} className="card stack-xs workspace-list-item">
+                  <p className="typo-small">{msg.text}</p>
+                  <p className="typo-muted text-xs">{new Date(msg.createdAt).toLocaleString()}</p>
+                </div>
+              ))}
+            </WorkspaceContentState>
           </div>
           <div className="flex items-center gap-2">
             <Input value={text} onChange={(e) => setText(e.target.value)} placeholder={t(I18N_KEYS.chat.placeholder)} />

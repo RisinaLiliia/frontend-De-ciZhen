@@ -24,7 +24,7 @@ export function HomeStatsPanel({ t, stats, formatNumber }: HomeStatsPanelProps) 
       </div>
 
       <div className="stat-grid mt-3">
-        <Link href="/client/requests" className="stat-link stat-card stat-divider">
+        <Link href="/requests?tab=new-orders" className="stat-link stat-card stat-divider">
           <div className="flex items-center gap-2">
             <span className="stat-icon">
               <IconBox className="h-3.5 w-3.5" />

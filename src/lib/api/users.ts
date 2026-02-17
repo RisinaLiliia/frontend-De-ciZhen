@@ -1,4 +1,4 @@
-import { apiPatch, apiPostForm } from '@/lib/api/http';
+import { apiPatch, apiPost, apiPostForm } from '@/lib/api/http';
 import type { AppMeDto } from '@/lib/api/dto/auth';
 
 export type UpdateMeDto = {
@@ -17,4 +17,8 @@ export function uploadMyAvatar(file: File) {
   const formData = new FormData();
   formData.append('avatar', file);
   return apiPostForm<AppMeDto>('/users/me/avatar', formData);
+}
+
+export function changeMyPassword(payload: { currentPassword: string; newPassword: string }) {
+  return apiPost<typeof payload, { ok: true }>('/users/me/password', payload);
 }

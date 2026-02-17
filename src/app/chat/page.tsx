@@ -12,6 +12,7 @@ import { useAuthUser } from '@/hooks/useAuthSnapshot';
 import { listInbox } from '@/lib/api/chat';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
+import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 
 type InboxFilter = 'all' | 'client' | 'provider';
 const CHAT_INBOX_FILTER_KEY = 'dc_chat_inbox_filter_v1';
@@ -105,32 +106,39 @@ export default function ChatInboxPage() {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              className={`badge ${filter === 'all' ? '' : 'btn-ghost'}`.trim()}
+              className={`chip ${filter === 'all' ? 'is-active' : ''}`.trim()}
               onClick={() => setFilter('all')}
+              aria-pressed={filter === 'all'}
             >
               {t(I18N_KEYS.chat.filterAll)} · {unreadByFilter.all}
             </button>
             <button
               type="button"
-              className={`badge ${filter === 'client' ? '' : 'btn-ghost'}`.trim()}
+              className={`chip ${filter === 'client' ? 'is-active' : ''}`.trim()}
               onClick={() => setFilter('client')}
+              aria-pressed={filter === 'client'}
             >
               {t(I18N_KEYS.chat.filterClient)} · {unreadByFilter.client}
             </button>
             <button
               type="button"
-              className={`badge ${filter === 'provider' ? '' : 'btn-ghost'}`.trim()}
+              className={`chip ${filter === 'provider' ? 'is-active' : ''}`.trim()}
               onClick={() => setFilter('provider')}
+              aria-pressed={filter === 'provider'}
             >
               {t(I18N_KEYS.chat.filterProvider)} · {unreadByFilter.provider}
             </button>
           </div>
-          {isLoading ? <p className="typo-muted">{t(I18N_KEYS.common.refreshing)}</p> : null}
           <div className="stack-sm">
-            {filteredThreads.length === 0 ? (
-              <p className="typo-muted">{t(I18N_KEYS.chat.empty)}</p>
-            ) : (
-              filteredThreads.map((thread) => {
+            <WorkspaceContentState
+              isLoading={isLoading}
+              isEmpty={filteredThreads.length === 0}
+              emptyTitle={t(I18N_KEYS.chat.empty)}
+              emptyHint={t(I18N_KEYS.requestsPage.subtitle)}
+              emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
+              emptyCtaHref="/requests?tab=new-orders"
+            >
+              {filteredThreads.map((thread) => {
                 const role = resolveThreadRole(thread);
                 const unread = getUnreadCount(thread, filter, role);
                 const participantId =
@@ -158,8 +166,8 @@ export default function ChatInboxPage() {
                     </p>
                   </Link>
                 );
-              })
-            )}
+              })}
+            </WorkspaceContentState>
           </div>
         </div>
       </PageShell>

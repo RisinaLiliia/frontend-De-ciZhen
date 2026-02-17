@@ -17,16 +17,18 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { ApiError } from '@/lib/api/http-error';
 
+const DEFAULT_AUTH_NEXT = '/requests?sort=date_desc&page=1&limit=20';
+
 export function LoginForm() {
   const t = useT();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get('next') || '/';
+  const next = searchParams.get('next') || DEFAULT_AUTH_NEXT;
   const role = searchParams.get('role');
   const registerHref = `/auth/register?next=${encodeURIComponent(next)}${
     role ? `&role=${encodeURIComponent(role)}` : ''
   }`;
-  const showNextHint = next && next !== '/';
+  const showNextHint = next && next !== DEFAULT_AUTH_NEXT;
 
   const login = useAuthLogin();
   const status = useAuthStatus();

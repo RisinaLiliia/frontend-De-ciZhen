@@ -268,11 +268,22 @@
     gap: var(--space-4);
   }
 
+  .requests-primary-cta {
+    width: auto;
+    min-width: 220px;
+  }
+
   @media (min-width: 768px) {
     .requests-header {
       flex-direction: row;
       align-items: flex-start;
       justify-content: space-between;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .requests-primary-cta {
+      width: 100%;
     }
   }
 
@@ -768,38 +779,52 @@
     gap: var(--space-3);
   }
 
-  .offer-status-badge {
+  .workspace-list-item {
+    border-color: color-mix(in oklab, var(--c-border) 72%, transparent);
+  }
+
+  .workspace-empty {
+    align-items: flex-start;
+  }
+
+  .status-badge {
+    --status-bg: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
+    --status-border: color-mix(in oklab, var(--c-primary) 42%, var(--c-border) 58%);
+    --status-text: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 4px 8px;
+    gap: 6px;
+    padding: 4px 10px;
     border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--c-text);
+    border: 1px solid var(--status-border);
+    background: var(--status-bg);
+    color: var(--status-text);
+    font-size: 12px;
+    font-weight: 700;
   }
 
-  .offer-status-badge__icon {
-    display: inline-flex;
-    width: 14px;
-    height: 14px;
-    align-items: center;
-    justify-content: center;
+  .status-badge--info {
+    --status-bg: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
+    --status-border: color-mix(in oklab, var(--c-primary) 42%, var(--c-border) 58%);
+    --status-text: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
   }
 
-  .offer-status-badge--sent {
-    color: color-mix(in oklab, var(--c-accent) 85%, var(--c-text) 15%);
-    cursor: help;
+  .status-badge--success {
+    --status-bg: color-mix(in oklab, #22c55e 16%, var(--c-panel) 84%);
+    --status-border: color-mix(in oklab, #22c55e 42%, var(--c-border) 58%);
+    --status-text: color-mix(in oklab, #22c55e 82%, var(--c-text) 18%);
   }
 
-  .offer-status-badge--accepted {
-    color: color-mix(in oklab, #7ed9a4 80%, var(--c-text) 20%);
+  .status-badge--warning {
+    --status-bg: color-mix(in oklab, #f59e0b 18%, var(--c-panel) 82%);
+    --status-border: color-mix(in oklab, #f59e0b 46%, var(--c-border) 54%);
+    --status-text: color-mix(in oklab, #f59e0b 84%, var(--c-text) 16%);
   }
 
-  .offer-status-badge--declined {
-    color: color-mix(in oklab, #ff8d8d 82%, var(--c-text) 18%);
+  .status-badge--danger {
+    --status-bg: color-mix(in oklab, #ef4444 14%, var(--c-panel) 86%);
+    --status-border: color-mix(in oklab, #ef4444 44%, var(--c-border) 56%);
+    --status-text: color-mix(in oklab, #ef4444 84%, var(--c-text) 16%);
   }
 
   .offer-actions {
@@ -818,6 +843,11 @@
     gap: 6px;
     border-radius: 10px;
     text-decoration: none;
+  }
+
+  .offer-actions__btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
   }
 
   .request-card__status-actions {
@@ -870,6 +900,25 @@
     justify-content: space-between;
     gap: var(--space-3);
     margin-top: var(--space-3);
+  }
+
+  .workspace-mobile-action {
+    position: sticky;
+    bottom: 0;
+    z-index: 30;
+    margin-top: var(--space-3);
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, transparent 0%, color-mix(in oklab, var(--c-bg) 88%, #000 12%) 32%);
+  }
+
+  .workspace-mobile-action__btn {
+    width: 100%;
+  }
+
+  @media (min-width: 821px) {
+    .workspace-mobile-action {
+      display: none;
+    }
   }
 
   .request-create {
@@ -1280,45 +1329,6 @@
 
   .offer-action-btn--delete:hover {
     background: color-mix(in oklab, var(--c-danger, #dc2626) 12%, var(--c-panel) 88%);
-  }
-
-  .request-status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-  }
-
-  .request-status-badge__icon {
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .request-status-badge__icon svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  .request-status-badge--review {
-    color: color-mix(in oklab, var(--c-primary) 72%, var(--c-text) 28%);
-    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
-    border-color: color-mix(in oklab, var(--c-primary) 30%, transparent);
-  }
-
-  .request-status-badge--progress {
-    color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
-    background: color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%);
-    border-color: color-mix(in oklab, var(--c-accent) 34%, transparent);
-  }
-
-  .request-status-badge--accepted {
-    color: color-mix(in oklab, var(--c-primary) 84%, #0b1220 16%);
-    background: color-mix(in oklab, var(--c-primary) 20%, var(--c-panel) 80%);
-    border-color: color-mix(in oklab, var(--c-primary) 46%, transparent);
   }
 
   .request-detail__icon-wrap {
