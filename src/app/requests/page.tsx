@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
@@ -12,6 +12,7 @@ import { HeroSection } from '@/components/ui/HeroSection';
 import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
+import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
 import {
   listMyRequests,
   listPublicRequests,
@@ -30,7 +31,7 @@ import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import { IconBriefcase, IconCheck, IconSend, IconUser } from '@/components/ui/icons/icons';
+import { IconBriefcase, IconCheck, IconHeart, IconSend, IconUser } from '@/components/ui/icons/icons';
 import type { I18nKey } from '@/lib/i18n/keys';
 
 const ALL_OPTION_KEY = 'all';
@@ -53,6 +54,7 @@ const NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX = 'dc_requests_new_seen_total_v1';
 
 function RequestsPageContent() {
   const router = useRouter();
+  const pathname = usePathname();
   const qc = useQueryClient();
   const t = useT();
   const { locale } = useI18n();
@@ -500,14 +502,18 @@ function RequestsPageContent() {
   const newOrdersCount = Math.max(0, totalAllRequests - seenTotal);
   const resolvedName = auth.user?.name?.trim() || 'User';
   const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${resolvedName}!`;
-  const completedMonthly = acceptedCount;
-  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${completedMonthly} ${t(
-    I18N_KEYS.requestsPage.navInsightClosedSuffix,
-  )} ${t(I18N_KEYS.requestsPage.navInsightDelta)}`;
   const activityBase = sentCount + acceptedCount;
   const activityProgress = activityBase > 0 ? Math.round((acceptedCount / activityBase) * 100) : 12;
-  const navRatingValue = providers[0]?.ratingAvg?.toFixed(1) ?? '4.9';
-  const navReviewsCount = providers[0]?.ratingCount ?? 0;
+  const myProviderRating = React.useMemo(() => {
+    const rated = myOffers.find((offer) => typeof offer.providerRatingAvg === 'number');
+    return {
+      avg: rated?.providerRatingAvg ?? 0,
+      count: rated?.providerRatingCount ?? 0,
+    };
+  }, [myOffers]);
+
+  const navRatingValue = myProviderRating.avg.toFixed(1);
+  const navReviewsCount = myProviderRating.count;
   const personalNavItems = React.useMemo(
     () =>
       isPersonalized
@@ -520,6 +526,7 @@ function RequestsPageContent() {
               value: newOrdersCount,
               hint: t(I18N_KEYS.requestsPage.resultsLabel),
               onClick: markNewOrdersSeen,
+              forceActive: false,
               match: 'prefix' as const,
             },
             {
@@ -532,6 +539,16 @@ function RequestsPageContent() {
               match: 'prefix' as const,
             },
             {
+              key: 'my-offers',
+              href: '/requests',
+              label: t(I18N_KEYS.requestsPage.navMyOffers),
+              icon: <IconSend />,
+              value: sentCount,
+              hint: t(I18N_KEYS.requestsPage.summarySent),
+              forceActive: pathname === '/requests',
+              match: 'prefix' as const,
+            },
+            {
               key: 'completed-jobs',
               href: '/provider/contracts',
               label: 'Abgeschlossene Jobs',
@@ -541,17 +558,18 @@ function RequestsPageContent() {
               match: 'prefix' as const,
             },
             {
-              key: 'my-offers',
-              href: '/provider',
-              label: t(I18N_KEYS.requestsPage.navMyOffers),
-              icon: <IconSend />,
-              value: sentCount,
-              hint: t(I18N_KEYS.requestsPage.summarySent),
+              key: 'my-favorites',
+              href: '/requests',
+              label: 'Meine Favoriten',
+              icon: <IconHeart />,
+              value: favoriteRequestIds.size,
+              hint: t(I18N_KEYS.requestDetails.ctaSave),
+              forceActive: false,
               match: 'prefix' as const,
             },
             {
               key: 'reviews',
-              href: '/provider/profile',
+              href: '/profile/workspace',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -591,7 +609,7 @@ function RequestsPageContent() {
             },
             {
               key: 'reviews',
-              href: '/client/profile',
+              href: '/profile/workspace',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -605,8 +623,10 @@ function RequestsPageContent() {
     [
       acceptedCount,
       completedJobsCount,
+      favoriteRequestIds.size,
       isPersonalized,
       markNewOrdersSeen,
+      pathname,
       navRatingValue,
       navReviewsCount,
       newOrdersCount,
@@ -626,6 +646,25 @@ function RequestsPageContent() {
       ),
     [myProviderContracts],
   );
+  const providerCompletedThisMonth = React.useMemo(
+    () => countCompletedInMonth(providerCompletedContracts, 0),
+    [providerCompletedContracts],
+  );
+  const providerCompletedLastMonth = React.useMemo(
+    () => countCompletedInMonth(providerCompletedContracts, -1),
+    [providerCompletedContracts],
+  );
+  const completedMoMDelta = React.useMemo(
+    () => calcMoMDeltaPercent(providerCompletedThisMonth, providerCompletedLastMonth),
+    [providerCompletedLastMonth, providerCompletedThisMonth],
+  );
+  const completedMoMLabel = React.useMemo(
+    () => formatMoMDeltaLabel(completedMoMDelta, locale),
+    [completedMoMDelta, locale],
+  );
+  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${providerCompletedThisMonth} ${t(
+    I18N_KEYS.requestsPage.navInsightClosedSuffix,
+  )} ${completedMoMLabel}`;
   const clientCompletedContracts = React.useMemo(
     () => myClientContracts.filter((item) => item.status === 'completed'),
     [myClientContracts],
@@ -726,7 +765,7 @@ function RequestsPageContent() {
       return {
         text: `Profil zu ${providerProfileCompleteness}% ausgefuellt. Vervollstaendige es fuer bessere Annahmequoten.`,
         ctaLabel: 'Profil vervollstaendigen',
-        ctaHref: '/provider/profile',
+        ctaHref: '/profile/workspace',
       };
     }
     if (recentOffers7d === 0) {
@@ -811,7 +850,7 @@ function RequestsPageContent() {
     emptyTitle: 'Noch keine Angebote. Starte mit dem ersten Auftrag.',
     emptyCtaLabel: 'Auftraege ansehen',
     emptyCtaHref: '/requests',
-  } as const;
+  };
 
   const clientStatsPayload = {
     kpis: [
@@ -854,7 +893,7 @@ function RequestsPageContent() {
     emptyTitle: 'Noch keine Anfrage erstellt.',
     emptyCtaLabel: 'Anfrage erstellen',
     emptyCtaHref: '/request/create',
-  } as const;
+  };
 
   const statsOrder =
     providerPriorityScore >= clientPriorityScore
@@ -869,14 +908,6 @@ function RequestsPageContent() {
 
   return (
     <PageShell right={<AuthActions />} showBack={isAuthed} mainClassName="py-6 requests-screen">
-      {isAuthed ? (
-        <PersonalNavSection
-          title={navTitle}
-          items={personalNavItems}
-          insightText={insightText}
-          progressPercent={activityProgress}
-        />
-      ) : null}
       {!isAuthed ? (
         <HeroSection
           title={t(I18N_KEYS.requestsPage.heroTitle)}
@@ -894,6 +925,15 @@ function RequestsPageContent() {
 
       <div className="requests-grid">
         <div className="stack-md">
+          {isAuthed ? (
+            <PersonalNavSection
+              className="personal-nav--left"
+              title={navTitle}
+              items={personalNavItems}
+              insightText={insightText}
+              progressPercent={activityProgress}
+            />
+          ) : null}
           {/* <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} /> */}
           <section className="panel requests-panel">
             <div className="requests-header">
@@ -997,16 +1037,7 @@ function RequestsPageContent() {
               <div className="provider-list">
                 {Array.from({ length: 2 }).map((_, index) => (
                   <div key={`provider-skeleton-${index}`} className="provider-card">
-                    <div className="provider-info">
-                      <div className="provider-avatar-wrap">
-                        <div className="skeleton is-wide h-12 w-12 rounded-full" />
-                      </div>
-                      <div className="provider-main">
-                        <div className="skeleton is-wide h-4 w-24" />
-                        <div className="skeleton is-wide h-3 w-20" />
-                        <div className="skeleton is-wide h-3 w-16" />
-                      </div>
-                    </div>
+                    <UserHeaderCardSkeleton />
                     <div className="skeleton is-wide h-10 w-full rounded-lg" />
                   </div>
                 ))}
@@ -1021,16 +1052,7 @@ function RequestsPageContent() {
               <div className="provider-list">
                 {Array.from({ length: 2 }).map((_, index) => (
                   <div key={`provider-error-skeleton-${index}`} className="provider-card">
-                    <div className="provider-info">
-                      <div className="provider-avatar-wrap">
-                        <div className="skeleton is-wide h-12 w-12 rounded-full" />
-                      </div>
-                      <div className="provider-main">
-                        <div className="skeleton is-wide h-4 w-24" />
-                        <div className="skeleton is-wide h-3 w-20" />
-                        <div className="skeleton is-wide h-3 w-16" />
-                      </div>
-                    </div>
+                    <UserHeaderCardSkeleton />
                     <div className="skeleton is-wide h-10 w-full rounded-lg" />
                   </div>
                 ))}
@@ -1093,7 +1115,7 @@ function computeProfileCompleteness(profile: {
   vatId?: string | null;
   status?: string;
   isBlocked?: boolean;
-} | null) {
+} | null | undefined) {
   if (!profile) return 0;
   let score = 0;
   if (profile.displayName?.trim()) score += 15;
@@ -1125,4 +1147,48 @@ function computeClientCompleteness(me: {
   if (me.acceptedPrivacyPolicy) score += 5;
   if (me.clientProfile?.id) score += 5;
   return Math.max(0, Math.min(100, score));
+}
+
+type DeltaResult =
+  | { kind: 'percent'; value: number }
+  | { kind: 'new' }
+  | { kind: 'none' };
+
+function calcMoMDeltaPercent(current: number, previous: number): DeltaResult {
+  if (previous <= 0) {
+    if (current <= 0) return { kind: 'none' };
+    return { kind: 'new' };
+  }
+  const raw = ((current - previous) / previous) * 100;
+  const rounded = Math.round(raw);
+  if (Object.is(rounded, -0) || rounded === 0) return { kind: 'percent', value: 0 };
+  return { kind: 'percent', value: rounded };
+}
+
+function formatMoMDeltaLabel(delta: DeltaResult, locale: string): string {
+  const isDe = locale.startsWith('de');
+  if (delta.kind === 'new') {
+    return isDe ? 'Neu zum letzten Monat.' : 'New vs last month.';
+  }
+  if (delta.kind === 'none') {
+    return isDe ? '0% zum letzten Monat.' : '0% vs last month.';
+  }
+  const sign = delta.value > 0 ? '+' : '';
+  return isDe ? `${sign}${delta.value}% zum letzten Monat.` : `${sign}${delta.value}% vs last month.`;
+}
+
+function countCompletedInMonth(
+  contracts: Array<{ completedAt: string | null }>,
+  monthOffsetFromNow: number,
+) {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth() + monthOffsetFromNow, 1);
+  const end = new Date(now.getFullYear(), now.getMonth() + monthOffsetFromNow + 1, 1);
+  const startTs = start.getTime();
+  const endTs = end.getTime();
+  return contracts.filter((item) => {
+    if (!item.completedAt) return false;
+    const ts = new Date(item.completedAt).getTime();
+    return Number.isFinite(ts) && ts >= startTs && ts < endTs;
+  }).length;
 }

@@ -23,6 +23,7 @@ import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { createRequest, publishMyRequest, uploadRequestPhotos } from '@/lib/api/requests';
+import { ApiError } from '@/lib/api/http-error';
 import { parseScheduleParam } from '@/features/request/schedule';
 import {
   createRequestSchema,
@@ -33,6 +34,57 @@ import {
 
 // import { useLocationStore } from '@/features/location/store';
 
+const REQUEST_DRAFT_STORAGE_KEY = 'dc_request_create_draft_v1';
+
+type RequestDraft = {
+  values: {
+    serviceKey: string;
+    cityId: string;
+    title: string;
+    propertyType: CreateRequestValues['propertyType'];
+    area: number;
+    price?: number;
+    preferredDate: string;
+    isRecurring: boolean;
+    description: string;
+  };
+  tags: string[];
+  categoryKey: string;
+  savedAt: number;
+};
+
+function readRequestDraft(): RequestDraft | null {
+  if (typeof window === 'undefined') return null;
+  const raw = window.localStorage.getItem(REQUEST_DRAFT_STORAGE_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as Partial<RequestDraft> | null;
+    if (!parsed || typeof parsed !== 'object' || typeof parsed.values !== 'object') {
+      return null;
+    }
+    const values = parsed.values as Partial<RequestDraft['values']>;
+    return {
+      values: {
+        serviceKey: typeof values.serviceKey === 'string' ? values.serviceKey : '',
+        cityId: typeof values.cityId === 'string' ? values.cityId : '',
+        title: typeof values.title === 'string' ? values.title : '',
+        propertyType: values.propertyType === 'house' ? 'house' : 'apartment',
+        area: typeof values.area === 'number' && Number.isFinite(values.area) ? values.area : 50,
+        price: typeof values.price === 'number' && Number.isFinite(values.price) ? values.price : undefined,
+        preferredDate: typeof values.preferredDate === 'string' ? values.preferredDate : '',
+        isRecurring: Boolean(values.isRecurring),
+        description: typeof values.description === 'string' ? values.description : '',
+      },
+      tags: Array.isArray(parsed.tags)
+        ? parsed.tags.filter((item): item is string => typeof item === 'string')
+        : [],
+      categoryKey: typeof parsed.categoryKey === 'string' ? parsed.categoryKey : '',
+      savedAt: typeof parsed.savedAt === 'number' ? parsed.savedAt : Date.now(),
+    };
+  } catch {
+    return null;
+  }
+}
 
 function CreateRequestContent() {
   const t = useT();
@@ -81,6 +133,7 @@ function CreateRequestContent() {
 
   const serviceKey = useWatch({ control, name: 'serviceKey' });
   const cityId = useWatch({ control, name: 'cityId' });
+  const watchedFormValues = useWatch({ control });
   const titleValue = useWatch({ control, name: 'title' }) ?? '';
   const descriptionValue = useWatch({ control, name: 'description' }) ?? '';
   const propertyType = useWatch({ control, name: 'propertyType' });
@@ -97,6 +150,67 @@ function CreateRequestContent() {
   }, [tags, setValue]);
 
   const [categoryKey, setCategoryKey] = React.useState('');
+  const draftRestoredRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || draftRestoredRef.current) return;
+    draftRestoredRef.current = true;
+    const draft = readRequestDraft();
+    if (!draft) return;
+
+    const values = draft.values;
+    if (typeof values.serviceKey === 'string') setValue('serviceKey', values.serviceKey);
+    if (typeof values.cityId === 'string') setValue('cityId', values.cityId);
+    if (typeof values.title === 'string') setValue('title', values.title);
+    if (values.propertyType === 'apartment' || values.propertyType === 'house') {
+      setValue('propertyType', values.propertyType);
+    }
+    if (typeof values.area === 'number' && Number.isFinite(values.area)) setValue('area', values.area);
+    if (typeof values.price === 'number' && Number.isFinite(values.price)) {
+      setValue('price', values.price);
+    } else if (values.price === null || values.price === undefined) {
+      setValue('price', undefined);
+    }
+    if (typeof values.preferredDate === 'string') setValue('preferredDate', values.preferredDate);
+    if (typeof values.isRecurring === 'boolean') setValue('isRecurring', values.isRecurring);
+    if (typeof values.description === 'string') setValue('description', values.description);
+
+    if (Array.isArray(draft.tags)) {
+      const safeTags = draft.tags.filter((item): item is string => typeof item === 'string');
+      setTags(safeTags);
+      setValue('tags', safeTags.length ? safeTags : undefined);
+    }
+    if (typeof draft.categoryKey === 'string') {
+      setCategoryKey(draft.categoryKey);
+    }
+  }, [setValue]);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || !draftRestoredRef.current) return;
+    const payload: RequestDraft = {
+      values: {
+        serviceKey: watchedFormValues.serviceKey ?? '',
+        cityId: watchedFormValues.cityId ?? '',
+        title: watchedFormValues.title ?? '',
+        propertyType: watchedFormValues.propertyType ?? 'apartment',
+        area:
+          typeof watchedFormValues.area === 'number' && Number.isFinite(watchedFormValues.area)
+            ? watchedFormValues.area
+            : 50,
+        price:
+          typeof watchedFormValues.price === 'number' && Number.isFinite(watchedFormValues.price)
+            ? watchedFormValues.price
+            : undefined,
+        preferredDate: watchedFormValues.preferredDate ?? '',
+        isRecurring: Boolean(watchedFormValues.isRecurring),
+        description: watchedFormValues.description ?? '',
+      },
+      tags,
+      categoryKey,
+      savedAt: Date.now(),
+    };
+    window.localStorage.setItem(REQUEST_DRAFT_STORAGE_KEY, JSON.stringify(payload));
+  }, [categoryKey, tags, watchedFormValues]);
 
   React.useEffect(() => {
     if (categoryKey) return;
@@ -115,10 +229,19 @@ function CreateRequestContent() {
       const preferredDateIso = values.preferredDate
         ? new Date(values.preferredDate).toISOString()
         : values.preferredDate;
-      const uploads =
-        photoItems.length > 0
-          ? await uploadRequestPhotos(photoItems.map((item) => item.file))
-          : { urls: [] };
+      let uploads: { urls: string[] } = { urls: [] };
+      if (photoItems.length > 0) {
+        try {
+          uploads = await uploadRequestPhotos(photoItems.map((item) => item.file));
+        } catch (error) {
+          if (error instanceof ApiError && error.status === 403) {
+            uploads = { urls: [] };
+            toast.message(t(I18N_KEYS.request.photosUploadForbidden));
+          } else {
+            throw error;
+          }
+        }
+      }
       const res = await createRequest({
         ...values,
         preferredDate: preferredDateIso,
@@ -128,8 +251,11 @@ function CreateRequestContent() {
         price: values.price ?? undefined,
       });
       await publishMyRequest(res.id);
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem(REQUEST_DRAFT_STORAGE_KEY);
+      }
       toast.success(t(I18N_KEYS.request.published));
-      router.push('/client/requests');
+      router.push('/requests');
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);

@@ -2,9 +2,9 @@
 'use client';
 
 import * as React from 'react';
-import { IconCalendar, IconHeart, IconPin } from '@/components/ui/icons/icons';
+import Link from 'next/link';
+import { IconBriefcase, IconCalendar, IconChat, IconHeart, IconPin } from '@/components/ui/icons/icons';
 import { OrderCard } from '@/components/orders/OrderCard';
-import { OfferActions } from '@/components/requests/OfferActions';
 import { OfferStatusBadge } from '@/components/requests/OfferStatusBadge';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -227,6 +227,32 @@ export function RequestsList({
                       />
                     </>
                   ) : null}
+                  {offerCardState === 'accepted' ? (
+                    <>
+                      <Link
+                        href="/provider/contracts"
+                        className="btn-primary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--contract"
+                        aria-label={t(I18N_KEYS.requestDetails.responseViewContract)}
+                        title={t(I18N_KEYS.requestDetails.responseViewContract)}
+                      >
+                        <i className="offer-action-btn__icon">
+                          <IconBriefcase />
+                        </i>
+                      </Link>
+                      {itemOffer?.id ? (
+                        <Link
+                          href={`/chat/${itemOffer.id}`}
+                          className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
+                          aria-label={t(I18N_KEYS.requestDetails.ctaChat)}
+                          title={t(I18N_KEYS.requestDetails.ctaChat)}
+                        >
+                          <i className="offer-action-btn__icon">
+                            <IconChat />
+                          </i>
+                        </Link>
+                      ) : null}
+                    </>
+                  ) : null}
                   {offerCardState === 'declined' ? (
                     <OfferActionButton
                       kind="submit"
@@ -257,26 +283,7 @@ export function RequestsList({
                 </button>
               ) : null
             }
-            actionSlot={
-              isProviderPersonalized && offerCardState === 'accepted' ? (
-                <OfferActions
-                  state={offerCardState}
-                  sendLabel={t(I18N_KEYS.requestDetails.ctaApply)}
-                  editLabel={t(I18N_KEYS.requestDetails.responseEditCta)}
-                  withdrawLabel={t(I18N_KEYS.requestDetails.responseCancel)}
-                  contractLabel={t(I18N_KEYS.requestDetails.responseViewContract)}
-                  chatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
-                  browseLabel={t(I18N_KEYS.requestDetails.showAll)}
-                  detailsLabel={t(I18N_KEYS.requestsPage.detailsCta)}
-                  detailsHref={detailsHref}
-                  chatHref={itemOffer ? `/chat/${itemOffer.id}` : undefined}
-                  onSend={() => onSendOffer?.(item.id)}
-                  onEdit={() => onEditOffer?.(item.id)}
-                  onWithdraw={() => itemOffer?.id && onWithdrawOffer?.(itemOffer.id)}
-                  isWorking={isPendingWithdraw}
-                />
-              ) : null
-            }
+            actionSlot={null}
           />
         );
       })}

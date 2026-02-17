@@ -43,6 +43,12 @@
     }
   }
 
+  @media (min-width: 980px) {
+    .personal-nav--left .personal-nav__track {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
   .personal-nav__item {
     min-height: 72px;
     padding: 10px 12px;
@@ -195,8 +201,22 @@
   }
 
   .rating-summary__stars {
+    position: relative;
+    display: inline-block;
     font-size: 12px;
     letter-spacing: 0.06em;
+    line-height: 1;
+  }
+
+  .rating-summary__stars-base {
+    color: color-mix(in oklab, var(--c-border) 70%, var(--c-text-muted) 30%);
+  }
+
+  .rating-summary__stars-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    overflow: hidden;
+    white-space: nowrap;
     color: var(--c-accent);
   }
 
@@ -832,6 +852,18 @@
     background: color-mix(in oklab, var(--c-danger, #dc2626) 10%, var(--c-panel) 90%);
   }
 
+  .request-card__status-action.request-card__status-action--contract.offer-action-btn--icon-only {
+    color: color-mix(in oklab, var(--c-accent) 86%, var(--c-text) 14%);
+    border-color: color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
+    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
+  }
+
+  .request-card__status-action.request-card__status-action--chat.offer-action-btn--icon-only {
+    color: color-mix(in oklab, #74a5ff 78%, var(--c-text) 22%);
+    border-color: color-mix(in oklab, #74a5ff 46%, var(--c-border) 54%);
+    background: color-mix(in oklab, #74a5ff 12%, var(--c-panel) 88%);
+  }
+
   .requests-pagination {
     display: flex;
     align-items: center;
@@ -1131,86 +1163,11 @@
   }
 
   .request-detail__client-card {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 12px;
-    align-items: center;
+    display: block;
     padding: 12px;
     border-radius: var(--radius-lg);
     border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
-  }
-
-  .request-detail__client-link {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 12px;
-    align-items: center;
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .request-detail__client-link:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 30%, transparent);
-    border-radius: var(--radius-md);
-  }
-
-  .request-detail__client-avatar-wrap {
-    position: relative;
-    display: inline-flex;
-  }
-
-  .request-detail__client-avatar {
-    position: relative;
-    width: 56px;
-    height: 56px;
-    border-radius: 999px;
-    overflow: hidden;
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    display: grid;
-    place-items: center;
-    font-weight: 700;
-    color: var(--c-text);
-  }
-
-  .request-detail__client-avatar--placeholder {
-    background:
-      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0)),
-      linear-gradient(135deg, var(--c-avatar-client), var(--c-avatar-client-light));
-    border-color: color-mix(in oklab, var(--c-avatar-client) 65%, transparent);
-    color: #0b1220;
-  }
-
-  .request-detail__client-img {
-    object-fit: cover;
-  }
-
-  .request-detail__client-name {
-    font-weight: 700;
-    font-size: 15px;
-  }
-
-  .request-detail__client-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--c-text-muted);
-  }
-
-  .request-detail__client-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .request-detail__client-rating {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-left: auto;
   }
 
   .request-detail__reviews-list {
@@ -1665,9 +1622,8 @@
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
   }
 
-  .request-offer-sheet__success-tip-avatar-wrap {
-    position: relative;
-    display: inline-flex;
+  .request-offer-sheet__success-tip-person {
+    min-width: 0;
   }
 
   .request-offer-sheet__success-tip-copy {

@@ -311,6 +311,8 @@ export default function RequestDetailsPage() {
         setSubmittedOfferAmount(parsedAmount);
         setOfferSheetInUrl(false);
         toast.message(t(I18N_KEYS.requestDetails.responseAlready));
+      } else if (error instanceof ApiError && error.status === 403) {
+        toast.error(error.message || t(I18N_KEYS.requestDetails.responseFailed));
       } else {
         toast.error(t(I18N_KEYS.requestDetails.responseFailed));
       }
@@ -739,7 +741,7 @@ export default function RequestDetailsPage() {
         successTipCardBody={t(I18N_KEYS.requestDetails.responseSuccessTipCardBody)}
         successProfileCta={t(I18N_KEYS.requestDetails.responseProfileCta)}
         successContinueCta={t(I18N_KEYS.requestDetails.responseContinueCta)}
-        successProfileHref={`/provider/profile?highlight=offer&next=${encodeURIComponent(`/requests/${request.id}`)}`}
+        successProfileHref={`/profile/workspace?highlight=offer&next=${encodeURIComponent(`/requests/${request.id}`)}`}
         showProfileAdvice={!isProviderProfileComplete}
         profileAvatarUrl={authMe?.avatar?.url ?? null}
         profileName={authMe?.name ?? authUser?.name ?? null}

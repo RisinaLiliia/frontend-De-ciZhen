@@ -25,6 +25,7 @@ export type MeResponseDto = {
   city?: string;
   language?: string;
   phone?: string;
+  bio?: string;
   avatar?: AvatarDto;
   acceptedPrivacyPolicy: boolean;
   acceptedPrivacyPolicyAt?: string | null;
