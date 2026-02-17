@@ -12,11 +12,14 @@ import { PersonalNavSection } from '@/components/layout/PersonalNavSection';
 import { HeroSection } from '@/components/ui/HeroSection';
 import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
+import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
+import { ProofReviewCard } from '@/components/reviews/ProofReviewCard';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import {
   deleteMyRequest,
+  getPublicRequestById,
   listMyRequests,
   listPublicRequests,
   type PublicRequestsSort,
@@ -37,7 +40,6 @@ import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { IconBriefcase, IconCheck, IconHeart, IconSend, IconUser } from '@/components/ui/icons/icons';
 import { trackUXEvent } from '@/lib/analytics';
-import { getStatusBadgeClass } from '@/lib/statusBadge';
 import type { I18nKey } from '@/lib/i18n/keys';
 
 const ALL_OPTION_KEY = 'all';
@@ -60,6 +62,8 @@ const NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX = 'dc_requests_new_seen_total_v1';
 
 type WorkspaceTab = 'new-orders' | 'my-requests' | 'my-offers' | 'completed-jobs' | 'favorites' | 'reviews';
 type WorkspaceStatusFilter = 'all' | 'open' | 'in_progress' | 'completed';
+type FavoritesView = 'requests' | 'providers';
+type ReviewsView = 'provider' | 'client';
 
 const WORKSPACE_TABS: WorkspaceTab[] = [
   'new-orders',
@@ -69,6 +73,8 @@ const WORKSPACE_TABS: WorkspaceTab[] = [
   'favorites',
   'reviews',
 ];
+const ORDERS_TAB_STORAGE_KEY = 'dc_orders_tab';
+const DEFAULT_ORDERS_WORKSPACE_URL = '/orders?tab=my-requests&sort=date_desc&page=1&limit=20';
 
 function resolveWorkspaceTab(value: string | null): WorkspaceTab {
   return value && WORKSPACE_TABS.includes(value as WorkspaceTab) ? (value as WorkspaceTab) : 'new-orders';
@@ -76,6 +82,14 @@ function resolveWorkspaceTab(value: string | null): WorkspaceTab {
 
 function resolveStatusFilter(value: string | null): WorkspaceStatusFilter {
   return value === 'open' || value === 'in_progress' || value === 'completed' ? value : 'all';
+}
+
+function resolveFavoritesView(value: string | null): FavoritesView {
+  return value === 'providers' ? 'providers' : 'requests';
+}
+
+function resolveReviewsView(value: string | null): ReviewsView {
+  return value === 'client' ? 'client' : 'provider';
 }
 
 function mapRequestStatusToFilter(status?: string): WorkspaceStatusFilter {
@@ -108,15 +122,53 @@ function RequestsPageContent() {
   const auth = useAuthSnapshot();
   const authStatus = auth.status;
   const isAuthed = authStatus === 'authenticated';
+  const isWorkspaceRoute = pathname === '/orders';
+  const isWorkspaceAuthed = isWorkspaceRoute && isAuthed;
+  const workspaceCurrentHref = React.useMemo(() => {
+    const query = searchParams.toString();
+    return `/orders${query ? `?${query}` : ''}`;
+  }, [searchParams]);
   const isPersonalized = isAuthed;
   const activeWorkspaceTab = React.useMemo(
-    () => resolveWorkspaceTab(searchParams.get('tab')),
-    [searchParams],
+    () => (isWorkspaceRoute ? resolveWorkspaceTab(searchParams.get('tab')) : 'new-orders'),
+    [isWorkspaceRoute, searchParams],
   );
   const activeStatusFilter = React.useMemo(
-    () => resolveStatusFilter(searchParams.get('status')),
+    () => (isWorkspaceRoute ? resolveStatusFilter(searchParams.get('status')) : 'all'),
+    [isWorkspaceRoute, searchParams],
+  );
+  const activeFavoritesView = React.useMemo(
+    () => resolveFavoritesView(searchParams.get('fav')),
     [searchParams],
   );
+  const activeReviewsView = React.useMemo(
+    () => resolveReviewsView(searchParams.get('reviewRole')),
+    [searchParams],
+  );
+
+  React.useEffect(() => {
+    if (!isWorkspaceRoute || authStatus !== 'unauthenticated') return;
+    router.replace(`/auth/login?next=${encodeURIComponent(workspaceCurrentHref)}`, { scroll: false });
+  }, [authStatus, isWorkspaceRoute, router, workspaceCurrentHref]);
+
+  React.useEffect(() => {
+    if (authStatus === 'authenticated' && pathname === '/requests') {
+      router.replace(DEFAULT_ORDERS_WORKSPACE_URL, { scroll: false });
+      return;
+    }
+    if (authStatus !== 'unauthenticated') return;
+    if (isWorkspaceRoute) return;
+    const next = new URLSearchParams(searchParams.toString());
+    const hadWorkspaceParams =
+      next.has('tab') || next.has('status') || next.has('fav') || next.has('reviewRole');
+    if (!hadWorkspaceParams) return;
+    next.delete('tab');
+    next.delete('status');
+    next.delete('fav');
+    next.delete('reviewRole');
+    const query = next.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }, [authStatus, isWorkspaceRoute, pathname, router, searchParams]);
 
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
@@ -239,6 +291,33 @@ function RequestsPageContent() {
     },
   });
 
+  const myOfferRequestIds = React.useMemo(
+    () => Array.from(new Set(myOffers.map((offer) => offer.requestId).filter(Boolean))),
+    [myOffers],
+  );
+
+  const { data: myOfferRequestsById = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>() } = useQuery({
+    queryKey: ['requests-by-my-offer-ids', ...myOfferRequestIds],
+    enabled: isWorkspaceAuthed && myOfferRequestIds.length > 0,
+    queryFn: async () => {
+      const pairs = await Promise.all(
+        myOfferRequestIds.map(async (id) => {
+          try {
+            const request = await getPublicRequestById(id);
+            return [id, request] as const;
+          } catch {
+            return [id, null] as const;
+          }
+        }),
+      );
+      const map = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>();
+      pairs.forEach(([id, request]) => {
+        if (request) map.set(id, request);
+      });
+      return map;
+    },
+  });
+
   const { data: favoriteRequests = [], isLoading: isFavoriteRequestsLoading } = useQuery({
     queryKey: ['favorite-requests'],
     enabled: isAuthed,
@@ -272,11 +351,11 @@ function RequestsPageContent() {
   });
 
   const { data: myReviews = [], isLoading: isMyReviewsLoading } = useQuery({
-    queryKey: ['reviews-my', 'all'],
-    enabled: isAuthed,
+    queryKey: ['reviews-my', activeReviewsView],
+    enabled: isWorkspaceAuthed,
     queryFn: async () => {
       try {
-        return await listMyReviews({ role: 'all' });
+        return await listMyReviews({ role: activeReviewsView });
       } catch (error) {
         if (error instanceof Error && 'status' in error) {
           const status = Number((error as { status?: number }).status ?? 0);
@@ -289,7 +368,7 @@ function RequestsPageContent() {
 
   const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery({
     queryKey: ['requests-my'],
-    enabled: isAuthed,
+    enabled: isWorkspaceAuthed,
     queryFn: async () => {
       try {
         return await listMyRequests();
@@ -305,7 +384,7 @@ function RequestsPageContent() {
 
   const { data: myProviderContracts = [], isLoading: isProviderContractsLoading } = useQuery({
     queryKey: ['contracts-my-provider'],
-    enabled: isAuthed,
+    enabled: isWorkspaceAuthed,
     queryFn: async () => {
       try {
         return await listMyContracts({ role: 'provider' });
@@ -321,7 +400,7 @@ function RequestsPageContent() {
 
   const { data: myClientContracts = [], isLoading: isClientContractsLoading } = useQuery({
     queryKey: ['contracts-my-client'],
-    enabled: isAuthed,
+    enabled: isWorkspaceAuthed,
     queryFn: async () => {
       try {
         return await listMyContracts({ role: 'client' });
@@ -517,6 +596,7 @@ function RequestsPageContent() {
     [pendingDeleteRequestId, qc, t],
   );
 
+
   const sentCount = React.useMemo(
     () => myOffers.filter((offer) => offer.status === 'sent').length,
     [myOffers],
@@ -582,6 +662,23 @@ function RequestsPageContent() {
     }
   }, [auth.user?.id, isAuthed, seenTotal, totalAllRequests]);
 
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || !isWorkspaceAuthed) return;
+    const hasTabInQuery = Boolean(searchParams.get('tab'));
+    if (hasTabInQuery) return;
+    const storedTab = window.localStorage.getItem(ORDERS_TAB_STORAGE_KEY);
+    const nextTab = resolveWorkspaceTab(storedTab);
+    if (!nextTab || nextTab === 'new-orders') return;
+    const next = new URLSearchParams(searchParams.toString());
+    next.set('tab', nextTab);
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+  }, [isWorkspaceAuthed, pathname, router, searchParams]);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || !isWorkspaceAuthed) return;
+    window.localStorage.setItem(ORDERS_TAB_STORAGE_KEY, activeWorkspaceTab);
+  }, [activeWorkspaceTab, isWorkspaceAuthed]);
+
   const markNewOrdersSeen = React.useCallback(() => {
     if (typeof window === 'undefined' || !isAuthed) return;
     const storageKey = `${NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
@@ -594,6 +691,8 @@ function RequestsPageContent() {
       const next = new URLSearchParams(searchParams.toString());
       next.set('tab', tab);
       next.set('status', 'all');
+      if (tab !== 'favorites') next.delete('fav');
+      if (tab !== 'reviews') next.delete('reviewRole');
       const query = next.toString();
       trackUXEvent('workspace_tab_change', { tab });
       router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
@@ -610,6 +709,26 @@ function RequestsPageContent() {
       router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
     },
     [activeWorkspaceTab, pathname, router, searchParams],
+  );
+  const setFavoritesView = React.useCallback(
+    (view: FavoritesView) => {
+      const next = new URLSearchParams(searchParams.toString());
+      next.set('tab', 'favorites');
+      next.set('fav', view);
+      const query = next.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+  const setReviewsView = React.useCallback(
+    (view: ReviewsView) => {
+      const next = new URLSearchParams(searchParams.toString());
+      next.set('tab', 'reviews');
+      next.set('reviewRole', view);
+      const query = next.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
   );
 
   const newOrdersCount = Math.max(0, totalAllRequests - seenTotal);
@@ -649,6 +768,62 @@ function RequestsPageContent() {
       ),
     [activeStatusFilter, myOffers],
   );
+  const myOfferRequests = React.useMemo(() => {
+    const fallbackDate = new Date().toISOString();
+    const items: Awaited<ReturnType<typeof getPublicRequestById>>[] = [];
+    const seen = new Set<string>();
+
+    filteredMyOffers.forEach((offer) => {
+      if (!offer.requestId || seen.has(offer.requestId)) return;
+      seen.add(offer.requestId);
+      const request = myOfferRequestsById.get(offer.requestId);
+      if (request) {
+        items.push(request);
+        return;
+      }
+      items.push({
+        id: offer.requestId,
+        serviceKey: offer.requestServiceKey || 'service',
+        cityId: offer.requestCityId || 'city',
+        cityName: offer.requestCityId || null,
+        categoryKey: null,
+        categoryName: null,
+        subcategoryName: offer.requestServiceKey || null,
+        propertyType: 'apartment',
+        area: 0,
+        price: typeof offer.amount === 'number' ? offer.amount : null,
+        preferredDate: offer.requestPreferredDate || offer.updatedAt || offer.createdAt || fallbackDate,
+        isRecurring: false,
+        title: offer.requestServiceKey || null,
+        description: offer.message || null,
+        photos: null,
+        imageUrl: null,
+        tags: null,
+        clientId: offer.clientUserId,
+        clientName: null,
+        clientAvatarUrl: null,
+        clientCity: null,
+        clientRatingAvg: null,
+        clientRatingCount: null,
+        clientIsOnline: null,
+        clientLastSeenAt: null,
+        status: (offer.requestStatus === 'matched'
+          ? 'matched'
+          : offer.requestStatus === 'closed'
+            ? 'closed'
+            : offer.requestStatus === 'cancelled'
+              ? 'cancelled'
+              : offer.requestStatus === 'draft'
+                ? 'draft'
+                : offer.requestStatus === 'paused'
+                  ? 'paused'
+                  : 'published'),
+        createdAt: offer.createdAt,
+      });
+    });
+
+    return items;
+  }, [filteredMyOffers, myOfferRequestsById]);
   const filteredContracts = React.useMemo(
     () =>
       allMyContracts.filter(
@@ -657,6 +832,117 @@ function RequestsPageContent() {
       ),
     [activeStatusFilter, allMyContracts],
   );
+  const contractRequestIds = React.useMemo(
+    () => Array.from(new Set(filteredContracts.map((item) => item.requestId).filter(Boolean))),
+    [filteredContracts],
+  );
+  const { data: contractRequestsById = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>() } = useQuery({
+    queryKey: ['requests-by-contract-ids', ...contractRequestIds],
+    enabled: isWorkspaceAuthed && contractRequestIds.length > 0,
+    queryFn: async () => {
+      const pairs = await Promise.all(
+        contractRequestIds.map(async (id) => {
+          try {
+            const request = await getPublicRequestById(id);
+            return [id, request] as const;
+          } catch {
+            return [id, null] as const;
+          }
+        }),
+      );
+      const map = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>();
+      pairs.forEach(([id, request]) => {
+        if (request) map.set(id, request);
+      });
+      return map;
+    },
+  });
+  const contractRequests = React.useMemo(() => {
+    const fallbackDate = new Date().toISOString();
+    const items: Awaited<ReturnType<typeof getPublicRequestById>>[] = [];
+    const seen = new Set<string>();
+    filteredContracts.forEach((item) => {
+      if (!item.requestId || seen.has(item.requestId)) return;
+      seen.add(item.requestId);
+      const request = contractRequestsById.get(item.requestId);
+      if (request) {
+        items.push(request);
+        return;
+      }
+      items.push({
+        id: item.requestId,
+        serviceKey: 'service',
+        cityId: 'city',
+        cityName: null,
+        categoryKey: null,
+        categoryName: null,
+        subcategoryName: null,
+        propertyType: 'apartment',
+        area: 0,
+        price: item.priceAmount ?? null,
+        preferredDate: item.updatedAt || item.createdAt || fallbackDate,
+        isRecurring: false,
+        title: `Contract #${item.id.slice(-6)}`,
+        description: null,
+        photos: null,
+        imageUrl: null,
+        tags: null,
+        clientId: item.clientId,
+        clientName: null,
+        clientAvatarUrl: null,
+        clientCity: null,
+        clientRatingAvg: null,
+        clientRatingCount: null,
+        clientIsOnline: null,
+        clientLastSeenAt: null,
+        status:
+          item.status === 'completed'
+            ? 'closed'
+            : item.status === 'cancelled'
+              ? 'cancelled'
+              : 'matched',
+        createdAt: item.createdAt,
+      });
+    });
+    return items;
+  }, [contractRequestsById, filteredContracts]);
+  const contractOffersByRequest = React.useMemo(() => {
+    const map = new Map<string, (typeof myOffers)[number]>();
+    filteredContracts.forEach((item) => {
+      map.set(item.requestId, {
+        id: item.offerId,
+        requestId: item.requestId,
+        providerUserId: item.providerUserId,
+        clientUserId: item.clientId,
+        status: item.status === 'cancelled' ? 'declined' : 'accepted',
+        message: null,
+        amount: item.priceAmount,
+        priceType: item.priceType,
+        availableAt: null,
+        availabilityNote: null,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+      });
+    });
+    return map;
+  }, [filteredContracts]);
+  const hasFavoriteRequests = favoriteRequests.length > 0;
+  const hasFavoriteProviders = favoriteProviders.length > 0;
+  const areFavoritesLoaded = !isFavoriteRequestsLoading && !isFavoriteProvidersLoading;
+  const resolvedFavoritesView = React.useMemo<FavoritesView>(() => {
+    if (
+      areFavoritesLoaded &&
+      activeFavoritesView === 'requests' &&
+      !hasFavoriteRequests &&
+      hasFavoriteProviders
+    ) {
+      return 'providers';
+    }
+    return activeFavoritesView;
+  }, [activeFavoritesView, areFavoritesLoaded, hasFavoriteProviders, hasFavoriteRequests]);
+  const favoritesItems = resolvedFavoritesView === 'requests' ? favoriteRequests : favoriteProviders;
+  const isFavoritesLoading = resolvedFavoritesView === 'requests' ? isFavoriteRequestsLoading : isFavoriteProvidersLoading;
+  const showWorkspaceHeader = activeWorkspaceTab !== 'favorites';
   const statusFilters = React.useMemo(
     () =>
       activeWorkspaceTab === 'new-orders' || activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews'
@@ -674,16 +960,16 @@ function RequestsPageContent() {
       return { label: 'Neue Anfrage erstellen', href: '/request/create' };
     }
     if (activeWorkspaceTab === 'my-offers') {
-      return { label: 'Neue Auftraege finden', href: '/requests?tab=new-orders' };
+      return { label: 'Neue Auftraege finden', href: '/orders?tab=new-orders' };
     }
     if (activeWorkspaceTab === 'completed-jobs') {
-      return { label: 'Aktive Auftraege', href: '/requests?tab=my-offers&status=in_progress' };
+      return { label: 'Aktive Auftraege', href: '/orders?tab=my-offers&status=in_progress' };
     }
     if (activeWorkspaceTab === 'favorites') {
-      return { label: 'Neue Favoriten', href: '/requests?tab=new-orders' };
+      return { label: 'Neue Favoriten', href: '/orders?tab=new-orders' };
     }
     if (activeWorkspaceTab === 'reviews') {
-      return { label: 'Meine Auftraege', href: '/requests?tab=my-offers' };
+      return { label: 'Meine Auftraege', href: '/orders?tab=my-offers' };
     }
     return { label: 'Neue Anfrage erstellen', href: '/request/create' };
   }, [activeWorkspaceTab]);
@@ -693,7 +979,7 @@ function RequestsPageContent() {
         ? [
             {
               key: 'new-orders',
-              href: '/requests?tab=new-orders',
+              href: '/orders?tab=new-orders',
               label: t(I18N_KEYS.requestsPage.navNewOrders),
               icon: <IconBriefcase />,
               value: newOrdersCount,
@@ -707,7 +993,7 @@ function RequestsPageContent() {
             },
             {
               key: 'my-orders',
-              href: '/requests?tab=my-requests',
+              href: '/orders?tab=my-requests',
               label: 'Meine Auftraege',
               icon: <IconBriefcase />,
               value: myRequests.length,
@@ -718,7 +1004,7 @@ function RequestsPageContent() {
             },
             {
               key: 'my-offers',
-              href: '/requests?tab=my-offers',
+              href: '/orders?tab=my-offers',
               label: t(I18N_KEYS.requestsPage.navMyOffers),
               icon: <IconSend />,
               value: sentCount,
@@ -729,7 +1015,7 @@ function RequestsPageContent() {
             },
             {
               key: 'completed-jobs',
-              href: '/requests?tab=completed-jobs',
+              href: '/orders?tab=completed-jobs',
               label: 'Abgeschlossene Jobs',
               icon: <IconCheck />,
               value: completedJobsCount,
@@ -740,7 +1026,7 @@ function RequestsPageContent() {
             },
             {
               key: 'my-favorites',
-              href: '/requests?tab=favorites',
+              href: '/orders?tab=favorites',
               label: 'Meine Favoriten',
               icon: <IconHeart />,
               value: favoriteRequestIds.size,
@@ -751,7 +1037,7 @@ function RequestsPageContent() {
             },
             {
               key: 'reviews',
-              href: '/requests?tab=reviews',
+              href: '/orders?tab=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -767,7 +1053,7 @@ function RequestsPageContent() {
         : [
             {
               key: 'new-orders',
-              href: '/requests?tab=new-orders',
+              href: '/orders?tab=new-orders',
               label: t(I18N_KEYS.requestsPage.navNewOrders),
               icon: <IconBriefcase />,
               value: newOrdersCount,
@@ -781,7 +1067,7 @@ function RequestsPageContent() {
             },
             {
               key: 'my-orders',
-              href: '/requests?tab=my-requests',
+              href: '/orders?tab=my-requests',
               label: 'Meine Auftraege',
               icon: <IconBriefcase />,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
@@ -791,7 +1077,7 @@ function RequestsPageContent() {
             },
             {
               key: 'my-offers',
-              href: '/requests?tab=my-offers',
+              href: '/orders?tab=my-offers',
               label: t(I18N_KEYS.requestsPage.navMyOffers),
               icon: <IconSend />,
               hint: t(I18N_KEYS.requestsPage.summarySent),
@@ -801,7 +1087,7 @@ function RequestsPageContent() {
             },
             {
               key: 'my-favorites',
-              href: '/requests?tab=favorites',
+              href: '/orders?tab=favorites',
               label: 'Meine Favoriten',
               icon: <IconHeart />,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
@@ -811,7 +1097,7 @@ function RequestsPageContent() {
             },
             {
               key: 'reviews',
-              href: '/requests?tab=reviews',
+              href: '/orders?tab=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -1111,8 +1397,12 @@ function RequestsPageContent() {
           { tab: 'provider' as const, title: 'Statistik Anbieter', payload: providerStatsPayload },
         ];
 
+  if (isWorkspaceRoute && authStatus !== 'authenticated') {
+    return null;
+  }
+
   return (
-    <PageShell right={<AuthActions />} showBack={isAuthed} mainClassName="py-6 requests-screen">
+    <PageShell right={<AuthActions />} showBack={isWorkspaceAuthed} mainClassName="py-6 requests-screen">
       {!isAuthed ? (
         <HeroSection
           title={t(I18N_KEYS.requestsPage.heroTitle)}
@@ -1130,7 +1420,7 @@ function RequestsPageContent() {
 
       <div className="requests-grid">
         <div className="stack-md">
-          {isAuthed ? (
+          {isWorkspaceAuthed ? (
             <PersonalNavSection
               className="personal-nav--left"
               title={navTitle}
@@ -1140,36 +1430,38 @@ function RequestsPageContent() {
             />
           ) : null}
           {/* <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} /> */}
-          <section className="panel requests-panel" aria-labelledby="workspace-section-title">
-            <div className="requests-header">
-              <div className="section-heading">
-                <p id="workspace-section-title" className="section-title">
-                  {activeWorkspaceTab === 'new-orders'
-                    ? t(I18N_KEYS.requestsPage.title)
-                    : activeWorkspaceTab === 'my-requests'
-                      ? 'Meine Auftraege'
-                      : activeWorkspaceTab === 'my-offers'
-                        ? 'Meine Angebote'
-                        : activeWorkspaceTab === 'completed-jobs'
-                          ? 'Abgeschlossene Jobs'
-                          : activeWorkspaceTab === 'favorites'
-                            ? 'Meine Favoriten'
+          <section className="panel requests-panel" aria-labelledby={showWorkspaceHeader ? 'workspace-section-title' : undefined}>
+            {showWorkspaceHeader ? (
+              <div className="requests-header">
+                <div className="section-heading">
+                  <p id="workspace-section-title" className="section-title">
+                    {activeWorkspaceTab === 'new-orders'
+                      ? t(I18N_KEYS.requestsPage.title)
+                      : activeWorkspaceTab === 'my-requests'
+                        ? 'Meine Auftraege'
+                        : activeWorkspaceTab === 'my-offers'
+                          ? 'Meine Angebote'
+                          : activeWorkspaceTab === 'completed-jobs'
+                            ? 'Abgeschlossene Jobs'
                             : 'Bewertungen'}
-                </p>
-                <p id="workspace-section-subtitle" className="section-subtitle">
-                  {activeWorkspaceTab === 'new-orders'
-                    ? t(I18N_KEYS.requestsPage.subtitle)
-                    : 'Workspace-Ansicht fuer deine eigenen Daten und Aktionen.'}
-                </p>
+                  </p>
+                  <p id="workspace-section-subtitle" className="section-subtitle">
+                    {activeWorkspaceTab === 'new-orders'
+                      ? t(I18N_KEYS.requestsPage.subtitle)
+                      : 'Workspace-Ansicht fuer deine eigenen Daten und Aktionen.'}
+                  </p>
+                </div>
+                {activeWorkspaceTab !== 'my-requests' && activeWorkspaceTab !== 'my-offers' ? (
+                  <Link
+                    href={primaryAction.href}
+                    className="btn-primary requests-primary-cta"
+                    onClick={() => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab })}
+                  >
+                    {primaryAction.label}
+                  </Link>
+                ) : null}
               </div>
-              <Link
-                href={primaryAction.href}
-                className="btn-primary requests-primary-cta"
-                onClick={() => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab })}
-              >
-                {primaryAction.label}
-              </Link>
-            </div>
+            ) : null}
 
             {activeWorkspaceTab === 'new-orders' ? (
               <RequestsFilters
@@ -1214,8 +1506,8 @@ function RequestsPageContent() {
             id="requests-list"
             className="requests-list"
             role="tabpanel"
-            aria-labelledby="workspace-section-title"
-            aria-describedby="workspace-section-subtitle"
+            aria-labelledby={showWorkspaceHeader ? 'workspace-section-title' : undefined}
+            aria-describedby={showWorkspaceHeader ? 'workspace-section-subtitle' : undefined}
             aria-live="polite"
           >
             {activeWorkspaceTab === 'new-orders' ? (
@@ -1245,11 +1537,7 @@ function RequestsPageContent() {
 
             {activeWorkspaceTab === 'my-requests' ? (
               <div className="stack-sm">
-                <Link href="/request/create" className="card stack-xs no-underline">
-                  <p className="text-2xl font-semibold leading-none">+</p>
-                  <p className="text-sm font-semibold">Neue Anfrage erstellen</p>
-                  <p className="typo-small">Kostenlos · mehrere Angebote</p>
-                </Link>
+                <CreateRequestCard />
                 <WorkspaceContentState
                   isLoading={isMyRequestsLoading}
                   isEmpty={filteredMyRequests.length === 0}
@@ -1258,35 +1546,24 @@ function RequestsPageContent() {
                   emptyCtaLabel="Neue Anfrage erstellen"
                   emptyCtaHref="/request/create"
                 >
-                  {filteredMyRequests.map((item) => (
-                    <article key={item.id} className="card stack-xs workspace-list-item">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold truncate">{item.title || item.serviceKey}</p>
-                          <p className="typo-small">{item.cityName || item.cityId}</p>
-                        </div>
-                        <span className={`${getStatusBadgeClass(item.status)} capitalize`}>{item.status}</span>
-                      </div>
-                      <p className="typo-small">
-                        Erstellt: {new Date(item.createdAt).toLocaleDateString(localeTag)}
-                      </p>
-                      <div className="offer-actions">
-                        <Link href={`/requests/${item.id}`} className="badge offer-actions__btn" aria-label={`Anfrage ${item.title || item.serviceKey} ansehen`}>Ansehen</Link>
-                        <Link href={`/requests/${item.id}`} className="badge offer-actions__btn" aria-label={`Anfrage ${item.title || item.serviceKey} bearbeiten`}>Bearbeiten</Link>
-                        <button
-                          type="button"
-                          className="btn-ghost offer-actions__btn"
-                          onClick={() => {
-                            void onDeleteMyRequest(item.id);
-                          }}
-                          disabled={pendingDeleteRequestId === item.id}
-                          aria-label={`Anfrage ${item.title || item.serviceKey} loeschen`}
-                        >
-                          {pendingDeleteRequestId === item.id ? 'Loeschen...' : 'Loeschen'}
-                        </button>
-                      </div>
-                    </article>
-                  ))}
+                  <RequestsList
+                    t={t}
+                    locale={locale}
+                    requests={filteredMyRequests}
+                    isLoading={isMyRequestsLoading}
+                    isError={false}
+                    serviceByKey={serviceByKey}
+                    categoryByKey={categoryByKey}
+                    cityById={cityById}
+                    formatDate={formatDate}
+                    formatPrice={formatPrice}
+                    ownerRequestActions={{
+                      onDelete: (requestId) => {
+                        void onDeleteMyRequest(requestId);
+                      },
+                      pendingDeleteRequestId,
+                    }}
+                  />
                 </WorkspaceContentState>
               </div>
             ) : null}
@@ -1299,43 +1576,27 @@ function RequestsPageContent() {
                   emptyTitle="Noch keine passenden Angebote."
                   emptyHint="Noch keine Angebote. Anfrage erstellen oder offene Auftraege ansehen."
                   emptyCtaLabel="Auftraege ansehen"
-                  emptyCtaHref="/requests?tab=new-orders"
+                  emptyCtaHref="/orders?tab=new-orders"
                 >
-                  {filteredMyOffers.map((item) => (
-                    <article key={item.id} className="card stack-xs workspace-list-item">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold truncate">{item.requestServiceKey || item.requestId}</p>
-                          <p className="typo-small">{item.requestCityId ?? '—'}</p>
-                        </div>
-                        <span className={`${getStatusBadgeClass(item.status)} capitalize`}>{item.status}</span>
-                      </div>
-                      <p className="typo-small">{typeof item.amount === 'number' ? `€ ${item.amount}` : '€ —'}</p>
-                      <div className="offer-actions">
-                        <Link href={`/requests/${item.requestId}`} className="badge offer-actions__btn" aria-label="Zugehoerige Anfrage ansehen">Anfrage</Link>
-                        <button
-                          type="button"
-                          className="badge offer-actions__btn"
-                          onClick={() => onOpenOfferSheet(item.requestId)}
-                          disabled={item.status !== 'sent'}
-                          aria-label="Angebot bearbeiten"
-                        >
-                          Bearbeiten
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-ghost offer-actions__btn"
-                          onClick={() => {
-                            void onWithdrawOffer(item.id);
-                          }}
-                          disabled={item.status !== 'sent' || pendingOfferRequestId === item.requestId}
-                          aria-label="Angebot zurueckziehen"
-                        >
-                          Zurueckziehen
-                        </button>
-                      </div>
-                    </article>
-                  ))}
+                  <RequestsList
+                    t={t}
+                    locale={locale}
+                    requests={myOfferRequests}
+                    isLoading={isMyOffersLoading}
+                    isError={false}
+                    serviceByKey={serviceByKey}
+                    categoryByKey={categoryByKey}
+                    cityById={cityById}
+                    formatDate={formatDate}
+                    formatPrice={formatPrice}
+                    isProviderPersonalized={true}
+                    offersByRequest={offersByRequest}
+                    onSendOffer={onOpenOfferSheet}
+                    onEditOffer={onOpenOfferSheet}
+                    onWithdrawOffer={onWithdrawOffer}
+                    pendingOfferRequestId={pendingOfferRequestId}
+                    showStaticFavoriteIcon={false}
+                  />
                 </WorkspaceContentState>
               </div>
             ) : null}
@@ -1348,72 +1609,137 @@ function RequestsPageContent() {
                   emptyTitle="Noch keine passenden Vertraege."
                   emptyHint="Sobald ein Angebot angenommen wird, erscheint es hier."
                   emptyCtaLabel="Meine Angebote"
-                  emptyCtaHref="/requests?tab=my-offers"
+                  emptyCtaHref="/orders?tab=my-offers"
                 >
-                  {filteredContracts.map((item) => (
-                    <article key={item.id} className="card stack-xs workspace-list-item">
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="text-sm font-semibold truncate">Contract #{item.id.slice(-6)}</p>
-                        <span className={`${getStatusBadgeClass(item.status)} capitalize`}>{item.status}</span>
-                      </div>
-                      <p className="typo-small">
-                        {item.priceAmount != null ? `€ ${item.priceAmount}` : 'Preis folgt'} ·
-                        {' '}
-                        {new Date(item.updatedAt).toLocaleDateString(localeTag)}
-                      </p>
-                      <Link href="/requests?tab=completed-jobs" className="badge offer-actions__btn" aria-label="Vertragsdetails ansehen">Details</Link>
-                    </article>
-                  ))}
+                  <RequestsList
+                    t={t}
+                    locale={locale}
+                    requests={contractRequests}
+                    isLoading={isProviderContractsLoading || isClientContractsLoading}
+                    isError={false}
+                    serviceByKey={serviceByKey}
+                    categoryByKey={categoryByKey}
+                    cityById={cityById}
+                    formatDate={formatDate}
+                    formatPrice={formatPrice}
+                    isProviderPersonalized={true}
+                    offersByRequest={contractOffersByRequest}
+                  />
                 </WorkspaceContentState>
               </div>
             ) : null}
 
             {activeWorkspaceTab === 'favorites' ? (
               <div className="stack-sm">
+                <div className="chip-row" role="tablist" aria-label="Favoriten Ansicht">
+                  <button
+                    type="button"
+                    className={`chip ${resolvedFavoritesView === 'requests' ? 'is-active' : ''}`.trim()}
+                    onClick={() => setFavoritesView('requests')}
+                    aria-pressed={resolvedFavoritesView === 'requests'}
+                  >
+                    Anfragen
+                  </button>
+                  <button
+                    type="button"
+                    className={`chip ${resolvedFavoritesView === 'providers' ? 'is-active' : ''}`.trim()}
+                    onClick={() => setFavoritesView('providers')}
+                    aria-pressed={resolvedFavoritesView === 'providers'}
+                  >
+                    Anbieter
+                  </button>
+                </div>
                 <WorkspaceContentState
-                  isLoading={isFavoriteRequestsLoading || isFavoriteProvidersLoading}
-                  isEmpty={favoriteRequests.length + favoriteProviders.length === 0}
-                  emptyTitle="Noch keine Favoriten gespeichert."
-                  emptyHint="Speichere interessante Anfragen oder Anbieter fuer schnellen Zugriff."
-                  emptyCtaLabel="Anfragen entdecken"
-                  emptyCtaHref="/requests?tab=new-orders"
+                  isLoading={isFavoritesLoading}
+                  isEmpty={favoritesItems.length === 0}
+                  emptyTitle={hasFavoriteRequests || hasFavoriteProviders ? 'Keine Elemente in dieser Kategorie.' : 'Du hast noch keine Favoriten.'}
+                  emptyHint={hasFavoriteRequests || hasFavoriteProviders ? 'Wechsle zwischen Anfragen und Anbietern.' : 'Markiere Auftraege oder Anbieter mit dem Herzsymbol, um sie hier zu speichern.'}
                 >
-                  {favoriteRequests.map((item) => (
-                    <article key={`fav-request-${item.id}`} className="card stack-xs workspace-list-item">
-                      <p className="text-sm font-semibold truncate">{item.title || item.serviceKey}</p>
-                      <Link href={`/requests/${item.id}`} className="badge offer-actions__btn">Anfrage ansehen</Link>
-                    </article>
-                  ))}
-                  {favoriteProviders.map((item) => (
-                    <article key={`fav-provider-${item.id}`} className="card stack-xs workspace-list-item">
-                      <p className="text-sm font-semibold truncate">{item.displayName || 'Provider'}</p>
-                      <Link href={`/providers/${item.id}`} className="badge offer-actions__btn">Profil ansehen</Link>
-                    </article>
-                  ))}
+                  {resolvedFavoritesView === 'requests'
+                    ? (
+                        <RequestsList
+                          t={t}
+                          locale={locale}
+                          requests={favoriteRequests}
+                          isLoading={isFavoriteRequestsLoading}
+                          isError={false}
+                          serviceByKey={serviceByKey}
+                          categoryByKey={categoryByKey}
+                          cityById={cityById}
+                          formatDate={formatDate}
+                          formatPrice={formatPrice}
+                          isProviderPersonalized={isPersonalized}
+                          offersByRequest={offersByRequest}
+                          favoriteRequestIds={favoriteRequestIds}
+                          onToggleFavorite={onToggleRequestFavorite}
+                          onSendOffer={onOpenOfferSheet}
+                          onEditOffer={onOpenOfferSheet}
+                          onWithdrawOffer={onWithdrawOffer}
+                          pendingOfferRequestId={pendingOfferRequestId}
+                          pendingFavoriteRequestIds={pendingFavoriteRequestIds}
+                          showStaticFavoriteIcon={false}
+                        />
+                      )
+                    : favoriteProviders.map((item) => (
+                        <article key={`fav-provider-${item.id}`} className="card stack-xs workspace-list-item">
+                          <p className="text-sm font-semibold truncate">{item.displayName || 'Provider'}</p>
+                          <Link href={`/providers/${item.id}`} className="badge offer-actions__btn">Profil ansehen</Link>
+                        </article>
+                      ))}
                 </WorkspaceContentState>
               </div>
             ) : null}
 
             {activeWorkspaceTab === 'reviews' ? (
               <div className="stack-sm">
+                <div className="chip-row" role="tablist" aria-label="Bewertungen Ansicht">
+                  <button
+                    type="button"
+                    className={`chip ${activeReviewsView === 'provider' ? 'is-active' : ''}`.trim()}
+                    onClick={() => setReviewsView('provider')}
+                    aria-pressed={activeReviewsView === 'provider'}
+                  >
+                    Als Anbieter
+                  </button>
+                  <button
+                    type="button"
+                    className={`chip ${activeReviewsView === 'client' ? 'is-active' : ''}`.trim()}
+                    onClick={() => setReviewsView('client')}
+                    aria-pressed={activeReviewsView === 'client'}
+                  >
+                    Als Kunde
+                  </button>
+                </div>
                 <WorkspaceContentState
                   isLoading={isMyReviewsLoading}
                   isEmpty={myReviews.length === 0}
                   emptyTitle="Noch keine Bewertungen vorhanden."
                   emptyHint="Nach abgeschlossenen Auftraegen erscheinen Bewertungen hier."
                   emptyCtaLabel="Auftraege verwalten"
-                  emptyCtaHref="/requests?tab=completed-jobs"
+                  emptyCtaHref="/orders?tab=completed-jobs"
                 >
-                  {myReviews.map((item) => (
-                    <article key={item.id} className="card stack-xs workspace-list-item">
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="text-sm font-semibold">{item.rating?.toFixed(1) ?? '—'} ★</p>
-                        <span className="badge capitalize">{item.targetRole ?? 'all'}</span>
-                      </div>
-                      <p className="typo-small">{item.text || item.comment || 'Kein Kommentar'}</p>
-                      <p className="typo-small">{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '—'}</p>
-                    </article>
-                  ))}
+                  <div className="proof-feed">
+                    {myReviews.map((item) => {
+                      const role = item.targetRole ?? activeReviewsView;
+                      const roleLabel = role === 'client' ? 'Als Kunde' : 'Als Anbieter';
+                      const createdLabel = item.createdAt
+                        ? new Date(item.createdAt).toLocaleDateString(localeTag)
+                        : '—';
+                      const author = item.authorName?.trim() || 'Bewertung';
+                      const reviewText = item.text || item.comment || 'Kein Kommentar';
+                      return (
+                        <ProofReviewCard
+                          key={item.id}
+                          title={author}
+                          info={createdLabel}
+                          review={`“${reviewText}”`}
+                          rating={item.rating?.toFixed(1) ?? '—'}
+                          price={roleLabel}
+                          isActive
+                        />
+                      );
+                    })}
+                  </div>
                 </WorkspaceContentState>
               </div>
             ) : null}
@@ -1446,7 +1772,7 @@ function RequestsPageContent() {
         </div>
 
         <aside className="stack-md hide-mobile">
-          {isAuthed && hasAnyStatsActivity
+          {isWorkspaceAuthed && hasAnyStatsActivity
             ? statsOrder.map((section) => (
                 <RequestsStatsPanel
                   key={section.tab}
@@ -1505,7 +1831,10 @@ function RequestsPageContent() {
           )}
         </aside>
       </div>
-      {isAuthed ? (
+      {isWorkspaceAuthed &&
+      activeWorkspaceTab !== 'favorites' &&
+      activeWorkspaceTab !== 'my-requests' &&
+      activeWorkspaceTab !== 'my-offers' ? (
         <div className="workspace-mobile-action">
           <Link
             href={primaryAction.href}

@@ -23,7 +23,7 @@ export default function RolePage() {
         </Link>
 
         <Link
-          href="/requests?tab=new-orders"
+          href="/orders?tab=new-orders"
           className="stack-sm rounded-lg border border-(--c-border) p-4 transition hover:border-(--c-primary)"
         >
           <h2 className="typo-2">{t(I18N_KEYS.auth.roleProvider)}</h2>

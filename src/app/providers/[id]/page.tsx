@@ -34,7 +34,7 @@ export default function ProviderPublicProfilePage() {
           emptyTitle={t(I18N_KEYS.provider.notFound)}
           emptyHint={t(I18N_KEYS.requestsPage.subtitle)}
           emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
-          emptyCtaHref="/requests?tab=new-orders"
+          emptyCtaHref="/orders?tab=new-orders"
           skeletonCount={1}
         >
           <h1 className="typo-h2">{data?.displayName || t(I18N_KEYS.provider.unnamed)}</h1>

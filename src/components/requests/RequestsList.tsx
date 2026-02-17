@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { IconBriefcase, IconCalendar, IconChat, IconHeart, IconPin } from '@/components/ui/icons/icons';
+import { IconBriefcase, IconCalendar, IconChat, IconEdit, IconHeart, IconPin } from '@/components/ui/icons/icons';
 import { OrderCard } from '@/components/orders/OrderCard';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -36,6 +36,10 @@ type RequestsListProps = {
   pendingOfferRequestId?: string | null;
   pendingFavoriteRequestIds?: Set<string>;
   showStaticFavoriteIcon?: boolean;
+  ownerRequestActions?: {
+    onDelete?: (requestId: string) => void;
+    pendingDeleteRequestId?: string | null;
+  };
 };
 
 export function RequestsList({
@@ -59,6 +63,7 @@ export function RequestsList({
   pendingOfferRequestId = null,
   pendingFavoriteRequestIds,
   showStaticFavoriteIcon = false,
+  ownerRequestActions,
 }: RequestsListProps) {
   if (isLoading) {
     return (
@@ -130,6 +135,7 @@ export function RequestsList({
         const tags = item.tags ?? [];
         const detailsHref = `/requests/${item.id}`;
         const itemOffer = isProviderPersonalized ? offersByRequest?.get(item.id) : undefined;
+        const isOwnerRequestList = Boolean(ownerRequestActions);
         const offerCardState = resolveOfferCardState(itemOffer);
         const badgeStatus =
           offerCardState === 'none' ? null : offerCardState;
@@ -145,6 +151,8 @@ export function RequestsList({
         const isFavoritePending = pendingFavoriteRequestIds?.has(item.id) ?? false;
         const isSentState = offerCardState === 'sent';
         const isPendingWithdraw = pendingOfferRequestId === item.id;
+        const isPendingOwnerDelete = ownerRequestActions?.pendingDeleteRequestId === item.id;
+        const ownerStatusLabel = mapRequestStatusLabel(item.status);
 
         return (
           <OrderCard
@@ -179,9 +187,45 @@ export function RequestsList({
               ...tags.slice(0, 2),
             ]}
             inlineCta={t(I18N_KEYS.requestsPage.detailsCta)}
-            mode={isProviderPersonalized ? 'static' : 'link'}
+            mode={isProviderPersonalized || isOwnerRequestList ? 'static' : 'link'}
             statusSlot={
-              offerCardState === 'none' ? (
+              isOwnerRequestList ? (
+                <span className="request-card__status-actions">
+                  <span className={`${getStatusBadgeClass(item.status)} capitalize`} title={ownerStatusLabel}>
+                    {ownerStatusLabel}
+                  </span>
+                  <Link
+                    href={detailsHref}
+                    className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action"
+                    aria-label={t(I18N_KEYS.requestsPage.openRequest)}
+                    title={t(I18N_KEYS.requestsPage.openRequest)}
+                  >
+                    <i className="offer-action-btn__icon">
+                      <IconBriefcase />
+                    </i>
+                  </Link>
+                  <Link
+                    href={detailsHref}
+                    className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--edit"
+                    aria-label={t(I18N_KEYS.requestDetails.responseEditTooltip)}
+                    title={t(I18N_KEYS.requestDetails.responseEditTooltip)}
+                  >
+                    <i className="offer-action-btn__icon">
+                      <IconEdit />
+                    </i>
+                  </Link>
+                  <OfferActionButton
+                    kind="delete"
+                    label={t(I18N_KEYS.requestDetails.responseCancel)}
+                    ariaLabel={t(I18N_KEYS.requestDetails.responseCancel)}
+                    title={t(I18N_KEYS.requestDetails.responseCancel)}
+                    iconOnly
+                    className="request-card__status-action request-card__status-action--danger"
+                    onClick={() => ownerRequestActions?.onDelete?.(item.id)}
+                    disabled={isPendingOwnerDelete}
+                  />
+                </span>
+              ) : offerCardState === 'none' ? (
                 <span className="request-card__status-actions">
                   <OfferActionButton
                     kind="submit"
@@ -227,7 +271,7 @@ export function RequestsList({
                   {offerCardState === 'accepted' ? (
                     <>
                       <Link
-                        href="/requests?tab=completed-jobs"
+                        href="/orders?tab=completed-jobs"
                         className="btn-primary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--contract"
                         aria-label={t(I18N_KEYS.requestDetails.responseViewContract)}
                         title={t(I18N_KEYS.requestDetails.responseViewContract)}
@@ -286,6 +330,16 @@ export function RequestsList({
       })}
     </>
   );
+}
+
+function mapRequestStatusLabel(status?: string) {
+  if (!status) return 'Offen';
+  if (status === 'completed') return 'Abgeschlossen';
+  if (status === 'cancelled') return 'Storniert';
+  if (status === 'in_progress' || status === 'assigned' || status === 'matched' || status === 'confirmed') {
+    return 'In Arbeit';
+  }
+  return 'Offen';
 }
 
 function pickServiceLabel(
