@@ -8,7 +8,6 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { IconButton } from '@/components/ui/IconButton';
 import { IconChat, IconLogin, IconLogout, IconUser, IconUserPlus } from '@/components/ui/icons/icons';
-import { ModeSwitch } from '@/components/layout/ModeSwitch';
 
 export function AuthActions() {
   const t = useT();
@@ -23,10 +22,8 @@ export function AuthActions() {
   if (status === 'idle' || status === 'loading') return null;
 
   if (status === 'authenticated' && user) {
-    const profileHref = user.role === 'provider' ? '/provider/profile' : '/client/profile';
     return (
       <div className="flex items-center gap-2">
-        <ModeSwitch />
         <Link
           href="/chat"
           aria-label={t(I18N_KEYS.requestsPage.navChat)}
@@ -35,7 +32,7 @@ export function AuthActions() {
           <IconChat />
         </Link>
         <Link
-          href={profileHref}
+          href="/profile/workspace"
           aria-label={t(I18N_KEYS.auth.profileLabel)}
           className="icon-button h-10 w-10 inline-flex items-center justify-center rounded-md"
         >

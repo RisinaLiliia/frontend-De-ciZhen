@@ -1,10 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
@@ -12,11 +11,15 @@ import { PersonalNavSection } from '@/components/layout/PersonalNavSection';
 import { HeroSection } from '@/components/ui/HeroSection';
 import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
+import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
+import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
 import {
+  listMyRequests,
   listPublicRequests,
   type PublicRequestsSort,
 } from '@/lib/api/requests';
-import { listPublicProviders } from '@/lib/api/providers';
+import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
+import { listMyContracts } from '@/lib/api/contracts';
 import { deleteOffer, listMyProviderOffers } from '@/lib/api/offers';
 import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
@@ -28,7 +31,7 @@ import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import { IconBriefcase, IconSend, IconUser } from '@/components/ui/icons/icons';
+import { IconBriefcase, IconCheck, IconHeart, IconSend, IconUser } from '@/components/ui/icons/icons';
 import type { I18nKey } from '@/lib/i18n/keys';
 
 const ALL_OPTION_KEY = 'all';
@@ -51,6 +54,7 @@ const NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX = 'dc_requests_new_seen_total_v1';
 
 function RequestsPageContent() {
   const router = useRouter();
+  const pathname = usePathname();
   const qc = useQueryClient();
   const t = useT();
   const { locale } = useI18n();
@@ -212,6 +216,70 @@ function RequestsPageContent() {
     },
   });
 
+  const { data: myRequests = [] } = useQuery({
+    queryKey: ['requests-my'],
+    enabled: isAuthed,
+    queryFn: async () => {
+      try {
+        return await listMyRequests();
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return [];
+        }
+        throw error;
+      }
+    },
+  });
+
+  const { data: myProviderContracts = [] } = useQuery({
+    queryKey: ['contracts-my-provider'],
+    enabled: isAuthed,
+    queryFn: async () => {
+      try {
+        return await listMyContracts({ role: 'provider' });
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return [];
+        }
+        throw error;
+      }
+    },
+  });
+
+  const { data: myClientContracts = [] } = useQuery({
+    queryKey: ['contracts-my-client'],
+    enabled: isAuthed,
+    queryFn: async () => {
+      try {
+        return await listMyContracts({ role: 'client' });
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return [];
+        }
+        throw error;
+      }
+    },
+  });
+
+  const { data: myProviderProfile } = useQuery({
+    queryKey: ['provider-profile-me'],
+    enabled: isAuthed,
+    queryFn: async () => {
+      try {
+        return await getMyProviderProfile();
+      } catch (error) {
+        if (error instanceof Error && 'status' in error) {
+          const status = Number((error as { status?: number }).status ?? 0);
+          if (status === 403 || status === 404) return null;
+        }
+        throw error;
+      }
+    },
+  });
+
   const {
     data: providers = [],
     isLoading: isProvidersLoading,
@@ -367,6 +435,14 @@ function RequestsPageContent() {
     () => myOffers.filter((offer) => offer.status === 'accepted').length,
     [myOffers],
   );
+  const completedJobsCount = React.useMemo(
+    () => myProviderContracts.filter((item) => item.status === 'completed').length,
+    [myProviderContracts],
+  );
+  const declinedCount = React.useMemo(
+    () => myOffers.filter((offer) => offer.status === 'declined').length,
+    [myOffers],
+  );
 
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const formatNumber = React.useMemo(() => new Intl.NumberFormat(localeTag), [localeTag]);
@@ -385,6 +461,10 @@ function RequestsPageContent() {
         currency: 'EUR',
         maximumFractionDigits: 0,
       }),
+    [localeTag],
+  );
+  const chartMonthLabel = React.useMemo(
+    () => new Intl.DateTimeFormat(localeTag, { month: 'short' }),
     [localeTag],
   );
 
@@ -422,14 +502,18 @@ function RequestsPageContent() {
   const newOrdersCount = Math.max(0, totalAllRequests - seenTotal);
   const resolvedName = auth.user?.name?.trim() || 'User';
   const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${resolvedName}!`;
-  const completedMonthly = acceptedCount;
-  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${completedMonthly} ${t(
-    I18N_KEYS.requestsPage.navInsightClosedSuffix,
-  )} ${t(I18N_KEYS.requestsPage.navInsightDelta)}`;
   const activityBase = sentCount + acceptedCount;
   const activityProgress = activityBase > 0 ? Math.round((acceptedCount / activityBase) * 100) : 12;
-  const navRatingValue = providers[0]?.ratingAvg?.toFixed(1) ?? '4.9';
-  const navReviewsCount = providers[0]?.ratingCount ?? 0;
+  const myProviderRating = React.useMemo(() => {
+    const rated = myOffers.find((offer) => typeof offer.providerRatingAvg === 'number');
+    return {
+      avg: rated?.providerRatingAvg ?? 0,
+      count: rated?.providerRatingCount ?? 0,
+    };
+  }, [myOffers]);
+
+  const navRatingValue = myProviderRating.avg.toFixed(1);
+  const navReviewsCount = myProviderRating.count;
   const personalNavItems = React.useMemo(
     () =>
       isPersonalized
@@ -442,6 +526,7 @@ function RequestsPageContent() {
               value: newOrdersCount,
               hint: t(I18N_KEYS.requestsPage.resultsLabel),
               onClick: markNewOrdersSeen,
+              forceActive: false,
               match: 'prefix' as const,
             },
             {
@@ -455,16 +540,36 @@ function RequestsPageContent() {
             },
             {
               key: 'my-offers',
-              href: '/provider',
+              href: '/requests',
               label: t(I18N_KEYS.requestsPage.navMyOffers),
               icon: <IconSend />,
               value: sentCount,
               hint: t(I18N_KEYS.requestsPage.summarySent),
+              forceActive: pathname === '/requests',
+              match: 'prefix' as const,
+            },
+            {
+              key: 'completed-jobs',
+              href: '/provider/contracts',
+              label: 'Abgeschlossene Jobs',
+              icon: <IconCheck />,
+              value: completedJobsCount,
+              hint: t(I18N_KEYS.provider.jobs),
+              match: 'prefix' as const,
+            },
+            {
+              key: 'my-favorites',
+              href: '/requests',
+              label: 'Meine Favoriten',
+              icon: <IconHeart />,
+              value: favoriteRequestIds.size,
+              hint: t(I18N_KEYS.requestDetails.ctaSave),
+              forceActive: false,
               match: 'prefix' as const,
             },
             {
               key: 'reviews',
-              href: '/provider/profile',
+              href: '/profile/workspace',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -504,7 +609,7 @@ function RequestsPageContent() {
             },
             {
               key: 'reviews',
-              href: '/client/profile',
+              href: '/profile/workspace',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -517,8 +622,11 @@ function RequestsPageContent() {
           ],
     [
       acceptedCount,
+      completedJobsCount,
+      favoriteRequestIds.size,
       isPersonalized,
       markNewOrdersSeen,
+      pathname,
       navRatingValue,
       navReviewsCount,
       newOrdersCount,
@@ -527,16 +635,279 @@ function RequestsPageContent() {
     ],
   );
 
+  const providerCompletedContracts = React.useMemo(
+    () => myProviderContracts.filter((item) => item.status === 'completed'),
+    [myProviderContracts],
+  );
+  const providerActiveContracts = React.useMemo(
+    () =>
+      myProviderContracts.filter(
+        (item) => item.status === 'pending' || item.status === 'confirmed' || item.status === 'in_progress',
+      ),
+    [myProviderContracts],
+  );
+  const providerCompletedThisMonth = React.useMemo(
+    () => countCompletedInMonth(providerCompletedContracts, 0),
+    [providerCompletedContracts],
+  );
+  const providerCompletedLastMonth = React.useMemo(
+    () => countCompletedInMonth(providerCompletedContracts, -1),
+    [providerCompletedContracts],
+  );
+  const completedMoMDelta = React.useMemo(
+    () => calcMoMDeltaPercent(providerCompletedThisMonth, providerCompletedLastMonth),
+    [providerCompletedLastMonth, providerCompletedThisMonth],
+  );
+  const completedMoMLabel = React.useMemo(
+    () => formatMoMDeltaLabel(completedMoMDelta, locale),
+    [completedMoMDelta, locale],
+  );
+  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${providerCompletedThisMonth} ${t(
+    I18N_KEYS.requestsPage.navInsightClosedSuffix,
+  )} ${completedMoMLabel}`;
+  const clientCompletedContracts = React.useMemo(
+    () => myClientContracts.filter((item) => item.status === 'completed'),
+    [myClientContracts],
+  );
+  const clientActiveContracts = React.useMemo(
+    () =>
+      myClientContracts.filter(
+        (item) => item.status === 'pending' || item.status === 'confirmed' || item.status === 'in_progress',
+      ),
+    [myClientContracts],
+  );
+  const myOpenRequests = React.useMemo(
+    () =>
+      myRequests.filter(
+        (item) =>
+          item.status === 'draft' ||
+          item.status === 'published' ||
+          item.status === 'paused' ||
+          item.status === 'matched',
+      ),
+    [myRequests],
+  );
+
+  const acceptedDecidedDenominator = acceptedCount + declinedCount;
+  const acceptanceRate = Math.round(
+    (acceptedCount / Math.max(acceptedDecidedDenominator, 1)) * 100,
+  );
+
+  const avgResponseMinutes = React.useMemo(() => {
+    const samples = myOffers
+      .map((item) => {
+        const created = new Date(item.createdAt).getTime();
+        const updated = new Date(item.updatedAt).getTime();
+        if (!Number.isFinite(created) || !Number.isFinite(updated)) return null;
+        const diff = Math.round((updated - created) / (1000 * 60));
+        return diff > 0 ? diff : null;
+      })
+      .filter((value): value is number => value !== null);
+    if (samples.length === 0) return null;
+    const avg = Math.round(samples.reduce((sum, value) => sum + value, 0) / samples.length);
+    return avg;
+  }, [myOffers]);
+
+  const now = Date.now();
+  const recentOffers7d = React.useMemo(
+    () =>
+      myOffers.filter(
+        (item) => now - new Date(item.createdAt).getTime() <= 7 * 24 * 60 * 60 * 1000,
+      ).length,
+    [myOffers, now],
+  );
+
+  const providerProfileCompleteness = React.useMemo(
+    () => computeProfileCompleteness(myProviderProfile),
+    [myProviderProfile],
+  );
+  const clientProfileCompleteness = React.useMemo(
+    () => computeClientCompleteness(auth.me),
+    [auth.me],
+  );
+
+  const providerChartPoints = React.useMemo(
+    () =>
+      buildLastSixMonthSeries(chartMonthLabel, (start, end) => ({
+        bars: providerCompletedContracts.filter((item) => {
+          if (!item.completedAt) return false;
+          const ts = new Date(item.completedAt).getTime();
+          return ts >= start && ts < end;
+        }).length,
+        line: providerCompletedContracts.reduce((sum, item) => {
+          if (!item.completedAt || typeof item.priceAmount !== 'number') return sum;
+          const ts = new Date(item.completedAt).getTime();
+          if (ts < start || ts >= end) return sum;
+          return sum + item.priceAmount;
+        }, 0),
+      })),
+    [chartMonthLabel, providerCompletedContracts],
+  );
+
+  const clientChartPoints = React.useMemo(
+    () =>
+      buildLastSixMonthSeries(chartMonthLabel, (start, end) => ({
+        bars: myRequests.filter((item) => {
+          const ts = new Date(item.createdAt).getTime();
+          return ts >= start && ts < end;
+        }).length,
+        line: clientCompletedContracts.filter((item) => {
+          if (!item.completedAt) return false;
+          const ts = new Date(item.completedAt).getTime();
+          return ts >= start && ts < end;
+        }).length,
+      })),
+    [chartMonthLabel, clientCompletedContracts, myRequests],
+  );
+
+  const providerHint = React.useMemo(() => {
+    if (providerProfileCompleteness < 80) {
+      return {
+        text: `Profil zu ${providerProfileCompleteness}% ausgefuellt. Vervollstaendige es fuer bessere Annahmequoten.`,
+        ctaLabel: 'Profil vervollstaendigen',
+        ctaHref: '/profile/workspace',
+      };
+    }
+    if (recentOffers7d === 0) {
+      return {
+        text: 'Seit 7 Tagen keine neuen Angebote. Pruefe Services, Standort und Verfuegbarkeit.',
+        ctaLabel: 'Auftraege ansehen',
+        ctaHref: '/requests',
+      };
+    }
+    if (acceptanceRate < 25) {
+      return {
+        text: 'Deine Annahmequote ist niedrig. Optimiere Preis und Nachricht fuer mehr Zusagen.',
+        ctaLabel: 'Angebote verbessern',
+        ctaHref: '/requests',
+      };
+    }
+    return {
+      text: 'Starke Performance. Halte Profil und Preise aktuell fuer stabile Auslastung.',
+      ctaLabel: 'Meine Vertraege',
+      ctaHref: '/provider/contracts',
+    };
+  }, [acceptanceRate, providerProfileCompleteness, recentOffers7d]);
+
+  const clientHint = React.useMemo(() => {
+    if (myRequests.length === 0) {
+      return {
+        text: 'Noch keine Anfrage erstellt. Starte mit deinem ersten Auftrag.',
+        ctaLabel: 'Anfrage erstellen',
+        ctaHref: '/request/create',
+      };
+    }
+    if (myOpenRequests.length > 0) {
+      return {
+        text: 'Du hast aktive Anfragen. Vergleiche Angebote und entscheide schneller.',
+        ctaLabel: 'Meine Anfragen',
+        ctaHref: '/client/requests',
+      };
+    }
+    return {
+      text: 'Deine Anfragen laufen stabil. Lege neue Aufgaben an, wenn du weitere Hilfe brauchst.',
+      ctaLabel: 'Neue Anfrage',
+      ctaHref: '/request/create',
+    };
+  }, [myOpenRequests.length, myRequests.length]);
+
+  const providerActivityCount =
+    sentCount +
+    acceptedCount +
+    declinedCount +
+    providerActiveContracts.length +
+    providerCompletedContracts.length;
+  const clientActivityCount =
+    myRequests.length + myOpenRequests.length + clientActiveContracts.length + clientCompletedContracts.length;
+  const hasAnyStatsActivity = providerActivityCount + clientActivityCount > 0;
+
+  const providerPriorityScore = providerProfileCompleteness + providerActivityCount * 5;
+  const clientPriorityScore = clientProfileCompleteness + clientActivityCount * 5;
+
+  const providerStatsPayload = {
+    kpis: [],
+    showKpis: false,
+    hasData: true,
+    chartTitle: 'Jobs / Einnahmen',
+    chartDelta:
+      providerCompletedContracts.length > 0
+        ? `+${Math.round((providerCompletedContracts.length / Math.max(1, myProviderContracts.length)) * 100)}%`
+        : undefined,
+    chartPoints: providerChartPoints,
+    secondary: {
+      leftLabel: 'gesendet',
+      leftValue: formatNumber.format(sentCount),
+      centerLabel: 'angenommen',
+      centerValue: formatNumber.format(acceptedCount),
+      rightLabel: 'aktiv',
+      rightValue: formatNumber.format(providerActiveContracts.length),
+      progressLabel: 'Annahmequote',
+      progressValue: acceptanceRate,
+      responseLabel: 'Antwortzeit',
+      responseValue: avgResponseMinutes ? `${avgResponseMinutes} min` : '—',
+    },
+    hint: providerHint,
+    emptyTitle: 'Noch keine Angebote. Starte mit dem ersten Auftrag.',
+    emptyCtaLabel: 'Auftraege ansehen',
+    emptyCtaHref: '/requests',
+  };
+
+  const clientStatsPayload = {
+    kpis: [
+      {
+        key: 'requests-total',
+        label: 'Meine Anfragen',
+        value: formatNumber.format(myRequests.length),
+      },
+      {
+        key: 'requests-open',
+        label: 'Aktiv',
+        value: formatNumber.format(myOpenRequests.length),
+      },
+      {
+        key: 'contracts-active',
+        label: 'In Arbeit',
+        value: formatNumber.format(clientActiveContracts.length),
+      },
+      {
+        key: 'contracts-completed',
+        label: 'Abgeschlossen',
+        value: formatNumber.format(clientCompletedContracts.length),
+      },
+    ],
+    chartTitle: 'Anfragen / Abschluesse',
+    chartPoints: clientChartPoints,
+    secondary: {
+      leftLabel: 'gesamt',
+      leftValue: formatNumber.format(myRequests.length),
+      centerLabel: 'offen',
+      centerValue: formatNumber.format(myOpenRequests.length),
+      rightLabel: 'in Arbeit',
+      rightValue: formatNumber.format(clientActiveContracts.length),
+      progressLabel: 'Abschlussquote',
+      progressValue: Math.round((clientCompletedContracts.length / Math.max(1, myRequests.length)) * 100),
+      responseLabel: 'Abgeschlossene Auftraege',
+      responseValue: formatNumber.format(clientCompletedContracts.length),
+    },
+    hint: clientHint,
+    emptyTitle: 'Noch keine Anfrage erstellt.',
+    emptyCtaLabel: 'Anfrage erstellen',
+    emptyCtaHref: '/request/create',
+  };
+
+  const statsOrder =
+    providerPriorityScore >= clientPriorityScore
+      ? [
+          { tab: 'provider' as const, title: 'Statistik Anbieter', payload: providerStatsPayload },
+          { tab: 'client' as const, title: 'Statistik Kunde', payload: clientStatsPayload },
+        ]
+      : [
+          { tab: 'client' as const, title: 'Statistik Kunde', payload: clientStatsPayload },
+          { tab: 'provider' as const, title: 'Statistik Anbieter', payload: providerStatsPayload },
+        ];
+
   return (
     <PageShell right={<AuthActions />} showBack={isAuthed} mainClassName="py-6 requests-screen">
-      {isAuthed ? (
-        <PersonalNavSection
-          title={navTitle}
-          items={personalNavItems}
-          insightText={insightText}
-          progressPercent={activityProgress}
-        />
-      ) : null}
       {!isAuthed ? (
         <HeroSection
           title={t(I18N_KEYS.requestsPage.heroTitle)}
@@ -554,6 +925,15 @@ function RequestsPageContent() {
 
       <div className="requests-grid">
         <div className="stack-md">
+          {isAuthed ? (
+            <PersonalNavSection
+              className="personal-nav--left"
+              title={navTitle}
+              items={personalNavItems}
+              insightText={insightText}
+              progressPercent={activityProgress}
+            />
+          ) : null}
           {/* <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} /> */}
           <section className="panel requests-panel">
             <div className="requests-header">
@@ -635,21 +1015,19 @@ function RequestsPageContent() {
         </div>
 
         <aside className="stack-md hide-mobile">
-          {isAuthed ? (
-            <section className="panel requests-provider-summary requests-provider-summary--aside">
-              <div className="requests-provider-summary__stats">
-                <span>
-                  <strong>{sentCount}</strong> {t(I18N_KEYS.requestsPage.summarySent)}
-                </span>
-                <span>
-                  <strong>{acceptedCount}</strong> {t(I18N_KEYS.requestsPage.summaryAccepted)}
-                </span>
-              </div>
-              <Link href="/requests#requests-list" className="btn-ghost is-primary">
-                {t(I18N_KEYS.requestsPage.summaryCta)}
-              </Link>
-            </section>
-          ) : null}
+          {isAuthed && hasAnyStatsActivity
+            ? statsOrder.map((section) => (
+                <RequestsStatsPanel
+                  key={section.tab}
+                  title={section.title}
+                  tabsLabel={{ provider: 'Anbieter', client: 'Kunde' }}
+                  tab={section.tab}
+                  showTabs={false}
+                  provider={providerStatsPayload}
+                  client={clientStatsPayload}
+                />
+              ))
+            : null}
           {isProvidersLoading ? (
             <section className="panel hide-mobile top-providers-panel">
               <div className="panel-header">
@@ -659,16 +1037,7 @@ function RequestsPageContent() {
               <div className="provider-list">
                 {Array.from({ length: 2 }).map((_, index) => (
                   <div key={`provider-skeleton-${index}`} className="provider-card">
-                    <div className="provider-info">
-                      <div className="provider-avatar-wrap">
-                        <div className="skeleton is-wide h-12 w-12 rounded-full" />
-                      </div>
-                      <div className="provider-main">
-                        <div className="skeleton is-wide h-4 w-24" />
-                        <div className="skeleton is-wide h-3 w-20" />
-                        <div className="skeleton is-wide h-3 w-16" />
-                      </div>
-                    </div>
+                    <UserHeaderCardSkeleton />
                     <div className="skeleton is-wide h-10 w-full rounded-lg" />
                   </div>
                 ))}
@@ -683,16 +1052,7 @@ function RequestsPageContent() {
               <div className="provider-list">
                 {Array.from({ length: 2 }).map((_, index) => (
                   <div key={`provider-error-skeleton-${index}`} className="provider-card">
-                    <div className="provider-info">
-                      <div className="provider-avatar-wrap">
-                        <div className="skeleton is-wide h-12 w-12 rounded-full" />
-                      </div>
-                      <div className="provider-main">
-                        <div className="skeleton is-wide h-4 w-24" />
-                        <div className="skeleton is-wide h-3 w-20" />
-                        <div className="skeleton is-wide h-3 w-16" />
-                      </div>
-                    </div>
+                    <UserHeaderCardSkeleton />
                     <div className="skeleton is-wide h-10 w-full rounded-lg" />
                   </div>
                 ))}
@@ -724,4 +1084,111 @@ export default function RequestsPage() {
       <RequestsPageContent />
     </React.Suspense>
   );
+}
+
+function buildLastSixMonthSeries(
+  monthFormatter: Intl.DateTimeFormat,
+  map: (startTs: number, endTs: number) => { bars: number; line: number },
+) {
+  const out: Array<{ label: string; bars: number; line: number }> = [];
+  const now = new Date();
+  for (let i = 5; i >= 0; i -= 1) {
+    const start = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+    const point = map(start.getTime(), end.getTime());
+    out.push({
+      label: monthFormatter.format(start),
+      bars: point.bars,
+      line: point.line,
+    });
+  }
+  return out;
+}
+
+function computeProfileCompleteness(profile: {
+  displayName?: string | null;
+  bio?: string | null;
+  cityId?: string | null;
+  serviceKeys?: string[];
+  basePrice?: number | null;
+  companyName?: string | null;
+  vatId?: string | null;
+  status?: string;
+  isBlocked?: boolean;
+} | null | undefined) {
+  if (!profile) return 0;
+  let score = 0;
+  if (profile.displayName?.trim()) score += 15;
+  if (profile.bio?.trim()) score += 15;
+  if (profile.cityId?.trim()) score += 15;
+  if ((profile.serviceKeys?.length ?? 0) > 0) score += 25;
+  if (typeof profile.basePrice === 'number' && profile.basePrice > 0) score += 10;
+  if (profile.companyName?.trim() || profile.vatId?.trim()) score += 10;
+  if (profile.status === 'active' && !profile.isBlocked) score += 10;
+  return Math.max(0, Math.min(100, score));
+}
+
+function computeClientCompleteness(me: {
+  name?: string;
+  email?: string;
+  city?: string;
+  phone?: string;
+  avatar?: { url?: string };
+  acceptedPrivacyPolicy?: boolean;
+  clientProfile?: { id?: string; status?: string } | null;
+} | null) {
+  if (!me) return 0;
+  let score = 0;
+  if (me.name?.trim()) score += 20;
+  if (me.email?.trim()) score += 20;
+  if (me.city?.trim()) score += 20;
+  if (me.phone?.trim()) score += 15;
+  if (me.avatar?.url?.trim()) score += 15;
+  if (me.acceptedPrivacyPolicy) score += 5;
+  if (me.clientProfile?.id) score += 5;
+  return Math.max(0, Math.min(100, score));
+}
+
+type DeltaResult =
+  | { kind: 'percent'; value: number }
+  | { kind: 'new' }
+  | { kind: 'none' };
+
+function calcMoMDeltaPercent(current: number, previous: number): DeltaResult {
+  if (previous <= 0) {
+    if (current <= 0) return { kind: 'none' };
+    return { kind: 'new' };
+  }
+  const raw = ((current - previous) / previous) * 100;
+  const rounded = Math.round(raw);
+  if (Object.is(rounded, -0) || rounded === 0) return { kind: 'percent', value: 0 };
+  return { kind: 'percent', value: rounded };
+}
+
+function formatMoMDeltaLabel(delta: DeltaResult, locale: string): string {
+  const isDe = locale.startsWith('de');
+  if (delta.kind === 'new') {
+    return isDe ? 'Neu zum letzten Monat.' : 'New vs last month.';
+  }
+  if (delta.kind === 'none') {
+    return isDe ? '0% zum letzten Monat.' : '0% vs last month.';
+  }
+  const sign = delta.value > 0 ? '+' : '';
+  return isDe ? `${sign}${delta.value}% zum letzten Monat.` : `${sign}${delta.value}% vs last month.`;
+}
+
+function countCompletedInMonth(
+  contracts: Array<{ completedAt: string | null }>,
+  monthOffsetFromNow: number,
+) {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth() + monthOffsetFromNow, 1);
+  const end = new Date(now.getFullYear(), now.getMonth() + monthOffsetFromNow + 1, 1);
+  const startTs = start.getTime();
+  const endTs = end.getTime();
+  return contracts.filter((item) => {
+    if (!item.completedAt) return false;
+    const ts = new Date(item.completedAt).getTime();
+    return Number.isFinite(ts) && ts >= startTs && ts < endTs;
+  }).length;
 }

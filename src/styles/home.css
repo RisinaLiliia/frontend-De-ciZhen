@@ -64,16 +64,16 @@
   .avatar-spark {
     background:
       radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0)),
-      linear-gradient(135deg, #3a6df0, #78b3ff);
-    border-color: rgba(120, 179, 255, 0.6);
+      linear-gradient(135deg, var(--c-avatar-provider), var(--c-avatar-provider-light));
+    border-color: color-mix(in oklab, var(--c-avatar-provider-light) 70%, transparent);
   }
 
   .avatar-ember {
     margin-left: -8px;
     background:
       radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0)),
-      linear-gradient(135deg, #ffb347, #ff7a59);
-    border-color: rgba(255, 179, 71, 0.6);
+      linear-gradient(135deg, var(--c-avatar-client), var(--c-avatar-client-light));
+    border-color: color-mix(in oklab, var(--c-avatar-client) 65%, transparent);
   }
 
   .proof-title {
@@ -468,6 +468,14 @@
     color: #0b1220;
   }
 
+  .provider-avatar--placeholder-client {
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0)),
+      linear-gradient(135deg, var(--c-avatar-client), var(--c-avatar-client-light));
+    border-color: color-mix(in oklab, var(--c-avatar-client) 65%, transparent);
+    color: #1a2030;
+  }
+
   .provider-avatar img {
     width: 100%;
     height: 100%;
@@ -540,6 +548,54 @@
 
   .provider-rating-summary {
     margin-top: 2px;
+  }
+
+  .user-header-card__link {
+    display: inline-flex;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .user-header-card--adaptive {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .user-header-card__identity {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  @media (min-width: 768px) {
+    .user-header-card--adaptive {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .user-header-card--adaptive .user-header-card__identity {
+      flex: 1 1 auto;
+      max-width: 100%;
+    }
+
+    .user-header-card--adaptive .provider-main {
+      min-width: 0;
+    }
+
+    .user-header-card--adaptive .user-header-card__rating {
+      margin-left: auto;
+      align-items: flex-end;
+      text-align: right;
+      flex-shrink: 0;
+      min-width: 136px;
+    }
   }
 
   .provider-badges {

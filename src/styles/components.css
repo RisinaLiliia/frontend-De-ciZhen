@@ -48,74 +48,6 @@
     font-size: 18px;
   }
 
-  .mode-switch {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px;
-    border-radius: 999px;
-    background: color-mix(in oklab, var(--c-panel) 75%, transparent);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-  }
-
-  .mode-switch--help-active {
-    background: linear-gradient(180deg, #3e5da3 0%, #2a4380 100%);
-    border-color: color-mix(in oklab, #1f2f58 80%, var(--c-border) 20%);
-    box-shadow: 0 8px 18px rgba(46, 78, 140, 0.35);
-  }
-
-  .mode-switch__btn {
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--c-text-muted);
-    transition:
-      color var(--transition-fast),
-      background var(--transition-fast),
-      box-shadow var(--transition-fast);
-  }
-
-  .mode-switch__btn.is-active {
-    background: var(--c-primary);
-    color: var(--c-primary-contrast);
-    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-primary) 35%, transparent);
-  }
-
-  .mode-switch--help-active .mode-switch__btn.is-active:not(.mode-switch__btn--cta) {
-    background: transparent;
-    border-color: transparent;
-    box-shadow: none;
-    color: #ffffff;
-  }
-
-  .mode-switch__btn--cta {
-    border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
-    color: var(--c-text-muted);
-    box-shadow: none;
-  }
-
-  .mode-switch__btn--cta:hover {
-    border-color: color-mix(in oklab, var(--c-accent) 38%, var(--c-border) 62%);
-    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
-  }
-
-  .mode-switch__btn--cta:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 3px color-mix(in oklab, var(--c-accent) 32%, transparent),
-      0 8px 18px color-mix(in oklab, var(--c-accent) 30%, transparent);
-  }
-
-  .mode-switch__btn--cta.is-active {
-    background: linear-gradient(180deg, #ffbf3f 0%, #f2a21c 100%);
-    color: var(--c-accent-contrast);
-    box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--c-accent) 45%, transparent),
-      0 8px 18px color-mix(in oklab, var(--c-accent) 34%, transparent);
-  }
-
   .card {
     @apply w-full;
     background: var(--c-panel);
@@ -815,6 +747,102 @@
     height: 20px;
     padding: 0 6px;
     font-size: 12px;
+  }
+
+  .profile-bio {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%),
+        color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%)
+      );
+  }
+
+  .profile-bio__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .profile-bio__title-wrap {
+    display: grid;
+    gap: 2px;
+  }
+
+  .profile-bio__label {
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--c-text-muted);
+  }
+
+  .profile-bio__textarea {
+    min-height: 132px;
+    padding: 12px 14px;
+    line-height: 1.55;
+    font-size: 16px;
+    resize: vertical;
+    background: color-mix(in oklab, var(--c-surface) 90%, var(--c-panel) 10%);
+    border-color: color-mix(in oklab, var(--c-border) 72%, transparent);
+  }
+
+  .profile-bio__textarea::placeholder {
+    color: color-mix(in oklab, var(--c-text-muted) 92%, transparent);
+  }
+
+  .profile-bio__textarea--readonly {
+    cursor: default;
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+    border-color: color-mix(in oklab, var(--c-border) 60%, transparent);
+  }
+
+  .profile-bio__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .profile-bio__hint {
+    font-size: 13px;
+    color: var(--c-text-muted);
+  }
+
+  .profile-bio__save-icon {
+    min-height: 36px;
+  }
+
+  .profile-bio__actions {
+    display: inline-flex;
+    gap: 8px;
+  }
+
+  .profile-bio__action {
+    width: auto;
+    min-width: 0;
+    height: 36px;
+    padding-inline: 12px;
+    font-size: 13px;
+  }
+
+  @media (max-width: 720px) {
+    .profile-bio__footer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .profile-bio__save-icon {
+      align-self: flex-end;
+    }
+
+    .profile-bio__actions {
+      align-self: flex-end;
+    }
   }
 
   .section-stack {

@@ -21,6 +21,7 @@ export type PersonalNavItem = {
     reviewsLabel: string;
     href?: string;
   };
+  forceActive?: boolean;
   match?: 'exact' | 'prefix';
 };
 
@@ -42,6 +43,7 @@ export function PersonalNavSection({
   const pathname = usePathname();
 
   const isActive = (item: PersonalNavItem) => {
+    if (typeof item.forceActive === 'boolean') return item.forceActive;
     if (item.match === 'prefix') return pathname === item.href || pathname.startsWith(`${item.href}/`);
     return pathname === item.href;
   };

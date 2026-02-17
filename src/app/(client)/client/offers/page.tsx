@@ -14,15 +14,7 @@ import { createThread } from '@/lib/api/chat';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import Link from 'next/link';
-
-const Star = ({ filled }: { filled: boolean }) => (
-  <span
-    className={filled ? 'text-[var(--c-primary)]' : 'text-[var(--c-border)]'}
-    aria-hidden
-  >
-    ★
-  </span>
-);
+import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 
 export default function ClientOffersPage() {
   const t = useT();
@@ -47,18 +39,6 @@ export default function ClientOffersPage() {
     }
   };
 
-  const renderStars = (rating?: number | null) => {
-    const safe = Math.max(0, Math.min(5, Math.round(rating ?? 0)));
-    return (
-      <span className="flex items-center gap-1 text-sm">
-        {Array.from({ length: 5 }).map((_, idx) => (
-          <Star key={idx} filled={idx < safe} />
-        ))}
-        <span className="ml-1 text-[var(--c-text-muted)]">{rating?.toFixed(1) ?? '—'}</span>
-      </span>
-    );
-  };
-
   return (
     <PageShell right={<AuthActions />} withSpacer={false}>
       <section className="text-center stack-sm">
@@ -75,23 +55,19 @@ export default function ClientOffersPage() {
 
           {(data ?? []).map((item) => {
             const displayName = item.providerDisplayName || t(I18N_KEYS.offers.unnamed);
-            const initials = displayName
-              .split(' ')
-              .slice(0, 2)
-              .map((part) => part[0]?.toUpperCase())
-              .join('');
             return (
               <div key={item.id} className="card stack-md">
                 <div className="flex items-start gap-4">
-                  <div className="h-12 w-12 shrink-0 rounded-full border border-[var(--c-border)] bg-[var(--c-panel)] flex items-center justify-center text-sm font-semibold text-[var(--c-text-muted)]">
-                    {initials || '•'}
-                  </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-base font-semibold">{displayName}</p>
-                        <div className="mt-1">{renderStars(item.providerRatingAvg)}</div>
-                      </div>
+                      <UserHeaderCard
+                        name={displayName}
+                        avatarUrl={item.providerAvatarUrl}
+                        hasProviderProfile
+                        rating={item.providerRatingAvg?.toFixed(1) ?? '—'}
+                        reviewsCount={item.providerRatingCount ?? 0}
+                        reviewsLabel={t(I18N_KEYS.homePublic.reviews)}
+                      />
                       <span className="badge capitalize">{item.status}</span>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">

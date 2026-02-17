@@ -15,10 +15,21 @@ export function RatingSummary({
   href,
   className,
 }: RatingSummaryProps) {
+  const numericRating = Number(rating);
+  const clampedRating = Number.isFinite(numericRating)
+    ? Math.max(0, Math.min(5, numericRating))
+    : 0;
+  const starsFillWidth = `${(clampedRating / 5) * 100}%`;
+
   const content = (
     <>
       <div className="rating-summary__line">
-        <span className="rating-summary__stars">★★★★★</span>
+        <span className="rating-summary__stars" aria-hidden="true">
+          <span className="rating-summary__stars-base">★★★★★</span>
+          <span className="rating-summary__stars-fill" style={{ width: starsFillWidth }}>
+            ★★★★★
+          </span>
+        </span>
         <span className="rating-summary__value">{rating}</span>
       </div>
       <span className="rating-summary__reviews">
@@ -37,4 +48,3 @@ export function RatingSummary({
 
   return <div className={`rating-summary ${className ?? ''}`.trim()}>{content}</div>;
 }
-

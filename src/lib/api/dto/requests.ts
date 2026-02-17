@@ -15,6 +15,24 @@ export type CreateRequestDto = {
   tags?: string[];
 };
 
+export type UpdateMyRequestDto = {
+  title?: string;
+  propertyType?: 'apartment' | 'house';
+  area?: number;
+  price?: number;
+  preferredDate?: string;
+  isRecurring?: boolean;
+  comment?: string;
+  description?: string;
+  photos?: string[];
+  tags?: string[];
+};
+
+export type DeleteMyRequestResponseDto = {
+  ok: true;
+  deletedRequestId: string;
+};
+
 export type RequestResponseDto = {
   id: string;
   serviceKey: string;

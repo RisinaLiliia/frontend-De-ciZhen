@@ -1,9 +1,11 @@
 // src/lib/api/requests.ts
-import { apiGet, apiPost, apiPostForm } from '@/lib/api/http';
+import { apiDelete, apiGet, apiPatch, apiPost, apiPostForm } from '@/lib/api/http';
 import type {
   CreateRequestDto,
+  DeleteMyRequestResponseDto,
   PublicRequestsResponseDto,
   RequestResponseDto,
+  UpdateMyRequestDto,
 } from '@/lib/api/dto/requests';
 
 export function createRequest(payload: CreateRequestDto) {
@@ -95,4 +97,12 @@ export function listMyRequests(params?: {
   if (params?.offset !== undefined) qs.set('offset', String(params.offset));
   const suffix = qs.toString() ? `?${qs.toString()}` : '';
   return apiGet<RequestResponseDto[]>(`/requests/my${suffix}`);
+}
+
+export function updateMyRequest(requestId: string, payload: UpdateMyRequestDto) {
+  return apiPatch<UpdateMyRequestDto, RequestResponseDto>(`/requests/my/${requestId}`, payload);
+}
+
+export function deleteMyRequest(requestId: string) {
+  return apiDelete<DeleteMyRequestResponseDto>(`/requests/my/${requestId}`);
 }

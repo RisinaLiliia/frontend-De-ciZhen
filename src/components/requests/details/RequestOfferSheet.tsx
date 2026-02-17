@@ -1,12 +1,11 @@
 import * as React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { RequestMetaInline } from '@/components/ui/RequestMetaInline';
 import { IconUser } from '@/components/ui/icons/icons';
-import { StatusDot } from '@/components/ui/StatusDot';
+import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 
 type RequestOfferSheetProps = {
   isOpen: boolean;
@@ -99,14 +98,6 @@ export function RequestOfferSheet({
   onSuccessBack,
   onSubmit,
 }: RequestOfferSheetProps) {
-  const safeAvatarUrl =
-    profileAvatarUrl && profileAvatarUrl.startsWith('http') ? profileAvatarUrl : null;
-
-  const avatarInitial = React.useMemo(() => {
-    const value = (profileName ?? '').trim();
-    return value ? value[0]?.toUpperCase() : 'P';
-  }, [profileName]);
-
   React.useEffect(() => {
     if (!isOpen) return;
 
@@ -169,29 +160,18 @@ export function RequestOfferSheet({
               <div className="request-offer-sheet__success-tip">
                 <h4 className="typo-h4">{successTipTitle}</h4>
                 <div className="request-offer-sheet__success-tip-card">
-                  <span className="provider-avatar-wrap request-offer-sheet__success-tip-avatar-wrap">
-                    <span
-                      className={`provider-avatar request-offer-sheet__success-tip-avatar ${
-                        safeAvatarUrl ? '' : 'provider-avatar--placeholder'
-                      }`.trim()}
-                    >
-                      {safeAvatarUrl ? (
-                        <Image
-                          src={safeAvatarUrl}
-                          alt={profileName ?? 'Profile avatar'}
-                          width={38}
-                          height={38}
-                          className="request-offer-sheet__success-tip-avatar-img"
-                        />
-                      ) : (
-                        <span>{avatarInitial}</span>
-                      )}
-                    </span>
-                    <StatusDot
-                      status={profileOnline ? 'online' : 'offline'}
-                      label={profileStatusLabel}
-                    />
-                  </span>
+                  <UserHeaderCard
+                    className="request-offer-sheet__success-tip-person"
+                    name={profileName ?? 'Profile'}
+                    avatarUrl={profileAvatarUrl}
+                    hasProviderProfile
+                    status={profileOnline ? 'online' : 'offline'}
+                    statusLabel={profileStatusLabel}
+                    showRating={false}
+                    rating="—"
+                    reviewsCount={0}
+                    reviewsLabel=""
+                  />
                   <div className="request-offer-sheet__success-tip-copy">
                     <p className="request-offer-sheet__success-tip-title">{successTipCardTitle}</p>
                     <p className="typo-small request-offer-sheet__success-advice">{successTipCardBody}</p>
