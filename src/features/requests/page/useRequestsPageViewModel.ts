@@ -111,34 +111,30 @@ type Input = {
 };
 
 export function useRequestsPageViewModel(params: Input) {
-  const filtersProps = React.useMemo<React.ComponentProps<typeof RequestsFilters>>(
-    () => ({
-      t: params.t,
-      locale: params.locale,
-      categoryOptions: params.categoryOptions,
-      serviceOptions: params.serviceOptions,
-      cityOptions: params.cityOptions,
-      sortOptions: params.sortOptions,
-      categoryKey: params.categoryKey,
-      subcategoryKey: params.subcategoryKey,
-      cityId: params.cityId,
-      sortBy: params.sortBy,
-      totalResults: params.totalResultsLabel,
-      isCategoriesLoading: params.isCategoriesLoading,
-      isServicesLoading: params.isServicesLoading,
-      isPending: params.isFiltersPending,
-      appliedChips: params.appliedFilterChips,
-      onCategoryChange: params.onCategoryChangeTracked,
-      onSubcategoryChange: params.onSubcategoryChangeTracked,
-      onCityChange: params.onCityChangeTracked,
-      onSortChange: params.onSortChangeTracked,
-      onReset: params.onResetTracked,
-    }),
-    [params],
-  );
+  const filtersProps: React.ComponentProps<typeof RequestsFilters> = {
+    t: params.t,
+    locale: params.locale,
+    categoryOptions: params.categoryOptions,
+    serviceOptions: params.serviceOptions,
+    cityOptions: params.cityOptions,
+    sortOptions: params.sortOptions,
+    categoryKey: params.categoryKey,
+    subcategoryKey: params.subcategoryKey,
+    cityId: params.cityId,
+    sortBy: params.sortBy,
+    totalResults: params.totalResultsLabel,
+    isCategoriesLoading: params.isCategoriesLoading,
+    isServicesLoading: params.isServicesLoading,
+    isPending: params.isFiltersPending,
+    appliedChips: params.appliedFilterChips,
+    onCategoryChange: params.onCategoryChangeTracked,
+    onSubcategoryChange: params.onSubcategoryChangeTracked,
+    onCityChange: params.onCityChangeTracked,
+    onSortChange: params.onSortChangeTracked,
+    onReset: params.onResetTracked,
+  };
 
-  const workspaceContentProps = React.useMemo<React.ComponentProps<typeof WorkspaceContent>>(() => {
-    return {
+  const workspaceContentProps: React.ComponentProps<typeof WorkspaceContent> = {
       activeWorkspaceTab: params.activeWorkspaceTab,
       showWorkspaceHeader: params.showWorkspaceHeader,
       showWorkspaceHeading: params.showWorkspaceHeading,
@@ -281,11 +277,9 @@ export function useRequestsPageViewModel(params: Input) {
         onPrevPage: () => params.setPage(Math.max(1, params.page - 1)),
         onNextPage: () => params.setPage(Math.min(params.totalPages, params.page + 1)),
       },
-    };
-  }, [filtersProps, params]);
+  };
 
-  const publicContentProps = React.useMemo<React.ComponentProps<typeof PublicContent>>(() => {
-    return {
+  const publicContentProps: React.ComponentProps<typeof PublicContent> = {
       filtersProps,
       statusFilters: params.statusFilters,
       activeStatusFilter: params.activeStatusFilter,
@@ -323,8 +317,7 @@ export function useRequestsPageViewModel(params: Input) {
       resultsLabel: params.t(I18N_KEYS.requestsPage.resultsLabel),
       onPrevPage: () => params.setPage(Math.max(1, params.page - 1)),
       onNextPage: () => params.setPage(Math.min(params.totalPages, params.page + 1)),
-    };
-  }, [filtersProps, params]);
+  };
 
   return {
     workspaceContentProps,

@@ -20,6 +20,7 @@ import {
   countCompletedInMonth,
   formatMoMDeltaLabel,
 } from '@/features/requests/page/metrics';
+import { getClientHint, getProviderHint } from '@/features/requests/page/workspaceCopy';
 import { IconBriefcase, IconCheck, IconHeart, IconSend, IconUser } from '@/components/ui/icons/icons';
 
 type StatsPayload = {
@@ -140,7 +141,7 @@ export function useRequestsWorkspaceState({
             {
               key: 'my-orders',
               href: '/orders?tab=my-requests',
-              label: 'Meine Auftraege',
+              label: t(I18N_KEYS.requestsPage.navMyOrders),
               icon: <IconBriefcase />,
               value: myRequests.length,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
@@ -173,7 +174,7 @@ export function useRequestsWorkspaceState({
             {
               key: 'my-favorites',
               href: '/orders?tab=favorites',
-              label: 'Meine Favoriten',
+              label: t(I18N_KEYS.requestDetails.saved),
               icon: <IconHeart />,
               value: favoriteRequestCount,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
@@ -214,7 +215,7 @@ export function useRequestsWorkspaceState({
             {
               key: 'my-orders',
               href: '/orders?tab=my-requests',
-              label: 'Meine Auftraege',
+              label: t(I18N_KEYS.requestsPage.navMyOrders),
               icon: <IconBriefcase />,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
               onClick: () => setWorkspaceTab('my-requests'),
@@ -234,7 +235,7 @@ export function useRequestsWorkspaceState({
             {
               key: 'my-favorites',
               href: '/orders?tab=favorites',
-              label: 'Meine Favoriten',
+              label: t(I18N_KEYS.requestDetails.saved),
               icon: <IconHeart />,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
               onClick: () => setWorkspaceTab('favorites'),
@@ -395,56 +396,15 @@ export function useRequestsWorkspaceState({
     [chartMonthLabel, clientCompletedContracts, myRequests],
   );
 
-  const providerHint = React.useMemo(() => {
-    if (providerProfileCompleteness < 80) {
-      return {
-        text: `Profil zu ${providerProfileCompleteness}% ausgefuellt. Vervollstaendige es fuer bessere Annahmequoten.`,
-        ctaLabel: 'Profil vervollstaendigen',
-        ctaHref: '/profile/workspace',
-      };
-    }
-    if (recentOffers7d === 0) {
-      return {
-        text: 'Seit 7 Tagen keine neuen Angebote. Pruefe Services, Standort und Verfuegbarkeit.',
-        ctaLabel: 'Auftraege ansehen',
-        ctaHref: '/requests',
-      };
-    }
-    if (acceptanceRate < 25) {
-      return {
-        text: 'Deine Annahmequote ist niedrig. Optimiere Preis und Nachricht fuer mehr Zusagen.',
-        ctaLabel: 'Angebote verbessern',
-        ctaHref: '/requests',
-      };
-    }
-    return {
-      text: 'Starke Performance. Halte Profil und Preise aktuell fuer stabile Auslastung.',
-      ctaLabel: 'Meine Vertraege',
-      ctaHref: '/provider/contracts',
-    };
-  }, [acceptanceRate, providerProfileCompleteness, recentOffers7d]);
+  const providerHint = React.useMemo(
+    () => getProviderHint(providerProfileCompleteness, recentOffers7d, acceptanceRate),
+    [acceptanceRate, providerProfileCompleteness, recentOffers7d],
+  );
 
-  const clientHint = React.useMemo(() => {
-    if (myRequests.length === 0) {
-      return {
-        text: 'Noch keine Anfrage erstellt. Starte mit deinem ersten Auftrag.',
-        ctaLabel: 'Anfrage erstellen',
-        ctaHref: '/request/create',
-      };
-    }
-    if (myOpenRequests.length > 0) {
-      return {
-        text: 'Du hast aktive Anfragen. Vergleiche Angebote und entscheide schneller.',
-        ctaLabel: 'Meine Anfragen',
-        ctaHref: '/client/requests',
-      };
-    }
-    return {
-      text: 'Deine Anfragen laufen stabil. Lege neue Aufgaben an, wenn du weitere Hilfe brauchst.',
-      ctaLabel: 'Neue Anfrage',
-      ctaHref: '/request/create',
-    };
-  }, [myOpenRequests.length, myRequests.length]);
+  const clientHint = React.useMemo(
+    () => getClientHint(myRequests.length, myOpenRequests.length),
+    [myOpenRequests.length, myRequests.length],
+  );
 
   const providerActivityCount =
     sentCount + acceptedCount + declinedCount + providerActiveContracts.length + providerCompletedContracts.length;
@@ -480,7 +440,7 @@ export function useRequestsWorkspaceState({
     hint: providerHint,
     emptyTitle: 'Noch keine Angebote. Starte mit dem ersten Auftrag.',
     emptyCtaLabel: 'Auftraege ansehen',
-    emptyCtaHref: '/requests',
+    emptyCtaHref: '/orders?tab=new-orders',
   };
 
   const clientStatsPayload: StatsPayload = {

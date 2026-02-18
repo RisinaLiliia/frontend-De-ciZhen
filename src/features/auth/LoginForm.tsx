@@ -17,10 +17,9 @@ import { useAuthLogin, useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { buildLoginSchema, type LoginValues } from '@/features/auth/login.schema';
 import { getLoginErrorMessage, isInvalidCredentialsError } from '@/features/auth/mapAuthError';
 import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
+import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-
-const DEFAULT_AUTH_NEXT = '/orders?tab=my-requests&sort=date_desc&page=1&limit=20';
 
 export function LoginForm() {
   const t = useT();
