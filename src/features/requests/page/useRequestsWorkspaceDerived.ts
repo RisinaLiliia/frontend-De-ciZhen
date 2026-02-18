@@ -15,6 +15,7 @@ import {
   type WorkspaceStatusFilter,
   type WorkspaceTab,
 } from '@/features/requests/page/workspace';
+import { WORKSPACE_PRIMARY_ACTION_BY_TAB, WORKSPACE_STATUS_FILTERS } from '@/features/requests/page/workspaceCopy';
 
 type Params = {
   activeStatusFilter: WorkspaceStatusFilter;
@@ -172,32 +173,12 @@ export function useRequestsWorkspaceDerived({
     () =>
       activeWorkspaceTab === 'new-orders' || activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews'
         ? []
-        : [
-            { key: 'all' as const, label: 'Alle' },
-            { key: 'open' as const, label: 'Offen' },
-            { key: 'in_progress' as const, label: 'In Arbeit' },
-            { key: 'completed' as const, label: 'Abgeschlossen' },
-          ],
+        : WORKSPACE_STATUS_FILTERS,
     [activeWorkspaceTab],
   );
 
   const primaryAction = React.useMemo(() => {
-    if (activeWorkspaceTab === 'my-requests') {
-      return { label: 'Neue Anfrage erstellen', href: '/request/create' };
-    }
-    if (activeWorkspaceTab === 'my-offers') {
-      return { label: 'Neue Auftraege finden', href: '/orders?tab=new-orders' };
-    }
-    if (activeWorkspaceTab === 'completed-jobs') {
-      return { label: 'Aktive Auftraege', href: '/orders?tab=my-offers&status=in_progress' };
-    }
-    if (activeWorkspaceTab === 'favorites') {
-      return { label: 'Neue Favoriten', href: '/orders?tab=new-orders' };
-    }
-    if (activeWorkspaceTab === 'reviews') {
-      return { label: 'Meine Auftraege', href: '/orders?tab=my-offers' };
-    }
-    return { label: 'Neue Anfrage erstellen', href: '/request/create' };
+    return WORKSPACE_PRIMARY_ACTION_BY_TAB[activeWorkspaceTab] ?? WORKSPACE_PRIMARY_ACTION_BY_TAB['my-requests']!;
   }, [activeWorkspaceTab]);
 
   return {

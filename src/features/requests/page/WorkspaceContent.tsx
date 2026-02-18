@@ -8,6 +8,7 @@ import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import type { FavoritesView, ReviewsView, WorkspaceStatusFilter, WorkspaceTab } from './workspace';
+import { WORKSPACE_SECTION_SUBTITLE, WORKSPACE_TAB_TITLES } from './workspaceCopy';
 
 type ChipFilter = {
   key: WorkspaceStatusFilter;
@@ -115,16 +116,10 @@ export function WorkspaceContent({
           {showWorkspaceHeading ? (
             <div className="section-heading">
               <p id="workspace-section-title" className="section-title">
-                {activeWorkspaceTab === 'my-requests'
-                  ? 'Meine Auftraege'
-                  : activeWorkspaceTab === 'my-offers'
-                    ? 'Meine Angebote'
-                    : activeWorkspaceTab === 'completed-jobs'
-                      ? 'Abgeschlossene Jobs'
-                      : 'Bewertungen'}
+                {WORKSPACE_TAB_TITLES[activeWorkspaceTab] ?? 'Bewertungen'}
               </p>
               <p id="workspace-section-subtitle" className="section-subtitle">
-                {'Workspace-Ansicht fuer deine eigenen Daten und Aktionen.'}
+                {WORKSPACE_SECTION_SUBTITLE}
               </p>
             </div>
           ) : null}
@@ -319,4 +314,3 @@ export function WorkspaceContent({
     </section>
   );
 }
-
