@@ -26,18 +26,7 @@ import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { FormLabel } from '@/components/ui/FormLabel';
 import { IconEye, IconEyeOff } from '@/components/ui/icons/icons';
 import { buildApiUrl } from '@/lib/api/url';
-
-async function with403Fallback<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
-  try {
-    return await fn();
-  } catch (error) {
-    if (error instanceof Error && 'status' in error) {
-      const status = Number((error as { status?: number }).status ?? 0);
-      if (status === 403 || status === 404) return fallback;
-    }
-    throw error;
-  }
-}
+import { withStatusFallback } from '@/lib/api/withStatusFallback';
 
 export default function ProfileWorkspacePage() {
   const t = useT();
@@ -85,31 +74,31 @@ export default function ProfileWorkspacePage() {
 
   const { data: myRequests = [] } = useQuery({
     queryKey: ['requests-my'],
-    queryFn: () => with403Fallback(() => listMyRequests(), []),
+    queryFn: () => withStatusFallback(() => listMyRequests(), []),
   });
   const { data: providerOffers = [] } = useQuery({
     queryKey: ['offers-my'],
-    queryFn: () => with403Fallback(() => listMyProviderOffers(), []),
+    queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
   });
   const { data: clientOffers = [] } = useQuery({
     queryKey: ['offers-my-client'],
-    queryFn: () => with403Fallback(() => listMyClientOffers(), []),
+    queryFn: () => withStatusFallback(() => listMyClientOffers(), []),
   });
   const { data: contracts = [] } = useQuery({
     queryKey: ['contracts-my-all'],
-    queryFn: () => with403Fallback(() => listMyContracts({ role: 'all' }), []),
+    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'all' }), []),
   });
   const { data: inbox = [] } = useQuery({
     queryKey: ['chat-inbox', 'all'],
-    queryFn: () => with403Fallback(() => listInbox('all'), []),
+    queryFn: () => withStatusFallback(() => listInbox('all'), []),
   });
   const { data: favoriteRequests = [] } = useQuery({
     queryKey: ['favorite-requests'],
-    queryFn: () => with403Fallback(() => listFavorites('request'), []),
+    queryFn: () => withStatusFallback(() => listFavorites('request'), []),
   });
   const { data: favoriteProviders = [] } = useQuery({
     queryKey: ['favorite-providers'],
-    queryFn: () => with403Fallback(() => listFavorites('provider'), []),
+    queryFn: () => withStatusFallback(() => listFavorites('provider'), []),
   });
   const { data: myProviderPublic } = useQuery({
     queryKey: ['provider-public-self', authMe?.id],

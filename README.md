@@ -1,1 +1,163 @@
-Next.js (TypeScript + Tailwind + React Query + RHF+Zod + PWA)
+# De'ciZhen Frontend
+
+Next.js frontend for De'ciZhen marketplace and workspace.
+
+## System Overview
+- The frontend is the user-facing layer of the De'ciZhen marketplace.
+- It integrates with a modular NestJS backend over REST APIs.
+- It supports public browsing, authenticated workspace flows, and role-based UX behavior.
+
+## Design Principles
+- Thin route components
+- Separation of data layer and presentation layer
+- Explicit access control
+- Environment-based configuration
+- Reusable feature modules
+
+## 1. Tech Stack
+- Next.js (App Router)
+- React + TypeScript
+- Zustand (auth/session state)
+- TanStack Query (data fetching + cache)
+- React Hook Form + Zod (forms/validation)
+- Tailwind CSS + project CSS tokens/themes
+- `react-markdown` (legal documents rendering)
+
+## 2. Product Routing Model
+
+### Public
+- `/` home
+- `/requests` public requests listing
+- `/requests/[id]` request details
+- `/providers/[id]` public provider profile
+
+### Authenticated Workspace
+- `/orders` canonical workspace screen (tab-based)
+- `/profile/workspace` canonical profile/settings screen
+- `/chat` unified inbox
+
+### Auth
+- `/auth/login`
+- `/auth/register`
+- modal-route counterparts via `app/@authModal`
+
+### Legal
+- `/privacy-policy`
+- `/cookie-notice`
+
+## 3. Access Guard (Next 16)
+- Route guard is implemented via `src/proxy.ts` (Next 16 `proxy`, not legacy middleware) to centralize access rules.
+- Rules:
+  - unauthenticated users opening `/orders*` are redirected to `/auth/login?next=...`
+  - authenticated users opening `/requests` are redirected to workspace default tab
+
+## 4. Architecture Notes
+
+### Requests page modularization
+Goal: keep route files thin and isolate data logic from UI rendering.
+This modularization ensures clear separation of concerns and improves testability.
+
+Core screen `src/app/requests/page.tsx` is refactored into composable modules:
+- `src/features/requests/page/useRequestsPageData.ts` (query/data layer)
+- `src/features/requests/page/useContractRequestsData.ts` (contract request mapping/query)
+- `src/features/requests/page/useRequestsWorkspaceState.tsx` (workspace KPIs/nav/stats/top providers)
+- `src/features/requests/page/useRequestsWorkspaceDerived.ts` (derived lists/view state)
+- `src/features/requests/page/useRequestsPageViewModel.ts` (UI props composition)
+- `src/features/requests/page/PublicContent.tsx` and `src/features/requests/page/WorkspaceContent.tsx` (render layers)
+
+### Error fallback standard
+- Shared helper: `src/lib/api/withStatusFallback.ts`
+- Replaces duplicated `403/404` fallback logic across requests/profile flows.
+
+## 5. Environment Configuration
+Create local env file:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Required:
+
+```env
+API_BASE_URL=http://localhost:4000
+NEXT_PUBLIC_PRIVACY_POLICY_URL=/privacy-policy
+NEXT_PUBLIC_COOKIE_NOTICE_URL=/cookie-notice
+```
+
+Optional:
+
+```env
+NEXT_PUBLIC_DEMO=true
+NEXT_PUBLIC_API_BASE=http://localhost:4000
+```
+
+Notes:
+- Frontend calls backend through `/api/*` rewrites (configured in `next.config.ts`).
+- `API_BASE_URL` has priority; `NEXT_PUBLIC_API_BASE` is fallback.
+
+## 6. Local Development
+Prerequisites:
+- Node.js `>= 20.9.0`
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run dev server:
+
+```bash
+npm run dev
+```
+
+Open:
+- `http://localhost:3000`
+
+## 7. Quality Gates
+Lint:
+
+```bash
+npm run lint
+```
+
+Unit tests (core flows):
+
+```bash
+npm run test
+```
+
+Production build check:
+
+```bash
+npm run build
+```
+
+Run production locally:
+
+```bash
+npm run start
+```
+
+## 8. Auth and Consent
+- Email/password auth via backend `/auth/*`
+- Social auth (Google/Apple) in the same auth flow
+- Register form includes explicit legal consent links
+- OAuth completion step supported via `POST /auth/oauth/complete-register`
+
+## 9. Legal Content Flow
+- Backend provides legal markdown via legal endpoints
+- Frontend pages render legal content with `react-markdown`
+- URLs for consent links are configurable via env:
+  - `NEXT_PUBLIC_PRIVACY_POLICY_URL`
+  - `NEXT_PUBLIC_COOKIE_NOTICE_URL`
+
+## 10. Scripts
+- `npm run dev`
+- `npm run build`
+- `npm run start`
+- `npm run lint`
+- `npm run test`
+
+## 11. License
+This project is proprietary. See [LICENSE](./LICENSE).

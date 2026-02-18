@@ -26,6 +26,7 @@ import { createOffer, deleteOffer, listMyProviderOffers, updateOffer } from '@/l
 import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
 import { getMyProviderProfile } from '@/lib/api/providers';
 import { ApiError } from '@/lib/api/http-error';
+import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useAuthMe, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -88,49 +89,19 @@ export default function RequestDetailsPage() {
   const { data: myResponses } = useQuery({
     queryKey: ['offers-my'],
     enabled: authStatus === 'authenticated',
-    queryFn: async () => {
-      try {
-        return await listMyProviderOffers();
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return [];
-        }
-        throw error;
-      }
-    },
+    queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
   });
 
   const { data: providerProfile } = useQuery({
     queryKey: ['provider-profile'],
     enabled: authStatus === 'authenticated',
-    queryFn: async () => {
-      try {
-        return await getMyProviderProfile();
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return null;
-        }
-        throw error;
-      }
-    },
+    queryFn: () => withStatusFallback(() => getMyProviderProfile(), null),
   });
 
   const { data: favoriteRequests } = useQuery({
     queryKey: ['favorite-requests'],
     enabled: authStatus === 'authenticated',
-    queryFn: async () => {
-      try {
-        return await listFavorites('request');
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return [];
-        }
-        throw error;
-      }
-    },
+    queryFn: () => withStatusFallback(() => listFavorites('request'), []),
   });
 
   const existingResponse = React.useMemo(() => {
