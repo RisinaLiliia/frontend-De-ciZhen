@@ -50,7 +50,7 @@ async function apiRequest<T>(
           : JSON.stringify(body),
   });
 
-  if (res.status === 401 && retry && !init?.skipAuthRefresh) {
+  if (res.status === 401 && retry && !init?.skipAuthRefresh && Boolean(accessToken)) {
     const refreshed = await refreshAccessToken();
     if (refreshed) {
       setAccessToken(refreshed);
