@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
@@ -10,25 +9,15 @@ import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { PersonalNavSection } from '@/components/layout/PersonalNavSection';
 import { HeroSection } from '@/components/ui/HeroSection';
-import { RequestsFilters } from '@/components/requests/RequestsFilters';
-import { RequestsList } from '@/components/requests/RequestsList';
-import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
 import { ProofReviewCard } from '@/components/reviews/ProofReviewCard';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
-import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import {
   deleteMyRequest,
   getPublicRequestById,
-  listMyRequests,
-  listPublicRequests,
-  type PublicRequestsSort,
 } from '@/lib/api/requests';
-import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
-import { listMyContracts } from '@/lib/api/contracts';
-import { deleteOffer, listMyProviderOffers } from '@/lib/api/offers';
-import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
-import { listMyReviews } from '@/lib/api/reviews';
+import { deleteOffer } from '@/lib/api/offers';
+import { addFavorite, removeFavorite } from '@/lib/api/favorites';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -38,79 +27,32 @@ import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import { IconBriefcase, IconCheck, IconHeart, IconSend, IconUser } from '@/components/ui/icons/icons';
 import { trackUXEvent } from '@/lib/analytics';
-import type { I18nKey } from '@/lib/i18n/keys';
-
-const ALL_OPTION_KEY = 'all';
-
-type SortKey = PublicRequestsSort;
-
-type SortOption = {
-  value: SortKey;
-  labelKey: I18nKey;
-};
-
-const SORT_OPTIONS: SortOption[] = [
-  { value: 'date_desc', labelKey: I18N_KEYS.requestsPage.sortNewest },
-  { value: 'date_asc', labelKey: I18N_KEYS.requestsPage.sortOldest },
-  { value: 'price_asc', labelKey: I18N_KEYS.requestsPage.sortPriceAsc },
-  { value: 'price_desc', labelKey: I18N_KEYS.requestsPage.sortPriceDesc },
-];
-
-const NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX = 'dc_requests_new_seen_total_v1';
-
-type WorkspaceTab = 'new-orders' | 'my-requests' | 'my-offers' | 'completed-jobs' | 'favorites' | 'reviews';
-type WorkspaceStatusFilter = 'all' | 'open' | 'in_progress' | 'completed';
-type FavoritesView = 'requests' | 'providers';
-type ReviewsView = 'provider' | 'client';
-
-const WORKSPACE_TABS: WorkspaceTab[] = [
-  'new-orders',
-  'my-requests',
-  'my-offers',
-  'completed-jobs',
-  'favorites',
-  'reviews',
-];
-const ORDERS_TAB_STORAGE_KEY = 'dc_orders_tab';
-const DEFAULT_ORDERS_WORKSPACE_URL = '/orders?tab=my-requests&sort=date_desc&page=1&limit=20';
-
-function resolveWorkspaceTab(value: string | null): WorkspaceTab {
-  return value && WORKSPACE_TABS.includes(value as WorkspaceTab) ? (value as WorkspaceTab) : 'new-orders';
-}
-
-function resolveStatusFilter(value: string | null): WorkspaceStatusFilter {
-  return value === 'open' || value === 'in_progress' || value === 'completed' ? value : 'all';
-}
-
-function resolveFavoritesView(value: string | null): FavoritesView {
-  return value === 'providers' ? 'providers' : 'requests';
-}
-
-function resolveReviewsView(value: string | null): ReviewsView {
-  return value === 'client' ? 'client' : 'provider';
-}
-
-function mapRequestStatusToFilter(status?: string): WorkspaceStatusFilter {
-  if (!status) return 'all';
-  if (status === 'completed') return 'completed';
-  if (status === 'in_progress' || status === 'assigned' || status === 'matched') return 'in_progress';
-  return 'open';
-}
-
-function mapOfferStatusToFilter(status?: string): WorkspaceStatusFilter {
-  if (!status) return 'all';
-  if (status === 'accepted') return 'in_progress';
-  if (status === 'declined') return 'completed';
-  return 'open';
-}
-
-function mapContractStatusToFilter(status?: string): WorkspaceStatusFilter {
-  if (!status) return 'all';
-  if (status === 'completed') return 'completed';
-  return 'in_progress';
-}
+import {
+  ALL_OPTION_KEY,
+  NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX,
+  SORT_OPTIONS,
+} from '@/features/requests/page/public';
+import {
+  ORDERS_TAB_STORAGE_KEY,
+  mapContractStatusToFilter,
+  mapOfferStatusToFilter,
+  mapRequestStatusToFilter,
+  resolveFavoritesView,
+  resolveReviewsView,
+  resolveStatusFilter,
+  resolveWorkspaceTab,
+  type FavoritesView,
+  type ReviewsView,
+  type WorkspaceStatusFilter,
+  type WorkspaceTab,
+} from '@/features/requests/page/workspace';
+import { PublicContent } from '@/features/requests/page/PublicContent';
+import { WorkspaceContent } from '@/features/requests/page/WorkspaceContent';
+import { useRequestsPageViewModel } from '@/features/requests/page/useRequestsPageViewModel';
+import { useRequestsPageData } from '@/features/requests/page/useRequestsPageData';
+import { useContractRequestsData } from '@/features/requests/page/useContractRequestsData';
+import { useRequestsWorkspaceState } from '@/features/requests/page/useRequestsWorkspaceState';
 
 function RequestsPageContent() {
   const router = useRouter();
@@ -124,10 +66,6 @@ function RequestsPageContent() {
   const isAuthed = authStatus === 'authenticated';
   const isWorkspaceRoute = pathname === '/orders';
   const isWorkspaceAuthed = isWorkspaceRoute && isAuthed;
-  const workspaceCurrentHref = React.useMemo(() => {
-    const query = searchParams.toString();
-    return `/orders${query ? `?${query}` : ''}`;
-  }, [searchParams]);
   const isPersonalized = isAuthed;
   const activeWorkspaceTab = React.useMemo(
     () => (isWorkspaceRoute ? resolveWorkspaceTab(searchParams.get('tab')) : 'new-orders'),
@@ -145,30 +83,6 @@ function RequestsPageContent() {
     () => resolveReviewsView(searchParams.get('reviewRole')),
     [searchParams],
   );
-
-  React.useEffect(() => {
-    if (!isWorkspaceRoute || authStatus !== 'unauthenticated') return;
-    router.replace(`/auth/login?next=${encodeURIComponent(workspaceCurrentHref)}`, { scroll: false });
-  }, [authStatus, isWorkspaceRoute, router, workspaceCurrentHref]);
-
-  React.useEffect(() => {
-    if (authStatus === 'authenticated' && pathname === '/requests') {
-      router.replace(DEFAULT_ORDERS_WORKSPACE_URL, { scroll: false });
-      return;
-    }
-    if (authStatus !== 'unauthenticated') return;
-    if (isWorkspaceRoute) return;
-    const next = new URLSearchParams(searchParams.toString());
-    const hadWorkspaceParams =
-      next.has('tab') || next.has('status') || next.has('fav') || next.has('reviewRole');
-    if (!hadWorkspaceParams) return;
-    next.delete('tab');
-    next.delete('status');
-    next.delete('fav');
-    next.delete('reviewRole');
-    const query = next.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [authStatus, isWorkspaceRoute, pathname, router, searchParams]);
 
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
@@ -327,196 +241,37 @@ function RequestsPageContent() {
     cities,
   });
 
-  const { data: publicRequests, isLoading, isError } = useQuery({
-    queryKey: [
-      'requests-public',
-      filter.cityId,
-      filter.categoryKey,
-      filter.subcategoryKey,
-      filter.sort,
-      filter.page,
-      filter.limit,
-    ],
-    queryFn: () => listPublicRequests(filter),
-  });
-
-  const { data: allRequestsSummary } = useQuery({
-    queryKey: ['requests-public-summary-total'],
-    enabled: isAuthed,
-    queryFn: () =>
-      listPublicRequests({
-        sort: 'date_desc',
-        page: 1,
-        limit: 1,
-      }),
-  });
-
-  const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery({
-    queryKey: ['offers-my'],
-    enabled: isAuthed,
-    queryFn: async () => {
-      try {
-        return await listMyProviderOffers();
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return [];
-        }
-        throw error;
-      }
-    },
-  });
-
-  const myOfferRequestIds = React.useMemo(
-    () => Array.from(new Set(myOffers.map((offer) => offer.requestId).filter(Boolean))),
-    [myOffers],
-  );
-
-  const { data: myOfferRequestsById = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>() } = useQuery({
-    queryKey: ['requests-by-my-offer-ids', ...myOfferRequestIds],
-    enabled: isWorkspaceAuthed && myOfferRequestIds.length > 0,
-    queryFn: async () => {
-      const pairs = await Promise.all(
-        myOfferRequestIds.map(async (id) => {
-          try {
-            const request = await getPublicRequestById(id);
-            return [id, request] as const;
-          } catch {
-            return [id, null] as const;
-          }
-        }),
-      );
-      const map = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>();
-      pairs.forEach(([id, request]) => {
-        if (request) map.set(id, request);
-      });
-      return map;
-    },
-  });
-
-  const { data: favoriteRequests = [], isLoading: isFavoriteRequestsLoading } = useQuery({
-    queryKey: ['favorite-requests'],
-    enabled: isAuthed,
-    queryFn: async () => {
-      try {
-        return await listFavorites('request');
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return [];
-        }
-        throw error;
-      }
-    },
-  });
-
-  const { data: favoriteProviders = [], isLoading: isFavoriteProvidersLoading } = useQuery({
-    queryKey: ['favorite-providers'],
-    enabled: isAuthed,
-    queryFn: async () => {
-      try {
-        return await listFavorites('provider');
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return [];
-        }
-        throw error;
-      }
-    },
-  });
-
-  const { data: myReviews = [], isLoading: isMyReviewsLoading } = useQuery({
-    queryKey: ['reviews-my', activeReviewsView],
-    enabled: isWorkspaceAuthed,
-    queryFn: async () => {
-      try {
-        return await listMyReviews({ role: activeReviewsView });
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return [];
-        }
-        throw error;
-      }
-    },
-  });
-
-  const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery({
-    queryKey: ['requests-my'],
-    enabled: isWorkspaceAuthed,
-    queryFn: async () => {
-      try {
-        return await listMyRequests();
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return [];
-        }
-        throw error;
-      }
-    },
-  });
-
-  const { data: myProviderContracts = [], isLoading: isProviderContractsLoading } = useQuery({
-    queryKey: ['contracts-my-provider'],
-    enabled: isWorkspaceAuthed,
-    queryFn: async () => {
-      try {
-        return await listMyContracts({ role: 'provider' });
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return [];
-        }
-        throw error;
-      }
-    },
-  });
-
-  const { data: myClientContracts = [], isLoading: isClientContractsLoading } = useQuery({
-    queryKey: ['contracts-my-client'],
-    enabled: isWorkspaceAuthed,
-    queryFn: async () => {
-      try {
-        return await listMyContracts({ role: 'client' });
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return [];
-        }
-        throw error;
-      }
-    },
-  });
-
-  const { data: myProviderProfile } = useQuery({
-    queryKey: ['provider-profile-me'],
-    enabled: isAuthed,
-    queryFn: async () => {
-      try {
-        return await getMyProviderProfile();
-      } catch (error) {
-        if (error instanceof Error && 'status' in error) {
-          const status = Number((error as { status?: number }).status ?? 0);
-          if (status === 403 || status === 404) return null;
-        }
-        throw error;
-      }
-    },
-  });
-
   const {
-    data: providers = [],
-    isLoading: isProvidersLoading,
-    isError: isProvidersError,
-  } = useQuery({
-    queryKey: ['providers-public', cityId, subcategoryKey],
-    queryFn: () =>
-      listPublicProviders({
-        cityId: cityId === ALL_OPTION_KEY ? undefined : cityId,
-        serviceKey: subcategoryKey === ALL_OPTION_KEY ? undefined : subcategoryKey,
-      }),
+    publicRequests,
+    isLoading,
+    isError,
+    allRequestsSummary,
+    myOffers,
+    isMyOffersLoading,
+    myOfferRequestsById,
+    favoriteRequests,
+    isFavoriteRequestsLoading,
+    favoriteProviders,
+    isFavoriteProvidersLoading,
+    myReviews,
+    isMyReviewsLoading,
+    myRequests,
+    isMyRequestsLoading,
+    myProviderContracts,
+    isProviderContractsLoading,
+    myClientContracts,
+    isClientContractsLoading,
+    myProviderProfile,
+    providers,
+    isProvidersLoading,
+    isProvidersError,
+  } = useRequestsPageData({
+    filter,
+    isAuthed,
+    isWorkspaceAuthed,
+    activeReviewsView,
+    cityId,
+    subcategoryKey,
   });
 
   const requests = publicRequests?.items ?? [];
@@ -546,37 +301,6 @@ function RequestsPageContent() {
     sortBy,
     subcategoryKey,
   ]);
-
-  const topProviders = React.useMemo(() => {
-    const sorted = [...providers].sort((a, b) => b.ratingAvg - a.ratingAvg);
-    return sorted.slice(0, 2).map((provider) => {
-      const name = provider.displayName ?? t(I18N_KEYS.provider.unnamed);
-      const avatarLetter = name.trim().charAt(0).toUpperCase() || 'A';
-      const rating = provider.ratingAvg.toFixed(1);
-      const reviewsLabel = `${provider.ratingCount} ${t(I18N_KEYS.homePublic.reviews)}`;
-      const jobsLabel = `${provider.completedJobs} ${t(I18N_KEYS.provider.jobs)}`;
-      const badges = [t(I18N_KEYS.homePublic.topProvider1Badge1)];
-      if (provider.ratingAvg >= 4.8 || provider.completedJobs >= 100) {
-        badges.push(t(I18N_KEYS.homePublic.topProvider2Badge1));
-      }
-      return {
-        id: provider.id,
-        badges,
-        status: 'online' as const,
-        statusLabel: t(I18N_KEYS.homePublic.topProviderStatus),
-        avatarLetter,
-        avatarUrl: provider.avatarUrl,
-        name,
-        role: jobsLabel,
-        rating,
-        reviewsCount: provider.ratingCount,
-        reviewsLabel,
-        ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
-        profileHref: `/providers/${provider.id}`,
-        reviewsHref: `/providers/${provider.id}#reviews`,
-      };
-    });
-  }, [providers, t]);
 
   const favoriteRequestIds = React.useMemo(
     () => new Set(favoriteRequests.map((item) => item.id)),
@@ -705,24 +429,6 @@ function RequestsPageContent() {
     [onDeleteMyRequestVoid, pendingDeleteRequestId],
   );
 
-
-  const sentCount = React.useMemo(
-    () => myOffers.filter((offer) => offer.status === 'sent').length,
-    [myOffers],
-  );
-  const acceptedCount = React.useMemo(
-    () => myOffers.filter((offer) => offer.status === 'accepted').length,
-    [myOffers],
-  );
-  const completedJobsCount = React.useMemo(
-    () => myProviderContracts.filter((item) => item.status === 'completed').length,
-    [myProviderContracts],
-  );
-  const declinedCount = React.useMemo(
-    () => myOffers.filter((offer) => offer.status === 'declined').length,
-    [myOffers],
-  );
-
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const formatNumber = React.useMemo(() => new Intl.NumberFormat(localeTag), [localeTag]);
   const formatDate = React.useMemo(
@@ -841,20 +547,6 @@ function RequestsPageContent() {
   );
 
   const newOrdersCount = Math.max(0, totalAllRequests - seenTotal);
-  const resolvedName = auth.user?.name?.trim() || 'User';
-  const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${resolvedName}!`;
-  const activityBase = sentCount + acceptedCount;
-  const activityProgress = activityBase > 0 ? Math.round((acceptedCount / activityBase) * 100) : 12;
-  const myProviderRating = React.useMemo(() => {
-    const rated = myOffers.find((offer) => typeof offer.providerRatingAvg === 'number');
-    return {
-      avg: rated?.providerRatingAvg ?? 0,
-      count: rated?.providerRatingCount ?? 0,
-    };
-  }, [myOffers]);
-
-  const navRatingValue = myProviderRating.avg.toFixed(1);
-  const navReviewsCount = myProviderRating.count;
   const allMyContracts = React.useMemo(
     () =>
       [...myProviderContracts, ...myClientContracts].sort((a, b) =>
@@ -941,100 +633,10 @@ function RequestsPageContent() {
       ),
     [activeStatusFilter, allMyContracts],
   );
-  const contractRequestIds = React.useMemo(
-    () => Array.from(new Set(filteredContracts.map((item) => item.requestId).filter(Boolean))),
-    [filteredContracts],
-  );
-  const { data: contractRequestsById = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>() } = useQuery({
-    queryKey: ['requests-by-contract-ids', ...contractRequestIds],
-    enabled: isWorkspaceAuthed && contractRequestIds.length > 0,
-    queryFn: async () => {
-      const pairs = await Promise.all(
-        contractRequestIds.map(async (id) => {
-          try {
-            const request = await getPublicRequestById(id);
-            return [id, request] as const;
-          } catch {
-            return [id, null] as const;
-          }
-        }),
-      );
-      const map = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>();
-      pairs.forEach(([id, request]) => {
-        if (request) map.set(id, request);
-      });
-      return map;
-    },
+  const { contractRequests, contractOffersByRequest } = useContractRequestsData({
+    filteredContracts,
+    isWorkspaceAuthed,
   });
-  const contractRequests = React.useMemo(() => {
-    const fallbackDate = new Date().toISOString();
-    const items: Awaited<ReturnType<typeof getPublicRequestById>>[] = [];
-    const seen = new Set<string>();
-    filteredContracts.forEach((item) => {
-      if (!item.requestId || seen.has(item.requestId)) return;
-      seen.add(item.requestId);
-      const request = contractRequestsById.get(item.requestId);
-      if (request) {
-        items.push(request);
-        return;
-      }
-      items.push({
-        id: item.requestId,
-        serviceKey: 'service',
-        cityId: 'city',
-        cityName: null,
-        categoryKey: null,
-        categoryName: null,
-        subcategoryName: null,
-        propertyType: 'apartment',
-        area: 0,
-        price: item.priceAmount ?? null,
-        preferredDate: item.updatedAt || item.createdAt || fallbackDate,
-        isRecurring: false,
-        title: `Contract #${item.id.slice(-6)}`,
-        description: null,
-        photos: null,
-        imageUrl: null,
-        tags: null,
-        clientId: item.clientId,
-        clientName: null,
-        clientAvatarUrl: null,
-        clientCity: null,
-        clientRatingAvg: null,
-        clientRatingCount: null,
-        clientIsOnline: null,
-        clientLastSeenAt: null,
-        status:
-          item.status === 'completed'
-            ? 'closed'
-            : item.status === 'cancelled'
-              ? 'cancelled'
-              : 'matched',
-        createdAt: item.createdAt,
-      });
-    });
-    return items;
-  }, [contractRequestsById, filteredContracts]);
-  const contractOffersByRequest = React.useMemo(() => {
-    const map = new Map<string, (typeof myOffers)[number]>();
-    filteredContracts.forEach((item) => {
-      map.set(item.requestId, {
-        id: item.offerId,
-        requestId: item.requestId,
-        providerUserId: item.providerUserId,
-        clientUserId: item.clientId,
-        status: item.status === 'cancelled' ? 'declined' : 'accepted',
-        message: null,
-        amount: item.priceAmount,
-        priceType: item.priceType,
-        availableAt: null,
-        availabilityNote: null,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
-      });
-    });
-    return map;
-  }, [filteredContracts]);
   const hasFavoriteRequests = favoriteRequests.length > 0;
   const hasFavoriteProviders = favoriteProviders.length > 0;
   const areFavoritesLoaded = !isFavoriteRequestsLoading && !isFavoriteProvidersLoading;
@@ -1118,429 +720,115 @@ function RequestsPageContent() {
     }
     return { label: 'Neue Anfrage erstellen', href: '/request/create' };
   }, [activeWorkspaceTab]);
-  const personalNavItems = React.useMemo(
-    () =>
-      isPersonalized
-        ? [
-            {
-              key: 'new-orders',
-              href: '/orders?tab=new-orders',
-              label: t(I18N_KEYS.requestsPage.navNewOrders),
-              icon: <IconBriefcase />,
-              value: newOrdersCount,
-              hint: t(I18N_KEYS.requestsPage.resultsLabel),
-              onClick: () => {
-                markNewOrdersSeen();
-                setWorkspaceTab('new-orders');
-              },
-              forceActive: activeWorkspaceTab === 'new-orders',
-              match: 'exact' as const,
-            },
-            {
-              key: 'my-orders',
-              href: '/orders?tab=my-requests',
-              label: 'Meine Auftraege',
-              icon: <IconBriefcase />,
-              value: myRequests.length,
-              hint: t(I18N_KEYS.requestsPage.summaryAccepted),
-              onClick: () => setWorkspaceTab('my-requests'),
-              forceActive: activeWorkspaceTab === 'my-requests',
-              match: 'exact' as const,
-            },
-            {
-              key: 'my-offers',
-              href: '/orders?tab=my-offers',
-              label: t(I18N_KEYS.requestsPage.navMyOffers),
-              icon: <IconSend />,
-              value: sentCount,
-              hint: t(I18N_KEYS.requestsPage.summarySent),
-              onClick: () => setWorkspaceTab('my-offers'),
-              forceActive: activeWorkspaceTab === 'my-offers',
-              match: 'exact' as const,
-            },
-            {
-              key: 'completed-jobs',
-              href: '/orders?tab=completed-jobs',
-              label: 'Abgeschlossene Jobs',
-              icon: <IconCheck />,
-              value: completedJobsCount,
-              hint: t(I18N_KEYS.provider.jobs),
-              onClick: () => setWorkspaceTab('completed-jobs'),
-              forceActive: activeWorkspaceTab === 'completed-jobs',
-              match: 'exact' as const,
-            },
-            {
-              key: 'my-favorites',
-              href: '/orders?tab=favorites',
-              label: 'Meine Favoriten',
-              icon: <IconHeart />,
-              value: favoriteRequestIds.size,
-              hint: t(I18N_KEYS.requestDetails.ctaSave),
-              onClick: () => setWorkspaceTab('favorites'),
-              forceActive: activeWorkspaceTab === 'favorites',
-              match: 'exact' as const,
-            },
-            {
-              key: 'reviews',
-              href: '/orders?tab=reviews',
-              label: t(I18N_KEYS.requestsPage.navReviews),
-              icon: <IconUser />,
-              rating: {
-                value: navRatingValue,
-                reviewsCount: navReviewsCount,
-                reviewsLabel: t(I18N_KEYS.homePublic.reviews),
-              },
-              onClick: () => setWorkspaceTab('reviews'),
-              forceActive: activeWorkspaceTab === 'reviews',
-              match: 'exact' as const,
-            },
-          ]
-        : [
-            {
-              key: 'new-orders',
-              href: '/orders?tab=new-orders',
-              label: t(I18N_KEYS.requestsPage.navNewOrders),
-              icon: <IconBriefcase />,
-              value: newOrdersCount,
-              hint: t(I18N_KEYS.requestsPage.resultsLabel),
-              onClick: () => {
-                markNewOrdersSeen();
-                setWorkspaceTab('new-orders');
-              },
-              forceActive: activeWorkspaceTab === 'new-orders',
-              match: 'exact' as const,
-            },
-            {
-              key: 'my-orders',
-              href: '/orders?tab=my-requests',
-              label: 'Meine Auftraege',
-              icon: <IconBriefcase />,
-              hint: t(I18N_KEYS.requestsPage.summaryAccepted),
-              onClick: () => setWorkspaceTab('my-requests'),
-              forceActive: activeWorkspaceTab === 'my-requests',
-              match: 'exact' as const,
-            },
-            {
-              key: 'my-offers',
-              href: '/orders?tab=my-offers',
-              label: t(I18N_KEYS.requestsPage.navMyOffers),
-              icon: <IconSend />,
-              hint: t(I18N_KEYS.requestsPage.summarySent),
-              onClick: () => setWorkspaceTab('my-offers'),
-              forceActive: activeWorkspaceTab === 'my-offers',
-              match: 'exact' as const,
-            },
-            {
-              key: 'my-favorites',
-              href: '/orders?tab=favorites',
-              label: 'Meine Favoriten',
-              icon: <IconHeart />,
-              hint: t(I18N_KEYS.requestDetails.ctaSave),
-              onClick: () => setWorkspaceTab('favorites'),
-              forceActive: activeWorkspaceTab === 'favorites',
-              match: 'exact' as const,
-            },
-            {
-              key: 'reviews',
-              href: '/orders?tab=reviews',
-              label: t(I18N_KEYS.requestsPage.navReviews),
-              icon: <IconUser />,
-              rating: {
-                value: navRatingValue,
-                reviewsCount: navReviewsCount,
-                reviewsLabel: t(I18N_KEYS.homePublic.reviews),
-              },
-              onClick: () => setWorkspaceTab('reviews'),
-              forceActive: activeWorkspaceTab === 'reviews',
-              match: 'exact' as const,
-            },
-          ],
-    [
-      activeWorkspaceTab,
-      completedJobsCount,
-      favoriteRequestIds.size,
-      isPersonalized,
-      markNewOrdersSeen,
-      myRequests.length,
-      navRatingValue,
-      navReviewsCount,
-      newOrdersCount,
-      setWorkspaceTab,
-      sentCount,
-      t,
-    ],
-  );
+  const {
+    topProviders,
+    navTitle,
+    activityProgress,
+    personalNavItems,
+    insightText,
+    hasAnyStatsActivity,
+    providerStatsPayload,
+    clientStatsPayload,
+    statsOrder,
+  } = useRequestsWorkspaceState({
+    t,
+    locale,
+    isPersonalized,
+    activeWorkspaceTab,
+    userName: auth.user?.name,
+    authMe: auth.me,
+    myOffers,
+    myRequests,
+    myProviderContracts,
+    myClientContracts,
+    myProviderProfile,
+    providers,
+    newOrdersCount,
+    favoriteRequestCount: favoriteRequestIds.size,
+    setWorkspaceTab,
+    markNewOrdersSeen,
+    formatNumber,
+    chartMonthLabel,
+  });
 
-  const providerCompletedContracts = React.useMemo(
-    () => myProviderContracts.filter((item) => item.status === 'completed'),
-    [myProviderContracts],
-  );
-  const providerActiveContracts = React.useMemo(
-    () =>
-      myProviderContracts.filter(
-        (item) => item.status === 'pending' || item.status === 'confirmed' || item.status === 'in_progress',
-      ),
-    [myProviderContracts],
-  );
-  const providerCompletedThisMonth = React.useMemo(
-    () => countCompletedInMonth(providerCompletedContracts, 0),
-    [providerCompletedContracts],
-  );
-  const providerCompletedLastMonth = React.useMemo(
-    () => countCompletedInMonth(providerCompletedContracts, -1),
-    [providerCompletedContracts],
-  );
-  const completedMoMDelta = React.useMemo(
-    () => calcMoMDeltaPercent(providerCompletedThisMonth, providerCompletedLastMonth),
-    [providerCompletedLastMonth, providerCompletedThisMonth],
-  );
-  const completedMoMLabel = React.useMemo(
-    () => formatMoMDeltaLabel(completedMoMDelta, locale),
-    [completedMoMDelta, locale],
-  );
-  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${providerCompletedThisMonth} ${t(
-    I18N_KEYS.requestsPage.navInsightClosedSuffix,
-  )} ${completedMoMLabel}`;
-  const clientCompletedContracts = React.useMemo(
-    () => myClientContracts.filter((item) => item.status === 'completed'),
-    [myClientContracts],
-  );
-  const clientActiveContracts = React.useMemo(
-    () =>
-      myClientContracts.filter(
-        (item) => item.status === 'pending' || item.status === 'confirmed' || item.status === 'in_progress',
-      ),
-    [myClientContracts],
-  );
-  const myOpenRequests = React.useMemo(
-    () =>
-      myRequests.filter(
-        (item) =>
-          item.status === 'draft' ||
-          item.status === 'published' ||
-          item.status === 'paused' ||
-          item.status === 'matched',
-      ),
-    [myRequests],
-  );
-
-  const acceptedDecidedDenominator = acceptedCount + declinedCount;
-  const acceptanceRate = Math.round(
-    (acceptedCount / Math.max(acceptedDecidedDenominator, 1)) * 100,
-  );
-
-  const avgResponseMinutes = React.useMemo(() => {
-    const samples = myOffers
-      .map((item) => {
-        const created = new Date(item.createdAt).getTime();
-        const updated = new Date(item.updatedAt).getTime();
-        if (!Number.isFinite(created) || !Number.isFinite(updated)) return null;
-        const diff = Math.round((updated - created) / (1000 * 60));
-        return diff > 0 ? diff : null;
-      })
-      .filter((value): value is number => value !== null);
-    if (samples.length === 0) return null;
-    const avg = Math.round(samples.reduce((sum, value) => sum + value, 0) / samples.length);
-    return avg;
-  }, [myOffers]);
-
-  const now = Date.now();
-  const recentOffers7d = React.useMemo(
-    () =>
-      myOffers.filter(
-        (item) => now - new Date(item.createdAt).getTime() <= 7 * 24 * 60 * 60 * 1000,
-      ).length,
-    [myOffers, now],
-  );
-
-  const providerProfileCompleteness = React.useMemo(
-    () => computeProfileCompleteness(myProviderProfile),
-    [myProviderProfile],
-  );
-  const clientProfileCompleteness = React.useMemo(
-    () => computeClientCompleteness(auth.me),
-    [auth.me],
-  );
-
-  const providerChartPoints = React.useMemo(
-    () =>
-      buildLastSixMonthSeries(chartMonthLabel, (start, end) => ({
-        bars: providerCompletedContracts.filter((item) => {
-          if (!item.completedAt) return false;
-          const ts = new Date(item.completedAt).getTime();
-          return ts >= start && ts < end;
-        }).length,
-        line: providerCompletedContracts.reduce((sum, item) => {
-          if (!item.completedAt || typeof item.priceAmount !== 'number') return sum;
-          const ts = new Date(item.completedAt).getTime();
-          if (ts < start || ts >= end) return sum;
-          return sum + item.priceAmount;
-        }, 0),
-      })),
-    [chartMonthLabel, providerCompletedContracts],
-  );
-
-  const clientChartPoints = React.useMemo(
-    () =>
-      buildLastSixMonthSeries(chartMonthLabel, (start, end) => ({
-        bars: myRequests.filter((item) => {
-          const ts = new Date(item.createdAt).getTime();
-          return ts >= start && ts < end;
-        }).length,
-        line: clientCompletedContracts.filter((item) => {
-          if (!item.completedAt) return false;
-          const ts = new Date(item.completedAt).getTime();
-          return ts >= start && ts < end;
-        }).length,
-      })),
-    [chartMonthLabel, clientCompletedContracts, myRequests],
-  );
-
-  const providerHint = React.useMemo(() => {
-    if (providerProfileCompleteness < 80) {
-      return {
-        text: `Profil zu ${providerProfileCompleteness}% ausgefuellt. Vervollstaendige es fuer bessere Annahmequoten.`,
-        ctaLabel: 'Profil vervollstaendigen',
-        ctaHref: '/profile/workspace',
-      };
-    }
-    if (recentOffers7d === 0) {
-      return {
-        text: 'Seit 7 Tagen keine neuen Angebote. Pruefe Services, Standort und Verfuegbarkeit.',
-        ctaLabel: 'Auftraege ansehen',
-        ctaHref: '/requests',
-      };
-    }
-    if (acceptanceRate < 25) {
-      return {
-        text: 'Deine Annahmequote ist niedrig. Optimiere Preis und Nachricht fuer mehr Zusagen.',
-        ctaLabel: 'Angebote verbessern',
-        ctaHref: '/requests',
-      };
-    }
-    return {
-      text: 'Starke Performance. Halte Profil und Preise aktuell fuer stabile Auslastung.',
-      ctaLabel: 'Meine Vertraege',
-      ctaHref: '/provider/contracts',
-    };
-  }, [acceptanceRate, providerProfileCompleteness, recentOffers7d]);
-
-  const clientHint = React.useMemo(() => {
-    if (myRequests.length === 0) {
-      return {
-        text: 'Noch keine Anfrage erstellt. Starte mit deinem ersten Auftrag.',
-        ctaLabel: 'Anfrage erstellen',
-        ctaHref: '/request/create',
-      };
-    }
-    if (myOpenRequests.length > 0) {
-      return {
-        text: 'Du hast aktive Anfragen. Vergleiche Angebote und entscheide schneller.',
-        ctaLabel: 'Meine Anfragen',
-        ctaHref: '/client/requests',
-      };
-    }
-    return {
-      text: 'Deine Anfragen laufen stabil. Lege neue Aufgaben an, wenn du weitere Hilfe brauchst.',
-      ctaLabel: 'Neue Anfrage',
-      ctaHref: '/request/create',
-    };
-  }, [myOpenRequests.length, myRequests.length]);
-
-  const providerActivityCount =
-    sentCount +
-    acceptedCount +
-    declinedCount +
-    providerActiveContracts.length +
-    providerCompletedContracts.length;
-  const clientActivityCount =
-    myRequests.length + myOpenRequests.length + clientActiveContracts.length + clientCompletedContracts.length;
-  const hasAnyStatsActivity = providerActivityCount + clientActivityCount > 0;
-
-  const providerPriorityScore = providerProfileCompleteness + providerActivityCount * 5;
-  const clientPriorityScore = clientProfileCompleteness + clientActivityCount * 5;
-
-  const providerStatsPayload = {
-    kpis: [],
-    showKpis: false,
-    hasData: true,
-    chartTitle: 'Jobs / Einnahmen',
-    chartDelta:
-      providerCompletedContracts.length > 0
-        ? `+${Math.round((providerCompletedContracts.length / Math.max(1, myProviderContracts.length)) * 100)}%`
-        : undefined,
-    chartPoints: providerChartPoints,
-    secondary: {
-      leftLabel: 'gesendet',
-      leftValue: formatNumber.format(sentCount),
-      centerLabel: 'angenommen',
-      centerValue: formatNumber.format(acceptedCount),
-      rightLabel: 'aktiv',
-      rightValue: formatNumber.format(providerActiveContracts.length),
-      progressLabel: 'Annahmequote',
-      progressValue: acceptanceRate,
-      responseLabel: 'Antwortzeit',
-      responseValue: avgResponseMinutes ? `${avgResponseMinutes} min` : '—',
-    },
-    hint: providerHint,
-    emptyTitle: 'Noch keine Angebote. Starte mit dem ersten Auftrag.',
-    emptyCtaLabel: 'Auftraege ansehen',
-    emptyCtaHref: '/requests',
-  };
-
-  const clientStatsPayload = {
-    kpis: [
-      {
-        key: 'requests-total',
-        label: 'Meine Anfragen',
-        value: formatNumber.format(myRequests.length),
-      },
-      {
-        key: 'requests-open',
-        label: 'Aktiv',
-        value: formatNumber.format(myOpenRequests.length),
-      },
-      {
-        key: 'contracts-active',
-        label: 'In Arbeit',
-        value: formatNumber.format(clientActiveContracts.length),
-      },
-      {
-        key: 'contracts-completed',
-        label: 'Abgeschlossen',
-        value: formatNumber.format(clientCompletedContracts.length),
-      },
-    ],
-    chartTitle: 'Anfragen / Abschluesse',
-    chartPoints: clientChartPoints,
-    secondary: {
-      leftLabel: 'gesamt',
-      leftValue: formatNumber.format(myRequests.length),
-      centerLabel: 'offen',
-      centerValue: formatNumber.format(myOpenRequests.length),
-      rightLabel: 'in Arbeit',
-      rightValue: formatNumber.format(clientActiveContracts.length),
-      progressLabel: 'Abschlussquote',
-      progressValue: Math.round((clientCompletedContracts.length / Math.max(1, myRequests.length)) * 100),
-      responseLabel: 'Abgeschlossene Auftraege',
-      responseValue: formatNumber.format(clientCompletedContracts.length),
-    },
-    hint: clientHint,
-    emptyTitle: 'Noch keine Anfrage erstellt.',
-    emptyCtaLabel: 'Anfrage erstellen',
-    emptyCtaHref: '/request/create',
-  };
-
-  const statsOrder =
-    providerPriorityScore >= clientPriorityScore
-      ? [
-          { tab: 'provider' as const, title: 'Statistik Anbieter', payload: providerStatsPayload },
-          { tab: 'client' as const, title: 'Statistik Kunde', payload: clientStatsPayload },
-        ]
-      : [
-          { tab: 'client' as const, title: 'Statistik Kunde', payload: clientStatsPayload },
-          { tab: 'provider' as const, title: 'Statistik Anbieter', payload: providerStatsPayload },
-        ];
+  const { workspaceContentProps, publicContentProps } = useRequestsPageViewModel({
+    t,
+    locale,
+    activeWorkspaceTab,
+    showWorkspaceHeader,
+    showWorkspaceHeading,
+    primaryAction,
+    onPrimaryActionClick: () => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab }),
+    statusFilters,
+    activeStatusFilter,
+    setStatusFilter,
+    categoryOptions,
+    serviceOptions,
+    cityOptions,
+    sortOptions,
+    categoryKey,
+    subcategoryKey,
+    cityId,
+    sortBy,
+    totalResultsLabel: formatNumber.format(totalResults),
+    isCategoriesLoading,
+    isServicesLoading,
+    isFiltersPending,
+    appliedFilterChips,
+    onCategoryChangeTracked,
+    onSubcategoryChangeTracked,
+    onCityChangeTracked,
+    onSortChangeTracked,
+    onResetTracked,
+    hasActivePublicFilter,
+    isWorkspaceRoute,
+    isLoading,
+    isError,
+    requestsCount: requests.length,
+    requests,
+    isPersonalized,
+    offersByRequest,
+    favoriteRequestIds,
+    onToggleRequestFavorite,
+    onOpenOfferSheet,
+    onWithdrawOffer,
+    pendingOfferRequestId,
+    pendingFavoriteRequestIds,
+    isAuthed,
+    serviceByKey,
+    categoryByKey,
+    cityById,
+    formatDate,
+    formatPrice,
+    isMyRequestsLoading,
+    filteredMyRequests,
+    ownerRequestActions,
+    isMyOffersLoading,
+    filteredMyOffers,
+    myOfferRequests,
+    isProviderContractsLoading,
+    isClientContractsLoading,
+    filteredContracts,
+    contractRequests,
+    contractOffersByRequest,
+    isFavoritesLoading,
+    favoritesItems,
+    hasFavoriteRequests,
+    hasFavoriteProviders,
+    resolvedFavoritesView,
+    setFavoritesView,
+    favoriteRequests,
+    isFavoriteRequestsLoading,
+    favoriteProviderCards,
+    isMyReviewsLoading,
+    myReviews,
+    activeReviewsView,
+    setReviewsView,
+    reviewCards,
+    page,
+    totalPages,
+    setPage,
+  });
 
   if (isWorkspaceRoute && authStatus !== 'authenticated') {
     return null;
@@ -1575,326 +863,7 @@ function RequestsPageContent() {
             />
           ) : null}
           {/* <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} /> */}
-          <section className="panel requests-panel" aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}>
-            {showWorkspaceHeader ? (
-              <div className="requests-header">
-                {showWorkspaceHeading ? (
-                  <div className="section-heading">
-                    <p id="workspace-section-title" className="section-title">
-                      {activeWorkspaceTab === 'my-requests'
-                        ? 'Meine Auftraege'
-                        : activeWorkspaceTab === 'my-offers'
-                          ? 'Meine Angebote'
-                          : activeWorkspaceTab === 'completed-jobs'
-                            ? 'Abgeschlossene Jobs'
-                            : 'Bewertungen'}
-                    </p>
-                    <p id="workspace-section-subtitle" className="section-subtitle">
-                      {'Workspace-Ansicht fuer deine eigenen Daten und Aktionen.'}
-                    </p>
-                  </div>
-                ) : null}
-                {activeWorkspaceTab !== 'new-orders' &&
-                activeWorkspaceTab !== 'my-requests' &&
-                activeWorkspaceTab !== 'my-offers' ? (
-                  <Link
-                    href={primaryAction.href}
-                    className="btn-primary requests-primary-cta"
-                    onClick={() => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab })}
-                  >
-                    {primaryAction.label}
-                  </Link>
-                ) : null}
-              </div>
-            ) : null}
-
-            {activeWorkspaceTab === 'new-orders' ? (
-              <RequestsFilters
-                t={t}
-                locale={locale}
-                categoryOptions={categoryOptions}
-                serviceOptions={serviceOptions}
-                cityOptions={cityOptions}
-                sortOptions={sortOptions}
-                categoryKey={categoryKey}
-                subcategoryKey={subcategoryKey}
-                cityId={cityId}
-                sortBy={sortBy}
-                totalResults={formatNumber.format(totalResults)}
-                isCategoriesLoading={isCategoriesLoading}
-                isServicesLoading={isServicesLoading}
-                isPending={isFiltersPending}
-                appliedChips={appliedFilterChips}
-                onCategoryChange={onCategoryChangeTracked}
-                onSubcategoryChange={onSubcategoryChangeTracked}
-                onCityChange={onCityChangeTracked}
-                onSortChange={onSortChangeTracked}
-                onReset={onResetTracked}
-              />
-            ) : null}
-            {statusFilters.length > 0 ? (
-              <div className="chip-row" role="tablist" aria-label="Statusfilter">
-                {statusFilters.map((filterItem) => (
-                  <button
-                    key={filterItem.key}
-                    type="button"
-                    className={`chip ${activeStatusFilter === filterItem.key ? 'is-active' : ''}`.trim()}
-                    onClick={() => setStatusFilter(filterItem.key)}
-                    aria-pressed={activeStatusFilter === filterItem.key}
-                  >
-                    {filterItem.label}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-            <section
-              id="requests-list"
-              className="requests-list"
-              role="tabpanel"
-              aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}
-              aria-describedby={showWorkspaceHeading ? 'workspace-section-subtitle' : undefined}
-              aria-live="polite"
-            >
-              {activeWorkspaceTab === 'new-orders' ? (
-                <WorkspaceContentState
-                  isLoading={isLoading}
-                  isEmpty={!isError && requests.length === 0}
-                  emptyTitle={hasActivePublicFilter ? 'Keine Auftraege gefunden.' : 'Noch keine Auftraege vorhanden.'}
-                  emptyHint={hasActivePublicFilter ? 'Passe die Filter an oder setze sie zurueck.' : 'Schau spaeter erneut vorbei oder pruefe eine andere Stadt.'}
-                  emptyCtaLabel={hasActivePublicFilter ? 'Filter zuruecksetzen' : undefined}
-                  emptyCtaHref={hasActivePublicFilter ? (isWorkspaceRoute ? '/orders?tab=new-orders' : '/requests') : undefined}
-                >
-                  <RequestsList
-                    t={t}
-                    locale={locale}
-                    requests={requests}
-                    isLoading={isLoading}
-                    isError={isError}
-                    serviceByKey={serviceByKey}
-                    categoryByKey={categoryByKey}
-                    cityById={cityById}
-                    formatDate={formatDate}
-                    formatPrice={formatPrice}
-                    isProviderPersonalized={isPersonalized}
-                    offersByRequest={offersByRequest}
-                    favoriteRequestIds={favoriteRequestIds}
-                    onToggleFavorite={onToggleRequestFavorite}
-                    onSendOffer={onOpenOfferSheet}
-                    onEditOffer={onOpenOfferSheet}
-                    onWithdrawOffer={onWithdrawOffer}
-                    pendingOfferRequestId={pendingOfferRequestId}
-                    pendingFavoriteRequestIds={pendingFavoriteRequestIds}
-                    showStaticFavoriteIcon={!isAuthed}
-                  />
-                </WorkspaceContentState>
-              ) : null}
-
-              {activeWorkspaceTab === 'my-requests' ? (
-                <div className="stack-sm">
-                  <CreateRequestCard />
-                  <WorkspaceContentState
-                    isLoading={isMyRequestsLoading}
-                    isEmpty={filteredMyRequests.length === 0}
-                    emptyTitle="Noch keine passenden Anfragen."
-                    emptyHint="Erstelle eine neue Anfrage oder wechsle den Statusfilter."
-                    emptyCtaLabel="Neue Anfrage erstellen"
-                    emptyCtaHref="/request/create"
-                  >
-                    <RequestsList
-                      t={t}
-                      locale={locale}
-                      requests={filteredMyRequests}
-                      isLoading={isMyRequestsLoading}
-                      isError={false}
-                      serviceByKey={serviceByKey}
-                      categoryByKey={categoryByKey}
-                      cityById={cityById}
-                      formatDate={formatDate}
-                      formatPrice={formatPrice}
-                      ownerRequestActions={ownerRequestActions}
-                    />
-                  </WorkspaceContentState>
-                </div>
-              ) : null}
-
-              {activeWorkspaceTab === 'my-offers' ? (
-                <div className="stack-sm">
-                  <WorkspaceContentState
-                    isLoading={isMyOffersLoading}
-                    isEmpty={filteredMyOffers.length === 0}
-                    emptyTitle="Noch keine passenden Angebote."
-                    emptyHint="Noch keine Angebote. Anfrage erstellen oder offene Auftraege ansehen."
-                    emptyCtaLabel="Auftraege ansehen"
-                    emptyCtaHref="/orders?tab=new-orders"
-                  >
-                    <RequestsList
-                      t={t}
-                      locale={locale}
-                      requests={myOfferRequests}
-                      isLoading={isMyOffersLoading}
-                      isError={false}
-                      serviceByKey={serviceByKey}
-                      categoryByKey={categoryByKey}
-                      cityById={cityById}
-                      formatDate={formatDate}
-                      formatPrice={formatPrice}
-                      isProviderPersonalized={true}
-                      offersByRequest={offersByRequest}
-                      onSendOffer={onOpenOfferSheet}
-                      onEditOffer={onOpenOfferSheet}
-                      onWithdrawOffer={onWithdrawOffer}
-                      pendingOfferRequestId={pendingOfferRequestId}
-                      showStaticFavoriteIcon={false}
-                    />
-                  </WorkspaceContentState>
-                </div>
-              ) : null}
-
-              {activeWorkspaceTab === 'completed-jobs' ? (
-                <div className="stack-sm">
-                  <WorkspaceContentState
-                    isLoading={isProviderContractsLoading || isClientContractsLoading}
-                    isEmpty={filteredContracts.length === 0}
-                    emptyTitle="Noch keine passenden Vertraege."
-                    emptyHint="Sobald ein Angebot angenommen wird, erscheint es hier."
-                    emptyCtaLabel="Meine Angebote"
-                    emptyCtaHref="/orders?tab=my-offers"
-                  >
-                    <RequestsList
-                      t={t}
-                      locale={locale}
-                      requests={contractRequests}
-                      isLoading={isProviderContractsLoading || isClientContractsLoading}
-                      isError={false}
-                      serviceByKey={serviceByKey}
-                      categoryByKey={categoryByKey}
-                      cityById={cityById}
-                      formatDate={formatDate}
-                      formatPrice={formatPrice}
-                      isProviderPersonalized={true}
-                      offersByRequest={contractOffersByRequest}
-                    />
-                  </WorkspaceContentState>
-                </div>
-              ) : null}
-
-              {activeWorkspaceTab === 'favorites' ? (
-                <div className="stack-sm">
-                  <div className="chip-row" role="tablist" aria-label="Favoriten Ansicht">
-                    <button
-                      type="button"
-                      className={`chip ${resolvedFavoritesView === 'requests' ? 'is-active' : ''}`.trim()}
-                      onClick={() => setFavoritesView('requests')}
-                      aria-pressed={resolvedFavoritesView === 'requests'}
-                    >
-                      Anfragen
-                    </button>
-                    <button
-                      type="button"
-                      className={`chip ${resolvedFavoritesView === 'providers' ? 'is-active' : ''}`.trim()}
-                      onClick={() => setFavoritesView('providers')}
-                      aria-pressed={resolvedFavoritesView === 'providers'}
-                    >
-                      Anbieter
-                    </button>
-                  </div>
-                  <WorkspaceContentState
-                    isLoading={isFavoritesLoading}
-                    isEmpty={favoritesItems.length === 0}
-                    emptyTitle={hasFavoriteRequests || hasFavoriteProviders ? 'Keine Elemente in dieser Kategorie.' : 'Du hast noch keine Favoriten.'}
-                    emptyHint={hasFavoriteRequests || hasFavoriteProviders ? 'Wechsle zwischen Anfragen und Anbietern.' : 'Markiere Auftraege oder Anbieter mit dem Herzsymbol, um sie hier zu speichern.'}
-                  >
-                    {resolvedFavoritesView === 'requests'
-                      ? (
-                          <RequestsList
-                            t={t}
-                            locale={locale}
-                            requests={favoriteRequests}
-                            isLoading={isFavoriteRequestsLoading}
-                            isError={false}
-                            serviceByKey={serviceByKey}
-                            categoryByKey={categoryByKey}
-                            cityById={cityById}
-                            formatDate={formatDate}
-                            formatPrice={formatPrice}
-                            isProviderPersonalized={isPersonalized}
-                            offersByRequest={offersByRequest}
-                            favoriteRequestIds={favoriteRequestIds}
-                            onToggleFavorite={onToggleRequestFavorite}
-                            onSendOffer={onOpenOfferSheet}
-                            onEditOffer={onOpenOfferSheet}
-                            onWithdrawOffer={onWithdrawOffer}
-                            pendingOfferRequestId={pendingOfferRequestId}
-                            pendingFavoriteRequestIds={pendingFavoriteRequestIds}
-                            showStaticFavoriteIcon={false}
-                          />
-                        )
-                      : favoriteProviderCards}
-                  </WorkspaceContentState>
-                </div>
-              ) : null}
-
-              {activeWorkspaceTab === 'reviews' ? (
-                <div className="stack-sm">
-                  <div className="chip-row" role="tablist" aria-label="Bewertungen Ansicht">
-                    <button
-                      type="button"
-                      className={`chip ${activeReviewsView === 'provider' ? 'is-active' : ''}`.trim()}
-                      onClick={() => setReviewsView('provider')}
-                      aria-pressed={activeReviewsView === 'provider'}
-                    >
-                      Als Anbieter
-                    </button>
-                    <button
-                      type="button"
-                      className={`chip ${activeReviewsView === 'client' ? 'is-active' : ''}`.trim()}
-                      onClick={() => setReviewsView('client')}
-                      aria-pressed={activeReviewsView === 'client'}
-                    >
-                      Als Kunde
-                    </button>
-                  </div>
-                  <WorkspaceContentState
-                    isLoading={isMyReviewsLoading}
-                    isEmpty={myReviews.length === 0}
-                    emptyTitle="Noch keine Bewertungen vorhanden."
-                    emptyHint="Nach abgeschlossenen Auftraegen erscheinen Bewertungen hier."
-                    emptyCtaLabel="Auftraege verwalten"
-                    emptyCtaHref="/orders?tab=completed-jobs"
-                  >
-                    <div className="proof-feed">
-                      {reviewCards}
-                    </div>
-                  </WorkspaceContentState>
-                </div>
-              ) : null}
-            </section>
-
-            {activeWorkspaceTab === 'new-orders' ? (
-              <div className="requests-pagination">
-                <button
-                  type="button"
-                  className="btn-ghost"
-                  onClick={() => setPage(Math.max(1, page - 1))}
-                  disabled={page <= 1}
-                >
-                  ←
-                </button>
-                <span className="typo-small">
-                  {t(I18N_KEYS.requestsPage.resultsLabel)} {formatNumber.format(totalResults)} •{' '}
-                  {page}/{totalPages}
-                </span>
-                <button
-                  type="button"
-                  className="btn-ghost"
-                  onClick={() => setPage(Math.min(totalPages, page + 1))}
-                  disabled={page >= totalPages}
-                >
-                  →
-                </button>
-              </div>
-            ) : null}
-          </section>
+          {isWorkspaceAuthed ? <WorkspaceContent {...workspaceContentProps} /> : <PublicContent {...publicContentProps} />}
         </div>
 
         <aside className="stack-md hide-mobile">
@@ -1982,111 +951,4 @@ export default function RequestsPage() {
       <RequestsPageContent />
     </React.Suspense>
   );
-}
-
-function buildLastSixMonthSeries(
-  monthFormatter: Intl.DateTimeFormat,
-  map: (startTs: number, endTs: number) => { bars: number; line: number },
-) {
-  const out: Array<{ label: string; bars: number; line: number }> = [];
-  const now = new Date();
-  for (let i = 5; i >= 0; i -= 1) {
-    const start = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
-    const point = map(start.getTime(), end.getTime());
-    out.push({
-      label: monthFormatter.format(start),
-      bars: point.bars,
-      line: point.line,
-    });
-  }
-  return out;
-}
-
-function computeProfileCompleteness(profile: {
-  displayName?: string | null;
-  bio?: string | null;
-  cityId?: string | null;
-  serviceKeys?: string[];
-  basePrice?: number | null;
-  companyName?: string | null;
-  vatId?: string | null;
-  status?: string;
-  isBlocked?: boolean;
-} | null | undefined) {
-  if (!profile) return 0;
-  let score = 0;
-  if (profile.displayName?.trim()) score += 15;
-  if (profile.bio?.trim()) score += 15;
-  if (profile.cityId?.trim()) score += 15;
-  if ((profile.serviceKeys?.length ?? 0) > 0) score += 25;
-  if (typeof profile.basePrice === 'number' && profile.basePrice > 0) score += 10;
-  if (profile.companyName?.trim() || profile.vatId?.trim()) score += 10;
-  if (profile.status === 'active' && !profile.isBlocked) score += 10;
-  return Math.max(0, Math.min(100, score));
-}
-
-function computeClientCompleteness(me: {
-  name?: string;
-  email?: string;
-  city?: string;
-  phone?: string;
-  avatar?: { url?: string };
-  acceptedPrivacyPolicy?: boolean;
-  clientProfile?: { id?: string; status?: string } | null;
-} | null) {
-  if (!me) return 0;
-  let score = 0;
-  if (me.name?.trim()) score += 20;
-  if (me.email?.trim()) score += 20;
-  if (me.city?.trim()) score += 20;
-  if (me.phone?.trim()) score += 15;
-  if (me.avatar?.url?.trim()) score += 15;
-  if (me.acceptedPrivacyPolicy) score += 5;
-  if (me.clientProfile?.id) score += 5;
-  return Math.max(0, Math.min(100, score));
-}
-
-type DeltaResult =
-  | { kind: 'percent'; value: number }
-  | { kind: 'new' }
-  | { kind: 'none' };
-
-function calcMoMDeltaPercent(current: number, previous: number): DeltaResult {
-  if (previous <= 0) {
-    if (current <= 0) return { kind: 'none' };
-    return { kind: 'new' };
-  }
-  const raw = ((current - previous) / previous) * 100;
-  const rounded = Math.round(raw);
-  if (Object.is(rounded, -0) || rounded === 0) return { kind: 'percent', value: 0 };
-  return { kind: 'percent', value: rounded };
-}
-
-function formatMoMDeltaLabel(delta: DeltaResult, locale: string): string {
-  const isDe = locale.startsWith('de');
-  if (delta.kind === 'new') {
-    return isDe ? 'Neu zum letzten Monat.' : 'New vs last month.';
-  }
-  if (delta.kind === 'none') {
-    return isDe ? '0% zum letzten Monat.' : '0% vs last month.';
-  }
-  const sign = delta.value > 0 ? '+' : '';
-  return isDe ? `${sign}${delta.value}% zum letzten Monat.` : `${sign}${delta.value}% vs last month.`;
-}
-
-function countCompletedInMonth(
-  contracts: Array<{ completedAt: string | null }>,
-  monthOffsetFromNow: number,
-) {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), now.getMonth() + monthOffsetFromNow, 1);
-  const end = new Date(now.getFullYear(), now.getMonth() + monthOffsetFromNow + 1, 1);
-  const startTs = start.getTime();
-  const endTs = end.getTime();
-  return contracts.filter((item) => {
-    if (!item.completedAt) return false;
-    const ts = new Date(item.completedAt).getTime();
-    return Number.isFinite(ts) && ts >= startTs && ts < endTs;
-  }).length;
 }
