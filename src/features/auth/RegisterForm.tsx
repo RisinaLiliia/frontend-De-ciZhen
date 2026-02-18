@@ -63,6 +63,7 @@ export function RegisterForm() {
       void confirmPassword;
       await registerUser({ ...payload, ...(oauthSignupToken ? { signupToken: oauthSignupToken } : {}) });
       toast.success(t(I18N_KEYS.auth.registerSuccess));
+      router.replace(next);
     } catch (error) {
       const message = getRegisterErrorMessage(error, t);
       if (isEmailExistsError(error)) {
