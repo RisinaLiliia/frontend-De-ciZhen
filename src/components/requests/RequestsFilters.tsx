@@ -26,6 +26,8 @@ type RequestsFiltersProps = {
   totalResults: string;
   isCategoriesLoading: boolean;
   isServicesLoading: boolean;
+  isPending?: boolean;
+  appliedChips?: Array<{ key: string; label: string; onRemove: () => void }>;
   onCategoryChange: (value: string) => void;
   onSubcategoryChange: (value: string) => void;
   onCityChange: (value: string) => void;
@@ -47,6 +49,8 @@ export function RequestsFilters({
   totalResults,
   isCategoriesLoading,
   isServicesLoading,
+  isPending = false,
+  appliedChips = [],
   onCategoryChange,
   onSubcategoryChange,
   onCityChange,
@@ -54,6 +58,8 @@ export function RequestsFilters({
   onReset,
 }: RequestsFiltersProps) {
   const [cityQuery] = React.useState('');
+  const controlsDisabled = isPending || isCategoriesLoading || isServicesLoading;
+  const hasActiveFilters = appliedChips.length > 0;
 
   const filteredCityOptions = React.useMemo(() => {
     const placeholder = cityOptions.find((option) => option.value === '');
@@ -67,10 +73,14 @@ export function RequestsFilters({
   }, [cityOptions, cityQuery, locale]);
 
   return (
-    <div className="requests-filters">
+    <div
+      className={`requests-filters requests-filters--sticky${isPending ? ' is-pending' : ''}`}
+      role="region"
+      aria-label="Filter"
+      aria-busy={isPending}
+    >
       <div className="requests-filter-row">
         <div className="requests-filter">
-          <label className="typo-small">{t(keys.I18N_KEYS.requestsPage.cityLabel)}</label>
           {/* <Input
             value={cityQuery}
             onChange={(e) => setCityQuery(e.target.value)}
@@ -86,10 +96,16 @@ export function RequestsFilters({
               onChange={onCityChange}
               className="requests-select is-city"
               aria-label={t(keys.I18N_KEYS.requestsPage.cityLabel)}
+              disabled={controlsDisabled}
             />
           </div>
         </div>
-        <button type="button" className="btn-ghost is-primary requests-clear" onClick={onReset}>
+        <button
+          type="button"
+          className="btn-ghost is-primary requests-clear"
+          onClick={onReset}
+          disabled={controlsDisabled || !hasActiveFilters}
+        >
           <IconFilter />
           {t(keys.I18N_KEYS.requestsPage.clearFilters)}
         </button>
@@ -102,7 +118,7 @@ export function RequestsFilters({
             onChange={onCategoryChange}
             className="requests-select"
             aria-label={t(keys.I18N_KEYS.requestsPage.categoryLabel)}
-            disabled={isCategoriesLoading}
+            disabled={controlsDisabled}
           />
         </div>
         <div className="requests-filter">
@@ -112,7 +128,7 @@ export function RequestsFilters({
             onChange={onSubcategoryChange}
             className="requests-select"
             aria-label={t(keys.I18N_KEYS.requestsPage.serviceLabel)}
-            disabled={isServicesLoading || categoryKey === 'all'}
+            disabled={controlsDisabled || categoryKey === 'all'}
           />
         </div>
         <div className="requests-filter">
@@ -122,13 +138,38 @@ export function RequestsFilters({
             onChange={onSortChange}
             className="requests-select"
             aria-label={t(keys.I18N_KEYS.requestsPage.sortLabel)}
+            disabled={controlsDisabled}
           />
         </div>
       </div>
-      <div className="requests-results">
+      {appliedChips.length > 0 ? (
+        <div className="chip-row" role="list" aria-label="Aktive Filter">
+          {appliedChips.map((chip) => (
+            <button
+              key={chip.key}
+              type="button"
+              className="chip is-active"
+              role="listitem"
+              onClick={chip.onRemove}
+              aria-label={`${chip.label} entfernen`}
+            >
+              {chip.label} ×
+            </button>
+          ))}
+        </div>
+      ) : null}
+      <div className="requests-results" aria-live="polite">
         <span className="typo-small">{t(keys.I18N_KEYS.requestsPage.countLabel)}</span>
         <CountBadge as="strong" value={totalResults} />
+        {isPending ? <span className="sr-only">Aktualisieren…</span> : null}
       </div>
+      {isCategoriesLoading || isServicesLoading ? (
+        <div className="requests-filters__skeleton" aria-hidden="true">
+          <div className="skeleton is-wide h-10 w-full rounded-md" />
+          <div className="skeleton is-wide h-10 w-full rounded-md" />
+          <div className="skeleton is-wide h-10 w-full rounded-md" />
+        </div>
+      ) : null}
     </div>
   );
 }

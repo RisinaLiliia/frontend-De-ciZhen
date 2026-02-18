@@ -3,10 +3,11 @@
 
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { buildPublicRequestsQuery, type PublicRequestsSort } from '@/lib/api/requests';
+import type { PublicRequestsSort } from '@/lib/api/requests';
 
 const ALL_OPTION_KEY = 'all';
 const FILTER_QUERY_KEYS = new Set(['cityId', 'categoryKey', 'subcategoryKey', 'serviceKey', 'sort', 'page', 'limit']);
+const DEFAULT_LIMIT = 20;
 
 type UseRequestsFiltersArgs<TService extends { key: string; categoryKey: string }> = {
   services: TService[];
@@ -20,48 +21,38 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = React.useTransition();
 
-  const initialCategoryKey = searchParams.get('categoryKey') ?? ALL_OPTION_KEY;
-  const initialSubcategoryKey =
-    searchParams.get('subcategoryKey') ?? searchParams.get('serviceKey') ?? ALL_OPTION_KEY;
-  const initialCityId = searchParams.get('cityId') ?? ALL_OPTION_KEY;
-  const initialSortParam = searchParams.get('sort') as PublicRequestsSort | null;
-  const initialSort = initialSortParam ?? defaultSort;
-  const initialPage = Number(searchParams.get('page') ?? '1');
-  const initialLimit = Number(searchParams.get('limit') ?? '20');
-
-  const [categoryKey, setCategoryKey] = React.useState<string>(initialCategoryKey);
-  const [subcategoryKey, setSubcategoryKey] = React.useState<string>(initialSubcategoryKey);
-  const [cityId, setCityId] = React.useState<string>(initialCityId);
-  const [sortBy, setSortBy] = React.useState<PublicRequestsSort>(initialSort);
-  const [page, setPage] = React.useState<number>(
-    Number.isFinite(initialPage) && initialPage > 0 ? initialPage : 1,
-  );
-  const [limit] = React.useState<number>(
-    Number.isFinite(initialLimit) && initialLimit > 0 ? initialLimit : 20,
-  );
+  const categoryParam = searchParams.get('categoryKey') ?? ALL_OPTION_KEY;
+  const subcategoryParam = searchParams.get('subcategoryKey') ?? searchParams.get('serviceKey') ?? ALL_OPTION_KEY;
+  const cityId = searchParams.get('cityId') ?? ALL_OPTION_KEY;
+  const sortBy = (searchParams.get('sort') as PublicRequestsSort | null) ?? defaultSort;
+  const page = readPositiveInt(searchParams.get('page'), 1);
+  const limit = readPositiveInt(searchParams.get('limit'), DEFAULT_LIMIT);
 
   const serviceByKey = React.useMemo(
     () => new Map(services.map((service) => [service.key, service])),
     [services],
   );
 
+  const categoryKey = React.useMemo(() => {
+    if (categoryParam !== ALL_OPTION_KEY) return categoryParam;
+    if (subcategoryParam === ALL_OPTION_KEY) return ALL_OPTION_KEY;
+    return serviceByKey.get(subcategoryParam)?.categoryKey ?? ALL_OPTION_KEY;
+  }, [categoryParam, serviceByKey, subcategoryParam]);
+
+  const subcategoryKey = React.useMemo(() => {
+    if (subcategoryParam === ALL_OPTION_KEY) return ALL_OPTION_KEY;
+    if (categoryKey === ALL_OPTION_KEY) return subcategoryParam;
+    const service = serviceByKey.get(subcategoryParam);
+    if (!service || service.categoryKey !== categoryKey) return ALL_OPTION_KEY;
+    return subcategoryParam;
+  }, [categoryKey, serviceByKey, subcategoryParam]);
+
   const filteredServices = React.useMemo(() => {
     if (categoryKey === ALL_OPTION_KEY) return [];
     return services.filter((service) => service.categoryKey === categoryKey);
   }, [categoryKey, services]);
-
-  React.useEffect(() => {
-    if (categoryKey !== ALL_OPTION_KEY || subcategoryKey === ALL_OPTION_KEY) return;
-    const service = serviceByKey.get(subcategoryKey);
-    if (service) setCategoryKey(service.categoryKey);
-  }, [categoryKey, subcategoryKey, serviceByKey]);
-
-  React.useEffect(() => {
-    if (subcategoryKey === ALL_OPTION_KEY) return;
-    const exists = filteredServices.some((service) => service.key === subcategoryKey);
-    if (!exists) setSubcategoryKey(ALL_OPTION_KEY);
-  }, [filteredServices, subcategoryKey]);
 
   const filter = React.useMemo(
     () => ({
@@ -75,55 +66,103 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
     [categoryKey, cityId, limit, page, sortBy, subcategoryKey],
   );
 
-  React.useEffect(() => {
-    const current = new URLSearchParams(searchParams.toString());
-    const nextFilter = new URLSearchParams(buildPublicRequestsQuery(filter));
-    const merged = new URLSearchParams();
+  const updateQuery = React.useCallback(
+    (next: {
+      cityId?: string;
+      categoryKey?: string;
+      subcategoryKey?: string;
+      sortBy?: PublicRequestsSort;
+      page?: number;
+    }) => {
+      const current = new URLSearchParams(searchParams.toString());
+      const merged = new URLSearchParams();
 
-    current.forEach((value, key) => {
-      if (!FILTER_QUERY_KEYS.has(key)) {
-        merged.append(key, value);
-      }
-    });
+      current.forEach((value, key) => {
+        if (!FILTER_QUERY_KEYS.has(key)) {
+          merged.append(key, value);
+        }
+      });
 
-    nextFilter.forEach((value, key) => {
-      merged.set(key, value);
-    });
+      const nextCity = next.cityId ?? cityId;
+      const nextCategory = next.categoryKey ?? categoryKey;
+      const nextSubcategory = next.subcategoryKey ?? subcategoryKey;
+      const nextSort = next.sortBy ?? sortBy;
+      const nextPage = next.page ?? page;
 
-    const nextQuery = merged.toString();
-    if (nextQuery !== searchParams.toString()) {
-      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname);
-    }
-  }, [filter, pathname, router, searchParams]);
+      if (nextCity !== ALL_OPTION_KEY) merged.set('cityId', nextCity);
+      if (nextCategory !== ALL_OPTION_KEY) merged.set('categoryKey', nextCategory);
+      if (nextSubcategory !== ALL_OPTION_KEY) merged.set('subcategoryKey', nextSubcategory);
+      if (nextSort !== defaultSort) merged.set('sort', nextSort);
+      if (nextPage > 1) merged.set('page', String(nextPage));
+      if (limit !== DEFAULT_LIMIT) merged.set('limit', String(limit));
 
-  const onCategoryChange = React.useCallback((value: string) => {
-    setCategoryKey(value);
-    setSubcategoryKey(ALL_OPTION_KEY);
-    setPage(1);
-  }, []);
+      const nextQuery = merged.toString();
+      startTransition(() => {
+        router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+      });
+    },
+    [categoryKey, cityId, defaultSort, limit, page, pathname, router, searchParams, sortBy, subcategoryKey],
+  );
 
-  const onSubcategoryChange = React.useCallback((value: string) => {
-    setSubcategoryKey(value);
-    setPage(1);
-  }, []);
+  const onCategoryChange = React.useCallback(
+    (value: string) => {
+      updateQuery({
+        categoryKey: value,
+        subcategoryKey: ALL_OPTION_KEY,
+        page: 1,
+      });
+    },
+    [updateQuery],
+  );
 
-  const onCityChange = React.useCallback((value: string) => {
-    setCityId(value);
-    setPage(1);
-  }, []);
+  const onSubcategoryChange = React.useCallback(
+    (value: string) => {
+      updateQuery({
+        subcategoryKey: value,
+        page: 1,
+      });
+    },
+    [updateQuery],
+  );
 
-  const onSortChange = React.useCallback((value: string) => {
-    setSortBy(value as PublicRequestsSort);
-    setPage(1);
-  }, []);
+  const onCityChange = React.useCallback(
+    (value: string) => {
+      updateQuery({
+        cityId: value,
+        page: 1,
+      });
+    },
+    [updateQuery],
+  );
+
+  const onSortChange = React.useCallback(
+    (value: string) => {
+      updateQuery({
+        sortBy: value as PublicRequestsSort,
+        page: 1,
+      });
+    },
+    [updateQuery],
+  );
 
   const onReset = React.useCallback(() => {
-    setCategoryKey(ALL_OPTION_KEY);
-    setSubcategoryKey(ALL_OPTION_KEY);
-    setCityId(ALL_OPTION_KEY);
-    setSortBy(defaultSort);
-    setPage(1);
-  }, [defaultSort]);
+    updateQuery({
+      categoryKey: ALL_OPTION_KEY,
+      subcategoryKey: ALL_OPTION_KEY,
+      cityId: ALL_OPTION_KEY,
+      sortBy: defaultSort,
+      page: 1,
+    });
+  }, [defaultSort, updateQuery]);
+
+  const setPage = React.useCallback(
+    (nextPage: number) => {
+      updateQuery({
+        page: Math.max(1, nextPage),
+      });
+    },
+    [updateQuery],
+  );
 
   return {
     categoryKey,
@@ -140,5 +179,11 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
     onSortChange,
     onReset,
     setPage,
+    isPending,
   };
+}
+
+function readPositiveInt(value: string | null, fallback: number) {
+  const parsed = Number(value ?? '');
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }

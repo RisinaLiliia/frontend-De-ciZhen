@@ -198,10 +198,36 @@ function RequestsPageContent() {
     onSortChange,
     onReset,
     setPage,
+    isPending: isFiltersPending,
   } = useRequestsFilters({
     services,
     defaultSort: 'date_desc',
   });
+
+  const onCategoryChangeTracked = React.useCallback((value: string) => {
+    onCategoryChange(value);
+    trackUXEvent('workspace_filter_change', { filter: 'category', value });
+  }, [onCategoryChange]);
+
+  const onSubcategoryChangeTracked = React.useCallback((value: string) => {
+    onSubcategoryChange(value);
+    trackUXEvent('workspace_filter_change', { filter: 'service', value });
+  }, [onSubcategoryChange]);
+
+  const onCityChangeTracked = React.useCallback((value: string) => {
+    onCityChange(value);
+    trackUXEvent('workspace_filter_change', { filter: 'city', value });
+  }, [onCityChange]);
+
+  const onSortChangeTracked = React.useCallback((value: string) => {
+    onSortChange(value);
+    trackUXEvent('workspace_filter_change', { filter: 'sort', value });
+  }, [onSortChange]);
+
+  const onResetTracked = React.useCallback(() => {
+    onReset();
+    trackUXEvent('workspace_filter_reset');
+  }, [onReset]);
 
   const categoryOptions = React.useMemo(
     () => [
@@ -244,6 +270,56 @@ function RequestsPageContent() {
     ],
     [cities, locale, t],
   );
+  const appliedFilterChips = React.useMemo(() => {
+    const chips: Array<{ key: string; label: string; onRemove: () => void }> = [];
+    if (cityId !== ALL_OPTION_KEY) {
+      const cityLabel = cityOptions.find((option) => option.value === cityId)?.label ?? cityId;
+      chips.push({
+        key: 'city',
+        label: cityLabel,
+        onRemove: () => onCityChangeTracked(ALL_OPTION_KEY),
+      });
+    }
+    if (categoryKey !== ALL_OPTION_KEY) {
+      const categoryLabel = categoryOptions.find((option) => option.value === categoryKey)?.label ?? categoryKey;
+      chips.push({
+        key: 'category',
+        label: categoryLabel,
+        onRemove: () => onCategoryChangeTracked(ALL_OPTION_KEY),
+      });
+    }
+    if (subcategoryKey !== ALL_OPTION_KEY) {
+      const serviceLabel = serviceOptions.find((option) => option.value === subcategoryKey)?.label ?? subcategoryKey;
+      chips.push({
+        key: 'service',
+        label: serviceLabel,
+        onRemove: () => onSubcategoryChangeTracked(ALL_OPTION_KEY),
+      });
+    }
+    if (sortBy !== 'date_desc') {
+      const sortLabel = sortOptions.find((option) => option.value === sortBy)?.label ?? sortBy;
+      chips.push({
+        key: 'sort',
+        label: sortLabel,
+        onRemove: () => onSortChangeTracked('date_desc'),
+      });
+    }
+    return chips;
+  }, [
+    categoryKey,
+    categoryOptions,
+    cityId,
+    cityOptions,
+    onCategoryChangeTracked,
+    onCityChangeTracked,
+    onSortChangeTracked,
+    onSubcategoryChangeTracked,
+    serviceOptions,
+    sortBy,
+    sortOptions,
+    subcategoryKey,
+  ]);
+  const hasActivePublicFilter = appliedFilterChips.length > 0;
 
   const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
     services,
@@ -448,6 +524,29 @@ function RequestsPageContent() {
   const totalAllRequests = allRequestsSummary?.total ?? totalResults;
   const totalPages = Math.max(1, Math.ceil(totalResults / limit));
 
+  React.useEffect(() => {
+    if (activeWorkspaceTab !== 'new-orders') return;
+    if (isLoading || isError || requests.length > 0) return;
+    trackUXEvent('workspace_empty_result', {
+      tab: 'new-orders',
+      hasFilters: hasActivePublicFilter,
+      cityId: cityId === ALL_OPTION_KEY ? null : cityId,
+      categoryKey: categoryKey === ALL_OPTION_KEY ? null : categoryKey,
+      subcategoryKey: subcategoryKey === ALL_OPTION_KEY ? null : subcategoryKey,
+      sortBy,
+    });
+  }, [
+    activeWorkspaceTab,
+    categoryKey,
+    cityId,
+    hasActivePublicFilter,
+    isError,
+    isLoading,
+    requests.length,
+    sortBy,
+    subcategoryKey,
+  ]);
+
   const topProviders = React.useMemo(() => {
     const sorted = [...providers].sort((a, b) => b.ratingAvg - a.ratingAvg);
     return sorted.slice(0, 2).map((provider) => {
@@ -594,6 +693,16 @@ function RequestsPageContent() {
       }
     },
     [pendingDeleteRequestId, qc, t],
+  );
+  const onDeleteMyRequestVoid = React.useCallback((requestId: string) => {
+    void onDeleteMyRequest(requestId);
+  }, [onDeleteMyRequest]);
+  const ownerRequestActions = React.useMemo(
+    () => ({
+      onDelete: onDeleteMyRequestVoid,
+      pendingDeleteRequestId,
+    }),
+    [onDeleteMyRequestVoid, pendingDeleteRequestId],
   );
 
 
@@ -942,7 +1051,43 @@ function RequestsPageContent() {
   }, [activeFavoritesView, areFavoritesLoaded, hasFavoriteProviders, hasFavoriteRequests]);
   const favoritesItems = resolvedFavoritesView === 'requests' ? favoriteRequests : favoriteProviders;
   const isFavoritesLoading = resolvedFavoritesView === 'requests' ? isFavoriteRequestsLoading : isFavoriteProvidersLoading;
+  const favoriteProviderCards = React.useMemo(
+    () =>
+      favoriteProviders.map((item) => (
+        <article key={`fav-provider-${item.id}`} className="card stack-xs workspace-list-item">
+          <p className="text-sm font-semibold truncate">{item.displayName || 'Provider'}</p>
+          <Link href={`/providers/${item.id}`} className="badge offer-actions__btn">
+            Profil ansehen
+          </Link>
+        </article>
+      )),
+    [favoriteProviders],
+  );
+  const reviewCards = React.useMemo(
+    () =>
+      myReviews.map((item) => {
+        const role = item.targetRole ?? activeReviewsView;
+        const roleLabel = role === 'client' ? 'Als Kunde' : 'Als Anbieter';
+        const createdLabel = item.createdAt ? new Date(item.createdAt).toLocaleDateString(localeTag) : '—';
+        const author = item.authorName?.trim() || 'Bewertung';
+        const reviewText = item.text || item.comment || 'Kein Kommentar';
+        return (
+          <ProofReviewCard
+            key={item.id}
+            title={author}
+            info={createdLabel}
+            review={`“${reviewText}”`}
+            rating={item.rating?.toFixed(1) ?? '—'}
+            price={roleLabel}
+            isActive
+          />
+        );
+      }),
+    [activeReviewsView, localeTag, myReviews],
+  );
   const showWorkspaceHeader = activeWorkspaceTab !== 'favorites';
+  const showWorkspaceHeading =
+    showWorkspaceHeader && activeWorkspaceTab !== 'new-orders';
   const statusFilters = React.useMemo(
     () =>
       activeWorkspaceTab === 'new-orders' || activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews'
@@ -1430,28 +1575,28 @@ function RequestsPageContent() {
             />
           ) : null}
           {/* <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} /> */}
-          <section className="panel requests-panel" aria-labelledby={showWorkspaceHeader ? 'workspace-section-title' : undefined}>
+          <section className="panel requests-panel" aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}>
             {showWorkspaceHeader ? (
               <div className="requests-header">
-                <div className="section-heading">
-                  <p id="workspace-section-title" className="section-title">
-                    {activeWorkspaceTab === 'new-orders'
-                      ? t(I18N_KEYS.requestsPage.title)
-                      : activeWorkspaceTab === 'my-requests'
+                {showWorkspaceHeading ? (
+                  <div className="section-heading">
+                    <p id="workspace-section-title" className="section-title">
+                      {activeWorkspaceTab === 'my-requests'
                         ? 'Meine Auftraege'
                         : activeWorkspaceTab === 'my-offers'
                           ? 'Meine Angebote'
                           : activeWorkspaceTab === 'completed-jobs'
                             ? 'Abgeschlossene Jobs'
                             : 'Bewertungen'}
-                  </p>
-                  <p id="workspace-section-subtitle" className="section-subtitle">
-                    {activeWorkspaceTab === 'new-orders'
-                      ? t(I18N_KEYS.requestsPage.subtitle)
-                      : 'Workspace-Ansicht fuer deine eigenen Daten und Aktionen.'}
-                  </p>
-                </div>
-                {activeWorkspaceTab !== 'my-requests' && activeWorkspaceTab !== 'my-offers' ? (
+                    </p>
+                    <p id="workspace-section-subtitle" className="section-subtitle">
+                      {'Workspace-Ansicht fuer deine eigenen Daten und Aktionen.'}
+                    </p>
+                  </div>
+                ) : null}
+                {activeWorkspaceTab !== 'new-orders' &&
+                activeWorkspaceTab !== 'my-requests' &&
+                activeWorkspaceTab !== 'my-offers' ? (
                   <Link
                     href={primaryAction.href}
                     className="btn-primary requests-primary-cta"
@@ -1478,11 +1623,13 @@ function RequestsPageContent() {
                 totalResults={formatNumber.format(totalResults)}
                 isCategoriesLoading={isCategoriesLoading}
                 isServicesLoading={isServicesLoading}
-                onCategoryChange={onCategoryChange}
-                onSubcategoryChange={onSubcategoryChange}
-                onCityChange={onCityChange}
-                onSortChange={onSortChange}
-                onReset={onReset}
+                isPending={isFiltersPending}
+                appliedChips={appliedFilterChips}
+                onCategoryChange={onCategoryChangeTracked}
+                onSubcategoryChange={onSubcategoryChangeTracked}
+                onCityChange={onCityChangeTracked}
+                onSortChange={onSortChangeTracked}
+                onReset={onResetTracked}
               />
             ) : null}
             {statusFilters.length > 0 ? (
@@ -1500,275 +1647,254 @@ function RequestsPageContent() {
                 ))}
               </div>
             ) : null}
-          </section>
-
-          <section
-            id="requests-list"
-            className="requests-list"
-            role="tabpanel"
-            aria-labelledby={showWorkspaceHeader ? 'workspace-section-title' : undefined}
-            aria-describedby={showWorkspaceHeader ? 'workspace-section-subtitle' : undefined}
-            aria-live="polite"
-          >
-            {activeWorkspaceTab === 'new-orders' ? (
-              <RequestsList
-                t={t}
-                locale={locale}
-                requests={requests}
-                isLoading={isLoading}
-                isError={isError}
-                serviceByKey={serviceByKey}
-                categoryByKey={categoryByKey}
-                cityById={cityById}
-                formatDate={formatDate}
-                formatPrice={formatPrice}
-                isProviderPersonalized={isPersonalized}
-                offersByRequest={offersByRequest}
-                favoriteRequestIds={favoriteRequestIds}
-                onToggleFavorite={onToggleRequestFavorite}
-                onSendOffer={onOpenOfferSheet}
-                onEditOffer={onOpenOfferSheet}
-                onWithdrawOffer={onWithdrawOffer}
-                pendingOfferRequestId={pendingOfferRequestId}
-                pendingFavoriteRequestIds={pendingFavoriteRequestIds}
-                showStaticFavoriteIcon={!isAuthed}
-              />
-            ) : null}
-
-            {activeWorkspaceTab === 'my-requests' ? (
-              <div className="stack-sm">
-                <CreateRequestCard />
+            <section
+              id="requests-list"
+              className="requests-list"
+              role="tabpanel"
+              aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}
+              aria-describedby={showWorkspaceHeading ? 'workspace-section-subtitle' : undefined}
+              aria-live="polite"
+            >
+              {activeWorkspaceTab === 'new-orders' ? (
                 <WorkspaceContentState
-                  isLoading={isMyRequestsLoading}
-                  isEmpty={filteredMyRequests.length === 0}
-                  emptyTitle="Noch keine passenden Anfragen."
-                  emptyHint="Erstelle eine neue Anfrage oder wechsle den Statusfilter."
-                  emptyCtaLabel="Neue Anfrage erstellen"
-                  emptyCtaHref="/request/create"
+                  isLoading={isLoading}
+                  isEmpty={!isError && requests.length === 0}
+                  emptyTitle={hasActivePublicFilter ? 'Keine Auftraege gefunden.' : 'Noch keine Auftraege vorhanden.'}
+                  emptyHint={hasActivePublicFilter ? 'Passe die Filter an oder setze sie zurueck.' : 'Schau spaeter erneut vorbei oder pruefe eine andere Stadt.'}
+                  emptyCtaLabel={hasActivePublicFilter ? 'Filter zuruecksetzen' : undefined}
+                  emptyCtaHref={hasActivePublicFilter ? (isWorkspaceRoute ? '/orders?tab=new-orders' : '/requests') : undefined}
                 >
                   <RequestsList
                     t={t}
                     locale={locale}
-                    requests={filteredMyRequests}
-                    isLoading={isMyRequestsLoading}
-                    isError={false}
+                    requests={requests}
+                    isLoading={isLoading}
+                    isError={isError}
                     serviceByKey={serviceByKey}
                     categoryByKey={categoryByKey}
                     cityById={cityById}
                     formatDate={formatDate}
                     formatPrice={formatPrice}
-                    ownerRequestActions={{
-                      onDelete: (requestId) => {
-                        void onDeleteMyRequest(requestId);
-                      },
-                      pendingDeleteRequestId,
-                    }}
-                  />
-                </WorkspaceContentState>
-              </div>
-            ) : null}
-
-            {activeWorkspaceTab === 'my-offers' ? (
-              <div className="stack-sm">
-                <WorkspaceContentState
-                  isLoading={isMyOffersLoading}
-                  isEmpty={filteredMyOffers.length === 0}
-                  emptyTitle="Noch keine passenden Angebote."
-                  emptyHint="Noch keine Angebote. Anfrage erstellen oder offene Auftraege ansehen."
-                  emptyCtaLabel="Auftraege ansehen"
-                  emptyCtaHref="/orders?tab=new-orders"
-                >
-                  <RequestsList
-                    t={t}
-                    locale={locale}
-                    requests={myOfferRequests}
-                    isLoading={isMyOffersLoading}
-                    isError={false}
-                    serviceByKey={serviceByKey}
-                    categoryByKey={categoryByKey}
-                    cityById={cityById}
-                    formatDate={formatDate}
-                    formatPrice={formatPrice}
-                    isProviderPersonalized={true}
+                    isProviderPersonalized={isPersonalized}
                     offersByRequest={offersByRequest}
+                    favoriteRequestIds={favoriteRequestIds}
+                    onToggleFavorite={onToggleRequestFavorite}
                     onSendOffer={onOpenOfferSheet}
                     onEditOffer={onOpenOfferSheet}
                     onWithdrawOffer={onWithdrawOffer}
                     pendingOfferRequestId={pendingOfferRequestId}
-                    showStaticFavoriteIcon={false}
+                    pendingFavoriteRequestIds={pendingFavoriteRequestIds}
+                    showStaticFavoriteIcon={!isAuthed}
                   />
                 </WorkspaceContentState>
-              </div>
-            ) : null}
+              ) : null}
 
-            {activeWorkspaceTab === 'completed-jobs' ? (
-              <div className="stack-sm">
-                <WorkspaceContentState
-                  isLoading={isProviderContractsLoading || isClientContractsLoading}
-                  isEmpty={filteredContracts.length === 0}
-                  emptyTitle="Noch keine passenden Vertraege."
-                  emptyHint="Sobald ein Angebot angenommen wird, erscheint es hier."
-                  emptyCtaLabel="Meine Angebote"
-                  emptyCtaHref="/orders?tab=my-offers"
-                >
-                  <RequestsList
-                    t={t}
-                    locale={locale}
-                    requests={contractRequests}
+              {activeWorkspaceTab === 'my-requests' ? (
+                <div className="stack-sm">
+                  <CreateRequestCard />
+                  <WorkspaceContentState
+                    isLoading={isMyRequestsLoading}
+                    isEmpty={filteredMyRequests.length === 0}
+                    emptyTitle="Noch keine passenden Anfragen."
+                    emptyHint="Erstelle eine neue Anfrage oder wechsle den Statusfilter."
+                    emptyCtaLabel="Neue Anfrage erstellen"
+                    emptyCtaHref="/request/create"
+                  >
+                    <RequestsList
+                      t={t}
+                      locale={locale}
+                      requests={filteredMyRequests}
+                      isLoading={isMyRequestsLoading}
+                      isError={false}
+                      serviceByKey={serviceByKey}
+                      categoryByKey={categoryByKey}
+                      cityById={cityById}
+                      formatDate={formatDate}
+                      formatPrice={formatPrice}
+                      ownerRequestActions={ownerRequestActions}
+                    />
+                  </WorkspaceContentState>
+                </div>
+              ) : null}
+
+              {activeWorkspaceTab === 'my-offers' ? (
+                <div className="stack-sm">
+                  <WorkspaceContentState
+                    isLoading={isMyOffersLoading}
+                    isEmpty={filteredMyOffers.length === 0}
+                    emptyTitle="Noch keine passenden Angebote."
+                    emptyHint="Noch keine Angebote. Anfrage erstellen oder offene Auftraege ansehen."
+                    emptyCtaLabel="Auftraege ansehen"
+                    emptyCtaHref="/orders?tab=new-orders"
+                  >
+                    <RequestsList
+                      t={t}
+                      locale={locale}
+                      requests={myOfferRequests}
+                      isLoading={isMyOffersLoading}
+                      isError={false}
+                      serviceByKey={serviceByKey}
+                      categoryByKey={categoryByKey}
+                      cityById={cityById}
+                      formatDate={formatDate}
+                      formatPrice={formatPrice}
+                      isProviderPersonalized={true}
+                      offersByRequest={offersByRequest}
+                      onSendOffer={onOpenOfferSheet}
+                      onEditOffer={onOpenOfferSheet}
+                      onWithdrawOffer={onWithdrawOffer}
+                      pendingOfferRequestId={pendingOfferRequestId}
+                      showStaticFavoriteIcon={false}
+                    />
+                  </WorkspaceContentState>
+                </div>
+              ) : null}
+
+              {activeWorkspaceTab === 'completed-jobs' ? (
+                <div className="stack-sm">
+                  <WorkspaceContentState
                     isLoading={isProviderContractsLoading || isClientContractsLoading}
-                    isError={false}
-                    serviceByKey={serviceByKey}
-                    categoryByKey={categoryByKey}
-                    cityById={cityById}
-                    formatDate={formatDate}
-                    formatPrice={formatPrice}
-                    isProviderPersonalized={true}
-                    offersByRequest={contractOffersByRequest}
-                  />
-                </WorkspaceContentState>
-              </div>
-            ) : null}
-
-            {activeWorkspaceTab === 'favorites' ? (
-              <div className="stack-sm">
-                <div className="chip-row" role="tablist" aria-label="Favoriten Ansicht">
-                  <button
-                    type="button"
-                    className={`chip ${resolvedFavoritesView === 'requests' ? 'is-active' : ''}`.trim()}
-                    onClick={() => setFavoritesView('requests')}
-                    aria-pressed={resolvedFavoritesView === 'requests'}
+                    isEmpty={filteredContracts.length === 0}
+                    emptyTitle="Noch keine passenden Vertraege."
+                    emptyHint="Sobald ein Angebot angenommen wird, erscheint es hier."
+                    emptyCtaLabel="Meine Angebote"
+                    emptyCtaHref="/orders?tab=my-offers"
                   >
-                    Anfragen
-                  </button>
-                  <button
-                    type="button"
-                    className={`chip ${resolvedFavoritesView === 'providers' ? 'is-active' : ''}`.trim()}
-                    onClick={() => setFavoritesView('providers')}
-                    aria-pressed={resolvedFavoritesView === 'providers'}
-                  >
-                    Anbieter
-                  </button>
+                    <RequestsList
+                      t={t}
+                      locale={locale}
+                      requests={contractRequests}
+                      isLoading={isProviderContractsLoading || isClientContractsLoading}
+                      isError={false}
+                      serviceByKey={serviceByKey}
+                      categoryByKey={categoryByKey}
+                      cityById={cityById}
+                      formatDate={formatDate}
+                      formatPrice={formatPrice}
+                      isProviderPersonalized={true}
+                      offersByRequest={contractOffersByRequest}
+                    />
+                  </WorkspaceContentState>
                 </div>
-                <WorkspaceContentState
-                  isLoading={isFavoritesLoading}
-                  isEmpty={favoritesItems.length === 0}
-                  emptyTitle={hasFavoriteRequests || hasFavoriteProviders ? 'Keine Elemente in dieser Kategorie.' : 'Du hast noch keine Favoriten.'}
-                  emptyHint={hasFavoriteRequests || hasFavoriteProviders ? 'Wechsle zwischen Anfragen und Anbietern.' : 'Markiere Auftraege oder Anbieter mit dem Herzsymbol, um sie hier zu speichern.'}
-                >
-                  {resolvedFavoritesView === 'requests'
-                    ? (
-                        <RequestsList
-                          t={t}
-                          locale={locale}
-                          requests={favoriteRequests}
-                          isLoading={isFavoriteRequestsLoading}
-                          isError={false}
-                          serviceByKey={serviceByKey}
-                          categoryByKey={categoryByKey}
-                          cityById={cityById}
-                          formatDate={formatDate}
-                          formatPrice={formatPrice}
-                          isProviderPersonalized={isPersonalized}
-                          offersByRequest={offersByRequest}
-                          favoriteRequestIds={favoriteRequestIds}
-                          onToggleFavorite={onToggleRequestFavorite}
-                          onSendOffer={onOpenOfferSheet}
-                          onEditOffer={onOpenOfferSheet}
-                          onWithdrawOffer={onWithdrawOffer}
-                          pendingOfferRequestId={pendingOfferRequestId}
-                          pendingFavoriteRequestIds={pendingFavoriteRequestIds}
-                          showStaticFavoriteIcon={false}
-                        />
-                      )
-                    : favoriteProviders.map((item) => (
-                        <article key={`fav-provider-${item.id}`} className="card stack-xs workspace-list-item">
-                          <p className="text-sm font-semibold truncate">{item.displayName || 'Provider'}</p>
-                          <Link href={`/providers/${item.id}`} className="badge offer-actions__btn">Profil ansehen</Link>
-                        </article>
-                      ))}
-                </WorkspaceContentState>
-              </div>
-            ) : null}
+              ) : null}
 
-            {activeWorkspaceTab === 'reviews' ? (
-              <div className="stack-sm">
-                <div className="chip-row" role="tablist" aria-label="Bewertungen Ansicht">
-                  <button
-                    type="button"
-                    className={`chip ${activeReviewsView === 'provider' ? 'is-active' : ''}`.trim()}
-                    onClick={() => setReviewsView('provider')}
-                    aria-pressed={activeReviewsView === 'provider'}
-                  >
-                    Als Anbieter
-                  </button>
-                  <button
-                    type="button"
-                    className={`chip ${activeReviewsView === 'client' ? 'is-active' : ''}`.trim()}
-                    onClick={() => setReviewsView('client')}
-                    aria-pressed={activeReviewsView === 'client'}
-                  >
-                    Als Kunde
-                  </button>
-                </div>
-                <WorkspaceContentState
-                  isLoading={isMyReviewsLoading}
-                  isEmpty={myReviews.length === 0}
-                  emptyTitle="Noch keine Bewertungen vorhanden."
-                  emptyHint="Nach abgeschlossenen Auftraegen erscheinen Bewertungen hier."
-                  emptyCtaLabel="Auftraege verwalten"
-                  emptyCtaHref="/orders?tab=completed-jobs"
-                >
-                  <div className="proof-feed">
-                    {myReviews.map((item) => {
-                      const role = item.targetRole ?? activeReviewsView;
-                      const roleLabel = role === 'client' ? 'Als Kunde' : 'Als Anbieter';
-                      const createdLabel = item.createdAt
-                        ? new Date(item.createdAt).toLocaleDateString(localeTag)
-                        : '—';
-                      const author = item.authorName?.trim() || 'Bewertung';
-                      const reviewText = item.text || item.comment || 'Kein Kommentar';
-                      return (
-                        <ProofReviewCard
-                          key={item.id}
-                          title={author}
-                          info={createdLabel}
-                          review={`“${reviewText}”`}
-                          rating={item.rating?.toFixed(1) ?? '—'}
-                          price={roleLabel}
-                          isActive
-                        />
-                      );
-                    })}
+              {activeWorkspaceTab === 'favorites' ? (
+                <div className="stack-sm">
+                  <div className="chip-row" role="tablist" aria-label="Favoriten Ansicht">
+                    <button
+                      type="button"
+                      className={`chip ${resolvedFavoritesView === 'requests' ? 'is-active' : ''}`.trim()}
+                      onClick={() => setFavoritesView('requests')}
+                      aria-pressed={resolvedFavoritesView === 'requests'}
+                    >
+                      Anfragen
+                    </button>
+                    <button
+                      type="button"
+                      className={`chip ${resolvedFavoritesView === 'providers' ? 'is-active' : ''}`.trim()}
+                      onClick={() => setFavoritesView('providers')}
+                      aria-pressed={resolvedFavoritesView === 'providers'}
+                    >
+                      Anbieter
+                    </button>
                   </div>
-                </WorkspaceContentState>
+                  <WorkspaceContentState
+                    isLoading={isFavoritesLoading}
+                    isEmpty={favoritesItems.length === 0}
+                    emptyTitle={hasFavoriteRequests || hasFavoriteProviders ? 'Keine Elemente in dieser Kategorie.' : 'Du hast noch keine Favoriten.'}
+                    emptyHint={hasFavoriteRequests || hasFavoriteProviders ? 'Wechsle zwischen Anfragen und Anbietern.' : 'Markiere Auftraege oder Anbieter mit dem Herzsymbol, um sie hier zu speichern.'}
+                  >
+                    {resolvedFavoritesView === 'requests'
+                      ? (
+                          <RequestsList
+                            t={t}
+                            locale={locale}
+                            requests={favoriteRequests}
+                            isLoading={isFavoriteRequestsLoading}
+                            isError={false}
+                            serviceByKey={serviceByKey}
+                            categoryByKey={categoryByKey}
+                            cityById={cityById}
+                            formatDate={formatDate}
+                            formatPrice={formatPrice}
+                            isProviderPersonalized={isPersonalized}
+                            offersByRequest={offersByRequest}
+                            favoriteRequestIds={favoriteRequestIds}
+                            onToggleFavorite={onToggleRequestFavorite}
+                            onSendOffer={onOpenOfferSheet}
+                            onEditOffer={onOpenOfferSheet}
+                            onWithdrawOffer={onWithdrawOffer}
+                            pendingOfferRequestId={pendingOfferRequestId}
+                            pendingFavoriteRequestIds={pendingFavoriteRequestIds}
+                            showStaticFavoriteIcon={false}
+                          />
+                        )
+                      : favoriteProviderCards}
+                  </WorkspaceContentState>
+                </div>
+              ) : null}
+
+              {activeWorkspaceTab === 'reviews' ? (
+                <div className="stack-sm">
+                  <div className="chip-row" role="tablist" aria-label="Bewertungen Ansicht">
+                    <button
+                      type="button"
+                      className={`chip ${activeReviewsView === 'provider' ? 'is-active' : ''}`.trim()}
+                      onClick={() => setReviewsView('provider')}
+                      aria-pressed={activeReviewsView === 'provider'}
+                    >
+                      Als Anbieter
+                    </button>
+                    <button
+                      type="button"
+                      className={`chip ${activeReviewsView === 'client' ? 'is-active' : ''}`.trim()}
+                      onClick={() => setReviewsView('client')}
+                      aria-pressed={activeReviewsView === 'client'}
+                    >
+                      Als Kunde
+                    </button>
+                  </div>
+                  <WorkspaceContentState
+                    isLoading={isMyReviewsLoading}
+                    isEmpty={myReviews.length === 0}
+                    emptyTitle="Noch keine Bewertungen vorhanden."
+                    emptyHint="Nach abgeschlossenen Auftraegen erscheinen Bewertungen hier."
+                    emptyCtaLabel="Auftraege verwalten"
+                    emptyCtaHref="/orders?tab=completed-jobs"
+                  >
+                    <div className="proof-feed">
+                      {reviewCards}
+                    </div>
+                  </WorkspaceContentState>
+                </div>
+              ) : null}
+            </section>
+
+            {activeWorkspaceTab === 'new-orders' ? (
+              <div className="requests-pagination">
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  onClick={() => setPage(Math.max(1, page - 1))}
+                  disabled={page <= 1}
+                >
+                  ←
+                </button>
+                <span className="typo-small">
+                  {t(I18N_KEYS.requestsPage.resultsLabel)} {formatNumber.format(totalResults)} •{' '}
+                  {page}/{totalPages}
+                </span>
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  onClick={() => setPage(Math.min(totalPages, page + 1))}
+                  disabled={page >= totalPages}
+                >
+                  →
+                </button>
               </div>
             ) : null}
           </section>
-
-          {activeWorkspaceTab === 'new-orders' ? (
-            <div className="requests-pagination">
-              <button
-                type="button"
-                className="btn-ghost"
-                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-                disabled={page <= 1}
-              >
-                ←
-              </button>
-              <span className="typo-small">
-                {t(I18N_KEYS.requestsPage.resultsLabel)} {formatNumber.format(totalResults)} •{' '}
-                {page}/{totalPages}
-              </span>
-              <button
-                type="button"
-                className="btn-ghost"
-                onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
-                disabled={page >= totalPages}
-              >
-                →
-              </button>
-            </div>
-          ) : null}
         </div>
 
         <aside className="stack-md hide-mobile">
@@ -1832,6 +1958,7 @@ function RequestsPageContent() {
         </aside>
       </div>
       {isWorkspaceAuthed &&
+      activeWorkspaceTab !== 'new-orders' &&
       activeWorkspaceTab !== 'favorites' &&
       activeWorkspaceTab !== 'my-requests' &&
       activeWorkspaceTab !== 'my-offers' ? (
