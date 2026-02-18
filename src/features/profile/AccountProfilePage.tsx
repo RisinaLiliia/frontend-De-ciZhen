@@ -26,6 +26,7 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
+import { withStatusFallback } from '@/lib/api/withStatusFallback';
 
 type ProfileFormValues = {
   displayName: string;
@@ -36,18 +37,6 @@ type ProfileFormValues = {
   basePrice: number;
   serviceKeys: string[];
 };
-
-async function with403Fallback<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
-  try {
-    return await fn();
-  } catch (error) {
-    if (error instanceof Error && 'status' in error) {
-      const status = Number((error as { status?: number }).status ?? 0);
-      if (status === 403 || status === 404) return fallback;
-    }
-    throw error;
-  }
-}
 
 export function AccountProfilePage() {
   const t = useT();
@@ -62,42 +51,42 @@ export function AccountProfilePage() {
 
   const { data: providerProfile, isLoading: isProviderLoading } = useQuery({
     queryKey: ['provider-profile-me'],
-    queryFn: () => with403Fallback(() => getMyProviderProfile(), null),
+    queryFn: () => withStatusFallback(() => getMyProviderProfile(), null),
   });
 
   const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery({
     queryKey: ['requests-my'],
-    queryFn: () => with403Fallback(() => listMyRequests(), []),
+    queryFn: () => withStatusFallback(() => listMyRequests(), []),
   });
 
   const { data: providerOffers = [], isLoading: isProviderOffersLoading } = useQuery({
     queryKey: ['offers-my'],
-    queryFn: () => with403Fallback(() => listMyProviderOffers(), []),
+    queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
   });
 
   const { data: clientOffers = [] } = useQuery({
     queryKey: ['offers-my-client'],
-    queryFn: () => with403Fallback(() => listMyClientOffers(), []),
+    queryFn: () => withStatusFallback(() => listMyClientOffers(), []),
   });
 
   const { data: providerContracts = [] } = useQuery({
     queryKey: ['contracts-my-provider'],
-    queryFn: () => with403Fallback(() => listMyContracts({ role: 'provider' }), []),
+    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'provider' }), []),
   });
 
   const { data: clientContracts = [] } = useQuery({
     queryKey: ['contracts-my-client'],
-    queryFn: () => with403Fallback(() => listMyContracts({ role: 'client' }), []),
+    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), []),
   });
 
   const { data: providerInbox = [] } = useQuery({
     queryKey: ['chat-inbox', 'provider'],
-    queryFn: () => with403Fallback(() => listInbox('provider'), []),
+    queryFn: () => withStatusFallback(() => listInbox('provider'), []),
   });
 
   const { data: clientInbox = [] } = useQuery({
     queryKey: ['chat-inbox', 'client'],
-    queryFn: () => with403Fallback(() => listInbox('client'), []),
+    queryFn: () => withStatusFallback(() => listInbox('client'), []),
   });
 
   const { register, handleSubmit, reset } = useForm<ProfileFormValues>({

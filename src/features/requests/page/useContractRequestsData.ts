@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import type { ContractDto } from '@/lib/api/dto/contracts';
+import type { OfferDto } from '@/lib/api/dto/offers';
 import { getPublicRequestById } from '@/lib/api/requests';
 
 type Params = {
@@ -93,7 +94,7 @@ export function useContractRequestsData({ filteredContracts, isWorkspaceAuthed }
   }, [contractRequestsById, filteredContracts]);
 
   const contractOffersByRequest = React.useMemo(() => {
-    const map = new Map<string, unknown>();
+    const map = new Map<string, OfferDto>();
     filteredContracts.forEach((item) => {
       map.set(item.requestId, {
         id: item.offerId,

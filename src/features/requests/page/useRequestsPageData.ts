@@ -9,6 +9,7 @@ import { listMyContracts } from '@/lib/api/contracts';
 import { listMyProviderOffers } from '@/lib/api/offers';
 import { listFavorites } from '@/lib/api/favorites';
 import { listMyReviews } from '@/lib/api/reviews';
+import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { ALL_OPTION_KEY } from '@/features/requests/page/public';
 import type { ReviewsView } from '@/features/requests/page/workspace';
 
@@ -22,18 +23,6 @@ type Params = {
   cityId: string;
   subcategoryKey: string;
 };
-
-async function with403or404Fallback<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
-  try {
-    return await fn();
-  } catch (error) {
-    if (error instanceof Error && 'status' in error) {
-      const status = Number((error as { status?: number }).status ?? 0);
-      if (status === 403 || status === 404) return fallback;
-    }
-    throw error;
-  }
-}
 
 export function useRequestsPageData(params: Params) {
   const { filter, isAuthed, isWorkspaceAuthed, activeReviewsView, cityId, subcategoryKey } = params;
@@ -65,7 +54,7 @@ export function useRequestsPageData(params: Params) {
   const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery({
     queryKey: ['offers-my'],
     enabled: isAuthed,
-    queryFn: () => with403or404Fallback(() => listMyProviderOffers(), []),
+    queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
   });
 
   const myOfferRequestIds = React.useMemo(
@@ -98,43 +87,43 @@ export function useRequestsPageData(params: Params) {
   const { data: favoriteRequests = [], isLoading: isFavoriteRequestsLoading } = useQuery({
     queryKey: ['favorite-requests'],
     enabled: isAuthed,
-    queryFn: () => with403or404Fallback(() => listFavorites('request'), []),
+    queryFn: () => withStatusFallback(() => listFavorites('request'), []),
   });
 
   const { data: favoriteProviders = [], isLoading: isFavoriteProvidersLoading } = useQuery({
     queryKey: ['favorite-providers'],
     enabled: isAuthed,
-    queryFn: () => with403or404Fallback(() => listFavorites('provider'), []),
+    queryFn: () => withStatusFallback(() => listFavorites('provider'), []),
   });
 
   const { data: myReviews = [], isLoading: isMyReviewsLoading } = useQuery({
     queryKey: ['reviews-my', activeReviewsView],
     enabled: isWorkspaceAuthed,
-    queryFn: () => with403or404Fallback(() => listMyReviews({ role: activeReviewsView }), []),
+    queryFn: () => withStatusFallback(() => listMyReviews({ role: activeReviewsView }), []),
   });
 
   const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery({
     queryKey: ['requests-my'],
     enabled: isWorkspaceAuthed,
-    queryFn: () => with403or404Fallback(() => listMyRequests(), []),
+    queryFn: () => withStatusFallback(() => listMyRequests(), []),
   });
 
   const { data: myProviderContracts = [], isLoading: isProviderContractsLoading } = useQuery({
     queryKey: ['contracts-my-provider'],
     enabled: isWorkspaceAuthed,
-    queryFn: () => with403or404Fallback(() => listMyContracts({ role: 'provider' }), []),
+    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'provider' }), []),
   });
 
   const { data: myClientContracts = [], isLoading: isClientContractsLoading } = useQuery({
     queryKey: ['contracts-my-client'],
     enabled: isWorkspaceAuthed,
-    queryFn: () => with403or404Fallback(() => listMyContracts({ role: 'client' }), []),
+    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), []),
   });
 
   const { data: myProviderProfile } = useQuery({
     queryKey: ['provider-profile-me'],
     enabled: isAuthed,
-    queryFn: () => with403or404Fallback(() => getMyProviderProfile(), null),
+    queryFn: () => withStatusFallback(() => getMyProviderProfile(), null),
   });
 
   const {

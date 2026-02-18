@@ -14,7 +14,6 @@ import { ProofReviewCard } from '@/components/reviews/ProofReviewCard';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
 import {
   deleteMyRequest,
-  getPublicRequestById,
 } from '@/lib/api/requests';
 import { deleteOffer } from '@/lib/api/offers';
 import { addFavorite, removeFavorite } from '@/lib/api/favorites';
@@ -35,9 +34,6 @@ import {
 } from '@/features/requests/page/public';
 import {
   ORDERS_TAB_STORAGE_KEY,
-  mapContractStatusToFilter,
-  mapOfferStatusToFilter,
-  mapRequestStatusToFilter,
   resolveFavoritesView,
   resolveReviewsView,
   resolveStatusFilter,
@@ -53,6 +49,7 @@ import { useRequestsPageViewModel } from '@/features/requests/page/useRequestsPa
 import { useRequestsPageData } from '@/features/requests/page/useRequestsPageData';
 import { useContractRequestsData } from '@/features/requests/page/useContractRequestsData';
 import { useRequestsWorkspaceState } from '@/features/requests/page/useRequestsWorkspaceState';
+import { useRequestsWorkspaceDerived } from '@/features/requests/page/useRequestsWorkspaceDerived';
 
 function RequestsPageContent() {
   const router = useRouter();
@@ -554,105 +551,41 @@ function RequestsPageContent() {
       ),
     [myClientContracts, myProviderContracts],
   );
-  const filteredMyRequests = React.useMemo(
-    () =>
-      myRequests.filter(
-        (item) =>
-          activeStatusFilter === 'all' || mapRequestStatusToFilter(item.status) === activeStatusFilter,
-      ),
-    [activeStatusFilter, myRequests],
-  );
-  const filteredMyOffers = React.useMemo(
-    () =>
-      myOffers.filter(
-        (item) => activeStatusFilter === 'all' || mapOfferStatusToFilter(item.status) === activeStatusFilter,
-      ),
-    [activeStatusFilter, myOffers],
-  );
-  const myOfferRequests = React.useMemo(() => {
-    const fallbackDate = new Date().toISOString();
-    const items: Awaited<ReturnType<typeof getPublicRequestById>>[] = [];
-    const seen = new Set<string>();
-
-    filteredMyOffers.forEach((offer) => {
-      if (!offer.requestId || seen.has(offer.requestId)) return;
-      seen.add(offer.requestId);
-      const request = myOfferRequestsById.get(offer.requestId);
-      if (request) {
-        items.push(request);
-        return;
-      }
-      items.push({
-        id: offer.requestId,
-        serviceKey: offer.requestServiceKey || 'service',
-        cityId: offer.requestCityId || 'city',
-        cityName: offer.requestCityId || null,
-        categoryKey: null,
-        categoryName: null,
-        subcategoryName: offer.requestServiceKey || null,
-        propertyType: 'apartment',
-        area: 0,
-        price: typeof offer.amount === 'number' ? offer.amount : null,
-        preferredDate: offer.requestPreferredDate || offer.updatedAt || offer.createdAt || fallbackDate,
-        isRecurring: false,
-        title: offer.requestServiceKey || null,
-        description: offer.message || null,
-        photos: null,
-        imageUrl: null,
-        tags: null,
-        clientId: offer.clientUserId,
-        clientName: null,
-        clientAvatarUrl: null,
-        clientCity: null,
-        clientRatingAvg: null,
-        clientRatingCount: null,
-        clientIsOnline: null,
-        clientLastSeenAt: null,
-        status: (offer.requestStatus === 'matched'
-          ? 'matched'
-          : offer.requestStatus === 'closed'
-            ? 'closed'
-            : offer.requestStatus === 'cancelled'
-              ? 'cancelled'
-              : offer.requestStatus === 'draft'
-                ? 'draft'
-                : offer.requestStatus === 'paused'
-                  ? 'paused'
-                  : 'published'),
-        createdAt: offer.createdAt,
-      });
-    });
-
-    return items;
-  }, [filteredMyOffers, myOfferRequestsById]);
-  const filteredContracts = React.useMemo(
-    () =>
-      allMyContracts.filter(
-        (item) =>
-          activeStatusFilter === 'all' || mapContractStatusToFilter(item.status) === activeStatusFilter,
-      ),
-    [activeStatusFilter, allMyContracts],
-  );
+  const {
+    filteredMyRequests,
+    filteredMyOffers,
+    myOfferRequests,
+    filteredContracts,
+    hasFavoriteRequests,
+    hasFavoriteProviders,
+    resolvedFavoritesView,
+    favoritesItems,
+    isFavoritesLoading,
+    resolvedReviews,
+    showWorkspaceHeader,
+    showWorkspaceHeading,
+    statusFilters,
+    primaryAction,
+  } = useRequestsWorkspaceDerived({
+    activeStatusFilter,
+    activeWorkspaceTab,
+    activeFavoritesView,
+    activeReviewsView,
+    myRequests,
+    myOffers,
+    myOfferRequestsById,
+    allMyContracts,
+    favoriteRequests,
+    favoriteProviders,
+    isFavoriteRequestsLoading,
+    isFavoriteProvidersLoading,
+    myReviews,
+    localeTag,
+  });
   const { contractRequests, contractOffersByRequest } = useContractRequestsData({
     filteredContracts,
     isWorkspaceAuthed,
   });
-  const hasFavoriteRequests = favoriteRequests.length > 0;
-  const hasFavoriteProviders = favoriteProviders.length > 0;
-  const areFavoritesLoaded = !isFavoriteRequestsLoading && !isFavoriteProvidersLoading;
-  const resolvedFavoritesView = React.useMemo<FavoritesView>(() => {
-    if (
-      areFavoritesLoaded &&
-      activeFavoritesView === 'requests' &&
-      !hasFavoriteRequests &&
-      hasFavoriteProviders
-    ) {
-      return 'providers';
-    }
-    return activeFavoritesView;
-  }, [activeFavoritesView, areFavoritesLoaded, hasFavoriteProviders, hasFavoriteRequests]);
-  const favoritesItems = resolvedFavoritesView === 'requests' ? favoriteRequests : favoriteProviders;
-  const isFavoritesLoading = resolvedFavoritesView === 'requests' ? isFavoriteRequestsLoading : isFavoriteProvidersLoading;
   const favoriteProviderCards = React.useMemo(
     () =>
       favoriteProviders.map((item) => (
@@ -667,59 +600,21 @@ function RequestsPageContent() {
   );
   const reviewCards = React.useMemo(
     () =>
-      myReviews.map((item) => {
-        const role = item.targetRole ?? activeReviewsView;
-        const roleLabel = role === 'client' ? 'Als Kunde' : 'Als Anbieter';
-        const createdLabel = item.createdAt ? new Date(item.createdAt).toLocaleDateString(localeTag) : '—';
-        const author = item.authorName?.trim() || 'Bewertung';
-        const reviewText = item.text || item.comment || 'Kein Kommentar';
+      resolvedReviews.map((item) => {
         return (
           <ProofReviewCard
             key={item.id}
-            title={author}
-            info={createdLabel}
-            review={`“${reviewText}”`}
+            title={item.author}
+            info={item.createdLabel}
+            review={`“${item.reviewText}”`}
             rating={item.rating?.toFixed(1) ?? '—'}
-            price={roleLabel}
+            price={item.roleLabel}
             isActive
           />
         );
       }),
-    [activeReviewsView, localeTag, myReviews],
+    [resolvedReviews],
   );
-  const showWorkspaceHeader = activeWorkspaceTab !== 'favorites';
-  const showWorkspaceHeading =
-    showWorkspaceHeader && activeWorkspaceTab !== 'new-orders';
-  const statusFilters = React.useMemo(
-    () =>
-      activeWorkspaceTab === 'new-orders' || activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews'
-        ? []
-        : [
-            { key: 'all' as const, label: 'Alle' },
-            { key: 'open' as const, label: 'Offen' },
-            { key: 'in_progress' as const, label: 'In Arbeit' },
-            { key: 'completed' as const, label: 'Abgeschlossen' },
-          ],
-    [activeWorkspaceTab],
-  );
-  const primaryAction = React.useMemo(() => {
-    if (activeWorkspaceTab === 'my-requests') {
-      return { label: 'Neue Anfrage erstellen', href: '/request/create' };
-    }
-    if (activeWorkspaceTab === 'my-offers') {
-      return { label: 'Neue Auftraege finden', href: '/orders?tab=new-orders' };
-    }
-    if (activeWorkspaceTab === 'completed-jobs') {
-      return { label: 'Aktive Auftraege', href: '/orders?tab=my-offers&status=in_progress' };
-    }
-    if (activeWorkspaceTab === 'favorites') {
-      return { label: 'Neue Favoriten', href: '/orders?tab=new-orders' };
-    }
-    if (activeWorkspaceTab === 'reviews') {
-      return { label: 'Meine Auftraege', href: '/orders?tab=my-offers' };
-    }
-    return { label: 'Neue Anfrage erstellen', href: '/request/create' };
-  }, [activeWorkspaceTab]);
   const {
     topProviders,
     navTitle,

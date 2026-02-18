@@ -4,18 +4,28 @@ import * as React from 'react';
 
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
+import type { OfferDto } from '@/lib/api/dto/offers';
+import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import type { ReviewDto } from '@/lib/api/dto/reviews';
+import type { ContractDto } from '@/lib/api/dto/contracts';
 import { WorkspaceContent } from '@/features/requests/page/WorkspaceContent';
 import { PublicContent } from '@/features/requests/page/PublicContent';
 import type { FavoritesView, ReviewsView, WorkspaceStatusFilter, WorkspaceTab } from '@/features/requests/page/workspace';
+import { RequestsFilters } from '@/components/requests/RequestsFilters';
 
 type FilterOption = { value: string; label: string };
 type FilterChip = { key: string; label: string; onRemove: () => void };
 type StatusFilter = { key: WorkspaceStatusFilter; label: string };
 type PrimaryAction = { href: string; label: string };
+type OwnerRequestActions = {
+  onDelete?: (requestId: string) => void;
+  pendingDeleteRequestId?: string | null;
+};
 
 type Input = {
   t: (key: I18nKey) => string;
-  locale: string;
+  locale: Locale;
   activeWorkspaceTab: WorkspaceTab;
   showWorkspaceHeader: boolean;
   showWorkspaceHeading: boolean;
@@ -49,9 +59,9 @@ type Input = {
   isLoading: boolean;
   isError: boolean;
   requestsCount: number;
-  requests: unknown[];
+  requests: RequestResponseDto[];
   isPersonalized: boolean;
-  offersByRequest: Map<string, unknown>;
+  offersByRequest: Map<string, OfferDto>;
   favoriteRequestIds: Set<string>;
   onToggleRequestFavorite: (requestId: string) => void;
   onOpenOfferSheet: (requestId: string) => void;
@@ -59,38 +69,38 @@ type Input = {
   pendingOfferRequestId: string | null;
   pendingFavoriteRequestIds: Set<string>;
   isAuthed: boolean;
-  serviceByKey: Map<string, unknown>;
-  categoryByKey: Map<string, unknown>;
-  cityById: Map<string, unknown>;
+  serviceByKey: Map<string, { categoryKey: string; i18n: Record<string, string> }>;
+  categoryByKey: Map<string, { i18n: Record<string, string> }>;
+  cityById: Map<string, { i18n: Record<string, string> }>;
   formatDate: Intl.DateTimeFormat;
   formatPrice: Intl.NumberFormat;
 
   isMyRequestsLoading: boolean;
-  filteredMyRequests: unknown[];
-  ownerRequestActions: Record<string, unknown>;
+  filteredMyRequests: RequestResponseDto[];
+  ownerRequestActions: OwnerRequestActions;
 
   isMyOffersLoading: boolean;
-  filteredMyOffers: unknown[];
-  myOfferRequests: unknown[];
+  filteredMyOffers: OfferDto[];
+  myOfferRequests: RequestResponseDto[];
 
   isProviderContractsLoading: boolean;
   isClientContractsLoading: boolean;
-  filteredContracts: unknown[];
-  contractRequests: unknown[];
-  contractOffersByRequest: Map<string, unknown>;
+  filteredContracts: ContractDto[];
+  contractRequests: RequestResponseDto[];
+  contractOffersByRequest: Map<string, OfferDto>;
 
   isFavoritesLoading: boolean;
-  favoritesItems: unknown[];
+  favoritesItems: Array<{ id: string }>;
   hasFavoriteRequests: boolean;
   hasFavoriteProviders: boolean;
   resolvedFavoritesView: FavoritesView;
   setFavoritesView: (view: FavoritesView) => void;
-  favoriteRequests: unknown[];
+  favoriteRequests: RequestResponseDto[];
   isFavoriteRequestsLoading: boolean;
   favoriteProviderCards: React.ReactNode;
 
   isMyReviewsLoading: boolean;
-  myReviews: unknown[];
+  myReviews: ReviewDto[];
   activeReviewsView: ReviewsView;
   setReviewsView: (view: ReviewsView) => void;
   reviewCards: React.ReactNode;
@@ -101,7 +111,7 @@ type Input = {
 };
 
 export function useRequestsPageViewModel(params: Input) {
-  const filtersProps = React.useMemo(
+  const filtersProps = React.useMemo<React.ComponentProps<typeof RequestsFilters>>(
     () => ({
       t: params.t,
       locale: params.locale,
@@ -127,7 +137,7 @@ export function useRequestsPageViewModel(params: Input) {
     [params],
   );
 
-  const workspaceContentProps = React.useMemo(() => {
+  const workspaceContentProps = React.useMemo<React.ComponentProps<typeof WorkspaceContent>>(() => {
     return {
       activeWorkspaceTab: params.activeWorkspaceTab,
       showWorkspaceHeader: params.showWorkspaceHeader,
@@ -271,10 +281,10 @@ export function useRequestsPageViewModel(params: Input) {
         onPrevPage: () => params.setPage(Math.max(1, params.page - 1)),
         onNextPage: () => params.setPage(Math.min(params.totalPages, params.page + 1)),
       },
-    } as React.ComponentProps<typeof WorkspaceContent>;
+    };
   }, [filtersProps, params]);
 
-  const publicContentProps = React.useMemo(() => {
+  const publicContentProps = React.useMemo<React.ComponentProps<typeof PublicContent>>(() => {
     return {
       filtersProps,
       statusFilters: params.statusFilters,
@@ -313,7 +323,7 @@ export function useRequestsPageViewModel(params: Input) {
       resultsLabel: params.t(I18N_KEYS.requestsPage.resultsLabel),
       onPrevPage: () => params.setPage(Math.max(1, params.page - 1)),
       onNextPage: () => params.setPage(Math.min(params.totalPages, params.page + 1)),
-    } as React.ComponentProps<typeof PublicContent>;
+    };
   }, [filtersProps, params]);
 
   return {
