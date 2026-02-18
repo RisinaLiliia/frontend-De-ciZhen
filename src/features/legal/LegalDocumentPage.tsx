@@ -104,7 +104,9 @@ function childrenToText(children: React.ReactNode): string {
   if (typeof children === 'string') return children;
   if (typeof children === 'number') return String(children);
   if (Array.isArray(children)) return children.map(childrenToText).join(' ');
-  if (React.isValidElement(children)) return childrenToText(children.props.children);
+  if (React.isValidElement<{ children?: React.ReactNode }>(children)) {
+    return childrenToText(children.props.children ?? '');
+  }
   return '';
 }
 
