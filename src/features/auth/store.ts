@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import type { AppMeDto, CapabilitiesDto, MeResponseDto, SafeUserDto, UserMode } from '@/lib/api/dto/auth';
 import { getMe, login, logout, register } from '@/lib/auth/api';
-import { refreshAccessToken } from '@/lib/auth/session';
+import { allowRefreshAttempts, refreshAccessToken, suppressRefreshAttempts } from '@/lib/auth/session';
 import { setAccessToken as setToken } from '@/lib/auth/token';
 
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';
@@ -95,6 +95,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
   clear: () => {
+    suppressRefreshAttempts();
     setToken(null);
     set({
       status: 'unauthenticated',
@@ -114,6 +115,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     const token = await refreshAccessToken();
     if (!token) {
+      suppressRefreshAttempts();
       set({
         status: 'unauthenticated',
         user: null,
@@ -128,12 +130,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     try {
+      allowRefreshAttempts();
       setToken(token);
       set({ accessToken: token });
       const me = await getMe();
       get().setMe(me);
       set({ status: 'authenticated', accessToken: token });
     } catch {
+      suppressRefreshAttempts();
       set({
         status: 'unauthenticated',
         user: null,
@@ -150,12 +154,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ status: 'loading', error: null });
     try {
       const data = await login({ email, password });
+      allowRefreshAttempts();
       setToken(data.accessToken);
       set({ accessToken: data.accessToken });
       const me = await getMe();
       get().setMe(me);
       set({ status: 'authenticated', accessToken: data.accessToken });
     } catch (error) {
+      suppressRefreshAttempts();
       set({
         status: 'unauthenticated',
         user: null,
@@ -174,12 +180,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ status: 'loading', error: null });
     try {
       const data = await register(payload);
+      allowRefreshAttempts();
       setToken(data.accessToken);
       set({ accessToken: data.accessToken });
       const me = await getMe();
       get().setMe(me);
       set({ status: 'authenticated', accessToken: data.accessToken });
     } catch (error) {
+      suppressRefreshAttempts();
       set({
         status: 'unauthenticated',
         user: null,
@@ -198,6 +206,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       await logout();
     } finally {
+      suppressRefreshAttempts();
       setToken(null);
       set({
         status: 'unauthenticated',
@@ -215,10 +224,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   fetchMe: async () => {
     try {
       const me = await getMe();
+      allowRefreshAttempts();
       get().setMe(me);
       set({ status: 'authenticated' });
       return me as MeResponseDto;
     } catch {
+      suppressRefreshAttempts();
       setToken(null);
       set({
         status: 'unauthenticated',
