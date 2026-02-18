@@ -42,7 +42,7 @@ type RequestsListProps = {
   };
 };
 
-export function RequestsList({
+function RequestsListComponent({
   t,
   locale,
   requests,
@@ -332,6 +332,34 @@ export function RequestsList({
   );
 }
 
+function areRequestsListPropsEqual(prev: RequestsListProps, next: RequestsListProps) {
+  return (
+    prev.t === next.t &&
+    prev.locale === next.locale &&
+    prev.requests === next.requests &&
+    prev.isLoading === next.isLoading &&
+    prev.isError === next.isError &&
+    prev.serviceByKey === next.serviceByKey &&
+    prev.categoryByKey === next.categoryByKey &&
+    prev.cityById === next.cityById &&
+    prev.formatDate === next.formatDate &&
+    prev.formatPrice === next.formatPrice &&
+    prev.isProviderPersonalized === next.isProviderPersonalized &&
+    prev.offersByRequest === next.offersByRequest &&
+    prev.favoriteRequestIds === next.favoriteRequestIds &&
+    prev.onToggleFavorite === next.onToggleFavorite &&
+    prev.onSendOffer === next.onSendOffer &&
+    prev.onEditOffer === next.onEditOffer &&
+    prev.onWithdrawOffer === next.onWithdrawOffer &&
+    prev.pendingOfferRequestId === next.pendingOfferRequestId &&
+    prev.pendingFavoriteRequestIds === next.pendingFavoriteRequestIds &&
+    prev.showStaticFavoriteIcon === next.showStaticFavoriteIcon &&
+    prev.ownerRequestActions === next.ownerRequestActions
+  );
+}
+
+export const RequestsList = React.memo(RequestsListComponent, areRequestsListPropsEqual);
+
 function mapRequestStatusLabel(status?: string) {
   if (!status) return 'Offen';
   if (status === 'completed') return 'Abgeschlossen';
@@ -373,7 +401,7 @@ function pickRequestImage(categoryKey: string) {
     electric: '/Elektriker bei der Arbeit an Schaltschrank.jpg',
     plumbing: '/Freundlicher Klempner bei der Arbeit.jpg',
     repair: '/Techniker repariert Smartphone in Werkstatt.jpg',
-    moving: '/Lädt Kisten aus einem Transporter.jpg',
+    moving: '/L%C3%A4dt%20Kisten%20aus%20einem%20Transporter.jpg',
   };
   return map[categoryKey] ?? '/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg';
 }
