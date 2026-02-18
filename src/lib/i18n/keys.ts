@@ -430,6 +430,7 @@ export const I18N_KEYS = {
     continueWithApple: 'auth.continueWithApple',
     oauthUnavailable: 'auth.oauthUnavailable',
     oauthFailed: 'auth.oauthFailed',
+    oauthConsentRequired: 'auth.oauthConsentRequired',
     closeDialog: 'auth.closeDialog',
     errorNameRequired: 'auth.errorNameRequired',
     errorNameMin: 'auth.errorNameMin',

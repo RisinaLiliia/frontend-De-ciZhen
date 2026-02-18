@@ -1,0 +1,111 @@
+.legalWrap {
+  padding: 1.25rem;
+}
+
+.legalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--stroke-soft);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.legalGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.toc {
+  position: sticky;
+  top: 88px;
+  align-self: start;
+  border: 1px solid var(--stroke-soft);
+  border-radius: 12px;
+  background: rgba(10, 22, 48, 0.45);
+  padding: 0.75rem;
+}
+
+.tocTitle {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.tocList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.tocItem {
+  margin: 0;
+}
+
+.tocSubItem {
+  margin: 0 0 0 0.75rem;
+}
+
+.tocLink {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.84rem;
+}
+
+.tocLink:hover {
+  color: var(--text-main);
+}
+
+.markdown {
+  max-width: 78ch;
+}
+
+.markdown :global(h1),
+.markdown :global(h2),
+.markdown :global(h3) {
+  scroll-margin-top: 96px;
+  color: var(--text-main);
+}
+
+.markdown :global(h1) {
+  font-size: 1.4rem;
+  margin: 1rem 0 0.75rem;
+}
+
+.markdown :global(h2) {
+  font-size: 1.12rem;
+  margin: 1.25rem 0 0.6rem;
+}
+
+.markdown :global(h3) {
+  font-size: 1rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.markdown :global(p),
+.markdown :global(li) {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.markdown :global(ul) {
+  margin: 0.4rem 0 0.8rem 1rem;
+  padding: 0;
+}
+
+@media (min-width: 980px) {
+  .legalWrap {
+    padding: 1.5rem;
+  }
+
+  .legalGrid {
+    grid-template-columns: minmax(0, 230px) minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+}
+

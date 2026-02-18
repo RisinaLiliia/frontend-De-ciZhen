@@ -24,6 +24,7 @@ export type AuthSnapshot = {
     city?: string;
     language?: string;
     acceptPrivacyPolicy: boolean;
+    signupToken?: string;
   }) => Promise<void>;
 };
 

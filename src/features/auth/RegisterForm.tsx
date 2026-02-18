@@ -28,6 +28,7 @@ export function RegisterForm() {
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || DEFAULT_AUTH_NEXT;
   const oauthError = searchParams.get('error');
+  const oauthSignupToken = searchParams.get('signupToken') || '';
   const loginHref = `/auth/login?next=${encodeURIComponent(next)}`;
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -61,7 +62,7 @@ export function RegisterForm() {
     try {
       const { confirmPassword, ...payload } = values;
       void confirmPassword;
-      await registerUser(payload);
+      await registerUser({ ...payload, ...(oauthSignupToken ? { signupToken: oauthSignupToken } : {}) });
       toast.success(t(I18N_KEYS.auth.registerSuccess));
     } catch (error) {
       const message = getRegisterErrorMessage(error, t);
@@ -103,6 +104,10 @@ export function RegisterForm() {
     }
     if (oauthError === 'oauth_failed') {
       toast.error(t(I18N_KEYS.auth.oauthFailed));
+      return;
+    }
+    if (oauthError === 'oauth_consent_required') {
+      toast.message(t(I18N_KEYS.auth.oauthConsentRequired));
     }
   }, [oauthError, t]);
 
