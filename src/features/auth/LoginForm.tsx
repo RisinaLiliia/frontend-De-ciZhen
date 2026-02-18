@@ -53,6 +53,7 @@ export function LoginForm() {
     try {
       await login(values.email, values.password);
       toast.success(t(I18N_KEYS.auth.loginSuccess));
+      router.replace(next);
     } catch (error) {
       const message = getLoginErrorMessage(error, t);
       if (isInvalidCredentialsError(error)) {

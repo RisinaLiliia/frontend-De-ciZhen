@@ -13,7 +13,7 @@ export function HomeHero({ t }: HomeHeroProps) {
       subtitle={t(I18N_KEYS.homePublic.subtitle)}
       ctas={[
         {
-          href: '/providers',
+          href: '/requests',
           label: t(I18N_KEYS.homePublic.findSpecialist),
           variant: 'secondary',
         },
