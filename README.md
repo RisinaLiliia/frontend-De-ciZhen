@@ -5,7 +5,7 @@ Next.js frontend for De'ciZhen marketplace and workspace.
 ## System Overview
 - The frontend is the user-facing layer of the De'ciZhen marketplace.
 - It integrates with a modular NestJS backend over REST APIs.
-- It supports public browsing, authenticated workspace flows, and object-based UX behavior.
+- It supports public browsing, authenticated workspace flows, and role-based UX behavior.
 
 ## Design Principles
 - Thin route components
@@ -46,8 +46,7 @@ Next.js frontend for De'ciZhen marketplace and workspace.
 - `/cookie-notice`
 
 ## 3. Access Guard (Next 16)
-- Route guard is implemented via `src/proxy.ts` (Next 16 `proxy`, not legacy middleware).
-- Implemented using Next 16 `proxy` to centralize access rules.
+- Route guard is implemented via `src/proxy.ts` (Next 16 `proxy`, not legacy middleware) to centralize access rules.
 - Rules:
   - unauthenticated users opening `/orders*` are redirected to `/auth/login?next=...`
   - authenticated users opening `/requests` are redirected to workspace default tab
@@ -56,6 +55,7 @@ Next.js frontend for De'ciZhen marketplace and workspace.
 
 ### Requests page modularization
 Goal: keep route files thin and isolate data logic from UI rendering.
+This modularization ensures clear separation of concerns and improves testability.
 
 Core screen `src/app/requests/page.tsx` is refactored into composable modules:
 - `src/features/requests/page/useRequestsPageData.ts` (query/data layer)
@@ -121,7 +121,7 @@ Lint:
 npm run lint
 ```
 
-Unit tests:
+Unit tests (core flows):
 
 ```bash
 npm run test
