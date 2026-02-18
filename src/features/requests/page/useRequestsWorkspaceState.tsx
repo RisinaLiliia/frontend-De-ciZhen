@@ -163,7 +163,7 @@ export function useRequestsWorkspaceState({
             {
               key: 'completed-jobs',
               href: '/orders?tab=completed-jobs',
-              label: 'Abgeschlossene Jobs',
+              label: t(I18N_KEYS.requestsPage.navCompletedJobs),
               icon: <IconCheck />,
               value: completedJobsCount,
               hint: t(I18N_KEYS.provider.jobs),
@@ -419,27 +419,29 @@ export function useRequestsWorkspaceState({
     kpis: [],
     showKpis: false,
     hasData: true,
-    chartTitle: 'Jobs / Einnahmen',
+    chartTitle: t(I18N_KEYS.requestsPage.statsProviderChartTitle),
     chartDelta:
       providerCompletedContracts.length > 0
         ? `+${Math.round((providerCompletedContracts.length / Math.max(1, myProviderContracts.length)) * 100)}%`
         : undefined,
     chartPoints: providerChartPoints,
     secondary: {
-      leftLabel: 'gesendet',
+      leftLabel: t(I18N_KEYS.requestsPage.statsLabelSent),
       leftValue: formatNumber.format(sentCount),
-      centerLabel: 'angenommen',
+      centerLabel: t(I18N_KEYS.requestsPage.statsLabelAccepted),
       centerValue: formatNumber.format(acceptedCount),
-      rightLabel: 'aktiv',
+      rightLabel: t(I18N_KEYS.requestsPage.statsLabelActive),
       rightValue: formatNumber.format(providerActiveContracts.length),
-      progressLabel: 'Annahmequote',
+      progressLabel: t(I18N_KEYS.requestsPage.statsLabelAcceptanceRate),
       progressValue: acceptanceRate,
-      responseLabel: 'Antwortzeit',
-      responseValue: avgResponseMinutes ? `${avgResponseMinutes} min` : '—',
+      responseLabel: t(I18N_KEYS.requestsPage.statsLabelResponseTime),
+      responseValue: avgResponseMinutes
+        ? `${avgResponseMinutes} ${t(I18N_KEYS.requestsPage.statsMinutesSuffix)}`
+        : '—',
     },
     hint: providerHint,
-    emptyTitle: 'Noch keine Angebote. Starte mit dem ersten Auftrag.',
-    emptyCtaLabel: 'Auftraege ansehen',
+    emptyTitle: t(I18N_KEYS.requestsPage.statsProviderEmptyTitle),
+    emptyCtaLabel: t(I18N_KEYS.requestsPage.statsProviderEmptyCta),
     emptyCtaHref: '/orders?tab=new-orders',
   };
 
@@ -447,54 +449,54 @@ export function useRequestsWorkspaceState({
     kpis: [
       {
         key: 'requests-total',
-        label: 'Meine Anfragen',
+        label: t(I18N_KEYS.requestsPage.statsKpiMyRequests),
         value: formatNumber.format(myRequests.length),
       },
       {
         key: 'requests-open',
-        label: 'Aktiv',
+        label: t(I18N_KEYS.requestsPage.statsKpiOpen),
         value: formatNumber.format(myOpenRequests.length),
       },
       {
         key: 'contracts-active',
-        label: 'In Arbeit',
+        label: t(I18N_KEYS.requestsPage.statsKpiInProgress),
         value: formatNumber.format(clientActiveContracts.length),
       },
       {
         key: 'contracts-completed',
-        label: 'Abgeschlossen',
+        label: t(I18N_KEYS.requestsPage.statsKpiCompleted),
         value: formatNumber.format(clientCompletedContracts.length),
       },
     ],
-    chartTitle: 'Anfragen / Abschluesse',
+    chartTitle: t(I18N_KEYS.requestsPage.statsClientChartTitle),
     chartPoints: clientChartPoints,
     secondary: {
-      leftLabel: 'gesamt',
+      leftLabel: t(I18N_KEYS.requestsPage.statsLabelTotal),
       leftValue: formatNumber.format(myRequests.length),
-      centerLabel: 'offen',
+      centerLabel: t(I18N_KEYS.requestsPage.statsLabelOpen),
       centerValue: formatNumber.format(myOpenRequests.length),
-      rightLabel: 'in Arbeit',
+      rightLabel: t(I18N_KEYS.requestsPage.statsKpiInProgress),
       rightValue: formatNumber.format(clientActiveContracts.length),
-      progressLabel: 'Abschlussquote',
+      progressLabel: t(I18N_KEYS.requestsPage.statsLabelCompletionRate),
       progressValue: Math.round((clientCompletedContracts.length / Math.max(1, myRequests.length)) * 100),
-      responseLabel: 'Abgeschlossene Auftraege',
+      responseLabel: t(I18N_KEYS.requestsPage.statsLabelCompletedJobs),
       responseValue: formatNumber.format(clientCompletedContracts.length),
     },
     hint: clientHint,
-    emptyTitle: 'Noch keine Anfrage erstellt.',
-    emptyCtaLabel: 'Anfrage erstellen',
+    emptyTitle: t(I18N_KEYS.requestsPage.statsClientEmptyTitle),
+    emptyCtaLabel: t(I18N_KEYS.requestsPage.statsClientEmptyCta),
     emptyCtaHref: '/request/create',
   };
 
   const statsOrder =
     providerPriorityScore >= clientPriorityScore
       ? [
-          { tab: 'provider' as const, title: 'Statistik Anbieter', payload: providerStatsPayload },
-          { tab: 'client' as const, title: 'Statistik Kunde', payload: clientStatsPayload },
+          { tab: 'provider' as const, title: t(I18N_KEYS.requestsPage.statsProviderTitle), payload: providerStatsPayload },
+          { tab: 'client' as const, title: t(I18N_KEYS.requestsPage.statsClientTitle), payload: clientStatsPayload },
         ]
       : [
-          { tab: 'client' as const, title: 'Statistik Kunde', payload: clientStatsPayload },
-          { tab: 'provider' as const, title: 'Statistik Anbieter', payload: providerStatsPayload },
+          { tab: 'client' as const, title: t(I18N_KEYS.requestsPage.statsClientTitle), payload: clientStatsPayload },
+          { tab: 'provider' as const, title: t(I18N_KEYS.requestsPage.statsProviderTitle), payload: providerStatsPayload },
         ];
 
   const topProviders = React.useMemo<TopProviderItem[]>(() => {
