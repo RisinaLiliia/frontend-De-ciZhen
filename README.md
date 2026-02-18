@@ -1,75 +1,160 @@
-# De’ciZhen Frontend
+# De'ciZhen Frontend
 
-Next.js 16 frontend for De’ciZhen marketplace/workspace.
+Next.js frontend for De'ciZhen marketplace and workspace.
 
-## Stack
-- Next.js 16 (App Router)
-- React 19 + TypeScript
-- Zustand (auth/store state)
-- React Query
-- React Hook Form + Zod
-- Tailwind CSS
-- `react-markdown` (legal pages rendering)
+## System Overview
+- The frontend is the user-facing layer of the De'ciZhen marketplace.
+- It integrates with a modular NestJS backend over REST APIs.
+- It supports public browsing, authenticated workspace flows, and object-based UX behavior.
 
-## Key UX Areas
-- Unified workspace route: `/orders` (tab-based flow)
-- Unified profile route: `/profile/workspace`
-- Auth as modal-routes (canonical):
-  - `/auth/login`
-  - `/auth/register`
-- OAuth Google/Apple integrated in auth flow
-- Legal pages:
-  - `/privacy-policy`
-  - `/cookie-notice`
+## Design Principles
+- Thin route components
+- Separation of data layer and presentation layer
+- Explicit access control
+- Environment-based configuration
+- Reusable feature modules
 
-## Auth Notes
-- Email/password login/register via backend `/auth/*`
-- Social login buttons call backend OAuth start endpoints
-- If OAuth requires explicit consent, frontend completes flow via:
-  - `POST /auth/oauth/complete-register`
-- Consent links in register form are driven by:
-  - `NEXT_PUBLIC_PRIVACY_POLICY_URL`
-  - `NEXT_PUBLIC_COOKIE_NOTICE_URL`
+## 1. Tech Stack
+- Next.js (App Router)
+- React + TypeScript
+- Zustand (auth/session state)
+- TanStack Query (data fetching + cache)
+- React Hook Form + Zod (forms/validation)
+- Tailwind CSS + project CSS tokens/themes
+- `react-markdown` (legal documents rendering)
 
-## Quick Start
-Prerequisites:
-- Node.js >= 20.9.0 (required by Next.js 16.1.6)
+## 2. Product Routing Model
 
-Install:
-```bash
-npm install
-```
+### Public
+- `/` home
+- `/requests` public requests listing
+- `/requests/[id]` request details
+- `/providers/[id]` public provider profile
 
-Create local env:
+### Authenticated Workspace
+- `/orders` canonical workspace screen (tab-based)
+- `/profile/workspace` canonical profile/settings screen
+- `/chat` unified inbox
+
+### Auth
+- `/auth/login`
+- `/auth/register`
+- modal-route counterparts via `app/@authModal`
+
+### Legal
+- `/privacy-policy`
+- `/cookie-notice`
+
+## 3. Access Guard (Next 16)
+- Route guard is implemented via `src/proxy.ts` (Next 16 `proxy`, not legacy middleware).
+- Implemented using Next 16 `proxy` to centralize access rules.
+- Rules:
+  - unauthenticated users opening `/orders*` are redirected to `/auth/login?next=...`
+  - authenticated users opening `/requests` are redirected to workspace default tab
+
+## 4. Architecture Notes
+
+### Requests page modularization
+Goal: keep route files thin and isolate data logic from UI rendering.
+
+Core screen `src/app/requests/page.tsx` is refactored into composable modules:
+- `src/features/requests/page/useRequestsPageData.ts` (query/data layer)
+- `src/features/requests/page/useContractRequestsData.ts` (contract request mapping/query)
+- `src/features/requests/page/useRequestsWorkspaceState.tsx` (workspace KPIs/nav/stats/top providers)
+- `src/features/requests/page/useRequestsWorkspaceDerived.ts` (derived lists/view state)
+- `src/features/requests/page/useRequestsPageViewModel.ts` (UI props composition)
+- `src/features/requests/page/PublicContent.tsx` and `src/features/requests/page/WorkspaceContent.tsx` (render layers)
+
+### Error fallback standard
+- Shared helper: `src/lib/api/withStatusFallback.ts`
+- Replaces duplicated `403/404` fallback logic across requests/profile flows.
+
+## 5. Environment Configuration
+Create local env file:
+
 ```bash
 cp .env.local.example .env.local
 ```
 
-If no template exists, set at least:
+Required:
+
 ```env
 API_BASE_URL=http://localhost:4000
 NEXT_PUBLIC_PRIVACY_POLICY_URL=/privacy-policy
 NEXT_PUBLIC_COOKIE_NOTICE_URL=/cookie-notice
 ```
 
-Run dev:
+Optional:
+
+```env
+NEXT_PUBLIC_DEMO=true
+NEXT_PUBLIC_API_BASE=http://localhost:4000
+```
+
+Notes:
+- Frontend calls backend through `/api/*` rewrites (configured in `next.config.ts`).
+- `API_BASE_URL` has priority; `NEXT_PUBLIC_API_BASE` is fallback.
+
+## 6. Local Development
+Prerequisites:
+- Node.js `>= 20.9.0`
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run dev server:
+
 ```bash
 npm run dev
 ```
 
-Build:
+Open:
+- `http://localhost:3000`
+
+## 7. Quality Gates
+Lint:
+
+```bash
+npm run lint
+```
+
+Unit tests:
+
+```bash
+npm run test
+```
+
+Production build check:
+
 ```bash
 npm run build
 ```
 
-## Scripts
+Run production locally:
+
+```bash
+npm run start
+```
+
+## 8. Auth and Consent
+- Email/password auth via backend `/auth/*`
+- Social auth (Google/Apple) in the same auth flow
+- Register form includes explicit legal consent links
+- OAuth completion step supported via `POST /auth/oauth/complete-register`
+
+## 9. Legal Content Flow
+- Backend provides legal markdown via legal endpoints
+- Frontend pages render legal content with `react-markdown`
+- URLs for consent links are configurable via env:
+  - `NEXT_PUBLIC_PRIVACY_POLICY_URL`
+  - `NEXT_PUBLIC_COOKIE_NOTICE_URL`
+
+## 10. Scripts
 - `npm run dev`
 - `npm run build`
 - `npm run start`
 - `npm run lint`
 - `npm run test`
-
-## Project Notes
-- Public requests list remains under `/requests`.
-- Authenticated workspace actions are under `/orders`.
-- Legal pages load markdown content from backend legal endpoints.
