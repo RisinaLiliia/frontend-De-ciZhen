@@ -3,6 +3,7 @@ export type HttpErrorDto = {
   statusCode: number;
   message: string | string[];
   error: string;
+  errorCode?: string;
   timestamp: string;
   path: string;
   requestId?: string;

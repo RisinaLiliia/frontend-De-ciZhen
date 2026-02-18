@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { toast } from 'sonner';
 
 import { Field } from '@/components/ui/Field';
+import { FormLabel } from '@/components/ui/FormLabel';
 import { Select } from '@/components/ui/Select';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { WannPicker } from '@/components/request/WannPicker';
@@ -20,6 +21,7 @@ import { pickI18n } from '@/lib/i18n/helpers';
 
 export function RequestForm() {
   const t = useT();
+  const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const { locale } = useI18n();
   const {
     data: cities,
@@ -113,27 +115,37 @@ export function RequestForm() {
 
       {isEmpty ? <p className="typo-muted">{t(I18N_KEYS.common.emptyData)}</p> : null}
 
-      <Field leftIcon={<IconSearch />} rightIcon={<IconChevronDown />}>
-        <Select
-          options={serviceOptions}
-          value={serviceKey}
-          onChange={setServiceKey}
-          aria-label={t(I18N_KEYS.home.serviceAria)}
-          placeholder={t(I18N_KEYS.home.servicePlaceholder)}
-          disabled={isDisabled}
-        />
-      </Field>
+      <div className="form-group">
+        <FormLabel required requiredHint={requiredHint}>
+          {t(I18N_KEYS.home.serviceAria)}
+        </FormLabel>
+        <Field leftIcon={<IconSearch />} rightIcon={<IconChevronDown />}>
+          <Select
+            options={serviceOptions}
+            value={serviceKey}
+            onChange={setServiceKey}
+            aria-label={t(I18N_KEYS.home.serviceAria)}
+            placeholder={t(I18N_KEYS.home.servicePlaceholder)}
+            disabled={isDisabled}
+          />
+        </Field>
+      </div>
 
-      <Field leftIcon={<IconPin />} rightIcon={<IconChevronDown />}>
-        <Select
-          options={cityOptions}
-          value={cityId}
-          onChange={setCityId}
-          aria-label={t(I18N_KEYS.home.cityAria)}
-          placeholder={t(I18N_KEYS.home.cityPlaceholder)}
-          disabled={isDisabled}
-        />
-      </Field>
+      <div className="form-group">
+        <FormLabel required requiredHint={requiredHint}>
+          {t(I18N_KEYS.home.cityAria)}
+        </FormLabel>
+        <Field leftIcon={<IconPin />} rightIcon={<IconChevronDown />}>
+          <Select
+            options={cityOptions}
+            value={cityId}
+            onChange={setCityId}
+            aria-label={t(I18N_KEYS.home.cityAria)}
+            placeholder={t(I18N_KEYS.home.cityPlaceholder)}
+            disabled={isDisabled}
+          />
+        </Field>
+      </div>
 
       <WannPicker value={schedule} onChange={setSchedule} disabled={isDisabled} />
 

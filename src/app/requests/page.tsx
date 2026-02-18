@@ -751,7 +751,7 @@ function RequestsPageContent() {
     if (page > totalPages) setPage(totalPages);
   }, [page, totalPages, setPage]);
 
-  const createRequestHref = '/auth/login?next=/request/create&role=client';
+  const createRequestHref = '/auth/login?next=/request/create';
   const [seenTotal, setSeenTotal] = React.useState(0);
 
   React.useEffect(() => {
