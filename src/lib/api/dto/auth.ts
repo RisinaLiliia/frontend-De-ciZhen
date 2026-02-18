@@ -29,6 +29,7 @@ export type MeResponseDto = {
   avatar?: AvatarDto;
   acceptedPrivacyPolicy: boolean;
   acceptedPrivacyPolicyAt?: string | null;
+  acceptedPrivacyPolicyVersion?: string | null;
   isBlocked: boolean;
   blockedAt?: string | null;
   createdAt: string;
@@ -73,6 +74,11 @@ export type RegisterDto = {
   city?: string;
   language?: string;
   role?: UserRole;
+  acceptPrivacyPolicy: boolean;
+};
+
+export type OauthCompleteRegisterDto = {
+  signupToken: string;
   acceptPrivacyPolicy: boolean;
 };
 

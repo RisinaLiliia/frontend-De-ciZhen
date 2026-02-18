@@ -80,6 +80,10 @@ export function LoginForm() {
     }
     if (oauthError === 'oauth_failed') {
       toast.error(t(I18N_KEYS.auth.oauthFailed));
+      return;
+    }
+    if (oauthError === 'oauth_consent_required') {
+      toast.message(t(I18N_KEYS.auth.oauthConsentRequired));
     }
   }, [oauthError, t]);
 

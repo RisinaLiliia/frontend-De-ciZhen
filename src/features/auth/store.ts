@@ -1,7 +1,7 @@
 // src/features/auth/store.ts
 import { create } from 'zustand';
 import type { AppMeDto, CapabilitiesDto, MeResponseDto, SafeUserDto, UserMode } from '@/lib/api/dto/auth';
-import { getMe, login, logout, register } from '@/lib/auth/api';
+import { completeOauthRegister, getMe, login, logout, register } from '@/lib/auth/api';
 import { allowRefreshAttempts, refreshAccessToken, suppressRefreshAttempts } from '@/lib/auth/session';
 import { setAccessToken as setToken } from '@/lib/auth/token';
 
@@ -32,6 +32,7 @@ type AuthState = {
     city?: string;
     language?: string;
     acceptPrivacyPolicy: boolean;
+    signupToken?: string;
   }) => Promise<void>;
   logout: () => Promise<void>;
   fetchMe: () => Promise<MeResponseDto | null>;
@@ -179,7 +180,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   register: async (payload) => {
     set({ status: 'loading', error: null });
     try {
-      const data = await register(payload);
+      const data = payload.signupToken
+        ? await completeOauthRegister({
+            signupToken: payload.signupToken,
+            acceptPrivacyPolicy: payload.acceptPrivacyPolicy,
+          })
+        : await register(payload);
       allowRefreshAttempts();
       setToken(data.accessToken);
       set({ accessToken: data.accessToken });

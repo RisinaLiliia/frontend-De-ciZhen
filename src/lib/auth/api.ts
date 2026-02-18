@@ -7,6 +7,7 @@ import type {
   AuthResponseDto,
   LoginDto,
   LogoutResponseDto,
+  OauthCompleteRegisterDto,
   RegisterDto,
 } from '@/lib/api/dto/auth';
 
@@ -66,6 +67,10 @@ export function login(payload: LoginDto) {
 
 export function register(payload: RegisterDto) {
   return authPost<RegisterDto, AuthResponseDto>('/auth/register', payload);
+}
+
+export function completeOauthRegister(payload: OauthCompleteRegisterDto) {
+  return authPost<OauthCompleteRegisterDto, AuthResponseDto>('/auth/oauth/complete-register', payload);
 }
 
 export function logout() {

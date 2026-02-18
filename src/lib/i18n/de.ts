@@ -397,6 +397,7 @@ export const de = {
     continueWithApple: 'Apple',
     oauthUnavailable: 'Social Login ist derzeit nicht verfügbar.',
     oauthFailed: 'Social Login fehlgeschlagen. Bitte versuche es erneut.',
+    oauthConsentRequired: 'Bitte akzeptiere zuerst Datenschutz und Cookies, um Social Login abzuschließen.',
     closeDialog: 'Schließen',
     errorNameRequired: 'Bitte gib deinen vollständigen Namen ein.',
     errorNameMin: 'Der Name muss mindestens 2 Zeichen lang sein.',

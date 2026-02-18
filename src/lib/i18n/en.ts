@@ -397,6 +397,7 @@ export const en: DeDictionary = {
     continueWithApple: 'Apple',
     oauthUnavailable: 'Social login is currently unavailable.',
     oauthFailed: 'Social login failed. Please try again.',
+    oauthConsentRequired: 'Please accept privacy and cookies first to complete social sign up.',
     closeDialog: 'Close',
     errorNameRequired: 'Please enter your full name.',
     errorNameMin: 'Name must be at least 2 characters.',
