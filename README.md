@@ -158,3 +158,6 @@ npm run start
 - `npm run start`
 - `npm run lint`
 - `npm run test`
+
+## 11. License
+This project is proprietary. See [LICENSE](./LICENSE).
