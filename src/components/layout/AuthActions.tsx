@@ -29,7 +29,8 @@ export function AuthActions() {
 
   const onLogout = React.useCallback(async () => {
     await logout();
-  }, [logout]);
+    router.replace('/requests?sort=date_desc&page=1&limit=20');
+  }, [logout, router]);
 
   if (status === 'idle' || status === 'loading') return null;
 

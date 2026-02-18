@@ -162,7 +162,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const me = await getMe();
         get().setMe(me);
       } catch {
-        // Keep authenticated state if token is valid; profile snapshot can be fetched later.
       }
     } catch (error) {
       suppressRefreshAttempts();
@@ -196,7 +195,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const me = await getMe();
         get().setMe(me);
       } catch {
-        // Keep authenticated state if token is valid; profile snapshot can be fetched later.
       }
     } catch (error) {
       suppressRefreshAttempts();

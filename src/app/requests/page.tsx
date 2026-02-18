@@ -12,6 +12,7 @@ import { HeroSection } from '@/components/ui/HeroSection';
 import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
 import { ProofReviewCard } from '@/components/reviews/ProofReviewCard';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
+import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import {
   deleteMyRequest,
 } from '@/lib/api/requests';
@@ -50,6 +51,7 @@ import { useRequestsPageData } from '@/features/requests/page/useRequestsPageDat
 import { useContractRequestsData } from '@/features/requests/page/useContractRequestsData';
 import { useRequestsWorkspaceState } from '@/features/requests/page/useRequestsWorkspaceState';
 import { useRequestsWorkspaceDerived } from '@/features/requests/page/useRequestsWorkspaceDerived';
+import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 
 function RequestsPageContent() {
   const router = useRouter();
@@ -80,6 +82,18 @@ function RequestsPageContent() {
     () => resolveReviewsView(searchParams.get('reviewRole')),
     [searchParams],
   );
+
+  React.useEffect(() => {
+    if (!isWorkspaceRoute || authStatus !== 'unauthenticated') return;
+    const query = searchParams.toString();
+    const nextPath = query ? `${pathname}?${query}` : pathname;
+    router.replace(`/auth/login?next=${encodeURIComponent(nextPath)}`);
+  }, [authStatus, isWorkspaceRoute, pathname, router, searchParams]);
+
+  React.useEffect(() => {
+    if (pathname !== '/requests' || authStatus !== 'authenticated') return;
+    router.replace(DEFAULT_AUTH_NEXT);
+  }, [authStatus, pathname, router]);
 
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
@@ -726,7 +740,7 @@ function RequestsPageContent() {
   });
 
   if (isWorkspaceRoute && authStatus !== 'authenticated') {
-    return null;
+    return <LoadingScreen />;
   }
 
   return (
