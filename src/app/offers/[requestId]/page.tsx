@@ -36,7 +36,7 @@ export default function OffersPage() {
 
   const ensureAuth = (next: string) => {
     if (status === 'authenticated') return true;
-    router.push(`/auth/register?role=client&next=${encodeURIComponent(next)}`);
+    router.push(`/auth/register?next=${encodeURIComponent(next)}`);
     return false;
   };
 
@@ -65,7 +65,7 @@ export default function OffersPage() {
           <div className="card stack-sm">
             <p className="typo-small">{t(I18N_KEYS.offers.softSubtitle)}</p>
             <div className="flex items-center gap-2">
-              <Link href={`/auth/register?role=client&next=/offers/${requestId}`} className="badge">
+              <Link href={`/auth/register?next=/offers/${requestId}`} className="badge">
                 {t(I18N_KEYS.offers.registerCta)}
               </Link>
               <Link href={`/auth/login?next=/offers/${requestId}`} className="badge">

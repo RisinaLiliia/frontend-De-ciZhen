@@ -7,7 +7,13 @@ import { I18nProvider } from '@/lib/i18n/I18nProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { PresenceProvider } from '@/lib/presence/PresenceProvider';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+  authModal,
+}: {
+  children: React.ReactNode;
+  authModal: React.ReactNode;
+}) {
   return (
     <html lang="de" suppressHydrationWarning>
       <body>
@@ -17,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <AuthProvider>
                 <PresenceProvider />
                 {children}
+                {authModal}
               </AuthProvider>
               <AppToaster />
             </QueryProvider>

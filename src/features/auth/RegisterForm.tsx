@@ -10,13 +10,15 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
+import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { IconCheck, IconEye, IconEyeOff } from '@/components/ui/icons/icons';
 import { useAuthRegister, useAuthStatus } from '@/hooks/useAuthSnapshot';
-import { registerSchema, type RegisterValues } from '@/features/auth/register.schema';
+import { buildRegisterSchema, type RegisterValues } from '@/features/auth/register.schema';
+import { getRegisterErrorMessage, isEmailExistsError } from '@/features/auth/mapAuthError';
+import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import { ApiError } from '@/lib/api/http-error';
 
 const DEFAULT_AUTH_NEXT = '/orders?tab=my-requests&sort=date_desc&page=1&limit=20';
 
@@ -25,17 +27,12 @@ export function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || DEFAULT_AUTH_NEXT;
-  const roleFromQuery = searchParams.get('role') as RegisterValues['role'] | null;
-  const loginHref = `/auth/login?next=${encodeURIComponent(next)}${
-    roleFromQuery ? `&role=${encodeURIComponent(roleFromQuery)}` : ''
-  }`;
-  const roleHint =
-    roleFromQuery === 'provider'
-      ? t(I18N_KEYS.landing.providerDesc)
-      : roleFromQuery === 'client'
-        ? t(I18N_KEYS.landing.clientDesc)
-        : '';
-  const showNextHint = next && next !== DEFAULT_AUTH_NEXT;
+  const oauthError = searchParams.get('error');
+  const loginHref = `/auth/login?next=${encodeURIComponent(next)}`;
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
+  const schema = React.useMemo(() => buildRegisterSchema(t), [t]);
 
   const registerUser = useAuthRegister();
   const status = useAuthStatus();
@@ -43,16 +40,17 @@ export function RegisterForm() {
   const {
     register,
     handleSubmit,
-    setValue,
     control,
+    setFocus,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<RegisterValues>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: '',
       email: '',
       password: '',
-      role: roleFromQuery ?? undefined,
+      confirmPassword: '',
       city: '',
       language: '',
       acceptPrivacyPolicy: false,
@@ -61,16 +59,35 @@ export function RegisterForm() {
 
   const onSubmit = async (values: RegisterValues) => {
     try {
-      await registerUser(values);
-      router.replace(next);
+      const { confirmPassword, ...payload } = values;
+      void confirmPassword;
+      await registerUser(payload);
+      toast.success(t(I18N_KEYS.auth.registerSuccess));
     } catch (error) {
-      const message = error instanceof ApiError ? error.message : 'Registration failed';
+      const message = getRegisterErrorMessage(error, t);
+      if (isEmailExistsError(error)) {
+        setError('email', { type: 'server', message });
+      }
       toast.error(message);
     }
   };
 
   const loading = isSubmitting || status === 'loading';
-  const role = useWatch({ control, name: 'role' });
+  const watchedPassword = useWatch({ control, name: 'password' }) ?? '';
+  const watchedName = useWatch({ control, name: 'name' }) ?? '';
+  const watchedEmail = useWatch({ control, name: 'email' }) ?? '';
+  const passwordChecks = React.useMemo(
+    () => ({
+      length: watchedPassword.length >= 8,
+      upper: /[A-ZА-ЯЁ]/.test(watchedPassword),
+      lower: /[a-zа-яё]/.test(watchedPassword),
+      digit: /\d/.test(watchedPassword),
+      symbol: /[^A-Za-zА-Яа-яЁё0-9]/.test(watchedPassword),
+    }),
+    [watchedPassword],
+  );
+  const isNameValid = watchedName.trim().length >= 2;
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(watchedEmail);
 
   React.useEffect(() => {
     if (status === 'authenticated') {
@@ -78,88 +95,204 @@ export function RegisterForm() {
     }
   }, [status, next, router]);
 
+  React.useEffect(() => {
+    if (!oauthError) return;
+    if (oauthError === 'oauth_unavailable') {
+      toast.error(t(I18N_KEYS.auth.oauthUnavailable));
+      return;
+    }
+    if (oauthError === 'oauth_failed') {
+      toast.error(t(I18N_KEYS.auth.oauthFailed));
+    }
+  }, [oauthError, t]);
+
+  React.useEffect(() => {
+    if (errors.name) {
+      setFocus('name');
+      return;
+    }
+    if (errors.email) {
+      setFocus('email');
+      return;
+    }
+    if (errors.password) {
+      setFocus('password');
+      return;
+    }
+    if (errors.confirmPassword) {
+      setFocus('confirmPassword');
+      return;
+    }
+    if (errors.acceptPrivacyPolicy) {
+      setFocus('acceptPrivacyPolicy');
+    }
+  }, [
+    errors.acceptPrivacyPolicy,
+    errors.confirmPassword,
+    errors.email,
+    errors.name,
+    errors.password,
+    setFocus,
+  ]);
+
+  const consentPrivacyHref = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL?.trim() || '';
+  const consentCookieHref = process.env.NEXT_PUBLIC_COOKIE_NOTICE_URL?.trim() || '';
+  const errorSummary =
+    errors.name?.message ||
+    errors.email?.message ||
+    errors.password?.message ||
+    errors.confirmPassword?.message ||
+    errors.acceptPrivacyPolicy?.message ||
+    '';
+
   return (
     <form className="form-stack" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <p className="sr-only" aria-live="polite">{errorSummary}</p>
       <div className="form-group">
-        <label className="typo-small" htmlFor="name">
+        <FormLabel htmlFor="name" required requiredHint={requiredHint}>
           {t(I18N_KEYS.auth.nameLabel)}
-        </label>
-        <Field>
-          <Input id="name" autoComplete="name" {...register('name')} />
+        </FormLabel>
+        <Field
+          rightIcon={
+            isNameValid && !errors.name ? (
+              <span className="auth-valid-icon">
+                <IconCheck />
+              </span>
+            ) : null
+          }
+        >
+          <Input
+            id="name"
+            autoComplete="name"
+            aria-invalid={errors.name ? 'true' : 'false'}
+            aria-describedby={errors.name ? 'register-name-error' : undefined}
+            {...register('name')}
+          />
         </Field>
-        {errors.name ? <p className="text-red-600 text-sm">{errors.name.message}</p> : null}
+        {errors.name ? <p id="register-name-error" className="auth-form-error" role="alert">{errors.name.message}</p> : null}
       </div>
 
       <div className="form-group">
-        <label className="typo-small" htmlFor="email">
+        <FormLabel htmlFor="email" required requiredHint={requiredHint}>
           {t(I18N_KEYS.auth.emailLabel)}
-        </label>
-        <Field>
-          <Input id="email" type="email" autoComplete="email" {...register('email')} />
+        </FormLabel>
+        <Field
+          rightIcon={
+            isEmailValid && !errors.email ? (
+              <span className="auth-valid-icon">
+                <IconCheck />
+              </span>
+            ) : null
+          }
+        >
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            aria-invalid={errors.email ? 'true' : 'false'}
+            aria-describedby={errors.email ? 'register-email-error' : undefined}
+            {...register('email')}
+          />
         </Field>
-        {errors.email ? <p className="text-red-600 text-sm">{errors.email.message}</p> : null}
+        {errors.email ? <p id="register-email-error" className="auth-form-error" role="alert">{errors.email.message}</p> : null}
       </div>
 
       <div className="form-group">
-        <label className="typo-small" htmlFor="password">
+        <FormLabel htmlFor="password" required requiredHint={requiredHint}>
           {t(I18N_KEYS.auth.passwordLabel)}
-        </label>
-        <Field>
+        </FormLabel>
+        <Field className="profile-settings__password-field">
           <Input
             id="password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             autoComplete="new-password"
+            aria-invalid={errors.password ? 'true' : 'false'}
+            aria-describedby={errors.password ? 'register-password-error' : undefined}
             {...register('password')}
           />
+          <button
+            type="button"
+            className="profile-settings__password-toggle"
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+            title={showPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+          >
+            {showPassword ? <IconEye /> : <IconEyeOff />}
+          </button>
         </Field>
-        {errors.password ? <p className="text-red-600 text-sm">{errors.password.message}</p> : null}
+        {errors.password ? <p id="register-password-error" className="auth-form-error" role="alert">{errors.password.message}</p> : null}
+        <div className="auth-password-rules">
+          <span className={passwordChecks.length ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLength)}</span>
+          <span className={passwordChecks.upper ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleUpper)}</span>
+          <span className={passwordChecks.lower ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLower)}</span>
+          <span className={passwordChecks.digit ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleDigit)}</span>
+          <span className={passwordChecks.symbol ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleSymbol)}</span>
+        </div>
       </div>
 
       <div className="form-group">
-        <label className="typo-small" htmlFor="role">
-          {t(I18N_KEYS.auth.roleLabel)}
-        </label>
-        <Field>
-          <Select
-            aria-label={t(I18N_KEYS.auth.roleLabel)}
-            value={role ?? ''}
-            onChange={(value) =>
-              setValue('role', value ? (value as RegisterValues['role']) : undefined)
-            }
-            options={[
-              { value: '', label: t(I18N_KEYS.auth.roleLabel) },
-              { value: 'client', label: t(I18N_KEYS.auth.roleClient) },
-              { value: 'provider', label: t(I18N_KEYS.auth.roleProvider) },
-            ]}
+        <FormLabel htmlFor="confirmPassword" required requiredHint={requiredHint}>
+          {t(I18N_KEYS.auth.confirmPasswordLabel)}
+        </FormLabel>
+        <Field className="profile-settings__password-field">
+          <Input
+            id="confirmPassword"
+            type={showConfirmPassword ? 'text' : 'password'}
+            autoComplete="new-password"
+            aria-invalid={errors.confirmPassword ? 'true' : 'false'}
+            aria-describedby={errors.confirmPassword ? 'register-confirm-password-error' : undefined}
+            {...register('confirmPassword')}
           />
+          <button
+            type="button"
+            className="profile-settings__password-toggle"
+            onClick={() => setShowConfirmPassword((prev) => !prev)}
+            aria-label={showConfirmPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+            title={showConfirmPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+          >
+            {showConfirmPassword ? <IconEye /> : <IconEyeOff />}
+          </button>
         </Field>
-        {errors.role ? <p className="text-red-600 text-sm">{errors.role.message}</p> : null}
-      </div>
-
-      <div className="form-group">
-        <label className="typo-small" htmlFor="city">
-          {t(I18N_KEYS.auth.cityLabel)}
-        </label>
-        <Field>
-          <Input id="city" autoComplete="address-level2" {...register('city')} />
-        </Field>
+        {errors.confirmPassword ? <p id="register-confirm-password-error" className="auth-form-error" role="alert">{errors.confirmPassword.message}</p> : null}
       </div>
 
       <label className="flex items-start gap-3 text-sm">
-        <input type="checkbox" className="mt-1" {...register('acceptPrivacyPolicy')} />
-        <span>{t(I18N_KEYS.auth.acceptPolicy)}</span>
+        <input
+          type="checkbox"
+          className="mt-1"
+          aria-invalid={errors.acceptPrivacyPolicy ? 'true' : 'false'}
+          aria-describedby={errors.acceptPrivacyPolicy ? 'register-consent-error' : undefined}
+          {...register('acceptPrivacyPolicy')}
+        />
+        <span className="auth-consent__text">
+          {t(I18N_KEYS.auth.acceptPolicyPrefix)}{' '}
+          {consentPrivacyHref ? (
+            <a href={consentPrivacyHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
+              {t(I18N_KEYS.auth.acceptPolicyPrivacyLink)}
+            </a>
+          ) : (
+            <span className="auth-consent__link is-disabled">{t(I18N_KEYS.auth.acceptPolicyPrivacyLink)}</span>
+          )}{' '}
+          {t(I18N_KEYS.auth.acceptPolicyAnd)}{' '}
+          {consentCookieHref ? (
+            <a href={consentCookieHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
+              {t(I18N_KEYS.auth.acceptPolicyCookieLink)}
+            </a>
+          ) : (
+            <span className="auth-consent__link is-disabled">{t(I18N_KEYS.auth.acceptPolicyCookieLink)}</span>
+          )}{' '}
+          {t(I18N_KEYS.auth.acceptPolicySuffix)}
+        </span>
       </label>
       {errors.acceptPrivacyPolicy ? (
-        <p className="text-red-600 text-sm">{errors.acceptPrivacyPolicy.message}</p>
+        <p id="register-consent-error" className="auth-form-error" role="alert">{errors.acceptPrivacyPolicy.message}</p>
       ) : null}
 
       <Button type="submit" loading={loading}>
         {t(I18N_KEYS.auth.registerCta)}
       </Button>
 
-      {showNextHint ? <p className="typo-small text-center">{t(I18N_KEYS.auth.nextHint)}</p> : null}
-
-      {roleHint ? <p className="typo-small text-center">{roleHint}</p> : null}
+      <SocialAuthButtons nextPath={next} />
 
       <Link href={loginHref} className="typo-small text-center link-accent">
         {t(I18N_KEYS.auth.toLogin)}

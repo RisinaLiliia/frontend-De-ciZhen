@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { Field } from '@/components/ui/Field';
+import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
@@ -88,6 +89,7 @@ function readRequestDraft(): RequestDraft | null {
 
 function CreateRequestContent() {
   const t = useT();
+  const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { locale } = useI18n();
@@ -385,7 +387,9 @@ function CreateRequestContent() {
             </div>
 
             <div className="form-group">
-              <label className="typo-small">{t(I18N_KEYS.request.categoryLabel)}</label>
+              <FormLabel required requiredHint={requiredHint}>
+                {t(I18N_KEYS.request.categoryLabel)}
+              </FormLabel>
               <Field leftIcon={<IconBriefcase />} rightIcon={<IconChevronDown />}>
                 <Select
                   value={categoryKey}
@@ -400,7 +404,9 @@ function CreateRequestContent() {
             </div>
 
             <div className="form-group">
-              <label className="typo-small">{t(I18N_KEYS.request.subcategoryLabel)}</label>
+              <FormLabel required requiredHint={requiredHint}>
+                {t(I18N_KEYS.request.subcategoryLabel)}
+              </FormLabel>
               <Field rightIcon={<IconChevronDown />}>
                 <Select
                   value={serviceKey}
@@ -417,7 +423,9 @@ function CreateRequestContent() {
 
             <div className="form-group">
               <div className="request-form__meta">
-                <label className="typo-small">{t(I18N_KEYS.request.titleLabel)}</label>
+                <FormLabel required requiredHint={requiredHint}>
+                  {t(I18N_KEYS.request.titleLabel)}
+                </FormLabel>
                 <span className="form-counter">{titleValue.length}/120</span>
               </div>
               <Field>
@@ -502,7 +510,9 @@ function CreateRequestContent() {
             </div>
 
             <div className="form-group">
-              <label className="typo-small">{t(I18N_KEYS.home.cityAria)}</label>
+              <FormLabel required requiredHint={requiredHint}>
+                {t(I18N_KEYS.home.cityAria)}
+              </FormLabel>
               <Field leftIcon={<IconPin />} rightIcon={<IconChevronDown />}>
                 <Select
                   value={cityId}
@@ -523,7 +533,9 @@ function CreateRequestContent() {
 
             <div className="request-form__row is-2">
               <div className="form-group">
-                <label className="typo-small">{t(I18N_KEYS.request.preferredDate)}</label>
+                <FormLabel required requiredHint={requiredHint}>
+                  {t(I18N_KEYS.request.preferredDate)}
+                </FormLabel>
                 <Field leftIcon={<IconCalendar />}>
                   <Input type="datetime-local" {...register('preferredDate')} />
                 </Field>

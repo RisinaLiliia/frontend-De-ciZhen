@@ -12,6 +12,7 @@ import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
+import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
 import { getMyProviderProfile, updateMyProviderProfile } from '@/lib/api/providers';
 import { useCities, useServices } from '@/features/catalog/queries';
@@ -30,6 +31,7 @@ type ProfileFormValues = {
 
 export function ProviderOnboardingClient() {
   const t = useT();
+  const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const router = useRouter();
   const searchParams = useSearchParams();
   const qc = useQueryClient();
@@ -123,7 +125,9 @@ export function ProviderOnboardingClient() {
 
         <form className="card stack-md" onSubmit={handleSubmit(onSubmit)}>
           <div className="stack-sm">
-            <label className="typo-small">{t(I18N_KEYS.provider.displayName)}</label>
+            <FormLabel required requiredHint={requiredHint}>
+              {t(I18N_KEYS.provider.displayName)}
+            </FormLabel>
             <Field>
               <Input required {...register('displayName')} />
             </Field>
@@ -137,7 +141,9 @@ export function ProviderOnboardingClient() {
           </div>
 
           <div className="stack-sm">
-            <label className="typo-small">{t(I18N_KEYS.provider.city)}</label>
+            <FormLabel required requiredHint={requiredHint}>
+              {t(I18N_KEYS.provider.city)}
+            </FormLabel>
             <Field>
               <select className="field" required {...register('cityId')}>
                 <option value="">—</option>
@@ -151,14 +157,18 @@ export function ProviderOnboardingClient() {
           </div>
 
           <div className="stack-sm">
-            <label className="typo-small">{t(I18N_KEYS.provider.basePrice)}</label>
+            <FormLabel required requiredHint={requiredHint}>
+              {t(I18N_KEYS.provider.basePrice)}
+            </FormLabel>
             <Field>
               <Input type="number" min={10} required {...register('basePrice')} />
             </Field>
           </div>
 
           <div className="stack-sm">
-            <label className="typo-small">{t(I18N_KEYS.provider.services)}</label>
+            <FormLabel required requiredHint={requiredHint}>
+              {t(I18N_KEYS.provider.services)}
+            </FormLabel>
             <div className="stack-sm">
               <div className="flex flex-wrap gap-2">
                 {(services ?? [])

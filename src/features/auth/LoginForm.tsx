@@ -4,18 +4,21 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/Button';
 import { Field } from '@/components/ui/Field';
+import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
+import { IconCheck, IconEye, IconEyeOff } from '@/components/ui/icons/icons';
 import { useAuthLogin, useAuthStatus } from '@/hooks/useAuthSnapshot';
-import { loginSchema, type LoginValues } from '@/features/auth/login.schema';
+import { buildLoginSchema, type LoginValues } from '@/features/auth/login.schema';
+import { getLoginErrorMessage, isInvalidCredentialsError } from '@/features/auth/mapAuthError';
+import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import { ApiError } from '@/lib/api/http-error';
 
 const DEFAULT_AUTH_NEXT = '/orders?tab=my-requests&sort=date_desc&page=1&limit=20';
 
@@ -24,11 +27,11 @@ export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || DEFAULT_AUTH_NEXT;
-  const role = searchParams.get('role');
-  const registerHref = `/auth/register?next=${encodeURIComponent(next)}${
-    role ? `&role=${encodeURIComponent(role)}` : ''
-  }`;
-  const showNextHint = next && next !== DEFAULT_AUTH_NEXT;
+  const oauthError = searchParams.get('error');
+  const registerHref = `/auth/register?next=${encodeURIComponent(next)}`;
+  const [showPassword, setShowPassword] = React.useState(false);
+  const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
+  const schema = React.useMemo(() => buildLoginSchema(t), [t]);
 
   const login = useAuthLogin();
   const status = useAuthStatus();
@@ -36,18 +39,27 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    control,
+    setFocus,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(schema),
     defaultValues: { email: '', password: '' },
   });
+  const watchedEmail = useWatch({ control, name: 'email' }) ?? '';
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(watchedEmail);
 
   const onSubmit = async (values: LoginValues) => {
     try {
       await login(values.email, values.password);
-      router.replace(next);
+      toast.success(t(I18N_KEYS.auth.loginSuccess));
     } catch (error) {
-      const message = error instanceof ApiError ? error.message : 'Login failed';
+      const message = getLoginErrorMessage(error, t);
+      if (isInvalidCredentialsError(error)) {
+        setError('email', { type: 'server', message });
+        setError('password', { type: 'server', message });
+      }
       toast.error(message);
     }
   };
@@ -60,47 +72,97 @@ export function LoginForm() {
     }
   }, [status, next, router]);
 
+  React.useEffect(() => {
+    if (!oauthError) return;
+    if (oauthError === 'oauth_unavailable') {
+      toast.error(t(I18N_KEYS.auth.oauthUnavailable));
+      return;
+    }
+    if (oauthError === 'oauth_failed') {
+      toast.error(t(I18N_KEYS.auth.oauthFailed));
+    }
+  }, [oauthError, t]);
+
+  React.useEffect(() => {
+    if (errors.email) {
+      setFocus('email');
+      return;
+    }
+    if (errors.password) {
+      setFocus('password');
+    }
+  }, [errors.email, errors.password, setFocus]);
+
+  const errorSummary = errors.email?.message || errors.password?.message || '';
+
   return (
     <form className="form-stack" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <p className="sr-only" aria-live="polite">{errorSummary}</p>
       <div className="form-group">
-        <label className="typo-small" htmlFor="email">
+        <FormLabel htmlFor="email" required requiredHint={requiredHint}>
           {t(I18N_KEYS.auth.emailLabel)}
-        </label>
-        <Field>
+        </FormLabel>
+        <Field
+          rightIcon={
+            isEmailValid && !errors.email ? (
+              <span className="auth-valid-icon">
+                <IconCheck />
+              </span>
+            ) : null
+          }
+        >
           <Input
             id="email"
             type="email"
             autoComplete="email"
+            aria-invalid={errors.email ? 'true' : 'false'}
+            aria-describedby={errors.email ? 'login-email-error' : undefined}
             {...register('email')}
           />
         </Field>
-        {errors.email ? <p className="text-red-600 text-sm">{errors.email.message}</p> : null}
+        {errors.email ? <p id="login-email-error" className="auth-form-error" role="alert">{errors.email.message}</p> : null}
       </div>
 
       <div className="form-group">
-        <label className="typo-small" htmlFor="password">
+        <FormLabel htmlFor="password" required requiredHint={requiredHint}>
           {t(I18N_KEYS.auth.passwordLabel)}
-        </label>
-        <Field>
+        </FormLabel>
+        <Field className="profile-settings__password-field">
           <Input
             id="password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
+            aria-invalid={errors.password ? 'true' : 'false'}
+            aria-describedby={errors.password ? 'login-password-error' : undefined}
             {...register('password')}
           />
+          <button
+            type="button"
+            className="profile-settings__password-toggle"
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+            title={showPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+          >
+            {showPassword ? <IconEye /> : <IconEyeOff />}
+          </button>
         </Field>
         {errors.password ? (
-          <p className="text-red-600 text-sm">{errors.password.message}</p>
+          <p id="login-password-error" className="auth-form-error" role="alert">{errors.password.message}</p>
         ) : null}
+        <button
+          type="button"
+          className="auth-form__link-btn"
+          onClick={() => toast.message(t(I18N_KEYS.auth.forgotPasswordSoon))}
+        >
+          {t(I18N_KEYS.auth.forgotPassword)}
+        </button>
       </div>
 
       <Button type="submit" loading={loading}>
         {t(I18N_KEYS.auth.loginCta)}
       </Button>
 
-      {showNextHint ? (
-        <p className="typo-small text-center">{t(I18N_KEYS.auth.nextHint)}</p>
-      ) : null}
+      <SocialAuthButtons nextPath={next} />
 
       <Link href={registerHref} className="typo-small text-center link-accent">
         {t(I18N_KEYS.auth.toRegister)}

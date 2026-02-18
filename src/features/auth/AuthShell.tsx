@@ -12,12 +12,12 @@ export function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <PageShell right={null}>
-      <div className="container-mobile auth-shell">
-        <section className="card stack-lg">
-          <header className="text-center stack-sm">
-            <h1 className="typo-h1">{title}</h1>
-            {subtitle ? <p className="typo-muted">{subtitle}</p> : null}
+    <PageShell right={null} showBack={false} mainClassName="auth-shell-main">
+      <div className="auth-shell">
+        <section className="card stack-lg auth-shell__dialog">
+          <header className="text-center stack-sm auth-shell__header">
+            <h1 className="typo-h1 auth-shell__title">{title}</h1>
+            {subtitle ? <p className="typo-muted auth-shell__subtitle">{subtitle}</p> : null}
           </header>
           {children}
         </section>

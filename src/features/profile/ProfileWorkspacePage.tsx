@@ -23,6 +23,7 @@ import { useAuthStore } from '@/features/auth/store';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
+import { FormLabel } from '@/components/ui/FormLabel';
 import { IconEye, IconEyeOff } from '@/components/ui/icons/icons';
 import { buildApiUrl } from '@/lib/api/url';
 
@@ -40,6 +41,7 @@ async function with403Fallback<T>(fn: () => Promise<T>, fallback: T): Promise<T>
 
 export default function ProfileWorkspacePage() {
   const t = useT();
+  const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const authMe = useAuthMe();
   const hasProviderProfile = useHasProviderProfile();
   const setMe = useAuthStore((s) => s.setMe);
@@ -446,28 +448,46 @@ export default function ProfileWorkspacePage() {
                 onClick={() => setIsProfileEditing((prev) => !prev)}
               />
             </header>
-            <label className="profile-settings__row">
-              <span className="typo-small profile-settings__row-label">Vollstaendiger Name</span>
+            <div className="profile-settings__row">
+              <FormLabel
+                className="profile-settings__row-label"
+                htmlFor="profile-full-name"
+                required
+                requiredHint={requiredHint}
+              >
+                Vollstaendiger Name
+              </FormLabel>
               <input
+                id="profile-full-name"
                 className="input"
                 value={profileForm.name}
                 onChange={(event) => setProfileForm((prev) => ({ ...prev, name: event.target.value }))}
                 readOnly={!isProfileEditing}
               />
-            </label>
-            <label className="profile-settings__row">
-              <span className="typo-small profile-settings__row-label">Stadt (optional)</span>
+            </div>
+            <div className="profile-settings__row">
+              <FormLabel className="profile-settings__row-label" htmlFor="profile-city">
+                Stadt (optional)
+              </FormLabel>
               <input
+                id="profile-city"
                 className="input"
                 value={profileForm.city}
                 onChange={(event) => setProfileForm((prev) => ({ ...prev, city: event.target.value }))}
                 readOnly={!isProfileEditing}
               />
-            </label>
-            <label className="profile-settings__row">
-              <span className="typo-small profile-settings__row-label">Email</span>
-              <input className="input" value={authMe?.email ?? ''} readOnly />
-            </label>
+            </div>
+            <div className="profile-settings__row">
+              <FormLabel
+                className="profile-settings__row-label"
+                htmlFor="profile-email"
+                required
+                requiredHint={requiredHint}
+              >
+                Email
+              </FormLabel>
+              <input id="profile-email" className="input" value={authMe?.email ?? ''} readOnly />
+            </div>
             {isProfileEditing ? (
               <div className="profile-settings__inline-actions">
                 <button
@@ -511,15 +531,30 @@ export default function ProfileWorkspacePage() {
                 onClick={() => setIsSecurityEditing((prev) => !prev)}
               />
             </header>
-            <label className="profile-settings__row">
-              <span className="typo-small profile-settings__row-label">Login</span>
-              <input className="input" value={authMe?.email ?? ''} disabled />
-            </label>
-            <label className="profile-settings__row">
-              <span className="typo-small profile-settings__row-label">Aktuelles Passwort</span>
+            <div className="profile-settings__row">
+              <FormLabel
+                className="profile-settings__row-label"
+                htmlFor="security-login"
+                required
+                requiredHint={requiredHint}
+              >
+                Login
+              </FormLabel>
+              <input id="security-login" className="input" value={authMe?.email ?? ''} disabled />
+            </div>
+            <div className="profile-settings__row">
+              <FormLabel
+                className="profile-settings__row-label"
+                htmlFor="security-current-password"
+                required
+                requiredHint={requiredHint}
+              >
+                Aktuelles Passwort
+              </FormLabel>
               {isSecurityEditing ? (
                 <span className="profile-settings__password-field">
                   <input
+                    id="security-current-password"
                     className="input"
                     type={showCurrentPassword ? 'text' : 'password'}
                     value={passwordForm.currentPassword}
@@ -539,14 +574,22 @@ export default function ProfileWorkspacePage() {
                   </button>
                 </span>
               ) : (
-                <input className="input" type="password" value="••••••••••••" readOnly />
+                <input id="security-current-password" className="input" type="password" value="••••••••••••" readOnly />
               )}
-            </label>
+            </div>
             {isSecurityEditing ? (
-              <label className="profile-settings__row">
-                <span className="typo-small profile-settings__row-label">Neues Passwort</span>
+              <div className="profile-settings__row">
+                <FormLabel
+                  className="profile-settings__row-label"
+                  htmlFor="security-new-password"
+                  required
+                  requiredHint={requiredHint}
+                >
+                  Neues Passwort
+                </FormLabel>
                 <span className="profile-settings__password-field profile-settings__password-field--accent">
                   <input
+                    id="security-new-password"
                     className={`input ${passwordForm.newPassword.length > 0 && !isPasswordStrong ? 'is-error' : ''}`.trim()}
                     type={showNewPassword ? 'text' : 'password'}
                     value={passwordForm.newPassword}
@@ -565,13 +608,21 @@ export default function ProfileWorkspacePage() {
                     {showNewPassword ? <IconEye /> : <IconEyeOff />}
                   </button>
                 </span>
-              </label>
+              </div>
             ) : null}
             {isSecurityEditing ? (
-              <label className="profile-settings__row">
-                <span className="typo-small profile-settings__row-label">Passwort wiederholen</span>
+              <div className="profile-settings__row">
+                <FormLabel
+                  className="profile-settings__row-label"
+                  htmlFor="security-confirm-password"
+                  required
+                  requiredHint={requiredHint}
+                >
+                  Passwort wiederholen
+                </FormLabel>
                 <span className="profile-settings__password-field profile-settings__password-field--accent">
                   <input
+                    id="security-confirm-password"
                     className={`input ${passwordForm.confirmPassword.length > 0 && !passwordsMatch ? 'is-error' : ''}`.trim()}
                     type={showConfirmPassword ? 'text' : 'password'}
                     value={passwordForm.confirmPassword}
@@ -590,7 +641,7 @@ export default function ProfileWorkspacePage() {
                     {showConfirmPassword ? <IconEye /> : <IconEyeOff />}
                   </button>
                 </span>
-              </label>
+              </div>
             ) : null}
             {isSecurityEditing ? (
               <div className="profile-settings__password-hint">

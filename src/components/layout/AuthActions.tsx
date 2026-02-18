@@ -3,6 +3,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuthLogout, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -11,9 +12,20 @@ import { IconChat, IconLogin, IconLogout, IconUser, IconUserPlus } from '@/compo
 
 export function AuthActions() {
   const t = useT();
+  const router = useRouter();
   const status = useAuthStatus();
   const user = useAuthUser();
   const logout = useAuthLogout();
+  const openAuth = React.useCallback(
+    (route: '/auth/login' | '/auth/register') => {
+      const next =
+        typeof window === 'undefined'
+          ? '/'
+          : `${window.location.pathname}${window.location.search}`;
+      router.push(`${route}?next=${encodeURIComponent(next)}`, { scroll: false });
+    },
+    [router],
+  );
 
   const onLogout = React.useCallback(async () => {
     await logout();
@@ -47,20 +59,22 @@ export function AuthActions() {
 
   return (
     <div className="flex items-center gap-2">
-      <Link
-        href="/auth/login"
+      <button
+        type="button"
+        onClick={() => openAuth('/auth/login')}
         aria-label={t(I18N_KEYS.auth.loginCta)}
         className="icon-button h-10 w-10 inline-flex items-center justify-center rounded-md"
       >
         <IconLogin />
-      </Link>
-      <Link
-        href="/auth/register"
+      </button>
+      <button
+        type="button"
+        onClick={() => openAuth('/auth/register')}
         aria-label={t(I18N_KEYS.auth.registerCta)}
         className="icon-button h-10 w-10 inline-flex items-center justify-center rounded-md"
       >
         <IconUserPlus />
-      </Link>
+      </button>
     </div>
   );
 }
