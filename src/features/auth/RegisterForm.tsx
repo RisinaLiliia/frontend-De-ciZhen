@@ -26,7 +26,11 @@ export function RegisterForm() {
   const searchParams = useSearchParams();
   const oauthError = searchParams.get('error');
   const oauthSignupToken = searchParams.get('signupToken') || '';
-  const loginHref = '/auth/login';
+  const nextPath = searchParams.get('next')?.trim();
+  const loginHref = React.useMemo(() => {
+    if (!nextPath || !nextPath.startsWith('/')) return '/auth/login';
+    return `/auth/login?next=${encodeURIComponent(nextPath)}`;
+  }, [nextPath]);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
@@ -60,7 +64,7 @@ export function RegisterForm() {
       void confirmPassword;
       await registerUser({ ...payload, ...(oauthSignupToken ? { signupToken: oauthSignupToken } : {}) });
       toast.success(t(I18N_KEYS.auth.registerSuccess));
-      navigateAfterAuth();
+      navigateAfterAuth(nextPath);
     } catch (error) {
       const message = getRegisterErrorMessage(error, t);
       if (isEmailExistsError(error)) {
@@ -89,9 +93,9 @@ export function RegisterForm() {
 
   React.useEffect(() => {
     if (status === 'authenticated') {
-      navigateAfterAuth();
+      navigateAfterAuth(nextPath);
     }
-  }, [navigateAfterAuth, status]);
+  }, [navigateAfterAuth, nextPath, status]);
 
   React.useEffect(() => {
     if (!oauthError) return;
@@ -137,8 +141,8 @@ export function RegisterForm() {
     setFocus,
   ]);
 
-  const consentPrivacyHref = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL?.trim() || '';
-  const consentCookieHref = process.env.NEXT_PUBLIC_COOKIE_NOTICE_URL?.trim() || '';
+  const consentPrivacyHref = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL?.trim() || '/privacy-policy';
+  const consentCookieHref = process.env.NEXT_PUBLIC_COOKIE_NOTICE_URL?.trim() || '/cookie-notice';
   const errorSummary =
     errors.name?.message ||
     errors.email?.message ||
@@ -268,21 +272,13 @@ export function RegisterForm() {
         />
         <span className="auth-consent__text">
           {t(I18N_KEYS.auth.acceptPolicyPrefix)}{' '}
-          {consentPrivacyHref ? (
-            <a href={consentPrivacyHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
+          <a href={consentPrivacyHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
               {t(I18N_KEYS.auth.acceptPolicyPrivacyLink)}
-            </a>
-          ) : (
-            <span className="auth-consent__link is-disabled">{t(I18N_KEYS.auth.acceptPolicyPrivacyLink)}</span>
-          )}{' '}
+            </a>{' '}
           {t(I18N_KEYS.auth.acceptPolicyAnd)}{' '}
-          {consentCookieHref ? (
-            <a href={consentCookieHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
+          <a href={consentCookieHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
               {t(I18N_KEYS.auth.acceptPolicyCookieLink)}
-            </a>
-          ) : (
-            <span className="auth-consent__link is-disabled">{t(I18N_KEYS.auth.acceptPolicyCookieLink)}</span>
-          )}{' '}
+            </a>{' '}
           {t(I18N_KEYS.auth.acceptPolicySuffix)}
         </span>
       </label>

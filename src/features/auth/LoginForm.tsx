@@ -17,7 +17,6 @@ import { useAuthLogin, useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { buildLoginSchema, type LoginValues } from '@/features/auth/login.schema';
 import { getLoginErrorMessage, isInvalidCredentialsError } from '@/features/auth/mapAuthError';
 import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
-import { forgotPassword } from '@/lib/auth/api';
 import { useAuthSuccessNavigate } from '@/features/auth/useAuthSuccessNavigate';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -28,6 +27,7 @@ export function LoginForm() {
   const oauthError = searchParams.get('error');
   const registerHref = '/auth/register';
   const [showPassword, setShowPassword] = React.useState(false);
+  const nextPath = searchParams.get('next')?.trim();
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const schema = React.useMemo(() => buildLoginSchema(t), [t]);
 
@@ -47,13 +47,20 @@ export function LoginForm() {
     defaultValues: { email: '', password: '' },
   });
   const watchedEmail = useWatch({ control, name: 'email' }) ?? '';
+  const forgotHref = React.useMemo(() => {
+    const params = new URLSearchParams();
+    if (nextPath && nextPath.startsWith('/')) params.set('next', nextPath);
+    if (watchedEmail) params.set('email', watchedEmail);
+    const query = params.toString();
+    return query ? `/auth/forgot-password?${query}` : '/auth/forgot-password';
+  }, [nextPath, watchedEmail]);
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(watchedEmail);
 
   const onSubmit = async (values: LoginValues) => {
     try {
       await login(values.email, values.password);
       toast.success(t(I18N_KEYS.auth.loginSuccess));
-      navigateAfterAuth();
+      navigateAfterAuth(nextPath);
     } catch (error) {
       const message = getLoginErrorMessage(error, t);
       if (isInvalidCredentialsError(error)) {
@@ -64,31 +71,13 @@ export function LoginForm() {
     }
   };
 
-  const onForgotPassword = async () => {
-    if (!watchedEmail || !isEmailValid) {
-      toast.error(t(I18N_KEYS.auth.errorEmailInvalid));
-      return;
-    }
-
-    try {
-      const result = await forgotPassword({ email: watchedEmail });
-      if (result.resetUrl) {
-        window.location.href = result.resetUrl;
-        return;
-      }
-      toast.success(t(I18N_KEYS.auth.forgotPasswordSoon));
-    } catch {
-      toast.error(t(I18N_KEYS.auth.errorGenericLogin));
-    }
-  };
-
   const loading = isSubmitting || status === 'loading';
 
   React.useEffect(() => {
     if (status === 'authenticated') {
-      navigateAfterAuth();
+      navigateAfterAuth(nextPath);
     }
-  }, [navigateAfterAuth, status]);
+  }, [navigateAfterAuth, nextPath, status]);
 
   React.useEffect(() => {
     if (!oauthError) return;
@@ -173,13 +162,9 @@ export function LoginForm() {
         ) : null}
       </div>
 
-      <button
-        type="button"
-        onClick={onForgotPassword}
-        className="typo-small ml-auto text-right link-accent"
-      >
+      <Link href={forgotHref} prefetch={false} className="typo-small ml-auto text-right link-accent">
         {t(I18N_KEYS.auth.forgotPassword)}
-      </button>
+      </Link>
 
       <Button type="submit" loading={loading}>
         {t(I18N_KEYS.auth.loginCta)}

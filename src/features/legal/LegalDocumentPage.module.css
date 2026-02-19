@@ -1,38 +1,171 @@
+.page {
+  position: relative;
+}
+
 .legalWrap {
-  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--c-border) 88%, transparent);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(1100px 500px at -10% -30%, color-mix(in oklab, var(--c-primary) 18%, transparent), transparent 62%),
+    radial-gradient(900px 400px at 110% -20%, color-mix(in oklab, var(--c-accent) 18%, transparent), transparent 56%),
+    linear-gradient(180deg, color-mix(in oklab, var(--c-surface) 82%, #0b1220 18%), color-mix(in oklab, var(--c-panel) 78%, #0b1220 22%));
+  padding: var(--space-4);
+  box-shadow: var(--shadow-card);
 }
 
 .legalHeader {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  gap: 0.75rem;
-  border-bottom: 1px solid var(--stroke-soft);
-  padding-bottom: 0.75rem;
-  margin-bottom: 1rem;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  padding: var(--space-1) 0 var(--space-3);
+  border-bottom: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+}
+
+.legalHeaderMeta {
+  display: grid;
+  gap: 6px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-primary-contrast);
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--c-primary) 78%, transparent),
+    color-mix(in oklab, var(--c-primary) 38%, transparent)
+  );
+  border: 1px solid color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(var(--fs-h2), 2.9vw, 2rem);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.02em;
+  color: var(--c-text);
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--c-text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.brandBadge {
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+  background: color-mix(in oklab, var(--c-panel) 86%, transparent);
+  color: var(--c-text-muted);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.metaBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--space-3);
+}
+
+.metaPill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
+  border-radius: 999px;
+  padding: 4px 10px;
+  color: var(--c-text-muted);
+  font-size: var(--fs-small);
+  line-height: 1.2;
+  background: color-mix(in oklab, var(--c-panel) 85%, transparent);
+}
+
+.metaActions {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.metaButton {
+  border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
+  background: color-mix(in oklab, var(--c-panel) 84%, transparent);
+  color: var(--c-text);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.metaButton:hover,
+.metaButton:focus-visible {
+  border-color: color-mix(in oklab, var(--c-accent) 60%, var(--c-border) 40%);
+  background: color-mix(in oklab, var(--c-accent) 12%, var(--c-panel) 88%);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.notice,
+.error {
+  margin-bottom: var(--space-3);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-body);
+}
+
+.notice {
+  color: var(--c-text);
+  background: color-mix(in oklab, var(--c-primary) 15%, var(--c-panel) 85%);
+  border: 1px solid color-mix(in oklab, var(--c-primary) 35%, var(--c-border) 65%);
+}
+
+.error {
+  color: color-mix(in oklab, #ef4444 85%, var(--c-text) 15%);
+  background: color-mix(in oklab, #ef4444 14%, var(--c-panel) 86%);
+  border: 1px solid color-mix(in oklab, #ef4444 35%, var(--c-border) 65%);
 }
 
 .legalGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .toc {
   position: sticky;
-  top: 88px;
+  top: 96px;
   align-self: start;
-  border: 1px solid var(--stroke-soft);
-  border-radius: 12px;
-  background: rgba(10, 22, 48, 0.45);
-  padding: 0.75rem;
+  border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--c-panel) 86%, transparent);
+  padding: 12px;
 }
 
 .tocTitle {
-  margin: 0 0 0.5rem;
-  font-size: 0.8rem;
+  margin: 0 0 8px;
+  font-size: 11px;
   font-weight: 700;
-  color: var(--text-main);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
 }
 
 .tocList {
@@ -40,7 +173,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.35rem;
+  gap: 6px;
 }
 
 .tocItem {
@@ -48,64 +181,159 @@
 }
 
 .tocSubItem {
-  margin: 0 0 0 0.75rem;
+  margin: 0 0 0 12px;
 }
 
 .tocLink {
-  color: var(--text-muted);
+  display: inline-flex;
+  color: var(--c-text-muted);
   text-decoration: none;
-  font-size: 0.84rem;
+  font-size: var(--fs-small);
+  line-height: 1.35;
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.tocLink:hover {
-  color: var(--text-main);
+.tocLink:hover,
+.tocLink:focus-visible {
+  color: var(--c-text);
+  border-color: color-mix(in oklab, var(--c-accent) 70%, transparent);
+  outline: none;
+}
+
+.tocLinkActive {
+  color: var(--c-text);
+  border-color: color-mix(in oklab, var(--c-accent) 80%, transparent);
+}
+
+.markdownWrap {
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
+  background: color-mix(in oklab, var(--c-panel) 90%, transparent);
 }
 
 .markdown {
   max-width: 78ch;
+  padding: 14px 16px;
 }
 
 .markdown :global(h1),
 .markdown :global(h2),
 .markdown :global(h3) {
-  scroll-margin-top: 96px;
-  color: var(--text-main);
+  scroll-margin-top: 110px;
+  color: var(--c-text);
 }
 
 .markdown :global(h1) {
-  font-size: 1.4rem;
-  margin: 1rem 0 0.75rem;
+  font-size: var(--fs-h2);
+  margin: 4px 0 12px;
+  letter-spacing: -0.01em;
+  line-height: var(--lh-tight);
 }
 
 .markdown :global(h2) {
-  font-size: 1.12rem;
-  margin: 1.25rem 0 0.6rem;
+  font-size: var(--fs-h3);
+  margin: 16px 0 8px;
+  padding-top: 4px;
+  border-top: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
 }
 
 .markdown :global(h3) {
-  font-size: 1rem;
-  margin: 1rem 0 0.5rem;
+  font-size: calc(var(--fs-body) + 1px);
+  margin: 14px 0 6px;
 }
 
 .markdown :global(p),
 .markdown :global(li) {
-  color: var(--text-muted);
-  line-height: 1.6;
+  color: var(--c-text-muted);
+  line-height: 1.7;
+  font-size: var(--fs-body);
 }
 
 .markdown :global(ul) {
-  margin: 0.4rem 0 0.8rem 1rem;
+  margin: 6px 0 14px 1rem;
   padding: 0;
+}
+
+.markdown :global(strong) {
+  color: var(--c-text);
+}
+
+.markdown :global(a) {
+  color: color-mix(in oklab, var(--c-accent) 80%, var(--c-text) 20%);
+}
+
+@media (max-width: 700px) {
+  .legalWrap {
+    padding: 12px;
+  }
+
+  .legalHeader {
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .brandBadge {
+    display: none;
+  }
+
+  .subtitle {
+    font-size: var(--fs-small);
+  }
+
+  .metaActions {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .metaButton {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .toc {
+    position: static;
+  }
+
+  .markdown {
+    padding: 12px;
+  }
 }
 
 @media (min-width: 980px) {
   .legalWrap {
-    padding: 1.5rem;
+    padding: 1.45rem;
   }
 
   .legalGrid {
-    grid-template-columns: minmax(0, 230px) minmax(0, 1fr);
-    gap: 1.25rem;
+    grid-template-columns: minmax(0, 236px) minmax(0, 1fr);
+    gap: 1.2rem;
+  }
+
+  .markdown {
+    padding: 16px 18px;
   }
 }
 
+@media print {
+  .legalWrap {
+    background: #ffffff;
+    border: none;
+    box-shadow: none;
+  }
+
+  .metaBar,
+  .toc,
+  .brandBadge {
+    display: none;
+  }
+
+  .title,
+  .markdown :global(h1),
+  .markdown :global(h2),
+  .markdown :global(h3),
+  .markdown :global(p),
+  .markdown :global(li) {
+    color: #0f172a;
+  }
+}

@@ -220,6 +220,19 @@
     color: color-mix(in oklab, #ff6b6b 85%, var(--c-text) 15%);
   }
 
+  .auth-form-note {
+    margin-top: 2px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 30%, transparent);
+    background: color-mix(in oklab, var(--c-primary) 10%, transparent);
+    display: grid;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: color-mix(in oklab, var(--c-text) 90%, white 10%);
+  }
+
   .auth-social {
     margin-top: 4px;
   }

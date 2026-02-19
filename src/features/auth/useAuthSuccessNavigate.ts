@@ -9,6 +9,14 @@ export function useAuthSuccessNavigate() {
   const didNavigateRef = React.useRef(false);
   const fallbackTimerRef = React.useRef<number | null>(null);
 
+  const sanitizeNext = React.useCallback((nextPath?: string | null) => {
+    if (!nextPath) return DEFAULT_AUTH_NEXT;
+    const value = String(nextPath).trim();
+    if (!value.startsWith('/')) return DEFAULT_AUTH_NEXT;
+    if (/[\r\n]/.test(value)) return DEFAULT_AUTH_NEXT;
+    return value;
+  }, []);
+
   React.useEffect(() => {
     return () => {
       if (fallbackTimerRef.current != null) {
@@ -18,11 +26,12 @@ export function useAuthSuccessNavigate() {
     };
   }, []);
 
-  return React.useCallback(() => {
+  return React.useCallback((nextPath?: string | null) => {
     if (didNavigateRef.current) return;
     didNavigateRef.current = true;
+    const target = sanitizeNext(nextPath);
 
-    router.replace(DEFAULT_AUTH_NEXT);
+    router.replace(target);
     router.refresh();
 
     if (typeof window !== 'undefined') {
@@ -31,10 +40,10 @@ export function useAuthSuccessNavigate() {
       }
       fallbackTimerRef.current = window.setTimeout(() => {
         if (window.location.pathname.startsWith('/auth')) {
-          window.location.assign(DEFAULT_AUTH_NEXT);
+          window.location.assign(target);
         }
         fallbackTimerRef.current = null;
       }, 900);
     }
-  }, [router]);
+  }, [router, sanitizeNext]);
 }
