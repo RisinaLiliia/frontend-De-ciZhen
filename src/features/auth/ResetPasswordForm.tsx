@@ -22,7 +22,11 @@ export function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token')?.trim() ?? '';
-  const loginHref = '/auth/login';
+  const nextPath = searchParams.get('next')?.trim();
+  const loginHref = React.useMemo(() => {
+    if (!nextPath || !nextPath.startsWith('/')) return '/auth/login';
+    return `/auth/login?next=${encodeURIComponent(nextPath)}`;
+  }, [nextPath]);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);

@@ -89,6 +89,7 @@ export type LoginDto = {
 
 export type ForgotPasswordDto = {
   email: string;
+  nextPath?: string;
 };
 
 export type ForgotPasswordResponseDto = {
