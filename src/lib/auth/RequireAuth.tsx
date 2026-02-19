@@ -2,29 +2,26 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
+import { DEFAULT_PUBLIC_REQUESTS_URL } from '@/features/auth/constants';
 
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname();
   const status = useAuthStatus();
 
   React.useEffect(() => {
     if (status === 'unauthenticated') {
-      const next = pathname ? `?next=${encodeURIComponent(pathname)}` : '';
-      router.replace(`/auth/login${next}`);
+      router.replace(DEFAULT_PUBLIC_REQUESTS_URL);
     }
-  }, [status, pathname, router]);
+  }, [status, router]);
 
   if (status === 'loading' || status === 'idle') {
     return <LoadingScreen />;
   }
 
-  if (status === 'unauthenticated') {
-    return null;
-  }
+  if (status === 'unauthenticated') return <LoadingScreen />;
 
   return <>{children}</>;
 }

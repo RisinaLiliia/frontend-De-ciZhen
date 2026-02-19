@@ -9,7 +9,7 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { IconButton } from '@/components/ui/IconButton';
 import { IconChat, IconLogin, IconLogout, IconUser, IconUserPlus } from '@/components/ui/icons/icons';
-import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
+import { DEFAULT_AUTH_NEXT, DEFAULT_PUBLIC_REQUESTS_URL } from '@/features/auth/constants';
 
 export function AuthActions() {
   const t = useT();
@@ -34,7 +34,11 @@ export function AuthActions() {
 
   const onLogout = React.useCallback(async () => {
     await logout();
-    router.replace('/requests?sort=date_desc&page=1&limit=20');
+    if (typeof window !== 'undefined') {
+      window.location.assign(DEFAULT_PUBLIC_REQUESTS_URL);
+      return;
+    }
+    router.replace(DEFAULT_PUBLIC_REQUESTS_URL);
   }, [logout, router]);
 
   if (status === 'idle' || status === 'loading') return null;
