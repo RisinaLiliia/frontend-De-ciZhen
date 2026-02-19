@@ -17,7 +17,7 @@ import { useAuthRegister, useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { buildRegisterSchema, type RegisterValues } from '@/features/auth/register.schema';
 import { getRegisterErrorMessage, isEmailExistsError } from '@/features/auth/mapAuthError';
 import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
-import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
+import { resolveSafeNext } from '@/features/auth/navigation';
 import { useAuthSuccessNavigate } from '@/features/auth/useAuthSuccessNavigate';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -25,7 +25,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 export function RegisterForm() {
   const t = useT();
   const searchParams = useSearchParams();
-  const next = searchParams.get('next') || DEFAULT_AUTH_NEXT;
+  const next = resolveSafeNext(searchParams.get('next'));
   const oauthError = searchParams.get('error');
   const oauthSignupToken = searchParams.get('signupToken') || '';
   const loginHref = `/auth/login?next=${encodeURIComponent(next)}`;

@@ -17,7 +17,7 @@ import { useAuthLogin, useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { buildLoginSchema, type LoginValues } from '@/features/auth/login.schema';
 import { getLoginErrorMessage, isInvalidCredentialsError } from '@/features/auth/mapAuthError';
 import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
-import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
+import { resolveSafeNext } from '@/features/auth/navigation';
 import { useAuthSuccessNavigate } from '@/features/auth/useAuthSuccessNavigate';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -25,7 +25,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 export function LoginForm() {
   const t = useT();
   const searchParams = useSearchParams();
-  const next = searchParams.get('next') || DEFAULT_AUTH_NEXT;
+  const next = resolveSafeNext(searchParams.get('next'));
   const oauthError = searchParams.get('error');
   const registerHref = `/auth/register?next=${encodeURIComponent(next)}`;
   const [showPassword, setShowPassword] = React.useState(false);
