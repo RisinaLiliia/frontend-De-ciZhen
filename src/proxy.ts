@@ -1,7 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-
-const DEFAULT_ORDERS_WORKSPACE_URL = '/orders?tab=my-requests&sort=date_desc&page=1&limit=20';
-const DEFAULT_PUBLIC_REQUESTS_URL = '/requests?sort=date_desc&page=1&limit=20';
+import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 
 function hasRefreshSession(req: NextRequest): boolean {
   const value = req.cookies.get('refreshToken')?.value;
@@ -9,19 +7,20 @@ function hasRefreshSession(req: NextRequest): boolean {
 }
 
 export function proxy(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+  const { pathname, search } = req.nextUrl;
   const isAuthenticated = hasRefreshSession(req);
 
   if (pathname.startsWith('/orders')) {
     if (!isAuthenticated) {
-      const url = new URL(DEFAULT_PUBLIC_REQUESTS_URL, req.url);
+      const url = new URL('/auth/login', req.url);
+      url.searchParams.set('next', `${pathname}${search}`);
       return NextResponse.redirect(url);
     }
     return NextResponse.next();
   }
 
   if (pathname === '/requests' && isAuthenticated) {
-    const url = new URL(DEFAULT_ORDERS_WORKSPACE_URL, req.url);
+    const url = new URL(DEFAULT_AUTH_NEXT, req.url);
     return NextResponse.redirect(url);
   }
 
