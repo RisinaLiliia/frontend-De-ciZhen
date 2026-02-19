@@ -105,7 +105,7 @@ function RequestsListComponent({
 
   return (
     <>
-      {requests.map((item) => {
+      {requests.map((item, index) => {
         const serviceLabel =
           item.subcategoryName ??
           pickServiceLabel(item.serviceKey, serviceByKey, locale);
@@ -157,6 +157,7 @@ function RequestsListComponent({
         return (
           <OrderCard
             key={item.id}
+            prefetch={index < 2}
             href={detailsHref}
             ariaLabel={t(I18N_KEYS.requestsPage.openRequest)}
             imageSrc={imageSrc}
@@ -272,6 +273,7 @@ function RequestsListComponent({
                     <>
                       <Link
                         href="/orders?tab=completed-jobs"
+                        prefetch={false}
                         className="btn-primary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--contract"
                         aria-label={t(I18N_KEYS.requestDetails.responseViewContract)}
                         title={t(I18N_KEYS.requestDetails.responseViewContract)}

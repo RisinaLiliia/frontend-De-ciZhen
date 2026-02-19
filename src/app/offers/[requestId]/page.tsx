@@ -65,10 +65,10 @@ export default function OffersPage() {
           <div className="card stack-sm">
             <p className="typo-small">{t(I18N_KEYS.offers.softSubtitle)}</p>
             <div className="flex items-center gap-2">
-              <Link href={`/auth/register?next=/offers/${requestId}`} className="badge">
+              <Link href={`/auth/register?next=/offers/${requestId}`} prefetch={false} className="badge">
                 {t(I18N_KEYS.offers.registerCta)}
               </Link>
-              <Link href={`/auth/login?next=/offers/${requestId}`} className="badge">
+              <Link href={`/auth/login?next=/offers/${requestId}`} prefetch={false} className="badge">
                 {t(I18N_KEYS.offers.loginCta)}
               </Link>
             </div>

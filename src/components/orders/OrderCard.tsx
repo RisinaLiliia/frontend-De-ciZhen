@@ -21,6 +21,7 @@ export type OrderCardProps = {
   statusSlot?: React.ReactNode;
   overlaySlot?: React.ReactNode;
   actionSlot?: React.ReactNode;
+  prefetch?: boolean;
 };
 
 export function OrderCard({
@@ -41,6 +42,7 @@ export function OrderCard({
   statusSlot,
   overlaySlot,
   actionSlot,
+  prefetch = false,
 }: OrderCardProps) {
   const hasImage = Boolean(imageSrc);
   const safeImageSrc = imageSrc ?? '';
@@ -119,7 +121,7 @@ export function OrderCard({
               {inlineCta} →
             </span>
           ) : (
-            <Link href={href} className="request-card__cta">
+            <Link href={href} prefetch={prefetch} className="request-card__cta">
               {inlineCta} →
             </Link>
           )
@@ -130,7 +132,7 @@ export function OrderCard({
 
   if (isLinkMode) {
     return (
-      <Link href={href} aria-label={ariaLabel ?? title} className={`${cardClassName} request-card--link`}>
+      <Link href={href} prefetch={prefetch} aria-label={ariaLabel ?? title} className={`${cardClassName} request-card--link`}>
         {cardContent}
       </Link>
     );
