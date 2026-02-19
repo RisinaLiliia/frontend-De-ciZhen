@@ -1,5 +1,4 @@
 // src/app/auth/register/page.tsx
-// src/app/auth/register/page.tsx
 'use client';
 
 import * as React from 'react';

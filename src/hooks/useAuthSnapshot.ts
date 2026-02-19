@@ -20,9 +20,6 @@ export type AuthSnapshot = {
     name: string;
     email: string;
     password: string;
-    role?: SafeUserDto['role'];
-    city?: string;
-    language?: string;
     acceptPrivacyPolicy: boolean;
     signupToken?: string;
   }) => Promise<void>;
