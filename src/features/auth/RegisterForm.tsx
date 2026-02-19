@@ -40,11 +40,16 @@ export function RegisterForm() {
   const navigateAfterAuth = React.useCallback(() => {
     if (didNavigate) return;
     setDidNavigate(true);
-    if (typeof window !== 'undefined') {
-      window.location.assign(next);
-      return;
-    }
     router.replace(next);
+    router.refresh();
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        const onAuthRoute = window.location.pathname.startsWith('/auth');
+        if (onAuthRoute) {
+          window.location.assign(next);
+        }
+      }, 900);
+    }
   }, [didNavigate, next, router]);
 
   const {
