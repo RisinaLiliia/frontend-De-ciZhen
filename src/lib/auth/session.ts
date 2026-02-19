@@ -4,6 +4,17 @@ import type { RefreshResponseDto } from '@/lib/api/dto/auth';
 
 let refreshPromise: Promise<string | null> | null = null;
 let refreshSuppressed = false;
+const SESSION_HINT_KEY = 'dc_auth_session_hint';
+
+function isProtectedPath(pathname: string): boolean {
+  return (
+    pathname.startsWith('/orders') ||
+    pathname.startsWith('/chat') ||
+    pathname.startsWith('/profile') ||
+    pathname.startsWith('/client') ||
+    pathname.startsWith('/provider')
+  );
+}
 
 export function allowRefreshAttempts() {
   refreshSuppressed = false;
@@ -11,6 +22,22 @@ export function allowRefreshAttempts() {
 
 export function suppressRefreshAttempts() {
   refreshSuppressed = true;
+}
+
+export function markSessionHint() {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(SESSION_HINT_KEY, '1');
+}
+
+export function clearSessionHint() {
+  if (typeof window === 'undefined') return;
+  window.localStorage.removeItem(SESSION_HINT_KEY);
+}
+
+export function shouldAttemptRefreshOnBootstrap(): boolean {
+  if (typeof window === 'undefined') return true;
+  if (isProtectedPath(window.location.pathname)) return true;
+  return window.localStorage.getItem(SESSION_HINT_KEY) === '1';
 }
 
 export async function refreshAccessToken(): Promise<string | null> {

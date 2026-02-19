@@ -53,6 +53,8 @@ import { useRequestsWorkspaceState } from '@/features/requests/page/useRequestsW
 import { useRequestsWorkspaceDerived } from '@/features/requests/page/useRequestsWorkspaceDerived';
 import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 
+const DEFAULT_PUBLIC_REQUESTS_URL = '/requests?sort=date_desc&page=1&limit=20';
+
 function RequestsPageContent() {
   const router = useRouter();
   const pathname = usePathname();
@@ -85,10 +87,8 @@ function RequestsPageContent() {
 
   React.useEffect(() => {
     if (!isWorkspaceRoute || authStatus !== 'unauthenticated') return;
-    const query = searchParams.toString();
-    const nextPath = query ? `${pathname}?${query}` : pathname;
-    router.replace(`/auth/login?next=${encodeURIComponent(nextPath)}`);
-  }, [authStatus, isWorkspaceRoute, pathname, router, searchParams]);
+    router.replace(DEFAULT_PUBLIC_REQUESTS_URL);
+  }, [authStatus, isWorkspaceRoute, router]);
 
   React.useEffect(() => {
     if (pathname !== '/requests' || authStatus !== 'authenticated') return;

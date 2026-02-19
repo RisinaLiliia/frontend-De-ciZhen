@@ -29,11 +29,21 @@ export function LoginForm() {
   const oauthError = searchParams.get('error');
   const registerHref = `/auth/register?next=${encodeURIComponent(next)}`;
   const [showPassword, setShowPassword] = React.useState(false);
+  const [didNavigate, setDidNavigate] = React.useState(false);
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const schema = React.useMemo(() => buildLoginSchema(t), [t]);
 
   const login = useAuthLogin();
   const status = useAuthStatus();
+  const navigateAfterAuth = React.useCallback(() => {
+    if (didNavigate) return;
+    setDidNavigate(true);
+    if (typeof window !== 'undefined') {
+      window.location.assign(next);
+      return;
+    }
+    router.replace(next);
+  }, [didNavigate, next, router]);
 
   const {
     register,
@@ -53,7 +63,7 @@ export function LoginForm() {
     try {
       await login(values.email, values.password);
       toast.success(t(I18N_KEYS.auth.loginSuccess));
-      router.replace(next);
+      navigateAfterAuth();
     } catch (error) {
       const message = getLoginErrorMessage(error, t);
       if (isInvalidCredentialsError(error)) {
@@ -68,9 +78,9 @@ export function LoginForm() {
 
   React.useEffect(() => {
     if (status === 'authenticated') {
-      router.replace(next);
+      navigateAfterAuth();
     }
-  }, [status, next, router]);
+  }, [navigateAfterAuth, status]);
 
   React.useEffect(() => {
     if (!oauthError) return;
