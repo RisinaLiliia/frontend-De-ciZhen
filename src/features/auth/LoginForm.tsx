@@ -183,7 +183,7 @@ export function LoginForm() {
 
       <SocialAuthButtons nextPath={next} />
 
-      <Link href={registerHref} className="typo-small text-center link-accent">
+      <Link href={registerHref} prefetch={false} className="typo-small text-center link-accent">
         {t(I18N_KEYS.auth.toRegister)}
       </Link>
     </form>
