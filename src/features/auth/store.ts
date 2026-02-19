@@ -48,64 +48,8 @@ type AuthState = {
   fetchMe: () => Promise<MeResponseDto | null>;
 };
 
-export const useAuthStore = create<AuthState>((set, get) => ({
-  status: 'idle',
-  user: null,
-  me: null,
-  capabilities: null,
-  lastMode: null,
-  hasProviderProfile: false,
-  hasClientProfile: false,
-  accessToken: null,
-  error: null,
-  setAccessToken: (token) => {
-    setToken(token);
-    set({ accessToken: token });
-  },
-  setUser: (user) => set({ user }),
-  setMe: (me) => {
-    const prevLastMode = get().lastMode;
-    const storedMode =
-      typeof window !== 'undefined' ? window.localStorage.getItem('dc_last_mode') : null;
-    const fallbackCapabilities = me
-      ? { canProvide: Boolean(me?.providerProfile) || me.role === 'provider' }
-      : null;
-    const nextCapabilities = me?.capabilities ?? fallbackCapabilities;
-    const nextLastMode =
-      me?.lastMode ??
-      prevLastMode ??
-      (storedMode === 'client' || storedMode === 'provider' ? storedMode : null);
-
-    set({
-      me,
-      capabilities: nextCapabilities,
-      lastMode: nextLastMode,
-      hasProviderProfile: Boolean(me?.providerProfile) || me?.role === 'provider',
-      hasClientProfile: Boolean(me?.clientProfile) || me?.role === 'client',
-      user: me
-        ? {
-            id: me.id,
-            name: me.name,
-            email: me.email,
-            role: me.role,
-            city: me.city,
-            language: me.language,
-            createdAt: me.createdAt,
-          }
-        : null,
-    });
-  },
-  setLastMode: (mode) => {
-    set({ lastMode: mode });
-    if (typeof window !== 'undefined') {
-      if (mode) {
-        window.localStorage.setItem('dc_last_mode', mode);
-      } else {
-        window.localStorage.removeItem('dc_last_mode');
-      }
-    }
-  },
-  clear: () => {
+export const useAuthStore = create<AuthState>((set, get) => {
+  const setUnauthenticatedState = () => {
     suppressRefreshAttempts();
     clearSessionHint();
     setToken(null);
@@ -120,179 +64,158 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       accessToken: null,
       error: null,
     });
-  },
-  bootstrap: async () => {
-    if (get().status !== 'idle') return;
-    if (!shouldAttemptRefreshOnBootstrap()) {
-      suppressRefreshAttempts();
-      set({
-        status: 'unauthenticated',
-        user: null,
-        me: null,
-        capabilities: null,
-        lastMode: null,
-        hasProviderProfile: false,
-        hasClientProfile: false,
-        accessToken: null,
-      });
-      return;
-    }
-    set({ status: 'loading', error: null });
+  };
 
-    const token = await refreshAccessToken();
-    if (!token) {
-      suppressRefreshAttempts();
-      clearSessionHint();
-      set({
-        status: 'unauthenticated',
-        user: null,
-        me: null,
-        capabilities: null,
-        lastMode: null,
-        hasProviderProfile: false,
-        hasClientProfile: false,
-        accessToken: null,
-      });
-      return;
-    }
+  const setAuthenticatedTokenState = (accessToken: string) => {
+    allowRefreshAttempts();
+    markSessionHint();
+    setToken(accessToken);
+    set({ status: 'authenticated', accessToken, error: null });
+  };
 
-    try {
-      allowRefreshAttempts();
-      markSessionHint();
+  return {
+    status: 'idle',
+    user: null,
+    me: null,
+    capabilities: null,
+    lastMode: null,
+    hasProviderProfile: false,
+    hasClientProfile: false,
+    accessToken: null,
+    error: null,
+    setAccessToken: (token) => {
       setToken(token);
       set({ accessToken: token });
-      const me = await getMe();
-      get().setMe(me);
-      set({ status: 'authenticated', accessToken: token });
-    } catch {
-      suppressRefreshAttempts();
-      clearSessionHint();
+    },
+    setUser: (user) => set({ user }),
+    setMe: (me) => {
+      const prevLastMode = get().lastMode;
+      const storedMode =
+        typeof window !== 'undefined' ? window.localStorage.getItem('dc_last_mode') : null;
+      const fallbackCapabilities = me
+        ? { canProvide: Boolean(me?.providerProfile) || me.role === 'provider' }
+        : null;
+      const nextCapabilities = me?.capabilities ?? fallbackCapabilities;
+      const nextLastMode =
+        me?.lastMode ??
+        prevLastMode ??
+        (storedMode === 'client' || storedMode === 'provider' ? storedMode : null);
+
       set({
-        status: 'unauthenticated',
-        user: null,
-        me: null,
-        capabilities: null,
-        lastMode: null,
-        hasProviderProfile: false,
-        hasClientProfile: false,
-        accessToken: null,
+        me,
+        capabilities: nextCapabilities,
+        lastMode: nextLastMode,
+        hasProviderProfile: Boolean(me?.providerProfile) || me?.role === 'provider',
+        hasClientProfile: Boolean(me?.clientProfile) || me?.role === 'client',
+        user: me
+          ? {
+              id: me.id,
+              name: me.name,
+              email: me.email,
+              role: me.role,
+              city: me.city,
+              language: me.language,
+              createdAt: me.createdAt,
+            }
+          : null,
       });
-    }
-  },
-  login: async (email, password) => {
-    set({ status: 'loading', error: null });
-    try {
-      const data = await login({ email, password });
-      allowRefreshAttempts();
-      markSessionHint();
-      setToken(data.accessToken);
-      set({ status: 'authenticated', accessToken: data.accessToken, error: null });
-      void getMe()
-        .then((me) => {
-          get().setMe(me);
-        })
-        .catch((error) => {
-          logAuthWarning('login:getMe', error);
-        });
-    } catch (error) {
-      suppressRefreshAttempts();
-      clearSessionHint();
-      set({
-        status: 'unauthenticated',
-        user: null,
-        me: null,
-        capabilities: null,
-        lastMode: null,
-        hasProviderProfile: false,
-        hasClientProfile: false,
-        accessToken: null,
-        error: null,
-      });
-      throw error;
-    }
-  },
-  register: async (payload) => {
-    set({ status: 'loading', error: null });
-    try {
-      const data = payload.signupToken
-        ? await completeOauthRegister({
-            signupToken: payload.signupToken,
-            acceptPrivacyPolicy: payload.acceptPrivacyPolicy,
+    },
+    setLastMode: (mode) => {
+      set({ lastMode: mode });
+      if (typeof window !== 'undefined') {
+        if (mode) {
+          window.localStorage.setItem('dc_last_mode', mode);
+        } else {
+          window.localStorage.removeItem('dc_last_mode');
+        }
+      }
+    },
+    clear: () => {
+      setUnauthenticatedState();
+    },
+    bootstrap: async () => {
+      if (get().status !== 'idle') return;
+      if (!shouldAttemptRefreshOnBootstrap()) {
+        setUnauthenticatedState();
+        return;
+      }
+
+      set({ status: 'loading', error: null });
+
+      const token = await refreshAccessToken();
+      if (!token) {
+        setUnauthenticatedState();
+        return;
+      }
+
+      try {
+        setAuthenticatedTokenState(token);
+        const me = await getMe();
+        get().setMe(me);
+      } catch {
+        setUnauthenticatedState();
+      }
+    },
+    login: async (email, password) => {
+      set({ status: 'loading', error: null });
+      try {
+        const data = await login({ email, password });
+        setAuthenticatedTokenState(data.accessToken);
+        void getMe()
+          .then((me) => {
+            get().setMe(me);
           })
-        : await register(payload);
-      allowRefreshAttempts();
-      markSessionHint();
-      setToken(data.accessToken);
-      set({ status: 'authenticated', accessToken: data.accessToken, error: null });
-      void getMe()
-        .then((me) => {
-          get().setMe(me);
-        })
-        .catch((error) => {
-          logAuthWarning('register:getMe', error);
-        });
-    } catch (error) {
-      suppressRefreshAttempts();
-      clearSessionHint();
-      set({
-        status: 'unauthenticated',
-        user: null,
-        me: null,
-        capabilities: null,
-        lastMode: null,
-        hasProviderProfile: false,
-        hasClientProfile: false,
-        accessToken: null,
-        error: null,
-      });
-      throw error;
-    }
-  },
-  logout: async () => {
-    try {
-      await logout();
-    } finally {
-      suppressRefreshAttempts();
-      clearSessionHint();
-      setToken(null);
-      set({
-        status: 'unauthenticated',
-        user: null,
-        me: null,
-        capabilities: null,
-        lastMode: null,
-        hasProviderProfile: false,
-        hasClientProfile: false,
-        accessToken: null,
-        error: null,
-      });
-    }
-  },
-  fetchMe: async () => {
-    try {
-      const me = await getMe();
-      allowRefreshAttempts();
-      markSessionHint();
-      get().setMe(me);
-      set({ status: 'authenticated' });
-      return me as MeResponseDto;
-    } catch {
-      suppressRefreshAttempts();
-      clearSessionHint();
-      setToken(null);
-      set({
-        status: 'unauthenticated',
-        user: null,
-        me: null,
-        capabilities: null,
-        lastMode: null,
-        hasProviderProfile: false,
-        hasClientProfile: false,
-        accessToken: null,
-      });
-      return null;
-    }
-  },
-}));
+          .catch((error) => {
+            logAuthWarning('login:getMe', error);
+          });
+      } catch (error) {
+        setUnauthenticatedState();
+        throw error;
+      }
+    },
+    register: async (payload) => {
+      set({ status: 'loading', error: null });
+      try {
+        const data = payload.signupToken
+          ? await completeOauthRegister({
+              signupToken: payload.signupToken,
+              acceptPrivacyPolicy: payload.acceptPrivacyPolicy,
+            })
+          : await register(payload);
+        setAuthenticatedTokenState(data.accessToken);
+        void getMe()
+          .then((me) => {
+            get().setMe(me);
+          })
+          .catch((error) => {
+            logAuthWarning('register:getMe', error);
+          });
+      } catch (error) {
+        setUnauthenticatedState();
+        throw error;
+      }
+    },
+    logout: async () => {
+      try {
+        await logout();
+      } finally {
+        setUnauthenticatedState();
+      }
+    },
+    fetchMe: async () => {
+      try {
+        const me = await getMe();
+        allowRefreshAttempts();
+        markSessionHint();
+        get().setMe(me);
+        set({ status: 'authenticated', error: null });
+        return me as MeResponseDto;
+      } catch {
+        setUnauthenticatedState();
+        return null;
+      }
+    },
+  };
+});
 
 export const clearAuth = () => useAuthStore.getState().clear();
