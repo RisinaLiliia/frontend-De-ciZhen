@@ -17,6 +17,7 @@ import { useAuthLogin, useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { buildLoginSchema, type LoginValues } from '@/features/auth/login.schema';
 import { getLoginErrorMessage, isInvalidCredentialsError } from '@/features/auth/mapAuthError';
 import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
+import { forgotPassword } from '@/lib/auth/api';
 import { useAuthSuccessNavigate } from '@/features/auth/useAuthSuccessNavigate';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -60,6 +61,24 @@ export function LoginForm() {
         setError('password', { type: 'server', message });
       }
       toast.error(message);
+    }
+  };
+
+  const onForgotPassword = async () => {
+    if (!watchedEmail || !isEmailValid) {
+      toast.error(t(I18N_KEYS.auth.errorEmailInvalid));
+      return;
+    }
+
+    try {
+      const result = await forgotPassword({ email: watchedEmail });
+      if (result.resetUrl) {
+        window.location.href = result.resetUrl;
+        return;
+      }
+      toast.success(t(I18N_KEYS.auth.forgotPasswordSoon));
+    } catch {
+      toast.error(t(I18N_KEYS.auth.errorGenericLogin));
     }
   };
 
@@ -153,6 +172,14 @@ export function LoginForm() {
           <p id="login-password-error" className="auth-form-error" role="alert">{errors.password.message}</p>
         ) : null}
       </div>
+
+      <button
+        type="button"
+        onClick={onForgotPassword}
+        className="typo-small ml-auto text-right link-accent"
+      >
+        {t(I18N_KEYS.auth.forgotPassword)}
+      </button>
 
       <Button type="submit" loading={loading}>
         {t(I18N_KEYS.auth.loginCta)}

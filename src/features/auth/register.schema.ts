@@ -11,16 +11,19 @@ export function buildRegisterSchema(t: Translate) {
         .string()
         .trim()
         .min(1, t('auth.errorNameRequired'))
-        .min(2, t('auth.errorNameMin')),
+        .min(2, t('auth.errorNameMin'))
+        .max(50, t('auth.errorNameMin')),
       email: z
         .string()
         .trim()
         .min(1, t('auth.errorEmailRequired'))
+        .max(100, t('auth.errorEmailInvalid'))
         .email(t('auth.errorEmailInvalid')),
       password: z
         .string()
         .min(1, t('auth.errorPasswordRequired'))
         .min(8, t('auth.errorPasswordMin'))
+        .max(64, t('auth.errorPasswordMin'))
         .regex(/[A-ZА-ЯЁ]/, t('auth.passwordRuleUpper'))
         .regex(/[a-zа-яё]/, t('auth.passwordRuleLower'))
         .regex(/\d/, t('auth.passwordRuleDigit'))

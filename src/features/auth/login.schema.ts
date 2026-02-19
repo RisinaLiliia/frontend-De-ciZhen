@@ -10,11 +10,13 @@ export function buildLoginSchema(t: Translate) {
       .string()
       .trim()
       .min(1, t('auth.errorEmailRequired'))
+      .max(100, t('auth.errorEmailInvalid'))
       .email(t('auth.errorEmailInvalid')),
     password: z
       .string()
       .min(1, t('auth.errorPasswordRequired'))
-      .min(8, t('auth.errorPasswordMin')),
+      .min(8, t('auth.errorPasswordMin'))
+      .max(64, t('auth.errorPasswordMin')),
   });
 }
 

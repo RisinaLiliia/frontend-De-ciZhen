@@ -5,7 +5,10 @@ import { getAccessToken } from '@/lib/auth/token';
 import type {
   AppMeDto,
   AuthResponseDto,
+  ForgotPasswordDto,
+  ForgotPasswordResponseDto,
   LoginDto,
+  ResetPasswordDto,
   LogoutResponseDto,
   OauthCompleteRegisterDto,
   RegisterDto,
@@ -79,4 +82,12 @@ export function logout() {
 
 export function getMe() {
   return authGet<AppMeDto>('/users/me');
+}
+
+export function forgotPassword(payload: ForgotPasswordDto) {
+  return authPost<ForgotPasswordDto, ForgotPasswordResponseDto>('/auth/forgot-password', payload);
+}
+
+export function resetPassword(payload: ResetPasswordDto) {
+  return authPost<ResetPasswordDto, LogoutResponseDto>('/auth/reset-password', payload);
 }
