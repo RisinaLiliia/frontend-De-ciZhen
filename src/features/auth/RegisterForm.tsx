@@ -31,11 +31,21 @@ export function RegisterForm() {
   const loginHref = `/auth/login?next=${encodeURIComponent(next)}`;
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [didNavigate, setDidNavigate] = React.useState(false);
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const schema = React.useMemo(() => buildRegisterSchema(t), [t]);
 
   const registerUser = useAuthRegister();
   const status = useAuthStatus();
+  const navigateAfterAuth = React.useCallback(() => {
+    if (didNavigate) return;
+    setDidNavigate(true);
+    if (typeof window !== 'undefined') {
+      window.location.assign(next);
+      return;
+    }
+    router.replace(next);
+  }, [didNavigate, next, router]);
 
   const {
     register,
@@ -63,7 +73,7 @@ export function RegisterForm() {
       void confirmPassword;
       await registerUser({ ...payload, ...(oauthSignupToken ? { signupToken: oauthSignupToken } : {}) });
       toast.success(t(I18N_KEYS.auth.registerSuccess));
-      router.replace(next);
+      navigateAfterAuth();
     } catch (error) {
       const message = getRegisterErrorMessage(error, t);
       if (isEmailExistsError(error)) {
@@ -92,9 +102,9 @@ export function RegisterForm() {
 
   React.useEffect(() => {
     if (status === 'authenticated') {
-      router.replace(next);
+      navigateAfterAuth();
     }
-  }, [status, next, router]);
+  }, [navigateAfterAuth, status]);
 
   React.useEffect(() => {
     if (!oauthError) return;

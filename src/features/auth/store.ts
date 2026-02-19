@@ -2,7 +2,14 @@
 import { create } from 'zustand';
 import type { AppMeDto, CapabilitiesDto, MeResponseDto, SafeUserDto, UserMode } from '@/lib/api/dto/auth';
 import { completeOauthRegister, getMe, login, logout, register } from '@/lib/auth/api';
-import { allowRefreshAttempts, refreshAccessToken, suppressRefreshAttempts } from '@/lib/auth/session';
+import {
+  allowRefreshAttempts,
+  clearSessionHint,
+  markSessionHint,
+  refreshAccessToken,
+  shouldAttemptRefreshOnBootstrap,
+  suppressRefreshAttempts,
+} from '@/lib/auth/session';
 import { setAccessToken as setToken } from '@/lib/auth/token';
 
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';
@@ -97,6 +104,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
   clear: () => {
     suppressRefreshAttempts();
+    clearSessionHint();
     setToken(null);
     set({
       status: 'unauthenticated',
@@ -112,11 +120,26 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
   bootstrap: async () => {
     if (get().status !== 'idle') return;
+    if (!shouldAttemptRefreshOnBootstrap()) {
+      suppressRefreshAttempts();
+      set({
+        status: 'unauthenticated',
+        user: null,
+        me: null,
+        capabilities: null,
+        lastMode: null,
+        hasProviderProfile: false,
+        hasClientProfile: false,
+        accessToken: null,
+      });
+      return;
+    }
     set({ status: 'loading', error: null });
 
     const token = await refreshAccessToken();
     if (!token) {
       suppressRefreshAttempts();
+      clearSessionHint();
       set({
         status: 'unauthenticated',
         user: null,
@@ -132,6 +155,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     try {
       allowRefreshAttempts();
+      markSessionHint();
       setToken(token);
       set({ accessToken: token });
       const me = await getMe();
@@ -139,6 +163,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ status: 'authenticated', accessToken: token });
     } catch {
       suppressRefreshAttempts();
+      clearSessionHint();
       set({
         status: 'unauthenticated',
         user: null,
@@ -156,6 +181,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const data = await login({ email, password });
       allowRefreshAttempts();
+      markSessionHint();
       setToken(data.accessToken);
       set({ status: 'authenticated', accessToken: data.accessToken, error: null });
       void getMe()
@@ -163,10 +189,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           get().setMe(me);
         })
         .catch(() => {
-          // Keep authenticated state; me can be fetched later.
         });
     } catch (error) {
       suppressRefreshAttempts();
+      clearSessionHint();
       set({
         status: 'unauthenticated',
         user: null,
@@ -191,6 +217,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           })
         : await register(payload);
       allowRefreshAttempts();
+      markSessionHint();
       setToken(data.accessToken);
       set({ status: 'authenticated', accessToken: data.accessToken, error: null });
       void getMe()
@@ -198,10 +225,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           get().setMe(me);
         })
         .catch(() => {
-          // Keep authenticated state; me can be fetched later.
         });
     } catch (error) {
       suppressRefreshAttempts();
+      clearSessionHint();
       set({
         status: 'unauthenticated',
         user: null,
@@ -221,6 +248,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await logout();
     } finally {
       suppressRefreshAttempts();
+      clearSessionHint();
       setToken(null);
       set({
         status: 'unauthenticated',
@@ -239,11 +267,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const me = await getMe();
       allowRefreshAttempts();
+      markSessionHint();
       get().setMe(me);
       set({ status: 'authenticated' });
       return me as MeResponseDto;
     } catch {
       suppressRefreshAttempts();
+      clearSessionHint();
       setToken(null);
       set({
         status: 'unauthenticated',

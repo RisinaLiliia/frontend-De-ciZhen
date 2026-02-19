@@ -9,6 +9,7 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { IconButton } from '@/components/ui/IconButton';
 import { IconChat, IconLogin, IconLogout, IconUser, IconUserPlus } from '@/components/ui/icons/icons';
+import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 
 export function AuthActions() {
   const t = useT();
@@ -18,10 +19,14 @@ export function AuthActions() {
   const logout = useAuthLogout();
   const openAuth = React.useCallback(
     (route: '/auth/login' | '/auth/register') => {
-      const next =
-        typeof window === 'undefined'
-          ? '/'
-          : `${window.location.pathname}${window.location.search}`;
+      const next = (() => {
+        if (typeof window === 'undefined') return DEFAULT_AUTH_NEXT;
+        const current = `${window.location.pathname}${window.location.search}`;
+        if (window.location.pathname === '/' || window.location.pathname.startsWith('/requests')) {
+          return DEFAULT_AUTH_NEXT;
+        }
+        return current;
+      })();
       router.push(`${route}?next=${encodeURIComponent(next)}`, { scroll: false });
     },
     [router],
