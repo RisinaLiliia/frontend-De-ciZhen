@@ -154,13 +154,6 @@ export function LoginForm() {
         {errors.password ? (
           <p id="login-password-error" className="auth-form-error" role="alert">{errors.password.message}</p>
         ) : null}
-        <button
-          type="button"
-          className="auth-form__link-btn"
-          onClick={() => toast.message(t(I18N_KEYS.auth.forgotPasswordSoon))}
-        >
-          {t(I18N_KEYS.auth.forgotPassword)}
-        </button>
       </div>
 
       <Button type="submit" loading={loading}>
