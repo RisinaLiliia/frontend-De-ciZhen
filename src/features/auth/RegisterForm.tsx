@@ -314,7 +314,7 @@ export function RegisterForm() {
 
       <SocialAuthButtons nextPath={next} />
 
-      <Link href={loginHref} className="typo-small text-center link-accent">
+      <Link href={loginHref} prefetch={false} className="typo-small text-center link-accent">
         {t(I18N_KEYS.auth.toLogin)}
       </Link>
     </form>
