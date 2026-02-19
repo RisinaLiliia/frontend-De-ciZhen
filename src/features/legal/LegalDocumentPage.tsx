@@ -12,10 +12,14 @@ type Props = {
   type: 'privacy' | 'cookies';
 };
 
+type TocItem = { id: string; label: string; level: 2 | 3 };
+
 export function LegalDocumentPage({ title, type }: Props) {
   const [content, setContent] = React.useState<string>('');
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [activeSectionId, setActiveSectionId] = React.useState<string>('');
+  const [copied, setCopied] = React.useState(false);
 
   React.useEffect(() => {
     let isActive = true;
@@ -42,9 +46,9 @@ export function LegalDocumentPage({ title, type }: Props) {
   }, [type]);
 
   const toc = React.useMemo(() => {
-    if (!content) return [] as Array<{ id: string; label: string; level: 2 | 3 }>;
+    if (!content) return [] as TocItem[];
     const lines = content.split('\n');
-    const result: Array<{ id: string; label: string; level: 2 | 3 }> = [];
+    const result: TocItem[] = [];
     for (const line of lines) {
       const h2 = /^##\s+(.+)$/.exec(line);
       const h3 = /^###\s+(.+)$/.exec(line);
@@ -54,16 +58,109 @@ export function LegalDocumentPage({ title, type }: Props) {
     return result;
   }, [content]);
 
+  React.useEffect(() => {
+    if (!toc.length) {
+      setActiveSectionId('');
+      return;
+    }
+
+    const headings = toc
+      .map((item) => document.getElementById(item.id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (!headings.length) {
+      setActiveSectionId('');
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target?.id) {
+          setActiveSectionId(visible.target.id);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '-20% 0px -64% 0px',
+        threshold: [0.1, 0.4, 0.7],
+      },
+    );
+
+    headings.forEach((el) => observer.observe(el));
+    setActiveSectionId(headings[0]?.id ?? '');
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [toc, content]);
+
+  const readingMinutes = React.useMemo(() => {
+    if (!content) return 0;
+    const plain = content.replace(/[#*_`>\-]/g, ' ');
+    const words = plain.split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.round(words / 220));
+  }, [content]);
+
+  const lastUpdatedLabel = React.useMemo(
+    () =>
+      new Intl.DateTimeFormat('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      }).format(new Date()),
+    [],
+  );
+
+  const handleCopyLink = React.useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1400);
+    } catch {
+      setCopied(false);
+    }
+  }, []);
+
   return (
-    <main className="container-mobile py-8">
+    <main className={`container-mobile py-8 ${styles.page}`}>
       <section className={`card ${styles.legalWrap}`}>
         <header className={styles.legalHeader}>
-          <h1 className="typo-h2">{title}</h1>
-          <p className="typo-muted">De&apos;ciZhen Legal</p>
+          <div className={styles.legalHeaderMeta}>
+            <span className={styles.eyebrow}>Rechtliches</span>
+            <h1 className={styles.title}>{title}</h1>
+            <p className={styles.subtitle}>Transparenz, Datenschutz und klare Regeln für die Nutzung der Plattform.</p>
+          </div>
+          <div className={styles.brandBadge}>De&apos;ciZhen Legal</div>
         </header>
 
-        {loading ? <p className="typo-muted">Wird geladen...</p> : null}
-        {error ? <p className="auth-form-error">{error}</p> : null}
+        <div className={styles.metaBar}>
+          <span className={styles.metaPill}>Zuletzt aktualisiert: {lastUpdatedLabel}</span>
+          {readingMinutes ? <span className={styles.metaPill}>Lesezeit: ~{readingMinutes} Min</span> : null}
+          <div className={styles.metaActions}>
+            <button type="button" className={styles.metaButton} onClick={handleCopyLink}>
+              {copied ? 'Link kopiert' : 'Link kopieren'}
+            </button>
+            <button type="button" className={styles.metaButton} onClick={() => window.print()}>
+              Drucken
+            </button>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className={styles.notice} role="status" aria-live="polite">
+            Wird geladen...
+          </div>
+        ) : null}
+
+        {error ? (
+          <div className={styles.error} role="alert">
+            {error}
+          </div>
+        ) : null}
 
         {!loading && !error ? (
           <div className={styles.legalGrid}>
@@ -71,27 +168,36 @@ export function LegalDocumentPage({ title, type }: Props) {
               <aside className={styles.toc}>
                 <p className={styles.tocTitle}>Inhalt</p>
                 <ul className={styles.tocList}>
-                  {toc.map((item) => (
-                    <li key={`${item.level}-${item.id}`} className={item.level === 3 ? styles.tocSubItem : styles.tocItem}>
-                      <a href={`#${item.id}`} className={styles.tocLink}>
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
+                  {toc.map((item) => {
+                    const isActive = item.id === activeSectionId;
+                    return (
+                      <li key={`${item.level}-${item.id}`} className={item.level === 3 ? styles.tocSubItem : styles.tocItem}>
+                        <a
+                          href={`#${item.id}`}
+                          className={`${styles.tocLink} ${isActive ? styles.tocLinkActive : ''}`}
+                          aria-current={isActive ? 'location' : undefined}
+                        >
+                          {item.label}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </aside>
             ) : null}
 
-            <article className={styles.markdown}>
-              <ReactMarkdown
-                components={{
-                  h1: ({ children }) => <h1 id={slugify(childrenToText(children))}>{children}</h1>,
-                  h2: ({ children }) => <h2 id={slugify(childrenToText(children))}>{children}</h2>,
-                  h3: ({ children }) => <h3 id={slugify(childrenToText(children))}>{children}</h3>,
-                }}
-              >
-                {content}
-              </ReactMarkdown>
+            <article className={styles.markdownWrap}>
+              <div className={styles.markdown}>
+                <ReactMarkdown
+                  components={{
+                    h1: ({ children }) => <h1 id={slugify(childrenToText(children))}>{children}</h1>,
+                    h2: ({ children }) => <h2 id={slugify(childrenToText(children))}>{children}</h2>,
+                    h3: ({ children }) => <h3 id={slugify(childrenToText(children))}>{children}</h3>,
+                  }}
+                >
+                  {content}
+                </ReactMarkdown>
+              </div>
             </article>
           </div>
         ) : null}
