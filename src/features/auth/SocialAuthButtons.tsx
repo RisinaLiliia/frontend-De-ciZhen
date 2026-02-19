@@ -3,20 +3,19 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { buildApiUrl } from '@/lib/api/url';
 import { IconBrandApple, IconBrandGoogle } from '@/components/ui/icons/icons';
+import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 
-type Props = {
-  nextPath: string;
-};
-
-export function SocialAuthButtons({ nextPath }: Props) {
+export function SocialAuthButtons() {
   const t = useT();
   const [activeProvider, setActiveProvider] = React.useState<'google' | 'apple' | null>(null);
 
   const goToProvider = React.useCallback((provider: 'google' | 'apple') => {
     setActiveProvider(provider);
-    const startUrl = buildApiUrl(`/auth/oauth/${provider}/start?next=${encodeURIComponent(nextPath)}`);
+    const startUrl = buildApiUrl(
+      `/auth/oauth/${provider}/start?next=${encodeURIComponent(DEFAULT_AUTH_NEXT)}`,
+    );
     window.location.assign(startUrl);
-  }, [nextPath]);
+  }, []);
 
   return (
     <div className="auth-social stack-xs">

@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 
-export function useAuthSuccessNavigate(next: string) {
+export function useAuthSuccessNavigate() {
   const router = useRouter();
   const didNavigateRef = React.useRef(false);
   const fallbackTimerRef = React.useRef<number | null>(null);
@@ -21,7 +22,7 @@ export function useAuthSuccessNavigate(next: string) {
     if (didNavigateRef.current) return;
     didNavigateRef.current = true;
 
-    router.replace(next);
+    router.replace(DEFAULT_AUTH_NEXT);
     router.refresh();
 
     if (typeof window !== 'undefined') {
@@ -30,10 +31,10 @@ export function useAuthSuccessNavigate(next: string) {
       }
       fallbackTimerRef.current = window.setTimeout(() => {
         if (window.location.pathname.startsWith('/auth')) {
-          window.location.assign(next);
+          window.location.assign(DEFAULT_AUTH_NEXT);
         }
         fallbackTimerRef.current = null;
       }, 900);
     }
-  }, [next, router]);
+  }, [router]);
 }
