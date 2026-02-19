@@ -42,14 +42,9 @@ export function useAuthSuccessNavigate() {
       fallbackTimerRef.current = window.setTimeout(() => {
         const isAuthPath = window.location.pathname.startsWith('/auth');
         const hasAuthModal = Boolean(document.querySelector('.auth-route-modal'));
-        const targetUrl = new URL(target, window.location.origin);
-        const isAtTarget =
-          window.location.pathname === targetUrl.pathname &&
-          window.location.search === targetUrl.search;
 
-        // Always exit auth flow after success. If client navigation stalls,
-        // force a hard navigation to target.
-        if (isAuthPath || hasAuthModal || !isAtTarget) {
+        // Only force hard navigation when auth UI is still visible.
+        if (isAuthPath || hasAuthModal) {
           window.location.replace(target);
         }
 

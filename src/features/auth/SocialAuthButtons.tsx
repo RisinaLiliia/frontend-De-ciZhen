@@ -8,6 +8,7 @@ import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 export function SocialAuthButtons() {
   const t = useT();
   const [activeProvider, setActiveProvider] = React.useState<'google' | 'apple' | null>(null);
+  const isAppleEnabled = process.env.NEXT_PUBLIC_ENABLE_APPLE_AUTH === 'true';
 
   const goToProvider = React.useCallback((provider: 'google' | 'apple') => {
     setActiveProvider(provider);
@@ -33,8 +34,12 @@ export function SocialAuthButtons() {
         <button
           type="button"
           className="auth-social__btn auth-social__btn--apple"
-          onClick={() => goToProvider('apple')}
-          disabled={activeProvider !== null}
+          onClick={() => {
+            if (!isAppleEnabled) return;
+            goToProvider('apple');
+          }}
+          disabled={activeProvider !== null || !isAppleEnabled}
+          aria-disabled={!isAppleEnabled}
         >
           <span className="auth-social__icon" aria-hidden="true"><IconBrandApple /></span>
           <span className="auth-social__label">{t(I18N_KEYS.auth.continueWithApple)}</span>
