@@ -24,7 +24,7 @@ export function HomeStatsPanel({ t, stats, formatNumber }: HomeStatsPanelProps) 
       </div>
 
       <div className="stat-grid mt-3">
-        <Link href="/orders?tab=new-orders" className="stat-link stat-card stat-divider">
+        <Link href="/orders?tab=new-orders" prefetch={false} className="stat-link stat-card stat-divider">
           <div className="flex items-center gap-2">
             <span className="stat-icon">
               <IconBox className="h-3.5 w-3.5" />
@@ -33,7 +33,7 @@ export function HomeStatsPanel({ t, stats, formatNumber }: HomeStatsPanelProps) 
           </div>
           <span className="stat-label">{t(I18N_KEYS.homePublic.statActive)}</span>
         </Link>
-        <Link href="/requests" className="stat-link stat-card stat-divider">
+        <Link href="/requests" prefetch={false} className="stat-link stat-card stat-divider">
           <div className="flex items-center gap-2">
             <span className="stat-icon">
               <IconCoins className="h-3.5 w-3.5" />
@@ -53,7 +53,7 @@ export function HomeStatsPanel({ t, stats, formatNumber }: HomeStatsPanelProps) 
           </div>
           <span className="stat-label">{t(I18N_KEYS.homePublic.statResponse)}</span>
         </div>
-        <Link href="/requests" className="stat-link stat-card stat-divider">
+        <Link href="/requests" prefetch={false} className="stat-link stat-card stat-divider">
           <div className="flex items-center gap-2">
             <span className="stat-icon">
               <IconStar className="h-3.5 w-3.5" />

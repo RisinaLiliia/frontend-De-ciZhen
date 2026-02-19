@@ -166,7 +166,7 @@ export function AccountProfilePage() {
       <section className="card stack-sm">
         <div className="flex items-center justify-between">
           <h2 className="typo-h3">{t(I18N_KEYS.client.chatsTitle)}</h2>
-          <Link href="/chat" className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
+          <Link href="/chat" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="flex items-center justify-between">
           <span className="typo-small">{t(I18N_KEYS.chat.inboxTitle)}</span>
@@ -177,7 +177,7 @@ export function AccountProfilePage() {
       <section className="card stack-sm">
         <div className="flex items-center justify-between">
           <h2 className="typo-h3">{t(I18N_KEYS.client.requestsTitle)}</h2>
-          <Link href="/requests" className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
+          <Link href="/requests" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="stack-sm">
           <WorkspaceContentState
@@ -207,7 +207,7 @@ export function AccountProfilePage() {
       <section className="card stack-sm">
         <div className="flex items-center justify-between">
           <h2 className="typo-h3">{t(I18N_KEYS.provider.myResponsesTitle)}</h2>
-          <Link href="/requests" className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
+          <Link href="/requests" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="stack-sm">
           <WorkspaceContentState
@@ -234,7 +234,7 @@ export function AccountProfilePage() {
       <section className="card stack-sm">
         <div className="flex items-center justify-between">
           <h2 className="typo-h3">{t(I18N_KEYS.client.contractsTitle)}</h2>
-          <Link href="/orders?tab=completed-jobs" className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
+          <Link href="/orders?tab=completed-jobs" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="flex items-center justify-between">
           <span className="typo-small">{t(I18N_KEYS.provider.contractsTitle)}</span>

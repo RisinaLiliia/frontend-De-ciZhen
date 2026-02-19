@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -18,37 +18,23 @@ import { buildLoginSchema, type LoginValues } from '@/features/auth/login.schema
 import { getLoginErrorMessage, isInvalidCredentialsError } from '@/features/auth/mapAuthError';
 import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
 import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
+import { useAuthSuccessNavigate } from '@/features/auth/useAuthSuccessNavigate';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 
 export function LoginForm() {
   const t = useT();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || DEFAULT_AUTH_NEXT;
   const oauthError = searchParams.get('error');
   const registerHref = `/auth/register?next=${encodeURIComponent(next)}`;
   const [showPassword, setShowPassword] = React.useState(false);
-  const [didNavigate, setDidNavigate] = React.useState(false);
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const schema = React.useMemo(() => buildLoginSchema(t), [t]);
 
   const login = useAuthLogin();
   const status = useAuthStatus();
-  const navigateAfterAuth = React.useCallback(() => {
-    if (didNavigate) return;
-    setDidNavigate(true);
-    router.replace(next);
-    router.refresh();
-    if (typeof window !== 'undefined') {
-      window.setTimeout(() => {
-        const onAuthRoute = window.location.pathname.startsWith('/auth');
-        if (onAuthRoute) {
-          window.location.assign(next);
-        }
-      }, 900);
-    }
-  }, [didNavigate, next, router]);
+  const navigateAfterAuth = useAuthSuccessNavigate(next);
 
   const {
     register,

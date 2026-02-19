@@ -8,7 +8,7 @@ type MoreDotsLinkProps = {
 
 export function MoreDotsLink({ href, label, className }: MoreDotsLinkProps) {
   return (
-    <Link href={href} className={`nearby-more ${className ?? ''}`} aria-label={label} title={label}>
+    <Link href={href} prefetch={false} className={`nearby-more ${className ?? ''}`} aria-label={label} title={label}>
       <span className="nearby-dot-item" />
       <span className="nearby-dot-item" />
       <span className="nearby-dot-item" />

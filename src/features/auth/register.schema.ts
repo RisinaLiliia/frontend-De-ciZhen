@@ -28,8 +28,6 @@ export function buildRegisterSchema(t: Translate) {
       confirmPassword: z
         .string()
         .min(1, t('auth.errorConfirmPasswordRequired')),
-      city: z.string().optional(),
-      language: z.string().optional(),
       acceptPrivacyPolicy: z
         .boolean()
         .refine((v) => v === true, t('auth.errorAcceptPolicyRequired')),

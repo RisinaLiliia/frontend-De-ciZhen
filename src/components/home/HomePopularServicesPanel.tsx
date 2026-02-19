@@ -27,7 +27,7 @@ export function HomePopularServicesPanel({
     <section className="panel">
       <div className="panel-header">
         <p className="section-title">{t(I18N_KEYS.homePublic.popularTitle)}</p>
-        <Link href="/requests" className="badge">
+        <Link href="/requests" prefetch={false} className="badge">
           {t(I18N_KEYS.homePublic.viewAll)}
         </Link>
       </div>
