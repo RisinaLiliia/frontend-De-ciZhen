@@ -34,15 +34,15 @@ export default function OffersPage() {
     enabled: Boolean(requestId),
   });
 
-  const ensureAuth = (next: string) => {
+  const ensureAuth = () => {
     if (status === 'authenticated') return true;
-    router.push(`/auth/register?next=${encodeURIComponent(next)}`);
+    router.push('/auth/register');
     return false;
   };
 
   const onAccept = async (id: string) => {
     try {
-      if (!ensureAuth(`/offers/${requestId}`)) return;
+      if (!ensureAuth()) return;
       await acceptOffer(id);
       toast.success(t(I18N_KEYS.offers.accepted));
       await qc.invalidateQueries({ queryKey: ['offers', requestId] });
@@ -65,10 +65,10 @@ export default function OffersPage() {
           <div className="card stack-sm">
             <p className="typo-small">{t(I18N_KEYS.offers.softSubtitle)}</p>
             <div className="flex items-center gap-2">
-              <Link href={`/auth/register?next=/offers/${requestId}`} prefetch={false} className="badge">
+              <Link href="/auth/register" prefetch={false} className="badge">
                 {t(I18N_KEYS.offers.registerCta)}
               </Link>
-              <Link href={`/auth/login?next=/offers/${requestId}`} prefetch={false} className="badge">
+              <Link href="/auth/login" prefetch={false} className="badge">
                 {t(I18N_KEYS.offers.loginCta)}
               </Link>
             </div>
@@ -117,7 +117,7 @@ export default function OffersPage() {
                         type="button"
                         className="badge"
                         onClick={() => {
-                          if (!ensureAuth(`/chat`)) return;
+                          if (!ensureAuth()) return;
                           createThread({
                             requestId: item.requestId,
                             providerUserId: item.providerUserId ?? '',

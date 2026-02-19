@@ -14,6 +14,12 @@ import { setAccessToken as setToken } from '@/lib/auth/token';
 
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';
 
+function logAuthWarning(scope: string, error: unknown) {
+  if (process.env.NODE_ENV === 'production') return;
+  // Keep diagnostics in dev without interrupting user flow.
+  console.warn(`[auth] ${scope} failed`, error);
+}
+
 type AuthState = {
   status: AuthStatus;
   user: SafeUserDto | null;
@@ -185,7 +191,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         .then((me) => {
           get().setMe(me);
         })
-        .catch(() => {
+        .catch((error) => {
+          logAuthWarning('login:getMe', error);
         });
     } catch (error) {
       suppressRefreshAttempts();
@@ -221,7 +228,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         .then((me) => {
           get().setMe(me);
         })
-        .catch(() => {
+        .catch((error) => {
+          logAuthWarning('register:getMe', error);
         });
     } catch (error) {
       suppressRefreshAttempts();

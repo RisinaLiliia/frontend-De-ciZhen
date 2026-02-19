@@ -165,23 +165,12 @@ export default function RequestDetailsPage() {
     setOfferAvailability('');
   }, [isAuthed]);
 
-  const buildNextUrl = React.useCallback(
-    (action: string) => {
-      const nextParams = new URLSearchParams(searchParams?.toString());
-      nextParams.set('action', action);
-      const qs = nextParams.toString();
-      return `${pathname}${qs ? `?${qs}` : ''}`;
-    },
-    [pathname, searchParams],
-  );
-
   const requireAuth = React.useCallback(
-    (action: string) => {
-      const nextUrl = buildNextUrl(action);
-      router.push(`/auth/login?next=${encodeURIComponent(nextUrl)}`);
+    () => {
+      router.push('/auth/login');
       toast.message(t(I18N_KEYS.requestDetails.loginRequired));
     },
-    [buildNextUrl, router, t],
+    [router, t],
   );
 
   const setOfferSheetInUrl = React.useCallback(
@@ -221,7 +210,7 @@ export default function RequestDetailsPage() {
   const handleApply = React.useCallback(() => {
     if (!request) return;
     if (authStatus !== 'authenticated') {
-      requireAuth('respond');
+      requireAuth();
       return;
     }
     if (isOwner) {
@@ -349,7 +338,7 @@ export default function RequestDetailsPage() {
 
   const handleChat = React.useCallback(() => {
     if (authStatus !== 'authenticated') {
-      requireAuth('chat');
+      requireAuth();
       return;
     }
     if (isOwner) {
@@ -362,7 +351,7 @@ export default function RequestDetailsPage() {
   const handleFavorite = React.useCallback(() => {
     if (!request) return;
     if (authStatus !== 'authenticated') {
-      requireAuth('favorite');
+      requireAuth();
       return;
     }
     if (isOwner) {

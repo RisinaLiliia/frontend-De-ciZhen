@@ -73,7 +73,7 @@ export type RegisterDto = {
   password: string;
   city?: string;
   language?: string;
-  role?: UserRole;
+  role?: 'client' | 'provider';
   acceptPrivacyPolicy: boolean;
 };
 
@@ -84,5 +84,19 @@ export type OauthCompleteRegisterDto = {
 
 export type LoginDto = {
   email: string;
+  password: string;
+};
+
+export type ForgotPasswordDto = {
+  email: string;
+};
+
+export type ForgotPasswordResponseDto = {
+  ok: boolean;
+  resetUrl?: string;
+};
+
+export type ResetPasswordDto = {
+  token: string;
   password: string;
 };

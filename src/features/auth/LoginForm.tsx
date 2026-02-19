@@ -17,7 +17,7 @@ import { useAuthLogin, useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { buildLoginSchema, type LoginValues } from '@/features/auth/login.schema';
 import { getLoginErrorMessage, isInvalidCredentialsError } from '@/features/auth/mapAuthError';
 import { SocialAuthButtons } from '@/features/auth/SocialAuthButtons';
-import { resolveSafeNext } from '@/features/auth/navigation';
+import { forgotPassword } from '@/lib/auth/api';
 import { useAuthSuccessNavigate } from '@/features/auth/useAuthSuccessNavigate';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -25,16 +25,15 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 export function LoginForm() {
   const t = useT();
   const searchParams = useSearchParams();
-  const next = resolveSafeNext(searchParams.get('next'));
   const oauthError = searchParams.get('error');
-  const registerHref = `/auth/register?next=${encodeURIComponent(next)}`;
+  const registerHref = '/auth/register';
   const [showPassword, setShowPassword] = React.useState(false);
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const schema = React.useMemo(() => buildLoginSchema(t), [t]);
 
   const login = useAuthLogin();
   const status = useAuthStatus();
-  const navigateAfterAuth = useAuthSuccessNavigate(next);
+  const navigateAfterAuth = useAuthSuccessNavigate();
 
   const {
     register,
@@ -62,6 +61,24 @@ export function LoginForm() {
         setError('password', { type: 'server', message });
       }
       toast.error(message);
+    }
+  };
+
+  const onForgotPassword = async () => {
+    if (!watchedEmail || !isEmailValid) {
+      toast.error(t(I18N_KEYS.auth.errorEmailInvalid));
+      return;
+    }
+
+    try {
+      const result = await forgotPassword({ email: watchedEmail });
+      if (result.resetUrl) {
+        window.location.href = result.resetUrl;
+        return;
+      }
+      toast.success(t(I18N_KEYS.auth.forgotPasswordSoon));
+    } catch {
+      toast.error(t(I18N_KEYS.auth.errorGenericLogin));
     }
   };
 
@@ -154,20 +171,21 @@ export function LoginForm() {
         {errors.password ? (
           <p id="login-password-error" className="auth-form-error" role="alert">{errors.password.message}</p>
         ) : null}
-        <button
-          type="button"
-          className="auth-form__link-btn"
-          onClick={() => toast.message(t(I18N_KEYS.auth.forgotPasswordSoon))}
-        >
-          {t(I18N_KEYS.auth.forgotPassword)}
-        </button>
       </div>
+
+      <button
+        type="button"
+        onClick={onForgotPassword}
+        className="typo-small ml-auto text-right link-accent"
+      >
+        {t(I18N_KEYS.auth.forgotPassword)}
+      </button>
 
       <Button type="submit" loading={loading}>
         {t(I18N_KEYS.auth.loginCta)}
       </Button>
 
-      <SocialAuthButtons nextPath={next} />
+      <SocialAuthButtons />
 
       <Link href={registerHref} prefetch={false} className="typo-small text-center link-accent">
         {t(I18N_KEYS.auth.toRegister)}
