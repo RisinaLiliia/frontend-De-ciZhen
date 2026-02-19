@@ -158,11 +158,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       allowRefreshAttempts();
       setToken(data.accessToken);
       set({ status: 'authenticated', accessToken: data.accessToken, error: null });
-      try {
-        const me = await getMe();
-        get().setMe(me);
-      } catch {
-      }
+      void getMe()
+        .then((me) => {
+          get().setMe(me);
+        })
+        .catch(() => {
+          // Keep authenticated state; me can be fetched later.
+        });
     } catch (error) {
       suppressRefreshAttempts();
       set({
@@ -191,11 +193,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       allowRefreshAttempts();
       setToken(data.accessToken);
       set({ status: 'authenticated', accessToken: data.accessToken, error: null });
-      try {
-        const me = await getMe();
-        get().setMe(me);
-      } catch {
-      }
+      void getMe()
+        .then((me) => {
+          get().setMe(me);
+        })
+        .catch(() => {
+          // Keep authenticated state; me can be fetched later.
+        });
     } catch (error) {
       suppressRefreshAttempts();
       set({

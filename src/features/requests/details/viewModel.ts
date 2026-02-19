@@ -53,7 +53,8 @@ export function buildRequestDetailsViewModel({
       ? new Date(request.preferredDate)
       : null;
   const images = buildRequestImageList(request);
-  const clientProfileHref = request.clientId ? `/clients/${request.clientId}` : null;
+  // No public client profile route exists yet; avoid generating broken links.
+  const clientProfileHref = null;
   const clientName = request.clientName ?? t(I18N_KEYS.requestDetails.clientUnknown);
   const clientAvatarUrl =
     request.clientAvatarUrl && request.clientAvatarUrl.startsWith('http')
