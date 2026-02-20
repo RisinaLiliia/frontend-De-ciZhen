@@ -45,7 +45,7 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
     : null;
 
   return (
-    <section className="panel home-activity-panel hide-mobile">
+    <section className="panel home-activity-panel">
       <div className="panel-header">
         <div className="section-heading">
           <p className="section-title">{t(I18N_KEYS.homePublic.activityTitle)}</p>

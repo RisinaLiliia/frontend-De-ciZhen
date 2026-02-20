@@ -25,7 +25,7 @@ export function HeroSection({
   return (
     <section className="hero">
       <div className="hero__copy">
-        <h1 className="typo-h1">{title}</h1>
+        <h1 className="typo-h1 hero__title">{title}</h1>
         {subtitle ? <p className="typo-muted">{subtitle}</p> : null}
         {ctas.length ? (
           <div className="action-row hero__actions">
