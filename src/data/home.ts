@@ -99,7 +99,8 @@ export const HOME_TOP_PROVIDERS: Array<{
   nameKey: I18nKey;
   roleKey: I18nKey;
   ratingKey: I18nKey;
-  reviewsKey: I18nKey;
+  responseMinutes: number;
+  reviewsCount: number;
   ctaKey: I18nKey;
   profileHref: string;
   reviewsHref: string;
@@ -113,7 +114,8 @@ export const HOME_TOP_PROVIDERS: Array<{
     nameKey: I18N_KEYS.homePublic.topProvider1Name,
     roleKey: I18N_KEYS.homePublic.topProvider1Role,
     ratingKey: I18N_KEYS.homePublic.topProvider1Rating,
-    reviewsKey: I18N_KEYS.homePublic.topProvider1Reviews,
+    responseMinutes: 12,
+    reviewsCount: 128,
     ctaKey: I18N_KEYS.homePublic.topProvider1Cta,
     profileHref: '/providers/1',
     reviewsHref: '/providers/1#reviews',
@@ -127,9 +129,40 @@ export const HOME_TOP_PROVIDERS: Array<{
     nameKey: I18N_KEYS.homePublic.topProvider2Name,
     roleKey: I18N_KEYS.homePublic.topProvider2Role,
     ratingKey: I18N_KEYS.homePublic.topProvider2Rating,
-    reviewsKey: I18N_KEYS.homePublic.topProvider2Reviews,
+    responseMinutes: 19,
+    reviewsCount: 96,
     ctaKey: I18N_KEYS.homePublic.topProvider2Cta,
     profileHref: '/providers/2',
     reviewsHref: '/providers/2#reviews',
+  },
+  {
+    id: 'provider-3',
+    badgeKeys: [I18N_KEYS.homePublic.topProvider3Badge1],
+    status: 'online',
+    statusLabelKey: I18N_KEYS.homePublic.topProviderStatus,
+    avatarLetter: 'S',
+    nameKey: I18N_KEYS.homePublic.topProvider3Name,
+    roleKey: I18N_KEYS.homePublic.topProvider3Role,
+    ratingKey: I18N_KEYS.homePublic.topProvider3Rating,
+    responseMinutes: 15,
+    reviewsCount: 142,
+    ctaKey: I18N_KEYS.homePublic.topProvider3Cta,
+    profileHref: '/providers/3',
+    reviewsHref: '/providers/3#reviews',
+  },
+  {
+    id: 'provider-4',
+    badgeKeys: [I18N_KEYS.homePublic.topProvider4Badge1],
+    status: 'offline',
+    statusLabelKey: I18N_KEYS.homePublic.topProviderStatusOffline,
+    avatarLetter: 'L',
+    nameKey: I18N_KEYS.homePublic.topProvider4Name,
+    roleKey: I18N_KEYS.homePublic.topProvider4Role,
+    ratingKey: I18N_KEYS.homePublic.topProvider4Rating,
+    responseMinutes: 24,
+    reviewsCount: 87,
+    ctaKey: I18N_KEYS.homePublic.topProvider4Cta,
+    profileHref: '/providers/4',
+    reviewsHref: '/providers/4#reviews',
   },
 ];

@@ -13,6 +13,8 @@ export type TopProviderItem = {
   name: string;
   role: string;
   rating: string;
+  responseTime?: string;
+  responseTimeLabel?: string;
   reviewsCount: number;
   reviewsLabel: string;
   ctaLabel: string;
@@ -79,6 +81,8 @@ export function TopProvidersPanel({
               avatarUrl={provider.avatarUrl}
               hasProviderProfile
               subtitle={provider.role}
+              responseTime={provider.responseTime}
+              responseTimeLabel={provider.responseTimeLabel}
               status={provider.status}
               statusLabel={provider.statusLabel}
               rating={provider.rating}

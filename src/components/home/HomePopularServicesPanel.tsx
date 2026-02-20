@@ -47,7 +47,7 @@ export function HomePopularServicesPanel({
               className="service-tile__badge"
               value={categoryCounts[service.key] ?? 0}
             />
-            {service.label}
+            <span className="service-tile__label">{service.label}</span>
           </Link>
         ))}
       </div>

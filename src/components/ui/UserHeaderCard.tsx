@@ -10,6 +10,8 @@ type UserHeaderCardProps = {
   name: string;
   avatarUrl?: string | null;
   subtitle?: string;
+  responseTime?: string;
+  responseTimeLabel?: string;
   href?: string | null;
   avatarRole?: 'provider' | 'client';
   stats?: UserDominantStats;
@@ -29,6 +31,8 @@ export function UserHeaderCard({
   name,
   avatarUrl,
   subtitle,
+  responseTime,
+  responseTimeLabel,
   href,
   avatarRole,
   stats,
@@ -85,6 +89,12 @@ export function UserHeaderCard({
         <div className="provider-main">
           <p className="provider-name">{name}</p>
           {subtitle ? <p className="provider-sub">{subtitle}</p> : null}
+          {responseTime ? (
+            <p className="provider-response">
+              <span className="provider-response__label">{responseTimeLabel ?? 'Response time'}:</span>
+              <span className="provider-response__value">{responseTime}</span>
+            </p>
+          ) : null}
         </div>
       </div>
       {showRating ? (
@@ -112,6 +122,12 @@ export function UserHeaderCard({
       <div className="provider-main">
         <p className="provider-name">{name}</p>
         {subtitle ? <p className="provider-sub">{subtitle}</p> : null}
+        {responseTime ? (
+          <p className="provider-response">
+            <span className="provider-response__label">{responseTimeLabel ?? 'Response time'}:</span>
+            <span className="provider-response__value">{responseTime}</span>
+          </p>
+        ) : null}
         {showRating ? (
           <RatingSummary
             rating={rating}
