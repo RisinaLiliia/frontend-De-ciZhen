@@ -74,7 +74,7 @@ export function HomeNearbyPanel({ t }: HomeNearbyPanelProps) {
     [locale],
   );
   return (
-    <section className="panel hide-mobile">
+    <section className="panel">
       <div className="panel-header">
         <div className="section-heading">
           <p className="section-title">{t(I18N_KEYS.homePublic.nearby)}</p>

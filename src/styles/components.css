@@ -1905,6 +1905,12 @@
     padding: clamp(20px, 4vw, 32px);
   }
 
+  .hero__title {
+    max-width: 24ch;
+    white-space: pre-line;
+    text-wrap: balance;
+  }
+
   .hero__actions {
     margin-top: auto;
     padding-top: var(--space-2);

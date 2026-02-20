@@ -8,6 +8,7 @@ type HomeHeroProps = {
 };
 
 export function HomeHero({ t }: HomeHeroProps) {
+  const heroTitle = t(I18N_KEYS.homePublic.title).replace(' in 2 Minuten', '\nin 2 Minuten');
   const ctas = [
     {
       href: '/requests',
@@ -24,7 +25,7 @@ export function HomeHero({ t }: HomeHeroProps) {
   return (
     <>
       <HeroSection
-        title={t(I18N_KEYS.homePublic.title)}
+        title={heroTitle}
         subtitle={t(I18N_KEYS.homePublic.subtitle)}
         mediaSrc="/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg"
       />
