@@ -1882,7 +1882,7 @@
     display: grid;
     gap: var(--space-4);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     border-radius: 0;
     border: none;
     background: linear-gradient(
@@ -1908,6 +1908,20 @@
   .hero__actions {
     margin-top: auto;
     padding-top: var(--space-2);
+  }
+
+  .sticky-action-row {
+    position: sticky;
+    top: calc(56px + 8px);
+    z-index: 30;
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .hero-dock-actions {
+    margin-top: calc(-1 * (var(--btn-h) + 12px));
+    z-index: 31;
+    margin-bottom: 12px;
   }
 
   .hero__media {
@@ -1943,6 +1957,13 @@
 
     .hero__actions {
       max-width: 480px;
+    }
+
+    .hero-dock-actions {
+      max-width: 480px;
+      margin-top: calc(-1 * (var(--btn-h) + 56px));
+      margin-left: clamp(20px, 4vw, 32px);
+      margin-right: auto;
     }
 
     .hero {

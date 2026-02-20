@@ -8,11 +8,13 @@ import { AuthActions } from '@/components/layout/AuthActions';
 import { HomeHero } from '@/components/home/HomeHero';
 import { HomeHowItWorksPanel } from '@/components/home/HomeHowItWorksPanel';
 import { HomeNearbyPanel } from '@/components/home/HomeNearbyPanel';
+import { HomePlatformActivityPanel } from '@/components/home/HomePlatformActivityPanel';
 import { HomePopularServicesPanel } from '@/components/home/HomePopularServicesPanel';
 import { HomeProofPanel } from '@/components/home/HomeProofPanel';
 import { HomeQuickSearchPanel } from '@/components/home/HomeQuickSearchPanel';
 import { HomeStatsPanel } from '@/components/home/HomeStatsPanel';
 import { HomeTopProvidersPanel } from '@/components/home/HomeTopProvidersPanel';
+import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
 import {
   HOME_CATEGORIES,
   HOME_PROOF_CASES,
@@ -139,49 +141,70 @@ export default function HomePage() {
       <HomeHero t={t} />
 
       <div className="home-grid">
-        <div className="stack-md">
-          <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} />
-          <HomeQuickSearchPanel
-            t={t}
-            region={region}
-            categories={categories}
-            selectedCategory={selectedCategory}
-            query={query}
-            onSelectCategory={(key) => {
-              setSelectedCategory((prev) => {
-                const nextCategory = prev === key ? null : key;
-                const nextLabel =
-                  nextCategory === null
-                    ? ''
-                    : categories.find((item) => item.key === key)?.label ?? '';
-                setQuery(nextLabel);
-                return nextCategory;
-              });
-            }}
-            onQueryChange={setQuery}
-            onSearch={() => {
-              const params = new URLSearchParams();
-              if (selectedCategory) params.set('category', selectedCategory);
-              if (query) params.set('q', query);
-              const suffix = params.toString();
-              router.push(`/requests${suffix ? `?${suffix}` : ''}`);
-            }}
-          />
-          <HomePopularServicesPanel
-            t={t}
-            services={services}
-            categoryCounts={categoryCounts}
-          />
-          <HomeProofPanel t={t} proofCases={proofCases} proofIndex={proofIndex} />
-          <HomeHowItWorksPanel t={t} />
+        <section className="home-combined-top">
+          <div className="home-combined-top__left stack-md">
+            <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} />
+            <HomeQuickSearchPanel
+              t={t}
+              region={region}
+              categories={categories}
+              selectedCategory={selectedCategory}
+              query={query}
+              onSelectCategory={(key) => {
+                setSelectedCategory((prev) => {
+                  const nextCategory = prev === key ? null : key;
+                  const nextLabel =
+                    nextCategory === null
+                      ? ''
+                      : categories.find((item) => item.key === key)?.label ?? '';
+                  setQuery(nextLabel);
+                  return nextCategory;
+                });
+              }}
+              onQueryChange={setQuery}
+              onSearch={() => {
+                const params = new URLSearchParams();
+                if (selectedCategory) params.set('category', selectedCategory);
+                if (query) params.set('q', query);
+                const suffix = params.toString();
+                router.push(`/requests${suffix ? `?${suffix}` : ''}`);
+              }}
+            />
+          </div>
+
+          <div className="home-combined-top__right">
+            <HomePlatformActivityPanel t={t} locale={locale} />
+          </div>
+        </section>
+
+        <section className="home-combined">
+          <div className="home-combined__left stack-md">
+            <HomePopularServicesPanel
+              t={t}
+              services={services}
+              categoryCounts={categoryCounts}
+            />
+            <HomeNearbyPanel t={t} />
+          </div>
+          <div className="home-combined__right">
+            <HomeTopProvidersPanel
+              t={t}
+              providers={HOME_TOP_PROVIDERS}
+            />
+          </div>
+        </section>
+
+        <div className="home-grid__main">
+          <section className="home-combined-bottom">
+            <div className="home-combined-bottom__left stack-md">
+              <HomeProofPanel t={t} proofCases={proofCases} proofIndex={proofIndex} />
+              <HomeHowItWorksPanel t={t} />
+            </div>
+            <div className="home-combined-bottom__right">
+              <HomeTrustLivePanel />
+            </div>
+          </section>
         </div>
-
-        <aside className="stack-md">
-          <HomeNearbyPanel t={t} />
-          <HomeTopProvidersPanel t={t} providers={HOME_TOP_PROVIDERS} />
-
-
-        </aside>
       </div>
     </PageShell>
   );

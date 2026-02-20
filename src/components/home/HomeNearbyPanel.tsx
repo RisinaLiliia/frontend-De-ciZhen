@@ -48,6 +48,9 @@ export function HomeNearbyPanel({ t }: HomeNearbyPanelProps) {
         sort: 'date_desc',
         limit: 3,
       }),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 
 
