@@ -5,6 +5,12 @@ import type { RefreshResponseDto } from '@/lib/api/dto/auth';
 let refreshPromise: Promise<string | null> | null = null;
 let refreshSuppressed = false;
 const SESSION_HINT_KEY = 'dc_auth_session_hint';
+const SESSION_HINT_COOKIE = 'dc_auth_session_hint';
+
+function setSessionHintCookie(value: '1' | '', maxAgeSeconds: number) {
+  if (typeof document === 'undefined') return;
+  document.cookie = `${SESSION_HINT_COOKIE}=${value}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax`;
+}
 
 function isProtectedPath(pathname: string): boolean {
   return (
@@ -27,11 +33,13 @@ export function suppressRefreshAttempts() {
 export function markSessionHint() {
   if (typeof window === 'undefined') return;
   window.localStorage.setItem(SESSION_HINT_KEY, '1');
+  setSessionHintCookie('1', 60 * 60 * 24 * 30);
 }
 
 export function clearSessionHint() {
   if (typeof window === 'undefined') return;
   window.localStorage.removeItem(SESSION_HINT_KEY);
+  setSessionHintCookie('', 0);
 }
 
 export function shouldAttemptRefreshOnBootstrap(): boolean {
@@ -53,7 +61,7 @@ export async function refreshAccessToken(): Promise<string | null> {
       });
 
       if (!res.ok) {
-        if (res.status === 401 || res.status === 403) {
+        if (res.status === 401 || res.status === 403 || res.status >= 500) {
           refreshSuppressed = true;
         }
         return null;

@@ -29,9 +29,14 @@ function hasRefreshSession(req: NextRequest): boolean {
   return exp > nowSec && sub.length > 0 && sessionId.length > 0;
 }
 
+function hasAuthHint(req: NextRequest): boolean {
+  return req.cookies.get('dc_auth_session_hint')?.value === '1';
+}
+
 export function proxy(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
   const isAuthenticated = hasRefreshSession(req);
+  const hasHint = hasAuthHint(req);
 
   if (pathname.startsWith('/orders')) {
     if (!isAuthenticated) {
@@ -42,7 +47,7 @@ export function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname === '/requests' && isAuthenticated) {
+  if (pathname === '/requests' && isAuthenticated && hasHint) {
     const url = new URL(DEFAULT_AUTH_NEXT, req.url);
     return NextResponse.redirect(url);
   }
