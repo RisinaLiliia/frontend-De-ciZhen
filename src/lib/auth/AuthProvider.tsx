@@ -10,8 +10,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const user = useAuthUser();
   const lastMode = useAuthLastMode();
   const setLastMode = useAuthSetLastMode();
+  const didBootstrap = React.useRef(false);
 
   React.useEffect(() => {
+    if (didBootstrap.current) return;
+    didBootstrap.current = true;
     bootstrap();
   }, [bootstrap]);
 

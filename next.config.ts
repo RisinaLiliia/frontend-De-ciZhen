@@ -1,9 +1,16 @@
 import type { NextConfig } from 'next';
 
-const API_BASE = process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE;
+const apiBaseFromServerEnv = process.env.API_BASE_URL?.trim();
+const apiBaseFromPublicEnv = process.env.NEXT_PUBLIC_API_BASE?.trim();
+const API_BASE =
+  apiBaseFromServerEnv ||
+  (process.env.NODE_ENV === 'production' ? apiBaseFromPublicEnv : '') ||
+  (process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : '');
 
 const nextConfig: NextConfig = {
   images: {
+    // Keep local dev resilient when external image hosts are slow/unreachable.
+    unoptimized: process.env.NODE_ENV === 'development',
     remotePatterns: [
       {
         protocol: 'https',
