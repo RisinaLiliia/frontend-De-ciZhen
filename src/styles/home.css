@@ -1649,6 +1649,63 @@
     }
   }
 
+  .home-stats__grid {
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-stats__card {
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .home-stats__link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .home-stats__link:hover {
+    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-primary) 18%);
+  }
+
+  .home-stats__link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+  }
+
+  .home-stats__value {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .home-stats__live {
+    animation: stat-tick 2.4s ease-in-out infinite;
+  }
+
+  .home-stats__label {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .home-stats__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--c-accent);
+    font-size: 12px;
+  }
+
   @media (max-width: 640px) {
     .home-screen {
       gap: var(--space-4);
@@ -1671,12 +1728,12 @@
       gap: var(--space-2);
     }
 
-    .home-screen .stat-grid {
+    .home-screen .home-stats__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 0;
     }
 
-    .home-screen .stat-card {
+    .home-screen .home-stats__card {
       position: relative;
       padding: 8px 8px;
       background: transparent;
@@ -1684,7 +1741,7 @@
       border-radius: 0;
     }
 
-    .home-screen .stat-card:not(:last-child)::after {
+    .home-screen .home-stats__card:not(:last-child)::after {
       content: "";
       position: absolute;
       right: 0;
@@ -1695,7 +1752,7 @@
       opacity: 0.7;
     }
 
-    .home-screen .stat-value {
+    .home-screen .home-stats__value {
       font-size: 17px;
       white-space: nowrap;
     }
@@ -1725,16 +1782,16 @@
   }
 
   @media (max-width: 360px) {
-    .home-screen .stat-value {
+    .home-screen .home-stats__value {
       font-size: 15px;
       letter-spacing: -0.2px;
     }
 
-    .home-screen .stat-label {
+    .home-screen .home-stats__label {
       font-size: 11px;
     }
 
-    .home-screen .stat-icon {
+    .home-screen .home-stats__icon {
       width: 18px;
       height: 18px;
     }
@@ -1753,12 +1810,12 @@
       font-size: 18px;
     }
 
-    .home-screen .stat-grid {
+    .home-screen .home-stats__grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0;
     }
 
-    .home-screen .stat-card {
+    .home-screen .home-stats__card {
       position: relative;
       padding: 12px 12px;
       background: transparent;
@@ -1766,7 +1823,7 @@
       border-radius: 0;
     }
 
-    .home-screen .stat-card:not(:last-child)::after {
+    .home-screen .home-stats__card:not(:last-child)::after {
       content: "";
       position: absolute;
       right: 0;
@@ -1795,7 +1852,7 @@
       font-size: 20px;
     }
 
-    .home-screen .stat-value {
+    .home-screen .home-stats__value {
       font-size: 22px;
     }
   }
