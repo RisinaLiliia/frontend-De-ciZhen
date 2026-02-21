@@ -11,11 +11,11 @@ type HomeProofPanelProps = {
 
 export function HomeProofPanel({ t, proofCases, proofIndex }: HomeProofPanelProps) {
   return (
-    <section className="panel">
-      <div className="panel-header">
-        <p className="section-title">{t(I18N_KEYS.homePublic.proofTitle)}</p>
+    <section className="panel home-proof-panel">
+      <div className="home-proof-panel__header">
+        <p className="home-proof-panel__title">{t(I18N_KEYS.homePublic.proofTitle)}</p>
       </div>
-      <div className="proof-feed">
+      <div className="home-proof-panel__feed">
         {proofCases.map((item, index) => (
           <ProofReviewCard
             key={item.id}

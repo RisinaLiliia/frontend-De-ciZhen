@@ -23,44 +23,44 @@ export function HomeStatsPanel({ t, stats, formatNumber }: HomeStatsPanelProps) 
         <span className="badge badge-live">{t(I18N_KEYS.homePublic.live)}</span>
       </div>
 
-      <div className="stat-grid mt-3">
-        <Link href="/orders?tab=new-orders" prefetch={false} className="stat-link stat-card stat-divider">
+      <div className="home-stats__grid mt-3">
+        <Link href="/orders?tab=new-orders" prefetch={false} className="home-stats__link home-stats__card">
           <div className="flex items-center gap-2">
-            <span className="stat-icon">
+            <span className="home-stats__icon">
               <IconBox className="h-3.5 w-3.5" />
             </span>
-            <span className="stat-value stat-live">{formatNumber.format(stats.active)}</span>
+            <span className="home-stats__value home-stats__live">{formatNumber.format(stats.active)}</span>
           </div>
-          <span className="stat-label">{t(I18N_KEYS.homePublic.statActive)}</span>
+          <span className="home-stats__label">{t(I18N_KEYS.homePublic.statActive)}</span>
         </Link>
-        <Link href="/requests" prefetch={false} className="stat-link stat-card stat-divider">
+        <Link href="/requests" prefetch={false} className="home-stats__link home-stats__card">
           <div className="flex items-center gap-2">
-            <span className="stat-icon">
+            <span className="home-stats__icon">
               <IconCoins className="h-3.5 w-3.5" />
             </span>
-            <span className="stat-value stat-live">{formatNumber.format(stats.completed)}</span>
+            <span className="home-stats__value home-stats__live">{formatNumber.format(stats.completed)}</span>
           </div>
-          <span className="stat-label">{t(I18N_KEYS.homePublic.statCompleted)}</span>
+          <span className="home-stats__label">{t(I18N_KEYS.homePublic.statCompleted)}</span>
         </Link>
-        <div className="stat-card stat-divider hide-mobile">
+        <div className="home-stats__card hide-mobile">
           <div className="flex items-center gap-2">
-            <span className="stat-icon">
+            <span className="home-stats__icon">
               <IconClock className="h-3.5 w-3.5" />
             </span>
-            <span className="stat-value stat-live">
+            <span className="home-stats__value home-stats__live">
               {stats.responseMin} {t(I18N_KEYS.homePublic.statMinutes)}
             </span>
           </div>
-          <span className="stat-label">{t(I18N_KEYS.homePublic.statResponse)}</span>
+          <span className="home-stats__label">{t(I18N_KEYS.homePublic.statResponse)}</span>
         </div>
-        <Link href="/requests" prefetch={false} className="stat-link stat-card stat-divider">
+        <Link href="/requests" prefetch={false} className="home-stats__link home-stats__card">
           <div className="flex items-center gap-2">
-            <span className="stat-icon">
+            <span className="home-stats__icon">
               <IconStar className="h-3.5 w-3.5" />
             </span>
-            <span className="stat-value stat-live">{stats.rating.toFixed(2)}</span>
+            <span className="home-stats__value home-stats__live">{stats.rating.toFixed(2)}</span>
           </div>
-          <span className="stat-label">{t(I18N_KEYS.homePublic.statRating)}</span>
+          <span className="home-stats__label">{t(I18N_KEYS.homePublic.statRating)}</span>
         </Link>
       </div>
     </section>
