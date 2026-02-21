@@ -154,21 +154,6 @@
     gap: 12px;
   }
 
-  /* In intro shell keep quick-search compact and do not inherit generic panel padding. */
-  .home-screen .home-intro-shell .panel.home-quick-search-panel {
-    padding:16px;
-  }
-
-  .home-intro-shell .home-combined-top__right {
-    display: grid;
-    align-self: stretch;
-  }
-
-  .home-intro-shell .home-combined-top__right .home-activity-panel {
-    height: 100%;
-    align-self: stretch;
-  }
-
   .hero-experiment--subtle {
     --hero-shot-duration: 3.2s;
     --hero-shot-iterations: infinite;
@@ -526,10 +511,6 @@
       max-width: none;
     }
 
-    /* .home-screen .home-intro-shell .panel.home-quick-search-panel {
-      padding: 12px 14px 10px;
-    } */
-
     .hero-experiment__trust {
       gap: 8px 10px;
     }
@@ -562,9 +543,10 @@
       font-size: 17px;
     }
 
-    /* .home-screen .home-intro-shell .panel.home-quick-search-panel {
-      padding: 10px 12px 10px;
-    } */
+   .home-screen .home-intro-shell .panel.home-quick-search-panel {
+    padding: 16px;
+   }
+
     .home-quick-search__header {
       flex-direction: column;
       align-items: flex-start;
@@ -1638,28 +1620,31 @@
 
     .home-intro-shell .home-combined-top__left {
       display: grid;
-      grid-template-rows: auto auto;
-      align-content: start;
-      height: auto;
+      grid-template-rows: auto minmax(0, 1fr);
       gap: 12px;
       align-self: stretch;
+      min-height: 0;
     }
 
-
-
-    .home-intro-shell .home-combined-top__right {
-      display: flex;
-      align-items: stretch;
-      align-self: stretch;
+    .home-intro-shell .home-combined-top__left .home-quick-search-panel {
       height: 100%;
       min-height: 0;
     }
 
-    .home-intro-shell .home-combined-top__right > .home-activity-panel {
-      flex: 1 1 auto;
-      width: 100%;
-      height: auto;
+    .home-intro-shell .home-combined-top__right {
+      display: grid;
+      align-self: stretch;
       min-height: 0;
+    }
+
+    .home-intro-shell .home-combined-top__right > .home-activity-panel {
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      margin: 0;
     }
 
     .home-combined-top__right,
