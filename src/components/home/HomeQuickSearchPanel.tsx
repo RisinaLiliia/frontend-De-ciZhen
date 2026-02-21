@@ -35,8 +35,8 @@ export function HomeQuickSearchPanel({
 
   return (
     <section className="panel home-quick-search-panel">
-      <div className="panel-header home-quick-search__header">
-        <p className="section-title">{t(I18N_KEYS.homePublic.quickSearch)}</p>
+      <div className="home-quick-search__panel-header home-quick-search__header">
+        <p className="home-quick-search__title">{t(I18N_KEYS.homePublic.quickSearch)}</p>
         <span className="request-meta-item home-quick-search__location">
           <IconPin />
           {region ?? t(I18N_KEYS.homePublic.liveRegionFallback)}

@@ -12,7 +12,7 @@ export function HomeHeroAnimatedPreview({ mode = 'subtle' }: HomeHeroAnimatedPre
     <section className={sectionClassName}>
       <div className="hero-experiment__bg" aria-hidden="true" />
       <div className="hero-experiment__content">
-        <span className="badge badge-live">Preview</span>
+        <span className="hero-experiment__preview-badge">Preview</span>
         <h2 className="hero-experiment__title">
           Lösung für deine Haushaltsaufgaben
           <br />
