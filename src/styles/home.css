@@ -535,19 +535,6 @@
     .home-screen .home-intro-shell .panel.home-quick-search-panel {
       padding: 10px 12px 10px;
     }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-shot__trace,
-    .hero-shot__dribble-mark,
-    .hero-shot__ball-wrap,
-    .hero-shot__ball,
-    .hero-shot__pulse {
-      animation: none;
-    }
-  }
-
-  @media (max-width: 640px) {
     .home-quick-search__header {
       flex-direction: column;
       align-items: flex-start;
@@ -569,6 +556,16 @@
     .home-quick-search__button {
       width: 100%;
       justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-shot__trace,
+    .hero-shot__dribble-mark,
+    .hero-shot__ball-wrap,
+    .hero-shot__ball,
+    .hero-shot__pulse {
+      animation: none;
     }
   }
 
@@ -1885,20 +1882,6 @@
     color: var(--c-text);
     text-align: center;
     word-break: break-word;
-  }
-
-  .badge-pill {
-    min-width: 18px;
-    height: 18px;
-    padding: 0 5px;
-    border-radius: 999px;
-    background: var(--c-accent);
-    color: var(--c-accent-contrast);
-    font-size: 10px;
-    font-weight: 700;
-    line-height: 18px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(245, 166, 35, 0.35);
   }
 
   .service-tile__badge {
