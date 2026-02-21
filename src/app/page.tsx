@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { HomeHero } from '@/components/home/HomeHero';
+import { HomeHeroAnimatedPreview } from '@/components/home/HomeHeroAnimatedPreview';
 import { HomeHowItWorksPanel } from '@/components/home/HomeHowItWorksPanel';
 import { HomeNearbyPanel } from '@/components/home/HomeNearbyPanel';
 import { HomePlatformActivityPanel } from '@/components/home/HomePlatformActivityPanel';
@@ -16,7 +17,6 @@ import { HomeStatsPanel } from '@/components/home/HomeStatsPanel';
 import { HomeTopProvidersPanel } from '@/components/home/HomeTopProvidersPanel';
 import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
 import {
-  HOME_CATEGORIES,
   HOME_PROOF_CASES,
   HOME_SERVICES,
   HOME_TOP_PROVIDERS,
@@ -28,7 +28,7 @@ import { useMockLiveStats } from '@/hooks/useMockLiveStats';
 import { useRotatingIndex } from '@/hooks/useRotatingIndex';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
-import type { CategoryOption, ProofCase } from '@/types/home';
+import type { ProofCase } from '@/types/home';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 export default function HomePage() {
@@ -37,8 +37,11 @@ export default function HomePage() {
   const router = useRouter();
   const status = useAuthStatus();
   const isDemo = process.env.NEXT_PUBLIC_DEMO !== 'false';
+  const heroVariant = process.env.NEXT_PUBLIC_HERO_VARIANT ?? 'animated';
+  const heroAnimationMode = process.env.NEXT_PUBLIC_HERO_ANIMATION_MODE === 'showcase' ? 'showcase' : 'subtle';
   const [query, setQuery] = React.useState('');
-  const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
+  const [cityQuery, setCityQuery] = React.useState('');
+  const [selectedCategory, setSelectedCategory] = React.useState('');
   const stats = useMockLiveStats(
     {
       active: 1284,
@@ -61,10 +64,6 @@ export default function HomePage() {
   );
   const region = useGeoRegion();
 
-  const categories = React.useMemo<CategoryOption[]>(
-    () => HOME_CATEGORIES.map((item) => ({ key: item.key, label: t(item.labelKey) })),
-    [t],
-  );
   const services = React.useMemo(
     () => HOME_SERVICES.map((item) => ({ ...item, label: t(item.labelKey) })),
     [t],
@@ -138,43 +137,47 @@ export default function HomePage() {
       mainClassName="py-6 home-screen"
       withSpacer={true}
     >
-      <HomeHero t={t} />
-
       <div className="home-grid">
-        <section className="home-combined-top">
-          <div className="home-combined-top__left stack-md">
-            <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} />
-            <HomeQuickSearchPanel
-              t={t}
-              region={region}
-              categories={categories}
-              selectedCategory={selectedCategory}
-              query={query}
-              onSelectCategory={(key) => {
-                setSelectedCategory((prev) => {
-                  const nextCategory = prev === key ? null : key;
-                  const nextLabel =
-                    nextCategory === null
-                      ? ''
-                      : categories.find((item) => item.key === key)?.label ?? '';
-                  setQuery(nextLabel);
-                  return nextCategory;
-                });
-              }}
-              onQueryChange={setQuery}
-              onSearch={() => {
-                const params = new URLSearchParams();
-                if (selectedCategory) params.set('category', selectedCategory);
-                if (query) params.set('q', query);
-                const suffix = params.toString();
-                router.push(`/requests${suffix ? `?${suffix}` : ''}`);
-              }}
-            />
-          </div>
+        <section className="home-intro-shell">
+          {(heroVariant === 'animated' || heroVariant === 'both') ? (
+            <HomeHeroAnimatedPreview mode={heroAnimationMode} />
+          ) : null}
+          {heroVariant === 'current' ? <HomeHero t={t} /> : null}
 
-          <div className="home-combined-top__right">
-            <HomePlatformActivityPanel t={t} locale={locale} />
-          </div>
+          <section className="home-combined-top">
+            <div className="home-combined-top__left stack-md">
+              <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} />
+              <HomeQuickSearchPanel
+                t={t}
+                region={region}
+                query={query}
+                cityQuery={cityQuery}
+                selectedCategory={selectedCategory}
+                onQueryChange={setQuery}
+                onCityQueryChange={setCityQuery}
+                onCategoryChange={(value) => {
+                  setSelectedCategory(value);
+                  if (!value) return;
+                  const params = new URLSearchParams();
+                  params.set('subcategoryKey', value);
+                  if (cityQuery) params.set('cityText', cityQuery);
+                  router.push(`/requests?${params.toString()}`);
+                }}
+                onSearch={() => {
+                  const params = new URLSearchParams();
+                  if (query) params.set('q', query);
+                  if (cityQuery) params.set('cityText', cityQuery);
+                  if (selectedCategory) params.set('subcategoryKey', selectedCategory);
+                  const suffix = params.toString();
+                  router.push(`/requests${suffix ? `?${suffix}` : ''}`);
+                }}
+              />
+            </div>
+
+            <div className="home-combined-top__right">
+              <HomePlatformActivityPanel t={t} locale={locale} />
+            </div>
+          </section>
         </section>
 
         <section className="home-combined">

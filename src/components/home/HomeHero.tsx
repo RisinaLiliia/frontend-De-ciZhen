@@ -2,6 +2,7 @@ import { HeroSection } from '@/components/ui/HeroSection';
 import Link from 'next/link';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
+import { trackUXEvent } from '@/lib/analytics';
 
 type HomeHeroProps = {
   t: (key: I18nKey) => string;
@@ -35,6 +36,7 @@ export function HomeHero({ t }: HomeHeroProps) {
             key={cta.href + cta.label}
             href={cta.href}
             className={cta.variant === 'primary' ? 'btn-primary btn-icon' : 'btn-secondary btn-icon'}
+            onClick={() => trackUXEvent('home_hero_cta_click', { variant: 'current', cta: cta.variant })}
           >
             {cta.label}
           </Link>
