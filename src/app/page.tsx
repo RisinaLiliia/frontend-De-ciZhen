@@ -41,6 +41,7 @@ export default function HomePage() {
   const heroAnimationMode = process.env.NEXT_PUBLIC_HERO_ANIMATION_MODE === 'showcase' ? 'showcase' : 'subtle';
   const [query, setQuery] = React.useState('');
   const [cityQuery, setCityQuery] = React.useState('');
+  const [resolvedCityId, setResolvedCityId] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('');
   const stats = useMockLiveStats(
     {
@@ -149,24 +150,20 @@ export default function HomePage() {
               <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} />
               <HomeQuickSearchPanel
                 t={t}
+                locale={locale}
                 region={region}
                 query={query}
                 cityQuery={cityQuery}
                 selectedCategory={selectedCategory}
                 onQueryChange={setQuery}
                 onCityQueryChange={setCityQuery}
-                onCategoryChange={(value) => {
-                  setSelectedCategory(value);
-                  if (!value) return;
-                  const params = new URLSearchParams();
-                  params.set('subcategoryKey', value);
-                  if (cityQuery) params.set('cityText', cityQuery);
-                  router.push(`/requests?${params.toString()}`);
-                }}
+                onCityResolvedChange={setResolvedCityId}
+                onCategoryChange={setSelectedCategory}
                 onSearch={() => {
                   const params = new URLSearchParams();
                   if (query) params.set('q', query);
                   if (cityQuery) params.set('cityText', cityQuery);
+                  if (resolvedCityId) params.set('cityId', resolvedCityId);
                   if (selectedCategory) params.set('subcategoryKey', selectedCategory);
                   const suffix = params.toString();
                   router.push(`/requests${suffix ? `?${suffix}` : ''}`);

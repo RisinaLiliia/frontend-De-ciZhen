@@ -27,6 +27,7 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
     staleTime: 60_000,
     refetchOnWindowFocus: false,
     retry: 1,
+    placeholderData: (previousData) => previousData,
   });
 
   const points = query.data?.data ?? [];
@@ -43,19 +44,21 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
         minute: '2-digit',
       }).format(new Date(query.data.updatedAt))
     : null;
+  const isInitialLoading = query.isLoading && points.length === 0;
+  const isUpdating = query.isFetching && points.length > 0;
 
   return (
-    <section className="panel home-activity-panel">
-      <div className="panel-header">
-        <div className="section-heading">
-          <p className="section-title">{t(I18N_KEYS.homePublic.activityTitle)}</p>
-          <p className="section-subtitle">{t(I18N_KEYS.homePublic.activitySubtitle)}</p>
+    <section className={`panel home-activity-panel ${isUpdating ? 'is-fetching' : ''}`.trim()}>
+      <div className="home-activity__header">
+        <div className="home-activity__header-top">
+          <p className="section-title home-activity__title">Aktivität</p>
+          {query.data?.source === 'mock' ? (
+            <span className="badge badge-live home-activity__demo">
+              {t(I18N_KEYS.homePublic.activityDemo)}
+            </span>
+          ) : null}
         </div>
-        {query.data?.source === 'mock' ? (
-          <span className="badge badge-live home-activity__demo">
-            {t(I18N_KEYS.homePublic.activityDemo)}
-          </span>
-        ) : null}
+        <p className="section-subtitle">{t(I18N_KEYS.homePublic.activitySubtitle)}</p>
       </div>
 
       <div className="home-activity__ranges mt-3">
@@ -77,17 +80,17 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
         ))}
       </div>
 
-      {query.isLoading ? (
+      {isInitialLoading ? (
         <div className="home-activity__loading mt-3">
           <div className="skeleton h-28 w-full" />
           <div className="skeleton h-10 w-full" />
         </div>
-      ) : query.isError ? (
+      ) : query.isError && points.length === 0 ? (
         <div className="home-activity__state mt-3">{t(I18N_KEYS.homePublic.activityError)}</div>
       ) : points.length === 0 ? (
         <div className="home-activity__state mt-3">{t(I18N_KEYS.homePublic.activityEmpty)}</div>
       ) : (
-        <>
+        <div className="home-activity__content">
           <MiniLineChart points={points} activeIndex={activeIndex} onHover={setActiveIndex} />
           {active ? (
             <div className="home-activity__meta">
@@ -107,7 +110,7 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
               ) : null}
             </div>
           ) : null}
-        </>
+        </div>
       )}
     </section>
   );
