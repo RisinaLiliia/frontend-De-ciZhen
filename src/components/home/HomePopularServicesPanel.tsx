@@ -31,23 +31,23 @@ export function HomePopularServicesPanel({
           {t(I18N_KEYS.homePublic.viewAll)}
         </Link>
       </div>
-      <div className="service-grid mt-3">
+      <div className="home-popular-services__grid mt-3">
         {services.map((service) => (
-          <Link key={service.key} href={service.href} className="service-tile service-link">
-            <span className="service-tile__image-wrap">
+          <Link key={service.key} href={service.href} className="home-popular-services__tile home-popular-services__link">
+            <span className="home-popular-services__image-wrap">
               <Image
                 src={service.imageSrc}
                 alt={service.label}
-                className="service-tile__image"
+                className="home-popular-services__image"
                 fill
                 sizes="(max-width: 768px) 50vw, 220px"
               />
             </span>
             <CountBadge
-              className="service-tile__badge"
+              className="home-popular-services__badge"
               value={categoryCounts[service.key] ?? 0}
             />
-            <span className="service-tile__label">{service.label}</span>
+            <span className="home-popular-services__label">{service.label}</span>
           </Link>
         ))}
       </div>
