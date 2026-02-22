@@ -27,7 +27,8 @@ Next.js frontend for De'ciZhen marketplace and workspace.
 
 ### Public
 - `/` home
-- `/requests` public requests listing
+- `/?view=orders` public orders explore mode (left-column listing with filters on home shell)
+- `/requests` public canonical alias for explore mode (authenticated users may be redirected to workspace by proxy rules)
 - `/requests/[id]` request details
 - `/providers/[id]` public provider profile
 
@@ -52,6 +53,15 @@ Next.js frontend for De'ciZhen marketplace and workspace.
   - authenticated users opening `/requests` are redirected to workspace default tab
 
 ## 4. Architecture Notes
+
+### Home Explore URL Contract
+- Home supports two public modes:
+  - default: `/`
+  - orders explore: `/?view=orders`
+- Explore mode keeps top layout and right column, while left column switches to `OrdersExplorer`.
+- Filters/pagination are URL-driven in explore mode (`sort`, `page`, `limit`, and filter params) for shareable state.
+- `/requests` is canonicalized as redirect to `/?view=orders`.
+- `/orders` remains workspace route for authenticated flows.
 
 ### Requests page modularization
 Goal: keep route files thin and isolate data logic from UI rendering.

@@ -1,19 +1,22 @@
-import Link from 'next/link';
+/* src/components/home/HomeHeroAnimatedPreview.tsx */
 import { trackUXEvent } from '@/lib/analytics';
+import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/Card';
 import { HomeHeroShot } from './HomeHeroShot';
+import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 
 type HomeHeroAnimatedPreviewProps = {
   mode?: 'subtle' | 'showcase';
 };
 
 export function HomeHeroAnimatedPreview({ mode = 'subtle' }: HomeHeroAnimatedPreviewProps) {
-  const sectionClassName = `panel hero-experiment hero-experiment--${mode}`.trim();
+  const cardClassName = `hero-experiment hero-experiment--${mode}`.trim();
 
   return (
-    <section className={sectionClassName}>
+    <Card className={cardClassName} padding="none">
       <div className="hero-experiment__bg" aria-hidden="true" />
       <div className="hero-experiment__content">
-        <span className="hero-experiment__preview-badge">Preview</span>
+        <Badge className="hero-experiment__preview-badge">Preview</Badge>
         <h2 className="hero-experiment__title">
           Lösung für deine Haushaltsaufgaben
           <br />
@@ -21,19 +24,14 @@ export function HomeHeroAnimatedPreview({ mode = 'subtle' }: HomeHeroAnimatedPre
         </h2>
         <p className="hero-experiment__subtitle">Schnell. Zuverlässig. Einfach.</p>
         <div className="hero-experiment__actions">
-          <Link
+          <CreateRequestCard
             href="/auth/login?next=%2Frequest%2Fnew"
-            className="request-create-card hero-experiment__create-card"
+            className="hero-experiment__create-card"
+            variant="compact"
+            title="Anfrage erstellen"
+            subtitle="Kostenlos · mehrere Angebote"
             onClick={() => trackUXEvent('home_hero_cta_click', { variant: 'animated', mode })}
-          >
-            <div className="request-create-card__body">
-              <p className="request-create-card__title">Anfrage erstellen</p>
-              <p className="request-create-card__subtitle">Kostenlos · mehrere Angebote</p>
-            </div>
-            <div className="request-create-card__media" aria-hidden="true">
-              <span className="request-create-card__plus">+</span>
-            </div>
-          </Link>
+          />
         </div>
 
         <ul className="hero-experiment__trust">
@@ -46,6 +44,6 @@ export function HomeHeroAnimatedPreview({ mode = 'subtle' }: HomeHeroAnimatedPre
       <div className="hero-experiment__visual" aria-hidden="true">
         <HomeHeroShot className="hero-shot" />
       </div>
-    </section>
+    </Card>
   );
 }

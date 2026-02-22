@@ -1,6 +1,7 @@
 /* src/styles/globals.css */
 @config "../../tailwind.config.ts";
 @import 'tailwindcss';
+@import './tokens.css';
 @import './themes.css';
 @import './base.css';
 @import './components.css';
@@ -8,3 +9,54 @@
 @import './home.css';
 @import './requests.css';
 @import './overlays.css';
+
+@layer base {
+  body {
+    background: hsl(var(--bg));
+    color: hsl(var(--text));
+    min-height: 100dvh;
+  }
+}
+
+@layer utilities {
+  .dc-surface {
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, hsl(var(--panel)) 96%, transparent),
+      color-mix(in oklab, hsl(var(--panel)) 88%, hsl(var(--border)) 12%)
+    );
+    border: 1px solid color-mix(in oklab, hsl(var(--border)) 60%, transparent);
+  }
+
+  .dc-glow {
+    box-shadow:
+      0 12px 28px color-mix(in oklab, hsl(var(--primary)) 14%, transparent),
+      0 0 0 1px color-mix(in oklab, hsl(var(--border)) 55%, transparent);
+  }
+
+  .dc-glow-hover {
+    transition:
+      transform 220ms,
+      box-shadow 220ms,
+      border-color 220ms;
+  }
+
+  .dc-glow-hover:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 16px 36px color-mix(in oklab, hsl(var(--primary)) 18%, transparent),
+      0 0 0 1px color-mix(in oklab, hsl(var(--border)) 55%, transparent);
+  }
+
+  html:not(.dark) .dc-glow {
+    box-shadow:
+      0 8px 20px color-mix(in oklab, hsl(var(--primary)) 9%, transparent),
+      0 0 0 1px color-mix(in oklab, hsl(var(--border)) 62%, transparent);
+  }
+
+  html:not(.dark) .dc-glow-hover:hover {
+    box-shadow:
+      0 12px 28px color-mix(in oklab, hsl(var(--primary)) 11%, transparent),
+      0 0 0 1px color-mix(in oklab, hsl(var(--border)) 62%, transparent);
+  }
+}

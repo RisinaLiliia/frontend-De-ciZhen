@@ -30,12 +30,16 @@ export function HomeHero({ t }: HomeHeroProps) {
         subtitle={t(I18N_KEYS.homePublic.subtitle)}
         mediaSrc="/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg"
       />
-      <div className="action-row sticky-action-row hero-dock-actions">
+      <div className="home-hero__actions sticky-action-row hero-dock-actions">
         {ctas.map((cta) => (
           <Link
             key={cta.href + cta.label}
             href={cta.href}
-            className={cta.variant === 'primary' ? 'btn-primary btn-icon' : 'btn-secondary btn-icon'}
+            className={
+              cta.variant === 'primary'
+                ? 'home-hero__cta home-hero__cta--primary home-cta'
+                : 'home-hero__cta home-hero__cta--secondary home-cta'
+            }
             onClick={() => trackUXEvent('home_hero_cta_click', { variant: 'current', cta: cta.variant })}
           >
             {cta.label}

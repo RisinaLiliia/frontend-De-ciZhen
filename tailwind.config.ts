@@ -1,21 +1,22 @@
+/* tailwind.config.ts */
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  darkMode: ['class', '.dark'],
+  darkMode: 'class',
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: '#1F3C88',
-          light: '#2F54C8',
-          dark: '#142B63',
-        },
-        accent: {
-          DEFAULT: '#F59E0B',
-          hover: '#D97706',
-          soft: '#FEF3C7',
-        },
+        primary: 'hsl(var(--primary) / <alpha-value>)',
+        accent: 'hsl(var(--accent) / <alpha-value>)',
+        bg: 'hsl(var(--bg) / <alpha-value>)',
+        surface: 'hsl(var(--surface) / <alpha-value>)',
+        panel: 'hsl(var(--panel) / <alpha-value>)',
+        text: 'hsl(var(--text) / <alpha-value>)',
+        muted: 'hsl(var(--muted) / <alpha-value>)',
+        border: 'hsl(var(--border) / <alpha-value>)',
+        background: 'hsl(var(--background) / <alpha-value>)',
+        foreground: 'hsl(var(--foreground) / <alpha-value>)',
       },
     },
   },

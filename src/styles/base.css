@@ -1,3 +1,4 @@
+/* src/styles/base.css */
 @layer base {
   html {
     font-family: var(--font-sans);
@@ -44,5 +45,68 @@
 
   select.field::-ms-expand {
     display: none;
+  }
+
+  @media (max-width: 768px) {
+    html,
+    body {
+      overflow-x: clip;
+    }
+
+    body {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    main,
+    section,
+    article,
+    aside,
+    header,
+    footer,
+    nav,
+    form {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    [class*='container'],
+    [class*='shell'],
+    [class*='layout'],
+    [class*='grid'],
+    [class*='row'],
+    [class*='stack'],
+    [class*='split'],
+    [class*='column'],
+    [class*='col-'] {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .panel,
+    .card,
+    .field,
+    .btn-primary,
+    .btn-secondary,
+    .btn-ghost {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    img,
+    svg,
+    video,
+    canvas,
+    iframe {
+      max-width: 100%;
+    }
   }
 }
