@@ -1,3 +1,4 @@
+/* src/components/home/HomeHeroShot.tsx */
 type HomeHeroShotProps = {
   className?: string;
   preserveAspectRatio?: string;
@@ -9,7 +10,7 @@ export function HomeHeroShot({ className, preserveAspectRatio, variant = 'defaul
 
   return (
     <svg viewBox="0 0 300 190" preserveAspectRatio={preserveAspectRatio} className={className ?? 'hero-shot'}>
-      <line className="hero-shot__floor" x1="16" y1={isTrust ? 176 : 152} x2="286" y2={isTrust ? 176 : 152} />
+      <line className="hero-shot__floor" x1={isTrust ? 54 : 136} y1={isTrust ? 176 : 152} x2={isTrust ? 272 : 286} y2={isTrust ? 176 : 152} />
       <path className="hero-shot__trace" d={isTrust ? 'M38 174 C 92 60, 156 34, 222 66' : 'M48 136 C 106 36, 192 20, 254 78'} />
 
       <circle className="hero-shot__dribble-mark is-one" cx={isTrust ? 64 : 52} cy={isTrust ? 175 : 151} r={isTrust ? 4.2 : 2.8} />

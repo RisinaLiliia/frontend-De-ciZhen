@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import { IconHeart } from '@/components/ui/icons/icons';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
+import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 
 export type TopProviderItem = {
   id: string;
@@ -44,13 +45,13 @@ export function TopProvidersPanel({
   onToggleFavorite,
 }: TopProvidersPanelProps) {
   return (
-    <section className={`panel hide-mobile top-providers-panel ${className ?? ''}`.trim()}>
-      <div className="panel-header">
-        <div className="section-heading">
-          <p className="section-title">{title}</p>
-          <p className="section-subtitle">{subtitle}</p>
+    <Card className={`hide-mobile top-providers-panel ${className ?? ''}`.trim()}>
+      <CardHeader className="home-panel-header">
+        <div className="home-panel-heading">
+          <CardTitle className="home-panel-title">{title}</CardTitle>
+          <p className="home-panel-subtitle">{subtitle}</p>
         </div>
-      </div>
+      </CardHeader>
       <div className="provider-list">
         {providers.map((provider) => (
           <div
@@ -90,7 +91,7 @@ export function TopProvidersPanel({
               reviewsLabel={provider.reviewsLabel}
               reviewsHref={provider.reviewsHref}
             />
-            <Link href={provider.profileHref} className="btn-ghost is-primary w-full provider-cta">
+            <Link href={provider.profileHref} className="top-providers__cta home-cta provider-cta">
               {provider.ctaLabel}
             </Link>
           </div>
@@ -100,6 +101,6 @@ export function TopProvidersPanel({
       <div className="top-providers-footer flex justify-center">
         <MoreDotsLink href={ctaHref} label={ctaLabel} />
       </div>
-    </section>
+    </Card>
   );
 }

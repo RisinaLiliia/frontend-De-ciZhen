@@ -6,6 +6,8 @@ import type { OfferDto } from '@/lib/api/dto/offers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import type { I18nKey } from '@/lib/i18n/keys';
 import {
   mapContractStatusToFilter,
   mapOfferStatusToFilter,
@@ -15,9 +17,10 @@ import {
   type WorkspaceStatusFilter,
   type WorkspaceTab,
 } from '@/features/requests/page/workspace';
-import { WORKSPACE_PRIMARY_ACTION_BY_TAB, WORKSPACE_STATUS_FILTERS } from '@/features/requests/page/workspaceCopy';
+import { getWorkspacePrimaryActionByTab, getWorkspaceStatusFilters } from '@/features/requests/page/workspaceCopy';
 
 type Params = {
+  t: (key: I18nKey) => string;
   activeStatusFilter: WorkspaceStatusFilter;
   activeWorkspaceTab: WorkspaceTab;
   activeFavoritesView: FavoritesView;
@@ -35,6 +38,7 @@ type Params = {
 };
 
 export function useRequestsWorkspaceDerived({
+  t,
   activeStatusFilter,
   activeWorkspaceTab,
   activeFavoritesView,
@@ -158,13 +162,16 @@ export function useRequestsWorkspaceDerived({
         const role = item.targetRole ?? activeReviewsView;
         return {
           ...item,
-          roleLabel: role === 'client' ? 'Als Kunde' : 'Als Anbieter',
+          roleLabel:
+            role === 'client'
+              ? t(I18N_KEYS.requestsPage.reviewsTabClient)
+              : t(I18N_KEYS.requestsPage.reviewsTabProvider),
           createdLabel: item.createdAt ? new Date(item.createdAt).toLocaleDateString(localeTag) : '—',
-          author: item.authorName?.trim() || 'Bewertung',
-          reviewText: item.text || item.comment || 'Kein Kommentar',
+          author: item.authorName?.trim() || t(I18N_KEYS.homePublic.reviews),
+          reviewText: item.text || item.comment || t(I18N_KEYS.common.emptyData),
         };
       }),
-    [activeReviewsView, localeTag, myReviews],
+    [activeReviewsView, localeTag, myReviews, t],
   );
 
   const showWorkspaceHeader = activeWorkspaceTab !== 'favorites';
@@ -173,13 +180,14 @@ export function useRequestsWorkspaceDerived({
     () =>
       activeWorkspaceTab === 'new-orders' || activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews'
         ? []
-        : WORKSPACE_STATUS_FILTERS,
-    [activeWorkspaceTab],
+        : getWorkspaceStatusFilters(t),
+    [activeWorkspaceTab, t],
   );
 
   const primaryAction = React.useMemo(() => {
-    return WORKSPACE_PRIMARY_ACTION_BY_TAB[activeWorkspaceTab] ?? WORKSPACE_PRIMARY_ACTION_BY_TAB['my-requests']!;
-  }, [activeWorkspaceTab]);
+    const actionsByTab = getWorkspacePrimaryActionByTab(t);
+    return actionsByTab[activeWorkspaceTab] ?? actionsByTab['my-requests']!;
+  }, [activeWorkspaceTab, t]);
 
   return {
     filteredMyRequests,

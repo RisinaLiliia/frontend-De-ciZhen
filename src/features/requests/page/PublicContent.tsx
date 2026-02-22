@@ -5,6 +5,8 @@ import * as React from 'react';
 import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import type { I18nKey } from '@/lib/i18n/keys';
 
 type StatusFilter = {
   key: string;
@@ -12,6 +14,7 @@ type StatusFilter = {
 };
 
 type Props = {
+  t: (key: I18nKey) => string;
   filtersProps: React.ComponentProps<typeof RequestsFilters>;
   statusFilters: StatusFilter[];
   activeStatusFilter: string;
@@ -24,13 +27,14 @@ type Props = {
   requestsListProps: React.ComponentProps<typeof RequestsList>;
   page: number;
   totalPages: number;
-  totalResultsLabel: string;
   resultsLabel: string;
   onPrevPage: () => void;
   onNextPage: () => void;
+  onListDensityChange?: (value: 'single' | 'double') => void;
 };
 
 export function PublicContent({
+  t,
   filtersProps,
   statusFilters,
   activeStatusFilter,
@@ -43,17 +47,32 @@ export function PublicContent({
   requestsListProps,
   page,
   totalPages,
-  totalResultsLabel,
   resultsLabel,
   onPrevPage,
   onNextPage,
+  onListDensityChange,
 }: Props) {
+  const [listDensity, setListDensity] = React.useState<'single' | 'double'>('single');
+
+  React.useEffect(() => {
+    onListDensityChange?.(listDensity);
+  }, [listDensity, onListDensityChange]);
+
   return (
     <section className="panel requests-panel">
-      <RequestsFilters {...filtersProps} />
+      <RequestsFilters
+        {...filtersProps}
+        resultsLabel={resultsLabel}
+        page={page}
+        totalPages={totalPages}
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
+        listDensity={listDensity}
+        onListDensityChange={setListDensity}
+      />
 
       {statusFilters.length > 0 ? (
-        <div className="chip-row" role="tablist" aria-label="Statusfilter">
+        <div className="chip-row" role="tablist" aria-label={t(I18N_KEYS.requestsPage.statusFiltersLabel)}>
           {statusFilters.map((filterItem) => (
             <button
               key={filterItem.key}
@@ -68,17 +87,26 @@ export function PublicContent({
         </div>
       ) : null}
 
-      <section id="requests-list" className="requests-list" role="tabpanel" aria-live="polite">
+      <section
+        id="requests-list"
+        className={`requests-list requests-list--stable ${listDensity === 'double' ? 'is-double' : 'is-single'}`.trim()}
+        role="tabpanel"
+        aria-live="polite"
+      >
         <WorkspaceContentState
           isLoading={isLoading}
           isEmpty={!isError && requestsCount === 0}
-          emptyTitle={hasActivePublicFilter ? 'Keine Auftraege gefunden.' : 'Noch keine Auftraege vorhanden.'}
+          emptyTitle={
+            hasActivePublicFilter
+              ? t(I18N_KEYS.requestsPage.emptyFilteredTitle)
+              : t(I18N_KEYS.requestsPage.emptyDefaultTitle)
+          }
           emptyHint={
             hasActivePublicFilter
-              ? 'Passe die Filter an oder setze sie zurueck.'
-              : 'Schau spaeter erneut vorbei oder pruefe eine andere Stadt.'
+              ? t(I18N_KEYS.requestsPage.emptyFilteredHint)
+              : t(I18N_KEYS.requestsPage.emptyDefaultHint)
           }
-          emptyCtaLabel={hasActivePublicFilter ? 'Filter zuruecksetzen' : undefined}
+          emptyCtaLabel={hasActivePublicFilter ? t(I18N_KEYS.requestsPage.clearFilters) : undefined}
           emptyCtaHref={hasActivePublicFilter ? emptyCtaHref : undefined}
         >
           <RequestsList {...requestsListProps} />
@@ -86,17 +114,30 @@ export function PublicContent({
       </section>
 
       <div className="requests-pagination">
-        <button type="button" className="btn-ghost" onClick={onPrevPage} disabled={page <= 1}>
-          ←
-        </button>
-        <span className="typo-small">
-          {resultsLabel} {totalResultsLabel} • {page}/{totalPages}
+        <span className="requests-page-nav__label">
+          {page}/{Math.max(1, totalPages)}
         </span>
-        <button type="button" className="btn-ghost" onClick={onNextPage} disabled={page >= totalPages}>
-          →
-        </button>
+        <div className="requests-page-nav" role="group" aria-label={t(I18N_KEYS.requestsPage.paginationBottomLabel)}>
+          <button
+            type="button"
+            className="btn-ghost requests-page-nav__btn"
+            onClick={onPrevPage}
+            disabled={page <= 1}
+            aria-label={t(I18N_KEYS.requestsPage.paginationPrev)}
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            className="btn-ghost requests-page-nav__btn"
+            onClick={onNextPage}
+            disabled={page >= totalPages}
+            aria-label={t(I18N_KEYS.requestsPage.paginationNext)}
+          >
+            →
+          </button>
+        </div>
       </div>
     </section>
   );
 }
-

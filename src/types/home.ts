@@ -20,4 +20,5 @@ export type ProofCase = {
   review: string;
   price: string;
   rating: string;
+  publishedAt: string;
 };

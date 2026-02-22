@@ -39,8 +39,8 @@ import {
 } from '@/features/requests/details/viewModel';
 
 const SIMILAR_LIMIT = 2;
-const WORKSPACE_MY_REQUESTS_URL = '/orders?tab=my-requests&sort=date_desc&page=1&limit=20';
-const WORKSPACE_NEW_ORDERS_URL = '/orders?tab=new-orders&sort=date_desc&page=1&limit=20';
+const WORKSPACE_MY_REQUESTS_URL = '/orders?tab=my-requests&sort=date_desc&page=1&limit=10';
+const WORKSPACE_NEW_ORDERS_URL = '/orders?tab=new-orders&sort=date_desc&page=1&limit=10';
 
 export default function RequestDetailsPage() {
   const t = useT();
@@ -428,7 +428,7 @@ export default function RequestDetailsPage() {
     if (request?.serviceKey) nextParams.set('subcategoryKey', request.serviceKey);
     nextParams.set('sort', 'date_desc');
     nextParams.set('page', '1');
-    nextParams.set('limit', '20');
+    nextParams.set('limit', '10');
     const qs = nextParams.toString();
     return `${authStatus === 'authenticated' ? '/orders' : '/requests'}${qs ? `?${qs}` : ''}`;
   }, [authStatus, request]);
@@ -632,13 +632,10 @@ export default function RequestDetailsPage() {
             items={similarForRender}
             footerLabel={t(I18N_KEYS.requestDetails.showAll)}
             footerHref={similarHref}
-            formatDate={(value) => formatDate.format(value)}
             formatPrice={(value) => formatPrice.format(value)}
-            badgeTodayLabel={t(I18N_KEYS.requestsPage.badgeToday)}
             recurringLabel={t(I18N_KEYS.client.recurringLabel)}
             onceLabel={t(I18N_KEYS.client.onceLabel)}
             openRequestLabel={t(I18N_KEYS.requestsPage.openRequest)}
-            detailsCtaLabel={t(I18N_KEYS.requestsPage.detailsCta)}
             priceOnRequestLabel={t(I18N_KEYS.requestDetails.priceOnRequest)}
             getImage={(item) => buildRequestImageList(item)[0]}
           />

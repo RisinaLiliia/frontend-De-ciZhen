@@ -1,7 +1,10 @@
+/* src/components/home/HomePlatformActivityPanel.tsx */
 'use client';
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Badge } from '@/components/ui/Badge';
+import { Card, CardTitle } from '@/components/ui/Card';
 import {
   getPlatformActivity,
   type PlatformActivityPoint,
@@ -48,17 +51,17 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
   const isUpdating = query.isFetching && points.length > 0;
 
   return (
-    <section className={`panel home-activity-panel ${isUpdating ? 'is-fetching' : ''}`.trim()}>
+    <Card className={`home-activity-panel ${isUpdating ? 'is-fetching' : ''}`.trim()}>
       <div className="home-activity__header">
         <div className="home-activity__header-top">
-          <p className="section-title home-activity__title">Aktivität</p>
+          <CardTitle className="home-activity__title">Aktivität</CardTitle>
           {query.data?.source === 'mock' ? (
-            <span className="badge badge-live home-activity__demo">
+            <Badge className="home-activity__demo">
               {t(I18N_KEYS.homePublic.activityDemo)}
-            </span>
+            </Badge>
           ) : null}
         </div>
-        <p className="section-subtitle">{t(I18N_KEYS.homePublic.activitySubtitle)}</p>
+        <p className="home-activity__subtitle">{t(I18N_KEYS.homePublic.activitySubtitle)}</p>
       </div>
 
       <div className="home-activity__ranges mt-3">
@@ -112,7 +115,7 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
           ) : null}
         </div>
       )}
-    </section>
+    </Card>
   );
 }
 

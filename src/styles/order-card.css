@@ -1,3 +1,4 @@
+/* src/styles/order-card.css */
 @layer components {
   .request-card {
     position: relative;
@@ -12,7 +13,7 @@
         90deg,
         color-mix(in oklab, var(--c-panel) 98%, transparent) 0%,
         color-mix(in oklab, var(--c-panel) 94%, transparent) 45%,
-        color-mix(in oklab, #0b1220 85%, transparent) 100%
+        color-mix(in oklab, var(--c-ink) 85%, transparent) 100%
       ),
       linear-gradient(
         180deg,
@@ -22,7 +23,7 @@
     box-shadow:
       var(--shadow-card),
       0 10px 24px color-mix(in oklab, var(--c-primary) 8%, transparent);
-    align-items: center;
+    align-items: stretch;
     transition:
       transform var(--transition),
       border-color var(--transition),
@@ -31,7 +32,17 @@
     color: inherit;
     overflow: hidden;
     container-type: inline-size;
-    min-height: 168px;
+    min-height: 196px;
+  }
+
+  html:not(.dark) .request-card {
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
+    background: linear-gradient(
+      180deg,
+      var(--c-panel) 0%,
+      color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%
+    );
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 18%, transparent);
   }
 
   .request-card--media-right .request-card__media {
@@ -77,7 +88,7 @@
     z-index: 3;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .request-card:hover {
@@ -112,9 +123,9 @@
     z-index: 1;
     background: linear-gradient(
       90deg,
-      rgba(11, 18, 32, 0) 0%,
-      rgba(11, 18, 32, 0.35) 45%,
-      rgba(11, 18, 32, 0.85) 100%
+      color-mix(in oklab, var(--c-ink) 0%, transparent) 0%,
+      color-mix(in oklab, var(--c-ink) 35%, transparent) 45%,
+      color-mix(in oklab, var(--c-ink) 85%, transparent) 100%
     );
     pointer-events: none;
   }
@@ -129,8 +140,14 @@
 
   .request-card__body {
     display: grid;
-    gap: 10px;
-    padding: 16px;
+    grid-template-rows:
+      auto
+      minmax(calc(2 * var(--lh-title) * 1em), auto)
+      minmax(20px, auto)
+      auto;
+    align-content: start;
+    gap: var(--space-2-5);
+    padding: var(--space-4);
     height: 100%;
   }
 
@@ -147,17 +164,23 @@
   }
 
   .request-card__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: var(--space-3);
+    align-items: center;
+    overflow: hidden;
     color: var(--c-text-muted);
     font-size: 13px;
+    min-height: 20px;
   }
 
   .request-meta-item {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-1-5);
+    white-space: nowrap;
+    min-width: 0;
   }
 
   .request-meta-item svg {
@@ -170,8 +193,9 @@
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 8px;
+    gap: var(--space-2);
     font-size: 14px;
+    margin-top: auto;
   }
 
   .request-card__price .proof-price {
@@ -186,11 +210,11 @@
   .request-card__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: var(--space-1-5);
   }
 
   .request-tag {
-    padding: 6px 10px;
+    padding: var(--space-1-5) var(--space-2-5);
     border-radius: 999px;
     font-size: 12px;
     background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
@@ -198,18 +222,20 @@
     color: var(--c-text);
   }
 
-  .request-card__cta {
-    margin-top: 4px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--c-primary);
+  .request-card__actions {
+    margin-top: var(--space-0-5);
   }
 
-  .request-card__actions {
-    margin-top: 2px;
+  .requests-list.is-double .request-card {
+    min-height: 204px;
+  }
+
+  .requests-list.is-double .request-card__body {
+    grid-template-rows:
+      auto
+      minmax(calc(2 * var(--lh-title) * 1em), auto)
+      minmax(20px, auto)
+      auto;
   }
 
   .request-card--skeleton {
@@ -240,21 +266,17 @@
     }
   }
 
-  .order-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
   .order-top__status {
     display: inline-flex;
     align-items: center;
   }
 
-  .order-date {
-    font-size: 11px;
-    color: var(--c-text-muted);
+  .order-category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-height: 24px;
   }
 
   .order-category {
@@ -265,56 +287,32 @@
     color: var(--c-text-muted);
   }
 
-  .order-live-dot {
-    display: inline-flex;
-    width: 6px;
-    height: 6px;
-    margin-right: 6px;
-    border-radius: 999px;
-    background: color-mix(in oklab, var(--c-primary) 65%, transparent);
-    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-primary) 30%, transparent);
-    animation: live-pulse 2.8s ease-out infinite;
-  }
-
-  @keyframes live-pulse {
-    0% {
-      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-primary) 30%, transparent);
-    }
-    70% {
-      box-shadow: 0 0 0 6px color-mix(in oklab, var(--c-primary) 0%, transparent);
-    }
-    100% {
-      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-primary) 0%, transparent);
-    }
-  }
-
   .order-badges {
     display: inline-flex;
     flex-wrap: wrap;
-    gap: 6px;
-    justify-content: flex-end;
+    gap: var(--space-1-5);
+    align-items: center;
+  }
+
+  .order-badges--media {
+    position: absolute;
+    right: 10px;
+    top: calc(10px + 30px + 6px);
+    z-index: 2;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: none;
   }
 
   .order-badge {
     font-size: 10px;
     font-weight: 700;
-    padding: 4px 8px;
+    padding: var(--space-1) var(--space-2);
     border-radius: 999px;
     background: color-mix(in oklab, var(--c-accent) 25%, var(--c-panel) 75%);
     color: var(--c-text);
     border: 1px solid color-mix(in oklab, var(--c-border) 55%, transparent);
     white-space: nowrap;
-  }
-
-  .order-badges--edge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-    z-index: 2;
   }
 
   .request-card__favorite-btn {
@@ -358,7 +356,7 @@
 
   .meta-item {
     position: relative;
-    padding-left: 10px;
+    padding-left: var(--space-2-5);
   }
 
   .meta-item::before {
