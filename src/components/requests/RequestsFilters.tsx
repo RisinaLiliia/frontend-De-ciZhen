@@ -6,6 +6,7 @@ import { Select } from '@/components/ui/Select';
 import { CountBadge } from '@/components/ui/CountBadge';
 // import { Input } from '@/components/ui/Input';
 import { IconFilter, IconPin } from '@/components/ui/icons/icons';
+import { RequestsMobileFilterToolbar } from '@/components/requests/RequestsMobileFilterToolbar';
 import * as keys from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -24,15 +25,22 @@ type RequestsFiltersProps = {
   cityId: string;
   sortBy: string;
   totalResults: string;
+  resultsLabel?: string;
+  page?: number;
+  totalPages?: number;
   isCategoriesLoading: boolean;
   isServicesLoading: boolean;
   isPending?: boolean;
+  listDensity?: 'single' | 'double';
   appliedChips?: Array<{ key: string; label: string; onRemove: () => void }>;
   onCategoryChange: (value: string) => void;
   onSubcategoryChange: (value: string) => void;
   onCityChange: (value: string) => void;
   onSortChange: (value: string) => void;
   onReset: () => void;
+  onPrevPage?: () => void;
+  onNextPage?: () => void;
+  onListDensityChange?: (value: 'single' | 'double') => void;
 };
 
 export function RequestsFilters({
@@ -47,19 +55,30 @@ export function RequestsFilters({
   cityId,
   sortBy,
   totalResults,
+  resultsLabel,
+  page = 1,
+  totalPages = 1,
   isCategoriesLoading,
   isServicesLoading,
   isPending = false,
+  listDensity = 'single',
   appliedChips = [],
   onCategoryChange,
   onSubcategoryChange,
   onCityChange,
   onSortChange,
   onReset,
+  onPrevPage,
+  onNextPage,
+  onListDensityChange,
 }: RequestsFiltersProps) {
   const [cityQuery] = React.useState('');
+  const [isMobileControlsOpen, setIsMobileControlsOpen] = React.useState(false);
+  const sortControlRef = React.useRef<HTMLDivElement | null>(null);
   const controlsDisabled = isPending || isCategoriesLoading || isServicesLoading;
   const hasActiveFilters = appliedChips.length > 0;
+  const hasPagination = typeof onPrevPage === 'function' && typeof onNextPage === 'function';
+  const hasDensityToggle = typeof onListDensityChange === 'function';
 
   const filteredCityOptions = React.useMemo(() => {
     const placeholder = cityOptions.find((option) => option.value === '');
@@ -72,96 +91,171 @@ export function RequestsFilters({
     return placeholder ? [placeholder, ...sorted] : sorted;
   }, [cityOptions, cityQuery, locale]);
 
+  const openSortControl = React.useCallback(() => {
+    setIsMobileControlsOpen(true);
+    requestAnimationFrame(() => {
+      sortControlRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+  }, []);
+
   return (
     <div
       className={`requests-filters requests-filters--sticky${isPending ? ' is-pending' : ''}`}
       role="region"
-      aria-label="Filter"
+      aria-label={t(keys.I18N_KEYS.requestsPage.filterRegionLabel)}
       aria-busy={isPending}
     >
-      <div className="requests-filter-row">
-        <div className="requests-filter">
-          {/* <Input
-            value={cityQuery}
-            onChange={(e) => setCityQuery(e.target.value)}
-            placeholder={t(I18N_KEYS.home.cityPlaceholder)}
-          /> */}
-          <div className="requests-select-wrap">
-            <span className="requests-select-icon requests-select-icon--city" aria-hidden="true">
-              <IconPin />
-            </span>
+      <RequestsMobileFilterToolbar
+        t={t}
+        isOpen={isMobileControlsOpen}
+        disabled={controlsDisabled}
+        page={page}
+        totalPages={totalPages}
+        hasPagination={hasPagination}
+        onToggleFilters={() => setIsMobileControlsOpen((prev) => !prev)}
+        onOpenSort={openSortControl}
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
+      />
+
+      <div id="requests-filter-controls" className={`requests-filters__controls ${isMobileControlsOpen ? 'is-open' : ''}`.trim()}>
+        <div className="requests-filter-row">
+          <div className="requests-filter">
+            {/* <Input
+              value={cityQuery}
+              onChange={(e) => setCityQuery(e.target.value)}
+              placeholder={t(I18N_KEYS.home.cityPlaceholder)}
+            /> */}
+            <div className="requests-select-wrap">
+              <span className="requests-select-icon requests-select-icon--city" aria-hidden="true">
+                <IconPin />
+              </span>
+              <Select
+                options={filteredCityOptions}
+                value={cityId}
+                onChange={onCityChange}
+                className="requests-select is-city"
+                aria-label={t(keys.I18N_KEYS.requestsPage.cityLabel)}
+                disabled={controlsDisabled}
+              />
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn-ghost is-primary requests-clear"
+            onClick={onReset}
+            disabled={controlsDisabled || !hasActiveFilters}
+          >
+            <IconFilter />
+            {t(keys.I18N_KEYS.requestsPage.clearFilters)}
+          </button>
+        </div>
+        <div className="requests-filter-grid">
+          <div className="requests-filter">
             <Select
-              options={filteredCityOptions}
-              value={cityId}
-              onChange={onCityChange}
-              className="requests-select is-city"
-              aria-label={t(keys.I18N_KEYS.requestsPage.cityLabel)}
+              options={categoryOptions}
+              value={categoryKey}
+              onChange={onCategoryChange}
+              className="requests-select"
+              aria-label={t(keys.I18N_KEYS.requestsPage.categoryLabel)}
+              disabled={controlsDisabled}
+            />
+          </div>
+          <div className="requests-filter">
+            <Select
+              options={serviceOptions}
+              value={subcategoryKey}
+              onChange={onSubcategoryChange}
+              className="requests-select"
+              aria-label={t(keys.I18N_KEYS.requestsPage.serviceLabel)}
+              disabled={controlsDisabled || categoryKey === 'all'}
+            />
+          </div>
+          <div className="requests-filter" ref={sortControlRef}>
+            <Select
+              options={sortOptions}
+              value={sortBy}
+              onChange={onSortChange}
+              className="requests-select"
+              aria-label={t(keys.I18N_KEYS.requestsPage.sortLabel)}
               disabled={controlsDisabled}
             />
           </div>
         </div>
-        <button
-          type="button"
-          className="btn-ghost is-primary requests-clear"
-          onClick={onReset}
-          disabled={controlsDisabled || !hasActiveFilters}
-        >
-          <IconFilter />
-          {t(keys.I18N_KEYS.requestsPage.clearFilters)}
-        </button>
+        {appliedChips.length > 0 ? (
+          <div className="chip-row" role="list" aria-label={t(keys.I18N_KEYS.requestsPage.activeFiltersLabel)}>
+            {appliedChips.map((chip) => (
+              <button
+                key={chip.key}
+                type="button"
+                className="chip is-active"
+                role="listitem"
+                onClick={chip.onRemove}
+                aria-label={`${chip.label} ${t(keys.I18N_KEYS.requestsPage.removeFilterSuffix)}`}
+              >
+                {chip.label} ×
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
-      <div className="requests-filter-grid">
-        <div className="requests-filter">
-          <Select
-            options={categoryOptions}
-            value={categoryKey}
-            onChange={onCategoryChange}
-            className="requests-select"
-            aria-label={t(keys.I18N_KEYS.requestsPage.categoryLabel)}
-            disabled={controlsDisabled}
-          />
+      <div className="requests-filter-summary">
+        <div className="requests-results" aria-live="polite">
+          <span className="typo-small">{resultsLabel ?? t(keys.I18N_KEYS.requestsPage.countLabel)}</span>
+          <CountBadge as="strong" value={totalResults} />
+          {isPending ? <span className="sr-only">{t(keys.I18N_KEYS.requestsPage.updatingLabel)}</span> : null}
         </div>
-        <div className="requests-filter">
-          <Select
-            options={serviceOptions}
-            value={subcategoryKey}
-            onChange={onSubcategoryChange}
-            className="requests-select"
-            aria-label={t(keys.I18N_KEYS.requestsPage.serviceLabel)}
-            disabled={controlsDisabled || categoryKey === 'all'}
-          />
-        </div>
-        <div className="requests-filter">
-          <Select
-            options={sortOptions}
-            value={sortBy}
-            onChange={onSortChange}
-            className="requests-select"
-            aria-label={t(keys.I18N_KEYS.requestsPage.sortLabel)}
-            disabled={controlsDisabled}
-          />
-        </div>
-      </div>
-      {appliedChips.length > 0 ? (
-        <div className="chip-row" role="list" aria-label="Aktive Filter">
-          {appliedChips.map((chip) => (
-            <button
-              key={chip.key}
-              type="button"
-              className="chip is-active"
-              role="listitem"
-              onClick={chip.onRemove}
-              aria-label={`${chip.label} entfernen`}
-            >
-              {chip.label} ×
-            </button>
-          ))}
-        </div>
-      ) : null}
-      <div className="requests-results" aria-live="polite">
-        <span className="typo-small">{t(keys.I18N_KEYS.requestsPage.countLabel)}</span>
-        <CountBadge as="strong" value={totalResults} />
-        {isPending ? <span className="sr-only">Aktualisieren…</span> : null}
+        {(hasDensityToggle || hasPagination) ? (
+          <div className="requests-filter-summary__controls">
+            {hasDensityToggle ? (
+              <div className="requests-view-toggle" role="group" aria-label={t(keys.I18N_KEYS.requestsPage.viewModeLabel)}>
+                <button
+                  type="button"
+                  className={`requests-view-toggle__btn ${listDensity === 'single' ? 'is-active' : ''}`.trim()}
+                  aria-label={t(keys.I18N_KEYS.requestsPage.viewModeSingle)}
+                  aria-pressed={listDensity === 'single'}
+                  onClick={() => onListDensityChange?.('single')}
+                >
+                  <span className="requests-layout-icon requests-layout-icon--single" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className={`requests-view-toggle__btn ${listDensity === 'double' ? 'is-active' : ''}`.trim()}
+                  aria-label={t(keys.I18N_KEYS.requestsPage.viewModeDouble)}
+                  aria-pressed={listDensity === 'double'}
+                  onClick={() => onListDensityChange?.('double')}
+                >
+                  <span className="requests-layout-icon requests-layout-icon--double" aria-hidden="true" />
+                </button>
+              </div>
+            ) : null}
+            {hasPagination ? (
+              <div className="requests-page-nav" role="group" aria-label={t(keys.I18N_KEYS.requestsPage.paginationLabel)}>
+                <button
+                  type="button"
+                  className="btn-ghost requests-page-nav__btn"
+                  onClick={onPrevPage}
+                  disabled={controlsDisabled || page <= 1}
+                  aria-label={t(keys.I18N_KEYS.requestsPage.paginationPrev)}
+                >
+                  ←
+                </button>
+                <span className="requests-page-nav__label">
+                  {page}/{Math.max(1, totalPages)}
+                </span>
+                <button
+                  type="button"
+                  className="btn-ghost requests-page-nav__btn"
+                  onClick={onNextPage}
+                  disabled={controlsDisabled || page >= totalPages}
+                  aria-label={t(keys.I18N_KEYS.requestsPage.paginationNext)}
+                >
+                  →
+                </button>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </div>
       {isCategoriesLoading || isServicesLoading ? (
         <div className="requests-filters__skeleton" aria-hidden="true">

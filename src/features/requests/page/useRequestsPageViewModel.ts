@@ -135,6 +135,7 @@ export function useRequestsPageViewModel(params: Input) {
   };
 
   const workspaceContentProps: React.ComponentProps<typeof WorkspaceContent> = {
+      t: params.t,
       activeWorkspaceTab: params.activeWorkspaceTab,
       showWorkspaceHeader: params.showWorkspaceHeader,
       showWorkspaceHeading: params.showWorkspaceHeading,
@@ -280,6 +281,7 @@ export function useRequestsPageViewModel(params: Input) {
   };
 
   const publicContentProps: React.ComponentProps<typeof PublicContent> = {
+      t: params.t,
       filtersProps,
       statusFilters: params.statusFilters,
       activeStatusFilter: params.activeStatusFilter,
@@ -313,7 +315,6 @@ export function useRequestsPageViewModel(params: Input) {
       },
       page: params.page,
       totalPages: params.totalPages,
-      totalResultsLabel: params.totalResultsLabel,
       resultsLabel: params.t(I18N_KEYS.requestsPage.resultsLabel),
       onPrevPage: () => params.setPage(Math.max(1, params.page - 1)),
       onNextPage: () => params.setPage(Math.min(params.totalPages, params.page + 1)),

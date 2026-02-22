@@ -41,6 +41,7 @@ type HintBanner = {
 type TabPayload = {
   kpis: KpiItem[];
   showKpis?: boolean;
+  showHint?: boolean;
   hasData?: boolean;
   chartTitle: string;
   chartDelta?: string;
@@ -233,12 +234,14 @@ export function RequestsStatsPanel({
             </div>
           </section>
 
-          <section className="requests-stats-hint">
-            <p className="requests-stats-hint__text">{payload.hint.text}</p>
-            <Link href={payload.hint.ctaHref} className="btn-ghost is-primary">
-              {payload.hint.ctaLabel}
-            </Link>
-          </section>
+          {payload.showHint !== false ? (
+            <section className="requests-stats-hint">
+              <p className="requests-stats-hint__text">{payload.hint.text}</p>
+              <Link href={payload.hint.ctaHref} className="btn-ghost is-primary">
+                {payload.hint.ctaLabel}
+              </Link>
+            </section>
+          ) : null}
         </>
       )}
     </section>

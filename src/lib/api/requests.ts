@@ -1,5 +1,6 @@
 // src/lib/api/requests.ts
 import { apiDelete, apiGet, apiPatch, apiPost, apiPostForm } from '@/lib/api/http';
+import { ApiError } from '@/lib/api/http-error';
 import type {
   CreateRequestDto,
   DeleteMyRequestResponseDto,
@@ -7,6 +8,7 @@ import type {
   RequestResponseDto,
   UpdateMyRequestDto,
 } from '@/lib/api/dto/requests';
+import { getMockPublicRequestById, listMockPublicRequests } from '@/lib/api/requests-mock';
 
 export function createRequest(payload: CreateRequestDto) {
   return apiPost<CreateRequestDto, RequestResponseDto>('/requests/my', payload);
@@ -41,6 +43,21 @@ export type PublicRequestsFilter = {
   offset?: number;
 };
 
+type RequestsMockMode = 'off' | 'only' | 'merge';
+
+function readMockMode(): RequestsMockMode {
+  const explicit = (process.env.NEXT_PUBLIC_REQUESTS_MOCK_MODE ?? '').toLowerCase();
+  if (explicit === 'off' || explicit === 'only' || explicit === 'merge') return explicit;
+  return process.env.NEXT_PUBLIC_REQUESTS_MOCK_ENABLED === 'true' ? 'only' : 'off';
+}
+
+function readMergeFetchLimit() {
+  const raw = Number(process.env.NEXT_PUBLIC_REQUESTS_MOCK_MERGE_FETCH_LIMIT ?? 100);
+  if (!Number.isFinite(raw)) return 100;
+  const normalized = Math.floor(raw);
+  return Math.min(100, Math.max(20, normalized));
+}
+
 export function buildPublicRequestsQuery(filter: PublicRequestsFilter) {
   const qs = new URLSearchParams();
   if (filter.cityId) qs.set('cityId', filter.cityId);
@@ -62,7 +79,7 @@ export function buildPublicRequestsQuery(filter: PublicRequestsFilter) {
   return qs.toString();
 }
 
-export async function listPublicRequests(filter: PublicRequestsFilter = {}) {
+async function listPublicRequestsFromApi(filter: PublicRequestsFilter = {}) {
   const suffix = buildPublicRequestsQuery(filter);
   const response = await apiGet<PublicRequestsResponseDto | RequestResponseDto[]>(
     `/requests/public?${suffix}`,
@@ -78,7 +95,91 @@ export async function listPublicRequests(filter: PublicRequestsFilter = {}) {
   return response;
 }
 
+function sortRequests(items: RequestResponseDto[], sort: PublicRequestsSort = 'date_desc') {
+  const copy = [...items];
+  copy.sort((a, b) => {
+    if (sort === 'date_desc') return a.createdAt < b.createdAt ? 1 : -1;
+    if (sort === 'date_asc') return a.createdAt > b.createdAt ? 1 : -1;
+    if (sort === 'price_asc') return (a.price ?? 0) - (b.price ?? 0);
+    return (b.price ?? 0) - (a.price ?? 0);
+  });
+  return copy;
+}
+
+function paginateRequests(items: RequestResponseDto[], filter: PublicRequestsFilter) {
+  const limit = Math.max(1, Math.floor(filter.limit ?? 20));
+  if (filter.offset != null) {
+    const offset = Math.max(0, Math.floor(filter.offset));
+    return {
+      items: items.slice(offset, offset + limit),
+      page: Math.floor(offset / limit) + 1,
+      limit,
+    };
+  }
+  const page = Math.max(1, Math.floor(filter.page ?? 1));
+  const start = (page - 1) * limit;
+  return {
+    items: items.slice(start, start + limit),
+    page,
+    limit,
+  };
+}
+
+export async function listPublicRequests(filter: PublicRequestsFilter = {}) {
+  const mode = readMockMode();
+  if (mode === 'only') {
+    return listMockPublicRequests(filter);
+  }
+  if (mode === 'off') {
+    return listPublicRequestsFromApi(filter);
+  }
+
+  const mergeFetchLimit = readMergeFetchLimit();
+  const poolFilter: PublicRequestsFilter = {
+    ...filter,
+    page: 1,
+    offset: undefined,
+    limit: mergeFetchLimit,
+  };
+
+  const [real, mock] = await Promise.all([
+    listPublicRequestsFromApi(poolFilter),
+    listMockPublicRequests(poolFilter),
+  ]);
+
+  const mergedById = new Map<string, RequestResponseDto>();
+  for (const item of real.items) mergedById.set(item.id, item);
+  for (const item of mock.items) {
+    if (!mergedById.has(item.id)) mergedById.set(item.id, item);
+  }
+
+  const sorted = sortRequests(Array.from(mergedById.values()), filter.sort ?? 'date_desc');
+  const paged = paginateRequests(sorted, filter);
+  return {
+    items: paged.items,
+    total: sorted.length,
+    page: paged.page,
+    limit: paged.limit,
+  };
+}
+
 export function getPublicRequestById(requestId: string) {
+  const mode = readMockMode();
+  if (mode === 'only') {
+    return getMockPublicRequestById(requestId).then((item) => {
+      if (item) return item;
+      throw new ApiError('Request not found', 404);
+    });
+  }
+
+  if (mode === 'merge') {
+    return apiGet<RequestResponseDto>(`/requests/public/${requestId}`).catch(async (error) => {
+      if (!(error instanceof ApiError) || error.status !== 404) throw error;
+      const item = await getMockPublicRequestById(requestId);
+      if (item) return item;
+      throw error;
+    });
+  }
   return apiGet<RequestResponseDto>(`/requests/public/${requestId}`);
 }
 

@@ -9,13 +9,10 @@ type RequestDetailSimilarProps = {
   items: RequestResponseDto[];
   footerLabel: string;
   footerHref: string;
-  formatDate: (value: Date) => string;
   formatPrice: (value: number) => string;
-  badgeTodayLabel: string;
   recurringLabel: string;
   onceLabel: string;
   openRequestLabel: string;
-  detailsCtaLabel: string;
   priceOnRequestLabel: string;
   getImage: (item: RequestResponseDto) => string;
 };
@@ -26,13 +23,10 @@ export function RequestDetailSimilar({
   items,
   footerLabel,
   footerHref,
-  formatDate,
   formatPrice,
-  badgeTodayLabel,
   recurringLabel,
   onceLabel,
   openRequestLabel,
-  detailsCtaLabel,
   priceOnRequestLabel,
   getImage,
 }: RequestDetailSimilarProps) {
@@ -47,10 +41,6 @@ export function RequestDetailSimilar({
               const itemTitle = item.title?.trim() || item.subcategoryName || item.serviceKey;
               const itemPrice =
                 item.price != null ? formatPrice(item.price) : priceOnRequestLabel;
-              const similarDate =
-                item.preferredDate && !Number.isNaN(new Date(item.preferredDate).getTime())
-                  ? formatDate(new Date(item.preferredDate))
-                  : '—';
               return (
                 <OrderCard
                   key={item.id}
@@ -58,14 +48,12 @@ export function RequestDetailSimilar({
                   ariaLabel={openRequestLabel}
                   imageSrc={getImage(item)}
                   imageAlt={itemTitle}
-                  dateLabel={similarDate}
-                  badges={[badgeTodayLabel, item.isRecurring ? recurringLabel : onceLabel]}
+                  badges={[item.isRecurring ? recurringLabel : onceLabel]}
                   category={item.categoryName ?? item.categoryKey ?? ''}
                   title={itemTitle}
                   meta={[item.cityName ?? item.cityId]}
                   bottomMeta={[item.subcategoryName ?? item.serviceKey]}
                   priceLabel={itemPrice}
-                  inlineCta={detailsCtaLabel}
                 />
               );
             })}

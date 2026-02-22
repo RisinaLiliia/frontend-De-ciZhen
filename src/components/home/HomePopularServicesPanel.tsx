@@ -1,9 +1,11 @@
+/* src/components/home/HomePopularServicesPanel.tsx */
 import Image from 'next/image';
 import Link from 'next/link';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { CategoryCounts } from '@/types/home';
 import { CountBadge } from '@/components/ui/CountBadge';
+import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 
 type ServiceItem = {
   key: string;
@@ -16,21 +18,23 @@ type HomePopularServicesPanelProps = {
   t: (key: I18nKey) => string;
   services: ServiceItem[];
   categoryCounts: CategoryCounts;
+  viewAllHref?: string;
 };
 
 export function HomePopularServicesPanel({
   t,
   services,
   categoryCounts,
+  viewAllHref = '/requests',
 }: HomePopularServicesPanelProps) {
   return (
-    <section className="panel">
-      <div className="panel-header">
-        <p className="section-title">{t(I18N_KEYS.homePublic.popularTitle)}</p>
-        <Link href="/requests" prefetch={false} className="badge">
+    <Card className="home-popular-panel">
+      <CardHeader className="home-panel-header">
+        <CardTitle className="home-panel-title">{t(I18N_KEYS.homePublic.popularTitle)}</CardTitle>
+        <Link href={viewAllHref} prefetch={false} className="home-popular__cta home-cta">
           {t(I18N_KEYS.homePublic.viewAll)}
         </Link>
-      </div>
+      </CardHeader>
       <div className="home-popular-services__grid mt-3">
         {services.map((service) => (
           <Link key={service.key} href={service.href} className="home-popular-services__tile home-popular-services__link">
@@ -40,7 +44,7 @@ export function HomePopularServicesPanel({
                 alt={service.label}
                 className="home-popular-services__image"
                 fill
-                sizes="(max-width: 768px) 50vw, 220px"
+                sizes="(max-width: 768px) 33vw, 220px"
               />
             </span>
             <CountBadge
@@ -51,6 +55,6 @@ export function HomePopularServicesPanel({
           </Link>
         ))}
       </div>
-    </section>
+    </Card>
   );
 }

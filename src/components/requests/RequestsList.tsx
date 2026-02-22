@@ -152,7 +152,7 @@ function RequestsListComponent({
         const isSentState = offerCardState === 'sent';
         const isPendingWithdraw = pendingOfferRequestId === item.id;
         const isPendingOwnerDelete = ownerRequestActions?.pendingDeleteRequestId === item.id;
-        const ownerStatusLabel = mapRequestStatusLabel(item.status);
+        const ownerStatusLabel = mapRequestStatusLabel(item.status, t);
 
         return (
           <OrderCard
@@ -162,11 +162,10 @@ function RequestsListComponent({
             ariaLabel={t(I18N_KEYS.requestsPage.openRequest)}
             imageSrc={imageSrc}
             imageAlt={categoryLabel}
-            dateLabel={formatDate.format(new Date(item.preferredDate))}
             badges={
               isProviderPersonalized
                 ? []
-                : [t(I18N_KEYS.requestsPage.badgeToday), recurringLabel]
+                : [recurringLabel]
             }
             category={categoryLabel}
             title={title}
@@ -187,7 +186,6 @@ function RequestsListComponent({
               serviceLabel,
               ...tags.slice(0, 2),
             ]}
-            inlineCta={t(I18N_KEYS.requestsPage.detailsCta)}
             mode={isProviderPersonalized || isOwnerRequestList ? 'static' : 'link'}
             statusSlot={
               isOwnerRequestList ? (
@@ -362,14 +360,14 @@ function areRequestsListPropsEqual(prev: RequestsListProps, next: RequestsListPr
 
 export const RequestsList = React.memo(RequestsListComponent, areRequestsListPropsEqual);
 
-function mapRequestStatusLabel(status?: string) {
-  if (!status) return 'Offen';
-  if (status === 'completed') return 'Abgeschlossen';
-  if (status === 'cancelled') return 'Storniert';
+function mapRequestStatusLabel(status: string | undefined, t: (key: I18nKey) => string) {
+  if (!status) return t(I18N_KEYS.requestsPage.statusOpen);
+  if (status === 'completed') return t(I18N_KEYS.requestsPage.statusCompleted);
+  if (status === 'cancelled') return t(I18N_KEYS.requestsPage.statusCancelled);
   if (status === 'in_progress' || status === 'assigned' || status === 'matched' || status === 'confirmed') {
-    return 'In Arbeit';
+    return t(I18N_KEYS.requestsPage.statusInProgress);
   }
-  return 'Offen';
+  return t(I18N_KEYS.requestsPage.statusOpen);
 }
 
 function pickServiceLabel(

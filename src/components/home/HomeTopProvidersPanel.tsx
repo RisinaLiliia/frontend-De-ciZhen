@@ -1,3 +1,4 @@
+/* src/components/home/HomeTopProvidersPanel.tsx */
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
 import type { I18nKey } from '@/lib/i18n/keys';

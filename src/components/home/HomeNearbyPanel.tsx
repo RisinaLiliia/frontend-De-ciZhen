@@ -1,3 +1,4 @@
+/* src/components/home/HomeNearbyPanel.tsx */
 'use client';
 
 import * as React from 'react';
@@ -12,13 +13,15 @@ import { useQuery } from '@tanstack/react-query';
 import { listPublicRequests } from '@/lib/api/requests';
 import { RequestsList } from '@/components/requests/RequestsList';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 
 type HomeNearbyPanelProps = {
   t: (key: I18nKey) => string;
+  viewAllHref?: string;
 };
 
 
-export function HomeNearbyPanel({ t }: HomeNearbyPanelProps) {
+export function HomeNearbyPanel({ t, viewAllHref = '/requests' }: HomeNearbyPanelProps) {
   const { locale } = useI18n();
   const region = useGeoRegion();
   const { data: cities = [] } = useCities('DE');
@@ -74,13 +77,13 @@ export function HomeNearbyPanel({ t }: HomeNearbyPanelProps) {
     [locale],
   );
   return (
-    <section className="panel">
-      <div className="panel-header">
-        <div className="section-heading">
-          <p className="section-title">{t(I18N_KEYS.homePublic.nearby)}</p>
-          <p className="section-subtitle">{t(I18N_KEYS.homePublic.nearbySubtitle)}</p>
+    <Card className="home-nearby-panel">
+      <CardHeader className="home-panel-header">
+        <div className="home-panel-heading">
+          <CardTitle className="home-panel-title">{t(I18N_KEYS.homePublic.nearby)}</CardTitle>
+          <p className="home-panel-subtitle">{t(I18N_KEYS.homePublic.nearbySubtitle)}</p>
         </div>
-      </div>
+      </CardHeader>
       <div className="nearby-list">
         <RequestsList
           t={t}
@@ -97,8 +100,8 @@ export function HomeNearbyPanel({ t }: HomeNearbyPanelProps) {
       </div>
 
       <div className="mt-3 flex justify-center">
-        <MoreDotsLink href="/requests" label={t(I18N_KEYS.homePublic.nearbyCta)} />
+        <MoreDotsLink href={viewAllHref} label={t(I18N_KEYS.homePublic.nearbyCta)} />
       </div>
-    </section>
+    </Card>
   );
 }

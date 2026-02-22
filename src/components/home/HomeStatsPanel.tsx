@@ -1,3 +1,4 @@
+/* src/components/home/HomeStatsPanel.tsx */
 import Link from 'next/link';
 import {
   IconBox,
@@ -5,6 +6,8 @@ import {
   IconCoins,
   IconStar,
 } from '@/components/ui/Icons';
+import { Badge } from '@/components/ui/Badge';
+import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { LiveStats } from '@/types/home';
@@ -13,18 +16,19 @@ type HomeStatsPanelProps = {
   t: (key: I18nKey) => string;
   stats: LiveStats;
   formatNumber: Intl.NumberFormat;
+  ordersHref?: string;
 };
 
-export function HomeStatsPanel({ t, stats, formatNumber }: HomeStatsPanelProps) {
+export function HomeStatsPanel({ t, stats, formatNumber, ordersHref = '/orders?tab=new-orders' }: HomeStatsPanelProps) {
   return (
-    <section className="panel">
-      <div className="panel-header">
-        <p className="section-title">{t(I18N_KEYS.homePublic.today)}</p>
-        <span className="badge badge-live">{t(I18N_KEYS.homePublic.live)}</span>
-      </div>
+    <Card className="home-stats-panel">
+      <CardHeader className="home-stats__header">
+        <CardTitle className="home-stats__title">{t(I18N_KEYS.homePublic.today)}</CardTitle>
+        <Badge className="home-stats__live-badge">{t(I18N_KEYS.homePublic.live)}</Badge>
+      </CardHeader>
 
       <div className="home-stats__grid mt-3">
-        <Link href="/orders?tab=new-orders" prefetch={false} className="home-stats__link home-stats__card">
+        <Link href={ordersHref} prefetch={false} className="home-stats__link home-stats__card">
           <div className="flex items-center gap-2">
             <span className="home-stats__icon">
               <IconBox className="h-3.5 w-3.5" />
@@ -63,6 +67,6 @@ export function HomeStatsPanel({ t, stats, formatNumber }: HomeStatsPanelProps) 
           <span className="home-stats__label">{t(I18N_KEYS.homePublic.statRating)}</span>
         </Link>
       </div>
-    </section>
+    </Card>
   );
 }

@@ -7,7 +7,7 @@ import type { PublicRequestsSort } from '@/lib/api/requests';
 
 const ALL_OPTION_KEY = 'all';
 const FILTER_QUERY_KEYS = new Set(['cityId', 'categoryKey', 'subcategoryKey', 'serviceKey', 'sort', 'page', 'limit']);
-const DEFAULT_LIMIT = 20;
+const DEFAULT_LIMIT = 10;
 
 type UseRequestsFiltersArgs<TService extends { key: string; categoryKey: string }> = {
   services: TService[];

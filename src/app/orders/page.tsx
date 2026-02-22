@@ -1,2 +1,1 @@
-
-export { default } from '@/app/requests/page';
+export { default } from './OrdersPageClient';

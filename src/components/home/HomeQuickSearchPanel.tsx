@@ -1,5 +1,8 @@
+/* src/components/home/HomeQuickSearchPanel.tsx */
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
+import { Button } from '@/components/ui/Button';
+import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { IconPin } from '@/components/ui/icons/icons';
 import { useCities } from '@/features/catalog/queries';
 import { pickI18n } from '@/lib/i18n/helpers';
@@ -35,6 +38,8 @@ export function HomeQuickSearchPanel({
 }: HomeQuickSearchPanelProps) {
   const { data: cities = [] } = useCities('DE');
   const [showCitySuggestions, setShowCitySuggestions] = React.useState(false);
+  const [activeCityIndex, setActiveCityIndex] = React.useState(-1);
+  const cityListboxId = React.useId();
   const cityOptions = cities
     .map((city) => ({
       id: city.id,
@@ -46,6 +51,7 @@ export function HomeQuickSearchPanel({
   const citySuggestions = normalizedCityQuery
     ? cityOptions.filter((city) => city.label.toLowerCase().startsWith(normalizedCityQuery)).slice(0, 8)
     : [];
+  const hasCitySuggestions = showCitySuggestions && citySuggestions.length > 0;
 
   const categoryChips = [
     { key: 'cleaning', label: t(I18N_KEYS.homePublic.serviceCleaning) },
@@ -72,6 +78,7 @@ export function HomeQuickSearchPanel({
   const handleCityChange = (value: string) => {
     onCityQueryChange(value);
     setShowCitySuggestions(true);
+    setActiveCityIndex(-1);
     const matched = cityOptions.find((city) => city.label.toLowerCase() === value.trim().toLowerCase());
     onCityResolvedChange(matched?.id ?? '');
   };
@@ -80,17 +87,53 @@ export function HomeQuickSearchPanel({
     onCityQueryChange(label);
     onCityResolvedChange(id);
     setShowCitySuggestions(false);
+    setActiveCityIndex(-1);
+  };
+
+  const handleCityKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!citySuggestions.length) {
+      if (event.key === 'Escape') {
+        setShowCitySuggestions(false);
+      }
+      return;
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setShowCitySuggestions(true);
+      setActiveCityIndex((prev) => (prev + 1) % citySuggestions.length);
+      return;
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setShowCitySuggestions(true);
+      setActiveCityIndex((prev) => (prev <= 0 ? citySuggestions.length - 1 : prev - 1));
+      return;
+    }
+
+    if (event.key === 'Enter' && activeCityIndex >= 0) {
+      event.preventDefault();
+      const picked = citySuggestions[activeCityIndex];
+      if (picked) handleCitySelect(picked.id, picked.label);
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      setShowCitySuggestions(false);
+      setActiveCityIndex(-1);
+    }
   };
 
   return (
-    <section className="panel home-quick-search-panel">
-      <div className="home-quick-search__panel-header home-quick-search__header">
-        <p className="section-title home-quick-search__title">{t(I18N_KEYS.homePublic.quickSearch)}</p>
+    <Card className="home-quick-search-panel">
+      <CardHeader className="home-quick-search__panel-header home-quick-search__header">
+        <CardTitle className="home-quick-search__title">{t(I18N_KEYS.homePublic.quickSearch)}</CardTitle>
         <span className="request-meta-item home-quick-search__location">
           <IconPin />
           {region ?? t(I18N_KEYS.homePublic.liveRegionFallback)}
         </span>
-      </div>
+      </CardHeader>
       <div className="chip-row home-quick-search__chips" role="group" aria-label={t(I18N_KEYS.homePublic.quickSearch)}>
         {categoryChips.map((item) => {
           const isActive = selectedCategory === item.key;
@@ -119,23 +162,41 @@ export function HomeQuickSearchPanel({
           <input
             className="field home-quick-search__field"
             type="search"
+            role="combobox"
+            autoComplete="off"
             aria-label={t(I18N_KEYS.home.cityPlaceholder)}
+            aria-expanded={hasCitySuggestions}
+            aria-controls={hasCitySuggestions ? cityListboxId : undefined}
+            aria-activedescendant={
+              hasCitySuggestions && activeCityIndex >= 0 ? `${cityListboxId}-option-${activeCityIndex}` : undefined
+            }
             placeholder={t(I18N_KEYS.home.cityPlaceholder)}
             value={cityQuery}
-            onFocus={() => setShowCitySuggestions(true)}
+            onFocus={() => {
+              setShowCitySuggestions(true);
+              setActiveCityIndex(-1);
+            }}
             onBlur={() => {
-              window.setTimeout(() => setShowCitySuggestions(false), 120);
+              window.setTimeout(() => {
+                setShowCitySuggestions(false);
+                setActiveCityIndex(-1);
+              }, 120);
             }}
             onChange={(event) => handleCityChange(event.target.value)}
+            onKeyDown={handleCityKeyDown}
           />
-          {showCitySuggestions && citySuggestions.length > 0 ? (
-            <div className="home-quick-search__city-suggestions" role="listbox" aria-label={t(I18N_KEYS.home.cityPlaceholder)}>
-              {citySuggestions.map((city) => (
+          {hasCitySuggestions ? (
+            <div id={cityListboxId} className="home-quick-search__city-suggestions" role="listbox" aria-label={t(I18N_KEYS.home.cityPlaceholder)}>
+              {citySuggestions.map((city, index) => (
                 <button
                   key={city.id}
+                  id={`${cityListboxId}-option-${index}`}
                   type="button"
                   className="home-quick-search__city-option"
+                  role="option"
+                  aria-selected={index === activeCityIndex}
                   onMouseDown={(event) => event.preventDefault()}
+                  onMouseEnter={() => setActiveCityIndex(index)}
                   onClick={() => handleCitySelect(city.id, city.label)}
                 >
                   {city.label}
@@ -144,10 +205,10 @@ export function HomeQuickSearchPanel({
             </div>
           ) : null}
         </div>
-        <button type="button" className="btn-secondary home-quick-search__button" onClick={onSearch}>
+        <Button type="button" variant="secondary" fullWidth={false} className="home-quick-search__button" onClick={onSearch}>
           {t(I18N_KEYS.homePublic.searchCta)}
-        </button>
+        </Button>
       </div>
-    </section>
+    </Card>
   );
 }

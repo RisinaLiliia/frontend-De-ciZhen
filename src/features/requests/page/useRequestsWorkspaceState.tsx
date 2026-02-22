@@ -106,7 +106,7 @@ export function useRequestsWorkspaceState({
     [myProviderContracts],
   );
 
-  const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${(userName ?? '').trim() || 'User'}!`;
+  const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${(userName ?? '').trim() || t(I18N_KEYS.requestsPage.navUserFallback)}!`;
   const activityBase = sentCount + acceptedCount;
   const activityProgress = activityBase > 0 ? Math.round((acceptedCount / activityBase) * 100) : 12;
 
@@ -397,13 +397,13 @@ export function useRequestsWorkspaceState({
   );
 
   const providerHint = React.useMemo(
-    () => getProviderHint(providerProfileCompleteness, recentOffers7d, acceptanceRate),
-    [acceptanceRate, providerProfileCompleteness, recentOffers7d],
+    () => getProviderHint(t, providerProfileCompleteness, recentOffers7d, acceptanceRate),
+    [acceptanceRate, providerProfileCompleteness, recentOffers7d, t],
   );
 
   const clientHint = React.useMemo(
-    () => getClientHint(myRequests.length, myOpenRequests.length),
-    [myOpenRequests.length, myRequests.length],
+    () => getClientHint(t, myRequests.length, myOpenRequests.length),
+    [myOpenRequests.length, myRequests.length, t],
   );
 
   const providerActivityCount =
