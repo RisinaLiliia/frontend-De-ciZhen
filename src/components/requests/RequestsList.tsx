@@ -128,8 +128,8 @@ function RequestsListComponent({
         const priceValue = item.price ?? estimatePrice(item.area, item.propertyType);
         const priceLabel = formatPrice.format(priceValue);
         const imageSrc =
-          item.imageUrl ||
           (item.photos?.length ? item.photos[0] : null) ||
+          item.imageUrl ||
           pickRequestImage(item.categoryKey ?? '');
         const title = item.title?.trim() || item.description?.trim() || serviceLabel;
         const tags = item.tags ?? [];
@@ -204,7 +204,7 @@ function RequestsListComponent({
                     </i>
                   </Link>
                   <Link
-                    href={detailsHref}
+                    href={`${detailsHref}?edit=1`}
                     className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--edit"
                     aria-label={t(I18N_KEYS.requestDetails.responseEditTooltip)}
                     title={t(I18N_KEYS.requestDetails.responseEditTooltip)}

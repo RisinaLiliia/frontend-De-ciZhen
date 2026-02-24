@@ -26,6 +26,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { createRequest, publishMyRequest, uploadRequestPhotos } from '@/lib/api/requests';
 import { ApiError } from '@/lib/api/http-error';
 import { parseScheduleParam } from '@/features/request/schedule';
+import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import {
   createRequestSchema,
   type CreateRequestValues,
@@ -92,6 +93,7 @@ function CreateRequestContent() {
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const authStatus = useAuthStatus();
   const { locale } = useI18n();
 
   const schedule = parseScheduleParam(searchParams.get('schedule') ?? undefined);
@@ -146,6 +148,7 @@ function CreateRequestContent() {
   >([]);
   const [tagInput, setTagInput] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);
+  const [activeSubmitIntent, setActiveSubmitIntent] = React.useState<'draft' | 'publish' | null>(null);
 
   React.useEffect(() => {
     setValue('tags', tags.length ? tags : undefined);
@@ -226,7 +229,22 @@ function CreateRequestContent() {
     return key.includes('clean');
   }, [categoryKey, serviceKey]);
 
-  const onSubmit = async (values: CreateRequestValues) => {
+  const onSubmit = async (values: CreateRequestValues, event?: React.BaseSyntheticEvent) => {
+    const submitter = (event?.nativeEvent as SubmitEvent | undefined)?.submitter;
+    const submitIntent =
+      submitter instanceof HTMLButtonElement && submitter.value === 'draft' ? 'draft' : 'publish';
+    setActiveSubmitIntent(submitIntent);
+
+    if (authStatus !== 'authenticated') {
+      toast.message(t(I18N_KEYS.requestDetails.loginRequired));
+      const currentParams = new URLSearchParams(searchParams.toString());
+      currentParams.set('intent', submitIntent);
+      const nextPath = `/request/create${currentParams.toString() ? `?${currentParams.toString()}` : ''}`;
+      router.push(`/auth/login?next=${encodeURIComponent(nextPath)}`);
+      setActiveSubmitIntent(null);
+      return;
+    }
+
     try {
       const preferredDateIso = values.preferredDate
         ? new Date(values.preferredDate).toISOString()
@@ -252,15 +270,27 @@ function CreateRequestContent() {
         tags: values.tags?.length ? values.tags : undefined,
         price: values.price ?? undefined,
       });
-      await publishMyRequest(res.id);
+      if (submitIntent === 'publish') {
+        await publishMyRequest(res.id);
+      }
       if (typeof window !== 'undefined') {
         window.localStorage.removeItem(REQUEST_DRAFT_STORAGE_KEY);
       }
-      toast.success(t(I18N_KEYS.request.published));
-      router.push('/requests');
+      toast.success(t(submitIntent === 'publish' ? I18N_KEYS.request.published : I18N_KEYS.request.created));
+      router.push(submitIntent === 'publish' ? '/requests' : '/requests?tab=my-requests');
     } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
+        toast.message(t(I18N_KEYS.requestDetails.loginRequired));
+        const currentParams = new URLSearchParams(searchParams.toString());
+        currentParams.set('intent', submitIntent);
+        const nextPath = `/request/create${currentParams.toString() ? `?${currentParams.toString()}` : ''}`;
+        router.push(`/auth/login?next=${encodeURIComponent(nextPath)}`);
+        return;
+      }
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
+    } finally {
+      setActiveSubmitIntent(null);
     }
   };
 
@@ -638,9 +668,23 @@ function CreateRequestContent() {
 
           <div className="request-actions">
             <p className="typo-small text-center">{t(I18N_KEYS.request.hint)}</p>
-            <Button type="submit" loading={isSubmitting}>
-              {t(I18N_KEYS.request.submitPublish)}
-            </Button>
+            <div className="request-form__row is-2">
+              <Button
+                type="submit"
+                variant="ghost"
+                value="draft"
+                loading={isSubmitting && activeSubmitIntent === 'draft'}
+              >
+                {t(I18N_KEYS.request.submitDraft)}
+              </Button>
+              <Button
+                type="submit"
+                value="publish"
+                loading={isSubmitting && activeSubmitIntent === 'publish'}
+              >
+                {t(I18N_KEYS.request.submitPublish)}
+              </Button>
+            </div>
           </div>
         </form>
       </div>

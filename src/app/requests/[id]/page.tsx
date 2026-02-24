@@ -3,11 +3,16 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { Button } from '@/components/ui/Button';
+import { IconEdit, IconTrash } from '@/components/ui/icons/icons';
 import {
   RequestDetailAbout,
   RequestDetailAside,
@@ -21,7 +26,7 @@ import {
   RequestDetailSimilar,
 } from '@/components/requests/details';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
-import { getPublicRequestById, listPublicRequests } from '@/lib/api/requests';
+import { getPublicRequestById, listPublicRequests, updateMyRequest, uploadRequestPhotos } from '@/lib/api/requests';
 import { createOffer, deleteOffer, listMyProviderOffers, updateOffer } from '@/lib/api/offers';
 import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
 import { getMyProviderProfile } from '@/lib/api/providers';
@@ -62,6 +67,15 @@ export default function RequestDetailsPage() {
   const [offerSheetMode, setOfferSheetMode] = React.useState<'form' | 'success'>('form');
   const [isSubmittingOffer, setIsSubmittingOffer] = React.useState(false);
   const [submittedOfferAmount, setSubmittedOfferAmount] = React.useState<number | null>(null);
+  const [isOwnerEditMode, setIsOwnerEditMode] = React.useState(false);
+  const [ownerTitle, setOwnerTitle] = React.useState('');
+  const [ownerDescription, setOwnerDescription] = React.useState('');
+  const [ownerPrice, setOwnerPrice] = React.useState('');
+  const [ownerPhotos, setOwnerPhotos] = React.useState<string[]>([]);
+  const [isSavingOwner, setIsSavingOwner] = React.useState(false);
+  const [isUploadingOwnerPhoto, setIsUploadingOwnerPhoto] = React.useState(false);
+  const [ownerPriceTrend, setOwnerPriceTrend] = React.useState<'up' | 'down' | null>(null);
+  const ownerPhotoInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const isAuthed = authStatus === 'authenticated';
 
@@ -149,6 +163,7 @@ export default function RequestDetailsPage() {
   );
 
   const isOwner = isAuthed && Boolean(request?.clientId) && request?.clientId === authUser?.id;
+  const shouldOpenOwnerEdit = searchParams?.get('edit') === '1';
   const isOfferSheetOpen = searchParams?.get('offer') === '1';
   const isOfferAccepted = existingResponse?.status === 'accepted';
   const hasOffer = isAuthed && Boolean(existingResponse || submittedOfferAmount !== null);
@@ -156,6 +171,27 @@ export default function RequestDetailsPage() {
   const showChatCta = !isOwner;
   const showFavoriteCta = !isOwner;
   const showOwnerBadge = isAuthed && isOwner;
+
+  React.useEffect(() => {
+    if (!request) return;
+    setOwnerTitle(request.title?.trim() || '');
+    setOwnerDescription(request.description?.trim() || '');
+    setOwnerPrice(
+      typeof request.price === 'number' && Number.isFinite(request.price) ? String(Math.round(request.price)) : '',
+    );
+    setOwnerPhotos((request.photos ?? []).filter(Boolean).slice(0, 4));
+    setOwnerPriceTrend(null);
+  }, [request]);
+
+  React.useEffect(() => {
+    if (!showOwnerBadge) {
+      setIsOwnerEditMode(false);
+      return;
+    }
+    if (shouldOpenOwnerEdit) {
+      setIsOwnerEditMode(true);
+    }
+  }, [showOwnerBadge, shouldOpenOwnerEdit]);
 
   React.useEffect(() => {
     if (isAuthed) return;
@@ -360,6 +396,81 @@ export default function RequestDetailsPage() {
     }
     void setFavorite(!isSaved);
   }, [authStatus, isOwner, isSaved, request, requireAuth, setFavorite, t]);
+
+  const handleOwnerClearText = React.useCallback(() => {
+    setOwnerTitle('');
+    setOwnerDescription('');
+  }, []);
+
+  const handleOwnerPhotoPick = React.useCallback(async (files: FileList | null) => {
+    if (!files) return;
+    if (ownerPhotos.length >= 4) return;
+
+    const first = Array.from(files).slice(0, 4 - ownerPhotos.length);
+    if (!first.length) return;
+    setIsUploadingOwnerPhoto(true);
+    try {
+      const uploaded = await uploadRequestPhotos(first);
+      if (uploaded.urls.length) {
+        setOwnerPhotos((prev) => [...prev, ...uploaded.urls].slice(0, 4));
+      }
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 403) {
+        toast.message(t(I18N_KEYS.request.photosUploadForbidden));
+      } else {
+        toast.error(t(I18N_KEYS.request.photosError));
+      }
+    } finally {
+      setIsUploadingOwnerPhoto(false);
+    }
+  }, [ownerPhotos.length, t]);
+
+  const handleOwnerSave = React.useCallback(async () => {
+    if (!request || !isOwner) return;
+    const nextTitle = ownerTitle.trim();
+    if (!nextTitle) return;
+    const nextDescription = ownerDescription.trim();
+    const parsedPrice = ownerPrice.trim() === '' ? undefined : Number(ownerPrice);
+    if (parsedPrice !== undefined && (!Number.isFinite(parsedPrice) || parsedPrice <= 0)) {
+      toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
+      return;
+    }
+
+    setIsSavingOwner(true);
+    try {
+      const updated = await updateMyRequest(request.id, {
+        title: nextTitle,
+        description: nextDescription || undefined,
+        price: parsedPrice,
+        photos: ownerPhotos,
+      });
+
+      const prevPrice = typeof request.price === 'number' ? request.price : null;
+      const nextPrice = typeof updated.price === 'number' ? updated.price : null;
+      setOwnerPriceTrend(
+        prevPrice != null && nextPrice != null
+          ? nextPrice < prevPrice
+            ? 'down'
+            : nextPrice > prevPrice
+              ? 'up'
+              : null
+          : null,
+      );
+
+      qc.setQueryData(['request-detail', request.id], updated);
+      qc.invalidateQueries({ queryKey: ['orders-explorer-public'] });
+      qc.invalidateQueries({ queryKey: ['requests-latest'] });
+      qc.invalidateQueries({ queryKey: ['request-similar'] });
+
+      setIsOwnerEditMode(false);
+      toast.success(t(I18N_KEYS.requestDetails.ownerUpdated));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+      toast.error(message);
+    } finally {
+      setIsSavingOwner(false);
+    }
+  }, [isOwner, ownerDescription, ownerPhotos, ownerPrice, ownerTitle, qc, request, t]);
 
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const formatPrice = React.useMemo(
@@ -572,19 +683,180 @@ export default function RequestDetailsPage() {
       <div className="request-detail">
         <section className="panel request-detail__panel">
           <RequestDetailHeader
-            title={viewModel.title}
-            priceLabel={viewModel.priceLabel}
+            title={isOwnerEditMode ? ownerTitle || viewModel.title : viewModel.title}
+            priceLabel={
+              isOwnerEditMode
+                ? ownerPrice.trim()
+                  ? formatPrice.format(Number(ownerPrice))
+                  : t(I18N_KEYS.requestDetails.priceOnRequest)
+                : viewModel.priceLabel
+            }
             tags={viewModel.tagList}
             badgeLabel={showOwnerBadge ? t(I18N_KEYS.requestDetails.ownerBadge) : undefined}
             statusBadge={
               <span className={getStatusBadgeClass(requestStatusView.token)}>{requestStatusView.label}</span>
             }
           />
-          <RequestDetailGallery images={viewModel.images} title={viewModel.title} />
-          <RequestDetailAbout
-            title={t(I18N_KEYS.requestDetails.about)}
-            description={viewModel.description}
-          />
+
+          {showOwnerBadge ? (
+            <section className="request-detail__owner-edit">
+              <div className="request-detail__owner-actions">
+                <button
+                  type="button"
+                  className="offer-action-btn offer-action-btn--icon-only icon-button icon-button--hint"
+                  data-tooltip={t(I18N_KEYS.requestDetails.ownerEdit)}
+                  aria-label={t(I18N_KEYS.requestDetails.ownerEdit)}
+                  onClick={() => setIsOwnerEditMode((prev) => !prev)}
+                >
+                  <span className="offer-action-btn__icon">
+                    <IconEdit />
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="offer-action-btn offer-action-btn--icon-only icon-button icon-button--hint"
+                  data-tooltip={t(I18N_KEYS.requestDetails.ownerClear)}
+                  aria-label={t(I18N_KEYS.requestDetails.ownerClear)}
+                  onClick={handleOwnerClearText}
+                  disabled={!isOwnerEditMode}
+                >
+                  <span className="offer-action-btn__icon">
+                    <IconTrash />
+                  </span>
+                </button>
+              </div>
+
+              <div className="request-detail__owner-field">
+                <Input
+                  value={ownerTitle}
+                  onChange={(event) => setOwnerTitle(event.target.value)}
+                  maxLength={120}
+                  disabled={!isOwnerEditMode}
+                  placeholder={t(I18N_KEYS.request.titlePlaceholder)}
+                  aria-label={t(I18N_KEYS.request.titleLabel)}
+                />
+              </div>
+
+              <div className="request-detail__owner-field">
+                <Textarea
+                  value={ownerDescription}
+                  onChange={(event) => setOwnerDescription(event.target.value)}
+                  disabled={!isOwnerEditMode}
+                  placeholder={t(I18N_KEYS.request.descriptionPlaceholder)}
+                  aria-label={t(I18N_KEYS.request.descriptionLabel)}
+                />
+              </div>
+
+              <div className="request-detail__owner-price-row">
+                <Input
+                  type="number"
+                  min={1}
+                  value={ownerPrice}
+                  onChange={(event) => setOwnerPrice(event.target.value)}
+                  disabled={!isOwnerEditMode}
+                  placeholder={t(I18N_KEYS.request.pricePlaceholder)}
+                  aria-label={t(I18N_KEYS.request.priceLabel)}
+                />
+                {ownerPriceTrend ? (
+                  <span className={`status-badge ${ownerPriceTrend === 'down' ? 'status-badge--success' : 'status-badge--warning'}`}>
+                    {ownerPriceTrend === 'down' ? '↓' : '↑'}{' '}
+                    {ownerPriceTrend === 'down'
+                      ? t(I18N_KEYS.requestDetails.ownerPriceTrendDown)
+                      : t(I18N_KEYS.requestDetails.ownerPriceTrendUp)}
+                  </span>
+                ) : null}
+              </div>
+
+              <div className="request-detail__owner-photos-wrap">
+                <input
+                  ref={ownerPhotoInputRef}
+                  type="file"
+                  className="sr-only"
+                  accept="image/jpeg,image/png"
+                  multiple
+                  onChange={(event) => {
+                    void handleOwnerPhotoPick(event.target.files);
+                    event.currentTarget.value = '';
+                  }}
+                />
+                <div className="request-detail__owner-photos">
+                  {Array.from({ length: 4 }).map((_, index) => {
+                    const src = ownerPhotos[index];
+                    if (src) {
+                      return (
+                        <div key={`${src}-${index}`} className="request-detail__owner-photo">
+                          <Image
+                            src={src}
+                            alt=""
+                            fill
+                            sizes="(max-width: 768px) 50vw, 180px"
+                            className="request-detail__owner-photo-img"
+                          />
+                          {isOwnerEditMode ? (
+                            <button
+                              type="button"
+                              className="request-photo__remove"
+                              aria-label={t(I18N_KEYS.request.removePhoto)}
+                              onClick={() =>
+                                setOwnerPhotos((prev) => prev.filter((_, photoIndex) => photoIndex !== index))
+                              }
+                            >
+                              ×
+                            </button>
+                          ) : null}
+                        </div>
+                      );
+                    }
+                    if (!isOwnerEditMode) {
+                      return null;
+                    }
+                    return (
+                      <button
+                        key={`slot-${index}`}
+                        type="button"
+                        className="request-detail__owner-photo-slot"
+                        onClick={() => ownerPhotoInputRef.current?.click()}
+                        disabled={!isOwnerEditMode || isUploadingOwnerPhoto || ownerPhotos.length >= 4}
+                        aria-label={t(I18N_KEYS.request.photosButton)}
+                      >
+                        +
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="request-upload__hint">{t(I18N_KEYS.requestDetails.ownerPhotosHint)}</p>
+              </div>
+
+              {isOwnerEditMode ? (
+                <div className="request-detail__owner-cta">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setIsOwnerEditMode(false)}
+                    disabled={isSavingOwner}
+                  >
+                    {t(I18N_KEYS.requestDetails.ownerCancel)}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => void handleOwnerSave()}
+                    loading={isSavingOwner}
+                    disabled={!ownerTitle.trim()}
+                  >
+                    {t(I18N_KEYS.requestDetails.ownerSave)}
+                  </Button>
+                </div>
+              ) : null}
+            </section>
+          ) : (
+            <>
+              <RequestDetailGallery images={viewModel.images} title={viewModel.title} />
+              <RequestDetailAbout
+                title={t(I18N_KEYS.requestDetails.about)}
+                description={viewModel.description}
+              />
+            </>
+          )}
           {viewModel.hasClientInfo ? (
             <RequestDetailClient
               title={t(I18N_KEYS.requestDetails.clientTitle)}

@@ -313,7 +313,7 @@ export default function HomePage() {
                 <div className="stack-md">
                   <PersonalNavSection items={exploreNavItems} className="personal-nav--left" />
                   <section className="panel stack-sm" aria-label="Workspace preview section">
-                    <CreateRequestCard />
+                    <CreateRequestCard href="/request/create" />
                   </section>
                 </div>
 
