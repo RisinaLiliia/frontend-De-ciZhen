@@ -117,6 +117,8 @@ export const en: DeDictionary = {
     proofCase12Price: '€ 130',
     nearby: 'New orders near you',
     nearbySubtitle: 'Updated in real time',
+    nearbyFallbackHint: 'Sorry, we did not find requests in your area. These might suit you instead.',
+    nearbyEmptyHint: 'No requests are available right now. Please check back later.',
     nearbyItem1Category: 'Electric',
     nearbyItem1Desc: 'Install outlet',
     nearbyItem1City: 'Berlin',

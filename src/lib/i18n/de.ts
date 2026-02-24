@@ -115,6 +115,8 @@ export const de = {
     proofCase12Price: '€ 130',
     nearby: 'Neue Aufträge in deiner Nähe',
     nearbySubtitle: 'Aktualisiert in Echtzeit',
+    nearbyFallbackHint: 'Entschuldigung, in deiner Nähe haben wir keine Aufträge gefunden. Vielleicht passen diese.',
+    nearbyEmptyHint: 'Aktuell sind keine Aufträge verfügbar. Bitte später erneut prüfen.',
     nearbyItem1Category: 'Elektrik',
     nearbyItem1Desc: 'Steckdose montieren',
     nearbyItem1City: 'Berlin',
