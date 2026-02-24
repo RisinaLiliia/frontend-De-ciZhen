@@ -10,6 +10,8 @@ export type OrderCardProps = {
   meta: Array<React.ReactNode>;
   bottomMeta?: Array<React.ReactNode>;
   priceLabel: string;
+  priceTrend?: 'up' | 'down' | null;
+  priceTrendLabel?: string | null;
   isActive?: boolean;
   ariaLabel?: string;
   imageSrc?: string | null;
@@ -30,6 +32,8 @@ export function OrderCard({
   meta,
   bottomMeta = [],
   priceLabel,
+  priceTrend = null,
+  priceTrendLabel = null,
   isActive,
   ariaLabel,
   imageSrc,
@@ -104,6 +108,17 @@ export function OrderCard({
 
         <div className="request-card__price">
           <span className="proof-price">{priceLabel}</span>
+          {priceTrend ? (
+            <span
+              className={`request-card__price-trend ${
+                priceTrend === 'down' ? 'is-down' : 'is-up'
+              }`.trim()}
+              title={priceTrendLabel ?? undefined}
+            >
+              <span aria-hidden="true">{priceTrend === 'down' ? '↓' : '↑'}</span>
+              {priceTrendLabel ? <span>{priceTrendLabel}</span> : null}
+            </span>
+          ) : null}
           {bottomMeta.length ? (
             <span className="request-card__sub">
               {bottomMeta.map((item, index) => (

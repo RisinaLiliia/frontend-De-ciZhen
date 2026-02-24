@@ -511,6 +511,8 @@ export const en: DeDictionary = {
     submit: 'Publish request',
     submitDraft: 'Save draft',
     submitPublish: 'Publish now',
+    priceTrendDown: 'Price reduced',
+    priceTrendUp: 'Price increased',
     created: 'Request created',
     published: 'Request published',
     hint: 'This is free. You will get several offers.',

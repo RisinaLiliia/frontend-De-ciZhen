@@ -461,6 +461,7 @@ export default function RequestDetailsPage() {
       qc.invalidateQueries({ queryKey: ['orders-explorer-public'] });
       qc.invalidateQueries({ queryKey: ['requests-latest'] });
       qc.invalidateQueries({ queryKey: ['request-similar'] });
+      qc.invalidateQueries({ queryKey: ['home-nearby-requests'] });
 
       setIsOwnerEditMode(false);
       toast.success(t(I18N_KEYS.requestDetails.ownerUpdated));

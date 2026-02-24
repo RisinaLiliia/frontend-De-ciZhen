@@ -44,6 +44,8 @@ export type RequestResponseDto = {
   propertyType: 'apartment' | 'house';
   area: number;
   price?: number | null;
+  previousPrice?: number | null;
+  priceTrend?: 'up' | 'down' | null;
   preferredDate: string;
   isRecurring: boolean;
   title?: string | null;

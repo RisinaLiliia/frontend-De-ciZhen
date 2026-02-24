@@ -511,6 +511,8 @@ export const de = {
     submit: 'Anfrage veröffentlichen',
     submitDraft: 'Als Entwurf speichern',
     submitPublish: 'Jetzt veröffentlichen',
+    priceTrendDown: 'Preis gesenkt',
+    priceTrendUp: 'Preis erhöht',
     created: 'Anfrage erstellt',
     published: 'Anfrage veröffentlicht',
     hint: 'Kostenlos. Du erhältst mehrere Angebote.',
