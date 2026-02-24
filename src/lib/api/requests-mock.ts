@@ -7,6 +7,44 @@ const COUNTRY_CODE = 'DE';
 
 let mockPoolPromise: Promise<RequestResponseDto[]> | null = null;
 
+const MOCK_TOP_PROVIDER_PROFILES = [
+  {
+    id: 'provider-1',
+    name: 'Anna K.',
+    ratingAvg: 4.9,
+    ratingCount: 128,
+    isOnline: true,
+  },
+  {
+    id: 'provider-2',
+    name: 'Markus S.',
+    ratingAvg: 4.8,
+    ratingCount: 96,
+    isOnline: false,
+  },
+  {
+    id: 'provider-3',
+    name: 'Sofia M.',
+    ratingAvg: 4.9,
+    ratingCount: 142,
+    isOnline: true,
+  },
+  {
+    id: 'provider-4',
+    name: 'Lukas B.',
+    ratingAvg: 4.7,
+    ratingCount: 87,
+    isOnline: false,
+  },
+  {
+    id: 'provider-5',
+    name: 'Nina T.',
+    ratingAvg: 4.8,
+    ratingCount: 104,
+    isOnline: true,
+  },
+] as const;
+
 function getMockCount() {
   const raw = Number(process.env.NEXT_PUBLIC_REQUESTS_MOCK_COUNT ?? DEFAULT_COUNT);
   if (!Number.isFinite(raw) || raw < 1) return DEFAULT_COUNT;
@@ -28,6 +66,12 @@ function generatePrice(index: number) {
   const base = 45 + (index % 9) * 18;
   const seasonal = ((index * 7) % 13) * 5;
   return base + seasonal;
+}
+
+function buildMockDescription(serviceLabel: string, cityLabel: string, index: number) {
+  const urgency = index % 4 === 0 ? 'Zeitnaher Start bevorzugt.' : 'Start flexibel in den nächsten Tagen.';
+  const quality = index % 3 === 0 ? 'Bitte mit Erfahrung und eigenem Werkzeug.' : 'Saubere und zuverlässige Ausführung gewünscht.';
+  return `${serviceLabel} in ${cityLabel}. ${urgency} ${quality}`;
 }
 
 async function buildMockPool(): Promise<RequestResponseDto[]> {
@@ -60,6 +104,14 @@ async function buildMockPool(): Promise<RequestResponseDto[]> {
     const cityLabel = pickI18nLabel(city.i18n, city.name);
     const price = generatePrice(index);
     const area = 35 + (index % 8) * 12;
+    const providerProfile = MOCK_TOP_PROVIDER_PROFILES[index % MOCK_TOP_PROVIDER_PROFILES.length];
+    const trendSeed = index % 6;
+    const priceTrend: 'up' | 'down' | null =
+      trendSeed === 0 ? 'up' : trendSeed === 1 ? 'down' : null;
+    const previousPrice =
+      priceTrend === 'up' ? Math.max(1, price - (10 + (index % 3) * 5))
+      : priceTrend === 'down' ? price + (10 + (index % 3) * 5)
+      : null;
 
     items.push({
       id: `mock-request-${index + 1}`,
@@ -72,20 +124,22 @@ async function buildMockPool(): Promise<RequestResponseDto[]> {
       propertyType: index % 3 === 0 ? 'house' : 'apartment',
       area,
       price,
+      previousPrice,
+      priceTrend,
       preferredDate,
       isRecurring: index % 4 === 0,
       title: `${serviceLabel} in ${cityLabel}`,
-      description: `Mock Auftrag (${index + 1}): ${serviceLabel} in ${cityLabel}.`,
+      description: buildMockDescription(serviceLabel, cityLabel, index),
       photos: [],
       imageUrl: null,
       tags: [],
-      clientId: `mock-client-${(index % 18) + 1}`,
-      clientName: `Kunde ${String((index % 18) + 1).padStart(2, '0')}`,
+      clientId: providerProfile.id,
+      clientName: providerProfile.name,
       clientAvatarUrl: null,
       clientCity: cityLabel,
-      clientRatingAvg: 4.1 + ((index % 7) * 0.1),
-      clientRatingCount: 8 + (index % 17) * 3,
-      clientIsOnline: index % 2 === 0,
+      clientRatingAvg: providerProfile.ratingAvg,
+      clientRatingCount: providerProfile.ratingCount,
+      clientIsOnline: providerProfile.isOnline,
       clientLastSeenAt: createdAt,
       status: 'published',
       createdAt,
@@ -163,4 +217,3 @@ export async function getMockPublicRequestById(requestId: string): Promise<Reque
   const pool = await getMockPool();
   return pool.find((item) => item.id === requestId) ?? null;
 }
-

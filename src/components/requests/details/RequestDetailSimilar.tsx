@@ -39,6 +39,8 @@ export function RequestDetailSimilar({
           <div className="request-detail__similar-list">
             {items.map((item) => {
               const itemTitle = item.title?.trim() || item.subcategoryName || item.serviceKey;
+              const excerptSource = item.description?.trim() ?? '';
+              const excerpt = excerptSource && excerptSource !== itemTitle ? excerptSource : null;
               const itemPrice =
                 item.price != null ? formatPrice(item.price) : priceOnRequestLabel;
               return (
@@ -51,6 +53,7 @@ export function RequestDetailSimilar({
                   badges={[item.isRecurring ? recurringLabel : onceLabel]}
                   category={item.categoryName ?? item.categoryKey ?? ''}
                   title={itemTitle}
+                  excerpt={excerpt}
                   meta={[item.cityName ?? item.cityId]}
                   bottomMeta={[item.subcategoryName ?? item.serviceKey]}
                   priceLabel={itemPrice}

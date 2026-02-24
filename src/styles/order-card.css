@@ -163,6 +163,18 @@
     min-height: calc(2 * var(--lh-title) * 1em);
   }
 
+  .request-card__excerpt {
+    margin: 0;
+    color: var(--c-text-muted);
+    font-size: 13px;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .request-card__meta {
     display: grid;
     grid-auto-flow: column;
@@ -216,15 +228,15 @@
   }
 
   .request-card__price-trend.is-down {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
-    border-color: color-mix(in oklab, var(--c-success) 45%, var(--c-border) 55%);
-    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
-  }
-
-  .request-card__price-trend.is-up {
     color: color-mix(in oklab, var(--c-warning) 84%, var(--c-text) 16%);
     border-color: color-mix(in oklab, var(--c-warning) 46%, var(--c-border) 54%);
     background: color-mix(in oklab, var(--c-warning) 12%, var(--c-panel) 88%);
+  }
+
+  .request-card__price-trend.is-up {
+    color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
+    border-color: color-mix(in oklab, var(--c-success) 45%, var(--c-border) 55%);
+    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
   }
 
   .request-card__sub {

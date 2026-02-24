@@ -4,6 +4,8 @@ import type { ReactNode } from 'react';
 type RequestDetailHeaderProps = {
   title: string;
   priceLabel: string;
+  priceTrend?: 'up' | 'down' | null;
+  priceTrendLabel?: string | null;
   tags: string[];
   badgeLabel?: string;
   statusBadge?: ReactNode;
@@ -12,6 +14,8 @@ type RequestDetailHeaderProps = {
 export function RequestDetailHeader({
   title,
   priceLabel,
+  priceTrend = null,
+  priceTrendLabel = null,
   tags,
   badgeLabel,
   statusBadge,
@@ -28,6 +32,11 @@ export function RequestDetailHeader({
         </div>
         <div className="request-detail__price">
           <span className="proof-price">{priceLabel}</span>
+          {priceTrend ? (
+            <span className={`status-badge ${priceTrend === 'up' ? 'status-badge--success' : 'status-badge--warning'}`}>
+              {priceTrend === 'down' ? '↓' : '↑'} {priceTrendLabel}
+            </span>
+          ) : null}
         </div>
       </div>
       <div className="request-detail__tags">

@@ -180,7 +180,18 @@ export default function RequestDetailsPage() {
       typeof request.price === 'number' && Number.isFinite(request.price) ? String(Math.round(request.price)) : '',
     );
     setOwnerPhotos((request.photos ?? []).filter(Boolean).slice(0, 4));
-    setOwnerPriceTrend(null);
+    const explicitTrend =
+      request.priceTrend === 'down' || request.priceTrend === 'up' ? request.priceTrend : null;
+    const derivedTrend =
+      explicitTrend ??
+      (typeof request.previousPrice === 'number' && typeof request.price === 'number'
+        ? request.price < request.previousPrice
+          ? 'down'
+          : request.price > request.previousPrice
+            ? 'up'
+            : null
+        : null);
+    setOwnerPriceTrend(derivedTrend);
   }, [request]);
 
   React.useEffect(() => {
@@ -447,18 +458,53 @@ export default function RequestDetailsPage() {
 
       const prevPrice = typeof request.price === 'number' ? request.price : null;
       const nextPrice = typeof updated.price === 'number' ? updated.price : null;
-      setOwnerPriceTrend(
-        prevPrice != null && nextPrice != null
+      const explicitTrend =
+        updated.priceTrend === 'down' || updated.priceTrend === 'up' ? updated.priceTrend : null;
+      const derivedTrend =
+        explicitTrend ??
+        (prevPrice != null && nextPrice != null
           ? nextPrice < prevPrice
             ? 'down'
             : nextPrice > prevPrice
               ? 'up'
               : null
-          : null,
-      );
+          : null);
+      const patchedRequest: RequestResponseDto = {
+        ...updated,
+        previousPrice:
+          typeof updated.previousPrice === 'number'
+            ? updated.previousPrice
+            : derivedTrend && prevPrice != null
+              ? prevPrice
+              : null,
+        priceTrend: derivedTrend,
+      };
 
-      qc.setQueryData(['request-detail', request.id], updated);
+      setOwnerPriceTrend(derivedTrend);
+      qc.setQueryData(['request-detail', request.id], patchedRequest);
+
+      const patchItem = (item: RequestResponseDto): RequestResponseDto =>
+        item.id === request.id ? { ...item, ...patchedRequest } : item;
+      const patchListPayload = (payload: unknown) => {
+        if (!payload || typeof payload !== 'object') return payload;
+        if (!('items' in (payload as Record<string, unknown>))) return payload;
+        const currentItems = (payload as { items?: RequestResponseDto[] }).items;
+        if (!Array.isArray(currentItems)) return payload;
+        return {
+          ...(payload as Record<string, unknown>),
+          items: currentItems.map(patchItem),
+        };
+      };
+      qc.setQueriesData({ queryKey: ['orders-explorer-public'] }, patchListPayload);
+      qc.setQueriesData({ queryKey: ['requests-public'] }, patchListPayload);
+      qc.setQueriesData({ queryKey: ['requests-my'] }, patchListPayload);
+      qc.setQueriesData({ queryKey: ['home-nearby-requests'] }, patchListPayload);
+      qc.setQueriesData({ queryKey: ['requests-latest'] }, patchListPayload);
+      qc.setQueriesData({ queryKey: ['request-similar'] }, patchListPayload);
+
       qc.invalidateQueries({ queryKey: ['orders-explorer-public'] });
+      qc.invalidateQueries({ queryKey: ['requests-public'] });
+      qc.invalidateQueries({ queryKey: ['requests-my'] });
       qc.invalidateQueries({ queryKey: ['requests-latest'] });
       qc.invalidateQueries({ queryKey: ['request-similar'] });
       qc.invalidateQueries({ queryKey: ['home-nearby-requests'] });
@@ -692,6 +738,30 @@ export default function RequestDetailsPage() {
                   : t(I18N_KEYS.requestDetails.priceOnRequest)
                 : viewModel.priceLabel
             }
+            priceTrend={
+              request.priceTrend === 'down' || request.priceTrend === 'up'
+                ? request.priceTrend
+                : typeof request.previousPrice === 'number' && typeof request.price === 'number'
+                  ? request.price < request.previousPrice
+                    ? 'down'
+                    : request.price > request.previousPrice
+                      ? 'up'
+                      : null
+                  : null
+            }
+            priceTrendLabel={
+              request.priceTrend === 'down' ||
+              (typeof request.previousPrice === 'number' &&
+                typeof request.price === 'number' &&
+                request.price < request.previousPrice)
+                ? t(I18N_KEYS.request.priceTrendDown)
+                : request.priceTrend === 'up' ||
+                    (typeof request.previousPrice === 'number' &&
+                      typeof request.price === 'number' &&
+                      request.price > request.previousPrice)
+                  ? t(I18N_KEYS.request.priceTrendUp)
+                  : null
+            }
             tags={viewModel.tagList}
             badgeLabel={showOwnerBadge ? t(I18N_KEYS.requestDetails.ownerBadge) : undefined}
             statusBadge={
@@ -759,7 +829,7 @@ export default function RequestDetailsPage() {
                   aria-label={t(I18N_KEYS.request.priceLabel)}
                 />
                 {ownerPriceTrend ? (
-                  <span className={`status-badge ${ownerPriceTrend === 'down' ? 'status-badge--success' : 'status-badge--warning'}`}>
+                  <span className={`status-badge ${ownerPriceTrend === 'up' ? 'status-badge--success' : 'status-badge--warning'}`}>
                     {ownerPriceTrend === 'down' ? '↓' : '↑'}{' '}
                     {ownerPriceTrend === 'down'
                       ? t(I18N_KEYS.requestDetails.ownerPriceTrendDown)

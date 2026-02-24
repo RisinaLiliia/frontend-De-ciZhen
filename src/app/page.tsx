@@ -122,7 +122,12 @@ export default function HomePage() {
     [isOrdersExploreView, proofCases],
   );
   const exploreSidebarProviders = React.useMemo(
-    () => (isOrdersExploreView && exploreListDensity === 'double' ? HOME_TOP_PROVIDERS.slice(0, 2) : HOME_TOP_PROVIDERS),
+    () =>
+      isOrdersExploreView
+        ? exploreListDensity === 'double'
+          ? HOME_TOP_PROVIDERS.slice(0, 2)
+          : HOME_TOP_PROVIDERS.slice(0, 5)
+        : HOME_TOP_PROVIDERS,
     [exploreListDensity, isOrdersExploreView],
   );
   const exploreSidebarProofCases = React.useMemo(
