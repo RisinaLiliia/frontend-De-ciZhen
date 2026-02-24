@@ -174,7 +174,9 @@ export function getPublicRequestById(requestId: string) {
 
   if (mode === 'merge') {
     return apiGet<RequestResponseDto>(`/requests/public/${requestId}`).catch(async (error) => {
-      if (!(error instanceof ApiError) || error.status !== 404) throw error;
+      if (!(error instanceof ApiError) || (error.status !== 404 && error.status !== 400)) {
+        throw error;
+      }
       const item = await getMockPublicRequestById(requestId);
       if (item) return item;
       throw error;

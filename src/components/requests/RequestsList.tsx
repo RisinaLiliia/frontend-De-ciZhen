@@ -118,10 +118,6 @@ function RequestsListComponent({
           (cityById.has(item.cityId)
             ? pickI18n(cityById.get(item.cityId)!.i18n, locale)
             : item.cityId);
-        const propertyLabel =
-          item.propertyType === 'house'
-            ? t(I18N_KEYS.request.propertyHouse)
-            : t(I18N_KEYS.request.propertyApartment);
         const recurringLabel = item.isRecurring
           ? t(I18N_KEYS.client.recurringLabel)
           : t(I18N_KEYS.client.onceLabel);
@@ -149,6 +145,8 @@ function RequestsListComponent({
           item.imageUrl ||
           pickRequestImage(item.categoryKey ?? '');
         const title = item.title?.trim() || item.description?.trim() || serviceLabel;
+        const excerptSource = item.description?.trim() ?? '';
+        const excerpt = excerptSource && excerptSource !== title ? excerptSource : null;
         const tags = item.tags ?? [];
         const detailsHref = `/requests/${item.id}`;
         const itemOffer = isProviderPersonalized ? offersByRequest?.get(item.id) : undefined;
@@ -186,6 +184,7 @@ function RequestsListComponent({
             }
             category={categoryLabel}
             title={title}
+            excerpt={excerpt}
             meta={[
               <>
                 <IconPin />
@@ -196,7 +195,6 @@ function RequestsListComponent({
                 {formatDate.format(new Date(item.preferredDate))}
               </>,
             ]}
-            bottomMeta={[`${propertyLabel} · ${item.area} m²`]}
             priceLabel={priceLabel}
             priceTrend={derivedPriceTrend}
             priceTrendLabel={priceTrendLabel}

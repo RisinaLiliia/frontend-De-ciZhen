@@ -1,12 +1,16 @@
 // src/components/orders/OrderCard.tsx
-import Link from 'next/link';
+'use client';
+
 import Image from 'next/image';
+import * as React from 'react';
+import { useRouter } from 'next/navigation';
 
 export type OrderCardProps = {
   href: string;
   badges: string[];
   category: string;
   title: string;
+  excerpt?: string | null;
   meta: Array<React.ReactNode>;
   bottomMeta?: Array<React.ReactNode>;
   priceLabel: string;
@@ -29,6 +33,7 @@ export function OrderCard({
   badges,
   category,
   title,
+  excerpt = null,
   meta,
   bottomMeta = [],
   priceLabel,
@@ -44,13 +49,43 @@ export function OrderCard({
   actionSlot,
   prefetch = false,
 }: OrderCardProps) {
+  const router = useRouter();
   const hasImage = Boolean(imageSrc);
   const visibleBadges = badges.slice(0, 1);
   const safeImageSrc = imageSrc ?? '';
   const cardClassName = `request-card request-card--media-right order-card-link ${
     !hasImage ? 'request-card--no-media' : ''
-  } ${isActive ? 'is-active' : ''}`.trim();
-  const isLinkMode = mode === 'link';
+  } ${isActive ? 'is-active' : ''} ${mode === 'link' ? 'request-card--link' : ''}`.trim();
+
+  const isInteractiveTarget = React.useCallback((target: EventTarget | null) => {
+    if (!(target instanceof Element)) return false;
+    return Boolean(
+      target.closest('a,button,input,textarea,select,[role=\"button\"],[data-card-action=\"true\"]'),
+    );
+  }, []);
+
+  const openCard = React.useCallback(() => {
+    if (!href) return;
+    router.push(href);
+  }, [href, router]);
+
+  const handleClick = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      if (isInteractiveTarget(event.target)) return;
+      openCard();
+    },
+    [isInteractiveTarget, openCard],
+  );
+
+  const handleKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      if (isInteractiveTarget(event.target)) return;
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      openCard();
+    },
+    [isInteractiveTarget, openCard],
+  );
 
   const cardContent = (
     <>
@@ -81,6 +116,7 @@ export function OrderCard({
           {statusSlot ? <span className="order-top__status">{statusSlot}</span> : null}
         </div>
         <div className="request-card__title">{title}</div>
+        {excerpt ? <p className="request-card__excerpt">{excerpt}</p> : null}
 
         <div className="request-card__meta">
           {meta.map((item, index) =>
@@ -135,16 +171,16 @@ export function OrderCard({
     </>
   );
 
-  if (isLinkMode) {
-    return (
-      <Link href={href} prefetch={prefetch} aria-label={ariaLabel ?? title} className={`${cardClassName} request-card--link`}>
-        {cardContent}
-      </Link>
-    );
-  }
-
   return (
-    <article className={cardClassName} aria-label={ariaLabel ?? title}>
+    <article
+      className={`${cardClassName} request-card--link`.trim()}
+      aria-label={ariaLabel ?? title}
+      role="link"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      data-prefetch={prefetch ? 'true' : 'false'}
+    >
       {cardContent}
     </article>
   );
