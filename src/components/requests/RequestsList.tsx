@@ -127,6 +127,23 @@ function RequestsListComponent({
           : t(I18N_KEYS.client.onceLabel);
         const priceValue = item.price ?? estimatePrice(item.area, item.propertyType);
         const priceLabel = formatPrice.format(priceValue);
+        const explicitPriceTrend =
+          item.priceTrend === 'down' || item.priceTrend === 'up' ? item.priceTrend : null;
+        const derivedPriceTrend =
+          explicitPriceTrend ??
+          (typeof item.previousPrice === 'number' && typeof item.price === 'number'
+            ? item.price < item.previousPrice
+              ? 'down'
+              : item.price > item.previousPrice
+                ? 'up'
+                : null
+            : null);
+        const priceTrendLabel =
+          derivedPriceTrend === 'down'
+            ? t(I18N_KEYS.request.priceTrendDown)
+            : derivedPriceTrend === 'up'
+              ? t(I18N_KEYS.request.priceTrendUp)
+              : null;
         const imageSrc =
           (item.photos?.length ? item.photos[0] : null) ||
           item.imageUrl ||
@@ -181,6 +198,8 @@ function RequestsListComponent({
             ]}
             bottomMeta={[`${propertyLabel} · ${item.area} m²`]}
             priceLabel={priceLabel}
+            priceTrend={derivedPriceTrend}
+            priceTrendLabel={priceTrendLabel}
             tags={[
               categoryLabel,
               serviceLabel,

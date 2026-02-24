@@ -544,6 +544,8 @@ export const I18N_KEYS = {
     submit: 'request.submit',
     submitDraft: 'request.submitDraft',
     submitPublish: 'request.submitPublish',
+    priceTrendDown: 'request.priceTrendDown',
+    priceTrendUp: 'request.priceTrendUp',
     created: 'request.created',
     published: 'request.published',
     hint: 'request.hint',
