@@ -154,6 +154,8 @@ export const I18N_KEYS = {
     proofCase12Price: 'homePublic.proofCase12Price',
     nearby: 'homePublic.nearby',
     nearbySubtitle: 'homePublic.nearbySubtitle',
+    nearbyFallbackHint: 'homePublic.nearbyFallbackHint',
+    nearbyEmptyHint: 'homePublic.nearbyEmptyHint',
     nearbyCta: 'homePublic.nearbyCta',
     nearbyItem1Category: 'homePublic.nearbyItem1Category',
     nearbyItem1Desc: 'homePublic.nearbyItem1Desc',

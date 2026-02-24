@@ -13,6 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import { listPublicRequests } from '@/lib/api/requests';
 import { RequestsList } from '@/components/requests/RequestsList';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 
 type HomeNearbyPanelProps = {
@@ -20,6 +21,8 @@ type HomeNearbyPanelProps = {
   viewAllHref?: string;
 };
 
+const MIN_NEARBY_ITEMS = 3;
+const FALLBACK_FETCH_LIMIT = 12;
 
 export function HomeNearbyPanel({ t, viewAllHref = '/requests' }: HomeNearbyPanelProps) {
   const { locale } = useI18n();
@@ -43,14 +46,39 @@ export function HomeNearbyPanel({ t, viewAllHref = '/requests' }: HomeNearbyPane
     cities,
   });
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError } = useQuery<PublicRequestsResponseDto & { usedFallback?: boolean }>({
     queryKey: ['home-nearby-requests', cityId],
-    queryFn: () =>
-      listPublicRequests({
+    queryFn: async () => {
+      const primary = await listPublicRequests({
         cityId,
         sort: 'date_desc',
-        limit: 3,
-      }),
+        limit: MIN_NEARBY_ITEMS,
+      });
+
+      if (!cityId || primary.items.length >= MIN_NEARBY_ITEMS) {
+        return { ...primary, usedFallback: false };
+      }
+
+      const fallback = await listPublicRequests({
+        sort: 'date_desc',
+        limit: FALLBACK_FETCH_LIMIT,
+      });
+      const seen = new Set(primary.items.map((item) => item.id));
+      const merged = [...primary.items];
+
+      for (const item of fallback.items) {
+        if (seen.has(item.id)) continue;
+        merged.push(item);
+        seen.add(item.id);
+        if (merged.length >= MIN_NEARBY_ITEMS) break;
+      }
+
+      return {
+        ...primary,
+        items: merged.slice(0, MIN_NEARBY_ITEMS),
+        usedFallback: merged.length > primary.items.length,
+      };
+    },
     staleTime: 60_000,
     refetchOnWindowFocus: false,
     retry: 1,
@@ -59,6 +87,10 @@ export function HomeNearbyPanel({ t, viewAllHref = '/requests' }: HomeNearbyPane
 
 
   const requests: RequestResponseDto[] = data?.items ?? [];
+  const usedFallback = Boolean(data?.usedFallback && requests.length > 0);
+  const subtitle = usedFallback
+    ? t(I18N_KEYS.homePublic.nearbyFallbackHint)
+    : t(I18N_KEYS.homePublic.nearbySubtitle);
   const formatDate = React.useMemo(
     () =>
       new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
@@ -81,22 +113,26 @@ export function HomeNearbyPanel({ t, viewAllHref = '/requests' }: HomeNearbyPane
       <CardHeader className="home-panel-header">
         <div className="home-panel-heading">
           <CardTitle className="home-panel-title">{t(I18N_KEYS.homePublic.nearby)}</CardTitle>
-          <p className="home-panel-subtitle">{t(I18N_KEYS.homePublic.nearbySubtitle)}</p>
+          <p className="home-panel-subtitle">{subtitle}</p>
         </div>
       </CardHeader>
       <div className="nearby-list">
-        <RequestsList
-          t={t}
-          locale={locale}
-          requests={requests}
-          isLoading={isLoading}
-          isError={isError}
-          serviceByKey={serviceByKey}
-          categoryByKey={categoryByKey}
-          cityById={cityById}
-          formatDate={formatDate}
-          formatPrice={formatPrice}
-        />
+        {!isLoading && !isError && requests.length === 0 ? (
+          <div className="card text-center typo-muted">{t(I18N_KEYS.homePublic.nearbyEmptyHint)}</div>
+        ) : (
+          <RequestsList
+            t={t}
+            locale={locale}
+            requests={requests}
+            isLoading={isLoading}
+            isError={isError}
+            serviceByKey={serviceByKey}
+            categoryByKey={categoryByKey}
+            cityById={cityById}
+            formatDate={formatDate}
+            formatPrice={formatPrice}
+          />
+        )}
       </div>
 
       <div className="mt-3 flex justify-center">
