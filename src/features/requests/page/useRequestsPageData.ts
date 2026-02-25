@@ -17,6 +17,7 @@ type PublicRequestsFilter = NonNullable<Parameters<typeof listPublicRequests>[0]
 
 type Params = {
   filter: PublicRequestsFilter;
+  locale: string;
   isAuthed: boolean;
   isWorkspaceAuthed: boolean;
   activeReviewsView: ReviewsView;
@@ -25,7 +26,7 @@ type Params = {
 };
 
 export function useRequestsPageData(params: Params) {
-  const { filter, isAuthed, isWorkspaceAuthed, activeReviewsView, cityId, subcategoryKey } = params;
+  const { filter, locale, isAuthed, isWorkspaceAuthed, activeReviewsView, cityId, subcategoryKey } = params;
 
   const { data: publicRequests, isLoading, isError } = useQuery({
     queryKey: [
@@ -36,15 +37,17 @@ export function useRequestsPageData(params: Params) {
       filter.sort,
       filter.page,
       filter.limit,
+      locale,
     ],
-    queryFn: () => listPublicRequests(filter),
+    queryFn: () => listPublicRequests({ ...filter, locale }),
   });
 
   const { data: allRequestsSummary } = useQuery({
-    queryKey: ['requests-public-summary-total'],
+    queryKey: ['requests-public-summary-total', locale],
     enabled: isAuthed,
     queryFn: () =>
       listPublicRequests({
+        locale,
         sort: 'date_desc',
         page: 1,
         limit: 1,
@@ -63,13 +66,13 @@ export function useRequestsPageData(params: Params) {
   );
 
   const { data: myOfferRequestsById = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>() } = useQuery({
-    queryKey: ['requests-by-my-offer-ids', ...myOfferRequestIds],
+    queryKey: ['requests-by-my-offer-ids', locale, ...myOfferRequestIds],
     enabled: isWorkspaceAuthed && myOfferRequestIds.length > 0,
     queryFn: async () => {
       const pairs = await Promise.all(
         myOfferRequestIds.map(async (id) => {
           try {
-            const request = await getPublicRequestById(id);
+            const request = await getPublicRequestById(id, { locale });
             return [id, request] as const;
           } catch {
             return [id, null] as const;

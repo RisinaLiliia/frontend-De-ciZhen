@@ -151,7 +151,7 @@ export default function HomePage() {
       {
         key: 'orders',
         href: '/?view=orders&section=orders',
-        label: 'Alle Aufträge',
+        label: t(I18N_KEYS.homePublic.exploreAllOrders),
         icon: <IconBriefcase />,
         value: formatNumber.format(stats.active),
         hint: t(I18N_KEYS.requestsPage.countLabel),
@@ -160,7 +160,7 @@ export default function HomePage() {
       {
         key: 'my-orders',
         href: '/?view=orders&section=providers',
-        label: 'Alle Anbieter',
+        label: t(I18N_KEYS.homePublic.exploreAllProviders),
         icon: <IconBriefcase />,
         value: formatNumber.format(publicProviders.length),
         hint: t(I18N_KEYS.requestsPage.heroProviderPrimaryCta),
@@ -330,7 +330,7 @@ export default function HomePage() {
 
                 <aside className="stack-md hide-mobile">
                   <RequestsStatsPanel
-                    title="Aktivität der Plattform"
+                    title={t(I18N_KEYS.homePublic.activityTitle)}
                     tabsLabel={{
                       provider: t(I18N_KEYS.app.modeProvider),
                       client: t(I18N_KEYS.app.modeClient),
@@ -385,7 +385,7 @@ export default function HomePage() {
                   proofCases={exploreSidebarProofCases}
                   proofIndex={exploreSidebarProofCases.length ? proofIndex % exploreSidebarProofCases.length : 0}
                 />
-                <HomeTrustLivePanel className={exploreTrustPanelClassName} />
+                <HomeTrustLivePanel className={exploreTrustPanelClassName} t={t} />
               </aside>
             </div>
           </div>
@@ -394,7 +394,7 @@ export default function HomePage() {
         <div className="home-grid">
           <section ref={heroAnchorRef} className="home-intro-shell">
             {(heroVariant === 'animated' || heroVariant === 'both') ? (
-              <HomeHeroAnimatedPreview mode={heroAnimationMode} />
+              <HomeHeroAnimatedPreview mode={heroAnimationMode} t={t} />
             ) : null}
             {heroVariant === 'current' ? <HomeHero t={t} /> : null}
 
@@ -459,7 +459,7 @@ export default function HomePage() {
                 <HomeHowItWorksPanel t={t} />
               </div>
               <div className="home-combined-bottom__right">
-                <HomeTrustLivePanel />
+                <HomeTrustLivePanel t={t} />
               </div>
             </section>
           </div>

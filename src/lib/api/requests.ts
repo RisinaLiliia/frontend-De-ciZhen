@@ -31,6 +31,7 @@ export type PublicRequestsSort =
   | 'price_desc';
 
 export type PublicRequestsFilter = {
+  locale?: string;
   cityId?: string;
   categoryKey?: string;
   subcategoryKey?: string;
@@ -163,10 +164,10 @@ export async function listPublicRequests(filter: PublicRequestsFilter = {}) {
   };
 }
 
-export function getPublicRequestById(requestId: string) {
+export function getPublicRequestById(requestId: string, options?: { locale?: string }) {
   const mode = readMockMode();
   if (mode === 'only') {
-    return getMockPublicRequestById(requestId).then((item) => {
+    return getMockPublicRequestById(requestId, options?.locale).then((item) => {
       if (item) return item;
       throw new ApiError('Request not found', 404);
     });
@@ -177,7 +178,7 @@ export function getPublicRequestById(requestId: string) {
       if (!(error instanceof ApiError) || (error.status !== 404 && error.status !== 400)) {
         throw error;
       }
-      const item = await getMockPublicRequestById(requestId);
+      const item = await getMockPublicRequestById(requestId, options?.locale);
       if (item) return item;
       throw error;
     });

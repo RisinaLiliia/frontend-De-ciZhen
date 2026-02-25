@@ -278,6 +278,7 @@ function RequestsPageContent() {
     isProvidersError,
   } = useRequestsPageData({
     filter,
+    locale,
     isAuthed,
     isWorkspaceAuthed,
     activeReviewsView,
@@ -600,6 +601,7 @@ function RequestsPageContent() {
   const { contractRequests, contractOffersByRequest } = useContractRequestsData({
     filteredContracts,
     isWorkspaceAuthed,
+    locale,
   });
   const favoriteProviderCards = React.useMemo(
     () =>

@@ -4,8 +4,11 @@ import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dt
 
 const DEFAULT_COUNT = 40;
 const COUNTRY_CODE = 'DE';
+const DEFAULT_LOCALE = 'de';
+const SUPPORTED_LOCALES = ['de', 'en'] as const;
+type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
-let mockPoolPromise: Promise<RequestResponseDto[]> | null = null;
+const mockPoolByLocale = new Map<SupportedLocale, Promise<RequestResponseDto[]>>();
 
 const MOCK_TOP_PROVIDER_PROFILES = [
   {
@@ -51,9 +54,50 @@ function getMockCount() {
   return Math.max(1, Math.floor(raw));
 }
 
-function pickI18nLabel(i18n: Record<string, string> | undefined, fallback: string) {
+function normalizeLocale(locale: string | undefined | null): SupportedLocale | null {
+  const normalized = locale?.trim().toLowerCase();
+  if (!normalized) return null;
+  const base = normalized.split('-')[0];
+  if (SUPPORTED_LOCALES.includes(base as SupportedLocale)) {
+    return base as SupportedLocale;
+  }
+  return null;
+}
+
+function resolveMockLocale(preferred?: string): SupportedLocale {
+  const direct = normalizeLocale(preferred);
+  if (direct) return direct;
+  if (typeof document !== 'undefined') {
+    const fromDocument = normalizeLocale(document.documentElement?.lang);
+    if (fromDocument) return fromDocument;
+  }
+  if (typeof navigator !== 'undefined') {
+    const fromNavigator = normalizeLocale(navigator.language);
+    if (fromNavigator) return fromNavigator;
+  }
+  return DEFAULT_LOCALE;
+}
+
+function pickByBaseLocale(i18n: Record<string, string>, baseLocale: SupportedLocale) {
+  const entries = Object.entries(i18n);
+  const exact = entries.find(([key]) => key.trim().toLowerCase() === baseLocale)?.[1];
+  if (exact) return exact;
+  const regional = entries.find(([key]) => key.trim().toLowerCase().startsWith(`${baseLocale}-`))?.[1];
+  if (regional) return regional;
+  return null;
+}
+
+function pickI18nLabel(
+  i18n: Record<string, string> | undefined,
+  fallback: string,
+  locale: SupportedLocale,
+) {
   if (!i18n) return fallback;
-  return i18n.de || i18n['de-DE'] || i18n.en || i18n['en-US'] || fallback;
+  const preferred = pickByBaseLocale(i18n, locale);
+  if (preferred) return preferred;
+  const secondary = pickByBaseLocale(i18n, locale === 'de' ? 'en' : 'de');
+  if (secondary) return secondary;
+  return Object.values(i18n).find((value) => value.trim().length > 0) ?? fallback;
 }
 
 function normalizeDateByIndex(index: number) {
@@ -68,13 +112,32 @@ function generatePrice(index: number) {
   return base + seasonal;
 }
 
-function buildMockDescription(serviceLabel: string, cityLabel: string, index: number) {
-  const urgency = index % 4 === 0 ? 'Zeitnaher Start bevorzugt.' : 'Start flexibel in den nächsten Tagen.';
-  const quality = index % 3 === 0 ? 'Bitte mit Erfahrung und eigenem Werkzeug.' : 'Saubere und zuverlässige Ausführung gewünscht.';
+function buildMockDescription(
+  serviceLabel: string,
+  cityLabel: string,
+  index: number,
+  locale: SupportedLocale,
+) {
+  const urgency =
+    locale === 'de'
+      ? index % 4 === 0
+        ? 'Zeitnaher Start bevorzugt.'
+        : 'Start flexibel in den nächsten Tagen.'
+      : index % 4 === 0
+        ? 'Preferably starting soon.'
+        : 'Flexible start within the next few days.';
+  const quality =
+    locale === 'de'
+      ? index % 3 === 0
+        ? 'Bitte mit Erfahrung und eigenem Werkzeug.'
+        : 'Saubere und zuverlässige Ausführung gewünscht.'
+      : index % 3 === 0
+        ? 'Experience and own tools preferred.'
+        : 'Looking for clean and reliable execution.';
   return `${serviceLabel} in ${cityLabel}. ${urgency} ${quality}`;
 }
 
-async function buildMockPool(): Promise<RequestResponseDto[]> {
+async function buildMockPool(locale: SupportedLocale): Promise<RequestResponseDto[]> {
   const [cities, categories, services] = await Promise.all([
     listCities(COUNTRY_CODE),
     listServiceCategories(),
@@ -99,9 +162,9 @@ async function buildMockPool(): Promise<RequestResponseDto[]> {
     const createdAt = normalizeDateByIndex(index);
     const preferredDate = normalizeDateByIndex(index - 2);
 
-    const categoryLabel = pickI18nLabel(category?.i18n, service.categoryKey);
-    const serviceLabel = pickI18nLabel(service.i18n, service.key);
-    const cityLabel = pickI18nLabel(city.i18n, city.name);
+    const categoryLabel = pickI18nLabel(category?.i18n, service.categoryKey, locale);
+    const serviceLabel = pickI18nLabel(service.i18n, service.key, locale);
+    const cityLabel = pickI18nLabel(city.i18n, city.name, locale);
     const price = generatePrice(index);
     const area = 35 + (index % 8) * 12;
     const providerProfile = MOCK_TOP_PROVIDER_PROFILES[index % MOCK_TOP_PROVIDER_PROFILES.length];
@@ -129,7 +192,7 @@ async function buildMockPool(): Promise<RequestResponseDto[]> {
       preferredDate,
       isRecurring: index % 4 === 0,
       title: `${serviceLabel} in ${cityLabel}`,
-      description: buildMockDescription(serviceLabel, cityLabel, index),
+      description: buildMockDescription(serviceLabel, cityLabel, index, locale),
       photos: [],
       imageUrl: null,
       tags: [],
@@ -149,11 +212,17 @@ async function buildMockPool(): Promise<RequestResponseDto[]> {
   return items;
 }
 
-async function getMockPool() {
-  if (!mockPoolPromise) {
-    mockPoolPromise = buildMockPool();
-  }
-  return mockPoolPromise;
+async function getMockPool(locale?: string) {
+  const resolvedLocale = resolveMockLocale(locale);
+  const existing = mockPoolByLocale.get(resolvedLocale);
+  if (existing) return existing;
+
+  const created = buildMockPool(resolvedLocale);
+  mockPoolByLocale.set(resolvedLocale, created);
+  void created.catch(() => {
+    mockPoolByLocale.delete(resolvedLocale);
+  });
+  return created;
 }
 
 function applyFilter(items: RequestResponseDto[], filter: PublicRequestsFilter) {
@@ -200,7 +269,7 @@ function applyPagination(items: RequestResponseDto[], filter: PublicRequestsFilt
 }
 
 export async function listMockPublicRequests(filter: PublicRequestsFilter = {}): Promise<PublicRequestsResponseDto> {
-  const pool = await getMockPool();
+  const pool = await getMockPool(filter.locale);
   const filtered = applyFilter(pool, filter);
   const sorted = applySort(filtered, filter.sort);
   const { pageItems, page, limit } = applyPagination(sorted, filter);
@@ -213,7 +282,10 @@ export async function listMockPublicRequests(filter: PublicRequestsFilter = {}):
   };
 }
 
-export async function getMockPublicRequestById(requestId: string): Promise<RequestResponseDto | null> {
-  const pool = await getMockPool();
+export async function getMockPublicRequestById(
+  requestId: string,
+  locale?: string,
+): Promise<RequestResponseDto | null> {
+  const pool = await getMockPool(locale);
   return pool.find((item) => item.id === requestId) ?? null;
 }

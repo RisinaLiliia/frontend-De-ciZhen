@@ -10,22 +10,23 @@ import { getPublicRequestById } from '@/lib/api/requests';
 type Params = {
   filteredContracts: ContractDto[];
   isWorkspaceAuthed: boolean;
+  locale: string;
 };
 
-export function useContractRequestsData({ filteredContracts, isWorkspaceAuthed }: Params) {
+export function useContractRequestsData({ filteredContracts, isWorkspaceAuthed, locale }: Params) {
   const contractRequestIds = React.useMemo(
     () => Array.from(new Set(filteredContracts.map((item) => item.requestId).filter(Boolean))),
     [filteredContracts],
   );
 
   const { data: contractRequestsById = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>() } = useQuery({
-    queryKey: ['requests-by-contract-ids', ...contractRequestIds],
+    queryKey: ['requests-by-contract-ids', locale, ...contractRequestIds],
     enabled: isWorkspaceAuthed && contractRequestIds.length > 0,
     queryFn: async () => {
       const pairs = await Promise.all(
         contractRequestIds.map(async (id) => {
           try {
-            const request = await getPublicRequestById(id);
+            const request = await getPublicRequestById(id, { locale });
             return [id, request] as const;
           } catch {
             return [id, null] as const;

@@ -194,9 +194,10 @@ export function OrdersExplorer({
       filter.sort,
       filter.page,
       filter.limit,
+      locale,
     ],
     enabled: !isProvidersView,
-    queryFn: () => listPublicRequests(filter),
+    queryFn: () => listPublicRequests({ ...filter, locale }),
   });
 
   const {

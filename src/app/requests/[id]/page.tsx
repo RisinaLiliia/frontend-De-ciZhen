@@ -84,16 +84,17 @@ export default function RequestDetailsPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['request-detail', requestId],
+    queryKey: ['request-detail', requestId, locale],
     enabled: Boolean(requestId),
-    queryFn: () => getPublicRequestById(String(requestId)),
+    queryFn: () => getPublicRequestById(String(requestId), { locale }),
   });
 
   const { data: similarData } = useQuery({
-    queryKey: ['request-similar', request?.id, request?.categoryKey, request?.serviceKey],
+    queryKey: ['request-similar', request?.id, request?.categoryKey, request?.serviceKey, locale],
     enabled: Boolean(request?.id),
     queryFn: () =>
       listPublicRequests({
+        locale,
         categoryKey: request?.categoryKey ?? undefined,
         sort: 'date_desc',
         limit: 20,
@@ -481,7 +482,7 @@ export default function RequestDetailsPage() {
       };
 
       setOwnerPriceTrend(derivedTrend);
-      qc.setQueryData(['request-detail', request.id], patchedRequest);
+      qc.setQueriesData({ queryKey: ['request-detail', request.id] }, patchedRequest);
 
       const patchItem = (item: RequestResponseDto): RequestResponseDto =>
         item.id === request.id ? { ...item, ...patchedRequest } : item;
@@ -554,10 +555,11 @@ export default function RequestDetailsPage() {
   }, [request, similarData]);
 
   const { data: latestData } = useQuery({
-    queryKey: ['requests-latest'],
+    queryKey: ['requests-latest', locale],
     enabled: Boolean(request?.id) && similar.length === 0,
     queryFn: () =>
       listPublicRequests({
+        locale,
         cityId: request?.cityId ?? undefined,
         sort: 'date_desc',
         limit: 12,

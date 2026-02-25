@@ -68,9 +68,10 @@ export function HomeNearbyPanel({
   const fallbackLimit = Math.max(FALLBACK_FETCH_LIMIT, targetItems * 2);
 
   const { data, isLoading, isError } = useQuery<PublicRequestsResponseDto & { usedFallback?: boolean }>({
-    queryKey: ['home-nearby-requests', cityId, targetItems],
+    queryKey: ['home-nearby-requests', cityId, targetItems, locale],
     queryFn: async () => {
       const primary = await listPublicRequests({
+        locale,
         cityId,
         sort: 'date_desc',
         limit: targetItems,
@@ -81,6 +82,7 @@ export function HomeNearbyPanel({
       }
 
       const fallback = await listPublicRequests({
+        locale,
         sort: 'date_desc',
         limit: fallbackLimit,
       });
