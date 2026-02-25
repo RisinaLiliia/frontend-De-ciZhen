@@ -65,12 +65,20 @@ async function buildMockPool(): Promise<MockProvider[]> {
   for (let index = 0; index < total; index += 1) {
     const city = activeCities[index % activeCities.length];
     const service = activeServices.length ? activeServices[index % activeServices.length] : null;
-    const ratingAvg = Number((4.2 + ((index * 7) % 9) * 0.08).toFixed(1));
-    const ratingCount = 18 + ((index * 13) % 190);
-    const completedJobs = 12 + ((index * 11) % 260);
+    const topTier = index < 8;
+    const ratingAvg = topTier
+      ? Number((4.9 - (index % 3) * 0.05).toFixed(1))
+      : Number((4.2 + ((index * 7) % 9) * 0.08).toFixed(1));
+    const ratingCount = topTier
+      ? 110 + ((index * 17) % 90)
+      : 18 + ((index * 13) % 190);
+    const completedJobs = topTier
+      ? 180 + ((index * 19) % 240)
+      : 12 + ((index * 11) % 260);
 
     items.push({
       id: `mock-provider-${index + 1}`,
+      userId: `mock-provider-${index + 1}`,
       displayName: buildMockDisplayName(index),
       avatarUrl: null,
       ratingAvg,
@@ -80,6 +88,7 @@ async function buildMockPool(): Promise<MockProvider[]> {
       cityId: city._id,
       cityName: pickCityName(city.i18n),
       serviceKey: service?.key,
+      serviceKeys: service?.key ? [service.key] : [],
     });
   }
 

@@ -13,12 +13,13 @@ function setSessionHintCookie(value: '1' | '', maxAgeSeconds: number) {
 }
 
 function isProtectedPath(pathname: string): boolean {
+  const isSegment = (prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
   return (
-    pathname.startsWith('/orders') ||
-    pathname.startsWith('/chat') ||
-    pathname.startsWith('/profile') ||
-    pathname.startsWith('/client') ||
-    pathname.startsWith('/provider')
+    isSegment('/orders') ||
+    isSegment('/chat') ||
+    isSegment('/profile') ||
+    isSegment('/client') ||
+    isSegment('/provider')
   );
 }
 
@@ -61,7 +62,10 @@ export async function refreshAccessToken(): Promise<string | null> {
       });
 
       if (!res.ok) {
-        if (res.status === 401 || res.status === 403 || res.status >= 500) {
+        if (res.status === 401 || res.status === 403) {
+          clearSessionHint();
+          refreshSuppressed = true;
+        } else if (res.status >= 500) {
           refreshSuppressed = true;
         }
         return null;

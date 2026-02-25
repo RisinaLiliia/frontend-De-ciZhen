@@ -1618,7 +1618,7 @@
   .provider-card__overlay-link {
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: 2;
     border-radius: inherit;
     text-decoration: none;
   }
@@ -1666,6 +1666,13 @@
   .provider-card__top {
     height: 100%;
     padding: var(--provider-card-top-reserve) var(--space-4) var(--space-2-5);
+    pointer-events: none;
+  }
+
+  .provider-card__top .rating-summary {
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
   }
 
   .provider-avatar-stack {
