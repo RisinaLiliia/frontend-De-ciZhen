@@ -107,18 +107,15 @@ function RequestsListComponent({
   return (
     <>
       {requests.map((item, index) => {
-        const serviceLabel =
-          item.subcategoryName ??
-          pickServiceLabel(item.serviceKey, serviceByKey, locale);
+        const localizedServiceLabel = pickServiceLabel(item.serviceKey, serviceByKey, locale);
+        const serviceLabel = localizedServiceLabel || item.subcategoryName || item.serviceKey;
         const fallbackCategoryKey =
           item.categoryKey ?? serviceByKey.get(item.serviceKey)?.categoryKey ?? '';
-        const categoryLabel =
-          item.categoryName ?? pickCategoryLabel(fallbackCategoryKey, categoryByKey, locale);
-        const cityLabel =
-          item.cityName ??
-          (cityById.has(item.cityId)
-            ? pickI18n(cityById.get(item.cityId)!.i18n, locale)
-            : item.cityId);
+        const localizedCategoryLabel = pickCategoryLabel(fallbackCategoryKey, categoryByKey, locale);
+        const categoryLabel = localizedCategoryLabel || item.categoryName || fallbackCategoryKey;
+        const cityLabel = cityById.has(item.cityId)
+          ? pickI18n(cityById.get(item.cityId)!.i18n, locale)
+          : item.cityName ?? item.cityId;
         const recurringLabel = item.isRecurring
           ? t(I18N_KEYS.client.recurringLabel)
           : t(I18N_KEYS.client.onceLabel);

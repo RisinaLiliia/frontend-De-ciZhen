@@ -54,7 +54,7 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
     <Card className={`home-activity-panel ${isUpdating ? 'is-fetching' : ''}`.trim()}>
       <div className="home-activity__header">
         <div className="home-activity__header-top">
-          <CardTitle className="home-activity__title">Aktivität</CardTitle>
+          <CardTitle className="home-activity__title">{t(I18N_KEYS.homePublic.activityTitle)}</CardTitle>
           {query.data?.source === 'mock' ? (
             <Badge className="home-activity__demo">
               {t(I18N_KEYS.homePublic.activityDemo)}
