@@ -8,6 +8,7 @@ import type { Locale } from '@/lib/i18n/t';
 type HomeOrdersExplorePanelProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
+  contentType?: 'requests' | 'providers';
   backHref?: string;
   showBack?: boolean;
   showHeading?: boolean;
@@ -17,6 +18,7 @@ type HomeOrdersExplorePanelProps = {
 export function HomeOrdersExplorePanel({
   t,
   locale,
+  contentType = 'requests',
   backHref = '/',
   showBack = true,
   showHeading = true,
@@ -33,9 +35,10 @@ export function HomeOrdersExplorePanel({
       <OrdersExplorer
         t={t}
         locale={locale}
+        contentType={contentType}
         showBack={showBack}
         backHref={backHref}
-        emptyCtaHref="/?view=orders"
+        emptyCtaHref={contentType === 'providers' ? '/?view=orders&section=providers' : '/?view=orders&section=orders'}
         onListDensityChange={onListDensityChange}
       />
     </section>

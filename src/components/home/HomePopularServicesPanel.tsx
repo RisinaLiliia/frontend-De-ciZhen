@@ -30,7 +30,10 @@ export function HomePopularServicesPanel({
   return (
     <Card className="home-popular-panel">
       <CardHeader className="home-panel-header">
-        <CardTitle className="home-panel-title">{t(I18N_KEYS.homePublic.popularTitle)}</CardTitle>
+        <div className="home-panel-heading">
+          <CardTitle className="home-panel-title">{t(I18N_KEYS.homePublic.popularTitle)}</CardTitle>
+          <p className="home-panel-subtitle">{t(I18N_KEYS.homePublic.popularSubtitle)}</p>
+        </div>
         <Link href={viewAllHref} prefetch={false} className="home-popular__cta home-cta">
           {t(I18N_KEYS.homePublic.viewAll)}
         </Link>
