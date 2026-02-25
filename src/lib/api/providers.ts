@@ -9,6 +9,19 @@ import { listMockPublicProviders } from '@/lib/api/providers-mock';
 
 type ProvidersMockMode = 'off' | 'only' | 'merge';
 
+function isMockProviderId(value: string) {
+  const id = value.trim().toLowerCase();
+  return id.startsWith('mock-provider-');
+}
+
+async function getMockProviderById(id: string) {
+  const targetId = String(id ?? '').trim();
+  const list = await listMockPublicProviders();
+  const found = list.find((item) => item.id === targetId || item.userId === targetId);
+  if (!found) throw new Error('Provider not found');
+  return found;
+}
+
 function readMockMode(): ProvidersMockMode {
   const explicit = (process.env.NEXT_PUBLIC_PROVIDERS_MOCK_MODE ?? process.env.NEXT_PUBLIC_REQUESTS_MOCK_MODE ?? '').toLowerCase();
   if (explicit === 'off' || explicit === 'only' || explicit === 'merge') return explicit;
@@ -55,12 +68,14 @@ export async function getPublicProviderById(id: string) {
   const mode = readMockMode();
   const targetId = String(id ?? '').trim();
   if (!targetId) throw new Error('provider id is required');
+  const isMockId = isMockProviderId(targetId);
 
   if (mode === 'only') {
-    const list = await listMockPublicProviders();
-    const found = list.find((item) => item.id === targetId || item.userId === targetId);
-    if (!found) throw new Error('Provider not found');
-    return found;
+    return getMockProviderById(targetId);
+  }
+
+  if (isMockId) {
+    return getMockProviderById(targetId);
   }
 
   if (mode === 'off') {
@@ -70,10 +85,7 @@ export async function getPublicProviderById(id: string) {
   try {
     return await getPublicProviderByIdFromApi(targetId);
   } catch {
-    const list = await listMockPublicProviders();
-    const found = list.find((item) => item.id === targetId || item.userId === targetId);
-    if (!found) throw new Error('Provider not found');
-    return found;
+    return getMockProviderById(targetId);
   }
 }
 

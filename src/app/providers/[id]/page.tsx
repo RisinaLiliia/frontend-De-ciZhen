@@ -133,7 +133,7 @@ export default function ProviderPublicProfilePage() {
       listReviews({
         targetUserId: String(providerTargetUserId),
         targetRole: 'provider',
-        limit: 250,
+        limit: 100,
         offset: 0,
       }),
   });
@@ -298,7 +298,8 @@ export default function ProviderPublicProfilePage() {
       const cityName = (item.cityName ?? '').trim();
       if (cityName) names.add(cityName);
     }
-    return Array.from(names);
+    // Avoid burst requests when geocoder is temporarily unavailable.
+    return Array.from(names).slice(0, 12);
   }, [categoryOnlyProviders, provider, shouldUseLocationFallback]);
 
   const { data: cityCoords = new Map<string, { lat: number; lng: number }>() } = useQuery({
@@ -306,26 +307,19 @@ export default function ProviderPublicProfilePage() {
     enabled: shouldUseLocationFallback && geocodeCityNames.length > 0,
     queryFn: async () => {
       const map = new Map<string, { lat: number; lng: number }>();
-      const pairs = await Promise.all(
-        geocodeCityNames.map(async (cityName) => {
-          try {
-            const res = await apiGet<GeoAutocompleteResponse>(
-              `/geo/autocomplete?query=${encodeURIComponent(cityName)}&countryCode=de&limit=1`,
-            );
-            const first = res.items?.[0];
-            if (typeof first?.lat === 'number' && typeof first?.lng === 'number') {
-              return [cityName.trim().toLowerCase(), { lat: first.lat, lng: first.lng }] as const;
-            }
-          } catch {
-            return null;
+      for (const cityName of geocodeCityNames) {
+        try {
+          const res = await apiGet<GeoAutocompleteResponse>(
+            `/geo/autocomplete?query=${encodeURIComponent(cityName)}&countryCode=de&limit=1`,
+          );
+          const first = res.items?.[0];
+          if (typeof first?.lat === 'number' && typeof first?.lng === 'number') {
+            map.set(cityName.trim().toLowerCase(), { lat: first.lat, lng: first.lng });
           }
-          return null;
-        }),
-      );
-
-      for (const pair of pairs) {
-        if (!pair) continue;
-        map.set(pair[0], pair[1]);
+        } catch {
+          // Stop geocode fallback on first upstream error to prevent console spam.
+          break;
+        }
       }
       return map;
     },
