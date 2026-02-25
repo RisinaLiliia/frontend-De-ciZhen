@@ -127,7 +127,10 @@ export function OrderCard({
                 </span>
               );
             }
-            if (React.isValidElement(item) && item.props?.['data-meta-item']) {
+            if (
+              React.isValidElement<{ 'data-meta-item'?: boolean }>(item) &&
+              item.props?.['data-meta-item']
+            ) {
               return <React.Fragment key={`node-${index}`}>{item}</React.Fragment>;
             }
             return (

@@ -77,7 +77,7 @@ async function buildMockPool(): Promise<MockProvider[]> {
       ratingCount,
       completedJobs,
       basePrice: 35 + ((index * 9) % 120),
-      cityId: city.id,
+      cityId: city._id,
       cityName: pickCityName(city.i18n),
       serviceKey: service?.key,
     });
