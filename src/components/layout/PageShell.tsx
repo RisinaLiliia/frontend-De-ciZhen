@@ -34,7 +34,7 @@ export function PageShell({
 }: Props) {
   const headerRight =
     showLanguageToggle || showThemeToggle || right ? (
-      <div className="flex items-center gap-2">
+      <div className="page-shell__topbar-actions flex items-center gap-2">
         {showLanguageToggle ? <LanguageToggle /> : null}
         {showThemeToggle ? <ThemeToggle /> : null}
         {right}
