@@ -25,6 +25,10 @@ async function listPublicProvidersFromApi(params?: { cityId?: string; serviceKey
   return apiGet<ProviderPublicDto[]>(`/providers${suffix}`);
 }
 
+async function getPublicProviderByIdFromApi(id: string) {
+  return apiGet<ProviderPublicDto>(`/providers/${encodeURIComponent(id)}`);
+}
+
 export async function listPublicProviders(params?: { cityId?: string; serviceKey?: string }) {
   const mode = readMockMode();
   if (mode === 'only') {
@@ -45,6 +49,32 @@ export async function listPublicProviders(params?: { cityId?: string; serviceKey
     if (!mergedById.has(item.id)) mergedById.set(item.id, item);
   }
   return Array.from(mergedById.values());
+}
+
+export async function getPublicProviderById(id: string) {
+  const mode = readMockMode();
+  const targetId = String(id ?? '').trim();
+  if (!targetId) throw new Error('provider id is required');
+
+  if (mode === 'only') {
+    const list = await listMockPublicProviders();
+    const found = list.find((item) => item.id === targetId || item.userId === targetId);
+    if (!found) throw new Error('Provider not found');
+    return found;
+  }
+
+  if (mode === 'off') {
+    return getPublicProviderByIdFromApi(targetId);
+  }
+
+  try {
+    return await getPublicProviderByIdFromApi(targetId);
+  } catch {
+    const list = await listMockPublicProviders();
+    const found = list.find((item) => item.id === targetId || item.userId === targetId);
+    if (!found) throw new Error('Provider not found');
+    return found;
+  }
 }
 
 export function getMyProviderProfile() {

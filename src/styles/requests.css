@@ -1282,6 +1282,13 @@
     text-align: right;
   }
 
+  .request-detail__price-prefix,
+  .request-detail__price-suffix {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--c-text-muted);
+  }
+
   .request-detail__price .proof-price {
     font-size: 24px;
     font-weight: 700;
@@ -1568,6 +1575,10 @@
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
   }
 
+  .request-detail__client-card--provider-hero {
+    border-top: 0;
+  }
+
   .request-detail__reviews-list {
     display: grid;
     gap: var(--space-3);
@@ -1606,6 +1617,182 @@
     margin-top: var(--space-2);
     font-size: 13px;
     color: var(--c-text);
+  }
+
+  .provider-reviews-hub {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 960px) {
+    .provider-reviews-hub {
+      grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  .provider-reviews-hub__summary {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 95%, var(--c-border) 5%);
+  }
+
+  .provider-reviews-hub__rating-main {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .provider-reviews-hub__rating-value {
+    margin: 0;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .provider-reviews-hub__rating-stars {
+    margin: 0;
+    letter-spacing: 0.08em;
+    color: var(--c-accent);
+    font-size: 15px;
+  }
+
+  .provider-reviews-hub__rating-meta {
+    margin: 0;
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .provider-reviews-hub__distribution {
+    display: grid;
+    gap: var(--space-1-5);
+  }
+
+  .provider-reviews-hub__distribution-row {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) 24px;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .provider-reviews-hub__distribution-score,
+  .provider-reviews-hub__distribution-count {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .provider-reviews-hub__distribution-track {
+    position: relative;
+    height: 8px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-border) 58%, transparent);
+    overflow: hidden;
+  }
+
+  .provider-reviews-hub__distribution-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-accent) 72%, var(--c-primary) 28%),
+      color-mix(in oklab, var(--c-primary) 66%, var(--c-panel) 34%)
+    );
+  }
+
+  .provider-reviews-hub__feed {
+    display: grid;
+    gap: var(--space-2-5);
+  }
+
+  .provider-reviews-hub__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .provider-reviews-hub__toolbar-label {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .provider-reviews-hub__sort {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .provider-reviews-hub__sort-btn {
+    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
+    color: var(--c-text-muted);
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .provider-reviews-hub__sort-btn.is-active {
+    border-color: color-mix(in oklab, var(--c-primary) 42%, var(--c-border) 58%);
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+  }
+
+  .provider-reviews-hub__list {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .provider-reviews-hub__item {
+    display: grid;
+    gap: var(--space-1-5);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 95%, var(--c-border) 5%);
+  }
+
+  .provider-reviews-hub__item-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-1-5);
+  }
+
+  .provider-reviews-hub__item-author {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .provider-reviews-hub__item-date {
+    margin: 0;
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .provider-reviews-hub__item-stars {
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--c-accent);
+  }
+
+  .provider-reviews-hub__item-text {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--c-text);
+  }
+
+  .provider-reviews-hub__more {
+    justify-self: center;
+    min-width: 180px;
   }
 
   .request-detail__mobile-cta {

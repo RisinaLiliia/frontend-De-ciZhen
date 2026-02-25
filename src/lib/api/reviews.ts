@@ -1,6 +1,7 @@
 // src/lib/api/reviews.ts
 import { apiGet } from '@/lib/api/http';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
+import { isMockProviderId, listMockReviews } from '@/lib/api/reviews-mock';
 
 type ReviewsQuery = {
   targetUserId: string;
@@ -16,6 +17,10 @@ type MyReviewsQuery = {
 };
 
 export function listReviews(params: ReviewsQuery) {
+  if (params.targetRole === 'provider' && isMockProviderId(params.targetUserId)) {
+    return Promise.resolve(listMockReviews(params));
+  }
+
   const qs = new URLSearchParams();
   qs.set('targetUserId', params.targetUserId);
   qs.set('targetRole', params.targetRole);

@@ -3,6 +3,7 @@ export type ProviderStatus = 'draft' | 'active' | 'suspended';
 
 export type ProviderPublicDto = {
   id: string;
+  userId?: string;
   displayName?: string | null;
   avatarUrl?: string | null;
   ratingAvg: number;
