@@ -45,8 +45,7 @@
     .requests-grid--balanced > .stack-md,
     .requests-grid--balanced > aside.stack-md,
     .requests-grid--equal-cols > .stack-md,
-    .requests-grid--equal-cols > aside.stack-md,
-    .requests-grid--equal-cols > div {
+    .requests-grid--equal-cols > aside.stack-md {
       height: 100%;
     }
 
@@ -55,9 +54,27 @@
       align-items: stretch;
     }
 
+    .requests-grid--equal-cols > aside.stack-md {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
     .requests-grid--balanced > aside.stack-md > :only-child {
       flex: 1 1 auto;
       height: 100%;
+    }
+
+    .requests-grid--equal-cols > div {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+      min-height: 100%;
+    }
+
+    .requests-grid--equal-cols > div > * {
+      flex: 1 1 auto;
+      min-height: 100%;
     }
 
     .requests-grid--equal-cols > aside.stack-md > :last-child {
@@ -852,13 +869,13 @@
     background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
     color: var(--c-primary);
     border-color: color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
-    box-shadow: 0 8px 18px rgba(43, 77, 162, 0.1);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
   }
 
   html:not(.dark) .btn-secondary:hover {
     background: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
     border-color: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
-    box-shadow: 0 12px 22px rgba(43, 77, 162, 0.14);
+    box-shadow: 0 12px 22px color-mix(in oklab, var(--c-primary) 14%, transparent);
   }
 
   .skeleton {
@@ -1071,15 +1088,15 @@
   @keyframes badge-pulse {
     0% {
       transform: translateY(0);
-      box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.35);
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
     }
     50% {
       transform: translateY(-1px);
-      box-shadow: 0 0 0 6px rgba(245, 166, 35, 0.12);
+      box-shadow: 0 0 0 6px color-mix(in oklab, var(--c-accent) 12%, transparent);
     }
     100% {
       transform: translateY(0);
-      box-shadow: 0 0 0 0 rgba(245, 166, 35, 0);
+      box-shadow: 0 0 0 0 transparent;
     }
   }
 
@@ -1100,13 +1117,13 @@
 
   @keyframes radar-pulse {
     0% {
-      box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.35);
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
     }
     70% {
-      box-shadow: 0 0 0 10px rgba(245, 166, 35, 0);
+      box-shadow: 0 0 0 10px transparent;
     }
     100% {
-      box-shadow: 0 0 0 0 rgba(245, 166, 35, 0);
+      box-shadow: 0 0 0 0 transparent;
     }
   }
 
@@ -1248,7 +1265,7 @@
     height: 8px;
     border-radius: 999px;
     background: var(--c-accent);
-    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.35);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
     animation: radar-pulse 2s ease-out infinite;
   }
 
@@ -1322,14 +1339,14 @@
   html:not(.dark) .chip {
     background: var(--c-panel);
     border-color: var(--c-border);
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.04);
+    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
   }
 
   html:not(.dark) .chip.is-active {
     background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
     border-color: color-mix(in oklab, var(--c-primary) 35%, var(--c-border) 65%);
     color: var(--c-text);
-    box-shadow: 0 10px 18px rgba(43, 77, 162, 0.1);
+    box-shadow: 0 10px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
   }
 
   .list-item {
@@ -1759,7 +1776,7 @@
 
   .profile-settings__avatar--placeholder {
     background:
-      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0)),
+      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-panel) 90%, transparent), transparent),
       linear-gradient(135deg, var(--c-avatar-provider), var(--c-avatar-provider-light));
   }
 
@@ -2279,7 +2296,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.1));
+    background: linear-gradient(90deg, color-mix(in oklab, var(--c-ink) 60%, transparent), color-mix(in oklab, var(--c-ink) 10%, transparent));
     pointer-events: none;
   }
 
@@ -2295,7 +2312,7 @@
   }
 
   html:not(.dark) .hero__media::after {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1));
+    background: linear-gradient(90deg, color-mix(in oklab, var(--c-panel) 35%, transparent), color-mix(in oklab, var(--c-panel) 10%, transparent));
   }
 
   .hero__media img {

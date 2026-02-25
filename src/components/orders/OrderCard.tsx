@@ -119,17 +119,26 @@ export function OrderCard({
         {excerpt ? <p className="request-card__excerpt">{excerpt}</p> : null}
 
         <div className="request-card__meta">
-          {meta.map((item, index) =>
-            typeof item === 'string' ? (
-              <span key={`${item}-${index}`} className="request-meta-item">
-                {item}
-              </span>
-            ) : (
+          {meta.map((item, index) => {
+            if (typeof item === 'string') {
+              return (
+                <span key={`${item}-${index}`} className="request-meta-item">
+                  {item}
+                </span>
+              );
+            }
+            if (
+              React.isValidElement<{ 'data-meta-item'?: boolean }>(item) &&
+              item.props?.['data-meta-item']
+            ) {
+              return <React.Fragment key={`node-${index}`}>{item}</React.Fragment>;
+            }
+            return (
               <span key={`node-${index}`} className="request-meta-item">
                 {item}
               </span>
-            ),
-          )}
+            );
+          })}
         </div>
 
         {visibleBadges.length && !hasImage ? (

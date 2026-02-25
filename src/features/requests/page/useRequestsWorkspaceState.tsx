@@ -11,6 +11,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import type { TopProviderItem } from '@/components/providers/TopProvidersPanel';
+import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
 import type { WorkspaceTab } from '@/features/requests/page/workspace';
 import {
   buildLastSixMonthSeries,
@@ -501,33 +502,17 @@ export function useRequestsWorkspaceState({
 
   const topProviders = React.useMemo<TopProviderItem[]>(() => {
     const sorted = [...providers].sort((a, b) => b.ratingAvg - a.ratingAvg);
-    return sorted.slice(0, 2).map((provider) => {
-      const name = provider.displayName ?? t(I18N_KEYS.provider.unnamed);
-      const avatarLetter = name.trim().charAt(0).toUpperCase() || 'A';
-      const rating = provider.ratingAvg.toFixed(1);
-      const reviewsLabel = `${provider.ratingCount} ${t(I18N_KEYS.homePublic.reviews)}`;
-      const jobsLabel = `${provider.completedJobs} ${t(I18N_KEYS.provider.jobs)}`;
-      const badges = [t(I18N_KEYS.homePublic.topProvider1Badge1)];
-      if (provider.ratingAvg >= 4.8 || provider.completedJobs >= 100) {
-        badges.push(t(I18N_KEYS.homePublic.topProvider2Badge1));
-      }
-      return {
-        id: provider.id,
-        badges,
-        status: 'online',
-        statusLabel: t(I18N_KEYS.homePublic.topProviderStatus),
-        avatarLetter,
-        avatarUrl: provider.avatarUrl,
-        name,
-        role: jobsLabel,
-        rating,
-        reviewsCount: provider.ratingCount,
-        reviewsLabel,
-        ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
+    return sorted.slice(0, 2).map((provider) =>
+      mapPublicProviderToCard({
+        t,
+        provider,
+        roleLabel: '',
         profileHref: `/providers/${provider.id}`,
         reviewsHref: `/providers/${provider.id}#reviews`,
-      };
-    });
+        ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
+        status: 'online',
+      }),
+    );
   }, [providers, t]);
 
   return {

@@ -3,8 +3,9 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { IconBriefcase, IconCalendar, IconChat, IconEdit, IconHeart, IconPin } from '@/components/ui/icons/icons';
+import { IconBriefcase, IconCalendar, IconChat, IconEdit, IconHeart } from '@/components/ui/icons/icons';
 import { OrderCard } from '@/components/orders/OrderCard';
+import { LocationMeta } from '@/components/ui/LocationMeta';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { pickI18n } from '@/lib/i18n/helpers';
@@ -186,14 +187,11 @@ function RequestsListComponent({
             title={title}
             excerpt={excerpt}
             meta={[
-              <>
-                <IconPin />
-                {cityLabel}
-              </>,
-              <>
+              <LocationMeta key="city" label={cityLabel} />,
+              <React.Fragment key="date">
                 <IconCalendar />
                 {formatDate.format(new Date(item.preferredDate))}
-              </>,
+              </React.Fragment>,
             ]}
             priceLabel={priceLabel}
             priceTrend={derivedPriceTrend}

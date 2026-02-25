@@ -4,6 +4,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { PersonalNavSection } from '@/components/layout/PersonalNavSection';
@@ -24,7 +25,6 @@ import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import {
   HOME_PROOF_CASES,
   HOME_SERVICES,
-  HOME_TOP_PROVIDERS,
 } from '@/data/home';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { useMockCategoryCounts } from '@/hooks/useMockCategoryCounts';
@@ -34,6 +34,7 @@ import { useRotatingIndex } from '@/hooks/useRotatingIndex';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
+import { listPublicProviders } from '@/lib/api/providers';
 import type { ProofCase } from '@/types/home';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { IconBriefcase, IconChat, IconCheck, IconUser } from '@/components/ui/icons/icons';
@@ -53,6 +54,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = React.useState('');
   const [exploreListDensity, setExploreListDensity] = React.useState<'single' | 'double'>('single');
   const isOrdersExploreView = searchParams.get('view') === 'orders';
+  const exploreSection = searchParams.get('section') === 'providers' ? 'providers' : 'orders';
   const heroAnchorRef = React.useRef<HTMLElement | null>(null);
   const listingAnchorRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -96,6 +98,10 @@ export default function HomePage() {
     { enabled: isDemo },
   );
   const region = useGeoRegion();
+  const { data: publicProviders = [] } = useQuery({
+    queryKey: ['home-providers-count'],
+    queryFn: () => listPublicProviders(),
+  });
 
   const services = React.useMemo(
     () => HOME_SERVICES.map((item) => ({ ...item, label: t(item.labelKey) })),
@@ -118,17 +124,16 @@ export default function HomePage() {
     [t],
   );
   const proofCasesPreview = React.useMemo(
-    () => proofCases.slice(0, isOrdersExploreView ? 5 : 4),
-    [isOrdersExploreView, proofCases],
+    () => proofCases.slice(0, 4),
+    [proofCases],
   );
-  const exploreSidebarProviders = React.useMemo(
-    () =>
-      isOrdersExploreView
-        ? exploreListDensity === 'double'
-          ? HOME_TOP_PROVIDERS.slice(0, 2)
-          : HOME_TOP_PROVIDERS.slice(0, 5)
-        : HOME_TOP_PROVIDERS,
+  const exploreSidebarProvidersLimit = React.useMemo(
+    () => (isOrdersExploreView ? (exploreListDensity === 'double' ? 2 : 5) : 5),
     [exploreListDensity, isOrdersExploreView],
+  );
+  const exploreSidebarNearbyLimit = React.useMemo(
+    () => (isOrdersExploreView && exploreSection === 'providers' ? (exploreListDensity === 'double' ? 2 : 5) : 3),
+    [exploreListDensity, exploreSection, isOrdersExploreView],
   );
   const exploreSidebarProofCases = React.useMemo(
     () => (isOrdersExploreView && exploreListDensity === 'double' ? proofCasesPreview.slice(0, 2) : proofCasesPreview),
@@ -145,20 +150,21 @@ export default function HomePage() {
     () => [
       {
         key: 'orders',
-        href: '/?view=orders',
+        href: '/?view=orders&section=orders',
         label: 'Alle Aufträge',
         icon: <IconBriefcase />,
         value: formatNumber.format(stats.active),
         hint: t(I18N_KEYS.requestsPage.countLabel),
-        forceActive: true,
+        forceActive: exploreSection === 'orders',
       },
       {
         key: 'my-orders',
-        href: '/auth/login?next=%2Forders%3Ftab%3Dmy-orders',
+        href: '/?view=orders&section=providers',
         label: 'Alle Anbieter',
         icon: <IconBriefcase />,
-        value: formatNumber.format(HOME_TOP_PROVIDERS.length),
+        value: formatNumber.format(publicProviders.length),
         hint: t(I18N_KEYS.requestsPage.heroProviderPrimaryCta),
+        forceActive: exploreSection === 'providers',
       },
       {
         key: 'chat',
@@ -188,7 +194,7 @@ export default function HomePage() {
         },
       },
     ],
-    [formatNumber, stats.active, stats.rating, t],
+    [exploreSection, formatNumber, publicProviders.length, stats.active, stats.rating, t],
   );
   const exploreStatsPayload = React.useMemo(
     () => ({
@@ -340,18 +346,40 @@ export default function HomePage() {
 
             <div className="requests-grid requests-grid--equal-cols">
               <div ref={listingAnchorRef}>
-                <HomeOrdersExplorePanel
-                  t={t}
-                  locale={locale}
-                  showHeading={false}
-                  showBack={false}
-                  backHref="/"
-                  onListDensityChange={setExploreListDensity}
-                />
+                {exploreSection === 'providers' ? (
+                  <HomeOrdersExplorePanel
+                    t={t}
+                    locale={locale}
+                    contentType="providers"
+                    showHeading={false}
+                    showBack={false}
+                    backHref="/"
+                    onListDensityChange={setExploreListDensity}
+                  />
+                ) : (
+                  <HomeOrdersExplorePanel
+                    t={t}
+                    locale={locale}
+                    contentType="requests"
+                    showHeading={false}
+                    showBack={false}
+                    backHref="/"
+                    onListDensityChange={setExploreListDensity}
+                  />
+                )}
               </div>
 
               <aside className="stack-md hide-mobile">
-                <HomeTopProvidersPanel t={t} providers={exploreSidebarProviders} />
+                {exploreSection === 'providers' ? (
+                  <HomeNearbyPanel
+                    t={t}
+                    viewAllHref="/?view=orders&section=orders"
+                    itemsLimit={exploreSidebarNearbyLimit}
+                    visibleRows={exploreSidebarNearbyLimit}
+                  />
+                ) : (
+                  <HomeTopProvidersPanel t={t} locale={locale} limit={exploreSidebarProvidersLimit} />
+                )}
                 <HomeProofPanel
                   t={t}
                   proofCases={exploreSidebarProofCases}
@@ -418,7 +446,8 @@ export default function HomePage() {
             <div className="home-combined__right">
               <HomeTopProvidersPanel
                 t={t}
-                providers={HOME_TOP_PROVIDERS}
+                locale={locale}
+                limit={4}
               />
             </div>
           </section>

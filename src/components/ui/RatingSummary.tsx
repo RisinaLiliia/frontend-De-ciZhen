@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import * as React from 'react';
 
 type RatingSummaryProps = {
   rating: string | number;
@@ -6,6 +7,7 @@ type RatingSummaryProps = {
   reviewsLabel: string;
   href?: string;
   className?: string;
+  trailing?: React.ReactNode;
 };
 
 export function RatingSummary({
@@ -14,6 +16,7 @@ export function RatingSummary({
   reviewsLabel,
   href,
   className,
+  trailing,
 }: RatingSummaryProps) {
   const numericRating = Number(rating);
   const clampedRating = Number.isFinite(numericRating)
@@ -32,8 +35,11 @@ export function RatingSummary({
         </span>
         <span className="rating-summary__value">{rating}</span>
       </div>
-      <span className="rating-summary__reviews">
-        {reviewsCount} {reviewsLabel}
+      <span className="rating-summary__reviews-row">
+        <span className="rating-summary__reviews">
+          {reviewsCount} {reviewsLabel}
+        </span>
+        {trailing ? <span className="rating-summary__trailing">{trailing}</span> : null}
       </span>
     </>
   );

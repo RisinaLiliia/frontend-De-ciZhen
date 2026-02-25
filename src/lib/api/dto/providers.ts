@@ -9,6 +9,10 @@ export type ProviderPublicDto = {
   ratingCount: number;
   completedJobs: number;
   basePrice?: number | null;
+  cityId?: string | null;
+  cityName?: string | null;
+  serviceKey?: string | null;
+  serviceKeys?: string[];
 };
 
 export type ProviderProfileDto = {

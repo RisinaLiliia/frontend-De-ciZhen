@@ -182,7 +182,10 @@ export const HOME_TOP_PROVIDERS: Array<{
   avatarLetter: string;
   nameKey: I18nKey;
   roleKey: I18nKey;
+  cityKey: I18nKey;
+  aboutKey: I18nKey;
   ratingKey: I18nKey;
+  reviewKey: I18nKey;
   responseMinutes: number;
   reviewsCount: number;
   ctaKey: I18nKey;
@@ -197,7 +200,10 @@ export const HOME_TOP_PROVIDERS: Array<{
     avatarLetter: 'A',
     nameKey: I18N_KEYS.homePublic.topProvider1Name,
     roleKey: I18N_KEYS.homePublic.topProvider1Role,
+    cityKey: I18N_KEYS.homePublic.topProvider1City,
+    aboutKey: I18N_KEYS.homePublic.topProvider1About,
     ratingKey: I18N_KEYS.homePublic.topProvider1Rating,
+    reviewKey: I18N_KEYS.homePublic.topProvider1Review,
     responseMinutes: 12,
     reviewsCount: 128,
     ctaKey: I18N_KEYS.homePublic.topProvider1Cta,
@@ -212,7 +218,10 @@ export const HOME_TOP_PROVIDERS: Array<{
     avatarLetter: 'M',
     nameKey: I18N_KEYS.homePublic.topProvider2Name,
     roleKey: I18N_KEYS.homePublic.topProvider2Role,
+    cityKey: I18N_KEYS.homePublic.topProvider2City,
+    aboutKey: I18N_KEYS.homePublic.topProvider2About,
     ratingKey: I18N_KEYS.homePublic.topProvider2Rating,
+    reviewKey: I18N_KEYS.homePublic.topProvider2Review,
     responseMinutes: 19,
     reviewsCount: 96,
     ctaKey: I18N_KEYS.homePublic.topProvider2Cta,
@@ -227,7 +236,10 @@ export const HOME_TOP_PROVIDERS: Array<{
     avatarLetter: 'S',
     nameKey: I18N_KEYS.homePublic.topProvider3Name,
     roleKey: I18N_KEYS.homePublic.topProvider3Role,
+    cityKey: I18N_KEYS.homePublic.topProvider3City,
+    aboutKey: I18N_KEYS.homePublic.topProvider3About,
     ratingKey: I18N_KEYS.homePublic.topProvider3Rating,
+    reviewKey: I18N_KEYS.homePublic.topProvider3Review,
     responseMinutes: 15,
     reviewsCount: 142,
     ctaKey: I18N_KEYS.homePublic.topProvider3Cta,
@@ -242,7 +254,10 @@ export const HOME_TOP_PROVIDERS: Array<{
     avatarLetter: 'L',
     nameKey: I18N_KEYS.homePublic.topProvider4Name,
     roleKey: I18N_KEYS.homePublic.topProvider4Role,
+    cityKey: I18N_KEYS.homePublic.topProvider4City,
+    aboutKey: I18N_KEYS.homePublic.topProvider4About,
     ratingKey: I18N_KEYS.homePublic.topProvider4Rating,
+    reviewKey: I18N_KEYS.homePublic.topProvider4Review,
     responseMinutes: 24,
     reviewsCount: 87,
     ctaKey: I18N_KEYS.homePublic.topProvider4Cta,
@@ -257,7 +272,10 @@ export const HOME_TOP_PROVIDERS: Array<{
     avatarLetter: 'N',
     nameKey: I18N_KEYS.homePublic.topProvider5Name,
     roleKey: I18N_KEYS.homePublic.topProvider5Role,
+    cityKey: I18N_KEYS.homePublic.topProvider5City,
+    aboutKey: I18N_KEYS.homePublic.topProvider5About,
     ratingKey: I18N_KEYS.homePublic.topProvider5Rating,
+    reviewKey: I18N_KEYS.homePublic.topProvider5Review,
     responseMinutes: 18,
     reviewsCount: 104,
     ctaKey: I18N_KEYS.homePublic.topProvider5Cta,
