@@ -3,11 +3,15 @@
 
 import { TopBar } from '@/components/layout/TopBar';
 import { BackButton } from '@/components/layout/BackButton';
+import { LanguageToggle } from '@/components/ui/LanguageToggle';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { cn } from '@/lib/utils/cn';
 
 type Props = {
   title?: string;
   right?: React.ReactNode;
+  showLanguageToggle?: boolean;
+  showThemeToggle?: boolean;
   showBack?: boolean;
   backHref?: string;
   forceBackHref?: boolean;
@@ -19,6 +23,8 @@ type Props = {
 export function PageShell({
   title,
   right,
+  showLanguageToggle = true,
+  showThemeToggle = true,
   showBack = true,
   backHref,
   forceBackHref = false,
@@ -26,9 +32,18 @@ export function PageShell({
   mainClassName,
   children,
 }: Props) {
+  const headerRight =
+    showLanguageToggle || showThemeToggle || right ? (
+      <div className="flex items-center gap-2">
+        {showLanguageToggle ? <LanguageToggle /> : null}
+        {showThemeToggle ? <ThemeToggle /> : null}
+        {right}
+      </div>
+    ) : null;
+
   return (
     <div className="min-h-dvh">
-      <TopBar title={title} right={right} />
+      <TopBar title={title} right={headerRight} />
 
       <main
         className={cn(
