@@ -73,7 +73,7 @@ export function AuthActions() {
         type="button"
         onClick={() => openAuth('/auth/register')}
         aria-label={t(I18N_KEYS.auth.registerCta)}
-        className="icon-button h-10 w-10 inline-flex items-center justify-center rounded-md"
+        className="icon-button auth-actions__register h-10 w-10 inline-flex items-center justify-center rounded-md"
       >
         <IconUserPlus />
       </button>

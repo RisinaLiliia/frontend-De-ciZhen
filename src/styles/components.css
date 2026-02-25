@@ -686,8 +686,21 @@
     position: sticky;
     top: 0;
     z-index: 40;
+    gap: 8px;
     background: var(--c-topbar);
     border-bottom: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+  }
+
+  .topbar__left {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .topbar__right {
+    flex: 0 0 auto;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
   }
 
   .brand {
@@ -696,6 +709,7 @@
     gap: 10px;
     font-weight: 700;
     letter-spacing: -0.01em;
+    min-width: 0;
   }
 
   .brand__logo {
@@ -711,6 +725,56 @@
 
   .brand__text {
     font-size: 18px;
+    white-space: nowrap;
+  }
+
+  .page-shell__topbar-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .page-shell__topbar-actions > .flex {
+    gap: 8px;
+  }
+
+  @media (max-width: 640px) {
+    .topbar {
+      padding-inline: 12px;
+    }
+
+    .page-shell__topbar-actions {
+      gap: 6px;
+    }
+
+    .page-shell__topbar-actions > .flex {
+      gap: 6px;
+    }
+
+    .page-shell__topbar-actions .icon-button {
+      width: 36px;
+      height: 36px;
+    }
+
+    .auth-actions__register {
+      display: none;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .page-shell__topbar-actions {
+      gap: 4px;
+    }
+
+    .page-shell__topbar-actions > .flex {
+      gap: 4px;
+    }
+
+    .page-shell__topbar-actions .icon-button {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
   }
 
   .card {
