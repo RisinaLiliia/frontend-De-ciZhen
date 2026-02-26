@@ -24,7 +24,7 @@ export function ThemeToggle() {
     <IconButton
       label={t(I18N_KEYS.common.themeLabel)}
       onClick={() => setTheme(next)}
-      className="h-9 w-9"
+      className="icon-button--topbar"
     >
       {isDark ? <IconMoon /> : <IconSun />}
     </IconButton>

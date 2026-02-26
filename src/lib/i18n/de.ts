@@ -650,6 +650,7 @@ export const de = {
     roleProvider: 'Ich biete Services an',
     logoutLabel: 'Abmelden',
     ordersLabel: 'Aufträge',
+    requestLabel: 'Anfrage',
     profileLabel: 'Profil',
     workspaceLabel: 'Workspace',
     navigationLabel: 'Hauptnavigation',

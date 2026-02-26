@@ -37,7 +37,7 @@ export function AuthActions() {
   if (status === 'authenticated' && user) {
     return (
       <div className="flex items-center gap-2">
-        <IconButton label={t(I18N_KEYS.auth.logoutLabel)} onClick={onLogout}>
+        <IconButton label={t(I18N_KEYS.auth.logoutLabel)} onClick={onLogout} className="icon-button--topbar">
           <IconLogout />
         </IconButton>
       </div>
@@ -46,22 +46,20 @@ export function AuthActions() {
 
   return (
     <div className="flex items-center gap-2">
-      <button
-        type="button"
+      <IconButton
         onClick={() => openAuth('/auth/login')}
-        aria-label={t(I18N_KEYS.auth.loginCta)}
-        className="icon-button h-10 w-10 inline-flex items-center justify-center rounded-md"
+        label={t(I18N_KEYS.auth.loginCta)}
+        className="icon-button--topbar"
       >
         <IconLogin />
-      </button>
-      <button
-        type="button"
+      </IconButton>
+      <IconButton
         onClick={() => openAuth('/auth/register')}
-        aria-label={t(I18N_KEYS.auth.registerCta)}
-        className="icon-button auth-actions__register h-10 w-10 inline-flex items-center justify-center rounded-md"
+        label={t(I18N_KEYS.auth.registerCta)}
+        className="icon-button--topbar auth-actions__register"
       >
         <IconUserPlus />
-      </button>
+      </IconButton>
     </div>
   );
 }

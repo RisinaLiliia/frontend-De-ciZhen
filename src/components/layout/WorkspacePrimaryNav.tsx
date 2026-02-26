@@ -1,10 +1,10 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { IconBriefcase, IconChat, IconSearch } from '@/components/ui/icons/icons';
-import { useAuthStatus } from '@/hooks/useAuthSnapshot';
+import { IconBriefcase, IconChat, IconPlus, IconUser } from '@/components/ui/icons/icons';
+import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 
@@ -13,24 +13,27 @@ type TopNavItem = {
   href: string;
   label: string;
   icon: ReactNode;
+  variant?: 'default' | 'create';
+  iconPosition?: 'leading' | 'trailing';
   isActive: (pathname: string, searchParams: URLSearchParams) => boolean;
 };
 
 const isPathPrefix = (pathname: string, prefix: string) =>
   pathname === prefix || pathname.startsWith(`${prefix}/`);
 
-const DEFAULT_PUBLIC_REQUESTS_URL = '/requests?sort=date_desc&page=1&limit=10';
-const WORKSPACE_PREVIEW_URL = '/?view=orders&section=orders';
+const WORKSPACE_PREVIEW_URL = '/workspace?section=orders';
+const AUTH_WORKSPACE_URL = '/workspace?tab=new-orders';
+const REQUEST_CREATE_URL = '/request/create';
 const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
+const AUTH_PROFILE_FALLBACK_URL = '/profile';
 
-function useTopNavItems(isAuthenticated: boolean): TopNavItem[] {
+function useTopNavItems(isAuthenticated: boolean, profileHref: string): TopNavItem[] {
   const t = useT();
 
-  const workspaceHref = isAuthenticated ? '/profile/workspace' : WORKSPACE_PREVIEW_URL;
-  const ordersHref = isAuthenticated ? '/orders' : DEFAULT_PUBLIC_REQUESTS_URL;
+  const workspaceHref = isAuthenticated ? AUTH_WORKSPACE_URL : WORKSPACE_PREVIEW_URL;
   const chatHref = isAuthenticated ? '/chat' : LOGIN_CHAT_URL;
 
-  return [
+  const items: TopNavItem[] = [
     {
       key: 'workspace',
       href: workspaceHref,
@@ -38,19 +41,19 @@ function useTopNavItems(isAuthenticated: boolean): TopNavItem[] {
       icon: <IconBriefcase />,
       isActive: (pathname, searchParams) =>
         isAuthenticated
-          ? isPathPrefix(pathname, '/profile')
-          : pathname === '/' && searchParams.get('view') === 'orders',
+          ? isPathPrefix(pathname, '/workspace')
+          : (pathname === '/workspace' &&
+              (searchParams.get('section') === 'orders' || searchParams.get('section') === 'providers')) ||
+            (pathname === '/' && searchParams.get('view') === 'orders'),
     },
     {
-      key: 'orders',
-      href: ordersHref,
-      label: t(I18N_KEYS.auth.ordersLabel),
-      icon: <IconSearch />,
-      isActive: (pathname, searchParams) =>
-        (isPathPrefix(pathname, '/orders') ||
-          isPathPrefix(pathname, '/requests') ||
-          isPathPrefix(pathname, '/offers')) &&
-        !(pathname === '/' && searchParams.get('view') === 'orders'),
+      key: 'request-create',
+      href: REQUEST_CREATE_URL,
+      label: t(I18N_KEYS.auth.requestLabel),
+      icon: <IconPlus />,
+      variant: 'create',
+      iconPosition: 'trailing',
+      isActive: (pathname) => isPathPrefix(pathname, '/request/create'),
     },
     {
       key: 'chat',
@@ -60,35 +63,67 @@ function useTopNavItems(isAuthenticated: boolean): TopNavItem[] {
       isActive: (pathname) => isPathPrefix(pathname, '/chat'),
     },
   ];
+
+  if (isAuthenticated) {
+    items.push({
+      key: 'profile',
+      href: profileHref,
+      label: t(I18N_KEYS.auth.profileLabel),
+      icon: <IconUser />,
+      isActive: (pathname) => isPathPrefix(pathname, '/profile'),
+    });
+  }
+
+  return items;
 }
 
 function WorkspacePrimaryNav({
   className,
   itemClassName,
+  mobile = false,
 }: {
   className: string;
   itemClassName: string;
+  mobile?: boolean;
 }) {
   const status = useAuthStatus();
   const pathname = usePathname() ?? '/';
   const searchParams = useSearchParams();
   const t = useT();
+  const user = useAuthUser();
   const isAuthenticated = status === 'authenticated';
-  const items = useTopNavItems(isAuthenticated);
+  const profileHref =
+    isAuthenticated && typeof user?.id === 'string' && user.id.trim().length > 0
+      ? `/profile/${encodeURIComponent(user.id)}`
+      : AUTH_PROFILE_FALLBACK_URL;
+  const items = useTopNavItems(isAuthenticated, profileHref);
   const params = new URLSearchParams(searchParams?.toString());
+  const navStyle = mobile
+    ? ({ '--topbar-mobile-columns': String(items.length) } as CSSProperties)
+    : undefined;
 
   return (
-    <nav className={className} aria-label={t(I18N_KEYS.auth.navigationLabel)}>
+    <nav className={className} aria-label={t(I18N_KEYS.auth.navigationLabel)} style={navStyle}>
       {items.map((item) => {
         const active = item.isActive(pathname, params);
+        const iconClassName = item.iconPosition === 'trailing' ? 'topbar-nav__icon topbar-nav__icon--trailing' : 'topbar-nav__icon';
+        const itemClasses = [
+          itemClassName,
+          item.variant === 'create' ? `${itemClassName}--create` : null,
+          active ? 'is-active' : null,
+        ]
+          .filter(Boolean)
+          .join(' ');
+
         return (
           <Link
             key={item.key}
             href={item.href}
             aria-current={active ? 'page' : undefined}
-            className={`${itemClassName} ${active ? 'is-active' : ''}`.trim()}
+            aria-label={item.label}
+            className={itemClasses}
           >
-            <span className="topbar-nav__icon" aria-hidden="true">
+            <span className={iconClassName} aria-hidden="true">
               {item.icon}
             </span>
             <span className="topbar-nav__label">{item.label}</span>
@@ -113,6 +148,7 @@ export function WorkspacePrimaryNavMobile() {
     <WorkspacePrimaryNav
       className="topbar-nav topbar-nav--mobile"
       itemClassName="topbar-nav__mobile-item"
+      mobile
     />
   );
 }
