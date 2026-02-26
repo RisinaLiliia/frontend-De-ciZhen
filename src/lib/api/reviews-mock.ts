@@ -5,6 +5,14 @@ type ReviewsQuery = {
   targetRole: 'client' | 'provider';
   limit?: number;
   offset?: number;
+  sort?: 'created_desc' | 'rating_desc';
+};
+
+type MockReviewsPage = {
+  items: ReviewDto[];
+  total: number;
+  limit: number;
+  offset: number;
 };
 
 const AUTHOR_NAMES = [
@@ -93,11 +101,41 @@ function buildMockProviderReviews(providerId: string): ReviewDto[] {
 }
 
 export function listMockReviews(params: ReviewsQuery): ReviewDto[] {
-  if (params.targetRole !== 'provider') return [];
-  const rows = buildMockProviderReviews(params.targetUserId);
+  return listMockReviewsPage(params).items;
+}
+
+function sortMockReviews(rows: ReviewDto[], sort: ReviewsQuery['sort']) {
+  const copy = [...rows];
+  copy.sort((a, b) => {
+    if (sort === 'rating_desc') {
+      const byRating = (Number(b.rating ?? 0) - Number(a.rating ?? 0));
+      if (byRating !== 0) return byRating;
+    }
+    const aTs = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const bTs = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return bTs - aTs;
+  });
+  return copy;
+}
+
+export function listMockReviewsPage(params: ReviewsQuery): MockReviewsPage {
+  if (params.targetRole !== 'provider') {
+    return {
+      items: [],
+      total: 0,
+      limit: Math.max(1, params.limit ?? 20),
+      offset: Math.max(0, params.offset ?? 0),
+    };
+  }
+  const rows = sortMockReviews(buildMockProviderReviews(params.targetUserId), params.sort);
   const offset = Math.max(0, params.offset ?? 0);
   const limit = Math.max(1, params.limit ?? rows.length);
-  return rows.slice(offset, offset + limit);
+  return {
+    items: rows.slice(offset, offset + limit),
+    total: rows.length,
+    limit,
+    offset,
+  };
 }
 
 export function isMockProviderId(targetUserId: string) {

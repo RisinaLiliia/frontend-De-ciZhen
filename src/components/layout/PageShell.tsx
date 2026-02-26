@@ -16,6 +16,7 @@ type Props = {
   showThemeToggle?: boolean;
   showWorkspaceNav?: boolean;
   showBack?: boolean;
+  hideBackOnMobile?: boolean;
   backHref?: string;
   forceBackHref?: boolean;
   withSpacer?: boolean;
@@ -30,6 +31,7 @@ export function PageShell({
   showThemeToggle = true,
   showWorkspaceNav = true,
   showBack = true,
+  hideBackOnMobile = false,
   backHref,
   forceBackHref = false,
   withSpacer = false,
@@ -65,7 +67,12 @@ export function PageShell({
         )}
       >
         {showBack ? (
-          <div className="flex items-center">
+          <div
+            className={cn(
+              'page-shell__back-row flex items-center',
+              hideBackOnMobile ? 'page-shell__back-row--mobile-hidden' : null,
+            )}
+          >
             <BackButton fallbackHref={backHref} forceFallback={forceBackHref} />
           </div>
         ) : null}

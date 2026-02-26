@@ -11,6 +11,7 @@ type Props = {
   trigger: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 };
 
 export function Popover({
@@ -20,8 +21,14 @@ export function Popover({
   trigger,
   children,
   className,
+  disabled = false,
 }: Props) {
   const ref = React.useRef<HTMLDivElement | null>(null);
+  const panelId = React.useId();
+  const toggle = React.useCallback(() => {
+    if (disabled) return;
+    onOpenChange(!open);
+  }, [disabled, onOpenChange, open]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -46,18 +53,26 @@ export function Popover({
   return (
     <div ref={ref} className={cn('dc-popover', className)}>
       <div
-        onClick={() => onOpenChange(!open)}
+        className="dc-popover-trigger"
+        onClick={toggle}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') onOpenChange(!open);
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggle();
+          }
         }}
         role="button"
-        tabIndex={0}
+        tabIndex={disabled ? -1 : 0}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls={panelId}
+        aria-disabled={disabled}
       >
         {trigger}
       </div>
 
       {open ? (
-        <div className="dc-popover-panel" data-align={align} role="dialog" aria-modal="false">
+        <div id={panelId} className="dc-popover-panel" data-align={align} role="dialog" aria-modal="false">
           {children}
         </div>
       ) : null}

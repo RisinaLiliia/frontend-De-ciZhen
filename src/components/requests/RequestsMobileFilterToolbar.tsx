@@ -1,5 +1,6 @@
 import { IconButton } from '@/components/ui/IconButton';
 import { IconFilter, IconSettings } from '@/components/ui/icons/icons';
+import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 
@@ -44,31 +45,18 @@ export function RequestsMobileFilterToolbar({
       </IconButton>
 
       {hasPagination ? (
-        <div className="requests-page-nav" role="group" aria-label={t(I18N_KEYS.requestsPage.paginationMobileLabel)}>
-          <button
-            type="button"
-            className="btn-ghost requests-page-nav__btn"
-            onClick={onPrevPage}
-            disabled={disabled || page <= 1}
-            aria-label={t(I18N_KEYS.requestsPage.paginationPrev)}
-            title={t(I18N_KEYS.requestsPage.paginationPrev)}
-          >
-            ←
-          </button>
-          <span className="requests-page-nav__label">
-            {page}/{Math.max(1, totalPages)}
-          </span>
-          <button
-            type="button"
-            className="btn-ghost requests-page-nav__btn"
-            onClick={onNextPage}
-            disabled={disabled || page >= totalPages}
-            aria-label={t(I18N_KEYS.requestsPage.paginationNext)}
-            title={t(I18N_KEYS.requestsPage.paginationNext)}
-          >
-            →
-          </button>
-        </div>
+        <RequestsPageNav
+          page={page}
+          totalPages={totalPages}
+          disabled={disabled}
+          onPrevPage={onPrevPage}
+          onNextPage={onNextPage}
+          ariaLabel={t(I18N_KEYS.requestsPage.paginationMobileLabel)}
+          prevAriaLabel={t(I18N_KEYS.requestsPage.paginationPrev)}
+          nextAriaLabel={t(I18N_KEYS.requestsPage.paginationNext)}
+          prevTitle={t(I18N_KEYS.requestsPage.paginationPrev)}
+          nextTitle={t(I18N_KEYS.requestsPage.paginationNext)}
+        />
       ) : null}
 
       <IconButton

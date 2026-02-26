@@ -4,7 +4,7 @@ export { RequestDetailHeader } from './RequestDetailHeader';
 export { RequestDetailGallery } from './RequestDetailGallery';
 export { RequestDetailAbout } from './RequestDetailAbout';
 export { RequestDetailClient } from './RequestDetailClient';
-export { RequestDetailAside } from './RequestDetailAside';
+export { RequestDetailAside, RequestDetailMetaRows } from './RequestDetailAside';
 export { RequestDetailSimilar } from './RequestDetailSimilar';
 export { RequestDetailMobileCta } from './RequestDetailMobileCta';
 export { RequestOfferSheet } from './RequestOfferSheet';
