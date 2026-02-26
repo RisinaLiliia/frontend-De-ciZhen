@@ -59,4 +59,52 @@
       0 12px 28px color-mix(in oklab, hsl(var(--primary)) 11%, transparent),
       0 0 0 1px color-mix(in oklab, hsl(var(--border)) 62%, transparent);
   }
+
+  [data-motion-paused='true'],
+  [data-motion-paused='true'] *,
+  [data-motion-paused='true']::before,
+  [data-motion-paused='true']::after,
+  [data-motion-paused='true'] *::before,
+  [data-motion-paused='true'] *::after {
+    animation-play-state: paused !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+      scroll-behavior: auto !important;
+    }
+
+    .skeleton::after,
+    .badge-live,
+    .stat-live,
+    .radar-dot,
+    .hero-experiment__preview-badge,
+    .hero-experiment__trust li::before,
+    .hero-shot__trace,
+    .hero-shot__dribble-mark,
+    .hero-shot__ball-wrap,
+    .hero-shot__ball-phase,
+    .hero-shot__ball-roll,
+    .hero-shot__ball-rebound,
+    .hero-shot__ball-spin,
+    .hero-shot__pulse,
+    .proof-stars,
+    .howitworks-step,
+    .howitworks-steps::before,
+    .nearby-dot,
+    .nearby-dot-item,
+    .provider-status-dot,
+    .home-stats__live-badge,
+    .home-stats__live,
+    .requests-select-icon--city::after,
+    .order-card-link.is-active {
+      animation: none !important;
+    }
+
+    .motion-reduce-transition,
+    .motion-reduce-transition * {
+      transition-duration: 1ms !important;
+      transition-delay: 0ms !important;
+    }
+  }
 }

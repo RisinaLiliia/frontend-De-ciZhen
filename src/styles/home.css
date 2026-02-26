@@ -152,6 +152,9 @@
   .hero-experiment {
     --hero-shot-duration: 3.2s;
     --hero-shot-iterations: infinite;
+    --motion-ease-shot: cubic-bezier(0.33, 0, 0.2, 1);
+    --motion-ease-impact: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --motion-ease-roll: cubic-bezier(0.22, 0.61, 0.36, 1);
     position: relative;
     overflow: hidden;
     display: grid;
@@ -166,9 +169,11 @@
   .home-intro-shell {
     grid-area: top;
     position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: grid;
     gap: var(--space-4);
-    padding: 14px;
+    padding: 16px;
     border-radius: calc(var(--radius-lg) + 2px);
     border: 0;
     background:
@@ -183,13 +188,38 @@
       0 14px 34px color-mix(in oklab, var(--c-primary) 8%, transparent);
   }
 
+  .home-intro-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 11%, transparent), transparent 52%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 16%, transparent),
+        color-mix(in oklab, var(--c-panel) 8%, transparent)
+      );
+    backdrop-filter: blur(10px) saturate(1.05);
+  }
+
+  .home-intro-shell > * {
+    position: relative;
+    z-index: 1;
+  }
+
   .home-intro-shell .hero-experiment {
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
     background: transparent !important;
     background-color: transparent !important;
-    padding: clamp(12px, 1.8vw, 18px);
+    overflow: visible;
+    padding-inline: clamp(12px, 1.8vw, 18px);
+    padding-block: clamp(12px, 1.8vw, 18px);
+    padding-block-start: clamp(18px, 2.4vw, 26px);
   }
 
   .home-intro-shell .home-stats-panel,
@@ -234,6 +264,48 @@
   .hero-experiment--subtle {
     --hero-shot-duration: 3.2s;
     --hero-shot-iterations: infinite;
+    --hero-mobile-phase-duration: var(--hero-shot-duration);
+    --hero-mobile-rebound-duration: var(--hero-shot-duration);
+    --hero-mobile-roll-duration: var(--hero-shot-duration);
+    --hero-mobile-spin-duration: var(--hero-shot-duration);
+    --hero-mobile-phase-ease: var(--motion-ease-shot);
+    --hero-mobile-rebound-ease: var(--motion-ease-impact);
+    --hero-mobile-roll-ease: var(--motion-ease-roll);
+    --hero-mobile-spin-ease: linear;
+    --hero-mobile-x-0: 0px;
+    --hero-mobile-x-1: 22px;
+    --hero-mobile-x-2: 44px;
+    --hero-mobile-x-3: 98px;
+    --hero-mobile-x-4: 166px;
+    --hero-mobile-x-5: 212px;
+    --hero-mobile-x-6: 220px;
+    --hero-mobile-x-7: 228px;
+    --hero-mobile-land-x: 222px;
+    --hero-mobile-y-start: -6px;
+    --hero-mobile-y-bounce-1: 8px;
+    --hero-mobile-y-bounce-2: 10px;
+    --hero-mobile-y-arc: -50px;
+    --hero-mobile-y-peak: -66px;
+    --hero-mobile-y-hoop-entry: -52px;
+    --hero-mobile-y-hoop-mid: -24px;
+    --hero-mobile-y-floor-contact: 4px;
+    --hero-mobile-y-floor: -6px;
+    --hero-mobile-scale-base: 0.88;
+    --hero-mobile-scale-squash-x: 0.98;
+    --hero-mobile-scale-squash-y: 0.78;
+    --hero-mobile-scale-hoop: 0.8;
+    --hero-mobile-scale-impact-x: 0.84;
+    --hero-mobile-scale-impact-y: 0.9;
+    --hero-mobile-scale-rebound-x: 0.9;
+    --hero-mobile-scale-rebound-y: 0.82;
+    --hero-mobile-rebound-one-up: -8px;
+    --hero-mobile-rebound-two-up: -5px;
+    --hero-mobile-roll-step-1: -38px;
+    --hero-mobile-roll-step-2: -78px;
+    --hero-mobile-roll-end: -122px;
+    --hero-mobile-roll-rot-step-1: -90deg;
+    --hero-mobile-roll-rot-step-2: -230deg;
+    --hero-mobile-roll-rot-end: -360deg;
   }
 
   .hero-experiment--showcase {
@@ -256,6 +328,17 @@
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 78%, transparent),
       var(--shadow-card);
+  }
+
+  html:not(.dark) .home-intro-shell::before {
+    background:
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 8%, transparent), transparent 56%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 64%),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 22%, transparent),
+        color-mix(in oklab, var(--c-panel) 14%, transparent)
+      );
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment {
@@ -521,6 +604,9 @@
   }
 
   .hero-shot {
+    --motion-ease-shot: ease-in-out;
+    --motion-ease-impact: ease-in-out;
+    --motion-ease-roll: ease-in-out;
     width: 100%;
     height: auto;
     color: var(--c-hero-shot-stroke);
@@ -541,7 +627,7 @@
     opacity: var(--hero-shot-trace-opacity);
     stroke-dasharray: 430;
     stroke-dashoffset: 430;
-    animation: hero-shot-trace var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
+    animation: hero-shot-trace var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
   }
 
   .hero-shot__hoop {
@@ -580,16 +666,24 @@
   }
 
   .hero-shot__dribble-mark.is-one {
-    animation: hero-shot-dribble-one var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
+    animation: hero-shot-dribble-one var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
   }
 
   .hero-shot__dribble-mark.is-two {
-    animation: hero-shot-dribble-two var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
+    animation: hero-shot-dribble-two var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
   }
 
   .hero-shot__ball-wrap {
     transform-origin: center;
-    animation: hero-shot-ball var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
+    animation: hero-shot-ball var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+  }
+
+  .hero-shot__ball-phase,
+  .hero-shot__ball-roll,
+  .hero-shot__ball-rebound,
+  .hero-shot__ball-spin {
+    transform-box: fill-box;
+    transform-origin: center;
   }
 
   .hero-shot__ball {
@@ -609,7 +703,7 @@
     fill: var(--c-accent);
     opacity: 0;
     transform-origin: center;
-    animation: hero-shot-pulse var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
+    animation: hero-shot-pulse var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
   }
 
   @keyframes hero-trust-pulse {
@@ -754,10 +848,180 @@
     }
   }
 
+  @keyframes hero-shot-trace-mobile {
+    0%,
+    14% {
+      stroke-dashoffset: 430;
+      opacity: 0;
+    }
+    38% {
+      stroke-dashoffset: 430;
+      opacity: 0.2;
+    }
+    62%,
+    80% {
+      stroke-dashoffset: 0;
+      opacity: 0.32;
+    }
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0.24;
+    }
+  }
+
+  @keyframes hero-shot-dribble-one-mobile {
+    0%,
+    12% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    15% {
+      opacity: 0.6;
+      transform: scale(1.25);
+    }
+    100% {
+      opacity: 0.26;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes hero-shot-dribble-two-mobile {
+    0%,
+    32% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    35% {
+      opacity: 0.6;
+      transform: scale(1.25);
+    }
+    100% {
+      opacity: 0.26;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes hero-shot-ball-phase-mobile {
+    0% {
+      transform: translate(var(--hero-mobile-x-0), var(--hero-mobile-y-start)) scale(var(--hero-mobile-scale-base));
+      opacity: 1;
+    }
+    10% {
+      transform: translate(var(--hero-mobile-x-0), var(--hero-mobile-y-bounce-1)) scale(var(--hero-mobile-scale-squash-x), var(--hero-mobile-scale-squash-y));
+    }
+    19% {
+      transform: translate(var(--hero-mobile-x-0), var(--hero-mobile-y-start)) scale(var(--hero-mobile-scale-base));
+    }
+    28% {
+      transform: translate(var(--hero-mobile-x-1), var(--hero-mobile-y-bounce-2)) scale(var(--hero-mobile-scale-squash-x), var(--hero-mobile-scale-squash-y));
+    }
+    38% {
+      transform: translate(var(--hero-mobile-x-2), var(--hero-mobile-y-start)) scale(var(--hero-mobile-scale-base));
+    }
+    50% {
+      transform: translate(var(--hero-mobile-x-3), var(--hero-mobile-y-arc)) scale(var(--hero-mobile-scale-base));
+    }
+    59% {
+      transform: translate(var(--hero-mobile-x-4), var(--hero-mobile-y-peak)) scale(var(--hero-mobile-scale-base));
+      opacity: 1;
+    }
+    66% {
+      transform: translate(var(--hero-mobile-x-5), var(--hero-mobile-y-hoop-entry)) scale(var(--hero-mobile-scale-hoop));
+      opacity: 1;
+    }
+    70% {
+      transform: translate(var(--hero-mobile-x-6), var(--hero-mobile-y-hoop-mid)) scale(var(--hero-mobile-scale-hoop));
+      opacity: 1;
+    }
+    72% {
+      transform: translate(var(--hero-mobile-x-7), var(--hero-mobile-y-floor-contact)) scale(var(--hero-mobile-scale-impact-x), var(--hero-mobile-scale-impact-y));
+      opacity: 1;
+    }
+    75% {
+      transform: translate(var(--hero-mobile-land-x), var(--hero-mobile-y-floor)) scale(var(--hero-mobile-scale-base));
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--hero-mobile-land-x), var(--hero-mobile-y-floor)) scale(var(--hero-mobile-scale-base));
+      opacity: 1;
+    }
+  }
+
+  @keyframes hero-shot-ball-rebound-mobile {
+    0%,
+    75% {
+      transform: translateY(0px) scale(1);
+    }
+    78% {
+      transform: translateY(var(--hero-mobile-rebound-one-up)) scale(1);
+    }
+    81% {
+      transform: translateY(0px) scale(var(--hero-mobile-scale-rebound-x), var(--hero-mobile-scale-rebound-y));
+    }
+    83% {
+      transform: translateY(var(--hero-mobile-rebound-two-up)) scale(1);
+    }
+    84% {
+      transform: translateY(0px) scale(var(--hero-mobile-scale-rebound-x), var(--hero-mobile-scale-rebound-y));
+    }
+    100% {
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes hero-shot-ball-roll-mobile {
+    0%,
+    75% {
+      transform: translateX(0px);
+    }
+    85% {
+      transform: translateX(var(--hero-mobile-roll-step-1));
+    }
+    93% {
+      transform: translateX(var(--hero-mobile-roll-step-2));
+    }
+    100% {
+      transform: translateX(var(--hero-mobile-roll-end));
+    }
+  }
+
+  @keyframes hero-shot-ball-roll-spin-mobile {
+    0%,
+    75% {
+      transform: rotate(0deg);
+    }
+    85% {
+      transform: rotate(var(--hero-mobile-roll-rot-step-1));
+    }
+    93% {
+      transform: rotate(var(--hero-mobile-roll-rot-step-2));
+    }
+    100% {
+      transform: rotate(var(--hero-mobile-roll-rot-end));
+      opacity: 1;
+    }
+  }
+
+  @keyframes hero-shot-pulse-mobile {
+    0%,
+    70% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    80% {
+      opacity: 0.45;
+      transform: scale(1.8);
+    }
+    100% {
+      opacity: 0.22;
+      transform: scale(1.25);
+    }
+  }
+
   @media (max-width: 900px) {
     .home-intro-shell {
       gap: 10px;
-      padding: 10px;
+      padding: 12px;
     }
 
     .hero-experiment {
@@ -814,11 +1078,55 @@
   @media (max-width: 640px) {
     .home-intro-shell {
       gap: 8px;
-      padding: 8px;
+      padding: 10px;
     }
 
     .hero-experiment--subtle {
       --hero-shot-iterations: 1;
+      --hero-shot-duration: 4s;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__trace {
+      animation-name: hero-shot-trace-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__dribble-mark.is-one {
+      animation-name: hero-shot-dribble-one-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__dribble-mark.is-two {
+      animation-name: hero-shot-dribble-two-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-wrap {
+      animation: none;
+      transform: none;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-phase {
+      animation: hero-shot-ball-phase-mobile var(--hero-mobile-phase-duration) var(--hero-mobile-phase-ease) 1 forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-rebound {
+      animation: none;
+      transform: none;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-roll {
+      animation: hero-shot-ball-roll-mobile var(--hero-mobile-roll-duration) var(--hero-mobile-roll-ease) 1 forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-spin {
+      animation: hero-shot-ball-roll-spin-mobile var(--hero-mobile-spin-duration) var(--hero-mobile-spin-ease) 1 forwards;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__pulse {
+      animation-name: hero-shot-pulse-mobile;
+      animation-fill-mode: forwards;
     }
 
     .home-quick-search__header {
@@ -875,7 +1183,10 @@
     .hero-shot__trace,
     .hero-shot__dribble-mark,
     .hero-shot__ball-wrap,
-    .hero-shot__ball,
+    .hero-shot__ball-phase,
+    .hero-shot__ball-roll,
+    .hero-shot__ball-rebound,
+    .hero-shot__ball-spin,
     .hero-shot__pulse {
       animation: none;
     }

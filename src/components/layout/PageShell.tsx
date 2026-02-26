@@ -7,6 +7,7 @@ import { WorkspacePrimaryNavDesktop, WorkspacePrimaryNavMobile } from '@/compone
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { cn } from '@/lib/utils/cn';
+import { useInfiniteMotionController } from '@/hooks/useInfiniteMotionController';
 
 type Props = {
   title?: string;
@@ -35,6 +36,8 @@ export function PageShell({
   mainClassName,
   children,
 }: Props) {
+  useInfiniteMotionController();
+
   const hasWorkspaceNav = showWorkspaceNav;
 
   const headerRight =
@@ -47,7 +50,7 @@ export function PageShell({
     ) : null;
 
   return (
-    <div className={cn('min-h-dvh page-shell', hasWorkspaceNav ? 'page-shell--with-mobile-nav' : null)}>
+    <div className={cn('min-h-dvh page-shell motion-reduce-transition', hasWorkspaceNav ? 'page-shell--with-mobile-nav' : null)}>
       <TopBar
         title={title}
         center={hasWorkspaceNav ? <WorkspacePrimaryNavDesktop /> : null}
