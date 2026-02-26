@@ -33,12 +33,18 @@ export function HomeHeroShot({ className, preserveAspectRatio, variant = 'defaul
       </g>
 
       <g className="hero-shot__ball-wrap">
-        <g className="hero-shot__ball-spin">
-          <circle className="hero-shot__ball" cx={isTrust ? 60 : 48} cy={isTrust ? 154 : 134} r={isTrust ? 22 : 22} />
-          <path className="hero-shot__ball-line" d={isTrust ? 'M38 154 H82' : 'M26 134 H70'} />
-          <path className="hero-shot__ball-line" d={isTrust ? 'M60 132 V176' : 'M48 112 V156'} />
-          <path className="hero-shot__ball-line" d={isTrust ? 'M45 138 C 56 150, 56 158, 45 170' : 'M33 118 C 44 130, 44 138, 33 150'} />
-          <path className="hero-shot__ball-line" d={isTrust ? 'M75 138 C 64 150, 64 158, 75 170' : 'M63 118 C 52 130, 52 138, 63 150'} />
+        <g className="hero-shot__ball-phase">
+          <g className="hero-shot__ball-roll">
+            <g className="hero-shot__ball-rebound">
+              <g className="hero-shot__ball-spin">
+                <circle className="hero-shot__ball" cx={isTrust ? 60 : 48} cy={isTrust ? 154 : 134} r={isTrust ? 22 : 22} />
+                <path className="hero-shot__ball-line" d={isTrust ? 'M38 154 H82' : 'M26 134 H70'} />
+                <path className="hero-shot__ball-line" d={isTrust ? 'M60 132 V176' : 'M48 112 V156'} />
+                <path className="hero-shot__ball-line" d={isTrust ? 'M45 138 C 56 150, 56 158, 45 170' : 'M33 118 C 44 130, 44 138, 33 150'} />
+                <path className="hero-shot__ball-line" d={isTrust ? 'M75 138 C 64 150, 64 158, 75 170' : 'M63 118 C 52 130, 52 138, 63 150'} />
+              </g>
+            </g>
+          </g>
         </g>
       </g>
 

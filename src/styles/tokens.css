@@ -20,4 +20,9 @@
   --font-sans: Inter, system-ui, sans-serif;
   --transition-fast: 150ms;
   --transition: 220ms;
+  --motion-fast: 120ms;
+  --motion-base: 180ms;
+  --motion-slow: 260ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
 }
