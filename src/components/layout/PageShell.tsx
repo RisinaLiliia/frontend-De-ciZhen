@@ -3,6 +3,7 @@
 
 import { TopBar } from '@/components/layout/TopBar';
 import { BackButton } from '@/components/layout/BackButton';
+import { WorkspacePrimaryNavDesktop, WorkspacePrimaryNavMobile } from '@/components/layout/WorkspacePrimaryNav';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { cn } from '@/lib/utils/cn';
@@ -12,6 +13,7 @@ type Props = {
   right?: React.ReactNode;
   showLanguageToggle?: boolean;
   showThemeToggle?: boolean;
+  showWorkspaceNav?: boolean;
   showBack?: boolean;
   backHref?: string;
   forceBackHref?: boolean;
@@ -25,6 +27,7 @@ export function PageShell({
   right,
   showLanguageToggle = true,
   showThemeToggle = true,
+  showWorkspaceNav = true,
   showBack = true,
   backHref,
   forceBackHref = false,
@@ -32,6 +35,8 @@ export function PageShell({
   mainClassName,
   children,
 }: Props) {
+  const hasWorkspaceNav = showWorkspaceNav;
+
   const headerRight =
     showLanguageToggle || showThemeToggle || right ? (
       <div className="page-shell__topbar-actions flex items-center gap-2">
@@ -42,12 +47,17 @@ export function PageShell({
     ) : null;
 
   return (
-    <div className="min-h-dvh">
-      <TopBar title={title} right={headerRight} />
+    <div className={cn('min-h-dvh page-shell', hasWorkspaceNav ? 'page-shell--with-mobile-nav' : null)}>
+      <TopBar
+        title={title}
+        center={hasWorkspaceNav ? <WorkspacePrimaryNavDesktop /> : null}
+        right={headerRight}
+      />
 
       <main
         className={cn(
           'container-mobile min-h-[calc(100dvh-56px)] py-8 flex flex-col',
+          hasWorkspaceNav ? 'page-shell__main--with-mobile-nav' : null,
           mainClassName,
         )}
       >
@@ -59,6 +69,8 @@ export function PageShell({
         {children}
         {withSpacer ? <div className="flex-1" /> : null}
       </main>
+
+      {hasWorkspaceNav ? <WorkspacePrimaryNavMobile /> : null}
     </div>
   );
 }

@@ -5,12 +5,13 @@ import Image from 'next/image';
 type Props = {
   title?: string;
   left?: React.ReactNode;
+  center?: React.ReactNode;
   right?: React.ReactNode;
 };
 
-export function TopBar({ title, left, right }: Props) {
+export function TopBar({ title, left, center, right }: Props) {
   return (
-    <header className="topbar">
+    <header className={`topbar ${center ? 'topbar--with-center' : ''}`.trim()}>
       <div className="topbar__left flex items-center gap-2 min-w-0">
         {left}
         {title ? (
@@ -23,6 +24,7 @@ export function TopBar({ title, left, right }: Props) {
         )}
       </div>
 
+      {center ? <div className="topbar__center">{center}</div> : null}
       <div className="topbar__right">{right}</div>
     </header>
   );
