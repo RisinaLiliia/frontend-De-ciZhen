@@ -38,7 +38,7 @@ export function HomeOrdersExplorePanel({
         contentType={contentType}
         showBack={showBack}
         backHref={backHref}
-        emptyCtaHref={contentType === 'providers' ? '/?view=orders&section=providers' : '/?view=orders&section=orders'}
+        emptyCtaHref={contentType === 'providers' ? '/workspace?section=providers' : '/workspace?section=orders'}
         onListDensityChange={onListDensityChange}
       />
     </section>

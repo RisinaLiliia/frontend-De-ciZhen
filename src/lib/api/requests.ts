@@ -46,6 +46,10 @@ export type PublicRequestsFilter = {
 
 type RequestsMockMode = 'off' | 'only' | 'merge';
 
+function isMockRequestId(requestId: string) {
+  return requestId.trim().startsWith('mock-request-');
+}
+
 function readMockMode(): RequestsMockMode {
   const explicit = (process.env.NEXT_PUBLIC_REQUESTS_MOCK_MODE ?? '').toLowerCase();
   if (explicit === 'off' || explicit === 'only' || explicit === 'merge') return explicit;
@@ -166,7 +170,9 @@ export async function listPublicRequests(filter: PublicRequestsFilter = {}) {
 
 export function getPublicRequestById(requestId: string, options?: { locale?: string }) {
   const mode = readMockMode();
-  if (mode === 'only') {
+  const isMockId = isMockRequestId(requestId);
+
+  if (mode === 'only' || isMockId) {
     return getMockPublicRequestById(requestId, options?.locale).then((item) => {
       if (item) return item;
       throw new ApiError('Request not found', 404);

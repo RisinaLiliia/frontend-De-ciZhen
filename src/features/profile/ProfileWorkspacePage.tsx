@@ -286,9 +286,9 @@ export default function ProfileWorkspacePage() {
   };
 
   const overview = [
-    { label: 'Meine Anfragen', value: myRequests.length, href: '/orders?tab=my-requests' },
-    { label: 'Meine Angebote', value: offersTotal, href: '/orders?tab=my-offers' },
-    { label: 'Vertraege', value: contracts.length, href: '/orders?tab=completed-jobs' },
+    { label: 'Meine Anfragen', value: myRequests.length, href: '/workspace?tab=my-requests' },
+    { label: 'Meine Angebote', value: offersTotal, href: '/workspace?tab=my-offers' },
+    { label: 'Vertraege', value: contracts.length, href: '/workspace?tab=completed-jobs' },
     { label: 'Posteingang', value: unreadTotal, href: '/chat' },
   ];
 
@@ -743,7 +743,7 @@ export default function ProfileWorkspacePage() {
             </Link>
           ))}
         </div>
-        <Link href="/orders?tab=new-orders" prefetch={false} className="btn-primary w-fit" onClick={guardNavigation}>
+        <Link href="/workspace?tab=new-orders" prefetch={false} className="btn-primary w-fit" onClick={guardNavigation}>
           Profil vervollstaendigen
         </Link>
       </section>

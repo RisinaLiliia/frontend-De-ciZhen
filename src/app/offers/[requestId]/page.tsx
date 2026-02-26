@@ -47,7 +47,7 @@ export default function OffersPage() {
       toast.success(t(I18N_KEYS.offers.accepted));
       await qc.invalidateQueries({ queryKey: ['offers', requestId] });
       await qc.invalidateQueries({ queryKey: ['client-contracts'] });
-      router.push('/orders?tab=completed-jobs');
+      router.push('/workspace?tab=completed-jobs');
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
@@ -82,7 +82,7 @@ export default function OffersPage() {
             emptyTitle={t(I18N_KEYS.offers.empty)}
             emptyHint={t(I18N_KEYS.offers.subtitle)}
             emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
-            emptyCtaHref="/orders?tab=new-orders"
+            emptyCtaHref="/workspace?tab=new-orders"
           >
           {(data ?? []).map((item) => {
             const displayName = item.providerDisplayName || t(I18N_KEYS.offers.unnamed);

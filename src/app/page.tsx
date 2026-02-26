@@ -53,8 +53,10 @@ export default function HomePage() {
   const [resolvedCityId, setResolvedCityId] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('');
   const [exploreListDensity, setExploreListDensity] = React.useState<'single' | 'double'>('single');
-  const isOrdersExploreView = searchParams.get('view') === 'orders';
-  const exploreSection = searchParams.get('section') === 'providers' ? 'providers' : 'orders';
+  const sectionParam = searchParams.get('section');
+  const isOrdersExploreView =
+    searchParams.get('view') === 'orders' || sectionParam === 'orders' || sectionParam === 'providers';
+  const exploreSection = sectionParam === 'providers' ? 'providers' : 'orders';
   const heroAnchorRef = React.useRef<HTMLElement | null>(null);
   const listingAnchorRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -150,7 +152,7 @@ export default function HomePage() {
     () => [
       {
         key: 'orders',
-        href: '/?view=orders&section=orders',
+        href: '/workspace?section=orders',
         label: t(I18N_KEYS.homePublic.exploreAllOrders),
         icon: <IconBriefcase />,
         value: formatNumber.format(stats.active),
@@ -159,7 +161,7 @@ export default function HomePage() {
       },
       {
         key: 'my-orders',
-        href: '/?view=orders&section=providers',
+        href: '/workspace?section=providers',
         label: t(I18N_KEYS.homePublic.exploreAllProviders),
         icon: <IconBriefcase />,
         value: formatNumber.format(publicProviders.length),
@@ -373,7 +375,7 @@ export default function HomePage() {
                 {exploreSection === 'providers' ? (
                   <HomeNearbyPanel
                     t={t}
-                    viewAllHref="/?view=orders&section=orders"
+                    viewAllHref="/workspace?section=orders"
                     itemsLimit={exploreSidebarNearbyLimit}
                     visibleRows={exploreSidebarNearbyLimit}
                   />
@@ -400,7 +402,7 @@ export default function HomePage() {
 
             <section className="home-combined-top">
               <div className="home-combined-top__left stack-md">
-                <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} ordersHref="/?view=orders" />
+                <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} ordersHref="/workspace?section=orders" />
                 <HomeQuickSearchPanel
                   t={t}
                   locale={locale}
@@ -438,9 +440,9 @@ export default function HomePage() {
                   t={t}
                   services={services}
                   categoryCounts={categoryCounts}
-                  viewAllHref="/?view=orders"
+                  viewAllHref="/workspace?section=orders"
                 />
-                <HomeNearbyPanel t={t} viewAllHref="/?view=orders" />
+                <HomeNearbyPanel t={t} viewAllHref="/workspace?section=orders" />
               </>
             </div>
             <div className="home-combined__right">
