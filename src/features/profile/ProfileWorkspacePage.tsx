@@ -36,6 +36,11 @@ export default function ProfileWorkspacePage() {
   const setMe = useAuthStore((s) => s.setMe);
   const { locale, setLocale } = useI18n();
   const { resolvedTheme, setTheme } = useTheme();
+  const [isThemeReady, setIsThemeReady] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsThemeReady(true);
+  }, []);
 
   const [isSavingProfile, setIsSavingProfile] = React.useState(false);
   const [isProfileEditing, setIsProfileEditing] = React.useState(false);
@@ -192,6 +197,7 @@ export default function ProfileWorkspacePage() {
     const done = checks.filter(Boolean).length;
     return Math.round((done / checks.length) * 100);
   }, [authMe?.bio, authMe?.city, authMe?.name, authMe?.phone, avatarUrl]);
+  const effectiveTheme = isThemeReady ? resolvedTheme : 'dark';
 
   const handleSaveProfile = async () => {
     const name = profileForm.name.trim();
@@ -679,14 +685,14 @@ export default function ProfileWorkspacePage() {
             <div className="profile-settings__choices">
               <button
                 type="button"
-                className={`profile-settings__choice ${resolvedTheme === 'light' ? 'is-active' : ''}`.trim()}
+                className={`profile-settings__choice ${effectiveTheme === 'light' ? 'is-active' : ''}`.trim()}
                 onClick={() => setTheme('light')}
               >
                 Light
               </button>
               <button
                 type="button"
-                className={`profile-settings__choice ${resolvedTheme === 'dark' ? 'is-active' : ''}`.trim()}
+                className={`profile-settings__choice ${effectiveTheme === 'dark' ? 'is-active' : ''}`.trim()}
                 onClick={() => setTheme('dark')}
               >
                 Dark

@@ -1,6 +1,7 @@
 // src/components/ui/ThemeToggle.tsx
 "use client";
 
+import * as React from "react";
 import { useTheme } from "next-themes";
 import { useT } from "@/lib/i18n/useT";
 import { I18N_KEYS } from "@/lib/i18n/keys";
@@ -10,7 +11,14 @@ import { IconMoon, IconSun } from "@/components/ui/icons/icons";
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const t = useT();
-  const next = resolvedTheme === "dark" ? "light" : "dark";
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = (mounted ? resolvedTheme : "dark") === "dark";
+  const next = isDark ? "light" : "dark";
 
   return (
     <IconButton
@@ -18,7 +26,7 @@ export function ThemeToggle() {
       onClick={() => setTheme(next)}
       className="h-9 w-9"
     >
-      {resolvedTheme === "dark" ? <IconMoon /> : <IconSun />}
+      {isDark ? <IconMoon /> : <IconSun />}
     </IconButton>
   );
 }
