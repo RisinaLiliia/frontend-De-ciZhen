@@ -8,7 +8,7 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { IconButton } from '@/components/ui/IconButton';
 import { IconLogin, IconLogout, IconUserPlus } from '@/components/ui/icons/icons';
-import { DEFAULT_PUBLIC_REQUESTS_URL } from '@/features/auth/constants';
+import { DEFAULT_PUBLIC_WORKSPACE_URL } from '@/features/auth/constants';
 
 export function AuthActions() {
   const t = useT();
@@ -26,10 +26,10 @@ export function AuthActions() {
   const onLogout = React.useCallback(async () => {
     await logout();
     if (typeof window !== 'undefined') {
-      window.location.assign(DEFAULT_PUBLIC_REQUESTS_URL);
+      window.location.assign(DEFAULT_PUBLIC_WORKSPACE_URL);
       return;
     }
-    router.replace(DEFAULT_PUBLIC_REQUESTS_URL);
+    router.replace(DEFAULT_PUBLIC_WORKSPACE_URL);
   }, [logout, router]);
 
   if (status === 'idle' || status === 'loading') return null;

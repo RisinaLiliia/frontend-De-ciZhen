@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
-import { DEFAULT_PUBLIC_REQUESTS_URL } from '@/features/auth/constants';
+import { DEFAULT_PUBLIC_WORKSPACE_URL } from '@/features/auth/constants';
 
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -13,7 +13,7 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (status === 'unauthenticated') {
-      router.replace(DEFAULT_PUBLIC_REQUESTS_URL);
+      router.replace(DEFAULT_PUBLIC_WORKSPACE_URL);
     }
   }, [status, router]);
 

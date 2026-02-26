@@ -18,37 +18,37 @@ export const HOME_SERVICES: Array<{
 }> = [
   {
     key: 'cleaning',
-    href: '/requests',
+    href: '/workspace?section=orders',
     labelKey: I18N_KEYS.homePublic.serviceCleaning,
     imageSrc: '/Reinigung im modernen Wohnzimmer.jpg',
   },
   {
     key: 'electric',
-    href: '/requests',
+    href: '/workspace?section=orders',
     labelKey: I18N_KEYS.homePublic.serviceElectric,
     imageSrc: '/Elektriker bei der Arbeit an Schaltschrank.jpg',
   },
   {
     key: 'plumbing',
-    href: '/requests',
+    href: '/workspace?section=orders',
     labelKey: I18N_KEYS.homePublic.servicePlumbing,
     imageSrc: '/Freundlicher Klempner bei der Arbeit.jpg',
   },
   {
     key: 'repair',
-    href: '/requests',
+    href: '/workspace?section=orders',
     labelKey: I18N_KEYS.homePublic.serviceRepair,
     imageSrc: '/Techniker repariert Smartphone in Werkstatt.jpg',
   },
   {
     key: 'moving',
-    href: '/requests',
+    href: '/workspace?section=orders',
     labelKey: I18N_KEYS.homePublic.serviceMoving,
     imageSrc: '/L%C3%A4dt%20Kisten%20aus%20einem%20Transporter.jpg',
   },
   {
     key: 'assembly',
-    href: '/requests',
+    href: '/workspace?section=orders',
     labelKey: I18N_KEYS.homePublic.serviceAssembly,
     imageSrc: '/Techniker repariert Smartphone in Werkstatt.jpg',
   },

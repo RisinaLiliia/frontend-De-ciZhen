@@ -1,5 +1,4 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 
 function decodeJwtPayload(token: string): Record<string, unknown> | null {
   try {
@@ -29,32 +28,39 @@ function hasRefreshSession(req: NextRequest): boolean {
   return exp > nowSec && sub.length > 0 && sessionId.length > 0;
 }
 
-function hasAuthHint(req: NextRequest): boolean {
-  return req.cookies.get('dc_auth_session_hint')?.value === '1';
-}
-
 export function proxy(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
   const isAuthenticated = hasRefreshSession(req);
-  const hasHint = hasAuthHint(req);
 
-  if (pathname.startsWith('/orders')) {
+  if (pathname === '/workspace') {
+    const tab = req.nextUrl.searchParams.get('tab');
+    const sectionRaw = req.nextUrl.searchParams.get('section');
+    const section = sectionRaw === 'providers' ? 'providers' : 'orders';
+
     if (!isAuthenticated) {
-      const url = new URL('/auth/login', req.url);
-      url.searchParams.set('next', `${pathname}${search}`);
+      if (tab) {
+        const login = new URL('/auth/login', req.url);
+        login.searchParams.set('next', `${pathname}${search}`);
+        return NextResponse.redirect(login);
+      }
+      const preview = new URL('/', req.url);
+      preview.searchParams.set('view', 'orders');
+      preview.searchParams.set('section', section);
+      return NextResponse.rewrite(preview);
+    }
+
+    if (!tab) {
+      const url = new URL('/workspace', req.url);
+      url.searchParams.set('tab', 'new-orders');
       return NextResponse.redirect(url);
     }
-    return NextResponse.next();
-  }
 
-  if (pathname === '/requests' && isAuthenticated && hasHint) {
-    const url = new URL(DEFAULT_AUTH_NEXT, req.url);
-    return NextResponse.redirect(url);
+    return NextResponse.next();
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/orders', '/orders/:path*', '/requests'],
+  matcher: ['/workspace', '/workspace/:path*'],
 };

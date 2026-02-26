@@ -12,12 +12,12 @@ export function HomeHero({ t }: HomeHeroProps) {
   const heroTitle = t(I18N_KEYS.homePublic.title).replace(' in 2 Minuten', '\nin 2 Minuten');
   const ctas = [
     {
-      href: '/requests',
+      href: '/workspace?section=orders',
       label: t(I18N_KEYS.homePublic.findSpecialist),
       variant: 'secondary' as const,
     },
     {
-      href: '/requests',
+      href: '/workspace?section=orders',
       label: t(I18N_KEYS.homePublic.findJob),
       variant: 'primary' as const,
     },

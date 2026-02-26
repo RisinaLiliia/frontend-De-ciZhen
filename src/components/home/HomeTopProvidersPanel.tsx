@@ -164,7 +164,7 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
       title={t(I18N_KEYS.homePublic.topProviders)}
       subtitle={t(I18N_KEYS.homePublic.topProvidersSubtitle)}
       ctaLabel={t(I18N_KEYS.homePublic.topProvidersCta)}
-      ctaHref="/requests"
+      ctaHref="/workspace?section=providers"
       providers={mappedProviders}
       favoriteProviderIds={favoriteProviderIds}
       onToggleFavorite={(providerId) => {

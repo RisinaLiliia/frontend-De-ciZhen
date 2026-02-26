@@ -146,7 +146,7 @@ export function useRequestsPageViewModel(params: Input) {
       setStatusFilter: params.setStatusFilter,
       filtersProps,
       hasActivePublicFilter: params.hasActivePublicFilter,
-      newOrdersResetHref: '/orders?tab=new-orders',
+      newOrdersResetHref: '/workspace?tab=new-orders',
       newOrdersState: {
         isLoading: params.isLoading,
         isError: params.isError,
@@ -290,7 +290,7 @@ export function useRequestsPageViewModel(params: Input) {
       isError: params.isError,
       requestsCount: params.requestsCount,
       hasActivePublicFilter: params.hasActivePublicFilter,
-      emptyCtaHref: '/requests',
+      emptyCtaHref: '/workspace?section=orders',
       requestsListProps: {
         t: params.t,
         locale: params.locale,

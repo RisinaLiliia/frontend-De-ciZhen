@@ -19,7 +19,7 @@ type HomeStatsPanelProps = {
   ordersHref?: string;
 };
 
-export function HomeStatsPanel({ t, stats, formatNumber, ordersHref = '/orders?tab=new-orders' }: HomeStatsPanelProps) {
+export function HomeStatsPanel({ t, stats, formatNumber, ordersHref = '/workspace?section=orders' }: HomeStatsPanelProps) {
   return (
     <Card className="home-stats-panel">
       <CardHeader className="home-stats__header">
@@ -37,7 +37,7 @@ export function HomeStatsPanel({ t, stats, formatNumber, ordersHref = '/orders?t
           </div>
           <span className="home-stats__label">{t(I18N_KEYS.homePublic.statActive)}</span>
         </Link>
-        <Link href="/requests" prefetch={false} className="home-stats__link home-stats__card">
+        <Link href={ordersHref} prefetch={false} className="home-stats__link home-stats__card">
           <div className="flex items-center gap-2">
             <span className="home-stats__icon">
               <IconCoins className="h-3.5 w-3.5" />
@@ -57,7 +57,7 @@ export function HomeStatsPanel({ t, stats, formatNumber, ordersHref = '/orders?t
           </div>
           <span className="home-stats__label">{t(I18N_KEYS.homePublic.statResponse)}</span>
         </div>
-        <Link href="/requests" prefetch={false} className="home-stats__link home-stats__card">
+        <Link href={ordersHref} prefetch={false} className="home-stats__link home-stats__card">
           <div className="flex items-center gap-2">
             <span className="home-stats__icon">
               <IconStar className="h-3.5 w-3.5" />
