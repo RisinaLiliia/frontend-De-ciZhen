@@ -12,7 +12,7 @@ export function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <PageShell right={null} showBack={false} mainClassName="auth-shell-main">
+    <PageShell right={null} showBack={false} showWorkspaceNav={false} mainClassName="auth-shell-main">
       <div className="auth-shell">
         <section className="card stack-lg auth-shell__dialog">
           <header className="text-center stack-sm auth-shell__header">

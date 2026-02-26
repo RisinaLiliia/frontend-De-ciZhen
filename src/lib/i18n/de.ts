@@ -647,7 +647,10 @@ export const de = {
     roleClient: 'Ich suche einen Service',
     roleProvider: 'Ich biete Services an',
     logoutLabel: 'Abmelden',
+    ordersLabel: 'Aufträge',
     profileLabel: 'Profil',
+    workspaceLabel: 'Workspace',
+    navigationLabel: 'Hauptnavigation',
   },
   landing: {
     title: 'Die Entscheidung für dein Zuhause',

@@ -647,7 +647,10 @@ export const en: DeDictionary = {
     roleClient: 'I need a service',
     roleProvider: 'I provide services',
     logoutLabel: 'Log out',
+    ordersLabel: 'Orders',
     profileLabel: 'Profile',
+    workspaceLabel: 'Workspace',
+    navigationLabel: 'Main navigation',
   },
   landing: {
     title: 'Decision made for your home',

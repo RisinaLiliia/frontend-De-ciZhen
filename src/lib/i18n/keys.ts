@@ -680,7 +680,10 @@ export const I18N_KEYS = {
     roleClient: 'auth.roleClient',
     roleProvider: 'auth.roleProvider',
     logoutLabel: 'auth.logoutLabel',
+    ordersLabel: 'auth.ordersLabel',
     profileLabel: 'auth.profileLabel',
+    workspaceLabel: 'auth.workspaceLabel',
+    navigationLabel: 'auth.navigationLabel',
   },
   landing: {
     title: 'landing.title',

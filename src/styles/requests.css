@@ -1148,10 +1148,11 @@
 
   .workspace-mobile-action {
     position: sticky;
-    bottom: 0;
+    bottom: var(--shell-mobile-nav-height, 0px);
     z-index: 30;
     margin-top: var(--space-3);
-    padding: var(--space-2-5) 0 calc(var(--space-2-5) + env(safe-area-inset-bottom));
+    padding: var(--space-2-5) 0
+      calc(var(--space-2-5) + env(safe-area-inset-bottom) + var(--shell-mobile-nav-height, 0px));
     background: linear-gradient(
       180deg,
       transparent 0%,
@@ -1917,7 +1918,7 @@
       position: fixed;
       left: 0;
       right: 0;
-      bottom: 12px;
+      bottom: calc(12px + var(--shell-mobile-nav-height, 0px));
       display: grid;
       gap: var(--space-2);
       padding: var(--space-3) var(--space-4);
