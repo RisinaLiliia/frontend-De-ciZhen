@@ -166,9 +166,11 @@
   .home-intro-shell {
     grid-area: top;
     position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: grid;
     gap: var(--space-4);
-    padding: 14px;
+    padding: 16px;
     border-radius: calc(var(--radius-lg) + 2px);
     border: 0;
     background:
@@ -183,13 +185,38 @@
       0 14px 34px color-mix(in oklab, var(--c-primary) 8%, transparent);
   }
 
+  .home-intro-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 11%, transparent), transparent 52%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 16%, transparent),
+        color-mix(in oklab, var(--c-panel) 8%, transparent)
+      );
+    backdrop-filter: blur(10px) saturate(1.05);
+  }
+
+  .home-intro-shell > * {
+    position: relative;
+    z-index: 1;
+  }
+
   .home-intro-shell .hero-experiment {
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
     background: transparent !important;
     background-color: transparent !important;
-    padding: clamp(12px, 1.8vw, 18px);
+    overflow: visible;
+    padding-inline: clamp(12px, 1.8vw, 18px);
+    padding-block: clamp(12px, 1.8vw, 18px);
+    padding-block-start: clamp(18px, 2.4vw, 26px);
   }
 
   .home-intro-shell .home-stats-panel,
@@ -256,6 +283,17 @@
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 78%, transparent),
       var(--shadow-card);
+  }
+
+  html:not(.dark) .home-intro-shell::before {
+    background:
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 8%, transparent), transparent 56%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 64%),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 22%, transparent),
+        color-mix(in oklab, var(--c-panel) 14%, transparent)
+      );
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment {
@@ -592,6 +630,11 @@
     animation: hero-shot-ball var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
   }
 
+  .hero-shot__ball-spin {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
   .hero-shot__ball {
     fill: var(--c-hero-shot-ball-fill);
     stroke: var(--c-hero-shot-ball-stroke);
@@ -754,10 +797,161 @@
     }
   }
 
+  @keyframes hero-shot-trace-mobile {
+    0%,
+    14% {
+      stroke-dashoffset: 430;
+      opacity: 0;
+    }
+    38% {
+      stroke-dashoffset: 430;
+      opacity: 0.2;
+    }
+    62%,
+    80% {
+      stroke-dashoffset: 0;
+      opacity: 0.32;
+    }
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0.24;
+    }
+  }
+
+  @keyframes hero-shot-dribble-one-mobile {
+    0%,
+    12% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    15% {
+      opacity: 0.6;
+      transform: scale(1.25);
+    }
+    100% {
+      opacity: 0.26;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes hero-shot-dribble-two-mobile {
+    0%,
+    32% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    35% {
+      opacity: 0.6;
+      transform: scale(1.25);
+    }
+    100% {
+      opacity: 0.26;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes hero-shot-ball-hero-mobile {
+    0% {
+      transform: translate(0px, -6px) scale(0.88);
+      opacity: 1;
+    }
+    10% {
+      transform: translate(0px, 8px) scale(0.98, 0.78);
+    }
+    19% {
+      transform: translate(0px, -6px) scale(0.88);
+    }
+    28% {
+      transform: translate(22px, 10px) scale(0.98, 0.78);
+    }
+    38% {
+      transform: translate(44px, -6px) scale(0.88);
+    }
+    50% {
+      transform: translate(98px, -50px) scale(0.88);
+    }
+    59% {
+      transform: translate(166px, -66px) scale(0.88);
+      opacity: 1;
+    }
+    66% {
+      transform: translate(212px, -52px) scale(0.8);
+      opacity: 1;
+    }
+    70% {
+      transform: translate(220px, -24px) scale(0.8);
+      opacity: 1;
+    }
+    72% {
+      transform: translate(228px, 4px) scale(0.84, 0.9);
+      opacity: 1;
+    }
+    75% {
+      transform: translate(222px, -14px) scale(0.88);
+      opacity: 1;
+    }
+    78% {
+      transform: translate(216px, -6px) scale(0.9, 0.82);
+      opacity: 1;
+    }
+    81% {
+      transform: translate(212px, -11px) scale(0.88);
+      opacity: 1;
+    }
+    84% {
+      transform: translate(208px, -6px) scale(0.9, 0.82);
+      opacity: 1;
+    }
+    89% {
+      transform: translate(184px, -6px) scale(0.88);
+      opacity: 1;
+    }
+    94% {
+      transform: translate(144px, -6px) scale(0.88);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(100px, -6px) scale(0.88);
+      opacity: 1;
+    }
+  }
+
+  @keyframes hero-shot-ball-roll-spin-mobile {
+    0%,
+    84% {
+      transform: rotate(0deg);
+    }
+    89% {
+      transform: rotate(-90deg);
+    }
+    94% {
+      transform: rotate(-230deg);
+    }
+    100% {
+      transform: rotate(-360deg);
+    }
+  }
+
+  @keyframes hero-shot-pulse-mobile {
+    0%,
+    70% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    80% {
+      opacity: 0.45;
+      transform: scale(1.8);
+    }
+    100% {
+      opacity: 0.22;
+      transform: scale(1.25);
+    }
+  }
+
   @media (max-width: 900px) {
     .home-intro-shell {
       gap: 10px;
-      padding: 10px;
+      padding: 12px;
     }
 
     .hero-experiment {
@@ -814,11 +1008,41 @@
   @media (max-width: 640px) {
     .home-intro-shell {
       gap: 8px;
-      padding: 8px;
+      padding: 10px;
     }
 
     .hero-experiment--subtle {
       --hero-shot-iterations: 1;
+      --hero-shot-duration: 4s;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__trace {
+      animation-name: hero-shot-trace-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__dribble-mark.is-one {
+      animation-name: hero-shot-dribble-one-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__dribble-mark.is-two {
+      animation-name: hero-shot-dribble-two-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-wrap {
+      animation-name: hero-shot-ball-hero-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-spin {
+      animation: hero-shot-ball-roll-spin-mobile var(--hero-shot-duration) ease-in-out 1 forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__pulse {
+      animation-name: hero-shot-pulse-mobile;
+      animation-fill-mode: forwards;
     }
 
     .home-quick-search__header {
