@@ -12,7 +12,7 @@ import { AuthActions } from '@/components/layout/AuthActions';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
-import { IconEdit, IconTrash } from '@/components/ui/icons/icons';
+import { IconEdit, IconEye, IconTrash } from '@/components/ui/icons/icons';
 import {
   RequestDetailAbout,
   RequestDetailAside,
@@ -21,6 +21,7 @@ import {
   RequestDetailGallery,
   RequestDetailHeader,
   RequestDetailLoading,
+  RequestDetailMetaRows,
   RequestDetailMobileCta,
   RequestOfferSheet,
   RequestDetailSimilar,
@@ -686,6 +687,7 @@ export default function RequestDetailsPage() {
     : hasOffer
       ? t(I18N_KEYS.requestDetails.responseEditCta)
       : t(I18N_KEYS.requestDetails.ctaApply);
+  const viewOffersLabel = t(I18N_KEYS.requestDetails.viewOffers);
   const applyState = isOfferAccepted ? 'accepted' : hasOffer ? 'edit' : 'default';
   const applyTitle = hasOffer ? t(I18N_KEYS.requestDetails.responseEditTooltip) : undefined;
   const requestStatusView =
@@ -930,6 +932,41 @@ export default function RequestDetailsPage() {
               />
             </>
           )}
+          <RequestDetailMetaRows
+            cityLabel={viewModel.cityLabel}
+            dateLabel={viewModel.preferredDateLabel}
+            className="request-detail__mobile-meta"
+          />
+          <RequestDetailMobileCta
+            className="request-detail__mobile-cta--inline"
+            ctaApplyLabel={applyLabel}
+            ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
+            ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
+            isSaved={isSaved}
+            onApply={handleApply}
+            onChat={handleChat}
+            onToggleSave={handleFavorite}
+            applyState={applyState}
+            applyTitle={applyTitle}
+            showApply={showOfferCta}
+            showChat={showChatCta}
+            showSave={showFavoriteCta}
+            compactIcons
+            extraActions={
+              showOwnerBadge ? (
+                <Link
+                  href={`/offers/${request.id}`}
+                  className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--contract"
+                  aria-label={viewOffersLabel}
+                  title={viewOffersLabel}
+                >
+                  <i className="offer-action-btn__icon">
+                    <IconEye />
+                  </i>
+                </Link>
+              ) : null
+            }
+          />
           {viewModel.hasClientInfo ? (
             <RequestDetailClient
               title={t(I18N_KEYS.requestDetails.clientTitle)}
@@ -966,7 +1003,7 @@ export default function RequestDetailsPage() {
                 href={`/offers/${request.id}`}
                 className="btn-secondary request-detail__cta-btn"
               >
-                {t(I18N_KEYS.requestDetails.viewOffers)}
+                {viewOffersLabel}
               </Link>
             ) : null
           }
@@ -986,28 +1023,6 @@ export default function RequestDetailsPage() {
           />
         </RequestDetailAside>
       </div>
-
-      <RequestDetailMobileCta
-        ctaApplyLabel={applyLabel}
-        ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
-        ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
-        isSaved={isSaved}
-        onApply={handleApply}
-        onChat={handleChat}
-        onToggleSave={handleFavorite}
-        applyState={applyState}
-        applyTitle={applyTitle}
-        showApply={showOfferCta}
-        showChat={showChatCta}
-        showSave={showFavoriteCta}
-        extraActions={
-          showOwnerBadge ? (
-            <Link href={`/offers/${request.id}`} className="btn-secondary request-detail__cta-btn">
-              {t(I18N_KEYS.requestDetails.viewOffers)}
-            </Link>
-          ) : null
-        }
-      />
 
       <RequestOfferSheet
         isOpen={isOfferSheetOpen}

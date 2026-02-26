@@ -1,5 +1,6 @@
 // src/lib/api/dto/providers.ts
 export type ProviderStatus = 'draft' | 'active' | 'suspended';
+export type ProviderAvailabilityState = 'open' | 'busy';
 
 export type ProviderPublicDto = {
   id: string;
@@ -14,6 +15,8 @@ export type ProviderPublicDto = {
   cityName?: string | null;
   serviceKey?: string | null;
   serviceKeys?: string[];
+  availabilityState?: ProviderAvailabilityState | null;
+  nextAvailableAt?: string | null;
 };
 
 export type ProviderProfileDto = {

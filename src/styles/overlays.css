@@ -57,6 +57,19 @@
   .dc-popover {
     position: relative;
     z-index: 60;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100%;
+  }
+
+  .dc-popover-trigger {
+    display: inline-flex;
+    max-width: 100%;
+  }
+
+  .dc-popover-trigger[aria-disabled='true'] {
+    cursor: default;
   }
 
   .dc-popover-panel {
@@ -64,7 +77,9 @@
     z-index: 80;
     margin-top: var(--space-2);
     left: 0;
-    width: min(var(--form-max), calc(100vw - 24px));
+    width: max-content;
+    min-width: min(260px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
     background: var(--c-surface);
     border: 1px solid var(--c-border);
     border-radius: var(--radius-lg);

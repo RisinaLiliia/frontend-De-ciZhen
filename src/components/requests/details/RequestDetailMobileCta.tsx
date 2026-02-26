@@ -19,6 +19,8 @@ type RequestDetailMobileCtaProps = {
   showSave?: boolean;
   notice?: React.ReactNode;
   extraActions?: React.ReactNode;
+  compactIcons?: boolean;
+  className?: string;
 };
 
 export function RequestDetailMobileCta({
@@ -38,25 +40,28 @@ export function RequestDetailMobileCta({
   showSave = true,
   notice,
   extraActions,
+  compactIcons = false,
+  className,
 }: RequestDetailMobileCtaProps) {
   const isEditState = applyState === 'edit';
-  const isAcceptedState = applyState === 'accepted';
+  const applyActionStateClass = isEditState ? 'request-card__status-action--edit' : 'request-card__status-action--submit';
 
   return (
-    <div className="request-detail__mobile-cta">
+    <div className={`request-detail__mobile-cta ${compactIcons ? 'request-detail__mobile-cta--compact' : ''} ${className ?? ''}`.trim()}>
       {notice ? <div className="request-detail__notice">{notice}</div> : null}
-      <div className="request-detail__cta">
+      <div className={compactIcons ? 'request-card__status-actions' : 'request-detail__cta'}>
         {extraActions}
         {showApply ? (
-          isAcceptedState ? (
-            <button
-              type="button"
-              className="btn-secondary request-detail__cta-btn is-accepted"
+          compactIcons ? (
+            <OfferActionButton
+              kind={isEditState ? 'edit' : 'submit'}
+              label={ctaApplyLabel}
+              className={`request-card__status-action ${applyActionStateClass}`.trim()}
               onClick={onApply}
               disabled={applyDisabled}
-            >
-              <span>{ctaApplyLabel}</span>
-            </button>
+              title={isEditState ? applyTitle : undefined}
+              iconOnly
+            />
           ) : (
             <OfferActionButton
               kind={isEditState ? 'edit' : 'submit'}
@@ -70,26 +75,56 @@ export function RequestDetailMobileCta({
             />
           )
         ) : null}
-        {showApply && applyHint ? <p className="request-detail__cta-subtext">{applyHint}</p> : null}
+        {showApply && applyHint && !compactIcons ? <p className="request-detail__cta-subtext">{applyHint}</p> : null}
         {showChat ? (
-          <button
-            type="button"
-            className="btn-secondary request-detail__cta-btn"
-            onClick={onChat}
-          >
-            <span>{ctaChatLabel}</span>
-            <IconChat />
-          </button>
+          compactIcons ? (
+            <button
+              type="button"
+              className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
+              onClick={onChat}
+              aria-label={ctaChatLabel}
+              title={ctaChatLabel}
+            >
+              <i className="offer-action-btn__icon">
+                <IconChat />
+              </i>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn-secondary request-detail__cta-btn"
+              onClick={onChat}
+              aria-label={ctaChatLabel}
+            >
+              <span>{ctaChatLabel}</span>
+              <IconChat />
+            </button>
+          )
         ) : null}
         {showSave ? (
-          <button
-            type="button"
-            className={`btn-ghost is-primary ${isSaved ? 'is-saved' : ''}`}
-            onClick={onToggleSave}
-          >
-            <span>{ctaSaveLabel}</span>
-            <IconHeart className="icon-heart" />
-          </button>
+          compactIcons ? (
+            <button
+              type="button"
+              className={`btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-detail__save ${isSaved ? 'is-saved' : ''}`.trim()}
+              onClick={onToggleSave}
+              aria-label={ctaSaveLabel}
+              title={ctaSaveLabel}
+            >
+              <i className="offer-action-btn__icon">
+                <IconHeart className="icon-heart" />
+              </i>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={`btn-ghost is-primary request-detail__save ${isSaved ? 'is-saved' : ''}`.trim()}
+              onClick={onToggleSave}
+              aria-label={ctaSaveLabel}
+            >
+              <span>{ctaSaveLabel}</span>
+              <IconHeart className="icon-heart" />
+            </button>
+          )
         ) : null}
       </div>
     </div>

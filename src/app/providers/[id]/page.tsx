@@ -17,11 +17,13 @@ import {
 } from '@/components/requests/details';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { ProviderCard } from '@/components/providers/ProviderCard';
+import { ProviderAvailabilityMeta } from '@/components/providers/ProviderAvailabilityMeta';
 import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
-import { getStatusBadgeClass } from '@/lib/statusBadge';
+import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
+import { listProviderSlots } from '@/lib/api/availability';
 import { getPublicProviderById, listPublicProviders } from '@/lib/api/providers';
-import { listReviews } from '@/lib/api/reviews';
+import { listReviews, listReviewsPage } from '@/lib/api/reviews';
 import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
@@ -30,9 +32,14 @@ import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { apiGet } from '@/lib/api/http';
 import { listServices } from '@/lib/api/catalog';
+import { createLongDateFormatter, parseDateSafe, toIsoDayLocal } from '@/lib/utils/date';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
+import type { ReviewDto } from '@/lib/api/dto/reviews';
 
 const SIMILAR_LIMIT = 2;
+const PROVIDER_REVIEWS_PAGE_SIZE = 4;
+const PROVIDER_REVIEWS_STATS_BATCH_LIMIT = 100;
+const PROVIDER_REVIEWS_STATS_MAX_ITEMS = 1000;
 
 type GeoAutocompleteItem = {
   lat?: number;
@@ -78,6 +85,50 @@ function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: num
   return r * c;
 }
 
+type ProviderAvailabilityModel = {
+  isBusy: boolean;
+  stateLabel: string;
+  datePrefix: string;
+  dateLabel: string;
+  dateIso: string;
+};
+
+function buildProviderAvailabilityModel({
+  availabilityState,
+  nextAvailableAt,
+  nextSlotStartAt,
+  formatLongDate,
+  openLabel,
+  busyLabel,
+  nextSlotLabel,
+}: {
+  availabilityState?: ProviderPublicDto['availabilityState'];
+  nextAvailableAt?: string | null;
+  nextSlotStartAt?: string | null;
+  formatLongDate: (value: Date) => string;
+  openLabel: string;
+  busyLabel: string;
+  nextSlotLabel: string;
+}): ProviderAvailabilityModel {
+  const firstSlotDate = parseDateSafe(nextSlotStartAt);
+  const nextAvailableDate = parseDateSafe(nextAvailableAt);
+  const resolvedDate = firstSlotDate ?? nextAvailableDate ?? new Date();
+  const resolvedState = availabilityState
+    ? availabilityState
+    : firstSlotDate
+      ? 'open'
+      : 'busy';
+  const isBusy = resolvedState === 'busy';
+
+  return {
+    isBusy,
+    stateLabel: isBusy ? busyLabel : openLabel,
+    datePrefix: nextSlotLabel,
+    dateLabel: formatLongDate(resolvedDate),
+    dateIso: toIsoDayLocal(resolvedDate),
+  };
+}
+
 export default function ProviderPublicProfilePage() {
   const t = useT();
   const { locale } = useI18n();
@@ -110,6 +161,39 @@ export default function ProviderPublicProfilePage() {
     () => (provider?.userId && provider.userId.trim().length > 0 ? provider.userId : provider?.id ?? null),
     [provider?.id, provider?.userId],
   );
+  const providerSlotsRange = React.useMemo(() => {
+    const from = new Date();
+    from.setHours(0, 0, 0, 0);
+    const to = new Date(from);
+    to.setDate(to.getDate() + 14);
+    return { from: toIsoDayLocal(from), to: toIsoDayLocal(to) };
+  }, []);
+  const providerSlotsTimezone = React.useMemo(() => {
+    if (typeof Intl === 'undefined') return 'Europe/Berlin';
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Berlin';
+  }, []);
+  const { data: providerSlots = [] } = useQuery({
+    queryKey: ['provider-availability-slots', providerTargetUserId, providerSlotsRange.from, providerSlotsRange.to, providerSlotsTimezone],
+    enabled: Boolean(providerTargetUserId),
+    queryFn: () =>
+      withStatusFallback(
+        () =>
+          listProviderSlots({
+            providerUserId: String(providerTargetUserId),
+            from: providerSlotsRange.from,
+            to: providerSlotsRange.to,
+            tz: providerSlotsTimezone,
+          }),
+        [],
+        [400, 404],
+      ),
+    staleTime: 60_000,
+  });
+  const [reviewSort, setReviewSort] = React.useState<'latest' | 'top'>('latest');
+  const [reviewPage, setReviewPage] = React.useState(1);
+  React.useEffect(() => {
+    setReviewPage(1);
+  }, [id, reviewSort]);
 
   const { data: services = [] } = useQuery({
     queryKey: ['catalog-services-all'],
@@ -126,18 +210,51 @@ export default function ProviderPublicProfilePage() {
     return map;
   }, [services]);
 
-  const { data: reviews = [], isLoading: isReviewsLoading } = useQuery({
-    queryKey: ['provider-reviews', providerTargetUserId],
+  const reviewsOffset = (reviewPage - 1) * PROVIDER_REVIEWS_PAGE_SIZE;
+  const reviewsSortValue = reviewSort === 'top' ? 'rating_desc' : 'created_desc';
+
+  const reviewsPageQuery = useQuery({
+    queryKey: ['provider-reviews-page', providerTargetUserId, reviewsSortValue, reviewPage],
     enabled: Boolean(providerTargetUserId),
     queryFn: () =>
-      listReviews({
+      listReviewsPage({
         targetUserId: String(providerTargetUserId),
         targetRole: 'provider',
-        limit: 100,
-        offset: 0,
+        limit: PROVIDER_REVIEWS_PAGE_SIZE,
+        offset: reviewsOffset,
+        sort: reviewsSortValue,
       }),
+    placeholderData: (previousData) => previousData,
   });
-  const reviewsForUi = reviews;
+
+  const { data: reviewsStatsRows = [] } = useQuery({
+    queryKey: ['provider-reviews-stats', providerTargetUserId],
+    enabled: Boolean(providerTargetUserId),
+    queryFn: async () => {
+      const allRows: ReviewDto[] = [];
+      let offset = 0;
+
+      while (allRows.length < PROVIDER_REVIEWS_STATS_MAX_ITEMS) {
+        const page = await listReviewsPage({
+          targetUserId: String(providerTargetUserId),
+          targetRole: 'provider',
+          limit: PROVIDER_REVIEWS_STATS_BATCH_LIMIT,
+          offset,
+          sort: 'created_desc',
+        });
+
+        if (page.items.length === 0) break;
+        allRows.push(...page.items);
+        offset += page.items.length;
+
+        if (page.total != null && offset >= page.total) break;
+        if (page.items.length < PROVIDER_REVIEWS_STATS_BATCH_LIMIT) break;
+      }
+
+      return allRows;
+    },
+    staleTime: 60_000,
+  });
 
   const { data: favoriteProviders = [] } = useQuery({
     queryKey: ['favorite-providers'],
@@ -197,7 +314,7 @@ export default function ProviderPublicProfilePage() {
       requireAuth();
       return;
     }
-    router.push(`/requests/create?providerId=${id}`);
+    router.push(`/request/create?providerId=${id}`);
   }, [id, isAuthed, requireAuth, router]);
 
   const handleChat = React.useCallback(() => {
@@ -219,6 +336,10 @@ export default function ProviderPublicProfilePage() {
   }, [isAuthed, isSaved, provider, requireAuth, setProviderFavorite]);
 
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
+  const longDateFormatter = React.useMemo(
+    () => createLongDateFormatter(localeTag),
+    [localeTag],
+  );
   const formatPrice = React.useMemo(
     () =>
       new Intl.NumberFormat(localeTag, {
@@ -361,11 +482,13 @@ export default function ProviderPublicProfilePage() {
     queryKey: ['provider-similar-review-preview', ...similarProviderIds],
     enabled: similarProviderIds.length > 0,
     queryFn: async () => {
+      const providerUserIdById = new Map(
+        similarProviders.map((item) => [item.id, item.userId?.trim() || item.id] as const),
+      );
       const pairs = await Promise.all(
         similarProviderIds.map(async (providerId) => {
           try {
-            const providerItem = similarProviders.find((item) => item.id === providerId);
-            const targetUserId = providerItem?.userId?.trim() || providerId;
+            const targetUserId = providerUserIdById.get(providerId) || providerId;
             const list = await listReviews({ targetUserId, targetRole: 'provider', limit: 1, offset: 0 });
             const first = list[0];
             const text = first?.text?.trim() || first?.comment?.trim() || '';
@@ -400,29 +523,25 @@ export default function ProviderPublicProfilePage() {
     [similarProviderReviewPreviewById, similarProviders, t],
   );
 
-  const hasRecentReview = reviewsForUi.length > 0;
   const reviewsUi = locale === 'de'
     ? {
         sortLatest: 'Neueste',
         sortTop: 'Top bewertet',
-        showMore: 'Mehr anzeigen',
         noText: 'Kein Kommentar hinterlassen.',
         basedOn: 'aus',
         ratingsLabel: 'Bewertungen',
+        expandAbout: 'Mehr lesen',
+        collapseAbout: 'Weniger anzeigen',
       }
     : {
         sortLatest: 'Latest',
         sortTop: 'Top rated',
-        showMore: 'Show more',
         noText: 'No text provided.',
         basedOn: 'from',
         ratingsLabel: 'ratings',
+        expandAbout: 'Read more',
+        collapseAbout: 'Show less',
       };
-  const [reviewSort, setReviewSort] = React.useState<'latest' | 'top'>('latest');
-  const [visibleReviewCount, setVisibleReviewCount] = React.useState(4);
-  React.useEffect(() => {
-    setVisibleReviewCount(4);
-  }, [id, reviewSort]);
 
   const reviewDateFormatter = React.useMemo(
     () =>
@@ -433,9 +552,9 @@ export default function ProviderPublicProfilePage() {
       }),
     [localeTag],
   );
-  const normalizedReviews = React.useMemo(
-    () =>
-      reviewsForUi.map((item) => {
+  const normalizeReviews = React.useCallback(
+    (rows: ReviewDto[]) =>
+      rows.map((item) => {
         const rawRating = Number(item.rating ?? 0);
         const rating = Number.isFinite(rawRating) ? Math.max(1, Math.min(5, Math.round(rawRating))) : 0;
         const text = item.text?.trim() || item.comment?.trim() || '';
@@ -450,13 +569,24 @@ export default function ProviderPublicProfilePage() {
           createdAtTs,
         };
       }),
-    [reviewsForUi, t],
+    [t],
   );
+
+  const pageReviews = React.useMemo(
+    () => normalizeReviews(reviewsPageQuery.data?.items ?? []),
+    [normalizeReviews, reviewsPageQuery.data?.items],
+  );
+  const statsReviews = React.useMemo(
+    () => normalizeReviews(reviewsStatsRows),
+    [normalizeReviews, reviewsStatsRows],
+  );
+  const metricsReviews = statsReviews.length > 0 ? statsReviews : pageReviews;
+  const hasRecentReview = metricsReviews.length > 0;
   const reviewsAverage = React.useMemo(() => {
-    if (normalizedReviews.length === 0) return 0;
-    const sum = normalizedReviews.reduce((acc, item) => acc + item.rating, 0);
-    return Math.round((sum / normalizedReviews.length) * 10) / 10;
-  }, [normalizedReviews]);
+    if (metricsReviews.length === 0) return 0;
+    const sum = metricsReviews.reduce((acc, item) => acc + item.rating, 0);
+    return Math.round((sum / metricsReviews.length) * 10) / 10;
+  }, [metricsReviews]);
   const displayRatingAvg = React.useMemo(() => {
     const raw = Number(provider?.ratingAvg);
     if (Number.isFinite(raw) && raw >= 0) return raw;
@@ -465,34 +595,109 @@ export default function ProviderPublicProfilePage() {
   const displayRatingCount = React.useMemo(() => {
     const raw = Number(provider?.ratingCount);
     if (Number.isFinite(raw) && raw >= 0) return Math.round(raw);
-    return normalizedReviews.length;
-  }, [normalizedReviews.length, provider?.ratingCount]);
+    if (typeof reviewsPageQuery.data?.total === 'number') return Math.round(reviewsPageQuery.data.total);
+    return metricsReviews.length;
+  }, [metricsReviews.length, provider?.ratingCount, reviewsPageQuery.data?.total]);
   const reviewsDistribution = React.useMemo(() => {
     const stats = new Map<number, number>();
     for (let score = 1; score <= 5; score += 1) stats.set(score, 0);
-    for (const item of normalizedReviews) {
+    for (const item of metricsReviews) {
       stats.set(item.rating, (stats.get(item.rating) ?? 0) + 1);
     }
     const max = Math.max(1, ...Array.from(stats.values()));
     return { stats, max };
-  }, [normalizedReviews]);
-  const sortedReviews = React.useMemo(() => {
-    const list = [...normalizedReviews];
-    list.sort((a, b) => {
-      if (reviewSort === 'top') {
+  }, [metricsReviews]);
+  const visibleReviews = React.useMemo(() => {
+    const list = [...pageReviews];
+    if (reviewSort === 'top') {
+      list.sort((a, b) => {
         if (b.rating !== a.rating) return b.rating - a.rating;
-      }
-      const aTs = a.createdAtTs ?? 0;
-      const bTs = b.createdAtTs ?? 0;
-      return bTs - aTs;
-    });
+        const aTs = a.createdAtTs ?? 0;
+        const bTs = b.createdAtTs ?? 0;
+        return bTs - aTs;
+      });
+    }
     return list;
-  }, [normalizedReviews, reviewSort]);
-  const visibleReviews = React.useMemo(
-    () => sortedReviews.slice(0, visibleReviewCount),
-    [sortedReviews, visibleReviewCount],
+  }, [pageReviews, reviewSort]);
+  const reviewsTotalForPagination = React.useMemo(() => {
+    if (typeof reviewsPageQuery.data?.total === 'number') return Math.max(0, Math.floor(reviewsPageQuery.data.total));
+    const raw = Number(provider?.ratingCount);
+    if (Number.isFinite(raw) && raw >= 0) return Math.max(0, Math.floor(raw));
+    return Math.max(pageReviews.length, metricsReviews.length);
+  }, [metricsReviews.length, pageReviews.length, provider?.ratingCount, reviewsPageQuery.data?.total]);
+  const totalReviewPages = React.useMemo(
+    () => Math.max(1, Math.ceil(reviewsTotalForPagination / PROVIDER_REVIEWS_PAGE_SIZE)),
+    [reviewsTotalForPagination],
   );
-  const canLoadMoreReviews = visibleReviewCount < sortedReviews.length;
+  React.useEffect(() => {
+    setReviewPage((prev) => Math.min(prev, totalReviewPages));
+  }, [totalReviewPages]);
+  const isReviewsLoading = reviewsPageQuery.isLoading && visibleReviews.length === 0;
+  const hasReviewsPagination = reviewsTotalForPagination > PROVIDER_REVIEWS_PAGE_SIZE;
+  const nextSlotStartAt = React.useMemo(() => {
+    const startCandidates = providerSlots
+      .map((slot) => slot?.startAt)
+      .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      .filter((value) => Number.isFinite(new Date(value).getTime()))
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    return startCandidates[0] ?? null;
+  }, [providerSlots]);
+  const availableIsoDays = React.useMemo(() => {
+    const days = providerSlots
+      .map((slot) => slot?.startAt)
+      .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      .map((value) => {
+        const parsed = new Date(value);
+        if (!Number.isFinite(parsed.getTime())) return '';
+        return toIsoDayLocal(parsed);
+      })
+      .filter((value): value is string => value.length > 0);
+    return Array.from(new Set(days)).sort();
+  }, [providerSlots]);
+  const availabilityCalendarCopy = locale === 'de'
+    ? {
+        title: 'Verfügbarkeit (14 Tage)',
+        free: 'Frei',
+        busy: 'Belegt',
+        out: 'Außerhalb Zeitraum',
+      }
+    : {
+        title: 'Availability (14 days)',
+        free: 'Free',
+        busy: 'Busy',
+        out: 'Outside range',
+      };
+  const availabilityCalendarConfig = React.useMemo(
+    () => ({
+      availableIsoDays,
+      rangeStartIso: providerSlotsRange.from,
+      rangeEndIso: providerSlotsRange.to,
+      title: availabilityCalendarCopy.title,
+      legendFree: availabilityCalendarCopy.free,
+      legendBusy: availabilityCalendarCopy.busy,
+      legendOut: availabilityCalendarCopy.out,
+    }),
+    [
+      availabilityCalendarCopy.busy,
+      availabilityCalendarCopy.free,
+      availabilityCalendarCopy.out,
+      availabilityCalendarCopy.title,
+      availableIsoDays,
+      providerSlotsRange.from,
+      providerSlotsRange.to,
+    ],
+  );
+  const availabilityModel = React.useMemo(() => {
+    return buildProviderAvailabilityModel({
+      availabilityState: provider?.availabilityState ?? undefined,
+      nextAvailableAt: provider?.nextAvailableAt ?? null,
+      nextSlotStartAt,
+      formatLongDate: (value) => longDateFormatter.format(value),
+      openLabel: t(I18N_KEYS.homePublic.providerAvailabilityStateOpen),
+      busyLabel: t(I18N_KEYS.homePublic.providerAvailabilityStateBusy),
+      nextSlotLabel: t(I18N_KEYS.homePublic.providerAvailabilityNextSlot),
+    });
+  }, [longDateFormatter, nextSlotStartAt, provider?.availabilityState, provider?.nextAvailableAt, t]);
 
   if (isLoading) {
     return <RequestDetailLoading />;
@@ -537,11 +742,12 @@ export default function ProviderPublicProfilePage() {
     <PageShell
       right={<AuthActions />}
       showBack
+      hideBackOnMobile
       backHref="/?view=orders&section=providers"
       forceBackHref
-      mainClassName="py-6"
+      mainClassName="provider-public-main pt-2 pb-6 md:py-6"
     >
-      <div className="request-detail">
+      <div className="request-detail request-detail--provider">
         <section className="panel request-detail__panel">
           <RequestDetailHeader
             title=""
@@ -550,9 +756,6 @@ export default function ProviderPublicProfilePage() {
             priceSuffixLabel={priceSuffixLabel}
             tags={[]}
             badgeLabel={t(I18N_KEYS.requestsPage.favoritesTabProviders)}
-            statusBadge={
-              <span className={getStatusBadgeClass(hasRecentReview ? 'in_progress' : 'sent')}>{statusLabel}</span>
-            }
           />
 
           <div className="request-detail__section request-detail__client">
@@ -580,9 +783,41 @@ export default function ProviderPublicProfilePage() {
                 showRating={false}
               />
             </div>
+            <div className="request-detail__provider-mobile-availability request-detail__availability-actions">
+              <ProviderAvailabilityMeta
+                stateLabel={availabilityModel.stateLabel}
+                datePrefix={availabilityModel.datePrefix}
+                dateLabel={availabilityModel.dateLabel}
+                dateIso={availabilityModel.dateIso}
+                tone={availabilityModel.isBusy ? 'warning' : 'success'}
+                calendarLocale={locale}
+                calendar={availabilityCalendarConfig}
+              />
+            </div>
+            <RequestDetailMobileCta
+              className="request-detail__mobile-cta--inline request-detail__mobile-cta--provider-inline"
+              ctaApplyLabel={t(I18N_KEYS.requestDetails.ctaApply)}
+              ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
+              ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
+              isSaved={isSaved}
+              onApply={handleApply}
+              onChat={handleChat}
+              onToggleSave={handleFavorite}
+              showApply
+              showChat
+              showSave
+              compactIcons
+            />
           </div>
 
-          <RequestDetailAbout title={t(I18N_KEYS.requestDetails.about)} description={aboutText} />
+          <RequestDetailAbout
+            title={t(I18N_KEYS.requestDetails.about)}
+            description={aboutText}
+            className="request-detail__section--about"
+            clampLines={7}
+            expandLabel={reviewsUi.expandAbout}
+            collapseLabel={reviewsUi.collapseAbout}
+          />
 
           <div className="request-detail__tags">
             {headerTags.map((tag) => (
@@ -634,6 +869,7 @@ export default function ProviderPublicProfilePage() {
                       <button
                         type="button"
                         className={`provider-reviews-hub__sort-btn ${reviewSort === 'latest' ? 'is-active' : ''}`.trim()}
+                        aria-pressed={reviewSort === 'latest'}
                         onClick={() => setReviewSort('latest')}
                       >
                         {reviewsUi.sortLatest}
@@ -641,6 +877,7 @@ export default function ProviderPublicProfilePage() {
                       <button
                         type="button"
                         className={`provider-reviews-hub__sort-btn ${reviewSort === 'top' ? 'is-active' : ''}`.trim()}
+                        aria-pressed={reviewSort === 'top'}
                         onClick={() => setReviewSort('top')}
                       >
                         {reviewsUi.sortTop}
@@ -664,21 +901,25 @@ export default function ProviderPublicProfilePage() {
                         <p className="provider-reviews-hub__item-text">{review.text || reviewsUi.noText}</p>
                       </article>
                     ))}
-                    {normalizedReviews.length === 0 ? (
+                    {reviewsTotalForPagination === 0 ? (
                       <article className="provider-reviews-hub__item card">
                         <p className="provider-reviews-hub__item-text">{t(I18N_KEYS.requestsPage.reviewsEmptyHint)}</p>
                       </article>
                     ) : null}
                   </div>
 
-                  {canLoadMoreReviews ? (
-                    <button
-                      type="button"
-                      className="btn-ghost provider-reviews-hub__more"
-                      onClick={() => setVisibleReviewCount((prev) => prev + 4)}
-                    >
-                      {reviewsUi.showMore}
-                    </button>
+                  {hasReviewsPagination ? (
+                    <RequestsPageNav
+                      className="provider-reviews-hub__page-nav"
+                      page={reviewPage}
+                      totalPages={totalReviewPages}
+                      disabled={isReviewsLoading}
+                      onPrevPage={() => setReviewPage((prev) => Math.max(1, prev - 1))}
+                      onNextPage={() => setReviewPage((prev) => Math.min(totalReviewPages, prev + 1))}
+                      ariaLabel={t(I18N_KEYS.requestsPage.paginationLabel)}
+                      prevAriaLabel={t(I18N_KEYS.requestsPage.paginationPrev)}
+                      nextAriaLabel={t(I18N_KEYS.requestsPage.paginationNext)}
+                    />
                   ) : null}
                 </div>
               </div>
@@ -689,6 +930,20 @@ export default function ProviderPublicProfilePage() {
         <RequestDetailAside
           cityLabel={profileCard.cityLabel || provider.cityName || '—'}
           dateLabel={profileCard.responseTime || t(I18N_KEYS.requestDetails.clientActive)}
+          metaClassName="request-detail__meta--provider-availability"
+          metaContent={
+            <div className="request-detail__availability-actions">
+              <ProviderAvailabilityMeta
+                stateLabel={availabilityModel.stateLabel}
+                datePrefix={availabilityModel.datePrefix}
+                dateLabel={availabilityModel.dateLabel}
+                dateIso={availabilityModel.dateIso}
+                tone={availabilityModel.isBusy ? 'warning' : 'success'}
+                calendarLocale={locale}
+                calendar={availabilityCalendarConfig}
+              />
+            </div>
+          }
           ctaApplyLabel={t(I18N_KEYS.requestDetails.ctaApply)}
           ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
           ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
@@ -709,7 +964,7 @@ export default function ProviderPublicProfilePage() {
               <>
                 <div className="provider-list">
                   {similarCards.map((item) => (
-                    <ProviderCard key={item.id} provider={item} />
+                    <ProviderCard key={item.id} provider={item} className="provider-card--similar-mobile-minimal" />
                   ))}
                 </div>
                 <div className="request-detail__similar-footer">
@@ -721,18 +976,6 @@ export default function ProviderPublicProfilePage() {
         </RequestDetailAside>
       </div>
 
-      <RequestDetailMobileCta
-        ctaApplyLabel={t(I18N_KEYS.requestDetails.ctaApply)}
-        ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
-        ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
-        isSaved={isSaved}
-        onApply={handleApply}
-        onChat={handleChat}
-        onToggleSave={handleFavorite}
-        showApply
-        showChat
-        showSave
-      />
     </PageShell>
   );
 }

@@ -77,8 +77,15 @@ export function mapPublicProviderToCard({
     typeof provider.basePrice === 'number' && Number.isFinite(provider.basePrice)
       ? `${t(I18N_KEYS.homePublic.providerPricingFrom)} ${provider.basePrice}€${t(I18N_KEYS.homePublic.providerPricingPerHour)}`
       : t(I18N_KEYS.homePublic.providerPricingFixed);
-  const availabilityLabel =
-    seed % 3 === 0
+  const hasExplicitAvailability = provider.availabilityState === 'open' || provider.availabilityState === 'busy';
+  const nextAvailableRaw = typeof provider.nextAvailableAt === 'string' ? provider.nextAvailableAt : '';
+  const availabilityLabel = hasExplicitAvailability
+    ? provider.availabilityState === 'busy'
+      ? t(I18N_KEYS.homePublic.providerAvailabilityTomorrow)
+      : nextAvailableRaw
+        ? t(I18N_KEYS.homePublic.providerAvailabilityToday)
+        : t(I18N_KEYS.homePublic.providerAvailabilityNow)
+    : seed % 3 === 0
       ? t(I18N_KEYS.homePublic.providerAvailabilityNow)
       : seed % 2 === 0
         ? t(I18N_KEYS.homePublic.providerAvailabilityToday)

@@ -3,6 +3,27 @@ import type { ReactNode } from 'react';
 import { IconCalendar, IconChat, IconHeart, IconPin } from '@/components/ui/icons/icons';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
 
+type RequestDetailMetaRowsProps = {
+  cityLabel: string;
+  dateLabel: string;
+  className?: string;
+};
+
+export function RequestDetailMetaRows({ cityLabel, dateLabel, className }: RequestDetailMetaRowsProps) {
+  return (
+    <div className={`request-detail__meta ${className ?? ''}`.trim()}>
+      <div className="request-detail__meta-item">
+        <IconPin />
+        <span>{cityLabel}</span>
+      </div>
+      <div className="request-detail__meta-item">
+        <IconCalendar />
+        <span>{dateLabel}</span>
+      </div>
+    </div>
+  );
+}
+
 type RequestDetailAsideProps = {
   cityLabel: string;
   dateLabel: string;
@@ -22,6 +43,8 @@ type RequestDetailAsideProps = {
   showSave?: boolean;
   notice?: ReactNode;
   extraActions?: ReactNode;
+  metaContent?: ReactNode;
+  metaClassName?: string;
   children?: ReactNode;
 };
 
@@ -44,6 +67,8 @@ export function RequestDetailAside({
   showSave = true,
   notice,
   extraActions,
+  metaContent,
+  metaClassName,
   children,
 }: RequestDetailAsideProps) {
   const isEditState = applyState === 'edit';
@@ -51,16 +76,7 @@ export function RequestDetailAside({
 
   return (
     <aside className="panel request-detail__panel request-detail__aside">
-      <div className="request-detail__meta">
-        <div className="request-detail__meta-item">
-          <IconPin />
-          <span>{cityLabel}</span>
-        </div>
-        <div className="request-detail__meta-item">
-          <IconCalendar />
-          <span>{dateLabel}</span>
-        </div>
-      </div>
+      {metaContent ?? <RequestDetailMetaRows cityLabel={cityLabel} dateLabel={dateLabel} className={metaClassName} />}
 
       {notice ? <div className="request-detail__notice">{notice}</div> : null}
 

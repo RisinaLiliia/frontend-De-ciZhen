@@ -49,6 +49,16 @@ function getMockCount() {
   return Math.max(1, Math.floor(raw));
 }
 
+function buildMockAvailability(index: number) {
+  const now = Date.now();
+  const isBusy = index % 4 === 0;
+  const hoursOffset = isBusy ? 18 + (index % 3) * 6 : index % 3 === 0 ? 0 : 2 + (index % 4) * 2;
+  return {
+    availabilityState: isBusy ? 'busy' : 'open',
+    nextAvailableAt: new Date(now + hoursOffset * 60 * 60 * 1000).toISOString(),
+  } as const;
+}
+
 async function buildMockPool(): Promise<MockProvider[]> {
   const [cities, services] = await Promise.all([
     listCities(COUNTRY_CODE),
@@ -75,6 +85,7 @@ async function buildMockPool(): Promise<MockProvider[]> {
     const completedJobs = topTier
       ? 180 + ((index * 19) % 240)
       : 12 + ((index * 11) % 260);
+    const availability = buildMockAvailability(index);
 
     items.push({
       id: `mock-provider-${index + 1}`,
@@ -89,6 +100,8 @@ async function buildMockPool(): Promise<MockProvider[]> {
       cityName: pickCityName(city.i18n),
       serviceKey: service?.key,
       serviceKeys: service?.key ? [service.key] : [],
+      availabilityState: availability.availabilityState,
+      nextAvailableAt: availability.nextAvailableAt,
     });
   }
 

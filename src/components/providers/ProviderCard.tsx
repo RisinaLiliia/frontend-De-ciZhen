@@ -43,6 +43,7 @@ type ProviderCardProps = {
   canToggleFavorite?: boolean;
   isFavorite?: boolean;
   onToggleFavorite?: (providerId: string) => void;
+  className?: string;
 };
 
 export function ProviderCard({
@@ -51,6 +52,7 @@ export function ProviderCard({
   canToggleFavorite = false,
   isFavorite = false,
   onToggleFavorite,
+  className,
 }: ProviderCardProps) {
   const primaryBadge = provider.badges[0] ?? null;
   const secondaryBadge = provider.badges[1] ?? null;
@@ -58,7 +60,7 @@ export function ProviderCard({
 
   return (
     <div
-      className={`provider-card ${variant === 'grid' ? 'is-grid' : 'is-list'} ${canToggleFavorite ? 'has-favorite-toggle' : ''} ${showCornerBadge ? 'has-corner-badge' : ''}`.trim()}
+      className={`provider-card ${variant === 'grid' ? 'is-grid' : 'is-list'} ${canToggleFavorite ? 'has-favorite-toggle' : ''} ${showCornerBadge ? 'has-corner-badge' : ''} ${className ?? ''}`.trim()}
     >
       <Link href={provider.profileHref} className="provider-card__overlay-link" aria-label={provider.name} />
       {canToggleFavorite ? (

@@ -6,6 +6,7 @@ import { Select } from '@/components/ui/Select';
 import { CountBadge } from '@/components/ui/CountBadge';
 // import { Input } from '@/components/ui/Input';
 import { IconFilter, IconPin } from '@/components/ui/icons/icons';
+import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { RequestsMobileFilterToolbar } from '@/components/requests/RequestsMobileFilterToolbar';
 import * as keys from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -230,29 +231,16 @@ export function RequestsFilters({
               </div>
             ) : null}
             {hasPagination ? (
-              <div className="requests-page-nav" role="group" aria-label={t(keys.I18N_KEYS.requestsPage.paginationLabel)}>
-                <button
-                  type="button"
-                  className="btn-ghost requests-page-nav__btn"
-                  onClick={onPrevPage}
-                  disabled={controlsDisabled || page <= 1}
-                  aria-label={t(keys.I18N_KEYS.requestsPage.paginationPrev)}
-                >
-                  ←
-                </button>
-                <span className="requests-page-nav__label">
-                  {page}/{Math.max(1, totalPages)}
-                </span>
-                <button
-                  type="button"
-                  className="btn-ghost requests-page-nav__btn"
-                  onClick={onNextPage}
-                  disabled={controlsDisabled || page >= totalPages}
-                  aria-label={t(keys.I18N_KEYS.requestsPage.paginationNext)}
-                >
-                  →
-                </button>
-              </div>
+              <RequestsPageNav
+                page={page}
+                totalPages={totalPages}
+                disabled={controlsDisabled}
+                onPrevPage={onPrevPage}
+                onNextPage={onNextPage}
+                ariaLabel={t(keys.I18N_KEYS.requestsPage.paginationLabel)}
+                prevAriaLabel={t(keys.I18N_KEYS.requestsPage.paginationPrev)}
+                nextAriaLabel={t(keys.I18N_KEYS.requestsPage.paginationNext)}
+              />
             ) : null}
           </div>
         ) : null}
