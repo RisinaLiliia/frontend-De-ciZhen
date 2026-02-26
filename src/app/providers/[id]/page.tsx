@@ -743,7 +743,7 @@ export default function ProviderPublicProfilePage() {
       right={<AuthActions />}
       showBack
       hideBackOnMobile
-      backHref="/?view=orders&section=providers"
+      backHref="/workspace?section=providers"
       forceBackHref
       mainClassName="provider-public-main pt-2 pb-6 md:py-6"
     >
@@ -968,7 +968,7 @@ export default function ProviderPublicProfilePage() {
                   ))}
                 </div>
                 <div className="request-detail__similar-footer">
-                  <MoreDotsLink href="/?view=orders&section=providers" label={t(I18N_KEYS.requestDetails.showAll)} />
+                  <MoreDotsLink href="/workspace?section=providers" label={t(I18N_KEYS.requestDetails.showAll)} />
                 </div>
               </>
             )}

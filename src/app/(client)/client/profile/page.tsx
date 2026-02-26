@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
 export default function ClientProfileLegacyPage() {
-  redirect('/profile/workspace');
+  redirect('/profile');
 }

@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
 export default function ClientRequestsLegacyPage() {
-  redirect('/orders?tab=my-requests');
+  redirect('/workspace?tab=my-requests');
 }

@@ -282,7 +282,7 @@ function RequestsListComponent({
                   {offerCardState === 'accepted' ? (
                     <>
                       <Link
-                        href="/orders?tab=completed-jobs"
+                        href="/workspace?tab=completed-jobs"
                         prefetch={false}
                         className="btn-primary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--contract"
                         aria-label={t(I18N_KEYS.requestDetails.responseViewContract)}

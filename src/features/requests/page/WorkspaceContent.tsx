@@ -223,7 +223,7 @@ export function WorkspaceContent({
               emptyTitle={t(I18N_KEYS.requestsPage.workspaceMyOffersEmptyTitle)}
               emptyHint={t(I18N_KEYS.requestsPage.workspaceMyOffersEmptyHint)}
               emptyCtaLabel={t(I18N_KEYS.requestsPage.workspaceMyOffersEmptyCta)}
-              emptyCtaHref="/orders?tab=new-orders"
+              emptyCtaHref="/workspace?tab=new-orders"
             >
               <RequestsList {...myOffersListProps} />
             </WorkspaceContentState>
@@ -238,7 +238,7 @@ export function WorkspaceContent({
               emptyTitle={t(I18N_KEYS.requestsPage.workspaceContractsEmptyTitle)}
               emptyHint={t(I18N_KEYS.requestsPage.workspaceContractsEmptyHint)}
               emptyCtaLabel={t(I18N_KEYS.requestsPage.workspaceContractsEmptyCta)}
-              emptyCtaHref="/orders?tab=my-offers"
+              emptyCtaHref="/workspace?tab=my-offers"
             >
               <RequestsList {...contractsListProps} />
             </WorkspaceContentState>
@@ -310,7 +310,7 @@ export function WorkspaceContent({
               emptyTitle={t(I18N_KEYS.requestsPage.reviewsEmptyTitle)}
               emptyHint={t(I18N_KEYS.requestsPage.reviewsEmptyHint)}
               emptyCtaLabel={t(I18N_KEYS.requestsPage.reviewsEmptyCta)}
-              emptyCtaHref="/orders?tab=completed-jobs"
+              emptyCtaHref="/workspace?tab=completed-jobs"
             >
               <div className="proof-feed">{reviewCardsNode}</div>
             </WorkspaceContentState>

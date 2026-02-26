@@ -45,8 +45,9 @@ import {
 } from '@/features/requests/details/viewModel';
 
 const SIMILAR_LIMIT = 2;
-const WORKSPACE_MY_REQUESTS_URL = '/orders?tab=my-requests&sort=date_desc&page=1&limit=10';
-const WORKSPACE_NEW_ORDERS_URL = '/orders?tab=new-orders&sort=date_desc&page=1&limit=10';
+const WORKSPACE_MY_REQUESTS_URL = '/workspace?tab=my-requests&sort=date_desc&page=1&limit=10';
+const WORKSPACE_NEW_ORDERS_URL = '/workspace?tab=new-orders&sort=date_desc&page=1&limit=10';
+const WORKSPACE_GUEST_ORDERS_URL = '/workspace?section=orders';
 
 export default function RequestDetailsPage() {
   const t = useT();
@@ -79,6 +80,8 @@ export default function RequestDetailsPage() {
   const ownerPhotoInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const isAuthed = authStatus === 'authenticated';
+  const profileId = authUser?.id ?? authMe?.id ?? null;
+  const profileHref = profileId ? `/profile/${encodeURIComponent(profileId)}` : '/profile';
 
   const {
     data: request,
@@ -267,7 +270,7 @@ export default function RequestDetailsPage() {
       return;
     }
     if (isOfferAccepted) {
-      router.push('/orders?tab=completed-jobs');
+      router.push('/workspace?tab=completed-jobs');
       return;
     }
     openOfferForm();
@@ -352,7 +355,7 @@ export default function RequestDetailsPage() {
       setOfferComment('');
       setOfferAvailability('');
       setOfferSheetInUrl(false);
-      router.push(authStatus === 'authenticated' ? WORKSPACE_NEW_ORDERS_URL : '/requests');
+      router.push(authStatus === 'authenticated' ? WORKSPACE_NEW_ORDERS_URL : WORKSPACE_GUEST_ORDERS_URL);
       return;
     }
 
@@ -584,14 +587,18 @@ export default function RequestDetailsPage() {
 
   const similarHref = React.useMemo(() => {
     const nextParams = new URLSearchParams();
-    if (authStatus === 'authenticated') nextParams.set('tab', 'new-orders');
+    if (authStatus === 'authenticated') {
+      nextParams.set('tab', 'new-orders');
+    } else {
+      nextParams.set('section', 'orders');
+    }
     if (request?.categoryKey) nextParams.set('categoryKey', request.categoryKey);
     if (request?.serviceKey) nextParams.set('subcategoryKey', request.serviceKey);
     nextParams.set('sort', 'date_desc');
     nextParams.set('page', '1');
     nextParams.set('limit', '10');
     const qs = nextParams.toString();
-    return `${authStatus === 'authenticated' ? '/orders' : '/requests'}${qs ? `?${qs}` : ''}`;
+    return `/workspace${qs ? `?${qs}` : ''}`;
   }, [authStatus, request]);
 
   const similarForRender = similar.length ? similar : latest;
@@ -634,7 +641,7 @@ export default function RequestDetailsPage() {
       if (isOwner) {
         toast.message(t(I18N_KEYS.requestDetails.selfBidError));
       } else if (isOfferAccepted) {
-        router.push('/orders?tab=completed-jobs');
+        router.push('/workspace?tab=completed-jobs');
       } else {
         openOfferForm();
       }
@@ -727,7 +734,7 @@ export default function RequestDetailsPage() {
     <PageShell
       right={<AuthActions />}
       showBack
-      backHref={isAuthed ? WORKSPACE_MY_REQUESTS_URL : '/requests'}
+      backHref={isAuthed ? WORKSPACE_MY_REQUESTS_URL : WORKSPACE_GUEST_ORDERS_URL}
       forceBackHref
       mainClassName="py-6"
     >
@@ -1062,7 +1069,7 @@ export default function RequestDetailsPage() {
         successTipCardBody={t(I18N_KEYS.requestDetails.responseSuccessTipCardBody)}
         successProfileCta={t(I18N_KEYS.requestDetails.responseProfileCta)}
         successContinueCta={t(I18N_KEYS.requestDetails.responseContinueCta)}
-        successProfileHref={`/profile/workspace?highlight=offer&next=${encodeURIComponent(`/requests/${request.id}`)}`}
+        successProfileHref={`${profileHref}?highlight=offer&next=${encodeURIComponent(`/requests/${request.id}`)}`}
         showProfileAdvice={!isProviderProfileComplete}
         profileAvatarUrl={authMe?.avatar?.url ?? null}
         profileName={authMe?.name ?? authUser?.name ?? null}
@@ -1090,7 +1097,7 @@ export default function RequestDetailsPage() {
         onSuccessBack={() => {
           setOfferSheetMode('form');
           setOfferSheetInUrl(false);
-          router.push('/requests');
+          router.push(isAuthed ? WORKSPACE_NEW_ORDERS_URL : WORKSPACE_GUEST_ORDERS_URL);
         }}
         onSubmit={handleOfferSubmit}
       />

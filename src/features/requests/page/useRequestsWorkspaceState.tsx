@@ -127,7 +127,7 @@ export function useRequestsWorkspaceState({
         ? [
             {
               key: 'new-orders',
-              href: '/orders?tab=new-orders',
+              href: '/workspace?tab=new-orders',
               label: t(I18N_KEYS.requestsPage.navNewOrders),
               icon: <IconBriefcase />,
               value: newOrdersCount,
@@ -141,7 +141,7 @@ export function useRequestsWorkspaceState({
             },
             {
               key: 'my-orders',
-              href: '/orders?tab=my-requests',
+              href: '/workspace?tab=my-requests',
               label: t(I18N_KEYS.requestsPage.navMyOrders),
               icon: <IconBriefcase />,
               value: myRequests.length,
@@ -152,7 +152,7 @@ export function useRequestsWorkspaceState({
             },
             {
               key: 'my-offers',
-              href: '/orders?tab=my-offers',
+              href: '/workspace?tab=my-offers',
               label: t(I18N_KEYS.requestsPage.navMyOffers),
               icon: <IconSend />,
               value: sentCount,
@@ -163,7 +163,7 @@ export function useRequestsWorkspaceState({
             },
             {
               key: 'completed-jobs',
-              href: '/orders?tab=completed-jobs',
+              href: '/workspace?tab=completed-jobs',
               label: t(I18N_KEYS.requestsPage.navCompletedJobs),
               icon: <IconCheck />,
               value: completedJobsCount,
@@ -174,7 +174,7 @@ export function useRequestsWorkspaceState({
             },
             {
               key: 'my-favorites',
-              href: '/orders?tab=favorites',
+              href: '/workspace?tab=favorites',
               label: t(I18N_KEYS.requestDetails.saved),
               icon: <IconHeart />,
               value: favoriteRequestCount,
@@ -185,7 +185,7 @@ export function useRequestsWorkspaceState({
             },
             {
               key: 'reviews',
-              href: '/orders?tab=reviews',
+              href: '/workspace?tab=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -201,7 +201,7 @@ export function useRequestsWorkspaceState({
         : [
             {
               key: 'new-orders',
-              href: '/orders?tab=new-orders',
+              href: '/workspace?tab=new-orders',
               label: t(I18N_KEYS.requestsPage.navNewOrders),
               icon: <IconBriefcase />,
               value: newOrdersCount,
@@ -215,7 +215,7 @@ export function useRequestsWorkspaceState({
             },
             {
               key: 'my-orders',
-              href: '/orders?tab=my-requests',
+              href: '/workspace?tab=my-requests',
               label: t(I18N_KEYS.requestsPage.navMyOrders),
               icon: <IconBriefcase />,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
@@ -225,7 +225,7 @@ export function useRequestsWorkspaceState({
             },
             {
               key: 'my-offers',
-              href: '/orders?tab=my-offers',
+              href: '/workspace?tab=my-offers',
               label: t(I18N_KEYS.requestsPage.navMyOffers),
               icon: <IconSend />,
               hint: t(I18N_KEYS.requestsPage.summarySent),
@@ -235,7 +235,7 @@ export function useRequestsWorkspaceState({
             },
             {
               key: 'my-favorites',
-              href: '/orders?tab=favorites',
+              href: '/workspace?tab=favorites',
               label: t(I18N_KEYS.requestDetails.saved),
               icon: <IconHeart />,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
@@ -245,7 +245,7 @@ export function useRequestsWorkspaceState({
             },
             {
               key: 'reviews',
-              href: '/orders?tab=reviews',
+              href: '/workspace?tab=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -443,7 +443,7 @@ export function useRequestsWorkspaceState({
     hint: providerHint,
     emptyTitle: t(I18N_KEYS.requestsPage.statsProviderEmptyTitle),
     emptyCtaLabel: t(I18N_KEYS.requestsPage.statsProviderEmptyCta),
-    emptyCtaHref: '/orders?tab=new-orders',
+    emptyCtaHref: '/workspace?tab=new-orders',
   };
 
   const clientStatsPayload: StatsPayload = {

@@ -51,9 +51,8 @@ import { useRequestsPageData } from '@/features/requests/page/useRequestsPageDat
 import { useContractRequestsData } from '@/features/requests/page/useContractRequestsData';
 import { useRequestsWorkspaceState } from '@/features/requests/page/useRequestsWorkspaceState';
 import { useRequestsWorkspaceDerived } from '@/features/requests/page/useRequestsWorkspaceDerived';
-import { DEFAULT_AUTH_NEXT } from '@/features/auth/constants';
 
-const DEFAULT_PUBLIC_REQUESTS_URL = '/requests?sort=date_desc&page=1&limit=10';
+const DEFAULT_GUEST_WORKSPACE_URL = '/workspace?section=orders';
 
 function RequestsPageContent() {
   const router = useRouter();
@@ -65,8 +64,13 @@ function RequestsPageContent() {
   const auth = useAuthSnapshot();
   const authStatus = auth.status;
   const isAuthed = authStatus === 'authenticated';
-  const isWorkspaceRoute = pathname === '/orders';
+  const isWorkspaceRoute = pathname === '/workspace';
   const isWorkspaceAuthed = isWorkspaceRoute && isAuthed;
+  const workspaceSection = searchParams.get('section');
+  const isWorkspaceGuestPreview =
+    isWorkspaceRoute &&
+    authStatus === 'unauthenticated' &&
+    (workspaceSection === 'orders' || workspaceSection === 'providers');
   const isPersonalized = isAuthed;
   const activeWorkspaceTab = React.useMemo(
     () => (isWorkspaceRoute ? resolveWorkspaceTab(searchParams.get('tab')) : 'new-orders'),
@@ -87,13 +91,9 @@ function RequestsPageContent() {
 
   React.useEffect(() => {
     if (!isWorkspaceRoute || authStatus !== 'unauthenticated') return;
-    router.replace(DEFAULT_PUBLIC_REQUESTS_URL);
-  }, [authStatus, isWorkspaceRoute, router]);
-
-  React.useEffect(() => {
-    if (pathname !== '/requests' || authStatus !== 'authenticated') return;
-    router.replace(DEFAULT_AUTH_NEXT);
-  }, [authStatus, pathname, router]);
+    if (workspaceSection === 'orders' || workspaceSection === 'providers') return;
+    router.replace(DEFAULT_GUEST_WORKSPACE_URL);
+  }, [authStatus, isWorkspaceRoute, router, workspaceSection]);
 
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
@@ -742,7 +742,7 @@ function RequestsPageContent() {
     setPage,
   });
 
-  if (isWorkspaceRoute && authStatus !== 'authenticated') {
+  if (isWorkspaceRoute && authStatus !== 'authenticated' && !isWorkspaceGuestPreview) {
     return <LoadingScreen />;
   }
 
@@ -830,7 +830,7 @@ function RequestsPageContent() {
               title={t(I18N_KEYS.homePublic.topProviders)}
               subtitle={t(I18N_KEYS.homePublic.topProvidersSubtitle)}
               ctaLabel={t(I18N_KEYS.homePublic.topProvidersCta)}
-              ctaHref="/requests"
+              ctaHref={isAuthed ? '/workspace?tab=new-orders' : '/workspace?section=providers'}
               providers={topProviders}
               favoriteProviderIds={favoriteProviderIds}
               onToggleFavorite={isAuthed ? onToggleProviderFavorite : undefined}

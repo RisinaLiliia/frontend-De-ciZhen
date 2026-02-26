@@ -25,7 +25,7 @@ export function HomePopularServicesPanel({
   t,
   services,
   categoryCounts,
-  viewAllHref = '/requests',
+  viewAllHref = '/workspace?section=orders',
 }: HomePopularServicesPanelProps) {
   return (
     <Card className="home-popular-panel">

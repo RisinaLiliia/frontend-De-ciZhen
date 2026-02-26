@@ -37,10 +37,10 @@ export function getWorkspacePrimaryActionByTab(
 ): Partial<Record<WorkspaceTab, { href: string; label: string }>> {
   return {
     'my-requests': { label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta), href: '/request/create' },
-    'my-offers': { label: t(I18N_KEYS.requestsPage.primaryActionFindNewOrders), href: '/orders?tab=new-orders' },
-    'completed-jobs': { label: t(I18N_KEYS.requestsPage.primaryActionActiveOrders), href: '/orders?tab=my-offers&status=in_progress' },
-    favorites: { label: t(I18N_KEYS.requestsPage.primaryActionNewFavorites), href: '/orders?tab=new-orders' },
-    reviews: { label: t(I18N_KEYS.requestsPage.navMyOrders), href: '/orders?tab=my-offers' },
+    'my-offers': { label: t(I18N_KEYS.requestsPage.primaryActionFindNewOrders), href: '/workspace?tab=new-orders' },
+    'completed-jobs': { label: t(I18N_KEYS.requestsPage.primaryActionActiveOrders), href: '/workspace?tab=my-offers&status=in_progress' },
+    favorites: { label: t(I18N_KEYS.requestsPage.primaryActionNewFavorites), href: '/workspace?tab=new-orders' },
+    reviews: { label: t(I18N_KEYS.requestsPage.navMyOrders), href: '/workspace?tab=my-offers' },
   };
 }
 
@@ -56,27 +56,27 @@ export function getProviderHint(
         I18N_KEYS.requestsPage.providerHintProfileSuffix,
       )}`,
       ctaLabel: t(I18N_KEYS.requestsPage.providerHintProfileCta),
-      ctaHref: '/profile/workspace',
+      ctaHref: '/profile',
     };
   }
   if (recentOffers7d === 0) {
     return {
       text: t(I18N_KEYS.requestsPage.providerHintNoOffersText),
       ctaLabel: t(I18N_KEYS.requestsPage.providerHintNoOffersCta),
-      ctaHref: '/orders?tab=new-orders',
+      ctaHref: '/workspace?tab=new-orders',
     };
   }
   if (acceptanceRate < 25) {
     return {
       text: t(I18N_KEYS.requestsPage.providerHintLowAcceptanceText),
       ctaLabel: t(I18N_KEYS.requestsPage.providerHintLowAcceptanceCta),
-      ctaHref: '/orders?tab=new-orders',
+      ctaHref: '/workspace?tab=new-orders',
     };
   }
   return {
     text: t(I18N_KEYS.requestsPage.providerHintStrongText),
     ctaLabel: t(I18N_KEYS.requestsPage.providerHintStrongCta),
-    ctaHref: '/orders?tab=completed-jobs',
+    ctaHref: '/workspace?tab=completed-jobs',
   };
 }
 
@@ -92,7 +92,7 @@ export function getClientHint(t: Translate, myRequestsCount: number, myOpenReque
     return {
       text: t(I18N_KEYS.requestsPage.clientHintHasOpenText),
       ctaLabel: t(I18N_KEYS.requestsPage.clientHintHasOpenCta),
-      ctaHref: '/orders?tab=my-requests',
+      ctaHref: '/workspace?tab=my-requests',
     };
   }
   return {

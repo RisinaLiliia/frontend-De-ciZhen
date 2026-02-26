@@ -8,9 +8,10 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 export function IconButton({ className, label, children, ...props }: Props) {
   return (
     <button
+      type={props.type ?? 'button'}
       aria-label={label}
       className={cn(
-        'icon-button h-10 w-10 inline-flex items-center justify-center rounded-md',
+        'icon-button icon-button--md inline-flex items-center justify-center',
         className,
       )}
       {...props}

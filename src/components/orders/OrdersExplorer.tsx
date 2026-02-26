@@ -40,7 +40,7 @@ export function OrdersExplorer({
   locale,
   contentType = 'requests',
   backHref = '/',
-  emptyCtaHref = '/?view=orders',
+  emptyCtaHref = '/workspace?section=orders',
   showBack = false,
   onListDensityChange,
 }: OrdersExplorerProps) {

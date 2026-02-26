@@ -34,7 +34,7 @@ export function HomeProofPanel({ t, proofCases, proofIndex }: HomeProofPanelProp
       </div>
       <div className="top-providers-footer flex justify-center">
         <MoreDotsLink
-          href="/orders?tab=reviews&reviewSort=published_desc"
+          href="/workspace?tab=reviews&reviewSort=published_desc"
           label={t(I18N_KEYS.homePublic.viewAll)}
         />
       </div>

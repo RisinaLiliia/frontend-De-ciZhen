@@ -8,7 +8,7 @@ import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { IconButton } from '@/components/ui/IconButton';
 import { IconLogin, IconLogout, IconUserPlus } from '@/components/ui/icons/icons';
-import { DEFAULT_PUBLIC_REQUESTS_URL } from '@/features/auth/constants';
+import { DEFAULT_PUBLIC_WORKSPACE_URL } from '@/features/auth/constants';
 
 export function AuthActions() {
   const t = useT();
@@ -26,10 +26,10 @@ export function AuthActions() {
   const onLogout = React.useCallback(async () => {
     await logout();
     if (typeof window !== 'undefined') {
-      window.location.assign(DEFAULT_PUBLIC_REQUESTS_URL);
+      window.location.assign(DEFAULT_PUBLIC_WORKSPACE_URL);
       return;
     }
-    router.replace(DEFAULT_PUBLIC_REQUESTS_URL);
+    router.replace(DEFAULT_PUBLIC_WORKSPACE_URL);
   }, [logout, router]);
 
   if (status === 'idle' || status === 'loading') return null;
@@ -37,7 +37,7 @@ export function AuthActions() {
   if (status === 'authenticated' && user) {
     return (
       <div className="flex items-center gap-2">
-        <IconButton label={t(I18N_KEYS.auth.logoutLabel)} onClick={onLogout}>
+        <IconButton label={t(I18N_KEYS.auth.logoutLabel)} onClick={onLogout} className="icon-button--topbar">
           <IconLogout />
         </IconButton>
       </div>
@@ -46,22 +46,20 @@ export function AuthActions() {
 
   return (
     <div className="flex items-center gap-2">
-      <button
-        type="button"
+      <IconButton
         onClick={() => openAuth('/auth/login')}
-        aria-label={t(I18N_KEYS.auth.loginCta)}
-        className="icon-button h-10 w-10 inline-flex items-center justify-center rounded-md"
+        label={t(I18N_KEYS.auth.loginCta)}
+        className="icon-button--topbar"
       >
         <IconLogin />
-      </button>
-      <button
-        type="button"
+      </IconButton>
+      <IconButton
         onClick={() => openAuth('/auth/register')}
-        aria-label={t(I18N_KEYS.auth.registerCta)}
-        className="icon-button auth-actions__register h-10 w-10 inline-flex items-center justify-center rounded-md"
+        label={t(I18N_KEYS.auth.registerCta)}
+        className="icon-button--topbar auth-actions__register"
       >
         <IconUserPlus />
-      </button>
+      </IconButton>
     </div>
   );
 }

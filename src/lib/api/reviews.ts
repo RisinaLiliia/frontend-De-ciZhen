@@ -1,7 +1,7 @@
 // src/lib/api/reviews.ts
 import { apiGet } from '@/lib/api/http';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
-import { isMockProviderId, listMockReviews, listMockReviewsPage } from '@/lib/api/reviews-mock';
+import { isMockProviderId, listMockReviewsPage } from '@/lib/api/reviews-mock';
 
 export type ReviewsSort = 'created_desc' | 'rating_desc';
 

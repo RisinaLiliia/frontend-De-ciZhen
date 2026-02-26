@@ -412,7 +412,7 @@ function CreateRequestContent() {
         window.localStorage.removeItem(REQUEST_DRAFT_STORAGE_KEY);
       }
       toast.success(t(submitIntent === 'publish' ? I18N_KEYS.request.published : I18N_KEYS.request.created));
-      router.push(submitIntent === 'publish' ? '/requests' : '/requests?tab=my-requests');
+      router.push(submitIntent === 'publish' ? '/workspace?tab=new-orders' : '/workspace?tab=my-requests');
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) {
         toast.message(t(I18N_KEYS.requestDetails.loginRequired));

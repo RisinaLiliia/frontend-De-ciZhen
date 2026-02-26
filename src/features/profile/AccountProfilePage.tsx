@@ -177,7 +177,7 @@ export function AccountProfilePage() {
       <section className="card stack-sm">
         <div className="flex items-center justify-between">
           <h2 className="typo-h3">{t(I18N_KEYS.client.requestsTitle)}</h2>
-          <Link href="/requests" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
+          <Link href="/workspace?tab=my-requests" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="stack-sm">
           <WorkspaceContentState
@@ -186,7 +186,7 @@ export function AccountProfilePage() {
             emptyTitle={t(I18N_KEYS.client.requestsEmpty)}
             emptyHint={t(I18N_KEYS.client.requestsTitle)}
             emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
-            emptyCtaHref="/orders?tab=new-orders"
+            emptyCtaHref="/workspace?tab=new-orders"
           >
             {myRequests.slice(0, 3).map((item) => (
               <div key={item.id} className="flex items-center justify-between workspace-list-item">
@@ -207,7 +207,7 @@ export function AccountProfilePage() {
       <section className="card stack-sm">
         <div className="flex items-center justify-between">
           <h2 className="typo-h3">{t(I18N_KEYS.provider.myResponsesTitle)}</h2>
-          <Link href="/requests" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
+          <Link href="/workspace?tab=my-offers" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="stack-sm">
           <WorkspaceContentState
@@ -216,7 +216,7 @@ export function AccountProfilePage() {
             emptyTitle={t(I18N_KEYS.provider.responsesEmpty)}
             emptyHint={t(I18N_KEYS.provider.myResponsesTitle)}
             emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
-            emptyCtaHref="/orders?tab=new-orders"
+            emptyCtaHref="/workspace?tab=new-orders"
           >
             {providerOffers.slice(0, 3).map((item) => (
               <div key={item.id} className="flex items-center justify-between workspace-list-item">
@@ -234,7 +234,7 @@ export function AccountProfilePage() {
       <section className="card stack-sm">
         <div className="flex items-center justify-between">
           <h2 className="typo-h3">{t(I18N_KEYS.client.contractsTitle)}</h2>
-          <Link href="/orders?tab=completed-jobs" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
+          <Link href="/workspace?tab=completed-jobs" prefetch={false} className="typo-small">{t(I18N_KEYS.client.viewAll)}</Link>
         </div>
         <div className="flex items-center justify-between">
           <span className="typo-small">{t(I18N_KEYS.provider.contractsTitle)}</span>

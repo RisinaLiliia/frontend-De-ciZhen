@@ -33,7 +33,7 @@ const FALLBACK_FETCH_LIMIT = 12;
 
 export function HomeNearbyPanel({
   t,
-  viewAllHref = '/requests',
+  viewAllHref = '/workspace?section=orders',
   itemsLimit = DEFAULT_NEARBY_ITEMS,
   visibleRows,
 }: HomeNearbyPanelProps) {

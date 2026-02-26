@@ -8,6 +8,7 @@ import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { cn } from '@/lib/utils/cn';
 import { useInfiniteMotionController } from '@/hooks/useInfiniteMotionController';
+import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 
 type Props = {
   title?: string;
@@ -39,14 +40,18 @@ export function PageShell({
   children,
 }: Props) {
   useInfiniteMotionController();
+  const authStatus = useAuthStatus();
 
   const hasWorkspaceNav = showWorkspaceNav;
+  const canShowTopbarToggles = authStatus === 'unauthenticated';
+  const isLanguageToggleVisible = showLanguageToggle && canShowTopbarToggles;
+  const isThemeToggleVisible = showThemeToggle && canShowTopbarToggles;
 
   const headerRight =
-    showLanguageToggle || showThemeToggle || right ? (
+    isLanguageToggleVisible || isThemeToggleVisible || right ? (
       <div className="page-shell__topbar-actions flex items-center gap-2">
-        {showLanguageToggle ? <LanguageToggle /> : null}
-        {showThemeToggle ? <ThemeToggle /> : null}
+        {isLanguageToggleVisible ? <LanguageToggle /> : null}
+        {isThemeToggleVisible ? <ThemeToggle /> : null}
         {right}
       </div>
     ) : null;
