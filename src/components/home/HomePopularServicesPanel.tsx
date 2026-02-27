@@ -47,7 +47,7 @@ export function HomePopularServicesPanel({
                 alt=""
                 className="home-popular-services__image"
                 fill
-                sizes="(max-width: 768px) 30vw, 120px"
+                sizes="(max-width: 768px) 46vw, 205px"
                 quality={60}
               />
             </span>
