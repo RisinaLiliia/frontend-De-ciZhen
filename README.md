@@ -22,6 +22,7 @@ Next.js frontend for De'ciZhen marketplace and workspace.
 - React Hook Form + Zod (forms/validation)
 - Tailwind CSS + project CSS tokens/themes
 - `react-markdown` (legal documents rendering)
+- Vitest + Testing Library + JSDOM (unit + component behavior tests)
 
 ## 2. Product Routing Model
 
@@ -63,11 +64,11 @@ Next.js frontend for De'ciZhen marketplace and workspace.
 - `/requests` is canonicalized as redirect to `/?view=orders`.
 - `/orders` remains workspace route for authenticated flows.
 
-### Requests page modularization
+### Workspace/requests page modularization
 Goal: keep route files thin and isolate data logic from UI rendering.
 This modularization ensures clear separation of concerns and improves testability.
 
-Core screen `src/app/requests/page.tsx` is refactored into composable modules:
+Core screen `src/app/orders/OrdersPageClient.tsx` is refactored into composable modules:
 - `src/features/requests/page/useRequestsPageData.ts` (query/data layer)
 - `src/features/requests/page/useContractRequestsData.ts` (contract request mapping/query)
 - `src/features/requests/page/useRequestsWorkspaceState.tsx` (workspace KPIs/nav/stats/top providers)
@@ -109,6 +110,12 @@ Notes:
 Prerequisites:
 - Node.js `>= 20.9.0`
 
+Verify active runtime:
+
+```bash
+node -v
+```
+
 Install dependencies:
 
 ```bash
@@ -131,10 +138,16 @@ Lint:
 npm run lint
 ```
 
-Unit tests (core flows):
+Unit + component tests:
 
 ```bash
 npm run test
+```
+
+Type check:
+
+```bash
+npm exec tsc --noEmit
 ```
 
 Production build check:
@@ -168,6 +181,7 @@ npm run start
 - `npm run start`
 - `npm run lint`
 - `npm run test`
+- `npm exec tsc --noEmit`
 
 ## 11. License
 This project is proprietary. See [LICENSE](./LICENSE).
