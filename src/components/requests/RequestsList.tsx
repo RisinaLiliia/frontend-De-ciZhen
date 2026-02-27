@@ -11,6 +11,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { resolveOfferCardState } from '@/features/requests/uiState';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
+import { pickRequestImage } from '@/lib/requests/images';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -176,7 +177,8 @@ function RequestsListComponent({
             href={detailsHref}
             ariaLabel={t(I18N_KEYS.requestsPage.openRequest)}
             imageSrc={imageSrc}
-            imageAlt={categoryLabel}
+            imageAlt=""
+            imagePriority={index === 0 && !isProviderPersonalized && !isOwnerRequestList}
             badges={
               isProviderPersonalized
                 ? []
@@ -422,15 +424,4 @@ function pickCategoryLabel(
 function estimatePrice(area: number, propertyType: string) {
   const factor = propertyType === 'house' ? 1.25 : 1;
   return Math.max(35, Math.round(area * 1.15 * factor));
-}
-
-function pickRequestImage(categoryKey: string) {
-  const map: Record<string, string> = {
-    cleaning: '/Reinigung im modernen Wohnzimmer.jpg',
-    electric: '/Elektriker bei der Arbeit an Schaltschrank.jpg',
-    plumbing: '/Freundlicher Klempner bei der Arbeit.jpg',
-    repair: '/Techniker repariert Smartphone in Werkstatt.jpg',
-    moving: '/L%C3%A4dt%20Kisten%20aus%20einem%20Transporter.jpg',
-  };
-  return map[categoryKey] ?? '/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg';
 }

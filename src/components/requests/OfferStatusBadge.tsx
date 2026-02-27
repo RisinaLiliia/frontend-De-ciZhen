@@ -10,6 +10,8 @@ type OfferStatusBadgeProps = {
 
 export function OfferStatusBadge({ status, label, title }: OfferStatusBadgeProps) {
   return (
-    <span className={`${getStatusBadgeClass(status)} capitalize`} title={title} aria-label={title ?? label}>{label}</span>
+    <span className={`${getStatusBadgeClass(status)} capitalize`} title={title}>
+      {label}
+    </span>
   );
 }

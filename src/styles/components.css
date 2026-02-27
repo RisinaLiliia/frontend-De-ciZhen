@@ -1943,7 +1943,7 @@
     border-radius: 999px;
     border: 1px solid color-mix(in oklab, var(--c-accent) 36%, var(--c-border) 64%);
     background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
-    color: var(--c-accent);
+    color: var(--c-text);
     font-size: 15px;
     font-weight: 700;
     line-height: 1;

@@ -44,10 +44,11 @@ export function HomePopularServicesPanel({
             <span className="home-popular-services__image-wrap">
               <Image
                 src={service.imageSrc}
-                alt={service.label}
+                alt=""
                 className="home-popular-services__image"
                 fill
-                sizes="(max-width: 768px) 33vw, 220px"
+                sizes="(max-width: 768px) 30vw, 120px"
+                quality={60}
               />
             </span>
             <CountBadge

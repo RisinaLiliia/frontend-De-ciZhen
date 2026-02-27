@@ -26,6 +26,9 @@ export type OrderCardProps = {
   overlaySlot?: React.ReactNode;
   actionSlot?: React.ReactNode;
   prefetch?: boolean;
+  imagePriority?: boolean;
+  imageQuality?: number;
+  imageSizes?: string;
 };
 
 export function OrderCard({
@@ -48,6 +51,9 @@ export function OrderCard({
   overlaySlot,
   actionSlot,
   prefetch = false,
+  imagePriority = false,
+  imageQuality = 62,
+  imageSizes = '(max-width: 640px) 96px, (max-width: 1024px) 140px, 180px',
 }: OrderCardProps) {
   const router = useRouter();
   const hasImage = Boolean(imageSrc);
@@ -104,9 +110,11 @@ export function OrderCard({
         <div className="request-card__media">
           <Image
             src={safeImageSrc}
-            alt={imageAlt ?? category}
+            alt={imageAlt ?? ''}
             fill
-            sizes="(max-width: 768px) 100vw, 360px"
+            sizes={imageSizes}
+            quality={imageQuality}
+            priority={imagePriority}
             className="request-card__image"
           />
         </div>

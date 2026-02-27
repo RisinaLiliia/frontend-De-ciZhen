@@ -23,12 +23,7 @@ export function ProviderDecisionMetrics({
     <div className={`provider-decision-metrics ${className ?? ''}`.trim()}>
       {hasTime ? (
         <span className="provider-decision-metric">
-          <span
-            className="provider-decision-metric__icon"
-            tabIndex={0}
-            title={responseTimeLabel ?? undefined}
-            aria-label={responseTimeLabel ?? undefined}
-          >
+          <span className="provider-decision-metric__icon" aria-hidden="true">
             <IconClock />
           </span>
           {responseTimeLabel ? <span className="provider-decision-metric__label">{responseTimeLabel}:</span> : null}
@@ -37,12 +32,7 @@ export function ProviderDecisionMetrics({
       ) : null}
       {hasRate ? (
         <span className="provider-decision-metric">
-          <span
-            className="provider-decision-metric__icon"
-            tabIndex={0}
-            title={responseRateLabel ?? undefined}
-            aria-label={responseRateLabel ?? undefined}
-          >
+          <span className="provider-decision-metric__icon" aria-hidden="true">
             <IconCheck />
           </span>
           {responseRateLabel ? <span className="provider-decision-metric__label">{responseRateLabel}:</span> : null}

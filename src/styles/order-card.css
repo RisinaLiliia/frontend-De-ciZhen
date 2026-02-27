@@ -228,15 +228,15 @@
   }
 
   .request-card__price-trend.is-down {
-    color: color-mix(in oklab, var(--c-warning) 84%, var(--c-text) 16%);
+    color: var(--c-text);
     border-color: color-mix(in oklab, var(--c-warning) 46%, var(--c-border) 54%);
-    background: color-mix(in oklab, var(--c-warning) 12%, var(--c-panel) 88%);
+    background: color-mix(in oklab, var(--c-warning) 22%, var(--c-panel) 78%);
   }
 
   .request-card__price-trend.is-up {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
+    color: var(--c-text);
     border-color: color-mix(in oklab, var(--c-success) 45%, var(--c-border) 55%);
-    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
+    background: color-mix(in oklab, var(--c-success) 22%, var(--c-panel) 78%);
   }
 
   .request-card__sub {

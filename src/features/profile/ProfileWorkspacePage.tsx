@@ -197,7 +197,7 @@ export default function ProfileWorkspacePage() {
     const done = checks.filter(Boolean).length;
     return Math.round((done / checks.length) * 100);
   }, [authMe?.bio, authMe?.city, authMe?.name, authMe?.phone, avatarUrl]);
-  const effectiveTheme = isThemeReady ? resolvedTheme : 'dark';
+  const effectiveTheme = isThemeReady ? resolvedTheme : 'light';
 
   const handleSaveProfile = async () => {
     const name = profileForm.name.trim();

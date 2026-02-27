@@ -1,12 +1,12 @@
 // src/components/ui/ThemeToggle.tsx
-"use client";
+'use client';
 
-import * as React from "react";
-import { useTheme } from "next-themes";
-import { useT } from "@/lib/i18n/useT";
-import { I18N_KEYS } from "@/lib/i18n/keys";
-import { IconButton } from "@/components/ui/IconButton";
-import { IconMoon, IconSun } from "@/components/ui/icons/icons";
+import * as React from 'react';
+import { useTheme } from 'next-themes';
+import { useT } from '@/lib/i18n/useT';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { IconButton } from '@/components/ui/IconButton';
+import { IconMoon, IconSun } from '@/components/ui/icons/icons';
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -17,8 +17,8 @@ export function ThemeToggle() {
     setMounted(true);
   }, []);
 
-  const isDark = (mounted ? resolvedTheme : "dark") === "dark";
-  const next = isDark ? "light" : "dark";
+  const isDark = (mounted ? resolvedTheme : 'light') === 'dark';
+  const next = isDark ? 'light' : 'dark';
 
   return (
     <IconButton
