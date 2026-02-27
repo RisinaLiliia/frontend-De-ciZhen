@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 
 const apiBaseFromServerEnv = process.env.API_BASE_URL?.trim();
 const apiBaseFromPublicEnv = process.env.NEXT_PUBLIC_API_BASE?.trim();
+const imageUnoptimized = process.env.NEXT_IMAGE_UNOPTIMIZED === 'true';
 const API_BASE =
   apiBaseFromServerEnv ||
   (process.env.NODE_ENV === 'production' ? apiBaseFromPublicEnv : '') ||
@@ -9,8 +10,8 @@ const API_BASE =
 
 const nextConfig: NextConfig = {
   images: {
-    // Keep local dev resilient when external image hosts are slow/unreachable.
-    unoptimized: process.env.NODE_ENV === 'development',
+    // Opt-in fallback for local troubleshooting with slow/unreachable image hosts.
+    unoptimized: imageUnoptimized,
     qualities: [60, 62, 75],
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
