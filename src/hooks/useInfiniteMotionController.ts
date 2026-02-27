@@ -94,7 +94,7 @@ export function useInfiniteMotionController() {
     };
 
     const mutationObserver = new MutationObserver(scheduleSync);
-    mutationObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
 
     const handleVisibilityChange = () => applyPausedState();
     const handleMotionPreferenceChange = () => applyPausedState();

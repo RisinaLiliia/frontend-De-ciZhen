@@ -15,6 +15,16 @@ export const metadata: Metadata = {
   },
   description:
     'De’ciZhen ist ein lokaler Service-Marktplatz: Aufträge veröffentlichen, Anbieter vergleichen, chatten und Aufträge sicher abschließen.',
+  manifest: '/favicon/site.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon/favicon.ico' },
+      { url: '/favicon/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+    ],
+    shortcut: [{ url: '/favicon/favicon.ico' }],
+    apple: [{ url: '/favicon/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
 };
 
 export default function RootLayout({
