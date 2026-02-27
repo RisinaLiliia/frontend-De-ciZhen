@@ -34,6 +34,7 @@ type RequestsListProps = {
   onSendOffer?: (requestId: string) => void;
   onEditOffer?: (requestId: string) => void;
   onWithdrawOffer?: (offerId: string) => void;
+  onOpenChatThread?: (offer: OfferDto) => void;
   pendingOfferRequestId?: string | null;
   pendingFavoriteRequestIds?: Set<string>;
   showStaticFavoriteIcon?: boolean;
@@ -61,6 +62,7 @@ function RequestsListComponent({
   onSendOffer,
   onEditOffer,
   onWithdrawOffer,
+  onOpenChatThread,
   pendingOfferRequestId = null,
   pendingFavoriteRequestIds,
   showStaticFavoriteIcon = false,
@@ -293,16 +295,30 @@ function RequestsListComponent({
                         </i>
                       </Link>
                       {itemOffer?.id ? (
-                        <Link
-                          href={`/chat/${itemOffer.id}`}
-                          className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
-                          aria-label={t(I18N_KEYS.requestDetails.ctaChat)}
-                          title={t(I18N_KEYS.requestDetails.ctaChat)}
-                        >
-                          <i className="offer-action-btn__icon">
-                            <IconChat />
-                          </i>
-                        </Link>
+                        onOpenChatThread ? (
+                          <button
+                            type="button"
+                            className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
+                            onClick={() => onOpenChatThread(itemOffer)}
+                            aria-label={t(I18N_KEYS.requestDetails.ctaChat)}
+                            title={t(I18N_KEYS.requestDetails.ctaChat)}
+                          >
+                            <i className="offer-action-btn__icon">
+                              <IconChat />
+                            </i>
+                          </button>
+                        ) : (
+                          <Link
+                            href="/chat"
+                            className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
+                            aria-label={t(I18N_KEYS.requestDetails.ctaChat)}
+                            title={t(I18N_KEYS.requestDetails.ctaChat)}
+                          >
+                            <i className="offer-action-btn__icon">
+                              <IconChat />
+                            </i>
+                          </Link>
+                        )
                       ) : null}
                     </>
                   ) : null}
@@ -363,6 +379,7 @@ function areRequestsListPropsEqual(prev: RequestsListProps, next: RequestsListPr
     prev.onSendOffer === next.onSendOffer &&
     prev.onEditOffer === next.onEditOffer &&
     prev.onWithdrawOffer === next.onWithdrawOffer &&
+    prev.onOpenChatThread === next.onOpenChatThread &&
     prev.pendingOfferRequestId === next.pendingOfferRequestId &&
     prev.pendingFavoriteRequestIds === next.pendingFavoriteRequestIds &&
     prev.showStaticFavoriteIcon === next.showStaticFavoriteIcon &&

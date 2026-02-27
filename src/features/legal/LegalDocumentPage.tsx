@@ -16,6 +16,7 @@ type TocItem = { id: string; label: string; level: 2 | 3 };
 
 export function LegalDocumentPage({ title, type }: Props) {
   const [content, setContent] = React.useState<string>('');
+  const [lastUpdatedAt, setLastUpdatedAt] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [activeSectionId, setActiveSectionId] = React.useState<string>('');
@@ -30,11 +31,16 @@ export function LegalDocumentPage({ title, type }: Props) {
     setError(null);
 
     load()
-      .then((text) => {
-        if (isActive) setContent(text);
+      .then((document) => {
+        if (!isActive) return;
+        setContent(document.content);
+        setLastUpdatedAt(document.lastModified);
       })
       .catch(() => {
-        if (isActive) setError('Dokument konnte nicht geladen werden.');
+        if (!isActive) return;
+        setContent('');
+        setLastUpdatedAt(null);
+        setError('Dokument konnte nicht geladen werden.');
       })
       .finally(() => {
         if (isActive) setLoading(false);
@@ -106,13 +112,17 @@ export function LegalDocumentPage({ title, type }: Props) {
   }, [content]);
 
   const lastUpdatedLabel = React.useMemo(
-    () =>
-      new Intl.DateTimeFormat('de-DE', {
+    () => {
+      if (!lastUpdatedAt) return 'Nicht angegeben';
+      const parsed = new Date(lastUpdatedAt);
+      if (!Number.isFinite(parsed.getTime())) return 'Nicht angegeben';
+      return new Intl.DateTimeFormat('de-DE', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
-      }).format(new Date()),
-    [],
+      }).format(parsed);
+    },
+    [lastUpdatedAt],
   );
 
   const handleCopyLink = React.useCallback(async () => {

@@ -17,7 +17,9 @@ import {
   deleteMyRequest,
 } from '@/lib/api/requests';
 import { deleteOffer } from '@/lib/api/offers';
+import type { OfferDto } from '@/lib/api/dto/offers';
 import { addFavorite, removeFavorite } from '@/lib/api/favorites';
+import { createThread } from '@/lib/api/chat';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -281,6 +283,7 @@ function RequestsPageContent() {
     locale,
     isAuthed,
     isWorkspaceAuthed,
+    activeWorkspaceTab,
     activeReviewsView,
     cityId,
     subcategoryKey,
@@ -411,6 +414,30 @@ function RequestsPageContent() {
       }
     },
     [myOffers, qc, t],
+  );
+
+  const onOpenChatThread = React.useCallback(
+    async (offer: OfferDto) => {
+      try {
+        const providerUserId = offer.providerUserId?.trim();
+        if (!providerUserId || !offer.requestId) {
+          router.push('/chat');
+          return;
+        }
+        const thread = await createThread({
+          requestId: offer.requestId,
+          providerUserId,
+          offerId: offer.id,
+        });
+        await qc.invalidateQueries({ queryKey: ['chat-inbox'] });
+        router.push(`/chat/${thread.id}`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+        router.push('/chat');
+      }
+    },
+    [qc, router, t],
   );
 
   const onDeleteMyRequest = React.useCallback(
@@ -704,6 +731,7 @@ function RequestsPageContent() {
     onToggleRequestFavorite,
     onOpenOfferSheet,
     onWithdrawOffer,
+    onOpenChatThread,
     pendingOfferRequestId,
     pendingFavoriteRequestIds,
     isAuthed,

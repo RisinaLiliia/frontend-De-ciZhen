@@ -53,9 +53,10 @@ export function OrderCard({
   const hasImage = Boolean(imageSrc);
   const visibleBadges = badges.slice(0, 1);
   const safeImageSrc = imageSrc ?? '';
+  const isLinkMode = mode === 'link';
   const cardClassName = `request-card request-card--media-right order-card-link ${
     !hasImage ? 'request-card--no-media' : ''
-  } ${isActive ? 'is-active' : ''} ${mode === 'link' ? 'request-card--link' : ''}`.trim();
+  } ${isActive ? 'is-active' : ''} ${isLinkMode ? 'request-card--link' : ''}`.trim();
 
   const isInteractiveTarget = React.useCallback((target: EventTarget | null) => {
     if (!(target instanceof Element)) return false;
@@ -182,12 +183,12 @@ export function OrderCard({
 
   return (
     <article
-      className={`${cardClassName} request-card--link`.trim()}
+      className={cardClassName}
       aria-label={ariaLabel ?? title}
-      role="link"
-      tabIndex={0}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
+      role={isLinkMode ? 'link' : undefined}
+      tabIndex={isLinkMode ? 0 : undefined}
+      onClick={isLinkMode ? handleClick : undefined}
+      onKeyDown={isLinkMode ? handleKeyDown : undefined}
       data-prefetch={prefetch ? 'true' : 'false'}
     >
       {cardContent}
