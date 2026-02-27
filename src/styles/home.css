@@ -263,7 +263,7 @@
 
   .hero-experiment--subtle {
     --hero-shot-duration: 3.2s;
-    --hero-shot-iterations: infinite;
+    --hero-shot-iterations: 4;
     --hero-mobile-phase-duration: var(--hero-shot-duration);
     --hero-mobile-rebound-duration: var(--hero-shot-duration);
     --hero-mobile-roll-duration: var(--hero-shot-duration);
@@ -507,8 +507,9 @@
     background: color-mix(in oklab, var(--c-surface) 88%, transparent);
     color: var(--c-text-muted);
     font-size: var(--fs-small);
-    animation: badge-pulse 1.6s ease-in-out infinite;
+    animation: hero-badge-float 2.2s ease-in-out infinite;
     justify-self: start;
+    will-change: transform, opacity;
   }
 
   .hero-experiment__preview-badge::after {
@@ -561,8 +562,8 @@
     height: 6px;
     border-radius: 999px;
     background: color-mix(in oklab, var(--c-primary) 82%, var(--c-hero-tint-primary) 18%);
-    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-primary) 25%, transparent);
     animation: hero-trust-pulse var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
+    will-change: transform, opacity;
   }
 
   .hero-experiment__actions {
@@ -628,6 +629,7 @@
     stroke-dasharray: 430;
     stroke-dashoffset: 430;
     animation: hero-shot-trace var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: stroke-dashoffset, opacity;
   }
 
   .hero-shot__hoop {
@@ -667,15 +669,18 @@
 
   .hero-shot__dribble-mark.is-one {
     animation: hero-shot-dribble-one var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: transform, opacity;
   }
 
   .hero-shot__dribble-mark.is-two {
     animation: hero-shot-dribble-two var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: transform, opacity;
   }
 
   .hero-shot__ball-wrap {
     transform-origin: center;
     animation: hero-shot-ball var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: transform, opacity;
   }
 
   .hero-shot__ball-phase,
@@ -704,15 +709,33 @@
     opacity: 0;
     transform-origin: center;
     animation: hero-shot-pulse var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: transform, opacity;
+  }
+
+  @keyframes hero-badge-float {
+    0% {
+      transform: translateY(0);
+      opacity: 0.96;
+    }
+    50% {
+      transform: translateY(-1px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 0.96;
+    }
   }
 
   @keyframes hero-trust-pulse {
     0%,
     100% {
-      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-primary) 25%, transparent);
+      transform: scale(1);
+      opacity: 0.9;
     }
     50% {
-      box-shadow: 0 0 0 5px transparent;
+      transform: scale(1.22);
+      opacity: 0.62;
     }
   }
 
