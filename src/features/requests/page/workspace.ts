@@ -1,5 +1,4 @@
 export type WorkspaceTab =
-  | 'new-orders'
   | 'my-requests'
   | 'my-offers'
   | 'completed-jobs'
@@ -12,7 +11,6 @@ export type FavoritesView = 'requests' | 'providers';
 export type ReviewsView = 'provider' | 'client';
 
 const WORKSPACE_TABS: WorkspaceTab[] = [
-  'new-orders',
   'my-requests',
   'my-offers',
   'completed-jobs',
@@ -23,7 +21,7 @@ const WORKSPACE_TABS: WorkspaceTab[] = [
 export const ORDERS_TAB_STORAGE_KEY = 'dc_orders_tab';
 
 export function resolveWorkspaceTab(value: string | null): WorkspaceTab {
-  return value && WORKSPACE_TABS.includes(value as WorkspaceTab) ? (value as WorkspaceTab) : 'new-orders';
+  return value && WORKSPACE_TABS.includes(value as WorkspaceTab) ? (value as WorkspaceTab) : 'my-requests';
 }
 
 export function resolveStatusFilter(value: string | null): WorkspaceStatusFilter {
@@ -57,4 +55,3 @@ export function mapContractStatusToFilter(status?: string): WorkspaceStatusFilte
   if (status === 'completed') return 'completed';
   return 'in_progress';
 }
-

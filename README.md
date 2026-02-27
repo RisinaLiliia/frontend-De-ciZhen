@@ -29,13 +29,15 @@ Next.js frontend for De'ciZhen marketplace and workspace.
 ### Public
 - `/` home
 - `/?view=orders` public orders explore mode (left-column listing with filters on home shell)
-- `/requests` public canonical alias for explore mode (authenticated users may be redirected to workspace by proxy rules)
+- `/workspace?section=orders` public workspace view (orders)
+- `/workspace?section=providers` public workspace view (providers)
 - `/requests/[id]` request details
 - `/providers/[id]` public provider profile
+- no `/orders` route (workspace is served only under `/workspace`)
 
 ### Authenticated Workspace
-- `/orders` canonical workspace screen (tab-based)
-- `/profile/workspace` canonical profile/settings screen
+- `/workspace?tab=*` canonical workspace screen (tab-based)
+- `/profile/{id}` canonical profile/settings screen (`/profile/workspace` stays as compatibility alias)
 - `/chat` unified inbox
 
 ### Auth
@@ -47,11 +49,12 @@ Next.js frontend for De'ciZhen marketplace and workspace.
 - `/privacy-policy`
 - `/cookie-notice`
 
-## 3. Access Guard (Next 16)
-- Route guard is implemented via `src/proxy.ts` (Next 16 `proxy`, not legacy middleware) to centralize access rules.
-- Rules:
-  - unauthenticated users opening `/orders*` are redirected to `/auth/login?next=...`
-  - authenticated users opening `/requests` are redirected to workspace default tab
+## 3. Access Model
+- Workspace route is served directly by `src/app/workspace/page.tsx` via `WorkspaceRouteClient`.
+- No proxy-based rewrites/redirects are used for `/workspace`.
+- Runtime mode selection is client-side:
+  - authenticated users: private workspace tabs (`/workspace?tab=*`)
+  - guests: public workspace explore (`/workspace?section=*`)
 
 ## 4. Architecture Notes
 
@@ -61,14 +64,19 @@ Next.js frontend for De'ciZhen marketplace and workspace.
   - orders explore: `/?view=orders`
 - Explore mode keeps top layout and right column, while left column switches to `OrdersExplorer`.
 - Filters/pagination are URL-driven in explore mode (`sort`, `page`, `limit`, and filter params) for shareable state.
-- `/requests` is canonicalized as redirect to `/?view=orders`.
-- `/orders` remains workspace route for authenticated flows.
+- Workspace guest explore (`/workspace?section=orders|providers`) uses the same visual shell directly on `/workspace`.
 
 ### Workspace/requests page modularization
 Goal: keep route files thin and isolate data logic from UI rendering.
 This modularization ensures clear separation of concerns and improves testability.
 
-Core screen `src/app/orders/OrdersPageClient.tsx` is refactored into composable modules:
+Workspace entrypoint:
+- `src/app/workspace/WorkspaceRouteClient.tsx` (auth/guest mode switch)
+
+Private workspace screen:
+- `src/app/orders/OrdersPageClient.tsx`
+
+Composable modules:
 - `src/features/requests/page/useRequestsPageData.ts` (query/data layer)
 - `src/features/requests/page/useContractRequestsData.ts` (contract request mapping/query)
 - `src/features/requests/page/useRequestsWorkspaceState.tsx` (workspace KPIs/nav/stats/top providers)
@@ -108,7 +116,7 @@ Notes:
 
 ## 6. Local Development
 Prerequisites:
-- Node.js `>= 20.9.0`
+- Node.js `>= 20.20.0` (project baseline: `20.20.0`, see `.nvmrc`)
 
 Verify active runtime:
 

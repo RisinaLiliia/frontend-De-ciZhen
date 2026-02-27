@@ -18,5 +18,4 @@ export const SORT_OPTIONS: SortOption[] = [
   { value: 'price_desc', labelKey: I18N_KEYS.requestsPage.sortPriceDesc },
 ];
 
-export const NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX = 'dc_requests_new_seen_total_v1';
-
+export const WORKSPACE_PUBLIC_ORDERS_SEEN_TOTAL_KEY_PREFIX = 'dc_workspace_public_orders_seen_total_v1';

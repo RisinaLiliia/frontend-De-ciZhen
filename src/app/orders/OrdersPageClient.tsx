@@ -7,11 +7,14 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
-import { PersonalNavSection } from '@/components/layout/PersonalNavSection';
+import { HomeOrdersExplorePanel } from '@/components/home/HomeOrdersExplorePanel';
+import { HomeNearbyPanel } from '@/components/home/HomeNearbyPanel';
+import { HomeTopProvidersPanel } from '@/components/home/HomeTopProvidersPanel';
+import { HomeProofPanel } from '@/components/home/HomeProofPanel';
+import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
+import { HomePlatformActivityPanel } from '@/components/home/HomePlatformActivityPanel';
 import { HeroSection } from '@/components/ui/HeroSection';
-import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
 import { ProofReviewCard } from '@/components/reviews/ProofReviewCard';
-import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import {
   deleteMyRequest,
@@ -25,14 +28,16 @@ import { pickI18n } from '@/lib/i18n/helpers';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
+import { HOME_PROOF_CASES } from '@/data/home';
+import type { ProofCase } from '@/types/home';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
+import { useRotatingIndex } from '@/hooks/useRotatingIndex';
 import { trackUXEvent } from '@/lib/analytics';
 import {
   ALL_OPTION_KEY,
-  NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX,
+  WORKSPACE_PUBLIC_ORDERS_SEEN_TOTAL_KEY_PREFIX,
   SORT_OPTIONS,
 } from '@/features/requests/page/public';
 import {
@@ -53,8 +58,16 @@ import { useRequestsPageData } from '@/features/requests/page/useRequestsPageDat
 import { useContractRequestsData } from '@/features/requests/page/useContractRequestsData';
 import { useRequestsWorkspaceState } from '@/features/requests/page/useRequestsWorkspaceState';
 import { useRequestsWorkspaceDerived } from '@/features/requests/page/useRequestsWorkspaceDerived';
+import { WorkspaceFrame, WorkspaceTopProvidersAside } from '@/features/requests/page/WorkspaceFrame';
+import { WorkspacePrivateIntro } from '@/features/requests/page/WorkspacePrivateIntro';
 
 const DEFAULT_GUEST_WORKSPACE_URL = '/workspace?section=orders';
+type PublicWorkspaceSection = 'orders' | 'providers' | 'stats';
+
+function resolvePublicSection(value: string | null): PublicWorkspaceSection | null {
+  if (value === 'orders' || value === 'providers' || value === 'stats') return value;
+  return null;
+}
 
 function RequestsPageContent() {
   const router = useRouter();
@@ -69,13 +82,15 @@ function RequestsPageContent() {
   const isWorkspaceRoute = pathname === '/workspace';
   const isWorkspaceAuthed = isWorkspaceRoute && isAuthed;
   const workspaceSection = searchParams.get('section');
+  const activePublicSection = resolvePublicSection(workspaceSection);
+  const isWorkspacePublicSection = activePublicSection !== null;
   const isWorkspaceGuestPreview =
     isWorkspaceRoute &&
     authStatus === 'unauthenticated' &&
-    (workspaceSection === 'orders' || workspaceSection === 'providers');
+    (workspaceSection === 'orders' || workspaceSection === 'providers' || workspaceSection === 'stats');
   const isPersonalized = isAuthed;
   const activeWorkspaceTab = React.useMemo(
-    () => (isWorkspaceRoute ? resolveWorkspaceTab(searchParams.get('tab')) : 'new-orders'),
+    () => (isWorkspaceRoute ? resolveWorkspaceTab(searchParams.get('tab')) : 'my-requests'),
     [isWorkspaceRoute, searchParams],
   );
   const activeStatusFilter = React.useMemo(
@@ -93,7 +108,7 @@ function RequestsPageContent() {
 
   React.useEffect(() => {
     if (!isWorkspaceRoute || authStatus !== 'unauthenticated') return;
-    if (workspaceSection === 'orders' || workspaceSection === 'providers') return;
+    if (workspaceSection === 'orders' || workspaceSection === 'providers' || workspaceSection === 'stats') return;
     router.replace(DEFAULT_GUEST_WORKSPACE_URL);
   }, [authStatus, isWorkspaceRoute, router, workspaceSection]);
 
@@ -291,14 +306,16 @@ function RequestsPageContent() {
 
   const requests = publicRequests?.items ?? [];
   const totalResults = publicRequests?.total ?? requests.length;
-  const totalAllRequests = allRequestsSummary?.total ?? totalResults;
+  const platformOrdersTotal = allRequestsSummary?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalResults / limit));
 
   React.useEffect(() => {
-    if (activeWorkspaceTab !== 'new-orders') return;
+    const isPublicOrdersContext =
+      isWorkspaceGuestPreview || (isWorkspaceAuthed && activePublicSection === 'orders');
+    if (!isPublicOrdersContext) return;
     if (isLoading || isError || requests.length > 0) return;
     trackUXEvent('workspace_empty_result', {
-      tab: 'new-orders',
+      tab: 'public-orders',
       hasFilters: hasActivePublicFilter,
       cityId: cityId === ALL_OPTION_KEY ? null : cityId,
       categoryKey: categoryKey === ALL_OPTION_KEY ? null : categoryKey,
@@ -306,12 +323,14 @@ function RequestsPageContent() {
       sortBy,
     });
   }, [
-    activeWorkspaceTab,
+    activePublicSection,
     categoryKey,
     cityId,
     hasActivePublicFilter,
     isError,
     isLoading,
+    isWorkspaceAuthed,
+    isWorkspaceGuestPreview,
     requests.length,
     sortBy,
     subcategoryKey,
@@ -446,7 +465,7 @@ function RequestsPageContent() {
       setPendingDeleteRequestId(requestId);
       try {
         await deleteMyRequest(requestId);
-        toast.success('Anfrage entfernt');
+        toast.success(t(I18N_KEYS.client.requestDeleted));
         await qc.invalidateQueries({ queryKey: ['requests-my'] });
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
@@ -498,51 +517,94 @@ function RequestsPageContent() {
 
   const createRequestHref = '/auth/login';
   const [seenTotal, setSeenTotal] = React.useState(0);
+  const [exploreListDensity, setExploreListDensity] = React.useState<'single' | 'double'>('single');
+  const proofCases = React.useMemo<ProofCase[]>(
+    () =>
+      HOME_PROOF_CASES.map((item) => ({
+        id: item.id,
+        title: t(item.titleKey),
+        info: t(item.infoKey),
+        review: t(item.reviewKey),
+        price: t(item.priceKey),
+        rating: item.rating,
+        publishedAt: item.publishedAt,
+      })),
+    [t],
+  );
+  const proofCasesPreview = React.useMemo(() => proofCases.slice(0, 4), [proofCases]);
+  const proofIndex = useRotatingIndex(proofCasesPreview.length, {
+    intervalMs: 5200,
+    holdMs: 600,
+  });
+  const exploreSidebarProvidersLimit = React.useMemo(
+    () => (exploreListDensity === 'double' ? 2 : 5),
+    [exploreListDensity],
+  );
+  const exploreSidebarNearbyLimit = React.useMemo(
+    () => (exploreListDensity === 'double' ? 2 : 5),
+    [exploreListDensity],
+  );
+  const exploreSidebarProofCases = React.useMemo(
+    () => (exploreListDensity === 'double' ? proofCasesPreview.slice(0, 2) : proofCasesPreview),
+    [exploreListDensity, proofCasesPreview],
+  );
+  const exploreTrustPanelClassName = exploreListDensity === 'double'
+    ? 'home-trust-live-panel--compact'
+    : undefined;
 
   React.useEffect(() => {
     if (typeof window === 'undefined' || !isAuthed) return;
-    const storageKey = `${NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
+    const storageKey = `${WORKSPACE_PUBLIC_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
     const raw = window.localStorage.getItem(storageKey);
     const parsed = raw ? Number(raw) : 0;
     setSeenTotal(Number.isFinite(parsed) ? parsed : 0);
   }, [auth.user?.id, isAuthed]);
 
   React.useEffect(() => {
-    if (!isAuthed || totalAllRequests <= 0 || typeof window === 'undefined') return;
-    if (seenTotal > totalAllRequests) {
-      const storageKey = `${NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
-      window.localStorage.setItem(storageKey, String(totalAllRequests));
-      setSeenTotal(totalAllRequests);
+    if (!isAuthed || typeof window === 'undefined') return;
+    if (seenTotal > platformOrdersTotal) {
+      const storageKey = `${WORKSPACE_PUBLIC_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
+      window.localStorage.setItem(storageKey, String(platformOrdersTotal));
+      setSeenTotal(platformOrdersTotal);
     }
-  }, [auth.user?.id, isAuthed, seenTotal, totalAllRequests]);
+  }, [auth.user?.id, isAuthed, platformOrdersTotal, seenTotal]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined' || !isWorkspaceAuthed) return;
+    if (isWorkspacePublicSection) return;
     const hasTabInQuery = Boolean(searchParams.get('tab'));
     if (hasTabInQuery) return;
     const storedTab = window.localStorage.getItem(ORDERS_TAB_STORAGE_KEY);
     const nextTab = resolveWorkspaceTab(storedTab);
-    if (!nextTab || nextTab === 'new-orders') return;
+    if (!nextTab || nextTab === 'my-requests') return;
     const next = new URLSearchParams(searchParams.toString());
     next.set('tab', nextTab);
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
-  }, [isWorkspaceAuthed, pathname, router, searchParams]);
+  }, [isWorkspaceAuthed, isWorkspacePublicSection, pathname, router, searchParams]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined' || !isWorkspaceAuthed) return;
+    if (isWorkspacePublicSection) return;
     window.localStorage.setItem(ORDERS_TAB_STORAGE_KEY, activeWorkspaceTab);
-  }, [activeWorkspaceTab, isWorkspaceAuthed]);
+  }, [activeWorkspaceTab, isWorkspaceAuthed, isWorkspacePublicSection]);
 
-  const markNewOrdersSeen = React.useCallback(() => {
+  const markPublicOrdersSeen = React.useCallback(() => {
     if (typeof window === 'undefined' || !isAuthed) return;
-    const storageKey = `${NEW_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
-    window.localStorage.setItem(storageKey, String(totalAllRequests));
-    setSeenTotal(totalAllRequests);
-  }, [auth.user?.id, isAuthed, totalAllRequests]);
+    const storageKey = `${WORKSPACE_PUBLIC_ORDERS_SEEN_TOTAL_KEY_PREFIX}:${auth.user?.id ?? 'guest'}`;
+    window.localStorage.setItem(storageKey, String(platformOrdersTotal));
+    setSeenTotal(platformOrdersTotal);
+  }, [auth.user?.id, isAuthed, platformOrdersTotal]);
+
+  React.useEffect(() => {
+    if (!isWorkspaceAuthed || activePublicSection !== 'orders') return;
+    if (isLoading || isError) return;
+    markPublicOrdersSeen();
+  }, [activePublicSection, isError, isLoading, isWorkspaceAuthed, markPublicOrdersSeen]);
 
   const setWorkspaceTab = React.useCallback(
     (tab: WorkspaceTab) => {
       const next = new URLSearchParams(searchParams.toString());
+      next.delete('section');
       next.set('tab', tab);
       next.set('status', 'all');
       if (tab !== 'favorites') next.delete('fav');
@@ -556,6 +618,7 @@ function RequestsPageContent() {
   const setStatusFilter = React.useCallback(
     (status: WorkspaceStatusFilter) => {
       const next = new URLSearchParams(searchParams.toString());
+      next.delete('section');
       next.set('tab', activeWorkspaceTab);
       next.set('status', status);
       const query = next.toString();
@@ -567,6 +630,7 @@ function RequestsPageContent() {
   const setFavoritesView = React.useCallback(
     (view: FavoritesView) => {
       const next = new URLSearchParams(searchParams.toString());
+      next.delete('section');
       next.set('tab', 'favorites');
       next.set('fav', view);
       const query = next.toString();
@@ -577,6 +641,7 @@ function RequestsPageContent() {
   const setReviewsView = React.useCallback(
     (view: ReviewsView) => {
       const next = new URLSearchParams(searchParams.toString());
+      next.delete('section');
       next.set('tab', 'reviews');
       next.set('reviewRole', view);
       const query = next.toString();
@@ -585,7 +650,7 @@ function RequestsPageContent() {
     [pathname, router, searchParams],
   );
 
-  const newOrdersCount = Math.max(0, totalAllRequests - seenTotal);
+  const newOrdersCount = Math.max(0, platformOrdersTotal - seenTotal);
   const allMyContracts = React.useMemo(
     () =>
       [...myProviderContracts, ...myClientContracts].sort((a, b) =>
@@ -636,11 +701,11 @@ function RequestsPageContent() {
         <article key={`fav-provider-${item.id}`} className="card stack-xs workspace-list-item">
           <p className="text-sm font-semibold truncate">{item.displayName || 'Provider'}</p>
           <Link href={`/providers/${item.id}`} className="badge offer-actions__btn">
-            Profil ansehen
+            {t(I18N_KEYS.offers.profileCta)}
           </Link>
         </article>
       )),
-    [favoriteProviders],
+    [favoriteProviders, t],
   );
   const reviewCards = React.useMemo(
     () =>
@@ -665,7 +730,6 @@ function RequestsPageContent() {
     activityProgress,
     personalNavItems,
     insightText,
-    hasAnyStatsActivity,
     providerStatsPayload,
     clientStatsPayload,
     statsOrder,
@@ -674,6 +738,7 @@ function RequestsPageContent() {
     locale,
     isPersonalized,
     activeWorkspaceTab,
+    activePublicSection,
     userName: auth.user?.name,
     authMe: auth.me,
     myOffers,
@@ -685,7 +750,7 @@ function RequestsPageContent() {
     newOrdersCount,
     favoriteRequestCount: favoriteRequestIds.size,
     setWorkspaceTab,
-    markNewOrdersSeen,
+    markPublicOrdersSeen,
     formatNumber,
     chartMonthLabel,
   });
@@ -791,83 +856,117 @@ function RequestsPageContent() {
         />
       ) : null}
 
-      <div className="requests-grid">
-        <div className="stack-md">
-          {isWorkspaceAuthed ? (
-            <PersonalNavSection
-              className="personal-nav--left"
-              title={navTitle}
-              items={personalNavItems}
+      {isWorkspaceAuthed ? (
+        isWorkspacePublicSection ? (
+          <div className="stack-md">
+            <WorkspacePrivateIntro
+              navTitle={navTitle}
+              personalNavItems={personalNavItems}
               insightText={insightText}
-              progressPercent={activityProgress}
+              activityProgress={activityProgress}
+              statsOrder={statsOrder}
+              statsFallbackTitle={t(I18N_KEYS.requestsPage.statsProviderTitle)}
+              statsTabsLabel={{
+                provider: t(I18N_KEYS.homePublic.howItWorksProviderTab),
+                client: t(I18N_KEYS.homePublic.howItWorksClientTab),
+              }}
+              statsErrorLabel={t(I18N_KEYS.requestsPage.statsLoadError)}
+              providerStatsPayload={providerStatsPayload}
+              clientStatsPayload={clientStatsPayload}
             />
-          ) : null}
-          {/* <HomeStatsPanel t={t} stats={stats} formatNumber={formatNumber} /> */}
-          {isWorkspaceAuthed ? <WorkspaceContent {...workspaceContentProps} /> : <PublicContent {...publicContentProps} />}
-        </div>
 
-        <aside className="stack-md hide-mobile">
-          {isWorkspaceAuthed && hasAnyStatsActivity
-            ? statsOrder.map((section) => (
-                <RequestsStatsPanel
-                  key={section.tab}
-                  title={section.title}
-                  tabsLabel={{ provider: 'Anbieter', client: 'Kunde' }}
-                  tab={section.tab}
-                  showTabs={false}
-                  provider={providerStatsPayload}
-                  client={clientStatsPayload}
+            <div className="requests-grid requests-grid--equal-cols">
+              <div>
+                {activePublicSection === 'stats' ? (
+                  <HomePlatformActivityPanel t={t} locale={locale} />
+                ) : (
+                  <HomeOrdersExplorePanel
+                    t={t}
+                    locale={locale}
+                    contentType={activePublicSection === 'providers' ? 'providers' : 'requests'}
+                    showHeading={false}
+                    showBack={false}
+                    backHref="/"
+                    onListDensityChange={setExploreListDensity}
+                  />
+                )}
+              </div>
+
+              <aside className="stack-md hide-mobile">
+                {activePublicSection === 'providers' ? (
+                  <HomeNearbyPanel
+                    t={t}
+                    viewAllHref="/workspace?section=orders"
+                    itemsLimit={exploreSidebarNearbyLimit}
+                    visibleRows={exploreSidebarNearbyLimit}
+                  />
+                ) : (
+                  <HomeTopProvidersPanel t={t} locale={locale} limit={exploreSidebarProvidersLimit} />
+                )}
+                <HomeProofPanel
+                  t={t}
+                  proofCases={exploreSidebarProofCases}
+                  proofIndex={exploreSidebarProofCases.length ? proofIndex % exploreSidebarProofCases.length : 0}
                 />
-              ))
-            : null}
-          {isProvidersLoading ? (
-            <section className="panel hide-mobile top-providers-panel">
-              <div className="panel-header">
-                <div className="skeleton is-wide h-5 w-40" />
-              </div>
-              <div className="skeleton is-wide h-4 w-48" />
-              <div className="provider-list">
-                {Array.from({ length: 2 }).map((_, index) => (
-                  <div key={`provider-skeleton-${index}`} className="provider-card">
-                    <UserHeaderCardSkeleton />
-                    <div className="skeleton is-wide h-10 w-full rounded-lg" />
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : isProvidersError ? (
-            <section className="panel hide-mobile top-providers-panel">
-              <div className="panel-header">
-                <div className="skeleton is-wide h-5 w-40" />
-              </div>
-              <div className="skeleton is-wide h-4 w-48" />
-              <div className="provider-list">
-                {Array.from({ length: 2 }).map((_, index) => (
-                  <div key={`provider-error-skeleton-${index}`} className="provider-card">
-                    <UserHeaderCardSkeleton />
-                    <div className="skeleton is-wide h-10 w-full rounded-lg" />
-                  </div>
-                ))}
-              </div>
-              <p className="typo-small text-center mt-3">
-                {t(I18N_KEYS.requestsPage.error)}
-              </p>
-            </section>
-          ) : (
-            <TopProvidersPanel
+                <HomeTrustLivePanel className={exploreTrustPanelClassName} t={t} />
+              </aside>
+            </div>
+          </div>
+        ) : (
+          <WorkspaceFrame
+            intro={(
+              <WorkspacePrivateIntro
+                navTitle={navTitle}
+                personalNavItems={personalNavItems}
+                insightText={insightText}
+                activityProgress={activityProgress}
+                statsOrder={statsOrder}
+                statsFallbackTitle={t(I18N_KEYS.requestsPage.statsProviderTitle)}
+                statsTabsLabel={{
+                  provider: t(I18N_KEYS.homePublic.howItWorksProviderTab),
+                  client: t(I18N_KEYS.homePublic.howItWorksClientTab),
+                }}
+                statsErrorLabel={t(I18N_KEYS.requestsPage.statsLoadError)}
+                providerStatsPayload={providerStatsPayload}
+                clientStatsPayload={clientStatsPayload}
+              />
+            )}
+            main={<WorkspaceContent {...workspaceContentProps} />}
+            aside={(
+              <WorkspaceTopProvidersAside
+                isLoading={isProvidersLoading}
+                isError={isProvidersError}
+                errorLabel={t(I18N_KEYS.requestsPage.error)}
+                title={t(I18N_KEYS.homePublic.topProviders)}
+                subtitle={t(I18N_KEYS.homePublic.topProvidersSubtitle)}
+                ctaLabel={t(I18N_KEYS.homePublic.topProvidersCta)}
+                ctaHref="/workspace?section=orders"
+                providers={topProviders}
+                favoriteProviderIds={favoriteProviderIds}
+                onToggleFavorite={onToggleProviderFavorite}
+              />
+            )}
+          />
+        )
+      ) : (
+        <WorkspaceFrame
+          main={<PublicContent {...publicContentProps} />}
+          aside={(
+            <WorkspaceTopProvidersAside
+              isLoading={isProvidersLoading}
+              isError={isProvidersError}
+              errorLabel={t(I18N_KEYS.requestsPage.error)}
               title={t(I18N_KEYS.homePublic.topProviders)}
               subtitle={t(I18N_KEYS.homePublic.topProvidersSubtitle)}
               ctaLabel={t(I18N_KEYS.homePublic.topProvidersCta)}
-              ctaHref={isAuthed ? '/workspace?tab=new-orders' : '/workspace?section=providers'}
+              ctaHref="/workspace?section=providers"
               providers={topProviders}
               favoriteProviderIds={favoriteProviderIds}
-              onToggleFavorite={isAuthed ? onToggleProviderFavorite : undefined}
             />
           )}
-        </aside>
-      </div>
+        />
+      )}
       {isWorkspaceAuthed &&
-      activeWorkspaceTab !== 'new-orders' &&
       activeWorkspaceTab !== 'favorites' &&
       activeWorkspaceTab !== 'my-requests' &&
       activeWorkspaceTab !== 'my-offers' ? (

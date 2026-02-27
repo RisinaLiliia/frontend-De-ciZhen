@@ -12,6 +12,8 @@ export type PersonalNavItem = {
   href: string;
   label: string;
   icon: ReactNode;
+  disabled?: boolean;
+  lockedHref?: string;
   value?: string | number;
   hint?: string;
   onClick?: () => void;
@@ -43,6 +45,7 @@ export function PersonalNavSection({
   const pathname = usePathname();
 
   const isActive = (item: PersonalNavItem) => {
+    if (item.disabled) return false;
     if (typeof item.forceActive === 'boolean') return item.forceActive;
     if (item.match === 'prefix') return pathname === item.href || pathname.startsWith(`${item.href}/`);
     return pathname === item.href;
@@ -53,33 +56,89 @@ export function PersonalNavSection({
       {title ? <h2 className="personal-nav__title">{title}</h2> : null}
       <div className="personal-nav__track">
         {items.map((item) => (
-          <Link
-            key={item.key}
-            href={item.href}
-            className={`personal-nav__item ${isActive(item) ? 'is-active' : ''}`.trim()}
-            onClick={item.onClick}
-          >
-            <span className="personal-nav__top">
-              <i className="personal-nav__icon" aria-hidden="true">
-                {item.icon}
-              </i>
-              <span className="personal-nav__label">{item.label}</span>
-              {item.value !== undefined && !item.rating ? (
-                <CountBadge as="strong" className="personal-nav__value" value={item.value} />
+          item.disabled && !item.lockedHref ? (
+            <span
+              key={item.key}
+              className="personal-nav__item is-disabled"
+              aria-disabled="true"
+            >
+              <span className="personal-nav__top">
+                <i className="personal-nav__icon" aria-hidden="true">
+                  {item.icon}
+                </i>
+                <span className="personal-nav__label">{item.label}</span>
+                {item.value !== undefined && !item.rating ? (
+                  <CountBadge as="strong" className="personal-nav__value" value={item.value} />
+                ) : null}
+              </span>
+              {item.rating ? (
+                <RatingSummary
+                  className="personal-nav__rating"
+                  rating={item.rating.value}
+                  reviewsCount={item.rating.reviewsCount}
+                  reviewsLabel={item.rating.reviewsLabel}
+                  href={item.rating.href}
+                />
+              ) : item.hint ? (
+                <span className="personal-nav__hint">{item.hint}</span>
               ) : null}
             </span>
-            {item.rating ? (
-              <RatingSummary
-                className="personal-nav__rating"
-                rating={item.rating.value}
-                reviewsCount={item.rating.reviewsCount}
-                reviewsLabel={item.rating.reviewsLabel}
-                href={item.rating.href}
-              />
-            ) : item.hint ? (
-              <span className="personal-nav__hint">{item.hint}</span>
-            ) : null}
-          </Link>
+          ) : item.disabled && item.lockedHref ? (
+            <Link
+              key={item.key}
+              href={item.lockedHref}
+              className="personal-nav__item is-disabled is-locked"
+            >
+              <span className="personal-nav__top">
+                <i className="personal-nav__icon" aria-hidden="true">
+                  {item.icon}
+                </i>
+                <span className="personal-nav__label">{item.label}</span>
+                {item.value !== undefined && !item.rating ? (
+                  <CountBadge as="strong" className="personal-nav__value" value={item.value} />
+                ) : null}
+              </span>
+              {item.rating ? (
+                <RatingSummary
+                  className="personal-nav__rating"
+                  rating={item.rating.value}
+                  reviewsCount={item.rating.reviewsCount}
+                  reviewsLabel={item.rating.reviewsLabel}
+                  href={item.rating.href}
+                />
+              ) : item.hint ? (
+                <span className="personal-nav__hint">{item.hint}</span>
+              ) : null}
+            </Link>
+          ) : (
+            <Link
+              key={item.key}
+              href={item.href}
+              className={`personal-nav__item ${isActive(item) ? 'is-active' : ''}`.trim()}
+              onClick={item.onClick}
+            >
+              <span className="personal-nav__top">
+                <i className="personal-nav__icon" aria-hidden="true">
+                  {item.icon}
+                </i>
+                <span className="personal-nav__label">{item.label}</span>
+                {item.value !== undefined && !item.rating ? (
+                  <CountBadge as="strong" className="personal-nav__value" value={item.value} />
+                ) : null}
+              </span>
+              {item.rating ? (
+                <RatingSummary
+                  className="personal-nav__rating"
+                  rating={item.rating.value}
+                  reviewsCount={item.rating.reviewsCount}
+                  reviewsLabel={item.rating.reviewsLabel}
+                  href={item.rating.href}
+                />
+              ) : item.hint ? (
+                <span className="personal-nav__hint">{item.hint}</span>
+              ) : null}
+            </Link>
+          )
         ))}
       </div>
       {insightText ? (

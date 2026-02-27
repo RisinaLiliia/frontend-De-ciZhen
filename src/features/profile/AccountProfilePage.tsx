@@ -186,7 +186,7 @@ export function AccountProfilePage() {
             emptyTitle={t(I18N_KEYS.client.requestsEmpty)}
             emptyHint={t(I18N_KEYS.client.requestsTitle)}
             emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
-            emptyCtaHref="/workspace?tab=new-orders"
+            emptyCtaHref="/workspace?section=orders"
           >
             {myRequests.slice(0, 3).map((item) => (
               <div key={item.id} className="flex items-center justify-between workspace-list-item">
@@ -216,7 +216,7 @@ export function AccountProfilePage() {
             emptyTitle={t(I18N_KEYS.provider.responsesEmpty)}
             emptyHint={t(I18N_KEYS.provider.myResponsesTitle)}
             emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
-            emptyCtaHref="/workspace?tab=new-orders"
+            emptyCtaHref="/workspace?section=orders"
           >
             {providerOffers.slice(0, 3).map((item) => (
               <div key={item.id} className="flex items-center justify-between workspace-list-item">

@@ -743,7 +743,7 @@ export default function ProfileWorkspacePage() {
             </Link>
           ))}
         </div>
-        <Link href="/workspace?tab=new-orders" prefetch={false} className="btn-primary w-fit" onClick={guardNavigation}>
+        <Link href="/workspace?section=orders" prefetch={false} className="btn-primary w-fit" onClick={guardNavigation}>
           Profil vervollstaendigen
         </Link>
       </section>
