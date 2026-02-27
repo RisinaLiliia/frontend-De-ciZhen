@@ -6,6 +6,7 @@ import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { RequestMetaInline } from '@/components/ui/RequestMetaInline';
 import { IconUser } from '@/components/ui/icons/icons';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
+import { focusIfPresent, getTrapFocusTarget, resolveInitialFocusTarget } from '@/lib/a11y/focusTrap';
 
 type RequestOfferSheetProps = {
   isOpen: boolean;
@@ -53,6 +54,20 @@ type RequestOfferSheetProps = {
   onSubmit: () => void;
 };
 
+function getFocusableElements(container: HTMLElement) {
+  const selectors = [
+    'a[href]',
+    'button:not([disabled])',
+    'input:not([disabled])',
+    'textarea:not([disabled])',
+    'select:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+  ];
+  return Array.from(container.querySelectorAll<HTMLElement>(selectors.join(','))).filter(
+    (el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true',
+  );
+}
+
 export function RequestOfferSheet({
   isOpen,
   mode,
@@ -98,22 +113,54 @@ export function RequestOfferSheet({
   onSuccessBack,
   onSubmit,
 }: RequestOfferSheetProps) {
+  const dialogTitleId = React.useId();
+  const amountInputId = React.useId();
+  const commentInputId = React.useId();
+  const availabilityInputId = React.useId();
+  const panelRef = React.useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement | null>(null);
+
   React.useEffect(() => {
     if (!isOpen) return;
 
+    const panel = panelRef.current;
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
+    window.requestAnimationFrame(() => {
+      if (!panel) return;
+      const target = resolveInitialFocusTarget(closeButtonRef.current, getFocusableElements(panel));
+      focusIfPresent(target);
+    });
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab' || !panel) return;
+      const focusable = getFocusableElements(panel);
+      if (focusable.length === 0) return;
+      const active = document.activeElement as HTMLElement | null;
+      const target = getTrapFocusTarget({
+        focusable,
+        activeElement: active,
+        container: panel,
+        shiftKey: event.shiftKey,
+      });
+      if (target) {
+        event.preventDefault();
+        target.focus();
       }
     };
-    window.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keydown', onKeyDown);
+      focusIfPresent(previouslyFocused);
     };
   }, [isOpen, onClose]);
 
@@ -124,15 +171,16 @@ export function RequestOfferSheet({
       className="dc-modal request-offer-sheet"
       role="dialog"
       aria-modal="true"
-      aria-label={mode === 'success' ? successTitle : title}
+      aria-labelledby={dialogTitleId}
     >
       <button type="button" className="dc-modal__backdrop request-offer-sheet__backdrop" onClick={onClose} aria-label={closeLabel} />
-      <div className="dc-modal__panel dc-modal__panel--compact request-offer-sheet__panel">
+      <div ref={panelRef} className="dc-modal__panel dc-modal__panel--compact request-offer-sheet__panel">
         <div className="request-offer-sheet__header">
           {mode === 'form' ? (
-            <h2 className="typo-h3">{title}</h2>
+            <h2 id={dialogTitleId} className="typo-h3">{title}</h2>
           ) : null}
           <button
+            ref={closeButtonRef}
             type="button"
             className="request-offer-sheet__close"
             onClick={onClose}
@@ -152,7 +200,7 @@ export function RequestOfferSheet({
         {mode === 'success' ? (
           <div className="request-offer-sheet__success">
             <div className="request-offer-sheet__success-main">
-              <h3 className="typo-h3 request-offer-sheet__success-title">{successTitle}</h3>
+              <h3 id={dialogTitleId} className="typo-h3 request-offer-sheet__success-title">{successTitle}</h3>
               <p className="typo-muted">{successBody}</p>
               <p className="typo-muted request-offer-sheet__success-subline">{successSubline}</p>
             </div>
@@ -198,8 +246,9 @@ export function RequestOfferSheet({
         ) : (
           <>
             <div className="request-offer-sheet__body">
-              <label className="typo-small">{amountLabel}</label>
+              <label className="typo-small" htmlFor={amountInputId}>{amountLabel}</label>
               <Input
+                id={amountInputId}
                 type="number"
                 min={1}
                 step="1"
@@ -208,16 +257,18 @@ export function RequestOfferSheet({
                 placeholder={amountPlaceholder}
               />
 
-              <label className="typo-small">{commentLabel}</label>
+              <label className="typo-small" htmlFor={commentInputId}>{commentLabel}</label>
               <Textarea
+                id={commentInputId}
                 value={commentValue}
                 onChange={(event) => onCommentChange(event.target.value)}
                 placeholder={commentPlaceholder}
                 rows={3}
               />
 
-              <label className="typo-small">{availabilityLabel}</label>
+              <label className="typo-small" htmlFor={availabilityInputId}>{availabilityLabel}</label>
               <Input
+                id={availabilityInputId}
                 value={availabilityValue}
                 onChange={(event) => onAvailabilityChange(event.target.value)}
                 placeholder={availabilityPlaceholder}

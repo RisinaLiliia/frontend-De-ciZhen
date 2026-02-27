@@ -11,7 +11,7 @@ import { listFavorites } from '@/lib/api/favorites';
 import { listMyReviews } from '@/lib/api/reviews';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { ALL_OPTION_KEY } from '@/features/requests/page/public';
-import type { ReviewsView } from '@/features/requests/page/workspace';
+import type { ReviewsView, WorkspaceTab } from '@/features/requests/page/workspace';
 
 type PublicRequestsFilter = NonNullable<Parameters<typeof listPublicRequests>[0]>;
 
@@ -20,13 +20,23 @@ type Params = {
   locale: string;
   isAuthed: boolean;
   isWorkspaceAuthed: boolean;
+  activeWorkspaceTab: WorkspaceTab;
   activeReviewsView: ReviewsView;
   cityId: string;
   subcategoryKey: string;
 };
 
 export function useRequestsPageData(params: Params) {
-  const { filter, locale, isAuthed, isWorkspaceAuthed, activeReviewsView, cityId, subcategoryKey } = params;
+  const {
+    filter,
+    locale,
+    isAuthed,
+    isWorkspaceAuthed,
+    activeWorkspaceTab,
+    activeReviewsView,
+    cityId,
+    subcategoryKey,
+  } = params;
 
   const { data: publicRequests, isLoading, isError } = useQuery({
     queryKey: [
@@ -64,10 +74,12 @@ export function useRequestsPageData(params: Params) {
     () => Array.from(new Set(myOffers.map((offer) => offer.requestId).filter(Boolean))),
     [myOffers],
   );
+  const shouldLoadOfferRequests = isWorkspaceAuthed && activeWorkspaceTab === 'my-offers';
+  const shouldLoadReviews = isWorkspaceAuthed && activeWorkspaceTab === 'reviews';
 
   const { data: myOfferRequestsById = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>() } = useQuery({
     queryKey: ['requests-by-my-offer-ids', locale, ...myOfferRequestIds],
-    enabled: isWorkspaceAuthed && myOfferRequestIds.length > 0,
+    enabled: shouldLoadOfferRequests && myOfferRequestIds.length > 0,
     queryFn: async () => {
       const pairs = await Promise.all(
         myOfferRequestIds.map(async (id) => {
@@ -101,7 +113,7 @@ export function useRequestsPageData(params: Params) {
 
   const { data: myReviews = [], isLoading: isMyReviewsLoading } = useQuery({
     queryKey: ['reviews-my', activeReviewsView],
-    enabled: isWorkspaceAuthed,
+    enabled: shouldLoadReviews,
     queryFn: () => withStatusFallback(() => listMyReviews({ role: activeReviewsView }), []),
   });
 

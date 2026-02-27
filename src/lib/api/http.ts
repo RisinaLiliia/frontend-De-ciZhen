@@ -65,7 +65,22 @@ async function apiRequest<T>(
     throw new ApiError(message, res.status, data);
   }
 
-  return (await res.json()) as T;
+  if (res.status === 204 || res.status === 205) {
+    return undefined as T;
+  }
+
+  const contentLength = res.headers.get('content-length');
+  if (contentLength === '0') {
+    return undefined as T;
+  }
+
+  const contentType = res.headers.get('content-type') ?? '';
+  if (contentType.includes('application/json')) {
+    return (await res.json()) as T;
+  }
+
+  const text = await res.text();
+  return (text || undefined) as T;
 }
 
 export async function apiGet<T>(path: string, init?: RequestInit): Promise<T> {

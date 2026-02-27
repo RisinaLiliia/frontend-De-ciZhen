@@ -1,6 +1,11 @@
 import { buildApiUrl } from '@/lib/api/url';
 
-async function fetchLegal(path: '/legal/privacy' | '/legal/cookies'): Promise<string> {
+export type LegalDocumentResponse = {
+  content: string;
+  lastModified: string | null;
+};
+
+async function fetchLegal(path: '/legal/privacy' | '/legal/cookies'): Promise<LegalDocumentResponse> {
   const res = await fetch(buildApiUrl(path), {
     method: 'GET',
     credentials: 'include',
@@ -9,7 +14,12 @@ async function fetchLegal(path: '/legal/privacy' | '/legal/cookies'): Promise<st
   if (!res.ok) {
     throw new Error(`Failed to load legal document: ${res.status}`);
   }
-  return res.text();
+  const content = await res.text();
+  const lastModified = res.headers.get('last-modified');
+  return {
+    content,
+    lastModified,
+  };
 }
 
 export function getPrivacyPolicy() {

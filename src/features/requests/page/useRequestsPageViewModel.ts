@@ -66,6 +66,7 @@ type Input = {
   onToggleRequestFavorite: (requestId: string) => void;
   onOpenOfferSheet: (requestId: string) => void;
   onWithdrawOffer: (requestId: string) => void;
+  onOpenChatThread: (offer: OfferDto) => void;
   pendingOfferRequestId: string | null;
   pendingFavoriteRequestIds: Set<string>;
   isAuthed: boolean;
@@ -170,6 +171,7 @@ export function useRequestsPageViewModel(params: Input) {
         onSendOffer: params.onOpenOfferSheet,
         onEditOffer: params.onOpenOfferSheet,
         onWithdrawOffer: params.onWithdrawOffer,
+        onOpenChatThread: params.onOpenChatThread,
         pendingOfferRequestId: params.pendingOfferRequestId,
         pendingFavoriteRequestIds: params.pendingFavoriteRequestIds,
         showStaticFavoriteIcon: !params.isAuthed,
@@ -211,6 +213,7 @@ export function useRequestsPageViewModel(params: Input) {
         onSendOffer: params.onOpenOfferSheet,
         onEditOffer: params.onOpenOfferSheet,
         onWithdrawOffer: params.onWithdrawOffer,
+        onOpenChatThread: params.onOpenChatThread,
         pendingOfferRequestId: params.pendingOfferRequestId,
         showStaticFavoriteIcon: false,
       },
@@ -231,6 +234,7 @@ export function useRequestsPageViewModel(params: Input) {
         formatPrice: params.formatPrice,
         isProviderPersonalized: true,
         offersByRequest: params.contractOffersByRequest,
+        onOpenChatThread: params.onOpenChatThread,
       },
       favoritesState: {
         isLoading: params.isFavoritesLoading,
@@ -258,6 +262,7 @@ export function useRequestsPageViewModel(params: Input) {
         onSendOffer: params.onOpenOfferSheet,
         onEditOffer: params.onOpenOfferSheet,
         onWithdrawOffer: params.onWithdrawOffer,
+        onOpenChatThread: params.onOpenChatThread,
         pendingOfferRequestId: params.pendingOfferRequestId,
         pendingFavoriteRequestIds: params.pendingFavoriteRequestIds,
         showStaticFavoriteIcon: false,
@@ -309,6 +314,7 @@ export function useRequestsPageViewModel(params: Input) {
         onSendOffer: params.onOpenOfferSheet,
         onEditOffer: params.onOpenOfferSheet,
         onWithdrawOffer: params.onWithdrawOffer,
+        onOpenChatThread: params.onOpenChatThread,
         pendingOfferRequestId: params.pendingOfferRequestId,
         pendingFavoriteRequestIds: params.pendingFavoriteRequestIds,
         showStaticFavoriteIcon: !params.isAuthed,
