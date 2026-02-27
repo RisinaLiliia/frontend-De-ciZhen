@@ -72,7 +72,7 @@ export function PublicContent({
       />
 
       {statusFilters.length > 0 ? (
-        <div className="chip-row" role="tablist" aria-label={t(I18N_KEYS.requestsPage.statusFiltersLabel)}>
+        <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.statusFiltersLabel)}>
           {statusFilters.map((filterItem) => (
             <button
               key={filterItem.key}
@@ -90,7 +90,8 @@ export function PublicContent({
       <section
         id="requests-list"
         className={`requests-list requests-list--stable ${listDensity === 'double' ? 'is-double' : 'is-single'}`.trim()}
-        role="tabpanel"
+        role="region"
+        aria-label={t(I18N_KEYS.requestsPage.resultsLabel)}
         aria-live="polite"
       >
         <WorkspaceContentState

@@ -136,7 +136,7 @@ export default function ChatInboxPage() {
               emptyTitle={t(I18N_KEYS.chat.empty)}
               emptyHint={t(I18N_KEYS.requestsPage.subtitle)}
               emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
-              emptyCtaHref="/workspace?tab=new-orders"
+              emptyCtaHref="/workspace?section=orders"
             >
               {filteredThreads.map((thread) => {
                 const role = resolveThreadRole(thread);

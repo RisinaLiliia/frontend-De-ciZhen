@@ -37,9 +37,9 @@ export function getWorkspacePrimaryActionByTab(
 ): Partial<Record<WorkspaceTab, { href: string; label: string }>> {
   return {
     'my-requests': { label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta), href: '/request/create' },
-    'my-offers': { label: t(I18N_KEYS.requestsPage.primaryActionFindNewOrders), href: '/workspace?tab=new-orders' },
+    'my-offers': { label: t(I18N_KEYS.requestsPage.primaryActionFindNewOrders), href: '/workspace?section=orders' },
     'completed-jobs': { label: t(I18N_KEYS.requestsPage.primaryActionActiveOrders), href: '/workspace?tab=my-offers&status=in_progress' },
-    favorites: { label: t(I18N_KEYS.requestsPage.primaryActionNewFavorites), href: '/workspace?tab=new-orders' },
+    favorites: { label: t(I18N_KEYS.requestsPage.primaryActionNewFavorites), href: '/workspace?section=orders' },
     reviews: { label: t(I18N_KEYS.requestsPage.navMyOrders), href: '/workspace?tab=my-offers' },
   };
 }
@@ -63,14 +63,14 @@ export function getProviderHint(
     return {
       text: t(I18N_KEYS.requestsPage.providerHintNoOffersText),
       ctaLabel: t(I18N_KEYS.requestsPage.providerHintNoOffersCta),
-      ctaHref: '/workspace?tab=new-orders',
+      ctaHref: '/workspace?section=orders',
     };
   }
   if (acceptanceRate < 25) {
     return {
       text: t(I18N_KEYS.requestsPage.providerHintLowAcceptanceText),
       ctaLabel: t(I18N_KEYS.requestsPage.providerHintLowAcceptanceCta),
-      ctaHref: '/workspace?tab=new-orders',
+      ctaHref: '/workspace?section=orders',
     };
   }
   return {

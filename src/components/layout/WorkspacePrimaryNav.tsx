@@ -22,7 +22,7 @@ const isPathPrefix = (pathname: string, prefix: string) =>
   pathname === prefix || pathname.startsWith(`${prefix}/`);
 
 const WORKSPACE_PREVIEW_URL = '/workspace?section=orders';
-const AUTH_WORKSPACE_URL = '/workspace?tab=new-orders';
+const AUTH_WORKSPACE_URL = '/workspace?section=orders';
 const REQUEST_CREATE_URL = '/request/create';
 const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
 const AUTH_PROFILE_FALLBACK_URL = '/profile';
@@ -42,8 +42,7 @@ function useTopNavItems(isAuthenticated: boolean, profileHref: string): TopNavIt
       isActive: (pathname, searchParams) =>
         isAuthenticated
           ? isPathPrefix(pathname, '/workspace')
-          : (pathname === '/workspace' &&
-              (searchParams.get('section') === 'orders' || searchParams.get('section') === 'providers')) ||
+          : pathname === '/workspace' ||
             (pathname === '/' && searchParams.get('view') === 'orders'),
     },
     {

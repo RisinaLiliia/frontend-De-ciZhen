@@ -46,7 +46,7 @@ import {
 
 const SIMILAR_LIMIT = 2;
 const WORKSPACE_MY_REQUESTS_URL = '/workspace?tab=my-requests&sort=date_desc&page=1&limit=10';
-const WORKSPACE_NEW_ORDERS_URL = '/workspace?tab=new-orders&sort=date_desc&page=1&limit=10';
+const WORKSPACE_PUBLIC_ORDERS_URL = '/workspace?section=orders&sort=date_desc&page=1&limit=10';
 const WORKSPACE_GUEST_ORDERS_URL = '/workspace?section=orders';
 
 export default function RequestDetailsPage() {
@@ -355,7 +355,7 @@ export default function RequestDetailsPage() {
       setOfferComment('');
       setOfferAvailability('');
       setOfferSheetInUrl(false);
-      router.push(authStatus === 'authenticated' ? WORKSPACE_NEW_ORDERS_URL : WORKSPACE_GUEST_ORDERS_URL);
+      router.push(authStatus === 'authenticated' ? WORKSPACE_PUBLIC_ORDERS_URL : WORKSPACE_GUEST_ORDERS_URL);
       return;
     }
 
@@ -587,11 +587,7 @@ export default function RequestDetailsPage() {
 
   const similarHref = React.useMemo(() => {
     const nextParams = new URLSearchParams();
-    if (authStatus === 'authenticated') {
-      nextParams.set('tab', 'new-orders');
-    } else {
-      nextParams.set('section', 'orders');
-    }
+    nextParams.set('section', 'orders');
     if (request?.categoryKey) nextParams.set('categoryKey', request.categoryKey);
     if (request?.serviceKey) nextParams.set('subcategoryKey', request.serviceKey);
     nextParams.set('sort', 'date_desc');
@@ -599,7 +595,7 @@ export default function RequestDetailsPage() {
     nextParams.set('limit', '10');
     const qs = nextParams.toString();
     return `/workspace${qs ? `?${qs}` : ''}`;
-  }, [authStatus, request]);
+  }, [request]);
 
   const similarForRender = similar.length ? similar : latest;
   const [isClientOnline, setIsClientOnline] = React.useState(false);
@@ -1097,7 +1093,7 @@ export default function RequestDetailsPage() {
         onSuccessBack={() => {
           setOfferSheetMode('form');
           setOfferSheetInUrl(false);
-          router.push(isAuthed ? WORKSPACE_NEW_ORDERS_URL : WORKSPACE_GUEST_ORDERS_URL);
+          router.push(isAuthed ? WORKSPACE_PUBLIC_ORDERS_URL : WORKSPACE_GUEST_ORDERS_URL);
         }}
         onSubmit={handleOfferSubmit}
       />

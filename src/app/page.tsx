@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
@@ -37,14 +37,16 @@ import { useT } from '@/lib/i18n/useT';
 import { listPublicProviders } from '@/lib/api/providers';
 import type { ProofCase } from '@/types/home';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { IconBriefcase, IconChat, IconCheck, IconUser } from '@/components/ui/icons/icons';
+import { IconBriefcase, IconCheck, IconHeart, IconSend, IconUser } from '@/components/ui/icons/icons';
 
 export default function HomePage() {
   const t = useT();
   const { locale } = useI18n();
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const status = useAuthStatus();
+  const isAuthenticated = status === 'authenticated';
   const isDemo = process.env.NEXT_PUBLIC_DEMO !== 'false';
   const heroVariant = process.env.NEXT_PUBLIC_HERO_VARIANT ?? 'animated';
   const heroAnimationMode = process.env.NEXT_PUBLIC_HERO_ANIMATION_MODE === 'showcase' ? 'showcase' : 'subtle';
@@ -54,9 +56,17 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = React.useState('');
   const [exploreListDensity, setExploreListDensity] = React.useState<'single' | 'double'>('single');
   const sectionParam = searchParams.get('section');
+  const exploreSection = React.useMemo<'orders' | 'providers' | 'stats'>(() => {
+    if (sectionParam === 'providers' || sectionParam === 'stats') return sectionParam;
+    return 'orders';
+  }, [sectionParam]);
+  const isWorkspaceRoute = pathname === '/workspace';
   const isOrdersExploreView =
-    searchParams.get('view') === 'orders' || sectionParam === 'orders' || sectionParam === 'providers';
-  const exploreSection = sectionParam === 'providers' ? 'providers' : 'orders';
+    isWorkspaceRoute ||
+    searchParams.get('view') === 'orders' ||
+    sectionParam === 'orders' ||
+    sectionParam === 'providers' ||
+    sectionParam === 'stats';
   const heroAnchorRef = React.useRef<HTMLElement | null>(null);
   const listingAnchorRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -151,7 +161,7 @@ export default function HomePage() {
   const exploreNavItems = React.useMemo(
     () => [
       {
-        key: 'orders',
+        key: 'public-orders',
         href: '/workspace?section=orders',
         label: t(I18N_KEYS.homePublic.exploreAllOrders),
         icon: <IconBriefcase />,
@@ -160,43 +170,65 @@ export default function HomePage() {
         forceActive: exploreSection === 'orders',
       },
       {
-        key: 'my-orders',
+        key: 'public-providers',
         href: '/workspace?section=providers',
         label: t(I18N_KEYS.homePublic.exploreAllProviders),
-        icon: <IconBriefcase />,
+        icon: <IconUser />,
         value: formatNumber.format(publicProviders.length),
         hint: t(I18N_KEYS.requestsPage.heroProviderPrimaryCta),
         forceActive: exploreSection === 'providers',
       },
       {
-        key: 'chat',
-        href: '/auth/login?next=%2Fchat',
-        label: t(I18N_KEYS.requestsPage.navChat),
-        icon: <IconChat />,
-        value: formatNumber.format(Math.max(1, Math.round(stats.active * 0.08))),
-        hint: t(I18N_KEYS.requestsPage.heroProviderPrimaryCta),
-      },
-      {
-        key: 'profile',
-        href: '/auth/login?next=%2Fprofile%2Fworkspace',
-        label: t(I18N_KEYS.auth.profileLabel),
-        icon: <IconUser />,
-        value: formatNumber.format(Math.max(1, Math.round(stats.rating * 20))),
-        hint: t(I18N_KEYS.requestsPage.heroProviderPrimaryCta),
-      },
-      {
-        key: 'reviews',
-        href: '/auth/login?next=%2Forders%3Ftab%3Dreviews',
-        label: t(I18N_KEYS.requestsPage.navReviews),
+        key: 'public-stats',
+        href: '/workspace?section=stats',
+        label: t(I18N_KEYS.homePublic.exploreStats),
         icon: <IconCheck />,
-        rating: {
-          value: stats.rating.toFixed(1),
-          reviewsCount: formatNumber.format(Math.max(1, Math.round(stats.rating * 20))),
-          reviewsLabel: t(I18N_KEYS.homePublic.reviews),
-        },
+        value: formatNumber.format(stats.completed),
+        hint: t(I18N_KEYS.homePublic.activitySubtitle),
+        forceActive: exploreSection === 'stats',
+      },
+      {
+        key: 'my-orders',
+        href: '/workspace?tab=my-requests',
+        label: t(I18N_KEYS.requestsPage.navMyOrders),
+        icon: <IconBriefcase />,
+        value: formatNumber.format(Math.max(1, Math.round(stats.active * 0.24))),
+        hint: t(I18N_KEYS.requestsPage.summaryAccepted),
+        disabled: !isAuthenticated,
+        lockedHref: !isAuthenticated ? '/auth/register?next=%2Fworkspace%3Ftab%3Dmy-requests' : undefined,
+      },
+      {
+        key: 'my-offers',
+        href: '/workspace?tab=my-offers',
+        label: t(I18N_KEYS.requestsPage.navMyOffers),
+        icon: <IconSend />,
+        value: formatNumber.format(Math.max(1, Math.round(stats.completed * 0.22))),
+        hint: t(I18N_KEYS.requestsPage.summarySent),
+        disabled: !isAuthenticated,
+        lockedHref: !isAuthenticated ? '/auth/register?next=%2Fworkspace%3Ftab%3Dmy-offers' : undefined,
+      },
+      {
+        key: 'completed-jobs',
+        href: '/workspace?tab=completed-jobs',
+        label: t(I18N_KEYS.requestsPage.navCompletedJobs),
+        icon: <IconCheck />,
+        value: formatNumber.format(Math.max(1, Math.round(stats.completed * 0.16))),
+        hint: t(I18N_KEYS.provider.jobs),
+        disabled: !isAuthenticated,
+        lockedHref: !isAuthenticated ? '/auth/register?next=%2Fworkspace%3Ftab%3Dcompleted-jobs' : undefined,
+      },
+      {
+        key: 'my-favorites',
+        href: '/workspace?tab=favorites',
+        label: t(I18N_KEYS.requestDetails.saved),
+        icon: <IconHeart />,
+        value: formatNumber.format(Math.max(1, Math.round(stats.active * 0.1))),
+        hint: t(I18N_KEYS.requestDetails.ctaSave),
+        disabled: !isAuthenticated,
+        lockedHref: !isAuthenticated ? '/auth/register?next=%2Fworkspace%3Ftab%3Dfavorites' : undefined,
       },
     ],
-    [exploreSection, formatNumber, publicProviders.length, stats.active, stats.rating, t],
+    [exploreSection, formatNumber, isAuthenticated, publicProviders.length, stats.active, stats.completed, t],
   );
   const exploreStatsPayload = React.useMemo(
     () => ({
@@ -253,13 +285,13 @@ export default function HomePage() {
       hint: {
         text: t(I18N_KEYS.requestsPage.heroProviderSubtitle),
         ctaLabel: t(I18N_KEYS.requestsPage.heroProviderPrimaryCta),
-        ctaHref: '/auth/register?next=%2Forders%3Ftab%3Dnew-orders',
+        ctaHref: isAuthenticated ? '/workspace?section=orders' : '/auth/register?next=%2Fworkspace%3Fsection%3Dorders',
       },
       emptyTitle: t(I18N_KEYS.requestsPage.empty),
       emptyCtaLabel: t(I18N_KEYS.requestsPage.heroProviderPrimaryCta),
-      emptyCtaHref: '/auth/register?next=%2Forders%3Ftab%3Dnew-orders',
+      emptyCtaHref: isAuthenticated ? '/workspace?section=orders' : '/auth/register?next=%2Fworkspace%3Fsection%3Dorders',
     }),
-    [formatNumber, stats.active, stats.completed, stats.rating, stats.responseMin, t],
+    [formatNumber, isAuthenticated, stats.active, stats.completed, stats.rating, stats.responseMin, t],
   );
 
   if (status === 'loading' || status === 'idle') {
@@ -348,7 +380,9 @@ export default function HomePage() {
 
             <div className="requests-grid requests-grid--equal-cols">
               <div ref={listingAnchorRef}>
-                {exploreSection === 'providers' ? (
+                {exploreSection === 'stats' ? (
+                  <HomePlatformActivityPanel t={t} locale={locale} />
+                ) : exploreSection === 'providers' ? (
                   <HomeOrdersExplorePanel
                     t={t}
                     locale={locale}

@@ -175,10 +175,10 @@ export function useRequestsWorkspaceDerived({
   );
 
   const showWorkspaceHeader = activeWorkspaceTab !== 'favorites';
-  const showWorkspaceHeading = showWorkspaceHeader && activeWorkspaceTab !== 'new-orders';
+  const showWorkspaceHeading = showWorkspaceHeader;
   const statusFilters = React.useMemo(
     () =>
-      activeWorkspaceTab === 'new-orders' || activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews'
+      activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews'
         ? []
         : getWorkspaceStatusFilters(t),
     [activeWorkspaceTab, t],

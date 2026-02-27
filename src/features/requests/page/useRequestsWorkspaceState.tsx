@@ -54,6 +54,7 @@ type Params = {
   locale: string;
   isPersonalized: boolean;
   activeWorkspaceTab: WorkspaceTab;
+  activePublicSection?: 'orders' | 'providers' | 'stats' | null;
   userName?: string | null;
   authMe: AppMeDto | null;
   myOffers: OfferDto[];
@@ -65,7 +66,7 @@ type Params = {
   newOrdersCount: number;
   favoriteRequestCount: number;
   setWorkspaceTab: (tab: WorkspaceTab) => void;
-  markNewOrdersSeen: () => void;
+  markPublicOrdersSeen: () => void;
   formatNumber: Intl.NumberFormat;
   chartMonthLabel: Intl.DateTimeFormat;
 };
@@ -75,6 +76,7 @@ export function useRequestsWorkspaceState({
   locale,
   isPersonalized,
   activeWorkspaceTab,
+  activePublicSection = null,
   userName,
   authMe,
   myOffers,
@@ -86,7 +88,7 @@ export function useRequestsWorkspaceState({
   newOrdersCount,
   favoriteRequestCount,
   setWorkspaceTab,
-  markNewOrdersSeen,
+  markPublicOrdersSeen,
   formatNumber,
   chartMonthLabel,
 }: Params) {
@@ -120,25 +122,56 @@ export function useRequestsWorkspaceState({
   }, [myOffers]);
   const navRatingValue = myProviderRating.avg.toFixed(1);
   const navReviewsCount = myProviderRating.count;
+  const hasActivePublicSection =
+    activePublicSection === 'orders' || activePublicSection === 'providers' || activePublicSection === 'stats';
+  const publicNavItems = React.useMemo<PersonalNavItem[]>(
+    () => [
+      {
+        key: 'public-orders',
+        href: '/workspace?section=orders',
+        label: t(I18N_KEYS.homePublic.exploreAllOrders),
+        icon: <IconBriefcase />,
+        value: newOrdersCount,
+        hint: t(I18N_KEYS.requestsPage.resultsLabel),
+        onClick: markPublicOrdersSeen,
+        forceActive: activePublicSection === 'orders',
+      },
+      {
+        key: 'public-providers',
+        href: '/workspace?section=providers',
+        label: t(I18N_KEYS.homePublic.exploreAllProviders),
+        icon: <IconUser />,
+        value: formatNumber.format(providers.length),
+        hint: t(I18N_KEYS.requestsPage.heroProviderPrimaryCta),
+        forceActive: activePublicSection === 'providers',
+      },
+      {
+        key: 'public-stats',
+        href: '/workspace?section=stats',
+        label: t(I18N_KEYS.homePublic.exploreStats),
+        icon: <IconCheck />,
+        value: formatNumber.format(myProviderContracts.length + myClientContracts.length),
+        hint: t(I18N_KEYS.homePublic.activitySubtitle),
+        forceActive: activePublicSection === 'stats',
+      },
+    ],
+    [
+      activePublicSection,
+      formatNumber,
+      markPublicOrdersSeen,
+      myClientContracts.length,
+      myProviderContracts.length,
+      newOrdersCount,
+      providers,
+      t,
+    ],
+  );
 
   const personalNavItems = React.useMemo<PersonalNavItem[]>(
     () =>
       isPersonalized
         ? [
-            {
-              key: 'new-orders',
-              href: '/workspace?tab=new-orders',
-              label: t(I18N_KEYS.requestsPage.navNewOrders),
-              icon: <IconBriefcase />,
-              value: newOrdersCount,
-              hint: t(I18N_KEYS.requestsPage.resultsLabel),
-              onClick: () => {
-                markNewOrdersSeen();
-                setWorkspaceTab('new-orders');
-              },
-              forceActive: activeWorkspaceTab === 'new-orders',
-              match: 'exact',
-            },
+            ...publicNavItems,
             {
               key: 'my-orders',
               href: '/workspace?tab=my-requests',
@@ -147,7 +180,7 @@ export function useRequestsWorkspaceState({
               value: myRequests.length,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
               onClick: () => setWorkspaceTab('my-requests'),
-              forceActive: activeWorkspaceTab === 'my-requests',
+              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-requests',
               match: 'exact',
             },
             {
@@ -158,7 +191,7 @@ export function useRequestsWorkspaceState({
               value: sentCount,
               hint: t(I18N_KEYS.requestsPage.summarySent),
               onClick: () => setWorkspaceTab('my-offers'),
-              forceActive: activeWorkspaceTab === 'my-offers',
+              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-offers',
               match: 'exact',
             },
             {
@@ -169,7 +202,7 @@ export function useRequestsWorkspaceState({
               value: completedJobsCount,
               hint: t(I18N_KEYS.provider.jobs),
               onClick: () => setWorkspaceTab('completed-jobs'),
-              forceActive: activeWorkspaceTab === 'completed-jobs',
+              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'completed-jobs',
               match: 'exact',
             },
             {
@@ -180,7 +213,7 @@ export function useRequestsWorkspaceState({
               value: favoriteRequestCount,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
               onClick: () => setWorkspaceTab('favorites'),
-              forceActive: activeWorkspaceTab === 'favorites',
+              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'favorites',
               match: 'exact',
             },
             {
@@ -194,25 +227,12 @@ export function useRequestsWorkspaceState({
                 reviewsLabel: t(I18N_KEYS.homePublic.reviews),
               },
               onClick: () => setWorkspaceTab('reviews'),
-              forceActive: activeWorkspaceTab === 'reviews',
+              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'reviews',
               match: 'exact',
             },
           ]
         : [
-            {
-              key: 'new-orders',
-              href: '/workspace?tab=new-orders',
-              label: t(I18N_KEYS.requestsPage.navNewOrders),
-              icon: <IconBriefcase />,
-              value: newOrdersCount,
-              hint: t(I18N_KEYS.requestsPage.resultsLabel),
-              onClick: () => {
-                markNewOrdersSeen();
-                setWorkspaceTab('new-orders');
-              },
-              forceActive: activeWorkspaceTab === 'new-orders',
-              match: 'exact',
-            },
+            ...publicNavItems,
             {
               key: 'my-orders',
               href: '/workspace?tab=my-requests',
@@ -220,7 +240,7 @@ export function useRequestsWorkspaceState({
               icon: <IconBriefcase />,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
               onClick: () => setWorkspaceTab('my-requests'),
-              forceActive: activeWorkspaceTab === 'my-requests',
+              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-requests',
               match: 'exact',
             },
             {
@@ -230,7 +250,7 @@ export function useRequestsWorkspaceState({
               icon: <IconSend />,
               hint: t(I18N_KEYS.requestsPage.summarySent),
               onClick: () => setWorkspaceTab('my-offers'),
-              forceActive: activeWorkspaceTab === 'my-offers',
+              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-offers',
               match: 'exact',
             },
             {
@@ -240,7 +260,7 @@ export function useRequestsWorkspaceState({
               icon: <IconHeart />,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
               onClick: () => setWorkspaceTab('favorites'),
-              forceActive: activeWorkspaceTab === 'favorites',
+              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'favorites',
               match: 'exact',
             },
             {
@@ -254,20 +274,20 @@ export function useRequestsWorkspaceState({
                 reviewsLabel: t(I18N_KEYS.homePublic.reviews),
               },
               onClick: () => setWorkspaceTab('reviews'),
-              forceActive: activeWorkspaceTab === 'reviews',
+              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'reviews',
               match: 'exact',
             },
           ],
     [
+      hasActivePublicSection,
       activeWorkspaceTab,
       completedJobsCount,
       favoriteRequestCount,
       isPersonalized,
-      markNewOrdersSeen,
       myRequests.length,
       navRatingValue,
       navReviewsCount,
-      newOrdersCount,
+      publicNavItems,
       sentCount,
       setWorkspaceTab,
       t,
@@ -443,7 +463,7 @@ export function useRequestsWorkspaceState({
     hint: providerHint,
     emptyTitle: t(I18N_KEYS.requestsPage.statsProviderEmptyTitle),
     emptyCtaLabel: t(I18N_KEYS.requestsPage.statsProviderEmptyCta),
-    emptyCtaHref: '/workspace?tab=new-orders',
+    emptyCtaHref: '/workspace?section=orders',
   };
 
   const clientStatsPayload: StatsPayload = {

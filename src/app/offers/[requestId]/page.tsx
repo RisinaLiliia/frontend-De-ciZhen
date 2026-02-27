@@ -82,7 +82,7 @@ export default function OffersPage() {
             emptyTitle={t(I18N_KEYS.offers.empty)}
             emptyHint={t(I18N_KEYS.offers.subtitle)}
             emptyCtaLabel={t(I18N_KEYS.requestsPage.navNewOrders)}
-            emptyCtaHref="/workspace?tab=new-orders"
+            emptyCtaHref="/workspace?section=orders"
           >
           {(data ?? []).map((item) => {
             const displayName = item.providerDisplayName || t(I18N_KEYS.offers.unnamed);

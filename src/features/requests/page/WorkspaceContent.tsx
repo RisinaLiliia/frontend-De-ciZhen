@@ -3,8 +3,6 @@
 import * as React from 'react';
 import Link from 'next/link';
 
-import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
-import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -32,15 +30,6 @@ type Props = {
   statusFilters: ChipFilter[];
   activeStatusFilter: WorkspaceStatusFilter;
   setStatusFilter: (status: WorkspaceStatusFilter) => void;
-  filtersProps: React.ComponentProps<typeof RequestsFilters>;
-  hasActivePublicFilter: boolean;
-  newOrdersResetHref: string;
-  newOrdersState: {
-    isLoading: boolean;
-    isError: boolean;
-    requestsCount: number;
-  };
-  newOrdersListProps: React.ComponentProps<typeof RequestsList>;
   myRequestsState: {
     isLoading: boolean;
     isEmpty: boolean;
@@ -73,14 +62,6 @@ type Props = {
   };
   onReviewsViewChange: (view: ReviewsView) => void;
   reviewCardsNode: React.ReactNode;
-  pagination: {
-    page: number;
-    totalPages: number;
-    totalResultsLabel: string;
-    resultsLabel: string;
-    onPrevPage: () => void;
-    onNextPage: () => void;
-  };
 };
 
 export function WorkspaceContent({
@@ -93,11 +74,6 @@ export function WorkspaceContent({
   statusFilters,
   activeStatusFilter,
   setStatusFilter,
-  filtersProps,
-  hasActivePublicFilter,
-  newOrdersResetHref,
-  newOrdersState,
-  newOrdersListProps,
   myRequestsState,
   myRequestsListProps,
   myOffersState,
@@ -111,9 +87,7 @@ export function WorkspaceContent({
   reviewsState,
   onReviewsViewChange,
   reviewCardsNode,
-  pagination,
 }: Props) {
-  const [listDensity, setListDensity] = React.useState<'single' | 'double'>('single');
   const workspaceTabTitles = React.useMemo(() => getWorkspaceTabTitles(t), [t]);
   const workspaceSectionSubtitle = React.useMemo(() => getWorkspaceSectionSubtitle(t), [t]);
 
@@ -131,7 +105,7 @@ export function WorkspaceContent({
               </p>
             </div>
           ) : null}
-          {activeWorkspaceTab !== 'new-orders' && activeWorkspaceTab !== 'my-requests' && activeWorkspaceTab !== 'my-offers' ? (
+          {activeWorkspaceTab !== 'my-requests' && activeWorkspaceTab !== 'my-offers' ? (
             <Link href={primaryAction.href} className="btn-primary requests-primary-cta" onClick={onPrimaryActionClick}>
               {primaryAction.label}
             </Link>
@@ -139,21 +113,8 @@ export function WorkspaceContent({
         </div>
       ) : null}
 
-      {activeWorkspaceTab === 'new-orders' ? (
-        <RequestsFilters
-          {...filtersProps}
-          resultsLabel={pagination.resultsLabel}
-          page={pagination.page}
-          totalPages={pagination.totalPages}
-          onPrevPage={pagination.onPrevPage}
-          onNextPage={pagination.onNextPage}
-          listDensity={listDensity}
-          onListDensityChange={setListDensity}
-        />
-      ) : null}
-
       {statusFilters.length > 0 ? (
-        <div className="chip-row" role="tablist" aria-label={t(I18N_KEYS.requestsPage.statusFiltersLabel)}>
+        <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.statusFiltersLabel)}>
           {statusFilters.map((filterItem) => (
             <button
               key={filterItem.key}
@@ -170,49 +131,23 @@ export function WorkspaceContent({
 
       <section
         id="requests-list"
-        className={`requests-list ${
-          activeWorkspaceTab === 'new-orders' ? 'requests-list--stable' : ''
-        } ${activeWorkspaceTab === 'new-orders' && listDensity === 'double' ? 'is-double' : 'is-single'}`.trim()}
-        role="tabpanel"
+        className="requests-list is-single"
+        role="region"
         aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}
         aria-describedby={showWorkspaceHeading ? 'workspace-section-subtitle' : undefined}
         aria-live="polite"
       >
-        {activeWorkspaceTab === 'new-orders' ? (
-          <WorkspaceContentState
-            isLoading={newOrdersState.isLoading}
-            isEmpty={!newOrdersState.isError && newOrdersState.requestsCount === 0}
-            emptyTitle={
-              hasActivePublicFilter
-                ? t(I18N_KEYS.requestsPage.emptyFilteredTitle)
-                : t(I18N_KEYS.requestsPage.emptyDefaultTitle)
-            }
-            emptyHint={
-              hasActivePublicFilter
-                ? t(I18N_KEYS.requestsPage.emptyFilteredHint)
-                : t(I18N_KEYS.requestsPage.emptyDefaultHint)
-            }
-            emptyCtaLabel={hasActivePublicFilter ? t(I18N_KEYS.requestsPage.clearFilters) : undefined}
-            emptyCtaHref={hasActivePublicFilter ? newOrdersResetHref : undefined}
-          >
-            <RequestsList {...newOrdersListProps} />
-          </WorkspaceContentState>
-        ) : null}
-
         {activeWorkspaceTab === 'my-requests' ? (
-          <div className="stack-sm">
-            <CreateRequestCard />
-            <WorkspaceContentState
-              isLoading={myRequestsState.isLoading}
-              isEmpty={myRequestsState.isEmpty}
-              emptyTitle={t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyTitle)}
-              emptyHint={t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyHint)}
-              emptyCtaLabel={t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta)}
-              emptyCtaHref="/request/create"
-            >
-              <RequestsList {...myRequestsListProps} />
-            </WorkspaceContentState>
-          </div>
+          <WorkspaceContentState
+            isLoading={myRequestsState.isLoading}
+            isEmpty={myRequestsState.isEmpty}
+            emptyTitle={t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyTitle)}
+            emptyHint={t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyHint)}
+            emptyCtaLabel={t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta)}
+            emptyCtaHref="/request/create"
+          >
+            <RequestsList {...myRequestsListProps} />
+          </WorkspaceContentState>
         ) : null}
 
         {activeWorkspaceTab === 'my-offers' ? (
@@ -223,7 +158,7 @@ export function WorkspaceContent({
               emptyTitle={t(I18N_KEYS.requestsPage.workspaceMyOffersEmptyTitle)}
               emptyHint={t(I18N_KEYS.requestsPage.workspaceMyOffersEmptyHint)}
               emptyCtaLabel={t(I18N_KEYS.requestsPage.workspaceMyOffersEmptyCta)}
-              emptyCtaHref="/workspace?tab=new-orders"
+              emptyCtaHref="/workspace?section=orders"
             >
               <RequestsList {...myOffersListProps} />
             </WorkspaceContentState>
@@ -247,7 +182,7 @@ export function WorkspaceContent({
 
         {activeWorkspaceTab === 'favorites' ? (
           <div className="stack-sm">
-            <div className="chip-row" role="tablist" aria-label={t(I18N_KEYS.requestsPage.favoritesViewLabel)}>
+            <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.favoritesViewLabel)}>
               <button
                 type="button"
                 className={`chip ${favoritesState.resolvedView === 'requests' ? 'is-active' : ''}`.trim()}
@@ -286,7 +221,7 @@ export function WorkspaceContent({
 
         {activeWorkspaceTab === 'reviews' ? (
           <div className="stack-sm">
-            <div className="chip-row" role="tablist" aria-label={t(I18N_KEYS.requestsPage.reviewsViewLabel)}>
+            <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.reviewsViewLabel)}>
               <button
                 type="button"
                 className={`chip ${reviewsState.activeView === 'provider' ? 'is-active' : ''}`.trim()}
@@ -317,34 +252,6 @@ export function WorkspaceContent({
           </div>
         ) : null}
       </section>
-
-      {activeWorkspaceTab === 'new-orders' ? (
-        <div className="requests-pagination">
-          <span className="requests-page-nav__label">
-            {pagination.page}/{Math.max(1, pagination.totalPages)}
-          </span>
-          <div className="requests-page-nav" role="group" aria-label={t(I18N_KEYS.requestsPage.paginationBottomLabel)}>
-            <button
-              type="button"
-              className="btn-ghost requests-page-nav__btn"
-              onClick={pagination.onPrevPage}
-              disabled={pagination.page <= 1}
-              aria-label={t(I18N_KEYS.requestsPage.paginationPrev)}
-            >
-              ←
-            </button>
-            <button
-              type="button"
-              className="btn-ghost requests-page-nav__btn"
-              onClick={pagination.onNextPage}
-              disabled={pagination.page >= pagination.totalPages}
-              aria-label={t(I18N_KEYS.requestsPage.paginationNext)}
-            >
-              →
-            </button>
-          </div>
-        </div>
-      ) : null}
     </section>
   );
 }

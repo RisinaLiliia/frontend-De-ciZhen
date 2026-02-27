@@ -1,1 +1,1 @@
-export { default } from '../orders/OrdersPageClient';
+export { default } from './WorkspaceRouteClient';
