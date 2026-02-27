@@ -1,4 +1,5 @@
 // src/app/layout.tsx
+import type { Metadata } from 'next';
 import '../styles/globals.css';
 import { AppThemeProvider } from '@/lib/theme/ThemeProvider';
 import { QueryProvider } from '@/lib/query/QueryProvider';
@@ -6,6 +7,15 @@ import { AppToaster } from '@/components/ui/Toaster';
 import { I18nProvider } from '@/lib/i18n/I18nProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { PresenceProvider } from '@/lib/presence/PresenceProvider';
+
+export const metadata: Metadata = {
+  title: {
+    default: 'De’ciZhen | Dienstleistungen finden und anbieten',
+    template: '%s | De’ciZhen',
+  },
+  description:
+    'De’ciZhen ist ein lokaler Service-Marktplatz: Aufträge veröffentlichen, Anbieter vergleichen, chatten und Aufträge sicher abschließen.',
+};
 
 export default function RootLayout({
   children,

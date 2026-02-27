@@ -2435,9 +2435,9 @@
   }
 
   .provider-badge--top {
-    color: color-mix(in oklab, var(--c-warning) 84%, var(--c-text) 16%);
+    color: var(--c-text);
     border-color: color-mix(in oklab, var(--c-warning) 42%, var(--c-border) 58%);
-    background: color-mix(in oklab, var(--c-warning) 16%, var(--c-panel) 84%);
+    background: color-mix(in oklab, var(--c-warning) 24%, var(--c-panel) 76%);
   }
 
   .provider-badge--service {

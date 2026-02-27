@@ -28,7 +28,7 @@ export function HomeHero({ t }: HomeHeroProps) {
       <HeroSection
         title={heroTitle}
         subtitle={t(I18N_KEYS.homePublic.subtitle)}
-        mediaSrc="/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg"
+        mediaSrc="/Handwerker in einem modernen Wohnzimmer.jpg"
       />
       <div className="home-hero__actions sticky-action-row hero-dock-actions">
         {ctas.map((cta) => (

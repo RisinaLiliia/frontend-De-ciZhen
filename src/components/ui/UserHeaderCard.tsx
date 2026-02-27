@@ -136,12 +136,13 @@ export function UserHeaderCard({
             {isVerified ? (
               <span
                 className={`provider-verified-icon ${status === 'online' ? 'is-online' : ''}`.trim()}
-                aria-label="Verified"
                 title="Verified"
+                aria-hidden="true"
               >
                 <IconCheck />
               </span>
             ) : null}
+            {isVerified ? <span className="sr-only">Verified</span> : null}
           </p>
           {cityNode}
           <ProviderDecisionMetrics
@@ -186,12 +187,13 @@ export function UserHeaderCard({
           {isVerified ? (
             <span
               className={`provider-verified-icon ${status === 'online' ? 'is-online' : ''}`.trim()}
-              aria-label="Verified"
               title="Verified"
+              aria-hidden="true"
             >
               <IconCheck />
             </span>
           ) : null}
+          {isVerified ? <span className="sr-only">Verified</span> : null}
         </p>
         {cityNode}
         <ProviderDecisionMetrics

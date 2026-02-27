@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
   images: {
     // Keep local dev resilient when external image hosts are slow/unreachable.
     unoptimized: process.env.NODE_ENV === 'development',
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',

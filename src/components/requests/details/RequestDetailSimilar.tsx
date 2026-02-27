@@ -49,7 +49,7 @@ export function RequestDetailSimilar({
                   href={`/requests/${item.id}`}
                   ariaLabel={openRequestLabel}
                   imageSrc={getImage(item)}
-                  imageAlt={itemTitle}
+                  imageAlt=""
                   badges={[item.isRecurring ? recurringLabel : onceLabel]}
                   category={item.categoryName ?? item.categoryKey ?? ''}
                   title={itemTitle}

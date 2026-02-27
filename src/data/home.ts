@@ -44,7 +44,7 @@ export const HOME_SERVICES: Array<{
     key: 'moving',
     href: '/workspace?section=orders',
     labelKey: I18N_KEYS.homePublic.serviceMoving,
-    imageSrc: '/L%C3%A4dt%20Kisten%20aus%20einem%20Transporter.jpg',
+    imageSrc: '/Lädt Kisten aus einem Transporter.jpg',
   },
   {
     key: 'assembly',

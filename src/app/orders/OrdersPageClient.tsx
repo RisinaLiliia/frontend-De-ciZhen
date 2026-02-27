@@ -2,19 +2,13 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useQueryClient } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
-import { HomeOrdersExplorePanel } from '@/components/home/HomeOrdersExplorePanel';
-import { HomeNearbyPanel } from '@/components/home/HomeNearbyPanel';
-import { HomeTopProvidersPanel } from '@/components/home/HomeTopProvidersPanel';
-import { HomeProofPanel } from '@/components/home/HomeProofPanel';
-import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
-import { HomePlatformActivityPanel } from '@/components/home/HomePlatformActivityPanel';
 import { HeroSection } from '@/components/ui/HeroSection';
-import { ProofReviewCard } from '@/components/reviews/ProofReviewCard';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import {
   deleteMyRequest,
@@ -51,15 +45,12 @@ import {
   type WorkspaceStatusFilter,
   type WorkspaceTab,
 } from '@/features/requests/page/workspace';
-import { PublicContent } from '@/features/requests/page/PublicContent';
-import { WorkspaceContent } from '@/features/requests/page/WorkspaceContent';
 import { useRequestsPageViewModel } from '@/features/requests/page/useRequestsPageViewModel';
 import { useRequestsPageData } from '@/features/requests/page/useRequestsPageData';
 import { useContractRequestsData } from '@/features/requests/page/useContractRequestsData';
 import { useRequestsWorkspaceState } from '@/features/requests/page/useRequestsWorkspaceState';
 import { useRequestsWorkspaceDerived } from '@/features/requests/page/useRequestsWorkspaceDerived';
 import { WorkspaceFrame, WorkspaceTopProvidersAside } from '@/features/requests/page/WorkspaceFrame';
-import { WorkspacePrivateIntro } from '@/features/requests/page/WorkspacePrivateIntro';
 
 const DEFAULT_GUEST_WORKSPACE_URL = '/workspace?section=orders';
 type PublicWorkspaceSection = 'orders' | 'providers' | 'stats';
@@ -68,6 +59,102 @@ function resolvePublicSection(value: string | null): PublicWorkspaceSection | nu
   if (value === 'orders' || value === 'providers' || value === 'stats') return value;
   return null;
 }
+
+const HomeOrdersExplorePanel = dynamic(
+  () => import('@/components/home/HomeOrdersExplorePanel').then((mod) => mod.HomeOrdersExplorePanel),
+  {
+    loading: () => (
+      <section className="panel">
+        <div className="skeleton h-96 w-full" />
+      </section>
+    ),
+  },
+);
+const HomePlatformActivityPanel = dynamic(
+  () => import('@/components/home/HomePlatformActivityPanel').then((mod) => mod.HomePlatformActivityPanel),
+  {
+    loading: () => (
+      <section className="panel">
+        <div className="skeleton h-96 w-full" />
+      </section>
+    ),
+  },
+);
+const HomeNearbyPanel = dynamic(
+  () => import('@/components/home/HomeNearbyPanel').then((mod) => mod.HomeNearbyPanel),
+  {
+    loading: () => (
+      <section className="panel">
+        <div className="skeleton h-64 w-full" />
+      </section>
+    ),
+  },
+);
+const HomeTopProvidersPanel = dynamic(
+  () => import('@/components/home/HomeTopProvidersPanel').then((mod) => mod.HomeTopProvidersPanel),
+  {
+    loading: () => (
+      <section className="panel">
+        <div className="skeleton h-64 w-full" />
+      </section>
+    ),
+  },
+);
+const HomeProofPanel = dynamic(
+  () => import('@/components/home/HomeProofPanel').then((mod) => mod.HomeProofPanel),
+  {
+    loading: () => (
+      <section className="panel">
+        <div className="skeleton h-64 w-full" />
+      </section>
+    ),
+  },
+);
+const HomeTrustLivePanel = dynamic(
+  () => import('@/components/home/HomeTrustLivePanel').then((mod) => mod.HomeTrustLivePanel),
+  {
+    loading: () => (
+      <section className="panel">
+        <div className="skeleton h-64 w-full" />
+      </section>
+    ),
+  },
+);
+const PublicContent = dynamic(
+  () => import('@/features/requests/page/PublicContent').then((mod) => mod.PublicContent),
+  {
+    loading: () => (
+      <section className="panel requests-panel">
+        <div className="skeleton h-96 w-full" />
+      </section>
+    ),
+  },
+);
+const WorkspaceContent = dynamic(
+  () => import('@/features/requests/page/WorkspaceContent').then((mod) => mod.WorkspaceContent),
+  {
+    loading: () => (
+      <section className="panel requests-panel">
+        <div className="skeleton h-96 w-full" />
+      </section>
+    ),
+  },
+);
+const WorkspacePrivateIntro = dynamic(
+  () => import('@/features/requests/page/WorkspacePrivateIntro').then((mod) => mod.WorkspacePrivateIntro),
+  {
+    loading: () => (
+      <section className="home-intro-shell">
+        <div className="panel">
+          <div className="skeleton h-48 w-full" />
+        </div>
+      </section>
+    ),
+  },
+);
+const ProofReviewCard = dynamic(
+  () => import('@/components/reviews/ProofReviewCard').then((mod) => mod.ProofReviewCard),
+);
 
 function RequestsPageContent() {
   const router = useRouter();
@@ -852,7 +939,7 @@ function RequestsPageContent() {
               variant: 'primary',
             },
           ]}
-          mediaSrc="/Handwerker%20in%20einem%20modernen%20Wohnzimmer.jpg"
+          mediaSrc="/Handwerker in einem modernen Wohnzimmer.jpg"
         />
       ) : null}
 
