@@ -12,8 +12,6 @@ const API_BASE =
 
 const nextConfig: NextConfig = {
   images: {
-    // Dev default: bypass optimizer to avoid remote upstream timeout noise.
-    // Set NEXT_IMAGE_OPTIMIZE_DEV=true to test optimizer locally.
     unoptimized: imageUnoptimized,
     qualities: [60, 62, 75],
     formats: ['image/avif', 'image/webp'],
