@@ -41,6 +41,7 @@ type WorkspaceTopProvidersAsideProps = {
   ctaHref: string;
   providers: ReadonlyArray<TopProviderItem>;
   favoriteProviderIds: Set<string>;
+  pendingFavoriteProviderIds?: Set<string>;
   onToggleFavorite?: (providerId: string) => void;
 };
 
@@ -54,6 +55,7 @@ export function WorkspaceTopProvidersAside({
   ctaHref,
   providers,
   favoriteProviderIds,
+  pendingFavoriteProviderIds,
   onToggleFavorite,
 }: WorkspaceTopProvidersAsideProps) {
   if (isLoading) {
@@ -103,6 +105,7 @@ export function WorkspaceTopProvidersAside({
       ctaHref={ctaHref}
       providers={providers}
       favoriteProviderIds={favoriteProviderIds}
+      pendingFavoriteProviderIds={pendingFavoriteProviderIds}
       onToggleFavorite={onToggleFavorite}
     />
   );

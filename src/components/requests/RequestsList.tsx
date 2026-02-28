@@ -3,10 +3,11 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { IconBriefcase, IconCalendar, IconChat, IconEdit, IconHeart } from '@/components/ui/icons/icons';
-import { OrderCard } from '@/components/orders/OrderCard';
+import { IconBriefcase, IconCalendar, IconChat, IconEdit } from '@/components/ui/icons/icons';
+import { RequestCard } from '@/components/requests/RequestCard';
 import { LocationMeta } from '@/components/ui/LocationMeta';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { resolveOfferCardState } from '@/features/requests/uiState';
@@ -28,7 +29,9 @@ type RequestsListProps = {
   cityById: Map<string, { i18n: Record<string, string> }>;
   formatDate: Intl.DateTimeFormat;
   formatPrice: Intl.NumberFormat;
-  isProviderPersonalized?: boolean;
+  enableOfferActions?: boolean;
+  showFavoriteButton?: boolean;
+  hideRecurringBadge?: boolean;
   offersByRequest?: Map<string, OfferDto>;
   favoriteRequestIds?: Set<string>;
   onToggleFavorite?: (requestId: string) => void;
@@ -38,7 +41,6 @@ type RequestsListProps = {
   onOpenChatThread?: (offer: OfferDto) => void;
   pendingOfferRequestId?: string | null;
   pendingFavoriteRequestIds?: Set<string>;
-  showStaticFavoriteIcon?: boolean;
   ownerRequestActions?: {
     onDelete?: (requestId: string) => void;
     pendingDeleteRequestId?: string | null;
@@ -56,7 +58,9 @@ function RequestsListComponent({
   cityById,
   formatDate,
   formatPrice,
-  isProviderPersonalized = false,
+  enableOfferActions = false,
+  showFavoriteButton = false,
+  hideRecurringBadge = false,
   offersByRequest,
   favoriteRequestIds,
   onToggleFavorite,
@@ -66,7 +70,6 @@ function RequestsListComponent({
   onOpenChatThread,
   pendingOfferRequestId = null,
   pendingFavoriteRequestIds,
-  showStaticFavoriteIcon = false,
   ownerRequestActions,
 }: RequestsListProps) {
   if (isLoading) {
@@ -150,7 +153,7 @@ function RequestsListComponent({
         const excerpt = excerptSource && excerptSource !== title ? excerptSource : null;
         const tags = item.tags ?? [];
         const detailsHref = `/requests/${item.id}`;
-        const itemOffer = isProviderPersonalized ? offersByRequest?.get(item.id) : undefined;
+        const itemOffer = enableOfferActions ? offersByRequest?.get(item.id) : undefined;
         const isOwnerRequestList = Boolean(ownerRequestActions);
         const offerCardState = resolveOfferCardState(itemOffer);
         const badgeStatus =
@@ -171,16 +174,16 @@ function RequestsListComponent({
         const ownerStatusLabel = mapRequestStatusLabel(item.status, t);
 
         return (
-          <OrderCard
+          <RequestCard
             key={item.id}
             prefetch={index < 2}
             href={detailsHref}
             ariaLabel={t(I18N_KEYS.requestsPage.openRequest)}
             imageSrc={imageSrc}
             imageAlt=""
-            imagePriority={index === 0 && !isProviderPersonalized && !isOwnerRequestList}
+            imagePriority={index === 0 && !hideRecurringBadge && !isOwnerRequestList}
             badges={
-              isProviderPersonalized
+              hideRecurringBadge
                 ? []
                 : [recurringLabel]
             }
@@ -202,7 +205,7 @@ function RequestsListComponent({
               serviceLabel,
               ...tags.slice(0, 2),
             ]}
-            mode={isProviderPersonalized || isOwnerRequestList ? 'static' : 'link'}
+            mode="link"
             statusSlot={
               isOwnerRequestList ? (
                 <span className="request-card__status-actions">
@@ -240,91 +243,10 @@ function RequestsListComponent({
                     disabled={isPendingOwnerDelete}
                   />
                 </span>
-              ) : offerCardState === 'none' ? (
-                <span className="request-card__status-actions">
-                  <OfferActionButton
-                    kind="submit"
-                    label={t(I18N_KEYS.requestDetails.ctaApply)}
-                    ariaLabel={t(I18N_KEYS.requestDetails.ctaApply)}
-                    title={t(I18N_KEYS.requestDetails.ctaApply)}
-                    iconOnly
-                    className="request-card__status-action request-card__status-action--submit"
-                    onClick={() => onSendOffer?.(item.id)}
-                  />
-                </span>
-              ) : statusLabel && badgeStatus ? (
-                <span className="request-card__status-actions">
-                  <span
-                    className={`${getStatusBadgeClass(badgeStatus)} capitalize`}
-                    title={badgeStatus === 'sent' ? t(I18N_KEYS.requestDetails.responseSentHint) : statusLabel}
-                  >
-                    {statusLabel}
-                  </span>
-                  {isSentState ? (
-                    <>
-                      <OfferActionButton
-                        kind="edit"
-                        label={t(I18N_KEYS.requestDetails.responseEditCta)}
-                        ariaLabel={t(I18N_KEYS.requestDetails.responseEditTooltip)}
-                        title={t(I18N_KEYS.requestDetails.responseEditTooltip)}
-                        iconOnly
-                        className="request-card__status-action request-card__status-action--edit"
-                        onClick={() => onEditOffer?.(item.id)}
-                      />
-                      <OfferActionButton
-                        kind="delete"
-                        label={t(I18N_KEYS.requestDetails.responseCancel)}
-                        ariaLabel={t(I18N_KEYS.requestDetails.responseCancel)}
-                        title={t(I18N_KEYS.requestDetails.responseCancel)}
-                        iconOnly
-                        className="request-card__status-action request-card__status-action--danger"
-                        onClick={() => itemOffer?.id && onWithdrawOffer?.(itemOffer.id)}
-                        disabled={isPendingWithdraw}
-                      />
-                    </>
-                  ) : null}
-                  {offerCardState === 'accepted' ? (
-                    <>
-                      <Link
-                        href="/workspace?tab=completed-jobs"
-                        prefetch={false}
-                        className="btn-primary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--contract"
-                        aria-label={t(I18N_KEYS.requestDetails.responseViewContract)}
-                        title={t(I18N_KEYS.requestDetails.responseViewContract)}
-                      >
-                        <i className="offer-action-btn__icon">
-                          <IconBriefcase />
-                        </i>
-                      </Link>
-                      {itemOffer?.id ? (
-                        onOpenChatThread ? (
-                          <button
-                            type="button"
-                            className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
-                            onClick={() => onOpenChatThread(itemOffer)}
-                            aria-label={t(I18N_KEYS.requestDetails.ctaChat)}
-                            title={t(I18N_KEYS.requestDetails.ctaChat)}
-                          >
-                            <i className="offer-action-btn__icon">
-                              <IconChat />
-                            </i>
-                          </button>
-                        ) : (
-                          <Link
-                            href="/chat"
-                            className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
-                            aria-label={t(I18N_KEYS.requestDetails.ctaChat)}
-                            title={t(I18N_KEYS.requestDetails.ctaChat)}
-                          >
-                            <i className="offer-action-btn__icon">
-                              <IconChat />
-                            </i>
-                          </Link>
-                        )
-                      ) : null}
-                    </>
-                  ) : null}
-                  {offerCardState === 'declined' ? (
+              ) : enableOfferActions ? (
+                offerCardState === 'none' ? (
+                  onSendOffer ? (
+                  <span className="request-card__status-actions">
                     <OfferActionButton
                       kind="submit"
                       label={t(I18N_KEYS.requestDetails.ctaApply)}
@@ -334,24 +256,108 @@ function RequestsListComponent({
                       className="request-card__status-action request-card__status-action--submit"
                       onClick={() => onSendOffer?.(item.id)}
                     />
+                  </span>
+                  ) : null
+                ) : statusLabel && badgeStatus ? (
+                  <span className="request-card__status-actions">
+                    <span
+                      className={`${getStatusBadgeClass(badgeStatus)} capitalize`}
+                      title={badgeStatus === 'sent' ? t(I18N_KEYS.requestDetails.responseSentHint) : statusLabel}
+                    >
+                      {statusLabel}
+                    </span>
+                    {isSentState ? (
+                      <>
+                        {onEditOffer ? (
+                          <OfferActionButton
+                            kind="edit"
+                            label={t(I18N_KEYS.requestDetails.responseEditCta)}
+                            ariaLabel={t(I18N_KEYS.requestDetails.responseEditTooltip)}
+                            title={t(I18N_KEYS.requestDetails.responseEditTooltip)}
+                            iconOnly
+                            className="request-card__status-action request-card__status-action--edit"
+                            onClick={() => onEditOffer(item.id)}
+                          />
+                        ) : null}
+                        {onWithdrawOffer && itemOffer?.id ? (
+                          <OfferActionButton
+                            kind="delete"
+                            label={t(I18N_KEYS.requestDetails.responseCancel)}
+                            ariaLabel={t(I18N_KEYS.requestDetails.responseCancel)}
+                            title={t(I18N_KEYS.requestDetails.responseCancel)}
+                            iconOnly
+                            className="request-card__status-action request-card__status-action--danger"
+                            onClick={() => onWithdrawOffer(itemOffer.id)}
+                            disabled={isPendingWithdraw}
+                          />
+                        ) : null}
+                      </>
+                    ) : null}
+                    {offerCardState === 'accepted' ? (
+                      <>
+                        <Link
+                          href="/workspace?tab=completed-jobs"
+                          prefetch={false}
+                          className="btn-primary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--contract"
+                          aria-label={t(I18N_KEYS.requestDetails.responseViewContract)}
+                          title={t(I18N_KEYS.requestDetails.responseViewContract)}
+                        >
+                          <i className="offer-action-btn__icon">
+                            <IconBriefcase />
+                          </i>
+                        </Link>
+                        {itemOffer?.id ? (
+                          onOpenChatThread ? (
+                            <button
+                              type="button"
+                              className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
+                              onClick={() => onOpenChatThread(itemOffer)}
+                              aria-label={t(I18N_KEYS.requestDetails.ctaChat)}
+                              title={t(I18N_KEYS.requestDetails.ctaChat)}
+                            >
+                              <i className="offer-action-btn__icon">
+                                <IconChat />
+                              </i>
+                            </button>
+                          ) : (
+                            <Link
+                              href="/chat"
+                              className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
+                              aria-label={t(I18N_KEYS.requestDetails.ctaChat)}
+                              title={t(I18N_KEYS.requestDetails.ctaChat)}
+                            >
+                              <i className="offer-action-btn__icon">
+                                <IconChat />
+                              </i>
+                            </Link>
+                          )
+                        ) : null}
+                      </>
+                    ) : null}
+                    {offerCardState === 'declined' && onSendOffer ? (
+                      <OfferActionButton
+                        kind="submit"
+                        label={t(I18N_KEYS.requestDetails.ctaApply)}
+                        ariaLabel={t(I18N_KEYS.requestDetails.ctaApply)}
+                        title={t(I18N_KEYS.requestDetails.ctaApply)}
+                        iconOnly
+                        className="request-card__status-action request-card__status-action--submit"
+                      onClick={() => onSendOffer(item.id)}
+                    />
                   ) : null}
                 </span>
+                ) : null
               ) : null
             }
             overlaySlot={
-              isProviderPersonalized || showStaticFavoriteIcon ? (
-                <button
-                  type="button"
-                  className={`btn-ghost is-primary request-detail__save request-card__favorite-btn ${
-                    isFavorite ? 'is-saved is-active' : ''
-                  } ${isFavoritePending ? 'is-pending' : ''}`.trim()}
-                  onClick={() => onToggleFavorite?.(item.id)}
-                  aria-label={t(I18N_KEYS.requestDetails.ctaSave)}
-                  title={t(I18N_KEYS.requestDetails.ctaSave)}
-                  disabled={isFavoritePending || !onToggleFavorite}
-                >
-                  <IconHeart className="icon-heart" />
-                </button>
+              showFavoriteButton ? (
+                <FavoriteButton
+                  variant="icon"
+                  isFavorite={isFavorite}
+                  isPending={isFavoritePending}
+                  onToggle={() => onToggleFavorite?.(item.id)}
+                  ariaLabel={t(I18N_KEYS.requestDetails.ctaSave)}
+                />
               ) : null
             }
             actionSlot={null}
@@ -374,7 +380,9 @@ function areRequestsListPropsEqual(prev: RequestsListProps, next: RequestsListPr
     prev.cityById === next.cityById &&
     prev.formatDate === next.formatDate &&
     prev.formatPrice === next.formatPrice &&
-    prev.isProviderPersonalized === next.isProviderPersonalized &&
+    prev.enableOfferActions === next.enableOfferActions &&
+    prev.showFavoriteButton === next.showFavoriteButton &&
+    prev.hideRecurringBadge === next.hideRecurringBadge &&
     prev.offersByRequest === next.offersByRequest &&
     prev.favoriteRequestIds === next.favoriteRequestIds &&
     prev.onToggleFavorite === next.onToggleFavorite &&
@@ -384,7 +392,6 @@ function areRequestsListPropsEqual(prev: RequestsListProps, next: RequestsListPr
     prev.onOpenChatThread === next.onOpenChatThread &&
     prev.pendingOfferRequestId === next.pendingOfferRequestId &&
     prev.pendingFavoriteRequestIds === next.pendingFavoriteRequestIds &&
-    prev.showStaticFavoriteIcon === next.showStaticFavoriteIcon &&
     prev.ownerRequestActions === next.ownerRequestActions
   );
 }

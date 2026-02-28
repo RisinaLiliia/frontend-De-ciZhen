@@ -19,7 +19,7 @@ const INFINITE_MOTION_SELECTORS = [
   '.top-providers-panel',
   '.requests-filters',
   '.requests-select-icon--city',
-  '.order-card-link.is-active',
+  '.request-card-link.is-active',
   '.provider-status-dot',
   '.nearby-dot',
   '.nearby-dot-item',

@@ -1,7 +1,8 @@
 // src/components/requests/details/RequestDetailAside.tsx
 import type { ReactNode } from 'react';
-import { IconCalendar, IconChat, IconHeart, IconPin } from '@/components/ui/icons/icons';
+import { IconCalendar, IconChat, IconPin } from '@/components/ui/icons/icons';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 type RequestDetailMetaRowsProps = {
   cityLabel: string;
@@ -31,6 +32,7 @@ type RequestDetailAsideProps = {
   ctaChatLabel: string;
   ctaSaveLabel: string;
   isSaved: boolean;
+  isSavePending?: boolean;
   onApply: () => void;
   onChat: () => void;
   onToggleSave: () => void;
@@ -55,6 +57,7 @@ export function RequestDetailAside({
   ctaChatLabel,
   ctaSaveLabel,
   isSaved,
+  isSavePending = false,
   onApply,
   onChat,
   onToggleSave,
@@ -117,14 +120,14 @@ export function RequestDetailAside({
           </button>
         ) : null}
         {showSave ? (
-          <button
-            type="button"
-            className={`btn-ghost is-primary request-detail__save ${isSaved ? 'is-saved' : ''}`}
-            onClick={onToggleSave}
-          >
-            <span>{ctaSaveLabel}</span>
-            <IconHeart className="icon-heart" />
-          </button>
+          <FavoriteButton
+            variant="cta"
+            isFavorite={isSaved}
+            isPending={isSavePending}
+            ariaLabel={ctaSaveLabel}
+            label={ctaSaveLabel}
+            onToggle={onToggleSave}
+          />
         ) : null}
       </div>
       <div className="request-detail__aside-spacer" />

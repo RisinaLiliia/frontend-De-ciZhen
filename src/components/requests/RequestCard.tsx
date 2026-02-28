@@ -1,11 +1,11 @@
-// src/components/orders/OrderCard.tsx
+// src/components/requests/RequestCard.tsx
 'use client';
 
 import Image from 'next/image';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 
-export type OrderCardProps = {
+export type RequestCardProps = {
   href: string;
   badges: string[];
   category: string;
@@ -31,7 +31,7 @@ export type OrderCardProps = {
   imageSizes?: string;
 };
 
-export function OrderCard({
+export function RequestCard({
   href,
   badges,
   category,
@@ -54,13 +54,13 @@ export function OrderCard({
   imagePriority = false,
   imageQuality = 62,
   imageSizes = '(max-width: 640px) 96px, (max-width: 1024px) 140px, 180px',
-}: OrderCardProps) {
+}: RequestCardProps) {
   const router = useRouter();
   const hasImage = Boolean(imageSrc);
   const visibleBadges = badges.slice(0, 1);
   const safeImageSrc = imageSrc ?? '';
   const isLinkMode = mode === 'link';
-  const cardClassName = `request-card request-card--media-right order-card-link ${
+  const cardClassName = `request-card request-card--media-right request-card-link ${
     !hasImage ? 'request-card--no-media' : ''
   } ${isActive ? 'is-active' : ''} ${isLinkMode ? 'request-card--link' : ''}`.trim();
 
@@ -98,9 +98,9 @@ export function OrderCard({
     <>
       {overlaySlot ? <div className="request-card__overlay">{overlaySlot}</div> : null}
       {visibleBadges.length && hasImage ? (
-        <div className="order-badges order-badges--media" aria-hidden="true">
+        <div className="request-badges request-badges--media" aria-hidden="true">
           {visibleBadges.map((badge) => (
-            <span key={badge} className="order-badge">
+            <span key={badge} className="request-badge">
               {badge}
             </span>
           ))}
@@ -120,9 +120,9 @@ export function OrderCard({
         </div>
       ) : null}
       <div className="request-card__body">
-        <div className="order-category-row">
-          <div className="order-category">{category}</div>
-          {statusSlot ? <span className="order-top__status">{statusSlot}</span> : null}
+        <div className="request-category-row">
+          <div className="request-category">{category}</div>
+          {statusSlot ? <span className="request-top__status">{statusSlot}</span> : null}
         </div>
         <div className="request-card__title">{title}</div>
         {excerpt ? <p className="request-card__excerpt">{excerpt}</p> : null}
@@ -151,9 +151,9 @@ export function OrderCard({
         </div>
 
         {visibleBadges.length && !hasImage ? (
-          <div className="order-badges" aria-hidden="true">
+          <div className="request-badges" aria-hidden="true">
             {visibleBadges.map((badge) => (
-              <span key={badge} className="order-badge">
+              <span key={badge} className="request-badge">
                 {badge}
               </span>
             ))}

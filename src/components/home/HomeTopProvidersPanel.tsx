@@ -1,16 +1,20 @@
 /* src/components/home/HomeTopProvidersPanel.tsx */
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
 import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
 import { listPublicProviders } from '@/lib/api/providers';
 import { listReviews } from '@/lib/api/reviews';
-import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
+import {
+  buildProviderFavoriteLookup,
+  isProviderInFavoriteLookup,
+  listFavorites,
+} from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
+import { useProviderFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import { useCities } from '@/features/catalog/queries';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -30,7 +34,6 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const qc = useQueryClient();
-  const [pendingFavoriteProviderIds, setPendingFavoriteProviderIds] = React.useState<Set<string>>(new Set());
   const { data: providers = [] } = useQuery({
     queryKey: ['home-top-providers', limit],
     queryFn: () => listPublicProviders(),
@@ -40,15 +43,40 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     enabled: isAuthed,
     queryFn: () => withStatusFallback(() => listFavorites('provider'), [], [401, 403]),
   });
+  const providerById = React.useMemo(
+    () => new Map(providers.map((provider) => [provider.id, provider])),
+    [providers],
+  );
   const { data: cities = [] } = useCities('DE');
-  const favoriteProviderIds = React.useMemo(
-    () => new Set(favoriteProviders.map((item) => item.id)),
+  const favoriteProviderLookup = React.useMemo(
+    () => buildProviderFavoriteLookup(favoriteProviders),
     [favoriteProviders],
   );
+  const favoriteProviderIds = React.useMemo(() => {
+    const ids = new Set<string>();
+    for (const provider of providers) {
+      if (isProviderInFavoriteLookup(favoriteProviderLookup, provider)) {
+        ids.add(provider.id);
+      }
+    }
+    return ids;
+  }, [favoriteProviderLookup, providers]);
   const nextPath = React.useMemo(() => {
     const qs = searchParams?.toString();
     return `${pathname}${qs ? `?${qs}` : ''}`;
   }, [pathname, searchParams]);
+  const {
+    pendingFavoriteProviderIds,
+    toggleProviderFavorite,
+  } = useProviderFavoriteToggle({
+    isAuthed,
+    nextPath,
+    router,
+    t,
+    qc,
+    favoriteProviderLookup,
+    providerById,
+  });
 
   const sortedProviders = React.useMemo(() => {
     const copy = [...providers];
@@ -123,42 +151,6 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
       }),
     [cityLabelById, reviewPreviewById, sortedProviders, t],
   );
-  const onToggleFavorite = React.useCallback(
-    async (providerId: string) => {
-      if (!isAuthed) {
-        router.push(`/auth/login?next=${encodeURIComponent(nextPath)}`);
-        toast.message(t(I18N_KEYS.requestDetails.favoritesSoon));
-        return;
-      }
-      if (pendingFavoriteProviderIds.has(providerId)) return;
-      const isSaved = favoriteProviderIds.has(providerId);
-      setPendingFavoriteProviderIds((prev) => {
-        const next = new Set(prev);
-        next.add(providerId);
-        return next;
-      });
-      try {
-        if (isSaved) {
-          await removeFavorite('provider', providerId);
-          toast.message(t(I18N_KEYS.requestDetails.favoritesRemoved));
-        } else {
-          await addFavorite('provider', providerId);
-          toast.success(t(I18N_KEYS.requestDetails.saved));
-        }
-        await qc.invalidateQueries({ queryKey: ['favorite-providers'] });
-      } catch {
-        toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
-      } finally {
-        setPendingFavoriteProviderIds((prev) => {
-          const next = new Set(prev);
-          next.delete(providerId);
-          return next;
-        });
-      }
-    },
-    [favoriteProviderIds, isAuthed, nextPath, pendingFavoriteProviderIds, qc, router, t],
-  );
-
   return (
     <TopProvidersPanel
       title={t(I18N_KEYS.homePublic.topProviders)}
@@ -167,8 +159,9 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
       ctaHref="/workspace?section=providers"
       providers={mappedProviders}
       favoriteProviderIds={favoriteProviderIds}
+      pendingFavoriteProviderIds={pendingFavoriteProviderIds}
       onToggleFavorite={(providerId) => {
-        void onToggleFavorite(providerId);
+        void toggleProviderFavorite(providerId);
       }}
     />
   );

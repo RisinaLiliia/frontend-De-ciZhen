@@ -24,8 +24,12 @@ import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { listProviderSlots } from '@/lib/api/availability';
 import { getPublicProviderById, listPublicProviders } from '@/lib/api/providers';
 import { listReviews, listReviewsPage } from '@/lib/api/reviews';
-import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
+import {
+  buildProviderFavoriteLookup,
+  listFavorites,
+} from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import { useProviderFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -261,47 +265,33 @@ export default function ProviderPublicProfilePage() {
     enabled: isAuthed,
     queryFn: () => withStatusFallback(() => listFavorites('provider'), [], [401, 403]),
   });
-
+  const favoriteProviderLookup = React.useMemo(
+    () => buildProviderFavoriteLookup(favoriteProviders),
+    [favoriteProviders],
+  );
+  const providerById = React.useMemo(() => {
+    const map = new Map<string, ProviderPublicDto>();
+    if (provider) map.set(provider.id, provider);
+    return map;
+  }, [provider]);
+  const nextPath = pathname || `/providers/${id}`;
+  const {
+    pendingFavoriteProviderIds,
+    isProviderSaved,
+    toggleProviderFavorite,
+  } = useProviderFavoriteToggle({
+    isAuthed,
+    nextPath,
+    router,
+    t,
+    qc,
+    favoriteProviderLookup,
+    providerById,
+  });
   const isSaved = React.useMemo(() => {
     if (!provider) return false;
-    return favoriteProviders.some((item) => item.id === provider.id);
-  }, [favoriteProviders, provider]);
-
-  const setProviderFavorite = React.useCallback(
-    async (nextSaved: boolean) => {
-      if (!provider) return;
-
-      qc.setQueryData<ProviderPublicDto[]>(['favorite-providers'], (prev) => {
-        const list = prev ? [...prev] : [];
-        const exists = list.some((item) => item.id === provider.id);
-        if (nextSaved && !exists) return [provider, ...list];
-        if (!nextSaved && exists) return list.filter((item) => item.id !== provider.id);
-        return list;
-      });
-
-      try {
-        if (nextSaved) {
-          await addFavorite('provider', provider.id);
-          toast.success(t(I18N_KEYS.requestDetails.saved));
-        } else {
-          await removeFavorite('provider', provider.id);
-          toast.message(t(I18N_KEYS.requestDetails.favoritesRemoved));
-        }
-      } catch {
-        qc.setQueryData<ProviderPublicDto[]>(['favorite-providers'], (prev) => {
-          const list = prev ? [...prev] : [];
-          const exists = list.some((item) => item.id === provider.id);
-          if (!nextSaved && !exists) return [provider, ...list];
-          if (nextSaved && exists) return list.filter((item) => item.id !== provider.id);
-          return list;
-        });
-        toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
-      }
-    },
-    [provider, qc, t],
-  );
-
-  const nextPath = pathname || `/providers/${id}`;
+    return isProviderSaved(provider.id);
+  }, [isProviderSaved, provider]);
 
   const requireAuth = React.useCallback(() => {
     router.push(`/auth/login?next=${encodeURIComponent(nextPath)}`);
@@ -328,12 +318,8 @@ export default function ProviderPublicProfilePage() {
 
   const handleFavorite = React.useCallback(() => {
     if (!provider) return;
-    if (!isAuthed) {
-      requireAuth();
-      return;
-    }
-    void setProviderFavorite(!isSaved);
-  }, [isAuthed, isSaved, provider, requireAuth, setProviderFavorite]);
+    void toggleProviderFavorite(provider.id);
+  }, [provider, toggleProviderFavorite]);
 
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const longDateFormatter = React.useMemo(
@@ -744,7 +730,6 @@ export default function ProviderPublicProfilePage() {
       showBack
       hideBackOnMobile
       backHref="/workspace?section=providers"
-      forceBackHref
       mainClassName="provider-public-main pt-2 pb-6 md:py-6"
     >
       <div className="request-detail request-detail--provider">
@@ -800,6 +785,7 @@ export default function ProviderPublicProfilePage() {
               ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
               ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
               isSaved={isSaved}
+              isSavePending={pendingFavoriteProviderIds.has(provider.id)}
               onApply={handleApply}
               onChat={handleChat}
               onToggleSave={handleFavorite}
@@ -948,6 +934,7 @@ export default function ProviderPublicProfilePage() {
           ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
           ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
           isSaved={isSaved}
+          isSavePending={pendingFavoriteProviderIds.has(provider.id)}
           onApply={handleApply}
           onChat={handleChat}
           onToggleSave={handleFavorite}

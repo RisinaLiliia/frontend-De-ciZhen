@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { IconHeart } from '@/components/ui/icons/icons';
 import { ProviderBadge, type ProviderBadgeSize, type ProviderBadgeType } from '@/components/ui/ProviderBadge';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 export type ProviderBadgeItem = {
   type: ProviderBadgeType;
@@ -42,6 +42,7 @@ type ProviderCardProps = {
   variant?: 'list' | 'grid';
   canToggleFavorite?: boolean;
   isFavorite?: boolean;
+  isFavoritePending?: boolean;
   onToggleFavorite?: (providerId: string) => void;
   className?: string;
 };
@@ -51,6 +52,7 @@ export function ProviderCard({
   variant = 'list',
   canToggleFavorite = false,
   isFavorite = false,
+  isFavoritePending = false,
   onToggleFavorite,
   className,
 }: ProviderCardProps) {
@@ -64,14 +66,14 @@ export function ProviderCard({
     >
       <Link href={provider.profileHref} className="provider-card__overlay-link" aria-label={provider.name} />
       {canToggleFavorite ? (
-        <button
-          type="button"
-          className={`provider-card__favorite request-card__favorite-btn ${isFavorite ? 'is-active' : ''}`}
-          aria-label={`Favorite ${provider.name}`}
-          onClick={() => onToggleFavorite?.(provider.id)}
-        >
-          <IconHeart />
-        </button>
+        <FavoriteButton
+          className="provider-card__favorite"
+          variant="icon"
+          isFavorite={isFavorite}
+          isPending={isFavoritePending}
+          ariaLabel={`Favorite ${provider.name}`}
+          onToggle={() => onToggleFavorite?.(provider.id)}
+        />
       ) : null}
 
       {showCornerBadge && primaryBadge ? (

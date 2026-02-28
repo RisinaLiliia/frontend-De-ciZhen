@@ -29,10 +29,11 @@ import {
 import { getStatusBadgeClass } from '@/lib/statusBadge';
 import { getPublicRequestById, listPublicRequests, updateMyRequest, uploadRequestPhotos } from '@/lib/api/requests';
 import { createOffer, deleteOffer, listMyProviderOffers, updateOffer } from '@/lib/api/offers';
-import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
+import { listFavorites } from '@/lib/api/favorites';
 import { getMyProviderProfile } from '@/lib/api/providers';
 import { ApiError } from '@/lib/api/http-error';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import { useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import { useAuthMe, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -117,7 +118,7 @@ export default function RequestDetailsPage() {
     queryFn: () => withStatusFallback(() => getMyProviderProfile(), null),
   });
 
-  const { data: favoriteRequests } = useQuery({
+  const { data: favoriteRequests = [] } = useQuery({
     queryKey: ['favorite-requests'],
     enabled: authStatus === 'authenticated',
     queryFn: () => withStatusFallback(() => listFavorites('request'), []),
@@ -128,44 +129,35 @@ export default function RequestDetailsPage() {
     return myResponses.find((response) => response.requestId === request.id) ?? null;
   }, [isAuthed, myResponses, request]);
 
+  const favoriteRequestIds = React.useMemo(
+    () => new Set(favoriteRequests.map((item) => item.id)),
+    [favoriteRequests],
+  );
+  const requestById = React.useMemo(() => {
+    const map = new Map<string, RequestResponseDto>();
+    if (request) map.set(request.id, request);
+    return map;
+  }, [request]);
+  const nextPath = React.useMemo(() => {
+    const qs = searchParams?.toString();
+    return `${pathname}${qs ? `?${qs}` : ''}`;
+  }, [pathname, searchParams]);
+  const {
+    pendingFavoriteRequestIds,
+    toggleRequestFavorite,
+  } = useRequestFavoriteToggle({
+    isAuthed,
+    nextPath,
+    router,
+    t,
+    qc,
+    favoriteRequestIds,
+    requestById,
+  });
   const isSaved = React.useMemo(() => {
-    if (!request || !favoriteRequests) return false;
-    return favoriteRequests.some((item) => item.id === request.id);
-  }, [favoriteRequests, request]);
-
-  const updateFavoritesCache = React.useCallback(
-    (nextSaved: boolean) => {
-      if (!request) return;
-      qc.setQueryData<RequestResponseDto[]>(['favorite-requests'], (prev) => {
-        const list = prev ? [...prev] : [];
-        const exists = list.some((item) => item.id === request.id);
-        if (nextSaved && !exists) return [request, ...list];
-        if (!nextSaved && exists) return list.filter((item) => item.id !== request.id);
-        return list;
-      });
-    },
-    [qc, request],
-  );
-
-  const setFavorite = React.useCallback(
-    async (nextSaved: boolean) => {
-      if (!request) return;
-      updateFavoritesCache(nextSaved);
-      try {
-        if (nextSaved) {
-          await addFavorite('request', request.id);
-          toast.success(t(I18N_KEYS.requestDetails.saved));
-        } else {
-          await removeFavorite('request', request.id);
-          toast.message(t(I18N_KEYS.requestDetails.favoritesRemoved));
-        }
-      } catch {
-        updateFavoritesCache(!nextSaved);
-        toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
-      }
-    },
-    [request, t, updateFavoritesCache],
-  );
+    if (!request) return false;
+    return favoriteRequestIds.has(request.id);
+  }, [favoriteRequestIds, request]);
 
   const isOwner = isAuthed && Boolean(request?.clientId) && request?.clientId === authUser?.id;
   const shouldOpenOwnerEdit = searchParams?.get('edit') === '1';
@@ -402,16 +394,12 @@ export default function RequestDetailsPage() {
 
   const handleFavorite = React.useCallback(() => {
     if (!request) return;
-    if (authStatus !== 'authenticated') {
-      requireAuth();
-      return;
-    }
     if (isOwner) {
       toast.message(t(I18N_KEYS.requestDetails.ownerHint));
       return;
     }
-    void setFavorite(!isSaved);
-  }, [authStatus, isOwner, isSaved, request, requireAuth, setFavorite, t]);
+    void toggleRequestFavorite(request.id);
+  }, [isOwner, request, t, toggleRequestFavorite]);
 
   const handleOwnerClearText = React.useCallback(() => {
     setOwnerTitle('');
@@ -647,17 +635,17 @@ export default function RequestDetailsPage() {
       } else {
         toast.message(t(I18N_KEYS.requestDetails.chatSoon));
       }
-    } else if (action === 'favorite') {
-      if (isOwner) {
-        toast.message(t(I18N_KEYS.requestDetails.ownerHint));
-      } else {
-        if (!isSaved) {
-          void setFavorite(true);
+      } else if (action === 'favorite') {
+        if (isOwner) {
+          toast.message(t(I18N_KEYS.requestDetails.ownerHint));
         } else {
-          toast.success(t(I18N_KEYS.requestDetails.saved));
+          if (!isSaved) {
+            void toggleRequestFavorite(request.id);
+          } else {
+            toast.success(t(I18N_KEYS.requestDetails.saved));
+          }
         }
       }
-    }
 
     const nextParams = new URLSearchParams(searchParams?.toString());
     nextParams.delete('action');
@@ -673,8 +661,8 @@ export default function RequestDetailsPage() {
     request,
     router,
     searchParams,
-    setFavorite,
     t,
+    toggleRequestFavorite,
   ]);
 
   if (isLoading) {
@@ -731,7 +719,6 @@ export default function RequestDetailsPage() {
       right={<AuthActions />}
       showBack
       backHref={isAuthed ? WORKSPACE_MY_REQUESTS_URL : WORKSPACE_GUEST_ORDERS_URL}
-      forceBackHref
       mainClassName="py-6"
     >
       <div className="request-detail">
@@ -946,6 +933,7 @@ export default function RequestDetailsPage() {
             ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
             ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
             isSaved={isSaved}
+            isSavePending={pendingFavoriteRequestIds.has(request.id)}
             onApply={handleApply}
             onChat={handleChat}
             onToggleSave={handleFavorite}
@@ -992,6 +980,7 @@ export default function RequestDetailsPage() {
           ctaChatLabel={t(I18N_KEYS.requestDetails.ctaChat)}
           ctaSaveLabel={t(I18N_KEYS.requestDetails.ctaSave)}
           isSaved={isSaved}
+          isSavePending={pendingFavoriteRequestIds.has(request.id)}
           onApply={handleApply}
           onChat={handleChat}
           onToggleSave={handleFavorite}
