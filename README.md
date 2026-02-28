@@ -1,195 +1,225 @@
 # De'ciZhen Frontend
 
-Next.js frontend for De'ciZhen marketplace and workspace.
+Frontend application for the De'ciZhen local services marketplace.
 
-## System Overview
-- The frontend is the user-facing layer of the De'ciZhen marketplace.
-- It integrates with a modular NestJS backend over REST APIs.
-- It supports public browsing, authenticated workspace flows, and role-based UX behavior.
+## Overview
 
-## Design Principles
-- Thin route components
-- Separation of data layer and presentation layer
-- Explicit access control
-- Environment-based configuration
-- Reusable feature modules
+- Built with Next.js App Router (`next@16.1.6`, `react@19.2.3`, TypeScript).
+- Provides:
+  - public marketplace browsing (`/`, `/workspace?section=*`, `/requests/[id]`, `/providers/[id]`)
+  - authenticated workspace (`/workspace?tab=*`, `/chat`, `/profile/*`)
+  - auth flows (login/register/forgot/reset + modal intercept routes)
+  - request creation, offer handling, contracts, favorites, reviews
+- Integrates with backend through frontend-relative `/api/*` and `/presence/*` rewrites.
 
-## 1. Tech Stack
-- Next.js (App Router)
-- React + TypeScript
-- Zustand (auth/session state)
-- TanStack Query (data fetching + cache)
-- React Hook Form + Zod (forms/validation)
-- Tailwind CSS + project CSS tokens/themes
-- `react-markdown` (legal documents rendering)
-- Vitest + Testing Library + JSDOM (unit + component behavior tests)
+## Tech Stack
 
-## 2. Product Routing Model
+- Next.js App Router + React + TypeScript
+- Zustand (auth state)
+- TanStack Query (server state/caching)
+- React Hook Form + Zod
+- Tailwind CSS + custom CSS tokens/themes
+- `socket.io-client` (presence)
+- `react-markdown` (legal documents)
+- Vitest + Testing Library
 
-### Public
-- `/` home
-- `/?view=orders` public orders explore mode (left-column listing with filters on home shell)
-- `/workspace?section=orders` public workspace view (orders)
-- `/workspace?section=providers` public workspace view (providers)
-- `/requests/[id]` request details
-- `/providers/[id]` public provider profile
-- no `/orders` route (workspace is served only under `/workspace`)
+## Runtime Architecture
 
-### Authenticated Workspace
-- `/workspace?tab=*` canonical workspace screen (tab-based)
-- `/profile/{id}` canonical profile/settings screen (`/profile/workspace` stays as compatibility alias)
-- `/chat` unified inbox
+- Root providers in `src/app/layout.tsx`:
+  - `AppThemeProvider`
+  - `I18nProvider` (`de`/`en`, persisted in `localStorage`)
+  - `QueryProvider`
+  - `AuthProvider` (refresh bootstrap + auth mode memory)
+  - `PresenceProvider` (socket + ping for authenticated users)
+- API client is centralized in `src/lib/api/http.ts`:
+  - bearer access token in memory
+  - `401` retry via `/auth/refresh`
+  - cookie-based refresh flow (`credentials: include`)
+- Workspace runtime switch:
+  - route entrypoint: `src/app/workspace/page.tsx`
+  - implementation: `src/app/workspace/WorkspaceRouteClient.tsx`
+  - authenticated -> `OrdersPageClient`
+  - unauthenticated -> home/public workspace shell
+- Home region hint uses client-side IP lookup (`https://ipapi.co/json/`) with 24h local cache.
 
-### Auth
-- `/auth/login`
-- `/auth/register`
-- modal-route counterparts via `app/@authModal`
+## Routing
 
-### Legal
-- `/privacy-policy`
-- `/cookie-notice`
+### Canonical routes
 
-## 3. Access Model
-- Workspace route is served directly by `src/app/workspace/page.tsx` via `WorkspaceRouteClient`.
-- No proxy-based rewrites/redirects are used for `/workspace`.
-- Runtime mode selection is client-side:
-  - authenticated users: private workspace tabs (`/workspace?tab=*`)
-  - guests: public workspace explore (`/workspace?section=*`)
+| Path | Access | Purpose |
+| --- | --- | --- |
+| `/` | Public | Home page; supports `?view=orders` explore mode |
+| `/workspace` | Public/Auth | Unified workspace surface |
+| `/requests/[id]` | Public/Auth | Request details, offer interaction |
+| `/providers/[id]` | Public/Auth | Public provider profile |
+| `/offers/[requestId]` | Public/Auth | Offers for a specific request |
+| `/request/create` | Public/Auth | Create request form (submit requires auth) |
+| `/chat` | Auth | Inbox |
+| `/chat/[threadId]` | Auth | Thread messages |
+| `/profile` | Auth | Redirects to `/profile/[id]` (or alias path) |
+| `/profile/[id]` | Auth | Profile/workspace settings page |
+| `/auth/login` | Public | Login page |
+| `/auth/register` | Public | Register page |
+| `/auth/forgot-password` | Public | Forgot password page |
+| `/auth/reset-password` | Public | Reset password page |
+| `/provider/onboarding` | Auth | Provider profile onboarding |
+| `/privacy-policy` | Public | Legal document page |
+| `/cookie-notice` | Public | Legal document page |
 
-## 4. Architecture Notes
+### Legacy compatibility routes (redirects)
 
-### Home Explore URL Contract
-- Home supports two public modes:
-  - default: `/`
-  - orders explore: `/?view=orders`
-- Explore mode keeps top layout and right column, while left column switches to `OrdersExplorer`.
-- Filters/pagination are URL-driven in explore mode (`sort`, `page`, `limit`, and filter params) for shareable state.
-- Workspace guest explore (`/workspace?section=orders|providers`) uses the same visual shell directly on `/workspace`.
+- `/client` -> `/workspace?section=orders`
+- `/client/requests` -> `/workspace?tab=my-requests`
+- `/client/offers` -> `/workspace?tab=my-requests`
+- `/client/contracts` -> `/workspace?tab=completed-jobs`
+- `/client/profile` -> `/profile`
+- `/provider` -> `/workspace?tab=my-offers`
+- `/provider/requests` -> `/workspace?section=orders`
+- `/provider/contracts` -> `/workspace?tab=completed-jobs`
+- `/provider/profile` -> `/profile`
+- `/request/new` -> `/request/create`
+- `/profile/workspace` remains a compatibility alias route
 
-### Workspace/requests page modularization
-Goal: keep route files thin and isolate data logic from UI rendering.
-This modularization ensures clear separation of concerns and improves testability.
+### Workspace query contract
 
-Workspace entrypoint:
-- `src/app/workspace/WorkspaceRouteClient.tsx` (auth/guest mode switch)
+- Public sections:
+  - `section=orders|providers|stats`
+- Private tabs:
+  - `tab=my-requests|my-offers|completed-jobs|favorites|reviews`
+  - `status=all|open|in_progress|completed`
+  - `fav=requests|providers`
+  - `reviewRole=provider|client`
+- Shared listing/filter params:
+  - `cityId`, `categoryKey`, `subcategoryKey` (or `serviceKey`), `sort`, `page`, `limit`
+  - `sort=date_desc|date_asc|price_asc|price_desc`
 
-Private workspace screen:
-- `src/app/orders/OrdersPageClient.tsx`
+## Environment Variables
 
-Composable modules:
-- `src/features/requests/page/useRequestsPageData.ts` (query/data layer)
-- `src/features/requests/page/useContractRequestsData.ts` (contract request mapping/query)
-- `src/features/requests/page/useRequestsWorkspaceState.tsx` (workspace KPIs/nav/stats/top providers)
-- `src/features/requests/page/useRequestsWorkspaceDerived.ts` (derived lists/view state)
-- `src/features/requests/page/useRequestsPageViewModel.ts` (UI props composition)
-- `src/features/requests/page/PublicContent.tsx` and `src/features/requests/page/WorkspaceContent.tsx` (render layers)
-
-### Error fallback standard
-- Shared helper: `src/lib/api/withStatusFallback.ts`
-- Replaces duplicated `403/404` fallback logic across requests/profile flows.
-
-## 5. Environment Configuration
-Create local env file:
+Start from:
 
 ```bash
 cp .env.local.example .env.local
 ```
 
-Required:
+Core variables:
 
-```env
-API_BASE_URL=http://localhost:4000
-NEXT_PUBLIC_PRIVACY_POLICY_URL=/privacy-policy
-NEXT_PUBLIC_COOKIE_NOTICE_URL=/cookie-notice
-```
+| Variable | Required | Default / behavior |
+| --- | --- | --- |
+| `API_BASE_URL` | No (dev fallback exists) | Main backend base for rewrites (`/api`, `/presence`) |
+| `NEXT_PUBLIC_API_BASE` | No | Fallback backend base (used by presence and production fallback rewrite base) |
+| `NEXT_PUBLIC_PRIVACY_POLICY_URL` | No | `/privacy-policy` |
+| `NEXT_PUBLIC_COOKIE_NOTICE_URL` | No | `/cookie-notice` |
 
-Optional:
+Feature flags and behavior:
 
-```env
-NEXT_PUBLIC_DEMO=true
-NEXT_PUBLIC_API_BASE=http://localhost:4000
-```
+| Variable | Default | Used for |
+| --- | --- | --- |
+| `NEXT_PUBLIC_DEMO` | `true` (unless explicitly `false`) | Home live/demo counters |
+| `NEXT_PUBLIC_HERO_VARIANT` | `animated` | Home hero variant switch |
+| `NEXT_PUBLIC_HERO_ANIMATION_MODE` | `subtle` | Hero animation mode (`subtle` or `showcase`) |
+| `NEXT_PUBLIC_ENABLE_APPLE_AUTH` | `false` | Enables Apple social auth button |
+| `NEXT_PUBLIC_ANALYTICS_SOURCE` | `mock` | Platform analytics source (`mock`/`real`) |
+| `NEXT_PUBLIC_ANALYTICS_SEED` | `decizhen-demo-v1` | Seed for deterministic mock analytics |
+| `NEXT_PUBLIC_ANALYTICS_FALLBACK_TO_MOCK` | `true` | Fallback behavior when real analytics fails |
 
-Notes:
-- Frontend calls backend through `/api/*` rewrites (configured in `next.config.ts`).
-- `API_BASE_URL` has priority; `NEXT_PUBLIC_API_BASE` is fallback.
+Mock data controls:
 
-## 6. Local Development
+| Variable | Default | Used for |
+| --- | --- | --- |
+| `NEXT_PUBLIC_REQUESTS_MOCK_MODE` | `off` | Requests source mode: `off`, `only`, `merge` |
+| `NEXT_PUBLIC_REQUESTS_MOCK_ENABLED` | `false` | Legacy switch (maps to `only` when mode unset) |
+| `NEXT_PUBLIC_REQUESTS_MOCK_COUNT` | `40` | Generated mock requests count |
+| `NEXT_PUBLIC_REQUESTS_MOCK_MERGE_FETCH_LIMIT` | `100` (clamped 20..100) | Pool size for merge mode |
+| `NEXT_PUBLIC_PROVIDERS_MOCK_MODE` | fallback to requests mode | Providers source mode: `off`, `only`, `merge` |
+| `NEXT_PUBLIC_PROVIDERS_MOCK_ENABLED` | `false` | Legacy providers-only switch |
+| `NEXT_PUBLIC_PROVIDERS_MOCK_COUNT` | fallback to requests count | Generated mock providers count |
+
+Presence and image optimization:
+
+| Variable | Default | Used for |
+| --- | --- | --- |
+| `NEXT_PUBLIC_PRESENCE_WS_BASE` | unset | Explicit WS origin for Socket.IO presence |
+| `NEXT_IMAGE_UNOPTIMIZED` | auto in dev | Forces `next/image` unoptimized mode |
+| `NEXT_IMAGE_OPTIMIZE_DEV` | `false` | Enables optimizer in dev when set to `true` |
+
+## Backend Integration
+
+- Frontend calls use `buildApiUrl()` -> `/api/*`.
+- `next.config.ts` rewrites:
+  - `/api/:path*` -> `${API_BASE}/:path*`
+  - `/presence/:path*` -> `${API_BASE}/presence/:path*`
+- Main backend domains used by frontend modules:
+  - auth: `/auth/*`, `/users/me`
+  - catalog: `/catalog/*`
+  - requests/offers/contracts/reviews/favorites/chat
+  - providers and availability
+  - legal: `/legal/privacy`, `/legal/cookies`
+  - analytics: `/analytics/platform-activity`, `/analytics/platform-live-feed`
+
+## Local Development
+
 Prerequisites:
-- Node.js `>= 20.20.0` (project baseline: `20.20.0`, see `.nvmrc`)
 
-Verify active runtime:
+- Node.js `>=20.20.0` (`.nvmrc` is `20.20.0`)
 
-```bash
-node -v
-```
-
-Install dependencies:
+Run:
 
 ```bash
 npm install
-```
-
-Run dev server:
-
-```bash
 npm run dev
 ```
 
-Open:
-- `http://localhost:3000`
+Open `http://localhost:3000`.
 
-## 7. Quality Gates
-Lint:
+## Scripts
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start dev server |
+| `npm run build` | Production build |
+| `npm run start` | Start production server |
+| `npm run lint` | ESLint |
+| `npm run lint:strict` | ESLint with `--max-warnings=0` |
+| `npm run lint:colors:home` | No hardcoded hex colors in `src/styles/home.css` |
+| `npm run lint:colors:components` | No hardcoded colors in `src/styles/components.css` (warn mode) |
+| `npm run lint:colors:components:strict` | Same check in strict mode |
+| `npm run lint:colors:pages` | No hardcoded colors in page style files (warn mode) |
+| `npm run lint:colors:pages:strict` | Same check in strict mode |
+| `npm run lint:colors` | Combined color checks |
+| `npm run test` | Vitest |
+| `npm exec tsc --noEmit` | Type check |
+
+## Tests
+
+Current test files:
+
+- `src/components/requests/details/RequestOfferSheet.test.tsx`
+- `src/features/auth/AuthRouteModal.test.tsx`
+- `src/features/requests/details/viewModel.test.ts`
+- `src/features/requests/uiState.test.ts`
+
+For a single non-watch run:
 
 ```bash
-npm run lint
+npm run test -- --run
 ```
 
-Unit + component tests:
+## Project Structure
 
-```bash
-npm run test
+```text
+src/
+  app/                 # App Router routes, route groups, modal intercept routes
+  components/          # Shared UI and domain components
+  features/            # Feature-level modules (auth, request creation, workspace, profile, legal)
+  hooks/               # Custom React hooks
+  lib/                 # API clients, auth/session, i18n, theme, utilities
+  styles/              # Global CSS, tokens, component/page styles
+  data/                # Static home page data
+  types/               # Shared TypeScript types
+scripts/               # Custom lint/check scripts (color guards)
+public/                # Static assets and favicon/manifest
 ```
 
-Type check:
+## License
 
-```bash
-npm exec tsc --noEmit
-```
-
-Production build check:
-
-```bash
-npm run build
-```
-
-Run production locally:
-
-```bash
-npm run start
-```
-
-## 8. Auth and Consent
-- Email/password auth via backend `/auth/*`
-- Social auth (Google/Apple) in the same auth flow
-- Register form includes explicit legal consent links
-- OAuth completion step supported via `POST /auth/oauth/complete-register`
-
-## 9. Legal Content Flow
-- Backend provides legal markdown via legal endpoints
-- Frontend pages render legal content with `react-markdown`
-- URLs for consent links are configurable via env:
-  - `NEXT_PUBLIC_PRIVACY_POLICY_URL`
-  - `NEXT_PUBLIC_COOKIE_NOTICE_URL`
-
-## 10. Scripts
-- `npm run dev`
-- `npm run build`
-- `npm run start`
-- `npm run lint`
-- `npm run test`
-- `npm exec tsc --noEmit`
-
-## 11. License
-This project is proprietary. See [LICENSE](./LICENSE).
+Proprietary software. See [LICENSE](./LICENSE).
