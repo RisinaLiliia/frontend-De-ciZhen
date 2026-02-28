@@ -2,7 +2,9 @@ import type { NextConfig } from 'next';
 
 const apiBaseFromServerEnv = process.env.API_BASE_URL?.trim();
 const apiBaseFromPublicEnv = process.env.NEXT_PUBLIC_API_BASE?.trim();
-const imageUnoptimized = process.env.NEXT_IMAGE_UNOPTIMIZED === 'true';
+const imageUnoptimized =
+  process.env.NEXT_IMAGE_UNOPTIMIZED === 'true' ||
+  (process.env.NODE_ENV === 'development' && process.env.NEXT_IMAGE_OPTIMIZE_DEV !== 'true');
 const API_BASE =
   apiBaseFromServerEnv ||
   (process.env.NODE_ENV === 'production' ? apiBaseFromPublicEnv : '') ||
@@ -10,7 +12,8 @@ const API_BASE =
 
 const nextConfig: NextConfig = {
   images: {
-    // Opt-in fallback for local troubleshooting with slow/unreachable image hosts.
+    // Dev default: bypass optimizer to avoid remote upstream timeout noise.
+    // Set NEXT_IMAGE_OPTIMIZE_DEV=true to test optimizer locally.
     unoptimized: imageUnoptimized,
     qualities: [60, 62, 75],
     formats: ['image/avif', 'image/webp'],
