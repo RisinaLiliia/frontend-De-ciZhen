@@ -48,7 +48,7 @@ Frontend application for the De'ciZhen local services marketplace.
 
 | Path | Access | Purpose |
 | --- | --- | --- |
-| `/` | Public | Home page; supports `?view=orders` explore mode |
+| `/` | Public | Home page |
 | `/workspace` | Public/Auth | Unified workspace surface |
 | `/requests/[id]` | Public/Auth | Request details, offer interaction |
 | `/providers/[id]` | Public/Auth | Public provider profile |
@@ -187,6 +187,9 @@ Open `http://localhost:3000`.
 | `npm run lint:colors:pages:strict` | Same check in strict mode |
 | `npm run lint:colors` | Combined color checks |
 | `npm run test` | Vitest |
+| `npm run test:e2e` | Playwright end-to-end tests |
+| `npm run test:e2e:headed` | Playwright headed mode |
+| `npm run test:e2e:ui` | Playwright UI mode |
 | `npm exec tsc --noEmit` | Type check |
 
 ## Tests

@@ -63,7 +63,6 @@ export default function HomePage() {
   const isWorkspaceRoute = pathname === '/workspace';
   const isOrdersExploreView =
     isWorkspaceRoute ||
-    searchParams.get('view') === 'orders' ||
     sectionParam === 'orders' ||
     sectionParam === 'providers' ||
     sectionParam === 'stats';
@@ -450,13 +449,13 @@ export default function HomePage() {
                   onCategoryChange={setSelectedCategory}
                   onSearch={() => {
                     const params = new URLSearchParams();
-                    params.set('view', 'orders');
+                    params.set('section', 'orders');
                     if (query) params.set('q', query);
                     if (cityQuery) params.set('cityText', cityQuery);
                     if (resolvedCityId) params.set('cityId', resolvedCityId);
                     if (selectedCategory) params.set('subcategoryKey', selectedCategory);
                     const suffix = params.toString();
-                    router.push(`/${suffix ? `?${suffix}` : ''}`);
+                    router.push(`/workspace${suffix ? `?${suffix}` : ''}`);
                   }}
                 />
               </div>

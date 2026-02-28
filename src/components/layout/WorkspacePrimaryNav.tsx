@@ -39,11 +39,10 @@ function useTopNavItems(isAuthenticated: boolean, profileHref: string): TopNavIt
       href: workspaceHref,
       label: t(I18N_KEYS.auth.workspaceLabel),
       icon: <IconBriefcase />,
-      isActive: (pathname, searchParams) =>
+      isActive: (pathname) =>
         isAuthenticated
           ? isPathPrefix(pathname, '/workspace')
-          : pathname === '/workspace' ||
-            (pathname === '/' && searchParams.get('view') === 'orders'),
+          : pathname === '/workspace',
     },
     {
       key: 'request-create',
