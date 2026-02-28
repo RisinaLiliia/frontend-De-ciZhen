@@ -47,6 +47,7 @@ export default function HomePage() {
   const searchParams = useSearchParams();
   const status = useAuthStatus();
   const isAuthenticated = status === 'authenticated';
+  const isUnauthenticated = status === 'unauthenticated';
   const isDemo = process.env.NEXT_PUBLIC_DEMO !== 'false';
   const heroVariant = process.env.NEXT_PUBLIC_HERO_VARIANT ?? 'animated';
   const heroAnimationMode = process.env.NEXT_PUBLIC_HERO_ANIMATION_MODE === 'showcase' ? 'showcase' : 'subtle';
@@ -194,7 +195,7 @@ export default function HomePage() {
         value: formatNumber.format(Math.max(1, Math.round(stats.active * 0.24))),
         hint: t(I18N_KEYS.requestsPage.summaryAccepted),
         disabled: !isAuthenticated,
-        lockedHref: !isAuthenticated ? '/auth/register?next=%2Fworkspace%3Ftab%3Dmy-requests' : undefined,
+        lockedHref: isUnauthenticated ? '/auth/login?next=%2Fworkspace%3Ftab%3Dmy-requests' : undefined,
       },
       {
         key: 'my-offers',
@@ -204,7 +205,7 @@ export default function HomePage() {
         value: formatNumber.format(Math.max(1, Math.round(stats.completed * 0.22))),
         hint: t(I18N_KEYS.requestsPage.summarySent),
         disabled: !isAuthenticated,
-        lockedHref: !isAuthenticated ? '/auth/register?next=%2Fworkspace%3Ftab%3Dmy-offers' : undefined,
+        lockedHref: isUnauthenticated ? '/auth/login?next=%2Fworkspace%3Ftab%3Dmy-offers' : undefined,
       },
       {
         key: 'completed-jobs',
@@ -214,7 +215,7 @@ export default function HomePage() {
         value: formatNumber.format(Math.max(1, Math.round(stats.completed * 0.16))),
         hint: t(I18N_KEYS.provider.jobs),
         disabled: !isAuthenticated,
-        lockedHref: !isAuthenticated ? '/auth/register?next=%2Fworkspace%3Ftab%3Dcompleted-jobs' : undefined,
+        lockedHref: isUnauthenticated ? '/auth/login?next=%2Fworkspace%3Ftab%3Dcompleted-jobs' : undefined,
       },
       {
         key: 'my-favorites',
@@ -224,10 +225,10 @@ export default function HomePage() {
         value: formatNumber.format(Math.max(1, Math.round(stats.active * 0.1))),
         hint: t(I18N_KEYS.requestDetails.ctaSave),
         disabled: !isAuthenticated,
-        lockedHref: !isAuthenticated ? '/auth/register?next=%2Fworkspace%3Ftab%3Dfavorites' : undefined,
+        lockedHref: isUnauthenticated ? '/auth/login?next=%2Fworkspace%3Ftab%3Dfavorites' : undefined,
       },
     ],
-    [exploreSection, formatNumber, isAuthenticated, publicProviders.length, stats.active, stats.completed, t],
+    [exploreSection, formatNumber, isAuthenticated, isUnauthenticated, publicProviders.length, stats.active, stats.completed, t],
   );
   const exploreStatsPayload = React.useMemo(
     () => ({

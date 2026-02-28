@@ -3,17 +3,23 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { PublicContent } from '@/features/requests/page/PublicContent';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { listPublicRequests } from '@/lib/api/requests';
+import { deleteOffer, listMyProviderOffers } from '@/lib/api/offers';
 import { listPublicProviders } from '@/lib/api/providers';
-import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
+import {
+  buildProviderFavoriteLookup,
+  isProviderInFavoriteLookup,
+  listFavorites,
+} from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
+import { useProviderFavoriteToggle, useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { ALL_OPTION_KEY, SORT_OPTIONS } from '@/features/requests/page/public';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -24,6 +30,7 @@ import { mapPublicProviderToCard } from '@/components/providers/providerCardMapp
 import { listReviews } from '@/lib/api/reviews';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import type { OfferDto } from '@/lib/api/dto/offers';
 
 type OrdersExplorerProps = {
   t: (key: I18nKey) => string;
@@ -50,9 +57,6 @@ export function OrdersExplorer({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const qc = useQueryClient();
-  const [pendingFavoriteProviderIds, setPendingFavoriteProviderIds] = React.useState<Set<string>>(
-    () => new Set(),
-  );
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
   const { data: services = [], isLoading: isServicesLoading } = useServices();
@@ -218,12 +222,77 @@ export function OrdersExplorer({
     enabled: isProvidersView && isAuthed,
     queryFn: () => withStatusFallback(() => listFavorites('provider'), [], [401, 403]),
   });
-  const favoriteProviderIds = React.useMemo(
-    () => new Set(favoriteProviders.map((item) => item.id)),
+  const providerById = React.useMemo(
+    () => new Map(providers.map((provider) => [provider.id, provider])),
+    [providers],
+  );
+  const favoriteProviderLookup = React.useMemo(
+    () => buildProviderFavoriteLookup(favoriteProviders),
     [favoriteProviders],
   );
+  const favoriteProviderIds = React.useMemo(
+    () =>
+      new Set(
+        providers
+          .filter((provider) => isProviderInFavoriteLookup(favoriteProviderLookup, provider))
+          .map((provider) => provider.id),
+      ),
+    [favoriteProviderLookup, providers],
+  );
 
-  const requests = publicRequests?.items ?? [];
+  const requests = React.useMemo(() => publicRequests?.items ?? [], [publicRequests?.items]);
+  const { data: myOffers = [] } = useQuery({
+    queryKey: ['offers-my'],
+    enabled: !isProvidersView && isAuthed,
+    queryFn: () => withStatusFallback(() => listMyProviderOffers(), [], [401, 403]),
+  });
+  const offersByRequest = React.useMemo(() => {
+    const map = new Map<string, OfferDto>();
+    myOffers.forEach((offer) => {
+      if (!map.has(offer.requestId) || offer.updatedAt > (map.get(offer.requestId)?.updatedAt ?? '')) {
+        map.set(offer.requestId, offer);
+      }
+    });
+    return map;
+  }, [myOffers]);
+  const requestById = React.useMemo(
+    () => new Map(requests.map((request) => [request.id, request])),
+    [requests],
+  );
+  const { data: favoriteRequests = [] } = useQuery({
+    queryKey: ['favorite-requests'],
+    enabled: !isProvidersView && isAuthed,
+    queryFn: () => withStatusFallback(() => listFavorites('request'), [], [401, 403]),
+  });
+  const favoriteRequestIds = React.useMemo(
+    () => new Set(favoriteRequests.map((item) => item.id)),
+    [favoriteRequests],
+  );
+  const {
+    pendingFavoriteProviderIds,
+    toggleProviderFavorite,
+  } = useProviderFavoriteToggle({
+    isAuthed,
+    nextPath,
+    router,
+    t,
+    qc,
+    favoriteProviderLookup,
+    providerById,
+  });
+  const {
+    pendingFavoriteRequestIds,
+    toggleRequestFavorite,
+  } = useRequestFavoriteToggle({
+    isAuthed,
+    nextPath,
+    router,
+    t,
+    qc,
+    favoriteRequestIds,
+    requestById,
+  });
+  const [pendingOfferRequestId, setPendingOfferRequestId] = React.useState<string | null>(null);
   const totalResults = publicRequests?.total ?? requests.length;
   const categoryServiceKeys = React.useMemo(() => {
     if (categoryKey === ALL_OPTION_KEY) return null;
@@ -308,6 +377,32 @@ export function OrdersExplorer({
       }),
     [locale],
   );
+  const openOfferSheet = React.useCallback(
+    (requestId: string) => {
+      router.push(`/requests/${requestId}?offer=1`);
+    },
+    [router],
+  );
+  const withdrawOffer = React.useCallback(
+    async (offerId: string) => {
+      const offer = myOffers.find((item) => item.id === offerId);
+      if (!offer) return;
+      setPendingOfferRequestId(offer.requestId);
+      try {
+        await deleteOffer(offerId);
+        toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
+        await qc.invalidateQueries({ queryKey: ['offers-my'] });
+      } catch {
+        toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+      } finally {
+        setPendingOfferRequestId(null);
+      }
+    },
+    [myOffers, qc, t],
+  );
+  const onWithdrawOffer = React.useCallback((offerId: string) => {
+    void withdrawOffer(offerId);
+  }, [withdrawOffer]);
   const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
     services,
     categories,
@@ -346,42 +441,6 @@ export function OrdersExplorer({
     const start = (Math.max(1, page) - 1) * limit;
     return sortedProviders.slice(start, start + limit);
   }, [limit, page, sortedProviders]);
-  const handleToggleProviderFavorite = React.useCallback(
-    async (providerId: string) => {
-      if (!isAuthed) {
-        router.push(`/auth/login?next=${encodeURIComponent(nextPath)}`);
-        toast.message(t(I18N_KEYS.requestDetails.favoritesSoon));
-        return;
-      }
-      if (pendingFavoriteProviderIds.has(providerId)) return;
-      const isSaved = favoriteProviderIds.has(providerId);
-      setPendingFavoriteProviderIds((prev) => {
-        const next = new Set(prev);
-        next.add(providerId);
-        return next;
-      });
-      try {
-        if (isSaved) {
-          await removeFavorite('provider', providerId);
-          toast.message(t(I18N_KEYS.requestDetails.favoritesRemoved));
-        } else {
-          await addFavorite('provider', providerId);
-          toast.success(t(I18N_KEYS.requestDetails.saved));
-        }
-        await qc.invalidateQueries({ queryKey: ['favorite-providers'] });
-      } catch {
-        toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
-      } finally {
-        setPendingFavoriteProviderIds((prev) => {
-          const next = new Set(prev);
-          next.delete(providerId);
-          return next;
-        });
-      }
-    },
-    [favoriteProviderIds, isAuthed, nextPath, pendingFavoriteProviderIds, qc, router, t],
-  );
-
   const providerIdsForPage = React.useMemo(() => pagedProviders.map((provider) => provider.id), [pagedProviders]);
   const { data: providerReviewPreviewById = new Map<string, string>() } = useQuery({
     queryKey: ['orders-explorer-provider-review-preview', ...providerIdsForPage],
@@ -465,8 +524,9 @@ export function OrdersExplorer({
                   variant="list"
                   canToggleFavorite
                   isFavorite={favoriteProviderIds.has(provider.id)}
+                  isFavoritePending={pendingFavoriteProviderIds.has(provider.id)}
                   onToggleFavorite={(providerId) => {
-                    void handleToggleProviderFavorite(providerId);
+                    void toggleProviderFavorite(providerId);
                   }}
                   provider={{
                     ...mapPublicProviderToCard({
@@ -570,7 +630,18 @@ export function OrdersExplorer({
           cityById,
           formatDate,
           formatPrice,
-          showStaticFavoriteIcon: true,
+          enableOfferActions: isAuthed,
+          offersByRequest,
+          favoriteRequestIds,
+          pendingFavoriteRequestIds,
+          onToggleFavorite: (requestId) => {
+            void toggleRequestFavorite(requestId);
+          },
+          onSendOffer: openOfferSheet,
+          onEditOffer: openOfferSheet,
+          onWithdrawOffer: onWithdrawOffer,
+          pendingOfferRequestId,
+          showFavoriteButton: true,
         }}
         page={page}
         totalPages={totalPages}

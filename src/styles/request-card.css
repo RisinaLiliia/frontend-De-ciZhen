@@ -1,4 +1,4 @@
-/* src/styles/order-card.css */
+/* src/styles/request-card.css */
 @layer components {
   .request-card {
     position: relative;
@@ -283,17 +283,17 @@
     background: color-mix(in oklab, var(--c-panel) 85%, var(--c-border) 15%);
   }
 
-  .order-card-link.is-active {
+  .request-card-link.is-active {
     border-color: color-mix(in oklab, var(--c-primary) 55%, var(--c-border) 45%);
     box-shadow:
       var(--shadow-card),
       0 10px 24px color-mix(in oklab, var(--c-primary) 16%, transparent),
       0 0 0 1px color-mix(in oklab, var(--c-primary) 22%, transparent);
     transform: translateY(-1px);
-    animation: order-breathe 5.8s ease-in-out infinite;
+    animation: request-breathe 5.8s ease-in-out infinite;
   }
 
-  @keyframes order-breathe {
+  @keyframes request-breathe {
     0%,
     100% {
       transform: translateY(0);
@@ -303,12 +303,12 @@
     }
   }
 
-  .order-top__status {
+  .request-top__status {
     display: inline-flex;
     align-items: center;
   }
 
-  .order-category-row {
+  .request-category-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -316,7 +316,7 @@
     min-height: 24px;
   }
 
-  .order-category {
+  .request-category {
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -324,14 +324,14 @@
     color: var(--c-text-muted);
   }
 
-  .order-badges {
+  .request-badges {
     display: inline-flex;
     flex-wrap: wrap;
     gap: var(--space-1-5);
     align-items: center;
   }
 
-  .order-badges--media {
+  .request-badges--media {
     position: absolute;
     right: 10px;
     top: calc(10px + 30px + 6px);
@@ -341,7 +341,7 @@
     pointer-events: none;
   }
 
-  .order-badge {
+  .request-badge {
     font-size: 10px;
     font-weight: 700;
     padding: var(--space-1) var(--space-2);
@@ -368,7 +368,7 @@
       background var(--transition-fast);
   }
 
-  .request-card__favorite-btn .icon-heart {
+  .request-card__favorite-btn svg {
     transition:
       color var(--transition),
       fill var(--transition);
@@ -381,7 +381,7 @@
     background: color-mix(in oklab, var(--c-accent) 20%, var(--c-panel) 80%);
   }
 
-  .request-card__favorite-btn.is-active .icon-heart {
+  .request-card__favorite-btn.is-active svg {
     color: var(--c-accent);
     fill: currentColor;
   }

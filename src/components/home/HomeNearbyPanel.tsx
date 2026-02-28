@@ -14,12 +14,15 @@ import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { listPublicRequests } from '@/lib/api/requests';
-import { addFavorite, listFavorites, removeFavorite } from '@/lib/api/favorites';
+import { deleteOffer, listMyProviderOffers } from '@/lib/api/offers';
+import { listFavorites } from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { RequestsList } from '@/components/requests/RequestsList';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
+import type { OfferDto } from '@/lib/api/dto/offers';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
+import { useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
 
 type HomeNearbyPanelProps = {
   t: (key: I18nKey) => string;
@@ -44,7 +47,6 @@ export function HomeNearbyPanel({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const qc = useQueryClient();
-  const [pendingFavoriteRequestIds, setPendingFavoriteRequestIds] = React.useState<Set<string>>(new Set());
   const region = useGeoRegion();
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [] } = useServiceCategories();
@@ -111,10 +113,29 @@ export function HomeNearbyPanel({
     enabled: isAuthed,
     queryFn: () => withStatusFallback(() => listFavorites('request'), [], [401, 403]),
   });
+  const { data: myOffers = [] } = useQuery({
+    queryKey: ['offers-my'],
+    enabled: isAuthed,
+    queryFn: () => withStatusFallback(() => listMyProviderOffers(), [], [401, 403]),
+  });
 
-
-
-  const requests: RequestResponseDto[] = data?.items ?? [];
+  const requests = React.useMemo<RequestResponseDto[]>(
+    () => data?.items ?? [],
+    [data?.items],
+  );
+  const offersByRequest = React.useMemo(() => {
+    const map = new Map<string, OfferDto>();
+    myOffers.forEach((offer) => {
+      if (!map.has(offer.requestId) || offer.updatedAt > (map.get(offer.requestId)?.updatedAt ?? '')) {
+        map.set(offer.requestId, offer);
+      }
+    });
+    return map;
+  }, [myOffers]);
+  const requestById = React.useMemo(
+    () => new Map(requests.map((request) => [request.id, request])),
+    [requests],
+  );
   const favoriteRequestIds = React.useMemo(
     () => new Set(favoriteRequests.map((item) => item.id)),
     [favoriteRequests],
@@ -123,6 +144,19 @@ export function HomeNearbyPanel({
     const qs = searchParams?.toString();
     return `${pathname}${qs ? `?${qs}` : ''}`;
   }, [pathname, searchParams]);
+  const {
+    pendingFavoriteRequestIds,
+    toggleRequestFavorite,
+  } = useRequestFavoriteToggle({
+    isAuthed,
+    nextPath,
+    router,
+    t,
+    qc,
+    favoriteRequestIds,
+    requestById,
+  });
+  const [pendingOfferRequestId, setPendingOfferRequestId] = React.useState<string | null>(null);
   const usedFallback = Boolean(data?.usedFallback && requests.length > 0);
   const subtitle = usedFallback
     ? t(I18N_KEYS.homePublic.nearbyFallbackHint)
@@ -144,42 +178,32 @@ export function HomeNearbyPanel({
       }),
     [locale],
   );
-
-  const handleToggleFavorite = React.useCallback(
-    async (requestId: string) => {
-      if (!isAuthed) {
-        router.push(`/auth/login?next=${encodeURIComponent(nextPath)}`);
-        toast.message(t(I18N_KEYS.requestDetails.favoritesSoon));
-        return;
-      }
-      if (pendingFavoriteRequestIds.has(requestId)) return;
-      const isSaved = favoriteRequestIds.has(requestId);
-      setPendingFavoriteRequestIds((prev) => {
-        const next = new Set(prev);
-        next.add(requestId);
-        return next;
-      });
+  const openOfferSheet = React.useCallback(
+    (requestId: string) => {
+      router.push(`/requests/${requestId}?offer=1`);
+    },
+    [router],
+  );
+  const withdrawOffer = React.useCallback(
+    async (offerId: string) => {
+      const offer = myOffers.find((item) => item.id === offerId);
+      if (!offer) return;
+      setPendingOfferRequestId(offer.requestId);
       try {
-        if (isSaved) {
-          await removeFavorite('request', requestId);
-          toast.message(t(I18N_KEYS.requestDetails.favoritesRemoved));
-        } else {
-          await addFavorite('request', requestId);
-          toast.success(t(I18N_KEYS.requestDetails.saved));
-        }
-        await qc.invalidateQueries({ queryKey: ['favorite-requests'] });
+        await deleteOffer(offerId);
+        toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
+        await qc.invalidateQueries({ queryKey: ['offers-my'] });
       } catch {
-        toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
+        toast.error(t(I18N_KEYS.requestDetails.responseFailed));
       } finally {
-        setPendingFavoriteRequestIds((prev) => {
-          const next = new Set(prev);
-          next.delete(requestId);
-          return next;
-        });
+        setPendingOfferRequestId(null);
       }
     },
-    [favoriteRequestIds, isAuthed, nextPath, pendingFavoriteRequestIds, qc, router, t],
+    [myOffers, qc, t],
   );
+  const onWithdrawOffer = React.useCallback((offerId: string) => {
+    void withdrawOffer(offerId);
+  }, [withdrawOffer]);
 
   const panelStyle = React.useMemo(
     () =>
@@ -212,12 +236,18 @@ export function HomeNearbyPanel({
             cityById={cityById}
             formatDate={formatDate}
             formatPrice={formatPrice}
+            enableOfferActions={isAuthed}
+            offersByRequest={offersByRequest}
             favoriteRequestIds={favoriteRequestIds}
             pendingFavoriteRequestIds={pendingFavoriteRequestIds}
             onToggleFavorite={(requestId) => {
-              void handleToggleFavorite(requestId);
+              void toggleRequestFavorite(requestId);
             }}
-            showStaticFavoriteIcon
+            onSendOffer={openOfferSheet}
+            onEditOffer={openOfferSheet}
+            onWithdrawOffer={onWithdrawOffer}
+            pendingOfferRequestId={pendingOfferRequestId}
+            showFavoriteButton
           />
         )}
       </div>

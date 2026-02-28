@@ -40,6 +40,23 @@ Provider:
 3. Continue communication in chat (`/chat`)
 4. Manage contracts/completed jobs in workspace tabs
 
+## Single Source Data Mode (Recommended)
+
+Use one runtime data source (backend DB) and keep frontend mocks disabled:
+
+1. Seed backend data (`Backend-De-ciZhen`):
+   - `npm run seed:cities`
+   - `npm run seed:services`
+   - `npm run seed:demo`
+2. In frontend `.env.local`, set:
+   - `NEXT_PUBLIC_REQUESTS_MOCK_MODE=off`
+   - `NEXT_PUBLIC_PROVIDERS_MOCK_MODE=off`
+
+Notes:
+- Favorites API accepts only Mongo ObjectId in `targetId`.
+- For provider favorites, backend contract is based on provider `userId` identity.
+- If local Redis is not running, run seeds with `REDIS_DISABLED=true`.
+
 ## Tech Stack
 
 - Next.js App Router (`next@16`)

@@ -5,7 +5,7 @@
 @import './themes.css';
 @import './base.css';
 @import './components.css';
-@import './order-card.css';
+@import './request-card.css';
 @import './home.css';
 @import './requests.css';
 @import './overlays.css';
@@ -97,7 +97,7 @@
     .home-stats__live-badge,
     .home-stats__live,
     .requests-select-icon--city::after,
-    .order-card-link.is-active {
+    .request-card-link.is-active {
       animation: none !important;
     }
 

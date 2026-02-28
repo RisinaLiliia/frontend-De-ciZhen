@@ -1,5 +1,5 @@
 // src/components/requests/details/RequestDetailSimilar.tsx
-import { OrderCard } from '@/components/orders/OrderCard';
+import { RequestCard } from '@/components/requests/RequestCard';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 
@@ -44,7 +44,7 @@ export function RequestDetailSimilar({
               const itemPrice =
                 item.price != null ? formatPrice(item.price) : priceOnRequestLabel;
               return (
-                <OrderCard
+                <RequestCard
                   key={item.id}
                   href={`/requests/${item.id}`}
                   ariaLabel={openRequestLabel}

@@ -1,12 +1,14 @@
 // src/components/requests/details/RequestDetailMobileCta.tsx
-import { IconChat, IconHeart } from '@/components/ui/icons/icons';
+import { IconChat } from '@/components/ui/icons/icons';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 type RequestDetailMobileCtaProps = {
   ctaApplyLabel: string;
   ctaChatLabel: string;
   ctaSaveLabel: string;
   isSaved: boolean;
+  isSavePending?: boolean;
   onApply: () => void;
   onChat: () => void;
   onToggleSave: () => void;
@@ -28,6 +30,7 @@ export function RequestDetailMobileCta({
   ctaChatLabel,
   ctaSaveLabel,
   isSaved,
+  isSavePending = false,
   onApply,
   onChat,
   onToggleSave,
@@ -103,27 +106,22 @@ export function RequestDetailMobileCta({
         ) : null}
         {showSave ? (
           compactIcons ? (
-            <button
-              type="button"
-              className={`btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-detail__save ${isSaved ? 'is-saved' : ''}`.trim()}
-              onClick={onToggleSave}
-              aria-label={ctaSaveLabel}
-              title={ctaSaveLabel}
-            >
-              <i className="offer-action-btn__icon">
-                <IconHeart className="icon-heart" />
-              </i>
-            </button>
+            <FavoriteButton
+              variant="compact"
+              isFavorite={isSaved}
+              isPending={isSavePending}
+              ariaLabel={ctaSaveLabel}
+              onToggle={onToggleSave}
+            />
           ) : (
-            <button
-              type="button"
-              className={`btn-ghost is-primary request-detail__save ${isSaved ? 'is-saved' : ''}`.trim()}
-              onClick={onToggleSave}
-              aria-label={ctaSaveLabel}
-            >
-              <span>{ctaSaveLabel}</span>
-              <IconHeart className="icon-heart" />
-            </button>
+            <FavoriteButton
+              variant="cta"
+              isFavorite={isSaved}
+              isPending={isSavePending}
+              ariaLabel={ctaSaveLabel}
+              label={ctaSaveLabel}
+              onToggle={onToggleSave}
+            />
           )
         ) : null}
       </div>

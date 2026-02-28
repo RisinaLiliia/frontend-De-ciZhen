@@ -127,7 +127,7 @@ export function UserHeaderCard({
         <div className="provider-main">
           {subtitle || secondaryBadge ? (
             <div className="provider-sub-row">
-              {subtitle ? <p className="provider-sub order-category">{subtitle}</p> : null}
+              {subtitle ? <p className="provider-sub request-category">{subtitle}</p> : null}
               {secondaryBadge ? <span className="provider-sub-row__badge">{secondaryBadge}</span> : null}
             </div>
           ) : null}
@@ -178,7 +178,7 @@ export function UserHeaderCard({
       <div className="provider-main">
         {subtitle || secondaryBadge ? (
           <div className="provider-sub-row">
-            {subtitle ? <p className="provider-sub order-category">{subtitle}</p> : null}
+            {subtitle ? <p className="provider-sub request-category">{subtitle}</p> : null}
             {secondaryBadge ? <span className="provider-sub-row__badge">{secondaryBadge}</span> : null}
           </div>
         ) : null}
