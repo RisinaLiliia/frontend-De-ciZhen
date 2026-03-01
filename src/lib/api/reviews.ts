@@ -1,7 +1,6 @@
 // src/lib/api/reviews.ts
 import { apiGet } from '@/lib/api/http';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
-import { isMockProviderId, listMockReviewsPage } from '@/lib/api/reviews-mock';
 
 export type ReviewsSort = 'created_desc' | 'rating_desc';
 
@@ -49,10 +48,6 @@ export type ReviewsPageResult = {
 export async function listReviewsPage(params: ReviewsQuery): Promise<ReviewsPageResult> {
   const limit = normalizeLimit(params.limit) ?? 20;
   const offset = normalizeOffset(params.offset) ?? 0;
-
-  if (params.targetRole === 'provider' && isMockProviderId(params.targetUserId)) {
-    return Promise.resolve(listMockReviewsPage({ ...params, limit, offset }));
-  }
 
   const qs = new URLSearchParams();
   qs.set('targetUserId', params.targetUserId);

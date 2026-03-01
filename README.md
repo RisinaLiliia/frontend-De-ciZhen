@@ -42,19 +42,18 @@ Provider:
 
 ## Single Source Data Mode (Recommended)
 
-Use one runtime data source (backend DB) and keep frontend mocks disabled:
+Use one runtime data source (backend DB). Frontend runtime mock feeds were removed.
 
 1. Seed backend data (`Backend-De-ciZhen`):
    - `npm run seed:cities`
    - `npm run seed:services`
+   - `npm run seed:providers`
    - `npm run seed:demo`
-2. In frontend `.env.local`, set:
-   - `NEXT_PUBLIC_REQUESTS_MOCK_MODE=off`
-   - `NEXT_PUBLIC_PROVIDERS_MOCK_MODE=off`
 
 Notes:
 - Favorites API accepts only Mongo ObjectId in `targetId`.
 - For provider favorites, backend contract is based on provider `userId` identity.
+- `seed:providers` fills DB with public provider cards (`seed-provider-<n>@test.com / Password1`).
 - If local Redis is not running, run seeds with `REDIS_DISABLED=true`.
 
 ## Tech Stack
@@ -172,21 +171,12 @@ At least one backend base must be available:
 - `NEXT_PUBLIC_HERO_VARIANT` (default: `animated`)
 - `NEXT_PUBLIC_HERO_ANIMATION_MODE` (default: `subtle`)
 
-### Analytics Flags
+### Analytics
 
-- `NEXT_PUBLIC_ANALYTICS_SOURCE` (`mock|real`, default: `mock`)
-- `NEXT_PUBLIC_ANALYTICS_SEED` (default: `decizhen-demo-v1`)
-- `NEXT_PUBLIC_ANALYTICS_FALLBACK_TO_MOCK` (default: `true`)
-
-### Mock / Dev Data
-
-- `NEXT_PUBLIC_REQUESTS_MOCK_MODE` (`off|only|merge`, default: `off`)
-- `NEXT_PUBLIC_REQUESTS_MOCK_ENABLED` (legacy flag, default: `false`)
-- `NEXT_PUBLIC_REQUESTS_MOCK_COUNT` (default: `40`)
-- `NEXT_PUBLIC_REQUESTS_MOCK_MERGE_FETCH_LIMIT` (default: `100`, clamped)
-- `NEXT_PUBLIC_PROVIDERS_MOCK_MODE` (fallbacks to requests mock mode)
-- `NEXT_PUBLIC_PROVIDERS_MOCK_ENABLED` (legacy flag)
-- `NEXT_PUBLIC_PROVIDERS_MOCK_COUNT` (fallbacks to requests mock count)
+- Home activity widgets use backend analytics endpoints:
+  - `/analytics/platform-activity`
+  - `/analytics/platform-live-feed`
+- No frontend analytics mock fallback is used in runtime.
 
 ### Image / Build Behavior
 
@@ -206,7 +196,7 @@ Current tracked event names include:
 - `workspace_status_filter_change`
 - `workspace_primary_cta_click`
 
-Platform activity panels can also consume backend analytics endpoints:
+Platform activity panels consume backend analytics endpoints:
 - `/analytics/platform-activity`
 - `/analytics/platform-live-feed`
 

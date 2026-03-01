@@ -3,7 +3,6 @@
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Badge } from '@/components/ui/Badge';
 import { Card, CardTitle } from '@/components/ui/Card';
 import {
   getPlatformActivity,
@@ -55,11 +54,6 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
       <div className="home-activity__header">
         <div className="home-activity__header-top">
           <CardTitle className="home-activity__title">{t(I18N_KEYS.homePublic.activityTitle)}</CardTitle>
-          {query.data?.source === 'mock' ? (
-            <Badge className="home-activity__demo">
-              {t(I18N_KEYS.homePublic.activityDemo)}
-            </Badge>
-          ) : null}
         </div>
         <p className="home-activity__subtitle">{t(I18N_KEYS.homePublic.activitySubtitle)}</p>
       </div>
