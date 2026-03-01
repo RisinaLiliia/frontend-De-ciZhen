@@ -1647,13 +1647,6 @@
     color: var(--c-text-muted);
   }
 
-  .home-activity__demo {
-    font-size: 10px;
-    letter-spacing: 0.02em;
-    flex-shrink: 0;
-    align-self: center;
-  }
-
   .home-activity__ranges {
     display: inline-flex;
     gap: 6px;
