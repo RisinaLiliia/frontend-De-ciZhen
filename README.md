@@ -181,7 +181,6 @@ At least one backend base must be available:
 
 - Home activity widgets use backend analytics endpoints:
   - `/analytics/platform-activity`
-  - `/analytics/platform-live-feed`
 - No frontend analytics mock fallback is used in runtime.
 
 ### Image / Build Behavior
@@ -209,7 +208,6 @@ Current tracked event names include:
 
 Platform activity panels consume backend analytics endpoints:
 - `/analytics/platform-activity`
-- `/analytics/platform-live-feed`
 
 ### GDPR / ePrivacy consent behavior
 
