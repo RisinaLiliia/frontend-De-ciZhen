@@ -54,7 +54,6 @@ export async function listReviewsPage(params: ReviewsQuery): Promise<ReviewsPage
   qs.set('targetRole', params.targetRole);
   qs.set('limit', String(limit));
   qs.set('offset', String(offset));
-  if (params.sort) qs.set('sort', params.sort);
 
   const response = await apiGet<ReviewDto[] | ReviewsPageResponseDto>(`/reviews?${qs.toString()}`);
   if (Array.isArray(response)) {
