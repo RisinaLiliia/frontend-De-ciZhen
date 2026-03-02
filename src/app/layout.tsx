@@ -7,6 +7,10 @@ import { AppToaster } from '@/components/ui/Toaster';
 import { I18nProvider } from '@/lib/i18n/I18nProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { PresenceProvider } from '@/lib/presence/PresenceProvider';
+import { ConsentProvider } from '@/lib/consent/ConsentProvider';
+import { GoogleAnalyticsManager } from '@/components/analytics/GoogleAnalyticsManager';
+import { CookieConsentLayer } from '@/components/legal/CookieConsentLayer';
+import { ConsentManageFooter } from '@/components/legal/ConsentManageFooter';
 
 export const metadata: Metadata = {
   title: {
@@ -39,14 +43,19 @@ export default function RootLayout({
       <body>
         <AppThemeProvider>
           <I18nProvider>
-            <QueryProvider>
-              <AuthProvider>
-                <PresenceProvider />
-                {children}
-                {authModal}
-              </AuthProvider>
-              <AppToaster />
-            </QueryProvider>
+            <ConsentProvider>
+              <QueryProvider>
+                <AuthProvider>
+                  <PresenceProvider />
+                  <GoogleAnalyticsManager />
+                  {children}
+                  <ConsentManageFooter />
+                  {authModal}
+                  <CookieConsentLayer />
+                </AuthProvider>
+                <AppToaster />
+              </QueryProvider>
+            </ConsentProvider>
           </I18nProvider>
         </AppThemeProvider>
       </body>
