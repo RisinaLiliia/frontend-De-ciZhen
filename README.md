@@ -48,6 +48,7 @@ Use one runtime data source (backend DB). Frontend runtime mock feeds were remov
    - `npm run seed:cities`
    - `npm run seed:services`
    - `npm run seed:providers`
+   - `npm run seed:reviews`
    - `npm run seed:demo`
 
 Notes:
