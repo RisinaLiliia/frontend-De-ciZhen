@@ -27,6 +27,7 @@ import { FormLabel } from '@/components/ui/FormLabel';
 import { IconEye, IconEyeOff } from '@/components/ui/icons/icons';
 import { buildApiUrl } from '@/lib/api/url';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import { useConsent } from '@/lib/consent/ConsentProvider';
 
 export default function ProfileWorkspacePage() {
   const t = useT();
@@ -36,6 +37,7 @@ export default function ProfileWorkspacePage() {
   const setMe = useAuthStore((s) => s.setMe);
   const { locale, setLocale } = useI18n();
   const { resolvedTheme, setTheme } = useTheme();
+  const { choice: consentChoice, openPreferences } = useConsent();
   const [isThemeReady, setIsThemeReady] = React.useState(false);
 
   React.useEffect(() => {
@@ -724,6 +726,26 @@ export default function ProfileWorkspacePage() {
             <div className="profile-settings__meta">
               <p className="typo-small">Aktuell: {locale.toUpperCase()}</p>
               <p className="typo-small">Favoriten gesamt: {favoritesTotal}</p>
+            </div>
+          </article>
+
+          <article className="profile-settings__card stack-sm">
+            <header className="profile-settings__card-head">
+              <p className="text-sm font-semibold">Datenschutz & Cookies</p>
+              <p className="typo-small">Verwalte deine Einwilligung fuer optionale Datennutzung.</p>
+            </header>
+            <div className="profile-settings__meta">
+              <p className="typo-small">Analytics: {consentChoice.analytics ? 'Aktiviert' : 'Deaktiviert'}</p>
+              <p className="typo-small">Marketing: {consentChoice.marketing ? 'Aktiviert' : 'Deaktiviert'}</p>
+            </div>
+            <div className="profile-settings__inline-actions">
+              <button
+                type="button"
+                className="btn-secondary profile-settings__save-btn"
+                onClick={openPreferences}
+              >
+                Cookie-Einstellungen oeffnen
+              </button>
             </div>
           </article>
         </div>

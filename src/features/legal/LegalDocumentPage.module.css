@@ -5,14 +5,21 @@
 .legalWrap {
   position: relative;
   overflow: hidden;
-  border: 1px solid color-mix(in oklab, var(--c-border) 88%, transparent);
+  border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
   border-radius: var(--radius-lg);
   background:
-    radial-gradient(1100px 500px at -10% -30%, color-mix(in oklab, var(--c-primary) 18%, transparent), transparent 62%),
-    radial-gradient(900px 400px at 110% -20%, color-mix(in oklab, var(--c-accent) 18%, transparent), transparent 56%),
-    linear-gradient(180deg, color-mix(in oklab, var(--c-surface) 82%, #0b1220 18%), color-mix(in oklab, var(--c-panel) 78%, #0b1220 22%));
+    radial-gradient(1040px 520px at -8% -26%, color-mix(in oklab, var(--c-primary) 16%, transparent), transparent 64%),
+    radial-gradient(860px 420px at 108% -18%, color-mix(in oklab, var(--c-accent) 15%, transparent), transparent 58%),
+    linear-gradient(
+      178deg,
+      color-mix(in oklab, var(--c-surface) 86%, transparent),
+      color-mix(in oklab, var(--c-panel) 84%, transparent)
+    );
+  backdrop-filter: blur(8px) saturate(1.03);
   padding: var(--space-4);
-  box-shadow: var(--shadow-card);
+  box-shadow:
+    0 14px 30px color-mix(in oklab, var(--c-ink) 10%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--c-border) 48%, transparent);
 }
 
 .legalHeader {
@@ -69,8 +76,13 @@
 .brandBadge {
   padding: 6px 10px;
   border-radius: var(--radius-sm);
-  border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-  background: color-mix(in oklab, var(--c-panel) 86%, transparent);
+  border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+  background:
+    linear-gradient(
+      136deg,
+      color-mix(in oklab, var(--c-panel) 84%, transparent),
+      color-mix(in oklab, var(--c-surface) 80%, transparent)
+    );
   color: var(--c-text-muted);
   font-size: var(--fs-small);
   font-weight: 600;
@@ -94,7 +106,12 @@
   color: var(--c-text-muted);
   font-size: var(--fs-small);
   line-height: 1.2;
-  background: color-mix(in oklab, var(--c-panel) 85%, transparent);
+  background:
+    linear-gradient(
+      130deg,
+      color-mix(in oklab, var(--c-panel) 82%, transparent),
+      color-mix(in oklab, var(--c-surface) 78%, transparent)
+    );
 }
 
 .metaActions {
@@ -105,7 +122,12 @@
 
 .metaButton {
   border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
-  background: color-mix(in oklab, var(--c-panel) 84%, transparent);
+  background:
+    linear-gradient(
+      132deg,
+      color-mix(in oklab, var(--c-panel) 82%, transparent),
+      color-mix(in oklab, var(--c-surface) 76%, transparent)
+    );
   color: var(--c-text);
   border-radius: var(--radius-sm);
   padding: 5px 10px;
@@ -155,7 +177,13 @@
   align-self: start;
   border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
   border-radius: var(--radius-md);
-  background: color-mix(in oklab, var(--c-panel) 86%, transparent);
+  background:
+    linear-gradient(
+      132deg,
+      color-mix(in oklab, var(--c-panel) 80%, transparent),
+      color-mix(in oklab, var(--c-surface) 78%, transparent)
+    );
+  backdrop-filter: blur(6px) saturate(1.02);
   padding: 12px;
 }
 
@@ -208,8 +236,14 @@
 
 .markdownWrap {
   border-radius: var(--radius-md);
-  border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
-  background: color-mix(in oklab, var(--c-panel) 90%, transparent);
+  border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+  background:
+    linear-gradient(
+      138deg,
+      color-mix(in oklab, var(--c-panel) 82%, transparent),
+      color-mix(in oklab, var(--c-surface) 80%, transparent)
+    );
+  backdrop-filter: blur(6px) saturate(1.02);
 }
 
 .markdown {
@@ -260,7 +294,9 @@
 }
 
 .markdown :global(a) {
-  color: color-mix(in oklab, var(--c-accent) 80%, var(--c-text) 20%);
+  color: color-mix(in oklab, var(--c-primary) 72%, var(--c-text) 28%);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
 
 @media (max-width: 700px) {

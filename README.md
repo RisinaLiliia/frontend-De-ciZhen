@@ -166,6 +166,11 @@ At least one backend base must be available:
 - `NEXT_PUBLIC_ENABLE_APPLE_AUTH` (default: `false`)
 - `NEXT_PUBLIC_PRESENCE_WS_BASE` (explicit WS base for presence socket)
 
+### Analytics / Consent
+
+- `NEXT_PUBLIC_ANALYTICS_ENABLED` (default: `false`; set `true` to enable analytics runtime)
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID` (GA4 Measurement ID, e.g. `G-XXXXXXXXXX`)
+
 ### Feature Flags (UX / Product)
 
 - `NEXT_PUBLIC_DEMO` (default: `true` unless explicitly `false`)
@@ -186,7 +191,10 @@ At least one backend base must be available:
 
 ## Analytics
 
-The frontend emits UX events via `window.dataLayer` when available (`src/lib/analytics.ts`).
+### Product analytics events
+
+The frontend emits UX events via `trackUXEvent` (`src/lib/analytics.ts`).
+Events are gated by user consent and are sent only when analytics consent is granted.
 
 Current tracked event names include:
 - `home_hero_cta_click`
@@ -197,9 +205,28 @@ Current tracked event names include:
 - `workspace_status_filter_change`
 - `workspace_primary_cta_click`
 
+### Home activity widgets (backend analytics)
+
 Platform activity panels consume backend analytics endpoints:
 - `/analytics/platform-activity`
 - `/analytics/platform-live-feed`
+
+### GDPR / ePrivacy consent behavior
+
+- Optional analytics is disabled by default.
+- A global cookie consent banner is shown until the user decides.
+- Users can accept all, reject optional, or customize categories.
+- Consent can be changed later via:
+  - global footer entry `Cookie settings` (public + authenticated pages)
+  - profile settings (`/profile/*`) via `Datenschutz & Cookies`
+- Consent decision is persisted in browser storage and mirrored to a lightweight consent cookie.
+
+### GA4 setup
+
+1. Set `NEXT_PUBLIC_ANALYTICS_ENABLED=true`.
+2. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX`.
+3. Restart frontend (`npm run dev`).
+4. Open the app and grant analytics consent in the banner.
 
 ## Deployment
 
