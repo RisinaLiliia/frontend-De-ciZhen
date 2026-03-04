@@ -7,6 +7,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 
 type Translator = (key: I18nKey) => string;
 
@@ -22,6 +23,10 @@ type ExploreProps = {
   sidebarProofCases: ProofCase[];
   proofIndex: number;
   trustPanelClassName?: string;
+  initialPublicRequests?: PublicRequestsResponseDto;
+  preferInitialPublicRequests?: boolean;
+  initialPublicRequestsLoading?: boolean;
+  initialPublicRequestsError?: boolean;
 };
 
 type Props = {
@@ -66,6 +71,10 @@ export function WorkspacePageLayout({
         sidebarProofCases={explore.sidebarProofCases}
         proofIndex={explore.proofIndex}
         trustPanelClassName={explore.trustPanelClassName}
+        initialPublicRequests={explore.initialPublicRequests}
+        preferInitialPublicRequests={explore.preferInitialPublicRequests}
+        initialPublicRequestsLoading={explore.initialPublicRequestsLoading}
+        initialPublicRequestsError={explore.initialPublicRequestsError}
       />
     );
   }

@@ -24,6 +24,7 @@ import { RequestsExplorerView } from '@/components/requests/RequestsExplorerView
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { OfferDto } from '@/lib/api/dto/offers';
+import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { ALL_OPTION_KEY } from '@/features/workspace/requests';
 
 export type RequestsExplorerProps = {
@@ -34,6 +35,10 @@ export type RequestsExplorerProps = {
   emptyCtaHref?: string;
   showBack?: boolean;
   onListDensityChange?: (value: 'single' | 'double') => void;
+  initialPublicRequests?: PublicRequestsResponseDto;
+  preferInitialPublicRequests?: boolean;
+  initialPublicRequestsLoading?: boolean;
+  initialPublicRequestsError?: boolean;
 };
 
 export function RequestsExplorer({
@@ -44,6 +49,10 @@ export function RequestsExplorer({
   emptyCtaHref = '/workspace?section=requests',
   showBack = false,
   onListDensityChange,
+  initialPublicRequests,
+  preferInitialPublicRequests = false,
+  initialPublicRequestsLoading = false,
+  initialPublicRequestsError = false,
 }: RequestsExplorerProps) {
   const authStatus = useAuthStatus();
   const isAuthed = authStatus === 'authenticated';
@@ -118,6 +127,17 @@ export function RequestsExplorer({
     setProvidersListDensity,
   } = providersData;
 
+  const hasDefaultPublicFilter =
+    !filter.cityId &&
+    !filter.categoryKey &&
+    !filter.subcategoryKey &&
+    (filter.sort ?? 'date_desc') === 'date_desc' &&
+    (filter.page ?? 1) === 1 &&
+    (filter.limit ?? 10) === 10;
+  const shouldUseInitialPublicRequests =
+    preferInitialPublicRequests && hasDefaultPublicFilter;
+  const hasInitialPublicRequests = Boolean(initialPublicRequests);
+
   const { data: publicRequests, isLoading, isError } = useQuery({
     queryKey: [
       'requests-explorer-public',
@@ -129,8 +149,19 @@ export function RequestsExplorer({
       filter.limit,
       locale,
     ],
-    enabled: !isProvidersView,
+    enabled:
+      !isProvidersView &&
+      (!shouldUseInitialPublicRequests ||
+        hasInitialPublicRequests ||
+        initialPublicRequestsError ||
+        !initialPublicRequestsLoading),
     queryFn: () => listPublicRequests({ ...filter, locale }),
+    initialData:
+      !isProvidersView && shouldUseInitialPublicRequests
+        ? initialPublicRequests
+        : undefined,
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 
   const requests = React.useMemo(() => publicRequests?.items ?? [], [publicRequests?.items]);

@@ -4,6 +4,7 @@ import { RequestsExplorer } from '@/components/requests/RequestsExplorer';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 
 export type HomeRequestsExplorePanelProps = {
   t: (key: I18nKey) => string;
@@ -13,6 +14,10 @@ export type HomeRequestsExplorePanelProps = {
   showBack?: boolean;
   showHeading?: boolean;
   onListDensityChange?: (value: 'single' | 'double') => void;
+  initialPublicRequests?: PublicRequestsResponseDto;
+  preferInitialPublicRequests?: boolean;
+  initialPublicRequestsLoading?: boolean;
+  initialPublicRequestsError?: boolean;
 };
 
 export function HomeRequestsExplorePanel({
@@ -23,6 +28,10 @@ export function HomeRequestsExplorePanel({
   showBack = true,
   showHeading = true,
   onListDensityChange,
+  initialPublicRequests,
+  preferInitialPublicRequests = false,
+  initialPublicRequestsLoading = false,
+  initialPublicRequestsError = false,
 }: HomeRequestsExplorePanelProps) {
   return (
     <section className="stack-sm">
@@ -40,6 +49,10 @@ export function HomeRequestsExplorePanel({
         backHref={backHref}
         emptyCtaHref={contentType === 'providers' ? '/workspace?section=providers' : '/workspace?section=requests'}
         onListDensityChange={onListDensityChange}
+        initialPublicRequests={initialPublicRequests}
+        preferInitialPublicRequests={preferInitialPublicRequests}
+        initialPublicRequestsLoading={initialPublicRequestsLoading}
+        initialPublicRequestsError={initialPublicRequestsError}
       />
     </section>
   );

@@ -8,6 +8,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 
 const ExploreRequestsPanel = dynamic(
   () => import('@/components/home/HomeRequestsExplorePanel').then((mod) => mod.HomeRequestsExplorePanel),
@@ -86,6 +87,10 @@ type WorkspaceExploreSectionProps = {
   sidebarProofCases: ProofCase[];
   proofIndex: number;
   trustPanelClassName?: string;
+  initialPublicRequests?: PublicRequestsResponseDto;
+  preferInitialPublicRequests?: boolean;
+  initialPublicRequestsLoading?: boolean;
+  initialPublicRequestsError?: boolean;
 };
 
 export function WorkspaceExploreSection({
@@ -99,6 +104,10 @@ export function WorkspaceExploreSection({
   sidebarProofCases,
   proofIndex,
   trustPanelClassName,
+  initialPublicRequests,
+  preferInitialPublicRequests,
+  initialPublicRequestsLoading,
+  initialPublicRequestsError,
 }: WorkspaceExploreSectionProps) {
   const isDesktop = useIsDesktop();
   const isSidebarReady = useDeferredMount(140);
@@ -118,10 +127,14 @@ export function WorkspaceExploreSection({
               showHeading={false}
               showBack={false}
               backHref="/"
-              onListDensityChange={onListDensityChange}
-            />
-          )}
-        </div>
+                onListDensityChange={onListDensityChange}
+                initialPublicRequests={initialPublicRequests}
+                preferInitialPublicRequests={preferInitialPublicRequests}
+                initialPublicRequestsLoading={initialPublicRequestsLoading}
+                initialPublicRequestsError={initialPublicRequestsError}
+              />
+            )}
+          </div>
 
         {isDesktop ? (
           <aside className="stack-md hide-mobile">

@@ -43,6 +43,7 @@ import {
 import type { Locale } from '@/lib/i18n/t';
 
 const WORKSPACE_PATH = '/workspace';
+const PUBLIC_REQUESTS_SEED_LIMIT = 10;
 const PUBLIC_CITY_ACTIVITY_FETCH_LIMIT = 20;
 const EMPTY_PROVIDER_IDS = new Set<string>();
 const NOOP_PROVIDER_TOGGLE = () => {};
@@ -107,7 +108,7 @@ function WorkspacePublicBranch({
       subcategoryKey: undefined,
       sort: 'date_desc',
       page: 1,
-      limit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+      limit: PUBLIC_REQUESTS_SEED_LIMIT,
       activityRange: '30d',
       cityActivityLimit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
     }),
@@ -115,7 +116,7 @@ function WorkspacePublicBranch({
       getWorkspacePublicOverview({
         sort: 'date_desc',
         page: 1,
-        limit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+        limit: PUBLIC_REQUESTS_SEED_LIMIT,
         activityRange: '30d',
         cityActivityLimit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
       }),
@@ -128,6 +129,16 @@ function WorkspacePublicBranch({
   const cityActivity = platformSnapshot?.cityActivity;
   const { localeTag, formatNumber } = useWorkspaceFormatters(locale);
   const explore = useExploreSidebar(t);
+  const exploreWithSeed = React.useMemo(
+    () => ({
+      ...explore,
+      initialPublicRequests: platformSnapshot?.requests,
+      preferInitialPublicRequests: true,
+      initialPublicRequestsLoading: isSummaryLoading,
+      initialPublicRequestsError: isSummaryError,
+    }),
+    [explore, isSummaryError, isSummaryLoading, platformSnapshot?.requests],
+  );
 
   const { setWorkspaceTab } = useWorkspaceNavigation({
     activeWorkspaceTab,
@@ -202,7 +213,7 @@ function WorkspacePublicBranch({
       t={t}
       locale={locale}
       intro={workspaceIntroNode}
-      explore={explore}
+      explore={exploreWithSeed}
       privateMain={null}
       publicMain={null}
       workspaceAsideBaseProps={EMPTY_ASIDE_BASE_PROPS}
