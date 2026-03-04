@@ -54,9 +54,13 @@ export function CookieConsentLayer() {
             <h2 className="cookie-consent-banner__title">{t(I18N_KEYS.consent.bannerTitle)}</h2>
             <p className="cookie-consent-banner__text">{t(I18N_KEYS.consent.bannerDescription)}</p>
             <p className="cookie-consent-banner__links">
-              <Link href={privacyHref}>{t(I18N_KEYS.consent.privacyPolicy)}</Link>
+              <Link href={privacyHref} prefetch={false}>
+                {t(I18N_KEYS.consent.privacyPolicy)}
+              </Link>
               <span aria-hidden="true">·</span>
-              <Link href={cookieHref}>{t(I18N_KEYS.consent.cookieNotice)}</Link>
+              <Link href={cookieHref} prefetch={false}>
+                {t(I18N_KEYS.consent.cookieNotice)}
+              </Link>
             </p>
           </div>
           <div className="cookie-consent-banner__actions">

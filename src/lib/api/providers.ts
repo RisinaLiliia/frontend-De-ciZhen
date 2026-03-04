@@ -6,7 +6,12 @@ import type {
   UpdateMyProviderProfileDto,
 } from '@/lib/api/dto/providers';
 
-export async function listPublicProviders(params?: { cityId?: string; serviceKey?: string }) {
+type ListPublicProvidersParams = {
+  cityId?: string;
+  serviceKey?: string;
+};
+
+export async function listPublicProviders(params?: ListPublicProvidersParams) {
   const qs = new URLSearchParams();
   if (params?.cityId) qs.set('cityId', params.cityId);
   if (params?.serviceKey) qs.set('serviceKey', params.serviceKey);

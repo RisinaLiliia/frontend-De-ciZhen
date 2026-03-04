@@ -29,6 +29,7 @@ export type PersonalNavItem = {
 
 type PersonalNavSectionProps = {
   title?: string;
+  headerSlot?: ReactNode;
   insightText?: string;
   progressPercent?: number;
   items: PersonalNavItem[];
@@ -37,6 +38,7 @@ type PersonalNavSectionProps = {
 
 export function PersonalNavSection({
   title,
+  headerSlot,
   insightText,
   progressPercent,
   items,
@@ -53,6 +55,7 @@ export function PersonalNavSection({
 
   return (
     <section className={`panel personal-nav ${className ?? ''}`.trim()}>
+      {headerSlot ? <div className="personal-nav__header-slot">{headerSlot}</div> : null}
       {title ? <h2 className="personal-nav__title">{title}</h2> : null}
       <div className="personal-nav__track">
         {items.map((item) => (
@@ -87,7 +90,9 @@ export function PersonalNavSection({
             <Link
               key={item.key}
               href={item.lockedHref}
+              prefetch={false}
               className="personal-nav__item is-disabled is-locked"
+              onClick={item.onClick}
             >
               <span className="personal-nav__top">
                 <i className="personal-nav__icon" aria-hidden="true">
@@ -114,6 +119,7 @@ export function PersonalNavSection({
             <Link
               key={item.key}
               href={item.href}
+              prefetch={false}
               className={`personal-nav__item ${isActive(item) ? 'is-active' : ''}`.trim()}
               onClick={item.onClick}
             >

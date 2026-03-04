@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import { WorkspaceShellPage } from '@/features/workspace/shell/WorkspaceShellPage';
 
 export default function ProviderHomeLegacyPage() {
-  redirect('/workspace?tab=my-offers');
+  return <WorkspaceShellPage forcedWorkspaceTab="my-offers" />;
 }

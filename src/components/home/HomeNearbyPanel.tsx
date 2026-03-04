@@ -29,6 +29,8 @@ type HomeNearbyPanelProps = {
   viewAllHref?: string;
   itemsLimit?: number;
   visibleRows?: number;
+  regionOverride?: string | null;
+  disableGeoLookup?: boolean;
 };
 
 const DEFAULT_NEARBY_ITEMS = 3;
@@ -36,9 +38,11 @@ const FALLBACK_FETCH_LIMIT = 12;
 
 export function HomeNearbyPanel({
   t,
-  viewAllHref = '/workspace?section=orders',
+  viewAllHref = '/workspace?section=requests',
   itemsLimit = DEFAULT_NEARBY_ITEMS,
   visibleRows,
+  regionOverride,
+  disableGeoLookup = false,
 }: HomeNearbyPanelProps) {
   const { locale } = useI18n();
   const authStatus = useAuthStatus();
@@ -47,7 +51,8 @@ export function HomeNearbyPanel({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const qc = useQueryClient();
-  const region = useGeoRegion();
+  const detectedRegion = useGeoRegion({ enabled: !disableGeoLookup });
+  const region = regionOverride ?? detectedRegion;
   const { data: cities = [] } = useCities('DE');
   const { data: categories = [] } = useServiceCategories();
   const { data: services = [] } = useServices();

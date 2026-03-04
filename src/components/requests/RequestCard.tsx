@@ -63,6 +63,7 @@ export function RequestCard({
   const cardClassName = `request-card request-card--media-right request-card-link ${
     !hasImage ? 'request-card--no-media' : ''
   } ${isActive ? 'is-active' : ''} ${isLinkMode ? 'request-card--link' : ''}`.trim();
+  const prefetchedRef = React.useRef(false);
 
   const isInteractiveTarget = React.useCallback((target: EventTarget | null) => {
     if (!(target instanceof Element)) return false;
@@ -75,6 +76,12 @@ export function RequestCard({
     if (!href) return;
     router.push(href);
   }, [href, router]);
+
+  const prefetchCard = React.useCallback(() => {
+    if (!prefetch || !href || prefetchedRef.current) return;
+    prefetchedRef.current = true;
+    router.prefetch(href);
+  }, [href, prefetch, router]);
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -197,6 +204,8 @@ export function RequestCard({
       tabIndex={isLinkMode ? 0 : undefined}
       onClick={isLinkMode ? handleClick : undefined}
       onKeyDown={isLinkMode ? handleKeyDown : undefined}
+      onMouseEnter={isLinkMode ? prefetchCard : undefined}
+      onFocus={isLinkMode ? prefetchCard : undefined}
       data-prefetch={prefetch ? 'true' : 'false'}
     >
       {cardContent}

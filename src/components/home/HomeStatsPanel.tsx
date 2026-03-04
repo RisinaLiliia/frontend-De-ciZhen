@@ -16,10 +16,10 @@ type HomeStatsPanelProps = {
   t: (key: I18nKey) => string;
   stats: LiveStats;
   formatNumber: Intl.NumberFormat;
-  ordersHref?: string;
+  requestsHref?: string;
 };
 
-export function HomeStatsPanel({ t, stats, formatNumber, ordersHref = '/workspace?section=orders' }: HomeStatsPanelProps) {
+export function HomeStatsPanel({ t, stats, formatNumber, requestsHref = '/workspace?section=requests' }: HomeStatsPanelProps) {
   return (
     <Card className="home-stats-panel">
       <CardHeader className="home-stats__header">
@@ -28,7 +28,7 @@ export function HomeStatsPanel({ t, stats, formatNumber, ordersHref = '/workspac
       </CardHeader>
 
       <div className="home-stats__grid mt-3">
-        <Link href={ordersHref} prefetch={false} className="home-stats__link home-stats__card">
+        <Link href={requestsHref} prefetch={false} className="home-stats__link home-stats__card">
           <div className="flex items-center gap-2">
             <span className="home-stats__icon">
               <IconBox className="h-3.5 w-3.5" />
@@ -37,7 +37,7 @@ export function HomeStatsPanel({ t, stats, formatNumber, ordersHref = '/workspac
           </div>
           <span className="home-stats__label">{t(I18N_KEYS.homePublic.statActive)}</span>
         </Link>
-        <Link href={ordersHref} prefetch={false} className="home-stats__link home-stats__card">
+        <Link href={requestsHref} prefetch={false} className="home-stats__link home-stats__card">
           <div className="flex items-center gap-2">
             <span className="home-stats__icon">
               <IconCoins className="h-3.5 w-3.5" />
@@ -57,7 +57,7 @@ export function HomeStatsPanel({ t, stats, formatNumber, ordersHref = '/workspac
           </div>
           <span className="home-stats__label">{t(I18N_KEYS.homePublic.statResponse)}</span>
         </div>
-        <Link href={ordersHref} prefetch={false} className="home-stats__link home-stats__card">
+        <Link href={requestsHref} prefetch={false} className="home-stats__link home-stats__card">
           <div className="flex items-center gap-2">
             <span className="home-stats__icon">
               <IconStar className="h-3.5 w-3.5" />

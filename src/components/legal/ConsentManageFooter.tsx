@@ -18,9 +18,13 @@ export function ConsentManageFooter() {
     <footer className="consent-manage-footer" role="contentinfo" aria-label={t(I18N_KEYS.consent.manageSettings)}>
       <div className="consent-manage-footer__inner">
         <div className="consent-manage-footer__links">
-          <Link href={privacyHref}>{t(I18N_KEYS.consent.privacyPolicy)}</Link>
+          <Link href={privacyHref} prefetch={false}>
+            {t(I18N_KEYS.consent.privacyPolicy)}
+          </Link>
           <span aria-hidden="true">·</span>
-          <Link href={cookieHref}>{t(I18N_KEYS.consent.cookieNotice)}</Link>
+          <Link href={cookieHref} prefetch={false}>
+            {t(I18N_KEYS.consent.cookieNotice)}
+          </Link>
         </div>
         <button
           type="button"

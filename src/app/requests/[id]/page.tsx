@@ -44,11 +44,14 @@ import {
   buildRequestDetailsViewModel,
   type RequestDetailsViewModel,
 } from '@/features/requests/details/viewModel';
+import { providerQK } from '@/features/provider/queries';
 
 const SIMILAR_LIMIT = 2;
+const SIMILAR_FETCH_LIMIT = 8;
+const LATEST_FETCH_LIMIT = 6;
 const WORKSPACE_MY_REQUESTS_URL = '/workspace?tab=my-requests&sort=date_desc&page=1&limit=10';
-const WORKSPACE_PUBLIC_ORDERS_URL = '/workspace?section=orders&sort=date_desc&page=1&limit=10';
-const WORKSPACE_GUEST_ORDERS_URL = '/workspace?section=orders';
+const WORKSPACE_PUBLIC_REQUESTS_URL = '/workspace?section=requests&sort=date_desc&page=1&limit=10';
+const WORKSPACE_GUEST_REQUESTS_URL = '/workspace?section=requests';
 
 export default function RequestDetailsPage() {
   const t = useT();
@@ -63,6 +66,11 @@ export default function RequestDetailsPage() {
   const params = useParams();
   const requestId = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const actionHandledRef = React.useRef(false);
+  const [isHydrated, setIsHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const [offerAmount, setOfferAmount] = React.useState('');
   const [offerComment, setOfferComment] = React.useState('');
@@ -90,38 +98,52 @@ export default function RequestDetailsPage() {
     isError,
   } = useQuery({
     queryKey: ['request-detail', requestId, locale],
-    enabled: Boolean(requestId),
+    enabled: isHydrated && Boolean(requestId),
     queryFn: () => getPublicRequestById(String(requestId), { locale }),
+    staleTime: 60_000,
+    retry: 0,
+    refetchOnWindowFocus: false,
   });
 
-  const { data: similarData } = useQuery({
+  const hasSimilarSeed = Boolean(request?.categoryKey || request?.serviceKey);
+  const similarQuery = useQuery({
     queryKey: ['request-similar', request?.id, request?.categoryKey, request?.serviceKey, locale],
-    enabled: Boolean(request?.id),
+    enabled: isHydrated && Boolean(request?.id) && hasSimilarSeed,
     queryFn: () =>
       listPublicRequests({
         locale,
         categoryKey: request?.categoryKey ?? undefined,
+        subcategoryKey: request?.serviceKey ?? undefined,
         sort: 'date_desc',
-        limit: 20,
+        limit: SIMILAR_FETCH_LIMIT,
       }),
+    staleTime: 120_000,
+    retry: 0,
+    refetchOnWindowFocus: false,
   });
 
   const { data: myResponses } = useQuery({
     queryKey: ['offers-my'],
-    enabled: authStatus === 'authenticated',
+    enabled: isHydrated && authStatus === 'authenticated',
     queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
 
   const { data: providerProfile } = useQuery({
-    queryKey: ['provider-profile'],
-    enabled: authStatus === 'authenticated',
+    queryKey: providerQK.myProfile(),
+    enabled: isHydrated && authStatus === 'authenticated',
     queryFn: () => withStatusFallback(() => getMyProviderProfile(), null),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
 
   const { data: favoriteRequests = [] } = useQuery({
     queryKey: ['favorite-requests'],
-    enabled: authStatus === 'authenticated',
+    enabled: isHydrated && authStatus === 'authenticated',
     queryFn: () => withStatusFallback(() => listFavorites('request'), []),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
 
   const existingResponse = React.useMemo(() => {
@@ -308,7 +330,7 @@ export default function RequestDetailsPage() {
       }
       await Promise.all([
         qc.invalidateQueries({ queryKey: ['offers-my'] }),
-        qc.invalidateQueries({ queryKey: ['provider-profile'] }),
+        qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
       ]);
     } catch (error) {
       if (error instanceof ApiError && (error.status === 404 || error.status === 405)) {
@@ -347,7 +369,7 @@ export default function RequestDetailsPage() {
       setOfferComment('');
       setOfferAvailability('');
       setOfferSheetInUrl(false);
-      router.push(authStatus === 'authenticated' ? WORKSPACE_PUBLIC_ORDERS_URL : WORKSPACE_GUEST_ORDERS_URL);
+      router.push(authStatus === 'authenticated' ? WORKSPACE_PUBLIC_REQUESTS_URL : WORKSPACE_GUEST_REQUESTS_URL);
       return;
     }
 
@@ -363,7 +385,7 @@ export default function RequestDetailsPage() {
       toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
       await Promise.all([
         qc.invalidateQueries({ queryKey: ['offers-my'] }),
-        qc.invalidateQueries({ queryKey: ['provider-profile'] }),
+        qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
       ]);
     } catch {
       toast.error(t(I18N_KEYS.requestDetails.responseFailed));
@@ -488,14 +510,14 @@ export default function RequestDetailsPage() {
           items: currentItems.map(patchItem),
         };
       };
-      qc.setQueriesData({ queryKey: ['orders-explorer-public'] }, patchListPayload);
+      qc.setQueriesData({ queryKey: ['requests-explorer-public'] }, patchListPayload);
       qc.setQueriesData({ queryKey: ['requests-public'] }, patchListPayload);
       qc.setQueriesData({ queryKey: ['requests-my'] }, patchListPayload);
       qc.setQueriesData({ queryKey: ['home-nearby-requests'] }, patchListPayload);
       qc.setQueriesData({ queryKey: ['requests-latest'] }, patchListPayload);
       qc.setQueriesData({ queryKey: ['request-similar'] }, patchListPayload);
 
-      qc.invalidateQueries({ queryKey: ['orders-explorer-public'] });
+      qc.invalidateQueries({ queryKey: ['requests-explorer-public'] });
       qc.invalidateQueries({ queryKey: ['requests-public'] });
       qc.invalidateQueries({ queryKey: ['requests-my'] });
       qc.invalidateQueries({ queryKey: ['requests-latest'] });
@@ -534,7 +556,7 @@ export default function RequestDetailsPage() {
 
   const similar = React.useMemo(() => {
     if (!request) return [];
-    const items = similarData?.items ?? [];
+    const items = similarQuery.data?.items ?? [];
     const filtered = items
       .filter(
         (item) =>
@@ -544,18 +566,23 @@ export default function RequestDetailsPage() {
       .slice(0, SIMILAR_LIMIT);
     if (filtered.length) return filtered;
     return items.filter((item) => item.id !== request.id).slice(0, SIMILAR_LIMIT);
-  }, [request, similarData]);
+  }, [request, similarQuery.data?.items]);
+
+  const shouldLoadLatest = Boolean(request?.id) && (!hasSimilarSeed || (similarQuery.isFetched && similar.length === 0));
 
   const { data: latestData } = useQuery({
     queryKey: ['requests-latest', locale],
-    enabled: Boolean(request?.id) && similar.length === 0,
+    enabled: isHydrated && shouldLoadLatest,
     queryFn: () =>
       listPublicRequests({
         locale,
         cityId: request?.cityId ?? undefined,
         sort: 'date_desc',
-        limit: 12,
+        limit: LATEST_FETCH_LIMIT,
       }),
+    staleTime: 120_000,
+    retry: 0,
+    refetchOnWindowFocus: false,
   });
 
   const latest = React.useMemo(() => {
@@ -575,7 +602,7 @@ export default function RequestDetailsPage() {
 
   const similarHref = React.useMemo(() => {
     const nextParams = new URLSearchParams();
-    nextParams.set('section', 'orders');
+    nextParams.set('section', 'requests');
     if (request?.categoryKey) nextParams.set('categoryKey', request.categoryKey);
     if (request?.serviceKey) nextParams.set('subcategoryKey', request.serviceKey);
     nextParams.set('sort', 'date_desc');
@@ -665,7 +692,7 @@ export default function RequestDetailsPage() {
     toggleRequestFavorite,
   ]);
 
-  if (isLoading) {
+  if (!isHydrated || isLoading) {
     return <RequestDetailLoading />;
   }
 
@@ -718,8 +745,8 @@ export default function RequestDetailsPage() {
     <PageShell
       right={<AuthActions />}
       showBack
-      backHref={isAuthed ? WORKSPACE_MY_REQUESTS_URL : WORKSPACE_GUEST_ORDERS_URL}
-      mainClassName="py-6"
+      backHref={isAuthed ? WORKSPACE_MY_REQUESTS_URL : WORKSPACE_GUEST_REQUESTS_URL}
+      mainClassName="pb-6"
     >
       <div className="request-detail">
         <section className="panel request-detail__panel">
@@ -1082,7 +1109,7 @@ export default function RequestDetailsPage() {
         onSuccessBack={() => {
           setOfferSheetMode('form');
           setOfferSheetInUrl(false);
-          router.push(isAuthed ? WORKSPACE_PUBLIC_ORDERS_URL : WORKSPACE_GUEST_ORDERS_URL);
+          router.push(isAuthed ? WORKSPACE_PUBLIC_REQUESTS_URL : WORKSPACE_GUEST_REQUESTS_URL);
         }}
         onSubmit={handleOfferSubmit}
       />

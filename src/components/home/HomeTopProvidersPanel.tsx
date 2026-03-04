@@ -6,7 +6,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
 import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
 import { listPublicProviders } from '@/lib/api/providers';
-import { listReviews } from '@/lib/api/reviews';
 import {
   buildProviderFavoriteLookup,
   isProviderInFavoriteLookup,
@@ -35,17 +34,56 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
   const searchParams = useSearchParams();
   const qc = useQueryClient();
   const { data: providers = [] } = useQuery({
-    queryKey: ['home-top-providers', limit],
+    queryKey: ['providers-public-top'],
     queryFn: () => listPublicProviders(),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
   const { data: favoriteProviders = [] } = useQuery({
     queryKey: ['favorite-providers'],
     enabled: isAuthed,
     queryFn: () => withStatusFallback(() => listFavorites('provider'), [], [401, 403]),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
+  const sortedProviders = React.useMemo(() => {
+    const max = Math.max(1, limit);
+    if (providers.length <= max) {
+      const copy = [...providers];
+      copy.sort((a, b) => b.ratingAvg - a.ratingAvg);
+      return copy;
+    }
+
+    const top: typeof providers = [];
+    for (const provider of providers) {
+      if (top.length === 0) {
+        top.push(provider);
+        continue;
+      }
+
+      let insertAt = -1;
+      for (let index = 0; index < top.length; index += 1) {
+        if (provider.ratingAvg > top[index].ratingAvg) {
+          insertAt = index;
+          break;
+        }
+      }
+
+      if (insertAt === -1) {
+        if (top.length < max) top.push(provider);
+      } else {
+        top.splice(insertAt, 0, provider);
+      }
+
+      if (top.length > max) top.length = max;
+    }
+
+    return top;
+  }, [limit, providers]);
   const providerById = React.useMemo(
-    () => new Map(providers.map((provider) => [provider.id, provider])),
-    [providers],
+    () => new Map(sortedProviders.map((provider) => [provider.id, provider])),
+    [sortedProviders],
   );
   const { data: cities = [] } = useCities('DE');
   const favoriteProviderLookup = React.useMemo(
@@ -54,13 +92,13 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
   );
   const favoriteProviderIds = React.useMemo(() => {
     const ids = new Set<string>();
-    for (const provider of providers) {
+    for (const provider of sortedProviders) {
       if (isProviderInFavoriteLookup(favoriteProviderLookup, provider)) {
         ids.add(provider.id);
       }
     }
     return ids;
-  }, [favoriteProviderLookup, providers]);
+  }, [favoriteProviderLookup, sortedProviders]);
   const nextPath = React.useMemo(() => {
     const qs = searchParams?.toString();
     return `${pathname}${qs ? `?${qs}` : ''}`;
@@ -78,12 +116,6 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     providerById,
   });
 
-  const sortedProviders = React.useMemo(() => {
-    const copy = [...providers];
-    copy.sort((a, b) => b.ratingAvg - a.ratingAvg);
-    return copy.slice(0, limit);
-  }, [limit, providers]);
-
   const cityLabelById = React.useMemo(() => {
     const map = new Map<string, string>();
     for (const city of cities) {
@@ -91,31 +123,6 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     }
     return map;
   }, [cities, locale]);
-
-  const providerIds = React.useMemo(() => sortedProviders.map((provider) => provider.id), [sortedProviders]);
-  const { data: reviewPreviewById = new Map<string, string>() } = useQuery({
-    queryKey: ['home-top-providers-review-preview', ...providerIds],
-    enabled: providerIds.length > 0,
-    queryFn: async () => {
-      const pairs = await Promise.all(
-        providerIds.map(async (providerId) => {
-          try {
-            const reviews = await listReviews({ targetUserId: providerId, targetRole: 'provider', limit: 1, offset: 0 });
-            const first = reviews[0];
-            const text = first?.text?.trim() || first?.comment?.trim() || '';
-            return [providerId, text] as const;
-          } catch {
-            return [providerId, ''] as const;
-          }
-        }),
-      );
-      const map = new Map<string, string>();
-      for (const [id, text] of pairs) {
-        if (text) map.set(id, text);
-      }
-      return map;
-    },
-  });
 
   const mappedProviders = React.useMemo(
     () =>
@@ -145,11 +152,10 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
         return {
           ...mapped,
           badges: secondary ? [topBadge, secondary] : [topBadge],
-          reviewPreview:
-            reviewPreviewById.get(provider.id) ?? t(I18N_KEYS.homePublic.providerReviewPreviewDefault),
+          reviewPreview: t(I18N_KEYS.homePublic.providerReviewPreviewDefault),
         };
       }),
-    [cityLabelById, reviewPreviewById, sortedProviders, t],
+    [cityLabelById, sortedProviders, t],
   );
   return (
     <TopProvidersPanel

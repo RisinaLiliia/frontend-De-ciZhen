@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import { WorkspaceShellPage } from '@/features/workspace/shell/WorkspaceShellPage';
 
 export default function ProviderRequestsLegacyPage() {
-  redirect('/workspace?section=orders');
+  return <WorkspaceShellPage forcedPublicSection="requests" />;
 }

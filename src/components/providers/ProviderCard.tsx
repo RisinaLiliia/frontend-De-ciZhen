@@ -64,7 +64,12 @@ export function ProviderCard({
     <div
       className={`provider-card ${variant === 'grid' ? 'is-grid' : 'is-list'} ${canToggleFavorite ? 'has-favorite-toggle' : ''} ${showCornerBadge ? 'has-corner-badge' : ''} ${className ?? ''}`.trim()}
     >
-      <Link href={provider.profileHref} className="provider-card__overlay-link" aria-label={provider.name} />
+      <Link
+        href={provider.profileHref}
+        prefetch={false}
+        className="provider-card__overlay-link"
+        aria-label={provider.name}
+      />
       {canToggleFavorite ? (
         <FavoriteButton
           className="provider-card__favorite"
