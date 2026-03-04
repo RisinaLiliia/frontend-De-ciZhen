@@ -18,7 +18,7 @@ export function WorkspaceShellPage({
   return (
     <PageShell
       right={<AuthActions />}
-      showBack
+      showBack={false}
       topbarOverlay={true}
       mainClassName="pb-6 requests-screen"
       withSpacer={true}
