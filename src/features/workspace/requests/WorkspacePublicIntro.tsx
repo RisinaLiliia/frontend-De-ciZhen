@@ -3,7 +3,7 @@
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/requests/WorkspacePublicDemandMapPanel';
-import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import type { WorkspacePublicCityActivityDto } from '@/lib/api/dto/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 
@@ -14,8 +14,7 @@ type WorkspacePublicIntroProps = {
   personalNavItems: PersonalNavItem[];
   insightText: string;
   activityProgress: number;
-  recentRequests: RequestResponseDto[];
-  platformRequestsTotal: number;
+  cityActivity: WorkspacePublicCityActivityDto | null | undefined;
   quickActionHref?: string;
 };
 
@@ -26,8 +25,7 @@ export function WorkspacePublicIntro({
   personalNavItems,
   insightText,
   activityProgress,
-  recentRequests,
-  platformRequestsTotal,
+  cityActivity,
   quickActionHref = '/request/create',
 }: WorkspacePublicIntroProps) {
   return (
@@ -50,8 +48,7 @@ export function WorkspacePublicIntro({
           <WorkspacePublicDemandMapPanel
             t={t}
             locale={locale}
-            requests={recentRequests}
-            platformRequestsTotal={platformRequestsTotal}
+            cityActivity={cityActivity}
           />
         </aside>
       </div>

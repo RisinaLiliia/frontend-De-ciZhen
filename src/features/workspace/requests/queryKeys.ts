@@ -1,6 +1,30 @@
 import type { ReviewsView } from '@/features/workspace/requests/workspace.types';
 
 export const workspaceQK = {
+  workspacePublicOverview: (args: {
+    cityId: string | undefined;
+    categoryKey: string | undefined;
+    subcategoryKey: string | undefined;
+    sort: string | undefined;
+    page: number | undefined;
+    limit: number | undefined;
+    activityRange: string | undefined;
+    cityActivityLimit: number | undefined;
+    locale: string;
+  }) => [
+    'workspace-public-overview',
+    args.cityId,
+    args.categoryKey,
+    args.subcategoryKey,
+    args.sort,
+    args.page,
+    args.limit,
+    args.activityRange,
+    args.cityActivityLimit,
+    args.locale,
+  ] as const,
+  workspacePublicSummary: (locale: string) => ['workspace-public-summary', locale] as const,
+  workspacePrivateOverview: () => ['workspace-private-overview'] as const,
   requestsPublic: (args: {
     cityId: string | undefined;
     categoryKey: string | undefined;

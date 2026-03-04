@@ -7,6 +7,7 @@ import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { ProviderProfileDto, ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
@@ -15,11 +16,11 @@ import { mapPublicProviderToCard } from '@/components/providers/providerCardMapp
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import {
-  buildLastSixMonthSeries,
   calcMoMDeltaPercent,
   computeClientCompleteness,
   computeProfileCompleteness,
   countCompletedInMonth,
+  type DeltaResult,
   formatMoMDeltaLabel,
 } from '@/features/workspace/requests/metrics';
 import { getClientHint, getProviderHint } from '@/features/workspace/requests/workspace.content';
@@ -65,7 +66,9 @@ type Params = {
   myProviderProfile: ProviderProfileDto | null | undefined;
   providers: ProviderPublicDto[];
   publicRequestsCount: number;
+  publicProvidersCount?: number;
   favoriteRequestCount: number;
+  workspacePrivateOverview?: WorkspacePrivateOverviewDto | null;
   setWorkspaceTab: (tab: WorkspaceTab) => void;
   markPublicRequestsSeen: () => void;
   guestLoginHref: string;
@@ -89,7 +92,9 @@ export function useWorkspaceState({
   myProviderProfile,
   providers,
   publicRequestsCount,
+  publicProvidersCount,
   favoriteRequestCount,
+  workspacePrivateOverview,
   setWorkspaceTab,
   markPublicRequestsSeen,
   guestLoginHref,
@@ -98,25 +103,46 @@ export function useWorkspaceState({
   chartMonthLabel,
 }: Params) {
   const sentCount = React.useMemo(
-    () => myOffers.filter((offer) => offer.status === 'sent').length,
-    [myOffers],
+    () =>
+      workspacePrivateOverview?.providerOffersByStatus.sent ??
+      myOffers.filter((offer) => offer.status === 'sent').length,
+    [myOffers, workspacePrivateOverview],
   );
   const acceptedCount = React.useMemo(
-    () => myOffers.filter((offer) => offer.status === 'accepted').length,
-    [myOffers],
+    () =>
+      workspacePrivateOverview?.providerOffersByStatus.accepted ??
+      myOffers.filter((offer) => offer.status === 'accepted').length,
+    [myOffers, workspacePrivateOverview],
   );
   const declinedCount = React.useMemo(
-    () => myOffers.filter((offer) => offer.status === 'declined').length,
-    [myOffers],
+    () =>
+      workspacePrivateOverview?.providerOffersByStatus.declined ??
+      myOffers.filter((offer) => offer.status === 'declined').length,
+    [myOffers, workspacePrivateOverview],
   );
   const completedJobsCount = React.useMemo(
-    () => myProviderContracts.filter((item) => item.status === 'completed').length,
-    [myProviderContracts],
+    () =>
+      workspacePrivateOverview?.providerContractsByStatus.completed ??
+      myProviderContracts.filter((item) => item.status === 'completed').length,
+    [myProviderContracts, workspacePrivateOverview],
+  );
+  const publicStatsCount = React.useMemo(
+    () =>
+      workspacePrivateOverview
+        ? workspacePrivateOverview.providerContractsByStatus.total +
+          workspacePrivateOverview.clientContractsByStatus.total
+        : myProviderContracts.length + myClientContracts.length,
+    [myClientContracts.length, myProviderContracts.length, workspacePrivateOverview],
   );
 
   const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${(userName ?? '').trim() || t(I18N_KEYS.requestsPage.navUserFallback)}!`;
-  const activityBase = sentCount + acceptedCount;
-  const activityProgress = activityBase > 0 ? Math.round((acceptedCount / activityBase) * 100) : 12;
+  const activityProgress = React.useMemo(() => {
+    if (workspacePrivateOverview) {
+      return clampPercent(workspacePrivateOverview.kpis.activityProgress);
+    }
+    const activityBase = sentCount + acceptedCount;
+    return activityBase > 0 ? clampPercent(Math.round((acceptedCount / activityBase) * 100)) : 12;
+  }, [acceptedCount, sentCount, workspacePrivateOverview]);
 
   const myProviderRating = React.useMemo(() => {
     const rated = myOffers.find((offer) => typeof offer.providerRatingAvg === 'number');
@@ -127,8 +153,11 @@ export function useWorkspaceState({
   }, [myOffers]);
   const navRatingValue = myProviderRating.avg.toFixed(1);
   const navReviewsCount = myProviderRating.count;
+
   const hasActivePublicSection =
     activePublicSection === 'requests' || activePublicSection === 'providers' || activePublicSection === 'stats';
+  const resolvedPublicProvidersCount = publicProvidersCount ?? providers.length;
+
   const publicNavItems = React.useMemo<PersonalNavItem[]>(
     () => [
       {
@@ -146,7 +175,7 @@ export function useWorkspaceState({
         href: '/workspace?section=providers',
         label: t(I18N_KEYS.homePublic.exploreAllProviders),
         icon: <IconUser />,
-        value: formatNumber.format(providers.length),
+        value: formatNumber.format(resolvedPublicProvidersCount),
         hint: t(I18N_KEYS.requestsPage.heroProviderPrimaryCta),
         forceActive: activePublicSection === 'providers',
       },
@@ -155,7 +184,7 @@ export function useWorkspaceState({
         href: '/workspace?section=stats',
         label: t(I18N_KEYS.homePublic.exploreStats),
         icon: <IconCheck />,
-        value: formatNumber.format(myProviderContracts.length + myClientContracts.length),
+        value: formatNumber.format(publicStatsCount),
         hint: t(I18N_KEYS.homePublic.activitySubtitle),
         forceActive: activePublicSection === 'stats',
       },
@@ -164,13 +193,112 @@ export function useWorkspaceState({
       activePublicSection,
       formatNumber,
       markPublicRequestsSeen,
-      myClientContracts.length,
-      myProviderContracts.length,
       publicRequestsCount,
-      providers,
+      publicStatsCount,
+      resolvedPublicProvidersCount,
       t,
     ],
   );
+
+  const myRequestsTotal = React.useMemo(
+    () => workspacePrivateOverview?.requestsByStatus.total ?? myRequests.length,
+    [myRequests.length, workspacePrivateOverview],
+  );
+  const myOpenRequestsCount = React.useMemo(
+    () => workspacePrivateOverview?.kpis.myOpenRequests ?? countOpenRequests(myRequests),
+    [myRequests, workspacePrivateOverview],
+  );
+  const recentOffers7d = React.useMemo(
+    () => workspacePrivateOverview?.kpis.recentOffers7d ?? countRecentOffers7d(myOffers),
+    [myOffers, workspacePrivateOverview],
+  );
+  const providerActiveContractsCount = React.useMemo(
+    () =>
+      workspacePrivateOverview?.kpis.providerActiveContracts ??
+      myProviderContracts.filter(
+        (item) => item.status === 'pending' || item.status === 'confirmed' || item.status === 'in_progress',
+      ).length,
+    [myProviderContracts, workspacePrivateOverview],
+  );
+  const clientActiveContractsCount = React.useMemo(
+    () =>
+      workspacePrivateOverview?.kpis.clientActiveContracts ??
+      myClientContracts.filter(
+        (item) => item.status === 'pending' || item.status === 'confirmed' || item.status === 'in_progress',
+      ).length,
+    [myClientContracts, workspacePrivateOverview],
+  );
+  const clientCompletedContractsCount = React.useMemo(
+    () =>
+      workspacePrivateOverview?.clientContractsByStatus.completed ??
+      myClientContracts.filter((item) => item.status === 'completed').length,
+    [myClientContracts, workspacePrivateOverview],
+  );
+
+  const acceptanceRate = React.useMemo(() => {
+    if (workspacePrivateOverview) {
+      return clampPercent(workspacePrivateOverview.kpis.acceptanceRate);
+    }
+    const acceptedDecidedDenominator = acceptedCount + declinedCount;
+    return clampPercent(Math.round((acceptedCount / Math.max(acceptedDecidedDenominator, 1)) * 100));
+  }, [acceptedCount, declinedCount, workspacePrivateOverview]);
+  const avgResponseMinutes = React.useMemo(
+    () => workspacePrivateOverview?.kpis.avgResponseMinutes ?? calcAverageResponseMinutes(myOffers),
+    [myOffers, workspacePrivateOverview],
+  );
+
+  const providerProfileCompleteness = React.useMemo(
+    () =>
+      workspacePrivateOverview?.profiles.providerCompleteness ??
+      computeProfileCompleteness(myProviderProfile),
+    [myProviderProfile, workspacePrivateOverview],
+  );
+  const clientProfileCompleteness = React.useMemo(
+    () =>
+      workspacePrivateOverview?.profiles.clientCompleteness ??
+      computeClientCompleteness(authMe),
+    [authMe, workspacePrivateOverview],
+  );
+
+  const providerCompletedContracts = React.useMemo(
+    () => myProviderContracts.filter((item) => item.status === 'completed'),
+    [myProviderContracts],
+  );
+  const providerCompletedThisMonth = React.useMemo(
+    () =>
+      workspacePrivateOverview?.insights.providerCompletedThisMonth ??
+      countCompletedInMonth(providerCompletedContracts, 0),
+    [providerCompletedContracts, workspacePrivateOverview],
+  );
+  const providerCompletedLastMonth = React.useMemo(
+    () =>
+      workspacePrivateOverview?.insights.providerCompletedLastMonth ??
+      countCompletedInMonth(providerCompletedContracts, -1),
+    [providerCompletedContracts, workspacePrivateOverview],
+  );
+  const completedMoMDelta = React.useMemo<DeltaResult>(() => {
+    const privateDeltaKind = workspacePrivateOverview?.insights.providerCompletedDeltaKind;
+    const privateDeltaPercent = workspacePrivateOverview?.insights.providerCompletedDeltaPercent;
+    if (
+      privateDeltaKind === 'percent' &&
+      typeof privateDeltaPercent === 'number'
+    ) {
+      return {
+        kind: 'percent',
+        value: privateDeltaPercent,
+      };
+    }
+    if (privateDeltaKind === 'new') return { kind: 'new' };
+    if (privateDeltaKind === 'none') return { kind: 'none' };
+    return calcMoMDeltaPercent(providerCompletedThisMonth, providerCompletedLastMonth);
+  }, [providerCompletedLastMonth, providerCompletedThisMonth, workspacePrivateOverview]);
+  const completedMoMLabel = React.useMemo(
+    () => formatMoMDeltaLabel(completedMoMDelta, locale),
+    [completedMoMDelta, locale],
+  );
+  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${providerCompletedThisMonth} ${t(
+    I18N_KEYS.requestsPage.navInsightClosedSuffix,
+  )} ${completedMoMLabel}`;
 
   const personalNavItems = React.useMemo<PersonalNavItem[]>(
     () =>
@@ -182,7 +310,7 @@ export function useWorkspaceState({
               href: '/workspace?tab=my-requests',
               label: t(I18N_KEYS.requestsPage.navMyOrders),
               icon: <IconBriefcase />,
-              value: myRequests.length,
+              value: myRequestsTotal,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
               onClick: () => setWorkspaceTab('my-requests'),
               forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-requests',
@@ -298,10 +426,10 @@ export function useWorkspaceState({
       favoriteRequestCount,
       guestLoginHref,
       isPersonalized,
-      onGuestLockedAction,
-      myRequests.length,
+      myRequestsTotal,
       navRatingValue,
       navReviewsCount,
+      onGuestLockedAction,
       publicNavItems,
       sentCount,
       setWorkspaceTab,
@@ -309,157 +437,54 @@ export function useWorkspaceState({
     ],
   );
 
-  const providerCompletedContracts = React.useMemo(
-    () => myProviderContracts.filter((item) => item.status === 'completed'),
-    [myProviderContracts],
-  );
-  const providerActiveContracts = React.useMemo(
-    () =>
-      myProviderContracts.filter(
-        (item) => item.status === 'pending' || item.status === 'confirmed' || item.status === 'in_progress',
-      ),
-    [myProviderContracts],
-  );
-  const providerCompletedThisMonth = React.useMemo(
-    () => countCompletedInMonth(providerCompletedContracts, 0),
-    [providerCompletedContracts],
-  );
-  const providerCompletedLastMonth = React.useMemo(
-    () => countCompletedInMonth(providerCompletedContracts, -1),
-    [providerCompletedContracts],
-  );
-  const completedMoMDelta = React.useMemo(
-    () => calcMoMDeltaPercent(providerCompletedThisMonth, providerCompletedLastMonth),
-    [providerCompletedLastMonth, providerCompletedThisMonth],
-  );
-  const completedMoMLabel = React.useMemo(
-    () => formatMoMDeltaLabel(completedMoMDelta, locale),
-    [completedMoMDelta, locale],
-  );
-  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${providerCompletedThisMonth} ${t(
-    I18N_KEYS.requestsPage.navInsightClosedSuffix,
-  )} ${completedMoMLabel}`;
-
-  const clientCompletedContracts = React.useMemo(
-    () => myClientContracts.filter((item) => item.status === 'completed'),
-    [myClientContracts],
-  );
-  const clientActiveContracts = React.useMemo(
-    () =>
-      myClientContracts.filter(
-        (item) => item.status === 'pending' || item.status === 'confirmed' || item.status === 'in_progress',
-      ),
-    [myClientContracts],
-  );
-  const myOpenRequests = React.useMemo(
-    () =>
-      myRequests.filter(
-        (item) =>
-          item.status === 'draft' ||
-          item.status === 'published' ||
-          item.status === 'paused' ||
-          item.status === 'matched',
-      ),
-    [myRequests],
-  );
-
-  const acceptedDecidedDenominator = acceptedCount + declinedCount;
-  const acceptanceRate = Math.round((acceptedCount / Math.max(acceptedDecidedDenominator, 1)) * 100);
-
-  const avgResponseMinutes = React.useMemo(() => {
-    const samples = myOffers
-      .map((item) => {
-        const created = new Date(item.createdAt).getTime();
-        const updated = new Date(item.updatedAt).getTime();
-        if (!Number.isFinite(created) || !Number.isFinite(updated)) return null;
-        const diff = Math.round((updated - created) / (1000 * 60));
-        return diff > 0 ? diff : null;
-      })
-      .filter((value): value is number => value !== null);
-    if (samples.length === 0) return null;
-    return Math.round(samples.reduce((sum, value) => sum + value, 0) / samples.length);
-  }, [myOffers]);
-
-  const [nowTs, setNowTs] = React.useState(0);
-  React.useEffect(() => {
-    setNowTs(Date.now());
-  }, []);
-  const recentOffers7d = React.useMemo(
-    () => myOffers.filter((item) => nowTs - new Date(item.createdAt).getTime() <= 7 * 24 * 60 * 60 * 1000).length,
-    [myOffers, nowTs],
-  );
-
-  const providerProfileCompleteness = React.useMemo(
-    () => computeProfileCompleteness(myProviderProfile),
-    [myProviderProfile],
-  );
-  const clientProfileCompleteness = React.useMemo(
-    () => computeClientCompleteness(authMe),
-    [authMe],
-  );
-
   const providerChartPoints = React.useMemo(
-    () =>
-      buildLastSixMonthSeries(chartMonthLabel, (start, end) => ({
-        bars: providerCompletedContracts.filter((item) => {
-          if (!item.completedAt) return false;
-          const ts = new Date(item.completedAt).getTime();
-          return ts >= start && ts < end;
-        }).length,
-        line: providerCompletedContracts.reduce((sum, item) => {
-          if (!item.completedAt || typeof item.priceAmount !== 'number') return sum;
-          const ts = new Date(item.completedAt).getTime();
-          if (ts < start || ts >= end) return sum;
-          return sum + item.priceAmount;
-        }, 0),
-      })),
-    [chartMonthLabel, providerCompletedContracts],
+    () => mapMonthlySeries(workspacePrivateOverview?.providerMonthlySeries, chartMonthLabel),
+    [chartMonthLabel, workspacePrivateOverview],
   );
-
   const clientChartPoints = React.useMemo(
-    () =>
-      buildLastSixMonthSeries(chartMonthLabel, (start, end) => ({
-        bars: myRequests.filter((item) => {
-          const ts = new Date(item.createdAt).getTime();
-          return ts >= start && ts < end;
-        }).length,
-        line: clientCompletedContracts.filter((item) => {
-          if (!item.completedAt) return false;
-          const ts = new Date(item.completedAt).getTime();
-          return ts >= start && ts < end;
-        }).length,
-      })),
-    [chartMonthLabel, clientCompletedContracts, myRequests],
+    () => mapMonthlySeries(workspacePrivateOverview?.clientMonthlySeries, chartMonthLabel),
+    [chartMonthLabel, workspacePrivateOverview],
   );
 
   const providerHint = React.useMemo(
     () => getProviderHint(t, providerProfileCompleteness, recentOffers7d, acceptanceRate),
     [acceptanceRate, providerProfileCompleteness, recentOffers7d, t],
   );
-
   const clientHint = React.useMemo(
-    () => getClientHint(t, myRequests.length, myOpenRequests.length),
-    [myOpenRequests.length, myRequests.length, t],
+    () => getClientHint(t, myRequestsTotal, myOpenRequestsCount),
+    [myOpenRequestsCount, myRequestsTotal, t],
   );
 
   const providerActivityCount =
-    sentCount + acceptedCount + declinedCount + providerActiveContracts.length + providerCompletedContracts.length;
+    sentCount +
+    acceptedCount +
+    declinedCount +
+    providerActiveContractsCount +
+    completedJobsCount;
   const clientActivityCount =
-    myRequests.length + myOpenRequests.length + clientActiveContracts.length + clientCompletedContracts.length;
+    myRequestsTotal +
+    myOpenRequestsCount +
+    clientActiveContractsCount +
+    clientCompletedContractsCount;
   const hasAnyStatsActivity = providerActivityCount + clientActivityCount > 0;
 
   const providerPriorityScore = providerProfileCompleteness + providerActivityCount * 5;
   const clientPriorityScore = clientProfileCompleteness + clientActivityCount * 5;
 
+  const providerDelta = React.useMemo(() => {
+    if (completedMoMDelta.kind === 'percent') {
+      const delta = Math.round(completedMoMDelta.value);
+      return `${delta >= 0 ? '+' : ''}${delta}%`;
+    }
+    return undefined;
+  }, [completedMoMDelta]);
+
   const providerStatsPayload: StatsPayload = {
     kpis: [],
     showKpis: false,
-    hasData: true,
+    hasData: hasAnyStatsActivity,
     chartTitle: t(I18N_KEYS.requestsPage.statsProviderChartTitle),
-    chartDelta:
-      providerCompletedContracts.length > 0
-        ? `+${Math.round((providerCompletedContracts.length / Math.max(1, myProviderContracts.length)) * 100)}%`
-        : undefined,
+    chartDelta: providerDelta,
     chartPoints: providerChartPoints,
     secondary: {
       leftLabel: t(I18N_KEYS.requestsPage.statsLabelSent),
@@ -467,13 +492,14 @@ export function useWorkspaceState({
       centerLabel: t(I18N_KEYS.requestsPage.statsLabelAccepted),
       centerValue: formatNumber.format(acceptedCount),
       rightLabel: t(I18N_KEYS.requestsPage.statsLabelActive),
-      rightValue: formatNumber.format(providerActiveContracts.length),
+      rightValue: formatNumber.format(providerActiveContractsCount),
       progressLabel: t(I18N_KEYS.requestsPage.statsLabelAcceptanceRate),
       progressValue: acceptanceRate,
       responseLabel: t(I18N_KEYS.requestsPage.statsLabelResponseTime),
-      responseValue: avgResponseMinutes
-        ? `${avgResponseMinutes} ${t(I18N_KEYS.requestsPage.statsMinutesSuffix)}`
-        : '—',
+      responseValue:
+        typeof avgResponseMinutes === 'number'
+          ? `${avgResponseMinutes} ${t(I18N_KEYS.requestsPage.statsMinutesSuffix)}`
+          : '—',
     },
     hint: providerHint,
     emptyTitle: t(I18N_KEYS.requestsPage.statsProviderEmptyTitle),
@@ -486,37 +512,39 @@ export function useWorkspaceState({
       {
         key: 'requests-total',
         label: t(I18N_KEYS.requestsPage.statsKpiMyRequests),
-        value: formatNumber.format(myRequests.length),
+        value: formatNumber.format(myRequestsTotal),
       },
       {
         key: 'requests-open',
         label: t(I18N_KEYS.requestsPage.statsKpiOpen),
-        value: formatNumber.format(myOpenRequests.length),
+        value: formatNumber.format(myOpenRequestsCount),
       },
       {
         key: 'contracts-active',
         label: t(I18N_KEYS.requestsPage.statsKpiInProgress),
-        value: formatNumber.format(clientActiveContracts.length),
+        value: formatNumber.format(clientActiveContractsCount),
       },
       {
         key: 'contracts-completed',
         label: t(I18N_KEYS.requestsPage.statsKpiCompleted),
-        value: formatNumber.format(clientCompletedContracts.length),
+        value: formatNumber.format(clientCompletedContractsCount),
       },
     ],
     chartTitle: t(I18N_KEYS.requestsPage.statsClientChartTitle),
     chartPoints: clientChartPoints,
     secondary: {
       leftLabel: t(I18N_KEYS.requestsPage.statsLabelTotal),
-      leftValue: formatNumber.format(myRequests.length),
+      leftValue: formatNumber.format(myRequestsTotal),
       centerLabel: t(I18N_KEYS.requestsPage.statsLabelOpen),
-      centerValue: formatNumber.format(myOpenRequests.length),
+      centerValue: formatNumber.format(myOpenRequestsCount),
       rightLabel: t(I18N_KEYS.requestsPage.statsKpiInProgress),
-      rightValue: formatNumber.format(clientActiveContracts.length),
+      rightValue: formatNumber.format(clientActiveContractsCount),
       progressLabel: t(I18N_KEYS.requestsPage.statsLabelCompletionRate),
-      progressValue: Math.round((clientCompletedContracts.length / Math.max(1, myRequests.length)) * 100),
+      progressValue: clampPercent(
+        Math.round((clientCompletedContractsCount / Math.max(1, myRequestsTotal)) * 100),
+      ),
       responseLabel: t(I18N_KEYS.requestsPage.statsLabelCompletedJobs),
-      responseValue: formatNumber.format(clientCompletedContracts.length),
+      responseValue: formatNumber.format(clientCompletedContractsCount),
     },
     hint: clientHint,
     emptyTitle: t(I18N_KEYS.requestsPage.statsClientEmptyTitle),
@@ -561,4 +589,53 @@ export function useWorkspaceState({
     clientStatsPayload,
     statsOrder,
   };
+}
+
+function clampPercent(value: number) {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function countOpenRequests(items: RequestResponseDto[]) {
+  return items.filter(
+    (item) =>
+      item.status === 'draft' ||
+      item.status === 'published' ||
+      item.status === 'paused' ||
+      item.status === 'matched',
+  ).length;
+}
+
+function countRecentOffers7d(items: OfferDto[]) {
+  const nowTs = Date.now();
+  return items.filter((item) => nowTs - new Date(item.createdAt).getTime() <= 7 * 24 * 60 * 60 * 1000).length;
+}
+
+function calcAverageResponseMinutes(items: OfferDto[]) {
+  const samples = items
+    .map((item) => {
+      const created = new Date(item.createdAt).getTime();
+      const updated = new Date(item.updatedAt).getTime();
+      if (!Number.isFinite(created) || !Number.isFinite(updated)) return null;
+      const diff = Math.round((updated - created) / (1000 * 60));
+      return diff > 0 ? diff : null;
+    })
+    .filter((value): value is number => value !== null);
+
+  if (samples.length === 0) return null;
+  return Math.round(samples.reduce((sum, value) => sum + value, 0) / samples.length);
+}
+
+function mapMonthlySeries(
+  series: WorkspacePrivateOverviewDto['providerMonthlySeries'] | undefined,
+  chartMonthLabel: Intl.DateTimeFormat,
+) {
+  return (series ?? []).map((point) => {
+    const ts = new Date(point.monthStart);
+    return {
+      label: Number.isFinite(ts.getTime()) ? chartMonthLabel.format(ts) : point.monthStart.slice(0, 7),
+      bars: Math.max(0, point.bars),
+      line: Math.max(0, point.line),
+    };
+  });
 }

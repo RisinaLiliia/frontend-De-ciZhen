@@ -13,7 +13,8 @@ type RequestsResponse = {
 };
 
 type SummaryResponse = {
-  total: number;
+  totalPublishedRequests: number;
+  totalActiveProviders: number;
 };
 
 type Args = {
@@ -51,7 +52,7 @@ export function useWorkspacePublicRequestsState({
 }: Args) {
   const requests = React.useMemo(() => publicRequests?.items ?? [], [publicRequests]);
   const totalResults = publicRequests?.total ?? requests.length;
-  const platformRequestsTotal = allRequestsSummary?.total ?? 0;
+  const platformRequestsTotal = allRequestsSummary?.totalPublishedRequests ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalResults / limit));
 
   React.useEffect(() => {

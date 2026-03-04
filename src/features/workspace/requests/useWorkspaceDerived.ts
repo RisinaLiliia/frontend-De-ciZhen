@@ -72,7 +72,6 @@ export function useWorkspaceDerived({
   );
 
   const myOfferRequests = React.useMemo(() => {
-    const fallbackDate = new Date().toISOString();
     const items: RequestResponseDto[] = [];
     const seen = new Set<string>();
 
@@ -80,48 +79,7 @@ export function useWorkspaceDerived({
       if (!offer.requestId || seen.has(offer.requestId)) return;
       seen.add(offer.requestId);
       const request = myOfferRequestsById.get(offer.requestId);
-      if (request) {
-        items.push(request);
-        return;
-      }
-
-      const requestStatus = offer.requestStatus ?? 'published';
-      items.push({
-        id: offer.requestId,
-        serviceKey: offer.requestServiceKey || 'service',
-        cityId: offer.requestCityId || 'city',
-        cityName: offer.requestCityId || null,
-        categoryKey: null,
-        categoryName: null,
-        subcategoryName: offer.requestServiceKey || null,
-        propertyType: 'apartment',
-        area: 0,
-        price: typeof offer.amount === 'number' ? offer.amount : null,
-        preferredDate: offer.requestPreferredDate || offer.updatedAt || offer.createdAt || fallbackDate,
-        isRecurring: false,
-        title: offer.requestServiceKey || null,
-        description: offer.message || null,
-        photos: null,
-        imageUrl: null,
-        tags: null,
-        clientId: offer.clientUserId,
-        clientName: null,
-        clientAvatarUrl: null,
-        clientCity: null,
-        clientRatingAvg: null,
-        clientRatingCount: null,
-        clientIsOnline: null,
-        clientLastSeenAt: null,
-        status:
-          requestStatus === 'matched' ||
-          requestStatus === 'closed' ||
-          requestStatus === 'cancelled' ||
-          requestStatus === 'draft' ||
-          requestStatus === 'paused'
-            ? requestStatus
-            : 'published',
-        createdAt: offer.createdAt,
-      });
+      if (request) items.push(request);
     });
 
     return items;

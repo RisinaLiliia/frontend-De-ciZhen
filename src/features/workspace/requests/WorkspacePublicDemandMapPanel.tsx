@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import type { WorkspacePublicCityActivityDto } from '@/lib/api/dto/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -10,8 +10,7 @@ import type { Locale } from '@/lib/i18n/t';
 type WorkspacePublicDemandMapPanelProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
-  requests: RequestResponseDto[];
-  platformRequestsTotal: number;
+  cityActivity: WorkspacePublicCityActivityDto | null | undefined;
 };
 
 type DemandCityPoint = {
@@ -94,28 +93,23 @@ function resolveCityId(rawCityName: string) {
 export function WorkspacePublicDemandMapPanel({
   t,
   locale,
-  requests,
-  platformRequestsTotal,
+  cityActivity,
 }: WorkspacePublicDemandMapPanelProps) {
   const formatNumber = React.useMemo(
     () => new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US'),
     [locale],
   );
 
-  const cityActivity = React.useMemo<DemandCityActivity[]>(() => {
+  const visibleCityActivity = React.useMemo<DemandCityActivity[]>(() => {
     const cityCount = new Map<string, number>();
     const cityName = new Map<string, string>();
 
-    requests.forEach((request) => {
-      const rawCity = request.cityName?.trim();
-      if (!rawCity) return;
-
-      const cityId = resolveCityId(rawCity);
+    (cityActivity?.items ?? []).forEach((entry) => {
+      const cityId = resolveCityId(entry.citySlug || entry.cityName || '');
       if (!cityId) return;
-
-      cityCount.set(cityId, (cityCount.get(cityId) ?? 0) + 1);
+      cityCount.set(cityId, (cityCount.get(cityId) ?? 0) + Math.max(0, entry.requestCount));
       if (!cityName.has(cityId)) {
-        cityName.set(cityId, rawCity);
+        cityName.set(cityId, entry.cityName || entry.citySlug || '');
       }
     });
 
@@ -128,12 +122,14 @@ export function WorkspacePublicDemandMapPanel({
     }))
       .filter((city) => city.count > 0)
       .sort((a, b) => b.count - a.count);
-  }, [requests]);
+  }, [cityActivity]);
 
-  const maxCount = cityActivity[0]?.count ?? 1;
-  const activeCitiesCount = cityActivity.length;
-  const visibleRequestsCount = cityActivity.reduce((sum, city) => sum + city.count, 0);
-  const topCities = cityActivity.slice(0, 5);
+  const maxCount = visibleCityActivity[0]?.count ?? 1;
+  const activeCitiesCount = cityActivity?.totalActiveCities ?? visibleCityActivity.length;
+  const visibleRequestsCount =
+    cityActivity?.totalActiveRequests ??
+    visibleCityActivity.reduce((sum, city) => sum + city.count, 0);
+  const topCities = visibleCityActivity.slice(0, 5);
 
   return (
     <section className="panel workspace-public-demand-map">
@@ -154,7 +150,7 @@ export function WorkspacePublicDemandMapPanel({
             d="M122 18L160 28L182 46L206 58L224 92L236 126L230 150L248 178L238 208L248 242L234 276L240 306L216 334L196 360L172 370L146 354L126 330L104 324L82 300L70 270L54 248L46 220L56 196L50 170L60 146L56 124L68 98L86 86L94 62L112 46L118 30Z"
           />
 
-          {cityActivity.map((city, index) => {
+          {visibleCityActivity.map((city, index) => {
             const intensity = city.count / maxCount;
             const radius = 4.2 + intensity * 4;
 
@@ -182,7 +178,7 @@ export function WorkspacePublicDemandMapPanel({
           <strong>{formatNumber.format(activeCitiesCount)}</strong> {t(I18N_KEYS.homePublic.demandMapActiveCities)}
         </span>
         <span>
-          <strong>{formatNumber.format(platformRequestsTotal || visibleRequestsCount)}</strong>{' '}
+          <strong>{formatNumber.format(visibleRequestsCount)}</strong>{' '}
           {t(I18N_KEYS.homePublic.demandMapActiveRequests)}
         </span>
       </div>

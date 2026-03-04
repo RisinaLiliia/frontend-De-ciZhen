@@ -7,7 +7,7 @@ import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import { listPublicRequests } from '@/lib/api/requests';
+import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { trackUXEvent } from '@/lib/analytics';
 import { useDevRenderMetric } from '@/lib/perf/useDevRenderMetric';
 import {
@@ -100,20 +100,32 @@ function WorkspacePublicBranch({
     isLoading: isSummaryLoading,
     isError: isSummaryError,
   } = useQuery({
-    queryKey: workspaceQK.requestsPublicCityActivity(locale, PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
+    queryKey: workspaceQK.workspacePublicOverview({
+      cityId: undefined,
+      categoryKey: undefined,
+      subcategoryKey: undefined,
+      sort: 'date_desc',
+      page: 1,
+      limit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+      activityRange: '30d',
+      cityActivityLimit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+      locale,
+    }),
     queryFn: () =>
-      listPublicRequests({
-        locale,
+      getWorkspacePublicOverview({
         sort: 'date_desc',
         page: 1,
         limit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+        activityRange: '30d',
+        cityActivityLimit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
       }),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
 
-  const platformRequestsTotal = platformSnapshot?.total ?? 0;
-  const recentRequests = platformSnapshot?.items ?? [];
+  const platformRequestsTotal = platformSnapshot?.summary.totalPublishedRequests ?? 0;
+  const platformProvidersTotal = platformSnapshot?.summary.totalActiveProviders ?? 0;
+  const cityActivity = platformSnapshot?.cityActivity;
   const { localeTag, formatNumber, chartMonthLabel } = useWorkspaceFormatters(locale);
   const explore = useExploreSidebar(t);
 
@@ -153,6 +165,7 @@ function WorkspacePublicBranch({
     myProviderProfile: null,
     providers: [],
     publicRequestsCount: platformRequestsTotal,
+    publicProvidersCount: platformProvidersTotal,
     favoriteRequestCount: 0,
     setWorkspaceTab,
     markPublicRequestsSeen,
@@ -171,8 +184,7 @@ function WorkspacePublicBranch({
         personalNavItems={personalNavItems}
         insightText={isPersonalized ? insightText : ''}
         activityProgress={activityProgress}
-        recentRequests={recentRequests}
-        platformRequestsTotal={platformRequestsTotal}
+        cityActivity={cityActivity}
         quickActionHref="/request/create"
       />
     ),
@@ -182,8 +194,7 @@ function WorkspacePublicBranch({
       locale,
       navTitle,
       personalNavItems,
-      platformRequestsTotal,
-      recentRequests,
+      cityActivity,
       t,
     ],
   );
@@ -284,6 +295,7 @@ function WorkspacePrivateBranch({
     isClientContractsLoading,
     myProviderProfile,
     providers,
+    workspacePrivateOverview,
     isProvidersLoading,
     isProvidersError,
   } = useWorkspaceData({
@@ -455,7 +467,9 @@ function WorkspacePrivateBranch({
     myProviderProfile,
     providers,
     publicRequestsCount: platformRequestsTotal,
+    publicProvidersCount: allRequestsSummary?.totalActiveProviders ?? providers.length,
     favoriteRequestCount: favoriteRequestIds.size,
+    workspacePrivateOverview,
     setWorkspaceTab,
     markPublicRequestsSeen,
     guestLoginHref,

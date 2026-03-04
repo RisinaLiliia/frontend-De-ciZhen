@@ -3,21 +3,26 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-import { getPublicRequestById, listMyRequests, listPublicRequests } from '@/lib/api/requests';
+import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import { listMyRequests } from '@/lib/api/requests';
 import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
 import { listMyContracts } from '@/lib/api/contracts';
 import { listMyProviderOffers } from '@/lib/api/offers';
 import { listFavorites } from '@/lib/api/favorites';
 import { listMyReviews } from '@/lib/api/reviews';
+import {
+  getWorkspacePrivateOverview,
+  getWorkspacePublicOverview,
+  getWorkspacePublicRequestsBatch,
+} from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import type { ReviewsView, WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import { providerQK } from '@/features/provider/queries';
-
-type PublicRequestsFilter = NonNullable<Parameters<typeof listPublicRequests>[0]>;
+import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
 
 type Params = {
-  filter: PublicRequestsFilter;
+  filter: WorkspacePublicOverviewQuery;
   locale: string;
   isAuthed: boolean;
   isWorkspaceAuthed: boolean;
@@ -40,30 +45,46 @@ export function useWorkspaceData(params: Params) {
   } = params;
   const shouldLoadPublicRequests = isWorkspacePublicSection || !isWorkspaceAuthed;
 
-  const { data: publicRequests, isLoading, isError } = useQuery({
-    queryKey: workspaceQK.requestsPublic({
+  const { data: publicOverview, isLoading, isError } = useQuery({
+    queryKey: workspaceQK.workspacePublicOverview({
       cityId: filter.cityId,
       categoryKey: filter.categoryKey,
       subcategoryKey: filter.subcategoryKey,
       sort: filter.sort,
       page: filter.page,
       limit: filter.limit,
+      activityRange: undefined,
+      cityActivityLimit: undefined,
       locale,
     }),
     enabled: shouldLoadPublicRequests,
-    queryFn: () => listPublicRequests({ ...filter, locale }),
-  });
-
-  const { data: allRequestsSummary } = useQuery({
-    queryKey: workspaceQK.requestsPublicSummaryTotal(locale),
-    enabled: isWorkspacePublicSection || isWorkspaceAuthed,
     queryFn: () =>
-      listPublicRequests({
-        locale,
-        sort: 'date_desc',
-        page: 1,
-        limit: 1,
+      getWorkspacePublicOverview({
+        cityId: filter.cityId,
+        categoryKey: filter.categoryKey,
+        subcategoryKey: filter.subcategoryKey,
+        sort: filter.sort,
+        page: filter.page,
+        limit: filter.limit,
       }),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const publicRequests = publicOverview?.requests;
+
+  const { data: publicSummaryOverview } = useQuery({
+    queryKey: workspaceQK.workspacePublicSummary(locale),
+    enabled: isWorkspacePublicSection || isWorkspaceAuthed,
+    queryFn: () => getWorkspacePublicOverview({ page: 1, limit: 1, cityActivityLimit: 1 }),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const allRequestsSummary = publicSummaryOverview?.summary;
+
+  const { data: workspacePrivateOverview } = useQuery({
+    queryKey: workspaceQK.workspacePrivateOverview(),
+    enabled: isWorkspaceAuthed && shouldLoadPrivateData,
+    queryFn: () => withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403]),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
@@ -81,25 +102,12 @@ export function useWorkspaceData(params: Params) {
   const shouldLoadOfferRequests = isWorkspaceAuthed && activeWorkspaceTab === 'my-offers';
   const shouldLoadReviews = isWorkspaceAuthed && activeWorkspaceTab === 'reviews';
 
-  const { data: myOfferRequestsById = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>() } = useQuery({
+  const { data: myOfferRequestsById = new Map<string, RequestResponseDto>() } = useQuery({
     queryKey: workspaceQK.requestsByMyOfferIds(locale, myOfferRequestIds),
     enabled: shouldLoadOfferRequests && myOfferRequestIds.length > 0,
     queryFn: async () => {
-      const pairs = await Promise.all(
-        myOfferRequestIds.map(async (id) => {
-          try {
-            const request = await getPublicRequestById(id, { locale });
-            return [id, request] as const;
-          } catch {
-            return [id, null] as const;
-          }
-        }),
-      );
-      const map = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>();
-      pairs.forEach(([id, request]) => {
-        if (request) map.set(id, request);
-      });
-      return map;
+      const batch = await getWorkspacePublicRequestsBatch(myOfferRequestIds);
+      return new Map<string, RequestResponseDto>(batch.items.map((request) => [request.id, request]));
     },
   });
 
@@ -163,6 +171,7 @@ export function useWorkspaceData(params: Params) {
     isLoading,
     isError,
     allRequestsSummary,
+    workspacePrivateOverview,
     myOffers,
     isMyOffersLoading,
     myOfferRequestsById,

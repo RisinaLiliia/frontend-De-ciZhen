@@ -5,7 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
-import { getPublicRequestById } from '@/lib/api/requests';
+import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import { getWorkspacePublicRequestsBatch } from '@/lib/api/workspace';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type Params = {
@@ -20,31 +21,18 @@ export function useWorkspaceContractRequestsData({ filteredContracts, isWorkspac
     [filteredContracts],
   );
 
-  const { data: contractRequestsById = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>() } = useQuery({
+  const { data: contractRequestsById = new Map<string, RequestResponseDto>() } = useQuery({
     queryKey: workspaceQK.requestsByContractIds(locale, contractRequestIds),
     enabled: isWorkspaceAuthed && contractRequestIds.length > 0,
     queryFn: async () => {
-      const pairs = await Promise.all(
-        contractRequestIds.map(async (id) => {
-          try {
-            const request = await getPublicRequestById(id, { locale });
-            return [id, request] as const;
-          } catch {
-            return [id, null] as const;
-          }
-        }),
-      );
-      const map = new Map<string, Awaited<ReturnType<typeof getPublicRequestById>>>();
-      pairs.forEach(([id, request]) => {
-        if (request) map.set(id, request);
-      });
-      return map;
+      const batch = await getWorkspacePublicRequestsBatch(contractRequestIds);
+      return new Map<string, RequestResponseDto>(batch.items.map((request) => [request.id, request]));
     },
   });
 
   const contractRequests = React.useMemo(() => {
     const fallbackDate = new Date().toISOString();
-    const items: Awaited<ReturnType<typeof getPublicRequestById>>[] = [];
+    const items: RequestResponseDto[] = [];
     const seen = new Set<string>();
 
     filteredContracts.forEach((item) => {
