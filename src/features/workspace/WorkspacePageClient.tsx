@@ -44,7 +44,7 @@ import type { Locale } from '@/lib/i18n/t';
 const WORKSPACE_PATH = '/workspace';
 const PUBLIC_CITY_ACTIVITY_FETCH_LIMIT = 20;
 const EMPTY_PROVIDER_IDS = new Set<string>();
-const NOOP_PROVIDER_TOGGLE = (_providerId: string) => {};
+const NOOP_PROVIDER_TOGGLE = () => {};
 
 const EMPTY_EXPLORE: React.ComponentProps<typeof WorkspacePageLayout>['explore'] = {
   setExploreListDensity: () => {},
@@ -191,6 +191,7 @@ function WorkspacePublicBranch({
     [
       activityProgress,
       insightText,
+      isPersonalized,
       locale,
       navTitle,
       personalNavItems,

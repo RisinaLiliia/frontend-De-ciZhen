@@ -28,7 +28,7 @@ export function WorkspacePublicStatsPanel({
     retry: 1,
   });
 
-  const points = data?.data ?? [];
+  const points = React.useMemo(() => data?.data ?? [], [data]);
   const formatNumber = React.useMemo(
     () => new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US'),
     [locale],

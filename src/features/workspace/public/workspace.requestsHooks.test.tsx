@@ -29,7 +29,7 @@ function PublicRequestsStateProbe() {
   const setPage = React.useMemo(() => vi.fn(), []);
   const result = useWorkspacePublicRequestsState({
     publicRequests: { items: [], total: 12 },
-    allRequestsSummary: { total: 24 },
+    allRequestsSummary: { totalPublishedRequests: 24, totalActiveProviders: 8 },
     limit: 10,
     page: 1,
     setPage,
