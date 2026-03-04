@@ -5,6 +5,7 @@ const workspaceUrl = `${baseUrl}/workspace?section=requests`;
 const providerUrl = `${baseUrl}/providers/69a433d8b31d3257ae5df91d`;
 
 const events = [];
+const perfLogs = [];
 
 function normalize(url) {
   try {
@@ -21,6 +22,13 @@ function normalize(url) {
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage();
+
+page.on('console', (msg) => {
+  const text = msg.text();
+  if (text.includes('[perf:')) {
+    perfLogs.push(text);
+  }
+});
 
 page.on('requestfinished', async (request) => {
   const response = await request.response();
@@ -113,6 +121,7 @@ const summary = {
   apiUniqueRequestKeys: apiRows.length,
   apiRequests: apiRows,
   nonStaticDuplicates: duplicateRows,
+  reactPerfLogs: perfLogs,
   topRequests: rows.slice(0, 30),
 };
 
