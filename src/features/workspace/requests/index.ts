@@ -11,7 +11,8 @@ export { WorkspacePublicStatsPanel } from './WorkspacePublicStatsPanel';
 export { useWorkspaceContractRequestsData } from './useWorkspaceContractRequestsData';
 export { useWorkspaceData } from './useWorkspaceData';
 export { useWorkspaceDerived } from './useWorkspaceDerived';
-export { useWorkspaceState } from './useWorkspaceState';
+export { useWorkspacePublicState } from './useWorkspacePublicState';
+export { useWorkspacePrivateState } from './useWorkspacePrivateState';
 export { useWorkspacePrivateViewModel, useWorkspacePublicViewModel } from './useWorkspaceViewModel';
 
 export {

@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { listMyRequests } from '@/lib/api/requests';
-import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
+import { listPublicProviders } from '@/lib/api/providers';
 import { listMyContracts } from '@/lib/api/contracts';
 import { listMyProviderOffers } from '@/lib/api/offers';
 import { listFavorites } from '@/lib/api/favorites';
@@ -18,7 +18,6 @@ import {
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import type { ReviewsView, WorkspaceTab } from '@/features/workspace/requests/workspace.types';
-import { providerQK } from '@/features/provider/queries';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
 
 type Params = {
@@ -44,6 +43,14 @@ export function useWorkspaceData(params: Params) {
     activeReviewsView,
   } = params;
   const shouldLoadPublicRequests = isWorkspacePublicSection || !isWorkspaceAuthed;
+  const shouldLoadMyRequests =
+    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-requests';
+  const shouldLoadMyOffers =
+    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-offers';
+  const shouldLoadMyContracts =
+    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'completed-jobs';
+  const shouldLoadFavoriteRequests =
+    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'favorites';
 
   const { data: publicOverview, isLoading, isError } = useQuery({
     queryKey: workspaceQK.workspacePublicOverview({
@@ -91,7 +98,7 @@ export function useWorkspaceData(params: Params) {
 
   const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery({
     queryKey: workspaceQK.offersMy(),
-    enabled: isAuthed && shouldLoadPrivateData,
+    enabled: shouldLoadMyOffers,
     queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
   });
 
@@ -113,7 +120,7 @@ export function useWorkspaceData(params: Params) {
 
   const { data: favoriteRequests = [], isLoading: isFavoriteRequestsLoading } = useQuery({
     queryKey: workspaceQK.favoriteRequests(),
-    enabled: isAuthed && shouldLoadPrivateData,
+    enabled: shouldLoadFavoriteRequests,
     queryFn: () => withStatusFallback(() => listFavorites('request'), []),
   });
 
@@ -131,26 +138,20 @@ export function useWorkspaceData(params: Params) {
 
   const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery({
     queryKey: workspaceQK.requestsMy(),
-    enabled: isWorkspaceAuthed && shouldLoadPrivateData,
+    enabled: shouldLoadMyRequests,
     queryFn: () => withStatusFallback(() => listMyRequests(), []),
   });
 
   const { data: myProviderContracts = [], isLoading: isProviderContractsLoading } = useQuery({
     queryKey: workspaceQK.contractsMyProvider(),
-    enabled: isWorkspaceAuthed && shouldLoadPrivateData,
+    enabled: shouldLoadMyContracts,
     queryFn: () => withStatusFallback(() => listMyContracts({ role: 'provider' }), []),
   });
 
   const { data: myClientContracts = [], isLoading: isClientContractsLoading } = useQuery({
     queryKey: workspaceQK.contractsMyClient(),
-    enabled: isWorkspaceAuthed && shouldLoadPrivateData,
+    enabled: shouldLoadMyContracts,
     queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), []),
-  });
-
-  const { data: myProviderProfile } = useQuery({
-    queryKey: providerQK.myProfile(),
-    enabled: isAuthed && shouldLoadPrivateData,
-    queryFn: () => withStatusFallback(() => getMyProviderProfile(), null),
   });
 
   const {
@@ -187,7 +188,6 @@ export function useWorkspaceData(params: Params) {
     isProviderContractsLoading,
     myClientContracts,
     isClientContractsLoading,
-    myProviderProfile,
     providers,
     isProvidersLoading,
     isProvidersError,

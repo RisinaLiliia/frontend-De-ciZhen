@@ -12,8 +12,9 @@ import { trackUXEvent } from '@/lib/analytics';
 import { useDevRenderMetric } from '@/lib/perf/useDevRenderMetric';
 import {
   useWorkspaceData,
+  useWorkspacePrivateState,
   useWorkspacePrivateViewModel,
-  useWorkspaceState,
+  useWorkspacePublicState,
 } from '@/features/workspace/requests';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import {
@@ -126,7 +127,7 @@ function WorkspacePublicBranch({
   const platformRequestsTotal = platformSnapshot?.summary.totalPublishedRequests ?? 0;
   const platformProvidersTotal = platformSnapshot?.summary.totalActiveProviders ?? 0;
   const cityActivity = platformSnapshot?.cityActivity;
-  const { localeTag, formatNumber, chartMonthLabel } = useWorkspaceFormatters(locale);
+  const { localeTag, formatNumber } = useWorkspaceFormatters(locale);
   const explore = useExploreSidebar(t);
 
   const { setWorkspaceTab } = useWorkspaceNavigation({
@@ -145,34 +146,20 @@ function WorkspacePublicBranch({
       !isSummaryError,
   });
 
-  const {
-    navTitle,
-    activityProgress,
-    personalNavItems,
-    insightText,
-  } = useWorkspaceState({
+  const { navTitle, activityProgress, personalNavItems, insightText } = useWorkspacePublicState({
     t,
-    locale,
     isPersonalized,
     activeWorkspaceTab,
     activePublicSection,
     userName: auth.user?.name,
-    authMe: auth.me,
-    myOffers: [],
-    myRequests: [],
-    myProviderContracts: [],
-    myClientContracts: [],
-    myProviderProfile: null,
-    providers: [],
     publicRequestsCount: platformRequestsTotal,
     publicProvidersCount: platformProvidersTotal,
-    favoriteRequestCount: 0,
+    publicStatsCount: platformRequestsTotal,
     setWorkspaceTab,
     markPublicRequestsSeen,
     guestLoginHref,
     onGuestLockedAction,
     formatNumber,
-    chartMonthLabel,
   });
 
   const workspaceIntroNode = React.useMemo(
@@ -294,7 +281,6 @@ function WorkspacePrivateBranch({
     isProviderContractsLoading,
     myClientContracts,
     isClientContractsLoading,
-    myProviderProfile,
     providers,
     workspacePrivateOverview,
     isProvidersLoading,
@@ -453,23 +439,18 @@ function WorkspacePrivateBranch({
     providerStatsPayload,
     clientStatsPayload,
     statsOrder,
-  } = useWorkspaceState({
+  } = useWorkspacePrivateState({
     t,
     locale,
     isPersonalized,
     activeWorkspaceTab,
     activePublicSection,
     userName: auth.user?.name,
-    authMe: auth.me,
     myOffers,
-    myRequests,
-    myProviderContracts,
-    myClientContracts,
-    myProviderProfile,
     providers,
     publicRequestsCount: platformRequestsTotal,
     publicProvidersCount: allRequestsSummary?.totalActiveProviders ?? providers.length,
-    favoriteRequestCount: favoriteRequestIds.size,
+    publicStatsCount: platformRequestsTotal,
     workspacePrivateOverview,
     setWorkspaceTab,
     markPublicRequestsSeen,
