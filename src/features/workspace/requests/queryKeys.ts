@@ -10,7 +10,6 @@ export const workspaceQK = {
     limit: number | undefined;
     activityRange: string | undefined;
     cityActivityLimit: number | undefined;
-    locale: string;
   }) => [
     'workspace-public-overview',
     args.cityId,
@@ -21,9 +20,8 @@ export const workspaceQK = {
     args.limit,
     args.activityRange,
     args.cityActivityLimit,
-    args.locale,
   ] as const,
-  workspacePublicSummary: (locale: string) => ['workspace-public-summary', locale] as const,
+  workspacePublicSummary: () => ['workspace-public-summary'] as const,
   workspacePrivateOverview: () => ['workspace-private-overview'] as const,
   requestsPublic: (args: {
     cityId: string | undefined;

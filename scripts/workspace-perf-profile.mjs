@@ -120,6 +120,15 @@ const summary = {
   apiRequestTotalCount: apiRows.reduce((sum, row) => sum + row.count, 0),
   apiUniqueRequestKeys: apiRows.length,
   apiRequests: apiRows,
+  apiTimeline: events
+    .filter((event) => event.key.startsWith('/api/'))
+    .map((event) => ({
+      method: event.method,
+      key: event.key,
+      status: event.status,
+      duration: event.duration,
+      type: event.type,
+    })),
   nonStaticDuplicates: duplicateRows,
   reactPerfLogs: perfLogs,
   topRequests: rows.slice(0, 30),

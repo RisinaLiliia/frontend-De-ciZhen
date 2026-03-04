@@ -110,7 +110,6 @@ function WorkspacePublicBranch({
       limit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
       activityRange: '30d',
       cityActivityLimit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
-      locale,
     }),
     queryFn: () =>
       getWorkspacePublicOverview({

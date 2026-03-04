@@ -62,7 +62,6 @@ export function useWorkspaceData(params: Params) {
       limit: filter.limit,
       activityRange: undefined,
       cityActivityLimit: undefined,
-      locale,
     }),
     enabled: shouldLoadPublicRequests,
     queryFn: () =>
@@ -80,7 +79,7 @@ export function useWorkspaceData(params: Params) {
   const publicRequests = publicOverview?.requests;
 
   const { data: publicSummaryOverview } = useQuery({
-    queryKey: workspaceQK.workspacePublicSummary(locale),
+    queryKey: workspaceQK.workspacePublicSummary(),
     enabled: isWorkspacePublicSection || isWorkspaceAuthed,
     queryFn: () => getWorkspacePublicOverview({ page: 1, limit: 1, cityActivityLimit: 1 }),
     staleTime: 60_000,
