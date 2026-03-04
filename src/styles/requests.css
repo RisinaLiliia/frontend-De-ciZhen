@@ -2724,14 +2724,16 @@
     font-weight: 600;
   }
 
-  .request-provider-calendar__calendar {
-    width: 100%;
+  .request-provider-calendar__availability {
+    gap: var(--space-2);
   }
 
-  .request-provider-calendar__day-selected {
-    background: color-mix(in oklab, var(--c-success) 78%, var(--c-panel) 22%) !important;
-    color: var(--c-success-contrast) !important;
-    border-color: color-mix(in oklab, var(--c-success) 70%, var(--c-border) 30%) !important;
+  .request-provider-calendar__availability .request-detail__availability-date {
+    font-size: 12px;
+  }
+
+  .request-provider-calendar__availability .request-detail__availability-status {
+    margin-bottom: 2px;
   }
 
   .request-provider-calendar__selected {

@@ -27,6 +27,10 @@ type ProviderAvailabilityMetaProps = {
   tone: 'success' | 'warning';
   calendarLocale?: 'de' | 'en';
   calendar?: ProviderAvailabilityCalendarConfig;
+  onSelectIsoDay?: (isoDay: string) => void;
+  showStateBadge?: boolean;
+  showDatePrefix?: boolean;
+  autoSelectFirstAvailable?: boolean;
   className?: string;
 };
 
@@ -38,6 +42,10 @@ export function ProviderAvailabilityMeta({
   tone,
   calendarLocale = 'de',
   calendar,
+  onSelectIsoDay,
+  showStateBadge = true,
+  showDatePrefix = true,
+  autoSelectFirstAvailable = true,
   className,
 }: ProviderAvailabilityMetaProps) {
   const [open, setOpen] = React.useState(false);
@@ -55,19 +63,23 @@ export function ProviderAvailabilityMeta({
     }
     const nextSelectedIso = availableSet.has(dateIso)
       ? dateIso
-      : calendar.availableIsoDays[0];
+      : autoSelectFirstAvailable
+        ? calendar.availableIsoDays[0]
+        : undefined;
     if (!nextSelectedIso) {
       setSelectedDay(undefined);
       return;
     }
     setSelectedDay(fromIsoDay(nextSelectedIso));
-  }, [availableSet, calendar, dateIso]);
+  }, [autoSelectFirstAvailable, availableSet, calendar, dateIso]);
 
   const triggerNode = (
     <span className={`request-detail__availability-date ${calendar ? 'request-detail__availability-date--interactive' : ''}`.trim()}>
       <IconCalendar />
-      <span className="request-detail__availability-date-prefix">{datePrefix}:</span>
-      <time dateTime={dateIso}>{dateLabel}</time>
+      {showDatePrefix ? (
+        <span className="request-detail__availability-date-prefix">{datePrefix}:</span>
+      ) : null}
+      {dateIso ? <time dateTime={dateIso}>{dateLabel}</time> : <span>{dateLabel}</span>}
     </span>
   );
 
@@ -91,6 +103,7 @@ export function ProviderAvailabilityMeta({
               const iso = toIsoDayLocal(day);
               if (!availableSet.has(iso)) return;
               setSelectedDay(fromIsoDay(iso));
+              onSelectIsoDay?.(iso);
             }}
             disabled={(day) => {
               const iso = toIsoDayLocal(day);
@@ -137,10 +150,12 @@ export function ProviderAvailabilityMeta({
 
   return (
     <div className={`request-detail__availability-meta ${className ?? ''}`.trim()}>
-      <span className={`status-badge request-detail__availability-status ${tone === 'warning' ? 'status-badge--warning' : 'status-badge--success'}`.trim()}>
-        <span className="request-detail__availability-dot" aria-hidden="true" />
-        {stateLabel}
-      </span>
+      {showStateBadge ? (
+        <span className={`status-badge request-detail__availability-status ${tone === 'warning' ? 'status-badge--warning' : 'status-badge--success'}`.trim()}>
+          <span className="request-detail__availability-dot" aria-hidden="true" />
+          {stateLabel}
+        </span>
+      ) : null}
       {calendarNode}
     </div>
   );

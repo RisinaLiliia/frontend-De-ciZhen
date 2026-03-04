@@ -7,10 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
-import { DayPicker } from 'react-day-picker';
-import { de, enUS } from 'date-fns/locale';
 import { toast } from 'sonner';
-import 'react-day-picker/dist/style.css';
 
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
@@ -20,8 +17,9 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
-import { IconCalendar, IconChevronDown, IconPin } from '@/components/ui/icons/icons';
+import { IconChevronDown, IconPin } from '@/components/ui/icons/icons';
 import { IconBriefcase, IconCoins } from '@/components/ui/Icons';
+import { ProviderAvailabilityMeta } from '@/components/providers/ProviderAvailabilityMeta';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -104,7 +102,6 @@ function CreateRequestContent() {
   const authStatus = useAuthStatus();
   const { locale } = useI18n();
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
-  const dayPickerLocale = locale === 'de' ? de : enUS;
   const longDateFormatter = React.useMemo(
     () => createLongDateFormatter(localeTag),
     [localeTag],
@@ -145,6 +142,13 @@ function CreateRequestContent() {
     from.setHours(0, 0, 0, 0);
     const to = new Date(from);
     to.setDate(to.getDate() + 14);
+    return { from: toIsoDayLocal(from), to: toIsoDayLocal(to) };
+  }, []);
+  const requestCalendarRange = React.useMemo(() => {
+    const from = new Date();
+    from.setHours(0, 0, 0, 0);
+    const to = new Date(from);
+    to.setDate(to.getDate() + 180);
     return { from: toIsoDayLocal(from), to: toIsoDayLocal(to) };
   }, []);
   const providerSlotsTimezone = React.useMemo(() => {
@@ -230,6 +234,15 @@ function CreateRequestContent() {
     parsed.setHours(0, 0, 0, 0);
     return parsed;
   }, [preferredDateValue]);
+  const selectedDayIso = React.useMemo(
+    () =>
+      selectedDay
+        ? toIsoDayLocal(selectedDay)
+        : isDirectProviderFlow
+          ? providerSlotsRange.from
+          : '',
+    [isDirectProviderFlow, providerSlotsRange.from, selectedDay],
+  );
 
   const [photoItems, setPhotoItems] = React.useState<
     Array<{ file: File; previewUrl: string }>
@@ -316,16 +329,7 @@ function CreateRequestContent() {
     const key = `${categoryKey} ${serviceKey}`.toLowerCase();
     return key.includes('clean');
   }, [categoryKey, serviceKey]);
-  const todayIso = React.useMemo(() => toIsoDayLocal(new Date()), []);
-  const isDaySelectable = React.useCallback(
-    (day: Date) => {
-      const iso = toIsoDayLocal(day);
-      if (iso < todayIso) return false;
-      if (!isDirectProviderFlow) return true;
-      return availableDaySet.has(iso);
-    },
-    [availableDaySet, isDirectProviderFlow, todayIso],
-  );
+
   const directFlowText = React.useMemo(
     () => ({
       calendarTitle: t(I18N_KEYS.request.directCalendarTitle),
@@ -343,6 +347,84 @@ function CreateRequestContent() {
     () => (selectedDay ? longDateFormatter.format(selectedDay) : directFlowText.selectedDateEmpty),
     [directFlowText.selectedDateEmpty, longDateFormatter, selectedDay],
   );
+  const availabilityCalendarCopy = React.useMemo(
+    () =>
+      locale === 'de'
+        ? {
+            free: 'Frei',
+            busy: 'Belegt',
+            out: 'Außerhalb Zeitraum',
+          }
+        : {
+            free: 'Free',
+            busy: 'Busy',
+            out: 'Outside range',
+          },
+    [locale],
+  );
+  const requestCalendarDays = React.useMemo(() => {
+    const days: string[] = [];
+    const cursor =
+      parseDateSafe(toPreferredDateValue(requestCalendarRange.from)) ?? new Date(requestCalendarRange.from);
+    const end =
+      parseDateSafe(toPreferredDateValue(requestCalendarRange.to)) ?? new Date(requestCalendarRange.to);
+    cursor.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+    while (cursor <= end) {
+      days.push(toIsoDayLocal(cursor));
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    return days;
+  }, [requestCalendarRange.from, requestCalendarRange.to]);
+  const requestCalendarConfig = React.useMemo(
+    () => ({
+      availableIsoDays: requestCalendarDays,
+      rangeStartIso: requestCalendarRange.from,
+      rangeEndIso: requestCalendarRange.to,
+      title: t(I18N_KEYS.request.preferredDate),
+      legendFree: availabilityCalendarCopy.free,
+      legendBusy: availabilityCalendarCopy.busy,
+      legendOut: availabilityCalendarCopy.out,
+    }),
+    [
+      availabilityCalendarCopy.busy,
+      availabilityCalendarCopy.free,
+      availabilityCalendarCopy.out,
+      requestCalendarDays,
+      requestCalendarRange.from,
+      requestCalendarRange.to,
+      t,
+    ],
+  );
+  const requestSelectedDateLabel = React.useMemo(() => {
+    if (!selectedDay) return locale === 'de' ? 'TT.MM.JJJJ' : 'MM/DD/YYYY';
+    return longDateFormatter.format(selectedDay);
+  }, [locale, longDateFormatter, selectedDay]);
+  const directFlowCalendarConfig = React.useMemo(
+    () => ({
+      availableIsoDays: availableDaysSorted,
+      rangeStartIso: providerSlotsRange.from,
+      rangeEndIso: providerSlotsRange.to,
+      title: directFlowText.calendarTitle,
+      legendFree: availabilityCalendarCopy.free,
+      legendBusy: availabilityCalendarCopy.busy,
+      legendOut: availabilityCalendarCopy.out,
+    }),
+    [
+      availabilityCalendarCopy.busy,
+      availabilityCalendarCopy.free,
+      availabilityCalendarCopy.out,
+      availableDaysSorted,
+      directFlowText.calendarTitle,
+      providerSlotsRange.from,
+      providerSlotsRange.to,
+    ],
+  );
+  const hasDirectAvailability = availableDaysSorted.length > 0;
+  const directAvailabilityLabel = hasDirectAvailability
+    ? t(I18N_KEYS.homePublic.providerAvailabilityStateOpen)
+    : t(I18N_KEYS.homePublic.providerAvailabilityStateBusy);
+  const directAvailabilityTone = hasDirectAvailability ? 'success' : 'warning';
 
   React.useEffect(() => {
     if (!isDirectProviderFlow) return;
@@ -355,7 +437,6 @@ function CreateRequestContent() {
       shouldValidate: true,
     });
   }, [availableDaySet, availableDaysSorted, isDirectProviderFlow, preferredDateValue, setValue]);
-
   const onSubmit = async (values: CreateRequestValues, event?: React.BaseSyntheticEvent) => {
     const submitter = (event?.nativeEvent as SubmitEvent | undefined)?.submitter;
     const submitIntent =
@@ -707,26 +788,23 @@ function CreateRequestContent() {
                         </strong>
                       </p>
                     </div>
-                    <div className="dc-calendar request-provider-calendar__calendar">
-                      <DayPicker
-                        locale={dayPickerLocale}
-                        mode="single"
-                        selected={selectedDay}
-                        onSelect={(nextDay) => {
-                          if (!nextDay || !isDaySelectable(nextDay)) return;
-                          const nextIsoDay = toIsoDayLocal(nextDay);
-                          setValue('preferredDate', toPreferredDateValue(nextIsoDay), {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                          });
-                        }}
-                        disabled={(day) => !isDaySelectable(day)}
-                        showOutsideDays
-                        modifiersClassNames={{
-                          selected: 'request-provider-calendar__day-selected',
-                        }}
-                      />
-                    </div>
+                    <ProviderAvailabilityMeta
+                      stateLabel={directAvailabilityLabel}
+                      datePrefix={t(I18N_KEYS.homePublic.providerAvailabilityNextSlot)}
+                      dateLabel={selectedDateLabel}
+                      dateIso={selectedDayIso}
+                      tone={directAvailabilityTone}
+                      calendarLocale={locale}
+                      calendar={directFlowCalendarConfig}
+                      className="request-provider-calendar__availability"
+                      onSelectIsoDay={(nextIsoDay) => {
+                        if (!availableDaySet.has(nextIsoDay)) return;
+                        setValue('preferredDate', toPreferredDateValue(nextIsoDay), {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }}
+                    />
                     <p className="request-provider-calendar__selected">
                       <span className="request-provider-calendar__selected-label">
                         {directFlowText.selectedDateLabel}:
@@ -743,9 +821,28 @@ function CreateRequestContent() {
                     <input type="hidden" {...register('preferredDate')} />
                   </div>
                 ) : (
-                  <Field leftIcon={<IconCalendar />}>
-                    <Input type="datetime-local" {...register('preferredDate')} />
-                  </Field>
+                  <div className="request-provider-calendar">
+                    <ProviderAvailabilityMeta
+                      stateLabel={t(I18N_KEYS.homePublic.providerAvailabilityStateOpen)}
+                      datePrefix={t(I18N_KEYS.request.preferredDate)}
+                      dateLabel={requestSelectedDateLabel}
+                      dateIso={selectedDayIso}
+                      tone="success"
+                      calendarLocale={locale}
+                      calendar={requestCalendarConfig}
+                      showStateBadge={false}
+                      showDatePrefix={false}
+                      autoSelectFirstAvailable={false}
+                      className="request-provider-calendar__availability"
+                      onSelectIsoDay={(nextIsoDay) => {
+                        setValue('preferredDate', toPreferredDateValue(nextIsoDay), {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }}
+                    />
+                    <input type="hidden" {...register('preferredDate')} />
+                  </div>
                 )}
                 {errors.preferredDate ? (
                   <p className="text-red-600 text-sm">{errors.preferredDate.message}</p>
