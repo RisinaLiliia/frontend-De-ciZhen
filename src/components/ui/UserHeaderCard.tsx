@@ -214,7 +214,7 @@ export function UserHeaderCard({
 
   if (href) {
     return (
-      <Link href={href} className={`user-header-card__link ${className ?? ''}`.trim()}>
+      <Link href={href} prefetch={false} className={`user-header-card__link ${className ?? ''}`.trim()}>
         {card}
       </Link>
     );

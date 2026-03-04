@@ -21,8 +21,8 @@ type TopNavItem = {
 const isPathPrefix = (pathname: string, prefix: string) =>
   pathname === prefix || pathname.startsWith(`${prefix}/`);
 
-const WORKSPACE_PREVIEW_URL = '/workspace?section=orders';
-const AUTH_WORKSPACE_URL = '/workspace?section=orders';
+const WORKSPACE_PREVIEW_URL = '/workspace?section=requests';
+const AUTH_WORKSPACE_URL = '/workspace?section=requests';
 const REQUEST_CREATE_URL = '/request/create';
 const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
 const AUTH_PROFILE_FALLBACK_URL = '/profile';
@@ -117,6 +117,7 @@ function WorkspacePrimaryNav({
           <Link
             key={item.key}
             href={item.href}
+            prefetch={false}
             aria-current={active ? 'page' : undefined}
             aria-label={item.label}
             className={itemClasses}

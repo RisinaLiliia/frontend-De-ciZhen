@@ -214,6 +214,7 @@ function RequestsListComponent({
                   </span>
                   <Link
                     href={detailsHref}
+                    prefetch={false}
                     className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action"
                     aria-label={t(I18N_KEYS.requestsPage.openRequest)}
                     title={t(I18N_KEYS.requestsPage.openRequest)}
@@ -224,6 +225,7 @@ function RequestsListComponent({
                   </Link>
                   <Link
                     href={`${detailsHref}?edit=1`}
+                    prefetch={false}
                     className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--edit"
                     aria-label={t(I18N_KEYS.requestDetails.responseEditTooltip)}
                     title={t(I18N_KEYS.requestDetails.responseEditTooltip)}
@@ -322,6 +324,7 @@ function RequestsListComponent({
                           ) : (
                             <Link
                               href="/chat"
+                              prefetch={false}
                               className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--chat"
                               aria-label={t(I18N_KEYS.requestDetails.ctaChat)}
                               title={t(I18N_KEYS.requestDetails.ctaChat)}

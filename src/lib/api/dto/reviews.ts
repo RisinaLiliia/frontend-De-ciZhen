@@ -9,3 +9,23 @@ export type ReviewDto = {
   authorName?: string | null;
   authorAvatarUrl?: string | null;
 };
+
+export type ReviewSummaryDto = {
+  targetUserId: string;
+  targetRole: 'client' | 'provider' | null;
+  total: number;
+  averageRating: number;
+  distribution: Record<'1' | '2' | '3' | '4' | '5', number>;
+};
+
+export type ReviewOverviewDto = {
+  items: ReviewDto[];
+  total: number;
+  limit: number;
+  offset: number;
+  summary: {
+    total: number;
+    averageRating: number;
+    distribution: Record<'1' | '2' | '3' | '4' | '5', number>;
+  };
+};

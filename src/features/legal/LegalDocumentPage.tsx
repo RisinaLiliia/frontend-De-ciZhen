@@ -5,6 +5,8 @@ import ReactMarkdown from 'react-markdown';
 
 import styles from './LegalDocumentPage.module.css';
 
+import { PageShell } from '@/components/layout/PageShell';
+import { AuthActions } from '@/components/layout/AuthActions';
 import { getCookieNotice, getPrivacyPolicy } from '@/lib/api/legal';
 
 type Props = {
@@ -136,83 +138,85 @@ export function LegalDocumentPage({ title, type }: Props) {
   }, []);
 
   return (
-    <main className={`container-mobile py-8 ${styles.page}`}>
-      <section className={`card ${styles.legalWrap}`}>
-        <header className={styles.legalHeader}>
-          <div className={styles.legalHeaderMeta}>
-            <span className={styles.eyebrow}>Rechtliches</span>
-            <h1 className={styles.title}>{title}</h1>
-            <p className={styles.subtitle}>Transparenz, Datenschutz und klare Regeln für die Nutzung der Plattform.</p>
-          </div>
-          <div className={styles.brandBadge}>De&apos;ciZhen Legal</div>
-        </header>
+    <PageShell right={<AuthActions />} withSpacer={false}>
+      <div className={styles.page}>
+        <section className={`card ${styles.legalWrap}`}>
+          <header className={styles.legalHeader}>
+            <div className={styles.legalHeaderMeta}>
+              <span className={styles.eyebrow}>Rechtliches</span>
+              <h1 className={styles.title}>{title}</h1>
+              <p className={styles.subtitle}>Transparenz, Datenschutz und klare Regeln für die Nutzung der Plattform.</p>
+            </div>
+            <div className={styles.brandBadge}>De&apos;ciZhen Legal</div>
+          </header>
 
-        <div className={styles.metaBar}>
-          <span className={styles.metaPill}>Zuletzt aktualisiert: {lastUpdatedLabel}</span>
-          {readingMinutes ? <span className={styles.metaPill}>Lesezeit: ~{readingMinutes} Min</span> : null}
-          <div className={styles.metaActions}>
-            <button type="button" className={styles.metaButton} onClick={handleCopyLink}>
-              {copied ? 'Link kopiert' : 'Link kopieren'}
-            </button>
-            <button type="button" className={styles.metaButton} onClick={() => window.print()}>
-              Drucken
-            </button>
+          <div className={styles.metaBar}>
+            <span className={styles.metaPill}>Zuletzt aktualisiert: {lastUpdatedLabel}</span>
+            {readingMinutes ? <span className={styles.metaPill}>Lesezeit: ~{readingMinutes} Min</span> : null}
+            <div className={styles.metaActions}>
+              <button type="button" className={styles.metaButton} onClick={handleCopyLink}>
+                {copied ? 'Link kopiert' : 'Link kopieren'}
+              </button>
+              <button type="button" className={styles.metaButton} onClick={() => window.print()}>
+                Drucken
+              </button>
+            </div>
           </div>
-        </div>
 
-        {loading ? (
-          <div className={styles.notice} role="status" aria-live="polite">
-            Wird geladen...
-          </div>
-        ) : null}
+          {loading ? (
+            <div className={styles.notice} role="status" aria-live="polite">
+              Wird geladen...
+            </div>
+          ) : null}
 
-        {error ? (
-          <div className={styles.error} role="alert">
-            {error}
-          </div>
-        ) : null}
+          {error ? (
+            <div className={styles.error} role="alert">
+              {error}
+            </div>
+          ) : null}
 
-        {!loading && !error ? (
-          <div className={styles.legalGrid}>
-            {toc.length > 0 ? (
-              <aside className={styles.toc}>
-                <p className={styles.tocTitle}>Inhalt</p>
-                <ul className={styles.tocList}>
-                  {toc.map((item) => {
-                    const isActive = item.id === activeSectionId;
-                    return (
-                      <li key={`${item.level}-${item.id}`} className={item.level === 3 ? styles.tocSubItem : styles.tocItem}>
-                        <a
-                          href={`#${item.id}`}
-                          className={`${styles.tocLink} ${isActive ? styles.tocLinkActive : ''}`}
-                          aria-current={isActive ? 'location' : undefined}
-                        >
-                          {item.label}
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </aside>
-            ) : null}
+          {!loading && !error ? (
+            <div className={styles.legalGrid}>
+              {toc.length > 0 ? (
+                <aside className={styles.toc}>
+                  <p className={styles.tocTitle}>Inhalt</p>
+                  <ul className={styles.tocList}>
+                    {toc.map((item) => {
+                      const isActive = item.id === activeSectionId;
+                      return (
+                        <li key={`${item.level}-${item.id}`} className={item.level === 3 ? styles.tocSubItem : styles.tocItem}>
+                          <a
+                            href={`#${item.id}`}
+                            className={`${styles.tocLink} ${isActive ? styles.tocLinkActive : ''}`}
+                            aria-current={isActive ? 'location' : undefined}
+                          >
+                            {item.label}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </aside>
+              ) : null}
 
-            <article className={styles.markdownWrap}>
-              <div className={styles.markdown}>
-                <ReactMarkdown
-                  components={{
-                    h1: ({ children }) => <h1 id={slugify(childrenToText(children))}>{children}</h1>,
-                    h2: ({ children }) => <h2 id={slugify(childrenToText(children))}>{children}</h2>,
-                    h3: ({ children }) => <h3 id={slugify(childrenToText(children))}>{children}</h3>,
-                  }}
-                >
-                  {content}
-                </ReactMarkdown>
-              </div>
-            </article>
-          </div>
-        ) : null}
-      </section>
-    </main>
+              <article className={styles.markdownWrap}>
+                <div className={styles.markdown}>
+                  <ReactMarkdown
+                    components={{
+                      h1: ({ children }) => <h1 id={slugify(childrenToText(children))}>{children}</h1>,
+                      h2: ({ children }) => <h2 id={slugify(childrenToText(children))}>{children}</h2>,
+                      h3: ({ children }) => <h3 id={slugify(childrenToText(children))}>{children}</h3>,
+                    }}
+                  >
+                    {content}
+                  </ReactMarkdown>
+                </div>
+              </article>
+            </div>
+          ) : null}
+        </section>
+      </div>
+    </PageShell>
   );
 }
 

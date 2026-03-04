@@ -160,13 +160,13 @@ export default function ProfileWorkspacePage() {
   const guardNavigation = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       if (!hasUnsavedChanges) return;
-      const shouldLeave = window.confirm('Du hast ungespeicherte Aenderungen. Seite wirklich verlassen?');
+      const shouldLeave = window.confirm(t(I18N_KEYS.client.profileUnsavedChangesConfirm));
       if (!shouldLeave) {
         event.preventDefault();
         return;
       }
     },
-    [hasUnsavedChanges],
+    [hasUnsavedChanges, t],
   );
 
   const offersTotal = providerOffers.length + clientOffers.length;
@@ -204,7 +204,7 @@ export default function ProfileWorkspacePage() {
   const handleSaveProfile = async () => {
     const name = profileForm.name.trim();
     if (name.length < 2) {
-      toast.error('Name muss mindestens 2 Zeichen haben');
+      toast.error(t(I18N_KEYS.client.profileNameMinError));
       return;
     }
 
@@ -216,7 +216,7 @@ export default function ProfileWorkspacePage() {
       });
       setMe(updated);
       setIsProfileEditing(false);
-      toast.success('Profil aktualisiert');
+      toast.success(t(I18N_KEYS.client.profileUpdated));
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
@@ -233,7 +233,7 @@ export default function ProfileWorkspacePage() {
       });
       setMe(updated);
       setIsBioEditing(false);
-      toast.success('Beschreibung aktualisiert');
+      toast.success(t(I18N_KEYS.client.profileBioUpdated));
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
@@ -251,7 +251,7 @@ export default function ProfileWorkspacePage() {
     try {
       const updated = await uploadMyAvatar(file);
       setMe(updated);
-      toast.success('Profilfoto aktualisiert');
+      toast.success(t(I18N_KEYS.client.profilePhotoUpdated));
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
@@ -263,11 +263,11 @@ export default function ProfileWorkspacePage() {
 
   const handleSavePassword = async () => {
     if (!isPasswordStrong) {
-      toast.error('Passwort: mind. 8 Zeichen, Gross/Klein, Zahl und Sonderzeichen');
+      toast.error(t(I18N_KEYS.client.profilePasswordPolicyError));
       return;
     }
     if (!passwordsMatch) {
-      toast.error('Passwoerter stimmen nicht ueberein');
+      toast.error(t(I18N_KEYS.client.profilePasswordMismatchError));
       return;
     }
     setIsSavingPassword(true);
@@ -278,7 +278,7 @@ export default function ProfileWorkspacePage() {
       });
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
       setIsSecurityEditing(false);
-      toast.success('Passwort geaendert');
+      toast.success(t(I18N_KEYS.client.profilePasswordUpdated));
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
@@ -288,10 +288,10 @@ export default function ProfileWorkspacePage() {
   };
 
   const overview = [
-    { label: 'Meine Anfragen', value: myRequests.length, href: '/workspace?tab=my-requests' },
-    { label: 'Meine Angebote', value: offersTotal, href: '/workspace?tab=my-offers' },
-    { label: 'Vertraege', value: contracts.length, href: '/workspace?tab=completed-jobs' },
-    { label: 'Posteingang', value: unreadTotal, href: '/chat' },
+    { label: t(I18N_KEYS.client.profileOverviewRequestsLabel), value: myRequests.length, href: '/workspace?tab=my-requests' },
+    { label: t(I18N_KEYS.client.profileOverviewOffersLabel), value: offersTotal, href: '/workspace?tab=my-offers' },
+    { label: t(I18N_KEYS.client.profileOverviewContractsLabel), value: contracts.length, href: '/workspace?tab=completed-jobs' },
+    { label: t(I18N_KEYS.client.profileOverviewInboxLabel), value: unreadTotal, href: '/chat' },
   ];
 
   const avatarInitial = (authMe?.name?.trim()?.charAt(0) || 'U').toUpperCase();
@@ -303,9 +303,8 @@ export default function ProfileWorkspacePage() {
     if (raw.startsWith('/')) return raw.startsWith('/api/') ? raw : buildApiUrl(raw);
     return raw;
   })();
-  const localeIsDe = locale === 'de';
-  const fileButtonLabel = localeIsDe ? 'Datei auswaehlen' : 'Choose file';
-  const noFileLabel = localeIsDe ? 'Keine Datei ausgewaehlt' : 'No file selected';
+  const fileButtonLabel = t(I18N_KEYS.client.profileFileChoose);
+  const noFileLabel = t(I18N_KEYS.client.profileFileNone);
 
   return (
     <PageShell right={<AuthActions />} withSpacer={false}>
@@ -324,7 +323,7 @@ export default function ProfileWorkspacePage() {
         <article className="profile-bio">
           <header className="profile-bio__head">
             <div className="profile-bio__title-wrap">
-              <p className="profile-bio__label">Beschreibung</p>
+              <p className="profile-bio__label">{t(I18N_KEYS.client.profileBioLabel)}</p>
             </div>
             <span className="count-badge count-badge--sm">{profileDescription.length}/2000</span>
           </header>
@@ -334,16 +333,16 @@ export default function ProfileWorkspacePage() {
             value={bioDraft}
             onChange={(event) => setBioDraft(event.target.value)}
             maxLength={2000}
-            placeholder="Erzaehle kurz ueber dich, deine Erfahrung oder Arbeitsweise."
+            placeholder={t(I18N_KEYS.client.profileBioPlaceholder)}
             readOnly={!isBioEditing}
           />
 
           <div className="profile-bio__footer">
-            <p className="profile-bio__hint">
-              {profileDescription
-                ? 'Aendere den Text jederzeit und speichere die neue Version.'
-                : 'Dieses Feld kann jederzeit bearbeitet und gespeichert werden.'}
-            </p>
+              <p className="profile-bio__hint">
+                {profileDescription
+                  ? t(I18N_KEYS.client.profileBioHintFilled)
+                  : t(I18N_KEYS.client.profileBioHintEmpty)}
+              </p>
             {isBioEditing ? (
               <div className="profile-bio__actions">
                 <button
@@ -355,7 +354,7 @@ export default function ProfileWorkspacePage() {
                   }}
                   disabled={isSavingBio}
                 >
-                  Abbrechen
+                  {t(I18N_KEYS.client.profileCancelCta)}
                 </button>
                 <button
                   type="button"
@@ -365,15 +364,15 @@ export default function ProfileWorkspacePage() {
                   }}
                   disabled={isSavingBio}
                 >
-                  {isSavingBio ? t(I18N_KEYS.common.refreshing) : 'Speichern'}
+                  {isSavingBio ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.client.profileSaveCta)}
                 </button>
               </div>
             ) : (
               <OfferActionButton
                 kind="edit"
-                label="Beschreibung bearbeiten"
-                ariaLabel="Beschreibung bearbeiten"
-                title="Beschreibung bearbeiten"
+                label={t(I18N_KEYS.client.profileBioEditAction)}
+                ariaLabel={t(I18N_KEYS.client.profileBioEditAction)}
+                title={t(I18N_KEYS.client.profileBioEditAction)}
                 iconOnly
                 className="request-card__status-action request-card__status-action--edit profile-bio__save-icon"
                 onClick={() => setIsBioEditing(true)}
@@ -385,14 +384,14 @@ export default function ProfileWorkspacePage() {
 
       <section className="card profile-settings">
         <header className="profile-settings__header">
-          <h2 className="typo-h3">Einstellungen</h2>
-          <p className="typo-small">Konto, Sicherheit und App-Einstellungen</p>
+          <h2 className="typo-h3">{t(I18N_KEYS.client.profileSettingsTitle)}</h2>
+          <p className="typo-small">{t(I18N_KEYS.client.profileSettingsSubtitle)}</p>
         </header>
 
         <div className="profile-settings__grid">
           <article className="profile-settings__card profile-settings__card--full stack-sm">
             <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">Profilfoto</p>
+              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profilePhotoTitle)}</p>
             </header>
             <div className="stack-xs">
               <div className="profile-settings__avatar-row">
@@ -400,16 +399,16 @@ export default function ProfileWorkspacePage() {
                   className={`profile-settings__avatar ${avatarPreviewUrl ? '' : 'profile-settings__avatar--placeholder'}`.trim()}
                 >
                   {avatarPreviewUrl ? (
-                    <Image src={avatarPreviewUrl} alt={authMe?.name ?? 'Avatar'} width={64} height={64} />
+                    <Image src={avatarPreviewUrl} alt={authMe?.name ?? t(I18N_KEYS.client.profileAvatarAlt)} width={64} height={64} />
                   ) : (
                     avatarInitial
                   )}
                   <label className="profile-settings__avatar-edit">
                     <OfferActionButton
                       kind="edit"
-                      label="Avatar bearbeiten"
-                      ariaLabel="Avatar bearbeiten"
-                      title="Avatar bearbeiten"
+                      label={t(I18N_KEYS.client.profileAvatarEditAction)}
+                      ariaLabel={t(I18N_KEYS.client.profileAvatarEditAction)}
+                      title={t(I18N_KEYS.client.profileAvatarEditAction)}
                       iconOnly
                       className="request-card__status-action request-card__status-action--edit"
                     />
@@ -425,7 +424,7 @@ export default function ProfileWorkspacePage() {
                   </label>
                 </span>
                 <div className="profile-settings__avatar-file">
-                  <p className="typo-small">{isUploadingAvatar ? 'Foto wird hochgeladen...' : 'JPG/PNG bis 10MB'}</p>
+                  <p className="typo-small">{isUploadingAvatar ? t(I18N_KEYS.client.profilePhotoUploading) : t(I18N_KEYS.client.profilePhotoFormatHint)}</p>
                   <p className="typo-small">{fileButtonLabel}: {avatarFileName || noFileLabel}</p>
                 </div>
               </div>
@@ -434,12 +433,12 @@ export default function ProfileWorkspacePage() {
 
           <article className="profile-settings__card stack-sm">
             <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">Persoenliche Daten</p>
+              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profilePersonalDataTitle)}</p>
               <OfferActionButton
                 kind="edit"
-                label="Profil bearbeiten"
-                ariaLabel="Profil bearbeiten"
-                title="Profil bearbeiten"
+                label={t(I18N_KEYS.client.profileEditAction)}
+                ariaLabel={t(I18N_KEYS.client.profileEditAction)}
+                title={t(I18N_KEYS.client.profileEditAction)}
                 iconOnly
                 className="request-card__status-action request-card__status-action--edit"
                 onClick={() => setIsProfileEditing((prev) => !prev)}
@@ -452,7 +451,7 @@ export default function ProfileWorkspacePage() {
                 required
                 requiredHint={requiredHint}
               >
-                Vollstaendiger Name
+                {t(I18N_KEYS.client.profileFullNameLabel)}
               </FormLabel>
               <input
                 id="profile-full-name"
@@ -464,7 +463,7 @@ export default function ProfileWorkspacePage() {
             </div>
             <div className="profile-settings__row">
               <FormLabel className="profile-settings__row-label" htmlFor="profile-city">
-                Stadt (optional)
+                {t(I18N_KEYS.client.profileCityOptionalLabel)}
               </FormLabel>
               <input
                 id="profile-city"
@@ -481,7 +480,7 @@ export default function ProfileWorkspacePage() {
                 required
                 requiredHint={requiredHint}
               >
-                Email
+                {t(I18N_KEYS.client.profileEmailLabel)}
               </FormLabel>
               <input id="profile-email" className="input" value={authMe?.email ?? ''} readOnly />
             </div>
@@ -495,7 +494,7 @@ export default function ProfileWorkspacePage() {
                   }}
                   disabled={isSavingProfile}
                 >
-                  {isSavingProfile ? t(I18N_KEYS.common.refreshing) : 'Speichern'}
+                  {isSavingProfile ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.client.profileSaveCta)}
                 </button>
                 <button
                   type="button"
@@ -509,7 +508,7 @@ export default function ProfileWorkspacePage() {
                   }}
                   disabled={isSavingProfile}
                 >
-                  Abbrechen
+                  {t(I18N_KEYS.client.profileCancelCta)}
                 </button>
               </div>
             ) : null}
@@ -517,12 +516,12 @@ export default function ProfileWorkspacePage() {
 
           <article className="profile-settings__card stack-sm">
             <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">Login und Sicherheit</p>
+              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profileSecurityTitle)}</p>
               <OfferActionButton
                 kind="edit"
-                label="Sicherheit bearbeiten"
-                ariaLabel="Sicherheit bearbeiten"
-                title="Sicherheit bearbeiten"
+                label={t(I18N_KEYS.client.profileSecurityEditAction)}
+                ariaLabel={t(I18N_KEYS.client.profileSecurityEditAction)}
+                title={t(I18N_KEYS.client.profileSecurityEditAction)}
                 iconOnly
                 className="request-card__status-action request-card__status-action--edit"
                 onClick={() => setIsSecurityEditing((prev) => !prev)}
@@ -535,7 +534,7 @@ export default function ProfileWorkspacePage() {
                 required
                 requiredHint={requiredHint}
               >
-                Login
+                {t(I18N_KEYS.client.profileLoginLabel)}
               </FormLabel>
               <input id="security-login" className="input" value={authMe?.email ?? ''} disabled />
             </div>
@@ -546,7 +545,7 @@ export default function ProfileWorkspacePage() {
                 required
                 requiredHint={requiredHint}
               >
-                Aktuelles Passwort
+                {t(I18N_KEYS.client.profileCurrentPasswordLabel)}
               </FormLabel>
               {isSecurityEditing ? (
                 <span className="profile-settings__password-field">
@@ -564,8 +563,8 @@ export default function ProfileWorkspacePage() {
                     type="button"
                     className="profile-settings__password-toggle"
                     onClick={() => setShowCurrentPassword((prev) => !prev)}
-                    aria-label={showCurrentPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
-                    title={showCurrentPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+                    aria-label={showCurrentPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
+                    title={showCurrentPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
                   >
                     {showCurrentPassword ? <IconEye /> : <IconEyeOff />}
                   </button>
@@ -582,7 +581,7 @@ export default function ProfileWorkspacePage() {
                   required
                   requiredHint={requiredHint}
                 >
-                  Neues Passwort
+                  {t(I18N_KEYS.client.profileNewPasswordLabel)}
                 </FormLabel>
                 <span className="profile-settings__password-field profile-settings__password-field--accent">
                   <input
@@ -599,8 +598,8 @@ export default function ProfileWorkspacePage() {
                     type="button"
                     className="profile-settings__password-toggle"
                     onClick={() => setShowNewPassword((prev) => !prev)}
-                    aria-label={showNewPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
-                    title={showNewPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+                    aria-label={showNewPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
+                    title={showNewPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
                   >
                     {showNewPassword ? <IconEye /> : <IconEyeOff />}
                   </button>
@@ -615,7 +614,7 @@ export default function ProfileWorkspacePage() {
                   required
                   requiredHint={requiredHint}
                 >
-                  Passwort wiederholen
+                  {t(I18N_KEYS.client.profileConfirmPasswordLabel)}
                 </FormLabel>
                 <span className="profile-settings__password-field profile-settings__password-field--accent">
                   <input
@@ -632,8 +631,8 @@ export default function ProfileWorkspacePage() {
                     type="button"
                     className="profile-settings__password-toggle"
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    aria-label={showConfirmPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
-                    title={showConfirmPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+                    aria-label={showConfirmPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
+                    title={showConfirmPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
                   >
                     {showConfirmPassword ? <IconEye /> : <IconEyeOff />}
                   </button>
@@ -642,11 +641,11 @@ export default function ProfileWorkspacePage() {
             ) : null}
             {isSecurityEditing ? (
               <div className="profile-settings__password-hint">
-                <span className={passwordChecks.length ? 'is-ok' : ''}>8+ Zeichen</span>
-                <span className={passwordChecks.upper ? 'is-ok' : ''}>Grossbuchstabe</span>
-                <span className={passwordChecks.lower ? 'is-ok' : ''}>Kleinbuchstabe</span>
-                <span className={passwordChecks.digit ? 'is-ok' : ''}>Zahl</span>
-                <span className={passwordChecks.symbol ? 'is-ok' : ''}>Sonderzeichen</span>
+                <span className={passwordChecks.length ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLength)}</span>
+                <span className={passwordChecks.upper ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleUpper)}</span>
+                <span className={passwordChecks.lower ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLower)}</span>
+                <span className={passwordChecks.digit ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleDigit)}</span>
+                <span className={passwordChecks.symbol ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleSymbol)}</span>
               </div>
             ) : null}
             {isSecurityEditing ? (
@@ -659,7 +658,7 @@ export default function ProfileWorkspacePage() {
                   }}
                   disabled={isSavingPassword}
                 >
-                  {isSavingPassword ? t(I18N_KEYS.common.refreshing) : 'Speichern'}
+                  {isSavingPassword ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.client.profileSaveCta)}
                 </button>
                 <button
                   type="button"
@@ -673,7 +672,7 @@ export default function ProfileWorkspacePage() {
                   }}
                   disabled={isSavingPassword}
                 >
-                  Abbrechen
+                  {t(I18N_KEYS.client.profileCancelCta)}
                 </button>
               </div>
             ) : null}
@@ -681,8 +680,8 @@ export default function ProfileWorkspacePage() {
 
           <article className="profile-settings__card stack-sm">
             <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">Darstellung</p>
-              <p className="typo-small">Waehle das Theme fuer deine Oberflaeche.</p>
+              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profileThemeTitle)}</p>
+              <p className="typo-small">{t(I18N_KEYS.client.profileThemeSubtitle)}</p>
             </header>
             <div className="profile-settings__choices">
               <button
@@ -690,22 +689,22 @@ export default function ProfileWorkspacePage() {
                 className={`profile-settings__choice ${effectiveTheme === 'light' ? 'is-active' : ''}`.trim()}
                 onClick={() => setTheme('light')}
               >
-                Light
+                {t(I18N_KEYS.common.themeLight)}
               </button>
               <button
                 type="button"
                 className={`profile-settings__choice ${effectiveTheme === 'dark' ? 'is-active' : ''}`.trim()}
                 onClick={() => setTheme('dark')}
               >
-                Dark
+                {t(I18N_KEYS.common.themeDark)}
               </button>
             </div>
           </article>
 
           <article className="profile-settings__card stack-sm">
             <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">Sprache</p>
-              <p className="typo-small">Steuere Lokalisierung und Interface-Sprache.</p>
+              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profileLanguageTitle)}</p>
+              <p className="typo-small">{t(I18N_KEYS.client.profileLanguageSubtitle)}</p>
             </header>
             <div className="profile-settings__choices">
               <button
@@ -713,30 +712,34 @@ export default function ProfileWorkspacePage() {
                 className={`profile-settings__choice ${locale === 'de' ? 'is-active' : ''}`.trim()}
                 onClick={() => setLocale('de')}
               >
-                Deutsch
+                {t(I18N_KEYS.common.languageGerman)}
               </button>
               <button
                 type="button"
                 className={`profile-settings__choice ${locale === 'en' ? 'is-active' : ''}`.trim()}
                 onClick={() => setLocale('en')}
               >
-                English
+                {t(I18N_KEYS.common.languageEnglish)}
               </button>
             </div>
             <div className="profile-settings__meta">
-              <p className="typo-small">Aktuell: {locale.toUpperCase()}</p>
-              <p className="typo-small">Favoriten gesamt: {favoritesTotal}</p>
+              <p className="typo-small">{t(I18N_KEYS.client.profileLanguageCurrentPrefix)}: {locale.toUpperCase()}</p>
+              <p className="typo-small">{t(I18N_KEYS.client.profileFavoritesTotalPrefix)}: {favoritesTotal}</p>
             </div>
           </article>
 
           <article className="profile-settings__card stack-sm">
             <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">Datenschutz & Cookies</p>
-              <p className="typo-small">Verwalte deine Einwilligung fuer optionale Datennutzung.</p>
+              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profilePrivacyTitle)}</p>
+              <p className="typo-small">{t(I18N_KEYS.client.profilePrivacySubtitle)}</p>
             </header>
             <div className="profile-settings__meta">
-              <p className="typo-small">Analytics: {consentChoice.analytics ? 'Aktiviert' : 'Deaktiviert'}</p>
-              <p className="typo-small">Marketing: {consentChoice.marketing ? 'Aktiviert' : 'Deaktiviert'}</p>
+              <p className="typo-small">
+                {t(I18N_KEYS.client.profileAnalyticsLabel)}: {consentChoice.analytics ? t(I18N_KEYS.client.profileEnabled) : t(I18N_KEYS.client.profileDisabled)}
+              </p>
+              <p className="typo-small">
+                {t(I18N_KEYS.client.profileMarketingLabel)}: {consentChoice.marketing ? t(I18N_KEYS.client.profileEnabled) : t(I18N_KEYS.client.profileDisabled)}
+              </p>
             </div>
             <div className="profile-settings__inline-actions">
               <button
@@ -744,7 +747,7 @@ export default function ProfileWorkspacePage() {
                 className="btn-secondary profile-settings__save-btn"
                 onClick={openPreferences}
               >
-                Cookie-Einstellungen oeffnen
+                {t(I18N_KEYS.client.profileOpenCookieSettingsCta)}
               </button>
             </div>
           </article>
@@ -753,20 +756,20 @@ export default function ProfileWorkspacePage() {
 
       <section className="card stack-sm">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="typo-h3">Kurzueberblick</h2>
-          <span className="badge">Profil: {profileCompleteness}%</span>
+          <h2 className="typo-h3">{t(I18N_KEYS.client.profileOverviewTitle)}</h2>
+          <span className="badge">{t(I18N_KEYS.client.profileOverviewCompletenessPrefix)}: {profileCompleteness}%</span>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {overview.map((item) => (
-            <Link key={item.label} href={item.href} className="card stack-xs no-underline" onClick={guardNavigation}>
+            <Link key={item.label} href={item.href} prefetch={false} className="card stack-xs no-underline" onClick={guardNavigation}>
               <p className="typo-small">{item.label}</p>
               <p className="typo-h3">{item.value}</p>
-              <p className="typo-small">Alle ansehen</p>
+              <p className="typo-small">{t(I18N_KEYS.client.profileOverviewViewAll)}</p>
             </Link>
           ))}
         </div>
-        <Link href="/workspace?section=orders" prefetch={false} className="btn-primary w-fit" onClick={guardNavigation}>
-          Profil vervollstaendigen
+        <Link href="/workspace?section=requests" prefetch={false} className="btn-primary w-fit" onClick={guardNavigation}>
+          {t(I18N_KEYS.client.profileCompleteProfileCta)}
         </Link>
       </section>
     </PageShell>

@@ -43,7 +43,7 @@ export function OfferActions({
           <IconSend />
           {sendLabel}
         </button>
-        <Link href={detailsHref} className="btn-secondary offer-actions__btn">
+        <Link href={detailsHref} prefetch={false} className="btn-secondary offer-actions__btn">
           {detailsLabel}
         </Link>
       </div>
@@ -73,12 +73,12 @@ export function OfferActions({
   if (state === 'accepted') {
     return (
       <div className="offer-actions">
-        <Link href={contractHref} className="btn-secondary offer-actions__btn">
+        <Link href={contractHref} prefetch={false} className="btn-secondary offer-actions__btn">
           <IconBriefcase />
           {contractLabel}
         </Link>
         {chatHref ? (
-          <Link href={chatHref} className="btn-ghost offer-actions__btn">
+          <Link href={chatHref} prefetch={false} className="btn-ghost offer-actions__btn">
             <IconChat />
             <span>{chatLabel}</span>
           </Link>
@@ -97,7 +97,7 @@ export function OfferActions({
       <button type="button" className="btn-ghost offer-actions__btn" onClick={onSend}>
         {browseLabel}
       </button>
-      <Link href={detailsHref} className="btn-secondary offer-actions__btn">
+      <Link href={detailsHref} prefetch={false} className="btn-secondary offer-actions__btn">
         {detailsLabel}
       </Link>
     </div>

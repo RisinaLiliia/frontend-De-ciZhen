@@ -109,6 +109,17 @@ Shared listing filters:
 - `sort=date_desc|date_asc|price_asc|price_desc`
 - `page`, `limit`
 
+### Provider Reviews Contract
+
+Provider public profile (`/providers/[id]`) consumes one BFF endpoint:
+- `GET /reviews/overview?targetUserId=<id>&targetRole=provider&limit=<n>&offset=<n>&sort=created_desc|rating_desc`
+
+Response is already view-ready:
+- paged `items` (review feed)
+- `summary.total`
+- `summary.averageRating`
+- `summary.distribution` (`1..5`)
+
 ### Legacy Compatibility Routes
 
 Backward-compatible redirects are still present for older links:

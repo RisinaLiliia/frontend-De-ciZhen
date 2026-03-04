@@ -23,7 +23,7 @@ import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { listProviderSlots } from '@/lib/api/availability';
 import { getPublicProviderById, listPublicProviders } from '@/lib/api/providers';
-import { listReviews, listReviewsPage } from '@/lib/api/reviews';
+import { getReviewsOverview } from '@/lib/api/reviews';
 import {
   buildProviderFavoriteLookup,
   listFavorites,
@@ -34,24 +34,28 @@ import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
-import { apiGet } from '@/lib/api/http';
-import { listServices } from '@/lib/api/catalog';
 import { createLongDateFormatter, parseDateSafe, toIsoDayLocal } from '@/lib/utils/date';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
 
 const SIMILAR_LIMIT = 2;
 const PROVIDER_REVIEWS_PAGE_SIZE = 4;
-const PROVIDER_REVIEWS_STATS_BATCH_LIMIT = 100;
-const PROVIDER_REVIEWS_STATS_MAX_ITEMS = 1000;
-
-type GeoAutocompleteItem = {
-  lat?: number;
-  lng?: number;
-};
-
-type GeoAutocompleteResponse = {
-  items: GeoAutocompleteItem[];
+const EMPTY_REVIEWS_OVERVIEW = {
+  items: [] as ReviewDto[],
+  total: 0,
+  limit: PROVIDER_REVIEWS_PAGE_SIZE,
+  offset: 0,
+  summary: {
+    total: 0,
+    averageRating: 0,
+    distribution: {
+      '1': 0,
+      '2': 0,
+      '3': 0,
+      '4': 0,
+      '5': 0,
+    },
+  },
 };
 
 function getProviderServiceKeys(provider: ProviderPublicDto) {
@@ -75,18 +79,6 @@ function getProviderCityKey(provider: ProviderPublicDto): string {
   const byName = (provider.cityName ?? '').trim().toLowerCase();
   if (byName) return `name:${byName}`;
   return '';
-}
-
-function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
-  const toRad = (deg: number) => (deg * Math.PI) / 180;
-  const r = 6371;
-  const dLat = toRad(b.lat - a.lat);
-  const dLng = toRad(b.lng - a.lng);
-  const x =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
-  return r * c;
 }
 
 type ProviderAvailabilityModel = {
@@ -145,13 +137,6 @@ export default function ProviderPublicProfilePage() {
   const isAuthed = authStatus === 'authenticated';
 
   const {
-    data: providers = [],
-  } = useQuery({
-    queryKey: ['provider-public-list'],
-    queryFn: () => listPublicProviders(),
-  });
-
-  const {
     data: provider,
     isLoading,
     isError,
@@ -199,64 +184,26 @@ export default function ProviderPublicProfilePage() {
     setReviewPage(1);
   }, [id, reviewSort]);
 
-  const { data: services = [] } = useQuery({
-    queryKey: ['catalog-services-all'],
-    queryFn: () => listServices(),
-  });
-
-  const serviceCategoryByKey = React.useMemo(() => {
-    const map = new Map<string, string>();
-    for (const service of services) {
-      const key = service?.key?.trim().toLowerCase();
-      const categoryKey = service?.categoryKey?.trim().toLowerCase();
-      if (key && categoryKey) map.set(key, categoryKey);
-    }
-    return map;
-  }, [services]);
-
   const reviewsOffset = (reviewPage - 1) * PROVIDER_REVIEWS_PAGE_SIZE;
   const reviewsSortValue = reviewSort === 'top' ? 'rating_desc' : 'created_desc';
 
-  const reviewsPageQuery = useQuery({
-    queryKey: ['provider-reviews-page', providerTargetUserId, reviewsSortValue, reviewPage],
+  const reviewsOverviewQuery = useQuery({
+    queryKey: ['provider-reviews-overview', providerTargetUserId, reviewsSortValue, reviewPage],
     enabled: Boolean(providerTargetUserId),
     queryFn: () =>
-      listReviewsPage({
-        targetUserId: String(providerTargetUserId),
-        targetRole: 'provider',
-        limit: PROVIDER_REVIEWS_PAGE_SIZE,
-        offset: reviewsOffset,
-        sort: reviewsSortValue,
-      }),
+      withStatusFallback(
+        () =>
+          getReviewsOverview({
+            targetUserId: String(providerTargetUserId),
+            targetRole: 'provider',
+            limit: PROVIDER_REVIEWS_PAGE_SIZE,
+            offset: reviewsOffset,
+            sort: reviewsSortValue,
+          }),
+        EMPTY_REVIEWS_OVERVIEW,
+        [400, 404],
+      ),
     placeholderData: (previousData) => previousData,
-  });
-
-  const { data: reviewsStatsRows = [] } = useQuery({
-    queryKey: ['provider-reviews-stats', providerTargetUserId],
-    enabled: Boolean(providerTargetUserId),
-    queryFn: async () => {
-      const allRows: ReviewDto[] = [];
-      let offset = 0;
-
-      while (allRows.length < PROVIDER_REVIEWS_STATS_MAX_ITEMS) {
-        const page = await listReviewsPage({
-          targetUserId: String(providerTargetUserId),
-          targetRole: 'provider',
-          limit: PROVIDER_REVIEWS_STATS_BATCH_LIMIT,
-          offset,
-          sort: 'created_desc',
-        });
-
-        if (page.items.length === 0) break;
-        allRows.push(...page.items);
-        offset += page.items.length;
-
-        if (page.total != null && offset >= page.total) break;
-        if (page.items.length < PROVIDER_REVIEWS_STATS_BATCH_LIMIT) break;
-      }
-
-      return allRows;
-    },
     staleTime: 60_000,
   });
 
@@ -349,148 +296,65 @@ export default function ProviderPublicProfilePage() {
   }, [provider, t]);
 
   const providerServiceKeys = React.useMemo(() => (provider ? getProviderServiceKeys(provider) : []), [provider]);
+  const primaryServiceKey = providerServiceKeys[0];
 
-  const providerCategoryKeys = React.useMemo(() => {
-    const keys = new Set<string>();
-    for (const serviceKey of providerServiceKeys) {
-      const categoryKey = serviceCategoryByKey.get(serviceKey);
-      if (categoryKey) keys.add(categoryKey);
-    }
-    return keys;
-  }, [providerServiceKeys, serviceCategoryByKey]);
-
-  const sameCityCategoryProviders = React.useMemo(() => {
-    if (!provider) return [] as ProviderPublicDto[];
-
-    const providerCityKey = getProviderCityKey(provider);
-    return providers
-      .filter((item) => item.id !== provider.id)
-      .filter((item) => {
-        if (providerCategoryKeys.size === 0) return true;
-        const candidateServiceKeys = getProviderServiceKeys(item);
-        return candidateServiceKeys.some((serviceKey) => {
-          const categoryKey = serviceCategoryByKey.get(serviceKey);
-          return categoryKey ? providerCategoryKeys.has(categoryKey) : false;
-        });
-      })
-      .filter((item) => {
-        if (!providerCityKey) return false;
-        return getProviderCityKey(item) === providerCityKey;
-      });
-  }, [provider, providerCategoryKeys, providers, serviceCategoryByKey]);
-
-  const categoryOnlyProviders = React.useMemo(() => {
-    if (!provider) return [] as ProviderPublicDto[];
-
-    return providers
-      .filter((item) => item.id !== provider.id)
-      .filter((item) => {
-        if (providerCategoryKeys.size === 0) return true;
-        const candidateServiceKeys = getProviderServiceKeys(item);
-        return candidateServiceKeys.some((serviceKey) => {
-          const categoryKey = serviceCategoryByKey.get(serviceKey);
-          return categoryKey ? providerCategoryKeys.has(categoryKey) : false;
-        });
-      });
-  }, [provider, providerCategoryKeys, providers, serviceCategoryByKey]);
-
-  const shouldUseLocationFallback = sameCityCategoryProviders.length === 0 && categoryOnlyProviders.length > 0;
-
-  const geocodeCityNames = React.useMemo(() => {
-    if (!provider || !shouldUseLocationFallback) return [] as string[];
-    const names = new Set<string>();
-    const own = (provider.cityName ?? '').trim();
-    if (own) names.add(own);
-    for (const item of categoryOnlyProviders) {
-      const cityName = (item.cityName ?? '').trim();
-      if (cityName) names.add(cityName);
-    }
-    // Avoid burst requests when geocoder is temporarily unavailable.
-    return Array.from(names).slice(0, 12);
-  }, [categoryOnlyProviders, provider, shouldUseLocationFallback]);
-
-  const { data: cityCoords = new Map<string, { lat: number; lng: number }>() } = useQuery({
-    queryKey: ['provider-city-coords', ...geocodeCityNames],
-    enabled: shouldUseLocationFallback && geocodeCityNames.length > 0,
+  const { data: providers = [] } = useQuery({
+    queryKey: ['provider-similar-candidates', provider?.id, provider?.cityId, provider?.cityName, primaryServiceKey],
+    enabled: Boolean(provider?.id),
     queryFn: async () => {
-      const map = new Map<string, { lat: number; lng: number }>();
-      for (const cityName of geocodeCityNames) {
-        try {
-          const res = await apiGet<GeoAutocompleteResponse>(
-            `/geo/autocomplete?query=${encodeURIComponent(cityName)}&countryCode=de&limit=1`,
-          );
-          const first = res.items?.[0];
-          if (typeof first?.lat === 'number' && typeof first?.lng === 'number') {
-            map.set(cityName.trim().toLowerCase(), { lat: first.lat, lng: first.lng });
-          }
-        } catch {
-          // Stop geocode fallback on first upstream error to prevent console spam.
-          break;
-        }
+      if (!provider) return [];
+
+      const byCityAndService = await withStatusFallback(
+        () =>
+          listPublicProviders({
+            cityId: provider.cityId || undefined,
+            serviceKey: primaryServiceKey,
+          }),
+        [],
+        [400, 404],
+      );
+      if (byCityAndService.length > 0) return byCityAndService;
+
+      if (primaryServiceKey) {
+        const byService = await withStatusFallback(
+          () =>
+            listPublicProviders({
+              serviceKey: primaryServiceKey,
+            }),
+          [],
+          [400, 404],
+        );
+        if (byService.length > 0) return byService;
       }
-      return map;
+
+      return [];
     },
+    staleTime: 120_000,
   });
+
+  const rankByRating = React.useCallback((a: ProviderPublicDto, b: ProviderPublicDto) => {
+    if (b.ratingAvg !== a.ratingAvg) return b.ratingAvg - a.ratingAvg;
+    if (b.ratingCount !== a.ratingCount) return b.ratingCount - a.ratingCount;
+    return (a.basePrice ?? Number.MAX_SAFE_INTEGER) - (b.basePrice ?? Number.MAX_SAFE_INTEGER);
+  }, []);
+
+  const sameCityProviders = React.useMemo(() => {
+    if (!provider) return [] as ProviderPublicDto[];
+    const providerCityKey = getProviderCityKey(provider);
+    if (!providerCityKey) return [] as ProviderPublicDto[];
+    return providers
+      .filter((item) => item.id !== provider.id)
+      .filter((item) => getProviderCityKey(item) === providerCityKey);
+  }, [provider, providers]);
 
   const similarProviders = React.useMemo(() => {
-    const rankByRating = (a: ProviderPublicDto, b: ProviderPublicDto) => {
-      if (b.ratingAvg !== a.ratingAvg) return b.ratingAvg - a.ratingAvg;
-      if (b.ratingCount !== a.ratingCount) return b.ratingCount - a.ratingCount;
-      return (a.basePrice ?? Number.MAX_SAFE_INTEGER) - (b.basePrice ?? Number.MAX_SAFE_INTEGER);
-    };
-
-    if (sameCityCategoryProviders.length > 0) {
-      return sameCityCategoryProviders.slice().sort(rankByRating).slice(0, SIMILAR_LIMIT);
+    if (!provider) return [] as ProviderPublicDto[];
+    const candidates = providers.filter((item) => item.id !== provider.id);
+    if (sameCityProviders.length > 0) {
+      return sameCityProviders.slice().sort(rankByRating).slice(0, SIMILAR_LIMIT);
     }
-
-    const ownCityName = (provider?.cityName ?? '').trim().toLowerCase();
-    const ownCoords = ownCityName ? cityCoords.get(ownCityName) : undefined;
-
-    return categoryOnlyProviders
-      .slice()
-      .sort((a, b) => {
-        const aCity = (a.cityName ?? '').trim().toLowerCase();
-        const bCity = (b.cityName ?? '').trim().toLowerCase();
-        const aCoords = aCity ? cityCoords.get(aCity) : undefined;
-        const bCoords = bCity ? cityCoords.get(bCity) : undefined;
-
-        const aDistance = ownCoords && aCoords ? haversineKm(ownCoords, aCoords) : Number.MAX_SAFE_INTEGER;
-        const bDistance = ownCoords && bCoords ? haversineKm(ownCoords, bCoords) : Number.MAX_SAFE_INTEGER;
-
-        if (aDistance !== bDistance) return aDistance - bDistance;
-        return rankByRating(a, b);
-      })
-      .slice(0, SIMILAR_LIMIT);
-  }, [categoryOnlyProviders, cityCoords, provider?.cityName, sameCityCategoryProviders]);
-
-  const similarProviderIds = React.useMemo(() => similarProviders.map((item) => item.id), [similarProviders]);
-  const { data: similarProviderReviewPreviewById = new Map<string, string>() } = useQuery({
-    queryKey: ['provider-similar-review-preview', ...similarProviderIds],
-    enabled: similarProviderIds.length > 0,
-    queryFn: async () => {
-      const providerUserIdById = new Map(
-        similarProviders.map((item) => [item.id, item.userId?.trim() || item.id] as const),
-      );
-      const pairs = await Promise.all(
-        similarProviderIds.map(async (providerId) => {
-          try {
-            const targetUserId = providerUserIdById.get(providerId) || providerId;
-            const list = await listReviews({ targetUserId, targetRole: 'provider', limit: 1, offset: 0 });
-            const first = list[0];
-            const text = first?.text?.trim() || first?.comment?.trim() || '';
-            return [providerId, text] as const;
-          } catch {
-            return [providerId, ''] as const;
-          }
-        }),
-      );
-      const map = new Map<string, string>();
-      for (const [providerId, text] of pairs) {
-        if (text) map.set(providerId, text);
-      }
-      return map;
-    },
-  });
+    return candidates.slice().sort(rankByRating).slice(0, SIMILAR_LIMIT);
+  }, [provider, providers, rankByRating, sameCityProviders]);
 
   const similarCards = React.useMemo(
     () =>
@@ -503,10 +367,9 @@ export default function ProviderPublicProfilePage() {
           ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
           status: 'online',
         }),
-        reviewPreview:
-          similarProviderReviewPreviewById.get(item.id) ?? t(I18N_KEYS.homePublic.providerReviewPreviewDefault),
+        reviewPreview: t(I18N_KEYS.homePublic.providerReviewPreviewDefault),
       })),
-    [similarProviderReviewPreviewById, similarProviders, t],
+    [similarProviders, t],
   );
 
   const reviewsUi = locale === 'de'
@@ -559,40 +422,48 @@ export default function ProviderPublicProfilePage() {
   );
 
   const pageReviews = React.useMemo(
-    () => normalizeReviews(reviewsPageQuery.data?.items ?? []),
-    [normalizeReviews, reviewsPageQuery.data?.items],
+    () => normalizeReviews(reviewsOverviewQuery.data?.items ?? []),
+    [normalizeReviews, reviewsOverviewQuery.data?.items],
   );
-  const statsReviews = React.useMemo(
-    () => normalizeReviews(reviewsStatsRows),
-    [normalizeReviews, reviewsStatsRows],
-  );
-  const metricsReviews = statsReviews.length > 0 ? statsReviews : pageReviews;
-  const hasRecentReview = metricsReviews.length > 0;
-  const reviewsAverage = React.useMemo(() => {
-    if (metricsReviews.length === 0) return 0;
-    const sum = metricsReviews.reduce((acc, item) => acc + item.rating, 0);
-    return Math.round((sum / metricsReviews.length) * 10) / 10;
-  }, [metricsReviews]);
+  const fallbackReviewsAverage = React.useMemo(() => {
+    if (pageReviews.length === 0) return 0;
+    const sum = pageReviews.reduce((acc, item) => acc + item.rating, 0);
+    return Math.round((sum / pageReviews.length) * 10) / 10;
+  }, [pageReviews]);
   const displayRatingAvg = React.useMemo(() => {
     const raw = Number(provider?.ratingAvg);
     if (Number.isFinite(raw) && raw >= 0) return raw;
-    return reviewsAverage;
-  }, [provider?.ratingAvg, reviewsAverage]);
+    const summaryAvg = Number(reviewsOverviewQuery.data?.summary?.averageRating);
+    if (Number.isFinite(summaryAvg) && summaryAvg >= 0) return summaryAvg;
+    return fallbackReviewsAverage;
+  }, [fallbackReviewsAverage, provider?.ratingAvg, reviewsOverviewQuery.data?.summary?.averageRating]);
   const displayRatingCount = React.useMemo(() => {
     const raw = Number(provider?.ratingCount);
     if (Number.isFinite(raw) && raw >= 0) return Math.round(raw);
-    if (typeof reviewsPageQuery.data?.total === 'number') return Math.round(reviewsPageQuery.data.total);
-    return metricsReviews.length;
-  }, [metricsReviews.length, provider?.ratingCount, reviewsPageQuery.data?.total]);
+    const summaryTotal = Number(reviewsOverviewQuery.data?.summary?.total);
+    if (Number.isFinite(summaryTotal) && summaryTotal >= 0) return Math.round(summaryTotal);
+    if (typeof reviewsOverviewQuery.data?.total === 'number') return Math.round(reviewsOverviewQuery.data.total);
+    return pageReviews.length;
+  }, [pageReviews.length, provider?.ratingCount, reviewsOverviewQuery.data?.summary?.total, reviewsOverviewQuery.data?.total]);
+  const hasRecentReview = displayRatingCount > 0;
   const reviewsDistribution = React.useMemo(() => {
     const stats = new Map<number, number>();
     for (let score = 1; score <= 5; score += 1) stats.set(score, 0);
-    for (const item of metricsReviews) {
-      stats.set(item.rating, (stats.get(item.rating) ?? 0) + 1);
+    const summary = reviewsOverviewQuery.data?.summary?.distribution;
+    if (summary) {
+      for (let score = 1; score <= 5; score += 1) {
+        const key = String(score) as '1' | '2' | '3' | '4' | '5';
+        const count = Number(summary[key] ?? 0);
+        stats.set(score, Number.isFinite(count) && count > 0 ? Math.floor(count) : 0);
+      }
+    } else {
+      for (const item of pageReviews) {
+        stats.set(item.rating, (stats.get(item.rating) ?? 0) + 1);
+      }
     }
     const max = Math.max(1, ...Array.from(stats.values()));
     return { stats, max };
-  }, [metricsReviews]);
+  }, [pageReviews, reviewsOverviewQuery.data?.summary?.distribution]);
   const visibleReviews = React.useMemo(() => {
     const list = [...pageReviews];
     if (reviewSort === 'top') {
@@ -606,11 +477,13 @@ export default function ProviderPublicProfilePage() {
     return list;
   }, [pageReviews, reviewSort]);
   const reviewsTotalForPagination = React.useMemo(() => {
-    if (typeof reviewsPageQuery.data?.total === 'number') return Math.max(0, Math.floor(reviewsPageQuery.data.total));
+    if (typeof reviewsOverviewQuery.data?.total === 'number') return Math.max(0, Math.floor(reviewsOverviewQuery.data.total));
+    const summaryTotal = Number(reviewsOverviewQuery.data?.summary?.total);
+    if (Number.isFinite(summaryTotal) && summaryTotal >= 0) return Math.max(0, Math.floor(summaryTotal));
     const raw = Number(provider?.ratingCount);
     if (Number.isFinite(raw) && raw >= 0) return Math.max(0, Math.floor(raw));
-    return Math.max(pageReviews.length, metricsReviews.length);
-  }, [metricsReviews.length, pageReviews.length, provider?.ratingCount, reviewsPageQuery.data?.total]);
+    return pageReviews.length;
+  }, [pageReviews.length, provider?.ratingCount, reviewsOverviewQuery.data?.summary?.total, reviewsOverviewQuery.data?.total]);
   const totalReviewPages = React.useMemo(
     () => Math.max(1, Math.ceil(reviewsTotalForPagination / PROVIDER_REVIEWS_PAGE_SIZE)),
     [reviewsTotalForPagination],
@@ -618,7 +491,7 @@ export default function ProviderPublicProfilePage() {
   React.useEffect(() => {
     setReviewPage((prev) => Math.min(prev, totalReviewPages));
   }, [totalReviewPages]);
-  const isReviewsLoading = reviewsPageQuery.isLoading && visibleReviews.length === 0;
+  const isReviewsLoading = reviewsOverviewQuery.isLoading && visibleReviews.length === 0;
   const hasReviewsPagination = reviewsTotalForPagination > PROVIDER_REVIEWS_PAGE_SIZE;
   const nextSlotStartAt = React.useMemo(() => {
     const startCandidates = providerSlots
@@ -718,19 +591,18 @@ export default function ProviderPublicProfilePage() {
 
   const similarProvidersTitle = locale === 'de' ? 'Ähnliche Anbieter' : 'Similar providers';
   const similarProvidersHint =
-    sameCityCategoryProviders.length === 0 && similarCards.length > 0
+    sameCityProviders.length === 0 && similarCards.length > 0
       ? locale === 'de'
-        ? 'Aus derselben Kategorie, nach Nähe sortiert.'
-        : 'Same category, sorted by nearest location.'
+        ? 'Aus derselben Leistungskategorie.'
+        : 'From the same service category.'
       : undefined;
 
   return (
     <PageShell
       right={<AuthActions />}
       showBack
-      hideBackOnMobile
       backHref="/workspace?section=providers"
-      mainClassName="provider-public-main pt-2 pb-6 md:py-6"
+      mainClassName="provider-public-main pb-6"
     >
       <div className="request-detail request-detail--provider">
         <section className="panel request-detail__panel">

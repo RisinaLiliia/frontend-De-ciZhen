@@ -23,7 +23,7 @@ export function HomeTrustLivePanel({ className, t }: HomeTrustLivePanelProps) {
 
       <HomeHeroShot className="hero-shot home-trust-live-panel__hero-shot" preserveAspectRatio="xMidYMid meet" variant="trust" />
 
-      <Link href="/auth/login?next=%2Frequest%2Fnew" className="home-trust-live-panel__cta home-cta">
+      <Link href="/auth/login?next=%2Frequest%2Fnew" prefetch={false} className="home-trust-live-panel__cta home-cta">
         {t(I18N_KEYS.homePublic.trustPanelCta)}
       </Link>
       <p className="home-trust-live-panel__cta-note">{t(I18N_KEYS.homePublic.trustPanelNote)}</p>

@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 const INFINITE_MOTION_SELECTORS = [
-  '.skeleton',
   '.badge-live',
   '.stat-live',
   '.radar-dot',
@@ -35,6 +34,8 @@ function getMotionTargets(root: ParentNode): HTMLElement[] {
 
 export function useInfiniteMotionController() {
   React.useEffect(() => {
+    // This observer is expensive on large pages; keep it opt-in.
+    if (process.env.NEXT_PUBLIC_INFINITE_MOTION_CONTROL !== '1') return;
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -47,7 +48,11 @@ export function useInfiniteMotionController() {
       observedTargets.forEach((el) => {
         const isIntersecting = intersectionState.get(el) ?? true;
         const shouldPause = isReduced || isHidden || !isIntersecting;
-        el.dataset.motionPaused = shouldPause ? 'true' : 'false';
+        if (shouldPause) {
+          el.dataset.motionPaused = 'true';
+          return;
+        }
+        delete el.dataset.motionPaused;
       });
     };
 

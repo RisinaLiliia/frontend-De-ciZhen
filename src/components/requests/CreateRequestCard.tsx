@@ -30,7 +30,7 @@ export function CreateRequestCard({
     .join(' ');
 
   return (
-    <Link href={href} className={classes} aria-label={resolvedTitle} onClick={onClick}>
+    <Link href={href} prefetch={false} className={classes} aria-label={resolvedTitle} onClick={onClick}>
       <div className="request-create-card__body">
         <p className="request-create-card__title">{resolvedTitle}</p>
         <p className="request-create-card__subtitle">{resolvedSubtitle}</p>

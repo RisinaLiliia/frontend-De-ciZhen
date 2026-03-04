@@ -52,7 +52,7 @@ export function WorkspaceContentState({
         <p className="text-sm font-semibold">{emptyTitle}</p>
         <p className="typo-small">{emptyHint}</p>
         {emptyCtaLabel && emptyCtaHref ? (
-          <Link href={emptyCtaHref} className="btn-primary requests-primary-cta">
+          <Link href={emptyCtaHref} prefetch={false} className="btn-primary requests-primary-cta">
             {emptyCtaLabel}
           </Link>
         ) : null}

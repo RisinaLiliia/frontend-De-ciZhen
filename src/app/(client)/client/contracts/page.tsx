@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import { WorkspaceShellPage } from '@/features/workspace/shell/WorkspaceShellPage';
 
 export default function ClientContractsLegacyPage() {
-  redirect('/workspace?tab=completed-jobs');
+  return <WorkspaceShellPage forcedWorkspaceTab="completed-jobs" />;
 }

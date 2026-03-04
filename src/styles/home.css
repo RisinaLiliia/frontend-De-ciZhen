@@ -167,14 +167,17 @@
   }
 
   .home-intro-shell {
+    --home-intro-padding: 16px;
     grid-area: top;
     position: relative;
     isolation: isolate;
     overflow: hidden;
     display: grid;
     gap: var(--space-4);
-    padding: 16px;
-    border-radius: calc(var(--radius-lg) + 2px);
+    margin: 0;
+    padding: var(--home-intro-padding);
+    padding-top: calc(var(--shell-topbar-height) + var(--home-intro-padding));
+    border-radius: 0 0 calc(var(--radius-lg) + 2px) calc(var(--radius-lg) + 2px);
     border: 0;
     background:
       radial-gradient(120% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 12%, transparent), transparent 48%),
@@ -1043,8 +1046,8 @@
 
   @media (max-width: 900px) {
     .home-intro-shell {
+      --home-intro-padding: 12px;
       gap: 10px;
-      padding: 12px;
     }
 
     .hero-experiment {
@@ -1100,8 +1103,8 @@
 
   @media (max-width: 640px) {
     .home-intro-shell {
+      --home-intro-padding: 10px;
       gap: 8px;
-      padding: 10px;
     }
 
     .hero-experiment--subtle {

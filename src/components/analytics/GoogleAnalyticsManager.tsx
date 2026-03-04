@@ -12,7 +12,13 @@ declare global {
 }
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim() ?? '';
-const ANALYTICS_ENABLED = process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true';
+const ANALYTICS_ENABLED =
+  process.env.NODE_ENV === 'production' &&
+  process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true';
+
+function isLocalhostHost(hostname: string) {
+  return hostname === 'localhost' || hostname === '::1' || hostname === '[::1]' || hostname.startsWith('127.');
+}
 
 function ensureGtagShim() {
   if (typeof window === 'undefined') return;
@@ -37,13 +43,23 @@ function updateGoogleConsent(analyticsGranted: boolean, marketingGranted: boolea
 
 export function GoogleAnalyticsManager() {
   const { ready, choice } = useConsent();
+  const [hostResolved, setHostResolved] = React.useState(false);
+  const [isLocalhost, setIsLocalhost] = React.useState(false);
 
   React.useEffect(() => {
-    if (!ready || !ANALYTICS_ENABLED || !GA_MEASUREMENT_ID) return;
-    updateGoogleConsent(choice.analytics, choice.marketing);
-  }, [ready, choice.analytics, choice.marketing]);
+    if (typeof window === 'undefined') return;
+    setIsLocalhost(isLocalhostHost(window.location.hostname));
+    setHostResolved(true);
+  }, []);
 
-  if (!ready || !ANALYTICS_ENABLED || !GA_MEASUREMENT_ID) {
+  const canRunAnalytics = ready && hostResolved && !isLocalhost && ANALYTICS_ENABLED && Boolean(GA_MEASUREMENT_ID);
+
+  React.useEffect(() => {
+    if (!canRunAnalytics) return;
+    updateGoogleConsent(choice.analytics, choice.marketing);
+  }, [canRunAnalytics, choice.analytics, choice.marketing]);
+
+  if (!canRunAnalytics) {
     return null;
   }
 

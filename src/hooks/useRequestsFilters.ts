@@ -8,6 +8,7 @@ import type { PublicRequestsSort } from '@/lib/api/requests';
 const ALL_OPTION_KEY = 'all';
 const FILTER_QUERY_KEYS = new Set(['cityId', 'categoryKey', 'subcategoryKey', 'serviceKey', 'sort', 'page', 'limit']);
 const DEFAULT_LIMIT = 10;
+const MAX_LIMIT = 100;
 
 type UseRequestsFiltersArgs<TService extends { key: string; categoryKey: string }> = {
   services: TService[];
@@ -28,7 +29,7 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
   const cityId = searchParams.get('cityId') ?? ALL_OPTION_KEY;
   const sortBy = (searchParams.get('sort') as PublicRequestsSort | null) ?? defaultSort;
   const page = readPositiveInt(searchParams.get('page'), 1);
-  const limit = readPositiveInt(searchParams.get('limit'), DEFAULT_LIMIT);
+  const limit = readPositiveInt(searchParams.get('limit'), DEFAULT_LIMIT, MAX_LIMIT);
 
   const serviceByKey = React.useMemo(
     () => new Map(services.map((service) => [service.key, service])),
@@ -183,7 +184,8 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
   };
 }
 
-function readPositiveInt(value: string | null, fallback: number) {
+function readPositiveInt(value: string | null, fallback: number, max = Number.MAX_SAFE_INTEGER) {
   const parsed = Number(value ?? '');
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+  if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+  return Math.min(max, Math.trunc(parsed));
 }

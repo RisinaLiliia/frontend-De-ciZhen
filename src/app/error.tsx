@@ -19,7 +19,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <PageShell title={t(I18N_KEYS.app.errorTitle)} showBack={false} withSpacer={true}>
+    <PageShell title={t(I18N_KEYS.app.errorTitle)} withSpacer={true}>
       <div className="stack-sm">
         <p className="typo-muted">{t(I18N_KEYS.app.errorMessage)}</p>
         <Button type="button" onClick={reset}>

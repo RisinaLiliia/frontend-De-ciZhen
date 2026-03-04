@@ -103,7 +103,7 @@ function StatsBody({ viewModel }: { viewModel: PayloadViewModel }) {
     return (
       <div className="requests-stats__empty">
         <p className="typo-small">{payload.emptyTitle}</p>
-        <Link href={payload.emptyCtaHref} className="btn-ghost is-primary">
+        <Link href={payload.emptyCtaHref} prefetch={false} className="btn-ghost is-primary">
           {payload.emptyCtaLabel}
         </Link>
       </div>
@@ -174,7 +174,7 @@ function StatsBody({ viewModel }: { viewModel: PayloadViewModel }) {
       {payload.showHint !== false ? (
         <section className="requests-stats-hint">
           <p className="requests-stats-hint__text">{payload.hint.text}</p>
-          <Link href={payload.hint.ctaHref} className="btn-ghost is-primary">
+          <Link href={payload.hint.ctaHref} prefetch={false} className="btn-ghost is-primary">
             {payload.hint.ctaLabel}
           </Link>
         </section>

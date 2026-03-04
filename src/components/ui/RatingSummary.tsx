@@ -46,7 +46,7 @@ export function RatingSummary({
 
   if (href) {
     return (
-      <Link href={href} className={`rating-summary ${className ?? ''}`.trim()}>
+      <Link href={href} prefetch={false} className={`rating-summary ${className ?? ''}`.trim()}>
         {content}
       </Link>
     );

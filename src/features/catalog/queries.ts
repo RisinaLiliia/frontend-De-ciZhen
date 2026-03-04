@@ -5,26 +5,29 @@ import { listCities, listServiceCategories, listServices } from '@/lib/api/catal
 import { mapCity, mapCategory, mapService } from './mappers';
 import type { City, Service, ServiceCategory } from './model';
 
-export function useCities(countryCode: string) {
+export function useCities(countryCode: string, enabled = true) {
   return useQuery<City[]>({
     queryKey: qk.cities(countryCode),
     queryFn: async () => (await listCities(countryCode)).map(mapCity),
     staleTime: 60_000,
+    enabled,
   });
 }
 
-export function useServiceCategories() {
+export function useServiceCategories(enabled = true) {
   return useQuery<ServiceCategory[]>({
     queryKey: qk.categories(),
     queryFn: async () => (await listServiceCategories()).map(mapCategory),
     staleTime: 60_000,
+    enabled,
   });
 }
 
-export function useServices(categoryKey?: string) {
+export function useServices(categoryKey?: string, enabled = true) {
   return useQuery<Service[]>({
     queryKey: qk.services(categoryKey),
     queryFn: async () => (await listServices(categoryKey)).map(mapService),
     staleTime: 60_000,
+    enabled,
   });
 }
