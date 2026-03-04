@@ -1,10 +1,10 @@
 // src/lib/api/reviews.ts
 import { apiGet } from '@/lib/api/http';
-import type { ReviewDto } from '@/lib/api/dto/reviews';
+import type { ReviewDto, ReviewOverviewDto, ReviewSummaryDto } from '@/lib/api/dto/reviews';
 
 export type ReviewsSort = 'created_desc' | 'rating_desc';
 
-type ReviewsQuery = {
+type ReviewsOverviewQuery = {
   targetUserId: string;
   targetRole: 'client' | 'provider';
   limit?: number;
@@ -30,52 +30,58 @@ function normalizeOffset(value: number | undefined) {
   return Math.max(int, 0);
 }
 
-type ReviewsPageResponseDto = {
-  items: ReviewDto[];
-  total?: number | null;
-  page?: number | null;
-  limit?: number | null;
-  offset?: number | null;
-};
+function normalizeReviewSummary(input: Partial<ReviewSummaryDto>): ReviewSummaryDto {
+  const distribution = {
+    '1': Math.max(0, Math.floor(Number(input.distribution?.['1'] ?? 0) || 0)),
+    '2': Math.max(0, Math.floor(Number(input.distribution?.['2'] ?? 0) || 0)),
+    '3': Math.max(0, Math.floor(Number(input.distribution?.['3'] ?? 0) || 0)),
+    '4': Math.max(0, Math.floor(Number(input.distribution?.['4'] ?? 0) || 0)),
+    '5': Math.max(0, Math.floor(Number(input.distribution?.['5'] ?? 0) || 0)),
+  } satisfies ReviewSummaryDto['distribution'];
 
-export type ReviewsPageResult = {
-  items: ReviewDto[];
-  total: number | null;
-  limit: number;
-  offset: number;
-};
+  const total = Math.max(0, Math.floor(Number(input.total ?? 0) || 0));
+  const averageRaw = Number(input.averageRating ?? 0);
+  const averageRating = Number.isFinite(averageRaw) ? Math.max(0, Math.min(5, averageRaw)) : 0;
 
-export async function listReviewsPage(params: ReviewsQuery): Promise<ReviewsPageResult> {
+  return {
+    targetUserId: String(input.targetUserId ?? ''),
+    targetRole: input.targetRole === 'client' || input.targetRole === 'provider' ? input.targetRole : null,
+    total,
+    averageRating,
+    distribution,
+  };
+}
+
+export async function getReviewsOverview(params: ReviewsOverviewQuery): Promise<ReviewOverviewDto> {
   const limit = normalizeLimit(params.limit) ?? 20;
   const offset = normalizeOffset(params.offset) ?? 0;
+  const sort: ReviewsSort = params.sort === 'rating_desc' ? 'rating_desc' : 'created_desc';
 
   const qs = new URLSearchParams();
   qs.set('targetUserId', params.targetUserId);
   qs.set('targetRole', params.targetRole);
   qs.set('limit', String(limit));
   qs.set('offset', String(offset));
+  qs.set('sort', sort);
 
-  const response = await apiGet<ReviewDto[] | ReviewsPageResponseDto>(`/reviews?${qs.toString()}`);
-  if (Array.isArray(response)) {
-    return {
-      items: response,
-      total: null,
-      limit,
-      offset,
-    };
-  }
+  const response = await apiGet<Partial<ReviewOverviewDto>>(`/reviews/overview?${qs.toString()}`);
+  const summary = normalizeReviewSummary({
+    targetUserId: params.targetUserId,
+    targetRole: params.targetRole,
+    ...response.summary,
+  });
 
   return {
     items: Array.isArray(response.items) ? response.items : [],
-    total: typeof response.total === 'number' ? Math.max(0, Math.floor(response.total)) : null,
-    limit: typeof response.limit === 'number' ? Math.max(1, Math.floor(response.limit)) : limit,
-    offset: typeof response.offset === 'number' ? Math.max(0, Math.floor(response.offset)) : offset,
+    total: Math.max(0, Math.floor(Number(response.total ?? summary.total) || 0)),
+    limit: Math.max(1, Math.floor(Number(response.limit ?? limit) || limit)),
+    offset: Math.max(0, Math.floor(Number(response.offset ?? offset) || offset)),
+    summary: {
+      total: summary.total,
+      averageRating: summary.averageRating,
+      distribution: summary.distribution,
+    },
   };
-}
-
-export async function listReviews(params: ReviewsQuery) {
-  const page = await listReviewsPage(params);
-  return page.items;
 }
 
 export function listMyReviews(params: MyReviewsQuery = {}) {
