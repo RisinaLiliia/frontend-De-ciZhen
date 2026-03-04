@@ -27,6 +27,8 @@ export type WorkspacePublicCityActivityItemDto = {
   cityName: string;
   cityId: string | null;
   requestCount: number;
+  lat: number | null;
+  lng: number | null;
 };
 
 export type WorkspacePublicCityActivityDto = {

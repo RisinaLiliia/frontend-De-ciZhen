@@ -280,6 +280,7 @@ export const de = {
     demandMapSubtitle: 'Pulsierende Punkte zeigen Städte mit aktuellen Anfragen.',
     demandMapActiveCities: 'aktive Städte',
     demandMapActiveRequests: 'aktive Aufträge',
+    demandMapActiveProviders: 'aktive Anbieter',
     demandMapEmpty: 'Noch keine aktiven Städte in den aktuellen Daten.',
     step1: 'Aufgabe beschreiben',
     step2: 'Rückmeldungen erhalten',

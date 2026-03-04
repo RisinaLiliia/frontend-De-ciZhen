@@ -2028,6 +2028,7 @@
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
   }
 
+
   .typo-h1 {
     font-size: var(--fs-h1);
     line-height: var(--lh-tight);

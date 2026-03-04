@@ -323,6 +323,7 @@ export const I18N_KEYS = {
     demandMapSubtitle: 'homePublic.demandMapSubtitle',
     demandMapActiveCities: 'homePublic.demandMapActiveCities',
     demandMapActiveRequests: 'homePublic.demandMapActiveRequests',
+    demandMapActiveProviders: 'homePublic.demandMapActiveProviders',
     demandMapEmpty: 'homePublic.demandMapEmpty',
   },
   requestsPage: {

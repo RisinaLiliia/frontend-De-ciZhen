@@ -282,6 +282,7 @@ export const en: DeDictionary = {
     demandMapSubtitle: 'Pulsing dots highlight cities with live demand.',
     demandMapActiveCities: 'active cities',
     demandMapActiveRequests: 'active requests',
+    demandMapActiveProviders: 'active providers',
     demandMapEmpty: 'No active cities in the current sample yet.',
     step1: 'Describe your task',
     step2: 'Get offers',

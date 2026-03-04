@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <PageShell
       right={<AuthActions />}
-      showBack
+      showBack={false}
       topbarOverlay={true}
       mainClassName="pb-6 home-screen"
       withSpacer={true}

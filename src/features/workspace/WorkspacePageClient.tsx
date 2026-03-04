@@ -127,6 +127,7 @@ function WorkspacePublicBranch({
   const platformRequestsTotal = platformSnapshot?.summary.totalPublishedRequests ?? 0;
   const platformProvidersTotal = platformSnapshot?.summary.totalActiveProviders ?? 0;
   const cityActivity = platformSnapshot?.cityActivity;
+  const platformSummary = platformSnapshot?.summary;
   const { localeTag, formatNumber } = useWorkspaceFormatters(locale);
   const explore = useExploreSidebar(t);
   const exploreWithSeed = React.useMemo(
@@ -182,6 +183,7 @@ function WorkspacePublicBranch({
         insightText={isPersonalized ? insightText : ''}
         activityProgress={activityProgress}
         cityActivity={cityActivity}
+        summary={platformSummary}
         quickActionHref="/request/create"
       />
     ),
@@ -193,6 +195,7 @@ function WorkspacePublicBranch({
       navTitle,
       personalNavItems,
       cityActivity,
+      platformSummary,
       t,
     ],
   );
