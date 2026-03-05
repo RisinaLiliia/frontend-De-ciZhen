@@ -3,18 +3,11 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
-import { listMyRequests } from '@/lib/api/requests';
-import { listMyProviderOffers, listMyClientOffers } from '@/lib/api/offers';
-import { listMyContracts } from '@/lib/api/contracts';
-import { listInbox } from '@/lib/api/chat';
-import { listFavorites } from '@/lib/api/favorites';
-import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
 import { changeMyPassword, updateMe, uploadMyAvatar } from '@/lib/api/users';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -25,14 +18,13 @@ import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { FormLabel } from '@/components/ui/FormLabel';
 import { IconEye, IconEyeOff } from '@/components/ui/icons/icons';
-import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useConsent } from '@/lib/consent/ConsentProvider';
 import {
   computeManualProfileCompleteness,
-  findProviderPublicByUserId,
   resolveAvatarPreviewUrl,
   resolveProfileCompleteness,
 } from '@/features/profile/profileWorkspace.presentation';
+import { useProfileWorkspaceData } from '@/features/profile/useProfileWorkspaceData';
 
 export default function ProfileWorkspacePage() {
   const t = useT();
@@ -84,46 +76,16 @@ export default function ProfileWorkspacePage() {
     passwordForm.confirmPassword.length > 0 &&
     passwordForm.confirmPassword === passwordForm.newPassword;
 
-  const { data: myRequests = [] } = useQuery({
-    queryKey: ['requests-my'],
-    queryFn: () => withStatusFallback(() => listMyRequests(), []),
-  });
-  const { data: providerOffers = [] } = useQuery({
-    queryKey: ['offers-my'],
-    queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
-  });
-  const { data: clientOffers = [] } = useQuery({
-    queryKey: ['offers-my-client'],
-    queryFn: () => withStatusFallback(() => listMyClientOffers(), []),
-  });
-  const { data: contracts = [] } = useQuery({
-    queryKey: ['contracts-my-all'],
-    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'all' }), []),
-  });
-  const { data: inbox = [] } = useQuery({
-    queryKey: ['chat-inbox', 'all'],
-    queryFn: () => withStatusFallback(() => listInbox('all'), []),
-  });
-  const { data: favoriteRequests = [] } = useQuery({
-    queryKey: ['favorite-requests'],
-    queryFn: () => withStatusFallback(() => listFavorites('request'), []),
-  });
-  const { data: favoriteProviders = [] } = useQuery({
-    queryKey: ['favorite-providers'],
-    queryFn: () => withStatusFallback(() => listFavorites('provider'), []),
-  });
-  const { data: myProviderPublic } = useQuery({
-    queryKey: ['provider-public-self', authMe?.id],
-    enabled: Boolean(authMe?.id),
-    queryFn: async () => {
-      const list = await listPublicProviders();
-      return findProviderPublicByUserId(list, authMe?.id);
-    },
-  });
-  const { data: myProviderProfile } = useQuery({
-    queryKey: ['provider-profile-self', authMe?.id],
-    enabled: Boolean(authMe?.id && hasProviderProfile),
-    queryFn: () => withStatusFallback(() => getMyProviderProfile(), null),
+  const {
+    favoritesTotal,
+    ratingValue,
+    reviewCount,
+    dominantStats,
+    overviewCounts,
+    myProviderProfile,
+  } = useProfileWorkspaceData({
+    authMeId: authMe?.id,
+    hasProviderProfile,
   });
 
   React.useEffect(() => {
@@ -179,24 +141,8 @@ export default function ProfileWorkspacePage() {
     [hasUnsavedChanges, t],
   );
 
-  const offersTotal = providerOffers.length + clientOffers.length;
-  const unreadTotal = inbox.reduce(
-    (sum, thread) => sum + (thread.unreadClientCount || 0) + (thread.unreadProviderCount || 0),
-    0,
-  );
-  const favoritesTotal = favoriteRequests.length + favoriteProviders.length;
   const avatarUrl = authMe?.avatar?.url?.trim() || null;
   const profileDescription = bioDraft.trim();
-  const ratingValue = myProviderPublic?.ratingAvg?.toFixed(1) ?? '—';
-  const reviewCount = myProviderPublic?.ratingCount ?? 0;
-  const dominantStats = React.useMemo(
-    () => ({
-      requestsCreated: myRequests.length,
-      offersSent: providerOffers.length,
-      contractsAsProvider: contracts.filter((item) => item.providerUserId === authMe?.id).length,
-    }),
-    [authMe?.id, contracts, myRequests.length, providerOffers.length],
-  );
 
   const manualProfileCompleteness = React.useMemo(
     () =>
@@ -307,10 +253,10 @@ export default function ProfileWorkspacePage() {
   };
 
   const overview = [
-    { label: t(I18N_KEYS.client.profileOverviewRequestsLabel), value: myRequests.length, href: '/workspace?tab=my-requests' },
-    { label: t(I18N_KEYS.client.profileOverviewOffersLabel), value: offersTotal, href: '/workspace?tab=my-offers' },
-    { label: t(I18N_KEYS.client.profileOverviewContractsLabel), value: contracts.length, href: '/workspace?tab=completed-jobs' },
-    { label: t(I18N_KEYS.client.profileOverviewInboxLabel), value: unreadTotal, href: '/chat' },
+    { label: t(I18N_KEYS.client.profileOverviewRequestsLabel), value: overviewCounts.requests, href: '/workspace?tab=my-requests' },
+    { label: t(I18N_KEYS.client.profileOverviewOffersLabel), value: overviewCounts.offers, href: '/workspace?tab=my-offers' },
+    { label: t(I18N_KEYS.client.profileOverviewContractsLabel), value: overviewCounts.contracts, href: '/workspace?tab=completed-jobs' },
+    { label: t(I18N_KEYS.client.profileOverviewInboxLabel), value: overviewCounts.inbox, href: '/chat' },
   ];
 
   const avatarInitial = (authMe?.name?.trim()?.charAt(0) || 'U').toUpperCase();
