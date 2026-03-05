@@ -14,7 +14,7 @@ import { listMyProviderOffers, listMyClientOffers } from '@/lib/api/offers';
 import { listMyContracts } from '@/lib/api/contracts';
 import { listInbox } from '@/lib/api/chat';
 import { listFavorites } from '@/lib/api/favorites';
-import { listPublicProviders } from '@/lib/api/providers';
+import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
 import { changeMyPassword, updateMe, uploadMyAvatar } from '@/lib/api/users';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -112,8 +112,19 @@ export default function ProfileWorkspacePage() {
     enabled: Boolean(authMe?.id),
     queryFn: async () => {
       const list = await listPublicProviders();
-      return list.find((item) => item.id === authMe?.id) ?? null;
+      const currentUserId = authMe?.id;
+      if (!currentUserId) return null;
+      return (
+        list.find((item) => item.userId === currentUserId) ??
+        list.find((item) => item.id === currentUserId) ??
+        null
+      );
     },
+  });
+  const { data: myProviderProfile } = useQuery({
+    queryKey: ['provider-profile-self', authMe?.id],
+    enabled: Boolean(authMe?.id && hasProviderProfile),
+    queryFn: () => withStatusFallback(() => getMyProviderProfile(), null),
   });
 
   React.useEffect(() => {
@@ -188,7 +199,7 @@ export default function ProfileWorkspacePage() {
     [authMe?.id, contracts, myRequests.length, providerOffers.length],
   );
 
-  const profileCompleteness = React.useMemo(() => {
+  const manualProfileCompleteness = React.useMemo(() => {
     const checks = [
       Boolean(authMe?.name?.trim()),
       Boolean(authMe?.city?.trim()),
@@ -199,6 +210,12 @@ export default function ProfileWorkspacePage() {
     const done = checks.filter(Boolean).length;
     return Math.round((done / checks.length) * 100);
   }, [authMe?.bio, authMe?.city, authMe?.name, authMe?.phone, avatarUrl]);
+  const profileCompleteness = React.useMemo(() => {
+    if (!hasProviderProfile) return manualProfileCompleteness;
+    if (myProviderProfile?.isProfileComplete === true) return 100;
+    if (myProviderProfile?.isProfileComplete === false) return Math.min(manualProfileCompleteness, 99);
+    return manualProfileCompleteness;
+  }, [hasProviderProfile, manualProfileCompleteness, myProviderProfile?.isProfileComplete]);
   const effectiveTheme = isThemeReady ? resolvedTheme : 'light';
 
   const handleSaveProfile = async () => {
