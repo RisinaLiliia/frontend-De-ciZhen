@@ -31,6 +31,7 @@ export type ProviderProfileDto = {
   basePrice?: number | null;
   status: ProviderStatus;
   isBlocked: boolean;
+  isProfileComplete: boolean;
   blockedAt?: string | null;
   createdAt: string;
   updatedAt: string;

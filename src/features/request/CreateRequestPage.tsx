@@ -2,7 +2,6 @@
 'use client';
 
 import * as React from 'react';
-import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,15 +10,6 @@ import { toast } from 'sonner';
 
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
-import { Field } from '@/components/ui/Field';
-import { FormLabel } from '@/components/ui/FormLabel';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
-import { Button } from '@/components/ui/Button';
-import { Textarea } from '@/components/ui/Textarea';
-import { IconChevronDown, IconPin } from '@/components/ui/icons/icons';
-import { IconBriefcase, IconCoins } from '@/components/ui/Icons';
-import { ProviderAvailabilityMeta } from '@/components/providers/ProviderAvailabilityMeta';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -37,62 +27,24 @@ import {
   createRequestSchema,
   type CreateRequestValues,
 } from '@/features/request/create.schema';
-
-const REQUEST_DRAFT_STORAGE_KEY = 'dc_request_create_draft_v1';
-
-type RequestDraft = {
-  values: {
-    serviceKey: string;
-    cityId: string;
-    title: string;
-    propertyType: CreateRequestValues['propertyType'];
-    area: number;
-    price?: number;
-    preferredDate: string;
-    isRecurring: boolean;
-    description: string;
-  };
-  tags: string[];
-  categoryKey: string;
-  savedAt: number;
-};
-
-function readRequestDraft(): RequestDraft | null {
-  if (typeof window === 'undefined') return null;
-  const raw = window.localStorage.getItem(REQUEST_DRAFT_STORAGE_KEY);
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(raw) as Partial<RequestDraft> | null;
-    if (!parsed || typeof parsed !== 'object' || typeof parsed.values !== 'object') {
-      return null;
-    }
-    const values = parsed.values as Partial<RequestDraft['values']>;
-    return {
-      values: {
-        serviceKey: typeof values.serviceKey === 'string' ? values.serviceKey : '',
-        cityId: typeof values.cityId === 'string' ? values.cityId : '',
-        title: typeof values.title === 'string' ? values.title : '',
-        propertyType: values.propertyType === 'house' ? 'house' : 'apartment',
-        area: typeof values.area === 'number' && Number.isFinite(values.area) ? values.area : 50,
-        price: typeof values.price === 'number' && Number.isFinite(values.price) ? values.price : undefined,
-        preferredDate: typeof values.preferredDate === 'string' ? values.preferredDate : '',
-        isRecurring: Boolean(values.isRecurring),
-        description: typeof values.description === 'string' ? values.description : '',
-      },
-      tags: Array.isArray(parsed.tags)
-        ? parsed.tags.filter((item): item is string => typeof item === 'string')
-        : [],
-      categoryKey: typeof parsed.categoryKey === 'string' ? parsed.categoryKey : '',
-      savedAt: typeof parsed.savedAt === 'number' ? parsed.savedAt : Date.now(),
-    };
-  } catch {
-    return null;
-  }
-}
-
-function toPreferredDateValue(dayIso: string) {
-  return `${dayIso}T09:00`;
-}
+import {
+  clearRequestDraft,
+  readRequestDraft,
+  writeRequestDraft,
+  type RequestDraft,
+} from '@/features/request/createDraft';
+import {
+  collectAvailableIsoDays,
+  createInclusiveIsoDayRange,
+  createIsoRangeFromToday,
+  resolveProviderSlotsTimezone,
+  resolveProviderTargetUserId,
+  toPreferredDateValue,
+} from '@/features/request/createRequestDate';
+import { useRequestPhotoItems } from '@/features/request/useRequestPhotoItems';
+import { CreateRequestBasicsSection } from '@/features/request/components/CreateRequestBasicsSection';
+import { CreateRequestDetailsSection } from '@/features/request/components/CreateRequestDetailsSection';
+import { CreateRequestActions } from '@/features/request/components/CreateRequestActions';
 
 function CreateRequestContent() {
   const t = useT();
@@ -132,29 +84,13 @@ function CreateRequestContent() {
     enabled: isDirectProviderFlow,
     queryFn: () => getPublicProviderById(providerId),
   });
-  const directProviderTargetUserId = React.useMemo(() => {
-    if (!directProvider) return null;
-    if (directProvider.userId?.trim()) return directProvider.userId.trim();
-    return directProvider.id;
-  }, [directProvider]);
-  const providerSlotsRange = React.useMemo(() => {
-    const from = new Date();
-    from.setHours(0, 0, 0, 0);
-    const to = new Date(from);
-    to.setDate(to.getDate() + 14);
-    return { from: toIsoDayLocal(from), to: toIsoDayLocal(to) };
-  }, []);
-  const requestCalendarRange = React.useMemo(() => {
-    const from = new Date();
-    from.setHours(0, 0, 0, 0);
-    const to = new Date(from);
-    to.setDate(to.getDate() + 180);
-    return { from: toIsoDayLocal(from), to: toIsoDayLocal(to) };
-  }, []);
-  const providerSlotsTimezone = React.useMemo(() => {
-    if (typeof Intl === 'undefined') return 'Europe/Berlin';
-    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Berlin';
-  }, []);
+  const directProviderTargetUserId = React.useMemo(
+    () => resolveProviderTargetUserId(directProvider),
+    [directProvider],
+  );
+  const providerSlotsRange = React.useMemo(() => createIsoRangeFromToday(14), []);
+  const requestCalendarRange = React.useMemo(() => createIsoRangeFromToday(180), []);
+  const providerSlotsTimezone = React.useMemo(() => resolveProviderSlotsTimezone(), []);
   const {
     data: providerSlots = [],
     isLoading: isProviderSlotsLoading,
@@ -214,20 +150,8 @@ function CreateRequestContent() {
   const isRecurringValue = useWatch({ control, name: 'isRecurring' });
   const preferredDateValue = useWatch({ control, name: 'preferredDate' }) ?? '';
 
-  const availableDaySet = React.useMemo(() => {
-    const set = new Set<string>();
-    for (const slot of providerSlots) {
-      if (!slot?.startAt) continue;
-      const parsed = new Date(slot.startAt);
-      if (!Number.isFinite(parsed.getTime())) continue;
-      set.add(toIsoDayLocal(parsed));
-    }
-    return set;
-  }, [providerSlots]);
-  const availableDaysSorted = React.useMemo(
-    () => Array.from(availableDaySet.values()).sort(),
-    [availableDaySet],
-  );
+  const availableDaysSorted = React.useMemo(() => collectAvailableIsoDays(providerSlots), [providerSlots]);
+  const availableDaySet = React.useMemo(() => new Set(availableDaysSorted), [availableDaysSorted]);
   const selectedDay = React.useMemo(() => {
     const parsed = parseDateSafe(preferredDateValue);
     if (!parsed) return undefined;
@@ -244,9 +168,10 @@ function CreateRequestContent() {
     [isDirectProviderFlow, providerSlotsRange.from, selectedDay],
   );
 
-  const [photoItems, setPhotoItems] = React.useState<
-    Array<{ file: File; previewUrl: string }>
-  >([]);
+  const { photoItems, onFilesSelected, removePhotoAt } = useRequestPhotoItems({
+    photosErrorMessage: t(I18N_KEYS.request.photosError),
+    photosLimitMessage: t(I18N_KEYS.request.photosLimit),
+  });
   const [tagInput, setTagInput] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);
   const [activeSubmitIntent, setActiveSubmitIntent] = React.useState<'draft' | 'publish' | null>(null);
@@ -315,7 +240,7 @@ function CreateRequestContent() {
       categoryKey,
       savedAt: Date.now(),
     };
-    window.localStorage.setItem(REQUEST_DRAFT_STORAGE_KEY, JSON.stringify(payload));
+    writeRequestDraft(payload);
   }, [categoryKey, tags, watchedFormValues]);
 
   React.useEffect(() => {
@@ -362,20 +287,10 @@ function CreateRequestContent() {
           },
     [locale],
   );
-  const requestCalendarDays = React.useMemo(() => {
-    const days: string[] = [];
-    const cursor =
-      parseDateSafe(toPreferredDateValue(requestCalendarRange.from)) ?? new Date(requestCalendarRange.from);
-    const end =
-      parseDateSafe(toPreferredDateValue(requestCalendarRange.to)) ?? new Date(requestCalendarRange.to);
-    cursor.setHours(0, 0, 0, 0);
-    end.setHours(0, 0, 0, 0);
-    while (cursor <= end) {
-      days.push(toIsoDayLocal(cursor));
-      cursor.setDate(cursor.getDate() + 1);
-    }
-    return days;
-  }, [requestCalendarRange.from, requestCalendarRange.to]);
+  const requestCalendarDays = React.useMemo(
+    () => createInclusiveIsoDayRange(requestCalendarRange.from, requestCalendarRange.to),
+    [requestCalendarRange.from, requestCalendarRange.to],
+  );
   const requestCalendarConfig = React.useMemo(
     () => ({
       availableIsoDays: requestCalendarDays,
@@ -489,9 +404,7 @@ function CreateRequestContent() {
       if (submitIntent === 'publish') {
         await publishMyRequest(res.id);
       }
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem(REQUEST_DRAFT_STORAGE_KEY);
-      }
+      clearRequestDraft();
       toast.success(t(submitIntent === 'publish' ? I18N_KEYS.request.published : I18N_KEYS.request.created));
       router.push(submitIntent === 'publish' ? '/workspace?section=requests' : '/workspace?tab=my-requests');
     } catch (error) {
@@ -554,58 +467,6 @@ function CreateRequestContent() {
     [cities, locale, t],
   );
 
-  const validateImage = React.useCallback(async (file: File) => {
-    if (!['image/jpeg', 'image/png'].includes(file.type)) {
-      toast.error(t(I18N_KEYS.request.photosError));
-      return false;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error(t(I18N_KEYS.request.photosError));
-      return false;
-    }
-    const url = URL.createObjectURL(file);
-    const img = new window.Image();
-    const loaded = await new Promise<boolean>((resolve) => {
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-      img.src = url;
-    });
-    const isValid = loaded && img.width >= 300 && img.height >= 300;
-    URL.revokeObjectURL(url);
-    if (!isValid) {
-      toast.error(t(I18N_KEYS.request.photosError));
-      return false;
-    }
-    return true;
-  }, [t]);
-
-  const onFilesSelected = async (files: FileList | null) => {
-    if (!files) return;
-    const incoming = Array.from(files);
-    const availableSlots = 8 - photoItems.length;
-    if (availableSlots <= 0) {
-      toast.message(t(I18N_KEYS.request.photosLimit));
-      return;
-    }
-    const nextFiles = incoming.slice(0, availableSlots);
-    const validated: Array<{ file: File; previewUrl: string }> = [];
-    for (const file of nextFiles) {
-      const ok = await validateImage(file);
-      if (!ok) continue;
-      const previewUrl = URL.createObjectURL(file);
-      validated.push({ file, previewUrl });
-    }
-    if (validated.length) {
-      setPhotoItems((prev) => [...prev, ...validated]);
-    }
-  };
-
-  React.useEffect(() => {
-    return () => {
-      photoItems.forEach((item) => URL.revokeObjectURL(item.previewUrl));
-    };
-  }, [photoItems]);
-
   const addTag = (value: string) => {
     const clean = value.trim();
     if (!clean) return;
@@ -626,341 +487,90 @@ function CreateRequestContent() {
         </section>
 
         <form className="card request-form" onSubmit={handleSubmit(onSubmit)}>
-          <section className="request-section">
-            <div className="request-section__header">
-              <h2 className="section-title">{t(I18N_KEYS.request.sectionBasicsTitle)}</h2>
-              <p className="section-subtitle">{t(I18N_KEYS.request.sectionBasicsSubtitle)}</p>
-            </div>
+          <CreateRequestBasicsSection
+            t={t}
+            requiredHint={requiredHint}
+            register={register}
+            categoryKey={categoryKey}
+            serviceKey={serviceKey}
+            categoryOptions={categoryOptions}
+            serviceOptions={serviceOptions}
+            titleValue={titleValue}
+            descriptionValue={descriptionValue}
+            serviceError={errors.serviceKey?.message?.toString()}
+            titleError={errors.title?.message?.toString()}
+            photoItems={photoItems}
+            onCategoryChange={(value) => {
+              setCategoryKey(value);
+              setValue('serviceKey', '');
+            }}
+            onServiceChange={(value) => setValue('serviceKey', value)}
+            onPhotosSelected={onFilesSelected}
+            onPhotoRemove={removePhotoAt}
+          />
 
-            <div className="form-group">
-              <FormLabel required requiredHint={requiredHint}>
-                {t(I18N_KEYS.request.categoryLabel)}
-              </FormLabel>
-              <Field leftIcon={<IconBriefcase />} rightIcon={<IconChevronDown />}>
-                <Select
-                  value={categoryKey}
-                  onChange={(value) => {
-                    setCategoryKey(value);
-                    setValue('serviceKey', '');
-                  }}
-                  options={categoryOptions}
-                  aria-label={t(I18N_KEYS.request.categoryLabel)}
-                />
-              </Field>
-            </div>
+          <CreateRequestDetailsSection
+            t={t}
+            requiredHint={requiredHint}
+            locale={locale}
+            register={register}
+            cityId={cityId}
+            cityOptions={cityOptions}
+            cityError={errors.cityId?.message?.toString()}
+            preferredDateError={errors.preferredDate?.message?.toString()}
+            areaError={errors.area?.message?.toString()}
+            isDirectProviderFlow={isDirectProviderFlow}
+            providerId={providerId}
+            directProviderDisplayName={directProvider?.displayName}
+            directFlowText={{
+              calendarTitle: directFlowText.calendarTitle,
+              calendarHintLoading: directFlowText.calendarHintLoading,
+              calendarHintReady: directFlowText.calendarHintReady,
+              calendarHintEmpty: directFlowText.calendarHintEmpty,
+              selectedDateLabel: directFlowText.selectedDateLabel,
+              providerPrefix: directFlowText.providerPrefix,
+            }}
+            directAvailabilityLabel={directAvailabilityLabel}
+            directAvailabilityTone={directAvailabilityTone}
+            selectedDateLabel={selectedDateLabel}
+            selectedDayIso={selectedDayIso}
+            requestSelectedDateLabel={requestSelectedDateLabel}
+            directFlowCalendarConfig={directFlowCalendarConfig}
+            requestCalendarConfig={requestCalendarConfig}
+            isDirectProviderLoading={isDirectProviderLoading}
+            isProviderSlotsLoading={isProviderSlotsLoading}
+            availableDaysCount={availableDaysSorted.length}
+            isCleaningCategory={isCleaningCategory}
+            propertyType={propertyType}
+            isRecurringValue={isRecurringValue}
+            tags={tags}
+            tagInput={tagInput}
+            onCityChange={(value) => setValue('cityId', value)}
+            onSelectDirectIsoDay={(nextIsoDay) => {
+              if (!availableDaySet.has(nextIsoDay)) return;
+              setValue('preferredDate', toPreferredDateValue(nextIsoDay), {
+                shouldDirty: true,
+                shouldValidate: true,
+              });
+            }}
+            onSelectRequestIsoDay={(nextIsoDay) => {
+              setValue('preferredDate', toPreferredDateValue(nextIsoDay), {
+                shouldDirty: true,
+                shouldValidate: true,
+              });
+            }}
+            onPropertyTypeChange={(value) => setValue('propertyType', value)}
+            onRecurringChange={(value) => setValue('isRecurring', value)}
+            onTagInputChange={setTagInput}
+            onTagCommit={() => addTag(tagInput)}
+            onTagRemove={(tag) => setTags((prev) => prev.filter((item) => item !== tag))}
+          />
 
-            <div className="form-group">
-              <FormLabel required requiredHint={requiredHint}>
-                {t(I18N_KEYS.request.subcategoryLabel)}
-              </FormLabel>
-              <Field rightIcon={<IconChevronDown />}>
-                <Select
-                  value={serviceKey}
-                  onChange={(value) => setValue('serviceKey', value)}
-                  options={serviceOptions}
-                  aria-label={t(I18N_KEYS.request.subcategoryLabel)}
-                  disabled={!categoryKey}
-                />
-              </Field>
-              {errors.serviceKey ? (
-                <p className="text-red-600 text-sm">{errors.serviceKey.message}</p>
-              ) : null}
-            </div>
-
-            <div className="form-group">
-              <div className="request-form__meta">
-                <FormLabel required requiredHint={requiredHint}>
-                  {t(I18N_KEYS.request.titleLabel)}
-                </FormLabel>
-                <span className="form-counter">{titleValue.length}/120</span>
-              </div>
-              <Field>
-                <Input
-                  {...register('title')}
-                  placeholder={t(I18N_KEYS.request.titlePlaceholder)}
-                  aria-invalid={errors.title ? 'true' : 'false'}
-                />
-              </Field>
-              {errors.title ? <p className="text-red-600 text-sm">{errors.title.message}</p> : null}
-            </div>
-
-            <div className="form-group">
-              <div className="request-form__meta">
-                <label className="typo-small">{t(I18N_KEYS.request.descriptionLabel)}</label>
-                <span className="form-counter">{descriptionValue.length}/2000</span>
-              </div>
-              <Field>
-                <Textarea
-                  {...register('description')}
-                  placeholder={t(I18N_KEYS.request.descriptionPlaceholder)}
-                />
-              </Field>
-            </div>
-
-            <div className="form-group">
-              <label className="typo-small">{t(I18N_KEYS.request.photosLabel)}</label>
-              <div className="request-upload">
-                <div className="request-upload__actions">
-                  <input
-                    id="request-photos"
-                    type="file"
-                    accept="image/jpeg,image/png"
-                    multiple
-                    onChange={(event) => {
-                      void onFilesSelected(event.target.files);
-                      event.currentTarget.value = '';
-                    }}
-                    className="sr-only"
-                  />
-                  <label htmlFor="request-photos" className="btn-secondary">
-                    {t(I18N_KEYS.request.photosButton)}
-                  </label>
-                </div>
-                <p className="request-upload__hint">{t(I18N_KEYS.request.photosHint)}</p>
-              </div>
-
-              {photoItems.length ? (
-                <div className="request-photos">
-                  {photoItems.map((item, index) => (
-                    <div key={item.previewUrl} className="request-photo">
-                      <Image
-                        src={item.previewUrl}
-                        alt=""
-                        fill
-                        className="request-photo__img"
-                        sizes="(min-width: 768px) 33vw, 50vw"
-                        unoptimized
-                      />
-                      <button
-                        type="button"
-                        className="request-photo__remove"
-                        onClick={() => {
-                          URL.revokeObjectURL(item.previewUrl);
-                          setPhotoItems((prev) => prev.filter((_, i) => i !== index));
-                        }}
-                        aria-label={t(I18N_KEYS.request.removePhoto)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </section>
-
-          <section className="request-section">
-            <div className="request-section__header">
-              <h2 className="section-title">{t(I18N_KEYS.request.sectionDetailsTitle)}</h2>
-              <p className="section-subtitle">{t(I18N_KEYS.request.sectionDetailsSubtitle)}</p>
-            </div>
-
-            <div className="form-group">
-              <FormLabel required requiredHint={requiredHint}>
-                {t(I18N_KEYS.home.cityAria)}
-              </FormLabel>
-              <Field leftIcon={<IconPin />} rightIcon={<IconChevronDown />}>
-                <Select
-                  value={cityId}
-                  onChange={(value) => setValue('cityId', value)}
-                  options={cityOptions}
-                  aria-label={t(I18N_KEYS.home.cityAria)}
-                />
-              </Field>
-              {errors.cityId ? (
-                <p className="text-red-600 text-sm">{errors.cityId.message}</p>
-              ) : null}
-            </div>
-
-            <div className="request-form__row is-2">
-              <div className="form-group">
-                <FormLabel required requiredHint={requiredHint}>
-                  {t(I18N_KEYS.request.preferredDate)}
-                </FormLabel>
-                {isDirectProviderFlow ? (
-                  <div className="request-provider-calendar">
-                    <div className="request-provider-calendar__head">
-                      <p className="request-provider-calendar__title">{directFlowText.calendarTitle}</p>
-                      <p className="request-provider-calendar__provider">
-                        {directFlowText.providerPrefix}:{' '}
-                        <strong>
-                          {directProvider?.displayName?.trim() || providerId}
-                        </strong>
-                      </p>
-                    </div>
-                    <ProviderAvailabilityMeta
-                      stateLabel={directAvailabilityLabel}
-                      datePrefix={t(I18N_KEYS.homePublic.providerAvailabilityNextSlot)}
-                      dateLabel={selectedDateLabel}
-                      dateIso={selectedDayIso}
-                      tone={directAvailabilityTone}
-                      calendarLocale={locale}
-                      calendar={directFlowCalendarConfig}
-                      className="request-provider-calendar__availability"
-                      onSelectIsoDay={(nextIsoDay) => {
-                        if (!availableDaySet.has(nextIsoDay)) return;
-                        setValue('preferredDate', toPreferredDateValue(nextIsoDay), {
-                          shouldDirty: true,
-                          shouldValidate: true,
-                        });
-                      }}
-                    />
-                    <p className="request-provider-calendar__selected">
-                      <span className="request-provider-calendar__selected-label">
-                        {directFlowText.selectedDateLabel}:
-                      </span>{' '}
-                      <span className="request-provider-calendar__selected-value">{selectedDateLabel}</span>
-                    </p>
-                    <p className="request-provider-calendar__hint">
-                      {isDirectProviderLoading || isProviderSlotsLoading
-                        ? directFlowText.calendarHintLoading
-                        : availableDaysSorted.length > 0
-                          ? directFlowText.calendarHintReady
-                          : directFlowText.calendarHintEmpty}
-                    </p>
-                    <input type="hidden" {...register('preferredDate')} />
-                  </div>
-                ) : (
-                  <div className="request-provider-calendar">
-                    <ProviderAvailabilityMeta
-                      stateLabel={t(I18N_KEYS.homePublic.providerAvailabilityStateOpen)}
-                      datePrefix={t(I18N_KEYS.request.preferredDate)}
-                      dateLabel={requestSelectedDateLabel}
-                      dateIso={selectedDayIso}
-                      tone="success"
-                      calendarLocale={locale}
-                      calendar={requestCalendarConfig}
-                      showStateBadge={false}
-                      showDatePrefix={false}
-                      autoSelectFirstAvailable={false}
-                      className="request-provider-calendar__availability"
-                      onSelectIsoDay={(nextIsoDay) => {
-                        setValue('preferredDate', toPreferredDateValue(nextIsoDay), {
-                          shouldDirty: true,
-                          shouldValidate: true,
-                        });
-                      }}
-                    />
-                    <input type="hidden" {...register('preferredDate')} />
-                  </div>
-                )}
-                {errors.preferredDate ? (
-                  <p className="text-red-600 text-sm">{errors.preferredDate.message}</p>
-                ) : null}
-              </div>
-              <div className="form-group">
-                <label className="typo-small">{t(I18N_KEYS.request.priceLabel)}</label>
-                <Field leftIcon={<IconCoins />}>
-                  <Input
-                    type="number"
-                    min={1}
-                    placeholder={t(I18N_KEYS.request.pricePlaceholder)}
-                    {...register('price', {
-                      setValueAs: (value) =>
-                        value === '' || value === undefined ? undefined : Number(value),
-                    })}
-                  />
-                </Field>
-              </div>
-            </div>
-
-            {isCleaningCategory ? (
-              <>
-                <div className="request-form__row is-2">
-                  <div className="form-group">
-                    <label className="typo-small">{t(I18N_KEYS.request.propertyType)}</label>
-                    <Field rightIcon={<IconChevronDown />}>
-                      <Select
-                      value={propertyType}
-                      onChange={(value) =>
-                        setValue('propertyType', value as CreateRequestValues['propertyType'])
-                      }
-                        options={[
-                          { value: 'apartment', label: t(I18N_KEYS.request.propertyApartment) },
-                          { value: 'house', label: t(I18N_KEYS.request.propertyHouse) },
-                        ]}
-                      />
-                    </Field>
-                  </div>
-                  <div className="form-group">
-                    <label className="typo-small">{t(I18N_KEYS.request.area)}</label>
-                    <Field>
-                      <Input
-                        type="number"
-                        min={10}
-                        {...register('area', { valueAsNumber: true })}
-                      />
-                    </Field>
-                    {errors.area ? (
-                      <p className="text-red-600 text-sm">{errors.area.message}</p>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="typo-small">{t(I18N_KEYS.request.recurring)}</label>
-                  <Field rightIcon={<IconChevronDown />}>
-                    <Select
-                      value={isRecurringValue ? 'recurring' : 'once'}
-                      onChange={(value) => setValue('isRecurring', value === 'recurring')}
-                      options={[
-                        { value: 'once', label: t(I18N_KEYS.request.modeOnce) },
-                        { value: 'recurring', label: t(I18N_KEYS.request.modeRecurring) },
-                      ]}
-                    />
-                  </Field>
-                </div>
-              </>
-            ) : null}
-
-            <div className="form-group">
-              <label className="typo-small">{t(I18N_KEYS.request.tagsLabel)}</label>
-              <div className="request-tags">
-                {tags.map((tag) => (
-                  <span key={tag} className="request-tag-chip">
-                    {tag}
-                    <button type="button" onClick={() => setTags((prev) => prev.filter((t) => t !== tag))}>
-                      ×
-                    </button>
-                  </span>
-                ))}
-                <Input
-                  className="request-tag-input"
-                  value={tagInput}
-                  onChange={(event) => setTagInput(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ',') {
-                      event.preventDefault();
-                      addTag(tagInput);
-                    }
-                  }}
-                  onBlur={() => addTag(tagInput)}
-                  placeholder={t(I18N_KEYS.request.tagsPlaceholder)}
-                />
-              </div>
-            </div>
-          </section>
-
-          <div className="request-actions">
-            <p className="typo-small text-center">{t(I18N_KEYS.request.hint)}</p>
-            <div className="request-form__row is-2">
-              <Button
-                type="submit"
-                variant="ghost"
-                value="draft"
-                loading={isSubmitting && activeSubmitIntent === 'draft'}
-              >
-                {t(I18N_KEYS.request.submitDraft)}
-              </Button>
-              <Button
-                type="submit"
-                value="publish"
-                loading={isSubmitting && activeSubmitIntent === 'publish'}
-              >
-                {t(I18N_KEYS.request.submitPublish)}
-              </Button>
-            </div>
-          </div>
+          <CreateRequestActions
+            t={t}
+            isSubmitting={isSubmitting}
+            activeSubmitIntent={activeSubmitIntent}
+          />
         </form>
       </div>
     </PageShell>
