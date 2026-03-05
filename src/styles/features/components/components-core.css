@@ -299,7 +299,7 @@
     margin-top: 2px;
     padding: 10px 12px;
     border-radius: 10px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 30%, transparent);
+    border: 1px solid var(--focus-ring-primary);
     background: color-mix(in oklab, var(--c-primary) 10%, transparent);
     display: grid;
     gap: 6px;
@@ -413,7 +413,7 @@
       linear-gradient(
         148deg,
         color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%) 0%,
-        color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%) 62%,
+        var(--surface-soft-bg-strong) 62%,
         color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%) 100%
       );
     border-color: color-mix(in oklab, var(--c-accent) 64%, var(--c-border) 36%);
@@ -488,7 +488,7 @@
     border-radius: 999px;
     padding: 3px 7px;
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
     color: var(--c-text-muted);
     flex: 0 0 auto;
   }
@@ -537,7 +537,7 @@
     height: 40px;
     border-radius: 999px;
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
     color: var(--c-text-muted);
     font-size: 22px;
     line-height: 1;
@@ -1037,7 +1037,7 @@
       linear-gradient(
         148deg,
         color-mix(in oklab, var(--c-accent) 22%, var(--c-panel) 78%) 0%,
-        color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%) 62%,
+        var(--surface-soft-bg) 62%,
         color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%) 100%
       );
     box-shadow:
@@ -1068,7 +1068,7 @@
       linear-gradient(
         148deg,
         color-mix(in oklab, var(--c-accent) 24%, var(--c-panel) 76%) 0%,
-        color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%) 62%,
+        var(--surface-soft-bg) 62%,
         color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%) 100%
       );
     box-shadow:
@@ -1209,7 +1209,7 @@
         linear-gradient(
           148deg,
           color-mix(in oklab, var(--c-accent) 20%, var(--c-panel) 80%) 0%,
-          color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%) 100%
+          var(--surface-soft-bg) 100%
         );
       color: var(--c-text-muted);
       backdrop-filter: blur(12px) saturate(1.18);
@@ -1280,7 +1280,7 @@
         linear-gradient(
           148deg,
           color-mix(in oklab, var(--c-accent) 24%, var(--c-panel) 76%) 0%,
-          color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%) 100%
+          var(--surface-soft-bg) 100%
         );
       box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 14%, transparent);
     }

@@ -1,7 +1,16 @@
 name: Frontend CI
 
 on:
+  workflow_dispatch:
   pull_request:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
   push:
     branches:
       - main
@@ -10,6 +19,9 @@ on:
       - feat/**
       - fix/**
       - refactor/**
+
+permissions:
+  contents: read
 
 jobs:
   quality:

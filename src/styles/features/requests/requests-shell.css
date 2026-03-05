@@ -21,7 +21,7 @@
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--c-panel) 96%, transparent),
-        color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%)
+        var(--surface-soft-bg)
       );
     box-shadow:
       0 12px 28px color-mix(in oklab, var(--c-primary) 10%, transparent),
@@ -110,7 +110,7 @@
     pointer-events: none;
     --personal-nav-item-border: color-mix(in oklab, var(--c-border) 72%, transparent);
     --personal-nav-item-bg-start: color-mix(in oklab, var(--c-panel) 94%, transparent);
-    --personal-nav-item-bg-end: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    --personal-nav-item-bg-end: var(--surface-soft-bg);
     --personal-nav-item-shadow: none;
     transform: none;
   }
@@ -307,8 +307,8 @@
   }
 
   .requests-provider-summary {
-    --soft-surface-border: color-mix(in oklab, var(--c-border) 65%, transparent);
-    --soft-surface-bg: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    --soft-surface-border: var(--surface-soft-border);
+    --soft-surface-bg: var(--surface-soft-bg);
     display: inline-flex;
     flex-direction: column;
     align-items: flex-end;
@@ -360,7 +360,7 @@
     padding: var(--space-1);
     border-radius: 10px;
     border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
   }
 
   .requests-stats__tab {
@@ -590,7 +590,7 @@
     padding: var(--space-2-5);
     border-radius: 12px;
     border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
   }
 
   .requests-stats-hint__text {
@@ -656,7 +656,7 @@
 
   .workspace-public-demand-map__leaflet .leaflet-control-zoom a {
     color: var(--c-text);
-    background: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
+    background: var(--surface-soft-bg-strong);
     border-color: color-mix(in oklab, var(--c-border) 58%, transparent);
   }
 
@@ -732,7 +732,7 @@
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--c-panel) 96%, transparent),
-        color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%)
+        var(--surface-soft-bg)
       );
     box-shadow: 0 10px 24px color-mix(in oklab, var(--c-overlay) 16%, transparent);
     padding: 4px 8px;
@@ -837,7 +837,7 @@
     padding: var(--space-3-5);
     border-radius: var(--radius-lg);
     border: 1px solid color-mix(in oklab, var(--c-border) 42%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
+    background: var(--surface-soft-bg-strong);
     box-shadow:
       0 10px 26px color-mix(in oklab, var(--c-primary) 10%, transparent),
       inset 0 1px 0 color-mix(in oklab, var(--c-primary-contrast) 10%, transparent);
@@ -1015,7 +1015,7 @@
     width: auto;
     border-radius: 999px;
     padding-inline: var(--space-4);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
     border: 1px solid color-mix(in oklab, var(--c-border) 58%, transparent);
     box-shadow: 0 6px 14px color-mix(in oklab, var(--c-primary) 8%, transparent);
     display: inline-flex;
@@ -1103,7 +1103,7 @@
     gap: var(--space-2);
     align-items: center;
     padding-top: var(--space-0-5);
-    border-top: 1px dashed color-mix(in oklab, var(--c-border) 65%, transparent);
+    border-top: 1px dashed var(--surface-soft-border);
   }
 
   .requests-filter-summary__controls {
@@ -1120,7 +1120,7 @@
     gap: var(--space-1);
     padding: var(--space-0-75);
     border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
   }
 

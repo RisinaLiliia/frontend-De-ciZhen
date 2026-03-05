@@ -32,7 +32,7 @@
     gap: 8px;
     padding: 8px 6px;
     border-radius: var(--radius-md);
-    background: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
+    background: var(--surface-soft-bg-strong);
     border: 1px solid var(--c-border);
     text-align: center;
     font-size: 12px;
@@ -160,7 +160,7 @@
 
   .home-hero__cta--secondary {
     border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
     color: var(--c-text);
   }
 

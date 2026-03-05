@@ -163,7 +163,7 @@
     border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
     background:
       radial-gradient(120% 100% at 0% 0%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent),
-      linear-gradient(180deg, color-mix(in oklab, var(--c-panel) 96%, transparent), color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%));
+      linear-gradient(180deg, color-mix(in oklab, var(--c-panel) 96%, transparent), var(--surface-soft-bg));
   }
 
   .home-intro-shell {
