@@ -1,4 +1,5 @@
 /* src/styles/home.css */
 @import './features/home/home-intro.css';
 @import './features/home/home-content.css';
+@import './features/home/home-content-layout.css';
 @import './features/home/home-actions.css';

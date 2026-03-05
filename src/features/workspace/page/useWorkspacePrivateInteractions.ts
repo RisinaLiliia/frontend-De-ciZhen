@@ -27,7 +27,7 @@ type InteractionsParams = {
   nextPath: WorkspaceBranchProps['routeState']['nextPath'];
   platformRequestsTotal: number;
   myOffers: OfferDto[];
-  favoriteRequestIds: Set<string>;
+  favoriteRequestIds: ReadonlySet<string>;
   requestById: ReadonlyMap<string, RequestResponseDto>;
   favoriteProviderLookup: ReadonlySet<string>;
   providerById: ReadonlyMap<string, ProviderPublicDto>;
