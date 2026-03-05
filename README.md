@@ -120,6 +120,14 @@ Response is already view-ready:
 - `summary.averageRating`
 - `summary.distribution` (`1..5`)
 
+### Backend-Derived Provider Readiness
+
+- Frontend consumes `providerProfile.isProfileComplete` from backend as the source of truth.
+- Field is available from:
+  - `GET /providers/me/profile`
+  - `PATCH /providers/me/profile`
+  - nested `providerProfile` in `POST /offers` and `PATCH /offers/:id`
+
 ### Legacy Compatibility Routes
 
 Backward-compatible redirects are still present for older links:

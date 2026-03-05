@@ -1,0 +1,39 @@
+/* src/styles/features/components/components-patterns.css */
+
+@layer components {
+  .ui-inline-center,
+  :is(
+      .offer-actions__btn,
+      .request-detail__cta .btn-primary,
+      .request-detail__cta .btn-secondary,
+      .request-detail__mobile-cta .btn-primary,
+      .request-detail__mobile-cta .btn-secondary,
+      .request-detail__mobile-cta .btn-ghost,
+      .request-detail__cta .btn-ghost
+    ) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ui-soft-surface,
+  :is(
+      .requests-provider-summary,
+      .provider-reviews-hub__summary,
+      .provider-reviews-hub__item
+    ) {
+    border: 1px solid var(--soft-surface-border, color-mix(in oklab, var(--c-border) 65%, transparent));
+    background: var(--soft-surface-bg, color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%));
+  }
+
+  .ui-icon-only-action,
+  .offer-action-btn--icon-only {
+    --icon-only-size: 24px;
+    width: var(--icon-only-size);
+    min-width: var(--icon-only-size);
+    height: var(--icon-only-size);
+    min-height: var(--icon-only-size);
+    padding: 0;
+    border-radius: 999px;
+  }
+}

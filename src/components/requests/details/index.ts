@@ -8,3 +8,4 @@ export { RequestDetailAside, RequestDetailMetaRows } from './RequestDetailAside'
 export { RequestDetailSimilar } from './RequestDetailSimilar';
 export { RequestDetailMobileCta } from './RequestDetailMobileCta';
 export { RequestOfferSheet } from './RequestOfferSheet';
+export { RequestOwnerEditPanel } from './RequestOwnerEditPanel';
