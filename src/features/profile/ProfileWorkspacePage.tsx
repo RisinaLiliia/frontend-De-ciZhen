@@ -25,9 +25,14 @@ import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { FormLabel } from '@/components/ui/FormLabel';
 import { IconEye, IconEyeOff } from '@/components/ui/icons/icons';
-import { buildApiUrl } from '@/lib/api/url';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useConsent } from '@/lib/consent/ConsentProvider';
+import {
+  computeManualProfileCompleteness,
+  findProviderPublicByUserId,
+  resolveAvatarPreviewUrl,
+  resolveProfileCompleteness,
+} from '@/features/profile/profileWorkspace.presentation';
 
 export default function ProfileWorkspacePage() {
   const t = useT();
@@ -112,13 +117,7 @@ export default function ProfileWorkspacePage() {
     enabled: Boolean(authMe?.id),
     queryFn: async () => {
       const list = await listPublicProviders();
-      const currentUserId = authMe?.id;
-      if (!currentUserId) return null;
-      return (
-        list.find((item) => item.userId === currentUserId) ??
-        list.find((item) => item.id === currentUserId) ??
-        null
-      );
+      return findProviderPublicByUserId(list, authMe?.id);
     },
   });
   const { data: myProviderProfile } = useQuery({
@@ -199,23 +198,26 @@ export default function ProfileWorkspacePage() {
     [authMe?.id, contracts, myRequests.length, providerOffers.length],
   );
 
-  const manualProfileCompleteness = React.useMemo(() => {
-    const checks = [
-      Boolean(authMe?.name?.trim()),
-      Boolean(authMe?.city?.trim()),
-      Boolean(authMe?.phone?.trim()),
-      Boolean(authMe?.bio?.trim()),
-      Boolean(avatarUrl),
-    ];
-    const done = checks.filter(Boolean).length;
-    return Math.round((done / checks.length) * 100);
-  }, [authMe?.bio, authMe?.city, authMe?.name, authMe?.phone, avatarUrl]);
-  const profileCompleteness = React.useMemo(() => {
-    if (!hasProviderProfile) return manualProfileCompleteness;
-    if (myProviderProfile?.isProfileComplete === true) return 100;
-    if (myProviderProfile?.isProfileComplete === false) return Math.min(manualProfileCompleteness, 99);
-    return manualProfileCompleteness;
-  }, [hasProviderProfile, manualProfileCompleteness, myProviderProfile?.isProfileComplete]);
+  const manualProfileCompleteness = React.useMemo(
+    () =>
+      computeManualProfileCompleteness({
+        name: authMe?.name,
+        city: authMe?.city,
+        phone: authMe?.phone,
+        bio: authMe?.bio,
+        avatarUrl,
+      }),
+    [authMe?.bio, authMe?.city, authMe?.name, authMe?.phone, avatarUrl],
+  );
+  const profileCompleteness = React.useMemo(
+    () =>
+      resolveProfileCompleteness({
+        manualProfileCompleteness,
+        hasProviderProfile,
+        providerProfile: myProviderProfile,
+      }),
+    [hasProviderProfile, manualProfileCompleteness, myProviderProfile],
+  );
   const effectiveTheme = isThemeReady ? resolvedTheme : 'light';
 
   const handleSaveProfile = async () => {
@@ -312,14 +314,7 @@ export default function ProfileWorkspacePage() {
   ];
 
   const avatarInitial = (authMe?.name?.trim()?.charAt(0) || 'U').toUpperCase();
-  const avatarPreviewUrl = (() => {
-    const raw = avatarUrl?.trim();
-    if (!raw) return null;
-    if (raw === '/avatars/default.png' || raw.endsWith('/avatars/default.png')) return null;
-    if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('data:image/')) return raw;
-    if (raw.startsWith('/')) return raw.startsWith('/api/') ? raw : buildApiUrl(raw);
-    return raw;
-  })();
+  const avatarPreviewUrl = resolveAvatarPreviewUrl(avatarUrl);
   const fileButtonLabel = t(I18N_KEYS.client.profileFileChoose);
   const noFileLabel = t(I18N_KEYS.client.profileFileNone);
 
