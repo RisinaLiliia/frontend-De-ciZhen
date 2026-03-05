@@ -16,11 +16,8 @@ import {
   RequestDetailMobileCta,
 } from '@/components/requests/details';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
-import { ProviderCard } from '@/components/providers/ProviderCard';
 import { ProviderAvailabilityMeta } from '@/components/providers/ProviderAvailabilityMeta';
 import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
-import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
-import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { listProviderSlots } from '@/lib/api/availability';
 import { getPublicProviderById, listPublicProviders } from '@/lib/api/providers';
 import {
@@ -43,6 +40,8 @@ import {
   getProviderServiceKeys,
 } from '@/features/providers/publicProfile/providerPublicProfile.presentation';
 import { useProviderReviewsModel } from '@/features/providers/publicProfile/useProviderReviewsModel';
+import { ProviderReviewsSection } from '@/features/providers/publicProfile/ProviderReviewsSection';
+import { ProviderSimilarSection } from '@/features/providers/publicProfile/ProviderSimilarSection';
 
 const SIMILAR_LIMIT = 2;
 
@@ -469,104 +468,24 @@ export default function ProviderPublicProfilePage() {
             ))}
           </div>
 
-          <div id="reviews" className="request-detail__section request-detail__similar">
-            <h3 className="request-detail__section-title">{t(I18N_KEYS.requestsPage.reviewsViewLabel)}</h3>
-            {isReviewsLoading ? <p className="request-detail__similar-note">...</p> : null}
-            {!isReviewsLoading ? (
-              <div className="provider-reviews-hub">
-                <div className="provider-reviews-hub__summary card">
-                  <div className="provider-reviews-hub__rating-main">
-                    <p className="provider-reviews-hub__rating-value">{displayRatingAvg.toFixed(1)}</p>
-                    <p className="provider-reviews-hub__rating-stars" aria-hidden="true">
-                      {'★'.repeat(Math.max(1, Math.min(5, Math.round(displayRatingAvg))))}
-                      {'☆'.repeat(5 - Math.max(1, Math.min(5, Math.round(displayRatingAvg))))}
-                    </p>
-                    <p className="provider-reviews-hub__rating-meta">
-                      {displayRatingCount} {t(I18N_KEYS.homePublic.reviews)}
-                    </p>
-                  </div>
-                  <div className="provider-reviews-hub__distribution">
-                    {[5, 4, 3, 2, 1].map((score) => {
-                      const count = reviewsDistribution.stats.get(score) ?? 0;
-                      const width = `${(count / reviewsDistribution.max) * 100}%`;
-                      return (
-                        <div key={score} className="provider-reviews-hub__distribution-row">
-                          <span className="provider-reviews-hub__distribution-score">{score}★</span>
-                          <span className="provider-reviews-hub__distribution-track">
-                            <span className="provider-reviews-hub__distribution-fill" style={{ width }} />
-                          </span>
-                          <span className="provider-reviews-hub__distribution-count">{count}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="provider-reviews-hub__feed">
-                  <div className="provider-reviews-hub__toolbar">
-                    <span className="provider-reviews-hub__toolbar-label">
-                      {reviewsUi.basedOn} {displayRatingCount} {reviewsUi.ratingsLabel}
-                    </span>
-                    <div className="provider-reviews-hub__sort">
-                      <button
-                        type="button"
-                        className={`provider-reviews-hub__sort-btn ${reviewSort === 'latest' ? 'is-active' : ''}`.trim()}
-                        aria-pressed={reviewSort === 'latest'}
-                        onClick={() => setReviewSort('latest')}
-                      >
-                        {reviewsUi.sortLatest}
-                      </button>
-                      <button
-                        type="button"
-                        className={`provider-reviews-hub__sort-btn ${reviewSort === 'top' ? 'is-active' : ''}`.trim()}
-                        aria-pressed={reviewSort === 'top'}
-                        onClick={() => setReviewSort('top')}
-                      >
-                        {reviewsUi.sortTop}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="provider-reviews-hub__list">
-                    {visibleReviews.map((review) => (
-                      <article key={review.id} className="provider-reviews-hub__item card">
-                        <div className="provider-reviews-hub__item-head">
-                          <p className="provider-reviews-hub__item-author">{review.authorName}</p>
-                          <p className="provider-reviews-hub__item-date">
-                            {review.createdAtTs ? reviewDateFormatter.format(new Date(review.createdAtTs)) : ''}
-                          </p>
-                        </div>
-                        <p className="provider-reviews-hub__item-stars" aria-label={`${review.rating} of 5`}>
-                          {'★'.repeat(review.rating)}
-                          {'☆'.repeat(Math.max(0, 5 - review.rating))}
-                        </p>
-                        <p className="provider-reviews-hub__item-text">{review.text || reviewsUi.noText}</p>
-                      </article>
-                    ))}
-                    {reviewsTotalForPagination === 0 ? (
-                      <article className="provider-reviews-hub__item card">
-                        <p className="provider-reviews-hub__item-text">{t(I18N_KEYS.requestsPage.reviewsEmptyHint)}</p>
-                      </article>
-                    ) : null}
-                  </div>
-
-                  {hasReviewsPagination ? (
-                    <RequestsPageNav
-                      className="provider-reviews-hub__page-nav"
-                      page={reviewPage}
-                      totalPages={totalReviewPages}
-                      disabled={isReviewsLoading}
-                      onPrevPage={() => setReviewPage((prev) => Math.max(1, prev - 1))}
-                      onNextPage={() => setReviewPage((prev) => Math.min(totalReviewPages, prev + 1))}
-                      ariaLabel={t(I18N_KEYS.requestsPage.paginationLabel)}
-                      prevAriaLabel={t(I18N_KEYS.requestsPage.paginationPrev)}
-                      nextAriaLabel={t(I18N_KEYS.requestsPage.paginationNext)}
-                    />
-                  ) : null}
-                </div>
-              </div>
-            ) : null}
-          </div>
+          <ProviderReviewsSection
+            t={t}
+            isReviewsLoading={isReviewsLoading}
+            displayRatingAvg={displayRatingAvg}
+            displayRatingCount={displayRatingCount}
+            reviewsDistribution={reviewsDistribution}
+            reviewsUi={reviewsUi}
+            reviewSort={reviewSort}
+            onReviewSortChange={setReviewSort}
+            visibleReviews={visibleReviews}
+            reviewsTotalForPagination={reviewsTotalForPagination}
+            hasReviewsPagination={hasReviewsPagination}
+            reviewPage={reviewPage}
+            totalReviewPages={totalReviewPages}
+            onPrevPage={() => setReviewPage((prev) => Math.max(1, prev - 1))}
+            onNextPage={() => setReviewPage((prev) => Math.min(totalReviewPages, prev + 1))}
+            formatReviewDate={(value) => reviewDateFormatter.format(new Date(value))}
+          />
         </section>
 
         <RequestDetailAside
@@ -598,24 +517,12 @@ export default function ProviderPublicProfilePage() {
           showChat
           showSave
         >
-          <div className="request-detail__section request-detail__similar">
-            <h3 className="request-detail__section-title">{similarProvidersTitle}</h3>
-            {similarProvidersHint ? <p className="request-detail__similar-note">{similarProvidersHint}</p> : null}
-            {similarCards.length === 0 ? (
-              <p className="request-detail__similar-note">{t(I18N_KEYS.requestsPage.emptyProvidersFilteredHint)}</p>
-            ) : (
-              <>
-                <div className="provider-list">
-                  {similarCards.map((item) => (
-                    <ProviderCard key={item.id} provider={item} className="provider-card--similar-mobile-minimal" />
-                  ))}
-                </div>
-                <div className="request-detail__similar-footer">
-                  <MoreDotsLink href="/workspace?section=providers" label={t(I18N_KEYS.requestDetails.showAll)} />
-                </div>
-              </>
-            )}
-          </div>
+          <ProviderSimilarSection
+            t={t}
+            title={similarProvidersTitle}
+            hint={similarProvidersHint}
+            cards={similarCards}
+          />
         </RequestDetailAside>
       </div>
 

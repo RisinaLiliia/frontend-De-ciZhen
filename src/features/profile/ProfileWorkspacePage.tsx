@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
@@ -25,6 +24,8 @@ import {
   resolveProfileCompleteness,
 } from '@/features/profile/profileWorkspace.presentation';
 import { useProfileWorkspaceData } from '@/features/profile/useProfileWorkspaceData';
+import { ProfilePreferencesCards } from '@/features/profile/ProfilePreferencesCards';
+import { ProfileOverviewSection } from '@/features/profile/ProfileOverviewSection';
 
 export default function ProfileWorkspacePage() {
   const t = useT();
@@ -164,7 +165,7 @@ export default function ProfileWorkspacePage() {
       }),
     [hasProviderProfile, manualProfileCompleteness, myProviderProfile],
   );
-  const effectiveTheme = isThemeReady ? resolvedTheme : 'light';
+  const effectiveTheme = (isThemeReady ? resolvedTheme : 'light') ?? 'light';
 
   const handleSaveProfile = async () => {
     const name = profileForm.name.trim();
@@ -636,100 +637,24 @@ export default function ProfileWorkspacePage() {
             ) : null}
           </article>
 
-          <article className="profile-settings__card stack-sm">
-            <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profileThemeTitle)}</p>
-              <p className="typo-small">{t(I18N_KEYS.client.profileThemeSubtitle)}</p>
-            </header>
-            <div className="profile-settings__choices">
-              <button
-                type="button"
-                className={`profile-settings__choice ${effectiveTheme === 'light' ? 'is-active' : ''}`.trim()}
-                onClick={() => setTheme('light')}
-              >
-                {t(I18N_KEYS.common.themeLight)}
-              </button>
-              <button
-                type="button"
-                className={`profile-settings__choice ${effectiveTheme === 'dark' ? 'is-active' : ''}`.trim()}
-                onClick={() => setTheme('dark')}
-              >
-                {t(I18N_KEYS.common.themeDark)}
-              </button>
-            </div>
-          </article>
-
-          <article className="profile-settings__card stack-sm">
-            <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profileLanguageTitle)}</p>
-              <p className="typo-small">{t(I18N_KEYS.client.profileLanguageSubtitle)}</p>
-            </header>
-            <div className="profile-settings__choices">
-              <button
-                type="button"
-                className={`profile-settings__choice ${locale === 'de' ? 'is-active' : ''}`.trim()}
-                onClick={() => setLocale('de')}
-              >
-                {t(I18N_KEYS.common.languageGerman)}
-              </button>
-              <button
-                type="button"
-                className={`profile-settings__choice ${locale === 'en' ? 'is-active' : ''}`.trim()}
-                onClick={() => setLocale('en')}
-              >
-                {t(I18N_KEYS.common.languageEnglish)}
-              </button>
-            </div>
-            <div className="profile-settings__meta">
-              <p className="typo-small">{t(I18N_KEYS.client.profileLanguageCurrentPrefix)}: {locale.toUpperCase()}</p>
-              <p className="typo-small">{t(I18N_KEYS.client.profileFavoritesTotalPrefix)}: {favoritesTotal}</p>
-            </div>
-          </article>
-
-          <article className="profile-settings__card stack-sm">
-            <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profilePrivacyTitle)}</p>
-              <p className="typo-small">{t(I18N_KEYS.client.profilePrivacySubtitle)}</p>
-            </header>
-            <div className="profile-settings__meta">
-              <p className="typo-small">
-                {t(I18N_KEYS.client.profileAnalyticsLabel)}: {consentChoice.analytics ? t(I18N_KEYS.client.profileEnabled) : t(I18N_KEYS.client.profileDisabled)}
-              </p>
-              <p className="typo-small">
-                {t(I18N_KEYS.client.profileMarketingLabel)}: {consentChoice.marketing ? t(I18N_KEYS.client.profileEnabled) : t(I18N_KEYS.client.profileDisabled)}
-              </p>
-            </div>
-            <div className="profile-settings__inline-actions">
-              <button
-                type="button"
-                className="btn-secondary profile-settings__save-btn"
-                onClick={openPreferences}
-              >
-                {t(I18N_KEYS.client.profileOpenCookieSettingsCta)}
-              </button>
-            </div>
-          </article>
+          <ProfilePreferencesCards
+            t={t}
+            locale={locale}
+            setLocale={setLocale}
+            effectiveTheme={effectiveTheme}
+            setTheme={setTheme}
+            favoritesTotal={favoritesTotal}
+            consentChoice={consentChoice}
+            openPreferences={openPreferences}
+          />
         </div>
       </section>
-
-      <section className="card stack-sm">
-        <div className="flex items-center justify-between gap-3">
-          <h2 className="typo-h3">{t(I18N_KEYS.client.profileOverviewTitle)}</h2>
-          <span className="badge">{t(I18N_KEYS.client.profileOverviewCompletenessPrefix)}: {profileCompleteness}%</span>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {overview.map((item) => (
-            <Link key={item.label} href={item.href} prefetch={false} className="card stack-xs no-underline" onClick={guardNavigation}>
-              <p className="typo-small">{item.label}</p>
-              <p className="typo-h3">{item.value}</p>
-              <p className="typo-small">{t(I18N_KEYS.client.profileOverviewViewAll)}</p>
-            </Link>
-          ))}
-        </div>
-        <Link href="/workspace?section=requests" prefetch={false} className="btn-primary w-fit" onClick={guardNavigation}>
-          {t(I18N_KEYS.client.profileCompleteProfileCta)}
-        </Link>
-      </section>
+      <ProfileOverviewSection
+        t={t}
+        profileCompleteness={profileCompleteness}
+        overview={overview}
+        onGuardNavigation={guardNavigation}
+      />
     </PageShell>
   );
 }
