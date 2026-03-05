@@ -37,12 +37,29 @@ type UseProviderReviewsModelParams = {
   t: Translate;
 };
 
-type NormalizedReview = {
+export type ProviderReviewSort = 'latest' | 'top';
+
+export type ProviderReviewsUi = {
+  sortLatest: string;
+  sortTop: string;
+  noText: string;
+  basedOn: string;
+  ratingsLabel: string;
+  expandAbout: string;
+  collapseAbout: string;
+};
+
+export type NormalizedProviderReview = {
   id: string;
   rating: number;
   text: string;
   authorName: string;
   createdAtTs: number | null;
+};
+
+export type ProviderReviewsDistribution = {
+  stats: Map<number, number>;
+  max: number;
 };
 
 export function useProviderReviewsModel({
@@ -53,7 +70,7 @@ export function useProviderReviewsModel({
   locale,
   t,
 }: UseProviderReviewsModelParams) {
-  const [reviewSort, setReviewSort] = React.useState<'latest' | 'top'>('latest');
+  const [reviewSort, setReviewSort] = React.useState<ProviderReviewSort>('latest');
   const [reviewPage, setReviewPage] = React.useState(1);
 
   React.useEffect(() => {
@@ -83,7 +100,7 @@ export function useProviderReviewsModel({
     staleTime: 60_000,
   });
 
-  const reviewsUi = locale === 'de'
+  const reviewsUi: ProviderReviewsUi = locale === 'de'
     ? {
         sortLatest: 'Neueste',
         sortTop: 'Top bewertet',
@@ -115,7 +132,7 @@ export function useProviderReviewsModel({
   );
 
   const normalizeReviews = React.useCallback(
-    (rows: ReviewDto[]): NormalizedReview[] =>
+    (rows: ReviewDto[]): NormalizedProviderReview[] =>
       rows.map((item) => {
         const rawRating = Number(item.rating ?? 0);
         const rating = Number.isFinite(rawRating) ? Math.max(1, Math.min(5, Math.round(rawRating))) : 0;
@@ -159,7 +176,7 @@ export function useProviderReviewsModel({
     return pageReviews.length;
   })();
   const hasRecentReview = displayRatingCount > 0;
-  const reviewsDistribution = React.useMemo(() => {
+  const reviewsDistribution: ProviderReviewsDistribution = React.useMemo(() => {
     const stats = new Map<number, number>();
     for (let score = 1; score <= 5; score += 1) stats.set(score, 0);
     const summary = reviewsOverviewQuery.data?.summary?.distribution;
