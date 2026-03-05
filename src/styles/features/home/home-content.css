@@ -27,7 +27,7 @@
   .proof-card {
     border-radius: var(--radius-md);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
     padding: 12px 14px;
     display: grid;
     gap: 6px;
@@ -181,7 +181,7 @@
 
   .howitworks-tab:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 30%, transparent);
+    box-shadow: 0 0 0 3px var(--focus-ring-primary);
   }
 
   .howitworks-tab.is-active {
@@ -208,7 +208,7 @@
     gap: 10px;
     padding: 12px;
     border-radius: var(--radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
     box-shadow: 0 12px 26px color-mix(in oklab, var(--c-panel) 60%, transparent);
     position: relative;
@@ -466,7 +466,7 @@
   .home-activity__chart {
     height: 132px;
     border-radius: var(--radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    border: 1px solid var(--surface-soft-border);
     background:
       linear-gradient(
         180deg,
@@ -740,7 +740,7 @@
     border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
     box-shadow:
       var(--shadow-card),
-      0 0 0 3px color-mix(in oklab, var(--c-primary) 30%, transparent);
+      0 0 0 3px var(--focus-ring-primary);
   }
 
   .provider-card__favorite {
@@ -1222,7 +1222,7 @@
     border-radius: 999px;
     color: var(--c-text);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
     white-space: nowrap;
   }
 
@@ -1751,7 +1751,7 @@
   .home-trust-live-panel__cta:focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 3px color-mix(in oklab, var(--c-primary) 30%, transparent),
+      0 0 0 3px var(--focus-ring-primary),
       0 12px 28px color-mix(in oklab, var(--c-primary) 22%, transparent);
   }
 
@@ -1983,7 +1983,7 @@
   }
 
   .home-stats__card {
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
     border: 1px solid var(--c-border);
     border-radius: var(--radius-md);
     padding: 12px;

@@ -22,8 +22,8 @@
       .provider-reviews-hub__summary,
       .provider-reviews-hub__item
     ) {
-    border: 1px solid var(--soft-surface-border, color-mix(in oklab, var(--c-border) 65%, transparent));
-    background: var(--soft-surface-bg, color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%));
+    border: 1px solid var(--soft-surface-border, var(--surface-soft-border));
+    background: var(--soft-surface-bg, var(--surface-soft-bg-strong));
   }
 
   .ui-icon-only-action,

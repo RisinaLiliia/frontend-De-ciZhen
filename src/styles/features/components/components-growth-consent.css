@@ -491,7 +491,7 @@
   .consent-manage-footer__links a {
     color: color-mix(in oklab, var(--c-primary) 74%, var(--c-text) 26%);
     text-decoration: none;
-    border-bottom: 1px solid color-mix(in oklab, var(--c-primary) 30%, transparent);
+    border-bottom: 1px solid var(--focus-ring-primary);
     transition:
       color var(--transition-fast),
       border-color var(--transition-fast);

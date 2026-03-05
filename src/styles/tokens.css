@@ -25,4 +25,8 @@
   --motion-slow: 260ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
+  --surface-soft-border: color-mix(in oklab, var(--c-border) 65%, transparent);
+  --surface-soft-bg: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+  --surface-soft-bg-strong: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
+  --focus-ring-primary: color-mix(in oklab, var(--c-primary) 30%, transparent);
 }

@@ -222,8 +222,8 @@
     min-height: 108px;
     border-radius: var(--radius-md);
     overflow: hidden;
-    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    border: 1px solid var(--surface-soft-border);
+    background: var(--surface-soft-bg);
   }
 
   .request-detail__owner-photo-img {
@@ -642,7 +642,7 @@
   .request-detail__review {
     padding: var(--space-3) var(--space-3-5);
     border-radius: var(--radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--c-panel) 92%, transparent);
   }
 
@@ -782,9 +782,9 @@
   }
 
   .provider-reviews-hub__sort-btn {
-    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    border: 1px solid var(--surface-soft-border);
     border-radius: 999px;
-    background: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
+    background: var(--surface-soft-bg-strong);
     color: var(--c-text-muted);
     font-size: 12px;
     padding: 6px 10px;
@@ -930,7 +930,7 @@
   }
 
   .offer-action-btn--icon-only {
-    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
   }
 
@@ -1263,7 +1263,7 @@
     gap: var(--space-2-5);
     padding: var(--space-3);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
   }
 
@@ -1402,7 +1402,7 @@
     padding: var(--space-1-5) var(--space-2-5);
     border-radius: 999px;
     font-size: 12px;
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    background: var(--surface-soft-bg);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     color: var(--c-text);
   }
@@ -1510,7 +1510,7 @@
     display: grid;
     gap: var(--space-3);
     padding-top: var(--space-3);
-    border-top: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
+    border-top: 1px solid var(--surface-soft-border);
   }
 
   .request-offer-sheet__success-tip-card {
@@ -1670,7 +1670,7 @@
   .provider-profile-form--highlight {
     border-color: color-mix(in oklab, var(--c-primary) 50%, var(--c-border) 50%);
     box-shadow:
-      0 0 0 2px color-mix(in oklab, var(--c-primary) 30%, transparent),
+      0 0 0 2px var(--focus-ring-primary),
       var(--shadow-card);
   }
 }

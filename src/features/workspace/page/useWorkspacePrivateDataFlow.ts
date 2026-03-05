@@ -1,25 +1,8 @@
 'use client';
 
-import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-
-import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import {
-  useWorkspaceData,
-} from '@/features/workspace/requests';
-import {
-  usePublicRequestsSeenTotal,
-  useWorkspaceActions,
-  useWorkspaceCollections,
-  useWorkspaceFavoriteToggles,
-  useWorkspaceFormatters,
-  useWorkspaceNavigation,
-  useWorkspacePublicFilters,
-  useWorkspacePublicRequestsState,
-  useWorkspaceTabPersistence,
-} from '@/features/workspace';
-import { WORKSPACE_PATH } from '@/features/workspace/page/workspacePage.constants';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import { useWorkspacePrivateInteractions } from '@/features/workspace/page/useWorkspacePrivateInteractions';
+import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspacePrivateSources';
 
 export function useWorkspacePrivateDataFlow({
   t,
@@ -29,9 +12,6 @@ export function useWorkspacePrivateDataFlow({
   isWorkspaceAuthed,
   routeState,
 }: WorkspaceBranchProps) {
-  const router = useRouter();
-  const qc = useQueryClient();
-
   const {
     activePublicSection,
     activeWorkspaceTab,
@@ -43,161 +23,30 @@ export function useWorkspacePrivateDataFlow({
     onGuestLockedAction,
   } = routeState;
 
-  const {
-    cities,
-    categories,
-    services,
-    categoryKey,
-    subcategoryKey,
-    cityId,
-    sortBy,
-    page,
-    limit,
-    filter,
-    setPage,
-    hasActivePublicFilter,
-  } = useWorkspacePublicFilters({
+  const sources = useWorkspacePrivateSources({
     t,
-    locale,
-    shouldLoadCatalog: true,
-  });
-
-  const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
-    services,
-    categories,
-    cities,
-  });
-
-  const {
-    publicRequests,
-    isLoading,
-    isError,
-    allRequestsSummary,
-    myOffers,
-    isMyOffersLoading,
-    myOfferRequestsById,
-    favoriteRequests,
-    isFavoriteRequestsLoading,
-    favoriteProviders,
-    isFavoriteProvidersLoading,
-    myReviews,
-    isMyReviewsLoading,
-    myRequests,
-    isMyRequestsLoading,
-    myProviderContracts,
-    isProviderContractsLoading,
-    myClientContracts,
-    isClientContractsLoading,
-    providers,
-    workspacePrivateOverview,
-    isProvidersLoading,
-    isProvidersError,
-  } = useWorkspaceData({
-    filter,
     locale,
     isAuthed,
     isWorkspaceAuthed,
-    isWorkspacePublicSection: false,
-    shouldLoadPrivateData: true,
+    activePublicSection,
     activeWorkspaceTab,
     activeReviewsView,
   });
 
-  const { requests, platformRequestsTotal } = useWorkspacePublicRequestsState({
-    publicRequests,
-    allRequestsSummary,
-    limit,
-    page,
-    setPage,
-    isWorkspacePublicSection: false,
-    activePublicSection,
-    isLoading,
-    isError,
-    hasActivePublicFilter,
-    cityId,
-    categoryKey,
-    subcategoryKey,
-    sortBy,
-  });
-
-  const {
-    favoriteRequestIds,
-    requestById,
-    providerById,
-    favoriteProviderLookup,
-    favoriteProviderIds,
-    offersByRequest,
-    allMyContracts,
-    favoriteProviderCityLabelById,
-    favoriteProviderRoleLabelById,
-  } = useWorkspaceCollections({
-    requests,
-    favoriteRequests,
-    providers,
-    favoriteProviders,
-    myOffers,
-    myProviderContracts,
-    myClientContracts,
-    cityById,
-    serviceByKey,
+  const interactions = useWorkspacePrivateInteractions({
+    t,
     locale,
-  });
-
-  const {
-    pendingFavoriteRequestIds,
-    pendingFavoriteProviderIds,
-    onToggleRequestFavorite,
-    onToggleProviderFavorite,
-  } = useWorkspaceFavoriteToggles({
     isAuthed,
-    nextPath,
-    router,
-    t,
-    qc,
-    favoriteRequestIds,
-    requestById,
-    favoriteProviderLookup,
-    providerById,
-  });
-
-  const {
-    pendingOfferRequestId,
-    ownerRequestActions,
-    onOpenOfferSheet,
-    onWithdrawOffer,
-    onOpenChatThread,
-  } = useWorkspaceActions({
-    isAuthed,
-    myOffers,
-    t,
-    qc,
-    router,
-  });
-
-  const { localeTag, formatNumber, formatDate, formatPrice, chartMonthLabel } =
-    useWorkspaceFormatters(locale);
-
-  const { markPublicRequestsSeen } = usePublicRequestsSeenTotal({
-    isAuthed,
-    userId: auth.user?.id,
-    platformRequestsTotal,
-    autoMarkSeen: false,
-  });
-
-  useWorkspaceTabPersistence({
     isWorkspaceAuthed,
-    isWorkspacePublicSection: false,
+    authUserId: auth.user?.id,
     activeWorkspaceTab,
-  });
-
-  const {
-    setWorkspaceTab,
-    setStatusFilter,
-    setFavoritesView,
-    setReviewsView,
-  } = useWorkspaceNavigation({
-    activeWorkspaceTab,
-    workspacePath: WORKSPACE_PATH,
+    nextPath,
+    platformRequestsTotal: sources.platformRequestsTotal,
+    myOffers: sources.myOffers,
+    favoriteRequestIds: sources.favoriteRequestIds,
+    requestById: sources.requestById,
+    favoriteProviderLookup: sources.favoriteProviderLookup,
+    providerById: sources.providerById,
   });
 
   return {
@@ -208,55 +57,7 @@ export function useWorkspacePrivateDataFlow({
     activeReviewsView,
     guestLoginHref,
     onGuestLockedAction,
-    platformRequestsTotal,
-    allRequestsSummary,
-    providers,
-    isProvidersLoading,
-    isProvidersError,
-    workspacePrivateOverview,
-    myOffers,
-    myRequests,
-    myOfferRequestsById,
-    allMyContracts,
-    favoriteRequests,
-    favoriteProviders,
-    favoriteProviderIds,
-    myReviews,
-    isFavoriteRequestsLoading,
-    isFavoriteProvidersLoading,
-    localeTag,
-    pendingFavoriteProviderIds,
-    onToggleProviderFavorite,
-    favoriteProviderLookup,
-    favoriteProviderRoleLabelById,
-    favoriteProviderCityLabelById,
-    formatNumber,
-    chartMonthLabel,
-    offersByRequest,
-    favoriteRequestIds,
-    onToggleRequestFavorite,
-    onOpenOfferSheet,
-    onWithdrawOffer,
-    onOpenChatThread,
-    pendingOfferRequestId,
-    pendingFavoriteRequestIds,
-    serviceByKey,
-    categoryByKey,
-    cityById,
-    formatDate,
-    formatPrice,
-    isMyRequestsLoading,
-    ownerRequestActions,
-    isMyOffersLoading,
-    isProviderContractsLoading,
-    isClientContractsLoading,
-    setFavoritesView,
-    isMyReviewsLoading,
-    setReviewsView,
-    setStatusFilter,
-    setWorkspaceTab,
-    markPublicRequestsSeen,
-    isLoading,
-    requestsCount: requests.length,
+    ...sources,
+    ...interactions,
   };
 }
