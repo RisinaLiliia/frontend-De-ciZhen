@@ -1,5 +1,15 @@
 # De'ciZhen Frontend
 
+## Current Release
+
+- Version: `0.3.2`
+- Date: `2026-03-06`
+- Highlights:
+  - large maintainability refactor for profile/provider/workspace modules
+  - workspace hook coverage expanded (`sources` and `interactions`)
+  - feature CSS split into smaller request/components/home layers
+  - PR CI checks stabilized around `quality` status check
+
 ## What Is De'ciZhen?
 
 De'ciZhen is a local services marketplace that connects clients and service providers.
