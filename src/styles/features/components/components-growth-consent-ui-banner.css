@@ -3,32 +3,33 @@
 @layer components {
   .cookie-consent-banner {
     position: fixed;
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
+    right: max(12px, env(safe-area-inset-right));
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    left: auto;
+    width: min(468px, calc(100vw - 24px));
     z-index: 75;
     display: grid;
-    gap: var(--space-4);
-    border-radius: 18px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
+    gap: var(--space-3);
+    border-radius: 16px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 24%, var(--c-border) 76%);
     background:
-      radial-gradient(580px 240px at -6% -18%, color-mix(in oklab, var(--c-primary) 22%, transparent), transparent 62%),
-      radial-gradient(520px 220px at 108% -14%, color-mix(in oklab, var(--c-accent) 20%, transparent), transparent 58%),
+      radial-gradient(320px 170px at -10% -16%, color-mix(in oklab, var(--c-primary) 10%, transparent), transparent 64%),
+      radial-gradient(280px 160px at 112% -12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
       linear-gradient(
         128deg,
-        color-mix(in oklab, var(--c-panel) 86%, transparent),
-        color-mix(in oklab, var(--c-surface) 82%, transparent)
+        color-mix(in oklab, var(--c-panel) 94%, transparent),
+        color-mix(in oklab, var(--c-surface) 90%, transparent)
       );
-    backdrop-filter: blur(10px) saturate(1.05);
+    backdrop-filter: blur(6px) saturate(1.01);
     box-shadow:
-      0 16px 40px color-mix(in oklab, var(--c-ink) 22%, transparent),
-      0 0 0 1px color-mix(in oklab, var(--c-border) 50%, transparent);
-    padding: var(--space-4);
+      0 8px 20px color-mix(in oklab, var(--c-ink) 10%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--c-border) 42%, transparent);
+    padding: 12px;
   }
 
   .cookie-consent-banner__body {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-1-5);
   }
 
   .cookie-consent-banner__eyebrow {
@@ -37,19 +38,21 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
+    color: color-mix(in oklab, var(--c-primary) 68%, var(--c-text) 32%);
   }
 
   .cookie-consent-banner__title {
     margin: 0;
-    font-size: clamp(18px, 2.2vw, 22px);
+    font-size: clamp(17px, 1.5vw, 20px);
     line-height: 1.2;
   }
 
   .cookie-consent-banner__text {
     margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
     color: var(--c-text-muted);
-    max-width: 72ch;
+    max-width: 44ch;
   }
 
   .cookie-consent-banner__links {
@@ -65,12 +68,12 @@
   .cookie-consent-banner__links a {
     display: inline-flex;
     align-items: center;
-    min-height: 28px;
+    min-height: 26px;
     border-radius: 999px;
-    padding: 0 10px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
-    background: color-mix(in oklab, var(--c-panel) 84%, transparent);
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    padding: 0 9px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--c-border) 84%);
+    background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+    color: color-mix(in oklab, var(--c-primary) 72%, var(--c-text) 28%);
     text-decoration: none;
     transition:
       transform var(--transition-fast),
@@ -80,9 +83,8 @@
 
   .cookie-consent-banner__links a:hover,
   .cookie-consent-banner__links a:focus-visible {
-    border-color: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
-    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
-    transform: translateY(-1px);
+    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
     outline: none;
   }
 
@@ -91,15 +93,58 @@
   }
 
   .cookie-consent-banner__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-1-5);
   }
 
   .cookie-consent-banner__action {
-    height: var(--btn-h) !important;
-    min-width: 162px;
+    width: 100% !important;
+    min-width: 0;
+    height: 40px !important;
     font-size: var(--btn-font);
+  }
+
+  .cookie-consent-banner__action--accept {
+    grid-column: 1 / -1;
+  }
+
+  .cookie-consent-banner__action--accept.btn-primary {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--c-accent) 44%, var(--c-border) 56%);
+    background:
+      radial-gradient(
+        circle at 24% 18%,
+        color-mix(in oklab, var(--c-hi-strong) 22%, transparent) 0%,
+        transparent 52%
+      ),
+      linear-gradient(
+        160deg,
+        color-mix(in oklab, var(--c-accent) 36%, var(--c-panel) 64%) 0%,
+        color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%) 100%
+      );
+    color: color-mix(in oklab, var(--c-accent) 88%, var(--c-text) 12%);
+    box-shadow:
+      0 6px 14px color-mix(in oklab, var(--c-accent) 16%, transparent),
+      inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 80%, transparent);
+  }
+
+  .cookie-consent-banner__action--accept.btn-primary:hover {
+    background:
+      radial-gradient(
+        circle at 24% 18%,
+        color-mix(in oklab, var(--c-hi-strong) 26%, transparent) 0%,
+        transparent 52%
+      ),
+      linear-gradient(
+        160deg,
+        color-mix(in oklab, var(--c-accent) 42%, var(--c-panel) 58%) 0%,
+        color-mix(in oklab, var(--c-primary) 18%, var(--c-panel) 82%) 100%
+      );
+    box-shadow:
+      0 8px 18px color-mix(in oklab, var(--c-accent) 20%, transparent),
+      inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 88%, transparent);
   }
 
 

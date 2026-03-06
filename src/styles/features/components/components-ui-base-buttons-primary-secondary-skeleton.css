@@ -9,21 +9,24 @@
     padding: 0 var(--btn-pad-x);
     background: var(--btn-primary-bg);
     color: var(--c-accent-contrast);
+    border: 1px solid color-mix(in oklab, var(--c-accent) 34%, var(--c-border) 66%);
     box-shadow: var(--btn-primary-shadow);
     transition:
       transform var(--transition-fast),
       opacity var(--transition-fast),
-      filter var(--transition-fast),
+      background var(--transition-fast),
+      border-color var(--transition-fast),
       box-shadow var(--transition-fast);
   }
 
   .btn-primary:hover {
-    filter: brightness(1.02);
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, var(--c-accent) 42%, var(--c-border) 58%);
     box-shadow: 0 10px 24px color-mix(in oklab, var(--c-accent) 25%, transparent);
   }
 
   .btn-primary:active {
-    transform: translateY(1px);
+    transform: translateY(0);
   }
 
   .btn-primary:disabled {
@@ -45,39 +48,29 @@
     font-size: var(--btn-font);
     padding: 0 var(--btn-pad-x);
     background: var(--btn-secondary-bg);
-    color: var(--c-primary-contrast);
+    color: var(--c-primary);
     border: var(--btn-secondary-border);
+    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-primary) 9%, transparent);
     transition:
       transform var(--transition-fast),
+      background var(--transition-fast),
       box-shadow var(--transition-fast),
       border-color var(--transition-fast);
   }
 
   .btn-secondary:hover {
+    transform: translateY(-1px);
     border-color: color-mix(in oklab, var(--c-primary) 60%, var(--c-border) 40%);
     box-shadow: var(--btn-secondary-shadow-hover);
   }
 
   .btn-secondary:active {
-    transform: translateY(1px);
+    transform: translateY(0);
   }
 
   .btn-secondary:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px var(--focus-ring-primary);
-  }
-
-  html:not(.dark) .btn-secondary {
-    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
-    color: var(--c-primary);
-    border-color: color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
-    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
-  }
-
-  html:not(.dark) .btn-secondary:hover {
-    background: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
-    border-color: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
-    box-shadow: 0 12px 22px color-mix(in oklab, var(--c-primary) 14%, transparent);
   }
 
   .skeleton {

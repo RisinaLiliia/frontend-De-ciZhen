@@ -166,7 +166,7 @@ export function buildWorkspacePublicContentProps({
       cityById,
       formatDate,
       formatPrice,
-      enableOfferActions: isPersonalized,
+      enableOfferActions: true,
       hideRecurringBadge: isPersonalized,
       showFavoriteButton: true,
       offersByRequest,

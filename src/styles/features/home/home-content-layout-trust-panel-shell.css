@@ -10,7 +10,7 @@
     gap: 12px;
     min-height: 100%;
     min-block-size: clamp(420px, 46vw, 560px);
-    padding: var(--home-panel-padding);
+    padding: var(--home-panel-padding, 16px);
     border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
     background:
       radial-gradient(140% 120% at 0% 0%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent 56%),

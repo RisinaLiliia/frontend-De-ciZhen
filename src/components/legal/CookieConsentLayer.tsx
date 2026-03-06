@@ -64,13 +64,28 @@ export function CookieConsentLayer() {
             </p>
           </div>
           <div className="cookie-consent-banner__actions">
-            <Button variant="secondary" fullWidth={false} className="cookie-consent-banner__action" onClick={rejectOptional}>
+            <Button
+              variant="secondary"
+              fullWidth={false}
+              className="cookie-consent-banner__action cookie-consent-banner__action--reject"
+              onClick={rejectOptional}
+            >
               {t(I18N_KEYS.consent.rejectOptional)}
             </Button>
-            <Button variant="ghost" fullWidth={false} className="cookie-consent-banner__action" onClick={openPreferences}>
+            <Button
+              variant="ghost"
+              fullWidth={false}
+              className="cookie-consent-banner__action cookie-consent-banner__action--customize"
+              onClick={openPreferences}
+            >
               {t(I18N_KEYS.consent.customize)}
             </Button>
-            <Button variant="primary" fullWidth={false} className="cookie-consent-banner__action" onClick={acceptAll}>
+            <Button
+              variant="primary"
+              fullWidth={false}
+              className="cookie-consent-banner__action cookie-consent-banner__action--accept"
+              onClick={acceptAll}
+            >
               {t(I18N_KEYS.consent.acceptAll)}
             </Button>
           </div>

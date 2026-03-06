@@ -67,8 +67,8 @@
   --c-avatar-client: #ffb347;
   --c-avatar-client-light: #ff7a59;
 
-  --shadow-card: 0 10px 26px color-mix(in oklab, var(--c-ink) 6%, transparent);
-  --shadow-card-hover: 0 14px 32px color-mix(in oklab, var(--c-ink) 9%, transparent);
+  --shadow-card: 0 8px 20px color-mix(in oklab, var(--c-ink) 7%, transparent);
+  --shadow-card-hover: 0 12px 26px color-mix(in oklab, var(--c-ink) 11%, transparent);
   --c-elev-shadow: 0 32px 72px color-mix(in oklab, #0b1220 36%, transparent);
   --btn-primary-bg: linear-gradient(
     180deg,
@@ -78,11 +78,11 @@
   --btn-primary-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 25%, transparent);
   --btn-secondary-bg: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--c-primary) 92%, white 8%),
-    color-mix(in oklab, var(--c-primary) 78%, black 22%)
+    color-mix(in oklab, var(--c-panel) 97%, var(--c-primary) 3%),
+    color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%)
   );
-  --btn-secondary-border: 1px solid color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
-  --btn-secondary-shadow-hover: 0 10px 24px color-mix(in oklab, var(--c-primary) 20%, transparent);
+  --btn-secondary-border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+  --btn-secondary-shadow-hover: 0 10px 22px color-mix(in oklab, var(--c-primary) 14%, transparent);
 
   --fs-h1: 28px;
   --fs-h2: 22px;

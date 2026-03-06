@@ -62,16 +62,8 @@
     box-shadow: 0 12px 26px color-mix(in oklab, var(--c-panel) 60%, transparent);
     position: relative;
     z-index: 1;
-    animation: howitworks-float 6.5s ease-in-out infinite;
-    will-change: transform;
-  }
-
-  .howitworks-step:nth-child(2) {
-    animation-delay: -0.8s;
-  }
-
-  .howitworks-step:nth-child(3) {
-    animation-delay: -1.6s;
+    animation: none;
+    will-change: auto;
   }
 
   .howitworks-step__index {
@@ -131,7 +123,7 @@
     );
     opacity: 0.35;
     transform: skewX(-14deg);
-    animation: howitworks-sheen 5.8s ease-in-out infinite;
+    animation: none;
     pointer-events: none;
   }
 

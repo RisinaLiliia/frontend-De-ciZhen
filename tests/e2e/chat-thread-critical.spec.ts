@@ -99,7 +99,7 @@ test('@critical authenticated user can read and send messages in chat thread', a
   await expect(page.getByText('Initial message')).toBeVisible();
   await expect.poll(() => markReadCalls).toBe(1);
 
-  const messageInput = page.locator('input').last();
+  const messageInput = page.getByPlaceholder(/Nachricht eingeben|Type a message/i);
   await messageInput.fill('Hello from client');
   await page.getByRole('button', { name: /Senden|Send/i }).click();
 

@@ -247,7 +247,7 @@ export function RequestsExplorer({
         cityById,
         formatDate,
         formatPrice,
-        enableOfferActions: isAuthed,
+        enableOfferActions: true,
         offersByRequest,
         favoriteRequestIds,
         pendingFavoriteRequestIds,

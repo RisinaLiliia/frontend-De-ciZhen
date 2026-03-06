@@ -4,10 +4,10 @@
     position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, clamp(72px, 22%, 180px));
-    gap: var(--space-4);
+    gap: var(--space-3);
     padding: 0;
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
     background:
       linear-gradient(
         90deg,
@@ -22,7 +22,7 @@
       );
     box-shadow:
       var(--shadow-card),
-      0 10px 24px color-mix(in oklab, var(--c-primary) 8%, transparent);
+      0 8px 18px color-mix(in oklab, var(--c-primary) 6%, transparent);
     align-items: stretch;
     transition:
       transform var(--transition),
@@ -32,17 +32,17 @@
     color: inherit;
     overflow: hidden;
     container-type: inline-size;
-    min-height: 196px;
+    min-height: 184px;
   }
 
   html:not(.dark) .request-card {
-    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 14%, var(--c-border) 86%);
     background: linear-gradient(
       180deg,
       var(--c-panel) 0%,
       color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%
     );
-    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 18%, transparent);
+    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 10%, transparent);
   }
 
   .request-card--media-right .request-card__media {
@@ -92,11 +92,11 @@
   }
 
   .request-card:hover {
-    transform: translateY(-2px);
-    border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
     box-shadow:
       var(--shadow-card),
-      0 14px 30px color-mix(in oklab, var(--c-primary) 14%, transparent);
+      0 10px 22px color-mix(in oklab, var(--c-primary) 10%, transparent);
   }
 
   .request-card--link:focus-visible {
@@ -114,20 +114,6 @@
     border-radius: 0;
     background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
     z-index: 0;
-  }
-
-  .request-card__media::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(
-      90deg,
-      color-mix(in oklab, var(--c-ink) 0%, transparent) 0%,
-      color-mix(in oklab, var(--c-ink) 35%, transparent) 45%,
-      color-mix(in oklab, var(--c-ink) 85%, transparent) 100%
-    );
-    pointer-events: none;
   }
 
   .request-card__image {

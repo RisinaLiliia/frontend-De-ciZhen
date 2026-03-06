@@ -25,7 +25,7 @@
   }
 
   .requests-list.is-double .request-card {
-    min-height: 204px;
+    min-height: 194px;
   }
 
   .requests-list.is-double .request-card__body {
@@ -45,23 +45,12 @@
   }
 
   .request-card-link.is-active {
-    border-color: color-mix(in oklab, var(--c-primary) 55%, var(--c-border) 45%);
+    border-color: color-mix(in oklab, var(--c-primary) 46%, var(--c-border) 54%);
     box-shadow:
       var(--shadow-card),
-      0 10px 24px color-mix(in oklab, var(--c-primary) 16%, transparent),
-      0 0 0 1px color-mix(in oklab, var(--c-primary) 22%, transparent);
+      0 8px 18px color-mix(in oklab, var(--c-primary) 12%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--c-primary) 18%, transparent);
     transform: translateY(-1px);
-    animation: request-breathe 5.8s ease-in-out infinite;
-  }
-
-  @keyframes request-breathe {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-2px);
-    }
   }
 
   .request-top__status {
@@ -80,7 +69,7 @@
   .request-category {
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--c-text-muted);
   }
@@ -107,9 +96,9 @@
     font-weight: 700;
     padding: var(--space-1) var(--space-2);
     border-radius: 999px;
-    background: color-mix(in oklab, var(--c-accent) 25%, var(--c-panel) 75%);
+    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
     color: var(--c-text);
-    border: 1px solid color-mix(in oklab, var(--c-border) 55%, transparent);
+    border: 1px solid color-mix(in oklab, var(--c-border) 48%, transparent);
     white-space: nowrap;
   }
 
