@@ -281,6 +281,8 @@ Notes:
 | `npm run lint:colors` | Combined design-token color checks |
 | `npm run test` | Vitest (unit/component) |
 | `npm run test:e2e` | Playwright e2e tests |
+| `npm run test:e2e:critical` | Playwright critical e2e flows (`@critical`) |
+| `npm run test:e2e:a11y` | Playwright accessibility smoke flows (`@a11y`) |
 | `npm run test:e2e:headed` | Playwright headed mode |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm exec tsc --noEmit` | Type check |

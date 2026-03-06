@@ -34,6 +34,10 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
+  const passwordToggleLabel = showPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow);
+  const confirmPasswordToggleLabel = showConfirmPassword
+    ? t(I18N_KEYS.client.profilePasswordHide)
+    : t(I18N_KEYS.client.profilePasswordShow);
   const schema = React.useMemo(() => buildRegisterSchema(t), [t]);
 
   const registerUser = useAuthRegister();
@@ -220,8 +224,8 @@ export function RegisterForm() {
             type="button"
             className="profile-settings__password-toggle"
             onClick={() => setShowPassword((prev) => !prev)}
-            aria-label={showPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
-            title={showPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+            aria-label={passwordToggleLabel}
+            title={passwordToggleLabel}
           >
             {showPassword ? <IconEye /> : <IconEyeOff />}
           </button>
@@ -253,8 +257,8 @@ export function RegisterForm() {
             type="button"
             className="profile-settings__password-toggle"
             onClick={() => setShowConfirmPassword((prev) => !prev)}
-            aria-label={showConfirmPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
-            title={showConfirmPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+            aria-label={confirmPasswordToggleLabel}
+            title={confirmPasswordToggleLabel}
           >
             {showConfirmPassword ? <IconEye /> : <IconEyeOff />}
           </button>

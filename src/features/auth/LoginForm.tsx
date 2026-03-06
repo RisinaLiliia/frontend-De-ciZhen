@@ -29,6 +29,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const nextPath = searchParams.get('next')?.trim();
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
+  const passwordToggleLabel = showPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow);
   const schema = React.useMemo(() => buildLoginSchema(t), [t]);
 
   const login = useAuthLogin();
@@ -151,8 +152,8 @@ export function LoginForm() {
             type="button"
             className="profile-settings__password-toggle"
             onClick={() => setShowPassword((prev) => !prev)}
-            aria-label={showPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
-            title={showPassword ? 'Passwort ausblenden' : 'Passwort anzeigen'}
+            aria-label={passwordToggleLabel}
+            title={passwordToggleLabel}
           >
             {showPassword ? <IconEye /> : <IconEyeOff />}
           </button>
