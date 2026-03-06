@@ -131,6 +131,7 @@
   .request-detail__price .proof-price {
     font-size: 24px;
     font-weight: 700;
+    color: color-mix(in oklab, var(--c-accent) 36%, var(--c-text) 64%);
   }
 
   .request-detail__tags {
@@ -1433,4 +1434,3 @@
   }
 
 }
-

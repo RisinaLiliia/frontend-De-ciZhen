@@ -287,6 +287,15 @@ Notes:
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm exec tsc --noEmit` | Type check |
 
+## CI Branch Protection
+
+For `main`, keep these required status checks enabled:
+- `Frontend CI / quality`
+- `Frontend CI / e2e-critical`
+
+Optional but recommended:
+- `Frontend CI / a11y-smoke`
+
 ## Project Structure
 
 ```text

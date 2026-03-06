@@ -1297,9 +1297,9 @@
   }
 
   .status-badge--success {
-    --status-bg: color-mix(in oklab, var(--c-success) 16%, var(--c-panel) 84%);
+    --status-bg: color-mix(in oklab, var(--c-success) 10%, var(--c-panel) 90%);
     --status-border: color-mix(in oklab, var(--c-success) 42%, var(--c-border) 58%);
-    --status-text: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
+    --status-text: color-mix(in oklab, var(--c-success) 56%, var(--c-text) 44%);
   }
 
   .status-badge--warning {

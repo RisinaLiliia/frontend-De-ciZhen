@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { dismissCookieConsentIfPresent } from './helpers/consent';
 
 test('@critical unauthenticated create-request submit redirects to login with resumable next', async ({ page }) => {
   await page.route('**/api/**', async (route) => {
@@ -67,10 +68,7 @@ test('@critical unauthenticated create-request submit redirects to login with re
   const schedule = encodeURIComponent(JSON.stringify({ mode: 'once', date: '2026-04-10' }));
   await page.goto(`/request/create?service=window-cleaning&city=berlin&schedule=${schedule}`);
 
-  const rejectConsentButton = page.getByRole('button', { name: /Nur notwendige|Necessary only/i });
-  if (await rejectConsentButton.isVisible()) {
-    await rejectConsentButton.click();
-  }
+  await dismissCookieConsentIfPresent(page);
 
   await page.locator('input[name="title"]').fill('Window cleaning in apartment');
   await page.locator('button[type="submit"][value="draft"]').click();
