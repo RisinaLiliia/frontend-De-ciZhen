@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import Image from 'next/image';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
@@ -14,9 +13,6 @@ import { useAuthMe, useHasProviderProfile } from '@/hooks/useAuthSnapshot';
 import { useAuthStore } from '@/features/auth/store';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
-import { OfferActionButton } from '@/components/ui/OfferActionButton';
-import { FormLabel } from '@/components/ui/FormLabel';
-import { IconEye, IconEyeOff } from '@/components/ui/icons/icons';
 import { useConsent } from '@/lib/consent/ConsentProvider';
 import {
   computeManualProfileCompleteness,
@@ -24,8 +20,9 @@ import {
   resolveProfileCompleteness,
 } from '@/features/profile/profileWorkspace.presentation';
 import { useProfileWorkspaceData } from '@/features/profile/useProfileWorkspaceData';
-import { ProfilePreferencesCards } from '@/features/profile/ProfilePreferencesCards';
+import { ProfileBioSection } from '@/features/profile/ProfileBioSection';
 import { ProfileOverviewSection } from '@/features/profile/ProfileOverviewSection';
+import { ProfileSettingsSection } from '@/features/profile/ProfileSettingsSection';
 
 export default function ProfileWorkspacePage() {
   const t = useT();
@@ -143,7 +140,6 @@ export default function ProfileWorkspacePage() {
   );
 
   const avatarUrl = authMe?.avatar?.url?.trim() || null;
-  const profileDescription = bioDraft.trim();
 
   const manualProfileCompleteness = React.useMemo(
     () =>
@@ -278,377 +274,87 @@ export default function ProfileWorkspacePage() {
           reviewsCount={reviewCount}
           reviewsLabel={t(I18N_KEYS.requestDetails.clientReviews)}
         />
-
-        <article className="profile-bio">
-          <header className="profile-bio__head">
-            <div className="profile-bio__title-wrap">
-              <p className="profile-bio__label">{t(I18N_KEYS.client.profileBioLabel)}</p>
-            </div>
-            <span className="count-badge count-badge--sm">{profileDescription.length}/2000</span>
-          </header>
-
-          <textarea
-            className={`input profile-bio__textarea ${isBioEditing ? '' : 'profile-bio__textarea--readonly'}`.trim()}
-            value={bioDraft}
-            onChange={(event) => setBioDraft(event.target.value)}
-            maxLength={2000}
-            placeholder={t(I18N_KEYS.client.profileBioPlaceholder)}
-            readOnly={!isBioEditing}
-          />
-
-          <div className="profile-bio__footer">
-              <p className="profile-bio__hint">
-                {profileDescription
-                  ? t(I18N_KEYS.client.profileBioHintFilled)
-                  : t(I18N_KEYS.client.profileBioHintEmpty)}
-              </p>
-            {isBioEditing ? (
-              <div className="profile-bio__actions">
-                <button
-                  type="button"
-                  className="btn-ghost profile-bio__action"
-                  onClick={() => {
-                    setBioDraft(authMe?.bio ?? '');
-                    setIsBioEditing(false);
-                  }}
-                  disabled={isSavingBio}
-                >
-                  {t(I18N_KEYS.client.profileCancelCta)}
-                </button>
-                <button
-                  type="button"
-                  className="btn-primary profile-bio__action"
-                  onClick={() => {
-                    void handleSaveBio();
-                  }}
-                  disabled={isSavingBio}
-                >
-                  {isSavingBio ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.client.profileSaveCta)}
-                </button>
-              </div>
-            ) : (
-              <OfferActionButton
-                kind="edit"
-                label={t(I18N_KEYS.client.profileBioEditAction)}
-                ariaLabel={t(I18N_KEYS.client.profileBioEditAction)}
-                title={t(I18N_KEYS.client.profileBioEditAction)}
-                iconOnly
-                className="request-card__status-action request-card__status-action--edit profile-bio__save-icon"
-                onClick={() => setIsBioEditing(true)}
-              />
-            )}
-          </div>
-        </article>
+        <ProfileBioSection
+          t={t}
+          bioDraft={bioDraft}
+          isBioEditing={isBioEditing}
+          isSavingBio={isSavingBio}
+          onBioChange={setBioDraft}
+          onStartBioEdit={() => setIsBioEditing(true)}
+          onCancelBioEdit={() => {
+            setBioDraft(authMe?.bio ?? '');
+            setIsBioEditing(false);
+          }}
+          onSaveBio={() => {
+            void handleSaveBio();
+          }}
+        />
       </section>
 
-      <section className="card profile-settings">
-        <header className="profile-settings__header">
-          <h2 className="typo-h3">{t(I18N_KEYS.client.profileSettingsTitle)}</h2>
-          <p className="typo-small">{t(I18N_KEYS.client.profileSettingsSubtitle)}</p>
-        </header>
-
-        <div className="profile-settings__grid">
-          <article className="profile-settings__card profile-settings__card--full stack-sm">
-            <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profilePhotoTitle)}</p>
-            </header>
-            <div className="stack-xs">
-              <div className="profile-settings__avatar-row">
-                <span
-                  className={`profile-settings__avatar ${avatarPreviewUrl ? '' : 'profile-settings__avatar--placeholder'}`.trim()}
-                >
-                  {avatarPreviewUrl ? (
-                    <Image src={avatarPreviewUrl} alt={authMe?.name ?? t(I18N_KEYS.client.profileAvatarAlt)} width={64} height={64} />
-                  ) : (
-                    avatarInitial
-                  )}
-                  <label className="profile-settings__avatar-edit">
-                    <OfferActionButton
-                      kind="edit"
-                      label={t(I18N_KEYS.client.profileAvatarEditAction)}
-                      ariaLabel={t(I18N_KEYS.client.profileAvatarEditAction)}
-                      title={t(I18N_KEYS.client.profileAvatarEditAction)}
-                      iconOnly
-                      className="request-card__status-action request-card__status-action--edit"
-                    />
-                    <input
-                      className="sr-only"
-                      type="file"
-                      accept="image/*"
-                      onChange={(event) => {
-                        void handleAvatarSelected(event);
-                      }}
-                      disabled={isUploadingAvatar}
-                    />
-                  </label>
-                </span>
-                <div className="profile-settings__avatar-file">
-                  <p className="typo-small">{isUploadingAvatar ? t(I18N_KEYS.client.profilePhotoUploading) : t(I18N_KEYS.client.profilePhotoFormatHint)}</p>
-                  <p className="typo-small">{fileButtonLabel}: {avatarFileName || noFileLabel}</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article className="profile-settings__card stack-sm">
-            <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profilePersonalDataTitle)}</p>
-              <OfferActionButton
-                kind="edit"
-                label={t(I18N_KEYS.client.profileEditAction)}
-                ariaLabel={t(I18N_KEYS.client.profileEditAction)}
-                title={t(I18N_KEYS.client.profileEditAction)}
-                iconOnly
-                className="request-card__status-action request-card__status-action--edit"
-                onClick={() => setIsProfileEditing((prev) => !prev)}
-              />
-            </header>
-            <div className="profile-settings__row">
-              <FormLabel
-                className="profile-settings__row-label"
-                htmlFor="profile-full-name"
-                required
-                requiredHint={requiredHint}
-              >
-                {t(I18N_KEYS.client.profileFullNameLabel)}
-              </FormLabel>
-              <input
-                id="profile-full-name"
-                className="input"
-                value={profileForm.name}
-                onChange={(event) => setProfileForm((prev) => ({ ...prev, name: event.target.value }))}
-                readOnly={!isProfileEditing}
-              />
-            </div>
-            <div className="profile-settings__row">
-              <FormLabel className="profile-settings__row-label" htmlFor="profile-city">
-                {t(I18N_KEYS.client.profileCityOptionalLabel)}
-              </FormLabel>
-              <input
-                id="profile-city"
-                className="input"
-                value={profileForm.city}
-                onChange={(event) => setProfileForm((prev) => ({ ...prev, city: event.target.value }))}
-                readOnly={!isProfileEditing}
-              />
-            </div>
-            <div className="profile-settings__row">
-              <FormLabel
-                className="profile-settings__row-label"
-                htmlFor="profile-email"
-                required
-                requiredHint={requiredHint}
-              >
-                {t(I18N_KEYS.client.profileEmailLabel)}
-              </FormLabel>
-              <input id="profile-email" className="input" value={authMe?.email ?? ''} readOnly />
-            </div>
-            {isProfileEditing ? (
-              <div className="profile-settings__inline-actions">
-                <button
-                  type="button"
-                  className="btn-primary profile-settings__save-btn"
-                  onClick={() => {
-                    void handleSaveProfile();
-                  }}
-                  disabled={isSavingProfile}
-                >
-                  {isSavingProfile ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.client.profileSaveCta)}
-                </button>
-                <button
-                  type="button"
-                  className="btn-ghost profile-settings__text-action"
-                  onClick={() => {
-                    setProfileForm({
-                      name: authMe?.name ?? '',
-                      city: authMe?.city ?? '',
-                    });
-                    setIsProfileEditing(false);
-                  }}
-                  disabled={isSavingProfile}
-                >
-                  {t(I18N_KEYS.client.profileCancelCta)}
-                </button>
-              </div>
-            ) : null}
-          </article>
-
-          <article className="profile-settings__card stack-sm">
-            <header className="profile-settings__card-head">
-              <p className="text-sm font-semibold">{t(I18N_KEYS.client.profileSecurityTitle)}</p>
-              <OfferActionButton
-                kind="edit"
-                label={t(I18N_KEYS.client.profileSecurityEditAction)}
-                ariaLabel={t(I18N_KEYS.client.profileSecurityEditAction)}
-                title={t(I18N_KEYS.client.profileSecurityEditAction)}
-                iconOnly
-                className="request-card__status-action request-card__status-action--edit"
-                onClick={() => setIsSecurityEditing((prev) => !prev)}
-              />
-            </header>
-            <div className="profile-settings__row">
-              <FormLabel
-                className="profile-settings__row-label"
-                htmlFor="security-login"
-                required
-                requiredHint={requiredHint}
-              >
-                {t(I18N_KEYS.client.profileLoginLabel)}
-              </FormLabel>
-              <input id="security-login" className="input" value={authMe?.email ?? ''} disabled />
-            </div>
-            <div className="profile-settings__row">
-              <FormLabel
-                className="profile-settings__row-label"
-                htmlFor="security-current-password"
-                required
-                requiredHint={requiredHint}
-              >
-                {t(I18N_KEYS.client.profileCurrentPasswordLabel)}
-              </FormLabel>
-              {isSecurityEditing ? (
-                <span className="profile-settings__password-field">
-                  <input
-                    id="security-current-password"
-                    className="input"
-                    type={showCurrentPassword ? 'text' : 'password'}
-                    value={passwordForm.currentPassword}
-                    onChange={(event) =>
-                      setPasswordForm((prev) => ({ ...prev, currentPassword: event.target.value }))
-                    }
-                    autoComplete="current-password"
-                  />
-                  <button
-                    type="button"
-                    className="profile-settings__password-toggle"
-                    onClick={() => setShowCurrentPassword((prev) => !prev)}
-                    aria-label={showCurrentPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
-                    title={showCurrentPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
-                  >
-                    {showCurrentPassword ? <IconEye /> : <IconEyeOff />}
-                  </button>
-                </span>
-              ) : (
-                <input id="security-current-password" className="input" type="password" value="••••••••••••" readOnly />
-              )}
-            </div>
-            {isSecurityEditing ? (
-              <div className="profile-settings__row">
-                <FormLabel
-                  className="profile-settings__row-label"
-                  htmlFor="security-new-password"
-                  required
-                  requiredHint={requiredHint}
-                >
-                  {t(I18N_KEYS.client.profileNewPasswordLabel)}
-                </FormLabel>
-                <span className="profile-settings__password-field profile-settings__password-field--accent">
-                  <input
-                    id="security-new-password"
-                    className={`input ${passwordForm.newPassword.length > 0 && !isPasswordStrong ? 'is-error' : ''}`.trim()}
-                    type={showNewPassword ? 'text' : 'password'}
-                    value={passwordForm.newPassword}
-                    onChange={(event) =>
-                      setPasswordForm((prev) => ({ ...prev, newPassword: event.target.value }))
-                    }
-                    autoComplete="new-password"
-                  />
-                  <button
-                    type="button"
-                    className="profile-settings__password-toggle"
-                    onClick={() => setShowNewPassword((prev) => !prev)}
-                    aria-label={showNewPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
-                    title={showNewPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
-                  >
-                    {showNewPassword ? <IconEye /> : <IconEyeOff />}
-                  </button>
-                </span>
-              </div>
-            ) : null}
-            {isSecurityEditing ? (
-              <div className="profile-settings__row">
-                <FormLabel
-                  className="profile-settings__row-label"
-                  htmlFor="security-confirm-password"
-                  required
-                  requiredHint={requiredHint}
-                >
-                  {t(I18N_KEYS.client.profileConfirmPasswordLabel)}
-                </FormLabel>
-                <span className="profile-settings__password-field profile-settings__password-field--accent">
-                  <input
-                    id="security-confirm-password"
-                    className={`input ${passwordForm.confirmPassword.length > 0 && !passwordsMatch ? 'is-error' : ''}`.trim()}
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={passwordForm.confirmPassword}
-                    onChange={(event) =>
-                      setPasswordForm((prev) => ({ ...prev, confirmPassword: event.target.value }))
-                    }
-                    autoComplete="new-password"
-                  />
-                  <button
-                    type="button"
-                    className="profile-settings__password-toggle"
-                    onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    aria-label={showConfirmPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
-                    title={showConfirmPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
-                  >
-                    {showConfirmPassword ? <IconEye /> : <IconEyeOff />}
-                  </button>
-                </span>
-              </div>
-            ) : null}
-            {isSecurityEditing ? (
-              <div className="profile-settings__password-hint">
-                <span className={passwordChecks.length ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLength)}</span>
-                <span className={passwordChecks.upper ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleUpper)}</span>
-                <span className={passwordChecks.lower ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLower)}</span>
-                <span className={passwordChecks.digit ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleDigit)}</span>
-                <span className={passwordChecks.symbol ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleSymbol)}</span>
-              </div>
-            ) : null}
-            {isSecurityEditing ? (
-              <div className="profile-settings__inline-actions">
-                <button
-                  type="button"
-                  className="btn-primary profile-settings__save-btn"
-                  onClick={() => {
-                    void handleSavePassword();
-                  }}
-                  disabled={isSavingPassword}
-                >
-                  {isSavingPassword ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.client.profileSaveCta)}
-                </button>
-                <button
-                  type="button"
-                  className="btn-ghost profile-settings__text-action"
-                  onClick={() => {
-                    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-                    setIsSecurityEditing(false);
-                    setShowCurrentPassword(false);
-                    setShowNewPassword(false);
-                    setShowConfirmPassword(false);
-                  }}
-                  disabled={isSavingPassword}
-                >
-                  {t(I18N_KEYS.client.profileCancelCta)}
-                </button>
-              </div>
-            ) : null}
-          </article>
-
-          <ProfilePreferencesCards
-            t={t}
-            locale={locale}
-            setLocale={setLocale}
-            effectiveTheme={effectiveTheme}
-            setTheme={setTheme}
-            favoritesTotal={favoritesTotal}
-            consentChoice={consentChoice}
-            openPreferences={openPreferences}
-          />
-        </div>
-      </section>
+      <ProfileSettingsSection
+        t={t}
+        requiredHint={requiredHint}
+        authMe={authMe}
+        avatarPreviewUrl={avatarPreviewUrl}
+        avatarInitial={avatarInitial}
+        isUploadingAvatar={isUploadingAvatar}
+        avatarFileName={avatarFileName}
+        fileButtonLabel={fileButtonLabel}
+        noFileLabel={noFileLabel}
+        onAvatarSelected={(event) => {
+          void handleAvatarSelected(event);
+        }}
+        profileForm={profileForm}
+        isProfileEditing={isProfileEditing}
+        isSavingProfile={isSavingProfile}
+        onToggleProfileEditing={() => setIsProfileEditing((prev) => !prev)}
+        onProfileFieldChange={(field, value) =>
+          setProfileForm((prev) => ({ ...prev, [field]: value }))
+        }
+        onSaveProfile={() => {
+          void handleSaveProfile();
+        }}
+        onCancelProfile={() => {
+          setProfileForm({
+            name: authMe?.name ?? '',
+            city: authMe?.city ?? '',
+          });
+          setIsProfileEditing(false);
+        }}
+        isSecurityEditing={isSecurityEditing}
+        isSavingPassword={isSavingPassword}
+        onToggleSecurityEditing={() => setIsSecurityEditing((prev) => !prev)}
+        onSavePassword={() => {
+          void handleSavePassword();
+        }}
+        onCancelSecurity={() => {
+          setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+          setIsSecurityEditing(false);
+          setShowCurrentPassword(false);
+          setShowNewPassword(false);
+          setShowConfirmPassword(false);
+        }}
+        passwordForm={passwordForm}
+        onPasswordFieldChange={(field, value) =>
+          setPasswordForm((prev) => ({ ...prev, [field]: value }))
+        }
+        showCurrentPassword={showCurrentPassword}
+        showNewPassword={showNewPassword}
+        showConfirmPassword={showConfirmPassword}
+        onToggleShowCurrentPassword={() => setShowCurrentPassword((prev) => !prev)}
+        onToggleShowNewPassword={() => setShowNewPassword((prev) => !prev)}
+        onToggleShowConfirmPassword={() => setShowConfirmPassword((prev) => !prev)}
+        passwordChecks={passwordChecks}
+        isPasswordStrong={isPasswordStrong}
+        passwordsMatch={passwordsMatch}
+        locale={locale}
+        setLocale={setLocale}
+        effectiveTheme={effectiveTheme}
+        setTheme={setTheme}
+        favoritesTotal={favoritesTotal}
+        consentChoice={consentChoice}
+        openPreferences={openPreferences}
+      />
       <ProfileOverviewSection
         t={t}
         profileCompleteness={profileCompleteness}
