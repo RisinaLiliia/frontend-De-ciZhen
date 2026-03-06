@@ -232,6 +232,19 @@ export function IconHeart({ className }: { className?: string } = {}) {
   );
 }
 
+export function IconStar() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path
+        d="m12 3.7 2.55 5.17 5.7.83-4.13 4.02.97 5.68L12 16.7 6.91 19.4l.97-5.68L3.75 9.7l5.7-.83L12 3.7Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function IconBrandGoogle() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">

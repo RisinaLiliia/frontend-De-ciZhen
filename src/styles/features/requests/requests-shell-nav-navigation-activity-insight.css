@@ -6,6 +6,49 @@
     pointer-events: none;
   }
 
+  .personal-nav__item--secondary .personal-nav__rating {
+    gap: 2px;
+  }
+
+  .personal-nav__item--secondary .rating-summary__line {
+    gap: var(--space-1);
+  }
+
+  .personal-nav__item--secondary .rating-summary__stars {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .personal-nav__item--secondary .rating-summary__value {
+    font-size: 14px;
+  }
+
+  .personal-nav__item--secondary .rating-summary__reviews {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .personal-nav__item--secondary[data-nav-key='reviews'] {
+    gap: 6px;
+  }
+
+  .personal-nav__item--secondary[data-nav-key='reviews'] .personal-nav__top {
+    gap: var(--space-1-5);
+  }
+
+  .personal-nav__item--secondary[data-nav-key='reviews'] .personal-nav__label {
+    font-weight: 650;
+  }
+
+  .personal-nav__item--secondary[data-nav-key='reviews'] .rating-summary__line {
+    gap: var(--space-1);
+  }
+
+  .personal-nav__item--secondary[data-nav-key='reviews'] .rating-summary__stars {
+    font-size: 10px;
+    letter-spacing: 0.03em;
+  }
+
   .activity-insight {
     display: grid;
     grid-template-columns: 1.1fr 1fr;

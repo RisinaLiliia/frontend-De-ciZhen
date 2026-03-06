@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
-import { IconBriefcase, IconCheck, IconHeart, IconSend, IconUser } from '@/components/ui/icons/icons';
+import { IconBriefcase, IconCheck, IconHeart, IconSend, IconStar } from '@/components/ui/icons/icons';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
@@ -127,7 +127,7 @@ export function useWorkspacePublicState({
               key: 'reviews',
               href: '/workspace?section=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
-              icon: <IconUser />,
+              icon: <IconStar />,
               rating: {
                 value: platformRatingAvg.toFixed(1),
                 reviewsCount: platformReviewsCount,
@@ -190,7 +190,7 @@ export function useWorkspacePublicState({
           key: 'reviews',
           href: '/workspace?section=reviews',
           label: t(I18N_KEYS.requestsPage.navReviews),
-          icon: <IconUser />,
+          icon: <IconStar />,
           rating: {
             value: platformRatingAvg.toFixed(1),
             reviewsCount: platformReviewsCount,
