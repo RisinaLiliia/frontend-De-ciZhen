@@ -14,12 +14,16 @@ type Translate = (key: I18nKey) => string;
 type ProviderReviewsSectionProps = {
   t: Translate;
   isReviewsLoading: boolean;
+  sectionId?: string;
+  sectionTitle?: string;
   displayRatingAvg: number;
   displayRatingCount: number;
   reviewsDistribution: ProviderReviewsDistribution;
   reviewsUi: ProviderReviewsUi;
   reviewSort: ProviderReviewSort;
   onReviewSortChange: (next: ProviderReviewSort) => void;
+  feedTopSlot?: React.ReactNode;
+  emptyHint?: string;
   visibleReviews: NormalizedProviderReview[];
   reviewsTotalForPagination: number;
   hasReviewsPagination: boolean;
@@ -33,12 +37,16 @@ type ProviderReviewsSectionProps = {
 export function ProviderReviewsSection({
   t,
   isReviewsLoading,
+  sectionId = 'reviews',
+  sectionTitle,
   displayRatingAvg,
   displayRatingCount,
   reviewsDistribution,
   reviewsUi,
   reviewSort,
   onReviewSortChange,
+  feedTopSlot,
+  emptyHint,
   visibleReviews,
   reviewsTotalForPagination,
   hasReviewsPagination,
@@ -49,8 +57,8 @@ export function ProviderReviewsSection({
   formatReviewDate,
 }: ProviderReviewsSectionProps) {
   return (
-    <div id="reviews" className="request-detail__section request-detail__similar">
-      <h3 className="request-detail__section-title">{t(I18N_KEYS.requestsPage.reviewsViewLabel)}</h3>
+    <div id={sectionId} className="request-detail__section request-detail__similar">
+      <h3 className="request-detail__section-title">{sectionTitle ?? t(I18N_KEYS.requestsPage.reviewsViewLabel)}</h3>
       {isReviewsLoading ? <p className="request-detail__similar-note">...</p> : null}
       {!isReviewsLoading ? (
         <div className="provider-reviews-hub">
@@ -83,6 +91,7 @@ export function ProviderReviewsSection({
           </div>
 
           <div className="provider-reviews-hub__feed">
+            {feedTopSlot}
             <div className="provider-reviews-hub__toolbar">
               <span className="provider-reviews-hub__toolbar-label">
                 {reviewsUi.basedOn} {displayRatingCount} {reviewsUi.ratingsLabel}
@@ -125,7 +134,7 @@ export function ProviderReviewsSection({
               ))}
               {reviewsTotalForPagination === 0 ? (
                 <article className="provider-reviews-hub__item card">
-                  <p className="provider-reviews-hub__item-text">{t(I18N_KEYS.requestsPage.reviewsEmptyHint)}</p>
+                  <p className="provider-reviews-hub__item-text">{emptyHint ?? t(I18N_KEYS.requestsPage.reviewsEmptyHint)}</p>
                 </article>
               ) : null}
             </div>

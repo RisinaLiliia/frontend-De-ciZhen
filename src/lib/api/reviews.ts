@@ -1,12 +1,12 @@
 // src/lib/api/reviews.ts
-import { apiGet } from '@/lib/api/http';
+import { apiGet, apiPost } from '@/lib/api/http';
 import type { ReviewDto, ReviewOverviewDto, ReviewSummaryDto } from '@/lib/api/dto/reviews';
 
 export type ReviewsSort = 'created_desc' | 'rating_desc';
 
 type ReviewsOverviewQuery = {
   targetUserId: string;
-  targetRole: 'client' | 'provider';
+  targetRole: 'client' | 'provider' | 'platform';
   limit?: number;
   offset?: number;
   sort?: ReviewsSort;
@@ -16,6 +16,18 @@ type MyReviewsQuery = {
   role?: 'all' | 'client' | 'provider';
   limit?: number;
   offset?: number;
+};
+
+type PlatformReviewsOverviewQuery = {
+  limit?: number;
+  offset?: number;
+  sort?: ReviewsSort;
+};
+
+export type CreatePlatformReviewPayload = {
+  rating: number;
+  text?: string;
+  authorName?: string;
 };
 
 function normalizeLimit(value: number | undefined) {
@@ -45,7 +57,10 @@ function normalizeReviewSummary(input: Partial<ReviewSummaryDto>): ReviewSummary
 
   return {
     targetUserId: String(input.targetUserId ?? ''),
-    targetRole: input.targetRole === 'client' || input.targetRole === 'provider' ? input.targetRole : null,
+    targetRole:
+      input.targetRole === 'client' || input.targetRole === 'provider' || input.targetRole === 'platform'
+        ? input.targetRole
+        : null,
     total,
     averageRating,
     distribution,
@@ -93,4 +108,40 @@ export function listMyReviews(params: MyReviewsQuery = {}) {
   if (offset != null) qs.set('offset', String(offset));
   const suffix = qs.toString() ? `?${qs.toString()}` : '';
   return apiGet<ReviewDto[]>(`/reviews/my${suffix}`);
+}
+
+export async function getPlatformReviewsOverview(
+  params: PlatformReviewsOverviewQuery = {},
+): Promise<ReviewOverviewDto> {
+  const limit = normalizeLimit(params.limit) ?? 20;
+  const offset = normalizeOffset(params.offset) ?? 0;
+  const sort: ReviewsSort = params.sort === 'rating_desc' ? 'rating_desc' : 'created_desc';
+
+  const qs = new URLSearchParams();
+  qs.set('limit', String(limit));
+  qs.set('offset', String(offset));
+  qs.set('sort', sort);
+
+  const response = await apiGet<Partial<ReviewOverviewDto>>(`/reviews/platform/overview?${qs.toString()}`);
+  const summary = normalizeReviewSummary({
+    targetUserId: 'platform',
+    targetRole: 'platform',
+    ...response.summary,
+  });
+
+  return {
+    items: Array.isArray(response.items) ? response.items : [],
+    total: Math.max(0, Math.floor(Number(response.total ?? summary.total) || 0)),
+    limit: Math.max(1, Math.floor(Number(response.limit ?? limit) || limit)),
+    offset: Math.max(0, Math.floor(Number(response.offset ?? offset) || offset)),
+    summary: {
+      total: summary.total,
+      averageRating: summary.averageRating,
+      distribution: summary.distribution,
+    },
+  };
+}
+
+export function createPlatformReview(payload: CreatePlatformReviewPayload) {
+  return apiPost<CreatePlatformReviewPayload, ReviewDto>('/reviews/platform', payload);
 }
