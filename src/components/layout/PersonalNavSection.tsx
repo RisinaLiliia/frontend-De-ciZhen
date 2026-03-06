@@ -74,6 +74,7 @@ export function PersonalNavSection({
         <span
           key={item.key}
           className={itemClassName}
+          data-nav-key={item.key}
           aria-disabled="true"
         >
           <span className="personal-nav__top">
@@ -107,6 +108,7 @@ export function PersonalNavSection({
           href={item.lockedHref}
           prefetch={false}
           className={itemClassName}
+          data-nav-key={item.key}
           onClick={item.onClick}
         >
           <span className="personal-nav__top">
@@ -139,6 +141,7 @@ export function PersonalNavSection({
         href={item.href}
         prefetch={false}
         className={itemClassName}
+        data-nav-key={item.key}
         onClick={item.onClick}
       >
         <span className="personal-nav__top">

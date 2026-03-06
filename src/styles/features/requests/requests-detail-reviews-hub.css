@@ -160,6 +160,33 @@
     color: var(--c-accent);
   }
 
+  .provider-reviews-hub__star-picker {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    gap: var(--space-0-5);
+  }
+
+  .provider-reviews-hub__star-line {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .provider-reviews-hub__star-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    padding: 0;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--c-accent);
+    letter-spacing: 0;
+  }
+
+  .provider-reviews-hub__star-btn.typo-muted {
+    color: color-mix(in oklab, var(--c-border) 74%, var(--c-text-muted) 26%);
+  }
+
   .provider-reviews-hub__item-text {
     margin: 0;
     font-size: 13px;
@@ -177,5 +204,176 @@
     margin-top: var(--space-1);
   }
 
+  #platform-reviews .provider-reviews-hub {
+    gap: var(--space-3);
+    max-width: min(1120px, 100%);
+    margin-inline: auto;
+  }
+
+  #platform-reviews .request-detail__section-title {
+    margin-bottom: var(--space-2);
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 960px) {
+    #platform-reviews .provider-reviews-hub {
+      grid-template-columns: minmax(190px, 228px) minmax(0, 1fr);
+    }
+  }
+
+  #platform-reviews .provider-reviews-hub__summary,
+  #platform-reviews .provider-reviews-hub__item--composer {
+    border-color: color-mix(in oklab, var(--c-primary) 14%, var(--c-border) 86%);
+    background:
+      linear-gradient(
+        165deg,
+        color-mix(in oklab, var(--c-primary) 6%, var(--surface-card-bg) 94%) 0%,
+        var(--surface-card-bg) 44%,
+        color-mix(in oklab, var(--c-accent) 4%, var(--surface-card-bg) 96%) 100%
+      );
+  }
+
+  #platform-reviews .provider-reviews-hub__summary {
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+
+  #platform-reviews .provider-reviews-hub__rating-value {
+    font-size: 30px;
+  }
+
+  #platform-reviews .provider-reviews-hub__rating-stars {
+    font-size: 14px;
+  }
+
+  #platform-reviews .provider-reviews-hub__rating-meta {
+    font-size: 11px;
+  }
+
+  #platform-reviews .provider-reviews-hub__distribution {
+    gap: var(--space-1);
+  }
+
+  #platform-reviews .provider-reviews-hub__distribution-row {
+    grid-template-columns: 24px minmax(0, 1fr) 18px;
+    gap: var(--space-1-5);
+  }
+
+  #platform-reviews .provider-reviews-hub__distribution-score,
+  #platform-reviews .provider-reviews-hub__distribution-count {
+    font-size: 11px;
+  }
+
+  #platform-reviews .provider-reviews-hub__distribution-track {
+    height: 6px;
+  }
+
+  #platform-reviews .provider-reviews-hub__composer-form {
+    gap: var(--space-3);
+  }
+
+  #platform-reviews .provider-reviews-hub__composer-title,
+  #platform-reviews .provider-reviews-hub__composer-hint {
+    margin: 0;
+  }
+
+  #platform-reviews .provider-reviews-hub__composer-hint {
+    max-width: 64ch;
+  }
+
+  #platform-reviews .provider-reviews-hub__star-line {
+    gap: var(--space-1-5);
+  }
+
+  #platform-reviews .provider-reviews-hub__star-btn {
+    transition:
+      transform var(--transition-fast),
+      background var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  #platform-reviews .provider-reviews-hub__star-btn:hover {
+    background: color-mix(in oklab, var(--c-accent) 14%, transparent);
+    transform: translateY(-1px);
+  }
+
+  #platform-reviews .provider-reviews-hub__star-value {
+    min-width: 3ch;
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  #platform-reviews .provider-reviews-hub__composer-actions {
+    gap: var(--space-1-5);
+  }
+
+  #platform-reviews .provider-reviews-hub__feed {
+    gap: var(--space-3);
+  }
+
+  #platform-reviews .provider-reviews-hub__toolbar {
+    padding: 0 var(--space-1);
+  }
+
+  #platform-reviews .provider-reviews-hub__toolbar-label {
+    font-size: 13px;
+  }
+
+  #platform-reviews .provider-reviews-hub__sort {
+    gap: var(--space-1-5);
+  }
+
+  #platform-reviews .provider-reviews-hub__sort-btn {
+    min-height: 34px;
+    padding-inline: 12px;
+  }
+
+  #platform-reviews .provider-reviews-hub__list {
+    gap: var(--space-2-5);
+  }
+
+  #platform-reviews .provider-reviews-hub__list .provider-reviews-hub__item {
+    padding: var(--space-3-5);
+    border-color: color-mix(in oklab, var(--c-border) 68%, transparent);
+  }
+
+  #platform-reviews .provider-reviews-hub__item-head {
+    align-items: center;
+  }
+
+  #platform-reviews .provider-reviews-hub__item-author {
+    font-size: 15px;
+  }
+
+  #platform-reviews .provider-reviews-hub__item-date {
+    font-size: 12px;
+  }
+
+  #platform-reviews .provider-reviews-hub__item-text {
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 78ch;
+  }
+
+  #platform-reviews .provider-reviews-hub__composer-submit,
+  #platform-reviews .provider-reviews-hub__composer-reset {
+    height: 44px;
+  }
+
+  #platform-reviews .provider-reviews-hub__composer-reset {
+    border-color: color-mix(in oklab, var(--c-border) 72%, var(--c-primary) 28%);
+  }
+
+  #platform-reviews .provider-reviews-hub__composer-reset:hover {
+    border-color: color-mix(in oklab, var(--c-primary) 44%, var(--c-border) 56%);
+    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg-strong) 92%);
+  }
+
+  @media (max-width: 767px) {
+    #platform-reviews .provider-reviews-hub__summary,
+    #platform-reviews .provider-reviews-hub__item--composer {
+      padding: var(--space-3);
+    }
+  }
 
 }

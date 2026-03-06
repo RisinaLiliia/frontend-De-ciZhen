@@ -199,10 +199,10 @@ export function WorkspacePlatformReviewsPanel({ t, locale }: WorkspacePlatformRe
   };
 
   const feedTopSlot = (
-    <article className="provider-reviews-hub__item card">
-      <form className="form-stack" onSubmit={onSubmit}>
-        <p className="typo-h4">{t(I18N_KEYS.requestsPage.platformReviewFormTitle)}</p>
-        <p className="typo-small typo-muted">{t(I18N_KEYS.requestsPage.platformReviewFormHint)}</p>
+    <article className="provider-reviews-hub__item provider-reviews-hub__item--composer card">
+      <form className="form-stack provider-reviews-hub__composer-form" onSubmit={onSubmit}>
+        <p className="typo-h3 provider-reviews-hub__composer-title">{t(I18N_KEYS.requestsPage.platformReviewFormTitle)}</p>
+        <p className="typo-muted provider-reviews-hub__composer-hint">{t(I18N_KEYS.requestsPage.platformReviewFormHint)}</p>
         {!isAuthenticated ? (
           <div className="form-group">
             <Input
@@ -220,18 +220,28 @@ export function WorkspacePlatformReviewsPanel({ t, locale }: WorkspacePlatformRe
         )}
         <div className="form-group">
           <p className="typo-small">{t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}</p>
-          <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}>
-            {[5, 4, 3, 2, 1].map((score) => (
-              <button
-                key={score}
-                type="button"
-                className={`chip ${draftRating === score ? 'is-active' : ''}`.trim()}
-                aria-pressed={draftRating === score}
-                onClick={() => setDraftRating(score)}
-              >
-                {score}★
-              </button>
-            ))}
+          <div className="provider-reviews-hub__star-line">
+            <div
+              className="chip-row provider-reviews-hub__star-picker"
+              role="group"
+              aria-label={t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}
+            >
+              {[1, 2, 3, 4, 5].map((score) => (
+                <button
+                  key={score}
+                  type="button"
+                  className={`icon-button icon-button--md provider-reviews-hub__star-btn ${score <= draftRating ? '' : 'typo-muted'}`.trim()}
+                  aria-pressed={draftRating === score}
+                  onClick={() => setDraftRating(score)}
+                  aria-label={`${score}`}
+                >
+                  {score <= draftRating ? '★' : '☆'}
+                </button>
+              ))}
+            </div>
+            <span className="typo-body provider-reviews-hub__star-value" aria-live="polite">
+              {draftRating.toFixed(1)}
+            </span>
           </div>
         </div>
         <div className="form-group">
@@ -244,13 +254,17 @@ export function WorkspacePlatformReviewsPanel({ t, locale }: WorkspacePlatformRe
             rows={3}
           />
         </div>
-        <div className="chip-row">
-          <button type="submit" className="btn-primary" disabled={createReviewMutation.isPending}>
+        <div className="auth-social__row provider-reviews-hub__composer-actions">
+          <button
+            type="submit"
+            className="auth-social__btn auth-social__btn--google provider-reviews-hub__composer-submit"
+            disabled={createReviewMutation.isPending}
+          >
             {t(I18N_KEYS.requestsPage.platformReviewFormSubmit)}
           </button>
           <button
             type="button"
-            className="btn-ghost"
+            className="btn-ghost provider-reviews-hub__composer-reset"
             onClick={() => {
               setDraftRating(5);
               setDraftText('');
