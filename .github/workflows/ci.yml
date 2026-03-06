@@ -13,8 +13,7 @@ on:
       - ready_for_review
   push:
     branches:
-      - main
-      - develop
+      - '**'
 
 permissions:
   contents: read
