@@ -6,6 +6,7 @@ import type { OfferDto } from '@/lib/api/dto/offers';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { clampPercent } from '@/features/workspace/requests/workspaceState.shared';
@@ -16,7 +17,7 @@ import { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/u
 
 type Params = {
   t: (key: I18nKey) => string;
-  locale: string;
+  locale: Locale;
   isPersonalized: boolean;
   activeWorkspaceTab: WorkspaceTab;
   activePublicSection?: PublicWorkspaceSection | null;

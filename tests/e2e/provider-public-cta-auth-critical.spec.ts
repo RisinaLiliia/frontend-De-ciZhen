@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { dismissCookieConsentIfPresent } from './helpers/consent';
 
 const providerId = 'provider-1';
 const providerUserId = 'provider-user-1';
@@ -88,6 +89,7 @@ test('@critical unauthenticated provider CTAs redirect to login with next path',
 
   for (const buttonLabel of checks) {
     await page.goto(`/providers/${providerId}`);
+    await dismissCookieConsentIfPresent(page);
     await expect(page.getByText('Test Provider')).toBeVisible();
 
     const cta = page.locator('.request-detail__aside').getByRole('button', { name: buttonLabel });

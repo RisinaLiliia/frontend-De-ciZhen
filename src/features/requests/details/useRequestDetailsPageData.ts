@@ -12,6 +12,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { providerQK } from '@/features/provider/queries';
+import type { AuthStatus } from '@/features/auth/store';
 
 type RouterLike = {
   push: (href: string) => void;
@@ -26,7 +27,7 @@ type Params = {
   locale: Locale;
   requestId: string | undefined;
   isHydrated: boolean;
-  authStatus: string;
+  authStatus: AuthStatus;
   isAuthed: boolean;
   pathname: string;
   searchParams: SearchParamsLike;

@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 import type { DeltaResult } from '@/features/workspace/requests/metrics';
 import { formatMoMDeltaLabel } from '@/features/workspace/requests/metrics';
 import { getClientHint, getProviderHint } from '@/features/workspace/requests/workspace.content';
@@ -17,7 +18,7 @@ type Translator = (key: I18nKey) => string;
 
 type Params = {
   t: Translator;
-  locale: string;
+  locale: Locale;
   overview: WorkspacePrivateOverviewDto;
   chartMonthLabel: Intl.DateTimeFormat;
   formatNumber: Intl.NumberFormat;
