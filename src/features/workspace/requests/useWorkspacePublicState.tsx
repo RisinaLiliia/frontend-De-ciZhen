@@ -19,6 +19,8 @@ type Params = {
   publicRequestsCount: number;
   publicProvidersCount: number;
   publicStatsCount: number;
+  platformRatingAvg: number;
+  platformReviewsCount: number;
   setWorkspaceTab: (tab: WorkspaceTab) => void;
   markPublicRequestsSeen: () => void;
   guestLoginHref: string;
@@ -35,6 +37,8 @@ export function useWorkspacePublicState({
   publicRequestsCount,
   publicProvidersCount,
   publicStatsCount,
+  platformRatingAvg,
+  platformReviewsCount,
   setWorkspaceTab,
   markPublicRequestsSeen,
   guestLoginHref,
@@ -43,7 +47,10 @@ export function useWorkspacePublicState({
 }: Params) {
   const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${(userName ?? '').trim() || t(I18N_KEYS.requestsPage.navUserFallback)}!`;
   const hasActivePublicSection =
-    activePublicSection === 'requests' || activePublicSection === 'providers' || activePublicSection === 'stats';
+    activePublicSection === 'requests' ||
+    activePublicSection === 'providers' ||
+    activePublicSection === 'stats' ||
+    activePublicSection === 'reviews';
 
   const publicNavItems = React.useMemo(
     () =>
@@ -118,17 +125,16 @@ export function useWorkspacePublicState({
             },
             {
               key: 'reviews',
-              href: '/workspace?tab=reviews',
+              href: '/workspace?section=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
-                value: '0.0',
-                reviewsCount: 0,
+                value: platformRatingAvg.toFixed(1),
+                reviewsCount: platformReviewsCount,
                 reviewsLabel: t(I18N_KEYS.homePublic.reviews),
               },
-              onClick: () => setWorkspaceTab('reviews'),
-              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'reviews',
-              match: 'exact',
+              forceActive: activePublicSection === 'reviews',
+              match: 'prefix',
             },
           ];
       }
@@ -182,29 +188,29 @@ export function useWorkspacePublicState({
         },
         {
           key: 'reviews',
-          href: '/workspace?tab=reviews',
+          href: '/workspace?section=reviews',
           label: t(I18N_KEYS.requestsPage.navReviews),
           icon: <IconUser />,
           rating: {
-            value: '0.0',
-            reviewsCount: 0,
+            value: platformRatingAvg.toFixed(1),
+            reviewsCount: platformReviewsCount,
             reviewsLabel: t(I18N_KEYS.homePublic.reviews),
           },
-          disabled: true,
-          lockedHref: guestLoginHref,
-          onClick: onGuestLockedAction,
-          forceActive: !hasActivePublicSection && activeWorkspaceTab === 'reviews',
-          match: 'exact',
+          forceActive: activePublicSection === 'reviews',
+          match: 'prefix',
           tier: 'secondary',
         },
       ];
     },
     [
+      activePublicSection,
       activeWorkspaceTab,
       guestLoginHref,
       hasActivePublicSection,
       isPersonalized,
       onGuestLockedAction,
+      platformRatingAvg,
+      platformReviewsCount,
       publicNavItems,
       setWorkspaceTab,
       t,

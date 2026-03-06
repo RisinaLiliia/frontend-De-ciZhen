@@ -3,7 +3,9 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
+import { getPlatformReviewsOverview } from '@/lib/api/reviews';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
+import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useWorkspacePublicState } from '@/features/workspace/requests';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import {
@@ -30,6 +32,36 @@ export function useWorkspacePublicBranchModel({
   routeState,
 }: WorkspaceBranchProps) {
   const { activePublicSection, activeWorkspaceTab, guestLoginHref, onGuestLockedAction } = routeState;
+
+  const {
+    data: platformReviewsOverview,
+  } = useQuery({
+    queryKey: ['platform-reviews-overview', 'summary'],
+    queryFn: () =>
+      withStatusFallback(
+        () => getPlatformReviewsOverview({ limit: 1, offset: 0, sort: 'created_desc' }),
+        {
+          items: [],
+          total: 0,
+          limit: 1,
+          offset: 0,
+          summary: {
+            total: 0,
+            averageRating: 0,
+            distribution: {
+              '1': 0,
+              '2': 0,
+              '3': 0,
+              '4': 0,
+              '5': 0,
+            },
+          },
+        },
+        [400, 404],
+      ),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
 
   const {
     data: platformSnapshot,
@@ -60,6 +92,8 @@ export function useWorkspacePublicBranchModel({
 
   const platformRequestsTotal = platformSnapshot?.summary.totalPublishedRequests ?? 0;
   const platformProvidersTotal = platformSnapshot?.summary.totalActiveProviders ?? 0;
+  const platformRatingAvg = Number(platformReviewsOverview?.summary.averageRating ?? 0);
+  const platformReviewsCount = Number(platformReviewsOverview?.summary.total ?? 0);
   const cityActivity = platformSnapshot?.cityActivity;
   const platformSummary = platformSnapshot?.summary;
   const { localeTag, formatNumber } = useWorkspaceFormatters(locale);
@@ -100,6 +134,8 @@ export function useWorkspacePublicBranchModel({
     publicRequestsCount: platformRequestsTotal,
     publicProvidersCount: platformProvidersTotal,
     publicStatsCount: platformRequestsTotal,
+    platformRatingAvg: Number.isFinite(platformRatingAvg) ? platformRatingAvg : 0,
+    platformReviewsCount: Number.isFinite(platformReviewsCount) ? Math.max(0, Math.round(platformReviewsCount)) : 0,
     setWorkspaceTab,
     markPublicRequestsSeen,
     guestLoginHref,

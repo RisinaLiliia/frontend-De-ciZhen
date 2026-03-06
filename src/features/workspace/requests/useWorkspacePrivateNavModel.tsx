@@ -55,7 +55,10 @@ export function useWorkspacePrivateNavModel({
   onGuestLockedAction,
 }: Params) {
   const hasActivePublicSection =
-    activePublicSection === 'requests' || activePublicSection === 'providers' || activePublicSection === 'stats';
+    activePublicSection === 'requests' ||
+    activePublicSection === 'providers' ||
+    activePublicSection === 'stats' ||
+    activePublicSection === 'reviews';
   const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${(userName ?? '').trim() || t(I18N_KEYS.requestsPage.navUserFallback)}!`;
 
   const publicNavItems = React.useMemo(
@@ -184,7 +187,7 @@ export function useWorkspacePrivateNavModel({
             },
             {
               key: 'reviews',
-              href: '/workspace?tab=reviews',
+              href: '/workspace?section=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconUser />,
               rating: {
@@ -192,14 +195,12 @@ export function useWorkspacePrivateNavModel({
                 reviewsCount: navReviewsCount,
                 reviewsLabel: t(I18N_KEYS.homePublic.reviews),
               },
-              disabled: true,
-              lockedHref: guestLoginHref,
-              onClick: onGuestLockedAction,
-              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'reviews',
-              match: 'exact',
+              forceActive: activePublicSection === 'reviews',
+              match: 'prefix',
             },
           ],
     [
+      activePublicSection,
       activeWorkspaceTab,
       completedJobsCount,
       favoriteRequestCount,

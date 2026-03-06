@@ -32,6 +32,17 @@ const PlatformActivityPanel = dynamic(
   },
 );
 
+const PlatformReviewsPanel = dynamic(
+  () => import('@/features/workspace/requests/WorkspacePlatformReviewsPanel').then((mod) => mod.WorkspacePlatformReviewsPanel),
+  {
+    loading: () => (
+      <section className="panel">
+        <div className="skeleton h-96 w-full" />
+      </section>
+    ),
+  },
+);
+
 const NearbyProvidersPanel = dynamic(
   () => import('@/components/home/HomeNearbyPanel').then((mod) => mod.HomeNearbyPanel),
   {
@@ -119,6 +130,8 @@ export function WorkspaceExploreSection({
         <div>
           {activeSection === 'stats' ? (
             <PlatformActivityPanel t={t} locale={locale} />
+          ) : activeSection === 'reviews' ? (
+            <PlatformReviewsPanel t={t} locale={locale} />
           ) : (
             <ExploreRequestsPanel
               t={t}
