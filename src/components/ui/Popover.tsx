@@ -52,24 +52,17 @@ export function Popover({
 
   return (
     <div ref={ref} className={cn('dc-popover', className)}>
-      <div
+      <button
+        type="button"
         className="dc-popover-trigger"
         onClick={toggle}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggle();
-          }
-        }}
-        role="button"
-        tabIndex={disabled ? -1 : 0}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={panelId}
-        aria-disabled={disabled}
+        disabled={disabled}
       >
         {trigger}
-      </div>
+      </button>
 
       {open ? (
         <div id={panelId} className="dc-popover-panel" data-align={align} role="dialog" aria-modal="false">

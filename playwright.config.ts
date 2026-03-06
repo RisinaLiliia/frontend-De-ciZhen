@@ -23,7 +23,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npm run build && npm run start -- --port ${PORT} --hostname 127.0.0.1`,
+    command: `npm run build -- --webpack && npm run start -- --port ${PORT} --hostname 127.0.0.1`,
     url: BASE_URL,
     reuseExistingServer: false,
     timeout: 300_000,
