@@ -1,0 +1,86 @@
+/* src/styles/features/components/components-growth-consent-ui-footer.css */
+
+@layer components {
+  .consent-manage-footer {
+    width: 100%;
+    padding: 8px 12px 16px;
+    margin-top: 8px;
+  }
+
+  .consent-manage-footer__inner {
+    max-width: var(--page-max, 1120px);
+    margin-inline: auto;
+    border-radius: 14px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+    background:
+      radial-gradient(460px 180px at -10% -40%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent 62%),
+      radial-gradient(420px 160px at 110% -30%, color-mix(in oklab, var(--c-accent) 12%, transparent), transparent 58%),
+      linear-gradient(
+        132deg,
+        color-mix(in oklab, var(--c-panel) 86%, transparent),
+        color-mix(in oklab, var(--c-surface) 84%, transparent)
+      );
+    backdrop-filter: blur(8px) saturate(1.03);
+    box-shadow:
+      0 10px 26px color-mix(in oklab, var(--c-ink) 10%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--c-border) 36%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 10px;
+  }
+
+  .consent-manage-footer__links {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .consent-manage-footer__links a {
+    color: color-mix(in oklab, var(--c-primary) 74%, var(--c-text) 26%);
+    text-decoration: none;
+    border-bottom: 1px solid var(--focus-ring-primary);
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .consent-manage-footer__links a:hover,
+  .consent-manage-footer__links a:focus-visible {
+    color: color-mix(in oklab, var(--c-primary) 86%, var(--c-text) 14%);
+    border-color: color-mix(in oklab, var(--c-primary) 52%, transparent);
+    outline: none;
+  }
+
+  .consent-manage-footer__button {
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    background: color-mix(in oklab, var(--c-panel) 84%, transparent);
+    color: var(--c-text);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0 12px;
+    transition:
+      background var(--transition-fast),
+      transform var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .consent-manage-footer__button:hover {
+    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
+    border-color: color-mix(in oklab, var(--c-primary) 42%, var(--c-border) 58%);
+    transform: translateY(-1px);
+  }
+
+  .consent-manage-footer__button:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--c-primary) 50%, transparent);
+    outline-offset: 2px;
+  }
+
+
+}

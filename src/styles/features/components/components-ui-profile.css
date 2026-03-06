@@ -1,0 +1,5 @@
+/* src/styles/features/components/components-ui-profile.css */
+
+@import './components-ui-profile-typography.css';
+@import './components-ui-profile-settings.css';
+@import './components-ui-profile-stack.css';

@@ -1,0 +1,128 @@
+/* src/styles/features/home/home-content-providers-shell.css */
+
+@layer components {
+  .provider-list {
+    margin-top: var(--space-2);
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+    min-width: 0;
+  }
+
+  .top-providers-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .provider-card {
+    --provider-card-height: 216px;
+    --provider-card-badge-strip-height: 28px;
+    --provider-card-top-gap: var(--space-4-5);
+    --provider-card-top-reserve: calc(var(--provider-card-badge-strip-height) + var(--provider-card-top-gap));
+    display: grid;
+    gap: var(--space-2-5);
+    padding: 0;
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--c-panel) 98%, transparent) 0%,
+        color-mix(in oklab, var(--c-panel) 94%, transparent) 45%,
+        color-mix(in oklab, var(--c-ink) 85%, transparent) 100%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 98%, transparent),
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%)
+      );
+    box-shadow:
+      var(--shadow-card),
+      0 10px 24px color-mix(in oklab, var(--c-primary) 8%, transparent);
+    position: relative;
+    container-type: inline-size;
+    min-width: 0;
+    align-content: start;
+    height: var(--provider-card-height);
+    min-height: var(--provider-card-height);
+    overflow: hidden;
+    transition:
+      transform var(--transition),
+      border-color var(--transition),
+      box-shadow var(--transition);
+  }
+
+  html:not(.dark) .provider-card {
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
+    background: linear-gradient(
+      180deg,
+      var(--c-panel) 0%,
+      color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%
+    );
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 18%, transparent);
+  }
+
+  .provider-card__overlay-link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    text-decoration: none;
+  }
+
+  .provider-card:focus-within {
+    border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
+    box-shadow:
+      var(--shadow-card),
+      0 0 0 3px var(--focus-ring-primary);
+  }
+
+  .provider-card__favorite {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-4);
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+
+  .provider-info,
+  .provider-avatar-stack {
+    position: relative;
+    z-index: 2;
+  }
+
+  .provider-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .provider-card .provider-info {
+    display: grid;
+    grid-template-columns: minmax(56px, auto) minmax(0, 1fr);
+    align-items: stretch;
+    gap: var(--space-3);
+    min-height: 100%;
+    height: 100%;
+  }
+
+  .provider-card__top {
+    height: 100%;
+    padding: var(--provider-card-top-reserve) var(--space-4) var(--space-2-5);
+    pointer-events: none;
+  }
+
+  .provider-card__top .rating-summary {
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
+  }
+
+
+}

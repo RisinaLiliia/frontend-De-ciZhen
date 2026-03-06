@@ -1,0 +1,125 @@
+/* src/styles/features/components/components-growth-hero.css */
+
+@layer components {
+  .hero {
+    display: grid;
+    gap: var(--space-4);
+    position: relative;
+    overflow: visible;
+    border-radius: 0;
+    border: none;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-ink) 75%, transparent),
+      color-mix(in oklab, var(--c-panel) 55%, transparent)
+    );
+    padding: 0;
+    min-height: 240px;
+    align-items: stretch;
+  }
+
+  .hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: clamp(20px, 4vw, 32px);
+  }
+
+  .hero__title {
+    max-width: 24ch;
+    white-space: pre-line;
+    text-wrap: balance;
+  }
+
+  .hero__actions {
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+
+  .sticky-action-row {
+    position: sticky;
+    top: calc(56px + 8px);
+    z-index: 30;
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .hero-dock-actions {
+    margin-top: calc(-1 * (var(--btn-h) + 12px));
+    z-index: 31;
+    margin-bottom: 12px;
+  }
+
+  .hero__media {
+    position: relative;
+    border-radius: 0;
+    overflow: hidden;
+    min-height: 200px;
+    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+    box-shadow: 0 18px 40px color-mix(in oklab, var(--c-panel) 55%, transparent);
+    height: 100%;
+    align-self: stretch;
+  }
+
+  .hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, color-mix(in oklab, var(--c-ink) 60%, transparent), color-mix(in oklab, var(--c-ink) 10%, transparent));
+    pointer-events: none;
+  }
+
+  html:not(.dark) .hero {
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--c-panel) 92%, var(--c-primary) 8%),
+      color-mix(in oklab, var(--c-panel) 96%, var(--c-accent) 4%)
+    );
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+
+  html:not(.dark) .hero__media::after {
+    background: linear-gradient(90deg, color-mix(in oklab, var(--c-panel) 35%, transparent), color-mix(in oklab, var(--c-panel) 10%, transparent));
+  }
+
+  .hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .hero__copy {
+      text-align: left;
+    }
+
+    .hero__actions {
+      max-width: 480px;
+    }
+
+    .hero-dock-actions {
+      max-width: 480px;
+      margin-top: calc(-1 * (var(--btn-h) + 56px));
+      margin-left: clamp(20px, 4vw, 32px);
+      margin-right: auto;
+    }
+
+    .hero {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      align-items: stretch;
+      min-height: 320px;
+      column-gap: clamp(24px, 4vw, 48px);
+    }
+
+    .hero__media {
+      min-height: 320px;
+    }
+  }
+
+}

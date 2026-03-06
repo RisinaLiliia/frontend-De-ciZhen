@@ -1,0 +1,186 @@
+/* src/styles/features/components/components-core-auth-modal.css */
+
+@layer components {
+  .auth-route-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+  }
+
+  .auth-route-modal__title-wrap {
+    display: grid;
+    gap: 4px;
+    text-align: center;
+  }
+
+  .auth-route-modal__title {
+    margin: 0;
+    font-size: clamp(24px, 2.6vw, 30px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .auth-route-modal__subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: var(--c-text-muted);
+    line-height: 1.35;
+  }
+
+  .auth-route-modal__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: var(--surface-soft-bg);
+    color: var(--c-text-muted);
+    font-size: 22px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast);
+  }
+
+  .auth-route-modal__close:hover {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-primary) 48%, var(--c-border) 52%);
+    background: color-mix(in oklab, var(--c-primary) 15%, var(--c-panel) 85%);
+  }
+
+  @media (max-width: 767px) {
+    .dc-modal.auth-route-modal {
+      inset: 56px 0 0 0;
+      height: calc(100dvh - 56px);
+      padding: 12px;
+      align-items: center;
+      justify-items: center;
+      background:
+        radial-gradient(
+          72% 52% at 50% 8%,
+          color-mix(in oklab, var(--c-primary) 24%, transparent),
+          transparent 70%
+        ),
+        color-mix(in oklab, var(--c-overlay) 92%, transparent);
+    }
+
+    .auth-route-modal__panel {
+      width: min(calc(100vw - 32px), 400px);
+      max-width: 400px;
+      max-height: calc(100dvh - 76px);
+      height: auto;
+      border-radius: 16px;
+      border: 1px solid color-mix(in oklab, var(--c-border) 68%, transparent);
+      padding: 10px 9px 14px;
+      gap: 10px;
+      overflow: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
+    }
+
+    .auth-route-modal__title {
+      font-size: clamp(18px, 5.2vw, 22px);
+      line-height: 1.12;
+    }
+
+    .auth-route-modal__subtitle {
+      font-size: 11px;
+      line-height: 1.24;
+    }
+
+    .auth-route-modal .field {
+      height: 36px;
+      padding-inline: 10px;
+      font-size: 12px;
+    }
+
+    .auth-route-modal .profile-settings__password-field .field,
+    .auth-route-modal .profile-settings__password-field .input {
+      padding-right: 50px;
+    }
+
+    .auth-route-modal label.flex.items-start.gap-3.text-sm span {
+      font-size: 10px;
+      line-height: 1.2;
+    }
+
+    .auth-route-modal .profile-settings__password-toggle {
+      width: 20px;
+      height: 20px;
+      right: 5px;
+      font-size: 12px;
+      padding: 0;
+    }
+
+    .auth-route-modal .profile-settings__password-toggle svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .auth-route-modal .auth-field-valid-icon {
+      right: 27px;
+    }
+
+    .auth-route-modal .auth-form-error {
+      font-size: 10px;
+      line-height: 1.25;
+    }
+
+    .auth-route-modal .form-label__required {
+      width: 12px;
+      height: 12px;
+      font-size: 10px;
+    }
+
+    .auth-route-modal .auth-social__divider {
+      font-size: 9px;
+    }
+
+    .auth-route-modal .auth-social__btn {
+      height: 36px;
+      padding: 0 10px;
+      font-size: 12px;
+      gap: 8px;
+    }
+
+    .auth-route-modal .auth-social__icon {
+      width: 16px;
+      height: 16px;
+      flex-basis: 16px;
+    }
+
+    .auth-route-modal .auth-social__icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .auth-route-modal .auth-social__label {
+      min-width: 48px;
+    }
+
+    .auth-route-modal .auth-social__row {
+      grid-template-columns: 1fr;
+    }
+
+    .auth-route-modal .form-stack {
+      gap: 7px;
+    }
+
+    .auth-route-modal .form-group {
+      gap: 3px;
+    }
+  }
+
+}

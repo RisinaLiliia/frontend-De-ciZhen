@@ -1,0 +1,96 @@
+/* src/styles/features/home/home-content-providers-profile-identity-identity-meta.css */
+
+@layer components {
+  .provider-name {
+    font-size: 17px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    min-width: 0;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .provider-name > span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .provider-verified-icon {
+    display: inline-flex;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    align-items: center;
+    justify-content: center;
+    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
+    background: color-mix(in oklab, var(--c-primary) 16%, var(--c-panel) 84%);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+  }
+
+  .provider-verified-icon svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .provider-verified-icon.is-online {
+    color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
+    background: color-mix(in oklab, var(--c-success) 16%, var(--c-panel) 84%);
+    border-color: color-mix(in oklab, var(--c-success) 42%, var(--c-border) 58%);
+  }
+
+  .provider-sub {
+    margin: 0;
+    color: var(--c-text-muted);
+    line-height: 1.2;
+  }
+
+  .provider-sub-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .provider-sub-row__badge {
+    display: inline-flex;
+    min-width: 0;
+    justify-self: end;
+  }
+
+  .provider-avatar-city {
+    max-width: 100%;
+    color: inherit;
+  }
+
+  .provider-avatar-city.request-meta-item {
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--c-text-muted);
+    gap: var(--space-1-5);
+  }
+
+  .provider-avatar-city.request-meta-item svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
+  }
+
+  .provider-avatar-city span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+
+}

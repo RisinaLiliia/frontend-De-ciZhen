@@ -1,0 +1,96 @@
+/* src/styles/features/home/home-content-layout-stats-mobile.css */
+
+@layer components {
+  @media (max-width: 640px) {
+    .home-screen {
+      --home-panel-padding: 12px;
+      gap: var(--space-4);
+    }
+
+    .home-screen .home-stats__title,
+    .home-screen .home-quick-search__title,
+    .home-screen .home-activity__title {
+      font-size: 16px;
+    }
+
+    .home-screen .home-activity__subtitle,
+    .home-screen .typo-muted {
+      font-size: 13px;
+    }
+
+    .home-screen .home-hero__actions,
+    .home-screen .action-row {
+      gap: var(--space-2);
+    }
+
+    .home-screen .home-stats__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .home-screen .home-stats__card {
+      position: relative;
+      padding: 8px 8px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .home-screen .home-stats__card:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      background: var(--c-border);
+      opacity: 0.7;
+    }
+
+    .home-screen .home-stats__value {
+      font-size: 17px;
+      white-space: nowrap;
+    }
+
+    .home-screen .chip-row {
+      gap: var(--space-2);
+    }
+
+    .home-screen .chip {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .home-screen .home-popular-services__grid {
+      gap: var(--space-2);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .home-screen .home-popular-services__tile {
+      padding: 6px 4px;
+      font-size: 11px;
+    }
+
+    .home-screen .list-item {
+      padding: 8px 0;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .home-screen .home-stats__value {
+      font-size: 15px;
+      letter-spacing: -0.2px;
+    }
+
+    .home-screen .home-stats__label {
+      font-size: 11px;
+    }
+
+    .home-screen .home-stats__icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+
+}

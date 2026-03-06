@@ -1,0 +1,31 @@
+/* src/styles/features/home/home-content-providers-badges-responsive-grid.css */
+
+@layer components {
+  .provider-card.is-grid {
+    gap: var(--space-3);
+    height: var(--provider-card-height);
+    min-height: var(--provider-card-height);
+  }
+
+  .provider-card.is-grid .provider-card__top {
+    padding: var(--space-3-5);
+  }
+
+  .provider-card.is-grid .provider-main-review {
+    -webkit-line-clamp: 2;
+    min-height: calc(2 * 1.35em);
+  }
+
+  @media (max-width: 1024px) {
+    .provider-card.is-grid {
+      gap: var(--space-2-5);
+    }
+
+    .provider-card.is-grid .provider-card__top {
+      padding: var(--space-3);
+    }
+  }
+
+
+
+}

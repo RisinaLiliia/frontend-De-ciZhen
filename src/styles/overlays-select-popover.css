@@ -1,0 +1,117 @@
+/* src/styles/overlays-select-popover.css */
+@layer components {
+  .dc-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .dc-select-content {
+    width: var(--radix-select-trigger-width);
+    max-width: min(var(--radix-select-trigger-width), calc(100vw - 32px));
+    z-index: 50;
+    max-height: 260px;
+    overflow: hidden;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: var(--space-1-5);
+  }
+
+  .dc-select-viewport {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-0-5);
+  }
+
+  .dc-select-item {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    border-radius: var(--radius-md);
+    padding: 0 var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--c-text);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .dc-select-item[data-disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .dc-select-item[data-highlighted] {
+    outline: none;
+    background: color-mix(in oklab, var(--c-accent) 18%, transparent);
+  }
+
+  .dc-select-item[data-state='checked'] {
+    background: color-mix(in oklab, var(--c-accent) 26%, transparent);
+  }
+
+  .dc-popover {
+    position: relative;
+    z-index: 60;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100%;
+  }
+
+  .dc-popover-trigger {
+    display: inline-flex;
+    max-width: 100%;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    cursor: pointer;
+  }
+
+  .dc-popover-trigger:disabled {
+    cursor: default;
+  }
+
+  .dc-popover-panel {
+    position: absolute;
+    z-index: 80;
+    margin-top: var(--space-2);
+    left: 0;
+    width: max-content;
+    min-width: min(260px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: var(--space-3);
+  }
+
+  .dc-popover-panel[data-align='end'] {
+    left: auto;
+    right: 0;
+  }
+
+  @media (max-width: 768px) {
+    .profile-popover .dc-popover-panel {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+    }
+
+    .profile-popover .dc-popover-panel[data-align='end'] {
+      left: 50%;
+      right: auto;
+    }
+  }
+
+
+}

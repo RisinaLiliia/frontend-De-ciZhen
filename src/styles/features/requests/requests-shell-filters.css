@@ -1,0 +1,4 @@
+/* src/styles/features/requests/requests-shell-filters.css */
+
+@import './requests-shell-filters-core.css';
+@import './requests-shell-filters-mobile.css';

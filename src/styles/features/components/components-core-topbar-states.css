@@ -1,0 +1,119 @@
+/* src/styles/features/components/components-core-topbar-states.css */
+
+@layer components {
+  .topbar-nav__item--create {
+    gap: 6px;
+    padding-right: 10px;
+    color: var(--c-text-muted);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-style: dashed;
+    border-color: color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
+    background-color: color-mix(in oklab, var(--c-panel) 80%, transparent);
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%) 0%,
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%) 62%,
+        color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%) 100%
+      );
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--c-hi) 10%, transparent),
+      0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
+  }
+
+  .topbar-nav__item--create::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-primary-contrast) 26%, transparent) 0%,
+        transparent 45%
+      ),
+      radial-gradient(
+        120% 90% at 15% 0%,
+        color-mix(in oklab, var(--c-primary-contrast) 20%, transparent) 0%,
+        transparent 70%
+      );
+  }
+
+  .topbar-nav__item--create > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .topbar-nav__item--create .topbar-nav__label {
+    order: 1;
+    font-weight: 700;
+  }
+
+  .topbar-nav__item--create .topbar-nav__icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-accent) 62%, var(--c-border) 38%);
+    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-accent) 16%);
+    color: color-mix(in oklab, var(--c-accent) 90%, var(--c-text) 10%);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-hi-strong) 16%, transparent);
+  }
+
+  .topbar-nav__item--create .topbar-nav__icon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .topbar-nav__item--create:hover {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-accent) 66%, var(--c-border) 34%);
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 22%, var(--c-panel) 78%) 0%,
+        var(--surface-soft-bg) 62%,
+        color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%) 100%
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--c-hi) 12%, transparent),
+      0 10px 20px color-mix(in oklab, var(--c-primary) 14%, transparent);
+  }
+
+  .topbar-nav__item.is-active {
+    color: color-mix(in oklab, var(--c-primary) 85%, var(--c-text) 15%);
+    border-color: color-mix(in oklab, var(--c-primary) 52%, transparent);
+    background: color-mix(in oklab, var(--c-primary) 19%, var(--c-panel) 81%);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 16%, transparent);
+  }
+
+  .topbar-nav__item:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--c-primary) 70%, white 30%);
+    outline-offset: 2px;
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--c-primary) 24%, transparent),
+      0 8px 18px color-mix(in oklab, var(--c-primary) 16%, transparent);
+  }
+
+  .topbar-nav__item--create.is-active,
+  .topbar-nav__item--create:focus-visible {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-accent) 66%, var(--c-border) 34%);
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 24%, var(--c-panel) 76%) 0%,
+        var(--surface-soft-bg) 62%,
+        color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%) 100%
+      );
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--c-accent) 20%, transparent),
+      0 10px 20px color-mix(in oklab, var(--c-primary) 14%, transparent);
+  }
+
+
+}

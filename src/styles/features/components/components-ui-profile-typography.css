@@ -1,0 +1,95 @@
+/* src/styles/features/components/components-ui-profile-typography.css */
+
+@layer components {
+  .typo-h1 {
+    font-size: var(--fs-h1);
+    line-height: var(--lh-tight);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .typo-h2 {
+    font-size: var(--fs-h2);
+    line-height: var(--lh-title);
+    font-weight: 700;
+  }
+
+  .typo-h3 {
+    font-size: var(--fs-h3);
+    line-height: var(--lh-title);
+    font-weight: 600;
+  }
+
+  .typo-body {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--c-text);
+  }
+
+  .typo-muted {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--c-muted);
+  }
+
+  .typo-small {
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--c-muted);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--c-border);
+    background: color-mix(in oklab, var(--c-surface) 88%, transparent);
+    font-size: var(--fs-small);
+    color: var(--c-muted);
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .badge:hover {
+    background: color-mix(in oklab, var(--c-surface) 85%, var(--c-border) 15%);
+    border-color: color-mix(in oklab, var(--c-border) 70%, var(--c-primary) 30%);
+    transform: translateY(-1px);
+  }
+
+  .badge:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+  }
+
+  .count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-accent) 36%, var(--c-border) 64%);
+    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
+    color: var(--c-text);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-accent) 18%, transparent);
+  }
+
+  .count-badge--sm {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    font-size: 12px;
+  }
+
+
+}

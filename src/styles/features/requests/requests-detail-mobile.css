@@ -1,0 +1,4 @@
+/* src/styles/features/requests/requests-detail-mobile.css */
+
+@import './requests-detail-mobile-provider-mobile.css';
+@import './requests-detail-mobile-compact-loading.css';

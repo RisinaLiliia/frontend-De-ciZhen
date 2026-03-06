@@ -1,0 +1,139 @@
+/* src/styles/features/home/home-content-proof-howitworks.css */
+
+@layer components {
+  .howitworks-panel {
+    display: grid;
+    gap: var(--space-3);
+    padding: 12px;
+  }
+
+  .howitworks-tabs {
+    display: inline-flex;
+    gap: 8px;
+    padding: 4px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 80%, transparent);
+  }
+
+  .howitworks-tab {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-text-muted);
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .howitworks-tab:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--focus-ring-primary);
+  }
+
+  .howitworks-tab.is-active {
+    color: var(--c-primary-contrast);
+    background: var(--btn-secondary-bg);
+    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
+  }
+
+  .howitworks-steps {
+    display: grid;
+    gap: var(--space-2);
+    position: relative;
+  }
+
+  @media (min-width: 768px) {
+    .howitworks-steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .howitworks-step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--surface-soft-border);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+    box-shadow: 0 12px 26px color-mix(in oklab, var(--c-panel) 60%, transparent);
+    position: relative;
+    z-index: 1;
+    animation: howitworks-float 6.5s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .howitworks-step:nth-child(2) {
+    animation-delay: -0.8s;
+  }
+
+  .howitworks-step:nth-child(3) {
+    animation-delay: -1.6s;
+  }
+
+  .howitworks-step__index {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c-primary);
+    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 25%, transparent);
+  }
+
+  .howitworks-step__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+
+  .howitworks-step__desc {
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--c-text-muted);
+  }
+
+  .howitworks-steps::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 18px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, var(--c-primary) 28%, transparent),
+      transparent
+    );
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .howitworks-steps::before {
+    content: "";
+    position: absolute;
+    left: -30%;
+    right: -30%;
+    top: 10px;
+    height: 14px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, var(--c-primary) 16%, transparent),
+      transparent
+    );
+    opacity: 0.35;
+    transform: skewX(-14deg);
+    animation: howitworks-sheen 5.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+
+}

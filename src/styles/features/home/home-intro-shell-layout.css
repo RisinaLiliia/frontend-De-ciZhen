@@ -1,0 +1,171 @@
+/* src/styles/features/home/home-intro-shell-layout.css */
+
+@layer components {
+  .hero-experiment {
+    --hero-shot-duration: 3.2s;
+    --hero-shot-iterations: infinite;
+    --motion-ease-shot: cubic-bezier(0.33, 0, 0.2, 1);
+    --motion-ease-impact: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --motion-ease-roll: cubic-bezier(0.22, 0.61, 0.36, 1);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    gap: var(--space-4);
+    padding: clamp(16px, 2.2vw, 24px);
+    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    background:
+      radial-gradient(120% 100% at 0% 0%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent),
+      linear-gradient(180deg, color-mix(in oklab, var(--c-panel) 96%, transparent), var(--surface-soft-bg));
+  }
+
+  .home-intro-shell {
+    --home-intro-padding: 16px;
+    grid-area: top;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+    padding: var(--home-intro-padding);
+    padding-top: calc(var(--shell-topbar-height) + var(--home-intro-padding));
+    border-radius: 0 0 calc(var(--radius-lg) + 2px) calc(var(--radius-lg) + 2px);
+    border: 0;
+    background:
+      radial-gradient(120% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 12%, transparent), transparent 48%),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 84%, var(--c-ink) 16%),
+        color-mix(in oklab, var(--c-panel) 72%, var(--c-ink) 28%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 10%, transparent),
+      0 14px 34px color-mix(in oklab, var(--c-primary) 8%, transparent);
+  }
+
+  .home-intro-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 11%, transparent), transparent 52%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 16%, transparent),
+        color-mix(in oklab, var(--c-panel) 8%, transparent)
+      );
+    backdrop-filter: blur(10px) saturate(1.05);
+  }
+
+  .home-intro-shell > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .home-intro-shell .hero-experiment {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    overflow: visible;
+    padding-inline: clamp(12px, 1.8vw, 18px);
+    padding-block: clamp(12px, 1.8vw, 18px);
+    padding-block-start: clamp(18px, 2.4vw, 26px);
+  }
+
+  .home-intro-shell .home-stats-panel,
+  .home-intro-shell .home-quick-search-panel,
+  .home-intro-shell .home-activity-panel {
+    box-shadow: none;
+    border-color: color-mix(in oklab, var(--c-border) 54%, var(--c-ink) 46%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--c-panel) 74%, var(--c-ink) 26%),
+      color-mix(in oklab, var(--c-panel) 68%, var(--c-ink) 32%)
+    );
+  }
+
+  .home-intro-shell .home-activity-panel {
+    border-color: color-mix(in oklab, var(--c-primary) 32%, var(--c-ink) 68%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--c-panel) 70%, var(--c-ink) 30%),
+      color-mix(in oklab, var(--c-panel) 64%, var(--c-ink) 36%)
+    );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 7%, transparent),
+      0 10px 24px color-mix(in oklab, var(--c-ink) 45%, transparent);
+  }
+
+  .home-intro-shell .home-stats-panel,
+  .home-intro-shell .home-quick-search-panel {
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 6%, transparent),
+      0 8px 20px color-mix(in oklab, var(--c-ink) 34%, transparent);
+  }
+
+  .home-intro-shell .home-combined-top {
+    gap: 12px;
+  }
+
+  .home-intro-shell .home-combined-top__left.stack-md {
+    gap: 12px;
+  }
+
+  .hero-experiment--subtle {
+    --hero-shot-duration: 3.2s;
+    --hero-shot-iterations: infinite;
+    --hero-mobile-phase-duration: var(--hero-shot-duration);
+    --hero-mobile-rebound-duration: var(--hero-shot-duration);
+    --hero-mobile-roll-duration: var(--hero-shot-duration);
+    --hero-mobile-spin-duration: var(--hero-shot-duration);
+    --hero-mobile-phase-ease: var(--motion-ease-shot);
+    --hero-mobile-rebound-ease: var(--motion-ease-impact);
+    --hero-mobile-roll-ease: var(--motion-ease-roll);
+    --hero-mobile-spin-ease: linear;
+    --hero-mobile-x-0: 0px;
+    --hero-mobile-x-1: 22px;
+    --hero-mobile-x-2: 44px;
+    --hero-mobile-x-3: 98px;
+    --hero-mobile-x-4: 166px;
+    --hero-mobile-x-5: 212px;
+    --hero-mobile-x-6: 220px;
+    --hero-mobile-x-7: 228px;
+    --hero-mobile-land-x: 222px;
+    --hero-mobile-y-start: -6px;
+    --hero-mobile-y-bounce-1: 8px;
+    --hero-mobile-y-bounce-2: 10px;
+    --hero-mobile-y-arc: -50px;
+    --hero-mobile-y-peak: -66px;
+    --hero-mobile-y-hoop-entry: -52px;
+    --hero-mobile-y-hoop-mid: -24px;
+    --hero-mobile-y-floor-contact: 4px;
+    --hero-mobile-y-floor: -6px;
+    --hero-mobile-scale-base: 0.88;
+    --hero-mobile-scale-squash-x: 0.98;
+    --hero-mobile-scale-squash-y: 0.78;
+    --hero-mobile-scale-hoop: 0.8;
+    --hero-mobile-scale-impact-x: 0.84;
+    --hero-mobile-scale-impact-y: 0.9;
+    --hero-mobile-scale-rebound-x: 0.9;
+    --hero-mobile-scale-rebound-y: 0.82;
+    --hero-mobile-rebound-one-up: -8px;
+    --hero-mobile-rebound-two-up: -5px;
+    --hero-mobile-roll-step-1: -38px;
+    --hero-mobile-roll-step-2: -78px;
+    --hero-mobile-roll-end: -122px;
+    --hero-mobile-roll-rot-step-1: -90deg;
+    --hero-mobile-roll-rot-step-2: -230deg;
+    --hero-mobile-roll-rot-end: -360deg;
+  }
+
+  .hero-experiment--showcase {
+    --hero-shot-duration: 3.8s;
+    --hero-shot-iterations: infinite;
+  }
+
+}

@@ -1,0 +1,5 @@
+/* src/styles/features/components/components-core-auth.css */
+
+@import './components-core-auth-shell.css';
+@import './components-core-auth-form.css';
+@import './components-core-auth-modal.css';

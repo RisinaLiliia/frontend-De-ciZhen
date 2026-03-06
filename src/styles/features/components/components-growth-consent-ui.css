@@ -1,0 +1,5 @@
+/* src/styles/features/components/components-growth-consent-ui.css */
+
+@import './components-growth-consent-ui-banner.css';
+@import './components-growth-consent-ui-footer.css';
+@import './components-growth-consent-ui-modal.css';

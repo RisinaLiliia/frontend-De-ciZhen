@@ -1,0 +1,105 @@
+/* src/styles/request-card-body-meta-price.css */
+@layer components {
+  .request-card__body {
+    display: grid;
+    grid-template-rows:
+      auto
+      minmax(calc(2 * var(--lh-title) * 1em), auto)
+      minmax(20px, auto)
+      auto;
+    align-content: start;
+    gap: var(--space-2-5);
+    padding: var(--space-4);
+    height: 100%;
+  }
+
+  .request-card__title {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: var(--lh-title);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: calc(2 * var(--lh-title) * 1em);
+  }
+
+  .request-card__excerpt {
+    margin: 0;
+    color: var(--c-text-muted);
+    font-size: 13px;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .request-card__meta {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: var(--space-3);
+    align-items: center;
+    overflow: hidden;
+    color: var(--c-text-muted);
+    font-size: 13px;
+    min-height: 20px;
+  }
+
+  .request-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .request-meta-item svg {
+    width: 16px;
+    height: 16px;
+    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
+  }
+
+  .request-card__price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-size: 14px;
+    margin-top: auto;
+  }
+
+  .request-card__price .proof-price {
+    font-size: 16px;
+  }
+
+  .request-card__price-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 2px var(--space-2);
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .request-card__price-trend.is-down {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-warning) 46%, var(--c-border) 54%);
+    background: color-mix(in oklab, var(--c-warning) 22%, var(--c-panel) 78%);
+  }
+
+  .request-card__price-trend.is-up {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-success) 45%, var(--c-border) 55%);
+    background: color-mix(in oklab, var(--c-success) 22%, var(--c-panel) 78%);
+  }
+
+
+}

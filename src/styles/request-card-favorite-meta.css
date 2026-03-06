@@ -1,0 +1,59 @@
+/* src/styles/request-card-favorite-meta.css */
+@layer components {
+  .request-card__favorite-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    color: var(--c-text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast);
+  }
+
+  .request-card__favorite-btn svg {
+    transition:
+      color var(--transition),
+      fill var(--transition);
+    fill: none;
+  }
+
+  .request-card__favorite-btn.is-active {
+    color: var(--c-accent);
+    border-color: color-mix(in oklab, var(--c-accent) 60%, var(--c-border) 40%);
+    background: color-mix(in oklab, var(--c-accent) 20%, var(--c-panel) 80%);
+  }
+
+  .request-card__favorite-btn.is-active svg {
+    color: var(--c-accent);
+    fill: currentColor;
+  }
+
+  .request-card__favorite-btn.is-pending {
+    opacity: 0.65;
+    cursor: wait;
+  }
+
+  .meta-item {
+    position: relative;
+    padding-left: var(--space-2-5);
+  }
+
+  .meta-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-primary) 60%, var(--c-border) 40%);
+    transform: translateY(-50%);
+  }
+
+}

@@ -1,0 +1,182 @@
+/* src/styles/features/home/home-content-providers-badges-responsive-responsive.css */
+
+@layer components {
+  @container (max-width: 520px) {
+    .provider-decision-metrics {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      gap: var(--space-1);
+    }
+
+    .provider-decision-metric {
+      padding: 0;
+      font-size: 11px;
+      gap: var(--space-0-75);
+    }
+
+    .provider-decision-metric__label {
+      display: none;
+    }
+
+    .provider-decision-metric__icon {
+      width: 12px;
+      height: 12px;
+    }
+
+    .provider-decision-metric__icon svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .provider-badges--corner {
+      gap: var(--space-0-75);
+    }
+
+    .provider-badge--md {
+      font-size: 10px;
+      padding: var(--space-1) var(--space-2-5);
+    }
+
+    .provider-badge--sm {
+      font-size: 10px;
+      padding: var(--space-1) var(--space-2-5);
+    }
+  }
+
+  @container (max-width: 430px) {
+    .provider-card {
+      --provider-card-top-gap: var(--space-3);
+      --provider-card-top-reserve: calc(var(--provider-card-badge-strip-height) + var(--provider-card-top-gap));
+    }
+
+    .provider-card__top {
+      padding: var(--provider-card-top-reserve) var(--space-3) var(--space-2);
+    }
+
+    .provider-card .provider-info {
+      grid-template-columns: minmax(52px, auto) minmax(0, 1fr);
+      gap: var(--space-2-5);
+    }
+
+    .provider-badges--corner {
+      top: var(--space-1-5);
+      left: var(--space-3);
+      right: var(--space-3);
+      gap: var(--space-0-75);
+    }
+
+    .provider-card.has-favorite-toggle .provider-badges--corner {
+      right: calc(var(--space-3) + 36px);
+    }
+
+    .provider-card__favorite {
+      top: var(--space-1-5);
+      right: var(--space-3);
+      width: 28px;
+      height: 28px;
+    }
+
+    .provider-badge {
+      font-size: 9px;
+      padding: var(--space-0-75) var(--space-2);
+    }
+
+    .provider-rating-summary .rating-summary__line {
+      gap: var(--space-1);
+    }
+  }
+
+  @media (hover: hover) {
+    .provider-card:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
+      box-shadow:
+        var(--shadow-card),
+        0 14px 30px color-mix(in oklab, var(--c-primary) 14%, transparent);
+    }
+
+  }
+
+  @media (hover: none) {
+  }
+
+  @media (max-width: 900px) {
+    .provider-card {
+      --provider-card-top-gap: var(--space-4);
+      --provider-card-top-reserve: calc(var(--provider-card-badge-strip-height) + var(--provider-card-top-gap));
+      gap: var(--space-2);
+    }
+
+    .provider-card__top {
+      padding: var(--provider-card-top-reserve) var(--space-3-5) var(--space-2-5);
+    }
+
+    .provider-card .provider-info {
+      grid-template-columns: minmax(50px, auto) minmax(0, 1fr);
+      gap: var(--space-2-5);
+    }
+
+    .provider-badges--corner {
+      top: var(--space-2);
+      left: var(--space-3-5);
+      right: var(--space-3-5);
+    }
+
+    .provider-card.has-favorite-toggle .provider-badges--corner {
+      right: calc(var(--space-3-5) + 38px);
+    }
+
+    .provider-card__favorite {
+      right: var(--space-3-5);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .provider-list {
+      gap: var(--space-2);
+    }
+
+    .provider-card {
+      --provider-card-top-gap: var(--space-2-5);
+      --provider-card-top-reserve: calc(var(--provider-card-badge-strip-height) + var(--provider-card-top-gap));
+      border-radius: var(--radius-md);
+    }
+
+    .provider-card__top {
+      padding: var(--provider-card-top-reserve) var(--space-2-5) var(--space-2-5);
+    }
+
+    .provider-name {
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .provider-sub {
+      font-size: 10px;
+      line-height: 1.25;
+    }
+
+    .provider-badge {
+      font-size: 9px;
+      padding: var(--space-0-75) var(--space-2);
+    }
+
+    .provider-badges--corner {
+      top: var(--space-1-5);
+      left: var(--space-2-5);
+      right: var(--space-2-5);
+    }
+
+    .provider-card.has-favorite-toggle .provider-badges--corner {
+      right: calc(var(--space-2-5) + 38px);
+    }
+
+    .provider-card__favorite {
+      top: var(--space-1-5);
+      right: var(--space-2-5);
+    }
+
+  }
+
+
+}

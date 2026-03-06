@@ -1,0 +1,75 @@
+/* src/styles/features/home/home-content-layout-trust-panel-compact-light.css */
+
+@layer components {
+  .home-trust-live-panel--compact {
+    min-block-size: clamp(310px, 34vw, 400px);
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .home-trust-live-panel--compact .home-trust-live-panel__title {
+    font-size: 17px;
+    line-height: var(--lh-title);
+    font-weight: 700;
+  }
+
+  .home-trust-live-panel--compact .home-trust-live-panel__subtitle {
+    display: block;
+    font-size: clamp(12px, 1vw, 14px);
+  }
+
+  .home-trust-live-panel--compact .home-trust-live-panel__hero-shot {
+    transform: translateY(-48px) scale(1.04);
+    opacity: 0.7;
+  }
+
+  .home-trust-live-panel--compact .home-trust-live-panel__heading {
+    z-index: 3;
+  }
+
+  .home-trust-live-panel--compact .home-trust-live-panel__cta {
+    min-height: 44px;
+    align-self: end;
+    margin-top: auto;
+  }
+
+  .home-trust-live-panel--compact .home-trust-live-panel__cta-note {
+    display: none;
+  }
+
+  html:not(.dark) .home-trust-live-panel {
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 24%, var(--c-border) 76%);
+    background:
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 8%, transparent), transparent 56%),
+      radial-gradient(115% 90% at 84% 10%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 60%),
+      linear-gradient(180deg, var(--c-panel) 0%, color-mix(in oklab, var(--c-panel) 90%, var(--c-hero-tint-primary) 10%) 100%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 90%, transparent),
+      0 10px 24px color-mix(in oklab, var(--c-ink) 6%, transparent);
+  }
+
+  html:not(.dark) .home-trust-live-panel__glass {
+    background:
+      radial-gradient(180px 90px at 78% 18%, color-mix(in oklab, var(--c-primary) 9%, transparent), transparent),
+      radial-gradient(220px 120px at 85% 26%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent);
+  }
+
+  html:not(.dark) .home-trust-live-panel__hero-shot {
+    opacity: 0.74;
+  }
+
+  html:not(.dark) .home-trust-live-panel__cta {
+    border-color: color-mix(in oklab, var(--c-primary) 24%, var(--c-border) 76%);
+    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
+    color: var(--c-primary);
+    box-shadow: 0 10px 22px color-mix(in oklab, var(--c-primary) 11%, transparent);
+  }
+
+  html:not(.dark) .home-trust-live-panel__cta:hover {
+    background: color-mix(in oklab, var(--c-primary) 15%, var(--c-panel) 85%);
+    box-shadow: 0 14px 28px color-mix(in oklab, var(--c-primary) 14%, transparent);
+  }
+
+
+
+}

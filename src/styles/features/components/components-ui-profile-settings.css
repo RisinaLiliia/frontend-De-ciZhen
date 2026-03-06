@@ -1,0 +1,5 @@
+/* src/styles/features/components/components-ui-profile-settings.css */
+
+@import './components-ui-profile-settings-bio.css';
+@import './components-ui-profile-settings-settings.css';
+@import './components-ui-profile-settings-avatar.css';

@@ -1,0 +1,4 @@
+/* src/styles/features/components/components-core-auth-form.css */
+
+@import './components-core-auth-form-modal-social.css';
+@import './components-core-auth-form-consent-validation.css';

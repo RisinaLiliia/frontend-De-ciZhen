@@ -1,0 +1,5 @@
+/* src/styles/features/requests/requests-shell-nav.css */
+
+@import './requests-shell-nav-navigation.css';
+@import './requests-shell-nav-rating-panel.css';
+@import './requests-shell-nav-provider-summary.css';

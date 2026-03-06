@@ -1,0 +1,83 @@
+/* src/styles/features/requests/requests-shell-stats-secondary-hint.css */
+
+@layer components {
+  .requests-stats-secondary {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-2-5);
+    border-radius: 12px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+  }
+
+  .requests-stats-secondary__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-1-5);
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .requests-stats-secondary__top strong {
+    color: var(--c-text);
+    margin-right: var(--space-1);
+  }
+
+  .requests-stats-secondary__progress {
+    display: grid;
+    gap: var(--space-1-25);
+  }
+
+  .requests-stats-secondary__progress-label {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .requests-stats-secondary__progress-label strong {
+    color: var(--c-accent);
+  }
+
+  .requests-stats-secondary__track {
+    height: 10px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-ink) 18%);
+    overflow: hidden;
+  }
+
+  .requests-stats-secondary__fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--c-success) 0%, var(--c-accent) 100%);
+  }
+
+  .requests-stats-secondary__response {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .requests-stats-secondary__response strong {
+    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
+  }
+
+  .requests-stats-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2-5);
+    padding: var(--space-2-5);
+    border-radius: 12px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    background: var(--surface-soft-bg);
+  }
+
+  .requests-stats-hint__text {
+    font-size: 12px;
+    color: var(--c-text);
+    line-height: 1.3;
+  }
+
+
+}

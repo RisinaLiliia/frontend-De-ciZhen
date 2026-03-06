@@ -1,0 +1,28 @@
+/* src/styles/features/home/home-actions-mobile.css */
+
+@layer components {
+  @media (max-width: 640px) {
+    .home-screen .home-intro-shell .hero-experiment {
+      padding: 16px 12px 14px;
+    }
+
+    .home-screen .home-intro-shell .hero-experiment__preview-badge {
+      margin-bottom: 12px;
+    }
+
+    .home-screen .home-intro-shell .hero-experiment__subtitle {
+      margin-top: 12px;
+    }
+
+    .home-screen .home-intro-shell .home-quick-search__actions {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .home-screen .home-intro-shell .home-quick-search__button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+}

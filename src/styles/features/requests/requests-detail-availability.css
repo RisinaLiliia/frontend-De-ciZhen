@@ -1,0 +1,4 @@
+/* src/styles/features/requests/requests-detail-availability.css */
+
+@import './requests-detail-availability-calendar.css';
+@import './requests-detail-availability-cta-similar.css';

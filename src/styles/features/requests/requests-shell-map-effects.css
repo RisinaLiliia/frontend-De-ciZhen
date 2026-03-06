@@ -1,0 +1,29 @@
+/* src/styles/features/requests/requests-shell-map-effects.css */
+
+@layer components {
+  @keyframes workspace-demand-map-pulse {
+    0% {
+      opacity: 0.4;
+      transform: scale(0.32);
+    }
+    68% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.8);
+    }
+  }
+
+  @media (max-width: 1280px) {
+    .workspace-public-demand-map__leaflet .leaflet-control-zoom {
+      transform: scale(0.94);
+      transform-origin: top left;
+    }
+
+    .workspace-public-demand-map__meta--overlay {
+      font-size: 11px;
+    }
+  }
+
+}

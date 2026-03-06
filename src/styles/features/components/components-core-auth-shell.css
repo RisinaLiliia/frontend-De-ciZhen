@@ -1,0 +1,142 @@
+/* src/styles/features/components/components-core-auth-shell.css */
+
+@layer components {
+  .auth-shell-main.container-mobile {
+    max-width: none;
+    width: 100%;
+    padding-inline: 0;
+    padding-bottom: 0;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .auth-shell {
+    --form-max: 440px;
+    width: 100%;
+    min-height: calc(100dvh - var(--shell-topbar-height));
+    display: grid;
+    place-items: center;
+    padding: 14px 16px;
+    position: relative;
+    isolation: isolate;
+  }
+
+  .auth-shell__dialog {
+    width: min(100%, var(--form-max));
+    margin-inline: auto;
+  }
+
+  .auth-shell__header {
+    gap: var(--space-2);
+  }
+
+  .auth-shell__title {
+    letter-spacing: -0.02em;
+  }
+
+  .auth-shell__subtitle {
+    max-width: 34ch;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .auth-shell::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: var(--c-overlay);
+      backdrop-filter: blur(5px) saturate(1.05);
+    }
+
+    .auth-shell__dialog {
+      width: min(86vw, 440px);
+      max-width: 440px;
+      border-color: color-mix(in oklab, var(--c-primary) 26%, var(--c-border) 74%);
+      background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+      box-shadow:
+        var(--c-elev-shadow),
+        0 0 0 1px color-mix(in oklab, var(--c-primary) 14%, transparent),
+        inset 0 1px 0 color-mix(in oklab, var(--c-panel) 90%, transparent);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .auth-shell__dialog {
+      width: 420px;
+      max-width: 420px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .auth-shell {
+      --form-max: 100%;
+      min-height: calc(100dvh - var(--shell-topbar-height));
+      padding: 6px 10px;
+    }
+
+    .auth-shell__dialog {
+      max-height: calc(100dvh - 68px);
+      overflow: auto;
+      padding: 12px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .auth-shell__title {
+      font-size: clamp(18px, 5.2vw, 22px);
+      line-height: 1.12;
+    }
+
+    .auth-shell__subtitle {
+      font-size: 11px;
+      line-height: 1.24;
+      max-width: 28ch;
+    }
+
+    .auth-shell .form-stack {
+      gap: 8px;
+    }
+
+    .auth-shell .form-group {
+      gap: 4px;
+    }
+
+    .auth-shell .typo-small {
+      font-size: 11px;
+      line-height: 1.2;
+    }
+
+    .auth-shell .field {
+      height: 38px;
+      font-size: 12px;
+      padding-inline: 11px;
+    }
+
+    .auth-shell .btn-primary {
+      height: 40px;
+      font-size: 13px;
+    }
+
+    .auth-shell .btn-secondary,
+    .auth-shell .btn-ghost {
+      height: 36px;
+      font-size: 12px;
+    }
+
+  .auth-shell .profile-settings__password-field .field,
+  .auth-shell .profile-settings__password-field .input {
+    padding-right: 38px;
+  }
+
+    .auth-shell .profile-settings__password-toggle {
+      width: 24px;
+      height: 24px;
+      right: 6px;
+    }
+  }
+
+
+}

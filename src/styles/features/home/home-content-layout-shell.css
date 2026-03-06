@@ -1,0 +1,66 @@
+/* src/styles/features/home/home-content-layout-shell.css */
+
+@layer components {
+  .home-grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "top"
+      "combined"
+      "main";
+  }
+
+  .home-screen {
+    --home-panel-padding: 16px;
+  }
+
+  .home-screen .hero-experiment,
+  .home-screen .home-stats-panel,
+  .home-screen .home-quick-search-panel,
+  .home-screen .home-activity-panel,
+  .home-screen .home-popular-panel,
+  .home-screen .home-nearby-panel,
+  .home-screen .home-proof-panel,
+  .home-screen .home-howitworks-panel,
+  .home-screen .howitworks-panel,
+  .home-screen .top-providers-panel,
+  .home-screen .home-trust-live-panel {
+    padding: var(--home-panel-padding);
+  }
+
+  .home-grid__main {
+    grid-area: main;
+  }
+
+  .home-skeleton-card {
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+    box-shadow: var(--shadow-card);
+    padding: var(--home-panel-padding);
+  }
+
+  .home-combined-top,
+  .home-combined,
+  .home-combined-bottom {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .home-combined-top {
+    grid-area: auto;
+  }
+
+  .home-combined {
+    grid-area: combined;
+  }
+
+  .home-combined-top > *,
+  .home-combined > *,
+  .home-combined-bottom > * {
+    min-width: 0;
+  }
+
+
+}

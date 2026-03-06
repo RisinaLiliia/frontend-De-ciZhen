@@ -1,0 +1,185 @@
+/* src/styles/features/requests/requests-shell-stats-header-kpi-chart.css */
+
+@layer components {
+  .requests-stats {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-3-5);
+  }
+
+  .requests-stats__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2-5);
+  }
+
+  .requests-stats__tabs {
+    display: inline-flex;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    border-radius: 10px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    background: var(--surface-soft-bg);
+  }
+
+  .requests-stats__tab {
+    min-height: 30px;
+    padding: 0 var(--space-2-5);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-text-muted);
+  }
+
+  .requests-stats__tab.is-active {
+    color: var(--c-accent-contrast);
+    background: var(--btn-primary-bg);
+  }
+
+  .requests-stats__loading,
+  .requests-stats__empty,
+  .requests-stats__error {
+    display: grid;
+    gap: var(--space-2-5);
+  }
+
+  .requests-stats__kpi-grid {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .requests-stats-kpi {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-2-5);
+    border-radius: 12px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+  }
+
+  .requests-stats-kpi__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .requests-stats-kpi__label {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .requests-stats-kpi__value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .requests-stats-kpi__delta {
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .requests-stats-kpi__delta.is-success {
+    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
+  }
+
+  .requests-stats-kpi__delta.is-accent {
+    color: var(--c-accent);
+  }
+
+  .requests-stats-kpi__delta.is-neutral {
+    color: var(--c-text-muted);
+  }
+
+  .requests-stats-chart {
+    display: grid;
+    gap: var(--space-2-5);
+    padding: var(--space-2-5);
+    border-radius: 12px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+  }
+
+  .requests-stats-chart__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .requests-stats-chart__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+
+  .requests-stats-chart__delta {
+    font-size: 12px;
+    font-weight: 700;
+    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
+  }
+
+  .requests-mini-chart {
+    height: 116px;
+    position: relative;
+  }
+
+  .requests-mini-chart__plot {
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--space-1-5);
+    align-items: end;
+    position: relative;
+    padding-bottom: var(--space-4-5);
+  }
+
+  .requests-mini-chart__column {
+    position: relative;
+    display: grid;
+    align-items: end;
+    justify-items: center;
+    height: 100%;
+  }
+
+  .requests-mini-chart__bar {
+    width: 100%;
+    max-width: 22px;
+    border-radius: 8px 8px 3px 3px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--c-success) 80%, var(--c-primary) 20%),
+      color-mix(in oklab, var(--c-primary) 70%, var(--c-ink) 30%)
+    );
+    z-index: 1;
+  }
+
+  .requests-mini-chart__label {
+    position: absolute;
+    bottom: -16px;
+    font-size: 10px;
+    color: var(--c-text-muted);
+  }
+
+  .requests-mini-chart__line {
+    position: absolute;
+    inset: 0 0 18px 0;
+    width: 100%;
+    height: calc(100% - 18px);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .requests-mini-chart__line path {
+    fill: none;
+    stroke: var(--c-accent);
+    stroke-width: 2.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+
+}

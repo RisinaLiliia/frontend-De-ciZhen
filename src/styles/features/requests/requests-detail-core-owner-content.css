@@ -1,0 +1,129 @@
+/* src/styles/features/requests/requests-detail-core-owner-content.css */
+
+@layer components {
+  .request-detail__owner-edit {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .request-detail__owner-actions {
+    display: inline-flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+  }
+
+  .request-detail__owner-field {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .request-detail__owner-price-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .request-detail__owner-price-row .field {
+    width: min(220px, 100%);
+  }
+
+  .request-detail__owner-photos-wrap {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .request-detail__owner-photos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .request-detail__owner-photo,
+  .request-detail__owner-photo-slot {
+    position: relative;
+    min-height: 108px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--surface-soft-border);
+    background: var(--surface-soft-bg);
+  }
+
+  .request-detail__owner-photo-img {
+    object-fit: cover;
+  }
+
+  .request-detail__owner-photo-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-primary);
+    font-size: 28px;
+    line-height: 1;
+    transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .request-detail__owner-photo-slot:hover:not(:disabled) {
+    border-color: color-mix(in oklab, var(--c-primary) 40%, var(--c-border) 60%);
+    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+    transform: translateY(-1px);
+  }
+
+  .request-detail__owner-photo-slot:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .request-detail__owner-cta {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+  }
+
+  .request-detail__owner-cta .btn-ghost,
+  .request-detail__owner-cta .btn-primary {
+    width: auto;
+    min-width: 0;
+    padding-inline: var(--space-3);
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .request-detail__text {
+    color: var(--c-text-muted);
+    line-height: 1.6;
+  }
+
+  .request-detail__text--clamped {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--request-detail-text-lines, 6);
+    overflow: hidden;
+  }
+
+  .request-detail__text-toggle {
+    justify-self: start;
+    border: 0;
+    background: transparent;
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--c-primary) 48%, transparent);
+    text-underline-offset: 3px;
+    padding: 0;
+  }
+
+  .request-detail__text-toggle:hover {
+    text-decoration-color: var(--c-primary);
+  }
+
+  .request-detail__text-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 28%, transparent);
+    border-radius: 6px;
+  }
+
+  /* Provider public profile: keep desktop/tablet two-column composition stable. */
+
+}

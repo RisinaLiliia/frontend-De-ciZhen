@@ -1,0 +1,110 @@
+/* src/styles/features/requests/requests-create-upload-tags-actions.css */
+
+@layer components {
+  .request-upload {
+    border: 1px dashed color-mix(in oklab, var(--c-border) 70%, transparent);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    display: grid;
+    gap: var(--space-3);
+    background: color-mix(in oklab, var(--c-surface) 92%, transparent);
+  }
+
+  .request-upload__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .request-upload__hint {
+    font-size: var(--fs-small);
+    color: var(--c-muted);
+  }
+
+  .request-photos {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 768px) {
+    .request-photos {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .request-photo {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 88%, transparent);
+    aspect-ratio: 4 / 3;
+  }
+
+  .request-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .request-photo__remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border-radius: 999px;
+    border: none;
+    background: color-mix(in oklab, var(--c-ink) 60%, transparent);
+    color: var(--c-primary-contrast);
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .request-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .request-tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    padding: var(--space-1-5) var(--space-2-5);
+    border-radius: 999px;
+    font-size: 12px;
+    background: var(--surface-soft-bg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    color: var(--c-text);
+  }
+
+  .request-tag-chip button {
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .request-tag-input {
+    flex: 1 1 160px;
+    min-width: 160px;
+  }
+
+  .request-tag-input.field {
+    height: 38px;
+    padding: 0 var(--space-3);
+  }
+
+  .request-actions {
+    padding: var(--space-4) var(--space-5) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+}

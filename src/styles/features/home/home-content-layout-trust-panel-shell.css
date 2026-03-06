@@ -1,0 +1,96 @@
+/* src/styles/features/home/home-content-layout-trust-panel-shell.css */
+
+@layer components {
+  .home-trust-live-panel {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    align-content: stretch;
+    gap: 12px;
+    min-height: 100%;
+    min-block-size: clamp(420px, 46vw, 560px);
+    padding: var(--home-panel-padding);
+    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    background:
+      radial-gradient(140% 120% at 0% 0%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent 56%),
+      radial-gradient(120% 90% at 85% 8%, color-mix(in oklab, var(--c-accent) 10%, transparent), transparent 58%),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 84%, var(--c-ink) 16%),
+        color-mix(in oklab, var(--c-panel) 72%, var(--c-ink) 28%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 8%, transparent),
+      0 10px 24px color-mix(in oklab, var(--c-ink) 40%, transparent);
+  }
+
+  .home-trust-live-panel__glass {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(180px 90px at 78% 18%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent),
+      radial-gradient(220px 120px at 85% 26%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent);
+    z-index: 0;
+  }
+
+  .home-trust-live-panel__heading {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 6px;
+    text-align: center;
+    align-content: start;
+  }
+
+  .home-trust-live-panel__title {
+    margin: 0;
+    font-size: clamp(26px, 3.2vw, 38px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--c-text);
+  }
+
+  .home-trust-live-panel__subtitle {
+    margin: 0;
+    font-size: clamp(14px, 1.4vw, 17px);
+    line-height: 1.35;
+    color: var(--c-text-muted);
+  }
+
+  .home-trust-live-panel__hero-shot {
+    --hero-shot-duration: 3.2s;
+    --hero-shot-iterations: infinite;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    opacity: 0.9;
+    pointer-events: none;
+    transform: scale(1.12);
+    transform-origin: center center;
+  }
+
+  .home-trust-live-panel__hero-shot .hero-shot__trace {
+    stroke-width: 1.4;
+    opacity: 0.42;
+  }
+
+  .home-trust-live-panel__hero-shot .hero-shot__ball-line {
+    stroke-width: 1.9;
+  }
+
+  .home-trust-live-panel__hero-shot .hero-shot__ball-wrap {
+    animation: hero-shot-ball-trust var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
+  }
+
+  .home-trust-live-panel__hero-shot .hero-shot__pulse {
+    animation: hero-shot-pulse-trust var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
+  }
+
+
+}

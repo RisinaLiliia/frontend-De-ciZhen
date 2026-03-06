@@ -1,0 +1,124 @@
+/* src/styles/features/home/home-content-layout-grid.css */
+
+@layer components {
+  @media (min-width: 1024px) {
+    .home-grid {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "top"
+        "combined"
+        "main";
+      align-items: start;
+    }
+
+    .home-combined-top,
+    .home-combined,
+    .home-combined-bottom {
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+      align-items: stretch;
+    }
+
+    .home-intro-shell .home-combined-top {
+      align-items: stretch;
+    }
+
+    .home-intro-shell .home-combined-top__left {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 12px;
+      align-self: stretch;
+      min-height: 0;
+    }
+
+    .home-intro-shell .home-combined-top__left .home-quick-search-panel {
+      height: 100%;
+      min-height: 0;
+    }
+
+    .home-intro-shell .home-combined-top__right {
+      display: grid;
+      align-self: stretch;
+      min-height: 0;
+    }
+
+    .home-intro-shell .home-combined-top__right > .home-activity-panel {
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      margin: 0;
+    }
+
+    .home-combined-top__right,
+    .home-combined__right,
+    .home-combined-bottom__right {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .home-combined-top__right .home-activity-panel,
+    .home-combined-bottom__right .home-trust-live-panel {
+      width: 100%;
+      min-height: 100%;
+      flex: 1 1 auto;
+    }
+
+    .home-combined__right {
+      padding-left: 0;
+    }
+
+    .home-combined__right .top-providers-panel {
+      display: flex;
+      width: 100%;
+      flex: 1 1 auto;
+      height: 100%;
+      margin: 0;
+    }
+
+    .home-combined__right .provider-list {
+      flex: 1 1 auto;
+      gap: var(--space-2-5);
+    }
+
+    .home-combined__right .top-providers-footer {
+      margin-top: auto;
+    }
+
+    .home-combined__left {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: var(--space-4);
+      min-height: 100%;
+    }
+
+    .home-combined__left .home-nearby-panel {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .home-combined__left .home-nearby-panel .nearby-list {
+      flex: 1 1 auto;
+    }
+
+    .home-combined-bottom__left {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: var(--space-6);
+      min-height: 100%;
+    }
+
+    .home-combined-bottom__left .howitworks-panel {
+      height: 100%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hide-mobile {
+      display: none !important;
+    }
+  }
+
+}

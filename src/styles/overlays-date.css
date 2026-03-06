@@ -1,0 +1,127 @@
+/* src/styles/overlays-date.css */
+@layer components {
+  .dc-date {
+    --rdp-accent: var(--c-accent);
+    --rdp-primary: var(--c-primary);
+    --rdp-muted: var(--c-muted);
+    --rdp-border: var(--c-border);
+  }
+
+  .dc-date .rdp {
+    margin: 0;
+  }
+
+  .dc-date .rdp-months {
+    width: 100%;
+  }
+
+  .dc-date .rdp-caption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-1) var(--space-0-5) var(--space-2-5);
+  }
+
+  .dc-date .rdp-caption_label {
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .dc-date .rdp-nav button {
+    height: 36px;
+    width: 36px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--c-border);
+    background: var(--c-surface);
+    color: var(--c-text);
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .dc-date .rdp-nav button:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--c-primary) 55%, transparent);
+    outline-offset: 2px;
+  }
+
+  .dc-date .rdp-nav button:hover {
+    background: color-mix(in oklab, var(--c-accent) 14%, transparent);
+    border-color: color-mix(in oklab, var(--c-accent) 30%, var(--c-border));
+  }
+
+  .dc-date .rdp-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 6px;
+  }
+
+  .dc-date .rdp-head_cell {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-muted);
+    text-transform: none;
+  }
+
+  .dc-date .rdp-day {
+    height: 40px;
+    width: 40px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    color: var(--c-text);
+    background: transparent;
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .dc-date .rdp-day:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--c-primary) 55%, transparent);
+    outline-offset: 2px;
+  }
+
+  .dc-date .rdp-day:hover {
+    background: color-mix(in oklab, var(--c-accent) 16%, transparent);
+  }
+
+  .dc-date .rdp-day_today {
+    border-color: color-mix(in oklab, var(--c-primary) 45%, transparent);
+    color: var(--c-primary);
+  }
+
+  .dc-date .rdp-day_selected,
+  .dc-date .rdp-day_selected:hover {
+    background: var(--c-accent);
+    color: var(--c-primary-contrast);
+  }
+
+  .dc-date .rdp-day_range_start,
+  .dc-date .rdp-day_range_end {
+    background: var(--c-accent);
+    color: var(--c-primary-contrast);
+  }
+
+  .dc-date .rdp-day_range_middle {
+    background: color-mix(in oklab, var(--c-accent) 22%, transparent);
+    color: var(--c-text);
+    border-radius: 999px;
+  }
+
+  .dc-date .rdp-day_disabled,
+  .dc-date .rdp-day_outside {
+    color: color-mix(in oklab, var(--c-muted) 65%, transparent);
+    opacity: 0.6;
+  }
+
+  @media (max-width: 420px) {
+    .dc-date .rdp-day {
+      height: 36px;
+      width: 36px;
+    }
+
+    .dc-date .rdp-table {
+      border-spacing: 5px;
+    }
+  }
+
+
+}

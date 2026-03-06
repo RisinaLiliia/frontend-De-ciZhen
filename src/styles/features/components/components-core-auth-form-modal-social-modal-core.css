@@ -1,0 +1,93 @@
+/* src/styles/features/components/components-core-auth-form-modal-social-modal-core.css */
+
+@layer components {
+  .auth-route-modal {
+    --dc-modal-max-width: 460px;
+  }
+
+  .auth-route-modal,
+  .auth-route-modal * {
+    box-sizing: border-box;
+  }
+
+  .auth-route-modal__panel {
+    gap: 14px;
+    overflow-x: hidden;
+  }
+
+  .auth-route-modal .form-stack,
+  .auth-route-modal .form-group,
+  .auth-route-modal .field,
+  .auth-route-modal .btn-primary,
+  .auth-route-modal .btn-secondary,
+  .auth-route-modal .btn-ghost {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .auth-route-modal p,
+  .auth-route-modal a {
+    overflow-wrap: anywhere;
+  }
+
+  .auth-form__link-btn {
+    width: fit-content;
+    align-self: flex-end;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
+    font-size: 12px;
+    line-height: 1.2;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .auth-form__link-btn:hover {
+    color: var(--c-primary);
+  }
+
+  .form-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .form-label__required {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: help;
+    color: color-mix(in oklab, var(--c-warning) 86%, var(--c-text) 14%);
+    background: color-mix(in oklab, var(--c-warning) 18%, transparent);
+    border: 1px solid color-mix(in oklab, var(--c-warning) 35%, transparent);
+  }
+
+  .auth-form-error {
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: color-mix(in oklab, var(--c-danger) 85%, var(--c-text) 15%);
+  }
+
+  .auth-form-note {
+    margin-top: 2px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--focus-ring-primary);
+    background: color-mix(in oklab, var(--c-primary) 10%, transparent);
+    display: grid;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: color-mix(in oklab, var(--c-text) 90%, white 10%);
+  }
+
+
+}

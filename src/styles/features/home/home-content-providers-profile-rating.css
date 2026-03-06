@@ -1,0 +1,114 @@
+/* src/styles/features/home/home-content-providers-profile-rating.css */
+
+@layer components {
+  .provider-main {
+    display: grid;
+    gap: var(--space-1-5);
+  }
+
+  .provider-rating-summary {
+    margin-top: 0;
+    gap: 2px;
+  }
+
+  .provider-rating-stack {
+    display: grid;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .provider-rating-review {
+    margin: 0;
+    font-size: 11px;
+    color: var(--c-text-muted);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .provider-rating-summary .rating-summary__line {
+    gap: var(--space-1);
+  }
+
+  .provider-rating-summary .rating-summary__reviews-row {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-1-5);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .provider-rating-summary .rating-summary__value {
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .provider-rating-summary .rating-summary__reviews {
+    font-size: 11px;
+  }
+
+  .provider-rating-summary .rating-summary__trailing {
+    min-width: 0;
+    justify-self: end;
+  }
+
+  .provider-avatar-stack .provider-rating-summary {
+    margin-top: 0;
+    min-height: 0;
+  }
+
+  .provider-avatar-stack .rating-summary__reviews {
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 600;
+  }
+
+  .provider-avatar-stack .rating-summary:hover .rating-summary__reviews {
+    color: var(--c-primary);
+  }
+
+  .provider-main-review {
+    margin: 0;
+    min-width: 0;
+    min-height: calc(2 * 1.35em);
+    -webkit-line-clamp: 2;
+    line-height: 1.35;
+  }
+
+  .provider-card__top .provider-main-review {
+    margin-top: 0;
+    align-self: end;
+  }
+
+  .provider-card__top .provider-info {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .provider-card__top .provider-avatar-stack {
+    justify-content: space-between;
+  }
+
+  .provider-card__top .provider-avatar-wrap {
+    justify-self: start;
+  }
+
+  .provider-card__top .provider-main {
+    min-width: 0;
+    padding-top: 0;
+    display: grid;
+    grid-template-rows:
+      auto
+      auto
+      minmax(20px, auto)
+      minmax(24px, auto)
+      minmax(calc(2 * 1.35em), auto);
+    align-content: start;
+    gap: var(--space-1-5);
+  }
+
+
+}
