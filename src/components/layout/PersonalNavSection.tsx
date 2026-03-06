@@ -12,6 +12,7 @@ export type PersonalNavItem = {
   href: string;
   label: string;
   icon: ReactNode;
+  tier?: 'primary' | 'secondary';
   disabled?: boolean;
   lockedHref?: string;
   value?: string | number;
@@ -53,100 +54,131 @@ export function PersonalNavSection({
     return pathname === item.href;
   };
 
+  const hasTieredLayout = items.some((item) => item.tier === 'primary' || item.tier === 'secondary');
+  const primaryItems = hasTieredLayout ? items.filter((item) => item.tier !== 'secondary') : items;
+  const secondaryItems = hasTieredLayout ? items.filter((item) => item.tier === 'secondary') : [];
+
+  const renderItem = (item: PersonalNavItem) => {
+    const itemClassName = [
+      'personal-nav__item',
+      item.tier === 'secondary' ? 'personal-nav__item--secondary' : null,
+      item.disabled ? 'is-disabled' : null,
+      item.disabled && item.lockedHref ? 'is-locked' : null,
+      !item.disabled && isActive(item) ? 'is-active' : null,
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    if (item.disabled && !item.lockedHref) {
+      return (
+        <span
+          key={item.key}
+          className={itemClassName}
+          aria-disabled="true"
+        >
+          <span className="personal-nav__top">
+            <i className="personal-nav__icon" aria-hidden="true">
+              {item.icon}
+            </i>
+            <span className="personal-nav__label">{item.label}</span>
+            {item.value !== undefined && !item.rating ? (
+              <CountBadge as="strong" className="personal-nav__value" value={item.value} />
+            ) : null}
+          </span>
+          {item.rating ? (
+            <RatingSummary
+              className="personal-nav__rating"
+              rating={item.rating.value}
+              reviewsCount={item.rating.reviewsCount}
+              reviewsLabel={item.rating.reviewsLabel}
+              href={item.rating.href}
+            />
+          ) : item.hint ? (
+            <span className="personal-nav__hint">{item.hint}</span>
+          ) : null}
+        </span>
+      );
+    }
+
+    if (item.disabled && item.lockedHref) {
+      return (
+        <Link
+          key={item.key}
+          href={item.lockedHref}
+          prefetch={false}
+          className={itemClassName}
+          onClick={item.onClick}
+        >
+          <span className="personal-nav__top">
+            <i className="personal-nav__icon" aria-hidden="true">
+              {item.icon}
+            </i>
+            <span className="personal-nav__label">{item.label}</span>
+            {item.value !== undefined && !item.rating ? (
+              <CountBadge as="strong" className="personal-nav__value" value={item.value} />
+            ) : null}
+          </span>
+          {item.rating ? (
+            <RatingSummary
+              className="personal-nav__rating"
+              rating={item.rating.value}
+              reviewsCount={item.rating.reviewsCount}
+              reviewsLabel={item.rating.reviewsLabel}
+              href={item.rating.href}
+            />
+          ) : item.hint ? (
+            <span className="personal-nav__hint">{item.hint}</span>
+          ) : null}
+        </Link>
+      );
+    }
+
+    return (
+      <Link
+        key={item.key}
+        href={item.href}
+        prefetch={false}
+        className={itemClassName}
+        onClick={item.onClick}
+      >
+        <span className="personal-nav__top">
+          <i className="personal-nav__icon" aria-hidden="true">
+            {item.icon}
+          </i>
+          <span className="personal-nav__label">{item.label}</span>
+          {item.value !== undefined && !item.rating ? (
+            <CountBadge as="strong" className="personal-nav__value" value={item.value} />
+          ) : null}
+        </span>
+        {item.rating ? (
+          <RatingSummary
+            className="personal-nav__rating"
+            rating={item.rating.value}
+            reviewsCount={item.rating.reviewsCount}
+            reviewsLabel={item.rating.reviewsLabel}
+            href={item.rating.href}
+          />
+        ) : item.hint ? (
+          <span className="personal-nav__hint">{item.hint}</span>
+        ) : null}
+      </Link>
+    );
+  };
+
   return (
     <section className={`panel personal-nav ${className ?? ''}`.trim()}>
       {headerSlot ? <div className="personal-nav__header-slot">{headerSlot}</div> : null}
       {title ? <h2 className="personal-nav__title">{title}</h2> : null}
-      <div className="personal-nav__track">
-        {items.map((item) => (
-          item.disabled && !item.lockedHref ? (
-            <span
-              key={item.key}
-              className="personal-nav__item is-disabled"
-              aria-disabled="true"
-            >
-              <span className="personal-nav__top">
-                <i className="personal-nav__icon" aria-hidden="true">
-                  {item.icon}
-                </i>
-                <span className="personal-nav__label">{item.label}</span>
-                {item.value !== undefined && !item.rating ? (
-                  <CountBadge as="strong" className="personal-nav__value" value={item.value} />
-                ) : null}
-              </span>
-              {item.rating ? (
-                <RatingSummary
-                  className="personal-nav__rating"
-                  rating={item.rating.value}
-                  reviewsCount={item.rating.reviewsCount}
-                  reviewsLabel={item.rating.reviewsLabel}
-                  href={item.rating.href}
-                />
-              ) : item.hint ? (
-                <span className="personal-nav__hint">{item.hint}</span>
-              ) : null}
-            </span>
-          ) : item.disabled && item.lockedHref ? (
-            <Link
-              key={item.key}
-              href={item.lockedHref}
-              prefetch={false}
-              className="personal-nav__item is-disabled is-locked"
-              onClick={item.onClick}
-            >
-              <span className="personal-nav__top">
-                <i className="personal-nav__icon" aria-hidden="true">
-                  {item.icon}
-                </i>
-                <span className="personal-nav__label">{item.label}</span>
-                {item.value !== undefined && !item.rating ? (
-                  <CountBadge as="strong" className="personal-nav__value" value={item.value} />
-                ) : null}
-              </span>
-              {item.rating ? (
-                <RatingSummary
-                  className="personal-nav__rating"
-                  rating={item.rating.value}
-                  reviewsCount={item.rating.reviewsCount}
-                  reviewsLabel={item.rating.reviewsLabel}
-                  href={item.rating.href}
-                />
-              ) : item.hint ? (
-                <span className="personal-nav__hint">{item.hint}</span>
-              ) : null}
-            </Link>
-          ) : (
-            <Link
-              key={item.key}
-              href={item.href}
-              prefetch={false}
-              className={`personal-nav__item ${isActive(item) ? 'is-active' : ''}`.trim()}
-              onClick={item.onClick}
-            >
-              <span className="personal-nav__top">
-                <i className="personal-nav__icon" aria-hidden="true">
-                  {item.icon}
-                </i>
-                <span className="personal-nav__label">{item.label}</span>
-                {item.value !== undefined && !item.rating ? (
-                  <CountBadge as="strong" className="personal-nav__value" value={item.value} />
-                ) : null}
-              </span>
-              {item.rating ? (
-                <RatingSummary
-                  className="personal-nav__rating"
-                  rating={item.rating.value}
-                  reviewsCount={item.rating.reviewsCount}
-                  reviewsLabel={item.rating.reviewsLabel}
-                  href={item.rating.href}
-                />
-              ) : item.hint ? (
-                <span className="personal-nav__hint">{item.hint}</span>
-              ) : null}
-            </Link>
-          )
-        ))}
-      </div>
+      {hasTieredLayout ? (
+        <div className="personal-nav__tracks">
+          <div className="personal-nav__track personal-nav__track--primary">{primaryItems.map(renderItem)}</div>
+          {secondaryItems.length > 0 ? (
+            <div className="personal-nav__track personal-nav__track--secondary">{secondaryItems.map(renderItem)}</div>
+          ) : null}
+        </div>
+      ) : (
+        <div className="personal-nav__track">{items.map(renderItem)}</div>
+      )}
       {insightText ? (
         <ActivityInsight text={insightText} progressPercent={progressPercent ?? 0} />
       ) : null}

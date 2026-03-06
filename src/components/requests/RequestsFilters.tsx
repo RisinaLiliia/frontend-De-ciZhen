@@ -120,7 +120,7 @@ export function RequestsFilters({
       />
 
       <div id="requests-filter-controls" className={`requests-filters__controls ${isMobileControlsOpen ? 'is-open' : ''}`.trim()}>
-        <div className="requests-filter-row">
+        <div className="requests-filter-grid requests-filter-grid--primary">
           <div className="requests-filter">
             {/* <Input
               value={cityQuery}
@@ -141,17 +141,6 @@ export function RequestsFilters({
               />
             </div>
           </div>
-          <button
-            type="button"
-            className="btn-ghost is-primary requests-clear"
-            onClick={onReset}
-            disabled={controlsDisabled || !hasActiveFilters}
-          >
-            <IconFilter />
-            {t(keys.I18N_KEYS.requestsPage.clearFilters)}
-          </button>
-        </div>
-        <div className="requests-filter-grid">
           <div className="requests-filter">
             <Select
               options={categoryOptions}
@@ -172,6 +161,8 @@ export function RequestsFilters({
               disabled={controlsDisabled || categoryKey === 'all'}
             />
           </div>
+        </div>
+        <div className="requests-filter-grid requests-filter-grid--secondary">
           <div className="requests-filter" ref={sortControlRef}>
             <Select
               options={sortOptions}
@@ -182,6 +173,15 @@ export function RequestsFilters({
               disabled={controlsDisabled}
             />
           </div>
+          <button
+            type="button"
+            className="btn-ghost is-primary requests-clear"
+            onClick={onReset}
+            disabled={controlsDisabled || !hasActiveFilters}
+          >
+            <IconFilter />
+            {t(keys.I18N_KEYS.requestsPage.clearFilters)}
+          </button>
         </div>
         {appliedChips.length > 0 ? (
           <div className="chip-row" role="list" aria-label={t(keys.I18N_KEYS.requestsPage.activeFiltersLabel)}>

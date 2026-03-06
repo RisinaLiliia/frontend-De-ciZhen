@@ -68,9 +68,9 @@ export function useWorkspacePublicState({
   );
 
   const personalNavItems = React.useMemo<PersonalNavItem[]>(
-    () =>
-      isPersonalized
-        ? [
+    () => {
+      if (isPersonalized) {
+        return [
             ...publicNavItems,
             {
               key: 'my-requests',
@@ -130,62 +130,75 @@ export function useWorkspacePublicState({
               forceActive: !hasActivePublicSection && activeWorkspaceTab === 'reviews',
               match: 'exact',
             },
-          ]
-        : [
-            ...publicNavItems,
-            {
-              key: 'my-requests',
-              href: '/workspace?tab=my-requests',
-              label: t(I18N_KEYS.requestsPage.navMyOrders),
-              icon: <IconBriefcase />,
-              hint: t(I18N_KEYS.requestsPage.summaryAccepted),
-              disabled: true,
-              lockedHref: guestLoginHref,
-              onClick: onGuestLockedAction,
-              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-requests',
-              match: 'exact',
-            },
-            {
-              key: 'my-offers',
-              href: '/workspace?tab=my-offers',
-              label: t(I18N_KEYS.requestsPage.navMyOffers),
-              icon: <IconSend />,
-              hint: t(I18N_KEYS.requestsPage.summarySent),
-              disabled: true,
-              lockedHref: guestLoginHref,
-              onClick: onGuestLockedAction,
-              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-offers',
-              match: 'exact',
-            },
-            {
-              key: 'my-favorites',
-              href: '/workspace?tab=favorites',
-              label: t(I18N_KEYS.requestDetails.saved),
-              icon: <IconHeart />,
-              hint: t(I18N_KEYS.requestDetails.ctaSave),
-              disabled: true,
-              lockedHref: guestLoginHref,
-              onClick: onGuestLockedAction,
-              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'favorites',
-              match: 'exact',
-            },
-            {
-              key: 'reviews',
-              href: '/workspace?tab=reviews',
-              label: t(I18N_KEYS.requestsPage.navReviews),
-              icon: <IconUser />,
-              rating: {
-                value: '0.0',
-                reviewsCount: 0,
-                reviewsLabel: t(I18N_KEYS.homePublic.reviews),
-              },
-              disabled: true,
-              lockedHref: guestLoginHref,
-              onClick: onGuestLockedAction,
-              forceActive: !hasActivePublicSection && activeWorkspaceTab === 'reviews',
-              match: 'exact',
-            },
-          ],
+          ];
+      }
+
+      const publicRequests = publicNavItems.find((item) => item.key === 'public-requests');
+      const publicProviders = publicNavItems.find((item) => item.key === 'public-providers');
+      const publicStats = publicNavItems.find((item) => item.key === 'public-stats');
+
+      return [
+        ...(publicRequests ? [{ ...publicRequests, tier: 'primary' as const }] : []),
+        ...(publicProviders ? [{ ...publicProviders, tier: 'primary' as const }] : []),
+        ...(publicStats ? [{ ...publicStats, tier: 'primary' as const }] : []),
+        {
+          key: 'my-requests',
+          href: '/workspace?tab=my-requests',
+          label: t(I18N_KEYS.requestsPage.navMyOrders),
+          icon: <IconBriefcase />,
+          hint: t(I18N_KEYS.requestsPage.summaryAccepted),
+          disabled: true,
+          lockedHref: guestLoginHref,
+          onClick: onGuestLockedAction,
+          forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-requests',
+          match: 'exact',
+          tier: 'secondary',
+        },
+        {
+          key: 'my-offers',
+          href: '/workspace?tab=my-offers',
+          label: t(I18N_KEYS.requestsPage.navMyOffers),
+          icon: <IconSend />,
+          hint: t(I18N_KEYS.requestsPage.summarySent),
+          disabled: true,
+          lockedHref: guestLoginHref,
+          onClick: onGuestLockedAction,
+          forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-offers',
+          match: 'exact',
+          tier: 'secondary',
+        },
+        {
+          key: 'my-favorites',
+          href: '/workspace?tab=favorites',
+          label: t(I18N_KEYS.requestDetails.saved),
+          icon: <IconHeart />,
+          hint: t(I18N_KEYS.requestDetails.ctaSave),
+          disabled: true,
+          lockedHref: guestLoginHref,
+          onClick: onGuestLockedAction,
+          forceActive: !hasActivePublicSection && activeWorkspaceTab === 'favorites',
+          match: 'exact',
+          tier: 'secondary',
+        },
+        {
+          key: 'reviews',
+          href: '/workspace?tab=reviews',
+          label: t(I18N_KEYS.requestsPage.navReviews),
+          icon: <IconUser />,
+          rating: {
+            value: '0.0',
+            reviewsCount: 0,
+            reviewsLabel: t(I18N_KEYS.homePublic.reviews),
+          },
+          disabled: true,
+          lockedHref: guestLoginHref,
+          onClick: onGuestLockedAction,
+          forceActive: !hasActivePublicSection && activeWorkspaceTab === 'reviews',
+          match: 'exact',
+          tier: 'secondary',
+        },
+      ];
+    },
     [
       activeWorkspaceTab,
       guestLoginHref,

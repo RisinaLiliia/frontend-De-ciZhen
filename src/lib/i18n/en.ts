@@ -670,9 +670,9 @@ export const en: DeDictionary = {
     roleProvider: 'I provide services',
     logoutLabel: 'Log out',
     ordersLabel: 'Orders',
-    requestLabel: 'Request',
+    requestLabel: 'Requests',
     profileLabel: 'Profile',
-    workspaceLabel: 'Workspace',
+    workspaceLabel: 'Dashboard',
     navigationLabel: 'Main navigation',
   },
   consent: {
