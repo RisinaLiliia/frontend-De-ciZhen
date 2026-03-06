@@ -1,0 +1,223 @@
+/* src/styles/features/requests/requests-create.css */
+
+@layer components {
+  .request-create {
+    --form-max: 560px;
+  }
+
+  .request-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: 0;
+  }
+
+  .request-section {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .request-section + .request-section {
+    border-top: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+  }
+
+  .request-section__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .request-form__row {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 768px) {
+    .request-form__row.is-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .request-form__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .request-provider-calendar {
+    display: grid;
+    gap: var(--space-2-5);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--surface-soft-border);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+  }
+
+  .request-provider-calendar__head {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .request-provider-calendar__title {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .request-provider-calendar__provider {
+    margin: 0;
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .request-provider-calendar__provider strong {
+    color: var(--c-text);
+    font-weight: 600;
+  }
+
+  .request-provider-calendar__availability {
+    gap: var(--space-2);
+  }
+
+  .request-provider-calendar__availability .request-detail__availability-date {
+    font-size: 12px;
+  }
+
+  .request-provider-calendar__availability .request-detail__availability-status {
+    margin-bottom: 2px;
+  }
+
+  .request-provider-calendar__selected {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.3;
+    color: var(--c-text-muted);
+  }
+
+  .request-provider-calendar__selected-label {
+    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-text) 12%);
+  }
+
+  .request-provider-calendar__selected-value {
+    color: var(--c-text);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .request-provider-calendar__hint {
+    margin: 0;
+    font-size: 12px;
+    color: var(--c-text-muted);
+    line-height: 1.3;
+  }
+
+  .request-upload {
+    border: 1px dashed color-mix(in oklab, var(--c-border) 70%, transparent);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    display: grid;
+    gap: var(--space-3);
+    background: color-mix(in oklab, var(--c-surface) 92%, transparent);
+  }
+
+  .request-upload__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .request-upload__hint {
+    font-size: var(--fs-small);
+    color: var(--c-muted);
+  }
+
+  .request-photos {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 768px) {
+    .request-photos {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .request-photo {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 88%, transparent);
+    aspect-ratio: 4 / 3;
+  }
+
+  .request-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .request-photo__remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border-radius: 999px;
+    border: none;
+    background: color-mix(in oklab, var(--c-ink) 60%, transparent);
+    color: var(--c-primary-contrast);
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .request-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .request-tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    padding: var(--space-1-5) var(--space-2-5);
+    border-radius: 999px;
+    font-size: 12px;
+    background: var(--surface-soft-bg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    color: var(--c-text);
+  }
+
+  .request-tag-chip button {
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .request-tag-input {
+    flex: 1 1 160px;
+    min-width: 160px;
+  }
+
+  .request-tag-input.field {
+    height: 38px;
+    padding: 0 var(--space-3);
+  }
+
+  .request-actions {
+    padding: var(--space-4) var(--space-5) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+}

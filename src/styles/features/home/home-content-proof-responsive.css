@@ -1,0 +1,31 @@
+/* src/styles/features/home/home-content-proof-responsive.css */
+
+@layer components {
+  @media (min-width: 768px) {
+    .home-proof-panel__feed {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @container (max-width: 520px) {
+    .home-proof-panel__feed {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @keyframes star-glow {
+    0% {
+      opacity: 0.6;
+      text-shadow: 0 0 0 transparent;
+    }
+    50% {
+      opacity: 1;
+      text-shadow: 0 0 10px color-mix(in oklab, var(--c-accent) 35%, transparent);
+    }
+    100% {
+      opacity: 0.6;
+      text-shadow: 0 0 0 transparent;
+    }
+  }
+
+}

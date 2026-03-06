@@ -1,0 +1,178 @@
+/* src/styles/features/home/home-intro-responsive.css */
+
+@layer components {
+  @media (max-width: 900px) {
+    .home-intro-shell {
+      --home-intro-padding: 12px;
+      gap: 10px;
+    }
+
+    .hero-experiment {
+      padding-bottom: 14px;
+    }
+
+    .hero-experiment__trust {
+      gap: 8px 10px;
+    }
+
+    .home-quick-search__chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .hero-experiment__visual {
+      position: static;
+      width: min(340px, 82vw);
+      margin-left: auto;
+      opacity: 0.72;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .home-intro-shell .hero-experiment {
+      padding: clamp(var(--space-4), 2.2vw, var(--space-6));
+      min-height: clamp(278px, 30vw, 360px);
+    }
+
+    .hero-experiment__content {
+      width: min(66%, 860px);
+      max-width: none;
+      padding-inline-end: clamp(var(--space-5), 6vw, var(--space-8));
+    }
+
+    .hero-experiment__trust {
+      margin-top: var(--space-1);
+      gap: var(--space-2);
+      display: inline-flex;
+      flex-wrap: nowrap;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+    }
+
+    .hero-experiment__trust::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .home-intro-shell {
+      --home-intro-padding: 10px;
+      gap: 8px;
+    }
+
+    .hero-experiment--subtle {
+      --hero-shot-iterations: 1;
+      --hero-shot-duration: 4s;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__trace {
+      animation-name: hero-shot-trace-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__dribble-mark.is-one {
+      animation-name: hero-shot-dribble-one-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__dribble-mark.is-two {
+      animation-name: hero-shot-dribble-two-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-wrap {
+      animation: none;
+      transform: none;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-phase {
+      animation: hero-shot-ball-phase-mobile var(--hero-mobile-phase-duration) var(--hero-mobile-phase-ease) 1 forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-rebound {
+      animation: none;
+      transform: none;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-roll {
+      animation: hero-shot-ball-roll-mobile var(--hero-mobile-roll-duration) var(--hero-mobile-roll-ease) 1 forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__ball-spin {
+      animation: hero-shot-ball-roll-spin-mobile var(--hero-mobile-spin-duration) var(--hero-mobile-spin-ease) 1 forwards;
+      animation-fill-mode: forwards;
+    }
+
+    .home-intro-shell .hero-experiment--subtle .hero-shot__pulse {
+      animation-name: hero-shot-pulse-mobile;
+      animation-fill-mode: forwards;
+    }
+
+    .home-quick-search__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .home-quick-search__location {
+      white-space: normal;
+    }
+
+    .home-quick-search__actions {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .home-quick-search__chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .home-quick-search__button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .home-trust-live-panel {
+      min-block-size: clamp(360px, 78vw, 460px);
+    }
+
+    .home-trust-live-panel__title {
+      font-size: clamp(22px, 7vw, 30px);
+    }
+
+    .home-trust-live-panel__hero-shot {
+      --hero-shot-iterations: 1;
+      opacity: 0.62;
+      transform: scale(1.04);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-experiment__content {
+      max-width: 100%;
+    }
+
+    .hero-experiment__actions {
+      overflow: hidden;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-shot__trace,
+    .hero-shot__dribble-mark,
+    .hero-shot__ball-wrap,
+    .hero-shot__ball-phase,
+    .hero-shot__ball-roll,
+    .hero-shot__ball-rebound,
+    .hero-shot__ball-spin,
+    .hero-shot__pulse {
+      animation: none;
+    }
+  }
+
+}
