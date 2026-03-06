@@ -2,27 +2,29 @@
 
 @layer components {
   .card {
-    --card-border-base: var(--c-border);
-    --card-border-hover: color-mix(in oklab, var(--c-border) 60%, var(--c-primary) 40%);
-    --card-border-focus: color-mix(in oklab, var(--c-border) 50%, var(--c-primary) 50%);
-    --card-shadow-base: var(--shadow-card);
-    --card-shadow-hover: var(--shadow-card-hover, var(--shadow-card));
-    --card-focus-ring: 0 0 0 2px color-mix(in oklab, var(--c-primary) 20%, transparent);
+    --card-border-base: var(--surface-card-border);
+    --card-border-hover: var(--surface-card-border-hover);
+    --card-border-focus: var(--surface-card-border-focus);
+    --card-shadow-base: var(--surface-card-shadow);
+    --card-shadow-hover: var(--surface-card-shadow-hover);
+    --card-focus-ring: 0 0 0 2px color-mix(in oklab, var(--c-primary) 18%, transparent);
     --card-shadow-focus: var(--card-shadow-base), var(--card-focus-ring);
     @apply w-full;
-    background: var(--c-panel);
+    background: var(--surface-card-bg);
     border: 1px solid var(--card-border-base);
     border-radius: var(--radius-lg);
     box-shadow: var(--card-shadow-base);
-    padding: 20px;
+    padding: 18px;
     transition:
       border-color var(--transition-fast),
+      background var(--transition-fast),
       box-shadow var(--transition-fast),
       transform var(--transition-fast);
   }
 
   .card:hover {
     border-color: var(--card-border-hover);
+    background: var(--surface-card-bg-hover);
     box-shadow: var(--card-shadow-hover);
     transform: translateY(-1px);
   }
@@ -34,8 +36,8 @@
 
   .field {
     @apply w-full h-11 text-sm;
-    background: var(--c-surface);
-    border: 1px solid var(--c-border);
+    background: var(--control-bg);
+    border: 1px solid var(--control-border);
     border-radius: var(--radius-md);
     padding: 0 14px;
     transition:
@@ -68,17 +70,14 @@
   }
 
   .field:hover {
-    border-color: color-mix(in oklab, var(--c-border) 70%, var(--c-text) 30%);
-  }
-
-  .dark .field {
-    background: color-mix(in oklab, var(--c-surface) 85%, var(--c-hi-strong) 15%);
+    border-color: var(--control-border-hover);
+    background: var(--control-bg-hover);
   }
 
   .field:focus {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
-    border-color: var(--c-primary);
+    box-shadow: var(--control-focus-ring);
+    border-color: color-mix(in oklab, var(--c-primary) 58%, var(--c-border) 42%);
   }
 
   .field[aria-invalid='true'] {

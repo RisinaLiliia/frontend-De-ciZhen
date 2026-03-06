@@ -138,7 +138,7 @@
     font-size: 12px;
     color: var(--c-accent);
     letter-spacing: 1px;
-    animation: star-glow 2.6s ease-in-out infinite;
+    animation: none;
   }
 
   .proof-score {

@@ -5,8 +5,8 @@
     display: inline-flex;
     align-items: baseline;
     justify-content: flex-start;
-    gap: var(--space-2-5);
-    padding: var(--space-0-5) 0 0;
+    gap: var(--space-2);
+    padding: var(--space-1) 0 0;
     border: 0;
     background: transparent;
     font-weight: 500;
@@ -15,9 +15,9 @@
 
   .requests-filter-summary {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-2-5);
     align-items: center;
-    padding-top: var(--space-0-5);
+    padding-top: var(--space-2);
     border-top: 1px dashed var(--surface-soft-border);
   }
 
@@ -25,7 +25,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-    gap: var(--space-2-5);
+    gap: var(--space-2);
     flex-wrap: wrap;
   }
 
@@ -33,7 +33,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    padding: var(--space-0-75);
+    padding: var(--space-1);
     border-radius: 999px;
     border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
@@ -95,7 +95,7 @@
   .requests-page-nav {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-1-5);
+    gap: var(--space-2);
   }
 
   .requests-page-nav__btn {
@@ -117,7 +117,7 @@
   @media (min-width: 768px) {
     .requests-filter-summary {
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: var(--space-2-5);
+      gap: var(--space-3);
     }
   }
 

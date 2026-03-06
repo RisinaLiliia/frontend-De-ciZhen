@@ -185,9 +185,14 @@ export function HomeNearbyPanel({
   );
   const openOfferSheet = React.useCallback(
     (requestId: string) => {
+      if (!isAuthed) {
+        toast.message(t(I18N_KEYS.requestDetails.loginRequired));
+        router.push(`/auth/login?next=${encodeURIComponent(`/requests/${requestId}?offer=1`)}`);
+        return;
+      }
       router.push(`/requests/${requestId}?offer=1`);
     },
-    [router],
+    [isAuthed, router, t],
   );
   const withdrawOffer = React.useCallback(
     async (offerId: string) => {
@@ -241,7 +246,7 @@ export function HomeNearbyPanel({
             cityById={cityById}
             formatDate={formatDate}
             formatPrice={formatPrice}
-            enableOfferActions={isAuthed}
+            enableOfferActions={true}
             offersByRequest={offersByRequest}
             favoriteRequestIds={favoriteRequestIds}
             pendingFavoriteRequestIds={pendingFavoriteRequestIds}

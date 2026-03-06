@@ -21,9 +21,9 @@
 
   .requests-filters {
     display: grid;
-    gap: var(--space-2-5);
+    gap: var(--space-3);
     align-items: end;
-    padding: var(--space-3-5);
+    padding: var(--space-4);
     border-radius: var(--radius-lg);
     border: 1px solid color-mix(in oklab, var(--c-border) 42%, transparent);
     background: var(--surface-soft-bg-strong);
@@ -52,7 +52,7 @@
 
   .requests-filter-row {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-2-5);
   }
 
   @media (min-width: 768px) {
@@ -64,7 +64,7 @@
 
   .requests-filter-grid {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-2-5);
   }
 
   @media (min-width: 768px) {

@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import { HOME_PROOF_CASES } from '@/data/home';
-import { useRotatingIndex } from '@/hooks/useRotatingIndex';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { ProofCase } from '@/types/home';
 
@@ -26,12 +25,9 @@ export function useExploreSidebar(t: Translator) {
     [t],
   );
 
-  const proofCasesPreview = React.useMemo(() => proofCases.slice(0, 4), [proofCases]);
+  const proofCasesPreview = React.useMemo(() => proofCases.slice(0, 3), [proofCases]);
 
-  const proofIndex = useRotatingIndex(proofCasesPreview.length, {
-    intervalMs: 5200,
-    holdMs: 600,
-  });
+  const proofIndex = 0;
 
   const sidebarTopProvidersLimit = React.useMemo(
     () => (exploreListDensity === 'double' ? 2 : 5),
@@ -45,9 +41,7 @@ export function useExploreSidebar(t: Translator) {
     () => (exploreListDensity === 'double' ? proofCasesPreview.slice(0, 2) : proofCasesPreview),
     [exploreListDensity, proofCasesPreview],
   );
-  const trustPanelClassName = exploreListDensity === 'double'
-    ? 'home-trust-live-panel--compact'
-    : undefined;
+  const trustPanelClassName = 'home-trust-live-panel--compact';
 
   return {
     exploreListDensity,

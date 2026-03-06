@@ -18,7 +18,6 @@ import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { useGeoRegion } from '@/hooks/useGeoRegion';
 import { useMockCategoryCounts } from '@/hooks/useMockCategoryCounts';
 import { useMockLiveStats } from '@/hooks/useMockLiveStats';
-import { useRotatingIndex } from '@/hooks/useRotatingIndex';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import type { ProofCase } from '@/types/home';
@@ -84,10 +83,7 @@ export function HomePageContentContainer() {
     () => proofCases.slice(0, 4),
     [proofCases],
   );
-  const proofIndex = useRotatingIndex(proofCasesPreview.length, {
-    intervalMs: 5200,
-    holdMs: 600,
-  });
+  const proofIndex = 0;
 
   if (status === 'loading' || status === 'idle') {
     return (
