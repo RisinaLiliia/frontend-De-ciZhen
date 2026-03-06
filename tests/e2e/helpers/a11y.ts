@@ -1,6 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { expect, type Page } from '@playwright/test';
+import axeCore from 'axe-core';
 
 type AxeAuditOptions = {
   includeImpacts?: ReadonlyArray<AxeImpact>;
@@ -17,10 +16,7 @@ type AxeViolation = {
   nodes: Array<{ target: string[]; failureSummary?: string }>;
 };
 
-const AXE_SCRIPT = readFileSync(
-  join(process.cwd(), 'node_modules', 'axe-core', 'axe.min.js'),
-  'utf8',
-);
+const AXE_SCRIPT = axeCore.source;
 
 function formatViolation(violation: AxeViolation) {
   const nodeSummary = violation.nodes

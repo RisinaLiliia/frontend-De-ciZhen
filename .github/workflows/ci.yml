@@ -13,7 +13,12 @@ on:
       - ready_for_review
   push:
     branches:
-      - '**'
+      - main
+      - develop
+      - feat/**
+      - fix/**
+      - chore/**
+      - hotfix/**
 
 permissions:
   contents: read

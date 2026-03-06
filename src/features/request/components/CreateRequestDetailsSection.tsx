@@ -188,17 +188,20 @@ export function CreateRequestDetailsSection({
         <div className="form-group">
           <label className="typo-small">{t(I18N_KEYS.request.priceLabel)}</label>
           <Field leftIcon={<IconCoins />}>
-            <Input
-              type="number"
-              min={1}
-              placeholder={t(I18N_KEYS.request.pricePlaceholder)}
-              {...register('price', {
-                setValueAs: (value) =>
-                  value === '' || value === undefined ? undefined : Number(value),
-              })}
-            />
-          </Field>
-        </div>
+              <Input
+                type="number"
+                min={1}
+                placeholder={t(I18N_KEYS.request.pricePlaceholder)}
+                {...register('price', {
+                  setValueAs: (value) => {
+                    if (value === '' || value === undefined || value === null) return undefined;
+                    const parsed = Number(value);
+                    return Number.isFinite(parsed) ? parsed : undefined;
+                  },
+                })}
+              />
+            </Field>
+          </div>
       </div>
 
       {isCleaningCategory ? (
@@ -225,7 +228,13 @@ export function CreateRequestDetailsSection({
                 <Input
                   type="number"
                   min={10}
-                  {...register('area', { valueAsNumber: true })}
+                  {...register('area', {
+                    setValueAs: (value) => {
+                      if (value === '' || value === undefined || value === null) return undefined;
+                      const parsed = Number(value);
+                      return Number.isFinite(parsed) ? parsed : undefined;
+                    },
+                  })}
                 />
               </Field>
               {areaError ? (
@@ -279,4 +288,3 @@ export function CreateRequestDetailsSection({
     </section>
   );
 }
-

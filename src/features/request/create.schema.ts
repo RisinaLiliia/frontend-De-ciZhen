@@ -5,6 +5,17 @@ import type { I18nKey } from '@/lib/i18n/keys';
 type Translate = (key: I18nKey) => string;
 
 export function buildCreateRequestSchema(t: Translate) {
+  const areaSchema = z
+    .number({ error: t('request.errorAreaRequired') })
+    .finite(t('request.errorAreaRequired'))
+    .min(10, t('request.errorAreaMin'));
+
+  const priceSchema = z
+    .number({ error: t('request.errorPriceInvalid') })
+    .finite(t('request.errorPriceInvalid'))
+    .min(1, t('request.errorPriceMin'))
+    .optional();
+
   return z.object({
     title: z
       .string()
@@ -14,8 +25,8 @@ export function buildCreateRequestSchema(t: Translate) {
     serviceKey: z.string().min(1, t('request.errorServiceRequired')),
     cityId: z.string().min(1, t('request.errorCityRequired')),
     propertyType: z.enum(['apartment', 'house']),
-    area: z.number().min(10, t('request.errorAreaMin')),
-    price: z.number().min(1, t('request.errorPriceMin')).optional(),
+    area: areaSchema,
+    price: priceSchema,
     preferredDate: z.string().min(1, t('request.errorDateRequired')),
     isRecurring: z.boolean(),
     description: z.string().max(2000, t('request.errorDescriptionMax')).optional(),
