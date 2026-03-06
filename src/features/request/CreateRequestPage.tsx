@@ -24,7 +24,7 @@ import { parseScheduleParam } from '@/features/request/schedule';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { createLongDateFormatter, parseDateSafe, toIsoDayLocal } from '@/lib/utils/date';
 import {
-  createRequestSchema,
+  buildCreateRequestSchema,
   type CreateRequestValues,
 } from '@/features/request/create.schema';
 import {
@@ -49,6 +49,7 @@ import { CreateRequestActions } from '@/features/request/components/CreateReques
 function CreateRequestContent() {
   const t = useT();
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
+  const schema = React.useMemo(() => buildCreateRequestSchema(t), [t]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const authStatus = useAuthStatus();
@@ -125,7 +126,7 @@ function CreateRequestContent() {
     control,
     formState: { errors, isSubmitting },
   } = useForm<CreateRequestValues>({
-    resolver: zodResolver(createRequestSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       serviceKey: defaultService,
       cityId: defaultCity,
