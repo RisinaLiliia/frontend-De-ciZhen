@@ -1,0 +1,27 @@
+/* src/styles/features/requests/requests-detail-core-responsive.css */
+
+@layer components {
+  @media (min-width: 768px) {
+    .request-detail--provider .request-detail__section--about {
+      align-content: start;
+    }
+
+    .request-detail--provider .request-detail__aside .request-detail__similar {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .request-detail--provider .request-detail__aside .provider-list {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .request-detail--provider .request-detail__aside .request-detail__similar-footer {
+      margin-top: auto;
+    }
+  }
+
+
+}

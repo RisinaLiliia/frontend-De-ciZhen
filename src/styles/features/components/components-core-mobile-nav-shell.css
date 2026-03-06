@@ -1,0 +1,51 @@
+/* src/styles/features/components/components-core-mobile-nav-shell.css */
+
+@layer components {
+  .topbar-nav--mobile {
+    display: none;
+  }
+
+  .page-shell__topbar-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow: visible;
+  }
+
+  .page-shell__topbar-actions > .flex {
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: nowrap;
+  }
+
+  .page-shell__main--with-mobile-nav {
+    padding-bottom: calc(var(--space-6) + var(--shell-mobile-nav-height) + env(safe-area-inset-bottom));
+  }
+
+  .page-shell > main {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    padding-top: calc(var(--space-8) + var(--shell-topbar-height));
+  }
+
+  .page-shell > main.page-shell__main--topbar-overlay {
+    padding-top: 0;
+  }
+
+  .page-shell__back-row {
+    min-width: 0;
+    margin-bottom: var(--space-2);
+  }
+
+  .page-shell__back-row--overlay {
+    padding-top: calc(var(--shell-topbar-height) + var(--space-2));
+  }
+
+
+}

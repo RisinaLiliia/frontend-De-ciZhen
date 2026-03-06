@@ -1,0 +1,84 @@
+/* src/styles/features/requests/requests-provider-provider-requests.css */
+
+@layer components {
+  .provider-requests-list {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .provider-request-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .provider-request-card__icons {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .provider-request-card__favorite {
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .provider-request-card__favorite .icon-heart {
+    fill: none;
+  }
+
+  .provider-request-card__favorite.is-saved .icon-heart {
+    color: var(--c-accent);
+    fill: currentColor;
+  }
+
+  .provider-request-card__responded {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    font-size: 12px;
+    font-weight: 600;
+    color: color-mix(in oklab, var(--c-success) 75%, var(--c-text) 25%);
+    padding: var(--space-2) var(--space-2-5);
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-success) 50%, transparent);
+    background: color-mix(in oklab, var(--c-success) 12%, transparent);
+  }
+
+  .provider-request-card__form {
+    margin-top: var(--space-1-5);
+  }
+
+  .provider-request-card__form-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 640px) {
+    .provider-request-card__form-actions {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
+  .provider-profile-highlight {
+    border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--c-primary) 28%, transparent),
+      0 14px 30px color-mix(in oklab, var(--c-primary) 18%, transparent);
+  }
+
+  .provider-profile-form--highlight {
+    border-color: color-mix(in oklab, var(--c-primary) 50%, var(--c-border) 50%);
+    box-shadow:
+      0 0 0 2px var(--focus-ring-primary),
+      var(--shadow-card);
+  }
+
+}

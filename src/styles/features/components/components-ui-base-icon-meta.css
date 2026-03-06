@@ -1,0 +1,65 @@
+/* src/styles/features/components/components-ui-base-icon-meta.css */
+
+@layer components {
+  .icon-button {
+    background: transparent;
+    transition:
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .icon-button--md {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+  }
+
+  .icon-button--topbar {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .icon-button:hover {
+    background: color-mix(in oklab, var(--c-border) 55%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .icon-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 36%, transparent);
+  }
+
+  .icon-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 46%, transparent);
+  }
+
+  .icon-button--hint {
+    position: relative;
+  }
+
+  @media (hover: hover) {
+    .icon-button--hint[data-tooltip]:hover::after,
+    .icon-button--hint[data-tooltip]:focus-visible::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%);
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--surface-soft-border);
+      background: var(--surface-soft-bg-strong);
+      color: var(--c-text);
+      font-size: 11px;
+      line-height: 1.1;
+      white-space: nowrap;
+      box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 12%, transparent);
+      pointer-events: none;
+      z-index: 50;
+    }
+  }
+
+}

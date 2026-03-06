@@ -1,0 +1,156 @@
+/* src/styles/features/home/home-content-proof-proof.css */
+
+@layer components {
+  .home-proof-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .home-proof-panel {
+    container-type: inline-size;
+  }
+
+  .home-proof-panel__title {
+    font-size: var(--fs-h3);
+    line-height: var(--lh-title);
+    font-weight: 600;
+  }
+
+  .home-proof-panel__feed {
+    margin-top: var(--space-3);
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .proof-card {
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: var(--surface-soft-bg);
+    padding: 12px 14px;
+    display: grid;
+    gap: 6px;
+    transition:
+      transform 300ms ease,
+      opacity 300ms ease,
+      box-shadow 300ms ease,
+      border-color 300ms ease;
+  }
+
+  .proof-card.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    border-color: color-mix(in oklab, var(--c-primary) 35%, var(--c-border) 65%);
+    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-primary) 15%, transparent);
+  }
+
+  .proof-card.is-dim {
+    opacity: 0.55;
+    transform: translateY(2px);
+  }
+
+  html:not(.dark) .home-proof-panel .proof-card {
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
+    background: linear-gradient(180deg, var(--c-panel) 0%, color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-ink) 5%, transparent);
+  }
+
+  html:not(.dark) .home-proof-panel .proof-card.is-active {
+    border-color: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
+    box-shadow: 0 12px 24px color-mix(in oklab, var(--c-primary) 10%, transparent);
+  }
+
+  html:not(.dark) .home-proof-panel .proof-card.is-dim {
+    opacity: 0.72;
+    transform: translateY(1px);
+  }
+
+  .proof-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .proof-avatars {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .proof-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid var(--c-border);
+    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c-text-muted);
+  }
+
+  .proof-avatar + .proof-avatar {
+    margin-left: -8px;
+  }
+
+  .avatar-spark {
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-panel) 90%, transparent), transparent),
+      linear-gradient(135deg, var(--c-avatar-provider), var(--c-avatar-provider-light));
+    border-color: color-mix(in oklab, var(--c-avatar-provider-light) 70%, transparent);
+  }
+
+  .avatar-ember {
+    margin-left: -8px;
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-panel) 85%, transparent), transparent),
+      linear-gradient(135deg, var(--c-avatar-client), var(--c-avatar-client-light));
+    border-color: color-mix(in oklab, var(--c-avatar-client) 65%, transparent);
+  }
+
+  .proof-title {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .proof-price {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c-accent);
+    white-space: nowrap;
+  }
+
+  .proof-info {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .proof-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .proof-stars {
+    font-size: 12px;
+    color: var(--c-accent);
+    letter-spacing: 1px;
+    animation: star-glow 2.6s ease-in-out infinite;
+  }
+
+  .proof-score {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+
+  .proof-review {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+
+}

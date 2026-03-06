@@ -1,0 +1,38 @@
+/* src/styles/features/requests/requests-detail-mobile-compact-loading.css */
+
+@layer components {
+  @media (max-width: 420px) {
+    .request-detail--provider .request-detail__client-card--provider-hero .user-header-card__identity {
+      gap: var(--space-1-5);
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .provider-main {
+      gap: 2px;
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .provider-decision-metrics {
+      gap: 1px;
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .provider-decision-metric {
+      font-size: 11px;
+    }
+
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-actions {
+      gap: var(--space-1-5);
+    }
+
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-action.offer-action-btn--icon-only {
+      width: 38px;
+      min-width: 38px;
+      height: 38px;
+      min-height: 38px;
+      border-radius: 11px;
+    }
+  }
+
+  .request-detail--loading .request-detail__panel {
+    pointer-events: none;
+  }
+
+}

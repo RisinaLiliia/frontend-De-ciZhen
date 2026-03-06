@@ -1,0 +1,117 @@
+/* src/styles/request-card-tags-status.css */
+@layer components {
+  .request-card__sub {
+    color: var(--c-text-muted);
+    font-size: 12px;
+  }
+
+  .request-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1-5);
+  }
+
+  .request-tag {
+    padding: var(--space-1-5) var(--space-2-5);
+    border-radius: 999px;
+    font-size: 12px;
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    color: var(--c-text);
+  }
+
+  .request-card__actions {
+    margin-top: var(--space-0-5);
+  }
+
+  .requests-list.is-double .request-card {
+    min-height: 204px;
+  }
+
+  .requests-list.is-double .request-card__body {
+    grid-template-rows:
+      auto
+      minmax(calc(2 * var(--lh-title) * 1em), auto)
+      minmax(20px, auto)
+      auto;
+  }
+
+  .request-card--skeleton {
+    pointer-events: none;
+  }
+
+  .request-card--skeleton .request-card__media {
+    background: color-mix(in oklab, var(--c-panel) 85%, var(--c-border) 15%);
+  }
+
+  .request-card-link.is-active {
+    border-color: color-mix(in oklab, var(--c-primary) 55%, var(--c-border) 45%);
+    box-shadow:
+      var(--shadow-card),
+      0 10px 24px color-mix(in oklab, var(--c-primary) 16%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--c-primary) 22%, transparent);
+    transform: translateY(-1px);
+    animation: request-breathe 5.8s ease-in-out infinite;
+  }
+
+  @keyframes request-breathe {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+
+  .request-top__status {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .request-category-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-height: 24px;
+  }
+
+  .request-category {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .request-badges {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-1-5);
+    align-items: center;
+  }
+
+  .request-badges--media {
+    position: absolute;
+    right: 10px;
+    top: calc(10px + 30px + 6px);
+    z-index: 2;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+
+  .request-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-accent) 25%, var(--c-panel) 75%);
+    color: var(--c-text);
+    border: 1px solid color-mix(in oklab, var(--c-border) 55%, transparent);
+    white-space: nowrap;
+  }
+
+
+}

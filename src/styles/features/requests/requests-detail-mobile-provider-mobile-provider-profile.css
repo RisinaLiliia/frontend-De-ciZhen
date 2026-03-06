@@ -1,0 +1,83 @@
+/* src/styles/features/requests/requests-detail-mobile-provider-mobile-provider-profile.css */
+
+@layer components {
+  @media (max-width: 768px) {
+    .request-detail--provider .request-detail__client-card--provider-hero .user-header-card__identity {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      width: 100%;
+      gap: var(--space-2);
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .provider-avatar-stack {
+      height: auto;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .provider-main {
+      min-width: 0;
+      gap: var(--space-1);
+      overflow: hidden;
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .provider-avatar {
+      width: 52px;
+      height: 52px;
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .provider-decision-metrics {
+      display: grid;
+      gap: 2px;
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .provider-decision-metric {
+      white-space: nowrap;
+      font-size: 11.5px;
+      line-height: 1.25;
+    }
+
+    .request-detail--provider .request-detail__client {
+      gap: var(--space-2);
+    }
+
+    .request-detail--provider .request-detail__provider-mobile-availability {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .request-detail--provider .request-detail__provider-mobile-availability .request-detail__availability-date {
+      font-size: 12px;
+    }
+
+    .request-detail--provider .request-detail__aside .request-detail__similar-footer {
+      margin-bottom: calc(var(--space-2) + var(--shell-mobile-nav-height, 0px) + env(safe-area-inset-bottom));
+    }
+
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-action.offer-action-btn--icon-only {
+      width: 40px;
+      min-width: 40px;
+      height: 40px;
+      min-height: 40px;
+      border-radius: 12px;
+    }
+
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .offer-action-btn__icon svg,
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-detail__save .icon-heart {
+      width: 16px;
+      height: 16px;
+    }
+
+    .request-detail--provider .request-detail__aside .provider-card--similar-mobile-minimal .provider-avatar-city,
+    .request-detail--provider .request-detail__aside .provider-card--similar-mobile-minimal .provider-decision-metrics {
+      display: none;
+    }
+
+    .request-detail--provider .request-detail__aside .provider-card--similar-mobile-minimal .provider-main {
+      gap: var(--space-1);
+    }
+  }
+}

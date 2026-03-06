@@ -1,0 +1,174 @@
+/* src/styles/features/home/home-intro-hero-shot-mobile-keyframes.css */
+
+@layer components {
+  @keyframes hero-shot-trace-mobile {
+    0%,
+    14% {
+      stroke-dashoffset: 430;
+      opacity: 0;
+    }
+    38% {
+      stroke-dashoffset: 430;
+      opacity: 0.2;
+    }
+    62%,
+    80% {
+      stroke-dashoffset: 0;
+      opacity: 0.32;
+    }
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0.24;
+    }
+  }
+
+  @keyframes hero-shot-dribble-one-mobile {
+    0%,
+    12% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    15% {
+      opacity: 0.6;
+      transform: scale(1.25);
+    }
+    100% {
+      opacity: 0.26;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes hero-shot-dribble-two-mobile {
+    0%,
+    32% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    35% {
+      opacity: 0.6;
+      transform: scale(1.25);
+    }
+    100% {
+      opacity: 0.26;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes hero-shot-ball-phase-mobile {
+    0% {
+      transform: translate(var(--hero-mobile-x-0), var(--hero-mobile-y-start)) scale(var(--hero-mobile-scale-base));
+      opacity: 1;
+    }
+    10% {
+      transform: translate(var(--hero-mobile-x-0), var(--hero-mobile-y-bounce-1)) scale(var(--hero-mobile-scale-squash-x), var(--hero-mobile-scale-squash-y));
+    }
+    19% {
+      transform: translate(var(--hero-mobile-x-0), var(--hero-mobile-y-start)) scale(var(--hero-mobile-scale-base));
+    }
+    28% {
+      transform: translate(var(--hero-mobile-x-1), var(--hero-mobile-y-bounce-2)) scale(var(--hero-mobile-scale-squash-x), var(--hero-mobile-scale-squash-y));
+    }
+    38% {
+      transform: translate(var(--hero-mobile-x-2), var(--hero-mobile-y-start)) scale(var(--hero-mobile-scale-base));
+    }
+    50% {
+      transform: translate(var(--hero-mobile-x-3), var(--hero-mobile-y-arc)) scale(var(--hero-mobile-scale-base));
+    }
+    59% {
+      transform: translate(var(--hero-mobile-x-4), var(--hero-mobile-y-peak)) scale(var(--hero-mobile-scale-base));
+      opacity: 1;
+    }
+    66% {
+      transform: translate(var(--hero-mobile-x-5), var(--hero-mobile-y-hoop-entry)) scale(var(--hero-mobile-scale-hoop));
+      opacity: 1;
+    }
+    70% {
+      transform: translate(var(--hero-mobile-x-6), var(--hero-mobile-y-hoop-mid)) scale(var(--hero-mobile-scale-hoop));
+      opacity: 1;
+    }
+    72% {
+      transform: translate(var(--hero-mobile-x-7), var(--hero-mobile-y-floor-contact)) scale(var(--hero-mobile-scale-impact-x), var(--hero-mobile-scale-impact-y));
+      opacity: 1;
+    }
+    75% {
+      transform: translate(var(--hero-mobile-land-x), var(--hero-mobile-y-floor)) scale(var(--hero-mobile-scale-base));
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--hero-mobile-land-x), var(--hero-mobile-y-floor)) scale(var(--hero-mobile-scale-base));
+      opacity: 1;
+    }
+  }
+
+  @keyframes hero-shot-ball-rebound-mobile {
+    0%,
+    75% {
+      transform: translateY(0px) scale(1);
+    }
+    78% {
+      transform: translateY(var(--hero-mobile-rebound-one-up)) scale(1);
+    }
+    81% {
+      transform: translateY(0px) scale(var(--hero-mobile-scale-rebound-x), var(--hero-mobile-scale-rebound-y));
+    }
+    83% {
+      transform: translateY(var(--hero-mobile-rebound-two-up)) scale(1);
+    }
+    84% {
+      transform: translateY(0px) scale(var(--hero-mobile-scale-rebound-x), var(--hero-mobile-scale-rebound-y));
+    }
+    100% {
+      transform: translateY(0px) scale(1);
+    }
+  }
+
+  @keyframes hero-shot-ball-roll-mobile {
+    0%,
+    75% {
+      transform: translateX(0px);
+    }
+    85% {
+      transform: translateX(var(--hero-mobile-roll-step-1));
+    }
+    93% {
+      transform: translateX(var(--hero-mobile-roll-step-2));
+    }
+    100% {
+      transform: translateX(var(--hero-mobile-roll-end));
+    }
+  }
+
+  @keyframes hero-shot-ball-roll-spin-mobile {
+    0%,
+    75% {
+      transform: rotate(0deg);
+    }
+    85% {
+      transform: rotate(var(--hero-mobile-roll-rot-step-1));
+    }
+    93% {
+      transform: rotate(var(--hero-mobile-roll-rot-step-2));
+    }
+    100% {
+      transform: rotate(var(--hero-mobile-roll-rot-end));
+      opacity: 1;
+    }
+  }
+
+  @keyframes hero-shot-pulse-mobile {
+    0%,
+    70% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    80% {
+      opacity: 0.45;
+      transform: scale(1.8);
+    }
+    100% {
+      opacity: 0.22;
+      transform: scale(1.25);
+    }
+  }
+
+}

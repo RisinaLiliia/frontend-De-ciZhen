@@ -1,0 +1,119 @@
+/* src/styles/overlays-calendar.css */
+@layer components {
+  .dc-calendar {
+    --rdp-accent-color: var(--c-accent);
+    --rdp-background-color: color-mix(in oklab, var(--c-accent) 16%, transparent);
+    --rdp-outline: 2px solid color-mix(in oklab, var(--c-primary) 40%, transparent);
+    width: 100%;
+  }
+
+  .dc-calendar .rdp-caption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-1-5) var(--space-1) var(--space-2-5);
+  }
+
+  .dc-calendar .rdp-caption_label {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--c-text);
+  }
+
+  .dc-calendar .rdp-nav {
+    display: flex;
+    gap: var(--space-1-5);
+  }
+
+  .dc-calendar .rdp-button {
+    border-radius: 10px;
+  }
+
+  .dc-calendar .rdp-nav_button {
+    height: 36px;
+    width: 36px;
+    border: 1px solid var(--c-border);
+    background: var(--c-surface);
+    color: var(--c-text);
+    transition:
+      background var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .dc-calendar .rdp-nav_button:hover {
+    background: color-mix(in oklab, var(--c-border) 45%, transparent);
+  }
+
+  .dc-calendar .rdp-nav_button:active {
+    transform: translateY(1px);
+  }
+
+  .dc-calendar .rdp-head_cell {
+    font-size: 12px;
+    color: var(--c-muted);
+    font-weight: 600;
+    padding: var(--space-1-5) 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .dc-calendar .rdp-cell {
+    padding: var(--space-0-5);
+  }
+
+  .dc-calendar .rdp-day {
+    height: 40px;
+    width: 40px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--c-text);
+    font-size: 14px;
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .dc-calendar .rdp-day:hover {
+    background: color-mix(in oklab, var(--c-border) 45%, transparent);
+  }
+
+  .dc-calendar .rdp-day_today {
+    border-color: color-mix(in oklab, var(--c-primary) 35%, transparent);
+  }
+
+  .dc-calendar .rdp-day_selected {
+    background: var(--rdp-background-color);
+    border-color: color-mix(in oklab, var(--c-accent) 40%, transparent);
+    color: var(--c-text);
+  }
+
+  .dc-calendar .rdp-day_range_start,
+  .dc-calendar .rdp-day_range_end {
+    background: color-mix(in oklab, var(--c-accent) 28%, transparent);
+    border-color: color-mix(in oklab, var(--c-accent) 50%, transparent);
+    color: var(--c-text);
+  }
+
+  .dc-calendar .rdp-day_range_middle {
+    background: color-mix(in oklab, var(--c-accent) 14%, transparent);
+    color: var(--c-text);
+  }
+
+  .dc-calendar .rdp-day_disabled {
+    opacity: 0.35;
+  }
+
+  .dc-date-hint {
+    margin-top: var(--space-2-5);
+    padding-top: var(--space-2-5);
+    border-top: 1px solid var(--c-border);
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    color: var(--c-muted);
+    font-size: var(--fs-small);
+  }
+
+
+}

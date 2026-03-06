@@ -1,0 +1,164 @@
+/* src/styles/features/home/home-intro-hero-shot-keyframes.css */
+
+@layer components {
+  @keyframes hero-badge-float {
+    0% {
+      transform: translateY(0);
+      opacity: 0.96;
+    }
+    50% {
+      transform: translateY(-1px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 0.96;
+    }
+  }
+
+  @keyframes hero-trust-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+    50% {
+      transform: scale(1.22);
+      opacity: 0.62;
+    }
+  }
+
+  @keyframes hero-shot-trace {
+    0%,
+    14% {
+      stroke-dashoffset: 430;
+      opacity: 0;
+    }
+    38% {
+      stroke-dashoffset: 430;
+      opacity: 0.2;
+    }
+    62%,
+    76% {
+      stroke-dashoffset: 0;
+      opacity: 0.32;
+    }
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes hero-shot-dribble-one {
+    0%,
+    12%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    15% {
+      opacity: 0.6;
+      transform: scale(1.25);
+    }
+  }
+
+  @keyframes hero-shot-dribble-two {
+    0%,
+    32%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    35% {
+      opacity: 0.6;
+      transform: scale(1.25);
+    }
+  }
+
+  @keyframes hero-shot-ball {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+      opacity: 1;
+    }
+    12% {
+      transform: translate(0px, 15px) scale(1.11, 0.89);
+    }
+    24% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    35% {
+      transform: translate(22px, 17px) scale(1.1, 0.9);
+    }
+    48% {
+      transform: translate(44px, 0px) scale(1);
+    }
+    62% {
+      transform: translate(98px, -42px) scale(1);
+    }
+    74% {
+      transform: translate(166px, -58px) scale(1);
+      opacity: 1;
+    }
+    83% {
+      transform: translate(212px, -44px) scale(0.92);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(212px, -44px) scale(0.92);
+      opacity: 0;
+    }
+  }
+
+  @keyframes hero-shot-ball-hero {
+    0% {
+      transform: translate(0px, -6px) scale(0.88);
+      opacity: 1;
+    }
+    12% {
+      transform: translate(0px, 8px) scale(0.98, 0.78);
+    }
+    24% {
+      transform: translate(0px, -6px) scale(0.88);
+    }
+    35% {
+      transform: translate(22px, 10px) scale(0.98, 0.78);
+    }
+    48% {
+      transform: translate(44px, -6px) scale(0.88);
+    }
+    62% {
+      transform: translate(98px, -50px) scale(0.88);
+    }
+    74% {
+      transform: translate(166px, -66px) scale(0.88);
+      opacity: 1;
+    }
+    83% {
+      transform: translate(212px, -52px) scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(212px, -52px) scale(0.8);
+      opacity: 0;
+    }
+  }
+
+  @keyframes hero-shot-pulse {
+    0%,
+    70% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    78% {
+      opacity: 0.45;
+      transform: scale(1.8);
+    }
+    88%,
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+
+
+}

@@ -1,0 +1,105 @@
+/* src/styles/features/home/home-content-providers-profile-identity-avatar-status.css */
+
+@layer components {
+  .provider-avatar-stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-2-5);
+    min-width: 0;
+    height: 100%;
+  }
+
+  .provider-avatar-wrap {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .provider-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in oklab, var(--c-primary) 25%, var(--c-panel) 75%);
+    color: var(--c-text);
+    font-size: 14px;
+    font-weight: 700;
+    overflow: hidden;
+  }
+
+  .provider-avatar--placeholder {
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-panel) 90%, transparent), transparent),
+      linear-gradient(135deg, var(--c-avatar-provider), var(--c-avatar-provider-light));
+    border-color: color-mix(in oklab, var(--c-avatar-provider-light) 70%, transparent);
+    color: var(--c-ink);
+  }
+
+  .provider-avatar--placeholder-client {
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-panel) 88%, transparent), transparent),
+      linear-gradient(135deg, var(--c-avatar-client), var(--c-avatar-client-light));
+    border-color: color-mix(in oklab, var(--c-avatar-client) 65%, transparent);
+    color: var(--c-ink);
+  }
+
+  .provider-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .provider-status-dot {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    border: 1px solid var(--c-panel);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+    animation: status-pulse 2s ease-out infinite;
+    z-index: 2;
+  }
+
+  .provider-status--online {
+    background: var(--c-online);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+  }
+
+  .provider-status--offline {
+    background: var(--c-offline);
+    box-shadow: none;
+    animation: none;
+  }
+
+  .provider-status-dot::after {
+    content: attr(data-status-label);
+    position: absolute;
+    bottom: 14px;
+    right: -4px;
+    background: color-mix(in oklab, var(--c-panel) 85%, var(--c-border) 15%);
+    color: var(--c-text);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    padding: var(--space-1) var(--space-1-5);
+    border-radius: 6px;
+    font-size: 10px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(2px);
+    pointer-events: none;
+    transition:
+      opacity var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .provider-status-dot:hover::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+
+}

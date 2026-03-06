@@ -1,0 +1,55 @@
+/* src/styles/features/requests/requests-shell-nav-navigation-activity-insight.css */
+
+@layer components {
+  .personal-nav__rating {
+    margin-top: auto;
+    pointer-events: none;
+  }
+
+  .activity-insight {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-3) var(--space-3-5);
+    border-radius: 12px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 50%, transparent);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 95%, transparent),
+        color-mix(in oklab, var(--c-panel) 89%, var(--c-border) 11%)
+      );
+  }
+
+  .activity-insight__text {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .activity-insight__track {
+    height: 10px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-panel) 75%, var(--c-ink) 25%);
+    border: 1px solid color-mix(in oklab, var(--c-border) 58%, transparent);
+    overflow: hidden;
+  }
+
+  .activity-insight__fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--c-success) 85%, var(--c-primary) 15%),
+        color-mix(in oklab, var(--c-success) 76%, var(--c-panel) 24%)
+      );
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--c-success) 35%, transparent);
+  }
+
+
+
+}

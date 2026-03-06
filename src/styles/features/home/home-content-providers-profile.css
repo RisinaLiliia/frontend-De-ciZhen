@@ -1,0 +1,5 @@
+/* src/styles/features/home/home-content-providers-profile.css */
+
+@import './home-content-providers-profile-identity.css';
+@import './home-content-providers-profile-rating.css';
+@import './home-content-providers-profile-adaptive.css';

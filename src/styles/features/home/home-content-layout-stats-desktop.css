@@ -1,0 +1,60 @@
+/* src/styles/features/home/home-content-layout-stats-desktop.css */
+
+@layer components {
+  @media (min-width: 768px) {
+    .home-screen {
+      --home-panel-padding: 16px;
+      gap: var(--space-6);
+    }
+
+    .home-screen .home-stats__title,
+    .home-screen .home-quick-search__title,
+    .home-screen .home-activity__title {
+      font-size: 18px;
+    }
+
+    .home-screen .home-stats__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .home-screen .home-stats__card {
+      position: relative;
+      padding: 12px 12px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .home-screen .home-stats__card:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 14px;
+      bottom: 14px;
+      width: 2px;
+      background: var(--c-border);
+      opacity: 0.7;
+    }
+
+  }
+
+  @media (min-width: 1024px) {
+    .home-screen {
+      --home-panel-padding: 18px;
+      gap: var(--space-8);
+    }
+
+    .home-screen .home-stats__title,
+    .home-screen .home-quick-search__title,
+    .home-screen .home-activity__title {
+      font-size: 20px;
+    }
+
+    .home-screen .home-stats__value {
+      font-size: 22px;
+    }
+  }
+
+
+}

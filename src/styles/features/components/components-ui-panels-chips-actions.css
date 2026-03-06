@@ -1,0 +1,101 @@
+/* src/styles/features/components/components-ui-panels-chips-actions.css */
+
+@layer components {
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: var(--surface-soft-bg-strong);
+    border: 1px solid var(--c-border);
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .chip:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, var(--c-border) 60%, var(--c-primary) 40%);
+  }
+
+  .chip:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 34%, transparent);
+  }
+
+  .chip.is-active {
+    border-color: color-mix(in oklab, var(--c-accent) 60%, var(--c-border) 40%);
+    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-accent) 18%);
+    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-accent) 20%, transparent);
+  }
+
+  html:not(.dark) .chip {
+    background: var(--c-panel);
+    border-color: var(--c-border);
+    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
+  }
+
+  html:not(.dark) .chip.is-active {
+    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
+    border-color: color-mix(in oklab, var(--c-primary) 35%, var(--c-border) 65%);
+    color: var(--c-text);
+    box-shadow: 0 10px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
+  }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: 10px 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+  }
+
+  .list-item:last-child {
+    border-bottom: none;
+  }
+
+  .panel-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid var(--c-border);
+    color: var(--c-text-muted);
+    transition:
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      background var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .panel-action:hover {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-border) 60%, var(--c-primary) 40%);
+    background: color-mix(in oklab, var(--c-surface) 85%, var(--c-border) 15%);
+    transform: translateY(-1px);
+  }
+
+  .panel-action:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+  }
+
+
+
+}

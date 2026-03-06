@@ -1,0 +1,92 @@
+/* src/styles/features/components/components-ui-profile-settings-avatar.css */
+
+@layer components {
+  .profile-settings__avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .profile-settings__avatar {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--c-ink);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
+  }
+
+  .profile-settings__avatar--placeholder {
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-panel) 90%, transparent), transparent),
+      linear-gradient(135deg, var(--c-avatar-provider), var(--c-avatar-provider-light));
+  }
+
+  .profile-settings__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-settings__avatar-edit {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    display: inline-flex;
+    cursor: pointer;
+  }
+
+  .profile-settings__avatar-edit .offer-action-btn {
+    min-width: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    padding: 0;
+  }
+
+  .profile-settings__avatar-file {
+    display: grid;
+    gap: 2px;
+  }
+
+  @media (max-width: 720px) {
+    .profile-bio__footer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .profile-bio__save-icon {
+      align-self: flex-end;
+    }
+
+    .profile-bio__actions {
+      align-self: flex-end;
+    }
+
+    .profile-settings__choices {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .profile-settings__row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .profile-settings__avatar-row {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+
+
+}

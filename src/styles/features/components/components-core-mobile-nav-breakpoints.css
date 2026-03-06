@@ -1,0 +1,52 @@
+/* src/styles/features/components/components-core-mobile-nav-breakpoints.css */
+
+@layer components {
+  @media (max-width: 640px) {
+    .brand {
+      gap: 8px;
+    }
+
+    .brand__text {
+      max-width: 11ch;
+    }
+
+    .page-shell__topbar-actions {
+      gap: 6px;
+    }
+
+    .page-shell__topbar-actions > .flex {
+      gap: 6px;
+    }
+
+    .auth-actions__register {
+      display: none;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .topbar-nav--mobile {
+      gap: 4px;
+      padding-inline: 8px;
+    }
+
+    .topbar-nav__mobile-item {
+      border-radius: 12px;
+    }
+
+    .page-shell__topbar-actions {
+      gap: 4px;
+    }
+
+    .page-shell__topbar-actions > .flex {
+      gap: 4px;
+    }
+
+    .icon-button--topbar {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+  }
+
+
+}

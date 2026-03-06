@@ -1,0 +1,118 @@
+/* src/styles/features/components/components-core-auth-form-modal-social-social.css */
+
+@layer components {
+  .auth-social {
+    margin-top: 4px;
+  }
+
+  .auth-social__divider {
+    margin: 2px 0;
+    text-align: center;
+    font-size: 10px;
+    color: color-mix(in oklab, var(--c-text-muted) 80%, transparent);
+    position: relative;
+    letter-spacing: 0.01em;
+  }
+
+  .auth-social__divider::before,
+  .auth-social__divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 28%;
+    height: 1px;
+    background: color-mix(in oklab, var(--c-border) 62%, transparent);
+  }
+
+  .auth-social__divider::before {
+    left: 0;
+  }
+
+  .auth-social__divider::after {
+    right: 0;
+  }
+
+  .auth-social__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .auth-social__btn {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .auth-social__btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .auth-social__icon {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 18px;
+  }
+
+  .auth-social__icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
+  .auth-social__label {
+    min-width: 52px;
+    text-align: left;
+    display: inline-block;
+  }
+
+  .auth-social__btn--google,
+  .auth-social__btn--apple {
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 10%, var(--c-panel) 90%) 0%,
+        color-mix(in oklab, var(--c-panel) 96%, var(--c-border) 4%) 62%,
+        color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%) 100%
+      );
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-accent) 54%, var(--c-border) 46%);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-hi) 10%, transparent);
+  }
+
+  .auth-social__btn--google:hover:not(:disabled),
+  .auth-social__btn--apple:hover:not(:disabled) {
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%) 0%,
+        var(--surface-soft-bg-strong) 62%,
+        color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%) 100%
+      );
+    border-color: color-mix(in oklab, var(--c-accent) 64%, var(--c-border) 36%);
+    transform: translateY(-1px);
+  }
+
+
+
+}

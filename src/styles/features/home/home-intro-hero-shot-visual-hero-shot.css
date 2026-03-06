@@ -1,0 +1,114 @@
+/* src/styles/features/home/home-intro-hero-shot-visual-hero-shot.css */
+
+@layer components {
+  .hero-shot {
+    --motion-ease-shot: ease-in-out;
+    --motion-ease-impact: ease-in-out;
+    --motion-ease-roll: ease-in-out;
+    width: 100%;
+    height: auto;
+    color: var(--c-hero-shot-stroke);
+  }
+
+  .hero-shot__floor {
+    stroke: var(--c-hero-shot-floor);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    opacity: var(--hero-shot-floor-opacity);
+  }
+
+  .hero-shot__trace {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.1;
+    stroke-linecap: round;
+    opacity: var(--hero-shot-trace-opacity);
+    stroke-dasharray: 430;
+    stroke-dashoffset: 430;
+    animation: hero-shot-trace var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: stroke-dashoffset, opacity;
+  }
+
+  .hero-shot__hoop {
+    fill: none;
+    stroke: var(--c-hero-shot-hoop);
+    stroke-width: 2.3;
+    opacity: 0.96;
+  }
+
+  .hero-shot__backboard {
+    fill: var(--c-hero-shot-backboard-fill);
+    stroke: var(--c-hero-shot-backboard-stroke);
+  }
+
+  .hero-shot__backboard-inner {
+    fill: none;
+    stroke: var(--c-hero-shot-hoop);
+    stroke-width: 1.6;
+    opacity: 0.9;
+  }
+
+  .hero-shot__rim {
+    stroke: var(--c-hero-shot-hoop);
+    stroke-width: 2.8;
+  }
+
+  .hero-shot__net {
+    stroke: var(--c-hero-shot-net);
+    stroke-width: 1.3;
+    opacity: 0.92;
+  }
+
+  .hero-shot__dribble-mark {
+    fill: var(--c-accent);
+    opacity: 0;
+  }
+
+  .hero-shot__dribble-mark.is-one {
+    animation: hero-shot-dribble-one var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: transform, opacity;
+  }
+
+  .hero-shot__dribble-mark.is-two {
+    animation: hero-shot-dribble-two var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: transform, opacity;
+  }
+
+  .hero-shot__ball-wrap {
+    transform-origin: center;
+    animation: hero-shot-ball var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: transform, opacity;
+  }
+
+  .hero-shot__ball-phase,
+  .hero-shot__ball-roll,
+  .hero-shot__ball-rebound,
+  .hero-shot__ball-spin {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .hero-shot__ball {
+    fill: var(--c-hero-shot-ball-fill);
+    stroke: var(--c-hero-shot-ball-stroke);
+    stroke-width: 1.3;
+  }
+
+  .hero-shot__ball-line {
+    fill: none;
+    stroke: var(--c-hero-shot-ball-line);
+    stroke-width: 1.15;
+    opacity: 0.65;
+  }
+
+  .hero-shot__pulse {
+    fill: var(--c-accent);
+    opacity: 0;
+    transform-origin: center;
+    animation: hero-shot-pulse var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);
+    will-change: transform, opacity;
+  }
+
+
+
+}

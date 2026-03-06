@@ -1,0 +1,69 @@
+/* src/styles/features/home/home-content-providers-badges-responsive-base.css */
+
+@layer components {
+  .provider-badges {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-1-5);
+  }
+
+  .provider-badges--corner {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-4);
+    right: var(--space-4);
+    z-index: 2;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--space-1);
+    flex-wrap: nowrap;
+    min-height: 22px;
+  }
+
+  .provider-card.has-favorite-toggle .provider-badges--corner {
+    right: calc(var(--space-4) + 38px);
+  }
+
+  .provider-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: var(--space-1) var(--space-2-5);
+    border-radius: 999px;
+    color: var(--c-text);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: var(--surface-soft-bg);
+    white-space: nowrap;
+  }
+
+  .provider-badge--md {
+    font-size: 10px;
+    padding: var(--space-1) var(--space-2-5);
+  }
+
+  .provider-badge--sm {
+    font-size: 10px;
+    padding: var(--space-1) var(--space-2-5);
+  }
+
+  .provider-badge--top {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-warning) 42%, var(--c-border) 58%);
+    background: color-mix(in oklab, var(--c-warning) 24%, var(--c-panel) 76%);
+  }
+
+  .provider-badge--service {
+    color: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
+    border-color: color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+    background: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
+  }
+
+  .provider-badge--fast {
+    color: color-mix(in oklab, var(--c-success) 84%, var(--c-text) 16%);
+    border-color: color-mix(in oklab, var(--c-success) 42%, var(--c-border) 58%);
+    background: color-mix(in oklab, var(--c-success) 14%, var(--c-panel) 86%);
+  }
+
+
+}

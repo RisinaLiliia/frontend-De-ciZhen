@@ -1,0 +1,66 @@
+/* src/styles/features/requests/requests-detail-reviews-base.css */
+
+@layer components {
+  .request-detail__client-card {
+    display: block;
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+  }
+
+  .request-detail__client-card--provider-hero {
+    border-top: 0;
+  }
+
+  .request-detail--provider .request-detail__client {
+    margin-bottom: var(--space-2);
+  }
+
+  .request-detail__reviews-list {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .request-detail__review {
+    padding: var(--space-3) var(--space-3-5);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--surface-soft-border);
+    background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+  }
+
+  .request-detail__review-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .request-detail__review-name {
+    font-weight: 600;
+  }
+
+  .request-detail__review-rating {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .request-detail__review-date {
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .request-detail__review-body {
+    margin-top: var(--space-2);
+    font-size: 13px;
+    color: var(--c-text);
+  }
+
+  .provider-reviews-hub {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+
+}

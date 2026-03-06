@@ -1,0 +1,172 @@
+/* src/styles/features/requests/requests-shell-nav-navigation-nav-core.css */
+
+@layer components {
+  .requests-screen {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .page-shell__main--overlay-with-back .home-intro-shell {
+    padding-top: var(--home-intro-padding);
+  }
+
+  .personal-nav {
+    display: grid;
+    gap: var(--space-2-5);
+    padding: var(--space-3-5);
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 42%, transparent);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 96%, transparent),
+        var(--surface-soft-bg)
+      );
+    box-shadow:
+      0 12px 28px color-mix(in oklab, var(--c-primary) 10%, transparent),
+      inset 0 1px 0 color-mix(in oklab, var(--c-primary-contrast) 12%, transparent);
+  }
+
+  .personal-nav__header-slot {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .personal-nav__title {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    color: var(--c-text);
+    margin: 0;
+  }
+
+  .personal-nav__track {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 980px) {
+    .personal-nav__track {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 980px) {
+    .personal-nav--left .personal-nav__track {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .personal-nav__item {
+    --personal-nav-item-color: var(--c-text);
+    --personal-nav-item-border: color-mix(in oklab, var(--c-primary) 50%, var(--c-border) 50%);
+    --personal-nav-item-bg-start: color-mix(in oklab, var(--c-panel) 95%, transparent);
+    --personal-nav-item-bg-end: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+    --personal-nav-item-shadow: none;
+    min-height: 72px;
+    padding: var(--space-2-5) var(--space-3);
+    border-radius: 12px;
+    border: 1px solid var(--personal-nav-item-border);
+    background:
+      linear-gradient(
+        180deg,
+        var(--personal-nav-item-bg-start),
+        var(--personal-nav-item-bg-end)
+      );
+    color: var(--personal-nav-item-color);
+    box-shadow: var(--personal-nav-item-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    text-decoration: none;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .personal-nav__item:hover,
+  .personal-nav__item.is-active {
+    --personal-nav-item-color: color-mix(in oklab, var(--c-primary) 84%, var(--c-ink) 16%);
+    --personal-nav-item-border: color-mix(in oklab, var(--c-primary) 58%, var(--c-border) 42%);
+    --personal-nav-item-bg-start: color-mix(in oklab, var(--c-primary) 22%, var(--c-panel) 78%);
+    --personal-nav-item-bg-end: color-mix(in oklab, var(--c-primary) 16%, var(--c-panel) 84%);
+    --personal-nav-item-shadow: 0 12px 24px color-mix(in oklab, var(--c-primary) 18%, transparent);
+  }
+
+  .personal-nav__item:hover {
+    transform: translateY(-1px);
+  }
+
+  .personal-nav__item.is-disabled {
+    opacity: 0.52;
+    cursor: not-allowed;
+    pointer-events: none;
+    --personal-nav-item-border: color-mix(in oklab, var(--c-border) 72%, transparent);
+    --personal-nav-item-bg-start: color-mix(in oklab, var(--c-panel) 94%, transparent);
+    --personal-nav-item-bg-end: var(--surface-soft-bg);
+    --personal-nav-item-shadow: none;
+    transform: none;
+  }
+
+  .personal-nav__item.is-disabled.is-locked {
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 0.72;
+  }
+
+  .personal-nav__item.is-disabled.is-locked:hover {
+    transform: none;
+    --personal-nav-item-border: color-mix(in oklab, var(--c-primary) 46%, var(--c-border) 54%);
+    --personal-nav-item-bg-start: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+    --personal-nav-item-bg-end: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+    --personal-nav-item-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 14%, transparent);
+  }
+
+  .personal-nav__icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .personal-nav__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .personal-nav__top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .personal-nav__label {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .personal-nav__value {
+    margin-left: auto;
+  }
+
+  .personal-nav__hint {
+    font-size: 12px;
+    color: var(--c-text-muted);
+    line-height: 1.15;
+  }
+
+
+}

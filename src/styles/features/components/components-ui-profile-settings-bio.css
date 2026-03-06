@@ -1,0 +1,86 @@
+/* src/styles/features/components/components-ui-profile-settings-bio.css */
+
+@layer components {
+  .profile-bio {
+    display: grid;
+    gap: 12px;
+    padding: 14px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--surface-soft-border);
+    background:
+      linear-gradient(
+        180deg,
+        var(--surface-soft-bg-strong),
+        color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%)
+      );
+  }
+
+  .profile-bio__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .profile-bio__title-wrap {
+    display: grid;
+    gap: 2px;
+  }
+
+  .profile-bio__label {
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--c-text-muted);
+  }
+
+  .profile-bio__textarea {
+    min-height: 132px;
+    padding: 12px 14px;
+    line-height: 1.55;
+    font-size: 16px;
+    resize: vertical;
+    background: color-mix(in oklab, var(--c-surface) 90%, var(--c-panel) 10%);
+    border-color: color-mix(in oklab, var(--c-border) 72%, transparent);
+  }
+
+  .profile-bio__textarea::placeholder {
+    color: color-mix(in oklab, var(--c-text-muted) 92%, transparent);
+  }
+
+  .profile-bio__textarea--readonly {
+    cursor: default;
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+    border-color: color-mix(in oklab, var(--c-border) 60%, transparent);
+  }
+
+  .profile-bio__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .profile-bio__hint {
+    font-size: 13px;
+    color: var(--c-text-muted);
+  }
+
+  .profile-bio__save-icon {
+    min-height: 36px;
+  }
+
+  .profile-bio__actions {
+    display: inline-flex;
+    gap: 8px;
+  }
+
+  .profile-bio__action {
+    width: auto;
+    min-width: 0;
+    height: 36px;
+    padding-inline: 12px;
+    font-size: 13px;
+  }
+
+
+}

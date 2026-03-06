@@ -1,0 +1,105 @@
+/* src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css */
+
+@layer components {
+  .nearby-list {
+    margin-top: var(--space-2);
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .home-nearby-panel .home-panel-subtitle {
+    margin-bottom: var(--space-1);
+  }
+
+  .home-nearby-panel .nearby-list {
+    --home-nearby-row-height: 196px;
+    min-height: calc(
+      (var(--home-nearby-visible-rows, 3) * var(--home-nearby-row-height)) +
+        ((var(--home-nearby-visible-rows, 3) - 1) * var(--space-2))
+    );
+    align-content: start;
+  }
+
+  @media (max-width: 767px) {
+    .home-nearby-panel .nearby-list {
+      min-height: 0;
+    }
+  }
+
+  .home-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .home-cta:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+  }
+
+  .home-activity-panel {
+    overflow: hidden;
+  }
+
+  .home-activity__header {
+    display: grid;
+    gap: 6px;
+  }
+
+  .home-activity__header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .home-activity__title {
+    margin: 0;
+  }
+
+  .home-activity__subtitle {
+    margin: 0;
+    font-size: var(--fs-body);
+    color: var(--c-text-muted);
+  }
+
+  .home-activity__ranges {
+    display: inline-flex;
+    gap: 6px;
+    padding: 4px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-panel) 86%, transparent);
+  }
+
+  .home-activity__range {
+    min-width: 44px;
+    height: 28px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--c-text-muted);
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .home-activity__range.is-active {
+    color: var(--c-primary-contrast);
+    background: var(--btn-secondary-bg);
+    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
+  }
+
+
+}

@@ -1,0 +1,115 @@
+/* src/styles/features/requests/requests-shell-results-list-status.css */
+
+@layer components {
+  .requests-list {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .requests-list--stable {
+    --requests-row-height: 196px;
+    --requests-row-gap: var(--space-3);
+    --requests-visible-rows: 10;
+  }
+
+  .requests-list.is-single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .requests-list.is-double {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .requests-list--stable.is-double {
+    --requests-row-height: 204px;
+    --requests-row-gap: var(--space-2);
+    --requests-visible-rows: 5;
+  }
+
+  @media (min-width: 981px) {
+    .requests-list--stable {
+      min-height: calc(
+        (var(--requests-visible-rows) * var(--requests-row-height)) +
+          ((var(--requests-visible-rows) - 1) * var(--requests-row-gap))
+      );
+      align-content: start;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .requests-list.is-double {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .workspace-list-item {
+    border-color: color-mix(in oklab, var(--c-border) 72%, transparent);
+  }
+
+  .workspace-empty {
+    align-items: flex-start;
+  }
+
+  .status-badge {
+    --status-bg: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
+    --status-border: color-mix(in oklab, var(--c-primary) 42%, var(--c-border) 58%);
+    --status-text: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    padding: var(--space-1) var(--space-2-5);
+    border-radius: 999px;
+    border: 1px solid var(--status-border);
+    background: var(--status-bg);
+    color: var(--status-text);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .status-badge--info {
+    --status-bg: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
+    --status-border: color-mix(in oklab, var(--c-primary) 42%, var(--c-border) 58%);
+    --status-text: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
+  }
+
+  .status-badge--success {
+    --status-bg: color-mix(in oklab, var(--c-success) 10%, var(--c-panel) 90%);
+    --status-border: color-mix(in oklab, var(--c-success) 42%, var(--c-border) 58%);
+    --status-text: color-mix(in oklab, var(--c-success) 56%, var(--c-text) 44%);
+  }
+
+  .status-badge--warning {
+    --status-bg: color-mix(in oklab, var(--c-warning) 18%, var(--c-panel) 82%);
+    --status-border: color-mix(in oklab, var(--c-warning) 46%, var(--c-border) 54%);
+    --status-text: color-mix(in oklab, var(--c-warning) 84%, var(--c-text) 16%);
+  }
+
+  .status-badge--danger {
+    --status-bg: color-mix(in oklab, var(--c-danger) 14%, var(--c-panel) 86%);
+    --status-border: color-mix(in oklab, var(--c-danger) 44%, var(--c-border) 56%);
+    --status-text: color-mix(in oklab, var(--c-danger) 84%, var(--c-text) 16%);
+  }
+
+  .offer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .offer-actions__btn {
+    min-height: 36px;
+    padding: var(--space-2) var(--space-3);
+    font-size: 13px;
+    gap: var(--space-1-5);
+    border-radius: 10px;
+    text-decoration: none;
+  }
+
+  .offer-actions__btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+  }
+
+
+}
