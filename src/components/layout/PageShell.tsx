@@ -90,7 +90,7 @@ export function PageShell({
 
   const shellMainStyle = React.useMemo<React.CSSProperties>(
     () => ({
-      paddingTop: topbarOverlay ? '0px' : 'calc(var(--space-8) + var(--shell-topbar-height))',
+      paddingTop: topbarOverlay ? '0px' : 'calc(var(--space-8) + var(--shell-topbar-height) + var(--shell-topbar-offset, 0px))',
     }),
     [topbarOverlay],
   );
@@ -107,7 +107,7 @@ export function PageShell({
       <main
         style={shellMainStyle}
         className={cn(
-          'container-mobile min-h-[calc(100dvh-var(--shell-topbar-height))] pt-0 pb-8 flex flex-col',
+          'container-mobile min-h-[calc(100dvh-var(--shell-topbar-height)-var(--shell-topbar-offset,0px))] pt-0 pb-8 flex flex-col',
           hasWorkspaceNav ? 'page-shell__main--with-mobile-nav' : null,
           topbarOverlay ? 'page-shell__main--topbar-overlay' : null,
           isOverlayBackRow ? 'page-shell__main--overlay-with-back' : null,

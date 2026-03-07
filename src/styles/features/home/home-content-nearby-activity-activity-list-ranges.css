@@ -67,7 +67,8 @@
 
   .home-activity__subtitle {
     margin: 0;
-    font-size: var(--fs-body);
+    font-size: var(--fs-small);
+    line-height: 1.35;
     color: var(--c-text-muted);
   }
 

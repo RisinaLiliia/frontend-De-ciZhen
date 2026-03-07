@@ -63,7 +63,8 @@
   }
 
   .home-screen .home-intro-shell .hero-experiment__visual .hero-shot {
-    transform: translateY(-8px);
+    transform: translateY(-8px) scale(1.06);
+    transform-origin: center right;
   }
 
   .home-screen .home-intro-shell .home-combined-top {
@@ -129,7 +130,7 @@
     }
 
     .home-screen .home-intro-shell .hero-experiment__visual .hero-shot {
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
 
     .home-screen .home-intro-shell .home-quick-search-panel {

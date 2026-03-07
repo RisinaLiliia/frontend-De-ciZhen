@@ -25,7 +25,8 @@
 
   .home-panel-subtitle {
     margin: 0;
-    font-size: 12px;
+    font-size: var(--fs-small);
+    line-height: 1.35;
     color: var(--c-text-muted);
   }
 
@@ -53,7 +54,8 @@
 
   .home-quick-search__location {
     margin-top: 2px;
-    font-size: 12px;
+    font-size: var(--fs-small);
+    line-height: 1.35;
     color: var(--c-text-muted);
     white-space: nowrap;
   }

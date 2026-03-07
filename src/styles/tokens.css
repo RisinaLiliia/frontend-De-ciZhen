@@ -54,4 +54,17 @@
   --surface-soft-bg: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
   --surface-soft-bg-strong: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
   --focus-ring-primary: color-mix(in oklab, var(--c-primary) 30%, transparent);
+
+  /* Global shell geometry shared by topbar/main/footer */
+  --shell-max-width: 1280px;
+  --shell-topbar-max-width: calc(var(--shell-max-width) - 16px);
+  --shell-inline-padding: clamp(16px, 2vw, 24px);
+  --shell-topbar-offset: clamp(8px, 1.5vw, 16px);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --shell-inline-padding: 12px;
+    --shell-topbar-offset: 8px;
+  }
 }

@@ -14,7 +14,7 @@
   .auth-shell {
     --form-max: 440px;
     width: 100%;
-    min-height: calc(100dvh - var(--shell-topbar-height));
+    min-height: calc(100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px));
     display: grid;
     place-items: center;
     padding: 14px 16px;
@@ -73,7 +73,7 @@
   @media (max-width: 767px) {
     .auth-shell {
       --form-max: 100%;
-      min-height: calc(100dvh - var(--shell-topbar-height));
+      min-height: calc(100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px));
       padding: 6px 10px;
     }
 
