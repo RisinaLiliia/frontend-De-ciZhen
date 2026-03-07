@@ -60,6 +60,7 @@ export function useWorkspacePrivateNavModel({
     activePublicSection === 'stats' ||
     activePublicSection === 'reviews';
   const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${(userName ?? '').trim() || t(I18N_KEYS.requestsPage.navUserFallback)}!`;
+  const navSubtitle = t(I18N_KEYS.requestsPage.navSubtitle);
 
   const publicNavItems = React.useMemo(
     () =>
@@ -124,7 +125,7 @@ export function useWorkspacePrivateNavModel({
             {
               key: 'my-favorites',
               href: '/workspace?tab=favorites',
-              label: t(I18N_KEYS.requestDetails.saved),
+              label: t(I18N_KEYS.requestsPage.navFavorites),
               icon: <IconHeart />,
               value: favoriteRequestCount,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
@@ -152,7 +153,7 @@ export function useWorkspacePrivateNavModel({
             {
               key: 'my-requests',
               href: '/workspace?tab=my-requests',
-              label: t(I18N_KEYS.requestsPage.navMyOrders),
+              label: t(I18N_KEYS.requestsPage.navGuestOrders),
               icon: <IconBriefcase />,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
               disabled: true,
@@ -164,7 +165,7 @@ export function useWorkspacePrivateNavModel({
             {
               key: 'my-offers',
               href: '/workspace?tab=my-offers',
-              label: t(I18N_KEYS.requestsPage.navMyOffers),
+              label: t(I18N_KEYS.requestsPage.navGuestOffers),
               icon: <IconSend />,
               hint: t(I18N_KEYS.requestsPage.summarySent),
               disabled: true,
@@ -176,7 +177,7 @@ export function useWorkspacePrivateNavModel({
             {
               key: 'my-favorites',
               href: '/workspace?tab=favorites',
-              label: t(I18N_KEYS.requestDetails.saved),
+              label: t(I18N_KEYS.requestsPage.navFavorites),
               icon: <IconHeart />,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
               disabled: true,
@@ -220,6 +221,7 @@ export function useWorkspacePrivateNavModel({
 
   return {
     navTitle,
+    navSubtitle,
     personalNavItems,
   };
 }

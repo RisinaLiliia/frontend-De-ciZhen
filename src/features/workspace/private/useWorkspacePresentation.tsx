@@ -17,6 +17,7 @@ type Args = {
   t: Translator;
   WorkspacePrivateIntroComponent: React.ComponentType<WorkspacePrivateIntroProps>;
   navTitle: string;
+  navSubtitle: string;
   personalNavItems: WorkspacePrivateIntroProps['personalNavItems'];
   insightText: string;
   activityProgress: number;
@@ -34,6 +35,7 @@ export function useWorkspacePresentation({
   t,
   WorkspacePrivateIntroComponent,
   navTitle,
+  navSubtitle,
   personalNavItems,
   insightText,
   activityProgress,
@@ -50,6 +52,7 @@ export function useWorkspacePresentation({
     () => (
       <WorkspacePrivateIntroComponent
         navTitle={navTitle}
+        navSubtitle={navSubtitle}
         personalNavItems={personalNavItems}
         insightText={insightText}
         activityProgress={activityProgress}
@@ -71,6 +74,7 @@ export function useWorkspacePresentation({
       clientStatsPayload,
       createRequestHref,
       navTitle,
+      navSubtitle,
       personalNavItems,
       providerStatsPayload,
       statsOrder,

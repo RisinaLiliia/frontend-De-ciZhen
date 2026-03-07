@@ -7,8 +7,8 @@
     gap: var(--space-1);
     padding: var(--space-2-5) var(--space-3-5);
     border-radius: var(--radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+    border: 1px solid var(--surface-soft-border);
+    background: var(--surface-soft-bg);
     font-size: 13px;
     font-weight: 600;
     color: var(--c-text);
@@ -23,13 +23,11 @@
     display: grid;
     gap: var(--space-3);
     align-items: end;
-    padding: var(--space-4);
+    padding: var(--home-panel-padding, 16px);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 42%, transparent);
-    background: var(--surface-soft-bg-strong);
-    box-shadow:
-      0 10px 26px color-mix(in oklab, var(--c-primary) 10%, transparent),
-      inset 0 1px 0 color-mix(in oklab, var(--c-primary-contrast) 10%, transparent);
+    border: 1px solid var(--surface-card-border);
+    background: var(--surface-card-bg);
+    box-shadow: var(--surface-card-shadow);
   }
 
   .requests-filters.is-pending {
@@ -110,9 +108,8 @@
   .requests-filters .dc-select-trigger {
     height: 44px;
     border-radius: var(--radius-md);
-    background: color-mix(in oklab, var(--c-panel) 93%, var(--c-border) 7%);
-    border: 1px solid color-mix(in oklab, var(--c-border) 58%, transparent);
-    box-shadow: 0 4px 12px color-mix(in oklab, var(--c-primary) 8%, transparent);
+    background: var(--control-bg);
+    border: 1px solid var(--control-border);
     transition:
       border-color var(--transition-fast),
       box-shadow var(--transition-fast),
@@ -120,13 +117,12 @@
   }
 
   .requests-filters .dc-select-trigger:hover {
-    border-color: color-mix(in oklab, var(--c-primary) 48%, var(--c-border) 52%);
+    border-color: var(--control-border-hover);
+    background: var(--control-bg-hover);
   }
 
   .requests-filters .dc-select-trigger:focus-visible {
-    box-shadow:
-      0 0 0 2px color-mix(in oklab, var(--c-primary) 22%, transparent),
-      0 6px 16px color-mix(in oklab, var(--c-primary) 12%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
   .requests-select::after {

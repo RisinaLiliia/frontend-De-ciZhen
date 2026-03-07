@@ -128,6 +128,7 @@ export function useWorkspacePrivatePresentationFlow({
   const {
     topProviders,
     navTitle,
+    navSubtitle,
     activityProgress,
     personalNavItems,
     insightText,
@@ -159,6 +160,7 @@ export function useWorkspacePrivatePresentationFlow({
     t,
     WorkspacePrivateIntroComponent: WorkspacePrivateIntro,
     navTitle,
+    navSubtitle,
     personalNavItems,
     insightText,
     activityProgress,

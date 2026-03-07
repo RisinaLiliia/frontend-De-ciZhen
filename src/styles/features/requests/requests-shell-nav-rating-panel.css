@@ -47,14 +47,6 @@
   }
 
   @media (max-width: 900px) {
-    .personal-nav__title {
-      font-size: 24px;
-    }
-
-    .personal-nav__label {
-      font-size: 14px;
-    }
-
     .activity-insight {
       grid-template-columns: 1fr;
     }
