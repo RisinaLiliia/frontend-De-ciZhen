@@ -7,12 +7,6 @@
       gap: var(--space-6);
     }
 
-    .home-screen .home-stats__title,
-    .home-screen .home-quick-search__title,
-    .home-screen .home-activity__title {
-      font-size: 18px;
-    }
-
     .home-screen .home-stats__grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0;
@@ -43,12 +37,6 @@
     .home-screen {
       --home-panel-padding: 18px;
       gap: var(--space-8);
-    }
-
-    .home-screen .home-stats__title,
-    .home-screen .home-quick-search__title,
-    .home-screen .home-activity__title {
-      font-size: 20px;
     }
 
     .home-screen .home-stats__value {

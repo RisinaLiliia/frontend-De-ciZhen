@@ -42,16 +42,16 @@
 
   .request-create-card__title {
     margin: 0;
-    font-size: 18px;
-    line-height: 1.3;
-    font-weight: 700;
+    font-size: var(--fs-h3);
+    line-height: var(--lh-title);
+    font-weight: 600;
     color: var(--c-text);
     overflow-wrap: anywhere;
   }
 
   .request-create-card__subtitle {
     margin: 0;
-    font-size: 13px;
+    font-size: var(--fs-small);
     line-height: 1.35;
     color: var(--c-text-muted);
     overflow-wrap: anywhere;
@@ -125,11 +125,13 @@
   }
 
   .request-create-card--compact .request-create-card__title {
-    font-size: 20px;
+    font-size: var(--fs-h3);
+    line-height: var(--lh-title);
   }
 
   .request-create-card--compact .request-create-card__subtitle {
-    font-size: 12px;
+    font-size: var(--fs-small);
+    line-height: 1.35;
   }
 
   .request-create-card--compact .request-create-card__plus {

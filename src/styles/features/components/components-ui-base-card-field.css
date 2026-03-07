@@ -1,7 +1,8 @@
 /* src/styles/features/components/components-ui-base-card-field.css */
 
 @layer components {
-  .card {
+  .card,
+  .panel {
     --card-border-base: var(--surface-card-border);
     --card-border-hover: var(--surface-card-border-hover);
     --card-border-focus: var(--surface-card-border-focus);
@@ -9,7 +10,6 @@
     --card-shadow-hover: var(--surface-card-shadow-hover);
     --card-focus-ring: 0 0 0 2px color-mix(in oklab, var(--c-primary) 18%, transparent);
     --card-shadow-focus: var(--card-shadow-base), var(--card-focus-ring);
-    @apply w-full;
     background: var(--surface-card-bg);
     border: 1px solid var(--card-border-base);
     border-radius: var(--radius-lg);
@@ -22,14 +22,20 @@
       transform var(--transition-fast);
   }
 
-  .card:hover {
+  .card {
+    @apply w-full;
+  }
+
+  .card:hover,
+  .panel:hover {
     border-color: var(--card-border-hover);
     background: var(--surface-card-bg-hover);
     box-shadow: var(--card-shadow-hover);
     transform: translateY(-1px);
   }
 
-  .card:focus-within {
+  .card:focus-within,
+  .panel:focus-within {
     border-color: var(--card-border-focus);
     box-shadow: var(--card-shadow-focus);
   }

@@ -11,12 +11,13 @@
     }
 
     .request-create-card--compact .request-create-card__title {
-      font-size: 17px;
+      font-size: var(--fs-h3);
+      line-height: var(--lh-title);
     }
 
     .request-create-card--compact .request-create-card__subtitle {
-      font-size: 11px;
-      line-height: 1.25;
+      font-size: var(--fs-small);
+      line-height: 1.35;
     }
   }
 
@@ -50,12 +51,13 @@
     }
 
     .request-create-card--compact .request-create-card__title {
-      font-size: 17px;
+      font-size: var(--fs-h3);
+      line-height: var(--lh-title);
     }
 
     .request-create-card--compact .request-create-card__subtitle {
-      font-size: 11px;
-      line-height: 1.25;
+      font-size: var(--fs-small);
+      line-height: 1.35;
     }
   }
 
@@ -68,7 +70,8 @@
     }
 
     .request-create-card--compact .request-create-card__title {
-      font-size: 16px;
+      font-size: var(--fs-h3);
+      line-height: var(--lh-title);
     }
   }
 
