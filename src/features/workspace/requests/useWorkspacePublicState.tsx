@@ -129,6 +129,7 @@ export function useWorkspacePublicState({
               href: '/workspace?section=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconStar />,
+              badgeValue: Number.isFinite(platformReviewsCount) ? Math.max(0, Math.round(platformReviewsCount)) : 0,
               rating: {
                 value: platformRatingAvg.toFixed(1),
                 reviewsCount: platformReviewsCount,
@@ -153,6 +154,7 @@ export function useWorkspacePublicState({
           href: '/workspace?tab=my-requests',
           label: t(I18N_KEYS.requestsPage.navGuestOrders),
           icon: <IconBriefcase />,
+          badgeValue: 0,
           hint: t(I18N_KEYS.requestsPage.summaryAccepted),
           disabled: true,
           lockedHref: guestLoginHref,
@@ -192,6 +194,7 @@ export function useWorkspacePublicState({
           href: '/workspace?section=reviews',
           label: t(I18N_KEYS.requestsPage.navReviews),
           icon: <IconStar />,
+          badgeValue: Number.isFinite(platformReviewsCount) ? Math.max(0, Math.round(platformReviewsCount)) : 0,
           rating: {
             value: platformRatingAvg.toFixed(1),
             reviewsCount: platformReviewsCount,

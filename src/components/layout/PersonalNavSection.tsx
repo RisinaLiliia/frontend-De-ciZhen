@@ -17,6 +17,7 @@ export type PersonalNavItem = {
   disabled?: boolean;
   lockedHref?: string;
   value?: string | number;
+  badgeValue?: number;
   hint?: string;
   onClick?: () => void;
   rating?: {
@@ -103,6 +104,32 @@ export function PersonalNavSection({
     };
   }, [hasTieredLayout, pathname, activeDockKey, syncDockIndicator]);
 
+  const parseNumericValue = (value: PersonalNavItem['value']) => {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return Math.max(0, Math.round(value));
+    }
+    if (typeof value !== 'string') return null;
+    const digits = value.replace(/[^\d]/g, '');
+    if (!digits) return null;
+    const parsed = Number(digits);
+    return Number.isFinite(parsed) ? Math.max(0, parsed) : null;
+  };
+
+  const resolveDockBadgeValue = (item: PersonalNavItem) => {
+    const count = typeof item.badgeValue === 'number' ? Math.max(0, Math.round(item.badgeValue)) : parseNumericValue(item.value);
+    if (count === null) return null;
+
+    const key = item.key;
+    const showAlways = key === 'public-requests' || key === 'public-providers' || key === 'public-stats' || key === 'my-requests';
+    const showWhenPositive = key === 'my-offers' || key === 'my-favorites' || key === 'reviews';
+
+    if (showAlways) return count;
+    if (showWhenPositive) return count > 0 ? count : null;
+    return null;
+  };
+
+  const formatDockBadgeValue = (value: number) => (value > 99 ? '99+' : String(value));
+
   const renderItem = (item: PersonalNavItem) => {
     const itemClassName = [
       'personal-nav__item',
@@ -113,6 +140,22 @@ export function PersonalNavSection({
     ]
       .filter(Boolean)
       .join(' ');
+    const dockBadgeValue = hasTieredLayout ? resolveDockBadgeValue(item) : null;
+    const regularValue = !hasTieredLayout && item.value !== undefined && !item.rating ? item.value : null;
+
+    const topContent = (
+      <span className="personal-nav__top">
+        <i className="personal-nav__icon" aria-hidden="true">
+          {item.icon}
+        </i>
+        <span className="personal-nav__label">{item.label}</span>
+        {dockBadgeValue !== null ? (
+          <CountBadge as="strong" size="sm" className="personal-nav__value personal-nav__value--dock" value={formatDockBadgeValue(dockBadgeValue)} />
+        ) : regularValue !== null ? (
+          <CountBadge as="strong" className="personal-nav__value" value={regularValue} />
+        ) : null}
+      </span>
+    );
 
     if (item.disabled && !item.lockedHref) {
       return (
@@ -122,15 +165,7 @@ export function PersonalNavSection({
           data-nav-key={item.key}
           aria-disabled="true"
         >
-          <span className="personal-nav__top">
-            <i className="personal-nav__icon" aria-hidden="true">
-              {item.icon}
-            </i>
-            <span className="personal-nav__label">{item.label}</span>
-            {item.value !== undefined && !item.rating ? (
-              <CountBadge as="strong" className="personal-nav__value" value={item.value} />
-            ) : null}
-          </span>
+          {topContent}
           {item.rating ? (
             <RatingSummary
               className="personal-nav__rating"
@@ -156,15 +191,7 @@ export function PersonalNavSection({
           data-nav-key={item.key}
           onClick={item.onClick}
         >
-          <span className="personal-nav__top">
-            <i className="personal-nav__icon" aria-hidden="true">
-              {item.icon}
-            </i>
-            <span className="personal-nav__label">{item.label}</span>
-            {item.value !== undefined && !item.rating ? (
-              <CountBadge as="strong" className="personal-nav__value" value={item.value} />
-            ) : null}
-          </span>
+          {topContent}
           {item.rating ? (
             <RatingSummary
               className="personal-nav__rating"
@@ -189,15 +216,7 @@ export function PersonalNavSection({
         data-nav-key={item.key}
         onClick={item.onClick}
       >
-        <span className="personal-nav__top">
-          <i className="personal-nav__icon" aria-hidden="true">
-            {item.icon}
-          </i>
-          <span className="personal-nav__label">{item.label}</span>
-          {item.value !== undefined && !item.rating ? (
-            <CountBadge as="strong" className="personal-nav__value" value={item.value} />
-          ) : null}
-        </span>
+        {topContent}
         {item.rating ? (
           <RatingSummary
             className="personal-nav__rating"

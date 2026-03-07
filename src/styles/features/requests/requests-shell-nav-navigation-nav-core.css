@@ -216,10 +216,31 @@
     line-height: 1.25;
   }
 
-  .personal-nav__track--dock .personal-nav__value,
   .personal-nav__track--dock .personal-nav__hint,
   .personal-nav__track--dock .personal-nav__rating {
     display: none;
+  }
+
+  .personal-nav__track--dock .personal-nav__value--dock {
+    margin-left: var(--space-1-5);
+    min-width: 18px;
+    height: 18px;
+    padding: 0 6px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 68%, var(--c-primary) 32%);
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%);
+    color: color-mix(in oklab, var(--c-text) 86%, var(--c-primary) 14%);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: none;
+  }
+
+  .personal-nav__track--dock .personal-nav__item.is-active .personal-nav__value--dock {
+    border-color: color-mix(in oklab, var(--c-primary) 52%, var(--c-border) 48%);
+    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-primary) 18%);
+    color: color-mix(in oklab, var(--c-text) 72%, var(--c-primary) 28%);
+    box-shadow: 0 4px 10px color-mix(in oklab, var(--c-primary) 18%, transparent);
   }
 
   @media (max-width: 640px) {
@@ -237,6 +258,13 @@
 
     .personal-nav__track--dock .personal-nav__icon {
       display: none;
+    }
+
+    .personal-nav__track--dock .personal-nav__value--dock {
+      min-width: 17px;
+      height: 17px;
+      padding: 0 5px;
+      font-size: 10px;
     }
   }
 
