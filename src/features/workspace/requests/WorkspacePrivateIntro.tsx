@@ -11,6 +11,7 @@ type StatsOrderItem = {
 
 export type WorkspacePrivateIntroProps = {
   navTitle: string;
+  navSubtitle: string;
   personalNavItems: PersonalNavItem[];
   insightText: string;
   activityProgress: number;
@@ -28,6 +29,7 @@ export type WorkspacePrivateIntroProps = {
 
 export function WorkspacePrivateIntro({
   navTitle,
+  navSubtitle,
   personalNavItems,
   insightText,
   activityProgress,
@@ -55,6 +57,7 @@ export function WorkspacePrivateIntro({
           <PersonalNavSection
             className="personal-nav--left"
             title={navTitle}
+            subtitle={navSubtitle}
             items={personalNavItems}
             insightText={insightText}
             progressPercent={activityProgress}

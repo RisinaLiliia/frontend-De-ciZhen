@@ -12,6 +12,7 @@ type WorkspacePublicIntroProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   navTitle: string;
+  navSubtitle: string;
   personalNavItems: PersonalNavItem[];
   insightText: string;
   activityProgress: number;
@@ -24,6 +25,7 @@ export function WorkspacePublicIntro({
   t,
   locale,
   navTitle,
+  navSubtitle,
   personalNavItems,
   insightText,
   activityProgress,
@@ -38,6 +40,7 @@ export function WorkspacePublicIntro({
           <PersonalNavSection
             className="personal-nav--left"
             title={navTitle}
+            subtitle={navSubtitle}
             items={personalNavItems}
             insightText={insightText}
             progressPercent={activityProgress}

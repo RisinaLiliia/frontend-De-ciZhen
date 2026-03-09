@@ -7,8 +7,7 @@
     border-radius: 999px;
     padding-inline: var(--space-4);
     background: var(--surface-soft-bg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 58%, transparent);
-    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-primary) 8%, transparent);
+    border: 1px solid var(--surface-soft-border);
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);

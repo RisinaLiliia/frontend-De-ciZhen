@@ -60,6 +60,7 @@ export function useWorkspacePrivateNavModel({
     activePublicSection === 'stats' ||
     activePublicSection === 'reviews';
   const navTitle = `${t(I18N_KEYS.requestsPage.navGreeting)}, ${(userName ?? '').trim() || t(I18N_KEYS.requestsPage.navUserFallback)}!`;
+  const navSubtitle = t(I18N_KEYS.requestsPage.navSubtitle);
 
   const publicNavItems = React.useMemo(
     () =>
@@ -93,6 +94,7 @@ export function useWorkspacePrivateNavModel({
               href: '/workspace?tab=my-requests',
               label: t(I18N_KEYS.requestsPage.navMyOrders),
               icon: <IconBriefcase />,
+              badgeValue: myRequestsTotal,
               value: myRequestsTotal,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
               onClick: () => setWorkspaceTab('my-requests'),
@@ -104,6 +106,7 @@ export function useWorkspacePrivateNavModel({
               href: '/workspace?tab=my-offers',
               label: t(I18N_KEYS.requestsPage.navMyOffers),
               icon: <IconSend />,
+              badgeValue: sentCount,
               value: sentCount,
               hint: t(I18N_KEYS.requestsPage.summarySent),
               onClick: () => setWorkspaceTab('my-offers'),
@@ -115,6 +118,7 @@ export function useWorkspacePrivateNavModel({
               href: '/workspace?tab=completed-jobs',
               label: t(I18N_KEYS.requestsPage.navCompletedJobs),
               icon: <IconCheck />,
+              badgeValue: completedJobsCount,
               value: completedJobsCount,
               hint: t(I18N_KEYS.provider.jobs),
               onClick: () => setWorkspaceTab('completed-jobs'),
@@ -124,8 +128,9 @@ export function useWorkspacePrivateNavModel({
             {
               key: 'my-favorites',
               href: '/workspace?tab=favorites',
-              label: t(I18N_KEYS.requestDetails.saved),
+              label: t(I18N_KEYS.requestsPage.navFavorites),
               icon: <IconHeart />,
+              badgeValue: favoriteRequestCount,
               value: favoriteRequestCount,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
               onClick: () => setWorkspaceTab('favorites'),
@@ -137,6 +142,7 @@ export function useWorkspacePrivateNavModel({
               href: '/workspace?tab=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconStar />,
+              badgeValue: navReviewsCount,
               rating: {
                 value: navRatingValue,
                 reviewsCount: navReviewsCount,
@@ -152,8 +158,9 @@ export function useWorkspacePrivateNavModel({
             {
               key: 'my-requests',
               href: '/workspace?tab=my-requests',
-              label: t(I18N_KEYS.requestsPage.navMyOrders),
+              label: t(I18N_KEYS.requestsPage.navGuestOrders),
               icon: <IconBriefcase />,
+              badgeValue: 0,
               hint: t(I18N_KEYS.requestsPage.summaryAccepted),
               disabled: true,
               lockedHref: guestLoginHref,
@@ -164,7 +171,7 @@ export function useWorkspacePrivateNavModel({
             {
               key: 'my-offers',
               href: '/workspace?tab=my-offers',
-              label: t(I18N_KEYS.requestsPage.navMyOffers),
+              label: t(I18N_KEYS.requestsPage.navGuestOffers),
               icon: <IconSend />,
               hint: t(I18N_KEYS.requestsPage.summarySent),
               disabled: true,
@@ -176,7 +183,7 @@ export function useWorkspacePrivateNavModel({
             {
               key: 'my-favorites',
               href: '/workspace?tab=favorites',
-              label: t(I18N_KEYS.requestDetails.saved),
+              label: t(I18N_KEYS.requestsPage.navFavorites),
               icon: <IconHeart />,
               hint: t(I18N_KEYS.requestDetails.ctaSave),
               disabled: true,
@@ -190,6 +197,7 @@ export function useWorkspacePrivateNavModel({
               href: '/workspace?section=reviews',
               label: t(I18N_KEYS.requestsPage.navReviews),
               icon: <IconStar />,
+              badgeValue: navReviewsCount,
               rating: {
                 value: navRatingValue,
                 reviewsCount: navReviewsCount,
@@ -220,6 +228,7 @@ export function useWorkspacePrivateNavModel({
 
   return {
     navTitle,
+    navSubtitle,
     personalNavItems,
   };
 }

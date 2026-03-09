@@ -68,6 +68,7 @@ export function useWorkspacePrivateState({
 
   const {
     navTitle,
+    navSubtitle,
     personalNavItems,
   } = useWorkspacePrivateNavModel({
     t,
@@ -110,6 +111,7 @@ export function useWorkspacePrivateState({
   return {
     topProviders,
     navTitle,
+    navSubtitle,
     activityProgress,
     personalNavItems,
     insightText,
