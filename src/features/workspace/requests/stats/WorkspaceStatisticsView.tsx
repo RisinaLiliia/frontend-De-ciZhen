@@ -50,8 +50,8 @@ export function WorkspaceStatisticsView({
   } = model;
 
   return (
-    <section className="panel workspace-statistics" aria-labelledby="workspace-statistics-title">
-      <header className="workspace-statistics__header">
+    <section className="panel requests-stats workspace-statistics" aria-labelledby="workspace-statistics-title">
+      <header className="requests-stats__header workspace-statistics__header">
         <div className="workspace-statistics__heading">
           <p id="workspace-statistics-title" className="section-title">
             {t(I18N_KEYS.homePublic.exploreStats)}
@@ -59,14 +59,14 @@ export function WorkspaceStatisticsView({
           <p className="typo-small">{copy.subtitle}</p>
         </div>
         <div className="workspace-statistics__controls">
-          <div className="chip-row workspace-statistics__ranges" role="group" aria-label={copy.rangeGroupLabel}>
+          <div className="requests-stats__tabs workspace-statistics__ranges" role="group" aria-label={copy.rangeGroupLabel}>
             {RANGE_OPTIONS.map((option) => {
               const isActive = option === range;
               return (
                 <button
                   key={option}
                   type="button"
-                  className={`chip workspace-statistics__range-chip ${isActive ? 'is-active' : ''}`.trim()}
+                  className={`requests-stats__tab workspace-statistics__range-chip ${isActive ? 'is-active' : ''}`.trim()}
                   onClick={() => setRange(option)}
                   aria-pressed={isActive}
                 >
@@ -87,29 +87,31 @@ export function WorkspaceStatisticsView({
       </div>
 
       {isLoading ? (
-        <div className="workspace-statistics__loading">
+        <div className="requests-stats__loading workspace-statistics__loading">
           <div className="skeleton h-20 w-full" />
           <div className="skeleton h-64 w-full" />
           <div className="skeleton h-64 w-full" />
         </div>
       ) : isError ? (
-        <div className="workspace-statistics__error">
+        <div className="requests-stats__error workspace-statistics__error">
           <p className="typo-small">{t(I18N_KEYS.requestsPage.statsLoadError)}</p>
         </div>
       ) : (
         <>
-          <section className="workspace-statistics__kpi-grid" aria-label={copy.kpiTitle}>
+          <section className="requests-stats__kpi-grid workspace-statistics__kpi-grid" aria-label={copy.kpiTitle}>
             {kpis.map((item) => (
-              <article key={item.key} className="workspace-statistics-kpi panel">
-                <p className="workspace-statistics-kpi__label">{item.label}</p>
-                <strong className="workspace-statistics-kpi__value">{item.value}</strong>
-                <p className={`workspace-statistics-kpi__delta is-${item.tone}`.trim()}>{item.hint}</p>
+              <article key={item.key} className="requests-stats-kpi workspace-statistics-kpi">
+                <p className="requests-stats-kpi__label workspace-statistics-kpi__label">{item.label}</p>
+                <strong className="requests-stats-kpi__value workspace-statistics-kpi__value">{item.value}</strong>
+                <p className={`requests-stats-kpi__delta ${item.tone === 'positive' ? 'is-success' : 'is-neutral'} workspace-statistics-kpi__delta`.trim()}>
+                  {item.hint}
+                </p>
               </article>
             ))}
           </section>
 
           <div className="workspace-statistics__grid workspace-statistics__grid--primary">
-            <section className="panel workspace-statistics__tile">
+            <section className="workspace-statistics__tile">
               <header className="workspace-statistics__tile-header">
                 <p className="section-title">{copy.activityTitle}</p>
                 <p className="typo-small">{copy.activitySubtitle}</p>
@@ -136,7 +138,7 @@ export function WorkspaceStatisticsView({
               </div>
             </section>
 
-            <section className="panel workspace-statistics__tile">
+            <section className="workspace-statistics__tile">
               <header className="workspace-statistics__tile-header">
                 <p className="section-title">{copy.demandTitle}</p>
                 <p className="typo-small">{copy.demandSubtitle}</p>
@@ -162,7 +164,7 @@ export function WorkspaceStatisticsView({
           </div>
 
           <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
-            <section className="panel workspace-statistics__tile">
+            <section className="workspace-statistics__tile">
               <header className="workspace-statistics__tile-header">
                 <p className="section-title">{copy.citiesTitle}</p>
                 <p className="typo-small">{copy.citiesSubtitle}</p>
@@ -195,7 +197,7 @@ export function WorkspaceStatisticsView({
           </div>
 
           <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
-            <section className="panel workspace-statistics__tile">
+            <section className="workspace-statistics__tile">
               <header className="workspace-statistics__tile-header">
                 <p className="section-title">{copy.profileTitle}</p>
                 <p className="typo-small">
@@ -219,7 +221,7 @@ export function WorkspaceStatisticsView({
               </div>
             </section>
 
-            <section className="panel workspace-statistics__tile">
+            <section className="workspace-statistics__tile">
               <header className="workspace-statistics__tile-header">
                 <p className="section-title">{copy.insightsTitle}</p>
               </header>
@@ -238,7 +240,7 @@ export function WorkspaceStatisticsView({
           </div>
 
           {growthCards.length > 0 ? (
-            <section className="panel workspace-statistics__tile workspace-statistics__growth">
+            <section className="workspace-statistics__tile workspace-statistics__growth">
               <header className="workspace-statistics__tile-header">
                 <p className="section-title">{copy.growthTitle}</p>
                 <p className="typo-small">{copy.growthSubtitle}</p>
@@ -296,7 +298,7 @@ function ActivityTrendChart({
     .join(' ');
 
   return (
-    <div className="workspace-statistics-chart">
+    <div className="requests-stats-chart workspace-statistics-chart">
       <svg
         viewBox={`0 0 ${width} ${height}`}
         preserveAspectRatio="none"

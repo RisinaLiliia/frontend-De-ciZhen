@@ -9,7 +9,7 @@
 
   .workspace-statistics__header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: var(--space-2-5);
   }
@@ -22,6 +22,8 @@
   .workspace-statistics__controls {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
     gap: var(--space-2);
   }
 
@@ -53,6 +55,8 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
+    padding-top: var(--space-1);
+    border-top: 1px dashed var(--surface-soft-border);
   }
 
   .workspace-statistics__mode-badge {
@@ -80,16 +84,13 @@
   .workspace-statistics__kpi-grid {
     display: grid;
     gap: var(--space-2);
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 
   .workspace-statistics-kpi {
     display: grid;
     gap: var(--space-1);
-    padding: var(--space-2-5);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--surface-soft-border);
-    background: var(--surface-soft-bg);
+    min-height: 98px;
   }
 
   .workspace-statistics-kpi__label {
@@ -133,6 +134,10 @@
   .workspace-statistics__tile {
     display: grid;
     gap: var(--space-2);
+    padding: var(--space-2-5);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--surface-soft-border);
+    background: var(--surface-soft-bg);
   }
 
   .workspace-statistics__tile-header {
@@ -233,6 +238,11 @@
 
   .workspace-statistics__map-tile {
     min-height: 320px;
+  }
+
+  .workspace-statistics__map-tile > .workspace-public-demand-map {
+    height: 100%;
+    border-radius: var(--radius-md);
   }
 
   .workspace-statistics-funnel {
@@ -350,10 +360,6 @@
   .workspace-statistics-chart {
     display: grid;
     gap: var(--space-1-5);
-    padding: var(--space-2-5);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--surface-soft-border);
-    background: var(--surface-soft-bg);
   }
 
   .workspace-statistics-chart__svg {
