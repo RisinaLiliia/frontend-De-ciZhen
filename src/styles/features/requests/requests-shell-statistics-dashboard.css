@@ -119,23 +119,6 @@
     gap: var(--space-2);
   }
 
-  .workspace-statistics__layout {
-    display: grid;
-    gap: var(--space-2-5);
-  }
-
-  .workspace-statistics__main {
-    display: grid;
-    gap: var(--space-2-5);
-    min-width: 0;
-  }
-
-  .workspace-statistics__rail {
-    display: grid;
-    gap: var(--space-2-5);
-    min-width: 0;
-  }
-
   .workspace-statistics__grid--primary {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   }
@@ -251,15 +234,6 @@
     font-size: var(--fs-small);
     font-weight: 700;
     color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
-  }
-
-  .workspace-statistics__map-tile {
-    min-height: 320px;
-  }
-
-  .workspace-statistics__map-tile > .workspace-public-demand-map {
-    height: 100%;
-    border-radius: var(--radius-md);
   }
 
   .workspace-statistics-funnel {
@@ -444,13 +418,6 @@
   @media (min-width: 900px) {
     .workspace-statistics__kpi-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .workspace-statistics__layout {
-      grid-template-columns: minmax(0, 2.1fr) minmax(280px, 1fr);
-      align-items: start;
     }
   }
 
