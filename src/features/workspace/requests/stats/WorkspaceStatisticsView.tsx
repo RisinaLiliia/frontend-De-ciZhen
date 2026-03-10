@@ -49,6 +49,8 @@ export function WorkspaceStatisticsView({
     growthCards,
     onExport,
   } = model;
+  const topDemand = demandRows[0] ?? null;
+  const topCity = cityRows[0] ?? null;
 
   return (
     <div className="requests-grid requests-grid--equal-cols" aria-labelledby="workspace-statistics-title">
@@ -137,12 +139,21 @@ export function WorkspaceStatisticsView({
                   <p className="section-title">{copy.demandTitle}</p>
                   <p className="section-subtitle">{copy.demandSubtitle}</p>
                 </header>
+                {topDemand ? (
+                  <p className="section-subtitle">
+                    {topDemand.categoryName}: {topDemand.sharePercent}%
+                  </p>
+                ) : null}
                 {demandRows.length === 0 ? (
                   <p className="workspace-statistics__empty">{copy.emptyDemand}</p>
                 ) : (
                   <ul className="workspace-statistics-demand" aria-label={copy.demandTitle}>
                     {demandRows.map((row, index) => (
-                      <li key={`${row.categoryKey ?? row.categoryName}-${index}`} className="workspace-statistics-demand__row">
+                      <li
+                        key={`${row.categoryKey ?? row.categoryName}-${index}`}
+                        className="stat-card stat-link workspace-statistics-demand__row"
+                        tabIndex={0}
+                      >
                         <div className="workspace-statistics-demand__meta">
                           <span className="workspace-statistics-demand__label">{row.categoryName}</span>
                           <span className="workspace-statistics-demand__value">{row.sharePercent}%</span>
@@ -163,12 +174,21 @@ export function WorkspaceStatisticsView({
                   <p className="section-title">{copy.citiesTitle}</p>
                   <p className="section-subtitle">{copy.citiesSubtitle}</p>
                 </header>
+                {topCity ? (
+                  <p className="section-subtitle">
+                    {topCity.name}: {formatNumber.format(topCity.count)}
+                  </p>
+                ) : null}
                 {cityRows.length === 0 ? (
                   <p className="workspace-statistics__empty">{copy.emptyCities}</p>
                 ) : (
                   <ol className="workspace-statistics-city-list">
                     {cityRows.map((item, index) => (
-                      <li key={`${item.key}-${index}`} className="list-item workspace-statistics-city-list__item">
+                      <li
+                        key={`${item.key}-${index}`}
+                        className="stat-card stat-link workspace-statistics-city-list__item"
+                        tabIndex={0}
+                      >
                         <span className="workspace-statistics-city-list__rank">{index + 1}</span>
                         <span className="workspace-statistics-city-list__name">{item.name}</span>
                         <span className="workspace-statistics-city-list__count">{formatNumber.format(item.count)}</span>
@@ -187,7 +207,7 @@ export function WorkspaceStatisticsView({
                 </header>
                 <div className="workspace-statistics-funnel" aria-label={copy.profileTitle}>
                   {funnel.map((step, index) => (
-                    <div key={`${step.key}-${index}`} className="workspace-statistics-funnel__step">
+                    <div key={`${step.key}-${index}`} className="stat-card workspace-statistics-funnel__step">
                       <div className="workspace-statistics-funnel__row">
                         <span>{step.label}</span>
                         <strong>{step.value}</strong>
@@ -227,7 +247,11 @@ export function WorkspaceStatisticsView({
               ) : (
                 <ul className="workspace-statistics-insights" aria-label={copy.insightsTitle}>
                   {insights.map((item, index) => (
-                    <li key={`${item.key}-${index}`} className={`workspace-statistics-insights__item is-${item.level}`.trim()}>
+                    <li
+                      key={`${item.key}-${index}`}
+                      className={`stat-card stat-link workspace-statistics-insights__item is-${item.level}`.trim()}
+                      tabIndex={0}
+                    >
                       {item.text}
                     </li>
                   ))}
