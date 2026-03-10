@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { IconDownload } from '@/components/ui/icons/icons';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -72,6 +73,8 @@ export function WorkspaceStatisticsView({
               action={{
                 label: copy.exportLabel,
                 onClick: onExport,
+                icon: <IconDownload />,
+                tooltip: copy.exportLabel,
               }}
             />
           )}

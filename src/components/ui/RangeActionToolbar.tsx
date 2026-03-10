@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import { Button } from '@/components/ui/Button';
 
 type RangeActionToolbarOption<T extends string> = {
@@ -16,6 +18,8 @@ type RangeActionToolbarProps<T extends string> = {
   action?: {
     label: string;
     onClick: () => void;
+    icon?: ReactNode;
+    tooltip?: string;
   };
 };
 
@@ -46,9 +50,22 @@ export function RangeActionToolbar<T extends string>({
         })}
       </div>
       {action ? (
-        <Button type="button" variant="secondary" fullWidth={false} onClick={action.onClick}>
-          {action.label}
-        </Button>
+        action.icon ? (
+          <button
+            type="button"
+            className="panel-action icon-button--hint"
+            aria-label={action.label}
+            title={action.tooltip ?? action.label}
+            data-tooltip={action.tooltip ?? action.label}
+            onClick={action.onClick}
+          >
+            {action.icon}
+          </button>
+        ) : (
+          <Button type="button" variant="secondary" fullWidth={false} onClick={action.onClick}>
+            {action.label}
+          </Button>
+        )
       ) : null}
     </div>
   );
