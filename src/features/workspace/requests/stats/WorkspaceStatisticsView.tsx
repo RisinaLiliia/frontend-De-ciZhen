@@ -113,34 +113,34 @@ export function WorkspaceStatisticsView({
               ))}
             </section>
 
-            <section className="panel requests-stats-chart workspace-statistics__hero" tabIndex={0}>
-              <header className="workspace-statistics__tile-header">
-                <p className="section-title">{copy.activityTitle}</p>
-                <p className="section-subtitle">{copy.activitySubtitle}</p>
-              </header>
-              <ActivityTrendChart
-                points={activityPoints}
-                requestsLabel={copy.requestsLabel}
-                offersLabel={copy.offersLabel}
-                emptyLabel={copy.emptyActivity}
-              />
-              <div className="workspace-statistics__meta-grid">
-                <div>
-                  <span>{copy.peakLabel}</span>
-                  <strong>{activityMeta.peak}</strong>
+            <div className="workspace-statistics__grid workspace-statistics__grid--primary">
+              <section className="panel requests-stats-chart" tabIndex={0}>
+                <header className="workspace-statistics__tile-header">
+                  <p className="section-title">{copy.activityTitle}</p>
+                  <p className="section-subtitle">{copy.activitySubtitle}</p>
+                </header>
+                <ActivityTrendChart
+                  points={activityPoints}
+                  requestsLabel={copy.requestsLabel}
+                  offersLabel={copy.offersLabel}
+                  emptyLabel={copy.emptyActivity}
+                />
+                <div className="workspace-statistics__meta-grid">
+                  <div>
+                    <span>{copy.peakLabel}</span>
+                    <strong>{activityMeta.peak}</strong>
+                  </div>
+                  <div>
+                    <span>{copy.bestWindowLabel}</span>
+                    <strong>{activityMeta.bestWindow}</strong>
+                  </div>
+                  <div>
+                    <span>{copy.updatedLabel}</span>
+                    <strong>{activityMeta.updatedAt}</strong>
+                  </div>
                 </div>
-                <div>
-                  <span>{copy.bestWindowLabel}</span>
-                  <strong>{activityMeta.bestWindow}</strong>
-                </div>
-                <div>
-                  <span>{copy.updatedLabel}</span>
-                  <strong>{activityMeta.updatedAt}</strong>
-                </div>
-              </div>
-            </section>
+              </section>
 
-            <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
               <section className="panel requests-stats-chart" tabIndex={0}>
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.demandTitle}</p>
@@ -173,7 +173,9 @@ export function WorkspaceStatisticsView({
                   </ul>
                 )}
               </section>
+            </div>
 
+            <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
               <section className="panel requests-stats-chart" tabIndex={0}>
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.citiesTitle}</p>
@@ -203,31 +205,30 @@ export function WorkspaceStatisticsView({
                 )}
               </section>
 
-            </div>
-
-            <section className="panel requests-stats-chart" tabIndex={0}>
-              <header className="workspace-statistics__tile-header">
-                <p className="section-title">{copy.profileTitle}</p>
-                <p className="section-subtitle">
-                  {model.mode === 'personalized' ? copy.profileSubtitlePersonalized : copy.profileSubtitlePlatform}
-                </p>
-              </header>
-              <div className="workspace-statistics-funnel" aria-label={copy.profileTitle}>
-                {funnel.map((step, index) => (
-                  <div key={`${step.key}-${index}`} className="stat-card workspace-statistics-funnel__step">
-                    <div className="workspace-statistics-funnel__row">
-                      <span>{step.label}</span>
-                      <strong>{step.value}</strong>
+              <section className="panel requests-stats-chart" tabIndex={0}>
+                <header className="workspace-statistics__tile-header">
+                  <p className="section-title">{copy.profileTitle}</p>
+                  <p className="section-subtitle">
+                    {model.mode === 'personalized' ? copy.profileSubtitlePersonalized : copy.profileSubtitlePlatform}
+                  </p>
+                </header>
+                <div className="workspace-statistics-funnel" aria-label={copy.profileTitle}>
+                  {funnel.map((step, index) => (
+                    <div key={`${step.key}-${index}`} className="stat-card workspace-statistics-funnel__step">
+                      <div className="workspace-statistics-funnel__row">
+                        <span>{step.label}</span>
+                        <strong>{step.value}</strong>
+                      </div>
+                      {index < funnel.length - 1 ? <span className="workspace-statistics-funnel__arrow">↓</span> : null}
                     </div>
-                    {index < funnel.length - 1 ? <span className="workspace-statistics-funnel__arrow">↓</span> : null}
+                  ))}
+                  <div className="workspace-statistics-funnel__conversion">
+                    <span>{copy.conversionLabel}</span>
+                    <strong>{conversion}</strong>
                   </div>
-                ))}
-                <div className="workspace-statistics-funnel__conversion">
-                  <span>{copy.conversionLabel}</span>
-                  <strong>{conversion}</strong>
                 </div>
-              </div>
-            </section>
+              </section>
+            </div>
           </>
         )}
       </section>
