@@ -261,14 +261,6 @@
     gap: var(--space-1-5);
   }
 
-  .workspace-statistics-chart__labels {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: var(--space-1);
-    font-size: 10px;
-    color: var(--c-text-muted);
-  }
-
   @media (min-width: 900px) {
     .workspace-statistics .requests-stats__kpi-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -297,8 +289,5 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .workspace-statistics-chart__labels {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
   }
 }
