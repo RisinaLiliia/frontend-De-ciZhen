@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import * as React from 'react';
 
+import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -58,29 +59,19 @@ export function WorkspaceStatisticsView({
             </p>
             <p className="typo-small">{copy.subtitle}</p>
           </div>
-          <div className="chip-row">
-            <div className="home-activity__ranges" role="group" aria-label={copy.rangeGroupLabel}>
-              {RANGE_OPTIONS.map((option, index) => {
-                const isActive = option === range;
-                return (
-                  <button
-                    key={`${option}-${index}`}
-                    type="button"
-                    className={`home-activity__range ${isActive ? 'is-active' : ''}`.trim()}
-                    onClick={() => setRange(option)}
-                    aria-pressed={isActive}
-                  >
-                    {rangeLabel(option, copy)}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="topbar-nav topbar-nav--desktop">
-              <button type="button" className="topbar-nav__item is-active" onClick={onExport}>
-                <span className="topbar-nav__label">{copy.exportLabel}</span>
-              </button>
-            </div>
-          </div>
+          <RangeActionToolbar
+            groupLabel={copy.rangeGroupLabel}
+            options={RANGE_OPTIONS.map((option) => ({
+              value: option,
+              label: rangeLabel(option, copy),
+            }))}
+            value={range}
+            onChange={setRange}
+            action={{
+              label: copy.exportLabel,
+              onClick: onExport,
+            }}
+          />
         </header>
 
         <div className="panel-header workspace-statistics__mode-row">
