@@ -140,11 +140,44 @@ export function WorkspaceExploreSection({
     return (
       <div className="stack-md">
         {intro}
-        <WorkspaceStatisticsPanel
-          t={t}
-          locale={locale}
-          isWorkspaceAuthed={isWorkspaceAuthed}
-        />
+        <div className="requests-grid requests-grid--equal-cols">
+          <div>
+            <WorkspaceStatisticsPanel
+              t={t}
+              locale={locale}
+              isWorkspaceAuthed={isWorkspaceAuthed}
+            />
+          </div>
+          {isDesktop ? (
+            <aside className="stack-md hide-mobile">
+              {isSidebarReady ? (
+                <>
+                  <TopProvidersPanel t={t} locale={locale} limit={sidebarTopProvidersLimit} />
+
+                  <ProofPanel
+                    t={t}
+                    proofCases={sidebarProofCases}
+                    proofIndex={sidebarProofCases.length ? proofIndex % sidebarProofCases.length : 0}
+                  />
+
+                  <TrustLivePanel className={trustPanelClassName} t={t} />
+                </>
+              ) : (
+                <>
+                  <section className="panel">
+                    <div className="skeleton h-64 w-full" />
+                  </section>
+                  <section className="panel">
+                    <div className="skeleton h-64 w-full" />
+                  </section>
+                  <section className="panel">
+                    <div className="skeleton h-64 w-full" />
+                  </section>
+                </>
+              )}
+            </aside>
+          ) : null}
+        </div>
       </div>
     );
   }

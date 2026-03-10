@@ -103,7 +103,7 @@ export function WorkspaceStatisticsView({
               <article key={`${item.key}-${index}`} className="requests-stats-kpi workspace-statistics-kpi">
                 <p className="requests-stats-kpi__label workspace-statistics-kpi__label">{item.label}</p>
                 <strong className="requests-stats-kpi__value workspace-statistics-kpi__value">{item.value}</strong>
-                <p className={`requests-stats-kpi__delta ${item.tone === 'positive' ? 'is-success' : 'is-neutral'} workspace-statistics-kpi__delta`.trim()}>
+                <p className={`requests-stats-kpi__delta ${item.tone === 'positive' ? 'is-accent' : 'is-neutral'} workspace-statistics-kpi__delta`.trim()}>
                   {item.hint}
                 </p>
               </article>
