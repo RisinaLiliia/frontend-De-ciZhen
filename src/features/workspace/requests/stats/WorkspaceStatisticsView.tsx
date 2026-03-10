@@ -57,30 +57,29 @@ export function WorkspaceStatisticsView({
     <div className="requests-grid requests-grid--equal-cols" aria-labelledby="workspace-statistics-title">
       <section className="panel requests-panel requests-stats workspace-statistics">
         <SectionHeader
-          className="requests-header requests-stats__header"
+          className="requests-stats__header"
           title={t(I18N_KEYS.homePublic.exploreStats)}
           subtitle={copy.subtitle}
           titleId="workspace-statistics-title"
+          actions={(
+            <RangeActionToolbar
+              className="workspace-statistics__header-toolbar"
+              groupLabel={copy.rangeGroupLabel}
+              options={RANGE_OPTIONS.map((option) => ({
+                value: option,
+                label: rangeLabel(option, copy),
+              }))}
+              value={range}
+              onChange={setRange}
+              action={{
+                label: copy.exportLabel,
+                onClick: onExport,
+                icon: <IconDownload />,
+                tooltip: copy.exportLabel,
+              }}
+            />
+          )}
         />
-
-        <div className="workspace-statistics__controls">
-          <RangeActionToolbar
-            className="workspace-statistics__toolbar"
-            groupLabel={copy.rangeGroupLabel}
-            options={RANGE_OPTIONS.map((option) => ({
-              value: option,
-              label: rangeLabel(option, copy),
-            }))}
-            value={range}
-            onChange={setRange}
-            action={{
-              label: copy.exportLabel,
-              onClick: onExport,
-              icon: <IconDownload />,
-              tooltip: copy.exportLabel,
-            }}
-          />
-        </div>
 
         <div className="panel-header workspace-statistics__mode-row">
           <span className="workspace-statistics__mode-badge">{modeLabel}</span>
