@@ -93,10 +93,6 @@
   .requests-stats-chart {
     display: grid;
     gap: var(--space-2-5);
-    padding: var(--space-2-5);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--surface-soft-border);
-    background: var(--surface-soft-bg);
   }
 
   .requests-stats-chart__header {

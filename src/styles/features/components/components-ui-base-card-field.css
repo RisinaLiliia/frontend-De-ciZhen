@@ -40,6 +40,13 @@
     box-shadow: var(--card-shadow-focus);
   }
 
+  .card:focus-visible,
+  .panel:focus-visible {
+    outline: none;
+    border-color: var(--card-border-focus);
+    box-shadow: var(--card-shadow-focus);
+  }
+
   .field {
     @apply w-full h-11 text-sm;
     background: var(--control-bg);

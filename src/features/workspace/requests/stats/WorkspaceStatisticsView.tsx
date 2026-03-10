@@ -105,7 +105,7 @@ export function WorkspaceStatisticsView({
             </section>
 
             <div className="workspace-statistics__grid workspace-statistics__grid--primary">
-              <section className="requests-stats-chart">
+              <section className="panel requests-stats-chart" tabIndex={0}>
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.activityTitle}</p>
                   <p className="section-subtitle">{copy.activitySubtitle}</p>
@@ -132,7 +132,7 @@ export function WorkspaceStatisticsView({
                 </div>
               </section>
 
-              <section className="requests-stats-chart">
+              <section className="panel requests-stats-chart" tabIndex={0}>
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.demandTitle}</p>
                   <p className="section-subtitle">{copy.demandSubtitle}</p>
@@ -158,7 +158,7 @@ export function WorkspaceStatisticsView({
             </div>
 
             <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
-              <section className="requests-stats-chart">
+              <section className="panel requests-stats-chart" tabIndex={0}>
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.citiesTitle}</p>
                   <p className="section-subtitle">{copy.citiesSubtitle}</p>
@@ -178,7 +178,7 @@ export function WorkspaceStatisticsView({
                 )}
               </section>
 
-              <section className="requests-stats-chart">
+              <section className="panel requests-stats-chart" tabIndex={0}>
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.profileTitle}</p>
                   <p className="section-subtitle">
