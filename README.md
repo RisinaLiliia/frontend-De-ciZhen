@@ -246,6 +246,16 @@ Current tracked event names include:
 Platform activity panels consume backend analytics endpoints:
 - `/analytics/platform-activity`
 
+### Workspace Statistik (single contract)
+
+`/workspace?section=stats` consumes one backend BFF endpoint:
+- `GET /workspace/statistics?range=24h|7d|30d|90d`
+
+Behavior:
+- guest users receive `mode=platform`
+- authenticated users receive `mode=personalized`
+- UI layout is shared for both modes; only payload data differs
+
 ### GDPR / ePrivacy consent behavior
 
 - Optional analytics is disabled by default.

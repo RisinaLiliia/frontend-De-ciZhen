@@ -1,6 +1,6 @@
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';
 
-export type WorkspacePublicActivityRange = '24h' | '7d' | '30d';
+export type WorkspacePublicActivityRange = '24h' | '7d' | '30d' | '90d';
 export type WorkspacePublicActivityInterval = 'hour' | 'day';
 
 export type WorkspacePublicActivityPointDto = {
@@ -133,4 +133,102 @@ export type WorkspacePrivateOverviewDto = {
   insights: WorkspacePrivateInsightsDto;
   providerMonthlySeries: WorkspacePrivateMonthlyPointDto[];
   clientMonthlySeries: WorkspacePrivateMonthlyPointDto[];
+};
+
+export type WorkspaceStatisticsRange = WorkspacePublicActivityRange;
+
+export type WorkspaceStatisticsSummaryDto = {
+  totalPublishedRequests: number;
+  totalActiveProviders: number;
+  totalActiveCities: number;
+  platformRatingAvg: number;
+  platformRatingCount: number;
+};
+
+export type WorkspaceStatisticsKpisDto = {
+  requestsTotal: number;
+  offersTotal: number;
+  completedJobsTotal: number;
+  successRate: number;
+  avgResponseMinutes: number | null;
+  profileCompleteness: number | null;
+  openRequests: number | null;
+  recentOffers7d: number | null;
+};
+
+export type WorkspaceStatisticsActivityPointDto = {
+  timestamp: string;
+  requests: number;
+  offers: number;
+};
+
+export type WorkspaceStatisticsActivityTotalsDto = {
+  requestsTotal: number;
+  offersTotal: number;
+  latestRequests: number;
+  latestOffers: number;
+  previousRequests: number;
+  previousOffers: number;
+  peakTimestamp: string | null;
+  bestWindowTimestamp: string | null;
+};
+
+export type WorkspaceStatisticsActivityDto = {
+  range: WorkspaceStatisticsRange;
+  interval: WorkspacePublicActivityInterval;
+  points: WorkspaceStatisticsActivityPointDto[];
+  totals: WorkspaceStatisticsActivityTotalsDto;
+};
+
+export type WorkspaceStatisticsCategoryDemandDto = {
+  categoryKey: string | null;
+  categoryName: string;
+  requestCount: number;
+  sharePercent: number;
+};
+
+export type WorkspaceStatisticsCityDemandDto = {
+  citySlug: string;
+  cityName: string;
+  cityId: string | null;
+  requestCount: number;
+  lat: number | null;
+  lng: number | null;
+};
+
+export type WorkspaceStatisticsDemandDto = {
+  categories: WorkspaceStatisticsCategoryDemandDto[];
+  cities: WorkspaceStatisticsCityDemandDto[];
+};
+
+export type WorkspaceStatisticsProfileFunnelDto = {
+  stage1: number;
+  stage2: number;
+  stage3: number;
+  stage4: number;
+  conversionRate: number;
+};
+
+export type WorkspaceStatisticsInsightDto = {
+  level: 'info' | 'trend' | 'warning';
+  code: string;
+  context: string | null;
+};
+
+export type WorkspaceStatisticsGrowthCardDto = {
+  key: string;
+  href: string;
+};
+
+export type WorkspaceStatisticsOverviewDto = {
+  updatedAt: string;
+  mode: 'platform' | 'personalized';
+  range: WorkspaceStatisticsRange;
+  summary: WorkspaceStatisticsSummaryDto;
+  kpis: WorkspaceStatisticsKpisDto;
+  activity: WorkspaceStatisticsActivityDto;
+  demand: WorkspaceStatisticsDemandDto;
+  profileFunnel: WorkspaceStatisticsProfileFunnelDto;
+  insights: WorkspaceStatisticsInsightDto[];
+  growthCards: WorkspaceStatisticsGrowthCardDto[];
 };
