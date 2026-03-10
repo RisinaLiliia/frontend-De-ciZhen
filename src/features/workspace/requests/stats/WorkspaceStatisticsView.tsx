@@ -28,6 +28,7 @@ export function WorkspaceStatisticsView({
   locale,
   model,
 }: WorkspaceStatisticsViewProps) {
+  const formatNumber = new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US');
   const {
     copy,
     range,
@@ -174,7 +175,7 @@ export function WorkspaceStatisticsView({
                     <li key={item.key} className="workspace-statistics-city-list__item">
                       <span className="workspace-statistics-city-list__rank">{index + 1}</span>
                       <span className="workspace-statistics-city-list__name">{item.name}</span>
-                      <span className="workspace-statistics-city-list__count">{item.count}</span>
+                      <span className="workspace-statistics-city-list__count">{formatNumber.format(item.count)}</span>
                     </li>
                   ))}
                 </ol>
@@ -208,7 +209,7 @@ export function WorkspaceStatisticsView({
                       <span>{step.label}</span>
                       <strong>{step.value}</strong>
                     </div>
-                    {index < funnel.length - 1 ? <span className="workspace-statistics-funnel__arrow">-&gt;</span> : null}
+                    {index < funnel.length - 1 ? <span className="workspace-statistics-funnel__arrow">↓</span> : null}
                   </div>
                 ))}
                 <div className="workspace-statistics-funnel__conversion">
@@ -308,8 +309,8 @@ function ActivityTrendChart({
         <path d={offersPath} className="workspace-statistics-chart__line is-offers" />
       </svg>
       <div className="workspace-statistics-chart__labels">
-        {points.map((point) => (
-          <span key={point.label}>{point.label}</span>
+        {points.map((point, index) => (
+          <span key={`${point.label}-${index}`}>{point.label}</span>
         ))}
       </div>
       <div className="workspace-statistics-chart__legend" aria-hidden="true">

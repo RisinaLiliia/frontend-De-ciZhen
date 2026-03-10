@@ -47,7 +47,7 @@ export type WorkspaceStatisticsCopy = {
 };
 
 const COPY_DE: WorkspaceStatisticsCopy = {
-  subtitle: 'Ubersicht uber Performance, Nachfrage und Wachstum',
+  subtitle: 'Überblick über Performance, Nachfrage und Wachstum',
   rangeGroupLabel: 'Zeitraum',
   range24h: '24h',
   range7d: '7 Tage',
@@ -56,24 +56,24 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   exportLabel: 'Export CSV',
   modePlatform: 'Plattform',
   modePersonalized: 'Personalisiert',
-  kpiTitle: 'KPI Ubersicht',
-  activityTitle: 'Aktivitat der Plattform',
+  kpiTitle: 'KPI Übersicht',
+  activityTitle: 'Aktivität der Plattform',
   activitySubtitle: 'Neue Anfragen und Angebote im Zeitverlauf',
   demandTitle: 'Nachfrage nach Kategorien',
-  demandSubtitle: 'Wo aktuell die meisten Auftrage entstehen',
-  citiesTitle: 'Stadte & Regionen',
-  citiesSubtitle: 'Top Nachfrage nach Stadt im gewahlten Zeitraum',
+  demandSubtitle: 'Wo aktuell die meisten Aufträge entstehen',
+  citiesTitle: 'Städte & Regionen',
+  citiesSubtitle: 'Top-Nachfrage nach Stadt im gewählten Zeitraum',
   profileTitle: 'Profil Performance',
-  profileSubtitlePlatform: 'Markt-Funnel uber die Plattform',
+  profileSubtitlePlatform: 'Markt-Funnel über die Plattform',
   profileSubtitlePersonalized: 'Wie dein Profil aktuell performt',
   insightsTitle: 'Empfehlungen & Insights',
   growthTitle: 'Wachstum & Promotion',
-  growthSubtitle: 'Tools fur mehr Sichtbarkeit und Reichweite',
-  emptyDemand: 'Noch keine Kategoriedaten fur diesen Zeitraum.',
-  emptyCities: 'Noch keine Stadtedaten verfugbar.',
+  growthSubtitle: 'Tools für mehr Sichtbarkeit und Reichweite',
+  emptyDemand: 'Noch keine Kategoriedaten für diesen Zeitraum.',
+  emptyCities: 'Noch keine Städtedaten verfügbar.',
   emptyInsights: 'Noch keine Insights verfugbar.',
-  emptyActivity: 'Noch keine Aktivitatsdaten.',
-  peakLabel: 'Hochster Aktivitatspunkt',
+  emptyActivity: 'Noch keine Aktivitätsdaten.',
+  peakLabel: 'Höchster Aktivitätspunkt',
   bestWindowLabel: 'Bestes Zeitfenster',
   updatedLabel: 'Letzte Aktualisierung',
   requestsLabel: 'Anfragen',
@@ -81,12 +81,12 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   reviewsLabel: 'Bewertungen',
   stage1LabelPlatform: 'Anfragen',
   stage2LabelPlatform: 'Angebote',
-  stage3LabelPlatform: 'Abschlusse',
-  stage4LabelPlatform: 'Abgeschlossene Auftrage',
+  stage3LabelPlatform: 'Abschlüsse',
+  stage4LabelPlatform: 'Abgeschlossene Aufträge',
   stage1LabelPersonalized: 'Offene Anfragen',
   stage2LabelPersonalized: 'Gesendete Angebote',
   stage3LabelPersonalized: 'Akzeptierte Angebote',
-  stage4LabelPersonalized: 'Abgeschlossene Auftrage',
+  stage4LabelPersonalized: 'Abgeschlossene Aufträge',
   conversionLabel: 'Conversion',
   growthCta: 'Mehr erfahren',
 };
@@ -146,15 +146,15 @@ export function resolveInsightText(copy: WorkspaceStatisticsCopy, insight: Works
   switch (insight.code) {
     case 'profile_incomplete':
       return copy === COPY_DE
-        ? `Dein Profil ist nur zu ${context || '0'}% vollstandig. Vollstandige Profile werden haufiger angefragt.`
+        ? `Dein Profil ist nur zu ${context || '0'}% vollständig. Vollständige Profile werden häufiger angefragt.`
         : `Your profile is only ${context || '0'}% complete. Complete profiles get requested more often.`;
     case 'low_success_rate':
       return copy === COPY_DE
-        ? `Deine Erfolgsquote liegt bei ${context || '0'}%. Prufe Preis und Angebotsnachricht.`
+        ? `Deine Erfolgsquote liegt bei ${context || '0'}%. Prüfe Preis und Angebotsnachricht.`
         : `Your success rate is ${context || '0'}%. Review pricing and offer messaging.`;
     case 'strong_response_time':
       return copy === COPY_DE
-        ? `Starke Antwortzeit (${context || '0'} Min.). Halte diesen Rhythmus fur mehr Abschlusse.`
+        ? `Starke Antwortzeit (${context || '0'} Min.). Halte diesen Rhythmus für mehr Abschlüsse.`
         : `Strong response time (${context || '0'} min). Keep this pace for higher win rates.`;
     case 'slow_response_time':
       return copy === COPY_DE
@@ -166,11 +166,11 @@ export function resolveInsightText(copy: WorkspaceStatisticsCopy, insight: Works
         : `Category ${context || '—'} currently shows strong demand.`;
     case 'top_city_demand':
       return copy === COPY_DE
-        ? `In ${context || 'dieser Stadt'} ist die Nachfrage aktuell am hochsten.`
+        ? `In ${context || 'dieser Stadt'} ist die Nachfrage aktuell am höchsten.`
         : `Demand is currently highest in ${context || 'this city'}.`;
     default:
       return copy === COPY_DE
-        ? 'Noch nicht genug Daten fur eine konkrete Empfehlung.'
+        ? 'Noch nicht genug Daten für eine konkrete Empfehlung.'
         : 'Not enough data yet for a specific recommendation.';
   }
 }
@@ -183,7 +183,7 @@ export function resolveGrowthCard(
     return {
       title: copy === COPY_DE ? 'Profil hervorheben' : 'Boost profile visibility',
       body: copy === COPY_DE
-        ? 'Mehr Sichtbarkeit in der Suche fur dein Profil.'
+        ? 'Mehr Sichtbarkeit in der Suche für dein Profil.'
         : 'Get higher visibility in search and discovery.',
       href: card.href,
     };
@@ -192,7 +192,7 @@ export function resolveGrowthCard(
     return {
       title: copy === COPY_DE ? 'Lokale Werbung' : 'Local promotion',
       body: copy === COPY_DE
-        ? 'Dienste gezielt in aktiven Stadten platzieren.'
+        ? 'Dienste gezielt in aktiven Städten platzieren.'
         : 'Promote services in the most active cities.',
       href: card.href,
     };

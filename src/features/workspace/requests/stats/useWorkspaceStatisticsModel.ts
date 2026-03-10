@@ -4,14 +4,30 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import type {
+  RequestResponseDto,
+} from '@/lib/api/dto/requests';
+import type {
+  ReviewOverviewDto,
+} from '@/lib/api/dto/reviews';
+import type {
   WorkspacePublicCityActivityDto,
   WorkspacePublicSummaryDto,
+  WorkspaceStatisticsActivityPointDto,
+  WorkspaceStatisticsActivityTotalsDto,
   WorkspaceStatisticsCategoryDemandDto,
   WorkspaceStatisticsGrowthCardDto,
   WorkspaceStatisticsInsightDto,
+  WorkspaceStatisticsOverviewDto,
   WorkspaceStatisticsRange,
 } from '@/lib/api/dto/workspace';
-import { getWorkspaceStatistics } from '@/lib/api/workspace';
+import { getPlatformActivity, type PlatformActivityRange } from '@/lib/api/analytics';
+import { getPlatformReviewsOverview } from '@/lib/api/reviews';
+import {
+  getWorkspacePrivateOverview,
+  getWorkspacePublicOverview,
+  getWorkspaceStatistics,
+} from '@/lib/api/workspace';
+import { hasAnyStatus, withStatusFallback } from '@/lib/api/withStatusFallback';
 import type { Locale } from '@/lib/i18n/t';
 import {
   getWorkspaceStatisticsCopy,
@@ -19,6 +35,27 @@ import {
   resolveInsightText,
   type WorkspaceStatisticsCopy,
 } from './workspaceStatistics.copy';
+
+const REVIEWS_SUMMARY_FALLBACK: ReviewOverviewDto = {
+  items: [],
+  total: 0,
+  limit: 1,
+  offset: 0,
+  summary: {
+    total: 0,
+    averageRating: 0,
+    distribution: {
+      '1': 0,
+      '2': 0,
+      '3': 0,
+      '4': 0,
+      '5': 0,
+    },
+  },
+};
+
+const ENABLE_STATISTICS_BFF = process.env.NEXT_PUBLIC_WORKSPACE_STATS_BFF === 'true';
+let isStatisticsBffAvailable: boolean | null = ENABLE_STATISTICS_BFF ? null : false;
 
 export type WorkspaceStatisticsKpiView = {
   key: string;
@@ -148,6 +185,237 @@ function exportCsv(rows: string[][], filename: string) {
   URL.revokeObjectURL(url);
 }
 
+function normalizeLegacyRange(range: WorkspaceStatisticsRange): PlatformActivityRange {
+  if (range === '24h' || range === '7d' || range === '30d') return range;
+  return '30d';
+}
+
+function clampPercent(value: number): number {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function toActivityTotals(points: WorkspaceStatisticsActivityPointDto[]): WorkspaceStatisticsActivityTotalsDto {
+  const requestsTotal = points.reduce((sum, point) => sum + point.requests, 0);
+  const offersTotal = points.reduce((sum, point) => sum + point.offers, 0);
+  const latest = points[points.length - 1] ?? null;
+  const previous = points[points.length - 2] ?? null;
+
+  const peak = points.reduce<{ timestamp: string; score: number } | null>((acc, point) => {
+    const score = point.requests + point.offers;
+    if (!acc || score > acc.score) return { timestamp: point.timestamp, score };
+    return acc;
+  }, null);
+
+  const bestWindow = points.reduce<{ timestamp: string; requests: number } | null>((acc, point) => {
+    if (!acc || point.requests > acc.requests) {
+      return { timestamp: point.timestamp, requests: point.requests };
+    }
+    return acc;
+  }, null);
+
+  return {
+    requestsTotal,
+    offersTotal,
+    latestRequests: latest?.requests ?? 0,
+    latestOffers: latest?.offers ?? 0,
+    previousRequests: previous?.requests ?? 0,
+    previousOffers: previous?.offers ?? 0,
+    peakTimestamp: peak?.timestamp ?? null,
+    bestWindowTimestamp: bestWindow?.timestamp ?? null,
+  };
+}
+
+function buildCategoryDemand(items: RequestResponseDto[]): WorkspaceStatisticsCategoryDemandDto[] {
+  const counts = new Map<string, { categoryKey: string | null; categoryName: string; count: number }>();
+  for (const item of items) {
+    const categoryName =
+      String(item.categoryName ?? '').trim() ||
+      String(item.subcategoryName ?? '').trim() ||
+      String(item.serviceKey ?? '').trim() ||
+      'Other';
+    const key = `${item.categoryKey ?? 'none'}::${categoryName}`;
+    const current = counts.get(key);
+    if (current) {
+      current.count += 1;
+      continue;
+    }
+    counts.set(key, {
+      categoryKey: item.categoryKey ?? null,
+      categoryName,
+      count: 1,
+    });
+  }
+
+  const rows = Array.from(counts.values())
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+  const total = rows.reduce((sum, row) => sum + row.count, 0);
+
+  return rows.map((row) => ({
+    categoryKey: row.categoryKey,
+    categoryName: row.categoryName,
+    requestCount: row.count,
+    sharePercent: total > 0 ? clampPercent((row.count / total) * 100) : 0,
+  }));
+}
+
+function buildInsightsFromFallback(params: {
+  mode: 'platform' | 'personalized';
+  profileCompleteness: number | null;
+  successRate: number;
+  avgResponseMinutes: number | null;
+  topCategoryName: string | null;
+  topCityName: string | null;
+}): WorkspaceStatisticsInsightDto[] {
+  const next: WorkspaceStatisticsInsightDto[] = [];
+
+  if (params.mode === 'personalized' && params.profileCompleteness !== null && params.profileCompleteness < 80) {
+    next.push({ level: 'warning', code: 'profile_incomplete', context: String(params.profileCompleteness) });
+  }
+  if (params.mode === 'personalized' && params.successRate < 25) {
+    next.push({ level: 'warning', code: 'low_success_rate', context: String(params.successRate) });
+  }
+  if (params.mode === 'personalized' && params.avgResponseMinutes !== null) {
+    if (params.avgResponseMinutes <= 30) {
+      next.push({ level: 'trend', code: 'strong_response_time', context: String(Math.round(params.avgResponseMinutes)) });
+    } else {
+      next.push({ level: 'info', code: 'slow_response_time', context: String(Math.round(params.avgResponseMinutes)) });
+    }
+  }
+  if (params.topCategoryName) {
+    next.push({ level: 'trend', code: 'high_category_demand', context: params.topCategoryName });
+  }
+  if (params.topCityName) {
+    next.push({ level: 'info', code: 'top_city_demand', context: params.topCityName });
+  }
+
+  if (next.length === 0) {
+    return [{ level: 'info', code: 'insufficient_data', context: null }];
+  }
+  return next.slice(0, 4);
+}
+
+async function getWorkspaceStatisticsFallback(
+  range: WorkspaceStatisticsRange,
+): Promise<WorkspaceStatisticsOverviewDto> {
+  const legacyRange = normalizeLegacyRange(range);
+
+  const [publicOverview, activity, reviews, privateOverview] = await Promise.all([
+    getWorkspacePublicOverview({
+      sort: 'date_desc',
+      page: 1,
+      limit: 80,
+      activityRange: legacyRange,
+      cityActivityLimit: 25,
+    }),
+    withStatusFallback(
+      () => getPlatformActivity(legacyRange),
+      {
+        range: legacyRange,
+        interval: legacyRange === '24h' ? 'hour' : 'day',
+        source: 'real',
+        data: [],
+        updatedAt: new Date().toISOString(),
+      },
+      [400, 404],
+    ),
+    withStatusFallback(
+      () => getPlatformReviewsOverview({ limit: 1, offset: 0, sort: 'created_desc' }),
+      REVIEWS_SUMMARY_FALLBACK,
+      [400, 404],
+    ),
+    withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403, 404]),
+  ]);
+
+  const points = (activity.data.length > 0 ? activity.data : publicOverview.activity.data).map((point) => ({
+    timestamp: point.timestamp,
+    requests: Math.max(0, Math.round(point.requests)),
+    offers: Math.max(0, Math.round(point.offers)),
+  }));
+  const activityTotals = toActivityTotals(points);
+
+  const demandCategories = buildCategoryDemand(publicOverview.requests.items);
+  const demandCities = publicOverview.cityActivity.items
+    .slice()
+    .sort((a, b) => b.requestCount - a.requestCount)
+    .slice(0, 8);
+
+  const mode: 'platform' | 'personalized' = privateOverview ? 'personalized' : 'platform';
+  const completedJobs = privateOverview
+    ? privateOverview.providerContractsByStatus.completed + privateOverview.clientContractsByStatus.completed
+    : 0;
+  const profileCompleteness = privateOverview
+    ? Math.max(privateOverview.profiles.providerCompleteness, privateOverview.profiles.clientCompleteness)
+    : null;
+  const successRate = privateOverview
+    ? privateOverview.kpis.acceptanceRate
+    : clampPercent((activityTotals.offersTotal / Math.max(1, activityTotals.requestsTotal)) * 100);
+
+  const insights = buildInsightsFromFallback({
+    mode,
+    profileCompleteness,
+    successRate,
+    avgResponseMinutes: privateOverview?.kpis.avgResponseMinutes ?? null,
+    topCategoryName: demandCategories[0]?.categoryName ?? null,
+    topCityName: demandCities[0]?.cityName ?? null,
+  });
+
+  return {
+    updatedAt: new Date().toISOString(),
+    mode,
+    range,
+    summary: {
+      totalPublishedRequests: publicOverview.summary.totalPublishedRequests,
+      totalActiveProviders: publicOverview.summary.totalActiveProviders,
+      totalActiveCities: publicOverview.cityActivity.totalActiveCities,
+      platformRatingAvg: Number(reviews.summary.averageRating ?? 0),
+      platformRatingCount: Number(reviews.summary.total ?? 0),
+    },
+    kpis: {
+      requestsTotal: privateOverview?.requestsByStatus.total ?? activityTotals.requestsTotal,
+      offersTotal: privateOverview?.providerOffersByStatus.sent ?? activityTotals.offersTotal,
+      completedJobsTotal: privateOverview ? completedJobs : 0,
+      successRate,
+      avgResponseMinutes: privateOverview?.kpis.avgResponseMinutes ?? null,
+      profileCompleteness,
+      openRequests: privateOverview?.kpis.myOpenRequests ?? null,
+      recentOffers7d: privateOverview?.kpis.recentOffers7d ?? null,
+    },
+    activity: {
+      range,
+      interval: legacyRange === '24h' ? 'hour' : 'day',
+      points,
+      totals: activityTotals,
+    },
+    demand: {
+      categories: demandCategories,
+      cities: demandCities,
+    },
+    profileFunnel: privateOverview
+      ? {
+          stage1: privateOverview.kpis.myOpenRequests,
+          stage2: privateOverview.providerOffersByStatus.sent,
+          stage3: privateOverview.providerOffersByStatus.accepted,
+          stage4: completedJobs,
+          conversionRate: privateOverview.kpis.acceptanceRate,
+        }
+      : {
+          stage1: activityTotals.requestsTotal,
+          stage2: activityTotals.offersTotal,
+          stage3: activityTotals.offersTotal,
+          stage4: 0,
+          conversionRate: successRate,
+        },
+    insights,
+    growthCards: [
+      { key: 'highlight_profile', href: '/workspace?section=profile' },
+      { key: 'local_ads', href: '/workspace?section=requests' },
+      { key: 'premium_tools', href: '/provider/onboarding' },
+    ],
+  };
+}
+
 export function useWorkspaceStatisticsModel({
   locale,
 }: {
@@ -160,7 +428,23 @@ export function useWorkspaceStatisticsModel({
 
   const query = useQuery({
     queryKey: ['workspace-statistics-overview', range],
-    queryFn: () => getWorkspaceStatistics(range),
+    queryFn: async () => {
+      if (isStatisticsBffAvailable === false) {
+        return getWorkspaceStatisticsFallback(range);
+      }
+
+      try {
+        const payload = await getWorkspaceStatistics(range);
+        isStatisticsBffAvailable = true;
+        return payload;
+      } catch (error) {
+        if (!hasAnyStatus(error, [400, 404])) {
+          throw error;
+        }
+        isStatisticsBffAvailable = false;
+        return getWorkspaceStatisticsFallback(range);
+      }
+    },
     staleTime: 60_000,
     refetchOnWindowFocus: false,
     placeholderData: (previousData) => previousData,
@@ -213,7 +497,7 @@ export function useWorkspaceStatisticsModel({
       },
       {
         key: 'active-cities',
-        label: locale === 'de' ? 'Aktive Stadte' : 'Active cities',
+        label: locale === 'de' ? 'Aktive Städte' : 'Active cities',
         value: formatNumber.format(data.summary.totalActiveCities),
         hint: locale === 'de' ? 'mit Nachfrage' : 'with demand',
         tone: 'neutral',
@@ -279,7 +563,7 @@ export function useWorkspaceStatisticsModel({
         },
         {
           key: 'profile-completeness',
-          label: locale === 'de' ? 'Profil Vollstandigkeit' : 'Profile completeness',
+          label: locale === 'de' ? 'Profil Vollständigkeit' : 'Profile completeness',
           value: formatPercent(data.kpis.profileCompleteness ?? 0),
           hint:
             (data.kpis.profileCompleteness ?? 0) >= 80
