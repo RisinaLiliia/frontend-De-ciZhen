@@ -52,6 +52,11 @@ export function WorkspaceStatisticsView({
   } = model;
   const topDemand = demandRows[0] ?? null;
   const topCity = cityRows[0] ?? null;
+  const snapshotItems = [
+    kpis[0] ? `${kpis[0].label}: ${kpis[0].value}` : null,
+    topDemand ? (locale === 'de' ? `Top Kategorie: ${topDemand.categoryName}` : `Top category: ${topDemand.categoryName}`) : null,
+    topCity ? (locale === 'de' ? `Aktivste Stadt: ${topCity.name}` : `Most active city: ${topCity.name}`) : null,
+  ].filter((item): item is string => Boolean(item));
 
   return (
     <div className="requests-grid requests-grid--equal-cols" aria-labelledby="workspace-statistics-title">
@@ -113,34 +118,78 @@ export function WorkspaceStatisticsView({
               ))}
             </section>
 
-            <div className="workspace-statistics__grid workspace-statistics__grid--primary">
-              <section className="panel requests-stats-chart" tabIndex={0}>
-                <header className="workspace-statistics__tile-header">
-                  <p className="section-title">{copy.activityTitle}</p>
-                  <p className="section-subtitle">{copy.activitySubtitle}</p>
-                </header>
-                <ActivityTrendChart
-                  points={activityPoints}
-                  requestsLabel={copy.requestsLabel}
-                  offersLabel={copy.offersLabel}
-                  emptyLabel={copy.emptyActivity}
-                />
-                <div className="workspace-statistics__meta-grid">
-                  <div>
-                    <span>{copy.peakLabel}</span>
-                    <strong>{activityMeta.peak}</strong>
-                  </div>
-                  <div>
-                    <span>{copy.bestWindowLabel}</span>
-                    <strong>{activityMeta.bestWindow}</strong>
-                  </div>
-                  <div>
-                    <span>{copy.updatedLabel}</span>
-                    <strong>{activityMeta.updatedAt}</strong>
-                  </div>
-                </div>
-              </section>
+            <section className="panel requests-stats-chart" tabIndex={0}>
+              <header className="workspace-statistics__tile-header">
+                <p className="section-title">{copy.snapshotTitle}</p>
+                <p className="section-subtitle">{copy.snapshotSubtitle}</p>
+              </header>
+              {snapshotItems.length === 0 ? (
+                <p className="workspace-statistics__empty">{copy.emptyInsights}</p>
+              ) : (
+                <ul className="workspace-statistics-insights" aria-label={copy.snapshotTitle}>
+                  {snapshotItems.map((item, index) => (
+                    <li key={`${item}-${index}`} className="stat-card workspace-statistics-insights__item is-info">
+                      <span className="workspace-statistics-insights__icon" aria-hidden="true">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
 
+            <section className="panel requests-stats-chart workspace-statistics__activity" tabIndex={0}>
+              <header className="workspace-statistics__tile-header">
+                <p className="section-title">{copy.activityTitle}</p>
+                <p className="section-subtitle">{copy.activitySubtitle}</p>
+              </header>
+              <ActivityTrendChart
+                points={activityPoints}
+                requestsLabel={copy.requestsLabel}
+                offersLabel={copy.offersLabel}
+                emptyLabel={copy.emptyActivity}
+              />
+              <div className="workspace-statistics__meta-grid">
+                <div>
+                  <span>{copy.peakLabel}</span>
+                  <strong>{activityMeta.peak}</strong>
+                </div>
+                <div>
+                  <span>{copy.bestWindowLabel}</span>
+                  <strong>{activityMeta.bestWindow}</strong>
+                </div>
+                <div>
+                  <span>{copy.updatedLabel}</span>
+                  <strong>{activityMeta.updatedAt}</strong>
+                </div>
+              </div>
+            </section>
+
+            <section className="panel requests-stats-chart" tabIndex={0}>
+              <header className="workspace-statistics__tile-header">
+                <p className="section-title">{copy.insightsTitle}</p>
+                <p className="section-subtitle">{copy.insightsSubtitle}</p>
+              </header>
+              {insights.length === 0 ? (
+                <p className="workspace-statistics__empty">{copy.emptyInsights}</p>
+              ) : (
+                <ul className="workspace-statistics-insights" aria-label={copy.insightsTitle}>
+                  {insights.map((item, index) => (
+                    <li
+                      key={`${item.key}-${index}`}
+                      className={`stat-card stat-link workspace-statistics-insights__item is-${item.level}`.trim()}
+                      tabIndex={0}
+                    >
+                      <span className="workspace-statistics-insights__icon" aria-hidden="true">
+                        {insightIcon(item.level)}
+                      </span>
+                      <span>{item.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+
+            <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
               <section className="panel requests-stats-chart" tabIndex={0}>
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.demandTitle}</p>
@@ -173,9 +222,7 @@ export function WorkspaceStatisticsView({
                   </ul>
                 )}
               </section>
-            </div>
 
-            <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
               <section className="panel requests-stats-chart" tabIndex={0}>
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.citiesTitle}</p>
@@ -205,70 +252,44 @@ export function WorkspaceStatisticsView({
                 )}
               </section>
 
-              <section className="panel requests-stats-chart" tabIndex={0}>
-                <header className="workspace-statistics__tile-header">
-                  <p className="section-title">{copy.profileTitle}</p>
-                  <p className="section-subtitle">
-                    {model.mode === 'personalized' ? copy.profileSubtitlePersonalized : copy.profileSubtitlePlatform}
-                  </p>
-                </header>
-                <div className="workspace-statistics-funnel" aria-label={copy.profileTitle}>
-                  {funnel.map((step, index) => (
-                    <div key={`${step.key}-${index}`} className="stat-card workspace-statistics-funnel__step">
-                      <div className="workspace-statistics-funnel__row">
-                        <span>{step.label}</span>
-                        <strong>{step.value}</strong>
-                      </div>
-                      {index < funnel.length - 1 ? <span className="workspace-statistics-funnel__arrow">↓</span> : null}
-                    </div>
-                  ))}
-                  <div className="workspace-statistics-funnel__conversion">
-                    <span>{copy.conversionLabel}</span>
-                    <strong>{conversion}</strong>
-                  </div>
-                </div>
-              </section>
             </div>
+
+            <section className="panel requests-stats-chart" tabIndex={0}>
+              <header className="workspace-statistics__tile-header">
+                <p className="section-title">{copy.profileTitle}</p>
+                <p className="section-subtitle">
+                  {model.mode === 'personalized' ? copy.profileSubtitlePersonalized : copy.profileSubtitlePlatform}
+                </p>
+              </header>
+              <div className="workspace-statistics-funnel" aria-label={copy.profileTitle}>
+                {funnel.map((step, index) => (
+                  <div key={`${step.key}-${index}`} className="stat-card workspace-statistics-funnel__step">
+                    <div className="workspace-statistics-funnel__row">
+                      <span>{step.label}</span>
+                      <strong>{step.value}</strong>
+                    </div>
+                    {index < funnel.length - 1 ? <span className="workspace-statistics-funnel__arrow">↓</span> : null}
+                  </div>
+                ))}
+                <div className="workspace-statistics-funnel__conversion">
+                  <span>{copy.conversionLabel}</span>
+                  <strong>{conversion}</strong>
+                </div>
+              </div>
+            </section>
           </>
         )}
       </section>
 
       <aside className="stack-md">
         {isLoading ? (
-          <>
-            <section className="panel"><div className="skeleton h-36 w-full" /></section>
-            <section className="panel"><div className="skeleton h-48 w-full" /></section>
-          </>
+          <section className="panel"><div className="skeleton h-48 w-full" /></section>
         ) : isError ? (
           <section className="panel">
             <p className="typo-small">{t(I18N_KEYS.requestsPage.statsLoadError)}</p>
           </section>
         ) : (
           <>
-            <section className="panel stack-sm">
-              <header className="workspace-statistics__tile-header">
-                <p className="section-title">{copy.insightsTitle}</p>
-              </header>
-              {insights.length === 0 ? (
-                <p className="workspace-statistics__empty">{copy.emptyInsights}</p>
-              ) : (
-                <ul className="workspace-statistics-insights" aria-label={copy.insightsTitle}>
-                  {insights.map((item, index) => (
-                    <li
-                      key={`${item.key}-${index}`}
-                      className={`stat-card stat-link workspace-statistics-insights__item is-${item.level}`.trim()}
-                      tabIndex={0}
-                    >
-                      <span className="workspace-statistics-insights__icon" aria-hidden="true">
-                        {insightIcon(item.level)}
-                      </span>
-                      <span>{item.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
-
             {growthCards.length > 0 ? (
               <section className="panel stack-sm workspace-statistics__growth">
                 <header className="workspace-statistics__tile-header">

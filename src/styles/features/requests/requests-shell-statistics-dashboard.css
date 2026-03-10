@@ -75,7 +75,7 @@
     color: var(--c-text);
   }
 
-  .workspace-statistics__grid--primary > .requests-stats-chart:first-child .home-activity__chart {
+  .workspace-statistics__activity .home-activity__chart {
     height: 172px;
   }
 

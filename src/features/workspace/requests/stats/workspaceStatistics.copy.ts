@@ -12,8 +12,11 @@ export type WorkspaceStatisticsCopy = {
   modePlatform: string;
   modePersonalized: string;
   kpiTitle: string;
+  snapshotTitle: string;
+  snapshotSubtitle: string;
   activityTitle: string;
   activitySubtitle: string;
+  insightsSubtitle: string;
   demandTitle: string;
   demandSubtitle: string;
   citiesTitle: string;
@@ -57,8 +60,11 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   modePlatform: 'Plattform',
   modePersonalized: 'Personalisiert',
   kpiTitle: 'KPI Übersicht',
+  snapshotTitle: 'Marktübersicht',
+  snapshotSubtitle: 'Schneller Überblick über die wichtigsten Signale',
   activityTitle: 'Aktivität der Plattform',
   activitySubtitle: 'Neue Anfragen und Angebote im Zeitverlauf',
+  insightsSubtitle: 'Was passiert gerade auf der Plattform',
   demandTitle: 'Nachfrage nach Kategorien',
   demandSubtitle: 'Wo aktuell die meisten Aufträge entstehen',
   citiesTitle: 'Städte & Regionen',
@@ -102,8 +108,11 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   modePlatform: 'Platform',
   modePersonalized: 'Personalized',
   kpiTitle: 'KPI overview',
+  snapshotTitle: 'Market snapshot',
+  snapshotSubtitle: 'Quick overview of key market signals',
   activityTitle: 'Platform activity',
   activitySubtitle: 'New requests and offers over time',
+  insightsSubtitle: 'What is happening on the platform right now',
   demandTitle: 'Demand by category',
   demandSubtitle: 'Where market demand is currently highest',
   citiesTitle: 'Cities & regions',
