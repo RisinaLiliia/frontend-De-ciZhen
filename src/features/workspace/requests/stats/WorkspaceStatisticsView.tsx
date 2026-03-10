@@ -48,24 +48,24 @@ export function WorkspaceStatisticsView({
   } = model;
 
   return (
-    <div className="workspace-statistics-shell requests-grid" aria-labelledby="workspace-statistics-title">
+    <div className="requests-grid requests-grid--equal-cols" aria-labelledby="workspace-statistics-title">
       <section className="panel requests-stats workspace-statistics">
-        <header className="requests-stats__header workspace-statistics__header">
-          <div className="workspace-statistics__heading">
+        <header className="requests-stats__header">
+          <div className="section-heading">
             <p id="workspace-statistics-title" className="section-title">
               {t(I18N_KEYS.homePublic.exploreStats)}
             </p>
             <p className="typo-small">{copy.subtitle}</p>
           </div>
-          <div className="workspace-statistics__controls">
-            <div className="requests-stats__tabs workspace-statistics__ranges" role="group" aria-label={copy.rangeGroupLabel}>
+          <div className="chip-row">
+            <div className="requests-stats__tabs" role="group" aria-label={copy.rangeGroupLabel}>
               {RANGE_OPTIONS.map((option, index) => {
                 const isActive = option === range;
                 return (
                   <button
                     key={`${option}-${index}`}
                     type="button"
-                    className={`requests-stats__tab workspace-statistics__range-chip ${isActive ? 'is-active' : ''}`.trim()}
+                    className={`requests-stats__tab ${isActive ? 'is-active' : ''}`.trim()}
                     onClick={() => setRange(option)}
                     aria-pressed={isActive}
                   >
@@ -74,15 +74,15 @@ export function WorkspaceStatisticsView({
                 );
               })}
             </div>
-            <button type="button" className="btn-ghost is-primary workspace-statistics__export" onClick={onExport}>
+            <button type="button" className="btn-ghost is-primary" onClick={onExport}>
               {copy.exportLabel}
             </button>
           </div>
         </header>
 
-        <div className="workspace-statistics__mode-row">
+        <div className="panel-header workspace-statistics__mode-row">
           <span className="workspace-statistics__mode-badge">{modeLabel}</span>
-          <span className="typo-small">{copy.kpiTitle}</span>
+          <span className="section-subtitle">{copy.kpiTitle}</span>
         </div>
 
         {isLoading ? (
@@ -97,12 +97,12 @@ export function WorkspaceStatisticsView({
           </div>
         ) : (
           <>
-            <section className="requests-stats__kpi-grid workspace-statistics__kpi-grid" aria-label={copy.kpiTitle}>
+            <section className="requests-stats__kpi-grid" aria-label={copy.kpiTitle}>
               {kpis.map((item, index) => (
-                <article key={`${item.key}-${index}`} className="requests-stats-kpi workspace-statistics-kpi">
-                  <p className="requests-stats-kpi__label workspace-statistics-kpi__label">{item.label}</p>
-                  <strong className="requests-stats-kpi__value workspace-statistics-kpi__value">{item.value}</strong>
-                  <p className={`requests-stats-kpi__delta ${item.tone === 'positive' ? 'is-accent' : 'is-neutral'} workspace-statistics-kpi__delta`.trim()}>
+                <article key={`${item.key}-${index}`} className="requests-stats-kpi">
+                  <p className="requests-stats-kpi__label">{item.label}</p>
+                  <strong className="requests-stats-kpi__value">{item.value}</strong>
+                  <p className={`requests-stats-kpi__delta ${item.tone === 'positive' ? 'is-accent' : 'is-neutral'}`.trim()}>
                     {item.hint}
                   </p>
                 </article>
@@ -110,7 +110,7 @@ export function WorkspaceStatisticsView({
             </section>
 
             <div className="workspace-statistics__grid workspace-statistics__grid--primary">
-              <section className="workspace-statistics__tile">
+              <section className="requests-stats-chart">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.activityTitle}</p>
                   <p className="typo-small">{copy.activitySubtitle}</p>
@@ -137,7 +137,7 @@ export function WorkspaceStatisticsView({
                 </div>
               </section>
 
-              <section className="workspace-statistics__tile">
+              <section className="requests-stats-chart">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.demandTitle}</p>
                   <p className="typo-small">{copy.demandSubtitle}</p>
@@ -163,7 +163,7 @@ export function WorkspaceStatisticsView({
             </div>
 
             <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
-              <section className="workspace-statistics__tile">
+              <section className="requests-stats-chart">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.citiesTitle}</p>
                   <p className="typo-small">{copy.citiesSubtitle}</p>
@@ -173,7 +173,7 @@ export function WorkspaceStatisticsView({
                 ) : (
                   <ol className="workspace-statistics-city-list">
                     {cityRows.map((item, index) => (
-                      <li key={`${item.key}-${index}`} className="workspace-statistics-city-list__item">
+                      <li key={`${item.key}-${index}`} className="list-item workspace-statistics-city-list__item">
                         <span className="workspace-statistics-city-list__rank">{index + 1}</span>
                         <span className="workspace-statistics-city-list__name">{item.name}</span>
                         <span className="workspace-statistics-city-list__count">{formatNumber.format(item.count)}</span>
@@ -183,7 +183,7 @@ export function WorkspaceStatisticsView({
                 )}
               </section>
 
-              <section className="workspace-statistics__tile">
+              <section className="requests-stats-chart">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.profileTitle}</p>
                   <p className="typo-small">
@@ -211,7 +211,7 @@ export function WorkspaceStatisticsView({
         )}
       </section>
 
-      <aside className="stack-md workspace-statistics-shell__side">
+      <aside className="stack-md">
         {isLoading ? (
           <>
             <section className="panel"><div className="skeleton h-36 w-full" /></section>
@@ -223,7 +223,7 @@ export function WorkspaceStatisticsView({
           </section>
         ) : (
           <>
-            <section className="panel workspace-statistics__side-card">
+            <section className="panel stack-sm">
               <header className="workspace-statistics__tile-header">
                 <p className="section-title">{copy.insightsTitle}</p>
               </header>
@@ -241,14 +241,14 @@ export function WorkspaceStatisticsView({
             </section>
 
             {growthCards.length > 0 ? (
-              <section className="panel workspace-statistics__side-card workspace-statistics__growth">
+              <section className="panel stack-sm workspace-statistics__growth">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.growthTitle}</p>
                   <p className="typo-small">{copy.growthSubtitle}</p>
                 </header>
                 <div className="workspace-statistics-growth__grid">
                   {growthCards.map((card, index) => (
-                    <article key={`${card.key}-${index}`} className="workspace-statistics-growth__card">
+                    <article key={`${card.key}-${index}`} className="stat-card workspace-statistics-growth__card">
                       <p className="workspace-statistics-growth__title">{card.title}</p>
                       <p className="workspace-statistics-growth__body">{card.body}</p>
                       <Link href={card.href} prefetch={false} className="btn-ghost is-primary workspace-statistics-growth__cta">

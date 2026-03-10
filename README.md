@@ -255,7 +255,8 @@ Behavior:
 - guest users receive `mode=platform`
 - authenticated users receive `mode=personalized`
 - UI layout is shared for both modes; only payload data differs
-- set `NEXT_PUBLIC_WORKSPACE_STATS_BFF=true` to use the unified BFF endpoint directly.
+- set `NEXT_PUBLIC_WORKSPACE_STATS_BFF=true` to use the unified BFF endpoint in production.
+- for local dev probing, also set `NEXT_PUBLIC_WORKSPACE_STATS_BFF_DEV=true`.
 - when the flag is not set, frontend uses compatibility fallback sources (safe for older backend builds).
 
 ### GDPR / ePrivacy consent behavior

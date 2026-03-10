@@ -71,7 +71,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   growthSubtitle: 'Tools für mehr Sichtbarkeit und Reichweite',
   emptyDemand: 'Noch keine Kategoriedaten für diesen Zeitraum.',
   emptyCities: 'Noch keine Städtedaten verfügbar.',
-  emptyInsights: 'Noch keine Insights verfugbar.',
+  emptyInsights: 'Noch keine Insights verfügbar.',
   emptyActivity: 'Noch keine Aktivitätsdaten.',
   peakLabel: 'Höchster Aktivitätspunkt',
   bestWindowLabel: 'Bestes Zeitfenster',
@@ -200,7 +200,7 @@ export function resolveGrowthCard(
   return {
     title: copy === COPY_DE ? 'Premium Anbieter Tools' : 'Premium provider tools',
     body: copy === COPY_DE
-      ? 'Erweiterte Analyse und Reichweite fur Wachstum.'
+      ? 'Erweiterte Analyse und Reichweite für Wachstum.'
       : 'Unlock advanced analytics and reach tools.',
     href: card.href,
   };

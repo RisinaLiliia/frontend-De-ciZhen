@@ -10,8 +10,6 @@ import type {
   ReviewOverviewDto,
 } from '@/lib/api/dto/reviews';
 import type {
-  WorkspacePublicCityActivityDto,
-  WorkspacePublicSummaryDto,
   WorkspaceStatisticsActivityPointDto,
   WorkspaceStatisticsActivityTotalsDto,
   WorkspaceStatisticsCategoryDemandDto,
@@ -54,7 +52,9 @@ const REVIEWS_SUMMARY_FALLBACK: ReviewOverviewDto = {
   },
 };
 
-const ENABLE_STATISTICS_BFF = process.env.NEXT_PUBLIC_WORKSPACE_STATS_BFF === 'true';
+const ENABLE_STATISTICS_BFF =
+  process.env.NEXT_PUBLIC_WORKSPACE_STATS_BFF === 'true' &&
+  (process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_WORKSPACE_STATS_BFF_DEV === 'true');
 let isStatisticsBffAvailable: boolean | null = ENABLE_STATISTICS_BFF ? null : false;
 
 export type WorkspaceStatisticsKpiView = {
@@ -101,10 +101,6 @@ export type WorkspaceStatisticsModel = {
   };
   demandRows: WorkspaceStatisticsCategoryDemandDto[];
   cityRows: Array<{ key: string; name: string; count: number }>;
-  cityMapPayload: {
-    cityActivity: WorkspacePublicCityActivityDto;
-    summary: WorkspacePublicSummaryDto;
-  };
   funnel: WorkspaceStatisticsFunnelItemView[];
   conversion: string;
   insights: WorkspaceStatisticsInsightView[];
@@ -690,21 +686,6 @@ export function useWorkspaceStatisticsModel({
     [data?.activity.totals.bestWindowTimestamp, data?.activity.totals.peakTimestamp, data?.updatedAt, locale],
   );
 
-  const cityMapPayload = React.useMemo(
-    () => ({
-      cityActivity: {
-        totalActiveCities: data?.summary.totalActiveCities ?? 0,
-        totalActiveRequests: (data?.demand.cities ?? []).reduce((sum, item) => sum + item.requestCount, 0),
-        items: data?.demand.cities ?? [],
-      },
-      summary: {
-        totalPublishedRequests: data?.summary.totalPublishedRequests ?? 0,
-        totalActiveProviders: data?.summary.totalActiveProviders ?? 0,
-      },
-    }),
-    [data?.demand.cities, data?.summary.totalActiveCities, data?.summary.totalActiveProviders, data?.summary.totalPublishedRequests],
-  );
-
   return {
     copy,
     range,
@@ -718,7 +699,6 @@ export function useWorkspaceStatisticsModel({
     activityMeta,
     demandRows: data?.demand.categories ?? [],
     cityRows,
-    cityMapPayload,
     funnel,
     conversion: formatPercent(data?.profileFunnel.conversionRate ?? 0),
     insights,

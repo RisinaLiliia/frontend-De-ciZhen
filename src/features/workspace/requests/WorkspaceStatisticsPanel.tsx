@@ -8,7 +8,6 @@ import { WorkspaceStatisticsView } from './stats/WorkspaceStatisticsView';
 type WorkspaceStatisticsPanelProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
-  isWorkspaceAuthed?: boolean;
 };
 
 export function WorkspaceStatisticsPanel({

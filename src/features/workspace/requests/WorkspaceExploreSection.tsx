@@ -119,7 +119,6 @@ type WorkspaceExploreSectionProps = {
 export function WorkspaceExploreSection({
   intro,
   activeSection,
-  isWorkspaceAuthed,
   t,
   locale,
   onListDensityChange,
@@ -143,7 +142,6 @@ export function WorkspaceExploreSection({
         <WorkspaceStatisticsPanel
           t={t}
           locale={locale}
-          isWorkspaceAuthed={isWorkspaceAuthed}
         />
       </div>
     );
