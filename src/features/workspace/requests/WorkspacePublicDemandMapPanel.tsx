@@ -16,6 +16,8 @@ type WorkspacePublicDemandMapPanelProps = {
   locale: Locale;
   cityActivity: WorkspacePublicCityActivityDto | null | undefined;
   summary?: WorkspacePublicSummaryDto | null;
+  isLoading?: boolean;
+  isError?: boolean;
 };
 
 export function WorkspacePublicDemandMapPanel({
@@ -23,6 +25,8 @@ export function WorkspacePublicDemandMapPanel({
   locale,
   cityActivity,
   summary,
+  isLoading = false,
+  isError = false,
 }: WorkspacePublicDemandMapPanelProps) {
   const formatNumber = React.useMemo(
     () => new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US'),
@@ -31,6 +35,7 @@ export function WorkspacePublicDemandMapPanel({
 
   const visibleCityActivity = React.useMemo(() => normalizeCityActivity(cityActivity?.items ?? []), [cityActivity]);
   const hasCoordinates = visibleCityActivity.length > 0;
+  const topAccessibleCities = React.useMemo(() => visibleCityActivity.slice(0, 5), [visibleCityActivity]);
 
   const activeProvidersCount = summary?.totalActiveProviders ?? 0;
   const activeRequestsCount =
@@ -50,9 +55,12 @@ export function WorkspacePublicDemandMapPanel({
       t={t}
       formatNumber={formatNumber}
       hasCoordinates={hasCoordinates}
+      isLoading={isLoading}
+      isError={isError}
       activeRequestsCount={activeRequestsCount}
       activeProvidersCount={activeProvidersCount}
       mapHostRef={mapHostRef}
+      topAccessibleCities={topAccessibleCities}
     />
   );
 }

@@ -18,6 +18,8 @@ type WorkspacePublicIntroProps = {
   activityProgress: number;
   cityActivity: WorkspacePublicCityActivityDto | null | undefined;
   summary?: WorkspacePublicSummaryDto | null;
+  isMapLoading?: boolean;
+  isMapError?: boolean;
   quickActionHref?: string;
 };
 
@@ -31,6 +33,8 @@ export function WorkspacePublicIntro({
   activityProgress,
   cityActivity,
   summary,
+  isMapLoading = false,
+  isMapError = false,
   quickActionHref = '/request/create',
 }: WorkspacePublicIntroProps) {
   return (
@@ -56,6 +60,8 @@ export function WorkspacePublicIntro({
             locale={locale}
             cityActivity={cityActivity}
             summary={summary}
+            isLoading={isMapLoading}
+            isError={isMapError}
           />
         </aside>
       </div>

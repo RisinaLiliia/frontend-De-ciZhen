@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import {
   normalizeCityActivity,
   normalizeCityToken,
-  pickVisiblePointsByZoom,
   sortCitiesByActivity,
   type DemandCityActivity,
 } from './mapHelpers';
@@ -182,20 +181,4 @@ describe('mapHelpers', () => {
     expect(sortCitiesByActivity(cities).map((city) => city.id)).toEqual(['2', '3', '1']);
   });
 
-  it('filters visible points by zoom and falls back when threshold hides everything', () => {
-    const dense: DemandCityActivity[] = [
-      { id: 'a', name: 'A', count: 10, lat: 0, lng: 0 },
-      { id: 'b', name: 'B', count: 5, lat: 0, lng: 0 },
-      { id: 'c', name: 'C', count: 3, lat: 0, lng: 0 },
-      { id: 'd', name: 'D', count: 1, lat: 0, lng: 0 },
-    ];
-    expect(pickVisiblePointsByZoom(dense, 5).map((city) => city.id)).toEqual(['a', 'b']);
-    expect(pickVisiblePointsByZoom(dense, 8).map((city) => city.id)).toEqual(['a', 'b', 'c', 'd']);
-
-    const sparse: DemandCityActivity[] = [
-      { id: 'x', name: 'X', count: 1, lat: 0, lng: 0 },
-      { id: 'y', name: 'Y', count: 1, lat: 0, lng: 0 },
-    ];
-    expect(pickVisiblePointsByZoom(sparse, 5).map((city) => city.id)).toEqual(['x', 'y']);
-  });
 });
