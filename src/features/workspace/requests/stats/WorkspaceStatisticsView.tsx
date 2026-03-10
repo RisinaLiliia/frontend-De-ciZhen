@@ -58,14 +58,14 @@ export function WorkspaceStatisticsView({
             <p className="typo-small">{copy.subtitle}</p>
           </div>
           <div className="chip-row">
-            <div className="requests-stats__tabs" role="group" aria-label={copy.rangeGroupLabel}>
+            <div className="home-activity__ranges" role="group" aria-label={copy.rangeGroupLabel}>
               {RANGE_OPTIONS.map((option, index) => {
                 const isActive = option === range;
                 return (
                   <button
                     key={`${option}-${index}`}
                     type="button"
-                    className={`requests-stats__tab ${isActive ? 'is-active' : ''}`.trim()}
+                    className={`home-activity__range ${isActive ? 'is-active' : ''}`.trim()}
                     onClick={() => setRange(option)}
                     aria-pressed={isActive}
                   >
@@ -74,7 +74,7 @@ export function WorkspaceStatisticsView({
                 );
               })}
             </div>
-            <button type="button" className="btn-primary w-fit" onClick={onExport}>
+            <button type="button" className="btn-secondary w-fit" onClick={onExport}>
               {copy.exportLabel}
             </button>
           </div>
