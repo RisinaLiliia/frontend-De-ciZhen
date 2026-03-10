@@ -17,7 +17,8 @@ import {
 } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
-import type { ReviewsView, WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
+import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
 
 type Params = {
@@ -28,7 +29,6 @@ type Params = {
   isWorkspacePublicSection: boolean;
   shouldLoadPrivateData: boolean;
   activeWorkspaceTab: WorkspaceTab;
-  activeReviewsView: ReviewsView;
 };
 
 export function useWorkspaceData(params: Params) {
@@ -40,7 +40,6 @@ export function useWorkspaceData(params: Params) {
     isWorkspacePublicSection,
     shouldLoadPrivateData,
     activeWorkspaceTab,
-    activeReviewsView,
   } = params;
   const shouldLoadPublicRequests = isWorkspacePublicSection || !isWorkspaceAuthed;
   const shouldLoadMyRequests =
@@ -78,14 +77,24 @@ export function useWorkspaceData(params: Params) {
   });
   const publicRequests = publicOverview?.requests;
 
-  const { data: publicSummaryOverview } = useQuery({
-    queryKey: workspaceQK.workspacePublicSummary(),
-    enabled: isWorkspacePublicSection || isWorkspaceAuthed,
-    queryFn: () => getWorkspacePublicOverview({ page: 1, limit: 1, cityActivityLimit: 1 }),
+  const {
+    data: publicSummaryOverview,
+    isLoading: isPublicSummaryLoading,
+    isError: isPublicSummaryError,
+  } = useQuery({
+    queryKey: workspaceQK.workspacePublicSummary(WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
+    enabled: true,
+    queryFn: () =>
+      getWorkspacePublicOverview({
+        page: 1,
+        limit: 1,
+        cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+      }),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
   const allRequestsSummary = publicSummaryOverview?.summary;
+  const publicCityActivity = publicSummaryOverview?.cityActivity;
 
   const { data: workspacePrivateOverview } = useQuery({
     queryKey: workspaceQK.workspacePrivateOverview(),
@@ -130,9 +139,9 @@ export function useWorkspaceData(params: Params) {
   });
 
   const { data: myReviews = [], isLoading: isMyReviewsLoading } = useQuery({
-    queryKey: workspaceQK.reviewsMy(activeReviewsView),
+    queryKey: workspaceQK.reviewsMy(),
     enabled: shouldLoadReviews && shouldLoadPrivateData,
-    queryFn: () => withStatusFallback(() => listMyReviews({ role: activeReviewsView }), []),
+    queryFn: () => withStatusFallback(() => listMyReviews({ role: 'all' }), []),
   });
 
   const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery({
@@ -171,6 +180,9 @@ export function useWorkspaceData(params: Params) {
     isLoading,
     isError,
     allRequestsSummary,
+    publicCityActivity,
+    isPublicSummaryLoading,
+    isPublicSummaryError,
     workspacePrivateOverview,
     myOffers,
     isMyOffersLoading,

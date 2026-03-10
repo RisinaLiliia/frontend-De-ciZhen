@@ -9,6 +9,7 @@ export type Option = { value: string; label: string; key?: string };
 
 type Props = {
   options: Option[];
+  id?: string;
   value?: string;
   defaultValue?: string;
   onChange?: (value: string) => void;
@@ -20,6 +21,7 @@ type Props = {
 
 export function Select({
   options,
+  id,
   value,
   defaultValue,
   onChange,
@@ -37,7 +39,7 @@ export function Select({
       onValueChange={onChange}
       disabled={disabled}
     >
-      <SelectPrimitive.Trigger className={cn('field dc-select-trigger', className)} {...a11y}>
+      <SelectPrimitive.Trigger id={id} className={cn('field dc-select-trigger', className)} {...a11y}>
         <SelectPrimitive.Value placeholder={placeholder} />
       </SelectPrimitive.Trigger>
 

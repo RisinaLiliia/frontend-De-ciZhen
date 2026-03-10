@@ -1,5 +1,3 @@
-import type { ReviewsView } from '@/features/workspace/requests/workspace.types';
-
 export const workspaceQK = {
   workspacePublicOverview: (args: {
     cityId: string | undefined;
@@ -21,7 +19,7 @@ export const workspaceQK = {
     args.activityRange,
     args.cityActivityLimit,
   ] as const,
-  workspacePublicSummary: () => ['workspace-public-summary'] as const,
+  workspacePublicSummary: (cityActivityLimit: number) => ['workspace-public-summary', cityActivityLimit] as const,
   workspacePrivateOverview: () => ['workspace-private-overview'] as const,
   requestsPublic: (args: {
     cityId: string | undefined;
@@ -49,7 +47,7 @@ export const workspaceQK = {
     ['requests-by-my-offer-ids', locale, ...requestIds] as const,
   favoriteRequests: () => ['favorite-requests'] as const,
   favoriteProviders: () => ['favorite-providers'] as const,
-  reviewsMy: (role: ReviewsView) => ['reviews-my', role] as const,
+  reviewsMy: () => ['reviews-my', 'all'] as const,
   requestsMy: () => ['requests-my'] as const,
   contractsMyProvider: () => ['contracts-my-provider'] as const,
   contractsMyClient: () => ['contracts-my-client'] as const,

@@ -5,15 +5,12 @@ import * as React from 'react';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { ContractDto } from '@/lib/api/dto/contracts';
-import type { ReviewDto } from '@/lib/api/dto/reviews';
-import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import {
   mapContractStatusToFilter,
   mapOfferStatusToFilter,
   mapRequestStatusToFilter,
   type FavoritesView,
-  type ReviewsView,
   type WorkspaceStatusFilter,
   type WorkspaceTab,
 } from '@/features/workspace/requests/workspace.types';
@@ -24,7 +21,6 @@ type Params = {
   activeStatusFilter: WorkspaceStatusFilter;
   activeWorkspaceTab: WorkspaceTab;
   activeFavoritesView: FavoritesView;
-  activeReviewsView: ReviewsView;
   myRequests: RequestResponseDto[];
   myOffers: OfferDto[];
   myOfferRequestsById: Map<string, RequestResponseDto>;
@@ -33,8 +29,6 @@ type Params = {
   favoriteProviders: Array<{ id: string }>;
   isFavoriteRequestsLoading: boolean;
   isFavoriteProvidersLoading: boolean;
-  myReviews: ReviewDto[];
-  localeTag: string;
 };
 
 export function useWorkspaceDerived({
@@ -42,7 +36,6 @@ export function useWorkspaceDerived({
   activeStatusFilter,
   activeWorkspaceTab,
   activeFavoritesView,
-  activeReviewsView,
   myRequests,
   myOffers,
   myOfferRequestsById,
@@ -51,8 +44,6 @@ export function useWorkspaceDerived({
   favoriteProviders,
   isFavoriteRequestsLoading,
   isFavoriteProvidersLoading,
-  myReviews,
-  localeTag,
 }: Params) {
   const filteredMyRequests = React.useMemo(
     () =>
@@ -114,29 +105,11 @@ export function useWorkspaceDerived({
   const isFavoritesLoading =
     resolvedFavoritesView === 'requests' ? isFavoriteRequestsLoading : isFavoriteProvidersLoading;
 
-  const resolvedReviews = React.useMemo(
-    () =>
-      myReviews.map((item) => {
-        const role = item.targetRole ?? activeReviewsView;
-        return {
-          ...item,
-          roleLabel:
-            role === 'client'
-              ? t(I18N_KEYS.requestsPage.reviewsTabClient)
-              : t(I18N_KEYS.requestsPage.reviewsTabProvider),
-          createdLabel: item.createdAt ? new Date(item.createdAt).toLocaleDateString(localeTag) : '—',
-          author: item.authorName?.trim() || t(I18N_KEYS.homePublic.reviews),
-          reviewText: item.text || item.comment || t(I18N_KEYS.common.emptyData),
-        };
-      }),
-    [activeReviewsView, localeTag, myReviews, t],
-  );
-
-  const showWorkspaceHeader = activeWorkspaceTab !== 'favorites';
+  const showWorkspaceHeader = activeWorkspaceTab !== 'favorites' && activeWorkspaceTab !== 'profile';
   const showWorkspaceHeading = showWorkspaceHeader;
   const statusFilters = React.useMemo(
     () =>
-      activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews'
+      activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews' || activeWorkspaceTab === 'profile'
         ? []
         : getWorkspaceStatusFilters(t),
     [activeWorkspaceTab, t],
@@ -157,7 +130,6 @@ export function useWorkspaceDerived({
     resolvedFavoritesView,
     favoritesItems,
     isFavoritesLoading,
-    resolvedReviews,
     showWorkspaceHeader,
     showWorkspaceHeading,
     statusFilters,

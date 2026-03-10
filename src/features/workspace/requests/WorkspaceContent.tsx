@@ -4,11 +4,14 @@ import * as React from 'react';
 import Link from 'next/link';
 
 import { RequestsList } from '@/components/requests/RequestsList';
+import { WorkspaceReviewsPanel } from '@/components/reviews/WorkspaceReviewsPanel';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
-import type { FavoritesView, ReviewsView, WorkspaceStatusFilter, WorkspaceTab } from './workspace.types';
+import type { ReviewDto } from '@/lib/api/dto/reviews';
+import type { FavoritesView, WorkspaceStatusFilter, WorkspaceTab } from './workspace.types';
 import { getWorkspaceSectionSubtitle, getWorkspaceTabTitles } from './workspace.content';
+import { WorkspaceProfileOnboardingForm } from './WorkspaceProfileOnboardingForm';
 
 type ChipFilter = {
   key: WorkspaceStatusFilter;
@@ -22,6 +25,7 @@ type PrimaryAction = {
 
 type Props = {
   t: (key: I18nKey) => string;
+  isWorkspaceAuthed: boolean;
   activeWorkspaceTab: WorkspaceTab;
   showWorkspaceHeader: boolean;
   showWorkspaceHeading: boolean;
@@ -57,15 +61,13 @@ type Props = {
   favoriteProvidersNode: React.ReactNode;
   reviewsState: {
     isLoading: boolean;
-    isEmpty: boolean;
-    activeView: ReviewsView;
+    items: ReviewDto[];
   };
-  onReviewsViewChange: (view: ReviewsView) => void;
-  reviewCardsNode: React.ReactNode;
 };
 
 export function WorkspaceContent({
   t,
+  isWorkspaceAuthed,
   activeWorkspaceTab,
   showWorkspaceHeader,
   showWorkspaceHeading,
@@ -85,11 +87,12 @@ export function WorkspaceContent({
   favoriteRequestsListProps,
   favoriteProvidersNode,
   reviewsState,
-  onReviewsViewChange,
-  reviewCardsNode,
 }: Props) {
   const workspaceTabTitles = React.useMemo(() => getWorkspaceTabTitles(t), [t]);
-  const workspaceSectionSubtitle = React.useMemo(() => getWorkspaceSectionSubtitle(t), [t]);
+  const workspaceSectionSubtitle = React.useMemo(
+    () => getWorkspaceSectionSubtitle(t, activeWorkspaceTab),
+    [activeWorkspaceTab, t],
+  );
 
   return (
     <section className="panel requests-panel" aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}>
@@ -105,7 +108,10 @@ export function WorkspaceContent({
               </p>
             </div>
           ) : null}
-          {activeWorkspaceTab !== 'my-requests' && activeWorkspaceTab !== 'my-offers' ? (
+          {activeWorkspaceTab !== 'my-requests' &&
+          activeWorkspaceTab !== 'my-offers' &&
+          activeWorkspaceTab !== 'profile' &&
+          activeWorkspaceTab !== 'reviews' ? (
             <Link href={primaryAction.href} prefetch={false} className="btn-primary requests-primary-cta" onClick={onPrimaryActionClick}>
               {primaryAction.label}
             </Link>
@@ -182,75 +188,70 @@ export function WorkspaceContent({
 
         {activeWorkspaceTab === 'favorites' ? (
           <div className="stack-sm">
-            <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.favoritesViewLabel)}>
-              <button
-                type="button"
-                className={`chip ${favoritesState.resolvedView === 'requests' ? 'is-active' : ''}`.trim()}
-                onClick={() => onFavoritesViewChange('requests')}
-                aria-pressed={favoritesState.resolvedView === 'requests'}
+            {!isWorkspaceAuthed ? (
+              <WorkspaceContentState
+                isLoading={false}
+                isEmpty={true}
+                emptyTitle={t(I18N_KEYS.requestsPage.favoritesGuestGateTitle)}
+                emptyHint={t(I18N_KEYS.requestsPage.favoritesGuestGateHint)}
+                emptyCtaLabel={t(I18N_KEYS.requestsPage.favoritesGuestGateCta)}
+                emptyCtaHref="/workspace?section=profile"
               >
-                {t(I18N_KEYS.requestsPage.favoritesTabRequests)}
-              </button>
-              <button
-                type="button"
-                className={`chip ${favoritesState.resolvedView === 'providers' ? 'is-active' : ''}`.trim()}
-                onClick={() => onFavoritesViewChange('providers')}
-                aria-pressed={favoritesState.resolvedView === 'providers'}
-              >
-                {t(I18N_KEYS.requestsPage.favoritesTabProviders)}
-              </button>
-            </div>
-            <WorkspaceContentState
-              isLoading={favoritesState.isLoading}
-              isEmpty={favoritesState.isEmpty}
-              emptyTitle={
-                favoritesState.hasFavoriteRequests || favoritesState.hasFavoriteProviders
-                  ? t(I18N_KEYS.requestsPage.favoritesEmptyCategoryTitle)
-                  : t(I18N_KEYS.requestsPage.favoritesEmptyAllTitle)
-              }
-              emptyHint={
-                favoritesState.hasFavoriteRequests || favoritesState.hasFavoriteProviders
-                  ? t(I18N_KEYS.requestsPage.favoritesEmptyCategoryHint)
-                  : t(I18N_KEYS.requestsPage.favoritesEmptyAllHint)
-              }
-            >
-              {favoritesState.resolvedView === 'requests' ? <RequestsList {...favoriteRequestsListProps} /> : favoriteProvidersNode}
-            </WorkspaceContentState>
+                <></>
+              </WorkspaceContentState>
+            ) : (
+              <>
+                <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.favoritesViewLabel)}>
+                  <button
+                    type="button"
+                    className={`chip ${favoritesState.resolvedView === 'requests' ? 'is-active' : ''}`.trim()}
+                    onClick={() => onFavoritesViewChange('requests')}
+                    aria-pressed={favoritesState.resolvedView === 'requests'}
+                  >
+                    {t(I18N_KEYS.requestsPage.favoritesTabRequests)}
+                  </button>
+                  <button
+                    type="button"
+                    className={`chip ${favoritesState.resolvedView === 'providers' ? 'is-active' : ''}`.trim()}
+                    onClick={() => onFavoritesViewChange('providers')}
+                    aria-pressed={favoritesState.resolvedView === 'providers'}
+                  >
+                    {t(I18N_KEYS.requestsPage.favoritesTabProviders)}
+                  </button>
+                </div>
+                <WorkspaceContentState
+                  isLoading={favoritesState.isLoading}
+                  isEmpty={favoritesState.isEmpty}
+                  emptyTitle={
+                    favoritesState.hasFavoriteRequests || favoritesState.hasFavoriteProviders
+                      ? t(I18N_KEYS.requestsPage.favoritesEmptyCategoryTitle)
+                      : t(I18N_KEYS.requestsPage.favoritesEmptyAllTitle)
+                  }
+                  emptyHint={
+                    favoritesState.hasFavoriteRequests || favoritesState.hasFavoriteProviders
+                      ? t(I18N_KEYS.requestsPage.favoritesEmptyCategoryHint)
+                      : t(I18N_KEYS.requestsPage.favoritesEmptyAllHint)
+                  }
+                >
+                  {favoritesState.resolvedView === 'requests' ? <RequestsList {...favoriteRequestsListProps} /> : favoriteProvidersNode}
+                </WorkspaceContentState>
+              </>
+            )}
           </div>
         ) : null}
 
         {activeWorkspaceTab === 'reviews' ? (
           <div className="stack-sm">
-            <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.reviewsViewLabel)}>
-              <button
-                type="button"
-                className={`chip ${reviewsState.activeView === 'provider' ? 'is-active' : ''}`.trim()}
-                onClick={() => onReviewsViewChange('provider')}
-                aria-pressed={reviewsState.activeView === 'provider'}
-              >
-                {t(I18N_KEYS.requestsPage.reviewsTabProvider)}
-              </button>
-              <button
-                type="button"
-                className={`chip ${reviewsState.activeView === 'client' ? 'is-active' : ''}`.trim()}
-                onClick={() => onReviewsViewChange('client')}
-                aria-pressed={reviewsState.activeView === 'client'}
-              >
-                {t(I18N_KEYS.requestsPage.reviewsTabClient)}
-              </button>
-            </div>
-            <WorkspaceContentState
-              isLoading={reviewsState.isLoading}
-              isEmpty={reviewsState.isEmpty}
-              emptyTitle={t(I18N_KEYS.requestsPage.reviewsEmptyTitle)}
-              emptyHint={t(I18N_KEYS.requestsPage.reviewsEmptyHint)}
-              emptyCtaLabel={t(I18N_KEYS.requestsPage.reviewsEmptyCta)}
-              emptyCtaHref="/workspace?tab=completed-jobs"
-            >
-              <div className="proof-feed">{reviewCardsNode}</div>
-            </WorkspaceContentState>
+            <WorkspaceReviewsPanel
+              t={t}
+              source={isWorkspaceAuthed ? 'user' : 'platform'}
+              userReviews={reviewsState.items}
+              isUserReviewsLoading={reviewsState.isLoading}
+            />
           </div>
         ) : null}
+
+        {activeWorkspaceTab === 'profile' ? <WorkspaceProfileOnboardingForm /> : null}
       </section>
     </section>
   );

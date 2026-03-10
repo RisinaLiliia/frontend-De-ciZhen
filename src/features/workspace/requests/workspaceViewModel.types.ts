@@ -10,7 +10,6 @@ import type { ReviewDto } from '@/lib/api/dto/reviews';
 import type { ContractDto } from '@/lib/api/dto/contracts';
 import type {
   FavoritesView,
-  ReviewsView,
   WorkspaceStatusFilter,
   WorkspaceTab,
 } from '@/features/workspace/requests/workspace.types';
@@ -52,6 +51,7 @@ export type BaseInput = {
 };
 
 export type PrivateInput = BaseInput & {
+  isWorkspaceAuthed: boolean;
   activeWorkspaceTab: WorkspaceTab;
   showWorkspaceHeader: boolean;
   showWorkspaceHeading: boolean;
@@ -84,9 +84,6 @@ export type PrivateInput = BaseInput & {
 
   isMyReviewsLoading: boolean;
   myReviews: ReviewDto[];
-  activeReviewsView: ReviewsView;
-  setReviewsView: (view: ReviewsView) => void;
-  reviewCards: React.ReactNode;
 };
 
 export type PublicInput = BaseInput & {

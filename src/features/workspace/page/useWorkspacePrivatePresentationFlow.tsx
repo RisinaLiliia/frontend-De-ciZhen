@@ -8,11 +8,11 @@ import {
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
 import {
-  ProofReviewCard,
   useWorkspaceContentData,
   useWorkspacePresentation,
   WorkspaceContent,
   WorkspacePrivateIntro,
+  WorkspacePublicIntro,
 } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
@@ -33,11 +33,13 @@ export function useWorkspacePrivatePresentationFlow({
     activeWorkspaceTab,
     activeStatusFilter,
     activeFavoritesView,
-    activeReviewsView,
     guestLoginHref,
     onGuestLockedAction,
     platformRequestsTotal,
     allRequestsSummary,
+    publicCityActivity,
+    isPublicSummaryLoading,
+    isPublicSummaryError,
     providers,
     isProvidersLoading,
     isProvidersError,
@@ -52,7 +54,6 @@ export function useWorkspacePrivatePresentationFlow({
     myReviews,
     isFavoriteRequestsLoading,
     isFavoriteProvidersLoading,
-    localeTag,
     pendingFavoriteProviderIds,
     onToggleProviderFavorite,
     favoriteProviderLookup,
@@ -80,7 +81,6 @@ export function useWorkspacePrivatePresentationFlow({
     isClientContractsLoading,
     setFavoritesView,
     isMyReviewsLoading,
-    setReviewsView,
     setStatusFilter,
     setWorkspaceTab,
     markPublicRequestsSeen,
@@ -97,7 +97,6 @@ export function useWorkspacePrivatePresentationFlow({
       activeStatusFilter,
       activeWorkspaceTab,
       activeFavoritesView,
-      activeReviewsView,
       myRequests,
       myOffers,
       myOfferRequestsById,
@@ -106,8 +105,6 @@ export function useWorkspacePrivatePresentationFlow({
       favoriteProviders,
       isFavoriteRequestsLoading,
       isFavoriteProvidersLoading,
-      myReviews,
-      localeTag,
     },
     contractArgs: {
       isWorkspaceAuthed,
@@ -121,7 +118,6 @@ export function useWorkspacePrivatePresentationFlow({
       onToggleProviderFavorite,
       favoriteProviderRoleLabelById,
       favoriteProviderCityLabelById,
-      ProofReviewCardComponent: ProofReviewCard,
     },
   });
 
@@ -174,9 +170,45 @@ export function useWorkspacePrivatePresentationFlow({
     favoriteProviderIds,
   });
 
+  const resolvedWorkspaceIntroNode = React.useMemo(
+    () =>
+      isWorkspaceAuthed
+        ? workspaceIntroNode
+        : (
+          <WorkspacePublicIntro
+            t={t}
+            locale={locale}
+            navTitle={navTitle}
+            navSubtitle={navSubtitle}
+            personalNavItems={personalNavItems}
+            insightText=""
+            activityProgress={0}
+            cityActivity={publicCityActivity}
+            summary={allRequestsSummary}
+            isMapLoading={isPublicSummaryLoading}
+            isMapError={isPublicSummaryError}
+            quickActionHref="/request/create"
+          />
+        ),
+    [
+      allRequestsSummary,
+      isWorkspaceAuthed,
+      locale,
+      navSubtitle,
+      navTitle,
+      personalNavItems,
+      publicCityActivity,
+      isPublicSummaryLoading,
+      isPublicSummaryError,
+      t,
+      workspaceIntroNode,
+    ],
+  );
+
   const { workspaceContentProps } = useWorkspacePrivateViewModel({
     t,
     locale,
+    isWorkspaceAuthed,
     activeWorkspaceTab,
     ...viewModelPatch,
     onPrimaryActionClick: () => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab }),
@@ -206,8 +238,6 @@ export function useWorkspacePrivatePresentationFlow({
     isFavoriteRequestsLoading,
     isMyReviewsLoading,
     myReviews,
-    activeReviewsView,
-    setReviewsView,
   });
 
   const privateMain = <WorkspaceContent {...workspaceContentProps} />;
@@ -217,7 +247,7 @@ export function useWorkspacePrivatePresentationFlow({
     activeWorkspaceTab,
     pendingFavoriteProviderIds,
     onToggleProviderFavorite,
-    workspaceIntroNode,
+    workspaceIntroNode: resolvedWorkspaceIntroNode,
     workspaceAsideBaseProps,
     privateMain,
     primaryAction,

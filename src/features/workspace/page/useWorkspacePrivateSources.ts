@@ -12,7 +12,6 @@ import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePa
 type SourcesParams = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isAuthed' | 'isWorkspaceAuthed'> & {
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
-  activeReviewsView: WorkspaceBranchProps['routeState']['activeReviewsView'];
 };
 
 export function useWorkspacePrivateSources({
@@ -22,7 +21,6 @@ export function useWorkspacePrivateSources({
   isWorkspaceAuthed,
   activePublicSection,
   activeWorkspaceTab,
-  activeReviewsView,
 }: SourcesParams) {
   const {
     cities,
@@ -54,6 +52,9 @@ export function useWorkspacePrivateSources({
     isLoading,
     isError,
     allRequestsSummary,
+    publicCityActivity,
+    isPublicSummaryLoading,
+    isPublicSummaryError,
     myOffers,
     isMyOffersLoading,
     myOfferRequestsById,
@@ -81,7 +82,6 @@ export function useWorkspacePrivateSources({
     isWorkspacePublicSection: false,
     shouldLoadPrivateData: true,
     activeWorkspaceTab,
-    activeReviewsView,
   });
 
   const { requests, platformRequestsTotal } = useWorkspacePublicRequestsState({
@@ -126,6 +126,9 @@ export function useWorkspacePrivateSources({
 
   return {
     allRequestsSummary,
+    publicCityActivity,
+    isPublicSummaryLoading,
+    isPublicSummaryError,
     providers,
     isProvidersLoading,
     isProvidersError,

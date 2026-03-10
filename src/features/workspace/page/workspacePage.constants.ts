@@ -4,7 +4,6 @@ import { WorkspacePageLayout } from '@/features/workspace';
 
 export const WORKSPACE_PATH = '/workspace';
 export const PUBLIC_REQUESTS_SEED_LIMIT = 10;
-export const PUBLIC_CITY_ACTIVITY_FETCH_LIMIT = 20;
 export const EMPTY_PROVIDER_IDS = new Set<string>();
 export const NOOP_PROVIDER_TOGGLE = () => {};
 

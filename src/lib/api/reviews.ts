@@ -30,6 +30,12 @@ export type CreatePlatformReviewPayload = {
   authorName?: string;
 };
 
+export type CreateUserReviewPayload = {
+  bookingId: string;
+  rating: number;
+  text?: string;
+};
+
 function normalizeLimit(value: number | undefined) {
   if (value == null) return undefined;
   const int = Math.trunc(value);
@@ -144,4 +150,12 @@ export async function getPlatformReviewsOverview(
 
 export function createPlatformReview(payload: CreatePlatformReviewPayload) {
   return apiPost<CreatePlatformReviewPayload, ReviewDto>('/reviews/platform', payload);
+}
+
+export function createClientReview(payload: CreateUserReviewPayload) {
+  return apiPost<CreateUserReviewPayload, ReviewDto>('/reviews/client', payload);
+}
+
+export function createProviderReview(payload: CreateUserReviewPayload) {
+  return apiPost<CreateUserReviewPayload, ReviewDto>('/reviews/provider', payload);
 }
