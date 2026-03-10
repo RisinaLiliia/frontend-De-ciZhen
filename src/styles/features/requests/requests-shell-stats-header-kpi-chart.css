@@ -55,6 +55,11 @@
     background: var(--surface-soft-bg);
   }
 
+  .requests-stats-kpi.is-positive {
+    border-color: color-mix(in oklab, var(--c-primary) 32%, var(--surface-soft-border) 68%);
+    background: color-mix(in oklab, var(--c-primary) 6%, var(--surface-soft-bg) 94%);
+  }
+
   .requests-stats-kpi__top {
     display: flex;
     align-items: baseline;

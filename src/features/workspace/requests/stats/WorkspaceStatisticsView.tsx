@@ -61,24 +61,26 @@ export function WorkspaceStatisticsView({
           title={t(I18N_KEYS.homePublic.exploreStats)}
           subtitle={copy.subtitle}
           titleId="workspace-statistics-title"
-          actions={(
-            <RangeActionToolbar
-              groupLabel={copy.rangeGroupLabel}
-              options={RANGE_OPTIONS.map((option) => ({
-                value: option,
-                label: rangeLabel(option, copy),
-              }))}
-              value={range}
-              onChange={setRange}
-              action={{
-                label: copy.exportLabel,
-                onClick: onExport,
-                icon: <IconDownload />,
-                tooltip: copy.exportLabel,
-              }}
-            />
-          )}
         />
+
+        <div className="workspace-statistics__controls">
+          <RangeActionToolbar
+            className="workspace-statistics__toolbar"
+            groupLabel={copy.rangeGroupLabel}
+            options={RANGE_OPTIONS.map((option) => ({
+              value: option,
+              label: rangeLabel(option, copy),
+            }))}
+            value={range}
+            onChange={setRange}
+            action={{
+              label: copy.exportLabel,
+              onClick: onExport,
+              icon: <IconDownload />,
+              tooltip: copy.exportLabel,
+            }}
+          />
+        </div>
 
         <div className="panel-header workspace-statistics__mode-row">
           <span className="workspace-statistics__mode-badge">{modeLabel}</span>
@@ -99,7 +101,10 @@ export function WorkspaceStatisticsView({
           <>
             <section className="requests-stats__kpi-grid" aria-label={copy.kpiTitle}>
               {kpis.map((item, index) => (
-                <article key={`${item.key}-${index}`} className="requests-stats-kpi">
+                <article
+                  key={`${item.key}-${index}`}
+                  className={`requests-stats-kpi ${item.tone === 'positive' ? 'is-positive' : ''}`.trim()}
+                >
                   <p className="requests-stats-kpi__label">{item.label}</p>
                   <strong className="requests-stats-kpi__value">{item.value}</strong>
                   <p className={`requests-stats-kpi__delta ${item.tone === 'positive' ? 'is-accent' : 'is-neutral'}`.trim()}>
@@ -255,7 +260,10 @@ export function WorkspaceStatisticsView({
                       className={`stat-card stat-link workspace-statistics-insights__item is-${item.level}`.trim()}
                       tabIndex={0}
                     >
-                      {item.text}
+                      <span className="workspace-statistics-insights__icon" aria-hidden="true">
+                        {insightIcon(item.level)}
+                      </span>
+                      <span>{item.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -286,6 +294,12 @@ export function WorkspaceStatisticsView({
       </aside>
     </div>
   );
+}
+
+function insightIcon(level: WorkspaceStatisticsModel['insights'][number]['level']): string {
+  if (level === 'warning') return '⚡';
+  if (level === 'trend') return '📈';
+  return '💡';
 }
 
 function ActivityTrendChart({
