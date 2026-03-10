@@ -26,6 +26,7 @@ import {
   getWorkspaceStatistics,
 } from '@/lib/api/workspace';
 import { hasAnyStatus, withStatusFallback } from '@/lib/api/withStatusFallback';
+import { getAccessToken } from '@/lib/auth/token';
 import type { Locale } from '@/lib/i18n/t';
 import {
   getWorkspaceStatisticsCopy,
@@ -295,6 +296,7 @@ function buildInsightsFromFallback(params: {
 async function getWorkspaceStatisticsFallback(
   range: WorkspaceStatisticsRange,
 ): Promise<WorkspaceStatisticsOverviewDto> {
+  const hasAccessToken = Boolean(getAccessToken());
   const legacyRange = normalizeLegacyRange(range);
 
   const [publicOverview, activity, reviews, privateOverview] = await Promise.all([
@@ -321,7 +323,9 @@ async function getWorkspaceStatisticsFallback(
       REVIEWS_SUMMARY_FALLBACK,
       [400, 404],
     ),
-    withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403, 404]),
+    hasAccessToken
+      ? withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403, 404])
+      : Promise.resolve(null),
   ]);
 
   const points = (activity.data.length > 0 ? activity.data : publicOverview.activity.data).map((point) => ({

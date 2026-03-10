@@ -75,9 +75,11 @@ export function WorkspaceStatisticsView({
                 );
               })}
             </div>
-            <button type="button" className="home-trust-live-panel__cta home-cta w-fit" onClick={onExport}>
-              {copy.exportLabel}
-            </button>
+            <div className="topbar-nav topbar-nav--desktop">
+              <button type="button" className="topbar-nav__item is-active" onClick={onExport}>
+                <span className="topbar-nav__label">{copy.exportLabel}</span>
+              </button>
+            </div>
           </div>
         </header>
 

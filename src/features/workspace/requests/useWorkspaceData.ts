@@ -16,6 +16,7 @@ import {
   getWorkspacePublicRequestsBatch,
 } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import { getAccessToken } from '@/lib/auth/token';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
@@ -50,6 +51,7 @@ export function useWorkspaceData(params: Params) {
     isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'completed-jobs';
   const shouldLoadFavoriteRequests =
     isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'favorites';
+  const hasAccessToken = Boolean(getAccessToken());
 
   const { data: publicOverview, isLoading, isError } = useQuery({
     queryKey: workspaceQK.workspacePublicOverview({
@@ -98,8 +100,11 @@ export function useWorkspaceData(params: Params) {
 
   const { data: workspacePrivateOverview } = useQuery({
     queryKey: workspaceQK.workspacePrivateOverview(),
-    enabled: isWorkspaceAuthed && shouldLoadPrivateData,
-    queryFn: () => withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403]),
+    enabled: isWorkspaceAuthed && shouldLoadPrivateData && hasAccessToken,
+    queryFn: () =>
+      hasAccessToken
+        ? withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403])
+        : Promise.resolve(null),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
