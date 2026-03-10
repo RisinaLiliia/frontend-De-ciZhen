@@ -1,6 +1,7 @@
 'use client';
 
 import { RequestsExplorer } from '@/components/requests/RequestsExplorer';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -36,10 +37,11 @@ export function HomeRequestsExplorePanel({
   return (
     <section className="stack-sm">
       {showHeading ? (
-        <div className="section-heading">
-          <h2 className="section-title">{t(I18N_KEYS.requestsPage.title)}</h2>
-          <p className="section-subtitle">{t(I18N_KEYS.requestsPage.subtitle)}</p>
-        </div>
+        <SectionHeader
+          title={t(I18N_KEYS.requestsPage.title)}
+          subtitle={t(I18N_KEYS.requestsPage.subtitle)}
+          titleAs="h2"
+        />
       ) : null}
       <RequestsExplorer
         t={t}

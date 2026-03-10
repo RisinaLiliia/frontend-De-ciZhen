@@ -4,6 +4,7 @@ import Link from 'next/link';
 import * as React from 'react';
 
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -51,28 +52,28 @@ export function WorkspaceStatisticsView({
 
   return (
     <div className="requests-grid requests-grid--equal-cols" aria-labelledby="workspace-statistics-title">
-      <section className="panel requests-stats workspace-statistics">
-        <header className="requests-stats__header">
-          <div className="section-heading">
-            <p id="workspace-statistics-title" className="section-title">
-              {t(I18N_KEYS.homePublic.exploreStats)}
-            </p>
-            <p className="typo-small">{copy.subtitle}</p>
-          </div>
-          <RangeActionToolbar
-            groupLabel={copy.rangeGroupLabel}
-            options={RANGE_OPTIONS.map((option) => ({
-              value: option,
-              label: rangeLabel(option, copy),
-            }))}
-            value={range}
-            onChange={setRange}
-            action={{
-              label: copy.exportLabel,
-              onClick: onExport,
-            }}
-          />
-        </header>
+      <section className="panel requests-panel requests-stats workspace-statistics">
+        <SectionHeader
+          className="requests-header requests-stats__header"
+          title={t(I18N_KEYS.homePublic.exploreStats)}
+          subtitle={copy.subtitle}
+          titleId="workspace-statistics-title"
+          actions={(
+            <RangeActionToolbar
+              groupLabel={copy.rangeGroupLabel}
+              options={RANGE_OPTIONS.map((option) => ({
+                value: option,
+                label: rangeLabel(option, copy),
+              }))}
+              value={range}
+              onChange={setRange}
+              action={{
+                label: copy.exportLabel,
+                onClick: onExport,
+              }}
+            />
+          )}
+        />
 
         <div className="panel-header workspace-statistics__mode-row">
           <span className="workspace-statistics__mode-badge">{modeLabel}</span>
@@ -107,7 +108,7 @@ export function WorkspaceStatisticsView({
               <section className="requests-stats-chart">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.activityTitle}</p>
-                  <p className="typo-small">{copy.activitySubtitle}</p>
+                  <p className="section-subtitle">{copy.activitySubtitle}</p>
                 </header>
                 <ActivityTrendChart
                   points={activityPoints}
@@ -134,7 +135,7 @@ export function WorkspaceStatisticsView({
               <section className="requests-stats-chart">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.demandTitle}</p>
-                  <p className="typo-small">{copy.demandSubtitle}</p>
+                  <p className="section-subtitle">{copy.demandSubtitle}</p>
                 </header>
                 {demandRows.length === 0 ? (
                   <p className="workspace-statistics__empty">{copy.emptyDemand}</p>
@@ -160,7 +161,7 @@ export function WorkspaceStatisticsView({
               <section className="requests-stats-chart">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.citiesTitle}</p>
-                  <p className="typo-small">{copy.citiesSubtitle}</p>
+                  <p className="section-subtitle">{copy.citiesSubtitle}</p>
                 </header>
                 {cityRows.length === 0 ? (
                   <p className="workspace-statistics__empty">{copy.emptyCities}</p>
@@ -180,7 +181,7 @@ export function WorkspaceStatisticsView({
               <section className="requests-stats-chart">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.profileTitle}</p>
-                  <p className="typo-small">
+                  <p className="section-subtitle">
                     {model.mode === 'personalized' ? copy.profileSubtitlePersonalized : copy.profileSubtitlePlatform}
                   </p>
                 </header>
@@ -238,7 +239,7 @@ export function WorkspaceStatisticsView({
               <section className="panel stack-sm workspace-statistics__growth">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.growthTitle}</p>
-                  <p className="typo-small">{copy.growthSubtitle}</p>
+                  <p className="section-subtitle">{copy.growthSubtitle}</p>
                 </header>
                 <div className="workspace-statistics-growth__grid">
                   {growthCards.map((card, index) => (
