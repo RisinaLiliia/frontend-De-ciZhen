@@ -106,18 +106,26 @@ Notes:
 ### Workspace Query Contract
 
 Public mode:
-- `section=orders|providers|stats`
+- `section=orders|requests|providers|stats|reviews|profile`
 
 Private mode:
-- `tab=my-requests|my-offers|completed-jobs|favorites|reviews`
+- `tab=my-requests|my-offers|completed-jobs|favorites|reviews|profile`
 - `status=all|open|in_progress|completed`
 - `fav=requests|providers`
-- `reviewRole=provider|client`
 
 Shared listing filters:
 - `cityId`, `categoryKey`, `subcategoryKey` (or `serviceKey`)
 - `sort=date_desc|date_asc|price_asc|price_desc`
 - `page`, `limit`
+
+### ADR (Workspace Routing + Reviews)
+
+- Decision record: `docs/adr/2026-03-10-workspace-routing-and-reviews-flow.md`
+- Summary:
+  - `tab` is treated as explicit mode only when valid.
+  - invalid `tab` does not disable a valid public `section`.
+  - legacy `reviewRole` flow is removed from workspace routing.
+  - reviewable bookings are loaded via paginated aggregation, not a single hard page.
 
 ### Provider Reviews Contract
 

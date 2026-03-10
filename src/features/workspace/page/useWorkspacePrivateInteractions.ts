@@ -102,7 +102,6 @@ export function useWorkspacePrivateInteractions({
     setWorkspaceTab,
     setStatusFilter,
     setFavoritesView,
-    setReviewsView,
   } = useWorkspaceNavigation({
     activeWorkspaceTab,
     workspacePath: WORKSPACE_PATH,
@@ -127,6 +126,5 @@ export function useWorkspacePrivateInteractions({
     setWorkspaceTab,
     setStatusFilter,
     setFavoritesView,
-    setReviewsView,
   };
 }

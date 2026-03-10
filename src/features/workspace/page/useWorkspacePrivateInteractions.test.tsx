@@ -101,7 +101,6 @@ describe('useWorkspacePrivateInteractions', () => {
       setWorkspaceTab: vi.fn(),
       setStatusFilter: vi.fn(),
       setFavoritesView: vi.fn(),
-      setReviewsView: vi.fn(),
     } as never);
 
     useWorkspaceTabPersistenceMock.mockImplementation(() => undefined);
