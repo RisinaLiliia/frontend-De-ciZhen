@@ -43,10 +43,6 @@
     gap: var(--space-3);
   }
 
-  .workspace-statistics__grid--primary {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  }
-
   .workspace-statistics__grid--secondary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -75,7 +71,7 @@
     color: var(--c-text);
   }
 
-  .workspace-statistics__grid--primary > .requests-stats-chart:first-child .home-activity__chart {
+  .workspace-statistics__hero .home-activity__chart {
     height: 172px;
   }
 
@@ -289,7 +285,6 @@
       flex-wrap: wrap;
     }
 
-    .workspace-statistics__grid--primary,
     .workspace-statistics__grid--secondary {
       grid-template-columns: minmax(0, 1fr);
     }
