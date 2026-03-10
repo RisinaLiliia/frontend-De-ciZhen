@@ -261,66 +261,12 @@
     gap: var(--space-1-5);
   }
 
-  .workspace-statistics-chart__svg {
-    width: 100%;
-    height: 180px;
-  }
-
-  .workspace-statistics-chart__axis {
-    stroke: color-mix(in oklab, var(--c-border) 85%, var(--c-panel) 15%);
-    stroke-width: 1;
-  }
-
-  .workspace-statistics-chart__line {
-    fill: none;
-    stroke-width: 2.25;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .workspace-statistics-chart__line.is-requests {
-    stroke: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
-  }
-
-  .workspace-statistics-chart__line.is-offers {
-    stroke: color-mix(in oklab, var(--c-accent) 74%, var(--c-text) 26%);
-  }
-
   .workspace-statistics-chart__labels {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: var(--space-1);
     font-size: 10px;
     color: var(--c-text-muted);
-  }
-
-  .workspace-statistics-chart__legend {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
-  .workspace-statistics-chart__legend-item {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    font-size: 11px;
-    color: var(--c-text-muted);
-  }
-
-  .workspace-statistics-chart__legend-item::before {
-    content: '';
-    width: 12px;
-    height: 2px;
-    border-radius: 99px;
-  }
-
-  .workspace-statistics-chart__legend-item.is-requests::before {
-    background: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
-  }
-
-  .workspace-statistics-chart__legend-item.is-offers::before {
-    background: color-mix(in oklab, var(--c-accent) 74%, var(--c-text) 26%);
   }
 
   @media (min-width: 900px) {

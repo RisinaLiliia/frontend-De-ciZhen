@@ -74,7 +74,7 @@ export function WorkspaceStatisticsView({
                 );
               })}
             </div>
-            <button type="button" className="btn-ghost is-primary" onClick={onExport}>
+            <button type="button" className="btn-primary w-fit" onClick={onExport}>
               {copy.exportLabel}
             </button>
           </div>
@@ -300,26 +300,32 @@ function ActivityTrendChart({
     .join(' ');
 
   return (
-    <div className="requests-stats-chart workspace-statistics-chart">
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        preserveAspectRatio="none"
-        className="workspace-statistics-chart__svg"
-        role="img"
-        aria-label={`${requestsLabel} / ${offersLabel}`}
-      >
-        <line x1="0" y1="88" x2={String(width)} y2="88" className="workspace-statistics-chart__axis" />
-        <path d={requestsPath} className="workspace-statistics-chart__line is-requests" />
-        <path d={offersPath} className="workspace-statistics-chart__line is-offers" />
-      </svg>
+    <div className="workspace-statistics-chart">
+      <div className="home-activity__chart">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          preserveAspectRatio="none"
+          className="home-activity__svg"
+          role="img"
+          aria-label={`${requestsLabel} / ${offersLabel}`}
+        >
+          <line x1="0" y1="88" x2={String(width)} y2="88" className="home-activity__axis" />
+          <path d={requestsPath} className="home-activity__line is-requests" />
+          <path d={offersPath} className="home-activity__line is-offers" />
+        </svg>
+      </div>
       <div className="workspace-statistics-chart__labels">
         {points.map((point, index) => (
           <span key={`${point.label}-${index}`}>{point.label}</span>
         ))}
       </div>
-      <div className="workspace-statistics-chart__legend" aria-hidden="true">
-        <span className="workspace-statistics-chart__legend-item is-requests">{requestsLabel}</span>
-        <span className="workspace-statistics-chart__legend-item is-offers">{offersLabel}</span>
+      <div className="home-activity__legend" aria-hidden="true">
+        <span className="home-activity__metric is-requests">
+          <strong>{requestsLabel}</strong>
+        </span>
+        <span className="home-activity__metric is-offers">
+          <strong>{offersLabel}</strong>
+        </span>
       </div>
     </div>
   );
