@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 import WorkspacePageClient from '@/features/workspace/WorkspacePageClient';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
-import type { WorkspaceTab } from '@/features/workspace/requests';
+import { isWorkspaceTab, type WorkspaceTab } from '@/features/workspace/requests';
 
 import {
   type PublicWorkspaceSection,
@@ -25,17 +25,26 @@ export function WorkspaceShell({
   const auth = useAuthSnapshot();
 
   const sectionParam = searchParams.get('section');
+  const tabParam = searchParams.get('tab');
+  const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
   const resolvedSection = resolvePublicWorkspaceSection(sectionParam);
+  const shouldPromoteReviewsSectionToTab =
+    auth.status === 'authenticated' &&
+    !forcedWorkspaceTab &&
+    !hasExplicitWorkspaceTab &&
+    (forcedPublicSection ?? resolvedSection) === 'reviews';
+  const resolvedWorkspaceTab = shouldPromoteReviewsSectionToTab ? 'reviews' : forcedWorkspaceTab;
   const activePublicSection = auth.status === 'loading' || auth.status === 'idle'
     ? (forcedPublicSection ?? resolvedSection ?? 'requests')
     : (forcedPublicSection
       ?? resolvedSection
       ?? (auth.status === 'unauthenticated' ? 'requests' : null));
+  const resolvedPublicSection = resolvedWorkspaceTab ? null : activePublicSection;
 
   return (
     <WorkspacePageClient
-      activePublicSection={activePublicSection}
-      activeWorkspaceTab={forcedWorkspaceTab}
+      activePublicSection={resolvedPublicSection}
+      activeWorkspaceTab={resolvedWorkspaceTab}
     />
   );
 }
