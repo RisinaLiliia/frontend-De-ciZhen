@@ -11,6 +11,28 @@ export type DemandCityActivity = {
 export const MAP_MIN_ZOOM = 5;
 export const MAP_MAX_ZOOM = 12;
 
+type LooseCityActivityLocation = {
+  lat?: unknown;
+  lng?: unknown;
+  lon?: unknown;
+};
+
+type LooseCityActivityItem = Partial<WorkspacePublicCityActivityItemDto> & {
+  slug?: unknown;
+  name?: unknown;
+  city?: unknown;
+  cityLabel?: unknown;
+  id?: unknown;
+  latitude?: unknown;
+  lon?: unknown;
+  longitude?: unknown;
+  location?: LooseCityActivityLocation | null;
+  activeRequests?: unknown;
+  requests?: unknown;
+  count?: unknown;
+  total?: unknown;
+};
+
 const CITY_COORDINATE_FALLBACK: Record<string, { lat: number; lng: number }> = {
   hamburg: { lat: 53.5511, lng: 9.9937 },
   berlin: { lat: 52.52, lng: 13.405 },
@@ -38,10 +60,6 @@ const CITY_COORDINATE_FALLBACK: Record<string, { lat: number; lng: number }> = {
   munchen: { lat: 48.1351, lng: 11.582 },
 };
 
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
-}
-
 function toFiniteNumber(value: unknown): number | null {
   if (typeof value === 'number') {
     return Number.isFinite(value) ? value : null;
@@ -63,6 +81,11 @@ function pickFirstNonEmptyString(...values: unknown[]): string {
     }
   }
   return '';
+}
+
+function readLocation(value: unknown): LooseCityActivityLocation | null {
+  if (!value || typeof value !== 'object') return null;
+  return value as LooseCityActivityLocation;
 }
 
 function toFiniteCoord(value: unknown, min: number, max: number): number | null {
@@ -91,7 +114,8 @@ export function sortCitiesByActivity(cities: DemandCityActivity[]): DemandCityAc
 export function normalizeCityActivity(items: WorkspacePublicCityActivityItemDto[]): DemandCityActivity[] {
   const normalized = items
     .map((entry, index) => {
-      const rawEntry = entry as Record<string, unknown>;
+      const rawEntry = entry as LooseCityActivityItem;
+      const location = readLocation(rawEntry.location);
       const rawCitySlug = pickFirstNonEmptyString(rawEntry.citySlug, rawEntry.slug);
       const rawCityName = pickFirstNonEmptyString(rawEntry.cityName, rawEntry.name, rawEntry.city, rawEntry.cityLabel);
       const citySlugToken = normalizeCityToken(rawCitySlug);
@@ -101,11 +125,11 @@ export function normalizeCityActivity(items: WorkspacePublicCityActivityItemDto[
         (cityNameToken ? CITY_COORDINATE_FALLBACK[cityNameToken] : undefined);
       const latRaw =
         toFiniteCoord(rawEntry.lat ?? rawEntry.latitude, -90, 90) ??
-        toFiniteCoord((rawEntry.location as Record<string, unknown> | undefined)?.lat, -90, 90);
+        toFiniteCoord(location?.lat, -90, 90);
       const lngRaw =
         toFiniteCoord(rawEntry.lng ?? rawEntry.lon ?? rawEntry.longitude, -180, 180) ??
-        toFiniteCoord((rawEntry.location as Record<string, unknown> | undefined)?.lng, -180, 180) ??
-        toFiniteCoord((rawEntry.location as Record<string, unknown> | undefined)?.lon, -180, 180);
+        toFiniteCoord(location?.lng, -180, 180) ??
+        toFiniteCoord(location?.lon, -180, 180);
       const shouldUseFallbackCoords = isZeroCoordinatePair(latRaw, lngRaw);
       const lat = (shouldUseFallbackCoords ? null : latRaw) ?? fallbackCoords?.lat ?? null;
       const lng = (shouldUseFallbackCoords ? null : lngRaw) ?? fallbackCoords?.lng ?? null;
@@ -135,23 +159,4 @@ export function normalizeCityActivity(items: WorkspacePublicCityActivityItemDto[
     .filter((city): city is DemandCityActivity => city !== null);
 
   return sortCitiesByActivity(normalized);
-}
-
-export function pickVisiblePointsByZoom(points: DemandCityActivity[], zoom: number): DemandCityActivity[] {
-  if (points.length <= 1) return points;
-
-  const safeZoom = clamp(zoom, MAP_MIN_ZOOM, MAP_MAX_ZOOM);
-  const maxCount = points[0]?.count ?? 1;
-  const minCountByZoom =
-    safeZoom <= 5
-      ? Math.max(3, Math.ceil(maxCount * 0.35))
-      : safeZoom <= 6
-      ? Math.max(2, Math.ceil(maxCount * 0.22))
-      : safeZoom <= 7
-      ? Math.max(1, Math.ceil(maxCount * 0.1))
-      : 1;
-
-  const filtered = points.filter((point) => point.count >= minCountByZoom);
-  if (filtered.length > 0) return filtered;
-  return points.slice(0, Math.max(1, Math.min(10, points.length)));
 }

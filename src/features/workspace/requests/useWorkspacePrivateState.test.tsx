@@ -45,6 +45,8 @@ function StateProbe(props: StateArgs) {
   const state = useWorkspacePrivateState(props);
   const myRequestsItem = state.personalNavItems.find((item) => item.key === 'my-requests');
   const reviewsItem = state.personalNavItems.find((item) => item.key === 'reviews');
+  const primaryItemsCount = state.personalNavItems.filter((item) => item.tier === 'primary').length;
+  const secondaryItemsCount = state.personalNavItems.filter((item) => item.tier === 'secondary').length;
 
   return (
     <div
@@ -57,6 +59,8 @@ function StateProbe(props: StateArgs) {
       data-progress={String(state.activityProgress)}
       data-stats-first={state.statsOrder[0]?.tab ?? ''}
       data-top-providers={String(state.topProviders.length)}
+      data-primary-count={String(primaryItemsCount)}
+      data-secondary-count={String(secondaryItemsCount)}
     />
   );
 }
@@ -101,6 +105,8 @@ describe('useWorkspacePrivateState', () => {
     expect(node.getAttribute('data-progress')).toBe('100');
     expect(node.getAttribute('data-stats-first')).toBe('provider');
     expect(node.getAttribute('data-top-providers')).toBe('0');
+    expect(node.getAttribute('data-primary-count')).toBe('4');
+    expect(node.getAttribute('data-secondary-count')).toBe('4');
   });
 
   it('locks private tabs for guests and keeps public items available', () => {
@@ -116,8 +122,10 @@ describe('useWorkspacePrivateState', () => {
     );
 
     const node = screen.getByTestId('state');
-    expect(node.getAttribute('data-nav-count')).toBe('7');
+    expect(node.getAttribute('data-nav-count')).toBe('8');
     expect(node.getAttribute('data-my-requests-locked')).toBe('true');
     expect(node.getAttribute('data-my-requests-value')).toBe('');
+    expect(node.getAttribute('data-primary-count')).toBe('4');
+    expect(node.getAttribute('data-secondary-count')).toBe('4');
   });
 });

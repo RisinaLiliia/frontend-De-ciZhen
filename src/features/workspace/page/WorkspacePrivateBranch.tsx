@@ -49,7 +49,7 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
         intro={workspaceIntroNode}
         explore={EMPTY_EXPLORE}
         privateMain={privateMain}
-        publicMain={null}
+        publicMain={privateMain}
         workspaceAsideBaseProps={workspaceAsideBaseProps}
         pendingFavoriteProviderIds={pendingFavoriteProviderIds}
         onToggleProviderFavorite={onToggleProviderFavorite}

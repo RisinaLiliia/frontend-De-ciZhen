@@ -15,11 +15,16 @@ export function getWorkspaceTabTitles(t: Translate): Partial<Record<WorkspaceTab
     'my-requests': t(I18N_KEYS.requestsPage.navMyOrders),
     'my-offers': t(I18N_KEYS.requestsPage.navMyOffers),
     'completed-jobs': t(I18N_KEYS.requestsPage.navCompletedJobs),
-    reviews: t(I18N_KEYS.requestsPage.navReviews),
+    favorites: t(I18N_KEYS.requestsPage.navFavorites),
+    reviews: t(I18N_KEYS.requestsPage.reviewsWorkspaceTitle),
+    profile: t(I18N_KEYS.provider.onboardingTitle),
   };
 }
 
-export function getWorkspaceSectionSubtitle(t: Translate): string {
+export function getWorkspaceSectionSubtitle(t: Translate, activeWorkspaceTab: WorkspaceTab): string {
+  if (activeWorkspaceTab === 'reviews') {
+    return t(I18N_KEYS.requestsPage.reviewsWorkspaceSubtitle);
+  }
   return t(I18N_KEYS.requestsPage.workspaceSectionSubtitle);
 }
 
@@ -41,6 +46,7 @@ export function getWorkspacePrimaryActionByTab(
     'completed-jobs': { label: t(I18N_KEYS.requestsPage.primaryActionActiveOrders), href: '/workspace?tab=my-offers&status=in_progress' },
     favorites: { label: t(I18N_KEYS.requestsPage.primaryActionNewFavorites), href: '/workspace?section=requests' },
     reviews: { label: t(I18N_KEYS.requestsPage.navMyOrders), href: '/workspace?tab=my-offers' },
+    profile: { label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta), href: '/request/create' },
   };
 }
 

@@ -7,7 +7,6 @@ import { trackUXEvent } from '@/lib/analytics';
 import { devPerfDuration, devPerfLog, devPerfNow } from '@/lib/perf/devPerf';
 import type {
   FavoritesView,
-  ReviewsView,
   WorkspaceStatusFilter,
   WorkspaceTab,
 } from '@/features/workspace/requests';
@@ -81,7 +80,7 @@ export function useWorkspaceNavigation({
       next.set('tab', tab);
       next.set('status', 'all');
       if (tab !== 'favorites') next.delete('fav');
-      if (tab !== 'reviews') next.delete('reviewRole');
+      next.delete('reviewRole');
       const query = next.toString();
       const nextHref = query ? `${workspacePath}?${query}` : workspacePath;
       const didSchedule = scheduleReplace(nextHref);
@@ -97,6 +96,7 @@ export function useWorkspaceNavigation({
       next.delete('section');
       next.set('tab', activeWorkspaceTab);
       next.set('status', status);
+      next.delete('reviewRole');
       const query = next.toString();
       const nextHref = query ? `${workspacePath}?${query}` : workspacePath;
       const didSchedule = scheduleReplace(nextHref);
@@ -112,19 +112,7 @@ export function useWorkspaceNavigation({
       next.delete('section');
       next.set('tab', 'favorites');
       next.set('fav', view);
-      const query = next.toString();
-      const nextHref = query ? `${workspacePath}?${query}` : workspacePath;
-      scheduleReplace(nextHref);
-    },
-    [scheduleReplace, searchParams, workspacePath],
-  );
-
-  const setReviewsView = React.useCallback(
-    (view: ReviewsView) => {
-      const next = new URLSearchParams(searchParams.toString());
-      next.delete('section');
-      next.set('tab', 'reviews');
-      next.set('reviewRole', view);
+      next.delete('reviewRole');
       const query = next.toString();
       const nextHref = query ? `${workspacePath}?${query}` : workspacePath;
       scheduleReplace(nextHref);
@@ -136,6 +124,5 @@ export function useWorkspaceNavigation({
     setWorkspaceTab,
     setStatusFilter,
     setFavoritesView,
-    setReviewsView,
   };
 }

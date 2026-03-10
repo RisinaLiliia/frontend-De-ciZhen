@@ -3,12 +3,12 @@ export type WorkspaceTab =
   | 'my-offers'
   | 'completed-jobs'
   | 'favorites'
-  | 'reviews';
+  | 'reviews'
+  | 'profile';
 
 export type WorkspaceStatusFilter = 'all' | 'open' | 'in_progress' | 'completed';
 
 export type FavoritesView = 'requests' | 'providers';
-export type ReviewsView = 'provider' | 'client';
 
 const WORKSPACE_TABS: WorkspaceTab[] = [
   'my-requests',
@@ -16,13 +16,18 @@ const WORKSPACE_TABS: WorkspaceTab[] = [
   'completed-jobs',
   'favorites',
   'reviews',
+  'profile',
 ];
 
 export const REQUESTS_TAB_STORAGE_KEY = 'dc_orders_tab';
 export const ORDERS_TAB_STORAGE_KEY = REQUESTS_TAB_STORAGE_KEY;
 
+export function isWorkspaceTab(value: string | null | undefined): value is WorkspaceTab {
+  return typeof value === 'string' && WORKSPACE_TABS.includes(value as WorkspaceTab);
+}
+
 export function resolveWorkspaceTab(value: string | null): WorkspaceTab {
-  return value && WORKSPACE_TABS.includes(value as WorkspaceTab) ? (value as WorkspaceTab) : 'my-requests';
+  return isWorkspaceTab(value) ? value : 'my-requests';
 }
 
 export function resolveStatusFilter(value: string | null): WorkspaceStatusFilter {
@@ -31,10 +36,6 @@ export function resolveStatusFilter(value: string | null): WorkspaceStatusFilter
 
 export function resolveFavoritesView(value: string | null): FavoritesView {
   return value === 'providers' ? 'providers' : 'requests';
-}
-
-export function resolveReviewsView(value: string | null): ReviewsView {
-  return value === 'client' ? 'client' : 'provider';
 }
 
 export function mapRequestStatusToFilter(status?: string): WorkspaceStatusFilter {

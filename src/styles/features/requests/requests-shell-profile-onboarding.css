@@ -1,0 +1,177 @@
+/* src/styles/features/requests/requests-shell-profile-onboarding.css */
+
+@layer components {
+  .workspace-profile-onboarding {
+    border-color: color-mix(in oklab, var(--c-primary) 20%, var(--surface-card-border) 80%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--surface-card-bg) 94%, var(--c-primary) 6%),
+        var(--surface-card-bg)
+      );
+  }
+
+  .workspace-profile-onboarding__step {
+    width: fit-content;
+  }
+
+  .workspace-profile-onboarding__form {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .workspace-profile-onboarding__grid {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 820px) {
+    .workspace-profile-onboarding__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .workspace-profile-onboarding__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: var(--fs-small);
+  }
+
+  .workspace-profile-onboarding__consent input[type='checkbox'] {
+    margin-top: 2px;
+  }
+
+  .workspace-profile-onboarding__actions {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .workspace-profile-onboarding__avatar-stack {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1-5);
+  }
+
+  .workspace-profile-onboarding .profile-settings__avatar {
+    width: 80px;
+    height: 80px;
+    overflow: visible;
+    border: 0;
+    padding: 0;
+    font-size: 40px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .workspace-profile-onboarding .profile-settings__avatar:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 14%, transparent);
+  }
+
+  .workspace-profile-onboarding .profile-settings__avatar:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--c-primary) 56%, transparent);
+    outline-offset: 2px;
+  }
+
+  .workspace-profile-onboarding .profile-settings__avatar:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .workspace-profile-onboarding .profile-settings__avatar-edit {
+    right: -2px;
+    bottom: -2px;
+    z-index: 2;
+  }
+
+  .workspace-profile-onboarding__avatar-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-success) 46%, var(--surface-card-border) 54%);
+    background: color-mix(in oklab, var(--surface-card-bg) 88%, var(--c-success) 12%);
+    color: color-mix(in oklab, var(--c-success) 86%, var(--c-ink) 14%);
+    box-shadow:
+      0 8px 18px color-mix(in oklab, var(--c-ink) 20%, transparent),
+      0 0 0 2px color-mix(in oklab, var(--surface-card-bg) 88%, transparent);
+  }
+
+  .workspace-profile-onboarding__avatar-badge svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .workspace-profile-onboarding__avatar-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--space-1);
+    border-radius: inherit;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: var(--c-primary-contrast);
+    background: color-mix(in oklab, var(--c-ink) 44%, transparent);
+    opacity: 0;
+    transition: opacity 180ms ease;
+  }
+
+  .workspace-profile-onboarding .profile-settings__avatar:hover .workspace-profile-onboarding__avatar-overlay,
+  .workspace-profile-onboarding .profile-settings__avatar:focus-visible .workspace-profile-onboarding__avatar-overlay {
+    opacity: 1;
+  }
+
+  .workspace-profile-onboarding .profile-settings__avatar-file {
+    align-items: center;
+    gap: 0;
+  }
+
+  .workspace-profile-onboarding .profile-settings__avatar-file .typo-small {
+    text-align: center;
+  }
+
+  .workspace-profile-onboarding__avatar-action {
+    width: fit-content;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: var(--fs-small);
+    color: var(--c-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .workspace-profile-onboarding__avatar-action:hover {
+    color: color-mix(in oklab, var(--c-accent) 82%, var(--c-text) 18%);
+  }
+
+  .workspace-profile-onboarding__avatar-action:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .workspace-profile-onboarding__avatar-action--danger {
+    color: color-mix(in oklab, var(--c-danger) 74%, var(--c-text) 26%);
+  }
+
+  .workspace-profile-onboarding__avatar-action--danger:hover {
+    color: color-mix(in oklab, var(--c-danger) 86%, var(--c-text) 14%);
+  }
+
+  .workspace-profile-onboarding--ready {
+    max-width: 680px;
+  }
+}

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { ActivityInsight } from '@/components/ui/ActivityInsight';
 import { CountBadge } from '@/components/ui/CountBadge';
@@ -50,12 +50,42 @@ export function PersonalNavSection({
   className,
 }: PersonalNavSectionProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const dockTrackRef = React.useRef<HTMLDivElement | null>(null);
   const [dockIndicatorStyle, setDockIndicatorStyle] = React.useState<React.CSSProperties | null>(null);
 
+  const hasHrefMatch = React.useCallback(
+    (item: PersonalNavItem) => {
+      const href = String(item.href ?? '').trim();
+      if (!href) return false;
+
+      // `item.href` may include `?section=...` / `?tab=...`; match both path and query subset.
+      const [hrefPath, hrefQuery = ''] = href.split('?');
+      const normalizedHrefPath = hrefPath || '';
+      if (normalizedHrefPath && normalizedHrefPath !== pathname) {
+        if (item.match === 'prefix') {
+          if (!(pathname === normalizedHrefPath || pathname.startsWith(`${normalizedHrefPath}/`))) return false;
+        } else {
+          return false;
+        }
+      }
+
+      if (!hrefQuery) return normalizedHrefPath ? normalizedHrefPath === pathname : false;
+
+      const hrefParams = new URLSearchParams(hrefQuery);
+      for (const [key, value] of hrefParams.entries()) {
+        if (searchParams.get(key) !== value) return false;
+      }
+      return true;
+    },
+    [pathname, searchParams],
+  );
+
   const isActive = (item: PersonalNavItem) => {
     if (item.disabled) return false;
-    if (typeof item.forceActive === 'boolean') return item.forceActive;
+    if (item.forceActive === true) return true;
+    if (hasHrefMatch(item)) return true;
+    if (item.forceActive === false) return false;
     if (item.match === 'prefix') return pathname === item.href || pathname.startsWith(`${item.href}/`);
     return pathname === item.href;
   };

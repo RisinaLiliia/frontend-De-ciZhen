@@ -5,7 +5,7 @@ import { useWorkspaceCards } from '@/features/workspace/private/useWorkspaceCard
 
 type WorkspaceDerivedArgs = Parameters<typeof useWorkspaceDerived>[0];
 type ContractRequestsDataArgs = Omit<Parameters<typeof useWorkspaceContractRequestsData>[0], 'filteredContracts'>;
-type WorkspaceCardsArgs = Omit<Parameters<typeof useWorkspaceCards>[0], 'resolvedReviews'>;
+type WorkspaceCardsArgs = Parameters<typeof useWorkspaceCards>[0];
 type WorkspaceDerivedResult = ReturnType<typeof useWorkspaceDerived>;
 type ContractRequestsDataResult = ReturnType<typeof useWorkspaceContractRequestsData>;
 type WorkspaceCardsResult = ReturnType<typeof useWorkspaceCards>;
@@ -27,7 +27,6 @@ export type WorkspaceViewModelPatch = {
   contractRequests: ContractRequestsDataResult['contractRequests'];
   contractOffersByRequest: ContractRequestsDataResult['contractOffersByRequest'];
   favoriteProviderCards: WorkspaceCardsResult['favoriteProviderCards'];
-  reviewCards: WorkspaceCardsResult['reviewCards'];
 };
 
 type Args = {
@@ -42,10 +41,7 @@ export function useWorkspaceContentData({ derivedArgs, contractArgs, cardsArgs }
     ...contractArgs,
     filteredContracts: derived.filteredContracts,
   });
-  const cards = useWorkspaceCards({
-    ...cardsArgs,
-    resolvedReviews: derived.resolvedReviews,
-  });
+  const cards = useWorkspaceCards(cardsArgs);
 
   const viewModelPatch = {
     showWorkspaceHeader: derived.showWorkspaceHeader,
@@ -64,7 +60,6 @@ export function useWorkspaceContentData({ derivedArgs, contractArgs, cardsArgs }
     contractRequests: contract.contractRequests,
     contractOffersByRequest: contract.contractOffersByRequest,
     favoriteProviderCards: cards.favoriteProviderCards,
-    reviewCards: cards.reviewCards,
   } satisfies WorkspaceViewModelPatch;
 
   return {

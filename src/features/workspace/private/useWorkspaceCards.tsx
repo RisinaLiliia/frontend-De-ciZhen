@@ -11,24 +11,6 @@ import { isProviderInFavoriteLookup } from '@/lib/api/favorites';
 
 type Translator = (key: I18nKey) => string;
 
-type ResolvedReview = {
-  id: string;
-  author: string;
-  createdLabel: string;
-  reviewText: string;
-  rating?: number | null;
-  roleLabel: string;
-};
-
-type ProofReviewCardProps = {
-  title: string;
-  info: string;
-  review: string;
-  rating: string;
-  price: string;
-  isActive?: boolean;
-};
-
 type Args = {
   t: Translator;
   favoriteProviders: ProviderPublicDto[];
@@ -37,8 +19,6 @@ type Args = {
   onToggleProviderFavorite: (providerId: string) => void;
   favoriteProviderRoleLabelById: ReadonlyMap<string, string>;
   favoriteProviderCityLabelById: ReadonlyMap<string, string>;
-  resolvedReviews: ResolvedReview[];
-  ProofReviewCardComponent: React.ComponentType<ProofReviewCardProps>;
 };
 
 export function useWorkspaceCards({
@@ -49,8 +29,6 @@ export function useWorkspaceCards({
   onToggleProviderFavorite,
   favoriteProviderRoleLabelById,
   favoriteProviderCityLabelById,
-  resolvedReviews,
-  ProofReviewCardComponent,
 }: Args) {
   const favoriteProviderCards = React.useMemo(
     () =>
@@ -85,24 +63,7 @@ export function useWorkspaceCards({
     ],
   );
 
-  const reviewCards = React.useMemo(
-    () =>
-      resolvedReviews.map((item) => (
-        <ProofReviewCardComponent
-          key={item.id}
-          title={item.author}
-          info={item.createdLabel}
-          review={`“${item.reviewText}”`}
-          rating={item.rating?.toFixed(1) ?? '—'}
-          price={item.roleLabel}
-          isActive
-        />
-      )),
-    [ProofReviewCardComponent, resolvedReviews],
-  );
-
   return {
     favoriteProviderCards,
-    reviewCards,
   };
 }

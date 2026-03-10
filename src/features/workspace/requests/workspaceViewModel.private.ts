@@ -11,6 +11,7 @@ export function buildWorkspacePrivateContentProps(
   const {
     t,
     locale,
+    isWorkspaceAuthed,
     activeWorkspaceTab,
     showWorkspaceHeader,
     showWorkspaceHeading,
@@ -41,9 +42,6 @@ export function buildWorkspacePrivateContentProps(
     favoriteProviderCards,
     isMyReviewsLoading,
     myReviews,
-    activeReviewsView,
-    setReviewsView,
-    reviewCards,
     isPersonalized,
     offersByRequest,
     favoriteRequestIds,
@@ -62,6 +60,7 @@ export function buildWorkspacePrivateContentProps(
 
   return {
     t,
+    isWorkspaceAuthed,
     activeWorkspaceTab,
     showWorkspaceHeader,
     showWorkspaceHeading,
@@ -168,10 +167,7 @@ export function buildWorkspacePrivateContentProps(
     favoriteProvidersNode: favoriteProviderCards,
     reviewsState: {
       isLoading: isMyReviewsLoading,
-      isEmpty: myReviews.length === 0,
-      activeView: activeReviewsView,
+      items: myReviews,
     },
-    onReviewsViewChange: setReviewsView,
-    reviewCardsNode: reviewCards,
   };
 }

@@ -24,6 +24,7 @@ export {
   getProviderHint,
 } from './workspace.content';
 export { workspaceQK } from './queryKeys';
+export { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from './workspace.constants';
 export {
   ALL_OPTION_KEY,
   SORT_OPTIONS,
@@ -31,18 +32,17 @@ export {
 } from './workspace.public';
 export type { SortKey, SortOption } from './workspace.public';
 export {
+  isWorkspaceTab,
   mapContractStatusToFilter,
   mapOfferStatusToFilter,
   mapRequestStatusToFilter,
   resolveFavoritesView,
-  resolveReviewsView,
   resolveStatusFilter,
   resolveWorkspaceTab,
   REQUESTS_TAB_STORAGE_KEY,
 } from './workspace.types';
 export type {
   FavoritesView,
-  ReviewsView,
   WorkspaceStatusFilter,
   WorkspaceTab,
 } from './workspace.types';

@@ -26,4 +26,12 @@
     }
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .workspace-demand-marker__pulse {
+      animation: none;
+      opacity: 0.2;
+      transform: none;
+    }
+  }
+
 }

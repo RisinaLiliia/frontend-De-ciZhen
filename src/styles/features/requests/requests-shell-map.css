@@ -189,5 +189,26 @@
     max-width: 240px;
   }
 
+  .workspace-public-demand-map__state {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    z-index: 1200;
+    font-size: 12px;
+    color: var(--c-text-muted);
+    text-align: center;
+    max-width: 240px;
+    padding: var(--space-1-5) var(--space-2);
+    border-radius: var(--radius-pill);
+    background: color-mix(in oklab, var(--c-panel) 90%, transparent);
+    border: 1px solid color-mix(in oklab, var(--c-border) 58%, transparent);
+  }
+
+  .workspace-public-demand-map__state--error {
+    color: color-mix(in oklab, var(--c-text) 84%, #8d3a3a);
+  }
+
 
 }

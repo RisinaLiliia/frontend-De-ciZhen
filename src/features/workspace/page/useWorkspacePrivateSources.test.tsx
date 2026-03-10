@@ -142,7 +142,6 @@ describe('useWorkspacePrivateSources', () => {
         isWorkspaceAuthed
         activePublicSection="requests"
         activeWorkspaceTab="my-requests"
-        activeReviewsView="provider"
       />,
     );
 
@@ -163,7 +162,6 @@ describe('useWorkspacePrivateSources', () => {
         isWorkspacePublicSection: false,
         shouldLoadPrivateData: true,
         activeWorkspaceTab: 'my-requests',
-        activeReviewsView: 'provider',
       }),
     );
 

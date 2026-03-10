@@ -88,7 +88,7 @@ export function useWorkspacePublicDemandLeafletMap({
           keyboard: true,
           title: `${clusterLabel} ${activeRequestsLabel}`,
         });
-        marker.bindTooltip(`${clusterLabel} ${activeRequestsLabel}`, {
+        marker.bindTooltip(createTooltipNode(`${clusterLabel} ${activeRequestsLabel}`), {
           direction: 'top',
           opacity: 0.96,
           className: 'workspace-demand-map-tooltip',
@@ -217,7 +217,7 @@ function renderCityMarker({
     title: item.name,
   });
 
-  marker.bindTooltip(`${item.name}: ${formatNumber.format(item.count)} ${activeRequestsLabel}`, {
+  marker.bindTooltip(createTooltipNode(`${item.name}: ${formatNumber.format(item.count)} ${activeRequestsLabel}`), {
     direction: 'top',
     opacity: 0.96,
     className: 'workspace-demand-map-tooltip',
@@ -227,4 +227,10 @@ function renderCityMarker({
     marker.openTooltip();
   });
   marker.addTo(layer);
+}
+
+function createTooltipNode(text: string): HTMLSpanElement {
+  const node = document.createElement('span');
+  node.textContent = text;
+  return node;
 }

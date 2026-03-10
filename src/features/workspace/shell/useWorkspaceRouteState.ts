@@ -5,8 +5,8 @@ import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import {
+  isWorkspaceTab,
   resolveFavoritesView,
-  resolveReviewsView,
   resolveStatusFilter,
   type WorkspaceTab,
   resolveWorkspaceTab,
@@ -35,14 +35,18 @@ export function useWorkspaceRouteState({
   workspacePath,
   t,
 }: Args) {
-  const activePublicSection = forcedWorkspaceTab
+  const tabParam = searchParams.get('tab');
+  const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
+  const sectionParam = searchParams.get('section');
+
+  const activePublicSection = forcedWorkspaceTab || hasExplicitWorkspaceTab
     ? null
-    : (forcedPublicSection ?? resolvePublicWorkspaceSection(searchParams.get('section')));
+    : (forcedPublicSection ?? resolvePublicWorkspaceSection(sectionParam));
   const isWorkspacePublicSection = activePublicSection !== null;
 
   const activeWorkspaceTab = React.useMemo(
-    () => forcedWorkspaceTab ?? resolveWorkspaceTab(searchParams.get('tab')),
-    [forcedWorkspaceTab, searchParams],
+    () => forcedWorkspaceTab ?? resolveWorkspaceTab(tabParam),
+    [forcedWorkspaceTab, tabParam],
   );
   const activeStatusFilter = React.useMemo(
     () => resolveStatusFilter(searchParams.get('status')),
@@ -50,10 +54,6 @@ export function useWorkspaceRouteState({
   );
   const activeFavoritesView = React.useMemo(
     () => resolveFavoritesView(searchParams.get('fav')),
-    [searchParams],
-  );
-  const activeReviewsView = React.useMemo(
-    () => resolveReviewsView(searchParams.get('reviewRole')),
     [searchParams],
   );
 
@@ -77,7 +77,6 @@ export function useWorkspaceRouteState({
     activeWorkspaceTab,
     activeStatusFilter,
     activeFavoritesView,
-    activeReviewsView,
     nextPath,
     guestLoginHref,
     onGuestLockedAction,

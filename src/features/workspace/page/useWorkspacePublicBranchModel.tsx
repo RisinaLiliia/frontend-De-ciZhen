@@ -13,10 +13,10 @@ import {
   usePublicRequestsSeenTotal,
   useWorkspaceFormatters,
   useWorkspaceNavigation,
+  WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
   WorkspacePublicIntro,
 } from '@/features/workspace';
 import {
-  PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
   PUBLIC_REQUESTS_SEED_LIMIT,
   WORKSPACE_PATH,
 } from '@/features/workspace/page/workspacePage.constants';
@@ -76,7 +76,7 @@ export function useWorkspacePublicBranchModel({
       page: 1,
       limit: PUBLIC_REQUESTS_SEED_LIMIT,
       activityRange: '30d',
-      cityActivityLimit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+      cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
     }),
     queryFn: () =>
       getWorkspacePublicOverview({
@@ -84,7 +84,7 @@ export function useWorkspacePublicBranchModel({
         page: 1,
         limit: PUBLIC_REQUESTS_SEED_LIMIT,
         activityRange: '30d',
-        cityActivityLimit: PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+        cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
       }),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
@@ -155,6 +155,8 @@ export function useWorkspacePublicBranchModel({
         activityProgress={activityProgress}
         cityActivity={cityActivity}
         summary={platformSummary}
+        isMapLoading={isSummaryLoading}
+        isMapError={isSummaryError}
         quickActionHref="/request/create"
       />
     ),
@@ -168,6 +170,8 @@ export function useWorkspacePublicBranchModel({
       personalNavItems,
       cityActivity,
       platformSummary,
+      isSummaryLoading,
+      isSummaryError,
       t,
     ],
   );

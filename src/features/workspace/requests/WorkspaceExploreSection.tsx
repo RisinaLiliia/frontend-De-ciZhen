@@ -43,6 +43,17 @@ const PlatformReviewsPanel = dynamic(
   },
 );
 
+const ProfileOnboardingPanel = dynamic(
+  () => import('@/features/workspace/requests/WorkspaceProfileOnboardingForm').then((mod) => mod.WorkspaceProfileOnboardingForm),
+  {
+    loading: () => (
+      <section className="panel">
+        <div className="skeleton h-96 w-full" />
+      </section>
+    ),
+  },
+);
+
 const NearbyProvidersPanel = dynamic(
   () => import('@/components/home/HomeNearbyPanel').then((mod) => mod.HomeNearbyPanel),
   {
@@ -132,6 +143,8 @@ export function WorkspaceExploreSection({
             <PlatformActivityPanel t={t} locale={locale} />
           ) : activeSection === 'reviews' ? (
             <PlatformReviewsPanel t={t} locale={locale} />
+          ) : activeSection === 'profile' ? (
+            <ProfileOnboardingPanel />
           ) : (
             <ExploreRequestsPanel
               t={t}

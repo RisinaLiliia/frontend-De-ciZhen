@@ -98,6 +98,7 @@ export function WorkspacePageLayout({
 
   return (
     <WorkspaceFrame
+      intro={intro}
       main={publicMain}
       aside={(
         <WorkspaceTopProvidersAside

@@ -12,6 +12,7 @@ describe('resolvePublicWorkspaceSection', () => {
     expect(resolvePublicWorkspaceSection('providers')).toBe('providers');
     expect(resolvePublicWorkspaceSection('stats')).toBe('stats');
     expect(resolvePublicWorkspaceSection('reviews')).toBe('reviews');
+    expect(resolvePublicWorkspaceSection('profile')).toBe('profile');
   });
 
   it('returns null for unknown values', () => {
