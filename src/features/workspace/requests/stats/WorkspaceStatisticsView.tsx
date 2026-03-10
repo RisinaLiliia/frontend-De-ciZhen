@@ -60,11 +60,11 @@ export function WorkspaceStatisticsView({
         </div>
         <div className="workspace-statistics__controls">
           <div className="requests-stats__tabs workspace-statistics__ranges" role="group" aria-label={copy.rangeGroupLabel}>
-            {RANGE_OPTIONS.map((option) => {
+            {RANGE_OPTIONS.map((option, index) => {
               const isActive = option === range;
               return (
                 <button
-                  key={option}
+                  key={`${option}-${index}`}
                   type="button"
                   className={`requests-stats__tab workspace-statistics__range-chip ${isActive ? 'is-active' : ''}`.trim()}
                   onClick={() => setRange(option)}
@@ -99,8 +99,8 @@ export function WorkspaceStatisticsView({
       ) : (
         <>
           <section className="requests-stats__kpi-grid workspace-statistics__kpi-grid" aria-label={copy.kpiTitle}>
-            {kpis.map((item) => (
-              <article key={item.key} className="requests-stats-kpi workspace-statistics-kpi">
+            {kpis.map((item, index) => (
+              <article key={`${item.key}-${index}`} className="requests-stats-kpi workspace-statistics-kpi">
                 <p className="requests-stats-kpi__label workspace-statistics-kpi__label">{item.label}</p>
                 <strong className="requests-stats-kpi__value workspace-statistics-kpi__value">{item.value}</strong>
                 <p className={`requests-stats-kpi__delta ${item.tone === 'positive' ? 'is-success' : 'is-neutral'} workspace-statistics-kpi__delta`.trim()}>
@@ -147,8 +147,8 @@ export function WorkspaceStatisticsView({
                 <p className="workspace-statistics__empty">{copy.emptyDemand}</p>
               ) : (
                 <ul className="workspace-statistics-demand" aria-label={copy.demandTitle}>
-                  {demandRows.map((row) => (
-                    <li key={`${row.categoryKey ?? row.categoryName}`} className="workspace-statistics-demand__row">
+                  {demandRows.map((row, index) => (
+                    <li key={`${row.categoryKey ?? row.categoryName}-${index}`} className="workspace-statistics-demand__row">
                       <div className="workspace-statistics-demand__meta">
                         <span className="workspace-statistics-demand__label">{row.categoryName}</span>
                         <span className="workspace-statistics-demand__value">{row.sharePercent}%</span>
@@ -174,7 +174,7 @@ export function WorkspaceStatisticsView({
               ) : (
                 <ol className="workspace-statistics-city-list">
                   {cityRows.map((item, index) => (
-                    <li key={item.key} className="workspace-statistics-city-list__item">
+                    <li key={`${item.key}-${index}`} className="workspace-statistics-city-list__item">
                       <span className="workspace-statistics-city-list__rank">{index + 1}</span>
                       <span className="workspace-statistics-city-list__name">{item.name}</span>
                       <span className="workspace-statistics-city-list__count">{formatNumber.format(item.count)}</span>
@@ -206,7 +206,7 @@ export function WorkspaceStatisticsView({
               </header>
               <div className="workspace-statistics-funnel" aria-label={copy.profileTitle}>
                 {funnel.map((step, index) => (
-                  <div key={step.key} className="workspace-statistics-funnel__step">
+                  <div key={`${step.key}-${index}`} className="workspace-statistics-funnel__step">
                     <div className="workspace-statistics-funnel__row">
                       <span>{step.label}</span>
                       <strong>{step.value}</strong>
@@ -229,8 +229,8 @@ export function WorkspaceStatisticsView({
                 <p className="workspace-statistics__empty">{copy.emptyInsights}</p>
               ) : (
                 <ul className="workspace-statistics-insights" aria-label={copy.insightsTitle}>
-                  {insights.map((item) => (
-                    <li key={item.key} className={`workspace-statistics-insights__item is-${item.level}`.trim()}>
+                  {insights.map((item, index) => (
+                    <li key={`${item.key}-${index}`} className={`workspace-statistics-insights__item is-${item.level}`.trim()}>
                       {item.text}
                     </li>
                   ))}
@@ -246,8 +246,8 @@ export function WorkspaceStatisticsView({
                 <p className="typo-small">{copy.growthSubtitle}</p>
               </header>
               <div className="workspace-statistics-growth__grid">
-                {growthCards.map((card) => (
-                  <article key={card.key} className="workspace-statistics-growth__card">
+                {growthCards.map((card, index) => (
+                  <article key={`${card.key}-${index}`} className="workspace-statistics-growth__card">
                     <p className="workspace-statistics-growth__title">{card.title}</p>
                     <p className="workspace-statistics-growth__body">{card.body}</p>
                     <Link href={card.href} prefetch={false} className="btn-ghost is-primary workspace-statistics-growth__cta">
