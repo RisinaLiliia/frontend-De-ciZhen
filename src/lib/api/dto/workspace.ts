@@ -173,11 +173,23 @@ export type WorkspaceStatisticsActivityTotalsDto = {
   bestWindowTimestamp: string | null;
 };
 
+export type WorkspaceStatisticsActivityMetricsDto = {
+  offerRatePercent: number;
+  responseMedianMinutes: number | null;
+  unansweredRequests24h: number;
+  cancellationRatePercent: number;
+  completedJobs: number;
+  gmvAmount: number;
+  platformRevenueAmount: number;
+  takeRatePercent: number;
+};
+
 export type WorkspaceStatisticsActivityDto = {
   range: WorkspaceStatisticsRange;
   interval: WorkspacePublicActivityInterval;
   points: WorkspaceStatisticsActivityPointDto[];
   totals: WorkspaceStatisticsActivityTotalsDto;
+  metrics: WorkspaceStatisticsActivityMetricsDto;
 };
 
 export type WorkspaceStatisticsCategoryDemandDto = {
@@ -204,14 +216,58 @@ export type WorkspaceStatisticsDemandDto = {
 };
 
 export type WorkspaceStatisticsProfileFunnelDto = {
+  periodLabel: string;
   stage1: number;
   stage2: number;
   stage3: number;
   stage4: number;
+  requestsTotal: number;
+  offersTotal: number;
+  confirmedResponsesTotal: number;
+  closedContractsTotal: number;
+  completedJobsTotal: number;
+  profitAmount: number;
+  offerResponseRatePercent: number;
+  confirmationRatePercent: number;
+  contractClosureRatePercent: number;
+  completionRatePercent: number;
   conversionRate: number;
+  totalConversionPercent: number;
+  summaryText: string;
+  stages: Array<{
+    id: 'requests' | 'offers' | 'confirmations' | 'contracts' | 'completed' | 'revenue';
+    label: string;
+    value: number;
+    displayValue: string;
+    widthPercent: number;
+    rateLabel: string | null;
+    ratePercent: number | null;
+    helperText: string | null;
+  }>;
 };
 
 export type WorkspaceStatisticsInsightDto = {
+  id?: string;
+  type?: 'demand' | 'opportunity' | 'performance' | 'growth' | 'risk' | 'promotion';
+  priority?: 'high' | 'medium' | 'low';
+  audience?: 'all' | 'provider' | 'client' | 'guest';
+  score?: number;
+  title?: string;
+  body?: string;
+  shortLabel?: string;
+  icon?: string;
+  confidence?: number;
+  metrics?: Array<{
+    key: string;
+    value: string | number;
+  }>;
+  action?: {
+    label: string;
+    actionType: 'internal_link' | 'modal' | 'promotion' | 'none';
+    href?: string;
+    payload?: Record<string, unknown>;
+  };
+  validUntil?: string;
   level: 'info' | 'trend' | 'warning';
   code: string;
   context: string | null;
