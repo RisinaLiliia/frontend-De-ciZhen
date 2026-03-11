@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { KpiCard } from '@/components/ui/KpiCard';
+import type { KpiCardTrend } from '@/components/ui/KpiCard';
 
 type StatsTab = 'provider' | 'client';
 
@@ -11,6 +13,7 @@ type KpiItem = {
   value: string;
   delta?: string;
   tone?: 'accent' | 'success' | 'neutral';
+  trend?: KpiCardTrend;
 };
 
 type ChartPoint = {
@@ -115,17 +118,14 @@ function StatsBody({ viewModel }: { viewModel: PayloadViewModel }) {
       {payload.showKpis !== false && payload.kpis.length > 0 ? (
         <div className="requests-stats__kpi-grid">
           {payload.kpis.map((kpi) => (
-            <article key={kpi.key} className="requests-stats-kpi">
-              <div className="requests-stats-kpi__top">
-                <span className="requests-stats-kpi__label">{kpi.label}</span>
-                <strong className="requests-stats-kpi__value">{kpi.value}</strong>
-              </div>
-              {kpi.delta ? (
-                <span className={`requests-stats-kpi__delta is-${kpi.tone ?? 'neutral'}`.trim()}>
-                  {kpi.delta}
-                </span>
-              ) : null}
-            </article>
+            <KpiCard
+              key={kpi.key}
+              label={kpi.label}
+              value={kpi.value}
+              meta={kpi.delta}
+              tone={kpi.tone ?? 'neutral'}
+              trend={kpi.trend}
+            />
           ))}
         </div>
       ) : null}

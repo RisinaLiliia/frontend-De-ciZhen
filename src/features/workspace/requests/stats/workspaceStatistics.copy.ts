@@ -16,8 +16,26 @@ export type WorkspaceStatisticsCopy = {
   activitySubtitle: string;
   demandTitle: string;
   demandSubtitle: string;
+  demandExpandListLabel: string;
   citiesTitle: string;
   citiesSubtitle: string;
+  citiesColumnRank: string;
+  citiesColumnCity: string;
+  citiesColumnRequests: string;
+  citiesColumnJobSearches: string;
+  citiesColumnProviderSearches: string;
+  citiesColumnMarketBalance: string;
+  citiesFilterPlaceholder: string;
+  citiesNoMatch: string;
+  citiesExpandListLabel: string;
+  citiesCollapseListLabel: string;
+  citySignalHigh: string;
+  citySignalMedium: string;
+  citySignalLow: string;
+  citySignalNone: string;
+  cityCoverageFullLabel: string;
+  cityCoveragePartialLabel: string;
+  cityCoverageNoneLabel: string;
   profileTitle: string;
   profileSubtitlePlatform: string;
   profileSubtitlePersonalized: string;
@@ -61,8 +79,26 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   activitySubtitle: 'Neue Anfragen und Angebote im Zeitverlauf',
   demandTitle: 'Nachfrage nach Kategorien',
   demandSubtitle: 'Wo aktuell die meisten Aufträge entstehen',
+  demandExpandListLabel: 'Alle Kategorien anzeigen',
   citiesTitle: 'Städte & Regionen',
-  citiesSubtitle: 'Top-Nachfrage nach Stadt im gewählten Zeitraum',
+  citiesSubtitle: 'Marktaktivität nach Stadt im gewählten Zeitraum',
+  citiesColumnRank: 'Rang',
+  citiesColumnCity: 'Stadt',
+  citiesColumnRequests: 'Anfragen',
+  citiesColumnJobSearches: 'Auftrags-Suchen',
+  citiesColumnProviderSearches: 'Anbieter-Suchen',
+  citiesColumnMarketBalance: 'Market Balance',
+  citiesFilterPlaceholder: 'Stadt suchen',
+  citiesNoMatch: 'Keine Stadt gefunden.',
+  citiesExpandListLabel: 'Alle Städte anzeigen',
+  citiesCollapseListLabel: 'Liste reduzieren',
+  citySignalHigh: 'Hohe Nachfrage',
+  citySignalMedium: 'Ausgeglichen',
+  citySignalLow: 'Viele Anbieter',
+  citySignalNone: 'Kein Suchsignal',
+  cityCoverageFullLabel: 'Volle Suchsignale',
+  cityCoveragePartialLabel: 'Teilweise Suchsignale',
+  cityCoverageNoneLabel: 'Nur Nachfrage-Daten',
   profileTitle: 'Profil Performance',
   profileSubtitlePlatform: 'Markt-Funnel über die Plattform',
   profileSubtitlePersonalized: 'Wie dein Profil aktuell performt',
@@ -106,8 +142,26 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   activitySubtitle: 'New requests and offers over time',
   demandTitle: 'Demand by category',
   demandSubtitle: 'Where market demand is currently highest',
+  demandExpandListLabel: 'Show all categories',
   citiesTitle: 'Cities & regions',
-  citiesSubtitle: 'Top demand by city for selected range',
+  citiesSubtitle: 'Market activity by city in selected range',
+  citiesColumnRank: 'Rank',
+  citiesColumnCity: 'City',
+  citiesColumnRequests: 'Requests',
+  citiesColumnJobSearches: 'Job searches',
+  citiesColumnProviderSearches: 'Provider searches',
+  citiesColumnMarketBalance: 'Market balance',
+  citiesFilterPlaceholder: 'Search city',
+  citiesNoMatch: 'No matching city found.',
+  citiesExpandListLabel: 'Show all cities',
+  citiesCollapseListLabel: 'Show fewer',
+  citySignalHigh: 'High demand',
+  citySignalMedium: 'Balanced',
+  citySignalLow: 'High provider activity',
+  citySignalNone: 'No search signal',
+  cityCoverageFullLabel: 'Full search signals',
+  cityCoveragePartialLabel: 'Partial search signals',
+  cityCoverageNoneLabel: 'Demand only data',
   profileTitle: 'Profile performance',
   profileSubtitlePlatform: 'Marketplace funnel for the platform',
   profileSubtitlePersonalized: 'How your profile performs right now',

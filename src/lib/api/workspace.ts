@@ -34,7 +34,7 @@ function buildWorkspacePublicOverviewQuery(params: WorkspacePublicOverviewQuery 
   }
   if (params.activityRange) qs.set('activityRange', params.activityRange);
   if (typeof params.cityActivityLimit === 'number') {
-    qs.set('cityActivityLimit', String(Math.min(100, Math.max(1, Math.trunc(params.cityActivityLimit)))));
+    qs.set('cityActivityLimit', String(Math.min(5000, Math.max(1, Math.trunc(params.cityActivityLimit)))));
   }
   return qs.toString();
 }

@@ -192,6 +192,8 @@ export type WorkspaceStatisticsCityDemandDto = {
   cityName: string;
   cityId: string | null;
   requestCount: number;
+  auftragSuchenCount: number;
+  anbieterSuchenCount: number;
   lat: number | null;
   lng: number | null;
 };

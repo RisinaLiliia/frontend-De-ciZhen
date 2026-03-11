@@ -46,55 +46,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .requests-stats-kpi {
-    display: grid;
-    gap: var(--space-1);
-    padding: var(--space-2-5);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--surface-soft-border);
-    background: var(--surface-soft-bg);
-  }
-
-  .requests-stats-kpi.is-positive {
-    border-color: color-mix(in oklab, var(--c-primary) 32%, var(--surface-soft-border) 68%);
-    background: color-mix(in oklab, var(--c-primary) 6%, var(--surface-soft-bg) 94%);
-  }
-
-  .requests-stats-kpi__top {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-
-  .requests-stats-kpi__label {
-    font-size: var(--fs-small);
-    color: var(--c-text-muted);
-  }
-
-  .requests-stats-kpi__value {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--c-text);
-  }
-
-  .requests-stats-kpi__delta {
-    font-size: var(--fs-small);
-    font-weight: 600;
-  }
-
-  .requests-stats-kpi__delta.is-success {
-    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
-  }
-
-  .requests-stats-kpi__delta.is-accent {
-    color: var(--c-accent);
-  }
-
-  .requests-stats-kpi__delta.is-neutral {
-    color: var(--c-text-muted);
-  }
-
   .requests-stats-chart {
     display: grid;
     gap: var(--space-2-5);

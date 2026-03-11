@@ -1,4 +1,5 @@
 import { buildApiUrl } from './url';
+import { apiPost } from './http';
 
 export type PlatformActivityRange = '24h' | '7d' | '30d';
 export type PlatformActivityInterval = 'hour' | 'day';
@@ -28,6 +29,32 @@ export type PlatformLiveFeedResponse = {
   source: PlatformActivitySource;
   updatedAt: string;
   data: PlatformLiveFeedItem[];
+};
+
+export type SearchEventTarget = 'request' | 'provider';
+export type SearchEventSource =
+  | 'workspace_requests'
+  | 'workspace_providers'
+  | 'workspace_filters'
+  | 'home_quick_search'
+  | 'other';
+
+export type CreateSearchEventDto = {
+  target: SearchEventTarget;
+  source?: SearchEventSource;
+  cityId?: string;
+  cityName?: string;
+  categoryKey?: string;
+  subcategoryKey?: string;
+  query?: string;
+  sessionId?: string;
+};
+
+export type SearchEventResponseDto = {
+  accepted: boolean;
+  deduped: boolean;
+  bucketStart: string;
+  recordedAt: string;
 };
 
 function toInterval(range: PlatformActivityRange): PlatformActivityInterval {
@@ -141,4 +168,10 @@ async function fetchPlatformLiveFeedReal(limit = 4): Promise<PlatformLiveFeedRes
 
 export async function getPlatformLiveFeed(limit = 4): Promise<PlatformLiveFeedResponse> {
   return fetchPlatformLiveFeedReal(limit);
+}
+
+export async function trackSearchEvent(payload: CreateSearchEventDto): Promise<SearchEventResponseDto> {
+  return apiPost<CreateSearchEventDto, SearchEventResponseDto>('/analytics/search-event', payload, {
+    skipAuthRefresh: true,
+  });
 }

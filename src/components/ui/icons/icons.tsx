@@ -269,6 +269,70 @@ export function IconStar() {
   );
 }
 
+export function IconTrophy() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M8 4h8v3a4 4 0 0 1-8 0V4Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path d="M10 14h4v3h-4z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M8 20h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M16 6h2a2 2 0 0 1 0 4h-2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 6H6a2 2 0 0 0 0 4h2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function IconTrophyRank({ rank }: { rank: 1 | 2 | 3 }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" role="img" aria-label={`Rank ${rank}`}>
+      <path
+        d="M8 4h8v3a4 4 0 0 1-8 0V4Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path d="M10 14h4v3h-4z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M8 20h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M16 6h2a2 2 0 0 1 0 4h-2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 6H6a2 2 0 0 0 0 4h2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <text
+        x="12"
+        y="12.6"
+        fill="currentColor"
+        fontSize="9"
+        fontWeight="900"
+        textAnchor="middle"
+      >
+        {rank}
+      </text>
+    </svg>
+  );
+}
+
 export function IconBrandGoogle() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">

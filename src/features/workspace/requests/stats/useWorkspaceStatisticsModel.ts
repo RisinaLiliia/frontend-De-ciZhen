@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
+import type { KpiCardTrend } from '@/components/ui/KpiCard';
 
 import type {
   RequestResponseDto,
@@ -10,9 +11,11 @@ import type {
   ReviewOverviewDto,
 } from '@/lib/api/dto/reviews';
 import type {
+  WorkspacePublicCityActivityItemDto,
   WorkspaceStatisticsActivityPointDto,
   WorkspaceStatisticsActivityTotalsDto,
   WorkspaceStatisticsCategoryDemandDto,
+  WorkspaceStatisticsCityDemandDto,
   WorkspaceStatisticsGrowthCardDto,
   WorkspaceStatisticsInsightDto,
   WorkspaceStatisticsOverviewDto,
@@ -53,10 +56,26 @@ const REVIEWS_SUMMARY_FALLBACK: ReviewOverviewDto = {
   },
 };
 
-const ENABLE_STATISTICS_BFF =
-  process.env.NEXT_PUBLIC_WORKSPACE_STATS_BFF === 'true' &&
-  (process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_WORKSPACE_STATS_BFF_DEV === 'true');
-let isStatisticsBffAvailable: boolean | null = ENABLE_STATISTICS_BFF ? null : false;
+const WORKSPACE_STATS_BFF_FLAG = process.env.NEXT_PUBLIC_WORKSPACE_STATS_BFF;
+const FORCE_DISABLE_STATISTICS_BFF = WORKSPACE_STATS_BFF_FLAG === 'false';
+const FORCE_ENABLE_STATISTICS_BFF = WORKSPACE_STATS_BFF_FLAG === 'true';
+let isStatisticsBffAvailable: boolean | null = FORCE_DISABLE_STATISTICS_BFF ? false : null;
+
+type WorkspaceStatisticsSource = 'bff' | 'fallback';
+type WorkspaceStatisticsCitySourceDto = Omit<
+  WorkspaceStatisticsCityDemandDto,
+  'auftragSuchenCount' | 'anbieterSuchenCount'
+> & {
+  auftragSuchenCount?: number;
+  anbieterSuchenCount?: number;
+};
+
+type WorkspaceStatisticsOverviewSourceDto = Omit<WorkspaceStatisticsOverviewDto, 'demand'> & {
+  demand: Omit<WorkspaceStatisticsOverviewDto['demand'], 'cities'> & {
+    cities: WorkspaceStatisticsCitySourceDto[];
+  };
+  __source: WorkspaceStatisticsSource;
+};
 
 export type WorkspaceStatisticsKpiView = {
   key: string;
@@ -64,6 +83,17 @@ export type WorkspaceStatisticsKpiView = {
   value: string;
   hint: string;
   tone: 'positive' | 'neutral';
+  trend: KpiCardTrend;
+};
+
+export type WorkspaceStatisticsCityRowView = {
+  key: string;
+  name: string;
+  count: number;
+  auftragSuchenCount: number | null;
+  anbieterSuchenCount: number | null;
+  marketBalanceRatio: number | null;
+  signal: 'high' | 'medium' | 'low' | 'none';
 };
 
 export type WorkspaceStatisticsFunnelItemView = {
@@ -101,7 +131,12 @@ export type WorkspaceStatisticsModel = {
     updatedAt: string;
   };
   demandRows: WorkspaceStatisticsCategoryDemandDto[];
-  cityRows: Array<{ key: string; name: string; count: number }>;
+  cityRows: WorkspaceStatisticsCityRowView[];
+  citySignalCoverage: {
+    mode: 'full' | 'partial' | 'none';
+    label: string;
+    detail: string;
+  };
   funnel: WorkspaceStatisticsFunnelItemView[];
   conversion: string;
   insights: WorkspaceStatisticsInsightView[];
@@ -148,14 +183,81 @@ function formatMinutes(value: number | null, locale: Locale) {
   return locale === 'de' ? `~${Math.round(value)} Min.` : `~${Math.round(value)} min`;
 }
 
-function toHint(value: number, baseline: number, locale: Locale) {
+function toHint(
+  value: number,
+  baseline: number,
+  range: WorkspaceStatisticsRange,
+  locale: Locale,
+) {
+  const context =
+    locale === 'de'
+      ? range === '24h'
+        ? 'heute'
+        : range === '7d'
+          ? 'diese Woche'
+          : range === '30d'
+            ? 'diesen Monat'
+            : 'in 90 Tagen'
+      : range === '24h'
+        ? 'today'
+        : range === '7d'
+          ? 'this week'
+          : range === '30d'
+            ? 'this month'
+            : 'in 90 days';
+
   if (baseline <= 0) {
-    if (value <= 0) return locale === 'de' ? '0% stabil' : '0% stable';
-    return locale === 'de' ? `+${value} neu` : `+${value} new`;
+    if (value <= 0) return locale === 'de' ? 'Trend stabil' : 'Trend stable';
+    return locale === 'de' ? `+${value} neu ${context}` : `+${value} new ${context}`;
   }
-  const pct = Math.round(((value - baseline) / baseline) * 100);
-  if (pct === 0) return locale === 'de' ? '0% stabil' : '0% stable';
-  return locale === 'de' ? `${pct > 0 ? '+' : ''}${pct}% ggü. vorher` : `${pct > 0 ? '+' : ''}${pct}% vs previous`;
+  const delta = value - baseline;
+  if (delta === 0) return locale === 'de' ? 'Trend stabil' : 'Trend stable';
+  if (locale === 'de') {
+    return `${delta > 0 ? '+' : ''}${delta} seit letzter Periode`;
+  }
+  return `${delta > 0 ? '+' : ''}${delta} since last period`;
+}
+
+function toTrend(value: number, baseline: number): KpiCardTrend {
+  if (baseline <= 0) {
+    if (value <= 0) return { direction: 'flat', percent: 0 };
+    return { direction: 'up', percent: 100 };
+  }
+  const percent = Math.round(((value - baseline) / baseline) * 100);
+  if (percent > 0) return { direction: 'up', percent };
+  if (percent < 0) return { direction: 'down', percent };
+  return { direction: 'flat', percent: 0 };
+}
+
+function resolveCitySignal(params: {
+  requestCount: number;
+  auftragSuchenCount: number;
+  anbieterSuchenCount: number;
+}): WorkspaceStatisticsCityRowView['signal'] {
+  const demandActivity = Math.max(0, params.requestCount) + Math.max(0, params.anbieterSuchenCount);
+  const supplyActivity = Math.max(0, params.auftragSuchenCount);
+  const pressure = demandActivity / Math.max(1, supplyActivity);
+  if (pressure >= 1.2) return 'high';
+  if (pressure <= 0.8) return 'low';
+  return 'medium';
+}
+
+function resolveMarketBalanceRatio(params: {
+  requestCount: number;
+  auftragSuchenCount: number;
+  anbieterSuchenCount: number;
+}): number {
+  const demandActivity = Math.max(0, params.requestCount) + Math.max(0, params.anbieterSuchenCount);
+  const supplyActivity = Math.max(0, params.auftragSuchenCount);
+  if (demandActivity <= 0) return 0;
+  return demandActivity / Math.max(1, supplyActivity);
+}
+
+function formatReviewCountHint(count: number, locale: Locale, formatNumber: Intl.NumberFormat): string {
+  if (locale === 'de') {
+    return `${formatNumber.format(count)} ${count === 1 ? 'Bewertung' : 'Bewertungen'}`;
+  }
+  return `${formatNumber.format(count)} ${count === 1 ? 'review' : 'reviews'}`;
 }
 
 function exportCsv(rows: string[][], filename: string) {
@@ -293,9 +395,43 @@ function buildInsightsFromFallback(params: {
   return next.slice(0, 4);
 }
 
+function mergeFullCityRanking(params: {
+  statsCities: WorkspaceStatisticsCitySourceDto[];
+  publicCities: WorkspacePublicCityActivityItemDto[];
+}): WorkspaceStatisticsCitySourceDto[] {
+  if (params.publicCities.length === 0) return params.statsCities;
+
+  const statsBySlug = new Map<string, WorkspaceStatisticsCitySourceDto>();
+  const statsByName = new Map<string, WorkspaceStatisticsCitySourceDto>();
+
+  for (const city of params.statsCities) {
+    statsBySlug.set(city.citySlug, city);
+    statsByName.set(city.cityName.trim().toLowerCase(), city);
+  }
+
+  return params.publicCities
+    .slice()
+    .sort((a, b) => b.requestCount - a.requestCount)
+    .map((city) => {
+      const bySlug = statsBySlug.get(city.citySlug);
+      const byName = statsByName.get(city.cityName.trim().toLowerCase());
+      const statsCity = bySlug ?? byName;
+      return {
+        citySlug: city.citySlug,
+        cityName: city.cityName,
+        cityId: city.cityId,
+        requestCount: city.requestCount,
+        lat: city.lat,
+        lng: city.lng,
+        auftragSuchenCount: statsCity?.auftragSuchenCount,
+        anbieterSuchenCount: statsCity?.anbieterSuchenCount,
+      };
+    });
+}
+
 async function getWorkspaceStatisticsFallback(
   range: WorkspaceStatisticsRange,
-): Promise<WorkspaceStatisticsOverviewDto> {
+): Promise<WorkspaceStatisticsOverviewSourceDto> {
   const hasAccessToken = Boolean(getAccessToken());
   const legacyRange = normalizeLegacyRange(range);
 
@@ -305,7 +441,7 @@ async function getWorkspaceStatisticsFallback(
       page: 1,
       limit: 80,
       activityRange: legacyRange,
-      cityActivityLimit: 25,
+      cityActivityLimit: 5000,
     }),
     withStatusFallback(
       () => getPlatformActivity(legacyRange),
@@ -339,7 +475,11 @@ async function getWorkspaceStatisticsFallback(
   const demandCities = publicOverview.cityActivity.items
     .slice()
     .sort((a, b) => b.requestCount - a.requestCount)
-    .slice(0, 8);
+    .map((item) => ({
+      ...item,
+      auftragSuchenCount: item.requestCount,
+      anbieterSuchenCount: item.requestCount,
+    }));
 
   const mode: 'platform' | 'personalized' = privateOverview ? 'personalized' : 'platform';
   const completedJobs = privateOverview
@@ -362,6 +502,7 @@ async function getWorkspaceStatisticsFallback(
   });
 
   return {
+    __source: 'fallback',
     updatedAt: new Date().toISOString(),
     mode,
     range,
@@ -426,7 +567,7 @@ export function useWorkspaceStatisticsModel({
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const formatNumber = React.useMemo(() => new Intl.NumberFormat(localeTag), [localeTag]);
 
-  const query = useQuery({
+  const query = useQuery<WorkspaceStatisticsOverviewSourceDto>({
     queryKey: ['workspace-statistics-overview', range],
     queryFn: async () => {
       if (isStatisticsBffAvailable === false) {
@@ -434,14 +575,60 @@ export function useWorkspaceStatisticsModel({
       }
 
       try {
-        const payload = await getWorkspaceStatistics(range);
+        const legacyRange = normalizeLegacyRange(range);
+        const [payload, fullPublicOverview] = await Promise.all([
+          getWorkspaceStatistics(range),
+          withStatusFallback(
+            () =>
+              getWorkspacePublicOverview({
+                sort: 'date_desc',
+                page: 1,
+                limit: 1,
+                activityRange: legacyRange,
+                cityActivityLimit: 5000,
+              }),
+            null,
+            [400, 404],
+          ),
+        ]);
+
+        const mergedCities = mergeFullCityRanking({
+          statsCities: payload.demand.cities,
+          publicCities: fullPublicOverview?.cityActivity.items ?? [],
+        });
+
         isStatisticsBffAvailable = true;
-        return payload;
+        return {
+          ...payload,
+          summary: {
+            ...payload.summary,
+            totalActiveCities: Math.max(
+              payload.summary.totalActiveCities,
+              fullPublicOverview?.cityActivity.totalActiveCities ?? 0,
+            ),
+          },
+          demand: {
+            ...payload.demand,
+            cities: mergedCities,
+          },
+          __source: 'bff',
+        };
       } catch (error) {
-        if (!hasAnyStatus(error, [400, 404])) {
+        if (hasAnyStatus(error, [404, 405, 501])) {
+          if (!FORCE_ENABLE_STATISTICS_BFF) {
+            isStatisticsBffAvailable = false;
+          }
+          return getWorkspaceStatisticsFallback(range);
+        }
+        if (hasAnyStatus(error, [400, 401, 403])) {
+          return getWorkspaceStatisticsFallback(range);
+        }
+        if (FORCE_DISABLE_STATISTICS_BFF) {
+          return getWorkspaceStatisticsFallback(range);
+        }
+        if (!hasAnyStatus(error, [400, 401, 403, 404, 405, 501])) {
           throw error;
         }
-        isStatisticsBffAvailable = false;
         return getWorkspaceStatisticsFallback(range);
       }
     },
@@ -471,29 +658,46 @@ export function useWorkspaceStatisticsModel({
         key: 'requests-total',
         label: copy.requestsLabel,
         value: formatNumber.format(data.kpis.requestsTotal),
-        hint: toHint(totals.latestRequests, totals.previousRequests, locale),
+        hint: toHint(totals.latestRequests, totals.previousRequests, range, locale),
         tone: totals.latestRequests >= totals.previousRequests ? 'positive' : 'neutral',
+        trend: toTrend(totals.latestRequests, totals.previousRequests),
       },
       {
         key: 'offers-total',
         label: copy.offersLabel,
         value: formatNumber.format(data.kpis.offersTotal),
-        hint: toHint(totals.latestOffers, totals.previousOffers, locale),
+        hint: toHint(totals.latestOffers, totals.previousOffers, range, locale),
         tone: totals.latestOffers >= totals.previousOffers ? 'positive' : 'neutral',
+        trend: toTrend(totals.latestOffers, totals.previousOffers),
       },
       {
         key: 'completed-total',
         label: copy.stage4LabelPlatform,
         value: formatNumber.format(data.kpis.completedJobsTotal),
-        hint: formatPercent(data.kpis.successRate),
-        tone: data.kpis.successRate >= 25 ? 'positive' : 'neutral',
+        hint: data.kpis.completedJobsTotal > 0
+          ? locale === 'de'
+            ? `Erfolgsquote ${formatPercent(data.kpis.successRate)}`
+            : `Success rate ${formatPercent(data.kpis.successRate)}`
+          : locale === 'de'
+            ? 'Noch keine Abschlüsse'
+            : 'No completed jobs yet',
+        tone: data.kpis.completedJobsTotal > 0 && data.kpis.successRate >= 25 ? 'positive' : 'neutral',
+        trend: data.kpis.completedJobsTotal > 0
+          ? {
+              direction: data.kpis.successRate >= 25 ? 'up' : 'down',
+              percent: Math.round(data.kpis.successRate),
+            }
+          : { direction: 'flat', percent: 0 },
       },
       {
         key: 'active-providers',
         label: locale === 'de' ? 'Aktive Anbieter' : 'Active providers',
         value: formatNumber.format(data.summary.totalActiveProviders),
-        hint: formatNumber.format(data.summary.totalPublishedRequests),
+        hint: locale === 'de'
+          ? `${formatNumber.format(data.summary.totalPublishedRequests)} aktive Aufträge`
+          : `${formatNumber.format(data.summary.totalPublishedRequests)} active requests`,
         tone: 'neutral',
+        trend: { direction: 'flat', percent: 0 },
       },
       {
         key: 'active-cities',
@@ -501,6 +705,7 @@ export function useWorkspaceStatisticsModel({
         value: formatNumber.format(data.summary.totalActiveCities),
         hint: locale === 'de' ? 'mit Nachfrage' : 'with demand',
         tone: 'neutral',
+        trend: { direction: 'flat', percent: 0 },
       },
       {
         key: 'rating-avg',
@@ -509,87 +714,230 @@ export function useWorkspaceStatisticsModel({
           data.summary.platformRatingAvg > 0
             ? data.summary.platformRatingAvg.toFixed(1)
             : '—',
-        hint: `${formatNumber.format(data.summary.platformRatingCount)} ${copy.reviewsLabel}`,
+        hint: formatReviewCountHint(data.summary.platformRatingCount, locale, formatNumber),
         tone: data.summary.platformRatingAvg >= 4 ? 'positive' : 'neutral',
+        trend: data.summary.platformRatingAvg > 0
+          ? {
+              direction: data.summary.platformRatingAvg >= 4 ? 'up' : 'down',
+              percent: Math.round((data.summary.platformRatingAvg / 5) * 100),
+            }
+          : { direction: 'flat', percent: 0 },
       },
     ];
 
     if (mode === 'personalized') {
+      const openRequests = data.kpis.openRequests ?? 0;
+      const recentOffers7d = data.kpis.recentOffers7d ?? 0;
+      const avgResponseMinutes = data.kpis.avgResponseMinutes;
+      const isFastResponse = typeof avgResponseMinutes === 'number' && avgResponseMinutes <= 30;
+      const acceptedOffers = data.profileFunnel.stage3;
+      const sentOffers = data.profileFunnel.stage2;
+      const completedJobs = data.kpis.completedJobsTotal;
+      const profileCompleteness = data.kpis.profileCompleteness ?? 0;
+
       return [
         {
           key: 'open-requests',
           label: copy.stage1LabelPersonalized,
-          value: formatNumber.format(data.kpis.openRequests ?? 0),
-          hint: formatNumber.format(data.kpis.requestsTotal),
+          value: formatNumber.format(openRequests),
+          hint: openRequests > 0
+            ? locale === 'de'
+              ? `${formatNumber.format(data.kpis.requestsTotal)} insgesamt im Zeitraum`
+              : `${formatNumber.format(data.kpis.requestsTotal)} total in selected range`
+            : locale === 'de'
+              ? 'Keine offenen Anfragen'
+              : 'No open requests',
           tone: 'neutral',
+          trend: { direction: 'flat', percent: 0 },
         },
         {
           key: 'recent-offers',
           label: copy.stage2LabelPersonalized,
           value: formatNumber.format(data.kpis.offersTotal),
-          hint: `${formatNumber.format(data.kpis.recentOffers7d ?? 0)} ${locale === 'de' ? 'letzte 7 Tage' : 'last 7 days'}`,
-          tone: (data.kpis.recentOffers7d ?? 0) > 0 ? 'positive' : 'neutral',
+          hint: recentOffers7d > 0
+            ? locale === 'de'
+              ? `${formatNumber.format(recentOffers7d)} in den letzten 7 Tagen`
+              : `${formatNumber.format(recentOffers7d)} in the last 7 days`
+            : locale === 'de'
+              ? 'Noch keine Angebote in den letzten 7 Tagen'
+              : 'No offers in the last 7 days',
+          tone: recentOffers7d > 0 ? 'positive' : 'neutral',
+          trend: recentOffers7d > 0
+            ? { direction: 'up', percent: 100 }
+            : { direction: 'flat', percent: 0 },
         },
         {
           key: 'completed-personal',
           label: copy.stage4LabelPersonalized,
-          value: formatNumber.format(data.kpis.completedJobsTotal),
-          hint: formatPercent(data.kpis.successRate),
-          tone: data.kpis.successRate >= 30 ? 'positive' : 'neutral',
+          value: formatNumber.format(completedJobs),
+          hint: completedJobs > 0
+            ? locale === 'de'
+              ? `Erfolgsquote ${formatPercent(data.kpis.successRate)}`
+              : `Success rate ${formatPercent(data.kpis.successRate)}`
+            : locale === 'de'
+              ? 'Noch keine Abschlüsse'
+              : 'No completed jobs yet',
+          tone: completedJobs > 0 && data.kpis.successRate >= 30 ? 'positive' : 'neutral',
+          trend: completedJobs > 0
+            ? { direction: data.kpis.successRate >= 30 ? 'up' : 'down', percent: Math.round(data.kpis.successRate) }
+            : { direction: 'flat', percent: 0 },
         },
         {
           key: 'response-time',
           label: locale === 'de' ? 'Antwortzeit' : 'Response time',
           value: formatMinutes(data.kpis.avgResponseMinutes, locale),
-          hint:
-            typeof data.kpis.avgResponseMinutes === 'number' && data.kpis.avgResponseMinutes <= 30
+          hint: typeof avgResponseMinutes !== 'number'
+            ? locale === 'de'
+              ? 'Noch keine Antwortzeit-Daten'
+              : 'No response-time data yet'
+            : isFastResponse
               ? locale === 'de'
-                ? 'Schnell'
-                : 'Fast'
+                ? 'Stark: unter 30 Min.'
+                : 'Strong: under 30 min'
               : locale === 'de'
-                ? 'Optimieren'
-                : 'Needs improvement',
-          tone:
-            typeof data.kpis.avgResponseMinutes === 'number' && data.kpis.avgResponseMinutes <= 30
-              ? 'positive'
-              : 'neutral',
+                ? 'Ziel: unter 30 Min.'
+                : 'Target: under 30 min',
+          tone: typeof avgResponseMinutes === 'number' && isFastResponse ? 'positive' : 'neutral',
+          trend: typeof avgResponseMinutes === 'number'
+            ? {
+                direction: isFastResponse ? 'up' : 'down',
+                percent: Math.max(0, 100 - Math.round(avgResponseMinutes)),
+              }
+            : { direction: 'flat', percent: 0 },
         },
         {
           key: 'success-rate',
           label: locale === 'de' ? 'Erfolgsquote' : 'Success rate',
-          value: formatPercent(data.kpis.successRate),
-          hint: formatNumber.format(data.profileFunnel.stage3),
-          tone: data.kpis.successRate >= 30 ? 'positive' : 'neutral',
+          value: sentOffers > 0 ? formatPercent(data.kpis.successRate) : '—',
+          hint: sentOffers > 0
+            ? locale === 'de'
+              ? `${formatNumber.format(acceptedOffers)} akzeptierte Angebote`
+              : `${formatNumber.format(acceptedOffers)} accepted offers`
+            : locale === 'de'
+              ? 'Noch keine gesendeten Angebote'
+              : 'No sent offers yet',
+          tone: sentOffers > 0 && data.kpis.successRate >= 30 ? 'positive' : 'neutral',
+          trend: sentOffers > 0
+            ? { direction: data.kpis.successRate >= 30 ? 'up' : 'down', percent: Math.round(data.kpis.successRate) }
+            : { direction: 'flat', percent: 0 },
         },
         {
           key: 'profile-completeness',
           label: locale === 'de' ? 'Profil Vollständigkeit' : 'Profile completeness',
-          value: formatPercent(data.kpis.profileCompleteness ?? 0),
-          hint:
-            (data.kpis.profileCompleteness ?? 0) >= 80
-              ? locale === 'de'
-                ? 'Starkes Profil'
-                : 'Strong profile'
-              : locale === 'de'
-                ? 'Potenzial'
-                : 'Growth potential',
-          tone: (data.kpis.profileCompleteness ?? 0) >= 80 ? 'positive' : 'neutral',
+          value: formatPercent(profileCompleteness),
+          hint: profileCompleteness >= 80
+            ? locale === 'de'
+              ? 'Starkes Profil'
+              : 'Strong profile'
+            : locale === 'de'
+              ? 'Profil ausbauen für mehr Sichtbarkeit'
+              : 'Improve profile for better visibility',
+          tone: profileCompleteness >= 80 ? 'positive' : 'neutral',
+          trend: profileCompleteness > 0
+            ? { direction: profileCompleteness >= 80 ? 'up' : 'down', percent: Math.round(profileCompleteness) }
+            : { direction: 'flat', percent: 0 },
         },
       ];
     }
 
     return shared;
-  }, [copy, data, formatNumber, locale, mode]);
+  }, [copy, data, formatNumber, locale, mode, range]);
 
-  const cityRows = React.useMemo(
-    () =>
-      (data?.demand.cities ?? []).map((item) => ({
+  const cityRows = React.useMemo<WorkspaceStatisticsCityRowView[]>(() => {
+    const source = data?.demand.cities ?? [];
+    if (source.length === 0) return [];
+
+    const hasSearchMetrics =
+      data?.__source === 'bff' &&
+      source.some(
+        (item) =>
+          typeof item.auftragSuchenCount === 'number' &&
+          Number.isFinite(item.auftragSuchenCount) &&
+          typeof item.anbieterSuchenCount === 'number' &&
+          Number.isFinite(item.anbieterSuchenCount),
+      );
+
+    return source.map((item) => {
+      const requestCount = Math.max(0, Math.round(item.requestCount ?? 0));
+      const rawAuftragSuchenCount =
+        typeof item.auftragSuchenCount === 'number' && Number.isFinite(item.auftragSuchenCount)
+          ? Math.max(0, Math.round(item.auftragSuchenCount))
+          : null;
+      const rawAnbieterSuchenCount =
+        typeof item.anbieterSuchenCount === 'number' && Number.isFinite(item.anbieterSuchenCount)
+          ? Math.max(0, Math.round(item.anbieterSuchenCount))
+          : null;
+
+      if (!hasSearchMetrics || rawAuftragSuchenCount === null || rawAnbieterSuchenCount === null) {
+        return {
+          key: item.citySlug,
+          name: item.cityName,
+          count: requestCount,
+          auftragSuchenCount: null,
+          anbieterSuchenCount: null,
+          marketBalanceRatio: null,
+          signal: 'none',
+        };
+      }
+
+      const auftragSuchenCount = rawAuftragSuchenCount;
+      const anbieterSuchenCount = rawAnbieterSuchenCount;
+      const marketBalanceRatio = resolveMarketBalanceRatio({
+        requestCount,
+        auftragSuchenCount,
+        anbieterSuchenCount,
+      });
+      const signal = resolveCitySignal({
+        requestCount,
+        auftragSuchenCount,
+        anbieterSuchenCount,
+      });
+
+      return {
         key: item.citySlug,
         name: item.cityName,
-        count: item.requestCount,
-      })),
-    [data?.demand.cities],
-  );
+        count: requestCount,
+        auftragSuchenCount,
+        anbieterSuchenCount,
+        marketBalanceRatio,
+        signal,
+      };
+    });
+  }, [data?.__source, data?.demand.cities]);
+
+  const citySignalCoverage = React.useMemo(() => {
+    const total = cityRows.length;
+    const withSearchSignals = cityRows.filter(
+      (row) => row.auftragSuchenCount !== null && row.anbieterSuchenCount !== null,
+    ).length;
+
+    const detail =
+      locale === 'de'
+        ? `${formatNumber.format(withSearchSignals)} von ${formatNumber.format(total)} Städte mit Suchsignal`
+        : `${formatNumber.format(withSearchSignals)} of ${formatNumber.format(total)} cities with search signal`;
+
+    if (total > 0 && withSearchSignals === total) {
+      return {
+        mode: 'full' as const,
+        label: copy.cityCoverageFullLabel,
+        detail,
+      };
+    }
+
+    if (withSearchSignals > 0) {
+      return {
+        mode: 'partial' as const,
+        label: copy.cityCoveragePartialLabel,
+        detail,
+      };
+    }
+
+    return {
+      mode: 'none' as const,
+      label: copy.cityCoverageNoneLabel,
+      detail,
+    };
+  }, [cityRows, copy.cityCoverageFullLabel, copy.cityCoverageNoneLabel, copy.cityCoveragePartialLabel, formatNumber, locale]);
 
   const funnel = React.useMemo<WorkspaceStatisticsFunnelItemView[]>(() => {
     if (!data) return [];
@@ -673,7 +1021,11 @@ export function useWorkspaceStatisticsModel({
       ['section', 'metric', 'value'],
       ...kpis.map((item) => ['kpi', item.label, item.value]),
       ...data.demand.categories.map((item) => ['category-demand', item.categoryName, `${item.sharePercent}% (${item.requestCount})`]),
-      ...cityRows.map((item) => ['city-demand', item.name, String(item.count)]),
+      ...cityRows.map((item) => [
+        'city-demand',
+        item.name,
+        `${item.count} (job-search=${item.auftragSuchenCount ?? 'n/a'}, provider-search=${item.anbieterSuchenCount ?? 'n/a'}, market-balance=${item.marketBalanceRatio === null ? 'n/a' : `${item.marketBalanceRatio.toFixed(2)}x`}, ${item.signal})`,
+      ]),
       ...funnel.map((item) => ['funnel', item.label, item.value]),
     ];
 
@@ -703,6 +1055,7 @@ export function useWorkspaceStatisticsModel({
     activityMeta,
     demandRows: data?.demand.categories ?? [],
     cityRows,
+    citySignalCoverage,
     funnel,
     conversion: formatPercent(data?.profileFunnel.conversionRate ?? 0),
     insights,
