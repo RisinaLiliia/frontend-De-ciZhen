@@ -178,6 +178,7 @@ Persistence / External services
   - bearer token in memory
   - `401` retry via `/auth/refresh`
   - cookie-based refresh flow (`credentials: include`)
+  - per-request `x-request-id` header for backend log correlation
 - `/workspace` is the single workspace runtime entrypoint:
   - authenticated users -> private workspace shell
   - guests -> public workspace shell
@@ -213,6 +214,7 @@ At least one backend base must be available:
 - `NEXT_PUBLIC_DEMO` (default: `true` unless explicitly `false`)
 - `NEXT_PUBLIC_HERO_VARIANT` (default: `animated`)
 - `NEXT_PUBLIC_HERO_ANIMATION_MODE` (default: `subtle`)
+- `NEXT_PUBLIC_WORKSPACE_STATS_SHOW_KPI` (default: `false`; toggles KPI cards in `/workspace?section=stats`)
 
 ### Analytics
 
