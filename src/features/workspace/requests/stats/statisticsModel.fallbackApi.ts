@@ -6,11 +6,14 @@ import { getWorkspacePrivateOverview, getWorkspacePublicOverview } from '@/lib/a
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { getAccessToken } from '@/lib/auth/token';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
+import { ensureStatisticsOpportunityContract } from './statisticsOpportunityContract.utils';
 import {
   buildInsightsFromFallback,
   clampPercent,
   formatFallbackRangeLabel,
   normalizeLegacyRange,
+  resolveCitySignal,
+  resolveMarketBalanceRatio,
   toActivityTotals,
   toFallbackActivityMetrics,
 } from './statisticsModel.mappers';
@@ -78,11 +81,25 @@ export async function getWorkspaceStatisticsFallback(
   const demandCities = publicOverview.cityActivity.items
     .slice()
     .sort((a, b) => b.requestCount - a.requestCount)
-    .map((item) => ({
-      ...item,
-      auftragSuchenCount: item.requestCount,
-      anbieterSuchenCount: item.requestCount,
-    }));
+    .map((item) => {
+      const auftragSuchenCount = item.requestCount;
+      const anbieterSuchenCount = item.requestCount;
+      return {
+        ...item,
+        auftragSuchenCount,
+        anbieterSuchenCount,
+        marketBalanceRatio: Number(resolveMarketBalanceRatio({
+          requestCount: item.requestCount,
+          auftragSuchenCount,
+          anbieterSuchenCount,
+        }).toFixed(2)),
+        signal: resolveCitySignal({
+          requestCount: item.requestCount,
+          auftragSuchenCount,
+          anbieterSuchenCount,
+        }),
+      };
+    });
 
   const mode: 'platform' | 'personalized' = privateOverview ? 'personalized' : 'platform';
   const completedJobs = privateOverview
@@ -185,7 +202,7 @@ export async function getWorkspaceStatisticsFallback(
     topCityName: demandCities[0]?.cityName ?? null,
   });
 
-  return {
+  return ensureStatisticsOpportunityContract({
     __source: 'fallback',
     updatedAt: new Date().toISOString(),
     mode,
@@ -248,5 +265,5 @@ export async function getWorkspaceStatisticsFallback(
       { key: 'local_ads', href: '/workspace?section=requests' },
       { key: 'premium_tools', href: '/provider/onboarding' },
     ],
-  };
+  });
 }

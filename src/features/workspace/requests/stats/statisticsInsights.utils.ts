@@ -3,6 +3,10 @@ import type {
   WorkspaceStatisticsCityDemandDto,
   WorkspaceStatisticsInsightDto,
 } from '@/lib/api/dto/workspace';
+import {
+  resolveCitySignal,
+  resolveMarketBalanceRatio,
+} from './statisticsModel.mappers';
 
 type InsightGroup = 'market' | 'performance' | 'growth' | 'risk' | 'promotion' | 'other';
 
@@ -134,6 +138,37 @@ export function mergeFullCityRanking(params: {
       const bySlug = statsBySlug.get(city.citySlug);
       const byName = statsByName.get(city.cityName.trim().toLowerCase());
       const statsCity = bySlug ?? byName;
+      const auftragSuchenCount =
+        typeof statsCity?.auftragSuchenCount === 'number' && Number.isFinite(statsCity.auftragSuchenCount)
+          ? Math.max(0, Math.round(statsCity.auftragSuchenCount))
+          : undefined;
+      const anbieterSuchenCount =
+        typeof statsCity?.anbieterSuchenCount === 'number' && Number.isFinite(statsCity.anbieterSuchenCount)
+          ? Math.max(0, Math.round(statsCity.anbieterSuchenCount))
+          : undefined;
+      const hasSearchSignals =
+        typeof auftragSuchenCount === 'number' &&
+        typeof anbieterSuchenCount === 'number';
+      const marketBalanceRatio =
+        typeof statsCity?.marketBalanceRatio === 'number' && Number.isFinite(statsCity.marketBalanceRatio)
+          ? statsCity.marketBalanceRatio
+          : hasSearchSignals
+            ? Number(resolveMarketBalanceRatio({
+              requestCount: city.requestCount,
+              auftragSuchenCount,
+              anbieterSuchenCount,
+            }).toFixed(2))
+            : null;
+      const signal = statsCity?.signal ?? (
+        hasSearchSignals
+          ? resolveCitySignal({
+            requestCount: city.requestCount,
+            auftragSuchenCount,
+            anbieterSuchenCount,
+          })
+          : 'none'
+      );
+
       return {
         citySlug: city.citySlug,
         cityName: city.cityName,
@@ -141,10 +176,10 @@ export function mergeFullCityRanking(params: {
         requestCount: city.requestCount,
         lat: city.lat,
         lng: city.lng,
-        auftragSuchenCount: statsCity?.auftragSuchenCount,
-        anbieterSuchenCount: statsCity?.anbieterSuchenCount,
-        marketBalanceRatio: statsCity?.marketBalanceRatio ?? null,
-        signal: statsCity?.signal ?? 'none',
+        auftragSuchenCount,
+        anbieterSuchenCount,
+        marketBalanceRatio,
+        signal,
       };
     });
 }

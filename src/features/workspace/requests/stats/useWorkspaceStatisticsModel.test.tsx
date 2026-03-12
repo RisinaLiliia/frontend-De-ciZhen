@@ -260,6 +260,8 @@ type StatsHook = (args: { locale: 'de' }) => {
   setRange: (next: WorkspaceStatisticsRange) => void;
   isLoading: boolean;
   cityRows: Array<unknown>;
+  opportunityRadar: Array<unknown>;
+  priceIntelligence: { contextLabel: string | null };
 };
 
 function createProbe(useWorkspaceStatisticsModel: StatsHook) {
@@ -272,6 +274,8 @@ function createProbe(useWorkspaceStatisticsModel: StatsHook) {
           data-range={model.range}
           data-loading={String(model.isLoading)}
           data-city-count={String(model.cityRows.length)}
+          data-opportunity-count={String(model.opportunityRadar.length)}
+          data-price-context={model.priceIntelligence.contextLabel ?? ''}
         />
         <button type="button" onClick={() => model.setRange('7d')}>set-7d</button>
       </div>
@@ -367,5 +371,29 @@ describe('useWorkspaceStatisticsModel', () => {
       expect(getWorkspaceStatisticsMock).toHaveBeenCalledWith('7d');
     });
     expect(getWorkspaceStatisticsMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('builds opportunity and price sections when legacy backend payload misses new fields', async () => {
+    const legacyPayload = { ...createStatsOverview('30d') } as unknown as Record<string, unknown>;
+    delete legacyPayload.opportunityRadar;
+    delete legacyPayload.priceIntelligence;
+    getWorkspaceStatisticsMock.mockResolvedValue(legacyPayload as unknown as WorkspaceStatisticsOverviewDto);
+
+    const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
+    const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
+    const queryClient = createQueryClient();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Probe />
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      const probe = screen.getByTestId('probe');
+      expect(probe.getAttribute('data-loading')).toBe('false');
+      expect(Number(probe.getAttribute('data-opportunity-count') ?? '0')).toBeGreaterThan(0);
+      expect(probe.getAttribute('data-price-context')).toContain('Berlin');
+    });
   });
 });

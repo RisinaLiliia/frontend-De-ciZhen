@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import {
@@ -196,7 +197,7 @@ export function WorkspaceStatisticsView({
   }, [range]);
 
   return (
-    <div className="requests-grid requests-grid--equal-cols" aria-labelledby="workspace-statistics-title">
+    <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout" aria-labelledby="workspace-statistics-title">
       <section className="panel requests-panel requests-stats workspace-statistics">
         <SectionHeader
           className="requests-stats__header"
@@ -244,7 +245,7 @@ export function WorkspaceStatisticsView({
 
             <div className="workspace-statistics__grid workspace-statistics__grid--primary">
               <section className="panel requests-stats-chart">
-                <header className="workspace-statistics__tile-header">
+                <header className="section-heading workspace-statistics__tile-header">
                   <p className="section-title">{copy.activityTitle}</p>
                   <p className="section-subtitle">{copy.activitySubtitle}</p>
                 </header>
@@ -297,7 +298,6 @@ export function WorkspaceStatisticsView({
               onNextPage={() => setCityPage((prev) => Math.min(cityTotalPages, prev + 1))}
               formatNumber={formatNumber}
               formatMarketBalance={formatMarketBalance}
-              coverage={model.citySignalCoverage}
               t={t}
             />
 
@@ -317,12 +317,18 @@ export function WorkspaceStatisticsView({
       </section>
 
       <aside className="stack-md">
-        <section className="panel requests-stats-chart">
-          <header className="workspace-statistics__tile-header">
-            <p className="section-title">{copy.profileTitle}</p>
+        <section className="panel requests-stats-chart workspace-statistics__profile-panel">
+          <header className="section-heading workspace-statistics__tile-header workspace-statistics__tile-header--profile">
+            <div className="workspace-statistics__profile-title-row">
+              <p className="section-title">{copy.profileTitle}</p>
+              {funnelPeriodLabel ? (
+                <span className="workspace-statistics__profile-period">
+                  {copy.profileRevenueLabel} · {funnelPeriodLabel}
+                </span>
+              ) : null}
+            </div>
             <p className="section-subtitle">
               {model.mode === 'personalized' ? copy.profileSubtitlePersonalized : copy.profileSubtitlePlatform}
-              {funnelPeriodLabel ? ` · ${funnelPeriodLabel}` : ''}
             </p>
           </header>
           {isLoading ? (
@@ -404,6 +410,8 @@ export function WorkspaceStatisticsView({
             />
           </>
         )}
+
+        <HomeTrustLivePanel className="home-trust-live-panel--compact workspace-statistics__trust-panel" t={t} />
       </aside>
     </div>
   );

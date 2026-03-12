@@ -44,9 +44,6 @@ export type WorkspaceStatisticsCopy = {
   citySignalMedium: string;
   citySignalLow: string;
   citySignalNone: string;
-  cityCoverageFullLabel: string;
-  cityCoveragePartialLabel: string;
-  cityCoverageNoneLabel: string;
   opportunityTitle: string;
   opportunitySubtitle: string;
   opportunityEmpty: string;
@@ -58,8 +55,6 @@ export type WorkspaceStatisticsCopy = {
   opportunityToneHigh: string;
   opportunityToneBalanced: string;
   opportunityToneSupplyHeavy: string;
-  opportunityAnalysisTitle: string;
-  opportunityAnalysisSubtitle: string;
   opportunityAxisDemand: string;
   opportunityAxisCompetition: string;
   opportunityAxisGrowth: string;
@@ -81,6 +76,7 @@ export type WorkspaceStatisticsCopy = {
   priceMarketAverageLabel: string;
   priceNoData: string;
   profileTitle: string;
+  profileRevenueLabel: string;
   profileSubtitlePlatform: string;
   profileSubtitlePersonalized: string;
   insightsTitle: string;
@@ -180,9 +176,6 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   citySignalMedium: 'Ausgeglichen',
   citySignalLow: 'Viele Anbieter',
   citySignalNone: 'Kein Suchsignal',
-  cityCoverageFullLabel: 'Volle Suchsignale',
-  cityCoveragePartialLabel: 'Teilweise Suchsignale',
-  cityCoverageNoneLabel: 'Nur Nachfrage-Daten',
   opportunityTitle: 'Opportunity Radar',
   opportunitySubtitle: 'Beste Marktchancen',
   opportunityEmpty: 'Noch keine Chancen-Daten verfügbar.',
@@ -194,8 +187,6 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   opportunityToneHigh: 'Hohe Nachfrage',
   opportunityToneBalanced: 'Ausgeglichen',
   opportunityToneSupplyHeavy: 'Viele Anbieter',
-  opportunityAnalysisTitle: 'Opportunity Analysis',
-  opportunityAnalysisSubtitle: 'AI-basierte Marktanalyse',
   opportunityAxisDemand: 'Nachfrage',
   opportunityAxisCompetition: 'Konkurrenz',
   opportunityAxisGrowth: 'Marktwachstum',
@@ -224,6 +215,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   priceMarketAverageLabel: 'Marktdurchschnitt',
   priceNoData: 'Noch keine Preisdaten verfügbar.',
   profileTitle: 'Profil Performance',
+  profileRevenueLabel: 'Umsatz',
   profileSubtitlePlatform: 'Von Anfragen bis zum erfolgreichen Abschluss und Umsatz',
   profileSubtitlePersonalized: 'Wie dein Profil aktuell performt',
   insightsTitle: 'Empfehlungen & Insights',
@@ -324,9 +316,6 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   citySignalMedium: 'Balanced',
   citySignalLow: 'High provider activity',
   citySignalNone: 'No search signal',
-  cityCoverageFullLabel: 'Full search signals',
-  cityCoveragePartialLabel: 'Partial search signals',
-  cityCoverageNoneLabel: 'Demand only data',
   opportunityTitle: 'Opportunity radar',
   opportunitySubtitle: 'Best market opportunities',
   opportunityEmpty: 'No opportunity data available yet.',
@@ -338,8 +327,6 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   opportunityToneHigh: 'High demand',
   opportunityToneBalanced: 'Balanced',
   opportunityToneSupplyHeavy: 'High provider activity',
-  opportunityAnalysisTitle: 'Opportunity analysis',
-  opportunityAnalysisSubtitle: 'AI-powered market analysis',
   opportunityAxisDemand: 'Demand',
   opportunityAxisCompetition: 'Competition',
   opportunityAxisGrowth: 'Market growth',
@@ -368,6 +355,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   priceMarketAverageLabel: 'Market average',
   priceNoData: 'No pricing data available yet.',
   profileTitle: 'Profile performance',
+  profileRevenueLabel: 'Revenue',
   profileSubtitlePlatform: 'From requests to successful completion and revenue',
   profileSubtitlePersonalized: 'How your profile performs right now',
   insightsTitle: 'Recommendations & insights',

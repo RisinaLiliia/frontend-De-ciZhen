@@ -197,11 +197,15 @@ describe('statisticsInsights.utils', () => {
         requestCount: 12,
         auftragSuchenCount: 8,
         anbieterSuchenCount: 16,
+        marketBalanceRatio: 2,
+        signal: 'high',
       });
       expect(merged[1]).toMatchObject({
         requestCount: 7,
         auftragSuchenCount: undefined,
         anbieterSuchenCount: undefined,
+        marketBalanceRatio: null,
+        signal: 'none',
       });
     });
 
@@ -239,6 +243,8 @@ describe('statisticsInsights.utils', () => {
         requestCount: 11,
         auftragSuchenCount: 9,
         anbieterSuchenCount: 18,
+        marketBalanceRatio: 2,
+        signal: 'high',
       });
     });
   });
