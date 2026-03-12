@@ -1,0 +1,314 @@
+/* requests-shell-statistics-dashboard-funnel.css */
+
+@layer components {
+  .workspace-statistics-funnel {
+    --workspace-funnel-layer-min-height: 60px;
+    --workspace-funnel-layer-min-height-tall: 70px;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics-funnel--skeleton {
+    gap: var(--space-1-5);
+  }
+
+  .workspace-statistics-funnel--empty {
+    gap: var(--space-1);
+    padding-block: var(--space-1);
+  }
+
+  .workspace-statistics-funnel__empty-title {
+    margin: 0;
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .workspace-statistics-funnel__empty-body {
+    margin: 0;
+    font-size: var(--fs-small);
+    color: var(--c-text-muted);
+    line-height: 1.45;
+  }
+
+  .workspace-statistics-funnel__stack {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-items: stretch;
+  }
+
+  .workspace-statistics-funnel__layer {
+    position: relative;
+    width: 100%;
+    min-height: var(--workspace-funnel-layer-min-height);
+    display: grid;
+    align-items: start;
+    gap: 0;
+    animation: workspace-statistics-funnel-enter 380ms ease-out both;
+    animation-delay: calc(var(--funnel-layer-index, 0) * 50ms);
+  }
+
+  .workspace-statistics-funnel__layer + .workspace-statistics-funnel__layer {
+    margin-top: -4px;
+  }
+
+  .workspace-statistics-funnel__shape {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-height: var(--workspace-funnel-layer-min-height);
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 22%, var(--surface-soft-border) 78%);
+    box-shadow: var(--surface-card-shadow);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--funnel-tone) 20%, var(--c-panel) 80%) 0%,
+        color-mix(in oklab, var(--funnel-tone) 12%, var(--surface-soft-bg) 88%) 100%
+      );
+    clip-path: polygon(
+      calc((100% - var(--funnel-top-width, 100%)) / 2) 0,
+      calc((100% + var(--funnel-top-width, 100%)) / 2) 0,
+      calc((100% + var(--funnel-bottom-width, 100%)) / 2) 100%,
+      calc((100% - var(--funnel-bottom-width, 100%)) / 2) 100%
+    );
+    color: var(--c-text);
+    transition:
+      transform 360ms ease-out,
+      box-shadow 360ms ease-out,
+      border-color 360ms ease-out,
+      filter 360ms ease-out,
+      clip-path 380ms ease-out;
+  }
+
+  .workspace-statistics-funnel__layer.is-tall .workspace-statistics-funnel__shape {
+    min-height: var(--workspace-funnel-layer-min-height-tall);
+  }
+
+  .workspace-statistics-funnel__layer-content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: block;
+    min-height: var(--workspace-funnel-layer-min-height);
+    padding: 6px var(--space-3);
+    pointer-events: none;
+  }
+
+  .workspace-statistics-funnel__layer.is-tall .workspace-statistics-funnel__layer-content {
+    min-height: var(--workspace-funnel-layer-min-height-tall);
+  }
+
+  .workspace-statistics-funnel__shape::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 60%);
+    pointer-events: none;
+  }
+
+  .workspace-statistics-funnel__layer:hover .workspace-statistics-funnel__shape {
+    filter: brightness(1.01);
+    transform: translateY(-1px);
+    box-shadow: var(--surface-card-shadow-hover);
+  }
+
+  .workspace-statistics-funnel__layer:focus-visible {
+    outline: none;
+  }
+
+  .workspace-statistics-funnel__layer:focus-visible .workspace-statistics-funnel__shape {
+    border-color: var(--surface-card-border-focus);
+    box-shadow:
+      var(--surface-card-shadow),
+      0 0 0 2px color-mix(in oklab, var(--c-primary) 20%, transparent);
+  }
+
+  .workspace-statistics-funnel__layer.is-tone-1 {
+    --funnel-tone: color-mix(in oklab, var(--c-accent) 78%, var(--c-primary) 22%);
+  }
+
+  .workspace-statistics-funnel__layer.is-tone-2 {
+    --funnel-tone: color-mix(in oklab, var(--c-accent) 58%, var(--c-primary) 42%);
+  }
+
+  .workspace-statistics-funnel__layer.is-tone-3 {
+    --funnel-tone: color-mix(in oklab, var(--c-accent) 40%, var(--c-primary) 60%);
+  }
+
+  .workspace-statistics-funnel__layer.is-tone-4 {
+    --funnel-tone: color-mix(in oklab, var(--c-accent) 22%, var(--c-primary) 78%);
+  }
+
+  .workspace-statistics-funnel__layer.is-tone-5 {
+    --funnel-tone: color-mix(in oklab, var(--c-accent) 16%, var(--c-primary) 84%);
+  }
+
+  .workspace-statistics-funnel__layer.is-tone-6 {
+    --funnel-tone: color-mix(in oklab, var(--c-accent) 10%, var(--c-primary) 90%);
+  }
+
+  .workspace-statistics-funnel__layer-label {
+    position: relative;
+    z-index: 2;
+    display: block;
+    margin: 0 auto;
+    max-width: none;
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: color-mix(in oklab, var(--c-text) 88%, var(--c-primary) 12%);
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .workspace-statistics-funnel__layer-value {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    font-size: 16px;
+    font-weight: 700;
+    color: color-mix(in oklab, var(--c-text) 90%, var(--c-primary) 10%);
+    line-height: 1;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .workspace-statistics-funnel__layer-hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 77%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: auto;
+    min-width: 0;
+    padding-inline: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: color-mix(in oklab, var(--c-text-muted) 84%, var(--c-primary) 16%);
+    line-height: 1.2;
+    animation: workspace-statistics-funnel-hint-enter 420ms ease-out both;
+    animation-delay: calc(var(--funnel-layer-index, 0) * 50ms + 80ms);
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .workspace-statistics-funnel__layer-hint::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    border-top: 1px dashed color-mix(in oklab, var(--c-primary) 42%, transparent);
+    opacity: 0.9;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .workspace-statistics-funnel__layer-hint-label,
+  .workspace-statistics-funnel__layer-hint-value {
+    display: block;
+    line-height: 1.2;
+    position: relative;
+    z-index: 1;
+    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--c-panel) 14%);
+    pointer-events: auto;
+  }
+
+  .workspace-statistics-funnel__layer-hint-label {
+    color: var(--c-text-muted);
+    font-weight: 600;
+    max-width: 58%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-inline-end: 6px;
+  }
+
+  .workspace-statistics-funnel__layer-hint-value {
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    font-weight: 700;
+    font-size: 13px;
+    white-space: nowrap;
+    padding-inline-start: 6px;
+  }
+
+  .workspace-statistics-funnel__summary {
+    margin: 0;
+    font-size: var(--fs-small);
+    color: var(--c-text-muted);
+    text-align: left;
+  }
+
+  .workspace-statistics-funnel__conversion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+    padding-top: var(--space-1);
+    border-top: 1px dashed var(--surface-soft-border);
+    font-size: var(--fs-small);
+  }
+
+  .workspace-statistics-funnel__conversion strong {
+    color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
+  }
+
+  @keyframes workspace-statistics-funnel-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes workspace-statistics-funnel-hint-enter {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .workspace-statistics-funnel {
+      --workspace-funnel-layer-min-height: 54px;
+      --workspace-funnel-layer-min-height-tall: 62px;
+    }
+
+    .workspace-statistics-funnel__layer {
+      gap: 8px;
+    }
+
+    .workspace-statistics-funnel__layer-hint {
+      font-size: 10px;
+      gap: 6px;
+      top: 79%;
+    }
+  }
+
+}
