@@ -21,6 +21,8 @@ import {
   StatisticsDemandPanel,
   StatisticsGrowthPanel,
   StatisticsInsightsPanel,
+  StatisticsOpportunityPanel,
+  StatisticsPricePanel,
 } from './WorkspaceStatisticsSections';
 
 type WorkspaceStatisticsViewProps = {
@@ -31,7 +33,7 @@ type WorkspaceStatisticsViewProps = {
 
 const RANGE_OPTIONS: WorkspaceStatisticsRange[] = ['24h', '7d', '30d', '90d'];
 const DEMAND_PAGE_SIZE = 5;
-const CITY_PAGE_SIZE = 15;
+const CITY_PAGE_SIZE = 10;
 const CITY_PAGE_QUERY_KEY = 'statsCityPage';
 
 function rangeLabel(range: WorkspaceStatisticsRange, localeCopy: WorkspaceStatisticsModel['copy']) {
@@ -298,6 +300,18 @@ export function WorkspaceStatisticsView({
               coverage={model.citySignalCoverage}
               t={t}
             />
+
+            <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
+              <StatisticsOpportunityPanel
+                copy={copy}
+                locale={locale}
+                opportunityRadar={model.opportunityRadar}
+              />
+              <StatisticsPricePanel
+                copy={copy}
+                priceIntelligence={model.priceIntelligence}
+              />
+            </div>
           </>
         )}
       </section>

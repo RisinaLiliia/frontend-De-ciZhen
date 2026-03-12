@@ -13,6 +13,7 @@ import {
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from './useWorkspaceStatisticsModel';
 
 type TranslateFn = (key: I18nKey) => string;
@@ -253,6 +254,355 @@ export function StatisticsCitiesPanel({
   );
 }
 
+export function StatisticsOpportunityPanel({
+  copy,
+  locale,
+  opportunityRadar,
+}: {
+  copy: WorkspaceStatisticsModel['copy'];
+  locale: Locale;
+  opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'];
+}) {
+  const analysisItem = opportunityRadar.find((item) => item.rank === 1) ?? opportunityRadar[0] ?? null;
+  const topCards = React.useMemo(() => {
+    const byRank = new Map<(typeof opportunityRadar)[number]['rank'], (typeof opportunityRadar)[number]>(
+      opportunityRadar.map((item) => [item.rank, item]),
+    );
+    const preferredRanks: Array<(typeof opportunityRadar)[number]['rank']> = [3, 2];
+    const preferred = preferredRanks
+      .map((rank) => byRank.get(rank))
+      .filter((item): item is NonNullable<typeof item> => Boolean(item));
+    if (preferred.length >= 2) return preferred;
+
+    const fallback = opportunityRadar
+      .filter((item) => item.rank !== analysisItem?.rank)
+      .sort((a, b) => b.rank - a.rank);
+    return [...preferred, ...fallback].slice(0, 2);
+  }, [analysisItem?.rank, opportunityRadar]);
+  const analysisAxes = React.useMemo(
+    () => (
+      analysisItem
+        ? ([
+            { key: 'demand', label: copy.opportunityAxisDemand, value: analysisItem.demandScore },
+            { key: 'competition', label: copy.opportunityAxisCompetition, value: Number((10 - analysisItem.competitionScore).toFixed(1)) },
+            { key: 'growth', label: copy.opportunityAxisGrowth, value: analysisItem.growthScore },
+            { key: 'activity', label: copy.opportunityAxisActivity, value: analysisItem.activityScore },
+          ] satisfies Array<{ key: OpportunityMetricKey; label: string; value: number }>).map((axis) => {
+            const semantic = opportunityMetricSemantic(axis.key, axis.value, locale);
+            return {
+              ...axis,
+              semanticLabel: semantic.label,
+              semanticTone: semantic.tone,
+            };
+          })
+        : []
+    ),
+    [
+      analysisItem,
+      copy.opportunityAxisActivity,
+      copy.opportunityAxisCompetition,
+      copy.opportunityAxisDemand,
+      copy.opportunityAxisGrowth,
+      locale,
+    ],
+  );
+  const radarPoints = React.useMemo(
+    () => buildOpportunityRadarPoints(analysisAxes.map((axis) => axis.value)),
+    [analysisAxes],
+  );
+  const radarPath = React.useMemo(
+    () => buildOpportunityRadarSmoothPath(radarPoints),
+    [radarPoints],
+  );
+  const radarRingLevels = React.useMemo(() => [2.5, 5, 7.5, 10], []);
+  const radarAxisEndpoints = React.useMemo(
+    () => buildOpportunityRadarAxisEndpoints(),
+    [],
+  );
+  const radarAxisValueLabels = React.useMemo(
+    () => buildOpportunityRadarAxisValueLabelPositions(analysisAxes.map((axis) => axis.value)),
+    [analysisAxes],
+  );
+  const analysisRankTone = analysisItem
+    ? analysisItem.rank === 1
+      ? 'gold'
+      : analysisItem.rank === 2
+        ? 'silver'
+        : 'bronze'
+    : null;
+  const analysisStatus = analysisItem
+    ? resolveOpportunityStatus(analysisItem.score)
+    : null;
+  const analysisStatusClass = analysisStatus ? opportunityStatusClassName(analysisStatus) : null;
+  const analysisSummary = React.useMemo(
+    () => (
+      analysisItem && analysisStatus
+        ? buildOpportunitySummary({
+            locale,
+            status: analysisStatus,
+            demand: analysisItem.demandScore,
+            competition: Number((10 - analysisItem.competitionScore).toFixed(1)),
+            growth: analysisItem.growthScore,
+            activity: analysisItem.activityScore,
+          })
+        : ''
+    ),
+    [analysisItem, analysisStatus, locale],
+  );
+
+  return (
+    <section className="panel requests-stats-chart workspace-statistics-opportunity">
+      <header className="workspace-statistics__tile-header">
+        <p className="section-title">{copy.opportunityTitle}</p>
+        <p className="section-subtitle">{copy.opportunitySubtitle}</p>
+      </header>
+      {opportunityRadar.length === 0 ? (
+        <p className="workspace-statistics__empty">{copy.opportunityEmpty}</p>
+      ) : (
+        <ol className="workspace-statistics-opportunity__list" aria-label={copy.opportunityTitle}>
+          {topCards.map((item) => {
+            const rankTone = item.rank === 1 ? 'gold' : item.rank === 2 ? 'silver' : 'bronze';
+            return (
+              <li
+                key={`${item.rank}-${item.city}`}
+                className="workspace-statistics-opportunity__item-wrap"
+              >
+                <Link
+                  href={item.href}
+                  prefetch={false}
+                  className={`stat-card stat-link workspace-statistics-opportunity__item workspace-statistics-opportunity__item--compact is-${item.tone}`.trim()}
+                >
+                  <div className="workspace-statistics-opportunity__top">
+                    <span className={`workspace-statistics-city-list__rank-cup is-${rankTone}`.trim()} aria-hidden="true">
+                      {item.rank === 1 ? <IconTrophyGold size={30} /> : null}
+                      {item.rank === 2 ? <IconTrophySilver size={30} /> : null}
+                      {item.rank === 3 ? <IconTrophyBronze size={30} /> : null}
+                    </span>
+                    <div className="workspace-statistics-opportunity__identity">
+                      <strong className="workspace-statistics-opportunity__city">{item.city}</strong>
+                      <span className="workspace-statistics-opportunity__category">{item.category}</span>
+                    </div>
+                  </div>
+
+                  <div className="workspace-statistics-opportunity__score-head">
+                    <span>{copy.opportunityScoreLabel}</span>
+                    <strong>{item.score.toFixed(1)} / 10</strong>
+                  </div>
+                  <div className="workspace-statistics-demand__track workspace-statistics-opportunity__score-track" aria-hidden="true">
+                    <span
+                      className="workspace-statistics-demand__fill workspace-statistics-opportunity__score-fill"
+                      style={{ width: `${Math.max(0, Math.min(100, item.score * 10))}%` }}
+                    />
+                  </div>
+
+                  <dl className="workspace-statistics-opportunity__metrics">
+                    <div>
+                      <dt>{copy.opportunityDemandLabel}</dt>
+                      <dd>{item.demand.toLocaleString()}</dd>
+                    </div>
+                    <div>
+                      <dt>{copy.opportunityProvidersLabel}</dt>
+                      <dd>{item.providers === null ? '—' : item.providers.toLocaleString()}</dd>
+                    </div>
+                    <div>
+                      <dt>{copy.opportunityBalanceLabel}</dt>
+                      <dd>{item.marketBalanceRatio === null ? '—' : item.marketBalanceRatio.toFixed(2)}</dd>
+                    </div>
+                  </dl>
+
+                  <p className={`workspace-statistics-opportunity__tone is-${item.tone}`.trim()}>
+                    {opportunityToneLabel(item.tone, copy)}
+                  </p>
+                </Link>
+              </li>
+            );
+          })}
+          {analysisItem ? (
+            <li className="workspace-statistics-opportunity__item-wrap is-last">
+              <Link
+                href={analysisItem.href}
+                prefetch={false}
+                className={`stat-card stat-link workspace-statistics-opportunity__item workspace-statistics-opportunity__item--analysis is-${analysisItem.tone}`.trim()}
+              >
+                <div className="workspace-statistics-opportunity__analysis-head">
+                  <div className="workspace-statistics-insights__assistant workspace-statistics-opportunity__analysis-assistant">
+                    <span className="workspace-statistics-insights__assistant-avatar" aria-hidden="true">AI</span>
+                    <span className="workspace-statistics-insights__assistant-copy">
+                      <strong className="workspace-statistics-insights__assistant-name">{copy.insightsAssistantName}</strong>
+                      <span className="workspace-statistics-insights__assistant-note">{copy.opportunityAnalysisSubtitle}</span>
+                    </span>
+                    <span className="workspace-statistics-opportunity__status workspace-statistics-opportunity__featured-badge is-top-chance">
+                      {locale === 'de' ? 'Top Chance' : 'Top chance'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="workspace-statistics-opportunity__analysis-overview">
+                  <div className="workspace-statistics-opportunity__analysis-identity">
+                    <span className={`workspace-statistics-city-list__rank-cup is-${analysisRankTone}`.trim()} aria-hidden="true">
+                      {analysisItem.rank === 1 ? <IconTrophyGold size={30} /> : null}
+                      {analysisItem.rank === 2 ? <IconTrophySilver size={30} /> : null}
+                      {analysisItem.rank === 3 ? <IconTrophyBronze size={30} /> : null}
+                    </span>
+                    <div className="workspace-statistics-opportunity__identity">
+                      <strong className="workspace-statistics-opportunity__city">{analysisItem.city}</strong>
+                      <span className="workspace-statistics-opportunity__category">{analysisItem.category}</span>
+                    </div>
+                  </div>
+                  <div
+                    className="workspace-statistics-opportunity__analysis-score"
+                    aria-label={`${copy.opportunityScoreLabel}: ${analysisItem.score.toFixed(1)} / 10`}
+                  >
+                    <div className="workspace-statistics-opportunity__score-head">
+                      <span>{copy.opportunityScoreLabel}</span>
+                      <strong>{analysisItem.score.toFixed(1)} / 10</strong>
+                    </div>
+                    <div className="workspace-statistics-demand__track workspace-statistics-opportunity__score-track" aria-hidden="true">
+                      <span
+                        className="workspace-statistics-demand__fill workspace-statistics-opportunity__score-fill"
+                        style={{ width: `${Math.max(0, Math.min(100, analysisItem.score * 10))}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="workspace-statistics-opportunity__analysis-body">
+                  <div className="workspace-statistics-opportunity__radar-block">
+                    {analysisStatus ? (
+                      <span className={`workspace-statistics-opportunity__status workspace-statistics-opportunity__status--radar is-${analysisStatusClass}`.trim()}>
+                        {opportunityStatusLabel(analysisStatus, locale)}
+                      </span>
+                    ) : null}
+                    <div className="workspace-statistics-opportunity__radar" aria-hidden="true">
+                      <svg viewBox="0 0 180 180" role="presentation">
+                        {radarRingLevels.map((level) => (
+                          <circle
+                            key={`ring-${level}`}
+                            cx="90"
+                            cy="90"
+                            r={(62 * level) / 10}
+                            className="workspace-statistics-opportunity__radar-ring"
+                          />
+                        ))}
+                        {radarRingLevels.map((level) => (
+                          <text
+                            key={`ring-label-${level}`}
+                            x="94"
+                            y={90 - ((62 * level) / 10) + 3}
+                            className="workspace-statistics-opportunity__radar-ring-label"
+                          >
+                            {level}
+                          </text>
+                        ))}
+                        {radarAxisEndpoints.map((endpoint, index) => (
+                          <line
+                            key={`axis-${index}`}
+                            x1="90"
+                            y1="90"
+                            x2={endpoint.x}
+                            y2={endpoint.y}
+                            className="workspace-statistics-opportunity__radar-axis"
+                          />
+                        ))}
+                        {radarPath ? <path d={radarPath} className="workspace-statistics-opportunity__radar-shape" /> : null}
+                        {radarPoints.map((point, index) => (
+                          <circle
+                            key={`dot-${index}`}
+                            cx={point.x}
+                            cy={point.y}
+                            r="2.5"
+                            className="workspace-statistics-opportunity__radar-dot"
+                          />
+                        ))}
+                        {radarAxisValueLabels.map((item, index) => (
+                          <text
+                            key={`axis-value-${index}`}
+                            x={item.x}
+                            y={item.y}
+                            className="workspace-statistics-opportunity__radar-axis-label"
+                          >
+                            {item.label}
+                          </text>
+                        ))}
+                      </svg>
+                    </div>
+                  </div>
+                  <ul className="workspace-statistics-opportunity__analysis-axes">
+                    {analysisAxes.map((axis) => (
+                      <li key={axis.key}>
+                        <div className="workspace-statistics-opportunity__axis-row">
+                          <span>{axis.label}</span>
+                          <strong>{axis.value.toFixed(1)} / 10</strong>
+                        </div>
+                        <div className="workspace-statistics-demand__track workspace-statistics-opportunity__axis-track" aria-hidden="true">
+                          <span
+                            className="workspace-statistics-demand__fill workspace-statistics-opportunity__axis-fill"
+                            style={{ width: `${Math.max(0, Math.min(100, axis.value * 10))}%` }}
+                          />
+                        </div>
+                        <em className={`workspace-statistics-opportunity__axis-semantic is-${axis.semanticTone}`.trim()}>
+                          {axis.semanticLabel}
+                        </em>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <p className="workspace-statistics-opportunity__summary" aria-label={locale === 'de' ? 'Opportunity Zusammenfassung' : 'Opportunity summary'}>
+                  {analysisSummary}
+                </p>
+
+                <dl className="workspace-statistics-opportunity__metrics">
+                  <div>
+                    <dt>{copy.opportunityDemandLabel}</dt>
+                    <dd>{analysisItem.demand.toLocaleString()}</dd>
+                  </div>
+                  <div>
+                    <dt>{copy.opportunityProvidersLabel}</dt>
+                    <dd>{analysisItem.providers === null ? '—' : analysisItem.providers.toLocaleString()}</dd>
+                  </div>
+                  <div>
+                    <dt>{copy.opportunityBalanceLabel}</dt>
+                    <dd>{analysisItem.marketBalanceRatio === null ? '—' : analysisItem.marketBalanceRatio.toFixed(2)}</dd>
+                  </div>
+                </dl>
+              </Link>
+            </li>
+          ) : null}
+        </ol>
+      )}
+    </section>
+  );
+}
+
+export function StatisticsPricePanel({
+  copy,
+  priceIntelligence,
+}: {
+  copy: WorkspaceStatisticsModel['copy'];
+  priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
+}) {
+  return (
+    <section className="panel requests-stats-chart workspace-statistics-price">
+      <header className="workspace-statistics__tile-header">
+        <p className="section-title">{copy.priceTitle}</p>
+        <p className="section-subtitle">{copy.priceSubtitle}</p>
+      </header>
+      {!priceIntelligence.contextLabel && !priceIntelligence.marketAverageLabel ? (
+        <p className="workspace-statistics__empty">{copy.priceNoData}</p>
+      ) : (
+        <div className="workspace-statistics-price__content">
+          <p className="workspace-statistics-price__context">{priceIntelligence.contextLabel ?? '—'}</p>
+          <strong className="workspace-statistics-price__range">{priceIntelligence.recommendedRangeLabel ?? '—'}</strong>
+          <p className="workspace-statistics-price__average">
+            {copy.priceMarketAverageLabel}: <strong>{priceIntelligence.marketAverageLabel ?? '—'}</strong>
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export function StatisticsInsightsPanel({
   copy,
   insights,
@@ -406,4 +756,189 @@ function citySignalIcon(
   if (signal === 'medium') return '→';
   if (signal === 'none') return '•';
   return '↘';
+}
+
+function opportunityToneLabel(
+  tone: WorkspaceStatisticsModel['opportunityRadar'][number]['tone'],
+  copy: WorkspaceStatisticsModel['copy'],
+): string {
+  if (tone === 'very-high') return copy.opportunityToneVeryHigh;
+  if (tone === 'high') return copy.opportunityToneHigh;
+  if (tone === 'balanced') return copy.opportunityToneBalanced;
+  return copy.opportunityToneSupplyHeavy;
+}
+
+function buildOpportunityRadarAxisEndpoints(): Array<{ x: number; y: number }> {
+  const count = 4;
+  const center = 90;
+  const radius = 62;
+  return Array.from({ length: count }, (_, index) => {
+    const angle = (-Math.PI / 2) + ((Math.PI * 2) / count) * index;
+    return {
+      x: center + (Math.cos(angle) * radius),
+      y: center + (Math.sin(angle) * radius),
+    };
+  });
+}
+
+function buildOpportunityRadarPoints(values: number[]): Array<{ x: number; y: number }> {
+  const count = 4;
+  const center = 90;
+  const maxRadius = 62;
+  return Array.from({ length: count }, (_, index) => {
+    const normalized = Math.max(0, Math.min(10, values[index] ?? 0)) / 10;
+    const angle = (-Math.PI / 2) + ((Math.PI * 2) / count) * index;
+    const radius = maxRadius * normalized;
+    return {
+      x: center + (Math.cos(angle) * radius),
+      y: center + (Math.sin(angle) * radius),
+    };
+  });
+}
+
+function buildOpportunityRadarSmoothPath(points: Array<{ x: number; y: number }>): string {
+  if (points.length < 3) return '';
+
+  const midpoint = (a: { x: number; y: number }, b: { x: number; y: number }) => ({
+    x: (a.x + b.x) / 2,
+    y: (a.y + b.y) / 2,
+  });
+
+  const firstMid = midpoint(points[points.length - 1]!, points[0]!);
+  let path = `M ${firstMid.x} ${firstMid.y}`;
+
+  for (let index = 0; index < points.length; index += 1) {
+    const point = points[index]!;
+    const next = points[(index + 1) % points.length]!;
+    const mid = midpoint(point, next);
+    path += ` Q ${point.x} ${point.y} ${mid.x} ${mid.y}`;
+  }
+
+  return `${path} Z`;
+}
+
+function buildOpportunityRadarAxisValueLabelPositions(values: number[]): Array<{ x: number; y: number; label: string }> {
+  const count = 4;
+  const center = 90;
+  const radius = 74;
+  return Array.from({ length: count }, (_, index) => {
+    const angle = (-Math.PI / 2) + ((Math.PI * 2) / count) * index;
+    const value = Math.max(0, Math.min(10, values[index] ?? 0));
+    return {
+      x: center + (Math.cos(angle) * radius),
+      y: center + (Math.sin(angle) * radius) + 3,
+      label: value.toFixed(1),
+    };
+  });
+}
+
+type OpportunityStatus = 'very_high' | 'good' | 'balanced' | 'competitive' | 'low';
+type OpportunityMetricKey = 'demand' | 'competition' | 'growth' | 'activity';
+
+function resolveOpportunityStatus(score: number): OpportunityStatus {
+  if (score >= 8.5) return 'very_high';
+  if (score >= 7) return 'good';
+  if (score >= 5) return 'balanced';
+  if (score >= 3.5) return 'competitive';
+  return 'low';
+}
+
+function opportunityStatusClassName(status: OpportunityStatus): string {
+  if (status === 'very_high') return 'very-high';
+  if (status === 'good') return 'good';
+  if (status === 'balanced') return 'balanced';
+  if (status === 'competitive') return 'competitive';
+  return 'low';
+}
+
+function opportunityStatusLabel(status: OpportunityStatus, locale: Locale): string {
+  if (locale === 'de') {
+    if (status === 'very_high') return 'Sehr hohe Chance';
+    if (status === 'good') return 'Gute Chance';
+    if (status === 'balanced') return 'Ausgeglichen';
+    if (status === 'competitive') return 'Viele Anbieter';
+    return 'Niedrige Chance';
+  }
+
+  if (status === 'very_high') return 'Very high opportunity';
+  if (status === 'good') return 'Good opportunity';
+  if (status === 'balanced') return 'Balanced';
+  if (status === 'competitive') return 'Competitive';
+  return 'Low opportunity';
+}
+
+function opportunityMetricSemantic(
+  key: OpportunityMetricKey,
+  value: number,
+  locale: Locale,
+): { label: string; tone: 'very-high' | 'high' | 'medium' | 'low' } {
+  if (key === 'competition') {
+    if (value >= 8) return { label: locale === 'de' ? 'Hoch' : 'High', tone: 'high' };
+    if (value >= 6) return { label: locale === 'de' ? 'Spürbar' : 'Noticeable', tone: 'medium' };
+    if (value >= 4) return { label: locale === 'de' ? 'Mittel' : 'Medium', tone: 'medium' };
+    return { label: locale === 'de' ? 'Niedrig' : 'Low', tone: 'low' };
+  }
+
+  if (value >= 8) return { label: locale === 'de' ? 'Sehr hoch' : 'Very high', tone: 'very-high' };
+  if (value >= 6) return { label: locale === 'de' ? 'Hoch' : 'High', tone: 'high' };
+  if (value >= 4) return { label: locale === 'de' ? 'Mittel' : 'Medium', tone: 'medium' };
+  return { label: locale === 'de' ? 'Niedrig' : 'Low', tone: 'low' };
+}
+
+function buildOpportunitySummary({
+  locale,
+  status,
+  demand,
+  competition,
+  growth,
+  activity,
+}: {
+  locale: Locale;
+  status: OpportunityStatus;
+  demand: number;
+  competition: number;
+  growth: number;
+  activity: number;
+}): string {
+  if (locale === 'de') {
+    if (status === 'very_high') {
+      return 'Sehr hohe Nachfrage bei kontrollierbarem Wettbewerb. Jetzt ist ein starker Moment, um Sichtbarkeit in dieser Kategorie auszubauen.';
+    }
+    if (status === 'good') {
+      return 'Solide Nachfrage mit guter Marktaktivität. Mit klarer Positionierung kannst du hier zügig neue Aufträge gewinnen.';
+    }
+    if (status === 'balanced') {
+      if (competition >= 7) {
+        return 'Hohe Nachfrage trifft aktuell auf starken Wettbewerb. Gute Chancen haben Anbieter mit klarer Spezialisierung oder besserer Sichtbarkeit.';
+      }
+      return 'Die Marktchance ist ausgeglichen. Mit sauberem Profil und schnellen Reaktionen lässt sich diese Region effizient bedienen.';
+    }
+    if (status === 'competitive') {
+      return 'Der Wettbewerb ist deutlich spürbar und drückt die Chance. Fokus auf Differenzierung und Preisstrategie verbessert die Abschlusswahrscheinlichkeit.';
+    }
+    if (demand < 4 || growth < 4 || activity < 4) {
+      return 'Aktuell ist die Nachfrage in diesem Segment begrenzt. Prüfe Alternativen mit stärkerem Wachstum oder niedrigerem Wettbewerbsdruck.';
+    }
+    return 'Die Opportunity ist derzeit niedrig. Neue Chancen entstehen meist mit zusätzlicher Nachfrage oder besserer Marktaktivität.';
+  }
+
+  if (status === 'very_high') {
+    return 'Demand is very high while competition stays manageable. This is a strong moment to increase visibility in this category.';
+  }
+  if (status === 'good') {
+    return 'Stable demand and healthy market activity create good momentum. A clear positioning can help you win new jobs quickly.';
+  }
+  if (status === 'balanced') {
+    if (competition >= 7) {
+      return 'Strong demand currently meets strong competition. Best chances come from sharper specialization and stronger visibility.';
+    }
+    return 'The market is balanced right now. A strong profile and fast response times can unlock consistent opportunities.';
+  }
+  if (status === 'competitive') {
+    return 'Competition pressure is high and limits upside. Better differentiation and pricing strategy can improve conversion.';
+  }
+  if (demand < 4 || growth < 4 || activity < 4) {
+    return 'Demand in this segment is currently limited. Consider alternatives with stronger growth or lower competitive pressure.';
+  }
+  return 'Opportunity is currently low. Better demand or higher market activity is needed before scaling efforts here.';
 }

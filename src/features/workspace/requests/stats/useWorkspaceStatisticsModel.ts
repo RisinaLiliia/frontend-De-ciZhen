@@ -63,6 +63,7 @@ export type WorkspaceStatisticsKpiView = {
 
 export type WorkspaceStatisticsCityRowView = {
   key: string;
+  cityId: string | null;
   name: string;
   count: number;
   auftragSuchenCount: number | null;
@@ -116,6 +117,30 @@ export type WorkspaceStatisticsActivitySignalView = {
   tone: 'positive' | 'neutral' | 'warning';
 };
 
+export type WorkspaceStatisticsOpportunityRadarItemView = {
+  rank: 1 | 2 | 3;
+  cityId: string | null;
+  city: string;
+  categoryKey: string | null;
+  category: string;
+  demand: number;
+  providers: number | null;
+  marketBalanceRatio: number | null;
+  score: number;
+  demandScore: number;
+  competitionScore: number;
+  growthScore: number;
+  activityScore: number;
+  tone: 'very-high' | 'high' | 'balanced' | 'supply-heavy';
+  href: string;
+};
+
+export type WorkspaceStatisticsPriceIntelligenceView = {
+  contextLabel: string | null;
+  recommendedRangeLabel: string | null;
+  marketAverageLabel: string | null;
+};
+
 export type WorkspaceStatisticsModel = {
   copy: WorkspaceStatisticsCopy;
   range: WorkspaceStatisticsRange;
@@ -139,6 +164,8 @@ export type WorkspaceStatisticsModel = {
     label: string;
     detail: string;
   };
+  opportunityRadar: WorkspaceStatisticsOpportunityRadarItemView[];
+  priceIntelligence: WorkspaceStatisticsPriceIntelligenceView;
   funnel: WorkspaceStatisticsFunnelItemView[];
   funnelPeriodLabel: string;
   funnelSummary: string;
@@ -563,6 +590,7 @@ export function useWorkspaceStatisticsModel({
       if (!hasSearchMetrics || rawAuftragSuchenCount === null || rawAnbieterSuchenCount === null) {
         return {
           key: item.citySlug,
+          cityId: item.cityId ?? null,
           name: item.cityName,
           count: requestCount,
           auftragSuchenCount: null,
@@ -587,6 +615,7 @@ export function useWorkspaceStatisticsModel({
 
       return {
         key: item.citySlug,
+        cityId: item.cityId ?? null,
         name: item.cityName,
         count: requestCount,
         auftragSuchenCount,
@@ -607,6 +636,130 @@ export function useWorkspaceStatisticsModel({
     );
     return rows;
   }, [data?.demand.categories, locale]);
+
+  const opportunityRadar = React.useMemo<WorkspaceStatisticsOpportunityRadarItemView[]>(() => {
+    if (cityRows.length === 0) return [];
+
+    const categoryLeaders = demandRows.slice(0, 3);
+    const fallbackCategory = locale === 'de' ? 'Generalistisch' : 'General';
+    const growthIndex = Math.max(0, Math.min(1, activityMetrics.offerRatePercent / 100));
+    const responseSpeedIndex =
+      typeof activityMetrics.responseMedianMinutes === 'number' && Number.isFinite(activityMetrics.responseMedianMinutes)
+        ? Math.max(0, Math.min(1, 1 - (activityMetrics.responseMedianMinutes / 180)))
+        : 0.5;
+
+    const demandByCity = cityRows.map((city) => Math.max(city.count, city.anbieterSuchenCount ?? 0));
+    const maxDemand = Math.max(1, ...demandByCity);
+
+    const withScore = cityRows.map((city) => {
+      const demand = Math.max(city.count, city.anbieterSuchenCount ?? 0);
+      const providers = city.auftragSuchenCount;
+      const demandIndex = Math.max(0, Math.min(1, demand / maxDemand));
+      const competitionIndex = city.marketBalanceRatio === null
+        ? 0.5
+        : Math.max(0, Math.min(1, city.marketBalanceRatio / 1.5));
+      const demandScore = Number((demandIndex * 10).toFixed(1));
+      const competitionScore = Number((competitionIndex * 10).toFixed(1));
+      const growthScore = Number((growthIndex * 10).toFixed(1));
+      const activityScore = Number((responseSpeedIndex * 10).toFixed(1));
+      const score = Number((10 * (
+        (demandIndex * 0.4) +
+        (competitionIndex * 0.3) +
+        (growthIndex * 0.2) +
+        (responseSpeedIndex * 0.1)
+      )).toFixed(1));
+
+      const tone: WorkspaceStatisticsOpportunityRadarItemView['tone'] =
+        score >= 8.5
+          ? 'very-high'
+          : score >= 7
+            ? 'high'
+            : score >= 5
+              ? 'balanced'
+              : 'supply-heavy';
+
+      return {
+        ...city,
+        demand,
+        providers,
+        score,
+        demandScore,
+        competitionScore,
+        growthScore,
+        activityScore,
+        tone,
+      };
+    });
+
+    return withScore
+      .sort((a, b) =>
+        (b.score - a.score) ||
+        (b.demand - a.demand) ||
+        a.name.localeCompare(b.name, locale === 'de' ? 'de-DE' : 'en-US'),
+      )
+      .slice(0, 3)
+      .map((city, index) => {
+        const categoryEntry = categoryLeaders[index] ?? null;
+        const category = categoryEntry?.categoryName ?? fallbackCategory;
+        const categoryKey = categoryEntry?.categoryKey ?? null;
+        const hrefParams = new URLSearchParams({ section: 'requests' });
+        if (city.cityId) hrefParams.set('cityId', city.cityId);
+        if (categoryKey) hrefParams.set('categoryKey', categoryKey);
+        return {
+          rank: (index + 1) as 1 | 2 | 3,
+          cityId: city.cityId,
+          city: city.name,
+          categoryKey,
+          category,
+          demand: city.demand,
+          providers: city.providers,
+          marketBalanceRatio: city.marketBalanceRatio,
+          score: city.score,
+          demandScore: city.demandScore,
+          competitionScore: city.competitionScore,
+          growthScore: city.growthScore,
+          activityScore: city.activityScore,
+          tone: city.tone,
+          href: `/workspace?${hrefParams.toString()}`,
+        };
+      });
+  }, [
+    activityMetrics.offerRatePercent,
+    activityMetrics.responseMedianMinutes,
+    cityRows,
+    demandRows,
+    locale,
+  ]);
+
+  const priceIntelligence = React.useMemo<WorkspaceStatisticsPriceIntelligenceView>(() => {
+    const topOpportunity = opportunityRadar[0] ?? null;
+    const contextLabel = topOpportunity
+      ? `${topOpportunity.category} · ${topOpportunity.city}`
+      : null;
+
+    const avgRevenue = activityMetrics.completedJobs > 0
+      ? activityMetrics.gmvAmount / activityMetrics.completedJobs
+      : null;
+
+    if (typeof avgRevenue !== 'number' || !Number.isFinite(avgRevenue) || avgRevenue <= 0) {
+      return {
+        contextLabel,
+        recommendedRangeLabel: null,
+        marketAverageLabel: null,
+      };
+    }
+
+    const roundToNearestFive = (value: number) => Math.max(5, Math.round(value / 5) * 5);
+    const lower = roundToNearestFive(avgRevenue * 0.85);
+    const upper = roundToNearestFive(avgRevenue * 1.15);
+    const marketAverage = roundToNearestFive(avgRevenue);
+
+    return {
+      contextLabel,
+      recommendedRangeLabel: `${formatCurrency.format(lower)} – ${formatCurrency.format(upper)}`,
+      marketAverageLabel: formatCurrency.format(marketAverage),
+    };
+  }, [activityMetrics.completedJobs, activityMetrics.gmvAmount, formatCurrency, opportunityRadar]);
 
   const citySignalCoverage = React.useMemo(() => {
     const total = cityRows.length;
@@ -794,6 +947,8 @@ export function useWorkspaceStatisticsModel({
     demandRows,
     cityRows,
     citySignalCoverage,
+    opportunityRadar,
+    priceIntelligence,
     funnel,
     funnelPeriodLabel,
     funnelSummary:
