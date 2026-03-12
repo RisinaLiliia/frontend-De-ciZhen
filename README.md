@@ -291,6 +291,16 @@ Notes:
 - Node.js 20+ is required
 - Backend must be reachable through configured API base env vars
 - Next.js rewrites are defined in `next.config.ts` for `/api/*` and `/presence/*`
+- Runtime env validation is executed in `src/lib/config/env.server.ts` (fail-fast on invalid prod env)
+
+## Release Gate
+
+- Project release checklist: `docs/release-dod.md`
+- One-command release verification:
+
+```bash
+npm run release:check
+```
 
 ## Scripts
 
@@ -298,6 +308,7 @@ Notes:
 | --- | --- |
 | `npm run dev` | Start dev server |
 | `npm run build` | Production build |
+| `npm run build:webpack` | Production build in webpack mode (release baseline) |
 | `npm run start` | Start production server |
 | `npm run lint` | ESLint |
 | `npm run lint:strict` | ESLint with `--max-warnings=0` |
@@ -308,6 +319,7 @@ Notes:
 | `npm run test:e2e:a11y` | Playwright accessibility smoke flows (`@a11y`) |
 | `npm run test:e2e:headed` | Playwright headed mode |
 | `npm run test:e2e:ui` | Playwright UI mode |
+| `npm run release:check` | Release quality gate (`lint + typecheck + tests + build`) |
 | `npm exec tsc --noEmit` | Type check |
 
 ## CI Branch Protection
