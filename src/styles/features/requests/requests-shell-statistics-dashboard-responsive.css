@@ -1,0 +1,183 @@
+/* requests-shell-statistics-dashboard-responsive.css */
+
+@layer components {
+  @media (min-width: 900px) {
+    .workspace-statistics__activity-signals {
+      --workspace-statistics-decision-gap-x: var(--space-4);
+      --workspace-statistics-decision-gap-y: var(--space-5);
+    }
+
+    .workspace-statistics__activity-signals::before {
+      content: "";
+      position: absolute;
+      left: var(--workspace-statistics-decision-divider-inset);
+      right: var(--workspace-statistics-decision-divider-inset);
+      top: 50%;
+      border-top: 1px dashed var(--workspace-statistics-decision-divider);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .workspace-statistics__activity-signals::after {
+      content: "";
+      position: absolute;
+      inset-block: var(--workspace-statistics-decision-divider-inset);
+      inset-inline: var(--workspace-statistics-decision-divider-inset);
+      background-image:
+        repeating-linear-gradient(to bottom, var(--workspace-statistics-decision-divider) 0 2px, transparent 2px 7px),
+        repeating-linear-gradient(to bottom, var(--workspace-statistics-decision-divider) 0 2px, transparent 2px 7px);
+      background-size: 1px 100%, 1px 100%;
+      background-position: 33.3333% 0, 66.6666% 0;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .workspace-statistics .requests-stats__kpi-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .workspace-statistics .requests-stats__kpi-grid::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      border-top: 1px dashed var(--workspace-statistics-kpi-divider);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .workspace-statistics .requests-stats__kpi-grid::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(to bottom, var(--workspace-statistics-kpi-divider) 0 2px, transparent 2px 7px),
+        repeating-linear-gradient(to bottom, var(--workspace-statistics-kpi-divider) 0 2px, transparent 2px 7px);
+      background-size: 1px 100%, 1px 100%;
+      background-position: 33.3333% 0, 66.6666% 0;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 0;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .workspace-statistics .requests-stats__header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .workspace-statistics__header-toolbar {
+      flex-wrap: wrap;
+    }
+
+    .workspace-statistics__grid--primary,
+    .workspace-statistics__grid--secondary {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-statistics__meta-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .workspace-statistics__activity-signals {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .workspace-statistics-opportunity__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-statistics-opportunity__item-wrap.is-last {
+      grid-column: auto;
+      display: block;
+    }
+
+    .workspace-statistics-opportunity__item-wrap.is-last .workspace-statistics-opportunity__item {
+      width: 100%;
+    }
+
+    .workspace-statistics-opportunity__analysis-body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-statistics-opportunity__analysis-overview {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-1-5);
+    }
+
+    .workspace-statistics-opportunity__analysis-axes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-1-5);
+    }
+
+    .workspace-statistics-opportunity__summary {
+      -webkit-line-clamp: 3;
+    }
+
+    .workspace-statistics-insights {
+      --workspace-statistics-insights-offset: 24px;
+    }
+
+    .workspace-statistics__cities-tools {
+      flex-wrap: wrap;
+    }
+
+    .workspace-statistics__growth {
+      grid-template-rows: auto;
+      min-height: 0;
+    }
+
+    .workspace-statistics-growth__featured.request-create-card,
+    .workspace-statistics-growth__featured.request-create-card--compact {
+      min-height: 120px;
+      height: auto;
+    }
+
+    .workspace-statistics-growth__grid {
+      grid-template-rows: none;
+    }
+
+    .workspace-statistics-growth__card {
+      min-height: 104px;
+      height: auto;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .workspace-statistics .requests-stats__kpi-grid,
+    .workspace-statistics__meta-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-statistics__activity-signals {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-statistics-opportunity__analysis-axes {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-statistics-insights {
+      --workspace-statistics-insights-offset: 12px;
+    }
+
+    .workspace-statistics-city-list__head,
+    .workspace-statistics-city-list__item {
+      min-width: 700px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .workspace-statistics-funnel__layer,
+    .workspace-statistics-funnel__layer-hint {
+      animation: none;
+    }
+
+    .workspace-statistics-funnel__shape {
+      transition: none;
+    }
+  }
+}

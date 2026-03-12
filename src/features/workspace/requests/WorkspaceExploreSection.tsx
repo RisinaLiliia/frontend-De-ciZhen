@@ -21,12 +21,12 @@ const ExploreRequestsPanel = dynamic(
   },
 );
 
-const PlatformActivityPanel = dynamic(
-  () => import('@/components/home/HomePlatformActivityPanel').then((mod) => mod.HomePlatformActivityPanel),
+const WorkspaceStatisticsPanel = dynamic(
+  () => import('@/features/workspace/requests/WorkspaceStatisticsPanel').then((mod) => mod.WorkspaceStatisticsPanel),
   {
     loading: () => (
       <section className="panel">
-        <div className="skeleton h-96 w-full" />
+        <div className="skeleton h-[42rem] w-full" />
       </section>
     ),
   },
@@ -101,6 +101,7 @@ const TrustLivePanel = dynamic(
 type WorkspaceExploreSectionProps = {
   intro: React.ReactNode;
   activeSection: PublicWorkspaceSection;
+  isWorkspaceAuthed: boolean;
   t: (key: I18nKey) => string;
   locale: Locale;
   onListDensityChange: (value: 'single' | 'double') => void;
@@ -134,14 +135,24 @@ export function WorkspaceExploreSection({
   const isDesktop = useIsDesktop();
   const isSidebarReady = useDeferredMount(140);
 
+  if (activeSection === 'stats') {
+    return (
+      <div className="stack-md">
+        {intro}
+        <WorkspaceStatisticsPanel
+          t={t}
+          locale={locale}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="stack-md">
       {intro}
       <div className="requests-grid requests-grid--equal-cols">
         <div>
-          {activeSection === 'stats' ? (
-            <PlatformActivityPanel t={t} locale={locale} />
-          ) : activeSection === 'reviews' ? (
+          {activeSection === 'reviews' ? (
             <PlatformReviewsPanel t={t} locale={locale} />
           ) : activeSection === 'profile' ? (
             <ProfileOnboardingPanel />
@@ -153,14 +164,14 @@ export function WorkspaceExploreSection({
               showHeading={false}
               showBack={false}
               backHref="/"
-                onListDensityChange={onListDensityChange}
-                initialPublicRequests={initialPublicRequests}
-                preferInitialPublicRequests={preferInitialPublicRequests}
-                initialPublicRequestsLoading={initialPublicRequestsLoading}
-                initialPublicRequestsError={initialPublicRequestsError}
-              />
-            )}
-          </div>
+              onListDensityChange={onListDensityChange}
+              initialPublicRequests={initialPublicRequests}
+              preferInitialPublicRequests={preferInitialPublicRequests}
+              initialPublicRequestsLoading={initialPublicRequestsLoading}
+              initialPublicRequestsError={initialPublicRequestsError}
+            />
+          )}
+        </div>
 
         {isDesktop ? (
           <aside className="stack-md hide-mobile">

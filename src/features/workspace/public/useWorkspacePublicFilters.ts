@@ -5,11 +5,14 @@ import * as React from 'react';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { trackUXEvent } from '@/lib/analytics';
+import { trackSearchEvent as postSearchEvent } from '@/lib/api/analytics';
+import { isAnalyticsConsentGranted } from '@/lib/consent/runtime';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { pickI18n } from '@/lib/i18n/helpers';
 import type { Locale } from '@/lib/i18n/t';
 import { ALL_OPTION_KEY, SORT_OPTIONS } from '@/features/workspace/requests';
+import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 
 type Translator = (key: I18nKey) => string;
 
@@ -17,9 +20,10 @@ type Args = {
   t: Translator;
   locale: Locale;
   shouldLoadCatalog: boolean;
+  activePublicSection: PublicWorkspaceSection | null;
 };
 
-export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog }: Args) {
+export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog, activePublicSection }: Args) {
   const { data: cities = [] } = useCities('DE', shouldLoadCatalog);
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories(shouldLoadCatalog);
   const { data: services = [], isLoading: isServicesLoading } = useServices(undefined, shouldLoadCatalog);
@@ -54,20 +58,56 @@ export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog }: Args
     defaultSort: 'date_desc',
   });
 
+  const sendSearchEvent = React.useCallback((next: {
+    cityId?: string;
+    categoryKey?: string;
+    subcategoryKey?: string;
+  }) => {
+    if (!isAnalyticsConsentGranted()) return;
+
+    const resolvedCityId = (next.cityId ?? cityId) === ALL_OPTION_KEY ? undefined : (next.cityId ?? cityId);
+    const resolvedCategoryKey =
+      (next.categoryKey ?? categoryKey) === ALL_OPTION_KEY ? undefined : (next.categoryKey ?? categoryKey);
+    const resolvedSubcategoryKey =
+      (next.subcategoryKey ?? subcategoryKey) === ALL_OPTION_KEY
+        ? undefined
+        : (next.subcategoryKey ?? subcategoryKey);
+
+    if (!resolvedCityId && !resolvedCategoryKey && !resolvedSubcategoryKey) {
+      return;
+    }
+
+    const cityName = resolvedCityId
+      ? pickI18n(cities.find((city) => city.id === resolvedCityId)?.i18n ?? {}, locale) || undefined
+      : undefined;
+
+    void postSearchEvent({
+      target: activePublicSection === 'providers' ? 'provider' : 'request',
+      source: activePublicSection === 'providers' ? 'workspace_providers' : 'workspace_requests',
+      cityId: resolvedCityId,
+      cityName,
+      categoryKey: resolvedCategoryKey,
+      subcategoryKey: resolvedSubcategoryKey,
+    }).catch(() => undefined);
+  }, [activePublicSection, categoryKey, cities, cityId, locale, subcategoryKey]);
+
   const onCategoryChangeTracked = React.useCallback((value: string) => {
     onCategoryChange(value);
     trackUXEvent('workspace_filter_change', { filter: 'category', value });
-  }, [onCategoryChange]);
+    sendSearchEvent({ categoryKey: value, subcategoryKey: ALL_OPTION_KEY });
+  }, [onCategoryChange, sendSearchEvent]);
 
   const onSubcategoryChangeTracked = React.useCallback((value: string) => {
     onSubcategoryChange(value);
     trackUXEvent('workspace_filter_change', { filter: 'service', value });
-  }, [onSubcategoryChange]);
+    sendSearchEvent({ subcategoryKey: value });
+  }, [onSubcategoryChange, sendSearchEvent]);
 
   const onCityChangeTracked = React.useCallback((value: string) => {
     onCityChange(value);
     trackUXEvent('workspace_filter_change', { filter: 'city', value });
-  }, [onCityChange]);
+    sendSearchEvent({ cityId: value });
+  }, [onCityChange, sendSearchEvent]);
 
   const onSortChangeTracked = React.useCallback((value: string) => {
     onSortChange(value);

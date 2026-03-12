@@ -19,6 +19,7 @@ type Args = {
   navTitle: string;
   navSubtitle: string;
   personalNavItems: WorkspacePrivateIntroProps['personalNavItems'];
+  hideNavBadges?: boolean;
   insightText: string;
   activityProgress: number;
   statsOrder: WorkspacePrivateIntroProps['statsOrder'];
@@ -37,6 +38,7 @@ export function useWorkspacePresentation({
   navTitle,
   navSubtitle,
   personalNavItems,
+  hideNavBadges = false,
   insightText,
   activityProgress,
   statsOrder,
@@ -54,6 +56,7 @@ export function useWorkspacePresentation({
         navTitle={navTitle}
         navSubtitle={navSubtitle}
         personalNavItems={personalNavItems}
+        hideNavBadges={hideNavBadges}
         insightText={insightText}
         activityProgress={activityProgress}
         statsOrder={statsOrder}
@@ -76,6 +79,7 @@ export function useWorkspacePresentation({
       navTitle,
       navSubtitle,
       personalNavItems,
+      hideNavBadges,
       providerStatsPayload,
       statsOrder,
       t,

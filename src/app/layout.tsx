@@ -11,6 +11,7 @@ import { ConsentProvider } from '@/lib/consent/ConsentProvider';
 import { GoogleAnalyticsManager } from '@/components/analytics/GoogleAnalyticsManager';
 import { CookieConsentLayer } from '@/components/legal/CookieConsentLayer';
 import { ConsentManageFooter } from '@/components/legal/ConsentManageFooter';
+import { assertServerEnv } from '@/lib/config/env.server';
 
 export const metadata: Metadata = {
   title: {
@@ -38,6 +39,8 @@ export default function RootLayout({
   children: React.ReactNode;
   authModal: React.ReactNode;
 }) {
+  assertServerEnv();
+
   return (
     <html lang="de" suppressHydrationWarning>
       <body>

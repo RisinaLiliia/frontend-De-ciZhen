@@ -39,6 +39,7 @@ export function useWorkspacePrivateSources({
     t,
     locale,
     shouldLoadCatalog: true,
+    activePublicSection,
   });
 
   const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({

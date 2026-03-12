@@ -246,6 +246,16 @@ export function IconHeart({ className }: { className?: string } = {}) {
   );
 }
 
+export function IconDownload() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 4v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="m8 10 4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 20h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function IconStar() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -253,6 +263,200 @@ export function IconStar() {
         d="m12 3.7 2.55 5.17 5.7.83-4.13 4.02.97 5.68L12 16.7 6.91 19.4l.97-5.68L3.75 9.7l5.7-.83L12 3.7Z"
         stroke="currentColor"
         strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconInsight() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 3.5a6.5 6.5 0 0 0-3.9 11.7c.8.6 1.2 1.2 1.3 2h5.2c.1-.8.5-1.4 1.3-2A6.5 6.5 0 0 0 12 3.5Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path d="M9.5 20h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M10.2 17.2h3.6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconAiAvatar() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="6" y="7" width="12" height="10" rx="3" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M12 4.5v2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="3.2" r="1.1" fill="currentColor" />
+      <path d="M6 11H4.6M19.4 11H18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="10" cy="11.5" r="1" fill="currentColor" />
+      <circle cx="14" cy="11.5" r="1" fill="currentColor" />
+      <rect x="9.2" y="14.1" width="5.6" height="1.8" rx="0.9" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function IconTrophy() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M8 4h8v3a4 4 0 0 1-8 0V4Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path d="M10 14h4v3h-4z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M8 20h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M16 6h2a2 2 0 0 1 0 4h-2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 6H6a2 2 0 0 0 0 4h2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function IconTrophyGold({ size = 24, className = '' }: { size?: number; className?: string } = {}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Gold trophy 1st place"
+      role="img"
+    >
+      <path
+        d="M8 4H16V7C16 9.76142 13.7614 12 11 12H13C10.2386 12 8 9.76142 8 7V4Z"
+        stroke="#E0A100"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8 5H6.75C5.7835 5 5 5.7835 5 6.75C5 8.54493 6.45507 10 8.25 10H8.5"
+        stroke="#E0A100"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 5H17.25C18.2165 5 19 5.7835 19 6.75C19 8.54493 17.5449 10 15.75 10H15.5"
+        stroke="#E0A100"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M12 12V15" stroke="#E0A100" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M9.5 19H14.5" stroke="#E0A100" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M10 15H14L15 19H9L10 15Z" stroke="#E0A100" strokeWidth="1.7" strokeLinejoin="round" />
+      <circle cx="17.5" cy="17.5" r="3.25" fill="#FFF7D6" stroke="#E0A100" strokeWidth="1.5" />
+      <path d="M17.5 15.95V19.05" stroke="#E0A100" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconTrophySilver({ size = 24, className = '' }: { size?: number; className?: string } = {}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Silver trophy 2nd place"
+      role="img"
+    >
+      <path
+        d="M8 4H16V7C16 9.76142 13.7614 12 11 12H13C10.2386 12 8 9.76142 8 7V4Z"
+        stroke="#8F98A3"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8 5H6.75C5.7835 5 5 5.7835 5 6.75C5 8.54493 6.45507 10 8.25 10H8.5"
+        stroke="#8F98A3"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 5H17.25C18.2165 5 19 5.7835 19 6.75C19 8.54493 17.5449 10 15.75 10H15.5"
+        stroke="#8F98A3"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M12 12V15" stroke="#8F98A3" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M9.5 19H14.5" stroke="#8F98A3" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M10 15H14L15 19H9L10 15Z" stroke="#8F98A3" strokeWidth="1.7" strokeLinejoin="round" />
+      <circle cx="17.5" cy="17.5" r="3.25" fill="#F3F4F6" stroke="#8F98A3" strokeWidth="1.5" />
+      <path
+        d="M16.65 16.45C16.9 16.12 17.28 15.95 17.67 15.95C18.36 15.95 18.85 16.39 18.85 17C18.85 17.42 18.62 17.78 18.18 18.13L16.9 19.05H18.9"
+        stroke="#8F98A3"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconTrophyBronze({ size = 24, className = '' }: { size?: number; className?: string } = {}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Bronze trophy 3rd place"
+      role="img"
+    >
+      <path
+        d="M8 4H16V7C16 9.76142 13.7614 12 11 12H13C10.2386 12 8 9.76142 8 7V4Z"
+        stroke="#B7794A"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8 5H6.75C5.7835 5 5 5.7835 5 6.75C5 8.54493 6.45507 10 8.25 10H8.5"
+        stroke="#B7794A"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 5H17.25C18.2165 5 19 5.7835 19 6.75C19 8.54493 17.5449 10 15.75 10H15.5"
+        stroke="#B7794A"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M12 12V15" stroke="#B7794A" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M9.5 19H14.5" stroke="#B7794A" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M10 15H14L15 19H9L10 15Z" stroke="#B7794A" strokeWidth="1.7" strokeLinejoin="round" />
+      <circle cx="17.5" cy="17.5" r="3.25" fill="#FAEEE5" stroke="#B7794A" strokeWidth="1.5" />
+      <path
+        d="M16.7 16.3C16.98 16.06 17.34 15.95 17.69 15.95C18.36 15.95 18.82 16.31 18.82 16.86C18.82 17.24 18.56 17.56 18.14 17.67C18.66 17.77 18.95 18.1 18.95 18.56C18.95 19.18 18.43 19.6 17.69 19.6C17.25 19.6 16.84 19.46 16.53 19.16"
+        stroke="#B7794A"
+        strokeWidth="1.5"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>

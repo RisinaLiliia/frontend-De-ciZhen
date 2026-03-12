@@ -37,6 +37,7 @@ type PersonalNavSectionProps = {
   insightText?: string;
   progressPercent?: number;
   items: PersonalNavItem[];
+  hideDockBadges?: boolean;
   className?: string;
 };
 
@@ -47,6 +48,7 @@ export function PersonalNavSection({
   insightText,
   progressPercent,
   items,
+  hideDockBadges = false,
   className,
 }: PersonalNavSectionProps) {
   const pathname = usePathname();
@@ -170,7 +172,7 @@ export function PersonalNavSection({
     ]
       .filter(Boolean)
       .join(' ');
-    const dockBadgeValue = hasTieredLayout ? resolveDockBadgeValue(item) : null;
+    const dockBadgeValue = hasTieredLayout && !hideDockBadges ? resolveDockBadgeValue(item) : null;
     const regularValue = !hasTieredLayout && item.value !== undefined && !item.rating ? item.value : null;
 
     const topContent = (

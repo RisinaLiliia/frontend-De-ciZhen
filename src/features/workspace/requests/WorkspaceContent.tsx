@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { WorkspaceReviewsPanel } from '@/components/reviews/WorkspaceReviewsPanel';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
@@ -97,26 +98,24 @@ export function WorkspaceContent({
   return (
     <section className="panel requests-panel" aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}>
       {showWorkspaceHeader ? (
-        <div className="requests-header">
-          {showWorkspaceHeading ? (
-            <div className="section-heading">
-              <p id="workspace-section-title" className="section-title">
-                {workspaceTabTitles[activeWorkspaceTab] ?? t(I18N_KEYS.requestsPage.navReviews)}
-              </p>
-              <p id="workspace-section-subtitle" className="section-subtitle">
-                {workspaceSectionSubtitle}
-              </p>
-            </div>
-          ) : null}
-          {activeWorkspaceTab !== 'my-requests' &&
-          activeWorkspaceTab !== 'my-offers' &&
-          activeWorkspaceTab !== 'profile' &&
-          activeWorkspaceTab !== 'reviews' ? (
-            <Link href={primaryAction.href} prefetch={false} className="btn-primary requests-primary-cta" onClick={onPrimaryActionClick}>
-              {primaryAction.label}
-            </Link>
-          ) : null}
-        </div>
+        <SectionHeader
+          className="requests-header"
+          title={workspaceTabTitles[activeWorkspaceTab] ?? t(I18N_KEYS.requestsPage.navReviews)}
+          subtitle={showWorkspaceHeading ? workspaceSectionSubtitle : undefined}
+          titleId={showWorkspaceHeading ? 'workspace-section-title' : undefined}
+          subtitleId={showWorkspaceHeading ? 'workspace-section-subtitle' : undefined}
+          hideHeading={!showWorkspaceHeading}
+          actions={
+            activeWorkspaceTab !== 'my-requests' &&
+            activeWorkspaceTab !== 'my-offers' &&
+            activeWorkspaceTab !== 'profile' &&
+            activeWorkspaceTab !== 'reviews' ? (
+              <Link href={primaryAction.href} prefetch={false} className="btn-primary requests-primary-cta" onClick={onPrimaryActionClick}>
+                {primaryAction.label}
+              </Link>
+            ) : null
+          }
+        />
       ) : null}
 
       {statusFilters.length > 0 ? (

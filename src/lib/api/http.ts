@@ -23,24 +23,43 @@ type ApiInit = RequestInit & {
   skipAuthRefresh?: boolean;
 };
 
+function createRequestId(): string {
+  const randomUuid =
+    typeof globalThis !== 'undefined' &&
+    typeof globalThis.crypto !== 'undefined' &&
+    typeof globalThis.crypto.randomUUID === 'function'
+      ? globalThis.crypto.randomUUID()
+      : null;
+  if (randomUuid) return randomUuid;
+  return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
 async function apiRequest<T>(
   method: string,
   path: string,
   body?: unknown,
   init?: ApiInit,
   retry = true,
+  requestId = createRequestId(),
 ): Promise<T> {
   const url = buildApiUrl(path);
   const accessToken = getAccessToken();
+  const headers = new Headers(init?.headers ?? undefined);
+
+  if (!headers.has('x-request-id')) {
+    headers.set('x-request-id', requestId);
+  }
+  if (accessToken && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${accessToken}`);
+  }
+  if (!(body instanceof FormData) && !headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
 
   const res = await fetch(url, {
     ...init,
     method,
-    headers: {
-      ...(init?.headers ?? {}),
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-      ...(body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
-    },
+    headers,
     credentials: 'include',
     body:
       body === undefined
@@ -54,7 +73,7 @@ async function apiRequest<T>(
     const refreshed = await refreshAccessToken();
     if (refreshed) {
       setAccessToken(refreshed);
-      return apiRequest<T>(method, path, body, init, false);
+      return apiRequest<T>(method, path, body, init, false, requestId);
     }
     setAccessToken(null);
     clearAuth();

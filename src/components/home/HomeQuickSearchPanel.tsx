@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { IconPin } from '@/components/ui/icons/icons';
 import { useCities } from '@/features/catalog/queries';
+import { trackSearchEvent as postSearchEvent } from '@/lib/api/analytics';
+import { isAnalyticsConsentGranted } from '@/lib/consent/runtime';
 import { pickI18n } from '@/lib/i18n/helpers';
 import type { Locale } from '@/lib/i18n/t';
 import * as React from 'react';
@@ -52,6 +54,7 @@ export function HomeQuickSearchPanel({
     ? cityOptions.filter((city) => city.label.toLowerCase().startsWith(normalizedCityQuery)).slice(0, 8)
     : [];
   const hasCitySuggestions = showCitySuggestions && citySuggestions.length > 0;
+  const resolvedCity = cityOptions.find((city) => city.label.toLowerCase() === cityQuery.trim().toLowerCase());
 
   const categoryChips = [
     { key: 'cleaning', label: t(I18N_KEYS.homePublic.serviceCleaning) },
@@ -205,7 +208,28 @@ export function HomeQuickSearchPanel({
             </div>
           ) : null}
         </div>
-        <Button type="button" variant="secondary" fullWidth={false} className="home-quick-search__button" onClick={onSearch}>
+        <Button
+          type="button"
+          variant="secondary"
+          fullWidth={false}
+          className="home-quick-search__button"
+          onClick={() => {
+            if (isAnalyticsConsentGranted()) {
+              const normalizedQuery = query.trim();
+              if (normalizedQuery || selectedCategory || resolvedCity?.id) {
+                void postSearchEvent({
+                  target: 'provider',
+                  source: 'home_quick_search',
+                  cityId: resolvedCity?.id,
+                  cityName: resolvedCity?.label,
+                  categoryKey: selectedCategory || undefined,
+                  query: normalizedQuery || undefined,
+                }).catch(() => undefined);
+              }
+            }
+            onSearch();
+          }}
+        >
           {t(I18N_KEYS.homePublic.searchCta)}
         </Button>
       </div>

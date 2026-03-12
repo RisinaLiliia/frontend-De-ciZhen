@@ -85,20 +85,23 @@
     min-width: 44px;
     height: 28px;
     padding: 0 10px;
-    border: 0;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
     border-radius: 999px;
     font-size: 11px;
     font-weight: 600;
-    color: var(--c-text-muted);
+    color: color-mix(in oklab, var(--c-primary) 60%, var(--c-text) 40%);
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-info-soft) 10%);
     transition:
       color var(--transition-fast),
       background var(--transition-fast),
+      border-color var(--transition-fast),
       box-shadow var(--transition-fast);
   }
 
   .home-activity__range.is-active {
     color: var(--c-primary-contrast);
-    background: var(--btn-secondary-bg);
+    border-color: color-mix(in oklab, var(--c-primary) 52%, var(--c-border) 48%);
+    background: color-mix(in oklab, var(--c-primary) 74%, var(--c-panel) 26%);
     box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
   }
 

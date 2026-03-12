@@ -14,6 +14,7 @@ type WorkspacePublicIntroProps = {
   navTitle: string;
   navSubtitle: string;
   personalNavItems: PersonalNavItem[];
+  hideNavBadges?: boolean;
   insightText: string;
   activityProgress: number;
   cityActivity: WorkspacePublicCityActivityDto | null | undefined;
@@ -29,6 +30,7 @@ export function WorkspacePublicIntro({
   navTitle,
   navSubtitle,
   personalNavItems,
+  hideNavBadges = false,
   insightText,
   activityProgress,
   cityActivity,
@@ -46,6 +48,7 @@ export function WorkspacePublicIntro({
             title={navTitle}
             subtitle={navSubtitle}
             items={personalNavItems}
+            hideDockBadges={hideNavBadges}
             insightText={insightText}
             progressPercent={activityProgress}
           />

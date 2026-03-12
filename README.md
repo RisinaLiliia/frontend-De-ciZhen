@@ -178,6 +178,7 @@ Persistence / External services
   - bearer token in memory
   - `401` retry via `/auth/refresh`
   - cookie-based refresh flow (`credentials: include`)
+  - per-request `x-request-id` header for backend log correlation
 - `/workspace` is the single workspace runtime entrypoint:
   - authenticated users -> private workspace shell
   - guests -> public workspace shell
@@ -213,6 +214,7 @@ At least one backend base must be available:
 - `NEXT_PUBLIC_DEMO` (default: `true` unless explicitly `false`)
 - `NEXT_PUBLIC_HERO_VARIANT` (default: `animated`)
 - `NEXT_PUBLIC_HERO_ANIMATION_MODE` (default: `subtle`)
+- `NEXT_PUBLIC_WORKSPACE_STATS_SHOW_KPI` (default: `false`; toggles KPI cards in `/workspace?section=stats`)
 
 ### Analytics
 
@@ -246,6 +248,19 @@ Current tracked event names include:
 Platform activity panels consume backend analytics endpoints:
 - `/analytics/platform-activity`
 
+### Workspace Statistik (single contract)
+
+`/workspace?section=stats` consumes one backend BFF endpoint:
+- `GET /workspace/statistics?range=24h|7d|30d|90d`
+
+Behavior:
+- guest users receive `mode=platform`
+- authenticated users receive `mode=personalized`
+- UI layout is shared for both modes; only payload data differs
+- set `NEXT_PUBLIC_WORKSPACE_STATS_BFF=true` to use the unified BFF endpoint in production.
+- for local dev probing, also set `NEXT_PUBLIC_WORKSPACE_STATS_BFF_DEV=true`.
+- when the flag is not set, frontend uses compatibility fallback sources (safe for older backend builds).
+
 ### GDPR / ePrivacy consent behavior
 
 - Optional analytics is disabled by default.
@@ -276,6 +291,16 @@ Notes:
 - Node.js 20+ is required
 - Backend must be reachable through configured API base env vars
 - Next.js rewrites are defined in `next.config.ts` for `/api/*` and `/presence/*`
+- Runtime env validation is executed in `src/lib/config/env.server.ts` (fail-fast on invalid prod env)
+
+## Release Gate
+
+- Project release checklist: `docs/release-dod.md`
+- One-command release verification:
+
+```bash
+npm run release:check
+```
 
 ## Scripts
 
@@ -283,6 +308,7 @@ Notes:
 | --- | --- |
 | `npm run dev` | Start dev server |
 | `npm run build` | Production build |
+| `npm run build:webpack` | Production build in webpack mode (release baseline) |
 | `npm run start` | Start production server |
 | `npm run lint` | ESLint |
 | `npm run lint:strict` | ESLint with `--max-warnings=0` |
@@ -293,6 +319,7 @@ Notes:
 | `npm run test:e2e:a11y` | Playwright accessibility smoke flows (`@a11y`) |
 | `npm run test:e2e:headed` | Playwright headed mode |
 | `npm run test:e2e:ui` | Playwright UI mode |
+| `npm run release:check` | Release quality gate (`lint + typecheck + tests + build`) |
 | `npm exec tsc --noEmit` | Type check |
 
 ## CI Branch Protection

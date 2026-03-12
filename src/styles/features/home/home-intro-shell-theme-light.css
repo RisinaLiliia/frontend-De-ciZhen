@@ -69,17 +69,6 @@
     color: color-mix(in oklab, var(--c-text) 92%, var(--c-primary) 8%);
   }
 
-  html:not(.dark) .home-intro-shell .home-combined-top .home-activity__range {
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-info-soft) 10%);
-    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
-    color: color-mix(in oklab, var(--c-primary) 60%, var(--c-text) 40%);
-  }
-
-  html:not(.dark) .home-intro-shell .home-combined-top .home-activity__range.is-active {
-    background: color-mix(in oklab, var(--c-primary) 74%, var(--c-panel) 26%);
-    color: var(--c-primary-contrast);
-  }
-
   html:not(.dark) .home-intro-shell .home-combined-top .chip {
     background: var(--c-panel);
     border-color: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);

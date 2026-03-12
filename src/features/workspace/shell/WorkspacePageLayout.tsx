@@ -63,6 +63,7 @@ export function WorkspacePageLayout({
       <WorkspaceExploreSection
         intro={intro}
         activeSection={activePublicSection ?? 'requests'}
+        isWorkspaceAuthed={isWorkspaceAuthed}
         t={t}
         locale={locale}
         onListDensityChange={explore.setExploreListDensity}

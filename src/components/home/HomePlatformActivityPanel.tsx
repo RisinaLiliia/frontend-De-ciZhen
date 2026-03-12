@@ -11,6 +11,7 @@ import {
 } from '@/lib/api/analytics';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
+import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 
 type HomePlatformActivityPanelProps = {
   t: (key: I18nKey) => string;
@@ -58,24 +59,22 @@ export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPan
         <p className="home-activity__subtitle">{t(I18N_KEYS.homePublic.activitySubtitle)}</p>
       </div>
 
-      <div className="home-activity__ranges mt-3">
-        {RANGES.map((item) => (
-          <button
-            key={item}
-            type="button"
-            className={`home-activity__range ${range === item ? 'is-active' : ''}`.trim()}
-            onClick={() => setRange(item)}
-          >
-            {t(
-              item === '24h'
-                ? I18N_KEYS.homePublic.activityRange24h
-                : item === '7d'
-                  ? I18N_KEYS.homePublic.activityRange7d
-                  : I18N_KEYS.homePublic.activityRange30d,
-            )}
-          </button>
-        ))}
-      </div>
+      <RangeActionToolbar
+        className="mt-3"
+        groupLabel={t(I18N_KEYS.homePublic.activityTitle)}
+        options={RANGES.map((item) => ({
+          value: item,
+          label: t(
+            item === '24h'
+              ? I18N_KEYS.homePublic.activityRange24h
+              : item === '7d'
+                ? I18N_KEYS.homePublic.activityRange7d
+                : I18N_KEYS.homePublic.activityRange30d,
+          ),
+        }))}
+        value={range}
+        onChange={setRange}
+      />
 
       {isInitialLoading ? (
         <div className="home-activity__loading mt-3">

@@ -77,8 +77,8 @@ export function WorkspacePublicDemandMapView({
         <div className="sr-only" aria-live="polite">
           <p>{t(I18N_KEYS.homePublic.demandMapTitle)}</p>
           <ul>
-            {topAccessibleCities.map((city) => (
-              <li key={city.id}>
+            {topAccessibleCities.map((city, index) => (
+              <li key={`${city.id}-${index}`}>
                 {city.name}: {formatNumber.format(city.count)} {t(I18N_KEYS.homePublic.demandMapActiveRequests)}
               </li>
             ))}

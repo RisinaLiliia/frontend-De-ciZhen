@@ -1,4 +1,5 @@
 /* src/styles/features/components/components-ui-panels.css */
 
 @import './components-ui-panels-panel-stat.css';
+@import './components-ui-panels-kpi-card.css';
 @import './components-ui-panels-chips-actions.css';

@@ -158,6 +158,7 @@ export function useWorkspacePrivatePresentationFlow({
     navTitle,
     navSubtitle,
     personalNavItems,
+    hideNavBadges: activePublicSection === 'stats',
     insightText,
     activityProgress,
     statsOrder,
@@ -181,6 +182,7 @@ export function useWorkspacePrivatePresentationFlow({
             navTitle={navTitle}
             navSubtitle={navSubtitle}
             personalNavItems={personalNavItems}
+            hideNavBadges={activePublicSection === 'stats'}
             insightText=""
             activityProgress={0}
             cityActivity={publicCityActivity}
@@ -191,6 +193,7 @@ export function useWorkspacePrivatePresentationFlow({
           />
         ),
     [
+      activePublicSection,
       allRequestsSummary,
       isWorkspaceAuthed,
       locale,

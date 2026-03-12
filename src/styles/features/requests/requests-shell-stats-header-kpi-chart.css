@@ -3,15 +3,11 @@
 @layer components {
   .requests-stats {
     display: grid;
-    gap: var(--space-3);
-    padding: var(--home-panel-padding, 16px);
+    gap: var(--space-4);
   }
 
   .requests-stats__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2-5);
+    gap: var(--space-4);
   }
 
   .requests-stats__tabs {
@@ -50,57 +46,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .requests-stats-kpi {
-    display: grid;
-    gap: var(--space-1);
-    padding: var(--space-2-5);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--surface-soft-border);
-    background: var(--surface-soft-bg);
-  }
-
-  .requests-stats-kpi__top {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-
-  .requests-stats-kpi__label {
-    font-size: var(--fs-small);
-    color: var(--c-text-muted);
-  }
-
-  .requests-stats-kpi__value {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--c-text);
-  }
-
-  .requests-stats-kpi__delta {
-    font-size: var(--fs-small);
-    font-weight: 600;
-  }
-
-  .requests-stats-kpi__delta.is-success {
-    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
-  }
-
-  .requests-stats-kpi__delta.is-accent {
-    color: var(--c-accent);
-  }
-
-  .requests-stats-kpi__delta.is-neutral {
-    color: var(--c-text-muted);
-  }
-
   .requests-stats-chart {
     display: grid;
     gap: var(--space-2-5);
-    padding: var(--space-2-5);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--surface-soft-border);
-    background: var(--surface-soft-bg);
   }
 
   .requests-stats-chart__header {
