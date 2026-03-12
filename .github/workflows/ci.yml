@@ -49,6 +49,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Security audit (prod deps, non-blocking)
+        run: npm run security:audit
+        continue-on-error: true
+
   e2e-critical:
     runs-on: ubuntu-latest
     timeout-minutes: 35
