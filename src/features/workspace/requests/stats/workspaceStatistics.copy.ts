@@ -53,6 +53,8 @@ export type WorkspaceStatisticsCopy = {
   insightsTitle: string;
   insightsSubtitle: string;
   insightsGeneratedLabel: string;
+  insightsAssistantName: string;
+  insightsAssistantNote: string;
   growthTitle: string;
   growthSubtitle: string;
   growthRecommendedPrefix: string;
@@ -154,6 +156,8 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   insightsTitle: 'Empfehlungen & Insights',
   insightsSubtitle: 'AI Decision Layer für Markt-, Performance- und Wachstums-Signale',
   insightsGeneratedLabel: 'Basierend auf aktuellen Plattformdaten',
+  insightsAssistantName: "De'ci AI",
+  insightsAssistantNote: 'Analysiert Markt-, Performance- und Wachstums-Signale',
   growthTitle: 'Wachstum & Promotion',
   growthSubtitle: 'Tools für mehr Sichtbarkeit und neue Aufträge',
   growthRecommendedPrefix: 'Empfohlen für',
@@ -256,6 +260,8 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   insightsTitle: 'Recommendations & insights',
   insightsSubtitle: 'AI decision layer for market, performance, and growth signals',
   insightsGeneratedLabel: 'Based on current platform data',
+  insightsAssistantName: "De'ci AI",
+  insightsAssistantNote: 'Analyzing market, performance, and growth signals',
   growthTitle: 'Growth & promotion',
   growthSubtitle: 'Tools for more visibility and new jobs',
   growthRecommendedPrefix: 'Recommended for',

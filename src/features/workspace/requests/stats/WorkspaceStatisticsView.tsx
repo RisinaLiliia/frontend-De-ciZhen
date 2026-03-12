@@ -1,28 +1,27 @@
 'use client';
 
-import Link from 'next/link';
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { Input } from '@/components/ui/Input';
-import { KpiCard } from '@/components/ui/KpiCard';
-import { Badge } from '@/components/ui/Badge';
-import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
-import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import {
   IconDownload,
-  IconInsight,
-  IconSearch,
-  IconTrophyBronze,
-  IconTrophyGold,
-  IconTrophySilver,
 } from '@/components/ui/icons/icons';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from './useWorkspaceStatisticsModel';
+import { buildFunnelVisualRows } from './statisticsFunnel.utils';
+import { paginateItems, parsePageParam } from './statisticsPagination.utils';
+import { applyPageQuery, isPageQueryInSync, toPageQueryValue } from './statisticsUrlState.utils';
+import {
+  StatisticsCitiesPanel,
+  StatisticsDecisionLayer,
+  StatisticsDemandPanel,
+  StatisticsGrowthPanel,
+  StatisticsInsightsPanel,
+} from './WorkspaceStatisticsSections';
 
 type WorkspaceStatisticsViewProps = {
   t: (key: I18nKey) => string;
@@ -31,24 +30,15 @@ type WorkspaceStatisticsViewProps = {
 };
 
 const RANGE_OPTIONS: WorkspaceStatisticsRange[] = ['24h', '7d', '30d', '90d'];
-const CITIES_COLLAPSED_LIMIT = 5;
-const DEMAND_PAGE_SIZE = 8;
+const DEMAND_PAGE_SIZE = 5;
+const CITY_PAGE_SIZE = 15;
 const CITY_PAGE_QUERY_KEY = 'statsCityPage';
-const FUNNEL_MIN_WIDTH_PERCENT_DESKTOP = 40;
-const FUNNEL_MIN_WIDTH_PERCENT_MOBILE = 52;
 
 function rangeLabel(range: WorkspaceStatisticsRange, localeCopy: WorkspaceStatisticsModel['copy']) {
   if (range === '24h') return localeCopy.range24h;
   if (range === '7d') return localeCopy.range7d;
   if (range === '30d') return localeCopy.range30d;
   return localeCopy.range90d;
-}
-
-function parsePageParam(value: string | null): number | null {
-  if (!value) return null;
-  const parsed = Number.parseInt(value, 10);
-  if (!Number.isFinite(parsed) || parsed < 1) return null;
-  return parsed;
 }
 
 export function WorkspaceStatisticsView({
@@ -71,7 +61,6 @@ export function WorkspaceStatisticsView({
   );
   const [demandPage, setDemandPage] = React.useState(1);
   const [cityQuery, setCityQuery] = React.useState('');
-  const [isCityListExpanded, setCityListExpanded] = React.useState(false);
   const [cityPage, setCityPage] = React.useState(() => cityPageFromUrl ?? 1);
   const funnelContainerRef = React.useRef<HTMLOListElement | null>(null);
   const [funnelContainerWidth, setFunnelContainerWidth] = React.useState(0);
@@ -82,7 +71,6 @@ export function WorkspaceStatisticsView({
     isLoading,
     isError,
     modeLabel,
-    kpis,
     activityPoints,
     activityMeta,
     activitySignals,
@@ -99,10 +87,15 @@ export function WorkspaceStatisticsView({
   } = model;
   const normalizedCityQuery = cityQuery.trim().toLowerCase();
   const hasCityQuery = normalizedCityQuery.length > 0;
-  const demandTotalPages = Math.max(1, Math.ceil(demandRows.length / DEMAND_PAGE_SIZE));
-  const safeDemandPage = Math.min(demandTotalPages, Math.max(1, demandPage));
-  const demandStartIndex = (safeDemandPage - 1) * DEMAND_PAGE_SIZE;
-  const visibleDemandRows = demandRows.slice(demandStartIndex, demandStartIndex + DEMAND_PAGE_SIZE);
+  const demandPagination = React.useMemo(
+    () => paginateItems(demandRows, demandPage, DEMAND_PAGE_SIZE),
+    [demandPage, demandRows],
+  );
+  const {
+    totalPages: demandTotalPages,
+    safePage: safeDemandPage,
+    visibleItems: visibleDemandRows,
+  } = demandPagination;
 
   const rankedCityRows = React.useMemo(() => (
     cityRows
@@ -123,13 +116,16 @@ export function WorkspaceStatisticsView({
     return rankedCityRows.filter((item) => item.name.toLowerCase().includes(normalizedCityQuery));
   }, [hasCityQuery, normalizedCityQuery, rankedCityRows]);
 
-  const isPaginatedMode = isCityListExpanded || hasCityQuery;
-  const cityPageSize = isPaginatedMode ? 10 : CITIES_COLLAPSED_LIMIT;
-  const cityTotalPages = Math.max(1, Math.ceil(filteredCityRows.length / cityPageSize));
-  const safeCityPage = Math.min(cityTotalPages, Math.max(1, cityPage));
-  const effectiveCityPage = isPaginatedMode ? safeCityPage : 1;
-  const cityStartIndex = (effectiveCityPage - 1) * cityPageSize;
-  const visibleCityRows = filteredCityRows.slice(cityStartIndex, cityStartIndex + cityPageSize);
+  const cityPagination = React.useMemo(
+    () => paginateItems(filteredCityRows, cityPage, CITY_PAGE_SIZE),
+    [cityPage, filteredCityRows],
+  );
+  const {
+    totalPages: cityTotalPages,
+    safePage: safeCityPage,
+    startIndex: cityStartIndex,
+    visibleItems: visibleCityRows,
+  } = cityPagination;
   const [isNarrowViewport, setNarrowViewport] = React.useState(false);
 
   React.useEffect(() => {
@@ -157,39 +153,7 @@ export function WorkspaceStatisticsView({
   }, []);
 
   const funnelVisualRows = React.useMemo(
-    () => {
-      const minVisualWidth = isNarrowViewport ? FUNNEL_MIN_WIDTH_PERCENT_MOBILE : FUNNEL_MIN_WIDTH_PERCENT_DESKTOP;
-      const completedWidth = funnel.find((step) => step.key === 'completed')?.widthPercent ?? null;
-      const shouldForceCompactByWidth = funnelContainerWidth > 0 && funnelContainerWidth < 420;
-      const visualWidths = funnel.map((step) => {
-        const sourceWidth = step.isCurrency && completedWidth !== null ? completedWidth : step.widthPercent;
-        return Math.max(minVisualWidth, Math.min(100, Number(sourceWidth || 0)));
-      });
-
-      return funnel.map((step, index) => {
-        const topWidthPercent = index === 0
-          ? (visualWidths[0] ?? 100)
-          : (visualWidths[index - 1] ?? visualWidths[0] ?? 100);
-        const bottomWidthPercent = visualWidths[index] ?? topWidthPercent;
-        const compactLabel = getCompactFunnelLabel(step.key, copy);
-        const isLongLabel = step.label.length > 24;
-        const shouldUseCompactLabel =
-          isNarrowViewport ||
-          shouldForceCompactByWidth ||
-          bottomWidthPercent < 52 ||
-          (isLongLabel && bottomWidthPercent < 62);
-
-        return {
-          ...step,
-          topWidthPercent,
-          bottomWidthPercent: Math.min(topWidthPercent, bottomWidthPercent),
-          fullLabel: step.label,
-          displayLabel: shouldUseCompactLabel ? compactLabel : step.label,
-          isCompactLabel: shouldUseCompactLabel,
-          isTall: !shouldUseCompactLabel && step.label.length > 18,
-        };
-      });
-    },
+    () => buildFunnelVisualRows({ funnel, copy, isNarrowViewport, funnelContainerWidth }),
     [copy, funnel, funnelContainerWidth, isNarrowViewport],
   );
 
@@ -207,13 +171,7 @@ export function WorkspaceStatisticsView({
 
   React.useEffect(() => {
     setCityPage(1);
-  }, [normalizedCityQuery, isCityListExpanded]);
-
-  React.useEffect(() => {
-    if (!isPaginatedMode && cityPage !== 1) {
-      setCityPage(1);
-    }
-  }, [cityPage, isPaginatedMode]);
+  }, [normalizedCityQuery]);
 
   React.useEffect(() => {
     const nextPage = cityPageFromUrl ?? 1;
@@ -223,18 +181,13 @@ export function WorkspaceStatisticsView({
   }, [cityPageFromUrl, cityPage]);
 
   React.useEffect(() => {
-    const nextPage = isPaginatedMode && safeCityPage > 1 ? String(safeCityPage) : null;
-    const currentPage = searchParams.get(CITY_PAGE_QUERY_KEY);
-    if ((currentPage ?? null) === nextPage) return;
+    const nextPage = toPageQueryValue(safeCityPage);
+    if (isPageQueryInSync(searchParams, CITY_PAGE_QUERY_KEY, nextPage)) return;
 
     replaceSearchParams((params) => {
-      if (nextPage) {
-        params.set(CITY_PAGE_QUERY_KEY, nextPage);
-      } else {
-        params.delete(CITY_PAGE_QUERY_KEY);
-      }
+      applyPageQuery(params, CITY_PAGE_QUERY_KEY, nextPage);
     });
-  }, [isPaginatedMode, replaceSearchParams, safeCityPage, searchParams]);
+  }, [replaceSearchParams, safeCityPage, searchParams]);
 
   React.useEffect(() => {
     setDemandPage(1);
@@ -269,9 +222,9 @@ export function WorkspaceStatisticsView({
         />
 
         <div className="panel-header workspace-statistics__mode-row">
-          <span className="workspace-statistics__mode-badge">{modeLabel}</span>
-          <span className="section-subtitle">{copy.kpiTitle}</span>
-        </div>
+            <span className="workspace-statistics__mode-badge">{modeLabel}</span>
+            <span className="section-subtitle">{copy.kpiTitle}</span>
+          </div>
 
         {isLoading ? (
           <div className="requests-stats__loading workspace-statistics__loading">
@@ -285,23 +238,10 @@ export function WorkspaceStatisticsView({
           </div>
         ) : (
           <>
-            <section className="requests-stats__kpi-grid" aria-label={copy.kpiTitle}>
-              {kpis.map((item) => (
-                <KpiCard
-                  key={item.key}
-                  label={item.label}
-                  value={item.value}
-                  meta={item.hint}
-                  tone={item.tone}
-                  trend={item.trend}
-                  variant="plain"
-                  focusable
-                />
-              ))}
-            </section>
+            <StatisticsDecisionLayer copy={copy} activitySignals={activitySignals} />
 
             <div className="workspace-statistics__grid workspace-statistics__grid--primary">
-              <section className="panel requests-stats-chart" tabIndex={0}>
+              <section className="panel requests-stats-chart">
                 <header className="workspace-statistics__tile-header">
                   <p className="section-title">{copy.activityTitle}</p>
                   <p className="section-subtitle">{copy.activitySubtitle}</p>
@@ -312,27 +252,6 @@ export function WorkspaceStatisticsView({
                   offersLabel={copy.offersLabel}
                   emptyLabel={copy.emptyActivity}
                 />
-                {activitySignals.length > 0 ? (
-                  <div className="workspace-statistics__activity-signals-wrap">
-                    <div className="workspace-statistics__activity-signals-head">
-                      <p className="section-title">{copy.activitySignalsTitle}</p>
-                      <p className="section-subtitle">{copy.activitySignalsSubtitle}</p>
-                    </div>
-                    <ul className="workspace-statistics__activity-signals" aria-label={copy.activitySignalsTitle}>
-                      {activitySignals.map((item) => (
-                        <li
-                          key={item.key}
-                          className={`stat-card workspace-statistics__activity-signal is-${item.tone}${item.tone === 'positive' ? ' dc-glow' : ''}`.trim()}
-                          tabIndex={0}
-                        >
-                          <span className="workspace-statistics__activity-signal-label">{item.label}</span>
-                          <strong className="workspace-statistics__activity-signal-value">{item.value}</strong>
-                          <span className="workspace-statistics__activity-signal-hint">{item.hint}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
                 <div className="workspace-statistics__meta-grid">
                   <div>
                     <span>{copy.peakLabel}</span>
@@ -349,172 +268,42 @@ export function WorkspaceStatisticsView({
                 </div>
               </section>
 
-              <section className="panel requests-stats-chart" tabIndex={0}>
-                <header className="workspace-statistics__tile-header">
-                  <p className="section-title">{copy.demandTitle}</p>
-                  <p className="section-subtitle">{copy.demandSubtitle}</p>
-                </header>
-                {demandRows.length === 0 ? (
-                  <p className="workspace-statistics__empty">{copy.emptyDemand}</p>
-                ) : (
-                  <>
-                    <ul className="workspace-statistics-demand" aria-label={copy.demandTitle}>
-                      {visibleDemandRows.map((row, index) => (
-                        <li
-                          key={`${row.categoryKey ?? row.categoryName}-${index}`}
-                          className="stat-card stat-link workspace-statistics-demand__row"
-                          tabIndex={0}
-                        >
-                          <div className="workspace-statistics-demand__meta">
-                            <span className="workspace-statistics-demand__label request-category">{row.categoryName}</span>
-                            <span className="workspace-statistics-demand__value">{row.sharePercent}%</span>
-                          </div>
-                          <div className="workspace-statistics-demand__track" aria-hidden="true">
-                            <span className="workspace-statistics-demand__fill" style={{ width: `${row.sharePercent}%` }} />
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                    {demandTotalPages > 1 ? (
-                      <div className="workspace-statistics__demand-pagination">
-                        <RequestsPageNav
-                          page={safeDemandPage}
-                          totalPages={demandTotalPages}
-                          ariaLabel={copy.demandTitle}
-                          prevAriaLabel={t(I18N_KEYS.requestsPage.paginationPrev)}
-                          nextAriaLabel={t(I18N_KEYS.requestsPage.paginationNext)}
-                          prevTitle={t(I18N_KEYS.requestsPage.paginationPrev)}
-                          nextTitle={t(I18N_KEYS.requestsPage.paginationNext)}
-                          onPrevPage={() => setDemandPage((prev) => Math.max(1, prev - 1))}
-                          onNextPage={() => setDemandPage((prev) => Math.min(demandTotalPages, prev + 1))}
-                        />
-                      </div>
-                    ) : null}
-                  </>
-                )}
-              </section>
+              <StatisticsDemandPanel
+                copy={copy}
+                demandRows={demandRows}
+                visibleDemandRows={visibleDemandRows}
+                safeDemandPage={safeDemandPage}
+                demandTotalPages={demandTotalPages}
+                onPrevPage={() => setDemandPage((prev) => Math.max(1, prev - 1))}
+                onNextPage={() => setDemandPage((prev) => Math.min(demandTotalPages, prev + 1))}
+                t={t}
+              />
             </div>
 
-            <section className="panel requests-stats-chart workspace-statistics__cities-panel" tabIndex={0}>
-              <header className="workspace-statistics__tile-header">
-                <p className="section-title">{copy.citiesTitle}</p>
-                <p className="section-subtitle">{copy.citiesSubtitle}</p>
-              </header>
-              {cityRows.length > 0 ? (
-                <div className="workspace-statistics__cities-coverage">
-                  <Badge
-                    variant={
-                      model.citySignalCoverage.mode === 'full'
-                        ? 'success'
-                        : model.citySignalCoverage.mode === 'partial'
-                          ? 'warning'
-                          : 'info'
-                    }
-                    size="sm"
-                  >
-                    {model.citySignalCoverage.label}
-                  </Badge>
-                  <span className="section-subtitle">{model.citySignalCoverage.detail}</span>
-                </div>
-              ) : null}
-              <div className="workspace-statistics__cities-tools">
-                <label className="workspace-statistics__cities-filter" aria-label={copy.citiesFilterPlaceholder}>
-                  <span className="workspace-statistics__cities-filter-icon" aria-hidden="true">
-                    <IconSearch />
-                  </span>
-                  <Input
-                    type="search"
-                    value={cityQuery}
-                    onChange={(event) => setCityQuery(event.target.value)}
-                    placeholder={copy.citiesFilterPlaceholder}
-                    className="workspace-statistics__cities-filter-input"
-                  />
-                </label>
-              </div>
-              {cityRows.length === 0 ? (
-                <p className="workspace-statistics__empty">{copy.emptyCities}</p>
-              ) : filteredCityRows.length === 0 ? (
-                <p className="workspace-statistics__empty">{copy.citiesNoMatch}</p>
-              ) : (
-                <ol className="workspace-statistics-city-list" aria-label={copy.citiesTitle}>
-                  <li className="workspace-statistics-city-list__head" aria-hidden="true">
-                    <span>{copy.citiesColumnRank}</span>
-                    <span>{copy.citiesColumnCity}</span>
-                    <span>{copy.citiesColumnRequests}</span>
-                    <span>{copy.citiesColumnJobSearches}</span>
-                    <span>{copy.citiesColumnProviderSearches}</span>
-                    <span>{copy.citiesColumnMarketBalance}</span>
-                  </li>
-                  {visibleCityRows.map((item, index) => {
-                    const rank = cityRankByKey.get(item.key) ?? cityStartIndex + index + 1;
-                    const rankTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : null;
-                    return (
-                    <li
-                      key={`${item.key}-${index}`}
-                      className="stat-card workspace-statistics-city-list__item"
-                      tabIndex={0}
-                    >
-                      <span className="workspace-statistics-city-list__rank-cell">
-                        {rankTone ? (
-                          <span className={`workspace-statistics-city-list__rank-cup is-${rankTone}`.trim()} aria-hidden="true">
-                            {rank === 1 ? <IconTrophyGold size={20} /> : null}
-                            {rank === 2 ? <IconTrophySilver size={20} /> : null}
-                            {rank === 3 ? <IconTrophyBronze size={20} /> : null}
-                          </span>
-                        ) : null}
-                        {!rankTone ? <span className="workspace-statistics-city-list__rank">{rank}</span> : null}
-                      </span>
-                      <span className="workspace-statistics-city-list__name">
-                        {item.name}
-                      </span>
-                      <span className="workspace-statistics-city-list__count">{formatNumber.format(item.count)}</span>
-                      <span className="workspace-statistics-city-list__share">{item.auftragSuchenCount === null ? '—' : formatNumber.format(item.auftragSuchenCount)}</span>
-                      <span className="workspace-statistics-city-list__share">{item.anbieterSuchenCount === null ? '—' : formatNumber.format(item.anbieterSuchenCount)}</span>
-                      <span className="workspace-statistics-city-list__balance">
-                        <strong>{item.marketBalanceRatio === null ? '—' : `${formatMarketBalance.format(item.marketBalanceRatio)}x`}</strong>
-                        <span className={`workspace-statistics-city-list__signal is-${item.signal}`.trim()}>
-                          <span className="workspace-statistics-city-list__signal-icon" aria-hidden="true">
-                            {citySignalIcon(item.signal)}
-                          </span>
-                          {citySignalLabel(item.signal, copy)}
-                        </span>
-                      </span>
-                    </li>
-                    );
-                  })}
-                </ol>
-              )}
-              {!hasCityQuery && !isCityListExpanded && filteredCityRows.length > CITIES_COLLAPSED_LIMIT ? (
-                <div className="workspace-statistics__cities-more-wrap">
-                  <MoreDotsLink
-                    label={copy.citiesExpandListLabel}
-                    className="workspace-statistics__cities-more"
-                    onClick={() => setCityListExpanded(true)}
-                  />
-                </div>
-              ) : null}
-              {isPaginatedMode && cityTotalPages > 1 ? (
-                <div className="workspace-statistics__cities-pagination">
-                  <RequestsPageNav
-                    page={effectiveCityPage}
-                    totalPages={cityTotalPages}
-                    ariaLabel={t(I18N_KEYS.requestsPage.paginationLabel)}
-                    prevAriaLabel={t(I18N_KEYS.requestsPage.paginationPrev)}
-                    nextAriaLabel={t(I18N_KEYS.requestsPage.paginationNext)}
-                    prevTitle={t(I18N_KEYS.requestsPage.paginationPrev)}
-                    nextTitle={t(I18N_KEYS.requestsPage.paginationNext)}
-                    onPrevPage={() => setCityPage((prev) => Math.max(1, prev - 1))}
-                    onNextPage={() => setCityPage((prev) => Math.min(cityTotalPages, prev + 1))}
-                  />
-                </div>
-              ) : null}
-            </section>
+            <StatisticsCitiesPanel
+              copy={copy}
+              cityRowsLength={cityRows.length}
+              filteredCityRows={filteredCityRows}
+              visibleCityRows={visibleCityRows}
+              cityRankByKey={cityRankByKey}
+              cityStartIndex={cityStartIndex}
+              cityTotalPages={cityTotalPages}
+              safeCityPage={safeCityPage}
+              cityQuery={cityQuery}
+              onCityQueryChange={setCityQuery}
+              onPrevPage={() => setCityPage((prev) => Math.max(1, prev - 1))}
+              onNextPage={() => setCityPage((prev) => Math.min(cityTotalPages, prev + 1))}
+              formatNumber={formatNumber}
+              formatMarketBalance={formatMarketBalance}
+              coverage={model.citySignalCoverage}
+              t={t}
+            />
           </>
         )}
       </section>
 
       <aside className="stack-md">
-        <section className="panel requests-stats-chart" tabIndex={0}>
+        <section className="panel requests-stats-chart">
           <header className="workspace-statistics__tile-header">
             <p className="section-title">{copy.profileTitle}</p>
             <p className="section-subtitle">
@@ -552,7 +341,6 @@ export function WorkspaceStatisticsView({
                       ['--funnel-bottom-width' as string]: `${step.bottomWidthPercent}%`,
                       ['--funnel-layer-index' as string]: `${index}`,
                     } as React.CSSProperties}
-                    tabIndex={0}
                     aria-label={`${step.fullLabel}: ${step.value}${step.railValue ? `, ${step.railLabel ?? ''} ${step.railValue}` : ''}`}
                     title={step.isCompactLabel ? step.fullLabel : undefined}
                   >
@@ -590,161 +378,21 @@ export function WorkspaceStatisticsView({
           </section>
         ) : (
           <>
-            <section className="panel stack-sm">
-              <header className="workspace-statistics__tile-header">
-                <p className="section-title">{copy.insightsTitle}</p>
-                <p className="section-subtitle">{copy.insightsSubtitle}</p>
-                <p className="workspace-statistics-insights__generated">{copy.insightsGeneratedLabel}</p>
-              </header>
-              {insights.length === 0 ? (
-                <p className="workspace-statistics__empty">{copy.emptyInsights}</p>
-              ) : (
-                <ul className="workspace-statistics-insights" aria-label={copy.insightsTitle}>
-                  {insights.map((item, index) => (
-                    <li
-                      key={`${item.key}-${index}`}
-                      className={`stat-card stat-link workspace-statistics-insights__item is-${item.level} is-${item.kind}${index === 0 ? ' is-featured' : ''}`.trim()}
-                      tabIndex={0}
-                    >
-                      <span className={`workspace-statistics-insights__icon is-${item.level}`.trim()} aria-hidden="true">
-                        {insightAdviceIcon()}
-                      </span>
-                      <span className="workspace-statistics-insights__content">
-                        {item.title ? (
-                          <strong className="workspace-statistics-insights__title">{item.title}</strong>
-                        ) : null}
-                        <span className="workspace-statistics-insights__text">{item.text}</span>
-                        {item.evidence ? (
-                          <span className="workspace-statistics-insights__evidence">{item.evidence}</span>
-                        ) : null}
-                        {showInsightsDebug ? (
-                          <span className="workspace-statistics-insights__debug">
-                            {item.code}
-                            {typeof item.score === 'number' ? ` · score ${item.score}` : ''}
-                            {item.priority ? ` · ${item.priority}` : ''}
-                            {item.context ? ` · ${item.context}` : ''}
-                          </span>
-                        ) : null}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
+            <StatisticsInsightsPanel
+              copy={copy}
+              insights={insights}
+              showInsightsDebug={showInsightsDebug}
+            />
 
-            {growthCards.length > 0 ? (
-              <section className="panel stack-sm workspace-statistics__growth">
-                <header className="workspace-statistics__tile-header">
-                  <p className="section-title">{copy.growthTitle}</p>
-                  <p className="section-subtitle">{copy.growthSubtitle}</p>
-                </header>
-                {(() => {
-                  const featuredCard = growthCards.find((item) => item.tone === 'primary') ?? growthCards[0] ?? null;
-                  const secondaryCards = growthCards
-                    .filter((item) => item.key !== featuredCard?.key)
-                    .slice(0, 2);
-
-                  return (
-                    <>
-                      {featuredCard ? (
-                        <div className="workspace-statistics-growth__featured-wrap">
-                          <Link
-                            href={featuredCard.href}
-                            prefetch={false}
-                            className="request-create-card request-create-card--compact workspace-statistics-growth__featured"
-                          >
-                            <div className="request-create-card__body workspace-statistics-growth__featured-content">
-                              <div className="workspace-statistics-growth__labels">
-                                <Badge variant="info" size="sm">{copy.growthFeaturedBadge}</Badge>
-                              </div>
-                              <p className="request-create-card__title">{featuredCard.title}</p>
-                              <p className="request-create-card__subtitle">{featuredCard.body}</p>
-                              <p className="workspace-statistics-growth__benefit">{featuredCard.benefit}</p>
-                              {featuredCard.recommendedFor ? (
-                                <p className="workspace-statistics-growth__recommended">
-                                  {copy.growthRecommendedPrefix} {featuredCard.recommendedFor}
-                                </p>
-                              ) : null}
-                            </div>
-                            <div className="request-create-card__media" aria-hidden="true">
-                              <span className="request-create-card__plus">+</span>
-                            </div>
-                          </Link>
-                        </div>
-                      ) : null}
-                      {secondaryCards.length > 0 ? (
-                        <div className="workspace-statistics-growth__grid">
-                          {secondaryCards.map((card, index) => (
-                            <article
-                              key={`${card.key}-${index}`}
-                              className="stat-card workspace-statistics-growth__card"
-                            >
-                              <div className="workspace-statistics-growth__head">
-                                <div className="workspace-statistics-growth__head-copy">
-                                  <p className="workspace-statistics-growth__title">{card.title}</p>
-                                  <div className="workspace-statistics-growth__labels">
-                                    {card.badge ? (
-                                      <Badge variant="info" size="sm">{card.badge}</Badge>
-                                    ) : null}
-                                  </div>
-                                </div>
-                              </div>
-                              <p className="workspace-statistics-growth__body">{card.body}</p>
-                              <p className="workspace-statistics-growth__benefit">{card.benefit}</p>
-                              {card.recommendedFor ? (
-                                <p className="workspace-statistics-growth__recommended">
-                                  {copy.growthRecommendedPrefix} {card.recommendedFor}
-                                </p>
-                              ) : null}
-                            </article>
-                          ))}
-                        </div>
-                      ) : null}
-                    </>
-                  );
-                })()}
-              </section>
-            ) : null}
+            <StatisticsGrowthPanel
+              copy={copy}
+              growthCards={growthCards}
+            />
           </>
         )}
       </aside>
     </div>
   );
-}
-
-function insightAdviceIcon(): React.ReactNode {
-  return <IconInsight />;
-}
-
-function citySignalLabel(
-  signal: WorkspaceStatisticsModel['cityRows'][number]['signal'],
-  copy: WorkspaceStatisticsModel['copy'],
-): string {
-  if (signal === 'high') return copy.citySignalHigh;
-  if (signal === 'medium') return copy.citySignalMedium;
-  if (signal === 'none') return copy.citySignalNone;
-  return copy.citySignalLow;
-}
-
-function citySignalIcon(
-  signal: WorkspaceStatisticsModel['cityRows'][number]['signal'],
-): string {
-  if (signal === 'high') return '↗';
-  if (signal === 'medium') return '→';
-  if (signal === 'none') return '•';
-  return '↘';
-}
-
-function getCompactFunnelLabel(
-  key: WorkspaceStatisticsModel['funnel'][number]['key'],
-  copy: WorkspaceStatisticsModel['copy'],
-): string {
-  if (key === 'offers') return copy.funnelOffersCompactLabel;
-  if (key === 'confirmed') return copy.funnelConfirmedCompactLabel;
-  if (key === 'closed') return copy.funnelClosedCompactLabel;
-  if (key === 'completed') return copy.funnelCompletedCompactLabel;
-  if (key === 'profit') return copy.funnelProfitCompactLabel;
-  return copy.funnelRequestsCompactLabel;
 }
 
 function ActivityTrendChart({
