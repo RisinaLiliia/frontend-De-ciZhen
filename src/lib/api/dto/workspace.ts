@@ -206,6 +206,8 @@ export type WorkspaceStatisticsCityDemandDto = {
   requestCount: number;
   auftragSuchenCount: number;
   anbieterSuchenCount: number;
+  marketBalanceRatio: number | null;
+  signal: 'high' | 'medium' | 'low' | 'none';
   lat: number | null;
   lng: number | null;
 };
@@ -213,6 +215,43 @@ export type WorkspaceStatisticsCityDemandDto = {
 export type WorkspaceStatisticsDemandDto = {
   categories: WorkspaceStatisticsCategoryDemandDto[];
   cities: WorkspaceStatisticsCityDemandDto[];
+};
+
+export type WorkspaceStatisticsOpportunityMetricDto = {
+  key: 'demand' | 'competition' | 'growth' | 'activity';
+  value: number;
+  semanticTone: 'very-high' | 'high' | 'medium' | 'low';
+  semanticKey: 'very_high' | 'high' | 'noticeable' | 'medium' | 'low';
+};
+
+export type WorkspaceStatisticsOpportunityRadarItemDto = {
+  rank: 1 | 2 | 3;
+  cityId: string | null;
+  city: string;
+  categoryKey: string | null;
+  category: string | null;
+  demand: number;
+  providers: number | null;
+  marketBalanceRatio: number | null;
+  score: number;
+  demandScore: number;
+  competitionScore: number;
+  growthScore: number;
+  activityScore: number;
+  status: 'very_high' | 'good' | 'balanced' | 'competitive' | 'low';
+  tone: 'very-high' | 'high' | 'balanced' | 'supply-heavy';
+  summaryKey: 'very_high' | 'good' | 'balanced_competitive' | 'balanced' | 'competitive' | 'low_demand' | 'low';
+  metrics: WorkspaceStatisticsOpportunityMetricDto[];
+};
+
+export type WorkspaceStatisticsPriceIntelligenceDto = {
+  citySlug: string | null;
+  city: string | null;
+  categoryKey: string | null;
+  category: string | null;
+  recommendedMin: number | null;
+  recommendedMax: number | null;
+  marketAverage: number | null;
 };
 
 export type WorkspaceStatisticsProfileFunnelDto = {
@@ -286,6 +325,8 @@ export type WorkspaceStatisticsOverviewDto = {
   kpis: WorkspaceStatisticsKpisDto;
   activity: WorkspaceStatisticsActivityDto;
   demand: WorkspaceStatisticsDemandDto;
+  opportunityRadar: WorkspaceStatisticsOpportunityRadarItemDto[];
+  priceIntelligence: WorkspaceStatisticsPriceIntelligenceDto;
   profileFunnel: WorkspaceStatisticsProfileFunnelDto;
   insights: WorkspaceStatisticsInsightDto[];
   growthCards: WorkspaceStatisticsGrowthCardDto[];

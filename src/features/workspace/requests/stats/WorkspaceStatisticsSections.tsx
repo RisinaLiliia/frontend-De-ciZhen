@@ -279,31 +279,29 @@ export function StatisticsOpportunityPanel({
       .sort((a, b) => b.rank - a.rank);
     return [...preferred, ...fallback].slice(0, 2);
   }, [analysisItem?.rank, opportunityRadar]);
+  const axisOrder = React.useMemo<OpportunityMetricKey[]>(
+    () => ['demand', 'competition', 'growth', 'activity'],
+    [],
+  );
   const analysisAxes = React.useMemo(
     () => (
       analysisItem
-        ? ([
-            { key: 'demand', label: copy.opportunityAxisDemand, value: analysisItem.demandScore },
-            { key: 'competition', label: copy.opportunityAxisCompetition, value: Number((10 - analysisItem.competitionScore).toFixed(1)) },
-            { key: 'growth', label: copy.opportunityAxisGrowth, value: analysisItem.growthScore },
-            { key: 'activity', label: copy.opportunityAxisActivity, value: analysisItem.activityScore },
-          ] satisfies Array<{ key: OpportunityMetricKey; label: string; value: number }>).map((axis) => {
-            const semantic = opportunityMetricSemantic(axis.key, axis.value, locale);
-            return {
-              ...axis,
-              semanticLabel: semantic.label,
-              semanticTone: semantic.tone,
-            };
-          })
+        ? axisOrder.map((key) => {
+          const metric = analysisItem.metrics.find((item) => item.key === key);
+          return {
+            key,
+            label: opportunityAxisLabel(key, copy),
+            value: Number((metric?.value ?? 0).toFixed(1)),
+            semanticLabel: opportunityMetricSemanticLabel(metric?.semanticKey ?? 'low', copy),
+            semanticTone: metric?.semanticTone ?? 'low',
+          };
+        })
         : []
     ),
     [
       analysisItem,
-      copy.opportunityAxisActivity,
-      copy.opportunityAxisCompetition,
-      copy.opportunityAxisDemand,
-      copy.opportunityAxisGrowth,
-      locale,
+      axisOrder,
+      copy,
     ],
   );
   const radarPoints = React.useMemo(
@@ -330,24 +328,15 @@ export function StatisticsOpportunityPanel({
         ? 'silver'
         : 'bronze'
     : null;
-  const analysisStatus = analysisItem
-    ? resolveOpportunityStatus(analysisItem.score)
-    : null;
+  const analysisStatus = analysisItem?.status ?? null;
   const analysisStatusClass = analysisStatus ? opportunityStatusClassName(analysisStatus) : null;
   const analysisSummary = React.useMemo(
     () => (
-      analysisItem && analysisStatus
-        ? buildOpportunitySummary({
-            locale,
-            status: analysisStatus,
-            demand: analysisItem.demandScore,
-            competition: Number((10 - analysisItem.competitionScore).toFixed(1)),
-            growth: analysisItem.growthScore,
-            activity: analysisItem.activityScore,
-          })
+      analysisItem
+        ? opportunitySummaryLabel(analysisItem.summaryKey, copy)
         : ''
     ),
-    [analysisItem, analysisStatus, locale],
+    [analysisItem, copy],
   );
 
   return (
@@ -834,14 +823,8 @@ function buildOpportunityRadarAxisValueLabelPositions(values: number[]): Array<{
 
 type OpportunityStatus = 'very_high' | 'good' | 'balanced' | 'competitive' | 'low';
 type OpportunityMetricKey = 'demand' | 'competition' | 'growth' | 'activity';
-
-function resolveOpportunityStatus(score: number): OpportunityStatus {
-  if (score >= 8.5) return 'very_high';
-  if (score >= 7) return 'good';
-  if (score >= 5) return 'balanced';
-  if (score >= 3.5) return 'competitive';
-  return 'low';
-}
+type OpportunitySummaryKey = WorkspaceStatisticsModel['opportunityRadar'][number]['summaryKey'];
+type OpportunitySemanticKey = WorkspaceStatisticsModel['opportunityRadar'][number]['metrics'][number]['semanticKey'];
 
 function opportunityStatusClassName(status: OpportunityStatus): string {
   if (status === 'very_high') return 'very-high';
@@ -867,78 +850,30 @@ function opportunityStatusLabel(status: OpportunityStatus, locale: Locale): stri
   return 'Low opportunity';
 }
 
-function opportunityMetricSemantic(
-  key: OpportunityMetricKey,
-  value: number,
-  locale: Locale,
-): { label: string; tone: 'very-high' | 'high' | 'medium' | 'low' } {
-  if (key === 'competition') {
-    if (value >= 8) return { label: locale === 'de' ? 'Hoch' : 'High', tone: 'high' };
-    if (value >= 6) return { label: locale === 'de' ? 'Spürbar' : 'Noticeable', tone: 'medium' };
-    if (value >= 4) return { label: locale === 'de' ? 'Mittel' : 'Medium', tone: 'medium' };
-    return { label: locale === 'de' ? 'Niedrig' : 'Low', tone: 'low' };
-  }
-
-  if (value >= 8) return { label: locale === 'de' ? 'Sehr hoch' : 'Very high', tone: 'very-high' };
-  if (value >= 6) return { label: locale === 'de' ? 'Hoch' : 'High', tone: 'high' };
-  if (value >= 4) return { label: locale === 'de' ? 'Mittel' : 'Medium', tone: 'medium' };
-  return { label: locale === 'de' ? 'Niedrig' : 'Low', tone: 'low' };
+function opportunityAxisLabel(key: OpportunityMetricKey, copy: WorkspaceStatisticsModel['copy']): string {
+  if (key === 'demand') return copy.opportunityAxisDemand;
+  if (key === 'competition') return copy.opportunityAxisCompetition;
+  if (key === 'growth') return copy.opportunityAxisGrowth;
+  return copy.opportunityAxisActivity;
 }
 
-function buildOpportunitySummary({
-  locale,
-  status,
-  demand,
-  competition,
-  growth,
-  activity,
-}: {
-  locale: Locale;
-  status: OpportunityStatus;
-  demand: number;
-  competition: number;
-  growth: number;
-  activity: number;
-}): string {
-  if (locale === 'de') {
-    if (status === 'very_high') {
-      return 'Sehr hohe Nachfrage bei kontrollierbarem Wettbewerb. Jetzt ist ein starker Moment, um Sichtbarkeit in dieser Kategorie auszubauen.';
-    }
-    if (status === 'good') {
-      return 'Solide Nachfrage mit guter Marktaktivität. Mit klarer Positionierung kannst du hier zügig neue Aufträge gewinnen.';
-    }
-    if (status === 'balanced') {
-      if (competition >= 7) {
-        return 'Hohe Nachfrage trifft aktuell auf starken Wettbewerb. Gute Chancen haben Anbieter mit klarer Spezialisierung oder besserer Sichtbarkeit.';
-      }
-      return 'Die Marktchance ist ausgeglichen. Mit sauberem Profil und schnellen Reaktionen lässt sich diese Region effizient bedienen.';
-    }
-    if (status === 'competitive') {
-      return 'Der Wettbewerb ist deutlich spürbar und drückt die Chance. Fokus auf Differenzierung und Preisstrategie verbessert die Abschlusswahrscheinlichkeit.';
-    }
-    if (demand < 4 || growth < 4 || activity < 4) {
-      return 'Aktuell ist die Nachfrage in diesem Segment begrenzt. Prüfe Alternativen mit stärkerem Wachstum oder niedrigerem Wettbewerbsdruck.';
-    }
-    return 'Die Opportunity ist derzeit niedrig. Neue Chancen entstehen meist mit zusätzlicher Nachfrage oder besserer Marktaktivität.';
-  }
+function opportunityMetricSemanticLabel(
+  key: OpportunitySemanticKey,
+  copy: WorkspaceStatisticsModel['copy'],
+): string {
+  if (key === 'very_high') return copy.opportunitySemanticVeryHigh;
+  if (key === 'high') return copy.opportunitySemanticHigh;
+  if (key === 'noticeable') return copy.opportunitySemanticNoticeable;
+  if (key === 'medium') return copy.opportunitySemanticMedium;
+  return copy.opportunitySemanticLow;
+}
 
-  if (status === 'very_high') {
-    return 'Demand is very high while competition stays manageable. This is a strong moment to increase visibility in this category.';
-  }
-  if (status === 'good') {
-    return 'Stable demand and healthy market activity create good momentum. A clear positioning can help you win new jobs quickly.';
-  }
-  if (status === 'balanced') {
-    if (competition >= 7) {
-      return 'Strong demand currently meets strong competition. Best chances come from sharper specialization and stronger visibility.';
-    }
-    return 'The market is balanced right now. A strong profile and fast response times can unlock consistent opportunities.';
-  }
-  if (status === 'competitive') {
-    return 'Competition pressure is high and limits upside. Better differentiation and pricing strategy can improve conversion.';
-  }
-  if (demand < 4 || growth < 4 || activity < 4) {
-    return 'Demand in this segment is currently limited. Consider alternatives with stronger growth or lower competitive pressure.';
-  }
-  return 'Opportunity is currently low. Better demand or higher market activity is needed before scaling efforts here.';
+function opportunitySummaryLabel(key: OpportunitySummaryKey, copy: WorkspaceStatisticsModel['copy']): string {
+  if (key === 'very_high') return copy.opportunitySummaryVeryHigh;
+  if (key === 'good') return copy.opportunitySummaryGood;
+  if (key === 'balanced_competitive') return copy.opportunitySummaryBalancedCompetitive;
+  if (key === 'balanced') return copy.opportunitySummaryBalanced;
+  if (key === 'competitive') return copy.opportunitySummaryCompetitive;
+  if (key === 'low_demand') return copy.opportunitySummaryLowDemand;
+  return copy.opportunitySummaryLow;
 }

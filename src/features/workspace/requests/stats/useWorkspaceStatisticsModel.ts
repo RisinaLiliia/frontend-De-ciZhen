@@ -9,6 +9,8 @@ import type {
   WorkspaceStatisticsCategoryDemandDto,
   WorkspaceStatisticsGrowthCardDto,
   WorkspaceStatisticsInsightDto,
+  WorkspaceStatisticsOpportunityRadarItemDto,
+  WorkspaceStatisticsPriceIntelligenceDto,
   WorkspaceStatisticsRange,
 } from '@/lib/api/dto/workspace';
 import {
@@ -38,8 +40,6 @@ import {
   formatPercent,
   formatReviewCountHint,
   normalizeLegacyRange,
-  resolveCitySignal,
-  resolveMarketBalanceRatio,
   toActivityTotals,
   toFallbackActivityMetrics,
   toHint,
@@ -131,6 +131,9 @@ export type WorkspaceStatisticsOpportunityRadarItemView = {
   competitionScore: number;
   growthScore: number;
   activityScore: number;
+  status: WorkspaceStatisticsOpportunityRadarItemDto['status'];
+  summaryKey: WorkspaceStatisticsOpportunityRadarItemDto['summaryKey'];
+  metrics: WorkspaceStatisticsOpportunityRadarItemDto['metrics'];
   tone: 'very-high' | 'high' | 'balanced' | 'supply-heavy';
   href: string;
 };
@@ -565,66 +568,26 @@ export function useWorkspaceStatisticsModel({
   const cityRows = React.useMemo<WorkspaceStatisticsCityRowView[]>(() => {
     const source = data?.demand.cities ?? [];
     if (source.length === 0) return [];
-
-    const hasSearchMetrics =
-      data?.__source === 'bff' &&
-      source.some(
-        (item) =>
-          typeof item.auftragSuchenCount === 'number' &&
-          Number.isFinite(item.auftragSuchenCount) &&
-          typeof item.anbieterSuchenCount === 'number' &&
-          Number.isFinite(item.anbieterSuchenCount),
-      );
-
-    return source.map((item) => {
-      const requestCount = Math.max(0, Math.round(item.requestCount ?? 0));
-      const rawAuftragSuchenCount =
+    return source.map((item) => ({
+      key: item.citySlug,
+      cityId: item.cityId ?? null,
+      name: item.cityName,
+      count: Math.max(0, Math.round(item.requestCount ?? 0)),
+      auftragSuchenCount:
         typeof item.auftragSuchenCount === 'number' && Number.isFinite(item.auftragSuchenCount)
           ? Math.max(0, Math.round(item.auftragSuchenCount))
-          : null;
-      const rawAnbieterSuchenCount =
+          : null,
+      anbieterSuchenCount:
         typeof item.anbieterSuchenCount === 'number' && Number.isFinite(item.anbieterSuchenCount)
           ? Math.max(0, Math.round(item.anbieterSuchenCount))
-          : null;
-
-      if (!hasSearchMetrics || rawAuftragSuchenCount === null || rawAnbieterSuchenCount === null) {
-        return {
-          key: item.citySlug,
-          cityId: item.cityId ?? null,
-          name: item.cityName,
-          count: requestCount,
-          auftragSuchenCount: null,
-          anbieterSuchenCount: null,
-          marketBalanceRatio: null,
-          signal: 'none',
-        };
-      }
-
-      const auftragSuchenCount = rawAuftragSuchenCount;
-      const anbieterSuchenCount = rawAnbieterSuchenCount;
-      const marketBalanceRatio = resolveMarketBalanceRatio({
-        requestCount,
-        auftragSuchenCount,
-        anbieterSuchenCount,
-      });
-      const signal = resolveCitySignal({
-        requestCount,
-        auftragSuchenCount,
-        anbieterSuchenCount,
-      });
-
-      return {
-        key: item.citySlug,
-        cityId: item.cityId ?? null,
-        name: item.cityName,
-        count: requestCount,
-        auftragSuchenCount,
-        anbieterSuchenCount,
-        marketBalanceRatio,
-        signal,
-      };
-    });
-  }, [data?.__source, data?.demand.cities]);
+          : null,
+      marketBalanceRatio:
+        typeof item.marketBalanceRatio === 'number' && Number.isFinite(item.marketBalanceRatio)
+          ? item.marketBalanceRatio
+          : null,
+      signal: item.signal ?? 'none',
+    }));
+  }, [data?.demand.cities]);
 
   const demandRows = React.useMemo<WorkspaceStatisticsCategoryDemandDto[]>(() => {
     const rows = (data?.demand.categories ?? []).slice();
@@ -638,128 +601,79 @@ export function useWorkspaceStatisticsModel({
   }, [data?.demand.categories, locale]);
 
   const opportunityRadar = React.useMemo<WorkspaceStatisticsOpportunityRadarItemView[]>(() => {
-    if (cityRows.length === 0) return [];
+    const source = data?.opportunityRadar ?? [];
+    if (source.length === 0) return [];
 
-    const categoryLeaders = demandRows.slice(0, 3);
     const fallbackCategory = locale === 'de' ? 'Generalistisch' : 'General';
-    const growthIndex = Math.max(0, Math.min(1, activityMetrics.offerRatePercent / 100));
-    const responseSpeedIndex =
-      typeof activityMetrics.responseMedianMinutes === 'number' && Number.isFinite(activityMetrics.responseMedianMinutes)
-        ? Math.max(0, Math.min(1, 1 - (activityMetrics.responseMedianMinutes / 180)))
-        : 0.5;
-
-    const demandByCity = cityRows.map((city) => Math.max(city.count, city.anbieterSuchenCount ?? 0));
-    const maxDemand = Math.max(1, ...demandByCity);
-
-    const withScore = cityRows.map((city) => {
-      const demand = Math.max(city.count, city.anbieterSuchenCount ?? 0);
-      const providers = city.auftragSuchenCount;
-      const demandIndex = Math.max(0, Math.min(1, demand / maxDemand));
-      const competitionIndex = city.marketBalanceRatio === null
-        ? 0.5
-        : Math.max(0, Math.min(1, city.marketBalanceRatio / 1.5));
-      const demandScore = Number((demandIndex * 10).toFixed(1));
-      const competitionScore = Number((competitionIndex * 10).toFixed(1));
-      const growthScore = Number((growthIndex * 10).toFixed(1));
-      const activityScore = Number((responseSpeedIndex * 10).toFixed(1));
-      const score = Number((10 * (
-        (demandIndex * 0.4) +
-        (competitionIndex * 0.3) +
-        (growthIndex * 0.2) +
-        (responseSpeedIndex * 0.1)
-      )).toFixed(1));
-
-      const tone: WorkspaceStatisticsOpportunityRadarItemView['tone'] =
-        score >= 8.5
-          ? 'very-high'
-          : score >= 7
-            ? 'high'
-            : score >= 5
-              ? 'balanced'
-              : 'supply-heavy';
-
-      return {
-        ...city,
-        demand,
-        providers,
-        score,
-        demandScore,
-        competitionScore,
-        growthScore,
-        activityScore,
-        tone,
-      };
-    });
-
-    return withScore
-      .sort((a, b) =>
-        (b.score - a.score) ||
-        (b.demand - a.demand) ||
-        a.name.localeCompare(b.name, locale === 'de' ? 'de-DE' : 'en-US'),
-      )
+    return source
+      .slice()
+      .sort((a, b) => (a.rank - b.rank))
       .slice(0, 3)
-      .map((city, index) => {
-        const categoryEntry = categoryLeaders[index] ?? null;
-        const category = categoryEntry?.categoryName ?? fallbackCategory;
-        const categoryKey = categoryEntry?.categoryKey ?? null;
+      .map((item, index) => {
         const hrefParams = new URLSearchParams({ section: 'requests' });
-        if (city.cityId) hrefParams.set('cityId', city.cityId);
-        if (categoryKey) hrefParams.set('categoryKey', categoryKey);
+        if (item.cityId) hrefParams.set('cityId', item.cityId);
+        if (item.categoryKey) hrefParams.set('categoryKey', item.categoryKey);
         return {
-          rank: (index + 1) as 1 | 2 | 3,
-          cityId: city.cityId,
-          city: city.name,
-          categoryKey,
-          category,
-          demand: city.demand,
-          providers: city.providers,
-          marketBalanceRatio: city.marketBalanceRatio,
-          score: city.score,
-          demandScore: city.demandScore,
-          competitionScore: city.competitionScore,
-          growthScore: city.growthScore,
-          activityScore: city.activityScore,
-          tone: city.tone,
+          rank: (item.rank ?? (index + 1)) as 1 | 2 | 3,
+          cityId: item.cityId ?? null,
+          city: item.city,
+          categoryKey: item.categoryKey ?? null,
+          category: item.category ?? fallbackCategory,
+          demand: Math.max(0, Math.round(item.demand ?? 0)),
+          providers:
+            typeof item.providers === 'number' && Number.isFinite(item.providers)
+              ? Math.max(0, Math.round(item.providers))
+              : null,
+          marketBalanceRatio:
+            typeof item.marketBalanceRatio === 'number' && Number.isFinite(item.marketBalanceRatio)
+              ? item.marketBalanceRatio
+              : null,
+          score: Number(item.score ?? 0),
+          demandScore: Number(item.demandScore ?? 0),
+          competitionScore: Number(item.competitionScore ?? 0),
+          growthScore: Number(item.growthScore ?? 0),
+          activityScore: Number(item.activityScore ?? 0),
+          status: item.status,
+          summaryKey: item.summaryKey,
+          metrics: item.metrics ?? [],
+          tone: item.tone,
           href: `/workspace?${hrefParams.toString()}`,
         };
       });
-  }, [
-    activityMetrics.offerRatePercent,
-    activityMetrics.responseMedianMinutes,
-    cityRows,
-    demandRows,
-    locale,
-  ]);
+  }, [data?.opportunityRadar, locale]);
 
   const priceIntelligence = React.useMemo<WorkspaceStatisticsPriceIntelligenceView>(() => {
-    const topOpportunity = opportunityRadar[0] ?? null;
-    const contextLabel = topOpportunity
-      ? `${topOpportunity.category} · ${topOpportunity.city}`
-      : null;
-
-    const avgRevenue = activityMetrics.completedJobs > 0
-      ? activityMetrics.gmvAmount / activityMetrics.completedJobs
-      : null;
-
-    if (typeof avgRevenue !== 'number' || !Number.isFinite(avgRevenue) || avgRevenue <= 0) {
+    const source: WorkspaceStatisticsPriceIntelligenceDto | undefined = data?.priceIntelligence;
+    if (!source) {
       return {
-        contextLabel,
+        contextLabel: null,
         recommendedRangeLabel: null,
         marketAverageLabel: null,
       };
     }
 
-    const roundToNearestFive = (value: number) => Math.max(5, Math.round(value / 5) * 5);
-    const lower = roundToNearestFive(avgRevenue * 0.85);
-    const upper = roundToNearestFive(avgRevenue * 1.15);
-    const marketAverage = roundToNearestFive(avgRevenue);
+    const contextLabel =
+      source.category && source.city
+        ? `${source.category} · ${source.city}`
+        : source.city ?? source.category ?? null;
+    const recommendedRangeLabel =
+      typeof source.recommendedMin === 'number' &&
+      Number.isFinite(source.recommendedMin) &&
+      typeof source.recommendedMax === 'number' &&
+      Number.isFinite(source.recommendedMax)
+        ? `${formatCurrency.format(source.recommendedMin)} – ${formatCurrency.format(source.recommendedMax)}`
+        : null;
+    const marketAverageLabel =
+      typeof source.marketAverage === 'number' && Number.isFinite(source.marketAverage)
+        ? formatCurrency.format(source.marketAverage)
+        : null;
 
     return {
       contextLabel,
-      recommendedRangeLabel: `${formatCurrency.format(lower)} – ${formatCurrency.format(upper)}`,
-      marketAverageLabel: formatCurrency.format(marketAverage),
+      recommendedRangeLabel,
+      marketAverageLabel,
     };
-  }, [activityMetrics.completedJobs, activityMetrics.gmvAmount, formatCurrency, opportunityRadar]);
+  }, [data?.priceIntelligence, formatCurrency]);
 
   const citySignalCoverage = React.useMemo(() => {
     const total = cityRows.length;

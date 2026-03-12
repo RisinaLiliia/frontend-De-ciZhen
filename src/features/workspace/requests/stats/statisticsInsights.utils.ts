@@ -105,10 +105,12 @@ export function selectInsightsForDisplay(
 
 export type WorkspaceStatisticsCitySearchSignalDto = Omit<
   WorkspaceStatisticsCityDemandDto,
-  'auftragSuchenCount' | 'anbieterSuchenCount'
+  'auftragSuchenCount' | 'anbieterSuchenCount' | 'marketBalanceRatio' | 'signal'
 > & {
   auftragSuchenCount?: number;
   anbieterSuchenCount?: number;
+  marketBalanceRatio?: number | null;
+  signal?: 'high' | 'medium' | 'low' | 'none';
 };
 
 export function mergeFullCityRanking(params: {
@@ -141,6 +143,8 @@ export function mergeFullCityRanking(params: {
         lng: city.lng,
         auftragSuchenCount: statsCity?.auftragSuchenCount,
         anbieterSuchenCount: statsCity?.anbieterSuchenCount,
+        marketBalanceRatio: statsCity?.marketBalanceRatio ?? null,
+        signal: statsCity?.signal ?? 'none',
       };
     });
 }

@@ -64,6 +64,18 @@ export type WorkspaceStatisticsCopy = {
   opportunityAxisCompetition: string;
   opportunityAxisGrowth: string;
   opportunityAxisActivity: string;
+  opportunitySemanticVeryHigh: string;
+  opportunitySemanticHigh: string;
+  opportunitySemanticNoticeable: string;
+  opportunitySemanticMedium: string;
+  opportunitySemanticLow: string;
+  opportunitySummaryVeryHigh: string;
+  opportunitySummaryGood: string;
+  opportunitySummaryBalancedCompetitive: string;
+  opportunitySummaryBalanced: string;
+  opportunitySummaryCompetitive: string;
+  opportunitySummaryLowDemand: string;
+  opportunitySummaryLow: string;
   priceTitle: string;
   priceSubtitle: string;
   priceMarketAverageLabel: string;
@@ -188,6 +200,25 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   opportunityAxisCompetition: 'Konkurrenz',
   opportunityAxisGrowth: 'Marktwachstum',
   opportunityAxisActivity: 'Marktaktivität',
+  opportunitySemanticVeryHigh: 'Sehr hoch',
+  opportunitySemanticHigh: 'Hoch',
+  opportunitySemanticNoticeable: 'Spürbar',
+  opportunitySemanticMedium: 'Mittel',
+  opportunitySemanticLow: 'Niedrig',
+  opportunitySummaryVeryHigh:
+    'Sehr hohe Nachfrage bei kontrollierbarem Wettbewerb. Jetzt ist ein starker Moment, um Sichtbarkeit in dieser Kategorie auszubauen.',
+  opportunitySummaryGood:
+    'Solide Nachfrage mit guter Marktaktivität. Mit klarer Positionierung kannst du hier zügig neue Aufträge gewinnen.',
+  opportunitySummaryBalancedCompetitive:
+    'Hohe Nachfrage trifft aktuell auf starken Wettbewerb. Gute Chancen haben Anbieter mit klarer Spezialisierung oder besserer Sichtbarkeit.',
+  opportunitySummaryBalanced:
+    'Die Marktchance ist ausgeglichen. Mit sauberem Profil und schnellen Reaktionen lässt sich diese Region effizient bedienen.',
+  opportunitySummaryCompetitive:
+    'Der Wettbewerb ist deutlich spürbar und drückt die Chance. Fokus auf Differenzierung und Preisstrategie verbessert die Abschlusswahrscheinlichkeit.',
+  opportunitySummaryLowDemand:
+    'Aktuell ist die Nachfrage in diesem Segment begrenzt. Prüfe Alternativen mit stärkerem Wachstum oder niedrigerem Wettbewerbsdruck.',
+  opportunitySummaryLow:
+    'Die Opportunity ist derzeit niedrig. Neue Chancen entstehen meist mit zusätzlicher Nachfrage oder besserer Marktaktivität.',
   priceTitle: 'Preis-Intelligenz',
   priceSubtitle: 'Empfohlene Preisbereiche',
   priceMarketAverageLabel: 'Marktdurchschnitt',
@@ -313,6 +344,25 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   opportunityAxisCompetition: 'Competition',
   opportunityAxisGrowth: 'Market growth',
   opportunityAxisActivity: 'Market activity',
+  opportunitySemanticVeryHigh: 'Very high',
+  opportunitySemanticHigh: 'High',
+  opportunitySemanticNoticeable: 'Noticeable',
+  opportunitySemanticMedium: 'Medium',
+  opportunitySemanticLow: 'Low',
+  opportunitySummaryVeryHigh:
+    'Demand is very high while competition stays manageable. This is a strong moment to increase visibility in this category.',
+  opportunitySummaryGood:
+    'Stable demand and healthy market activity create good momentum. A clear positioning can help you win new jobs quickly.',
+  opportunitySummaryBalancedCompetitive:
+    'Strong demand currently meets strong competition. Best chances come from sharper specialization and stronger visibility.',
+  opportunitySummaryBalanced:
+    'The market is balanced right now. A strong profile and fast response times can unlock consistent opportunities.',
+  opportunitySummaryCompetitive:
+    'Competition pressure is high and limits upside. Better differentiation and pricing strategy can improve conversion.',
+  opportunitySummaryLowDemand:
+    'Demand in this segment is currently limited. Consider alternatives with stronger growth or lower competitive pressure.',
+  opportunitySummaryLow:
+    'Opportunity is currently low. Better demand or higher market activity is needed before scaling efforts here.',
   priceTitle: 'Price intelligence',
   priceSubtitle: 'Recommended price ranges',
   priceMarketAverageLabel: 'Market average',
