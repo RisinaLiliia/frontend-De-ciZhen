@@ -13,6 +13,7 @@ export type WorkspacePrivateIntroProps = {
   navTitle: string;
   navSubtitle: string;
   personalNavItems: PersonalNavItem[];
+  hideNavBadges?: boolean;
   insightText: string;
   activityProgress: number;
   statsOrder: StatsOrderItem[];
@@ -31,6 +32,7 @@ export function WorkspacePrivateIntro({
   navTitle,
   navSubtitle,
   personalNavItems,
+  hideNavBadges = false,
   insightText,
   activityProgress,
   statsOrder,
@@ -59,6 +61,7 @@ export function WorkspacePrivateIntro({
             title={navTitle}
             subtitle={navSubtitle}
             items={personalNavItems}
+            hideDockBadges={hideNavBadges}
             insightText={insightText}
             progressPercent={activityProgress}
           />
