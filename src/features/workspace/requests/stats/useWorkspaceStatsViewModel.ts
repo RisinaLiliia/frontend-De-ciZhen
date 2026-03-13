@@ -21,13 +21,10 @@ import {
 } from './workspaceStatistics.copy';
 import {
   inferInsightType,
-  mergeInsightsByIdentity,
-  selectInsightsForDisplay,
 } from './statisticsInsights.utils';
 import {
   formatDateLabel,
   formatDateTimeLabel,
-  formatDecisionUpdatedAtLabel,
   formatInsightEvidence,
   formatMinutes,
   formatPercent,
@@ -157,10 +154,7 @@ export type WorkspaceStatisticsModel = {
     bestWindow: string;
     updatedAt: string;
   };
-  decisionFootnote: {
-    updatedLine: string;
-    basedOnLine: string;
-  };
+  decisionInsight: string;
   activitySignals: WorkspaceStatisticsActivitySignalView[];
   demandRows: WorkspaceStatisticsCategoryDemandDto[];
   cityRows: WorkspaceStatisticsCityRowView[];
@@ -736,8 +730,7 @@ export function useWorkspaceStatsViewModel({
   const insights = React.useMemo<WorkspaceStatisticsInsightView[]>(
     () => {
       if (!data) return [];
-      const merged = mergeInsightsByIdentity(data.insights ?? []);
-      return selectInsightsForDisplay(merged, mode).map((item, index) => ({
+      return (data.insights ?? []).slice(0, 4).map((item, index) => ({
         key: item.id ?? `${item.code}-${index}`,
         level: item.level,
         kind: inferInsightType(item),
@@ -751,8 +744,20 @@ export function useWorkspaceStatsViewModel({
         evidence: formatInsightEvidence(item.metrics, locale, formatNumber),
       }));
     },
-    [copy, data, formatNumber, locale, mode],
+    [copy, data, formatNumber, locale],
   );
+
+  const decisionInsight = React.useMemo(() => {
+    const backendDecisionInsight = typeof data?.decisionInsight === 'string'
+      ? data.decisionInsight.trim()
+      : '';
+    if (backendDecisionInsight.length > 0) return backendDecisionInsight;
+
+    const firstInsightText = insights[0]?.text?.trim() ?? '';
+    if (firstInsightText.length > 0) return firstInsightText;
+
+    return copy.decisionKiFallbackInsight;
+  }, [copy.decisionKiFallbackInsight, data, insights]);
 
   const growthCards = React.useMemo<WorkspaceStatisticsGrowthCardView[]>(
     () => {
@@ -806,31 +811,6 @@ export function useWorkspaceStatsViewModel({
     [data?.activity.totals.bestWindowTimestamp, data?.activity.totals.peakTimestamp, data?.updatedAt, locale],
   );
 
-  const decisionFootnote = React.useMemo(() => {
-    const updatedAtLabel = formatDecisionUpdatedAtLabel(data?.updatedAt, locale);
-    const rangeLabel = range === '24h'
-      ? copy.range24h
-      : range === '7d'
-        ? copy.range7d
-        : range === '90d'
-          ? copy.range90d
-          : copy.range30d;
-    return {
-      updatedLine: `${copy.activitySignalsUpdatedPrefix}: ${updatedAtLabel}`,
-      basedOnLine: `${copy.activitySignalsBasedOnPrefix} ${rangeLabel}.`,
-    };
-  }, [
-    copy.activitySignalsBasedOnPrefix,
-    copy.activitySignalsUpdatedPrefix,
-    copy.range24h,
-    copy.range30d,
-    copy.range7d,
-    copy.range90d,
-    data?.updatedAt,
-    locale,
-    range,
-  ]);
-
   return {
     copy,
     range,
@@ -842,7 +822,7 @@ export function useWorkspaceStatsViewModel({
     kpis,
     activityPoints,
     activityMeta,
-    decisionFootnote,
+    decisionInsight,
     activitySignals,
     demandRows,
     cityRows,

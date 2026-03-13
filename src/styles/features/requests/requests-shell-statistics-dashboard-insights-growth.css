@@ -13,12 +13,11 @@
 
   .workspace-statistics-insights__header {
     display: grid;
-    gap: var(--space-1-5);
+    gap: var(--space-3);
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "stamp"
       "heading"
-      "assistant";
+      "ki";
   }
 
   .workspace-statistics-insights__heading {
@@ -33,80 +32,12 @@
     margin: 0;
   }
 
-  .workspace-statistics-insights__stamp {
-    grid-area: stamp;
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    align-self: start;
-    min-height: var(--workspace-statistics-chip-height);
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid var(--surface-soft-border);
-    background: var(--surface-soft-bg);
-    color: var(--c-text-muted);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    line-height: 1.2;
-  }
-
   .workspace-statistics-insights__secondary.requests-list {
-    gap: var(--space-1-5);
+    gap: var(--space-3);
   }
 
-  .workspace-statistics-insights__assistant {
-    grid-area: assistant;
-    display: grid;
-    grid-template-columns: 26px minmax(0, 1fr);
-    align-items: center;
-    gap: var(--space-1-5);
-    margin-top: var(--space-0-5);
-    padding: var(--space-1-5);
-    border-radius: 14px;
-    border: 1px solid var(--surface-soft-border);
-    background:
-      linear-gradient(
-        150deg,
-        color-mix(in oklab, var(--c-panel) 92%, white 8%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%) 100%
-      );
-    width: 100%;
-  }
-
-  .workspace-statistics-insights__assistant-avatar {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
-    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    line-height: 1;
-  }
-
-  .workspace-statistics-insights__assistant-copy {
-    display: grid;
-    gap: 1px;
-    min-width: 0;
-  }
-
-  .workspace-statistics-insights__assistant-name {
-    font-size: var(--fs-small);
-    font-weight: 700;
-    color: var(--c-text);
-  }
-
-  .workspace-statistics-insights__assistant-note {
-    font-size: 12px;
-    color: var(--c-text-muted);
-    line-height: 1.35;
+  .workspace-statistics-insights__ki {
+    grid-area: ki;
   }
 
   .workspace-statistics-insights__item {
@@ -272,14 +203,9 @@
     .workspace-statistics-insights__header {
       grid-template-columns: minmax(0, 1fr);
       grid-template-areas:
-        "stamp"
         "heading"
-        "assistant";
+        "ki";
       align-items: start;
-    }
-
-    .workspace-statistics-insights__stamp {
-      justify-self: end;
     }
   }
 

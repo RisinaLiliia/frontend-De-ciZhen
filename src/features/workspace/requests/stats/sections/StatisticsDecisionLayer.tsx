@@ -1,14 +1,15 @@
 'use client';
 
 import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import { StatisticsKiCard } from '../components/StatisticsKiCard';
 
 export function StatisticsDecisionLayer({
   copy,
-  decisionFootnote,
+  decisionInsight,
   activitySignals,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
-  decisionFootnote: WorkspaceStatisticsModel['decisionFootnote'];
+  decisionInsight: WorkspaceStatisticsModel['decisionInsight'];
   activitySignals: WorkspaceStatisticsModel['activitySignals'];
 }) {
   if (activitySignals.length === 0) return null;
@@ -31,10 +32,15 @@ export function StatisticsDecisionLayer({
           </li>
         ))}
       </ul>
-      <div className="workspace-statistics__decision-footnote" aria-live="polite">
-        <span>{decisionFootnote.updatedLine}</span>
-        <span>{decisionFootnote.basedOnLine}</span>
-      </div>
+      <StatisticsKiCard
+        className="workspace-statistics__decision-ai"
+        metaStamp
+        stamp={copy.priceGeneratedLabel}
+        avatarLabel={copy.insightsAssistantAvatarLabel}
+        name={copy.insightsAssistantName}
+        role={copy.priceRecommendationLabel}
+        description={decisionInsight}
+      />
     </section>
   );
 }

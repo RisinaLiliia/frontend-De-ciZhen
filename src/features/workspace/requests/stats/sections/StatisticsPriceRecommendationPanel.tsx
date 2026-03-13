@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import { StatisticsKiCard } from '../components/StatisticsKiCard';
 
 function fillTemplate(template: string, values: Record<string, string>): string {
   return template.replace(/\{(\w+)\}/g, (match, key: string) => values[key] ?? match);
@@ -53,21 +54,15 @@ export function StatisticsPriceRecommendationPanel({
 
   return (
     <section className="panel requests-stats-chart workspace-statistics-price-recommendation">
-      <span className="workspace-statistics-price__stamp workspace-statistics-price__stamp--meta">
-        {copy.priceGeneratedLabel}
-      </span>
-      <div className="workspace-statistics-price__ki">
-        <span className="workspace-statistics-price__ki-avatar" aria-hidden="true">
-          {copy.insightsAssistantAvatarLabel}
-        </span>
-        <span className="workspace-statistics-price__ki-copy">
-          <strong className="workspace-statistics-price__ki-name">{copy.insightsAssistantName}</strong>
-          <span className="workspace-statistics-price__ki-note">{copy.priceRecommendationLabel}</span>
-        </span>
-      </div>
-      <p className="workspace-statistics-price__note">
-        {priceIntelligence.recommendation ?? copy.priceGuidanceNote}
-      </p>
+      <StatisticsKiCard
+        variant="plain"
+        metaStamp
+        stamp={copy.priceGeneratedLabel}
+        avatarLabel={copy.insightsAssistantAvatarLabel}
+        name={copy.insightsAssistantName}
+        role={copy.priceRecommendationLabel}
+        description={priceIntelligence.recommendation ?? copy.priceGuidanceNote}
+      />
       <button
         type="button"
         className="btn-secondary workspace-statistics-price__strategy-button"

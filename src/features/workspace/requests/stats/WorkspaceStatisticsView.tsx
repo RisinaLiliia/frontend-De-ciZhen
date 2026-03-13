@@ -80,7 +80,7 @@ export function WorkspaceStatisticsView({
     modeLabel,
     activityPoints,
     activityMeta,
-    decisionFootnote,
+    decisionInsight,
     activitySignals,
     demandRows,
     cityRows,
@@ -169,7 +169,6 @@ export function WorkspaceStatisticsView({
       setProfilePanelMinHeight(null);
       return;
     }
-    const decisionFootnoteElement = decisionCluster.querySelector<HTMLElement>('.workspace-statistics__decision-footnote');
 
     const desktopMedia = window.matchMedia('(min-width: 1024px)');
     let frameId = 0;
@@ -184,7 +183,7 @@ export function WorkspaceStatisticsView({
 
         const statsRect = statsPanel.getBoundingClientRect();
         const decisionRect = decisionCluster.getBoundingClientRect();
-        const decisionBottom = decisionFootnoteElement?.getBoundingClientRect().bottom ?? decisionRect.bottom;
+        const decisionBottom = decisionRect.bottom;
         const nextHeight = Math.max(0, Math.round(decisionBottom - statsRect.top));
         setProfilePanelMinHeight((prev) => (prev === nextHeight ? prev : nextHeight));
       });
@@ -195,7 +194,6 @@ export function WorkspaceStatisticsView({
     const observer = new ResizeObserver(syncHeight);
     observer.observe(statsPanel);
     observer.observe(decisionCluster);
-    if (decisionFootnoteElement) observer.observe(decisionFootnoteElement);
     desktopMedia.addEventListener('change', syncHeight);
 
     return () => {
@@ -283,7 +281,7 @@ export function WorkspaceStatisticsView({
           {!isLoading && !isError ? (
             <StatisticsDecisionLayer
               copy={copy}
-              decisionFootnote={decisionFootnote}
+              decisionInsight={decisionInsight}
               activitySignals={activitySignals}
             />
           ) : null}

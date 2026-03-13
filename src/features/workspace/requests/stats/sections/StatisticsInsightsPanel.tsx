@@ -1,6 +1,7 @@
 'use client';
 
 import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import { StatisticsKiCard } from '../components/StatisticsKiCard';
 
 function splitInsightEvidence(evidence: string | undefined): string[] {
   if (!evidence) return [];
@@ -49,14 +50,14 @@ export function StatisticsInsightsPanel({
           <p className="section-title">{copy.insightsTitle}</p>
           <p className="section-subtitle">{copy.insightsSubtitle}</p>
         </span>
-        <span className="workspace-statistics-insights__stamp">{copy.insightsGeneratedLabel}</span>
-        <div className="workspace-statistics-insights__assistant">
-          <span className="workspace-statistics-insights__assistant-avatar" aria-hidden="true">{copy.insightsAssistantAvatarLabel}</span>
-          <span className="workspace-statistics-insights__assistant-copy">
-            <strong className="workspace-statistics-insights__assistant-name">{copy.insightsAssistantName}</strong>
-            <span className="workspace-statistics-insights__assistant-note">{copy.insightsAssistantNote}</span>
-          </span>
-        </div>
+        <StatisticsKiCard
+          className="workspace-statistics-insights__ki"
+          variant="plain"
+          stamp={copy.insightsGeneratedLabel}
+          avatarLabel={copy.insightsAssistantAvatarLabel}
+          name={copy.insightsAssistantName}
+          role={copy.insightsAssistantNote}
+        />
       </header>
       {insights.length === 0 ? (
         <p className="workspace-statistics__empty">{copy.emptyInsights}</p>

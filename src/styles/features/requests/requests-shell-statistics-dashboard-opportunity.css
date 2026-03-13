@@ -438,31 +438,6 @@
     gap: var(--space-1-5);
   }
 
-  .workspace-statistics-price__stamp {
-    display: inline-flex;
-    align-items: center;
-    width: fit-content;
-    align-self: start;
-    min-height: var(--workspace-statistics-chip-height);
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid var(--surface-soft-border);
-    background: var(--surface-soft-bg);
-    color: var(--c-text-muted);
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: 0.01em;
-  }
-
-  .workspace-statistics-price__stamp--meta {
-    margin-top: 0;
-    width: calc(100% + (var(--space-2) * 2));
-    margin-inline: calc(var(--space-2) * -1);
-    justify-content: center;
-    white-space: nowrap;
-  }
-
   .workspace-statistics-price__content {
     display: grid;
     gap: var(--space-2);
@@ -689,74 +664,6 @@
   .workspace-statistics-price__tick:last-child {
     transform: translateX(-100%);
     text-align: right;
-  }
-
-  .workspace-statistics-price__recommendation {
-    display: grid;
-    gap: var(--space-1-5);
-    padding: var(--space-2);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--surface-soft-border) 84%);
-    border-radius: 12px;
-    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
-  }
-
-  .workspace-statistics-price__ki {
-    display: grid;
-    grid-template-columns: 24px minmax(0, 1fr);
-    align-items: center;
-    gap: var(--space-1-5);
-    margin-top: 0;
-    border-radius: 12px;
-    padding: var(--space-1) var(--space-1-5);
-    border: 1px solid var(--surface-soft-border);
-    background:
-      linear-gradient(
-        150deg,
-        color-mix(in oklab, var(--c-panel) 95%, white 5%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 92%, var(--c-panel) 8%) 100%
-      );
-  }
-
-  .workspace-statistics-price__ki-avatar {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
-    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    line-height: 1;
-  }
-
-  .workspace-statistics-price__ki-copy {
-    display: grid;
-    gap: 1px;
-    min-width: 0;
-  }
-
-  .workspace-statistics-price__ki-name {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--c-text);
-  }
-
-  .workspace-statistics-price__ki-note {
-    font-size: 11px;
-    color: var(--c-text-muted);
-    line-height: 1.3;
-  }
-
-  .workspace-statistics-price__note {
-    margin: 0;
-    font-size: 12px;
-    line-height: 1.45;
-    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-text) 10%);
   }
 
   .workspace-statistics-price__strategy-button.btn-secondary {

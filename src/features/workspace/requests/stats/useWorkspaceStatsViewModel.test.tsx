@@ -255,6 +255,7 @@ function Probe({
       data-has-funnel={String(model.hasFunnelData)}
       data-funnel-requests={String(model.funnel.find((row) => row.key === 'requests')?.count ?? 0)}
       data-funnel-summary={model.funnelSummary}
+      data-decision-insight={model.decisionInsight}
     />
   );
 }
@@ -273,6 +274,7 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-price-range')).toContain('65');
     expect(probe.getAttribute('data-price-range')).toContain('90');
     expect(probe.getAttribute('data-price-average')).toContain('78');
+    expect(probe.getAttribute('data-decision-insight')).toContain('Kennzahlen');
   });
 
   it('keeps loading/error flags when no data is available', () => {

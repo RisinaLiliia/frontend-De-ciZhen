@@ -332,6 +332,7 @@ export type WorkspaceStatisticsOverviewDto = {
   updatedAt: string;
   mode: 'platform' | 'personalized';
   range: WorkspaceStatisticsRange;
+  decisionInsight?: string | null;
   summary: WorkspaceStatisticsSummaryDto;
   kpis: WorkspaceStatisticsKpisDto;
   activity: WorkspaceStatisticsActivityDto;

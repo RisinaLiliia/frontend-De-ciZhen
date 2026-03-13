@@ -16,6 +16,7 @@ export type WorkspaceStatisticsCopy = {
   activitySubtitle: string;
   activitySignalsTitle: string;
   activitySignalsSubtitle: string;
+  decisionKiFallbackInsight: string;
   activitySignalsUpdatedPrefix: string;
   activitySignalsBasedOnPrefix: string;
   activityOfferRateLabel: string;
@@ -180,6 +181,8 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   activitySubtitle: 'Neue Anfragen und Angebote im Zeitverlauf',
   activitySignalsTitle: 'Decision Layer',
   activitySignalsSubtitle: 'Operative Kennzahlen für Markt- und Wachstumsentscheidungen',
+  decisionKiFallbackInsight:
+    'Operative Kennzahlen zeigen den aktuellen Plattformzustand. Nutze schnelle Reaktionen und klare Positionierung, um Abschlusschancen zu verbessern.',
   activitySignalsUpdatedPrefix: 'Aktualisiert',
   activitySignalsBasedOnPrefix: 'Basierend auf Plattformaktivität der letzten',
   activityOfferRateLabel: 'Angebotsquote',
@@ -355,6 +358,8 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   activitySubtitle: 'New requests and offers over time',
   activitySignalsTitle: 'Decision layer',
   activitySignalsSubtitle: 'Operational metrics for market and growth decisions',
+  decisionKiFallbackInsight:
+    'Operational metrics reflect current platform health. Faster responses and clearer positioning can improve close rates.',
   activitySignalsUpdatedPrefix: 'Updated',
   activitySignalsBasedOnPrefix: 'Based on platform activity over the last',
   activityOfferRateLabel: 'Offer rate',
