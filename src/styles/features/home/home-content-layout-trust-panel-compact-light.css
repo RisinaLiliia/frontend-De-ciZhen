@@ -8,14 +8,15 @@
   }
 
   .home-trust-live-panel--compact .home-trust-live-panel__title {
-    font-size: 17px;
+    font-size: var(--fs-h3);
     line-height: var(--lh-title);
     font-weight: 700;
   }
 
   .home-trust-live-panel--compact .home-trust-live-panel__subtitle {
     display: block;
-    font-size: clamp(12px, 1vw, 14px);
+    font-size: var(--fs-small);
+    line-height: 1.35;
   }
 
   .home-trust-live-panel--compact .home-trust-live-panel__hero-shot {

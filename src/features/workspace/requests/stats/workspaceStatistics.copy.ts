@@ -619,9 +619,11 @@ export function resolveGrowthCard(
   return {
     title: copy === COPY_DE ? 'Premium Anbieter Tools' : 'Premium provider tools',
     body: copy === COPY_DE
-      ? 'Erweiterte Analyse und Reichweite für Wachstum.'
-      : 'Unlock advanced analytics and reach tools.',
-    benefit: copy === COPY_DE ? 'Erweiterte Markt-Insights' : 'Advanced market insights',
+      ? 'Erweiterte Analyse- und Reichweitenmodule für nachhaltiges Wachstum.'
+      : 'Advanced analytics and reach modules for sustainable growth.',
+    benefit: copy === COPY_DE
+      ? 'Tiefere Markt-Insights, höhere Sichtbarkeit und klare Wachstumshebel'
+      : 'Deeper market insights, higher visibility, and clear growth levers',
     tone: 'default',
     badge: copy === COPY_DE ? 'Beta' : 'Beta',
     href: card.href,

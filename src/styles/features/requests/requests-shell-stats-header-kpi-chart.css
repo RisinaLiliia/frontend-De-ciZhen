@@ -3,7 +3,7 @@
 @layer components {
   .requests-stats {
     display: grid;
-    gap: var(--space-4);
+    gap: var(--layout-section-gap);
   }
 
   .requests-stats__header {

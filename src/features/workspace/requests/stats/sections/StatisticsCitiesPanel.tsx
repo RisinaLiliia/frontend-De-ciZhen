@@ -14,6 +14,7 @@ import type { TranslateFn } from './statisticsSections.types';
 import { citySignalIcon, citySignalLabel } from './statisticsSections.utils';
 
 export function StatisticsCitiesPanel({
+  panelRef,
   copy,
   cityRowsLength,
   filteredCityRows,
@@ -30,6 +31,7 @@ export function StatisticsCitiesPanel({
   formatMarketBalance,
   t,
 }: {
+  panelRef?: React.Ref<HTMLElement>;
   copy: WorkspaceStatisticsModel['copy'];
   cityRowsLength: number;
   filteredCityRows: WorkspaceStatisticsModel['cityRows'];
@@ -47,7 +49,7 @@ export function StatisticsCitiesPanel({
   t: TranslateFn;
 }) {
   return (
-    <section className="panel requests-stats-chart workspace-statistics__cities-panel">
+    <section ref={panelRef} className="panel requests-stats-chart workspace-statistics__cities-panel">
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.citiesTitle}</p>
         <p className="section-subtitle">{copy.citiesSubtitle}</p>

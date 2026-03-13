@@ -214,9 +214,9 @@
     isolation: isolate;
     overflow: hidden;
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
     gap: var(--space-2-5);
-    min-height: 480px;
+    min-height: 528px;
     border-color: color-mix(in oklab, var(--c-primary) 22%, var(--surface-card-border) 78%);
     background:
       radial-gradient(130% 110% at 0% 0%, var(--c-glow-primary), transparent 54%),
@@ -230,6 +230,7 @@
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 74%, transparent),
       var(--surface-card-shadow);
+    flex-shrink: 0;
   }
 
   .workspace-statistics__growth::before {
@@ -253,7 +254,7 @@
   .workspace-statistics-growth__featured-wrap {
     display: grid;
     gap: 0;
-    min-height: 0;
+    min-height: 228px;
     grid-row: 2;
   }
 
@@ -269,8 +270,8 @@
     min-height: 100%;
     height: 100%;
     grid-template-columns: minmax(0, 1fr) 126px;
-    padding: 16px;
-    gap: 14px;
+    padding: var(--workspace-statistics-container-pad);
+    gap: var(--space-3-5);
   }
 
   .workspace-statistics-growth__featured-content {
@@ -304,9 +305,13 @@
     display: grid;
     gap: var(--space-1-5);
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto;
     min-height: 0;
     grid-row: 3;
+  }
+
+  .workspace-statistics-growth__grid--single {
+    grid-template-rows: auto;
   }
 
   .workspace-statistics-growth__card {
@@ -314,10 +319,11 @@
     isolation: isolate;
     overflow: hidden;
     display: grid;
-    gap: var(--space-1);
+    gap: var(--space-2);
     min-height: 0;
-    height: 100%;
-    padding: 10px 12px;
+    height: auto;
+    padding: var(--space-2) var(--workspace-statistics-container-pad);
+    align-content: start;
     border: 1px solid var(--surface-soft-border);
     background:
       linear-gradient(
@@ -335,6 +341,13 @@
       transform var(--transition-fast),
       box-shadow var(--transition-fast),
       border-color var(--transition-fast);
+  }
+
+  .workspace-statistics-growth__card.is-premium {
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
+    padding-bottom: var(--space-3);
   }
 
   .workspace-statistics-growth__card::before {
@@ -362,18 +375,19 @@
 
   .workspace-statistics-growth__head {
     display: grid;
-    gap: 6px;
+    gap: var(--space-2);
   }
 
   .workspace-statistics-growth__head-copy {
     display: grid;
-    gap: var(--space-1);
+    gap: var(--space-1-5);
     min-width: 0;
   }
 
   .workspace-statistics-growth__title {
     margin: 0;
-    font-size: var(--fs-small);
+    font-size: var(--fs-h3);
+    line-height: var(--lh-title);
     font-weight: 700;
     color: var(--c-text);
   }
@@ -387,21 +401,22 @@
 
   .workspace-statistics-growth__body {
     margin: 0;
-    font-size: 12px;
+    margin-top: var(--space-0-5);
+    font-size: var(--fs-body);
     color: var(--c-text-muted);
     line-height: 1.45;
   }
 
   .workspace-statistics-growth__benefit {
     margin: 0;
-    font-size: 11px;
+    font-size: var(--fs-body);
     color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
     font-weight: 600;
   }
 
   .workspace-statistics-growth__recommended {
     margin: 0;
-    font-size: 11px;
+    font-size: var(--fs-small);
     color: color-mix(in oklab, var(--c-primary) 66%, var(--c-text-muted) 34%);
     font-weight: 600;
   }
@@ -409,6 +424,28 @@
   .workspace-statistics-chart {
     display: grid;
     gap: var(--space-1-5);
+  }
+
+  @media (max-width: 1023px) {
+    .workspace-statistics__growth {
+      grid-template-rows: auto;
+      min-height: 0;
+    }
+
+    .workspace-statistics-growth__featured.request-create-card,
+    .workspace-statistics-growth__featured.request-create-card--compact {
+      min-height: 120px;
+      height: auto;
+    }
+
+    .workspace-statistics-growth__grid {
+      grid-template-rows: none;
+    }
+
+    .workspace-statistics-growth__card {
+      min-height: 104px;
+      height: auto;
+    }
   }
 
 }

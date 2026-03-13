@@ -6,21 +6,30 @@ import { Badge } from '@/components/ui/Badge';
 import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
 
 export function StatisticsGrowthPanel({
+  panelRef,
+  panelMinHeight,
   copy,
   growthCards,
 }: {
+  panelRef?: React.Ref<HTMLElement>;
+  panelMinHeight?: number | null;
   copy: WorkspaceStatisticsModel['copy'];
   growthCards: WorkspaceStatisticsModel['growthCards'];
 }) {
-  if (growthCards.length === 0) return null;
+  const visibleGrowthCards = growthCards.filter((item) => item.key !== 'local_ads');
+  if (visibleGrowthCards.length === 0) return null;
 
-  const featuredCard = growthCards.find((item) => item.tone === 'primary') ?? growthCards[0] ?? null;
-  const secondaryCards = growthCards
+  const featuredCard = visibleGrowthCards.find((item) => item.tone === 'primary') ?? visibleGrowthCards[0] ?? null;
+  const secondaryCards = visibleGrowthCards
     .filter((item) => item.key !== featuredCard?.key)
     .slice(0, 2);
 
   return (
-    <section className="panel stack-sm workspace-statistics__growth">
+    <section
+      ref={panelRef}
+      className="panel stack-sm workspace-statistics__growth"
+      style={panelMinHeight ? { minHeight: `${panelMinHeight}px` } : undefined}
+    >
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.growthTitle}</p>
         <p className="section-subtitle">{copy.growthSubtitle}</p>
@@ -52,11 +61,13 @@ export function StatisticsGrowthPanel({
         </div>
       ) : null}
       {secondaryCards.length > 0 ? (
-        <div className="workspace-statistics-growth__grid">
+        <div
+          className={`workspace-statistics-growth__grid${secondaryCards.length === 1 ? ' workspace-statistics-growth__grid--single' : ''}`.trim()}
+        >
           {secondaryCards.map((card, index) => (
             <article
               key={`${card.key}-${index}`}
-              className="stat-card workspace-statistics-growth__card"
+              className={`stat-card workspace-statistics-growth__card${card.key === 'premium_tools' ? ' is-premium' : ''}`.trim()}
             >
               <div className="workspace-statistics-growth__head">
                 <div className="workspace-statistics-growth__head-copy">

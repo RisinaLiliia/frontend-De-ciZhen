@@ -254,7 +254,7 @@
   .workspace-statistics-funnel__layer-hint-value {
     color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
     font-weight: 700;
-    font-size: 13px;
+    font-size: var(--fs-small);
     white-space: nowrap;
     padding-inline-start: 6px;
   }

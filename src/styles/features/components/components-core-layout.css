@@ -13,7 +13,7 @@
 
   .requests-grid {
     display: grid;
-    gap: var(--space-6);
+    gap: var(--layout-section-gap);
   }
 
   @media (max-width: 768px) {

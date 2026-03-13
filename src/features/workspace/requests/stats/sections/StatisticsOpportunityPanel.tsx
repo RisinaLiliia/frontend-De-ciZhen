@@ -14,10 +14,12 @@ import {
 } from './opportunity/opportunity.utils';
 
 export function StatisticsOpportunityPanel({
+  panelRef,
   copy,
   locale,
   opportunityRadar,
 }: {
+  panelRef?: React.Ref<HTMLElement>;
   copy: WorkspaceStatisticsModel['copy'];
   locale: Locale;
   opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'];
@@ -40,7 +42,7 @@ export function StatisticsOpportunityPanel({
   );
 
   return (
-    <section className="panel requests-stats-chart workspace-statistics-opportunity">
+    <section ref={panelRef} className="panel requests-stats-chart workspace-statistics-opportunity">
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.opportunityTitle}</p>
         <p className="section-subtitle">{copy.opportunitySubtitle}</p>

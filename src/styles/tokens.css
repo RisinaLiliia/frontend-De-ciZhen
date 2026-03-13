@@ -61,6 +61,7 @@
   --shell-inline-padding: clamp(16px, 2vw, 24px);
   --shell-topbar-offset: clamp(8px, 1.5vw, 16px);
   --section-top-offset: clamp(24px, 3vw, 40px);
+  --layout-section-gap: var(--space-5);
 }
 
 @media (max-width: 768px) {
@@ -68,5 +69,6 @@
     --shell-inline-padding: 12px;
     --shell-topbar-offset: 8px;
     --section-top-offset: clamp(14px, 4vw, 22px);
+    --layout-section-gap: var(--space-4);
   }
 }

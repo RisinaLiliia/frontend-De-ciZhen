@@ -69,8 +69,14 @@ export function WorkspaceStatisticsView({
   const funnelContainerRef = React.useRef<HTMLOListElement | null>(null);
   const statisticsPanelRef = React.useRef<HTMLElement | null>(null);
   const decisionClusterRef = React.useRef<HTMLDivElement | null>(null);
+  const citiesPanelRef = React.useRef<HTMLElement | null>(null);
+  const growthPanelRef = React.useRef<HTMLElement | null>(null);
+  const opportunityPanelRef = React.useRef<HTMLElement | null>(null);
+  const trustPanelWrapRef = React.useRef<HTMLDivElement | null>(null);
   const [funnelContainerWidth, setFunnelContainerWidth] = React.useState(0);
   const [profilePanelMinHeight, setProfilePanelMinHeight] = React.useState<number | null>(null);
+  const [growthPanelMinHeight, setGrowthPanelMinHeight] = React.useState<number | null>(null);
+  const [trustPanelMinHeight, setTrustPanelMinHeight] = React.useState<number | null>(null);
   const {
     copy,
     range,
@@ -84,6 +90,7 @@ export function WorkspaceStatisticsView({
     activitySignals,
     demandRows,
     cityRows,
+    opportunityRadar,
     funnel,
     funnelPeriodLabel,
     funnelSummary,
@@ -203,6 +210,88 @@ export function WorkspaceStatisticsView({
     };
   }, [activitySignals.length, isError, isLoading]);
 
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const citiesPanel = citiesPanelRef.current;
+    const growthPanel = growthPanelRef.current;
+    if (!citiesPanel || !growthPanel) {
+      setGrowthPanelMinHeight(null);
+      return;
+    }
+
+    const desktopMedia = window.matchMedia('(min-width: 1024px)');
+    let frameId = 0;
+
+    const syncHeight = () => {
+      cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(() => {
+        if (!desktopMedia.matches) {
+          setGrowthPanelMinHeight(null);
+          return;
+        }
+
+        const citiesRect = citiesPanel.getBoundingClientRect();
+        const growthRect = growthPanel.getBoundingClientRect();
+        const nextHeight = Math.max(0, Math.round(citiesRect.bottom - growthRect.top));
+        setGrowthPanelMinHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+      });
+    };
+
+    syncHeight();
+
+    const observer = new ResizeObserver(syncHeight);
+    observer.observe(citiesPanel);
+    observer.observe(growthPanel);
+    desktopMedia.addEventListener('change', syncHeight);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      observer.disconnect();
+      desktopMedia.removeEventListener('change', syncHeight);
+    };
+  }, [cityRows.length, isError, isLoading, safeCityPage]);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const opportunityPanel = opportunityPanelRef.current;
+    if (!opportunityPanel) {
+      setTrustPanelMinHeight(null);
+      return;
+    }
+
+    const desktopMedia = window.matchMedia('(min-width: 1024px)');
+    let frameId = 0;
+
+    const syncHeight = () => {
+      cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(() => {
+        if (!desktopMedia.matches) {
+          setTrustPanelMinHeight(null);
+          return;
+        }
+
+        const opportunityRect = opportunityPanel.getBoundingClientRect();
+        const nextHeight = Math.max(0, Math.round(opportunityRect.height));
+        setTrustPanelMinHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+      });
+    };
+
+    syncHeight();
+
+    const observer = new ResizeObserver(syncHeight);
+    observer.observe(opportunityPanel);
+    if (trustPanelWrapRef.current) observer.observe(trustPanelWrapRef.current);
+    desktopMedia.addEventListener('change', syncHeight);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      observer.disconnect();
+      desktopMedia.removeEventListener('change', syncHeight);
+    };
+  }, [isError, isLoading, opportunityRadar.length]);
+
   const funnelVisualRows = React.useMemo(
     () => buildFunnelVisualRows({ funnel, copy, isNarrowViewport, funnelContainerWidth }),
     [copy, funnel, funnelContainerWidth, isNarrowViewport],
@@ -299,79 +388,83 @@ export function WorkspaceStatisticsView({
           </div>
         ) : (
           <>
-            <div className="workspace-statistics__grid workspace-statistics__grid--primary">
-              <section className="panel requests-stats-chart">
-                <header className="section-heading workspace-statistics__tile-header">
-                  <p className="section-title">{copy.activityTitle}</p>
-                  <p className="section-subtitle">{copy.activitySubtitle}</p>
-                </header>
-                <ActivityTrendChart
-                  points={activityPoints}
-                  requestsLabel={copy.requestsLabel}
-                  offersLabel={copy.offersLabel}
-                  emptyLabel={copy.emptyActivity}
-                />
-                <div className="workspace-statistics__meta-grid">
-                  <div>
-                    <span>{copy.peakLabel}</span>
-                    <strong>{activityMeta.peak}</strong>
+            <div className="workspace-statistics__sections stack-md">
+              <div className="workspace-statistics__grid workspace-statistics__grid--primary">
+                <section className="panel requests-stats-chart">
+                  <header className="section-heading workspace-statistics__tile-header">
+                    <p className="section-title">{copy.activityTitle}</p>
+                    <p className="section-subtitle">{copy.activitySubtitle}</p>
+                  </header>
+                  <ActivityTrendChart
+                    points={activityPoints}
+                    requestsLabel={copy.requestsLabel}
+                    offersLabel={copy.offersLabel}
+                    emptyLabel={copy.emptyActivity}
+                  />
+                  <div className="workspace-statistics__meta-grid">
+                    <div>
+                      <span>{copy.peakLabel}</span>
+                      <strong>{activityMeta.peak}</strong>
+                    </div>
+                    <div>
+                      <span>{copy.bestWindowLabel}</span>
+                      <strong>{activityMeta.bestWindow}</strong>
+                    </div>
+                    <div>
+                      <span>{copy.updatedLabel}</span>
+                      <strong>{activityMeta.updatedAt}</strong>
+                    </div>
                   </div>
-                  <div>
-                    <span>{copy.bestWindowLabel}</span>
-                    <strong>{activityMeta.bestWindow}</strong>
-                  </div>
-                  <div>
-                    <span>{copy.updatedLabel}</span>
-                    <strong>{activityMeta.updatedAt}</strong>
-                  </div>
-                </div>
-              </section>
+                </section>
 
-              <StatisticsDemandPanel
+                <StatisticsDemandPanel
+                  copy={copy}
+                  demandRows={demandRows}
+                  visibleDemandRows={visibleDemandRows}
+                  safeDemandPage={safeDemandPage}
+                  demandTotalPages={demandTotalPages}
+                  onPrevPage={() => setDemandPage((prev) => Math.max(1, prev - 1))}
+                  onNextPage={() => setDemandPage((prev) => Math.min(demandTotalPages, prev + 1))}
+                  t={t}
+                />
+              </div>
+
+              <StatisticsCitiesPanel
+                panelRef={citiesPanelRef}
                 copy={copy}
-                demandRows={demandRows}
-                visibleDemandRows={visibleDemandRows}
-                safeDemandPage={safeDemandPage}
-                demandTotalPages={demandTotalPages}
-                onPrevPage={() => setDemandPage((prev) => Math.max(1, prev - 1))}
-                onNextPage={() => setDemandPage((prev) => Math.min(demandTotalPages, prev + 1))}
+                cityRowsLength={cityRows.length}
+                filteredCityRows={filteredCityRows}
+                visibleCityRows={visibleCityRows}
+                cityRankByKey={cityRankByKey}
+                cityStartIndex={cityStartIndex}
+                cityTotalPages={cityTotalPages}
+                safeCityPage={safeCityPage}
+                cityQuery={cityQuery}
+                onCityQueryChange={setCityQuery}
+                onPrevPage={() => setCityPage((prev) => Math.max(1, prev - 1))}
+                onNextPage={() => setCityPage((prev) => Math.min(cityTotalPages, prev + 1))}
+                formatNumber={formatNumber}
+                formatMarketBalance={formatMarketBalance}
                 t={t}
               />
-            </div>
 
-            <StatisticsCitiesPanel
-              copy={copy}
-              cityRowsLength={cityRows.length}
-              filteredCityRows={filteredCityRows}
-              visibleCityRows={visibleCityRows}
-              cityRankByKey={cityRankByKey}
-              cityStartIndex={cityStartIndex}
-              cityTotalPages={cityTotalPages}
-              safeCityPage={safeCityPage}
-              cityQuery={cityQuery}
-              onCityQueryChange={setCityQuery}
-              onPrevPage={() => setCityPage((prev) => Math.max(1, prev - 1))}
-              onNextPage={() => setCityPage((prev) => Math.min(cityTotalPages, prev + 1))}
-              formatNumber={formatNumber}
-              formatMarketBalance={formatMarketBalance}
-              t={t}
-            />
-
-            <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
-              <StatisticsOpportunityPanel
-                copy={copy}
-                locale={locale}
-                opportunityRadar={model.opportunityRadar}
-              />
-              <div className="workspace-statistics-price__column stack-sm">
-                <StatisticsPricePanel
+              <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
+                <StatisticsOpportunityPanel
+                  panelRef={opportunityPanelRef}
                   copy={copy}
-                  priceIntelligence={model.priceIntelligence}
+                  locale={locale}
+                  opportunityRadar={opportunityRadar}
                 />
-                <StatisticsPriceRecommendationPanel
-                  copy={copy}
-                  priceIntelligence={model.priceIntelligence}
-                />
+                <div className="workspace-statistics-price__column stack-sm">
+                  <StatisticsPricePanel
+                    copy={copy}
+                    priceIntelligence={model.priceIntelligence}
+                  />
+                  <StatisticsPriceRecommendationPanel
+                    copy={copy}
+                    priceIntelligence={model.priceIntelligence}
+                  />
+                </div>
               </div>
             </div>
           </>
@@ -470,13 +563,21 @@ export function WorkspaceStatisticsView({
             />
 
             <StatisticsGrowthPanel
+              panelRef={growthPanelRef}
+              panelMinHeight={growthPanelMinHeight}
               copy={copy}
               growthCards={growthCards}
             />
           </>
         )}
 
-        <HomeTrustLivePanel className="home-trust-live-panel--compact workspace-statistics__trust-panel" t={t} />
+        <div
+          ref={trustPanelWrapRef}
+          className="workspace-statistics__trust-wrap"
+          style={trustPanelMinHeight ? { minHeight: `${trustPanelMinHeight}px` } : undefined}
+        >
+          <HomeTrustLivePanel className="home-trust-live-panel--compact workspace-statistics__trust-panel" t={t} />
+        </div>
       </aside>
     </div>
   );
