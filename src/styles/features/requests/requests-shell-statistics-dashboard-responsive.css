@@ -2,6 +2,10 @@
 
 @layer components {
   @media (min-width: 900px) {
+    .workspace-statistics__decision-layer {
+      --workspace-statistics-decision-gap-x: var(--space-4);
+    }
+
     .workspace-statistics__activity-signals {
       --workspace-statistics-decision-gap-x: var(--space-4);
       --workspace-statistics-decision-gap-y: var(--space-5);

@@ -60,6 +60,12 @@ function createOverviewData(): WorkspaceStatisticsOverviewSourceDto {
         gmvAmount: 1510,
         platformRevenueAmount: 151,
         takeRatePercent: 10,
+        offerRateTone: 'neutral',
+        responseMedianTone: 'neutral',
+        unansweredTone: 'warning',
+        cancellationTone: 'positive',
+        completedTone: 'positive',
+        revenueTone: 'positive',
       },
     },
     demand: {
@@ -182,6 +188,11 @@ function createOverviewData(): WorkspaceStatisticsOverviewSourceDto {
       recommendedMin: 65,
       recommendedMax: 90,
       marketAverage: 78,
+      optimalMin: 74,
+      optimalMax: 83,
+      recommendation: 'Preise im Bereich von 74 € – 83 € erzielen aktuell die höchste Abschlussrate in Berlin.',
+      profitPotentialScore: 7.4,
+      profitPotentialStatus: 'medium',
     },
     profileFunnel: {
       periodLabel: '30 Tage',
@@ -244,6 +255,7 @@ function Probe({
       data-has-funnel={String(model.hasFunnelData)}
       data-funnel-requests={String(model.funnel.find((row) => row.key === 'requests')?.count ?? 0)}
       data-funnel-summary={model.funnelSummary}
+      data-decision-insight={model.decisionInsight}
     />
   );
 }
@@ -262,6 +274,7 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-price-range')).toContain('65');
     expect(probe.getAttribute('data-price-range')).toContain('90');
     expect(probe.getAttribute('data-price-average')).toContain('78');
+    expect(probe.getAttribute('data-decision-insight')).toContain('Kennzahlen');
   });
 
   it('keeps loading/error flags when no data is available', () => {
@@ -291,6 +304,11 @@ describe('useWorkspaceStatsViewModel', () => {
         recommendedMin: null,
         recommendedMax: null,
         marketAverage: null,
+        optimalMin: null,
+        optimalMax: null,
+        recommendation: null,
+        profitPotentialScore: null,
+        profitPotentialStatus: null,
       },
       opportunityRadar: [
         {
@@ -310,7 +328,7 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-opportunity-categories')).toBe('Generalistisch');
   });
 
-  it('keeps platform 24h funnel visible from published requests baseline when backend stage1 is zero', () => {
+  it('keeps funnel hidden when backend returns zero stages for platform 24h', () => {
     const data = createOverviewData();
     const data24h: WorkspaceStatisticsOverviewSourceDto = {
       ...data,
@@ -403,8 +421,8 @@ describe('useWorkspaceStatsViewModel', () => {
     render(<Probe data={data24h} isLoading={false} isError={false} range="24h" />);
 
     const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-has-funnel')).toBe('true');
-    expect(probe.getAttribute('data-funnel-requests')).toBe('149');
-    expect(probe.getAttribute('data-funnel-summary')).toContain('149');
+    expect(probe.getAttribute('data-has-funnel')).toBe('false');
+    expect(probe.getAttribute('data-funnel-requests')).toBe('0');
+    expect(probe.getAttribute('data-funnel-summary')).toContain('0');
   });
 });

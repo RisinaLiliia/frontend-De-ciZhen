@@ -427,9 +427,57 @@
     overflow: hidden;
   }
 
+  .workspace-statistics-price__column {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .workspace-statistics-price-recommendation {
+    display: grid;
+    gap: var(--space-1-5);
+  }
+
   .workspace-statistics-price__content {
     display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .workspace-statistics-price__hero {
+    position: relative;
+    display: grid;
     gap: var(--space-1);
+    align-content: start;
+    padding: var(--space-2);
+    min-height: 166px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 22%, var(--surface-soft-border) 78%);
+    border-radius: 16px;
+    background:
+      linear-gradient(
+        160deg,
+        color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%) 0%,
+        color-mix(in oklab, var(--c-accent) 8%, var(--c-panel) 92%) 100%
+      );
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 7%, transparent);
+  }
+
+  .workspace-statistics-price__signal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--workspace-statistics-chip-height);
+    width: fit-content;
+    padding: 0 var(--workspace-statistics-chip-pad-inline);
+    border-radius: var(--workspace-statistics-chip-radius);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    font-size: var(--workspace-statistics-chip-font-size);
+    font-weight: var(--workspace-statistics-chip-font-weight);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1;
   }
 
   .workspace-statistics-price__context {
@@ -437,26 +485,259 @@
     font-size: var(--fs-small);
     font-weight: 700;
     color: var(--c-text);
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .workspace-statistics-price__label {
+    display: block;
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
   }
 
   .workspace-statistics-price__range {
-    font-size: var(--fs-h3);
+    display: block;
+    font-size: clamp(25px, 3vw, 28px);
     font-weight: 700;
     color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
     line-height: 1.15;
     font-variant-numeric: tabular-nums;
+    word-break: break-word;
   }
 
   .workspace-statistics-price__average {
     margin: 0;
     font-size: var(--fs-small);
     color: var(--c-text-muted);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
   }
 
   .workspace-statistics-price__average strong {
     color: var(--c-text);
+    font-size: clamp(20px, 2.4vw, 24px);
     font-weight: 700;
+    line-height: 1.1;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-price__profit {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-2);
+    border-radius: 12px;
+    border: 1px solid color-mix(in oklab, var(--c-success) 26%, var(--surface-soft-border) 74%);
+    background: color-mix(in oklab, var(--c-success) 8%, var(--c-panel) 92%);
+  }
+
+  .workspace-statistics-price__profit-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+    font-size: 12px;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__profit-head strong {
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--c-text);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-price__profit-track {
+    height: 8px;
+    border-radius: 999px;
+    border: 1px solid var(--surface-soft-border);
+    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+    overflow: hidden;
+  }
+
+  .workspace-statistics-price__profit-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-primary) 76%, var(--c-accent) 24%),
+      color-mix(in oklab, var(--c-success) 80%, var(--c-primary) 20%)
+    );
+    transition: width 220ms ease-out;
+  }
+
+  .workspace-statistics-price__profit-label {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: color-mix(in oklab, var(--c-success) 78%, var(--c-text) 22%);
+  }
+
+  .workspace-statistics-price__bar-wrap {
+    position: relative;
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .workspace-statistics-price__bar {
+    position: relative;
+    height: 10px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+    border: 1px solid var(--surface-soft-border);
+    overflow: hidden;
+  }
+
+  .workspace-statistics-price__bar-sweet-spot {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-primary) 72%, var(--c-accent) 28%),
+      color-mix(in oklab, var(--c-accent) 78%, var(--c-warn) 22%)
+    );
+  }
+
+  .workspace-statistics-price__bar-sweet-label {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .workspace-statistics-price__bar-average-marker {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 2px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-text) 74%, var(--c-primary) 26%);
+    transform: translateX(-50%);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--c-panel) 66%, transparent);
+  }
+
+  .workspace-statistics-price__ticks {
+    position: relative;
+    margin: 0;
+    padding: 12px 0 0;
+    list-style: none;
+    min-height: 24px;
+  }
+
+  .workspace-statistics-price__tick {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--c-text-muted);
+    line-height: 1.2;
+    max-width: 68px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-price__tick:first-child {
+    transform: none;
+    text-align: left;
+  }
+
+  .workspace-statistics-price__tick:last-child {
+    transform: translateX(-100%);
+    text-align: right;
+  }
+
+  .workspace-statistics-price__strategy-button.btn-secondary {
+    min-height: 32px;
+    width: fit-content;
+    padding: 0 12px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+
+  .workspace-statistics-price__strategy-panel {
+    display: grid;
+    gap: var(--space-1-5);
+    padding: var(--space-2);
+    border-radius: 12px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
+    background: color-mix(in oklab, var(--c-panel) 94%, var(--surface-soft-bg) 6%);
+  }
+
+  .workspace-statistics-price__strategy-title {
+    margin: 0;
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .workspace-statistics-price__strategy-section {
+    display: grid;
+    gap: 4px;
+    padding-top: var(--space-1);
+    border-top: 1px dashed color-mix(in oklab, var(--surface-soft-border) 84%, var(--c-primary) 16%);
+  }
+
+  .workspace-statistics-price__strategy-section:first-of-type {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .workspace-statistics-price__strategy-section-label {
+    margin: 0;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--c-text-muted);
+    font-weight: 700;
+  }
+
+  .workspace-statistics-price__strategy-section-text {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-text) 12%);
+  }
+
+  @media (max-width: 639px) {
+    .workspace-statistics-price__average {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-0-5);
+    }
+
+    .workspace-statistics-price__ticks {
+      min-height: 36px;
+    }
+
+    .workspace-statistics-price__tick {
+      max-width: 56px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .workspace-statistics-price__hero {
+      min-height: 0;
+    }
   }
 
 }

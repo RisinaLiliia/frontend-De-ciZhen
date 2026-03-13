@@ -4,41 +4,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import type { ReviewOverviewDto } from '@/lib/api/dto/reviews';
 import type {
-  WorkspacePublicOverviewDto,
   WorkspaceStatisticsOverviewDto,
   WorkspaceStatisticsRange,
 } from '@/lib/api/dto/workspace';
-import * as analyticsApi from '@/lib/api/analytics';
-import * as reviewsApi from '@/lib/api/reviews';
 import * as workspaceApi from '@/lib/api/workspace';
-import * as tokenApi from '@/lib/auth/token';
 
 vi.mock('@/lib/api/workspace', () => ({
   getWorkspaceStatistics: vi.fn(),
-  getWorkspacePublicOverview: vi.fn(),
-  getWorkspacePrivateOverview: vi.fn(),
-}));
-
-vi.mock('@/lib/api/analytics', () => ({
-  getPlatformActivity: vi.fn(),
-}));
-
-vi.mock('@/lib/api/reviews', () => ({
-  getPlatformReviewsOverview: vi.fn(),
-}));
-
-vi.mock('@/lib/auth/token', () => ({
-  getAccessToken: vi.fn(),
 }));
 
 const getWorkspaceStatisticsMock = vi.mocked(workspaceApi.getWorkspaceStatistics);
-const getWorkspacePublicOverviewMock = vi.mocked(workspaceApi.getWorkspacePublicOverview);
-const getWorkspacePrivateOverviewMock = vi.mocked(workspaceApi.getWorkspacePrivateOverview);
-const getPlatformActivityMock = vi.mocked(analyticsApi.getPlatformActivity);
-const getPlatformReviewsOverviewMock = vi.mocked(reviewsApi.getPlatformReviewsOverview);
-const getAccessTokenMock = vi.mocked(tokenApi.getAccessToken);
 
 function createQueryClient() {
   return new QueryClient({
@@ -50,74 +26,6 @@ function createQueryClient() {
       },
     },
   });
-}
-
-function createPublicOverview(range: WorkspaceStatisticsRange): WorkspacePublicOverviewDto {
-  return {
-    updatedAt: '2026-03-11T10:00:00.000Z',
-    summary: {
-      totalPublishedRequests: 12,
-      totalActiveProviders: 7,
-    },
-    activity: {
-      range,
-      interval: range === '24h' ? 'hour' : 'day',
-      source: 'real',
-      data: [
-        { timestamp: '2026-03-10T09:00:00.000Z', requests: 2, offers: 1 },
-        { timestamp: '2026-03-11T09:00:00.000Z', requests: 3, offers: 2 },
-      ],
-      updatedAt: '2026-03-11T10:00:00.000Z',
-    },
-    cityActivity: {
-      totalActiveCities: 2,
-      totalActiveRequests: 12,
-      items: [
-        {
-          citySlug: 'berlin',
-          cityName: 'Berlin',
-          cityId: 'berlin-id',
-          requestCount: 7,
-          lat: 52.52,
-          lng: 13.405,
-        },
-        {
-          citySlug: 'hamburg',
-          cityName: 'Hamburg',
-          cityId: 'hamburg-id',
-          requestCount: 5,
-          lat: 53.5511,
-          lng: 9.9937,
-        },
-      ],
-    },
-    requests: {
-      items: [],
-      total: 0,
-      page: 1,
-      limit: 80,
-    },
-  };
-}
-
-function createReviewsOverview(): ReviewOverviewDto {
-  return {
-    items: [],
-    total: 1,
-    limit: 1,
-    offset: 0,
-    summary: {
-      total: 1,
-      averageRating: 5,
-      distribution: {
-        '1': 0,
-        '2': 0,
-        '3': 0,
-        '4': 0,
-        '5': 1,
-      },
-    },
-  };
 }
 
 function createStatsOverview(range: WorkspaceStatisticsRange): WorkspaceStatisticsOverviewDto {
@@ -168,6 +76,12 @@ function createStatsOverview(range: WorkspaceStatisticsRange): WorkspaceStatisti
         gmvAmount: 1500,
         platformRevenueAmount: 150,
         takeRatePercent: 10,
+        offerRateTone: 'neutral',
+        responseMedianTone: 'positive',
+        unansweredTone: 'warning',
+        cancellationTone: 'positive',
+        completedTone: 'positive',
+        revenueTone: 'positive',
       },
     },
     demand: {
@@ -228,6 +142,11 @@ function createStatsOverview(range: WorkspaceStatisticsRange): WorkspaceStatisti
       recommendedMin: 300,
       recommendedMax: 430,
       marketAverage: 375,
+      optimalMin: 345,
+      optimalMax: 400,
+      recommendation: 'Preise im Bereich von 345 € – 400 € erzielen aktuell die höchste Abschlussrate in Berlin.',
+      profitPotentialScore: 8.1,
+      profitPotentialStatus: 'high',
     },
     profileFunnel: {
       periodLabel: '30 Tage',
@@ -259,10 +178,10 @@ type StatsHook = (args: { locale: 'de' }) => {
   range: WorkspaceStatisticsRange;
   setRange: (next: WorkspaceStatisticsRange) => void;
   isLoading: boolean;
+  isError: boolean;
   cityRows: Array<unknown>;
   opportunityRadar: Array<unknown>;
   priceIntelligence: { contextLabel: string | null };
-  funnel: Array<{ key: string; count: number }>;
 };
 
 function createProbe(useWorkspaceStatisticsModel: StatsHook) {
@@ -274,13 +193,13 @@ function createProbe(useWorkspaceStatisticsModel: StatsHook) {
           data-testid="probe"
           data-range={model.range}
           data-loading={String(model.isLoading)}
+          data-error={String(model.isError)}
           data-city-count={String(model.cityRows.length)}
           data-opportunity-count={String(model.opportunityRadar.length)}
           data-price-context={model.priceIntelligence.contextLabel ?? ''}
-          data-funnel-requests={String(model.funnel.find((item) => item.key === 'requests')?.count ?? 0)}
         />
         <button type="button" onClick={() => model.setRange('7d')}>set-7d</button>
-        <button type="button" onClick={() => model.setRange('24h')}>set-24h</button>
+        <button type="button" onClick={() => model.setRange('90d')}>set-90d</button>
       </div>
     );
   };
@@ -293,65 +212,13 @@ afterEach(() => {
 describe('useWorkspaceStatisticsModel', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    delete process.env.NEXT_PUBLIC_WORKSPACE_STATS_BFF;
-
-    getWorkspacePublicOverviewMock.mockImplementation(async (params) =>
-      createPublicOverview((params?.activityRange ?? '30d') as WorkspaceStatisticsRange),
-    );
-    getPlatformActivityMock.mockImplementation(async (range) => ({
-      range,
-      interval: range === '24h' ? 'hour' : 'day',
-      source: 'real',
-      data: [{ timestamp: '2026-03-11T09:00:00.000Z', requests: 3, offers: 2 }],
-      updatedAt: '2026-03-11T10:00:00.000Z',
-    }));
-    getPlatformReviewsOverviewMock.mockResolvedValue(createReviewsOverview());
-    getWorkspacePrivateOverviewMock.mockResolvedValue(null as never);
-    getAccessTokenMock.mockReturnValue(null);
   });
 
-  it.each([404, 405, 501])(
-    'falls back on BFF status %s and keeps BFF disabled after range change',
-    async (statusCode) => {
-      getWorkspaceStatisticsMock.mockRejectedValue({ status: statusCode });
-
-      const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
-      const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
-      const queryClient = createQueryClient();
-
-      render(
-        <QueryClientProvider client={queryClient}>
-          <Probe />
-        </QueryClientProvider>,
-      );
-
-      await waitFor(() => {
-        expect(screen.getByTestId('probe').getAttribute('data-loading')).toBe('false');
-      });
-
-      expect(getWorkspaceStatisticsMock).toHaveBeenCalledTimes(1);
-      expect(getWorkspaceStatisticsMock).toHaveBeenCalledWith('30d');
-
-      fireEvent.click(screen.getByRole('button', { name: 'set-7d' }));
-
-      await waitFor(() => {
-        expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('7d');
-      });
-      await waitFor(() => {
-        expect(getWorkspaceStatisticsMock).toHaveBeenCalledTimes(1);
-      });
-
-      const hasFallbackRequestForNewRange = getWorkspacePublicOverviewMock.mock.calls.some(
-        ([params]) => params?.activityRange === '7d' && params?.limit === 80,
-      );
-      expect(hasFallbackRequestForNewRange).toBe(true);
-    },
-  );
-
-  it('uses BFF again for next range when endpoint responds successfully', async () => {
+  it('loads statistics from BFF and refetches by selected range', async () => {
     getWorkspaceStatisticsMock
       .mockResolvedValueOnce(createStatsOverview('30d'))
-      .mockResolvedValueOnce(createStatsOverview('7d'));
+      .mockResolvedValueOnce(createStatsOverview('7d'))
+      .mockResolvedValueOnce(createStatsOverview('90d'));
 
     const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
     const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
@@ -366,64 +233,26 @@ describe('useWorkspaceStatisticsModel', () => {
     await waitFor(() => {
       expect(screen.getByTestId('probe').getAttribute('data-loading')).toBe('false');
     });
-    expect(getWorkspaceStatisticsMock).toHaveBeenCalledWith('30d');
+    expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(1, '30d');
+    expect(screen.getByTestId('probe').getAttribute('data-price-context')).toContain('Berlin');
 
     fireEvent.click(screen.getByRole('button', { name: 'set-7d' }));
 
     await waitFor(() => {
-      expect(getWorkspaceStatisticsMock).toHaveBeenCalledWith('7d');
+      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(2, '7d');
     });
-    expect(getWorkspaceStatisticsMock).toHaveBeenCalledTimes(2);
-  });
+    expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('7d');
 
-  it('builds opportunity and price sections when legacy backend payload misses new fields', async () => {
-    const legacyPayload = { ...createStatsOverview('30d') } as unknown as Record<string, unknown>;
-    delete legacyPayload.opportunityRadar;
-    delete legacyPayload.priceIntelligence;
-    getWorkspaceStatisticsMock.mockResolvedValue(legacyPayload as unknown as WorkspaceStatisticsOverviewDto);
-
-    const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
-    const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
-    const queryClient = createQueryClient();
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Probe />
-      </QueryClientProvider>,
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'set-90d' }));
 
     await waitFor(() => {
-      const probe = screen.getByTestId('probe');
-      expect(probe.getAttribute('data-loading')).toBe('false');
-      expect(Number(probe.getAttribute('data-opportunity-count') ?? '0')).toBeGreaterThan(0);
-      expect(probe.getAttribute('data-price-context')).toContain('Berlin');
+      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(3, '90d');
     });
+    expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('90d');
   });
 
-  it('keeps fallback funnel base in 24h from published requests when activity flow is empty', async () => {
-    getWorkspaceStatisticsMock.mockRejectedValue({ status: 401 });
-    getWorkspacePublicOverviewMock.mockImplementation(async (params) => {
-      const range = (params?.activityRange ?? '30d') as WorkspaceStatisticsRange;
-      const payload = createPublicOverview(range);
-      return {
-        ...payload,
-        summary: {
-          ...payload.summary,
-          totalPublishedRequests: 149,
-        },
-        activity: {
-          ...payload.activity,
-          data: [],
-        },
-      };
-    });
-    getPlatformActivityMock.mockImplementation(async (range) => ({
-      range,
-      interval: range === '24h' ? 'hour' : 'day',
-      source: 'real',
-      data: [],
-      updatedAt: '2026-03-11T10:00:00.000Z',
-    }));
+  it('surfaces error state when BFF request fails', async () => {
+    getWorkspaceStatisticsMock.mockRejectedValueOnce(new Error('failed'));
 
     const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
     const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
@@ -437,15 +266,8 @@ describe('useWorkspaceStatisticsModel', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('probe').getAttribute('data-loading')).toBe('false');
+      expect(screen.getByTestId('probe').getAttribute('data-error')).toBe('true');
     });
-
-    fireEvent.click(screen.getByRole('button', { name: 'set-24h' }));
-
-    await waitFor(() => {
-      expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('24h');
-    });
-    await waitFor(() => {
-      expect(screen.getByTestId('probe').getAttribute('data-funnel-requests')).toBe('149');
-    });
+    expect(getWorkspaceStatisticsMock).toHaveBeenCalledTimes(1);
   });
 });
