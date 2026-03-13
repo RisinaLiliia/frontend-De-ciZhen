@@ -753,11 +753,8 @@ export function useWorkspaceStatsViewModel({
       : '';
     if (backendDecisionInsight.length > 0) return backendDecisionInsight;
 
-    const firstInsightText = insights[0]?.text?.trim() ?? '';
-    if (firstInsightText.length > 0) return firstInsightText;
-
     return copy.decisionKiFallbackInsight;
-  }, [copy.decisionKiFallbackInsight, data, insights]);
+  }, [copy.decisionKiFallbackInsight, data]);
 
   const growthCards = React.useMemo<WorkspaceStatisticsGrowthCardView[]>(
     () => {
