@@ -1,14 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import type { KpiCardTrend } from '@/components/ui/KpiCard';
 
 import type {
   WorkspaceStatisticsActivityMetricsDto,
   WorkspaceStatisticsCategoryDemandDto,
   WorkspaceStatisticsGrowthCardDto,
-  WorkspaceStatisticsInsightDto,
-  WorkspaceStatisticsOpportunityRadarItemDto,
   WorkspaceStatisticsPriceIntelligenceDto,
   WorkspaceStatisticsRange,
 } from '@/lib/api/dto/workspace';
@@ -17,7 +14,6 @@ import {
   getWorkspaceStatisticsCopy,
   resolveGrowthCard,
   resolveInsightText,
-  type WorkspaceStatisticsCopy,
 } from './workspaceStatistics.copy';
 import {
   inferInsightType,
@@ -33,142 +29,17 @@ import {
   toTrend,
 } from './statisticsModel.mappers';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
-
-export type WorkspaceStatisticsKpiView = {
-  key: string;
-  label: string;
-  value: string;
-  hint: string;
-  tone: 'positive' | 'neutral';
-  trend: KpiCardTrend;
-};
-
-export type WorkspaceStatisticsCityRowView = {
-  key: string;
-  cityId: string | null;
-  name: string;
-  count: number;
-  auftragSuchenCount: number | null;
-  anbieterSuchenCount: number | null;
-  marketBalanceRatio: number | null;
-  signal: 'high' | 'medium' | 'low' | 'none';
-};
-
-export type WorkspaceStatisticsFunnelItemView = {
-  key: string;
-  label: string;
-  count: number;
-  value: string;
-  widthPercent: number;
-  rateFromPreviousPercent: number | null;
-  railLabel?: string;
-  railValue?: string;
-  isCurrency?: boolean;
-};
-
-export type WorkspaceStatisticsInsightView = {
-  key: string;
-  level: WorkspaceStatisticsInsightDto['level'];
-  kind: 'demand' | 'opportunity' | 'performance' | 'growth' | 'risk' | 'promotion' | 'other';
-  code: string;
-  priority?: WorkspaceStatisticsInsightDto['priority'];
-  score?: number;
-  metrics?: Array<{ key: string; value: string | number }>;
-  context?: string | null;
-  title?: string;
-  text: string;
-  evidence?: string;
-};
-
-export type WorkspaceStatisticsGrowthCardView = {
-  key: string;
-  title: string;
-  body: string;
-  benefit: string;
-  tone: 'primary' | 'default';
-  badge?: string;
-  recommendedFor?: string;
-  href: string;
-};
-
-export type WorkspaceStatisticsActivitySignalView = {
-  key: string;
-  label: string;
-  value: string;
-  hint: string;
-  tone: 'positive' | 'neutral' | 'warning';
-};
-
-export type WorkspaceStatisticsOpportunityRadarItemView = {
-  rank: 1 | 2 | 3;
-  cityId: string | null;
-  city: string;
-  categoryKey: string | null;
-  category: string;
-  demand: number;
-  providers: number | null;
-  marketBalanceRatio: number | null;
-  score: number;
-  demandScore: number;
-  competitionScore: number;
-  growthScore: number;
-  activityScore: number;
-  status: WorkspaceStatisticsOpportunityRadarItemDto['status'];
-  summaryKey: WorkspaceStatisticsOpportunityRadarItemDto['summaryKey'];
-  metrics: WorkspaceStatisticsOpportunityRadarItemDto['metrics'];
-  tone: 'very-high' | 'high' | 'balanced' | 'supply-heavy';
-  href: string;
-};
-
-export type WorkspaceStatisticsPriceIntelligenceView = {
-  cityLabel: string | null;
-  categoryLabel: string | null;
-  contextLabel: string | null;
-  recommendedRangeLabel: string | null;
-  marketAverageLabel: string | null;
-  recommendedMin: number | null;
-  recommendedMax: number | null;
-  marketAverage: number | null;
-  optimalMin: number | null;
-  optimalMax: number | null;
-  optimalMinLabel: string | null;
-  optimalMaxLabel: string | null;
-  recommendation: string | null;
-  profitPotentialScore: number | null;
-  profitPotentialStatus: 'high' | 'medium' | 'low' | null;
-  profitPotentialLabel: string | null;
-};
-
-export type WorkspaceStatisticsModel = {
-  copy: WorkspaceStatisticsCopy;
-  range: WorkspaceStatisticsRange;
-  setRange: (next: WorkspaceStatisticsRange) => void;
-  isLoading: boolean;
-  isError: boolean;
-  mode: 'platform' | 'personalized';
-  modeLabel: string;
-  kpis: WorkspaceStatisticsKpiView[];
-  activityPoints: Array<{ label: string; requests: number; offers: number }>;
-  activityMeta: {
-    peak: string;
-    bestWindow: string;
-    updatedAt: string;
-  };
-  decisionInsight: string;
-  activitySignals: WorkspaceStatisticsActivitySignalView[];
-  demandRows: WorkspaceStatisticsCategoryDemandDto[];
-  cityRows: WorkspaceStatisticsCityRowView[];
-  opportunityRadar: WorkspaceStatisticsOpportunityRadarItemView[];
-  priceIntelligence: WorkspaceStatisticsPriceIntelligenceView;
-  funnel: WorkspaceStatisticsFunnelItemView[];
-  funnelPeriodLabel: string;
-  funnelSummary: string;
-  hasFunnelData: boolean;
-  conversion: string;
-  insights: WorkspaceStatisticsInsightView[];
-  growthCards: WorkspaceStatisticsGrowthCardView[];
-  onExport: () => void;
-};
+import type {
+  WorkspaceStatisticsActivitySignalView,
+  WorkspaceStatisticsCityRowView,
+  WorkspaceStatisticsFunnelItemView,
+  WorkspaceStatisticsGrowthCardView,
+  WorkspaceStatisticsInsightView,
+  WorkspaceStatisticsKpiView,
+  WorkspaceStatisticsModel,
+  WorkspaceStatisticsOpportunityRadarItemView,
+  WorkspaceStatisticsPriceIntelligenceView,
+} from './workspaceStatistics.model';
 
 const DEFAULT_ACTIVITY_METRICS: WorkspaceStatisticsActivityMetricsDto = {
   offerRatePercent: 0,
@@ -337,12 +208,8 @@ export function useWorkspaceStatsViewModel({
         label: copy.stage4LabelPlatform,
         value: formatNumber.format(data.kpis.completedJobsTotal),
         hint: data.kpis.completedJobsTotal > 0
-          ? locale === 'de'
-            ? `Erfolgsquote ${formatPercent(data.kpis.successRate)}`
-            : `Success rate ${formatPercent(data.kpis.successRate)}`
-          : locale === 'de'
-            ? 'Noch keine Abschlüsse'
-            : 'No completed jobs yet',
+          ? `${copy.kpiSuccessRateLabel} ${formatPercent(data.kpis.successRate)}`
+          : copy.kpiNoCompletedJobs,
         tone: data.kpis.completedJobsTotal > 0 && data.kpis.successRate >= 25 ? 'positive' : 'neutral',
         trend: data.kpis.completedJobsTotal > 0
           ? {
@@ -353,25 +220,23 @@ export function useWorkspaceStatsViewModel({
       },
       {
         key: 'active-providers',
-        label: locale === 'de' ? 'Aktive Anbieter' : 'Active providers',
+        label: copy.kpiActiveProvidersLabel,
         value: formatNumber.format(data.summary.totalActiveProviders),
-        hint: locale === 'de'
-          ? `${formatNumber.format(data.summary.totalPublishedRequests)} aktive Aufträge`
-          : `${formatNumber.format(data.summary.totalPublishedRequests)} active requests`,
+        hint: `${formatNumber.format(data.summary.totalPublishedRequests)} ${copy.kpiActiveRequestsHintSuffix}`,
         tone: 'neutral',
         trend: { direction: 'flat', percent: 0 },
       },
       {
         key: 'active-cities',
-        label: locale === 'de' ? 'Aktive Städte' : 'Active cities',
+        label: copy.kpiActiveCitiesLabel,
         value: formatNumber.format(data.summary.totalActiveCities),
-        hint: locale === 'de' ? 'mit Nachfrage' : 'with demand',
+        hint: copy.kpiWithDemandHint,
         tone: 'neutral',
         trend: { direction: 'flat', percent: 0 },
       },
       {
         key: 'rating-avg',
-        label: locale === 'de' ? 'Durchschnittsbewertung' : 'Average rating',
+        label: copy.kpiAverageRatingLabel,
         value:
           data.summary.platformRatingAvg > 0
             ? data.summary.platformRatingAvg.toFixed(1)
@@ -403,12 +268,8 @@ export function useWorkspaceStatsViewModel({
           label: copy.stage1LabelPersonalized,
           value: formatNumber.format(openRequests),
           hint: openRequests > 0
-            ? locale === 'de'
-              ? `${formatNumber.format(data.kpis.requestsTotal)} insgesamt im Zeitraum`
-              : `${formatNumber.format(data.kpis.requestsTotal)} total in selected range`
-            : locale === 'de'
-              ? 'Keine offenen Anfragen'
-              : 'No open requests',
+            ? `${formatNumber.format(data.kpis.requestsTotal)} ${copy.kpiTotalInRangeHintSuffix}`
+            : copy.kpiNoOpenRequests,
           tone: 'neutral',
           trend: { direction: 'flat', percent: 0 },
         },
@@ -417,12 +278,8 @@ export function useWorkspaceStatsViewModel({
           label: copy.stage2LabelPersonalized,
           value: formatNumber.format(data.kpis.offersTotal),
           hint: recentOffers7d > 0
-            ? locale === 'de'
-              ? `${formatNumber.format(recentOffers7d)} in den letzten 7 Tagen`
-              : `${formatNumber.format(recentOffers7d)} in the last 7 days`
-            : locale === 'de'
-              ? 'Noch keine Angebote in den letzten 7 Tagen'
-              : 'No offers in the last 7 days',
+            ? `${formatNumber.format(recentOffers7d)} ${copy.kpiLast7DaysHintSuffix}`
+            : copy.kpiNoRecentOffers7d,
           tone: recentOffers7d > 0 ? 'positive' : 'neutral',
           trend: recentOffers7d > 0
             ? { direction: 'up', percent: 100 }
@@ -433,12 +290,8 @@ export function useWorkspaceStatsViewModel({
           label: copy.stage4LabelPersonalized,
           value: formatNumber.format(completedJobs),
           hint: completedJobs > 0
-            ? locale === 'de'
-              ? `Erfolgsquote ${formatPercent(data.kpis.successRate)}`
-              : `Success rate ${formatPercent(data.kpis.successRate)}`
-            : locale === 'de'
-              ? 'Noch keine Abschlüsse'
-              : 'No completed jobs yet',
+            ? `${copy.kpiSuccessRateLabel} ${formatPercent(data.kpis.successRate)}`
+            : copy.kpiNoCompletedJobs,
           tone: completedJobs > 0 && data.kpis.successRate >= 30 ? 'positive' : 'neutral',
           trend: completedJobs > 0
             ? { direction: data.kpis.successRate >= 30 ? 'up' : 'down', percent: Math.round(data.kpis.successRate) }
@@ -446,19 +299,13 @@ export function useWorkspaceStatsViewModel({
         },
         {
           key: 'response-time',
-          label: locale === 'de' ? 'Antwortzeit' : 'Response time',
+          label: copy.kpiResponseTimeLabel,
           value: formatMinutes(data.kpis.avgResponseMinutes, locale),
           hint: typeof avgResponseMinutes !== 'number'
-            ? locale === 'de'
-              ? 'Noch keine Antwortzeit-Daten'
-              : 'No response-time data yet'
+            ? copy.kpiNoResponseTimeData
             : isFastResponse
-              ? locale === 'de'
-                ? 'Stark: unter 30 Min.'
-                : 'Strong: under 30 min'
-              : locale === 'de'
-                ? 'Ziel: unter 30 Min.'
-                : 'Target: under 30 min',
+              ? copy.kpiFastResponseHint
+              : copy.kpiResponseTargetHint,
           tone: typeof avgResponseMinutes === 'number' && isFastResponse ? 'positive' : 'neutral',
           trend: typeof avgResponseMinutes === 'number'
             ? {
@@ -469,15 +316,11 @@ export function useWorkspaceStatsViewModel({
         },
         {
           key: 'success-rate',
-          label: locale === 'de' ? 'Erfolgsquote' : 'Success rate',
+          label: copy.kpiSuccessRateLabel,
           value: sentOffers > 0 ? formatPercent(data.kpis.successRate) : '—',
           hint: sentOffers > 0
-            ? locale === 'de'
-              ? `${formatNumber.format(acceptedOffers)} akzeptierte Angebote`
-              : `${formatNumber.format(acceptedOffers)} accepted offers`
-            : locale === 'de'
-              ? 'Noch keine gesendeten Angebote'
-              : 'No sent offers yet',
+            ? `${formatNumber.format(acceptedOffers)} ${copy.kpiAcceptedOffersHintSuffix}`
+            : copy.kpiNoSentOffers,
           tone: sentOffers > 0 && data.kpis.successRate >= 30 ? 'positive' : 'neutral',
           trend: sentOffers > 0
             ? { direction: data.kpis.successRate >= 30 ? 'up' : 'down', percent: Math.round(data.kpis.successRate) }
@@ -485,15 +328,11 @@ export function useWorkspaceStatsViewModel({
         },
         {
           key: 'profile-completeness',
-          label: locale === 'de' ? 'Profil Vollständigkeit' : 'Profile completeness',
+          label: copy.kpiProfileCompletenessLabel,
           value: formatPercent(profileCompleteness),
           hint: profileCompleteness >= 80
-            ? locale === 'de'
-              ? 'Starkes Profil'
-              : 'Strong profile'
-            : locale === 'de'
-              ? 'Profil ausbauen für mehr Sichtbarkeit'
-              : 'Improve profile for better visibility',
+            ? copy.kpiStrongProfileHint
+            : copy.kpiImproveProfileHint,
           tone: profileCompleteness >= 80 ? 'positive' : 'neutral',
           trend: profileCompleteness > 0
             ? { direction: profileCompleteness >= 80 ? 'up' : 'down', percent: Math.round(profileCompleteness) }

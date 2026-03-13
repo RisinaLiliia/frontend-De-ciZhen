@@ -92,9 +92,9 @@
     grid-template-columns: var(--workspace-statistics-city-grid);
     align-items: center;
     gap: var(--space-1-5);
-    padding: 0 12px;
+    padding: 0 var(--workspace-statistics-container-pad);
     min-width: 700px;
-    font-size: 11px;
+    font-size: var(--fs-small);
     font-weight: 700;
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -234,7 +234,7 @@
   }
 
   .workspace-statistics-city-list__signal-icon {
-    font-size: 10px;
+    font-size: var(--fs-small);
     line-height: 1;
   }
 

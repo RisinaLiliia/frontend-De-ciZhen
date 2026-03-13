@@ -97,9 +97,6 @@
 
   }
 
-  @media (hover: none) {
-  }
-
   @media (max-width: 900px) {
     .provider-card {
       --provider-card-top-gap: var(--space-4);

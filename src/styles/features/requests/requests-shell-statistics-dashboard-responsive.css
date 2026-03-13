@@ -125,25 +125,6 @@
       flex-wrap: wrap;
     }
 
-    .workspace-statistics__growth {
-      grid-template-rows: auto;
-      min-height: 0;
-    }
-
-    .workspace-statistics-growth__featured.request-create-card,
-    .workspace-statistics-growth__featured.request-create-card--compact {
-      min-height: 120px;
-      height: auto;
-    }
-
-    .workspace-statistics-growth__grid {
-      grid-template-rows: none;
-    }
-
-    .workspace-statistics-growth__card {
-      min-height: 104px;
-      height: auto;
-    }
   }
 
   @media (max-width: 639px) {

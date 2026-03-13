@@ -65,7 +65,6 @@
     z-index: 2;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     min-height: var(--btn-h);
     padding: 0 var(--btn-pad-x);
     border-radius: var(--radius-md);
