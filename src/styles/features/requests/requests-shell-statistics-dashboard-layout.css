@@ -21,6 +21,11 @@
     border-top: 1px dashed var(--surface-soft-border);
   }
 
+  .workspace-statistics__decision-cluster {
+    display: grid;
+    gap: var(--space-8);
+  }
+
   .workspace-statistics__mode-badge {
     display: inline-flex;
     align-items: center;
@@ -57,12 +62,29 @@
     border-radius: var(--radius-md);
     background: transparent;
     box-shadow: none;
-    min-height: 124px;
-    padding: var(--space-3) var(--space-2-5);
+    min-height: 132px;
+    gap: var(--space-1-5);
+    padding: var(--space-3-5) var(--space-3);
     transition:
       background var(--transition-fast),
       box-shadow var(--transition-fast),
       transform var(--transition-fast);
+  }
+
+  .workspace-statistics .requests-stats__kpi-grid .kpi-card__value {
+    letter-spacing: -0.01em;
+  }
+
+  .workspace-statistics .requests-stats__kpi-grid .kpi-card__bottom {
+    align-items: flex-start;
+    min-height: 34px;
+    margin-top: var(--space-0-5);
+    padding-top: var(--space-1);
+    border-top: 1px dashed color-mix(in oklab, var(--c-primary) 32%, transparent);
+  }
+
+  .workspace-statistics .requests-stats__kpi-grid .kpi-card__meta {
+    line-height: 1.4;
   }
 
   .workspace-statistics .requests-stats__kpi-grid .kpi-card--positive,
@@ -90,7 +112,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    padding-top: var(--space-1);
+    padding-top: 0;
   }
 
   .workspace-statistics__grid--primary {
@@ -143,7 +165,7 @@
 
   .workspace-statistics__activity-signals-head {
     display: grid;
-    gap: 2px;
+    gap: var(--space-2);
   }
 
   .workspace-statistics__activity-signals {
@@ -203,9 +225,9 @@
   }
 
   .workspace-statistics__activity-signal-hint {
-    font-size: 11px;
+    font-size: var(--fs-small);
     color: var(--c-text-muted);
-    line-height: 1.4;
+    line-height: var(--lh-body);
   }
 
   .workspace-statistics__activity-signal.is-positive {
@@ -230,6 +252,16 @@
 
   .workspace-statistics__activity-signal.is-positive .workspace-statistics__activity-signal-value {
     color: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
+  }
+
+  .workspace-statistics__decision-footnote {
+    display: grid;
+    gap: var(--space-0-5);
+    margin: var(--space-6) 0 var(--space-6);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--c-text-muted);
+    text-align: right;
   }
 
   .workspace-statistics__meta-grid span {

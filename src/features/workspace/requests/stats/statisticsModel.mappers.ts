@@ -39,6 +39,32 @@ export function formatDateTimeLabel(timestamp: string | null | undefined, locale
   }).format(date);
 }
 
+export function formatDecisionUpdatedAtLabel(timestamp: string | null | undefined, locale: Locale) {
+  if (!timestamp) return '—';
+  const date = new Date(timestamp);
+  if (!Number.isFinite(date.getTime())) return '—';
+
+  const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
+  const parts = new Intl.DateTimeFormat(localeTag, {
+    day: '2-digit',
+    month: locale === 'de' ? 'long' : 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(date);
+
+  const day = parts.find((part) => part.type === 'day')?.value ?? '—';
+  const month = parts.find((part) => part.type === 'month')?.value ?? '—';
+  const hour = parts.find((part) => part.type === 'hour')?.value ?? '—';
+  const minute = parts.find((part) => part.type === 'minute')?.value ?? '—';
+
+  if (locale === 'de') {
+    return `${day}. ${month} · ${hour}:${minute}`;
+  }
+
+  return `${month} ${day} · ${hour}:${minute}`;
+}
+
 export function formatPercent(value: number) {
   if (!Number.isFinite(value)) return '0%';
   return `${Math.max(0, Math.round(value))}%`;

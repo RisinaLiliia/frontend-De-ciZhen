@@ -27,6 +27,7 @@ import {
 import {
   formatDateLabel,
   formatDateTimeLabel,
+  formatDecisionUpdatedAtLabel,
   formatInsightEvidence,
   formatMinutes,
   formatPercent,
@@ -155,6 +156,10 @@ export type WorkspaceStatisticsModel = {
     peak: string;
     bestWindow: string;
     updatedAt: string;
+  };
+  decisionFootnote: {
+    updatedLine: string;
+    basedOnLine: string;
   };
   activitySignals: WorkspaceStatisticsActivitySignalView[];
   demandRows: WorkspaceStatisticsCategoryDemandDto[];
@@ -801,6 +806,31 @@ export function useWorkspaceStatsViewModel({
     [data?.activity.totals.bestWindowTimestamp, data?.activity.totals.peakTimestamp, data?.updatedAt, locale],
   );
 
+  const decisionFootnote = React.useMemo(() => {
+    const updatedAtLabel = formatDecisionUpdatedAtLabel(data?.updatedAt, locale);
+    const rangeLabel = range === '24h'
+      ? copy.range24h
+      : range === '7d'
+        ? copy.range7d
+        : range === '90d'
+          ? copy.range90d
+          : copy.range30d;
+    return {
+      updatedLine: `${copy.activitySignalsUpdatedPrefix}: ${updatedAtLabel}`,
+      basedOnLine: `${copy.activitySignalsBasedOnPrefix} ${rangeLabel}.`,
+    };
+  }, [
+    copy.activitySignalsBasedOnPrefix,
+    copy.activitySignalsUpdatedPrefix,
+    copy.range24h,
+    copy.range30d,
+    copy.range7d,
+    copy.range90d,
+    data?.updatedAt,
+    locale,
+    range,
+  ]);
+
   return {
     copy,
     range,
@@ -812,6 +842,7 @@ export function useWorkspaceStatsViewModel({
     kpis,
     activityPoints,
     activityMeta,
+    decisionFootnote,
     activitySignals,
     demandRows,
     cityRows,

@@ -67,7 +67,10 @@ export function WorkspaceStatisticsView({
   const [cityQuery, setCityQuery] = React.useState('');
   const [cityPage, setCityPage] = React.useState(() => cityPageFromUrl ?? 1);
   const funnelContainerRef = React.useRef<HTMLOListElement | null>(null);
+  const statisticsPanelRef = React.useRef<HTMLElement | null>(null);
+  const decisionClusterRef = React.useRef<HTMLDivElement | null>(null);
   const [funnelContainerWidth, setFunnelContainerWidth] = React.useState(0);
+  const [profilePanelMinHeight, setProfilePanelMinHeight] = React.useState<number | null>(null);
   const {
     copy,
     range,
@@ -77,6 +80,7 @@ export function WorkspaceStatisticsView({
     modeLabel,
     activityPoints,
     activityMeta,
+    decisionFootnote,
     activitySignals,
     demandRows,
     cityRows,
@@ -156,6 +160,51 @@ export function WorkspaceStatisticsView({
     return () => observer.disconnect();
   }, []);
 
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const statsPanel = statisticsPanelRef.current;
+    const decisionCluster = decisionClusterRef.current;
+    if (!statsPanel || !decisionCluster) {
+      setProfilePanelMinHeight(null);
+      return;
+    }
+    const decisionFootnoteElement = decisionCluster.querySelector<HTMLElement>('.workspace-statistics__decision-footnote');
+
+    const desktopMedia = window.matchMedia('(min-width: 1024px)');
+    let frameId = 0;
+
+    const syncHeight = () => {
+      cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(() => {
+        if (!desktopMedia.matches) {
+          setProfilePanelMinHeight(null);
+          return;
+        }
+
+        const statsRect = statsPanel.getBoundingClientRect();
+        const decisionRect = decisionCluster.getBoundingClientRect();
+        const decisionBottom = decisionFootnoteElement?.getBoundingClientRect().bottom ?? decisionRect.bottom;
+        const nextHeight = Math.max(0, Math.round(decisionBottom - statsRect.top));
+        setProfilePanelMinHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+      });
+    };
+
+    syncHeight();
+
+    const observer = new ResizeObserver(syncHeight);
+    observer.observe(statsPanel);
+    observer.observe(decisionCluster);
+    if (decisionFootnoteElement) observer.observe(decisionFootnoteElement);
+    desktopMedia.addEventListener('change', syncHeight);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      observer.disconnect();
+      desktopMedia.removeEventListener('change', syncHeight);
+    };
+  }, [activitySignals.length, isError, isLoading]);
+
   const funnelVisualRows = React.useMemo(
     () => buildFunnelVisualRows({ funnel, copy, isNarrowViewport, funnelContainerWidth }),
     [copy, funnel, funnelContainerWidth, isNarrowViewport],
@@ -199,7 +248,7 @@ export function WorkspaceStatisticsView({
 
   return (
     <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout" aria-labelledby="workspace-statistics-title">
-      <section className="panel requests-panel requests-stats workspace-statistics">
+      <section ref={statisticsPanelRef} className="panel requests-panel requests-stats workspace-statistics">
         <SectionHeader
           className="requests-stats__header"
           title={t(I18N_KEYS.homePublic.exploreStats)}
@@ -225,10 +274,20 @@ export function WorkspaceStatisticsView({
           )}
         />
 
-        <div className="panel-header workspace-statistics__mode-row">
+        <div ref={decisionClusterRef} className="workspace-statistics__decision-cluster">
+          <div className="panel-header workspace-statistics__mode-row">
             <span className="workspace-statistics__mode-badge">{modeLabel}</span>
             <span className="section-subtitle">{copy.kpiTitle}</span>
           </div>
+
+          {!isLoading && !isError ? (
+            <StatisticsDecisionLayer
+              copy={copy}
+              decisionFootnote={decisionFootnote}
+              activitySignals={activitySignals}
+            />
+          ) : null}
+        </div>
 
         {isLoading ? (
           <div className="requests-stats__loading workspace-statistics__loading">
@@ -242,8 +301,6 @@ export function WorkspaceStatisticsView({
           </div>
         ) : (
           <>
-            <StatisticsDecisionLayer copy={copy} activitySignals={activitySignals} />
-
             <div className="workspace-statistics__grid workspace-statistics__grid--primary">
               <section className="panel requests-stats-chart">
                 <header className="section-heading workspace-statistics__tile-header">
@@ -324,7 +381,10 @@ export function WorkspaceStatisticsView({
       </section>
 
       <aside className="stack-md">
-        <section className="panel requests-stats-chart workspace-statistics__profile-panel">
+        <section
+          className="panel requests-stats-chart workspace-statistics__profile-panel"
+          style={profilePanelMinHeight ? { minHeight: `${profilePanelMinHeight}px` } : undefined}
+        >
           <header className="section-heading workspace-statistics__tile-header workspace-statistics__tile-header--profile">
             <div className="workspace-statistics__profile-title-row">
               <p className="section-title">{copy.profileTitle}</p>

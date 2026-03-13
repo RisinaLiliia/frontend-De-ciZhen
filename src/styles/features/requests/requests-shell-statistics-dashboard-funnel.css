@@ -8,6 +8,13 @@
     gap: var(--space-2);
   }
 
+  @media (min-width: 900px) {
+    .workspace-statistics__profile-panel .workspace-statistics-funnel {
+      --workspace-funnel-layer-min-height: 56px;
+      --workspace-funnel-layer-min-height-tall: 64px;
+    }
+  }
+
   .workspace-statistics-funnel--skeleton {
     gap: var(--space-1-5);
   }
@@ -201,10 +208,10 @@
     width: auto;
     min-width: 0;
     padding-inline: 0;
-    font-size: 11px;
+    font-size: var(--fs-small);
     font-weight: 600;
     color: color-mix(in oklab, var(--c-text-muted) 84%, var(--c-primary) 16%);
-    line-height: 1.2;
+    line-height: var(--lh-title);
     animation: workspace-statistics-funnel-hint-enter 420ms ease-out both;
     animation-delay: calc(var(--funnel-layer-index, 0) * 50ms + 80ms);
     z-index: 3;

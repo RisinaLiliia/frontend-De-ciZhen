@@ -3,6 +3,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
+import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 import { useWorkspaceStatsViewModel } from './useWorkspaceStatsViewModel';
 
@@ -223,14 +224,16 @@ function Probe({
   data,
   isLoading,
   isError,
+  range = '30d',
 }: {
   data: WorkspaceStatisticsOverviewSourceDto | undefined;
   isLoading: boolean;
   isError: boolean;
+  range?: WorkspaceStatisticsRange;
 }) {
   const model = useWorkspaceStatsViewModel({
     locale: 'de',
-    range: '30d',
+    range,
     setRange: () => undefined,
     data,
     isLoading,
@@ -249,6 +252,9 @@ function Probe({
       data-price-context={model.priceIntelligence.contextLabel ?? ''}
       data-price-range={model.priceIntelligence.recommendedRangeLabel ?? ''}
       data-price-average={model.priceIntelligence.marketAverageLabel ?? ''}
+      data-has-funnel={String(model.hasFunnelData)}
+      data-funnel-requests={String(model.funnel.find((row) => row.key === 'requests')?.count ?? 0)}
+      data-funnel-summary={model.funnelSummary}
     />
   );
 }
@@ -318,5 +324,103 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-price-range')).toBe('');
     expect(probe.getAttribute('data-price-average')).toBe('');
     expect(probe.getAttribute('data-opportunity-categories')).toBe('Generalistisch');
+  });
+
+  it('keeps funnel hidden when backend returns zero stages for platform 24h', () => {
+    const data = createOverviewData();
+    const data24h: WorkspaceStatisticsOverviewSourceDto = {
+      ...data,
+      range: '24h',
+      summary: {
+        ...data.summary,
+        totalPublishedRequests: 149,
+      },
+      profileFunnel: {
+        ...data.profileFunnel,
+        periodLabel: '24h',
+        stage1: 0,
+        stage2: 0,
+        stage3: 0,
+        stage4: 0,
+        requestsTotal: 0,
+        offersTotal: 0,
+        confirmedResponsesTotal: 0,
+        closedContractsTotal: 0,
+        completedJobsTotal: 0,
+        profitAmount: 0,
+        totalConversionPercent: 0,
+        conversionRate: 0,
+        summaryText: 'Von 0 Anfragen wurden 0 erfolgreich abgeschlossen.',
+        stages: [
+          {
+            id: 'requests',
+            label: 'Anfragen',
+            value: 0,
+            displayValue: '0',
+            widthPercent: 0,
+            rateLabel: 'Basis',
+            ratePercent: 100,
+            helperText: null,
+          },
+          {
+            id: 'offers',
+            label: 'Angebote von Anbietern',
+            value: 0,
+            displayValue: '0',
+            widthPercent: 0,
+            rateLabel: 'Antwortquote',
+            ratePercent: 0,
+            helperText: null,
+          },
+          {
+            id: 'confirmations',
+            label: 'Bestätigte Rückmeldungen',
+            value: 0,
+            displayValue: '0',
+            widthPercent: 0,
+            rateLabel: 'Zustimmungsrate',
+            ratePercent: 0,
+            helperText: null,
+          },
+          {
+            id: 'contracts',
+            label: 'Geschlossene Verträge',
+            value: 0,
+            displayValue: '0',
+            widthPercent: 0,
+            rateLabel: 'Abschlussrate',
+            ratePercent: 0,
+            helperText: null,
+          },
+          {
+            id: 'completed',
+            label: 'Erfolgreich abgeschlossen',
+            value: 0,
+            displayValue: '0',
+            widthPercent: 0,
+            rateLabel: 'Erfüllungsquote',
+            ratePercent: 0,
+            helperText: null,
+          },
+          {
+            id: 'revenue',
+            label: 'Gewinnsumme',
+            value: 0,
+            displayValue: '0 €',
+            widthPercent: 0,
+            rateLabel: 'Ø Umsatz / Auftrag',
+            ratePercent: null,
+            helperText: '—',
+          },
+        ],
+      },
+    };
+
+    render(<Probe data={data24h} isLoading={false} isError={false} range="24h" />);
+
+    const probe = screen.getByTestId('probe');
+    expect(probe.getAttribute('data-has-funnel')).toBe('false');
+    expect(probe.getAttribute('data-funnel-requests')).toBe('0');
+    expect(probe.getAttribute('data-funnel-summary')).toContain('0');
   });
 });
