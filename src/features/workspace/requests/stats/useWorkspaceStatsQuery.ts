@@ -4,15 +4,10 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
-import {
-  getWorkspacePublicOverview,
-  getWorkspaceStatistics,
-} from '@/lib/api/workspace';
-import { hasAnyStatus, withStatusFallback } from '@/lib/api/withStatusFallback';
+import { getWorkspaceStatistics } from '@/lib/api/workspace';
+import { hasAnyStatus } from '@/lib/api/withStatusFallback';
 import { ensureStatisticsOpportunityContract } from './statisticsOpportunityContract.utils';
-import { mergeFullCityRanking } from './statisticsInsights.utils';
 import { getWorkspaceStatisticsFallback } from './statisticsModel.fallbackApi';
-import { normalizeLegacyRange } from './statisticsModel.mappers';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 
 const WORKSPACE_STATS_BFF_FLAG = process.env.NEXT_PUBLIC_WORKSPACE_STATS_BFF;
@@ -40,42 +35,11 @@ export function useWorkspaceStatsQuery(): UseWorkspaceStatsQueryResult {
       }
 
       try {
-        const legacyRange = normalizeLegacyRange(range);
-        const [payload, fullPublicOverview] = await Promise.all([
-          getWorkspaceStatistics(range),
-          withStatusFallback(
-            () =>
-              getWorkspacePublicOverview({
-                sort: 'date_desc',
-                page: 1,
-                limit: 1,
-                activityRange: legacyRange,
-                cityActivityLimit: 5000,
-              }),
-            null,
-            [400, 404],
-          ),
-        ]);
-
-        const mergedCities = mergeFullCityRanking({
-          statsCities: payload.demand.cities,
-          publicCities: fullPublicOverview?.cityActivity.items ?? [],
-        });
+        const payload = await getWorkspaceStatistics(range);
 
         bffAvailabilityRef.current = true;
         return ensureStatisticsOpportunityContract({
           ...payload,
-          summary: {
-            ...payload.summary,
-            totalActiveCities: Math.max(
-              payload.summary.totalActiveCities,
-              fullPublicOverview?.cityActivity.totalActiveCities ?? 0,
-            ),
-          },
-          demand: {
-            ...payload.demand,
-            cities: mergedCities,
-          },
           __source: 'bff',
         });
       } catch (error) {

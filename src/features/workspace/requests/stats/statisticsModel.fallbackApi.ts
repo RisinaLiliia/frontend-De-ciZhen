@@ -111,7 +111,10 @@ export async function getWorkspaceStatisticsFallback(
   const successRate = privateOverview
     ? privateOverview.kpis.acceptanceRate
     : clampPercent((activityTotals.offersTotal / Math.max(1, activityTotals.requestsTotal)) * 100);
-  const requestsFunnelTotal = privateOverview ? privateOverview.kpis.myOpenRequests : activityTotals.requestsTotal;
+  const requestsFunnelBase = privateOverview ? privateOverview.kpis.myOpenRequests : activityTotals.requestsTotal;
+  const requestsFunnelTotal = !privateOverview && range === '24h' && requestsFunnelBase <= 0
+    ? Math.max(0, Math.round(publicOverview.summary.totalPublishedRequests))
+    : Math.max(0, Math.round(requestsFunnelBase));
   const offersFunnelTotal = privateOverview ? privateOverview.providerOffersByStatus.sent : activityTotals.offersTotal;
   const confirmedResponsesTotal = privateOverview ? privateOverview.providerOffersByStatus.accepted : activityTotals.offersTotal;
   const closedContractsTotal = privateOverview ? completedJobs : 0;

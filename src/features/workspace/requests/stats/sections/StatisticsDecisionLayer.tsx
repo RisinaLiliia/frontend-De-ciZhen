@@ -4,16 +4,18 @@ import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
 
 export function StatisticsDecisionLayer({
   copy,
+  decisionFootnote,
   activitySignals,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
+  decisionFootnote: WorkspaceStatisticsModel['decisionFootnote'];
   activitySignals: WorkspaceStatisticsModel['activitySignals'];
 }) {
   if (activitySignals.length === 0) return null;
 
   return (
     <section className="workspace-statistics__decision-layer">
-      <div className="workspace-statistics__activity-signals-head">
+      <div className="section-heading workspace-statistics__activity-signals-head">
         <p className="section-title">{copy.activitySignalsTitle}</p>
         <p className="section-subtitle">{copy.activitySignalsSubtitle}</p>
       </div>
@@ -29,6 +31,10 @@ export function StatisticsDecisionLayer({
           </li>
         ))}
       </ul>
+      <div className="workspace-statistics__decision-footnote" aria-live="polite">
+        <span>{decisionFootnote.updatedLine}</span>
+        <span>{decisionFootnote.basedOnLine}</span>
+      </div>
     </section>
   );
 }

@@ -27,6 +27,7 @@ import {
 import {
   buildSupplementalInsights,
   formatDateLabel,
+  formatDecisionUpdatedAtLabel,
   formatDateTimeLabel,
   formatInsightEvidence,
   formatMinutes,
@@ -145,6 +146,10 @@ export type WorkspaceStatisticsModel = {
     peak: string;
     bestWindow: string;
     updatedAt: string;
+  };
+  decisionFootnote: {
+    updatedLine: string;
+    basedOnLine: string;
   };
   activitySignals: WorkspaceStatisticsActivitySignalView[];
   demandRows: WorkspaceStatisticsCategoryDemandDto[];
@@ -597,9 +602,31 @@ export function useWorkspaceStatsViewModel({
 
   const funnel = React.useMemo<WorkspaceStatisticsFunnelItemView[]>(() => {
     if (!data) return [];
+    const applyPlatform24hBase = (rows: WorkspaceStatisticsFunnelItemView[]) => {
+      if (mode !== 'platform' || range !== '24h') return rows;
+      const hasStageVolume = rows.some((item) => !item.isCurrency && item.count > 0);
+      if (hasStageVolume) return rows;
+      const fallbackRequests = Math.max(0, Math.round(data.summary.totalPublishedRequests ?? 0));
+      if (fallbackRequests <= 0) return rows;
+
+      const next = rows.slice();
+      const requestIndex = next.findIndex((item) => item.key === 'requests');
+      if (requestIndex < 0) return rows;
+      const requestStage = next[requestIndex];
+      if (!requestStage) return rows;
+
+      next[requestIndex] = {
+        ...requestStage,
+        count: fallbackRequests,
+        value: formatNumber.format(fallbackRequests),
+        widthPercent: 100,
+      };
+      return next;
+    };
+
     const stages = data.profileFunnel.stages;
     if (Array.isArray(stages) && stages.length > 0) {
-      return stages.map((stage) => {
+      const mapped = stages.map((stage) => {
         const normalizedId = stage.id === 'confirmations'
           ? 'confirmed'
           : stage.id === 'contracts'
@@ -623,6 +650,7 @@ export function useWorkspaceStatsViewModel({
           isCurrency: stage.id === 'revenue',
         } satisfies WorkspaceStatisticsFunnelItemView;
       });
+      return applyPlatform24hBase(mapped);
     }
 
     const requestsCount = Math.max(0, Math.round(data.profileFunnel.requestsTotal ?? data.profileFunnel.stage1 ?? 0));
@@ -634,7 +662,7 @@ export function useWorkspaceStatsViewModel({
     const avgRevenuePerCompleted = completedCount > 0 ? profitAmount / completedCount : 0;
     const widthByRequests = (value: number) => Math.max(0, Math.min(100, Number(((value / Math.max(1, requestsCount)) * 100).toFixed(2))));
 
-    return [
+    const computed = [
       { key: 'requests', label: copy.funnelRequestsLabel, count: requestsCount, value: formatNumber.format(requestsCount), widthPercent: 100, rateFromPreviousPercent: null },
       { key: 'offers', label: copy.funnelOffersLabel, count: offersCount, value: formatNumber.format(offersCount), widthPercent: widthByRequests(offersCount), rateFromPreviousPercent: data.profileFunnel.offerResponseRatePercent ?? null, railLabel: copy.funnelRateOfferLabel, railValue: formatPercent(data.profileFunnel.offerResponseRatePercent ?? 0) },
       { key: 'confirmed', label: copy.funnelConfirmedLabel, count: confirmedCount, value: formatNumber.format(confirmedCount), widthPercent: widthByRequests(confirmedCount), rateFromPreviousPercent: data.profileFunnel.confirmationRatePercent ?? null, railLabel: copy.funnelRateConfirmationLabel, railValue: formatPercent(data.profileFunnel.confirmationRatePercent ?? 0) },
@@ -642,7 +670,8 @@ export function useWorkspaceStatsViewModel({
       { key: 'completed', label: copy.funnelCompletedLabel, count: completedCount, value: formatNumber.format(completedCount), widthPercent: widthByRequests(completedCount), rateFromPreviousPercent: data.profileFunnel.completionRatePercent ?? null, railLabel: copy.funnelRateCompletionLabel, railValue: formatPercent(data.profileFunnel.completionRatePercent ?? 0) },
       { key: 'profit', label: copy.funnelProfitLabel, count: completedCount, value: formatCurrency.format(profitAmount), widthPercent: widthByRequests(completedCount), rateFromPreviousPercent: null, railLabel: copy.funnelRateAvgRevenueLabel, railValue: completedCount > 0 ? formatCurrency.format(avgRevenuePerCompleted) : '—', isCurrency: true },
     ];
-  }, [copy, data, formatCurrency, formatNumber]);
+    return applyPlatform24hBase(computed);
+  }, [copy, data, formatCurrency, formatNumber, mode, range]);
 
   const hasFunnelData = React.useMemo(() => {
     if (!funnel.length) return false;
@@ -655,6 +684,15 @@ export function useWorkspaceStatsViewModel({
     () => String(data?.profileFunnel.periodLabel ?? '').trim() || '',
     [data?.profileFunnel.periodLabel],
   );
+
+  const useComputedFunnelSummary = React.useMemo(() => {
+    if (!data) return false;
+    if (mode !== 'platform' || range !== '24h') return false;
+    const backendRequests = Number(data.profileFunnel.requestsTotal ?? data.profileFunnel.stage1 ?? 0);
+    if (backendRequests > 0) return false;
+    const requestsCount = funnel.find((item) => item.key === 'requests')?.count ?? 0;
+    return requestsCount > 0;
+  }, [data, funnel, mode, range]);
 
   const insights = React.useMemo<WorkspaceStatisticsInsightView[]>(
     () => {
@@ -732,6 +770,32 @@ export function useWorkspaceStatsViewModel({
     [data?.activity.totals.bestWindowTimestamp, data?.activity.totals.peakTimestamp, data?.updatedAt, locale],
   );
 
+  const decisionFootnote = React.useMemo(() => {
+    const rangeLabel =
+      range === '24h'
+        ? copy.range24h
+        : range === '7d'
+          ? copy.range7d
+          : range === '30d'
+            ? copy.range30d
+            : copy.range90d;
+
+    return {
+      updatedLine: `${copy.activitySignalsUpdatedPrefix}: ${formatDecisionUpdatedAtLabel(data?.updatedAt, locale)}`,
+      basedOnLine: `${copy.activitySignalsBasedOnPrefix} ${rangeLabel}.`,
+    };
+  }, [
+    copy.activitySignalsBasedOnPrefix,
+    copy.activitySignalsUpdatedPrefix,
+    copy.range24h,
+    copy.range30d,
+    copy.range7d,
+    copy.range90d,
+    data?.updatedAt,
+    locale,
+    range,
+  ]);
+
   return {
     copy,
     range,
@@ -743,6 +807,7 @@ export function useWorkspaceStatsViewModel({
     kpis,
     activityPoints,
     activityMeta,
+    decisionFootnote,
     activitySignals,
     demandRows,
     cityRows,
@@ -751,8 +816,10 @@ export function useWorkspaceStatsViewModel({
     funnel,
     funnelPeriodLabel,
     funnelSummary:
-      String(data?.profileFunnel.summaryText ?? '').trim() ||
-      `${copy.funnelSummaryPrefix} ${funnel.find((item) => item.key === 'requests')?.value ?? '0'} ${copy.funnelSummaryMiddle} ${funnel.find((item) => item.key === 'completed')?.value ?? '0'} ${copy.funnelSummarySuffix}`,
+      useComputedFunnelSummary
+        ? `${copy.funnelSummaryPrefix} ${funnel.find((item) => item.key === 'requests')?.value ?? '0'} ${copy.funnelSummaryMiddle} ${funnel.find((item) => item.key === 'completed')?.value ?? '0'} ${copy.funnelSummarySuffix}`
+        : (String(data?.profileFunnel.summaryText ?? '').trim() ||
+          `${copy.funnelSummaryPrefix} ${funnel.find((item) => item.key === 'requests')?.value ?? '0'} ${copy.funnelSummaryMiddle} ${funnel.find((item) => item.key === 'completed')?.value ?? '0'} ${copy.funnelSummarySuffix}`),
     hasFunnelData,
     conversion: formatPercent(
       Number.isFinite(data?.profileFunnel.totalConversionPercent)

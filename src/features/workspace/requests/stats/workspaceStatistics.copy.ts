@@ -16,6 +16,8 @@ export type WorkspaceStatisticsCopy = {
   activitySubtitle: string;
   activitySignalsTitle: string;
   activitySignalsSubtitle: string;
+  activitySignalsUpdatedPrefix: string;
+  activitySignalsBasedOnPrefix: string;
   activityOfferRateLabel: string;
   activityResponseMedianLabel: string;
   activityUnansweredLabel: string;
@@ -148,6 +150,8 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   activitySubtitle: 'Neue Anfragen und Angebote im Zeitverlauf',
   activitySignalsTitle: 'Decision Layer',
   activitySignalsSubtitle: 'Operative Kennzahlen für Markt- und Wachstumsentscheidungen',
+  activitySignalsUpdatedPrefix: 'Aktualisiert',
+  activitySignalsBasedOnPrefix: 'Basierend auf Plattformaktivität der letzten',
   activityOfferRateLabel: 'Angebotsquote',
   activityResponseMedianLabel: 'Median Antwortzeit',
   activityUnansweredLabel: 'Unbeantwortet >24h',
@@ -288,6 +292,8 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   activitySubtitle: 'New requests and offers over time',
   activitySignalsTitle: 'Decision layer',
   activitySignalsSubtitle: 'Operational metrics for market and growth decisions',
+  activitySignalsUpdatedPrefix: 'Updated',
+  activitySignalsBasedOnPrefix: 'Based on platform activity over the last',
   activityOfferRateLabel: 'Offer rate',
   activityResponseMedianLabel: 'Median response time',
   activityUnansweredLabel: 'Unanswered >24h',
