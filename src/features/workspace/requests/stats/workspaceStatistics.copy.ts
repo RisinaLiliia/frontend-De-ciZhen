@@ -84,6 +84,13 @@ export type WorkspaceStatisticsCopy = {
   insightsGeneratedLabel: string;
   insightsAssistantName: string;
   insightsAssistantNote: string;
+  insightsTypeChanceLabel: string;
+  insightsTypeTrendLabel: string;
+  insightsTypeRiskLabel: string;
+  insightsTypeActionLabel: string;
+  insightsTypeSignalLabel: string;
+  insightsFeaturedLabel: string;
+  insightsFeaturedActionLabel: string;
   growthTitle: string;
   growthSubtitle: string;
   growthRecommendedPrefix: string;
@@ -218,11 +225,18 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   profileRevenueLabel: 'Umsatz',
   profileSubtitlePlatform: 'Von Anfragen bis zum erfolgreichen Abschluss und Umsatz',
   profileSubtitlePersonalized: 'Wie dein Profil aktuell performt',
-  insightsTitle: 'Empfehlungen & Insights',
-  insightsSubtitle: 'AI Decision Layer für Markt-, Performance- und Wachstums-Signale',
+  insightsTitle: 'Handlungsempfehlungen',
+  insightsSubtitle: 'KI-gestützte Hinweise für bessere Entscheidungen',
   insightsGeneratedLabel: 'Basierend auf aktuellen Plattformdaten',
   insightsAssistantName: "De'ci AI",
-  insightsAssistantNote: 'Analysiert Markt-, Performance- und Wachstums-Signale',
+  insightsAssistantNote: 'Priorisiert Chancen, Risiken und nächste Schritte',
+  insightsTypeChanceLabel: 'Chance',
+  insightsTypeTrendLabel: 'Trend',
+  insightsTypeRiskLabel: 'Risiko',
+  insightsTypeActionLabel: 'Aktion',
+  insightsTypeSignalLabel: 'Signal',
+  insightsFeaturedLabel: 'Priorität',
+  insightsFeaturedActionLabel: 'Mehr Details',
   growthTitle: 'Wachstum & Promotion',
   growthSubtitle: 'Tools für mehr Sichtbarkeit und neue Aufträge',
   growthRecommendedPrefix: 'Empfohlen für',
@@ -358,11 +372,18 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   profileRevenueLabel: 'Revenue',
   profileSubtitlePlatform: 'From requests to successful completion and revenue',
   profileSubtitlePersonalized: 'How your profile performs right now',
-  insightsTitle: 'Recommendations & insights',
-  insightsSubtitle: 'AI decision layer for market, performance, and growth signals',
+  insightsTitle: 'Action recommendations',
+  insightsSubtitle: 'AI-guided signals for better decisions',
   insightsGeneratedLabel: 'Based on current platform data',
   insightsAssistantName: "De'ci AI",
-  insightsAssistantNote: 'Analyzing market, performance, and growth signals',
+  insightsAssistantNote: 'Prioritizing opportunities, risks, and next steps',
+  insightsTypeChanceLabel: 'Chance',
+  insightsTypeTrendLabel: 'Trend',
+  insightsTypeRiskLabel: 'Risk',
+  insightsTypeActionLabel: 'Action',
+  insightsTypeSignalLabel: 'Signal',
+  insightsFeaturedLabel: 'Priority',
+  insightsFeaturedActionLabel: 'View details',
   growthTitle: 'Growth & promotion',
   growthSubtitle: 'Tools for more visibility and new jobs',
   growthRecommendedPrefix: 'Recommended for',

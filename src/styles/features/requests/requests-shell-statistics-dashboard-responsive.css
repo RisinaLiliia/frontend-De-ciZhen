@@ -117,10 +117,6 @@
       -webkit-line-clamp: 3;
     }
 
-    .workspace-statistics-insights {
-      --workspace-statistics-insights-offset: 24px;
-    }
-
     .workspace-statistics__cities-tools {
       flex-wrap: wrap;
     }
@@ -158,10 +154,6 @@
 
     .workspace-statistics-opportunity__analysis-axes {
       grid-template-columns: minmax(0, 1fr);
-    }
-
-    .workspace-statistics-insights {
-      --workspace-statistics-insights-offset: 12px;
     }
 
     .workspace-statistics-city-list__head,
