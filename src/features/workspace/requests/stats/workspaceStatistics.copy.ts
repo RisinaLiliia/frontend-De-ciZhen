@@ -121,6 +121,26 @@ export type WorkspaceStatisticsCopy = {
   growthSubtitle: string;
   growthRecommendedPrefix: string;
   growthFeaturedBadge: string;
+  kpiSuccessRateLabel: string;
+  kpiNoCompletedJobs: string;
+  kpiActiveProvidersLabel: string;
+  kpiActiveRequestsHintSuffix: string;
+  kpiActiveCitiesLabel: string;
+  kpiWithDemandHint: string;
+  kpiAverageRatingLabel: string;
+  kpiNoOpenRequests: string;
+  kpiTotalInRangeHintSuffix: string;
+  kpiLast7DaysHintSuffix: string;
+  kpiNoRecentOffers7d: string;
+  kpiResponseTimeLabel: string;
+  kpiNoResponseTimeData: string;
+  kpiFastResponseHint: string;
+  kpiResponseTargetHint: string;
+  kpiAcceptedOffersHintSuffix: string;
+  kpiNoSentOffers: string;
+  kpiProfileCompletenessLabel: string;
+  kpiStrongProfileHint: string;
+  kpiImproveProfileHint: string;
   emptyDemand: string;
   emptyCities: string;
   emptyInsights: string;
@@ -297,6 +317,26 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   growthSubtitle: 'Tools für mehr Sichtbarkeit und neue Aufträge',
   growthRecommendedPrefix: 'Empfohlen für',
   growthFeaturedBadge: 'Empfohlen',
+  kpiSuccessRateLabel: 'Erfolgsquote',
+  kpiNoCompletedJobs: 'Noch keine Abschlüsse',
+  kpiActiveProvidersLabel: 'Aktive Anbieter',
+  kpiActiveRequestsHintSuffix: 'aktive Aufträge',
+  kpiActiveCitiesLabel: 'Aktive Städte',
+  kpiWithDemandHint: 'mit Nachfrage',
+  kpiAverageRatingLabel: 'Durchschnittsbewertung',
+  kpiNoOpenRequests: 'Keine offenen Anfragen',
+  kpiTotalInRangeHintSuffix: 'insgesamt im Zeitraum',
+  kpiLast7DaysHintSuffix: 'in den letzten 7 Tagen',
+  kpiNoRecentOffers7d: 'Noch keine Angebote in den letzten 7 Tagen',
+  kpiResponseTimeLabel: 'Antwortzeit',
+  kpiNoResponseTimeData: 'Noch keine Antwortzeit-Daten',
+  kpiFastResponseHint: 'Stark: unter 30 Min.',
+  kpiResponseTargetHint: 'Ziel: unter 30 Min.',
+  kpiAcceptedOffersHintSuffix: 'akzeptierte Angebote',
+  kpiNoSentOffers: 'Noch keine gesendeten Angebote',
+  kpiProfileCompletenessLabel: 'Profil Vollständigkeit',
+  kpiStrongProfileHint: 'Starkes Profil',
+  kpiImproveProfileHint: 'Profil ausbauen für mehr Sichtbarkeit',
   emptyDemand: 'Noch keine Kategoriedaten für diesen Zeitraum.',
   emptyCities: 'Noch keine Städtedaten verfügbar.',
   emptyInsights: 'Noch keine Insights verfügbar.',
@@ -474,6 +514,26 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   growthSubtitle: 'Tools for more visibility and new jobs',
   growthRecommendedPrefix: 'Recommended for',
   growthFeaturedBadge: 'Recommended',
+  kpiSuccessRateLabel: 'Success rate',
+  kpiNoCompletedJobs: 'No completed jobs yet',
+  kpiActiveProvidersLabel: 'Active providers',
+  kpiActiveRequestsHintSuffix: 'active requests',
+  kpiActiveCitiesLabel: 'Active cities',
+  kpiWithDemandHint: 'with demand',
+  kpiAverageRatingLabel: 'Average rating',
+  kpiNoOpenRequests: 'No open requests',
+  kpiTotalInRangeHintSuffix: 'total in selected range',
+  kpiLast7DaysHintSuffix: 'in the last 7 days',
+  kpiNoRecentOffers7d: 'No offers in the last 7 days',
+  kpiResponseTimeLabel: 'Response time',
+  kpiNoResponseTimeData: 'No response-time data yet',
+  kpiFastResponseHint: 'Strong: under 30 min',
+  kpiResponseTargetHint: 'Target: under 30 min',
+  kpiAcceptedOffersHintSuffix: 'accepted offers',
+  kpiNoSentOffers: 'No sent offers yet',
+  kpiProfileCompletenessLabel: 'Profile completeness',
+  kpiStrongProfileHint: 'Strong profile',
+  kpiImproveProfileHint: 'Improve profile for better visibility',
   emptyDemand: 'No category demand data for this range.',
   emptyCities: 'No city demand data yet.',
   emptyInsights: 'No insights available yet.',

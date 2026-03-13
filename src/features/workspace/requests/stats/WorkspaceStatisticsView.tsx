@@ -13,6 +13,7 @@ import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from './useWorkspaceStatisticsModel';
+import { useSyncedPanelMinHeight } from './useSyncedPanelMinHeight';
 import { buildFunnelVisualRows } from './statisticsFunnel.utils';
 import { paginateItems, parsePageParam } from './statisticsPagination.utils';
 import { applyPageQuery, isPageQueryInSync, toPageQueryValue } from './statisticsUrlState.utils';
@@ -74,9 +75,6 @@ export function WorkspaceStatisticsView({
   const opportunityPanelRef = React.useRef<HTMLElement | null>(null);
   const trustPanelWrapRef = React.useRef<HTMLDivElement | null>(null);
   const [funnelContainerWidth, setFunnelContainerWidth] = React.useState(0);
-  const [profilePanelMinHeight, setProfilePanelMinHeight] = React.useState<number | null>(null);
-  const [growthPanelMinHeight, setGrowthPanelMinHeight] = React.useState<number | null>(null);
-  const [trustPanelMinHeight, setTrustPanelMinHeight] = React.useState<number | null>(null);
   const {
     copy,
     range,
@@ -142,6 +140,23 @@ export function WorkspaceStatisticsView({
     visibleItems: visibleCityRows,
   } = cityPagination;
   const [isNarrowViewport, setNarrowViewport] = React.useState(false);
+  const profilePanelMinHeight = useSyncedPanelMinHeight({
+    sourceRef: decisionClusterRef,
+    targetRef: statisticsPanelRef,
+    mode: 'sourceBottomToTargetTop',
+    watchKey: `${activitySignals.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
+  });
+  const growthPanelMinHeight = useSyncedPanelMinHeight({
+    sourceRef: citiesPanelRef,
+    targetRef: growthPanelRef,
+    mode: 'sourceBottomToTargetTop',
+    watchKey: `${cityRows.length}-${safeCityPage}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
+  });
+  const trustPanelMinHeight = useSyncedPanelMinHeight({
+    sourceRef: opportunityPanelRef,
+    mode: 'sourceHeight',
+    watchKey: `${opportunityRadar.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
+  });
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -166,131 +181,6 @@ export function WorkspaceStatisticsView({
     observer.observe(target);
     return () => observer.disconnect();
   }, []);
-
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const statsPanel = statisticsPanelRef.current;
-    const decisionCluster = decisionClusterRef.current;
-    if (!statsPanel || !decisionCluster) {
-      setProfilePanelMinHeight(null);
-      return;
-    }
-
-    const desktopMedia = window.matchMedia('(min-width: 1024px)');
-    let frameId = 0;
-
-    const syncHeight = () => {
-      cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(() => {
-        if (!desktopMedia.matches) {
-          setProfilePanelMinHeight(null);
-          return;
-        }
-
-        const statsRect = statsPanel.getBoundingClientRect();
-        const decisionRect = decisionCluster.getBoundingClientRect();
-        const decisionBottom = decisionRect.bottom;
-        const nextHeight = Math.max(0, Math.round(decisionBottom - statsRect.top));
-        setProfilePanelMinHeight((prev) => (prev === nextHeight ? prev : nextHeight));
-      });
-    };
-
-    syncHeight();
-
-    const observer = new ResizeObserver(syncHeight);
-    observer.observe(statsPanel);
-    observer.observe(decisionCluster);
-    desktopMedia.addEventListener('change', syncHeight);
-
-    return () => {
-      cancelAnimationFrame(frameId);
-      observer.disconnect();
-      desktopMedia.removeEventListener('change', syncHeight);
-    };
-  }, [activitySignals.length, isError, isLoading]);
-
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const citiesPanel = citiesPanelRef.current;
-    const growthPanel = growthPanelRef.current;
-    if (!citiesPanel || !growthPanel) {
-      setGrowthPanelMinHeight(null);
-      return;
-    }
-
-    const desktopMedia = window.matchMedia('(min-width: 1024px)');
-    let frameId = 0;
-
-    const syncHeight = () => {
-      cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(() => {
-        if (!desktopMedia.matches) {
-          setGrowthPanelMinHeight(null);
-          return;
-        }
-
-        const citiesRect = citiesPanel.getBoundingClientRect();
-        const growthRect = growthPanel.getBoundingClientRect();
-        const nextHeight = Math.max(0, Math.round(citiesRect.bottom - growthRect.top));
-        setGrowthPanelMinHeight((prev) => (prev === nextHeight ? prev : nextHeight));
-      });
-    };
-
-    syncHeight();
-
-    const observer = new ResizeObserver(syncHeight);
-    observer.observe(citiesPanel);
-    observer.observe(growthPanel);
-    desktopMedia.addEventListener('change', syncHeight);
-
-    return () => {
-      cancelAnimationFrame(frameId);
-      observer.disconnect();
-      desktopMedia.removeEventListener('change', syncHeight);
-    };
-  }, [cityRows.length, isError, isLoading, safeCityPage]);
-
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const opportunityPanel = opportunityPanelRef.current;
-    if (!opportunityPanel) {
-      setTrustPanelMinHeight(null);
-      return;
-    }
-
-    const desktopMedia = window.matchMedia('(min-width: 1024px)');
-    let frameId = 0;
-
-    const syncHeight = () => {
-      cancelAnimationFrame(frameId);
-      frameId = window.requestAnimationFrame(() => {
-        if (!desktopMedia.matches) {
-          setTrustPanelMinHeight(null);
-          return;
-        }
-
-        const opportunityRect = opportunityPanel.getBoundingClientRect();
-        const nextHeight = Math.max(0, Math.round(opportunityRect.height));
-        setTrustPanelMinHeight((prev) => (prev === nextHeight ? prev : nextHeight));
-      });
-    };
-
-    syncHeight();
-
-    const observer = new ResizeObserver(syncHeight);
-    observer.observe(opportunityPanel);
-    if (trustPanelWrapRef.current) observer.observe(trustPanelWrapRef.current);
-    desktopMedia.addEventListener('change', syncHeight);
-
-    return () => {
-      cancelAnimationFrame(frameId);
-      observer.disconnect();
-      desktopMedia.removeEventListener('change', syncHeight);
-    };
-  }, [isError, isLoading, opportunityRadar.length]);
 
   const funnelVisualRows = React.useMemo(
     () => buildFunnelVisualRows({ funnel, copy, isNarrowViewport, funnelContainerWidth }),
