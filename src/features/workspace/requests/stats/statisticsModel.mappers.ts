@@ -307,6 +307,12 @@ export function toFallbackActivityMetrics(params: {
     gmvAmount,
     platformRevenueAmount: 0,
     takeRatePercent,
+    offerRateTone: 'neutral',
+    responseMedianTone: 'neutral',
+    unansweredTone: 'positive',
+    cancellationTone: 'neutral',
+    completedTone: completedJobs > 0 ? 'positive' : 'neutral',
+    revenueTone: 'neutral',
   };
 }
 

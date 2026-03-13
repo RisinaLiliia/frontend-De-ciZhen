@@ -182,6 +182,12 @@ export type WorkspaceStatisticsActivityMetricsDto = {
   gmvAmount: number;
   platformRevenueAmount: number;
   takeRatePercent: number;
+  offerRateTone: 'positive' | 'neutral' | 'warning';
+  responseMedianTone: 'positive' | 'neutral' | 'warning';
+  unansweredTone: 'positive' | 'neutral' | 'warning';
+  cancellationTone: 'positive' | 'neutral' | 'warning';
+  completedTone: 'positive' | 'neutral' | 'warning';
+  revenueTone: 'positive' | 'neutral' | 'warning';
 };
 
 export type WorkspaceStatisticsActivityDto = {
@@ -204,8 +210,8 @@ export type WorkspaceStatisticsCityDemandDto = {
   cityName: string;
   cityId: string | null;
   requestCount: number;
-  auftragSuchenCount: number;
-  anbieterSuchenCount: number;
+  auftragSuchenCount: number | null;
+  anbieterSuchenCount: number | null;
   marketBalanceRatio: number | null;
   signal: 'high' | 'medium' | 'low' | 'none';
   lat: number | null;
@@ -252,6 +258,11 @@ export type WorkspaceStatisticsPriceIntelligenceDto = {
   recommendedMin: number | null;
   recommendedMax: number | null;
   marketAverage: number | null;
+  optimalMin: number | null;
+  optimalMax: number | null;
+  recommendation: string | null;
+  profitPotentialScore: number | null;
+  profitPotentialStatus: 'high' | 'medium' | 'low' | null;
 };
 
 export type WorkspaceStatisticsProfileFunnelDto = {

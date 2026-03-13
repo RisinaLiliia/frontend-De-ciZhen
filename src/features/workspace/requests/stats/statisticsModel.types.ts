@@ -9,8 +9,8 @@ export type WorkspaceStatisticsCitySourceDto = Omit<
   WorkspaceStatisticsCityDemandDto,
   'auftragSuchenCount' | 'anbieterSuchenCount' | 'marketBalanceRatio' | 'signal'
 > & {
-  auftragSuchenCount?: number;
-  anbieterSuchenCount?: number;
+  auftragSuchenCount?: number | null;
+  anbieterSuchenCount?: number | null;
   marketBalanceRatio?: number | null;
   signal?: 'high' | 'medium' | 'low' | 'none';
 };

@@ -24,6 +24,7 @@ import {
   StatisticsInsightsPanel,
   StatisticsOpportunityPanel,
   StatisticsPricePanel,
+  StatisticsPriceRecommendationPanel,
 } from './WorkspaceStatisticsSections';
 
 type WorkspaceStatisticsViewProps = {
@@ -307,10 +308,16 @@ export function WorkspaceStatisticsView({
                 locale={locale}
                 opportunityRadar={model.opportunityRadar}
               />
-              <StatisticsPricePanel
-                copy={copy}
-                priceIntelligence={model.priceIntelligence}
-              />
+              <div className="workspace-statistics-price__column stack-sm">
+                <StatisticsPricePanel
+                  copy={copy}
+                  priceIntelligence={model.priceIntelligence}
+                />
+                <StatisticsPriceRecommendationPanel
+                  copy={copy}
+                  priceIntelligence={model.priceIntelligence}
+                />
+              </div>
             </div>
           </>
         )}

@@ -73,7 +73,29 @@ export type WorkspaceStatisticsCopy = {
   opportunitySummaryLow: string;
   priceTitle: string;
   priceSubtitle: string;
+  priceGeneratedLabel: string;
+  priceRadarLabel: string;
   priceMarketAverageLabel: string;
+  priceRecommendedLabel: string;
+  priceRecommendationLabel: string;
+  priceSweetSpotLabel: string;
+  priceProfitPotentialLabel: string;
+  priceProfitHighLabel: string;
+  priceProfitMediumLabel: string;
+  priceProfitLowLabel: string;
+  priceStrategyButtonLabel: string;
+  priceStrategyHideButtonLabel: string;
+  priceStrategyTitle: string;
+  priceStrategyWhyLabel: string;
+  priceStrategyWhyTemplate: string;
+  priceStrategyObservationLabel: string;
+  priceStrategyObservationTemplate: string;
+  priceStrategyActionLabel: string;
+  priceStrategyActionTemplate: string;
+  priceStrategyPremiumLabel: string;
+  priceStrategyPremiumTemplate: string;
+  priceSignalLabel: string;
+  priceGuidanceNote: string;
   priceNoData: string;
   profileTitle: string;
   profileRevenueLabel: string;
@@ -220,7 +242,32 @@ const COPY_DE: WorkspaceStatisticsCopy = {
     'Die Opportunity ist derzeit niedrig. Neue Chancen entstehen meist mit zusätzlicher Nachfrage oder besserer Marktaktivität.',
   priceTitle: 'Preis-Intelligenz',
   priceSubtitle: 'Empfohlene Preisbereiche',
+  priceGeneratedLabel: 'Basierend auf aktuellen Auftragsdaten',
+  priceRadarLabel: 'Marktpreis-Radar',
   priceMarketAverageLabel: 'Marktdurchschnitt',
+  priceRecommendedLabel: 'Empfohlener Bereich',
+  priceRecommendationLabel: 'Empfehlung',
+  priceSweetSpotLabel: 'Optimale Zone',
+  priceProfitPotentialLabel: 'Profit Potential',
+  priceProfitHighLabel: 'Sehr gute Marktchance',
+  priceProfitMediumLabel: 'Solide Marktchance',
+  priceProfitLowLabel: 'Vorsichtige Marktchance',
+  priceStrategyButtonLabel: 'Preisstrategie anzeigen',
+  priceStrategyHideButtonLabel: 'Strategie ausblenden',
+  priceStrategyTitle: 'Preisstrategie',
+  priceStrategyWhyLabel: 'Warum dieser Bereich funktioniert',
+  priceStrategyWhyTemplate: '{range} erzielt aktuell die höchste Abschlussrate{citySuffix}.',
+  priceStrategyObservationLabel: 'Marktbeobachtung',
+  priceStrategyObservationTemplate:
+    'Viele Anbieter orientieren sich am Marktdurchschnitt von {average}. Angebote nahe {range} werden aktuell häufiger ausgewählt.',
+  priceStrategyActionLabel: 'Handlungsempfehlung',
+  priceStrategyActionTemplate:
+    'Positioniere dein Angebot leicht unter oder nahe dem Marktdurchschnitt, antworte schnell und betone klare Profilvorteile.',
+  priceStrategyPremiumLabel: 'Wann höher funktionieren kann',
+  priceStrategyPremiumTemplate:
+    'Ein Preis oberhalb des empfohlenen Korridors funktioniert besser, wenn dein Profil starke Bewertungen, schnelle Antwortzeiten und klaren Premium-Service zeigt.',
+  priceSignalLabel: 'Preis Signal',
+  priceGuidanceNote: 'Orientierung für neue Angebote im gewählten Zeitraum.',
   priceNoData: 'Noch keine Preisdaten verfügbar.',
   profileTitle: 'Profil Performance',
   profileRevenueLabel: 'Umsatz',
@@ -368,7 +415,32 @@ const COPY_EN: WorkspaceStatisticsCopy = {
     'Opportunity is currently low. Better demand or higher market activity is needed before scaling efforts here.',
   priceTitle: 'Price intelligence',
   priceSubtitle: 'Recommended price ranges',
+  priceGeneratedLabel: 'Based on current order data',
+  priceRadarLabel: 'Market price radar',
   priceMarketAverageLabel: 'Market average',
+  priceRecommendedLabel: 'Recommended range',
+  priceRecommendationLabel: 'Recommendation',
+  priceSweetSpotLabel: 'Optimal zone',
+  priceProfitPotentialLabel: 'Profit potential',
+  priceProfitHighLabel: 'Strong market potential',
+  priceProfitMediumLabel: 'Solid market potential',
+  priceProfitLowLabel: 'Cautious market potential',
+  priceStrategyButtonLabel: 'Show pricing strategy',
+  priceStrategyHideButtonLabel: 'Hide strategy',
+  priceStrategyTitle: 'Pricing strategy',
+  priceStrategyWhyLabel: 'Why this range works',
+  priceStrategyWhyTemplate: '{range} currently shows the highest close rate{citySuffix}.',
+  priceStrategyObservationLabel: 'Market observation',
+  priceStrategyObservationTemplate:
+    'Many providers cluster near the market average of {average}. Offers close to {range} are currently selected more often.',
+  priceStrategyActionLabel: 'Recommended action',
+  priceStrategyActionTemplate:
+    'Position your offer slightly below or close to market average, respond quickly, and highlight clear profile advantages.',
+  priceStrategyPremiumLabel: 'When higher pricing can work',
+  priceStrategyPremiumTemplate:
+    'A price above the recommended corridor performs better when your profile has strong reviews, fast response, and clear premium service.',
+  priceSignalLabel: 'Price signal',
+  priceGuidanceNote: 'Reference range for new offers in the selected period.',
   priceNoData: 'No pricing data available yet.',
   profileTitle: 'Profile performance',
   profileRevenueLabel: 'Revenue',

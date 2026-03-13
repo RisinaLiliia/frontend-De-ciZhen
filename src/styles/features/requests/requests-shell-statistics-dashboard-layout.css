@@ -99,6 +99,12 @@
 
   .workspace-statistics__grid--secondary {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .workspace-statistics__grid--secondary > .workspace-statistics-opportunity,
+  .workspace-statistics__grid--secondary > .workspace-statistics-price__column {
+    align-self: start;
   }
 
   .workspace-statistics__tile-header {

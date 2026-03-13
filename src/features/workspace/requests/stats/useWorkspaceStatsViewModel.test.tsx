@@ -59,6 +59,12 @@ function createOverviewData(): WorkspaceStatisticsOverviewSourceDto {
         gmvAmount: 1510,
         platformRevenueAmount: 151,
         takeRatePercent: 10,
+        offerRateTone: 'neutral',
+        responseMedianTone: 'neutral',
+        unansweredTone: 'warning',
+        cancellationTone: 'positive',
+        completedTone: 'positive',
+        revenueTone: 'positive',
       },
     },
     demand: {
@@ -181,6 +187,11 @@ function createOverviewData(): WorkspaceStatisticsOverviewSourceDto {
       recommendedMin: 65,
       recommendedMax: 90,
       marketAverage: 78,
+      optimalMin: 74,
+      optimalMax: 83,
+      recommendation: 'Preise im Bereich von 74 € – 83 € erzielen aktuell die höchste Abschlussrate in Berlin.',
+      profitPotentialScore: 7.4,
+      profitPotentialStatus: 'medium',
     },
     profileFunnel: {
       periodLabel: '30 Tage',
@@ -285,6 +296,11 @@ describe('useWorkspaceStatsViewModel', () => {
         recommendedMin: null,
         recommendedMax: null,
         marketAverage: null,
+        optimalMin: null,
+        optimalMax: null,
+        recommendation: null,
+        profitPotentialScore: null,
+        profitPotentialStatus: null,
       },
       opportunityRadar: [
         {

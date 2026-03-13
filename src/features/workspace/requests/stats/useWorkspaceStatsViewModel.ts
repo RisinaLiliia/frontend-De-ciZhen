@@ -25,15 +25,12 @@ import {
   selectInsightsForDisplay,
 } from './statisticsInsights.utils';
 import {
-  buildSupplementalInsights,
   formatDateLabel,
   formatDateTimeLabel,
   formatInsightEvidence,
   formatMinutes,
   formatPercent,
   formatReviewCountHint,
-  toActivityTotals,
-  toFallbackActivityMetrics,
   toHint,
   toTrend,
 } from './statisticsModel.mappers';
@@ -126,9 +123,22 @@ export type WorkspaceStatisticsOpportunityRadarItemView = {
 };
 
 export type WorkspaceStatisticsPriceIntelligenceView = {
+  cityLabel: string | null;
+  categoryLabel: string | null;
   contextLabel: string | null;
   recommendedRangeLabel: string | null;
   marketAverageLabel: string | null;
+  recommendedMin: number | null;
+  recommendedMax: number | null;
+  marketAverage: number | null;
+  optimalMin: number | null;
+  optimalMax: number | null;
+  optimalMinLabel: string | null;
+  optimalMaxLabel: string | null;
+  recommendation: string | null;
+  profitPotentialScore: number | null;
+  profitPotentialStatus: 'high' | 'medium' | 'low' | null;
+  profitPotentialLabel: string | null;
 };
 
 export type WorkspaceStatisticsModel = {
@@ -159,6 +169,23 @@ export type WorkspaceStatisticsModel = {
   insights: WorkspaceStatisticsInsightView[];
   growthCards: WorkspaceStatisticsGrowthCardView[];
   onExport: () => void;
+};
+
+const DEFAULT_ACTIVITY_METRICS: WorkspaceStatisticsActivityMetricsDto = {
+  offerRatePercent: 0,
+  responseMedianMinutes: null,
+  unansweredRequests24h: 0,
+  cancellationRatePercent: 0,
+  completedJobs: 0,
+  gmvAmount: 0,
+  platformRevenueAmount: 0,
+  takeRatePercent: 10,
+  offerRateTone: 'neutral',
+  responseMedianTone: 'neutral',
+  unansweredTone: 'positive',
+  cancellationTone: 'neutral',
+  completedTone: 'neutral',
+  revenueTone: 'neutral',
 };
 
 function exportCsv(rows: string[][], filename: string) {
@@ -226,10 +253,10 @@ export function useWorkspaceStatsViewModel({
     [data?.activity.points, locale, range],
   );
 
-  const activityMetrics: WorkspaceStatisticsActivityMetricsDto = data?.activity.metrics ?? toFallbackActivityMetrics({
-    totals: data?.activity.totals ?? toActivityTotals([]),
-    completedJobs: data?.kpis.completedJobsTotal ?? 0,
-  });
+  const activityMetrics: WorkspaceStatisticsActivityMetricsDto = React.useMemo(
+    () => data?.activity.metrics ?? DEFAULT_ACTIVITY_METRICS,
+    [data?.activity.metrics],
+  );
 
   const activitySignals = React.useMemo<WorkspaceStatisticsActivitySignalView[]>(() => {
     const responseValue = formatMinutes(activityMetrics.responseMedianMinutes, locale);
@@ -246,48 +273,42 @@ export function useWorkspaceStatsViewModel({
         label: copy.activityOfferRateLabel,
         value: formatPercent(activityMetrics.offerRatePercent),
         hint: locale === 'de' ? 'Angebote pro Anfrage' : 'Offers per request',
-        tone: activityMetrics.offerRatePercent >= 60 ? 'positive' : activityMetrics.offerRatePercent < 30 ? 'warning' : 'neutral',
+        tone: activityMetrics.offerRateTone,
       },
       {
         key: 'response-median',
         label: copy.activityResponseMedianLabel,
         value: responseValue,
         hint: responseHint,
-        tone: typeof activityMetrics.responseMedianMinutes === 'number'
-          ? activityMetrics.responseMedianMinutes <= 30
-            ? 'positive'
-            : activityMetrics.responseMedianMinutes > 90
-              ? 'warning'
-              : 'neutral'
-          : 'neutral',
+        tone: activityMetrics.responseMedianTone,
       },
       {
         key: 'unanswered',
         label: copy.activityUnansweredLabel,
         value: formatNumber.format(activityMetrics.unansweredRequests24h),
         hint: locale === 'de' ? 'Offene Nachfrage ohne Angebot' : 'Open demand without offers',
-        tone: activityMetrics.unansweredRequests24h > 0 ? 'warning' : 'positive',
+        tone: activityMetrics.unansweredTone,
       },
       {
         key: 'cancellation',
         label: copy.activityCancellationLabel,
         value: formatPercent(activityMetrics.cancellationRatePercent),
         hint: locale === 'de' ? 'Stornos aus Abschlüssen + Stornos' : 'Cancels from completions + cancels',
-        tone: activityMetrics.cancellationRatePercent <= 10 ? 'positive' : activityMetrics.cancellationRatePercent >= 25 ? 'warning' : 'neutral',
+        tone: activityMetrics.cancellationTone,
       },
       {
         key: 'completed',
         label: copy.activityCompletedLabel,
         value: formatNumber.format(activityMetrics.completedJobs),
         hint: locale === 'de' ? 'Gelöste Aufträge im Zeitraum' : 'Completed jobs in range',
-        tone: activityMetrics.completedJobs > 0 ? 'positive' : 'neutral',
+        tone: activityMetrics.completedTone,
       },
       {
         key: 'revenue',
         label: copy.activityRevenueLabel,
         value: formatCurrency.format(activityMetrics.platformRevenueAmount),
         hint: revenueHint,
-        tone: activityMetrics.platformRevenueAmount > 0 ? 'positive' : 'neutral',
+        tone: activityMetrics.revenueTone,
       },
     ];
   }, [activityMetrics, copy, formatCurrency, formatNumber, locale]);
@@ -566,12 +587,27 @@ export function useWorkspaceStatsViewModel({
     const source: WorkspaceStatisticsPriceIntelligenceDto | undefined = data?.priceIntelligence;
     if (!source) {
       return {
+        cityLabel: null,
+        categoryLabel: null,
         contextLabel: null,
         recommendedRangeLabel: null,
         marketAverageLabel: null,
+        recommendedMin: null,
+        recommendedMax: null,
+        marketAverage: null,
+        optimalMin: null,
+        optimalMax: null,
+        optimalMinLabel: null,
+        optimalMaxLabel: null,
+        recommendation: null,
+        profitPotentialScore: null,
+        profitPotentialStatus: null,
+        profitPotentialLabel: null,
       };
     }
 
+    const cityLabel = source.city ?? null;
+    const categoryLabel = source.category ?? null;
     const contextLabel =
       source.category && source.city
         ? `${source.category} · ${source.city}`
@@ -587,62 +623,98 @@ export function useWorkspaceStatsViewModel({
       typeof source.marketAverage === 'number' && Number.isFinite(source.marketAverage)
         ? formatCurrency.format(source.marketAverage)
         : null;
+    const recommendedMin =
+      typeof source.recommendedMin === 'number' && Number.isFinite(source.recommendedMin)
+        ? source.recommendedMin
+        : null;
+    const recommendedMax =
+      typeof source.recommendedMax === 'number' && Number.isFinite(source.recommendedMax)
+        ? source.recommendedMax
+        : null;
+    const marketAverage =
+      typeof source.marketAverage === 'number' && Number.isFinite(source.marketAverage)
+        ? source.marketAverage
+        : null;
+    const optimalMinValue =
+      typeof source.optimalMin === 'number' && Number.isFinite(source.optimalMin)
+        ? source.optimalMin
+        : null;
+    const optimalMaxValue =
+      typeof source.optimalMax === 'number' && Number.isFinite(source.optimalMax)
+        ? source.optimalMax
+        : null;
+    const optimalMinLabel =
+      optimalMinValue !== null && Number.isFinite(optimalMinValue)
+        ? formatCurrency.format(optimalMinValue)
+        : null;
+    const optimalMaxLabel =
+      optimalMaxValue !== null && Number.isFinite(optimalMaxValue)
+        ? formatCurrency.format(optimalMaxValue)
+        : null;
+    const recommendation = typeof source.recommendation === 'string' ? source.recommendation : null;
+    const profitPotentialScore =
+      typeof source.profitPotentialScore === 'number' && Number.isFinite(source.profitPotentialScore)
+        ? source.profitPotentialScore
+        : null;
+    const profitPotentialStatus = source.profitPotentialStatus ?? null;
+    const profitPotentialLabel =
+      profitPotentialStatus === 'high'
+        ? copy.priceProfitHighLabel
+        : profitPotentialStatus === 'medium'
+          ? copy.priceProfitMediumLabel
+          : profitPotentialStatus === 'low'
+            ? copy.priceProfitLowLabel
+            : null;
 
     return {
+      cityLabel,
+      categoryLabel,
       contextLabel,
       recommendedRangeLabel,
       marketAverageLabel,
+      recommendedMin,
+      recommendedMax,
+      marketAverage,
+      optimalMin: optimalMinValue,
+      optimalMax: optimalMaxValue,
+      optimalMinLabel,
+      optimalMaxLabel,
+      recommendation,
+      profitPotentialScore,
+      profitPotentialStatus,
+      profitPotentialLabel,
     };
-  }, [data?.priceIntelligence, formatCurrency]);
+  }, [copy.priceProfitHighLabel, copy.priceProfitLowLabel, copy.priceProfitMediumLabel, data?.priceIntelligence, formatCurrency]);
 
   const funnel = React.useMemo<WorkspaceStatisticsFunnelItemView[]>(() => {
     if (!data) return [];
     const stages = data.profileFunnel.stages;
-    if (Array.isArray(stages) && stages.length > 0) {
-      return stages.map((stage) => {
-        const normalizedId = stage.id === 'confirmations'
-          ? 'confirmed'
-          : stage.id === 'contracts'
-            ? 'closed'
-            : stage.id === 'revenue'
-              ? 'profit'
-              : stage.id;
-        const ratePercent = typeof stage.ratePercent === 'number' ? Math.max(0, Math.min(100, Math.round(stage.ratePercent))) : null;
-        return {
-          key: normalizedId,
-          label: stage.label,
-          count: Math.max(0, Math.round(stage.value)),
-          value: stage.displayValue,
-          widthPercent: Math.max(0, Math.min(100, Number(stage.widthPercent ?? 0))),
-          rateFromPreviousPercent: ratePercent,
-          railLabel: stage.id === 'requests' ? undefined : (stage.rateLabel ?? undefined),
-          railValue:
-            stage.id === 'requests'
-              ? undefined
-              : (stage.helperText ?? (ratePercent !== null ? formatPercent(ratePercent) : undefined)),
-          isCurrency: stage.id === 'revenue',
-        } satisfies WorkspaceStatisticsFunnelItemView;
-      });
-    }
-
-    const requestsCount = Math.max(0, Math.round(data.profileFunnel.requestsTotal ?? data.profileFunnel.stage1 ?? 0));
-    const offersCount = Math.max(0, Math.round(data.profileFunnel.offersTotal ?? data.profileFunnel.stage2 ?? 0));
-    const confirmedCount = Math.max(0, Math.round(data.profileFunnel.confirmedResponsesTotal ?? data.profileFunnel.stage3 ?? 0));
-    const closedCount = Math.max(0, Math.round(data.profileFunnel.closedContractsTotal ?? data.profileFunnel.stage4 ?? 0));
-    const completedCount = Math.max(0, Math.round(data.profileFunnel.completedJobsTotal ?? data.kpis.completedJobsTotal ?? 0));
-    const profitAmount = Math.max(0, Number(data.profileFunnel.profitAmount ?? data.activity.metrics.gmvAmount ?? 0));
-    const avgRevenuePerCompleted = completedCount > 0 ? profitAmount / completedCount : 0;
-    const widthByRequests = (value: number) => Math.max(0, Math.min(100, Number(((value / Math.max(1, requestsCount)) * 100).toFixed(2))));
-
-    return [
-      { key: 'requests', label: copy.funnelRequestsLabel, count: requestsCount, value: formatNumber.format(requestsCount), widthPercent: 100, rateFromPreviousPercent: null },
-      { key: 'offers', label: copy.funnelOffersLabel, count: offersCount, value: formatNumber.format(offersCount), widthPercent: widthByRequests(offersCount), rateFromPreviousPercent: data.profileFunnel.offerResponseRatePercent ?? null, railLabel: copy.funnelRateOfferLabel, railValue: formatPercent(data.profileFunnel.offerResponseRatePercent ?? 0) },
-      { key: 'confirmed', label: copy.funnelConfirmedLabel, count: confirmedCount, value: formatNumber.format(confirmedCount), widthPercent: widthByRequests(confirmedCount), rateFromPreviousPercent: data.profileFunnel.confirmationRatePercent ?? null, railLabel: copy.funnelRateConfirmationLabel, railValue: formatPercent(data.profileFunnel.confirmationRatePercent ?? 0) },
-      { key: 'closed', label: copy.funnelClosedLabel, count: closedCount, value: formatNumber.format(closedCount), widthPercent: widthByRequests(closedCount), rateFromPreviousPercent: data.profileFunnel.contractClosureRatePercent ?? null, railLabel: copy.funnelRateClosureLabel, railValue: formatPercent(data.profileFunnel.contractClosureRatePercent ?? 0) },
-      { key: 'completed', label: copy.funnelCompletedLabel, count: completedCount, value: formatNumber.format(completedCount), widthPercent: widthByRequests(completedCount), rateFromPreviousPercent: data.profileFunnel.completionRatePercent ?? null, railLabel: copy.funnelRateCompletionLabel, railValue: formatPercent(data.profileFunnel.completionRatePercent ?? 0) },
-      { key: 'profit', label: copy.funnelProfitLabel, count: completedCount, value: formatCurrency.format(profitAmount), widthPercent: widthByRequests(completedCount), rateFromPreviousPercent: null, railLabel: copy.funnelRateAvgRevenueLabel, railValue: completedCount > 0 ? formatCurrency.format(avgRevenuePerCompleted) : '—', isCurrency: true },
-    ];
-  }, [copy, data, formatCurrency, formatNumber]);
+    if (!Array.isArray(stages) || stages.length === 0) return [];
+    return stages.map((stage) => {
+      const normalizedId = stage.id === 'confirmations'
+        ? 'confirmed'
+        : stage.id === 'contracts'
+          ? 'closed'
+          : stage.id === 'revenue'
+            ? 'profit'
+            : stage.id;
+      const ratePercent = typeof stage.ratePercent === 'number' ? Math.max(0, Math.min(100, Math.round(stage.ratePercent))) : null;
+      return {
+        key: normalizedId,
+        label: stage.label,
+        count: Math.max(0, Math.round(stage.value)),
+        value: stage.displayValue,
+        widthPercent: Math.max(0, Math.min(100, Number(stage.widthPercent ?? 0))),
+        rateFromPreviousPercent: ratePercent,
+        railLabel: stage.id === 'requests' ? undefined : (stage.rateLabel ?? undefined),
+        railValue:
+          stage.id === 'requests'
+            ? undefined
+            : (stage.helperText ?? (ratePercent !== null ? formatPercent(ratePercent) : undefined)),
+        isCurrency: stage.id === 'revenue',
+      } satisfies WorkspaceStatisticsFunnelItemView;
+    });
+  }, [data]);
 
   const hasFunnelData = React.useMemo(() => {
     if (!funnel.length) return false;
@@ -659,10 +731,7 @@ export function useWorkspaceStatsViewModel({
   const insights = React.useMemo<WorkspaceStatisticsInsightView[]>(
     () => {
       if (!data) return [];
-      const merged = mergeInsightsByIdentity([
-        ...(data.insights ?? []),
-        ...buildSupplementalInsights({ data, mode }),
-      ]);
+      const merged = mergeInsightsByIdentity(data.insights ?? []);
       return selectInsightsForDisplay(merged, mode).map((item, index) => ({
         key: item.id ?? `${item.code}-${index}`,
         level: item.level,

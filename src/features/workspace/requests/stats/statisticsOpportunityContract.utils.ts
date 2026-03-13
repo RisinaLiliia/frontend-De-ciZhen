@@ -218,17 +218,34 @@ function buildPriceIntelligence(payload: WorkspaceStatisticsOverviewSourceDto, o
       recommendedMin: null,
       recommendedMax: null,
       marketAverage: null,
+      optimalMin: null,
+      optimalMax: null,
+      recommendation: null,
+      profitPotentialScore: null,
+      profitPotentialStatus: null,
     };
   }
+
+  const recommendedMin = roundToNearestStep(avgRevenue * 0.85, 5);
+  const recommendedMax = roundToNearestStep(avgRevenue * 1.15, 5);
+  const marketAverage = roundToNearestStep(avgRevenue, 5);
+  const rangeSpan = Math.max(0, recommendedMax - recommendedMin);
+  const optimalMin = rangeSpan > 0 ? Math.max(0, Math.round(recommendedMin + rangeSpan * 0.35)) : null;
+  const optimalMax = rangeSpan > 0 ? Math.max(0, Math.round(recommendedMin + rangeSpan * 0.7)) : null;
 
   return {
     citySlug: topCity?.citySlug ?? null,
     city: topOpportunity?.city ?? null,
     categoryKey: topOpportunity?.categoryKey ?? null,
     category: topOpportunity?.category ?? null,
-    recommendedMin: roundToNearestStep(avgRevenue * 0.85, 5),
-    recommendedMax: roundToNearestStep(avgRevenue * 1.15, 5),
-    marketAverage: roundToNearestStep(avgRevenue, 5),
+    recommendedMin,
+    recommendedMax,
+    marketAverage,
+    optimalMin,
+    optimalMax,
+    recommendation: null,
+    profitPotentialScore: null,
+    profitPotentialStatus: null,
   };
 }
 

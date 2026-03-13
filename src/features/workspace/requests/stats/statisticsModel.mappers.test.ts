@@ -68,6 +68,8 @@ describe('statisticsModel.mappers', () => {
     expect(metrics.offerRatePercent).toBe(54);
     expect(metrics.completedJobs).toBe(5);
     expect(metrics.takeRatePercent).toBe(12);
+    expect(metrics.offerRateTone).toBe('neutral');
+    expect(metrics.completedTone).toBe('positive');
   });
 
   it('builds fallback insights and truncates list to four', () => {
@@ -133,6 +135,12 @@ describe('statisticsModel.mappers', () => {
           gmvAmount: 1000,
           platformRevenueAmount: 100,
           takeRatePercent: 10,
+          offerRateTone: 'positive',
+          responseMedianTone: 'positive',
+          unansweredTone: 'warning',
+          cancellationTone: 'positive',
+          completedTone: 'positive',
+          revenueTone: 'positive',
         },
       },
       demand: {
