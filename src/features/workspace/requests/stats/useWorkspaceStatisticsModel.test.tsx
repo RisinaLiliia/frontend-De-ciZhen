@@ -262,6 +262,7 @@ type StatsHook = (args: { locale: 'de' }) => {
   cityRows: Array<unknown>;
   opportunityRadar: Array<unknown>;
   priceIntelligence: { contextLabel: string | null };
+  funnel: Array<{ key: string; count: number }>;
 };
 
 function createProbe(useWorkspaceStatisticsModel: StatsHook) {
@@ -276,8 +277,10 @@ function createProbe(useWorkspaceStatisticsModel: StatsHook) {
           data-city-count={String(model.cityRows.length)}
           data-opportunity-count={String(model.opportunityRadar.length)}
           data-price-context={model.priceIntelligence.contextLabel ?? ''}
+          data-funnel-requests={String(model.funnel.find((item) => item.key === 'requests')?.count ?? 0)}
         />
         <button type="button" onClick={() => model.setRange('7d')}>set-7d</button>
+        <button type="button" onClick={() => model.setRange('24h')}>set-24h</button>
       </div>
     );
   };
@@ -394,6 +397,55 @@ describe('useWorkspaceStatisticsModel', () => {
       expect(probe.getAttribute('data-loading')).toBe('false');
       expect(Number(probe.getAttribute('data-opportunity-count') ?? '0')).toBeGreaterThan(0);
       expect(probe.getAttribute('data-price-context')).toContain('Berlin');
+    });
+  });
+
+  it('keeps fallback funnel base in 24h from published requests when activity flow is empty', async () => {
+    getWorkspaceStatisticsMock.mockRejectedValue({ status: 401 });
+    getWorkspacePublicOverviewMock.mockImplementation(async (params) => {
+      const range = (params?.activityRange ?? '30d') as WorkspaceStatisticsRange;
+      const payload = createPublicOverview(range);
+      return {
+        ...payload,
+        summary: {
+          ...payload.summary,
+          totalPublishedRequests: 149,
+        },
+        activity: {
+          ...payload.activity,
+          data: [],
+        },
+      };
+    });
+    getPlatformActivityMock.mockImplementation(async (range) => ({
+      range,
+      interval: range === '24h' ? 'hour' : 'day',
+      source: 'real',
+      data: [],
+      updatedAt: '2026-03-11T10:00:00.000Z',
+    }));
+
+    const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
+    const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
+    const queryClient = createQueryClient();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Probe />
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('probe').getAttribute('data-loading')).toBe('false');
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'set-24h' }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('24h');
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('probe').getAttribute('data-funnel-requests')).toBe('149');
     });
   });
 });
