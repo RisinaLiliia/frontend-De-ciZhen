@@ -51,7 +51,7 @@ export function StatisticsInsightsPanel({
         </span>
         <span className="workspace-statistics-insights__stamp">{copy.insightsGeneratedLabel}</span>
         <div className="workspace-statistics-insights__assistant">
-          <span className="workspace-statistics-insights__assistant-avatar" aria-hidden="true">AI</span>
+          <span className="workspace-statistics-insights__assistant-avatar" aria-hidden="true">{copy.insightsAssistantAvatarLabel}</span>
           <span className="workspace-statistics-insights__assistant-copy">
             <strong className="workspace-statistics-insights__assistant-name">{copy.insightsAssistantName}</strong>
             <span className="workspace-statistics-insights__assistant-note">{copy.insightsAssistantNote}</span>

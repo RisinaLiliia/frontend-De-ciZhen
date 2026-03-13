@@ -82,6 +82,7 @@ export type WorkspaceStatisticsCopy = {
   insightsTitle: string;
   insightsSubtitle: string;
   insightsGeneratedLabel: string;
+  insightsAssistantAvatarLabel: string;
   insightsAssistantName: string;
   insightsAssistantNote: string;
   insightsTypeChanceLabel: string;
@@ -228,7 +229,8 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   insightsTitle: 'Handlungsempfehlungen',
   insightsSubtitle: 'KI-gestützte Hinweise für bessere Entscheidungen',
   insightsGeneratedLabel: 'Basierend auf aktuellen Plattformdaten',
-  insightsAssistantName: "De'ci AI",
+  insightsAssistantAvatarLabel: 'KI',
+  insightsAssistantName: "De'ci KI",
   insightsAssistantNote: 'Priorisiert Chancen, Risiken und nächste Schritte',
   insightsTypeChanceLabel: 'Chance',
   insightsTypeTrendLabel: 'Trend',
@@ -375,6 +377,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   insightsTitle: 'Action recommendations',
   insightsSubtitle: 'AI-guided signals for better decisions',
   insightsGeneratedLabel: 'Based on current platform data',
+  insightsAssistantAvatarLabel: 'AI',
   insightsAssistantName: "De'ci AI",
   insightsAssistantNote: 'Prioritizing opportunities, risks, and next steps',
   insightsTypeChanceLabel: 'Chance',
