@@ -17,8 +17,8 @@
   }
 
   .kpi-card--positive {
-    border-color: color-mix(in oklab, var(--c-primary) 32%, var(--surface-soft-border) 68%);
-    background: color-mix(in oklab, var(--c-primary) 6%, var(--surface-soft-bg) 94%);
+    border-color: color-mix(in oklab, var(--c-border) 72%, var(--c-info-soft) 28%);
+    background: color-mix(in oklab, var(--c-info-soft) 36%, var(--surface-soft-bg) 64%);
   }
 
   .kpi-card--plain {
@@ -41,7 +41,7 @@
     border-color: var(--surface-card-border-focus);
     box-shadow:
       var(--surface-card-shadow),
-      0 0 0 2px color-mix(in oklab, var(--c-primary) 18%, transparent);
+      0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
   }
 
   .kpi-card__top {

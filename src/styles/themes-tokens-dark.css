@@ -14,7 +14,7 @@
   --c-bg: #141a24;
   --c-bg-gradient: radial-gradient(
       circle at 20% 0%,
-      color-mix(in oklab, var(--c-primary) 35%, transparent),
+      color-mix(in oklab, var(--c-panel) 42%, transparent),
       transparent
     ),
     linear-gradient(180deg, #161c27 0%, #101621 100%);
@@ -77,9 +77,9 @@
   --btn-primary-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 30%, transparent);
   --btn-secondary-bg: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--c-panel) 94%, var(--c-primary) 6%),
-    color-mix(in oklab, var(--c-panel) 84%, var(--c-primary) 16%)
+    color-mix(in oklab, var(--c-panel) 92%, white 8%),
+    color-mix(in oklab, var(--c-panel) 86%, var(--c-ink) 14%)
   );
-  --btn-secondary-border: 1px solid color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
-  --btn-secondary-shadow-hover: 0 10px 22px color-mix(in oklab, var(--c-primary) 20%, transparent);
+  --btn-secondary-border: 1px solid color-mix(in oklab, var(--c-border) 82%, white 18%);
+  --btn-secondary-shadow-hover: 0 10px 22px color-mix(in oklab, var(--c-ink) 26%, transparent);
 }

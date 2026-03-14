@@ -8,8 +8,11 @@
     --card-border-focus: var(--surface-card-border-focus);
     --card-shadow-base: var(--surface-card-shadow);
     --card-shadow-hover: var(--surface-card-shadow-hover);
-    --card-focus-ring: 0 0 0 2px color-mix(in oklab, var(--c-primary) 18%, transparent);
-    --card-shadow-focus: var(--card-shadow-base), var(--card-focus-ring);
+    --card-focus-ring: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+    --card-shadow-focus:
+      var(--card-shadow-base),
+      var(--card-focus-ring),
+      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 42%, transparent);
     background: var(--surface-card-bg);
     border: 1px solid var(--card-border-base);
     border-radius: var(--radius-lg);
@@ -90,7 +93,7 @@
   .field:focus {
     outline: none;
     box-shadow: var(--control-focus-ring);
-    border-color: color-mix(in oklab, var(--c-primary) 58%, var(--c-border) 42%);
+    border-color: var(--control-border-hover);
   }
 
   .field[aria-invalid='true'] {

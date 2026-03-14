@@ -28,18 +28,18 @@
 
   .chip:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--c-border) 60%, var(--c-primary) 40%);
+    border-color: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
   }
 
   .chip:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 34%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
   }
 
   .chip.is-active {
-    border-color: color-mix(in oklab, var(--c-accent) 60%, var(--c-border) 40%);
-    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-accent) 18%);
-    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-accent) 20%, transparent);
+    border-color: color-mix(in oklab, var(--c-border) 68%, var(--c-accent) 32%);
+    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-accent) 12%);
+    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 10%, transparent);
   }
 
   html:not(.dark) .chip {
@@ -49,10 +49,14 @@
   }
 
   html:not(.dark) .chip.is-active {
-    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
-    border-color: color-mix(in oklab, var(--c-primary) 35%, var(--c-border) 65%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--c-panel) 94%, var(--c-surface) 6%),
+      color-mix(in oklab, var(--c-panel) 86%, var(--c-accent) 14%)
+    );
+    border-color: color-mix(in oklab, var(--c-border) 74%, var(--c-accent) 26%);
     color: var(--c-text);
-    box-shadow: 0 10px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
+    box-shadow: 0 10px 18px color-mix(in oklab, var(--c-ink) 8%, transparent);
   }
 
   .list-item {
@@ -86,14 +90,14 @@
 
   .panel-action:hover {
     color: var(--c-text);
-    border-color: color-mix(in oklab, var(--c-border) 60%, var(--c-primary) 40%);
+    border-color: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
     background: color-mix(in oklab, var(--c-surface) 85%, var(--c-border) 15%);
     transform: translateY(-1px);
   }
 
   .panel-action:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
   }
 
 
