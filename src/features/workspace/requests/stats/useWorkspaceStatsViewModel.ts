@@ -82,6 +82,26 @@ function exportCsv(rows: string[][], filename: string) {
   URL.revokeObjectURL(url);
 }
 
+function fillTemplate(template: string, values: Record<string, string>): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) => values[key] ?? match);
+}
+
+function formatCurrencyRangeCompact(params: {
+  min: number;
+  max: number;
+  locale: Locale;
+  localeTag: string;
+}): string {
+  const numberFormatter = new Intl.NumberFormat(params.localeTag, {
+    maximumFractionDigits: 0,
+  });
+  const minLabel = numberFormatter.format(params.min);
+  const maxLabel = numberFormatter.format(params.max);
+  return params.locale === 'de'
+    ? `${minLabel}\u2013${maxLabel} \u20ac`
+    : `\u20ac${minLabel}\u2013\u20ac${maxLabel}`;
+}
+
 type UseWorkspaceStatsViewModelParams = {
   locale: Locale;
   range: WorkspaceStatisticsRange;
@@ -430,11 +450,19 @@ export function useWorkspaceStatsViewModel({
         contextLabel: null,
         recommendedRangeLabel: null,
         marketAverageLabel: null,
+        recommendedPriceLabel: null,
+        smartSignalLabel: null,
+        smartSignalTone: null,
+        confidenceLabel: null,
+        confidenceDetailLabel: null,
         recommendedMin: null,
         recommendedMax: null,
         marketAverage: null,
         optimalMin: null,
         optimalMax: null,
+        smartRecommendedPrice: null,
+        analyzedRequestsCount: null,
+        confidenceLevel: null,
         optimalMinLabel: null,
         optimalMaxLabel: null,
         recommendation: null,
@@ -450,17 +478,6 @@ export function useWorkspaceStatsViewModel({
       source.category && source.city
         ? `${source.category} · ${source.city}`
         : source.city ?? source.category ?? null;
-    const recommendedRangeLabel =
-      typeof source.recommendedMin === 'number' &&
-      Number.isFinite(source.recommendedMin) &&
-      typeof source.recommendedMax === 'number' &&
-      Number.isFinite(source.recommendedMax)
-        ? `${formatCurrency.format(source.recommendedMin)} – ${formatCurrency.format(source.recommendedMax)}`
-        : null;
-    const marketAverageLabel =
-      typeof source.marketAverage === 'number' && Number.isFinite(source.marketAverage)
-        ? formatCurrency.format(source.marketAverage)
-        : null;
     const recommendedMin =
       typeof source.recommendedMin === 'number' && Number.isFinite(source.recommendedMin)
         ? source.recommendedMin
@@ -468,6 +485,20 @@ export function useWorkspaceStatsViewModel({
     const recommendedMax =
       typeof source.recommendedMax === 'number' && Number.isFinite(source.recommendedMax)
         ? source.recommendedMax
+        : null;
+    const recommendedRangeLabel =
+      recommendedMin !== null &&
+      recommendedMax !== null
+        ? formatCurrencyRangeCompact({
+            min: recommendedMin,
+            max: recommendedMax,
+            locale,
+            localeTag,
+          })
+        : null;
+    const marketAverageLabel =
+      typeof source.marketAverage === 'number' && Number.isFinite(source.marketAverage)
+        ? formatCurrency.format(source.marketAverage)
         : null;
     const marketAverage =
       typeof source.marketAverage === 'number' && Number.isFinite(source.marketAverage)
@@ -489,7 +520,55 @@ export function useWorkspaceStatsViewModel({
       optimalMaxValue !== null && Number.isFinite(optimalMaxValue)
         ? formatCurrency.format(optimalMaxValue)
         : null;
-    const recommendation = typeof source.recommendation === 'string' ? source.recommendation : null;
+    const smartRecommendedPrice =
+      typeof source.smartRecommendedPrice === 'number' && Number.isFinite(source.smartRecommendedPrice)
+        ? source.smartRecommendedPrice
+        : null;
+    const recommendedPriceLabel =
+      smartRecommendedPrice !== null
+        ? formatCurrency.format(smartRecommendedPrice)
+        : null;
+    const smartSignalTone = source.smartSignalTone ?? null;
+    const smartSignalLabel = smartRecommendedPrice !== null && smartSignalTone
+      ? fillTemplate(
+          smartSignalTone === 'visibility'
+            ? copy.priceSmartSignalVisibilityTemplate
+            : smartSignalTone === 'premium'
+              ? copy.priceSmartSignalPremiumTemplate
+              : copy.priceSmartSignalBalancedTemplate,
+          {
+            price: recommendedPriceLabel ?? '—',
+          },
+        )
+      : null;
+    const analyzedRequestsCount =
+      typeof source.analyzedRequestsCount === 'number' && Number.isFinite(source.analyzedRequestsCount)
+        ? source.analyzedRequestsCount
+        : null;
+    const confidenceLevel = source.confidenceLevel ?? null;
+    const confidenceLabel =
+      confidenceLevel === 'high'
+        ? copy.priceConfidenceHighLabel
+        : confidenceLevel === 'medium'
+          ? copy.priceConfidenceMediumLabel
+          : confidenceLevel === 'low'
+            ? copy.priceConfidenceLowLabel
+            : null;
+    const confidenceDetailLabel =
+      analyzedRequestsCount !== null && confidenceLevel
+        ? fillTemplate(copy.priceConfidenceBasedOnTemplate, {
+            count: formatNumber.format(analyzedRequestsCount),
+          })
+        : null;
+    const recommendation =
+      typeof source.recommendation === 'string' && source.recommendation.trim().length > 0
+        ? source.recommendation
+        : (recommendedRangeLabel
+          ? fillTemplate(copy.priceRecommendationFallbackTemplate, {
+              range: recommendedRangeLabel,
+              citySuffix: source.city ? ` in ${source.city}` : '',
+            })
+          : null);
     const profitPotentialScore =
       typeof source.profitPotentialScore === 'number' && Number.isFinite(source.profitPotentialScore)
         ? source.profitPotentialScore
@@ -510,11 +589,19 @@ export function useWorkspaceStatsViewModel({
       contextLabel,
       recommendedRangeLabel,
       marketAverageLabel,
+      recommendedPriceLabel,
+      smartSignalLabel,
+      smartSignalTone,
+      confidenceLabel,
+      confidenceDetailLabel,
       recommendedMin,
       recommendedMax,
       marketAverage,
       optimalMin: optimalMinValue,
       optimalMax: optimalMaxValue,
+      smartRecommendedPrice,
+      analyzedRequestsCount,
+      confidenceLevel,
       optimalMinLabel,
       optimalMaxLabel,
       recommendation,
@@ -522,7 +609,24 @@ export function useWorkspaceStatsViewModel({
       profitPotentialStatus,
       profitPotentialLabel,
     };
-  }, [copy.priceProfitHighLabel, copy.priceProfitLowLabel, copy.priceProfitMediumLabel, data?.priceIntelligence, formatCurrency]);
+  }, [
+    copy.priceConfidenceBasedOnTemplate,
+    copy.priceConfidenceHighLabel,
+    copy.priceConfidenceLowLabel,
+    copy.priceConfidenceMediumLabel,
+    copy.priceProfitHighLabel,
+    copy.priceProfitLowLabel,
+    copy.priceProfitMediumLabel,
+    copy.priceRecommendationFallbackTemplate,
+    copy.priceSmartSignalBalancedTemplate,
+    copy.priceSmartSignalPremiumTemplate,
+    copy.priceSmartSignalVisibilityTemplate,
+    data?.priceIntelligence,
+    formatCurrency,
+    formatNumber,
+    locale,
+    localeTag,
+  ]);
 
   const funnel = React.useMemo<WorkspaceStatisticsFunnelItemView[]>(() => {
     if (!data) return [];

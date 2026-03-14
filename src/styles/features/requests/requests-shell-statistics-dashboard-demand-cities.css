@@ -21,7 +21,7 @@
 
   .workspace-statistics-demand__track {
     height: 8px;
-    border-radius: 999px;
+    border-radius: var(--workspace-statistics-chip-radius);
     border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
     overflow: hidden;
@@ -55,7 +55,7 @@
 
   .workspace-statistics__cities-filter-icon {
     position: absolute;
-    left: 12px;
+    left: var(--space-3);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -65,7 +65,7 @@
 
   .workspace-statistics__cities-filter-input.field {
     height: 38px;
-    padding-left: 40px;
+    padding-left: calc(var(--space-8) + var(--space-2));
   }
 
   .workspace-statistics__demand-pagination,
@@ -136,7 +136,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: var(--space-1-5);
     min-width: 0;
   }
 
@@ -222,7 +222,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: var(--space-1);
     min-height: var(--workspace-statistics-chip-height);
     padding: 0 var(--workspace-statistics-chip-pad-inline);
     border-radius: var(--workspace-statistics-chip-radius);

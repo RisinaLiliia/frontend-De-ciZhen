@@ -24,9 +24,20 @@ export function StatisticsOpportunityPanel({
   locale: Locale;
   opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'];
 }) {
-  const analysisItem = React.useMemo(
-    () => selectOpportunityAnalysisItem(opportunityRadar),
+  const defaultRank = React.useMemo(
+    () => selectOpportunityAnalysisItem(opportunityRadar)?.rank ?? null,
     [opportunityRadar],
+  );
+  const [selectedRank, setSelectedRank] = React.useState<typeof defaultRank>(defaultRank);
+
+  React.useEffect(() => {
+    if (selectedRank !== null && opportunityRadar.some((item) => item.rank === selectedRank)) return;
+    setSelectedRank(defaultRank);
+  }, [defaultRank, opportunityRadar, selectedRank]);
+
+  const analysisItem = React.useMemo(
+    () => selectOpportunityAnalysisItem(opportunityRadar, selectedRank),
+    [opportunityRadar, selectedRank],
   );
   const topCards = React.useMemo(
     () => selectOpportunityTopCards({ opportunityRadar, analysisItem }),
@@ -51,7 +62,12 @@ export function StatisticsOpportunityPanel({
         <p className="workspace-statistics__empty">{copy.opportunityEmpty}</p>
       ) : (
         <ol className="workspace-statistics-opportunity__list" aria-label={copy.opportunityTitle}>
-          <OpportunityTopCards copy={copy} locale={locale} items={topCards} />
+          <OpportunityTopCards
+            copy={copy}
+            locale={locale}
+            items={topCards}
+            onSelect={setSelectedRank}
+          />
           {analysisItem ? (
             <li className="workspace-statistics-opportunity__item-wrap is-last">
               <OpportunityAnalysisCard

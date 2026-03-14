@@ -1,6 +1,7 @@
 'use client';
 
 import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import { StatisticsSignalMeter } from '../components/StatisticsSignalMeter';
 
 export function StatisticsPricePanel({
   copy,
@@ -48,20 +49,54 @@ export function StatisticsPricePanel({
   const optimalLeftPercent = toPercent(optimalMinValue);
   const optimalRightPercent = toPercent(optimalMaxValue);
   const optimalWidthPercent = Math.max(0, optimalRightPercent - optimalLeftPercent);
+  const optimalCenterPercent = optimalLeftPercent + (optimalWidthPercent / 2);
   const averageMarkerPercent = toPercent(averageValue);
+  const optimalRangeLabel =
+    (priceIntelligence.optimalMinLabel && priceIntelligence.optimalMaxLabel)
+      ? `${priceIntelligence.optimalMinLabel} – ${priceIntelligence.optimalMaxLabel}`
+      : priceIntelligence.recommendedRangeLabel ?? '—';
+  const endpointMinLabel = priceIntelligence.recommendedRangeLabel?.split('–')[0]?.trim() ?? '—';
+  const endpointMaxLabel = priceIntelligence.recommendedRangeLabel?.split('–')[1]?.trim() ?? '—';
 
-  const tickLabels = hasRangeValues
+  const pricePositionTicks = hasRangeValues
     ? [
-        { key: 'min', label: priceIntelligence.recommendedRangeLabel?.split('–')[0]?.trim() ?? '—', percent: 0 },
-        { key: 'avg', label: priceIntelligence.marketAverageLabel ?? '—', percent: averageMarkerPercent },
-        { key: 'max', label: priceIntelligence.recommendedRangeLabel?.split('–')[1]?.trim() ?? '—', percent: 100 },
-      ]
+        { key: 'min', label: minValue === null ? '—' : `${minValue}`, formatted: endpointMinLabel, percent: 0 },
+        {
+          key: 'optimal-min',
+          label: optimalMinValue === null ? '—' : `${optimalMinValue}`,
+          formatted: priceIntelligence.optimalMinLabel ?? endpointMinLabel,
+          percent: optimalLeftPercent,
+        },
+        {
+          key: 'avg',
+          label: averageValue === null ? '—' : `${averageValue}`,
+          formatted: priceIntelligence.marketAverageLabel ?? '—',
+          percent: averageMarkerPercent,
+        },
+        {
+          key: 'optimal-max',
+          label: optimalMaxValue === null ? '—' : `${optimalMaxValue}`,
+          formatted: priceIntelligence.optimalMaxLabel ?? endpointMaxLabel,
+          percent: optimalRightPercent,
+        },
+        { key: 'max', label: maxValue === null ? '—' : `${maxValue}`, formatted: endpointMaxLabel, percent: 100 },
+      ].filter((tick, index, collection) => {
+        return collection.findIndex((candidate) => candidate.label === tick.label && candidate.formatted === tick.formatted) === index;
+      })
     : [];
   const profitScore =
     typeof priceIntelligence.profitPotentialScore === 'number' && Number.isFinite(priceIntelligence.profitPotentialScore)
       ? Math.max(0, Math.min(10, priceIntelligence.profitPotentialScore))
       : null;
   const profitFillPercent = profitScore === null ? 0 : Math.max(0, Math.min(100, profitScore * 10));
+  const profitSemanticTone =
+    priceIntelligence.profitPotentialStatus === 'high'
+      ? 'very-high'
+      : priceIntelligence.profitPotentialStatus === 'medium'
+        ? 'high'
+        : priceIntelligence.profitPotentialStatus === 'low'
+          ? 'low'
+          : 'balanced';
 
   return (
     <section className="panel requests-stats-chart workspace-statistics-price">
@@ -81,59 +116,122 @@ export function StatisticsPricePanel({
               {priceIntelligence.recommendedRangeLabel ?? '—'}
             </strong>
           </article>
-          <p className="workspace-statistics-price__average">
-            {copy.priceMarketAverageLabel} <strong>{priceIntelligence.marketAverageLabel ?? '—'}</strong>
-          </p>
-          <section className="workspace-statistics-price__profit" aria-label={copy.priceProfitPotentialLabel}>
-            <div className="workspace-statistics-price__profit-head">
-              <span>{copy.priceProfitPotentialLabel}</span>
-              <strong>{profitScore === null ? '— / 10' : `${profitScore.toFixed(1)} / 10`}</strong>
-            </div>
-            <div className="workspace-statistics-price__profit-track" aria-hidden="true">
-              <span
-                className="workspace-statistics-price__profit-fill"
-                style={{
-                  width: `${profitFillPercent}%`,
-                }}
-              />
-            </div>
-            {priceIntelligence.profitPotentialLabel ? (
-              <p className="workspace-statistics-price__profit-label">{priceIntelligence.profitPotentialLabel}</p>
-            ) : null}
-          </section>
           {hasRangeValues ? (
-            <div className="workspace-statistics-price__bar-wrap" aria-label={copy.priceRadarLabel}>
-              <div className="workspace-statistics-price__bar">
-                <span
-                  className="workspace-statistics-price__bar-sweet-spot"
-                  style={{
-                    left: `${optimalLeftPercent}%`,
-                    width: `${optimalWidthPercent}%`,
-                  }}
-                />
-                <span className="workspace-statistics-price__bar-sweet-label">{copy.priceSweetSpotLabel}</span>
-                <span
-                  className="workspace-statistics-price__bar-average-marker"
-                  style={{
-                    left: `${averageMarkerPercent}%`,
-                  }}
-                />
+            <section className="workspace-statistics-price__position" aria-label={copy.priceOpportunityZoneLabel}>
+              <div className="workspace-statistics-price__position-head">
+                <span className="workspace-statistics-price__position-label">{copy.priceOpportunityZoneLabel}</span>
+                <strong className="workspace-statistics-price__position-range">{optimalRangeLabel}</strong>
               </div>
-              <ol className="workspace-statistics-price__ticks" aria-hidden="true">
-                {tickLabels.map((tick) => (
-                  <li
-                    key={tick.key}
-                    className="workspace-statistics-price__tick"
+              <p className="workspace-statistics-price__position-hint">{copy.priceOpportunityHint}</p>
+              <div className="workspace-statistics-price__position-scale" aria-hidden="true">
+                <span>{endpointMinLabel}</span>
+                <span>{endpointMaxLabel}</span>
+              </div>
+              <div className="workspace-statistics-price__bar-wrap" aria-label={copy.priceRadarLabel}>
+                <div className="workspace-statistics-price__bar">
+                  <span className="workspace-statistics-price__bar-base-line" />
+                  {pricePositionTicks.map((tick) => (
+                    <span
+                      key={tick.key}
+                      className={`workspace-statistics-price__bar-node workspace-statistics-price__bar-node--${tick.key}`}
+                      style={{
+                        left: `${tick.percent}%`,
+                      }}
+                    />
+                  ))}
+                  <span
+                    className="workspace-statistics-price__bar-sweet-spot"
                     style={{
-                      left: `${tick.percent}%`,
+                      left: `${optimalLeftPercent}%`,
+                      width: `${optimalWidthPercent}%`,
+                    }}
+                  />
+                  <span
+                    className="workspace-statistics-price__bar-sweet-label"
+                    style={{
+                      left: `${optimalCenterPercent}%`,
                     }}
                   >
-                    <span>{tick.label}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
+                    <span>{copy.priceRecommendationLabel}</span>
+                    <strong>{optimalRangeLabel}</strong>
+                  </span>
+                  <span
+                    className="workspace-statistics-price__bar-average-marker"
+                    style={{
+                      left: `${averageMarkerPercent}%`,
+                    }}
+                  />
+                </div>
+                <ol className="workspace-statistics-price__ticks" aria-hidden="true">
+                  {pricePositionTicks.map((tick) => (
+                    <li
+                      key={tick.key}
+                      className={`workspace-statistics-price__tick workspace-statistics-price__tick--${tick.key}`}
+                      style={{
+                        left: `${tick.percent}%`,
+                      }}
+                    >
+                      <span>{tick.formatted}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <div className="workspace-statistics-price__position-legend" aria-hidden="true">
+                <span>{copy.pricePositionLowLabel}</span>
+                <span>{copy.priceRecommendationLabel}</span>
+                <span>{copy.pricePositionHighLabel}</span>
+              </div>
+            </section>
           ) : null}
+          {(priceIntelligence.smartSignalLabel || priceIntelligence.recommendedPriceLabel || priceIntelligence.confidenceLabel) ? (
+            <section className="workspace-statistics-price__signal-card" aria-label={copy.priceSmartSignalLabel}>
+              <div className="workspace-statistics-price__signal-head">
+                <span className="workspace-statistics-price__signal-label">{copy.priceSmartSignalLabel}</span>
+                {priceIntelligence.recommendedPriceLabel ? (
+                  <strong className="workspace-statistics-price__signal-value">
+                    {priceIntelligence.recommendedPriceLabel}
+                  </strong>
+                ) : null}
+              </div>
+              {priceIntelligence.smartSignalLabel ? (
+                <p className="workspace-statistics-price__signal-body">{priceIntelligence.smartSignalLabel}</p>
+              ) : null}
+              {(priceIntelligence.confidenceLabel || priceIntelligence.confidenceDetailLabel) ? (
+                <div className="workspace-statistics-price__confidence">
+                  {priceIntelligence.confidenceLabel ? (
+                    <span className="workspace-statistics-price__confidence-badge">
+                      {copy.priceConfidenceLabel}: <strong>{priceIntelligence.confidenceLabel}</strong>
+                    </span>
+                  ) : null}
+                  {priceIntelligence.confidenceDetailLabel ? (
+                    <span className="workspace-statistics-price__confidence-detail">
+                      {priceIntelligence.confidenceDetailLabel}
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
+            </section>
+          ) : null}
+          <div className="workspace-statistics-price__summary-grid">
+            <article className="workspace-statistics-price__summary-card workspace-statistics-price__summary-card--average">
+              <span className="workspace-statistics-price__summary-label">{copy.priceMarketAverageLabel}</span>
+              <strong className="workspace-statistics-price__summary-value">{priceIntelligence.marketAverageLabel ?? '—'}</strong>
+            </article>
+            <section
+              className="workspace-statistics-price__profit workspace-statistics-price__summary-card"
+              aria-label={copy.priceProfitPotentialLabel}
+            >
+              <StatisticsSignalMeter
+                className="workspace-statistics-price__profit-signal"
+                label={copy.priceProfitPotentialLabel}
+                value={profitScore === null ? '— / 10' : `${profitScore.toFixed(1)} / 10`}
+                progressPercent={profitFillPercent}
+                semanticLabel={priceIntelligence.profitPotentialLabel}
+                semanticTone={profitSemanticTone}
+                semanticAlign="start"
+              />
+            </section>
+          </div>
         </div>
       )}
     </section>

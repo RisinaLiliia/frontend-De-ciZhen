@@ -47,7 +47,7 @@ function makeOpportunityItem(overrides: Partial<OpportunityItem> = {}): Opportun
 }
 
 describe('opportunity.utils', () => {
-  it('selects analysis item by rank=1 and top cards as rank 3 + rank 2', () => {
+  it('selects analysis item by rank=1 and top cards as the remaining top ranked items', () => {
     const items: OpportunityItem[] = [
       makeOpportunityItem({ rank: 2, cityId: 'city-2', city: 'Karlsruhe' }),
       makeOpportunityItem({ rank: 3, cityId: 'city-3', city: 'Mannheim' }),
@@ -58,7 +58,21 @@ describe('opportunity.utils', () => {
     expect(analysisItem?.rank).toBe(1);
 
     const topCards = selectOpportunityTopCards({ opportunityRadar: items, analysisItem });
-    expect(topCards.map((item) => item.rank)).toEqual([3, 2]);
+    expect(topCards.map((item) => item.rank)).toEqual([2, 3]);
+  });
+
+  it('supports switching the analysis item to another top-ranked card', () => {
+    const items: OpportunityItem[] = [
+      makeOpportunityItem({ rank: 1, cityId: 'city-1', city: 'Berlin' }),
+      makeOpportunityItem({ rank: 2, cityId: 'city-2', city: 'Karlsruhe' }),
+      makeOpportunityItem({ rank: 3, cityId: 'city-3', city: 'Mannheim' }),
+    ];
+
+    const analysisItem = selectOpportunityAnalysisItem(items, 2);
+    expect(analysisItem?.rank).toBe(2);
+
+    const topCards = selectOpportunityTopCards({ opportunityRadar: items, analysisItem });
+    expect(topCards.map((item) => item.rank)).toEqual([1, 3]);
   });
 
   it('builds fallback top cards when preferred ranks are missing', () => {

@@ -1,11 +1,15 @@
 'use client';
 
+import type * as React from 'react';
+
 type StatisticsKiCardProps = {
   avatarLabel: string;
   name: string;
   role: string;
   stamp?: string | null;
   description?: string | null;
+  actions?: React.ReactNode;
+  details?: React.ReactNode;
   className?: string;
   metaStamp?: boolean;
   variant?: 'default' | 'plain';
@@ -17,6 +21,8 @@ export function StatisticsKiCard({
   role,
   stamp,
   description,
+  actions,
+  details,
   className,
   metaStamp = false,
   variant = 'default',
@@ -45,6 +51,8 @@ export function StatisticsKiCard({
         </span>
       </div>
       {description ? <p className="workspace-statistics-ki__text">{description}</p> : null}
+      {actions ? <div className="workspace-statistics-ki__actions">{actions}</div> : null}
+      {details ? <div className="workspace-statistics-ki__details">{details}</div> : null}
     </section>
   );
 }

@@ -10,6 +10,8 @@ type OpportunitySemanticKey = OpportunityMetric['semanticKey'];
 type OpportunitySemanticTone = OpportunityMetric['semanticTone'];
 
 type PriceIntelligence = NonNullable<WorkspaceStatisticsOverviewSourceDto['priceIntelligence']>;
+type PriceSignalTone = NonNullable<PriceIntelligence['smartSignalTone']>;
+type PriceConfidenceLevel = NonNullable<PriceIntelligence['confidenceLevel']>;
 
 function clampUnit(value: number): number {
   if (!Number.isFinite(value)) return 0;
@@ -29,6 +31,35 @@ function roundRatio(value: number): number {
 function roundToNearestStep(value: number, step: number): number {
   if (!Number.isFinite(value)) return 0;
   return Math.max(step, Math.round(value / step) * step);
+}
+
+function resolvePriceSmartSignalTone(params: {
+  smartRecommendedPrice: number | null;
+  marketAverage: number | null;
+}): PriceSignalTone | null {
+  if (params.smartRecommendedPrice === null || params.marketAverage === null) return null;
+  const delta = params.smartRecommendedPrice - params.marketAverage;
+  if (delta <= -10) return 'visibility';
+  if (delta >= 10) return 'premium';
+  return 'balanced';
+}
+
+function resolvePriceConfidenceLevel(analyzedRequestsCount: number | null): PriceConfidenceLevel | null {
+  if (analyzedRequestsCount === null || analyzedRequestsCount <= 0) return null;
+  if (analyzedRequestsCount >= 100) return 'high';
+  if (analyzedRequestsCount >= 40) return 'medium';
+  return 'low';
+}
+
+function resolveProfitPotentialStatus(score: number | null): PriceIntelligence['profitPotentialStatus'] {
+  if (score === null) return null;
+  if (score >= 7.5) return 'high';
+  if (score >= 5) return 'medium';
+  return 'low';
+}
+
+function coalesceNullable<T>(preferred: T | null | undefined, fallback: T | null): T | null {
+  return preferred ?? fallback;
 }
 
 function resolveOpportunityStatus(score: number): OpportunityStatus {
@@ -220,6 +251,10 @@ function buildPriceIntelligence(payload: WorkspaceStatisticsOverviewSourceDto, o
       marketAverage: null,
       optimalMin: null,
       optimalMax: null,
+      smartRecommendedPrice: null,
+      smartSignalTone: null,
+      analyzedRequestsCount: topOpportunity?.demand ?? topCity?.requestCount ?? null,
+      confidenceLevel: resolvePriceConfidenceLevel(topOpportunity?.demand ?? topCity?.requestCount ?? null),
       recommendation: null,
       profitPotentialScore: null,
       profitPotentialStatus: null,
@@ -230,8 +265,20 @@ function buildPriceIntelligence(payload: WorkspaceStatisticsOverviewSourceDto, o
   const recommendedMax = roundToNearestStep(avgRevenue * 1.15, 5);
   const marketAverage = roundToNearestStep(avgRevenue, 5);
   const rangeSpan = Math.max(0, recommendedMax - recommendedMin);
-  const optimalMin = rangeSpan > 0 ? Math.max(0, Math.round(recommendedMin + rangeSpan * 0.35)) : null;
-  const optimalMax = rangeSpan > 0 ? Math.max(0, Math.round(recommendedMin + rangeSpan * 0.7)) : null;
+  const optimalMin = rangeSpan > 0 ? roundToNearestStep(recommendedMin + rangeSpan * 0.35, 5) : null;
+  const optimalMax = rangeSpan > 0 ? roundToNearestStep(recommendedMin + rangeSpan * 0.7, 5) : null;
+  const smartRecommendedPrice =
+    optimalMin !== null && optimalMax !== null
+      ? roundToNearestStep((optimalMin + optimalMax) / 2, 5)
+      : null;
+  const analyzedRequestsCount = topOpportunity?.demand ?? topCity?.requestCount ?? null;
+  const confidenceLevel = resolvePriceConfidenceLevel(analyzedRequestsCount);
+  const smartSignalTone = resolvePriceSmartSignalTone({
+    smartRecommendedPrice,
+    marketAverage,
+  });
+  const profitPotentialScore = topOpportunity?.score ?? null;
+  const profitPotentialStatus = resolveProfitPotentialStatus(profitPotentialScore);
 
   return {
     citySlug: topCity?.citySlug ?? null,
@@ -243,9 +290,13 @@ function buildPriceIntelligence(payload: WorkspaceStatisticsOverviewSourceDto, o
     marketAverage,
     optimalMin,
     optimalMax,
+    smartRecommendedPrice,
+    smartSignalTone,
+    analyzedRequestsCount,
+    confidenceLevel,
     recommendation: null,
-    profitPotentialScore: null,
-    profitPotentialStatus: null,
+    profitPotentialScore,
+    profitPotentialStatus,
   };
 }
 
@@ -261,9 +312,40 @@ export function ensureStatisticsOpportunityContract(
     ? payload.opportunityRadar ?? []
     : buildOpportunityRadar(payload);
 
+  const derivedPriceIntelligence = buildPriceIntelligence(payload, opportunityRadar);
   const priceIntelligence = hasPriceIntelligence
-    ? (payload.priceIntelligence as PriceIntelligence)
-    : buildPriceIntelligence(payload, opportunityRadar);
+    ? {
+        ...(payload.priceIntelligence as PriceIntelligence),
+        citySlug: coalesceNullable(payload.priceIntelligence?.citySlug, derivedPriceIntelligence.citySlug),
+        city: coalesceNullable(payload.priceIntelligence?.city, derivedPriceIntelligence.city),
+        categoryKey: coalesceNullable(payload.priceIntelligence?.categoryKey, derivedPriceIntelligence.categoryKey),
+        category: coalesceNullable(payload.priceIntelligence?.category, derivedPriceIntelligence.category),
+        recommendedMin: coalesceNullable(payload.priceIntelligence?.recommendedMin, derivedPriceIntelligence.recommendedMin),
+        recommendedMax: coalesceNullable(payload.priceIntelligence?.recommendedMax, derivedPriceIntelligence.recommendedMax),
+        marketAverage: coalesceNullable(payload.priceIntelligence?.marketAverage, derivedPriceIntelligence.marketAverage),
+        optimalMin: coalesceNullable(payload.priceIntelligence?.optimalMin, derivedPriceIntelligence.optimalMin),
+        optimalMax: coalesceNullable(payload.priceIntelligence?.optimalMax, derivedPriceIntelligence.optimalMax),
+        smartRecommendedPrice: coalesceNullable(
+          payload.priceIntelligence?.smartRecommendedPrice,
+          derivedPriceIntelligence.smartRecommendedPrice,
+        ),
+        smartSignalTone: coalesceNullable(payload.priceIntelligence?.smartSignalTone, derivedPriceIntelligence.smartSignalTone),
+        analyzedRequestsCount: coalesceNullable(
+          payload.priceIntelligence?.analyzedRequestsCount,
+          derivedPriceIntelligence.analyzedRequestsCount,
+        ),
+        confidenceLevel: coalesceNullable(payload.priceIntelligence?.confidenceLevel, derivedPriceIntelligence.confidenceLevel),
+        recommendation: coalesceNullable(payload.priceIntelligence?.recommendation, derivedPriceIntelligence.recommendation),
+        profitPotentialScore: coalesceNullable(
+          payload.priceIntelligence?.profitPotentialScore,
+          derivedPriceIntelligence.profitPotentialScore,
+        ),
+        profitPotentialStatus: coalesceNullable(
+          payload.priceIntelligence?.profitPotentialStatus,
+          derivedPriceIntelligence.profitPotentialStatus,
+        ),
+      }
+    : derivedPriceIntelligence;
 
   return {
     ...payload,

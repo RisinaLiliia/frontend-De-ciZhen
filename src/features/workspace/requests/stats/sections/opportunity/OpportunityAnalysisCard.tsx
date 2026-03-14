@@ -1,5 +1,4 @@
 'use client';
-import Link from 'next/link';
 import * as React from 'react';
 import {
   IconTrophyBronze,
@@ -8,13 +7,14 @@ import {
 } from '@/components/ui/icons/icons';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../../useWorkspaceStatisticsModel';
+import { StatisticsSignalMeter } from '../../components/StatisticsSignalMeter';
+import { StatisticsStatusBadge } from '../../components/StatisticsStatusBadge';
 import type { OpportunityAxis, OpportunityItem } from './opportunity.utils';
 import {
   buildOpportunityRadarAxisEndpoints,
   buildOpportunityRadarAxisValueLabelPositions,
   buildOpportunityRadarPoints,
   buildOpportunityRadarSmoothPath,
-  opportunityCardAriaLabel,
   opportunityStatusClassName,
   opportunityStatusLabel,
 } from './opportunity.utils';
@@ -47,14 +47,13 @@ export function OpportunityAnalysisCard({
   const radarRingLevels = React.useMemo(() => [2.5, 5, 7.5, 10], []);
   const radarAxisEndpoints = React.useMemo(() => buildOpportunityRadarAxisEndpoints(), []);
   const rankTone = item.rank === 1 ? 'gold' : item.rank === 2 ? 'silver' : 'bronze';
-  const statusClass = opportunityStatusClassName(item.status);
+  const featuredStatus = item.rank === 1 && item.status === 'balanced' ? 'good' : item.status;
+  const statusClass = opportunityStatusClassName(featuredStatus);
 
   return (
-    <Link
-      href={item.href}
-      prefetch={false}
-      className={`stat-card stat-link workspace-statistics-opportunity__item workspace-statistics-opportunity__item--analysis is-${item.tone}`.trim()}
-      aria-label={opportunityCardAriaLabel({ item, copy, locale })}
+    <article
+      className={`stat-card workspace-statistics-opportunity__item workspace-statistics-opportunity__item--analysis is-${item.tone}`.trim()}
+      aria-label={locale === 'de' ? `Detailanalyse für ${item.city}` : `Detailed analysis for ${item.city}`}
     >
       <div className="workspace-statistics-opportunity__analysis-overview">
         <div className="workspace-statistics-opportunity__analysis-identity">
@@ -72,24 +71,23 @@ export function OpportunityAnalysisCard({
           className="workspace-statistics-opportunity__analysis-score"
           aria-label={`${copy.opportunityScoreLabel}: ${item.score.toFixed(1)} / 10`}
         >
-          <div className="workspace-statistics-opportunity__score-head">
-            <span>{copy.opportunityScoreLabel}</span>
-            <strong>{item.score.toFixed(1)} / 10</strong>
-          </div>
-          <div className="workspace-statistics-demand__track workspace-statistics-opportunity__score-track" aria-hidden="true">
-            <span
-              className="workspace-statistics-demand__fill workspace-statistics-opportunity__score-fill"
-              style={{ width: `${Math.max(0, Math.min(100, item.score * 10))}%` }}
-            />
-          </div>
+          <StatisticsSignalMeter
+            className="workspace-statistics-opportunity__score"
+            label={copy.opportunityScoreLabel}
+            value={`${item.score.toFixed(1)} / 10`}
+            progressPercent={item.score * 10}
+          />
         </div>
       </div>
 
+      <StatisticsStatusBadge
+        className="workspace-statistics-opportunity__status workspace-statistics-opportunity__status--analysis"
+        tone={statusClass}
+        label={opportunityStatusLabel(featuredStatus, locale)}
+      />
+
       <div className="workspace-statistics-opportunity__analysis-body">
         <div className="workspace-statistics-opportunity__radar-block">
-          <span className={`workspace-statistics-opportunity__status workspace-statistics-opportunity__status--radar is-${statusClass}`.trim()}>
-            {opportunityStatusLabel(item.status, locale)}
-          </span>
           <div className="workspace-statistics-opportunity__radar" aria-hidden="true">
             <svg viewBox="0 0 180 180" role="presentation">
               {radarRingLevels.map((level) => (
@@ -147,19 +145,14 @@ export function OpportunityAnalysisCard({
         <ul className="workspace-statistics-opportunity__analysis-axes">
           {axes.map((axis) => (
             <li key={axis.key}>
-              <div className="workspace-statistics-opportunity__axis-row">
-                <span>{axis.label}</span>
-                <strong>{axis.value.toFixed(1)} / 10</strong>
-              </div>
-              <div className="workspace-statistics-demand__track workspace-statistics-opportunity__axis-track" aria-hidden="true">
-                <span
-                  className="workspace-statistics-demand__fill workspace-statistics-opportunity__axis-fill"
-                  style={{ width: `${Math.max(0, Math.min(100, axis.value * 10))}%` }}
-                />
-              </div>
-              <em className={`workspace-statistics-opportunity__axis-semantic is-${axis.semanticTone}`.trim()}>
-                {axis.semanticLabel}
-              </em>
+              <StatisticsSignalMeter
+                className="workspace-statistics-opportunity__axis-signal"
+                label={axis.label}
+                value={`${axis.value.toFixed(1)} / 10`}
+                progressPercent={axis.value * 10}
+                semanticLabel={axis.semanticLabel}
+                semanticTone={axis.semanticTone}
+              />
             </li>
           ))}
         </ul>
@@ -183,6 +176,6 @@ export function OpportunityAnalysisCard({
           <dd>{item.marketBalanceRatio === null ? '—' : item.marketBalanceRatio.toFixed(2)}</dd>
         </div>
       </dl>
-    </Link>
+    </article>
   );
 }

@@ -78,16 +78,32 @@ export type WorkspaceStatisticsCopy = {
   priceSubtitle: string;
   priceGeneratedLabel: string;
   priceRadarLabel: string;
+  pricePositionLabel: string;
+  priceOpportunityZoneLabel: string;
+  priceOpportunityHint: string;
+  pricePositionLowLabel: string;
+  pricePositionHighLabel: string;
   priceMarketAverageLabel: string;
   priceRecommendedLabel: string;
   priceRecommendationLabel: string;
   priceSweetSpotLabel: string;
+  priceSmartSignalLabel: string;
+  priceSmartSignalVisibilityTemplate: string;
+  priceSmartSignalBalancedTemplate: string;
+  priceSmartSignalPremiumTemplate: string;
+  priceConfidenceLabel: string;
+  priceConfidenceHighLabel: string;
+  priceConfidenceMediumLabel: string;
+  priceConfidenceLowLabel: string;
+  priceConfidenceBasedOnTemplate: string;
   priceProfitPotentialLabel: string;
   priceProfitHighLabel: string;
   priceProfitMediumLabel: string;
   priceProfitLowLabel: string;
   priceStrategyButtonLabel: string;
-  priceStrategyHideButtonLabel: string;
+  priceStrategyCloseLabel: string;
+  priceStrategyLoadingLabel: string;
+  priceStrategyLoadingBody: string;
   priceStrategyTitle: string;
   priceStrategyWhyLabel: string;
   priceStrategyWhyTemplate: string;
@@ -97,6 +113,7 @@ export type WorkspaceStatisticsCopy = {
   priceStrategyActionTemplate: string;
   priceStrategyPremiumLabel: string;
   priceStrategyPremiumTemplate: string;
+  priceRecommendationFallbackTemplate: string;
   priceSignalLabel: string;
   priceGuidanceNote: string;
   priceNoData: string;
@@ -121,6 +138,7 @@ export type WorkspaceStatisticsCopy = {
   growthSubtitle: string;
   growthRecommendedPrefix: string;
   growthFeaturedBadge: string;
+  growthLocalAdsCta: string;
   kpiSuccessRateLabel: string;
   kpiNoCompletedJobs: string;
   kpiActiveProvidersLabel: string;
@@ -271,16 +289,32 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   priceSubtitle: 'Empfohlene Preisbereiche',
   priceGeneratedLabel: 'Basierend auf aktuellen Auftragsdaten',
   priceRadarLabel: 'Marktpreis-Radar',
+  pricePositionLabel: 'Empfohlener Preisbereich',
+  priceOpportunityZoneLabel: 'Opportunity Zone',
+  priceOpportunityHint: 'Empfohlener Bereich basiert auf aktuellen Abschlussraten.',
+  pricePositionLowLabel: 'Niedrig',
+  pricePositionHighLabel: 'Hoch',
   priceMarketAverageLabel: 'Marktdurchschnitt',
   priceRecommendedLabel: 'Empfohlener Bereich',
   priceRecommendationLabel: 'Empfehlung',
   priceSweetSpotLabel: 'Optimale Zone',
+  priceSmartSignalLabel: 'Smart Pricing Signal',
+  priceSmartSignalVisibilityTemplate: 'Preis leicht unter dem Durchschnitt: nahe {price} erhöht aktuell die Sichtbarkeit.',
+  priceSmartSignalBalancedTemplate: 'Beste Abschlussrate aktuell nahe {price}.',
+  priceSmartSignalPremiumTemplate: 'Ein Preis nahe {price} funktioniert, wenn dein Profil klaren Premium-Mehrwert zeigt.',
+  priceConfidenceLabel: 'KI Confidence',
+  priceConfidenceHighLabel: 'Hoch',
+  priceConfidenceMediumLabel: 'Mittel',
+  priceConfidenceLowLabel: 'Niedrig',
+  priceConfidenceBasedOnTemplate: 'Basierend auf {count} analysierten Aufträgen',
   priceProfitPotentialLabel: 'Profit Potential',
   priceProfitHighLabel: 'Sehr gute Marktchance',
   priceProfitMediumLabel: 'Solide Marktchance',
   priceProfitLowLabel: 'Vorsichtige Marktchance',
-  priceStrategyButtonLabel: 'Preisstrategie anzeigen',
-  priceStrategyHideButtonLabel: 'Strategie ausblenden',
+  priceStrategyButtonLabel: 'Preisstrategie ansehen',
+  priceStrategyCloseLabel: 'Strategie schließen',
+  priceStrategyLoadingLabel: "De'ci KI analysiert aktuelle Marktdaten…",
+  priceStrategyLoadingBody: 'Die Preisstrategie wird auf Basis von Nachfrage, Wettbewerb und Abschlussraten vorbereitet.',
   priceStrategyTitle: 'Preisstrategie',
   priceStrategyWhyLabel: 'Warum dieser Bereich funktioniert',
   priceStrategyWhyTemplate: '{range} erzielt aktuell die höchste Abschlussrate{citySuffix}.',
@@ -293,6 +327,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   priceStrategyPremiumLabel: 'Wann höher funktionieren kann',
   priceStrategyPremiumTemplate:
     'Ein Preis oberhalb des empfohlenen Korridors funktioniert besser, wenn dein Profil starke Bewertungen, schnelle Antwortzeiten und klaren Premium-Service zeigt.',
+  priceRecommendationFallbackTemplate: 'Der Preisbereich {range} zeigt aktuell die höchste Abschlussrate{citySuffix}.',
   priceSignalLabel: 'Preis Signal',
   priceGuidanceNote: 'Orientierung für neue Angebote im gewählten Zeitraum.',
   priceNoData: 'Noch keine Preisdaten verfügbar.',
@@ -317,6 +352,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   growthSubtitle: 'Tools für mehr Sichtbarkeit und neue Aufträge',
   growthRecommendedPrefix: 'Empfohlen für',
   growthFeaturedBadge: 'Empfohlen',
+  growthLocalAdsCta: 'Region ansehen',
   kpiSuccessRateLabel: 'Erfolgsquote',
   kpiNoCompletedJobs: 'Noch keine Abschlüsse',
   kpiActiveProvidersLabel: 'Aktive Anbieter',
@@ -468,16 +504,32 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   priceSubtitle: 'Recommended price ranges',
   priceGeneratedLabel: 'Based on current order data',
   priceRadarLabel: 'Market price radar',
+  pricePositionLabel: 'Recommended price range',
+  priceOpportunityZoneLabel: 'Opportunity zone',
+  priceOpportunityHint: 'Recommended range based on current close-rate patterns.',
+  pricePositionLowLabel: 'Low',
+  pricePositionHighLabel: 'High',
   priceMarketAverageLabel: 'Market average',
   priceRecommendedLabel: 'Recommended range',
   priceRecommendationLabel: 'Recommendation',
   priceSweetSpotLabel: 'Optimal zone',
+  priceSmartSignalLabel: 'Smart pricing signal',
+  priceSmartSignalVisibilityTemplate: 'Pricing slightly below average near {price} currently improves visibility.',
+  priceSmartSignalBalancedTemplate: 'Best close rate currently sits near {price}.',
+  priceSmartSignalPremiumTemplate: 'Pricing near {price} works best when your profile clearly signals premium value.',
+  priceConfidenceLabel: 'AI confidence',
+  priceConfidenceHighLabel: 'High',
+  priceConfidenceMediumLabel: 'Medium',
+  priceConfidenceLowLabel: 'Low',
+  priceConfidenceBasedOnTemplate: 'Based on {count} analyzed jobs',
   priceProfitPotentialLabel: 'Profit potential',
   priceProfitHighLabel: 'Strong market potential',
   priceProfitMediumLabel: 'Solid market potential',
   priceProfitLowLabel: 'Cautious market potential',
-  priceStrategyButtonLabel: 'Show pricing strategy',
-  priceStrategyHideButtonLabel: 'Hide strategy',
+  priceStrategyButtonLabel: 'View pricing strategy',
+  priceStrategyCloseLabel: 'Close strategy',
+  priceStrategyLoadingLabel: 'De\'ci AI is analyzing current market data…',
+  priceStrategyLoadingBody: 'The pricing strategy is being prepared from demand, competition, and close-rate signals.',
   priceStrategyTitle: 'Pricing strategy',
   priceStrategyWhyLabel: 'Why this range works',
   priceStrategyWhyTemplate: '{range} currently shows the highest close rate{citySuffix}.',
@@ -490,6 +542,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   priceStrategyPremiumLabel: 'When higher pricing can work',
   priceStrategyPremiumTemplate:
     'A price above the recommended corridor performs better when your profile has strong reviews, fast response, and clear premium service.',
+  priceRecommendationFallbackTemplate: 'The range {range} currently shows the highest close rate{citySuffix}.',
   priceSignalLabel: 'Price signal',
   priceGuidanceNote: 'Reference range for new offers in the selected period.',
   priceNoData: 'No pricing data available yet.',
@@ -514,6 +567,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   growthSubtitle: 'Tools for more visibility and new jobs',
   growthRecommendedPrefix: 'Recommended for',
   growthFeaturedBadge: 'Recommended',
+  growthLocalAdsCta: 'View region',
   kpiSuccessRateLabel: 'Success rate',
   kpiNoCompletedJobs: 'No completed jobs yet',
   kpiActiveProvidersLabel: 'Active providers',
@@ -669,9 +723,9 @@ export function resolveGrowthCard(
     return {
       title: copy === COPY_DE ? 'Lokale Werbung' : 'Local promotion',
       body: copy === COPY_DE
-        ? 'Dienste gezielt in aktiven Städten platzieren.'
-        : 'Promote services in the most active cities.',
-      benefit: copy === COPY_DE ? 'Mehr Anfragen aus deiner Region' : 'More requests from your region',
+        ? 'Mehr Sichtbarkeit in Städten mit aktiver Nachfrage.'
+        : 'More visibility in cities with active demand.',
+      benefit: copy === COPY_DE ? 'Mehr Anfragen aus dieser Region' : 'More requests from this region',
       tone: 'default',
       href: card.href,
     };

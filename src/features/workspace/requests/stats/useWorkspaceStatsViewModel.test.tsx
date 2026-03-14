@@ -190,6 +190,10 @@ function createOverviewData(): WorkspaceStatisticsOverviewSourceDto {
       marketAverage: 78,
       optimalMin: 74,
       optimalMax: 83,
+      smartRecommendedPrice: 80,
+      smartSignalTone: 'balanced',
+      analyzedRequestsCount: 126,
+      confidenceLevel: 'high',
       recommendation: 'Preise im Bereich von 74 € – 83 € erzielen aktuell die höchste Abschlussrate in Berlin.',
       profitPotentialScore: 7.4,
       profitPotentialStatus: 'medium',
@@ -252,6 +256,8 @@ function Probe({
       data-price-context={model.priceIntelligence.contextLabel ?? ''}
       data-price-range={model.priceIntelligence.recommendedRangeLabel ?? ''}
       data-price-average={model.priceIntelligence.marketAverageLabel ?? ''}
+      data-price-signal={model.priceIntelligence.smartSignalLabel ?? ''}
+      data-price-confidence={model.priceIntelligence.confidenceLabel ?? ''}
       data-has-funnel={String(model.hasFunnelData)}
       data-funnel-requests={String(model.funnel.find((row) => row.key === 'requests')?.count ?? 0)}
       data-funnel-summary={model.funnelSummary}
@@ -274,6 +280,8 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-price-range')).toContain('65');
     expect(probe.getAttribute('data-price-range')).toContain('90');
     expect(probe.getAttribute('data-price-average')).toContain('78');
+    expect(probe.getAttribute('data-price-signal')).toContain('80');
+    expect(probe.getAttribute('data-price-confidence')).toBe('Hoch');
     expect(probe.getAttribute('data-decision-insight')).toContain('Kennzahlen');
   });
 
@@ -306,6 +314,10 @@ describe('useWorkspaceStatsViewModel', () => {
         marketAverage: null,
         optimalMin: null,
         optimalMax: null,
+        smartRecommendedPrice: null,
+        smartSignalTone: null,
+        analyzedRequestsCount: null,
+        confidenceLevel: null,
         recommendation: null,
         profitPotentialScore: null,
         profitPotentialStatus: null,

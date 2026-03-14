@@ -345,17 +345,18 @@ export function WorkspaceStatisticsView({
                   locale={locale}
                   opportunityRadar={opportunityRadar}
                 />
-                <div className="workspace-statistics-price__column stack-sm">
+                <div className="workspace-statistics-price__column">
                   <StatisticsPricePanel
-                    copy={copy}
-                    priceIntelligence={model.priceIntelligence}
-                  />
-                  <StatisticsPriceRecommendationPanel
                     copy={copy}
                     priceIntelligence={model.priceIntelligence}
                   />
                 </div>
               </div>
+
+              <StatisticsPriceRecommendationPanel
+                copy={copy}
+                priceIntelligence={model.priceIntelligence}
+              />
             </div>
           </>
         )}

@@ -1,10 +1,18 @@
 /* requests-shell-statistics-dashboard-opportunity.css */
 
 @layer components {
+  .workspace-statistics-opportunity,
+  .workspace-statistics-price {
+    --workspace-statistics-feature-card-min-h: 188px;
+    --workspace-statistics-feature-card-pad: var(--space-3);
+    --workspace-statistics-feature-card-gap: var(--space-1-5);
+    --workspace-statistics-feature-stack-gap: var(--space-2);
+  }
+
   .workspace-statistics-opportunity__list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-2);
+    gap: var(--workspace-statistics-feature-stack-gap);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -12,6 +20,7 @@
 
   .workspace-statistics-opportunity__item-wrap {
     min-width: 0;
+    display: grid;
   }
 
   .workspace-statistics-opportunity__item-wrap.is-last {
@@ -29,14 +38,35 @@
     align-content: start;
     gap: var(--space-2);
     min-height: 0;
+    height: 100%;
     padding: var(--space-2) var(--space-2-5);
     border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
-    border-radius: 16px;
+    border-radius: var(--workspace-statistics-radius-lg);
     background: color-mix(in oklab, var(--c-panel) 96%, var(--surface-soft-bg) 4%);
     transition:
       box-shadow var(--transition-fast),
       transform var(--transition-fast),
       border-color var(--transition-fast);
+  }
+
+  button.workspace-statistics-opportunity__item {
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .workspace-statistics-opportunity__item--compact {
+    min-height: var(--workspace-statistics-feature-card-min-h);
+    padding: var(--workspace-statistics-feature-card-pad);
+    gap: var(--workspace-statistics-feature-card-gap);
+    grid-template-rows: auto auto 1fr auto;
+  }
+
+  .workspace-statistics-opportunity__item--compact .workspace-statistics-opportunity__metrics {
+    grid-row: 4;
+    align-self: end;
   }
 
   .workspace-statistics-opportunity__item:hover {
@@ -72,19 +102,19 @@
 
   .workspace-statistics-opportunity__identity {
     display: grid;
-    gap: 2px;
+    gap: var(--space-0-75);
     min-width: 0;
   }
 
   .workspace-statistics-opportunity__city {
-    font-size: var(--fs-small);
+    font-size: var(--workspace-statistics-title-size);
     font-weight: 700;
     color: var(--c-text);
-    line-height: 1.2;
+    line-height: 1.25;
   }
 
   .workspace-statistics-opportunity__category {
-    font-size: 11px;
+    font-size: var(--workspace-statistics-label-size);
     color: var(--c-text-muted);
     line-height: 1.3;
     overflow: hidden;
@@ -92,81 +122,16 @@
     white-space: nowrap;
   }
 
-  .workspace-statistics-opportunity__score-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-    font-size: 11px;
-    color: var(--c-text-muted);
+  .workspace-statistics-opportunity__score {
     min-width: 0;
-  }
-
-  .workspace-statistics-opportunity__score-head strong {
-    color: var(--c-text);
-    font-size: var(--fs-small);
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .workspace-statistics-opportunity__status {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: var(--workspace-statistics-chip-height);
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid var(--surface-soft-border);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: var(--workspace-statistics-chip-font-weight);
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  .workspace-statistics-opportunity__status.is-very-high {
-    color: color-mix(in oklab, var(--c-success) 84%, var(--c-text) 16%);
-    border-color: color-mix(in oklab, var(--c-success) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
-  }
-
-  .workspace-statistics-opportunity__status.is-good {
-    color: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
-    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
-  }
-
-  .workspace-statistics-opportunity__status.is-balanced {
-    color: var(--c-text-muted);
-    border-color: var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
-  }
-
-  .workspace-statistics-opportunity__status.is-competitive {
-    color: color-mix(in oklab, var(--c-warn) 80%, var(--c-text) 20%);
-    border-color: color-mix(in oklab, var(--c-warn) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-warn) 12%, var(--c-panel) 88%);
-  }
-
-  .workspace-statistics-opportunity__status.is-low {
-    color: var(--c-text-muted);
-    border-color: var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
-  }
-
-  .workspace-statistics-opportunity__score-track {
-    margin-top: -2px;
-  }
-
-  .workspace-statistics-opportunity__score-fill {
-    transition: width 240ms ease-out;
   }
 
   .workspace-statistics-opportunity__metrics {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-1);
+    gap: var(--space-1-5);
     margin: 0;
-    padding-top: var(--space-1);
+    padding-top: var(--space-1-5);
     border-top: 1px dashed var(--surface-soft-border);
   }
 
@@ -176,13 +141,13 @@
 
   .workspace-statistics-opportunity__metrics dt {
     margin: 0;
-    font-size: 10px;
+    font-size: var(--workspace-statistics-chip-font-size);
     line-height: 1.2;
     color: var(--c-text-muted);
   }
 
   .workspace-statistics-opportunity__metrics dd {
-    margin: 2px 0 0;
+    margin: var(--space-0-5) 0 0;
     font-size: var(--fs-small);
     font-weight: 700;
     color: color-mix(in oklab, var(--c-text) 88%, var(--c-primary) 12%);
@@ -231,6 +196,7 @@
   .workspace-statistics-opportunity__item--analysis {
     gap: var(--space-2-5);
     padding: var(--space-2-5);
+    cursor: default;
   }
 
   .workspace-statistics-opportunity__analysis-overview {
@@ -238,6 +204,8 @@
     grid-template-columns: minmax(0, 188px) minmax(0, 1fr);
     gap: var(--space-2-5);
     align-items: start;
+    padding-bottom: var(--space-2);
+    border-bottom: 1px dashed var(--surface-soft-border);
   }
 
   .workspace-statistics-opportunity__analysis-identity {
@@ -246,7 +214,7 @@
     align-items: start;
     gap: var(--space-1-5);
     min-width: 0;
-    margin-left: -4px;
+    margin-left: calc(var(--space-1) * -1);
   }
 
   .workspace-statistics-opportunity__analysis-identity .workspace-statistics-city-list__rank-cup {
@@ -262,7 +230,7 @@
 
   .workspace-statistics-opportunity__analysis-score {
     display: grid;
-    gap: 4px;
+    gap: var(--space-1);
     min-width: 0;
     align-content: start;
     font-size: var(--fs-h3);
@@ -273,21 +241,23 @@
     white-space: nowrap;
   }
 
-  .workspace-statistics-opportunity__analysis-score .workspace-statistics-opportunity__score-track {
-    margin-top: 0;
-  }
-
   .workspace-statistics-opportunity__analysis-body {
     display: grid;
     grid-template-columns: minmax(0, 188px) minmax(0, 1fr);
     gap: var(--space-2-5);
     align-items: start;
+    padding-top: var(--space-1);
   }
 
   .workspace-statistics-opportunity__radar-block {
     display: grid;
-    gap: var(--space-1);
+    gap: var(--space-1-5);
     align-content: start;
+  }
+
+  .workspace-statistics-opportunity__status--analysis {
+    justify-self: start;
+    margin-top: calc(var(--space-0-5) * -1);
   }
 
   .workspace-statistics-opportunity__status--radar {
@@ -357,68 +327,17 @@
 
   .workspace-statistics-opportunity__analysis-axes li {
     display: grid;
-    gap: 4px;
+    gap: var(--space-1);
     min-width: 0;
   }
 
-  .workspace-statistics-opportunity__axis-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-
-  .workspace-statistics-opportunity__analysis-axes span {
-    font-size: 11px;
-    color: var(--c-text-muted);
-  }
-
-  .workspace-statistics-opportunity__analysis-axes strong {
-    font-size: var(--fs-small);
-    font-weight: 700;
-    color: var(--c-text);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .workspace-statistics-opportunity__axis-track {
-    margin-top: 0;
-  }
-
-  .workspace-statistics-opportunity__axis-fill {
-    transition: width 220ms ease-out;
-  }
-
-  .workspace-statistics-opportunity__axis-semantic {
-    margin: 0;
-    display: block;
-    width: 100%;
-    text-align: center;
-    font-style: normal;
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--c-text-muted);
-  }
-
-  .workspace-statistics-opportunity__axis-semantic.is-very-high {
-    color: color-mix(in oklab, var(--c-success) 84%, var(--c-text) 16%);
-  }
-
-  .workspace-statistics-opportunity__axis-semantic.is-high {
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
-  }
-
-  .workspace-statistics-opportunity__axis-semantic.is-medium {
-    color: color-mix(in oklab, var(--c-primary) 62%, var(--c-text-muted) 38%);
-  }
-
-  .workspace-statistics-opportunity__axis-semantic.is-low {
-    color: color-mix(in oklab, var(--c-warn) 72%, var(--c-text) 28%);
+  .workspace-statistics-opportunity__axis-signal {
+    min-width: 0;
   }
 
   .workspace-statistics-opportunity__summary {
     margin: 0;
-    font-size: 12px;
+    font-size: var(--workspace-statistics-copy-size-tight);
     line-height: 1.45;
     color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-text) 10%);
     display: -webkit-box;
@@ -429,30 +348,35 @@
 
   .workspace-statistics-price__column {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-3);
     align-content: start;
   }
 
   .workspace-statistics-price-recommendation {
     display: grid;
-    gap: var(--space-1-5);
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .workspace-statistics-price-recommendation .workspace-statistics__decision-ai {
+    margin-top: 0;
   }
 
   .workspace-statistics-price__content {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--workspace-statistics-feature-stack-gap);
     align-content: start;
   }
 
   .workspace-statistics-price__hero {
     position: relative;
     display: grid;
-    gap: var(--space-1);
+    gap: var(--workspace-statistics-feature-card-gap);
     align-content: start;
-    padding: var(--space-2);
-    min-height: 166px;
+    padding: var(--workspace-statistics-feature-card-pad);
+    min-height: var(--workspace-statistics-feature-card-min-h);
     border: 1px solid color-mix(in oklab, var(--c-primary) 22%, var(--surface-soft-border) 78%);
-    border-radius: 16px;
+    border-radius: var(--workspace-statistics-radius-lg);
     background:
       linear-gradient(
         160deg,
@@ -482,17 +406,17 @@
 
   .workspace-statistics-price__context {
     margin: 0;
-    font-size: var(--fs-small);
+    font-size: var(--workspace-statistics-title-size);
     font-weight: 700;
     color: var(--c-text);
-    line-height: 1.35;
+    line-height: 1.25;
     word-break: break-word;
   }
 
   .workspace-statistics-price__label {
     display: block;
     margin: 0;
-    font-size: 11px;
+    font-size: var(--workspace-statistics-label-size);
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -501,25 +425,45 @@
 
   .workspace-statistics-price__range {
     display: block;
-    font-size: clamp(25px, 3vw, 28px);
+    font-size: clamp(24px, 2.8vw, 27px);
     font-weight: 700;
     color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
-    line-height: 1.15;
+    line-height: 1.1;
     font-variant-numeric: tabular-nums;
     word-break: break-word;
   }
 
-  .workspace-statistics-price__average {
-    margin: 0;
-    font-size: var(--fs-small);
-    color: var(--c-text-muted);
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
+  .workspace-statistics-price__summary-grid {
+    display: grid;
+    gap: var(--workspace-statistics-feature-stack-gap);
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: var(--workspace-statistics-feature-stack-gap);
   }
 
-  .workspace-statistics-price__average strong {
+  .workspace-statistics-price__summary-card {
+    display: grid;
+    gap: var(--workspace-statistics-feature-card-gap);
+    align-content: start;
+    min-height: 100%;
+    padding: var(--workspace-statistics-feature-card-pad);
+    border-radius: var(--workspace-statistics-radius-md);
+    border: 1px solid var(--surface-soft-border);
+    background: color-mix(in oklab, var(--c-panel) 95%, var(--surface-soft-bg) 5%);
+  }
+
+  .workspace-statistics-price__summary-card--average {
+    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 38%, transparent);
+  }
+
+  .workspace-statistics-price__summary-label {
+    font-size: var(--workspace-statistics-label-size);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__summary-value {
     color: var(--c-text);
     font-size: clamp(20px, 2.4vw, 24px);
     font-weight: 700;
@@ -530,104 +474,176 @@
 
   .workspace-statistics-price__profit {
     display: grid;
-    gap: var(--space-1);
-    padding: var(--space-2);
-    border-radius: 12px;
-    border: 1px solid color-mix(in oklab, var(--c-success) 26%, var(--surface-soft-border) 74%);
-    background: color-mix(in oklab, var(--c-success) 8%, var(--c-panel) 92%);
-  }
-
-  .workspace-statistics-price__profit-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-    font-size: 12px;
-    color: var(--c-text-muted);
-  }
-
-  .workspace-statistics-price__profit-head strong {
-    font-size: var(--fs-small);
-    font-weight: 700;
-    color: var(--c-text);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .workspace-statistics-price__profit-track {
-    height: 8px;
-    border-radius: 999px;
+    gap: var(--space-1-5);
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
-    overflow: hidden;
+    background: color-mix(in oklab, var(--c-panel) 95%, var(--surface-soft-bg) 5%);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 34%, transparent);
   }
 
-  .workspace-statistics-price__profit-fill {
-    display: block;
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(
-      90deg,
-      color-mix(in oklab, var(--c-primary) 76%, var(--c-accent) 24%),
-      color-mix(in oklab, var(--c-success) 80%, var(--c-primary) 20%)
-    );
-    transition: width 220ms ease-out;
-  }
-
-  .workspace-statistics-price__profit-label {
-    margin: 0;
-    font-size: 12px;
-    font-weight: 700;
-    color: color-mix(in oklab, var(--c-success) 78%, var(--c-text) 22%);
+  .workspace-statistics-price__profit-signal {
+    gap: var(--space-1-5);
   }
 
   .workspace-statistics-price__bar-wrap {
     position: relative;
     display: grid;
-    gap: var(--space-1);
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics-price__position {
+    display: grid;
+    gap: var(--space-2-5);
+    padding: var(--space-3);
+    border-radius: var(--workspace-statistics-radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-accent) 18%, var(--surface-soft-border) 82%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 96%, var(--surface-soft-bg) 4%),
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-accent) 8%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--c-white) 34%, transparent),
+      0 10px 24px color-mix(in oklab, var(--c-ink) 5%, transparent);
+  }
+
+  .workspace-statistics-price__position-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics-price__position-label {
+    font-size: var(--workspace-statistics-label-size);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__position-range {
+    font-size: var(--workspace-statistics-copy-size-tight);
+    font-weight: 700;
+    color: color-mix(in oklab, var(--c-text) 92%, var(--c-accent) 8%);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-price__position-hint {
+    margin: 0;
+    font-size: var(--workspace-statistics-copy-size-tight);
+    line-height: 1.45;
+    color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
+  }
+
+  .workspace-statistics-price__position-scale {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding-inline: var(--space-0-5);
+    font-size: var(--workspace-statistics-copy-size);
+    font-weight: 700;
+    color: var(--c-text);
+    font-variant-numeric: tabular-nums;
   }
 
   .workspace-statistics-price__bar {
     position: relative;
-    height: 10px;
-    border-radius: 999px;
-    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+    height: 22px;
+    border-radius: var(--workspace-statistics-chip-radius);
+    background: color-mix(in oklab, var(--surface-soft-bg) 82%, var(--c-panel) 18%);
     border: 1px solid var(--surface-soft-border);
     overflow: hidden;
   }
 
+  .workspace-statistics-price__bar-base-line {
+    position: absolute;
+    inset: 50% 10px auto;
+    height: 2px;
+    border-radius: var(--workspace-statistics-chip-radius);
+    background: color-mix(in oklab, var(--c-border) 72%, transparent);
+    transform: translateY(-50%);
+  }
+
+  .workspace-statistics-price__bar-node {
+    position: absolute;
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    border-radius: var(--workspace-statistics-chip-radius);
+    border: 1px solid color-mix(in oklab, var(--c-panel) 82%, transparent);
+    background: color-mix(in oklab, var(--c-text-muted) 54%, var(--c-panel) 46%);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-panel) 72%, transparent);
+    z-index: 1;
+  }
+
+  .workspace-statistics-price__bar-node--avg {
+    width: 11px;
+    height: 11px;
+    background: color-mix(in oklab, var(--c-text) 72%, var(--c-primary) 28%);
+  }
+
+  .workspace-statistics-price__bar-node--optimal-min,
+  .workspace-statistics-price__bar-node--optimal-max {
+    background: color-mix(in oklab, var(--c-accent) 52%, var(--c-panel) 48%);
+  }
+
   .workspace-statistics-price__bar-sweet-spot {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    border-radius: 999px;
+    top: 3px;
+    bottom: 3px;
+    border-radius: var(--workspace-statistics-chip-radius);
     background: linear-gradient(
       90deg,
       color-mix(in oklab, var(--c-primary) 72%, var(--c-accent) 28%),
       color-mix(in oklab, var(--c-accent) 78%, var(--c-warn) 22%)
     );
+    opacity: 0.92;
   }
 
   .workspace-statistics-price__bar-sweet-label {
     position: absolute;
-    top: -18px;
+    top: -38px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 10px;
+    display: grid;
+    gap: var(--space-0-5);
+    justify-items: center;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--workspace-statistics-radius-sm);
+    border: 1px solid color-mix(in oklab, var(--c-accent) 28%, var(--surface-soft-border) 72%);
+    background: color-mix(in oklab, var(--c-panel) 94%, var(--c-accent) 6%);
+    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+  }
+
+  .workspace-statistics-price__bar-sweet-label span {
+    font-size: var(--workspace-statistics-chip-font-size);
     font-weight: 700;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
-    white-space: nowrap;
-    pointer-events: none;
+    line-height: 1;
+  }
+
+  .workspace-statistics-price__bar-sweet-label strong {
+    font-size: var(--workspace-statistics-label-size);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--c-text);
+    font-variant-numeric: tabular-nums;
   }
 
   .workspace-statistics-price__bar-average-marker {
     position: absolute;
-    top: -3px;
-    bottom: -3px;
+    top: -5px;
+    bottom: -5px;
     width: 2px;
-    border-radius: 999px;
+    border-radius: var(--workspace-statistics-chip-radius);
     background: color-mix(in oklab, var(--c-text) 74%, var(--c-primary) 26%);
     transform: translateX(-50%);
     box-shadow: 0 0 0 1px color-mix(in oklab, var(--c-panel) 66%, transparent);
@@ -636,20 +652,20 @@
   .workspace-statistics-price__ticks {
     position: relative;
     margin: 0;
-    padding: 12px 0 0;
+    padding: var(--space-5) 0 0;
     list-style: none;
-    min-height: 24px;
+    min-height: 32px;
   }
 
   .workspace-statistics-price__tick {
     position: absolute;
     top: 0;
     transform: translateX(-50%);
-    font-size: 10px;
+    font-size: var(--workspace-statistics-chip-font-size);
     font-weight: 600;
     color: var(--c-text-muted);
     line-height: 1.2;
-    max-width: 68px;
+    max-width: 72px;
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -666,65 +682,442 @@
     text-align: right;
   }
 
-  .workspace-statistics-price__strategy-button.btn-secondary {
-    min-height: 32px;
+  .workspace-statistics-price__position-legend {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-0-5);
+    font-size: var(--workspace-statistics-chip-font-size);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__position-legend span:nth-child(2) {
+    color: color-mix(in oklab, var(--c-accent) 72%, var(--c-text) 28%);
+  }
+
+  .workspace-statistics-price__position-legend span:last-child {
+    text-align: right;
+  }
+
+  .workspace-statistics-price__strategy-button.auth-social__btn {
     width: fit-content;
-    padding: 0 12px;
-    font-size: 12px;
-    border-radius: 10px;
+    min-width: 220px;
+    justify-content: center;
+    padding-inline: var(--space-4);
+    border-radius: var(--workspace-statistics-radius-md);
+    font-size: var(--workspace-statistics-copy-size);
+  }
+
+  .workspace-statistics-price__signal-card {
+    display: grid;
+    gap: var(--space-1-5);
+    padding: var(--space-2-5);
+    border-radius: var(--workspace-statistics-radius-soft);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 97%, var(--surface-soft-bg) 3%),
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-primary) 8%)
+      );
+  }
+
+  .workspace-statistics-price__signal-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics-price__signal-label {
+    font-size: var(--workspace-statistics-label-size);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__signal-value {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in oklab, var(--c-primary) 74%, var(--c-text) 26%);
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-price__signal-body {
+    margin: 0;
+    font-size: var(--workspace-statistics-copy-size);
+    line-height: 1.5;
+    color: color-mix(in oklab, var(--c-text) 90%, var(--c-text-muted) 10%);
+  }
+
+  .workspace-statistics-price__confidence {
+    display: grid;
+    gap: var(--space-1-5);
+  }
+
+  .workspace-statistics-price__confidence-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    width: fit-content;
+    min-height: 28px;
+    padding: 0 var(--space-2-5);
+    border-radius: var(--workspace-statistics-chip-radius);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--surface-soft-border) 84%);
+    background: color-mix(in oklab, var(--c-primary) 7%, var(--c-panel) 93%);
+    font-size: var(--workspace-statistics-label-size);
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__confidence-badge strong {
+    color: var(--c-text);
+    font-weight: 700;
+  }
+
+  .workspace-statistics-price__confidence-detail {
+    font-size: var(--workspace-statistics-label-size);
+    line-height: 1.4;
+    color: color-mix(in oklab, var(--c-text-muted) 94%, var(--c-text) 6%);
   }
 
   .workspace-statistics-price__strategy-panel {
-    display: grid;
-    gap: var(--space-1-5);
-    padding: var(--space-2);
-    border-radius: 12px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
-    background: color-mix(in oklab, var(--c-panel) 94%, var(--surface-soft-bg) 6%);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
   }
 
-  .workspace-statistics-price__strategy-title {
+  .workspace-statistics-price__strategy-hero {
     margin: 0;
-    font-size: var(--fs-small);
+  }
+
+  .workspace-statistics-price__strategy-hero-range {
+    font-size: clamp(22px, 4vw, 28px);
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
+  }
+
+  .workspace-statistics-price__strategy-hero-text {
+    line-height: 1.5;
+  }
+
+  .workspace-statistics-price__strategy-section {
+    margin: 0;
+  }
+
+  .workspace-statistics-price__strategy-section-text {
+    line-height: 1.45;
+  }
+
+  .workspace-statistics-price-modal {
+    z-index: 1400;
+    opacity: 0;
+    place-items: start center;
+    overflow-y: auto;
+    padding: clamp(var(--space-4), 3vw, var(--space-6));
+    transition: opacity 220ms ease;
+  }
+
+  .workspace-statistics-price-modal[data-state='open'] {
+    opacity: 1;
+  }
+
+  .workspace-statistics-price-modal__backdrop {
+    background: color-mix(in oklab, var(--c-ink) 54%, transparent);
+    -webkit-backdrop-filter: blur(12px) saturate(0.92);
+    backdrop-filter: blur(12px) saturate(0.92);
+    opacity: 0;
+    transition: opacity 220ms ease;
+  }
+
+  .workspace-statistics-price-modal[data-state='open'] .workspace-statistics-price-modal__backdrop {
+    opacity: 1;
+  }
+
+  .workspace-statistics-price-modal__panel {
+    --dc-modal-max-width: 620px;
+    gap: var(--space-3);
+    width: min(var(--dc-modal-max-width), 100%);
+    margin: auto 0;
+    align-content: start;
+    min-height: 0;
+    padding: clamp(var(--space-3), 2.4vw, var(--space-4-5));
+    border-color: color-mix(in oklab, var(--c-border) 52%, white 48%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 98%, white 2%) 0%,
+        color-mix(in oklab, var(--c-panel) 94%, var(--surface-soft-bg) 6%) 100%
+      );
+    box-shadow:
+      0 28px 72px color-mix(in oklab, var(--c-ink) 22%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 68%, transparent),
+      inset 0 -1px 0 color-mix(in oklab, var(--surface-soft-border) 75%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.03);
+    backdrop-filter: blur(18px) saturate(1.03);
+    transform: translateY(18px) scale(0.985);
+    opacity: 0;
+    transition:
+      opacity 220ms ease,
+      transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      box-shadow 240ms ease;
+  }
+
+  .workspace-statistics-price-modal[data-state='open'] .workspace-statistics-price-modal__panel {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .workspace-statistics-price-modal__intro {
+    margin-top: 0;
+    transform: translateY(4px);
+    opacity: 0;
+    transition:
+      opacity 180ms ease,
+      transform 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .workspace-statistics-price-modal[data-state='open'] .workspace-statistics-price-modal__intro {
+    transform: translateY(0);
+    opacity: 1;
+    transition-delay: 60ms;
+  }
+
+  .workspace-statistics-price-modal__intro[data-phase='loading'] {
+    animation: workspace-statistics-price-modal-fade-up 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .workspace-statistics-price-modal__intro-loader {
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics-price-modal__intro-loader-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .workspace-statistics-price-modal__intro-loader-copy {
+    display: grid;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .workspace-statistics-price-modal__body {
+    position: relative;
+    min-height: 280px;
+    overflow: hidden;
+    border-radius: calc(var(--workspace-statistics-radius-lg) + var(--space-0-5));
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--surface-soft-bg) 52%, transparent) 0%,
+        transparent 100%
+      );
+    border: 1px solid color-mix(in oklab, var(--surface-soft-border) 88%, transparent);
+  }
+
+  .workspace-statistics-price-modal__header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: var(--space-3);
+    transform: translateY(6px);
+    opacity: 0;
+    transition:
+      opacity 180ms ease,
+      transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .workspace-statistics-price-modal[data-state='open'] .workspace-statistics-price-modal__header {
+    transform: translateY(0);
+    opacity: 1;
+    transition-delay: 90ms;
+  }
+
+  .workspace-statistics-price-modal__title-wrap {
+    display: grid;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .workspace-statistics-price-modal__context {
+    margin: 0;
+    font-size: var(--workspace-statistics-label-size);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price-modal__title {
+    margin: 0;
+    font-size: clamp(24px, 4vw, 28px);
+    line-height: 1.1;
+    color: var(--c-text);
+  }
+
+  .workspace-statistics-price-modal__range {
+    margin: 0;
+    font-size: var(--workspace-statistics-copy-size);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
+  }
+
+  .workspace-statistics-price-modal__close {
+    border: 1px solid var(--surface-soft-border);
+    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--c-panel) 14%);
+    color: var(--c-text);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--workspace-statistics-chip-radius);
+    font-size: 20px;
+    line-height: 1;
+    flex: 0 0 auto;
+    transition:
+      transform 180ms ease,
+      background 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .workspace-statistics-price-modal__close:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, var(--surface-soft-border) 82%, var(--c-border) 18%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 92%, white 8%);
+  }
+
+  .workspace-statistics-price-modal__close:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 8%, transparent);
+  }
+
+  .workspace-statistics-price-modal__loading {
+    display: grid;
+    gap: var(--space-2-5);
+    align-content: start;
+    min-height: 280px;
+    padding: clamp(var(--space-3), 2vw, var(--space-4));
+    animation: workspace-statistics-price-modal-fade-up 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .workspace-statistics-price-modal__loading-visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+  }
+
+  .workspace-statistics-price-modal__loading-orb {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--workspace-statistics-chip-radius);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 24%, var(--surface-soft-border) 76%);
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-accent) 34%, transparent), transparent 58%),
+      color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--c-white) 32%, transparent),
+      0 10px 24px color-mix(in oklab, var(--c-ink) 10%, transparent);
+    animation: workspace-statistics-price-modal-pulse 1.1s ease-in-out infinite alternate;
+  }
+
+  .workspace-statistics-price-modal__loading-beam {
+    position: absolute;
+    inset-inline: 8px;
+    top: 50%;
+    height: 1px;
+    background:
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%) 32%,
+        color-mix(in oklab, var(--c-accent) 36%, var(--surface-soft-border) 64%) 50%,
+        color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%) 68%,
+        transparent 100%
+      );
+    transform-origin: center;
+    animation: workspace-statistics-price-modal-scan 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  }
+
+  .workspace-statistics-price-modal__loading-title {
+    margin: 0;
+    font-size: var(--workspace-statistics-title-size);
     font-weight: 700;
     color: var(--c-text);
   }
 
-  .workspace-statistics-price__strategy-section {
-    display: grid;
-    gap: 4px;
-    padding-top: var(--space-1);
-    border-top: 1px dashed color-mix(in oklab, var(--surface-soft-border) 84%, var(--c-primary) 16%);
-  }
-
-  .workspace-statistics-price__strategy-section:first-of-type {
-    padding-top: 0;
-    border-top: 0;
-  }
-
-  .workspace-statistics-price__strategy-section-label {
+  .workspace-statistics-price-modal__loading-text {
     margin: 0;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    font-size: var(--workspace-statistics-copy-size);
+    line-height: 1.5;
     color: var(--c-text-muted);
-    font-weight: 700;
   }
 
-  .workspace-statistics-price__strategy-section-text {
-    margin: 0;
-    font-size: 12px;
-    line-height: 1.45;
-    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-text) 12%);
+  .workspace-statistics-price-modal__loading-lines {
+    display: grid;
+    gap: var(--space-1-5);
+    padding-top: var(--space-0-5);
+  }
+
+  .workspace-statistics-price-modal__content {
+    padding: clamp(var(--space-3), 2vw, var(--space-4));
+    animation: workspace-statistics-price-modal-fade-up 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  @keyframes workspace-statistics-price-modal-pulse {
+    from {
+      transform: scale(1);
+      opacity: 0.78;
+    }
+
+    to {
+      transform: scale(1.04);
+      opacity: 1;
+    }
+  }
+
+  @keyframes workspace-statistics-price-modal-scan {
+    0% {
+      opacity: 0.32;
+      transform: scaleX(0.72);
+    }
+
+    50% {
+      opacity: 0.78;
+      transform: scaleX(1);
+    }
+
+    100% {
+      opacity: 0.32;
+      transform: scaleX(0.72);
+    }
+  }
+
+  @keyframes workspace-statistics-price-modal-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (max-width: 639px) {
-    .workspace-statistics-price__average {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--space-0-5);
-    }
-
     .workspace-statistics-price__ticks {
       min-height: 36px;
     }
@@ -732,11 +1125,65 @@
     .workspace-statistics-price__tick {
       max-width: 56px;
     }
+
+    .workspace-statistics-price__position-scale,
+    .workspace-statistics-price__position-range {
+      font-size: var(--workspace-statistics-copy-size-tight);
+    }
+
+    .workspace-statistics-price__bar-sweet-label {
+      top: -32px;
+      padding-inline: 6px;
+    }
+
+    .workspace-statistics-price__bar-sweet-label strong {
+      font-size: var(--workspace-statistics-chip-font-size);
+    }
+
+    .workspace-statistics-price-modal__header {
+      gap: var(--space-2);
+    }
   }
 
   @media (max-width: 1023px) {
+    .workspace-statistics-opportunity__item--compact,
     .workspace-statistics-price__hero {
       min-height: 0;
+    }
+
+    .workspace-statistics-price__signal-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-0-5);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .workspace-statistics-price-modal,
+    .workspace-statistics-price-modal__backdrop,
+    .workspace-statistics-price-modal__panel,
+    .workspace-statistics-price-modal__intro,
+    .workspace-statistics-price-modal__header,
+    .workspace-statistics-price-modal__loading,
+    .workspace-statistics-price-modal__content,
+    .workspace-statistics-price-modal__loading-orb,
+    .workspace-statistics-price-modal__loading-beam,
+    .workspace-statistics-price-modal__close {
+      animation: none;
+      transition: none;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .workspace-statistics-price-modal {
+      place-items: end stretch;
+      padding: 0;
+    }
+
+    .workspace-statistics-price-modal__panel {
+      min-height: 0;
+      margin: 0;
     }
   }
 

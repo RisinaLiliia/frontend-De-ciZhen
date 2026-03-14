@@ -6,7 +6,7 @@
     gap: var(--space-1-5);
     padding: var(--space-2);
     border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--surface-soft-border) 84%);
-    border-radius: 12px;
+    border-radius: var(--workspace-statistics-radius-md);
     background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
   }
 
@@ -46,7 +46,7 @@
     grid-template-columns: 24px minmax(0, 1fr);
     align-items: center;
     gap: var(--space-1-5);
-    border-radius: 12px;
+    border-radius: var(--workspace-statistics-radius-md);
     padding: var(--space-1) var(--space-1-5);
     border: 1px solid var(--surface-soft-border);
     background:
@@ -70,7 +70,7 @@
     justify-content: center;
     width: 24px;
     height: 24px;
-    border-radius: 999px;
+    border-radius: var(--workspace-statistics-chip-radius);
     border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%);
     background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
     color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
@@ -83,7 +83,7 @@
 
   .workspace-statistics-ki__copy {
     display: grid;
-    gap: 1px;
+    gap: var(--space-0-5);
     min-width: 0;
   }
 
@@ -106,8 +106,27 @@
     color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-text) 10%);
   }
 
+  .workspace-statistics-ki__actions {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: var(--space-0-5);
+  }
+
+  .workspace-statistics-ki__details {
+    display: grid;
+    gap: var(--space-1-5);
+    padding-top: var(--space-1-5);
+    border-top: 1px solid color-mix(in oklab, var(--surface-soft-border) 90%, var(--c-primary) 10%);
+  }
+
   .workspace-statistics-ki--plain .workspace-statistics-ki__text {
     color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-ki--plain .workspace-statistics-ki__details {
+    padding-top: var(--space-1);
+    border-top: 0;
   }
 
   @media (max-width: 639px) {
