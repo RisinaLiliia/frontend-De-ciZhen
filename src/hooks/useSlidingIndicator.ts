@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-type Params<T extends HTMLElement> = {
+type Params = {
   activeSelector: string;
   enabled?: boolean;
   deps?: React.DependencyList;
@@ -12,9 +12,10 @@ export function useSlidingIndicator<T extends HTMLElement>({
   activeSelector,
   enabled = true,
   deps = [],
-}: Params<T>) {
+}: Params) {
   const containerRef = React.useRef<T | null>(null);
   const [indicatorStyle, setIndicatorStyle] = React.useState<React.CSSProperties | null>(null);
+  const dependencyList = deps;
 
   const syncIndicator = React.useCallback(() => {
     if (!enabled) {
@@ -60,7 +61,7 @@ export function useSlidingIndicator<T extends HTMLElement>({
       window.removeEventListener('resize', onResize);
       observer?.disconnect();
     };
-  }, [enabled, syncIndicator, ...deps]);
+  }, [enabled, syncIndicator, dependencyList]);
 
   return {
     containerRef,
