@@ -819,9 +819,7 @@
   .workspace-statistics-price-modal {
     z-index: 1400;
     opacity: 0;
-    place-items: start center;
     overflow-y: auto;
-    padding: clamp(var(--space-4), 3vw, var(--space-6));
     transition: opacity 220ms ease;
   }
 
@@ -830,9 +828,6 @@
   }
 
   .workspace-statistics-price-modal__backdrop {
-    background: color-mix(in oklab, var(--c-ink) 54%, transparent);
-    -webkit-backdrop-filter: blur(12px) saturate(0.92);
-    backdrop-filter: blur(12px) saturate(0.92);
     opacity: 0;
     transition: opacity 220ms ease;
   }
@@ -844,22 +839,9 @@
   .workspace-statistics-price-modal__panel {
     --dc-modal-max-width: 620px;
     gap: var(--space-3);
-    width: min(var(--dc-modal-max-width), 100%);
     margin: auto 0;
     align-content: start;
     min-height: 0;
-    padding: clamp(var(--space-3), 2.4vw, var(--space-4-5));
-    border-color: color-mix(in oklab, var(--c-border) 52%, white 48%);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--c-panel) 98%, white 2%) 0%,
-        color-mix(in oklab, var(--c-panel) 94%, var(--surface-soft-bg) 6%) 100%
-      );
-    box-shadow:
-      0 28px 72px color-mix(in oklab, var(--c-ink) 22%, transparent),
-      inset 0 1px 0 color-mix(in oklab, white 68%, transparent),
-      inset 0 -1px 0 color-mix(in oklab, var(--surface-soft-border) 75%, transparent);
     -webkit-backdrop-filter: blur(18px) saturate(1.03);
     backdrop-filter: blur(18px) saturate(1.03);
     transform: translateY(18px) scale(0.985);
@@ -929,8 +911,10 @@
   .workspace-statistics-price-modal__header {
     display: flex;
     align-items: start;
-    justify-content: space-between;
+    justify-content: flex-start;
+    position: relative;
     gap: var(--space-3);
+    padding-right: 52px;
     transform: translateY(6px);
     opacity: 0;
     transition:
@@ -975,31 +959,8 @@
   }
 
   .workspace-statistics-price-modal__close {
-    border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--c-panel) 14%);
-    color: var(--c-text);
-    width: 36px;
-    height: 36px;
-    border-radius: var(--workspace-statistics-chip-radius);
-    font-size: 20px;
-    line-height: 1;
-    flex: 0 0 auto;
-    transition:
-      transform 180ms ease,
-      background 180ms ease,
-      border-color 180ms ease,
-      box-shadow 180ms ease;
-  }
-
-  .workspace-statistics-price-modal__close:hover {
-    transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--surface-soft-border) 82%, var(--c-border) 18%);
-    background: color-mix(in oklab, var(--surface-soft-bg) 92%, white 8%);
-  }
-
-  .workspace-statistics-price-modal__close:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 8%, transparent);
+    top: 0;
+    right: 0;
   }
 
   .workspace-statistics-price-modal__loading {
@@ -1176,11 +1137,6 @@
   }
 
   @media (max-width: 768px) {
-    .workspace-statistics-price-modal {
-      place-items: end stretch;
-      padding: 0;
-    }
-
     .workspace-statistics-price-modal__panel {
       min-height: 0;
       margin: 0;

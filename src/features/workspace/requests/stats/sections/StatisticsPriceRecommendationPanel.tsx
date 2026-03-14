@@ -132,7 +132,7 @@ function StatisticsPriceStrategyModal({
 
   return createPortal((
     <div
-      className="dc-modal workspace-statistics-layout workspace-statistics-price-modal"
+      className="dc-modal auth-route-modal workspace-statistics-layout workspace-statistics-price-modal"
       data-state={isVisible ? 'open' : 'closed'}
       role="dialog"
       aria-modal="true"
@@ -147,7 +147,7 @@ function StatisticsPriceStrategyModal({
       />
       <section
         ref={panelRef}
-        className="dc-modal__panel dc-modal__panel--compact workspace-statistics-price-modal__panel"
+        className="dc-modal__panel dc-modal__panel--compact auth-route-modal__panel workspace-statistics-price-modal__panel"
       >
         <div className="workspace-statistics-price-modal__intro" data-phase={isAnalyzing ? 'loading' : 'ready'}>
           {isAnalyzing ? (
@@ -186,7 +186,7 @@ function StatisticsPriceStrategyModal({
           <button
             ref={closeButtonRef}
             type="button"
-            className="workspace-statistics-price-modal__close"
+            className="auth-route-modal__close workspace-statistics-price-modal__close"
             aria-label={copy.priceStrategyCloseLabel}
             onClick={onClose}
           >
@@ -281,6 +281,7 @@ export function StatisticsPriceRecommendationPanel({
       <StatisticsKiCard
         className="workspace-statistics__decision-ai"
         metaStamp
+        layout="inline-action"
         stamp={copy.priceGeneratedLabel}
         avatarLabel={copy.insightsAssistantAvatarLabel}
         name={copy.insightsAssistantName}

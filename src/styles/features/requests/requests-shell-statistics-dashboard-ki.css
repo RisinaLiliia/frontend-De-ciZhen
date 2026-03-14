@@ -113,6 +113,36 @@
     padding-top: var(--space-0-5);
   }
 
+  .workspace-statistics-ki--inline-action {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "stamp stamp"
+      "head head"
+      "text actions";
+    align-items: center;
+    column-gap: var(--space-3);
+  }
+
+  .workspace-statistics-ki--inline-action .workspace-statistics-ki__stamp {
+    grid-area: stamp;
+  }
+
+  .workspace-statistics-ki--inline-action .workspace-statistics-ki__head {
+    grid-area: head;
+  }
+
+  .workspace-statistics-ki--inline-action .workspace-statistics-ki__text {
+    grid-area: text;
+    align-self: center;
+  }
+
+  .workspace-statistics-ki--inline-action .workspace-statistics-ki__actions {
+    grid-area: actions;
+    align-self: center;
+    justify-content: flex-end;
+    padding-top: 0;
+  }
+
   .workspace-statistics-ki__details {
     display: grid;
     gap: var(--space-1-5);
@@ -130,6 +160,20 @@
   }
 
   @media (max-width: 639px) {
+    .workspace-statistics-ki--inline-action {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "stamp"
+        "head"
+        "text"
+        "actions";
+    }
+
+    .workspace-statistics-ki--inline-action .workspace-statistics-ki__actions {
+      justify-content: flex-start;
+      padding-top: var(--space-0-5);
+    }
+
     .workspace-statistics-ki--meta .workspace-statistics-ki__stamp {
       width: fit-content;
       margin-inline: 0;

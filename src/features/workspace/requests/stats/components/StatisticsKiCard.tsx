@@ -13,6 +13,7 @@ type StatisticsKiCardProps = {
   className?: string;
   metaStamp?: boolean;
   variant?: 'default' | 'plain';
+  layout?: 'default' | 'inline-action';
 };
 
 export function StatisticsKiCard({
@@ -26,11 +27,13 @@ export function StatisticsKiCard({
   className,
   metaStamp = false,
   variant = 'default',
+  layout = 'default',
 }: StatisticsKiCardProps) {
   const rootClassName = [
     'workspace-statistics-ki',
     variant === 'plain' ? 'workspace-statistics-ki--plain' : '',
     metaStamp ? 'workspace-statistics-ki--meta' : '',
+    layout === 'inline-action' ? 'workspace-statistics-ki--inline-action' : '',
     className ?? '',
   ]
     .filter(Boolean)
