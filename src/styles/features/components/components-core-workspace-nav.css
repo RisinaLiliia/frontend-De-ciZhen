@@ -1,0 +1,496 @@
+/* src/styles/features/components/components-core-workspace-nav.css */
+
+@layer components {
+  .topbar-nav {
+    min-width: 0;
+  }
+
+  .topbar-nav__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+  }
+
+  .topbar-nav__icon--trailing {
+    order: 2;
+  }
+
+  .topbar-nav__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .topbar-nav__label {
+    line-height: 1;
+  }
+
+  .topbar-nav__item,
+  .topbar-nav__mobile-item {
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .topbar-nav__item:focus,
+  .topbar-nav__item:focus-visible,
+  .topbar-nav__mobile-item:focus,
+  .topbar-nav__mobile-item:focus-visible {
+    outline: none;
+  }
+
+  .topbar-nav--desktop {
+    --topbar-nav-surface-border: color-mix(in oklab, white 72%, var(--c-border) 28%);
+    --topbar-nav-surface-bg:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 76%, var(--c-panel) 24%) 0%,
+        color-mix(in oklab, white 62%, var(--c-panel) 38%) 100%
+      );
+    --topbar-nav-surface-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 78%, transparent),
+      0 10px 22px color-mix(in oklab, var(--c-ink) 8%, transparent);
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    isolation: isolate;
+    gap: 6px;
+    max-width: 100%;
+    padding: 4px;
+    border-radius: 999px;
+    border: 1px solid var(--topbar-nav-surface-border);
+    background: var(--topbar-nav-surface-bg);
+    box-shadow: var(--topbar-nav-surface-shadow);
+    overflow: hidden;
+  }
+
+  html.dark .topbar-nav--desktop {
+    --topbar-nav-surface-border: color-mix(in oklab, var(--c-border) 88%, white 12%);
+    --topbar-nav-surface-bg:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 92%, white 8%) 0%,
+        color-mix(in oklab, var(--c-panel) 94%, var(--c-ink) 6%) 100%
+      );
+    --topbar-nav-surface-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 10%, transparent),
+      0 12px 26px color-mix(in oklab, var(--c-ink) 28%, transparent);
+  }
+
+  .topbar-nav__indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, white 80%, var(--c-border) 20%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 92%, var(--c-panel) 8%) 0%,
+        color-mix(in oklab, white 74%, var(--c-panel) 26%) 100%
+      );
+    box-shadow:
+      0 10px 22px color-mix(in oklab, var(--c-ink) 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 84%, transparent);
+    transition:
+      transform 280ms var(--ease-standard),
+      width 280ms var(--ease-standard),
+      height 280ms var(--ease-standard),
+      opacity 180ms var(--ease-standard);
+    pointer-events: none;
+    z-index: 0;
+    will-change: transform, width, height;
+  }
+
+  html.dark .topbar-nav__indicator {
+    border-color: color-mix(in oklab, var(--c-border) 78%, white 22%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 78%, white 22%) 0%,
+        color-mix(in oklab, var(--c-panel) 90%, white 10%) 100%
+      );
+    box-shadow:
+      0 14px 28px color-mix(in oklab, var(--c-ink) 28%, transparent),
+      0 4px 12px color-mix(in oklab, white 6%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 14%, transparent);
+  }
+
+  .topbar-nav__item {
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--c-text-muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1;
+    font-size: 13px;
+    font-weight: 600;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  html.dark .topbar-nav__item {
+    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-text) 12%);
+  }
+
+  .topbar-nav__item:hover {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, white 22%, transparent);
+    background: color-mix(in oklab, white 20%, transparent);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 48%, transparent);
+    transform: translateY(-0.5px);
+  }
+
+  html.dark .topbar-nav__item:hover {
+    color: color-mix(in oklab, white 90%, var(--c-text) 10%);
+    border-color: color-mix(in oklab, white 8%, transparent);
+    background: color-mix(in oklab, white 4%, transparent);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+  }
+
+  .topbar-nav__item.is-active {
+    color: var(--c-text);
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .topbar-nav__item:focus-visible {
+    border-color: color-mix(in oklab, white 26%, var(--c-border) 74%);
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, white 12%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 52%, transparent);
+  }
+
+  html.dark .topbar-nav__item:focus-visible {
+    border-color: color-mix(in oklab, white 12%, var(--c-border) 88%);
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, white 7%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+  }
+
+  .topbar-nav__item--create {
+    gap: 6px;
+    padding-right: 10px;
+    color: var(--c-text-muted);
+    isolation: isolate;
+    overflow: hidden;
+    border-style: dashed;
+    border-color: color-mix(in oklab, var(--c-accent) 40%, var(--c-border) 60%);
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 10%, var(--c-panel) 90%) 0%,
+        color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%) 62%,
+        color-mix(in oklab, white 6%, var(--c-panel) 94%) 100%
+      );
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 26%, transparent),
+      0 8px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+  }
+
+  .topbar-nav__item--create::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-primary-contrast) 16%, transparent) 0%,
+        transparent 48%
+      ),
+      radial-gradient(
+        120% 90% at 15% 0%,
+        color-mix(in oklab, white 12%, transparent) 0%,
+        transparent 70%
+      );
+  }
+
+  .topbar-nav__item--create > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .topbar-nav__item--create .topbar-nav__label {
+    order: 1;
+    font-weight: 700;
+  }
+
+  .topbar-nav__item--create .topbar-nav__icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-accent) 40%, var(--c-border) 60%);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-accent) 8%);
+    color: color-mix(in oklab, var(--c-accent) 74%, var(--c-text) 26%);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 18%, transparent);
+  }
+
+  .topbar-nav__item--create .topbar-nav__icon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .topbar-nav__item--create:hover {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-accent) 48%, var(--c-border) 52%);
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%) 0%,
+        color-mix(in oklab, white 10%, var(--c-panel) 90%) 62%,
+        color-mix(in oklab, white 8%, var(--c-panel) 92%) 100%
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 28%, transparent),
+      0 10px 20px color-mix(in oklab, var(--c-ink) 10%, transparent);
+  }
+
+  .topbar-nav__item--create.is-active,
+  .topbar-nav__item--create:focus-visible {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-accent) 50%, var(--c-border) 50%);
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 16%, var(--c-panel) 84%) 0%,
+        color-mix(in oklab, white 12%, var(--c-panel) 88%) 62%,
+        color-mix(in oklab, white 8%, var(--c-panel) 92%) 100%
+      );
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--c-accent) 12%, transparent),
+      0 10px 20px color-mix(in oklab, var(--c-ink) 10%, transparent);
+  }
+
+  html.dark .topbar-nav__item--create {
+    color: color-mix(in oklab, white 78%, var(--c-accent) 22%);
+    border-color: color-mix(in oklab, var(--c-accent) 42%, var(--c-border) 58%);
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 12%, var(--c-panel) 88%) 0%,
+        color-mix(in oklab, var(--c-panel) 96%, var(--c-ink) 4%) 62%,
+        color-mix(in oklab, white 6%, var(--c-panel) 94%) 100%
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 10%, transparent),
+      0 12px 24px color-mix(in oklab, var(--c-ink) 18%, transparent);
+  }
+
+  html.dark .topbar-nav__item--create::before {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 8%, transparent) 0%,
+        transparent 46%
+      ),
+      radial-gradient(
+        120% 90% at 15% 0%,
+        color-mix(in oklab, var(--c-accent) 10%, transparent) 0%,
+        transparent 70%
+      );
+  }
+
+  html.dark .topbar-nav__item--create .topbar-nav__icon {
+    border-color: color-mix(in oklab, var(--c-accent) 40%, var(--c-border) 60%);
+    background: color-mix(in oklab, var(--c-accent) 10%, var(--c-panel) 90%);
+    color: color-mix(in oklab, var(--c-accent) 76%, white 24%);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+  }
+
+  html.dark .topbar-nav__item--create:hover {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-accent) 48%, var(--c-border) 52%);
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 16%, var(--c-panel) 84%) 0%,
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-ink) 8%) 62%,
+        color-mix(in oklab, white 8%, var(--c-panel) 92%) 100%
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+      0 14px 28px color-mix(in oklab, var(--c-ink) 20%, transparent);
+  }
+
+  html.dark .topbar-nav__item--create.is-active,
+  html.dark .topbar-nav__item--create:focus-visible {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-accent) 52%, var(--c-border) 48%);
+    background:
+      linear-gradient(
+        148deg,
+        color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%) 0%,
+        color-mix(in oklab, var(--c-panel) 90%, var(--c-ink) 10%) 62%,
+        color-mix(in oklab, white 8%, var(--c-panel) 92%) 100%
+      );
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--c-accent) 12%, transparent),
+      0 14px 28px color-mix(in oklab, var(--c-ink) 20%, transparent);
+  }
+
+  @media (max-width: 820px) {
+    .topbar-nav--mobile {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 42;
+      display: grid;
+      grid-template-columns: repeat(var(--topbar-mobile-columns, 3), minmax(0, 1fr));
+      gap: 6px;
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+      border-top: 1px solid color-mix(in oklab, var(--c-border) 58%, transparent);
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in oklab, var(--c-bg) 88%, transparent),
+          color-mix(in oklab, var(--c-bg) 96%, black 4%)
+        );
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-nav__mobile-item {
+      min-height: 58px;
+      border-radius: 14px;
+      border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+      background: color-mix(in oklab, var(--c-panel) 86%, transparent);
+      color: var(--c-text-muted);
+      text-decoration: none;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      transition:
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        background var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .topbar-nav__mobile-item .topbar-nav__icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .topbar-nav__mobile-item .topbar-nav__label {
+      display: inline-flex;
+      font-size: 10px;
+      line-height: 1;
+      color: color-mix(in oklab, var(--c-text-muted) 88%, transparent);
+      transition: color var(--transition-fast);
+    }
+
+    .topbar-nav__mobile-item.is-active {
+      color: var(--c-text);
+      border-color: color-mix(in oklab, white 12%, var(--c-border) 88%);
+      background: color-mix(in oklab, white 6%, var(--c-panel) 94%);
+      box-shadow:
+        inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+        0 8px 18px color-mix(in oklab, var(--c-ink) 16%, transparent);
+    }
+
+    .topbar-nav__mobile-item.is-active .topbar-nav__label {
+      color: inherit;
+    }
+
+    .topbar-nav__mobile-item:focus-visible {
+      border-color: color-mix(in oklab, white 16%, var(--c-border) 84%);
+      box-shadow:
+        0 0 0 3px color-mix(in oklab, white 7%, transparent),
+        0 8px 18px color-mix(in oklab, var(--c-ink) 16%, transparent);
+    }
+
+    .topbar-nav__mobile-item--create {
+      isolation: isolate;
+      overflow: hidden;
+      border-style: dashed;
+      border-color: color-mix(in oklab, var(--c-accent) 42%, var(--c-border) 58%);
+      background:
+        linear-gradient(
+          148deg,
+          color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%) 0%,
+          color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%) 100%
+        );
+      backdrop-filter: blur(12px) saturate(1.18);
+      -webkit-backdrop-filter: blur(12px) saturate(1.18);
+    }
+
+    .topbar-nav__mobile-item--create::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in oklab, var(--c-primary-contrast) 18%, transparent) 0%,
+          transparent 46%
+        ),
+        radial-gradient(
+          120% 90% at 20% 0%,
+          color-mix(in oklab, white 10%, transparent) 0%,
+          transparent 70%
+        );
+    }
+
+    .topbar-nav__mobile-item--create > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar-nav__mobile-item--create .topbar-nav__icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in oklab, var(--c-accent) 44%, var(--c-border) 56%);
+      background: color-mix(in oklab, var(--c-panel) 90%, var(--c-accent) 10%);
+      color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
+      box-shadow:
+        0 8px 16px color-mix(in oklab, var(--c-ink) 12%, transparent),
+        inset 0 1px 0 color-mix(in oklab, white 14%, transparent);
+    }
+
+    .topbar-nav__mobile-item--create .topbar-nav__icon svg {
+      width: 24px;
+      height: 24px;
+      transform: translateY(-1px);
+    }
+
+    .topbar-nav__mobile-item--create .topbar-nav__label {
+      display: none;
+    }
+
+    .topbar-nav__mobile-item--create.is-active,
+    .topbar-nav__mobile-item--create:focus-visible {
+      color: var(--c-text);
+      border-color: color-mix(in oklab, var(--c-accent) 46%, var(--c-border) 54%);
+      background:
+        linear-gradient(
+          148deg,
+          color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%) 0%,
+          color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%) 100%
+        );
+      box-shadow:
+        0 0 0 3px color-mix(in oklab, var(--c-accent) 10%, transparent),
+        0 8px 18px color-mix(in oklab, var(--c-ink) 16%, transparent);
+    }
+  }
+}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { IconBriefcase, IconChat, IconPlus, IconUser } from '@/components/ui/icons/icons';
 import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
+import { useSlidingIndicator } from '@/hooks/useSlidingIndicator';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 
@@ -99,9 +100,16 @@ function WorkspacePrimaryNav({
   const navStyle = mobile
     ? ({ '--topbar-mobile-columns': String(items.length) } as CSSProperties)
     : undefined;
+  const activeItemKey = items.find((item) => item.isActive(pathname, params))?.key ?? '';
+  const { containerRef, indicatorStyle } = useSlidingIndicator<HTMLElement>({
+    activeSelector: '.topbar-nav__item.is-active',
+    enabled: !mobile,
+    watchKey: `${pathname}|${activeItemKey}|${items.length}`,
+  });
 
   return (
-    <nav className={className} aria-label={t(I18N_KEYS.auth.navigationLabel)} style={navStyle}>
+    <nav className={className} aria-label={t(I18N_KEYS.auth.navigationLabel)} style={navStyle} ref={mobile ? undefined : containerRef}>
+      {!mobile && indicatorStyle ? <span className="topbar-nav__indicator" aria-hidden="true" style={indicatorStyle} /> : null}
       {items.map((item) => {
         const active = item.isActive(pathname, params);
         const iconClassName = item.iconPosition === 'trailing' ? 'topbar-nav__icon topbar-nav__icon--trailing' : 'topbar-nav__icon';

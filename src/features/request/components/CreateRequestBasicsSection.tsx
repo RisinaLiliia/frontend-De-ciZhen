@@ -76,6 +76,7 @@ export function CreateRequestBasicsSection({
         <FormLabel required requiredHint={requiredHint}>
           {t(I18N_KEYS.request.subcategoryLabel)}
         </FormLabel>
+        <input type="hidden" value={serviceKey} readOnly {...register('serviceKey')} />
         <Field rightIcon={<IconChevronDown />}>
           <Select
             value={serviceKey}

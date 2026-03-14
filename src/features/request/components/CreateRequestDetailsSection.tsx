@@ -109,6 +109,7 @@ export function CreateRequestDetailsSection({
         <FormLabel required requiredHint={requiredHint}>
           {t(I18N_KEYS.home.cityAria)}
         </FormLabel>
+        <input type="hidden" value={cityId} readOnly {...register('cityId')} />
         <Field leftIcon={<IconPin />} rightIcon={<IconChevronDown />}>
           <Select
             value={cityId}
@@ -160,7 +161,7 @@ export function CreateRequestDetailsSection({
                     ? directFlowText.calendarHintReady
                     : directFlowText.calendarHintEmpty}
               </p>
-              <input type="hidden" {...register('preferredDate')} />
+              <input type="hidden" value={selectedDayIso ? `${selectedDayIso}T09:00` : ''} readOnly {...register('preferredDate')} />
             </div>
           ) : (
             <div className="request-provider-calendar">
@@ -178,7 +179,7 @@ export function CreateRequestDetailsSection({
                 className="request-provider-calendar__availability"
                 onSelectIsoDay={onSelectRequestIsoDay}
               />
-              <input type="hidden" {...register('preferredDate')} />
+              <input type="hidden" value={selectedDayIso ? `${selectedDayIso}T09:00` : ''} readOnly {...register('preferredDate')} />
             </div>
           )}
           {preferredDateError ? (

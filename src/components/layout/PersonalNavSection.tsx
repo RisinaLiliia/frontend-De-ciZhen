@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import { ActivityInsight } from '@/components/ui/ActivityInsight';
 import { CountBadge } from '@/components/ui/CountBadge';
 import { RatingSummary } from '@/components/ui/RatingSummary';
+import { useSlidingIndicator } from '@/hooks/useSlidingIndicator';
 
 export type PersonalNavItem = {
   key: string;
@@ -53,8 +54,6 @@ export function PersonalNavSection({
 }: PersonalNavSectionProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const dockTrackRef = React.useRef<HTMLDivElement | null>(null);
-  const [dockIndicatorStyle, setDockIndicatorStyle] = React.useState<React.CSSProperties | null>(null);
 
   const hasHrefMatch = React.useCallback(
     (item: PersonalNavItem) => {
@@ -97,44 +96,11 @@ export function PersonalNavSection({
   const secondaryItems = hasTieredLayout ? items.filter((item) => item.tier === 'secondary') : [];
   const dockItems = hasTieredLayout ? [...primaryItems, ...secondaryItems] : items;
   const activeDockKey = dockItems.find((item) => isActive(item))?.key ?? '';
-
-  const syncDockIndicator = React.useCallback(() => {
-    const track = dockTrackRef.current;
-    if (!track) return;
-    const activeItem = track.querySelector<HTMLElement>('.personal-nav__item.is-active');
-    if (!activeItem) {
-      setDockIndicatorStyle(null);
-      return;
-    }
-
-    const trackRect = track.getBoundingClientRect();
-    const itemRect = activeItem.getBoundingClientRect();
-    setDockIndicatorStyle({
-      transform: `translate3d(${itemRect.left - trackRect.left}px, ${itemRect.top - trackRect.top}px, 0)`,
-      width: `${itemRect.width}px`,
-      height: `${itemRect.height}px`,
-    });
-  }, []);
-
-  React.useEffect(() => {
-    if (!hasTieredLayout) return;
-
-    syncDockIndicator();
-    const raf = window.requestAnimationFrame(syncDockIndicator);
-
-    const onResize = () => syncDockIndicator();
-    window.addEventListener('resize', onResize);
-
-    const track = dockTrackRef.current;
-    const observer = typeof ResizeObserver !== 'undefined' && track ? new ResizeObserver(syncDockIndicator) : null;
-    if (observer && track) observer.observe(track);
-
-    return () => {
-      window.cancelAnimationFrame(raf);
-      window.removeEventListener('resize', onResize);
-      observer?.disconnect();
-    };
-  }, [hasTieredLayout, pathname, activeDockKey, syncDockIndicator]);
+  const { containerRef: dockTrackRef, indicatorStyle: dockIndicatorStyle } = useSlidingIndicator<HTMLDivElement>({
+    activeSelector: '.personal-nav__item.is-active',
+    enabled: hasTieredLayout,
+    watchKey: `${pathname}|${activeDockKey}|${dockItems.length}`,
+  });
 
   const parseNumericValue = (value: PersonalNavItem['value']) => {
     if (typeof value === 'number' && Number.isFinite(value)) {

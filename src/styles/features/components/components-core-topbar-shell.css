@@ -54,13 +54,18 @@
     min-width: 0;
     position: relative;
     border-radius: 26px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid color-mix(in oklab, white 78%, var(--c-border) 22%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 82%, var(--c-panel) 18%) 0%,
+        color-mix(in oklab, white 68%, var(--c-panel) 32%) 100%
+      );
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     box-shadow:
-      0 8px 24px rgba(15, 23, 42, 0.06),
-      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 55%, transparent);
+      0 14px 30px color-mix(in oklab, var(--c-ink) 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 78%, transparent);
     transition:
       background var(--transition-fast),
       border-color var(--transition-fast),
@@ -82,7 +87,7 @@
         color-mix(in oklab, var(--c-panel) 14%, transparent) 42%,
         transparent 100%
       ),
-      radial-gradient(640px 180px at -8% -120%, color-mix(in oklab, var(--c-primary) 6%, transparent), transparent 64%),
+      radial-gradient(640px 180px at -8% -120%, color-mix(in oklab, white 4%, transparent), transparent 64%),
       radial-gradient(520px 180px at 108% -120%, color-mix(in oklab, var(--c-accent) 4%, transparent), transparent 62%);
     opacity: 0.64;
     transition: opacity var(--transition-fast);
@@ -94,11 +99,16 @@
   }
 
   .topbar.is-elevated .topbar__inner {
-    background: rgba(255, 255, 255, 0.74);
-    border-color: rgba(255, 255, 255, 0.52);
+    border-color: color-mix(in oklab, white 82%, var(--c-border) 18%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 86%, var(--c-panel) 14%) 0%,
+        color-mix(in oklab, white 72%, var(--c-panel) 28%) 100%
+      );
     box-shadow:
-      0 10px 28px rgba(15, 23, 42, 0.08),
-      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 62%, transparent);
+      0 18px 36px color-mix(in oklab, var(--c-ink) 10%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 82%, transparent);
   }
 
   .topbar.is-elevated .topbar__inner::before {
@@ -106,13 +116,50 @@
   }
 
   html.dark .topbar__inner {
-    border-color: color-mix(in oklab, var(--c-border) 44%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 70%, transparent);
+    border-color: color-mix(in oklab, var(--c-border) 88%, white 12%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 92%, white 8%) 0%,
+        color-mix(in oklab, var(--c-panel) 94%, var(--c-ink) 6%) 100%
+      );
+    box-shadow:
+      0 18px 42px color-mix(in oklab, var(--c-ink) 42%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
   }
 
   html.dark .topbar.is-elevated .topbar__inner {
-    border-color: color-mix(in oklab, var(--c-border) 52%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 76%, transparent);
+    border-color: color-mix(in oklab, var(--c-border) 82%, white 18%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 90%, white 10%) 0%,
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-ink) 8%) 100%
+      );
+    box-shadow:
+      0 22px 46px color-mix(in oklab, var(--c-ink) 48%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 12%, transparent);
+  }
+
+  html.dark .topbar__inner::before {
+    opacity: 0.88;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 10%, transparent) 0%,
+        color-mix(in oklab, white 4%, transparent) 38%,
+        transparent 100%
+      ),
+      radial-gradient(
+        640px 180px at -8% -120%,
+        color-mix(in oklab, white 6%, transparent),
+        transparent 64%
+      ),
+      radial-gradient(
+        520px 180px at 108% -120%,
+        color-mix(in oklab, var(--c-accent) 10%, transparent),
+        transparent 62%
+      );
   }
 
   .topbar__inner--with-center {
@@ -144,6 +191,77 @@
     align-items: center;
     justify-content: flex-end;
     overflow: visible;
+  }
+
+  .topbar .icon-button--topbar {
+    border: 1px solid color-mix(in oklab, white 74%, var(--c-border) 26%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 78%, var(--c-panel) 22%),
+        color-mix(in oklab, white 64%, var(--c-panel) 36%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 78%, transparent),
+      0 8px 18px color-mix(in oklab, var(--c-ink) 8%, transparent);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .topbar .icon-button--topbar:hover {
+    border-color: color-mix(in oklab, white 28%, var(--c-border) 72%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 84%, var(--c-panel) 16%),
+        color-mix(in oklab, white 64%, var(--c-panel) 36%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 82%, transparent),
+      0 10px 22px color-mix(in oklab, var(--c-ink) 10%, transparent);
+  }
+
+  .topbar .icon-button--topbar:focus-visible {
+    border-color: color-mix(in oklab, white 34%, var(--c-border) 66%);
+    outline: none;
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, white 16%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 82%, transparent),
+      0 10px 22px color-mix(in oklab, var(--c-ink) 10%, transparent);
+  }
+
+  html.dark .topbar .icon-button--topbar {
+    border-color: color-mix(in oklab, var(--c-border) 84%, white 16%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 90%, white 10%),
+        color-mix(in oklab, var(--c-panel) 94%, var(--c-ink) 6%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 10%, transparent),
+      0 10px 20px color-mix(in oklab, var(--c-ink) 24%, transparent);
+  }
+
+  html.dark .topbar .icon-button--topbar:hover {
+    border-color: color-mix(in oklab, white 14%, var(--c-border) 86%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 92%, white 8%),
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-ink) 8%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+      0 12px 24px color-mix(in oklab, var(--c-ink) 28%, transparent);
+  }
+
+  html.dark .topbar .icon-button--topbar:focus-visible {
+    border-color: color-mix(in oklab, white 18%, var(--c-border) 82%);
+    outline: none;
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, white 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+      0 12px 24px color-mix(in oklab, var(--c-ink) 28%, transparent);
   }
 
 
