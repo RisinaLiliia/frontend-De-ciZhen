@@ -16,11 +16,10 @@ export function StatisticsGrowthPanel({
   copy: WorkspaceStatisticsModel['copy'];
   growthCards: WorkspaceStatisticsModel['growthCards'];
 }) {
-  const visibleGrowthCards = growthCards.filter((item) => item.key !== 'local_ads');
-  if (visibleGrowthCards.length === 0) return null;
+  if (growthCards.length === 0) return null;
 
-  const featuredCard = visibleGrowthCards.find((item) => item.tone === 'primary') ?? visibleGrowthCards[0] ?? null;
-  const secondaryCards = visibleGrowthCards
+  const featuredCard = growthCards.find((item) => item.tone === 'primary') ?? growthCards[0] ?? null;
+  const secondaryCards = growthCards
     .filter((item) => item.key !== featuredCard?.key)
     .slice(0, 2);
 
@@ -64,29 +63,87 @@ export function StatisticsGrowthPanel({
         <div
           className={`workspace-statistics-growth__grid${secondaryCards.length === 1 ? ' workspace-statistics-growth__grid--single' : ''}`.trim()}
         >
-          {secondaryCards.map((card, index) => (
-            <article
-              key={`${card.key}-${index}`}
-              className={`stat-card workspace-statistics-growth__card${card.key === 'premium_tools' ? ' is-premium' : ''}`.trim()}
-            >
-              <div className="workspace-statistics-growth__head">
-                <div className="workspace-statistics-growth__head-copy">
-                  <p className="workspace-statistics-growth__title">{card.title}</p>
-                  <div className="workspace-statistics-growth__labels">
-                    {card.badge ? (
-                      <Badge variant="info" size="sm">{card.badge}</Badge>
-                    ) : null}
+          {secondaryCards.map((card) => (
+            card.key === 'local_ads' ? (
+              <Link
+                key={card.key}
+                href={card.href}
+                prefetch={false}
+                className="stat-card stat-link workspace-statistics-growth__card is-local"
+              >
+                <div className="workspace-statistics-growth__head">
+                  <div className="workspace-statistics-growth__head-copy">
+                    <p className="workspace-statistics-growth__title">{card.title}</p>
+                    <p className="workspace-statistics-growth__body">{card.body}</p>
+                    <div className="workspace-statistics-growth__labels">
+                      {card.recommendedFor ? (
+                        <Badge variant="info" size="sm">
+                          {copy.growthRecommendedPrefix} {card.recommendedFor}
+                        </Badge>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="workspace-statistics-growth__visual" aria-hidden="true">
+                    <span className="workspace-statistics-growth__visual-tile">
+                      <span className="workspace-statistics-growth__visual-ring" />
+                      <span className="workspace-statistics-growth__visual-pin" />
+                      <span className="workspace-statistics-growth__visual-dot is-primary" />
+                      <span className="workspace-statistics-growth__visual-dot is-secondary" />
+                    </span>
                   </div>
                 </div>
-              </div>
-              <p className="workspace-statistics-growth__body">{card.body}</p>
-              <p className="workspace-statistics-growth__benefit">{card.benefit}</p>
-              {card.recommendedFor ? (
-                <p className="workspace-statistics-growth__recommended">
-                  {copy.growthRecommendedPrefix} {card.recommendedFor}
-                </p>
-              ) : null}
-            </article>
+                <p className="workspace-statistics-growth__benefit">{card.benefit}</p>
+                <span className="link-accent workspace-statistics-growth__cta">
+                  {copy.growthLocalAdsCta}
+                </span>
+              </Link>
+            ) : card.key === 'premium_tools' ? (
+              <Link
+                key={card.key}
+                href={card.href}
+                prefetch={false}
+                className="stat-card stat-link workspace-statistics-growth__card is-premium"
+              >
+                <div className="workspace-statistics-growth__head">
+                  <div className="workspace-statistics-growth__head-copy">
+                    <p className="workspace-statistics-growth__title">{card.title}</p>
+                    <div className="workspace-statistics-growth__labels">
+                      {card.badge ? (
+                        <Badge variant="info" size="sm">{card.badge}</Badge>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+                <p className="workspace-statistics-growth__body">{card.body}</p>
+                <p className="workspace-statistics-growth__benefit">{card.benefit}</p>
+                <span className="link-accent workspace-statistics-growth__cta">
+                  {copy.growthCta}
+                </span>
+              </Link>
+            ) : (
+              <article
+                key={card.key}
+                className="stat-card workspace-statistics-growth__card"
+              >
+                <div className="workspace-statistics-growth__head">
+                  <div className="workspace-statistics-growth__head-copy">
+                    <p className="workspace-statistics-growth__title">{card.title}</p>
+                    <div className="workspace-statistics-growth__labels">
+                      {card.badge ? (
+                        <Badge variant="info" size="sm">{card.badge}</Badge>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+                <p className="workspace-statistics-growth__body">{card.body}</p>
+                <p className="workspace-statistics-growth__benefit">{card.benefit}</p>
+                {card.recommendedFor ? (
+                  <p className="workspace-statistics-growth__recommended">
+                    {copy.growthRecommendedPrefix} {card.recommendedFor}
+                  </p>
+                ) : null}
+              </article>
+            )
           ))}
         </div>
       ) : null}

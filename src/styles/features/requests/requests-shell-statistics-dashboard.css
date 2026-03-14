@@ -1,6 +1,7 @@
 /* src/styles/features/requests/requests-shell-statistics-dashboard.css */
 
 @import './requests-shell-statistics-dashboard-layout.css';
+@import './requests-shell-statistics-dashboard-signal.css';
 @import './requests-shell-statistics-dashboard-demand-cities.css';
 @import './requests-shell-statistics-dashboard-opportunity.css';
 @import './requests-shell-statistics-dashboard-ki.css';

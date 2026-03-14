@@ -17,7 +17,12 @@ export type OpportunityAxis = {
 
 export function selectOpportunityAnalysisItem(
   opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'],
+  selectedRank?: WorkspaceStatisticsModel['opportunityRadar'][number]['rank'] | null,
 ): OpportunityItem | null {
+  if (selectedRank) {
+    const selectedItem = opportunityRadar.find((item) => item.rank === selectedRank);
+    if (selectedItem) return selectedItem;
+  }
   return opportunityRadar.find((item) => item.rank === 1) ?? opportunityRadar[0] ?? null;
 }
 
@@ -26,20 +31,10 @@ export function selectOpportunityTopCards(params: {
   analysisItem: OpportunityItem | null;
 }): OpportunityItem[] {
   const { opportunityRadar, analysisItem } = params;
-  const byRank = new Map<(typeof opportunityRadar)[number]['rank'], (typeof opportunityRadar)[number]>(
-    opportunityRadar.map((item) => [item.rank, item]),
-  );
-  const preferredRanks: Array<(typeof opportunityRadar)[number]['rank']> = [3, 2];
-  const preferred = preferredRanks
-    .map((rank) => byRank.get(rank))
-    .filter((item): item is NonNullable<typeof item> => Boolean(item));
-  if (preferred.length >= 2) return preferred;
-
-  const preferredRanksSet = new Set(preferred.map((item) => item.rank));
-  const fallback = opportunityRadar
-    .filter((item) => item.rank !== analysisItem?.rank && !preferredRanksSet.has(item.rank))
-    .sort((a, b) => b.rank - a.rank);
-  return [...preferred, ...fallback].slice(0, 2);
+  return opportunityRadar
+    .filter((item) => item.rank !== analysisItem?.rank)
+    .sort((a, b) => a.rank - b.rank)
+    .slice(0, 2);
 }
 
 export function buildOpportunityAnalysisAxes(params: {
@@ -138,7 +133,9 @@ export function buildOpportunityRadarAxisValueLabelPositions(
   });
 }
 
-export function opportunityStatusClassName(status: OpportunityStatus): string {
+export function opportunityStatusClassName(
+  status: OpportunityStatus,
+): 'very-high' | 'good' | 'balanced' | 'competitive' | 'low' {
   if (status === 'very_high') return 'very-high';
   if (status === 'good') return 'good';
   if (status === 'balanced') return 'balanced';

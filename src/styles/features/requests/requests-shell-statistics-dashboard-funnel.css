@@ -40,7 +40,7 @@
 
   .workspace-statistics-funnel__stack {
     display: grid;
-    gap: 8px;
+    gap: var(--space-2);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -59,7 +59,7 @@
   }
 
   .workspace-statistics-funnel__layer + .workspace-statistics-funnel__layer {
-    margin-top: -4px;
+    margin-top: calc(var(--space-1) * -1);
   }
 
   .workspace-statistics-funnel__shape {
@@ -107,7 +107,7 @@
     z-index: 2;
     display: block;
     min-height: var(--workspace-funnel-layer-min-height);
-    padding: 6px var(--space-3);
+    padding: var(--space-1-5) var(--space-3);
     pointer-events: none;
   }
 
@@ -186,7 +186,7 @@
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    font-size: 16px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     color: color-mix(in oklab, var(--c-text) 90%, var(--c-primary) 10%);
     line-height: 1;
@@ -204,7 +204,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: var(--space-2-5);
     width: auto;
     min-width: 0;
     padding-inline: 0;
@@ -248,7 +248,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-inline-end: 6px;
+    padding-inline-end: var(--space-1-5);
   }
 
   .workspace-statistics-funnel__layer-hint-value {
@@ -256,7 +256,7 @@
     font-weight: 700;
     font-size: var(--fs-small);
     white-space: nowrap;
-    padding-inline-start: 6px;
+    padding-inline-start: var(--space-1-5);
   }
 
   .workspace-statistics-funnel__summary {
@@ -308,12 +308,12 @@
     }
 
     .workspace-statistics-funnel__layer {
-      gap: 8px;
+      gap: var(--space-2);
     }
 
     .workspace-statistics-funnel__layer-hint {
-      font-size: 10px;
-      gap: 6px;
+      font-size: var(--workspace-statistics-chip-font-size);
+      gap: var(--space-1-5);
       top: 79%;
     }
   }

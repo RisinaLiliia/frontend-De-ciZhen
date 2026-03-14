@@ -1,0 +1,129 @@
+/* requests-shell-statistics-dashboard-signal.css */
+
+@layer components {
+  .workspace-statistics-signal {
+    display: grid;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .workspace-statistics-signal__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-width: 0;
+    font-size: var(--workspace-statistics-label-size);
+    line-height: 1.25;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-signal__label {
+    min-width: 0;
+  }
+
+  .workspace-statistics-signal__value {
+    color: var(--c-text);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-signal__track {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    height: 8px;
+    margin-top: 0;
+    border: 1px solid color-mix(in oklab, var(--surface-soft-border) 88%, transparent);
+    border-radius: var(--workspace-statistics-chip-radius);
+    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+  }
+
+  .workspace-statistics-signal__fill {
+    display: block;
+    height: 100%;
+    border-radius: var(--workspace-statistics-chip-radius);
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-primary) 54%, var(--c-accent) 46%),
+      color-mix(in oklab, var(--c-accent) 74%, var(--c-primary) 26%)
+    );
+    transition: width 220ms ease-out;
+  }
+
+  .workspace-statistics-signal__semantic {
+    margin: 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-style: normal;
+    font-size: var(--workspace-statistics-chip-font-size);
+    font-weight: 700;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-signal__semantic.is-start {
+    text-align: left;
+  }
+
+  .workspace-statistics-signal__semantic.is-very-high {
+    color: color-mix(in oklab, var(--c-success) 84%, var(--c-text) 16%);
+  }
+
+  .workspace-statistics-signal__semantic.is-good,
+  .workspace-statistics-signal__semantic.is-high {
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+  }
+
+  .workspace-statistics-signal__semantic.is-balanced,
+  .workspace-statistics-signal__semantic.is-medium {
+    color: color-mix(in oklab, var(--c-primary) 62%, var(--c-text-muted) 38%);
+  }
+
+  .workspace-statistics-signal__semantic.is-competitive,
+  .workspace-statistics-signal__semantic.is-low {
+    color: color-mix(in oklab, var(--c-warn) 72%, var(--c-text) 28%);
+  }
+
+  .workspace-statistics-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--workspace-statistics-chip-height);
+    width: fit-content;
+    padding: 0 var(--workspace-statistics-chip-pad-inline);
+    border-radius: var(--workspace-statistics-chip-radius);
+    border: 1px solid var(--surface-soft-border);
+    font-size: var(--workspace-statistics-chip-font-size);
+    font-weight: var(--workspace-statistics-chip-font-weight);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-status-badge.is-very-high {
+    color: color-mix(in oklab, var(--c-success) 84%, var(--c-text) 16%);
+    border-color: color-mix(in oklab, var(--c-success) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
+  }
+
+  .workspace-statistics-status-badge.is-good {
+    color: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
+    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
+  }
+
+  .workspace-statistics-status-badge.is-balanced {
+    color: var(--c-text-muted);
+    border-color: var(--surface-soft-border);
+    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+  }
+
+  .workspace-statistics-status-badge.is-competitive,
+  .workspace-statistics-status-badge.is-low {
+    color: color-mix(in oklab, var(--c-warn) 80%, var(--c-text) 20%);
+    border-color: color-mix(in oklab, var(--c-warn) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--c-warn) 12%, var(--c-panel) 88%);
+  }
+}

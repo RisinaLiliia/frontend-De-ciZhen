@@ -260,6 +260,10 @@ export type WorkspaceStatisticsPriceIntelligenceDto = {
   marketAverage: number | null;
   optimalMin: number | null;
   optimalMax: number | null;
+  smartRecommendedPrice: number | null;
+  smartSignalTone: 'visibility' | 'balanced' | 'premium' | null;
+  analyzedRequestsCount: number | null;
+  confidenceLevel: 'high' | 'medium' | 'low' | null;
   recommendation: string | null;
   profitPotentialScore: number | null;
   profitPotentialStatus: 'high' | 'medium' | 'low' | null;

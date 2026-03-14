@@ -8,6 +8,15 @@
     --workspace-statistics-chip-radius: 999px;
     --workspace-statistics-chip-font-size: 10px;
     --workspace-statistics-chip-font-weight: 700;
+    --workspace-statistics-title-size: var(--fs-body);
+    --workspace-statistics-label-size: calc(var(--fs-small) - 2px);
+    --workspace-statistics-copy-size-tight: calc(var(--fs-small) - 1px);
+    --workspace-statistics-copy-size: var(--fs-small);
+    --workspace-statistics-meta-size: var(--fs-small);
+    --workspace-statistics-radius-sm: var(--radius-sm);
+    --workspace-statistics-radius-md: var(--radius-md);
+    --workspace-statistics-radius-lg: var(--radius-lg);
+    --workspace-statistics-radius-soft: calc(var(--radius-md) + var(--space-0-5));
     --workspace-statistics-section-header-min-h: 52px;
     --workspace-statistics-section-gap: var(--layout-section-gap);
     --workspace-statistics-container-pad: var(--space-3);
