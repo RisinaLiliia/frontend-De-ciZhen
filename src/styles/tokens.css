@@ -28,8 +28,8 @@
 
   /* Global surface system */
   --surface-card-border: color-mix(in oklab, var(--c-border) 64%, transparent);
-  --surface-card-border-hover: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
-  --surface-card-border-focus: color-mix(in oklab, var(--c-primary) 42%, var(--c-border) 58%);
+  --surface-card-border-hover: color-mix(in oklab, var(--c-border) 78%, var(--c-panel) 22%);
+  --surface-card-border-focus: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
   --surface-card-bg: linear-gradient(
     180deg,
     color-mix(in oklab, var(--c-panel) 98%, transparent),
@@ -38,7 +38,7 @@
   --surface-card-bg-hover: linear-gradient(
     180deg,
     color-mix(in oklab, var(--c-panel) 99%, transparent),
-    color-mix(in oklab, var(--c-panel) 94%, var(--c-primary) 6%)
+    color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%)
   );
   --surface-card-shadow: var(--shadow-card);
   --surface-card-shadow-hover: var(--shadow-card-hover, var(--shadow-card));
@@ -47,13 +47,13 @@
   --control-bg: color-mix(in oklab, var(--c-surface) 88%, var(--c-panel) 12%);
   --control-bg-hover: color-mix(in oklab, var(--c-surface) 80%, var(--c-panel) 20%);
   --control-border: color-mix(in oklab, var(--c-border) 78%, transparent);
-  --control-border-hover: color-mix(in oklab, var(--c-border) 58%, var(--c-primary) 42%);
-  --control-focus-ring: 0 0 0 3px color-mix(in oklab, var(--c-primary) 30%, transparent);
+  --control-border-hover: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
+  --control-focus-ring: 0 0 0 3px color-mix(in oklab, var(--c-text) 12%, transparent);
 
   --surface-soft-border: color-mix(in oklab, var(--c-border) 65%, transparent);
   --surface-soft-bg: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
   --surface-soft-bg-strong: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
-  --focus-ring-primary: color-mix(in oklab, var(--c-primary) 30%, transparent);
+  --focus-ring-primary: color-mix(in oklab, var(--c-primary) 18%, transparent);
 
   /* Global shell geometry shared by topbar/main/footer */
   --shell-max-width: 1280px;

@@ -10,17 +10,17 @@
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--c-panel) 98%, var(--c-surface) 2%) 0%,
-        color-mix(in oklab, var(--c-panel) 86%, var(--c-primary) 14%) 58%,
-        color-mix(in oklab, var(--c-bg) 94%, var(--c-panel) 6%) 100%
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%) 58%,
+        color-mix(in oklab, var(--c-bg) 92%, var(--c-panel) 8%) 100%
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 78%, transparent),
-      var(--shadow-card);
+      0 18px 40px color-mix(in oklab, var(--c-ink) 8%, transparent);
   }
 
   html:not(.dark) .home-intro-shell::before {
     background:
-      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 8%, transparent), transparent 56%),
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-surface) 32%, transparent), transparent 56%),
       radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 64%),
       linear-gradient(
         180deg,
@@ -40,15 +40,15 @@
   html:not(.dark) .home-intro-shell .home-stats-panel,
   html:not(.dark) .home-intro-shell .home-quick-search-panel,
   html:not(.dark) .home-intro-shell .home-activity-panel {
-    border-color: color-mix(in oklab, var(--c-primary) 20%, var(--c-border) 80%);
+    border-color: color-mix(in oklab, var(--c-border) 82%, var(--c-surface) 18%);
     background: linear-gradient(
       180deg,
       color-mix(in oklab, var(--c-panel) 98%, var(--c-surface) 2%) 0%,
-      color-mix(in oklab, var(--c-panel) 92%, var(--c-primary) 8%) 100%
+      color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%) 100%
     );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 92%, transparent),
-      0 7px 18px color-mix(in oklab, var(--c-glass-shadow) 40%, transparent);
+      0 10px 24px color-mix(in oklab, var(--c-ink) 8%, transparent);
   }
 
   html:not(.dark) .home-intro-shell .home-stats__title,
@@ -66,47 +66,51 @@
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .home-stats__value {
-    color: color-mix(in oklab, var(--c-text) 92%, var(--c-primary) 8%);
+    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .chip {
     background: var(--c-panel);
-    border-color: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
-    color: color-mix(in oklab, var(--c-text) 90%, var(--c-primary) 10%);
+    border-color: color-mix(in oklab, var(--c-border) 82%, var(--c-surface) 18%);
+    color: color-mix(in oklab, var(--c-text) 94%, var(--c-border) 6%);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .chip.is-active {
-    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
-    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
-    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 20%, transparent);
+    border-color: color-mix(in oklab, var(--c-border) 70%, var(--c-accent) 30%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--c-panel) 94%, var(--c-surface) 6%),
+      color-mix(in oklab, var(--c-panel) 86%, var(--c-accent) 14%)
+    );
+    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .field {
-    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-primary) 12%);
-    border-color: color-mix(in oklab, var(--c-primary) 24%, var(--c-border) 76%);
-    color: color-mix(in oklab, var(--c-text) 94%, var(--c-primary) 6%);
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-surface) 10%);
+    border-color: color-mix(in oklab, var(--c-border) 80%, var(--c-surface) 20%);
+    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .field::placeholder {
-    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-primary) 10%);
+    color: color-mix(in oklab, var(--c-text-muted) 94%, var(--c-border) 6%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__title {
-    color: color-mix(in oklab, var(--c-text) 92%, var(--c-primary) 8%);
+    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__subtitle {
-    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-primary) 12%);
+    color: color-mix(in oklab, var(--c-text-muted) 94%, var(--c-border) 6%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__trust li {
-    color: color-mix(in oklab, var(--c-text) 82%, var(--c-primary) 18%);
+    color: color-mix(in oklab, var(--c-text) 88%, var(--c-border) 12%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__preview-badge {
-    color: color-mix(in oklab, var(--c-text-muted) 70%, var(--c-primary) 30%);
+    color: color-mix(in oklab, var(--c-text-muted) 84%, var(--c-accent) 16%);
     border-color: color-mix(in oklab, var(--c-accent) 36%, var(--c-border) 64%);
-    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-primary) 12%);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-accent) 8%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card {
@@ -114,22 +118,22 @@
     background:
       linear-gradient(
         148deg,
-        color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%) 0%,
-        color-mix(in oklab, var(--c-panel) 82%, var(--c-primary) 18%) 58%,
-        color-mix(in oklab, var(--c-primary) 24%, var(--c-panel) 76%) 100%
+        color-mix(in oklab, var(--c-accent) 16%, var(--c-panel) 84%) 0%,
+        color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%) 58%,
+        color-mix(in oklab, var(--c-surface) 14%, var(--c-panel) 86%) 100%
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 90%, transparent),
-      0 10px 22px color-mix(in oklab, var(--c-primary) 22%, transparent),
-      0 4px 10px color-mix(in oklab, var(--c-accent) 18%, transparent);
+      0 12px 26px color-mix(in oklab, var(--c-ink) 10%, transparent),
+      0 4px 10px color-mix(in oklab, var(--c-accent) 10%, transparent);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__title {
-    color: color-mix(in oklab, var(--c-text) 94%, var(--c-primary) 6%);
+    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__subtitle {
-    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--c-primary) 18%);
+    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-accent) 10%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__media {
@@ -138,8 +142,8 @@
       radial-gradient(circle at 22% 18%, color-mix(in oklab, var(--c-panel) 62%, transparent), transparent 52%),
       linear-gradient(
         160deg,
-        color-mix(in oklab, var(--c-accent) 34%, var(--c-panel) 66%) 0%,
-        color-mix(in oklab, var(--c-primary) 26%, var(--c-panel) 74%) 100%
+        color-mix(in oklab, var(--c-accent) 28%, var(--c-panel) 72%) 0%,
+        color-mix(in oklab, var(--c-surface) 16%, var(--c-panel) 84%) 100%
       );
   }
 
@@ -148,7 +152,7 @@
     background: color-mix(in oklab, var(--c-panel) 68%, var(--c-accent) 32%);
     color: color-mix(in oklab, var(--c-accent) 90%, var(--c-ink) 10%);
     box-shadow:
-      0 10px 20px color-mix(in oklab, var(--c-primary) 20%, transparent),
+      0 10px 20px color-mix(in oklab, var(--c-ink) 10%, transparent),
       inset 0 1px 0 color-mix(in oklab, var(--c-panel) 88%, transparent);
   }
 

@@ -15,7 +15,12 @@
   --c-bg: #f5f7fb;
   --c-bg-gradient: radial-gradient(
       circle at 20% 10%,
-      color-mix(in oklab, var(--c-panel) 78%, transparent),
+      color-mix(in oklab, var(--c-panel) 72%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      circle at 88% 6%,
+      color-mix(in oklab, var(--c-accent) 10%, transparent),
       transparent
     ),
     linear-gradient(180deg, #f5f7fb 0%, #eff3f9 100%);
@@ -41,8 +46,8 @@
   --c-ink: #0f172a;
   --c-hero-tint-primary: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
   --c-hero-tint-accent: color-mix(in oklab, var(--c-accent) 10%, var(--c-panel) 90%);
-  --c-glow-primary: color-mix(in oklab, var(--c-primary) 22%, transparent);
-  --c-glow-accent: color-mix(in oklab, var(--c-accent) 20%, transparent);
+  --c-glow-primary: color-mix(in oklab, var(--c-primary) 12%, transparent);
+  --c-glow-accent: color-mix(in oklab, var(--c-accent) 14%, transparent);
   --c-hero-shot-stroke: color-mix(in oklab, var(--c-primary) 90%, var(--c-hero-tint-primary) 10%);
   --c-hero-shot-floor: color-mix(in oklab, var(--c-primary) 26%, var(--c-border) 74%);
   --c-hero-shot-hoop: color-mix(in oklab, var(--c-accent) 82%, var(--c-hero-tint-accent) 18%);
@@ -67,8 +72,12 @@
   --c-avatar-client: #ffb347;
   --c-avatar-client-light: #ff7a59;
 
-  --shadow-card: 0 8px 20px color-mix(in oklab, var(--c-ink) 7%, transparent);
-  --shadow-card-hover: 0 12px 26px color-mix(in oklab, var(--c-ink) 11%, transparent);
+  --shadow-card:
+    0 10px 24px color-mix(in oklab, var(--c-ink) 8%, transparent),
+    0 2px 6px color-mix(in oklab, var(--c-ink) 4%, transparent);
+  --shadow-card-hover:
+    0 14px 30px color-mix(in oklab, var(--c-ink) 10%, transparent),
+    0 4px 10px color-mix(in oklab, var(--c-ink) 5%, transparent);
   --c-elev-shadow: 0 32px 72px color-mix(in oklab, #0b1220 36%, transparent);
   --btn-primary-bg: linear-gradient(
     180deg,
@@ -78,11 +87,11 @@
   --btn-primary-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 25%, transparent);
   --btn-secondary-bg: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--c-panel) 97%, var(--c-primary) 3%),
-    color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%)
+    color-mix(in oklab, var(--c-panel) 96%, var(--c-surface) 4%),
+    color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%)
   );
-  --btn-secondary-border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
-  --btn-secondary-shadow-hover: 0 10px 22px color-mix(in oklab, var(--c-primary) 14%, transparent);
+  --btn-secondary-border: 1px solid color-mix(in oklab, var(--c-border) 82%, var(--c-text) 18%);
+  --btn-secondary-shadow-hover: 0 10px 22px color-mix(in oklab, var(--c-ink) 10%, transparent);
 
   --fs-h1: 28px;
   --fs-h2: 22px;
