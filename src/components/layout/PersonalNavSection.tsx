@@ -99,7 +99,7 @@ export function PersonalNavSection({
   const { containerRef: dockTrackRef, indicatorStyle: dockIndicatorStyle } = useSlidingIndicator<HTMLDivElement>({
     activeSelector: '.personal-nav__item.is-active',
     enabled: hasTieredLayout,
-    deps: [pathname, activeDockKey, dockItems.length],
+    watchKey: `${pathname}|${activeDockKey}|${dockItems.length}`,
   });
 
   const parseNumericValue = (value: PersonalNavItem['value']) => {

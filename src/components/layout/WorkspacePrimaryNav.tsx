@@ -104,7 +104,7 @@ function WorkspacePrimaryNav({
   const { containerRef, indicatorStyle } = useSlidingIndicator<HTMLElement>({
     activeSelector: '.topbar-nav__item.is-active',
     enabled: !mobile,
-    deps: [pathname, activeItemKey, items.length],
+    watchKey: `${pathname}|${activeItemKey}|${items.length}`,
   });
 
   return (

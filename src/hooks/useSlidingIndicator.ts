@@ -5,17 +5,16 @@ import * as React from 'react';
 type Params = {
   activeSelector: string;
   enabled?: boolean;
-  deps?: React.DependencyList;
+  watchKey?: string;
 };
 
 export function useSlidingIndicator<T extends HTMLElement>({
   activeSelector,
   enabled = true,
-  deps = [],
+  watchKey = '',
 }: Params) {
   const containerRef = React.useRef<T | null>(null);
   const [indicatorStyle, setIndicatorStyle] = React.useState<React.CSSProperties | null>(null);
-  const dependencyList = deps;
 
   const syncIndicator = React.useCallback(() => {
     if (!enabled) {
@@ -61,7 +60,7 @@ export function useSlidingIndicator<T extends HTMLElement>({
       window.removeEventListener('resize', onResize);
       observer?.disconnect();
     };
-  }, [enabled, syncIndicator, dependencyList]);
+  }, [enabled, syncIndicator, watchKey]);
 
   return {
     containerRef,
