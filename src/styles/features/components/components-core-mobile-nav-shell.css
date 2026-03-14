@@ -5,6 +5,29 @@
     display: none;
   }
 
+  @media (max-width: 820px) {
+    .topbar__inner {
+      padding-inline: var(--shell-inline-padding, 12px);
+      border-radius: 20px;
+    }
+
+    .topbar__inner--with-center {
+      display: flex;
+    }
+
+    .topbar__center {
+      display: none;
+    }
+
+    .page-shell__back-row--mobile-hidden {
+      display: none;
+    }
+
+    .page-shell--with-mobile-nav {
+      --shell-mobile-nav-height: 72px;
+    }
+  }
+
   .page-shell__topbar-actions {
     display: inline-flex;
     align-items: center;

@@ -49,7 +49,7 @@
     margin: calc(-1 * var(--space-1)) 0 0;
     font-size: var(--fs-small);
     line-height: 1.35;
-    color: color-mix(in oklab, var(--c-text-muted) 86%, var(--c-primary) 14%);
+    color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
     max-width: 62ch;
   }
 
@@ -107,6 +107,36 @@
   }
 
   .personal-nav__track--dock {
+    --personal-nav-dock-border: color-mix(in oklab, white 74%, var(--c-border) 26%);
+    --personal-nav-dock-bg:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 80%, var(--c-panel) 20%) 0%,
+        color-mix(in oklab, white 64%, var(--c-panel) 36%) 100%
+      );
+    --personal-nav-dock-shadow:
+      0 14px 30px color-mix(in oklab, var(--c-ink) 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 72%, transparent);
+    --personal-nav-dock-item-color: color-mix(in oklab, var(--c-text) 82%, var(--c-text-muted) 18%);
+    --personal-nav-dock-item-hover-color: var(--c-text);
+    --personal-nav-dock-item-hover-bg: color-mix(in oklab, white 30%, transparent);
+    --personal-nav-dock-indicator-border: color-mix(in oklab, white 84%, var(--c-border) 16%);
+    --personal-nav-dock-indicator-bg:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.95),
+        rgba(255, 255, 255, 0.78)
+      );
+    --personal-nav-dock-indicator-shadow:
+      0 10px 22px color-mix(in oklab, var(--c-ink) 8%, transparent),
+      0 4px 12px color-mix(in oklab, white 8%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    --personal-nav-dock-badge-border: color-mix(in oklab, var(--c-border) 78%, white 22%);
+    --personal-nav-dock-badge-bg: color-mix(in oklab, var(--c-panel) 92%, white 8%);
+    --personal-nav-dock-badge-color: color-mix(in oklab, var(--c-text) 88%, var(--c-text-muted) 12%);
+    --personal-nav-dock-badge-active-border: color-mix(in oklab, var(--c-border) 68%, white 32%);
+    --personal-nav-dock-badge-active-bg: color-mix(in oklab, white 12%, var(--c-panel) 88%);
+    --personal-nav-dock-badge-active-color: var(--c-text);
     --control-gap: 6px;
     --control-pad: 6px;
     position: relative;
@@ -115,12 +145,45 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: var(--control-pad);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--personal-nav-dock-border);
+    background: var(--personal-nav-dock-bg);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    box-shadow: var(--personal-nav-dock-shadow);
     overflow: hidden;
+  }
+
+  html.dark .personal-nav__track--dock {
+    --personal-nav-dock-border: color-mix(in oklab, var(--c-border) 86%, white 14%);
+    --personal-nav-dock-bg:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 92%, white 8%) 0%,
+        color-mix(in oklab, var(--c-panel) 96%, var(--c-ink) 4%) 100%
+      );
+    --personal-nav-dock-shadow:
+      0 18px 34px color-mix(in oklab, var(--c-ink) 34%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+    --personal-nav-dock-item-color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
+    --personal-nav-dock-item-hover-color: var(--c-text);
+    --personal-nav-dock-item-hover-bg: color-mix(in oklab, white 5%, transparent);
+    --personal-nav-dock-indicator-border: color-mix(in oklab, var(--c-border) 78%, white 22%);
+    --personal-nav-dock-indicator-bg:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 14%, var(--c-panel) 86%) 0%,
+        color-mix(in oklab, white 6%, var(--c-panel) 94%) 100%
+      );
+    --personal-nav-dock-indicator-shadow:
+      0 16px 30px color-mix(in oklab, var(--c-ink) 34%, transparent),
+      0 4px 12px color-mix(in oklab, white 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 14%, transparent);
+    --personal-nav-dock-badge-border: color-mix(in oklab, var(--c-border) 78%, white 22%);
+    --personal-nav-dock-badge-bg: color-mix(in oklab, var(--c-panel) 88%, white 12%);
+    --personal-nav-dock-badge-color: color-mix(in oklab, white 88%, var(--c-text-muted) 12%);
+    --personal-nav-dock-badge-active-border: color-mix(in oklab, var(--c-border) 68%, white 32%);
+    --personal-nav-dock-badge-active-bg: color-mix(in oklab, white 16%, var(--c-panel) 84%);
+    --personal-nav-dock-badge-active-color: var(--c-text);
   }
 
   @media (min-width: 700px) {
@@ -157,17 +220,19 @@
     justify-content: center;
     align-items: center;
     gap: 0;
-    color: color-mix(in oklab, var(--c-text) 72%, var(--c-primary) 28%);
+    color: var(--personal-nav-dock-item-color);
     position: relative;
     z-index: 1;
   }
 
   .personal-nav__track--dock .personal-nav__item:hover {
+    background: var(--personal-nav-dock-item-hover-bg);
+    color: var(--personal-nav-dock-item-hover-color);
     transform: translateY(-1px) scale(1.02);
   }
 
   .personal-nav__track--dock .personal-nav__item.is-active {
-    color: color-mix(in oklab, var(--c-text) 92%, var(--c-primary) 8%);
+    color: var(--personal-nav-dock-item-hover-color);
     transform: translateY(0) scale(1);
   }
 
@@ -180,17 +245,9 @@
     left: 0;
     top: 0;
     border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.72);
-    background:
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.95),
-        rgba(255, 255, 255, 0.78)
-      );
-    box-shadow:
-      0 10px 22px color-mix(in oklab, var(--c-primary) 20%, transparent),
-      0 4px 12px color-mix(in oklab, var(--c-primary) 14%, transparent),
-      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    border: 1px solid var(--personal-nav-dock-indicator-border);
+    background: var(--personal-nav-dock-indicator-bg);
+    box-shadow: var(--personal-nav-dock-indicator-shadow);
     transition:
       transform 280ms var(--ease-standard),
       width 280ms var(--ease-standard),
@@ -227,9 +284,9 @@
     height: 18px;
     padding: 0 6px;
     border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--c-border) 68%, var(--c-primary) 32%);
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%);
-    color: color-mix(in oklab, var(--c-text) 86%, var(--c-primary) 14%);
+    border: 1px solid var(--personal-nav-dock-badge-border);
+    background: var(--personal-nav-dock-badge-bg);
+    color: var(--personal-nav-dock-badge-color);
     font-size: 11px;
     font-weight: 700;
     line-height: 1;
@@ -237,10 +294,10 @@
   }
 
   .personal-nav__track--dock .personal-nav__item.is-active .personal-nav__value--dock {
-    border-color: color-mix(in oklab, var(--c-primary) 52%, var(--c-border) 48%);
-    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-primary) 18%);
-    color: color-mix(in oklab, var(--c-text) 72%, var(--c-primary) 28%);
-    box-shadow: 0 4px 10px color-mix(in oklab, var(--c-primary) 18%, transparent);
+    border-color: var(--personal-nav-dock-badge-active-border);
+    background: var(--personal-nav-dock-badge-active-bg);
+    color: var(--personal-nav-dock-badge-active-color);
+    box-shadow: 0 4px 10px color-mix(in oklab, var(--c-ink) 14%, transparent);
   }
 
   @media (max-width: 640px) {
@@ -275,10 +332,10 @@
 
   .personal-nav__item:hover,
   .personal-nav__item.is-active {
-    --personal-nav-item-color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text) 30%);
-    --personal-nav-item-border: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
-    --personal-nav-item-bg-start: color-mix(in oklab, var(--c-panel) 94%, var(--c-primary) 6%);
-    --personal-nav-item-bg-end: color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%);
+    --personal-nav-item-color: var(--c-text);
+    --personal-nav-item-border: color-mix(in oklab, white 18%, var(--c-border) 82%);
+    --personal-nav-item-bg-start: color-mix(in oklab, white 8%, var(--c-panel) 92%);
+    --personal-nav-item-bg-end: color-mix(in oklab, white 4%, var(--c-panel) 96%);
     --personal-nav-item-shadow: var(--surface-card-shadow-hover);
   }
 
@@ -305,10 +362,10 @@
 
   .personal-nav__item.is-disabled.is-locked:hover {
     transform: none;
-    --personal-nav-item-border: color-mix(in oklab, var(--c-primary) 46%, var(--c-border) 54%);
-    --personal-nav-item-bg-start: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
-    --personal-nav-item-bg-end: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
-    --personal-nav-item-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 14%, transparent);
+    --personal-nav-item-border: color-mix(in oklab, white 18%, var(--c-border) 82%);
+    --personal-nav-item-bg-start: color-mix(in oklab, white 8%, var(--c-panel) 92%);
+    --personal-nav-item-bg-end: color-mix(in oklab, white 4%, var(--c-panel) 96%);
+    --personal-nav-item-shadow: 0 8px 18px color-mix(in oklab, var(--c-ink) 12%, transparent);
   }
 
   .personal-nav__icon {
