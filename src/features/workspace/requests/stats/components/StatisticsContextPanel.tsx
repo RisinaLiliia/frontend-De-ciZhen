@@ -8,7 +8,7 @@ import {
   IconFilter,
 } from '@/components/ui/icons/icons';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
-import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
 const ALL_CITIES_VALUE = '__all_cities__';
 const ALL_CATEGORIES_VALUE = '__all_categories__';

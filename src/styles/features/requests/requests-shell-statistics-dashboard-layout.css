@@ -69,6 +69,28 @@
     gap: var(--space-2-5);
   }
 
+  .workspace-statistics__background-error {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in oklab, var(--c-warning) 24%, var(--surface-soft-border) 76%);
+    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+  }
+
+  .workspace-statistics__background-error strong {
+    font-size: var(--fs-body);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--lh-title);
+    color: var(--c-text);
+  }
+
+  .workspace-statistics__background-error p {
+    margin: 0;
+    font-size: var(--fs-small);
+    color: var(--c-text-muted);
+  }
+
   .workspace-statistics .requests-stats__kpi-grid {
     position: relative;
     isolation: isolate;

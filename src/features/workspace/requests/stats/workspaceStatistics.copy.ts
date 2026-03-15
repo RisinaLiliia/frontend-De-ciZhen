@@ -36,6 +36,8 @@ export type WorkspaceStatisticsCopy = {
   contextHealthActivityLow: string;
   contextLowDataTitle: string;
   contextLowDataBody: string;
+  backgroundErrorTitle: string;
+  backgroundErrorBody: string;
   exportLabel: string;
   modePlatform: string;
   modePersonalized: string;
@@ -115,15 +117,6 @@ export type WorkspaceStatisticsCopy = {
   priceRecommendedLabel: string;
   priceRecommendationLabel: string;
   priceSweetSpotLabel: string;
-  priceSmartSignalLabel: string;
-  priceSmartSignalVisibilityTemplate: string;
-  priceSmartSignalBalancedTemplate: string;
-  priceSmartSignalPremiumTemplate: string;
-  priceConfidenceLabel: string;
-  priceConfidenceHighLabel: string;
-  priceConfidenceMediumLabel: string;
-  priceConfidenceLowLabel: string;
-  priceConfidenceBasedOnTemplate: string;
   priceProfitPotentialLabel: string;
   priceProfitHighLabel: string;
   priceProfitMediumLabel: string;
@@ -267,6 +260,8 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   contextHealthActivityLow: 'Ruhig',
   contextLowDataTitle: 'Zu wenig Daten für eine verlässliche Segmentanalyse',
   contextLowDataBody: 'Erweitern Sie den Zeitraum oder wechseln Sie zu Alle Städte bzw. Alle Kategorien.',
+  backgroundErrorTitle: 'Aktualisierung fehlgeschlagen',
+  backgroundErrorBody: 'Die sichtbaren Daten stammen noch aus dem vorherigen Analysekontext. Bitte versuchen Sie die Aktualisierung erneut.',
   exportLabel: 'Export CSV',
   modePlatform: 'Plattform',
   modePersonalized: 'Personalisiert',
@@ -354,15 +349,6 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   priceRecommendedLabel: 'Empfohlener Bereich',
   priceRecommendationLabel: 'Empfehlung',
   priceSweetSpotLabel: 'Optimale Zone',
-  priceSmartSignalLabel: 'Smart Pricing Signal',
-  priceSmartSignalVisibilityTemplate: 'Preis leicht unter dem Durchschnitt: nahe {price} erhöht aktuell die Sichtbarkeit.',
-  priceSmartSignalBalancedTemplate: 'Beste Abschlussrate aktuell nahe {price}.',
-  priceSmartSignalPremiumTemplate: 'Ein Preis nahe {price} funktioniert, wenn dein Profil klaren Premium-Mehrwert zeigt.',
-  priceConfidenceLabel: 'KI Confidence',
-  priceConfidenceHighLabel: 'Hoch',
-  priceConfidenceMediumLabel: 'Mittel',
-  priceConfidenceLowLabel: 'Niedrig',
-  priceConfidenceBasedOnTemplate: 'Basierend auf {count} analysierten Aufträgen',
   priceProfitPotentialLabel: 'Profit Potential',
   priceProfitHighLabel: 'Sehr gute Marktchance',
   priceProfitMediumLabel: 'Solide Marktchance',
@@ -510,6 +496,8 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   contextHealthActivityLow: 'Quiet',
   contextLowDataTitle: 'Not enough data for reliable segment analysis',
   contextLowDataBody: 'Expand the period or switch to all cities or all categories.',
+  backgroundErrorTitle: 'Update failed',
+  backgroundErrorBody: 'The visible data still comes from the previous analysis context. Please try the refresh again.',
   exportLabel: 'Export CSV',
   modePlatform: 'Platform',
   modePersonalized: 'Personalized',
@@ -597,15 +585,6 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   priceRecommendedLabel: 'Recommended range',
   priceRecommendationLabel: 'Recommendation',
   priceSweetSpotLabel: 'Optimal zone',
-  priceSmartSignalLabel: 'Smart pricing signal',
-  priceSmartSignalVisibilityTemplate: 'Pricing slightly below average near {price} currently improves visibility.',
-  priceSmartSignalBalancedTemplate: 'Best close rate currently sits near {price}.',
-  priceSmartSignalPremiumTemplate: 'Pricing near {price} works best when your profile clearly signals premium value.',
-  priceConfidenceLabel: 'AI confidence',
-  priceConfidenceHighLabel: 'High',
-  priceConfidenceMediumLabel: 'Medium',
-  priceConfidenceLowLabel: 'Low',
-  priceConfidenceBasedOnTemplate: 'Based on {count} analyzed jobs',
   priceProfitPotentialLabel: 'Profit potential',
   priceProfitHighLabel: 'Strong market potential',
   priceProfitMediumLabel: 'Solid market potential',

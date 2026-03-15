@@ -2,7 +2,7 @@
 
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import type { TranslateFn } from './statisticsSections.types';
 
 export function StatisticsDemandPanel({

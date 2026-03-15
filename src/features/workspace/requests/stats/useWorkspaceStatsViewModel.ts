@@ -5,8 +5,8 @@ import * as React from 'react';
 import type {
   WorkspaceStatisticsActivityMetricsDto,
   WorkspaceStatisticsCategoryDemandDto,
+  WorkspaceStatisticsContextHealthDto,
   WorkspaceStatisticsGrowthCardDto,
-  WorkspaceStatisticsPriceIntelligenceDto,
   WorkspaceStatisticsRange,
 } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
@@ -28,12 +28,11 @@ import {
   toHint,
   toTrend,
 } from './statisticsModel.mappers';
-import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
+import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type {
   WorkspaceStatisticsActivitySignalView,
   WorkspaceStatisticsContextMetricView,
   WorkspaceStatisticsCityRowView,
-  WorkspaceStatisticsFilterOption,
   WorkspaceStatisticsFunnelItemView,
   WorkspaceStatisticsFilters,
   WorkspaceStatisticsGrowthCardView,
@@ -85,8 +84,25 @@ function exportCsv(rows: string[][], filename: string) {
   URL.revokeObjectURL(url);
 }
 
-function fillTemplate(template: string, values: Record<string, string>): string {
-  return template.replace(/\{(\w+)\}/g, (match, key: string) => values[key] ?? match);
+function resolveHealthMetricValue(
+  metric: WorkspaceStatisticsContextHealthDto,
+  copy: ReturnType<typeof getWorkspaceStatisticsCopy>,
+) {
+  if (metric.key === 'demand') {
+    if (metric.value === 'rising') return copy.contextHealthDemandRising;
+    if (metric.value === 'stable') return copy.contextHealthDemandStable;
+    return copy.contextHealthDemandLimited;
+  }
+
+  if (metric.key === 'competition') {
+    if (metric.value === 'low') return copy.contextHealthCompetitionLow;
+    if (metric.value === 'high') return copy.contextHealthCompetitionHigh;
+    return copy.contextHealthCompetitionBalanced;
+  }
+
+  if (metric.value === 'high') return copy.contextHealthActivityHigh;
+  if (metric.value === 'low') return copy.contextHealthActivityLow;
+  return copy.contextHealthActivityStable;
 }
 
 function formatCurrencyRangeCompact(params: {
@@ -110,13 +126,22 @@ function normalizeNullableFilterValue(value: string | null | undefined): string 
   return normalized.length > 0 ? normalized : null;
 }
 
-function matchesNullableFilter(candidate: string | null | undefined, selected: string | null) {
-  if (!selected) return true;
-  return normalizeNullableFilterValue(candidate) === selected;
-}
+function ensureSelectedFilterOption(params: {
+  options: Array<{ value: string; label: string }>;
+  selectedValue: string | null;
+  selectedLabel: string | null | undefined;
+}) {
+  const { options, selectedValue, selectedLabel } = params;
+  if (!selectedValue) return options.slice();
+  if (options.some((item) => item.value === selectedValue)) return options.slice();
 
-function compareOptionLabels(a: WorkspaceStatisticsFilterOption, b: WorkspaceStatisticsFilterOption, localeTag: string) {
-  return a.label.localeCompare(b.label, localeTag);
+  const normalizedLabel = String(selectedLabel ?? '').trim();
+  if (normalizedLabel.length === 0) return options.slice();
+
+  return [
+    { value: selectedValue, label: normalizedLabel },
+    ...options,
+  ];
 }
 
 type UseWorkspaceStatsViewModelParams = {
@@ -127,9 +152,10 @@ type UseWorkspaceStatsViewModelParams = {
   setCityId: (next: string | null) => void;
   setCategoryKey: (next: string | null) => void;
   resetFilters: () => void;
-  data: WorkspaceStatisticsOverviewSourceDto | undefined;
+  data: WorkspaceStatisticsDecisionDashboardDto | undefined;
   isLoading: boolean;
   isError: boolean;
+  hasBackgroundError: boolean;
   isFetching: boolean;
   isPendingFilters: boolean;
 };
@@ -145,6 +171,7 @@ export function useWorkspaceStatsViewModel({
   data,
   isLoading,
   isError,
+  hasBackgroundError,
   isFetching,
   isPendingFilters,
 }: UseWorkspaceStatsViewModelParams): WorkspaceStatisticsModel {
@@ -421,45 +448,28 @@ export function useWorkspaceStatsViewModel({
   }, [data?.demand.cities]);
 
   const rawDemandRows = React.useMemo<WorkspaceStatisticsCategoryDemandDto[]>(() => {
-    const rows = (data?.demand.categories ?? []).slice();
-    rows.sort(
-      (a, b) =>
-        (b.sharePercent - a.sharePercent) ||
-        (b.requestCount - a.requestCount) ||
-        a.categoryName.localeCompare(b.categoryName, locale === 'de' ? 'de-DE' : 'en-US'),
-    );
-    return rows;
-  }, [data?.demand.categories, locale]);
+    return (data?.demand.categories ?? []).slice();
+  }, [data?.demand.categories]);
 
-  const cityOptions = React.useMemo<WorkspaceStatisticsFilterOption[]>(() => {
-    return rawCityRows
-      .map((row) => ({
-        value: row.cityId ?? row.key,
-        label: row.name,
-      }))
-      .sort((a, b) => compareOptionLabels(a, b, localeTag));
-  }, [localeTag, rawCityRows]);
+  const cityOptions = React.useMemo(
+    () =>
+      ensureSelectedFilterOption({
+        options: data?.filterOptions.cities ?? [],
+        selectedValue: selectedCityId,
+        selectedLabel: data?.decisionContext.city.label,
+      }),
+    [data?.decisionContext, data?.filterOptions.cities, selectedCityId],
+  );
 
-  const categoryOptions = React.useMemo<WorkspaceStatisticsFilterOption[]>(() => {
-    const map = new Map<string, WorkspaceStatisticsFilterOption>();
-    rawDemandRows.forEach((row) => {
-      const value = normalizeNullableFilterValue(row.categoryKey);
-      if (!value) return;
-      map.set(value, { value, label: row.categoryName });
-    });
-    (data?.opportunityRadar ?? []).forEach((item) => {
-      const value = normalizeNullableFilterValue(item.categoryKey);
-      const label = String(item.category ?? '').trim();
-      if (!value || !label) return;
-      if (!map.has(value)) map.set(value, { value, label });
-    });
-    const priceValue = normalizeNullableFilterValue(data?.priceIntelligence?.categoryKey);
-    const priceLabel = String(data?.priceIntelligence?.category ?? '').trim();
-    if (priceValue && priceLabel && !map.has(priceValue)) {
-      map.set(priceValue, { value: priceValue, label: priceLabel });
-    }
-    return Array.from(map.values()).sort((a, b) => compareOptionLabels(a, b, localeTag));
-  }, [data?.opportunityRadar, data?.priceIntelligence?.category, data?.priceIntelligence?.categoryKey, localeTag, rawDemandRows]);
+  const categoryOptions = React.useMemo(
+    () =>
+      ensureSelectedFilterOption({
+        options: data?.filterOptions.categories ?? [],
+        selectedValue: selectedCategoryKey,
+        selectedLabel: data?.decisionContext.category.label,
+      }),
+    [data?.decisionContext, data?.filterOptions.categories, selectedCategoryKey],
+  );
 
   const selectedCityOption = React.useMemo(
     () => cityOptions.find((item) => item.value === selectedCityId) ?? null,
@@ -471,14 +481,12 @@ export function useWorkspaceStatsViewModel({
   );
 
   const cityRows = React.useMemo<WorkspaceStatisticsCityRowView[]>(() => {
-    if (!selectedCityId) return rawCityRows;
-    return rawCityRows.filter((item) => (item.cityId ?? item.key) === selectedCityId);
-  }, [rawCityRows, selectedCityId]);
+    return rawCityRows;
+  }, [rawCityRows]);
 
   const demandRows = React.useMemo<WorkspaceStatisticsCategoryDemandDto[]>(() => {
-    if (!selectedCategoryKey) return rawDemandRows;
-    return rawDemandRows.filter((item) => normalizeNullableFilterValue(item.categoryKey) === selectedCategoryKey);
-  }, [rawDemandRows, selectedCategoryKey]);
+    return rawDemandRows;
+  }, [rawDemandRows]);
 
   const opportunityRadar = React.useMemo<WorkspaceStatisticsOpportunityRadarItemView[]>(() => {
     const source = data?.opportunityRadar ?? [];
@@ -486,17 +494,12 @@ export function useWorkspaceStatsViewModel({
 
     const fallbackCategory = locale === 'de' ? 'Generalistisch' : 'General';
     return source
-      .slice()
-      .filter((item) => matchesNullableFilter(item.cityId, selectedCityId))
-      .filter((item) => matchesNullableFilter(item.categoryKey, selectedCategoryKey))
-      .sort((a, b) => Number(b.score ?? 0) - Number(a.score ?? 0))
-      .slice(0, 3)
       .map((item, index) => {
         const hrefParams = new URLSearchParams({ section: 'requests' });
         if (item.cityId) hrefParams.set('cityId', item.cityId);
         if (item.categoryKey) hrefParams.set('categoryKey', item.categoryKey);
         return {
-          rank: (index + 1) as 1 | 2 | 3,
+          rank: (item.rank ?? index + 1) as 1 | 2 | 3,
           cityId: item.cityId ?? null,
           city: item.city,
           categoryKey: item.categoryKey ?? null,
@@ -522,67 +525,27 @@ export function useWorkspaceStatsViewModel({
           href: `/workspace?${hrefParams.toString()}`,
         };
       });
-  }, [data?.opportunityRadar, locale, selectedCategoryKey, selectedCityId]);
+  }, [data?.opportunityRadar, locale]);
 
   const priceIntelligence = React.useMemo<WorkspaceStatisticsPriceIntelligenceView>(() => {
-    const source: WorkspaceStatisticsPriceIntelligenceDto | undefined = data?.priceIntelligence;
-    const fallbackContextLabel = selectedCategoryOption && selectedCityOption
-      ? `${selectedCategoryOption.label} · ${selectedCityOption.label}`
-      : selectedCityOption?.label ?? selectedCategoryOption?.label ?? null;
-    const hasDirectCityMatch = !selectedCityId ||
-      normalizeNullableFilterValue(source?.citySlug) === selectedCityId ||
-      String(source?.city ?? '').trim() === (selectedCityOption?.label ?? '');
-    const hasDirectCategoryMatch = matchesNullableFilter(source?.categoryKey, selectedCategoryKey);
-    const hasDirectContextMatch = Boolean(source) && hasDirectCityMatch && hasDirectCategoryMatch;
+    const source = data?.priceIntelligence;
+    const contextCityFallback = data?.decisionContext.city.label ?? selectedCityOption?.label ?? null;
+    const contextCategoryFallback = data?.decisionContext.category.label ?? selectedCategoryOption?.label ?? null;
+    const fallbackContextLabel = contextCategoryFallback && contextCityFallback
+      ? `${contextCategoryFallback} · ${contextCityFallback}`
+      : contextCityFallback ?? contextCategoryFallback ?? null;
     if (!source) {
       return {
-        cityLabel: selectedCityOption?.label ?? null,
-        categoryLabel: selectedCategoryOption?.label ?? null,
+        cityLabel: contextCityFallback,
+        categoryLabel: contextCategoryFallback,
         contextLabel: fallbackContextLabel,
         recommendedRangeLabel: null,
         marketAverageLabel: null,
-        recommendedPriceLabel: null,
-        smartSignalLabel: null,
-        smartSignalTone: null,
-        confidenceLabel: null,
-        confidenceDetailLabel: null,
         recommendedMin: null,
         recommendedMax: null,
         marketAverage: null,
         optimalMin: null,
         optimalMax: null,
-        smartRecommendedPrice: null,
-        analyzedRequestsCount: null,
-        confidenceLevel: null,
-        optimalMinLabel: null,
-        optimalMaxLabel: null,
-        recommendation: null,
-        profitPotentialScore: null,
-        profitPotentialStatus: null,
-        profitPotentialLabel: null,
-      };
-    }
-
-    if (isFocusMode && !hasDirectContextMatch) {
-      return {
-        cityLabel: selectedCityOption?.label ?? source.city ?? null,
-        categoryLabel: selectedCategoryOption?.label ?? source.category ?? null,
-        contextLabel: fallbackContextLabel,
-        recommendedRangeLabel: null,
-        marketAverageLabel: null,
-        recommendedPriceLabel: null,
-        smartSignalLabel: null,
-        smartSignalTone: null,
-        confidenceLabel: null,
-        confidenceDetailLabel: null,
-        recommendedMin: null,
-        recommendedMax: null,
-        marketAverage: null,
-        optimalMin: null,
-        optimalMax: null,
-        smartRecommendedPrice: null,
-        analyzedRequestsCount: null,
-        confidenceLevel: null,
         optimalMinLabel: null,
         optimalMaxLabel: null,
         recommendation: null,
@@ -618,8 +581,8 @@ export function useWorkspaceStatsViewModel({
         : null;
     const marketAverageLabel =
       typeof source.marketAverage === 'number' && Number.isFinite(source.marketAverage)
-        ? formatCurrency.format(source.marketAverage)
-        : null;
+      ? formatCurrency.format(source.marketAverage)
+      : null;
     const marketAverage =
       typeof source.marketAverage === 'number' && Number.isFinite(source.marketAverage)
         ? source.marketAverage
@@ -640,55 +603,10 @@ export function useWorkspaceStatsViewModel({
       optimalMaxValue !== null && Number.isFinite(optimalMaxValue)
         ? formatCurrency.format(optimalMaxValue)
         : null;
-    const smartRecommendedPrice =
-      typeof source.smartRecommendedPrice === 'number' && Number.isFinite(source.smartRecommendedPrice)
-        ? source.smartRecommendedPrice
-        : null;
-    const recommendedPriceLabel =
-      smartRecommendedPrice !== null
-        ? formatCurrency.format(smartRecommendedPrice)
-        : null;
-    const smartSignalTone = source.smartSignalTone ?? null;
-    const smartSignalLabel = smartRecommendedPrice !== null && smartSignalTone
-      ? fillTemplate(
-          smartSignalTone === 'visibility'
-            ? copy.priceSmartSignalVisibilityTemplate
-            : smartSignalTone === 'premium'
-              ? copy.priceSmartSignalPremiumTemplate
-              : copy.priceSmartSignalBalancedTemplate,
-          {
-            price: recommendedPriceLabel ?? '—',
-          },
-        )
-      : null;
-    const analyzedRequestsCount =
-      typeof source.analyzedRequestsCount === 'number' && Number.isFinite(source.analyzedRequestsCount)
-        ? source.analyzedRequestsCount
-        : null;
-    const confidenceLevel = source.confidenceLevel ?? null;
-    const confidenceLabel =
-      confidenceLevel === 'high'
-        ? copy.priceConfidenceHighLabel
-        : confidenceLevel === 'medium'
-          ? copy.priceConfidenceMediumLabel
-          : confidenceLevel === 'low'
-            ? copy.priceConfidenceLowLabel
-            : null;
-    const confidenceDetailLabel =
-      analyzedRequestsCount !== null && confidenceLevel
-        ? fillTemplate(copy.priceConfidenceBasedOnTemplate, {
-            count: formatNumber.format(analyzedRequestsCount),
-          })
-        : null;
     const recommendation =
       typeof source.recommendation === 'string' && source.recommendation.trim().length > 0
         ? source.recommendation
-        : (recommendedRangeLabel
-          ? fillTemplate(copy.priceRecommendationFallbackTemplate, {
-              range: recommendedRangeLabel,
-              citySuffix: source.city ? ` in ${source.city}` : '',
-            })
-          : null);
+        : null;
     const profitPotentialScore =
       typeof source.profitPotentialScore === 'number' && Number.isFinite(source.profitPotentialScore)
         ? source.profitPotentialScore
@@ -709,19 +627,11 @@ export function useWorkspaceStatsViewModel({
       contextLabel,
       recommendedRangeLabel,
       marketAverageLabel,
-      recommendedPriceLabel,
-      smartSignalLabel,
-      smartSignalTone,
-      confidenceLabel,
-      confidenceDetailLabel,
       recommendedMin,
       recommendedMax,
       marketAverage,
       optimalMin: optimalMinValue,
       optimalMax: optimalMaxValue,
-      smartRecommendedPrice,
-      analyzedRequestsCount,
-      confidenceLevel,
       optimalMinLabel,
       optimalMaxLabel,
       recommendation,
@@ -730,26 +640,16 @@ export function useWorkspaceStatsViewModel({
       profitPotentialLabel,
     };
   }, [
-    copy.priceConfidenceBasedOnTemplate,
-    copy.priceConfidenceHighLabel,
-    copy.priceConfidenceLowLabel,
-    copy.priceConfidenceMediumLabel,
     copy.priceProfitHighLabel,
     copy.priceProfitLowLabel,
     copy.priceProfitMediumLabel,
-    copy.priceRecommendationFallbackTemplate,
-    copy.priceSmartSignalBalancedTemplate,
-    copy.priceSmartSignalPremiumTemplate,
-    copy.priceSmartSignalVisibilityTemplate,
     data?.priceIntelligence,
+    data?.decisionContext.category.label,
+    data?.decisionContext.city.label,
     formatCurrency,
-    formatNumber,
-    isFocusMode,
     locale,
     localeTag,
-    selectedCategoryKey,
     selectedCategoryOption,
-    selectedCityId,
     selectedCityOption,
   ]);
 
@@ -796,91 +696,36 @@ export function useWorkspaceStatsViewModel({
   );
 
   const contextPeriodLabel = React.useMemo(() => {
-    if (range === '24h') return copy.range24h;
-    if (range === '7d') return copy.range7d;
-    if (range === '30d') return copy.range30d;
+    const selectedPeriod = data?.decisionContext.period ?? range;
+    if (selectedPeriod === '24h') return copy.range24h;
+    if (selectedPeriod === '7d') return copy.range7d;
+    if (selectedPeriod === '30d') return copy.range30d;
     return copy.range90d;
-  }, [copy.range24h, copy.range30d, copy.range7d, copy.range90d, range]);
+  }, [copy.range24h, copy.range30d, copy.range7d, copy.range90d, data?.decisionContext.period, range]);
 
-  const contextCityLabel = selectedCityOption?.label ?? copy.contextAllCitiesLabel;
-  const contextCategoryLabel = selectedCategoryOption?.label ?? copy.contextAllCategoriesLabel;
-  const contextScopeLabel = isFocusMode ? copy.contextScopeFocusLabel : copy.contextScopeGlobalLabel;
-
-  const hasScopedPriceData = Boolean(priceIntelligence.recommendedRangeLabel || priceIntelligence.marketAverageLabel);
-  const isLowDataContext = isFocusMode && (
-    (selectedCityId && cityRows.length === 0) ||
-    (selectedCategoryKey && demandRows.length === 0) ||
-    opportunityRadar.length === 0 ||
-    !hasScopedPriceData
-  );
+  const contextCityLabel = data?.decisionContext.city.label ?? selectedCityOption?.label ?? copy.contextAllCitiesLabel;
+  const contextCategoryLabel = data?.decisionContext.category.label ?? selectedCategoryOption?.label ?? copy.contextAllCategoriesLabel;
+  const contextScopeLabel = (data?.decisionContext.mode ?? (isFocusMode ? 'focus' : 'global')) === 'focus'
+    ? copy.contextScopeFocusLabel
+    : copy.contextScopeGlobalLabel;
+  const isLowDataContext = Boolean(data?.decisionContext.lowData?.isLowData);
 
   const contextHealthMetrics = React.useMemo<WorkspaceStatisticsContextMetricView[]>(() => {
-    const leadingDemand = demandRows[0];
-    const latestDelta = Number(data?.activity.totals.latestRequests ?? 0) - Number(data?.activity.totals.previousRequests ?? 0);
-    const competitionRatio = opportunityRadar[0]?.marketBalanceRatio ?? cityRows[0]?.marketBalanceRatio ?? null;
-
-    return [
-      {
-        key: 'demand',
-        label: copy.contextHealthDemandLabel,
-        value: leadingDemand
-          ? leadingDemand.sharePercent >= 45
-            ? copy.contextHealthDemandRising
-            : copy.contextHealthDemandStable
-          : copy.contextHealthDemandLimited,
-        tone: leadingDemand
-          ? leadingDemand.sharePercent >= 45
-            ? 'positive'
-            : 'neutral'
-          : 'warning',
-      },
-      {
-        key: 'competition',
-        label: copy.contextHealthCompetitionLabel,
-        value: competitionRatio === null
-          ? copy.contextHealthCompetitionBalanced
-          : competitionRatio >= 2
-            ? copy.contextHealthCompetitionLow
-            : competitionRatio >= 1
-              ? copy.contextHealthCompetitionBalanced
-              : copy.contextHealthCompetitionHigh,
-        tone: competitionRatio === null
-          ? 'neutral'
-          : competitionRatio >= 2
-            ? 'positive'
-            : competitionRatio >= 1
-              ? 'neutral'
-              : 'warning',
-      },
-      {
-        key: 'activity',
-        label: copy.contextHealthActivityLabel,
-        value: latestDelta > 0
-          ? copy.contextHealthActivityHigh
-          : latestDelta < 0
-            ? copy.contextHealthActivityLow
-            : copy.contextHealthActivityStable,
-        tone: latestDelta > 0 ? 'positive' : latestDelta < 0 ? 'warning' : 'neutral',
-      },
-    ];
+    const source = data?.decisionContext.health ?? [];
+    return source.map((metric) => ({
+      key: metric.key,
+      label:
+        metric.key === 'demand'
+          ? copy.contextHealthDemandLabel
+          : metric.key === 'competition'
+            ? copy.contextHealthCompetitionLabel
+            : copy.contextHealthActivityLabel,
+      value: resolveHealthMetricValue(metric, copy),
+      tone: metric.tone,
+    }));
   }, [
-    cityRows,
-    copy.contextHealthActivityHigh,
-    copy.contextHealthActivityLabel,
-    copy.contextHealthActivityLow,
-    copy.contextHealthActivityStable,
-    copy.contextHealthCompetitionBalanced,
-    copy.contextHealthCompetitionHigh,
-    copy.contextHealthCompetitionLabel,
-    copy.contextHealthCompetitionLow,
-    copy.contextHealthDemandLabel,
-    copy.contextHealthDemandLimited,
-    copy.contextHealthDemandRising,
-    copy.contextHealthDemandStable,
-    data?.activity.totals.latestRequests,
-    data?.activity.totals.previousRequests,
-    demandRows,
-    opportunityRadar,
+    copy,
+    data?.decisionContext.health,
   ]);
 
   const insights = React.useMemo<WorkspaceStatisticsInsightView[]>(
@@ -892,23 +737,13 @@ export function useWorkspaceStatsViewModel({
           kind: 'risk',
           code: 'focus_low_data',
           context: `${contextCityLabel} · ${contextCategoryLabel}`,
-          title: copy.contextLowDataTitle,
-          text: copy.contextLowDataBody,
+          title: data?.decisionContext.lowData?.title ?? copy.contextLowDataTitle,
+          text: data?.decisionContext.lowData?.body ?? copy.contextLowDataBody,
           evidence: `${contextPeriodLabel} · ${contextScopeLabel}`,
         }];
       }
       if (!data) return [];
-      const normalizedCityLabel = contextCityLabel.toLowerCase();
-      const normalizedCategoryLabel = contextCategoryLabel.toLowerCase();
-      const scopedInsights = (data.insights ?? []).filter((item) => {
-        if (!isFocusMode) return true;
-        const context = String(item.context ?? '').toLowerCase();
-        if (selectedCityId && !context.includes(normalizedCityLabel)) return false;
-        if (selectedCategoryKey && !context.includes(normalizedCategoryLabel)) return false;
-        return true;
-      });
-
-      return scopedInsights.slice(0, 4).map((item, index) => ({
+      return (data.insights ?? []).map((item, index) => ({
         key: item.id ?? `${item.code}-${index}`,
         level: item.level,
         kind: inferInsightType(item),
@@ -930,11 +765,8 @@ export function useWorkspaceStatsViewModel({
       copy,
       data,
       formatNumber,
-      isFocusMode,
       isLowDataContext,
       locale,
-      selectedCategoryKey,
-      selectedCityId,
     ],
   );
 
@@ -950,26 +782,21 @@ export function useWorkspaceStatsViewModel({
 
   const growthCards = React.useMemo<WorkspaceStatisticsGrowthCardView[]>(
     () => {
-      const recommendedCity = (data?.insights ?? []).find((insight) =>
-        insight.code.includes('city'),
-      )?.context ?? selectedCityOption?.label ?? undefined;
-      const recommendedScope = selectedCategoryOption?.label ?? recommendedCity;
-
       return (data?.growthCards ?? []).map((card: WorkspaceStatisticsGrowthCardDto) => {
         const resolved = resolveGrowthCard(copy, card);
         return {
           key: card.key,
-          title: resolved.title,
-          body: resolved.body,
-          benefit: resolved.benefit,
-          tone: resolved.tone,
-          badge: resolved.badge,
-          recommendedFor: card.key === 'local_ads' ? recommendedScope : undefined,
+          title: card.title ?? resolved.title,
+          body: card.body ?? resolved.body,
+          benefit: card.benefit ?? resolved.benefit,
+          tone: card.tone ?? resolved.tone,
+          badge: card.badge ?? resolved.badge,
+          recommendedFor: card.recommendedFor,
           href: resolved.href,
         };
       });
     },
-    [copy, data?.growthCards, data?.insights, selectedCategoryOption?.label, selectedCityOption?.label],
+    [copy, data?.growthCards],
   );
 
   const onExport = React.useCallback(() => {
@@ -988,10 +815,9 @@ export function useWorkspaceStatsViewModel({
       ...funnel.map((item) => ['funnel', item.label, item.value]),
     ];
 
-    const scopeSuffix = [selectedCityId, selectedCategoryKey].filter(Boolean).join('-');
-    const filename = `workspace-statistics-${range}${scopeSuffix ? `-${scopeSuffix}` : ''}-${new Date().toISOString().slice(0, 10)}.csv`;
+    const filename = data.exportMeta?.filename?.trim() || `workspace-statistics-${range}-${new Date().toISOString().slice(0, 10)}.csv`;
     exportCsv(rows, filename);
-  }, [activitySignals, cityRows, data, funnel, kpis, range, selectedCategoryKey, selectedCityId]);
+  }, [activitySignals, cityRows, data, funnel, kpis, range]);
 
   const activityMeta = React.useMemo(
     () => ({
@@ -1003,16 +829,18 @@ export function useWorkspaceStatsViewModel({
   );
 
   const context = React.useMemo(() => {
-    const stickyLabel = `${contextPeriodLabel} · ${contextCityLabel} · ${contextCategoryLabel}`;
-    const title = isFocusMode
-      ? `${copy.contextScopeFocusLabel}: ${contextCityLabel} · ${contextCategoryLabel}`
-      : copy.contextScopeGlobalLabel;
+    const stickyLabel = data?.decisionContext.stickyLabel?.trim() || `${contextPeriodLabel} · ${contextCityLabel} · ${contextCategoryLabel}`;
+    const title = data?.decisionContext.title?.trim() || (
+      (data?.decisionContext.mode ?? (isFocusMode ? 'focus' : 'global')) === 'focus'
+        ? `${copy.contextScopeFocusLabel}: ${contextCityLabel} · ${contextCategoryLabel}`
+        : copy.contextScopeGlobalLabel
+    );
     const subtitle = isLowDataContext
-      ? copy.contextLowDataBody
-      : copy.contextSubtitle;
+      ? (data?.decisionContext.lowData?.body ?? copy.contextLowDataBody)
+      : (data?.decisionContext.subtitle?.trim() || copy.contextSubtitle);
 
     return {
-      mode: isFocusMode ? 'focus' : 'global',
+      mode: data?.decisionContext.mode ?? (isFocusMode ? 'focus' : 'global'),
       periodLabel: contextPeriodLabel,
       cityLabel: contextCityLabel,
       categoryLabel: contextCategoryLabel,
@@ -1022,10 +850,16 @@ export function useWorkspaceStatsViewModel({
       subtitle,
       healthMetrics: contextHealthMetrics,
       isLowData: isLowDataContext,
-      lowDataTitle: isLowDataContext ? copy.contextLowDataTitle : null,
-      lowDataBody: isLowDataContext ? copy.contextLowDataBody : null,
+      lowDataTitle: isLowDataContext ? (data?.decisionContext.lowData?.title ?? copy.contextLowDataTitle) : null,
+      lowDataBody: isLowDataContext ? (data?.decisionContext.lowData?.body ?? copy.contextLowDataBody) : null,
     } satisfies WorkspaceStatisticsModel['context'];
   }, [
+    data?.decisionContext.lowData?.body,
+    data?.decisionContext.lowData?.title,
+    data?.decisionContext.mode,
+    data?.decisionContext.stickyLabel,
+    data?.decisionContext.subtitle,
+    data?.decisionContext.title,
     contextCityLabel,
     contextHealthMetrics,
     contextPeriodLabel,
@@ -1040,6 +874,27 @@ export function useWorkspaceStatsViewModel({
     isLowDataContext,
   ]);
 
+  const sectionMeta = React.useMemo(
+    () => ({
+      decisionSubtitle: data?.sectionMeta.decisionSubtitle ?? null,
+      demandSubtitle: data?.sectionMeta.demandSubtitle ?? null,
+      citiesSubtitle: data?.sectionMeta.citiesSubtitle ?? null,
+      opportunityTitle: data?.sectionMeta.opportunityTitle ?? null,
+      priceTitle: data?.sectionMeta.priceTitle ?? null,
+      insightsSubtitle: data?.sectionMeta.insightsSubtitle ?? null,
+      growthSubtitle: data?.sectionMeta.growthSubtitle ?? null,
+    }),
+    [
+      data?.sectionMeta.citiesSubtitle,
+      data?.sectionMeta.decisionSubtitle,
+      data?.sectionMeta.demandSubtitle,
+      data?.sectionMeta.growthSubtitle,
+      data?.sectionMeta.insightsSubtitle,
+      data?.sectionMeta.opportunityTitle,
+      data?.sectionMeta.priceTitle,
+    ],
+  );
+
   return {
     copy,
     filters,
@@ -1050,12 +905,14 @@ export function useWorkspaceStatsViewModel({
     resetFilters,
     isLoading: isLoading && !data,
     isError: isError && !data,
+    hasBackgroundError,
     isUpdating: isPendingFilters || isFetching,
     mode,
     modeLabel: mode === 'personalized' ? copy.modePersonalized : copy.modePlatform,
     cityOptions,
     categoryOptions,
     context,
+    sectionMeta,
     kpis,
     activityPoints,
     activityMeta,

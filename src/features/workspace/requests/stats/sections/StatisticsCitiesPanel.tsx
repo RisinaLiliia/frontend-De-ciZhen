@@ -9,7 +9,7 @@ import {
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import type { TranslateFn } from './statisticsSections.types';
 import { citySignalIcon, citySignalLabel } from './statisticsSections.utils';
 

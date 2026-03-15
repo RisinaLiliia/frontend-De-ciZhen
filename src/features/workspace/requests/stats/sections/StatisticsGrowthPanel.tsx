@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { Badge } from '@/components/ui/Badge';
-import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
 export function StatisticsGrowthPanel({
   panelRef,

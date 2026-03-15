@@ -5,7 +5,7 @@ import * as React from 'react';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { WorkspaceOverlayShell } from '../WorkspaceOverlayShell';
-import { useWorkspaceStatisticsModel } from './useWorkspaceStatisticsModel';
+import { useDecisionDashboardModel } from './useDecisionDashboardModel';
 import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { WorkspaceStatisticsPanel } from '../WorkspaceStatisticsPanel';
 
@@ -18,7 +18,7 @@ export function WorkspaceStatisticsExperience({
   t: (key: I18nKey) => string;
   locale: Locale;
 }) {
-  const model = useWorkspaceStatisticsModel({ locale });
+  const model = useDecisionDashboardModel({ locale });
   const [isOverlayCollapsed, setIsOverlayCollapsed] = React.useState(false);
 
   const overlayIntro = React.useCallback((headerToggle: React.ReactNode) => {

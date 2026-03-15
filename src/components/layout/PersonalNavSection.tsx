@@ -42,7 +42,7 @@ type PersonalNavSectionProps = {
   className?: string;
 };
 
-export function PersonalNavSection({
+export const PersonalNavSection = React.memo(function PersonalNavSection({
   title,
   subtitle,
   headerSlot,
@@ -258,4 +258,4 @@ export function PersonalNavSection({
       ) : null}
     </section>
   );
-}
+});

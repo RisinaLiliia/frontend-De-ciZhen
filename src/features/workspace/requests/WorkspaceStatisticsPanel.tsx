@@ -2,9 +2,9 @@
 
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { useWorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsModel';
+import { useDecisionDashboardModel } from './stats/useDecisionDashboardModel';
 import { WorkspaceStatisticsView } from './stats/WorkspaceStatisticsView';
-import type { WorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from './stats/workspaceStatistics.model';
 
 type WorkspaceStatisticsPanelProps = {
   t: (key: I18nKey) => string;
@@ -34,7 +34,7 @@ function WorkspaceStatisticsPanelWithModel({
   t,
   locale,
 }: Omit<WorkspaceStatisticsPanelProps, 'model'>) {
-  const model = useWorkspaceStatisticsModel({ locale });
+  const model = useDecisionDashboardModel({ locale });
   return (
     <WorkspaceStatisticsView
       t={t}

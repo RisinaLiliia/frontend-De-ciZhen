@@ -32,6 +32,38 @@ export function WorkspaceOverlayShell({
     const shellNode = shellRef.current;
     const bodyNode = bodyRef.current;
     if (!shellNode || !bodyNode) return;
+    const topbarNode = document.querySelector('.topbar');
+    let syncFrameId = 0;
+
+    const syncOverlayState = () => {
+      window.cancelAnimationFrame(syncFrameId);
+      syncFrameId = window.requestAnimationFrame(() => {
+        if (isManualCollapsed) {
+          setIsAutoCollapsed(false);
+          return;
+        }
+
+        const currentShell = shellRef.current;
+        const currentBody = bodyRef.current;
+        if (!currentShell || !currentBody) return;
+
+        const nextHeight = Math.ceil(currentBody.scrollHeight);
+        expandedHeightRef.current = Math.max(expandedHeightRef.current, nextHeight);
+        setExpandedHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+
+        if (expandingRef.current) {
+          setIsAutoCollapsed(false);
+          return;
+        }
+
+        const topbarBottom = topbarNode?.getBoundingClientRect().bottom ?? 96;
+        const shellTop = currentShell.offsetTop;
+        const expandedBottom = shellTop + Math.max(expandedHeightRef.current, currentBody.scrollHeight);
+        const viewportThreshold = window.scrollY + topbarBottom + 8;
+        const nextCollapsed = viewportThreshold >= expandedBottom;
+        setIsAutoCollapsed((prev) => (prev === nextCollapsed ? prev : nextCollapsed));
+      });
+    };
 
     const updateExpandedHeight = () => {
       if (isManualCollapsed) return;
@@ -41,35 +73,15 @@ export function WorkspaceOverlayShell({
     };
 
     const onScroll = () => {
-      if (expandingRef.current) {
-        setIsAutoCollapsed(false);
-        return;
-      }
-
-      if (isManualCollapsed) {
-        setIsAutoCollapsed(false);
-        return;
-      }
-
-      const currentShell = shellRef.current;
-      const currentBody = bodyRef.current;
-      if (!currentShell || !currentBody) return;
-      const topbarBottom =
-        document.querySelector('.topbar')?.getBoundingClientRect().bottom ??
-        96;
-      const shellTop = currentShell.offsetTop;
-      const expandedBottom = shellTop + Math.max(expandedHeightRef.current, currentBody.scrollHeight);
-      const viewportThreshold = window.scrollY + topbarBottom + 8;
-      setIsAutoCollapsed(viewportThreshold >= expandedBottom);
+      syncOverlayState();
     };
 
     updateExpandedHeight();
-    onScroll();
+    syncOverlayState();
     const observer =
       typeof ResizeObserver !== 'undefined'
         ? new ResizeObserver(() => {
-            updateExpandedHeight();
-            onScroll();
+            syncOverlayState();
           })
         : null;
     observer?.observe(shellNode);
@@ -78,6 +90,7 @@ export function WorkspaceOverlayShell({
     window.addEventListener('resize', onScroll);
     return () => {
       observer?.disconnect();
+      window.cancelAnimationFrame(syncFrameId);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
       if (expandFrameRef.current !== null) {
@@ -153,13 +166,11 @@ export function WorkspaceOverlayShell({
     </button>
   );
 
-  const measuredBodyHeight = Math.max(expandedHeight, expandedHeightRef.current);
-
   return (
     <section
       ref={shellRef}
       className={`workspace-overlay-shell ${isCollapsed ? 'is-collapsed' : 'is-expanded'}`.trim()}
-      style={measuredBodyHeight > 0 ? { ['--workspace-overlay-body-height' as string]: `${measuredBodyHeight}px` } : undefined}
+      style={expandedHeight > 0 ? { ['--workspace-overlay-body-height' as string]: `${expandedHeight}px` } : undefined}
     >
       <div ref={bodyRef} className="workspace-overlay-shell__body">
         {typeof children === 'function' ? children({ headerToggle }) : children}

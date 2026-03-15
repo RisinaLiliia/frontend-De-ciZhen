@@ -1,6 +1,6 @@
 'use client';
 
-import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import { StatisticsKiCard } from '../components/StatisticsKiCard';
 
 function splitInsightEvidence(evidence: string | undefined): string[] {

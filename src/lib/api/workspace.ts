@@ -51,6 +51,7 @@ export function getWorkspacePrivateOverview() {
 export type WorkspaceStatisticsQuery = {
   range?: WorkspaceStatisticsRange;
   cityId?: string | null;
+  regionId?: string | null;
   categoryKey?: string | null;
 };
 
@@ -61,6 +62,7 @@ export function getWorkspaceStatistics(query: WorkspaceStatisticsRange | Workspa
   const qs = new URLSearchParams();
   qs.set('range', params.range ?? '30d');
   if (params.cityId) qs.set('cityId', params.cityId);
+  if (params.regionId) qs.set('regionId', params.regionId);
   if (params.categoryKey) qs.set('categoryKey', params.categoryKey);
   return apiGet<WorkspaceStatisticsOverviewDto>(`/workspace/statistics?${qs.toString()}`);
 }

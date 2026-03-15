@@ -117,7 +117,7 @@ type WorkspaceExploreSectionProps = {
   initialPublicRequestsError?: boolean;
 };
 
-export function WorkspaceExploreSection({
+export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSection({
   intro,
   activeSection,
   t,
@@ -224,7 +224,7 @@ export function WorkspaceExploreSection({
       </div>
     </div>
   );
-}
+});
 
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = React.useState(false);

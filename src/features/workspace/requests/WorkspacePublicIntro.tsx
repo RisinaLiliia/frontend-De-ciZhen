@@ -1,5 +1,7 @@
 'use client';
 
+import * as React from 'react';
+
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/requests/WorkspacePublicDemandMapPanel';
@@ -27,7 +29,7 @@ type WorkspacePublicIntroProps = {
   navHeaderSlot?: React.ReactNode;
 };
 
-export function WorkspacePublicIntro({
+export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   t,
   locale,
   navTitle,
@@ -80,4 +82,4 @@ export function WorkspacePublicIntro({
       </div>
     </section>
   );
-}
+});

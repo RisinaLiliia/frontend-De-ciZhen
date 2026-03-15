@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import { OpportunityAnalysisCard } from './opportunity/OpportunityAnalysisCard';
 import { OpportunityTopCards } from './opportunity/OpportunityTopCards';
 import {

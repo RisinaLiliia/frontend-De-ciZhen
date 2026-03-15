@@ -7,7 +7,7 @@ import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceStatisticsModel } from './useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
 import { useSyncedPanelMinHeight } from './useSyncedPanelMinHeight';
 import { buildFunnelVisualRows } from './statisticsFunnel.utils';
 import { paginateItems, parsePageParam } from './statisticsPagination.utils';
@@ -67,8 +67,10 @@ export function WorkspaceStatisticsView({
     range,
     isLoading,
     isError,
+    hasBackgroundError,
     modeLabel,
     context,
+    sectionMeta,
     activityPoints,
     activityMeta,
     decisionInsight,
@@ -109,6 +111,13 @@ export function WorkspaceStatisticsView({
   const citiesSubtitle = context.mode === 'focus'
     ? `${copy.citiesSubtitle} · ${context.periodLabel}`
     : copy.citiesSubtitle;
+  const resolvedDecisionSubtitle = sectionMeta.decisionSubtitle ?? decisionSubtitle;
+  const resolvedDemandSubtitle = sectionMeta.demandSubtitle ?? demandSubtitle;
+  const resolvedCitiesSubtitle = sectionMeta.citiesSubtitle ?? citiesSubtitle;
+  const resolvedOpportunityTitle = sectionMeta.opportunityTitle ?? opportunityTitle;
+  const resolvedPriceTitle = sectionMeta.priceTitle ?? priceTitle;
+  const resolvedInsightsSubtitle = sectionMeta.insightsSubtitle ?? insightsSubtitle;
+  const resolvedGrowthSubtitle = sectionMeta.growthSubtitle ?? growthSubtitle;
   const demandPagination = React.useMemo(
     () => paginateItems(demandRows, demandPage, DEMAND_PAGE_SIZE),
     [demandPage, demandRows],
@@ -248,12 +257,19 @@ export function WorkspaceStatisticsView({
             <span className="section-subtitle">{copy.kpiTitle} · {context.scopeLabel}</span>
           </div>
 
+          {hasBackgroundError && !isLoading && !isError ? (
+            <div className="workspace-statistics__background-error" role="status" aria-live="polite">
+              <strong>{copy.backgroundErrorTitle}</strong>
+              <p>{copy.backgroundErrorBody}</p>
+            </div>
+          ) : null}
+
           {!isLoading && !isError ? (
             <StatisticsDecisionLayer
               copy={copy}
               decisionInsight={decisionInsight}
               activitySignals={activitySignals}
-              subtitle={decisionSubtitle}
+              subtitle={resolvedDecisionSubtitle}
             />
           ) : null}
         </div>
@@ -301,7 +317,7 @@ export function WorkspaceStatisticsView({
 
                 <StatisticsDemandPanel
                   copy={copy}
-                  subtitle={demandSubtitle}
+                  subtitle={resolvedDemandSubtitle}
                   demandRows={demandRows}
                   visibleDemandRows={visibleDemandRows}
                   safeDemandPage={safeDemandPage}
@@ -315,7 +331,7 @@ export function WorkspaceStatisticsView({
               <StatisticsCitiesPanel
                 panelRef={citiesPanelRef}
                 copy={copy}
-                subtitle={citiesSubtitle}
+                subtitle={resolvedCitiesSubtitle}
                 cityRowsLength={cityRows.length}
                 filteredCityRows={filteredCityRows}
                 visibleCityRows={visibleCityRows}
@@ -337,13 +353,13 @@ export function WorkspaceStatisticsView({
                   panelRef={opportunityPanelRef}
                   copy={copy}
                   locale={locale}
-                  title={opportunityTitle}
+                  title={resolvedOpportunityTitle}
                   opportunityRadar={opportunityRadar}
                 />
                 <div className="workspace-statistics-price__column">
                   <StatisticsPricePanel
                     copy={copy}
-                    title={priceTitle}
+                    title={resolvedPriceTitle}
                     priceIntelligence={model.priceIntelligence}
                   />
                 </div>
@@ -445,7 +461,7 @@ export function WorkspaceStatisticsView({
           <>
             <StatisticsInsightsPanel
               copy={copy}
-              subtitle={insightsSubtitle}
+              subtitle={resolvedInsightsSubtitle}
               insights={insights}
               showInsightsDebug={showInsightsDebug}
             />
@@ -454,7 +470,7 @@ export function WorkspaceStatisticsView({
               panelRef={growthPanelRef}
               panelMinHeight={growthPanelMinHeight}
               copy={copy}
-              subtitle={growthSubtitle}
+              subtitle={resolvedGrowthSubtitle}
               growthCards={growthCards}
             />
           </>

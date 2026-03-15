@@ -1,5 +1,5 @@
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceStatisticsModel } from '../../useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from '../../workspaceStatistics.model';
 
 export type OpportunityItem = WorkspaceStatisticsModel['opportunityRadar'][number];
 export type OpportunityStatus = 'very_high' | 'good' | 'balanced' | 'competitive' | 'low';

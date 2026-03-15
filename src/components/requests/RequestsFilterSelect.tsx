@@ -25,6 +25,11 @@ export function RequestsFilterSelect({
   icon,
   iconClassName,
 }: RequestsFilterSelectProps) {
+  const resolvedValue = React.useMemo(
+    () => (options.some((option) => option.value === value) ? value : undefined),
+    [options, value],
+  );
+
   return (
     <div className="requests-select-wrap">
       {icon ? (
@@ -34,7 +39,7 @@ export function RequestsFilterSelect({
       ) : null}
       <Select
         options={options}
-        value={value}
+        value={resolvedValue}
         onChange={onChange}
         className={className}
         aria-label={ariaLabel}
