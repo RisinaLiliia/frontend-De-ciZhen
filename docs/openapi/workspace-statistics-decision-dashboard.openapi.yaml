@@ -1,0 +1,241 @@
+openapi: 3.1.0
+info:
+  title: Workspace Statistics Decision Dashboard
+  version: 1.0.0
+  description: |
+    Aggregated backend contract for `/workspace?section=stats`.
+    One response must drive the full decision dashboard for the selected analysis context.
+paths:
+  /workspace/statistics:
+    get:
+      summary: Get decision dashboard statistics
+      operationId: getWorkspaceStatisticsDecisionDashboard
+      parameters:
+        - in: query
+          name: range
+          required: true
+          schema:
+            type: string
+            enum: [24h, 7d, 30d, 90d]
+        - in: query
+          name: cityId
+          required: false
+          schema:
+            type: string
+            nullable: true
+        - in: query
+          name: regionId
+          required: false
+          schema:
+            type: string
+            nullable: true
+        - in: query
+          name: categoryKey
+          required: false
+          schema:
+            type: string
+            nullable: true
+      responses:
+        '200':
+          description: Aggregated decision dashboard response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceStatisticsDecisionDashboard'
+components:
+  schemas:
+    FilterOption:
+      type: object
+      required: [value, label]
+      properties:
+        value:
+          type: string
+        label:
+          type: string
+        disabled:
+          type: boolean
+    SelectedFilter:
+      type: object
+      required: [value, label]
+      properties:
+        value:
+          type: string
+          nullable: true
+        label:
+          type: string
+    ContextHealthMetric:
+      type: object
+      required: [key, value, tone]
+      properties:
+        key:
+          type: string
+          enum: [demand, competition, activity]
+        value:
+          type: string
+          enum: [rising, stable, limited, high, balanced, low]
+        tone:
+          type: string
+          enum: [positive, neutral, warning]
+    DecisionContext:
+      type: object
+      required: [mode, period, city, category, health]
+      properties:
+        mode:
+          type: string
+          enum: [global, focus]
+        period:
+          type: string
+          enum: [24h, 7d, 30d, 90d]
+        city:
+          $ref: '#/components/schemas/SelectedFilter'
+        region:
+          allOf:
+            - $ref: '#/components/schemas/SelectedFilter'
+          nullable: true
+        category:
+          $ref: '#/components/schemas/SelectedFilter'
+        service:
+          allOf:
+            - $ref: '#/components/schemas/SelectedFilter'
+          nullable: true
+        scopeLabel:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        subtitle:
+          type: string
+          nullable: true
+        stickyLabel:
+          type: string
+          nullable: true
+        health:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContextHealthMetric'
+        lowData:
+          type: object
+          properties:
+            isLowData:
+              type: boolean
+            title:
+              type: string
+              nullable: true
+            body:
+              type: string
+              nullable: true
+    FilterOptions:
+      type: object
+      required: [cities, categories, services]
+      properties:
+        cities:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterOption'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterOption'
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterOption'
+    SectionMeta:
+      type: object
+      properties:
+        decisionSubtitle:
+          type: string
+          nullable: true
+        demandSubtitle:
+          type: string
+          nullable: true
+        citiesSubtitle:
+          type: string
+          nullable: true
+        opportunityTitle:
+          type: string
+          nullable: true
+        priceTitle:
+          type: string
+          nullable: true
+        insightsSubtitle:
+          type: string
+          nullable: true
+        growthSubtitle:
+          type: string
+          nullable: true
+    WorkspaceStatisticsDecisionDashboard:
+      type: object
+      required:
+        - updatedAt
+        - mode
+        - range
+        - decisionContext
+        - filterOptions
+        - summary
+        - kpis
+        - activity
+        - demand
+        - profileFunnel
+        - insights
+        - growthCards
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+        mode:
+          type: string
+          enum: [platform, personalized]
+        range:
+          type: string
+          enum: [24h, 7d, 30d, 90d]
+        decisionContext:
+          $ref: '#/components/schemas/DecisionContext'
+        filterOptions:
+          $ref: '#/components/schemas/FilterOptions'
+        sectionMeta:
+          $ref: '#/components/schemas/SectionMeta'
+        decisionInsight:
+          type: string
+          nullable: true
+        summary:
+          type: object
+          additionalProperties: true
+        kpis:
+          type: object
+          additionalProperties: true
+        activity:
+          type: object
+          additionalProperties: true
+        demand:
+          type: object
+          additionalProperties: true
+        opportunityRadar:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        priceIntelligence:
+          type: object
+          nullable: true
+          additionalProperties: true
+        profileFunnel:
+          type: object
+          additionalProperties: true
+        insights:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        growthCards:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        exportMeta:
+          type: object
+          properties:
+            filename:
+              type: string
+              nullable: true

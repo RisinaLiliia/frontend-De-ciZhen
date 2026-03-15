@@ -22,6 +22,24 @@ import {
 } from '@/features/workspace/page/workspacePage.constants';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 
+const EMPTY_PLATFORM_REVIEWS_OVERVIEW = {
+  items: [],
+  total: 0,
+  limit: 1,
+  offset: 0,
+  summary: {
+    total: 0,
+    averageRating: 0,
+    distribution: {
+      '1': 0,
+      '2': 0,
+      '3': 0,
+      '4': 0,
+      '5': 0,
+    },
+  },
+};
+
 export function useWorkspacePublicBranchModel({
   t,
   locale,
@@ -40,27 +58,12 @@ export function useWorkspacePublicBranchModel({
     queryFn: () =>
       withStatusFallback(
         () => getPlatformReviewsOverview({ limit: 1, offset: 0, sort: 'created_desc' }),
-        {
-          items: [],
-          total: 0,
-          limit: 1,
-          offset: 0,
-          summary: {
-            total: 0,
-            averageRating: 0,
-            distribution: {
-              '1': 0,
-              '2': 0,
-              '3': 0,
-              '4': 0,
-              '5': 0,
-            },
-          },
-        },
+        EMPTY_PLATFORM_REVIEWS_OVERVIEW,
         [400, 404],
       ),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
+    notifyOnChangeProps: ['data'],
   });
 
   const {
@@ -88,6 +91,8 @@ export function useWorkspacePublicBranchModel({
       }),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
+    placeholderData: (previousData) => previousData,
+    notifyOnChangeProps: ['data', 'isLoading', 'isError'],
   });
 
   const platformRequestsTotal = platformSnapshot?.summary.totalPublishedRequests ?? 0;
@@ -158,9 +163,11 @@ export function useWorkspacePublicBranchModel({
         isMapLoading={isSummaryLoading}
         isMapError={isSummaryError}
         quickActionHref="/request/create"
+        showQuickAction={activePublicSection !== 'stats'}
       />
     ),
     [
+      activePublicSection,
       activityProgress,
       insightText,
       isPersonalized,
