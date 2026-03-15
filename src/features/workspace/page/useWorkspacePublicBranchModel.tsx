@@ -158,9 +158,11 @@ export function useWorkspacePublicBranchModel({
         isMapLoading={isSummaryLoading}
         isMapError={isSummaryError}
         quickActionHref="/request/create"
+        showQuickAction={activePublicSection !== 'stats'}
       />
     ),
     [
+      activePublicSection,
       activityProgress,
       insightText,
       isPersonalized,

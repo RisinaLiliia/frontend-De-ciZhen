@@ -32,10 +32,12 @@ function resolveInsightBadge(
 
 export function StatisticsInsightsPanel({
   copy,
+  subtitle,
   insights,
   showInsightsDebug,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
+  subtitle?: string;
   insights: WorkspaceStatisticsModel['insights'];
   showInsightsDebug: boolean;
 }) {
@@ -48,7 +50,7 @@ export function StatisticsInsightsPanel({
       <header className="section-heading workspace-statistics__tile-header workspace-statistics-insights__header">
         <span className="workspace-statistics-insights__heading">
           <p className="section-title">{copy.insightsTitle}</p>
-          <p className="section-subtitle">{copy.insightsSubtitle}</p>
+          <p className="section-subtitle">{subtitle ?? copy.insightsSubtitle}</p>
         </span>
         <StatisticsKiCard
           className="workspace-statistics-insights__ki"

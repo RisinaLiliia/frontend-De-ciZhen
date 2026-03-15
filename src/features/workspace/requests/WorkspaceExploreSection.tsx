@@ -9,6 +9,7 @@ import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
+import { WorkspaceOverlayShell } from './WorkspaceOverlayShell';
 
 const ExploreRequestsPanel = dynamic(
   () => import('@/components/home/HomeRequestsExplorePanel').then((mod) => mod.HomeRequestsExplorePanel),
@@ -21,8 +22,8 @@ const ExploreRequestsPanel = dynamic(
   },
 );
 
-const WorkspaceStatisticsPanel = dynamic(
-  () => import('@/features/workspace/requests/WorkspaceStatisticsPanel').then((mod) => mod.WorkspaceStatisticsPanel),
+const WorkspaceStatisticsExperience = dynamic(
+  () => import('@/features/workspace/requests/stats/WorkspaceStatisticsExperience').then((mod) => mod.WorkspaceStatisticsExperience),
   {
     loading: () => (
       <section className="panel">
@@ -138,8 +139,8 @@ export function WorkspaceExploreSection({
   if (activeSection === 'stats') {
     return (
       <div className="stack-md">
-        {intro}
-        <WorkspaceStatisticsPanel
+        <WorkspaceStatisticsExperience
+          intro={intro}
           t={t}
           locale={locale}
         />
@@ -149,7 +150,16 @@ export function WorkspaceExploreSection({
 
   return (
     <div className="stack-md">
-      {intro}
+      <WorkspaceOverlayShell>
+        {({ headerToggle }) =>
+          React.isValidElement(intro)
+            ? React.cloneElement(
+                intro as React.ReactElement<{ navHeaderSlot?: React.ReactNode }>,
+                { navHeaderSlot: headerToggle },
+              )
+            : intro
+        }
+      </WorkspaceOverlayShell>
       <div className="requests-grid requests-grid--equal-cols">
         <div>
           {activeSection === 'reviews' ? (

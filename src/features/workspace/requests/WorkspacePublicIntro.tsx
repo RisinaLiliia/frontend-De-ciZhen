@@ -22,6 +22,9 @@ type WorkspacePublicIntroProps = {
   isMapLoading?: boolean;
   isMapError?: boolean;
   quickActionHref?: string;
+  showQuickAction?: boolean;
+  leftColumnSlot?: React.ReactNode;
+  navHeaderSlot?: React.ReactNode;
 };
 
 export function WorkspacePublicIntro({
@@ -38,6 +41,9 @@ export function WorkspacePublicIntro({
   isMapLoading = false,
   isMapError = false,
   quickActionHref = '/request/create',
+  showQuickAction = true,
+  leftColumnSlot,
+  navHeaderSlot,
 }: WorkspacePublicIntroProps) {
   return (
     <section className="home-intro-shell">
@@ -47,14 +53,18 @@ export function WorkspacePublicIntro({
             className="personal-nav--left"
             title={navTitle}
             subtitle={navSubtitle}
+            headerSlot={navHeaderSlot}
             items={personalNavItems}
             hideDockBadges={hideNavBadges}
             insightText={insightText}
             progressPercent={activityProgress}
           />
-          <section className="panel stack-sm" aria-label="Workspace quick action">
-            <CreateRequestCard href={quickActionHref} />
-          </section>
+          {leftColumnSlot}
+          {showQuickAction ? (
+            <section className="panel stack-sm" aria-label="Workspace quick action">
+              <CreateRequestCard href={quickActionHref} />
+            </section>
+          ) : null}
         </div>
 
         <aside className="stack-md hide-mobile">

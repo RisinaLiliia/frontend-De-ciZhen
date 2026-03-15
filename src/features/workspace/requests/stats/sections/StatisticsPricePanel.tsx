@@ -5,9 +5,11 @@ import { StatisticsSignalMeter } from '../components/StatisticsSignalMeter';
 
 export function StatisticsPricePanel({
   copy,
+  title,
   priceIntelligence,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
+  title?: string;
   priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
 }) {
   const hasRangeValues =
@@ -101,7 +103,7 @@ export function StatisticsPricePanel({
   return (
     <section className="panel requests-stats-chart workspace-statistics-price">
       <header className="section-heading workspace-statistics__tile-header">
-        <p className="section-title">{copy.priceTitle}</p>
+        <p className="section-title">{title ?? copy.priceTitle}</p>
         <p className="section-subtitle">{copy.priceSubtitle}</p>
       </header>
       {!hasPriceData ? (

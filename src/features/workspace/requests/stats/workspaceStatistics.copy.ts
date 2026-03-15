@@ -8,6 +8,34 @@ export type WorkspaceStatisticsCopy = {
   range7d: string;
   range30d: string;
   range90d: string;
+  contextTitle: string;
+  contextSubtitle: string;
+  contextPeriodLabel: string;
+  contextCityLabel: string;
+  contextCategoryLabel: string;
+  contextAllCitiesLabel: string;
+  contextAllCategoriesLabel: string;
+  contextAllServicesLabel: string;
+  contextResetLabel: string;
+  contextStickyExpandLabel: string;
+  contextStickyCollapseLabel: string;
+  contextUpdatingLabel: string;
+  contextScopeGlobalLabel: string;
+  contextScopeFocusLabel: string;
+  contextHealthDemandLabel: string;
+  contextHealthCompetitionLabel: string;
+  contextHealthActivityLabel: string;
+  contextHealthDemandRising: string;
+  contextHealthDemandStable: string;
+  contextHealthDemandLimited: string;
+  contextHealthCompetitionHigh: string;
+  contextHealthCompetitionBalanced: string;
+  contextHealthCompetitionLow: string;
+  contextHealthActivityHigh: string;
+  contextHealthActivityStable: string;
+  contextHealthActivityLow: string;
+  contextLowDataTitle: string;
+  contextLowDataBody: string;
   exportLabel: string;
   modePlatform: string;
   modePersonalized: string;
@@ -211,6 +239,34 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   range7d: '7 Tage',
   range30d: '30 Tage',
   range90d: '90 Tage',
+  contextTitle: 'Analysekontext',
+  contextSubtitle: 'Ein gemeinsamer Marktfilter steuert KPI, Chancen, Preise und Empfehlungen.',
+  contextPeriodLabel: 'Zeitraum',
+  contextCityLabel: 'Stadt',
+  contextCategoryLabel: 'Kategorie',
+  contextAllCitiesLabel: 'Alle Städte',
+  contextAllCategoriesLabel: 'Alle Kategorien',
+  contextAllServicesLabel: 'Alle Services',
+  contextResetLabel: 'Filter zurücksetzen',
+  contextStickyExpandLabel: 'Analysekontext öffnen',
+  contextStickyCollapseLabel: 'Analysekontext reduzieren',
+  contextUpdatingLabel: 'Aktualisiert Kontext',
+  contextScopeGlobalLabel: 'Globaler Markt',
+  contextScopeFocusLabel: 'Fokusmodus',
+  contextHealthDemandLabel: 'Nachfrage',
+  contextHealthCompetitionLabel: 'Wettbewerb',
+  contextHealthActivityLabel: 'Aktivität',
+  contextHealthDemandRising: 'Steigend',
+  contextHealthDemandStable: 'Stabil',
+  contextHealthDemandLimited: 'Begrenzt',
+  contextHealthCompetitionHigh: 'Hoch',
+  contextHealthCompetitionBalanced: 'Ausgeglichen',
+  contextHealthCompetitionLow: 'Niedrig',
+  contextHealthActivityHigh: 'Aktiv',
+  contextHealthActivityStable: 'Stabil',
+  contextHealthActivityLow: 'Ruhig',
+  contextLowDataTitle: 'Zu wenig Daten für eine verlässliche Segmentanalyse',
+  contextLowDataBody: 'Erweitern Sie den Zeitraum oder wechseln Sie zu Alle Städte bzw. Alle Kategorien.',
   exportLabel: 'Export CSV',
   modePlatform: 'Plattform',
   modePersonalized: 'Personalisiert',
@@ -426,6 +482,34 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   range7d: '7 days',
   range30d: '30 days',
   range90d: '90 days',
+  contextTitle: 'Analysis context',
+  contextSubtitle: 'One shared market filter drives KPI, opportunities, pricing, and recommendations.',
+  contextPeriodLabel: 'Period',
+  contextCityLabel: 'City',
+  contextCategoryLabel: 'Category',
+  contextAllCitiesLabel: 'All cities',
+  contextAllCategoriesLabel: 'All categories',
+  contextAllServicesLabel: 'All services',
+  contextResetLabel: 'Reset filters',
+  contextStickyExpandLabel: 'Open analysis context',
+  contextStickyCollapseLabel: 'Collapse analysis context',
+  contextUpdatingLabel: 'Updating context',
+  contextScopeGlobalLabel: 'Global market',
+  contextScopeFocusLabel: 'Focus mode',
+  contextHealthDemandLabel: 'Demand',
+  contextHealthCompetitionLabel: 'Competition',
+  contextHealthActivityLabel: 'Activity',
+  contextHealthDemandRising: 'Rising',
+  contextHealthDemandStable: 'Stable',
+  contextHealthDemandLimited: 'Limited',
+  contextHealthCompetitionHigh: 'High',
+  contextHealthCompetitionBalanced: 'Balanced',
+  contextHealthCompetitionLow: 'Low',
+  contextHealthActivityHigh: 'Active',
+  contextHealthActivityStable: 'Stable',
+  contextHealthActivityLow: 'Quiet',
+  contextLowDataTitle: 'Not enough data for reliable segment analysis',
+  contextLowDataBody: 'Expand the period or switch to all cities or all categories.',
   exportLabel: 'Export CSV',
   modePlatform: 'Platform',
   modePersonalized: 'Personalized',

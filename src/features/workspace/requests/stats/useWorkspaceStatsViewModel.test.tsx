@@ -6,6 +6,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 import { useWorkspaceStatsViewModel } from './useWorkspaceStatsViewModel';
+import type { WorkspaceStatisticsFilters } from './workspaceStatistics.model';
 
 afterEach(() => {
   cleanup();
@@ -229,19 +230,32 @@ function Probe({
   isLoading,
   isError,
   range = '30d',
+  filters,
 }: {
   data: WorkspaceStatisticsOverviewSourceDto | undefined;
   isLoading: boolean;
   isError: boolean;
   range?: WorkspaceStatisticsRange;
+  filters?: WorkspaceStatisticsFilters;
 }) {
+  const resolvedFilters: WorkspaceStatisticsFilters = filters ?? {
+    period: range,
+    cityId: null,
+    categoryKey: null,
+  };
   const model = useWorkspaceStatsViewModel({
     locale: 'de',
+    filters: resolvedFilters,
     range,
     setRange: () => undefined,
+    setCityId: () => undefined,
+    setCategoryKey: () => undefined,
+    resetFilters: () => undefined,
     data,
     isLoading,
     isError,
+    isFetching: false,
+    isPendingFilters: false,
   });
 
   return (
@@ -258,6 +272,9 @@ function Probe({
       data-price-average={model.priceIntelligence.marketAverageLabel ?? ''}
       data-price-signal={model.priceIntelligence.smartSignalLabel ?? ''}
       data-price-confidence={model.priceIntelligence.confidenceLabel ?? ''}
+      data-context-mode={model.context.mode}
+      data-context-sticky={model.context.stickyLabel}
+      data-context-low-data={String(model.context.isLowData)}
       data-has-funnel={String(model.hasFunnelData)}
       data-funnel-requests={String(model.funnel.find((row) => row.key === 'requests')?.count ?? 0)}
       data-funnel-summary={model.funnelSummary}
@@ -338,6 +355,49 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-price-range')).toBe('');
     expect(probe.getAttribute('data-price-average')).toBe('');
     expect(probe.getAttribute('data-opportunity-categories')).toBe('Generalistisch');
+  });
+
+  it('filters context-sensitive sections by selected city and category', () => {
+    render(
+      <Probe
+        data={createOverviewData()}
+        isLoading={false}
+        isError={false}
+        filters={{
+          period: '30d',
+          cityId: 'berlin-id',
+          categoryKey: 'cleaning',
+        }}
+      />,
+    );
+
+    const probe = screen.getByTestId('probe');
+    expect(probe.getAttribute('data-opportunity-order')).toBe('1');
+    expect(probe.getAttribute('data-price-context')).toBe('Cleaning & Housekeeping · Berlin');
+    expect(probe.getAttribute('data-context-mode')).toBe('focus');
+    expect(probe.getAttribute('data-context-sticky')).toContain('Berlin');
+    expect(probe.getAttribute('data-context-low-data')).toBe('false');
+  });
+
+  it('surfaces low-data context when selected scope has no direct price or opportunity match', () => {
+    render(
+      <Probe
+        data={createOverviewData()}
+        isLoading={false}
+        isError={false}
+        filters={{
+          period: '30d',
+          cityId: 'mannheim-id',
+          categoryKey: 'cleaning',
+        }}
+      />,
+    );
+
+    const probe = screen.getByTestId('probe');
+    expect(probe.getAttribute('data-opportunity-order')).toBe('');
+    expect(probe.getAttribute('data-price-range')).toBe('');
+    expect(probe.getAttribute('data-context-low-data')).toBe('true');
+    expect(probe.getAttribute('data-decision-insight')).toContain('Erweitern');
   });
 
   it('keeps funnel hidden when backend returns zero stages for platform 24h', () => {

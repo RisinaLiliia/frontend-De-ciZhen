@@ -467,7 +467,7 @@ export const de = {
     clientHintHasOpenCta: 'Meine Anfragen',
     clientHintStableText: 'Deine Anfragen laufen stabil. Lege neue Aufgaben an, wenn du weitere Hilfe brauchst.',
     clientHintStableCta: 'Neue Anfrage',
-    navUserFallback: 'Nutzer',
+    navUserFallback: 'Freund',
     profileOnboardingStep: 'Schritt 3 von 4',
     profileOnboardingSubtitle:
       'Erstelle dein Profil und dein Konto in einem Schritt. Nach dem Absenden bist du automatisch registriert und eingeloggt.',

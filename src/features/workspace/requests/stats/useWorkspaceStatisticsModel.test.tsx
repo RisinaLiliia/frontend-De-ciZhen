@@ -237,20 +237,32 @@ describe('useWorkspaceStatisticsModel', () => {
     await waitFor(() => {
       expect(screen.getByTestId('probe').getAttribute('data-loading')).toBe('false');
     });
-    expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(1, '30d');
+    expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(1, {
+      range: '30d',
+      cityId: null,
+      categoryKey: null,
+    });
     expect(screen.getByTestId('probe').getAttribute('data-price-context')).toContain('Berlin');
 
     fireEvent.click(screen.getByRole('button', { name: 'set-7d' }));
 
     await waitFor(() => {
-      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(2, '7d');
+      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(2, {
+        range: '7d',
+        cityId: null,
+        categoryKey: null,
+      });
     });
     expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('7d');
 
     fireEvent.click(screen.getByRole('button', { name: 'set-90d' }));
 
     await waitFor(() => {
-      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(3, '90d');
+      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(3, {
+        range: '90d',
+        cityId: null,
+        categoryKey: null,
+      });
     });
     expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('90d');
   });

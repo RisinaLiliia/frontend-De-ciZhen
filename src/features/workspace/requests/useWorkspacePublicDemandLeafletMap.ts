@@ -37,6 +37,8 @@ export function useWorkspacePublicDemandLeafletMap({
   const markersLayerRef = React.useRef<import('leaflet').LayerGroup | null>(null);
   const leafletRef = React.useRef<LeafletModule | null>(null);
   const renderMarkersRef = React.useRef<() => void>(() => {});
+  const resizeObserverRef = React.useRef<ResizeObserver | null>(null);
+  const invalidateFrameRef = React.useRef<number | null>(null);
   const clusterIndex = React.useMemo(() => createDemandClusterIndex(cities), [cities]);
 
   renderMarkersRef.current = () => {
@@ -128,6 +130,9 @@ export function useWorkspacePublicDemandLeafletMap({
         minZoom: MAP_MIN_ZOOM,
         maxZoom: MAP_MAX_ZOOM,
         preferCanvas: true,
+        zoomAnimation: false,
+        fadeAnimation: false,
+        markerZoomAnimation: false,
       });
 
       map.setView(GERMANY_CENTER, 6);
@@ -155,11 +160,38 @@ export function useWorkspacePublicDemandLeafletMap({
       mapRef.current = map;
       markersLayerRef.current = markersLayer;
       renderMarkersRef.current();
-      requestAnimationFrame(() => map.invalidateSize());
+
+      const invalidateSize = () => {
+        if (invalidateFrameRef.current !== null) {
+          cancelAnimationFrame(invalidateFrameRef.current);
+        }
+        invalidateFrameRef.current = requestAnimationFrame(() => {
+          invalidateFrameRef.current = null;
+          if (!mapRef.current) return;
+          mapRef.current.invalidateSize({ pan: false, debounceMoveend: true });
+        });
+      };
+
+      if (typeof ResizeObserver !== 'undefined') {
+        const observer = new ResizeObserver(() => {
+          invalidateSize();
+        });
+        observer.observe(mapHostRef.current);
+        resizeObserverRef.current = observer;
+      }
+
+      invalidateSize();
 
       destroy = () => {
+        resizeObserverRef.current?.disconnect();
+        resizeObserverRef.current = null;
+        if (invalidateFrameRef.current !== null) {
+          cancelAnimationFrame(invalidateFrameRef.current);
+          invalidateFrameRef.current = null;
+        }
         map.off('zoomend', handleViewportEnd);
         map.off('moveend', handleViewportEnd);
+        map.stop();
         markersLayer.clearLayers();
         map.remove();
         markersLayerRef.current = null;

@@ -122,14 +122,55 @@ export type WorkspaceStatisticsPriceIntelligenceView = {
   profitPotentialLabel: string | null;
 };
 
+export type WorkspaceStatisticsFilterOption = {
+  value: string;
+  label: string;
+};
+
+export type WorkspaceStatisticsFilters = {
+  period: WorkspaceStatisticsRange;
+  cityId: string | null;
+  categoryKey: string | null;
+};
+
+export type WorkspaceStatisticsContextMetricView = {
+  key: string;
+  label: string;
+  value: string;
+  tone: 'positive' | 'neutral' | 'warning';
+};
+
+export type WorkspaceStatisticsContextView = {
+  mode: 'global' | 'focus';
+  periodLabel: string;
+  cityLabel: string;
+  categoryLabel: string;
+  scopeLabel: string;
+  stickyLabel: string;
+  title: string;
+  subtitle: string;
+  healthMetrics: WorkspaceStatisticsContextMetricView[];
+  isLowData: boolean;
+  lowDataTitle: string | null;
+  lowDataBody: string | null;
+};
+
 export type WorkspaceStatisticsModel = {
   copy: WorkspaceStatisticsCopy;
+  filters: WorkspaceStatisticsFilters;
   range: WorkspaceStatisticsRange;
   setRange: (next: WorkspaceStatisticsRange) => void;
+  setCityId: (next: string | null) => void;
+  setCategoryKey: (next: string | null) => void;
+  resetFilters: () => void;
   isLoading: boolean;
   isError: boolean;
+  isUpdating: boolean;
   mode: 'platform' | 'personalized';
   modeLabel: string;
+  cityOptions: WorkspaceStatisticsFilterOption[];
+  categoryOptions: WorkspaceStatisticsFilterOption[];
+  context: WorkspaceStatisticsContextView;
   kpis: WorkspaceStatisticsKpiView[];
   activityPoints: Array<{ label: string; requests: number; offers: number }>;
   activityMeta: {
