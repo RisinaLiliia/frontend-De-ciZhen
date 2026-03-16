@@ -7,20 +7,14 @@ import {
   IconDownload,
   IconFilter,
 } from '@/components/ui/icons/icons';
-import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
-
-const ALL_CITIES_VALUE = '__all_cities__';
-const ALL_CATEGORIES_VALUE = '__all_categories__';
-const ALL_SERVICES_VALUE = '__all_services__';
-const RANGE_OPTIONS: WorkspaceStatisticsRange[] = ['24h', '7d', '30d', '90d'];
-
-function rangeLabel(range: WorkspaceStatisticsRange, copy: WorkspaceStatisticsModel['copy']) {
-  if (range === '24h') return copy.range24h;
-  if (range === '7d') return copy.range7d;
-  if (range === '30d') return copy.range30d;
-  return copy.range90d;
-}
+import {
+  ALL_CATEGORIES_VALUE,
+  ALL_CITIES_VALUE,
+  ALL_SERVICES_VALUE,
+  RANGE_OPTIONS,
+  rangeLabel,
+} from './statisticsContext.constants';
 
 export function StatisticsContextPanel({
   copy,

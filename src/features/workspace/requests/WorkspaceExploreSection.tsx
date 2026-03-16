@@ -150,16 +150,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
 
   return (
     <div className="stack-md">
-      <WorkspaceOverlayShell>
-        {({ headerToggle }) =>
-          React.isValidElement(intro)
-            ? React.cloneElement(
-                intro as React.ReactElement<{ navHeaderSlot?: React.ReactNode }>,
-                { navHeaderSlot: headerToggle },
-              )
-            : intro
-        }
-      </WorkspaceOverlayShell>
+      <WorkspaceOverlayShell>{intro}</WorkspaceOverlayShell>
       <div className="requests-grid requests-grid--equal-cols">
         <div>
           {activeSection === 'reviews' ? (

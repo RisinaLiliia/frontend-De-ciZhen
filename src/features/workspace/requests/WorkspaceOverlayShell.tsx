@@ -8,6 +8,7 @@ type WorkspaceOverlayShellProps = {
   children: React.ReactNode | ((controls: { headerToggle: React.ReactNode }) => React.ReactNode);
   summary?: string | null;
   compactLabel?: string;
+  compactContent?: React.ReactNode;
   onCollapsedChange?: (isCollapsed: boolean) => void;
 };
 
@@ -15,6 +16,7 @@ export function WorkspaceOverlayShell({
   children,
   summary,
   compactLabel,
+  compactContent,
   onCollapsedChange,
 }: WorkspaceOverlayShellProps) {
   const shellRef = React.useRef<HTMLElement | null>(null);
@@ -140,21 +142,32 @@ export function WorkspaceOverlayShell({
   const compactSummary = summary?.trim() ? summary : compactLabel?.trim() ? compactLabel : null;
   const hasSummary = Boolean(compactSummary);
 
-  const headerToggle = (
+  const toggleLabel = isCollapsed ? 'Navigation einblenden' : 'Navigation ausblenden';
+  const toggleAction = isCollapsed ? expandOverlay : collapseOverlay;
+  const toggleButton = (
     <button
       type="button"
-      className="workspace-overlay-shell__header-toggle"
+      className="workspace-overlay-shell__toggle-button"
       aria-expanded={!isCollapsed}
-      aria-label="Navigation ausblenden"
-      title="Navigation ausblenden"
-      data-tooltip="Navigation ausblenden"
-      onClick={collapseOverlay}
+      aria-label={toggleLabel}
+      title={toggleLabel}
+      data-tooltip={toggleLabel}
+      onClick={toggleAction}
     >
       <span className="workspace-overlay-shell__toggle-icon" aria-hidden="true">
         <IconChevronDown />
       </span>
     </button>
   );
+  const compactNode = compactContent ? (
+    <div className="workspace-overlay-shell__compact-content">
+      {compactContent}
+    </div>
+  ) : hasSummary ? (
+    <div className="workspace-overlay-shell__compact-content">
+      <span className="workspace-overlay-shell__summary">{compactSummary}</span>
+    </div>
+  ) : null;
 
   return (
     <section
@@ -162,30 +175,21 @@ export function WorkspaceOverlayShell({
       className={`workspace-overlay-shell ${isCollapsed ? 'is-collapsed' : 'is-expanded'}`.trim()}
       style={expandedHeight > 0 ? { ['--workspace-overlay-body-height' as string]: `${expandedHeight}px` } : undefined}
     >
+      <div className="workspace-overlay-shell__toggle-rail">
+        {toggleButton}
+      </div>
+
       <div ref={bodyRef} className="workspace-overlay-shell__body">
-        {typeof children === 'function' ? children({ headerToggle }) : children}
+        {typeof children === 'function' ? children({ headerToggle: null }) : children}
       </div>
 
       <div ref={sentinelRef} aria-hidden="true" style={{ height: 1, width: 1, position: 'absolute', top: '100%', left: 0 }} />
 
-      <div className="workspace-overlay-shell__compact-bar">
-        <button
-          type="button"
-          className={`workspace-overlay-shell__compact-toggle${hasSummary ? ' workspace-overlay-shell__compact-toggle--summary' : ' workspace-overlay-shell__compact-toggle--icon-only'}`}
-          aria-expanded={false}
-          aria-label="Navigation einblenden"
-          title="Navigation einblenden"
-          data-tooltip="Navigation einblenden"
-          onClick={expandOverlay}
-        >
-          <span className="workspace-overlay-shell__toggle-icon" aria-hidden="true">
-            <IconChevronDown />
-          </span>
-          {compactSummary ? (
-            <span className="workspace-overlay-shell__summary">{compactSummary}</span>
-          ) : null}
-        </button>
-      </div>
+      {isCollapsed && compactNode ? (
+        <div className="workspace-overlay-shell__compact-bar" aria-hidden={!isCollapsed}>
+          {compactNode}
+        </div>
+      ) : null}
     </section>
   );
 }
