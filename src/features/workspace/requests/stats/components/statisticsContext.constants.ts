@@ -15,3 +15,10 @@ export function rangeLabel(
   if (range === '30d') return copy.range30d;
   return copy.range90d;
 }
+
+export function rangeLabelShort(range: WorkspaceStatisticsRange) {
+  if (range === '24h') return '24h';
+  if (range === '7d') return '7d';
+  if (range === '30d') return '30d';
+  return '90d';
+}

@@ -14,6 +14,7 @@ import {
   ALL_SERVICES_VALUE,
   RANGE_OPTIONS,
   rangeLabel,
+  rangeLabelShort,
 } from './statisticsContext.constants';
 
 export function StatisticsContextPanel({
@@ -53,6 +54,11 @@ export function StatisticsContextPanel({
   const categoryValue = filters.categoryKey ?? ALL_CATEGORIES_VALUE;
   const body = (
     <div className="workspace-statistics-context__body">
+      <div className="workspace-statistics-context__mobile-header">
+        <p className="workspace-statistics-context__mobile-eyebrow">{copy.contextTitle}</p>
+        <h2 className="workspace-statistics-context__mobile-title">{copy.contextTitle}</h2>
+        <p className="workspace-statistics-context__mobile-summary">{context.stickyLabel}</p>
+      </div>
       <div className="panel-header workspace-statistics-context__header">
         <div className="section-heading workspace-statistics-context__heading">
           <p className="section-title">{context.title}</p>
@@ -81,6 +87,30 @@ export function StatisticsContextPanel({
             <IconDownload />
           </button>
         </div>
+      </div>
+
+      <div className="workspace-statistics-context__mobile-range-row">
+        <div className="workspace-statistics-context__range-wrap">
+          <RangeActionToolbar
+            className="workspace-statistics-context__range-toolbar"
+            groupLabel={copy.rangeGroupLabel}
+            options={RANGE_OPTIONS.map((option) => ({
+              value: option,
+              label: rangeLabelShort(option),
+            }))}
+            value={filters.period}
+            onChange={onRangeChange}
+          />
+        </div>
+        <button
+          type="button"
+          className="panel-action icon-button--hint workspace-statistics-context__mobile-export"
+          aria-label={copy.exportLabel}
+          title={copy.exportLabel}
+          onClick={onExport}
+        >
+          <IconDownload />
+        </button>
       </div>
 
       <div className="workspace-statistics-context__filters-shell">

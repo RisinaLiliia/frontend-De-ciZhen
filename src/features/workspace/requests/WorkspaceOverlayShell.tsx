@@ -22,18 +22,17 @@ export function WorkspaceOverlayShell({
   const shellRef = React.useRef<HTMLElement | null>(null);
   const bodyRef = React.useRef<HTMLDivElement | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
-  const expandedHeightRef = React.useRef(0);
-  const expandingRef = React.useRef(false);
   const expandFrameRef = React.useRef<number | null>(null);
   const [expandedHeight, setExpandedHeight] = React.useState(0);
   const [isManualCollapsed, setIsManualCollapsed] = React.useState(false);
   const [isAutoCollapsed, setIsAutoCollapsed] = React.useState(false);
-
-  const isManualCollapsedRef = React.useRef(false);
+  const [isManualOverride, setIsManualOverride] = React.useState(false);
+  const overlayId = React.useId();
+  const isManualOverrideRef = React.useRef(false);
 
   React.useEffect(() => {
-    isManualCollapsedRef.current = isManualCollapsed;
-  }, [isManualCollapsed]);
+    isManualOverrideRef.current = isManualOverride;
+  }, [isManualOverride]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -43,14 +42,8 @@ export function WorkspaceOverlayShell({
     const sentinelNode = sentinelRef.current;
     if (!shellNode || !bodyNode || !sentinelNode) return;
 
-    const topbarNode = document.querySelector('.topbar');
-    const topbarBottom = topbarNode?.getBoundingClientRect().bottom ?? 96;
-    const rootMargin = `-${topbarBottom + 8}px 0px 0px 0px`;
-
     const updateExpandedHeight = () => {
-      if (isManualCollapsedRef.current) return;
       const nextHeight = Math.ceil(bodyNode.scrollHeight);
-      expandedHeightRef.current = Math.max(expandedHeightRef.current, nextHeight);
       setExpandedHeight((prev) => (prev === nextHeight ? prev : nextHeight));
     };
 
@@ -64,27 +57,48 @@ export function WorkspaceOverlayShell({
     resizeObserver?.observe(shellNode);
     resizeObserver?.observe(bodyNode);
 
-    const intersectionObserver =
-      typeof IntersectionObserver !== 'undefined'
-        ? new IntersectionObserver(
-            ([entry]) => {
-              if (isManualCollapsedRef.current) {
-                setIsAutoCollapsed(false);
-                return;
-              }
+    const handleIntersection: IntersectionObserverCallback = ([entry]) => {
+      if (isManualOverrideRef.current) return;
 
-              const nextCollapsed = !entry.isIntersecting;
-              setIsAutoCollapsed((prev) => (prev === nextCollapsed ? prev : nextCollapsed));
-            },
-            { root: null, threshold: 0, rootMargin },
-          )
+      const nextCollapsed = !entry.isIntersecting;
+      setIsAutoCollapsed((prev) => (prev === nextCollapsed ? prev : nextCollapsed));
+    };
+
+    let intersectionObserver: IntersectionObserver | null = null;
+    let currentRootMargin = '';
+    const getTopbarBottom = () =>
+      document.querySelector('.topbar')?.getBoundingClientRect().bottom ?? 96;
+    const updateIntersectionObserver = () => {
+      const nextRootMargin = `-${getTopbarBottom() + 8}px 0px 0px 0px`;
+      if (intersectionObserver && nextRootMargin === currentRootMargin) return;
+      currentRootMargin = nextRootMargin;
+      intersectionObserver?.disconnect();
+      intersectionObserver =
+        typeof IntersectionObserver !== 'undefined'
+          ? new IntersectionObserver(handleIntersection, {
+              root: null,
+              threshold: 0,
+              rootMargin: currentRootMargin,
+            })
+          : null;
+      intersectionObserver?.observe(sentinelNode);
+    };
+
+    updateIntersectionObserver();
+
+    const topbarNode = document.querySelector('.topbar');
+    const topbarObserver =
+      typeof ResizeObserver !== 'undefined' && topbarNode
+        ? new ResizeObserver(updateIntersectionObserver)
         : null;
-
-    intersectionObserver?.observe(sentinelNode);
+    topbarObserver?.observe(topbarNode);
+    window.addEventListener('resize', updateIntersectionObserver, { passive: true });
 
     return () => {
       resizeObserver?.disconnect();
+      topbarObserver?.disconnect();
       intersectionObserver?.disconnect();
+      window.removeEventListener('resize', updateIntersectionObserver);
       if (expandFrameRef.current !== null) {
         window.cancelAnimationFrame(expandFrameRef.current);
       }
@@ -98,14 +112,16 @@ export function WorkspaceOverlayShell({
   }, [isCollapsed, onCollapsedChange]);
 
   const collapseOverlay = React.useCallback(() => {
+    setIsManualOverride(true);
     setIsManualCollapsed(true);
+    setIsAutoCollapsed(false);
   }, []);
 
   const expandOverlay = React.useCallback(() => {
-    expandingRef.current = true;
     if (typeof window !== 'undefined' && expandFrameRef.current !== null) {
       window.cancelAnimationFrame(expandFrameRef.current);
     }
+    setIsManualOverride(true);
     setIsManualCollapsed(false);
     setIsAutoCollapsed(false);
     shellRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
@@ -121,7 +137,6 @@ export function WorkspaceOverlayShell({
         const timedOut = window.performance.now() - startedAt > 1600;
 
         if (reachedTarget || timedOut) {
-          expandingRef.current = false;
           expandFrameRef.current = null;
           return;
         }
@@ -141,6 +156,8 @@ export function WorkspaceOverlayShell({
 
   const compactSummary = summary?.trim() ? summary : compactLabel?.trim() ? compactLabel : null;
   const hasSummary = Boolean(compactSummary);
+  const bodyId = `${overlayId}-body`;
+  const compactBarId = compactContent || hasSummary ? `${overlayId}-compact` : undefined;
 
   const toggleLabel = isCollapsed ? 'Navigation einblenden' : 'Navigation ausblenden';
   const toggleAction = isCollapsed ? expandOverlay : collapseOverlay;
@@ -152,6 +169,7 @@ export function WorkspaceOverlayShell({
       aria-label={toggleLabel}
       title={toggleLabel}
       data-tooltip={toggleLabel}
+      aria-controls={compactBarId ? `${bodyId} ${compactBarId}` : bodyId}
       onClick={toggleAction}
     >
       <span className="workspace-overlay-shell__toggle-icon" aria-hidden="true">
@@ -179,14 +197,18 @@ export function WorkspaceOverlayShell({
         {toggleButton}
       </div>
 
-      <div ref={bodyRef} className="workspace-overlay-shell__body">
+      <div ref={bodyRef} id={bodyId} className="workspace-overlay-shell__body">
         {typeof children === 'function' ? children({ headerToggle: null }) : children}
       </div>
 
       <div ref={sentinelRef} aria-hidden="true" style={{ height: 1, width: 1, position: 'absolute', top: '100%', left: 0 }} />
 
       {isCollapsed && compactNode ? (
-        <div className="workspace-overlay-shell__compact-bar" aria-hidden={!isCollapsed}>
+        <div
+          id={compactBarId}
+          className="workspace-overlay-shell__compact-bar"
+          aria-hidden={!isCollapsed}
+        >
           {compactNode}
         </div>
       ) : null}
