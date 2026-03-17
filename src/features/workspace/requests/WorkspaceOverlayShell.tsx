@@ -91,7 +91,9 @@ export function WorkspaceOverlayShell({
       typeof ResizeObserver !== 'undefined' && topbarNode
         ? new ResizeObserver(updateIntersectionObserver)
         : null;
-    topbarObserver?.observe(topbarNode);
+    if (topbarObserver && topbarNode) {
+      topbarObserver.observe(topbarNode);
+    }
     window.addEventListener('resize', updateIntersectionObserver, { passive: true });
 
     return () => {

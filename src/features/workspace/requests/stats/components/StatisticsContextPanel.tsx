@@ -7,6 +7,7 @@ import {
   IconDownload,
   IconFilter,
 } from '@/components/ui/icons/icons';
+import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import {
   ALL_CATEGORIES_VALUE,
