@@ -44,7 +44,51 @@ type RequestsFiltersProps = {
   onListDensityChange?: (value: 'single' | 'double') => void;
 };
 
-export function RequestsFilters({
+type RequestsFilterControlsProps = Pick<
+  RequestsFiltersProps,
+  | 't'
+  | 'locale'
+  | 'categoryOptions'
+  | 'serviceOptions'
+  | 'cityOptions'
+  | 'sortOptions'
+  | 'categoryKey'
+  | 'subcategoryKey'
+  | 'cityId'
+  | 'sortBy'
+  | 'page'
+  | 'totalPages'
+  | 'isCategoriesLoading'
+  | 'isServicesLoading'
+  | 'isPending'
+  | 'appliedChips'
+  | 'onCategoryChange'
+  | 'onSubcategoryChange'
+  | 'onCityChange'
+  | 'onSortChange'
+  | 'onReset'
+  | 'onPrevPage'
+  | 'onNextPage'
+> & {
+  variant?: 'panel' | 'shell';
+  showMobileToolbar?: boolean;
+};
+
+type RequestsResultsSummaryProps = Pick<
+  RequestsFiltersProps,
+  | 't'
+  | 'totalResults'
+  | 'resultsLabel'
+  | 'page'
+  | 'totalPages'
+  | 'isPending'
+  | 'listDensity'
+  | 'onPrevPage'
+  | 'onNextPage'
+  | 'onListDensityChange'
+>;
+
+export function RequestsFilterControls({
   t,
   locale,
   categoryOptions,
@@ -55,14 +99,11 @@ export function RequestsFilters({
   subcategoryKey,
   cityId,
   sortBy,
-  totalResults,
-  resultsLabel,
   page = 1,
   totalPages = 1,
   isCategoriesLoading,
   isServicesLoading,
   isPending = false,
-  listDensity = 'single',
   appliedChips = [],
   onCategoryChange,
   onSubcategoryChange,
@@ -71,15 +112,15 @@ export function RequestsFilters({
   onReset,
   onPrevPage,
   onNextPage,
-  onListDensityChange,
-}: RequestsFiltersProps) {
+  variant = 'panel',
+  showMobileToolbar = true,
+}: RequestsFilterControlsProps) {
   const [cityQuery] = React.useState('');
   const [isMobileControlsOpen, setIsMobileControlsOpen] = React.useState(false);
   const sortControlRef = React.useRef<HTMLDivElement | null>(null);
   const controlsDisabled = isPending || isCategoriesLoading || isServicesLoading;
   const hasActiveFilters = appliedChips.length > 0;
   const hasPagination = typeof onPrevPage === 'function' && typeof onNextPage === 'function';
-  const hasDensityToggle = typeof onListDensityChange === 'function';
 
   const filteredCityOptions = React.useMemo(() => {
     const placeholder = cityOptions.find((option) => option.value === '');
@@ -101,23 +142,25 @@ export function RequestsFilters({
 
   return (
     <div
-      className={`requests-filters requests-filters--sticky${isPending ? ' is-pending' : ''}`}
+      className={`requests-filters requests-filters--sticky requests-filters--${variant}${isPending ? ' is-pending' : ''}`.trim()}
       role="region"
       aria-label={t(keys.I18N_KEYS.requestsPage.filterRegionLabel)}
       aria-busy={isPending}
     >
-      <RequestsMobileFilterToolbar
-        t={t}
-        isOpen={isMobileControlsOpen}
-        disabled={controlsDisabled}
-        page={page}
-        totalPages={totalPages}
-        hasPagination={hasPagination}
-        onToggleFilters={() => setIsMobileControlsOpen((prev) => !prev)}
-        onOpenSort={openSortControl}
-        onPrevPage={onPrevPage}
-        onNextPage={onNextPage}
-      />
+      {showMobileToolbar ? (
+        <RequestsMobileFilterToolbar
+          t={t}
+          isOpen={isMobileControlsOpen}
+          disabled={controlsDisabled}
+          page={page}
+          totalPages={totalPages}
+          hasPagination={hasPagination}
+          onToggleFilters={() => setIsMobileControlsOpen((prev) => !prev)}
+          onOpenSort={openSortControl}
+          onPrevPage={onPrevPage}
+          onNextPage={onNextPage}
+        />
+      ) : null}
 
       <div id="requests-filter-controls" className={`requests-filters__controls ${isMobileControlsOpen ? 'is-open' : ''}`.trim()}>
         <div className="requests-filter-grid requests-filter-grid--primary">
@@ -172,12 +215,14 @@ export function RequestsFilters({
           </div>
           <button
             type="button"
-            className="btn-ghost is-primary requests-clear"
+            className={`${variant === 'shell' ? 'panel-action icon-button--hint requests-clear requests-clear--icon' : 'btn-ghost is-primary requests-clear'}`.trim()}
             onClick={onReset}
             disabled={controlsDisabled || !hasActiveFilters}
+            aria-label={t(keys.I18N_KEYS.requestsPage.clearFilters)}
+            title={t(keys.I18N_KEYS.requestsPage.clearFilters)}
           >
             <IconFilter />
-            {t(keys.I18N_KEYS.requestsPage.clearFilters)}
+            {variant === 'shell' ? null : t(keys.I18N_KEYS.requestsPage.clearFilters)}
           </button>
         </div>
         {appliedChips.length > 0 ? (
@@ -197,51 +242,6 @@ export function RequestsFilters({
           </div>
         ) : null}
       </div>
-      <div className="requests-filter-summary">
-        <div className="requests-results" aria-live="polite">
-          <span className="typo-small">{resultsLabel ?? t(keys.I18N_KEYS.requestsPage.countLabel)}</span>
-          <CountBadge as="strong" value={totalResults} />
-          {isPending ? <span className="sr-only">{t(keys.I18N_KEYS.requestsPage.updatingLabel)}</span> : null}
-        </div>
-        {(hasDensityToggle || hasPagination) ? (
-          <div className="requests-filter-summary__controls">
-            {hasDensityToggle ? (
-              <div className="requests-view-toggle" role="group" aria-label={t(keys.I18N_KEYS.requestsPage.viewModeLabel)}>
-                <button
-                  type="button"
-                  className={`requests-view-toggle__btn ${listDensity === 'single' ? 'is-active' : ''}`.trim()}
-                  aria-label={t(keys.I18N_KEYS.requestsPage.viewModeSingle)}
-                  aria-pressed={listDensity === 'single'}
-                  onClick={() => onListDensityChange?.('single')}
-                >
-                  <span className="requests-layout-icon requests-layout-icon--single" aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  className={`requests-view-toggle__btn ${listDensity === 'double' ? 'is-active' : ''}`.trim()}
-                  aria-label={t(keys.I18N_KEYS.requestsPage.viewModeDouble)}
-                  aria-pressed={listDensity === 'double'}
-                  onClick={() => onListDensityChange?.('double')}
-                >
-                  <span className="requests-layout-icon requests-layout-icon--double" aria-hidden="true" />
-                </button>
-              </div>
-            ) : null}
-            {hasPagination ? (
-              <RequestsPageNav
-                page={page}
-                totalPages={totalPages}
-                disabled={controlsDisabled}
-                onPrevPage={onPrevPage}
-                onNextPage={onNextPage}
-                ariaLabel={t(keys.I18N_KEYS.requestsPage.paginationLabel)}
-                prevAriaLabel={t(keys.I18N_KEYS.requestsPage.paginationPrev)}
-                nextAriaLabel={t(keys.I18N_KEYS.requestsPage.paginationNext)}
-              />
-            ) : null}
-          </div>
-        ) : null}
-      </div>
       {isCategoriesLoading || isServicesLoading ? (
         <div className="requests-filters__skeleton" aria-hidden="true">
           <div className="skeleton is-wide h-10 w-full rounded-md" />
@@ -250,5 +250,142 @@ export function RequestsFilters({
         </div>
       ) : null}
     </div>
+  );
+}
+
+export function RequestsResultsSummary({
+  t,
+  totalResults,
+  resultsLabel,
+  page = 1,
+  totalPages = 1,
+  isPending = false,
+  listDensity = 'single',
+  onPrevPage,
+  onNextPage,
+  onListDensityChange,
+}: RequestsResultsSummaryProps) {
+  const hasPagination = typeof onPrevPage === 'function' && typeof onNextPage === 'function';
+  const hasDensityToggle = typeof onListDensityChange === 'function';
+  const controlsDisabled = isPending;
+
+  return (
+    <div className="requests-filter-summary">
+      <div className="requests-results" aria-live="polite">
+        <span className="typo-small">{resultsLabel ?? t(keys.I18N_KEYS.requestsPage.countLabel)}</span>
+        <CountBadge as="strong" value={totalResults} />
+        {isPending ? <span className="sr-only">{t(keys.I18N_KEYS.requestsPage.updatingLabel)}</span> : null}
+      </div>
+      {(hasDensityToggle || hasPagination) ? (
+        <div className="requests-filter-summary__controls">
+          {hasDensityToggle ? (
+            <div className="requests-view-toggle" role="group" aria-label={t(keys.I18N_KEYS.requestsPage.viewModeLabel)}>
+              <button
+                type="button"
+                className={`requests-view-toggle__btn ${listDensity === 'single' ? 'is-active' : ''}`.trim()}
+                aria-label={t(keys.I18N_KEYS.requestsPage.viewModeSingle)}
+                aria-pressed={listDensity === 'single'}
+                onClick={() => onListDensityChange?.('single')}
+              >
+                <span className="requests-layout-icon requests-layout-icon--single" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className={`requests-view-toggle__btn ${listDensity === 'double' ? 'is-active' : ''}`.trim()}
+                aria-label={t(keys.I18N_KEYS.requestsPage.viewModeDouble)}
+                aria-pressed={listDensity === 'double'}
+                onClick={() => onListDensityChange?.('double')}
+              >
+                <span className="requests-layout-icon requests-layout-icon--double" aria-hidden="true" />
+              </button>
+            </div>
+          ) : null}
+          {hasPagination ? (
+            <RequestsPageNav
+              page={page}
+              totalPages={totalPages}
+              disabled={controlsDisabled}
+              onPrevPage={onPrevPage}
+              onNextPage={onNextPage}
+              ariaLabel={t(keys.I18N_KEYS.requestsPage.paginationLabel)}
+              prevAriaLabel={t(keys.I18N_KEYS.requestsPage.paginationPrev)}
+              nextAriaLabel={t(keys.I18N_KEYS.requestsPage.paginationNext)}
+            />
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+export function RequestsFilters({
+  t,
+  locale,
+  categoryOptions,
+  serviceOptions,
+  cityOptions,
+  sortOptions,
+  categoryKey,
+  subcategoryKey,
+  cityId,
+  sortBy,
+  totalResults,
+  resultsLabel,
+  page = 1,
+  totalPages = 1,
+  isCategoriesLoading,
+  isServicesLoading,
+  isPending = false,
+  listDensity = 'single',
+  appliedChips = [],
+  onCategoryChange,
+  onSubcategoryChange,
+  onCityChange,
+  onSortChange,
+  onReset,
+  onPrevPage,
+  onNextPage,
+  onListDensityChange,
+}: RequestsFiltersProps) {
+  return (
+    <>
+      <RequestsFilterControls
+        t={t}
+        locale={locale}
+        categoryOptions={categoryOptions}
+        serviceOptions={serviceOptions}
+        cityOptions={cityOptions}
+        sortOptions={sortOptions}
+        categoryKey={categoryKey}
+        subcategoryKey={subcategoryKey}
+        cityId={cityId}
+        sortBy={sortBy}
+        page={page}
+        totalPages={totalPages}
+        isCategoriesLoading={isCategoriesLoading}
+        isServicesLoading={isServicesLoading}
+        isPending={isPending}
+        appliedChips={appliedChips}
+        onCategoryChange={onCategoryChange}
+        onSubcategoryChange={onSubcategoryChange}
+        onCityChange={onCityChange}
+        onSortChange={onSortChange}
+        onReset={onReset}
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
+      />
+      <RequestsResultsSummary
+        t={t}
+        totalResults={totalResults}
+        resultsLabel={resultsLabel}
+        page={page}
+        totalPages={totalPages}
+        isPending={isPending}
+        listDensity={listDensity}
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
+        onListDensityChange={onListDensityChange}
+      />
+    </>
   );
 }

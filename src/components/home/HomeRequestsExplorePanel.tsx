@@ -15,6 +15,7 @@ export type HomeRequestsExplorePanelProps = {
   showBack?: boolean;
   showHeading?: boolean;
   onListDensityChange?: (value: 'single' | 'double') => void;
+  showTopFilters?: boolean;
   initialPublicRequests?: PublicRequestsResponseDto;
   preferInitialPublicRequests?: boolean;
   initialPublicRequestsLoading?: boolean;
@@ -29,6 +30,7 @@ export function HomeRequestsExplorePanel({
   showBack = true,
   showHeading = true,
   onListDensityChange,
+  showTopFilters = true,
   initialPublicRequests,
   preferInitialPublicRequests = false,
   initialPublicRequestsLoading = false,
@@ -51,6 +53,7 @@ export function HomeRequestsExplorePanel({
         backHref={backHref}
         emptyCtaHref={contentType === 'providers' ? '/workspace?section=providers' : '/workspace?section=requests'}
         onListDensityChange={onListDensityChange}
+        showTopFilters={showTopFilters}
         initialPublicRequests={initialPublicRequests}
         preferInitialPublicRequests={preferInitialPublicRequests}
         initialPublicRequestsLoading={initialPublicRequestsLoading}

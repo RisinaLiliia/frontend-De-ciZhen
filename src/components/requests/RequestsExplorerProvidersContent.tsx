@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { RequestsFilters } from '@/components/requests/RequestsFilters';
+import { RequestsFilters, RequestsResultsSummary } from '@/components/requests/RequestsFilters';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { ProviderCard } from '@/components/providers/ProviderCard';
 import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
@@ -45,6 +45,7 @@ type Props = {
   favoriteProviderIds: Set<string>;
   pendingFavoriteProviderIds: Set<string>;
   onToggleProviderFavorite: (providerId: string) => void | Promise<void>;
+  showFilterControls?: boolean;
 };
 
 export function RequestsExplorerProvidersContent({
@@ -80,38 +81,54 @@ export function RequestsExplorerProvidersContent({
   favoriteProviderIds,
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
+  showFilterControls = true,
 }: Props) {
   return (
-    <section className="panel requests-panel">
-      <RequestsFilters
-        t={t}
-        locale={locale}
-        categoryOptions={categoryOptions}
-        serviceOptions={serviceOptions}
-        cityOptions={cityOptions}
-        sortOptions={sortOptions}
-        categoryKey={categoryKey}
-        subcategoryKey={subcategoryKey}
-        cityId={cityId}
-        sortBy={sortBy}
-        totalResults={totalProvidersLabel}
-        resultsLabel={t(I18N_KEYS.requestsPage.providersResultsLabel)}
-        page={page}
-        totalPages={totalProviderPages}
-        isCategoriesLoading={isCategoriesLoading}
-        isServicesLoading={isServicesLoading}
-        isPending={isPending}
-        appliedChips={appliedFilterChips.filter((chip) => chip.key !== 'sort')}
-        onCategoryChange={onCategoryChange}
-        onSubcategoryChange={onSubcategoryChange}
-        onCityChange={onCityChange}
-        onSortChange={onSortChange}
-        onReset={onReset}
-        listDensity={providersListDensity}
-        onListDensityChange={onListDensityChange}
-        onPrevPage={() => onSetPage(Math.max(1, page - 1))}
-        onNextPage={() => onSetPage(Math.min(totalProviderPages, page + 1))}
-      />
+    <section className="panel requests-panel workspace-primary-overlay-panel">
+      {showFilterControls ? (
+        <RequestsFilters
+          t={t}
+          locale={locale}
+          categoryOptions={categoryOptions}
+          serviceOptions={serviceOptions}
+          cityOptions={cityOptions}
+          sortOptions={sortOptions}
+          categoryKey={categoryKey}
+          subcategoryKey={subcategoryKey}
+          cityId={cityId}
+          sortBy={sortBy}
+          totalResults={totalProvidersLabel}
+          resultsLabel={t(I18N_KEYS.requestsPage.providersResultsLabel)}
+          page={page}
+          totalPages={totalProviderPages}
+          isCategoriesLoading={isCategoriesLoading}
+          isServicesLoading={isServicesLoading}
+          isPending={isPending}
+          appliedChips={appliedFilterChips.filter((chip) => chip.key !== 'sort')}
+          onCategoryChange={onCategoryChange}
+          onSubcategoryChange={onSubcategoryChange}
+          onCityChange={onCityChange}
+          onSortChange={onSortChange}
+          onReset={onReset}
+          listDensity={providersListDensity}
+          onListDensityChange={onListDensityChange}
+          onPrevPage={() => onSetPage(Math.max(1, page - 1))}
+          onNextPage={() => onSetPage(Math.min(totalProviderPages, page + 1))}
+        />
+      ) : (
+        <RequestsResultsSummary
+          t={t}
+          totalResults={totalProvidersLabel}
+          resultsLabel={t(I18N_KEYS.requestsPage.providersResultsLabel)}
+          page={page}
+          totalPages={totalProviderPages}
+          isPending={isPending}
+          listDensity={providersListDensity}
+          onListDensityChange={onListDensityChange}
+          onPrevPage={() => onSetPage(Math.max(1, page - 1))}
+          onNextPage={() => onSetPage(Math.min(totalProviderPages, page + 1))}
+        />
+      )}
 
       <section
         id="providers-list"

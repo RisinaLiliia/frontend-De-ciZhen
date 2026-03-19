@@ -1,13 +1,19 @@
 'use client';
 
 import * as React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { WorkspacePublicDemandMapPanel } from '../WorkspacePublicDemandMapPanel';
+import { workspaceQK } from '../queryKeys';
+import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '../workspace.constants';
 import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
+import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { useSyncedPanelMinHeight } from './useSyncedPanelMinHeight';
 import { buildFunnelVisualRows } from './statisticsFunnel.utils';
 import { paginateItems, parsePageParam } from './statisticsPagination.utils';
@@ -67,6 +73,7 @@ export function WorkspaceStatisticsView({
     range,
     isLoading,
     isError,
+    isUpdating,
     hasBackgroundError,
     modeLabel,
     context,
@@ -175,6 +182,24 @@ export function WorkspaceStatisticsView({
     mode: 'sourceHeight',
     watchKey: `${opportunityRadar.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
   });
+  const {
+    data: publicSummaryOverview,
+    isLoading: isPublicSummaryLoading,
+    isError: isPublicSummaryError,
+  } = useQuery({
+    queryKey: workspaceQK.workspacePublicSummary(WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
+    queryFn: () =>
+      getWorkspacePublicOverview({
+        page: 1,
+        limit: 1,
+        cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+      }),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const publicCityActivity = publicSummaryOverview?.cityActivity;
+  const publicSummary = publicSummaryOverview?.summary;
+  const showDemandMapPanel = Boolean(publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -243,7 +268,27 @@ export function WorkspaceStatisticsView({
 
   return (
     <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout" aria-labelledby="workspace-statistics-title">
-      <section ref={statisticsPanelRef} className="panel requests-panel requests-stats workspace-statistics">
+      <section ref={statisticsPanelRef} className="panel requests-panel requests-stats workspace-statistics workspace-primary-overlay-panel">
+        <StatisticsContextPanel
+          copy={copy}
+          filters={filters}
+          cityOptions={model.cityOptions}
+          categoryOptions={model.categoryOptions}
+          context={context}
+          isUpdating={isUpdating}
+          onRangeChange={model.setRange}
+          onCityChange={model.setCityId}
+          onCategoryChange={model.setCategoryKey}
+          onReset={model.resetFilters}
+          onExport={model.onExport}
+          isStickyCompact={false}
+          isExpanded
+          onToggleExpanded={() => undefined}
+          showToggle={false}
+          surface="embedded"
+          showControls={false}
+        />
+
         <SectionHeader
           className="requests-stats__header"
           title={t(I18N_KEYS.homePublic.exploreStats)}
@@ -375,6 +420,19 @@ export function WorkspaceStatisticsView({
       </section>
 
       <aside className="stack-md">
+        {showDemandMapPanel ? (
+          <div className="workspace-statistics__rail-map">
+            <WorkspacePublicDemandMapPanel
+              t={t}
+              locale={locale}
+              cityActivity={publicCityActivity}
+              summary={publicSummary}
+              isLoading={isPublicSummaryLoading}
+              isError={isPublicSummaryError}
+            />
+          </div>
+        ) : null}
+
         <section
           className="panel requests-stats-chart workspace-statistics__profile-panel"
           style={profilePanelMinHeight ? { minHeight: `${profilePanelMinHeight}px` } : undefined}

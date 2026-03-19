@@ -68,6 +68,10 @@
   }
 
   @media (max-width: 1023px) {
+    .workspace-statistics-context--controls-only .workspace-statistics-context__body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .workspace-statistics .requests-stats__header {
       flex-direction: column;
       align-items: stretch;
@@ -78,7 +82,8 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .workspace-statistics-context .panel-header {
+    .workspace-statistics-context .panel-header,
+    .workspace-statistics-context__toolbar {
       flex-direction: column;
       align-items: stretch;
     }

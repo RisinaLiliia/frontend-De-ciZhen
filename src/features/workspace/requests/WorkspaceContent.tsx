@@ -96,7 +96,7 @@ export function WorkspaceContent({
   );
 
   return (
-    <section className="panel requests-panel" aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}>
+    <section className="panel requests-panel workspace-primary-overlay-panel" aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}>
       {showWorkspaceHeader ? (
         <SectionHeader
           className="requests-header"

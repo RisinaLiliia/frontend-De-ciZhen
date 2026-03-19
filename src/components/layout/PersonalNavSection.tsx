@@ -40,6 +40,7 @@ type PersonalNavSectionProps = {
   items: PersonalNavItem[];
   hideDockBadges?: boolean;
   className?: string;
+  surface?: 'panel' | 'embedded';
 };
 
 export const PersonalNavSection = React.memo(function PersonalNavSection({
@@ -51,6 +52,7 @@ export const PersonalNavSection = React.memo(function PersonalNavSection({
   items,
   hideDockBadges = false,
   className,
+  surface = 'panel',
 }: PersonalNavSectionProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -231,7 +233,7 @@ export const PersonalNavSection = React.memo(function PersonalNavSection({
   };
 
   return (
-    <section className={`panel personal-nav ${className ?? ''}`.trim()}>
+    <section className={`${surface === 'panel' ? 'panel ' : ''}personal-nav${surface === 'embedded' ? ' personal-nav--embedded' : ''} ${className ?? ''}`.trim()}>
       {title ? (
         <div className="personal-nav__title-row">
           {headerSlot ? <div className="personal-nav__header-slot">{headerSlot}</div> : null}

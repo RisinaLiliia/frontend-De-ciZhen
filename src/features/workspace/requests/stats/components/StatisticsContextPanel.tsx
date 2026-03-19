@@ -34,6 +34,9 @@ export function StatisticsContextPanel({
   isExpanded,
   onToggleExpanded,
   showToggle = true,
+  surface = 'panel',
+  showSummary = true,
+  showControls = true,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
   filters: WorkspaceStatisticsModel['filters'];
@@ -50,21 +53,51 @@ export function StatisticsContextPanel({
   isExpanded: boolean;
   onToggleExpanded: () => void;
   showToggle?: boolean;
+  surface?: 'panel' | 'embedded';
+  showSummary?: boolean;
+  showControls?: boolean;
 }) {
   const cityValue = filters.cityId ?? ALL_CITIES_VALUE;
   const categoryValue = filters.categoryKey ?? ALL_CATEGORIES_VALUE;
-  const body = (
-    <div className="workspace-statistics-context__body">
+  const summaryBlock = showSummary ? (
+    <>
       <div className="workspace-statistics-context__mobile-header">
         <p className="workspace-statistics-context__mobile-eyebrow">{copy.contextTitle}</p>
-        <h2 className="workspace-statistics-context__mobile-title">{copy.contextTitle}</h2>
-        <p className="workspace-statistics-context__mobile-summary">{context.stickyLabel}</p>
+        <h2 className="workspace-statistics-context__mobile-title">{context.title}</h2>
+        <p className="workspace-statistics-context__mobile-summary">{context.subtitle}</p>
       </div>
+
       <div className="panel-header workspace-statistics-context__header">
-        <div className="section-heading workspace-statistics-context__heading">
+        <div className="section-heading workspace-statistics-context__heading workspace-statistics__tile-header">
           <p className="section-title">{context.title}</p>
           <p className="section-subtitle">{context.subtitle}</p>
         </div>
+      </div>
+
+      <div className="workspace-statistics-context__health-grid" aria-label={context.scopeLabel}>
+        {context.healthMetrics.map((metric) => (
+          <article
+            key={metric.key}
+            className={`stat-card workspace-statistics-context__health-card is-${metric.tone}`.trim()}
+          >
+            <span className="stat-label">{metric.label}</span>
+            <strong className="stat-value">{metric.value}</strong>
+          </article>
+        ))}
+      </div>
+
+      {context.isLowData && context.lowDataTitle && context.lowDataBody ? (
+        <div className="workspace-statistics-context__notice" role="status">
+          <strong>{context.lowDataTitle}</strong>
+          <p>{context.lowDataBody}</p>
+        </div>
+      ) : null}
+    </>
+  ) : null;
+
+  const controlsBlock = showControls ? (
+    <>
+      <div className={`workspace-statistics-context__toolbar${showSummary ? ' workspace-statistics-context__toolbar--with-summary' : ''}`.trim()}>
         <div className="workspace-statistics-context__header-actions">
           <div className="workspace-statistics-context__range-wrap">
             <RangeActionToolbar
@@ -78,15 +111,6 @@ export function StatisticsContextPanel({
               onChange={onRangeChange}
             />
           </div>
-          <button
-            type="button"
-            className="panel-action icon-button--hint"
-            aria-label={copy.exportLabel}
-            title={copy.exportLabel}
-            onClick={onExport}
-          >
-            <IconDownload />
-          </button>
         </div>
       </div>
 
@@ -103,15 +127,6 @@ export function StatisticsContextPanel({
             onChange={onRangeChange}
           />
         </div>
-        <button
-          type="button"
-          className="panel-action icon-button--hint workspace-statistics-context__mobile-export"
-          aria-label={copy.exportLabel}
-          title={copy.exportLabel}
-          onClick={onExport}
-        >
-          <IconDownload />
-        </button>
       </div>
 
       <div className="workspace-statistics-context__filters-shell">
@@ -157,40 +172,41 @@ export function StatisticsContextPanel({
         <div className="requests-filter-grid requests-filter-grid--secondary workspace-statistics-context__filters-actions">
           <button
             type="button"
-            className="btn-ghost is-primary requests-clear"
+            className="panel-action icon-button--hint workspace-statistics-context__icon-action"
+            aria-label={copy.contextResetLabel}
+            title={copy.contextResetLabel}
             onClick={onReset}
           >
             <IconFilter />
-            {copy.contextResetLabel}
+          </button>
+          <button
+            type="button"
+            className="panel-action icon-button--hint workspace-statistics-context__icon-action"
+            aria-label={copy.exportLabel}
+            title={copy.exportLabel}
+            onClick={onExport}
+          >
+            <IconDownload />
           </button>
         </div>
       </div>
+    </>
+  ) : null;
 
-      <div className="workspace-statistics-context__health-grid" aria-label={context.scopeLabel}>
-        {context.healthMetrics.map((metric) => (
-          <article
-            key={metric.key}
-            className={`stat-card workspace-statistics-context__health-card is-${metric.tone}`.trim()}
-          >
-            <span className="stat-label">{metric.label}</span>
-            <strong className="stat-value">{metric.value}</strong>
-          </article>
-        ))}
-      </div>
-
-      {context.isLowData && context.lowDataTitle && context.lowDataBody ? (
-        <div className="workspace-statistics-context__notice" role="status">
-          <strong>{context.lowDataTitle}</strong>
-          <p>{context.lowDataBody}</p>
-        </div>
-      ) : null}
+  const body = (
+    <div className="workspace-statistics-context__body">
+      {summaryBlock}
+      {controlsBlock}
     </div>
   );
+
+  const sectionModifiers = `${surface === 'embedded' ? ' workspace-statistics-context--embedded' : ''}${showSummary ? '' : ' workspace-statistics-context--controls-only'}${showControls ? '' : ' workspace-statistics-context--summary-only'}`.trim();
+  const baseSectionClass = `${surface === 'panel' ? 'panel ' : ''}${showSummary && !showControls ? 'requests-stats-chart ' : ''}workspace-statistics-context${sectionModifiers ? ` ${sectionModifiers}` : ''}`.trim();
 
   if (!showToggle) {
     return (
       <section
-        className="workspace-statistics-context workspace-statistics-context--embedded panel is-expanded"
+        className={`${baseSectionClass} is-expanded`.trim()}
         aria-label={copy.contextTitle}
       >
         {body}
@@ -200,7 +216,8 @@ export function StatisticsContextPanel({
 
   return (
     <section
-      className={`workspace-statistics-context panel${isStickyCompact ? ' is-sticky' : ''}${isExpanded ? ' is-expanded' : ' is-collapsed'}${isUpdating ? ' is-updating' : ''}`.trim()}
+      className={`workspace-statistics-context panel${sectionModifiers ? ` ${sectionModifiers}` : ''}${isStickyCompact ? ' is-sticky' : ''}${isExpanded ? ' is-expanded' : ' is-collapsed'}${isUpdating ? ' is-updating' : ''}`.trim()}
+      data-state={isExpanded ? 'expanded' : 'collapsed'}
       aria-label={copy.contextTitle}
     >
       <button
@@ -229,7 +246,7 @@ export function StatisticsContextPanel({
         </span>
       </button>
 
-      {isExpanded ? body : null}
+      {body}
     </section>
   );
 }
