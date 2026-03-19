@@ -28,16 +28,11 @@ export function WorkspaceStatisticsExperience({
         cityOptions={model.cityOptions}
         categoryOptions={model.categoryOptions}
         context={model.context}
-        isUpdating={model.isUpdating}
         onRangeChange={model.setRange}
         onCityChange={model.setCityId}
         onCategoryChange={model.setCategoryKey}
         onReset={model.resetFilters}
         onExport={model.onExport}
-        isStickyCompact={false}
-        isExpanded
-        onToggleExpanded={() => undefined}
-        showToggle={false}
         surface="embedded"
         showSummary={false}
       />
@@ -56,14 +51,10 @@ export function WorkspaceStatisticsExperience({
       intro as React.ReactElement<{
         leftColumnSlot?: React.ReactNode;
         navHeaderSlot?: React.ReactNode;
-        controlShellLabel?: string;
-        controlShellSummary?: string;
         showDemandMap?: boolean;
       }>,
       {
         leftColumnSlot: contextPanel,
-        controlShellLabel: model.copy.contextTitle,
-        controlShellSummary: model.context.stickyLabel,
         showDemandMap: false,
       },
     );

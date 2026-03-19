@@ -5,18 +5,16 @@ import * as React from 'react';
 type WorkspaceOverlaySurfaceProps = {
   intro: React.ReactNode;
   children: React.ReactNode;
-  bodyClassName?: string;
 };
 
 export function WorkspaceOverlaySurface({
   intro,
   children,
-  bodyClassName,
 }: WorkspaceOverlaySurfaceProps) {
   return (
-    <section className="workspace-primary-overlay-shell">
+    <section className="workspace-primary-overlay-shell workspace-overlay-surface">
       <div className="workspace-primary-overlay-shell__intro">{intro}</div>
-      <div className={`workspace-primary-overlay-shell__body${bodyClassName ? ` ${bodyClassName}` : ''}`.trim()}>
+      <div className="workspace-primary-overlay-shell__body">
         {children}
       </div>
     </section>

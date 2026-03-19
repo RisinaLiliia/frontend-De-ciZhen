@@ -14,8 +14,6 @@ import type { Locale } from '@/lib/i18n/t';
 type WorkspacePublicIntroProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
-  navTitle: string;
-  navSubtitle: string;
   personalNavItems: PersonalNavItem[];
   hideNavBadges?: boolean;
   insightText: string;
@@ -28,16 +26,12 @@ type WorkspacePublicIntroProps = {
   showQuickAction?: boolean;
   leftColumnSlot?: React.ReactNode;
   navHeaderSlot?: React.ReactNode;
-  controlShellLabel?: string;
-  controlShellSummary?: string;
   showDemandMap?: boolean;
 };
 
 export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   t,
   locale,
-  navTitle,
-  navSubtitle,
   personalNavItems,
   hideNavBadges = false,
   insightText,
@@ -50,8 +44,6 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   showQuickAction = true,
   leftColumnSlot,
   navHeaderSlot,
-  controlShellLabel,
-  controlShellSummary,
   showDemandMap = true,
 }: WorkspacePublicIntroProps) {
   const showMarketMap = showDemandMap && Boolean(cityActivity || summary || isMapLoading || isMapError);
@@ -60,8 +52,6 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
     <section className="home-intro-shell">
       <div className="stack-md">
         <WorkspaceControlShell
-          label={controlShellLabel ?? navTitle}
-          summary={controlShellSummary ?? navSubtitle}
           navigation={(
             <PersonalNavSection
               className="personal-nav--left"

@@ -246,11 +246,9 @@ export const PersonalNavSection = React.memo(function PersonalNavSection({
         <div className="personal-nav__header-slot">{headerSlot}</div>
       ) : null}
       {hasTieredLayout ? (
-        <div className="personal-nav__tracks">
-          <div className="personal-nav__track personal-nav__track--dock" ref={dockTrackRef}>
-            {dockIndicatorStyle ? <span className="personal-nav__dock-indicator" aria-hidden="true" style={dockIndicatorStyle} /> : null}
-            {dockItems.map(renderItem)}
-          </div>
+        <div className="personal-nav__track personal-nav__track--dock" ref={dockTrackRef}>
+          {dockIndicatorStyle ? <span className="personal-nav__dock-indicator" aria-hidden="true" style={dockIndicatorStyle} /> : null}
+          {dockItems.map(renderItem)}
         </div>
       ) : (
         <div className="personal-nav__track">{items.map(renderItem)}</div>

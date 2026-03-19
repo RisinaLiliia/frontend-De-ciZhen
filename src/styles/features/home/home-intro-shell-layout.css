@@ -18,18 +18,10 @@
       linear-gradient(180deg, color-mix(in oklab, var(--c-panel) 96%, transparent), var(--surface-soft-bg));
   }
 
-  .home-intro-shell {
-    --home-intro-padding: 16px;
-    grid-area: top;
+  :is(.home-intro-shell, .workspace-overlay-surface) {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    display: grid;
-    gap: var(--space-4);
-    margin: 0;
-    padding: var(--home-intro-padding);
-    padding-top: calc(var(--shell-topbar-height) + var(--shell-topbar-offset, 0px) + var(--home-intro-padding));
-    border-radius: 0 0 calc(var(--radius-lg) + 2px) calc(var(--radius-lg) + 2px);
     border: 0;
     background:
       radial-gradient(120% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 12%, transparent), transparent 48%),
@@ -43,7 +35,7 @@
       0 14px 34px color-mix(in oklab, var(--c-primary) 8%, transparent);
   }
 
-  .home-intro-shell::before {
+  :is(.home-intro-shell, .workspace-overlay-surface)::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -56,13 +48,24 @@
         180deg,
         color-mix(in oklab, var(--c-panel) 16%, transparent),
         color-mix(in oklab, var(--c-panel) 8%, transparent)
-      );
+    );
     backdrop-filter: blur(10px) saturate(1.05);
   }
 
-  .home-intro-shell > * {
+  :is(.home-intro-shell, .workspace-overlay-surface) > * {
     position: relative;
     z-index: 1;
+  }
+
+  .home-intro-shell {
+    --home-intro-padding: 16px;
+    grid-area: top;
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+    padding: var(--home-intro-padding);
+    padding-top: calc(var(--shell-topbar-height) + var(--shell-topbar-offset, 0px) + var(--home-intro-padding));
+    border-radius: 0 0 calc(var(--radius-lg) + 2px) calc(var(--radius-lg) + 2px);
   }
 
   .home-intro-shell .hero-experiment {

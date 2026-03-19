@@ -59,7 +59,7 @@ export function WorkspacePlatformReviewsMain({
   }, [totalPages]);
 
   return (
-    <section className="panel requests-panel workspace-primary-overlay-panel" id="platform-reviews">
+    <section className="panel requests-panel" id="platform-reviews">
       {showInlineRail ? (
         <div className="workspace-platform-reviews__mobile-rail">
           <WorkspacePlatformReviewsRail t={t} />

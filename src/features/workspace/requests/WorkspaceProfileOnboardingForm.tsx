@@ -264,7 +264,7 @@ export function WorkspaceProfileOnboardingForm() {
 
   if (status === 'authenticated') {
     return (
-      <article className="card stack-sm workspace-profile-onboarding workspace-profile-onboarding--ready workspace-primary-overlay-panel" role="status">
+      <article className="card stack-sm workspace-profile-onboarding workspace-profile-onboarding--ready" role="status">
         <p className="typo-h3">{t(I18N_KEYS.provider.profileTitle)}</p>
         <p className="typo-small">{t(I18N_KEYS.requestsPage.profileOnboardingAuthedHint)}</p>
         <Link href="/profile" prefetch={false} className="btn-primary requests-primary-cta">
@@ -275,7 +275,7 @@ export function WorkspaceProfileOnboardingForm() {
   }
 
   return (
-    <article className="card stack-md workspace-profile-onboarding workspace-primary-overlay-panel" aria-labelledby="workspace-profile-onboarding-title">
+    <article className="card stack-md workspace-profile-onboarding" aria-labelledby="workspace-profile-onboarding-title">
       <header className="stack-sm">
         <span className="status-badge status-badge--info workspace-profile-onboarding__step">
           {t(I18N_KEYS.requestsPage.profileOnboardingStep)}

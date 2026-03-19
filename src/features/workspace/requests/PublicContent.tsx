@@ -61,7 +61,7 @@ export function PublicContent({
   }, [listDensity, onListDensityChange]);
 
   return (
-    <section className="panel requests-panel workspace-primary-overlay-panel">
+    <section className="panel requests-panel">
       {showFilterControls ? (
         <RequestsFilters
           {...filtersProps}

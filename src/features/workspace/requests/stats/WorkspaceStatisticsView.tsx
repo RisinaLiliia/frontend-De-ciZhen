@@ -73,7 +73,6 @@ export function WorkspaceStatisticsView({
     range,
     isLoading,
     isError,
-    isUpdating,
     hasBackgroundError,
     modeLabel,
     context,
@@ -268,23 +267,18 @@ export function WorkspaceStatisticsView({
 
   return (
     <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout" aria-labelledby="workspace-statistics-title">
-      <section ref={statisticsPanelRef} className="panel requests-panel requests-stats workspace-statistics workspace-primary-overlay-panel">
+      <section ref={statisticsPanelRef} className="panel requests-panel requests-stats workspace-statistics">
         <StatisticsContextPanel
           copy={copy}
           filters={filters}
           cityOptions={model.cityOptions}
           categoryOptions={model.categoryOptions}
           context={context}
-          isUpdating={isUpdating}
           onRangeChange={model.setRange}
           onCityChange={model.setCityId}
           onCategoryChange={model.setCategoryKey}
           onReset={model.resetFilters}
           onExport={model.onExport}
-          isStickyCompact={false}
-          isExpanded
-          onToggleExpanded={() => undefined}
-          showToggle={false}
           surface="embedded"
           showControls={false}
         />

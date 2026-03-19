@@ -11,8 +11,6 @@ type StatsOrderItem = {
 };
 
 export type WorkspacePrivateIntroProps = {
-  navTitle: string;
-  navSubtitle: string;
   personalNavItems: PersonalNavItem[];
   hideNavBadges?: boolean;
   insightText: string;
@@ -30,13 +28,9 @@ export type WorkspacePrivateIntroProps = {
   showQuickAction?: boolean;
   leftColumnSlot?: React.ReactNode;
   navHeaderSlot?: React.ReactNode;
-  controlShellLabel?: string;
-  controlShellSummary?: string;
 };
 
 export function WorkspacePrivateIntro({
-  navTitle,
-  navSubtitle,
   personalNavItems,
   hideNavBadges = false,
   insightText,
@@ -51,8 +45,6 @@ export function WorkspacePrivateIntro({
   showQuickAction = true,
   leftColumnSlot,
   navHeaderSlot,
-  controlShellLabel,
-  controlShellSummary,
 }: WorkspacePrivateIntroProps) {
   const preferredStatsTab = statsOrder[0]?.tab ?? 'provider';
   const titleByTab = statsOrder.reduce<Partial<Record<'provider' | 'client', string>>>(
@@ -67,8 +59,6 @@ export function WorkspacePrivateIntro({
     <section className="home-intro-shell">
       <div className="stack-md">
         <WorkspaceControlShell
-          label={controlShellLabel ?? navTitle}
-          summary={controlShellSummary ?? navSubtitle}
           navigation={(
             <PersonalNavSection
               className="personal-nav--left"

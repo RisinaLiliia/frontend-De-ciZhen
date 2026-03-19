@@ -84,7 +84,7 @@ export function RequestsExplorerProvidersContent({
   showFilterControls = true,
 }: Props) {
   return (
-    <section className="panel requests-panel workspace-primary-overlay-panel">
+    <section className="panel requests-panel">
       {showFilterControls ? (
         <RequestsFilters
           t={t}
