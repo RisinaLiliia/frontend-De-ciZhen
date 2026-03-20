@@ -71,6 +71,7 @@ type RequestsFilterControlsProps = Pick<
   | 'onNextPage'
 > & {
   variant?: 'panel' | 'shell';
+  surface?: 'card' | 'embedded';
   showMobileToolbar?: boolean;
 };
 
@@ -113,6 +114,7 @@ export function RequestsFilterControls({
   onPrevPage,
   onNextPage,
   variant = 'panel',
+  surface = 'card',
   showMobileToolbar = true,
 }: RequestsFilterControlsProps) {
   const [cityQuery] = React.useState('');
@@ -142,7 +144,7 @@ export function RequestsFilterControls({
 
   return (
     <div
-      className={`requests-filters requests-filters--sticky requests-filters--${variant}${isPending ? ' is-pending' : ''}`.trim()}
+      className={`requests-filters requests-filters--sticky requests-filters--${variant} requests-filters--surface-${surface}${isPending ? ' is-pending' : ''}`.trim()}
       role="region"
       aria-label={t(keys.I18N_KEYS.requestsPage.filterRegionLabel)}
       aria-busy={isPending}
@@ -162,7 +164,10 @@ export function RequestsFilterControls({
         />
       ) : null}
 
-      <div id="requests-filter-controls" className={`requests-filters__controls ${isMobileControlsOpen ? 'is-open' : ''}`.trim()}>
+      <div
+        id="requests-filter-controls"
+        className={`requests-filters__controls requests-filters__controls--${variant} ${isMobileControlsOpen ? 'is-open' : ''}`.trim()}
+      >
         <div className="requests-filter-grid requests-filter-grid--primary">
           <div className="requests-filter">
             {/* <Input
@@ -215,7 +220,7 @@ export function RequestsFilterControls({
           </div>
           <button
             type="button"
-            className={`${variant === 'shell' ? 'panel-action icon-button--hint requests-clear requests-clear--icon' : 'btn-ghost is-primary requests-clear'}`.trim()}
+            className={`${variant === 'shell' ? 'panel-action icon-button--hint workspace-control-shell__action requests-clear requests-clear--icon' : 'btn-ghost is-primary requests-clear'}`.trim()}
             onClick={onReset}
             disabled={controlsDisabled || !hasActiveFilters}
             aria-label={t(keys.I18N_KEYS.requestsPage.clearFilters)}
@@ -226,7 +231,11 @@ export function RequestsFilterControls({
           </button>
         </div>
         {appliedChips.length > 0 ? (
-          <div className="chip-row" role="list" aria-label={t(keys.I18N_KEYS.requestsPage.activeFiltersLabel)}>
+          <div
+            className={`chip-row requests-filters__chips requests-filters__chips--${variant}`.trim()}
+            role="list"
+            aria-label={t(keys.I18N_KEYS.requestsPage.activeFiltersLabel)}
+          >
             {appliedChips.map((chip) => (
               <button
                 key={chip.key}

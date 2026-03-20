@@ -7,6 +7,7 @@ import { RequestsList } from '@/components/requests/RequestsList';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
+import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 
 type StatusFilter = {
   key: string;
@@ -88,21 +89,12 @@ export function PublicContent({
         />
       )}
 
-      {statusFilters.length > 0 ? (
-        <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.statusFiltersLabel)}>
-          {statusFilters.map((filterItem) => (
-            <button
-              key={filterItem.key}
-              type="button"
-              className={`chip ${activeStatusFilter === filterItem.key ? 'is-active' : ''}`.trim()}
-              onClick={() => onStatusFilterChange(filterItem.key)}
-              aria-pressed={activeStatusFilter === filterItem.key}
-            >
-              {filterItem.label}
-            </button>
-          ))}
-        </div>
-      ) : null}
+      <WorkspaceChipToggleGroup
+        items={statusFilters}
+        selectedKey={activeStatusFilter}
+        onSelect={onStatusFilterChange}
+        ariaLabel={t(I18N_KEYS.requestsPage.statusFiltersLabel)}
+      />
 
       <section
         id="requests-list"

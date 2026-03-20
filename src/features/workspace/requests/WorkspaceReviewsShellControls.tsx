@@ -54,7 +54,7 @@ export function WorkspaceReviewsShellControls({
         />
         <button
           type="button"
-          className="panel-action icon-button--hint workspace-reviews-shell-controls__reset"
+          className="panel-action icon-button--hint workspace-control-shell__action workspace-reviews-shell-controls__reset"
           aria-label={locale === 'de' ? 'Filter zurücksetzen' : 'Reset filters'}
           title={locale === 'de' ? 'Filter zurücksetzen' : 'Reset filters'}
           onClick={resetReviewControls}

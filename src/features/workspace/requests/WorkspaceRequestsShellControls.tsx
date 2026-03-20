@@ -50,6 +50,7 @@ export function WorkspaceRequestsShellControls({
       onSortChange={filters.onSortChange}
       onReset={filters.onReset}
       variant="shell"
+      surface="embedded"
       showMobileToolbar={false}
     />
   );
