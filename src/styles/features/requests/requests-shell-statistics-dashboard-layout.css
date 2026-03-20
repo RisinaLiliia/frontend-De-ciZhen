@@ -393,6 +393,68 @@
       align-items: center;
     }
 
+    .workspace-statistics-context--controls-only .workspace-statistics-context__body {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: var(--space-2);
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__toolbar {
+      display: none;
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__mobile-range-row {
+      display: flex;
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__range-wrap {
+      width: 100%;
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__range-toolbar.chip-row {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__range-toolbar .home-activity__ranges {
+      gap: var(--space-1);
+      padding: var(--space-1);
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__range-toolbar .home-activity__range {
+      min-width: calc(var(--space-5) + var(--space-4));
+      height: calc(var(--space-6) + var(--space-1));
+      padding: 0 var(--space-2-5);
+      font-size: 12px;
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__filters-shell {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__filters-grid {
+      grid-template-columns: minmax(0, 1fr);
+      min-width: 0;
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__filters-grid .requests-filter {
+      min-width: 0;
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__filters-shell .requests-select {
+      min-width: 0;
+    }
+
+    .workspace-statistics-context--controls-only .workspace-statistics-context__filters-actions {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      width: 100%;
+      justify-content: flex-end;
+      justify-items: end;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
     .workspace-statistics-context__health-grid,
     .workspace-statistics-context__notice {
       display: none;

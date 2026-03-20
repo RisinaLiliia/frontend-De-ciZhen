@@ -214,13 +214,19 @@
     --workspace-overlay-inline-pad: var(--home-intro-padding, var(--space-4));
     --workspace-overlay-panel-gap: var(--layout-section-gap);
     display: grid;
-    gap: var(--layout-section-gap);
-    padding: var(--workspace-overlay-inline-pad);
+    grid-template-columns:
+      var(--workspace-overlay-inline-pad)
+      minmax(0, 1fr)
+      var(--workspace-overlay-inline-pad);
+    row-gap: var(--layout-section-gap);
+    column-gap: 0;
+    padding-inline: 0;
     padding-top: calc(
       var(--shell-topbar-height) +
       var(--shell-topbar-offset, 0px) +
       var(--workspace-overlay-panel-gap)
     );
+    padding-bottom: var(--workspace-overlay-inline-pad);
     border-radius: 28px;
   }
 
@@ -229,15 +235,11 @@
   }
 
   .workspace-primary-overlay-shell__intro {
+    grid-column: 1 / -1;
     padding: 0;
     position: relative;
     z-index: 3;
-  }
-
-  .workspace-primary-overlay-shell__intro .workspace-control-shell-anchor {
-    width: calc(100% + (var(--workspace-overlay-inline-pad) * 2));
-    max-width: none;
-    margin-inline: calc(-1 * var(--workspace-overlay-inline-pad));
+    min-width: 0;
   }
 
   .workspace-primary-overlay-shell__intro > .home-intro-shell {
@@ -256,9 +258,11 @@
   }
 
   .workspace-primary-overlay-shell__body {
+    grid-column: 2;
     padding: 0;
     position: relative;
     z-index: 1;
+    min-width: 0;
   }
 
   .workspace-primary-overlay-shell__body .requests-grid {

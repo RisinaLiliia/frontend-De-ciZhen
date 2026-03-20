@@ -19,6 +19,7 @@ export function WorkspaceControlShell({
   const anchorRef = React.useRef<HTMLDivElement | null>(null);
   const shellRef = React.useRef<HTMLElement | null>(null);
   const condensedThresholdRef = React.useRef(0);
+  const pinnedStateRef = React.useRef(false);
   const [isCondensed, setIsCondensed] = React.useState(false);
   const [isPinned, setIsPinned] = React.useState(false);
   const [pinnedMetrics, setPinnedMetrics] = React.useState<{ left: number; width: number; height: number }>({
@@ -32,11 +33,20 @@ export function WorkspaceControlShell({
 
     let frame = 0;
 
+    const readStickyTop = () => {
+      const shell = shellRef.current;
+      if (!shell) return 0;
+
+      const top = Number.parseFloat(window.getComputedStyle(shell).top);
+      return Number.isFinite(top) ? top : 0;
+    };
+
     const measureThreshold = () => {
       const anchor = anchorRef.current;
       if (!anchor) return;
 
-      condensedThresholdRef.current = anchor.getBoundingClientRect().top + window.scrollY + 32;
+      condensedThresholdRef.current =
+        anchor.getBoundingClientRect().top + window.scrollY - readStickyTop();
     };
 
     const measurePinnedMetrics = () => {
@@ -64,11 +74,14 @@ export function WorkspaceControlShell({
     };
 
     const syncCondensedState = () => {
-      const nextIsCondensed = window.scrollY > condensedThresholdRef.current;
+      const nextIsCondensed = window.scrollY >= condensedThresholdRef.current;
       const nextIsPinned = nextIsCondensed;
+      if (nextIsPinned && !pinnedStateRef.current) {
+        measurePinnedMetrics();
+      }
+      pinnedStateRef.current = nextIsPinned;
       setIsCondensed((current) => (current === nextIsCondensed ? current : nextIsCondensed));
       setIsPinned((current) => (current === nextIsPinned ? current : nextIsPinned));
-      if (nextIsPinned) measurePinnedMetrics();
     };
 
     const scheduleSync = () => {
@@ -100,6 +113,7 @@ export function WorkspaceControlShell({
     window.addEventListener('resize', handleResize);
 
     return () => {
+      pinnedStateRef.current = false;
       resizeObserver?.disconnect();
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener('scroll', scheduleSync);
