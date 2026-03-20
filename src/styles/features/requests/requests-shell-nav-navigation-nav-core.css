@@ -21,6 +21,17 @@
   }
 
   .workspace-control-shell {
+    --workspace-control-shell-sticky-gap: var(--space-2);
+    --workspace-control-shell-sticky-top: calc(
+      var(--shell-topbar-height) +
+      var(--shell-topbar-offset, 0px) +
+      var(--workspace-control-shell-sticky-gap)
+    );
+    --workspace-control-shell-section-pad: var(--home-panel-padding, var(--space-4));
+    --workspace-control-shell-section-gap: var(--space-3);
+    --workspace-control-shell-condensed-pad-y: var(--space-3);
+    --workspace-control-shell-condensed-pad-x: var(--space-3-5);
+    --workspace-control-shell-condensed-section-gap: var(--space-2-5);
     --workspace-control-shell-border: color-mix(in oklab, var(--c-primary) 14%, var(--surface-card-border) 86%);
     --workspace-control-shell-bg:
       linear-gradient(
@@ -69,11 +80,10 @@
     isolation: isolate;
     display: grid;
     gap: 0;
-    top: calc(
-      var(--shell-topbar-height) +
-      var(--shell-topbar-offset, 0px) +
-      var(--space-2)
-    );
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    top: var(--workspace-control-shell-sticky-top);
     z-index: 24;
     position: sticky;
     border-radius: var(--radius-lg);
@@ -185,25 +195,49 @@
       inset 0 1px 0 color-mix(in oklab, white 46%, transparent);
   }
 
+  .workspace-control-shell[data-pinned='true'] {
+    position: fixed;
+    top: var(--workspace-control-shell-sticky-top);
+    z-index: 39;
+  }
+
+  .workspace-control-shell-anchor {
+    position: relative;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    z-index: 3;
+  }
+
   .workspace-primary-overlay-shell {
+    --workspace-overlay-inline-pad: var(--home-intro-padding, var(--space-4));
+    --workspace-overlay-panel-gap: var(--layout-section-gap);
     display: grid;
     gap: var(--layout-section-gap);
-    padding: var(--home-intro-padding, var(--space-4));
+    padding: var(--workspace-overlay-inline-pad);
     padding-top: calc(
       var(--shell-topbar-height) +
       var(--shell-topbar-offset, 0px) +
-      var(--home-intro-padding, var(--space-4)) +
-      var(--section-top-offset, 0px)
+      var(--workspace-overlay-panel-gap)
     );
     border-radius: 28px;
   }
 
   .page-shell__main--overlay-with-back .workspace-primary-overlay-shell {
-    padding-top: var(--home-intro-padding, var(--space-4));
+    padding-top: var(--workspace-overlay-panel-gap);
   }
 
   .workspace-primary-overlay-shell__intro {
     padding: 0;
+    position: relative;
+    z-index: 3;
+  }
+
+  .workspace-primary-overlay-shell__intro .workspace-control-shell-anchor {
+    width: calc(100% + (var(--workspace-overlay-inline-pad) * 2));
+    max-width: none;
+    margin-inline: calc(-1 * var(--workspace-overlay-inline-pad));
   }
 
   .workspace-primary-overlay-shell__intro > .home-intro-shell {
@@ -223,6 +257,8 @@
 
   .workspace-primary-overlay-shell__body {
     padding: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .workspace-primary-overlay-shell__body .requests-grid {
@@ -293,7 +329,7 @@
   .workspace-control-shell__section,
   .workspace-control-shell__aside {
     min-width: 0;
-    padding: var(--home-panel-padding, var(--space-4));
+    padding: var(--workspace-control-shell-section-pad);
     transition: padding var(--transition-fast);
   }
 
@@ -310,11 +346,11 @@
   }
 
   .workspace-control-shell__section--navigation {
-    padding-bottom: var(--space-3);
+    padding-bottom: var(--workspace-control-shell-section-gap);
   }
 
   .workspace-control-shell__section--context {
-    padding-top: var(--space-3);
+    padding-top: var(--workspace-control-shell-section-gap);
   }
 
   .workspace-control-shell .requests-filters--surface-embedded.requests-filters--shell {
@@ -323,15 +359,15 @@
 
   .workspace-control-shell[data-condensed='true'] .workspace-control-shell__section,
   .workspace-control-shell[data-condensed='true'] .workspace-control-shell__aside {
-    padding: var(--space-3) var(--space-3-5);
+    padding: var(--workspace-control-shell-condensed-pad-y) var(--workspace-control-shell-condensed-pad-x);
   }
 
   .workspace-control-shell[data-condensed='true'] .workspace-control-shell__section--navigation {
-    padding-bottom: var(--space-2-5);
+    padding-bottom: var(--workspace-control-shell-condensed-section-gap);
   }
 
   .workspace-control-shell[data-condensed='true'] .workspace-control-shell__section--context {
-    padding-top: var(--space-2-5);
+    padding-top: var(--workspace-control-shell-condensed-section-gap);
   }
 
   .workspace-control-shell .requests-filters--surface-embedded .requests-filter .requests-select-wrap {
@@ -658,34 +694,16 @@
 
   @media (max-width: 767px) {
     .workspace-control-shell {
-      top: calc(
-        var(--shell-topbar-height) +
-        var(--shell-topbar-offset, 0px) +
-        var(--space-1-5)
-      );
+      --workspace-control-shell-sticky-gap: var(--space-1-5);
+      --workspace-control-shell-section-pad: var(--space-3);
+      --workspace-control-shell-section-gap: var(--space-2);
+      --workspace-control-shell-condensed-pad-y: var(--space-2-5);
+      --workspace-control-shell-condensed-pad-x: var(--space-3);
       border-radius: 18px;
-    }
-
-    .workspace-control-shell__section,
-    .workspace-control-shell__aside {
-      padding: var(--space-3);
-    }
-
-    .workspace-control-shell__section--navigation {
-      padding-bottom: var(--space-2);
-    }
-
-    .workspace-control-shell__section--context {
-      padding-top: var(--space-2);
     }
 
     .workspace-control-shell[data-condensed='true'] {
       border-radius: 16px;
-    }
-
-    .workspace-control-shell[data-condensed='true'] .workspace-control-shell__section,
-    .workspace-control-shell[data-condensed='true'] .workspace-control-shell__aside {
-      padding: var(--space-2-5) var(--space-3);
     }
 
     .workspace-control-shell .requests-filters--surface-embedded .dc-select-trigger,
@@ -917,6 +935,7 @@
     align-items: center;
     gap: var(--space-2);
     min-width: 0;
+    width: 100%;
   }
 
   .personal-nav__track--dock {
