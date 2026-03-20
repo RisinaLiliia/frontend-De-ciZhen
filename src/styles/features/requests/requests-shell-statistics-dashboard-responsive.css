@@ -68,6 +68,10 @@
   }
 
   @media (max-width: 1023px) {
+    .workspace-statistics-context--controls-only .workspace-statistics-context__body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .workspace-statistics .requests-stats__header {
       flex-direction: column;
       align-items: stretch;
@@ -78,7 +82,7 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .workspace-statistics-context .panel-header {
+    .workspace-statistics-context__toolbar {
       flex-direction: column;
       align-items: stretch;
     }
@@ -148,18 +152,9 @@
   }
 
   @media (max-width: 639px) {
-    .workspace-statistics-context__compact-toggle,
     .workspace-statistics-context__body {
       padding-left: var(--space-2-5);
       padding-right: var(--space-2-5);
-    }
-
-    .workspace-statistics-context__compact-toggle {
-      align-items: flex-start;
-    }
-
-    .workspace-statistics-context__compact-trailing {
-      align-self: center;
     }
 
     .workspace-statistics-context__health-grid {

@@ -130,7 +130,7 @@ export function useWorkspacePublicBranchModel({
       !isSummaryError,
   });
 
-  const { navTitle, navSubtitle, activityProgress, personalNavItems, insightText } = useWorkspacePublicState({
+  const { activityProgress, personalNavItems, insightText } = useWorkspacePublicState({
     t,
     isPersonalized,
     activeWorkspaceTab,
@@ -153,8 +153,6 @@ export function useWorkspacePublicBranchModel({
       <WorkspacePublicIntro
         t={t}
         locale={locale}
-        navTitle={navTitle}
-        navSubtitle={navSubtitle}
         personalNavItems={personalNavItems}
         insightText={isPersonalized ? insightText : ''}
         activityProgress={activityProgress}
@@ -172,8 +170,6 @@ export function useWorkspacePublicBranchModel({
       insightText,
       isPersonalized,
       locale,
-      navTitle,
-      navSubtitle,
       personalNavItems,
       cityActivity,
       platformSummary,
