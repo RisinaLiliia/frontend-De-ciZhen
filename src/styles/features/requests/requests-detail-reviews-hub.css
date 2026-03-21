@@ -204,49 +204,15 @@
     margin-top: var(--space-1);
   }
 
-  .workspace-platform-reviews__mobile-rail {
-    display: grid;
-    gap: var(--layout-section-gap);
-  }
-
-  .workspace-platform-reviews {
-    align-content: start;
-    width: 100%;
-  }
-
-  .workspace-platform-reviews__header {
-    gap: var(--space-2);
-  }
-
-  .workspace-platform-reviews__summary {
-    align-content: start;
-  }
-
-  .workspace-platform-reviews__composer {
-    display: grid;
-    gap: var(--space-4);
-    align-content: start;
-    padding-top: var(--layout-section-gap);
-    border-top: 1px solid color-mix(in oklab, var(--surface-soft-border) 70%, transparent);
-  }
-
-  .workspace-reviews-list.requests-list--stable {
-    --requests-row-height: 190px;
-    --requests-visible-rows: 10;
-  }
-
-  .workspace-reviews-list.requests-list--stable.is-double {
-    --requests-row-height: 204px;
-    --requests-visible-rows: 5;
-  }
-
-  .workspace-reviews-list .provider-reviews-hub__item {
-    height: 100%;
-  }
-
   #platform-reviews .provider-reviews-hub {
-    width: 100%;
-    max-width: none;
+    gap: var(--space-3);
+    max-width: min(1120px, 100%);
+    margin-inline: auto;
+  }
+
+  #platform-reviews .request-detail__section-title {
+    margin-bottom: var(--space-2);
+    letter-spacing: -0.01em;
   }
 
   @media (min-width: 960px) {
@@ -255,7 +221,20 @@
     }
   }
 
+  #platform-reviews .provider-reviews-hub__summary,
+  #platform-reviews .provider-reviews-hub__item--composer {
+    border-color: color-mix(in oklab, var(--c-primary) 14%, var(--c-border) 86%);
+    background:
+      linear-gradient(
+        165deg,
+        color-mix(in oklab, var(--c-primary) 6%, var(--surface-card-bg) 94%) 0%,
+        var(--surface-card-bg) 44%,
+        color-mix(in oklab, var(--c-accent) 4%, var(--surface-card-bg) 96%) 100%
+      );
+  }
+
   #platform-reviews .provider-reviews-hub__summary {
+    padding: var(--space-3);
     gap: var(--space-2);
   }
 
@@ -291,6 +270,15 @@
 
   #platform-reviews .provider-reviews-hub__composer-form {
     gap: var(--space-3);
+  }
+
+  #platform-reviews .provider-reviews-hub__composer-title,
+  #platform-reviews .provider-reviews-hub__composer-hint {
+    margin: 0;
+  }
+
+  #platform-reviews .provider-reviews-hub__composer-hint {
+    max-width: 64ch;
   }
 
   #platform-reviews .provider-reviews-hub__star-line {
@@ -382,8 +370,9 @@
   }
 
   @media (max-width: 767px) {
-    .workspace-platform-reviews__mobile-rail {
-      margin-bottom: var(--layout-section-gap);
+    #platform-reviews .provider-reviews-hub__summary,
+    #platform-reviews .provider-reviews-hub__item--composer {
+      padding: var(--space-3);
     }
   }
 

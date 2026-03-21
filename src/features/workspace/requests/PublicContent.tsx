@@ -2,12 +2,11 @@
 
 import * as React from 'react';
 
-import { RequestsFilters, RequestsResultsSummary } from '@/components/requests/RequestsFilters';
+import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
-import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 
 type StatusFilter = {
   key: string;
@@ -32,7 +31,6 @@ type Props = {
   onPrevPage: () => void;
   onNextPage: () => void;
   onListDensityChange?: (value: 'single' | 'double') => void;
-  showFilterControls?: boolean;
 };
 
 export function PublicContent({
@@ -53,7 +51,6 @@ export function PublicContent({
   onPrevPage,
   onNextPage,
   onListDensityChange,
-  showFilterControls = true,
 }: Props) {
   const [listDensity, setListDensity] = React.useState<'single' | 'double'>('single');
 
@@ -63,38 +60,32 @@ export function PublicContent({
 
   return (
     <section className="panel requests-panel">
-      {showFilterControls ? (
-        <RequestsFilters
-          {...filtersProps}
-          resultsLabel={resultsLabel}
-          page={page}
-          totalPages={totalPages}
-          onPrevPage={onPrevPage}
-          onNextPage={onNextPage}
-          listDensity={listDensity}
-          onListDensityChange={setListDensity}
-        />
-      ) : (
-        <RequestsResultsSummary
-          t={t}
-          totalResults={filtersProps.totalResults}
-          resultsLabel={resultsLabel}
-          page={page}
-          totalPages={totalPages}
-          isPending={filtersProps.isPending}
-          listDensity={listDensity}
-          onPrevPage={onPrevPage}
-          onNextPage={onNextPage}
-          onListDensityChange={setListDensity}
-        />
-      )}
-
-      <WorkspaceChipToggleGroup
-        items={statusFilters}
-        selectedKey={activeStatusFilter}
-        onSelect={onStatusFilterChange}
-        ariaLabel={t(I18N_KEYS.requestsPage.statusFiltersLabel)}
+      <RequestsFilters
+        {...filtersProps}
+        resultsLabel={resultsLabel}
+        page={page}
+        totalPages={totalPages}
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
+        listDensity={listDensity}
+        onListDensityChange={setListDensity}
       />
+
+      {statusFilters.length > 0 ? (
+        <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.statusFiltersLabel)}>
+          {statusFilters.map((filterItem) => (
+            <button
+              key={filterItem.key}
+              type="button"
+              className={`chip ${activeStatusFilter === filterItem.key ? 'is-active' : ''}`.trim()}
+              onClick={() => onStatusFilterChange(filterItem.key)}
+              aria-pressed={activeStatusFilter === filterItem.key}
+            >
+              {filterItem.label}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       <section
         id="requests-list"

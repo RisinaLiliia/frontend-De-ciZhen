@@ -16,6 +16,8 @@ type WorkspaceAsideBaseProps = Omit<
 type Args = {
   t: Translator;
   WorkspacePrivateIntroComponent: React.ComponentType<WorkspacePrivateIntroProps>;
+  navTitle: string;
+  navSubtitle: string;
   personalNavItems: WorkspacePrivateIntroProps['personalNavItems'];
   hideNavBadges?: boolean;
   insightText: string;
@@ -34,6 +36,8 @@ type Args = {
 export function useWorkspacePresentation({
   t,
   WorkspacePrivateIntroComponent,
+  navTitle,
+  navSubtitle,
   personalNavItems,
   hideNavBadges = false,
   insightText,
@@ -51,6 +55,8 @@ export function useWorkspacePresentation({
   const workspaceIntroNode = React.useMemo(
     () => (
       <WorkspacePrivateIntroComponent
+        navTitle={navTitle}
+        navSubtitle={navSubtitle}
         personalNavItems={personalNavItems}
         hideNavBadges={hideNavBadges}
         insightText={insightText}
@@ -73,6 +79,8 @@ export function useWorkspacePresentation({
       activityProgress,
       clientStatsPayload,
       createRequestHref,
+      navTitle,
+      navSubtitle,
       personalNavItems,
       hideNavBadges,
       providerStatsPayload,

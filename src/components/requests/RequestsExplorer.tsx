@@ -26,7 +26,6 @@ export type RequestsExplorerProps = {
   emptyCtaHref?: string;
   showBack?: boolean;
   onListDensityChange?: (value: 'single' | 'double') => void;
-  showTopFilters?: boolean;
   initialPublicRequests?: PublicRequestsResponseDto;
   preferInitialPublicRequests?: boolean;
   initialPublicRequestsLoading?: boolean;
@@ -41,7 +40,6 @@ export function RequestsExplorer({
   emptyCtaHref = '/workspace?section=requests',
   showBack = false,
   onListDensityChange,
-  showTopFilters = true,
   initialPublicRequests,
   preferInitialPublicRequests = false,
   initialPublicRequestsLoading = false,
@@ -202,7 +200,6 @@ export function RequestsExplorer({
       favoriteProviderIds={favoriteProviderIds}
       pendingFavoriteProviderIds={pendingFavoriteProviderIds}
       onToggleProviderFavorite={toggleProviderFavorite}
-      showFilterControls={showTopFilters}
     />
   );
 
@@ -269,7 +266,6 @@ export function RequestsExplorer({
       onPrevPage={() => setPage(Math.max(1, page - 1))}
       onNextPage={() => setPage(Math.min(totalPages, page + 1))}
       onListDensityChange={onListDensityChange}
-      showFilterControls={showTopFilters}
     />
   );
 

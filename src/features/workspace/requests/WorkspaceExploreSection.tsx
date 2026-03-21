@@ -2,40 +2,14 @@
 
 import * as React from 'react';
 import dynamic from 'next/dynamic';
-import { useQuery } from '@tanstack/react-query';
 
-import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { useDeferredMount } from '@/hooks/useDeferredMount';
-import { getWorkspacePublicOverview } from '@/lib/api/workspace';
-
-class ErrorBoundary extends React.Component<{ children: React.ReactNode; fallback: React.ReactNode }, { hasError: boolean }> {
-  state = { hasError: false };
-
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: unknown) {
-    console.error('WorkspaceExploreSection error boundary:', error);
-  }
-
-  render() {
-    return this.state.hasError ? this.props.fallback : this.props.children;
-  }
-}
-
-import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
-import { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
-import { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
-import { WorkspacePlatformReviewsRail } from './WorkspacePlatformReviewsRail';
-import { WorkspaceRequestsShellControls } from './WorkspaceRequestsShellControls';
-import { WorkspaceReviewsShellControls } from './WorkspaceReviewsShellControls';
-import { workspaceQK } from './queryKeys';
-import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from './workspace.constants';
+import { WorkspaceOverlayShell } from './WorkspaceOverlayShell';
 
 const ExploreRequestsPanel = dynamic(
   () => import('@/components/home/HomeRequestsExplorePanel').then((mod) => mod.HomeRequestsExplorePanel),
@@ -53,7 +27,7 @@ const WorkspaceStatisticsExperience = dynamic(
   {
     loading: () => (
       <section className="panel">
-        <div className="skeleton h-168 w-full" />
+        <div className="skeleton h-[42rem] w-full" />
       </section>
     ),
   },
@@ -161,87 +135,26 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
 }: WorkspaceExploreSectionProps) {
   const isDesktop = useIsDesktop();
   const isSidebarReady = useDeferredMount(140);
-  const exploreGridClassName = activeSection === 'reviews'
-    ? 'requests-grid'
-    : 'requests-grid requests-grid--equal-cols';
-  const showExploreRailMap = isDesktop && (
-    activeSection === 'requests'
-    || activeSection === 'providers'
-    || activeSection === 'reviews'
-    || activeSection === 'profile'
-  );
-  const showExploreRailQuickAction = isDesktop && (
-    activeSection === 'requests'
-    || activeSection === 'providers'
-    || activeSection === 'reviews'
-    || activeSection === 'profile'
-  );
-  const showExploreShellFilters = activeSection === 'requests' || activeSection === 'providers' || activeSection === 'reviews';
-  const renderedIntro = React.useMemo(() => {
-    if (!(showExploreRailMap || showExploreRailQuickAction || showExploreShellFilters) || !React.isValidElement(intro)) return intro;
-
-    return React.cloneElement(
-      intro as React.ReactElement<{
-        showDemandMap?: boolean;
-        showQuickAction?: boolean;
-        leftColumnSlot?: React.ReactNode;
-      }>,
-      {
-        showDemandMap: showExploreRailMap ? false : undefined,
-        showQuickAction: showExploreRailQuickAction ? false : undefined,
-        leftColumnSlot: showExploreShellFilters
-          ? (
-            activeSection === 'reviews'
-              ? <WorkspaceReviewsShellControls t={t} locale={locale} />
-              : <WorkspaceRequestsShellControls t={t} locale={locale} contentType={activeSection === 'providers' ? 'providers' : 'requests'} />
-          )
-          : undefined,
-      },
-    );
-  }, [activeSection, intro, locale, showExploreRailMap, showExploreRailQuickAction, showExploreShellFilters, t]);
-  const {
-    data: publicSummaryOverview,
-    isLoading: isPublicSummaryLoading,
-    isError: isPublicSummaryError,
-  } = useQuery({
-    queryKey: workspaceQK.workspacePublicSummary(WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
-    enabled: showExploreRailMap,
-    queryFn: () =>
-      getWorkspacePublicOverview({
-        page: 1,
-        limit: 1,
-        cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
-      }),
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-  });
-  const publicCityActivity = publicSummaryOverview?.cityActivity;
-  const publicSummary = publicSummaryOverview?.summary;
-  const showRailMap = showExploreRailMap
-    && Boolean(publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError);
 
   if (activeSection === 'stats') {
     return (
-      <ErrorBoundary fallback={(
-        <section className="panel">
-          <div className="panel__body">{t(I18N_KEYS.requestsPage.statsLoadError)}</div>
-        </section>
-      )}>
+      <div className="stack-md">
         <WorkspaceStatisticsExperience
           intro={intro}
           t={t}
           locale={locale}
         />
-      </ErrorBoundary>
+      </div>
     );
   }
 
   return (
-    <WorkspaceOverlaySurface intro={renderedIntro}>
-      <div className={exploreGridClassName}>
+    <div className="stack-md">
+      <WorkspaceOverlayShell>{intro}</WorkspaceOverlayShell>
+      <div className="requests-grid requests-grid--equal-cols">
         <div>
           {activeSection === 'reviews' ? (
-            <PlatformReviewsPanel t={t} locale={locale} showInlineRail={!isDesktop} />
+            <PlatformReviewsPanel t={t} locale={locale} />
           ) : activeSection === 'profile' ? (
             <ProfileOnboardingPanel />
           ) : (
@@ -253,7 +166,6 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
               showBack={false}
               backHref="/"
               onListDensityChange={onListDensityChange}
-              showTopFilters={activeSection !== 'requests' && activeSection !== 'providers'}
               initialPublicRequests={initialPublicRequests}
               preferInitialPublicRequests={preferInitialPublicRequests}
               initialPublicRequestsLoading={initialPublicRequestsLoading}
@@ -266,26 +178,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
           <aside className="stack-md hide-mobile">
             {isSidebarReady ? (
               <>
-                {activeSection === 'reviews' ? <WorkspacePlatformReviewsRail t={t} /> : null}
-
-                {showRailMap ? (
-                  <WorkspacePublicDemandMapPanel
-                    t={t}
-                    locale={locale}
-                    cityActivity={publicCityActivity}
-                    summary={publicSummary}
-                    isLoading={isPublicSummaryLoading}
-                    isError={isPublicSummaryError}
-                  />
-                ) : null}
-
-                {showExploreRailQuickAction ? (
-                  <section className="panel stack-sm" aria-label="Workspace quick action">
-                    <CreateRequestCard href="/request/create" />
-                  </section>
-                ) : null}
-
-                {activeSection === 'reviews' ? null : activeSection === 'providers' ? (
+                {activeSection === 'providers' ? (
                   <NearbyProvidersPanel
                     t={t}
                     viewAllHref="/workspace?section=requests"
@@ -296,13 +189,11 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
                   <TopProvidersPanel t={t} locale={locale} limit={sidebarTopProvidersLimit} />
                 )}
 
-                {activeSection === 'reviews' ? null : (
-                  <ProofPanel
-                    t={t}
-                    proofCases={sidebarProofCases}
-                    proofIndex={sidebarProofCases.length ? proofIndex % sidebarProofCases.length : 0}
-                  />
-                )}
+                <ProofPanel
+                  t={t}
+                  proofCases={sidebarProofCases}
+                  proofIndex={sidebarProofCases.length ? proofIndex % sidebarProofCases.length : 0}
+                />
 
                 <TrustLivePanel className={trustPanelClassName} t={t} />
               </>
@@ -322,7 +213,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
           </aside>
         ) : null}
       </div>
-    </WorkspaceOverlaySurface>
+    </div>
   );
 });
 

@@ -2,11 +2,9 @@ export { PublicContent } from './PublicContent';
 export { WorkspaceContent } from './WorkspaceContent';
 export { WorkspaceExploreSection } from './WorkspaceExploreSection';
 export { WorkspaceFrame, WorkspaceTopProvidersAside } from './WorkspaceFrame';
-export { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
 export { WorkspacePrivateIntro } from './WorkspacePrivateIntro';
 export type { WorkspacePrivateIntroProps } from './WorkspacePrivateIntro';
 export { WorkspacePublicIntro } from './WorkspacePublicIntro';
-export { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 export { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
 export { WorkspacePublicStatsPanel } from './WorkspacePublicStatsPanel';
 

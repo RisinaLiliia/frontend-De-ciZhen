@@ -2,7 +2,7 @@
 
 @layer components {
   /* Light mode: clean premium hero with clear hierarchy */
-  html:not(.dark) :is(.home-intro-shell, .workspace-overlay-surface) {
+  html:not(.dark) .home-intro-shell {
     border: 0;
     background:
       radial-gradient(130% 110% at 0% 0%, var(--c-glow-primary), transparent 52%),
@@ -18,7 +18,7 @@
       0 18px 40px color-mix(in oklab, var(--c-ink) 8%, transparent);
   }
 
-  html:not(.dark) :is(.home-intro-shell, .workspace-overlay-surface)::before {
+  html:not(.dark) .home-intro-shell::before {
     background:
       radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-surface) 32%, transparent), transparent 56%),
       radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 64%),
