@@ -70,7 +70,7 @@ describe('useWorkspacePrivateSources', () => {
       cityId: 'all',
       sortBy: 'date_desc',
       page: 2,
-      limit: 20,
+      limit: 10,
       filter,
       setPage,
       hasActivePublicFilter: true,

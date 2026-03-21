@@ -1,6 +1,6 @@
 // src/lib/api/reviews.ts
 import { apiGet, apiPost } from '@/lib/api/http';
-import type { ReviewDto, ReviewOverviewDto, ReviewRange, ReviewSummaryDto } from '@/lib/api/dto/reviews';
+import type { ReviewDto, ReviewOverviewDto, ReviewSummaryDto } from '@/lib/api/dto/reviews';
 
 export type ReviewsSort = 'created_desc' | 'rating_desc';
 
@@ -22,7 +22,6 @@ type PlatformReviewsOverviewQuery = {
   limit?: number;
   offset?: number;
   sort?: ReviewsSort;
-  range?: ReviewRange;
 };
 
 export type CreatePlatformReviewPayload = {
@@ -128,7 +127,6 @@ export async function getPlatformReviewsOverview(
   qs.set('limit', String(limit));
   qs.set('offset', String(offset));
   qs.set('sort', sort);
-  if (params.range) qs.set('range', params.range);
 
   const response = await apiGet<Partial<ReviewOverviewDto>>(`/reviews/platform/overview?${qs.toString()}`);
   const summary = normalizeReviewSummary({

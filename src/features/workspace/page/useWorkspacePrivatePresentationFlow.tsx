@@ -123,6 +123,8 @@ export function useWorkspacePrivatePresentationFlow({
 
   const {
     topProviders,
+    navTitle,
+    navSubtitle,
     activityProgress,
     personalNavItems,
     insightText,
@@ -153,6 +155,8 @@ export function useWorkspacePrivatePresentationFlow({
   const { workspaceIntroNode, workspaceAsideBaseProps } = useWorkspacePresentation({
     t,
     WorkspacePrivateIntroComponent: WorkspacePrivateIntro,
+    navTitle,
+    navSubtitle,
     personalNavItems,
     hideNavBadges: activePublicSection === 'stats',
     insightText,
@@ -176,6 +180,8 @@ export function useWorkspacePrivatePresentationFlow({
           <WorkspacePublicIntro
             t={t}
             locale={locale}
+            navTitle={navTitle}
+            navSubtitle={navSubtitle}
             personalNavItems={personalNavItems}
             hideNavBadges={activePublicSection === 'stats'}
             insightText=""
@@ -193,6 +199,8 @@ export function useWorkspacePrivatePresentationFlow({
       allRequestsSummary,
       isWorkspaceAuthed,
       locale,
+      navSubtitle,
+      navTitle,
       personalNavItems,
       publicCityActivity,
       isPublicSummaryLoading,

@@ -30,7 +30,7 @@ function PublicRequestsStateProbe() {
   const result = useWorkspacePublicRequestsState({
     publicRequests: { items: [], total: 12 },
     allRequestsSummary: { totalPublishedRequests: 24, totalActiveProviders: 8 },
-    limit: 20,
+    limit: 10,
     page: 1,
     setPage,
     isWorkspacePublicSection: false,

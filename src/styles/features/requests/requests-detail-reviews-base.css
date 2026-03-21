@@ -59,7 +59,7 @@
 
   .provider-reviews-hub {
     display: grid;
-    gap: var(--layout-section-gap);
+    gap: var(--space-3);
   }
 
 

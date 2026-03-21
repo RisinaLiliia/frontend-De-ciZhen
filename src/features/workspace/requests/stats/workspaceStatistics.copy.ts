@@ -17,6 +17,10 @@ export type WorkspaceStatisticsCopy = {
   contextAllCategoriesLabel: string;
   contextAllServicesLabel: string;
   contextResetLabel: string;
+  contextStickyExpandLabel: string;
+  contextStickyCollapseLabel: string;
+  contextApplyLabel: string;
+  contextUpdatingLabel: string;
   contextScopeGlobalLabel: string;
   contextScopeFocusLabel: string;
   contextHealthDemandLabel: string;
@@ -238,6 +242,10 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   contextAllCategoriesLabel: 'Alle Kategorien',
   contextAllServicesLabel: 'Alle Services',
   contextResetLabel: 'Filter zurücksetzen',
+  contextStickyExpandLabel: 'Analysekontext öffnen',
+  contextStickyCollapseLabel: 'Analysekontext reduzieren',
+  contextApplyLabel: 'Anwenden',
+  contextUpdatingLabel: 'Aktualisiert Kontext',
   contextScopeGlobalLabel: 'Globaler Markt',
   contextScopeFocusLabel: 'Fokusmodus',
   contextHealthDemandLabel: 'Nachfrage',
@@ -471,6 +479,10 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   contextAllCategoriesLabel: 'All categories',
   contextAllServicesLabel: 'All services',
   contextResetLabel: 'Reset filters',
+  contextStickyExpandLabel: 'Open analysis context',
+  contextStickyCollapseLabel: 'Collapse analysis context',
+  contextApplyLabel: 'Apply',
+  contextUpdatingLabel: 'Updating context',
   contextScopeGlobalLabel: 'Global market',
   contextScopeFocusLabel: 'Focus mode',
   contextHealthDemandLabel: 'Demand',

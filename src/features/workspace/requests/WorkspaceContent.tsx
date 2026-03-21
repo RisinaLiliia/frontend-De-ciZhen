@@ -10,7 +10,6 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
-import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 import type { FavoritesView, WorkspaceStatusFilter, WorkspaceTab } from './workspace.types';
 import { getWorkspaceSectionSubtitle, getWorkspaceTabTitles } from './workspace.content';
 import { WorkspaceProfileOnboardingForm } from './WorkspaceProfileOnboardingForm';
@@ -119,12 +118,21 @@ export function WorkspaceContent({
         />
       ) : null}
 
-      <WorkspaceChipToggleGroup
-        items={statusFilters}
-        selectedKey={activeStatusFilter}
-        onSelect={(key) => setStatusFilter(key as WorkspaceStatusFilter)}
-        ariaLabel={t(I18N_KEYS.requestsPage.statusFiltersLabel)}
-      />
+      {statusFilters.length > 0 ? (
+        <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.statusFiltersLabel)}>
+          {statusFilters.map((filterItem) => (
+            <button
+              key={filterItem.key}
+              type="button"
+              className={`chip ${activeStatusFilter === filterItem.key ? 'is-active' : ''}`.trim()}
+              onClick={() => setStatusFilter(filterItem.key)}
+              aria-pressed={activeStatusFilter === filterItem.key}
+            >
+              {filterItem.label}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       <section
         id="requests-list"
@@ -192,15 +200,24 @@ export function WorkspaceContent({
               </WorkspaceContentState>
             ) : (
               <>
-                <WorkspaceChipToggleGroup
-                  items={[
-                    { key: 'requests', label: t(I18N_KEYS.requestsPage.favoritesTabRequests) },
-                    { key: 'providers', label: t(I18N_KEYS.requestsPage.favoritesTabProviders) },
-                  ]}
-                  selectedKey={favoritesState.resolvedView}
-                  onSelect={(key) => onFavoritesViewChange(key as FavoritesView)}
-                  ariaLabel={t(I18N_KEYS.requestsPage.favoritesViewLabel)}
-                />
+                <div className="chip-row" role="group" aria-label={t(I18N_KEYS.requestsPage.favoritesViewLabel)}>
+                  <button
+                    type="button"
+                    className={`chip ${favoritesState.resolvedView === 'requests' ? 'is-active' : ''}`.trim()}
+                    onClick={() => onFavoritesViewChange('requests')}
+                    aria-pressed={favoritesState.resolvedView === 'requests'}
+                  >
+                    {t(I18N_KEYS.requestsPage.favoritesTabRequests)}
+                  </button>
+                  <button
+                    type="button"
+                    className={`chip ${favoritesState.resolvedView === 'providers' ? 'is-active' : ''}`.trim()}
+                    onClick={() => onFavoritesViewChange('providers')}
+                    aria-pressed={favoritesState.resolvedView === 'providers'}
+                  >
+                    {t(I18N_KEYS.requestsPage.favoritesTabProviders)}
+                  </button>
+                </div>
                 <WorkspaceContentState
                   isLoading={favoritesState.isLoading}
                   isEmpty={favoritesState.isEmpty}

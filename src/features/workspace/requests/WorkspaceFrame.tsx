@@ -4,7 +4,6 @@ import * as React from 'react';
 import type { ReactNode } from 'react';
 import { TopProvidersPanel, type TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
-import { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
 
 type WorkspaceFrameProps = {
   intro?: ReactNode;
@@ -17,12 +16,13 @@ export function WorkspaceFrame({ intro, main, aside }: WorkspaceFrameProps) {
 
   if (intro) {
     return (
-      <WorkspaceOverlaySurface intro={intro}>
+      <div className="stack-md">
+        {intro}
         <div className="requests-grid requests-grid--equal-cols">
           <div className="stack-md">{main}</div>
           {isDesktop ? <aside className="stack-md hide-mobile">{aside}</aside> : null}
         </div>
-      </WorkspaceOverlaySurface>
+      </div>
     );
   }
 

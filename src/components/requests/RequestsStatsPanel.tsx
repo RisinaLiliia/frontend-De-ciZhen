@@ -74,7 +74,6 @@ type RequestsStatsPanelProps = {
   error?: boolean;
   errorLabel?: string;
   className?: string;
-  surface?: 'panel' | 'embedded';
 };
 
 const FALLBACK_POINTS: ChartPoint[] = [
@@ -199,7 +198,6 @@ export function RequestsStatsPanel({
   error = false,
   errorLabel = 'Failed to load stats.',
   className,
-  surface = 'panel',
 }: RequestsStatsPanelProps) {
   const [tab, setTab] = React.useState<StatsTab>(defaultTab);
   const [stableContentMinHeight, setStableContentMinHeight] = React.useState<number | undefined>(
@@ -271,10 +269,7 @@ export function RequestsStatsPanel({
   }, [activeTab, client, error, loading, provider]);
 
   return (
-    <section
-      className={`${surface === 'panel' ? 'panel ' : ''}requests-stats${surface === 'embedded' ? ' requests-stats--embedded' : ''} ${className ?? ''}`.trim()}
-      style={{ position: 'relative' }}
-    >
+    <section className={`panel requests-stats ${className ?? ''}`.trim()} style={{ position: 'relative' }}>
       <div className="requests-stats__header">
         <p className="section-title">{resolvedTitle}</p>
         {showTabs ? (
