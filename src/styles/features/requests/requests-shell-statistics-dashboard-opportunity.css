@@ -712,6 +712,81 @@
     font-size: var(--workspace-statistics-copy-size);
   }
 
+  .workspace-statistics-price__signal-card {
+    display: grid;
+    gap: var(--space-1-5);
+    padding: var(--space-2-5);
+    border-radius: var(--workspace-statistics-radius-soft);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 97%, var(--surface-soft-bg) 3%),
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-primary) 8%)
+      );
+  }
+
+  .workspace-statistics-price__signal-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics-price__signal-label {
+    font-size: var(--workspace-statistics-label-size);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__signal-value {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in oklab, var(--c-primary) 74%, var(--c-text) 26%);
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-price__signal-body {
+    margin: 0;
+    font-size: var(--workspace-statistics-copy-size);
+    line-height: 1.5;
+    color: color-mix(in oklab, var(--c-text) 90%, var(--c-text-muted) 10%);
+  }
+
+  .workspace-statistics-price__confidence {
+    display: grid;
+    gap: var(--space-1-5);
+  }
+
+  .workspace-statistics-price__confidence-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    width: fit-content;
+    min-height: 28px;
+    padding: 0 var(--space-2-5);
+    border-radius: var(--workspace-statistics-chip-radius);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--surface-soft-border) 84%);
+    background: color-mix(in oklab, var(--c-primary) 7%, var(--c-panel) 93%);
+    font-size: var(--workspace-statistics-label-size);
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__confidence-badge strong {
+    color: var(--c-text);
+    font-weight: 700;
+  }
+
+  .workspace-statistics-price__confidence-detail {
+    font-size: var(--workspace-statistics-label-size);
+    line-height: 1.4;
+    color: color-mix(in oklab, var(--c-text-muted) 94%, var(--c-text) 6%);
+  }
+
   .workspace-statistics-price__strategy-panel {
     margin: 0;
     padding: 0;
@@ -1037,6 +1112,11 @@
       min-height: 0;
     }
 
+    .workspace-statistics-price__signal-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-0-5);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

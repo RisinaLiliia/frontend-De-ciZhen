@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
 import { OpportunityAnalysisCard } from './opportunity/OpportunityAnalysisCard';
 import { OpportunityTopCards } from './opportunity/OpportunityTopCards';
 import {
@@ -17,13 +17,11 @@ export function StatisticsOpportunityPanel({
   panelRef,
   copy,
   locale,
-  title,
   opportunityRadar,
 }: {
   panelRef?: React.Ref<HTMLElement>;
   copy: WorkspaceStatisticsModel['copy'];
   locale: Locale;
-  title?: string;
   opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'];
 }) {
   const defaultRank = React.useMemo(
@@ -57,7 +55,7 @@ export function StatisticsOpportunityPanel({
   return (
     <section ref={panelRef} className="panel requests-stats-chart workspace-statistics-opportunity">
       <header className="section-heading workspace-statistics__tile-header">
-        <p className="section-title">{title ?? copy.opportunityTitle}</p>
+        <p className="section-title">{copy.opportunityTitle}</p>
         <p className="section-subtitle">{copy.opportunitySubtitle}</p>
       </header>
       {opportunityRadar.length === 0 ? (

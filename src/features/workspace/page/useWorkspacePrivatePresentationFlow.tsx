@@ -169,7 +169,6 @@ export function useWorkspacePrivatePresentationFlow({
     isProvidersError,
     topProviders,
     favoriteProviderIds,
-    showQuickAction: activePublicSection !== 'stats',
   });
 
   const resolvedWorkspaceIntroNode = React.useMemo(
@@ -191,7 +190,6 @@ export function useWorkspacePrivatePresentationFlow({
             isMapLoading={isPublicSummaryLoading}
             isMapError={isPublicSummaryError}
             quickActionHref="/request/create"
-            showQuickAction={activePublicSection !== 'stats'}
           />
         ),
     [

@@ -183,7 +183,6 @@ type StatsHook = (args: { locale: 'de' }) => {
   setRange: (next: WorkspaceStatisticsRange) => void;
   isLoading: boolean;
   isError: boolean;
-  hasBackgroundError: boolean;
   cityRows: Array<unknown>;
   opportunityRadar: Array<unknown>;
   priceIntelligence: { contextLabel: string | null };
@@ -199,7 +198,6 @@ function createProbe(useWorkspaceStatisticsModel: StatsHook) {
           data-range={model.range}
           data-loading={String(model.isLoading)}
           data-error={String(model.isError)}
-          data-background-error={String(model.hasBackgroundError)}
           data-city-count={String(model.cityRows.length)}
           data-opportunity-count={String(model.opportunityRadar.length)}
           data-price-context={model.priceIntelligence.contextLabel ?? ''}
@@ -239,35 +237,20 @@ describe('useWorkspaceStatisticsModel', () => {
     await waitFor(() => {
       expect(screen.getByTestId('probe').getAttribute('data-loading')).toBe('false');
     });
-    expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(1, {
-      range: '30d',
-      cityId: null,
-      regionId: null,
-      categoryKey: null,
-    });
+    expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(1, '30d');
     expect(screen.getByTestId('probe').getAttribute('data-price-context')).toContain('Berlin');
 
     fireEvent.click(screen.getByRole('button', { name: 'set-7d' }));
 
     await waitFor(() => {
-      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(2, {
-        range: '7d',
-        cityId: null,
-        regionId: null,
-        categoryKey: null,
-      });
+      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(2, '7d');
     });
     expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('7d');
 
     fireEvent.click(screen.getByRole('button', { name: 'set-90d' }));
 
     await waitFor(() => {
-      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(3, {
-        range: '90d',
-        cityId: null,
-        regionId: null,
-        categoryKey: null,
-      });
+      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(3, '90d');
     });
     expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('90d');
   });
@@ -290,36 +273,5 @@ describe('useWorkspaceStatisticsModel', () => {
       expect(screen.getByTestId('probe').getAttribute('data-error')).toBe('true');
     });
     expect(getWorkspaceStatisticsMock).toHaveBeenCalledTimes(1);
-  });
-
-  it('keeps stale data visible and marks background refetch failures', async () => {
-    getWorkspaceStatisticsMock
-      .mockResolvedValueOnce(createStatsOverview('30d'))
-      .mockRejectedValueOnce(new Error('failed refetch'));
-
-    const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
-    const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
-    const queryClient = createQueryClient();
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Probe />
-      </QueryClientProvider>,
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId('probe').getAttribute('data-loading')).toBe('false');
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: 'set-7d' }));
-
-    await waitFor(() => {
-      expect(screen.getByTestId('probe').getAttribute('data-background-error')).toBe('true');
-    });
-
-    const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-error')).toBe('false');
-    expect(probe.getAttribute('data-city-count')).toBe('1');
-    expect(probe.getAttribute('data-opportunity-count')).toBe('1');
   });
 });

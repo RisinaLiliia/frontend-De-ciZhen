@@ -73,26 +73,6 @@
       align-items: stretch;
     }
 
-    .workspace-statistics-context__filters-grid,
-    .workspace-statistics-context__filters-actions {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .workspace-statistics-context .panel-header {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .workspace-statistics-context__header-actions {
-      width: 100%;
-      margin-left: 0;
-      justify-content: space-between;
-    }
-
-    .workspace-statistics-context__health-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     .workspace-statistics__header-toolbar {
       flex-wrap: wrap;
     }
@@ -148,29 +128,6 @@
   }
 
   @media (max-width: 639px) {
-    .workspace-statistics-context__compact-toggle,
-    .workspace-statistics-context__body {
-      padding-left: var(--space-2-5);
-      padding-right: var(--space-2-5);
-    }
-
-    .workspace-statistics-context__compact-toggle {
-      align-items: flex-start;
-    }
-
-    .workspace-statistics-context__compact-trailing {
-      align-self: center;
-    }
-
-    .workspace-statistics-context__health-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .workspace-statistics-context__header-actions {
-      flex-wrap: wrap;
-      justify-content: flex-start;
-    }
-
     .workspace-statistics .requests-stats__kpi-grid,
     .workspace-statistics__meta-grid {
       grid-template-columns: minmax(0, 1fr);

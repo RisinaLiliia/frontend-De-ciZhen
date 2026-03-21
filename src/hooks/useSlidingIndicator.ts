@@ -15,11 +15,9 @@ export function useSlidingIndicator<T extends HTMLElement>({
 }: Params) {
   const containerRef = React.useRef<T | null>(null);
   const [indicatorStyle, setIndicatorStyle] = React.useState<React.CSSProperties | null>(null);
-  const indicatorSnapshotRef = React.useRef<string>('');
 
   const syncIndicator = React.useCallback(() => {
     if (!enabled) {
-      indicatorSnapshotRef.current = '';
       setIndicatorStyle(null);
       return;
     }
@@ -29,22 +27,17 @@ export function useSlidingIndicator<T extends HTMLElement>({
 
     const activeItem = container.querySelector<HTMLElement>(activeSelector);
     if (!activeItem) {
-      indicatorSnapshotRef.current = '';
       setIndicatorStyle(null);
       return;
     }
 
     const containerRect = container.getBoundingClientRect();
     const itemRect = activeItem.getBoundingClientRect();
-    const nextStyle = {
+    setIndicatorStyle({
       transform: `translate3d(${itemRect.left - containerRect.left}px, ${itemRect.top - containerRect.top}px, 0)`,
       width: `${itemRect.width}px`,
       height: `${itemRect.height}px`,
-    } satisfies React.CSSProperties;
-    const nextSnapshot = `${nextStyle.transform}|${nextStyle.width}|${nextStyle.height}`;
-    if (indicatorSnapshotRef.current === nextSnapshot) return;
-    indicatorSnapshotRef.current = nextSnapshot;
-    setIndicatorStyle(nextStyle);
+    });
   }, [activeSelector, enabled]);
 
   React.useEffect(() => {

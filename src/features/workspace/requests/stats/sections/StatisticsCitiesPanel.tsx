@@ -9,14 +9,13 @@ import {
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
 import type { TranslateFn } from './statisticsSections.types';
 import { citySignalIcon, citySignalLabel } from './statisticsSections.utils';
 
 export function StatisticsCitiesPanel({
   panelRef,
   copy,
-  subtitle,
   cityRowsLength,
   filteredCityRows,
   visibleCityRows,
@@ -34,7 +33,6 @@ export function StatisticsCitiesPanel({
 }: {
   panelRef?: React.Ref<HTMLElement>;
   copy: WorkspaceStatisticsModel['copy'];
-  subtitle?: string;
   cityRowsLength: number;
   filteredCityRows: WorkspaceStatisticsModel['cityRows'];
   visibleCityRows: WorkspaceStatisticsModel['cityRows'];
@@ -54,7 +52,7 @@ export function StatisticsCitiesPanel({
     <section ref={panelRef} className="panel requests-stats-chart workspace-statistics__cities-panel">
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.citiesTitle}</p>
-        <p className="section-subtitle">{subtitle ?? copy.citiesSubtitle}</p>
+        <p className="section-subtitle">{copy.citiesSubtitle}</p>
       </header>
       <div className="workspace-statistics__cities-tools">
         <label className="workspace-statistics__cities-filter" aria-label={copy.citiesFilterPlaceholder}>

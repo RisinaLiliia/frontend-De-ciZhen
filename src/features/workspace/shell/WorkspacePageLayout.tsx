@@ -44,7 +44,7 @@ type Props = {
   onToggleProviderFavorite: (providerId: string) => void;
 };
 
-export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
+export function WorkspacePageLayout({
   isWorkspacePublicSection,
   isWorkspaceAuthed,
   activePublicSection,
@@ -109,4 +109,4 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       )}
     />
   );
-});
+}
