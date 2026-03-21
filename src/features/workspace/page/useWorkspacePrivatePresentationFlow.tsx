@@ -184,6 +184,7 @@ export function useWorkspacePrivatePresentationFlow({
             summary={allRequestsSummary}
             isMapLoading={isPublicSummaryLoading}
             isMapError={isPublicSummaryError}
+            hideDemandMapOnMobile={activePublicSection !== 'stats'}
             quickActionHref="/request/create"
             showQuickAction={activePublicSection !== 'stats'}
           />

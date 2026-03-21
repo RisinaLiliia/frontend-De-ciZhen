@@ -4,13 +4,11 @@ import * as React from 'react';
 import type { ReactNode } from 'react';
 
 type WorkspaceControlShellProps = {
-  navigation: ReactNode;
   context?: ReactNode;
   aside?: ReactNode;
 };
 
 export function WorkspaceControlShell({
-  navigation,
   context,
   aside,
 }: WorkspaceControlShellProps) {
@@ -144,6 +142,8 @@ export function WorkspaceControlShell({
         data-mode="static"
         data-condensed={isCondensed ? 'true' : 'false'}
         data-pinned={isPinned ? 'true' : 'false'}
+        data-has-context={hasContext ? 'true' : 'false'}
+        data-has-aside={hasAside ? 'true' : 'false'}
         style={shellStyle}
       >
         <div className="workspace-control-shell__body">
@@ -151,9 +151,6 @@ export function WorkspaceControlShell({
             className={`workspace-control-shell__layout${hasContext ? ' has-context' : ''}${hasAside ? ' has-aside' : ''}`.trim()}
           >
             <div className="workspace-control-shell__main">
-              <div className="workspace-control-shell__section workspace-control-shell__section--navigation">
-                {navigation}
-              </div>
               {context ? (
                 <div className="workspace-control-shell__section workspace-control-shell__section--context">
                   {context}

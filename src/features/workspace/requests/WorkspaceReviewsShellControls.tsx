@@ -3,6 +3,7 @@
 import { IconFilter } from '@/components/ui/icons/icons';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import type { ProviderReviewSort } from '@/features/providers/publicProfile/useProviderReviewsModel';
+import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
 import {
   getWorkspaceReviewRangeLabel,
@@ -28,7 +29,11 @@ export function WorkspaceReviewsShellControls({
     resetReviewControls,
   } = useWorkspaceReviewControlsState();
 
-  return (
+  const sortLabel = reviewSort === 'top'
+    ? (locale === 'de' ? 'Top bewertet' : 'Top rated')
+    : (locale === 'de' ? 'Neueste' : 'Latest');
+
+  const controlsContent = (
     <div className="workspace-reviews-shell-controls">
       <div className="workspace-reviews-shell-controls__group workspace-reviews-shell-controls__group--range">
         <RangeActionToolbar
@@ -63,5 +68,27 @@ export function WorkspaceReviewsShellControls({
         </button>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      <div className="workspace-reviews-shell-controls__desktop">
+        {controlsContent}
+      </div>
+      <WorkspaceMobileFiltersSheet
+        title={locale === 'de' ? 'Bewertungsfilter' : 'Review filters'}
+        closeLabel={t(I18N_KEYS.auth.closeDialog)}
+        triggerLabel={locale === 'de' ? 'Filter' : 'Filters'}
+        summary={(
+          <>
+            <span className="workspace-mobile-filters__summary-chip">{getWorkspaceReviewRangeLabel(reviewRange, locale)}</span>
+            <span className="workspace-mobile-filters__summary-chip">{sortLabel}</span>
+          </>
+        )}
+        className="workspace-reviews-shell-controls__mobile"
+      >
+        {controlsContent}
+      </WorkspaceMobileFiltersSheet>
+    </>
   );
 }

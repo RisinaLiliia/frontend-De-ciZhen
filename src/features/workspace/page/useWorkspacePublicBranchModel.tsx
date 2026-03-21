@@ -160,6 +160,7 @@ export function useWorkspacePublicBranchModel({
         summary={platformSummary}
         isMapLoading={isSummaryLoading}
         isMapError={isSummaryError}
+        hideDemandMapOnMobile={activePublicSection !== 'stats'}
         quickActionHref="/request/create"
         showQuickAction={activePublicSection !== 'stats'}
       />

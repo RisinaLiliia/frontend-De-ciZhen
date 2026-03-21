@@ -3,6 +3,7 @@
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import { RequestsFilterSelect } from '@/components/requests/RequestsFilterSelect';
 import { IconDownload, IconFilter } from '@/components/ui/icons/icons';
+import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import {
@@ -28,6 +29,8 @@ export function StatisticsContextPanel({
   surface = 'panel',
   showSummary = true,
   showControls = true,
+  controlsPosition = 'bottom',
+  closeLabel = 'Close',
 }: {
   copy: WorkspaceStatisticsModel['copy'];
   filters: WorkspaceStatisticsModel['filters'];
@@ -42,9 +45,13 @@ export function StatisticsContextPanel({
   surface?: 'panel' | 'embedded';
   showSummary?: boolean;
   showControls?: boolean;
+  controlsPosition?: 'top' | 'bottom';
+  closeLabel?: string;
 }) {
   const cityValue = filters.cityId ?? ALL_CITIES_VALUE;
   const categoryValue = filters.categoryKey ?? ALL_CATEGORIES_VALUE;
+  const selectedCityLabel = cityOptions.find((option) => option.value === cityValue)?.label ?? copy.contextAllCitiesLabel;
+  const selectedCategoryLabel = categoryOptions.find((option) => option.value === categoryValue)?.label ?? copy.contextAllCategoriesLabel;
   const summaryBlock = showSummary ? (
     <>
       <div className="workspace-statistics-context__health-grid" aria-label={context.scopeLabel}>
@@ -68,7 +75,7 @@ export function StatisticsContextPanel({
     </>
   ) : null;
 
-  const controlsBlock = showControls ? (
+  const controlsInner = (
     <>
       <div className={`workspace-statistics-context__toolbar${showSummary ? ' workspace-statistics-context__toolbar--with-summary' : ''}`.trim()}>
         <div className="workspace-statistics-context__header-actions">
@@ -164,12 +171,44 @@ export function StatisticsContextPanel({
         </div>
       </div>
     </>
+  );
+
+  const controlsBlock = showControls ? (
+    <>
+      <div className="workspace-statistics-context__controls-desktop">
+        {controlsInner}
+      </div>
+      {surface === 'embedded' ? (
+        <WorkspaceMobileFiltersSheet
+          title={copy.contextTitle}
+          closeLabel={closeLabel}
+          triggerLabel={copy.contextTitle}
+          summary={(
+            <>
+              <span className="workspace-mobile-filters__summary-chip">{rangeLabelShort(filters.period)}</span>
+              <span className="workspace-mobile-filters__summary-chip">{selectedCityLabel}</span>
+              <span className="workspace-mobile-filters__summary-chip">{selectedCategoryLabel}</span>
+            </>
+          )}
+          className="workspace-statistics-context__controls-mobile"
+        >
+          <div className="workspace-statistics-context workspace-statistics-context--embedded workspace-statistics-context--controls-only">
+            <div className="workspace-statistics-context__body">
+              {controlsInner}
+            </div>
+          </div>
+        </WorkspaceMobileFiltersSheet>
+      ) : null}
+    </>
   ) : null;
+
+  const bodyContent = controlsPosition === 'top'
+    ? [controlsBlock, summaryBlock]
+    : [summaryBlock, controlsBlock];
 
   const body = (
     <div className="workspace-statistics-context__body">
-      {summaryBlock}
-      {controlsBlock}
+      {bodyContent}
     </div>
   );
 

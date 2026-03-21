@@ -32,8 +32,6 @@ import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
 import { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
 import { WorkspacePlatformReviewsRail } from './WorkspacePlatformReviewsRail';
-import { WorkspaceRequestsShellControls } from './WorkspaceRequestsShellControls';
-import { WorkspaceReviewsShellControls } from './WorkspaceReviewsShellControls';
 import { workspaceQK } from './queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from './workspace.constants';
 
@@ -176,29 +174,20 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
     || activeSection === 'reviews'
     || activeSection === 'profile'
   );
-  const showExploreShellFilters = activeSection === 'requests' || activeSection === 'providers' || activeSection === 'reviews';
   const renderedIntro = React.useMemo(() => {
-    if (!(showExploreRailMap || showExploreRailQuickAction || showExploreShellFilters) || !React.isValidElement(intro)) return intro;
+    if (!(showExploreRailMap || showExploreRailQuickAction) || !React.isValidElement(intro)) return intro;
 
     return React.cloneElement(
       intro as React.ReactElement<{
         showDemandMap?: boolean;
         showQuickAction?: boolean;
-        leftColumnSlot?: React.ReactNode;
       }>,
       {
         showDemandMap: showExploreRailMap ? false : undefined,
         showQuickAction: showExploreRailQuickAction ? false : undefined,
-        leftColumnSlot: showExploreShellFilters
-          ? (
-            activeSection === 'reviews'
-              ? <WorkspaceReviewsShellControls t={t} locale={locale} />
-              : <WorkspaceRequestsShellControls t={t} locale={locale} contentType={activeSection === 'providers' ? 'providers' : 'requests'} />
-          )
-          : undefined,
       },
     );
-  }, [activeSection, intro, locale, showExploreRailMap, showExploreRailQuickAction, showExploreShellFilters, t]);
+  }, [intro, showExploreRailMap, showExploreRailQuickAction]);
   const {
     data: publicSummaryOverview,
     isLoading: isPublicSummaryLoading,
@@ -253,7 +242,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
               showBack={false}
               backHref="/"
               onListDensityChange={onListDensityChange}
-              showTopFilters={activeSection !== 'requests' && activeSection !== 'providers'}
+              showTopFilters
               initialPublicRequests={initialPublicRequests}
               preferInitialPublicRequests={preferInitialPublicRequests}
               initialPublicRequestsLoading={initialPublicRequestsLoading}

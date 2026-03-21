@@ -280,7 +280,9 @@ export function WorkspaceStatisticsView({
           onReset={model.resetFilters}
           onExport={model.onExport}
           surface="embedded"
-          showControls={false}
+          showControls
+          controlsPosition="top"
+          closeLabel={t(I18N_KEYS.auth.closeDialog)}
         />
 
         <SectionHeader

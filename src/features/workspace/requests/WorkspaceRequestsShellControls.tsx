@@ -52,6 +52,7 @@ export function WorkspaceRequestsShellControls({
       variant="shell"
       surface="embedded"
       showMobileToolbar={false}
+      mobileMode="sheet"
     />
   );
 }

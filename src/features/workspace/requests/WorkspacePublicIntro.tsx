@@ -5,7 +5,7 @@ import * as React from 'react';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/requests/WorkspacePublicDemandMapPanel';
-import { WorkspaceControlShell } from '@/features/workspace/requests/WorkspaceControlShell';
+import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
 import type { WorkspacePublicCityActivityDto } from '@/lib/api/dto/workspace';
 import type { WorkspacePublicSummaryDto } from '@/lib/api/dto/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -27,6 +27,7 @@ type WorkspacePublicIntroProps = {
   leftColumnSlot?: React.ReactNode;
   navHeaderSlot?: React.ReactNode;
   showDemandMap?: boolean;
+  hideDemandMapOnMobile?: boolean;
 };
 
 export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
@@ -45,38 +46,38 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   leftColumnSlot,
   navHeaderSlot,
   showDemandMap = true,
+  hideDemandMapOnMobile = true,
 }: WorkspacePublicIntroProps) {
   const showMarketMap = showDemandMap && Boolean(cityActivity || summary || isMapLoading || isMapError);
 
   return (
     <section className="home-intro-shell">
       <div className="stack-md">
-        <WorkspaceControlShell
-          navigation={(
-            <PersonalNavSection
-              className="personal-nav--left"
-              headerSlot={navHeaderSlot}
-              items={personalNavItems}
-              hideDockBadges={hideNavBadges}
-              insightText={insightText}
-              progressPercent={activityProgress}
-              surface="embedded"
-            />
-          )}
-          context={leftColumnSlot}
+        <PersonalNavSection
+          className="personal-nav--left"
+          headerSlot={navHeaderSlot}
+          items={personalNavItems}
+          hideDockBadges={hideNavBadges}
+          insightText={insightText}
+          progressPercent={activityProgress}
+          surface="embedded"
         />
+        {leftColumnSlot ? leftColumnSlot : null}
+        <WorkspaceMobileSectionSheet items={personalNavItems} />
         {showMarketMap ? (
-          <WorkspacePublicDemandMapPanel
-            t={t}
-            locale={locale}
-            cityActivity={cityActivity}
-            summary={summary}
-            isLoading={isMapLoading}
-            isError={isMapError}
-          />
+          <div className={hideDemandMapOnMobile ? 'workspace-intro__mobile-hidden' : undefined}>
+            <WorkspacePublicDemandMapPanel
+              t={t}
+              locale={locale}
+              cityActivity={cityActivity}
+              summary={summary}
+              isLoading={isMapLoading}
+              isError={isMapError}
+            />
+          </div>
         ) : null}
         {showQuickAction ? (
-          <section className="panel stack-sm" aria-label="Workspace quick action">
+          <section className="panel stack-sm workspace-intro__mobile-hidden" aria-label="Workspace quick action">
             <CreateRequestCard href={quickActionHref} />
           </section>
         ) : null}

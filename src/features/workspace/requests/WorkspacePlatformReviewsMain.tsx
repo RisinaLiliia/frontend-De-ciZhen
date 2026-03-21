@@ -7,6 +7,7 @@ import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useWorkspacePlatformReviewsOverview } from '@/features/workspace/requests/useWorkspacePlatformReviewsOverview';
+import { WorkspaceReviewsShellControls } from '@/features/workspace/requests/WorkspaceReviewsShellControls';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
 import { WorkspacePlatformReviewsRail } from '@/features/workspace/requests/WorkspacePlatformReviewsRail';
 
@@ -65,6 +66,8 @@ export function WorkspacePlatformReviewsMain({
           <WorkspacePlatformReviewsRail t={t} />
         </div>
       ) : null}
+
+      <WorkspaceReviewsShellControls t={t} locale={locale} />
 
       <RequestsResultsSummary
         t={t}

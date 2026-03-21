@@ -8,6 +8,7 @@ import { IconFilter, IconPin } from '@/components/ui/icons/icons';
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { RequestsMobileFilterToolbar } from '@/components/requests/RequestsMobileFilterToolbar';
 import { RequestsFilterSelect } from '@/components/requests/RequestsFilterSelect';
+import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
 import * as keys from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -73,6 +74,7 @@ type RequestsFilterControlsProps = Pick<
   variant?: 'panel' | 'shell';
   surface?: 'card' | 'embedded';
   showMobileToolbar?: boolean;
+  mobileMode?: 'inline' | 'sheet';
 };
 
 type RequestsResultsSummaryProps = Pick<
@@ -116,6 +118,7 @@ export function RequestsFilterControls({
   variant = 'panel',
   surface = 'card',
   showMobileToolbar = true,
+  mobileMode = 'inline',
 }: RequestsFilterControlsProps) {
   const [cityQuery] = React.useState('');
   const [isMobileControlsOpen, setIsMobileControlsOpen] = React.useState(false);
@@ -135,12 +138,107 @@ export function RequestsFilterControls({
     return placeholder ? [placeholder, ...sorted] : sorted;
   }, [cityOptions, cityQuery, locale]);
 
+  const cityLabel = React.useMemo(
+    () => cityOptions.find((option) => option.value === cityId)?.label ?? t(keys.I18N_KEYS.requestsPage.cityLabel),
+    [cityId, cityOptions, t],
+  );
+  const categoryLabel = React.useMemo(
+    () => categoryOptions.find((option) => option.value === categoryKey)?.label ?? t(keys.I18N_KEYS.requestsPage.categoryLabel),
+    [categoryKey, categoryOptions, t],
+  );
+  const serviceLabel = React.useMemo(
+    () => serviceOptions.find((option) => option.value === subcategoryKey)?.label ?? t(keys.I18N_KEYS.requestsPage.serviceLabel),
+    [subcategoryKey, serviceOptions, t],
+  );
+
   const openSortControl = React.useCallback(() => {
     setIsMobileControlsOpen(true);
     requestAnimationFrame(() => {
       sortControlRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     });
   }, []);
+
+  const controlsContent = (
+    <>
+      <div className="requests-filter-grid requests-filter-grid--primary">
+        <div className="requests-filter">
+          <RequestsFilterSelect
+            options={filteredCityOptions}
+            value={cityId}
+            onChange={onCityChange}
+            className="requests-select is-city"
+            ariaLabel={t(keys.I18N_KEYS.requestsPage.cityLabel)}
+            disabled={controlsDisabled}
+            icon={<IconPin />}
+            iconClassName="requests-select-icon--city"
+          />
+        </div>
+        <div className="requests-filter">
+          <RequestsFilterSelect
+            options={categoryOptions}
+            value={categoryKey}
+            onChange={onCategoryChange}
+            className="requests-select"
+            ariaLabel={t(keys.I18N_KEYS.requestsPage.categoryLabel)}
+            disabled={controlsDisabled}
+          />
+        </div>
+        <div className="requests-filter">
+          <RequestsFilterSelect
+            options={serviceOptions}
+            value={subcategoryKey}
+            onChange={onSubcategoryChange}
+            className="requests-select"
+            ariaLabel={t(keys.I18N_KEYS.requestsPage.serviceLabel)}
+            disabled={controlsDisabled || categoryKey === 'all'}
+          />
+        </div>
+      </div>
+      <div className="requests-filter-grid requests-filter-grid--secondary">
+        <div className="requests-filter" ref={sortControlRef}>
+          <RequestsFilterSelect
+            options={sortOptions}
+            value={sortBy}
+            onChange={onSortChange}
+            className="requests-select"
+            ariaLabel={t(keys.I18N_KEYS.requestsPage.sortLabel)}
+            disabled={controlsDisabled}
+          />
+        </div>
+        <button
+          type="button"
+          className={`${variant === 'shell' ? 'panel-action icon-button--hint workspace-control-shell__action requests-clear requests-clear--icon' : 'btn-ghost is-primary requests-clear'}`.trim()}
+          onClick={onReset}
+          disabled={controlsDisabled || !hasActiveFilters}
+          aria-label={t(keys.I18N_KEYS.requestsPage.clearFilters)}
+          title={t(keys.I18N_KEYS.requestsPage.clearFilters)}
+        >
+          <IconFilter />
+          {variant === 'shell' ? null : t(keys.I18N_KEYS.requestsPage.clearFilters)}
+        </button>
+      </div>
+      {appliedChips.length > 0 ? (
+        <div
+          className={`chip-row requests-filters__chips requests-filters__chips--${variant}`.trim()}
+          role="list"
+          aria-label={t(keys.I18N_KEYS.requestsPage.activeFiltersLabel)}
+        >
+          {appliedChips.map((chip) => (
+            <button
+              key={chip.key}
+              type="button"
+              className="chip is-active"
+              role="listitem"
+              onClick={chip.onRemove}
+              aria-label={`${chip.label} ${t(keys.I18N_KEYS.requestsPage.removeFilterSuffix)}`}
+            >
+              {chip.label} ×
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </>
+  );
 
   return (
     <div
@@ -164,92 +262,32 @@ export function RequestsFilterControls({
         />
       ) : null}
 
+      {mobileMode === 'sheet' ? (
+        <WorkspaceMobileFiltersSheet
+          title={t(keys.I18N_KEYS.requestsPage.filterRegionLabel)}
+          closeLabel={t(keys.I18N_KEYS.auth.closeDialog)}
+          triggerLabel={t(keys.I18N_KEYS.requestsPage.mobileFilterLabel)}
+          summary={(
+            <>
+              <span className="workspace-mobile-filters__summary-chip">{cityLabel}</span>
+              <span className="workspace-mobile-filters__summary-chip">{subcategoryKey !== 'all' ? serviceLabel : categoryLabel}</span>
+            </>
+          )}
+          className="requests-filters__mobile-sheet"
+        >
+          <div className="requests-filters requests-filters--surface-embedded requests-filters--shell requests-filters--mobile-sheet-body">
+            <div className="requests-filters__controls">
+              {controlsContent}
+            </div>
+          </div>
+        </WorkspaceMobileFiltersSheet>
+      ) : null}
+
       <div
         id="requests-filter-controls"
-        className={`requests-filters__controls requests-filters__controls--${variant} ${isMobileControlsOpen ? 'is-open' : ''}`.trim()}
+        className={`requests-filters__controls requests-filters__controls--${variant} ${isMobileControlsOpen ? 'is-open' : ''}${mobileMode === 'sheet' ? ' requests-filters__controls--desktop-shell' : ''}`.trim()}
       >
-        <div className="requests-filter-grid requests-filter-grid--primary">
-          <div className="requests-filter">
-            {/* <Input
-              value={cityQuery}
-              onChange={(e) => setCityQuery(e.target.value)}
-              placeholder={t(I18N_KEYS.home.cityPlaceholder)}
-            /> */}
-            <RequestsFilterSelect
-              options={filteredCityOptions}
-              value={cityId}
-              onChange={onCityChange}
-              className="requests-select is-city"
-              ariaLabel={t(keys.I18N_KEYS.requestsPage.cityLabel)}
-              disabled={controlsDisabled}
-              icon={<IconPin />}
-              iconClassName="requests-select-icon--city"
-            />
-          </div>
-          <div className="requests-filter">
-            <RequestsFilterSelect
-              options={categoryOptions}
-              value={categoryKey}
-              onChange={onCategoryChange}
-              className="requests-select"
-              ariaLabel={t(keys.I18N_KEYS.requestsPage.categoryLabel)}
-              disabled={controlsDisabled}
-            />
-          </div>
-          <div className="requests-filter">
-            <RequestsFilterSelect
-              options={serviceOptions}
-              value={subcategoryKey}
-              onChange={onSubcategoryChange}
-              className="requests-select"
-              ariaLabel={t(keys.I18N_KEYS.requestsPage.serviceLabel)}
-              disabled={controlsDisabled || categoryKey === 'all'}
-            />
-          </div>
-        </div>
-        <div className="requests-filter-grid requests-filter-grid--secondary">
-          <div className="requests-filter" ref={sortControlRef}>
-            <RequestsFilterSelect
-              options={sortOptions}
-              value={sortBy}
-              onChange={onSortChange}
-              className="requests-select"
-              ariaLabel={t(keys.I18N_KEYS.requestsPage.sortLabel)}
-              disabled={controlsDisabled}
-            />
-          </div>
-          <button
-            type="button"
-            className={`${variant === 'shell' ? 'panel-action icon-button--hint workspace-control-shell__action requests-clear requests-clear--icon' : 'btn-ghost is-primary requests-clear'}`.trim()}
-            onClick={onReset}
-            disabled={controlsDisabled || !hasActiveFilters}
-            aria-label={t(keys.I18N_KEYS.requestsPage.clearFilters)}
-            title={t(keys.I18N_KEYS.requestsPage.clearFilters)}
-          >
-            <IconFilter />
-            {variant === 'shell' ? null : t(keys.I18N_KEYS.requestsPage.clearFilters)}
-          </button>
-        </div>
-        {appliedChips.length > 0 ? (
-          <div
-            className={`chip-row requests-filters__chips requests-filters__chips--${variant}`.trim()}
-            role="list"
-            aria-label={t(keys.I18N_KEYS.requestsPage.activeFiltersLabel)}
-          >
-            {appliedChips.map((chip) => (
-              <button
-                key={chip.key}
-                type="button"
-                className="chip is-active"
-                role="listitem"
-                onClick={chip.onRemove}
-                aria-label={`${chip.label} ${t(keys.I18N_KEYS.requestsPage.removeFilterSuffix)}`}
-              >
-                {chip.label} ×
-              </button>
-            ))}
-          </div>
-        ) : null}
+        {controlsContent}
       </div>
       {isCategoriesLoading || isServicesLoading ? (
         <div className="requests-filters__skeleton" aria-hidden="true">
