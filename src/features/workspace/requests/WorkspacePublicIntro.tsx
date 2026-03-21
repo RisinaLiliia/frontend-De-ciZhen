@@ -1,7 +1,5 @@
 'use client';
 
-import * as React from 'react';
-
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/requests/WorkspacePublicDemandMapPanel';
@@ -24,12 +22,9 @@ type WorkspacePublicIntroProps = {
   isMapLoading?: boolean;
   isMapError?: boolean;
   quickActionHref?: string;
-  showQuickAction?: boolean;
-  leftColumnSlot?: React.ReactNode;
-  navHeaderSlot?: React.ReactNode;
 };
 
-export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
+export function WorkspacePublicIntro({
   t,
   locale,
   navTitle,
@@ -43,9 +38,6 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   isMapLoading = false,
   isMapError = false,
   quickActionHref = '/request/create',
-  showQuickAction = true,
-  leftColumnSlot,
-  navHeaderSlot,
 }: WorkspacePublicIntroProps) {
   return (
     <section className="home-intro-shell">
@@ -55,18 +47,14 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
             className="personal-nav--left"
             title={navTitle}
             subtitle={navSubtitle}
-            headerSlot={navHeaderSlot}
             items={personalNavItems}
             hideDockBadges={hideNavBadges}
             insightText={insightText}
             progressPercent={activityProgress}
           />
-          {leftColumnSlot}
-          {showQuickAction ? (
-            <section className="panel stack-sm" aria-label="Workspace quick action">
-              <CreateRequestCard href={quickActionHref} />
-            </section>
-          ) : null}
+          <section className="panel stack-sm" aria-label="Workspace quick action">
+            <CreateRequestCard href={quickActionHref} />
+          </section>
         </div>
 
         <aside className="stack-md hide-mobile">
@@ -82,4 +70,4 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
       </div>
     </section>
   );
-});
+}

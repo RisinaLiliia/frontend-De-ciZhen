@@ -30,7 +30,6 @@ type Args = {
   isProvidersError: boolean;
   topProviders: WorkspaceAsideBaseProps['providers'];
   favoriteProviderIds: WorkspaceAsideBaseProps['favoriteProviderIds'];
-  showQuickAction?: boolean;
 };
 
 export function useWorkspacePresentation({
@@ -50,7 +49,6 @@ export function useWorkspacePresentation({
   isProvidersError,
   topProviders,
   favoriteProviderIds,
-  showQuickAction = true,
 }: Args) {
   const workspaceIntroNode = React.useMemo(
     () => (
@@ -71,7 +69,6 @@ export function useWorkspacePresentation({
         providerStatsPayload={providerStatsPayload}
         clientStatsPayload={clientStatsPayload}
         quickActionHref={createRequestHref}
-        showQuickAction={showQuickAction}
       />
     ),
     [
@@ -87,7 +84,6 @@ export function useWorkspacePresentation({
       statsOrder,
       t,
       insightText,
-      showQuickAction,
     ],
   );
 

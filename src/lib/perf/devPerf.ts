@@ -10,10 +10,6 @@ function canProfile() {
   );
 }
 
-export function devPerfCanProfile() {
-  return canProfile();
-}
-
 function roundMs(value: number) {
   return Math.round(value * 100) / 100;
 }

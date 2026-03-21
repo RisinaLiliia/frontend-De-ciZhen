@@ -5,110 +5,38 @@ import { useQuery } from '@tanstack/react-query';
 
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { getWorkspaceStatistics } from '@/lib/api/workspace';
-import {
-  normalizeWorkspaceDecisionDashboardResponse,
-  type WorkspaceStatisticsDecisionDashboardDto,
-} from './statisticsDecisionDashboard.contract';
-import { workspaceStatisticsDecisionDashboardSchema } from './workspaceStatisticsDecisionDashboard.schema';
-import type { WorkspaceStatisticsFilters } from './workspaceStatistics.model';
+import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 
 export type UseWorkspaceStatsQueryResult = {
-  filters: WorkspaceStatisticsFilters;
   range: WorkspaceStatisticsRange;
   setRange: (next: WorkspaceStatisticsRange) => void;
-  setCityId: (next: string | null) => void;
-  setCategoryKey: (next: string | null) => void;
-  resetFilters: () => void;
-  data: WorkspaceStatisticsDecisionDashboardDto | undefined;
+  data: WorkspaceStatisticsOverviewSourceDto | undefined;
   isLoading: boolean;
   isError: boolean;
-  hasBackgroundError: boolean;
-  isFetching: boolean;
-  isPendingFilters: boolean;
 };
 
 export function useWorkspaceStatsQuery(): UseWorkspaceStatsQueryResult {
-  const [filters, setFilters] = React.useState<WorkspaceStatisticsFilters>({
-    period: '30d',
-    cityId: null,
-    regionId: null,
-    categoryKey: null,
-  });
-  const [isPendingFilters, startTransition] = React.useTransition();
+  const [range, setRange] = React.useState<WorkspaceStatisticsRange>('30d');
 
-  const setRange = React.useCallback((next: WorkspaceStatisticsRange) => {
-    startTransition(() => {
-      setFilters((current) => ({ ...current, period: next }));
-    });
-  }, []);
-
-  const setCityId = React.useCallback((next: string | null) => {
-    startTransition(() => {
-      setFilters((current) => ({ ...current, cityId: next }));
-    });
-  }, []);
-
-  const setCategoryKey = React.useCallback((next: string | null) => {
-    startTransition(() => {
-      setFilters((current) => ({ ...current, categoryKey: next }));
-    });
-  }, []);
-
-  const resetFilters = React.useCallback(() => {
-    startTransition(() => {
-      setFilters((current) => ({
-        period: current.period,
-        cityId: null,
-        regionId: null,
-        categoryKey: null,
-      }));
-    });
-  }, []);
-
-  const [lastSuccessfulData, setLastSuccessfulData] = React.useState<WorkspaceStatisticsDecisionDashboardDto | undefined>(undefined);
-
-  const query = useQuery<WorkspaceStatisticsDecisionDashboardDto>({
-    queryKey: ['workspace-statistics-overview', filters.period, filters.regionId, filters.cityId, filters.categoryKey],
-    queryFn: async (): Promise<WorkspaceStatisticsDecisionDashboardDto> => {
-      const payload = await getWorkspaceStatistics({
-        range: filters.period,
-        cityId: filters.cityId,
-        regionId: filters.regionId,
-        categoryKey: filters.categoryKey,
-      });
-      const normalized = normalizeWorkspaceDecisionDashboardResponse({
+  const query = useQuery<WorkspaceStatisticsOverviewSourceDto>({
+    queryKey: ['workspace-statistics-overview', range],
+    queryFn: async () => {
+      const payload = await getWorkspaceStatistics(range);
+      return {
         ...payload,
         __source: 'bff',
-      }, filters);
-      workspaceStatisticsDecisionDashboardSchema.parse(normalized);
-      return normalized;
+      };
     },
     staleTime: 60_000,
     refetchOnWindowFocus: false,
     placeholderData: (previousData) => previousData,
   });
 
-  React.useEffect(() => {
-    if (query.data) {
-      setLastSuccessfulData(query.data);
-    }
-  }, [query.data]);
-
-  const resolvedData = query.data ?? lastSuccessfulData;
-  const hasBackgroundError = query.isError && Boolean(resolvedData);
-
   return {
-    filters,
-    range: filters.period,
+    range,
     setRange,
-    setCityId,
-    setCategoryKey,
-    resetFilters,
-    data: resolvedData,
+    data: query.data,
     isLoading: query.isLoading,
     isError: query.isError,
-    hasBackgroundError,
-    isFetching: query.isFetching,
-    isPendingFilters,
   };
 }

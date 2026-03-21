@@ -42,7 +42,7 @@ type PersonalNavSectionProps = {
   className?: string;
 };
 
-export const PersonalNavSection = React.memo(function PersonalNavSection({
+export function PersonalNavSection({
   title,
   subtitle,
   headerSlot,
@@ -232,17 +232,9 @@ export const PersonalNavSection = React.memo(function PersonalNavSection({
 
   return (
     <section className={`panel personal-nav ${className ?? ''}`.trim()}>
-      {title ? (
-        <div className="personal-nav__title-row">
-          {headerSlot ? <div className="personal-nav__header-slot">{headerSlot}</div> : null}
-          <div className="personal-nav__title-copy">
-            <h2 className="personal-nav__title">{title}</h2>
-            {subtitle ? <p className="personal-nav__subtitle">{subtitle}</p> : null}
-          </div>
-        </div>
-      ) : headerSlot ? (
-        <div className="personal-nav__header-slot">{headerSlot}</div>
-      ) : null}
+      {headerSlot ? <div className="personal-nav__header-slot">{headerSlot}</div> : null}
+      {title ? <h2 className="personal-nav__title">{title}</h2> : null}
+      {subtitle ? <p className="personal-nav__subtitle">{subtitle}</p> : null}
       {hasTieredLayout ? (
         <div className="personal-nav__tracks">
           <div className="personal-nav__track personal-nav__track--dock" ref={dockTrackRef}>
@@ -258,4 +250,4 @@ export const PersonalNavSection = React.memo(function PersonalNavSection({
       ) : null}
     </section>
   );
-});
+}

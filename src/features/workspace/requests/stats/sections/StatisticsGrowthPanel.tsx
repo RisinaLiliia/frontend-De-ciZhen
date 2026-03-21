@@ -3,19 +3,17 @@
 import Link from 'next/link';
 
 import { Badge } from '@/components/ui/Badge';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
 
 export function StatisticsGrowthPanel({
   panelRef,
   panelMinHeight,
   copy,
-  subtitle,
   growthCards,
 }: {
   panelRef?: React.Ref<HTMLElement>;
   panelMinHeight?: number | null;
   copy: WorkspaceStatisticsModel['copy'];
-  subtitle?: string;
   growthCards: WorkspaceStatisticsModel['growthCards'];
 }) {
   if (growthCards.length === 0) return null;
@@ -33,7 +31,7 @@ export function StatisticsGrowthPanel({
     >
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.growthTitle}</p>
-        <p className="section-subtitle">{subtitle ?? copy.growthSubtitle}</p>
+        <p className="section-subtitle">{copy.growthSubtitle}</p>
       </header>
       {featuredCard ? (
         <div className="workspace-statistics-growth__featured-wrap">

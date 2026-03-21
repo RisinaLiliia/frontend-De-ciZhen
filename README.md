@@ -248,37 +248,18 @@ Current tracked event names include:
 Platform activity panels consume backend analytics endpoints:
 - `/analytics/platform-activity`
 
-### Workspace Statistik (decision dashboard contract)
+### Workspace Statistik (single contract)
 
-`/workspace?section=stats` is implemented as one decision-dashboard query:
-- `GET /workspace/statistics?range=24h|7d|30d|90d&cityId?&regionId?&categoryKey?`
-
-Contract goals:
-- one request drives the whole stats page
-- backend owns analytical meaning and section consistency
-- frontend maps DTOs to UI and keeps only presentation formatting
-- `city/region/category` are not local widget filters; they are the global dashboard context
-
-Expected response shape:
-- `decisionContext`
-- `filterOptions`
-- `sectionMeta`
-- `summary`
-- `kpis`
-- `activity`
-- `demand`
-- `opportunityRadar`
-- `priceIntelligence`
-- `profileFunnel`
-- `insights`
-- `growthCards`
+`/workspace?section=stats` consumes one backend BFF endpoint:
+- `GET /workspace/statistics?range=24h|7d|30d|90d`
 
 Behavior:
 - guest users receive `mode=platform`
 - authenticated users receive `mode=personalized`
-- UI layout is shared; payload changes by context/mode
-- canonical contract reference: [docs/openapi/workspace-statistics-decision-dashboard.openapi.yaml](docs/openapi/workspace-statistics-decision-dashboard.openapi.yaml)
-- frontend still contains a temporary compatibility normalizer for older payloads, but the target architecture is backend-complete contract first
+- UI layout is shared for both modes; only payload data differs
+- set `NEXT_PUBLIC_WORKSPACE_STATS_BFF=true` to use the unified BFF endpoint in production.
+- for local dev probing, also set `NEXT_PUBLIC_WORKSPACE_STATS_BFF_DEV=true`.
+- when the flag is not set, frontend uses compatibility fallback sources (safe for older backend builds).
 
 ### GDPR / ePrivacy consent behavior
 

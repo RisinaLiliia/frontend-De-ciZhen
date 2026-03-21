@@ -101,11 +101,19 @@ export type WorkspaceStatisticsPriceIntelligenceView = {
   contextLabel: string | null;
   recommendedRangeLabel: string | null;
   marketAverageLabel: string | null;
+  recommendedPriceLabel: string | null;
+  smartSignalLabel: string | null;
+  smartSignalTone: 'visibility' | 'balanced' | 'premium' | null;
+  confidenceLabel: string | null;
+  confidenceDetailLabel: string | null;
   recommendedMin: number | null;
   recommendedMax: number | null;
   marketAverage: number | null;
   optimalMin: number | null;
   optimalMax: number | null;
+  smartRecommendedPrice: number | null;
+  analyzedRequestsCount: number | null;
+  confidenceLevel: 'high' | 'medium' | 'low' | null;
   optimalMinLabel: string | null;
   optimalMaxLabel: string | null;
   recommendation: string | null;
@@ -114,67 +122,14 @@ export type WorkspaceStatisticsPriceIntelligenceView = {
   profitPotentialLabel: string | null;
 };
 
-export type WorkspaceStatisticsFilterOption = {
-  value: string;
-  label: string;
-};
-
-export type WorkspaceStatisticsFilters = {
-  period: WorkspaceStatisticsRange;
-  cityId: string | null;
-  regionId?: string | null;
-  categoryKey: string | null;
-};
-
-export type WorkspaceStatisticsContextMetricView = {
-  key: string;
-  label: string;
-  value: string;
-  tone: 'positive' | 'neutral' | 'warning';
-};
-
-export type WorkspaceStatisticsContextView = {
-  mode: 'global' | 'focus';
-  periodLabel: string;
-  cityLabel: string;
-  regionLabel?: string | null;
-  categoryLabel: string;
-  scopeLabel: string;
-  stickyLabel: string;
-  title: string;
-  subtitle: string;
-  healthMetrics: WorkspaceStatisticsContextMetricView[];
-  isLowData: boolean;
-  lowDataTitle: string | null;
-  lowDataBody: string | null;
-};
-
 export type WorkspaceStatisticsModel = {
   copy: WorkspaceStatisticsCopy;
-  filters: WorkspaceStatisticsFilters;
   range: WorkspaceStatisticsRange;
   setRange: (next: WorkspaceStatisticsRange) => void;
-  setCityId: (next: string | null) => void;
-  setCategoryKey: (next: string | null) => void;
-  resetFilters: () => void;
   isLoading: boolean;
   isError: boolean;
-  hasBackgroundError: boolean;
-  isUpdating: boolean;
   mode: 'platform' | 'personalized';
   modeLabel: string;
-  cityOptions: WorkspaceStatisticsFilterOption[];
-  categoryOptions: WorkspaceStatisticsFilterOption[];
-  context: WorkspaceStatisticsContextView;
-  sectionMeta: {
-    decisionSubtitle?: string | null;
-    demandSubtitle?: string | null;
-    citiesSubtitle?: string | null;
-    opportunityTitle?: string | null;
-    priceTitle?: string | null;
-    insightsSubtitle?: string | null;
-    growthSubtitle?: string | null;
-  };
   kpis: WorkspaceStatisticsKpiView[];
   activityPoints: Array<{ label: string; requests: number; offers: number }>;
   activityMeta: {

@@ -48,22 +48,9 @@ export function getWorkspacePrivateOverview() {
   return apiGet<WorkspacePrivateOverviewDto>('/workspace/private');
 }
 
-export type WorkspaceStatisticsQuery = {
-  range?: WorkspaceStatisticsRange;
-  cityId?: string | null;
-  regionId?: string | null;
-  categoryKey?: string | null;
-};
-
-export function getWorkspaceStatistics(query: WorkspaceStatisticsRange | WorkspaceStatisticsQuery = '30d') {
-  const params: WorkspaceStatisticsQuery = typeof query === 'string'
-    ? { range: query }
-    : query;
+export function getWorkspaceStatistics(range: WorkspaceStatisticsRange = '30d') {
   const qs = new URLSearchParams();
-  qs.set('range', params.range ?? '30d');
-  if (params.cityId) qs.set('cityId', params.cityId);
-  if (params.regionId) qs.set('regionId', params.regionId);
-  if (params.categoryKey) qs.set('categoryKey', params.categoryKey);
+  qs.set('range', range);
   return apiGet<WorkspaceStatisticsOverviewDto>(`/workspace/statistics?${qs.toString()}`);
 }
 

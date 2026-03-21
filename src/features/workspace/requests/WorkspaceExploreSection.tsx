@@ -9,7 +9,6 @@ import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
-import { WorkspaceOverlayShell } from './WorkspaceOverlayShell';
 
 const ExploreRequestsPanel = dynamic(
   () => import('@/components/home/HomeRequestsExplorePanel').then((mod) => mod.HomeRequestsExplorePanel),
@@ -22,8 +21,8 @@ const ExploreRequestsPanel = dynamic(
   },
 );
 
-const WorkspaceStatisticsExperience = dynamic(
-  () => import('@/features/workspace/requests/stats/WorkspaceStatisticsExperience').then((mod) => mod.WorkspaceStatisticsExperience),
+const WorkspaceStatisticsPanel = dynamic(
+  () => import('@/features/workspace/requests/WorkspaceStatisticsPanel').then((mod) => mod.WorkspaceStatisticsPanel),
   {
     loading: () => (
       <section className="panel">
@@ -117,7 +116,7 @@ type WorkspaceExploreSectionProps = {
   initialPublicRequestsError?: boolean;
 };
 
-export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSection({
+export function WorkspaceExploreSection({
   intro,
   activeSection,
   t,
@@ -139,8 +138,8 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
   if (activeSection === 'stats') {
     return (
       <div className="stack-md">
-        <WorkspaceStatisticsExperience
-          intro={intro}
+        {intro}
+        <WorkspaceStatisticsPanel
           t={t}
           locale={locale}
         />
@@ -150,16 +149,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
 
   return (
     <div className="stack-md">
-      <WorkspaceOverlayShell>
-        {({ headerToggle }) =>
-          React.isValidElement(intro)
-            ? React.cloneElement(
-                intro as React.ReactElement<{ navHeaderSlot?: React.ReactNode }>,
-                { navHeaderSlot: headerToggle },
-              )
-            : intro
-        }
-      </WorkspaceOverlayShell>
+      {intro}
       <div className="requests-grid requests-grid--equal-cols">
         <div>
           {activeSection === 'reviews' ? (
@@ -224,7 +214,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
       </div>
     </div>
   );
-});
+}
 
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = React.useState(false);
