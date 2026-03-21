@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 
 const strict = process.argv.includes('--strict');
 const checkRgb = process.argv.includes('--check-rgb');
@@ -22,10 +22,6 @@ const allowlist = new Set(
 const fileViolations = [];
 for (const relativePath of targets) {
   const fileUrl = new URL(`../${relativePath}`, import.meta.url);
-  if (!existsSync(fileUrl)) {
-    console.warn(`[WARN] Missing file skipped: ${relativePath}`);
-    continue;
-  }
   const source = readFileSync(fileUrl, 'utf8');
   const lines = source.split(/\r?\n/);
 

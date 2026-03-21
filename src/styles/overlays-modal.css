@@ -35,21 +35,6 @@
       0 0 0 1px color-mix(in oklab, var(--c-border) 55%, transparent);
   }
 
-  .workspace-statistics-quick-sheet {
-    padding: 0;
-    align-items: start;
-  }
-
-  .workspace-statistics-quick-sheet .dc-modal__panel {
-    position: fixed;
-    top: var(--quick-sheet-top, var(--space-6));
-    left: var(--quick-sheet-inline, 0px);
-    width: min(100%, var(--quick-sheet-width, 100%));
-    right: auto;
-    max-height: calc(100dvh - var(--quick-sheet-top, var(--space-6)) - var(--space-4));
-    margin: 0;
-  }
-
   .dc-modal__panel--compact {
     --dc-modal-max-width: 540px;
   }
@@ -69,20 +54,6 @@
       max-height: 90vh;
       border-radius: 18px 18px 0 0;
       padding: var(--space-4);
-    }
-
-    .workspace-statistics-quick-sheet {
-      align-items: stretch;
-      padding: 0;
-    }
-
-    .workspace-statistics-quick-sheet .dc-modal__panel {
-      top: var(--quick-sheet-top, var(--space-4));
-      left: var(--quick-sheet-inline, 0px);
-      right: auto;
-      width: min(100%, var(--quick-sheet-width, 100%));
-      max-height: calc(100dvh - var(--quick-sheet-top, var(--space-4)) - var(--space-4));
-      border-radius: var(--radius-lg);
     }
   }
 
