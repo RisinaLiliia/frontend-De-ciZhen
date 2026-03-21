@@ -19,7 +19,6 @@ export function WorkspaceOverlayShell({
 }: WorkspaceOverlayShellProps) {
   const shellRef = React.useRef<HTMLElement | null>(null);
   const bodyRef = React.useRef<HTMLDivElement | null>(null);
-  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   const expandedHeightRef = React.useRef(0);
   const expandingRef = React.useRef(false);
   const expandFrameRef = React.useRef<number | null>(null);
@@ -27,67 +26,78 @@ export function WorkspaceOverlayShell({
   const [isManualCollapsed, setIsManualCollapsed] = React.useState(false);
   const [isAutoCollapsed, setIsAutoCollapsed] = React.useState(false);
 
-  const isManualCollapsedRef = React.useRef(false);
-
-  React.useEffect(() => {
-    isManualCollapsedRef.current = isManualCollapsed;
-  }, [isManualCollapsed]);
-
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const shellNode = shellRef.current;
     const bodyNode = bodyRef.current;
-    const sentinelNode = sentinelRef.current;
-    if (!shellNode || !bodyNode || !sentinelNode) return;
-
+    if (!shellNode || !bodyNode) return;
     const topbarNode = document.querySelector('.topbar');
-    const topbarBottom = topbarNode?.getBoundingClientRect().bottom ?? 96;
-    const rootMargin = `-${topbarBottom + 8}px 0px 0px 0px`;
+    let syncFrameId = 0;
+
+    const syncOverlayState = () => {
+      window.cancelAnimationFrame(syncFrameId);
+      syncFrameId = window.requestAnimationFrame(() => {
+        if (isManualCollapsed) {
+          setIsAutoCollapsed(false);
+          return;
+        }
+
+        const currentShell = shellRef.current;
+        const currentBody = bodyRef.current;
+        if (!currentShell || !currentBody) return;
+
+        const nextHeight = Math.ceil(currentBody.scrollHeight);
+        expandedHeightRef.current = Math.max(expandedHeightRef.current, nextHeight);
+        setExpandedHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+
+        if (expandingRef.current) {
+          setIsAutoCollapsed(false);
+          return;
+        }
+
+        const topbarBottom = topbarNode?.getBoundingClientRect().bottom ?? 96;
+        const shellTop = currentShell.offsetTop;
+        const expandedBottom = shellTop + Math.max(expandedHeightRef.current, currentBody.scrollHeight);
+        const viewportThreshold = window.scrollY + topbarBottom + 8;
+        const nextCollapsed = viewportThreshold >= expandedBottom;
+        setIsAutoCollapsed((prev) => (prev === nextCollapsed ? prev : nextCollapsed));
+      });
+    };
 
     const updateExpandedHeight = () => {
-      if (isManualCollapsedRef.current) return;
+      if (isManualCollapsed) return;
       const nextHeight = Math.ceil(bodyNode.scrollHeight);
       expandedHeightRef.current = Math.max(expandedHeightRef.current, nextHeight);
       setExpandedHeight((prev) => (prev === nextHeight ? prev : nextHeight));
     };
 
+    const onScroll = () => {
+      syncOverlayState();
+    };
+
     updateExpandedHeight();
-
-    const resizeObserver =
+    syncOverlayState();
+    const observer =
       typeof ResizeObserver !== 'undefined'
-        ? new ResizeObserver(updateExpandedHeight)
+        ? new ResizeObserver(() => {
+            syncOverlayState();
+          })
         : null;
-
-    resizeObserver?.observe(shellNode);
-    resizeObserver?.observe(bodyNode);
-
-    const intersectionObserver =
-      typeof IntersectionObserver !== 'undefined'
-        ? new IntersectionObserver(
-            ([entry]) => {
-              if (isManualCollapsedRef.current) {
-                setIsAutoCollapsed(false);
-                return;
-              }
-
-              const nextCollapsed = !entry.isIntersecting;
-              setIsAutoCollapsed((prev) => (prev === nextCollapsed ? prev : nextCollapsed));
-            },
-            { root: null, threshold: 0, rootMargin },
-          )
-        : null;
-
-    intersectionObserver?.observe(sentinelNode);
-
+    observer?.observe(shellNode);
+    observer?.observe(bodyNode);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
     return () => {
-      resizeObserver?.disconnect();
-      intersectionObserver?.disconnect();
+      observer?.disconnect();
+      window.cancelAnimationFrame(syncFrameId);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
       if (expandFrameRef.current !== null) {
         window.cancelAnimationFrame(expandFrameRef.current);
       }
     };
-  }, []);
+  }, [isManualCollapsed]);
 
   const isCollapsed = isManualCollapsed || isAutoCollapsed;
 
@@ -165,8 +175,6 @@ export function WorkspaceOverlayShell({
       <div ref={bodyRef} className="workspace-overlay-shell__body">
         {typeof children === 'function' ? children({ headerToggle }) : children}
       </div>
-
-      <div ref={sentinelRef} aria-hidden="true" style={{ height: 1, width: 1, position: 'absolute', top: '100%', left: 0 }} />
 
       <div className="workspace-overlay-shell__compact-bar">
         <button
