@@ -19,7 +19,6 @@ export type WorkspaceStatisticsCopy = {
   contextResetLabel: string;
   contextStickyExpandLabel: string;
   contextStickyCollapseLabel: string;
-  contextApplyLabel: string;
   contextUpdatingLabel: string;
   contextScopeGlobalLabel: string;
   contextScopeFocusLabel: string;
@@ -244,7 +243,6 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   contextResetLabel: 'Filter zurücksetzen',
   contextStickyExpandLabel: 'Analysekontext öffnen',
   contextStickyCollapseLabel: 'Analysekontext reduzieren',
-  contextApplyLabel: 'Anwenden',
   contextUpdatingLabel: 'Aktualisiert Kontext',
   contextScopeGlobalLabel: 'Globaler Markt',
   contextScopeFocusLabel: 'Fokusmodus',
@@ -481,7 +479,6 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   contextResetLabel: 'Reset filters',
   contextStickyExpandLabel: 'Open analysis context',
   contextStickyCollapseLabel: 'Collapse analysis context',
-  contextApplyLabel: 'Apply',
   contextUpdatingLabel: 'Updating context',
   contextScopeGlobalLabel: 'Global market',
   contextScopeFocusLabel: 'Focus mode',
