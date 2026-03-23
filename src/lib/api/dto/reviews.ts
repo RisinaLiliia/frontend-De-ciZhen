@@ -10,6 +10,8 @@ export type ReviewDto = {
   authorAvatarUrl?: string | null;
 };
 
+export type ReviewRange = '24h' | '7d' | '30d' | '90d';
+
 export type ReviewSummaryDto = {
   targetUserId: string;
   targetRole: 'client' | 'provider' | 'platform' | null;

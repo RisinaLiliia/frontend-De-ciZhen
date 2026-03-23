@@ -31,7 +31,7 @@ import type { ReviewDto } from '@/lib/api/dto/reviews';
 
 type Translate = (key: I18nKey) => string;
 
-const REVIEWS_PAGE_SIZE = 6;
+const REVIEWS_PAGE_SIZE = 20;
 const EMPTY_PLATFORM_OVERVIEW = {
   items: [] as Array<{
     id: string;

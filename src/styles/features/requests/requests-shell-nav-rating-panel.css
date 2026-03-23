@@ -54,13 +54,13 @@
 
   .requests-panel {
     display: grid;
-    gap: var(--space-4);
+    gap: var(--layout-section-gap);
   }
 
   .requests-header {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--layout-section-gap);
   }
 
   .requests-primary-cta {

@@ -21,6 +21,11 @@
     border-top: 1px dashed var(--surface-soft-border);
   }
 
+  .requests-panel > .requests-filter-summary:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
   .requests-filter-summary__controls {
     display: inline-flex;
     align-items: center;

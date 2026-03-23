@@ -6,6 +6,13 @@
     gap: var(--layout-section-gap);
   }
 
+  .requests-stats--embedded {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
   .requests-stats__header {
     gap: var(--space-4);
   }

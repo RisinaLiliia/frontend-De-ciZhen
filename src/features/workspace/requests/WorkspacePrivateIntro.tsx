@@ -3,6 +3,7 @@
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
+import { WorkspaceControlShell } from '@/features/workspace/requests/WorkspaceControlShell';
 
 type StatsOrderItem = {
   tab: 'provider' | 'client';
@@ -10,8 +11,6 @@ type StatsOrderItem = {
 };
 
 export type WorkspacePrivateIntroProps = {
-  navTitle: string;
-  navSubtitle: string;
   personalNavItems: PersonalNavItem[];
   hideNavBadges?: boolean;
   insightText: string;
@@ -32,8 +31,6 @@ export type WorkspacePrivateIntroProps = {
 };
 
 export function WorkspacePrivateIntro({
-  navTitle,
-  navSubtitle,
   personalNavItems,
   hideNavBadges = false,
   insightText,
@@ -60,39 +57,40 @@ export function WorkspacePrivateIntro({
 
   return (
     <section className="home-intro-shell">
-      <div className="requests-grid requests-grid--balanced">
-        <div className="stack-md">
-          <PersonalNavSection
-            className="personal-nav--left"
-            title={navTitle}
-            subtitle={navSubtitle}
-            headerSlot={navHeaderSlot}
-            items={personalNavItems}
-            hideDockBadges={hideNavBadges}
-            insightText={insightText}
-            progressPercent={activityProgress}
-          />
-          {leftColumnSlot}
-          {showQuickAction ? (
-            <section className="panel stack-sm" aria-label="Workspace quick action">
-              <CreateRequestCard href={quickActionHref} />
-            </section>
-          ) : null}
-        </div>
-
-        <aside className="stack-md hide-mobile">
-          <RequestsStatsPanel
-            title={titleByTab[preferredStatsTab] ?? statsFallbackTitle}
-            titleByTab={titleByTab}
-            tabsLabel={statsTabsLabel}
-            defaultTab={preferredStatsTab}
-            preferredTab={preferredStatsTab}
-            storageKey="dc_workspace_intro_stats_tab"
-            errorLabel={statsErrorLabel}
-            provider={providerStatsPayload}
-            client={clientStatsPayload}
-          />
-        </aside>
+      <div className="stack-md">
+        <WorkspaceControlShell
+          navigation={(
+            <PersonalNavSection
+              className="personal-nav--left"
+              headerSlot={navHeaderSlot}
+              items={personalNavItems}
+              hideDockBadges={hideNavBadges}
+              insightText={insightText}
+              progressPercent={activityProgress}
+              surface="embedded"
+            />
+          )}
+          context={leftColumnSlot}
+          aside={(
+            <RequestsStatsPanel
+              title={titleByTab[preferredStatsTab] ?? statsFallbackTitle}
+              titleByTab={titleByTab}
+              tabsLabel={statsTabsLabel}
+              defaultTab={preferredStatsTab}
+              preferredTab={preferredStatsTab}
+              storageKey="dc_workspace_intro_stats_tab"
+              errorLabel={statsErrorLabel}
+              provider={providerStatsPayload}
+              client={clientStatsPayload}
+              surface="embedded"
+            />
+          )}
+        />
+        {showQuickAction ? (
+          <section className="panel stack-sm" aria-label="Workspace quick action">
+            <CreateRequestCard href={quickActionHref} />
+          </section>
+        ) : null}
       </div>
     </section>
   );
