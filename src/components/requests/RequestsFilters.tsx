@@ -2,12 +2,12 @@
 'use client';
 
 import * as React from 'react';
-import { Select } from '@/components/ui/Select';
 import { CountBadge } from '@/components/ui/CountBadge';
 // import { Input } from '@/components/ui/Input';
 import { IconFilter, IconPin } from '@/components/ui/icons/icons';
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { RequestsMobileFilterToolbar } from '@/components/requests/RequestsMobileFilterToolbar';
+import { RequestsFilterSelect } from '@/components/requests/RequestsFilterSelect';
 import * as keys from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -127,49 +127,46 @@ export function RequestsFilters({
               onChange={(e) => setCityQuery(e.target.value)}
               placeholder={t(I18N_KEYS.home.cityPlaceholder)}
             /> */}
-            <div className="requests-select-wrap">
-              <span className="requests-select-icon requests-select-icon--city" aria-hidden="true">
-                <IconPin />
-              </span>
-              <Select
-                options={filteredCityOptions}
-                value={cityId}
-                onChange={onCityChange}
-                className="requests-select is-city"
-                aria-label={t(keys.I18N_KEYS.requestsPage.cityLabel)}
-                disabled={controlsDisabled}
-              />
-            </div>
+            <RequestsFilterSelect
+              options={filteredCityOptions}
+              value={cityId}
+              onChange={onCityChange}
+              className="requests-select is-city"
+              ariaLabel={t(keys.I18N_KEYS.requestsPage.cityLabel)}
+              disabled={controlsDisabled}
+              icon={<IconPin />}
+              iconClassName="requests-select-icon--city"
+            />
           </div>
           <div className="requests-filter">
-            <Select
+            <RequestsFilterSelect
               options={categoryOptions}
               value={categoryKey}
               onChange={onCategoryChange}
               className="requests-select"
-              aria-label={t(keys.I18N_KEYS.requestsPage.categoryLabel)}
+              ariaLabel={t(keys.I18N_KEYS.requestsPage.categoryLabel)}
               disabled={controlsDisabled}
             />
           </div>
           <div className="requests-filter">
-            <Select
+            <RequestsFilterSelect
               options={serviceOptions}
               value={subcategoryKey}
               onChange={onSubcategoryChange}
               className="requests-select"
-              aria-label={t(keys.I18N_KEYS.requestsPage.serviceLabel)}
+              ariaLabel={t(keys.I18N_KEYS.requestsPage.serviceLabel)}
               disabled={controlsDisabled || categoryKey === 'all'}
             />
           </div>
         </div>
         <div className="requests-filter-grid requests-filter-grid--secondary">
           <div className="requests-filter" ref={sortControlRef}>
-            <Select
+            <RequestsFilterSelect
               options={sortOptions}
               value={sortBy}
               onChange={onSortChange}
               className="requests-select"
-              aria-label={t(keys.I18N_KEYS.requestsPage.sortLabel)}
+              ariaLabel={t(keys.I18N_KEYS.requestsPage.sortLabel)}
               disabled={controlsDisabled}
             />
           </div>

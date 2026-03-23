@@ -26,6 +26,9 @@ export type WorkspacePrivateIntroProps = {
   providerStatsPayload: React.ComponentProps<typeof RequestsStatsPanel>['provider'];
   clientStatsPayload: React.ComponentProps<typeof RequestsStatsPanel>['client'];
   quickActionHref?: string;
+  showQuickAction?: boolean;
+  leftColumnSlot?: React.ReactNode;
+  navHeaderSlot?: React.ReactNode;
 };
 
 export function WorkspacePrivateIntro({
@@ -42,6 +45,9 @@ export function WorkspacePrivateIntro({
   providerStatsPayload,
   clientStatsPayload,
   quickActionHref = '/request/create',
+  showQuickAction = true,
+  leftColumnSlot,
+  navHeaderSlot,
 }: WorkspacePrivateIntroProps) {
   const preferredStatsTab = statsOrder[0]?.tab ?? 'provider';
   const titleByTab = statsOrder.reduce<Partial<Record<'provider' | 'client', string>>>(
@@ -60,14 +66,18 @@ export function WorkspacePrivateIntro({
             className="personal-nav--left"
             title={navTitle}
             subtitle={navSubtitle}
+            headerSlot={navHeaderSlot}
             items={personalNavItems}
             hideDockBadges={hideNavBadges}
             insightText={insightText}
             progressPercent={activityProgress}
           />
-          <section className="panel stack-sm" aria-label="Workspace quick action">
-            <CreateRequestCard href={quickActionHref} />
-          </section>
+          {leftColumnSlot}
+          {showQuickAction ? (
+            <section className="panel stack-sm" aria-label="Workspace quick action">
+              <CreateRequestCard href={quickActionHref} />
+            </section>
+          ) : null}
         </div>
 
         <aside className="stack-md hide-mobile">
