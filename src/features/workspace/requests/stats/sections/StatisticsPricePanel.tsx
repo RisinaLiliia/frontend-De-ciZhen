@@ -1,13 +1,15 @@
 'use client';
 
-import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import { StatisticsSignalMeter } from '../components/StatisticsSignalMeter';
 
 export function StatisticsPricePanel({
   copy,
+  title,
   priceIntelligence,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
+  title?: string;
   priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
 }) {
   const hasRangeValues =
@@ -101,7 +103,7 @@ export function StatisticsPricePanel({
   return (
     <section className="panel requests-stats-chart workspace-statistics-price">
       <header className="section-heading workspace-statistics__tile-header">
-        <p className="section-title">{copy.priceTitle}</p>
+        <p className="section-title">{title ?? copy.priceTitle}</p>
         <p className="section-subtitle">{copy.priceSubtitle}</p>
       </header>
       {!hasPriceData ? (
@@ -181,35 +183,6 @@ export function StatisticsPricePanel({
                 <span>{copy.priceRecommendationLabel}</span>
                 <span>{copy.pricePositionHighLabel}</span>
               </div>
-            </section>
-          ) : null}
-          {(priceIntelligence.smartSignalLabel || priceIntelligence.recommendedPriceLabel || priceIntelligence.confidenceLabel) ? (
-            <section className="workspace-statistics-price__signal-card" aria-label={copy.priceSmartSignalLabel}>
-              <div className="workspace-statistics-price__signal-head">
-                <span className="workspace-statistics-price__signal-label">{copy.priceSmartSignalLabel}</span>
-                {priceIntelligence.recommendedPriceLabel ? (
-                  <strong className="workspace-statistics-price__signal-value">
-                    {priceIntelligence.recommendedPriceLabel}
-                  </strong>
-                ) : null}
-              </div>
-              {priceIntelligence.smartSignalLabel ? (
-                <p className="workspace-statistics-price__signal-body">{priceIntelligence.smartSignalLabel}</p>
-              ) : null}
-              {(priceIntelligence.confidenceLabel || priceIntelligence.confidenceDetailLabel) ? (
-                <div className="workspace-statistics-price__confidence">
-                  {priceIntelligence.confidenceLabel ? (
-                    <span className="workspace-statistics-price__confidence-badge">
-                      {copy.priceConfidenceLabel}: <strong>{priceIntelligence.confidenceLabel}</strong>
-                    </span>
-                  ) : null}
-                  {priceIntelligence.confidenceDetailLabel ? (
-                    <span className="workspace-statistics-price__confidence-detail">
-                      {priceIntelligence.confidenceDetailLabel}
-                    </span>
-                  ) : null}
-                </div>
-              ) : null}
             </section>
           ) : null}
           <div className="workspace-statistics-price__summary-grid">

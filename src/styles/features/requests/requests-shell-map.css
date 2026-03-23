@@ -6,8 +6,15 @@
     flex-direction: column;
     gap: var(--space-2-5);
     padding: var(--space-3);
-    height: 100%;
-    min-height: 100%;
+    height: auto;
+    min-height: 0;
+  }
+
+  .workspace-public-demand-map--embedded {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .workspace-public-demand-map__header {
@@ -24,7 +31,7 @@
     isolation: isolate;
     z-index: 0;
     overflow: hidden;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     border-radius: 14px;
     border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
     background:
@@ -34,7 +41,7 @@
         color-mix(in oklab, var(--c-panel) 95%, transparent),
         color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%)
       );
-    min-height: 300px;
+    min-height: clamp(280px, 34vw, 420px);
     height: auto;
     padding: 0;
   }
@@ -218,6 +225,12 @@
 
   .workspace-public-demand-map__state--error {
     color: color-mix(in oklab, var(--c-text) 84%, #8d3a3a);
+  }
+
+  @media (max-width: 767px) {
+    .workspace-public-demand-map__canvas {
+      min-height: 300px;
+    }
   }
 
 

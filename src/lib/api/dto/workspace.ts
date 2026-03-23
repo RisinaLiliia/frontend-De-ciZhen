@@ -205,6 +205,71 @@ export type WorkspaceStatisticsCategoryDemandDto = {
   sharePercent: number;
 };
 
+export type WorkspaceStatisticsFilterOptionDto = {
+  value: string;
+  label: string;
+  disabled?: boolean;
+};
+
+export type WorkspaceStatisticsSelectedFilterDto = {
+  value: string | null;
+  label: string;
+};
+
+export type WorkspaceStatisticsContextHealthKey = 'demand' | 'competition' | 'activity';
+export type WorkspaceStatisticsContextHealthValue =
+  | 'rising'
+  | 'stable'
+  | 'limited'
+  | 'high'
+  | 'balanced'
+  | 'low';
+
+export type WorkspaceStatisticsContextHealthDto = {
+  key: WorkspaceStatisticsContextHealthKey;
+  value: WorkspaceStatisticsContextHealthValue;
+  tone: 'positive' | 'neutral' | 'warning';
+};
+
+export type WorkspaceStatisticsDecisionContextDto = {
+  mode: 'global' | 'focus';
+  period: WorkspaceStatisticsRange;
+  city: WorkspaceStatisticsSelectedFilterDto;
+  region?: WorkspaceStatisticsSelectedFilterDto | null;
+  category: WorkspaceStatisticsSelectedFilterDto;
+  service?: WorkspaceStatisticsSelectedFilterDto | null;
+  scopeLabel?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  stickyLabel?: string | null;
+  health: WorkspaceStatisticsContextHealthDto[];
+  lowData?: {
+    isLowData: boolean;
+    title?: string | null;
+    body?: string | null;
+  };
+};
+
+export type WorkspaceStatisticsFilterOptionsDto = {
+  cities: WorkspaceStatisticsFilterOptionDto[];
+  categories: WorkspaceStatisticsFilterOptionDto[];
+  services?: WorkspaceStatisticsFilterOptionDto[];
+};
+
+export type WorkspaceStatisticsSectionMetaDto = {
+  decisionSubtitle?: string | null;
+  demandSubtitle?: string | null;
+  citiesSubtitle?: string | null;
+  opportunityTitle?: string | null;
+  priceTitle?: string | null;
+  insightsSubtitle?: string | null;
+  growthSubtitle?: string | null;
+};
+
+export type WorkspaceStatisticsExportMetaDto = {
+  filename?: string | null;
+};
+
 export type WorkspaceStatisticsCityDemandDto = {
   citySlug: string;
   cityName: string;
@@ -330,12 +395,22 @@ export type WorkspaceStatisticsInsightDto = {
 export type WorkspaceStatisticsGrowthCardDto = {
   key: string;
   href: string;
+  title?: string;
+  body?: string;
+  benefit?: string;
+  tone?: 'primary' | 'default';
+  badge?: string;
+  recommendedFor?: string;
 };
 
 export type WorkspaceStatisticsOverviewDto = {
   updatedAt: string;
   mode: 'platform' | 'personalized';
   range: WorkspaceStatisticsRange;
+  decisionContext?: WorkspaceStatisticsDecisionContextDto;
+  filterOptions?: WorkspaceStatisticsFilterOptionsDto;
+  sectionMeta?: WorkspaceStatisticsSectionMetaDto;
+  exportMeta?: WorkspaceStatisticsExportMetaDto;
   decisionInsight?: string | null;
   summary: WorkspaceStatisticsSummaryDto;
   kpis: WorkspaceStatisticsKpisDto;

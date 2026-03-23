@@ -15,11 +15,11 @@ export type HomeRequestsExplorePanelProps = {
   showBack?: boolean;
   showHeading?: boolean;
   onListDensityChange?: (value: 'single' | 'double') => void;
+  showTopFilters?: boolean;
   initialPublicRequests?: PublicRequestsResponseDto;
   preferInitialPublicRequests?: boolean;
   initialPublicRequestsLoading?: boolean;
   initialPublicRequestsError?: boolean;
-  showTopFilters?: boolean;
 };
 
 export function HomeRequestsExplorePanel({
@@ -30,11 +30,11 @@ export function HomeRequestsExplorePanel({
   showBack = true,
   showHeading = true,
   onListDensityChange,
+  showTopFilters = true,
   initialPublicRequests,
   preferInitialPublicRequests = false,
   initialPublicRequestsLoading = false,
   initialPublicRequestsError = false,
-  showTopFilters = true,
 }: HomeRequestsExplorePanelProps) {
   return (
     <section className="stack-sm">

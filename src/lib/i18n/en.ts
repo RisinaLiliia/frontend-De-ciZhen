@@ -469,7 +469,7 @@ export const en: DeDictionary = {
     clientHintHasOpenCta: 'My requests',
     clientHintStableText: 'Your requests are stable. Create new tasks when you need more help.',
     clientHintStableCta: 'New request',
-    navUserFallback: 'User',
+    navUserFallback: 'Friend',
     profileOnboardingStep: 'Step 3 of 4',
     profileOnboardingSubtitle:
       'Create your profile and account in one flow. After submit, you are automatically registered and signed in.',

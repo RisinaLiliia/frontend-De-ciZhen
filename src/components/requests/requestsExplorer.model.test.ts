@@ -14,9 +14,9 @@ import type { RequestsExplorerSharedFilters } from '@/components/requests/reques
 
 describe('requestsExplorer.model', () => {
   it('detects default public filter state', () => {
-    expect(hasDefaultPublicFilter({ sort: 'date_desc', page: 1, limit: 10 })).toBe(true);
-    expect(hasDefaultPublicFilter({ cityId: 'berlin', sort: 'date_desc', page: 1, limit: 10 })).toBe(false);
-    expect(hasDefaultPublicFilter({ sort: 'price_desc', page: 1, limit: 10 })).toBe(false);
+    expect(hasDefaultPublicFilter({ sort: 'date_desc', page: 1, limit: 20 })).toBe(true);
+    expect(hasDefaultPublicFilter({ cityId: 'berlin', sort: 'date_desc', page: 1, limit: 20 })).toBe(false);
+    expect(hasDefaultPublicFilter({ sort: 'price_desc', page: 1, limit: 20 })).toBe(false);
   });
 
   it('keeps latest offer per request in offers map', () => {

@@ -1,18 +1,19 @@
 'use client';
 
 import * as React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
-import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import {
-  IconDownload,
-} from '@/components/ui/icons/icons';
-import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
+import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceStatisticsModel } from './useWorkspaceStatisticsModel';
+import { WorkspacePublicDemandMapPanel } from '../WorkspacePublicDemandMapPanel';
+import { workspaceQK } from '../queryKeys';
+import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '../workspace.constants';
+import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
+import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { useSyncedPanelMinHeight } from './useSyncedPanelMinHeight';
 import { buildFunnelVisualRows } from './statisticsFunnel.utils';
 import { paginateItems, parsePageParam } from './statisticsPagination.utils';
@@ -33,18 +34,9 @@ type WorkspaceStatisticsViewProps = {
   locale: Locale;
   model: WorkspaceStatisticsModel;
 };
-
-const RANGE_OPTIONS: WorkspaceStatisticsRange[] = ['24h', '7d', '30d', '90d'];
 const DEMAND_PAGE_SIZE = 5;
 const CITY_PAGE_SIZE = 10;
 const CITY_PAGE_QUERY_KEY = 'statsCityPage';
-
-function rangeLabel(range: WorkspaceStatisticsRange, localeCopy: WorkspaceStatisticsModel['copy']) {
-  if (range === '24h') return localeCopy.range24h;
-  if (range === '7d') return localeCopy.range7d;
-  if (range === '30d') return localeCopy.range30d;
-  return localeCopy.range90d;
-}
 
 export function WorkspaceStatisticsView({
   t,
@@ -77,11 +69,14 @@ export function WorkspaceStatisticsView({
   const [funnelContainerWidth, setFunnelContainerWidth] = React.useState(0);
   const {
     copy,
+    filters,
     range,
-    setRange,
     isLoading,
     isError,
+    hasBackgroundError,
     modeLabel,
+    context,
+    sectionMeta,
     activityPoints,
     activityMeta,
     decisionInsight,
@@ -96,10 +91,39 @@ export function WorkspaceStatisticsView({
     conversion,
     insights,
     growthCards,
-    onExport,
   } = model;
   const normalizedCityQuery = cityQuery.trim().toLowerCase();
   const hasCityQuery = normalizedCityQuery.length > 0;
+  const focusLabel = React.useMemo(() => {
+    if (filters.categoryKey && filters.cityId) return `${context.categoryLabel} in ${context.cityLabel}`;
+    if (filters.categoryKey) return context.categoryLabel;
+    if (filters.cityId) return context.cityLabel;
+    return null;
+  }, [context.categoryLabel, context.cityLabel, filters.categoryKey, filters.cityId]);
+  const opportunityTitle = focusLabel ? `${copy.opportunityTitle} ${locale === 'de' ? 'für' : 'for'} ${focusLabel}` : copy.opportunityTitle;
+  const priceTitle = focusLabel ? `${copy.priceTitle} ${locale === 'de' ? 'für' : 'for'} ${focusLabel}` : copy.priceTitle;
+  const insightsSubtitle = focusLabel
+    ? `${copy.insightsSubtitle} · ${focusLabel}`
+    : copy.insightsSubtitle;
+  const growthSubtitle = focusLabel
+    ? `${copy.growthSubtitle} · ${focusLabel}`
+    : copy.growthSubtitle;
+  const decisionSubtitle = focusLabel
+    ? `${copy.activitySignalsSubtitle} · ${focusLabel}`
+    : copy.activitySignalsSubtitle;
+  const demandSubtitle = context.mode === 'focus'
+    ? `${copy.demandSubtitle} · ${context.periodLabel}`
+    : copy.demandSubtitle;
+  const citiesSubtitle = context.mode === 'focus'
+    ? `${copy.citiesSubtitle} · ${context.periodLabel}`
+    : copy.citiesSubtitle;
+  const resolvedDecisionSubtitle = sectionMeta.decisionSubtitle ?? decisionSubtitle;
+  const resolvedDemandSubtitle = sectionMeta.demandSubtitle ?? demandSubtitle;
+  const resolvedCitiesSubtitle = sectionMeta.citiesSubtitle ?? citiesSubtitle;
+  const resolvedOpportunityTitle = sectionMeta.opportunityTitle ?? opportunityTitle;
+  const resolvedPriceTitle = sectionMeta.priceTitle ?? priceTitle;
+  const resolvedInsightsSubtitle = sectionMeta.insightsSubtitle ?? insightsSubtitle;
+  const resolvedGrowthSubtitle = sectionMeta.growthSubtitle ?? growthSubtitle;
   const demandPagination = React.useMemo(
     () => paginateItems(demandRows, demandPage, DEMAND_PAGE_SIZE),
     [demandPage, demandRows],
@@ -157,6 +181,24 @@ export function WorkspaceStatisticsView({
     mode: 'sourceHeight',
     watchKey: `${opportunityRadar.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
   });
+  const {
+    data: publicSummaryOverview,
+    isLoading: isPublicSummaryLoading,
+    isError: isPublicSummaryError,
+  } = useQuery({
+    queryKey: workspaceQK.workspacePublicSummary(WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
+    queryFn: () =>
+      getWorkspacePublicOverview({
+        page: 1,
+        limit: 1,
+        cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+      }),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const publicCityActivity = publicSummaryOverview?.cityActivity;
+  const publicSummary = publicSummaryOverview?.summary;
+  const showDemandMapPanel = Boolean(publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -226,42 +268,48 @@ export function WorkspaceStatisticsView({
   return (
     <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout" aria-labelledby="workspace-statistics-title">
       <section ref={statisticsPanelRef} className="panel requests-panel requests-stats workspace-statistics">
+        <StatisticsContextPanel
+          copy={copy}
+          filters={filters}
+          cityOptions={model.cityOptions}
+          categoryOptions={model.categoryOptions}
+          context={context}
+          onRangeChange={model.setRange}
+          onCityChange={model.setCityId}
+          onCategoryChange={model.setCategoryKey}
+          onReset={model.resetFilters}
+          onExport={model.onExport}
+          surface="embedded"
+          showControls={false}
+          closeLabel={t(I18N_KEYS.auth.closeDialog)}
+        />
+
         <SectionHeader
           className="requests-stats__header"
           title={t(I18N_KEYS.homePublic.exploreStats)}
           subtitle={copy.subtitle}
           titleId="workspace-statistics-title"
-          actions={(
-            <RangeActionToolbar
-              className="workspace-statistics__header-toolbar"
-              groupLabel={copy.rangeGroupLabel}
-              options={RANGE_OPTIONS.map((option) => ({
-                value: option,
-                label: rangeLabel(option, copy),
-              }))}
-              value={range}
-              onChange={setRange}
-              action={{
-                label: copy.exportLabel,
-                onClick: onExport,
-                icon: <IconDownload />,
-                tooltip: copy.exportLabel,
-              }}
-            />
-          )}
         />
 
         <div ref={decisionClusterRef} className="workspace-statistics__decision-cluster">
           <div className="panel-header workspace-statistics__mode-row">
             <span className="workspace-statistics__mode-badge">{modeLabel}</span>
-            <span className="section-subtitle">{copy.kpiTitle}</span>
+            <span className="section-subtitle">{copy.kpiTitle} · {context.scopeLabel}</span>
           </div>
+
+          {hasBackgroundError && !isLoading && !isError ? (
+            <div className="workspace-statistics__background-error" role="status" aria-live="polite">
+              <strong>{copy.backgroundErrorTitle}</strong>
+              <p>{copy.backgroundErrorBody}</p>
+            </div>
+          ) : null}
 
           {!isLoading && !isError ? (
             <StatisticsDecisionLayer
               copy={copy}
               decisionInsight={decisionInsight}
               activitySignals={activitySignals}
+              subtitle={resolvedDecisionSubtitle}
             />
           ) : null}
         </div>
@@ -309,6 +357,7 @@ export function WorkspaceStatisticsView({
 
                 <StatisticsDemandPanel
                   copy={copy}
+                  subtitle={resolvedDemandSubtitle}
                   demandRows={demandRows}
                   visibleDemandRows={visibleDemandRows}
                   safeDemandPage={safeDemandPage}
@@ -322,6 +371,7 @@ export function WorkspaceStatisticsView({
               <StatisticsCitiesPanel
                 panelRef={citiesPanelRef}
                 copy={copy}
+                subtitle={resolvedCitiesSubtitle}
                 cityRowsLength={cityRows.length}
                 filteredCityRows={filteredCityRows}
                 visibleCityRows={visibleCityRows}
@@ -343,11 +393,13 @@ export function WorkspaceStatisticsView({
                   panelRef={opportunityPanelRef}
                   copy={copy}
                   locale={locale}
+                  title={resolvedOpportunityTitle}
                   opportunityRadar={opportunityRadar}
                 />
                 <div className="workspace-statistics-price__column">
                   <StatisticsPricePanel
                     copy={copy}
+                    title={resolvedPriceTitle}
                     priceIntelligence={model.priceIntelligence}
                   />
                 </div>
@@ -363,6 +415,19 @@ export function WorkspaceStatisticsView({
       </section>
 
       <aside className="stack-md">
+        {showDemandMapPanel ? (
+          <div className="workspace-statistics__rail-map">
+            <WorkspacePublicDemandMapPanel
+              t={t}
+              locale={locale}
+              cityActivity={publicCityActivity}
+              summary={publicSummary}
+              isLoading={isPublicSummaryLoading}
+              isError={isPublicSummaryError}
+            />
+          </div>
+        ) : null}
+
         <section
           className="panel requests-stats-chart workspace-statistics__profile-panel"
           style={profilePanelMinHeight ? { minHeight: `${profilePanelMinHeight}px` } : undefined}
@@ -449,6 +514,7 @@ export function WorkspaceStatisticsView({
           <>
             <StatisticsInsightsPanel
               copy={copy}
+              subtitle={resolvedInsightsSubtitle}
               insights={insights}
               showInsightsDebug={showInsightsDebug}
             />
@@ -457,6 +523,7 @@ export function WorkspaceStatisticsView({
               panelRef={growthPanelRef}
               panelMinHeight={growthPanelMinHeight}
               copy={copy}
+              subtitle={resolvedGrowthSubtitle}
               growthCards={growthCards}
             />
           </>

@@ -6,7 +6,7 @@ import {
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceStatisticsModel } from '../../useWorkspaceStatisticsModel';
+import type { WorkspaceStatisticsModel } from '../../workspaceStatistics.model';
 import { StatisticsSignalMeter } from '../../components/StatisticsSignalMeter';
 import type { OpportunityItem } from './opportunity.utils';
 import { opportunityCardAriaLabel, opportunityStatusClassName, opportunityStatusLabel } from './opportunity.utils';
