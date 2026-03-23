@@ -19,6 +19,17 @@ This feature is the frontend shell for the workspace decision dashboard at `/wor
   - mapping layer only
   - formats labels, currency, dates, and view props
   - must not become a second analytics engine
+- `workspaceStatisticsViewModel.helpers.ts`
+  - barrel for pure builders used by the stats hook
+  - keeps orchestration imports stable while implementation stays split by domain
+- `workspaceStatisticsViewModel.activity.ts`
+  - activity signals and KPI builders
+- `workspaceStatisticsViewModel.market.ts`
+  - city demand and opportunity radar mapping
+- `workspaceStatisticsViewModel.pricing.ts`
+  - pricing recommendation mapping
+- `workspaceStatisticsViewModel.funnel.ts`
+  - funnel stage mapping
 - `WorkspaceStatisticsView.tsx`
   - presentation shell for the stats page
 - `sections/*`

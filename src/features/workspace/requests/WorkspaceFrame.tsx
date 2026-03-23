@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { TopProvidersPanel, type TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
 import { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
+import { useIsDesktop } from './useIsDesktop';
 
 type WorkspaceFrameProps = {
   intro?: ReactNode;
@@ -112,25 +113,4 @@ export function WorkspaceTopProvidersAside({
       onToggleFavorite={onToggleFavorite}
     />
   );
-}
-
-function useIsDesktop() {
-  const [isDesktop, setIsDesktop] = React.useState(false);
-
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const media = window.matchMedia('(min-width: 1024px)');
-    const update = () => setIsDesktop(media.matches);
-    update();
-
-    if (typeof media.addEventListener === 'function') {
-      media.addEventListener('change', update);
-      return () => media.removeEventListener('change', update);
-    }
-
-    media.addListener(update);
-    return () => media.removeListener(update);
-  }, []);
-
-  return isDesktop;
 }

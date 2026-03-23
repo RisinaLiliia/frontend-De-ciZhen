@@ -96,6 +96,7 @@ export const PersonalNavSection = React.memo(function PersonalNavSection({
   const primaryItems = hasTieredLayout ? items.filter((item) => item.tier !== 'secondary') : items;
   const secondaryItems = hasTieredLayout ? items.filter((item) => item.tier === 'secondary') : [];
   const dockItems = hasTieredLayout ? [...primaryItems, ...secondaryItems] : items;
+  const hasVisibleItems = dockItems.length > 0;
 
   const parseNumericValue = (value: PersonalNavItem['value']) => {
     if (typeof value === 'number' && Number.isFinite(value)) {
@@ -241,13 +242,15 @@ export const PersonalNavSection = React.memo(function PersonalNavSection({
       ) : headerSlot ? (
         <div className="personal-nav__header-slot">{headerSlot}</div>
       ) : null}
-      {hasTieredLayout ? (
-        <div className="personal-nav__track personal-nav__track--dock" role="group" aria-label="Workspace navigation tabs">
-          {dockItems.map(renderItem)}
-        </div>
-      ) : (
-        <div className="personal-nav__track">{items.map(renderItem)}</div>
-      )}
+      {hasVisibleItems ? (
+        hasTieredLayout ? (
+          <div className="personal-nav__track personal-nav__track--dock" role="group" aria-label="Workspace navigation tabs">
+            {dockItems.map(renderItem)}
+          </div>
+        ) : (
+          <div className="personal-nav__track">{items.map(renderItem)}</div>
+        )
+      ) : null}
       {insightText ? (
         <ActivityInsight text={insightText} progressPercent={progressPercent ?? 0} />
       ) : null}

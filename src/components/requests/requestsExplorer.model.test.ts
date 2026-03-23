@@ -2,10 +2,15 @@ import { describe, expect, it } from 'vitest';
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import {
+  buildRequestsExplorerNextPath,
+  buildRequestsExplorerProvidersContentProps,
+  buildRequestsExplorerRequestsContentProps,
   buildOffersByRequestMap,
   hasDefaultPublicFilter,
+  pickRequestsExplorerSharedFilters,
   resolveTotalPages,
 } from '@/components/requests/requestsExplorer.model';
+import type { RequestsExplorerSharedFilters } from '@/components/requests/requestsExplorer.types';
 
 describe('requestsExplorer.model', () => {
   it('detects default public filter state', () => {
@@ -42,5 +47,121 @@ describe('requestsExplorer.model', () => {
     expect(resolveTotalPages(0, 10)).toBe(1);
     expect(resolveTotalPages(21, 10)).toBe(3);
     expect(resolveTotalPages(21, 0)).toBe(21);
+  });
+
+  it('builds next path with an optional query string', () => {
+    expect(buildRequestsExplorerNextPath('/workspace', null)).toBe('/workspace');
+    expect(buildRequestsExplorerNextPath('/workspace', new URLSearchParams('tab=requests&page=2'))).toBe(
+      '/workspace?tab=requests&page=2',
+    );
+  });
+
+  it('projects shared explorer filters and builds providers content props', () => {
+    const sharedFilters = pickRequestsExplorerSharedFilters({
+      categoryOptions: [{ value: 'all', label: 'All categories' }],
+      serviceOptions: [{ value: 'design', label: 'Design' }],
+      cityOptions: [{ value: 'berlin', label: 'Berlin' }],
+      sortOptions: [{ value: 'date_desc', label: 'Newest' }],
+      categoryKey: 'all',
+      subcategoryKey: 'design',
+      cityId: 'berlin',
+      sortBy: 'date_desc',
+      page: 2,
+      isCategoriesLoading: false,
+      isServicesLoading: false,
+      isPending: false,
+      appliedFilterChips: [{ key: 'city', label: 'Berlin', onRemove: () => {} }],
+      onCategoryChange: () => {},
+      onSubcategoryChange: () => {},
+      onCityChange: () => {},
+      onSortChange: () => {},
+      onReset: () => {},
+      setPage: () => {},
+    } satisfies RequestsExplorerSharedFilters);
+
+    const providersContent = buildRequestsExplorerProvidersContentProps({
+      t: (key) => key,
+      locale: 'de',
+      sharedFilters,
+      providersData: {
+        totalProvidersLabel: '12',
+        totalProviderPages: 3,
+        providersListDensity: 'double',
+        setProvidersListDensity: () => {},
+        isProvidersLoading: false,
+        isProvidersError: false,
+        filteredProvidersCount: 12,
+        pagedProviders: [],
+        favoriteProviderIds: new Set(['provider-1']),
+        pendingFavoriteProviderIds: new Set(['provider-2']),
+        toggleProviderFavorite: () => {},
+      },
+      showFilterControls: false,
+    });
+
+    expect(sharedFilters.page).toBe(2);
+    expect(providersContent.onSetPage).toBe(sharedFilters.setPage);
+    expect(providersContent.providersListDensity).toBe('double');
+    expect(providersContent.showFilterControls).toBe(false);
+  });
+
+  it('builds requests content props from shared filter and request state', () => {
+    const setPage = () => {};
+    const sharedFilters: RequestsExplorerSharedFilters = {
+      categoryOptions: [],
+      serviceOptions: [],
+      cityOptions: [],
+      sortOptions: [],
+      categoryKey: 'all',
+      subcategoryKey: 'all',
+      cityId: 'all',
+      sortBy: 'date_desc',
+      page: 1,
+      isCategoriesLoading: false,
+      isServicesLoading: false,
+      isPending: false,
+      appliedFilterChips: [],
+      onCategoryChange: () => {},
+      onSubcategoryChange: () => {},
+      onCityChange: () => {},
+      onSortChange: () => {},
+      onReset: () => {},
+      setPage,
+    };
+
+    const requestsContent = buildRequestsExplorerRequestsContentProps({
+      t: (key) => key,
+      locale: 'de',
+      emptyCtaHref: '/workspace?section=requests',
+      sharedFilters,
+      requestsData: {
+        totalResultsLabel: '4',
+        requests: [],
+        isLoading: false,
+        isError: false,
+        offersByRequest: new Map(),
+        favoriteRequestIds: new Set(['request-1']),
+        pendingFavoriteRequestIds: new Set(['request-2']),
+        pendingOfferRequestId: 'request-3',
+        totalPages: 6,
+        openOfferSheet: () => {},
+        onWithdrawOffer: () => {},
+        toggleRequestFavorite: () => {},
+      },
+      catalogIndex: {
+        serviceByKey: new Map(),
+        categoryByKey: new Map(),
+        cityById: new Map(),
+      },
+      formatDate: new Intl.DateTimeFormat('de-DE'),
+      formatPrice: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }),
+      onListDensityChange: () => {},
+      showTopFilters: true,
+    });
+
+    expect(requestsContent.setPage).toBe(setPage);
+    expect(requestsContent.totalPages).toBe(6);
+    expect(requestsContent.emptyCtaHref).toBe('/workspace?section=requests');
+    expect(requestsContent.showTopFilters).toBe(true);
   });
 });

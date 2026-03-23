@@ -7,6 +7,10 @@ import { useProviderFavoriteToggle, useRequestFavoriteToggle } from '@/hooks/use
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
+import {
+  buildWorkspaceFavoriteToggleHandlers,
+  buildWorkspaceFavoriteTogglesResult,
+} from '@/features/workspace/private/workspaceFavoriteToggles.model';
 
 type RouterLike = {
   push: (href: string) => void;
@@ -63,18 +67,35 @@ export function useWorkspaceFavoriteToggles({
     providerById,
   });
 
-  const onToggleRequestFavorite = React.useCallback((requestId: string) => {
-    void toggleRequestFavorite(requestId);
-  }, [toggleRequestFavorite]);
-
-  const onToggleProviderFavorite = React.useCallback((providerId: string) => {
-    void toggleProviderFavorite(providerId);
-  }, [toggleProviderFavorite]);
-
-  return {
-    pendingFavoriteRequestIds,
-    pendingFavoriteProviderIds,
+  const {
     onToggleRequestFavorite,
     onToggleProviderFavorite,
-  };
+  } = React.useMemo(
+    () =>
+      buildWorkspaceFavoriteToggleHandlers({
+        toggleRequestFavorite,
+        toggleProviderFavorite,
+      }),
+    [toggleProviderFavorite, toggleRequestFavorite],
+  );
+
+  return React.useMemo(
+    () =>
+      buildWorkspaceFavoriteTogglesResult({
+        requestToggle: {
+          pendingFavoriteRequestIds,
+        },
+        providerToggle: {
+          pendingFavoriteProviderIds,
+        },
+        onToggleRequestFavorite,
+        onToggleProviderFavorite,
+      }),
+    [
+      onToggleProviderFavorite,
+      onToggleRequestFavorite,
+      pendingFavoriteProviderIds,
+      pendingFavoriteRequestIds,
+    ],
+  );
 }

@@ -3,6 +3,13 @@
 import type { ComponentProps } from 'react';
 
 import type { WorkspaceContent } from '@/features/workspace/requests/WorkspaceContent';
+import {
+  buildWorkspaceFavoriteRequestsListProps,
+  buildWorkspaceOfferRequestsListProps,
+  buildWorkspaceOwnerRequestsListProps,
+  buildWorkspaceState,
+} from '@/features/workspace/requests/workspaceViewModel.helpers';
+import { buildWorkspaceListContext } from '@/features/workspace/requests/workspaceViewModel.shared';
 import type { PrivateInput } from '@/features/workspace/requests/workspaceViewModel.types';
 
 export function buildWorkspacePrivateContentProps(
@@ -10,7 +17,6 @@ export function buildWorkspacePrivateContentProps(
 ): ComponentProps<typeof WorkspaceContent> {
   const {
     t,
-    locale,
     isWorkspaceAuthed,
     activeWorkspaceTab,
     showWorkspaceHeader,
@@ -42,21 +48,9 @@ export function buildWorkspacePrivateContentProps(
     favoriteProviderCards,
     isMyReviewsLoading,
     myReviews,
-    isPersonalized,
-    offersByRequest,
-    favoriteRequestIds,
-    onToggleRequestFavorite,
-    onOpenOfferSheet,
-    onWithdrawOffer,
-    onOpenChatThread,
-    pendingOfferRequestId,
-    pendingFavoriteRequestIds,
-    serviceByKey,
-    categoryByKey,
-    cityById,
-    formatDate,
-    formatPrice,
   } = params;
+  const listContext = buildWorkspaceListContext(params);
+  const contractsLoading = isProviderContractsLoading || isClientContractsLoading;
 
   return {
     t,
@@ -69,105 +63,35 @@ export function buildWorkspacePrivateContentProps(
     statusFilters,
     activeStatusFilter,
     setStatusFilter,
-    myRequestsState: {
-      isLoading: isMyRequestsLoading,
-      isEmpty: filteredMyRequests.length === 0,
-    },
-    myRequestsListProps: {
-      t,
-      locale,
+    myRequestsState: buildWorkspaceState(isMyRequestsLoading, filteredMyRequests.length === 0),
+    myRequestsListProps: buildWorkspaceOwnerRequestsListProps(listContext, {
       requests: filteredMyRequests,
       isLoading: isMyRequestsLoading,
-      isError: false,
-      serviceByKey,
-      categoryByKey,
-      cityById,
-      formatDate,
-      formatPrice,
       ownerRequestActions,
-    },
-    myOffersState: {
-      isLoading: isMyOffersLoading,
-      isEmpty: filteredMyOffers.length === 0,
-    },
-    myOffersListProps: {
-      t,
-      locale,
+    }),
+    myOffersState: buildWorkspaceState(isMyOffersLoading, filteredMyOffers.length === 0),
+    myOffersListProps: buildWorkspaceOfferRequestsListProps(listContext, {
       requests: myOfferRequests,
       isLoading: isMyOffersLoading,
-      isError: false,
-      serviceByKey,
-      categoryByKey,
-      cityById,
-      formatDate,
-      formatPrice,
-      enableOfferActions: true,
-      hideRecurringBadge: true,
-      showFavoriteButton: false,
-      offersByRequest,
-      onSendOffer: onOpenOfferSheet,
-      onEditOffer: onOpenOfferSheet,
-      onWithdrawOffer,
-      onOpenChatThread,
-      pendingOfferRequestId,
-    },
-    contractsState: {
-      isLoading: isProviderContractsLoading || isClientContractsLoading,
-      isEmpty: filteredContracts.length === 0,
-    },
-    contractsListProps: {
-      t,
-      locale,
+    }),
+    contractsState: buildWorkspaceState(contractsLoading, filteredContracts.length === 0),
+    contractsListProps: buildWorkspaceOfferRequestsListProps(listContext, {
       requests: contractRequests,
-      isLoading: isProviderContractsLoading || isClientContractsLoading,
-      isError: false,
-      serviceByKey,
-      categoryByKey,
-      cityById,
-      formatDate,
-      formatPrice,
-      enableOfferActions: true,
-      hideRecurringBadge: true,
-      showFavoriteButton: false,
+      isLoading: contractsLoading,
       offersByRequest: contractOffersByRequest,
-      onOpenChatThread,
-    },
+    }),
     favoritesState: {
-      isLoading: isFavoritesLoading,
-      isEmpty: favoritesItems.length === 0,
+      ...buildWorkspaceState(isFavoritesLoading, favoritesItems.length === 0),
       hasFavoriteRequests,
       hasFavoriteProviders,
       resolvedView: resolvedFavoritesView,
     },
     onFavoritesViewChange: setFavoritesView,
-    favoriteRequestsListProps: {
-      t,
-      locale,
+    favoriteRequestsListProps: buildWorkspaceFavoriteRequestsListProps(listContext, {
       requests: favoriteRequests,
       isLoading: isFavoriteRequestsLoading,
-      isError: false,
-      serviceByKey,
-      categoryByKey,
-      cityById,
-      formatDate,
-      formatPrice,
-      enableOfferActions: true,
-      hideRecurringBadge: isPersonalized,
-      showFavoriteButton: true,
-      offersByRequest,
-      favoriteRequestIds,
-      onToggleFavorite: onToggleRequestFavorite,
-      onSendOffer: onOpenOfferSheet,
-      onEditOffer: onOpenOfferSheet,
-      onWithdrawOffer,
-      onOpenChatThread,
-      pendingOfferRequestId,
-      pendingFavoriteRequestIds,
-    },
+    }),
     favoriteProvidersNode: favoriteProviderCards,
-    reviewsState: {
-      isLoading: isMyReviewsLoading,
-      items: myReviews,
-    },
+    reviewsState: { isLoading: isMyReviewsLoading, items: myReviews },
   };
 }

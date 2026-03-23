@@ -1,13 +1,21 @@
 'use client';
 
 import * as React from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 import { WorkspaceExploreSection, WorkspaceFrame, WorkspaceTopProvidersAside } from '@/features/workspace/requests';
+import type { WorkspaceTab } from '@/features/workspace/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
+import {
+  WorkspaceContextAside,
+  WorkspaceModeHeader,
+} from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
+import { isWorkspaceTab } from '@/features/workspace/requests';
+import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 
 type Translator = (key: I18nKey) => string;
 
@@ -33,12 +41,14 @@ type Props = {
   isWorkspacePublicSection: boolean;
   isWorkspaceAuthed: boolean;
   activePublicSection: PublicWorkspaceSection | null;
+  activeWorkspaceTab: WorkspaceTab;
   t: Translator;
   locale: Locale;
   intro: React.ReactNode;
   explore: ExploreProps;
   privateMain: React.ReactNode;
   publicMain: React.ReactNode;
+  asideTopSlot?: React.ReactNode;
   workspaceAsideBaseProps: WorkspaceAsideBaseProps;
   pendingFavoriteProviderIds: Set<string>;
   onToggleProviderFavorite: (providerId: string) => void;
@@ -48,20 +58,76 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   isWorkspacePublicSection,
   isWorkspaceAuthed,
   activePublicSection,
+  activeWorkspaceTab,
   t,
   locale,
   intro,
   explore,
   privateMain,
   publicMain,
+  asideTopSlot,
   workspaceAsideBaseProps,
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
 }: Props) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isOverviewPrivateMode =
+    !isWorkspacePublicSection &&
+    isWorkspaceOverviewMode({
+      activePublicSection,
+      activeWorkspaceTab,
+      pathname,
+      sectionParam: searchParams.get('section'),
+      hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
+    });
+
+  const introWithWorkspaceChrome = React.useMemo(() => {
+    if (!React.isValidElement(intro)) return intro;
+
+    return React.cloneElement(
+      intro as React.ReactElement<{
+        navHeaderSlot?: React.ReactNode;
+        leftColumnSlot?: React.ReactNode;
+      }>,
+      {
+        navHeaderSlot: (
+          <WorkspaceModeHeader
+            t={t}
+            locale={locale}
+            activePublicSection={activePublicSection}
+            activeWorkspaceTab={activeWorkspaceTab}
+          />
+        ),
+      },
+    );
+  }, [activePublicSection, activeWorkspaceTab, intro, locale, t]);
+
+  const contextualAside = (
+    <>
+      {asideTopSlot}
+      <WorkspaceContextAside
+        t={t}
+        locale={locale}
+        activePublicSection={activePublicSection}
+        activeWorkspaceTab={activeWorkspaceTab}
+      >
+        {!isOverviewPrivateMode ? (
+          <WorkspaceTopProvidersAside
+            {...workspaceAsideBaseProps}
+            ctaHref={isWorkspaceAuthed ? '/workspace?section=requests' : '/workspace?section=providers'}
+            pendingFavoriteProviderIds={pendingFavoriteProviderIds}
+            onToggleFavorite={onToggleProviderFavorite}
+          />
+        ) : null}
+      </WorkspaceContextAside>
+    </>
+  );
+
   if (isWorkspacePublicSection) {
     return (
       <WorkspaceExploreSection
-        intro={intro}
+        intro={introWithWorkspaceChrome}
         activeSection={activePublicSection ?? 'requests'}
         isWorkspaceAuthed={isWorkspaceAuthed}
         t={t}
@@ -83,30 +149,18 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   if (isWorkspaceAuthed) {
     return (
       <WorkspaceFrame
-        intro={intro}
+        intro={introWithWorkspaceChrome}
         main={privateMain}
-        aside={(
-          <WorkspaceTopProvidersAside
-            {...workspaceAsideBaseProps}
-            ctaHref="/workspace?section=requests"
-            pendingFavoriteProviderIds={pendingFavoriteProviderIds}
-            onToggleFavorite={onToggleProviderFavorite}
-          />
-        )}
+        aside={contextualAside}
       />
     );
   }
 
   return (
     <WorkspaceFrame
-      intro={intro}
+      intro={introWithWorkspaceChrome}
       main={publicMain}
-      aside={(
-        <WorkspaceTopProvidersAside
-          {...workspaceAsideBaseProps}
-          ctaHref="/workspace?section=providers"
-        />
-      )}
+      aside={contextualAside}
     />
   );
 });

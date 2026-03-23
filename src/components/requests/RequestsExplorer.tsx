@@ -4,34 +4,24 @@ import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { PublicContent } from '@/features/workspace/requests';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { useProviderFavoriteToggle } from '@/hooks/useFavoriteToggles';
-import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useRequestsExplorerFilters } from '@/components/requests/useRequestsExplorerFilters';
 import { useProvidersExploreData } from '@/components/requests/useProvidersExploreData';
+import { RequestsExplorerRequestsContent } from '@/components/requests/RequestsExplorerRequestsContent';
 import { RequestsExplorerView } from '@/components/requests/RequestsExplorerView';
 import { useRequestsExplorerRequestsData } from '@/components/requests/useRequestsExplorerRequestsData';
 import { RequestsExplorerProvidersContent } from '@/components/requests/RequestsExplorerProvidersContent';
-import type { I18nKey } from '@/lib/i18n/keys';
-import type { Locale } from '@/lib/i18n/t';
-import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
+import {
+  buildRequestsExplorerNextPath,
+  buildRequestsExplorerProvidersContentProps,
+  buildRequestsExplorerRequestsContentProps,
+  pickRequestsExplorerSharedFilters,
+} from '@/components/requests/requestsExplorer.model';
+import type { RequestsExplorerProps } from '@/components/requests/requestsExplorer.types';
 
-export type RequestsExplorerProps = {
-  t: (key: I18nKey) => string;
-  locale: Locale;
-  contentType?: 'requests' | 'providers';
-  backHref?: string;
-  emptyCtaHref?: string;
-  showBack?: boolean;
-  onListDensityChange?: (value: 'single' | 'double') => void;
-  showTopFilters?: boolean;
-  initialPublicRequests?: PublicRequestsResponseDto;
-  preferInitialPublicRequests?: boolean;
-  initialPublicRequestsLoading?: boolean;
-  initialPublicRequestsError?: boolean;
-};
+export type { RequestsExplorerProps } from '@/components/requests/requestsExplorer.types';
 
 export function RequestsExplorer({
   t,
@@ -56,48 +46,21 @@ export function RequestsExplorer({
   const isProvidersView = contentType === 'providers';
 
   const filters = useRequestsExplorerFilters({ t, locale });
-  const {
-    cities,
-    categories,
-    services,
-    isCategoriesLoading,
-    isServicesLoading,
-    sortOptions,
-    categoryOptions,
-    serviceOptions,
-    cityOptions,
-    categoryKey,
-    subcategoryKey,
-    cityId,
-    sortBy,
-    page,
-    limit,
-    filter,
-    setPage,
-    isPending,
-    onCategoryChange,
-    onSubcategoryChange,
-    onCityChange,
-    onSortChange,
-    onReset,
-    appliedFilterChips,
-    formatDate,
-    formatPrice,
-  } = filters;
+  const sharedFilters = pickRequestsExplorerSharedFilters(filters);
 
   const providersData = useProvidersExploreData({
     locale,
     isAuthed,
     isProvidersView,
-    cityId,
-    subcategoryKey,
-    categoryKey,
-    sortBy,
-    page,
-    limit,
-    setPage,
-    services,
-    cityOptions,
+    cityId: filters.cityId,
+    subcategoryKey: filters.subcategoryKey,
+    categoryKey: filters.categoryKey,
+    sortBy: filters.sortBy,
+    page: filters.page,
+    limit: filters.limit,
+    setPage: filters.setPage,
+    services: filters.services,
+    cityOptions: filters.cityOptions,
     onListDensityChange,
   });
   const {
@@ -119,10 +82,10 @@ export function RequestsExplorer({
     locale,
     isAuthed,
     isProvidersView,
-    filter,
-    page,
-    limit,
-    setPage,
+    filter: filters.filter,
+    page: filters.page,
+    limit: filters.limit,
+    setPage: filters.setPage,
     searchParams,
     pathname,
     initialPublicRequests,
@@ -146,15 +109,15 @@ export function RequestsExplorer({
   } = requestsData;
 
   const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
-    services,
-    categories,
-    cities,
+    services: filters.services,
+    categories: filters.categories,
+    cities: filters.cities,
   });
 
-  const nextPath = React.useMemo(() => {
-    const qs = searchParams?.toString();
-    return `${pathname}${qs ? `?${qs}` : ''}`;
-  }, [pathname, searchParams]);
+  const nextPath = React.useMemo(
+    () => buildRequestsExplorerNextPath(pathname, searchParams),
+    [pathname, searchParams],
+  );
   const {
     pendingFavoriteProviderIds,
     toggleProviderFavorite,
@@ -168,118 +131,63 @@ export function RequestsExplorer({
     providerById,
   });
 
-  const providersContent = (
-    <RequestsExplorerProvidersContent
-      t={t}
-      locale={locale}
-      categoryOptions={categoryOptions}
-      serviceOptions={serviceOptions}
-      cityOptions={cityOptions}
-      sortOptions={sortOptions}
-      categoryKey={categoryKey}
-      subcategoryKey={subcategoryKey}
-      cityId={cityId}
-      sortBy={sortBy}
-      totalProvidersLabel={totalProvidersLabel}
-      page={page}
-      totalProviderPages={totalProviderPages}
-      isCategoriesLoading={isCategoriesLoading}
-      isServicesLoading={isServicesLoading}
-      isPending={isPending}
-      appliedFilterChips={appliedFilterChips}
-      onCategoryChange={onCategoryChange}
-      onSubcategoryChange={onSubcategoryChange}
-      onCityChange={onCityChange}
-      onSortChange={onSortChange}
-      onReset={onReset}
-      onSetPage={setPage}
-      providersListDensity={providersListDensity}
-      onListDensityChange={setProvidersListDensity}
-      isProvidersLoading={isProvidersLoading}
-      isProvidersError={isProvidersError}
-      filteredProvidersCount={filteredProvidersCount}
-      pagedProviders={pagedProviders}
-      favoriteProviderIds={favoriteProviderIds}
-      pendingFavoriteProviderIds={pendingFavoriteProviderIds}
-      onToggleProviderFavorite={toggleProviderFavorite}
-      showFilterControls={showTopFilters}
-    />
-  );
+  const providersContentProps = buildRequestsExplorerProvidersContentProps({
+    t,
+    locale,
+    sharedFilters,
+    providersData: {
+      totalProvidersLabel,
+      totalProviderPages,
+      providersListDensity,
+      setProvidersListDensity,
+      isProvidersLoading,
+      isProvidersError,
+      filteredProvidersCount,
+      pagedProviders,
+      favoriteProviderIds,
+      pendingFavoriteProviderIds,
+      toggleProviderFavorite,
+    },
+    showFilterControls: showTopFilters,
+  });
 
-  const requestsContent = (
-    <PublicContent
-      t={t}
-      filtersProps={{
-        t,
-        locale,
-        categoryOptions,
-        serviceOptions,
-        cityOptions,
-        sortOptions,
-        categoryKey,
-        subcategoryKey,
-        cityId,
-        sortBy,
-        totalResults: totalResultsLabel,
-        isCategoriesLoading,
-        isServicesLoading,
-        isPending,
-        appliedChips: appliedFilterChips,
-        onCategoryChange,
-        onSubcategoryChange,
-        onCityChange,
-        onSortChange,
-        onReset,
-      }}
-      statusFilters={[]}
-      activeStatusFilter="all"
-      onStatusFilterChange={() => {}}
-      isLoading={isLoading}
-      isError={isError}
-      requestsCount={requests.length}
-      hasActivePublicFilter={appliedFilterChips.length > 0}
-      emptyCtaHref={emptyCtaHref}
-      requestsListProps={{
-        t,
-        locale,
-        requests,
-        isLoading,
-        isError,
-        serviceByKey,
-        categoryByKey,
-        cityById,
-        formatDate,
-        formatPrice,
-        enableOfferActions: true,
-        offersByRequest,
-        favoriteRequestIds,
-        pendingFavoriteRequestIds,
-        onToggleFavorite: (requestId) => {
-          void toggleRequestFavorite(requestId);
-        },
-        onSendOffer: openOfferSheet,
-        onEditOffer: openOfferSheet,
-        onWithdrawOffer,
-        pendingOfferRequestId,
-        showFavoriteButton: true,
-      }}
-      page={page}
-      totalPages={totalPages}
-      resultsLabel={t(I18N_KEYS.requestsPage.countLabel)}
-      onPrevPage={() => setPage(Math.max(1, page - 1))}
-      onNextPage={() => setPage(Math.min(totalPages, page + 1))}
-      onListDensityChange={onListDensityChange}
-      showFilterControls={showTopFilters}
-    />
-  );
+  const requestsContentProps = buildRequestsExplorerRequestsContentProps({
+    t,
+    locale,
+    emptyCtaHref,
+    sharedFilters,
+    requestsData: {
+      totalResultsLabel,
+      requests,
+      isLoading,
+      isError,
+      offersByRequest,
+      favoriteRequestIds,
+      pendingFavoriteRequestIds,
+      pendingOfferRequestId,
+      totalPages,
+      openOfferSheet,
+      onWithdrawOffer,
+      toggleRequestFavorite,
+    },
+    catalogIndex: {
+      serviceByKey,
+      categoryByKey,
+      cityById,
+    },
+    formatDate: filters.formatDate,
+    formatPrice: filters.formatPrice,
+    onListDensityChange,
+    showTopFilters,
+  });
 
   return (
     <RequestsExplorerView
       isProvidersView={isProvidersView}
       showBack={showBack}
       backHref={backHref}
-      providersContent={providersContent}
-      requestsContent={requestsContent}
+      providersContent={<RequestsExplorerProvidersContent {...providersContentProps} />}
+      requestsContent={<RequestsExplorerRequestsContent {...requestsContentProps} />}
     />
   );
 }

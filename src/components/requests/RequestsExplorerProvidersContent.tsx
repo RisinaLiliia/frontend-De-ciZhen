@@ -2,51 +2,15 @@
 
 import * as React from 'react';
 
+import { RequestsBottomPagination } from '@/components/requests/RequestsBottomPagination';
 import { RequestsFilters, RequestsResultsSummary } from '@/components/requests/RequestsFilters';
+import { selectRequestsAppliedChipsForContentType } from '@/components/requests/requestsFilters.model';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { ProviderCard } from '@/components/providers/ProviderCard';
 import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
-import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import { ALL_OPTION_KEY } from '@/features/workspace/requests';
-import type { Locale } from '@/lib/i18n/t';
-import type { FilterOption } from '@/components/requests/RequestsFilters';
-import type { ProviderPublicDto } from '@/lib/api/dto/providers';
-
-type Props = {
-  t: (key: I18nKey) => string;
-  locale: Locale;
-  categoryOptions: FilterOption[];
-  serviceOptions: FilterOption[];
-  cityOptions: FilterOption[];
-  sortOptions: FilterOption[];
-  categoryKey: string;
-  subcategoryKey: string;
-  cityId: string;
-  sortBy: string;
-  totalProvidersLabel: string;
-  page: number;
-  totalProviderPages: number;
-  isCategoriesLoading: boolean;
-  isServicesLoading: boolean;
-  isPending: boolean;
-  appliedFilterChips: Array<{ key: string; label: string; onRemove: () => void }>;
-  onCategoryChange: (value: string) => void;
-  onSubcategoryChange: (value: string) => void;
-  onCityChange: (value: string) => void;
-  onSortChange: (value: string) => void;
-  onReset: () => void;
-  onSetPage: (page: number) => void;
-  providersListDensity: 'single' | 'double';
-  onListDensityChange: (value: 'single' | 'double') => void;
-  isProvidersLoading: boolean;
-  isProvidersError: boolean;
-  filteredProvidersCount: number;
-  pagedProviders: ProviderPublicDto[];
-  favoriteProviderIds: Set<string>;
-  pendingFavoriteProviderIds: Set<string>;
-  onToggleProviderFavorite: (providerId: string) => void | Promise<void>;
-  showFilterControls?: boolean;
-};
+import type { RequestsExplorerProvidersContentProps } from '@/components/requests/requestsExplorer.types';
 
 export function RequestsExplorerProvidersContent({
   t,
@@ -82,7 +46,10 @@ export function RequestsExplorerProvidersContent({
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
   showFilterControls = true,
-}: Props) {
+}: RequestsExplorerProvidersContentProps) {
+  const onPrevPage = () => onSetPage(Math.max(1, page - 1));
+  const onNextPage = () => onSetPage(Math.min(totalProviderPages, page + 1));
+
   return (
     <section className="panel requests-panel">
       {showFilterControls ? (
@@ -104,7 +71,7 @@ export function RequestsExplorerProvidersContent({
           isCategoriesLoading={isCategoriesLoading}
           isServicesLoading={isServicesLoading}
           isPending={isPending}
-          appliedChips={appliedFilterChips.filter((chip) => chip.key !== 'sort')}
+          appliedChips={selectRequestsAppliedChipsForContentType(appliedFilterChips, 'providers')}
           onCategoryChange={onCategoryChange}
           onSubcategoryChange={onSubcategoryChange}
           onCityChange={onCityChange}
@@ -112,8 +79,8 @@ export function RequestsExplorerProvidersContent({
           onReset={onReset}
           listDensity={providersListDensity}
           onListDensityChange={onListDensityChange}
-          onPrevPage={() => onSetPage(Math.max(1, page - 1))}
-          onNextPage={() => onSetPage(Math.min(totalProviderPages, page + 1))}
+          onPrevPage={onPrevPage}
+          onNextPage={onNextPage}
         />
       ) : (
         <RequestsResultsSummary
@@ -125,8 +92,8 @@ export function RequestsExplorerProvidersContent({
           isPending={isPending}
           listDensity={providersListDensity}
           onListDensityChange={onListDensityChange}
-          onPrevPage={() => onSetPage(Math.max(1, page - 1))}
-          onNextPage={() => onSetPage(Math.min(totalProviderPages, page + 1))}
+          onPrevPage={onPrevPage}
+          onNextPage={onNextPage}
         />
       )}
 
@@ -171,31 +138,13 @@ export function RequestsExplorerProvidersContent({
         </WorkspaceContentState>
       </section>
 
-      <div className="requests-pagination">
-        <span className="requests-page-nav__label">
-          {page}/{Math.max(1, totalProviderPages)}
-        </span>
-        <div className="requests-page-nav" role="group" aria-label={t(I18N_KEYS.requestsPage.paginationBottomLabel)}>
-          <button
-            type="button"
-            className="btn-ghost requests-page-nav__btn"
-            onClick={() => onSetPage(Math.max(1, page - 1))}
-            disabled={page <= 1}
-            aria-label={t(I18N_KEYS.requestsPage.paginationPrev)}
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            className="btn-ghost requests-page-nav__btn"
-            onClick={() => onSetPage(Math.min(totalProviderPages, page + 1))}
-            disabled={page >= totalProviderPages}
-            aria-label={t(I18N_KEYS.requestsPage.paginationNext)}
-          >
-            →
-          </button>
-        </div>
-      </div>
+      <RequestsBottomPagination
+        t={t}
+        page={page}
+        totalPages={totalProviderPages}
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
+      />
     </section>
   );
 }

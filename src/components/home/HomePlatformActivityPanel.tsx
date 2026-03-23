@@ -1,175 +1,122 @@
 /* src/components/home/HomePlatformActivityPanel.tsx */
 'use client';
 
-import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Card, CardTitle } from '@/components/ui/Card';
-import {
-  getPlatformActivity,
-  type PlatformActivityPoint,
-  type PlatformActivityRange,
-} from '@/lib/api/analytics';
-import { I18N_KEYS } from '@/lib/i18n/keys';
-import type { I18nKey } from '@/lib/i18n/keys';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
+import type {
+  HomePlatformActivityChartModel,
+  HomePlatformActivityPanelViewModel,
+} from '@/components/home/homePlatformActivityPanel.model';
 
-type HomePlatformActivityPanelProps = {
-  t: (key: I18nKey) => string;
-  locale: string;
+type HomePlatformActivityPanelProps = HomePlatformActivityPanelViewModel & {
+  onRangeChange: (next: HomePlatformActivityPanelViewModel['range']) => void;
+  onHoverPoint: (index: number) => void;
 };
 
-const RANGES: PlatformActivityRange[] = ['24h', '7d', '30d'];
-
-export function HomePlatformActivityPanel({ t, locale }: HomePlatformActivityPanelProps) {
-  const [range, setRange] = React.useState<PlatformActivityRange>('7d');
-  const [activeIndex, setActiveIndex] = React.useState<number>(0);
-
-  const query = useQuery({
-    queryKey: ['home-platform-activity', range],
-    queryFn: () => getPlatformActivity(range),
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-    retry: 1,
-    placeholderData: (previousData) => previousData,
-  });
-
-  const points = query.data?.data ?? [];
-  React.useEffect(() => {
-    setActiveIndex(Math.max(0, points.length - 1));
-  }, [points.length, range]);
-
-  const active = points[activeIndex] ?? points[points.length - 1];
-  const updatedAt = query.data?.updatedAt
-    ? new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
-        day: '2-digit',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(new Date(query.data.updatedAt))
-    : null;
-  const isInitialLoading = query.isLoading && points.length === 0;
-  const isUpdating = query.isFetching && points.length > 0;
-
+export function HomePlatformActivityPanel({
+  title,
+  subtitle,
+  groupLabel,
+  rangeOptions,
+  range,
+  status,
+  isUpdating,
+  errorLabel,
+  emptyLabel,
+  content,
+  onRangeChange,
+  onHoverPoint,
+}: HomePlatformActivityPanelProps) {
   return (
     <Card className={`home-activity-panel ${isUpdating ? 'is-fetching' : ''}`.trim()}>
       <div className="home-activity__header">
         <div className="home-activity__header-top">
-          <CardTitle className="home-activity__title">{t(I18N_KEYS.homePublic.activityTitle)}</CardTitle>
+          <CardTitle className="home-activity__title">{title}</CardTitle>
         </div>
-        <p className="home-activity__subtitle">{t(I18N_KEYS.homePublic.activitySubtitle)}</p>
+        <p className="home-activity__subtitle">{subtitle}</p>
       </div>
 
       <RangeActionToolbar
         className="mt-3"
-        groupLabel={t(I18N_KEYS.homePublic.activityTitle)}
-        options={RANGES.map((item) => ({
-          value: item,
-          label: t(
-            item === '24h'
-              ? I18N_KEYS.homePublic.activityRange24h
-              : item === '7d'
-                ? I18N_KEYS.homePublic.activityRange7d
-                : I18N_KEYS.homePublic.activityRange30d,
-          ),
-        }))}
+        groupLabel={groupLabel}
+        options={rangeOptions}
         value={range}
-        onChange={setRange}
+        onChange={onRangeChange}
       />
 
-      {isInitialLoading ? (
+      {status === 'loading' ? (
         <div className="home-activity__loading mt-3">
           <div className="skeleton h-28 w-full" />
           <div className="skeleton h-10 w-full" />
         </div>
-      ) : query.isError && points.length === 0 ? (
-        <div className="home-activity__state mt-3">{t(I18N_KEYS.homePublic.activityError)}</div>
-      ) : points.length === 0 ? (
-        <div className="home-activity__state mt-3">{t(I18N_KEYS.homePublic.activityEmpty)}</div>
+      ) : status === 'error' ? (
+        <div className="home-activity__state mt-3">{errorLabel}</div>
+      ) : status === 'empty' || !content ? (
+        <div className="home-activity__state mt-3">{emptyLabel}</div>
       ) : (
         <div className="home-activity__content">
-          <MiniLineChart points={points} activeIndex={activeIndex} onHover={setActiveIndex} />
-          {active ? (
-            <div className="home-activity__meta">
-              <div className="home-activity__point-time">{formatPointTime(active.timestamp, range, locale)}</div>
-              <div className="home-activity__legend">
-                <span className="home-activity__metric is-requests">
-                  {t(I18N_KEYS.homePublic.activityRequests)}: <strong>{active.requests}</strong>
-                </span>
-                <span className="home-activity__metric is-offers">
-                  {t(I18N_KEYS.homePublic.activityOffers)}: <strong>{active.offers}</strong>
-                </span>
-              </div>
-              {updatedAt ? (
-                <div className="home-activity__updated">
-                  {t(I18N_KEYS.homePublic.activityUpdated)}: {updatedAt}
-                </div>
-              ) : null}
+          <HomePlatformActivityChart chart={content.chart} onHoverPoint={onHoverPoint} />
+          <div className="home-activity__meta">
+            <div className="home-activity__point-time">{content.pointTime}</div>
+            <div className="home-activity__legend">
+              <span className="home-activity__metric is-requests">
+                {content.requestsMetric.label}: <strong>{content.requestsMetric.value}</strong>
+              </span>
+              <span className="home-activity__metric is-offers">
+                {content.offersMetric.label}: <strong>{content.offersMetric.value}</strong>
+              </span>
             </div>
-          ) : null}
+            {content.updatedText ? (
+              <div className="home-activity__updated">{content.updatedText}</div>
+            ) : null}
+          </div>
         </div>
       )}
     </Card>
   );
 }
 
-function MiniLineChart({
-  points,
-  activeIndex,
-  onHover,
+function HomePlatformActivityChart({
+  chart,
+  onHoverPoint,
 }: {
-  points: PlatformActivityPoint[];
-  activeIndex: number;
-  onHover: (index: number) => void;
+  chart: HomePlatformActivityChartModel;
+  onHoverPoint: (index: number) => void;
 }) {
-  const width = 100;
-  const height = 100;
-  const maxValue = Math.max(1, ...points.flatMap((point) => [point.requests, point.offers]));
-  const step = width / Math.max(points.length - 1, 1);
-
-  const toY = React.useCallback((value: number) => {
-    const top = 10;
-    const bottom = 85;
-    return bottom - (value / maxValue) * (bottom - top);
-  }, [maxValue]);
-
-  const requestsPath = points
-    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${index * step} ${toY(point.requests)}`)
-    .join(' ');
-  const offersPath = points
-    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${index * step} ${toY(point.offers)}`)
-    .join(' ');
-
-  const handlePointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    if (!rect.width) return;
-    const progress = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
-    const index = Math.round(progress * Math.max(points.length - 1, 0));
-    onHover(index);
-  };
-
   return (
     <div className="home-activity__chart mt-3">
       <svg
         className="home-activity__svg"
-        viewBox={`0 0 ${width} ${height}`}
+        viewBox={chart.viewBox}
         preserveAspectRatio="none"
-        onPointerMove={handlePointerMove}
       >
-        <line x1="0" y1="85" x2={String(width)} y2="85" className="home-activity__axis" />
-        <path d={offersPath} className="home-activity__line is-offers" />
-        <path d={requestsPath} className="home-activity__line is-requests" />
-        {points.map((point, index) => (
-          <g key={`${point.timestamp}-${index}`}>
+        <line x1="0" y1="85" x2={String(chart.width)} y2="85" className="home-activity__axis" />
+        <path d={chart.offersPath} className="home-activity__line is-offers" />
+        <path d={chart.requestsPath} className="home-activity__line is-requests" />
+        {chart.hoverZones.map((zone) => (
+          <rect
+            key={zone.key}
+            x={zone.x}
+            y="0"
+            width={Math.max(zone.width, 1)}
+            height={chart.height}
+            fill="transparent"
+            onPointerEnter={() => onHoverPoint(zone.index)}
+            onPointerMove={() => onHoverPoint(zone.index)}
+          />
+        ))}
+        {chart.dots.map((point) => (
+          <g key={point.key}>
             <circle
-              cx={index * step}
-              cy={toY(point.requests)}
-              r={activeIndex === index ? 1.8 : 0.85}
+              cx={point.requests.cx}
+              cy={point.requests.cy}
+              r={point.requests.r}
               className="home-activity__dot is-requests"
             />
             <circle
-              cx={index * step}
-              cy={toY(point.offers)}
-              r={activeIndex === index ? 1.8 : 0.85}
+              cx={point.offers.cx}
+              cy={point.offers.cy}
+              r={point.offers.r}
               className="home-activity__dot is-offers"
             />
           </g>
@@ -177,21 +124,4 @@ function MiniLineChart({
       </svg>
     </div>
   );
-}
-
-function formatPointTime(timestamp: string, range: PlatformActivityRange, locale: string): string {
-  const date = new Date(timestamp);
-  const isGerman = locale === 'de';
-  if (Number.isNaN(date.getTime())) return timestamp;
-  if (range === '24h') {
-    return new Intl.DateTimeFormat(isGerman ? 'de-DE' : 'en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(date);
-  }
-  return new Intl.DateTimeFormat(isGerman ? 'de-DE' : 'en-US', {
-    weekday: 'short',
-    day: '2-digit',
-    month: 'short',
-  }).format(date);
 }

@@ -1,5 +1,6 @@
 export { PublicContent } from './PublicContent';
 export { WorkspaceContent } from './WorkspaceContent';
+export { WorkspaceOverviewMain } from './WorkspaceOverviewMain';
 export { WorkspaceExploreSection } from './WorkspaceExploreSection';
 export { WorkspaceFrame, WorkspaceTopProvidersAside } from './WorkspaceFrame';
 export { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';

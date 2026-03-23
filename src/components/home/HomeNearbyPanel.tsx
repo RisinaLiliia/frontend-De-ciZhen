@@ -20,9 +20,22 @@ import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { RequestsList } from '@/components/requests/RequestsList';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
-import type { OfferDto } from '@/lib/api/dto/offers';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
+import {
+  buildHomeNearbyFavoriteRequestIds,
+  buildHomeNearbyNextPath,
+  buildHomeNearbyOffersByRequest,
+  buildHomeNearbyPanelStyle,
+  buildHomeNearbyRequestById,
+  buildHomeNearbyRequestsResult,
+  findHomeNearbyOfferRequestId,
+  resolveHomeNearbyCityId,
+  resolveHomeNearbyLoginHref,
+  resolveHomeNearbyOfferHref,
+  resolveHomeNearbySubtitleKey,
+  shouldUseHomeNearbyFallback,
+} from '@/components/home/homeNearbyPanel.model';
 
 type HomeNearbyPanelProps = {
   t: (key: I18nKey) => string;
@@ -58,12 +71,7 @@ export function HomeNearbyPanel({
   const { data: services = [] } = useServices();
 
   const cityId = React.useMemo(() => {
-    if (!region) return undefined;
-    const target = region.trim().toLowerCase();
-    const match = cities.find((city) =>
-      Object.values(city.i18n ?? {}).some((name) => name.trim().toLowerCase() === target),
-    );
-    return match?.id;
+    return resolveHomeNearbyCityId(cities, region);
   }, [cities, region]);
 
   const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
@@ -84,7 +92,7 @@ export function HomeNearbyPanel({
         limit: targetItems,
       });
 
-      if (!cityId || primary.items.length >= targetItems) {
+      if (!shouldUseHomeNearbyFallback(cityId, primary.items.length, targetItems)) {
         return { ...primary, usedFallback: false };
       }
 
@@ -93,21 +101,12 @@ export function HomeNearbyPanel({
         sort: 'date_desc',
         limit: fallbackLimit,
       });
-      const seen = new Set(primary.items.map((item) => item.id));
-      const merged = [...primary.items];
 
-      for (const item of fallback.items) {
-        if (seen.has(item.id)) continue;
-        merged.push(item);
-        seen.add(item.id);
-        if (merged.length >= targetItems) break;
-      }
-
-      return {
-        ...primary,
-        items: merged.slice(0, targetItems),
-        usedFallback: merged.length > primary.items.length,
-      };
+      return buildHomeNearbyRequestsResult({
+        primary,
+        fallback,
+        targetItems,
+      });
     },
     staleTime: 60_000,
     refetchOnWindowFocus: false,
@@ -129,25 +128,18 @@ export function HomeNearbyPanel({
     [data?.items],
   );
   const offersByRequest = React.useMemo(() => {
-    const map = new Map<string, OfferDto>();
-    myOffers.forEach((offer) => {
-      if (!map.has(offer.requestId) || offer.updatedAt > (map.get(offer.requestId)?.updatedAt ?? '')) {
-        map.set(offer.requestId, offer);
-      }
-    });
-    return map;
+    return buildHomeNearbyOffersByRequest(myOffers);
   }, [myOffers]);
   const requestById = React.useMemo(
-    () => new Map(requests.map((request) => [request.id, request])),
+    () => buildHomeNearbyRequestById(requests),
     [requests],
   );
   const favoriteRequestIds = React.useMemo(
-    () => new Set(favoriteRequests.map((item) => item.id)),
+    () => buildHomeNearbyFavoriteRequestIds(favoriteRequests),
     [favoriteRequests],
   );
   const nextPath = React.useMemo(() => {
-    const qs = searchParams?.toString();
-    return `${pathname}${qs ? `?${qs}` : ''}`;
+    return buildHomeNearbyNextPath(pathname, searchParams?.toString());
   }, [pathname, searchParams]);
   const {
     pendingFavoriteRequestIds,
@@ -163,9 +155,7 @@ export function HomeNearbyPanel({
   });
   const [pendingOfferRequestId, setPendingOfferRequestId] = React.useState<string | null>(null);
   const usedFallback = Boolean(data?.usedFallback && requests.length > 0);
-  const subtitle = usedFallback
-    ? t(I18N_KEYS.homePublic.nearbyFallbackHint)
-    : t(I18N_KEYS.homePublic.nearbySubtitle);
+  const subtitle = t(resolveHomeNearbySubtitleKey(usedFallback));
   const formatDate = React.useMemo(
     () =>
       new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
@@ -187,18 +177,18 @@ export function HomeNearbyPanel({
     (requestId: string) => {
       if (!isAuthed) {
         toast.message(t(I18N_KEYS.requestDetails.loginRequired));
-        router.push(`/auth/login?next=${encodeURIComponent(`/requests/${requestId}?offer=1`)}`);
+        router.push(resolveHomeNearbyLoginHref(requestId));
         return;
       }
-      router.push(`/requests/${requestId}?offer=1`);
+      router.push(resolveHomeNearbyOfferHref(requestId));
     },
     [isAuthed, router, t],
   );
   const withdrawOffer = React.useCallback(
     async (offerId: string) => {
-      const offer = myOffers.find((item) => item.id === offerId);
-      if (!offer) return;
-      setPendingOfferRequestId(offer.requestId);
+      const requestId = findHomeNearbyOfferRequestId(myOffers, offerId);
+      if (!requestId) return;
+      setPendingOfferRequestId(requestId);
       try {
         await deleteOffer(offerId);
         toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
@@ -216,10 +206,7 @@ export function HomeNearbyPanel({
   }, [withdrawOffer]);
 
   const panelStyle = React.useMemo(
-    () =>
-      ({
-        '--home-nearby-visible-rows': String(Math.max(1, visibleRows ?? targetItems)),
-      }) as React.CSSProperties,
+    () => buildHomeNearbyPanelStyle({ targetItems, visibleRows }),
     [targetItems, visibleRows],
   );
 

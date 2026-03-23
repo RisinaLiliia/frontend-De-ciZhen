@@ -1,0 +1,97 @@
+/* src/styles/features/requests/requests-shell-overview.css */
+
+@layer components {
+  .workspace-overview {
+    display: grid;
+    gap: var(--layout-section-gap);
+  }
+
+  .workspace-overview__hero,
+  .workspace-overview__grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .workspace-overview__panel {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .workspace-overview__kpis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .workspace-overview__health {
+    margin-top: calc(var(--space-1) * -1);
+  }
+
+  .workspace-overview__actions {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .workspace-overview__action-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .workspace-overview__insights {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .workspace-overview__insight-card {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, white 68%, var(--c-border) 32%);
+    background: color-mix(in oklab, white 80%, var(--c-panel) 20%);
+  }
+
+  .workspace-overview__insight-label {
+    font-size: var(--fs-small);
+    line-height: var(--lh-tight);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-overview__insight-text {
+    margin: 0;
+    color: var(--c-text);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .workspace-overview__insight-cta {
+    justify-self: start;
+  }
+
+  .workspace-overview__list {
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 1024px) {
+    .workspace-overview__hero {
+      grid-template-columns: minmax(0, 1.7fr) minmax(320px, 0.9fr);
+      align-items: start;
+    }
+
+    .workspace-overview__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .workspace-overview__kpis,
+    .workspace-overview__action-links {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}

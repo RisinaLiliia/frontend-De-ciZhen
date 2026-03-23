@@ -5,7 +5,6 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
 import { listProviderSlots } from '@/lib/api/availability';
 import { getPublicProviderById, listPublicProviders } from '@/lib/api/providers';
 import {
@@ -25,11 +24,17 @@ import {
   getAvailableIsoDays,
   getNextSlotStartAt,
   getProviderCityKey,
-  getProviderServiceKeys,
 } from '@/features/providers/publicProfile/providerPublicProfile.presentation';
 import { useProviderReviewsModel } from '@/features/providers/publicProfile/useProviderReviewsModel';
-
-const SIMILAR_LIMIT = 2;
+import {
+  buildProviderPublicProfileAvailabilityCalendarConfig,
+  buildProviderPublicProfileCard,
+  buildProviderPublicProfileSimilarCards,
+  buildProviderPublicProfileSimilarProviders,
+  buildProviderPublicProfileViewModel,
+  getPrimaryProviderServiceKey,
+  resolveProviderTargetUserId,
+} from '@/features/providers/publicProfile/providerPublicProfile.model';
 
 export function useProviderPublicProfileModel() {
   const t = useT();
@@ -53,8 +58,8 @@ export function useProviderPublicProfileModel() {
   });
 
   const providerTargetUserId = React.useMemo(
-    () => (provider?.userId && provider.userId.trim().length > 0 ? provider.userId : provider?.id ?? null),
-    [provider?.id, provider?.userId],
+    () => resolveProviderTargetUserId(provider),
+    [provider],
   );
   const providerSlotsRange = React.useMemo(() => {
     const from = new Date();
@@ -161,20 +166,11 @@ export function useProviderPublicProfileModel() {
     [localeTag],
   );
 
-  const profileCard = React.useMemo(() => {
-    if (!provider) return null;
-    return mapPublicProviderToCard({
-      t,
-      provider,
-      profileHref: `/providers/${provider.id}`,
-      reviewsHref: `/providers/${provider.id}#reviews`,
-      ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
-      status: 'online',
-    });
-  }, [provider, t]);
-
-  const providerServiceKeys = React.useMemo(() => (provider ? getProviderServiceKeys(provider) : []), [provider]);
-  const primaryServiceKey = providerServiceKeys[0];
+  const profileCard = React.useMemo(
+    () => (provider ? buildProviderPublicProfileCard({ provider, t }) : null),
+    [provider, t],
+  );
+  const primaryServiceKey = React.useMemo(() => getPrimaryProviderServiceKey(provider), [provider]);
 
   const { data: providers = [] } = useQuery({
     queryKey: ['provider-similar-candidates', provider?.id, provider?.cityId, provider?.cityName, primaryServiceKey],
@@ -210,43 +206,16 @@ export function useProviderPublicProfileModel() {
     staleTime: 120_000,
   });
 
-  const rankByRating = React.useCallback((a: ProviderPublicDto, b: ProviderPublicDto) => {
-    if (b.ratingAvg !== a.ratingAvg) return b.ratingAvg - a.ratingAvg;
-    if (b.ratingCount !== a.ratingCount) return b.ratingCount - a.ratingCount;
-    return (a.basePrice ?? Number.MAX_SAFE_INTEGER) - (b.basePrice ?? Number.MAX_SAFE_INTEGER);
-  }, []);
-
-  const sameCityProviders = React.useMemo(() => {
-    if (!provider) return [] as ProviderPublicDto[];
-    const providerCityKey = getProviderCityKey(provider);
-    if (!providerCityKey) return [] as ProviderPublicDto[];
-    return providers
-      .filter((item) => item.id !== provider.id)
-      .filter((item) => getProviderCityKey(item) === providerCityKey);
-  }, [provider, providers]);
-
   const similarProviders = React.useMemo(() => {
     if (!provider) return [] as ProviderPublicDto[];
-    const candidates = providers.filter((item) => item.id !== provider.id);
-    if (sameCityProviders.length > 0) {
-      return sameCityProviders.slice().sort(rankByRating).slice(0, SIMILAR_LIMIT);
-    }
-    return candidates.slice().sort(rankByRating).slice(0, SIMILAR_LIMIT);
-  }, [provider, providers, rankByRating, sameCityProviders]);
+    return buildProviderPublicProfileSimilarProviders({
+      provider,
+      providers,
+    });
+  }, [provider, providers]);
 
   const similarCards = React.useMemo(
-    () =>
-      similarProviders.map((item) => ({
-        ...mapPublicProviderToCard({
-          t,
-          provider: item,
-          profileHref: `/providers/${item.id}`,
-          reviewsHref: `/providers/${item.id}#reviews`,
-          ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
-          status: 'online',
-        }),
-        reviewPreview: t(I18N_KEYS.homePublic.providerReviewPreviewDefault),
-      })),
+    () => buildProviderPublicProfileSimilarCards({ providers: similarProviders, t }),
     [similarProviders, t],
   );
 
@@ -284,35 +253,17 @@ export function useProviderPublicProfileModel() {
     [providerSlots],
   );
 
-  const availabilityCalendarCopy = locale === 'de'
-    ? {
-        title: 'Verfügbarkeit (14 Tage)',
-        free: 'Frei',
-        busy: 'Belegt',
-        out: 'Außerhalb Zeitraum',
-      }
-    : {
-        title: 'Availability (14 days)',
-        free: 'Free',
-        busy: 'Busy',
-        out: 'Outside range',
-      };
   const availabilityCalendarConfig = React.useMemo(
-    () => ({
-      availableIsoDays,
-      rangeStartIso: providerSlotsRange.from,
-      rangeEndIso: providerSlotsRange.to,
-      title: availabilityCalendarCopy.title,
-      legendFree: availabilityCalendarCopy.free,
-      legendBusy: availabilityCalendarCopy.busy,
-      legendOut: availabilityCalendarCopy.out,
-    }),
+    () =>
+      buildProviderPublicProfileAvailabilityCalendarConfig({
+        locale,
+        availableIsoDays,
+        rangeStartIso: providerSlotsRange.from,
+        rangeEndIso: providerSlotsRange.to,
+      }),
     [
-      availabilityCalendarCopy.busy,
-      availabilityCalendarCopy.free,
-      availabilityCalendarCopy.out,
-      availabilityCalendarCopy.title,
       availableIsoDays,
+      locale,
       providerSlotsRange.from,
       providerSlotsRange.to,
     ],
@@ -329,37 +280,35 @@ export function useProviderPublicProfileModel() {
     });
   }, [longDateFormatter, nextSlotStartAt, provider?.availabilityState, provider?.nextAvailableAt, t]);
 
-  const statusLabel = hasRecentReview
-    ? t(I18N_KEYS.requestDetails.clientOnline)
-    : t(I18N_KEYS.requestDetails.clientActive);
-
-  const headerTags = [
-    ...(profileCard?.servicePreview ?? []),
-    provider?.cityName?.trim() || profileCard?.cityLabel,
-  ].filter((item): item is string => Boolean(item));
-
-  const priceLabel =
-    typeof provider?.basePrice === 'number'
-      ? formatPrice.format(provider.basePrice)
-      : t(I18N_KEYS.requestDetails.priceOnRequest);
-  const pricePrefixLabel =
-    typeof provider?.basePrice === 'number' ? `${t(I18N_KEYS.provider.basePrice)}:` : undefined;
-  const priceSuffixLabel =
-    typeof provider?.basePrice === 'number'
-      ? locale === 'de'
-        ? 'pro Stunde'
-        : 'per hour'
-      : undefined;
-
-  const aboutText = profileCard?.aboutPreview?.trim() || t(I18N_KEYS.requestsPage.reviewsEmptyHint);
-
-  const similarProvidersTitle = locale === 'de' ? 'Ähnliche Anbieter' : 'Similar providers';
-  const similarProvidersHint =
-    sameCityProviders.length === 0 && similarCards.length > 0
-      ? locale === 'de'
-        ? 'Aus derselben Leistungskategorie.'
-        : 'From the same service category.'
-      : undefined;
+  const {
+    statusLabel,
+    headerTags,
+    priceLabel,
+    pricePrefixLabel,
+    priceSuffixLabel,
+    aboutText,
+    similarProvidersTitle,
+    similarProvidersHint,
+  } = React.useMemo(
+    () =>
+      buildProviderPublicProfileViewModel({
+        provider,
+        profileCard,
+        hasRecentReview,
+        locale,
+        formatPrice,
+        t,
+        similarCardsLength: similarCards.length,
+        hasSameCityProviders: provider
+          ? providers.some(
+              (item) =>
+                item.id !== provider.id &&
+                getProviderCityKey(item) === getProviderCityKey(provider),
+            )
+          : false,
+      }),
+    [formatPrice, hasRecentReview, locale, profileCard, provider, providers, similarCards.length, t],
+  );
 
   return {
     t,

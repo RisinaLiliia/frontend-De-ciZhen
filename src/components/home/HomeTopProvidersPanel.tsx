@@ -1,21 +1,26 @@
 /* src/components/home/HomeTopProvidersPanel.tsx */
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
-import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
+import {
+  buildHomeCityLabelById,
+  buildHomeFavoriteProviderIds,
+  buildHomeTopProviderCards,
+  buildHomeTopProvidersById,
+  buildHomeTopProvidersNextPath,
+  rankHomeTopProviders,
+} from '@/components/home/homeTopProvidersPanel.model';
 import { listPublicProviders } from '@/lib/api/providers';
 import {
   buildProviderFavoriteLookup,
-  isProviderInFavoriteLookup,
   listFavorites,
 } from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { useProviderFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import { useCities } from '@/features/catalog/queries';
-import { pickI18n } from '@/lib/i18n/helpers';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -47,42 +52,12 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
-  const sortedProviders = React.useMemo(() => {
-    const max = Math.max(1, limit);
-    if (providers.length <= max) {
-      const copy = [...providers];
-      copy.sort((a, b) => b.ratingAvg - a.ratingAvg);
-      return copy;
-    }
-
-    const top: typeof providers = [];
-    for (const provider of providers) {
-      if (top.length === 0) {
-        top.push(provider);
-        continue;
-      }
-
-      let insertAt = -1;
-      for (let index = 0; index < top.length; index += 1) {
-        if (provider.ratingAvg > top[index].ratingAvg) {
-          insertAt = index;
-          break;
-        }
-      }
-
-      if (insertAt === -1) {
-        if (top.length < max) top.push(provider);
-      } else {
-        top.splice(insertAt, 0, provider);
-      }
-
-      if (top.length > max) top.length = max;
-    }
-
-    return top;
-  }, [limit, providers]);
+  const sortedProviders = React.useMemo(
+    () => rankHomeTopProviders(providers, limit),
+    [limit, providers],
+  );
   const providerById = React.useMemo(
-    () => new Map(sortedProviders.map((provider) => [provider.id, provider])),
+    () => buildHomeTopProvidersById(sortedProviders),
     [sortedProviders],
   );
   const { data: cities = [] } = useCities('DE');
@@ -90,18 +65,17 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     () => buildProviderFavoriteLookup(favoriteProviders),
     [favoriteProviders],
   );
-  const favoriteProviderIds = React.useMemo(() => {
-    const ids = new Set<string>();
-    for (const provider of sortedProviders) {
-      if (isProviderInFavoriteLookup(favoriteProviderLookup, provider)) {
-        ids.add(provider.id);
-      }
-    }
-    return ids;
-  }, [favoriteProviderLookup, sortedProviders]);
+  const favoriteProviderIds = React.useMemo(
+    () =>
+      buildHomeFavoriteProviderIds({
+        providers: sortedProviders,
+        favoriteProviderLookup,
+      }),
+    [favoriteProviderLookup, sortedProviders],
+  );
   const nextPath = React.useMemo(() => {
-    const qs = searchParams?.toString();
-    return `${pathname}${qs ? `?${qs}` : ''}`;
+    const qs = searchParams?.toString() ?? '';
+    return buildHomeTopProvidersNextPath(pathname, qs);
   }, [pathname, searchParams]);
   const {
     pendingFavoriteProviderIds,
@@ -116,44 +90,17 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     providerById,
   });
 
-  const cityLabelById = React.useMemo(() => {
-    const map = new Map<string, string>();
-    for (const city of cities) {
-      map.set(city.id, pickI18n(city.i18n, locale));
-    }
-    return map;
-  }, [cities, locale]);
+  const cityLabelById = React.useMemo(
+    () => buildHomeCityLabelById({ cities, locale }),
+    [cities, locale],
+  );
 
   const mappedProviders = React.useMemo(
     () =>
-      sortedProviders.map((provider) => {
-        const mapped = mapPublicProviderToCard({
-          t,
-          provider,
-          cityLabel:
-            (provider as { cityId?: string }).cityId
-              ? cityLabelById.get((provider as { cityId?: string }).cityId ?? '') ?? ''
-              : '',
-          profileHref: `/providers/${provider.id}`,
-          reviewsHref: `/providers/${provider.id}#reviews`,
-          ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
-          status: 'online',
-        });
-
-        const topBadge = {
-          type: 'top' as const,
-          size: 'md' as const,
-          label: t(I18N_KEYS.homePublic.providerBadgeTopAnbieter),
-          tooltip: t(I18N_KEYS.homePublic.providerBadgeTopAnbieterTooltip),
-        };
-
-        const secondary = mapped.badges.find((badge) => badge.type !== 'top') ?? null;
-
-        return {
-          ...mapped,
-          badges: secondary ? [topBadge, secondary] : [topBadge],
-          reviewPreview: t(I18N_KEYS.homePublic.providerReviewPreviewDefault),
-        };
+      buildHomeTopProviderCards({
+        t,
+        providers: sortedProviders,
+        cityLabelById,
       }),
     [cityLabelById, sortedProviders, t],
   );

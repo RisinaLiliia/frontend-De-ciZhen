@@ -1,15 +1,12 @@
 'use client';
 
-import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
-import { RequestsFilterSelect } from '@/components/requests/RequestsFilterSelect';
-import { IconDownload, IconFilter } from '@/components/ui/icons/icons';
-import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
+import { IconDownload } from '@/components/ui/icons/icons';
+import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import {
   ALL_CATEGORIES_VALUE,
   ALL_CITIES_VALUE,
-  ALL_SERVICES_VALUE,
   RANGE_OPTIONS,
   rangeLabel,
   rangeLabelShort,
@@ -76,135 +73,75 @@ export function StatisticsContextPanel({
   ) : null;
 
   const controlsInner = (
-    <>
-      <div className={`workspace-statistics-context__toolbar${showSummary ? ' workspace-statistics-context__toolbar--with-summary' : ''}`.trim()}>
-        <div className="workspace-statistics-context__header-actions">
-          <div className="workspace-statistics-context__range-wrap">
-            <RangeActionToolbar
-              className="workspace-statistics-context__range-toolbar"
-              groupLabel={copy.rangeGroupLabel}
-              options={RANGE_OPTIONS.map((option) => ({
-                value: option,
-                label: rangeLabel(option, copy),
-              }))}
-              value={filters.period}
-              onChange={onRangeChange}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="workspace-statistics-context__mobile-range-row">
-        <div className="workspace-statistics-context__range-wrap">
-          <RangeActionToolbar
-            className="workspace-statistics-context__range-toolbar"
-            groupLabel={copy.rangeGroupLabel}
-            options={RANGE_OPTIONS.map((option) => ({
-              value: option,
-              label: rangeLabelShort(option),
-            }))}
-            value={filters.period}
-            onChange={onRangeChange}
-          />
-        </div>
-      </div>
-
-      <div className="workspace-statistics-context__filters-shell">
-        <div className="requests-filter-grid requests-filter-grid--primary workspace-statistics-context__filters-grid">
-          <div className="requests-filter">
-            <RequestsFilterSelect
-              className="requests-select workspace-statistics-context__select"
-              value={cityValue}
-              onChange={(next) => onCityChange(next === ALL_CITIES_VALUE ? null : next)}
-              options={[
-                { value: ALL_CITIES_VALUE, label: copy.contextAllCitiesLabel },
-                ...cityOptions,
-              ]}
-              ariaLabel={copy.contextCityLabel}
-            />
-          </div>
-
-          <div className="requests-filter">
-            <RequestsFilterSelect
-              className="requests-select workspace-statistics-context__select"
-              value={categoryValue}
-              onChange={(next) => onCategoryChange(next === ALL_CATEGORIES_VALUE ? null : next)}
-              options={[
-                { value: ALL_CATEGORIES_VALUE, label: copy.contextAllCategoriesLabel },
-                ...categoryOptions,
-              ]}
-              ariaLabel={copy.contextCategoryLabel}
-            />
-          </div>
-
-          <div className="requests-filter">
-            <RequestsFilterSelect
-              className="requests-select workspace-statistics-context__select"
-              value={ALL_SERVICES_VALUE}
-              onChange={() => undefined}
-              options={[{ value: ALL_SERVICES_VALUE, label: copy.contextAllServicesLabel }]}
-              ariaLabel={copy.contextAllServicesLabel}
-              disabled
-            />
-          </div>
-        </div>
-
-        <div className="requests-filter-grid requests-filter-grid--secondary workspace-statistics-context__filters-actions">
-          <button
-            type="button"
-            className="panel-action icon-button--hint workspace-statistics-context__icon-action"
-            aria-label={copy.contextResetLabel}
-            title={copy.contextResetLabel}
-            onClick={onReset}
-          >
-            <IconFilter />
-          </button>
-          <button
-            type="button"
-            className="panel-action icon-button--hint workspace-statistics-context__icon-action"
-            aria-label={copy.exportLabel}
-            title={copy.exportLabel}
-            onClick={onExport}
-          >
-            <IconDownload />
-          </button>
-        </div>
-      </div>
-    </>
+    <WorkspaceSharedContextControls
+      title={copy.contextTitle}
+      resetLabel={copy.contextResetLabel}
+      closeLabel={closeLabel}
+      city={{
+        value: cityValue,
+        options: [
+          { value: ALL_CITIES_VALUE, label: copy.contextAllCitiesLabel },
+          ...cityOptions,
+        ],
+        ariaLabel: copy.contextCityLabel,
+        onChange: (next) => onCityChange(next === ALL_CITIES_VALUE ? null : next),
+        summaryLabel: selectedCityLabel,
+      }}
+      category={{
+        value: categoryValue,
+        options: [
+          { value: ALL_CATEGORIES_VALUE, label: copy.contextAllCategoriesLabel },
+          ...categoryOptions,
+        ],
+        ariaLabel: copy.contextCategoryLabel,
+        onChange: (next) => onCategoryChange(next === ALL_CATEGORIES_VALUE ? null : next),
+        summaryLabel: selectedCategoryLabel,
+      }}
+      range={{
+        value: filters.period,
+        options: RANGE_OPTIONS.map((option) => ({
+          value: option,
+          label: rangeLabel(option, copy),
+        })),
+        mobileOptions: RANGE_OPTIONS.map((option) => ({
+          value: option,
+          label: rangeLabelShort(option),
+        })),
+        groupLabel: copy.rangeGroupLabel,
+        onChange: onRangeChange,
+        summaryLabel: rangeLabelShort(filters.period),
+      }}
+      onReset={onReset}
+      action={{
+        label: copy.exportLabel,
+        onClick: onExport,
+        icon: <IconDownload />,
+        tooltip: copy.exportLabel,
+      }}
+      surface={surface === 'embedded' ? 'embedded' : 'shell'}
+      className="workspace-statistics-context__shared-controls"
+    />
   );
 
   const controlsBlock = showControls ? (
-    <>
-      <div className="workspace-statistics-context__controls-desktop">
-        {controlsInner}
-      </div>
-      {surface === 'embedded' ? (
-        <WorkspaceMobileFiltersSheet
-          title={copy.contextTitle}
-          closeLabel={closeLabel}
-          triggerLabel={copy.contextTitle}
-          summary={(
-            <>
-              <span className="workspace-mobile-filters__summary-chip">{rangeLabelShort(filters.period)}</span>
-              <span className="workspace-mobile-filters__summary-chip">{selectedCityLabel}</span>
-              <span className="workspace-mobile-filters__summary-chip">{selectedCategoryLabel}</span>
-            </>
-          )}
-          className="workspace-statistics-context__controls-mobile"
-        >
-          <div className="workspace-statistics-context workspace-statistics-context--embedded workspace-statistics-context--controls-only">
-            <div className="workspace-statistics-context__body">
-              {controlsInner}
-            </div>
-          </div>
-        </WorkspaceMobileFiltersSheet>
-      ) : null}
-    </>
+    <div className="workspace-statistics-context__controls-desktop">
+      {controlsInner}
+    </div>
   ) : null;
 
   const bodyContent = controlsPosition === 'top'
-    ? [controlsBlock, summaryBlock]
-    : [summaryBlock, controlsBlock];
+    ? (
+      <>
+        {controlsBlock}
+        {summaryBlock}
+      </>
+    )
+    : (
+      <>
+        {summaryBlock}
+        {controlsBlock}
+      </>
+    );
 
   const body = (
     <div className="workspace-statistics-context__body">

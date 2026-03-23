@@ -51,7 +51,7 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   const showMarketMap = showDemandMap && Boolean(cityActivity || summary || isMapLoading || isMapError);
 
   return (
-    <section className="home-intro-shell">
+    <section className="workspace-intro-shell">
       <div className="stack-md">
         <PersonalNavSection
           className="personal-nav--left"
@@ -63,7 +63,7 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
           surface="embedded"
         />
         {leftColumnSlot ? leftColumnSlot : null}
-        <WorkspaceMobileSectionSheet items={personalNavItems} />
+        {personalNavItems.length ? <WorkspaceMobileSectionSheet items={personalNavItems} /> : null}
         {showMarketMap ? (
           <div className={hideDemandMapOnMobile ? 'workspace-intro__mobile-hidden' : undefined}>
             <WorkspacePublicDemandMapPanel

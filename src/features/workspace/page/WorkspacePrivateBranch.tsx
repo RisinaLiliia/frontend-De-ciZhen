@@ -25,6 +25,7 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
     onToggleProviderFavorite,
     workspaceIntroNode,
     workspaceAsideBaseProps,
+    asideTopSlot,
     privateMain,
     primaryAction,
     isLoading,
@@ -44,12 +45,14 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
         isWorkspacePublicSection={false}
         isWorkspaceAuthed={isWorkspaceAuthed}
         activePublicSection={activePublicSection}
+        activeWorkspaceTab={activeWorkspaceTab}
         t={t}
         locale={locale}
         intro={workspaceIntroNode}
         explore={EMPTY_EXPLORE}
         privateMain={privateMain}
         publicMain={privateMain}
+        asideTopSlot={asideTopSlot}
         workspaceAsideBaseProps={workspaceAsideBaseProps}
         pendingFavoriteProviderIds={pendingFavoriteProviderIds}
         onToggleProviderFavorite={onToggleProviderFavorite}

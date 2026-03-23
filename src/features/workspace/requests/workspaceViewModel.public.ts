@@ -5,6 +5,8 @@ import type { ComponentProps } from 'react';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { PublicContent } from '@/features/workspace/requests/PublicContent';
 import type { RequestsFilters } from '@/components/requests/RequestsFilters';
+import { buildWorkspacePublicRequestsListProps } from '@/features/workspace/requests/workspaceViewModel.helpers';
+import { buildWorkspaceListContext } from '@/features/workspace/requests/workspaceViewModel.shared';
 import type {
   PublicInput,
 } from '@/features/workspace/requests/workspaceViewModel.types';
@@ -144,6 +146,25 @@ export function buildWorkspacePublicContentProps({
   onPrevPage,
   onNextPage,
 }: BuildPublicContentArgs): ComponentProps<typeof PublicContent> {
+  const listContext = buildWorkspaceListContext({
+    t,
+    locale,
+    isPersonalized,
+    offersByRequest,
+    favoriteRequestIds,
+    onToggleRequestFavorite,
+    onOpenOfferSheet,
+    onWithdrawOffer,
+    onOpenChatThread,
+    pendingOfferRequestId,
+    pendingFavoriteRequestIds,
+    serviceByKey,
+    categoryByKey,
+    cityById,
+    formatDate,
+    formatPrice,
+  });
+
   return {
     t,
     filtersProps,
@@ -155,30 +176,11 @@ export function buildWorkspacePublicContentProps({
     requestsCount,
     hasActivePublicFilter,
     emptyCtaHref: '/workspace?section=requests',
-    requestsListProps: {
-      t,
-      locale,
+    requestsListProps: buildWorkspacePublicRequestsListProps(listContext, {
       requests,
       isLoading,
       isError,
-      serviceByKey,
-      categoryByKey,
-      cityById,
-      formatDate,
-      formatPrice,
-      enableOfferActions: true,
-      hideRecurringBadge: isPersonalized,
-      showFavoriteButton: true,
-      offersByRequest,
-      favoriteRequestIds,
-      onToggleFavorite: onToggleRequestFavorite,
-      onSendOffer: onOpenOfferSheet,
-      onEditOffer: onOpenOfferSheet,
-      onWithdrawOffer,
-      onOpenChatThread,
-      pendingOfferRequestId,
-      pendingFavoriteRequestIds,
-    },
+    }),
     page,
     totalPages,
     resultsLabel: t(I18N_KEYS.requestsPage.resultsLabel),

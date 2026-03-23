@@ -57,7 +57,7 @@ export function WorkspacePrivateIntro({
   );
 
   return (
-    <section className="home-intro-shell">
+    <section className="workspace-intro-shell">
       <div className="stack-md">
         <PersonalNavSection
           className="personal-nav--left"
@@ -85,7 +85,7 @@ export function WorkspacePrivateIntro({
             />
           )}
         />
-        <WorkspaceMobileSectionSheet items={personalNavItems} />
+        {personalNavItems.length ? <WorkspaceMobileSectionSheet items={personalNavItems} /> : null}
         {showQuickAction ? (
           <section className="panel stack-sm workspace-intro__mobile-hidden" aria-label="Workspace quick action">
             <CreateRequestCard href={quickActionHref} />

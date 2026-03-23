@@ -26,6 +26,7 @@ export function WorkspaceShell({
 
   const sectionParam = searchParams.get('section');
   const tabParam = searchParams.get('tab');
+  const isOverviewRoute = sectionParam === 'overview';
   const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
   const resolvedSection = resolvePublicWorkspaceSection(sectionParam);
   const shouldPromoteReviewsSectionToTab =
@@ -35,10 +36,10 @@ export function WorkspaceShell({
     (forcedPublicSection ?? resolvedSection) === 'reviews';
   const resolvedWorkspaceTab = shouldPromoteReviewsSectionToTab ? 'reviews' : forcedWorkspaceTab;
   const activePublicSection = auth.status === 'loading' || auth.status === 'idle'
-    ? (forcedPublicSection ?? resolvedSection ?? 'requests')
+    ? (forcedPublicSection ?? resolvedSection ?? (isOverviewRoute ? null : 'requests'))
     : (forcedPublicSection
       ?? resolvedSection
-      ?? (auth.status === 'unauthenticated' ? 'requests' : null));
+      ?? (isOverviewRoute ? null : (auth.status === 'unauthenticated' ? 'requests' : null)));
   const resolvedPublicSection = resolvedWorkspaceTab ? null : activePublicSection;
 
   return (

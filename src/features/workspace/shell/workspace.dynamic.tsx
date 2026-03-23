@@ -28,7 +28,7 @@ export const WorkspacePrivateIntro = dynamic(
   () => import('@/features/workspace/requests/WorkspacePrivateIntro').then((mod) => mod.WorkspacePrivateIntro),
   {
     loading: () => (
-      <section className="home-intro-shell">
+      <section className="workspace-intro-shell">
         <div className="panel">
           <div className="skeleton h-48 w-full" />
         </div>
@@ -41,7 +41,7 @@ export const WorkspacePublicIntro = dynamic(
   () => import('@/features/workspace/requests/WorkspacePublicIntro').then((mod) => mod.WorkspacePublicIntro),
   {
     loading: () => (
-      <section className="home-intro-shell">
+      <section className="workspace-intro-shell">
         <div className="panel">
           <div className="skeleton h-48 w-full" />
         </div>

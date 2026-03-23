@@ -4,19 +4,15 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { listPublicProviders } from '@/lib/api/providers';
-import {
-  buildProviderFavoriteLookup,
-  isProviderInFavoriteLookup,
-  listFavorites,
-} from '@/lib/api/favorites';
+import { buildProviderFavoriteLookup, listFavorites } from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import {
+  buildProvidersExploreCollection,
+  formatProvidersTotalLabel,
+} from '@/components/requests/providersExplore.model';
 import { ALL_OPTION_KEY } from '@/features/workspace/requests';
+import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import type { Locale } from '@/lib/i18n/t';
-
-type FilterOption = {
-  value: string;
-  label: string;
-};
 
 type Args = {
   locale: Locale;
@@ -69,87 +65,48 @@ export function useProvidersExploreData({
     queryFn: () => withStatusFallback(() => listFavorites('provider'), [], [401, 403]),
   });
 
-  const providerById = React.useMemo(
-    () => new Map(providers.map((provider) => [provider.id, provider])),
-    [providers],
-  );
-
   const favoriteProviderLookup = React.useMemo(
     () => buildProviderFavoriteLookup(favoriteProviders),
     [favoriteProviders],
   );
 
-  const favoriteProviderIds = React.useMemo(
+  const {
+    providerById,
+    favoriteProviderIds,
+    pagedProviders,
+    totalProviderPages,
+    filteredProvidersCount,
+  } = React.useMemo(
     () =>
-      new Set(
-        providers
-          .filter((provider) => isProviderInFavoriteLookup(favoriteProviderLookup, provider))
-          .map((provider) => provider.id),
-      ),
-    [favoriteProviderLookup, providers],
+      buildProvidersExploreCollection({
+        providers,
+        favoriteProviderLookup,
+        categoryKey,
+        subcategoryKey,
+        cityId,
+        services,
+        cityOptions,
+        sortBy,
+        page,
+        limit,
+      }),
+    [
+      categoryKey,
+      cityId,
+      cityOptions,
+      favoriteProviderLookup,
+      limit,
+      page,
+      providers,
+      services,
+      sortBy,
+      subcategoryKey,
+    ],
   );
 
-  const categoryServiceKeys = React.useMemo(() => {
-    if (categoryKey === ALL_OPTION_KEY) return null;
-    const keys = services
-      .filter((service) => service.categoryKey === categoryKey)
-      .map((service) => service.key);
-    return new Set(keys);
-  }, [categoryKey, services]);
-
-  const filteredProviders = React.useMemo(() => {
-    const getProviderServiceKeys = (provider: (typeof providers)[number]) => {
-      const direct = (provider as { serviceKey?: string | null }).serviceKey;
-      const list = (provider as { serviceKeys?: string[] | null }).serviceKeys;
-      const values = [
-        ...(Array.isArray(list) ? list : []),
-        ...(typeof direct === 'string' && direct.trim().length > 0 ? [direct] : []),
-      ]
-        .map((value) => value?.trim())
-        .filter((value): value is string => Boolean(value));
-      return new Set(values);
-    };
-
-    const selectedCityLabel =
-      cityId !== ALL_OPTION_KEY
-        ? cityOptions.find((option) => option.value === cityId)?.label?.trim().toLowerCase()
-        : '';
-
-    return providers.filter((provider) => {
-      if (cityId !== ALL_OPTION_KEY) {
-        const providerCityId = (provider as { cityId?: string | null }).cityId ?? '';
-        const providerCityName = (
-          (provider as { cityName?: string | null }).cityName ??
-          (provider as { city?: string | null }).city ??
-          ''
-        )
-          .trim()
-          .toLowerCase();
-        const matchesById = providerCityId === cityId;
-        const matchesByName = Boolean(selectedCityLabel) && providerCityName === selectedCityLabel;
-        if (!matchesById && !matchesByName) return false;
-      }
-
-      const providerServiceKeys = getProviderServiceKeys(provider);
-      if (subcategoryKey !== ALL_OPTION_KEY) {
-        return providerServiceKeys.has(subcategoryKey);
-      }
-      if (categoryServiceKeys) {
-        if (providerServiceKeys.size === 0) return false;
-        for (const key of providerServiceKeys) {
-          if (categoryServiceKeys.has(key)) return true;
-        }
-        return false;
-      }
-      return true;
-    });
-  }, [categoryServiceKeys, cityId, cityOptions, providers, subcategoryKey]);
-
-  const totalProviders = filteredProviders.length;
-  const totalProviderPages = Math.max(1, Math.ceil(totalProviders / limit));
   const totalProvidersLabel = React.useMemo(
-    () => new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US').format(totalProviders),
-    [locale, totalProviders],
+    () => formatProvidersTotalLabel(locale, filteredProvidersCount),
+    [filteredProvidersCount, locale],
   );
 
   React.useEffect(() => {
@@ -164,22 +121,6 @@ export function useProvidersExploreData({
     onListDensityChange?.(providersListDensity);
   }, [isProvidersView, onListDensityChange, providersListDensity]);
 
-  const sortedProviders = React.useMemo(() => {
-    const copy = [...filteredProviders];
-    copy.sort((a, b) => {
-      if (sortBy === 'date_asc') return a.ratingAvg - b.ratingAvg;
-      if (sortBy === 'price_asc') return (a.basePrice ?? 0) - (b.basePrice ?? 0);
-      if (sortBy === 'price_desc') return (b.basePrice ?? 0) - (a.basePrice ?? 0);
-      return b.ratingAvg - a.ratingAvg;
-    });
-    return copy;
-  }, [filteredProviders, sortBy]);
-
-  const pagedProviders = React.useMemo(() => {
-    const start = (Math.max(1, page) - 1) * limit;
-    return sortedProviders.slice(start, start + limit);
-  }, [limit, page, sortedProviders]);
-
   return {
     isProvidersLoading,
     isProvidersError,
@@ -189,7 +130,7 @@ export function useProvidersExploreData({
     pagedProviders,
     totalProviderPages,
     totalProvidersLabel,
-    filteredProvidersCount: filteredProviders.length,
+    filteredProvidersCount,
     providersListDensity,
     setProvidersListDensity,
   };

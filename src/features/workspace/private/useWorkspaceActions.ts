@@ -11,6 +11,14 @@ import { createThread } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { workspaceQK } from '@/features/workspace/requests';
+import {
+  buildWorkspaceActionsResult,
+  buildWorkspaceOfferLoginHref,
+  buildWorkspaceOfferSheetHref,
+  buildWorkspaceOwnerRequestActions,
+  resolveWorkspaceChatNavigation,
+  resolveWorkspaceOfferById,
+} from '@/features/workspace/private/workspaceActions.model';
 
 type RouterLike = {
   push: (href: string) => void;
@@ -34,17 +42,17 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
     (requestId: string) => {
       if (!isAuthed) {
         toast.message(t(I18N_KEYS.requestDetails.loginRequired));
-        router.push(`/auth/login?next=${encodeURIComponent(`/requests/${requestId}?offer=1`)}`);
+        router.push(buildWorkspaceOfferLoginHref(requestId));
         return;
       }
-      router.push(`/requests/${requestId}?offer=1`);
+      router.push(buildWorkspaceOfferSheetHref(requestId));
     },
     [isAuthed, router, t],
   );
 
   const onWithdrawOffer = React.useCallback(
     async (offerId: string) => {
-      const offer = myOffers.find((item) => item.id === offerId);
+      const offer = resolveWorkspaceOfferById(myOffers, offerId);
       if (!offer) return;
       setPendingOfferRequestId(offer.requestId);
       try {
@@ -63,16 +71,12 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
   const onOpenChatThread = React.useCallback(
     async (offer: OfferDto) => {
       try {
-        const providerUserId = offer.providerUserId?.trim();
-        if (!providerUserId || !offer.requestId) {
-          router.push('/chat');
+        const navigation = resolveWorkspaceChatNavigation(offer);
+        if (!navigation.threadInput) {
+          router.push(navigation.fallbackHref);
           return;
         }
-        const thread = await createThread({
-          requestId: offer.requestId,
-          providerUserId,
-          offerId: offer.id,
-        });
+        const thread = await createThread(navigation.threadInput);
         await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
         router.push(`/chat/${thread.id}`);
       } catch (error) {
@@ -107,18 +111,29 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
   }, [onDeleteMyRequest]);
 
   const ownerRequestActions = React.useMemo(
-    () => ({
-      onDelete: onDeleteMyRequestVoid,
-      pendingDeleteRequestId,
-    }),
+    () =>
+      buildWorkspaceOwnerRequestActions({
+        onDelete: onDeleteMyRequestVoid,
+        pendingDeleteRequestId,
+      }),
     [onDeleteMyRequestVoid, pendingDeleteRequestId],
   );
 
-  return {
-    pendingOfferRequestId,
-    ownerRequestActions,
-    onOpenOfferSheet,
-    onWithdrawOffer,
-    onOpenChatThread,
-  };
+  return React.useMemo(
+    () =>
+      buildWorkspaceActionsResult({
+        pendingOfferRequestId,
+        ownerRequestActions,
+        onOpenOfferSheet,
+        onWithdrawOffer,
+        onOpenChatThread,
+      }),
+    [
+      onOpenChatThread,
+      onOpenOfferSheet,
+      onWithdrawOffer,
+      ownerRequestActions,
+      pendingOfferRequestId,
+    ],
+  );
 }

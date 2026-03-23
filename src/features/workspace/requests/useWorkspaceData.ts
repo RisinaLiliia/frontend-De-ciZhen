@@ -3,22 +3,15 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-import type { RequestResponseDto } from '@/lib/api/dto/requests';
-import { listMyRequests } from '@/lib/api/requests';
-import { listPublicProviders } from '@/lib/api/providers';
-import { listMyContracts } from '@/lib/api/contracts';
-import { listMyProviderOffers } from '@/lib/api/offers';
-import { listFavorites } from '@/lib/api/favorites';
-import { listMyReviews } from '@/lib/api/reviews';
-import {
-  getWorkspacePrivateOverview,
-  getWorkspacePublicOverview,
-  getWorkspacePublicRequestsBatch,
-} from '@/lib/api/workspace';
-import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { getAccessToken } from '@/lib/auth/token';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
-import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
+import {
+  buildWorkspaceOfferRequestIds,
+  resolveWorkspaceDataPlan,
+} from '@/features/workspace/requests/workspaceData.model';
+import {
+  buildWorkspaceDataQueries,
+  buildWorkspaceOfferRequestsQuery,
+} from '@/features/workspace/requests/workspaceData.queries';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
 
@@ -42,143 +35,98 @@ export function useWorkspaceData(params: Params) {
     shouldLoadPrivateData,
     activeWorkspaceTab,
   } = params;
-  const shouldLoadPublicRequests = isWorkspacePublicSection || !isWorkspaceAuthed;
-  const shouldLoadMyRequests =
-    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-requests';
-  const shouldLoadMyOffers =
-    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-offers';
-  const shouldLoadMyContracts =
-    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'completed-jobs';
-  const shouldLoadFavoriteRequests =
-    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'favorites';
   const hasAccessToken = Boolean(getAccessToken());
-
-  const { data: publicOverview, isLoading, isError } = useQuery({
-    queryKey: workspaceQK.workspacePublicOverview({
-      cityId: filter.cityId,
-      categoryKey: filter.categoryKey,
-      subcategoryKey: filter.subcategoryKey,
-      sort: filter.sort,
-      page: filter.page,
-      limit: filter.limit,
-      activityRange: undefined,
-      cityActivityLimit: undefined,
-    }),
-    enabled: shouldLoadPublicRequests,
-    queryFn: () =>
-      getWorkspacePublicOverview({
-        cityId: filter.cityId,
-        categoryKey: filter.categoryKey,
-        subcategoryKey: filter.subcategoryKey,
-        sort: filter.sort,
-        page: filter.page,
-        limit: filter.limit,
+  const loadPlan = React.useMemo(
+    () =>
+      resolveWorkspaceDataPlan({
+        isAuthed,
+        isWorkspaceAuthed,
+        isWorkspacePublicSection,
+        shouldLoadPrivateData,
+        activeWorkspaceTab,
+        hasAccessToken,
       }),
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-  });
+    [
+      activeWorkspaceTab,
+      hasAccessToken,
+      isAuthed,
+      isWorkspaceAuthed,
+      isWorkspacePublicSection,
+      shouldLoadPrivateData,
+    ],
+  );
+
+  const workspaceDataQueries = React.useMemo(
+    () =>
+      buildWorkspaceDataQueries({
+        filter,
+        loadPlan,
+        hasAccessToken,
+      }),
+    [
+      filter,
+      hasAccessToken,
+      loadPlan,
+    ],
+  );
+
+  const { data: publicOverview, isLoading, isError } = useQuery(workspaceDataQueries.publicOverview);
   const publicRequests = publicOverview?.requests;
 
   const {
     data: publicSummaryOverview,
     isLoading: isPublicSummaryLoading,
     isError: isPublicSummaryError,
-  } = useQuery({
-    queryKey: workspaceQK.workspacePublicSummary(WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
-    enabled: true,
-    queryFn: () =>
-      getWorkspacePublicOverview({
-        page: 1,
-        limit: 1,
-        cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
-      }),
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-  });
+  } = useQuery(workspaceDataQueries.publicSummary);
   const allRequestsSummary = publicSummaryOverview?.summary;
   const publicCityActivity = publicSummaryOverview?.cityActivity;
 
-  const { data: workspacePrivateOverview } = useQuery({
-    queryKey: workspaceQK.workspacePrivateOverview(),
-    enabled: isWorkspaceAuthed && shouldLoadPrivateData && hasAccessToken,
-    queryFn: () =>
-      hasAccessToken
-        ? withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403])
-        : Promise.resolve(null),
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-  });
+  const { data: workspacePrivateOverview } = useQuery(workspaceDataQueries.privateOverview);
 
-  const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery({
-    queryKey: workspaceQK.offersMy(),
-    enabled: shouldLoadMyOffers,
-    queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
-  });
+  const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery(workspaceDataQueries.myOffers);
 
   const myOfferRequestIds = React.useMemo(
-    () => Array.from(new Set(myOffers.map((offer) => offer.requestId).filter(Boolean))),
+    () => buildWorkspaceOfferRequestIds(myOffers),
     [myOffers],
   );
-  const shouldLoadOfferRequests = isWorkspaceAuthed && activeWorkspaceTab === 'my-offers';
-  const shouldLoadReviews = isWorkspaceAuthed && activeWorkspaceTab === 'reviews';
 
-  const { data: myOfferRequestsById = new Map<string, RequestResponseDto>() } = useQuery({
-    queryKey: workspaceQK.requestsByMyOfferIds(locale, myOfferRequestIds),
-    enabled: shouldLoadOfferRequests && myOfferRequestIds.length > 0,
-    queryFn: async () => {
-      const batch = await getWorkspacePublicRequestsBatch(myOfferRequestIds);
-      return new Map<string, RequestResponseDto>(batch.items.map((request) => [request.id, request]));
-    },
-  });
+  const myOfferRequestsQuery = React.useMemo(
+    () =>
+      buildWorkspaceOfferRequestsQuery({
+        locale,
+        requestIds: myOfferRequestIds,
+        enabled: loadPlan.shouldLoadOfferRequests,
+      }),
+    [loadPlan.shouldLoadOfferRequests, locale, myOfferRequestIds],
+  );
 
-  const { data: favoriteRequests = [], isLoading: isFavoriteRequestsLoading } = useQuery({
-    queryKey: workspaceQK.favoriteRequests(),
-    enabled: shouldLoadFavoriteRequests,
-    queryFn: () => withStatusFallback(() => listFavorites('request'), []),
-  });
+  const { data: myOfferRequestsById = new Map() } = useQuery(myOfferRequestsQuery);
 
-  const { data: favoriteProviders = [], isLoading: isFavoriteProvidersLoading } = useQuery({
-    queryKey: workspaceQK.favoriteProviders(),
-    enabled: isAuthed && shouldLoadPrivateData,
-    queryFn: () => withStatusFallback(() => listFavorites('provider'), []),
-  });
+  const { data: favoriteRequests = [], isLoading: isFavoriteRequestsLoading } = useQuery(
+    workspaceDataQueries.favoriteRequests,
+  );
 
-  const { data: myReviews = [], isLoading: isMyReviewsLoading } = useQuery({
-    queryKey: workspaceQK.reviewsMy(),
-    enabled: shouldLoadReviews && shouldLoadPrivateData,
-    queryFn: () => withStatusFallback(() => listMyReviews({ role: 'all' }), []),
-  });
+  const { data: favoriteProviders = [], isLoading: isFavoriteProvidersLoading } = useQuery(
+    workspaceDataQueries.favoriteProviders,
+  );
 
-  const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery({
-    queryKey: workspaceQK.requestsMy(),
-    enabled: shouldLoadMyRequests,
-    queryFn: () => withStatusFallback(() => listMyRequests(), []),
-  });
+  const { data: myReviews = [], isLoading: isMyReviewsLoading } = useQuery(workspaceDataQueries.myReviews);
 
-  const { data: myProviderContracts = [], isLoading: isProviderContractsLoading } = useQuery({
-    queryKey: workspaceQK.contractsMyProvider(),
-    enabled: shouldLoadMyContracts,
-    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'provider' }), []),
-  });
+  const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery(workspaceDataQueries.myRequests);
 
-  const { data: myClientContracts = [], isLoading: isClientContractsLoading } = useQuery({
-    queryKey: workspaceQK.contractsMyClient(),
-    enabled: shouldLoadMyContracts,
-    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), []),
-  });
+  const { data: myProviderContracts = [], isLoading: isProviderContractsLoading } = useQuery(
+    workspaceDataQueries.myProviderContracts,
+  );
+
+  const { data: myClientContracts = [], isLoading: isClientContractsLoading } = useQuery(
+    workspaceDataQueries.myClientContracts,
+  );
 
   const {
     data: providers = [],
     isLoading: isProvidersLoading,
     isError: isProvidersError,
-  } = useQuery({
-    queryKey: workspaceQK.providersPublic(),
-    enabled: !isWorkspacePublicSection && shouldLoadPrivateData,
-    queryFn: () => listPublicProviders(),
-    staleTime: 5 * 60 * 1000,
-    gcTime: 15 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
+  } = useQuery(workspaceDataQueries.providers);
 
   return {
     publicRequests,

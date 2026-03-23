@@ -1,6 +1,8 @@
 /* src/styles/features/requests/requests-shell.css */
 
 @import './requests-shell-nav.css';
+@import './requests-shell-environment.css';
+@import './requests-shell-overview.css';
 @import './requests-shell-stats-map.css';
 @import './requests-shell-filters.css';
 @import './requests-shell-results.css';
