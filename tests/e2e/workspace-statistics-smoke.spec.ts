@@ -244,6 +244,7 @@ test('workspace stats smoke: range switch + demand/city pagination', async ({ pa
   await page.goto('/workspace?section=stats');
 
   await expect(page.locator('.workspace-statistics')).toBeVisible();
+  await expect(page.locator('.skeleton')).toHaveCount(0);
   await expect(page.locator('.workspace-statistics-insights')).toContainText('Insight body 30d');
 
   const demandPanel = page.locator('.workspace-statistics__demand-pagination');
@@ -257,6 +258,7 @@ test('workspace stats smoke: range switch + demand/city pagination', async ({ pa
   await expect(page.locator('.workspace-statistics-city-list__item').first()).toContainText('City 16');
 
   await page.locator('.workspace-statistics .home-activity__ranges button').nth(1).click();
+  await expect(page.locator('.skeleton')).toHaveCount(0);
   await expect(page.locator('.workspace-statistics-insights')).toContainText('Insight body 7d');
 
   expect(statsRangesRequested).toContain('30d');

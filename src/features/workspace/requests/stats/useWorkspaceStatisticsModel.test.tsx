@@ -14,6 +14,53 @@ vi.mock('@/lib/api/workspace', () => ({
   getWorkspaceStatistics: vi.fn(),
 }));
 
+const navigationState = vi.hoisted(() => {
+  let pathname = '/workspace';
+  let search = '';
+  const listeners = new Set<() => void>();
+  const replace = vi.fn((href: string) => {
+    const url = new URL(href, 'http://localhost');
+    pathname = url.pathname;
+    search = url.search.startsWith('?') ? url.search.slice(1) : url.search;
+    listeners.forEach((listener) => listener());
+  });
+
+  return {
+    replace,
+    getPathname: () => pathname,
+    getSearch: () => search,
+    subscribe: (listener: () => void) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    reset: () => {
+      pathname = '/workspace';
+      search = '';
+      replace.mockClear();
+    },
+  };
+});
+
+vi.mock('next/navigation', async () => {
+  const ReactModule = await import('react');
+
+  return {
+    useRouter: () => ({
+      replace: navigationState.replace,
+    }),
+    usePathname: () => navigationState.getPathname(),
+    useSearchParams: () => {
+      const query = ReactModule.useSyncExternalStore(
+        navigationState.subscribe,
+        navigationState.getSearch,
+        navigationState.getSearch,
+      );
+
+      return new URLSearchParams(query);
+    },
+  };
+});
+
 const getWorkspaceStatisticsMock = vi.mocked(workspaceApi.getWorkspaceStatistics);
 
 function createQueryClient() {
@@ -218,6 +265,7 @@ afterEach(() => {
 describe('useWorkspaceStatisticsModel', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    navigationState.reset();
   });
 
   it('loads statistics from BFF and refetches by selected range', async () => {
