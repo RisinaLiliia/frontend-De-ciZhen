@@ -4,7 +4,7 @@ import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import type { ProviderReviewSort } from '@/features/providers/publicProfile/useProviderReviewsModel';
-import type { ReviewRange } from '@/lib/api/dto/reviews';
+import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import {
   DEFAULT_WORKSPACE_REVIEW_RANGE,
   DEFAULT_WORKSPACE_REVIEW_SORT,
@@ -17,7 +17,7 @@ function parseReviewSort(value: string | null): ProviderReviewSort {
   return value === 'top' ? 'top' : DEFAULT_WORKSPACE_REVIEW_SORT;
 }
 
-function parseReviewRange(value: string | null): ReviewRange {
+function parseReviewRange(value: string | null): WorkspaceStatisticsRange {
   if (value === '24h' || value === '7d' || value === '90d') return value;
   return DEFAULT_WORKSPACE_REVIEW_RANGE;
 }
@@ -46,7 +46,7 @@ export function useWorkspaceReviewControlsState() {
     });
   }, [replaceParams]);
 
-  const setReviewRange = React.useCallback((next: ReviewRange) => {
+  const setReviewRange = React.useCallback((next: WorkspaceStatisticsRange) => {
     replaceParams((params) => {
       if (next === DEFAULT_WORKSPACE_REVIEW_RANGE) {
         params.delete(REVIEW_RANGE_QUERY_KEY);

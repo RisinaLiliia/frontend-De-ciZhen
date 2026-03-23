@@ -18,7 +18,6 @@ type WorkspacePublicDemandMapPanelProps = {
   summary?: WorkspacePublicSummaryDto | null;
   isLoading?: boolean;
   isError?: boolean;
-  surface?: 'panel' | 'embedded';
 };
 
 export function WorkspacePublicDemandMapPanel({
@@ -28,7 +27,6 @@ export function WorkspacePublicDemandMapPanel({
   summary,
   isLoading = false,
   isError = false,
-  surface = 'panel',
 }: WorkspacePublicDemandMapPanelProps) {
   const formatNumber = React.useMemo(
     () => new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US'),
@@ -59,7 +57,6 @@ export function WorkspacePublicDemandMapPanel({
       hasCoordinates={hasCoordinates}
       isLoading={isLoading}
       isError={isError}
-      surface={surface}
       activeRequestsCount={activeRequestsCount}
       activeProvidersCount={activeProvidersCount}
       mapHostRef={mapHostRef}

@@ -2,12 +2,11 @@
 
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../useWorkspaceStatisticsModel';
 import type { TranslateFn } from './statisticsSections.types';
 
 export function StatisticsDemandPanel({
   copy,
-  subtitle,
   demandRows,
   visibleDemandRows,
   safeDemandPage,
@@ -17,7 +16,6 @@ export function StatisticsDemandPanel({
   t,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
-  subtitle?: string;
   demandRows: WorkspaceStatisticsModel['demandRows'];
   visibleDemandRows: WorkspaceStatisticsModel['demandRows'];
   safeDemandPage: number;
@@ -30,7 +28,7 @@ export function StatisticsDemandPanel({
     <section className="panel requests-stats-chart">
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.demandTitle}</p>
-        <p className="section-subtitle">{subtitle ?? copy.demandSubtitle}</p>
+        <p className="section-subtitle">{copy.demandSubtitle}</p>
       </header>
       {demandRows.length === 0 ? (
         <p className="workspace-statistics__empty">{copy.emptyDemand}</p>

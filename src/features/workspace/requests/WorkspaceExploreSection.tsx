@@ -132,7 +132,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
       <div className={exploreGridClassName}>
         <div>
           {activeSection === 'reviews' ? (
-            <PlatformReviewsPanel t={t} locale={locale} showInlineRail={!isDesktop} />
+            <PlatformReviewsPanel t={t} locale={locale} />
           ) : activeSection === 'profile' ? (
             <ProfileOnboardingPanel />
           ) : (

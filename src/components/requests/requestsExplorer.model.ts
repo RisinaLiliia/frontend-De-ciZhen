@@ -24,7 +24,7 @@ export function hasDefaultPublicFilter(filter: PublicFilter) {
     !filter.subcategoryKey &&
     (filter.sort ?? 'date_desc') === 'date_desc' &&
     (filter.page ?? 1) === 1 &&
-    (filter.limit ?? 20) === 20
+    (filter.limit ?? 10) === 10
   );
 }
 

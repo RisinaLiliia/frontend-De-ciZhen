@@ -46,7 +46,7 @@ import {
 
 type Translate = (key: I18nKey) => string;
 
-const REVIEWS_PAGE_SIZE = 20;
+const REVIEWS_PAGE_SIZE = 6;
 const EMPTY_PLATFORM_OVERVIEW = {
   items: [] as Array<{
     id: string;

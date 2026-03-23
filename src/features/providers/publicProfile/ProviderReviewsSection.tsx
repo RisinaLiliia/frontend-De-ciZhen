@@ -21,7 +21,6 @@ type ProviderReviewsSectionProps = {
   reviewsDistribution: ProviderReviewsDistribution;
   reviewsUi: ProviderReviewsUi;
   reviewSort: ProviderReviewSort;
-  showSortControls?: boolean;
   onReviewSortChange: (next: ProviderReviewSort) => void;
   feedTopSlot?: React.ReactNode;
   emptyHint?: string;
@@ -45,7 +44,6 @@ export function ProviderReviewsSection({
   reviewsDistribution,
   reviewsUi,
   reviewSort,
-  showSortControls = true,
   onReviewSortChange,
   feedTopSlot,
   emptyHint,
@@ -98,26 +96,24 @@ export function ProviderReviewsSection({
               <span className="provider-reviews-hub__toolbar-label">
                 {reviewsUi.basedOn} {displayRatingCount} {reviewsUi.ratingsLabel}
               </span>
-              {showSortControls ? (
-                <div className="provider-reviews-hub__sort">
-                  <button
-                    type="button"
-                    className={`provider-reviews-hub__sort-btn ${reviewSort === 'latest' ? 'is-active' : ''}`.trim()}
-                    aria-pressed={reviewSort === 'latest'}
-                    onClick={() => onReviewSortChange('latest')}
-                  >
-                    {reviewsUi.sortLatest}
-                  </button>
-                  <button
-                    type="button"
-                    className={`provider-reviews-hub__sort-btn ${reviewSort === 'top' ? 'is-active' : ''}`.trim()}
-                    aria-pressed={reviewSort === 'top'}
-                    onClick={() => onReviewSortChange('top')}
-                  >
-                    {reviewsUi.sortTop}
-                  </button>
-                </div>
-              ) : null}
+              <div className="provider-reviews-hub__sort">
+                <button
+                  type="button"
+                  className={`provider-reviews-hub__sort-btn ${reviewSort === 'latest' ? 'is-active' : ''}`.trim()}
+                  aria-pressed={reviewSort === 'latest'}
+                  onClick={() => onReviewSortChange('latest')}
+                >
+                  {reviewsUi.sortLatest}
+                </button>
+                <button
+                  type="button"
+                  className={`provider-reviews-hub__sort-btn ${reviewSort === 'top' ? 'is-active' : ''}`.trim()}
+                  aria-pressed={reviewSort === 'top'}
+                  onClick={() => onReviewSortChange('top')}
+                >
+                  {reviewsUi.sortTop}
+                </button>
+              </div>
             </div>
 
             <div className="provider-reviews-hub__list">

@@ -5,7 +5,6 @@ import * as React from 'react';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { WorkspaceOverlaySurface } from '../WorkspaceOverlaySurface';
-import { useDecisionDashboardModel } from './useDecisionDashboardModel';
 import { WorkspaceStatisticsPanel } from '../WorkspaceStatisticsPanel';
 
 export function WorkspaceStatisticsExperience({
@@ -17,8 +16,6 @@ export function WorkspaceStatisticsExperience({
   t: (key: I18nKey) => string;
   locale: Locale;
 }) {
-  const model = useDecisionDashboardModel({ locale });
-
   const overlayIntro = React.useCallback(() => {
     if (!React.isValidElement(intro)) {
       return intro;
@@ -37,7 +34,7 @@ export function WorkspaceStatisticsExperience({
   return (
     <WorkspaceOverlaySurface intro={overlayIntro()}>
       <div className="workspace-statistics-experience__content">
-        <WorkspaceStatisticsPanel t={t} locale={locale} model={model} />
+        <WorkspaceStatisticsPanel t={t} locale={locale} />
       </div>
     </WorkspaceOverlaySurface>
   );

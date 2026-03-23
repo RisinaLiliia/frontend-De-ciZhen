@@ -7,7 +7,7 @@
   }
 
   .personal-nav__item--secondary .personal-nav__rating {
-    gap: var(--space-0-5);
+    gap: 2px;
   }
 
   .personal-nav__item--secondary .rating-summary__line {
@@ -29,7 +29,7 @@
   }
 
   .personal-nav__item--secondary[data-nav-key='reviews'] {
-    gap: var(--space-1-5);
+    gap: 6px;
   }
 
   .personal-nav__item--secondary[data-nav-key='reviews'] .personal-nav__top {
@@ -68,7 +68,7 @@
   }
 
   .activity-insight__track {
-    height: var(--space-2-5);
+    height: 10px;
     border-radius: 999px;
     background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
     border: 1px solid var(--surface-soft-border);

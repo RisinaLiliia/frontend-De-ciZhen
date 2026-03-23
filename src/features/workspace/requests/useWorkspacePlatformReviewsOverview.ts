@@ -91,7 +91,6 @@ export function useWorkspacePlatformReviewsOverview({
             limit,
             offset: reviewsOffset,
             sort: sortValue,
-            range: reviewRange,
           }),
         {
           ...EMPTY_PLATFORM_OVERVIEW,

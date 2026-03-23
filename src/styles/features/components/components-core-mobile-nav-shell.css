@@ -1,10 +1,8 @@
 /* src/styles/features/components/components-core-mobile-nav-shell.css */
 
 @layer components {
-  @media (min-width: 821px) {
-    .topbar-nav--mobile {
-      display: none;
-    }
+  .topbar-nav--mobile {
+    display: none;
   }
 
   @media (max-width: 820px) {
