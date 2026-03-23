@@ -2,36 +2,16 @@
 
 import * as React from 'react';
 
-import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { trackUXEvent } from '@/lib/analytics';
-import { ALL_OPTION_KEY } from '@/features/workspace/requests';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import {
+  resolveWorkspacePublicEmptyResultPayload,
+  resolveWorkspacePublicRequestsPageClamp,
+  resolveWorkspacePublicRequestsState,
+  type WorkspacePublicRequestsStateArgs,
+} from './workspacePublicRequestsState.model';
 
-type RequestsResponse = {
-  items: RequestResponseDto[];
-  total: number;
-};
-
-type SummaryResponse = {
-  totalPublishedRequests: number;
-  totalActiveProviders: number;
-};
-
-type Args = {
-  publicRequests: RequestsResponse | undefined;
-  allRequestsSummary: SummaryResponse | undefined;
-  limit: number;
-  page?: number;
+type Args = WorkspacePublicRequestsStateArgs & {
   setPage?: (page: number) => void;
-  isWorkspacePublicSection: boolean;
-  activePublicSection: PublicWorkspaceSection | null;
-  isLoading: boolean;
-  isError: boolean;
-  hasActivePublicFilter: boolean;
-  cityId: string;
-  categoryKey: string;
-  subcategoryKey: string;
-  sortBy: string;
 };
 
 export function useWorkspacePublicRequestsState({
@@ -50,28 +30,37 @@ export function useWorkspacePublicRequestsState({
   subcategoryKey,
   sortBy,
 }: Args) {
-  const requests = React.useMemo(() => publicRequests?.items ?? [], [publicRequests]);
-  const totalResults = publicRequests?.total ?? requests.length;
-  const platformRequestsTotal = allRequestsSummary?.totalPublishedRequests ?? 0;
-  const totalPages = Math.max(1, Math.ceil(totalResults / limit));
+  const { requests, totalResults, platformRequestsTotal, totalPages } = React.useMemo(
+    () =>
+      resolveWorkspacePublicRequestsState({
+        publicRequests,
+        allRequestsSummary,
+        limit,
+      }),
+    [allRequestsSummary, limit, publicRequests],
+  );
 
   React.useEffect(() => {
-    if (typeof page !== 'number' || !setPage) return;
-    if (page > totalPages) setPage(totalPages);
+    if (!setPage) return;
+    const nextPage = resolveWorkspacePublicRequestsPageClamp(page, totalPages);
+    if (nextPage !== null) setPage(nextPage);
   }, [page, setPage, totalPages]);
 
   React.useEffect(() => {
-    const isPublicRequestsContext = isWorkspacePublicSection && activePublicSection === 'requests';
-    if (!isPublicRequestsContext) return;
-    if (isLoading || isError || requests.length > 0) return;
-    trackUXEvent('workspace_empty_result', {
-      tab: 'public-requests',
-      hasFilters: hasActivePublicFilter,
-      cityId: cityId === ALL_OPTION_KEY ? null : cityId,
-      categoryKey: categoryKey === ALL_OPTION_KEY ? null : categoryKey,
-      subcategoryKey: subcategoryKey === ALL_OPTION_KEY ? null : subcategoryKey,
+    const payload = resolveWorkspacePublicEmptyResultPayload({
+      isWorkspacePublicSection,
+      activePublicSection,
+      isLoading,
+      isError,
+      hasActivePublicFilter,
+      cityId,
+      categoryKey,
+      subcategoryKey,
       sortBy,
+      requestsCount: requests.length,
     });
+    if (!payload) return;
+    trackUXEvent('workspace_empty_result', payload);
   }, [
     activePublicSection,
     categoryKey,

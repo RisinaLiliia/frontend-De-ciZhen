@@ -6,7 +6,6 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { WorkspaceOverlaySurface } from '../WorkspaceOverlaySurface';
 import { useDecisionDashboardModel } from './useDecisionDashboardModel';
-import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { WorkspaceStatisticsPanel } from '../WorkspaceStatisticsPanel';
 
 export function WorkspaceStatisticsExperience({
@@ -21,44 +20,19 @@ export function WorkspaceStatisticsExperience({
   const model = useDecisionDashboardModel({ locale });
 
   const overlayIntro = React.useCallback(() => {
-    const contextPanel = (
-      <StatisticsContextPanel
-        copy={model.copy}
-        filters={model.filters}
-        cityOptions={model.cityOptions}
-        categoryOptions={model.categoryOptions}
-        context={model.context}
-        onRangeChange={model.setRange}
-        onCityChange={model.setCityId}
-        onCategoryChange={model.setCategoryKey}
-        onReset={model.resetFilters}
-        onExport={model.onExport}
-        surface="embedded"
-        showSummary={false}
-      />
-    );
-
     if (!React.isValidElement(intro)) {
-      return (
-        <div className="stack-md">
-          {intro}
-          {contextPanel}
-        </div>
-      );
+      return intro;
     }
 
     return React.cloneElement(
       intro as React.ReactElement<{
-        leftColumnSlot?: React.ReactNode;
-        navHeaderSlot?: React.ReactNode;
         showDemandMap?: boolean;
       }>,
       {
-        leftColumnSlot: contextPanel,
         showDemandMap: false,
       },
     );
-  }, [intro, model]);
+  }, [intro]);
 
   return (
     <WorkspaceOverlaySurface intro={overlayIntro()}>

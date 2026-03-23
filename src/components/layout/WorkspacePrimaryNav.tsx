@@ -8,6 +8,7 @@ import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { useSlidingIndicator } from '@/hooks/useSlidingIndicator';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
+import { WORKSPACE_MOBILE_NAV_OPEN_EVENT } from '@/lib/workspaceMobileNavigation';
 
 type TopNavItem = {
   key: string;
@@ -96,22 +97,27 @@ function WorkspacePrimaryNav({
       ? `/profile/${encodeURIComponent(user.id)}`
       : AUTH_PROFILE_FALLBACK_URL;
   const items = useTopNavItems(isAuthenticated, profileHref);
+  const visibleItems = mobile ? items.filter((item) => item.key !== 'profile') : items;
   const params = new URLSearchParams(searchParams?.toString());
   const navStyle = mobile
-    ? ({ '--topbar-mobile-columns': String(items.length) } as CSSProperties)
+    ? ({ '--topbar-mobile-columns': String(visibleItems.length) } as CSSProperties)
     : undefined;
-  const activeItemKey = items.find((item) => item.isActive(pathname, params))?.key ?? '';
+  const activeItemKey = visibleItems.find((item) => item.isActive(pathname, params))?.key ?? '';
   const { containerRef, indicatorStyle } = useSlidingIndicator<HTMLElement>({
     activeSelector: '.topbar-nav__item.is-active',
     enabled: !mobile,
-    watchKey: `${pathname}|${activeItemKey}|${items.length}`,
+    watchKey: `${pathname}|${activeItemKey}|${visibleItems.length}`,
   });
 
   return (
     <nav className={className} aria-label={t(I18N_KEYS.auth.navigationLabel)} style={navStyle} ref={mobile ? undefined : containerRef}>
       {!mobile && indicatorStyle ? <span className="topbar-nav__indicator" aria-hidden="true" style={indicatorStyle} /> : null}
-      {items.map((item) => {
+      {visibleItems.map((item) => {
         const active = item.isActive(pathname, params);
+        const shouldOpenMobileWorkspaceSheet =
+          mobile
+          && item.key === 'workspace'
+          && isPathPrefix(pathname, '/workspace');
         const iconClassName = item.iconPosition === 'trailing' ? 'topbar-nav__icon topbar-nav__icon--trailing' : 'topbar-nav__icon';
         const itemClasses = [
           itemClassName,
@@ -129,6 +135,12 @@ function WorkspacePrimaryNav({
             aria-current={active ? 'page' : undefined}
             aria-label={item.label}
             className={itemClasses}
+            onClick={(event) => {
+              if (shouldOpenMobileWorkspaceSheet) {
+                event.preventDefault();
+                window.dispatchEvent(new Event(WORKSPACE_MOBILE_NAV_OPEN_EVENT));
+              }
+            }}
           >
             <span className={iconClassName} aria-hidden="true">
               {item.icon}

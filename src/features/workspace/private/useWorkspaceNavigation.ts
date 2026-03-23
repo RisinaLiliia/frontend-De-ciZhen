@@ -10,6 +10,12 @@ import type {
   WorkspaceStatusFilter,
   WorkspaceTab,
 } from '@/features/workspace/requests';
+import {
+  buildWorkspaceCurrentHref,
+  buildWorkspaceFavoritesViewHref,
+  buildWorkspaceStatusFilterHref,
+  buildWorkspaceTabHref,
+} from '@/features/workspace/private/workspaceNavigation.model';
 
 type Args = {
   activeWorkspaceTab: WorkspaceTab;
@@ -28,8 +34,10 @@ export function useWorkspaceNavigation({
   const lastRequestedHrefRef = React.useRef<string | null>(null);
 
   const currentHref = React.useMemo(() => {
-    const query = searchParams.toString();
-    return query ? `${workspacePath}?${query}` : workspacePath;
+    return buildWorkspaceCurrentHref({
+      search: searchParams.toString(),
+      workspacePath,
+    });
   }, [searchParams, workspacePath]);
 
   const scheduleReplace = React.useCallback((nextHref: string) => {
@@ -75,14 +83,11 @@ export function useWorkspaceNavigation({
 
   const setWorkspaceTab = React.useCallback(
     (tab: WorkspaceTab) => {
-      const next = new URLSearchParams(searchParams.toString());
-      next.delete('section');
-      next.set('tab', tab);
-      next.set('status', 'all');
-      if (tab !== 'favorites') next.delete('fav');
-      next.delete('reviewRole');
-      const query = next.toString();
-      const nextHref = query ? `${workspacePath}?${query}` : workspacePath;
+      const nextHref = buildWorkspaceTabHref({
+        search: searchParams.toString(),
+        workspacePath,
+        tab,
+      });
       const didSchedule = scheduleReplace(nextHref);
       if (!didSchedule) return;
       trackUXEvent('workspace_tab_change', { tab });
@@ -92,13 +97,12 @@ export function useWorkspaceNavigation({
 
   const setStatusFilter = React.useCallback(
     (status: WorkspaceStatusFilter) => {
-      const next = new URLSearchParams(searchParams.toString());
-      next.delete('section');
-      next.set('tab', activeWorkspaceTab);
-      next.set('status', status);
-      next.delete('reviewRole');
-      const query = next.toString();
-      const nextHref = query ? `${workspacePath}?${query}` : workspacePath;
+      const nextHref = buildWorkspaceStatusFilterHref({
+        search: searchParams.toString(),
+        workspacePath,
+        activeWorkspaceTab,
+        status,
+      });
       const didSchedule = scheduleReplace(nextHref);
       if (!didSchedule) return;
       trackUXEvent('workspace_status_filter_change', { tab: activeWorkspaceTab, status });
@@ -108,13 +112,11 @@ export function useWorkspaceNavigation({
 
   const setFavoritesView = React.useCallback(
     (view: FavoritesView) => {
-      const next = new URLSearchParams(searchParams.toString());
-      next.delete('section');
-      next.set('tab', 'favorites');
-      next.set('fav', view);
-      next.delete('reviewRole');
-      const query = next.toString();
-      const nextHref = query ? `${workspacePath}?${query}` : workspacePath;
+      const nextHref = buildWorkspaceFavoritesViewHref({
+        search: searchParams.toString(),
+        workspacePath,
+        view,
+      });
       scheduleReplace(nextHref);
     },
     [scheduleReplace, searchParams, workspacePath],

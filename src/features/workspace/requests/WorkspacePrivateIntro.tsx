@@ -4,6 +4,7 @@ import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
 import { WorkspaceControlShell } from '@/features/workspace/requests/WorkspaceControlShell';
+import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
 
 type StatsOrderItem = {
   tab: 'provider' | 'client';
@@ -56,20 +57,18 @@ export function WorkspacePrivateIntro({
   );
 
   return (
-    <section className="home-intro-shell">
+    <section className="workspace-intro-shell">
       <div className="stack-md">
+        <PersonalNavSection
+          className="personal-nav--left"
+          headerSlot={navHeaderSlot}
+          items={personalNavItems}
+          hideDockBadges={hideNavBadges}
+          insightText={insightText}
+          progressPercent={activityProgress}
+          surface="embedded"
+        />
         <WorkspaceControlShell
-          navigation={(
-            <PersonalNavSection
-              className="personal-nav--left"
-              headerSlot={navHeaderSlot}
-              items={personalNavItems}
-              hideDockBadges={hideNavBadges}
-              insightText={insightText}
-              progressPercent={activityProgress}
-              surface="embedded"
-            />
-          )}
           context={leftColumnSlot}
           aside={(
             <RequestsStatsPanel
@@ -86,8 +85,9 @@ export function WorkspacePrivateIntro({
             />
           )}
         />
+        {personalNavItems.length ? <WorkspaceMobileSectionSheet items={personalNavItems} /> : null}
         {showQuickAction ? (
-          <section className="panel stack-sm" aria-label="Workspace quick action">
+          <section className="panel stack-sm workspace-intro__mobile-hidden" aria-label="Workspace quick action">
             <CreateRequestCard href={quickActionHref} />
           </section>
         ) : null}

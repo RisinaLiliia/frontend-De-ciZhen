@@ -94,4 +94,26 @@ describe('WorkspaceShell', () => {
     expect(node.getAttribute('data-public-section')).toBe('null');
     expect(node.getAttribute('data-workspace-tab')).toBe('my-offers');
   });
+
+  it('keeps overview route private while auth state is loading', () => {
+    mockSearchParams('section=overview');
+    mockAuth('loading');
+
+    render(<WorkspaceShell />);
+
+    const node = screen.getByTestId('workspace-page-client');
+    expect(node.getAttribute('data-public-section')).toBe('null');
+    expect(node.getAttribute('data-workspace-tab')).toBe('null');
+  });
+
+  it('keeps overview route private for unauthenticated users', () => {
+    mockSearchParams('section=overview');
+    mockAuth('unauthenticated');
+
+    render(<WorkspaceShell />);
+
+    const node = screen.getByTestId('workspace-page-client');
+    expect(node.getAttribute('data-public-section')).toBe('null');
+    expect(node.getAttribute('data-workspace-tab')).toBe('null');
+  });
 });

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 
+import { RequestsBottomPagination } from '@/components/requests/RequestsBottomPagination';
 import { RequestsFilters, RequestsResultsSummary } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
@@ -123,31 +124,13 @@ export function PublicContent({
         </WorkspaceContentState>
       </section>
 
-      <div className="requests-pagination">
-        <span className="requests-page-nav__label">
-          {page}/{Math.max(1, totalPages)}
-        </span>
-        <div className="requests-page-nav" role="group" aria-label={t(I18N_KEYS.requestsPage.paginationBottomLabel)}>
-          <button
-            type="button"
-            className="btn-ghost requests-page-nav__btn"
-            onClick={onPrevPage}
-            disabled={page <= 1}
-            aria-label={t(I18N_KEYS.requestsPage.paginationPrev)}
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            className="btn-ghost requests-page-nav__btn"
-            onClick={onNextPage}
-            disabled={page >= totalPages}
-            aria-label={t(I18N_KEYS.requestsPage.paginationNext)}
-          >
-            →
-          </button>
-        </div>
-      </div>
+      <RequestsBottomPagination
+        t={t}
+        page={page}
+        totalPages={totalPages}
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
+      />
     </section>
   );
 }

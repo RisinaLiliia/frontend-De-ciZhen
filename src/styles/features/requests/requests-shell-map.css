@@ -28,6 +28,8 @@
 
   .workspace-public-demand-map__canvas {
     position: relative;
+    isolation: isolate;
+    z-index: 0;
     overflow: hidden;
     flex: 0 0 auto;
     border-radius: 14px;
@@ -47,10 +49,18 @@
   .workspace-public-demand-map__leaflet {
     position: absolute;
     inset: 0;
+    z-index: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
     border-radius: inherit;
+  }
+
+  .workspace-public-demand-map__leaflet .leaflet-top,
+  .workspace-public-demand-map__leaflet .leaflet-bottom,
+  .workspace-public-demand-map__leaflet .leaflet-pane,
+  .workspace-public-demand-map__leaflet .leaflet-control {
+    isolation: auto;
   }
 
   .workspace-public-demand-map__leaflet.leaflet-container {

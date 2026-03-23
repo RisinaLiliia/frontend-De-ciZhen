@@ -3,11 +3,9 @@
 import * as React from 'react';
 
 import { ProviderCard } from '@/components/providers/ProviderCard';
-import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { I18nKey } from '@/lib/i18n/keys';
-import { I18N_KEYS } from '@/lib/i18n/keys';
-import { isProviderInFavoriteLookup } from '@/lib/api/favorites';
+import { buildWorkspaceFavoriteProviderCardModels } from '@/features/workspace/private/workspaceCards.model';
 
 type Translator = (key: I18nKey) => string;
 
@@ -32,24 +30,19 @@ export function useWorkspaceCards({
 }: Args) {
   const favoriteProviderCards = React.useMemo(
     () =>
-      favoriteProviders.map((item) => (
+      buildWorkspaceFavoriteProviderCardModels({
+        t,
+        favoriteProviders,
+        favoriteProviderLookup,
+        pendingFavoriteProviderIds,
+        onToggleProviderFavorite,
+        favoriteProviderRoleLabelById,
+        favoriteProviderCityLabelById,
+      }).map((item) => (
         <ProviderCard
-          key={`fav-provider-${item.id}`}
+          key={item.key}
           variant="list"
-          canToggleFavorite
-          isFavorite={isProviderInFavoriteLookup(favoriteProviderLookup, item)}
-          isFavoritePending={pendingFavoriteProviderIds.has(item.id)}
-          onToggleFavorite={onToggleProviderFavorite}
-          provider={mapPublicProviderToCard({
-            t,
-            provider: item,
-            roleLabel: favoriteProviderRoleLabelById.get(item.id) ?? '',
-            cityLabel: favoriteProviderCityLabelById.get(item.id) ?? '',
-            profileHref: `/providers/${item.id}`,
-            reviewsHref: `/providers/${item.id}#reviews`,
-            ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
-            status: 'online',
-          })}
+          {...item.props}
         />
       )),
     [

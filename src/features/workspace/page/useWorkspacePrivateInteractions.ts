@@ -2,9 +2,6 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import type { OfferDto } from '@/lib/api/dto/offers';
-import type { ProviderPublicDto } from '@/lib/api/dto/providers';
-import type { RequestResponseDto } from '@/lib/api/dto/requests';
 
 import {
   usePublicRequestsSeenTotal,
@@ -14,24 +11,18 @@ import {
   useWorkspaceNavigation,
   useWorkspaceTabPersistence,
 } from '@/features/workspace';
-import { WORKSPACE_PATH } from '@/features/workspace/page/workspacePage.constants';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import {
+  buildWorkspacePrivateActionsArgs,
+  buildWorkspacePrivateFavoriteToggleArgs,
+  buildWorkspacePrivateNavigationArgs,
+  buildWorkspacePrivateSeenTotalArgs,
+  buildWorkspacePrivateTabPersistenceArgs,
+  resolveWorkspacePrivateInteractionsResult,
+  type WorkspacePrivateInteractionsParams,
+  type WorkspacePrivateInteractionsResult,
+} from '@/features/workspace/page/workspacePrivateInteractions.model';
 
-type InteractionsParams = {
-  t: WorkspaceBranchProps['t'];
-  locale: WorkspaceBranchProps['locale'];
-  isAuthed: boolean;
-  isWorkspaceAuthed: boolean;
-  authUserId?: string | null;
-  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
-  nextPath: WorkspaceBranchProps['routeState']['nextPath'];
-  platformRequestsTotal: number;
-  myOffers: OfferDto[];
-  favoriteRequestIds: ReadonlySet<string>;
-  requestById: ReadonlyMap<string, RequestResponseDto>;
-  favoriteProviderLookup: ReadonlySet<string>;
-  providerById: ReadonlyMap<string, ProviderPublicDto>;
-};
+type InteractionsParams = WorkspacePrivateInteractionsParams;
 
 export function useWorkspacePrivateInteractions({
   t,
@@ -47,84 +38,62 @@ export function useWorkspacePrivateInteractions({
   requestById,
   favoriteProviderLookup,
   providerById,
-}: InteractionsParams) {
+}: InteractionsParams): WorkspacePrivateInteractionsResult {
   const router = useRouter();
   const qc = useQueryClient();
 
-  const {
-    pendingFavoriteRequestIds,
-    pendingFavoriteProviderIds,
-    onToggleRequestFavorite,
-    onToggleProviderFavorite,
-  } = useWorkspaceFavoriteToggles({
-    isAuthed,
-    nextPath,
-    router,
-    t,
-    qc,
-    favoriteRequestIds,
-    requestById,
-    favoriteProviderLookup,
-    providerById,
-  });
+  const favoriteToggles = useWorkspaceFavoriteToggles(
+    buildWorkspacePrivateFavoriteToggleArgs({
+      isAuthed,
+      nextPath,
+      router,
+      t,
+      qc,
+      favoriteRequestIds,
+      requestById,
+      favoriteProviderLookup,
+      providerById,
+    }),
+  );
 
-  const {
-    pendingOfferRequestId,
-    ownerRequestActions,
-    onOpenOfferSheet,
-    onWithdrawOffer,
-    onOpenChatThread,
-  } = useWorkspaceActions({
-    isAuthed,
-    myOffers,
-    t,
-    qc,
-    router,
-  });
+  const actions = useWorkspaceActions(
+    buildWorkspacePrivateActionsArgs({
+      isAuthed,
+      myOffers,
+      t,
+      qc,
+      router,
+    }),
+  );
 
-  const { localeTag, formatNumber, formatDate, formatPrice, chartMonthLabel } =
-    useWorkspaceFormatters(locale);
+  const formatters = useWorkspaceFormatters(locale);
 
-  const { markPublicRequestsSeen } = usePublicRequestsSeenTotal({
-    isAuthed,
-    userId: authUserId,
-    platformRequestsTotal,
-    autoMarkSeen: false,
-  });
+  const { markPublicRequestsSeen } = usePublicRequestsSeenTotal(
+    buildWorkspacePrivateSeenTotalArgs({
+      isAuthed,
+      authUserId,
+      platformRequestsTotal,
+    }),
+  );
 
-  useWorkspaceTabPersistence({
-    isWorkspaceAuthed,
-    isWorkspacePublicSection: false,
-    activeWorkspaceTab,
-  });
+  useWorkspaceTabPersistence(
+    buildWorkspacePrivateTabPersistenceArgs({
+      isWorkspaceAuthed,
+      activeWorkspaceTab,
+    }),
+  );
 
-  const {
-    setWorkspaceTab,
-    setStatusFilter,
-    setFavoritesView,
-  } = useWorkspaceNavigation({
-    activeWorkspaceTab,
-    workspacePath: WORKSPACE_PATH,
-  });
+  const navigation = useWorkspaceNavigation(
+    buildWorkspacePrivateNavigationArgs({
+      activeWorkspaceTab,
+    }),
+  );
 
-  return {
-    pendingFavoriteRequestIds,
-    pendingFavoriteProviderIds,
-    onToggleRequestFavorite,
-    onToggleProviderFavorite,
-    pendingOfferRequestId,
-    ownerRequestActions,
-    onOpenOfferSheet,
-    onWithdrawOffer,
-    onOpenChatThread,
-    localeTag,
-    formatNumber,
-    formatDate,
-    formatPrice,
-    chartMonthLabel,
+  return resolveWorkspacePrivateInteractionsResult({
+    favoriteToggles,
+    actions,
+    formatters,
     markPublicRequestsSeen,
-    setWorkspaceTab,
-    setStatusFilter,
-    setFavoritesView,
-  };
+    navigation,
+  });
 }

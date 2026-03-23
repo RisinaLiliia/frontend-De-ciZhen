@@ -8,6 +8,12 @@ import {
   useWorkspacePublicRequestsState,
 } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import {
+  buildWorkspacePrivateSourcesCollectionsArgs,
+  buildWorkspacePrivateSourcesDataArgs,
+  buildWorkspacePrivateSourcesRequestsStateArgs,
+  resolveWorkspacePrivateSourcesResult,
+} from '@/features/workspace/page/workspacePrivateSources.model';
 
 type SourcesParams = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isAuthed' | 'isWorkspaceAuthed'> & {
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
@@ -48,119 +54,47 @@ export function useWorkspacePrivateSources({
     cities,
   });
 
-  const {
-    publicRequests,
-    isLoading,
-    isError,
-    allRequestsSummary,
-    publicCityActivity,
-    isPublicSummaryLoading,
-    isPublicSummaryError,
-    myOffers,
-    isMyOffersLoading,
-    myOfferRequestsById,
-    favoriteRequests,
-    isFavoriteRequestsLoading,
-    favoriteProviders,
-    isFavoriteProvidersLoading,
-    myReviews,
-    isMyReviewsLoading,
-    myRequests,
-    isMyRequestsLoading,
-    myProviderContracts,
-    isProviderContractsLoading,
-    myClientContracts,
-    isClientContractsLoading,
-    providers,
-    workspacePrivateOverview,
-    isProvidersLoading,
-    isProvidersError,
-  } = useWorkspaceData({
-    filter,
-    locale,
-    isAuthed,
-    isWorkspaceAuthed,
-    isWorkspacePublicSection: false,
-    shouldLoadPrivateData: true,
-    activeWorkspaceTab,
-  });
+  const data = useWorkspaceData(
+    buildWorkspacePrivateSourcesDataArgs({
+      filter,
+      locale,
+      isAuthed,
+      isWorkspaceAuthed,
+      activeWorkspaceTab,
+    }),
+  );
 
-  const { requests, platformRequestsTotal } = useWorkspacePublicRequestsState({
-    publicRequests,
-    allRequestsSummary,
-    limit,
-    page,
-    setPage,
-    isWorkspacePublicSection: false,
-    activePublicSection,
-    isLoading,
-    isError,
-    hasActivePublicFilter,
-    cityId,
-    categoryKey,
-    subcategoryKey,
-    sortBy,
-  });
+  const publicRequestsState = useWorkspacePublicRequestsState(
+    buildWorkspacePrivateSourcesRequestsStateArgs({
+      filters: {
+        limit,
+        page,
+        setPage,
+        hasActivePublicFilter,
+        cityId,
+        categoryKey,
+        subcategoryKey,
+        sortBy,
+      },
+      data,
+      activePublicSection,
+    }),
+  );
 
-  const {
-    favoriteRequestIds,
-    requestById,
-    providerById,
-    favoriteProviderLookup,
-    favoriteProviderIds,
-    offersByRequest,
-    allMyContracts,
-    favoriteProviderCityLabelById,
-    favoriteProviderRoleLabelById,
-  } = useWorkspaceCollections({
-    requests,
-    favoriteRequests,
-    providers,
-    favoriteProviders,
-    myOffers,
-    myProviderContracts,
-    myClientContracts,
-    cityById,
-    serviceByKey,
-    locale,
-  });
+  const catalogIndex = { serviceByKey, categoryByKey, cityById };
+  const collections = useWorkspaceCollections(
+    buildWorkspacePrivateSourcesCollectionsArgs({
+      requests: publicRequestsState.requests,
+      data,
+      catalogIndex,
+      locale,
+    }),
+  );
 
-  return {
-    allRequestsSummary,
-    publicCityActivity,
-    isPublicSummaryLoading,
-    isPublicSummaryError,
-    providers,
-    isProvidersLoading,
-    isProvidersError,
-    workspacePrivateOverview,
-    myOffers,
-    myRequests,
-    myOfferRequestsById,
-    allMyContracts,
-    favoriteRequests,
-    favoriteProviders,
-    favoriteProviderIds,
-    myReviews,
-    isFavoriteRequestsLoading,
-    isFavoriteProvidersLoading,
-    offersByRequest,
-    favoriteRequestIds,
-    favoriteProviderLookup,
-    requestById,
-    providerById,
-    favoriteProviderRoleLabelById,
-    favoriteProviderCityLabelById,
-    serviceByKey,
-    categoryByKey,
-    cityById,
-    isMyRequestsLoading,
-    isMyOffersLoading,
-    isProviderContractsLoading,
-    isClientContractsLoading,
-    isMyReviewsLoading,
-    platformRequestsTotal,
-    isLoading,
-    requestsCount: requests.length,
-  };
+  return resolveWorkspacePrivateSourcesResult({
+    data,
+    catalogIndex,
+    collections,
+    publicRequestsState,
+  });
 }

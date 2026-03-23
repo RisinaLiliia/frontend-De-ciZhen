@@ -2,14 +2,11 @@
 
 import * as React from 'react';
 
-import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import {
-  buildWorkspaceNavHeader,
-  buildWorkspacePersonalNavItems,
-} from '@/features/workspace/requests/workspaceState.shared';
+import { resolveWorkspacePublicMeta } from '@/features/workspace/requests/workspacePublicState.model';
+import { useWorkspacePublicNavModel } from '@/features/workspace/requests/useWorkspacePublicNavModel';
 
 type Params = {
   t: (key: I18nKey) => string;
@@ -46,60 +43,34 @@ export function useWorkspacePublicState({
   onGuestLockedAction,
   formatNumber,
 }: Params) {
-  const { navTitle, navSubtitle } = React.useMemo(
-    () => buildWorkspaceNavHeader({ t, userName }),
-    [t, userName],
+  const { activityProgress, insightText, navRatingValue, navReviewsCount } = React.useMemo(
+    () => resolveWorkspacePublicMeta({ platformRatingAvg, platformReviewsCount }),
+    [platformRatingAvg, platformReviewsCount],
   );
 
-  const personalNavItems = React.useMemo<PersonalNavItem[]>(
-    () =>
-      buildWorkspacePersonalNavItems({
-        t,
-        formatNumber,
-        isPersonalized,
-        activeWorkspaceTab,
-        activePublicSection,
-        publicRequestsCount,
-        publicProvidersCount,
-        publicStatsCount,
-        myRequestsTotal: 0,
-        sentCount: 0,
-        completedJobsCount: 0,
-        favoriteRequestCount: 0,
-        navRatingValue: platformRatingAvg.toFixed(1),
-        navReviewsCount: platformReviewsCount,
-        markPublicRequestsSeen,
-        setWorkspaceTab,
-        guestLoginHref,
-        onGuestLockedAction,
-        reviewsHref: '/workspace?section=reviews',
-        reviewsMatch: 'prefix',
-        reviewsForceActive: activePublicSection === 'reviews',
-        includeCompletedJobsInSecondary: true,
-      }),
-    [
-      activePublicSection,
-      activeWorkspaceTab,
-      formatNumber,
-      guestLoginHref,
-      isPersonalized,
-      markPublicRequestsSeen,
-      onGuestLockedAction,
-      platformRatingAvg,
-      platformReviewsCount,
-      publicProvidersCount,
-      publicRequestsCount,
-      publicStatsCount,
-      setWorkspaceTab,
-      t,
-    ],
-  );
+  const { navTitle, navSubtitle, personalNavItems } = useWorkspacePublicNavModel({
+    t,
+    formatNumber,
+    isPersonalized,
+    activeWorkspaceTab,
+    activePublicSection,
+    userName,
+    publicRequestsCount,
+    publicProvidersCount,
+    publicStatsCount,
+    navRatingValue,
+    navReviewsCount,
+    setWorkspaceTab,
+    markPublicRequestsSeen,
+    guestLoginHref,
+    onGuestLockedAction,
+  });
 
   return {
     navTitle,
     navSubtitle,
-    activityProgress: 12,
+    activityProgress,
     personalNavItems,
-    insightText: '',
+    insightText,
   };
 }

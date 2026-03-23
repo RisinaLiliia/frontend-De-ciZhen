@@ -2,11 +2,13 @@
 
 import * as React from 'react';
 
+import { RequestsBottomPagination } from '@/components/requests/RequestsBottomPagination';
 import { RequestsResultsSummary } from '@/components/requests/RequestsFilters';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useWorkspacePlatformReviewsOverview } from '@/features/workspace/requests/useWorkspacePlatformReviewsOverview';
+import { WorkspaceReviewsShellControls } from '@/features/workspace/requests/WorkspaceReviewsShellControls';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
 import { WorkspacePlatformReviewsRail } from '@/features/workspace/requests/WorkspacePlatformReviewsRail';
 
@@ -66,6 +68,8 @@ export function WorkspacePlatformReviewsMain({
         </div>
       ) : null}
 
+      <WorkspaceReviewsShellControls t={t} locale={locale} />
+
       <RequestsResultsSummary
         t={t}
         totalResults={displayRatingCount.toLocaleString(localeTag)}
@@ -109,31 +113,13 @@ export function WorkspacePlatformReviewsMain({
         </WorkspaceContentState>
       </section>
 
-      <div className="requests-pagination">
-        <span className="requests-page-nav__label">
-          {reviewPage}/{Math.max(1, totalPages)}
-        </span>
-        <div className="requests-page-nav" role="group" aria-label={t(I18N_KEYS.requestsPage.paginationBottomLabel)}>
-          <button
-            type="button"
-            className="btn-ghost requests-page-nav__btn"
-            onClick={() => setReviewPage((prev) => Math.max(1, prev - 1))}
-            disabled={reviewPage <= 1}
-            aria-label={t(I18N_KEYS.requestsPage.paginationPrev)}
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            className="btn-ghost requests-page-nav__btn"
-            onClick={() => setReviewPage((prev) => Math.min(totalPages, prev + 1))}
-            disabled={reviewPage >= totalPages}
-            aria-label={t(I18N_KEYS.requestsPage.paginationNext)}
-          >
-            →
-          </button>
-        </div>
-      </div>
+      <RequestsBottomPagination
+        t={t}
+        page={reviewPage}
+        totalPages={totalPages}
+        onPrevPage={() => setReviewPage((prev) => Math.max(1, prev - 1))}
+        onNextPage={() => setReviewPage((prev) => Math.min(totalPages, prev + 1))}
+      />
     </section>
   );
 }

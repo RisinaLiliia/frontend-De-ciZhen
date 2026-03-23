@@ -2,16 +2,15 @@
 
 import * as React from 'react';
 
-import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
-import { WorkspaceTopProvidersAside, type WorkspacePrivateIntroProps } from '@/features/workspace/requests';
+import type { WorkspacePrivateIntroProps } from '@/features/workspace/requests';
+import {
+  buildWorkspaceAsideBaseProps,
+  buildWorkspacePrivateIntroProps,
+  type WorkspaceAsideBaseProps,
+} from '@/features/workspace/private/workspacePresentation.model';
 
 type Translator = (key: I18nKey) => string;
-
-type WorkspaceAsideBaseProps = Omit<
-  React.ComponentProps<typeof WorkspaceTopProvidersAside>,
-  'ctaHref' | 'pendingFavoriteProviderIds' | 'onToggleFavorite'
->;
 
 type Args = {
   t: Translator;
@@ -51,21 +50,18 @@ export function useWorkspacePresentation({
   const workspaceIntroNode = React.useMemo(
     () => (
       <WorkspacePrivateIntroComponent
-        personalNavItems={personalNavItems}
-        hideNavBadges={hideNavBadges}
-        insightText={insightText}
-        activityProgress={activityProgress}
-        statsOrder={statsOrder}
-        statsFallbackTitle={t(I18N_KEYS.requestsPage.statsProviderTitle)}
-        statsTabsLabel={{
-          provider: t(I18N_KEYS.homePublic.howItWorksProviderTab),
-          client: t(I18N_KEYS.homePublic.howItWorksClientTab),
-        }}
-        statsErrorLabel={t(I18N_KEYS.requestsPage.statsLoadError)}
-        providerStatsPayload={providerStatsPayload}
-        clientStatsPayload={clientStatsPayload}
-        quickActionHref={createRequestHref}
-        showQuickAction={showQuickAction}
+        {...buildWorkspacePrivateIntroProps({
+          t,
+          personalNavItems,
+          hideNavBadges,
+          insightText,
+          activityProgress,
+          statsOrder,
+          providerStatsPayload,
+          clientStatsPayload,
+          createRequestHref,
+          showQuickAction,
+        })}
       />
     ),
     [
@@ -84,16 +80,14 @@ export function useWorkspacePresentation({
   );
 
   const workspaceAsideBaseProps = React.useMemo<WorkspaceAsideBaseProps>(
-    () => ({
-      isLoading: isProvidersLoading,
-      isError: isProvidersError,
-      errorLabel: t(I18N_KEYS.requestsPage.error),
-      title: t(I18N_KEYS.homePublic.topProviders),
-      subtitle: t(I18N_KEYS.homePublic.topProvidersSubtitle),
-      ctaLabel: t(I18N_KEYS.homePublic.topProvidersCta),
-      providers: topProviders,
-      favoriteProviderIds,
-    }),
+    () =>
+      buildWorkspaceAsideBaseProps({
+        t,
+        isProvidersLoading,
+        isProvidersError,
+        topProviders,
+        favoriteProviderIds,
+      }),
     [favoriteProviderIds, isProvidersError, isProvidersLoading, t, topProviders],
   );
 

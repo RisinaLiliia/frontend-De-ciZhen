@@ -6,7 +6,7 @@ import { HomeHero } from '@/components/home/HomeHero';
 import { HomeHeroAnimatedPreview } from '@/components/home/HomeHeroAnimatedPreview';
 import { HomeHowItWorksPanel } from '@/components/home/HomeHowItWorksPanel';
 import { HomeNearbyPanel } from '@/components/home/HomeNearbyPanel';
-import { HomePlatformActivityPanel } from '@/components/home/HomePlatformActivityPanel';
+import { HomePlatformActivityPanelContainer } from '@/components/home/HomePlatformActivityPanelContainer';
 import { HomePopularServicesPanel } from '@/components/home/HomePopularServicesPanel';
 import { HomeProofPanel } from '@/components/home/HomeProofPanel';
 import { HomeQuickSearchPanel } from '@/components/home/HomeQuickSearchPanel';
@@ -158,7 +158,7 @@ export function HomePageContentContainer() {
           </div>
 
           <div className="home-combined-top__right">
-            <HomePlatformActivityPanel t={t} locale={locale} />
+            <HomePlatformActivityPanelContainer t={t} locale={locale} />
           </div>
         </section>
       </section>

@@ -14,10 +14,19 @@ import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import {
+  buildRequestsExplorerNextPath,
   buildOffersByRequestMap,
-  hasDefaultPublicFilter,
   resolveTotalPages,
 } from '@/components/requests/requestsExplorer.model';
+import {
+  buildFavoriteRequestIds,
+  buildRequestByIdMap,
+  buildRequestsExplorerPublicRequestsQueryState,
+  findOfferRequestId,
+  formatRequestsExplorerTotalResultsLabel,
+  resolveRequestsExplorerLoginHref,
+  resolveRequestsExplorerOfferHref,
+} from '@/components/requests/requestsExplorerRequestsData.model';
 
 type Params = {
   t: (key: I18nKey) => string;
@@ -49,38 +58,33 @@ export function useRequestsExplorerRequestsData({
   pathname,
   initialPublicRequests,
   preferInitialPublicRequests,
-  initialPublicRequestsLoading,
-  initialPublicRequestsError,
 }: Params) {
   const router = useRouter();
   const qc = useQueryClient();
 
-  const hasDefaultFilter = hasDefaultPublicFilter(filter);
-  const shouldUseInitialPublicRequests = preferInitialPublicRequests && hasDefaultFilter;
-  const hasInitialPublicRequests = Boolean(initialPublicRequests);
+  const publicRequestsQueryState = React.useMemo(
+    () =>
+      buildRequestsExplorerPublicRequestsQueryState({
+        filter,
+        locale,
+        isProvidersView,
+        preferInitialPublicRequests,
+        initialPublicRequests,
+      }),
+    [
+      filter,
+      initialPublicRequests,
+      isProvidersView,
+      locale,
+      preferInitialPublicRequests,
+    ],
+  );
 
   const { data: publicRequests, isLoading, isError } = useQuery({
-    queryKey: [
-      'requests-explorer-public',
-      filter.cityId,
-      filter.categoryKey,
-      filter.subcategoryKey,
-      filter.sort,
-      filter.page,
-      filter.limit,
-      locale,
-    ],
-    enabled:
-      !isProvidersView &&
-      (!shouldUseInitialPublicRequests ||
-        hasInitialPublicRequests ||
-        initialPublicRequestsError ||
-        !initialPublicRequestsLoading),
+    queryKey: publicRequestsQueryState.queryKey,
+    enabled: publicRequestsQueryState.enabled,
     queryFn: () => listPublicRequests({ ...filter, locale }),
-    initialData:
-      !isProvidersView && shouldUseInitialPublicRequests
-        ? initialPublicRequests
-        : undefined,
+    initialData: publicRequestsQueryState.initialData,
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
@@ -98,7 +102,7 @@ export function useRequestsExplorerRequestsData({
     [myOffers],
   );
   const requestById = React.useMemo(
-    () => new Map(requests.map((request) => [request.id, request])),
+    () => buildRequestByIdMap(requests),
     [requests],
   );
 
@@ -109,13 +113,12 @@ export function useRequestsExplorerRequestsData({
   });
 
   const favoriteRequestIds = React.useMemo(
-    () => new Set(favoriteRequests.map((item) => item.id)),
+    () => buildFavoriteRequestIds(favoriteRequests),
     [favoriteRequests],
   );
 
   const nextPath = React.useMemo(() => {
-    const qs = searchParams?.toString();
-    return `${pathname}${qs ? `?${qs}` : ''}`;
+    return buildRequestsExplorerNextPath(pathname, searchParams);
   }, [pathname, searchParams]);
 
   const {
@@ -137,19 +140,19 @@ export function useRequestsExplorerRequestsData({
     (requestId: string) => {
       if (!isAuthed) {
         toast.message(t(I18N_KEYS.requestDetails.loginRequired));
-        router.push(`/auth/login?next=${encodeURIComponent(`/requests/${requestId}?offer=1`)}`);
+        router.push(resolveRequestsExplorerLoginHref(requestId));
         return;
       }
-      router.push(`/requests/${requestId}?offer=1`);
+      router.push(resolveRequestsExplorerOfferHref(requestId));
     },
     [isAuthed, router, t],
   );
 
   const withdrawOffer = React.useCallback(
     async (offerId: string) => {
-      const offer = myOffers.find((item) => item.id === offerId);
-      if (!offer) return;
-      setPendingOfferRequestId(offer.requestId);
+      const offerRequestId = findOfferRequestId(myOffers, offerId);
+      if (!offerRequestId) return;
+      setPendingOfferRequestId(offerRequestId);
       try {
         await deleteOffer(offerId);
         toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
@@ -170,7 +173,7 @@ export function useRequestsExplorerRequestsData({
   const totalResults = publicRequests?.total ?? requests.length;
   const totalPages = resolveTotalPages(totalResults, limit);
   const totalResultsLabel = React.useMemo(
-    () => new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US').format(totalResults),
+    () => formatRequestsExplorerTotalResultsLabel(locale, totalResults),
     [locale, totalResults],
   );
 

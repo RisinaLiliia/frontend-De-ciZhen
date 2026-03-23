@@ -281,6 +281,7 @@ export function WorkspaceStatisticsView({
           onExport={model.onExport}
           surface="embedded"
           showControls={false}
+          closeLabel={t(I18N_KEYS.auth.closeDialog)}
         />
 
         <SectionHeader

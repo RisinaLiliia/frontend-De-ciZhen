@@ -23,11 +23,26 @@ import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
-import { Input } from '@/components/ui/Input';
-import { Select, type Option } from '@/components/ui/Select';
-import { Textarea } from '@/components/ui/Textarea';
+import type { Option } from '@/components/ui/Select';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
+import { WorkspacePlatformReviewComposer } from '@/components/reviews/WorkspacePlatformReviewComposer';
+import { WorkspaceUserReviewComposer } from '@/components/reviews/WorkspaceUserReviewComposer';
+import {
+  buildWorkspaceLocaleTag,
+  buildWorkspacePlatformReviewDistribution,
+  buildWorkspacePlatformReviews,
+  buildWorkspaceReviewDistribution,
+  buildWorkspaceReviewableBookingOptions,
+  buildWorkspaceReviewableRequestById,
+  buildWorkspaceReviewsAverage,
+  buildWorkspaceReviewsCount,
+  buildWorkspaceReviewsUi,
+  buildWorkspaceSortedUserReviews,
+  resolveWorkspaceReviewableBookingsLoading,
+  resolveWorkspaceUserReviewMutationErrorKey,
+  resolveWorkspaceUserSubmitDisabled,
+} from '@/components/reviews/workspaceReviewsPanel.model';
 
 type Translate = (key: I18nKey) => string;
 
@@ -64,47 +79,6 @@ type WorkspaceReviewsPanelProps = {
   userReviews?: ReviewDto[];
   isUserReviewsLoading?: boolean;
 };
-
-function clampRating(value: number) {
-  if (!Number.isFinite(value)) return 0;
-  return Math.max(1, Math.min(5, Math.round(value)));
-}
-
-function toNormalizedReview(
-  item: {
-    id: string;
-    rating?: number | null;
-    text?: string | null;
-    comment?: string | null;
-    createdAt?: string | null;
-    authorName?: string | null;
-  },
-  fallbackAuthor: string,
-  fallbackText: string,
-) {
-  const rawRating = Number(item.rating ?? 0);
-  const text = item.text?.trim() || item.comment?.trim() || fallbackText;
-  const createdAtRaw = item.createdAt ? new Date(item.createdAt) : null;
-  const createdAtTs =
-    createdAtRaw && Number.isFinite(createdAtRaw.getTime()) ? createdAtRaw.getTime() : null;
-  return {
-    id: item.id,
-    rating: clampRating(rawRating),
-    text,
-    authorName: item.authorName?.trim() || fallbackAuthor,
-    createdAtTs,
-  } satisfies NormalizedProviderReview;
-}
-
-function buildDistributionFromReviews(items: NormalizedProviderReview[]): ProviderReviewsDistribution {
-  const stats = new Map<number, number>();
-  for (let score = 1; score <= 5; score += 1) stats.set(score, 0);
-  items.forEach((item) => {
-    const score = clampRating(item.rating);
-    stats.set(score, (stats.get(score) ?? 0) + 1);
-  });
-  return { stats, max: Math.max(1, ...Array.from(stats.values())) };
-}
 
 export function WorkspaceReviewsPanel({
   t,
@@ -194,24 +168,12 @@ export function WorkspaceReviewsPanel({
   });
 
   const platformReviews = React.useMemo<NormalizedProviderReview[]>(
-    () =>
-      (platformQuery.data?.items ?? []).map((item) =>
-        toNormalizedReview(item, t(I18N_KEYS.requestsPage.platformReviewAnonymous), t(I18N_KEYS.requestsPage.platformReviewNoText))),
+    () => buildWorkspacePlatformReviews(platformQuery.data?.items ?? [], t),
     [platformQuery.data?.items, t],
   );
 
   const sortedUserReviews = React.useMemo<NormalizedProviderReview[]>(
-    () => {
-      const mapped = userReviews.map((item) =>
-        toNormalizedReview(item, t(I18N_KEYS.requestsPage.navUserFallback), t(I18N_KEYS.requestsPage.platformReviewNoText)));
-
-      return mapped.sort((a, b) => {
-        if (reviewSort === 'top') {
-          if (b.rating !== a.rating) return b.rating - a.rating;
-        }
-        return (b.createdAtTs ?? 0) - (a.createdAtTs ?? 0);
-      });
-    },
+    () => buildWorkspaceSortedUserReviews(userReviews, reviewSort, t),
     [reviewSort, t, userReviews],
   );
 
@@ -223,36 +185,26 @@ export function WorkspaceReviewsPanel({
   const visibleReviews = source === 'platform' ? platformReviews : visibleUserReviews;
 
   const displayRatingAvg = React.useMemo(() => {
-    if (source === 'platform') {
-      const summaryAvg = Number(platformQuery.data?.summary.averageRating ?? 0);
-      return Number.isFinite(summaryAvg) && summaryAvg >= 0 ? summaryAvg : 0;
-    }
-    if (sortedUserReviews.length === 0) return 0;
-    const sum = sortedUserReviews.reduce((acc, item) => acc + item.rating, 0);
-    return sum / sortedUserReviews.length;
+    return buildWorkspaceReviewsAverage({
+      source,
+      platformAverageRating: platformQuery.data?.summary.averageRating,
+      userReviews: sortedUserReviews,
+    });
   }, [platformQuery.data?.summary.averageRating, sortedUserReviews, source]);
 
   const displayRatingCount = React.useMemo(() => {
-    if (source === 'platform') {
-      const summaryTotal = Number(platformQuery.data?.summary.total ?? 0);
-      return Number.isFinite(summaryTotal) && summaryTotal >= 0 ? Math.floor(summaryTotal) : 0;
-    }
-    return sortedUserReviews.length;
+    return buildWorkspaceReviewsCount({
+      source,
+      platformTotal: platformQuery.data?.summary.total,
+      userReviewsCount: sortedUserReviews.length,
+    });
   }, [platformQuery.data?.summary.total, sortedUserReviews.length, source]);
 
   const reviewsDistribution: ProviderReviewsDistribution = React.useMemo(() => {
     if (source === 'platform') {
-      const stats = new Map<number, number>();
-      for (let score = 1; score <= 5; score += 1) stats.set(score, 0);
-      const distribution = platformQuery.data?.summary.distribution;
-      for (let score = 1; score <= 5; score += 1) {
-        const key = String(score) as '1' | '2' | '3' | '4' | '5';
-        const count = Number(distribution?.[key] ?? 0);
-        stats.set(score, Number.isFinite(count) && count > 0 ? Math.floor(count) : 0);
-      }
-      return { stats, max: Math.max(1, ...Array.from(stats.values())) };
+      return buildWorkspacePlatformReviewDistribution(platformQuery.data?.summary.distribution);
     }
-    return buildDistributionFromReviews(sortedUserReviews);
+    return buildWorkspaceReviewDistribution(sortedUserReviews);
   }, [platformQuery.data?.summary, sortedUserReviews, source]);
 
   const hasReviewsPagination = displayRatingCount > REVIEWS_PAGE_SIZE;
@@ -262,27 +214,12 @@ export function WorkspaceReviewsPanel({
     setReviewPage((prev) => Math.min(prev, totalReviewPages));
   }, [totalReviewPages]);
 
-  const reviewsUi: ProviderReviewsUi = resolvedLocale === 'de'
-    ? {
-        sortLatest: 'Neueste',
-        sortTop: 'Top bewertet',
-        noText: t(I18N_KEYS.requestsPage.platformReviewNoText),
-        basedOn: t(I18N_KEYS.requestsPage.platformReviewBasedOn),
-        ratingsLabel: t(I18N_KEYS.homePublic.reviews),
-        expandAbout: '',
-        collapseAbout: '',
-      }
-    : {
-        sortLatest: 'Latest',
-        sortTop: 'Top rated',
-        noText: t(I18N_KEYS.requestsPage.platformReviewNoText),
-        basedOn: t(I18N_KEYS.requestsPage.platformReviewBasedOn),
-        ratingsLabel: t(I18N_KEYS.homePublic.reviews),
-        expandAbout: '',
-        collapseAbout: '',
-      };
+  const reviewsUi: ProviderReviewsUi = React.useMemo(
+    () => buildWorkspaceReviewsUi(resolvedLocale, t),
+    [resolvedLocale, t],
+  );
 
-  const localeTag = resolvedLocale === 'de' ? 'de-DE' : 'en-US';
+  const localeTag = React.useMemo(() => buildWorkspaceLocaleTag(resolvedLocale), [resolvedLocale]);
   const reviewDateFormatter = React.useMemo(
     () =>
       new Intl.DateTimeFormat(localeTag, {
@@ -302,41 +239,18 @@ export function WorkspaceReviewsPanel({
     [localeTag],
   );
 
-  const reviewableRequestById = React.useMemo(() => {
-    const map = new Map<string, { title?: string | null; cityName?: string | null }>();
-    (reviewableRequestsQuery.data?.items ?? []).forEach((requestItem) => {
-      map.set(requestItem.id, {
-        title: requestItem.title ?? null,
-        cityName: requestItem.cityName ?? null,
-      });
-    });
-    return map;
-  }, [reviewableRequestsQuery.data?.items]);
+  const reviewableRequestById = React.useMemo(
+    () => buildWorkspaceReviewableRequestById(reviewableRequestsQuery.data?.items ?? []),
+    [reviewableRequestsQuery.data?.items],
+  );
 
   const reviewableBookingOptions = React.useMemo<Option[]>(
-    () =>
-      (userCompletedBookingsQuery.data ?? [])
-        .slice()
-        .sort((a, b) => {
-          const aTs = new Date(a.startAt).getTime();
-          const bTs = new Date(b.startAt).getTime();
-          return (Number.isFinite(bTs) ? bTs : 0) - (Number.isFinite(aTs) ? aTs : 0);
-        })
-        .map((bookingItem) => {
-          const requestInfo = reviewableRequestById.get(bookingItem.requestId);
-          const requestTitle =
-            requestInfo?.title?.trim() || t(I18N_KEYS.requestsPage.userReviewFormWorkFallback);
-          const cityLabel = requestInfo?.cityName?.trim() || '';
-          const bookingDateRaw = new Date(bookingItem.startAt);
-          const bookingDateLabel = Number.isFinite(bookingDateRaw.getTime())
-            ? bookingDateFormatter.format(bookingDateRaw)
-            : '';
-          const meta = [cityLabel, bookingDateLabel].filter((item) => item.length > 0).join(' · ');
-          return {
-            value: bookingItem.id,
-            label: meta.length > 0 ? `${requestTitle} · ${meta}` : requestTitle,
-          };
-        }),
+    () => buildWorkspaceReviewableBookingOptions({
+      bookings: userCompletedBookingsQuery.data ?? [],
+      reviewableRequestById,
+      bookingDateFormatter,
+      t,
+    }),
     [bookingDateFormatter, reviewableRequestById, t, userCompletedBookingsQuery.data],
   );
 
@@ -397,15 +311,7 @@ export function WorkspaceReviewsPanel({
     },
     onError: (error) => {
       const message = error instanceof Error ? error.message : '';
-      if (message === 'booking-required') {
-        toast.error(t(I18N_KEYS.requestsPage.userReviewFormBookingRequired));
-        return;
-      }
-      if (message === 'role-unsupported') {
-        toast.error(t(I18N_KEYS.requestsPage.userReviewFormRoleUnsupported));
-        return;
-      }
-      toast.error(t(I18N_KEYS.requestsPage.userReviewFormError));
+      toast.error(t(resolveWorkspaceUserReviewMutationErrorKey(message)));
     },
   });
 
@@ -422,168 +328,57 @@ export function WorkspaceReviewsPanel({
   };
 
   const platformComposer = (
-    <article className="provider-reviews-hub__item provider-reviews-hub__item--composer card">
-      <form className="form-stack provider-reviews-hub__composer-form" onSubmit={onSubmitPlatform}>
-        <p className="typo-h3 provider-reviews-hub__composer-title">{t(I18N_KEYS.requestsPage.platformReviewFormTitle)}</p>
-        <p className="typo-muted provider-reviews-hub__composer-hint">{t(I18N_KEYS.requestsPage.platformReviewFormHint)}</p>
-        {!isAuthenticated ? (
-          <div className="form-group">
-            <Input
-              value={draftAuthorName}
-              onChange={(event) => setDraftAuthorName(event.target.value)}
-              maxLength={120}
-              placeholder={t(I18N_KEYS.requestsPage.platformReviewFormAuthorPlaceholder)}
-              aria-label={t(I18N_KEYS.requestsPage.platformReviewFormAuthorPlaceholder)}
-            />
-          </div>
-        ) : null}
-        <div className="form-group">
-          <p className="typo-small">{t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}</p>
-          <div className="provider-reviews-hub__star-line">
-            <div
-              className="chip-row provider-reviews-hub__star-picker"
-              role="group"
-              aria-label={t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}
-            >
-              {[1, 2, 3, 4, 5].map((score) => (
-                <button
-                  key={score}
-                  type="button"
-                  className={`icon-button icon-button--md provider-reviews-hub__star-btn ${score <= draftRating ? '' : 'typo-muted'}`.trim()}
-                  aria-pressed={draftRating === score}
-                  onClick={() => setDraftRating(score)}
-                  aria-label={`${score}`}
-                >
-                  {score <= draftRating ? '★' : '☆'}
-                </button>
-              ))}
-            </div>
-            <span className="typo-body provider-reviews-hub__star-value" aria-live="polite">
-              {draftRating.toFixed(1)}
-            </span>
-          </div>
-        </div>
-        <div className="form-group">
-          <Textarea
-            value={draftText}
-            onChange={(event) => setDraftText(event.target.value)}
-            maxLength={1000}
-            placeholder={t(I18N_KEYS.requestsPage.platformReviewFormTextPlaceholder)}
-            aria-label={t(I18N_KEYS.requestsPage.platformReviewFormTextPlaceholder)}
-            rows={3}
-          />
-        </div>
-        <div className="auth-social__row provider-reviews-hub__composer-actions">
-          <button
-            type="submit"
-            className="auth-social__btn auth-social__btn--google provider-reviews-hub__composer-submit"
-            disabled={createReviewMutation.isPending}
-          >
-            {t(I18N_KEYS.requestsPage.platformReviewFormSubmit)}
-          </button>
-          <button
-            type="button"
-            className="btn-ghost provider-reviews-hub__composer-reset"
-            onClick={() => {
-              setDraftRating(5);
-              setDraftText('');
-              if (!isAuthenticated) setDraftAuthorName('');
-            }}
-            disabled={createReviewMutation.isPending}
-          >
-            {t(I18N_KEYS.requestsPage.platformReviewFormClear)}
-          </button>
-        </div>
-      </form>
-    </article>
+    <WorkspacePlatformReviewComposer
+      t={t}
+      isAuthenticated={isAuthenticated}
+      draftAuthorName={draftAuthorName}
+      draftRating={draftRating}
+      draftText={draftText}
+      isPending={createReviewMutation.isPending}
+      onAuthorNameChange={setDraftAuthorName}
+      onRatingChange={setDraftRating}
+      onTextChange={setDraftText}
+      onSubmit={onSubmitPlatform}
+      onReset={() => {
+        setDraftRating(5);
+        setDraftText('');
+        if (!isAuthenticated) setDraftAuthorName('');
+      }}
+    />
   );
-  const isReviewableBookingsLoading =
-    source === 'user' &&
-    (userCompletedBookingsQuery.isLoading ||
-      (reviewableRequestIds.length > 0 && reviewableRequestsQuery.isLoading));
-  const isUserSubmitDisabled =
-    createUserReviewMutation.isPending ||
-    !isAuthenticated ||
-    reviewableBookingOptions.length === 0 ||
-    draftBookingId.trim().length === 0;
+
+  const isReviewableBookingsLoading = resolveWorkspaceReviewableBookingsLoading({
+    source,
+    userCompletedBookingsLoading: userCompletedBookingsQuery.isLoading,
+    reviewableRequestIdsCount: reviewableRequestIds.length,
+    reviewableRequestsLoading: reviewableRequestsQuery.isLoading,
+  });
+  const isUserSubmitDisabled = resolveWorkspaceUserSubmitDisabled({
+    isPending: createUserReviewMutation.isPending,
+    isAuthenticated,
+    reviewableBookingOptionsLength: reviewableBookingOptions.length,
+    draftBookingId,
+  });
 
   const userComposer = (
-    <article className="provider-reviews-hub__item provider-reviews-hub__item--composer card">
-      <form className="form-stack provider-reviews-hub__composer-form" onSubmit={onSubmitUser}>
-        <p className="typo-h3 provider-reviews-hub__composer-title">{t(I18N_KEYS.requestsPage.userReviewFormTitle)}</p>
-        <p className="typo-muted provider-reviews-hub__composer-hint">{t(I18N_KEYS.requestsPage.userReviewFormHint)}</p>
-        <div className="form-group">
-          <p className="typo-small">{t(I18N_KEYS.requestsPage.userReviewFormBookingLabel)}</p>
-          <Select
-            options={reviewableBookingOptions}
-            value={draftBookingId}
-            onChange={setDraftBookingId}
-            placeholder={t(I18N_KEYS.requestsPage.userReviewFormBookingPlaceholder)}
-            disabled={isReviewableBookingsLoading || createUserReviewMutation.isPending}
-            aria-label={t(I18N_KEYS.requestsPage.userReviewFormBookingLabel)}
-          />
-          {!isReviewableBookingsLoading && reviewableBookingOptions.length === 0 ? (
-            <p className="typo-small typo-muted">{t(I18N_KEYS.requestsPage.userReviewFormNoEligibleHint)}</p>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <p className="typo-small">{t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}</p>
-          <div className="provider-reviews-hub__star-line">
-            <div
-              className="chip-row provider-reviews-hub__star-picker"
-              role="group"
-              aria-label={t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}
-            >
-              {[1, 2, 3, 4, 5].map((score) => (
-                <button
-                  key={score}
-                  type="button"
-                  className={`icon-button icon-button--md provider-reviews-hub__star-btn ${score <= draftRating ? '' : 'typo-muted'}`.trim()}
-                  aria-pressed={draftRating === score}
-                  onClick={() => setDraftRating(score)}
-                  aria-label={`${score}`}
-                >
-                  {score <= draftRating ? '★' : '☆'}
-                </button>
-              ))}
-            </div>
-            <span className="typo-body provider-reviews-hub__star-value" aria-live="polite">
-              {draftRating.toFixed(1)}
-            </span>
-          </div>
-        </div>
-        <div className="form-group">
-          <Textarea
-            value={draftText}
-            onChange={(event) => setDraftText(event.target.value)}
-            maxLength={1000}
-            placeholder={t(I18N_KEYS.requestsPage.userReviewFormTextPlaceholder)}
-            aria-label={t(I18N_KEYS.requestsPage.userReviewFormTextPlaceholder)}
-            rows={3}
-          />
-        </div>
-        <div className="auth-social__row provider-reviews-hub__composer-actions">
-          <button
-            type="submit"
-            className="auth-social__btn auth-social__btn--google provider-reviews-hub__composer-submit"
-            disabled={isUserSubmitDisabled}
-          >
-            {t(I18N_KEYS.requestsPage.userReviewFormSubmit)}
-          </button>
-          <button
-            type="button"
-            className="btn-ghost provider-reviews-hub__composer-reset"
-            onClick={() => {
-              setDraftRating(5);
-              setDraftText('');
-            }}
-            disabled={createUserReviewMutation.isPending}
-          >
-            {t(I18N_KEYS.requestsPage.platformReviewFormClear)}
-          </button>
-        </div>
-      </form>
-    </article>
+    <WorkspaceUserReviewComposer
+      t={t}
+      draftBookingId={draftBookingId}
+      draftRating={draftRating}
+      draftText={draftText}
+      reviewableBookingOptions={reviewableBookingOptions}
+      isReviewableBookingsLoading={isReviewableBookingsLoading}
+      isPending={createUserReviewMutation.isPending}
+      isSubmitDisabled={isUserSubmitDisabled}
+      onBookingChange={setDraftBookingId}
+      onRatingChange={setDraftRating}
+      onTextChange={setDraftText}
+      onSubmit={onSubmitUser}
+      onReset={() => {
+        setDraftRating(5);
+        setDraftText('');
+      }}
+    />
   );
 
   const feedTopSlot = source === 'platform' ? platformComposer : userComposer;
