@@ -25,7 +25,8 @@ export function usePublicRequestsSeenTotal({
     const storageKey = `${WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX}:${userId ?? 'guest'}`;
     const raw = window.localStorage.getItem(storageKey);
     const parsed = raw ? Number(raw) : 0;
-    setSeenTotal(Number.isFinite(parsed) ? parsed : 0);
+    const nextSeenTotal = Number.isFinite(parsed) ? parsed : 0;
+    setSeenTotal((current) => (current === nextSeenTotal ? current : nextSeenTotal));
   }, [isAuthed, userId]);
 
   React.useEffect(() => {
@@ -33,7 +34,7 @@ export function usePublicRequestsSeenTotal({
     if (seenTotal > total) {
       const storageKey = `${WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX}:${userId ?? 'guest'}`;
       window.localStorage.setItem(storageKey, String(total));
-      setSeenTotal(total);
+      setSeenTotal((current) => (current === total ? current : total));
     }
   }, [isAuthed, seenTotal, total, userId]);
 
@@ -41,7 +42,7 @@ export function usePublicRequestsSeenTotal({
     if (typeof window === 'undefined' || !isAuthed) return;
     const storageKey = `${WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX}:${userId ?? 'guest'}`;
     window.localStorage.setItem(storageKey, String(total));
-    setSeenTotal(total);
+    setSeenTotal((current) => (current === total ? current : total));
   }, [isAuthed, total, userId]);
 
   React.useEffect(() => {
