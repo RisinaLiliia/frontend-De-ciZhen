@@ -71,19 +71,19 @@ function getOverviewCopy(locale: Locale) {
   }
 
   return {
-    snapshotTitle: 'Plattformueberblick',
+    snapshotTitle: 'Plattformüberblick',
     snapshotSubtitle: 'Was jetzt passiert, wo Chancen liegen und was als Nächstes zu tun ist.',
     focusLabel: 'Focus Mode',
     quickActionsTitle: 'Schnellaktionen',
     quickActionsSubtitle: 'Direkt in die naechste Entscheidung springen, ohne den gemeinsamen Workspace-Kontext zu verlassen.',
     quickActionsSecondary: {
-      requests: 'Auftraege oeffnen',
+      requests: 'Aufträge öffnen',
       providers: 'Anbieter suchen',
-      analysis: 'Analyse oeffnen',
+      analysis: 'Analyse öffnen',
     },
     offersTitle: 'Aktive Angebote',
     offersSubtitle: 'Neue Nachfrage mit Marktsignalen als direkter Einstieg in Analyse.',
-    offersCta: 'Analyse oeffnen',
+    offersCta: 'Analyse öffnen',
     topProvidersTitle: 'Top Anbieter',
     topProvidersSubtitle: 'Verifiziert, schnell in der Antwort und mit sichtbarer Aktivitaet im aktuellen gemeinsamen Kontext.',
     opportunityBadge: 'Chance',
