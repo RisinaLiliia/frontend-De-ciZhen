@@ -1,40 +1,35 @@
 'use client';
 
 import * as React from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
-import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
-import { WorkspaceMobileSectionSheetCard } from '@/features/workspace/requests/WorkspaceMobileSectionSheetCard';
 import { useWorkspaceMobileSectionSheet } from '@/features/workspace/requests/useWorkspaceMobileSectionSheet';
 import {
-  isWorkspaceMobileSheetItemActive,
-  splitWorkspaceMobileSheetItems,
-} from '@/features/workspace/requests/workspaceMobileSectionSheet.model';
+  useWorkspaceSharedContext,
+} from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
+import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { Locale } from '@/lib/i18n/t';
 
 export function WorkspaceMobileSectionSheet({
-  items,
+  locale,
+  activePublicSection,
+  activeWorkspaceTab,
 }: {
-  items: PersonalNavItem[];
+  locale: Locale;
+  activePublicSection: PublicWorkspaceSection | null;
+  activeWorkspaceTab: WorkspaceTab;
 }) {
   const t = useT();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { open, setOpen, panelRef, closeButtonRef } = useWorkspaceMobileSectionSheet();
   const titleId = React.useId();
-  const { primaryItems, secondaryItems } = React.useMemo(
-    () => splitWorkspaceMobileSheetItems(items),
-    [items],
-  );
-
-  const isActive = React.useCallback((item: PersonalNavItem) => {
-    return isWorkspaceMobileSheetItemActive(item, pathname, searchParams);
-  }, [pathname, searchParams]);
-
-  const onSelectItem = React.useCallback((item: PersonalNavItem) => {
-    item.onClick?.();
-    setOpen(false);
-  }, [setOpen]);
+  const model = useWorkspaceSharedContext({
+    t,
+    locale,
+    activePublicSection,
+    activeWorkspaceTab,
+  });
 
   if (!open) return null;
 
@@ -63,34 +58,26 @@ export function WorkspaceMobileSectionSheet({
           </button>
         </header>
         <div className="workspace-mobile-nav-sheet__body">
-          {primaryItems.length ? (
-            <section className="workspace-mobile-nav-sheet__section">
-              <div className="workspace-mobile-nav-sheet__grid">
-                {primaryItems.map((item) => (
-                  <WorkspaceMobileSectionSheetCard
-                    key={item.key}
-                    item={item}
-                    active={isActive(item)}
-                    onSelect={onSelectItem}
-                  />
-                ))}
-              </div>
-            </section>
-          ) : null}
-          {secondaryItems.length ? (
-            <section className="workspace-mobile-nav-sheet__section workspace-mobile-nav-sheet__section--secondary">
-              <div className="workspace-mobile-nav-sheet__grid">
-                {secondaryItems.map((item) => (
-                  <WorkspaceMobileSectionSheetCard
-                    key={item.key}
-                    item={item}
-                    active={isActive(item)}
-                    onSelect={onSelectItem}
-                  />
-                ))}
-              </div>
-            </section>
-          ) : null}
+          <section className="workspace-mobile-nav-sheet__section">
+            <nav className="workspace-mode-nav workspace-mode-nav--sheet" aria-label={locale === 'de' ? 'Workspace-Modi' : 'Workspace modes'}>
+              {model.modeItems.map((item) => (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  prefetch={false}
+                  className={`workspace-mode-nav__item${item.isActive ? ' is-active' : ''}`.trim()}
+                  aria-current={item.isActive ? 'page' : undefined}
+                  onClick={() => setOpen(false)}
+                >
+                  <span className="workspace-mode-nav__icon" aria-hidden="true">{item.icon}</span>
+                  <span className="workspace-mode-nav__copy">
+                    <strong className="workspace-mode-nav__label">{item.label}</strong>
+                    <span className="workspace-mode-nav__description">{item.description}</span>
+                  </span>
+                </Link>
+              ))}
+            </nav>
+          </section>
         </div>
       </section>
     </div>

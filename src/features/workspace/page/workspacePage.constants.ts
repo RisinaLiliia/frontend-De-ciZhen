@@ -8,6 +8,7 @@ export const EMPTY_PROVIDER_IDS = new Set<string>();
 export const NOOP_PROVIDER_TOGGLE = () => {};
 
 export const EMPTY_EXPLORE: ComponentProps<typeof WorkspacePageLayout>['explore'] = {
+  exploreListDensity: 'single',
   setExploreListDensity: () => {},
   sidebarNearbyLimit: 0,
   sidebarTopProvidersLimit: 0,

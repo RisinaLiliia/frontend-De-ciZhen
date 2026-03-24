@@ -2,17 +2,19 @@
 
 import * as React from 'react';
 
-import { RequestsBottomPagination } from '@/components/requests/RequestsBottomPagination';
+import { RequestsPaginatedPanel } from '@/components/requests/RequestsPaginatedPanel';
 import { RequestsResultsSummary } from '@/components/requests/RequestsFilters';
-import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import {
+  DEFAULT_REQUESTS_LIST_DENSITY,
+  REQUESTS_PAGE_SIZE,
+  type RequestsListDensity,
+} from '@/lib/requests/pagination';
 import { useWorkspacePlatformReviewsOverview } from '@/features/workspace/requests/useWorkspacePlatformReviewsOverview';
 import { WorkspaceReviewsShellControls } from '@/features/workspace/requests/WorkspaceReviewsShellControls';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
 import { WorkspacePlatformReviewsRail } from '@/features/workspace/requests/WorkspacePlatformReviewsRail';
-
-const REVIEWS_PAGE_SIZE = 20;
 
 type Translate = (key: I18nKey) => string;
 
@@ -29,7 +31,7 @@ export function WorkspacePlatformReviewsMain({
 }: WorkspacePlatformReviewsMainProps) {
   const { reviewRange, reviewSort } = useWorkspaceReviewControlsState();
   const [reviewPage, setReviewPage] = React.useState(1);
-  const [listDensity, setListDensity] = React.useState<'single' | 'double'>('single');
+  const [listDensity, setListDensity] = React.useState<RequestsListDensity>(DEFAULT_REQUESTS_LIST_DENSITY);
   const {
     visibleReviews,
     displayRatingCount,
@@ -39,7 +41,7 @@ export function WorkspacePlatformReviewsMain({
   } = useWorkspacePlatformReviewsOverview({
     t,
     page: reviewPage,
-    limit: REVIEWS_PAGE_SIZE,
+    limit: REQUESTS_PAGE_SIZE,
   });
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const reviewDateFormatter = React.useMemo(
@@ -60,8 +62,8 @@ export function WorkspacePlatformReviewsMain({
     setReviewPage((prev) => Math.min(prev, totalPages));
   }, [totalPages]);
 
-  return (
-    <section className="panel requests-panel" id="platform-reviews">
+  const topSlot = (
+    <>
       {showInlineRail ? (
         <div className="workspace-platform-reviews__mobile-rail">
           <WorkspacePlatformReviewsRail t={t} />
@@ -82,44 +84,41 @@ export function WorkspacePlatformReviewsMain({
         onPrevPage={() => setReviewPage((prev) => Math.max(1, prev - 1))}
         onNextPage={() => setReviewPage((prev) => Math.min(totalPages, prev + 1))}
       />
+    </>
+  );
 
-      <section
-        className={`requests-list requests-list--stable workspace-reviews-list ${listDensity === 'double' ? 'is-double' : 'is-single'}`.trim()}
-        role="region"
-        aria-label={t(I18N_KEYS.homePublic.reviews)}
-        aria-live="polite"
-      >
-        <WorkspaceContentState
-          isLoading={isLoading}
-          isEmpty={!isLoading && displayRatingCount === 0}
-          emptyTitle={t(I18N_KEYS.homePublic.reviews)}
-          emptyHint={t(I18N_KEYS.requestsPage.platformReviewsEmptyHint)}
-        >
-          {visibleReviews.map((review) => (
-            <article key={review.id} className="provider-reviews-hub__item card">
-              <div className="provider-reviews-hub__item-head">
-                <p className="provider-reviews-hub__item-author">{review.authorName}</p>
-                <p className="provider-reviews-hub__item-date">
-                  {review.createdAtTs ? reviewDateFormatter.format(new Date(review.createdAtTs)) : ''}
-                </p>
-              </div>
-              <p className="provider-reviews-hub__item-stars" aria-label={`${review.rating} of 5`}>
-                {'★'.repeat(review.rating)}
-                {'☆'.repeat(Math.max(0, 5 - review.rating))}
-              </p>
-              <p className="provider-reviews-hub__item-text">{review.text}</p>
-            </article>
-          ))}
-        </WorkspaceContentState>
-      </section>
-
-      <RequestsBottomPagination
-        t={t}
-        page={reviewPage}
-        totalPages={totalPages}
-        onPrevPage={() => setReviewPage((prev) => Math.max(1, prev - 1))}
-        onNextPage={() => setReviewPage((prev) => Math.min(totalPages, prev + 1))}
-      />
-    </section>
+  return (
+    <RequestsPaginatedPanel
+      t={t}
+      page={reviewPage}
+      totalPages={totalPages}
+      onPrevPage={() => setReviewPage((prev) => Math.max(1, prev - 1))}
+      onNextPage={() => setReviewPage((prev) => Math.min(totalPages, prev + 1))}
+      topSlot={topSlot}
+      panelClassName="workspace-platform-reviews"
+      listAriaLabel={t(I18N_KEYS.homePublic.reviews)}
+      listDensity={listDensity}
+      listClassName="workspace-reviews-list"
+      isLoading={isLoading}
+      isEmpty={!isLoading && displayRatingCount === 0}
+      emptyTitle={t(I18N_KEYS.homePublic.reviews)}
+      emptyHint={t(I18N_KEYS.requestsPage.platformReviewsEmptyHint)}
+    >
+      {visibleReviews.map((review) => (
+        <article key={review.id} className="provider-reviews-hub__item card">
+          <div className="provider-reviews-hub__item-head">
+            <p className="provider-reviews-hub__item-author">{review.authorName}</p>
+            <p className="provider-reviews-hub__item-date">
+              {review.createdAtTs ? reviewDateFormatter.format(new Date(review.createdAtTs)) : ''}
+            </p>
+          </div>
+          <p className="provider-reviews-hub__item-stars" aria-label={`${review.rating} of 5`}>
+            {'★'.repeat(review.rating)}
+            {'☆'.repeat(Math.max(0, 5 - review.rating))}
+          </p>
+          <p className="provider-reviews-hub__item-text">{review.text}</p>
+        </article>
+      ))}
+    </RequestsPaginatedPanel>
   );
 }

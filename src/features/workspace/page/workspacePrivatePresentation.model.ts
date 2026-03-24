@@ -45,6 +45,7 @@ type BuildPublicIntroArgs = {
   data: Pick<
     WorkspacePrivateDataFlowResult,
     | 'activePublicSection'
+    | 'activeWorkspaceTab'
     | 'allRequestsSummary'
     | 'publicCityActivity'
     | 'isPublicSummaryLoading'
@@ -158,6 +159,9 @@ export function buildWorkspacePrivatePresentationArgs({
 }: BuildPresentationArgs): WorkspacePresentationArgs {
   return {
     t: branch.t,
+    locale: branch.locale,
+    activePublicSection: data.activePublicSection,
+    activeWorkspaceTab: data.activeWorkspaceTab,
     WorkspacePrivateIntroComponent,
     personalNavItems: buildWorkspaceLocalNavItems(privateState.personalNavItems),
     hideNavBadges: data.activePublicSection === 'stats',
@@ -183,6 +187,8 @@ export function buildWorkspacePublicIntroProps({
   return {
     t: branch.t,
     locale: branch.locale,
+    activePublicSection: data.activePublicSection,
+    activeWorkspaceTab: data.activeWorkspaceTab,
     personalNavItems: buildWorkspaceLocalNavItems(personalNavItems),
     hideNavBadges: data.activePublicSection === 'stats',
     insightText: '',

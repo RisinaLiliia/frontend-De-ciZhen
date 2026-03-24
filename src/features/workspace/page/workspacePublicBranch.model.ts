@@ -60,6 +60,7 @@ type BuildExploreWithSeedArgs = {
 type BuildPublicIntroArgs = {
   branch: Pick<WorkspaceBranchProps, 't' | 'locale' | 'isPersonalized'>;
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
+  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   state: PublicStateModel;
   cityActivity: PublicIntroProps['cityActivity'];
   platformSummary: PublicIntroProps['summary'];
@@ -162,6 +163,7 @@ export function shouldAutoMarkPublicRequestsSeen(params: {
 export function buildWorkspacePublicIntroProps({
   branch,
   activePublicSection,
+  activeWorkspaceTab,
   state,
   cityActivity,
   platformSummary,
@@ -171,6 +173,8 @@ export function buildWorkspacePublicIntroProps({
   return {
     t: branch.t,
     locale: branch.locale,
+    activePublicSection,
+    activeWorkspaceTab,
     personalNavItems: buildWorkspaceLocalNavItems(state.personalNavItems),
     insightText: branch.isPersonalized ? state.insightText : '',
     activityProgress: state.activityProgress,

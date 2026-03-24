@@ -16,6 +16,7 @@ type BuildWorkspacePublicIntroArgsParams = {
   data: Pick<
     WorkspacePublicDataFlowResult,
     | 'activePublicSection'
+    | 'activeWorkspaceTab'
     | 'activityProgress'
     | 'personalNavItems'
     | 'insightText'
@@ -46,6 +47,7 @@ export function buildWorkspacePublicIntroArgs({
   return {
     branch,
     activePublicSection: data.activePublicSection,
+    activeWorkspaceTab: data.activeWorkspaceTab,
     state: {
       activityProgress: data.activityProgress,
       personalNavItems: data.personalNavItems,

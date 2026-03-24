@@ -5,6 +5,10 @@ import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/Pe
 import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
 import { WorkspaceControlShell } from '@/features/workspace/requests/WorkspaceControlShell';
 import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
+import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
+import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { Locale } from '@/lib/i18n/t';
 
 type StatsOrderItem = {
   tab: 'provider' | 'client';
@@ -12,6 +16,9 @@ type StatsOrderItem = {
 };
 
 export type WorkspacePrivateIntroProps = {
+  locale: Locale;
+  activePublicSection: PublicWorkspaceSection | null;
+  activeWorkspaceTab: WorkspaceTab;
   personalNavItems: PersonalNavItem[];
   hideNavBadges?: boolean;
   insightText: string;
@@ -32,6 +39,9 @@ export type WorkspacePrivateIntroProps = {
 };
 
 export function WorkspacePrivateIntro({
+  locale,
+  activePublicSection,
+  activeWorkspaceTab,
   personalNavItems,
   hideNavBadges = false,
   insightText,
@@ -68,6 +78,11 @@ export function WorkspacePrivateIntro({
           progressPercent={activityProgress}
           surface="embedded"
         />
+        <WorkspaceMobileContextSection
+          locale={locale}
+          activePublicSection={activePublicSection}
+          activeWorkspaceTab={activeWorkspaceTab}
+        />
         <WorkspaceControlShell
           context={leftColumnSlot}
           aside={(
@@ -85,7 +100,11 @@ export function WorkspacePrivateIntro({
             />
           )}
         />
-        {personalNavItems.length ? <WorkspaceMobileSectionSheet items={personalNavItems} /> : null}
+        <WorkspaceMobileSectionSheet
+          locale={locale}
+          activePublicSection={activePublicSection}
+          activeWorkspaceTab={activeWorkspaceTab}
+        />
         {showQuickAction ? (
           <section className="panel stack-sm workspace-intro__mobile-hidden" aria-label="Workspace quick action">
             <CreateRequestCard href={quickActionHref} />

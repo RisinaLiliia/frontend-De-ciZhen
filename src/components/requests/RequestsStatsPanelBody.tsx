@@ -26,7 +26,7 @@ export function RequestsStatsPanelBody({ viewModel }: { viewModel: PayloadViewMo
   return (
     <>
       {payload.showKpis !== false && payload.kpis.length > 0 ? (
-        <div className="requests-stats__kpi-grid">
+        <div className="requests-stats__kpi-grid kpi-grid kpi-grid--decision">
           {payload.kpis.map((kpi) => (
             <KpiCard
               key={kpi.key}

@@ -5,12 +5,13 @@ import { resolveWorkspacePublicDataFlowResult } from './workspacePublicDataFlow.
 describe('workspacePublicDataFlow.model', () => {
   it('assembles final public data-flow payload from route state, snapshot, formatters, explore and public state', () => {
     const exploreWithSeed = {
+      exploreListDensity: 'single' as const,
       setExploreListDensity: vi.fn(),
       sidebarNearbyLimit: 5,
       sidebarTopProvidersLimit: 3,
       sidebarProofCases: [],
       proofIndex: 1,
-    };
+    } as const;
     const publicState = {
       personalNavItems: [{ key: 'requests', href: '/workspace', label: 'Requests', icon: null }],
       activityProgress: 72,

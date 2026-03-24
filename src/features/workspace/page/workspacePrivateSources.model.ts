@@ -130,6 +130,7 @@ export function resolveWorkspacePrivateSourcesResult({
 }: ResolveWorkspacePrivateSourcesResultParams) {
   return {
     allRequestsSummary: data.allRequestsSummary,
+    publicRequests: publicRequestsState.requests,
     publicCityActivity: data.publicCityActivity,
     isPublicSummaryLoading: data.isPublicSummaryLoading,
     isPublicSummaryError: data.isPublicSummaryError,
@@ -163,6 +164,7 @@ export function resolveWorkspacePrivateSourcesResult({
     isClientContractsLoading: data.isClientContractsLoading,
     isMyReviewsLoading: data.isMyReviewsLoading,
     platformRequestsTotal: publicRequestsState.platformRequestsTotal,
+    isPublicRequestsError: data.isError,
     isLoading: data.isLoading,
     requestsCount: publicRequestsState.requests.length,
   };

@@ -19,6 +19,9 @@ type WorkspacePublicDemandMapPanelProps = {
   isLoading?: boolean;
   isError?: boolean;
   surface?: 'panel' | 'embedded';
+  panelRef?: React.Ref<HTMLElement>;
+  style?: React.CSSProperties;
+  onSelectCity?: (cityId: string) => void;
 };
 
 export function WorkspacePublicDemandMapPanel({
@@ -29,6 +32,9 @@ export function WorkspacePublicDemandMapPanel({
   isLoading = false,
   isError = false,
   surface = 'panel',
+  panelRef,
+  style,
+  onSelectCity,
 }: WorkspacePublicDemandMapPanelProps) {
   const formatNumber = React.useMemo(
     () => new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US'),
@@ -50,6 +56,7 @@ export function WorkspacePublicDemandMapPanel({
     hasCoordinates,
     formatNumber,
     activeRequestsLabel: t(I18N_KEYS.homePublic.demandMapActiveRequests),
+    onSelectCity,
   });
 
   return (
@@ -60,6 +67,8 @@ export function WorkspacePublicDemandMapPanel({
       isLoading={isLoading}
       isError={isError}
       surface={surface}
+      panelRef={panelRef}
+      style={style}
       activeRequestsCount={activeRequestsCount}
       activeProvidersCount={activeProvidersCount}
       mapHostRef={mapHostRef}

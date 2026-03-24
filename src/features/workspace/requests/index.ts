@@ -1,6 +1,7 @@
 export { PublicContent } from './PublicContent';
 export { WorkspaceContent } from './WorkspaceContent';
 export { WorkspaceOverviewMain } from './WorkspaceOverviewMain';
+export { WorkspaceOverviewInsightsPanel } from './WorkspaceOverviewInsightsPanel';
 export { WorkspaceExploreSection } from './WorkspaceExploreSection';
 export { WorkspaceFrame, WorkspaceTopProvidersAside } from './WorkspaceFrame';
 export { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
@@ -10,6 +11,7 @@ export { WorkspacePublicIntro } from './WorkspacePublicIntro';
 export { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 export { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
 export { WorkspacePublicStatsPanel } from './WorkspacePublicStatsPanel';
+export { useWorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsModel';
 
 export { useWorkspaceContractRequestsData } from './useWorkspaceContractRequestsData';
 export { useWorkspaceData } from './useWorkspaceData';

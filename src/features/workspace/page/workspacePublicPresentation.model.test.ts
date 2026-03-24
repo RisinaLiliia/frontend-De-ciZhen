@@ -88,12 +88,13 @@ describe('workspacePublicPresentation.model', () => {
   it('builds layout props and render metric payload for the public branch shell', () => {
     const workspaceIntroNode = 'intro';
     const exploreWithSeed = {
+      exploreListDensity: 'single' as const,
       setExploreListDensity: () => undefined,
       sidebarNearbyLimit: 5,
       sidebarTopProvidersLimit: 5,
       sidebarProofCases: [],
       proofIndex: 0,
-    };
+    } as const;
 
     const layoutProps = buildWorkspacePublicLayoutProps({
       t: (key) => String(key),
