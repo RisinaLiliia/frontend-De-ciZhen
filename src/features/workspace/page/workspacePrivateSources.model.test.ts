@@ -127,6 +127,8 @@ describe('workspacePrivateSources.model', () => {
     });
 
     expect(result.platformRequestsTotal).toBe(12);
+    expect(result.publicRequests).toEqual([{ id: 'req-1' }, { id: 'req-2' }]);
+    expect(result.isPublicRequestsError).toBeUndefined();
     expect(result.requestsCount).toBe(2);
     expect(result.isProviderContractsLoading).toBe(true);
     expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));

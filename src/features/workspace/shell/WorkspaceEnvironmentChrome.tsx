@@ -15,6 +15,10 @@ import {
   IconUser,
 } from '@/components/ui/icons/icons';
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
+import { WorkspaceDecisionActionCard } from '@/features/workspace/requests/components/WorkspaceDecisionActionCard';
+import { WorkspaceDecisionRecommendationModal } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationModal';
+import { WorkspaceDecisionRecommendationSection } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationSection';
+import { getWorkspaceStatisticsCopy } from '@/features/workspace/requests/stats/workspaceStatistics.copy';
 import { useWorkspacePublicFilters } from '@/features/workspace/public/useWorkspacePublicFilters';
 import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 import { resolveActiveWorkspaceMode, type WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
@@ -22,12 +26,13 @@ import { RANGE_OPTIONS, rangeLabelShort } from '@/features/workspace/requests/st
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { useT } from '@/lib/i18n/useT';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import { isWorkspaceTab, type WorkspaceTab } from '@/features/workspace/requests';
+import { isWorkspaceTab, type WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 
 type Translator = (key: I18nKey) => string;
 
-type WorkspaceModeItem = {
+export type WorkspaceModeItem = {
   key: WorkspaceModeKey;
   label: string;
   description: string;
@@ -56,10 +61,9 @@ type WorkspaceModeCopy = {
     syncValue: string;
   };
   rail: {
-    contextTitle: string;
-    contextDescription: string;
     nextStepTitle: string;
     scopeLabel: string;
+    openModeTemplate: string;
   };
   modes: Record<WorkspaceModeKey, {
     label: string;
@@ -77,6 +81,7 @@ type WorkspaceSharedContext = {
   description: string;
   railDescription: string;
   scope: string;
+  activeModeHref: string;
   chips: Array<{
     key: 'city' | 'category' | 'service' | 'range';
     label: string;
@@ -104,8 +109,115 @@ type WorkspaceSharedContext = {
   };
 };
 
+type WorkspaceFocusRecommendationCopy = {
+  title: string;
+  defaultContextLabel: string;
+  loadingLabel: string;
+  loadingBody: string;
+  recommendationLabel: string;
+  scopeLabel: string;
+  actionLabel: string;
+  switchLabel: string;
+  modes: Record<WorkspaceModeKey, {
+    heroTitleTemplate: string;
+    heroText: string;
+    actionText: string;
+    switchText: string;
+  }>;
+};
+
 const SHARED_QUERY_KEYS = ['cityId', 'categoryKey', 'subcategoryKey', 'range'] as const;
 const CLEAR_QUERY_KEYS = ['cityId', 'categoryKey', 'subcategoryKey', 'range', 'sort', 'page'] as const;
+
+function getWorkspaceFocusRecommendationCopy(locale: Locale): WorkspaceFocusRecommendationCopy {
+  if (locale === 'en') {
+    return {
+      title: 'Next step',
+      defaultContextLabel: 'Current workspace context',
+      loadingLabel: "De'ci AI is prioritizing the next step…",
+      loadingBody: 'The recommendation is prepared from the active workspace context, filters, and current mode.',
+      recommendationLabel: 'Recommended step',
+      scopeLabel: 'Shared scope',
+      actionLabel: 'Recommended action',
+      switchLabel: 'When switching makes sense',
+      modes: {
+        overview: {
+          heroTitleTemplate: 'Prioritize {mode}',
+          heroText: 'Overview is currently the strongest next step to triage queue, offers, and platform signals before moving deeper into execution.',
+          actionText: 'Start in overview, review new requests and active offers, then move into execution or analytics with clearer priorities.',
+          switchText: 'Switch to Requests when direct replies or offers are urgent, and to Analysis when pricing, timing, or market signals need a decision first.',
+        },
+        requests: {
+          heroTitleTemplate: 'Prioritize {mode}',
+          heroText: 'Requests is currently the strongest next step because the active context already narrows the work queue to relevant demand.',
+          actionText: 'Work through the newest relevant requests first, keep response time low, and decide quickly whether to offer, shortlist, or move on.',
+          switchText: 'Switch to Analysis when pricing or win-rate confidence is unclear, and to Providers when you need additional capacity or backup supply.',
+        },
+        providers: {
+          heroTitleTemplate: 'Prioritize {mode}',
+          heroText: 'Providers is currently the strongest next step when you need to compare supply inside the same market scope.',
+          actionText: 'Use the current filters to shortlist providers, compare responsiveness and profile quality, and keep the final list tightly scoped.',
+          switchText: 'Switch to Requests when demand already needs action now, and to Analysis when you need stronger confidence on competition or market depth first.',
+        },
+        analysis: {
+          heroTitleTemplate: 'Prioritize {mode}',
+          heroText: 'Analysis is currently the strongest next step when the next decision depends on timing, pricing, or market momentum.',
+          actionText: 'Validate pricing, demand, and competition inside the same context before sending offers or changing activation priorities.',
+          switchText: 'Switch back to Requests when the decision is ready for execution, and to Actions when profile, setup, or visibility changes are the real blocker.',
+        },
+        actions: {
+          heroTitleTemplate: 'Prioritize {mode}',
+          heroText: 'Actions is currently the strongest next step when activation, profile quality, or setup is limiting performance.',
+          actionText: 'Use this mode to improve readiness, tighten profile quality, and complete operational setup without losing the shared market frame.',
+          switchText: 'Switch to Analysis when you need clearer market direction first, and to Requests once the setup is strong enough for direct execution.',
+        },
+      },
+    };
+  }
+
+  return {
+    title: 'Nächster Schritt',
+    defaultContextLabel: 'Aktueller Workspace-Kontext',
+    loadingLabel: "De'ci KI priorisiert den nächsten Schritt…",
+    loadingBody: 'Die Empfehlung wird auf Basis des aktiven Workspace-Kontexts, der Filter und des aktuellen Modus vorbereitet.',
+    recommendationLabel: 'Empfohlener Schritt',
+    scopeLabel: 'Gemeinsamer Scope',
+    actionLabel: 'Handlungsempfehlung',
+    switchLabel: 'Wann ein Wechsel sinnvoll ist',
+    modes: {
+      overview: {
+        heroTitleTemplate: '{mode} priorisieren',
+        heroText: 'Die Übersicht ist aktuell der sinnvollste nächste Schritt, um Queue, Angebote und Plattformsignale vor der tieferen Ausführung sauber zu priorisieren.',
+        actionText: 'Starte in der Übersicht, prüfe neue Anfragen und aktive Angebote und gehe erst danach gezielt in Ausführung oder Analyse.',
+        switchText: 'Wechsle in Aufträge, wenn direkte Antworten oder Angebote anstehen, und in Analyse, wenn Preis, Timing oder Marktchance zuerst geklärt werden müssen.',
+      },
+      requests: {
+        heroTitleTemplate: '{mode} priorisieren',
+        heroText: 'Aufträge ist aktuell der sinnvollste nächste Schritt, weil der aktive Kontext die Nachfrage bereits auf relevante Arbeit eingrenzt.',
+        actionText: 'Arbeite zuerst die neuesten passenden Anfragen ab, halte Reaktionszeiten niedrig und entscheide schnell über Angebot, Shortlist oder Abschluss.',
+        switchText: 'Wechsle in Analyse, wenn Preisstrategie oder Abschlusswahrscheinlichkeit unklar sind, und in Anbieter, wenn zusätzliche Kapazität oder Alternativen fehlen.',
+      },
+      providers: {
+        heroTitleTemplate: '{mode} priorisieren',
+        heroText: 'Anbieter ist aktuell der sinnvollste nächste Schritt, wenn du Angebot und Kapazität im gleichen Marktkontext vergleichen musst.',
+        actionText: 'Nutze die aktuellen Filter, um Anbieter enger zu shortlistieren, Reaktionsstärke zu vergleichen und die Auswahl klar zu verdichten.',
+        switchText: 'Wechsle in Aufträge, wenn die Nachfrage sofort operativ bearbeitet werden muss, und in Analyse, wenn Wettbewerb oder Marktgröße zuerst bewertet werden sollten.',
+      },
+      analysis: {
+        heroTitleTemplate: '{mode} priorisieren',
+        heroText: 'Analyse ist aktuell der sinnvollste nächste Schritt, wenn Preis, Timing oder Marktbewegung die nächste Entscheidung bestimmen.',
+        actionText: 'Prüfe Pricing, Nachfrage und Wettbewerb im gleichen Kontext, bevor du Angebote verschickst oder Aktivierungen umpriorisierst.',
+        switchText: 'Wechsle zurück in Aufträge, sobald die Entscheidung reif für Ausführung ist, und in Aktionen, wenn Profil, Setup oder Sichtbarkeit der eigentliche Engpass sind.',
+      },
+      actions: {
+        heroTitleTemplate: '{mode} priorisieren',
+        heroText: 'Aktionen ist aktuell der sinnvollste nächste Schritt, wenn Aktivierung, Profilqualität oder Setup die Leistung begrenzen.',
+        actionText: 'Nutze diesen Modus, um Einsatzbereitschaft, Profilqualität und operative Basis zu stärken, ohne den gemeinsamen Marktkontext zu verlieren.',
+        switchText: 'Wechsle in Analyse, wenn du zuerst eine klarere Marktrichtung brauchst, und in Aufträge, sobald das Setup stark genug für direkte Ausführung ist.',
+      },
+    },
+  };
+}
 
 function getWorkspaceModeCopy(locale: Locale): WorkspaceModeCopy {
   if (locale === 'en') {
@@ -129,10 +241,9 @@ function getWorkspaceModeCopy(locale: Locale): WorkspaceModeCopy {
         syncValue: 'Requests / Providers / Analytics',
       },
       rail: {
-        contextTitle: 'Context in effect',
-        contextDescription: 'These filters stay visible while you move through workspace modes.',
         nextStepTitle: 'Current focus',
         scopeLabel: 'Shared scope',
+        openModeTemplate: 'Open {mode}',
       },
       modes: {
         overview: {
@@ -194,10 +305,9 @@ function getWorkspaceModeCopy(locale: Locale): WorkspaceModeCopy {
       syncValue: 'Aufträge / Anbieter / Analyse',
     },
     rail: {
-      contextTitle: 'Aktiver Kontext',
-      contextDescription: 'Diese Filter bleiben sichtbar, während du zwischen den Workspace-Modi wechselst.',
       nextStepTitle: 'Aktueller Fokus',
       scopeLabel: 'Gemeinsamer Scope',
+      openModeTemplate: '{mode} öffnen',
     },
     modes: {
       overview: {
@@ -250,6 +360,21 @@ function resolveRangeLabel(locale: Locale, value: string | null, fallback: strin
 function resolveWorkspaceSharedRange(value: string | null): WorkspaceStatisticsRange {
   if (value === '24h' || value === '7d' || value === '30d' || value === '90d') return value;
   return '30d';
+}
+
+function fillWorkspaceModeTemplate(template: string, mode: string) {
+  return template.replace('{mode}', mode);
+}
+
+function getWorkspaceChipValue(
+  chips: WorkspaceSharedContext['chips'],
+  key: WorkspaceSharedContext['chips'][number]['key'],
+) {
+  return chips.find((chip) => chip.key === key)?.value ?? '';
+}
+
+function joinWorkspaceContext(parts: Array<string | null | undefined>) {
+  return parts.filter((part): part is string => Boolean(part && part.trim())).join(' · ');
 }
 
 function toWorkspaceHref(params: URLSearchParams) {
@@ -305,7 +430,72 @@ export function buildWorkspaceLocalNavItems(items: PersonalNavItem[]) {
   return [];
 }
 
-function useWorkspaceSharedContext({
+function buildSharedContextControlsProps({
+  model,
+  t,
+  locale,
+}: {
+  model: WorkspaceSharedContext;
+  t: Translator;
+  locale: Locale;
+}) {
+  const cityChip = model.chips.find((chip) => chip.key === 'city');
+  const categoryChip = model.chips.find((chip) => chip.key === 'category');
+  const serviceChip = model.chips.find((chip) => chip.key === 'service');
+  const rangeChip = model.chips.find((chip) => chip.key === 'range');
+
+  return {
+    title: model.copy.sharedContextLabel,
+    resetLabel: t(I18N_KEYS.requestsPage.clearFilters),
+    closeLabel: model.controls.closeLabel,
+    city: {
+      value: model.controls.cityId,
+      options: model.controls.cityOptions,
+      ariaLabel: t(I18N_KEYS.requestsPage.cityLabel),
+      onChange: model.controls.onCityChange,
+      summaryLabel: cityChip?.value ?? model.copy.contextFallbacks.city,
+    },
+    category: {
+      value: model.controls.categoryKey,
+      options: model.controls.categoryOptions,
+      ariaLabel: t(I18N_KEYS.requestsPage.categoryLabel),
+      onChange: model.controls.onCategoryChange,
+      summaryLabel: categoryChip?.value ?? model.copy.contextFallbacks.category,
+    },
+    service: {
+      value: model.controls.subcategoryKey,
+      options: model.controls.serviceOptions,
+      ariaLabel: t(I18N_KEYS.requestsPage.serviceLabel),
+      onChange: model.controls.onSubcategoryChange,
+      summaryLabel: serviceChip?.value ?? model.copy.contextFallbacks.service,
+      disabled: model.controls.categoryKey === 'all',
+    },
+    range: {
+      value: model.controls.range,
+      options: RANGE_OPTIONS.map((option) => ({
+        value: option,
+        label: resolveRangeLabel(locale, option, model.copy.contextFallbacks.range),
+      })),
+      mobileOptions: RANGE_OPTIONS.map((option) => ({
+        value: option,
+        label: rangeLabelShort(option),
+      })),
+      groupLabel: locale === 'de' ? 'Zeitraum' : 'Range',
+      onChange: model.controls.onRangeChange,
+      summaryLabel: rangeChip?.value ?? model.copy.contextFallbacks.range,
+    },
+    sort: {
+      value: model.controls.sortBy,
+      options: model.controls.sortOptions,
+      ariaLabel: t(I18N_KEYS.requestsPage.sortLabel),
+      onChange: model.controls.onSortChange,
+      summaryLabel: model.controls.sortOptions.find((item) => item.value === model.controls.sortBy)?.label ?? '',
+    },
+    onReset: model.controls.onReset,
+  };
+}
+
+export function useWorkspaceSharedContext({
   t,
   locale,
   activePublicSection,
@@ -475,6 +665,7 @@ function useWorkspaceSharedContext({
   );
 
   const activeModeCopy = copy.modes[activeMode];
+  const activeModeHref = modeItems.find((item) => item.isActive)?.href ?? '/workspace';
 
   return React.useMemo(
     () => ({
@@ -484,6 +675,7 @@ function useWorkspaceSharedContext({
       description: activeModeCopy.description,
       railDescription: activeModeCopy.railDescription,
       scope: activeModeCopy.scope,
+      activeModeHref,
       chips,
       copy,
       controls: {
@@ -511,6 +703,7 @@ function useWorkspaceSharedContext({
       activeModeCopy.railDescription,
       activeModeCopy.scope,
       activeModeCopy.title,
+      activeModeHref,
       categoryKey,
       categoryOptions,
       chips,
@@ -551,11 +744,7 @@ export function WorkspaceModeHeader({
     activePublicSection,
     activeWorkspaceTab,
   });
-
-  const cityChip = model.chips.find((chip) => chip.key === 'city');
-  const categoryChip = model.chips.find((chip) => chip.key === 'category');
-  const serviceChip = model.chips.find((chip) => chip.key === 'service');
-  const rangeChip = model.chips.find((chip) => chip.key === 'range');
+  const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
   return (
     <section className="workspace-environment">
       <div className="workspace-environment__hero">
@@ -588,56 +777,41 @@ export function WorkspaceModeHeader({
       </nav>
 
       <WorkspaceSharedContextControls
-        title={model.copy.sharedContextLabel}
-        resetLabel={t(I18N_KEYS.requestsPage.clearFilters)}
-        closeLabel={model.controls.closeLabel}
-        city={{
-          value: model.controls.cityId,
-          options: model.controls.cityOptions,
-          ariaLabel: t(I18N_KEYS.requestsPage.cityLabel),
-          onChange: model.controls.onCityChange,
-          summaryLabel: cityChip?.value ?? model.copy.contextFallbacks.city,
-        }}
-        category={{
-          value: model.controls.categoryKey,
-          options: model.controls.categoryOptions,
-          ariaLabel: t(I18N_KEYS.requestsPage.categoryLabel),
-          onChange: model.controls.onCategoryChange,
-          summaryLabel: categoryChip?.value ?? model.copy.contextFallbacks.category,
-        }}
-        service={{
-          value: model.controls.subcategoryKey,
-          options: model.controls.serviceOptions,
-          ariaLabel: t(I18N_KEYS.requestsPage.serviceLabel),
-          onChange: model.controls.onSubcategoryChange,
-          summaryLabel: serviceChip?.value ?? model.copy.contextFallbacks.service,
-          disabled: model.controls.categoryKey === 'all',
-        }}
-        range={{
-          value: model.controls.range,
-          options: RANGE_OPTIONS.map((option) => ({
-            value: option,
-            label: resolveRangeLabel(locale, option, model.copy.contextFallbacks.range),
-          })),
-          mobileOptions: RANGE_OPTIONS.map((option) => ({
-            value: option,
-            label: rangeLabelShort(option),
-          })),
-          groupLabel: locale === 'de' ? 'Zeitraum' : 'Range',
-          onChange: model.controls.onRangeChange,
-          summaryLabel: rangeChip?.value ?? model.copy.contextFallbacks.range,
-        }}
-        sort={{
-          value: model.controls.sortBy,
-          options: model.controls.sortOptions,
-          ariaLabel: t(I18N_KEYS.requestsPage.sortLabel),
-          onChange: model.controls.onSortChange,
-          summaryLabel: model.controls.sortOptions.find((item) => item.value === model.controls.sortBy)?.label ?? '',
-        }}
-        onReset={model.controls.onReset}
+        {...sharedContextControlsProps}
         surface="shell"
+        className="workspace-shared-context-controls--header"
       />
     </section>
+  );
+}
+
+export function WorkspaceMobileContextSection({
+  locale,
+  activePublicSection,
+  activeWorkspaceTab,
+}: {
+  locale: Locale;
+  activePublicSection: PublicWorkspaceSection | null;
+  activeWorkspaceTab: WorkspaceTab;
+}) {
+  const t = useT();
+  const model = useWorkspaceSharedContext({
+    t,
+    locale,
+    activePublicSection,
+    activeWorkspaceTab,
+  });
+  const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
+
+  return (
+    <div className="workspace-mobile-context-section">
+      <WorkspaceSharedContextControls
+        {...sharedContextControlsProps}
+        surface="shell"
+        mobileBehavior="inline"
+        className="workspace-mobile-context-section__controls"
+      />
+    </div>
   );
 }
 
@@ -660,38 +834,126 @@ export function WorkspaceContextAside({
     activePublicSection,
     activeWorkspaceTab,
   });
+  const statsCopy = React.useMemo(() => getWorkspaceStatisticsCopy(locale), [locale]);
+  const focusCopy = React.useMemo(() => getWorkspaceFocusRecommendationCopy(locale), [locale]);
+  const focusActionLabel = React.useMemo(
+    () => fillWorkspaceModeTemplate(model.copy.rail.openModeTemplate, model.title),
+    [model.copy.rail.openModeTemplate, model.title],
+  );
+  const [isFocusOpen, setIsFocusOpen] = React.useState(false);
+  const [isAnalyzingFocus, setIsAnalyzingFocus] = React.useState(false);
+  const cityValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'city'), [model.chips]);
+  const categoryValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'category'), [model.chips]);
+  const serviceValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'service'), [model.chips]);
+  const rangeValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'range'), [model.chips]);
+  const selectedService = serviceValue !== model.copy.contextFallbacks.service ? serviceValue : '';
+  const selectedCategory = categoryValue !== model.copy.contextFallbacks.category ? categoryValue : '';
+  const selectedCity = cityValue !== model.copy.contextFallbacks.city ? cityValue : '';
+  const focusContextLabel = React.useMemo(() => {
+    const primaryScope = selectedService || selectedCategory;
+    return joinWorkspaceContext([primaryScope, selectedCity]) || focusCopy.defaultContextLabel;
+  }, [focusCopy.defaultContextLabel, selectedCategory, selectedCity, selectedService]);
+  const focusScopeMetric = React.useMemo(
+    () => joinWorkspaceContext([selectedService || selectedCategory, selectedCity, rangeValue]) || model.scope,
+    [model.scope, rangeValue, selectedCategory, selectedCity, selectedService],
+  );
+  const focusModeCopy = focusCopy.modes[model.activeMode];
+  const focusHeroTitle = React.useMemo(
+    () => fillWorkspaceModeTemplate(focusModeCopy.heroTitleTemplate, model.title),
+    [focusModeCopy.heroTitleTemplate, model.title],
+  );
+  const openFocusRecommendation = React.useCallback(() => {
+    setIsAnalyzingFocus(true);
+    setIsFocusOpen(true);
+  }, []);
+  const closeFocusRecommendation = React.useCallback(() => {
+    setIsFocusOpen(false);
+    setIsAnalyzingFocus(false);
+  }, []);
+  const focusScopeText = React.useMemo(() => {
+    if (locale === 'de') {
+      return `Der aktuelle Workspace-Kontext bleibt über alle Modi hinweg aktiv: ${focusScopeMetric}. ${model.scope}.`;
+    }
+    return `The current workspace context stays active across modes: ${focusScopeMetric}. ${model.scope}.`;
+  }, [focusScopeMetric, locale, model.scope]);
+  const focusActionText = React.useMemo(
+    () => `${focusModeCopy.actionText} ${model.railDescription}`,
+    [focusModeCopy.actionText, model.railDescription],
+  );
+
+  React.useEffect(() => {
+    if (!isFocusOpen || !isAnalyzingFocus) return;
+    const timeoutId = window.setTimeout(() => {
+      setIsAnalyzingFocus(false);
+    }, 1400);
+    return () => window.clearTimeout(timeoutId);
+  }, [isAnalyzingFocus, isFocusOpen]);
 
   return (
     <div className="workspace-context-rail">
       <section className="panel workspace-context-rail__panel">
-        <div className="workspace-context-rail__panel-head">
-          <span className="workspace-context-rail__eyebrow">{model.copy.rail.contextTitle}</span>
-          <strong className="workspace-context-rail__title">{model.scope}</strong>
-        </div>
-        <p className="workspace-context-rail__description">{model.copy.rail.contextDescription}</p>
-        <div className="workspace-context-rail__chip-list">
-          {model.chips.map((chip) => (
-            <div key={chip.key} className="workspace-context-rail__chip">
-              <span className="workspace-context-rail__chip-icon" aria-hidden="true">{chip.icon}</span>
-              <span className="workspace-context-rail__chip-copy">
-                <span className="workspace-context-rail__chip-label">{chip.label}</span>
-                <strong className="workspace-context-rail__chip-value">{chip.value}</strong>
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="panel workspace-context-rail__panel">
-        <div className="workspace-context-rail__panel-head">
-          <span className="workspace-context-rail__eyebrow">{model.copy.rail.nextStepTitle}</span>
-          <strong className="workspace-context-rail__title">{model.title}</strong>
-        </div>
-        <p className="workspace-context-rail__description">{model.railDescription}</p>
-        <div className="workspace-context-rail__focus">
-          <span className="workspace-context-rail__focus-label">{model.copy.rail.scopeLabel}</span>
-          <strong className="workspace-context-rail__focus-value">{model.scope}</strong>
-        </div>
+        <span className="workspace-environment__eyebrow">{model.copy.rail.nextStepTitle}</span>
+        <WorkspaceDecisionActionCard
+          className="workspace-context-rail__decision"
+          layout="stacked"
+          avatarLabel={statsCopy.insightsAssistantAvatarLabel}
+          name={statsCopy.insightsAssistantName}
+          role={statsCopy.priceRecommendationLabel}
+          description={model.railDescription}
+          actionLabel={focusActionLabel}
+          onActionClick={openFocusRecommendation}
+          actionAriaHasPopup
+        />
+        <WorkspaceDecisionRecommendationModal
+          generatedLabel={statsCopy.insightsGeneratedLabel}
+          assistantAvatarLabel={statsCopy.insightsAssistantAvatarLabel}
+          assistantName={statsCopy.insightsAssistantName}
+          assistantRole={statsCopy.priceRecommendationLabel}
+          loadingLabel={focusCopy.loadingLabel}
+          loadingBody={focusCopy.loadingBody}
+          title={focusCopy.title}
+          titleContext={focusContextLabel}
+          summaryLabel={model.title}
+          closeLabel={model.controls.closeLabel}
+          isOpen={isFocusOpen}
+          isLoading={isAnalyzingFocus}
+          onClose={closeFocusRecommendation}
+        >
+          <article className="workspace-decision-modal__content-stack form-stack">
+            <WorkspaceDecisionRecommendationSection
+              badgeLabel={focusCopy.recommendationLabel}
+              badgeTone="info"
+              tone="performance"
+              metric={model.title}
+              title={focusHeroTitle}
+              text={focusModeCopy.heroText}
+              featured
+              className="workspace-decision-modal__hero"
+            />
+            <WorkspaceDecisionRecommendationSection
+              badgeLabel={focusCopy.scopeLabel}
+              badgeTone="info"
+              tone="performance"
+              metric={focusScopeMetric}
+              text={focusScopeText}
+              className="workspace-decision-modal__section"
+            />
+            <WorkspaceDecisionRecommendationSection
+              badgeLabel={focusCopy.actionLabel}
+              badgeTone="success"
+              tone="opportunity"
+              text={focusActionText}
+              className="workspace-decision-modal__section"
+            />
+            <WorkspaceDecisionRecommendationSection
+              badgeLabel={focusCopy.switchLabel}
+              badgeTone="warning"
+              tone="promotion"
+              text={focusModeCopy.switchText}
+              className="workspace-decision-modal__section"
+            />
+          </article>
+        </WorkspaceDecisionRecommendationModal>
       </section>
 
       {children}

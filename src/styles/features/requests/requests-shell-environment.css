@@ -1,7 +1,9 @@
 /* src/styles/features/requests/requests-shell-environment.css */
 
 @layer components {
-  .workspace-environment {
+  .workspace-environment,
+  .workspace-context-brief,
+  .workspace-context-rail {
     --workspace-environment-section-gap: var(--layout-section-gap);
     --workspace-environment-card-gap: var(--space-2);
     --workspace-environment-card-pad: var(--home-panel-padding, var(--space-4));
@@ -12,6 +14,9 @@
     --workspace-environment-title-line-height: var(--lh-title);
     --workspace-environment-body-line-height: var(--lh-body);
     --workspace-environment-tight-line-height: var(--lh-tight);
+  }
+
+  .workspace-environment {
     display: grid;
     gap: var(--workspace-environment-section-gap);
   }
@@ -29,8 +34,7 @@
   }
 
   .workspace-environment__eyebrow,
-  .workspace-context-brief__eyebrow,
-  .workspace-context-rail__eyebrow {
+  .workspace-context-brief__eyebrow {
     margin: 0;
     font-size: var(--workspace-environment-label-size);
     line-height: var(--workspace-environment-tight-line-height);
@@ -144,8 +148,7 @@
   }
 
   .workspace-mode-nav__icon,
-  .workspace-context-strip__chip-icon,
-  .workspace-context-rail__chip-icon {
+  .workspace-context-strip__chip-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -159,8 +162,7 @@
   }
 
   .workspace-mode-nav__copy,
-  .workspace-context-strip__chip-copy,
-  .workspace-context-rail__chip-copy {
+  .workspace-context-strip__chip-copy {
     display: grid;
     gap: var(--space-0-5);
     min-width: 0;
@@ -168,18 +170,14 @@
 
   .workspace-mode-nav__label,
   .workspace-context-strip__chip-value,
-  .workspace-context-rail__chip-value,
-  .workspace-context-brief__metric-value,
-  .workspace-context-rail__focus-value {
+  .workspace-context-brief__metric-value {
     color: var(--c-text);
     font-weight: 700;
   }
 
   .workspace-mode-nav__description,
   .workspace-context-strip__chip-label,
-  .workspace-context-rail__chip-label,
-  .workspace-context-brief__metric-label,
-  .workspace-context-rail__focus-label {
+  .workspace-context-brief__metric-label {
     color: var(--c-text-muted);
     font-size: var(--workspace-environment-label-size);
     line-height: var(--workspace-environment-body-line-height);
@@ -219,6 +217,14 @@
     gap: var(--workspace-environment-card-gap);
   }
 
+  .workspace-mobile-context-section {
+    display: none;
+  }
+
+  .workspace-mobile-context-section__controls {
+    width: 100%;
+  }
+
   .workspace-shared-context-controls--embedded {
     gap: var(--space-3);
   }
@@ -229,6 +235,17 @@
 
   .workspace-shared-context-controls__mobile {
     display: none;
+  }
+
+  .workspace-shared-context-controls__mobile--inline {
+    display: none;
+    gap: var(--space-2);
+  }
+
+  .workspace-shared-context-controls__summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .workspace-shared-context-controls__surface {
@@ -294,15 +311,22 @@
     transform: translateY(-1px);
   }
 
-  .workspace-context-strip__chips,
-  .workspace-context-rail__chip-list {
+  .workspace-shared-context-controls__mobile--inline .workspace-shared-context-controls__surface {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .workspace-shared-context-controls__mobile--inline .workspace-shared-context-controls__action {
+    justify-self: start;
+  }
+
+  .workspace-context-strip__chips {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--space-2);
   }
 
-  .workspace-context-strip__chip,
-  .workspace-context-rail__chip {
+  .workspace-context-strip__chip {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     gap: var(--workspace-environment-card-gap);
@@ -344,8 +368,7 @@
     gap: var(--space-2);
   }
 
-  .workspace-context-brief__metric,
-  .workspace-context-rail__focus {
+  .workspace-context-brief__metric {
     display: grid;
     gap: var(--space-1);
     padding: var(--space-2-5);
@@ -361,16 +384,7 @@
 
   .workspace-context-rail__panel {
     display: grid;
-    gap: var(--workspace-environment-section-gap);
-  }
-
-  .workspace-context-rail__panel-head {
-    display: grid;
-    gap: var(--space-1);
-  }
-
-  .workspace-context-rail__focus {
-    margin-top: calc(var(--space-1) * -1);
+    gap: var(--space-3);
   }
 
   html.dark .workspace-environment__shell-hint,
@@ -388,9 +402,7 @@
   html.dark .workspace-context-strip,
   html.dark .workspace-context-strip__chip,
   html.dark .workspace-context-brief,
-  html.dark .workspace-context-brief__metric,
-  html.dark .workspace-context-rail__chip,
-  html.dark .workspace-context-rail__focus {
+  html.dark .workspace-context-brief__metric {
     border-color: color-mix(in oklab, var(--c-border) 84%, white 16%);
     background:
       linear-gradient(
@@ -411,8 +423,7 @@
   }
 
   html.dark .workspace-mode-nav__icon,
-  html.dark .workspace-context-strip__chip-icon,
-  html.dark .workspace-context-rail__chip-icon {
+  html.dark .workspace-context-strip__chip-icon {
     background: color-mix(in oklab, var(--c-panel) 82%, white 18%);
   }
 
@@ -434,13 +445,23 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .workspace-context-strip__chips,
-    .workspace-context-rail__chip-list {
+    .workspace-context-strip__chips {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 767px) {
+    .workspace-environment,
+    .workspace-context-brief,
+    .workspace-context-rail {
+      --workspace-environment-section-gap: var(--space-3);
+      --workspace-environment-card-gap: 10px;
+      --workspace-environment-card-pad: 12px;
+      --workspace-environment-title-size: clamp(22px, 6vw, 28px);
+      --workspace-environment-body-size: 13px;
+      --workspace-environment-label-size: 11px;
+    }
+
     .workspace-environment__hero,
     .workspace-context-strip__header,
     .workspace-context-brief__head {
@@ -448,14 +469,52 @@
       align-items: stretch;
     }
 
+    .workspace-environment__heading {
+      gap: 6px;
+    }
+
+    .workspace-environment__shell-hint {
+      min-height: 36px;
+      padding-inline: 12px;
+    }
+
     .workspace-mode-nav {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .workspace-mode-nav__item {
+      border-radius: 16px;
+    }
+
+    .workspace-mode-nav__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+    }
+
+    .workspace-mode-nav__label {
+      font-size: 13px;
+      line-height: 1.15;
+    }
+
+    .workspace-mode-nav__description {
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
     .workspace-context-strip__chips,
-    .workspace-context-brief__metrics,
-    .workspace-context-rail__chip-list {
+    .workspace-context-brief__metrics {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-shared-context-controls--header {
+      display: none;
+    }
+
+    .workspace-mobile-context-section {
+      display: grid;
+      gap: 10px;
+      margin-top: -2px;
     }
 
     .workspace-shared-context-controls__desktop {
@@ -466,8 +525,183 @@
       display: block;
     }
 
-    .workspace-mode-nav__item {
+    .workspace-shared-context-controls__mobile--inline {
+      display: grid;
+    }
+
+    .workspace-mobile-context-section__controls {
+      --workspace-mobile-context-border: color-mix(in oklab, var(--c-primary) 14%, var(--surface-card-border) 86%);
+      --workspace-mobile-context-bg:
+        linear-gradient(
+          180deg,
+          color-mix(in oklab, white 96%, var(--surface-card-bg) 4%) 0%,
+          color-mix(in oklab, white 88%, var(--surface-card-bg) 12%) 100%
+        );
+      --workspace-mobile-context-shadow:
+        0 12px 28px color-mix(in oklab, var(--c-ink) 7%, transparent),
+        inset 0 1px 0 color-mix(in oklab, white 78%, transparent);
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--workspace-mobile-context-border);
+      background: var(--workspace-mobile-context-bg);
+      box-shadow: var(--workspace-mobile-context-shadow);
+    }
+
+    html.dark .workspace-mobile-context-section__controls {
+      --workspace-mobile-context-border: color-mix(in oklab, var(--c-primary) 16%, var(--c-border) 84%);
+      --workspace-mobile-context-bg:
+        linear-gradient(
+          180deg,
+          color-mix(in oklab, var(--c-panel) 90%, white 10%) 0%,
+          color-mix(in oklab, var(--c-panel) 96%, white 4%) 100%
+        );
+      --workspace-mobile-context-shadow:
+        0 14px 28px color-mix(in oklab, var(--c-ink) 20%, transparent),
+        inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+    }
+
+    .workspace-mobile-context-section__controls.workspace-context-strip {
+      gap: 12px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-strip__header {
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-strip__label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__summary {
+      gap: 6px;
+      margin-top: -2px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
+      min-height: 28px;
+      padding-inline: 10px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in oklab, var(--surface-soft-border) 62%, transparent);
+      background: color-mix(in oklab, white 72%, var(--c-panel) 28%);
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      color: color-mix(in oklab, var(--c-text-muted) 76%, var(--c-text) 24%);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip:first-child {
+      background: color-mix(in oklab, var(--c-primary) 10%, white 90%);
+      border-color: color-mix(in oklab, var(--c-primary) 22%, var(--surface-soft-border) 78%);
+      color: color-mix(in oklab, var(--c-primary) 52%, var(--c-text) 48%);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__body {
+      gap: 10px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__filters-grid,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-row {
+      gap: 10px;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__select {
+      min-height: 44px;
+      border-radius: 14px;
+      font-size: 13px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-toolbar {
+      padding: 8px;
+      border-radius: 14px;
+      border: 1px solid color-mix(in oklab, white 34%, var(--c-border) 66%);
+      background: color-mix(in oklab, white 52%, transparent);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-toolbar .home-activity__ranges {
+      gap: 6px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__action {
+      width: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      border-radius: 12px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__sort-filter {
+      min-width: 0;
+    }
+
+    .workspace-mode-nav > .workspace-mode-nav__item {
       min-height: 100%;
+    }
+
+  }
+
+  @media (max-width: 420px) {
+    .workspace-environment {
+      --workspace-environment-card-pad: 10px;
+      --workspace-environment-body-size: 12px;
+      --workspace-environment-label-size: 10px;
+    }
+
+    .workspace-mode-nav {
+      gap: 8px;
+    }
+
+    .workspace-mode-nav__item {
+      border-radius: 14px;
+    }
+
+    .workspace-mode-nav__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+    }
+
+    .workspace-mode-nav__label {
+      font-size: 12px;
+    }
+
+    .workspace-mode-nav__description {
+      font-size: 10px;
+    }
+
+    .workspace-shared-context-controls__summary {
+      gap: 6px;
+    }
+
+    .workspace-mobile-context-section {
+      gap: 8px;
+    }
+
+    .workspace-mobile-context-section__controls {
+      padding: 10px;
+      border-radius: 16px;
+    }
+
+    .workspace-mobile-context-section__controls.workspace-context-strip {
+      gap: 10px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
+      min-height: 26px;
+      padding-inline: 9px;
+      font-size: 9px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__select {
+      min-height: 42px;
+      font-size: 12px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-toolbar {
+      padding: 7px;
+      border-radius: 12px;
     }
   }
 }

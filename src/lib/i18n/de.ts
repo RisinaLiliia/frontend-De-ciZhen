@@ -165,7 +165,7 @@ export const de = {
     nearbyMicro3: '3 Aufträge in den letzten 10 Minuten vergeben',
     nearbyInlineCta: 'Details ansehen →',
     topProviders: 'Top Anbieter heute',
-    topProvidersSubtitle: 'Verifiziert & aktiv diese Woche',
+    topProvidersSubtitle: 'Verifiziert und aktiv diese Woche.',
     topProvider1Name: 'Anna K.',
     topProvider1Role: 'Reinigung',
     topProvider1City: 'Mannheim',

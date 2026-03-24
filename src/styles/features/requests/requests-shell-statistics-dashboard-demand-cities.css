@@ -11,6 +11,16 @@
     gap: var(--space-1);
   }
 
+  .workspace-statistics-demand__row-button {
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+  }
+
   .workspace-statistics-demand__meta {
     display: flex;
     justify-content: space-between;

@@ -13,6 +13,10 @@ import {
 import { ALL_OPTION_KEY } from '@/features/workspace/requests';
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import type { Locale } from '@/lib/i18n/t';
+import {
+  resolveRequestsListDensityForPageSize,
+  type RequestsListDensity,
+} from '@/lib/requests/pagination';
 
 type Args = {
   locale: Locale;
@@ -27,7 +31,7 @@ type Args = {
   setPage: (page: number) => void;
   services: Array<{ key: string; categoryKey: string }>;
   cityOptions: FilterOption[];
-  onListDensityChange?: (value: 'single' | 'double') => void;
+  onListDensityChange?: (value: RequestsListDensity) => void;
 };
 
 export function useProvidersExploreData({
@@ -115,7 +119,17 @@ export function useProvidersExploreData({
     setPage(totalProviderPages);
   }, [isProvidersView, page, setPage, totalProviderPages]);
 
-  const [providersListDensity, setProvidersListDensity] = React.useState<'single' | 'double'>('single');
+  const [providersListDensity, setProvidersListDensity] = React.useState<RequestsListDensity>(
+    resolveRequestsListDensityForPageSize(limit),
+  );
+
+  React.useEffect(() => {
+    const nextDensity = resolveRequestsListDensityForPageSize(limit);
+    if (nextDensity !== providersListDensity) {
+      setProvidersListDensity(nextDensity);
+    }
+  }, [limit, providersListDensity]);
+
   React.useEffect(() => {
     if (!isProvidersView) return;
     onListDensityChange?.(providersListDensity);

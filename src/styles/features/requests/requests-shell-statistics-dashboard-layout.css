@@ -83,52 +83,6 @@
     color: var(--c-text-muted);
   }
 
-  .workspace-statistics .requests-stats__kpi-grid {
-    position: relative;
-    isolation: isolate;
-    gap: 0;
-    --workspace-statistics-kpi-divider: color-mix(in oklab, var(--c-primary) 52%, transparent);
-  }
-
-  .workspace-statistics .requests-stats__kpi-grid .kpi-card {
-    position: relative;
-    z-index: 1;
-    border: 0;
-    border-radius: var(--radius-md);
-    background: transparent;
-    box-shadow: none;
-    min-height: 132px;
-    gap: var(--space-1-5);
-    padding: var(--space-3-5) var(--workspace-statistics-container-pad);
-    transition:
-      background var(--transition-fast),
-      box-shadow var(--transition-fast),
-      transform var(--transition-fast);
-  }
-
-  .workspace-statistics .requests-stats__kpi-grid .kpi-card__value {
-    letter-spacing: -0.01em;
-  }
-
-  .workspace-statistics .requests-stats__kpi-grid .kpi-card__bottom {
-    align-items: flex-start;
-    min-height: 34px;
-    margin-top: var(--space-0-5);
-    padding-top: var(--space-1);
-    border-top: 1px dashed color-mix(in oklab, var(--c-primary) 32%, transparent);
-  }
-
-  .workspace-statistics .requests-stats__kpi-grid .kpi-card__meta {
-    line-height: 1.4;
-  }
-
-  .workspace-statistics .requests-stats__kpi-grid .kpi-card--positive,
-  .workspace-statistics .requests-stats__kpi-grid .kpi-card--plain,
-  .workspace-statistics .requests-stats__kpi-grid .kpi-card--plain.kpi-card--positive {
-    border: 0;
-    background: transparent;
-  }
-
   .workspace-statistics__header-toolbar {
     align-items: center;
     flex-wrap: nowrap;
@@ -603,13 +557,8 @@
   }
 
   .workspace-statistics__activity-signal.is-positive {
-    border-color: color-mix(in oklab, var(--c-primary) 44%, var(--c-accent) 18%, var(--surface-soft-border) 38%);
-    background:
-      linear-gradient(
-        135deg,
-        color-mix(in oklab, var(--c-hero-tint-accent) 84%, var(--c-panel) 16%) 0%,
-        color-mix(in oklab, var(--c-hero-tint-primary) 90%, var(--c-panel) 10%) 100%
-      );
+    border-color: var(--surface-decision-active-border);
+    background: var(--surface-decision-active-bg);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
   }
@@ -623,29 +572,11 @@
   }
 
   .workspace-statistics__activity-signal.is-positive .workspace-statistics__activity-signal-value {
-    color: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
+    color: var(--surface-decision-active-value);
   }
 
   .workspace-statistics__decision-ai {
     margin-top: var(--space-1);
-    align-self: stretch;
-    inline-size: 100%;
-  }
-
-  .workspace-statistics__decision-ai.workspace-statistics-ki--meta .workspace-statistics-ki__stamp {
-    width: fit-content;
-    margin-inline: 0;
-    justify-content: flex-start;
-    align-self: flex-start;
-  }
-
-  .workspace-statistics__decision-ai .workspace-statistics-ki__head {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .workspace-statistics__decision-ai .workspace-statistics-ki__text {
-    max-width: 100%;
   }
 
   .workspace-statistics__meta-grid span {
@@ -664,56 +595,10 @@
     height: 172px;
   }
 
-  .workspace-statistics__trust-wrap {
-    display: grid;
-  }
-
-  .workspace-statistics__trust-wrap > .workspace-statistics__trust-panel {
-    min-block-size: 100%;
-    block-size: 100%;
-  }
-
-  .workspace-statistics__trust-panel.home-trust-live-panel--compact {
-    padding: var(--space-4-5);
-    gap: var(--space-2);
-  }
-
-  .workspace-statistics__trust-panel .home-trust-live-panel__heading {
-    text-align: left;
-    gap: var(--space-2);
-  }
-
-  .workspace-statistics__trust-panel .home-trust-live-panel__title {
-    margin: 0;
-    font-size: var(--fs-h3);
-    line-height: var(--lh-title);
-    font-weight: 600;
-    letter-spacing: normal;
-  }
-
-  .workspace-statistics__trust-panel .home-trust-live-panel__subtitle {
-    margin: 0;
-    font-size: var(--fs-small);
-    line-height: 1.35;
-    color: var(--c-text-muted);
-  }
-
   .workspace-statistics__empty {
     margin: 0;
     font-size: var(--fs-small);
     color: var(--c-text-muted);
-  }
-
-  @media (max-width: 1023px) {
-    .workspace-statistics__decision-ai {
-      align-self: stretch;
-      inline-size: 100%;
-    }
-
-    .workspace-statistics__decision-ai.workspace-statistics-ki--meta .workspace-statistics-ki__stamp {
-      align-self: flex-start;
-      justify-content: flex-start;
-    }
   }
 
 }

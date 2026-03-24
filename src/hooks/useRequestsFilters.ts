@@ -38,6 +38,11 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
     [defaultSort, searchParams],
   );
 
+  const currentHref = React.useMemo(() => {
+    const currentSearch = searchParams.toString();
+    return currentSearch ? `${pathname}?${currentSearch}` : pathname;
+  }, [pathname, searchParams]);
+
   const { categoryKey, subcategoryKey, filteredServices } = React.useMemo(
     () =>
       resolveRequestsFilterSelection({
@@ -60,6 +65,7 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
       subcategoryKey?: string;
       sortBy?: PublicRequestsSort;
       page?: number;
+      limit?: number;
     }) => {
       const nextHref = buildRequestsFiltersHref({
         pathname,
@@ -75,11 +81,16 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
         next,
         defaultSort,
       });
+
+      if (nextHref === currentHref) {
+        return;
+      }
+
       startTransition(() => {
         router.replace(nextHref, { scroll: false });
       });
     },
-    [categoryKey, cityId, defaultSort, limit, page, pathname, router, searchParams, sortBy, subcategoryKey],
+    [categoryKey, cityId, currentHref, defaultSort, limit, page, pathname, router, searchParams, sortBy, subcategoryKey],
   );
 
   const onCategoryChange = React.useCallback(
@@ -135,11 +146,27 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
 
   const setPage = React.useCallback(
     (nextPage: number) => {
+      const normalizedPage = Math.max(1, nextPage);
+      if (normalizedPage === page) return;
+
       updateQuery({
-        page: Math.max(1, nextPage),
+        page: normalizedPage,
       });
     },
-    [updateQuery],
+    [page, updateQuery],
+  );
+
+  const setLimit = React.useCallback(
+    (nextLimit: number) => {
+      const normalizedLimit = Math.max(1, nextLimit);
+      if (normalizedLimit === limit && page === 1) return;
+
+      updateQuery({
+        limit: normalizedLimit,
+        page: 1,
+      });
+    },
+    [limit, page, updateQuery],
   );
 
   return {
@@ -157,6 +184,7 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
     onSortChange,
     onReset,
     setPage,
+    setLimit,
     isPending,
   };
 }

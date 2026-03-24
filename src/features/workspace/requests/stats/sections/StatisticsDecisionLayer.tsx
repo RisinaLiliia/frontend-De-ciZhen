@@ -1,7 +1,8 @@
 'use client';
 
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
-import { StatisticsKiCard } from '../components/StatisticsKiCard';
+import { StatisticsDecisionAiCard } from '../components/StatisticsDecisionAiCard';
+import { StatisticsMetricSignalCard } from '../components/StatisticsMetricSignalCard';
 
 export function StatisticsDecisionLayer({
   copy,
@@ -24,24 +25,20 @@ export function StatisticsDecisionLayer({
       </div>
       <ul className="workspace-statistics__activity-signals" aria-label={copy.activitySignalsTitle}>
         {activitySignals.map((item) => (
-          <li
+          <StatisticsMetricSignalCard
             key={item.key}
-            className={`stat-card workspace-statistics__activity-signal is-${item.tone}${item.tone === 'positive' ? ' dc-glow' : ''}`.trim()}
-          >
-            <span className="workspace-statistics__activity-signal-label">{item.label}</span>
-            <strong className="workspace-statistics__activity-signal-value">{item.value}</strong>
-            <span className="workspace-statistics__activity-signal-hint">{item.hint}</span>
-          </li>
+            as="li"
+            label={item.label}
+            value={item.value}
+            hint={item.hint}
+            tone={item.tone}
+          />
         ))}
       </ul>
-      <StatisticsKiCard
+      <StatisticsDecisionAiCard
         className="workspace-statistics__decision-ai"
-        metaStamp
-        stamp={copy.priceGeneratedLabel}
-        avatarLabel={copy.insightsAssistantAvatarLabel}
-        name={copy.insightsAssistantName}
-        role={copy.priceRecommendationLabel}
-        description={decisionInsight}
+        copy={copy}
+        decisionInsight={decisionInsight}
       />
     </section>
   );

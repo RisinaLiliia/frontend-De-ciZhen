@@ -6,6 +6,9 @@ import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/requests/WorkspacePublicDemandMapPanel';
 import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
+import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
+import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { WorkspacePublicCityActivityDto } from '@/lib/api/dto/workspace';
 import type { WorkspacePublicSummaryDto } from '@/lib/api/dto/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -14,6 +17,8 @@ import type { Locale } from '@/lib/i18n/t';
 type WorkspacePublicIntroProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
+  activePublicSection: PublicWorkspaceSection | null;
+  activeWorkspaceTab: WorkspaceTab;
   personalNavItems: PersonalNavItem[];
   hideNavBadges?: boolean;
   insightText: string;
@@ -33,6 +38,8 @@ type WorkspacePublicIntroProps = {
 export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   t,
   locale,
+  activePublicSection,
+  activeWorkspaceTab,
   personalNavItems,
   hideNavBadges = false,
   insightText,
@@ -62,8 +69,17 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
           progressPercent={activityProgress}
           surface="embedded"
         />
+        <WorkspaceMobileContextSection
+          locale={locale}
+          activePublicSection={activePublicSection}
+          activeWorkspaceTab={activeWorkspaceTab}
+        />
         {leftColumnSlot ? leftColumnSlot : null}
-        {personalNavItems.length ? <WorkspaceMobileSectionSheet items={personalNavItems} /> : null}
+        <WorkspaceMobileSectionSheet
+          locale={locale}
+          activePublicSection={activePublicSection}
+          activeWorkspaceTab={activeWorkspaceTab}
+        />
         {showMarketMap ? (
           <div className={hideDemandMapOnMobile ? 'workspace-intro__mobile-hidden' : undefined}>
             <WorkspacePublicDemandMapPanel

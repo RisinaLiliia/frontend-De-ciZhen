@@ -34,12 +34,13 @@ describe('workspacePublicPresentationFlow.model', () => {
 
   it('assembles public presentation layout props and render metric payload', () => {
     const exploreWithSeed = {
+      exploreListDensity: 'single' as const,
       setExploreListDensity: vi.fn(),
       sidebarNearbyLimit: 5,
       sidebarTopProvidersLimit: 3,
       sidebarProofCases: [],
       proofIndex: 1,
-    };
+    } as const;
 
     const result = resolveWorkspacePublicPresentationFlowResult({
       branch: {

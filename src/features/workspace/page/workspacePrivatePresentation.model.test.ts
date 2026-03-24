@@ -111,6 +111,8 @@ describe('workspacePrivatePresentation.model', () => {
 
     expect(privateStateArgs.publicProvidersCount).toBe(1);
     expect(privateStateArgs.userName).toBe('Liliya');
+    expect(publicIntroProps.activePublicSection).toBe('requests');
+    expect(publicIntroProps.activeWorkspaceTab).toBe('my-offers');
     expect(publicIntroProps.quickActionHref).toBe('/request/create');
     expect(publicIntroProps.hideDemandMapOnMobile).toBe(true);
   });

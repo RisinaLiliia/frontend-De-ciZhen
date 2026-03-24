@@ -57,6 +57,7 @@ export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog, active
     onSortChange,
     onReset,
     setPage,
+    setLimit,
     isPending: isFiltersPending,
   } = useRequestsFilters({
     services,
@@ -175,6 +176,7 @@ export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog, active
     limit,
     filter,
     setPage,
+    setLimit,
     isFiltersPending,
     sortOptions,
     categoryOptions,

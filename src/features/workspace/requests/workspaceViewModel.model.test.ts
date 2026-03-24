@@ -84,6 +84,7 @@ describe('workspaceViewModel.model', () => {
 
   it('builds public workspace content props with pagination and status handlers', () => {
     const setPage = vi.fn();
+    const setLimit = vi.fn();
     const setStatusFilter = vi.fn();
     const publicInput: PublicInput = {
       ...createBaseInput(),
@@ -112,8 +113,10 @@ describe('workspaceViewModel.model', () => {
       requestsCount: 2,
       requests: [{ id: 'req-1' }, { id: 'req-2' }] as never[],
       page: 3,
+      limit: 20,
       totalPages: 5,
       setPage,
+      setLimit,
     };
 
     const { publicContentProps } = buildWorkspacePublicViewModel(publicInput);

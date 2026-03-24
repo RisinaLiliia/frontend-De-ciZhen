@@ -5,6 +5,9 @@ import type { ComponentProps } from 'react';
 import { WorkspaceTopProvidersAside, type WorkspacePrivateIntroProps } from '@/features/workspace/requests';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
+import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 
 type Translator = (key: I18nKey) => string;
 
@@ -15,6 +18,9 @@ export type WorkspaceAsideBaseProps = Omit<
 
 type BuildWorkspacePrivateIntroPropsArgs = {
   t: Translator;
+  locale: Locale;
+  activePublicSection: PublicWorkspaceSection | null;
+  activeWorkspaceTab: WorkspaceTab;
   personalNavItems: WorkspacePrivateIntroProps['personalNavItems'];
   hideNavBadges?: boolean;
   insightText: string;
@@ -36,6 +42,9 @@ type BuildWorkspaceAsideBasePropsArgs = {
 
 export function buildWorkspacePrivateIntroProps({
   t,
+  locale,
+  activePublicSection,
+  activeWorkspaceTab,
   personalNavItems,
   hideNavBadges = false,
   insightText,
@@ -47,6 +56,9 @@ export function buildWorkspacePrivateIntroProps({
   showQuickAction = true,
 }: BuildWorkspacePrivateIntroPropsArgs): WorkspacePrivateIntroProps {
   return {
+    locale,
+    activePublicSection,
+    activeWorkspaceTab,
     personalNavItems,
     hideNavBadges,
     insightText,

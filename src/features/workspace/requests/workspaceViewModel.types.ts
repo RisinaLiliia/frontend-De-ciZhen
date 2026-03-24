@@ -113,6 +113,8 @@ export type PublicInput = BaseInput & {
   requests: RequestResponseDto[];
 
   page: number;
+  limit: number;
   totalPages: number;
   setPage: (page: number) => void;
+  setLimit: (limit: number) => void;
 };

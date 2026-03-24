@@ -54,6 +54,13 @@
   --surface-soft-bg: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
   --surface-soft-bg-strong: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
   --focus-ring-primary: color-mix(in oklab, var(--c-primary) 18%, transparent);
+  --surface-decision-active-border: color-mix(in oklab, var(--c-primary) 44%, var(--c-accent) 18%, var(--surface-soft-border) 38%);
+  --surface-decision-active-bg: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--c-hero-tint-accent) 84%, var(--c-panel) 16%) 0%,
+    color-mix(in oklab, var(--c-hero-tint-primary) 90%, var(--c-panel) 10%) 100%
+  );
+  --surface-decision-active-value: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
 
   /* Global shell geometry shared by topbar/main/footer */
   --shell-max-width: 1280px;

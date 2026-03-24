@@ -4,8 +4,8 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -14,14 +14,13 @@ import { workspaceQK } from '../queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '../workspace.constants';
 import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
 import { StatisticsContextPanel } from './components/StatisticsContextPanel';
-import { useSyncedPanelMinHeight } from './useSyncedPanelMinHeight';
 import { buildFunnelVisualRows } from './statisticsFunnel.utils';
 import { paginateItems, parsePageParam } from './statisticsPagination.utils';
 import { applyPageQuery, isPageQueryInSync, toPageQueryValue } from './statisticsUrlState.utils';
 import {
   StatisticsCitiesPanel,
   StatisticsDecisionLayer,
-  StatisticsDemandPanel,
+  StatisticsDemandPanelSection,
   StatisticsGrowthPanel,
   StatisticsInsightsPanel,
   StatisticsOpportunityPanel,
@@ -34,7 +33,6 @@ type WorkspaceStatisticsViewProps = {
   locale: Locale;
   model: WorkspaceStatisticsModel;
 };
-const DEMAND_PAGE_SIZE = 5;
 const CITY_PAGE_SIZE = 10;
 const CITY_PAGE_QUERY_KEY = 'statsCityPage';
 
@@ -56,7 +54,6 @@ export function WorkspaceStatisticsView({
     () => parsePageParam(searchParams.get(CITY_PAGE_QUERY_KEY)),
     [searchParams],
   );
-  const [demandPage, setDemandPage] = React.useState(1);
   const [cityQuery, setCityQuery] = React.useState('');
   const [cityPage, setCityPage] = React.useState(() => cityPageFromUrl ?? 1);
   const funnelContainerRef = React.useRef<HTMLOListElement | null>(null);
@@ -65,12 +62,10 @@ export function WorkspaceStatisticsView({
   const citiesPanelRef = React.useRef<HTMLElement | null>(null);
   const growthPanelRef = React.useRef<HTMLElement | null>(null);
   const opportunityPanelRef = React.useRef<HTMLElement | null>(null);
-  const trustPanelWrapRef = React.useRef<HTMLDivElement | null>(null);
   const [funnelContainerWidth, setFunnelContainerWidth] = React.useState(0);
   const {
     copy,
     filters,
-    range,
     isLoading,
     isError,
     hasBackgroundError,
@@ -81,7 +76,6 @@ export function WorkspaceStatisticsView({
     activityMeta,
     decisionInsight,
     activitySignals,
-    demandRows,
     cityRows,
     opportunityRadar,
     funnel,
@@ -111,29 +105,15 @@ export function WorkspaceStatisticsView({
   const decisionSubtitle = focusLabel
     ? `${copy.activitySignalsSubtitle} · ${focusLabel}`
     : copy.activitySignalsSubtitle;
-  const demandSubtitle = context.mode === 'focus'
-    ? `${copy.demandSubtitle} · ${context.periodLabel}`
-    : copy.demandSubtitle;
   const citiesSubtitle = context.mode === 'focus'
     ? `${copy.citiesSubtitle} · ${context.periodLabel}`
     : copy.citiesSubtitle;
   const resolvedDecisionSubtitle = sectionMeta.decisionSubtitle ?? decisionSubtitle;
-  const resolvedDemandSubtitle = sectionMeta.demandSubtitle ?? demandSubtitle;
   const resolvedCitiesSubtitle = sectionMeta.citiesSubtitle ?? citiesSubtitle;
   const resolvedOpportunityTitle = sectionMeta.opportunityTitle ?? opportunityTitle;
   const resolvedPriceTitle = sectionMeta.priceTitle ?? priceTitle;
   const resolvedInsightsSubtitle = sectionMeta.insightsSubtitle ?? insightsSubtitle;
   const resolvedGrowthSubtitle = sectionMeta.growthSubtitle ?? growthSubtitle;
-  const demandPagination = React.useMemo(
-    () => paginateItems(demandRows, demandPage, DEMAND_PAGE_SIZE),
-    [demandPage, demandRows],
-  );
-  const {
-    totalPages: demandTotalPages,
-    safePage: safeDemandPage,
-    visibleItems: visibleDemandRows,
-  } = demandPagination;
-
   const rankedCityRows = React.useMemo(() => (
     cityRows
       .slice()
@@ -175,11 +155,6 @@ export function WorkspaceStatisticsView({
     targetRef: growthPanelRef,
     mode: 'sourceBottomToTargetTop',
     watchKey: `${cityRows.length}-${safeCityPage}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
-  });
-  const trustPanelMinHeight = useSyncedPanelMinHeight({
-    sourceRef: opportunityPanelRef,
-    mode: 'sourceHeight',
-    watchKey: `${opportunityRadar.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
   });
   const {
     data: publicSummaryOverview,
@@ -260,10 +235,6 @@ export function WorkspaceStatisticsView({
       applyPageQuery(params, CITY_PAGE_QUERY_KEY, nextPage);
     });
   }, [replaceSearchParams, safeCityPage, searchParams]);
-
-  React.useEffect(() => {
-    setDemandPage(1);
-  }, [range]);
 
   return (
     <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout" aria-labelledby="workspace-statistics-title">
@@ -355,17 +326,7 @@ export function WorkspaceStatisticsView({
                   </div>
                 </section>
 
-                <StatisticsDemandPanel
-                  copy={copy}
-                  subtitle={resolvedDemandSubtitle}
-                  demandRows={demandRows}
-                  visibleDemandRows={visibleDemandRows}
-                  safeDemandPage={safeDemandPage}
-                  demandTotalPages={demandTotalPages}
-                  onPrevPage={() => setDemandPage((prev) => Math.max(1, prev - 1))}
-                  onNextPage={() => setDemandPage((prev) => Math.min(demandTotalPages, prev + 1))}
-                  t={t}
-                />
+                <StatisticsDemandPanelSection model={model} t={t} />
               </div>
 
               <StatisticsCitiesPanel
@@ -528,14 +489,6 @@ export function WorkspaceStatisticsView({
             />
           </>
         )}
-
-        <div
-          ref={trustPanelWrapRef}
-          className="workspace-statistics__trust-wrap"
-          style={trustPanelMinHeight ? { minHeight: `${trustPanelMinHeight}px` } : undefined}
-        >
-          <HomeTrustLivePanel className="home-trust-live-panel--compact workspace-statistics__trust-panel" t={t} />
-        </div>
       </aside>
     </div>
   );

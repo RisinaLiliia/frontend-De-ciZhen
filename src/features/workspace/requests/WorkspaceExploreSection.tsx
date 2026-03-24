@@ -64,6 +64,7 @@ type WorkspaceExploreSectionProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   onListDensityChange: (value: 'single' | 'double') => void;
+  exploreListDensity: 'single' | 'double';
   sidebarNearbyLimit: number;
   sidebarTopProvidersLimit: number;
   sidebarProofCases: ProofCase[];
@@ -81,6 +82,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
   t,
   locale,
   onListDensityChange,
+  exploreListDensity,
   sidebarNearbyLimit,
   sidebarTopProvidersLimit,
   sidebarProofCases,
@@ -158,6 +160,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
             activeSection={activeSection}
             t={t}
             locale={locale}
+            exploreListDensity={exploreListDensity}
             sidebarNearbyLimit={sidebarNearbyLimit}
             sidebarTopProvidersLimit={sidebarTopProvidersLimit}
             sidebarProofCases={sidebarProofCases}

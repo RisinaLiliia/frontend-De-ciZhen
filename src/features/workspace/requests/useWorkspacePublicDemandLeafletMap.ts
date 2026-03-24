@@ -17,6 +17,7 @@ type UseWorkspacePublicDemandLeafletMapParams = {
   hasCoordinates: boolean;
   formatNumber: Intl.NumberFormat;
   activeRequestsLabel: string;
+  onSelectCity?: (cityId: string) => void;
 };
 
 const GERMANY_CENTER: [number, number] = [51.1657, 10.4515];
@@ -31,6 +32,7 @@ export function useWorkspacePublicDemandLeafletMap({
   hasCoordinates,
   formatNumber,
   activeRequestsLabel,
+  onSelectCity,
 }: UseWorkspacePublicDemandLeafletMapParams) {
   const mapHostRef = React.useRef<HTMLDivElement | null>(null);
   const mapRef = React.useRef<import('leaflet').Map | null>(null);
@@ -111,6 +113,7 @@ export function useWorkspacePublicDemandLeafletMap({
         maxCount,
         formatNumber,
         activeRequestsLabel,
+        onSelectCity,
       });
     });
   };
@@ -208,7 +211,7 @@ export function useWorkspacePublicDemandLeafletMap({
 
   React.useEffect(() => {
     renderMarkersRef.current();
-  }, [activeRequestsLabel, clusterIndex, formatNumber, hasCoordinates]);
+  }, [activeRequestsLabel, clusterIndex, formatNumber, hasCoordinates, onSelectCity]);
 
   return {
     mapHostRef,
@@ -223,6 +226,7 @@ function renderCityMarker({
   maxCount,
   formatNumber,
   activeRequestsLabel,
+  onSelectCity,
 }: {
   L: LeafletModule;
   layer: import('leaflet').LayerGroup;
@@ -231,6 +235,7 @@ function renderCityMarker({
   maxCount: number;
   formatNumber: Intl.NumberFormat;
   activeRequestsLabel: string;
+  onSelectCity?: (cityId: string) => void;
 }) {
   const intensity = item.count / Math.max(1, maxCount);
   const dotSize = Math.round(10 + intensity * 12);
@@ -256,6 +261,10 @@ function renderCityMarker({
   });
 
   marker.on('click', () => {
+    if (onSelectCity) {
+      onSelectCity(item.cityId);
+      return;
+    }
     marker.openTooltip();
   });
   marker.addTo(layer);

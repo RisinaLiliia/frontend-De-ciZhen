@@ -5,33 +5,38 @@ import Link from 'next/link';
 
 import { RequestsList } from '@/components/requests/RequestsList';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
+import { RequestCard } from '@/components/requests/RequestCard';
+import { buildRequestListPresentation } from '@/components/requests/requestListItem.model';
 import type { RequestsListProps } from '@/components/requests/requestsList.types';
-import type { TabPayload } from '@/components/requests/requestsStatsPanel.types';
 import { ProviderList } from '@/components/providers/ProviderList';
 import type { TopProviderItem } from '@/components/providers/TopProvidersPanel';
-import { KpiCard } from '@/components/ui/KpiCard';
-import { ActivityInsight } from '@/components/ui/ActivityInsight';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
+import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { buildWorkspaceHref } from '@/features/workspace/shell/workspaceLinks';
+import type { WorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsModel';
+import { StatisticsDecisionAiCard } from './stats/components/StatisticsDecisionAiCard';
+import { StatisticsMetricSignalCard } from './stats/components/StatisticsMetricSignalCard';
+import { StatisticsDemandPanelSection } from './stats/WorkspaceStatisticsSections';
 
 type WorkspaceOverviewMainProps = {
   locale: Locale;
+  t: (key: I18nKey) => string;
+  currentSearch: string;
+  statisticsModel: WorkspaceStatisticsModel;
+  heroRef?: React.Ref<HTMLDivElement>;
+  gridRef?: React.Ref<HTMLDivElement>;
   primaryAction: {
     href: string;
     label: string;
   };
   onPrimaryActionClick: () => void;
-  insightText: string;
-  activityProgress: number;
-  providerStatsPayload: TabPayload;
-  clientStatsPayload: TabPayload;
-  myRequestsListProps: RequestsListProps;
-  myOffersListProps: RequestsListProps;
+  activeOffersListProps: RequestsListProps;
   topProviders: ReadonlyArray<TopProviderItem>;
   topProvidersTitle: string;
   topProvidersSubtitle: string;
   topProvidersCtaLabel: string;
-  topProvidersCtaHref: string;
   favoriteProviderIds: ReadonlySet<string>;
   pendingFavoriteProviderIds: ReadonlySet<string>;
   onToggleProviderFavorite: (providerId: string) => void;
@@ -40,227 +45,355 @@ type WorkspaceOverviewMainProps = {
 function getOverviewCopy(locale: Locale) {
   if (locale === 'en') {
     return {
-      snapshotTitle: 'Health overview',
-      snapshotSubtitle: 'Current workload, response, and active delivery in one glance.',
+      snapshotTitle: 'Platform overview',
+      snapshotSubtitle: 'What is happening now, where the opportunity is, and what to do next.',
+      focusLabel: 'Focus mode',
       quickActionsTitle: 'Quick actions',
-      quickActionsSubtitle: 'Jump into the next decision without opening another mode first.',
-      quickActionsSecondary: [
-        { href: '/workspace?section=requests', label: 'Open requests mode' },
-        { href: '/workspace?section=providers', label: 'Find providers' },
-        { href: '/workspace?section=stats', label: 'Open analysis' },
-      ],
-      insightsTitle: 'AI insights',
-      insightsSubtitle: 'Two or three signals worth acting on now.',
-      requestsTitle: 'New requests',
-      requestsSubtitle: 'A short queue preview, not the full operating list.',
-      requestsCta: 'View all requests',
+      quickActionsSubtitle: 'Jump into the next decision without leaving the shared workspace context.',
+      quickActionsSecondary: {
+        requests: 'Open requests',
+        providers: 'Find providers',
+        analysis: 'Open analysis',
+      },
       offersTitle: 'Active offers',
-      offersSubtitle: 'Current offer flow that still needs attention.',
-      offersCta: 'View offers',
+      offersSubtitle: 'Recent demand entries enriched with market opportunity signals.',
+      offersCta: 'Open analysis',
       topProvidersTitle: 'Top providers',
-      topProvidersSubtitle: 'Best-matching providers in the current shared context.',
-      insightLabels: ['Signal', 'Provider tip', 'Client tip'],
+      topProvidersSubtitle: 'Providers with strong proof, fast response, and visible activity in the current shared context.',
+      opportunityBadge: 'Opportunity',
+      demandHigh: 'High demand',
+      demandMedium: 'Stable demand',
+      demandLow: 'Selective demand',
+      competitionLow: 'Few providers',
+      competitionBalanced: 'Balanced supply',
+      competitionHigh: 'Higher competition',
     };
   }
 
   return {
-    snapshotTitle: 'Health Overview',
-    snapshotSubtitle: 'Aktuelle Auslastung, Reaktionslage und laufende Arbeit auf einen Blick.',
+    snapshotTitle: 'Plattformueberblick',
+    snapshotSubtitle: 'Was jetzt passiert, wo Chancen liegen und was als Nächstes zu tun ist.',
+    focusLabel: 'Focus Mode',
     quickActionsTitle: 'Schnellaktionen',
-    quickActionsSubtitle: 'Direkt in die naechste Entscheidung springen, ohne den Workspace zu verlassen.',
-    quickActionsSecondary: [
-      { href: '/workspace?section=requests', label: 'Auftraege oeffnen' },
-      { href: '/workspace?section=providers', label: 'Anbieter suchen' },
-      { href: '/workspace?section=stats', label: 'Analyse oeffnen' },
-    ],
-    insightsTitle: 'AI Insights',
-    insightsSubtitle: 'Die wichtigsten Signale fuer die naechsten Schritte.',
-    requestsTitle: 'Neue Anfragen',
-    requestsSubtitle: 'Nur ein kurzer Queue-Preview, keine lange Arbeitsliste.',
-    requestsCta: 'Alle Anfragen',
+    quickActionsSubtitle: 'Direkt in die naechste Entscheidung springen, ohne den gemeinsamen Workspace-Kontext zu verlassen.',
+    quickActionsSecondary: {
+      requests: 'Auftraege oeffnen',
+      providers: 'Anbieter suchen',
+      analysis: 'Analyse oeffnen',
+    },
     offersTitle: 'Aktive Angebote',
-    offersSubtitle: 'Angebote, die noch Aufmerksamkeit brauchen.',
-    offersCta: 'Meine Angebote',
+    offersSubtitle: 'Neue Nachfrage mit Marktsignalen als direkter Einstieg in Analyse.',
+    offersCta: 'Analyse oeffnen',
     topProvidersTitle: 'Top Anbieter',
-    topProvidersSubtitle: 'Passende Anbieter im aktuellen gemeinsamen Kontext.',
-    insightLabels: ['Signal', 'Anbieter-Tipp', 'Kunden-Tipp'],
+    topProvidersSubtitle: 'Verifiziert, schnell in der Antwort und mit sichtbarer Aktivitaet im aktuellen gemeinsamen Kontext.',
+    opportunityBadge: 'Chance',
+    demandHigh: 'Hohe Nachfrage',
+    demandMedium: 'Stabile Nachfrage',
+    demandLow: 'Selektive Nachfrage',
+    competitionLow: 'Wenig Anbieter',
+    competitionBalanced: 'Ausgeglichen',
+    competitionHigh: 'Mehr Wettbewerb',
   };
 }
 
-function buildSnapshotItems(clientPayload: TabPayload, providerPayload: TabPayload) {
+function getRequestCreatedAtTs(request: Pick<RequestResponseDto, 'createdAt'>) {
+  const timestamp = new Date(request.createdAt).getTime();
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function sortRequestsByCreatedAtDesc(requests: RequestResponseDto[]) {
+  return requests
+    .slice()
+    .sort((left, right) => getRequestCreatedAtTs(right) - getRequestCreatedAtTs(left));
+}
+
+function buildPlatformSnapshotItems(model: WorkspaceStatisticsModel) {
+  const liveItems = model.kpis.slice(0, 4).map((item) => ({
+    key: item.key,
+    label: item.label,
+    value: item.value,
+    hint: item.hint,
+    tone: item.tone,
+  }));
+
+  if (liveItems.length > 0) return liveItems;
+
   return [
     {
-      key: 'client-total',
-      label: clientPayload.kpis[0]?.label ?? clientPayload.secondary.leftLabel,
-      value: clientPayload.kpis[0]?.value ?? clientPayload.secondary.leftValue,
-      meta: clientPayload.chartTitle,
-      tone: 'accent' as const,
-    },
-    {
-      key: 'client-open',
-      label: clientPayload.kpis[1]?.label ?? clientPayload.secondary.centerLabel,
-      value: clientPayload.kpis[1]?.value ?? clientPayload.secondary.centerValue,
-      meta: clientPayload.secondary.progressLabel,
+      key: 'requests-total',
+      label: model.copy.requestsLabel,
+      value: '—',
+      hint: model.copy.kpiActiveRequestsHintSuffix,
       tone: 'neutral' as const,
     },
     {
-      key: 'provider-sent',
-      label: providerPayload.secondary.leftLabel,
-      value: providerPayload.secondary.leftValue,
-      meta: providerPayload.chartTitle,
-      tone: 'success' as const,
+      key: 'offers-total',
+      label: model.copy.offersLabel,
+      value: '—',
+      hint: model.copy.kpiLast7DaysHintSuffix,
+      tone: 'neutral' as const,
     },
     {
-      key: 'provider-active',
-      label: providerPayload.secondary.rightLabel,
-      value: providerPayload.secondary.rightValue,
-      meta: providerPayload.secondary.responseLabel,
+      key: 'completed-total',
+      label: model.copy.stage4LabelPlatform,
+      value: '—',
+      hint: model.copy.kpiNoCompletedJobs,
+      tone: 'neutral' as const,
+    },
+    {
+      key: 'active-providers',
+      label: model.copy.kpiActiveProvidersLabel,
+      value: '—',
+      hint: model.copy.kpiWithDemandHint,
       tone: 'neutral' as const,
     },
   ];
 }
 
+function resolveRequestCategoryKey(request: RequestResponseDto, listProps: RequestsListProps) {
+  return request.categoryKey ?? listProps.serviceByKey.get(request.serviceKey)?.categoryKey ?? null;
+}
+
+function resolveOpportunityMatch(params: {
+  request: RequestResponseDto;
+  categoryKey: string | null;
+  opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'];
+}) {
+  const { request, categoryKey, opportunityRadar } = params;
+
+  return opportunityRadar.find((item) => item.cityId === request.cityId && item.categoryKey === categoryKey)
+    ?? opportunityRadar.find((item) => item.cityId === request.cityId)
+    ?? opportunityRadar.find((item) => item.categoryKey === categoryKey)
+    ?? opportunityRadar[0]
+    ?? null;
+}
+
+function resolveDemandLabel(params: {
+  copy: ReturnType<typeof getOverviewCopy>;
+  opportunity: WorkspaceStatisticsModel['opportunityRadar'][number] | null;
+}) {
+  const { copy, opportunity } = params;
+  if (!opportunity) return copy.demandMedium;
+  if (opportunity.demandScore >= 7) return copy.demandHigh;
+  if (opportunity.demandScore >= 4.5) return copy.demandMedium;
+  return copy.demandLow;
+}
+
+function resolveCompetitionLabel(params: {
+  copy: ReturnType<typeof getOverviewCopy>;
+  opportunity: WorkspaceStatisticsModel['opportunityRadar'][number] | null;
+}) {
+  const { copy, opportunity } = params;
+  if (!opportunity) return copy.competitionBalanced;
+  if (opportunity.providers !== null && opportunity.providers <= 3) return copy.competitionLow;
+  if (opportunity.tone === 'balanced' || opportunity.tone === 'high') return copy.competitionBalanced;
+  return copy.competitionHigh;
+}
+
+function WorkspaceOpportunityCards({
+  locale,
+  currentSearch,
+  copy,
+  requestsListProps,
+  statisticsModel,
+}: {
+  locale: Locale;
+  currentSearch: string;
+  copy: ReturnType<typeof getOverviewCopy>;
+  requestsListProps: RequestsListProps;
+  statisticsModel: WorkspaceStatisticsModel;
+}) {
+  const recentRequests = React.useMemo(
+    () => sortRequestsByCreatedAtDesc(requestsListProps.requests).slice(0, 2),
+    [requestsListProps.requests],
+  );
+
+  const cards = React.useMemo(
+    () =>
+      recentRequests.map((request, index) => {
+        const categoryKey = resolveRequestCategoryKey(request, requestsListProps);
+        const presentation = buildRequestListPresentation({
+          item: request,
+          t: requestsListProps.t,
+          locale,
+          serviceByKey: requestsListProps.serviceByKey,
+          categoryByKey: requestsListProps.categoryByKey,
+          cityById: requestsListProps.cityById,
+          formatPrice: requestsListProps.formatPrice,
+          enableOfferActions: false,
+          pendingOfferRequestId: null,
+        });
+        const opportunity = resolveOpportunityMatch({
+          request,
+          categoryKey,
+          opportunityRadar: statisticsModel.opportunityRadar,
+        });
+        const analysisHref = buildWorkspaceHref({
+          currentSearch,
+          section: 'stats',
+          patch: {
+            cityId: request.cityId,
+            categoryKey,
+          },
+          removeKeys: ['page', 'statsCityPage'],
+        });
+
+        return {
+          key: request.id,
+          prefetch: index < 2,
+          href: analysisHref,
+          preferredDate: request.preferredDate,
+          presentation,
+          demandLabel: resolveDemandLabel({ copy, opportunity }),
+          competitionLabel: resolveCompetitionLabel({ copy, opportunity }),
+        };
+      }),
+    [copy, currentSearch, locale, recentRequests, requestsListProps, statisticsModel.opportunityRadar],
+  );
+
+  if (requestsListProps.isLoading || requestsListProps.isError || recentRequests.length === 0) {
+    return (
+      <div className="requests-list is-single workspace-overview__list">
+        <RequestsList
+          {...requestsListProps}
+          requests={recentRequests}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="workspace-overview__opportunities">
+      {cards.map((card) => (
+        <RequestCard
+          key={card.key}
+          href={card.href}
+          ariaLabel={card.presentation.card.title}
+          prefetch={card.prefetch}
+          imageSrc={card.presentation.card.imageSrc}
+          imageAlt=""
+          badges={[]}
+          category={card.presentation.card.categoryLabel}
+          title={card.presentation.card.title}
+          excerpt={card.presentation.card.excerpt}
+          meta={[
+            card.presentation.card.cityLabel,
+            requestsListProps.formatDate.format(new Date(card.preferredDate)),
+          ]}
+          bottomMeta={[card.demandLabel, card.competitionLabel]}
+          priceLabel={card.presentation.card.priceLabel}
+          priceTrend={card.presentation.card.priceTrend}
+          priceTrendLabel={card.presentation.card.priceTrendLabel}
+          mode="link"
+          statusSlot={<span className="status-badge status-badge--success">{copy.opportunityBadge}</span>}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function WorkspaceOverviewMain({
   locale,
+  t,
+  currentSearch,
+  statisticsModel,
+  heroRef,
+  gridRef,
   primaryAction,
   onPrimaryActionClick,
-  insightText,
-  activityProgress,
-  providerStatsPayload,
-  clientStatsPayload,
-  myRequestsListProps,
-  myOffersListProps,
+  activeOffersListProps,
   topProviders,
   topProvidersTitle,
   topProvidersSubtitle,
   topProvidersCtaLabel,
-  topProvidersCtaHref,
   favoriteProviderIds,
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
 }: WorkspaceOverviewMainProps) {
   const copy = React.useMemo(() => getOverviewCopy(locale), [locale]);
   const snapshotItems = React.useMemo(
-    () => buildSnapshotItems(clientStatsPayload, providerStatsPayload),
-    [clientStatsPayload, providerStatsPayload],
-  );
-  const insights = React.useMemo(
-    () => [
-      {
-        key: 'workspace-signal',
-        label: copy.insightLabels[0],
-        text: insightText,
-        ctaHref: '/workspace?section=stats',
-        ctaLabel: locale === 'de' ? 'Analyse ansehen' : 'Open analysis',
-      },
-      {
-        key: 'provider-hint',
-        label: copy.insightLabels[1],
-        text: providerStatsPayload.hint.text,
-        ctaHref: providerStatsPayload.hint.ctaHref,
-        ctaLabel: providerStatsPayload.hint.ctaLabel,
-      },
-      {
-        key: 'client-hint',
-        label: copy.insightLabels[2],
-        text: clientStatsPayload.hint.text,
-        ctaHref: clientStatsPayload.hint.ctaHref,
-        ctaLabel: clientStatsPayload.hint.ctaLabel,
-      },
-    ].filter((item) => item.text.trim().length > 0).slice(0, 3),
-    [clientStatsPayload.hint.ctaHref, clientStatsPayload.hint.ctaLabel, clientStatsPayload.hint.text, copy.insightLabels, insightText, locale, providerStatsPayload.hint.ctaHref, providerStatsPayload.hint.ctaLabel, providerStatsPayload.hint.text],
-  );
-  const recentRequestsListProps = React.useMemo<RequestsListProps>(
-    () => ({
-      ...myRequestsListProps,
-      requests: myRequestsListProps.requests.slice(0, 2),
-    }),
-    [myRequestsListProps],
-  );
-  const activeOffersListProps = React.useMemo<RequestsListProps>(
-    () => ({
-      ...myOffersListProps,
-      requests: myOffersListProps.requests.slice(0, 2),
-    }),
-    [myOffersListProps],
+    () => buildPlatformSnapshotItems(statisticsModel),
+    [statisticsModel],
   );
   const topProviderItems = React.useMemo(
     () => topProviders.slice(0, 3),
     [topProviders],
   );
+  const resolvedTopProvidersSubtitle = copy.topProvidersSubtitle || topProvidersSubtitle;
+  const requestsHref = React.useMemo(
+    () => buildWorkspaceHref({ currentSearch, section: 'requests', removeKeys: ['page'] }),
+    [currentSearch],
+  );
+  const providersHref = React.useMemo(
+    () => buildWorkspaceHref({ currentSearch, section: 'providers', removeKeys: ['page'] }),
+    [currentSearch],
+  );
+  const analysisHref = React.useMemo(
+    () => buildWorkspaceHref({ currentSearch, section: 'stats', removeKeys: ['page'] }),
+    [currentSearch],
+  );
+  const quickActionLinks = React.useMemo(
+    () => [
+      { href: requestsHref, label: copy.quickActionsSecondary.requests },
+      { href: providersHref, label: copy.quickActionsSecondary.providers },
+      { href: analysisHref, label: copy.quickActionsSecondary.analysis },
+    ],
+    [analysisHref, copy.quickActionsSecondary.analysis, copy.quickActionsSecondary.providers, copy.quickActionsSecondary.requests, providersHref, requestsHref],
+  );
+  const isFocusMode = statisticsModel.context.mode === 'focus';
 
   return (
     <section className="workspace-overview">
-      <div className="workspace-overview__hero">
+      <div ref={heroRef} className="workspace-overview__hero">
         <section className="panel workspace-overview__panel workspace-overview__panel--snapshot">
           <div className="panel-header">
-            <div>
+            <div className="section-heading">
               <p className="section-title">{copy.snapshotTitle}</p>
-              <p className="section-subtitle">{copy.snapshotSubtitle}</p>
+              <p className="section-subtitle">
+                {isFocusMode ? statisticsModel.context.subtitle : copy.snapshotSubtitle}
+              </p>
+              {isFocusMode ? (
+                <div className="chip-row workspace-overview__focus-row">
+                  <span className="status-badge status-badge--info">
+                    {copy.focusLabel}: {statisticsModel.context.stickyLabel}
+                  </span>
+                </div>
+              ) : null}
             </div>
           </div>
           <div className="workspace-overview__kpis">
             {snapshotItems.map((item) => (
-              <KpiCard
+              <StatisticsMetricSignalCard
                 key={item.key}
                 label={item.label}
                 value={item.value}
-                meta={item.meta}
+                hint={item.hint}
                 tone={item.tone}
               />
             ))}
           </div>
-          <ActivityInsight text={insightText} progressPercent={activityProgress} className="workspace-overview__health" />
+          <StatisticsDecisionAiCard
+            copy={statisticsModel.copy}
+            decisionInsight={statisticsModel.decisionInsight}
+          />
         </section>
 
-        <section className="panel workspace-overview__panel workspace-overview__panel--actions">
-          <div className="panel-header">
-            <div>
-              <p className="section-title">{copy.quickActionsTitle}</p>
-              <p className="section-subtitle">{copy.quickActionsSubtitle}</p>
-            </div>
-          </div>
-          <div className="workspace-overview__actions">
-            <CreateRequestCard href={primaryAction.href} variant="compact" onClick={onPrimaryActionClick} />
-            <div className="workspace-overview__action-links">
-              {copy.quickActionsSecondary.map((action) => (
-                <Link key={action.href} href={action.href} prefetch={false} className="btn-ghost is-primary">
-                  {action.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <StatisticsDemandPanelSection
+          model={statisticsModel}
+          t={t}
+          className="workspace-overview__panel"
+          onSelectCategory={statisticsModel.setCategoryKey}
+        />
       </div>
 
-      <div className="workspace-overview__grid">
+      <div ref={gridRef} className="workspace-overview__grid">
         <section className="panel workspace-overview__panel">
           <div className="panel-header">
-            <div>
-              <p className="section-title">{copy.insightsTitle}</p>
-              <p className="section-subtitle">{copy.insightsSubtitle}</p>
-            </div>
-          </div>
-          <div className="workspace-overview__insights">
-            {insights.map((item) => (
-              <article key={item.key} className="workspace-overview__insight-card">
-                <span className="workspace-overview__insight-label">{item.label}</span>
-                <p className="workspace-overview__insight-text">{item.text}</p>
-                <Link href={item.ctaHref} prefetch={false} className="btn-ghost is-primary workspace-overview__insight-cta">
-                  {item.ctaLabel}
-                </Link>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel workspace-overview__panel">
-          <div className="panel-header">
-            <div>
+            <div className="section-heading">
               <p className="section-title">{topProvidersTitle}</p>
-              <p className="section-subtitle">{topProvidersSubtitle}</p>
+              <p className="section-subtitle">{resolvedTopProvidersSubtitle}</p>
             </div>
-            <MoreDotsLink href={topProvidersCtaHref} label={topProvidersCtaLabel} />
+            <MoreDotsLink href={providersHref} label={topProvidersCtaLabel} />
           </div>
           <ProviderList
             providers={topProviderItems}
@@ -269,35 +402,43 @@ export function WorkspaceOverviewMain({
             onToggleFavorite={onToggleProviderFavorite}
           />
         </section>
-      </div>
-
-      <div className="workspace-overview__grid">
-        <section className="panel workspace-overview__panel">
-          <div className="panel-header">
-            <div>
-              <p className="section-title">{copy.requestsTitle}</p>
-              <p className="section-subtitle">{copy.requestsSubtitle}</p>
-            </div>
-            <MoreDotsLink href="/workspace?section=requests" label={copy.requestsCta} />
-          </div>
-          <div className="requests-list is-single workspace-overview__list">
-            <RequestsList {...recentRequestsListProps} />
-          </div>
-        </section>
 
         <section className="panel workspace-overview__panel">
           <div className="panel-header">
-            <div>
+            <div className="section-heading">
               <p className="section-title">{copy.offersTitle}</p>
               <p className="section-subtitle">{copy.offersSubtitle}</p>
             </div>
-            <MoreDotsLink href="/workspace?tab=my-offers" label={copy.offersCta} />
+            <MoreDotsLink href={analysisHref} label={copy.offersCta} />
           </div>
-          <div className="requests-list is-single workspace-overview__list">
-            <RequestsList {...activeOffersListProps} />
-          </div>
+          <WorkspaceOpportunityCards
+            locale={locale}
+            currentSearch={currentSearch}
+            copy={copy}
+            requestsListProps={activeOffersListProps}
+            statisticsModel={statisticsModel}
+          />
         </section>
       </div>
+
+      <section className="panel workspace-overview__panel workspace-overview__panel--actions">
+        <div className="panel-header">
+          <div className="section-heading">
+            <p className="section-title">{copy.quickActionsTitle}</p>
+            <p className="section-subtitle">{copy.quickActionsSubtitle}</p>
+          </div>
+        </div>
+        <div className="workspace-overview__actions">
+          <CreateRequestCard href={primaryAction.href} variant="compact" onClick={onPrimaryActionClick} />
+          <div className="workspace-overview__action-links">
+            {quickActionLinks.map((action) => (
+              <Link key={action.href} href={action.href} prefetch={false} className="btn-ghost is-primary">
+                {action.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
     </section>
   );
 }

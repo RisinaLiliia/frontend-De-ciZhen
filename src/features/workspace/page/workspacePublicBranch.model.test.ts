@@ -59,6 +59,7 @@ describe('workspacePublicBranch.model', () => {
   it('builds explore seed flags, intro props and auto-mark policy', () => {
     const exploreWithSeed = buildWorkspacePublicExploreWithSeed({
       explore: {
+        exploreListDensity: 'single' as const,
         setExploreListDensity: () => undefined,
         sidebarNearbyLimit: 5,
         sidebarTopProvidersLimit: 5,
@@ -76,6 +77,7 @@ describe('workspacePublicBranch.model', () => {
         isPersonalized: false,
       },
       activePublicSection: 'stats',
+      activeWorkspaceTab: 'my-requests',
       state: {
         personalNavItems: [],
         insightText: 'ignored',
@@ -94,6 +96,8 @@ describe('workspacePublicBranch.model', () => {
     expect(exploreWithSeed.preferInitialPublicRequests).toBe(true);
     expect(exploreWithSeed.initialPublicRequestsError).toBe(true);
     expect(introProps.insightText).toBe('');
+    expect(introProps.activePublicSection).toBe('stats');
+    expect(introProps.activeWorkspaceTab).toBe('my-requests');
     expect(introProps.hideDemandMapOnMobile).toBe(false);
     expect(introProps.showQuickAction).toBe(false);
     expect(

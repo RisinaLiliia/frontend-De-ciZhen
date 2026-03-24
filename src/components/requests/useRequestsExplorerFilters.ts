@@ -47,6 +47,7 @@ export function useRequestsExplorerFilters({ t, locale }: Args) {
     onSortChange,
     onReset,
     setPage,
+    setLimit,
     isPending,
   } = useRequestsFilters({
     services,
@@ -115,6 +116,7 @@ export function useRequestsExplorerFilters({ t, locale }: Args) {
     limit,
     filter,
     setPage,
+    setLimit,
     isPending,
     onCategoryChange,
     onSubcategoryChange,

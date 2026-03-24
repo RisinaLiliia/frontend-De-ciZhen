@@ -3,11 +3,14 @@
 import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
+import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import { trackUXEvent } from '@/lib/analytics';
+import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import {
   WorkspaceOverviewMain,
+  WorkspaceOverviewInsightsPanel,
   WorkspacePublicDemandMapPanel,
+  useWorkspaceStatisticsModel,
   useWorkspacePrivateState,
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
@@ -41,6 +44,7 @@ export function useWorkspacePrivatePresentationFlow({
 }: UseWorkspacePrivatePresentationFlowParams) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const currentSearch = searchParams.toString();
   const { isWorkspaceAuthed } = branch;
   const { activePublicSection, activeWorkspaceTab, pendingFavoriteProviderIds, onToggleProviderFavorite, isLoading, requestsCount } = data;
   const isOverviewMode =
@@ -90,6 +94,22 @@ export function useWorkspacePrivatePresentationFlow({
       })()
     );
 
+  const overviewHeroRef = React.useRef<HTMLDivElement | null>(null);
+  const overviewGridRef = React.useRef<HTMLDivElement | null>(null);
+  const overviewMapPanelRef = React.useRef<HTMLElement | null>(null);
+  const overviewInsightsPanelRef = React.useRef<HTMLElement | null>(null);
+  const overviewMapMinHeight = useSyncedPanelMinHeight({
+    sourceRef: overviewHeroRef,
+    mode: 'sourceHeight',
+    watchKey: isOverviewMode,
+  });
+  const overviewInsightsMinHeight = useSyncedPanelMinHeight({
+    sourceRef: overviewGridRef,
+    mode: 'sourceHeight',
+    watchKey: isOverviewMode,
+  });
+  const overviewStatisticsModel = useWorkspaceStatisticsModel({ locale: branch.locale });
+
   const asideTopSlot = isOverviewMode ? (
     <>
       <WorkspacePublicDemandMapPanel
@@ -99,10 +119,17 @@ export function useWorkspacePrivatePresentationFlow({
         summary={data.allRequestsSummary}
         isLoading={data.isPublicSummaryLoading}
         isError={data.isPublicSummaryError}
+        onSelectCity={overviewStatisticsModel.setCityId}
+        panelRef={overviewMapPanelRef}
+        style={overviewMapMinHeight ? { minHeight: `${overviewMapMinHeight}px` } : undefined}
       />
-      <section className="panel stack-sm" aria-label="Workspace quick action">
-        <CreateRequestCard href={primaryAction.href} />
-      </section>
+      <WorkspaceOverviewInsightsPanel
+        locale={branch.locale}
+        currentSearch={currentSearch}
+        statisticsModel={overviewStatisticsModel}
+        panelRef={overviewInsightsPanelRef}
+        style={overviewInsightsMinHeight ? { minHeight: `${overviewInsightsMinHeight}px` } : undefined}
+      />
     </>
   ) : null;
 
@@ -120,22 +147,70 @@ export function useWorkspacePrivatePresentationFlow({
     }),
   );
 
+  const activeOffersListProps = React.useMemo(
+    () =>
+      buildRequestsListProps({
+        t: branch.t,
+        locale: branch.locale,
+        requests: data.publicRequests,
+        isLoading: data.isLoading,
+        isError: data.isPublicRequestsError,
+        serviceByKey: data.serviceByKey,
+        categoryByKey: data.categoryByKey,
+        cityById: data.cityById,
+        formatDate: data.formatDate,
+        formatPrice: data.formatPrice,
+        enableOfferActions: true,
+        hideRecurringBadge: branch.isPersonalized,
+        showFavoriteButton: true,
+        offersByRequest: data.offersByRequest,
+        favoriteRequestIds: data.favoriteRequestIds,
+        onToggleFavorite: data.onToggleRequestFavorite,
+        onSendOffer: data.onOpenOfferSheet,
+        onEditOffer: data.onOpenOfferSheet,
+        onWithdrawOffer: data.onWithdrawOffer,
+        onOpenChatThread: data.onOpenChatThread,
+        pendingOfferRequestId: data.pendingOfferRequestId,
+        pendingFavoriteRequestIds: data.pendingFavoriteRequestIds,
+      }),
+    [
+      branch.isPersonalized,
+      branch.locale,
+      branch.t,
+      data.categoryByKey,
+      data.cityById,
+      data.favoriteRequestIds,
+      data.formatDate,
+      data.formatPrice,
+      data.isLoading,
+      data.isPublicRequestsError,
+      data.offersByRequest,
+      data.onOpenChatThread,
+      data.onOpenOfferSheet,
+      data.onToggleRequestFavorite,
+      data.onWithdrawOffer,
+      data.pendingFavoriteRequestIds,
+      data.pendingOfferRequestId,
+      data.publicRequests,
+      data.serviceByKey,
+    ],
+  );
+
   const privateMain = isOverviewMode ? (
     <WorkspaceOverviewMain
       locale={branch.locale}
+      t={branch.t}
+      currentSearch={currentSearch}
+      statisticsModel={overviewStatisticsModel}
+      heroRef={overviewHeroRef}
+      gridRef={overviewGridRef}
       primaryAction={primaryAction}
       onPrimaryActionClick={onPrimaryActionClick}
-      insightText={privateState.insightText}
-      activityProgress={privateState.activityProgress}
-      providerStatsPayload={privateState.providerStatsPayload}
-      clientStatsPayload={privateState.clientStatsPayload}
-      myRequestsListProps={workspaceContentProps.myRequestsListProps}
-      myOffersListProps={workspaceContentProps.myOffersListProps}
+      activeOffersListProps={activeOffersListProps}
       topProviders={workspaceAsideBaseProps.providers}
       topProvidersTitle={workspaceAsideBaseProps.title}
       topProvidersSubtitle={workspaceAsideBaseProps.subtitle}
       topProvidersCtaLabel={workspaceAsideBaseProps.ctaLabel}
-      topProvidersCtaHref="/workspace?section=providers"
       favoriteProviderIds={workspaceAsideBaseProps.favoriteProviderIds}
       pendingFavoriteProviderIds={pendingFavoriteProviderIds}
       onToggleProviderFavorite={onToggleProviderFavorite}

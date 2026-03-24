@@ -64,6 +64,7 @@ type Props = {
   activeSection: PublicWorkspaceSection;
   t: (key: I18nKey) => string;
   locale: Locale;
+  exploreListDensity: 'single' | 'double';
   sidebarNearbyLimit: number;
   sidebarTopProvidersLimit: number;
   sidebarProofCases: ProofCase[];
@@ -84,6 +85,7 @@ export function WorkspaceExploreRail({
   activeSection,
   t,
   locale,
+  exploreListDensity,
   sidebarNearbyLimit,
   sidebarTopProvidersLimit,
   sidebarProofCases,
@@ -148,13 +150,13 @@ export function WorkspaceExploreRail({
             <TopProvidersPanel t={t} locale={locale} limit={sidebarTopProvidersLimit} />
           )}
 
-          {activeSection === 'reviews' ? null : (
+          {activeSection === 'reviews' ? null : (exploreListDensity === 'double') ? (
             <ProofPanel
               t={t}
               proofCases={sidebarProofCases}
               proofIndex={sidebarProofCases.length ? proofIndex % sidebarProofCases.length : 0}
             />
-          )}
+          ) : null}
 
           <TrustLivePanel className={trustPanelClassName} t={t} />
         </>

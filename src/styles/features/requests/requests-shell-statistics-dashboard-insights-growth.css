@@ -1,6 +1,14 @@
 /* requests-shell-statistics-dashboard-insights-growth.css */
 
 @layer components {
+  .workspace-insights-panel {
+    --workspace-insights-panel-gap: var(--space-3);
+    --workspace-insights-list-gap: var(--space-2);
+    --workspace-insights-header-gap: var(--space-3);
+    display: grid;
+    gap: var(--workspace-insights-panel-gap);
+  }
+
   .workspace-statistics__profile-panel {
     display: grid;
     gap: var(--space-2);
@@ -8,12 +16,12 @@
 
   .workspace-statistics-insights {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--workspace-insights-list-gap);
   }
 
   .workspace-statistics-insights__header {
     display: grid;
-    gap: var(--space-3);
+    gap: var(--workspace-insights-header-gap);
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "heading"
@@ -33,7 +41,7 @@
   }
 
   .workspace-statistics-insights__secondary.requests-list {
-    gap: var(--space-3);
+    gap: var(--workspace-insights-list-gap);
   }
 
   .workspace-statistics-insights__ki {

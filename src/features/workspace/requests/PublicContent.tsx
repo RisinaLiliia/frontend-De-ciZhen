@@ -2,12 +2,15 @@
 
 import * as React from 'react';
 
-import { RequestsBottomPagination } from '@/components/requests/RequestsBottomPagination';
+import { RequestsPaginatedPanel } from '@/components/requests/RequestsPaginatedPanel';
 import { RequestsFilters, RequestsResultsSummary } from '@/components/requests/RequestsFilters';
 import { RequestsList } from '@/components/requests/RequestsList';
-import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
+import {
+  DEFAULT_REQUESTS_LIST_DENSITY,
+  type RequestsListDensity,
+} from '@/lib/requests/pagination';
 import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 
 type StatusFilter = {
@@ -32,7 +35,8 @@ type Props = {
   resultsLabel: string;
   onPrevPage: () => void;
   onNextPage: () => void;
-  onListDensityChange?: (value: 'single' | 'double') => void;
+  initialListDensity?: RequestsListDensity;
+  onListDensityChange?: (value: RequestsListDensity) => void;
   showFilterControls?: boolean;
 };
 
@@ -53,84 +57,95 @@ export function PublicContent({
   resultsLabel,
   onPrevPage,
   onNextPage,
+  initialListDensity,
   onListDensityChange,
   showFilterControls = true,
 }: Props) {
-  const [listDensity, setListDensity] = React.useState<'single' | 'double'>('single');
+  const [listDensity, setListDensity] = React.useState<RequestsListDensity>(initialListDensity ?? DEFAULT_REQUESTS_LIST_DENSITY);
+  const prevInitialDensityRef = React.useRef<RequestsListDensity | undefined>(initialListDensity);
+  const mountedRef = React.useRef(false);
 
   React.useEffect(() => {
+    if (initialListDensity == null) return;
+
+    if (prevInitialDensityRef.current !== initialListDensity) {
+      setListDensity(initialListDensity);
+      prevInitialDensityRef.current = initialListDensity;
+    }
+  }, [initialListDensity]);
+
+  React.useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+
     onListDensityChange?.(listDensity);
   }, [listDensity, onListDensityChange]);
 
+  const topSlot = showFilterControls ? (
+    <RequestsFilters
+      {...filtersProps}
+      resultsLabel={resultsLabel}
+      page={page}
+      totalPages={totalPages}
+      onPrevPage={onPrevPage}
+      onNextPage={onNextPage}
+      listDensity={listDensity}
+      onListDensityChange={setListDensity}
+    />
+  ) : (
+    <RequestsResultsSummary
+      t={t}
+      totalResults={filtersProps.totalResults}
+      resultsLabel={resultsLabel}
+      page={page}
+      totalPages={totalPages}
+      isPending={filtersProps.isPending}
+      listDensity={listDensity}
+      onPrevPage={onPrevPage}
+      onNextPage={onNextPage}
+      onListDensityChange={setListDensity}
+    />
+  );
+
+  const secondarySlot = (
+    <WorkspaceChipToggleGroup
+      items={statusFilters}
+      selectedKey={activeStatusFilter}
+      onSelect={onStatusFilterChange}
+      ariaLabel={t(I18N_KEYS.requestsPage.statusFiltersLabel)}
+    />
+  );
+
   return (
-    <section className="panel requests-panel">
-      {showFilterControls ? (
-        <RequestsFilters
-          {...filtersProps}
-          resultsLabel={resultsLabel}
-          page={page}
-          totalPages={totalPages}
-          onPrevPage={onPrevPage}
-          onNextPage={onNextPage}
-          listDensity={listDensity}
-          onListDensityChange={setListDensity}
-        />
-      ) : (
-        <RequestsResultsSummary
-          t={t}
-          totalResults={filtersProps.totalResults}
-          resultsLabel={resultsLabel}
-          page={page}
-          totalPages={totalPages}
-          isPending={filtersProps.isPending}
-          listDensity={listDensity}
-          onPrevPage={onPrevPage}
-          onNextPage={onNextPage}
-          onListDensityChange={setListDensity}
-        />
-      )}
-
-      <WorkspaceChipToggleGroup
-        items={statusFilters}
-        selectedKey={activeStatusFilter}
-        onSelect={onStatusFilterChange}
-        ariaLabel={t(I18N_KEYS.requestsPage.statusFiltersLabel)}
-      />
-
-      <section
-        id="requests-list"
-        className={`requests-list requests-list--stable ${listDensity === 'double' ? 'is-double' : 'is-single'}`.trim()}
-        role="region"
-        aria-label={t(I18N_KEYS.requestsPage.resultsLabel)}
-        aria-live="polite"
-      >
-        <WorkspaceContentState
-          isLoading={isLoading}
-          isEmpty={!isError && requestsCount === 0}
-          emptyTitle={
-            hasActivePublicFilter
-              ? t(I18N_KEYS.requestsPage.emptyFilteredTitle)
-              : t(I18N_KEYS.requestsPage.emptyDefaultTitle)
-          }
-          emptyHint={
-            hasActivePublicFilter
-              ? t(I18N_KEYS.requestsPage.emptyFilteredHint)
-              : t(I18N_KEYS.requestsPage.emptyDefaultHint)
-          }
-          emptyCtaLabel={hasActivePublicFilter ? t(I18N_KEYS.requestsPage.clearFilters) : undefined}
-          emptyCtaHref={hasActivePublicFilter ? emptyCtaHref : undefined}
-        >
-          <RequestsList {...requestsListProps} />
-        </WorkspaceContentState>
-      </section>
-
-      <RequestsBottomPagination
-        t={t}
-        page={page}
-        totalPages={totalPages}
-        onPrevPage={onPrevPage}
-        onNextPage={onNextPage}
-      />
-    </section>
+    <RequestsPaginatedPanel
+      t={t}
+      page={page}
+      totalPages={totalPages}
+      onPrevPage={onPrevPage}
+      onNextPage={onNextPage}
+      topSlot={topSlot}
+      secondarySlot={secondarySlot}
+      listId="requests-list"
+      listAriaLabel={t(I18N_KEYS.requestsPage.resultsLabel)}
+      listDensity={listDensity}
+      isLoading={isLoading}
+      isEmpty={!isError && requestsCount === 0}
+      emptyTitle={
+        hasActivePublicFilter
+          ? t(I18N_KEYS.requestsPage.emptyFilteredTitle)
+          : t(I18N_KEYS.requestsPage.emptyDefaultTitle)
+      }
+      emptyHint={
+        hasActivePublicFilter
+          ? t(I18N_KEYS.requestsPage.emptyFilteredHint)
+          : t(I18N_KEYS.requestsPage.emptyDefaultHint)
+      }
+      emptyCtaLabel={hasActivePublicFilter ? t(I18N_KEYS.requestsPage.clearFilters) : undefined}
+      emptyCtaHref={hasActivePublicFilter ? emptyCtaHref : undefined}
+    >
+      <RequestsList {...requestsListProps} />
+    </RequestsPaginatedPanel>
   );
 }

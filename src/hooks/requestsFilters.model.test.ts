@@ -29,8 +29,24 @@ describe('requestsFilters.model', () => {
       cityId: 'berlin',
       sortBy: 'price_desc',
       page: 3,
-      limit: 40,
+      limit: 20,
     });
+  });
+
+  it('normalizes limit to supported page sizes', () => {
+    expect(
+      resolveRequestsFilterQueryParams(
+        new URLSearchParams('limit=10'),
+        'date_desc',
+      ).limit,
+    ).toBe(10);
+
+    expect(
+      resolveRequestsFilterQueryParams(
+        new URLSearchParams('limit=17'),
+        'date_desc',
+      ).limit,
+    ).toBe(20);
   });
 
   it('resolves category and subcategory selection from services', () => {
@@ -99,16 +115,17 @@ describe('requestsFilters.model', () => {
           subcategoryKey: 'all',
           sortBy: 'date_desc',
           page: 7,
-          limit: 40,
+          limit: 20,
         },
         next: {
           cityId: 'berlin',
           categoryKey: 'design',
           subcategoryKey: 'logo',
           page: 1,
+          limit: 10,
         },
         defaultSort: 'date_desc',
       }),
-    ).toBe('/workspace?tab=requests&cityId=berlin&categoryKey=design&subcategoryKey=logo&limit=40');
+    ).toBe('/workspace?tab=requests&cityId=berlin&categoryKey=design&subcategoryKey=logo&limit=10');
   });
 });

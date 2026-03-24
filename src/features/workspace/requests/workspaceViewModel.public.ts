@@ -7,6 +7,7 @@ import type { PublicContent } from '@/features/workspace/requests/PublicContent'
 import type { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { buildWorkspacePublicRequestsListProps } from '@/features/workspace/requests/workspaceViewModel.helpers';
 import { buildWorkspaceListContext } from '@/features/workspace/requests/workspaceViewModel.shared';
+import { resolveRequestsListDensityForPageSize, resolveRequestsPageSizeForDensity } from '@/lib/requests/pagination';
 import type {
   PublicInput,
 } from '@/features/workspace/requests/workspaceViewModel.types';
@@ -61,7 +62,9 @@ type BuildPublicContentArgs = Pick<
   | 'pendingOfferRequestId'
   | 'pendingFavoriteRequestIds'
   | 'page'
+  | 'limit'
   | 'totalPages'
+  | 'setLimit'
 > & {
   filtersProps: ComponentProps<typeof RequestsFilters>;
   onStatusFilterChange: (status: string) => void;
@@ -140,7 +143,9 @@ export function buildWorkspacePublicContentProps({
   pendingOfferRequestId,
   pendingFavoriteRequestIds,
   page,
+  limit,
   totalPages,
+  setLimit,
   filtersProps,
   onStatusFilterChange,
   onPrevPage,
@@ -186,5 +191,7 @@ export function buildWorkspacePublicContentProps({
     resultsLabel: t(I18N_KEYS.requestsPage.resultsLabel),
     onPrevPage,
     onNextPage,
+    initialListDensity: resolveRequestsListDensityForPageSize(limit),
+    onListDensityChange: (density) => setLimit(resolveRequestsPageSizeForDensity(density)),
   };
 }

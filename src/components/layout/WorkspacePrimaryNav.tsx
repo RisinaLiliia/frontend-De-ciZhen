@@ -23,16 +23,20 @@ type TopNavItem = {
 const isPathPrefix = (pathname: string, prefix: string) =>
   pathname === prefix || pathname.startsWith(`${prefix}/`);
 
-const WORKSPACE_PREVIEW_URL = '/workspace?section=requests';
-const AUTH_WORKSPACE_URL = '/workspace?section=requests';
+const DESKTOP_WORKSPACE_PREVIEW_URL = '/workspace?section=overview';
+const DESKTOP_AUTH_WORKSPACE_URL = '/workspace?section=overview';
+const MOBILE_WORKSPACE_PREVIEW_URL = '/workspace?section=overview';
+const MOBILE_AUTH_WORKSPACE_URL = '/workspace?section=overview';
 const REQUEST_CREATE_URL = '/request/create';
 const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
 const AUTH_PROFILE_FALLBACK_URL = '/profile';
 
-function useTopNavItems(isAuthenticated: boolean, profileHref: string): TopNavItem[] {
+function useTopNavItems(isAuthenticated: boolean, profileHref: string, mobile: boolean): TopNavItem[] {
   const t = useT();
 
-  const workspaceHref = isAuthenticated ? AUTH_WORKSPACE_URL : WORKSPACE_PREVIEW_URL;
+  const workspaceHref = mobile
+    ? (isAuthenticated ? MOBILE_AUTH_WORKSPACE_URL : MOBILE_WORKSPACE_PREVIEW_URL)
+    : (isAuthenticated ? DESKTOP_AUTH_WORKSPACE_URL : DESKTOP_WORKSPACE_PREVIEW_URL);
   const chatHref = isAuthenticated ? '/chat' : LOGIN_CHAT_URL;
 
   const items: TopNavItem[] = [
@@ -96,7 +100,7 @@ function WorkspacePrimaryNav({
     isAuthenticated && typeof user?.id === 'string' && user.id.trim().length > 0
       ? `/profile/${encodeURIComponent(user.id)}`
       : AUTH_PROFILE_FALLBACK_URL;
-  const items = useTopNavItems(isAuthenticated, profileHref);
+  const items = useTopNavItems(isAuthenticated, profileHref, mobile);
   const visibleItems = mobile ? items.filter((item) => item.key !== 'profile') : items;
   const params = new URLSearchParams(searchParams?.toString());
   const navStyle = mobile

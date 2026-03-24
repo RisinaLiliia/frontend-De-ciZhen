@@ -12,6 +12,8 @@ type WorkspacePublicDemandMapViewProps = {
   isLoading: boolean;
   isError: boolean;
   surface?: 'panel' | 'embedded';
+  panelRef?: React.Ref<HTMLElement>;
+  style?: React.CSSProperties;
   activeRequestsCount: number;
   activeProvidersCount: number;
   mapHostRef: React.RefObject<HTMLDivElement | null>;
@@ -29,6 +31,8 @@ export function WorkspacePublicDemandMapView({
   isLoading,
   isError,
   surface = 'panel',
+  panelRef,
+  style,
   activeRequestsCount,
   activeProvidersCount,
   mapHostRef,
@@ -38,7 +42,11 @@ export function WorkspacePublicDemandMapView({
   const showEmptyState = !isLoading && !isError && !hasCoordinates;
 
   return (
-    <section className={`${surface === 'panel' ? 'panel ' : ''}workspace-public-demand-map${surface === 'embedded' ? ' workspace-public-demand-map--embedded' : ''}`.trim()}>
+    <section
+      ref={panelRef}
+      style={style}
+      className={`${surface === 'panel' ? 'panel ' : ''}workspace-public-demand-map${surface === 'embedded' ? ' workspace-public-demand-map--embedded' : ''}`.trim()}
+    >
       <header className="workspace-public-demand-map__header">
         <p className="section-title">{t(I18N_KEYS.homePublic.demandMapTitle)}</p>
         <p className="typo-small">{t(I18N_KEYS.homePublic.demandMapSubtitle)}</p>

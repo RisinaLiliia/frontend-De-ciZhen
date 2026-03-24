@@ -7,6 +7,7 @@ import type {
 } from '@/components/requests/requestsExplorer.types';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { REQUESTS_PAGE_SIZE, type RequestsListDensity } from '@/lib/requests/pagination';
 
 type PublicFilter = {
   cityId?: string;
@@ -24,7 +25,7 @@ export function hasDefaultPublicFilter(filter: PublicFilter) {
     !filter.subcategoryKey &&
     (filter.sort ?? 'date_desc') === 'date_desc' &&
     (filter.page ?? 1) === 1 &&
-    (filter.limit ?? 20) === 20
+    (filter.limit ?? REQUESTS_PAGE_SIZE) === REQUESTS_PAGE_SIZE
   );
 }
 
@@ -51,8 +52,8 @@ type BuildProvidersContentArgs = {
   providersData: {
     totalProvidersLabel: string;
     totalProviderPages: number;
-    providersListDensity: 'single' | 'double';
-    setProvidersListDensity: (value: 'single' | 'double') => void;
+    providersListDensity: RequestsListDensity;
+    setProvidersListDensity: (value: RequestsListDensity) => void;
     isProvidersLoading: boolean;
     isProvidersError: boolean;
     filteredProvidersCount: number;
@@ -61,6 +62,7 @@ type BuildProvidersContentArgs = {
     pendingFavoriteProviderIds: Set<string>;
     toggleProviderFavorite: (providerId: string) => void | Promise<void>;
   };
+  onListDensityChange?: (value: RequestsListDensity) => void;
   showFilterControls: boolean;
 };
 
@@ -86,7 +88,7 @@ type BuildRequestsContentArgs = {
   catalogIndex: RequestsExplorerCatalogIndex;
   formatDate: Intl.DateTimeFormat;
   formatPrice: Intl.NumberFormat;
-  onListDensityChange?: (value: 'single' | 'double') => void;
+  onListDensityChange?: (value: RequestsListDensity) => void;
   showTopFilters: boolean;
 };
 
@@ -108,6 +110,7 @@ export function pickRequestsExplorerSharedFilters(
     cityId: filters.cityId,
     sortBy: filters.sortBy,
     page: filters.page,
+    limit: filters.limit,
     isCategoriesLoading: filters.isCategoriesLoading,
     isServicesLoading: filters.isServicesLoading,
     isPending: filters.isPending,
@@ -126,6 +129,7 @@ export function buildRequestsExplorerProvidersContentProps({
   locale,
   sharedFilters,
   providersData,
+  onListDensityChange,
   showFilterControls,
 }: BuildProvidersContentArgs): RequestsExplorerProvidersContentProps {
   return {
@@ -136,7 +140,7 @@ export function buildRequestsExplorerProvidersContentProps({
     totalProviderPages: providersData.totalProviderPages,
     onSetPage: sharedFilters.setPage,
     providersListDensity: providersData.providersListDensity,
-    onListDensityChange: providersData.setProvidersListDensity,
+    onListDensityChange: onListDensityChange ?? providersData.setProvidersListDensity,
     isProvidersLoading: providersData.isProvidersLoading,
     isProvidersError: providersData.isProvidersError,
     filteredProvidersCount: providersData.filteredProvidersCount,

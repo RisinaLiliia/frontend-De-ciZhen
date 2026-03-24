@@ -4,6 +4,7 @@ import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import type { RequestsListDensity } from '@/lib/requests/pagination';
 
 export type RequestsExplorerProps = {
   t: (key: I18nKey) => string;
@@ -12,7 +13,7 @@ export type RequestsExplorerProps = {
   backHref?: string;
   emptyCtaHref?: string;
   showBack?: boolean;
-  onListDensityChange?: (value: 'single' | 'double') => void;
+  onListDensityChange?: (value: RequestsListDensity) => void;
   showTopFilters?: boolean;
   initialPublicRequests?: PublicRequestsResponseDto;
   preferInitialPublicRequests?: boolean;
@@ -36,6 +37,7 @@ export type RequestsExplorerSharedFilters = {
   cityId: string;
   sortBy: string;
   page: number;
+  limit: number;
   isCategoriesLoading: boolean;
   isServicesLoading: boolean;
   isPending: boolean;
@@ -60,8 +62,8 @@ export type RequestsExplorerProvidersContentProps = {
   totalProvidersLabel: string;
   totalProviderPages: number;
   onSetPage: (page: number) => void;
-  providersListDensity: 'single' | 'double';
-  onListDensityChange: (value: 'single' | 'double') => void;
+  providersListDensity: RequestsListDensity;
+  onListDensityChange: (value: RequestsListDensity) => void;
   isProvidersLoading: boolean;
   isProvidersError: boolean;
   filteredProvidersCount: number;
@@ -91,5 +93,5 @@ export type RequestsExplorerRequestsContentProps = {
   toggleRequestFavorite: (requestId: string) => Promise<void> | void;
   formatDate: Intl.DateTimeFormat;
   formatPrice: Intl.NumberFormat;
-  onListDensityChange?: (value: 'single' | 'double') => void;
+  onListDensityChange?: (value: RequestsListDensity) => void;
 } & RequestsExplorerSharedFilters & RequestsExplorerCatalogIndex;

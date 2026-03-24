@@ -19,6 +19,7 @@ import {
   buildRequestsExplorerRequestsContentProps,
   pickRequestsExplorerSharedFilters,
 } from '@/components/requests/requestsExplorer.model';
+import { resolveRequestsPageSizeForDensity } from '@/lib/requests/pagination';
 import type { RequestsExplorerProps } from '@/components/requests/requestsExplorer.types';
 
 export type { RequestsExplorerProps } from '@/components/requests/requestsExplorer.types';
@@ -47,6 +48,13 @@ export function RequestsExplorer({
 
   const filters = useRequestsExplorerFilters({ t, locale });
   const sharedFilters = pickRequestsExplorerSharedFilters(filters);
+  const handleRequestsListDensityChange = React.useCallback(
+    (value: 'single' | 'double') => {
+      filters.setLimit(resolveRequestsPageSizeForDensity(value));
+      onListDensityChange?.(value);
+    },
+    [filters, onListDensityChange],
+  );
 
   const providersData = useProvidersExploreData({
     locale,
@@ -108,6 +116,14 @@ export function RequestsExplorer({
     toggleRequestFavorite,
   } = requestsData;
 
+  const handleProvidersListDensityChange = React.useCallback(
+    (value: 'single' | 'double') => {
+      setProvidersListDensity(value);
+      handleRequestsListDensityChange(value);
+    },
+    [handleRequestsListDensityChange, setProvidersListDensity],
+  );
+
   const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
     services: filters.services,
     categories: filters.categories,
@@ -149,6 +165,7 @@ export function RequestsExplorer({
       toggleProviderFavorite,
     },
     showFilterControls: showTopFilters,
+    onListDensityChange: handleProvidersListDensityChange,
   });
 
   const requestsContentProps = buildRequestsExplorerRequestsContentProps({
@@ -177,7 +194,7 @@ export function RequestsExplorer({
     },
     formatDate: filters.formatDate,
     formatPrice: filters.formatPrice,
-    onListDensityChange,
+    onListDensityChange: handleRequestsListDensityChange,
     showTopFilters,
   });
 

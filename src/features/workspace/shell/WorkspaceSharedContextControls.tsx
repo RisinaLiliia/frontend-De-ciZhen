@@ -60,6 +60,7 @@ type WorkspaceSharedContextControlsProps = {
   className?: string;
   surface?: 'shell' | 'embedded';
   mobileTriggerLabel?: string;
+  mobileBehavior?: 'sheet-trigger' | 'inline';
 };
 
 export function WorkspaceSharedContextControls({
@@ -76,6 +77,7 @@ export function WorkspaceSharedContextControls({
   className,
   surface = 'shell',
   mobileTriggerLabel,
+  mobileBehavior = 'sheet-trigger',
 }: WorkspaceSharedContextControlsProps) {
   const rootClassName = [
     'workspace-shared-context-controls',
@@ -168,6 +170,20 @@ export function WorkspaceSharedContextControls({
     </div>
   );
 
+  const summary = (
+    <>
+      <span className="workspace-mobile-filters__summary-chip">{range.summaryLabel}</span>
+      {sort ? (
+        <span className="workspace-mobile-filters__summary-chip">{sort.summaryLabel}</span>
+      ) : null}
+      <span className="workspace-mobile-filters__summary-chip">{city.summaryLabel}</span>
+      <span className="workspace-mobile-filters__summary-chip">{category.summaryLabel}</span>
+      {service ? (
+        <span className="workspace-mobile-filters__summary-chip">{service.summaryLabel}</span>
+      ) : null}
+    </>
+  );
+
   return (
     <section className={rootClassName} aria-label={title}>
       <div className="workspace-context-strip__header">
@@ -178,27 +194,24 @@ export function WorkspaceSharedContextControls({
         {renderContent(false)}
       </div>
 
-      <WorkspaceMobileFiltersSheet
-        title={title}
-        closeLabel={closeLabel}
-        triggerLabel={mobileTriggerLabel ?? title}
-        summary={(
-          <>
-            <span className="workspace-mobile-filters__summary-chip">{range.summaryLabel}</span>
-            {sort ? (
-              <span className="workspace-mobile-filters__summary-chip">{sort.summaryLabel}</span>
-            ) : null}
-            <span className="workspace-mobile-filters__summary-chip">{city.summaryLabel}</span>
-            <span className="workspace-mobile-filters__summary-chip">{category.summaryLabel}</span>
-            {service ? (
-              <span className="workspace-mobile-filters__summary-chip">{service.summaryLabel}</span>
-            ) : null}
-          </>
-        )}
-        className="workspace-shared-context-controls__mobile"
-      >
-        {renderContent(true)}
-      </WorkspaceMobileFiltersSheet>
+      {mobileBehavior === 'inline' ? (
+        <div className="workspace-shared-context-controls__mobile workspace-shared-context-controls__mobile--inline">
+          <div className="workspace-shared-context-controls__summary" aria-hidden="true">
+            {summary}
+          </div>
+          {renderContent(true)}
+        </div>
+      ) : (
+        <WorkspaceMobileFiltersSheet
+          title={title}
+          closeLabel={closeLabel}
+          triggerLabel={mobileTriggerLabel ?? title}
+          summary={summary}
+          className="workspace-shared-context-controls__mobile"
+        >
+          {renderContent(true)}
+        </WorkspaceMobileFiltersSheet>
+      )}
     </section>
   );
 }

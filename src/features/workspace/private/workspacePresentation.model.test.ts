@@ -9,6 +9,9 @@ describe('workspacePresentation.model', () => {
   it('builds private intro props with translated stats labels and quick action config', () => {
     const props = buildWorkspacePrivateIntroProps({
       t: (key) => String(key),
+      locale: 'de',
+      activePublicSection: 'requests',
+      activeWorkspaceTab: 'my-offers',
       personalNavItems: [{ key: 'requests', label: 'Requests', href: '/workspace', icon: null }],
       hideNavBadges: true,
       insightText: 'Insight',
@@ -69,6 +72,9 @@ describe('workspacePresentation.model', () => {
     });
 
     expect(props.hideNavBadges).toBe(true);
+    expect(props.locale).toBe('de');
+    expect(props.activePublicSection).toBe('requests');
+    expect(props.activeWorkspaceTab).toBe('my-offers');
     expect(props.statsTabsLabel.provider).toBe('homePublic.howItWorksProviderTab');
     expect(props.statsErrorLabel).toBe('requestsPage.statsLoadError');
     expect(props.quickActionHref).toBe('/request/create');
