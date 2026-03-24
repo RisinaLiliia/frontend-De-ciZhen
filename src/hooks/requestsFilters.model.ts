@@ -1,5 +1,9 @@
 import { ALL_OPTION_KEY } from '@/features/workspace/requests';
 import type { PublicRequestsSort } from '@/lib/api/requests';
+import {
+  REQUESTS_PAGE_SIZE,
+  REQUESTS_PAGE_SIZE_SINGLE,
+} from '@/lib/requests/pagination';
 
 export const REQUESTS_FILTER_QUERY_KEYS = new Set([
   'cityId',
@@ -10,8 +14,7 @@ export const REQUESTS_FILTER_QUERY_KEYS = new Set([
   'page',
   'limit',
 ]);
-export const DEFAULT_REQUESTS_FILTER_LIMIT = 20;
-export const MAX_REQUESTS_FILTER_LIMIT = 100;
+export const DEFAULT_REQUESTS_FILTER_LIMIT = REQUESTS_PAGE_SIZE;
 
 type SearchParamsLike = Pick<URLSearchParams, 'get' | 'forEach'>;
 
@@ -30,6 +33,7 @@ type RequestsFiltersNextState = {
   subcategoryKey?: string;
   sortBy?: PublicRequestsSort;
   page?: number;
+  limit?: number;
 };
 
 type RequestsService = {
@@ -47,17 +51,16 @@ export function resolveRequestsFilterQueryParams(
   searchParams: SearchParamsLike,
   defaultSort: PublicRequestsSort,
 ) {
+  const requestedLimit = readPositiveInt(searchParams.get('limit'), DEFAULT_REQUESTS_FILTER_LIMIT, REQUESTS_PAGE_SIZE);
+  const limit = requestedLimit <= REQUESTS_PAGE_SIZE_SINGLE ? REQUESTS_PAGE_SIZE_SINGLE : REQUESTS_PAGE_SIZE;
+
   return {
     categoryParam: searchParams.get('categoryKey') ?? ALL_OPTION_KEY,
     subcategoryParam: searchParams.get('subcategoryKey') ?? searchParams.get('serviceKey') ?? ALL_OPTION_KEY,
     cityId: searchParams.get('cityId') ?? ALL_OPTION_KEY,
     sortBy: (searchParams.get('sort') as PublicRequestsSort | null) ?? defaultSort,
     page: readPositiveInt(searchParams.get('page'), 1),
-    limit: readPositiveInt(
-      searchParams.get('limit'),
-      DEFAULT_REQUESTS_FILTER_LIMIT,
-      MAX_REQUESTS_FILTER_LIMIT,
-    ),
+    limit,
   };
 }
 
@@ -137,13 +140,14 @@ export function buildRequestsFiltersHref(params: {
   const nextSubcategory = next.subcategoryKey ?? current.subcategoryKey;
   const nextSort = next.sortBy ?? current.sortBy;
   const nextPage = next.page ?? current.page;
+  const nextLimit = next.limit ?? current.limit;
 
   if (nextCity !== ALL_OPTION_KEY) merged.set('cityId', nextCity);
   if (nextCategory !== ALL_OPTION_KEY) merged.set('categoryKey', nextCategory);
   if (nextSubcategory !== ALL_OPTION_KEY) merged.set('subcategoryKey', nextSubcategory);
   if (nextSort !== defaultSort) merged.set('sort', nextSort);
   if (nextPage > 1) merged.set('page', String(nextPage));
-  if (current.limit !== DEFAULT_REQUESTS_FILTER_LIMIT) merged.set('limit', String(current.limit));
+  if (nextLimit !== DEFAULT_REQUESTS_FILTER_LIMIT) merged.set('limit', String(nextLimit));
 
   const nextQuery = merged.toString();
   return nextQuery ? `${pathname}?${nextQuery}` : pathname;
