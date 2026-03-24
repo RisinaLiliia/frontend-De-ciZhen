@@ -94,7 +94,7 @@ describe('workspacePublicPresentation.model', () => {
       sidebarTopProvidersLimit: 5,
       sidebarProofCases: [],
       proofIndex: 0,
-    } as const;
+    };
 
     const layoutProps = buildWorkspacePublicLayoutProps({
       t: (key) => String(key),
