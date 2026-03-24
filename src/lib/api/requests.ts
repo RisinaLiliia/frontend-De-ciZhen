@@ -1,5 +1,6 @@
 // src/lib/api/requests.ts
 import { apiDelete, apiGet, apiPatch, apiPost, apiPostForm } from '@/lib/api/http';
+import { REQUESTS_PAGE_SIZE } from '@/lib/requests/pagination';
 import type {
   CreateRequestDto,
   DeleteMyRequestResponseDto,
@@ -44,7 +45,7 @@ export type PublicRequestsFilter = {
 
 export function buildPublicRequestsQuery(filter: PublicRequestsFilter) {
   const page = Math.max(1, Math.trunc(filter.page ?? 1));
-  const limit = Math.min(100, Math.max(1, Math.trunc(filter.limit ?? 20)));
+  const limit = Math.min(100, Math.max(1, Math.trunc(filter.limit ?? REQUESTS_PAGE_SIZE)));
   const offset =
     filter.offset == null ? null : Math.max(0, Math.trunc(filter.offset));
   const qs = new URLSearchParams();

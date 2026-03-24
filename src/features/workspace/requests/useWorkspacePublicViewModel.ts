@@ -50,8 +50,10 @@ export function useWorkspacePublicViewModel(params: PublicInput) {
     pendingOfferRequestId,
     pendingFavoriteRequestIds,
     page,
+    limit,
     totalPages,
     setPage,
+    setLimit,
   } = params;
 
   const publicContentProps = React.useMemo(
@@ -100,8 +102,10 @@ export function useWorkspacePublicViewModel(params: PublicInput) {
         pendingOfferRequestId,
         pendingFavoriteRequestIds,
         page,
+        limit,
         totalPages,
         setPage,
+        setLimit,
       }).publicContentProps,
     [
       activeStatusFilter,
@@ -133,6 +137,7 @@ export function useWorkspacePublicViewModel(params: PublicInput) {
       onToggleRequestFavorite,
       onWithdrawOffer,
       page,
+      limit,
       pendingFavoriteRequestIds,
       pendingOfferRequestId,
       requests,
@@ -140,6 +145,7 @@ export function useWorkspacePublicViewModel(params: PublicInput) {
       serviceByKey,
       serviceOptions,
       setPage,
+      setLimit,
       setStatusFilter,
       sortBy,
       sortOptions,
