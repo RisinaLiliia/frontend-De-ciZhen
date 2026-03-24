@@ -1,6 +1,16 @@
 /* src/styles/features/components/components-ui-panels-kpi-card.css */
 
 @layer components {
+  .kpi-grid {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kpi-grid--decision {
+    gap: var(--space-3);
+  }
+
   .kpi-card {
     display: grid;
     gap: var(--space-1);
@@ -17,8 +27,14 @@
   }
 
   .kpi-card--positive {
-    border-color: color-mix(in oklab, var(--c-border) 72%, var(--c-info-soft) 28%);
-    background: color-mix(in oklab, var(--c-info-soft) 36%, var(--surface-soft-bg) 64%);
+    border-color: var(--surface-decision-active-border);
+    background: var(--surface-decision-active-bg);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .kpi-card--positive .kpi-card__value {
+    color: var(--surface-decision-active-value);
   }
 
   .kpi-card--plain {
@@ -129,5 +145,27 @@
 
   .kpi-card__meta.is-neutral {
     color: var(--c-text-muted);
+  }
+
+  .kpi-grid--decision .kpi-card {
+    min-height: 132px;
+    gap: var(--space-1-5);
+    padding: var(--space-3-5) var(--space-3);
+  }
+
+  .kpi-grid--decision .kpi-card__value {
+    letter-spacing: -0.01em;
+  }
+
+  .kpi-grid--decision .kpi-card__bottom {
+    align-items: flex-start;
+    min-height: 34px;
+    margin-top: var(--space-0-5);
+    padding-top: var(--space-1);
+    border-top: 1px dashed color-mix(in oklab, var(--c-primary) 32%, transparent);
+  }
+
+  .kpi-grid--decision .kpi-card__meta {
+    line-height: 1.4;
   }
 }

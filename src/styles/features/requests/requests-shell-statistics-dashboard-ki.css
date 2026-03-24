@@ -2,11 +2,17 @@
 
 @layer components {
   .workspace-statistics-ki {
+    --workspace-ai-card-chip-height: var(--workspace-statistics-chip-height, 20px);
+    --workspace-ai-card-chip-pad-inline: var(--workspace-statistics-chip-pad-inline, var(--space-1-5));
+    --workspace-ai-card-chip-radius: var(--workspace-statistics-chip-radius, 999px);
+    --workspace-ai-card-chip-font-size: var(--workspace-statistics-chip-font-size, 10px);
+    --workspace-ai-card-chip-font-weight: var(--workspace-statistics-chip-font-weight, 700);
+    --workspace-ai-card-radius-md: var(--workspace-statistics-radius-md, var(--radius-md));
     display: grid;
     gap: var(--space-1-5);
     padding: var(--space-2);
     border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--surface-soft-border) 84%);
-    border-radius: var(--workspace-statistics-radius-md);
+    border-radius: var(--workspace-ai-card-radius-md);
     background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
   }
 
@@ -22,14 +28,14 @@
     align-items: center;
     align-self: start;
     width: fit-content;
-    min-height: var(--workspace-statistics-chip-height);
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
+    min-height: var(--workspace-ai-card-chip-height);
+    padding: 0 var(--workspace-ai-card-chip-pad-inline);
+    border-radius: var(--workspace-ai-card-chip-radius);
     border: 1px solid var(--surface-soft-border);
     background: var(--surface-soft-bg);
     color: var(--c-text-muted);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: 600;
+    font-size: var(--workspace-ai-card-chip-font-size);
+    font-weight: var(--workspace-ai-card-chip-font-weight);
     line-height: 1.2;
     letter-spacing: 0.01em;
   }
@@ -41,12 +47,25 @@
     white-space: nowrap;
   }
 
+  .workspace-ai-card--decision {
+    align-self: stretch;
+    inline-size: 100%;
+  }
+
+  .workspace-ai-card--decision.workspace-statistics-ki--meta .workspace-statistics-ki__stamp {
+    width: fit-content;
+    margin-inline: 0;
+    justify-content: flex-start;
+    align-self: flex-start;
+    white-space: normal;
+  }
+
   .workspace-statistics-ki__head {
     display: grid;
     grid-template-columns: 24px minmax(0, 1fr);
     align-items: center;
     gap: var(--space-1-5);
-    border-radius: var(--workspace-statistics-radius-md);
+    border-radius: var(--workspace-ai-card-radius-md);
     padding: var(--space-1) var(--space-1-5);
     border: 1px solid var(--surface-soft-border);
     background:
@@ -70,12 +89,12 @@
     justify-content: center;
     width: 24px;
     height: 24px;
-    border-radius: var(--workspace-statistics-chip-radius);
+    border-radius: var(--workspace-ai-card-chip-radius);
     border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%);
     background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
     color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: 700;
+    font-size: var(--workspace-ai-card-chip-font-size);
+    font-weight: var(--workspace-ai-card-chip-font-weight);
     letter-spacing: 0.02em;
     text-transform: uppercase;
     line-height: 1;
@@ -104,6 +123,21 @@
     font-size: var(--fs-small);
     line-height: 1.45;
     color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-text) 10%);
+  }
+
+  .workspace-ai-card--decision .workspace-statistics-ki__head,
+  .workspace-ai-card--decision .workspace-statistics-ki__text {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .workspace-ai-card__action.auth-social__btn {
+    width: fit-content;
+    min-width: 220px;
+    justify-content: center;
+    padding-inline: var(--space-4);
+    border-radius: var(--workspace-ai-card-radius-md);
+    font-size: var(--fs-small);
   }
 
   .workspace-statistics-ki__actions {

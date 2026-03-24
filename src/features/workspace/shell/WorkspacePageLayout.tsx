@@ -25,6 +25,7 @@ type WorkspaceAsideBaseProps = Omit<
 >;
 
 type ExploreProps = {
+  exploreListDensity: 'single' | 'double';
   setExploreListDensity: (value: 'single' | 'double') => void;
   sidebarNearbyLimit: number;
   sidebarTopProvidersLimit: number;
@@ -133,6 +134,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
         t={t}
         locale={locale}
         onListDensityChange={explore.setExploreListDensity}
+        exploreListDensity={explore.exploreListDensity}
         sidebarNearbyLimit={explore.sidebarNearbyLimit}
         sidebarTopProvidersLimit={explore.sidebarTopProvidersLimit}
         sidebarProofCases={explore.sidebarProofCases}

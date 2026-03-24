@@ -9,7 +9,6 @@ import {
   formatPercent,
   formatReviewCountHint,
   toHint,
-  toTrend,
 } from './statisticsModel.mappers';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type {
@@ -115,7 +114,6 @@ export function buildKpis(params: {
       value: formatNumber.format(data.kpis.requestsTotal),
       hint: toHint(totals.latestRequests, totals.previousRequests, range, locale),
       tone: totals.latestRequests >= totals.previousRequests ? 'positive' : 'neutral',
-      trend: toTrend(totals.latestRequests, totals.previousRequests),
     },
     {
       key: 'offers-total',
@@ -123,7 +121,6 @@ export function buildKpis(params: {
       value: formatNumber.format(data.kpis.offersTotal),
       hint: toHint(totals.latestOffers, totals.previousOffers, range, locale),
       tone: totals.latestOffers >= totals.previousOffers ? 'positive' : 'neutral',
-      trend: toTrend(totals.latestOffers, totals.previousOffers),
     },
     {
       key: 'completed-total',
@@ -133,9 +130,6 @@ export function buildKpis(params: {
         ? `${copy.kpiSuccessRateLabel} ${formatPercent(data.kpis.successRate)}`
         : copy.kpiNoCompletedJobs,
       tone: data.kpis.completedJobsTotal > 0 && data.kpis.successRate >= 25 ? 'positive' : 'neutral',
-      trend: data.kpis.completedJobsTotal > 0
-        ? { direction: data.kpis.successRate >= 25 ? 'up' : 'down', percent: Math.round(data.kpis.successRate) }
-        : { direction: 'flat', percent: 0 },
     },
     {
       key: 'active-providers',
@@ -143,7 +137,6 @@ export function buildKpis(params: {
       value: formatNumber.format(data.summary.totalActiveProviders),
       hint: `${formatNumber.format(data.summary.totalPublishedRequests)} ${copy.kpiActiveRequestsHintSuffix}`,
       tone: 'neutral',
-      trend: { direction: 'flat', percent: 0 },
     },
     {
       key: 'active-cities',
@@ -151,7 +144,6 @@ export function buildKpis(params: {
       value: formatNumber.format(data.summary.totalActiveCities),
       hint: copy.kpiWithDemandHint,
       tone: 'neutral',
-      trend: { direction: 'flat', percent: 0 },
     },
     {
       key: 'rating-avg',
@@ -159,12 +151,6 @@ export function buildKpis(params: {
       value: data.summary.platformRatingAvg > 0 ? data.summary.platformRatingAvg.toFixed(1) : '—',
       hint: formatReviewCountHint(data.summary.platformRatingCount, locale, formatNumber),
       tone: data.summary.platformRatingAvg >= 4 ? 'positive' : 'neutral',
-      trend: data.summary.platformRatingAvg > 0
-        ? {
-            direction: data.summary.platformRatingAvg >= 4 ? 'up' : 'down',
-            percent: Math.round((data.summary.platformRatingAvg / 5) * 100),
-          }
-        : { direction: 'flat', percent: 0 },
     },
   ];
 
@@ -188,7 +174,6 @@ export function buildKpis(params: {
         ? `${formatNumber.format(data.kpis.requestsTotal)} ${copy.kpiTotalInRangeHintSuffix}`
         : copy.kpiNoOpenRequests,
       tone: 'neutral',
-      trend: { direction: 'flat', percent: 0 },
     },
     {
       key: 'recent-offers',
@@ -198,7 +183,6 @@ export function buildKpis(params: {
         ? `${formatNumber.format(recentOffers7d)} ${copy.kpiLast7DaysHintSuffix}`
         : copy.kpiNoRecentOffers7d,
       tone: recentOffers7d > 0 ? 'positive' : 'neutral',
-      trend: recentOffers7d > 0 ? { direction: 'up', percent: 100 } : { direction: 'flat', percent: 0 },
     },
     {
       key: 'completed-personal',
@@ -208,9 +192,6 @@ export function buildKpis(params: {
         ? `${copy.kpiSuccessRateLabel} ${formatPercent(data.kpis.successRate)}`
         : copy.kpiNoCompletedJobs,
       tone: completedJobs > 0 && data.kpis.successRate >= 30 ? 'positive' : 'neutral',
-      trend: completedJobs > 0
-        ? { direction: data.kpis.successRate >= 30 ? 'up' : 'down', percent: Math.round(data.kpis.successRate) }
-        : { direction: 'flat', percent: 0 },
     },
     {
       key: 'response-time',
@@ -222,12 +203,6 @@ export function buildKpis(params: {
           ? copy.kpiFastResponseHint
           : copy.kpiResponseTargetHint,
       tone: typeof avgResponseMinutes === 'number' && isFastResponse ? 'positive' : 'neutral',
-      trend: typeof avgResponseMinutes === 'number'
-        ? {
-            direction: isFastResponse ? 'up' : 'down',
-            percent: Math.max(0, 100 - Math.round(avgResponseMinutes)),
-          }
-        : { direction: 'flat', percent: 0 },
     },
     {
       key: 'success-rate',
@@ -237,9 +212,6 @@ export function buildKpis(params: {
         ? `${formatNumber.format(acceptedOffers)} ${copy.kpiAcceptedOffersHintSuffix}`
         : copy.kpiNoSentOffers,
       tone: sentOffers > 0 && data.kpis.successRate >= 30 ? 'positive' : 'neutral',
-      trend: sentOffers > 0
-        ? { direction: data.kpis.successRate >= 30 ? 'up' : 'down', percent: Math.round(data.kpis.successRate) }
-        : { direction: 'flat', percent: 0 },
     },
     {
       key: 'profile-completeness',
@@ -247,9 +219,6 @@ export function buildKpis(params: {
       value: formatPercent(profileCompleteness),
       hint: profileCompleteness >= 80 ? copy.kpiStrongProfileHint : copy.kpiImproveProfileHint,
       tone: profileCompleteness >= 80 ? 'positive' : 'neutral',
-      trend: profileCompleteness > 0
-        ? { direction: profileCompleteness >= 80 ? 'up' : 'down', percent: Math.round(profileCompleteness) }
-        : { direction: 'flat', percent: 0 },
     },
   ];
 }

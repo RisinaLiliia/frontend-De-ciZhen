@@ -74,9 +74,15 @@
   .provider-main-review {
     margin: 0;
     min-width: 0;
-    min-height: calc(2 * 1.35em);
+    min-height: calc(2 * 1.4em);
+    color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
+    font-size: 12px;
+    line-height: 1.4;
+    display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .provider-card__top .provider-main-review {
@@ -105,7 +111,7 @@
       auto
       minmax(20px, auto)
       minmax(24px, auto)
-      minmax(calc(2 * 1.35em), auto);
+      minmax(calc(2 * 1.4em), auto);
     align-content: start;
     gap: var(--space-1-5);
   }

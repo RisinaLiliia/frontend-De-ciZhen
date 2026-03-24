@@ -173,6 +173,34 @@
     gap: var(--space-1-5);
   }
 
+  .workspace-mode-nav--sheet {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1-5);
+  }
+
+  .workspace-mode-nav--sheet .workspace-mode-nav__item {
+    min-height: 0;
+    padding: 12px;
+    gap: 10px;
+    border-radius: 16px;
+  }
+
+  .workspace-mode-nav--sheet .workspace-mode-nav__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .workspace-mode-nav--sheet .workspace-mode-nav__label {
+    font-size: 13px;
+    line-height: 1.15;
+  }
+
+  .workspace-mode-nav--sheet .workspace-mode-nav__description {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
   .workspace-mobile-nav-sheet__section--secondary {
     padding-top: var(--space-1-5);
     border-top: 1px solid color-mix(in oklab, white 20%, transparent);
@@ -341,6 +369,41 @@
     .workspace-mobile-nav-sheet__body {
       align-content: start;
       min-height: 0;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .workspace-mobile-nav-sheet {
+      padding:
+        var(--space-2)
+        max(var(--space-2), env(safe-area-inset-right))
+        0
+        max(var(--space-2), env(safe-area-inset-left));
+    }
+
+    .workspace-mobile-nav-sheet__surface {
+      border-radius: 22px;
+      padding: 12px;
+    }
+
+    .workspace-mode-nav--sheet .workspace-mode-nav__item {
+      padding: 11px;
+      gap: 9px;
+      border-radius: 14px;
+    }
+
+    .workspace-mode-nav--sheet .workspace-mode-nav__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+    }
+
+    .workspace-mode-nav--sheet .workspace-mode-nav__label {
+      font-size: 12px;
+    }
+
+    .workspace-mode-nav--sheet .workspace-mode-nav__description {
+      font-size: 10px;
     }
   }
 }

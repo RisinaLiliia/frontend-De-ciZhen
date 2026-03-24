@@ -1,5 +1,6 @@
 'use client';
 
+import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 
@@ -23,29 +24,17 @@ export function RequestsBottomPagination({
 
   return (
     <div className="requests-pagination">
-      <span className="requests-page-nav__label">
-        {safePage}/{safeTotalPages}
-      </span>
-      <div className="requests-page-nav" role="group" aria-label={t(I18N_KEYS.requestsPage.paginationBottomLabel)}>
-        <button
-          type="button"
-          className="btn-ghost requests-page-nav__btn"
-          onClick={onPrevPage}
-          disabled={safePage <= 1}
-          aria-label={t(I18N_KEYS.requestsPage.paginationPrev)}
-        >
-          ←
-        </button>
-        <button
-          type="button"
-          className="btn-ghost requests-page-nav__btn"
-          onClick={onNextPage}
-          disabled={safePage >= safeTotalPages}
-          aria-label={t(I18N_KEYS.requestsPage.paginationNext)}
-        >
-          →
-        </button>
-      </div>
+      <RequestsPageNav
+        page={safePage}
+        totalPages={safeTotalPages}
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
+        ariaLabel={t(I18N_KEYS.requestsPage.paginationBottomLabel)}
+        prevAriaLabel={t(I18N_KEYS.requestsPage.paginationPrev)}
+        nextAriaLabel={t(I18N_KEYS.requestsPage.paginationNext)}
+        prevTitle={t(I18N_KEYS.requestsPage.paginationPrev)}
+        nextTitle={t(I18N_KEYS.requestsPage.paginationNext)}
+      />
     </div>
   );
 }

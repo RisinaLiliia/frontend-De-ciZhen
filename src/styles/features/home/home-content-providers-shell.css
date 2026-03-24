@@ -2,9 +2,9 @@
 
 @layer components {
   .provider-list {
-    margin-top: var(--space-2);
+    margin-top: 0;
     display: grid;
-    gap: var(--space-3);
+    gap: var(--space-2-5);
     align-content: start;
     min-width: 0;
   }
@@ -12,17 +12,22 @@
   .top-providers-panel {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-4);
     min-width: 0;
   }
 
   .provider-card {
-    --provider-card-height: 216px;
-    --provider-card-badge-strip-height: 28px;
-    --provider-card-top-gap: var(--space-4-5);
-    --provider-card-top-reserve: calc(var(--provider-card-badge-strip-height) + var(--provider-card-top-gap));
+    --provider-card-min-height: 184px;
+    --provider-card-inline-pad: 14px;
+    --provider-card-block-pad: 14px;
+    --provider-card-corner-offset: 10px;
+    --provider-card-badge-strip-height: 22px;
+    --provider-card-top-gap: var(--space-2-5);
+    --provider-card-top-reserve: calc(
+      var(--provider-card-corner-offset) + var(--provider-card-badge-strip-height) + var(--provider-card-top-gap)
+    );
     display: grid;
-    gap: var(--space-2-5);
+    gap: var(--space-3);
     padding: 0;
     border-radius: var(--radius-lg);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
@@ -45,8 +50,7 @@
     container-type: inline-size;
     min-width: 0;
     align-content: start;
-    height: var(--provider-card-height);
-    min-height: var(--provider-card-height);
+    min-height: var(--provider-card-min-height);
     overflow: hidden;
     transition:
       transform var(--transition),
@@ -81,8 +85,8 @@
 
   .provider-card__favorite {
     position: absolute;
-    top: var(--space-2);
-    right: var(--space-4);
+    top: var(--provider-card-corner-offset);
+    right: var(--provider-card-inline-pad);
     width: 30px;
     height: 30px;
     display: inline-flex;
@@ -114,8 +118,12 @@
 
   .provider-card__top {
     height: 100%;
-    padding: var(--provider-card-top-reserve) var(--space-4) var(--space-2-5);
+    padding: var(--provider-card-block-pad) var(--provider-card-inline-pad);
     pointer-events: none;
+  }
+
+  .provider-card.has-corner-badge .provider-card__top {
+    padding-top: var(--provider-card-top-reserve);
   }
 
   .provider-card__top .rating-summary {

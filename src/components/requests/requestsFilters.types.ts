@@ -2,6 +2,7 @@
 
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import type { RequestsListDensity } from '@/lib/requests/pagination';
 
 export type FilterOption = { value: string; label: string };
 
@@ -29,7 +30,7 @@ export type RequestsFiltersProps = {
   isCategoriesLoading: boolean;
   isServicesLoading: boolean;
   isPending?: boolean;
-  listDensity?: 'single' | 'double';
+  listDensity?: RequestsListDensity;
   appliedChips?: RequestsFilterChip[];
   onCategoryChange: (value: string) => void;
   onSubcategoryChange: (value: string) => void;
@@ -38,7 +39,7 @@ export type RequestsFiltersProps = {
   onReset: () => void;
   onPrevPage?: () => void;
   onNextPage?: () => void;
-  onListDensityChange?: (value: 'single' | 'double') => void;
+  onListDensityChange?: (value: RequestsListDensity) => void;
 };
 
 export type RequestsFilterControlsProps = Pick<

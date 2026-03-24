@@ -3,6 +3,7 @@
 import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import { PublicContent } from '@/features/workspace/requests';
 import { I18N_KEYS } from '@/lib/i18n/keys';
+import { resolveRequestsListDensityForPageSize } from '@/lib/requests/pagination';
 import type { RequestsExplorerRequestsContentProps } from '@/components/requests/requestsExplorer.types';
 
 export function RequestsExplorerRequestsContent({
@@ -45,6 +46,7 @@ export function RequestsExplorerRequestsContent({
   formatDate,
   formatPrice,
   page,
+  limit,
   setPage,
   onListDensityChange,
 }: RequestsExplorerRequestsContentProps) {
@@ -113,6 +115,7 @@ export function RequestsExplorerRequestsContent({
       resultsLabel={t(I18N_KEYS.requestsPage.countLabel)}
       onPrevPage={onPrevPage}
       onNextPage={onNextPage}
+      initialListDensity={resolveRequestsListDensityForPageSize(limit)}
       onListDensityChange={onListDensityChange}
       showFilterControls={showTopFilters}
     />

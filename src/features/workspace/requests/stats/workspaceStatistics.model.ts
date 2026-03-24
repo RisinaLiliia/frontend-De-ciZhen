@@ -1,6 +1,4 @@
 'use client';
-
-import type { KpiCardTrend } from '@/components/ui/KpiCard';
 import type {
   WorkspaceStatisticsCategoryDemandDto,
   WorkspaceStatisticsInsightDto,
@@ -15,7 +13,6 @@ export type WorkspaceStatisticsKpiView = {
   value: string;
   hint: string;
   tone: 'positive' | 'neutral';
-  trend: KpiCardTrend;
 };
 
 export type WorkspaceStatisticsCityRowView = {
