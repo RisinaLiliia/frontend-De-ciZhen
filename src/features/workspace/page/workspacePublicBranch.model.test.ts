@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace';
+import { REQUESTS_PAGE_SIZE } from '@/lib/requests/pagination';
 
 import {
   EMPTY_PLATFORM_REVIEWS_OVERVIEW,
@@ -25,7 +26,7 @@ describe('workspacePublicBranch.model', () => {
       undefined,
       'date_desc',
       1,
-      10,
+      REQUESTS_PAGE_SIZE,
       '30d',
       WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
     ]);

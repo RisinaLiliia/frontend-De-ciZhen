@@ -69,7 +69,6 @@ export function RequestsExplorer({
     setPage: filters.setPage,
     services: filters.services,
     cityOptions: filters.cityOptions,
-    onListDensityChange,
   });
   const {
     isProvidersLoading,
@@ -82,7 +81,6 @@ export function RequestsExplorer({
     totalProvidersLabel,
     filteredProvidersCount,
     providersListDensity,
-    setProvidersListDensity,
   } = providersData;
 
   const requestsData = useRequestsExplorerRequestsData({
@@ -118,10 +116,9 @@ export function RequestsExplorer({
 
   const handleProvidersListDensityChange = React.useCallback(
     (value: 'single' | 'double') => {
-      setProvidersListDensity(value);
       handleRequestsListDensityChange(value);
     },
-    [handleRequestsListDensityChange, setProvidersListDensity],
+    [handleRequestsListDensityChange],
   );
 
   const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
@@ -155,7 +152,6 @@ export function RequestsExplorer({
       totalProvidersLabel,
       totalProviderPages,
       providersListDensity,
-      setProvidersListDensity,
       isProvidersLoading,
       isProvidersError,
       filteredProvidersCount,

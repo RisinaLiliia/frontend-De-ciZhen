@@ -88,7 +88,6 @@ describe('requestsExplorer.model', () => {
         totalProvidersLabel: '12',
         totalProviderPages: 3,
         providersListDensity: 'double',
-        setProvidersListDensity: () => {},
         isProvidersLoading: false,
         isProvidersError: false,
         filteredProvidersCount: 12,

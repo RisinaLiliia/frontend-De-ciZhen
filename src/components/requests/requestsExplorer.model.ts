@@ -53,7 +53,6 @@ type BuildProvidersContentArgs = {
     totalProvidersLabel: string;
     totalProviderPages: number;
     providersListDensity: RequestsListDensity;
-    setProvidersListDensity: (value: RequestsListDensity) => void;
     isProvidersLoading: boolean;
     isProvidersError: boolean;
     filteredProvidersCount: number;
@@ -140,7 +139,7 @@ export function buildRequestsExplorerProvidersContentProps({
     totalProviderPages: providersData.totalProviderPages,
     onSetPage: sharedFilters.setPage,
     providersListDensity: providersData.providersListDensity,
-    onListDensityChange: onListDensityChange ?? providersData.setProvidersListDensity,
+    onListDensityChange: onListDensityChange ?? (() => undefined),
     isProvidersLoading: providersData.isProvidersLoading,
     isProvidersError: providersData.isProvidersError,
     filteredProvidersCount: providersData.filteredProvidersCount,
