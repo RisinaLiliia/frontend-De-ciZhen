@@ -31,7 +31,6 @@ type Args = {
   setPage: (page: number) => void;
   services: Array<{ key: string; categoryKey: string }>;
   cityOptions: FilterOption[];
-  onListDensityChange?: (value: RequestsListDensity) => void;
 };
 
 export function useProvidersExploreData({
@@ -47,7 +46,6 @@ export function useProvidersExploreData({
   setPage,
   services,
   cityOptions,
-  onListDensityChange,
 }: Args) {
   const {
     data: providers = [],
@@ -119,21 +117,10 @@ export function useProvidersExploreData({
     setPage(totalProviderPages);
   }, [isProvidersView, page, setPage, totalProviderPages]);
 
-  const [providersListDensity, setProvidersListDensity] = React.useState<RequestsListDensity>(
-    resolveRequestsListDensityForPageSize(limit),
+  const providersListDensity = React.useMemo<RequestsListDensity>(
+    () => resolveRequestsListDensityForPageSize(limit),
+    [limit],
   );
-
-  React.useEffect(() => {
-    const nextDensity = resolveRequestsListDensityForPageSize(limit);
-    if (nextDensity !== providersListDensity) {
-      setProvidersListDensity(nextDensity);
-    }
-  }, [limit, providersListDensity]);
-
-  React.useEffect(() => {
-    if (!isProvidersView) return;
-    onListDensityChange?.(providersListDensity);
-  }, [isProvidersView, onListDensityChange, providersListDensity]);
 
   return {
     isProvidersLoading,
@@ -146,6 +133,5 @@ export function useProvidersExploreData({
     totalProvidersLabel,
     filteredProvidersCount,
     providersListDensity,
-    setProvidersListDensity,
   };
 }

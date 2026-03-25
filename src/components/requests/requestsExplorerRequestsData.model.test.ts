@@ -65,6 +65,23 @@ describe('requestsExplorerRequestsData.model', () => {
     ).toBe(true);
   });
 
+  it('does not attach mismatched initial data to a different page-size query', () => {
+    const state = buildRequestsExplorerPublicRequestsQueryState({
+      filter: { sort: 'date_desc', page: 1, limit: 20 },
+      locale: 'en',
+      isProvidersView: false,
+      preferInitialPublicRequests: true,
+      initialPublicRequests: {
+        items: [],
+        total: 0,
+        page: 1,
+        limit: 10,
+      },
+    });
+
+    expect(state.initialData).toBeUndefined();
+  });
+
   it('builds request maps and favorite ids', () => {
     const requests = [
       { id: 'request-1' },

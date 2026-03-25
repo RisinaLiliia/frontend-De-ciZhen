@@ -12,6 +12,31 @@ type BuildPublicRequestsQueryStateArgs = {
   initialPublicRequests?: PublicRequestsResponseDto;
 };
 
+function resolveMatchingInitialPublicRequests({
+  filter,
+  preferInitialPublicRequests,
+  initialPublicRequests,
+}: Pick<
+  BuildPublicRequestsQueryStateArgs,
+  'filter' | 'preferInitialPublicRequests' | 'initialPublicRequests'
+>) {
+  const shouldUseInitialPublicRequests = preferInitialPublicRequests && hasDefaultPublicFilter(filter);
+  if (!shouldUseInitialPublicRequests || !initialPublicRequests) {
+    return undefined;
+  }
+
+  const initialPage = typeof initialPublicRequests.page === 'number' ? initialPublicRequests.page : 1;
+  const initialLimit = typeof initialPublicRequests.limit === 'number'
+    ? initialPublicRequests.limit
+    : initialPublicRequests.items.length;
+
+  if (initialPage !== (filter.page ?? 1) || initialLimit !== (filter.limit ?? initialLimit)) {
+    return undefined;
+  }
+
+  return initialPublicRequests;
+}
+
 export function buildRequestsExplorerPublicRequestsQueryState({
   filter,
   locale,
@@ -19,8 +44,6 @@ export function buildRequestsExplorerPublicRequestsQueryState({
   preferInitialPublicRequests,
   initialPublicRequests,
 }: BuildPublicRequestsQueryStateArgs) {
-  const shouldUseInitialPublicRequests = preferInitialPublicRequests && hasDefaultPublicFilter(filter);
-
   return {
     queryKey: [
       'requests-explorer-public',
@@ -33,10 +56,13 @@ export function buildRequestsExplorerPublicRequestsQueryState({
       locale,
     ] as const,
     enabled: !isProvidersView,
-    initialData:
-      !isProvidersView && shouldUseInitialPublicRequests
-        ? initialPublicRequests
-        : undefined,
+    initialData: !isProvidersView
+      ? resolveMatchingInitialPublicRequests({
+        filter,
+        preferInitialPublicRequests,
+        initialPublicRequests,
+      })
+      : undefined,
   };
 }
 
