@@ -15,6 +15,7 @@ import {
   buildOpportunityRadarAxisValueLabelPositions,
   buildOpportunityRadarPoints,
   buildOpportunityRadarSmoothPath,
+  buildOpportunityReasons,
   opportunityStatusClassName,
   opportunityStatusLabel,
 } from './opportunity.utils';
@@ -49,6 +50,10 @@ export function OpportunityAnalysisCard({
   const rankTone = item.rank === 1 ? 'gold' : item.rank === 2 ? 'silver' : 'bronze';
   const featuredStatus = item.rank === 1 && item.status === 'balanced' ? 'good' : item.status;
   const statusClass = opportunityStatusClassName(featuredStatus);
+  const reasons = React.useMemo(
+    () => buildOpportunityReasons({ locale, item }),
+    [item, locale],
+  );
 
   return (
     <article
@@ -161,6 +166,17 @@ export function OpportunityAnalysisCard({
       <p className="workspace-statistics-opportunity__summary" aria-label={locale === 'de' ? 'Opportunity Zusammenfassung' : 'Opportunity summary'}>
         {summary}
       </p>
+
+      {reasons.length > 0 ? (
+        <div className="workspace-statistics-opportunity__reasons">
+          <strong className="workspace-statistics-opportunity__reasons-title">{copy.opportunityWhyLabel}</strong>
+          <ul className="workspace-statistics-opportunity__reasons-list">
+            {reasons.map((reason) => (
+              <li key={reason}>{reason}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <dl className="workspace-statistics-opportunity__metrics">
         <div>

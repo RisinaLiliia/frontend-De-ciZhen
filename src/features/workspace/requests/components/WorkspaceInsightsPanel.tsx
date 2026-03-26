@@ -2,8 +2,6 @@
 
 import Link from 'next/link';
 
-import { StatisticsKiCard } from '@/features/workspace/requests/stats/components/StatisticsKiCard';
-
 export type WorkspaceInsightsPanelItem = {
   key: string;
   level?: 'info' | 'trend' | 'warning';
@@ -20,8 +18,8 @@ export type WorkspaceInsightsPanelItem = {
 };
 
 type WorkspaceInsightsPanelProps = {
-  title: string;
-  subtitle: string;
+  title?: string;
+  subtitle?: string;
   emptyLabel: string;
   generatedLabel: string;
   assistantAvatarLabel: string;
@@ -81,31 +79,64 @@ export function WorkspaceInsightsPanel({
 }: WorkspaceInsightsPanelProps) {
   const featuredItem = items[0];
   const secondaryItems = items.slice(1);
+  const hasHeading = Boolean(title?.trim() || subtitle?.trim());
+  const panelLabel = title?.trim() || assistantRole;
+  const rootClassName = [
+    hasHeading ? 'panel' : 'workspace-statistics-ki',
+    'workspace-insights-panel',
+    hasHeading ? '' : 'workspace-insights-panel--compact-head',
+    className ?? '',
+  ].filter(Boolean).join(' ');
 
   return (
     <section
       ref={panelRef}
       style={style}
-      className={['panel', 'workspace-insights-panel', className ?? ''].filter(Boolean).join(' ')}
+      className={rootClassName}
     >
-      <header className="section-heading workspace-statistics__tile-header workspace-statistics-insights__header">
-        <span className="workspace-statistics-insights__heading">
-          <p className="section-title">{title}</p>
-          <p className="section-subtitle">{subtitle}</p>
-        </span>
-        <StatisticsKiCard
-          className="workspace-statistics-insights__ki"
-          variant="plain"
-          stamp={generatedLabel}
-          avatarLabel={assistantAvatarLabel}
-          name={assistantName}
-          role={assistantRole}
-        />
-      </header>
+      {hasHeading ? (
+        <header
+          className={[
+            'section-heading',
+            'workspace-statistics__tile-header',
+            'workspace-statistics-insights__header',
+          ].filter(Boolean).join(' ')}
+        >
+          <span className="workspace-statistics-insights__heading">
+            {title?.trim() ? <p className="section-title">{title}</p> : null}
+            {subtitle?.trim() ? <p className="section-subtitle">{subtitle}</p> : null}
+          </span>
+          <div className="workspace-statistics-insights__ki">
+            <span className="workspace-statistics-ki__stamp">{generatedLabel}</span>
+            <div className="workspace-statistics-ki__head">
+              <span className="workspace-statistics-ki__avatar" aria-hidden="true">
+                {assistantAvatarLabel}
+              </span>
+              <span className="workspace-statistics-ki__copy">
+                <strong className="workspace-statistics-ki__name">{assistantName}</strong>
+                <span className="workspace-statistics-ki__role">{assistantRole}</span>
+              </span>
+            </div>
+          </div>
+        </header>
+      ) : (
+        <>
+          <span className="workspace-statistics-ki__stamp">{generatedLabel}</span>
+          <div className="workspace-statistics-ki__head">
+            <span className="workspace-statistics-ki__avatar" aria-hidden="true">
+              {assistantAvatarLabel}
+            </span>
+            <span className="workspace-statistics-ki__copy">
+              <strong className="workspace-statistics-ki__name">{assistantName}</strong>
+              <span className="workspace-statistics-ki__role">{assistantRole}</span>
+            </span>
+          </div>
+        </>
+      )}
       {items.length === 0 ? (
         <p className="workspace-statistics__empty">{emptyLabel}</p>
       ) : (
-        <div className="workspace-statistics-insights" aria-label={title}>
+        <div className="workspace-statistics-insights" aria-label={panelLabel}>
           {featuredItem ? (
             <article className={buildInsightClassName(featuredItem, true)}>
               <span className="workspace-statistics-insights__content">
@@ -141,7 +172,7 @@ export function WorkspaceInsightsPanel({
             </article>
           ) : null}
           {secondaryItems.length > 0 ? (
-            <ul className="workspace-statistics-insights__secondary requests-list" aria-label={title}>
+            <ul className="workspace-statistics-insights__secondary requests-list" aria-label={panelLabel}>
               {secondaryItems.map((item) => (
                 <li key={item.key} className={buildInsightClassName(item)}>
                   <span className="workspace-statistics-insights__content">

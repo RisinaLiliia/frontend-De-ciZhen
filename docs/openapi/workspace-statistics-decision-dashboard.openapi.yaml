@@ -165,6 +165,179 @@ components:
         growthSubtitle:
           type: string
           nullable: true
+    OpportunityMetric:
+      type: object
+      required: [key, value, semanticTone, semanticKey]
+      properties:
+        key:
+          type: string
+          enum: [demand, competition, growth, activity]
+        value:
+          type: number
+        semanticTone:
+          type: string
+          enum: [very-high, high, medium, low]
+        semanticKey:
+          type: string
+          enum: [very_high, high, noticeable, medium, low]
+    OpportunityPeerContext:
+      type: object
+      required: [role, distanceKm, reason]
+      properties:
+        role:
+          type: string
+          enum: [focus, competitor]
+        distanceKm:
+          type: number
+          nullable: true
+        reason:
+          type: string
+          enum: [selected_city, nearby_competitor, top_ranked]
+    PriceIntelligence:
+      type: object
+      required:
+        - citySlug
+        - city
+        - categoryKey
+        - category
+        - recommendedMin
+        - recommendedMax
+        - marketAverage
+        - optimalMin
+        - optimalMax
+        - smartRecommendedPrice
+        - smartSignalTone
+        - analyzedRequestsCount
+        - confidenceLevel
+        - recommendation
+        - profitPotentialScore
+        - profitPotentialStatus
+      properties:
+        citySlug:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        categoryKey:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        recommendedMin:
+          type: number
+          nullable: true
+        recommendedMax:
+          type: number
+          nullable: true
+        marketAverage:
+          type: number
+          nullable: true
+        optimalMin:
+          type: number
+          nullable: true
+        optimalMax:
+          type: number
+          nullable: true
+        smartRecommendedPrice:
+          type: number
+          nullable: true
+        smartSignalTone:
+          type: string
+          nullable: true
+          enum: [visibility, balanced, premium]
+        analyzedRequestsCount:
+          type: number
+          nullable: true
+        confidenceLevel:
+          type: string
+          nullable: true
+          enum: [high, medium, low]
+        recommendation:
+          type: string
+          nullable: true
+        profitPotentialScore:
+          type: number
+          nullable: true
+        profitPotentialStatus:
+          type: string
+          nullable: true
+          enum: [high, medium, low]
+    OpportunityRadarItem:
+      type: object
+      required:
+        - rank
+        - cityId
+        - city
+        - categoryKey
+        - category
+        - demand
+        - providers
+        - marketBalanceRatio
+        - score
+        - demandScore
+        - competitionScore
+        - growthScore
+        - activityScore
+        - status
+        - tone
+        - summaryKey
+        - metrics
+      properties:
+        rank:
+          type: integer
+          enum: [1, 2, 3]
+        cityId:
+          type: string
+          nullable: true
+        city:
+          type: string
+        categoryKey:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        demand:
+          type: number
+        providers:
+          type: number
+          nullable: true
+        marketBalanceRatio:
+          type: number
+          nullable: true
+        score:
+          type: number
+        demandScore:
+          type: number
+        competitionScore:
+          type: number
+        growthScore:
+          type: number
+        activityScore:
+          type: number
+        status:
+          type: string
+          enum: [very_high, good, balanced, competitive, low]
+        tone:
+          type: string
+          enum: [very-high, high, balanced, supply-heavy]
+        summaryKey:
+          type: string
+          enum: [very_high, good, balanced_competitive, balanced, competitive, low_demand, low]
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpportunityMetric'
+        peerContext:
+          allOf:
+            - $ref: '#/components/schemas/OpportunityPeerContext'
+          nullable: true
+        priceIntelligence:
+          allOf:
+            - $ref: '#/components/schemas/PriceIntelligence'
+          nullable: true
     WorkspaceStatisticsDecisionDashboard:
       type: object
       required:
@@ -214,12 +387,10 @@ components:
         opportunityRadar:
           type: array
           items:
-            type: object
-            additionalProperties: true
+            $ref: '#/components/schemas/OpportunityRadarItem'
         priceIntelligence:
-          type: object
+          $ref: '#/components/schemas/PriceIntelligence'
           nullable: true
-          additionalProperties: true
         profileFunnel:
           type: object
           additionalProperties: true

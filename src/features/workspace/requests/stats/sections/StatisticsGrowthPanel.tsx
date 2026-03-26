@@ -1,5 +1,6 @@
 'use client';
 
+import type { Ref } from 'react';
 import Link from 'next/link';
 
 import { Badge } from '@/components/ui/Badge';
@@ -11,12 +12,14 @@ export function StatisticsGrowthPanel({
   copy,
   subtitle,
   growthCards,
+  recommendedForFallback,
 }: {
-  panelRef?: React.Ref<HTMLElement>;
+  panelRef?: Ref<HTMLElement>;
   panelMinHeight?: number | null;
   copy: WorkspaceStatisticsModel['copy'];
   subtitle?: string;
   growthCards: WorkspaceStatisticsModel['growthCards'];
+  recommendedForFallback?: string | null;
 }) {
   if (growthCards.length === 0) return null;
 
@@ -49,9 +52,9 @@ export function StatisticsGrowthPanel({
               <p className="request-create-card__title">{featuredCard.title}</p>
               <p className="request-create-card__subtitle">{featuredCard.body}</p>
               <p className="workspace-statistics-growth__benefit">{featuredCard.benefit}</p>
-              {featuredCard.recommendedFor ? (
+              {featuredCard.recommendedFor ?? recommendedForFallback ? (
                 <p className="workspace-statistics-growth__recommended">
-                  {copy.growthRecommendedPrefix} {featuredCard.recommendedFor}
+                  {copy.growthRecommendedPrefix} {featuredCard.recommendedFor ?? recommendedForFallback}
                 </p>
               ) : null}
             </div>
@@ -78,9 +81,9 @@ export function StatisticsGrowthPanel({
                     <p className="workspace-statistics-growth__title">{card.title}</p>
                     <p className="workspace-statistics-growth__body">{card.body}</p>
                     <div className="workspace-statistics-growth__labels">
-                      {card.recommendedFor ? (
+                      {card.recommendedFor ?? recommendedForFallback ? (
                         <Badge variant="info" size="sm">
-                          {copy.growthRecommendedPrefix} {card.recommendedFor}
+                          {copy.growthRecommendedPrefix} {card.recommendedFor ?? recommendedForFallback}
                         </Badge>
                       ) : null}
                     </div>
@@ -139,9 +142,9 @@ export function StatisticsGrowthPanel({
                 </div>
                 <p className="workspace-statistics-growth__body">{card.body}</p>
                 <p className="workspace-statistics-growth__benefit">{card.benefit}</p>
-                {card.recommendedFor ? (
+                {card.recommendedFor ?? recommendedForFallback ? (
                   <p className="workspace-statistics-growth__recommended">
-                    {copy.growthRecommendedPrefix} {card.recommendedFor}
+                    {copy.growthRecommendedPrefix} {card.recommendedFor ?? recommendedForFallback}
                   </p>
                 ) : null}
               </article>

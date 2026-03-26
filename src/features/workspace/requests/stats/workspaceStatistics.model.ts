@@ -71,6 +71,12 @@ export type WorkspaceStatisticsActivitySignalView = {
   tone: 'positive' | 'neutral' | 'warning';
 };
 
+export type WorkspaceStatisticsActivityTrendView = {
+  label: string;
+  value: string;
+  tone: 'positive' | 'neutral' | 'warning';
+};
+
 export type WorkspaceStatisticsOpportunityRadarItemView = {
   rank: 1 | 2 | 3;
   cityId: string | null;
@@ -89,6 +95,8 @@ export type WorkspaceStatisticsOpportunityRadarItemView = {
   summaryKey: WorkspaceStatisticsOpportunityRadarItemDto['summaryKey'];
   metrics: WorkspaceStatisticsOpportunityRadarItemDto['metrics'];
   tone: 'very-high' | 'high' | 'balanced' | 'supply-heavy';
+  peerContext?: WorkspaceStatisticsOpportunityRadarItemDto['peerContext'] | null;
+  priceIntelligence?: WorkspaceStatisticsPriceIntelligenceView | null;
   href: string;
 };
 
@@ -179,6 +187,7 @@ export type WorkspaceStatisticsModel = {
     bestWindow: string;
     updatedAt: string;
   };
+  activityTrend: WorkspaceStatisticsActivityTrendView;
   decisionInsight: string;
   activitySignals: WorkspaceStatisticsActivitySignalView[];
   demandRows: WorkspaceStatisticsCategoryDemandDto[];
@@ -189,6 +198,12 @@ export type WorkspaceStatisticsModel = {
   funnelPeriodLabel: string;
   funnelSummary: string;
   hasFunnelData: boolean;
+  funnelDropoff: {
+    label: string;
+    value: string;
+    hint: string;
+    tone: 'positive' | 'neutral' | 'warning';
+  } | null;
   conversion: string;
   insights: WorkspaceStatisticsInsightView[];
   growthCards: WorkspaceStatisticsGrowthCardView[];

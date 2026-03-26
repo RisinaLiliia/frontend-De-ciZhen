@@ -62,7 +62,7 @@
 
   .workspace-statistics-ki__head {
     display: grid;
-    grid-template-columns: 24px minmax(0, 1fr);
+    grid-template-columns: var(--workspace-statistics-icon-md) minmax(0, 1fr);
     align-items: center;
     gap: var(--space-1-5);
     border-radius: var(--workspace-ai-card-radius-md);
@@ -87,8 +87,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: var(--workspace-statistics-icon-md);
+    height: var(--workspace-statistics-icon-md);
     border-radius: var(--workspace-ai-card-chip-radius);
     border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%);
     background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
@@ -168,6 +168,7 @@
   .workspace-statistics-ki--inline-action .workspace-statistics-ki__text {
     grid-area: text;
     align-self: center;
+    min-width: 0;
   }
 
   .workspace-statistics-ki--inline-action .workspace-statistics-ki__actions {
@@ -175,6 +176,11 @@
     align-self: center;
     justify-content: flex-end;
     padding-top: 0;
+  }
+
+  .workspace-ai-card--decision.workspace-statistics-ki--inline-action .workspace-ai-card__action.auth-social__btn {
+    min-width: 0;
+    white-space: nowrap;
   }
 
   .workspace-statistics-ki__details {
@@ -193,7 +199,43 @@
     border-top: 0;
   }
 
+  .workspace-statistics-ki__decision-grid {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workspace-statistics-ki__decision-block {
+    display: grid;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .workspace-statistics-ki__decision-title {
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .workspace-statistics-ki__decision-list {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding-left: var(--space-3);
+    color: var(--c-text-muted);
+    font-size: var(--fs-small);
+    line-height: 1.45;
+  }
+
+  .workspace-statistics-ki__decision-list--ordered {
+    list-style: decimal;
+  }
+
   @media (max-width: 639px) {
+    .workspace-statistics-ki__decision-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .workspace-statistics-ki--inline-action {
       grid-template-columns: minmax(0, 1fr);
       grid-template-areas:

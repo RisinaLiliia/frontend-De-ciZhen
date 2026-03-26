@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import type { Ref } from 'react';
 
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
@@ -19,40 +19,21 @@ export function StatisticsOpportunityPanel({
   locale,
   title,
   opportunityRadar,
+  selectedRank,
+  onSelectRank,
 }: {
-  panelRef?: React.Ref<HTMLElement>;
+  panelRef?: Ref<HTMLElement>;
   copy: WorkspaceStatisticsModel['copy'];
   locale: Locale;
   title?: string;
   opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'];
+  selectedRank: WorkspaceStatisticsModel['opportunityRadar'][number]['rank'] | null;
+  onSelectRank: (rank: WorkspaceStatisticsModel['opportunityRadar'][number]['rank']) => void;
 }) {
-  const defaultRank = React.useMemo(
-    () => selectOpportunityAnalysisItem(opportunityRadar)?.rank ?? null,
-    [opportunityRadar],
-  );
-  const [selectedRank, setSelectedRank] = React.useState<typeof defaultRank>(defaultRank);
-
-  React.useEffect(() => {
-    if (selectedRank !== null && opportunityRadar.some((item) => item.rank === selectedRank)) return;
-    setSelectedRank(defaultRank);
-  }, [defaultRank, opportunityRadar, selectedRank]);
-
-  const analysisItem = React.useMemo(
-    () => selectOpportunityAnalysisItem(opportunityRadar, selectedRank),
-    [opportunityRadar, selectedRank],
-  );
-  const topCards = React.useMemo(
-    () => selectOpportunityTopCards({ opportunityRadar, analysisItem }),
-    [analysisItem, opportunityRadar],
-  );
-  const analysisAxes = React.useMemo(
-    () => buildOpportunityAnalysisAxes({ analysisItem, copy }),
-    [analysisItem, copy],
-  );
-  const analysisSummary = React.useMemo(
-    () => (analysisItem ? opportunitySummaryLabel(analysisItem.summaryKey, copy) : ''),
-    [analysisItem, copy],
-  );
+  const analysisItem = selectOpportunityAnalysisItem(opportunityRadar, selectedRank);
+  const topCards = selectOpportunityTopCards({ opportunityRadar, analysisItem });
+  const analysisAxes = buildOpportunityAnalysisAxes({ analysisItem, copy });
+  const analysisSummary = analysisItem ? opportunitySummaryLabel(analysisItem.summaryKey, copy) : '';
 
   return (
     <section ref={panelRef} className="panel requests-stats-chart workspace-statistics-opportunity">
@@ -68,7 +49,7 @@ export function StatisticsOpportunityPanel({
             copy={copy}
             locale={locale}
             items={topCards}
-            onSelect={setSelectedRank}
+            onSelect={onSelectRank}
           />
           {analysisItem ? (
             <li className="workspace-statistics-opportunity__item-wrap is-last">

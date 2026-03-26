@@ -1,5 +1,7 @@
 'use client';
 
+import type { Ref } from 'react';
+
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { Input } from '@/components/ui/Input';
 import {
@@ -18,6 +20,7 @@ export function StatisticsCitiesPanel({
   copy,
   subtitle,
   cityRowsLength,
+  activeCityId,
   filteredCityRows,
   visibleCityRows,
   cityRankByKey,
@@ -26,16 +29,18 @@ export function StatisticsCitiesPanel({
   safeCityPage,
   cityQuery,
   onCityQueryChange,
+  onSelectCity,
   onPrevPage,
   onNextPage,
   formatNumber,
   formatMarketBalance,
   t,
 }: {
-  panelRef?: React.Ref<HTMLElement>;
+  panelRef?: Ref<HTMLElement>;
   copy: WorkspaceStatisticsModel['copy'];
   subtitle?: string;
   cityRowsLength: number;
+  activeCityId: string | null;
   filteredCityRows: WorkspaceStatisticsModel['cityRows'];
   visibleCityRows: WorkspaceStatisticsModel['cityRows'];
   cityRankByKey: Map<string, number>;
@@ -44,6 +49,7 @@ export function StatisticsCitiesPanel({
   safeCityPage: number;
   cityQuery: string;
   onCityQueryChange: (value: string) => void;
+  onSelectCity: (cityId: string | null) => void;
   onPrevPage: () => void;
   onNextPage: () => void;
   formatNumber: Intl.NumberFormat;
@@ -95,36 +101,43 @@ export function StatisticsCitiesPanel({
             return (
               <li
                 key={`${item.key}-${index}`}
-                className="stat-card workspace-statistics-city-list__item"
-                aria-label={`${copy.citiesColumnRank} ${rank}. ${item.name}. ${copy.citiesColumnRequests}: ${requestsLabel}. ${copy.citiesColumnJobSearches}: ${jobSearchesLabel}. ${copy.citiesColumnProviderSearches}: ${providerSearchesLabel}. ${copy.citiesColumnMarketBalance}: ${marketBalanceLabel}. ${signalLabel}.`}
+                className="workspace-statistics-city-list__item-shell"
               >
-                <span className="workspace-statistics-city-list__rank-cell">
-                  {rankTone ? (
-                    <span className={`workspace-statistics-city-list__rank-cup is-${rankTone}`.trim()} aria-hidden="true">
-                      {rank === 1 ? <IconTrophyGold size={20} /> : null}
-                      {rank === 2 ? <IconTrophySilver size={20} /> : null}
-                      {rank === 3 ? <IconTrophyBronze size={20} /> : null}
-                    </span>
-                  ) : null}
-                  {!rankTone ? <span className="workspace-statistics-city-list__rank">{rank}</span> : null}
-                </span>
-                <span className="workspace-statistics-city-list__name">{item.name}</span>
-                <span className="workspace-statistics-city-list__count">{formatNumber.format(item.count)}</span>
-                <span className="workspace-statistics-city-list__share">
-                  {jobSearchesLabel}
-                </span>
-                <span className="workspace-statistics-city-list__share">
-                  {providerSearchesLabel}
-                </span>
-                <span className="workspace-statistics-city-list__balance">
-                  <strong>{marketBalanceLabel}</strong>
-                  <span className={`workspace-statistics-city-list__signal is-${item.signal}`.trim()}>
-                    <span className="workspace-statistics-city-list__signal-icon" aria-hidden="true">
-                      {citySignalIcon(item.signal)}
-                    </span>
-                    {signalLabel}
+                <button
+                  type="button"
+                  className={`stat-card workspace-statistics-city-list__item${activeCityId === item.cityId ? ' is-active' : ''}`.trim()}
+                  aria-pressed={activeCityId === item.cityId}
+                  aria-label={`${copy.citiesColumnRank} ${rank}. ${item.name}. ${copy.citiesColumnRequests}: ${requestsLabel}. ${copy.citiesColumnJobSearches}: ${jobSearchesLabel}. ${copy.citiesColumnProviderSearches}: ${providerSearchesLabel}. ${copy.citiesColumnMarketBalance}: ${marketBalanceLabel}. ${signalLabel}.`}
+                  onClick={() => onSelectCity(activeCityId === item.cityId ? null : item.cityId)}
+                >
+                  <span className="workspace-statistics-city-list__rank-cell">
+                    {rankTone ? (
+                      <span className={`workspace-statistics-city-list__rank-cup is-${rankTone}`.trim()} aria-hidden="true">
+                        {rank === 1 ? <IconTrophyGold size={20} /> : null}
+                        {rank === 2 ? <IconTrophySilver size={20} /> : null}
+                        {rank === 3 ? <IconTrophyBronze size={20} /> : null}
+                      </span>
+                    ) : null}
+                    {!rankTone ? <span className="workspace-statistics-city-list__rank">{rank}</span> : null}
                   </span>
-                </span>
+                  <span className="workspace-statistics-city-list__name">{item.name}</span>
+                  <span className="workspace-statistics-city-list__count">{formatNumber.format(item.count)}</span>
+                  <span className="workspace-statistics-city-list__share">
+                    {jobSearchesLabel}
+                  </span>
+                  <span className="workspace-statistics-city-list__share">
+                    {providerSearchesLabel}
+                  </span>
+                  <span className="workspace-statistics-city-list__balance">
+                    <strong>{marketBalanceLabel}</strong>
+                    <span className={`workspace-statistics-city-list__signal is-${item.signal}`.trim()}>
+                      <span className="workspace-statistics-city-list__signal-icon" aria-hidden="true">
+                        {citySignalIcon(item.signal)}
+                      </span>
+                      {signalLabel}
+                    </span>
+                  </span>
+                </button>
               </li>
             );
           })}

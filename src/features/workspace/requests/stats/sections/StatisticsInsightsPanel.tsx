@@ -1,5 +1,7 @@
 'use client';
 
+import type { Ref } from 'react';
+
 import { WorkspaceInsightsPanel, type WorkspaceInsightsPanelItem } from '@/features/workspace/requests/components/WorkspaceInsightsPanel';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
@@ -31,13 +33,15 @@ export function resolveInsightBadge(
 }
 
 export function StatisticsInsightsPanel({
+  panelRef,
+  panelMinHeight,
   copy,
-  subtitle,
   insights,
   showInsightsDebug,
 }: {
+  panelRef?: Ref<HTMLElement>;
+  panelMinHeight?: number | null;
   copy: WorkspaceStatisticsModel['copy'];
-  subtitle?: string;
   insights: WorkspaceStatisticsModel['insights'];
   showInsightsDebug: boolean;
 }) {
@@ -67,15 +71,15 @@ export function StatisticsInsightsPanel({
 
   return (
     <WorkspaceInsightsPanel
-      title={copy.insightsTitle}
-      subtitle={subtitle ?? copy.insightsSubtitle}
       emptyLabel={copy.emptyInsights}
-      generatedLabel={copy.insightsGeneratedLabel}
+      generatedLabel={copy.priceGeneratedLabel}
       assistantAvatarLabel={copy.insightsAssistantAvatarLabel}
       assistantName={copy.insightsAssistantName}
       assistantRole={copy.insightsAssistantNote}
       featuredLabel={copy.insightsFeaturedLabel}
       items={items}
+      panelRef={panelRef}
+      style={panelMinHeight ? { minHeight: `${panelMinHeight}px`, height: `${panelMinHeight}px` } : undefined}
     />
   );
 }

@@ -89,7 +89,7 @@ export function WorkspaceOverviewInsightsPanel({
       assistantRole={statisticsModel.copy.insightsAssistantNote}
       featuredLabel={statisticsModel.copy.insightsFeaturedLabel}
       items={insights}
-      className="workspace-overview__panel"
+      className="workspace-statistics-layout workspace-overview__panel"
       panelRef={panelRef}
       style={style}
     />

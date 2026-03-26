@@ -98,6 +98,18 @@ function createPayload(): WorkspaceStatisticsOverviewSourceDto {
           lat: 49.4875,
           lng: 8.466,
         },
+        {
+          citySlug: 'karlsruhe',
+          cityName: 'Karlsruhe',
+          cityId: 'karlsruhe-id',
+          requestCount: 8,
+          auftragSuchenCount: 3,
+          anbieterSuchenCount: 8,
+          marketBalanceRatio: 2.67,
+          signal: 'high',
+          lat: 49.0069,
+          lng: 8.4037,
+        },
       ],
     },
     opportunityRadar: [
@@ -147,6 +159,30 @@ function createPayload(): WorkspaceStatisticsOverviewSourceDto {
           { key: 'competition', value: 7.5, semanticTone: 'high', semanticKey: 'high' },
           { key: 'growth', value: 6.2, semanticTone: 'high', semanticKey: 'high' },
           { key: 'activity', value: 5.6, semanticTone: 'medium', semanticKey: 'medium' },
+        ],
+      },
+      {
+        rank: 3,
+        cityId: 'karlsruhe-id',
+        city: 'Karlsruhe',
+        categoryKey: 'cleaning',
+        category: 'Cleaning & Housekeeping',
+        demand: 8,
+        providers: 3,
+        marketBalanceRatio: 2.67,
+        score: 7.4,
+        demandScore: 7.9,
+        competitionScore: 7.1,
+        growthScore: 6,
+        activityScore: 5.1,
+        status: 'good',
+        tone: 'high',
+        summaryKey: 'good',
+        metrics: [
+          { key: 'demand', value: 7.9, semanticTone: 'high', semanticKey: 'high' },
+          { key: 'competition', value: 7.1, semanticTone: 'high', semanticKey: 'high' },
+          { key: 'growth', value: 6, semanticTone: 'high', semanticKey: 'high' },
+          { key: 'activity', value: 5.1, semanticTone: 'medium', semanticKey: 'medium' },
         ],
       },
     ],
@@ -234,10 +270,12 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
       cityId: 'berlin-id',
       categoryKey: 'cleaning',
     });
+    const opportunityRadar = result.opportunityRadar ?? [];
 
-    expect(result).toBe(payload);
     expect(result.decisionContext.subtitle).toBe('Server generated context.');
     expect(result.exportMeta.filename).toBe('server-generated.csv');
+    expect(opportunityRadar[0]?.priceIntelligence?.city).toBe('Berlin');
+    expect(opportunityRadar[1]?.peerContext?.reason).toBe('nearby_competitor');
   });
 
   it('builds fallback decision context and filter options from legacy payload', () => {
@@ -247,7 +285,7 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
       categoryKey: null,
     });
 
-    expect(result.filterOptions.cities.map((item) => item.value)).toEqual(['berlin-id', 'mannheim-id']);
+    expect(result.filterOptions.cities.map((item) => item.value)).toEqual(['berlin-id', 'karlsruhe-id', 'mannheim-id']);
     expect(result.filterOptions.categories.map((item) => item.value)).toEqual(['cleaning', 'plumbing']);
     expect(result.decisionContext.mode).toBe('global');
     expect(result.decisionContext.city.label).toBe('Alle Städte');
@@ -263,13 +301,16 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
       cityId: 'berlin-id',
       categoryKey: 'cleaning',
     });
+    const opportunityRadar = result.opportunityRadar ?? [];
 
     expect(result.decisionContext.mode).toBe('focus');
     expect(result.decisionContext.city.label).toBe('Berlin');
     expect(result.decisionContext.category.label).toBe('Cleaning & Housekeeping');
     expect(result.demand.categories).toHaveLength(1);
     expect(result.demand.cities).toHaveLength(1);
-    expect(result.opportunityRadar).toHaveLength(1);
+    expect(opportunityRadar).toHaveLength(3);
+    expect(opportunityRadar.map((item) => item.city)).toEqual(['Berlin', 'Mannheim', 'Karlsruhe']);
+    expect(opportunityRadar[0]?.peerContext?.reason).toBe('selected_city');
     expect(result.priceIntelligence?.city).toBe('Berlin');
     expect(result.priceIntelligence?.categoryKey).toBe('cleaning');
     expect(() => workspaceStatisticsDecisionDashboardSchema.parse(result)).not.toThrow();

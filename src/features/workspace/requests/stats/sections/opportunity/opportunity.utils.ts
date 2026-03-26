@@ -172,6 +172,46 @@ export function opportunitySummaryLabel(
   return copy.opportunitySummaryLow;
 }
 
+export function buildOpportunityReasons(params: {
+  locale: Locale;
+  item: OpportunityItem;
+}): string[] {
+  const { locale, item } = params;
+  const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
+  const reasons: string[] = [];
+
+  if (typeof item.marketBalanceRatio === 'number' && item.marketBalanceRatio >= 2) {
+    reasons.push(
+      locale === 'de'
+        ? `Mehr Nachfrage als Anbieter (${item.marketBalanceRatio.toFixed(1)}x Marktbalance).`
+        : `Demand currently exceeds provider pressure (${item.marketBalanceRatio.toFixed(1)}x market balance).`,
+    );
+  }
+
+  if (typeof item.providers === 'number' && item.providers > 0) {
+    reasons.push(
+      locale === 'de'
+        ? `${item.demand.toLocaleString(localeTag)} Nachfrage-Signale bei nur ${item.providers.toLocaleString(localeTag)} aktiven Anbietern.`
+        : `${item.demand.toLocaleString(localeTag)} demand signals with only ${item.providers.toLocaleString(localeTag)} active providers.`,
+    );
+  }
+
+  const strongestMetric = item.metrics
+    .slice()
+    .sort((a, b) => b.value - a.value)
+    .find((metric) => metric.key !== 'competition');
+
+  if (strongestMetric?.key === 'growth') {
+    reasons.push(locale === 'de' ? 'Das Segment zeigt zusätzlich starkes Wachstum.' : 'This segment also shows strong growth.');
+  } else if (strongestMetric?.key === 'activity') {
+    reasons.push(locale === 'de' ? 'Die Marktaktivität ist hoch genug für schnelle Abschlüsse.' : 'Market activity is high enough to support faster closes.');
+  } else if (strongestMetric?.key === 'demand') {
+    reasons.push(locale === 'de' ? 'Die Nachfrage liegt klar über dem Durchschnitt.' : 'Demand is clearly above average.');
+  }
+
+  return Array.from(new Set(reasons)).slice(0, 3);
+}
+
 export function opportunityCardAriaLabel(params: {
   item: OpportunityItem;
   copy: WorkspaceStatisticsModel['copy'];

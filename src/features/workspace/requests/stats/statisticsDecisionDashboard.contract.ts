@@ -12,6 +12,10 @@ import type {
   WorkspaceStatisticsSectionMetaDto,
 } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
+import {
+  buildFocusedOpportunityRadar,
+  ensureStatisticsOpportunityContract,
+} from './statisticsOpportunityContract.utils';
 
 export type DecisionDashboardFilters = {
   period: WorkspaceStatisticsOverviewDto['range'];
@@ -36,11 +40,6 @@ function normalizeFilterValue(value: string | null | undefined): string | null {
 
 function compareOptions(a: WorkspaceStatisticsFilterOptionDto, b: WorkspaceStatisticsFilterOptionDto) {
   return a.label.localeCompare(b.label, 'de-DE');
-}
-
-function matchesNullableFilter(candidate: string | null | undefined, selected: string | null) {
-  if (!selected) return true;
-  return normalizeFilterValue(candidate) === selected;
 }
 
 function buildFilterOptions(payload: WorkspaceStatisticsOverviewSourceDto): WorkspaceStatisticsDecisionDashboardDto['filterOptions'] {
@@ -88,6 +87,15 @@ function buildFilterOptions(payload: WorkspaceStatisticsOverviewSourceDto): Work
   };
 }
 
+function ensureFilterOptions(
+  filterOptions: WorkspaceStatisticsFilterOptionsDto,
+): WorkspaceStatisticsDecisionDashboardDto['filterOptions'] {
+  return {
+    ...filterOptions,
+    services: filterOptions.services ?? [],
+  };
+}
+
 function scopeDemandRows(
   payload: WorkspaceStatisticsOverviewSourceDto,
   filters: DecisionDashboardFilters,
@@ -116,10 +124,11 @@ function scopeOpportunityRadar(
   payload: WorkspaceStatisticsOverviewSourceDto,
   filters: DecisionDashboardFilters,
 ) {
-  return (payload.opportunityRadar ?? [])
-    .slice()
-    .filter((item) => matchesNullableFilter(item.cityId, filters.cityId))
-    .filter((item) => matchesNullableFilter(item.categoryKey, filters.categoryKey));
+  return buildFocusedOpportunityRadar(payload, {
+    cityId: filters.cityId,
+    categoryKey: filters.categoryKey,
+    limit: 3,
+  });
 }
 
 function sortOpportunityRadar(
@@ -127,38 +136,16 @@ function sortOpportunityRadar(
 ) {
   return items
     .slice()
-    .sort((a, b) => Number(b.score ?? 0) - Number(a.score ?? 0))
     .slice(0, 3);
 }
 
 function scopePriceIntelligence(params: {
   payload: WorkspaceStatisticsOverviewSourceDto;
-  filters: DecisionDashboardFilters;
-  cityLabel: string | null;
+  opportunityRadar: NonNullable<WorkspaceStatisticsOverviewSourceDto['opportunityRadar']>;
 }): WorkspaceStatisticsPriceIntelligenceDto | undefined {
-  const source = params.payload.priceIntelligence;
+  if (params.opportunityRadar.length === 0) return undefined;
+  const source = params.opportunityRadar[0]?.priceIntelligence ?? params.payload.priceIntelligence;
   if (!source) return undefined;
-
-  const cityMatches = !params.filters.cityId || String(source.city ?? '').trim() === String(params.cityLabel ?? '').trim();
-  const categoryMatches = matchesNullableFilter(source.categoryKey, params.filters.categoryKey);
-
-  if ((params.filters.cityId || params.filters.categoryKey) && (!cityMatches || !categoryMatches)) {
-    return {
-      ...source,
-      recommendedMin: null,
-      recommendedMax: null,
-      marketAverage: null,
-      optimalMin: null,
-      optimalMax: null,
-      smartRecommendedPrice: null,
-      smartSignalTone: null,
-      analyzedRequestsCount: null,
-      confidenceLevel: null,
-      recommendation: null,
-      profitPotentialScore: null,
-      profitPotentialStatus: null,
-    };
-  }
 
   return source;
 }
@@ -292,8 +279,8 @@ function buildSectionMeta(
 
   return {
     opportunityTitle: focusLabel ? `Opportunity Radar für ${focusLabel}` : undefined,
-    priceTitle: focusLabel ? `Preis-Intelligenz für ${focusLabel}` : undefined,
-    insightsSubtitle: focusLabel ? `Empfehlungen basierend auf dem aktuellen Kontext · ${focusLabel}` : undefined,
+    priceTitle: undefined,
+    insightsSubtitle: undefined,
     growthSubtitle: focusLabel ? `Wachstum & Promotion · ${focusLabel}` : undefined,
   };
 }
@@ -314,29 +301,20 @@ export function normalizeWorkspaceDecisionDashboardResponse(
   payload: WorkspaceStatisticsOverviewSourceDto,
   filters: DecisionDashboardFilters,
 ): WorkspaceStatisticsDecisionDashboardDto {
-  if (
-    payload.decisionContext &&
-    payload.filterOptions &&
-    payload.sectionMeta &&
-    payload.exportMeta
-  ) {
-    return payload as WorkspaceStatisticsDecisionDashboardDto;
-  }
+  const normalizedPayload = ensureStatisticsOpportunityContract(payload);
 
-  const filterOptions = buildFilterOptions(payload);
-  const cityRows = scopeCityRows(payload, filters);
-  const demandRows = scopeDemandRows(payload, filters);
-  const opportunityRadar = sortOpportunityRadar(scopeOpportunityRadar(payload, filters));
-  const selectedCityLabel =
-    filterOptions.cities.find((item) => item.value === filters.cityId)?.label ??
-    null;
+  const filterOptions = payload.filterOptions
+    ? ensureFilterOptions(payload.filterOptions)
+    : buildFilterOptions(normalizedPayload);
+  const cityRows = scopeCityRows(normalizedPayload, filters);
+  const demandRows = scopeDemandRows(normalizedPayload, filters);
+  const opportunityRadar = sortOpportunityRadar(scopeOpportunityRadar(normalizedPayload, filters));
   const priceIntelligence = scopePriceIntelligence({
-    payload,
-    filters,
-    cityLabel: selectedCityLabel,
+    payload: normalizedPayload,
+    opportunityRadar,
   });
-  const decisionContext = buildDecisionContext({
-    payload,
+  const decisionContext = payload.decisionContext ?? buildDecisionContext({
+    payload: normalizedPayload,
     filters,
     filterOptions,
     demandRows,
@@ -346,9 +324,9 @@ export function normalizeWorkspaceDecisionDashboardResponse(
   });
 
   return {
-    ...payload,
+    ...normalizedPayload,
     demand: {
-      ...payload.demand,
+      ...normalizedPayload.demand,
       categories: demandRows,
       cities: cityRows,
     },
@@ -356,7 +334,7 @@ export function normalizeWorkspaceDecisionDashboardResponse(
     priceIntelligence,
     decisionContext,
     filterOptions,
-    sectionMeta: buildSectionMeta(payload, decisionContext),
-    exportMeta: buildExportMeta(payload, filters),
+    sectionMeta: payload.sectionMeta ?? buildSectionMeta(normalizedPayload, decisionContext),
+    exportMeta: payload.exportMeta ?? buildExportMeta(normalizedPayload, filters),
   };
 }

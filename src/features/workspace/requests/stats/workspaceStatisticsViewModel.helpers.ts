@@ -1,5 +1,6 @@
 export {
   buildActivitySignals,
+  buildActivityTrend,
   buildKpis,
   DEFAULT_ACTIVITY_METRICS,
 } from './workspaceStatisticsViewModel.activity';
@@ -13,7 +14,7 @@ export {
   buildPriceIntelligence,
 } from './workspaceStatisticsViewModel.pricing';
 
-export { buildFunnel } from './workspaceStatisticsViewModel.funnel';
+export { buildFunnel, buildFunnelDropoff } from './workspaceStatisticsViewModel.funnel';
 
 export {
   buildContext,

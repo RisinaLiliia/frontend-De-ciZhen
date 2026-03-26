@@ -5,6 +5,8 @@ import { WorkspaceDecisionActionCard } from '@/features/workspace/requests/compo
 import { WorkspaceDecisionRecommendationModal } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationModal';
 import { WorkspaceDecisionRecommendationSection } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationSection';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { Locale } from '@/lib/i18n/t';
+import { buildPriceStrategyOptions } from '../statisticsDecisionEngine.utils';
 
 function fillTemplate(template: string, values: Record<string, string>): string {
   return template.replace(/\{(\w+)\}/g, (match, key: string) => values[key] ?? match);
@@ -12,9 +14,11 @@ function fillTemplate(template: string, values: Record<string, string>): string 
 
 export function StatisticsPriceRecommendationPanel({
   copy,
+  locale,
   priceIntelligence,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
+  locale: Locale;
   priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
 }) {
   const [isStrategyOpen, setIsStrategyOpen] = React.useState(false);
@@ -46,6 +50,10 @@ export function StatisticsPriceRecommendationPanel({
     Boolean(priceIntelligence.contextLabel) ||
     Boolean(priceIntelligence.recommendedRangeLabel) ||
     Boolean(priceIntelligence.marketAverageLabel);
+  const strategyOptions = React.useMemo(
+    () => buildPriceStrategyOptions({ locale, copy, priceIntelligence }),
+    [copy, locale, priceIntelligence],
+  );
 
   const openStrategy = React.useCallback(() => {
     setIsAnalyzingStrategy(true);
@@ -86,6 +94,15 @@ export function StatisticsPriceRecommendationPanel({
         onActionClick={openStrategy}
         actionAriaHasPopup
       />
+      <div className="workspace-statistics-price__strategy-grid" aria-label={copy.priceStrategyTitle}>
+        {strategyOptions.map((option) => (
+          <article key={option.key} className="stat-card workspace-statistics-price__strategy-card">
+            <span className="workspace-statistics-price__strategy-label">{option.label}</span>
+            <strong className="workspace-statistics-price__strategy-value">{option.priceLabel}</strong>
+            <p className="workspace-statistics-price__strategy-copy">{option.description}</p>
+          </article>
+        ))}
+      </div>
       <WorkspaceDecisionRecommendationModal
         generatedLabel={copy.priceGeneratedLabel}
         assistantAvatarLabel={copy.insightsAssistantAvatarLabel}

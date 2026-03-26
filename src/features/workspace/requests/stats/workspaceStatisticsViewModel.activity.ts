@@ -13,6 +13,7 @@ import {
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type {
   WorkspaceStatisticsActivitySignalView,
+  WorkspaceStatisticsActivityTrendView,
   WorkspaceStatisticsKpiView,
 } from './workspaceStatistics.model';
 
@@ -32,6 +33,53 @@ export const DEFAULT_ACTIVITY_METRICS: WorkspaceStatisticsActivityMetricsDto = {
   completedTone: 'neutral',
   revenueTone: 'neutral',
 };
+
+export function buildActivityTrend(params: {
+  copy: WorkspaceStatisticsCopy;
+  latestRequests: number;
+  previousRequests: number;
+}): WorkspaceStatisticsActivityTrendView {
+  const { copy, latestRequests, previousRequests } = params;
+  const safePrevious = Math.max(0, previousRequests);
+
+  if (safePrevious === 0 && latestRequests === 0) {
+    return {
+      label: copy.contextTrendLabel,
+      value: '→ 0%',
+      tone: 'neutral',
+    };
+  }
+
+  if (safePrevious === 0) {
+    return {
+      label: copy.contextTrendLabel,
+      value: '↑ +100%',
+      tone: 'positive',
+    };
+  }
+
+  const deltaPercent = Math.round(((latestRequests - safePrevious) / safePrevious) * 100);
+  if (deltaPercent > 0) {
+    return {
+      label: copy.contextTrendLabel,
+      value: `↑ +${deltaPercent}%`,
+      tone: 'positive',
+    };
+  }
+  if (deltaPercent < 0) {
+    return {
+      label: copy.contextTrendLabel,
+      value: `↓ ${deltaPercent}%`,
+      tone: 'warning',
+    };
+  }
+
+  return {
+    label: copy.contextTrendLabel,
+    value: '→ 0%',
+    tone: 'neutral',
+  };
+}
 
 export function buildActivitySignals(params: {
   activityMetrics: WorkspaceStatisticsActivityMetricsDto;
@@ -54,42 +102,50 @@ export function buildActivitySignals(params: {
       key: 'offer-rate',
       label: copy.activityOfferRateLabel,
       value: formatPercent(activityMetrics.offerRatePercent),
-      hint: locale === 'de' ? 'Angebote pro Anfrage' : 'Offers per request',
+      hint: locale === 'de'
+        ? (activityMetrics.offerRatePercent >= 50 ? 'Signal: Nachfrage wird solide in Angebote umgewandelt' : 'Risiko: Zu wenig Nachfrage wird in Angebote überführt')
+        : (activityMetrics.offerRatePercent >= 50 ? 'Signal: demand is converting into offers' : 'Risk: too little demand is converting into offers'),
       tone: activityMetrics.offerRateTone,
     },
     {
       key: 'response-median',
       label: copy.activityResponseMedianLabel,
       value: responseValue,
-      hint: responseHint,
+      hint: responseValue === '—'
+        ? responseHint
+        : (locale === 'de' ? 'Aktion: erstes Angebot möglichst unter 2h senden' : 'Action: keep the first offer below 2h'),
       tone: activityMetrics.responseMedianTone,
     },
     {
       key: 'unanswered',
       label: copy.activityUnansweredLabel,
       value: formatNumber.format(activityMetrics.unansweredRequests24h),
-      hint: locale === 'de' ? 'Offene Nachfrage ohne Angebot' : 'Open demand without offers',
+      hint: locale === 'de' ? 'Risiko: verlorene Aufträge ohne schnelle Reaktion' : 'Risk: lost jobs without a fast response',
       tone: activityMetrics.unansweredTone,
     },
     {
       key: 'cancellation',
       label: copy.activityCancellationLabel,
       value: formatPercent(activityMetrics.cancellationRatePercent),
-      hint: locale === 'de' ? 'Stornos aus Abschlüssen + Stornos' : 'Cancels from completions + cancels',
+      hint: locale === 'de'
+        ? (activityMetrics.cancellationRatePercent <= 10 ? 'Signal: stabile Abschlussqualität' : 'Risiko: instabile Abschlussqualität')
+        : (activityMetrics.cancellationRatePercent <= 10 ? 'Signal: stable close quality' : 'Risk: unstable close quality'),
       tone: activityMetrics.cancellationTone,
     },
     {
       key: 'completed',
       label: copy.activityCompletedLabel,
       value: formatNumber.format(activityMetrics.completedJobs),
-      hint: locale === 'de' ? 'Gelöste Aufträge im Zeitraum' : 'Completed jobs in range',
+      hint: locale === 'de' ? 'Signal: bewiesene Lieferfähigkeit im aktuellen Markt' : 'Signal: proven delivery capacity in the current market',
       tone: activityMetrics.completedTone,
     },
     {
       key: 'revenue',
       label: copy.activityRevenueLabel,
       value: formatCurrency.format(activityMetrics.platformRevenueAmount),
-      hint: revenueHint,
+      hint: locale === 'de'
+        ? `Signal: Monetarisierung funktioniert. ${revenueHint}`
+        : `Signal: monetization is working. ${revenueHint}`,
       tone: activityMetrics.revenueTone,
     },
   ];

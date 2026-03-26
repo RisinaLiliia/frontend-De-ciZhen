@@ -890,7 +890,7 @@ export function WorkspaceContextAside({
   }, [isAnalyzingFocus, isFocusOpen]);
 
   return (
-    <div className="workspace-context-rail">
+    <div className="workspace-statistics-layout workspace-context-rail">
       <section className="panel workspace-context-rail__panel">
         <span className="workspace-environment__eyebrow">{model.copy.rail.nextStepTitle}</span>
         <WorkspaceDecisionActionCard

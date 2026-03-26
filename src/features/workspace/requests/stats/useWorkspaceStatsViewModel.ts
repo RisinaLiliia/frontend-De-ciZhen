@@ -30,10 +30,12 @@ import type {
 } from './workspaceStatistics.model';
 import {
   buildActivitySignals,
+  buildActivityTrend,
   buildCityRows,
   buildContext,
   buildContextHealthMetrics,
   buildFunnel,
+  buildFunnelDropoff,
   buildGrowthCards,
   buildInsights,
   buildKpis,
@@ -121,6 +123,15 @@ export function useWorkspaceStatsViewModel({
     });
   }, [activityMetrics, copy, formatCurrency, formatNumber, locale]);
 
+  const activityTrend = React.useMemo(
+    () => buildActivityTrend({
+      copy,
+      latestRequests: data?.activity.totals.latestRequests ?? 0,
+      previousRequests: data?.activity.totals.previousRequests ?? 0,
+    }),
+    [copy, data?.activity.totals.latestRequests, data?.activity.totals.previousRequests],
+  );
+
   const kpis = React.useMemo<WorkspaceStatisticsKpiView[]>(() => {
     return buildKpis({ copy, data, formatNumber, locale, mode, range });
   }, [copy, data, formatNumber, locale, mode, range]);
@@ -172,10 +183,13 @@ export function useWorkspaceStatsViewModel({
 
   const opportunityRadar = React.useMemo<WorkspaceStatisticsOpportunityRadarItemView[]>(() => {
     return buildOpportunityRadar({
+      copy,
       locale,
+      localeTag,
+      formatCurrency,
       source: data?.opportunityRadar,
     });
-  }, [data?.opportunityRadar, locale]);
+  }, [copy, data?.opportunityRadar, formatCurrency, locale, localeTag]);
 
   const priceIntelligence = React.useMemo<WorkspaceStatisticsPriceIntelligenceView>(() => {
     const contextCityFallback = data?.decisionContext.city.label ?? selectedCityOption?.label ?? null;
@@ -204,6 +218,10 @@ export function useWorkspaceStatsViewModel({
   const funnel = React.useMemo<WorkspaceStatisticsFunnelItemView[]>(() => {
     return buildFunnel(data);
   }, [data]);
+  const funnelDropoff = React.useMemo(
+    () => buildFunnelDropoff({ copy, funnel }),
+    [copy, funnel],
+  );
 
   const hasFunnelData = React.useMemo(() => {
     if (!funnel.length) return false;
@@ -357,6 +375,7 @@ export function useWorkspaceStatsViewModel({
     kpis,
     activityPoints,
     activityMeta,
+    activityTrend,
     decisionInsight,
     activitySignals,
     demandRows,
@@ -369,6 +388,7 @@ export function useWorkspaceStatsViewModel({
       String(data?.profileFunnel.summaryText ?? '').trim() ||
       `${copy.funnelSummaryPrefix} ${funnel.find((item) => item.key === 'requests')?.value ?? '0'} ${copy.funnelSummaryMiddle} ${funnel.find((item) => item.key === 'completed')?.value ?? '0'} ${copy.funnelSummarySuffix}`,
     hasFunnelData,
+    funnelDropoff,
     conversion: formatPercent(
       Number.isFinite(data?.profileFunnel.totalConversionPercent)
         ? Number(data?.profileFunnel.totalConversionPercent)

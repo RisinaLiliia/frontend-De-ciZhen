@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { SectionHeader } from '@/components/ui/SectionHeader';
+import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
@@ -14,8 +14,10 @@ import { workspaceQK } from '../queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '../workspace.constants';
 import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
 import { StatisticsContextPanel } from './components/StatisticsContextPanel';
+import { buildDecisionPlan } from './statisticsDecisionEngine.utils';
 import { buildFunnelVisualRows } from './statisticsFunnel.utils';
 import { paginateItems, parsePageParam } from './statisticsPagination.utils';
+import { selectOpportunityAnalysisItem } from './sections/opportunity/opportunity.utils';
 import { applyPageQuery, isPageQueryInSync, toPageQueryValue } from './statisticsUrlState.utils';
 import {
   StatisticsCitiesPanel,
@@ -60,6 +62,7 @@ export function WorkspaceStatisticsView({
   const statisticsPanelRef = React.useRef<HTMLElement | null>(null);
   const decisionClusterRef = React.useRef<HTMLDivElement | null>(null);
   const citiesPanelRef = React.useRef<HTMLElement | null>(null);
+  const insightsPanelRef = React.useRef<HTMLElement | null>(null);
   const growthPanelRef = React.useRef<HTMLElement | null>(null);
   const opportunityPanelRef = React.useRef<HTMLElement | null>(null);
   const [funnelContainerWidth, setFunnelContainerWidth] = React.useState(0);
@@ -74,6 +77,7 @@ export function WorkspaceStatisticsView({
     sectionMeta,
     activityPoints,
     activityMeta,
+    activityTrend,
     decisionInsight,
     activitySignals,
     cityRows,
@@ -82,6 +86,7 @@ export function WorkspaceStatisticsView({
     funnelPeriodLabel,
     funnelSummary,
     hasFunnelData,
+    funnelDropoff,
     conversion,
     insights,
     growthCards,
@@ -95,10 +100,6 @@ export function WorkspaceStatisticsView({
     return null;
   }, [context.categoryLabel, context.cityLabel, filters.categoryKey, filters.cityId]);
   const opportunityTitle = focusLabel ? `${copy.opportunityTitle} ${locale === 'de' ? 'für' : 'for'} ${focusLabel}` : copy.opportunityTitle;
-  const priceTitle = focusLabel ? `${copy.priceTitle} ${locale === 'de' ? 'für' : 'for'} ${focusLabel}` : copy.priceTitle;
-  const insightsSubtitle = focusLabel
-    ? `${copy.insightsSubtitle} · ${focusLabel}`
-    : copy.insightsSubtitle;
   const growthSubtitle = focusLabel
     ? `${copy.growthSubtitle} · ${focusLabel}`
     : copy.growthSubtitle;
@@ -111,8 +112,6 @@ export function WorkspaceStatisticsView({
   const resolvedDecisionSubtitle = sectionMeta.decisionSubtitle ?? decisionSubtitle;
   const resolvedCitiesSubtitle = sectionMeta.citiesSubtitle ?? citiesSubtitle;
   const resolvedOpportunityTitle = sectionMeta.opportunityTitle ?? opportunityTitle;
-  const resolvedPriceTitle = sectionMeta.priceTitle ?? priceTitle;
-  const resolvedInsightsSubtitle = sectionMeta.insightsSubtitle ?? insightsSubtitle;
   const resolvedGrowthSubtitle = sectionMeta.growthSubtitle ?? growthSubtitle;
   const rankedCityRows = React.useMemo(() => (
     cityRows
@@ -132,6 +131,29 @@ export function WorkspaceStatisticsView({
     if (!hasCityQuery) return rankedCityRows;
     return rankedCityRows.filter((item) => item.name.toLowerCase().includes(normalizedCityQuery));
   }, [hasCityQuery, normalizedCityQuery, rankedCityRows]);
+  const defaultOpportunityRank = React.useMemo(
+    () => selectOpportunityAnalysisItem(opportunityRadar)?.rank ?? null,
+    [opportunityRadar],
+  );
+  const [selectedOpportunityRank, setSelectedOpportunityRank] = React.useState<typeof defaultOpportunityRank>(defaultOpportunityRank);
+  const selectedOpportunity = React.useMemo(
+    () => selectOpportunityAnalysisItem(opportunityRadar, selectedOpportunityRank),
+    [opportunityRadar, selectedOpportunityRank],
+  );
+  const activePriceIntelligence = selectedOpportunity?.priceIntelligence ?? model.priceIntelligence;
+  const resolvedPriceTitle = copy.priceTitle;
+  const decisionPlan = React.useMemo(
+    () => buildDecisionPlan({
+      locale,
+      copy,
+      decisionInsight,
+      selectedOpportunity,
+      priceIntelligence: activePriceIntelligence,
+      currentCityId: filters.cityId,
+      currentCategoryKey: filters.categoryKey,
+    }),
+    [activePriceIntelligence, copy, decisionInsight, filters.categoryKey, filters.cityId, locale, selectedOpportunity],
+  );
 
   const cityPagination = React.useMemo(
     () => paginateItems(filteredCityRows, cityPage, CITY_PAGE_SIZE),
@@ -155,6 +177,11 @@ export function WorkspaceStatisticsView({
     targetRef: growthPanelRef,
     mode: 'sourceBottomToTargetTop',
     watchKey: `${cityRows.length}-${safeCityPage}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
+  });
+  const insightsPanelMinHeight = useSyncedPanelMinHeight({
+    sourceRef: citiesPanelRef,
+    mode: 'sourceHeight',
+    watchKey: `${cityRows.length}-${safeCityPage}-${insights.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
   });
   const {
     data: publicSummaryOverview,
@@ -236,54 +263,82 @@ export function WorkspaceStatisticsView({
     });
   }, [replaceSearchParams, safeCityPage, searchParams]);
 
+  React.useEffect(() => {
+    if (selectedOpportunityRank !== null && opportunityRadar.some((item) => item.rank === selectedOpportunityRank)) return;
+    setSelectedOpportunityRank(defaultOpportunityRank);
+  }, [defaultOpportunityRank, opportunityRadar, selectedOpportunityRank]);
+
+  const applySelectedOpportunityFocus = React.useCallback(() => {
+    if (!selectedOpportunity) return;
+    if (decisionPlan.shouldApplyFocus) {
+      model.setCityId(selectedOpportunity.cityId);
+      model.setCategoryKey(selectedOpportunity.categoryKey);
+      return;
+    }
+
+    const next = new URLSearchParams(searchParams.toString());
+    next.set('section', 'requests');
+    if (selectedOpportunity.cityId) {
+      next.set('cityId', selectedOpportunity.cityId);
+    } else {
+      next.delete('cityId');
+    }
+    if (selectedOpportunity.categoryKey) {
+      next.set('categoryKey', selectedOpportunity.categoryKey);
+    } else {
+      next.delete('categoryKey');
+    }
+    router.push(`${pathname}?${next.toString()}`, { scroll: false });
+  }, [decisionPlan.shouldApplyFocus, model, pathname, router, searchParams, selectedOpportunity]);
+
   return (
-    <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout" aria-labelledby="workspace-statistics-title">
-      <section ref={statisticsPanelRef} className="panel requests-panel requests-stats workspace-statistics">
-        <StatisticsContextPanel
-          copy={copy}
-          filters={filters}
-          cityOptions={model.cityOptions}
-          categoryOptions={model.categoryOptions}
-          context={context}
-          onRangeChange={model.setRange}
-          onCityChange={model.setCityId}
-          onCategoryChange={model.setCategoryKey}
-          onReset={model.resetFilters}
-          onExport={model.onExport}
-          surface="embedded"
-          showControls={false}
-          closeLabel={t(I18N_KEYS.auth.closeDialog)}
-        />
+    <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout">
+      <section className="workspace-statistics workspace-statistics__column">
+        <section ref={statisticsPanelRef} className="panel requests-panel workspace-statistics__intro">
+          <StatisticsContextPanel
+            copy={copy}
+            filters={filters}
+            cityOptions={model.cityOptions}
+            categoryOptions={model.categoryOptions}
+            context={context}
+            activityTrend={activityTrend}
+            onRangeChange={model.setRange}
+            onCityChange={model.setCityId}
+            onCategoryChange={model.setCategoryKey}
+            onReset={model.resetFilters}
+            onExport={model.onExport}
+            surface="embedded"
+            showControls={false}
+            closeLabel={t(I18N_KEYS.auth.closeDialog)}
+          />
 
-        <SectionHeader
-          className="requests-stats__header"
-          title={t(I18N_KEYS.homePublic.exploreStats)}
-          subtitle={copy.subtitle}
-          titleId="workspace-statistics-title"
-        />
-
-        <div ref={decisionClusterRef} className="workspace-statistics__decision-cluster">
-          <div className="panel-header workspace-statistics__mode-row">
-            <span className="workspace-statistics__mode-badge">{modeLabel}</span>
-            <span className="section-subtitle">{copy.kpiTitle} · {context.scopeLabel}</span>
-          </div>
-
-          {hasBackgroundError && !isLoading && !isError ? (
-            <div className="workspace-statistics__background-error" role="status" aria-live="polite">
-              <strong>{copy.backgroundErrorTitle}</strong>
-              <p>{copy.backgroundErrorBody}</p>
+          <div ref={decisionClusterRef} className="workspace-statistics__decision-cluster">
+            <div className="panel-header workspace-statistics__mode-row">
+              <span className="workspace-statistics__mode-badge">{modeLabel}</span>
+              <span className="section-subtitle">{copy.kpiTitle} · {context.scopeLabel}</span>
             </div>
-          ) : null}
 
-          {!isLoading && !isError ? (
-            <StatisticsDecisionLayer
-              copy={copy}
-              decisionInsight={decisionInsight}
-              activitySignals={activitySignals}
-              subtitle={resolvedDecisionSubtitle}
-            />
-          ) : null}
-        </div>
+            {hasBackgroundError && !isLoading && !isError ? (
+              <div className="workspace-statistics__background-error" role="status" aria-live="polite">
+                <strong>{copy.backgroundErrorTitle}</strong>
+                <p>{copy.backgroundErrorBody}</p>
+              </div>
+            ) : null}
+
+            {!isLoading && !isError ? (
+              <StatisticsDecisionLayer
+                copy={copy}
+                decisionInsight={decisionInsight}
+                decisionPlan={decisionPlan}
+                selectedOpportunity={selectedOpportunity}
+                priceIntelligence={activePriceIntelligence}
+                onActionClick={applySelectedOpportunityFocus}
+                activitySignals={activitySignals}
+                subtitle={resolvedDecisionSubtitle}
+              />
+            ) : null}
+          </div>
+        </section>
 
         {isLoading ? (
           <div className="requests-stats__loading workspace-statistics__loading">
@@ -334,6 +389,7 @@ export function WorkspaceStatisticsView({
                 copy={copy}
                 subtitle={resolvedCitiesSubtitle}
                 cityRowsLength={cityRows.length}
+                activeCityId={filters.cityId}
                 filteredCityRows={filteredCityRows}
                 visibleCityRows={visibleCityRows}
                 cityRankByKey={cityRankByKey}
@@ -342,6 +398,7 @@ export function WorkspaceStatisticsView({
                 safeCityPage={safeCityPage}
                 cityQuery={cityQuery}
                 onCityQueryChange={setCityQuery}
+                onSelectCity={model.setCityId}
                 onPrevPage={() => setCityPage((prev) => Math.max(1, prev - 1))}
                 onNextPage={() => setCityPage((prev) => Math.min(cityTotalPages, prev + 1))}
                 formatNumber={formatNumber}
@@ -356,19 +413,21 @@ export function WorkspaceStatisticsView({
                   locale={locale}
                   title={resolvedOpportunityTitle}
                   opportunityRadar={opportunityRadar}
+                  selectedRank={selectedOpportunityRank}
+                  onSelectRank={setSelectedOpportunityRank}
                 />
-                <div className="workspace-statistics-price__column">
-                  <StatisticsPricePanel
-                    copy={copy}
-                    title={resolvedPriceTitle}
-                    priceIntelligence={model.priceIntelligence}
-                  />
-                </div>
+                <StatisticsPricePanel
+                  className="workspace-statistics-price--secondary"
+                  copy={copy}
+                  title={resolvedPriceTitle}
+                  priceIntelligence={activePriceIntelligence}
+                />
               </div>
 
               <StatisticsPriceRecommendationPanel
                 copy={copy}
-                priceIntelligence={model.priceIntelligence}
+                locale={locale}
+                priceIntelligence={activePriceIntelligence}
               />
             </div>
           </>
@@ -454,6 +513,13 @@ export function WorkspaceStatisticsView({
                 ))}
               </ol>
               <p className="workspace-statistics-funnel__summary">{funnelSummary}</p>
+              {funnelDropoff ? (
+                <div className={`workspace-statistics-funnel__dropoff is-${funnelDropoff.tone}`.trim()}>
+                  <span>{funnelDropoff.label}</span>
+                  <strong>{funnelDropoff.value}</strong>
+                  <p>{funnelDropoff.hint}</p>
+                </div>
+              ) : null}
               <div className="workspace-statistics-funnel__conversion">
                 <span>{copy.conversionLabel}</span>
                 <strong>{conversion}</strong>
@@ -474,8 +540,9 @@ export function WorkspaceStatisticsView({
         ) : (
           <>
             <StatisticsInsightsPanel
+              panelRef={insightsPanelRef}
+              panelMinHeight={insightsPanelMinHeight}
               copy={copy}
-              subtitle={resolvedInsightsSubtitle}
               insights={insights}
               showInsightsDebug={showInsightsDebug}
             />
@@ -486,9 +553,12 @@ export function WorkspaceStatisticsView({
               copy={copy}
               subtitle={resolvedGrowthSubtitle}
               growthCards={growthCards}
+              recommendedForFallback={focusLabel}
             />
           </>
         )}
+
+        <HomeTrustLivePanel className="home-trust-live-panel--compact" t={t} />
       </aside>
     </div>
   );
