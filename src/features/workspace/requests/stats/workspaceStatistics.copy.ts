@@ -13,6 +13,8 @@ export type WorkspaceStatisticsCopy = {
   contextPeriodLabel: string;
   contextCityLabel: string;
   contextCategoryLabel: string;
+  contextAnalysisLabel: string;
+  contextTrendLabel: string;
   contextAllCitiesLabel: string;
   contextAllCategoriesLabel: string;
   contextAllServicesLabel: string;
@@ -101,6 +103,7 @@ export type WorkspaceStatisticsCopy = {
   opportunitySummaryCompetitive: string;
   opportunitySummaryLowDemand: string;
   opportunitySummaryLow: string;
+  opportunityWhyLabel: string;
   priceTitle: string;
   priceSubtitle: string;
   priceGeneratedLabel: string;
@@ -131,6 +134,9 @@ export type WorkspaceStatisticsCopy = {
   priceStrategyActionTemplate: string;
   priceStrategyPremiumLabel: string;
   priceStrategyPremiumTemplate: string;
+  priceStrategyEntryLabel: string;
+  priceStrategyGrowthLabel: string;
+  priceStrategyScaleLabel: string;
   priceRecommendationFallbackTemplate: string;
   priceSignalLabel: string;
   priceGuidanceNote: string;
@@ -139,8 +145,6 @@ export type WorkspaceStatisticsCopy = {
   profileRevenueLabel: string;
   profileSubtitlePlatform: string;
   profileSubtitlePersonalized: string;
-  insightsTitle: string;
-  insightsSubtitle: string;
   insightsGeneratedLabel: string;
   insightsAssistantAvatarLabel: string;
   insightsAssistantName: string;
@@ -152,6 +156,14 @@ export type WorkspaceStatisticsCopy = {
   insightsTypeSignalLabel: string;
   insightsFeaturedLabel: string;
   insightsFeaturedActionLabel: string;
+  decisionWhyLabel: string;
+  decisionNextStepsLabel: string;
+  decisionStrategyTitle: string;
+  decisionStrategyCloseLabel: string;
+  decisionStrategyLoadingLabel: string;
+  decisionStrategyLoadingBody: string;
+  decisionApplyStrategyLabel: string;
+  decisionOpenRequestsLabel: string;
   growthTitle: string;
   growthSubtitle: string;
   growthRecommendedPrefix: string;
@@ -215,6 +227,7 @@ export type WorkspaceStatisticsCopy = {
   funnelSummaryPrefix: string;
   funnelSummaryMiddle: string;
   funnelSummarySuffix: string;
+  funnelDropoffLabel: string;
   funnelEmptyTitle: string;
   funnelEmptyBody: string;
   funnelError: string;
@@ -234,6 +247,8 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   contextPeriodLabel: 'Zeitraum',
   contextCityLabel: 'Stadt',
   contextCategoryLabel: 'Kategorie',
+  contextAnalysisLabel: 'Analyse',
+  contextTrendLabel: 'Trend',
   contextAllCitiesLabel: 'Alle Städte',
   contextAllCategoriesLabel: 'Alle Kategorien',
   contextAllServicesLabel: 'Alle Services',
@@ -330,6 +345,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
     'Aktuell ist die Nachfrage in diesem Segment begrenzt. Prüfe Alternativen mit stärkerem Wachstum oder niedrigerem Wettbewerbsdruck.',
   opportunitySummaryLow:
     'Die Opportunity ist derzeit niedrig. Neue Chancen entstehen meist mit zusätzlicher Nachfrage oder besserer Marktaktivität.',
+  opportunityWhyLabel: 'Warum gute Chance?',
   priceTitle: 'Preis-Intelligenz',
   priceSubtitle: 'Empfohlene Preisbereiche',
   priceGeneratedLabel: 'Basierend auf aktuellen Auftragsdaten',
@@ -363,6 +379,9 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   priceStrategyPremiumLabel: 'Wann höher funktionieren kann',
   priceStrategyPremiumTemplate:
     'Ein Preis oberhalb des empfohlenen Korridors funktioniert besser, wenn dein Profil starke Bewertungen, schnelle Antwortzeiten und klaren Premium-Service zeigt.',
+  priceStrategyEntryLabel: 'Einstieg',
+  priceStrategyGrowthLabel: 'Wachstum',
+  priceStrategyScaleLabel: 'Skalierung',
   priceRecommendationFallbackTemplate: 'Der Preisbereich {range} zeigt aktuell die höchste Abschlussrate{citySuffix}.',
   priceSignalLabel: 'Preis Signal',
   priceGuidanceNote: 'Orientierung für neue Angebote im gewählten Zeitraum.',
@@ -371,8 +390,6 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   profileRevenueLabel: 'Umsatz',
   profileSubtitlePlatform: 'Von Anfragen bis zum erfolgreichen Abschluss und Umsatz',
   profileSubtitlePersonalized: 'Wie dein Profil aktuell performt',
-  insightsTitle: 'Handlungsempfehlungen',
-  insightsSubtitle: 'KI-gestützte Hinweise für bessere Entscheidungen',
   insightsGeneratedLabel: 'Basierend auf aktuellen Plattformdaten',
   insightsAssistantAvatarLabel: 'KI',
   insightsAssistantName: "De'ci KI",
@@ -384,6 +401,14 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   insightsTypeSignalLabel: 'Signal',
   insightsFeaturedLabel: 'Priorität',
   insightsFeaturedActionLabel: 'Mehr Details',
+  decisionWhyLabel: 'Warum jetzt',
+  decisionNextStepsLabel: 'Nächste Schritte',
+  decisionStrategyTitle: 'Strategie-Empfehlung',
+  decisionStrategyCloseLabel: 'Strategie schließen',
+  decisionStrategyLoadingLabel: "De'ci KI analysiert deine Strategie…",
+  decisionStrategyLoadingBody: 'Fokus, Preis und Reaktionszeit werden auf Basis von Nachfrage, Wettbewerb und Conversion-Signalen vorbereitet.',
+  decisionApplyStrategyLabel: 'Strategie anwenden',
+  decisionOpenRequestsLabel: 'Passende Aufträge öffnen',
   growthTitle: 'Wachstum & Promotion',
   growthSubtitle: 'Tools für mehr Sichtbarkeit und neue Aufträge',
   growthRecommendedPrefix: 'Empfohlen für',
@@ -447,6 +472,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   funnelSummaryPrefix: 'Von',
   funnelSummaryMiddle: 'Anfragen wurden',
   funnelSummarySuffix: 'erfolgreich abgeschlossen.',
+  funnelDropoffLabel: 'Drop-off Highlight',
   funnelEmptyTitle: 'Noch keine Funnel-Daten verfügbar',
   funnelEmptyBody:
     'Sobald erste Anfragen, Angebote und Abschlüsse vorliegen, erscheint hier deine Performance über die Plattform.',
@@ -467,6 +493,8 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   contextPeriodLabel: 'Period',
   contextCityLabel: 'City',
   contextCategoryLabel: 'Category',
+  contextAnalysisLabel: 'Analysis',
+  contextTrendLabel: 'Trend',
   contextAllCitiesLabel: 'All cities',
   contextAllCategoriesLabel: 'All categories',
   contextAllServicesLabel: 'All services',
@@ -563,6 +591,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
     'Demand in this segment is currently limited. Consider alternatives with stronger growth or lower competitive pressure.',
   opportunitySummaryLow:
     'Opportunity is currently low. Better demand or higher market activity is needed before scaling efforts here.',
+  opportunityWhyLabel: 'Why this is a good opportunity',
   priceTitle: 'Price intelligence',
   priceSubtitle: 'Recommended price ranges',
   priceGeneratedLabel: 'Based on current order data',
@@ -596,6 +625,9 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   priceStrategyPremiumLabel: 'When higher pricing can work',
   priceStrategyPremiumTemplate:
     'A price above the recommended corridor performs better when your profile has strong reviews, fast response, and clear premium service.',
+  priceStrategyEntryLabel: 'Entry',
+  priceStrategyGrowthLabel: 'Growth',
+  priceStrategyScaleLabel: 'Scale',
   priceRecommendationFallbackTemplate: 'The range {range} currently shows the highest close rate{citySuffix}.',
   priceSignalLabel: 'Price signal',
   priceGuidanceNote: 'Reference range for new offers in the selected period.',
@@ -604,8 +636,6 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   profileRevenueLabel: 'Revenue',
   profileSubtitlePlatform: 'From requests to successful completion and revenue',
   profileSubtitlePersonalized: 'How your profile performs right now',
-  insightsTitle: 'Action recommendations',
-  insightsSubtitle: 'AI-guided signals for better decisions',
   insightsGeneratedLabel: 'Based on current platform data',
   insightsAssistantAvatarLabel: 'AI',
   insightsAssistantName: "De'ci AI",
@@ -617,6 +647,14 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   insightsTypeSignalLabel: 'Signal',
   insightsFeaturedLabel: 'Priority',
   insightsFeaturedActionLabel: 'View details',
+  decisionWhyLabel: 'Why now',
+  decisionNextStepsLabel: 'Next steps',
+  decisionStrategyTitle: 'Strategy recommendation',
+  decisionStrategyCloseLabel: 'Close strategy',
+  decisionStrategyLoadingLabel: 'De\'ci AI is analyzing your strategy…',
+  decisionStrategyLoadingBody: 'Focus, pricing, and response speed are being prepared from demand, competition, and conversion signals.',
+  decisionApplyStrategyLabel: 'Apply strategy',
+  decisionOpenRequestsLabel: 'Open matching requests',
   growthTitle: 'Growth & promotion',
   growthSubtitle: 'Tools for more visibility and new jobs',
   growthRecommendedPrefix: 'Recommended for',
@@ -680,6 +718,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   funnelSummaryPrefix: 'From',
   funnelSummaryMiddle: 'requests,',
   funnelSummarySuffix: 'were successfully completed.',
+  funnelDropoffLabel: 'Drop-off highlight',
   funnelEmptyTitle: 'No funnel data available yet',
   funnelEmptyBody:
     'As soon as first requests, offers, and completions are available, your platform performance will appear here.',

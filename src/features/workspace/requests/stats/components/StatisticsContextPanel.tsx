@@ -18,6 +18,7 @@ export function StatisticsContextPanel({
   cityOptions,
   categoryOptions,
   context,
+  activityTrend,
   onRangeChange,
   onCityChange,
   onCategoryChange,
@@ -34,6 +35,7 @@ export function StatisticsContextPanel({
   cityOptions: WorkspaceStatisticsModel['cityOptions'];
   categoryOptions: WorkspaceStatisticsModel['categoryOptions'];
   context: WorkspaceStatisticsModel['context'];
+  activityTrend: WorkspaceStatisticsModel['activityTrend'];
   onRangeChange: (next: WorkspaceStatisticsRange) => void;
   onCityChange: (next: string | null) => void;
   onCategoryChange: (next: string | null) => void;
@@ -51,6 +53,18 @@ export function StatisticsContextPanel({
   const selectedCategoryLabel = categoryOptions.find((option) => option.value === categoryValue)?.label ?? copy.contextAllCategoriesLabel;
   const summaryBlock = showSummary ? (
     <>
+      <div className="workspace-statistics-context__summary-head">
+        <div className="workspace-statistics-context__summary-copy">
+          <span className="workspace-statistics-context__summary-label">{copy.contextAnalysisLabel}</span>
+          <strong className="workspace-statistics-context__summary-value">{context.stickyLabel}</strong>
+          <p className="workspace-statistics-context__summary-text">{context.subtitle}</p>
+        </div>
+        <article className={`stat-card workspace-statistics-context__trend-card is-${activityTrend.tone}`.trim()}>
+          <span className="stat-label">{activityTrend.label}</span>
+          <strong className="stat-value">{activityTrend.value}</strong>
+        </article>
+      </div>
+
       <div className="workspace-statistics-context__health-grid" aria-label={context.scopeLabel}>
         {context.healthMetrics.map((metric) => (
           <article

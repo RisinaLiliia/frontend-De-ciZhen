@@ -220,7 +220,68 @@ function createOverviewData(): WorkspaceStatisticsOverviewSourceDto {
       conversionRate: 21,
       totalConversionPercent: 21,
       summaryText: 'Von 24 Anfragen wurden 5 erfolgreich abgeschlossen.',
-      stages: [],
+      stages: [
+        {
+          id: 'requests',
+          label: 'Anfragen',
+          value: 24,
+          displayValue: '24',
+          widthPercent: 100,
+          rateLabel: 'Basis',
+          ratePercent: 100,
+          helperText: null,
+        },
+        {
+          id: 'offers',
+          label: 'Angebote',
+          value: 13,
+          displayValue: '13',
+          widthPercent: 54,
+          rateLabel: 'Angebotsquote',
+          ratePercent: 54,
+          helperText: '54%',
+        },
+        {
+          id: 'confirmations',
+          label: 'Bestätigungen',
+          value: 8,
+          displayValue: '8',
+          widthPercent: 33,
+          rateLabel: 'Antwortquote',
+          ratePercent: 62,
+          helperText: '62%',
+        },
+        {
+          id: 'contracts',
+          label: 'Verträge',
+          value: 5,
+          displayValue: '5',
+          widthPercent: 21,
+          rateLabel: 'Abschlussrate',
+          ratePercent: 63,
+          helperText: '63%',
+        },
+        {
+          id: 'completed',
+          label: 'Abgeschlossen',
+          value: 5,
+          displayValue: '5',
+          widthPercent: 21,
+          rateLabel: 'Erfüllungsquote',
+          ratePercent: 100,
+          helperText: '100%',
+        },
+        {
+          id: 'revenue',
+          label: 'Gewinn',
+          value: 1510,
+          displayValue: '1.510 €',
+          widthPercent: 21,
+          rateLabel: 'Ø Umsatz / Auftrag',
+          ratePercent: null,
+          helperText: '302 €',
+        },
+      ],
     },
     insights: [],
     growthCards: [],
@@ -274,6 +335,7 @@ function Probe({
       data-background-error={String(model.hasBackgroundError)}
       data-demand-order={model.demandRows.map((row) => row.categoryKey).join(',')}
       data-opportunity-order={model.opportunityRadar.map((row) => row.rank).join(',')}
+      data-opportunity-cities={model.opportunityRadar.map((row) => row.city).join('|')}
       data-opportunity-categories={model.opportunityRadar.map((row) => row.category).join('|')}
       data-first-opportunity-href={model.opportunityRadar[0]?.href ?? ''}
       data-price-context={model.priceIntelligence.contextLabel ?? ''}
@@ -282,9 +344,12 @@ function Probe({
       data-context-mode={model.context.mode}
       data-context-sticky={model.context.stickyLabel}
       data-context-low-data={String(model.context.isLowData)}
+      data-activity-trend={model.activityTrend.value}
       data-has-funnel={String(model.hasFunnelData)}
       data-funnel-requests={String(model.funnel.find((row) => row.key === 'requests')?.count ?? 0)}
       data-funnel-summary={model.funnelSummary}
+      data-funnel-dropoff={model.funnelDropoff?.value ?? ''}
+      data-funnel-dropoff-hint={model.funnelDropoff?.hint ?? ''}
       data-decision-insight={model.decisionInsight}
     />
   );
@@ -329,13 +394,19 @@ describe('useWorkspaceStatsViewModel', () => {
     const probe = screen.getByTestId('probe');
     expect(probe.getAttribute('data-demand-order')).toBe('cleaning,plumbing');
     expect(probe.getAttribute('data-opportunity-order')).toBe('1,2,3');
-    expect(probe.getAttribute('data-opportunity-categories')).toContain('Generalistisch');
+    expect(probe.getAttribute('data-opportunity-cities')).toBe('Berlin|Karlsruhe|Mannheim');
+    expect(probe.getAttribute('data-opportunity-categories')).toBe(
+      'Cleaning & Housekeeping|Cleaning & Housekeeping|Cleaning & Housekeeping',
+    );
     expect(probe.getAttribute('data-first-opportunity-href')).toContain('cityId=berlin-id');
     expect(probe.getAttribute('data-first-opportunity-href')).toContain('categoryKey=cleaning');
     expect(probe.getAttribute('data-price-context')).toBe('Cleaning & Housekeeping · Berlin');
     expect(probe.getAttribute('data-price-range')).toContain('65');
     expect(probe.getAttribute('data-price-range')).toContain('90');
     expect(probe.getAttribute('data-price-average')).toContain('78');
+    expect(probe.getAttribute('data-activity-trend')).toBe('↑ +20%');
+    expect(probe.getAttribute('data-funnel-dropoff')).toBe('46%');
+    expect(probe.getAttribute('data-funnel-dropoff-hint')).toContain('Angebote');
     expect(probe.getAttribute('data-decision-insight')).toContain('Kennzahlen');
   });
 
@@ -368,7 +439,7 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-demand-order')).toBe('cleaning,plumbing');
   });
 
-  it('formats range and average labels as empty when price data is missing', () => {
+  it('derives price context from opportunity data when legacy price intelligence is missing', () => {
     const data = createOverviewData();
     const firstOpportunity = data.opportunityRadar?.[0];
     if (!firstOpportunity) throw new Error('fixture should contain at least one opportunity');
@@ -404,10 +475,10 @@ describe('useWorkspaceStatsViewModel', () => {
     render(<Probe data={dataWithoutPrice} isLoading={false} isError={false} />);
 
     const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-price-context')).toBe('');
-    expect(probe.getAttribute('data-price-range')).toBe('');
-    expect(probe.getAttribute('data-price-average')).toBe('');
-    expect(probe.getAttribute('data-opportunity-categories')).toBe('Generalistisch');
+    expect(probe.getAttribute('data-price-context')).toBe('Cleaning & Housekeeping · Berlin');
+    expect(probe.getAttribute('data-price-range')).not.toBe('');
+    expect(probe.getAttribute('data-price-average')).not.toBe('');
+    expect(probe.getAttribute('data-opportunity-categories')).toBe('Cleaning & Housekeeping|Cleaning & Housekeeping');
   });
 
   it('filters context-sensitive sections by selected city and category', () => {
@@ -425,7 +496,8 @@ describe('useWorkspaceStatsViewModel', () => {
     );
 
     const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-opportunity-order')).toBe('1');
+    expect(probe.getAttribute('data-opportunity-order')).toBe('1,2,3');
+    expect(probe.getAttribute('data-opportunity-cities')).toBe('Berlin|Mannheim|Karlsruhe');
     expect(probe.getAttribute('data-price-context')).toBe('Cleaning & Housekeeping · Berlin');
     expect(probe.getAttribute('data-context-mode')).toBe('focus');
     expect(probe.getAttribute('data-context-sticky')).toContain('Berlin');
@@ -440,7 +512,7 @@ describe('useWorkspaceStatsViewModel', () => {
         isError={false}
         filters={{
           period: '30d',
-          cityId: 'mannheim-id',
+          cityId: 'unknown-city',
           categoryKey: 'cleaning',
         }}
       />,

@@ -4,10 +4,12 @@ import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import { StatisticsSignalMeter } from '../components/StatisticsSignalMeter';
 
 export function StatisticsPricePanel({
+  className,
   copy,
   title,
   priceIntelligence,
 }: {
+  className?: string;
   copy: WorkspaceStatisticsModel['copy'];
   title?: string;
   priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
@@ -101,7 +103,7 @@ export function StatisticsPricePanel({
           : 'balanced';
 
   return (
-    <section className="panel requests-stats-chart workspace-statistics-price">
+    <section className={`panel requests-stats-chart workspace-statistics-price${className ? ` ${className}` : ''}`.trim()}>
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{title ?? copy.priceTitle}</p>
         <p className="section-subtitle">{copy.priceSubtitle}</p>

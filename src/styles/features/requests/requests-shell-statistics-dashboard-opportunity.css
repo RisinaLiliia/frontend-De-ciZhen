@@ -7,6 +7,8 @@
     --workspace-statistics-feature-card-pad: var(--space-3);
     --workspace-statistics-feature-card-gap: var(--space-1-5);
     --workspace-statistics-feature-stack-gap: var(--space-2);
+    --workspace-statistics-radar-width: calc((var(--space-8) * 5) + var(--space-2-5));
+    --workspace-statistics-price-strategy-min-height: calc((var(--space-8) * 3) + var(--space-6) + var(--space-3));
   }
 
   .workspace-statistics-opportunity__list {
@@ -265,7 +267,7 @@
   }
 
   .workspace-statistics-opportunity__radar {
-    width: min(100%, 170px);
+    width: min(100%, var(--workspace-statistics-radar-width));
     justify-self: center;
   }
 
@@ -288,7 +290,7 @@
 
   .workspace-statistics-opportunity__radar-ring-label,
   .workspace-statistics-opportunity__radar-axis-label {
-    font-size: 9px;
+    font-size: var(--workspace-statistics-micro-size);
     font-weight: 700;
     fill: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-primary) 10%);
     font-variant-numeric: tabular-nums;
@@ -346,9 +348,22 @@
     overflow: hidden;
   }
 
-  .workspace-statistics-price__column {
-    display: grid;
-    gap: var(--space-3);
+  .workspace-statistics__grid--secondary {
+    align-items: stretch;
+  }
+
+  .workspace-statistics__grid--secondary > .workspace-statistics-opportunity,
+  .workspace-statistics__grid--secondary > .workspace-statistics-price {
+    align-self: stretch;
+  }
+
+  .workspace-statistics__grid--secondary > .workspace-statistics-opportunity {
+    height: 100%;
+    align-content: start;
+  }
+
+  .workspace-statistics__grid--secondary > .workspace-statistics-price {
+    height: 100%;
     align-content: start;
   }
 
@@ -406,10 +421,10 @@
 
   .workspace-statistics-price__context {
     margin: 0;
-    font-size: var(--workspace-statistics-title-size);
-    font-weight: 700;
-    color: var(--c-text);
-    line-height: 1.25;
+    font-size: var(--workspace-statistics-context-metric-size);
+    font-weight: 600;
+    color: var(--c-text-muted);
+    line-height: 1.35;
     word-break: break-word;
   }
 
@@ -425,10 +440,10 @@
 
   .workspace-statistics-price__range {
     display: block;
-    font-size: clamp(24px, 2.8vw, 27px);
+    font-size: var(--workspace-statistics-display-size-lg);
     font-weight: 700;
     color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
-    line-height: 1.1;
+    line-height: var(--lh-tight);
     font-variant-numeric: tabular-nums;
     word-break: break-word;
   }
@@ -444,7 +459,6 @@
     display: grid;
     gap: var(--workspace-statistics-feature-card-gap);
     align-content: start;
-    min-height: 100%;
     padding: var(--workspace-statistics-feature-card-pad);
     border-radius: var(--workspace-statistics-radius-md);
     border: 1px solid var(--surface-soft-border);
@@ -465,9 +479,9 @@
 
   .workspace-statistics-price__summary-value {
     color: var(--c-text);
-    font-size: clamp(20px, 2.4vw, 24px);
+    font-size: var(--workspace-statistics-display-size);
     font-weight: 700;
-    line-height: 1.1;
+    line-height: var(--lh-tight);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
@@ -718,7 +732,7 @@
 
   .workspace-statistics-price__strategy-hero-range,
   .workspace-decision-modal__hero .workspace-statistics-insights__title {
-    font-size: clamp(22px, 4vw, 28px);
+    font-size: var(--workspace-statistics-display-size-lg);
     font-variant-numeric: tabular-nums;
     color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
   }
@@ -736,6 +750,87 @@
   .workspace-statistics-price__strategy-section-text,
   .workspace-decision-modal__section .workspace-statistics-insights__text {
     line-height: 1.45;
+  }
+
+  .workspace-decision-modal__actions {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: var(--space-1);
+  }
+
+  .workspace-decision-modal__primary-action.auth-social__btn {
+    width: fit-content;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-opportunity__reasons {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-2);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--surface-soft-border) 84%);
+    border-radius: var(--workspace-statistics-radius-md);
+    background: color-mix(in oklab, var(--surface-soft-bg) 82%, var(--c-panel) 18%);
+  }
+
+  .workspace-statistics-opportunity__reasons-title {
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .workspace-statistics-opportunity__reasons-list {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding-left: var(--space-3);
+    font-size: var(--fs-small);
+    line-height: 1.45;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  .workspace-statistics-price__strategy-card {
+    display: grid;
+    gap: var(--space-1);
+    align-content: start;
+    min-height: var(--workspace-statistics-price-strategy-min-height);
+    padding: var(--space-2-5);
+    border-color: color-mix(in oklab, var(--c-primary) 14%, var(--surface-soft-border) 86%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--surface-soft-bg) 76%, var(--c-panel) 24%) 0%,
+        color-mix(in oklab, var(--c-panel) 94%, var(--surface-soft-bg) 6%) 100%
+      );
+  }
+
+  .workspace-statistics-price__strategy-label {
+    font-size: var(--workspace-statistics-chip-font-size);
+    font-weight: var(--workspace-statistics-chip-font-weight);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-price__strategy-value {
+    font-size: var(--workspace-statistics-display-size);
+    line-height: var(--lh-tight);
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
+  }
+
+  .workspace-statistics-price__strategy-copy {
+    margin: 0;
+    font-size: var(--fs-small);
+    line-height: 1.45;
+    color: var(--c-text-muted);
   }
 
   .workspace-statistics-price-modal {
@@ -867,8 +962,8 @@
 
   .workspace-statistics-price-modal__title {
     margin: 0;
-    font-size: clamp(24px, 4vw, 28px);
-    line-height: 1.1;
+    font-size: var(--workspace-statistics-display-size-lg);
+    line-height: var(--lh-tight);
     color: var(--c-text);
   }
 

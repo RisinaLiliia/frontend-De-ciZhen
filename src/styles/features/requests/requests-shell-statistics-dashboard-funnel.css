@@ -266,6 +266,51 @@
     text-align: left;
   }
 
+  .workspace-statistics-funnel__dropoff {
+    display: grid;
+    gap: var(--space-0-5);
+    padding: var(--space-2);
+    border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
+    border: 1px solid var(--surface-soft-border);
+    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+  }
+
+  .workspace-statistics-funnel__dropoff span {
+    font-size: var(--workspace-statistics-chip-font-size, 10px);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-funnel__dropoff strong {
+    font-size: var(--workspace-statistics-display-size);
+    line-height: var(--lh-tight);
+    color: var(--c-text);
+  }
+
+  .workspace-statistics-funnel__dropoff p {
+    margin: 0;
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-funnel__dropoff.is-positive {
+    border-color: color-mix(in oklab, var(--c-success) 28%, var(--surface-soft-border) 72%);
+    background: color-mix(in oklab, var(--c-success) 9%, var(--surface-soft-bg) 91%);
+  }
+
+  .workspace-statistics-funnel__dropoff.is-neutral {
+    border-color: color-mix(in oklab, var(--c-primary) 22%, var(--surface-soft-border) 78%);
+    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
+  }
+
+  .workspace-statistics-funnel__dropoff.is-warning {
+    border-color: color-mix(in oklab, var(--c-warning) 28%, var(--surface-soft-border) 72%);
+    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+  }
+
   .workspace-statistics-funnel__conversion {
     display: flex;
     align-items: center;

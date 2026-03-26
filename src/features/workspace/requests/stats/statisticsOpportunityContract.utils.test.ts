@@ -125,19 +125,22 @@ describe('ensureStatisticsOpportunityContract', () => {
 
     const result = ensureStatisticsOpportunityContract(payload);
     const priceIntelligence = result.priceIntelligence;
+    const opportunityRadar = result.opportunityRadar ?? [];
 
-    expect(result.opportunityRadar).toHaveLength(2);
+    expect(opportunityRadar).toHaveLength(2);
+    expect(opportunityRadar[0]?.peerContext?.reason).toBe('top_ranked');
+    expect(opportunityRadar[0]?.priceIntelligence?.city).toBe('Berlin');
     expect(priceIntelligence).toBeDefined();
     expect(priceIntelligence?.city).toBe('Berlin');
     expect(priceIntelligence?.category).toBe('Cleaning & Housekeeping');
-    expect(priceIntelligence?.recommendedMin).toBe(340);
-    expect(priceIntelligence?.recommendedMax).toBe(460);
-    expect(priceIntelligence?.marketAverage).toBe(400);
-    expect(priceIntelligence?.optimalMin).toBe(380);
-    expect(priceIntelligence?.optimalMax).toBe(425);
-    expect(priceIntelligence?.smartRecommendedPrice).toBe(405);
+    expect(priceIntelligence?.recommendedMin).toBe(385);
+    expect(priceIntelligence?.recommendedMax).toBe(495);
+    expect(priceIntelligence?.marketAverage).toBe(440);
+    expect(priceIntelligence?.optimalMin).toBe(420);
+    expect(priceIntelligence?.optimalMax).toBe(460);
+    expect(priceIntelligence?.smartRecommendedPrice).toBe(440);
     expect(priceIntelligence?.smartSignalTone).toBe('balanced');
-    expect(priceIntelligence?.analyzedRequestsCount).toBe(126);
+    expect(priceIntelligence?.analyzedRequestsCount).toBe(137);
     expect(priceIntelligence?.confidenceLevel).toBe('high');
     expect(priceIntelligence?.profitPotentialStatus).toBe('high');
   });

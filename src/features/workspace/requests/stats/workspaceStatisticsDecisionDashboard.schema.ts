@@ -63,6 +63,29 @@ const opportunitySchema = z.object({
     semanticTone: z.enum(['very-high', 'high', 'medium', 'low']),
     semanticKey: z.enum(['very_high', 'high', 'noticeable', 'medium', 'low']),
   })),
+  peerContext: z.object({
+    role: z.enum(['focus', 'competitor']),
+    distanceKm: z.number().nullable(),
+    reason: z.enum(['selected_city', 'nearby_competitor', 'top_ranked']),
+  }).nullable().optional(),
+  priceIntelligence: z.object({
+    citySlug: z.string().nullable(),
+    city: z.string().nullable(),
+    categoryKey: z.string().nullable(),
+    category: z.string().nullable(),
+    recommendedMin: z.number().nullable(),
+    recommendedMax: z.number().nullable(),
+    marketAverage: z.number().nullable(),
+    optimalMin: z.number().nullable(),
+    optimalMax: z.number().nullable(),
+    smartRecommendedPrice: z.number().nullable(),
+    smartSignalTone: z.enum(['visibility', 'balanced', 'premium']).nullable(),
+    analyzedRequestsCount: z.number().nullable(),
+    confidenceLevel: z.enum(['high', 'medium', 'low']).nullable(),
+    recommendation: z.string().nullable(),
+    profitPotentialScore: z.number().nullable(),
+    profitPotentialStatus: z.enum(['high', 'medium', 'low']).nullable(),
+  }).nullable().optional(),
 });
 
 export const workspaceStatisticsDecisionDashboardSchema = z.object({

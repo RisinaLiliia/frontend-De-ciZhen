@@ -295,6 +295,31 @@ export type WorkspaceStatisticsOpportunityMetricDto = {
   semanticKey: 'very_high' | 'high' | 'noticeable' | 'medium' | 'low';
 };
 
+export type WorkspaceStatisticsPriceIntelligenceDto = {
+  citySlug: string | null;
+  city: string | null;
+  categoryKey: string | null;
+  category: string | null;
+  recommendedMin: number | null;
+  recommendedMax: number | null;
+  marketAverage: number | null;
+  optimalMin: number | null;
+  optimalMax: number | null;
+  smartRecommendedPrice: number | null;
+  smartSignalTone: 'visibility' | 'balanced' | 'premium' | null;
+  analyzedRequestsCount: number | null;
+  confidenceLevel: 'high' | 'medium' | 'low' | null;
+  recommendation: string | null;
+  profitPotentialScore: number | null;
+  profitPotentialStatus: 'high' | 'medium' | 'low' | null;
+};
+
+export type WorkspaceStatisticsOpportunityPeerContextDto = {
+  role: 'focus' | 'competitor';
+  distanceKm: number | null;
+  reason: 'selected_city' | 'nearby_competitor' | 'top_ranked';
+};
+
 export type WorkspaceStatisticsOpportunityRadarItemDto = {
   rank: 1 | 2 | 3;
   cityId: string | null;
@@ -313,25 +338,8 @@ export type WorkspaceStatisticsOpportunityRadarItemDto = {
   tone: 'very-high' | 'high' | 'balanced' | 'supply-heavy';
   summaryKey: 'very_high' | 'good' | 'balanced_competitive' | 'balanced' | 'competitive' | 'low_demand' | 'low';
   metrics: WorkspaceStatisticsOpportunityMetricDto[];
-};
-
-export type WorkspaceStatisticsPriceIntelligenceDto = {
-  citySlug: string | null;
-  city: string | null;
-  categoryKey: string | null;
-  category: string | null;
-  recommendedMin: number | null;
-  recommendedMax: number | null;
-  marketAverage: number | null;
-  optimalMin: number | null;
-  optimalMax: number | null;
-  smartRecommendedPrice: number | null;
-  smartSignalTone: 'visibility' | 'balanced' | 'premium' | null;
-  analyzedRequestsCount: number | null;
-  confidenceLevel: 'high' | 'medium' | 'low' | null;
-  recommendation: string | null;
-  profitPotentialScore: number | null;
-  profitPotentialStatus: 'high' | 'medium' | 'low' | null;
+  peerContext?: WorkspaceStatisticsOpportunityPeerContextDto | null;
+  priceIntelligence?: WorkspaceStatisticsPriceIntelligenceDto | null;
 };
 
 export type WorkspaceStatisticsProfileFunnelDto = {

@@ -343,7 +343,7 @@ export function WorkspaceOverviewMain({
   const isFocusMode = statisticsModel.context.mode === 'focus';
 
   return (
-    <section className="workspace-overview">
+    <section className="workspace-statistics-layout workspace-overview">
       <div ref={heroRef} className="workspace-overview__hero">
         <section className="panel workspace-overview__panel workspace-overview__panel--snapshot">
           <div className="panel-header">

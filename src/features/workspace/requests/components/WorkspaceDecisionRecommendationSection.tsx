@@ -34,18 +34,18 @@ export function WorkspaceDecisionRecommendationSection({
 
   return (
     <section className={rootClassName}>
-      <span className="workspace-statistics-insights__content">
-        <span className="workspace-statistics-insights__eyebrow">
+      <div className="workspace-statistics-insights__content">
+        <div className="workspace-statistics-insights__eyebrow">
           <span className={badgeClassName}>{badgeLabel}</span>
           {metric ? (
             <span className="workspace-statistics-insights__metric">{metric}</span>
           ) : null}
-        </span>
+        </div>
         {title ? (
           <strong className="workspace-statistics-insights__title">{title}</strong>
         ) : null}
-        <span className="workspace-statistics-insights__text">{text}</span>
-      </span>
+        <div className="workspace-statistics-insights__text">{text}</div>
+      </div>
     </section>
   );
 }

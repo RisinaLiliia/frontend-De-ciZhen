@@ -7,6 +7,12 @@
     --workspace-insights-header-gap: var(--space-3);
     display: grid;
     gap: var(--workspace-insights-panel-gap);
+    align-content: start;
+  }
+
+  .workspace-insights-panel--compact-head {
+    --workspace-insights-panel-gap: var(--space-2);
+    --workspace-insights-header-gap: 0;
   }
 
   .workspace-statistics__profile-panel {
@@ -26,6 +32,11 @@
     grid-template-areas:
       "heading"
       "ki";
+  }
+
+  .workspace-insights-panel--compact-head .workspace-statistics__tile-header {
+    min-height: 0;
+    gap: 0;
   }
 
   .workspace-statistics-insights__heading {

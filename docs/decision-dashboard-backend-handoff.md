@@ -39,6 +39,10 @@ Backend must compute:
 - low-data decision
 - health summary (`demand / competition / activity`)
 - opportunity ranking and scores
+- opportunity cluster behavior for focus mode:
+  - rank `1` must be the selected city when `cityId` is present
+  - ranks `2..3` must be direct nearby competitors for the same analytical scope
+  - each opportunity item should already include its own `peerContext` and `priceIntelligence`
 - price corridor, confidence, and recommendation
 - AI / rule-based recommendations
 - growth actions and recommended scope
@@ -65,9 +69,11 @@ This file should become removable after backend rollout.
 2. `filterOptions` are returned explicitly and do not depend on frontend inference.
 3. `sectionMeta` is returned for context-sensitive headings where product wording matters.
 4. `priceIntelligence` is either fully reliable or explicitly low-confidence; no pseudo-analytics.
-5. `insights` and `growthCards` are already scoped to the chosen context.
-6. No frontend scoring or ranking is required to render primary dashboard sections.
-7. Response is compatible with:
+5. In focus mode, `opportunityRadar` is a precomputed comparison set, not a generic top-list.
+6. Clicking another opportunity card on the frontend should only switch between server-computed item payloads; no frontend recomputation of pricing/ranking.
+7. `insights` and `growthCards` are already scoped to the chosen context.
+8. No frontend scoring or ranking is required to render primary dashboard sections.
+9. Response is compatible with:
    - [workspace-statistics-decision-dashboard.openapi.yaml](/Users/liliya/Desktop/frontend-de-cizhen/docs/openapi/workspace-statistics-decision-dashboard.openapi.yaml)
    - [workspace.ts](/Users/liliya/Desktop/frontend-de-cizhen/src/lib/api/dto/workspace.ts)
 

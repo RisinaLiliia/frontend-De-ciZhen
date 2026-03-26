@@ -69,6 +69,10 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .workspace-statistics-context__summary-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .workspace-statistics__header-toolbar {
       flex-wrap: wrap;
     }
@@ -117,6 +121,10 @@
       -webkit-line-clamp: 3;
     }
 
+    .workspace-statistics-price__strategy-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .workspace-statistics__cities-tools {
       flex-wrap: wrap;
     }
@@ -151,6 +159,7 @@
     }
 
     .workspace-statistics-city-list__head,
+    .workspace-statistics-city-list__item-shell,
     .workspace-statistics-city-list__item {
       min-width: 700px;
     }

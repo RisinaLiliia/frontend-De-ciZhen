@@ -4,6 +4,7 @@ import type {
   WorkspaceStatisticsCityRowView,
   WorkspaceStatisticsOpportunityRadarItemView,
 } from './workspaceStatistics.model';
+import { buildPriceIntelligence as buildPriceIntelligenceView } from './workspaceStatisticsViewModel.pricing';
 
 export function buildCityRows(
   source: WorkspaceStatisticsDecisionDashboardDto['demand']['cities'] | undefined,
@@ -32,10 +33,19 @@ export function buildCityRows(
 }
 
 export function buildOpportunityRadar(params: {
+  copy: Parameters<typeof buildPriceIntelligenceView>[0]['copy'];
   locale: Locale;
+  localeTag: string;
+  formatCurrency: Intl.NumberFormat;
   source: WorkspaceStatisticsDecisionDashboardDto['opportunityRadar'] | undefined;
 }): WorkspaceStatisticsOpportunityRadarItemView[] {
-  const { locale, source } = params;
+  const {
+    copy,
+    locale,
+    localeTag,
+    formatCurrency,
+    source,
+  } = params;
   if (!source?.length) return [];
 
   const fallbackCategory = locale === 'de' ? 'Generalistisch' : 'General';
@@ -68,6 +78,18 @@ export function buildOpportunityRadar(params: {
       summaryKey: item.summaryKey,
       metrics: item.metrics ?? [],
       tone: item.tone,
+      peerContext: item.peerContext ?? null,
+      priceIntelligence: item.priceIntelligence
+        ? buildPriceIntelligenceView({
+            copy,
+            source: item.priceIntelligence,
+            contextCityFallback: item.city,
+            contextCategoryFallback: item.category ?? fallbackCategory,
+            locale,
+            localeTag,
+            formatCurrency,
+          })
+        : null,
       href: `/workspace?${hrefParams.toString()}`,
     };
   });

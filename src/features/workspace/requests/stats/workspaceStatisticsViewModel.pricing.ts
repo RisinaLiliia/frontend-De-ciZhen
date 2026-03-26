@@ -62,10 +62,10 @@ export function buildPriceIntelligence(params: {
     };
   }
 
-  const cityLabel = source.city ?? null;
-  const categoryLabel = source.category ?? null;
+  const cityLabel = source.city ?? contextCityFallback ?? null;
+  const categoryLabel = source.category ?? contextCategoryFallback ?? null;
   const contextLabel =
-    source.category && source.city ? `${source.category} · ${source.city}` : source.city ?? source.category ?? null;
+    categoryLabel && cityLabel ? `${categoryLabel} · ${cityLabel}` : cityLabel ?? categoryLabel ?? fallbackContextLabel;
   const recommendedMin =
     typeof source.recommendedMin === 'number' && Number.isFinite(source.recommendedMin)
       ? source.recommendedMin
