@@ -2,8 +2,7 @@
 
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
-import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
-import { WorkspaceControlShell } from '@/features/workspace/requests/WorkspaceControlShell';
+import type { TabPayload } from '@/components/requests/requestsStatsPanel.types';
 import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
 import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
@@ -30,8 +29,8 @@ export type WorkspacePrivateIntroProps = {
     client: string;
   };
   statsErrorLabel: string;
-  providerStatsPayload: React.ComponentProps<typeof RequestsStatsPanel>['provider'];
-  clientStatsPayload: React.ComponentProps<typeof RequestsStatsPanel>['client'];
+  providerStatsPayload: TabPayload;
+  clientStatsPayload: TabPayload;
   quickActionHref?: string;
   showQuickAction?: boolean;
   leftColumnSlot?: React.ReactNode;
@@ -46,26 +45,11 @@ export function WorkspacePrivateIntro({
   hideNavBadges = false,
   insightText,
   activityProgress,
-  statsOrder,
-  statsFallbackTitle,
-  statsTabsLabel,
-  statsErrorLabel,
-  providerStatsPayload,
-  clientStatsPayload,
   quickActionHref = '/request/create',
   showQuickAction = true,
   leftColumnSlot,
   navHeaderSlot,
 }: WorkspacePrivateIntroProps) {
-  const preferredStatsTab = statsOrder[0]?.tab ?? 'provider';
-  const titleByTab = statsOrder.reduce<Partial<Record<'provider' | 'client', string>>>(
-    (acc, section) => {
-      acc[section.tab] = section.title;
-      return acc;
-    },
-    {},
-  );
-
   return (
     <section className="workspace-intro-shell">
       <div className="stack-md">
@@ -83,23 +67,7 @@ export function WorkspacePrivateIntro({
           activePublicSection={activePublicSection}
           activeWorkspaceTab={activeWorkspaceTab}
         />
-        <WorkspaceControlShell
-          context={leftColumnSlot}
-          aside={(
-            <RequestsStatsPanel
-              title={titleByTab[preferredStatsTab] ?? statsFallbackTitle}
-              titleByTab={titleByTab}
-              tabsLabel={statsTabsLabel}
-              defaultTab={preferredStatsTab}
-              preferredTab={preferredStatsTab}
-              storageKey="dc_workspace_intro_stats_tab"
-              errorLabel={statsErrorLabel}
-              provider={providerStatsPayload}
-              client={clientStatsPayload}
-              surface="embedded"
-            />
-          )}
-        />
+        {leftColumnSlot ? leftColumnSlot : null}
         <WorkspaceMobileSectionSheet
           locale={locale}
           activePublicSection={activePublicSection}

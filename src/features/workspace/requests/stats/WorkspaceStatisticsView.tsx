@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
+import { RequestsStatsPanel } from '@/components/requests/RequestsStatsPanel';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
@@ -12,6 +13,7 @@ import type { Locale } from '@/lib/i18n/t';
 import { WorkspacePublicDemandMapPanel } from '../WorkspacePublicDemandMapPanel';
 import { workspaceQK } from '../queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '../workspace.constants';
+import type { WorkspaceStatisticsPrivateStatsPanelProps } from '../WorkspaceStatisticsPanel';
 import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
 import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { buildDecisionPlan } from './statisticsDecisionEngine.utils';
@@ -34,6 +36,7 @@ type WorkspaceStatisticsViewProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   model: WorkspaceStatisticsModel;
+  privateStatsPanel?: WorkspaceStatisticsPrivateStatsPanelProps | null;
 };
 const CITY_PAGE_SIZE = 10;
 const CITY_PAGE_QUERY_KEY = 'statsCityPage';
@@ -42,6 +45,7 @@ export function WorkspaceStatisticsView({
   t,
   locale,
   model,
+  privateStatsPanel = null,
 }: WorkspaceStatisticsViewProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -197,10 +201,13 @@ export function WorkspaceStatisticsView({
       }),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
+    enabled: !privateStatsPanel,
   });
   const publicCityActivity = publicSummaryOverview?.cityActivity;
   const publicSummary = publicSummaryOverview?.summary;
-  const showDemandMapPanel = Boolean(publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError);
+  const showDemandMapPanel = !privateStatsPanel && Boolean(
+    publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError,
+  );
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -435,7 +442,9 @@ export function WorkspaceStatisticsView({
       </section>
 
       <aside className="stack-md">
-        {showDemandMapPanel ? (
+        {privateStatsPanel ? (
+          <RequestsStatsPanel {...privateStatsPanel} />
+        ) : showDemandMapPanel ? (
           <div className="workspace-statistics__rail-map">
             <WorkspacePublicDemandMapPanel
               t={t}
