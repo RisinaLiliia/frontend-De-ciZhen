@@ -212,6 +212,7 @@ export function WorkspaceStatisticsView({
       rightRailOpportunities,
       rightRailRisks,
       selectedOpportunity,
+      userIntelligence,
     ],
   );
 

@@ -14,7 +14,6 @@ import { getWorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 import {
   formatDateLabel,
   formatDateTimeLabel,
-  formatPercent,
 } from './statisticsModel.mappers';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type {
@@ -119,77 +118,62 @@ export function useWorkspaceStatsViewModel({
   const selectedCategoryKey = normalizeNullableFilterValue(filters.categoryKey);
   const isFocusMode = Boolean(selectedCityId || selectedCategoryKey);
 
-  const activityPoints = React.useMemo(
-    () => {
-      const points = (data?.activity.points ?? []).slice(-12);
-      const comparisonPointsByTimestamp = new Map(
-        (data?.activityComparison?.points ?? []).map((point) => [point.timestamp, point]),
-      );
-      const marketRequestsTotal = Math.max(0, Math.round(data?.activity.totals.requestsTotal ?? 0));
-      const marketOffersTotal = Math.max(0, Math.round(data?.activity.totals.offersTotal ?? 0));
-      const clientTotal = Math.max(
-        0,
-        Math.round(data?.profileFunnel.requestsTotal ?? privateOverview?.requestsByStatus.total ?? 0),
-      );
-      const providerTotal = Math.max(
-        0,
-        Math.round(data?.profileFunnel.offersTotal ?? privateOverview?.providerOffersByStatus.total ?? 0),
-      );
-      const canBuildClientOverlay = mode === 'personalized' && clientTotal > 0 && marketRequestsTotal > 0;
-      const canBuildProviderOverlay = mode === 'personalized' && providerTotal > 0 && marketOffersTotal > 0;
+  const activityPoints = (() => {
+    const points = (data?.activity.points ?? []).slice(-12);
+    const comparisonPointsByTimestamp = new Map(
+      (data?.activityComparison?.points ?? []).map((point) => [point.timestamp, point]),
+    );
+    const marketRequestsTotal = Math.max(0, Math.round(data?.activity.totals.requestsTotal ?? 0));
+    const marketOffersTotal = Math.max(0, Math.round(data?.activity.totals.offersTotal ?? 0));
+    const clientTotal = Math.max(
+      0,
+      Math.round(data?.profileFunnel.requestsTotal ?? privateOverview?.requestsByStatus.total ?? 0),
+    );
+    const providerTotal = Math.max(
+      0,
+      Math.round(data?.profileFunnel.offersTotal ?? privateOverview?.providerOffersByStatus.total ?? 0),
+    );
+    const canBuildClientOverlay = mode === 'personalized' && clientTotal > 0 && marketRequestsTotal > 0;
+    const canBuildProviderOverlay = mode === 'personalized' && providerTotal > 0 && marketOffersTotal > 0;
 
-      return points.map((point) => {
-        const comparisonPoint = comparisonPointsByTimestamp.get(point.timestamp);
-        if (comparisonPoint) {
-          return {
-            label: formatDateLabel(point.timestamp, range, locale),
-            requests: point.requests,
-            offers: point.offers,
-            clientActivity: comparisonPoint.clientActivity,
-            providerActivity: comparisonPoint.providerActivity,
-          };
-        }
-
-        const rawClientActivity = canBuildClientOverlay
-          ? (point.requests / marketRequestsTotal) * clientTotal
-          : null;
-        const clientActivity = rawClientActivity === null
-          ? null
-          : point.requests > 0
-            ? Math.max(1, Math.round(rawClientActivity))
-            : 0;
-        const rawProviderActivity = canBuildProviderOverlay
-          ? (point.offers / marketOffersTotal) * providerTotal
-          : null;
-        const providerActivity = rawProviderActivity === null
-          ? null
-          : point.offers > 0
-            ? Math.max(1, Math.round(rawProviderActivity))
-            : 0;
-
+    return points.map((point) => {
+      const comparisonPoint = comparisonPointsByTimestamp.get(point.timestamp);
+      if (comparisonPoint) {
         return {
           label: formatDateLabel(point.timestamp, range, locale),
           requests: point.requests,
           offers: point.offers,
-          clientActivity,
-          providerActivity,
+          clientActivity: comparisonPoint.clientActivity,
+          providerActivity: comparisonPoint.providerActivity,
         };
-      });
-    },
-    [
-      data?.activity.points,
-      data?.activityComparison?.points,
-      data?.activity.totals.offersTotal,
-      data?.activity.totals.requestsTotal,
-      data?.profileFunnel.offersTotal,
-      data?.profileFunnel.requestsTotal,
-      locale,
-      mode,
-      privateOverview?.providerOffersByStatus.total,
-      privateOverview?.requestsByStatus.total,
-      range,
-    ],
-  );
+      }
+
+      const rawClientActivity = canBuildClientOverlay
+        ? (point.requests / marketRequestsTotal) * clientTotal
+        : null;
+      const clientActivity = rawClientActivity === null
+        ? null
+        : point.requests > 0
+          ? Math.max(1, Math.round(rawClientActivity))
+          : 0;
+      const rawProviderActivity = canBuildProviderOverlay
+        ? (point.offers / marketOffersTotal) * providerTotal
+        : null;
+      const providerActivity = rawProviderActivity === null
+        ? null
+        : point.offers > 0
+          ? Math.max(1, Math.round(rawProviderActivity))
+          : 0;
+
+      return {
+        label: formatDateLabel(point.timestamp, range, locale),
+        requests: point.requests,
+        offers: point.offers,
+        clientActivity,
+        providerActivity,
+      };
+    });
+  })();
 
   const activityMetrics: WorkspaceStatisticsActivityMetricsDto = React.useMemo(
     () => data?.activity.metrics ?? DEFAULT_ACTIVITY_METRICS,
@@ -206,7 +190,7 @@ export function useWorkspaceStatsViewModel({
     });
   }, [copy, data?.userIntelligence, formatCurrency, formatNumber, locale]);
 
-  const activitySignals = React.useMemo<WorkspaceStatisticsActivitySignalView[]>(() => {
+  const activitySignals: WorkspaceStatisticsActivitySignalView[] = (() => {
     if (mode === 'personalized' && data?.decisionLayer) {
       return buildDecisionLayerSignals({
         copy,
@@ -244,18 +228,7 @@ export function useWorkspaceStatsViewModel({
       formatNumber,
       locale,
     });
-  }, [
-    activityMetrics,
-    copy,
-    data?.activity.metrics.completedJobs,
-    data?.decisionLayer,
-    data?.profileFunnel.completedJobsTotal,
-    formatCurrency,
-    formatNumber,
-    locale,
-    mode,
-    userIntelligence,
-  ]);
+  })();
 
   const activityTrend = React.useMemo(
     () => buildActivityTrend({
@@ -535,46 +508,32 @@ export function useWorkspaceStatsViewModel({
     });
   }, [activitySignals, cityRows, data, funnel, kpis, range]);
 
-  const activityTitle = React.useMemo(
-    () => (data?.activityComparison ? data.activityComparison.title ?? copy.activityTitle : copy.activityTitle),
-    [copy.activityTitle, data?.activityComparison],
-  );
+  const activityTitle = data?.activityComparison
+    ? data.activityComparison.title ?? copy.activityTitle
+    : copy.activityTitle;
 
-  const activitySubtitle = React.useMemo(
-    () => (data?.activityComparison ? data.activityComparison.subtitle ?? copy.activitySubtitle : copy.activitySubtitle),
-    [copy.activitySubtitle, data?.activityComparison],
-  );
+  const activitySubtitle = data?.activityComparison
+    ? data.activityComparison.subtitle ?? copy.activitySubtitle
+    : copy.activitySubtitle;
 
-  const activitySummary = React.useMemo(
-    () => (data?.activityComparison ? data.activityComparison.summary ?? null : null),
-    [data?.activityComparison],
-  );
+  const activitySummary = data?.activityComparison ? data.activityComparison.summary ?? null : null;
 
-  const activityMeta = React.useMemo(
-    () => ({
-      peak: formatDateTimeLabel(
-        data?.activityComparison ? data.activityComparison.peakTimestamp ?? null : data?.activity.totals.peakTimestamp,
-        locale,
-      ),
-      bestWindow: formatDateTimeLabel(
-        data?.activityComparison
-          ? data.activityComparison.bestWindowTimestamp ?? null
-          : data?.activity.totals.bestWindowTimestamp,
-        locale,
-      ),
-      updatedAt: formatDateTimeLabel(
-        data?.activityComparison ? data.activityComparison.updatedAt ?? null : data?.updatedAt,
-        locale,
-      ),
-    }),
-    [
-      data?.activity.totals.bestWindowTimestamp,
-      data?.activity.totals.peakTimestamp,
-      data?.updatedAt,
-      data?.activityComparison,
+  const activityMeta = {
+    peak: formatDateTimeLabel(
+      data?.activityComparison ? data.activityComparison.peakTimestamp ?? null : data?.activity.totals.peakTimestamp,
       locale,
-    ],
-  );
+    ),
+    bestWindow: formatDateTimeLabel(
+      data?.activityComparison
+        ? data.activityComparison.bestWindowTimestamp ?? null
+        : data?.activity.totals.bestWindowTimestamp,
+      locale,
+    ),
+    updatedAt: formatDateTimeLabel(
+      data?.activityComparison ? data.activityComparison.updatedAt ?? null : data?.updatedAt,
+      locale,
+    ),
+  };
 
   const context = React.useMemo(() => {
     return buildContext({

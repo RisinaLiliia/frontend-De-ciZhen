@@ -443,7 +443,7 @@ export function buildRecommendationPrioritySection(params: {
   fallbackSubtitle: string;
   fallbackItems: WorkspaceStatisticsPriorityItemView[];
 }): WorkspaceStatisticsPrioritySectionView | null {
-  const { copy, locale, source, fallbackTitle, fallbackSubtitle, fallbackItems } = params;
+  const { locale, source, fallbackTitle, fallbackSubtitle, fallbackItems } = params;
   if (!source) {
     return fallbackItems.length > 0
       ? {
