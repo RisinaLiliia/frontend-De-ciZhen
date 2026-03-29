@@ -158,8 +158,14 @@ export function useWorkspaceStatsQuery({
         ...hydratedPayload,
         __source: 'bff',
       }, filters);
-      workspaceStatisticsDecisionDashboardSchema.parse(normalized);
-      return normalized;
+      const parsed = workspaceStatisticsDecisionDashboardSchema.safeParse(normalized);
+      if (!parsed.success) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Workspace statistics schema mismatch', parsed.error.flatten());
+        }
+        return normalized as WorkspaceStatisticsDecisionDashboardDto;
+      }
+      return parsed.data as WorkspaceStatisticsDecisionDashboardDto;
     },
     staleTime: 60_000,
     refetchOnWindowFocus: false,

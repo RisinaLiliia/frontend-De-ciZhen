@@ -700,7 +700,8 @@ function normalizeUserActionCode(code: string | null | undefined): WorkspaceStat
     code === 'adjust_price' ||
     code === 'focus_market' ||
     code === 'complete_profile' ||
-    code === 'follow_up_unanswered'
+    code === 'follow_up_unanswered' ||
+    code === 'follow_up_requests'
   ) {
     return code;
   }

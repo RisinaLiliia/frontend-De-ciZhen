@@ -477,7 +477,7 @@ export function useWorkspaceStatsViewModel({
       if (code === 'adjust_price') return copy.userActionPriceTitle;
       if (code === 'focus_market') return copy.userActionFocusTitle;
       if (code === 'complete_profile') return copy.userActionProfileTitle;
-      if (code === 'follow_up_unanswered') return copy.userActionFollowUpTitle;
+      if (code === 'follow_up_unanswered' || code === 'follow_up_requests') return copy.userActionFollowUpTitle;
       return data?.decisionLayer?.primaryAction?.label?.trim() || null;
     },
     [copy, data?.decisionLayer?.primaryAction?.code, data?.decisionLayer?.primaryAction?.label],

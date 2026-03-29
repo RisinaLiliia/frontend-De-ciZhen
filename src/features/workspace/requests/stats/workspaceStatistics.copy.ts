@@ -199,6 +199,7 @@ export type WorkspaceStatisticsCopy = {
   userOpportunitiesSubtitle: string;
   userActionsTitle: string;
   userActionsSubtitle: string;
+  userActionsEmpty: string;
   userRiskSeverityHigh: string;
   userRiskSeverityMedium: string;
   userRiskSeverityLow: string;
@@ -535,6 +536,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   userOpportunitiesSubtitle: 'Marktfelder mit besserem Fit für dein Profil',
   userActionsTitle: 'Nächste Schritte',
   userActionsSubtitle: 'Decision → Action',
+  userActionsEmpty: 'Noch nicht genug Daten für konkrete nächste Schritte.',
   userRiskSeverityHigh: 'Hoch',
   userRiskSeverityMedium: 'Mittel',
   userRiskSeverityLow: 'Niedrig',
@@ -872,6 +874,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   userOpportunitiesSubtitle: 'Markets with a stronger fit for your profile',
   userActionsTitle: 'Next steps',
   userActionsSubtitle: 'Decision → Action',
+  userActionsEmpty: 'Not enough data yet for concrete next steps.',
   userRiskSeverityHigh: 'High',
   userRiskSeverityMedium: 'Medium',
   userRiskSeverityLow: 'Low',

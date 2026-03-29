@@ -144,6 +144,73 @@ function roundGap(userValue: number | null, marketValue: number | null) {
   return Math.round((userValue - marketValue) * 10) / 10;
 }
 
+function normalizeFunnelStageKey(
+  key: string | null | undefined,
+): 'requests' | 'offers' | 'responses' | 'contracts' | 'completed' | null {
+  if (
+    key === 'requests' ||
+    key === 'offers' ||
+    key === 'responses' ||
+    key === 'contracts' ||
+    key === 'completed'
+  ) {
+    return key;
+  }
+  return null;
+}
+
+function normalizeFunnelComparisonContract(
+  source: WorkspaceStatisticsOverviewSourceDto['funnelComparison'] | null | undefined,
+): WorkspaceStatisticsOverviewSourceDto['funnelComparison'] | null {
+  if (!source) return null;
+
+  const extendedSource = source as typeof source & {
+    title?: string | null;
+    primaryAction?: { code?: string | null } | null;
+  };
+  const rawLargestDropOffStage = (source as { largestDropOffStage?: unknown }).largestDropOffStage;
+  const largestDropOffStageObject = (
+    rawLargestDropOffStage &&
+    typeof rawLargestDropOffStage === 'object' &&
+    !Array.isArray(rawLargestDropOffStage)
+  )
+    ? rawLargestDropOffStage as { key?: string | null; severity?: 'low' | 'medium' | 'high' | 'critical' | null }
+    : null;
+
+  const largestDropOffStageKey = normalizeFunnelStageKey(
+    typeof rawLargestDropOffStage === 'string'
+      ? rawLargestDropOffStage
+      : (largestDropOffStageObject?.key ?? null),
+  );
+
+  const normalizedStages = source.stages.map((stage) => ({
+    ...stage,
+    status:
+      stage.status === 'good' ||
+      stage.status === 'warning' ||
+      stage.status === 'critical' ||
+      stage.status === 'neutral'
+        ? stage.status
+        : 'neutral',
+    dropOffSeverity:
+      largestDropOffStageObject &&
+      largestDropOffStageObject.key === stage.key
+        ? (largestDropOffStageObject.severity ?? null)
+        : stage.dropOffSeverity ?? null,
+    recommendation:
+      stage.recommendation ??
+      (extendedSource.primaryAction?.code ?? null),
+  }));
+
+  return {
+    ...source,
+    comparisonLabel: source.comparisonLabel ?? extendedSource.title ?? null,
+    largestGapStage: normalizeFunnelStageKey(typeof source.largestGapStage === 'string' ? source.largestGapStage : null),
+    largestDropOffStage: largestDropOffStageKey,
+    stages: normalizedStages,
+  };
+}
+
 function alignDecisionLayerWithFunnelComparison(params: {
   decisionLayer: WorkspaceStatisticsOverviewSourceDto['decisionLayer'] | null | undefined;
   funnelComparison: WorkspaceStatisticsOverviewSourceDto['funnelComparison'] | null | undefined;
@@ -376,10 +443,12 @@ export function normalizeWorkspaceDecisionDashboardResponse(
     payload: normalizedPayload,
     priceIntelligence,
   });
-  const funnelComparison = payload.funnelComparison ?? buildCompatibilityFunnelComparison({
-    payload: normalizedPayload,
-    userIntelligence,
-  });
+  const funnelComparison = normalizeFunnelComparisonContract(
+    payload.funnelComparison ?? buildCompatibilityFunnelComparison({
+      payload: normalizedPayload,
+      userIntelligence,
+    }),
+  );
   const decisionLayer = alignDecisionLayerWithFunnelComparison({
     decisionLayer: payload.decisionLayer ?? buildCompatibilityDecisionLayer({
       payload: normalizedPayload,

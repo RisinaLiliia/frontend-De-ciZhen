@@ -288,7 +288,9 @@ function resolveSignalActionLabel(copy: WorkspaceStatisticsCopy, signal: UserInt
   if (signal.actionCode === 'adjust_price') return copy.userActionPriceTitle;
   if (signal.actionCode === 'focus_market') return copy.userActionFocusTitle;
   if (signal.actionCode === 'complete_profile') return copy.userActionProfileTitle;
-  if (signal.actionCode === 'follow_up_unanswered') return copy.userActionFollowUpTitle;
+  if (signal.actionCode === 'follow_up_unanswered' || signal.actionCode === 'follow_up_requests') {
+    return copy.userActionFollowUpTitle;
+  }
   return null;
 }
 
@@ -297,7 +299,7 @@ function resolveActionCodeLabel(copy: WorkspaceStatisticsCopy, actionCode: UserI
   if (actionCode === 'adjust_price') return copy.userActionPriceTitle;
   if (actionCode === 'focus_market') return copy.userActionFocusTitle;
   if (actionCode === 'complete_profile') return copy.userActionProfileTitle;
-  if (actionCode === 'follow_up_unanswered') return copy.userActionFollowUpTitle;
+  if (actionCode === 'follow_up_unanswered' || actionCode === 'follow_up_requests') return copy.userActionFollowUpTitle;
   return null;
 }
 

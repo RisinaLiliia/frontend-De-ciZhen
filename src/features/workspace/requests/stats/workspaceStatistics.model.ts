@@ -57,8 +57,16 @@ export type WorkspaceStatisticsFunnelComparisonStageView = {
   marketRate: string;
   userRate: string;
   gapRate: string;
-  status: 'above_market' | 'below_market' | 'at_market' | 'insufficient_data';
-  dropOffSeverity: 'high' | 'medium' | 'low' | null;
+  status:
+    | 'good'
+    | 'warning'
+    | 'critical'
+    | 'neutral'
+    | 'at_market'
+    | 'above_market'
+    | 'below_market'
+    | 'insufficient_data';
+  dropOffSeverity?: 'low' | 'medium' | 'high' | 'critical' | null;
   recommendation: string | null;
 };
 

@@ -139,6 +139,9 @@ const userSignalSchema = z.object({
     'growing_category',
     'low_visibility',
     'strong_position',
+    'low_competition_segment',
+    'price_above_market',
+    'price_below_market',
   ]),
   severity: z.enum(['high', 'medium', 'low']),
   metricKey: z.enum([
@@ -159,8 +162,20 @@ const userSignalSchema = z.object({
     'focus_market',
     'complete_profile',
     'follow_up_unanswered',
+    'follow_up_requests',
   ]).nullable().optional(),
 });
+
+const funnelStageStatusSchema = z.enum([
+  'good',
+  'warning',
+  'critical',
+  'neutral',
+  'at_market',
+  'above_market',
+  'below_market',
+  'insufficient_data',
+]);
 
 const userPerformancePositionSchema = z.object({
   percentile: z.number().nullable(),
@@ -216,6 +231,7 @@ const userActionStepSchema = z.object({
     'focus_market',
     'complete_profile',
     'follow_up_unanswered',
+    'follow_up_requests',
   ]),
   priority: z.enum(['high', 'medium', 'low']),
   targetValue: z.number().nullable().optional(),
@@ -232,8 +248,8 @@ const decisionLayerMetricSchema = z.object({
   gapPercent: z.number().nullable(),
   unit: z.enum(['percent', 'minutes', 'currency', 'count']),
   direction: z.enum(['better', 'worse', 'neutral']),
-  status: z.enum(['good', 'warning', 'critical', 'neutral']),
-  signalCodes: z.array(userPriorityItemSchema.shape.code.or(userSignalSchema.shape.code)),
+  status: funnelStageStatusSchema,
+  signalCodes: z.array(z.string()),
   primaryActionCode: userActionStepSchema.shape.code.nullable(),
   summary: z.string().nullable(),
 });
@@ -314,8 +330,8 @@ const funnelComparisonStageSchema = z.object({
   marketRateFromPrev: z.number().nullable(),
   userRateFromPrev: z.number().nullable(),
   gapRate: z.number().nullable(),
-  status: z.enum(['above_market', 'below_market', 'at_market', 'insufficient_data']),
-  dropOffSeverity: z.enum(['high', 'medium', 'low']).nullable(),
+  status: funnelStageStatusSchema,
+  dropOffSeverity: z.enum(['low', 'medium', 'high', 'critical']).nullable().optional(),
   recommendation: z.string().nullable(),
 });
 
