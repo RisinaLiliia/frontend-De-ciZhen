@@ -9,3 +9,6 @@ export { StatisticsPricePanel } from './sections/StatisticsPricePanel';
 export { StatisticsPriceRecommendationPanel } from './sections/StatisticsPriceRecommendationPanel';
 export { StatisticsInsightsPanel } from './sections/StatisticsInsightsPanel';
 export { StatisticsGrowthPanel } from './sections/StatisticsGrowthPanel';
+export { StatisticsPerformancePositionPanel } from './sections/StatisticsPerformancePositionPanel';
+export { StatisticsPriorityPanel } from './sections/StatisticsPriorityPanel';
+export { StatisticsActionPlanPanel } from './sections/StatisticsActionPlanPanel';

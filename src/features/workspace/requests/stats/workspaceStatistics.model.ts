@@ -4,6 +4,7 @@ import type {
   WorkspaceStatisticsInsightDto,
   WorkspaceStatisticsOpportunityRadarItemDto,
   WorkspaceStatisticsRange,
+  WorkspaceStatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 
@@ -36,6 +37,39 @@ export type WorkspaceStatisticsFunnelItemView = {
   railLabel?: string;
   railValue?: string;
   isCurrency?: boolean;
+  compare?: WorkspaceStatisticsFunnelItemCompareView | null;
+};
+
+export type WorkspaceStatisticsFunnelItemCompareView = {
+  userCount: string;
+  userRate: string | null;
+  marketRate: string | null;
+  gapRate: string | null;
+  isLargestGap: boolean;
+  isLargestDropoff: boolean;
+};
+
+export type WorkspaceStatisticsFunnelComparisonStageView = {
+  key: string;
+  label: string;
+  marketCount: string;
+  userCount: string;
+  marketRate: string;
+  userRate: string;
+  gapRate: string;
+  status: 'above_market' | 'below_market' | 'at_market' | 'insufficient_data';
+  dropOffSeverity: 'high' | 'medium' | 'low' | null;
+  recommendation: string | null;
+};
+
+export type WorkspaceStatisticsFunnelComparisonView = {
+  comparisonLabel: string;
+  summary: string | null;
+  primaryBottleneck: string | null;
+  nextAction: string | null;
+  largestGapStage: string | null;
+  largestDropOffStage: string | null;
+  stages: WorkspaceStatisticsFunnelComparisonStageView[];
 };
 
 export type WorkspaceStatisticsInsightView = {
@@ -67,8 +101,129 @@ export type WorkspaceStatisticsActivitySignalView = {
   key: string;
   label: string;
   value: string;
+  marketValue?: string | null;
+  userValue?: string | null;
   hint: string;
   tone: 'positive' | 'neutral' | 'warning';
+};
+
+export type WorkspaceStatisticsBenchmarkMetricView = {
+  key: string;
+  label: string;
+  userValue: string;
+  marketValue: string;
+  delta: string;
+  tone: 'positive' | 'neutral' | 'warning';
+  statusLabel: string | null;
+};
+
+export type WorkspaceStatisticsDecisionSignalView = {
+  key: string;
+  type: 'risk' | 'opportunity' | 'performance' | 'growth';
+  code: string;
+  severity: 'high' | 'medium' | 'low';
+  actionLabel: string | null;
+};
+
+export type WorkspaceStatisticsPerformancePositionView = {
+  headline: string;
+  summary: string;
+  overall: string;
+  category: string;
+  city: string;
+  bucket: 'top' | 'average' | 'below';
+};
+
+export type WorkspaceStatisticsProfileGapView = {
+  title: string;
+  summary: string;
+  tone: 'positive' | 'neutral' | 'warning';
+};
+
+export type WorkspaceStatisticsPriorityItemView = {
+  key: string;
+  title: string;
+  body: string;
+  metric: string | null;
+  tone: 'positive' | 'neutral' | 'warning';
+  cityLabel?: string | null;
+  categoryLabel?: string | null;
+};
+
+export type WorkspaceStatisticsPrioritySectionView = {
+  title: string;
+  subtitle: string;
+  hasReliableItems: boolean;
+  items: WorkspaceStatisticsPriorityItemView[];
+};
+
+export type WorkspaceStatisticsActionStepView = {
+  key: string;
+  code: string;
+  title: string;
+  detail: string;
+  priorityLabel: string;
+  priorityTone: 'success' | 'info' | 'warning';
+  impactLabel: string;
+  effectLabel: string;
+};
+
+export type WorkspaceStatisticsActionSectionView = {
+  title: string;
+  subtitle: string;
+  hasReliableItems: boolean;
+  steps: WorkspaceStatisticsActionStepView[];
+};
+
+export type WorkspaceStatisticsPricingGapView = {
+  currentPrice: string;
+  recommendedRange: string;
+  marketAverage: string;
+  statusLabel: string;
+  summary: string;
+  effect: string;
+  gap: string;
+  action: string | null;
+  tone: 'positive' | 'neutral' | 'warning';
+};
+
+export type WorkspaceStatisticsPersonalizedPricingView = WorkspaceStatisticsPricingGapView & {
+  title: string | null;
+  subtitle: string | null;
+  contextLabel: string | null;
+};
+
+export type WorkspaceStatisticsCategoryFitItemView = {
+  key: string;
+  label: string;
+  marketDemandShare: string;
+  userFitLabel: string;
+  opportunityLabel: string;
+  recommendation: string | null;
+};
+
+export type WorkspaceStatisticsCityComparisonItemView = {
+  key: string;
+  cityId: string | null;
+  city: string;
+  marketRequests: string;
+  userActivityLabel: string;
+  userConversion: string;
+  recommendation: string | null;
+};
+
+export type WorkspaceStatisticsUserIntelligenceView = {
+  comparisonLabel: string;
+  formulaMetrics: WorkspaceStatisticsBenchmarkMetricView[];
+  decisionMetrics: WorkspaceStatisticsBenchmarkMetricView[];
+  signals: WorkspaceStatisticsDecisionSignalView[];
+  funnelSignals: WorkspaceStatisticsActivitySignalView[];
+  performancePosition: WorkspaceStatisticsPerformancePositionView | null;
+  profileGap: WorkspaceStatisticsProfileGapView | null;
+  risks: WorkspaceStatisticsPriorityItemView[];
+  opportunities: WorkspaceStatisticsPriorityItemView[];
+  pricing: WorkspaceStatisticsPricingGapView | null;
+  nextSteps: WorkspaceStatisticsActionStepView[];
 };
 
 export type WorkspaceStatisticsActivityTrendView = {
@@ -129,6 +284,7 @@ export type WorkspaceStatisticsFilters = {
   cityId: string | null;
   regionId?: string | null;
   categoryKey: string | null;
+  viewerMode?: WorkspaceStatisticsViewerMode | null;
 };
 
 export type WorkspaceStatisticsContextMetricView = {
@@ -161,6 +317,8 @@ export type WorkspaceStatisticsModel = {
   setRange: (next: WorkspaceStatisticsRange) => void;
   setCityId: (next: string | null) => void;
   setCategoryKey: (next: string | null) => void;
+  viewerMode: WorkspaceStatisticsViewerMode | null;
+  setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
   resetFilters: () => void;
   isLoading: boolean;
   isError: boolean;
@@ -181,20 +339,38 @@ export type WorkspaceStatisticsModel = {
     growthSubtitle?: string | null;
   };
   kpis: WorkspaceStatisticsKpiView[];
-  activityPoints: Array<{ label: string; requests: number; offers: number }>;
+  activityTitle: string;
+  activitySubtitle: string;
+  activitySummary: string | null;
+  activityPoints: Array<{
+    label: string;
+    requests: number;
+    offers: number;
+    clientActivity?: number | null;
+    providerActivity?: number | null;
+  }>;
   activityMeta: {
     peak: string;
     bestWindow: string;
     updatedAt: string;
   };
   activityTrend: WorkspaceStatisticsActivityTrendView;
+  decisionLayerSubtitle: string | null;
   decisionInsight: string;
+  decisionActionLabel: string | null;
   activitySignals: WorkspaceStatisticsActivitySignalView[];
   demandRows: WorkspaceStatisticsCategoryDemandDto[];
   cityRows: WorkspaceStatisticsCityRowView[];
   opportunityRadar: WorkspaceStatisticsOpportunityRadarItemView[];
   priceIntelligence: WorkspaceStatisticsPriceIntelligenceView;
+  personalizedPricing: WorkspaceStatisticsPersonalizedPricingView | null;
+  categoryFit: WorkspaceStatisticsCategoryFitItemView[];
+  cityComparison: WorkspaceStatisticsCityComparisonItemView[];
+  rightRailRisks: WorkspaceStatisticsPrioritySectionView | null;
+  rightRailOpportunities: WorkspaceStatisticsPrioritySectionView | null;
+  rightRailNextSteps: WorkspaceStatisticsActionSectionView | null;
   funnel: WorkspaceStatisticsFunnelItemView[];
+  funnelComparison: WorkspaceStatisticsFunnelComparisonView | null;
   funnelPeriodLabel: string;
   funnelSummary: string;
   hasFunnelData: boolean;
@@ -207,5 +383,6 @@ export type WorkspaceStatisticsModel = {
   conversion: string;
   insights: WorkspaceStatisticsInsightView[];
   growthCards: WorkspaceStatisticsGrowthCardView[];
+  userIntelligence: WorkspaceStatisticsUserIntelligenceView | null;
   onExport: () => void;
 };

@@ -8,11 +8,15 @@ export function StatisticsPricePanel({
   copy,
   title,
   priceIntelligence,
+  pricing,
+  personalizedPricing,
 }: {
   className?: string;
   copy: WorkspaceStatisticsModel['copy'];
   title?: string;
   priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
+  pricing?: NonNullable<WorkspaceStatisticsModel['userIntelligence']>['pricing'];
+  personalizedPricing?: WorkspaceStatisticsModel['personalizedPricing'];
 }) {
   const hasRangeValues =
     typeof priceIntelligence.recommendedMin === 'number' &&
@@ -105,8 +109,8 @@ export function StatisticsPricePanel({
   return (
     <section className={`panel requests-stats-chart workspace-statistics-price${className ? ` ${className}` : ''}`.trim()}>
       <header className="section-heading workspace-statistics__tile-header">
-        <p className="section-title">{title ?? copy.priceTitle}</p>
-        <p className="section-subtitle">{copy.priceSubtitle}</p>
+        <p className="section-title">{title ?? personalizedPricing?.title ?? copy.priceTitle}</p>
+        <p className="section-subtitle">{personalizedPricing?.subtitle ?? copy.priceSubtitle}</p>
       </header>
       {!hasPriceData ? (
         <p className="workspace-statistics__empty">{copy.priceNoData}</p>
@@ -188,10 +192,43 @@ export function StatisticsPricePanel({
             </section>
           ) : null}
           <div className="workspace-statistics-price__summary-grid">
+            {(personalizedPricing ?? pricing) ? (
+              <article className={`workspace-statistics-price__summary-card workspace-statistics-price__summary-card--personal is-${(personalizedPricing ?? pricing)?.tone}`.trim()}>
+                <span className="workspace-statistics-price__summary-label">{copy.userPricingCurrentLabel}</span>
+                <strong className="workspace-statistics-price__summary-value">{(personalizedPricing ?? pricing)?.currentPrice}</strong>
+                <span className="workspace-statistics-price__summary-note">
+                  {copy.userPricingRecommendedLabel}: {(personalizedPricing ?? pricing)?.recommendedRange}
+                </span>
+                <dl className="workspace-statistics-price__summary-definition">
+                  <div>
+                    <dt>{copy.userPricingPositionLabel}</dt>
+                    <dd>{(personalizedPricing ?? pricing)?.statusLabel}</dd>
+                  </div>
+                  <div>
+                    <dt>{copy.userPricingEffectLabel}</dt>
+                    <dd>{(personalizedPricing ?? pricing)?.effect}</dd>
+                  </div>
+                </dl>
+              </article>
+            ) : null}
             <article className="workspace-statistics-price__summary-card workspace-statistics-price__summary-card--average">
               <span className="workspace-statistics-price__summary-label">{copy.priceMarketAverageLabel}</span>
               <strong className="workspace-statistics-price__summary-value">{priceIntelligence.marketAverageLabel ?? '—'}</strong>
             </article>
+            {(personalizedPricing ?? pricing) ? (
+              <article className={`workspace-statistics-price__summary-card workspace-statistics-price__summary-card--gap is-${(personalizedPricing ?? pricing)?.tone}`.trim()}>
+                <span className="workspace-statistics-price__summary-label">{copy.userGapTitle}</span>
+                <strong className="workspace-statistics-price__summary-value">{(personalizedPricing ?? pricing)?.gap}</strong>
+                <span className="workspace-statistics-price__summary-note">
+                  {copy.userComparisonLabel}: {(personalizedPricing ?? pricing)?.marketAverage}
+                </span>
+                {(personalizedPricing ?? pricing)?.action ? (
+                  <span className="workspace-statistics-price__summary-note">
+                    {(personalizedPricing ?? pricing)?.action}
+                  </span>
+                ) : null}
+              </article>
+            ) : null}
             <section
               className="workspace-statistics-price__profit workspace-statistics-price__summary-card"
               aria-label={copy.priceProfitPotentialLabel}

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
+import { hydrateAuthenticatedStatisticsPayload } from './statisticsAuthenticatedPayload.utils';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 import { normalizeWorkspaceDecisionDashboardResponse } from './statisticsDecisionDashboard.contract';
 import { workspaceStatisticsDecisionDashboardSchema } from './workspaceStatisticsDecisionDashboard.schema';
@@ -230,7 +232,94 @@ function createPayload(): WorkspaceStatisticsOverviewSourceDto {
   };
 }
 
+function createPrivateOverview(): WorkspacePrivateOverviewDto {
+  return {
+    updatedAt: '2026-03-15T10:00:00.000Z',
+    user: {
+      userId: 'user-1',
+      role: 'provider',
+    },
+    requestsByStatus: {
+      draft: 1,
+      published: 14,
+      paused: 0,
+      matched: 3,
+      closed: 5,
+      cancelled: 1,
+      total: 24,
+    },
+    providerOffersByStatus: {
+      sent: 9,
+      accepted: 4,
+      declined: 2,
+      withdrawn: 1,
+      total: 16,
+    },
+    clientOffersByStatus: {
+      sent: 0,
+      accepted: 0,
+      declined: 0,
+      withdrawn: 0,
+      total: 0,
+    },
+    providerContractsByStatus: {
+      pending: 1,
+      confirmed: 1,
+      in_progress: 2,
+      completed: 3,
+      cancelled: 0,
+      total: 7,
+    },
+    clientContractsByStatus: {
+      pending: 0,
+      confirmed: 0,
+      in_progress: 0,
+      completed: 1,
+      cancelled: 0,
+      total: 1,
+    },
+    favorites: {
+      requests: 0,
+      providers: 0,
+    },
+    reviews: {
+      asProvider: 0,
+      asClient: 0,
+    },
+    profiles: {
+      providerCompleteness: 82,
+      clientCompleteness: 56,
+    },
+    kpis: {
+      myOpenRequests: 18,
+      providerActiveContracts: 3,
+      clientActiveContracts: 0,
+      acceptanceRate: 44,
+      activityProgress: 61,
+      avgResponseMinutes: 1766,
+      recentOffers7d: 3,
+    },
+    insights: {
+      providerCompletedThisMonth: 3,
+      providerCompletedLastMonth: 2,
+      providerCompletedDeltaKind: 'percent',
+      providerCompletedDeltaPercent: 50,
+    },
+    providerMonthlySeries: [],
+    clientMonthlySeries: [],
+  };
+}
+
 describe('normalizeWorkspaceDecisionDashboardResponse', () => {
+  it('does not synthesize personalized funnel data from private overview when backend has not sent a contextual personalized contract', () => {
+    const hydrated = hydrateAuthenticatedStatisticsPayload({
+      payload: createPayload() as unknown as import('@/lib/api/dto/workspace').WorkspaceStatisticsOverviewDto,
+      privateOverview: createPrivateOverview(),
+    });
+
+    expect(hydrated).toEqual(createPayload());
+  });
+
   it('trusts backend decision dashboard fields when the full contract is already present', () => {
     const payload = {
       ...createPayload(),
@@ -314,5 +403,272 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
     expect(result.priceIntelligence?.city).toBe('Berlin');
     expect(result.priceIntelligence?.categoryKey).toBe('cleaning');
     expect(() => workspaceStatisticsDecisionDashboardSchema.parse(result)).not.toThrow();
+  });
+
+  it('adds compatibility user intelligence for personalized payloads when backend has not sent it yet', () => {
+    const personalized = createPayload();
+    personalized.mode = 'personalized';
+    personalized.kpis.requestsTotal = 58;
+    personalized.kpis.offersTotal = 18;
+    personalized.kpis.completedJobsTotal = 7;
+    personalized.kpis.successRate = 39;
+    personalized.kpis.avgResponseMinutes = 930;
+    personalized.kpis.profileCompleteness = 62;
+    personalized.kpis.openRequests = 28;
+    personalized.kpis.recentOffers7d = 3;
+    personalized.profileFunnel.requestsTotal = 58;
+    personalized.profileFunnel.offersTotal = 18;
+    personalized.profileFunnel.confirmedResponsesTotal = 11;
+    personalized.profileFunnel.completedJobsTotal = 7;
+    personalized.profileFunnel.profitAmount = 3150;
+    personalized.profileFunnel.confirmationRatePercent = 61;
+
+    const normalized = normalizeWorkspaceDecisionDashboardResponse(personalized, {
+      period: '30d',
+      cityId: null,
+      categoryKey: null,
+    });
+
+    expect(normalized.userIntelligence?.formulaMetrics).toHaveLength(8);
+    expect(normalized.userIntelligence?.decisionMetrics).toHaveLength(3);
+    expect(normalized.userIntelligence?.signals.length).toBeGreaterThan(0);
+    expect(normalized.userIntelligence?.signals.some((item) => item.code === 'slow_response')).toBe(true);
+    expect(normalized.userIntelligence?.signals.some((item) => item.actionCode === 'respond_faster')).toBe(true);
+    expect(normalized.decisionLayer?.metrics).toHaveLength(6);
+    expect(normalized.decisionLayer?.primaryAction?.code).toBeTruthy();
+    expect(normalized.personalizedPricing?.position).toBeTruthy();
+    expect(normalized.categoryFit?.items.length).toBeGreaterThan(0);
+    expect(normalized.cityComparison?.items.length).toBeGreaterThan(0);
+    expect(normalized.funnelComparison?.stages).toHaveLength(5);
+    expect(normalized.funnelComparison?.summary).toContain('Du verlierst aktuell');
+    expect(normalized.funnelComparison?.largestDropOffStage).toBeTruthy();
+    expect(normalized.funnelComparison?.nextAction).toBeTruthy();
+    expect(normalized.userIntelligence?.performancePosition.percentile).not.toBeNull();
+    expect(normalized.userIntelligence?.risks.length).toBeGreaterThan(0);
+    expect(normalized.userIntelligence?.opportunities.length).toBeGreaterThan(0);
+    expect(normalized.userIntelligence?.nextSteps.length).toBeGreaterThan(0);
+    expect(() => workspaceStatisticsDecisionDashboardSchema.parse(normalized)).not.toThrow();
+  });
+
+  it('aligns decision layer offer rate and completed jobs with canonical funnel comparison values', () => {
+    const personalized = createPayload();
+    personalized.mode = 'personalized';
+    personalized.decisionLayer = {
+      title: 'Decision Layer',
+      subtitle: 'Server section',
+      metrics: [
+        {
+          id: 'offer_rate',
+          label: 'Angebotsquote',
+          marketValue: 12,
+          userValue: 99,
+          gapAbsolute: 87,
+          gapPercent: 87,
+          unit: 'percent',
+          direction: 'better',
+          status: 'good',
+          signalCodes: [],
+          primaryActionCode: null,
+          summary: 'Old values',
+        },
+        {
+          id: 'completed_jobs',
+          label: 'Abgeschlossene Aufträge',
+          marketValue: 999,
+          userValue: 888,
+          gapAbsolute: -111,
+          gapPercent: null,
+          unit: 'count',
+          direction: 'neutral',
+          status: 'neutral',
+          signalCodes: [],
+          primaryActionCode: null,
+          summary: 'Old values',
+        },
+      ],
+      primaryInsight: 'Insight',
+      primaryAction: null,
+    };
+    personalized.funnelComparison = {
+      comparisonLabel: 'User vs Markt',
+      summary: 'Canonical funnel',
+      largestGapStage: 'offers',
+      largestDropOffStage: 'responses',
+      primaryBottleneck: 'Responses',
+      nextAction: 'respond_faster',
+      stages: [
+        {
+          key: 'requests',
+          label: 'Requests',
+          marketCount: 79,
+          userCount: 3,
+          marketRateFromPrev: 100,
+          userRateFromPrev: 100,
+          gapRate: 0,
+          status: 'at_market',
+          dropOffSeverity: null,
+          recommendation: null,
+        },
+        {
+          key: 'offers',
+          label: 'Offers',
+          marketCount: 53,
+          userCount: 2,
+          marketRateFromPrev: 67,
+          userRateFromPrev: 100,
+          gapRate: 33,
+          status: 'above_market',
+          dropOffSeverity: 'low',
+          recommendation: null,
+        },
+        {
+          key: 'responses',
+          label: 'Responses',
+          marketCount: 24,
+          userCount: 0,
+          marketRateFromPrev: 45,
+          userRateFromPrev: 0,
+          gapRate: -45,
+          status: 'below_market',
+          dropOffSeverity: 'high',
+          recommendation: 'respond_faster',
+        },
+        {
+          key: 'contracts',
+          label: 'Contracts',
+          marketCount: 19,
+          userCount: 0,
+          marketRateFromPrev: 79,
+          userRateFromPrev: null,
+          gapRate: null,
+          status: 'insufficient_data',
+          dropOffSeverity: null,
+          recommendation: null,
+        },
+        {
+          key: 'completed',
+          label: 'Completed',
+          marketCount: 18,
+          userCount: 0,
+          marketRateFromPrev: 95,
+          userRateFromPrev: null,
+          gapRate: null,
+          status: 'insufficient_data',
+          dropOffSeverity: null,
+          recommendation: null,
+        },
+      ],
+    };
+
+    const normalized = normalizeWorkspaceDecisionDashboardResponse(personalized, {
+      period: '30d',
+      cityId: null,
+      categoryKey: null,
+    });
+
+    const offerRate = normalized.decisionLayer?.metrics.find((metric) => metric.id === 'offer_rate');
+    const completedJobs = normalized.decisionLayer?.metrics.find((metric) => metric.id === 'completed_jobs');
+
+    expect(offerRate?.marketValue).toBe(67);
+    expect(offerRate?.userValue).toBe(100);
+    expect(offerRate?.gapPercent).toBe(33);
+    expect(completedJobs?.marketValue).toBe(18);
+    expect(completedJobs?.userValue).toBe(0);
+    expect(completedJobs?.gapAbsolute).toBe(-18);
+  });
+
+  it('reuses canonical personalized sections as compatibility sources for userIntelligence', () => {
+    const personalized = createPayload();
+    personalized.mode = 'personalized';
+    personalized.personalizedPricing = {
+      title: 'Preisstrategie',
+      subtitle: 'Server pricing',
+      contextLabel: 'Berlin · Cleaning',
+      marketAverage: 78,
+      recommendedMin: 65,
+      recommendedMax: 90,
+      userPrice: 95,
+      gapAbsolute: 17,
+      comparisonReliability: 'high',
+      position: 'above',
+      effect: 'warning',
+      actionCode: 'adjust_price',
+      summary: 'Server-side pricing summary',
+    };
+    personalized.risks = {
+      title: 'Risiken',
+      subtitle: 'Server risks',
+      hasReliableItems: true,
+      items: [{
+        code: 'high_unanswered_requests',
+        type: 'risk',
+        priority: 'high',
+        title: 'Zu viele offene Anfragen',
+        description: 'Mehrere Vorgänge warten zu lange.',
+        confidence: 0.86,
+        reliability: 'high',
+        context: '18 offen',
+        actionCode: 'follow_up_unanswered',
+        action: {
+          code: 'follow_up_unanswered',
+          label: 'Offene Vorgänge priorisieren',
+          target: '/workspace?tab=my-requests',
+        },
+      }],
+    };
+    personalized.opportunities = {
+      title: 'Chancen',
+      subtitle: 'Server opportunities',
+      hasReliableItems: true,
+      items: [{
+        code: 'city_opportunity_high',
+        type: 'opportunity',
+        priority: 'medium',
+        title: 'Berlin hat Nachfrage',
+        description: 'Hier gibt es aktuell Spielraum.',
+        confidence: 0.79,
+        reliability: 'medium',
+        context: 'Berlin',
+        actionCode: 'focus_market',
+        action: {
+          code: 'focus_market',
+          label: 'Marktfokus schärfen',
+          target: '/workspace?section=stats&focus=cities',
+        },
+      }],
+    };
+    personalized.nextSteps = {
+      title: 'Nächste Schritte',
+      subtitle: 'Server steps',
+      hasReliableItems: true,
+      items: [{
+        code: 'respond_faster',
+        type: 'performance',
+        priority: 'high',
+        title: 'Antworte schneller',
+        description: 'Halte die Reaktionszeit niedrig.',
+        confidence: 0.82,
+        reliability: 'high',
+        context: 'Berlin',
+        actionCode: 'respond_faster',
+        action: {
+          code: 'respond_faster',
+          label: 'Schneller reagieren',
+          target: '/workspace?tab=my-requests',
+        },
+      }],
+    };
+
+    const normalized = normalizeWorkspaceDecisionDashboardResponse(personalized, {
+      period: '30d',
+      cityId: null,
+      categoryKey: null,
+    });
+
+    expect(normalized.userIntelligence?.pricing?.status).toBe('above');
+    expect(normalized.userIntelligence?.pricing?.conversionImpact).toBe('warning');
+    expect(normalized.userIntelligence?.risks[0]?.code).toBe('high_unanswered');
+    expect(normalized.userIntelligence?.opportunities[0]?.code).toBe('high_demand_city');
+    expect(normalized.userIntelligence?.nextSteps[0]?.code).toBe('respond_faster');
   });
 });

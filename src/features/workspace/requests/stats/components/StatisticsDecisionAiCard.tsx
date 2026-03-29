@@ -23,7 +23,8 @@ export function StatisticsDecisionAiCard({
   showDetails = true,
   className,
 }: StatisticsDecisionAiCardProps) {
-  if (!decisionInsight.trim()) return null;
+  const description = decisionPlan?.summary ?? decisionInsight;
+  if (!description.trim()) return null;
 
   const rootClassName = ['workspace-ai-card', 'workspace-ai-card--decision', className ?? '']
     .filter(Boolean)
@@ -38,7 +39,7 @@ export function StatisticsDecisionAiCard({
       avatarLabel={copy.insightsAssistantAvatarLabel}
       name={copy.insightsAssistantName}
       role={copy.priceRecommendationLabel}
-      description={decisionPlan?.summary ?? decisionInsight}
+      description={description}
       actions={decisionPlan?.actionLabel ? (
         <button
           type="button"

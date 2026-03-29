@@ -79,6 +79,7 @@ type WorkspaceExploreSectionProps = {
 export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSection({
   intro,
   activeSection,
+  isWorkspaceAuthed,
   t,
   locale,
   onListDensityChange,
@@ -122,6 +123,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
       )}>
         <WorkspaceStatisticsExperience
           intro={intro}
+          isWorkspaceAuthed={isWorkspaceAuthed}
           t={t}
           locale={locale}
         />

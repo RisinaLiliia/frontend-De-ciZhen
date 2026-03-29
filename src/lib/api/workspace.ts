@@ -5,6 +5,7 @@ import type {
   WorkspacePublicRequestsBatchResponseDto,
   WorkspaceStatisticsOverviewDto,
   WorkspaceStatisticsRange,
+  WorkspaceStatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 
 export type WorkspacePublicOverviewQuery = {
@@ -53,6 +54,7 @@ export type WorkspaceStatisticsQuery = {
   cityId?: string | null;
   regionId?: string | null;
   categoryKey?: string | null;
+  viewerMode?: WorkspaceStatisticsViewerMode | null;
 };
 
 export function getWorkspaceStatistics(query: WorkspaceStatisticsRange | WorkspaceStatisticsQuery = '30d') {
@@ -64,6 +66,7 @@ export function getWorkspaceStatistics(query: WorkspaceStatisticsRange | Workspa
   if (params.cityId) qs.set('cityId', params.cityId);
   if (params.regionId) qs.set('regionId', params.regionId);
   if (params.categoryKey) qs.set('categoryKey', params.categoryKey);
+  if (params.viewerMode) qs.set('viewerMode', params.viewerMode);
   return apiGet<WorkspaceStatisticsOverviewDto>(`/workspace/statistics?${qs.toString()}`);
 }
 

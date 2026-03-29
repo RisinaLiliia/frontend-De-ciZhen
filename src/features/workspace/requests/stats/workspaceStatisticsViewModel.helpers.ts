@@ -14,7 +14,13 @@ export {
   buildPriceIntelligence,
 } from './workspaceStatisticsViewModel.pricing';
 
-export { buildFunnel, buildFunnelDropoff } from './workspaceStatisticsViewModel.funnel';
+export {
+  buildFunnel,
+  buildFunnelComparison,
+  buildFunnelConversion,
+  buildFunnelDropoff,
+  buildFunnelSummary,
+} from './workspaceStatisticsViewModel.funnel';
 
 export {
   buildContext,
@@ -27,5 +33,16 @@ export {
   resolveContextPeriodLabel,
   resolveDecisionInsight,
 } from './workspaceStatisticsViewModel.context';
+
+export {
+  buildCategoryFit,
+  buildCityComparison,
+  buildDecisionLayerSignals,
+  buildPersonalizedPricingSection,
+  buildPersonalizedActivitySignals,
+  buildRecommendationActionSection,
+  buildRecommendationPrioritySection,
+  buildUserIntelligence,
+} from './workspaceStatisticsViewModel.user';
 
 export { exportWorkspaceStatisticsCsv } from './workspaceStatisticsViewModel.export';

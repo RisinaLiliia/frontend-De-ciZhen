@@ -34,6 +34,7 @@ export function StatisticsCitiesPanel({
   onNextPage,
   formatNumber,
   formatMarketBalance,
+  cityComparison,
   t,
 }: {
   panelRef?: Ref<HTMLElement>;
@@ -54,6 +55,7 @@ export function StatisticsCitiesPanel({
   onNextPage: () => void;
   formatNumber: Intl.NumberFormat;
   formatMarketBalance: Intl.NumberFormat;
+  cityComparison?: WorkspaceStatisticsModel['cityComparison'];
   t: TranslateFn;
 }) {
   return (
@@ -98,6 +100,7 @@ export function StatisticsCitiesPanel({
             const providerSearchesLabel = item.anbieterSuchenCount === null ? '—' : formatNumber.format(item.anbieterSuchenCount);
             const marketBalanceLabel = item.marketBalanceRatio === null ? '—' : `${formatMarketBalance.format(item.marketBalanceRatio)}x`;
             const signalLabel = citySignalLabel(item.signal, copy);
+            const matchedCityComparison = cityComparison?.find((city) => city.city.trim().toLowerCase() === item.name.trim().toLowerCase()) ?? null;
             return (
               <li
                 key={`${item.key}-${index}`}
@@ -136,6 +139,11 @@ export function StatisticsCitiesPanel({
                       </span>
                       {signalLabel}
                     </span>
+                    {matchedCityComparison?.recommendation ? (
+                      <span className="workspace-statistics-city-list__personal-note">
+                        {copy.userRecommendationLabel}: {matchedCityComparison.recommendation}
+                      </span>
+                    ) : null}
                   </span>
                 </button>
               </li>

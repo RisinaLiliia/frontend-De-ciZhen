@@ -36,6 +36,7 @@ const navigationState = vi.hoisted(() => {
     reset: () => {
       pathname = '/workspace';
       search = '';
+      listeners.clear();
       replace.mockClear();
     },
   };
@@ -228,6 +229,7 @@ function createStatsOverview(range: WorkspaceStatisticsRange): WorkspaceStatisti
 type StatsHook = (args: { locale: 'de' }) => {
   range: WorkspaceStatisticsRange;
   setRange: (next: WorkspaceStatisticsRange) => void;
+  setViewerMode: (next: 'provider' | 'customer') => void;
   isLoading: boolean;
   isError: boolean;
   hasBackgroundError: boolean;
@@ -253,6 +255,7 @@ function createProbe(useWorkspaceStatisticsModel: StatsHook) {
         />
         <button type="button" onClick={() => model.setRange('7d')}>set-7d</button>
         <button type="button" onClick={() => model.setRange('90d')}>set-90d</button>
+        <button type="button" onClick={() => model.setViewerMode('customer')}>set-customer</button>
       </div>
     );
   };
@@ -265,6 +268,7 @@ afterEach(() => {
 describe('useWorkspaceStatisticsModel', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    getWorkspaceStatisticsMock.mockReset();
     navigationState.reset();
   });
 
@@ -272,6 +276,7 @@ describe('useWorkspaceStatisticsModel', () => {
     getWorkspaceStatisticsMock
       .mockResolvedValueOnce(createStatsOverview('30d'))
       .mockResolvedValueOnce(createStatsOverview('7d'))
+      .mockResolvedValueOnce(createStatsOverview('90d'))
       .mockResolvedValueOnce(createStatsOverview('90d'));
 
     const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
@@ -292,6 +297,7 @@ describe('useWorkspaceStatisticsModel', () => {
       cityId: null,
       regionId: null,
       categoryKey: null,
+      viewerMode: null,
     });
     expect(screen.getByTestId('probe').getAttribute('data-price-context')).toContain('Berlin');
 
@@ -303,6 +309,7 @@ describe('useWorkspaceStatisticsModel', () => {
         cityId: null,
         regionId: null,
         categoryKey: null,
+        viewerMode: null,
       });
     });
     expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('7d');
@@ -315,9 +322,22 @@ describe('useWorkspaceStatisticsModel', () => {
         cityId: null,
         regionId: null,
         categoryKey: null,
+        viewerMode: null,
       });
     });
     expect(screen.getByTestId('probe').getAttribute('data-range')).toBe('90d');
+
+    fireEvent.click(screen.getByRole('button', { name: 'set-customer' }));
+
+    await waitFor(() => {
+      expect(getWorkspaceStatisticsMock).toHaveBeenNthCalledWith(4, {
+        range: '90d',
+        cityId: null,
+        regionId: null,
+        categoryKey: null,
+        viewerMode: 'customer',
+      });
+    });
   });
 
   it('surfaces error state when BFF request fails', async () => {

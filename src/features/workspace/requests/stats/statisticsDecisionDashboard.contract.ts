@@ -16,6 +16,14 @@ import {
   buildFocusedOpportunityRadar,
   ensureStatisticsOpportunityContract,
 } from './statisticsOpportunityContract.utils';
+import {
+  buildCompatibilityCategoryFit,
+  buildCompatibilityCityComparison,
+  buildCompatibilityDecisionLayer,
+  buildCompatibilityFunnelComparison,
+  buildCompatibilityPersonalizedPricing,
+  buildCompatibilityUserIntelligence,
+} from './statisticsUserIntelligence.utils';
 
 export type DecisionDashboardFilters = {
   period: WorkspaceStatisticsOverviewDto['range'];
@@ -129,6 +137,48 @@ function scopeOpportunityRadar(
     categoryKey: filters.categoryKey,
     limit: 3,
   });
+}
+
+function roundGap(userValue: number | null, marketValue: number | null) {
+  if (typeof userValue !== 'number' || typeof marketValue !== 'number') return null;
+  return Math.round((userValue - marketValue) * 10) / 10;
+}
+
+function alignDecisionLayerWithFunnelComparison(params: {
+  decisionLayer: WorkspaceStatisticsOverviewSourceDto['decisionLayer'] | null | undefined;
+  funnelComparison: WorkspaceStatisticsOverviewSourceDto['funnelComparison'] | null | undefined;
+}) {
+  const { decisionLayer, funnelComparison } = params;
+  if (!decisionLayer || !funnelComparison) return decisionLayer ?? null;
+
+  const offersStage = funnelComparison.stages.find((stage) => stage.key === 'offers') ?? null;
+  const completedStage = funnelComparison.stages.find((stage) => stage.key === 'completed') ?? null;
+
+  return {
+    ...decisionLayer,
+    metrics: decisionLayer.metrics.map((metric) => {
+      if (metric.id === 'offer_rate' && offersStage) {
+        return {
+          ...metric,
+          marketValue: offersStage.marketRateFromPrev,
+          userValue: offersStage.userRateFromPrev,
+          gapAbsolute: offersStage.gapRate,
+          gapPercent: offersStage.gapRate,
+        };
+      }
+
+      if (metric.id === 'completed_jobs' && completedStage) {
+        return {
+          ...metric,
+          marketValue: completedStage.marketCount,
+          userValue: completedStage.userCount,
+          gapAbsolute: roundGap(completedStage.userCount, completedStage.marketCount),
+        };
+      }
+
+      return metric;
+    }),
+  };
 }
 
 function sortOpportunityRadar(
@@ -322,6 +372,34 @@ export function normalizeWorkspaceDecisionDashboardResponse(
     opportunityRadar,
     priceIntelligence,
   });
+  const userIntelligence = payload.userIntelligence ?? buildCompatibilityUserIntelligence({
+    payload: normalizedPayload,
+    priceIntelligence,
+  });
+  const funnelComparison = payload.funnelComparison ?? buildCompatibilityFunnelComparison({
+    payload: normalizedPayload,
+    userIntelligence,
+  });
+  const decisionLayer = alignDecisionLayerWithFunnelComparison({
+    decisionLayer: payload.decisionLayer ?? buildCompatibilityDecisionLayer({
+      payload: normalizedPayload,
+      userIntelligence,
+    }),
+    funnelComparison,
+  });
+  const personalizedPricing = payload.personalizedPricing ?? buildCompatibilityPersonalizedPricing({
+    payload: normalizedPayload,
+    userIntelligence,
+    priceIntelligence,
+  });
+  const categoryFit = payload.categoryFit ?? buildCompatibilityCategoryFit({
+    payload: normalizedPayload,
+    userIntelligence,
+  });
+  const cityComparison = payload.cityComparison ?? buildCompatibilityCityComparison({
+    payload: normalizedPayload,
+    userIntelligence,
+  });
 
   return {
     ...normalizedPayload,
@@ -336,5 +414,11 @@ export function normalizeWorkspaceDecisionDashboardResponse(
     filterOptions,
     sectionMeta: payload.sectionMeta ?? buildSectionMeta(normalizedPayload, decisionContext),
     exportMeta: payload.exportMeta ?? buildExportMeta(normalizedPayload, filters),
+    decisionLayer,
+    personalizedPricing,
+    categoryFit,
+    cityComparison,
+    funnelComparison,
+    userIntelligence,
   };
 }

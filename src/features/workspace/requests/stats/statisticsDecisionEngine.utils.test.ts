@@ -3,12 +3,16 @@ import { describe, expect, it } from 'vitest';
 import { getWorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 import {
   buildDecisionPlan,
+  buildPersonalizedDecisionPlan,
   buildOpportunityReasons,
   buildPriceStrategyOptions,
 } from './statisticsDecisionEngine.utils';
 import type {
+  WorkspaceStatisticsActionSectionView,
   WorkspaceStatisticsOpportunityRadarItemView,
+  WorkspaceStatisticsPersonalizedPricingView,
   WorkspaceStatisticsPriceIntelligenceView,
+  WorkspaceStatisticsPrioritySectionView,
 } from './workspaceStatistics.model';
 
 function makeOpportunity(
@@ -66,6 +70,88 @@ function makePriceIntelligence(
   };
 }
 
+function makePersonalizedPricing(
+  overrides: Partial<WorkspaceStatisticsPersonalizedPricingView> = {},
+): WorkspaceStatisticsPersonalizedPricingView {
+  return {
+    title: 'Preisstrategie',
+    subtitle: 'Server pricing',
+    contextLabel: 'Cleaning & Housekeeping · Berlin',
+    currentPrice: '450 €',
+    recommendedRange: '380 € – 420 €',
+    marketAverage: '400 €',
+    statusLabel: 'Zu hoch',
+    summary: 'Pricing Strategy',
+    effect: 'Zu hoch → weniger Abschlüsse',
+    gap: '+50 €',
+    action: 'Preis anpassen: Positioniere neue Angebote näher bei 400€.',
+    tone: 'warning',
+    ...overrides,
+  };
+}
+
+function makePrioritySection(
+  type: 'risks' | 'opportunities',
+  overrides: Partial<WorkspaceStatisticsPrioritySectionView> = {},
+): WorkspaceStatisticsPrioritySectionView {
+  const item = type === 'risks'
+    ? {
+      key: 'slow-response',
+      title: 'Reaktionszeit zu hoch',
+      body: 'Du antwortest deutlich langsamer als der Markt.',
+      metric: '930 Min.',
+      tone: 'warning' as const,
+    }
+    : {
+      key: 'high-demand-city',
+      title: 'Hohe Nachfrage in deinem Zielmarkt',
+      body: 'Berlin · Cleaning & Housekeeping zeigt aktuell starke Nachfrage für dein Setup.',
+      metric: '12',
+      tone: 'positive' as const,
+    };
+
+  return {
+    title: type === 'risks' ? 'Risiken' : 'Chancen',
+    subtitle: type === 'risks' ? 'Server risks' : 'Server opportunities',
+    hasReliableItems: true,
+    items: [item],
+    ...overrides,
+  };
+}
+
+function makeActionSection(
+  overrides: Partial<WorkspaceStatisticsActionSectionView> = {},
+): WorkspaceStatisticsActionSectionView {
+  return {
+    title: 'Nächste Schritte',
+    subtitle: 'Server actions',
+    hasReliableItems: true,
+    steps: [
+      {
+        key: 'respond-faster',
+        code: 'respond_faster',
+        title: 'Antworte schneller',
+        detail: 'Ziel: erste Antwort unter 120 Minuten senden.',
+        priorityLabel: 'High',
+        priorityTone: 'warning',
+        impactLabel: 'Hoch',
+        effectLabel: 'Mehr Antworten im Peak-Zeitfenster und weniger offene Vorgänge.',
+      },
+      {
+        key: 'focus-market',
+        code: 'focus_market',
+        title: 'Marktfokus schärfen',
+        detail: 'Fokus auf Berlin · Cleaning & Housekeeping legen, solange Nachfrage und Balance stark sind.',
+        priorityLabel: 'Medium',
+        priorityTone: 'info',
+        impactLabel: 'Mittel',
+        effectLabel: 'Mehr Sichtbarkeit im stärksten Marktsegment.',
+      },
+    ],
+    ...overrides,
+  };
+}
+
 describe('statisticsDecisionEngine.utils', () => {
   it('builds actionable decision plan when selected opportunity changes the current focus', () => {
     const copy = getWorkspaceStatisticsCopy('de');
@@ -104,6 +190,30 @@ describe('statisticsDecisionEngine.utils', () => {
     expect(decisionPlan.summary).toContain('align focus');
     expect(decisionPlan.actionLabel).toBe(copy.decisionOpenRequestsLabel);
     expect(decisionPlan.shouldApplyFocus).toBe(false);
+  });
+
+  it('builds personalized decision plan from user signals and next steps', () => {
+    const copy = getWorkspaceStatisticsCopy('de');
+    const selectedOpportunity = makeOpportunity();
+    const decisionPlan = buildPersonalizedDecisionPlan({
+      locale: 'de',
+      copy,
+      personalizedPricing: makePersonalizedPricing(),
+      risks: makePrioritySection('risks'),
+      opportunities: makePrioritySection('opportunities'),
+      nextSteps: makeActionSection(),
+      selectedOpportunity,
+      currentCityId: null,
+      currentCategoryKey: null,
+    });
+
+    expect(decisionPlan.summary).toContain('Antworte schneller');
+    expect(decisionPlan.reasons).toContain('Du antwortest deutlich langsamer als der Markt.');
+    expect(decisionPlan.reasons).toContain('Zu hoch → weniger Abschlüsse');
+    expect(decisionPlan.steps[0]).toContain('Antworte schneller');
+    expect(decisionPlan.steps[1]).toContain('Marktfokus schärfen');
+    expect(decisionPlan.actionLabel).toBe(copy.decisionApplyStrategyLabel);
+    expect(decisionPlan.shouldApplyFocus).toBe(true);
   });
 
   it('builds strategy price options from the recommended corridor', () => {

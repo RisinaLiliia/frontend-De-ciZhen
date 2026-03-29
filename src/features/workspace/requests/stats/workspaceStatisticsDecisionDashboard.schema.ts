@@ -88,11 +88,243 @@ const opportunitySchema = z.object({
   }).nullable().optional(),
 });
 
+const userComparisonMetricSchema = z.object({
+  key: z.enum(['offer_rate', 'response_time', 'unanswered']),
+  unit: z.enum(['percent', 'minutes', 'count']),
+  userValue: z.number().nullable(),
+  marketValue: z.number().nullable(),
+  direction: z.enum(['up', 'down', 'flat']),
+  tone: toneSchema,
+  status: z.enum(['high', 'medium', 'low']).nullable(),
+});
+
+const userFormulaMetricSchema = z.object({
+  key: z.enum([
+    'offer_rate',
+    'response_rate',
+    'conversion_rate',
+    'completion_rate',
+    'cancellation_rate',
+    'avg_response_time',
+    'revenue',
+    'avg_order_value',
+  ]),
+  formula: z.enum([
+    'offers / requests',
+    'responses / offers',
+    'contracts / requests',
+    'completed / contracts',
+    'cancellations / contracts',
+    'sum(response_time) / responses',
+    'sum(order_price * platform_fee)',
+    'total_revenue / completed_orders',
+  ]),
+  unit: z.enum(['percent', 'minutes', 'currency']),
+  userValue: z.number().nullable(),
+  marketValue: z.number().nullable(),
+  gap: z.number().nullable(),
+  direction: z.enum(['up', 'down', 'flat']),
+  tone: toneSchema,
+});
+
+const userSignalSchema = z.object({
+  id: z.string(),
+  type: z.enum(['risk', 'opportunity', 'performance', 'growth']),
+  code: z.enum([
+    'high_unanswered',
+    'slow_response',
+    'overpriced',
+    'underpriced',
+    'high_demand_city',
+    'growing_category',
+    'low_visibility',
+    'strong_position',
+  ]),
+  severity: z.enum(['high', 'medium', 'low']),
+  metricKey: z.enum([
+    'offer_rate',
+    'response_rate',
+    'conversion_rate',
+    'completion_rate',
+    'cancellation_rate',
+    'avg_response_time',
+    'revenue',
+    'avg_order_value',
+    'response_time',
+    'unanswered',
+  ]).nullable().optional(),
+  actionCode: z.enum([
+    'respond_faster',
+    'adjust_price',
+    'focus_market',
+    'complete_profile',
+    'follow_up_unanswered',
+  ]).nullable().optional(),
+});
+
+const userPerformancePositionSchema = z.object({
+  percentile: z.number().nullable(),
+  categoryPercentile: z.number().nullable(),
+  cityPercentile: z.number().nullable(),
+  bucket: z.enum(['top', 'average', 'below']),
+  categoryLabel: z.string().nullable().optional(),
+  cityLabel: z.string().nullable().optional(),
+});
+
+const userProfileGapSchema = z.object({
+  fromStage: z.literal('offers'),
+  toStage: z.literal('confirmations'),
+  lossPercent: z.number().nullable(),
+  lostCount: z.number().nullable(),
+  tone: toneSchema,
+});
+
+const userPriorityItemSchema = z.object({
+  id: z.string(),
+  code: z.enum([
+    'slow_response',
+    'high_unanswered',
+    'low_visibility',
+    'high_demand_city',
+    'growing_category',
+    'low_competition_segment',
+    'price_above_market',
+    'price_below_market',
+    'strong_position',
+  ]),
+  severity: z.enum(['high', 'medium', 'low']),
+  cityLabel: z.string().nullable().optional(),
+  categoryLabel: z.string().nullable().optional(),
+  value: z.number().nullable().optional(),
+  secondaryValue: z.number().nullable().optional(),
+});
+
+const userPricingSchema = z.object({
+  currentPrice: z.number().nullable(),
+  recommendedMin: z.number().nullable(),
+  recommendedMax: z.number().nullable(),
+  marketAverage: z.number().nullable(),
+  status: z.enum(['below', 'within', 'above', 'unknown']),
+  conversionImpact: toneSchema,
+});
+
+const userActionStepSchema = z.object({
+  id: z.string(),
+  code: z.enum([
+    'respond_faster',
+    'adjust_price',
+    'focus_market',
+    'complete_profile',
+    'follow_up_unanswered',
+  ]),
+  priority: z.enum(['high', 'medium', 'low']),
+  targetValue: z.number().nullable().optional(),
+  cityLabel: z.string().nullable().optional(),
+  categoryLabel: z.string().nullable().optional(),
+});
+
+const decisionLayerMetricSchema = z.object({
+  id: z.enum(['offer_rate', 'avg_response_time', 'unanswered_over_24h', 'completed_jobs', 'revenue', 'average_order_value']),
+  label: z.string(),
+  marketValue: z.number().nullable(),
+  userValue: z.number().nullable(),
+  gapAbsolute: z.number().nullable(),
+  gapPercent: z.number().nullable(),
+  unit: z.enum(['percent', 'minutes', 'currency', 'count']),
+  direction: z.enum(['better', 'worse', 'neutral']),
+  status: z.enum(['good', 'warning', 'critical', 'neutral']),
+  signalCodes: z.array(userPriorityItemSchema.shape.code.or(userSignalSchema.shape.code)),
+  primaryActionCode: userActionStepSchema.shape.code.nullable(),
+  summary: z.string().nullable(),
+});
+
+const personalizedPricingSchema = z.object({
+  title: z.string().nullable(),
+  subtitle: z.string().nullable(),
+  contextLabel: z.string().nullable(),
+  marketAverage: z.number().nullable(),
+  recommendedMin: z.number().nullable(),
+  recommendedMax: z.number().nullable(),
+  userPrice: z.number().nullable(),
+  gapAbsolute: z.number().nullable(),
+  comparisonReliability: z.enum(['high', 'medium', 'low', 'unavailable']),
+  position: z.enum(['below', 'within', 'above', 'unknown']),
+  effect: toneSchema,
+  actionCode: userActionStepSchema.shape.code.nullable(),
+  summary: z.string().nullable(),
+});
+
+const categoryFitItemSchema = z.object({
+  categoryKey: z.string().nullable(),
+  label: z.string(),
+  marketDemandShare: z.number().nullable(),
+  reliability: z.enum(['high', 'medium', 'low', 'unknown']),
+  userFit: z.enum(['high', 'medium', 'low', 'unknown']),
+  opportunity: z.enum(['high', 'medium', 'low', 'unknown']),
+  actionCode: userActionStepSchema.shape.code.nullable(),
+  summary: z.string().nullable(),
+});
+
+const cityComparisonItemSchema = z.object({
+  cityId: z.string().nullable(),
+  city: z.string(),
+  marketRequests: z.number().nullable(),
+  reliability: z.enum(['high', 'medium', 'low', 'unknown']),
+  userActivity: z.enum(['high', 'medium', 'low', 'unknown']),
+  userConversion: z.number().nullable(),
+  actionCode: userActionStepSchema.shape.code.nullable(),
+  recommendation: z.string().nullable(),
+});
+
+const activityComparisonPointSchema = z.object({
+  timestamp: z.string(),
+  clientActivity: z.number().nullable(),
+  providerActivity: z.number().nullable(),
+});
+
+const recommendationItemSchema = z.object({
+  code: z.string(),
+  type: z.enum(['risk', 'opportunity', 'performance', 'growth', 'promotion', 'demand']),
+  priority: z.enum(['high', 'medium', 'low']),
+  title: z.string(),
+  description: z.string(),
+  confidence: z.number(),
+  reliability: z.enum(['high', 'medium', 'low']),
+  context: z.string().nullable(),
+  actionCode: z.string().nullable(),
+  action: z.object({
+    code: z.string(),
+    label: z.string(),
+    target: z.string().nullable(),
+  }).nullable(),
+});
+
+const recommendationSectionSchema = z.object({
+  title: z.string().nullable(),
+  subtitle: z.string().nullable(),
+  hasReliableItems: z.boolean(),
+  items: z.array(recommendationItemSchema),
+});
+
+const funnelComparisonStageSchema = z.object({
+  key: z.enum(['requests', 'offers', 'responses', 'contracts', 'completed']),
+  label: z.string(),
+  marketCount: z.number().nullable(),
+  userCount: z.number().nullable(),
+  marketRateFromPrev: z.number().nullable(),
+  userRateFromPrev: z.number().nullable(),
+  gapRate: z.number().nullable(),
+  status: z.enum(['above_market', 'below_market', 'at_market', 'insufficient_data']),
+  dropOffSeverity: z.enum(['high', 'medium', 'low']).nullable(),
+  recommendation: z.string().nullable(),
+});
+
 export const workspaceStatisticsDecisionDashboardSchema = z.object({
   __source: z.enum(['bff', 'fallback']),
   updatedAt: z.string(),
   mode: z.enum(['platform', 'personalized']),
   range: rangeSchema,
+  viewerMode: z.enum(['provider', 'customer']).nullable().optional(),
   decisionContext: z.object({
     mode: z.enum(['global', 'focus']),
     period: rangeSchema,
@@ -236,6 +468,64 @@ export const workspaceStatisticsDecisionDashboardSchema = z.object({
     profitPotentialStatus: z.enum(['high', 'medium', 'low']).nullable(),
   }).optional(),
   decisionInsight: z.string().nullable().optional(),
+  decisionLayer: z.object({
+    title: z.string().nullable(),
+    subtitle: z.string().nullable(),
+    metrics: z.array(decisionLayerMetricSchema),
+    primaryInsight: z.string().nullable(),
+    primaryAction: z.object({
+      code: userActionStepSchema.shape.code,
+      label: z.string(),
+      target: z.string().nullable(),
+    }).nullable(),
+  }).nullable().optional(),
+  personalizedPricing: personalizedPricingSchema.nullable().optional(),
+  categoryFit: z.object({
+    title: z.string().nullable(),
+    subtitle: z.string().nullable(),
+    hasReliableItems: z.boolean(),
+    items: z.array(categoryFitItemSchema),
+  }).nullable().optional(),
+  cityComparison: z.object({
+    title: z.string().nullable(),
+    subtitle: z.string().nullable(),
+    hasReliableItems: z.boolean(),
+    items: z.array(cityComparisonItemSchema),
+  }).nullable().optional(),
+  risks: recommendationSectionSchema.nullable().optional(),
+  opportunities: recommendationSectionSchema.nullable().optional(),
+  nextSteps: recommendationSectionSchema.nullable().optional(),
+  activityComparison: z.object({
+    title: z.string().nullable().optional(),
+    subtitle: z.string().nullable().optional(),
+    summary: z.string().nullable().optional(),
+    peakTimestamp: z.string().nullable().optional(),
+    bestWindowTimestamp: z.string().nullable().optional(),
+    updatedAt: z.string().nullable().optional(),
+    hasReliableSeries: z.boolean(),
+    points: z.array(activityComparisonPointSchema),
+  }).nullable().optional(),
+  funnelComparison: z.object({
+    comparisonLabel: z.string().nullable().optional(),
+    summary: z.string().nullable().optional(),
+    largestGapStage: z.enum(['requests', 'offers', 'responses', 'contracts', 'completed']).nullable(),
+    largestDropOffStage: z.enum(['requests', 'offers', 'responses', 'contracts', 'completed']).nullable(),
+    primaryBottleneck: z.string().nullable(),
+    nextAction: z.string().nullable(),
+    stages: z.array(funnelComparisonStageSchema),
+  }).nullable().optional(),
+  userIntelligence: z.object({
+    comparisonLabel: z.string().nullable().optional(),
+    formulaMetrics: z.array(userFormulaMetricSchema),
+    decisionMetrics: z.array(userComparisonMetricSchema),
+    signals: z.array(userSignalSchema),
+    performancePosition: userPerformancePositionSchema,
+    profileGap: userProfileGapSchema.nullable(),
+    risks: z.array(userPriorityItemSchema),
+    opportunities: z.array(userPriorityItemSchema),
+    pricing: userPricingSchema.nullable(),
+    nextSteps: z.array(userActionStepSchema),
+  }).nullable().optional(),
 });
 
 export type WorkspaceStatisticsDecisionDashboardSchema = z.infer<typeof workspaceStatisticsDecisionDashboardSchema>;

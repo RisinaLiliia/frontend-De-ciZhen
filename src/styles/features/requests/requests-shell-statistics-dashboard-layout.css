@@ -54,9 +54,30 @@
   }
 
   .workspace-statistics__mode-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
     gap: var(--space-2);
     padding-top: 0;
     border-top: 0;
+  }
+
+  .workspace-statistics__mode-meta {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .workspace-statistics__viewer-mode {
+    display: grid;
+    justify-items: end;
+    gap: var(--space-1);
+  }
+
+  .workspace-statistics__viewer-mode-label {
+    font-size: var(--workspace-statistics-label-size);
+    font-weight: var(--font-weight-semibold);
+    color: var(--c-text-muted);
   }
 
   .workspace-statistics__decision-cluster {
@@ -551,7 +572,7 @@
   }
 
   .workspace-statistics__tile-header--profile {
-    gap: var(--space-1);
+    gap: var(--workspace-statistics-context-gap);
   }
 
   .workspace-statistics__profile-title-row {
@@ -637,10 +658,44 @@
     color: var(--c-text);
   }
 
+  .workspace-statistics__activity-signal-compare {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .workspace-statistics__activity-signal-compare-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics__activity-signal-compare-label {
+    font-size: var(--fs-small);
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics__activity-signal-compare-value {
+    font-size: var(--fs-h3);
+    line-height: 1.1;
+  }
+
+  .workspace-statistics__activity-signal-compare-value.is-user {
+    color: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
+  }
+
+  .workspace-statistics__activity-signal-compare-value.is-market {
+    color: color-mix(in oklab, var(--c-text) 72%, var(--c-text-muted) 28%);
+  }
+
   .workspace-statistics__activity-signal-hint {
     font-size: var(--fs-small);
     color: var(--c-text-muted);
     line-height: var(--lh-body);
+  }
+
+  .workspace-statistics__activity-signal-hint strong {
+    color: var(--c-text);
   }
 
   .workspace-statistics__activity-signal.is-positive {
@@ -676,6 +731,14 @@
   .workspace-statistics__meta-grid strong {
     font-size: var(--fs-small);
     color: var(--c-text);
+  }
+
+  .workspace-statistics__activity-summary {
+    margin: 0;
+    padding-top: var(--space-1);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+    color: var(--c-text-muted);
   }
 
   .workspace-statistics__grid--primary > .requests-stats-chart:first-child .home-activity__chart {

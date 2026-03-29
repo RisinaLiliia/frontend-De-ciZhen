@@ -1,8 +1,11 @@
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 import type {
+  WorkspaceStatisticsActionSectionView,
   WorkspaceStatisticsOpportunityRadarItemView,
+  WorkspaceStatisticsPersonalizedPricingView,
   WorkspaceStatisticsPriceIntelligenceView,
+  WorkspaceStatisticsPrioritySectionView,
 } from './workspaceStatistics.model';
 
 export type WorkspaceDecisionPlan = {
@@ -34,6 +37,18 @@ type PriceStrategyArgs = {
   locale: Locale;
   copy: WorkspaceStatisticsCopy;
   priceIntelligence: WorkspaceStatisticsPriceIntelligenceView;
+};
+
+type PersonalizedDecisionPlanArgs = {
+  locale: Locale;
+  copy: WorkspaceStatisticsCopy;
+  personalizedPricing: WorkspaceStatisticsPersonalizedPricingView | null;
+  risks: WorkspaceStatisticsPrioritySectionView | null;
+  opportunities: WorkspaceStatisticsPrioritySectionView | null;
+  nextSteps: WorkspaceStatisticsActionSectionView | null;
+  selectedOpportunity: WorkspaceStatisticsOpportunityRadarItemView | null;
+  currentCityId: string | null;
+  currentCategoryKey: string | null;
 };
 
 function formatFocusLabel(
@@ -152,6 +167,55 @@ export function buildDecisionPlan({
     actionLabel: shouldApplyFocus
       ? copy.decisionApplyStrategyLabel
       : copy.decisionOpenRequestsLabel,
+    shouldApplyFocus,
+  };
+}
+
+export function buildPersonalizedDecisionPlan({
+  locale,
+  copy,
+  personalizedPricing,
+  risks,
+  opportunities,
+  nextSteps,
+  selectedOpportunity,
+  currentCityId,
+  currentCategoryKey,
+}: PersonalizedDecisionPlanArgs): WorkspaceDecisionPlan {
+  const primaryStep = nextSteps?.steps[0] ?? null;
+  const topRisk = risks?.items[0] ?? null;
+  const topOpportunity = opportunities?.items[0] ?? null;
+  const hasFocusStep = nextSteps?.steps.some((step) => step.code === 'focus_market') ?? false;
+  const shouldApplyFocus = Boolean(
+    hasFocusStep && selectedOpportunity && (
+      selectedOpportunity.cityId !== currentCityId ||
+      selectedOpportunity.categoryKey !== currentCategoryKey
+    ),
+  );
+
+  const summary = primaryStep
+    ? `${primaryStep.title}: ${primaryStep.detail}`
+    : (
+      locale === 'de'
+        ? 'Priorisiert Chancen, Risiken und nächste Schritte für dein aktuelles Markt-Setup.'
+        : 'Prioritizes opportunities, risks, and next steps for your current market setup.'
+    );
+
+  const reasons = [
+    topRisk?.body ?? null,
+    topOpportunity?.body ?? null,
+    personalizedPricing?.effect ?? null,
+  ].filter((value): value is string => Boolean(value && value.trim().length > 0)).slice(0, 3);
+
+  const steps = (nextSteps?.steps ?? [])
+    .map((step) => `${step.title}: ${step.detail}`)
+    .slice(0, 4);
+
+  return {
+    summary,
+    reasons,
+    steps,
+    actionLabel: shouldApplyFocus ? copy.decisionApplyStrategyLabel : copy.decisionOpenRequestsLabel,
     shouldApplyFocus,
   };
 }
