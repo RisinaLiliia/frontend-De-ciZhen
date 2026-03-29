@@ -1103,13 +1103,26 @@ export function buildCompatibilityFunnelComparison(params: {
   const responseStep = userIntelligence.nextSteps.find((item) => item.code === 'respond_faster');
   const unansweredStep = userIntelligence.nextSteps.find((item) => item.code === 'follow_up_unanswered');
   const pricingStep = userIntelligence.nextSteps.find((item) => item.code === 'adjust_price');
+  const marketRequests = payload.activity.totals.requestsTotal;
+  const marketOffers = payload.activity.totals.offersTotal;
+  const marketCompleted = payload.activity.metrics.completedJobs;
+  const userRequests = payload.profileFunnel.requestsTotal;
+  const userOffers = payload.profileFunnel.offersTotal;
+  const userResponses = payload.profileFunnel.confirmedResponsesTotal;
+  const userContracts = payload.profileFunnel.closedContractsTotal;
+  const userCompleted = payload.profileFunnel.completedJobsTotal;
+  const marketOfferRate = toPercent(safeDivide(marketOffers, marketRequests));
+  const userOfferRate = toPercent(safeDivide(userOffers, userRequests));
+  const userResponseRate = toPercent(safeDivide(userResponses, userOffers));
+  const userContractRate = toPercent(safeDivide(userContracts, userResponses));
+  const userCompletionRate = toPercent(safeDivide(userCompleted, userContracts));
 
   const stages: WorkspaceStatisticsFunnelComparisonStageDto[] = [
     {
       key: 'requests',
       label: 'Requests',
-      marketCount: payload.activity.totals.requestsTotal,
-      userCount: payload.profileFunnel.requestsTotal,
+      marketCount: marketRequests,
+      userCount: userRequests,
       marketRateFromPrev: 100,
       userRateFromPrev: 100,
       gapRate: 0,
@@ -1120,52 +1133,52 @@ export function buildCompatibilityFunnelComparison(params: {
     {
       key: 'offers',
       label: 'Offers',
-      marketCount: payload.activity.totals.offersTotal,
-      userCount: payload.profileFunnel.offersTotal,
-      marketRateFromPrev: payload.activity.metrics.offerRatePercent,
-      userRateFromPrev: payload.profileFunnel.offerResponseRatePercent,
-      gapRate: roundGap(payload.profileFunnel.offerResponseRatePercent, payload.activity.metrics.offerRatePercent),
+      marketCount: marketOffers,
+      userCount: userOffers,
+      marketRateFromPrev: marketOfferRate,
+      userRateFromPrev: userOfferRate,
+      gapRate: roundGap(userOfferRate, marketOfferRate),
       status: resolveFunnelStageStatus({
-        userRateFromPrev: payload.profileFunnel.offerResponseRatePercent,
-        marketRateFromPrev: payload.activity.metrics.offerRatePercent,
+        userRateFromPrev: userOfferRate,
+        marketRateFromPrev: marketOfferRate,
       }),
-      dropOffSeverity: resolveDropOffSeverity(payload.profileFunnel.offerResponseRatePercent),
+      dropOffSeverity: resolveDropOffSeverity(userOfferRate),
       recommendation: toFunnelRecommendationCode(focusStep),
     },
     {
       key: 'responses',
       label: 'Responses',
       marketCount: null,
-      userCount: payload.profileFunnel.confirmedResponsesTotal,
+      userCount: userResponses,
       marketRateFromPrev: null,
-      userRateFromPrev: payload.profileFunnel.confirmationRatePercent,
+      userRateFromPrev: userResponseRate,
       gapRate: null,
       status: 'insufficient_data',
-      dropOffSeverity: resolveDropOffSeverity(payload.profileFunnel.confirmationRatePercent),
+      dropOffSeverity: resolveDropOffSeverity(userResponseRate),
       recommendation: toFunnelRecommendationCode(responseStep ?? unansweredStep),
     },
     {
       key: 'contracts',
       label: 'Contracts',
       marketCount: null,
-      userCount: payload.profileFunnel.closedContractsTotal,
+      userCount: userContracts,
       marketRateFromPrev: null,
-      userRateFromPrev: payload.profileFunnel.contractClosureRatePercent,
+      userRateFromPrev: userContractRate,
       gapRate: null,
       status: 'insufficient_data',
-      dropOffSeverity: resolveDropOffSeverity(payload.profileFunnel.contractClosureRatePercent),
+      dropOffSeverity: resolveDropOffSeverity(userContractRate),
       recommendation: toFunnelRecommendationCode(pricingStep ?? responseStep),
     },
     {
       key: 'completed',
       label: 'Completed',
-      marketCount: payload.activity.metrics.completedJobs,
-      userCount: payload.profileFunnel.completedJobsTotal,
+      marketCount: marketCompleted,
+      userCount: userCompleted,
       marketRateFromPrev: null,
-      userRateFromPrev: payload.profileFunnel.completionRatePercent,
+      userRateFromPrev: userCompletionRate,
       gapRate: null,
       status: 'insufficient_data',
-      dropOffSeverity: resolveDropOffSeverity(payload.profileFunnel.completionRatePercent),
+      dropOffSeverity: resolveDropOffSeverity(userCompletionRate),
       recommendation: toFunnelRecommendationCode(pricingStep),
     },
   ];

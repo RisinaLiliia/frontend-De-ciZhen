@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type {
   WorkspacePrivateOverviewDto,
   WorkspaceStatisticsRange,
+  WorkspaceStatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 import { getWorkspaceStatistics } from '@/lib/api/workspace';
 import {
@@ -23,6 +24,7 @@ export type UseWorkspaceStatsQueryResult = {
   setRange: (next: WorkspaceStatisticsRange) => void;
   setCityId: (next: string | null) => void;
   setCategoryKey: (next: string | null) => void;
+  setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
   resetFilters: () => void;
   data: WorkspaceStatisticsDecisionDashboardDto | undefined;
   isLoading: boolean;
@@ -59,6 +61,11 @@ export function useWorkspaceStatsQuery({
       cityId: resolveNullableFilter(searchParams.get('cityId')),
       regionId: null,
       categoryKey: resolveNullableFilter(searchParams.get('categoryKey')),
+      viewerMode: searchParams.get('viewerMode') === 'customer'
+        ? 'customer'
+        : searchParams.get('viewerMode') === 'provider'
+          ? 'provider'
+          : null,
     }),
     [searchParams],
   );
@@ -108,6 +115,12 @@ export function useWorkspaceStatsQuery({
     });
   }, [replaceSearchParams]);
 
+  const setViewerMode = React.useCallback((next: WorkspaceStatisticsViewerMode) => {
+    replaceSearchParams((params) => {
+      params.set('viewerMode', next);
+    });
+  }, [replaceSearchParams]);
+
   const resetFilters = React.useCallback(() => {
     replaceSearchParams((params) => {
       params.delete('cityId');
@@ -126,6 +139,7 @@ export function useWorkspaceStatsQuery({
       filters.regionId,
       filters.cityId,
       filters.categoryKey,
+      filters.viewerMode ?? 'auto',
       privateOverview?.updatedAt ?? 'no-private-overview',
     ],
     queryFn: async (): Promise<WorkspaceStatisticsDecisionDashboardDto> => {
@@ -134,6 +148,7 @@ export function useWorkspaceStatsQuery({
         cityId: filters.cityId,
         regionId: filters.regionId,
         categoryKey: filters.categoryKey,
+        viewerMode: filters.viewerMode,
       });
       const hydratedPayload = hydrateAuthenticatedStatisticsPayload({
         payload,
@@ -166,6 +181,7 @@ export function useWorkspaceStatsQuery({
     setRange,
     setCityId,
     setCategoryKey,
+    setViewerMode,
     resetFilters,
     data: resolvedData,
     isLoading: query.isLoading,

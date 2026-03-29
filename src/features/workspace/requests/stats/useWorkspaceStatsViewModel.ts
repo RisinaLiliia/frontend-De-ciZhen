@@ -7,6 +7,7 @@ import type {
   WorkspaceStatisticsActivityMetricsDto,
   WorkspaceStatisticsCategoryDemandDto,
   WorkspaceStatisticsRange,
+  WorkspaceStatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 import { getWorkspaceStatisticsCopy } from './workspaceStatistics.copy';
@@ -71,6 +72,7 @@ type UseWorkspaceStatsViewModelParams = {
   setRange: (next: WorkspaceStatisticsRange) => void;
   setCityId: (next: string | null) => void;
   setCategoryKey: (next: string | null) => void;
+  setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
   resetFilters: () => void;
   data: WorkspaceStatisticsDecisionDashboardDto | undefined;
   isLoading: boolean;
@@ -88,6 +90,7 @@ export function useWorkspaceStatsViewModel({
   setRange,
   setCityId,
   setCategoryKey,
+  setViewerMode,
   resetFilters,
   data,
   isLoading,
@@ -109,6 +112,9 @@ export function useWorkspaceStatsViewModel({
     [localeTag],
   );
   const mode = data?.mode ?? 'platform';
+  const viewerMode = mode === 'personalized'
+    ? (data?.viewerMode ?? filters.viewerMode ?? 'provider')
+    : null;
   const selectedCityId = normalizeNullableFilterValue(filters.cityId);
   const selectedCategoryKey = normalizeNullableFilterValue(filters.categoryKey);
   const isFocusMode = Boolean(selectedCityId || selectedCategoryKey);
@@ -606,6 +612,8 @@ export function useWorkspaceStatsViewModel({
     setRange,
     setCityId,
     setCategoryKey,
+    viewerMode,
+    setViewerMode,
     resetFilters,
     isLoading: isLoading && !data,
     isError: isError && !data,

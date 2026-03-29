@@ -324,6 +324,7 @@ export const workspaceStatisticsDecisionDashboardSchema = z.object({
   updatedAt: z.string(),
   mode: z.enum(['platform', 'personalized']),
   range: rangeSchema,
+  viewerMode: z.enum(['provider', 'customer']).nullable().optional(),
   decisionContext: z.object({
     mode: z.enum(['global', 'focus']),
     period: rangeSchema,

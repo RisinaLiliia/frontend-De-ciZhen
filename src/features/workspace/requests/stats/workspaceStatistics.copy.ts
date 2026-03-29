@@ -40,6 +40,9 @@ export type WorkspaceStatisticsCopy = {
   exportLabel: string;
   modePlatform: string;
   modePersonalized: string;
+  viewerModeLabel: string;
+  viewerModeProviderLabel: string;
+  viewerModeCustomerLabel: string;
   kpiTitle: string;
   activityTitle: string;
   activitySubtitle: string;
@@ -147,6 +150,10 @@ export type WorkspaceStatisticsCopy = {
   profileSubtitlePlatform: string;
   profileSubtitlePersonalized: string;
   profileComparisonHeadline: string;
+  profileStrengthLabel: string;
+  profileMainLossLabel: string;
+  profileRecommendationLineLabel: string;
+  profileSummaryFallback: string;
   comparisonUserLabel: string;
   comparisonMarketLabel: string;
   comparisonGapLabel: string;
@@ -358,6 +365,9 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   exportLabel: 'Export CSV',
   modePlatform: 'Plattform',
   modePersonalized: 'Personalisiert',
+  viewerModeLabel: 'Perspektive',
+  viewerModeProviderLabel: 'Für Anbieter',
+  viewerModeCustomerLabel: 'Für Auftraggeber',
   kpiTitle: 'KPI Übersicht',
   activityTitle: 'Aktivität der Plattform',
   activitySubtitle: 'Neue Anfragen und Angebote im Zeitverlauf',
@@ -474,8 +484,12 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   profileTitle: 'Profil Performance',
   profileRevenueLabel: 'Umsatz',
   profileSubtitlePlatform: 'Von Anfragen bis zum erfolgreichen Abschluss und Umsatz',
-  profileSubtitlePersonalized: 'Wie dein Profil aktuell performt',
+  profileSubtitlePersonalized: 'Von Anfragen bis zum erfolgreichen Abschluss und Umsatz',
   profileComparisonHeadline: 'Deine Performance im Vergleich zum Markt',
+  profileStrengthLabel: 'Stärke',
+  profileMainLossLabel: 'Hauptverlust',
+  profileRecommendationLineLabel: 'Empfehlung',
+  profileSummaryFallback: 'Noch nicht genug Daten für eine verlässliche Einordnung.',
   comparisonUserLabel: 'Du',
   comparisonMarketLabel: 'Markt',
   comparisonGapLabel: 'Gap',
@@ -688,6 +702,9 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   exportLabel: 'Export CSV',
   modePlatform: 'Platform',
   modePersonalized: 'Personalized',
+  viewerModeLabel: 'Perspective',
+  viewerModeProviderLabel: 'For providers',
+  viewerModeCustomerLabel: 'For customers',
   kpiTitle: 'KPI overview',
   activityTitle: 'Platform activity',
   activitySubtitle: 'New requests and offers over time',
@@ -804,8 +821,12 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   profileTitle: 'Profile performance',
   profileRevenueLabel: 'Revenue',
   profileSubtitlePlatform: 'From requests to successful completion and revenue',
-  profileSubtitlePersonalized: 'How your profile performs right now',
+  profileSubtitlePersonalized: 'From requests to successful completion and revenue',
   profileComparisonHeadline: 'Your performance compared with the market',
+  profileStrengthLabel: 'Strength',
+  profileMainLossLabel: 'Main loss',
+  profileRecommendationLineLabel: 'Recommendation',
+  profileSummaryFallback: 'Not enough data yet for a reliable assessment.',
   comparisonUserLabel: 'You',
   comparisonMarketLabel: 'Market',
   comparisonGapLabel: 'Gap',

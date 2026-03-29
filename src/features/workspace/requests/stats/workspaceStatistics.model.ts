@@ -4,6 +4,7 @@ import type {
   WorkspaceStatisticsInsightDto,
   WorkspaceStatisticsOpportunityRadarItemDto,
   WorkspaceStatisticsRange,
+  WorkspaceStatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 
@@ -36,6 +37,16 @@ export type WorkspaceStatisticsFunnelItemView = {
   railLabel?: string;
   railValue?: string;
   isCurrency?: boolean;
+  compare?: WorkspaceStatisticsFunnelItemCompareView | null;
+};
+
+export type WorkspaceStatisticsFunnelItemCompareView = {
+  userCount: string;
+  userRate: string | null;
+  marketRate: string | null;
+  gapRate: string | null;
+  isLargestGap: boolean;
+  isLargestDropoff: boolean;
 };
 
 export type WorkspaceStatisticsFunnelComparisonStageView = {
@@ -273,6 +284,7 @@ export type WorkspaceStatisticsFilters = {
   cityId: string | null;
   regionId?: string | null;
   categoryKey: string | null;
+  viewerMode?: WorkspaceStatisticsViewerMode | null;
 };
 
 export type WorkspaceStatisticsContextMetricView = {
@@ -305,6 +317,8 @@ export type WorkspaceStatisticsModel = {
   setRange: (next: WorkspaceStatisticsRange) => void;
   setCityId: (next: string | null) => void;
   setCategoryKey: (next: string | null) => void;
+  viewerMode: WorkspaceStatisticsViewerMode | null;
+  setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
   resetFilters: () => void;
   isLoading: boolean;
   isError: boolean;

@@ -54,9 +54,30 @@
   }
 
   .workspace-statistics__mode-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
     gap: var(--space-2);
     padding-top: 0;
     border-top: 0;
+  }
+
+  .workspace-statistics__mode-meta {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .workspace-statistics__viewer-mode {
+    display: grid;
+    justify-items: end;
+    gap: var(--space-1);
+  }
+
+  .workspace-statistics__viewer-mode-label {
+    font-size: var(--workspace-statistics-label-size);
+    font-weight: var(--font-weight-semibold);
+    color: var(--c-text-muted);
   }
 
   .workspace-statistics__decision-cluster {
@@ -551,7 +572,7 @@
   }
 
   .workspace-statistics__tile-header--profile {
-    gap: var(--space-1);
+    gap: var(--workspace-statistics-context-gap);
   }
 
   .workspace-statistics__profile-title-row {

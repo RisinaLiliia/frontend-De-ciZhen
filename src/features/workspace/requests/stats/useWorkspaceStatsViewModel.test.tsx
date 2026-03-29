@@ -506,6 +506,7 @@ function Probe({
     setRange: () => undefined,
     setCityId: () => undefined,
     setCategoryKey: () => undefined,
+    setViewerMode: () => undefined,
     resetFilters: () => undefined,
     data: normalizedData,
     isLoading,
@@ -544,6 +545,16 @@ function Probe({
       data-has-funnel={String(model.hasFunnelData)}
       data-funnel-requests={String(model.funnel.find((row) => row.key === 'requests')?.count ?? 0)}
       data-funnel-offers={String(model.funnel.find((row) => row.key === 'offers')?.count ?? 0)}
+      data-funnel-requests-compare={[
+        model.funnel.find((row) => row.key === 'requests')?.compare?.userCount ?? '',
+        model.funnel.find((row) => row.key === 'requests')?.compare?.userRate ?? '',
+        model.funnel.find((row) => row.key === 'requests')?.compare?.gapRate ?? '',
+      ].join('|')}
+      data-funnel-offers-compare={[
+        model.funnel.find((row) => row.key === 'offers')?.compare?.userCount ?? '',
+        model.funnel.find((row) => row.key === 'offers')?.compare?.userRate ?? '',
+        model.funnel.find((row) => row.key === 'offers')?.compare?.gapRate ?? '',
+      ].join('|')}
       data-funnel-summary={model.funnelSummary}
       data-funnel-conversion={model.conversion}
       data-funnel-dropoff={model.funnelDropoff?.value ?? ''}
@@ -589,6 +600,7 @@ function NormalizedProbe({
     setRange: () => undefined,
     setCityId: () => undefined,
     setCategoryKey: () => undefined,
+    setViewerMode: () => undefined,
     resetFilters: () => undefined,
     data,
     isLoading: false,
@@ -803,7 +815,7 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-funnel-conversion')).toBe('12%');
   });
 
-  it('builds personalized funnel shape from canonical funnelComparison stages', () => {
+  it('builds personalized funnel shape from canonical funnelComparison market stages', () => {
     const data = normalizeWorkspaceDecisionDashboardResponse(createPersonalizedOverviewData(), {
       period: '30d',
       cityId: null,
@@ -828,8 +840,10 @@ describe('useWorkspaceStatsViewModel', () => {
     render(<Probe data={data} isLoading={false} isError={false} />);
 
     const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-funnel-requests')).toBe('58');
-    expect(probe.getAttribute('data-funnel-offers')).toBe('18');
+    const marketRequests = data.funnelComparison?.stages.find((stage) => stage.key === 'requests')?.marketCount ?? 0;
+    const marketOffers = data.funnelComparison?.stages.find((stage) => stage.key === 'offers')?.marketCount ?? 0;
+    expect(probe.getAttribute('data-funnel-requests')).toBe(String(marketRequests));
+    expect(probe.getAttribute('data-funnel-offers')).toBe(String(marketOffers));
   });
 
   it('surfaces background refetch errors without switching the whole screen into blocking error mode', () => {
@@ -1081,6 +1095,8 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-user-comparison')).toBe('User vs Markt');
     expect(probe.getAttribute('data-user-position')).not.toBe('');
     expect(probe.getAttribute('data-user-actions')).toContain('Preis');
+    expect(probe.getAttribute('data-funnel-requests-compare')).toBe('58||');
+    expect(probe.getAttribute('data-funnel-offers-compare')).toBe('18|31%|-23 pp');
   });
 
   it('adds client and provider activity overlay series when private overview is available', () => {

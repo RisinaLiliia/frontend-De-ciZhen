@@ -17,7 +17,8 @@
 
   .workspace-statistics__profile-panel {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--workspace-statistics-section-gap);
+    align-content: start;
   }
 
   .workspace-statistics-insights {

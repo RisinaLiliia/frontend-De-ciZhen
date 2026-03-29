@@ -29,17 +29,19 @@ export function buildFunnel(
         return [normalizedKey, stage];
       }),
     );
-    const rootCount = data.funnelComparison.stages.find((stage) => stage.key === 'requests')?.userCount
-      ?? data.funnelComparison.stages[0]?.userCount
+    const rootCount = data.funnelComparison.stages.find((stage) => stage.key === 'requests')?.marketCount
+      ?? data.funnelComparison.stages[0]?.marketCount
       ?? 0;
     const safeRootCount = typeof rootCount === 'number' && rootCount > 0 ? rootCount : 0;
+    const largestGapStageKey = data.funnelComparison.largestGapStage;
+    const largestDropOffStageKey = data.funnelComparison.largestDropOffStage;
 
     return data.funnelComparison.stages.map((stage) => {
       const legacyStage = stageLabelByKey.get(stage.key);
-      const count = Math.max(0, Math.round(stage.userCount ?? 0));
+      const count = Math.max(0, Math.round(stage.marketCount ?? 0));
       const ratePercent =
-        typeof stage.userRateFromPrev === 'number'
-          ? Math.max(0, Math.min(100, Math.round(stage.userRateFromPrev)))
+        typeof stage.marketRateFromPrev === 'number'
+          ? Math.max(0, Math.min(100, Math.round(stage.marketRateFromPrev)))
           : null;
       const widthPercent = safeRootCount > 0 ? (count / safeRootCount) * 100 : 0;
 
@@ -59,6 +61,22 @@ export function buildFunnel(
           ? undefined
           : (ratePercent !== null ? formatPercent(ratePercent) : undefined),
         isCurrency: false,
+        compare: {
+          userCount: stage.userCount === null ? '—' : String(Math.max(0, Math.round(stage.userCount))),
+          userRate: stage.key === 'requests'
+            ? null
+            : (typeof stage.userRateFromPrev === 'number' ? formatPercent(stage.userRateFromPrev) : '—'),
+          marketRate: stage.key === 'requests'
+            ? null
+            : (typeof stage.marketRateFromPrev === 'number' ? formatPercent(stage.marketRateFromPrev) : '—'),
+          gapRate: stage.key === 'requests'
+            ? null
+            : (typeof stage.gapRate === 'number'
+              ? `${stage.gapRate > 0 ? '+' : ''}${Math.round(stage.gapRate)} pp`
+              : '—'),
+          isLargestGap: stage.key === largestGapStageKey,
+          isLargestDropoff: stage.key === largestDropOffStageKey,
+        },
       };
     });
   }
@@ -92,6 +110,7 @@ export function buildFunnel(
           ? undefined
           : (stage.helperText ?? (ratePercent !== null ? formatPercent(ratePercent) : undefined)),
       isCurrency: stage.id === 'revenue',
+      compare: null,
     };
   });
 }
@@ -192,7 +211,8 @@ export function buildFunnelSummary(params: {
     const requestsStage = data.funnelComparison?.stages.find((item) => item.key === 'requests');
     const completedStage = data.funnelComparison?.stages.find((item) => item.key === 'completed');
     if (typeof requestsStage?.userCount === 'number' && typeof completedStage?.userCount === 'number') {
-      return `${copy.funnelSummaryPrefix} ${formatNumber.format(requestsStage.userCount)} ${copy.funnelSummaryMiddle} ${formatNumber.format(completedStage.userCount)} ${copy.funnelSummarySuffix}`;
+      const safeCompletedCount = Math.min(completedStage.userCount, requestsStage.userCount);
+      return `${copy.funnelSummaryPrefix} ${formatNumber.format(requestsStage.userCount)} ${copy.funnelSummaryMiddle} ${formatNumber.format(safeCompletedCount)} ${copy.funnelSummarySuffix}`;
     }
   }
 
@@ -216,7 +236,8 @@ export function buildFunnelConversion(params: {
       typeof completedStage?.userCount === 'number' &&
       requestsStage.userCount > 0
     ) {
-      return formatPercent((completedStage.userCount / requestsStage.userCount) * 100);
+      const safeCompletedCount = Math.min(completedStage.userCount, requestsStage.userCount);
+      return formatPercent((safeCompletedCount / requestsStage.userCount) * 100);
     }
   }
 

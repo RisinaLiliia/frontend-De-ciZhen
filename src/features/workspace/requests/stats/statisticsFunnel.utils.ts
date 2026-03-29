@@ -2,7 +2,8 @@ import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 import type { WorkspaceStatisticsFunnelItemView } from './workspaceStatistics.model';
 
 export const FUNNEL_MIN_WIDTH_PERCENT_DESKTOP = 40;
-export const FUNNEL_MIN_WIDTH_PERCENT_MOBILE = 52;
+export const FUNNEL_MIN_WIDTH_PERCENT_MOBILE_PLATFORM = 38;
+export const FUNNEL_MIN_WIDTH_PERCENT_MOBILE_PERSONALIZED = 58;
 
 export type WorkspaceStatisticsFunnelVisualRow = WorkspaceStatisticsFunnelItemView & {
   topWidthPercent: number;
@@ -30,10 +31,13 @@ export function buildFunnelVisualRows(params: {
   copy: WorkspaceStatisticsCopy;
   isNarrowViewport: boolean;
   funnelContainerWidth: number;
+  mode?: 'platform' | 'personalized';
 }): WorkspaceStatisticsFunnelVisualRow[] {
-  const { funnel, copy, isNarrowViewport, funnelContainerWidth } = params;
+  const { funnel, copy, isNarrowViewport, funnelContainerWidth, mode = 'platform' } = params;
   const minVisualWidth = isNarrowViewport
-    ? FUNNEL_MIN_WIDTH_PERCENT_MOBILE
+    ? (mode === 'personalized'
+      ? FUNNEL_MIN_WIDTH_PERCENT_MOBILE_PERSONALIZED
+      : FUNNEL_MIN_WIDTH_PERCENT_MOBILE_PLATFORM)
     : FUNNEL_MIN_WIDTH_PERCENT_DESKTOP;
   const completedWidth = funnel.find((step) => step.key === 'completed')?.widthPercent ?? null;
   const shouldForceCompactByWidth = funnelContainerWidth > 0 && funnelContainerWidth < 420;

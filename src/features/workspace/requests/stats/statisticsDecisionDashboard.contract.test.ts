@@ -311,22 +311,13 @@ function createPrivateOverview(): WorkspacePrivateOverviewDto {
 }
 
 describe('normalizeWorkspaceDecisionDashboardResponse', () => {
-  it('hydrates authenticated market-only payloads with private overview before normalization', () => {
+  it('does not synthesize personalized funnel data from private overview when backend has not sent a contextual personalized contract', () => {
     const hydrated = hydrateAuthenticatedStatisticsPayload({
       payload: createPayload() as unknown as import('@/lib/api/dto/workspace').WorkspaceStatisticsOverviewDto,
       privateOverview: createPrivateOverview(),
     });
 
-    expect(hydrated.mode).toBe('personalized');
-    expect(hydrated.kpis.profileCompleteness).toBe(82);
-    expect(hydrated.kpis.openRequests).toBe(18);
-    expect(hydrated.kpis.recentOffers7d).toBe(3);
-    expect(hydrated.kpis.avgResponseMinutes).toBe(1766);
-    expect(hydrated.profileFunnel.requestsTotal).toBe(18);
-    expect(hydrated.profileFunnel.offersTotal).toBe(9);
-    expect(hydrated.profileFunnel.confirmedResponsesTotal).toBe(4);
-    expect(hydrated.profileFunnel.completedJobsTotal).toBe(4);
-    expect(hydrated.profileFunnel.stages).toHaveLength(6);
+    expect(hydrated).toEqual(createPayload());
   });
 
   it('trusts backend decision dashboard fields when the full contract is already present', () => {
@@ -457,6 +448,133 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
     expect(normalized.userIntelligence?.opportunities.length).toBeGreaterThan(0);
     expect(normalized.userIntelligence?.nextSteps.length).toBeGreaterThan(0);
     expect(() => workspaceStatisticsDecisionDashboardSchema.parse(normalized)).not.toThrow();
+  });
+
+  it('aligns decision layer offer rate and completed jobs with canonical funnel comparison values', () => {
+    const personalized = createPayload();
+    personalized.mode = 'personalized';
+    personalized.decisionLayer = {
+      title: 'Decision Layer',
+      subtitle: 'Server section',
+      metrics: [
+        {
+          id: 'offer_rate',
+          label: 'Angebotsquote',
+          marketValue: 12,
+          userValue: 99,
+          gapAbsolute: 87,
+          gapPercent: 87,
+          unit: 'percent',
+          direction: 'better',
+          status: 'good',
+          signalCodes: [],
+          primaryActionCode: null,
+          summary: 'Old values',
+        },
+        {
+          id: 'completed_jobs',
+          label: 'Abgeschlossene Aufträge',
+          marketValue: 999,
+          userValue: 888,
+          gapAbsolute: -111,
+          gapPercent: null,
+          unit: 'count',
+          direction: 'neutral',
+          status: 'neutral',
+          signalCodes: [],
+          primaryActionCode: null,
+          summary: 'Old values',
+        },
+      ],
+      primaryInsight: 'Insight',
+      primaryAction: null,
+    };
+    personalized.funnelComparison = {
+      comparisonLabel: 'User vs Markt',
+      summary: 'Canonical funnel',
+      largestGapStage: 'offers',
+      largestDropOffStage: 'responses',
+      primaryBottleneck: 'Responses',
+      nextAction: 'respond_faster',
+      stages: [
+        {
+          key: 'requests',
+          label: 'Requests',
+          marketCount: 79,
+          userCount: 3,
+          marketRateFromPrev: 100,
+          userRateFromPrev: 100,
+          gapRate: 0,
+          status: 'at_market',
+          dropOffSeverity: null,
+          recommendation: null,
+        },
+        {
+          key: 'offers',
+          label: 'Offers',
+          marketCount: 53,
+          userCount: 2,
+          marketRateFromPrev: 67,
+          userRateFromPrev: 100,
+          gapRate: 33,
+          status: 'above_market',
+          dropOffSeverity: 'low',
+          recommendation: null,
+        },
+        {
+          key: 'responses',
+          label: 'Responses',
+          marketCount: 24,
+          userCount: 0,
+          marketRateFromPrev: 45,
+          userRateFromPrev: 0,
+          gapRate: -45,
+          status: 'below_market',
+          dropOffSeverity: 'high',
+          recommendation: 'respond_faster',
+        },
+        {
+          key: 'contracts',
+          label: 'Contracts',
+          marketCount: 19,
+          userCount: 0,
+          marketRateFromPrev: 79,
+          userRateFromPrev: null,
+          gapRate: null,
+          status: 'insufficient_data',
+          dropOffSeverity: null,
+          recommendation: null,
+        },
+        {
+          key: 'completed',
+          label: 'Completed',
+          marketCount: 18,
+          userCount: 0,
+          marketRateFromPrev: 95,
+          userRateFromPrev: null,
+          gapRate: null,
+          status: 'insufficient_data',
+          dropOffSeverity: null,
+          recommendation: null,
+        },
+      ],
+    };
+
+    const normalized = normalizeWorkspaceDecisionDashboardResponse(personalized, {
+      period: '30d',
+      cityId: null,
+      categoryKey: null,
+    });
+
+    const offerRate = normalized.decisionLayer?.metrics.find((metric) => metric.id === 'offer_rate');
+    const completedJobs = normalized.decisionLayer?.metrics.find((metric) => metric.id === 'completed_jobs');
+
+    expect(offerRate?.marketValue).toBe(67);
+    expect(offerRate?.userValue).toBe(100);
+    expect(offerRate?.gapPercent).toBe(33);
+    expect(completedJobs?.marketValue).toBe(18);
+    expect(completedJobs?.userValue).toBe(0);
+    expect(completedJobs?.gapAbsolute).toBe(-18);
   });
 
   it('reuses canonical personalized sections as compatibility sources for userIntelligence', () => {
