@@ -264,6 +264,46 @@ components:
           type: string
           nullable: true
           enum: [high, medium, low]
+    ActivityComparisonPoint:
+      type: object
+      required: [timestamp, clientActivity, providerActivity]
+      properties:
+        timestamp:
+          type: string
+        clientActivity:
+          type: number
+          nullable: true
+        providerActivity:
+          type: number
+          nullable: true
+    ActivityComparison:
+      type: object
+      required: [hasReliableSeries, points]
+      properties:
+        title:
+          type: string
+          nullable: true
+        subtitle:
+          type: string
+          nullable: true
+        summary:
+          type: string
+          nullable: true
+        peakTimestamp:
+          type: string
+          nullable: true
+        bestWindowTimestamp:
+          type: string
+          nullable: true
+        updatedAt:
+          type: string
+          nullable: true
+        hasReliableSeries:
+          type: boolean
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityComparisonPoint'
     OpportunityRadarItem:
       type: object
       required:
@@ -338,6 +378,539 @@ components:
           allOf:
             - $ref: '#/components/schemas/PriceIntelligence'
           nullable: true
+    UserComparisonMetric:
+      type: object
+      required: [key, unit, userValue, marketValue, direction, tone, status]
+      properties:
+        key:
+          type: string
+          enum: [offer_rate, response_time, unanswered]
+        unit:
+          type: string
+          enum: [percent, minutes, count]
+        userValue:
+          type: number
+          nullable: true
+        marketValue:
+          type: number
+          nullable: true
+        direction:
+          type: string
+          enum: [up, down, flat]
+        tone:
+          type: string
+          enum: [positive, neutral, warning]
+        status:
+          type: string
+          nullable: true
+          enum: [high, medium, low]
+    UserFormulaMetric:
+      type: object
+      required: [key, formula, unit, userValue, marketValue, gap, direction, tone]
+      properties:
+        key:
+          type: string
+          enum:
+            - offer_rate
+            - response_rate
+            - conversion_rate
+            - completion_rate
+            - cancellation_rate
+            - avg_response_time
+            - revenue
+            - avg_order_value
+        formula:
+          type: string
+          enum:
+            - offers / requests
+            - responses / offers
+            - contracts / requests
+            - completed / contracts
+            - cancellations / contracts
+            - sum(response_time) / responses
+            - sum(order_price * platform_fee)
+            - total_revenue / completed_orders
+        unit:
+          type: string
+          enum: [percent, minutes, currency]
+        userValue:
+          type: number
+          nullable: true
+        marketValue:
+          type: number
+          nullable: true
+        gap:
+          type: number
+          nullable: true
+        direction:
+          type: string
+          enum: [up, down, flat]
+        tone:
+          type: string
+          enum: [positive, neutral, warning]
+    UserSignal:
+      type: object
+      required: [id, type, code, severity]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [risk, opportunity, performance, growth]
+        code:
+          type: string
+          enum:
+            - high_unanswered
+            - slow_response
+            - overpriced
+            - underpriced
+            - high_demand_city
+            - growing_category
+            - low_visibility
+            - strong_position
+        severity:
+          type: string
+          enum: [high, medium, low]
+        metricKey:
+          type: string
+          nullable: true
+          enum:
+            - offer_rate
+            - response_rate
+            - conversion_rate
+            - completion_rate
+            - cancellation_rate
+            - avg_response_time
+            - revenue
+            - avg_order_value
+            - response_time
+            - unanswered
+        actionCode:
+          type: string
+          nullable: true
+          enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
+    UserPerformancePosition:
+      type: object
+      required: [percentile, categoryPercentile, cityPercentile, bucket]
+      properties:
+        percentile:
+          type: number
+          nullable: true
+        categoryPercentile:
+          type: number
+          nullable: true
+        cityPercentile:
+          type: number
+          nullable: true
+        bucket:
+          type: string
+          enum: [top, average, below]
+        categoryLabel:
+          type: string
+          nullable: true
+        cityLabel:
+          type: string
+          nullable: true
+    UserProfileGap:
+      type: object
+      required: [fromStage, toStage, lossPercent, lostCount, tone]
+      properties:
+        fromStage:
+          type: string
+          enum: [offers]
+        toStage:
+          type: string
+          enum: [confirmations]
+        lossPercent:
+          type: number
+          nullable: true
+        lostCount:
+          type: number
+          nullable: true
+        tone:
+          type: string
+          enum: [positive, neutral, warning]
+    UserPriorityItem:
+      type: object
+      required: [id, code, severity]
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+          enum:
+            - slow_response
+            - high_unanswered
+            - low_visibility
+            - high_demand_city
+            - growing_category
+            - low_competition_segment
+            - price_above_market
+            - price_below_market
+            - strong_position
+        severity:
+          type: string
+          enum: [high, medium, low]
+        cityLabel:
+          type: string
+          nullable: true
+        categoryLabel:
+          type: string
+          nullable: true
+        value:
+          type: number
+          nullable: true
+        secondaryValue:
+          type: number
+          nullable: true
+    UserPricing:
+      type: object
+      required: [currentPrice, recommendedMin, recommendedMax, marketAverage, status, conversionImpact]
+      properties:
+        currentPrice:
+          type: number
+          nullable: true
+        recommendedMin:
+          type: number
+          nullable: true
+        recommendedMax:
+          type: number
+          nullable: true
+        marketAverage:
+          type: number
+          nullable: true
+        status:
+          type: string
+          enum: [below, within, above, unknown]
+        conversionImpact:
+          type: string
+          enum: [positive, neutral, warning]
+    UserActionStep:
+      type: object
+      required: [id, code, priority]
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+          enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
+        priority:
+          type: string
+          enum: [high, medium, low]
+        targetValue:
+          type: number
+          nullable: true
+        cityLabel:
+          type: string
+          nullable: true
+        categoryLabel:
+          type: string
+          nullable: true
+    DecisionLayerMetric:
+      type: object
+      required: [id, label, marketValue, userValue, gapAbsolute, gapPercent, unit, direction, status, signalCodes, primaryActionCode, summary]
+      properties:
+        id:
+          type: string
+          enum: [offer_rate, avg_response_time, unanswered_over_24h, completed_jobs, revenue, average_order_value]
+        label:
+          type: string
+        marketValue:
+          type: number
+          nullable: true
+        userValue:
+          type: number
+          nullable: true
+        gapAbsolute:
+          type: number
+          nullable: true
+        gapPercent:
+          type: number
+          nullable: true
+        unit:
+          type: string
+          enum: [percent, minutes, currency, count]
+        direction:
+          type: string
+          enum: [better, worse, neutral]
+        status:
+          type: string
+          enum: [good, warning, critical, neutral]
+        signalCodes:
+          type: array
+          items:
+            type: string
+        primaryActionCode:
+          type: string
+          nullable: true
+          enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
+        summary:
+          type: string
+          nullable: true
+    DecisionLayerAction:
+      type: object
+      required: [code, label, target]
+      properties:
+        code:
+          type: string
+          enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
+        label:
+          type: string
+        target:
+          type: string
+          nullable: true
+    DecisionLayer:
+      type: object
+      required: [title, subtitle, metrics, primaryInsight, primaryAction]
+      properties:
+        title:
+          type: string
+          nullable: true
+        subtitle:
+          type: string
+          nullable: true
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/DecisionLayerMetric'
+        primaryInsight:
+          type: string
+          nullable: true
+        primaryAction:
+          allOf:
+            - $ref: '#/components/schemas/DecisionLayerAction'
+          nullable: true
+    PersonalizedPricing:
+      type: object
+      required: [title, subtitle, contextLabel, marketAverage, recommendedMin, recommendedMax, userPrice, gapAbsolute, position, effect, actionCode, summary]
+      properties:
+        title:
+          type: string
+          nullable: true
+        subtitle:
+          type: string
+          nullable: true
+        contextLabel:
+          type: string
+          nullable: true
+        marketAverage:
+          type: number
+          nullable: true
+        recommendedMin:
+          type: number
+          nullable: true
+        recommendedMax:
+          type: number
+          nullable: true
+        userPrice:
+          type: number
+          nullable: true
+        gapAbsolute:
+          type: number
+          nullable: true
+        position:
+          type: string
+          enum: [below, within, above, unknown]
+        effect:
+          type: string
+          enum: [positive, neutral, warning]
+        actionCode:
+          type: string
+          nullable: true
+          enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
+        summary:
+          type: string
+          nullable: true
+    CategoryFitItem:
+      type: object
+      required: [categoryKey, label, marketDemandShare, userFit, opportunity, actionCode, summary]
+      properties:
+        categoryKey:
+          type: string
+          nullable: true
+        label:
+          type: string
+        marketDemandShare:
+          type: number
+          nullable: true
+        userFit:
+          type: string
+          enum: [high, medium, low, unknown]
+        opportunity:
+          type: string
+          enum: [high, medium, low, unknown]
+        actionCode:
+          type: string
+          nullable: true
+          enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
+        summary:
+          type: string
+          nullable: true
+    CategoryFit:
+      type: object
+      required: [title, subtitle, items]
+      properties:
+        title:
+          type: string
+          nullable: true
+        subtitle:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryFitItem'
+    CityComparisonItem:
+      type: object
+      required: [cityId, city, marketRequests, userActivity, userConversion, actionCode, recommendation]
+      properties:
+        cityId:
+          type: string
+          nullable: true
+        city:
+          type: string
+        marketRequests:
+          type: number
+          nullable: true
+        userActivity:
+          type: string
+          enum: [high, medium, low, unknown]
+        userConversion:
+          type: number
+          nullable: true
+        actionCode:
+          type: string
+          nullable: true
+          enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
+        recommendation:
+          type: string
+          nullable: true
+    CityComparison:
+      type: object
+      required: [title, subtitle, items]
+      properties:
+        title:
+          type: string
+          nullable: true
+        subtitle:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CityComparisonItem'
+    FunnelComparisonStage:
+      type: object
+      required: [key, label, marketCount, userCount, marketRateFromPrev, userRateFromPrev, gapRate, status, dropOffSeverity, recommendation]
+      properties:
+        key:
+          type: string
+          enum: [requests, offers, responses, contracts, completed]
+        label:
+          type: string
+        marketCount:
+          type: number
+          nullable: true
+        userCount:
+          type: number
+          nullable: true
+        marketRateFromPrev:
+          type: number
+          nullable: true
+        userRateFromPrev:
+          type: number
+          nullable: true
+        gapRate:
+          type: number
+          nullable: true
+        status:
+          type: string
+          enum: [above_market, below_market, at_market, insufficient_data]
+        dropOffSeverity:
+          type: string
+          nullable: true
+          enum: [high, medium, low]
+        recommendation:
+          type: string
+          nullable: true
+    FunnelComparison:
+      type: object
+      required: [largestGapStage, largestDropOffStage, primaryBottleneck, nextAction, stages]
+      properties:
+        comparisonLabel:
+          type: string
+          nullable: true
+        summary:
+          type: string
+          nullable: true
+        largestGapStage:
+          type: string
+          nullable: true
+          enum: [requests, offers, responses, contracts, completed]
+        largestDropOffStage:
+          type: string
+          nullable: true
+          enum: [requests, offers, responses, contracts, completed]
+        primaryBottleneck:
+          type: string
+          nullable: true
+        nextAction:
+          type: string
+          nullable: true
+        stages:
+          type: array
+          items:
+            $ref: '#/components/schemas/FunnelComparisonStage'
+    UserIntelligence:
+      type: object
+      required:
+        - formulaMetrics
+        - decisionMetrics
+        - signals
+        - performancePosition
+        - profileGap
+        - risks
+        - opportunities
+        - pricing
+        - nextSteps
+      properties:
+        comparisonLabel:
+          type: string
+          nullable: true
+        formulaMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserFormulaMetric'
+        decisionMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserComparisonMetric'
+        signals:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSignal'
+        performancePosition:
+          $ref: '#/components/schemas/UserPerformancePosition'
+        profileGap:
+          allOf:
+            - $ref: '#/components/schemas/UserProfileGap'
+          nullable: true
+        risks:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPriorityItem'
+        opportunities:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPriorityItem'
+        pricing:
+          allOf:
+            - $ref: '#/components/schemas/UserPricing'
+          nullable: true
+        nextSteps:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserActionStep'
     WorkspaceStatisticsDecisionDashboard:
       type: object
       required:
@@ -372,6 +945,22 @@ components:
         decisionInsight:
           type: string
           nullable: true
+        decisionLayer:
+          allOf:
+            - $ref: '#/components/schemas/DecisionLayer'
+          nullable: true
+        personalizedPricing:
+          allOf:
+            - $ref: '#/components/schemas/PersonalizedPricing'
+          nullable: true
+        categoryFit:
+          allOf:
+            - $ref: '#/components/schemas/CategoryFit'
+          nullable: true
+        cityComparison:
+          allOf:
+            - $ref: '#/components/schemas/CityComparison'
+          nullable: true
         summary:
           type: object
           additionalProperties: true
@@ -381,6 +970,10 @@ components:
         activity:
           type: object
           additionalProperties: true
+        activityComparison:
+          allOf:
+            - $ref: '#/components/schemas/ActivityComparison'
+          nullable: true
         demand:
           type: object
           additionalProperties: true
@@ -410,3 +1003,11 @@ components:
             filename:
               type: string
               nullable: true
+        funnelComparison:
+          allOf:
+            - $ref: '#/components/schemas/FunnelComparison'
+          nullable: true
+        userIntelligence:
+          allOf:
+            - $ref: '#/components/schemas/UserIntelligence'
+          nullable: true

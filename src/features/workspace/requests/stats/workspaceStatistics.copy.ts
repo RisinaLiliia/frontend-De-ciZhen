@@ -53,6 +53,7 @@ export type WorkspaceStatisticsCopy = {
   activityUnansweredLabel: string;
   activityCancellationLabel: string;
   activityCompletedLabel: string;
+  activityAverageOrderValueLabel: string;
   activityGmvLabel: string;
   activityRevenueLabel: string;
   activityNoResponse: string;
@@ -145,6 +146,12 @@ export type WorkspaceStatisticsCopy = {
   profileRevenueLabel: string;
   profileSubtitlePlatform: string;
   profileSubtitlePersonalized: string;
+  profileComparisonHeadline: string;
+  comparisonUserLabel: string;
+  comparisonMarketLabel: string;
+  comparisonGapLabel: string;
+  clientActivityChartLabel: string;
+  providerActivityChartLabel: string;
   insightsGeneratedLabel: string;
   insightsAssistantAvatarLabel: string;
   insightsAssistantName: string;
@@ -164,6 +171,83 @@ export type WorkspaceStatisticsCopy = {
   decisionStrategyLoadingBody: string;
   decisionApplyStrategyLabel: string;
   decisionOpenRequestsLabel: string;
+  userComparisonLabel: string;
+  userDecisionSubtitle: string;
+  userGapTitle: string;
+  userGapSummaryTemplate: string;
+  userPositionTitle: string;
+  userPositionSubtitle: string;
+  userPositionTopPrefix: string;
+  userPositionTopSuffix: string;
+  userPositionAverageLabel: string;
+  userPositionBelowLabel: string;
+  userPositionSummaryTemplate: string;
+  userPositionSummaryFallback: string;
+  userPositionOverallLabel: string;
+  userPositionCategoryLabel: string;
+  userPositionCityLabel: string;
+  userRisksTitle: string;
+  userRisksSubtitle: string;
+  userOpportunitiesTitle: string;
+  userOpportunitiesSubtitle: string;
+  userActionsTitle: string;
+  userActionsSubtitle: string;
+  userRiskSeverityHigh: string;
+  userRiskSeverityMedium: string;
+  userRiskSeverityLow: string;
+  userRiskSlowResponseTitle: string;
+  userRiskSlowResponseBody: string;
+  userRiskUnansweredTitle: string;
+  userRiskUnansweredBody: string;
+  userRiskVisibilityTitle: string;
+  userRiskVisibilityBody: string;
+  userOpportunityDemandTitle: string;
+  userOpportunityDemandBody: string;
+  userOpportunityCompetitionTitle: string;
+  userOpportunityCompetitionBody: string;
+  userOpportunityCategoryTitle: string;
+  userOpportunityCategoryBody: string;
+  userPricingCurrentLabel: string;
+  userPricingRecommendedLabel: string;
+  userPricingAverageLabel: string;
+  userPricingSummary: string;
+  userPricingStatusAbove: string;
+  userPricingStatusBelow: string;
+  userPricingStatusWithin: string;
+  userPricingStatusUnknown: string;
+  userPricingPositionLabel: string;
+  userPricingEffectLabel: string;
+  userPricingEffectAbove: string;
+  userPricingEffectBelow: string;
+  userPricingEffectWithin: string;
+  userPricingEffectUnknown: string;
+  userForYouLabel: string;
+  userFitLabel: string;
+  userFitHighLabel: string;
+  userRecommendationLabel: string;
+  userActionPriorityHigh: string;
+  userActionPriorityMedium: string;
+  userActionPriorityLow: string;
+  userActionImpactLabel: string;
+  userActionEffectLabel: string;
+  userActionImpactHigh: string;
+  userActionImpactMedium: string;
+  userActionImpactLow: string;
+  userActionRespondTitle: string;
+  userActionRespondDetail: string;
+  userActionRespondEffect: string;
+  userActionPriceTitle: string;
+  userActionPriceDetail: string;
+  userActionPriceEffect: string;
+  userActionFocusTitle: string;
+  userActionFocusDetail: string;
+  userActionFocusEffect: string;
+  userActionProfileTitle: string;
+  userActionProfileDetail: string;
+  userActionProfileEffect: string;
+  userActionFollowUpTitle: string;
+  userActionFollowUpDetail: string;
+  userActionFollowUpEffect: string;
   growthTitle: string;
   growthSubtitle: string;
   growthRecommendedPrefix: string;
@@ -288,6 +372,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   activityUnansweredLabel: 'Unbeantwortet >24h',
   activityCancellationLabel: 'Stornoquote',
   activityCompletedLabel: 'Abschlüsse',
+  activityAverageOrderValueLabel: 'Ø Auftragswert',
   activityGmvLabel: 'GMV',
   activityRevenueLabel: 'Plattform-Umsatz',
   activityNoResponse: 'Keine Antwortdaten',
@@ -390,6 +475,12 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   profileRevenueLabel: 'Umsatz',
   profileSubtitlePlatform: 'Von Anfragen bis zum erfolgreichen Abschluss und Umsatz',
   profileSubtitlePersonalized: 'Wie dein Profil aktuell performt',
+  profileComparisonHeadline: 'Deine Performance im Vergleich zum Markt',
+  comparisonUserLabel: 'Du',
+  comparisonMarketLabel: 'Markt',
+  comparisonGapLabel: 'Gap',
+  clientActivityChartLabel: 'Du als Auftraggeber',
+  providerActivityChartLabel: 'Du als Anbieter',
   insightsGeneratedLabel: 'Basierend auf aktuellen Plattformdaten',
   insightsAssistantAvatarLabel: 'KI',
   insightsAssistantName: "De'ci KI",
@@ -409,6 +500,83 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   decisionStrategyLoadingBody: 'Fokus, Preis und Reaktionszeit werden auf Basis von Nachfrage, Wettbewerb und Conversion-Signalen vorbereitet.',
   decisionApplyStrategyLabel: 'Strategie anwenden',
   decisionOpenRequestsLabel: 'Passende Aufträge öffnen',
+  userComparisonLabel: 'User vs Markt',
+  userDecisionSubtitle: 'Vergleicht deine Performance mit dem aktuellen Markt',
+  userGapTitle: 'Gap Analysis',
+  userGapSummaryTemplate: 'Du verlierst {percent}% zwischen Angebot → Antwort. Das betrifft aktuell {count} Vorgänge.',
+  userPositionTitle: 'Performance vs Market',
+  userPositionSubtitle: 'Deine Position im aktuellen Marktumfeld',
+  userPositionTopPrefix: 'Top',
+  userPositionTopSuffix: 'Anbieter',
+  userPositionAverageLabel: 'Marktdurchschnitt',
+  userPositionBelowLabel: 'Unterdurchschnittlich',
+  userPositionSummaryTemplate: 'Du liegst aktuell auf dem {percentile}. Perzentil im Vergleich zum Markt.',
+  userPositionSummaryFallback: 'Noch nicht genug Daten für eine belastbare Marktposition.',
+  userPositionOverallLabel: 'Gesamt',
+  userPositionCategoryLabel: 'Kategorie',
+  userPositionCityLabel: 'Stadt',
+  userRisksTitle: 'Risiken & Bottlenecks',
+  userRisksSubtitle: 'Wo Performance verloren geht',
+  userOpportunitiesTitle: 'Chancen für dich',
+  userOpportunitiesSubtitle: 'Marktfelder mit besserem Fit für dein Profil',
+  userActionsTitle: 'Nächste Schritte',
+  userActionsSubtitle: 'Decision → Action',
+  userRiskSeverityHigh: 'Hoch',
+  userRiskSeverityMedium: 'Mittel',
+  userRiskSeverityLow: 'Niedrig',
+  userRiskSlowResponseTitle: 'Reaktionszeit zu hoch',
+  userRiskSlowResponseBody: 'Du antwortest mit {user} Min. deutlich langsamer als der Markt mit {market} Min.',
+  userRiskUnansweredTitle: 'Zu viele offene Anfragen',
+  userRiskUnansweredBody: '{count} offene Vorgänge warten noch auf eine klare Reaktion.',
+  userRiskVisibilityTitle: 'Niedrige Sichtbarkeit',
+  userRiskVisibilityBody: 'Dein Profil ist erst zu {profile}% vollständig. Das drückt Sichtbarkeit und Vertrauen.',
+  userOpportunityDemandTitle: 'Hohe Nachfrage in deinem Zielmarkt',
+  userOpportunityDemandBody: '{city} · {category} zeigt aktuell starke Nachfrage für dein Setup.',
+  userOpportunityCompetitionTitle: 'Wenig Anbieter im Segment',
+  userOpportunityCompetitionBody: '{city} · {category} hat aktuell ein günstiges Nachfrage-Konkurrenz-Verhältnis.',
+  userOpportunityCategoryTitle: 'Kategorie wächst',
+  userOpportunityCategoryBody: '{category} entwickelt sich aktuell stärker als andere Segmente.',
+  userPricingCurrentLabel: 'Dein Preis',
+  userPricingRecommendedLabel: 'Empfohlen',
+  userPricingAverageLabel: 'Markt',
+  userPricingSummary: 'Pricing Strategy',
+  userPricingStatusAbove: 'Zu hoch',
+  userPricingStatusBelow: 'Zu niedrig',
+  userPricingStatusWithin: 'Im Korridor',
+  userPricingStatusUnknown: 'Noch offen',
+  userPricingPositionLabel: 'Position',
+  userPricingEffectLabel: 'Erwarteter Effekt',
+  userPricingEffectAbove: 'Zu hoch → weniger Abschlüsse',
+  userPricingEffectBelow: 'Zu niedrig → Marge bleibt liegen',
+  userPricingEffectWithin: 'Im empfohlenen Bereich → gute Abschlusschance',
+  userPricingEffectUnknown: 'Noch keine belastbare Preisposition verfügbar',
+  userForYouLabel: 'Für dich',
+  userFitLabel: 'Dein Fit',
+  userFitHighLabel: 'hoch',
+  userRecommendationLabel: 'Empfehlung',
+  userActionPriorityHigh: 'High',
+  userActionPriorityMedium: 'Medium',
+  userActionPriorityLow: 'Low',
+  userActionImpactLabel: 'Impact',
+  userActionEffectLabel: 'Erwarteter Effekt',
+  userActionImpactHigh: 'Hoch',
+  userActionImpactMedium: 'Mittel',
+  userActionImpactLow: 'Niedrig',
+  userActionRespondTitle: 'Antworte schneller',
+  userActionRespondDetail: 'Ziel: erste Antwort unter {target} Minuten senden.',
+  userActionRespondEffect: 'Mehr Antworten im Peak-Zeitfenster und weniger offene Vorgänge.',
+  userActionPriceTitle: 'Preis anpassen',
+  userActionPriceDetail: 'Positioniere neue Angebote näher bei {price}€.',
+  userActionPriceEffect: 'Bessere Conversion im empfohlenen Preisfenster.',
+  userActionFocusTitle: 'Marktfokus schärfen',
+  userActionFocusDetail: 'Fokus auf {city} · {category} legen, solange Nachfrage und Balance stark sind.',
+  userActionFocusEffect: 'Mehr Sichtbarkeit im stärksten Marktsegment.',
+  userActionProfileTitle: 'Profil vervollständigen',
+  userActionProfileDetail: 'Profil auf mindestens {target}% Vollständigkeit bringen.',
+  userActionProfileEffect: 'Mehr Vertrauen und bessere Sichtbarkeit in passenden Aufträgen.',
+  userActionFollowUpTitle: 'Offene Anfragen nachfassen',
+  userActionFollowUpDetail: '{count} offene Vorgänge priorisiert beantworten oder schließen.',
+  userActionFollowUpEffect: 'Weniger verlorene Vorgänge und klarere Pipeline.',
   growthTitle: 'Wachstum & Promotion',
   growthSubtitle: 'Tools für mehr Sichtbarkeit und neue Aufträge',
   growthRecommendedPrefix: 'Empfohlen für',
@@ -534,6 +702,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   activityUnansweredLabel: 'Unanswered >24h',
   activityCancellationLabel: 'Cancellation rate',
   activityCompletedLabel: 'Completed jobs',
+  activityAverageOrderValueLabel: 'Avg order value',
   activityGmvLabel: 'GMV',
   activityRevenueLabel: 'Platform revenue',
   activityNoResponse: 'No response data',
@@ -636,6 +805,12 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   profileRevenueLabel: 'Revenue',
   profileSubtitlePlatform: 'From requests to successful completion and revenue',
   profileSubtitlePersonalized: 'How your profile performs right now',
+  profileComparisonHeadline: 'Your performance compared with the market',
+  comparisonUserLabel: 'You',
+  comparisonMarketLabel: 'Market',
+  comparisonGapLabel: 'Gap',
+  clientActivityChartLabel: 'You as client',
+  providerActivityChartLabel: 'You as provider',
   insightsGeneratedLabel: 'Based on current platform data',
   insightsAssistantAvatarLabel: 'AI',
   insightsAssistantName: "De'ci AI",
@@ -655,6 +830,83 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   decisionStrategyLoadingBody: 'Focus, pricing, and response speed are being prepared from demand, competition, and conversion signals.',
   decisionApplyStrategyLabel: 'Apply strategy',
   decisionOpenRequestsLabel: 'Open matching requests',
+  userComparisonLabel: 'User vs Market',
+  userDecisionSubtitle: 'Compares your performance with the current market',
+  userGapTitle: 'Gap analysis',
+  userGapSummaryTemplate: 'You lose {percent}% between offer → response. That currently affects {count} cases.',
+  userPositionTitle: 'Performance vs market',
+  userPositionSubtitle: 'Your current market position',
+  userPositionTopPrefix: 'Top',
+  userPositionTopSuffix: 'providers',
+  userPositionAverageLabel: 'Market average',
+  userPositionBelowLabel: 'Below average',
+  userPositionSummaryTemplate: 'You currently rank around the {percentile}th percentile versus the market.',
+  userPositionSummaryFallback: 'Not enough data for a reliable market position yet.',
+  userPositionOverallLabel: 'Overall',
+  userPositionCategoryLabel: 'Category',
+  userPositionCityLabel: 'City',
+  userRisksTitle: 'Risks & bottlenecks',
+  userRisksSubtitle: 'Where performance is leaking',
+  userOpportunitiesTitle: 'Opportunities for you',
+  userOpportunitiesSubtitle: 'Markets with a stronger fit for your profile',
+  userActionsTitle: 'Next steps',
+  userActionsSubtitle: 'Decision → Action',
+  userRiskSeverityHigh: 'High',
+  userRiskSeverityMedium: 'Medium',
+  userRiskSeverityLow: 'Low',
+  userRiskSlowResponseTitle: 'Response time is too slow',
+  userRiskSlowResponseBody: 'You reply in {user} min, slower than the market at {market} min.',
+  userRiskUnansweredTitle: 'Too many open requests',
+  userRiskUnansweredBody: '{count} open cases still need a clear reply.',
+  userRiskVisibilityTitle: 'Low visibility',
+  userRiskVisibilityBody: 'Your profile is only {profile}% complete. That reduces visibility and trust.',
+  userOpportunityDemandTitle: 'High demand in your target market',
+  userOpportunityDemandBody: '{city} · {category} currently shows strong demand for your setup.',
+  userOpportunityCompetitionTitle: 'Low competition in segment',
+  userOpportunityCompetitionBody: '{city} · {category} currently has favorable demand-to-competition balance.',
+  userOpportunityCategoryTitle: 'Category is growing',
+  userOpportunityCategoryBody: '{category} is currently outgrowing other segments.',
+  userPricingCurrentLabel: 'Your price',
+  userPricingRecommendedLabel: 'Recommended',
+  userPricingAverageLabel: 'Market',
+  userPricingSummary: 'Pricing strategy',
+  userPricingStatusAbove: 'Too high',
+  userPricingStatusBelow: 'Too low',
+  userPricingStatusWithin: 'In range',
+  userPricingStatusUnknown: 'Open',
+  userPricingPositionLabel: 'Position',
+  userPricingEffectLabel: 'Expected effect',
+  userPricingEffectAbove: 'Too high → fewer conversions',
+  userPricingEffectBelow: 'Too low → margin left on the table',
+  userPricingEffectWithin: 'In corridor → strong close potential',
+  userPricingEffectUnknown: 'No reliable pricing position yet',
+  userForYouLabel: 'For you',
+  userFitLabel: 'Your fit',
+  userFitHighLabel: 'high',
+  userRecommendationLabel: 'Recommendation',
+  userActionPriorityHigh: 'High',
+  userActionPriorityMedium: 'Medium',
+  userActionPriorityLow: 'Low',
+  userActionImpactLabel: 'Impact',
+  userActionEffectLabel: 'Expected effect',
+  userActionImpactHigh: 'High',
+  userActionImpactMedium: 'Medium',
+  userActionImpactLow: 'Low',
+  userActionRespondTitle: 'Reply faster',
+  userActionRespondDetail: 'Target: send the first reply within {target} minutes.',
+  userActionRespondEffect: 'More replies during peak demand windows and fewer open items.',
+  userActionPriceTitle: 'Adjust price',
+  userActionPriceDetail: 'Move new offers closer to {price}€.',
+  userActionPriceEffect: 'Better conversion inside the recommended pricing corridor.',
+  userActionFocusTitle: 'Sharpen market focus',
+  userActionFocusDetail: 'Focus on {city} · {category} while demand and balance stay strong.',
+  userActionFocusEffect: 'More visibility in the strongest market segment.',
+  userActionProfileTitle: 'Complete profile',
+  userActionProfileDetail: 'Bring the profile to at least {target}% completeness.',
+  userActionProfileEffect: 'More trust and stronger visibility in matching jobs.',
+  userActionFollowUpTitle: 'Follow up on open requests',
+  userActionFollowUpDetail: 'Prioritize {count} open cases for reply or closure.',
+  userActionFollowUpEffect: 'Fewer lost pipeline items and a clearer workflow.',
   growthTitle: 'Growth & promotion',
   growthSubtitle: 'Tools for more visibility and new jobs',
   growthRecommendedPrefix: 'Recommended for',

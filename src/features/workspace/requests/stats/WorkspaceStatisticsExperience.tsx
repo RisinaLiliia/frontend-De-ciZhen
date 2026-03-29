@@ -68,7 +68,6 @@ export function WorkspaceStatisticsExperience({
   t: (key: I18nKey) => string;
   locale: Locale;
 }) {
-  const model = useDecisionDashboardModel({ locale });
   const privateStatsPanelFromIntro = React.useMemo(() => resolvePrivateStatsPanel(intro), [intro]);
   const formatNumber = React.useMemo(
     () => new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US'),
@@ -84,10 +83,14 @@ export function WorkspaceStatisticsExperience({
     isError: isPrivateOverviewError,
   } = useQuery({
     queryKey: workspaceQK.workspacePrivateOverview(),
-    enabled: isWorkspaceAuthed && !privateStatsPanelFromIntro,
+    enabled: isWorkspaceAuthed,
     queryFn: () => withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403, 404]),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
+  });
+  const model = useDecisionDashboardModel({
+    locale,
+    privateOverview: isWorkspaceAuthed ? (workspacePrivateOverview ?? null) : null,
   });
   const privateStatsPanelFromQuery = React.useMemo<WorkspaceStatisticsPrivateStatsPanelProps | null>(() => {
     if (!isWorkspaceAuthed || privateStatsPanelFromIntro) {

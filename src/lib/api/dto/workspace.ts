@@ -198,6 +198,23 @@ export type WorkspaceStatisticsActivityDto = {
   metrics: WorkspaceStatisticsActivityMetricsDto;
 };
 
+export type WorkspaceStatisticsActivityComparisonPointDto = {
+  timestamp: string;
+  clientActivity: number | null;
+  providerActivity: number | null;
+};
+
+export type WorkspaceStatisticsActivityComparisonDto = {
+  title?: string | null;
+  subtitle?: string | null;
+  summary?: string | null;
+  peakTimestamp?: string | null;
+  bestWindowTimestamp?: string | null;
+  updatedAt?: string | null;
+  hasReliableSeries: boolean;
+  points: WorkspaceStatisticsActivityComparisonPointDto[];
+};
+
 export type WorkspaceStatisticsCategoryDemandDto = {
   categoryKey: string | null;
   categoryName: string;
@@ -411,6 +428,264 @@ export type WorkspaceStatisticsGrowthCardDto = {
   recommendedFor?: string;
 };
 
+export type WorkspaceStatisticsUserComparisonMetricDto = {
+  key: 'offer_rate' | 'response_time' | 'unanswered';
+  unit: 'percent' | 'minutes' | 'count';
+  userValue: number | null;
+  marketValue: number | null;
+  direction: 'up' | 'down' | 'flat';
+  tone: 'positive' | 'neutral' | 'warning';
+  status: 'high' | 'medium' | 'low' | null;
+};
+
+export type WorkspaceStatisticsUserFormulaMetricDto = {
+  key:
+    | 'offer_rate'
+    | 'response_rate'
+    | 'conversion_rate'
+    | 'completion_rate'
+    | 'cancellation_rate'
+    | 'avg_response_time'
+    | 'revenue'
+    | 'avg_order_value';
+  formula:
+    | 'offers / requests'
+    | 'responses / offers'
+    | 'contracts / requests'
+    | 'completed / contracts'
+    | 'cancellations / contracts'
+    | 'sum(response_time) / responses'
+    | 'sum(order_price * platform_fee)'
+    | 'total_revenue / completed_orders';
+  unit: 'percent' | 'minutes' | 'currency';
+  userValue: number | null;
+  marketValue: number | null;
+  gap: number | null;
+  direction: 'up' | 'down' | 'flat';
+  tone: 'positive' | 'neutral' | 'warning';
+};
+
+export type WorkspaceStatisticsUserSignalDto = {
+  id: string;
+  type: 'risk' | 'opportunity' | 'performance' | 'growth';
+  code:
+    | 'high_unanswered'
+    | 'slow_response'
+    | 'overpriced'
+    | 'underpriced'
+    | 'high_demand_city'
+    | 'growing_category'
+    | 'low_visibility'
+    | 'strong_position';
+  severity: 'high' | 'medium' | 'low';
+  metricKey?: WorkspaceStatisticsUserFormulaMetricDto['key'] | WorkspaceStatisticsUserComparisonMetricDto['key'] | null;
+  actionCode?: WorkspaceStatisticsUserActionStepDto['code'] | null;
+};
+
+export type WorkspaceStatisticsUserPerformancePositionDto = {
+  percentile: number | null;
+  categoryPercentile: number | null;
+  cityPercentile: number | null;
+  bucket: 'top' | 'average' | 'below';
+  categoryLabel?: string | null;
+  cityLabel?: string | null;
+};
+
+export type WorkspaceStatisticsUserProfileGapDto = {
+  fromStage: 'offers';
+  toStage: 'confirmations';
+  lossPercent: number | null;
+  lostCount: number | null;
+  tone: 'positive' | 'neutral' | 'warning';
+};
+
+export type WorkspaceStatisticsUserPriorityItemDto = {
+  id: string;
+  code:
+    | 'slow_response'
+    | 'high_unanswered'
+    | 'low_visibility'
+    | 'high_demand_city'
+    | 'growing_category'
+    | 'low_competition_segment'
+    | 'price_above_market'
+    | 'price_below_market'
+    | 'strong_position';
+  severity: 'high' | 'medium' | 'low';
+  cityLabel?: string | null;
+  categoryLabel?: string | null;
+  value?: number | null;
+  secondaryValue?: number | null;
+};
+
+export type WorkspaceStatisticsUserPricingDto = {
+  currentPrice: number | null;
+  recommendedMin: number | null;
+  recommendedMax: number | null;
+  marketAverage: number | null;
+  status: 'below' | 'within' | 'above' | 'unknown';
+  conversionImpact: 'positive' | 'neutral' | 'warning';
+};
+
+export type WorkspaceStatisticsUserActionStepDto = {
+  id: string;
+  code:
+    | 'respond_faster'
+    | 'adjust_price'
+    | 'focus_market'
+    | 'complete_profile'
+    | 'follow_up_unanswered';
+  priority: 'high' | 'medium' | 'low';
+  targetValue?: number | null;
+  cityLabel?: string | null;
+  categoryLabel?: string | null;
+};
+
+export type WorkspaceStatisticsUserIntelligenceDto = {
+  comparisonLabel?: string | null;
+  formulaMetrics: WorkspaceStatisticsUserFormulaMetricDto[];
+  decisionMetrics: WorkspaceStatisticsUserComparisonMetricDto[];
+  signals: WorkspaceStatisticsUserSignalDto[];
+  performancePosition: WorkspaceStatisticsUserPerformancePositionDto;
+  profileGap: WorkspaceStatisticsUserProfileGapDto | null;
+  risks: WorkspaceStatisticsUserPriorityItemDto[];
+  opportunities: WorkspaceStatisticsUserPriorityItemDto[];
+  pricing: WorkspaceStatisticsUserPricingDto | null;
+  nextSteps: WorkspaceStatisticsUserActionStepDto[];
+};
+
+export type WorkspaceStatisticsDecisionLayerMetricDto = {
+  id:
+    | 'offer_rate'
+    | 'avg_response_time'
+    | 'unanswered_over_24h'
+    | 'completed_jobs'
+    | 'revenue'
+    | 'average_order_value';
+  label: string;
+  marketValue: number | null;
+  userValue: number | null;
+  gapAbsolute: number | null;
+  gapPercent: number | null;
+  unit: 'percent' | 'minutes' | 'currency' | 'count';
+  direction: 'better' | 'worse' | 'neutral';
+  status: 'good' | 'warning' | 'critical' | 'neutral';
+  signalCodes: WorkspaceStatisticsUserSignalDto['code'][];
+  primaryActionCode: WorkspaceStatisticsUserActionStepDto['code'] | null;
+  summary: string | null;
+};
+
+export type WorkspaceStatisticsDecisionLayerDto = {
+  title: string | null;
+  subtitle: string | null;
+  metrics: WorkspaceStatisticsDecisionLayerMetricDto[];
+  primaryInsight: string | null;
+  primaryAction: {
+    code: WorkspaceStatisticsUserActionStepDto['code'];
+    label: string;
+    target: string | null;
+  } | null;
+};
+
+export type WorkspaceStatisticsPersonalizedPricingDto = {
+  title: string | null;
+  subtitle: string | null;
+  contextLabel: string | null;
+  marketAverage: number | null;
+  recommendedMin: number | null;
+  recommendedMax: number | null;
+  userPrice: number | null;
+  gapAbsolute: number | null;
+  comparisonReliability: 'high' | 'medium' | 'low' | 'unavailable';
+  position: 'below' | 'within' | 'above' | 'unknown';
+  effect: 'positive' | 'neutral' | 'warning';
+  actionCode: WorkspaceStatisticsUserActionStepDto['code'] | null;
+  summary: string | null;
+};
+
+export type WorkspaceStatisticsCategoryFitItemDto = {
+  categoryKey: string | null;
+  label: string;
+  marketDemandShare: number | null;
+  reliability: 'high' | 'medium' | 'low' | 'unknown';
+  userFit: 'high' | 'medium' | 'low' | 'unknown';
+  opportunity: 'high' | 'medium' | 'low' | 'unknown';
+  actionCode: WorkspaceStatisticsUserActionStepDto['code'] | null;
+  summary: string | null;
+};
+
+export type WorkspaceStatisticsCategoryFitDto = {
+  title: string | null;
+  subtitle: string | null;
+  hasReliableItems: boolean;
+  items: WorkspaceStatisticsCategoryFitItemDto[];
+};
+
+export type WorkspaceStatisticsCityComparisonItemDto = {
+  cityId: string | null;
+  city: string;
+  marketRequests: number | null;
+  reliability: 'high' | 'medium' | 'low' | 'unknown';
+  userActivity: 'high' | 'medium' | 'low' | 'unknown';
+  userConversion: number | null;
+  actionCode: WorkspaceStatisticsUserActionStepDto['code'] | null;
+  recommendation: string | null;
+};
+
+export type WorkspaceStatisticsCityComparisonDto = {
+  title: string | null;
+  subtitle: string | null;
+  hasReliableItems: boolean;
+  items: WorkspaceStatisticsCityComparisonItemDto[];
+};
+
+export type WorkspaceStatisticsRecommendationItemDto = {
+  code: string;
+  type: 'risk' | 'opportunity' | 'performance' | 'growth' | 'promotion' | 'demand';
+  priority: 'high' | 'medium' | 'low';
+  title: string;
+  description: string;
+  confidence: number;
+  reliability: 'high' | 'medium' | 'low';
+  context: string | null;
+  actionCode: string | null;
+  action: {
+    code: string;
+    label: string;
+    target: string | null;
+  } | null;
+};
+
+export type WorkspaceStatisticsRecommendationSectionDto = {
+  title: string | null;
+  subtitle: string | null;
+  hasReliableItems: boolean;
+  items: WorkspaceStatisticsRecommendationItemDto[];
+};
+
+export type WorkspaceStatisticsFunnelComparisonStageDto = {
+  key: 'requests' | 'offers' | 'responses' | 'contracts' | 'completed';
+  label: string;
+  marketCount: number | null;
+  userCount: number | null;
+  marketRateFromPrev: number | null;
+  userRateFromPrev: number | null;
+  gapRate: number | null;
+  status: 'above_market' | 'below_market' | 'at_market' | 'insufficient_data';
+  dropOffSeverity: 'high' | 'medium' | 'low' | null;
+  recommendation: string | null;
+};
+
+export type WorkspaceStatisticsFunnelComparisonDto = {
+  comparisonLabel?: string | null;
+  summary?: string | null;
+  largestGapStage: WorkspaceStatisticsFunnelComparisonStageDto['key'] | null;
+  largestDropOffStage: WorkspaceStatisticsFunnelComparisonStageDto['key'] | null;
+  primaryBottleneck: string | null;
+  nextAction: string | null;
+  stages: WorkspaceStatisticsFunnelComparisonStageDto[];
+};
+
 export type WorkspaceStatisticsOverviewDto = {
   updatedAt: string;
   mode: 'platform' | 'personalized';
@@ -420,13 +695,23 @@ export type WorkspaceStatisticsOverviewDto = {
   sectionMeta?: WorkspaceStatisticsSectionMetaDto;
   exportMeta?: WorkspaceStatisticsExportMetaDto;
   decisionInsight?: string | null;
+  decisionLayer?: WorkspaceStatisticsDecisionLayerDto | null;
+  personalizedPricing?: WorkspaceStatisticsPersonalizedPricingDto | null;
+  categoryFit?: WorkspaceStatisticsCategoryFitDto | null;
+  cityComparison?: WorkspaceStatisticsCityComparisonDto | null;
+  risks?: WorkspaceStatisticsRecommendationSectionDto | null;
+  opportunities?: WorkspaceStatisticsRecommendationSectionDto | null;
+  nextSteps?: WorkspaceStatisticsRecommendationSectionDto | null;
   summary: WorkspaceStatisticsSummaryDto;
   kpis: WorkspaceStatisticsKpisDto;
   activity: WorkspaceStatisticsActivityDto;
+  activityComparison?: WorkspaceStatisticsActivityComparisonDto | null;
   demand: WorkspaceStatisticsDemandDto;
   opportunityRadar: WorkspaceStatisticsOpportunityRadarItemDto[];
   priceIntelligence: WorkspaceStatisticsPriceIntelligenceDto;
   profileFunnel: WorkspaceStatisticsProfileFunnelDto;
   insights: WorkspaceStatisticsInsightDto[];
   growthCards: WorkspaceStatisticsGrowthCardDto[];
+  funnelComparison?: WorkspaceStatisticsFunnelComparisonDto | null;
+  userIntelligence?: WorkspaceStatisticsUserIntelligenceDto | null;
 };

@@ -16,6 +16,14 @@ import {
   buildFocusedOpportunityRadar,
   ensureStatisticsOpportunityContract,
 } from './statisticsOpportunityContract.utils';
+import {
+  buildCompatibilityCategoryFit,
+  buildCompatibilityCityComparison,
+  buildCompatibilityDecisionLayer,
+  buildCompatibilityFunnelComparison,
+  buildCompatibilityPersonalizedPricing,
+  buildCompatibilityUserIntelligence,
+} from './statisticsUserIntelligence.utils';
 
 export type DecisionDashboardFilters = {
   period: WorkspaceStatisticsOverviewDto['range'];
@@ -322,6 +330,27 @@ export function normalizeWorkspaceDecisionDashboardResponse(
     opportunityRadar,
     priceIntelligence,
   });
+  const userIntelligence = payload.userIntelligence ?? buildCompatibilityUserIntelligence({
+    payload: normalizedPayload,
+    priceIntelligence,
+  });
+  const decisionLayer = payload.decisionLayer ?? buildCompatibilityDecisionLayer({
+    payload: normalizedPayload,
+    userIntelligence,
+  });
+  const personalizedPricing = payload.personalizedPricing ?? buildCompatibilityPersonalizedPricing({
+    payload: normalizedPayload,
+    userIntelligence,
+    priceIntelligence,
+  });
+  const categoryFit = payload.categoryFit ?? buildCompatibilityCategoryFit({
+    payload: normalizedPayload,
+    userIntelligence,
+  });
+  const cityComparison = payload.cityComparison ?? buildCompatibilityCityComparison({
+    payload: normalizedPayload,
+    userIntelligence,
+  });
 
   return {
     ...normalizedPayload,
@@ -336,5 +365,14 @@ export function normalizeWorkspaceDecisionDashboardResponse(
     filterOptions,
     sectionMeta: payload.sectionMeta ?? buildSectionMeta(normalizedPayload, decisionContext),
     exportMeta: payload.exportMeta ?? buildExportMeta(normalizedPayload, filters),
+    decisionLayer,
+    personalizedPricing,
+    categoryFit,
+    cityComparison,
+    funnelComparison: payload.funnelComparison ?? buildCompatibilityFunnelComparison({
+      payload: normalizedPayload,
+      userIntelligence,
+    }),
+    userIntelligence,
   };
 }

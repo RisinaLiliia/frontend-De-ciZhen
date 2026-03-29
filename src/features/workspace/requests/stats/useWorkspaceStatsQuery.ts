@@ -4,12 +4,16 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
+import type {
+  WorkspacePrivateOverviewDto,
+  WorkspaceStatisticsRange,
+} from '@/lib/api/dto/workspace';
 import { getWorkspaceStatistics } from '@/lib/api/workspace';
 import {
   normalizeWorkspaceDecisionDashboardResponse,
   type WorkspaceStatisticsDecisionDashboardDto,
 } from './statisticsDecisionDashboard.contract';
+import { hydrateAuthenticatedStatisticsPayload } from './statisticsAuthenticatedPayload.utils';
 import { workspaceStatisticsDecisionDashboardSchema } from './workspaceStatisticsDecisionDashboard.schema';
 import type { WorkspaceStatisticsFilters } from './workspaceStatistics.model';
 
@@ -39,7 +43,11 @@ function resolveNullableFilter(value: string | null) {
   return normalized.length > 0 ? normalized : null;
 }
 
-export function useWorkspaceStatsQuery(): UseWorkspaceStatsQueryResult {
+export function useWorkspaceStatsQuery({
+  privateOverview = null,
+}: {
+  privateOverview?: WorkspacePrivateOverviewDto | null;
+} = {}): UseWorkspaceStatsQueryResult {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -112,7 +120,14 @@ export function useWorkspaceStatsQuery(): UseWorkspaceStatsQueryResult {
   const [lastSuccessfulData, setLastSuccessfulData] = React.useState<WorkspaceStatisticsDecisionDashboardDto | undefined>(undefined);
 
   const query = useQuery<WorkspaceStatisticsDecisionDashboardDto>({
-    queryKey: ['workspace-statistics-overview', filters.period, filters.regionId, filters.cityId, filters.categoryKey],
+    queryKey: [
+      'workspace-statistics-overview',
+      filters.period,
+      filters.regionId,
+      filters.cityId,
+      filters.categoryKey,
+      privateOverview?.updatedAt ?? 'no-private-overview',
+    ],
     queryFn: async (): Promise<WorkspaceStatisticsDecisionDashboardDto> => {
       const payload = await getWorkspaceStatistics({
         range: filters.period,
@@ -120,8 +135,12 @@ export function useWorkspaceStatsQuery(): UseWorkspaceStatsQueryResult {
         regionId: filters.regionId,
         categoryKey: filters.categoryKey,
       });
+      const hydratedPayload = hydrateAuthenticatedStatisticsPayload({
+        payload,
+        privateOverview,
+      });
       const normalized = normalizeWorkspaceDecisionDashboardResponse({
-        ...payload,
+        ...hydratedPayload,
         __source: 'bff',
       }, filters);
       workspaceStatisticsDecisionDashboardSchema.parse(normalized);

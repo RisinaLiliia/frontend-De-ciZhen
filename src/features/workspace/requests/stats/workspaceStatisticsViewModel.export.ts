@@ -31,6 +31,13 @@ function exportCsv(rows: string[][], filename: string) {
   URL.revokeObjectURL(url);
 }
 
+function serializeActivitySignalValue(item: WorkspaceStatisticsActivitySignalView) {
+  if (item.marketValue && item.userValue) {
+    return `${item.marketValue} | ${item.userValue}`;
+  }
+  return item.value;
+}
+
 export function exportWorkspaceStatisticsCsv(params: {
   activitySignals: WorkspaceStatisticsActivitySignalView[];
   cityRows: WorkspaceStatisticsCityRowView[];
@@ -45,7 +52,7 @@ export function exportWorkspaceStatisticsCsv(params: {
   const rows: string[][] = [
     ['section', 'metric', 'value'],
     ...kpis.map((item) => ['kpi', item.label, item.value]),
-    ...activitySignals.map((item) => ['activity-signal', item.label, `${item.value} (${item.hint})`]),
+    ...activitySignals.map((item) => ['activity-signal', item.label, `${serializeActivitySignalValue(item)} (${item.hint})`]),
     ...data.demand.categories.map((item) => ['category-demand', item.categoryName, `${item.sharePercent}% (${item.requestCount})`]),
     ...cityRows.map((item) => [
       'city-demand',

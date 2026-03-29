@@ -80,6 +80,13 @@ export function StatisticsDecisionLayer({
             value={item.value}
             hint={item.hint}
             tone={item.tone}
+            comparison={item.marketValue && item.userValue ? {
+              userLabel: copy.comparisonUserLabel,
+              userValue: item.userValue,
+              marketLabel: copy.comparisonMarketLabel,
+              marketValue: item.marketValue,
+              gapLabel: copy.comparisonGapLabel,
+            } : null}
           />
         ))}
       </ul>
