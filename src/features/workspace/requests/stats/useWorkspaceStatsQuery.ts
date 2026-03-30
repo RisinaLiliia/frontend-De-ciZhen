@@ -61,6 +61,7 @@ export function useWorkspaceStatsQuery({
       cityId: resolveNullableFilter(searchParams.get('cityId')),
       regionId: null,
       categoryKey: resolveNullableFilter(searchParams.get('categoryKey')),
+      subcategoryKey: resolveNullableFilter(searchParams.get('subcategoryKey')),
       viewerMode: searchParams.get('viewerMode') === 'customer'
         ? 'customer'
         : searchParams.get('viewerMode') === 'provider'
@@ -139,6 +140,7 @@ export function useWorkspaceStatsQuery({
       filters.regionId,
       filters.cityId,
       filters.categoryKey,
+      filters.subcategoryKey,
       filters.viewerMode ?? 'auto',
       privateOverview?.updatedAt ?? 'no-private-overview',
     ],
@@ -148,6 +150,7 @@ export function useWorkspaceStatsQuery({
         cityId: filters.cityId,
         regionId: filters.regionId,
         categoryKey: filters.categoryKey,
+        subcategoryKey: filters.subcategoryKey,
         viewerMode: filters.viewerMode,
       });
       const hydratedPayload = hydrateAuthenticatedStatisticsPayload({

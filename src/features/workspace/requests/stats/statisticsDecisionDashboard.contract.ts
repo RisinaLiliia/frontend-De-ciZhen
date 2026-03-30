@@ -30,6 +30,7 @@ export type DecisionDashboardFilters = {
   cityId: string | null;
   regionId?: string | null;
   categoryKey: string | null;
+  subcategoryKey?: string | null;
 };
 
 export type WorkspaceStatisticsDecisionDashboardDto = WorkspaceStatisticsOverviewSourceDto & {

@@ -292,6 +292,7 @@ export type WorkspaceStatisticsFilters = {
   cityId: string | null;
   regionId?: string | null;
   categoryKey: string | null;
+  subcategoryKey?: string | null;
   viewerMode?: WorkspaceStatisticsViewerMode | null;
 };
 
