@@ -667,10 +667,10 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-funnel-comparison-summary')).toContain('Du verlierst');
     expect(probe.getAttribute('data-funnel-comparison-action')).toContain('Marktfokus schärfen');
     expect((probe.getAttribute('data-activity-signal-labels') ?? '').split('|')).toHaveLength(6);
-    expect(probe.getAttribute('data-activity-signal-labels')).toContain('Angebotsquote');
-    expect(probe.getAttribute('data-activity-signal-labels')).toContain('Median Antwortzeit');
-    expect(probe.getAttribute('data-activity-signal-labels')).toContain('Abschlüsse');
-    expect(probe.getAttribute('data-activity-signal-labels')).toContain('Plattform-Umsatz');
+    expect(probe.getAttribute('data-activity-signal-labels')).toContain('Offer rate');
+    expect(probe.getAttribute('data-activity-signal-labels')).toContain('Average response time');
+    expect(probe.getAttribute('data-activity-signal-labels')).toContain('Completed jobs');
+    expect(probe.getAttribute('data-activity-signal-labels')).toContain('Revenue');
     expect(probe.getAttribute('data-activity-signal-values')).toContain('55%|31%|31%');
     expect(probe.getAttribute('data-activity-signal-values')).toContain('45 Min.|930 Min.|930 Min.');
     expect(probe.getAttribute('data-activity-signal-hints')).toContain('unter dem Markt');

@@ -23,8 +23,12 @@ export type WorkspaceStatisticsCityRowView = {
   count: number;
   auftragSuchenCount: number | null;
   anbieterSuchenCount: number | null;
+  providersActive: number | null;
   marketBalanceRatio: number | null;
+  score: number | null;
+  rank: number | null;
   signal: 'high' | 'medium' | 'low' | 'none';
+  peerContext: WorkspaceStatisticsOpportunityRadarItemDto['peerContext'] | null;
 };
 
 export type WorkspaceStatisticsFunnelItemView = {
@@ -57,8 +61,16 @@ export type WorkspaceStatisticsFunnelComparisonStageView = {
   marketRate: string;
   userRate: string;
   gapRate: string;
-  status: 'above_market' | 'below_market' | 'at_market' | 'insufficient_data';
-  dropOffSeverity: 'high' | 'medium' | 'low' | null;
+  status:
+    | 'good'
+    | 'warning'
+    | 'critical'
+    | 'neutral'
+    | 'at_market'
+    | 'above_market'
+    | 'below_market'
+    | 'insufficient_data';
+  dropOffSeverity?: 'low' | 'medium' | 'high' | 'critical' | null;
   recommendation: string | null;
 };
 
@@ -284,6 +296,7 @@ export type WorkspaceStatisticsFilters = {
   cityId: string | null;
   regionId?: string | null;
   categoryKey: string | null;
+  subcategoryKey?: string | null;
   viewerMode?: WorkspaceStatisticsViewerMode | null;
 };
 

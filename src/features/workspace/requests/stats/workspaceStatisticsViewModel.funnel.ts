@@ -11,7 +11,7 @@ function resolveActionLabel(copy: WorkspaceStatisticsCopy, actionCode: string | 
   if (actionCode === 'adjust_price') return copy.userActionPriceTitle;
   if (actionCode === 'focus_market') return copy.userActionFocusTitle;
   if (actionCode === 'complete_profile') return copy.userActionProfileTitle;
-  if (actionCode === 'follow_up_unanswered') return copy.userActionFollowUpTitle;
+  if (actionCode === 'follow_up_unanswered' || actionCode === 'follow_up_requests') return copy.userActionFollowUpTitle;
   return null;
 }
 

@@ -590,6 +590,11 @@
   .workspace-statistics-user-panel {
     display: grid;
     gap: var(--space-3);
+    align-content: start;
+  }
+
+  .workspace-statistics-user-panel--actions {
+    min-height: 280px;
   }
 
   .workspace-statistics-user-position {

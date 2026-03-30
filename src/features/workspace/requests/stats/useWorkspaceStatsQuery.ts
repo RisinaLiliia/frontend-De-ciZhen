@@ -61,6 +61,7 @@ export function useWorkspaceStatsQuery({
       cityId: resolveNullableFilter(searchParams.get('cityId')),
       regionId: null,
       categoryKey: resolveNullableFilter(searchParams.get('categoryKey')),
+      subcategoryKey: resolveNullableFilter(searchParams.get('subcategoryKey')),
       viewerMode: searchParams.get('viewerMode') === 'customer'
         ? 'customer'
         : searchParams.get('viewerMode') === 'provider'
@@ -139,6 +140,7 @@ export function useWorkspaceStatsQuery({
       filters.regionId,
       filters.cityId,
       filters.categoryKey,
+      filters.subcategoryKey,
       filters.viewerMode ?? 'auto',
       privateOverview?.updatedAt ?? 'no-private-overview',
     ],
@@ -148,6 +150,7 @@ export function useWorkspaceStatsQuery({
         cityId: filters.cityId,
         regionId: filters.regionId,
         categoryKey: filters.categoryKey,
+        subcategoryKey: filters.subcategoryKey,
         viewerMode: filters.viewerMode,
       });
       const hydratedPayload = hydrateAuthenticatedStatisticsPayload({
@@ -158,8 +161,14 @@ export function useWorkspaceStatsQuery({
         ...hydratedPayload,
         __source: 'bff',
       }, filters);
-      workspaceStatisticsDecisionDashboardSchema.parse(normalized);
-      return normalized;
+      const parsed = workspaceStatisticsDecisionDashboardSchema.safeParse(normalized);
+      if (!parsed.success) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Workspace statistics schema mismatch', parsed.error.flatten());
+        }
+        return normalized as WorkspaceStatisticsDecisionDashboardDto;
+      }
+      return parsed.data as WorkspaceStatisticsDecisionDashboardDto;
     },
     staleTime: 60_000,
     refetchOnWindowFocus: false,

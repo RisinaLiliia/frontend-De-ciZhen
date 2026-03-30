@@ -352,6 +352,23 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
       exportMeta: {
         filename: 'server-generated.csv',
       },
+      opportunityRadar: [
+        {
+          ...createPayload().opportunityRadar![1],
+          rank: 1,
+          peerContext: { role: 'focus', distanceKm: null, reason: 'selected_city' },
+        },
+        {
+          ...createPayload().opportunityRadar![2],
+          rank: 2,
+          peerContext: { role: 'competitor', distanceKm: 8.4, reason: 'nearby_competitor' },
+        },
+        {
+          ...createPayload().opportunityRadar![0],
+          rank: 3,
+          peerContext: { role: 'competitor', distanceKm: 42.1, reason: 'nearby_competitor' },
+        },
+      ],
     } satisfies WorkspaceStatisticsOverviewSourceDto;
 
     const result = normalizeWorkspaceDecisionDashboardResponse(payload, {

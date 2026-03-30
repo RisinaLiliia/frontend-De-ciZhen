@@ -7,12 +7,16 @@ export type WorkspaceStatisticsSource = 'bff' | 'fallback';
 
 export type WorkspaceStatisticsCitySourceDto = Omit<
   WorkspaceStatisticsCityDemandDto,
-  'auftragSuchenCount' | 'anbieterSuchenCount' | 'marketBalanceRatio' | 'signal'
+  'auftragSuchenCount' | 'anbieterSuchenCount' | 'providersActive' | 'marketBalanceRatio' | 'score' | 'rank' | 'signal' | 'peerContext'
 > & {
   auftragSuchenCount?: number | null;
   anbieterSuchenCount?: number | null;
+  providersActive?: number | null;
   marketBalanceRatio?: number | null;
+  score?: number | null;
+  rank?: number | null;
   signal?: 'high' | 'medium' | 'low' | 'none';
+  peerContext?: WorkspaceStatisticsCityDemandDto['peerContext'];
 };
 
 export type WorkspaceStatisticsOverviewSourceDto = Omit<

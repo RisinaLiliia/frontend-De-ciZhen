@@ -24,11 +24,24 @@ export function buildCityRows(
       typeof item.anbieterSuchenCount === 'number' && Number.isFinite(item.anbieterSuchenCount)
         ? Math.max(0, Math.round(item.anbieterSuchenCount))
         : null,
+    providersActive:
+      typeof item.providersActive === 'number' && Number.isFinite(item.providersActive)
+        ? Math.max(0, Math.round(item.providersActive))
+        : null,
     marketBalanceRatio:
       typeof item.marketBalanceRatio === 'number' && Number.isFinite(item.marketBalanceRatio)
         ? item.marketBalanceRatio
         : null,
+    score:
+      typeof item.score === 'number' && Number.isFinite(item.score)
+        ? item.score
+        : null,
+    rank:
+      typeof item.rank === 'number' && Number.isFinite(item.rank)
+        ? Math.max(1, Math.round(item.rank))
+        : null,
     signal: item.signal ?? 'none',
+    peerContext: item.peerContext ?? null,
   }));
 }
 

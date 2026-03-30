@@ -288,7 +288,9 @@ function resolveSignalActionLabel(copy: WorkspaceStatisticsCopy, signal: UserInt
   if (signal.actionCode === 'adjust_price') return copy.userActionPriceTitle;
   if (signal.actionCode === 'focus_market') return copy.userActionFocusTitle;
   if (signal.actionCode === 'complete_profile') return copy.userActionProfileTitle;
-  if (signal.actionCode === 'follow_up_unanswered') return copy.userActionFollowUpTitle;
+  if (signal.actionCode === 'follow_up_unanswered' || signal.actionCode === 'follow_up_requests') {
+    return copy.userActionFollowUpTitle;
+  }
   return null;
 }
 
@@ -297,7 +299,7 @@ function resolveActionCodeLabel(copy: WorkspaceStatisticsCopy, actionCode: UserI
   if (actionCode === 'adjust_price') return copy.userActionPriceTitle;
   if (actionCode === 'focus_market') return copy.userActionFocusTitle;
   if (actionCode === 'complete_profile') return copy.userActionProfileTitle;
-  if (actionCode === 'follow_up_unanswered') return copy.userActionFollowUpTitle;
+  if (actionCode === 'follow_up_unanswered' || actionCode === 'follow_up_requests') return copy.userActionFollowUpTitle;
   return null;
 }
 
@@ -355,17 +357,19 @@ export function buildDecisionLayerSignals(params: {
 
     return {
       key: metric.id,
-      label: metric.id === 'average_order_value'
-        ? copy.activityAverageOrderValueLabel
-        : metric.id === 'completed_jobs'
-          ? copy.activityCompletedLabel
-          : metric.id === 'unanswered_over_24h'
-            ? copy.activityUnansweredLabel
-            : metric.id === 'avg_response_time'
-              ? copy.activityResponseMedianLabel
-              : metric.id === 'revenue'
-                ? copy.activityRevenueLabel
-                : copy.activityOfferRateLabel,
+      label: metric.label?.trim() || (
+        metric.id === 'average_order_value'
+          ? copy.activityAverageOrderValueLabel
+          : metric.id === 'completed_jobs'
+            ? copy.activityCompletedLabel
+            : metric.id === 'unanswered_over_24h'
+              ? copy.activityUnansweredLabel
+              : metric.id === 'avg_response_time'
+                ? copy.activityResponseMedianLabel
+                : metric.id === 'revenue'
+                  ? copy.activityRevenueLabel
+                  : copy.activityOfferRateLabel
+      ),
       value: userValue,
       marketValue,
       userValue,

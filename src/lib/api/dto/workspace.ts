@@ -296,9 +296,13 @@ export type WorkspaceStatisticsCityDemandDto = {
   auftragSuchenCount: number | null;
   anbieterSuchenCount: number | null;
   marketBalanceRatio: number | null;
+  providersActive?: number | null;
+  score?: number | null;
+  rank?: number | null;
   signal: 'high' | 'medium' | 'low' | 'none';
   lat: number | null;
   lng: number | null;
+  peerContext?: WorkspaceStatisticsOpportunityPeerContextDto | null;
 };
 
 export type WorkspaceStatisticsDemandDto = {
@@ -477,7 +481,10 @@ export type WorkspaceStatisticsUserSignalDto = {
     | 'high_demand_city'
     | 'growing_category'
     | 'low_visibility'
-    | 'strong_position';
+    | 'strong_position'
+    | 'low_competition_segment'
+    | 'price_above_market'
+    | 'price_below_market';
   severity: 'high' | 'medium' | 'low';
   metricKey?: WorkspaceStatisticsUserFormulaMetricDto['key'] | WorkspaceStatisticsUserComparisonMetricDto['key'] | null;
   actionCode?: WorkspaceStatisticsUserActionStepDto['code'] | null;
@@ -535,7 +542,8 @@ export type WorkspaceStatisticsUserActionStepDto = {
     | 'adjust_price'
     | 'focus_market'
     | 'complete_profile'
-    | 'follow_up_unanswered';
+    | 'follow_up_unanswered'
+    | 'follow_up_requests';
   priority: 'high' | 'medium' | 'low';
   targetValue?: number | null;
   cityLabel?: string | null;
@@ -571,7 +579,7 @@ export type WorkspaceStatisticsDecisionLayerMetricDto = {
   unit: 'percent' | 'minutes' | 'currency' | 'count';
   direction: 'better' | 'worse' | 'neutral';
   status: 'good' | 'warning' | 'critical' | 'neutral';
-  signalCodes: WorkspaceStatisticsUserSignalDto['code'][];
+  signalCodes: string[];
   primaryActionCode: WorkspaceStatisticsUserActionStepDto['code'] | null;
   summary: string | null;
 };
@@ -672,8 +680,16 @@ export type WorkspaceStatisticsFunnelComparisonStageDto = {
   marketRateFromPrev: number | null;
   userRateFromPrev: number | null;
   gapRate: number | null;
-  status: 'above_market' | 'below_market' | 'at_market' | 'insufficient_data';
-  dropOffSeverity: 'high' | 'medium' | 'low' | null;
+  status:
+    | 'good'
+    | 'warning'
+    | 'critical'
+    | 'neutral'
+    | 'at_market'
+    | 'above_market'
+    | 'below_market'
+    | 'insufficient_data';
+  dropOffSeverity?: 'low' | 'medium' | 'high' | 'critical' | null;
   recommendation: string | null;
 };
 
