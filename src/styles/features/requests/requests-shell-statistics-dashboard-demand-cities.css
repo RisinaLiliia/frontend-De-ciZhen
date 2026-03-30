@@ -189,6 +189,19 @@
       0 0 0 1px color-mix(in oklab, var(--c-primary) 12%, transparent);
   }
 
+  .workspace-statistics-city-list__item.is-competitor:not(.is-active) {
+    border-color: color-mix(in oklab, var(--c-accent) 26%, var(--surface-card-border-hover) 74%);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--c-accent) 7%, var(--c-panel) 93%) 0%,
+        color-mix(in oklab, var(--surface-soft-bg) 90%, var(--c-accent) 10%) 100%
+      );
+    box-shadow:
+      var(--surface-card-shadow-hover),
+      0 0 0 1px color-mix(in oklab, var(--c-accent) 10%, transparent);
+  }
+
   .workspace-statistics-city-list__rank-cell {
     display: inline-flex;
     align-items: center;

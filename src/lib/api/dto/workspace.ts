@@ -296,9 +296,13 @@ export type WorkspaceStatisticsCityDemandDto = {
   auftragSuchenCount: number | null;
   anbieterSuchenCount: number | null;
   marketBalanceRatio: number | null;
+  providersActive?: number | null;
+  score?: number | null;
+  rank?: number | null;
   signal: 'high' | 'medium' | 'low' | 'none';
   lat: number | null;
   lng: number | null;
+  peerContext?: WorkspaceStatisticsOpportunityPeerContextDto | null;
 };
 
 export type WorkspaceStatisticsDemandDto = {

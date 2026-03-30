@@ -141,7 +141,15 @@ export function WorkspaceStatisticsView({
   const rankedCityRows = React.useMemo(() => (
     cityRows
       .slice()
-      .sort((a, b) => (b.count - a.count) || a.name.localeCompare(b.name, locale === 'de' ? 'de-DE' : 'en-US'))
+      .sort((a, b) => {
+        if (typeof a.rank === 'number' || typeof b.rank === 'number') {
+          return (a.rank ?? Number.MAX_SAFE_INTEGER) - (b.rank ?? Number.MAX_SAFE_INTEGER);
+        }
+        if (typeof a.score === 'number' || typeof b.score === 'number') {
+          return (b.score ?? Number.NEGATIVE_INFINITY) - (a.score ?? Number.NEGATIVE_INFINITY);
+        }
+        return (b.count - a.count) || a.name.localeCompare(b.name, locale === 'de' ? 'de-DE' : 'en-US');
+      })
   ), [cityRows, locale]);
 
   const cityRankByKey = React.useMemo(() => {

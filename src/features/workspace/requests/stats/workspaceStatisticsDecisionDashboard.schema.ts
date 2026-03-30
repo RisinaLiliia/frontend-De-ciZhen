@@ -28,9 +28,17 @@ const cityDemandSchema = z.object({
   auftragSuchenCount: z.number().nullable().optional(),
   anbieterSuchenCount: z.number().nullable().optional(),
   marketBalanceRatio: z.number().nullable().optional(),
+  providersActive: z.number().nullable().optional(),
+  score: z.number().nullable().optional(),
+  rank: z.number().nullable().optional(),
   signal: z.enum(['high', 'medium', 'low', 'none']).optional(),
   lat: z.number().nullable(),
   lng: z.number().nullable(),
+  peerContext: z.object({
+    role: z.enum(['focus', 'competitor']),
+    distanceKm: z.number().nullable(),
+    reason: z.enum(['selected_city', 'nearby_competitor', 'top_ranked']),
+  }).nullable().optional(),
 });
 
 const categoryDemandSchema = z.object({

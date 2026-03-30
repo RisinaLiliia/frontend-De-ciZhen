@@ -23,8 +23,12 @@ export type WorkspaceStatisticsCityRowView = {
   count: number;
   auftragSuchenCount: number | null;
   anbieterSuchenCount: number | null;
+  providersActive: number | null;
   marketBalanceRatio: number | null;
+  score: number | null;
+  rank: number | null;
   signal: 'high' | 'medium' | 'low' | 'none';
+  peerContext: WorkspaceStatisticsOpportunityRadarItemDto['peerContext'] | null;
 };
 
 export type WorkspaceStatisticsFunnelItemView = {

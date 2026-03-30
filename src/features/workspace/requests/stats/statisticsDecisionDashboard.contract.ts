@@ -125,6 +125,15 @@ function scopeCityRows(
   filters: DecisionDashboardFilters,
 ) {
   const rows = (payload.demand.cities ?? []).slice();
+  const hasBackendScopedCityContract = filters.cityId
+    ? rows.some((row) => row.peerContext?.reason === 'selected_city')
+    : rows.some(
+      (row) =>
+        typeof row.rank === 'number' ||
+        typeof row.score === 'number' ||
+        row.peerContext !== undefined,
+    );
+  if (hasBackendScopedCityContract) return rows;
   if (!filters.cityId) return rows;
   return rows.filter((row) => (row.cityId ?? row.citySlug) === filters.cityId);
 }
@@ -133,6 +142,14 @@ function scopeOpportunityRadar(
   payload: WorkspaceStatisticsOverviewSourceDto,
   filters: DecisionDashboardFilters,
 ) {
+  const backendOpportunityRadar = (payload.opportunityRadar ?? []).slice();
+  const hasBackendScopedOpportunityContract = filters.cityId
+    ? backendOpportunityRadar[0]?.peerContext?.reason === 'selected_city'
+    : backendOpportunityRadar.length > 0 && backendOpportunityRadar.some(
+      (item) => item.peerContext !== undefined || item.priceIntelligence !== undefined,
+    );
+  if (hasBackendScopedOpportunityContract) return backendOpportunityRadar.slice(0, 3);
+
   return buildFocusedOpportunityRadar(payload, {
     cityId: filters.cityId,
     categoryKey: filters.categoryKey,

@@ -357,17 +357,19 @@ export function buildDecisionLayerSignals(params: {
 
     return {
       key: metric.id,
-      label: metric.id === 'average_order_value'
-        ? copy.activityAverageOrderValueLabel
-        : metric.id === 'completed_jobs'
-          ? copy.activityCompletedLabel
-          : metric.id === 'unanswered_over_24h'
-            ? copy.activityUnansweredLabel
-            : metric.id === 'avg_response_time'
-              ? copy.activityResponseMedianLabel
-              : metric.id === 'revenue'
-                ? copy.activityRevenueLabel
-                : copy.activityOfferRateLabel,
+      label: metric.label?.trim() || (
+        metric.id === 'average_order_value'
+          ? copy.activityAverageOrderValueLabel
+          : metric.id === 'completed_jobs'
+            ? copy.activityCompletedLabel
+            : metric.id === 'unanswered_over_24h'
+              ? copy.activityUnansweredLabel
+              : metric.id === 'avg_response_time'
+                ? copy.activityResponseMedianLabel
+                : metric.id === 'revenue'
+                  ? copy.activityRevenueLabel
+                  : copy.activityOfferRateLabel
+      ),
       value: userValue,
       marketValue,
       userValue,

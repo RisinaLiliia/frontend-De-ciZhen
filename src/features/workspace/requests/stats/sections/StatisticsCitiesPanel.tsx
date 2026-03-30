@@ -93,7 +93,7 @@ export function StatisticsCitiesPanel({
             <span>{copy.citiesColumnMarketBalance}</span>
           </li>
           {visibleCityRows.map((item, index) => {
-            const rank = cityRankByKey.get(item.key) ?? cityStartIndex + index + 1;
+            const rank = item.rank ?? cityRankByKey.get(item.key) ?? cityStartIndex + index + 1;
             const rankTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : null;
             const requestsLabel = formatNumber.format(item.count);
             const jobSearchesLabel = item.auftragSuchenCount === null ? '—' : formatNumber.format(item.auftragSuchenCount);
@@ -101,6 +101,7 @@ export function StatisticsCitiesPanel({
             const marketBalanceLabel = item.marketBalanceRatio === null ? '—' : `${formatMarketBalance.format(item.marketBalanceRatio)}x`;
             const signalLabel = citySignalLabel(item.signal, copy);
             const matchedCityComparison = cityComparison?.find((city) => city.city.trim().toLowerCase() === item.name.trim().toLowerCase()) ?? null;
+            const isCompetitor = item.peerContext?.role === 'competitor';
             return (
               <li
                 key={`${item.key}-${index}`}
@@ -108,7 +109,7 @@ export function StatisticsCitiesPanel({
               >
                 <button
                   type="button"
-                  className={`stat-card workspace-statistics-city-list__item${activeCityId === item.cityId ? ' is-active' : ''}`.trim()}
+                  className={`stat-card workspace-statistics-city-list__item${activeCityId === item.cityId ? ' is-active' : ''}${isCompetitor ? ' is-competitor' : ''}`.trim()}
                   aria-pressed={activeCityId === item.cityId}
                   aria-label={`${copy.citiesColumnRank} ${rank}. ${item.name}. ${copy.citiesColumnRequests}: ${requestsLabel}. ${copy.citiesColumnJobSearches}: ${jobSearchesLabel}. ${copy.citiesColumnProviderSearches}: ${providerSearchesLabel}. ${copy.citiesColumnMarketBalance}: ${marketBalanceLabel}. ${signalLabel}.`}
                   onClick={() => onSelectCity(activeCityId === item.cityId ? null : item.cityId)}
