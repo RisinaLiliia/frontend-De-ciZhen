@@ -209,8 +209,11 @@ test('@critical authenticated user can open, read, inspect, and send messages in
   await expect.poll(() => markReadCalls).toBe(1);
 
   await page.getByRole('button', { name: /Info/i }).click();
-  await expect(page.getByRole('dialog', { name: /Informationen|Information/i })).toBeVisible();
-  await expect(page.getByText('WC reparieren')).toBeVisible();
+  const infoDialog = page.getByRole('dialog', { name: /Informationen|Information/i });
+  await expect(infoDialog).toBeVisible();
+  await expect(infoDialog.getByRole('heading', { name: 'WC reparieren' })).toBeVisible();
+  await infoDialog.getByRole('button', { name: /Schließen|Close/i }).click();
+  await expect(infoDialog).toBeHidden();
 
   const messageInput = page.getByPlaceholder(/Nachricht schreiben|Write a message/i);
   await messageInput.fill('Hello from client');

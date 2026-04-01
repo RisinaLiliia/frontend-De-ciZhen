@@ -13,9 +13,12 @@ test('@critical authenticated user can login, create request, and publish it', a
 
     if (path === '/api/auth/refresh') {
       return route.fulfill({
-        status: 401,
+        status: 200,
         headers: jsonHeaders,
-        body: JSON.stringify({ message: 'Unauthorized' }),
+        body: JSON.stringify({
+          accessToken: 'token-refresh-1',
+          expiresIn: 3600,
+        }),
       });
     }
 
