@@ -15,8 +15,12 @@ import {
   type WorkspaceStatisticsDecisionDashboardDto,
 } from './statisticsDecisionDashboard.contract';
 import { hydrateAuthenticatedStatisticsPayload } from './statisticsAuthenticatedPayload.utils';
+import { parsePageParam } from './statisticsPagination.utils';
 import { workspaceStatisticsDecisionDashboardSchema } from './workspaceStatisticsDecisionDashboard.schema';
 import type { WorkspaceStatisticsFilters } from './workspaceStatistics.model';
+
+const CITY_LIST_PAGE_SIZE = 10;
+const CITY_PAGE_QUERY_KEY = 'statsCityPage';
 
 export type UseWorkspaceStatsQueryResult = {
   filters: WorkspaceStatisticsFilters;
@@ -24,6 +28,8 @@ export type UseWorkspaceStatsQueryResult = {
   setRange: (next: WorkspaceStatisticsRange) => void;
   setCityId: (next: string | null) => void;
   setCategoryKey: (next: string | null) => void;
+  cityListPage: number;
+  setCityListPage: (next: number) => void;
   setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
   resetFilters: () => void;
   data: WorkspaceStatisticsDecisionDashboardDto | undefined;
@@ -68,6 +74,10 @@ export function useWorkspaceStatsQuery({
           ? 'provider'
           : null,
     }),
+    [searchParams],
+  );
+  const cityListPage = React.useMemo(
+    () => parsePageParam(searchParams.get(CITY_PAGE_QUERY_KEY)) ?? 1,
     [searchParams],
   );
 
@@ -116,6 +126,17 @@ export function useWorkspaceStatsQuery({
     });
   }, [replaceSearchParams]);
 
+  const setCityListPage = React.useCallback((next: number) => {
+    replaceSearchParams((params) => {
+      const safeNext = Math.max(1, Math.trunc(next));
+      if (safeNext <= 1) {
+        params.delete(CITY_PAGE_QUERY_KEY);
+      } else {
+        params.set(CITY_PAGE_QUERY_KEY, String(safeNext));
+      }
+    });
+  }, [replaceSearchParams]);
+
   const setViewerMode = React.useCallback((next: WorkspaceStatisticsViewerMode) => {
     replaceSearchParams((params) => {
       params.set('viewerMode', next);
@@ -141,6 +162,8 @@ export function useWorkspaceStatsQuery({
       filters.cityId,
       filters.categoryKey,
       filters.subcategoryKey,
+      cityListPage,
+      CITY_LIST_PAGE_SIZE,
       filters.viewerMode ?? 'auto',
       privateOverview?.updatedAt ?? 'no-private-overview',
     ],
@@ -152,6 +175,8 @@ export function useWorkspaceStatsQuery({
         categoryKey: filters.categoryKey,
         subcategoryKey: filters.subcategoryKey,
         viewerMode: filters.viewerMode,
+        citiesPage: cityListPage,
+        citiesLimit: CITY_LIST_PAGE_SIZE,
       });
       const hydratedPayload = hydrateAuthenticatedStatisticsPayload({
         payload,
@@ -190,6 +215,8 @@ export function useWorkspaceStatsQuery({
     setRange,
     setCityId,
     setCategoryKey,
+    cityListPage,
+    setCityListPage,
     setViewerMode,
     resetFilters,
     data: resolvedData,

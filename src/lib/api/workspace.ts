@@ -56,6 +56,8 @@ export type WorkspaceStatisticsQuery = {
   categoryKey?: string | null;
   subcategoryKey?: string | null;
   viewerMode?: WorkspaceStatisticsViewerMode | null;
+  citiesPage?: number;
+  citiesLimit?: number;
 };
 
 export function getWorkspaceStatistics(query: WorkspaceStatisticsRange | WorkspaceStatisticsQuery = '30d') {
@@ -69,6 +71,12 @@ export function getWorkspaceStatistics(query: WorkspaceStatisticsRange | Workspa
   if (params.categoryKey) qs.set('categoryKey', params.categoryKey);
   if (params.subcategoryKey) qs.set('subcategoryKey', params.subcategoryKey);
   if (params.viewerMode) qs.set('viewerMode', params.viewerMode);
+  if (typeof params.citiesPage === 'number') {
+    qs.set('citiesPage', String(Math.max(1, Math.trunc(params.citiesPage))));
+  }
+  if (typeof params.citiesLimit === 'number') {
+    qs.set('citiesLimit', String(Math.min(50, Math.max(1, Math.trunc(params.citiesLimit)))));
+  }
   return apiGet<WorkspaceStatisticsOverviewDto>(`/workspace/statistics?${qs.toString()}`);
 }
 

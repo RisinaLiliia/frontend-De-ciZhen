@@ -41,6 +41,14 @@ const cityDemandSchema = z.object({
   }).nullable().optional(),
 });
 
+const cityListSchema = z.object({
+  items: z.array(cityDemandSchema),
+  page: z.number(),
+  limit: z.number(),
+  totalItems: z.number(),
+  totalPages: z.number(),
+});
+
 const categoryDemandSchema = z.object({
   categoryKey: z.string().nullable(),
   categoryName: z.string(),
@@ -404,6 +412,7 @@ export const workspaceStatisticsDecisionDashboardSchema = z.object({
   demand: z.object({
     categories: z.array(categoryDemandSchema),
     cities: z.array(cityDemandSchema),
+    cityList: cityListSchema.optional(),
   }),
   opportunityRadar: z.array(opportunitySchema),
   profileFunnel: z.object({

@@ -3,22 +3,30 @@
 import * as React from 'react';
 
 import { RequestsFilterSelect } from '@/components/requests/RequestsFilterSelect';
+import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
-import { IconFilter, IconPin } from '@/components/ui/icons/icons';
+import { IconFilter } from '@/components/ui/icons/icons';
 import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
+import type { Locale } from '@/lib/i18n/t';
 
 type WorkspaceSharedContextControlsProps = {
   title: string;
+  locale: Locale;
   resetLabel: string;
   closeLabel: string;
   city: {
     value: string;
-    options: FilterOption[];
+    allOption?: FilterOption;
     ariaLabel: string;
     onChange: (value: string) => void;
     summaryLabel: string;
+    placeholder: string;
+    searchPlaceholder: string;
+    loadingLabel: string;
+    emptyLabel: string;
+    errorLabel: string;
   };
   category: {
     value: string;
@@ -65,6 +73,7 @@ type WorkspaceSharedContextControlsProps = {
 
 export function WorkspaceSharedContextControls({
   title,
+  locale,
   resetLabel,
   closeLabel,
   city,
@@ -90,15 +99,23 @@ export function WorkspaceSharedContextControls({
       <div className="workspace-shared-context-controls__body">
         <div className="requests-filter-grid requests-filter-grid--primary workspace-shared-context-controls__filters-grid">
           <div className="requests-filter">
-            <RequestsFilterSelect
-              options={city.options}
-              value={city.value}
-              onChange={city.onChange}
-              className="requests-select is-city workspace-shared-context-controls__select"
-              ariaLabel={city.ariaLabel}
-              icon={<IconPin />}
-              iconClassName="requests-select-icon--city"
-            />
+            <div className="requests-select-wrap">
+              <CitySearchSelect
+                mode="inline"
+                inlineBehavior="auto"
+                locale={locale}
+                value={city.value}
+                onChange={city.onChange}
+                className="requests-select is-city workspace-shared-context-controls__select"
+                ariaLabel={city.ariaLabel}
+                placeholder={city.placeholder}
+                allOption={city.allOption}
+                searchPlaceholder={city.searchPlaceholder}
+                loadingLabel={city.loadingLabel}
+                emptyLabel={city.emptyLabel}
+                errorLabel={city.errorLabel}
+              />
+            </div>
           </div>
 
           <div className="requests-filter">

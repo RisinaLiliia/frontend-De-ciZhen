@@ -5,6 +5,9 @@ export type CityResponseDto = {
   name: string;
   i18n: Record<string, string>;
   countryCode: string;
+  stateName: string | null;
+  districtName: string | null;
+  postalCodes: string[];
   isActive: boolean;
   sortOrder: number;
 };

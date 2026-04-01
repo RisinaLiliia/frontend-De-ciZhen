@@ -168,6 +168,21 @@
     padding-left: calc(var(--space-8) + var(--space-2));
   }
 
+  .requests-select.is-city.dc-city-search--inline {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .requests-select.is-city.dc-city-search--inline::after {
+    display: none;
+  }
+
+  .requests-select.is-city.dc-city-search--inline .dc-city-search-input {
+    min-height: 44px;
+    padding-left: 40px;
+    padding-right: var(--space-3);
+  }
+
   .requests-select-icon {
     position: absolute;
     left: 14px;

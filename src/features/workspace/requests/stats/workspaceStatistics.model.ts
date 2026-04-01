@@ -330,6 +330,8 @@ export type WorkspaceStatisticsModel = {
   setRange: (next: WorkspaceStatisticsRange) => void;
   setCityId: (next: string | null) => void;
   setCategoryKey: (next: string | null) => void;
+  cityListPage: number;
+  setCityListPage: (next: number) => void;
   viewerMode: WorkspaceStatisticsViewerMode | null;
   setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
   resetFilters: () => void;
@@ -374,6 +376,10 @@ export type WorkspaceStatisticsModel = {
   activitySignals: WorkspaceStatisticsActivitySignalView[];
   demandRows: WorkspaceStatisticsCategoryDemandDto[];
   cityRows: WorkspaceStatisticsCityRowView[];
+  cityListRows: WorkspaceStatisticsCityRowView[];
+  cityListLimit: number;
+  cityListTotalItems: number;
+  cityListTotalPages: number;
   opportunityRadar: WorkspaceStatisticsOpportunityRadarItemView[];
   priceIntelligence: WorkspaceStatisticsPriceIntelligenceView;
   personalizedPricing: WorkspaceStatisticsPersonalizedPricingView | null;

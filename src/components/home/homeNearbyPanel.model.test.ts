@@ -22,8 +22,12 @@ function city(overrides: Partial<City> = {}): City {
   return {
     id: 'berlin',
     key: 'berlin',
+    name: 'Berlin',
     i18n: { de: 'Berlin', en: 'Berlin' },
     countryCode: 'DE',
+    stateName: 'Berlin',
+    districtName: null,
+    postalCodes: ['10115'],
     isActive: true,
     sortOrder: 1,
     ...overrides,
