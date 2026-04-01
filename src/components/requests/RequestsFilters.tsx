@@ -78,6 +78,7 @@ export function RequestsFilterControls({
   });
   const controlsContentProps = {
     t,
+    locale,
     cityId,
     categoryKey,
     subcategoryKey,

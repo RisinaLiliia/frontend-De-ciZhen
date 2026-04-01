@@ -95,7 +95,6 @@ function CreateRequestContent() {
       cityId={formModel.cityId}
       categoryOptions={catalogModel.categoryOptions}
       serviceOptions={catalogModel.serviceOptions}
-      cityOptions={catalogModel.cityOptions}
       titleValue={formModel.titleValue}
       descriptionValue={formModel.descriptionValue}
       serviceError={formModel.errors.serviceKey?.message?.toString()}
