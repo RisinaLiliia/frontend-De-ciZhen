@@ -4,7 +4,7 @@ import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { Field } from '@/components/ui/Field';
 import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
-import { Select, type Option } from '@/components/ui/Select';
+import { Select } from '@/components/ui/Select';
 import { IconChevronDown, IconPin } from '@/components/ui/icons/icons';
 import { IconCoins } from '@/components/ui/Icons';
 import { ProviderAvailabilityMeta } from '@/components/providers/ProviderAvailabilityMeta';

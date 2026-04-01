@@ -40,7 +40,6 @@ export function ProviderOnboardingContainer() {
     handleSubmit,
     reset,
     setValue,
-    watch,
     formState: { isSubmitting },
   } = useForm<ProviderOnboardingFormValues>({
     defaultValues: {
@@ -70,7 +69,7 @@ export function ProviderOnboardingContainer() {
   }, [searchParams]);
 
   const hasNextParam = Boolean(searchParams?.get('next'));
-  const cityIdValue = watch('cityId') ?? '';
+  const cityIdValue = useWatch({ control, name: 'cityId' }) ?? '';
   const selectedServiceKeys = useWatch({ control, name: 'serviceKeys' }) ?? [];
   const cancelLabel = hasNextParam
     ? t(I18N_KEYS.provider.onboardingCancel)
