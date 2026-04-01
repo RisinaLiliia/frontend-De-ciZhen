@@ -11,7 +11,7 @@ import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
 import { Button } from '@/components/ui/Button';
 import { listOffersByRequest, acceptOffer } from '@/lib/api/offers';
-import { createThread } from '@/lib/api/chat';
+import { createConversation } from '@/lib/api/chat';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
@@ -118,12 +118,18 @@ export default function OffersPage() {
                         className="badge"
                         onClick={() => {
                           if (!ensureAuth()) return;
-                          createThread({
+                          createConversation({
+                            relatedEntity: {
+                              type: 'offer',
+                              id: item.id,
+                            },
                             requestId: item.requestId,
+                            participantUserId: item.providerUserId ?? '',
+                            participantRole: 'provider',
                             providerUserId: item.providerUserId ?? '',
                             offerId: item.id,
                           })
-                            .then((thread) => router.push(`/chat/${thread.id}`))
+                            .then((conversation) => router.push(`/chat?conversation=${encodeURIComponent(conversation.id)}`))
                             .catch((error) => {
                               const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
                               toast.error(message);

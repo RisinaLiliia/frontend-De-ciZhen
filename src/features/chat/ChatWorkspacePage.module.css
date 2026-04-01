@@ -1,0 +1,721 @@
+.shell {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+  gap: 0;
+  min-height: calc(100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px) - var(--space-8));
+  border: 1px solid var(--surface-card-border);
+  border-radius: 28px;
+  background: color-mix(in oklab, var(--c-panel) 92%, var(--c-surface) 8%);
+  box-shadow: var(--surface-card-shadow);
+  overflow: hidden;
+}
+
+.sidebarPane,
+.threadPane {
+  min-width: 0;
+}
+
+.sidebarPane {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-right: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--c-panel) 96%, var(--c-surface) 4%), color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%));
+}
+
+.sidebarHeader {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-bottom: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
+}
+
+.sidebarTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sidebarTitle {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.sidebarBadge,
+.unreadBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--c-accent);
+  color: var(--c-accent-contrast);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.searchField {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  display: inline-flex;
+  color: var(--c-muted);
+}
+
+.searchInput {
+  padding-left: 42px;
+}
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filterChip {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--control-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--c-panel) 90%, var(--c-surface) 10%);
+  color: var(--c-text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.filterChip:hover,
+.filterChip:focus-visible {
+  border-color: var(--control-border-hover);
+  color: var(--c-text);
+}
+
+.filterChipActive {
+  border-color: color-mix(in oklab, var(--c-primary) 24%, var(--control-border) 76%);
+  background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
+  color: var(--c-primary);
+}
+
+.sidebarBody {
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-3);
+}
+
+.sidebarList {
+  display: grid;
+  gap: 6px;
+}
+
+.conversationItem {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background: transparent;
+  text-align: left;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    transform var(--transition-fast);
+}
+
+.conversationItem:hover,
+.conversationItem:focus-visible {
+  border-color: color-mix(in oklab, var(--surface-card-border) 90%, transparent);
+  background: color-mix(in oklab, var(--c-panel) 88%, var(--c-surface) 12%);
+  transform: translateY(-1px);
+}
+
+.conversationItemActive {
+  border-color: color-mix(in oklab, var(--c-primary) 16%, var(--surface-card-border) 84%);
+  background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+}
+
+.conversationBody {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.conversationTopRow,
+.conversationBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.conversationName,
+.conversationPreview,
+.threadTitle,
+.infoHeadline,
+.participantName,
+.emptyTitle {
+  margin: 0;
+  color: var(--c-text);
+}
+
+.conversationName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.conversationNameUnread {
+  font-weight: 800;
+}
+
+.conversationTime,
+.conversationSubline,
+.threadSubtitle,
+.messageMeta,
+.composerState,
+.emptyHint,
+.infoLabel,
+.participantMeta {
+  margin: 0;
+  color: var(--c-text-muted);
+}
+
+.conversationTime,
+.conversationSubline,
+.messageMeta,
+.composerState,
+.infoLabel {
+  font-size: 12px;
+}
+
+.conversationPreview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+}
+
+.conversationTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+  color: var(--c-primary);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.conversationPreviewText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversationSubline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebarEmptyState,
+.threadEmptyState,
+.messagesEmptyState {
+  display: grid;
+  gap: var(--space-3);
+  place-items: start;
+  padding: var(--space-5);
+}
+
+.avatar,
+.avatarSkeleton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--c-primary) 16%, var(--c-panel) 84%),
+    color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%)
+  );
+  color: var(--c-primary);
+  font-size: 15px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.avatarStatus {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--c-panel);
+  border-radius: 999px;
+  background: #1fb56a;
+}
+
+.sidebarSkeletonBody {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+.sidebarSkeletonRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.threadPane {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  background:
+    radial-gradient(circle at top right, color-mix(in oklab, var(--c-primary) 6%, transparent), transparent 42%),
+    linear-gradient(180deg, color-mix(in oklab, var(--c-surface) 94%, var(--c-panel) 6%), color-mix(in oklab, var(--c-panel) 88%, var(--c-surface) 12%));
+}
+
+.threadHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
+  background: color-mix(in oklab, var(--c-panel) 78%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.threadHeaderMain {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.threadHeaderBody {
+  min-width: 0;
+}
+
+.threadTitle {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.threadSubtitle {
+  margin-top: 2px;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.infoButton,
+.mobileBackButton {
+  flex-shrink: 0;
+}
+
+.mobileBackButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--control-border);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--c-panel) 90%, transparent);
+  color: var(--c-text);
+}
+
+.contextBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px var(--space-5);
+  border-bottom: 1px solid color-mix(in oklab, var(--surface-card-border) 80%, transparent);
+  background: color-mix(in oklab, var(--c-panel) 72%, transparent);
+  color: var(--c-text-muted);
+  font-size: 13px;
+}
+
+.contextBarLabel {
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.contextBarText,
+.contextBarStatus {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contextBarText {
+  color: var(--c-text);
+}
+
+.contextBarDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--c-text-muted);
+  flex-shrink: 0;
+}
+
+.messagesScroll {
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-4) var(--space-5);
+}
+
+.messagesTopAction {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+}
+
+.loadOlderButton {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--control-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--c-panel) 90%, transparent);
+  color: var(--c-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dayBlock {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.dateDivider {
+  display: flex;
+  justify-content: center;
+  margin: var(--space-2) 0;
+}
+
+.dateDivider span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--c-panel) 82%, transparent);
+  color: var(--c-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.messageRow {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: var(--space-2);
+}
+
+.messageRowOwn {
+  justify-content: flex-end;
+}
+
+.messageStack,
+.messageStackOwn,
+.messageSkeletonList {
+  display: grid;
+  gap: 6px;
+}
+
+.messageStack {
+  max-width: min(68%, 640px);
+}
+
+.messageStackOwn {
+  justify-items: end;
+}
+
+.messageBubble {
+  padding: 10px 14px;
+  border: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
+  border-radius: 18px 18px 18px 8px;
+  background: color-mix(in oklab, var(--c-panel) 96%, var(--c-surface) 4%);
+  box-shadow: 0 8px 22px color-mix(in oklab, var(--c-ink) 6%, transparent);
+}
+
+.messageBubbleOwn {
+  border-color: color-mix(in oklab, var(--c-primary) 14%, transparent);
+  border-radius: 18px 18px 8px 18px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%),
+    color-mix(in oklab, var(--c-accent) 8%, var(--c-panel) 92%)
+  );
+}
+
+.messageText {
+  margin: 0;
+  color: var(--c-text);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.messageMeta {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.attachmentList {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.attachmentLink {
+  color: var(--c-primary);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.attachmentLink:hover,
+.attachmentLink:focus-visible {
+  text-decoration: underline;
+}
+
+.composerBar {
+  display: grid;
+  gap: 8px;
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
+  background: color-mix(in oklab, var(--c-panel) 84%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+.composerInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: end;
+}
+
+.composerInput {
+  min-height: 44px;
+  max-height: 160px;
+  resize: none;
+  overflow: auto;
+}
+
+.sendButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 14px;
+  background: var(--c-primary);
+  color: var(--c-primary-contrast, white);
+  transition:
+    transform var(--transition-fast),
+    opacity var(--transition);
+}
+
+.sendButton:hover,
+.sendButton:focus-visible {
+  transform: translateY(-1px);
+}
+
+.sendButton:disabled {
+  opacity: 0.45;
+  transform: none;
+}
+
+.drawerBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  border: none;
+  background: color-mix(in oklab, var(--c-ink) 48%, transparent);
+}
+
+.infoDrawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(360px, 100%);
+  height: 100%;
+  border-left: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
+  background: color-mix(in oklab, var(--c-panel) 97%, var(--c-surface) 3%);
+  box-shadow: -16px 0 40px color-mix(in oklab, var(--c-ink) 14%, transparent);
+}
+
+.infoDrawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
+}
+
+.infoDrawerTitle {
+  margin: 0;
+  font-size: 18px;
+}
+
+.infoDrawerBody {
+  overflow: auto;
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5);
+}
+
+.infoSection {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.infoHeadline {
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.infoMetaList {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.infoMetaRow {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.infoMetaIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+  color: var(--c-primary);
+}
+
+.infoValue {
+  margin: 4px 0 0;
+  color: var(--c-text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.participantCard {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.participantBody {
+  min-width: 0;
+}
+
+.infoActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+@media (max-width: 1023px) {
+  .shell {
+    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+  }
+
+  .messageStack {
+    max-width: 76%;
+  }
+}
+
+@media (max-width: 767px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: calc(100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px) - var(--space-6));
+    border-radius: 22px;
+  }
+
+  .shellThreadSelected .sidebarPane {
+    display: none;
+  }
+
+  .shell:not(.shellThreadSelected) .threadPane {
+    display: none;
+  }
+
+  .sidebarPane {
+    border-right: none;
+  }
+
+  .threadHeader,
+  .contextBar,
+  .messagesScroll,
+  .composerBar,
+  .sidebarHeader,
+  .sidebarBody {
+    padding-inline: var(--space-4);
+  }
+
+  .mobileBackButton {
+    display: inline-flex;
+  }
+
+  .messageStack {
+    max-width: 88%;
+  }
+
+  .infoDrawer {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    max-height: min(72dvh, 640px);
+    height: auto;
+    border-left: none;
+    border-top: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -16px 40px color-mix(in oklab, var(--c-ink) 14%, transparent);
+  }
+}

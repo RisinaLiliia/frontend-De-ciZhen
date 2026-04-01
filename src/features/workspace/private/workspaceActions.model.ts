@@ -19,14 +19,20 @@ export function resolveWorkspaceChatNavigation(offer: OfferDto) {
   if (!providerUserId || !offer.requestId) {
     return {
       fallbackHref: '/chat',
-      threadInput: null,
+      conversationInput: null,
     };
   }
 
   return {
     fallbackHref: '/chat',
-    threadInput: {
+    conversationInput: {
+      relatedEntity: {
+        type: 'offer' as const,
+        id: offer.id,
+      },
       requestId: offer.requestId,
+      participantUserId: providerUserId,
+      participantRole: 'provider' as const,
       providerUserId,
       offerId: offer.id,
     },
