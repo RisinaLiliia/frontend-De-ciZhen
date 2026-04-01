@@ -7,6 +7,7 @@ export const en: DeDictionary = {
     refreshing: 'Refreshing…',
     loadError: 'Failed to load data. Please try again later.',
     loadErrorShort: 'Data could not be loaded.',
+    noResults: 'No results found.',
     emptyData: 'No services or locations are available right now.',
     selectServiceCity: 'Please select a service and a city.',
     back: 'Back',

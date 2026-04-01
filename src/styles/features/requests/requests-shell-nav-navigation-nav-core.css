@@ -358,8 +358,23 @@
     letter-spacing: -0.01em;
   }
 
+  .workspace-control-shell .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input {
+    min-height: calc(var(--space-6) * 2);
+    border-radius: var(--radius-lg);
+    border-color: var(--workspace-control-embedded-border);
+    background: var(--workspace-control-embedded-bg);
+    box-shadow: var(--workspace-control-embedded-shadow);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
   .workspace-control-shell[data-condensed='true'] .requests-filters--surface-embedded .dc-select-trigger {
     height: calc(var(--space-5) + var(--space-6));
+    border-radius: calc(var(--radius-md) + var(--space-0-5));
+  }
+
+  .workspace-control-shell[data-condensed='true'] .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input {
+    min-height: calc(var(--space-5) + var(--space-6));
     border-radius: calc(var(--radius-md) + var(--space-0-5));
   }
 
@@ -369,7 +384,21 @@
     transform: translateY(-1px);
   }
 
+  .workspace-control-shell .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input:hover {
+    border-color: color-mix(in oklab, white 54%, var(--workspace-control-embedded-border) 46%);
+    background: var(--workspace-control-embedded-bg-hover);
+    transform: translateY(-1px);
+  }
+
   .workspace-control-shell .requests-filters--surface-embedded .dc-select-trigger:focus-visible {
+    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--workspace-control-embedded-border) 66%);
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--c-primary) 14%, transparent),
+      var(--workspace-control-embedded-shadow);
+  }
+
+  .workspace-control-shell .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input:focus-visible,
+  .workspace-control-shell .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input:focus {
     border-color: color-mix(in oklab, var(--c-primary) 34%, var(--workspace-control-embedded-border) 66%);
     box-shadow:
       0 0 0 3px color-mix(in oklab, var(--c-primary) 14%, transparent),
@@ -672,6 +701,12 @@
     .workspace-control-shell .requests-filters--surface-embedded .dc-select-trigger,
     .workspace-control-shell[data-condensed='true'] .requests-filters--surface-embedded .dc-select-trigger {
       height: calc(var(--space-8) + var(--space-2-5));
+      border-radius: var(--radius-md);
+    }
+
+    .workspace-control-shell .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input,
+    .workspace-control-shell[data-condensed='true'] .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input {
+      min-height: calc(var(--space-8) + var(--space-2-5));
       border-radius: var(--radius-md);
     }
 

@@ -3,14 +3,14 @@
 import type { Ref } from 'react';
 
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
-import { Input } from '@/components/ui/Input';
+import { CitySearchSelect, type CitySearchOption } from '@/components/ui/CitySearchSelect';
 import {
-  IconSearch,
   IconTrophyBronze,
   IconTrophyGold,
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import type { TranslateFn } from './statisticsSections.types';
 import { citySignalIcon, citySignalLabel } from './statisticsSections.utils';
@@ -18,17 +18,15 @@ import { citySignalIcon, citySignalLabel } from './statisticsSections.utils';
 export function StatisticsCitiesPanel({
   panelRef,
   copy,
+  locale,
   subtitle,
   cityRowsLength,
   activeCityId,
-  filteredCityRows,
   visibleCityRows,
-  cityRankByKey,
-  cityStartIndex,
+  cityListPage,
+  cityListLimit,
+  cityOptions,
   cityTotalPages,
-  safeCityPage,
-  cityQuery,
-  onCityQueryChange,
   onSelectCity,
   onPrevPage,
   onNextPage,
@@ -39,17 +37,15 @@ export function StatisticsCitiesPanel({
 }: {
   panelRef?: Ref<HTMLElement>;
   copy: WorkspaceStatisticsModel['copy'];
+  locale: Locale;
   subtitle?: string;
   cityRowsLength: number;
   activeCityId: string | null;
-  filteredCityRows: WorkspaceStatisticsModel['cityRows'];
   visibleCityRows: WorkspaceStatisticsModel['cityRows'];
-  cityRankByKey: Map<string, number>;
-  cityStartIndex: number;
+  cityListPage: number;
+  cityListLimit: number;
+  cityOptions: WorkspaceStatisticsModel['cityOptions'];
   cityTotalPages: number;
-  safeCityPage: number;
-  cityQuery: string;
-  onCityQueryChange: (value: string) => void;
   onSelectCity: (cityId: string | null) => void;
   onPrevPage: () => void;
   onNextPage: () => void;
@@ -58,6 +54,12 @@ export function StatisticsCitiesPanel({
   cityComparison?: WorkspaceStatisticsModel['cityComparison'];
   t: TranslateFn;
 }) {
+  const cityValue = activeCityId ?? '';
+  const loadingLabel = locale === 'de' ? 'Aktualisiere…' : 'Refreshing…';
+  const emptyLabel = locale === 'de' ? 'Keine Ergebnisse' : 'No results';
+  const errorLabel = locale === 'de' ? 'Daten konnten nicht geladen werden.' : 'Data could not be loaded.';
+  const selectedCityLabel = cityOptions.find((option) => option.value === cityValue)?.label ?? copy.citiesFilterPlaceholder;
+
   return (
     <section ref={panelRef} className="panel requests-stats-chart workspace-statistics__cities-panel">
       <header className="section-heading workspace-statistics__tile-header">
@@ -65,23 +67,24 @@ export function StatisticsCitiesPanel({
         <p className="section-subtitle">{subtitle ?? copy.citiesSubtitle}</p>
       </header>
       <div className="workspace-statistics__cities-tools">
-        <label className="workspace-statistics__cities-filter" aria-label={copy.citiesFilterPlaceholder}>
-          <span className="workspace-statistics__cities-filter-icon" aria-hidden="true">
-            <IconSearch />
-          </span>
-          <Input
-            type="search"
-            value={cityQuery}
-            onChange={(event) => onCityQueryChange(event.target.value)}
-            placeholder={copy.citiesFilterPlaceholder}
-            className="workspace-statistics__cities-filter-input"
-          />
-        </label>
+        <CitySearchSelect
+          mode="inline"
+          inlineBehavior="auto"
+          locale={locale}
+          value={cityValue}
+          onChange={(next) => onSelectCity(next || null)}
+          className="requests-select is-city workspace-statistics__cities-filter"
+          ariaLabel={copy.contextCityLabel}
+          placeholder={selectedCityLabel}
+          allOption={{ value: '', label: copy.contextAllCitiesLabel } satisfies CitySearchOption}
+          searchPlaceholder={copy.citiesFilterPlaceholder}
+          loadingLabel={loadingLabel}
+          emptyLabel={emptyLabel}
+          errorLabel={errorLabel}
+        />
       </div>
       {cityRowsLength === 0 ? (
         <p className="workspace-statistics__empty">{copy.emptyCities}</p>
-      ) : filteredCityRows.length === 0 ? (
-        <p className="workspace-statistics__empty">{copy.citiesNoMatch}</p>
       ) : (
         <ol className="workspace-statistics-city-list" aria-label={copy.citiesTitle}>
           <li className="workspace-statistics-city-list__head" aria-hidden="true">
@@ -93,7 +96,7 @@ export function StatisticsCitiesPanel({
             <span>{copy.citiesColumnMarketBalance}</span>
           </li>
           {visibleCityRows.map((item, index) => {
-            const rank = item.rank ?? cityRankByKey.get(item.key) ?? cityStartIndex + index + 1;
+            const rank = item.rank ?? ((cityListPage - 1) * cityListLimit) + index + 1;
             const rankTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : null;
             const requestsLabel = formatNumber.format(item.count);
             const jobSearchesLabel = item.auftragSuchenCount === null ? '—' : formatNumber.format(item.auftragSuchenCount);
@@ -155,7 +158,7 @@ export function StatisticsCitiesPanel({
       {cityTotalPages > 1 ? (
         <div className="workspace-statistics__cities-pagination">
           <RequestsPageNav
-            page={safeCityPage}
+            page={cityListPage}
             totalPages={cityTotalPages}
             ariaLabel={t(I18N_KEYS.requestsPage.paginationLabel)}
             prevAriaLabel={t(I18N_KEYS.requestsPage.paginationPrev)}

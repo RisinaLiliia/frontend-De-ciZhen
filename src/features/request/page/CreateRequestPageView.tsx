@@ -23,7 +23,6 @@ type Props = {
   cityId: string;
   categoryOptions: Option[];
   serviceOptions: Option[];
-  cityOptions: Option[];
   titleValue: string;
   descriptionValue: string;
   serviceError?: string;
@@ -85,7 +84,6 @@ export function CreateRequestPageView({
   cityId,
   categoryOptions,
   serviceOptions,
-  cityOptions,
   titleValue,
   descriptionValue,
   serviceError,
@@ -162,7 +160,6 @@ export function CreateRequestPageView({
             locale={locale}
             register={register}
             cityId={cityId}
-            cityOptions={cityOptions}
             cityError={cityError}
             preferredDateError={preferredDateError}
             areaError={areaError}

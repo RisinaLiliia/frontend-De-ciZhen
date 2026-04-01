@@ -15,9 +15,7 @@ import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
 import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { buildDecisionPlan, buildPersonalizedDecisionPlan } from './statisticsDecisionEngine.utils';
 import { buildFunnelVisualRows } from './statisticsFunnel.utils';
-import { paginateItems, parsePageParam } from './statisticsPagination.utils';
 import { selectOpportunityAnalysisItem } from './sections/opportunity/opportunity.utils';
-import { applyPageQuery, isPageQueryInSync, toPageQueryValue } from './statisticsUrlState.utils';
 import {
   StatisticsActionPlanPanel,
   StatisticsCitiesPanel,
@@ -37,8 +35,6 @@ type WorkspaceStatisticsViewProps = {
   locale: Locale;
   model: WorkspaceStatisticsModel;
 };
-const CITY_PAGE_SIZE = 10;
-const CITY_PAGE_QUERY_KEY = 'statsCityPage';
 
 export function WorkspaceStatisticsView({
   t,
@@ -54,12 +50,6 @@ export function WorkspaceStatisticsView({
     minimumFractionDigits: 1,
     maximumFractionDigits: 2,
   });
-  const cityPageFromUrl = React.useMemo(
-    () => parsePageParam(searchParams.get(CITY_PAGE_QUERY_KEY)),
-    [searchParams],
-  );
-  const [cityQuery, setCityQuery] = React.useState('');
-  const [cityPage, setCityPage] = React.useState(() => cityPageFromUrl ?? 1);
   const funnelContainerRef = React.useRef<HTMLOListElement | null>(null);
   const statisticsPanelRef = React.useRef<HTMLElement | null>(null);
   const profilePanelRef = React.useRef<HTMLElement | null>(null);
@@ -91,6 +81,10 @@ export function WorkspaceStatisticsView({
     decisionActionLabel,
     activitySignals,
     cityRows,
+    cityListRows,
+    cityListPage,
+    cityListLimit,
+    cityListTotalPages,
     cityComparison,
     opportunityRadar,
     funnel,
@@ -110,8 +104,6 @@ export function WorkspaceStatisticsView({
     userIntelligence,
   } = model;
   const isPersonalizedMode = mode === 'personalized' && Boolean(userIntelligence);
-  const normalizedCityQuery = cityQuery.trim().toLowerCase();
-  const hasCityQuery = normalizedCityQuery.length > 0;
   const focusLabel = React.useMemo(() => {
     if (filters.categoryKey && filters.cityId) return `${context.categoryLabel} in ${context.cityLabel}`;
     if (filters.categoryKey) return context.categoryLabel;
@@ -138,32 +130,6 @@ export function WorkspaceStatisticsView({
   const resolvedCitiesSubtitle = sectionMeta.citiesSubtitle ?? citiesSubtitle;
   const resolvedOpportunityTitle = sectionMeta.opportunityTitle ?? opportunityTitle;
   const resolvedGrowthSubtitle = sectionMeta.growthSubtitle ?? growthSubtitle;
-  const rankedCityRows = React.useMemo(() => (
-    cityRows
-      .slice()
-      .sort((a, b) => {
-        if (typeof a.rank === 'number' || typeof b.rank === 'number') {
-          return (a.rank ?? Number.MAX_SAFE_INTEGER) - (b.rank ?? Number.MAX_SAFE_INTEGER);
-        }
-        if (typeof a.score === 'number' || typeof b.score === 'number') {
-          return (b.score ?? Number.NEGATIVE_INFINITY) - (a.score ?? Number.NEGATIVE_INFINITY);
-        }
-        return (b.count - a.count) || a.name.localeCompare(b.name, locale === 'de' ? 'de-DE' : 'en-US');
-      })
-  ), [cityRows, locale]);
-
-  const cityRankByKey = React.useMemo(() => {
-    const next = new Map<string, number>();
-    rankedCityRows.forEach((item, index) => {
-      next.set(item.key, index + 1);
-    });
-    return next;
-  }, [rankedCityRows]);
-
-  const filteredCityRows = React.useMemo(() => {
-    if (!hasCityQuery) return rankedCityRows;
-    return rankedCityRows.filter((item) => item.name.toLowerCase().includes(normalizedCityQuery));
-  }, [hasCityQuery, normalizedCityQuery, rankedCityRows]);
   const defaultOpportunityRank = React.useMemo(
     () => selectOpportunityAnalysisItem(opportunityRadar)?.rank ?? null,
     [opportunityRadar],
@@ -224,16 +190,6 @@ export function WorkspaceStatisticsView({
     ],
   );
 
-  const cityPagination = React.useMemo(
-    () => paginateItems(filteredCityRows, cityPage, CITY_PAGE_SIZE),
-    [cityPage, filteredCityRows],
-  );
-  const {
-    totalPages: cityTotalPages,
-    safePage: safeCityPage,
-    startIndex: cityStartIndex,
-    visibleItems: visibleCityRows,
-  } = cityPagination;
   const [isNarrowViewport, setNarrowViewport] = React.useState(false);
   const introPanelMinHeight = useSyncedPanelMinHeight({
     sourceRef: profilePanelRef,
@@ -244,12 +200,12 @@ export function WorkspaceStatisticsView({
     sourceRef: citiesPanelRef,
     targetRef: growthPanelRef,
     mode: 'sourceBottomToTargetTop',
-    watchKey: `${cityRows.length}-${safeCityPage}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
+    watchKey: `${cityListRows.length}-${cityListPage}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
   });
   const insightsPanelMinHeight = useSyncedPanelMinHeight({
     sourceRef: citiesPanelRef,
     mode: 'sourceHeight',
-    watchKey: `${cityRows.length}-${safeCityPage}-${insights.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
+    watchKey: `${cityListRows.length}-${cityListPage}-${insights.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
   });
   const {
     data: publicSummaryOverview,
@@ -352,38 +308,6 @@ export function WorkspaceStatisticsView({
     isPersonalizedMode,
   ]);
 
-  const replaceSearchParams = React.useCallback(
-    (mutate: (params: URLSearchParams) => void) => {
-      const current = searchParams.toString();
-      const next = new URLSearchParams(current);
-      mutate(next);
-      const nextQuery = next.toString();
-      if (nextQuery === current) return;
-      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
-    },
-    [pathname, router, searchParams],
-  );
-
-  React.useEffect(() => {
-    setCityPage(1);
-  }, [normalizedCityQuery]);
-
-  React.useEffect(() => {
-    const nextPage = cityPageFromUrl ?? 1;
-    if (nextPage !== cityPage) {
-      setCityPage(nextPage);
-    }
-  }, [cityPageFromUrl, cityPage]);
-
-  React.useEffect(() => {
-    const nextPage = toPageQueryValue(safeCityPage);
-    if (isPageQueryInSync(searchParams, CITY_PAGE_QUERY_KEY, nextPage)) return;
-
-    replaceSearchParams((params) => {
-      applyPageQuery(params, CITY_PAGE_QUERY_KEY, nextPage);
-    });
-  }, [replaceSearchParams, safeCityPage, searchParams]);
-
   React.useEffect(() => {
     if (selectedOpportunityRank !== null && opportunityRadar.some((item) => item.rank === selectedOpportunityRank)) return;
     setSelectedOpportunityRank(defaultOpportunityRank);
@@ -422,6 +346,7 @@ export function WorkspaceStatisticsView({
         >
           <StatisticsContextPanel
             copy={copy}
+            locale={locale}
             filters={filters}
             cityOptions={model.cityOptions}
             categoryOptions={model.categoryOptions}
@@ -546,20 +471,18 @@ export function WorkspaceStatisticsView({
               <StatisticsCitiesPanel
                 panelRef={citiesPanelRef}
                 copy={copy}
+                locale={locale}
                 subtitle={resolvedCitiesSubtitle}
                 cityRowsLength={cityRows.length}
                 activeCityId={filters.cityId}
-                filteredCityRows={filteredCityRows}
-                visibleCityRows={visibleCityRows}
-                cityRankByKey={cityRankByKey}
-                cityStartIndex={cityStartIndex}
-                cityTotalPages={cityTotalPages}
-                safeCityPage={safeCityPage}
-                cityQuery={cityQuery}
-                onCityQueryChange={setCityQuery}
+                visibleCityRows={cityListRows}
+                cityListPage={cityListPage}
+                cityListLimit={cityListLimit}
+                cityOptions={model.cityOptions}
+                cityTotalPages={cityListTotalPages}
                 onSelectCity={model.setCityId}
-                onPrevPage={() => setCityPage((prev) => Math.max(1, prev - 1))}
-                onNextPage={() => setCityPage((prev) => Math.min(cityTotalPages, prev + 1))}
+                onPrevPage={() => model.setCityListPage(Math.max(1, cityListPage - 1))}
+                onNextPage={() => model.setCityListPage(Math.min(cityListTotalPages, cityListPage + 1))}
                 formatNumber={formatNumber}
                 formatMarketBalance={formatMarketBalance}
                 cityComparison={cityComparison}

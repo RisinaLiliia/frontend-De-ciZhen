@@ -1,9 +1,10 @@
 import * as React from 'react';
 import type { UseFormRegister } from 'react-hook-form';
+import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { Field } from '@/components/ui/Field';
 import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
-import { Select, type Option } from '@/components/ui/Select';
+import { Select } from '@/components/ui/Select';
 import { IconChevronDown, IconPin } from '@/components/ui/icons/icons';
 import { IconCoins } from '@/components/ui/Icons';
 import { ProviderAvailabilityMeta } from '@/components/providers/ProviderAvailabilityMeta';
@@ -27,7 +28,6 @@ type CreateRequestDetailsSectionProps = {
   locale: 'de' | 'en';
   register: UseFormRegister<CreateRequestValues>;
   cityId: string;
-  cityOptions: Option[];
   cityError?: string;
   preferredDateError?: string;
   areaError?: string;
@@ -66,7 +66,6 @@ export function CreateRequestDetailsSection({
   locale,
   register,
   cityId,
-  cityOptions,
   cityError,
   preferredDateError,
   areaError,
@@ -111,11 +110,16 @@ export function CreateRequestDetailsSection({
         </FormLabel>
         <input type="hidden" value={cityId} readOnly {...register('cityId')} />
         <Field leftIcon={<IconPin />} rightIcon={<IconChevronDown />}>
-          <Select
+          <CitySearchSelect
+            locale={locale}
             value={cityId}
             onChange={onCityChange}
-            options={cityOptions}
-            aria-label={t(I18N_KEYS.home.cityAria)}
+            placeholder={t(I18N_KEYS.home.cityPlaceholder)}
+            ariaLabel={t(I18N_KEYS.home.cityAria)}
+            searchPlaceholder={t(I18N_KEYS.home.cityPlaceholder)}
+            loadingLabel={t(I18N_KEYS.common.refreshing)}
+            emptyLabel={t(I18N_KEYS.common.noResults)}
+            errorLabel={t(I18N_KEYS.common.loadErrorShort)}
           />
         </Field>
         {cityError ? (

@@ -3,13 +3,16 @@
 import * as React from 'react';
 
 import { RequestsFilterSelect } from '@/components/requests/RequestsFilterSelect';
+import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { IconFilter, IconPin } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 import type { FilterOption, RequestsFilterChip } from './requestsFilters.types';
 
 type RequestsFilterControlsContentProps = {
   t: (key: I18nKey) => string;
+  locale: Locale;
   cityId: string;
   categoryKey: string;
   subcategoryKey: string;
@@ -32,6 +35,7 @@ type RequestsFilterControlsContentProps = {
 
 export function RequestsFilterControlsContent({
   t,
+  locale,
   cityId,
   categoryKey,
   subcategoryKey,
@@ -51,20 +55,34 @@ export function RequestsFilterControlsContent({
   onSortChange,
   onReset,
 }: RequestsFilterControlsContentProps) {
+  const allCityOption = React.useMemo(
+    () => cityOptions.find((option) => option.value === 'all'),
+    [cityOptions],
+  );
+
   return (
     <>
       <div className="requests-filter-grid requests-filter-grid--primary">
         <div className="requests-filter">
-          <RequestsFilterSelect
-            options={cityOptions}
-            value={cityId}
-            onChange={onCityChange}
-            className="requests-select is-city"
-            ariaLabel={t(I18N_KEYS.requestsPage.cityLabel)}
-            disabled={controlsDisabled}
-            icon={<IconPin />}
-            iconClassName="requests-select-icon--city"
-          />
+          <div className="requests-select-wrap">
+            <span className="requests-select-icon requests-select-icon--city" aria-hidden="true">
+              <IconPin />
+            </span>
+            <CitySearchSelect
+              locale={locale}
+              value={cityId}
+              onChange={onCityChange}
+              className="requests-select is-city"
+              ariaLabel={t(I18N_KEYS.requestsPage.cityLabel)}
+              disabled={controlsDisabled}
+              placeholder={allCityOption?.label ?? t(I18N_KEYS.requestsPage.cityLabel)}
+              allOption={allCityOption}
+              searchPlaceholder={t(I18N_KEYS.home.cityPlaceholder)}
+              loadingLabel={t(I18N_KEYS.common.refreshing)}
+              emptyLabel={t(I18N_KEYS.common.noResults)}
+              errorLabel={t(I18N_KEYS.common.loadErrorShort)}
+            />
+          </div>
         </div>
         <div className="requests-filter">
           <RequestsFilterSelect

@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import { deleteOffer } from '@/lib/api/offers';
 import { deleteMyRequest } from '@/lib/api/requests';
-import { createThread } from '@/lib/api/chat';
+import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { workspaceQK } from '@/features/workspace/requests';
@@ -72,13 +72,13 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
     async (offer: OfferDto) => {
       try {
         const navigation = resolveWorkspaceChatNavigation(offer);
-        if (!navigation.threadInput) {
+        if (!navigation.conversationInput) {
           router.push(navigation.fallbackHref);
           return;
         }
-        const thread = await createThread(navigation.threadInput);
+        const conversation = await createConversation(navigation.conversationInput);
         await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
-        router.push(`/chat/${thread.id}`);
+        router.push(`/chat?conversation=${encodeURIComponent(conversation.id)}`);
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
         toast.error(message);

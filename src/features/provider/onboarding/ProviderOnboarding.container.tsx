@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { useCities, useServices } from '@/features/catalog/queries';
+import { useServices } from '@/features/catalog/queries';
 import { ProviderOnboardingSection } from '@/features/provider/onboarding/ProviderOnboarding.section';
 import type { ProviderOnboardingFormValues } from '@/features/provider/onboarding/types';
 import { providerQK, useMyProviderProfile } from '@/features/provider/queries';
@@ -28,11 +28,6 @@ export function ProviderOnboardingContainer() {
   const fetchMe = useAuthStore((state) => state.fetchMe);
 
   const {
-    data: cities = [],
-    isLoading: isCitiesLoading,
-    isError: isCitiesError,
-  } = useCities('DE');
-  const {
     data: services = [],
     isLoading: isServicesLoading,
     isError: isServicesError,
@@ -44,6 +39,7 @@ export function ProviderOnboardingContainer() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { isSubmitting },
   } = useForm<ProviderOnboardingFormValues>({
     defaultValues: {
@@ -73,6 +69,7 @@ export function ProviderOnboardingContainer() {
   }, [searchParams]);
 
   const hasNextParam = Boolean(searchParams?.get('next'));
+  const cityIdValue = useWatch({ control, name: 'cityId' }) ?? '';
   const selectedServiceKeys = useWatch({ control, name: 'serviceKeys' }) ?? [];
   const cancelLabel = hasNextParam
     ? t(I18N_KEYS.provider.onboardingCancel)
@@ -113,16 +110,20 @@ export function ProviderOnboardingContainer() {
   return (
     <ProviderOnboardingSection
       register={register}
+      cityIdValue={cityIdValue}
       requiredHint={requiredHint}
-      cities={cities}
       services={services}
       selectedServiceKeys={selectedServiceKeys}
-      isCitiesLoading={isCitiesLoading}
-      isCitiesError={isCitiesError}
       isServicesLoading={isServicesLoading}
       isServicesError={isServicesError}
       isSubmitting={isSubmitting}
       cancelLabel={cancelLabel}
+      onCityChange={(value) => {
+        setValue('cityId', value, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+      }}
       onSubmit={handleSubmit(onSubmit)}
       onCancel={handleCancel}
     />

@@ -446,14 +446,20 @@ function buildSharedContextControlsProps({
 
   return {
     title: model.copy.sharedContextLabel,
+    locale,
     resetLabel: t(I18N_KEYS.requestsPage.clearFilters),
     closeLabel: model.controls.closeLabel,
     city: {
       value: model.controls.cityId,
-      options: model.controls.cityOptions,
+      allOption: model.controls.cityOptions.find((item) => item.value === 'all'),
       ariaLabel: t(I18N_KEYS.requestsPage.cityLabel),
       onChange: model.controls.onCityChange,
       summaryLabel: cityChip?.value ?? model.copy.contextFallbacks.city,
+      placeholder: cityChip?.value ?? model.copy.contextFallbacks.city,
+      searchPlaceholder: t(I18N_KEYS.home.cityPlaceholder),
+      loadingLabel: t(I18N_KEYS.common.refreshing),
+      emptyLabel: t(I18N_KEYS.common.noResults),
+      errorLabel: t(I18N_KEYS.common.loadErrorShort),
     },
     category: {
       value: model.controls.categoryKey,

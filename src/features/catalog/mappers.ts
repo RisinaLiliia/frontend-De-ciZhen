@@ -5,8 +5,12 @@ import type { City, Service, ServiceCategory } from './model';
 export const mapCity = (dto: CityResponseDto): City => ({
   id: dto._id,
   key: dto.key,
+  name: dto.name,
   i18n: dto.i18n,
   countryCode: dto.countryCode,
+  stateName: dto.stateName,
+  districtName: dto.districtName,
+  postalCodes: dto.postalCodes,
   isActive: dto.isActive,
   sortOrder: dto.sortOrder,
 });

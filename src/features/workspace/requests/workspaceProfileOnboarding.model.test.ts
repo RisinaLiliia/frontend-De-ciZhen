@@ -12,8 +12,30 @@ import {
 describe('workspaceProfileOnboarding.model', () => {
   it('builds sorted city and category options', () => {
     const cityOptions = buildProfileCityOptions([
-      { id: 'muc', key: 'munich', i18n: { en: 'Munich' }, countryCode: 'DE', isActive: true, sortOrder: 2 },
-      { id: 'ber', key: 'berlin', i18n: { en: 'Berlin' }, countryCode: 'DE', isActive: true, sortOrder: 1 },
+      {
+        id: 'muc',
+        key: 'munich',
+        name: 'Munich',
+        i18n: { en: 'Munich' },
+        countryCode: 'DE',
+        stateName: 'Bavaria',
+        districtName: null,
+        postalCodes: ['80331'],
+        isActive: true,
+        sortOrder: 2,
+      },
+      {
+        id: 'ber',
+        key: 'berlin',
+        name: 'Berlin',
+        i18n: { en: 'Berlin' },
+        countryCode: 'DE',
+        stateName: 'Berlin',
+        districtName: null,
+        postalCodes: ['10115'],
+        isActive: true,
+        sortOrder: 1,
+      },
     ], 'en');
     const categoryOptions = buildProfileCategoryOptions([
       { key: 'repair', i18n: { en: 'Repair' }, isActive: true, sortOrder: 20 },
@@ -65,7 +87,18 @@ describe('workspaceProfileOnboarding.model', () => {
       password: 'Abcdef1!',
       acceptPrivacyPolicy: true,
     }, [
-      { id: 'ber', key: 'berlin', i18n: { en: 'Berlin' }, countryCode: 'DE', isActive: true, sortOrder: 1 },
+      {
+        id: 'ber',
+        key: 'berlin',
+        name: 'Berlin',
+        i18n: { en: 'Berlin' },
+        countryCode: 'DE',
+        stateName: 'Berlin',
+        districtName: null,
+        postalCodes: ['10115'],
+        isActive: true,
+        sortOrder: 1,
+      },
     ], 'en', [
       { key: 'deep-clean', categoryKey: 'cleaning', i18n: { en: 'Deep clean' }, isActive: true, sortOrder: 1 },
       { key: 'repair-door', categoryKey: 'repair', i18n: { en: 'Repair door' }, isActive: true, sortOrder: 2 },
@@ -84,5 +117,19 @@ describe('workspaceProfileOnboarding.model', () => {
       password: 'Abcdef1!',
       acceptPrivacyPolicy: true,
     }, [], 'en', [])).toBeNull();
+
+    expect(resolveProfileOnboardingSubmission({
+      name: 'Maria',
+      cityId: 'missing',
+      categoryKey: '',
+      description: '',
+      email: 'maria@example.com',
+      password: 'Abcdef1!',
+      acceptPrivacyPolicy: true,
+    }, [], 'en', [], 'Berlin')).toEqual({
+      cityLabel: 'Berlin',
+      description: '',
+      selectedCategoryServiceKeys: [],
+    });
   });
 });

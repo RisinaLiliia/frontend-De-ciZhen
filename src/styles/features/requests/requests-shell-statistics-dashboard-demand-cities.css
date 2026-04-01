@@ -71,25 +71,17 @@
   }
 
   .workspace-statistics__cities-filter {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
+    display: grid;
     width: min(100%, 320px);
   }
 
-  .workspace-statistics__cities-filter-icon {
-    position: absolute;
-    left: var(--space-3);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--c-text-muted);
-    pointer-events: none;
+  .workspace-statistics__cities-filter .dc-city-search-input {
+    height: var(--workspace-statistics-control-height-compact);
   }
 
-  .workspace-statistics__cities-filter-input.field {
-    height: var(--workspace-statistics-control-height-compact);
-    padding-left: calc(var(--space-8) + var(--space-2));
+  .workspace-statistics__cities-filter .dc-city-search-preview,
+  .workspace-statistics__cities-filter .dc-city-search-state--inline {
+    margin-top: 0;
   }
 
   .workspace-statistics__demand-pagination,

@@ -305,9 +305,18 @@ export type WorkspaceStatisticsCityDemandDto = {
   peerContext?: WorkspaceStatisticsOpportunityPeerContextDto | null;
 };
 
+export type WorkspaceStatisticsCityListDto = {
+  items: WorkspaceStatisticsCityDemandDto[];
+  page: number;
+  limit: number;
+  totalItems: number;
+  totalPages: number;
+};
+
 export type WorkspaceStatisticsDemandDto = {
   categories: WorkspaceStatisticsCategoryDemandDto[];
   cities: WorkspaceStatisticsCityDemandDto[];
+  cityList?: WorkspaceStatisticsCityListDto;
 };
 
 export type WorkspaceStatisticsOpportunityMetricDto = {

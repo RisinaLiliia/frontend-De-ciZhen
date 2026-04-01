@@ -66,7 +66,12 @@ export function HomeNearbyPanel({
   const qc = useQueryClient();
   const detectedRegion = useGeoRegion({ enabled: !disableGeoLookup });
   const region = regionOverride ?? detectedRegion;
-  const { data: cities = [] } = useCities('DE');
+  const deferredRegion = React.useDeferredValue(region?.trim() ?? '');
+  const { data: cities = [] } = useCities('DE', {
+    enabled: deferredRegion.length > 0,
+    query: deferredRegion,
+    limit: 8,
+  });
   const { data: categories = [] } = useServiceCategories();
   const { data: services = [] } = useServices();
 

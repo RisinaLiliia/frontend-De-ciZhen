@@ -71,6 +71,8 @@ type UseWorkspaceStatsViewModelParams = {
   setRange: (next: WorkspaceStatisticsRange) => void;
   setCityId: (next: string | null) => void;
   setCategoryKey: (next: string | null) => void;
+  cityListPage: number;
+  setCityListPage: (next: number) => void;
   setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
   resetFilters: () => void;
   data: WorkspaceStatisticsDecisionDashboardDto | undefined;
@@ -89,6 +91,8 @@ export function useWorkspaceStatsViewModel({
   setRange,
   setCityId,
   setCategoryKey,
+  cityListPage,
+  setCityListPage,
   setViewerMode,
   resetFilters,
   data,
@@ -283,6 +287,12 @@ export function useWorkspaceStatsViewModel({
   const cityRows = React.useMemo<WorkspaceStatisticsCityRowView[]>(() => {
     return rawCityRows;
   }, [rawCityRows]);
+  const cityListRows = React.useMemo<WorkspaceStatisticsCityRowView[]>(() => {
+    return buildCityRows(data?.demand.cityList?.items ?? data?.demand.cities);
+  }, [data?.demand.cities, data?.demand.cityList?.items]);
+  const cityListLimit = data?.demand.cityList?.limit ?? cityListRows.length;
+  const cityListTotalItems = data?.demand.cityList?.totalItems ?? cityListRows.length;
+  const cityListTotalPages = data?.demand.cityList?.totalPages ?? 1;
 
   const demandRows = React.useMemo<WorkspaceStatisticsCategoryDemandDto[]>(() => {
     return rawDemandRows;
@@ -571,6 +581,8 @@ export function useWorkspaceStatsViewModel({
     setRange,
     setCityId,
     setCategoryKey,
+    cityListPage,
+    setCityListPage,
     viewerMode,
     setViewerMode,
     resetFilters,
@@ -597,6 +609,10 @@ export function useWorkspaceStatsViewModel({
     activitySignals,
     demandRows,
     cityRows,
+    cityListRows,
+    cityListLimit,
+    cityListTotalItems,
+    cityListTotalPages,
     opportunityRadar,
     priceIntelligence,
     personalizedPricing,

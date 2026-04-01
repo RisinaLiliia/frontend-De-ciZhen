@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { listMyRequests } from '@/lib/api/requests';
 import { listMyProviderOffers, listMyClientOffers } from '@/lib/api/offers';
 import { listMyContracts } from '@/lib/api/contracts';
-import { listInbox } from '@/lib/api/chat';
+import { listConversations } from '@/lib/api/chat';
 import { listFavorites } from '@/lib/api/favorites';
 import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
@@ -37,7 +37,8 @@ export function useProfileWorkspaceData({
   });
   const { data: inbox = [] } = useQuery({
     queryKey: ['chat-inbox', 'all'],
-    queryFn: () => withStatusFallback(() => listInbox('all'), []),
+    queryFn: async () =>
+      withStatusFallback(async () => (await listConversations()).items, []),
   });
   const { data: favoriteRequests = [] } = useQuery({
     queryKey: ['favorite-requests'],
@@ -62,10 +63,12 @@ export function useProfileWorkspaceData({
   });
 
   const offersTotal = providerOffers.length + clientOffers.length;
-  const unreadTotal = inbox.reduce(
-    (sum, thread) => sum + (thread.unreadClientCount || 0) + (thread.unreadProviderCount || 0),
-    0,
-  );
+  const unreadTotal = inbox.reduce((sum, conversation) => {
+    if (typeof conversation.unread === 'number') {
+      return sum + Math.max(conversation.unread, 0);
+    }
+    return sum + Object.values(conversation.unreadCount ?? {}).reduce((count, value) => count + value, 0);
+  }, 0);
   const favoritesTotal = favoriteRequests.length + favoriteProviders.length;
   const ratingValue = myProviderPublic?.ratingAvg?.toFixed(1) ?? '—';
   const reviewCount = myProviderPublic?.ratingCount ?? 0;

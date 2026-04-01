@@ -3,6 +3,7 @@
 import { IconDownload } from '@/components/ui/icons/icons';
 import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
+import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import {
   ALL_CATEGORIES_VALUE,
@@ -29,6 +30,7 @@ export function StatisticsContextPanel({
   showControls = true,
   controlsPosition = 'bottom',
   closeLabel = 'Close',
+  locale,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
   filters: WorkspaceStatisticsModel['filters'];
@@ -46,9 +48,13 @@ export function StatisticsContextPanel({
   showControls?: boolean;
   controlsPosition?: 'top' | 'bottom';
   closeLabel?: string;
+  locale: Locale;
 }) {
   const cityValue = filters.cityId ?? ALL_CITIES_VALUE;
   const categoryValue = filters.categoryKey ?? ALL_CATEGORIES_VALUE;
+  const loadingLabel = locale === 'de' ? 'Aktualisiere…' : 'Refreshing…';
+  const emptyLabel = locale === 'de' ? 'Keine Ergebnisse' : 'No results';
+  const errorLabel = locale === 'de' ? 'Daten konnten nicht geladen werden.' : 'Data could not be loaded.';
   const selectedCityLabel = cityOptions.find((option) => option.value === cityValue)?.label ?? copy.contextAllCitiesLabel;
   const selectedCategoryLabel = categoryOptions.find((option) => option.value === categoryValue)?.label ?? copy.contextAllCategoriesLabel;
   const summaryBlock = showSummary ? (
@@ -89,17 +95,20 @@ export function StatisticsContextPanel({
   const controlsInner = (
     <WorkspaceSharedContextControls
       title={copy.contextTitle}
+      locale={locale}
       resetLabel={copy.contextResetLabel}
       closeLabel={closeLabel}
       city={{
         value: cityValue,
-        options: [
-          { value: ALL_CITIES_VALUE, label: copy.contextAllCitiesLabel },
-          ...cityOptions,
-        ],
+        allOption: { value: ALL_CITIES_VALUE, label: copy.contextAllCitiesLabel },
         ariaLabel: copy.contextCityLabel,
         onChange: (next) => onCityChange(next === ALL_CITIES_VALUE ? null : next),
         summaryLabel: selectedCityLabel,
+        placeholder: selectedCityLabel,
+        searchPlaceholder: copy.contextCityLabel,
+        loadingLabel,
+        emptyLabel,
+        errorLabel,
       }}
       category={{
         value: categoryValue,

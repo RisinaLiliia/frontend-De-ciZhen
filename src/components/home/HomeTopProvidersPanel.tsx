@@ -56,11 +56,26 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     () => rankHomeTopProviders(providers, limit),
     [limit, providers],
   );
+  const providerCityIds = React.useMemo(
+    () =>
+      Array.from(
+        new Set(
+          sortedProviders
+            .map((provider) => provider.cityId?.trim() ?? '')
+            .filter((cityId) => cityId.length > 0),
+        ),
+      ),
+    [sortedProviders],
+  );
   const providerById = React.useMemo(
     () => buildHomeTopProvidersById(sortedProviders),
     [sortedProviders],
   );
-  const { data: cities = [] } = useCities('DE');
+  const { data: cities = [] } = useCities('DE', {
+    ids: providerCityIds,
+    enabled: providerCityIds.length > 0,
+    limit: providerCityIds.length || 1,
+  });
   const favoriteProviderLookup = React.useMemo(
     () => buildProviderFavoriteLookup(favoriteProviders),
     [favoriteProviders],

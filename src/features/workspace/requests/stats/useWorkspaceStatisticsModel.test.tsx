@@ -298,6 +298,8 @@ describe('useWorkspaceStatisticsModel', () => {
       regionId: null,
       categoryKey: null,
       subcategoryKey: null,
+      citiesPage: 1,
+      citiesLimit: 10,
       viewerMode: null,
     });
     expect(screen.getByTestId('probe').getAttribute('data-price-context')).toContain('Berlin');
@@ -311,6 +313,8 @@ describe('useWorkspaceStatisticsModel', () => {
         regionId: null,
         categoryKey: null,
         subcategoryKey: null,
+        citiesPage: 1,
+        citiesLimit: 10,
         viewerMode: null,
       });
     });
@@ -325,6 +329,8 @@ describe('useWorkspaceStatisticsModel', () => {
         regionId: null,
         categoryKey: null,
         subcategoryKey: null,
+        citiesPage: 1,
+        citiesLimit: 10,
         viewerMode: null,
       });
     });
@@ -339,6 +345,8 @@ describe('useWorkspaceStatisticsModel', () => {
         regionId: null,
         categoryKey: null,
         subcategoryKey: null,
+        citiesPage: 1,
+        citiesLimit: 10,
         viewerMode: 'customer',
       });
     });

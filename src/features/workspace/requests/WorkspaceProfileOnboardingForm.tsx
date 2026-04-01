@@ -22,7 +22,6 @@ import { useWorkspaceProfileOnboardingAvatar } from './useWorkspaceProfileOnboar
 import {
   buildPasswordChecks,
   buildProfileCategoryOptions,
-  buildProfileCityOptions,
   buildProfileOnboardingSchema,
   resolveAvatarInitial,
   resolveProfileOnboardingSubmission,
@@ -38,11 +37,6 @@ export function WorkspaceProfileOnboardingForm() {
   const setLastMode = useAuthSetLastMode();
 
   const {
-    data: cities = [],
-    isLoading: isCitiesLoading,
-    isError: isCitiesError,
-  } = useCities('DE');
-  const {
     data: categories = [],
     isLoading: isCategoriesLoading,
     isError: isCategoriesError,
@@ -54,6 +48,7 @@ export function WorkspaceProfileOnboardingForm() {
   const schema = React.useMemo(() => buildProfileOnboardingSchema(t), [t]);
   const [showPassword, setShowPassword] = React.useState(false);
   const [isSubmittingFlow, setIsSubmittingFlow] = React.useState(false);
+  const [selectedCityLabel, setSelectedCityLabel] = React.useState('');
   const {
     avatarFile,
     avatarPreviewUrl,
@@ -93,6 +88,11 @@ export function WorkspaceProfileOnboardingForm() {
   const nameValue = watch('name');
   const cityIdValue = watch('cityId');
   const categoryKeyValue = watch('categoryKey');
+  const { data: selectedCities = [] } = useCities('DE', {
+    enabled: Boolean(cityIdValue),
+    ids: cityIdValue ? [cityIdValue] : [],
+    limit: 1,
+  });
   const passwordValue = watch('password') ?? '';
   const descriptionValue = watch('description');
   const descriptionLength = descriptionValue?.length ?? 0;
@@ -100,10 +100,6 @@ export function WorkspaceProfileOnboardingForm() {
   const avatarActionLabel = avatarPreviewUrl
     ? t(I18N_KEYS.client.profilePhotoChangeAction)
     : t(I18N_KEYS.client.profilePhotoAddAction);
-  const cityOptions = React.useMemo<Option[]>(
-    () => buildProfileCityOptions(cities, locale),
-    [cities, locale],
-  );
   const categoryOptions = React.useMemo<Option[]>(
     () => buildProfileCategoryOptions(categories, locale),
     [categories, locale],
@@ -115,7 +111,13 @@ export function WorkspaceProfileOnboardingForm() {
 
   const onSubmit = React.useCallback(
     async (values: ProfileOnboardingValues) => {
-      const submission = resolveProfileOnboardingSubmission(values, cities, locale, services);
+      const submission = resolveProfileOnboardingSubmission(
+        values,
+        selectedCities,
+        locale,
+        services,
+        selectedCityLabel,
+      );
       if (!submission) {
         toast.error(t(I18N_KEYS.requestsPage.profileOnboardingCityRequired));
         return;
@@ -169,7 +171,7 @@ export function WorkspaceProfileOnboardingForm() {
         setIsSubmittingFlow(false);
       }
     },
-    [avatarFile, cities, locale, registerUser, router, services, setError, setLastMode, t],
+    [avatarFile, locale, registerUser, router, selectedCities, selectedCityLabel, services, setError, setLastMode, t],
   );
 
   if (status === 'authenticated') {
@@ -199,12 +201,12 @@ export function WorkspaceProfileOnboardingForm() {
       <form className="workspace-profile-onboarding__form" onSubmit={handleSubmit(onSubmit)} noValidate>
         <WorkspaceProfileOnboardingProfileSection
           t={t}
+          locale={locale}
           loading={loading}
           requiredHint={requiredHint}
-          cityOptions={cityOptions}
           categoryOptions={categoryOptions}
-          isCitiesLoading={isCitiesLoading}
-          isCitiesError={isCitiesError}
+          isCitiesLoading={false}
+          isCitiesError={false}
           isCategoriesLoading={isCategoriesLoading}
           isCategoriesError={isCategoriesError}
           cityIdValue={cityIdValue}
@@ -220,6 +222,7 @@ export function WorkspaceProfileOnboardingForm() {
           onAvatarClear={onAvatarClear}
           register={register}
           setValue={setValue}
+          onCityOptionSelect={(option) => setSelectedCityLabel(option.label)}
           errors={errors}
         />
 
