@@ -5,6 +5,7 @@ export const I18N_KEYS = {
     refreshing: 'common.refreshing',
     loadError: 'common.loadError',
     loadErrorShort: 'common.loadErrorShort',
+    noResults: 'common.noResults',
     emptyData: 'common.emptyData',
     selectServiceCity: 'common.selectServiceCity',
     back: 'common.back',

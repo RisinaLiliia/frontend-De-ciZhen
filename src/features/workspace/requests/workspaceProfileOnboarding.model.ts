@@ -95,12 +95,16 @@ export function resolveProfileOnboardingSubmission(
   cities: City[],
   locale: Locale,
   services: Service[],
+  fallbackCityLabel?: string | null,
 ) {
   const selectedCity = cities.find((city) => city.id === values.cityId);
-  if (!selectedCity) return null;
+  const cityLabel = selectedCity
+    ? pickI18n(selectedCity.i18n, locale) || selectedCity.key
+    : fallbackCityLabel?.trim() || null;
+  if (!cityLabel) return null;
 
   return {
-    cityLabel: pickI18n(selectedCity.i18n, locale) || selectedCity.key,
+    cityLabel,
     description: values.description.trim(),
     selectedCategoryServiceKeys: resolveCategoryServiceKeys(values.categoryKey, services),
   };

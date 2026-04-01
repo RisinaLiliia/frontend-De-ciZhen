@@ -4,52 +4,50 @@ import * as React from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 
 import { Button } from '@/components/ui/Button';
+import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { Field } from '@/components/ui/Field';
 import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
-import type { City, Service } from '@/features/catalog/model';
+import type { Service } from '@/features/catalog/model';
 import type { ProviderOnboardingFormValues } from '@/features/provider/onboarding/types';
-import { I18N_KEYS } from '@/lib/i18n/keys';
 import { pickI18n } from '@/lib/i18n/helpers';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 
 type ProviderOnboardingSectionProps = {
   register: UseFormRegister<ProviderOnboardingFormValues>;
+  cityIdValue: string;
   requiredHint: string;
-  cities: City[];
   services: Service[];
   selectedServiceKeys: string[];
-  isCitiesLoading: boolean;
-  isCitiesError: boolean;
   isServicesLoading: boolean;
   isServicesError: boolean;
   isSubmitting: boolean;
   cancelLabel: string;
+  onCityChange: (value: string) => void;
   onSubmit: React.FormEventHandler<HTMLFormElement>;
   onCancel: () => void;
 };
 
 export function ProviderOnboardingSection({
   register,
+  cityIdValue,
   requiredHint,
-  cities,
   services,
   selectedServiceKeys,
-  isCitiesLoading,
-  isCitiesError,
   isServicesLoading,
   isServicesError,
   isSubmitting,
   cancelLabel,
+  onCityChange,
   onSubmit,
   onCancel,
 }: ProviderOnboardingSectionProps) {
   const t = useT();
   const { locale } = useI18n();
-  const citiesDisabled = isCitiesLoading || isCitiesError || isSubmitting;
   const servicesDisabled = isServicesLoading || isServicesError || isSubmitting;
-  const submitDisabled = citiesDisabled || servicesDisabled;
+  const submitDisabled = isSubmitting || servicesDisabled;
 
   return (
     <>
@@ -89,20 +87,19 @@ export function ProviderOnboardingSection({
             {t(I18N_KEYS.provider.city)}
           </FormLabel>
           <Field>
-            <select className="field" required disabled={citiesDisabled} {...register('cityId')}>
-              <option value="">
-                {isCitiesLoading
-                  ? t(I18N_KEYS.common.refreshing)
-                  : isCitiesError
-                    ? t(I18N_KEYS.common.loadErrorShort)
-                    : '—'}
-              </option>
-              {cities.map((city) => (
-                <option key={city.id} value={city.id}>
-                  {pickI18n(city.i18n, locale) || city.key}
-                </option>
-              ))}
-            </select>
+            <CitySearchSelect
+              locale={locale}
+              value={cityIdValue}
+              onChange={onCityChange}
+              placeholder={t(I18N_KEYS.home.cityPlaceholder)}
+              ariaLabel={t(I18N_KEYS.provider.city)}
+              disabled={isSubmitting}
+              searchPlaceholder={t(I18N_KEYS.home.cityPlaceholder)}
+              loadingLabel={t(I18N_KEYS.common.refreshing)}
+              emptyLabel={t(I18N_KEYS.common.noResults)}
+              errorLabel={t(I18N_KEYS.common.loadErrorShort)}
+            />
+            <input type="hidden" {...register('cityId')} />
           </Field>
         </div>
 

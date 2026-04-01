@@ -84,5 +84,19 @@ describe('workspaceProfileOnboarding.model', () => {
       password: 'Abcdef1!',
       acceptPrivacyPolicy: true,
     }, [], 'en', [])).toBeNull();
+
+    expect(resolveProfileOnboardingSubmission({
+      name: 'Maria',
+      cityId: 'missing',
+      categoryKey: '',
+      description: '',
+      email: 'maria@example.com',
+      password: 'Abcdef1!',
+      acceptPrivacyPolicy: true,
+    }, [], 'en', [], 'Berlin')).toEqual({
+      cityLabel: 'Berlin',
+      description: '',
+      selectedCategoryServiceKeys: [],
+    });
   });
 });

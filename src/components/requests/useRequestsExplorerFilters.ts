@@ -22,7 +22,6 @@ type Args = {
 };
 
 export function useRequestsExplorerFilters({ t, locale }: Args) {
-  const { data: cities = [] } = useCities('DE');
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories();
   const { data: services = [], isLoading: isServicesLoading } = useServices();
   const { formatDate, formatPrice } = useWorkspaceFormatters(locale);
@@ -52,6 +51,11 @@ export function useRequestsExplorerFilters({ t, locale }: Args) {
   } = useRequestsFilters({
     services,
     defaultSort: 'date_desc',
+  });
+  const { data: cities = [] } = useCities('DE', {
+    ids: cityId !== ALL_OPTION_KEY ? [cityId] : [],
+    enabled: cityId !== ALL_OPTION_KEY,
+    limit: 8,
   });
 
   const categoryOptions = React.useMemo(

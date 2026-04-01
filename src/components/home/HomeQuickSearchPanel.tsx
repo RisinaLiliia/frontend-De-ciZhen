@@ -38,10 +38,15 @@ export function HomeQuickSearchPanel({
   onCategoryChange,
   onSearch,
 }: HomeQuickSearchPanelProps) {
-  const { data: cities = [] } = useCities('DE');
   const [showCitySuggestions, setShowCitySuggestions] = React.useState(false);
   const [activeCityIndex, setActiveCityIndex] = React.useState(-1);
   const cityListboxId = React.useId();
+  const deferredCityQuery = React.useDeferredValue(cityQuery.trim());
+  const { data: cities = [] } = useCities('DE', {
+    enabled: deferredCityQuery.length > 0,
+    query: deferredCityQuery,
+    limit: 8,
+  });
   const cityOptions = cities
     .map((city) => ({
       id: city.id,
@@ -50,9 +55,7 @@ export function HomeQuickSearchPanel({
     .sort((a, b) => a.label.localeCompare(b.label, locale));
 
   const normalizedCityQuery = cityQuery.trim().toLowerCase();
-  const citySuggestions = normalizedCityQuery
-    ? cityOptions.filter((city) => city.label.toLowerCase().startsWith(normalizedCityQuery)).slice(0, 8)
-    : [];
+  const citySuggestions = normalizedCityQuery ? cityOptions : [];
   const hasCitySuggestions = showCitySuggestions && citySuggestions.length > 0;
   const resolvedCity = cityOptions.find((city) => city.label.toLowerCase() === cityQuery.trim().toLowerCase());
 

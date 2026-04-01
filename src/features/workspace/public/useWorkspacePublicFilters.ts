@@ -33,7 +33,6 @@ type Args = {
 };
 
 export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog, activePublicSection }: Args) {
-  const { data: cities = [] } = useCities('DE', shouldLoadCatalog);
   const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories(shouldLoadCatalog);
   const { data: services = [], isLoading: isServicesLoading } = useServices(undefined, shouldLoadCatalog);
 
@@ -62,6 +61,11 @@ export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog, active
   } = useRequestsFilters({
     services,
     defaultSort: 'date_desc',
+  });
+  const { data: cities = [] } = useCities('DE', {
+    enabled: shouldLoadCatalog && cityId !== ALL_OPTION_KEY,
+    ids: cityId !== ALL_OPTION_KEY ? [cityId] : [],
+    limit: 8,
   });
 
   const sendSearchEvent = React.useCallback((next: {

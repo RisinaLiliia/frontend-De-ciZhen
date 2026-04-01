@@ -5,6 +5,7 @@ export const de = {
     refreshing: 'Aktualisiere…',
     loadError: 'Fehler beim Laden der Daten. Bitte später erneut versuchen.',
     loadErrorShort: 'Daten konnten nicht geladen werden.',
+    noResults: 'Keine Treffer gefunden.',
     emptyData: 'Zurzeit sind keine Services oder Orte verfügbar.',
     selectServiceCity: 'Bitte Service und Ort auswählen.',
     back: 'Zurück',

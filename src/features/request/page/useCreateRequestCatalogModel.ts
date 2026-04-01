@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Option } from '@/components/ui/Select';
-import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
+import { useServiceCategories, useServices } from '@/features/catalog/queries';
 import { pickI18n } from '@/lib/i18n/helpers';
 import type { I18nKey } from '@/lib/i18n/keys';
 
@@ -13,7 +13,6 @@ type Params = {
 };
 
 export function useCreateRequestCatalogModel({ locale, t, categoryKey }: Params) {
-  const { data: cities } = useCities('DE');
   const { data: categories } = useServiceCategories();
   const { data: services } = useServices();
 
@@ -50,20 +49,8 @@ export function useCreateRequestCatalogModel({ locale, t, categoryKey }: Params)
     [categories, locale, t],
   );
 
-  const cityOptions = React.useMemo<Option[]>(
-    () => [
-      { value: '', label: t('home.cityPlaceholder') },
-      ...(cities ?? []).map((city) => ({
-        value: city.id,
-        label: pickI18n(city.i18n, locale),
-      })),
-    ],
-    [cities, locale, t],
-  );
-
   return {
     services,
-    cityOptions,
     categoryOptions,
     serviceOptions,
   };

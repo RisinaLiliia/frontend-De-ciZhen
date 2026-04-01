@@ -1,11 +1,13 @@
 'use client';
 
+import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { Field } from '@/components/ui/Field';
 import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
 import { Select, type Option } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 import type { I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 import type { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -14,9 +16,9 @@ import type { ProfileOnboardingValues } from './workspaceProfileOnboarding.model
 
 type WorkspaceProfileOnboardingProfileSectionProps = {
   t: (key: I18nKey) => string;
+  locale: Locale;
   loading: boolean;
   requiredHint: string;
-  cityOptions: Option[];
   categoryOptions: Option[];
   isCitiesLoading: boolean;
   isCitiesError: boolean;
@@ -33,6 +35,7 @@ type WorkspaceProfileOnboardingProfileSectionProps = {
   onAvatarSelected: (event: React.ChangeEvent<HTMLInputElement>) => void;
   openAvatarPicker: () => void;
   onAvatarClear: () => void;
+  onCityOptionSelect: (option: { value: string; label: string }) => void;
   register: UseFormRegister<ProfileOnboardingValues>;
   setValue: UseFormSetValue<ProfileOnboardingValues>;
   errors: FieldErrors<ProfileOnboardingValues>;
@@ -40,9 +43,9 @@ type WorkspaceProfileOnboardingProfileSectionProps = {
 
 export function WorkspaceProfileOnboardingProfileSection({
   t,
+  locale,
   loading,
   requiredHint,
-  cityOptions,
   categoryOptions,
   isCitiesLoading,
   isCitiesError,
@@ -58,6 +61,7 @@ export function WorkspaceProfileOnboardingProfileSection({
   onAvatarSelected,
   openAvatarPicker,
   onAvatarClear,
+  onCityOptionSelect,
   register,
   setValue,
   errors,
@@ -96,19 +100,23 @@ export function WorkspaceProfileOnboardingProfileSection({
             {t(I18N_KEYS.provider.city)}
           </FormLabel>
           <Field>
-            <Select
-              id="workspace-profile-city"
-              options={cityOptions}
-              value={cityIdValue || undefined}
+            <CitySearchSelect
+              locale={locale}
+              value={cityIdValue || ''}
               onChange={(value) => {
                 setValue('cityId', value, {
                   shouldDirty: true,
                   shouldValidate: true,
                 });
               }}
-              placeholder={isCitiesLoading ? t(I18N_KEYS.common.refreshing) : '—'}
+              placeholder={isCitiesLoading ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.home.cityPlaceholder)}
               disabled={isCitiesLoading || isCitiesError || loading}
-              aria-label={t(I18N_KEYS.requestsPage.cityLabel)}
+              ariaLabel={t(I18N_KEYS.requestsPage.cityLabel)}
+              searchPlaceholder={t(I18N_KEYS.home.cityPlaceholder)}
+              loadingLabel={t(I18N_KEYS.common.refreshing)}
+              emptyLabel={t(I18N_KEYS.common.noResults)}
+              errorLabel={t(I18N_KEYS.common.loadErrorShort)}
+              onSelectOption={onCityOptionSelect}
             />
             <input type="hidden" {...register('cityId')} />
           </Field>
