@@ -205,7 +205,7 @@ test('@critical authenticated user can open, read, inspect, and send messages in
   await dismissCookieConsentIfPresent(page);
 
   await expect(page.getByRole('option', { name: /Robin Service/i })).toBeVisible();
-  await expect(page.getByText('Initial message')).toBeVisible();
+  await expect(page.getByRole('log').getByText('Initial message')).toBeVisible();
   await expect.poll(() => markReadCalls).toBe(1);
 
   await page.getByRole('button', { name: /Info/i }).click();
@@ -216,6 +216,6 @@ test('@critical authenticated user can open, read, inspect, and send messages in
   await messageInput.fill('Hello from client');
   await page.getByRole('button', { name: /Senden|Send/i }).click();
 
-  await expect(page.getByText('Hello from client')).toBeVisible();
+  await expect(page.getByRole('log').getByText('Hello from client')).toBeVisible();
   expect(sendCalls).toBe(1);
 });

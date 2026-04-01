@@ -64,6 +64,7 @@ test('@critical authenticated user can login, create request, and publish it', a
           {
             key: 'cleaning',
             sortOrder: 1,
+            isActive: true,
             i18n: { de: 'Reinigung', en: 'Cleaning' },
           },
         ]),
@@ -79,6 +80,7 @@ test('@critical authenticated user can login, create request, and publish it', a
             key: 'window-cleaning',
             categoryKey: 'cleaning',
             sortOrder: 1,
+            isActive: true,
             i18n: { de: 'Fensterreinigung', en: 'Window cleaning' },
           },
         ]),
@@ -91,8 +93,15 @@ test('@critical authenticated user can login, create request, and publish it', a
         headers: jsonHeaders,
         body: JSON.stringify([
           {
-            id: 'berlin',
+            _id: 'berlin',
+            key: 'city_berlin',
+            name: 'Berlin',
             countryCode: 'DE',
+            stateName: 'Berlin',
+            districtName: null,
+            postalCodes: ['10115'],
+            isActive: true,
+            sortOrder: 1,
             i18n: { de: 'Berlin', en: 'Berlin' },
           },
         ]),

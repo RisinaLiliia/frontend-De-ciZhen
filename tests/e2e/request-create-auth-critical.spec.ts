@@ -23,6 +23,7 @@ test('@critical unauthenticated create-request submit redirects to login with re
           {
             key: 'cleaning',
             sortOrder: 1,
+            isActive: true,
             i18n: { de: 'Reinigung', en: 'Cleaning' },
           },
         ]),
@@ -38,6 +39,7 @@ test('@critical unauthenticated create-request submit redirects to login with re
             key: 'window-cleaning',
             categoryKey: 'cleaning',
             sortOrder: 1,
+            isActive: true,
             i18n: { de: 'Fensterreinigung', en: 'Window cleaning' },
           },
         ]),
@@ -50,8 +52,15 @@ test('@critical unauthenticated create-request submit redirects to login with re
         headers: jsonHeaders,
         body: JSON.stringify([
           {
-            id: 'berlin',
+            _id: 'berlin',
+            key: 'city_berlin',
+            name: 'Berlin',
             countryCode: 'DE',
+            stateName: 'Berlin',
+            districtName: null,
+            postalCodes: ['10115'],
+            isActive: true,
+            sortOrder: 1,
             i18n: { de: 'Berlin', en: 'Berlin' },
           },
         ]),
