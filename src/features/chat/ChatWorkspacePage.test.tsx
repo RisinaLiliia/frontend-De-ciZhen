@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { ChatWorkspacePage } from './ChatWorkspacePage';
@@ -325,13 +325,14 @@ describe('ChatWorkspacePage', () => {
     sendMessageMock.mockImplementationOnce(() => pendingMessage.promise as never);
 
     renderPage();
-    expect(await screen.findByText('Ich bin um 16 Uhr da.')).not.toBeNull();
+    const threadLog = await screen.findByRole('log');
+    expect(await within(threadLog).findByText('Ich bin um 16 Uhr da.')).not.toBeNull();
 
     const textarea = screen.getByPlaceholderText('Nachricht schreiben');
     fireEvent.change(textarea, { target: { value: 'Neue Nachricht' } });
     fireEvent.keyDown(textarea, { key: 'Enter' });
 
-    expect(await screen.findByText('Neue Nachricht')).not.toBeNull();
+    expect(await within(threadLog).findByText('Neue Nachricht')).not.toBeNull();
     expect(sendMessageMock).toHaveBeenCalledWith({
       conversationId: 'conv-1',
       text: 'Neue Nachricht',
