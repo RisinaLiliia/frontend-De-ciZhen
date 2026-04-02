@@ -6,6 +6,7 @@ export type ProviderPublicDto = {
   id: string;
   userId?: string;
   displayName?: string | null;
+  bio?: string | null;
   avatarUrl?: string | null;
   ratingAvg: number;
   ratingCount: number;

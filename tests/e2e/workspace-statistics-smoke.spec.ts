@@ -255,9 +255,11 @@ test('workspace stats smoke: range switch + demand/city pagination', async ({ pa
   const cityPanel = page.locator('.workspace-statistics__cities-pagination');
   await expect(cityPanel).toBeVisible();
   await cityPanel.locator('button').nth(1).click();
-  await expect(page.locator('.workspace-statistics-city-list__item').first()).toContainText('City 16');
+  await expect(page.locator('.workspace-statistics-city-list__item').first()).toContainText('City 11');
 
-  await page.locator('.workspace-statistics .home-activity__ranges button').nth(1).click();
+  const rangeToolbar = page.locator('.workspace-shared-context-controls__desktop .home-activity__ranges');
+  await expect(rangeToolbar).toBeVisible();
+  await rangeToolbar.getByRole('button', { name: '7 Tage' }).click();
   await expect(page.locator('.skeleton')).toHaveCount(0);
   await expect(page.locator('.workspace-statistics-insights')).toContainText('Insight body 7d');
 

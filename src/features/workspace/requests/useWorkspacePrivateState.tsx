@@ -103,7 +103,7 @@ export function useWorkspacePrivateState({
   );
 
   const topProviders = useWorkspacePrivateTopProviders(
-    buildWorkspacePrivateTopProvidersArgs({ t, providers }),
+    buildWorkspacePrivateTopProvidersArgs({ t, locale, providers }),
   );
 
   return resolveWorkspacePrivateStateResult({

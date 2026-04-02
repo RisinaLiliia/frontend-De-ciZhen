@@ -359,7 +359,17 @@ describe('ChatWorkspacePage', () => {
 
     renderPage();
 
-    expect(await screen.findByText('Keine Ergebnisse')).not.toBeNull();
+    expect(await screen.findByText('Keine Chats gefunden')).not.toBeNull();
     expect(screen.getByText('Versuchen Sie einen anderen Namen oder Suchbegriff.')).not.toBeNull();
+  });
+
+  it('renders the empty inbox without request call-to-action buttons', async () => {
+    listConversationsMock.mockResolvedValueOnce({ items: [] });
+
+    renderPage();
+
+    expect(await screen.findByText('Noch keine Unterhaltungen')).not.toBeNull();
+    expect(screen.getByText('Sobald Sie mit einem Anbieter oder Kunden schreiben, erscheint die Konversation hier.')).not.toBeNull();
+    expect(screen.queryByRole('link', { name: /anfragen/i })).toBeNull();
   });
 });

@@ -114,10 +114,11 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     () =>
       buildHomeTopProviderCards({
         t,
+        locale,
         providers: sortedProviders,
         cityLabelById,
       }),
-    [cityLabelById, sortedProviders, t],
+    [cityLabelById, locale, sortedProviders, t],
   );
   return (
     <TopProvidersPanel

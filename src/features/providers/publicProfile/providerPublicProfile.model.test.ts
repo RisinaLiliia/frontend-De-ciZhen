@@ -51,13 +51,13 @@ describe('providerPublicProfile.model', () => {
       provider({ id: 'b', ratingAvg: 4.8, ratingCount: 100 }),
     )).toBeLessThan(0);
     expect(similarProviders.map((item) => item.id)).toEqual(['provider-2', 'provider-3']);
-    expect(buildProviderPublicProfileCard({ provider: baseProvider, t: t as never }).profileHref).toBe('/providers/provider-1');
-    expect(buildProviderPublicProfileSimilarCards({ providers: similarProviders, t: t as never })).toHaveLength(2);
+    expect(buildProviderPublicProfileCard({ provider: baseProvider, t: t as never, locale: 'de' }).profileHref).toBe('/providers/provider-1');
+    expect(buildProviderPublicProfileSimilarCards({ providers: similarProviders, t: t as never, locale: 'de' })).toHaveLength(2);
   });
 
   it('builds availability calendar config and final profile view model', () => {
     const t = (key: string) => key;
-    const profileCard = buildProviderPublicProfileCard({ provider: provider({ basePrice: 80 }), t: t as never });
+    const profileCard = buildProviderPublicProfileCard({ provider: provider({ basePrice: 80 }), t: t as never, locale: 'de' });
     const viewModel = buildProviderPublicProfileViewModel({
       provider: provider({ basePrice: 80 }),
       profileCard,

@@ -826,12 +826,14 @@ export function WorkspaceContextAside({
   locale,
   activePublicSection,
   activeWorkspaceTab,
+  className,
   children,
 }: {
   t: Translator;
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
+  className?: string;
   children: React.ReactNode;
 }) {
   const model = useWorkspaceSharedContext({
@@ -896,7 +898,7 @@ export function WorkspaceContextAside({
   }, [isAnalyzingFocus, isFocusOpen]);
 
   return (
-    <div className="workspace-statistics-layout workspace-context-rail">
+    <div className={['workspace-statistics-layout', 'workspace-context-rail', className ?? ''].filter(Boolean).join(' ')}>
       <section className="panel workspace-context-rail__panel">
         <span className="workspace-environment__eyebrow">{model.copy.rail.nextStepTitle}</span>
         <WorkspaceDecisionActionCard

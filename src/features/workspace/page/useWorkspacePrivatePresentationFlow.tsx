@@ -96,8 +96,6 @@ export function useWorkspacePrivatePresentationFlow({
 
   const overviewHeroRef = React.useRef<HTMLDivElement | null>(null);
   const overviewGridRef = React.useRef<HTMLDivElement | null>(null);
-  const overviewMapPanelRef = React.useRef<HTMLElement | null>(null);
-  const overviewInsightsPanelRef = React.useRef<HTMLElement | null>(null);
   const overviewMapMinHeight = useSyncedPanelMinHeight({
     sourceRef: overviewHeroRef,
     mode: 'sourceHeight',
@@ -120,14 +118,12 @@ export function useWorkspacePrivatePresentationFlow({
         isLoading={data.isPublicSummaryLoading}
         isError={data.isPublicSummaryError}
         onSelectCity={overviewStatisticsModel.setCityId}
-        panelRef={overviewMapPanelRef}
         style={overviewMapMinHeight ? { minHeight: `${overviewMapMinHeight}px` } : undefined}
       />
       <WorkspaceOverviewInsightsPanel
         locale={branch.locale}
         currentSearch={currentSearch}
         statisticsModel={overviewStatisticsModel}
-        panelRef={overviewInsightsPanelRef}
         style={overviewInsightsMinHeight ? { minHeight: `${overviewInsightsMinHeight}px` } : undefined}
       />
     </>

@@ -17,10 +17,10 @@
   }
 
   .provider-card {
-    --provider-card-min-height: 184px;
-    --provider-card-inline-pad: 14px;
-    --provider-card-block-pad: 14px;
-    --provider-card-corner-offset: 10px;
+    --provider-card-min-height: 194px;
+    --provider-card-inline-pad: 16px;
+    --provider-card-block-pad: 16px;
+    --provider-card-corner-offset: 14px;
     --provider-card-badge-strip-height: 22px;
     --provider-card-top-gap: var(--space-2-5);
     --provider-card-top-reserve: calc(
@@ -110,7 +110,7 @@
   .provider-card .provider-info {
     display: grid;
     grid-template-columns: minmax(56px, auto) minmax(0, 1fr);
-    align-items: stretch;
+    align-items: start;
     gap: var(--space-3);
     min-height: 100%;
     height: 100%;

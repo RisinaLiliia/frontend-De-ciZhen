@@ -58,6 +58,7 @@ export function RequestCard({
   const router = useRouter();
   const hasImage = Boolean(imageSrc);
   const visibleBadges = badges.slice(0, 1);
+  const excerptText = excerpt?.trim() ?? '';
   const safeImageSrc = imageSrc ?? '';
   const isLinkMode = mode === 'link';
   const cardClassName = `request-card request-card--media-right request-card-link ${
@@ -132,7 +133,13 @@ export function RequestCard({
           {statusSlot ? <span className="request-top__status">{statusSlot}</span> : null}
         </div>
         <div className="request-card__title">{title}</div>
-        {excerpt ? <p className="request-card__excerpt">{excerpt}</p> : null}
+        <p
+          className="request-card__excerpt"
+          title={excerptText || undefined}
+          aria-hidden={excerptText ? undefined : true}
+        >
+          {excerptText}
+        </p>
 
         <div className="request-card__meta">
           {meta.map((item, index) => {
@@ -157,41 +164,44 @@ export function RequestCard({
           })}
         </div>
 
-        {visibleBadges.length && !hasImage ? (
-          <div className="request-badges" aria-hidden="true">
-            {visibleBadges.map((badge) => (
-              <span key={badge} className="request-badge">
-                {badge}
-              </span>
-            ))}
-          </div>
-        ) : null}
-
-        <div className="request-card__price">
-          <span className="proof-price">{priceLabel}</span>
-          {priceTrend ? (
-            <span
-              className={`request-card__price-trend ${
-                priceTrend === 'down' ? 'is-down' : 'is-up'
-              }`.trim()}
-              title={priceTrendLabel ?? undefined}
-            >
-              <span aria-hidden="true">{priceTrend === 'down' ? '↓' : '↑'}</span>
-              {priceTrendLabel ? <span>{priceTrendLabel}</span> : null}
-            </span>
-          ) : null}
-          {bottomMeta.length ? (
-            <span className="request-card__sub">
-              {bottomMeta.map((item, index) => (
-                <span key={`bottom-${index}`} className="meta-item">
-                  {item}
+        <div className="request-card__content">
+          {visibleBadges.length && !hasImage ? (
+            <div className="request-badges" aria-hidden="true">
+              {visibleBadges.map((badge) => (
+                <span key={badge} className="request-badge">
+                  {badge}
                 </span>
               ))}
-            </span>
+            </div>
           ) : null}
         </div>
 
-        {actionSlot ? <div className="request-card__actions">{actionSlot}</div> : null}
+        <div className="request-card__footer">
+          <div className="request-card__price">
+            <span className="proof-price">{priceLabel}</span>
+            {priceTrend ? (
+              <span
+                className={`request-card__price-trend ${
+                  priceTrend === 'down' ? 'is-down' : 'is-up'
+                }`.trim()}
+                title={priceTrendLabel ?? undefined}
+              >
+                <span aria-hidden="true">{priceTrend === 'down' ? '↓' : '↑'}</span>
+                {priceTrendLabel ? <span>{priceTrendLabel}</span> : null}
+              </span>
+            ) : null}
+            {bottomMeta.length ? (
+              <span className="request-card__sub">
+                {bottomMeta.map((item, index) => (
+                  <span key={`bottom-${index}`} className="meta-item">
+                    {item}
+                  </span>
+                ))}
+              </span>
+            ) : null}
+          </div>
+          {actionSlot ? <div className="request-card__actions">{actionSlot}</div> : null}
+        </div>
       </div>
     </>
   );

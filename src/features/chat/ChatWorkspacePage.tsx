@@ -812,9 +812,6 @@ export function ChatWorkspacePage() {
               <div className={styles.sidebarEmptyState}>
                 <h2 className={styles.emptyTitle}>{copy.listEmptyTitle}</h2>
                 <p className={styles.emptyHint}>{copy.listEmptyHint}</p>
-                <Link href="/workspace?section=requests" prefetch={false} className="btn-secondary">
-                  {copy.listEmptyCta}
-                </Link>
               </div>
             ) : (
               <div className={styles.sidebarList} role="listbox" aria-label={copy.title}>
@@ -882,18 +879,13 @@ export function ChatWorkspacePage() {
 
         <section className={styles.threadPane}>
           {!selectedConversation ? (
-            <div className={styles.threadEmptyState}>
+            <div className={`${styles.threadEmptyState} ${styles.threadEmptyStateCentered}`.trim()}>
               <h2 className={styles.emptyTitle}>
                 {hasConversations ? copy.threadIdleTitle : copy.listEmptyTitle}
               </h2>
               <p className={styles.emptyHint}>
                 {hasConversations ? copy.threadIdleHint : copy.listEmptyHint}
               </p>
-              {!hasConversations ? (
-                <Link href="/workspace?section=requests" prefetch={false} className="btn-secondary">
-                  {copy.listEmptyCta}
-                </Link>
-              ) : null}
             </div>
           ) : (
             <>

@@ -18,7 +18,6 @@ export type ChatPageCopy = {
   filterArchived: string;
   listEmptyTitle: string;
   listEmptyHint: string;
-  listEmptyCta: string;
   listSearchEmptyTitle: string;
   listSearchEmptyHint: string;
   threadIdleTitle: string;
@@ -68,15 +67,14 @@ const COPY: Record<Locale, ChatPageCopy> = {
     filterCustomer: 'Kunde',
     filterProvider: 'Anbieter',
     filterArchived: 'Archiviert',
-    listEmptyTitle: 'Noch keine Nachrichten',
+    listEmptyTitle: 'Noch keine Unterhaltungen',
     listEmptyHint: 'Sobald Sie mit einem Anbieter oder Kunden schreiben, erscheint die Konversation hier.',
-    listEmptyCta: 'Zu Anfragen',
-    listSearchEmptyTitle: 'Keine Ergebnisse',
+    listSearchEmptyTitle: 'Keine Chats gefunden',
     listSearchEmptyHint: 'Versuchen Sie einen anderen Namen oder Suchbegriff.',
-    threadIdleTitle: 'Wählen Sie einen Chat aus',
-    threadIdleHint: 'Ihre Nachrichten werden hier angezeigt.',
+    threadIdleTitle: 'Wählen Sie einen Chat',
+    threadIdleHint: 'Öffnen Sie links eine Unterhaltung, um den Verlauf zu sehen.',
     threadEmptyTitle: 'Noch keine Nachrichten',
-    threadEmptyHint: 'Schreiben Sie die erste Nachricht, um die Konversation zu starten.',
+    threadEmptyHint: 'Schreiben Sie die erste Nachricht, um die Unterhaltung zu starten.',
     composerPlaceholder: 'Nachricht schreiben',
     composerCta: 'Senden',
     composerSending: 'Wird gesendet…',
@@ -118,15 +116,14 @@ const COPY: Record<Locale, ChatPageCopy> = {
     filterCustomer: 'Customer',
     filterProvider: 'Provider',
     filterArchived: 'Archived',
-    listEmptyTitle: 'No messages yet',
+    listEmptyTitle: 'No conversations yet',
     listEmptyHint: 'Once you message a provider or customer, the conversation will appear here.',
-    listEmptyCta: 'Go to requests',
-    listSearchEmptyTitle: 'No results',
+    listSearchEmptyTitle: 'No chats found',
     listSearchEmptyHint: 'Try another name or search term.',
     threadIdleTitle: 'Choose a chat',
-    threadIdleHint: 'Your messages will appear here.',
+    threadIdleHint: 'Open a conversation from the left to view the thread.',
     threadEmptyTitle: 'No messages yet',
-    threadEmptyHint: 'Write the first message to start the conversation.',
+    threadEmptyHint: 'Write the first message to start the thread.',
     composerPlaceholder: 'Write a message',
     composerCta: 'Send',
     composerSending: 'Sending…',

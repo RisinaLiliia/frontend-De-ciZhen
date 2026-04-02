@@ -6,11 +6,6 @@
     min-height: var(--provider-card-min-height);
   }
 
-  .provider-card.is-grid .provider-main-review {
-    -webkit-line-clamp: 2;
-    min-height: calc(2 * 1.35em);
-  }
-
   @media (max-width: 1024px) {
     .provider-card.is-grid {
       gap: var(--space-2-5);

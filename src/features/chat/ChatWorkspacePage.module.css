@@ -244,8 +244,23 @@
 .messagesEmptyState {
   display: grid;
   gap: var(--space-3);
-  place-items: start;
   padding: var(--space-5);
+}
+
+.sidebarEmptyState,
+.messagesEmptyState {
+  place-items: start;
+}
+
+.threadEmptyState {
+  align-content: center;
+  justify-items: start;
+  min-height: 100%;
+}
+
+.threadEmptyStateCentered {
+  justify-items: center;
+  text-align: center;
 }
 
 .avatar,

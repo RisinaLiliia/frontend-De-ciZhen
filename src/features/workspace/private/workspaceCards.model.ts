@@ -5,12 +5,14 @@ import { mapPublicProviderToCard } from '@/components/providers/providerCardMapp
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import { isProviderInFavoriteLookup } from '@/lib/api/favorites';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 
 type Translator = (key: I18nKey) => string;
 type FavoriteProviderCardProps = Omit<Parameters<typeof ProviderCard>[0], 'variant'>;
 
 type BuildWorkspaceFavoriteProviderCardPropsArgs = {
   t: Translator;
+  locale: Locale;
   provider: ProviderPublicDto;
   favoriteProviderLookup: ReadonlySet<string>;
   pendingFavoriteProviderIds: ReadonlySet<string>;
@@ -21,6 +23,7 @@ type BuildWorkspaceFavoriteProviderCardPropsArgs = {
 
 export function buildWorkspaceFavoriteProviderCardProps({
   t,
+  locale,
   provider,
   favoriteProviderLookup,
   pendingFavoriteProviderIds,
@@ -35,6 +38,7 @@ export function buildWorkspaceFavoriteProviderCardProps({
     onToggleFavorite: onToggleProviderFavorite,
     provider: mapPublicProviderToCard({
       t,
+      locale,
       provider,
       roleLabel: favoriteProviderRoleLabelById.get(provider.id) ?? '',
       cityLabel: favoriteProviderCityLabelById.get(provider.id) ?? '',
@@ -48,6 +52,7 @@ export function buildWorkspaceFavoriteProviderCardProps({
 
 export function buildWorkspaceFavoriteProviderCardModels(params: {
   t: Translator;
+  locale: Locale;
   favoriteProviders: ProviderPublicDto[];
   favoriteProviderLookup: ReadonlySet<string>;
   pendingFavoriteProviderIds: ReadonlySet<string>;
@@ -59,6 +64,7 @@ export function buildWorkspaceFavoriteProviderCardModels(params: {
     key: `fav-provider-${provider.id}`,
     props: buildWorkspaceFavoriteProviderCardProps({
       t: params.t,
+      locale: params.locale,
       provider,
       favoriteProviderLookup: params.favoriteProviderLookup,
       pendingFavoriteProviderIds: params.pendingFavoriteProviderIds,

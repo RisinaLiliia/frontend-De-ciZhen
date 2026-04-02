@@ -167,8 +167,8 @@ export function useProviderPublicProfileModel() {
   );
 
   const profileCard = React.useMemo(
-    () => (provider ? buildProviderPublicProfileCard({ provider, t }) : null),
-    [provider, t],
+    () => (provider ? buildProviderPublicProfileCard({ provider, t, locale }) : null),
+    [locale, provider, t],
   );
   const primaryServiceKey = React.useMemo(() => getPrimaryProviderServiceKey(provider), [provider]);
 
@@ -215,8 +215,8 @@ export function useProviderPublicProfileModel() {
   }, [provider, providers]);
 
   const similarCards = React.useMemo(
-    () => buildProviderPublicProfileSimilarCards({ providers: similarProviders, t }),
-    [similarProviders, t],
+    () => buildProviderPublicProfileSimilarCards({ providers: similarProviders, t, locale }),
+    [locale, similarProviders, t],
   );
 
   const {

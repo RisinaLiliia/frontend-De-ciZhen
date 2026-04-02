@@ -112,6 +112,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
         locale={locale}
         activePublicSection={activePublicSection}
         activeWorkspaceTab={activeWorkspaceTab}
+        className={isOverviewPrivateMode ? 'workspace-context-rail--overview' : undefined}
       >
         {!isOverviewPrivateMode ? (
           <WorkspaceTopProvidersAside
