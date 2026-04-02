@@ -114,6 +114,7 @@ export function buildWorkspacePrivateContentDataArgs({
     },
     cardsArgs: {
       t: branch.t,
+      locale: branch.locale,
       favoriteProviders: data.favoriteProviders,
       favoriteProviderLookup: data.favoriteProviderLookup,
       pendingFavoriteProviderIds: data.pendingFavoriteProviderIds,

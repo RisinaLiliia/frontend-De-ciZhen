@@ -19,10 +19,12 @@ export function resolveProviderTargetUserId(provider: ProviderPublicDto | undefi
 export function buildProviderPublicProfileCard(params: {
   provider: ProviderPublicDto;
   t: Translate;
+  locale: Locale;
 }) {
-  const { provider, t } = params;
+  const { provider, t, locale } = params;
   return mapPublicProviderToCard({
     t,
+    locale,
     provider,
     profileHref: `/providers/${provider.id}`,
     reviewsHref: `/providers/${provider.id}#reviews`,
@@ -59,11 +61,13 @@ export function buildProviderPublicProfileSimilarProviders(params: {
 export function buildProviderPublicProfileSimilarCards(params: {
   providers: ProviderPublicDto[];
   t: Translate;
+  locale: Locale;
 }) {
   return params.providers.map((item) => ({
     ...buildProviderPublicProfileCard({
       provider: item,
       t: params.t,
+      locale: params.locale,
     }),
     reviewPreview: params.t(I18N_KEYS.homePublic.providerReviewPreviewDefault),
   }));

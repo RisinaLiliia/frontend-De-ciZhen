@@ -25,11 +25,14 @@ type WorkspaceInsightsPanelProps = {
   assistantAvatarLabel: string;
   assistantName: string;
   assistantRole: string;
+  assistantDescription?: string;
   featuredLabel?: string;
   items: WorkspaceInsightsPanelItem[];
   className?: string;
+  titleVariant?: 'default' | 'request-card';
   panelRef?: React.Ref<HTMLElement>;
   style?: React.CSSProperties;
+  showHeader?: boolean;
 };
 
 function renderInsightAction(item: WorkspaceInsightsPanelItem) {
@@ -71,22 +74,41 @@ export function WorkspaceInsightsPanel({
   assistantAvatarLabel,
   assistantName,
   assistantRole,
+  assistantDescription,
   featuredLabel,
   items,
   className,
+  titleVariant = 'default',
   panelRef,
   style,
+  showHeader = true,
 }: WorkspaceInsightsPanelProps) {
   const featuredItem = items[0];
   const secondaryItems = items.slice(1);
-  const hasHeading = Boolean(title?.trim() || subtitle?.trim());
-  const panelLabel = title?.trim() || assistantRole;
+  const hasHeading = showHeader && Boolean(title?.trim() || subtitle?.trim());
+  const panelLabel = title?.trim() || assistantRole || emptyLabel;
   const rootClassName = [
-    hasHeading ? 'panel' : 'workspace-statistics-ki',
+    hasHeading || showHeader ? 'panel' : 'workspace-statistics-ki',
     'workspace-insights-panel',
-    hasHeading ? '' : 'workspace-insights-panel--compact-head',
+    showHeader && hasHeading ? '' : 'workspace-insights-panel--compact-head',
     className ?? '',
   ].filter(Boolean).join(' ');
+  const assistantDescriptionText = assistantDescription?.trim() || assistantRole;
+  const titleClassName = [
+    'workspace-statistics-insights__title',
+    titleVariant === 'request-card' ? 'request-card__title' : '',
+  ].filter(Boolean).join(' ');
+  const assistantHead = (
+    <div className="workspace-statistics-ki__head">
+      <span className="workspace-statistics-ki__avatar" aria-hidden="true">
+        {assistantAvatarLabel}
+      </span>
+      <span className="workspace-statistics-ki__copy">
+        <strong className="workspace-statistics-ki__name">{assistantName}</strong>
+        <span className="workspace-statistics-ki__role">{assistantDescriptionText}</span>
+      </span>
+    </div>
+  );
 
   return (
     <section
@@ -94,7 +116,8 @@ export function WorkspaceInsightsPanel({
       style={style}
       className={rootClassName}
     >
-      {hasHeading ? (
+      {showHeader ? (
+        hasHeading ? (
         <header
           className={[
             'section-heading',
@@ -108,30 +131,17 @@ export function WorkspaceInsightsPanel({
           </span>
           <div className="workspace-statistics-insights__ki">
             <span className="workspace-statistics-ki__stamp">{generatedLabel}</span>
-            <div className="workspace-statistics-ki__head">
-              <span className="workspace-statistics-ki__avatar" aria-hidden="true">
-                {assistantAvatarLabel}
-              </span>
-              <span className="workspace-statistics-ki__copy">
-                <strong className="workspace-statistics-ki__name">{assistantName}</strong>
-                <span className="workspace-statistics-ki__role">{assistantRole}</span>
-              </span>
-            </div>
+            {assistantHead}
           </div>
         </header>
-      ) : (
+        ) : (
         <>
           <span className="workspace-statistics-ki__stamp">{generatedLabel}</span>
-          <div className="workspace-statistics-ki__head">
-            <span className="workspace-statistics-ki__avatar" aria-hidden="true">
-              {assistantAvatarLabel}
-            </span>
-            <span className="workspace-statistics-ki__copy">
-              <strong className="workspace-statistics-ki__name">{assistantName}</strong>
-              <span className="workspace-statistics-ki__role">{assistantRole}</span>
-            </span>
-          </div>
+          {assistantHead}
         </>
+        )
+      ) : (
+        assistantHead
       )}
       {items.length === 0 ? (
         <p className="workspace-statistics__empty">{emptyLabel}</p>
@@ -149,7 +159,9 @@ export function WorkspaceInsightsPanel({
                   ) : null}
                 </span>
                 {featuredItem.title ? (
-                  <strong className="workspace-statistics-insights__title">{featuredItem.title}</strong>
+                  <strong className={titleClassName}>
+                    {featuredItem.title}
+                  </strong>
                 ) : null}
                 <span className="workspace-statistics-insights__text">{featuredItem.text}</span>
                 {featuredItem.metrics && featuredItem.metrics.length > 0 ? (
@@ -182,7 +194,9 @@ export function WorkspaceInsightsPanel({
                       </span>
                     </span>
                     {item.title ? (
-                      <strong className="workspace-statistics-insights__title">{item.title}</strong>
+                      <strong className={titleClassName}>
+                        {item.title}
+                      </strong>
                     ) : null}
                     <span className="workspace-statistics-insights__text">{item.text}</span>
                     {item.evidence ? (

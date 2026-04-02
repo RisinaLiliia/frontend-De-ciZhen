@@ -51,6 +51,7 @@ export function buildHomeCityLabelById(params: {
 
 export function buildHomeTopProviderCards(params: {
   t: Translator;
+  locale: Locale;
   providers: ProviderPublicDto[];
   cityLabelById: ReadonlyMap<string, string>;
 }): TopProviderItem[] {
@@ -64,6 +65,7 @@ export function buildHomeTopProviderCards(params: {
   return params.providers.map((provider) => {
     const mapped = mapPublicProviderToCard({
       t: params.t,
+      locale: params.locale,
       provider,
       cityLabel:
         (provider as { cityId?: string }).cityId

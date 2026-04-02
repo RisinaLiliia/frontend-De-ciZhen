@@ -5,12 +5,14 @@ import * as React from 'react';
 import { ProviderCard } from '@/components/providers/ProviderCard';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 import { buildWorkspaceFavoriteProviderCardModels } from '@/features/workspace/private/workspaceCards.model';
 
 type Translator = (key: I18nKey) => string;
 
 type Args = {
   t: Translator;
+  locale: Locale;
   favoriteProviders: ProviderPublicDto[];
   favoriteProviderLookup: ReadonlySet<string>;
   pendingFavoriteProviderIds: ReadonlySet<string>;
@@ -21,6 +23,7 @@ type Args = {
 
 export function useWorkspaceCards({
   t,
+  locale,
   favoriteProviders,
   favoriteProviderLookup,
   pendingFavoriteProviderIds,
@@ -32,6 +35,7 @@ export function useWorkspaceCards({
     () =>
       buildWorkspaceFavoriteProviderCardModels({
         t,
+        locale,
         favoriteProviders,
         favoriteProviderLookup,
         pendingFavoriteProviderIds,
@@ -50,6 +54,7 @@ export function useWorkspaceCards({
       favoriteProviderLookup,
       favoriteProviderRoleLabelById,
       favoriteProviders,
+      locale,
       onToggleProviderFavorite,
       pendingFavoriteProviderIds,
       t,

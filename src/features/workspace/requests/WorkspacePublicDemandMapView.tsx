@@ -47,9 +47,9 @@ export function WorkspacePublicDemandMapView({
       style={style}
       className={`${surface === 'panel' ? 'panel ' : ''}workspace-public-demand-map${surface === 'embedded' ? ' workspace-public-demand-map--embedded' : ''}`.trim()}
     >
-      <header className="workspace-public-demand-map__header">
+      <header className="workspace-public-demand-map__header workspace-statistics__tile-header">
         <p className="section-title">{t(I18N_KEYS.homePublic.demandMapTitle)}</p>
-        <p className="typo-small">{t(I18N_KEYS.homePublic.demandMapSubtitle)}</p>
+        <p className="section-subtitle">{t(I18N_KEYS.homePublic.demandMapSubtitle)}</p>
       </header>
 
       <div className="workspace-public-demand-map__canvas">

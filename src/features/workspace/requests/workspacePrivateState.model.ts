@@ -90,10 +90,12 @@ export function buildWorkspacePrivateStatsModelArgs(params: {
 
 export function buildWorkspacePrivateTopProvidersArgs(params: {
   t: WorkspacePrivateTopProvidersArgs['t'];
+  locale: WorkspacePrivateTopProvidersArgs['locale'];
   providers: WorkspacePrivateTopProvidersArgs['providers'];
 }): WorkspacePrivateTopProvidersArgs {
   return {
     t: params.t,
+    locale: params.locale,
     providers: params.providers,
   };
 }

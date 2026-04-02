@@ -70,6 +70,7 @@ describe('workspacePrivateState.model', () => {
     });
     const topProvidersArgs = buildWorkspacePrivateTopProvidersArgs({
       t: (key) => String(key),
+      locale: 'de',
       providers: [],
     });
 

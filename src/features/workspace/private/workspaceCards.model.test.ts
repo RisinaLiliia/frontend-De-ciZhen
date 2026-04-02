@@ -22,6 +22,7 @@ describe('workspaceCards.model', () => {
     const toggle = vi.fn();
     const props = buildWorkspaceFavoriteProviderCardProps({
       t: (key) => String(key),
+      locale: 'de',
       provider: provider(),
       favoriteProviderLookup: new Set(['provider-1']),
       pendingFavoriteProviderIds: new Set(['provider-1']),
@@ -42,6 +43,7 @@ describe('workspaceCards.model', () => {
   it('builds stable keyed models for all favorite providers', () => {
     const models = buildWorkspaceFavoriteProviderCardModels({
       t: (key) => String(key),
+      locale: 'de',
       favoriteProviders: [
         provider({ id: 'provider-1' }),
         provider({ id: 'provider-2', displayName: 'Provider Two' }),

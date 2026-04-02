@@ -3,16 +3,20 @@
 import * as React from 'react';
 import Link from 'next/link';
 
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { RequestCard } from '@/components/requests/RequestCard';
 import { buildRequestListPresentation } from '@/components/requests/requestListItem.model';
 import type { RequestsListProps } from '@/components/requests/requestsList.types';
 import { ProviderList } from '@/components/providers/ProviderList';
+import { LocationMeta } from '@/components/ui/LocationMeta';
 import type { TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
+import { IconCalendar } from '@/components/ui/icons/icons';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { buildWorkspaceHref } from '@/features/workspace/shell/workspaceLinks';
 import type { WorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsModel';
@@ -46,20 +50,20 @@ function getOverviewCopy(locale: Locale) {
   if (locale === 'en') {
     return {
       snapshotTitle: 'Platform overview',
-      snapshotSubtitle: 'What is happening now, where the opportunity is, and what to do next.',
+      snapshotSubtitle: 'What matters now, where the opportunity is, and what to do next.',
       focusLabel: 'Focus mode',
       quickActionsTitle: 'Quick actions',
-      quickActionsSubtitle: 'Jump into the next decision without leaving the shared workspace context.',
+      quickActionsSubtitle: 'Jump to the next decision without leaving this workspace.',
       quickActionsSecondary: {
         requests: 'Open requests',
         providers: 'Find providers',
         analysis: 'Open analysis',
       },
       offersTitle: 'Active offers',
-      offersSubtitle: 'Recent demand entries enriched with market opportunity signals.',
+      offersSubtitle: 'Recent demand with market signals for faster analysis.',
       offersCta: 'Open analysis',
       topProvidersTitle: 'Top providers',
-      topProvidersSubtitle: 'Providers with strong proof, fast response, and visible activity in the current shared context.',
+      topProvidersSubtitle: 'Verified providers with fast replies and visible activity here.',
       opportunityBadge: 'Opportunity',
       demandHigh: 'High demand',
       demandMedium: 'Stable demand',
@@ -75,17 +79,17 @@ function getOverviewCopy(locale: Locale) {
     snapshotSubtitle: 'Was jetzt passiert, wo Chancen liegen und was als Nächstes zu tun ist.',
     focusLabel: 'Focus Mode',
     quickActionsTitle: 'Schnellaktionen',
-    quickActionsSubtitle: 'Direkt in die naechste Entscheidung springen, ohne den gemeinsamen Workspace-Kontext zu verlassen.',
+    quickActionsSubtitle: 'Direkt zur nächsten Entscheidung, ohne den Workspace-Kontext zu verlassen.',
     quickActionsSecondary: {
       requests: 'Aufträge öffnen',
       providers: 'Anbieter suchen',
       analysis: 'Analyse öffnen',
     },
     offersTitle: 'Aktive Angebote',
-    offersSubtitle: 'Neue Nachfrage mit Marktsignalen als direkter Einstieg in Analyse.',
+    offersSubtitle: 'Neue Nachfrage mit Marktsignalen für den direkten Analyse-Einstieg.',
     offersCta: 'Analyse öffnen',
     topProvidersTitle: 'Top Anbieter',
-    topProvidersSubtitle: 'Verifiziert, schnell in der Antwort und mit sichtbarer Aktivitaet im aktuellen gemeinsamen Kontext.',
+    topProvidersSubtitle: 'Verifiziert, schnell in der Antwort und aktiv im aktuellen Kontext.',
     opportunityBadge: 'Chance',
     demandHigh: 'Hohe Nachfrage',
     demandMedium: 'Stabile Nachfrage',
@@ -192,13 +196,11 @@ function resolveCompetitionLabel(params: {
 
 function WorkspaceOpportunityCards({
   locale,
-  currentSearch,
   copy,
   requestsListProps,
   statisticsModel,
 }: {
   locale: Locale;
-  currentSearch: string;
   copy: ReturnType<typeof getOverviewCopy>;
   requestsListProps: RequestsListProps;
   statisticsModel: WorkspaceStatisticsModel;
@@ -221,34 +223,27 @@ function WorkspaceOpportunityCards({
           cityById: requestsListProps.cityById,
           formatPrice: requestsListProps.formatPrice,
           enableOfferActions: false,
+          favoriteRequestIds: requestsListProps.favoriteRequestIds,
           pendingOfferRequestId: null,
+          pendingFavoriteRequestIds: requestsListProps.pendingFavoriteRequestIds,
         });
         const opportunity = resolveOpportunityMatch({
           request,
           categoryKey,
           opportunityRadar: statisticsModel.opportunityRadar,
         });
-        const analysisHref = buildWorkspaceHref({
-          currentSearch,
-          section: 'stats',
-          patch: {
-            cityId: request.cityId,
-            categoryKey,
-          },
-          removeKeys: ['page', 'statsCityPage'],
-        });
 
         return {
           key: request.id,
           prefetch: index < 2,
-          href: analysisHref,
+          href: `/requests/${request.id}`,
           preferredDate: request.preferredDate,
           presentation,
           demandLabel: resolveDemandLabel({ copy, opportunity }),
           competitionLabel: resolveCompetitionLabel({ copy, opportunity }),
         };
       }),
-    [copy, currentSearch, locale, recentRequests, requestsListProps, statisticsModel.opportunityRadar],
+    [copy, locale, recentRequests, requestsListProps, statisticsModel.opportunityRadar],
   );
 
   if (requestsListProps.isLoading || requestsListProps.isError || recentRequests.length === 0) {
@@ -277,8 +272,11 @@ function WorkspaceOpportunityCards({
           title={card.presentation.card.title}
           excerpt={card.presentation.card.excerpt}
           meta={[
-            card.presentation.card.cityLabel,
-            requestsListProps.formatDate.format(new Date(card.preferredDate)),
+            <LocationMeta key="city" label={card.presentation.card.cityLabel} />,
+            <React.Fragment key="date">
+              <IconCalendar />
+              {requestsListProps.formatDate.format(new Date(card.preferredDate))}
+            </React.Fragment>,
           ]}
           bottomMeta={[card.demandLabel, card.competitionLabel]}
           priceLabel={card.presentation.card.priceLabel}
@@ -286,6 +284,17 @@ function WorkspaceOpportunityCards({
           priceTrendLabel={card.presentation.card.priceTrendLabel}
           mode="link"
           statusSlot={<span className="status-badge status-badge--success">{copy.opportunityBadge}</span>}
+          overlaySlot={
+            requestsListProps.showFavoriteButton ? (
+              <FavoriteButton
+                variant="icon"
+                isFavorite={card.presentation.favorite.isFavorite}
+                isPending={card.presentation.favorite.isFavoritePending}
+                onToggle={() => requestsListProps.onToggleFavorite?.(card.key)}
+                ariaLabel={requestsListProps.t(I18N_KEYS.requestDetails.ctaSave)}
+              />
+            ) : null
+          }
         />
       ))}
     </div>
@@ -347,7 +356,7 @@ export function WorkspaceOverviewMain({
       <div ref={heroRef} className="workspace-overview__hero">
         <section className="panel workspace-overview__panel workspace-overview__panel--snapshot">
           <div className="panel-header">
-            <div className="section-heading">
+            <div className="section-heading workspace-statistics__tile-header">
               <p className="section-title">{copy.snapshotTitle}</p>
               <p className="section-subtitle">
                 {isFocusMode ? statisticsModel.context.subtitle : copy.snapshotSubtitle}
@@ -375,6 +384,7 @@ export function WorkspaceOverviewMain({
           <StatisticsDecisionAiCard
             copy={statisticsModel.copy}
             decisionInsight={statisticsModel.decisionInsight}
+            className="workspace-overview__snapshot-ai"
           />
         </section>
 
@@ -389,13 +399,14 @@ export function WorkspaceOverviewMain({
       <div ref={gridRef} className="workspace-overview__grid">
         <section className="panel workspace-overview__panel">
           <div className="panel-header">
-            <div className="section-heading">
+            <div className="section-heading workspace-statistics__tile-header">
               <p className="section-title">{topProvidersTitle}</p>
               <p className="section-subtitle">{resolvedTopProvidersSubtitle}</p>
             </div>
             <MoreDotsLink href={providersHref} label={topProvidersCtaLabel} />
           </div>
           <ProviderList
+            className="provider-list workspace-overview__providers"
             providers={topProviderItems}
             favoriteProviderIds={favoriteProviderIds}
             pendingFavoriteProviderIds={pendingFavoriteProviderIds}
@@ -405,7 +416,7 @@ export function WorkspaceOverviewMain({
 
         <section className="panel workspace-overview__panel">
           <div className="panel-header">
-            <div className="section-heading">
+            <div className="section-heading workspace-statistics__tile-header">
               <p className="section-title">{copy.offersTitle}</p>
               <p className="section-subtitle">{copy.offersSubtitle}</p>
             </div>
@@ -413,7 +424,6 @@ export function WorkspaceOverviewMain({
           </div>
           <WorkspaceOpportunityCards
             locale={locale}
-            currentSearch={currentSearch}
             copy={copy}
             requestsListProps={activeOffersListProps}
             statisticsModel={statisticsModel}
@@ -423,7 +433,7 @@ export function WorkspaceOverviewMain({
 
       <section className="panel workspace-overview__panel workspace-overview__panel--actions">
         <div className="panel-header">
-          <div className="section-heading">
+          <div className="section-heading workspace-statistics__tile-header">
             <p className="section-title">{copy.quickActionsTitle}</p>
             <p className="section-subtitle">{copy.quickActionsSubtitle}</p>
           </div>

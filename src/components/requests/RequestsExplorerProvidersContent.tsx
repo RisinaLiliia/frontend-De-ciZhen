@@ -123,6 +123,7 @@ export function RequestsExplorerProvidersContent({
           provider={{
             ...mapPublicProviderToCard({
               t,
+              locale,
               provider,
               roleLabel: subcategoryKey !== ALL_OPTION_KEY
                 ? (serviceOptions.find((item) => item.value === subcategoryKey)?.label ?? '')

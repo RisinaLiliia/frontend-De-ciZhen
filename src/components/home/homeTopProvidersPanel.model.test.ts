@@ -71,13 +71,23 @@ describe('homeTopProvidersPanel.model', () => {
   it('builds top-provider cards with forced top badge and default review preview', () => {
     const cards = buildHomeTopProviderCards({
       t: (key) => String(key),
-      providers: [provider({ id: 'provider-2', cityId: 'berlin', ratingAvg: 4.9, ratingCount: 40 }) as ProviderPublicDto & { cityId: string }],
+      locale: 'de',
+      providers: [
+        provider({
+          id: 'provider-2',
+          cityId: 'berlin',
+          ratingAvg: 4.9,
+          ratingCount: 40,
+          bio: 'Backend bio for home top provider.',
+        }) as ProviderPublicDto & { cityId: string },
+      ],
       cityLabelById: new Map([['berlin', 'Berlin']]),
     });
 
     expect(cards).toHaveLength(1);
     expect(cards[0]?.badges[0]?.type).toBe('top');
     expect(cards[0]?.reviewPreview).toBe('homePublic.providerReviewPreviewDefault');
+    expect(cards[0]?.aboutPreview).toBe('Backend bio for home top provider.');
     expect(cards[0]?.cityLabel).toBe('Berlin');
     expect(cards[0]?.profileHref).toBe('/providers/provider-2');
   });

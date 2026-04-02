@@ -52,6 +52,16 @@
     color: var(--c-text-muted);
   }
 
+  .section-heading .section-subtitle,
+  .workspace-public-demand-map__header .section-subtitle {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: calc(2 * 1.35em);
+  }
+
   .section-heading {
     display: flex;
     flex-direction: column;

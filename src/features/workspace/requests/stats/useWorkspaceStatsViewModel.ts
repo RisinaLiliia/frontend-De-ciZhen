@@ -15,6 +15,7 @@ import {
   formatDateLabel,
   formatDateTimeLabel,
 } from './statisticsModel.mappers';
+import { paginateItems } from './statisticsPagination.utils';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type {
   WorkspaceStatisticsActivitySignalView,
@@ -62,6 +63,8 @@ import {
   resolveContextPeriodLabel,
   resolveDecisionInsight,
 } from './workspaceStatisticsViewModel.helpers';
+
+const CITY_LIST_FALLBACK_PAGE_SIZE = 10;
 
 type UseWorkspaceStatsViewModelParams = {
   locale: Locale;
@@ -287,12 +290,30 @@ export function useWorkspaceStatsViewModel({
   const cityRows = React.useMemo<WorkspaceStatisticsCityRowView[]>(() => {
     return rawCityRows;
   }, [rawCityRows]);
-  const cityListRows = React.useMemo<WorkspaceStatisticsCityRowView[]>(() => {
-    return buildCityRows(data?.demand.cityList?.items ?? data?.demand.cities);
-  }, [data?.demand.cities, data?.demand.cityList?.items]);
-  const cityListLimit = data?.demand.cityList?.limit ?? cityListRows.length;
-  const cityListTotalItems = data?.demand.cityList?.totalItems ?? cityListRows.length;
-  const cityListTotalPages = data?.demand.cityList?.totalPages ?? 1;
+  const demandCityList = data?.demand.cityList;
+  const cityListPagination = React.useMemo(() => {
+    if (demandCityList) {
+      const rows = buildCityRows(demandCityList.items);
+      return {
+        rows,
+        limit: demandCityList.limit,
+        totalItems: demandCityList.totalItems,
+        totalPages: demandCityList.totalPages,
+      };
+    }
+
+    const paginated = paginateItems(rawCityRows, cityListPage, CITY_LIST_FALLBACK_PAGE_SIZE);
+    return {
+      rows: paginated.visibleItems,
+      limit: CITY_LIST_FALLBACK_PAGE_SIZE,
+      totalItems: rawCityRows.length,
+      totalPages: paginated.totalPages,
+    };
+  }, [cityListPage, demandCityList, rawCityRows]);
+  const cityListRows = cityListPagination.rows;
+  const cityListLimit = cityListPagination.limit;
+  const cityListTotalItems = cityListPagination.totalItems;
+  const cityListTotalPages = cityListPagination.totalPages;
 
   const demandRows = React.useMemo<WorkspaceStatisticsCategoryDemandDto[]>(() => {
     return rawDemandRows;

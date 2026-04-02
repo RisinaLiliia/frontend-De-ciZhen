@@ -1,9 +1,15 @@
 /* src/styles/features/home/home-content-providers-profile-rating.css */
 
 @layer components {
+  .provider-card__top {
+    --provider-card-left-column-width: 104px;
+    --provider-card-column-gap: var(--space-3);
+  }
+
   .provider-main {
     display: grid;
-    gap: var(--space-1-5);
+    gap: var(--space-1);
+    min-width: 0;
   }
 
   .provider-rating-summary {
@@ -19,13 +25,22 @@
 
   .provider-rating-review {
     margin: 0;
-    font-size: 11px;
-    color: var(--c-text-muted);
-    line-height: 1.3;
+    min-width: 0;
+    min-height: calc(2 * 1.35em);
+    max-height: calc(2 * 1.35em);
+    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-text) 12%);
+    font-size: 12px;
+    line-height: 1.35;
+    font-style: normal;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .provider-rating-review:empty {
+    opacity: 0;
   }
 
   .provider-rating-summary .rating-summary__line {
@@ -75,27 +90,152 @@
     margin: 0;
     min-width: 0;
     min-height: calc(2 * 1.4em);
+    max-height: calc(2 * 1.4em);
     color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
     font-size: 12px;
     line-height: 1.4;
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
+  .provider-main__about {
+    margin: 0;
+    min-width: 0;
+    min-height: calc(2 * 1.4em);
+    max-height: calc(2 * 1.4em);
+    margin-bottom: var(--space-1);
+  }
+
   .provider-card__top .provider-main-review {
     margin-top: 0;
-    align-self: end;
+    align-self: start;
+  }
+
+  .provider-card__top .provider-main__eyebrow,
+  .provider-card__top .provider-main__meta-row,
+  .provider-card__top .provider-main__city,
+  .provider-card__top .provider-main__metrics,
+  .provider-card__top .provider-main__about,
+  .provider-card__top .provider-main__proof,
+  .provider-card__top .provider-main__trust,
+  .provider-card__top .provider-main__insights,
+  .provider-card__top .provider-main__detail-row,
+  .provider-card__top .provider-main__footer-row {
+    min-width: 0;
+  }
+
+  .provider-main__proof {
+    display: flex;
+    align-items: flex-start;
+    min-width: 0;
+    min-height: calc(2 * 1.4em);
+  }
+
+  .provider-main__proof-review {
+    display: flex;
+    align-items: flex-start;
+    min-height: calc(2 * 1.4em);
+    min-width: 0;
+  }
+
+  .provider-main__trust {
+    display: grid;
+    min-width: 0;
+    min-height: calc(2 * 1.35em);
+    margin-bottom: var(--space-1-5);
+  }
+
+  .provider-main__trust-top {
+    display: grid;
+    grid-template-columns: var(--provider-card-left-column-width) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--provider-card-column-gap);
+    min-width: 0;
+  }
+
+  .provider-main__trust-rating {
+    display: inline-flex;
+    align-items: center;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    min-width: 0;
+    max-width: fit-content;
+  }
+
+  .provider-main__trust-reviews {
+    display: inline-flex;
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    flex-basis: 100%;
+  }
+
+  .provider-main__trust-quote {
+    align-self: start;
+    min-width: 0;
+    max-width: 100%;
+    padding-top: 1px;
+    line-height: 1.32;
+    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-text) 10%);
+  }
+
+  .provider-main__meta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    min-height: 18px;
+    flex-wrap: nowrap;
+  }
+
+  .provider-main__meta-location {
+    display: inline-flex;
+    min-width: 0;
+    flex: 0 1 auto;
+  }
+
+  .provider-main__meta-location .provider-avatar-city.request-meta-item {
+    flex-wrap: nowrap;
+  }
+
+  .provider-main__meta-metrics {
+    min-width: 0;
+    min-height: 18px;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: var(--space-2);
   }
 
   .provider-card__top .provider-info {
     grid-template-columns: auto minmax(0, 1fr);
   }
 
+  .provider-card__top .provider-info.user-header-card--provider-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .provider-card-layout__main-row {
+    display: grid;
+    grid-template-columns: var(--provider-card-left-column-width) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--provider-card-column-gap);
+    min-width: 0;
+  }
+
   .provider-card__top .provider-avatar-stack {
-    justify-content: space-between;
+    justify-content: flex-start;
+    width: var(--provider-card-left-column-width);
   }
 
   .provider-card__top .provider-avatar-wrap {
@@ -105,15 +245,125 @@
   .provider-card__top .provider-main {
     min-width: 0;
     padding-top: 0;
+    height: auto;
     display: grid;
     grid-template-rows:
       auto
       auto
-      minmax(20px, auto)
-      minmax(24px, auto)
-      minmax(calc(2 * 1.4em), auto);
+      minmax(18px, auto)
+      minmax(calc(2 * 1.35em), auto)
+      minmax(calc(2 * 1.35em), auto)
+      minmax(18px, auto);
     align-content: start;
+    gap: var(--space-1);
+  }
+
+  .provider-card__top .user-header-card--provider-card .provider-main {
+    grid-template-rows: none;
+    grid-auto-rows: max-content;
+    gap: var(--space-2);
+  }
+
+  .provider-card__top .user-header-card--provider-card .provider-main__eyebrow {
+    min-height: 24px;
+  }
+
+  .provider-card__top .user-header-card--provider-card .provider-sub {
+    line-height: 1;
+  }
+
+  .provider-card__top .user-header-card--provider-card .provider-name {
+    min-height: 0;
+    line-height: 1.28;
+  }
+
+  .provider-card__top .user-header-card--provider-card .provider-main__meta-row {
+    min-height: 16px;
     gap: var(--space-1-5);
+  }
+
+  .provider-card__top .user-header-card--provider-card .provider-main__meta-metrics {
+    min-height: 16px;
+    gap: var(--space-1-5);
+  }
+
+  .provider-card__top .user-header-card--provider-card .provider-main__about {
+    margin-top: var(--space-0-5);
+    margin-bottom: var(--space-2-5);
+  }
+
+  .provider-card__top .user-header-card--provider-card .provider-main__trust,
+  .provider-card__top .user-header-card--provider-card .provider-main__footer-row,
+  .provider-card__top .user-header-card--provider-card .provider-main__insights {
+    width: 100%;
+  }
+
+  .provider-main__footer-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  .provider-main__detail-row {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    min-width: 0;
+    color: var(--c-text-muted);
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .provider-main__detail-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
+    flex: 0 0 18px;
+  }
+
+  .provider-main__detail-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .provider-main__detail-icon--price {
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
+    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .provider-main__detail-text {
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-0-5);
+  }
+
+  .provider-main__detail-text.request-detail__availability-date {
+    font-size: 12px;
+    line-height: 1.3;
+    flex-wrap: nowrap;
+  }
+
+  .provider-main__detail-text--price .proof-price {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .provider-main__detail-text--price .request-detail__price-prefix,
+  .provider-main__detail-text--price .request-detail__price-suffix {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--c-text-muted);
   }
 
 

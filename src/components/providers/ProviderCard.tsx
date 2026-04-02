@@ -29,8 +29,12 @@ export type ProviderCardItem = {
   reviewsCount: number;
   reviewsLabel: string;
   reviewPreview?: string;
-  pricingLabel?: string;
-  availabilityLabel?: string;
+  availabilityDatePrefix?: string;
+  availabilityDateLabel?: string;
+  availabilityDateIso?: string;
+  pricingPrefixLabel?: string;
+  pricingValueLabel?: string;
+  pricingSuffixLabel?: string;
   servicePreview?: string[];
   ctaLabel: string;
   profileHref: string;
@@ -121,6 +125,12 @@ export function ProviderCard({
         reviewsHref={provider.reviewsHref}
         reviewPreview={provider.reviewPreview}
         aboutPreview={provider.aboutPreview}
+        availabilityDatePrefix={provider.availabilityDatePrefix}
+        availabilityDateLabel={provider.availabilityDateLabel}
+        availabilityDateIso={provider.availabilityDateIso}
+        pricingPrefixLabel={provider.pricingPrefixLabel}
+        pricingValueLabel={provider.pricingValueLabel}
+        pricingSuffixLabel={provider.pricingSuffixLabel}
         ratingPlacement="avatar"
       />
     </div>

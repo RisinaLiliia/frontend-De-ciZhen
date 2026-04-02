@@ -19,8 +19,8 @@ import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace
 import type { WorkspaceDataLoadPlan } from '@/features/workspace/requests/workspaceData.model';
 
 const DEFAULT_STALE_TIME_MS = 60_000;
-const PROVIDERS_STALE_TIME_MS = 5 * 60 * 1000;
-const PROVIDERS_GC_TIME_MS = 15 * 60 * 1000;
+const PROVIDERS_STALE_TIME_MS = 30_000;
+const PROVIDERS_GC_TIME_MS = 5 * 60 * 1000;
 
 function buildStableWorkspaceQuery<TQueryKey extends readonly unknown[], TQueryFnData>(params: {
   queryKey: TQueryKey;
@@ -127,7 +127,8 @@ export function buildWorkspaceDataQueries({
       queryFn: () => listPublicProviders(),
       staleTime: PROVIDERS_STALE_TIME_MS,
       gcTime: PROVIDERS_GC_TIME_MS,
-      refetchOnWindowFocus: false as const,
+      refetchOnMount: true as const,
+      refetchOnWindowFocus: true as const,
     },
   };
 }

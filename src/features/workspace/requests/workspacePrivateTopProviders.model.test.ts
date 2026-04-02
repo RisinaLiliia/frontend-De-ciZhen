@@ -42,9 +42,15 @@ describe('workspacePrivateTopProviders.model', () => {
   it('builds only the top two workspace provider cards with workspace-specific hrefs', () => {
     const cards = buildWorkspacePrivateTopProviders({
       t: (key) => String(key),
+      locale: 'de',
       providers: [
         provider({ id: 'provider-1', ratingAvg: 4.2 }),
-        provider({ id: 'provider-2', ratingAvg: 4.9, displayName: 'Best Provider' }),
+        provider({
+          id: 'provider-2',
+          ratingAvg: 4.9,
+          displayName: 'Best Provider',
+          bio: 'Backend bio for workspace top provider.',
+        }),
         provider({ id: 'provider-3', ratingAvg: 4.7 }),
       ],
     });
@@ -55,5 +61,6 @@ describe('workspacePrivateTopProviders.model', () => {
     expect(cards[0]?.reviewsHref).toBe('/providers/provider-2#reviews');
     expect(cards[0]?.status).toBe('online');
     expect(cards[0]?.ctaLabel).toBe('homePublic.topProvider1Cta');
+    expect(cards[0]?.aboutPreview).toBe('Backend bio for workspace top provider.');
   });
 });

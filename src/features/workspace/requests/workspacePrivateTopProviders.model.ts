@@ -4,6 +4,7 @@ import { mapPublicProviderToCard } from '@/components/providers/providerCardMapp
 import type { TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 
 type Translator = (key: I18nKey) => string;
 
@@ -15,11 +16,13 @@ export function rankWorkspaceTopProviders(providers: ProviderPublicDto[]) {
 
 export function buildWorkspaceTopProviderCard(params: {
   t: Translator;
+  locale: Locale;
   provider: ProviderPublicDto;
 }): TopProviderItem {
-  const { t, provider } = params;
+  const { t, locale, provider } = params;
   return mapPublicProviderToCard({
     t,
+    locale,
     provider,
     roleLabel: '',
     profileHref: `/providers/${provider.id}`,
@@ -31,6 +34,7 @@ export function buildWorkspaceTopProviderCard(params: {
 
 export function buildWorkspacePrivateTopProviders(params: {
   t: Translator;
+  locale: Locale;
   providers: ProviderPublicDto[];
 }) {
   return rankWorkspaceTopProviders(params.providers)
@@ -38,6 +42,7 @@ export function buildWorkspacePrivateTopProviders(params: {
     .map((provider) =>
       buildWorkspaceTopProviderCard({
         t: params.t,
+        locale: params.locale,
         provider,
       }),
     );
