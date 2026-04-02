@@ -56,8 +56,9 @@ export function buildHomeTopProviderCards(params: {
   cityLabelById: ReadonlyMap<string, string>;
 }): TopProviderItem[] {
   const topBadge = {
-    type: 'top' as const,
-    size: 'md' as const,
+    variant: 'info' as const,
+    size: 'sm' as const,
+    tone: 'soft' as const,
     label: params.t(I18N_KEYS.homePublic.providerBadgeTopAnbieter),
     tooltip: params.t(I18N_KEYS.homePublic.providerBadgeTopAnbieterTooltip),
   };
@@ -77,7 +78,7 @@ export function buildHomeTopProviderCards(params: {
       status: 'online',
     });
 
-    const secondary = mapped.badges.find((badge) => badge.type !== 'top') ?? null;
+    const secondary = mapped.badges.find((badge) => badge.label !== topBadge.label) ?? null;
 
     return {
       ...mapped,

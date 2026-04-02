@@ -2,6 +2,7 @@
 
 import type { Ref } from 'react';
 
+import type { BadgeVariant } from '@/components/ui/Badge';
 import { WorkspaceInsightsPanel, type WorkspaceInsightsPanelItem } from '@/features/workspace/requests/components/WorkspaceInsightsPanel';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
@@ -16,20 +17,20 @@ export function splitInsightEvidence(evidence: string | undefined): string[] {
 export function resolveInsightBadge(
   item: WorkspaceStatisticsModel['insights'][number],
   copy: WorkspaceStatisticsModel['copy'],
-): { label: string; tone: 'success' | 'info' | 'warning' | 'danger' } {
+): { label: string; tone: BadgeVariant } {
   if (item.kind === 'opportunity' || item.kind === 'demand') {
-    return { label: copy.insightsTypeChanceLabel, tone: 'success' };
+    return { label: copy.insightsTypeChanceLabel, tone: 'opportunity' };
   }
   if (item.kind === 'growth' || item.kind === 'performance') {
     return { label: copy.insightsTypeTrendLabel, tone: 'info' };
   }
   if (item.kind === 'risk') {
-    return { label: copy.insightsTypeRiskLabel, tone: 'warning' };
+    return { label: copy.insightsTypeRiskLabel, tone: 'risk' };
   }
   if (item.kind === 'promotion') {
-    return { label: copy.insightsTypeActionLabel, tone: 'danger' };
+    return { label: copy.insightsTypeActionLabel, tone: 'warning' };
   }
-  return { label: copy.insightsTypeSignalLabel, tone: 'info' };
+  return { label: copy.insightsTypeSignalLabel, tone: 'neutral' };
 }
 
 export function StatisticsInsightsPanel({

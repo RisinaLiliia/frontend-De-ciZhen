@@ -1,13 +1,17 @@
 /* requests-shell-statistics-dashboard-ki.css */
 
 @layer components {
-  .workspace-statistics-ki {
+  .workspace-statistics-ki,
+  .workspace-statistics-ki-tokens {
     --workspace-ai-card-chip-height: var(--workspace-statistics-chip-height, 20px);
     --workspace-ai-card-chip-pad-inline: var(--workspace-statistics-chip-pad-inline, var(--space-1-5));
     --workspace-ai-card-chip-radius: var(--workspace-statistics-chip-radius, 999px);
     --workspace-ai-card-chip-font-size: var(--workspace-statistics-chip-font-size, 10px);
     --workspace-ai-card-chip-font-weight: var(--workspace-statistics-chip-font-weight, 700);
     --workspace-ai-card-radius-md: var(--workspace-statistics-radius-md, var(--radius-md));
+  }
+
+  .workspace-statistics-ki {
     display: grid;
     gap: var(--space-1-5);
     padding: var(--space-2);

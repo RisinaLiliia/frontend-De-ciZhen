@@ -1,12 +1,13 @@
 import Link from 'next/link';
-import { ProviderBadge, type ProviderBadgeSize, type ProviderBadgeType } from '@/components/ui/ProviderBadge';
+import { Badge, type BadgeSize, type BadgeTone, type BadgeVariant } from '@/components/ui/Badge';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 export type ProviderBadgeItem = {
-  type: ProviderBadgeType;
-  size: ProviderBadgeSize;
+  variant: BadgeVariant;
+  size: BadgeSize;
   label: string;
+  tone?: BadgeTone;
   tooltip?: string;
 };
 
@@ -87,19 +88,25 @@ export function ProviderCard({
 
       {showCornerBadge && primaryBadge ? (
         <div className="provider-badges provider-badges--corner">
-          <ProviderBadge
-            type={primaryBadge.type}
+          <Badge
+            variant={primaryBadge.variant}
+            tone={primaryBadge.tone ?? 'soft'}
             size={primaryBadge.size}
-            label={primaryBadge.label}
-            tooltip={primaryBadge.tooltip}
-          />
+            title={primaryBadge.tooltip}
+            aria-label={primaryBadge.tooltip ?? primaryBadge.label}
+          >
+            {primaryBadge.label}
+          </Badge>
           {secondaryBadge ? (
-            <ProviderBadge
-              type={secondaryBadge.type}
+            <Badge
+              variant={secondaryBadge.variant}
+              tone={secondaryBadge.tone ?? 'soft'}
               size={secondaryBadge.size}
-              label={secondaryBadge.label}
-              tooltip={secondaryBadge.tooltip}
-            />
+              title={secondaryBadge.tooltip}
+              aria-label={secondaryBadge.tooltip ?? secondaryBadge.label}
+            >
+              {secondaryBadge.label}
+            </Badge>
           ) : null}
         </div>
       ) : null}

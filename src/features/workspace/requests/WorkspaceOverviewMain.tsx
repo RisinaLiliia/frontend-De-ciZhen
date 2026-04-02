@@ -10,6 +10,7 @@ import { RequestCard } from '@/components/requests/RequestCard';
 import { buildRequestListPresentation } from '@/components/requests/requestListItem.model';
 import type { RequestsListProps } from '@/components/requests/requestsList.types';
 import { ProviderList } from '@/components/providers/ProviderList';
+import { Badge } from '@/components/ui/Badge';
 import { LocationMeta } from '@/components/ui/LocationMeta';
 import type { TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
@@ -31,6 +32,7 @@ type WorkspaceOverviewMainProps = {
   statisticsModel: WorkspaceStatisticsModel;
   heroRef?: React.Ref<HTMLDivElement>;
   gridRef?: React.Ref<HTMLDivElement>;
+  actionsRef?: React.Ref<HTMLElement>;
   primaryAction: {
     href: string;
     label: string;
@@ -283,7 +285,7 @@ function WorkspaceOpportunityCards({
           priceTrend={card.presentation.card.priceTrend}
           priceTrendLabel={card.presentation.card.priceTrendLabel}
           mode="link"
-          statusSlot={<span className="status-badge status-badge--success">{copy.opportunityBadge}</span>}
+          statusSlot={<Badge variant="opportunity" tone="soft" size="sm">{copy.opportunityBadge}</Badge>}
           overlaySlot={
             requestsListProps.showFavoriteButton ? (
               <FavoriteButton
@@ -308,6 +310,7 @@ export function WorkspaceOverviewMain({
   statisticsModel,
   heroRef,
   gridRef,
+  actionsRef,
   primaryAction,
   onPrimaryActionClick,
   activeOffersListProps,
@@ -431,7 +434,7 @@ export function WorkspaceOverviewMain({
         </section>
       </div>
 
-      <section className="panel workspace-overview__panel workspace-overview__panel--actions">
+      <section ref={actionsRef} className="panel workspace-overview__panel workspace-overview__panel--actions">
         <div className="panel-header">
           <div className="section-heading workspace-statistics__tile-header">
             <p className="section-title">{copy.quickActionsTitle}</p>

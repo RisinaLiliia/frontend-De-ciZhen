@@ -87,7 +87,7 @@ export function RequestsListItem({
       imageSrc={view.card.imageSrc}
       imageAlt=""
       imagePriority={index === 0 && !hideRecurringBadge && !view.status.isOwnerRequestList}
-      badges={hideRecurringBadge ? [] : [view.card.recurringLabel]}
+      badges={hideRecurringBadge ? [] : [{ label: view.card.recurringLabel, variant: 'neutral', tone: 'outline', size: 'sm' }]}
       category={view.card.categoryLabel}
       title={view.card.title}
       excerpt={view.card.excerpt}

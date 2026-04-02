@@ -51,46 +51,6 @@
     align-items: flex-start;
   }
 
-  .status-badge {
-    --status-bg: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
-    --status-border: color-mix(in oklab, var(--c-primary) 42%, var(--c-border) 58%);
-    --status-text: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1-5);
-    padding: var(--space-1) var(--space-2-5);
-    border-radius: 999px;
-    border: 1px solid var(--status-border);
-    background: var(--status-bg);
-    color: var(--status-text);
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  .status-badge--info {
-    --status-bg: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
-    --status-border: color-mix(in oklab, var(--c-primary) 42%, var(--c-border) 58%);
-    --status-text: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
-  }
-
-  .status-badge--success {
-    --status-bg: color-mix(in oklab, var(--c-success) 10%, var(--c-panel) 90%);
-    --status-border: color-mix(in oklab, var(--c-success) 42%, var(--c-border) 58%);
-    --status-text: color-mix(in oklab, var(--c-success) 56%, var(--c-text) 44%);
-  }
-
-  .status-badge--warning {
-    --status-bg: color-mix(in oklab, var(--c-warning) 18%, var(--c-panel) 82%);
-    --status-border: color-mix(in oklab, var(--c-warning) 46%, var(--c-border) 54%);
-    --status-text: color-mix(in oklab, var(--c-warning) 84%, var(--c-text) 16%);
-  }
-
-  .status-badge--danger {
-    --status-bg: color-mix(in oklab, var(--c-danger) 14%, var(--c-panel) 86%);
-    --status-border: color-mix(in oklab, var(--c-danger) 44%, var(--c-border) 56%);
-    --status-text: color-mix(in oklab, var(--c-danger) 84%, var(--c-text) 16%);
-  }
-
   .offer-actions {
     display: flex;
     flex-wrap: wrap;

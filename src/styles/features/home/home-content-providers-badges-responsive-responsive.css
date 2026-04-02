@@ -19,27 +19,17 @@
     }
 
     .provider-decision-metric__icon {
-      width: 12px;
-      height: 12px;
+      width: 15px;
+      height: 15px;
     }
 
     .provider-decision-metric__icon svg {
-      width: 10px;
-      height: 10px;
+      width: 15px;
+      height: 15px;
     }
 
     .provider-badges--corner {
       gap: var(--space-0-75);
-    }
-
-    .provider-badge--md {
-      font-size: 10px;
-      padding: var(--space-1) var(--space-2-5);
-    }
-
-    .provider-badge--sm {
-      font-size: 10px;
-      padding: var(--space-1) var(--space-2-5);
     }
   }
 
@@ -56,11 +46,6 @@
     .provider-card__favorite {
       width: 28px;
       height: 28px;
-    }
-
-    .provider-badge {
-      font-size: 9px;
-      padding: var(--space-0-75) var(--space-2);
     }
 
     .provider-rating-summary .rating-summary__line {
@@ -103,11 +88,6 @@
     .provider-sub {
       font-size: 10px;
       line-height: 1.25;
-    }
-
-    .provider-badge {
-      font-size: 9px;
-      padding: var(--space-0-75) var(--space-2);
     }
 
     .provider-badges--corner {

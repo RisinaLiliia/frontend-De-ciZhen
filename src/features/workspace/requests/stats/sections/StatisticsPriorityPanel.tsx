@@ -1,17 +1,19 @@
 'use client';
 
-import { Badge } from '@/components/ui/Badge';
+import { Badge, type BadgeVariant } from '@/components/ui/Badge';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
 export function StatisticsPriorityPanel({
   title,
   subtitle,
   badgeLabel,
+  badgeVariant,
   items,
 }: {
   title: string;
   subtitle: string;
   badgeLabel: string;
+  badgeVariant: BadgeVariant;
   items: NonNullable<WorkspaceStatisticsModel['userIntelligence']>['risks'];
 }) {
   if (!items || !Array.isArray(items) || items.length === 0) return null;
@@ -26,7 +28,7 @@ export function StatisticsPriorityPanel({
         {items.map((item) => (
           <article key={item.key} className={`stat-card workspace-statistics-user-priority__item is-${item.tone}`.trim()}>
             <div className="workspace-statistics-user-priority__head">
-              <Badge variant={item.tone === 'warning' ? 'warning' : 'info'} size="sm">{badgeLabel}</Badge>
+              <Badge variant={badgeVariant} tone="soft" size="sm">{badgeLabel}</Badge>
               {item.metric ? (
                 <span className="workspace-statistics-user-priority__metric">{item.metric}</span>
               ) : null}

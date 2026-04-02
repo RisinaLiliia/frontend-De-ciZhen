@@ -59,13 +59,7 @@ export function WorkspaceOverviewInsightsPanel({
 
   if (insights.length === 0) return null;
 
-  const assistantDescription = [
-    statisticsModel.copy.insightsAssistantNote,
-    statisticsModel.copy.insightsGeneratedLabel,
-  ]
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .join('. ');
+  const assistantDescription = statisticsModel.copy.insightsAssistantNote.trim();
 
   return (
     <WorkspaceInsightsPanel
@@ -78,7 +72,6 @@ export function WorkspaceOverviewInsightsPanel({
       featuredLabel={statisticsModel.copy.insightsFeaturedLabel}
       items={insights}
       className="workspace-statistics-layout workspace-overview__panel"
-      titleVariant="request-card"
       panelRef={panelRef}
       style={style}
       showHeader={false}

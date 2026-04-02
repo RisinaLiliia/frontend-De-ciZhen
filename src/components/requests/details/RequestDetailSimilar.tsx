@@ -50,7 +50,7 @@ export function RequestDetailSimilar({
                   ariaLabel={openRequestLabel}
                   imageSrc={getImage(item)}
                   imageAlt=""
-                  badges={[item.isRecurring ? recurringLabel : onceLabel]}
+                  badges={[{ label: item.isRecurring ? recurringLabel : onceLabel, variant: 'neutral', tone: 'outline', size: 'sm' }]}
                   category={item.categoryName ?? item.categoryKey ?? ''}
                   title={itemTitle}
                   excerpt={excerpt}

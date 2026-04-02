@@ -700,12 +700,14 @@ export function WorkspaceStatisticsView({
                   title={rightRailRisks?.title ?? copy.userRisksTitle}
                   subtitle={rightRailRisks?.subtitle ?? copy.userRisksSubtitle}
                   badgeLabel={copy.insightsTypeRiskLabel}
+                  badgeVariant="risk"
                   items={rightRailRisks?.items ?? []}
                 />
                 <StatisticsPriorityPanel
                   title={rightRailOpportunities?.title ?? copy.userOpportunitiesTitle}
                   subtitle={rightRailOpportunities?.subtitle ?? copy.userOpportunitiesSubtitle}
                   badgeLabel={copy.insightsTypeChanceLabel}
+                  badgeVariant="opportunity"
                   items={rightRailOpportunities?.items ?? []}
                 />
                 <StatisticsActionPlanPanel
