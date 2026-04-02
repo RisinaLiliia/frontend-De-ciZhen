@@ -96,6 +96,7 @@ export function useWorkspacePrivatePresentationFlow({
 
   const overviewHeroRef = React.useRef<HTMLDivElement | null>(null);
   const overviewGridRef = React.useRef<HTMLDivElement | null>(null);
+  const overviewActionsRef = React.useRef<HTMLElement | null>(null);
   const overviewMapMinHeight = useSyncedPanelMinHeight({
     sourceRef: overviewHeroRef,
     mode: 'sourceHeight',
@@ -103,6 +104,11 @@ export function useWorkspacePrivatePresentationFlow({
   });
   const overviewInsightsMinHeight = useSyncedPanelMinHeight({
     sourceRef: overviewGridRef,
+    mode: 'sourceHeight',
+    watchKey: isOverviewMode,
+  });
+  const overviewDecisionMinHeight = useSyncedPanelMinHeight({
+    sourceRef: overviewActionsRef,
     mode: 'sourceHeight',
     watchKey: isOverviewMode,
   });
@@ -118,13 +124,21 @@ export function useWorkspacePrivatePresentationFlow({
         isLoading={data.isPublicSummaryLoading}
         isError={data.isPublicSummaryError}
         onSelectCity={overviewStatisticsModel.setCityId}
-        style={overviewMapMinHeight ? { minHeight: `${overviewMapMinHeight}px` } : undefined}
+        style={
+          overviewMapMinHeight
+            ? { minHeight: `${overviewMapMinHeight}px`, height: `${overviewMapMinHeight}px` }
+            : undefined
+        }
       />
       <WorkspaceOverviewInsightsPanel
         locale={branch.locale}
         currentSearch={currentSearch}
         statisticsModel={overviewStatisticsModel}
-        style={overviewInsightsMinHeight ? { minHeight: `${overviewInsightsMinHeight}px` } : undefined}
+        style={
+          overviewInsightsMinHeight
+            ? { minHeight: `${overviewInsightsMinHeight}px`, height: `${overviewInsightsMinHeight}px` }
+            : undefined
+        }
       />
     </>
   ) : null;
@@ -200,6 +214,7 @@ export function useWorkspacePrivatePresentationFlow({
       statisticsModel={overviewStatisticsModel}
       heroRef={overviewHeroRef}
       gridRef={overviewGridRef}
+      actionsRef={overviewActionsRef}
       primaryAction={primaryAction}
       onPrimaryActionClick={onPrimaryActionClick}
       activeOffersListProps={activeOffersListProps}
@@ -223,6 +238,9 @@ export function useWorkspacePrivatePresentationFlow({
     workspaceIntroNode: resolvedWorkspaceIntroNode,
     workspaceAsideBaseProps,
     asideTopSlot,
+    overviewDecisionPanelStyle: overviewDecisionMinHeight
+      ? { minHeight: `${overviewDecisionMinHeight}px`, height: `${overviewDecisionMinHeight}px` }
+      : undefined,
     privateMain,
     primaryAction,
     isLoading,

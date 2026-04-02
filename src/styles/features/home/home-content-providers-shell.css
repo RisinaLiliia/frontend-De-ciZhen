@@ -21,7 +21,7 @@
     --provider-card-inline-pad: 16px;
     --provider-card-block-pad: 16px;
     --provider-card-corner-offset: 14px;
-    --provider-card-badge-strip-height: 22px;
+    --provider-card-badge-strip-height: 28px;
     --provider-card-top-gap: var(--space-2-5);
     --provider-card-top-reserve: calc(
       var(--provider-card-corner-offset) + var(--provider-card-badge-strip-height) + var(--provider-card-top-gap)

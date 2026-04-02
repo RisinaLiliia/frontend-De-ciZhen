@@ -38,16 +38,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
     border-radius: 999px;
     color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
     outline: none;
   }
 
   .provider-decision-metric__icon svg {
-    width: 12px;
-    height: 12px;
+    width: 15px;
+    height: 15px;
     display: block;
   }
 

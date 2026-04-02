@@ -2,28 +2,41 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils/cn';
 
-const badgeVariants = cva('inline-flex items-center justify-center rounded-full border font-semibold whitespace-nowrap', {
+const badgeVariants = cva('ui-badge', {
   variants: {
     variant: {
-      default: 'badge',
-      info: 'status-badge status-badge--info',
-      success: 'status-badge status-badge--success',
-      warning: 'status-badge status-badge--warning',
-      danger: 'status-badge status-badge--danger',
+      default: 'ui-badge--neutral',
+      neutral: 'ui-badge--neutral',
+      info: 'ui-badge--info',
+      success: 'ui-badge--success',
+      warning: 'ui-badge--warning',
+      danger: 'ui-badge--risk',
+      risk: 'ui-badge--risk',
+      opportunity: 'ui-badge--opportunity',
     },
     size: {
-      sm: 'text-[11px] px-2 py-0.5',
-      md: '',
+      sm: 'ui-badge--sm',
+      md: 'ui-badge--md',
+    },
+    tone: {
+      soft: 'ui-badge--soft',
+      outline: 'ui-badge--outline',
+      solid: 'ui-badge--solid',
     },
   },
   defaultVariants: {
-    variant: 'default',
+    variant: 'neutral',
     size: 'md',
+    tone: 'soft',
   },
 });
 
+export type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>['variant']>;
+export type BadgeSize = NonNullable<VariantProps<typeof badgeVariants>['size']>;
+export type BadgeTone = NonNullable<VariantProps<typeof badgeVariants>['tone']>;
+
 type BadgeProps = React.HTMLAttributes<HTMLSpanElement> & VariantProps<typeof badgeVariants>;
 
-export function Badge({ className, variant, size, ...props }: BadgeProps) {
-  return <span className={cn(badgeVariants({ variant, size }), className)} {...props} />;
+export function Badge({ className, variant, size, tone, ...props }: BadgeProps) {
+  return <span className={cn(badgeVariants({ variant, size, tone }), className)} {...props} />;
 }

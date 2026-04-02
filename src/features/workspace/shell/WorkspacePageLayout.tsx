@@ -50,6 +50,7 @@ type Props = {
   privateMain: React.ReactNode;
   publicMain: React.ReactNode;
   asideTopSlot?: React.ReactNode;
+  overviewDecisionPanelStyle?: React.CSSProperties;
   workspaceAsideBaseProps: WorkspaceAsideBaseProps;
   pendingFavoriteProviderIds: Set<string>;
   onToggleProviderFavorite: (providerId: string) => void;
@@ -67,6 +68,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   privateMain,
   publicMain,
   asideTopSlot,
+  overviewDecisionPanelStyle,
   workspaceAsideBaseProps,
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
@@ -105,25 +107,24 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   }, [activePublicSection, activeWorkspaceTab, intro, locale, t]);
 
   const contextualAside = (
-    <>
-      {asideTopSlot}
-      <WorkspaceContextAside
-        t={t}
-        locale={locale}
-        activePublicSection={activePublicSection}
-        activeWorkspaceTab={activeWorkspaceTab}
-        className={isOverviewPrivateMode ? 'workspace-context-rail--overview' : undefined}
-      >
-        {!isOverviewPrivateMode ? (
-          <WorkspaceTopProvidersAside
-            {...workspaceAsideBaseProps}
-            ctaHref={isWorkspaceAuthed ? '/workspace?section=requests' : '/workspace?section=providers'}
-            pendingFavoriteProviderIds={pendingFavoriteProviderIds}
-            onToggleFavorite={onToggleProviderFavorite}
-          />
-        ) : null}
-      </WorkspaceContextAside>
-    </>
+    <WorkspaceContextAside
+      t={t}
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      className={isOverviewPrivateMode ? 'workspace-context-rail--overview' : undefined}
+      topSlot={isOverviewPrivateMode ? asideTopSlot : undefined}
+      panelStyle={isOverviewPrivateMode ? overviewDecisionPanelStyle : undefined}
+    >
+      {!isOverviewPrivateMode ? (
+        <WorkspaceTopProvidersAside
+          {...workspaceAsideBaseProps}
+          ctaHref={isWorkspaceAuthed ? '/workspace?section=requests' : '/workspace?section=providers'}
+          pendingFavoriteProviderIds={pendingFavoriteProviderIds}
+          onToggleFavorite={onToggleProviderFavorite}
+        />
+      ) : null}
+    </WorkspaceContextAside>
   );
 
   if (isWorkspacePublicSection) {

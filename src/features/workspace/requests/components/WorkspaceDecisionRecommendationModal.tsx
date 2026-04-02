@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 import { createPortal } from 'react-dom';
-
-import { StatisticsKiCard } from '@/features/workspace/requests/stats/components/StatisticsKiCard';
 import { focusIfPresent, getTrapFocusTarget, resolveInitialFocusTarget } from '@/lib/a11y/focusTrap';
 
 function getFocusableElements(container: HTMLElement) {
@@ -21,7 +19,7 @@ function getFocusableElements(container: HTMLElement) {
 }
 
 type WorkspaceDecisionRecommendationModalProps = {
-  generatedLabel: string;
+  generatedLabel?: string;
   assistantAvatarLabel: string;
   assistantName: string;
   assistantRole: string;
@@ -167,7 +165,7 @@ export function WorkspaceDecisionRecommendationModal({
         <div className="workspace-statistics-price-modal__intro" data-phase={isLoading ? 'loading' : 'ready'}>
           {isLoading ? (
             <div className="workspace-statistics-ki workspace-statistics-ki--meta workspace-statistics-price-modal__intro-loader" aria-live="polite">
-              <span className="workspace-statistics-ki__stamp">{generatedLabel}</span>
+              {generatedLabel ? <span className="workspace-statistics-ki__stamp">{generatedLabel}</span> : null}
               <div className="workspace-statistics-price-modal__intro-loader-head">
                 <div className="workspace-statistics-price-modal__loading-visual" aria-hidden="true">
                   <div className="workspace-statistics-price-modal__loading-orb" />
@@ -180,14 +178,18 @@ export function WorkspaceDecisionRecommendationModal({
               </div>
             </div>
           ) : (
-            <StatisticsKiCard
-              className="workspace-statistics__decision-ai"
-              metaStamp
-              stamp={generatedLabel}
-              avatarLabel={assistantAvatarLabel}
-              name={assistantName}
-              role={assistantRole}
-            />
+            <div className="workspace-statistics__decision-ai workspace-statistics-price-modal__decision-ai workspace-statistics-ki-tokens">
+              {generatedLabel ? <span className="workspace-statistics-ki__stamp">{generatedLabel}</span> : null}
+              <div className="workspace-statistics-ki__head">
+                <span className="workspace-statistics-ki__avatar" aria-hidden="true">
+                  {assistantAvatarLabel}
+                </span>
+                <span className="workspace-statistics-ki__copy">
+                  <strong className="workspace-statistics-ki__name">{assistantName}</strong>
+                  <span className="workspace-statistics-ki__role">{assistantRole}</span>
+                </span>
+              </div>
+            </div>
           )}
         </div>
         <header className="workspace-statistics-price-modal__header">

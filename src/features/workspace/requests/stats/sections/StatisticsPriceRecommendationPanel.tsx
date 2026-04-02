@@ -104,7 +104,6 @@ export function StatisticsPriceRecommendationPanel({
         ))}
       </div>
       <WorkspaceDecisionRecommendationModal
-        generatedLabel={copy.priceGeneratedLabel}
         assistantAvatarLabel={copy.insightsAssistantAvatarLabel}
         assistantName={copy.insightsAssistantName}
         assistantRole={copy.priceRecommendationLabel}

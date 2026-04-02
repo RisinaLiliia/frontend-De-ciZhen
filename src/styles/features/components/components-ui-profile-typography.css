@@ -38,31 +38,103 @@
     color: var(--c-muted);
   }
 
-  .badge {
+  .ui-badge,
+  .badge,
+  .status-badge {
+    --badge-accent: color-mix(in oklab, var(--c-text-muted) 78%, var(--c-border) 22%);
+    --badge-bg: color-mix(in oklab, var(--badge-accent) 10%, var(--c-panel) 90%);
+    --badge-border: color-mix(in oklab, var(--badge-accent) 26%, var(--c-border) 74%);
+    --badge-text: color-mix(in oklab, var(--badge-accent) 52%, var(--c-text) 48%);
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
+    justify-content: center;
+    gap: var(--space-1);
+    min-height: 28px;
+    padding-inline: 12px;
     border-radius: 999px;
-    border: 1px solid var(--c-border);
-    background: color-mix(in oklab, var(--c-surface) 88%, transparent);
-    font-size: var(--fs-small);
-    color: var(--c-muted);
+    border: 1px solid var(--badge-border);
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 65%, transparent),
+      0 1px 2px color-mix(in oklab, var(--badge-accent) 6%, transparent);
     transition:
       background var(--transition-fast),
       border-color var(--transition-fast),
       color var(--transition-fast),
-      transform var(--transition-fast),
       box-shadow var(--transition-fast);
   }
 
-  .badge:hover {
-    background: color-mix(in oklab, var(--c-surface) 85%, var(--c-border) 15%);
-    border-color: color-mix(in oklab, var(--c-border) 70%, var(--c-primary) 30%);
-    transform: translateY(-1px);
+  .ui-badge--sm {
+    min-height: 28px;
+    padding-inline: 12px;
+    font-size: 12px;
   }
 
-  .badge:focus-visible {
+  .ui-badge--md {
+    min-height: 32px;
+    padding-inline: 14px;
+    font-size: 13px;
+  }
+
+  .ui-badge--soft,
+  .badge,
+  .status-badge {
+    --badge-bg: color-mix(in oklab, var(--badge-accent) 12%, var(--c-panel) 88%);
+    --badge-border: color-mix(in oklab, var(--badge-accent) 30%, var(--c-border) 70%);
+    --badge-text: color-mix(in oklab, var(--badge-accent) 74%, var(--c-text) 26%);
+  }
+
+  .ui-badge--outline {
+    --badge-bg: color-mix(in oklab, white 72%, transparent);
+    --badge-border: color-mix(in oklab, var(--badge-accent) 22%, var(--c-border) 78%);
+    --badge-text: color-mix(in oklab, var(--badge-accent) 56%, var(--c-text) 44%);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 76%, transparent);
+  }
+
+  .ui-badge--solid {
+    --badge-bg: color-mix(in oklab, var(--badge-accent) 84%, white 16%);
+    --badge-border: color-mix(in oklab, var(--badge-accent) 90%, black 10%);
+    --badge-text: white;
+    box-shadow: 0 10px 18px color-mix(in oklab, var(--badge-accent) 16%, transparent);
+  }
+
+  .ui-badge--neutral {
+    --badge-accent: color-mix(in oklab, var(--c-text-muted) 78%, var(--c-border) 22%);
+  }
+
+  .ui-badge--info,
+  .status-badge--info {
+    --badge-accent: var(--c-primary);
+  }
+
+  .ui-badge--success,
+  .status-badge--success {
+    --badge-accent: var(--c-success);
+  }
+
+  .ui-badge--warning,
+  .status-badge--warning {
+    --badge-accent: var(--c-warning);
+  }
+
+  .ui-badge--risk,
+  .status-badge--danger {
+    --badge-accent: var(--c-danger);
+  }
+
+  .ui-badge--opportunity {
+    --badge-accent: color-mix(in oklab, var(--c-success) 72%, var(--c-primary) 28%);
+  }
+
+  .badge:focus-visible,
+  .status-badge:focus-visible,
+  .ui-badge:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
   }

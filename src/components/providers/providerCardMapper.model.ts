@@ -99,30 +99,34 @@ export function buildProviderCardBadges(params: {
   const badges: ProviderBadgeItem[] = [];
   if (isTopAnbieter) {
     badges.push({
-      type: 'top',
-      size: 'md',
+      variant: 'info',
+      size: 'sm',
+      tone: 'soft',
       label: t(I18N_KEYS.homePublic.providerBadgeTopAnbieter),
       tooltip: t(I18N_KEYS.homePublic.providerBadgeTopAnbieterTooltip),
     });
   } else if (isTopService) {
     badges.push({
-      type: 'service',
-      size: 'md',
+      variant: 'info',
+      size: 'sm',
+      tone: 'soft',
       label: t(I18N_KEYS.homePublic.providerBadgeTopService),
       tooltip: t(I18N_KEYS.homePublic.providerBadgeTopServiceTooltip),
     });
     if (isSchnelleAntwort) {
       badges.push({
-        type: 'fast',
-        size: 'md',
+        variant: 'opportunity',
+        size: 'sm',
+        tone: 'soft',
         label: t(I18N_KEYS.homePublic.providerBadgeFastReply),
         tooltip: t(I18N_KEYS.homePublic.providerBadgeFastReplyTooltip),
       });
     }
   } else if (isSchnelleAntwort) {
     badges.push({
-      type: 'fast',
-      size: 'md',
+      variant: 'opportunity',
+      size: 'sm',
+      tone: 'soft',
       label: t(I18N_KEYS.homePublic.providerBadgeFastReply),
       tooltip: t(I18N_KEYS.homePublic.providerBadgeFastReplyTooltip),
     });

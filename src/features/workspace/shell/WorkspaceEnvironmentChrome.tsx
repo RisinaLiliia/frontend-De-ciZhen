@@ -827,6 +827,8 @@ export function WorkspaceContextAside({
   activePublicSection,
   activeWorkspaceTab,
   className,
+  topSlot,
+  panelStyle,
   children,
 }: {
   t: Translator;
@@ -834,7 +836,9 @@ export function WorkspaceContextAside({
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
   className?: string;
-  children: React.ReactNode;
+  topSlot?: React.ReactNode;
+  panelStyle?: React.CSSProperties;
+  children?: React.ReactNode;
 }) {
   const model = useWorkspaceSharedContext({
     t,
@@ -899,7 +903,9 @@ export function WorkspaceContextAside({
 
   return (
     <div className={['workspace-statistics-layout', 'workspace-context-rail', className ?? ''].filter(Boolean).join(' ')}>
-      <section className="panel workspace-context-rail__panel">
+      {topSlot}
+
+      <section className="panel workspace-context-rail__panel" style={panelStyle}>
         <span className="workspace-environment__eyebrow">{model.copy.rail.nextStepTitle}</span>
         <WorkspaceDecisionActionCard
           className="workspace-context-rail__decision"
@@ -913,7 +919,6 @@ export function WorkspaceContextAside({
           actionAriaHasPopup
         />
         <WorkspaceDecisionRecommendationModal
-          generatedLabel={statsCopy.insightsGeneratedLabel}
           assistantAvatarLabel={statsCopy.insightsAssistantAvatarLabel}
           assistantName={statsCopy.insightsAssistantName}
           assistantRole={statsCopy.priceRecommendationLabel}

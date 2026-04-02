@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
+import { Badge, type BadgeVariant } from '@/components/ui/Badge';
 
 export type WorkspaceInsightsPanelItem = {
   key: string;
   level?: 'info' | 'trend' | 'warning';
   kind?: 'demand' | 'opportunity' | 'performance' | 'growth' | 'risk' | 'promotion' | 'other';
   badgeLabel: string;
-  badgeTone: 'success' | 'info' | 'warning' | 'danger';
+  badgeTone: BadgeVariant;
   title?: string;
   text: string;
   evidence?: string;
@@ -29,7 +30,6 @@ type WorkspaceInsightsPanelProps = {
   featuredLabel?: string;
   items: WorkspaceInsightsPanelItem[];
   className?: string;
-  titleVariant?: 'default' | 'request-card';
   panelRef?: React.Ref<HTMLElement>;
   style?: React.CSSProperties;
   showHeader?: boolean;
@@ -57,8 +57,6 @@ function renderInsightAction(item: WorkspaceInsightsPanelItem) {
 
 function buildInsightClassName(item: WorkspaceInsightsPanelItem, featured = false) {
   return [
-    'stat-card',
-    'stat-link',
     'workspace-statistics-insights__item',
     featured ? 'is-featured' : '',
     item.level ? `is-${item.level}` : '',
@@ -78,7 +76,6 @@ export function WorkspaceInsightsPanel({
   featuredLabel,
   items,
   className,
-  titleVariant = 'default',
   panelRef,
   style,
   showHeader = true,
@@ -88,16 +85,12 @@ export function WorkspaceInsightsPanel({
   const hasHeading = showHeader && Boolean(title?.trim() || subtitle?.trim());
   const panelLabel = title?.trim() || assistantRole || emptyLabel;
   const rootClassName = [
-    hasHeading || showHeader ? 'panel' : 'workspace-statistics-ki',
+    hasHeading || showHeader ? 'panel' : 'panel workspace-statistics-ki-tokens',
     'workspace-insights-panel',
     showHeader && hasHeading ? '' : 'workspace-insights-panel--compact-head',
     className ?? '',
   ].filter(Boolean).join(' ');
   const assistantDescriptionText = assistantDescription?.trim() || assistantRole;
-  const titleClassName = [
-    'workspace-statistics-insights__title',
-    titleVariant === 'request-card' ? 'request-card__title' : '',
-  ].filter(Boolean).join(' ');
   const assistantHead = (
     <div className="workspace-statistics-ki__head">
       <span className="workspace-statistics-ki__avatar" aria-hidden="true">
@@ -151,18 +144,19 @@ export function WorkspaceInsightsPanel({
             <article className={buildInsightClassName(featuredItem, true)}>
               <span className="workspace-statistics-insights__content">
                 <span className="workspace-statistics-insights__eyebrow">
-                  <span className={`status-badge status-badge--${featuredItem.badgeTone} workspace-statistics-insights__chip`}>
+                  <Badge
+                    variant={featuredItem.badgeTone}
+                    tone="soft"
+                    size="sm"
+                    className="workspace-statistics-insights__chip"
+                  >
                     {featuredItem.badgeLabel}
-                  </span>
+                  </Badge>
                   {featuredLabel ? (
                     <span className="workspace-statistics-insights__featured-label">{featuredLabel}</span>
                   ) : null}
                 </span>
-                {featuredItem.title ? (
-                  <strong className={titleClassName}>
-                    {featuredItem.title}
-                  </strong>
-                ) : null}
+                {featuredItem.title ? <strong className="workspace-statistics-insights__title">{featuredItem.title}</strong> : null}
                 <span className="workspace-statistics-insights__text">{featuredItem.text}</span>
                 {featuredItem.metrics && featuredItem.metrics.length > 0 ? (
                   <span className="workspace-statistics-insights__metrics">
@@ -173,7 +167,7 @@ export function WorkspaceInsightsPanel({
                     ))}
                   </span>
                 ) : null}
-                {featuredItem.evidence ? (
+                {featuredItem.evidence && (!featuredItem.metrics || featuredItem.metrics.length === 0) ? (
                   <span className="workspace-statistics-insights__evidence">{featuredItem.evidence}</span>
                 ) : null}
                 {renderInsightAction(featuredItem)}
@@ -189,15 +183,16 @@ export function WorkspaceInsightsPanel({
                 <li key={item.key} className={buildInsightClassName(item)}>
                   <span className="workspace-statistics-insights__content">
                     <span className="workspace-statistics-insights__eyebrow">
-                      <span className={`status-badge status-badge--${item.badgeTone} workspace-statistics-insights__chip`}>
+                      <Badge
+                        variant={item.badgeTone}
+                        tone="soft"
+                        size="sm"
+                        className="workspace-statistics-insights__chip"
+                      >
                         {item.badgeLabel}
-                      </span>
+                      </Badge>
                     </span>
-                    {item.title ? (
-                      <strong className={titleClassName}>
-                        {item.title}
-                      </strong>
-                    ) : null}
+                    {item.title ? <strong className="workspace-statistics-insights__title">{item.title}</strong> : null}
                     <span className="workspace-statistics-insights__text">{item.text}</span>
                     {item.evidence ? (
                       <span className="workspace-statistics-insights__evidence">{item.evidence}</span>

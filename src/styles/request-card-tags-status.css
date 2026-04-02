@@ -102,16 +102,12 @@
     pointer-events: none;
   }
 
-  .request-badge {
-    font-size: 10px;
-    font-weight: 700;
-    padding: var(--space-1) var(--space-2);
-    border-radius: 999px;
-    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
-    color: var(--c-text);
-    border: 1px solid color-mix(in oklab, var(--c-border) 48%, transparent);
-    white-space: nowrap;
+  .request-badges .ui-badge {
+    min-height: 26px;
+    padding-inline: 10px;
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 72%, transparent),
+      0 6px 14px color-mix(in oklab, var(--c-shadow) 10%, transparent);
   }
-
 
 }

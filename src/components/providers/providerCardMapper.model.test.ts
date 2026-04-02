@@ -74,8 +74,10 @@ describe('providerCardMapper.model', () => {
         provider: provider({ ratingAvg: 4.9, ratingCount: 40 }),
         responseRate: 82,
         responseMinutes: 18,
-      }).map((badge) => badge.type),
-    ).toEqual(['top']);
+      }),
+    ).toEqual([
+      expect.objectContaining({ variant: 'info', tone: 'soft' }),
+    ]);
 
     expect(
       buildProviderCardBadges({
@@ -83,8 +85,11 @@ describe('providerCardMapper.model', () => {
         provider: provider({ ratingAvg: 4.75, ratingCount: 20 }),
         responseRate: 79,
         responseMinutes: 18,
-      }).map((badge) => badge.type),
-    ).toEqual(['service', 'fast']);
+      }),
+    ).toEqual([
+      expect.objectContaining({ variant: 'info', tone: 'soft' }),
+      expect.objectContaining({ variant: 'opportunity', tone: 'soft' }),
+    ]);
 
     expect(resolveProviderIsVerified(provider({ ratingCount: 31 }))).toBe(true);
     expect(resolveProviderIsVerified(provider({ ratingCount: 5, completedJobs: 10 }))).toBe(false);

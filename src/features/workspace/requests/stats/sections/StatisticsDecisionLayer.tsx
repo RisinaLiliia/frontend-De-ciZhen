@@ -99,7 +99,6 @@ export function StatisticsDecisionLayer({
         showDetails={false}
       />
       <WorkspaceDecisionRecommendationModal
-        generatedLabel={copy.priceGeneratedLabel}
         assistantAvatarLabel={copy.insightsAssistantAvatarLabel}
         assistantName={copy.insightsAssistantName}
         assistantRole={copy.priceRecommendationLabel}

@@ -26,6 +26,7 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
     workspaceIntroNode,
     workspaceAsideBaseProps,
     asideTopSlot,
+    overviewDecisionPanelStyle,
     privateMain,
     primaryAction,
     isLoading,
@@ -53,6 +54,7 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
         privateMain={privateMain}
         publicMain={privateMain}
         asideTopSlot={asideTopSlot}
+        overviewDecisionPanelStyle={overviewDecisionPanelStyle}
         workspaceAsideBaseProps={workspaceAsideBaseProps}
         pendingFavoriteProviderIds={pendingFavoriteProviderIds}
         onToggleProviderFavorite={onToggleProviderFavorite}

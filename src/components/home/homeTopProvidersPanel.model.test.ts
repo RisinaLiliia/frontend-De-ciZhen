@@ -85,7 +85,7 @@ describe('homeTopProvidersPanel.model', () => {
     });
 
     expect(cards).toHaveLength(1);
-    expect(cards[0]?.badges[0]?.type).toBe('top');
+    expect(cards[0]?.badges[0]).toMatchObject({ variant: 'info', tone: 'soft' });
     expect(cards[0]?.reviewPreview).toBe('homePublic.providerReviewPreviewDefault');
     expect(cards[0]?.aboutPreview).toBe('Backend bio for home top provider.');
     expect(cards[0]?.cityLabel).toBe('Berlin');

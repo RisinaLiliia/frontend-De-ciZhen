@@ -4,10 +4,21 @@
 import Image from 'next/image';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { Badge, type BadgeSize, type BadgeTone, type BadgeVariant } from '@/components/ui/Badge';
+
+export type RequestCardBadge = {
+  label: string;
+  variant?: BadgeVariant;
+  tone?: BadgeTone;
+  size?: BadgeSize;
+  className?: string;
+  title?: string;
+  ariaLabel?: string;
+};
 
 export type RequestCardProps = {
   href: string;
-  badges: string[];
+  badges: Array<string | RequestCardBadge>;
   category: string;
   title: string;
   excerpt?: string | null;
@@ -57,7 +68,18 @@ export function RequestCard({
 }: RequestCardProps) {
   const router = useRouter();
   const hasImage = Boolean(imageSrc);
-  const visibleBadges = badges.slice(0, 1);
+  const visibleBadges = badges
+    .slice(0, 1)
+    .map<RequestCardBadge>((badge) => (
+      typeof badge === 'string'
+        ? { label: badge, variant: 'neutral', tone: 'outline', size: 'sm' }
+        : {
+            size: 'sm',
+            tone: 'soft',
+            variant: 'neutral',
+            ...badge,
+          }
+    ));
   const excerptText = excerpt?.trim() ?? '';
   const safeImageSrc = imageSrc ?? '';
   const isLinkMode = mode === 'link';
@@ -108,9 +130,17 @@ export function RequestCard({
       {visibleBadges.length && hasImage ? (
         <div className="request-badges request-badges--media" aria-hidden="true">
           {visibleBadges.map((badge) => (
-            <span key={badge} className="request-badge">
-              {badge}
-            </span>
+            <Badge
+              key={badge.label}
+              variant={badge.variant}
+              tone={badge.tone}
+              size={badge.size}
+              className={badge.className}
+              title={badge.title}
+              aria-label={badge.ariaLabel}
+            >
+              {badge.label}
+            </Badge>
           ))}
         </div>
       ) : null}
@@ -168,9 +198,17 @@ export function RequestCard({
           {visibleBadges.length && !hasImage ? (
             <div className="request-badges" aria-hidden="true">
               {visibleBadges.map((badge) => (
-                <span key={badge} className="request-badge">
-                  {badge}
-                </span>
+                <Badge
+                  key={badge.label}
+                  variant={badge.variant}
+                  tone={badge.tone}
+                  size={badge.size}
+                  className={badge.className}
+                  title={badge.title}
+                  aria-label={badge.ariaLabel}
+                >
+                  {badge.label}
+                </Badge>
               ))}
             </div>
           ) : null}

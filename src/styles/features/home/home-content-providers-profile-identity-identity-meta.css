@@ -110,9 +110,9 @@
   }
 
   .provider-avatar-city.request-meta-item svg {
-    width: 14px;
-    height: 14px;
-    flex: 0 0 14px;
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
     color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
   }
 
