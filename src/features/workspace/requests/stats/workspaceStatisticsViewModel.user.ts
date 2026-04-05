@@ -543,8 +543,10 @@ export function buildPersonalizedPricingSection(params: {
     subtitle: source.subtitle,
     contextLabel: source.contextLabel,
     currentPrice: source.userPrice === null ? '—' : formatCurrency.format(source.userPrice),
+    currentPriceValue: source.userPrice,
     recommendedRange,
     marketAverage: source.marketAverage === null ? '—' : formatCurrency.format(source.marketAverage),
+    marketAverageValue: source.marketAverage,
     statusLabel:
       source.position === 'above'
         ? copy.userPricingStatusAbove
@@ -854,11 +856,13 @@ export function buildUserIntelligence(params: {
 
       return {
       currentPrice: source.pricing.currentPrice === null ? '—' : formatCurrency.format(source.pricing.currentPrice),
+      currentPriceValue: source.pricing.currentPrice,
       recommendedRange:
         source.pricing.recommendedMin === null || source.pricing.recommendedMax === null
           ? '—'
           : `${formatCurrency.format(source.pricing.recommendedMin)} – ${formatCurrency.format(source.pricing.recommendedMax)}`,
       marketAverage: source.pricing.marketAverage === null ? '—' : formatCurrency.format(source.pricing.marketAverage),
+      marketAverageValue: source.pricing.marketAverage,
       statusLabel:
         source.pricing.status === 'above'
           ? copy.userPricingStatusAbove

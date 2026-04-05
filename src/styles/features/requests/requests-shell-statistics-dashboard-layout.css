@@ -25,6 +25,7 @@
     --workspace-statistics-section-header-min-h: calc((var(--space-6) * 2) + var(--space-1));
     --workspace-statistics-section-gap: var(--layout-section-gap);
     --workspace-statistics-intro-gap: var(--space-5);
+    --workspace-statistics-rail-panel-gap: var(--space-3);
     --workspace-statistics-container-pad: var(--space-3);
     --workspace-statistics-context-gap: var(--space-2-5);
     --workspace-statistics-context-pad: var(--home-panel-padding, var(--space-4));
