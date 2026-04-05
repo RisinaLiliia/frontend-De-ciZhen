@@ -13,7 +13,7 @@ import type { OfferDto } from '@/lib/api/dto/offers';
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';
 
 describe('requestsExplorerRequestsData.model', () => {
-  it('builds public requests query state with initial data preference for default filters', () => {
+  it('builds public requests query state with placeholder seed for default filters', () => {
     const initialPublicRequests = {
       items: [],
       total: 0,
@@ -30,7 +30,7 @@ describe('requestsExplorerRequestsData.model', () => {
     });
 
     expect(state.enabled).toBe(true);
-    expect(state.initialData).toBe(initialPublicRequests);
+    expect(state.placeholderData).toBe(initialPublicRequests);
     expect(state.queryKey).toEqual([
       'requests-explorer-public',
       undefined,
@@ -79,7 +79,7 @@ describe('requestsExplorerRequestsData.model', () => {
       },
     });
 
-    expect(state.initialData).toBeUndefined();
+    expect(state.placeholderData).toBeUndefined();
   });
 
   it('builds request maps and favorite ids', () => {

@@ -56,7 +56,7 @@ export function buildRequestsExplorerPublicRequestsQueryState({
       locale,
     ] as const,
     enabled: !isProvidersView,
-    initialData: !isProvidersView
+    placeholderData: !isProvidersView
       ? resolveMatchingInitialPublicRequests({
         filter,
         preferInitialPublicRequests,

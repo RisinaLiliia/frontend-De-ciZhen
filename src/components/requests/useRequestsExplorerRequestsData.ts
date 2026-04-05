@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { listPublicRequests, type PublicRequestsFilter } from '@/lib/api/requests';
 import { deleteOffer, listMyProviderOffers } from '@/lib/api/offers';
 import { listFavorites } from '@/lib/api/favorites';
+import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
@@ -83,8 +84,23 @@ export function useRequestsExplorerRequestsData({
   const { data: publicRequests, isLoading, isError } = useQuery({
     queryKey: publicRequestsQueryState.queryKey,
     enabled: publicRequestsQueryState.enabled,
-    queryFn: () => listPublicRequests({ ...filter, locale }),
-    initialData: publicRequestsQueryState.initialData,
+    queryFn: async () => {
+      if (preferInitialPublicRequests) {
+        const overview = await getWorkspacePublicOverview({
+          cityId: filter.cityId,
+          categoryKey: filter.categoryKey,
+          subcategoryKey: filter.subcategoryKey,
+          sort: filter.sort,
+          page: filter.page,
+          limit: filter.limit,
+        });
+
+        return overview.requests;
+      }
+
+      return listPublicRequests({ ...filter, locale });
+    },
+    placeholderData: publicRequestsQueryState.placeholderData,
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
@@ -179,9 +195,10 @@ export function useRequestsExplorerRequestsData({
 
   React.useEffect(() => {
     if (isProvidersView) return;
+    if (isLoading || isError || !publicRequests) return;
     if (page <= totalPages) return;
     setPage(totalPages);
-  }, [isProvidersView, page, setPage, totalPages]);
+  }, [isError, isLoading, isProvidersView, page, publicRequests, setPage, totalPages]);
 
   return {
     isLoading,
