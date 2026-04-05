@@ -81,17 +81,19 @@ export function WorkspacePublicDemandMapView({
         ) : null}
         {showEmptyState ? <p className="workspace-public-demand-map__empty">{t(I18N_KEYS.homePublic.demandMapEmpty)}</p> : null}
 
-        {!isLoading && !isError ? (
-          <div className="workspace-public-demand-map__meta workspace-public-demand-map__meta--overlay dc-surface dc-glow">
-            <span>
-              <strong>{formatNumber.format(activeRequestsCount)}</strong> {t(I18N_KEYS.homePublic.demandMapActiveRequests)}
-            </span>
-            <span>
-              <strong>{formatNumber.format(activeProvidersCount)}</strong> {t(I18N_KEYS.homePublic.demandMapActiveProviders)}
-            </span>
-          </div>
-        ) : null}
       </div>
+      {!isLoading && !isError ? (
+        <div className="workspace-public-demand-map__meta workspace-public-demand-map__meta--footer">
+          <article className="stat-card workspace-public-demand-map__metric">
+            <strong className="stat-value">{formatNumber.format(activeRequestsCount)}</strong>
+            <span className="stat-label">{t(I18N_KEYS.homePublic.demandMapActiveRequests)}</span>
+          </article>
+          <article className="stat-card workspace-public-demand-map__metric">
+            <strong className="stat-value">{formatNumber.format(activeProvidersCount)}</strong>
+            <span className="stat-label">{t(I18N_KEYS.homePublic.demandMapActiveProviders)}</span>
+          </article>
+        </div>
+      ) : null}
       {topAccessibleCities.length > 0 ? (
         <div className="sr-only" aria-live="polite">
           <p>{t(I18N_KEYS.homePublic.demandMapTitle)}</p>

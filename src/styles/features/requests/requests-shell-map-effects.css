@@ -20,10 +20,6 @@
       transform: scale(0.94);
       transform-origin: top left;
     }
-
-    .workspace-public-demand-map__meta--overlay {
-      font-size: 11px;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
