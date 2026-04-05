@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { dismissCookieConsentIfPresent } from './helpers/consent';
 
 function createCategories(count: number) {
   return Array.from({ length: count }, (_, index) => {
@@ -242,6 +243,7 @@ test('workspace stats smoke: range switch + demand/city pagination', async ({ pa
   });
 
   await page.goto('/workspace?section=stats');
+  await dismissCookieConsentIfPresent(page);
 
   await expect(page.locator('.workspace-statistics')).toBeVisible();
   await expect(page.locator('.skeleton')).toHaveCount(0);
@@ -250,16 +252,16 @@ test('workspace stats smoke: range switch + demand/city pagination', async ({ pa
   const demandPanel = page.locator('.workspace-statistics__demand-pagination');
   await expect(demandPanel).toBeVisible();
   await demandPanel.locator('button').nth(1).click();
-  await expect(page.locator('.workspace-statistics-demand__label').first()).toContainText('Category 6');
+  await expect(page.locator('.workspace-statistics-demand__label').first()).toContainText('Category 7');
 
   const cityPanel = page.locator('.workspace-statistics__cities-pagination');
   await expect(cityPanel).toBeVisible();
   await cityPanel.locator('button').nth(1).click();
   await expect(page.locator('.workspace-statistics-city-list__item').first()).toContainText('City 11');
 
-  const rangeToolbar = page.locator('.workspace-shared-context-controls__desktop .home-activity__ranges');
+  const rangeToolbar = page.locator('.workspace-shared-context-controls__desktop .home-activity__ranges').first();
   await expect(rangeToolbar).toBeVisible();
-  await rangeToolbar.getByRole('button', { name: '7 Tage' }).click();
+  await rangeToolbar.getByRole('button', { name: /7 Tage|7 days/i }).click();
   await expect(page.locator('.skeleton')).toHaveCount(0);
   await expect(page.locator('.workspace-statistics-insights')).toContainText('Insight body 7d');
 

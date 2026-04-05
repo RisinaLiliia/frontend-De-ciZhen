@@ -21,6 +21,7 @@ import {
   WorkspacePrivateIntro,
   WorkspacePublicIntro,
 } from '@/features/workspace';
+import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import { isWorkspaceTab } from '@/features/workspace/requests';
@@ -95,26 +96,26 @@ export function useWorkspacePrivatePresentationFlow({
     );
 
   const overviewHeroRef = React.useRef<HTMLDivElement | null>(null);
-  const overviewGridRef = React.useRef<HTMLDivElement | null>(null);
-  const overviewActionsRef = React.useRef<HTMLElement | null>(null);
+  const overviewOffersPanelRef = React.useRef<HTMLElement | null>(null);
+  const overviewFocusPanelRef = React.useRef<HTMLElement | null>(null);
   const overviewMapMinHeight = useSyncedPanelMinHeight({
     sourceRef: overviewHeroRef,
     mode: 'sourceHeight',
     watchKey: isOverviewMode,
   });
   const overviewInsightsMinHeight = useSyncedPanelMinHeight({
-    sourceRef: overviewGridRef,
+    sourceRef: overviewOffersPanelRef,
     mode: 'sourceHeight',
     watchKey: isOverviewMode,
   });
-  const overviewDecisionMinHeight = useSyncedPanelMinHeight({
-    sourceRef: overviewActionsRef,
+  const overviewActionsMinHeight = useSyncedPanelMinHeight({
+    sourceRef: overviewFocusPanelRef,
     mode: 'sourceHeight',
     watchKey: isOverviewMode,
   });
   const overviewStatisticsModel = useWorkspaceStatisticsModel({ locale: branch.locale });
 
-  const asideTopSlot = isOverviewMode ? (
+  const overviewRailTopSlot = isOverviewMode ? (
     <>
       <WorkspacePublicDemandMapPanel
         t={branch.t}
@@ -123,6 +124,7 @@ export function useWorkspacePrivatePresentationFlow({
         summary={data.allRequestsSummary}
         isLoading={data.isPublicSummaryLoading}
         isError={data.isPublicSummaryError}
+        className="workspace-overview__rail-panel--map"
         onSelectCity={overviewStatisticsModel.setCityId}
         style={
           overviewMapMinHeight
@@ -141,6 +143,14 @@ export function useWorkspacePrivatePresentationFlow({
         }
       />
     </>
+  ) : null;
+  const overviewRailBottomSlot = isOverviewMode ? (
+    <WorkspaceContextFocusPanel
+      t={branch.t}
+      locale={branch.locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+    />
   ) : null;
 
   const onPrimaryActionClick = React.useCallback(
@@ -213,8 +223,10 @@ export function useWorkspacePrivatePresentationFlow({
       currentSearch={currentSearch}
       statisticsModel={overviewStatisticsModel}
       heroRef={overviewHeroRef}
-      gridRef={overviewGridRef}
-      actionsRef={overviewActionsRef}
+      offersPanelRef={overviewOffersPanelRef}
+      actionsStyle={overviewActionsMinHeight ? { minHeight: `${overviewActionsMinHeight}px` } : undefined}
+      mobileRailTopSlot={overviewRailTopSlot}
+      mobileRailBottomSlot={overviewRailBottomSlot}
       primaryAction={primaryAction}
       onPrimaryActionClick={onPrimaryActionClick}
       activeOffersListProps={activeOffersListProps}
@@ -237,10 +249,8 @@ export function useWorkspacePrivatePresentationFlow({
     onToggleProviderFavorite,
     workspaceIntroNode: resolvedWorkspaceIntroNode,
     workspaceAsideBaseProps,
-    asideTopSlot,
-    overviewDecisionPanelStyle: overviewDecisionMinHeight
-      ? { minHeight: `${overviewDecisionMinHeight}px`, height: `${overviewDecisionMinHeight}px` }
-      : undefined,
+    asideTopSlot: overviewRailTopSlot,
+    overviewDecisionPanelRef: overviewFocusPanelRef,
     privateMain,
     primaryAction,
     isLoading,

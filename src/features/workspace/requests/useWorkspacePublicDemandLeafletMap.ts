@@ -26,6 +26,7 @@ const GERMANY_BOUNDS: [[number, number], [number, number]] = [
   [56.8, 16.8],
 ];
 const CLUSTER_MIN_CITY_POINTS = 7;
+const MAP_INVALIDATE_DELAYS_MS = [120, 360] as const;
 
 export function useWorkspacePublicDemandLeafletMap({
   cities,
@@ -34,13 +35,16 @@ export function useWorkspacePublicDemandLeafletMap({
   activeRequestsLabel,
   onSelectCity,
 }: UseWorkspacePublicDemandLeafletMapParams) {
+  const mapCanvasRef = React.useRef<HTMLDivElement | null>(null);
   const mapHostRef = React.useRef<HTMLDivElement | null>(null);
   const mapRef = React.useRef<import('leaflet').Map | null>(null);
   const markersLayerRef = React.useRef<import('leaflet').LayerGroup | null>(null);
   const leafletRef = React.useRef<LeafletModule | null>(null);
   const renderMarkersRef = React.useRef<() => void>(() => {});
   const resizeObserverRef = React.useRef<ResizeObserver | null>(null);
+  const initObserverRef = React.useRef<ResizeObserver | null>(null);
   const invalidateFrameRef = React.useRef<number | null>(null);
+  const invalidateTimeoutsRef = React.useRef<number[]>([]);
   const clusterIndex = React.useMemo(() => createDemandClusterIndex(cities), [cities]);
 
   renderMarkersRef.current = () => {
@@ -121,13 +125,46 @@ export function useWorkspacePublicDemandLeafletMap({
   React.useEffect(() => {
     let isCancelled = false;
     let destroy: (() => void) | null = null;
+    let isInitializing = false;
 
-    (async () => {
-      if (!mapHostRef.current || mapRef.current) return;
+    const clearInvalidateTimers = () => {
+      invalidateTimeoutsRef.current.forEach((timeoutId) => {
+        window.clearTimeout(timeoutId);
+      });
+      invalidateTimeoutsRef.current = [];
+    };
+
+    const getMapHost = () => mapHostRef.current;
+    const getMapCanvas = () => mapCanvasRef.current;
+    const hasVisibleMapSize = () => {
+      const host = getMapHost();
+      if (!host) return false;
+      const hostRect = host.getBoundingClientRect();
+      if (hostRect.width > 0 && hostRect.height > 0) return true;
+      const canvas = getMapCanvas();
+      if (!canvas) return false;
+      const canvasRect = canvas.getBoundingClientRect();
+      return canvasRect.width > 0 && canvasRect.height > 0;
+    };
+
+    const initializeMap = async () => {
+      if (isInitializing || mapRef.current || !hasVisibleMapSize()) return;
+      const mapHost = getMapHost();
+      if (!mapHost) return;
+
+      isInitializing = true;
       const L = await import('leaflet');
-      if (isCancelled || !mapHostRef.current || mapRef.current) return;
+      if (isCancelled || mapRef.current) {
+        isInitializing = false;
+        return;
+      }
+      const resolvedMapHost = getMapHost();
+      if (!resolvedMapHost || !hasVisibleMapSize()) {
+        isInitializing = false;
+        return;
+      }
 
-      const map = L.map(mapHostRef.current, {
+      const map = L.map(resolvedMapHost, {
         zoomControl: true,
         attributionControl: false,
         minZoom: MAP_MIN_ZOOM,
@@ -175,17 +212,28 @@ export function useWorkspacePublicDemandLeafletMap({
         });
       };
 
+      const scheduleInvalidateSize = () => {
+        invalidateSize();
+        clearInvalidateTimers();
+        invalidateTimeoutsRef.current = MAP_INVALIDATE_DELAYS_MS.map((delay) => window.setTimeout(invalidateSize, delay));
+      };
+
       if (typeof ResizeObserver !== 'undefined') {
         const observer = new ResizeObserver(() => {
           invalidateSize();
         });
-        observer.observe(mapHostRef.current);
+        observer.observe(resolvedMapHost);
+        const canvas = getMapCanvas();
+        if (canvas) observer.observe(canvas);
         resizeObserverRef.current = observer;
       }
 
-      invalidateSize();
+      scheduleInvalidateSize();
 
       destroy = () => {
+        clearInvalidateTimers();
+        initObserverRef.current?.disconnect();
+        initObserverRef.current = null;
         resizeObserverRef.current?.disconnect();
         resizeObserverRef.current = null;
         if (invalidateFrameRef.current !== null) {
@@ -201,10 +249,39 @@ export function useWorkspacePublicDemandLeafletMap({
         mapRef.current = null;
         leafletRef.current = null;
       };
-    })();
+      isInitializing = false;
+    };
+
+    const observeUntilVisible = () => {
+      const mapHost = getMapHost();
+      if (!mapHost) return;
+
+      if (hasVisibleMapSize()) {
+        void initializeMap();
+        return;
+      }
+
+      if (typeof ResizeObserver === 'undefined') return;
+
+      const observer = new ResizeObserver(() => {
+        if (!hasVisibleMapSize()) return;
+        observer.disconnect();
+        initObserverRef.current = null;
+        void initializeMap();
+      });
+      observer.observe(mapHost);
+      const canvas = getMapCanvas();
+      if (canvas) observer.observe(canvas);
+      initObserverRef.current = observer;
+    };
+
+    observeUntilVisible();
 
     return () => {
       isCancelled = true;
+      initObserverRef.current?.disconnect();
+      initObserverRef.current = null;
+      clearInvalidateTimers();
       destroy?.();
     };
   }, []);
@@ -214,6 +291,7 @@ export function useWorkspacePublicDemandLeafletMap({
   }, [activeRequestsLabel, clusterIndex, formatNumber, hasCoordinates, onSelectCity]);
 
   return {
+    mapCanvasRef,
     mapHostRef,
   };
 }

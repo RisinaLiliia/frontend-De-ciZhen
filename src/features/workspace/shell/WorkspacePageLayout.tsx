@@ -50,7 +50,7 @@ type Props = {
   privateMain: React.ReactNode;
   publicMain: React.ReactNode;
   asideTopSlot?: React.ReactNode;
-  overviewDecisionPanelStyle?: React.CSSProperties;
+  overviewDecisionPanelRef?: React.Ref<HTMLElement>;
   workspaceAsideBaseProps: WorkspaceAsideBaseProps;
   pendingFavoriteProviderIds: Set<string>;
   onToggleProviderFavorite: (providerId: string) => void;
@@ -68,7 +68,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   privateMain,
   publicMain,
   asideTopSlot,
-  overviewDecisionPanelStyle,
+  overviewDecisionPanelRef,
   workspaceAsideBaseProps,
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
@@ -84,6 +84,8 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       sectionParam: searchParams.get('section'),
       hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
     });
+  const overviewFrameClassName = isOverviewPrivateMode ? 'workspace-frame__flow--overview' : undefined;
+  const overviewGridClassName = isOverviewPrivateMode ? 'workspace-frame--overview' : undefined;
 
   const introWithWorkspaceChrome = React.useMemo(() => {
     if (!React.isValidElement(intro)) return intro;
@@ -114,7 +116,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       activeWorkspaceTab={activeWorkspaceTab}
       className={isOverviewPrivateMode ? 'workspace-context-rail--overview' : undefined}
       topSlot={isOverviewPrivateMode ? asideTopSlot : undefined}
-      panelStyle={isOverviewPrivateMode ? overviewDecisionPanelStyle : undefined}
+      panelRef={isOverviewPrivateMode ? overviewDecisionPanelRef : undefined}
     >
       {!isOverviewPrivateMode ? (
         <WorkspaceTopProvidersAside
@@ -156,6 +158,8 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
         intro={introWithWorkspaceChrome}
         main={privateMain}
         aside={contextualAside}
+        frameClassName={overviewGridClassName}
+        contentClassName={overviewFrameClassName}
       />
     );
   }
@@ -165,6 +169,8 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       intro={introWithWorkspaceChrome}
       main={publicMain}
       aside={contextualAside}
+      frameClassName={overviewGridClassName}
+      contentClassName={overviewFrameClassName}
     />
   );
 });

@@ -5,32 +5,41 @@ import type { ReactNode } from 'react';
 import { TopProvidersPanel, type TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
 import { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
-import { useIsDesktop } from './useIsDesktop';
 
 type WorkspaceFrameProps = {
   intro?: ReactNode;
   main: ReactNode;
   aside: ReactNode;
+  frameClassName?: string;
+  contentClassName?: string;
 };
 
-export function WorkspaceFrame({ intro, main, aside }: WorkspaceFrameProps) {
-  const isDesktop = useIsDesktop();
+export function WorkspaceFrame({
+  intro,
+  main,
+  aside,
+  frameClassName,
+  contentClassName,
+}: WorkspaceFrameProps) {
+  const desktopAsideClassName = ['stack-md', 'hide-below-desktop'].filter(Boolean).join(' ');
+  const contentWrapperClassName = ['stack-md', contentClassName ?? ''].filter(Boolean).join(' ');
+  const gridClassName = ['requests-grid', intro ? 'requests-grid--equal-cols' : '', frameClassName ?? ''].filter(Boolean).join(' ');
 
   if (intro) {
     return (
       <WorkspaceOverlaySurface intro={intro}>
-        <div className="requests-grid requests-grid--equal-cols">
-          <div className="stack-md">{main}</div>
-          {isDesktop ? <aside className="stack-md hide-mobile">{aside}</aside> : null}
+        <div className={gridClassName}>
+          <div className={contentWrapperClassName}>{main}</div>
+          <aside className={desktopAsideClassName}>{aside}</aside>
         </div>
       </WorkspaceOverlaySurface>
     );
   }
 
   return (
-    <div className="requests-grid">
-      <div className="stack-md">{main}</div>
-      {isDesktop ? <aside className="stack-md hide-mobile">{aside}</aside> : null}
+    <div className={gridClassName}>
+      <div className={contentWrapperClassName}>{main}</div>
+      <aside className={desktopAsideClassName}>{aside}</aside>
     </div>
   );
 }
@@ -64,7 +73,7 @@ export function WorkspaceTopProvidersAside({
 }: WorkspaceTopProvidersAsideProps) {
   if (isLoading) {
     return (
-      <section className="panel hide-mobile top-providers-panel">
+      <section className="panel hide-below-desktop top-providers-panel">
         <div className="panel-header">
           <div className="skeleton is-wide h-5 w-40" />
         </div>
@@ -83,7 +92,7 @@ export function WorkspaceTopProvidersAside({
 
   if (isError) {
     return (
-      <section className="panel hide-mobile top-providers-panel">
+      <section className="panel hide-below-desktop top-providers-panel">
         <div className="panel-header">
           <div className="skeleton is-wide h-5 w-40" />
         </div>

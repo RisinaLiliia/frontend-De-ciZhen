@@ -14,8 +14,10 @@ type WorkspacePublicDemandMapViewProps = {
   surface?: 'panel' | 'embedded';
   panelRef?: React.Ref<HTMLElement>;
   style?: React.CSSProperties;
+  className?: string;
   activeRequestsCount: number;
   activeProvidersCount: number;
+  mapCanvasRef: React.RefObject<HTMLDivElement | null>;
   mapHostRef: React.RefObject<HTMLDivElement | null>;
   topAccessibleCities: Array<{
     id: string;
@@ -33,8 +35,10 @@ export function WorkspacePublicDemandMapView({
   surface = 'panel',
   panelRef,
   style,
+  className,
   activeRequestsCount,
   activeProvidersCount,
+  mapCanvasRef,
   mapHostRef,
   topAccessibleCities,
 }: WorkspacePublicDemandMapViewProps) {
@@ -45,14 +49,19 @@ export function WorkspacePublicDemandMapView({
     <section
       ref={panelRef}
       style={style}
-      className={`${surface === 'panel' ? 'panel ' : ''}workspace-public-demand-map${surface === 'embedded' ? ' workspace-public-demand-map--embedded' : ''}`.trim()}
+      className={[
+        surface === 'panel' ? 'panel' : '',
+        'workspace-public-demand-map',
+        surface === 'embedded' ? 'workspace-public-demand-map--embedded' : '',
+        className ?? '',
+      ].filter(Boolean).join(' ')}
     >
       <header className="workspace-public-demand-map__header workspace-statistics__tile-header">
         <p className="section-title">{t(I18N_KEYS.homePublic.demandMapTitle)}</p>
         <p className="section-subtitle">{t(I18N_KEYS.homePublic.demandMapSubtitle)}</p>
       </header>
 
-      <div className="workspace-public-demand-map__canvas">
+      <div ref={mapCanvasRef} className="workspace-public-demand-map__canvas">
         <div
           ref={mapHostRef}
           className="workspace-public-demand-map__leaflet"

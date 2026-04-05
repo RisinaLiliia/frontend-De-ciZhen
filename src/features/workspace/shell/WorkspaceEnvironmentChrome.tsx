@@ -821,24 +821,20 @@ export function WorkspaceMobileContextSection({
   );
 }
 
-export function WorkspaceContextAside({
+export function WorkspaceContextFocusPanel({
   t,
   locale,
   activePublicSection,
   activeWorkspaceTab,
   className,
-  topSlot,
-  panelStyle,
-  children,
+  panelRef,
 }: {
   t: Translator;
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
   className?: string;
-  topSlot?: React.ReactNode;
-  panelStyle?: React.CSSProperties;
-  children?: React.ReactNode;
+  panelRef?: React.Ref<HTMLElement>;
 }) {
   const model = useWorkspaceSharedContext({
     t,
@@ -902,72 +898,108 @@ export function WorkspaceContextAside({
   }, [isAnalyzingFocus, isFocusOpen]);
 
   return (
+    <section
+      ref={panelRef}
+      className={['panel', 'workspace-context-rail__panel', 'workspace-context-rail__panel--focus', className ?? ''].filter(Boolean).join(' ')}
+    >
+      <span className="workspace-environment__eyebrow">{model.copy.rail.nextStepTitle}</span>
+      <span className="section-subtitle workspace-context-rail__subtitle-placeholder" aria-hidden="true">
+        &nbsp;
+      </span>
+      <WorkspaceDecisionActionCard
+        className="workspace-context-rail__decision"
+        layout="stacked"
+        avatarLabel={statsCopy.insightsAssistantAvatarLabel}
+        name={statsCopy.insightsAssistantName}
+        role={statsCopy.priceRecommendationLabel}
+        description={model.railDescription}
+        actionLabel={focusActionLabel}
+        onActionClick={openFocusRecommendation}
+        actionAriaHasPopup
+      />
+      <WorkspaceDecisionRecommendationModal
+        assistantAvatarLabel={statsCopy.insightsAssistantAvatarLabel}
+        assistantName={statsCopy.insightsAssistantName}
+        assistantRole={statsCopy.priceRecommendationLabel}
+        loadingLabel={focusCopy.loadingLabel}
+        loadingBody={focusCopy.loadingBody}
+        title={focusCopy.title}
+        titleContext={focusContextLabel}
+        summaryLabel={model.title}
+        closeLabel={model.controls.closeLabel}
+        isOpen={isFocusOpen}
+        isLoading={isAnalyzingFocus}
+        onClose={closeFocusRecommendation}
+      >
+        <article className="workspace-decision-modal__content-stack form-stack">
+          <WorkspaceDecisionRecommendationSection
+            badgeLabel={focusCopy.recommendationLabel}
+            badgeTone="info"
+            tone="performance"
+            metric={model.title}
+            title={focusHeroTitle}
+            text={focusModeCopy.heroText}
+            featured
+            className="workspace-decision-modal__hero"
+          />
+          <WorkspaceDecisionRecommendationSection
+            badgeLabel={focusCopy.scopeLabel}
+            badgeTone="info"
+            tone="performance"
+            metric={focusScopeMetric}
+            text={focusScopeText}
+            className="workspace-decision-modal__section"
+          />
+          <WorkspaceDecisionRecommendationSection
+            badgeLabel={focusCopy.actionLabel}
+            badgeTone="success"
+            tone="opportunity"
+            text={focusActionText}
+            className="workspace-decision-modal__section"
+          />
+          <WorkspaceDecisionRecommendationSection
+            badgeLabel={focusCopy.switchLabel}
+            badgeTone="warning"
+            tone="promotion"
+            text={focusModeCopy.switchText}
+            className="workspace-decision-modal__section"
+          />
+        </article>
+      </WorkspaceDecisionRecommendationModal>
+    </section>
+  );
+}
+
+export function WorkspaceContextAside({
+  t,
+  locale,
+  activePublicSection,
+  activeWorkspaceTab,
+  className,
+  topSlot,
+  panelRef,
+  children,
+}: {
+  t: Translator;
+  locale: Locale;
+  activePublicSection: PublicWorkspaceSection | null;
+  activeWorkspaceTab: WorkspaceTab;
+  className?: string;
+  topSlot?: React.ReactNode;
+  panelRef?: React.Ref<HTMLElement>;
+  children?: React.ReactNode;
+}) {
+  return (
     <div className={['workspace-statistics-layout', 'workspace-context-rail', className ?? ''].filter(Boolean).join(' ')}>
       {topSlot}
 
-      <section className="panel workspace-context-rail__panel" style={panelStyle}>
-        <span className="workspace-environment__eyebrow">{model.copy.rail.nextStepTitle}</span>
-        <WorkspaceDecisionActionCard
-          className="workspace-context-rail__decision"
-          layout="stacked"
-          avatarLabel={statsCopy.insightsAssistantAvatarLabel}
-          name={statsCopy.insightsAssistantName}
-          role={statsCopy.priceRecommendationLabel}
-          description={model.railDescription}
-          actionLabel={focusActionLabel}
-          onActionClick={openFocusRecommendation}
-          actionAriaHasPopup
-        />
-        <WorkspaceDecisionRecommendationModal
-          assistantAvatarLabel={statsCopy.insightsAssistantAvatarLabel}
-          assistantName={statsCopy.insightsAssistantName}
-          assistantRole={statsCopy.priceRecommendationLabel}
-          loadingLabel={focusCopy.loadingLabel}
-          loadingBody={focusCopy.loadingBody}
-          title={focusCopy.title}
-          titleContext={focusContextLabel}
-          summaryLabel={model.title}
-          closeLabel={model.controls.closeLabel}
-          isOpen={isFocusOpen}
-          isLoading={isAnalyzingFocus}
-          onClose={closeFocusRecommendation}
-        >
-          <article className="workspace-decision-modal__content-stack form-stack">
-            <WorkspaceDecisionRecommendationSection
-              badgeLabel={focusCopy.recommendationLabel}
-              badgeTone="info"
-              tone="performance"
-              metric={model.title}
-              title={focusHeroTitle}
-              text={focusModeCopy.heroText}
-              featured
-              className="workspace-decision-modal__hero"
-            />
-            <WorkspaceDecisionRecommendationSection
-              badgeLabel={focusCopy.scopeLabel}
-              badgeTone="info"
-              tone="performance"
-              metric={focusScopeMetric}
-              text={focusScopeText}
-              className="workspace-decision-modal__section"
-            />
-            <WorkspaceDecisionRecommendationSection
-              badgeLabel={focusCopy.actionLabel}
-              badgeTone="success"
-              tone="opportunity"
-              text={focusActionText}
-              className="workspace-decision-modal__section"
-            />
-            <WorkspaceDecisionRecommendationSection
-              badgeLabel={focusCopy.switchLabel}
-              badgeTone="warning"
-              tone="promotion"
-              text={focusModeCopy.switchText}
-              className="workspace-decision-modal__section"
-            />
-          </article>
-        </WorkspaceDecisionRecommendationModal>
-      </section>
+      <WorkspaceContextFocusPanel
+        t={t}
+        locale={locale}
+        activePublicSection={activePublicSection}
+        activeWorkspaceTab={activeWorkspaceTab}
+        panelRef={panelRef}
+      />
 
       {children}
     </div>

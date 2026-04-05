@@ -1,9 +1,16 @@
 /* requests-shell-statistics-dashboard-demand-cities.css */
 
 @layer components {
+  .workspace-statistics__demand-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-items: start;
+  }
+
   .workspace-statistics-demand {
     display: grid;
     gap: var(--space-2);
+    align-content: start;
   }
 
   .workspace-statistics-demand__row {
@@ -91,6 +98,10 @@
     gap: var(--space-2);
     justify-content: center;
     margin-top: var(--space-2);
+  }
+
+  .workspace-statistics__demand-pagination {
+    align-self: end;
   }
 
   .workspace-statistics-city-list {
