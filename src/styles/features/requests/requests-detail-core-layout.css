@@ -62,6 +62,10 @@
     gap: var(--space-1-5);
   }
 
+  .request-detail__eyebrow {
+    margin: 0;
+  }
+
   .request-detail__badge {
     align-self: flex-start;
   }

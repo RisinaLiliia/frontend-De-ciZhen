@@ -173,6 +173,7 @@ export function RequestDetailsPageView({
         <section className="panel request-detail__panel">
           <RequestDetailHeader
             title={isOwnerEditMode ? ownerTitle || viewModel.title : viewModel.title}
+            eyebrowLabel={viewModel.categoryLabel}
             priceLabel={
               isOwnerEditMode
                 ? ownerPrice.trim()

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 
 type RequestDetailHeaderProps = {
   title: string;
+  eyebrowLabel?: string;
   priceLabel: string;
   pricePrefixLabel?: string;
   priceSuffixLabel?: string;
@@ -15,6 +16,7 @@ type RequestDetailHeaderProps = {
 
 export function RequestDetailHeader({
   title,
+  eyebrowLabel,
   priceLabel,
   pricePrefixLabel,
   priceSuffixLabel,
@@ -32,6 +34,7 @@ export function RequestDetailHeader({
             {badgeLabel ? <span className="badge request-detail__badge">{badgeLabel}</span> : null}
             {statusBadge}
           </div>
+          {eyebrowLabel ? <p className="request-category request-detail__eyebrow">{eyebrowLabel}</p> : null}
           {title ? <h1 className="request-detail__title">{title}</h1> : null}
         </div>
         <div className="request-detail__price">
