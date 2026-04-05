@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('workspace public map renders full map with overlay stats and active markers', async ({ page }) => {
+test('workspace public map renders full map with footer stats and active markers', async ({ page }) => {
   await page.route('**/api/**', async (route) => {
     const url = new URL(route.request().url());
     const path = url.pathname;
@@ -108,10 +108,10 @@ test('workspace public map renders full map with overlay stats and active marker
   const map = page.locator('.workspace-public-demand-map__leaflet');
   await expect(map).toBeVisible();
 
-  const overlay = page.locator('.workspace-public-demand-map__meta--overlay');
-  await expect(overlay).toBeVisible();
-  await expect(overlay).toContainText('10');
-  await expect(overlay).toContainText('44');
+  const footer = page.locator('.workspace-public-demand-map__meta--footer');
+  await expect(footer).toBeVisible();
+  await expect(footer).toContainText('10');
+  await expect(footer).toContainText('44');
 
   const markers = page.locator('.workspace-demand-marker');
   await expect(markers).toHaveCount(3);

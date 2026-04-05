@@ -36,7 +36,7 @@ export function StatisticsDemandPanel({
   className?: string;
 }) {
   return (
-    <section className={['panel', 'requests-stats-chart', className].filter(Boolean).join(' ')}>
+    <section className={['panel', 'requests-stats-chart', 'workspace-statistics__demand-panel', className].filter(Boolean).join(' ')}>
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.demandTitle}</p>
         <p className="section-subtitle">{subtitle ?? copy.demandSubtitle}</p>
@@ -113,7 +113,7 @@ export function StatisticsDemandPanel({
   );
 }
 
-const DEFAULT_DEMAND_PAGE_SIZE = 5;
+const DEFAULT_DEMAND_PAGE_SIZE = 6;
 
 function resolveDemandSubtitle(model: Pick<WorkspaceStatisticsModel, 'copy' | 'context' | 'sectionMeta'>) {
   if (model.sectionMeta.demandSubtitle) return model.sectionMeta.demandSubtitle;

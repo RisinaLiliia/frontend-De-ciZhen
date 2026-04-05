@@ -16,6 +16,12 @@
     gap: var(--layout-section-gap);
   }
 
+  @media (max-width: 1023px) {
+    .hide-below-desktop {
+      display: none !important;
+    }
+  }
+
   @media (max-width: 768px) {
     .container-mobile {
       gap: var(--space-6);

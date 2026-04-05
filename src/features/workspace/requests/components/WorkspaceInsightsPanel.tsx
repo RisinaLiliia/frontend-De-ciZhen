@@ -84,9 +84,11 @@ export function WorkspaceInsightsPanel({
   const secondaryItems = items.slice(1);
   const hasHeading = showHeader && Boolean(title?.trim() || subtitle?.trim());
   const panelLabel = title?.trim() || assistantRole || emptyLabel;
+  const itemsCountClassName = items.length > 0 ? `workspace-insights-panel--items-${Math.min(items.length, 4)}` : '';
   const rootClassName = [
     hasHeading || showHeader ? 'panel' : 'panel workspace-statistics-ki-tokens',
     'workspace-insights-panel',
+    itemsCountClassName,
     showHeader && hasHeading ? '' : 'workspace-insights-panel--compact-head',
     className ?? '',
   ].filter(Boolean).join(' ');

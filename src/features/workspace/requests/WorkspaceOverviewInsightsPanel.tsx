@@ -71,7 +71,7 @@ export function WorkspaceOverviewInsightsPanel({
       assistantDescription={assistantDescription}
       featuredLabel={statisticsModel.copy.insightsFeaturedLabel}
       items={insights}
-      className="workspace-statistics-layout workspace-overview__panel"
+      className="workspace-statistics-layout workspace-overview__panel workspace-overview__rail-panel--insights"
       panelRef={panelRef}
       style={style}
       showHeader={false}

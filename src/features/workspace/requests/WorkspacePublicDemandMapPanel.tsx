@@ -21,6 +21,7 @@ type WorkspacePublicDemandMapPanelProps = {
   surface?: 'panel' | 'embedded';
   panelRef?: React.Ref<HTMLElement>;
   style?: React.CSSProperties;
+  className?: string;
   onSelectCity?: (cityId: string) => void;
 };
 
@@ -34,6 +35,7 @@ export function WorkspacePublicDemandMapPanel({
   surface = 'panel',
   panelRef,
   style,
+  className,
   onSelectCity,
 }: WorkspacePublicDemandMapPanelProps) {
   const formatNumber = React.useMemo(
@@ -51,7 +53,7 @@ export function WorkspacePublicDemandMapPanel({
     cityActivity?.totalActiveRequests ??
     visibleCityActivity.reduce((sum, city) => sum + city.count, 0);
 
-  const { mapHostRef } = useWorkspacePublicDemandLeafletMap({
+  const { mapCanvasRef, mapHostRef } = useWorkspacePublicDemandLeafletMap({
     cities: visibleCityActivity,
     hasCoordinates,
     formatNumber,
@@ -69,8 +71,10 @@ export function WorkspacePublicDemandMapPanel({
       surface={surface}
       panelRef={panelRef}
       style={style}
+      className={className}
       activeRequestsCount={activeRequestsCount}
       activeProvidersCount={activeProvidersCount}
+      mapCanvasRef={mapCanvasRef}
       mapHostRef={mapHostRef}
       topAccessibleCities={topAccessibleCities}
     />

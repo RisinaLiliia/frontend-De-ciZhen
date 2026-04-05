@@ -387,6 +387,17 @@
     gap: var(--space-3);
   }
 
+  .workspace-context-rail__subtitle-placeholder {
+    display: -webkit-box;
+    min-height: calc(2 * 1.35em);
+    margin: 0;
+    visibility: hidden;
+    pointer-events: none;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
   html.dark .workspace-environment__shell-hint,
   html.dark .workspace-context-brief__badge {
     border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);

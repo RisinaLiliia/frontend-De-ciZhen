@@ -117,7 +117,7 @@ export function WorkspaceExploreRail({
     && Boolean(publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError);
 
   return (
-    <aside className="stack-md hide-mobile">
+    <aside className="stack-md hide-below-desktop">
       {isSidebarReady ? (
         <>
           {activeSection === 'reviews' ? <WorkspacePlatformReviewsRail t={t} /> : null}

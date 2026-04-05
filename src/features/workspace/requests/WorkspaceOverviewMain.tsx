@@ -31,8 +31,10 @@ type WorkspaceOverviewMainProps = {
   currentSearch: string;
   statisticsModel: WorkspaceStatisticsModel;
   heroRef?: React.Ref<HTMLDivElement>;
-  gridRef?: React.Ref<HTMLDivElement>;
-  actionsRef?: React.Ref<HTMLElement>;
+  offersPanelRef?: React.Ref<HTMLElement>;
+  actionsStyle?: React.CSSProperties;
+  mobileRailTopSlot?: React.ReactNode;
+  mobileRailBottomSlot?: React.ReactNode;
   primaryAction: {
     href: string;
     label: string;
@@ -309,8 +311,10 @@ export function WorkspaceOverviewMain({
   currentSearch,
   statisticsModel,
   heroRef,
-  gridRef,
-  actionsRef,
+  offersPanelRef,
+  actionsStyle,
+  mobileRailTopSlot,
+  mobileRailBottomSlot,
   primaryAction,
   onPrimaryActionClick,
   activeOffersListProps,
@@ -399,8 +403,14 @@ export function WorkspaceOverviewMain({
         />
       </div>
 
-      <div ref={gridRef} className="workspace-overview__grid">
-        <section className="panel workspace-overview__panel">
+      {mobileRailTopSlot ? (
+        <div className="workspace-overview__mobile-rail workspace-overview__mobile-rail--top">
+          {mobileRailTopSlot}
+        </div>
+      ) : null}
+
+      <div className="workspace-overview__grid">
+        <section className="panel workspace-overview__panel workspace-overview__panel--providers">
           <div className="panel-header">
             <div className="section-heading workspace-statistics__tile-header">
               <p className="section-title">{topProvidersTitle}</p>
@@ -417,7 +427,7 @@ export function WorkspaceOverviewMain({
           />
         </section>
 
-        <section className="panel workspace-overview__panel">
+        <section ref={offersPanelRef} className="panel workspace-overview__panel workspace-overview__panel--offers">
           <div className="panel-header">
             <div className="section-heading workspace-statistics__tile-header">
               <p className="section-title">{copy.offersTitle}</p>
@@ -434,7 +444,10 @@ export function WorkspaceOverviewMain({
         </section>
       </div>
 
-      <section ref={actionsRef} className="panel workspace-overview__panel workspace-overview__panel--actions">
+      <section
+        className="panel workspace-overview__panel workspace-overview__panel--actions"
+        style={actionsStyle}
+      >
         <div className="panel-header">
           <div className="section-heading workspace-statistics__tile-header">
             <p className="section-title">{copy.quickActionsTitle}</p>
@@ -452,6 +465,12 @@ export function WorkspaceOverviewMain({
           </div>
         </div>
       </section>
+
+      {mobileRailBottomSlot ? (
+        <div className="workspace-overview__mobile-rail workspace-overview__mobile-rail--bottom">
+          {mobileRailBottomSlot}
+        </div>
+      ) : null}
     </section>
   );
 }
