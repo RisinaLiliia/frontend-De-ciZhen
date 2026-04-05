@@ -257,7 +257,7 @@ export function UserHeaderCard({
       )}
       {aboutRow}
       {!isInlineProofLayout ? proofRow : null}
-      {!isInlineProofLayout && showRating ? (
+      {!isInlineProofLayout && showRating && !adaptiveDesktop ? (
         <div className="provider-rating-stack">
           {ratingNode}
         </div>

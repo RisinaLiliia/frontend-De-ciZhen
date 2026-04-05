@@ -63,7 +63,6 @@ export function PublicContent({
 }: Props) {
   const [listDensity, setListDensity] = React.useState<RequestsListDensity>(initialListDensity ?? DEFAULT_REQUESTS_LIST_DENSITY);
   const prevInitialDensityRef = React.useRef<RequestsListDensity | undefined>(initialListDensity);
-  const mountedRef = React.useRef(false);
 
   React.useEffect(() => {
     if (initialListDensity == null) return;
@@ -74,14 +73,13 @@ export function PublicContent({
     }
   }, [initialListDensity]);
 
-  React.useEffect(() => {
-    if (!mountedRef.current) {
-      mountedRef.current = true;
-      return;
-    }
-
-    onListDensityChange?.(listDensity);
-  }, [listDensity, onListDensityChange]);
+  const handleListDensityChange = React.useCallback((nextDensity: RequestsListDensity) => {
+    setListDensity((currentDensity) => {
+      if (currentDensity === nextDensity) return currentDensity;
+      return nextDensity;
+    });
+    onListDensityChange?.(nextDensity);
+  }, [onListDensityChange]);
 
   const topSlot = showFilterControls ? (
     <RequestsFilters
@@ -92,7 +90,7 @@ export function PublicContent({
       onPrevPage={onPrevPage}
       onNextPage={onNextPage}
       listDensity={listDensity}
-      onListDensityChange={setListDensity}
+      onListDensityChange={handleListDensityChange}
     />
   ) : (
     <RequestsResultsSummary
@@ -105,7 +103,7 @@ export function PublicContent({
       listDensity={listDensity}
       onPrevPage={onPrevPage}
       onNextPage={onNextPage}
-      onListDensityChange={setListDensity}
+      onListDensityChange={handleListDensityChange}
     />
   );
 

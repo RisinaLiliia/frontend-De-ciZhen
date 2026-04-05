@@ -36,22 +36,68 @@ export function useRequestsExplorerFilters({ t, locale }: Args) {
     subcategoryKey,
     cityId,
     sortBy,
-    page,
+    page: queryPage,
     limit,
     filter,
     filteredServices,
-    onCategoryChange,
-    onSubcategoryChange,
-    onCityChange,
-    onSortChange,
-    onReset,
-    setPage,
-    setLimit,
+    onCategoryChange: onCategoryChangeQuery,
+    onSubcategoryChange: onSubcategoryChangeQuery,
+    onCityChange: onCityChangeQuery,
+    onSortChange: onSortChangeQuery,
+    onReset: onResetQuery,
+    setLimit: setLimitQuery,
     isPending,
   } = useRequestsFilters({
     services,
     defaultSort: 'date_desc',
   });
+  const [page, setPageState] = React.useState(queryPage);
+  const pageScopeKey = React.useMemo(
+    () => JSON.stringify([cityId, categoryKey, subcategoryKey, sortBy, limit]),
+    [categoryKey, cityId, limit, sortBy, subcategoryKey],
+  );
+  const prevPageScopeKeyRef = React.useRef<string | null>(null);
+
+  React.useEffect(() => {
+    if (prevPageScopeKeyRef.current === pageScopeKey) return;
+    prevPageScopeKeyRef.current = pageScopeKey;
+    setPageState(queryPage);
+  }, [pageScopeKey, queryPage]);
+
+  const setPage = React.useCallback((nextPage: number) => {
+    const normalized = Math.max(1, Math.trunc(nextPage));
+    setPageState((current) => (current === normalized ? current : normalized));
+  }, []);
+
+  const onCategoryChange = React.useCallback((value: string) => {
+    setPageState(1);
+    onCategoryChangeQuery(value);
+  }, [onCategoryChangeQuery]);
+
+  const onSubcategoryChange = React.useCallback((value: string) => {
+    setPageState(1);
+    onSubcategoryChangeQuery(value);
+  }, [onSubcategoryChangeQuery]);
+
+  const onCityChange = React.useCallback((value: string) => {
+    setPageState(1);
+    onCityChangeQuery(value);
+  }, [onCityChangeQuery]);
+
+  const onSortChange = React.useCallback((value: string) => {
+    setPageState(1);
+    onSortChangeQuery(value);
+  }, [onSortChangeQuery]);
+
+  const onReset = React.useCallback(() => {
+    setPageState(1);
+    onResetQuery();
+  }, [onResetQuery]);
+
+  const setLimit = React.useCallback((nextLimit: number) => {
+    setPageState(1);
+    setLimitQuery(nextLimit);
+  }, [setLimitQuery]);
   const { data: cities = [] } = useCities('DE', {
     ids: cityId !== ALL_OPTION_KEY ? [cityId] : [],
     enabled: cityId !== ALL_OPTION_KEY,
@@ -118,7 +164,10 @@ export function useRequestsExplorerFilters({ t, locale }: Args) {
     sortBy,
     page,
     limit,
-    filter,
+    filter: {
+      ...filter,
+      page,
+    },
     setPage,
     setLimit,
     isPending,

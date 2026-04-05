@@ -6,6 +6,7 @@ import { buildRequestImageList } from '@/lib/requests/images';
 
 export type RequestDetailsViewModel = {
   title: string;
+  categoryLabel: string;
   description: string;
   tagList: string[];
   priceLabel: string;
@@ -90,6 +91,7 @@ export function buildRequestDetailsViewModel({
 
   return {
     title,
+    categoryLabel,
     description,
     tagList,
     priceLabel,

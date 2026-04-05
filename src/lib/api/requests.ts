@@ -47,7 +47,9 @@ export function buildPublicRequestsQuery(filter: PublicRequestsFilter) {
   const page = Math.max(1, Math.trunc(filter.page ?? 1));
   const limit = Math.min(100, Math.max(1, Math.trunc(filter.limit ?? REQUESTS_PAGE_SIZE)));
   const offset =
-    filter.offset == null ? null : Math.max(0, Math.trunc(filter.offset));
+    filter.offset == null
+      ? (page - 1) * limit
+      : Math.max(0, Math.trunc(filter.offset));
   const qs = new URLSearchParams();
   if (filter.cityId) qs.set('cityId', filter.cityId);
   if (filter.categoryKey) qs.set('categoryKey', filter.categoryKey);
@@ -59,11 +61,8 @@ export function buildPublicRequestsQuery(filter: PublicRequestsFilter) {
   if (filter.priceMin != null) qs.set('priceMin', String(filter.priceMin));
   if (filter.priceMax != null) qs.set('priceMax', String(filter.priceMax));
   qs.set('sort', filter.sort ?? 'date_desc');
-  if (offset != null) {
-    qs.set('offset', String(offset));
-  } else {
-    qs.set('page', String(page));
-  }
+  qs.set('page', String(page));
+  qs.set('offset', String(offset));
   qs.set('limit', String(limit));
   return qs.toString();
 }

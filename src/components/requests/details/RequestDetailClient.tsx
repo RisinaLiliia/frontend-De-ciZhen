@@ -39,6 +39,7 @@ export function RequestDetailClient({
           rating={ratingText}
           reviewsCount={ratingCount}
           reviewsLabel={reviewsLabel}
+          className="request-detail__client-header"
         />
       </div>
     </div>

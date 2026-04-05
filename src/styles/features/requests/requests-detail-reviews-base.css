@@ -13,6 +13,56 @@
     border-top: 0;
   }
 
+  .request-detail__client-header .user-header-card--adaptive {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .request-detail__client-header .user-header-card__identity {
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: center;
+  }
+
+  .request-detail__client-header .provider-main {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .request-detail__client-header .provider-main__eyebrow,
+  .request-detail__client-header .provider-main__city,
+  .request-detail__client-header .provider-main__metrics,
+  .request-detail__client-header .provider-main__about,
+  .request-detail__client-header .provider-main__proof,
+  .request-detail__client-header .provider-main__footer-row {
+    display: none;
+    min-height: 0;
+  }
+
+  .request-detail__client-header .provider-name {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .request-detail__client-header .user-header-card__rating {
+    min-width: 112px;
+    justify-items: end;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .request-detail__client-header .provider-rating-summary {
+    gap: 0;
+  }
+
+  .request-detail__client-header .provider-rating-summary .rating-summary__line {
+    justify-content: flex-end;
+  }
+
   .request-detail--provider .request-detail__client {
     margin-bottom: var(--space-2);
   }
