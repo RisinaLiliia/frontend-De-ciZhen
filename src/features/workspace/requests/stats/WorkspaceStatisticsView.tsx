@@ -14,7 +14,7 @@ import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '../workspace.constan
 import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
 import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { buildDecisionPlan, buildPersonalizedDecisionPlan } from './statisticsDecisionEngine.utils';
-import { buildFunnelVisualRows } from './statisticsFunnel.utils';
+import { buildEmptyFunnelItems, buildFunnelVisualRows, type WorkspaceStatisticsFunnelVisualRow } from './statisticsFunnel.utils';
 import { selectOpportunityAnalysisItem } from './sections/opportunity/opportunity.utils';
 import {
   StatisticsActionPlanPanel,
@@ -52,6 +52,7 @@ export function WorkspaceStatisticsView({
   });
   const funnelContainerRef = React.useRef<HTMLOListElement | null>(null);
   const statisticsPanelRef = React.useRef<HTMLElement | null>(null);
+  const mapPanelRef = React.useRef<HTMLElement | null>(null);
   const profilePanelRef = React.useRef<HTMLElement | null>(null);
   const citiesPanelRef = React.useRef<HTMLElement | null>(null);
   const insightsPanelRef = React.useRef<HTMLElement | null>(null);
@@ -204,6 +205,7 @@ export function WorkspaceStatisticsView({
   });
   const insightsPanelMinHeight = useSyncedPanelMinHeight({
     sourceRef: citiesPanelRef,
+    targetRef: insightsPanelRef,
     mode: 'sourceHeight',
     watchKey: `${cityListRows.length}-${cityListPage}-${insights.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
   });
@@ -228,6 +230,12 @@ export function WorkspaceStatisticsView({
   const showDemandMapPanel = !isPersonalizedMode && Boolean(
     publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError,
   );
+  const mapPanelMinHeight = useSyncedPanelMinHeight({
+    sourceRef: statisticsPanelRef,
+    targetRef: mapPanelRef,
+    mode: 'sourceHeight',
+    watchKey: `${showDemandMapPanel ? 1 : 0}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
+  });
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -256,6 +264,16 @@ export function WorkspaceStatisticsView({
   const funnelVisualRows = React.useMemo(
     () => buildFunnelVisualRows({ funnel, copy, isNarrowViewport, funnelContainerWidth, mode }),
     [copy, funnel, funnelContainerWidth, isNarrowViewport, mode],
+  );
+  const emptyFunnelVisualRows = React.useMemo(
+    () => buildFunnelVisualRows({
+      funnel: buildEmptyFunnelItems(copy),
+      copy,
+      isNarrowViewport,
+      funnelContainerWidth,
+      mode,
+    }),
+    [copy, funnelContainerWidth, isNarrowViewport, mode],
   );
   const funnelComparisonByKey = React.useMemo(() => {
     const next = new Map<string, NonNullable<typeof funnelComparison>['stages'][number]>();
@@ -519,7 +537,7 @@ export function WorkspaceStatisticsView({
         )}
       </section>
 
-      <aside className="stack-md">
+      <aside className="stack-md workspace-statistics__rail">
         {showDemandMapPanel ? (
           <div className="workspace-statistics__rail-map">
             <WorkspacePublicDemandMapPanel
@@ -529,6 +547,9 @@ export function WorkspaceStatisticsView({
               summary={publicSummary}
               isLoading={isPublicSummaryLoading}
               isError={isPublicSummaryError}
+              panelRef={mapPanelRef}
+              style={mapPanelMinHeight ? { minHeight: `${mapPanelMinHeight}px`, height: `${mapPanelMinHeight}px` } : undefined}
+              className="workspace-statistics__rail-panel workspace-statistics__rail-panel--map"
             />
           </div>
         ) : null}
@@ -564,9 +585,22 @@ export function WorkspaceStatisticsView({
           ) : isError ? (
             <p className="workspace-statistics__empty">{copy.funnelError}</p>
           ) : !hasFunnelData ? (
-            <div className="workspace-statistics-funnel workspace-statistics-funnel--empty">
-              <p className="workspace-statistics-funnel__empty-title">{copy.funnelEmptyTitle}</p>
-              <p className="workspace-statistics-funnel__empty-body">{copy.funnelEmptyBody}</p>
+            <div className="workspace-statistics-funnel workspace-statistics-funnel--empty-visual">
+              <StatisticsFunnelStack
+                rows={emptyFunnelVisualRows}
+                copy={copy}
+                isPersonalizedMode={isPersonalizedMode}
+                funnelContainerRef={funnelContainerRef}
+                isPlaceholder
+              />
+              <div className="workspace-statistics-funnel__empty-note">
+                <p className="workspace-statistics-funnel__empty-title">{copy.funnelEmptyTitle}</p>
+                <p className="workspace-statistics-funnel__empty-body">{copy.funnelEmptyBody}</p>
+              </div>
+              <div className="workspace-statistics-funnel__conversion workspace-statistics-funnel__conversion--empty">
+                <span>{copy.conversionLabel}</span>
+                <strong>—</strong>
+              </div>
             </div>
           ) : (
             <div className={`workspace-statistics-funnel${isPersonalizedMode ? ' workspace-statistics-funnel--personalized' : ''}`.trim()} aria-label={copy.profileTitle}>
@@ -582,74 +616,12 @@ export function WorkspaceStatisticsView({
                   </div>
                 </div>
               ) : null}
-              <ol className="workspace-statistics-funnel__stack" ref={funnelContainerRef}>
-                {funnelVisualRows.map((step, index) => (
-                  (() => {
-                    const comparison = !step.isCurrency ? (step.compare ?? null) : null;
-                    const layerHintValue = !isPersonalizedMode
-                      ? step.railValue
-                      : (comparison?.marketRate ?? undefined);
-                    const layerHintLabel = !isPersonalizedMode
-                      ? step.railLabel
-                      : (comparison?.marketRate ? step.railLabel : undefined);
-                    const comparisonLine = comparison
-                      ? [
-                        `${copy.comparisonUserLabel} ${comparison.userCount}`,
-                        comparison.userRate,
-                        comparison.gapRate,
-                      ].filter(Boolean).join(' · ')
-                      : null;
-
-                    return (
-                      <li
-                        key={`${step.key}-${index}`}
-                        className={`workspace-statistics-funnel__layer is-tone-${Math.min(index + 1, 6)}${step.isTall ? ' is-tall' : ''}`.trim()}
-                        style={{
-                          ['--funnel-top-width' as string]: `${step.topWidthPercent}%`,
-                          ['--funnel-bottom-width' as string]: `${step.bottomWidthPercent}%`,
-                          ['--funnel-layer-index' as string]: `${index}`,
-                        } as React.CSSProperties}
-                        aria-label={
-                          isPersonalizedMode && comparison
-                            ? [
-                              `${step.fullLabel}: ${copy.comparisonMarketLabel} ${step.value}`,
-                              `${copy.comparisonUserLabel} ${comparison.userCount}`,
-                              comparison.userRate ? `${copy.comparisonUserLabel} ${comparison.userRate}` : null,
-                              layerHintLabel && layerHintValue
-                                ? `${layerHintLabel} ${layerHintValue}`
-                                : null,
-                              comparison.gapRate
-                                ? `${copy.comparisonGapLabel} ${comparison.gapRate}`
-                                : null,
-                            ].filter(Boolean).join(', ')
-                            : `${step.fullLabel}: ${step.value}${layerHintValue ? `, ${layerHintLabel ?? ''} ${step.railValue ?? ''}` : ''}`
-                        }
-                        title={step.isCompactLabel ? step.fullLabel : undefined}
-                      >
-                        <div className="workspace-statistics-funnel__shape" aria-hidden="true" />
-                        <div className="workspace-statistics-funnel__layer-content">
-                          <span className="workspace-statistics-funnel__layer-label">{step.displayLabel}</span>
-                          <strong className="workspace-statistics-funnel__layer-value">{step.value}</strong>
-                        </div>
-                        {layerHintLabel || layerHintValue ? (
-                          <div className="workspace-statistics-funnel__layer-hint">
-                            <div className="workspace-statistics-funnel__layer-hint-main">
-                              {layerHintLabel ? <span className="workspace-statistics-funnel__layer-hint-label">{layerHintLabel}</span> : null}
-                              <span className="workspace-statistics-funnel__layer-hint-line" aria-hidden="true" />
-                              {layerHintValue ? <strong className="workspace-statistics-funnel__layer-hint-value">{layerHintValue}</strong> : null}
-                            </div>
-                          </div>
-                        ) : null}
-                        {isPersonalizedMode && comparisonLine ? (
-                          <div className={`workspace-statistics-funnel__layer-hint-compare${comparison?.isLargestGap ? ' is-highlighted' : ''}${comparison?.isLargestDropoff ? ' is-dropoff' : ''}`.trim()}>
-                            {comparisonLine}
-                          </div>
-                        ) : null}
-                      </li>
-                    );
-                  })()
-                ))}
-              </ol>
+              <StatisticsFunnelStack
+                rows={funnelVisualRows}
+                copy={copy}
+                isPersonalizedMode={isPersonalizedMode}
+                funnelContainerRef={funnelContainerRef}
+              />
               <p className="workspace-statistics-funnel__summary">{funnelSummary}</p>
               {personalizedProfileGap ? (
                 <div className={`workspace-statistics-funnel__gap is-${personalizedProfileGap.tone}`.trim()}>
@@ -741,6 +713,87 @@ export function WorkspaceStatisticsView({
         )}
       </aside>
     </div>
+  );
+}
+
+function StatisticsFunnelStack({
+  rows,
+  copy,
+  isPersonalizedMode,
+  funnelContainerRef,
+  isPlaceholder = false,
+}: {
+  rows: WorkspaceStatisticsFunnelVisualRow[];
+  copy: WorkspaceStatisticsModel['copy'];
+  isPersonalizedMode: boolean;
+  funnelContainerRef?: React.RefObject<HTMLOListElement | null>;
+  isPlaceholder?: boolean;
+}) {
+  return (
+    <ol
+      className={`workspace-statistics-funnel__stack${isPlaceholder ? ' workspace-statistics-funnel__stack--placeholder' : ''}`.trim()}
+      ref={funnelContainerRef}
+    >
+      {rows.map((step, index) => {
+        const comparison = !step.isCurrency ? (step.compare ?? null) : null;
+        const layerHintValue = !isPersonalizedMode
+          ? step.railValue
+          : (comparison?.marketRate ?? undefined);
+        const layerHintLabel = !isPersonalizedMode
+          ? step.railLabel
+          : (comparison?.marketRate ? step.railLabel : undefined);
+        const comparisonLine = comparison
+          ? [
+            `${copy.comparisonUserLabel} ${comparison.userCount}`,
+            comparison.userRate,
+            comparison.gapRate,
+          ].filter(Boolean).join(' · ')
+          : null;
+        const ariaLabel = isPersonalizedMode && comparison
+          ? [
+            `${step.fullLabel}: ${copy.comparisonMarketLabel} ${step.value}`,
+            `${copy.comparisonUserLabel} ${comparison.userCount}`,
+            comparison.userRate ? `${copy.comparisonUserLabel} ${comparison.userRate}` : null,
+            layerHintLabel && layerHintValue ? `${layerHintLabel} ${layerHintValue}` : null,
+            comparison.gapRate ? `${copy.comparisonGapLabel} ${comparison.gapRate}` : null,
+          ].filter(Boolean).join(', ')
+          : `${step.fullLabel}: ${step.value}${layerHintValue ? `, ${layerHintLabel ?? ''} ${step.railValue ?? ''}` : ''}`;
+
+        return (
+          <li
+            key={`${step.key}-${index}`}
+            className={`workspace-statistics-funnel__layer is-tone-${Math.min(index + 1, 6)}${step.isTall ? ' is-tall' : ''}${isPlaceholder ? ' is-placeholder' : ''}`.trim()}
+            style={{
+              ['--funnel-top-width' as string]: `${step.topWidthPercent}%`,
+              ['--funnel-bottom-width' as string]: `${step.bottomWidthPercent}%`,
+              ['--funnel-layer-index' as string]: `${index}`,
+            } as React.CSSProperties}
+            aria-label={ariaLabel}
+            title={step.isCompactLabel ? step.fullLabel : undefined}
+          >
+            <div className="workspace-statistics-funnel__shape" aria-hidden="true" />
+            <div className="workspace-statistics-funnel__layer-content">
+              <span className="workspace-statistics-funnel__layer-label">{step.displayLabel}</span>
+              <strong className="workspace-statistics-funnel__layer-value">{step.value}</strong>
+            </div>
+            {layerHintLabel || layerHintValue ? (
+              <div className="workspace-statistics-funnel__layer-hint">
+                <div className="workspace-statistics-funnel__layer-hint-main">
+                  {layerHintLabel ? <span className="workspace-statistics-funnel__layer-hint-label">{layerHintLabel}</span> : null}
+                  <span className="workspace-statistics-funnel__layer-hint-line" aria-hidden="true" />
+                  {layerHintValue ? <strong className="workspace-statistics-funnel__layer-hint-value">{layerHintValue}</strong> : null}
+                </div>
+              </div>
+            ) : null}
+            {isPersonalizedMode && comparisonLine ? (
+              <div className={`workspace-statistics-funnel__layer-hint-compare${comparison?.isLargestGap ? ' is-highlighted' : ''}${comparison?.isLargestDropoff ? ' is-dropoff' : ''}`.trim()}>
+                {comparisonLine}
+              </div>
+            ) : null}
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 

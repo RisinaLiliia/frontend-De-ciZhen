@@ -26,6 +26,60 @@ export function getCompactFunnelLabel(
   return copy.funnelRequestsCompactLabel;
 }
 
+export function buildEmptyFunnelItems(copy: WorkspaceStatisticsCopy): WorkspaceStatisticsFunnelItemView[] {
+  return [
+    {
+      key: 'requests',
+      label: copy.funnelRequestsLabel,
+      count: 0,
+      value: '—',
+      widthPercent: 100,
+      rateFromPreviousPercent: null,
+    },
+    {
+      key: 'offers',
+      label: copy.funnelOffersLabel,
+      count: 0,
+      value: '—',
+      widthPercent: 86,
+      rateFromPreviousPercent: null,
+    },
+    {
+      key: 'confirmed',
+      label: copy.funnelConfirmedLabel,
+      count: 0,
+      value: '—',
+      widthPercent: 74,
+      rateFromPreviousPercent: null,
+    },
+    {
+      key: 'closed',
+      label: copy.funnelClosedLabel,
+      count: 0,
+      value: '—',
+      widthPercent: 62,
+      rateFromPreviousPercent: null,
+    },
+    {
+      key: 'completed',
+      label: copy.funnelCompletedLabel,
+      count: 0,
+      value: '—',
+      widthPercent: 52,
+      rateFromPreviousPercent: null,
+    },
+    {
+      key: 'profit',
+      label: copy.funnelProfitLabel,
+      count: 0,
+      value: '—',
+      widthPercent: 52,
+      rateFromPreviousPercent: null,
+      isCurrency: true,
+    },
+  ];
+}
+
 export function buildFunnelVisualRows(params: {
   funnel: WorkspaceStatisticsFunnelItemView[];
   copy: WorkspaceStatisticsCopy;

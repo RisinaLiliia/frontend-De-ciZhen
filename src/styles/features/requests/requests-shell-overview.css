@@ -206,7 +206,7 @@
     align-content: start;
   }
 
-  .workspace-context-rail--overview .workspace-insights-panel {
+  .workspace-context-rail--overview .workspace-insights-panel--rail-balanced {
     --workspace-insights-panel-gap: var(--workspace-overview-panel-gap);
     --workspace-insights-list-gap: var(--workspace-overview-content-gap);
     --workspace-insights-header-gap: var(--workspace-overview-content-gap);
@@ -225,40 +225,16 @@
     --workspace-insight-badge-height: 28px;
     --workspace-insight-badge-pad-inline: 12px;
     --workspace-insight-badge-font-size: 12px;
+    --workspace-insights-balanced-head-min-height: var(--workspace-overview-insights-head-min-height);
+    --workspace-insights-balanced-title-lines: var(--workspace-overview-insights-title-lines);
+    --workspace-insights-balanced-text-lines: var(--workspace-overview-insights-text-lines);
+    --workspace-insights-balanced-evidence-lines: var(--workspace-overview-insights-evidence-lines);
   }
 
   .workspace-context-rail--overview .workspace-overview__rail-panel--map,
   .workspace-context-rail--overview .workspace-overview__rail-panel--insights,
   .workspace-context-rail--overview .workspace-context-rail__panel--focus {
     min-width: 0;
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel.workspace-insights-panel--compact-head .workspace-statistics-ki__head {
-    min-height: var(--workspace-overview-insights-head-min-height);
-    align-items: start;
-    align-content: start;
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel.workspace-insights-panel--items-2 {
-    --workspace-overview-insights-head-min-height: calc(var(--workspace-statistics-section-header-min-h) + var(--space-5));
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel.workspace-insights-panel--items-4 {
-    --workspace-insight-card-pad: 14px;
-    --workspace-insight-card-pad-featured: 15px;
-    --workspace-insight-title-size: 15px;
-    --workspace-insight-copy-size: 11px;
-    --workspace-insight-action-size: 11px;
-    --workspace-overview-insights-stack-gap: var(--space-1-5);
-    --workspace-overview-insights-text-lines: 2;
-    --workspace-overview-insights-evidence-lines: 1;
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel {
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: var(--workspace-overview-panel-gap);
-    min-height: 0;
-    height: 100%;
   }
 
   .workspace-context-rail--overview > .workspace-public-demand-map,
@@ -268,15 +244,6 @@
 
   .workspace-context-rail--overview > .workspace-context-rail__panel > .workspace-environment__eyebrow {
     margin: 0;
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel .workspace-statistics-ki__head {
-    padding: var(--space-1-5) var(--space-2);
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel .workspace-statistics-ki__role {
-    font-size: var(--workspace-overview-insights-copy-size);
-    line-height: var(--workspace-overview-insights-support-line-height);
   }
 
   .workspace-context-rail--overview > .workspace-public-demand-map {
@@ -293,85 +260,6 @@
     max-height: var(--workspace-overview-map-canvas-height);
     flex: 0 0 auto;
     align-self: start;
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights {
-    display: grid;
-    min-height: 100%;
-    height: 100%;
-    align-content: stretch;
-    grid-template-rows: minmax(0, 1.02fr) minmax(0, 0.98fr);
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel.workspace-insights-panel--items-2 .workspace-statistics-insights {
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel.workspace-insights-panel--items-1 .workspace-statistics-insights {
-    grid-template-rows: minmax(0, 1fr);
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel.workspace-insights-panel--items-3 .workspace-statistics-insights {
-    grid-template-rows: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  }
-
-  .workspace-context-rail--overview > .workspace-insights-panel.workspace-insights-panel--items-4 .workspace-statistics-insights {
-    grid-template-rows: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights__item {
-    min-height: 0;
-    height: 100%;
-    align-content: stretch;
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights__item.is-featured {
-    min-height: 0;
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights__secondary.requests-list {
-    display: grid;
-    grid-auto-rows: minmax(0, 1fr);
-    align-content: stretch;
-    min-height: 0;
-    height: 100%;
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights__secondary.requests-list > li {
-    min-height: 0;
-    height: 100%;
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights__secondary.requests-list > li > .workspace-statistics-insights__item,
-  .workspace-context-rail--overview .workspace-statistics-insights > .workspace-statistics-insights__item.is-featured {
-    height: 100%;
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights__content {
-    display: grid;
-    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
-    min-height: 100%;
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights__title {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: var(--workspace-overview-insights-title-lines);
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights__text {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: var(--workspace-overview-insights-text-lines);
-  }
-
-  .workspace-context-rail--overview .workspace-statistics-insights__evidence {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: var(--workspace-overview-insights-evidence-lines);
   }
 
   .workspace-context-rail--overview .workspace-context-rail__decision.workspace-statistics-ki {

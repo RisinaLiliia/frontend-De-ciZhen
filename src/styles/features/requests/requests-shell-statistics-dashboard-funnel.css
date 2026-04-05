@@ -24,9 +24,37 @@
     gap: var(--workspace-statistics-context-gap);
   }
 
-  .workspace-statistics-funnel--empty {
+  .workspace-statistics-funnel--empty-visual {
     gap: var(--workspace-statistics-context-gap);
-    padding-block: var(--space-1-5);
+    align-content: start;
+    min-height: 440px;
+  }
+
+  .workspace-statistics-funnel__stack--placeholder .workspace-statistics-funnel__layer {
+    animation: none;
+  }
+
+  .workspace-statistics-funnel__layer.is-placeholder .workspace-statistics-funnel__shape {
+    border-color: color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
+    filter: saturate(0.55) brightness(1.02);
+    opacity: 0.82;
+  }
+
+  .workspace-statistics-funnel__layer.is-placeholder .workspace-statistics-funnel__layer-label {
+    color: color-mix(in oklab, var(--c-text-muted) 76%, var(--c-text) 24%);
+  }
+
+  .workspace-statistics-funnel__layer.is-placeholder .workspace-statistics-funnel__layer-value {
+    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--c-text) 18%);
+  }
+
+  .workspace-statistics-funnel__empty-note {
+    display: grid;
+    gap: var(--space-1-5);
+    padding: var(--workspace-statistics-container-pad);
+    border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
+    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--surface-soft-border) 84%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 90%, var(--c-panel) 10%);
   }
 
   .workspace-statistics-funnel__empty-title {
@@ -459,6 +487,10 @@
     color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
   }
 
+  .workspace-statistics-funnel__conversion--empty strong {
+    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--c-text) 18%);
+  }
+
   @keyframes workspace-statistics-funnel-enter {
     from {
       opacity: 0;
@@ -483,6 +515,10 @@
     .workspace-statistics-funnel {
       --workspace-funnel-layer-min-height: 54px;
       --workspace-funnel-layer-min-height-tall: 62px;
+    }
+
+    .workspace-statistics-funnel--empty-visual {
+      min-height: 360px;
     }
 
     .workspace-statistics-funnel--personalized {

@@ -13,7 +13,6 @@ export type WorkspaceStatisticsCopy = {
   contextPeriodLabel: string;
   contextCityLabel: string;
   contextCategoryLabel: string;
-  contextAnalysisLabel: string;
   contextTrendLabel: string;
   contextAllCitiesLabel: string;
   contextAllCategoriesLabel: string;
@@ -339,7 +338,6 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   contextPeriodLabel: 'Zeitraum',
   contextCityLabel: 'Stadt',
   contextCategoryLabel: 'Kategorie',
-  contextAnalysisLabel: 'Analyse',
   contextTrendLabel: 'Trend',
   contextAllCitiesLabel: 'Alle Städte',
   contextAllCategoriesLabel: 'Alle Kategorien',
@@ -677,7 +675,6 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   contextPeriodLabel: 'Period',
   contextCityLabel: 'City',
   contextCategoryLabel: 'Category',
-  contextAnalysisLabel: 'Analysis',
   contextTrendLabel: 'Trend',
   contextAllCitiesLabel: 'All cities',
   contextAllCategoriesLabel: 'All categories',

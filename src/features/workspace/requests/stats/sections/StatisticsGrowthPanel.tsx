@@ -31,7 +31,7 @@ export function StatisticsGrowthPanel({
   return (
     <section
       ref={panelRef}
-      className="panel stack-sm workspace-statistics__growth"
+      className="panel stack-sm workspace-statistics__growth workspace-statistics__rail-panel workspace-statistics__rail-panel--growth"
       style={panelMinHeight ? { minHeight: `${panelMinHeight}px` } : undefined}
     >
       <header className="section-heading workspace-statistics__tile-header">

@@ -59,6 +59,10 @@ export function StatisticsCitiesPanel({
   const emptyLabel = locale === 'de' ? 'Keine Ergebnisse' : 'No results';
   const errorLabel = locale === 'de' ? 'Daten konnten nicht geladen werden.' : 'Data could not be loaded.';
   const selectedCityLabel = cityOptions.find((option) => option.value === cityValue)?.label ?? copy.citiesFilterPlaceholder;
+  const placeholderCityLabel = locale === 'de' ? 'Weitere Vergleichsdaten fehlen' : 'Additional comparison data unavailable';
+  const placeholderSignalLabel = locale === 'de' ? 'Keine Daten' : 'No data';
+  const minimumVisibleRows = 3;
+  const placeholderRowCount = Math.max(0, minimumVisibleRows - visibleCityRows.length);
 
   return (
     <section ref={panelRef} className="panel requests-stats-chart workspace-statistics__cities-panel">
@@ -153,6 +157,31 @@ export function StatisticsCitiesPanel({
               </li>
             );
           })}
+          {Array.from({ length: placeholderRowCount }, (_, index) => (
+            <li
+              key={`placeholder-city-row-${index}`}
+              className="workspace-statistics-city-list__item-shell workspace-statistics-city-list__item-shell--placeholder"
+              aria-hidden="true"
+            >
+              <div className="stat-card workspace-statistics-city-list__item workspace-statistics-city-list__item--placeholder">
+                <span className="workspace-statistics-city-list__rank-cell">
+                  <span className="workspace-statistics-city-list__rank">—</span>
+                </span>
+                <span className="workspace-statistics-city-list__name workspace-statistics-city-list__name--placeholder">
+                  {placeholderCityLabel}
+                </span>
+                <span className="workspace-statistics-city-list__count">—</span>
+                <span className="workspace-statistics-city-list__share">—</span>
+                <span className="workspace-statistics-city-list__share">—</span>
+                <span className="workspace-statistics-city-list__balance">
+                  <strong>—</strong>
+                  <span className="workspace-statistics-city-list__signal is-none">
+                    {placeholderSignalLabel}
+                  </span>
+                </span>
+              </div>
+            </li>
+          ))}
         </ol>
       )}
       {cityTotalPages > 1 ? (
