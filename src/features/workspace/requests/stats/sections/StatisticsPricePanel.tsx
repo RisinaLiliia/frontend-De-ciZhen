@@ -18,6 +18,7 @@ export function StatisticsPricePanel({
   pricing?: NonNullable<WorkspaceStatisticsModel['userIntelligence']>['pricing'];
   personalizedPricing?: WorkspaceStatisticsModel['personalizedPricing'];
 }) {
+  const activePricing = personalizedPricing ?? pricing ?? null;
   const hasRangeValues =
     typeof priceIntelligence.recommendedMin === 'number' &&
     Number.isFinite(priceIntelligence.recommendedMin) &&
@@ -105,6 +106,15 @@ export function StatisticsPricePanel({
         : priceIntelligence.profitPotentialStatus === 'low'
           ? 'low'
           : 'balanced';
+  const comparisonProfilePercent =
+    hasRangeValues && activePricing?.currentPriceValue !== null && activePricing?.currentPriceValue !== undefined
+      ? toPercent(activePricing.currentPriceValue)
+      : null;
+  const comparisonMarketPercent =
+    hasRangeValues && activePricing?.marketAverageValue !== null && activePricing?.marketAverageValue !== undefined
+      ? toPercent(activePricing.marketAverageValue)
+      : null;
+  const hasComparisonBar = comparisonProfilePercent !== null && comparisonMarketPercent !== null;
 
   return (
     <section className={`panel requests-stats-chart workspace-statistics-price${className ? ` ${className}` : ''}`.trim()}>
@@ -192,21 +202,21 @@ export function StatisticsPricePanel({
             </section>
           ) : null}
           <div className="workspace-statistics-price__summary-grid">
-            {(personalizedPricing ?? pricing) ? (
-              <article className={`workspace-statistics-price__summary-card workspace-statistics-price__summary-card--personal is-${(personalizedPricing ?? pricing)?.tone}`.trim()}>
+            {activePricing ? (
+              <article className={`workspace-statistics-price__summary-card workspace-statistics-price__summary-card--personal is-${activePricing.tone}`.trim()}>
                 <span className="workspace-statistics-price__summary-label">{copy.userPricingCurrentLabel}</span>
-                <strong className="workspace-statistics-price__summary-value">{(personalizedPricing ?? pricing)?.currentPrice}</strong>
+                <strong className="workspace-statistics-price__summary-value">{activePricing.currentPrice}</strong>
                 <span className="workspace-statistics-price__summary-note">
-                  {copy.userPricingRecommendedLabel}: {(personalizedPricing ?? pricing)?.recommendedRange}
+                  {copy.userPricingRecommendedLabel}: {activePricing.recommendedRange}
                 </span>
                 <dl className="workspace-statistics-price__summary-definition">
                   <div>
                     <dt>{copy.userPricingPositionLabel}</dt>
-                    <dd>{(personalizedPricing ?? pricing)?.statusLabel}</dd>
+                    <dd>{activePricing.statusLabel}</dd>
                   </div>
                   <div>
                     <dt>{copy.userPricingEffectLabel}</dt>
-                    <dd>{(personalizedPricing ?? pricing)?.effect}</dd>
+                    <dd>{activePricing.effect}</dd>
                   </div>
                 </dl>
               </article>
@@ -215,16 +225,16 @@ export function StatisticsPricePanel({
               <span className="workspace-statistics-price__summary-label">{copy.priceMarketAverageLabel}</span>
               <strong className="workspace-statistics-price__summary-value">{priceIntelligence.marketAverageLabel ?? '—'}</strong>
             </article>
-            {(personalizedPricing ?? pricing) ? (
-              <article className={`workspace-statistics-price__summary-card workspace-statistics-price__summary-card--gap is-${(personalizedPricing ?? pricing)?.tone}`.trim()}>
+            {activePricing ? (
+              <article className={`workspace-statistics-price__summary-card workspace-statistics-price__summary-card--gap is-${activePricing.tone}`.trim()}>
                 <span className="workspace-statistics-price__summary-label">{copy.userGapTitle}</span>
-                <strong className="workspace-statistics-price__summary-value">{(personalizedPricing ?? pricing)?.gap}</strong>
+                <strong className="workspace-statistics-price__summary-value">{activePricing.gap}</strong>
                 <span className="workspace-statistics-price__summary-note">
-                  {copy.userComparisonLabel}: {(personalizedPricing ?? pricing)?.marketAverage}
+                  {copy.userComparisonLabel}: {activePricing.marketAverage}
                 </span>
-                {(personalizedPricing ?? pricing)?.action ? (
+                {activePricing.action ? (
                   <span className="workspace-statistics-price__summary-note">
-                    {(personalizedPricing ?? pricing)?.action}
+                    {activePricing.action}
                   </span>
                 ) : null}
               </article>
@@ -244,6 +254,34 @@ export function StatisticsPricePanel({
               />
             </section>
           </div>
+          {hasComparisonBar ? (
+            <section className="workspace-statistics-price__comparison" aria-label={copy.userComparisonLabel}>
+              <div className="workspace-statistics-price__comparison-row">
+                <span className="workspace-statistics-price__comparison-label">{copy.userPricingProfileLabel}</span>
+                <div className="workspace-statistics-signal__track workspace-statistics-price__comparison-track" aria-hidden="true">
+                  <span
+                    className="workspace-statistics-signal__fill workspace-statistics-price__comparison-fill workspace-statistics-price__comparison-fill--profile"
+                    style={{ width: `${comparisonProfilePercent}%` }}
+                  />
+                </div>
+                <strong className="workspace-statistics-price__comparison-value">
+                  {Math.round(comparisonProfilePercent)}%
+                </strong>
+              </div>
+              <div className="workspace-statistics-price__comparison-row">
+                <span className="workspace-statistics-price__comparison-label">{copy.comparisonMarketLabel}</span>
+                <div className="workspace-statistics-signal__track workspace-statistics-price__comparison-track" aria-hidden="true">
+                  <span
+                    className="workspace-statistics-signal__fill workspace-statistics-price__comparison-fill workspace-statistics-price__comparison-fill--market"
+                    style={{ width: `${comparisonMarketPercent}%` }}
+                  />
+                </div>
+                <strong className="workspace-statistics-price__comparison-value">
+                  {Math.round(comparisonMarketPercent)}%
+                </strong>
+              </div>
+            </section>
+          ) : null}
         </div>
       )}
     </section>

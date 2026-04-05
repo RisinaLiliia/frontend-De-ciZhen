@@ -30,6 +30,55 @@
     --workspace-insights-header-gap: 0;
   }
 
+  .workspace-insights-panel--rail-balanced {
+    --workspace-insights-panel-gap: var(--space-4);
+    --workspace-insights-list-gap: var(--space-3);
+    --workspace-insights-header-gap: var(--space-3);
+    --workspace-insight-card-gap: var(--space-2);
+    --workspace-insight-card-pad: var(--provider-card-inline-pad, 16px);
+    --workspace-insight-card-pad-featured: var(--workspace-insight-card-pad);
+    --workspace-insight-content-gap: var(--space-2);
+    --workspace-insight-title-size: 16px;
+    --workspace-insight-title-line-height: 1.28;
+    --workspace-insight-copy-size: var(--workspace-statistics-copy-size-tight, var(--fs-small));
+    --workspace-insight-copy-line-height: 1.45;
+    --workspace-insight-support-line-height: 1.35;
+    --workspace-insight-action-size: 12px;
+    --workspace-insight-action-line-height: 1.3;
+    --workspace-insight-badge-height: 28px;
+    --workspace-insight-badge-pad-inline: 12px;
+    --workspace-insight-badge-font-size: 12px;
+    --workspace-insights-balanced-head-min-height: calc(var(--workspace-statistics-section-header-min-h) + var(--space-4));
+    --workspace-insights-balanced-title-lines: 2;
+    --workspace-insights-balanced-text-lines: 3;
+    --workspace-insights-balanced-evidence-lines: 2;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: stretch;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--compact-head .workspace-statistics-ki__head {
+    min-height: var(--workspace-insights-balanced-head-min-height);
+    align-items: start;
+    align-content: start;
+  }
+
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-2 {
+    --workspace-insights-balanced-head-min-height: calc(var(--workspace-statistics-section-header-min-h) + var(--space-5));
+  }
+
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-4 {
+    --workspace-insight-card-pad: 14px;
+    --workspace-insight-card-pad-featured: 15px;
+    --workspace-insight-title-size: 15px;
+    --workspace-insight-copy-size: 11px;
+    --workspace-insight-action-size: 11px;
+    --workspace-insight-content-gap: var(--space-1-5);
+    --workspace-insights-balanced-text-lines: 2;
+    --workspace-insights-balanced-evidence-lines: 1;
+  }
+
   .workspace-statistics__profile-panel {
     display: grid;
     gap: var(--workspace-statistics-section-gap);
@@ -73,6 +122,15 @@
 
   .workspace-statistics-insights__ki {
     grid-area: ki;
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-ki__head {
+    padding: var(--space-1-5) var(--space-2);
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-ki__role {
+    font-size: var(--workspace-insight-copy-size);
+    line-height: var(--workspace-insight-support-line-height);
   }
 
   .workspace-statistics-insights__item {
@@ -191,6 +249,11 @@
     gap: var(--space-1);
   }
 
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__metrics {
+    align-self: center;
+    justify-self: start;
+  }
+
   .workspace-statistics-insights__metric {
     display: inline-flex;
     align-items: center;
@@ -237,6 +300,84 @@
     border-color: color-mix(in oklab, var(--c-accent) 32%, var(--surface-card-border) 68%);
   }
 
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights {
+    min-height: 100%;
+    height: 100%;
+    align-content: stretch;
+    grid-template-rows: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  }
+
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-2 .workspace-statistics-insights {
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-1 .workspace-statistics-insights {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-3 .workspace-statistics-insights {
+    grid-template-rows: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  }
+
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-4 .workspace-statistics-insights {
+    grid-template-rows: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__item {
+    min-height: 0;
+    height: 100%;
+    align-content: stretch;
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__item.is-featured {
+    min-height: 0;
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__secondary.requests-list {
+    display: grid;
+    grid-auto-rows: minmax(0, 1fr);
+    align-content: stretch;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__secondary.requests-list > li {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__secondary.requests-list > li > .workspace-statistics-insights__item,
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights > .workspace-statistics-insights__item.is-featured {
+    height: 100%;
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__content {
+    display: grid;
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+    min-height: 100%;
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__title {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--workspace-insights-balanced-title-lines);
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__text {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--workspace-insights-balanced-text-lines);
+  }
+
+  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__evidence {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--workspace-insights-balanced-evidence-lines);
+  }
+
   @media (min-width: 1120px) {
     .workspace-statistics-insights__header {
       grid-template-columns: minmax(0, 1fr);
@@ -252,23 +393,27 @@
     isolation: isolate;
     overflow: hidden;
     display: grid;
-    grid-template-rows: auto auto auto;
-    gap: var(--space-2-5);
+    grid-template-rows: auto auto auto auto;
+    gap: var(--workspace-statistics-rail-panel-gap);
     min-height: 528px;
-    border-color: color-mix(in oklab, var(--c-primary) 22%, var(--surface-card-border) 78%);
+    border-color: color-mix(in oklab, var(--c-primary) 16%, var(--surface-card-border) 84%);
     background:
-      radial-gradient(130% 110% at 0% 0%, var(--c-glow-primary), transparent 54%),
-      radial-gradient(100% 90% at 88% 12%, var(--c-glow-accent), transparent 64%),
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 6%, transparent), transparent 56%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 4%, transparent), transparent 66%),
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--c-panel) 98%, var(--c-surface) 2%) 0%,
-        color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%) 58%,
-        color-mix(in oklab, var(--surface-soft-bg) 94%, var(--c-panel) 6%) 100%
+        color-mix(in oklab, var(--c-panel) 95%, var(--c-primary) 5%) 60%,
+        color-mix(in oklab, var(--surface-soft-bg) 96%, var(--c-panel) 4%) 100%
       );
     box-shadow:
-      inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 74%, transparent),
+      inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 60%, transparent),
       var(--surface-card-shadow);
     flex-shrink: 0;
+  }
+
+  .workspace-statistics__rail-panel.workspace-statistics__growth {
+    gap: var(--space-3);
   }
 
   .workspace-statistics__growth::before {
@@ -278,82 +423,147 @@
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 8%, transparent), transparent 56%),
-      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 64%),
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 5%, transparent), transparent 58%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 4%, transparent), transparent 66%),
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--c-panel) 18%, transparent),
-        color-mix(in oklab, var(--c-panel) 10%, transparent)
+        color-mix(in oklab, var(--c-panel) 10%, transparent),
+        color-mix(in oklab, var(--c-panel) 6%, transparent)
       );
-    -webkit-backdrop-filter: blur(8px) saturate(1.02);
-    backdrop-filter: blur(8px) saturate(1.02);
+    -webkit-backdrop-filter: blur(6px) saturate(1.01);
+    backdrop-filter: blur(6px) saturate(1.01);
   }
 
-  .workspace-statistics-growth__featured-wrap {
+  .workspace-statistics-growth__featured {
     display: grid;
-    gap: 0;
-    min-height: 228px;
-    grid-row: 2;
-  }
-
-  .workspace-statistics-growth__featured.request-create-card {
-    max-width: 100%;
-    min-height: 100%;
-    height: 100%;
-    border-style: solid;
-    border-color: color-mix(in oklab, var(--c-primary) 24%, var(--surface-card-border) 76%);
+    gap: var(--space-3);
+    min-height: 0;
+    padding: calc(var(--workspace-statistics-container-pad) + 2px);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--surface-card-border) 82%);
+    border-radius: var(--workspace-statistics-radius-lg);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 96%, white 4%) 0%,
+        color-mix(in oklab, var(--surface-soft-bg) 92%, var(--c-panel) 8%) 100%
+      );
     box-shadow:
-      inset 0 1px 0 color-mix(in oklab, white 82%, transparent),
-      0 14px 30px color-mix(in oklab, var(--c-primary) 10%, transparent);
+      inset 0 1px 0 color-mix(in oklab, white 62%, transparent),
+      0 10px 22px color-mix(in oklab, var(--c-text) 8%, transparent);
   }
 
-  .workspace-statistics-growth__featured.request-create-card--compact {
-    max-width: 100%;
-    min-height: 100%;
-    height: 100%;
-    grid-template-columns: minmax(0, 1fr) 126px;
-    padding: var(--workspace-statistics-container-pad);
-    gap: var(--space-3-5);
+  .workspace-statistics-growth__featured-head,
+  .workspace-statistics-growth__featured-copy,
+  .workspace-statistics-growth__effect,
+  .workspace-statistics-growth__position,
+  .workspace-statistics-growth__why {
+    display: grid;
+    gap: var(--space-1-5);
   }
 
-  .workspace-statistics-growth__featured-content {
+  .workspace-statistics-growth__badges {
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    min-height: 100%;
-    gap: 0;
-    padding-right: var(--space-1);
-    text-align: left;
+    flex-wrap: wrap;
+    gap: var(--space-1);
   }
 
-  .workspace-statistics-growth__featured-content > * {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  .workspace-statistics-growth__featured .request-create-card__title {
-    font-size: var(--fs-h3);
-    line-height: var(--lh-title);
+  .workspace-statistics-growth__featured-title {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.15;
     font-weight: 700;
-    text-align: left;
+    letter-spacing: -0.02em;
+    color: var(--c-text);
   }
 
-  .workspace-statistics-growth__featured .request-create-card__subtitle {
+  .workspace-statistics-growth__featured-text {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
     color: var(--c-text-muted);
-    text-align: left;
+  }
+
+  .workspace-statistics-growth__section-label {
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--c-text-muted) 74%, var(--c-text) 26%);
+  }
+
+  .workspace-statistics-growth__effect,
+  .workspace-statistics-growth__position,
+  .workspace-statistics-growth__why,
+  .workspace-statistics-growth__steps {
+    padding-top: var(--space-2);
+    border-top: 1px solid color-mix(in oklab, var(--surface-soft-border) 72%, transparent);
+  }
+
+  .workspace-statistics-growth__effect-value {
+    font-size: 22px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: color-mix(in oklab, var(--c-primary) 74%, var(--c-text) 26%);
+  }
+
+  .workspace-statistics-growth__position-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-1-5);
+  }
+
+  .workspace-statistics-growth__position-item {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid color-mix(in oklab, var(--surface-soft-border) 78%, transparent);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 92%, transparent),
+        color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%)
+      );
+  }
+
+  .workspace-statistics-growth__position-item span {
+    font-size: 11px;
+    line-height: 1.3;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-growth__position-item strong {
+    font-size: var(--fs-small);
+    line-height: 1.35;
+    color: var(--c-text);
+  }
+
+  .workspace-statistics-growth__why-list {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding-left: var(--space-2-5);
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-growth__why-list li {
+    margin: 0;
   }
 
   .workspace-statistics-growth__grid {
     display: grid;
-    gap: var(--space-1-5);
+    gap: var(--space-2);
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    min-height: 0;
-    grid-row: 3;
+    align-items: stretch;
   }
 
   .workspace-statistics-growth__grid--single {
-    grid-template-rows: auto;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .workspace-statistics-growth__card {
@@ -361,24 +571,21 @@
     isolation: isolate;
     overflow: hidden;
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-2-5);
     min-height: 0;
-    height: auto;
-    padding: var(--space-2) var(--workspace-statistics-container-pad);
+    height: 100%;
+    padding: var(--workspace-statistics-container-pad);
     align-content: start;
-    border: 1px solid var(--surface-soft-border);
+    border: 1px solid color-mix(in oklab, var(--surface-soft-border) 92%, var(--c-text) 8%);
     background:
       linear-gradient(
         150deg,
-        color-mix(in oklab, var(--c-panel) 84%, white 16%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%) 60%,
-        color-mix(in oklab, var(--c-panel) 90%, white 10%) 100%
+        color-mix(in oklab, var(--c-panel) 90%, white 10%) 0%,
+        color-mix(in oklab, var(--surface-soft-bg) 92%, var(--c-panel) 8%) 100%
       );
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
     box-shadow:
-      0 8px 20px color-mix(in oklab, var(--c-text) 8%, transparent),
-      inset 0 1px 0 color-mix(in oklab, white 74%, transparent);
+      0 6px 16px color-mix(in oklab, var(--c-text) 7%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 64%, transparent);
     transition:
       transform var(--transition-fast),
       box-shadow var(--transition-fast),
@@ -386,193 +593,74 @@
   }
 
   .workspace-statistics-growth__card.is-premium {
-    border-color: color-mix(in oklab, var(--c-primary) 18%, var(--surface-card-border) 82%);
+    border-color: color-mix(in oklab, var(--c-primary) 10%, var(--surface-soft-border) 90%);
     background:
-      radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--c-primary) 10%, transparent), transparent 56%),
+      radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--c-primary) 8%, transparent), transparent 58%),
       linear-gradient(
         150deg,
-        color-mix(in oklab, var(--c-panel) 88%, white 12%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%) 60%,
-        color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%) 100%
+        color-mix(in oklab, var(--c-panel) 92%, white 8%) 0%,
+        color-mix(in oklab, var(--surface-soft-bg) 90%, var(--c-panel) 10%) 100%
       );
     box-shadow:
-      0 10px 24px color-mix(in oklab, var(--c-primary) 10%, transparent),
-      inset 0 1px 0 color-mix(in oklab, white 80%, transparent);
+      0 6px 16px color-mix(in oklab, var(--c-primary) 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 64%, transparent);
   }
 
-  .workspace-statistics-growth__card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
+  .workspace-statistics-growth__card.is-local {
+    border-color: color-mix(in oklab, var(--c-primary) 10%, var(--surface-soft-border) 90%);
     background:
+      radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--c-primary) 6%, transparent), transparent 58%),
       linear-gradient(
-        180deg,
-        color-mix(in oklab, white 20%, transparent) 0%,
-        transparent 55%
+        150deg,
+        color-mix(in oklab, var(--c-panel) 91%, white 9%) 0%,
+        color-mix(in oklab, var(--surface-soft-bg) 91%, var(--c-panel) 9%) 100%
       );
-    opacity: 0.85;
-    pointer-events: none;
+    box-shadow:
+      0 6px 16px color-mix(in oklab, var(--c-primary) 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 64%, transparent);
   }
 
   .workspace-statistics-growth__card:hover {
-    transform: translateY(-2px);
-    border-color: var(--surface-card-border-hover);
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, var(--c-primary) 32%, var(--surface-card-border-hover) 68%);
     box-shadow:
-      0 12px 26px color-mix(in oklab, var(--c-text) 12%, transparent),
-      inset 0 1px 0 color-mix(in oklab, white 80%, transparent);
+      0 12px 24px color-mix(in oklab, var(--c-text) 10%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 68%, transparent);
   }
 
-  .workspace-statistics-growth__head {
-    display: grid;
-    gap: var(--space-2);
+  .workspace-statistics-growth__card.is-local:hover {
+    border-color: color-mix(in oklab, var(--c-primary) 40%, var(--surface-card-border-hover) 60%);
+    box-shadow:
+      0 12px 24px color-mix(in oklab, var(--c-primary) 10%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 68%, transparent);
   }
 
-  .workspace-statistics-growth__card.is-local .workspace-statistics-growth__head {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
+  .workspace-statistics-growth__card.is-premium:hover {
+    border-color: color-mix(in oklab, var(--c-primary) 38%, var(--surface-card-border-hover) 62%);
+    box-shadow:
+      0 12px 24px color-mix(in oklab, var(--c-primary) 12%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 70%, transparent);
   }
 
-  .workspace-statistics-growth__head-copy {
+  .workspace-statistics-growth__card-copy {
     display: grid;
     gap: var(--space-1-5);
-    min-width: 0;
   }
 
   .workspace-statistics-growth__title {
     margin: 0;
-    font-size: var(--fs-h3);
-    line-height: var(--lh-title);
+    font-size: 16px;
+    line-height: 1.25;
     font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--c-text);
-  }
-
-  .workspace-statistics-growth__labels {
-    display: inline-flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--space-1);
   }
 
   .workspace-statistics-growth__body {
     margin: 0;
-    margin-top: var(--space-0-5);
-    font-size: var(--fs-body);
+    font-size: 13px;
     color: var(--c-text-muted);
     line-height: 1.45;
-  }
-
-  .workspace-statistics-growth__benefit {
-    margin: 0;
-    font-size: var(--fs-body);
-    color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
-    font-weight: 600;
-  }
-
-  .workspace-statistics-growth__card.is-local {
-    gap: var(--space-1-5);
-    border-color: color-mix(in oklab, var(--c-accent) 18%, var(--surface-card-border) 82%);
-    background:
-      radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 58%),
-      linear-gradient(
-        150deg,
-        color-mix(in oklab, var(--c-panel) 86%, white 14%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 90%, var(--c-panel) 10%) 60%,
-        color-mix(in oklab, var(--c-panel) 92%, white 8%) 100%
-      );
-  }
-
-  .workspace-statistics-growth__card.is-local .workspace-statistics-growth__body {
-    margin-top: 0;
-  }
-
-  .workspace-statistics-growth__card.is-local .workspace-statistics-growth__benefit {
-    color: var(--c-text);
-    font-weight: 700;
-  }
-
-  .workspace-statistics-growth__card.is-premium .workspace-statistics-growth__benefit {
-    color: color-mix(in oklab, var(--c-primary) 72%, var(--c-text) 28%);
-    font-weight: 700;
-  }
-
-  .workspace-statistics-growth__card.is-local .workspace-statistics-growth__labels {
-    margin-top: var(--space-0-5);
-  }
-
-  .workspace-statistics-growth__visual {
-    display: grid;
-    place-items: center;
-  }
-
-  .workspace-statistics-growth__visual-tile {
-    position: relative;
-    width: 76px;
-    height: 76px;
-    border-radius: var(--workspace-statistics-radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-accent) 26%, var(--surface-soft-border) 74%);
-    background:
-      radial-gradient(120% 120% at 30% 28%, color-mix(in oklab, var(--c-accent) 18%, white 82%), transparent 52%),
-      linear-gradient(
-        160deg,
-        color-mix(in oklab, var(--c-panel) 88%, white 12%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 86%, var(--c-panel) 14%) 100%
-      );
-    box-shadow:
-      inset 0 1px 0 color-mix(in oklab, white 78%, transparent),
-      0 10px 24px color-mix(in oklab, var(--c-text) 8%, transparent);
-  }
-
-  .workspace-statistics-growth__visual-ring {
-    position: absolute;
-    inset: 22px;
-    border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--c-accent) 48%, var(--surface-soft-border) 52%);
-    opacity: 0.72;
-  }
-
-  .workspace-statistics-growth__visual-pin {
-    position: absolute;
-    top: 19px;
-    left: 31px;
-    width: 14px;
-    height: 14px;
-    border-radius: 999px 999px 999px 0;
-    transform: rotate(-45deg);
-    background: color-mix(in oklab, var(--c-accent) 68%, var(--c-primary) 32%);
-    box-shadow: 0 0 0 4px color-mix(in oklab, var(--c-accent) 10%, transparent);
-  }
-
-  .workspace-statistics-growth__visual-pin::after {
-    content: "";
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: color-mix(in oklab, white 88%, var(--c-panel) 12%);
-  }
-
-  .workspace-statistics-growth__visual-dot {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    background: color-mix(in oklab, var(--c-primary) 54%, var(--c-accent) 46%);
-    box-shadow: 0 0 0 5px color-mix(in oklab, currentColor 12%, transparent);
-  }
-
-  .workspace-statistics-growth__visual-dot.is-primary {
-    right: 16px;
-    top: 18px;
-    color: color-mix(in oklab, var(--c-accent) 62%, var(--c-primary) 38%);
-  }
-
-  .workspace-statistics-growth__visual-dot.is-secondary {
-    left: 16px;
-    bottom: 18px;
-    color: color-mix(in oklab, var(--c-primary) 58%, var(--c-accent) 42%);
   }
 
   .workspace-statistics-growth__cta {
@@ -584,20 +672,163 @@
     text-decoration: none;
   }
 
-  .workspace-statistics-growth__card.is-premium .workspace-statistics-growth__cta {
-    color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
-  }
-
   .workspace-statistics-growth__cta::after {
     content: "→";
     font-size: 0.95em;
   }
 
-  .workspace-statistics-growth__recommended {
+  .workspace-statistics-growth__meta-list {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+  }
+
+  .workspace-statistics-growth__meta-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding-top: var(--space-1);
+    border-top: 1px solid color-mix(in oklab, var(--surface-soft-border) 72%, transparent);
+  }
+
+  .workspace-statistics-growth__market-meta {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics-growth__market-focus {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .workspace-statistics-growth__market-focus-label {
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--c-text-muted) 74%, var(--c-text) 26%);
+  }
+
+  .workspace-statistics-growth__market-focus-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-1);
+    font-size: var(--fs-small);
+    line-height: 1.35;
+    color: var(--c-text);
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .workspace-statistics-growth__market-focus-icon {
+    display: inline-flex;
+    align-items: center;
+    color: color-mix(in oklab, var(--c-primary) 62%, var(--c-text-muted) 38%);
+  }
+
+  .workspace-statistics-growth__market-focus-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .workspace-statistics-growth__market-health-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics-growth__meta-item dt,
+  .workspace-statistics-growth__meta-item dd {
     margin: 0;
     font-size: var(--fs-small);
-    color: color-mix(in oklab, var(--c-primary) 66%, var(--c-text-muted) 34%);
+    line-height: 1.35;
+  }
+
+  .workspace-statistics-growth__meta-item dt {
+    color: var(--c-text-muted);
+  }
+
+  .workspace-statistics-growth__meta-item dd {
+    color: var(--c-text);
     font-weight: 600;
+    text-align: right;
+  }
+
+  .workspace-statistics-growth__steps {
+    display: grid;
+    gap: var(--space-1-5);
+  }
+
+  .workspace-statistics-growth__steps-title {
+    font-size: var(--fs-small);
+    line-height: 1.35;
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .workspace-statistics-growth__steps-list {
+    counter-reset: growth-steps;
+    display: grid;
+    gap: var(--space-1-5);
+    margin: 0;
+    padding: 0;
+    font-size: var(--fs-small);
+    line-height: 1.45;
+    color: var(--c-text-muted);
+    list-style: none;
+  }
+
+  .workspace-statistics-growth__steps-list li {
+    position: relative;
+    counter-increment: growth-steps;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .workspace-statistics-growth__steps-list li::before {
+    content: counter(growth-steps);
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 24%, var(--surface-soft-border) 76%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 94%, transparent),
+        color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 58%, transparent),
+      0 4px 10px color-mix(in oklab, var(--c-text) 8%, transparent);
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 700;
+    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text) 30%);
+  }
+
+  .workspace-statistics-growth__steps-list li::after {
+    content: "";
+    position: absolute;
+    left: 11.5px;
+    top: calc(100% + 2px);
+    width: 1px;
+    height: calc(var(--space-1-5) - 4px);
+    background: color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
+  }
+
+  .workspace-statistics-growth__steps-list li:last-child::after {
+    display: none;
   }
 
   .workspace-statistics-chart {
@@ -740,31 +971,11 @@
 
   @media (max-width: 1023px) {
     .workspace-statistics__growth {
-      grid-template-rows: auto;
       min-height: 0;
     }
 
-    .workspace-statistics-growth__featured.request-create-card,
-    .workspace-statistics-growth__featured.request-create-card--compact {
-      min-height: 120px;
-      height: auto;
-    }
-
-    .workspace-statistics-growth__grid {
-      grid-template-rows: none;
-    }
-
-    .workspace-statistics-growth__card {
-      min-height: 104px;
-      height: auto;
-    }
-
-    .workspace-statistics-growth__card.is-local .workspace-statistics-growth__head {
+    .workspace-statistics-growth__position-grid {
       grid-template-columns: minmax(0, 1fr);
-    }
-
-    .workspace-statistics-growth__visual {
-      justify-content: start;
     }
   }
 

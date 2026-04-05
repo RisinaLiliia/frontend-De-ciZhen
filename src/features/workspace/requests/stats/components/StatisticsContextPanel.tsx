@@ -61,7 +61,6 @@ export function StatisticsContextPanel({
     <>
       <div className="workspace-statistics-context__summary-head">
         <div className="workspace-statistics-context__summary-copy">
-          <span className="workspace-statistics-context__summary-label">{copy.contextAnalysisLabel}</span>
           <strong className="workspace-statistics-context__summary-value">{context.stickyLabel}</strong>
           <p className="workspace-statistics-context__summary-text">{context.subtitle}</p>
         </div>

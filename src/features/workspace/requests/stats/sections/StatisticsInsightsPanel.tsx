@@ -46,7 +46,7 @@ export function StatisticsInsightsPanel({
   insights: WorkspaceStatisticsModel['insights'];
   showInsightsDebug: boolean;
 }) {
-  const items: WorkspaceInsightsPanelItem[] = insights.map((item) => {
+  const items: WorkspaceInsightsPanelItem[] = insights.slice(0, 4).map((item) => {
     const badge = resolveInsightBadge(item, copy);
     return {
       key: item.key,
@@ -73,14 +73,17 @@ export function StatisticsInsightsPanel({
   return (
     <WorkspaceInsightsPanel
       emptyLabel={copy.emptyInsights}
-      generatedLabel={copy.priceGeneratedLabel}
+      generatedLabel={copy.insightsGeneratedLabel}
       assistantAvatarLabel={copy.insightsAssistantAvatarLabel}
       assistantName={copy.insightsAssistantName}
       assistantRole={copy.insightsAssistantNote}
+      assistantDescription={copy.insightsAssistantNote.trim()}
       featuredLabel={copy.insightsFeaturedLabel}
       items={items}
+      className="workspace-statistics-layout workspace-insights-panel--rail-balanced workspace-statistics__rail-panel workspace-statistics__rail-panel--insights"
       panelRef={panelRef}
       style={panelMinHeight ? { minHeight: `${panelMinHeight}px`, height: `${panelMinHeight}px` } : undefined}
+      showHeader={false}
     />
   );
 }

@@ -189,8 +189,10 @@ export type WorkspaceStatisticsActionSectionView = {
 
 export type WorkspaceStatisticsPricingGapView = {
   currentPrice: string;
+  currentPriceValue: number | null;
   recommendedRange: string;
   marketAverage: string;
+  marketAverageValue: number | null;
   statusLabel: string;
   summary: string;
   effect: string;

@@ -13,7 +13,6 @@ export type WorkspaceStatisticsCopy = {
   contextPeriodLabel: string;
   contextCityLabel: string;
   contextCategoryLabel: string;
-  contextAnalysisLabel: string;
   contextTrendLabel: string;
   contextAllCitiesLabel: string;
   contextAllCategoriesLabel: string;
@@ -216,6 +215,7 @@ export type WorkspaceStatisticsCopy = {
   userOpportunityCategoryTitle: string;
   userOpportunityCategoryBody: string;
   userPricingCurrentLabel: string;
+  userPricingProfileLabel: string;
   userPricingRecommendedLabel: string;
   userPricingAverageLabel: string;
   userPricingSummary: string;
@@ -260,7 +260,37 @@ export type WorkspaceStatisticsCopy = {
   growthSubtitle: string;
   growthRecommendedPrefix: string;
   growthFeaturedBadge: string;
+  growthPriorityHigh: string;
+  growthHeroVisibilityTitle: string;
+  growthHeroVisibilityTitleWithContext: string;
+  growthExpectedEffectLabel: string;
+  growthPositionTitle: string;
+  growthVisibilityLabel: string;
+  growthVisibilityLow: string;
+  growthResponseLabel: string;
+  growthResponseMedium: string;
+  growthWhyNowTitle: string;
+  growthDemandInContext: string;
+  growthDemandGeneric: string;
+  growthMarketChanceCurrent: string;
+  growthVisibilityBelowAverage: string;
+  growthFocusLabel: string;
+  growthDemandLabel: string;
+  growthDemandHighValue: string;
+  growthCompetitionLabel: string;
+  growthCompetitionMedium: string;
+  growthConversionLabel: string;
+  growthConversionOptimizable: string;
+  growthMarketCompareLabel: string;
+  growthMarketCompareAvailable: string;
+  growthHighlightCta: string;
   growthLocalAdsCta: string;
+  growthPremiumCta: string;
+  growthNextStepsTitle: string;
+  growthNextStepVisibility: string;
+  growthNextStepLocalAds: string;
+  growthNextStepLocalAdsWithContext: string;
+  growthNextStepPricing: string;
   kpiSuccessRateLabel: string;
   kpiNoCompletedJobs: string;
   kpiActiveProvidersLabel: string;
@@ -339,7 +369,6 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   contextPeriodLabel: 'Zeitraum',
   contextCityLabel: 'Stadt',
   contextCategoryLabel: 'Kategorie',
-  contextAnalysisLabel: 'Analyse',
   contextTrendLabel: 'Trend',
   contextAllCitiesLabel: 'Alle Städte',
   contextAllCategoriesLabel: 'Alle Kategorien',
@@ -553,6 +582,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   userOpportunityCategoryTitle: 'Kategorie wächst',
   userOpportunityCategoryBody: '{category} entwickelt sich aktuell stärker als andere Segmente.',
   userPricingCurrentLabel: 'Dein Preis',
+  userPricingProfileLabel: 'Dein Profil',
   userPricingRecommendedLabel: 'Empfohlen',
   userPricingAverageLabel: 'Markt',
   userPricingSummary: 'Pricing Strategy',
@@ -594,10 +624,40 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   userActionFollowUpDetail: '{count} offene Vorgänge priorisiert beantworten oder schließen.',
   userActionFollowUpEffect: 'Weniger verlorene Vorgänge und klarere Pipeline.',
   growthTitle: 'Wachstum & Promotion',
-  growthSubtitle: 'Tools für mehr Sichtbarkeit und neue Aufträge',
+  growthSubtitle: 'Mehr Sichtbarkeit und planbares Wachstum im aktuellen Markt',
   growthRecommendedPrefix: 'Empfohlen für',
   growthFeaturedBadge: 'Empfohlen',
+  growthPriorityHigh: 'Priorität Hoch',
+  growthHeroVisibilityTitle: 'Sichtbarkeit steigern',
+  growthHeroVisibilityTitleWithContext: 'Sichtbarkeit in {context} steigern',
+  growthExpectedEffectLabel: 'Erwarteter Effekt',
+  growthPositionTitle: 'Deine Position',
+  growthVisibilityLabel: 'Sichtbarkeit',
+  growthVisibilityLow: 'Niedrig',
+  growthResponseLabel: 'Antwortzeit',
+  growthResponseMedium: 'Mittel',
+  growthWhyNowTitle: 'Warum jetzt?',
+  growthDemandInContext: 'Hohe Nachfrage in {context}',
+  growthDemandGeneric: 'Hohe Nachfrage im aktuellen Markt',
+  growthMarketChanceCurrent: 'Gute Marktchance im aktuellen Zeitraum',
+  growthVisibilityBelowAverage: 'Dein Profil liegt unter dem lokalen Durchschnitt',
+  growthFocusLabel: 'Fokus',
+  growthDemandLabel: 'Nachfrage',
+  growthDemandHighValue: 'Hoch',
+  growthCompetitionLabel: 'Wettbewerb',
+  growthCompetitionMedium: 'Mittel',
+  growthConversionLabel: 'Conversion',
+  growthConversionOptimizable: 'Optimierbar',
+  growthMarketCompareLabel: 'Marktvergleich',
+  growthMarketCompareAvailable: 'Verfügbar',
+  growthHighlightCta: 'Sichtbarkeit erhöhen',
   growthLocalAdsCta: 'Region ansehen',
+  growthPremiumCta: 'Insights öffnen',
+  growthNextStepsTitle: 'Nächste Schritte',
+  growthNextStepVisibility: 'Profil sichtbarer machen',
+  growthNextStepLocalAds: 'Werbung aktivieren',
+  growthNextStepLocalAdsWithContext: 'Werbung in {context} aktivieren',
+  growthNextStepPricing: 'Preisstrategie prüfen',
   kpiSuccessRateLabel: 'Erfolgsquote',
   kpiNoCompletedJobs: 'Noch keine Abschlüsse',
   kpiActiveProvidersLabel: 'Aktive Anbieter',
@@ -677,7 +737,6 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   contextPeriodLabel: 'Period',
   contextCityLabel: 'City',
   contextCategoryLabel: 'Category',
-  contextAnalysisLabel: 'Analysis',
   contextTrendLabel: 'Trend',
   contextAllCitiesLabel: 'All cities',
   contextAllCategoriesLabel: 'All categories',
@@ -891,6 +950,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   userOpportunityCategoryTitle: 'Category is growing',
   userOpportunityCategoryBody: '{category} is currently outgrowing other segments.',
   userPricingCurrentLabel: 'Your price',
+  userPricingProfileLabel: 'Your profile',
   userPricingRecommendedLabel: 'Recommended',
   userPricingAverageLabel: 'Market',
   userPricingSummary: 'Pricing strategy',
@@ -932,10 +992,40 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   userActionFollowUpDetail: 'Prioritize {count} open cases for reply or closure.',
   userActionFollowUpEffect: 'Fewer lost pipeline items and a clearer workflow.',
   growthTitle: 'Growth & promotion',
-  growthSubtitle: 'Tools for more visibility and new jobs',
+  growthSubtitle: 'More visibility and more deliberate growth in the current market',
   growthRecommendedPrefix: 'Recommended for',
   growthFeaturedBadge: 'Recommended',
+  growthPriorityHigh: 'High priority',
+  growthHeroVisibilityTitle: 'Increase visibility',
+  growthHeroVisibilityTitleWithContext: 'Increase visibility in {context}',
+  growthExpectedEffectLabel: 'Expected effect',
+  growthPositionTitle: 'Your position',
+  growthVisibilityLabel: 'Visibility',
+  growthVisibilityLow: 'Low',
+  growthResponseLabel: 'Response time',
+  growthResponseMedium: 'Medium',
+  growthWhyNowTitle: 'Why now?',
+  growthDemandInContext: 'High demand in {context}',
+  growthDemandGeneric: 'High demand in the current market',
+  growthMarketChanceCurrent: 'Strong market opportunity in the current time range',
+  growthVisibilityBelowAverage: 'Your profile sits below the local average',
+  growthFocusLabel: 'Focus',
+  growthDemandLabel: 'Demand',
+  growthDemandHighValue: 'High',
+  growthCompetitionLabel: 'Competition',
+  growthCompetitionMedium: 'Medium',
+  growthConversionLabel: 'Conversion',
+  growthConversionOptimizable: 'Can improve',
+  growthMarketCompareLabel: 'Market comparison',
+  growthMarketCompareAvailable: 'Available',
+  growthHighlightCta: 'Increase visibility',
   growthLocalAdsCta: 'View region',
+  growthPremiumCta: 'Open insights',
+  growthNextStepsTitle: 'Next steps',
+  growthNextStepVisibility: 'Improve profile visibility',
+  growthNextStepLocalAds: 'Activate promotion',
+  growthNextStepLocalAdsWithContext: 'Activate promotion in {context}',
+  growthNextStepPricing: 'Review pricing strategy',
   kpiSuccessRateLabel: 'Success rate',
   kpiNoCompletedJobs: 'No completed jobs yet',
   kpiActiveProvidersLabel: 'Active providers',
@@ -1081,9 +1171,9 @@ export function resolveGrowthCard(
     return {
       title: copy === COPY_DE ? 'Profil hervorheben' : 'Boost profile visibility',
       body: copy === COPY_DE
-        ? 'Mehr Sichtbarkeit in der Suche für dein Profil.'
-        : 'Get higher visibility in search and discovery.',
-      benefit: copy === COPY_DE ? 'Bis zu 40% mehr Profilaufrufe' : 'Up to 40% more profile views',
+        ? 'Mehr passende Anfragen durch bessere Positionierung in einem Markt mit aktiver Nachfrage.'
+        : 'More relevant requests through stronger positioning in an active market.',
+      benefit: copy === COPY_DE ? '+18–40 % Profilaufrufe' : '+18–40% profile views',
       tone: 'primary',
       href: card.href,
     };
@@ -1092,21 +1182,21 @@ export function resolveGrowthCard(
     return {
       title: copy === COPY_DE ? 'Lokale Werbung' : 'Local promotion',
       body: copy === COPY_DE
-        ? 'Mehr Sichtbarkeit in Städten mit aktiver Nachfrage.'
-        : 'More visibility in cities with active demand.',
-      benefit: copy === COPY_DE ? 'Mehr Anfragen aus dieser Region' : 'More requests from this region',
+        ? 'Mehr Reichweite in Städten mit aktiver Nachfrage.'
+        : 'More reach in cities with active demand.',
+      benefit: copy === COPY_DE ? 'Mehr Reichweite im Fokusmarkt' : 'More reach in the focus market',
       tone: 'default',
       href: card.href,
     };
   }
   return {
-    title: copy === COPY_DE ? 'Premium Anbieter Tools' : 'Premium provider tools',
+    title: copy === COPY_DE ? 'Markt-Insights & Conversion-Analyse' : 'Market insights & conversion analysis',
     body: copy === COPY_DE
-      ? 'Erweiterte Analyse- und Reichweitenmodule für nachhaltiges Wachstum.'
-      : 'Advanced analytics and reach modules for sustainable growth.',
+      ? 'Erkenne, warum Anfragen nicht zu Aufträgen werden, und verbessere deine Entscheidungen.'
+      : 'See why requests do not turn into jobs and improve your decisions.',
     benefit: copy === COPY_DE
-      ? 'Tiefere Markt-Insights, höhere Sichtbarkeit und klare Wachstumshebel'
-      : 'Deeper market insights, higher visibility, and clear growth levers',
+      ? 'Klarere Entscheidungen im Marktvergleich'
+      : 'Clearer decisions with market comparison',
     tone: 'default',
     badge: copy === COPY_DE ? 'Beta' : 'Beta',
     href: card.href,

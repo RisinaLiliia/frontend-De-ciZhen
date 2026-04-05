@@ -252,7 +252,7 @@ test('workspace stats smoke: range switch + demand/city pagination', async ({ pa
   const demandPanel = page.locator('.workspace-statistics__demand-pagination');
   await expect(demandPanel).toBeVisible();
   await demandPanel.locator('button').nth(1).click();
-  await expect(page.locator('.workspace-statistics-demand__label').first()).toContainText('Category 7');
+  await expect(page.locator('.workspace-statistics-demand__label').first()).toContainText('Category 8');
 
   const cityPanel = page.locator('.workspace-statistics__cities-pagination');
   await expect(cityPanel).toBeVisible();
