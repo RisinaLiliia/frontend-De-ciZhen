@@ -248,18 +248,18 @@
 
   .workspace-context-rail--overview > .workspace-public-demand-map {
     display: grid;
-    grid-template-rows: auto auto;
-    align-content: start;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-content: stretch;
     min-height: 0;
     height: 100%;
   }
 
   .workspace-context-rail--overview > .workspace-public-demand-map .workspace-public-demand-map__canvas {
     min-height: var(--workspace-overview-map-canvas-height);
-    height: var(--workspace-overview-map-canvas-height);
-    max-height: var(--workspace-overview-map-canvas-height);
-    flex: 0 0 auto;
-    align-self: start;
+    height: 100%;
+    max-height: none;
+    flex: 1 1 auto;
+    align-self: stretch;
   }
 
   .workspace-context-rail--overview .workspace-context-rail__decision.workspace-statistics-ki {

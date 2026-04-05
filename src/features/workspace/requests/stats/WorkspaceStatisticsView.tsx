@@ -52,6 +52,7 @@ export function WorkspaceStatisticsView({
   });
   const funnelContainerRef = React.useRef<HTMLOListElement | null>(null);
   const statisticsPanelRef = React.useRef<HTMLElement | null>(null);
+  const primaryGridRef = React.useRef<HTMLDivElement | null>(null);
   const mapPanelRef = React.useRef<HTMLElement | null>(null);
   const profilePanelRef = React.useRef<HTMLElement | null>(null);
   const citiesPanelRef = React.useRef<HTMLElement | null>(null);
@@ -235,6 +236,12 @@ export function WorkspaceStatisticsView({
     targetRef: mapPanelRef,
     mode: 'sourceHeight',
     watchKey: `${showDemandMapPanel ? 1 : 0}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
+  });
+  const primaryGridMinHeight = useSyncedPanelMinHeight({
+    sourceRef: profilePanelRef,
+    targetRef: primaryGridRef,
+    mode: 'sourceHeight',
+    watchKey: `${hasFunnelData ? 1 : 0}-${funnelPeriodLabel ?? ''}-${activityPoints.length}-${model.demandRows.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
   });
 
   React.useEffect(() => {
@@ -446,7 +453,11 @@ export function WorkspaceStatisticsView({
         ) : (
           <>
             <div className="workspace-statistics__sections stack-md">
-              <div className="workspace-statistics__grid workspace-statistics__grid--primary">
+              <div
+                ref={primaryGridRef}
+                className="workspace-statistics__grid workspace-statistics__grid--primary"
+                style={primaryGridMinHeight ? { minHeight: `${primaryGridMinHeight}px` } : undefined}
+              >
                 <section className="panel requests-stats-chart">
                   <header className="section-heading workspace-statistics__tile-header">
                     <p className="section-title">{activityTitle}</p>
