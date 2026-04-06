@@ -148,9 +148,9 @@ export function buildRequestsFiltersHref(params: {
   const nextPage = next.page ?? current.page;
   const nextLimit = next.limit ?? current.limit;
 
-  if (nextCity !== ALL_OPTION_KEY) merged.set('city', nextCity);
-  if (nextCategory !== ALL_OPTION_KEY) merged.set('category', nextCategory);
-  if (nextSubcategory !== ALL_OPTION_KEY) merged.set('service', nextSubcategory);
+  if (nextCity !== ALL_OPTION_KEY) merged.set('cityId', nextCity);
+  if (nextCategory !== ALL_OPTION_KEY) merged.set('categoryKey', nextCategory);
+  if (nextSubcategory !== ALL_OPTION_KEY) merged.set('subcategoryKey', nextSubcategory);
   if (nextSort !== defaultSort) merged.set('sort', nextSort);
   if (nextPage > 1) merged.set('page', String(nextPage));
   if (nextLimit !== DEFAULT_REQUESTS_FILTER_LIMIT) merged.set('limit', String(nextLimit));
