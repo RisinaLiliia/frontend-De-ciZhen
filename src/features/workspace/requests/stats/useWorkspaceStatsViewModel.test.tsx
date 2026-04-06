@@ -396,6 +396,7 @@ function createPrivateOverview(): WorkspacePrivateOverviewDto {
       userId: 'user-1',
       role: 'provider',
     },
+    preferredRole: 'provider',
     requestsByStatus: {
       draft: 1,
       published: 14,

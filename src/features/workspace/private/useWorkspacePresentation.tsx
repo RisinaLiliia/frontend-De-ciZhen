@@ -34,6 +34,7 @@ type Args = {
   topProviders: WorkspaceAsideBaseProps['providers'];
   favoriteProviderIds: WorkspaceAsideBaseProps['favoriteProviderIds'];
   showQuickAction?: boolean;
+  preferredRequestsRole?: WorkspacePrivateIntroProps['preferredRequestsRole'];
 };
 
 export function useWorkspacePresentation({
@@ -55,6 +56,7 @@ export function useWorkspacePresentation({
   topProviders,
   favoriteProviderIds,
   showQuickAction = true,
+  preferredRequestsRole = null,
 }: Args) {
   const workspaceIntroNode = React.useMemo(
     () => (
@@ -73,6 +75,7 @@ export function useWorkspacePresentation({
           clientStatsPayload,
           createRequestHref,
           showQuickAction,
+          preferredRequestsRole,
         })}
       />
     ),
@@ -91,6 +94,7 @@ export function useWorkspacePresentation({
       t,
       insightText,
       showQuickAction,
+      preferredRequestsRole,
     ],
   );
 

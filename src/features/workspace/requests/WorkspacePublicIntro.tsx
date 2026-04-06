@@ -33,6 +33,7 @@ type WorkspacePublicIntroProps = {
   navHeaderSlot?: React.ReactNode;
   showDemandMap?: boolean;
   hideDemandMapOnMobile?: boolean;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
 };
 
 export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
@@ -54,6 +55,7 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   navHeaderSlot,
   showDemandMap = true,
   hideDemandMapOnMobile = true,
+  preferredRequestsRole = null,
 }: WorkspacePublicIntroProps) {
   const showMarketMap = showDemandMap && Boolean(cityActivity || summary || isMapLoading || isMapError);
 
@@ -73,12 +75,14 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
           locale={locale}
           activePublicSection={activePublicSection}
           activeWorkspaceTab={activeWorkspaceTab}
+          preferredRequestsRole={preferredRequestsRole}
         />
         {leftColumnSlot ? leftColumnSlot : null}
         <WorkspaceMobileSectionSheet
           locale={locale}
           activePublicSection={activePublicSection}
           activeWorkspaceTab={activeWorkspaceTab}
+          preferredRequestsRole={preferredRequestsRole}
         />
         {showMarketMap ? (
           <div className={hideDemandMapOnMobile ? 'workspace-intro__mobile-hidden' : undefined}>

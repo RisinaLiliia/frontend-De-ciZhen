@@ -2,12 +2,14 @@
 
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { getWorkspacePrivateOverview } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { WorkspaceOverlaySurface } from '../WorkspaceOverlaySurface';
 import { useDecisionDashboardModel } from './useDecisionDashboardModel';
 import { WorkspaceStatisticsPanel } from '../WorkspaceStatisticsPanel';
@@ -23,12 +25,17 @@ export function WorkspaceStatisticsExperience({
   t: (key: I18nKey) => string;
   locale: Locale;
 }) {
+  const searchParams = useSearchParams();
+  const privateOverviewPeriod: WorkspaceStatisticsRange = (() => {
+    const value = searchParams.get('period') ?? searchParams.get('range');
+    return value === '24h' || value === '7d' || value === '90d' ? value : '30d';
+  })();
   const {
     data: workspacePrivateOverview,
   } = useQuery({
-    queryKey: workspaceQK.workspacePrivateOverview(),
+    queryKey: workspaceQK.workspacePrivateOverview(privateOverviewPeriod),
     enabled: isWorkspaceAuthed,
-    queryFn: () => withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403, 404]),
+    queryFn: () => withStatusFallback(() => getWorkspacePrivateOverview({ period: privateOverviewPeriod }), null, [401, 403, 404]),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });

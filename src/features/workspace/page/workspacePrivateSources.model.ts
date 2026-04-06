@@ -21,6 +21,9 @@ type BuildWorkspacePrivateSourcesDataArgsParams = Pick<
 > & {
   filter: WorkspacePublicFiltersResult['filter'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+  activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
+  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
+  activeRequestsPeriod?: WorkspaceBranchProps['routeState']['activeRequestsPeriod'];
 };
 
 type BuildWorkspacePrivateSourcesRequestsStateArgsParams = {
@@ -67,6 +70,9 @@ export function buildWorkspacePrivateSourcesDataArgs({
   isAuthed,
   isWorkspaceAuthed,
   activeWorkspaceTab,
+  activePublicSection = null,
+  requestsScope = 'market',
+  activeRequestsPeriod = '30d',
 }: BuildWorkspacePrivateSourcesDataArgsParams): Parameters<typeof useWorkspaceData>[0] {
   return {
     filter,
@@ -76,6 +82,9 @@ export function buildWorkspacePrivateSourcesDataArgs({
     isWorkspacePublicSection: false,
     shouldLoadPrivateData: true,
     activeWorkspaceTab,
+    activePublicSection,
+    requestsScope,
+    activeRequestsPeriod,
   };
 }
 
@@ -138,9 +147,13 @@ export function resolveWorkspacePrivateSourcesResult({
     isProvidersLoading: data.isProvidersLoading,
     isProvidersError: data.isProvidersError,
     workspacePrivateOverview: data.workspacePrivateOverview,
+    isWorkspacePrivateOverviewLoading: data.isWorkspacePrivateOverviewLoading,
     myOffers: data.myOffers,
+    myClientOffers: data.myClientOffers,
     myRequests: data.myRequests,
     myOfferRequestsById: data.myOfferRequestsById,
+    myProviderContracts: data.myProviderContracts,
+    myClientContracts: data.myClientContracts,
     allMyContracts: collections.allMyContracts,
     favoriteRequests: data.favoriteRequests,
     favoriteProviders: data.favoriteProviders,
@@ -160,6 +173,7 @@ export function resolveWorkspacePrivateSourcesResult({
     cityById: catalogIndex.cityById,
     isMyRequestsLoading: data.isMyRequestsLoading,
     isMyOffersLoading: data.isMyOffersLoading,
+    isMyClientOffersLoading: data.isMyClientOffersLoading,
     isProviderContractsLoading: data.isProviderContractsLoading,
     isClientContractsLoading: data.isClientContractsLoading,
     isMyReviewsLoading: data.isMyReviewsLoading,

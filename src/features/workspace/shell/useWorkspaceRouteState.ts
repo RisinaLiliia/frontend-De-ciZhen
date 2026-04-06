@@ -6,6 +6,10 @@ import { toast } from 'sonner';
 
 import {
   isWorkspaceTab,
+  resolveWorkspaceRequestsPeriod,
+  resolveWorkspaceRequestsRole,
+  resolveWorkspaceRequestsScope,
+  resolveWorkspaceRequestsState,
   resolveFavoritesView,
   resolveStatusFilter,
   type WorkspaceTab,
@@ -23,6 +27,7 @@ type Translator = (key: I18nKey) => string;
 type Args = {
   forcedPublicSection?: PublicWorkspaceSection | null;
   forcedWorkspaceTab?: WorkspaceTab | null;
+  isAuthed?: boolean;
   searchParams: ReadonlyURLSearchParams;
   workspacePath: string;
   t: Translator;
@@ -31,6 +36,7 @@ type Args = {
 export function useWorkspaceRouteState({
   forcedPublicSection,
   forcedWorkspaceTab,
+  isAuthed = false,
   searchParams,
   workspacePath,
   t,
@@ -38,11 +44,15 @@ export function useWorkspaceRouteState({
   const tabParam = searchParams.get('tab');
   const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
   const sectionParam = searchParams.get('section');
+  const resolvedPublicSection = forcedPublicSection ?? resolvePublicWorkspaceSection(sectionParam);
+  const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), isAuthed);
+  const isRequestsSection = !forcedWorkspaceTab && !hasExplicitWorkspaceTab && resolvedPublicSection === 'requests';
+  const isPrivateRequestsScope = isRequestsSection && requestsScope === 'my';
 
   const activePublicSection = forcedWorkspaceTab || hasExplicitWorkspaceTab
     ? null
-    : (forcedPublicSection ?? resolvePublicWorkspaceSection(sectionParam));
-  const isWorkspacePublicSection = activePublicSection !== null;
+    : resolvedPublicSection;
+  const isWorkspacePublicSection = activePublicSection !== null && !isPrivateRequestsScope;
 
   const activeWorkspaceTab = React.useMemo(
     () => forcedWorkspaceTab ?? resolveWorkspaceTab(tabParam),
@@ -54,6 +64,18 @@ export function useWorkspaceRouteState({
   );
   const activeFavoritesView = React.useMemo(
     () => resolveFavoritesView(searchParams.get('fav')),
+    [searchParams],
+  );
+  const activeRequestsRole = React.useMemo(
+    () => resolveWorkspaceRequestsRole(searchParams.get('role')),
+    [searchParams],
+  );
+  const activeRequestsState = React.useMemo(
+    () => resolveWorkspaceRequestsState(searchParams.get('state')),
+    [searchParams],
+  );
+  const activeRequestsPeriod = React.useMemo(
+    () => resolveWorkspaceRequestsPeriod(searchParams.get('period') ?? searchParams.get('range')),
     [searchParams],
   );
 
@@ -77,6 +99,10 @@ export function useWorkspaceRouteState({
     activeWorkspaceTab,
     activeStatusFilter,
     activeFavoritesView,
+    requestsScope,
+    activeRequestsRole,
+    activeRequestsState,
+    activeRequestsPeriod,
     nextPath,
     guestLoginHref,
     onGuestLockedAction,

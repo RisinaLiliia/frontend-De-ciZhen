@@ -4,9 +4,12 @@ import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { buildRequestsListProps } from '@/components/requests/requestsListProps';
+import { ActivityInsight } from '@/components/ui/ActivityInsight';
 import { trackUXEvent } from '@/lib/analytics';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import {
+  RequestsPrivateActionRail,
+  RequestsPrivateView,
   WorkspaceOverviewMain,
   WorkspaceOverviewInsightsPanel,
   WorkspacePublicDemandMapPanel,
@@ -14,6 +17,7 @@ import {
   useWorkspacePrivateState,
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
+import { buildMyRequestsViewModel } from '@/features/workspace/requests/myRequestsView.model';
 import {
   useWorkspaceContentData,
   useWorkspacePresentation,
@@ -71,6 +75,7 @@ export function useWorkspacePrivatePresentationFlow({
       data,
       WorkspacePrivateIntroComponent: WorkspacePrivateIntro,
       showQuickAction: data.activePublicSection !== 'stats' && !isOverviewMode,
+      preferredRequestsRole: data.workspacePrivateOverview?.preferredRole ?? null,
       privateState,
     }),
   );
@@ -114,6 +119,18 @@ export function useWorkspacePrivatePresentationFlow({
     watchKey: isOverviewMode,
   });
   const overviewStatisticsModel = useWorkspaceStatisticsModel({ locale: branch.locale });
+
+  const privateInsightTopSlot = !isOverviewMode && isWorkspaceAuthed && privateState.insightText ? (
+    <section className="panel workspace-context-rail__panel workspace-context-rail__panel--insight">
+      <span className="workspace-environment__eyebrow">
+        {branch.locale === 'de' ? 'Arbeitslage' : 'Work snapshot'}
+      </span>
+      <ActivityInsight
+        text={privateState.insightText}
+        progressPercent={privateState.activityProgress}
+      />
+    </section>
+  ) : null;
 
   const overviewRailTopSlot = isOverviewMode ? (
     <>
@@ -216,6 +233,65 @@ export function useWorkspacePrivatePresentationFlow({
     ],
   );
 
+  const isUnifiedPrivateRequests =
+    data.activePublicSection === 'requests' &&
+    data.requestsScope === 'my';
+  const privateRequestsLoading = data.isMyRequestsLoading
+    || data.isMyOffersLoading
+    || data.isMyClientOffersLoading
+    || data.isProviderContractsLoading
+    || data.isClientContractsLoading
+    || (data.activeRequestsRole === 'all' && data.isWorkspacePrivateOverviewLoading);
+  const preferredRequestsRole = data.workspacePrivateOverview?.preferredRole ?? null;
+  const effectiveRequestsRole = data.activeRequestsRole === 'all'
+    ? preferredRequestsRole
+    : data.activeRequestsRole;
+  const privateRequestsModel = React.useMemo(
+    () =>
+      buildMyRequestsViewModel({
+        locale: branch.locale,
+        role: effectiveRequestsRole ?? 'all',
+        state: data.activeRequestsState,
+        period: data.activeRequestsPeriod,
+        sort: searchParams.get('sort'),
+        myRequests: data.myRequests,
+        myOffers: data.myOffers,
+        myClientOffers: data.myClientOffers,
+        myOfferRequestsById: data.myOfferRequestsById,
+        myProviderContracts: data.myProviderContracts,
+        myClientContracts: data.myClientContracts,
+        cityById: data.cityById,
+        categoryByKey: data.categoryByKey,
+        serviceByKey: data.serviceByKey,
+        formatDate: (value) => data.formatDate.format(new Date(value)),
+        formatPrice: (value) => data.formatPrice.format(value),
+      }),
+    [
+      branch.locale,
+      data.activeRequestsPeriod,
+      data.activeRequestsState,
+      data.categoryByKey,
+      data.cityById,
+      effectiveRequestsRole,
+      data.formatDate,
+      data.formatPrice,
+      data.myClientContracts,
+      data.myClientOffers,
+      data.myOfferRequestsById,
+      data.myOffers,
+      data.myProviderContracts,
+      data.myRequests,
+      data.serviceByKey,
+      searchParams,
+    ],
+  );
+  const privateAside = isUnifiedPrivateRequests ? (
+    <div className="stack-md">
+      {privateInsightTopSlot}
+      <RequestsPrivateActionRail locale={branch.locale} rail={privateRequestsModel.rail} />
+    </div>
+  ) : undefined;
+
   const privateMain = isOverviewMode ? (
     <WorkspaceOverviewMain
       locale={branch.locale}
@@ -238,6 +314,15 @@ export function useWorkspacePrivatePresentationFlow({
       pendingFavoriteProviderIds={pendingFavoriteProviderIds}
       onToggleProviderFavorite={onToggleProviderFavorite}
     />
+  ) : isUnifiedPrivateRequests ? (
+    <RequestsPrivateView
+      locale={branch.locale}
+      isWorkspaceAuthed={branch.isWorkspaceAuthed}
+      guestLoginHref={data.guestLoginHref}
+      model={privateRequestsModel}
+      isLoading={privateRequestsLoading}
+      isError={false}
+    />
   ) : (
     <WorkspaceContent {...workspaceContentProps} />
   );
@@ -249,7 +334,9 @@ export function useWorkspacePrivatePresentationFlow({
     onToggleProviderFavorite,
     workspaceIntroNode: resolvedWorkspaceIntroNode,
     workspaceAsideBaseProps,
-    asideTopSlot: overviewRailTopSlot,
+    asideTopSlot: overviewRailTopSlot ?? privateInsightTopSlot,
+    privateAside,
+    preferredRequestsRole,
     overviewDecisionPanelRef: overviewFocusPanelRef,
     privateMain,
     primaryAction,

@@ -50,6 +50,114 @@ export type WorkspacePublicRequestsBatchResponseDto = {
   missingIds: string[];
 };
 
+export type WorkspaceRequestsScopeDto = 'market' | 'my';
+export type WorkspaceRequestsRoleDto = 'all' | 'customer' | 'provider';
+export type WorkspaceRequestsStateDto = 'all' | 'open' | 'clarifying' | 'active' | 'completed';
+export type WorkspaceRequestsPeriodDto = WorkspacePublicActivityRange;
+
+export type WorkspaceRequestsResponseDto = {
+  section: 'requests';
+  scope: WorkspaceRequestsScopeDto;
+  header: {
+    eyebrow?: string;
+    title: string;
+    subtitle?: string;
+  };
+  filters: {
+    city?: string | null;
+    category?: string | null;
+    service?: string | null;
+    period?: WorkspaceRequestsPeriodDto;
+    role?: WorkspaceRequestsRoleDto;
+    state?: WorkspaceRequestsStateDto;
+    sort?: string;
+  };
+  summary?: WorkspaceRequestsSummaryDto | null;
+  list: WorkspaceRequestsListDto;
+  sidePanel?: WorkspaceRequestsSidePanelDto | null;
+};
+
+export type WorkspaceRequestsSummaryDto = {
+  items: Array<{
+    key: 'all' | 'open' | 'clarifying' | 'active' | 'completed' | 'pending';
+    label: string;
+    value: number;
+    isHighlighted?: boolean;
+  }>;
+};
+
+export type WorkspaceRequestsListDto = {
+  total: number;
+  page: number;
+  limit: number;
+  hasMore: boolean;
+  items: WorkspaceMyRequestCardDto[];
+};
+
+export type WorkspaceMyRequestCardDto = {
+  id: string;
+  role: 'customer' | 'provider';
+  title: string;
+  category: string;
+  subcategory?: string | null;
+  city?: string | null;
+  createdAt?: string | null;
+  nextEventAt?: string | null;
+  budget?: number | null;
+  agreedPrice?: number | null;
+  state: 'open' | 'clarifying' | 'active' | 'completed';
+  stateLabel: string;
+  urgency?: 'low' | 'medium' | 'high' | null;
+  activity?: {
+    label: string;
+    tone?: 'info' | 'warning' | 'success' | 'neutral';
+  } | null;
+  progress: {
+    currentStep: 'request' | 'offers' | 'selection' | 'contract' | 'done';
+    steps: Array<{
+      key: 'request' | 'offers' | 'selection' | 'contract' | 'done';
+      label: string;
+      status: 'done' | 'current' | 'upcoming';
+    }>;
+  };
+  quickActions: Array<{
+    key: string;
+    label: string;
+    tone: 'primary' | 'secondary' | 'neutral';
+    href?: string;
+    action?: string;
+  }>;
+};
+
+export type WorkspaceRequestsSidePanelDto = {
+  focus?: {
+    title: string;
+    description: string;
+    cta?: {
+      label: string;
+      href?: string;
+    };
+  } | null;
+  recommendation?: {
+    title: string;
+    description: string;
+    cta?: {
+      label: string;
+      href?: string;
+    };
+  } | null;
+  contextItems?: Array<{
+    title: string;
+    description?: string;
+    meta?: Array<{ label: string; value: string }>;
+    cta?: { label: string; href?: string };
+  }>;
+  nextSteps?: Array<{
+    id: string;
+    title: string;
+  }>;
+};
+
 export type WorkspacePrivateStatusCountsDto = {
   draft: number;
   published: number;
@@ -121,6 +229,7 @@ export type WorkspacePrivateOverviewDto = {
     userId: string;
     role: 'client' | 'provider' | 'admin';
   };
+  preferredRole: 'customer' | 'provider';
   requestsByStatus: WorkspacePrivateStatusCountsDto;
   providerOffersByStatus: WorkspacePrivateOfferStatusCountsDto;
   clientOffersByStatus: WorkspacePrivateOfferStatusCountsDto;

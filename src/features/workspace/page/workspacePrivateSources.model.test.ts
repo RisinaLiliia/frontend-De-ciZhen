@@ -31,6 +31,7 @@ describe('workspacePrivateSources.model', () => {
       isWorkspacePublicSection: false,
       shouldLoadPrivateData: true,
       activeWorkspaceTab: 'my-requests',
+      activeRequestsPeriod: '30d',
     });
   });
 

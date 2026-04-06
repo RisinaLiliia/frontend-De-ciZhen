@@ -67,7 +67,7 @@ export async function getWorkspaceStatisticsFallback(
       [400, 404],
     ),
     hasAccessToken
-      ? withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403, 404])
+      ? withStatusFallback(() => getWorkspacePrivateOverview({ period: legacyRange }), null, [401, 403, 404])
       : Promise.resolve(null),
   ]);
 

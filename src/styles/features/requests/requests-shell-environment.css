@@ -1,6 +1,10 @@
 /* src/styles/features/requests/requests-shell-environment.css */
 
 @layer components {
+  .workspace-shared-context-controls {
+    --workspace-context-control-font-size: 12px;
+  }
+
   .workspace-environment,
   .workspace-context-brief,
   .workspace-context-rail {
@@ -262,6 +266,157 @@
 
   .workspace-shared-context-controls__filters-grid {
     gap: var(--space-2);
+    align-items: start;
+  }
+
+  .workspace-shared-context-controls__control-row {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .workspace-shared-context-controls__control-cluster {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    flex-wrap: nowrap;
+    padding: 8px;
+    border-radius: 16px;
+    border: 1px solid color-mix(in oklab, white 68%, var(--c-border) 32%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 80%, var(--c-panel) 20%),
+        color-mix(in oklab, white 72%, var(--c-panel) 28%)
+      );
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 76%, transparent);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-padding-inline: 8px;
+  }
+
+  .workspace-shared-context-controls__control-cluster::-webkit-scrollbar {
+    display: none;
+  }
+
+  .workspace-shared-context-controls__inline-control {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .workspace-shared-context-controls__combined-row {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    align-items: end;
+    gap: var(--space-3);
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .workspace-shared-context-controls__combined-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .workspace-shared-context-controls__combined-row > .requests-scope-switch {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .workspace-shared-context-controls__combined-row > .howitworks-tabs {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    grid-column: 2;
+    justify-self: center;
+    min-width: 0;
+  }
+
+  .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab,
+  .workspace-shared-context-controls__slash-tab,
+  .workspace-shared-context-controls__surface .dc-select-trigger,
+  .workspace-shared-context-controls__surface .dc-city-search-input,
+  .workspace-shared-context-controls__range-toolbar .home-activity__range {
+    font-size: var(--workspace-context-control-font-size);
+  }
+
+  .workspace-shared-context-controls__combined-states,
+  .workspace-shared-context-controls__chip-group {
+    width: auto;
+    flex-wrap: nowrap;
+  }
+
+  .workspace-shared-context-controls__combined-states {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .workspace-shared-context-controls__slash-tabs {
+    display: inline-flex;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    gap: 8px;
+    grid-column: 3;
+    justify-self: end;
+    padding: 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    white-space: nowrap;
+  }
+
+  .workspace-shared-context-controls__slash-tab {
+    position: relative;
+    align-self: flex-end;
+    margin-bottom: -1px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-bottom-color: transparent;
+    border-radius: 12px 12px 0 0;
+    background: transparent;
+    color: var(--c-text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .workspace-shared-context-controls__slash-tab:hover {
+    color: var(--c-text);
+    background: color-mix(in oklab, white 92%, var(--c-panel) 8%);
+    border-color: color-mix(in oklab, var(--control-border-hover) 78%, transparent);
+  }
+
+  .workspace-shared-context-controls__slash-tab:focus-visible {
+    outline: none;
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c-primary) 34%, transparent);
+  }
+
+  .workspace-shared-context-controls__slash-tab.is-active {
+    color: var(--c-text);
+    font-weight: 700;
+    border-color: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-primary) 10%, white 90%),
+        color-mix(in oklab, var(--c-primary) 16%, white 84%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 84%, transparent),
+      0 18px 34px color-mix(in oklab, var(--c-primary) 12%, transparent);
   }
 
   .workspace-shared-context-controls__range-row {
@@ -444,6 +599,46 @@
     background: color-mix(in oklab, var(--c-panel) 92%, white 8%);
   }
 
+  html.dark .workspace-shared-context-controls__control-cluster {
+    border-color: color-mix(in oklab, var(--c-border) 84%, white 16%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 88%, white 12%),
+        color-mix(in oklab, var(--c-panel) 94%, white 6%)
+      );
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+  }
+
+  html.dark .workspace-shared-context-controls__slash-tab {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  html.dark .workspace-shared-context-controls__slash-tab:hover {
+    background: color-mix(in oklab, var(--c-panel) 88%, white 12%);
+    border-color: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+  }
+
+  html.dark .workspace-shared-context-controls__slash-tab:focus-visible {
+    border-color: color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c-primary) 38%, transparent);
+  }
+
+  html.dark .workspace-shared-context-controls__slash-tab.is-active {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 78%, var(--c-primary) 22%),
+        color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+      0 18px 34px color-mix(in oklab, var(--c-primary) 12%, transparent);
+  }
+
   @media (min-width: 768px) {
     .workspace-shared-context-controls__range-row {
       grid-template-columns: minmax(0, 1fr) auto auto;
@@ -617,6 +812,21 @@
     .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-row {
       gap: 10px;
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__control-cluster {
+      padding: 6px;
+      border-radius: 14px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-start;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tabs {
+      margin-left: 0;
     }
 
     .workspace-mobile-context-section__controls .workspace-shared-context-controls__select {

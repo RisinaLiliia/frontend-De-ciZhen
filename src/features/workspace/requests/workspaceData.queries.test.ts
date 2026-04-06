@@ -30,6 +30,7 @@ describe('workspaceData.queries', () => {
       },
       loadPlan,
       hasAccessToken: false,
+      activeRequestsPeriod: '30d',
     });
 
     expect(queries.publicOverview.enabled).toBe(true);
@@ -64,6 +65,7 @@ describe('workspaceData.queries', () => {
       filter: {},
       loadPlan,
       hasAccessToken: false,
+      activeRequestsPeriod: '30d',
     });
 
     expect(queries.privateOverview.enabled).toBe(false);

@@ -16,10 +16,12 @@ export function WorkspaceMobileSectionSheet({
   locale,
   activePublicSection,
   activeWorkspaceTab,
+  preferredRequestsRole = null,
 }: {
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
 }) {
   const t = useT();
   const { open, setOpen, panelRef, closeButtonRef } = useWorkspaceMobileSectionSheet();
@@ -29,6 +31,7 @@ export function WorkspaceMobileSectionSheet({
     locale,
     activePublicSection,
     activeWorkspaceTab,
+    preferredRequestsRole,
   });
 
   if (!open) return null;

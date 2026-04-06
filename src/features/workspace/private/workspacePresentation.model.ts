@@ -30,6 +30,7 @@ type BuildWorkspacePrivateIntroPropsArgs = {
   clientStatsPayload: WorkspacePrivateIntroProps['clientStatsPayload'];
   createRequestHref: string;
   showQuickAction?: boolean;
+  preferredRequestsRole?: WorkspacePrivateIntroProps['preferredRequestsRole'];
 };
 
 type BuildWorkspaceAsideBasePropsArgs = {
@@ -54,6 +55,7 @@ export function buildWorkspacePrivateIntroProps({
   clientStatsPayload,
   createRequestHref,
   showQuickAction = true,
+  preferredRequestsRole = null,
 }: BuildWorkspacePrivateIntroPropsArgs): WorkspacePrivateIntroProps {
   return {
     locale,
@@ -74,6 +76,7 @@ export function buildWorkspacePrivateIntroProps({
     clientStatsPayload,
     quickActionHref: createRequestHref,
     showQuickAction,
+    preferredRequestsRole,
   };
 }
 

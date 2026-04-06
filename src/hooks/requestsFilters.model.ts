@@ -6,8 +6,11 @@ import {
 } from '@/lib/requests/pagination';
 
 export const REQUESTS_FILTER_QUERY_KEYS = new Set([
+  'city',
   'cityId',
+  'category',
   'categoryKey',
+  'service',
   'subcategoryKey',
   'serviceKey',
   'sort',
@@ -55,9 +58,12 @@ export function resolveRequestsFilterQueryParams(
   const limit = requestedLimit <= REQUESTS_PAGE_SIZE_SINGLE ? REQUESTS_PAGE_SIZE_SINGLE : REQUESTS_PAGE_SIZE;
 
   return {
-    categoryParam: searchParams.get('categoryKey') ?? ALL_OPTION_KEY,
-    subcategoryParam: searchParams.get('subcategoryKey') ?? searchParams.get('serviceKey') ?? ALL_OPTION_KEY,
-    cityId: searchParams.get('cityId') ?? ALL_OPTION_KEY,
+    categoryParam: searchParams.get('category') ?? searchParams.get('categoryKey') ?? ALL_OPTION_KEY,
+    subcategoryParam: searchParams.get('service')
+      ?? searchParams.get('subcategoryKey')
+      ?? searchParams.get('serviceKey')
+      ?? ALL_OPTION_KEY,
+    cityId: searchParams.get('city') ?? searchParams.get('cityId') ?? ALL_OPTION_KEY,
     sortBy: (searchParams.get('sort') as PublicRequestsSort | null) ?? defaultSort,
     page: readPositiveInt(searchParams.get('page'), 1),
     limit,
@@ -142,9 +148,9 @@ export function buildRequestsFiltersHref(params: {
   const nextPage = next.page ?? current.page;
   const nextLimit = next.limit ?? current.limit;
 
-  if (nextCity !== ALL_OPTION_KEY) merged.set('cityId', nextCity);
-  if (nextCategory !== ALL_OPTION_KEY) merged.set('categoryKey', nextCategory);
-  if (nextSubcategory !== ALL_OPTION_KEY) merged.set('subcategoryKey', nextSubcategory);
+  if (nextCity !== ALL_OPTION_KEY) merged.set('city', nextCity);
+  if (nextCategory !== ALL_OPTION_KEY) merged.set('category', nextCategory);
+  if (nextSubcategory !== ALL_OPTION_KEY) merged.set('service', nextSubcategory);
   if (nextSort !== defaultSort) merged.set('sort', nextSort);
   if (nextPage > 1) merged.set('page', String(nextPage));
   if (nextLimit !== DEFAULT_REQUESTS_FILTER_LIMIT) merged.set('limit', String(nextLimit));
