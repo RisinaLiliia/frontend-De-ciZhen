@@ -60,7 +60,6 @@ export function useWorkspaceData(params: Params) {
     [
       activeWorkspaceTab,
       activePublicSection,
-      activeRequestsPeriod,
       hasAccessToken,
       isAuthed,
       isWorkspaceAuthed,

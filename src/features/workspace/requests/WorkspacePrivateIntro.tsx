@@ -43,8 +43,6 @@ export function WorkspacePrivateIntro({
   activeWorkspaceTab,
   personalNavItems,
   hideNavBadges = false,
-  insightText,
-  activityProgress,
   quickActionHref = '/request/create',
   showQuickAction = true,
   leftColumnSlot,

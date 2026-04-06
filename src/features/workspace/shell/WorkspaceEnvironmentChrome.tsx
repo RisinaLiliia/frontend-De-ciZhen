@@ -886,24 +886,27 @@ export function useWorkspaceSharedContext({
     }
     : copy.modes[activeMode];
   const activeModeHref = modeItems.find((item) => item.isActive)?.href ?? '/workspace';
-  const scopeSwitch = activeMode === 'requests'
-    ? ([
-      {
-        key: 'market' as const,
-        label: locale === 'de' ? 'Markt' : 'Market',
-        href: buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'market' }),
-        isActive: requestsScope === 'market',
-      },
-      {
-        key: 'my' as const,
-        label: locale === 'de' ? 'Meine Arbeit' : 'My work',
-        href: auth.status === 'authenticated'
-          ? buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' })
-          : `/auth/login?next=${encodeURIComponent(buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' }))}`,
-        isActive: requestsScope === 'my',
-      },
-    ])
-    : null;
+  const scopeSwitch = React.useMemo(
+    () => (activeMode === 'requests'
+      ? [
+        {
+          key: 'market' as const,
+          label: locale === 'de' ? 'Markt' : 'Market',
+          href: buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'market' }),
+          isActive: requestsScope === 'market',
+        },
+        {
+          key: 'my' as const,
+          label: locale === 'de' ? 'Meine Arbeit' : 'My work',
+          href: auth.status === 'authenticated'
+            ? buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' })
+            : `/auth/login?next=${encodeURIComponent(buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' }))}`,
+          isActive: requestsScope === 'my',
+        },
+      ]
+      : null),
+    [activeMode, auth.status, locale, rawSearch, requestsScope],
+  );
   const effectiveSortBy = requestsScope === 'my'
     ? (searchParams.get('sort') ?? 'activity')
     : sortBy;

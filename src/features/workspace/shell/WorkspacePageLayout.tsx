@@ -98,6 +98,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       intro as React.ReactElement<{
         navHeaderSlot?: React.ReactNode;
         leftColumnSlot?: React.ReactNode;
+        preferredRequestsRole?: 'customer' | 'provider' | null;
       }>,
       {
         navHeaderSlot: (
@@ -111,7 +112,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
         ),
       },
     );
-  }, [activePublicSection, activeWorkspaceTab, intro, locale, t]);
+  }, [activePublicSection, activeWorkspaceTab, intro, locale, preferredRequestsRole, t]);
 
   const contextualAside = (
     <WorkspaceContextAside
