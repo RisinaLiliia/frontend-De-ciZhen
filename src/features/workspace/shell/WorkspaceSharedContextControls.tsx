@@ -6,6 +6,7 @@ import { RequestsFilterSelect } from '@/components/requests/RequestsFilterSelect
 import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
+import { WorkspaceChipToggleGroup } from '@/features/workspace/requests/WorkspaceChipToggleGroup';
 import { IconFilter } from '@/components/ui/icons/icons';
 import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
@@ -58,6 +59,17 @@ type WorkspaceSharedContextControlsProps = {
     onChange: (value: string) => void;
     summaryLabel: string;
   };
+  extraFilters?: Array<{
+    key: string;
+    value: string;
+    options: FilterOption[];
+    ariaLabel: string;
+    onChange: (value: string) => void;
+    summaryLabel: string;
+    disabled?: boolean;
+    display?: 'select' | 'chips';
+  }>;
+  inlineControl?: React.ReactNode;
   onReset: () => void;
   action?: {
     label: string;
@@ -81,6 +93,8 @@ export function WorkspaceSharedContextControls({
   service,
   range,
   sort,
+  extraFilters,
+  inlineControl,
   onReset,
   action,
   className,
@@ -93,10 +107,55 @@ export function WorkspaceSharedContextControls({
     surface === 'shell' ? 'workspace-context-strip' : 'workspace-shared-context-controls--embedded',
     className,
   ].filter(Boolean).join(' ');
+  const hasControlCluster = Boolean(inlineControl) || Boolean(extraFilters?.length);
+  const controlClusterClassName = [
+    'requests-filter',
+    inlineControl && !extraFilters?.length
+      ? 'workspace-shared-context-controls__control-row'
+      : 'workspace-shared-context-controls__control-cluster',
+  ].join(' ');
 
   const renderContent = (mobile: boolean) => (
     <div className="requests-filters requests-filters--surface-embedded requests-filters--shell workspace-shared-context-controls__surface">
       <div className="workspace-shared-context-controls__body">
+        {hasControlCluster ? (
+          <div className={controlClusterClassName}>
+            {inlineControl ? (
+              <div className="workspace-shared-context-controls__inline-control">
+                {inlineControl}
+              </div>
+            ) : null}
+            {extraFilters?.map((filter) => (
+              <div
+                key={filter.key}
+                className={filter.display === 'chips' ? 'workspace-shared-context-controls__chip-filter' : undefined}
+              >
+                {filter.display === 'chips' ? (
+                  <WorkspaceChipToggleGroup
+                    items={filter.options.map((option) => ({
+                      key: option.value,
+                      label: option.label,
+                    }))}
+                    selectedKey={filter.value}
+                    onSelect={filter.onChange}
+                    ariaLabel={filter.ariaLabel}
+                    className="workspace-shared-context-controls__chip-group"
+                  />
+                ) : (
+                  <RequestsFilterSelect
+                    options={filter.options}
+                    value={filter.value}
+                    onChange={filter.onChange}
+                    className="requests-select workspace-shared-context-controls__select"
+                    ariaLabel={filter.ariaLabel}
+                    disabled={filter.disabled}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        ) : null}
+
         <div className="requests-filter-grid requests-filter-grid--primary workspace-shared-context-controls__filters-grid">
           <div className="requests-filter">
             <div className="requests-select-wrap">
@@ -198,6 +257,9 @@ export function WorkspaceSharedContextControls({
       {service ? (
         <span className="workspace-mobile-filters__summary-chip">{service.summaryLabel}</span>
       ) : null}
+      {extraFilters?.map((filter) => (
+        <span key={filter.key} className="workspace-mobile-filters__summary-chip">{filter.summaryLabel}</span>
+      ))}
     </>
   );
 

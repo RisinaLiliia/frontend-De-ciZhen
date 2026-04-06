@@ -26,6 +26,8 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
     workspaceIntroNode,
     workspaceAsideBaseProps,
     asideTopSlot,
+    privateAside,
+    preferredRequestsRole,
     overviewDecisionPanelRef,
     privateMain,
     primaryAction,
@@ -47,12 +49,14 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
         isWorkspaceAuthed={isWorkspaceAuthed}
         activePublicSection={activePublicSection}
         activeWorkspaceTab={activeWorkspaceTab}
+        preferredRequestsRole={preferredRequestsRole}
         t={t}
         locale={locale}
         intro={workspaceIntroNode}
         explore={EMPTY_EXPLORE}
         privateMain={privateMain}
         publicMain={privateMain}
+        privateAside={privateAside}
         asideTopSlot={asideTopSlot}
         overviewDecisionPanelRef={overviewDecisionPanelRef}
         workspaceAsideBaseProps={workspaceAsideBaseProps}

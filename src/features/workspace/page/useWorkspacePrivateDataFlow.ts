@@ -17,6 +17,10 @@ export function useWorkspacePrivateDataFlow({
     activeWorkspaceTab,
     activeStatusFilter,
     activeFavoritesView,
+    requestsScope,
+    activeRequestsRole,
+    activeRequestsState,
+    activeRequestsPeriod,
     nextPath,
     guestLoginHref,
     onGuestLockedAction,
@@ -29,6 +33,8 @@ export function useWorkspacePrivateDataFlow({
     isWorkspaceAuthed,
     activePublicSection,
     activeWorkspaceTab,
+    requestsScope,
+    activeRequestsPeriod,
   });
 
   const interactions = useWorkspacePrivateInteractions({
@@ -52,6 +58,10 @@ export function useWorkspacePrivateDataFlow({
     activeWorkspaceTab,
     activeStatusFilter,
     activeFavoritesView,
+    requestsScope,
+    activeRequestsRole,
+    activeRequestsState,
+    activeRequestsPeriod,
     guestLoginHref,
     onGuestLockedAction,
     ...sources,

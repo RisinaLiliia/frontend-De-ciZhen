@@ -8,6 +8,7 @@ export { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
 export { WorkspacePrivateIntro } from './WorkspacePrivateIntro';
 export type { WorkspacePrivateIntroProps } from './WorkspacePrivateIntro';
 export { WorkspacePublicIntro } from './WorkspacePublicIntro';
+export { RequestsPrivateActionRail, RequestsPrivateView } from './RequestsPrivateView';
 export { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 export { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
 export { WorkspacePublicStatsPanel } from './WorkspacePublicStatsPanel';
@@ -46,8 +47,21 @@ export {
   resolveWorkspaceTab,
   REQUESTS_TAB_STORAGE_KEY,
 } from './workspace.types';
+export {
+  buildWorkspaceRequestsScopeHref,
+  resolveWorkspaceRequestsPeriod,
+  resolveWorkspaceRequestsRole,
+  resolveWorkspaceRequestsScope,
+  resolveWorkspaceRequestsState,
+} from './workspaceRequestsScope.model';
 export type {
   FavoritesView,
   WorkspaceStatusFilter,
   WorkspaceTab,
 } from './workspace.types';
+export type {
+  WorkspaceRequestsPeriod,
+  WorkspaceRequestsRole,
+  WorkspaceRequestsScope,
+  WorkspaceRequestsState,
+} from './workspaceRequestsScope.model';

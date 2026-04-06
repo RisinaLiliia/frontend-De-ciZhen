@@ -28,7 +28,16 @@ import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import { isWorkspaceTab, type WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
+import {
+  buildWorkspaceRequestsScopeHref,
+  isWorkspaceTab,
+  resolveWorkspaceRequestsRole,
+  resolveWorkspaceRequestsScope,
+  resolveWorkspaceRequestsState,
+  type WorkspaceRequestsScope,
+  type WorkspaceTab,
+} from '@/features/workspace/requests';
 
 type Translator = (key: I18nKey) => string;
 
@@ -76,6 +85,14 @@ type WorkspaceModeCopy = {
 
 type WorkspaceSharedContext = {
   activeMode: WorkspaceModeKey;
+  activePublicSection: PublicWorkspaceSection | null;
+  requestsScope: WorkspaceRequestsScope;
+  scopeSwitch: Array<{
+    key: WorkspaceRequestsScope;
+    label: string;
+    href: string;
+    isActive: boolean;
+  }> | null;
   modeItems: WorkspaceModeItem[];
   title: string;
   description: string;
@@ -99,11 +116,17 @@ type WorkspaceSharedContext = {
     subcategoryKey: string;
     sortBy: string;
     range: WorkspaceStatisticsRange;
+    role: string;
+    state: string;
+    viewerMode: 'provider' | 'customer';
     onCityChange: (value: string) => void;
     onCategoryChange: (value: string) => void;
     onSubcategoryChange: (value: string) => void;
     onSortChange: (value: string) => void;
     onRangeChange: (next: WorkspaceStatisticsRange) => void;
+    onRoleChange: (value: string) => void;
+    onStateChange: (value: string) => void;
+    onViewerModeChange: (value: 'provider' | 'customer') => void;
     onReset: () => void;
     closeLabel: string;
   };
@@ -126,8 +149,8 @@ type WorkspaceFocusRecommendationCopy = {
   }>;
 };
 
-const SHARED_QUERY_KEYS = ['cityId', 'categoryKey', 'subcategoryKey', 'range'] as const;
-const CLEAR_QUERY_KEYS = ['cityId', 'categoryKey', 'subcategoryKey', 'range', 'sort', 'page'] as const;
+const SHARED_QUERY_KEYS = ['city', 'category', 'service', 'period', 'range'] as const;
+const CLEAR_QUERY_KEYS = ['city', 'cityId', 'category', 'categoryKey', 'service', 'subcategoryKey', 'serviceKey', 'period', 'range', 'sort', 'page', 'role', 'state'] as const;
 
 function getWorkspaceFocusRecommendationCopy(locale: Locale): WorkspaceFocusRecommendationCopy {
   if (locale === 'en') {
@@ -362,6 +385,52 @@ function resolveWorkspaceSharedRange(value: string | null): WorkspaceStatisticsR
   return '30d';
 }
 
+function getRequestsScopeTitle(locale: Locale, scope: WorkspaceRequestsScope) {
+  if (scope === 'my') {
+    return {
+      title: locale === 'de' ? 'Meine Arbeit' : 'My work',
+      description: locale === 'de'
+        ? 'Verwalte deine Anfragen, laufenden Vorgänge, Rückmeldungen und Abschlüsse in einer Arbeitsumgebung.'
+        : 'Manage your requests, workflows, replies, and completions in one operating environment.',
+      railDescription: locale === 'de'
+        ? 'Arbeite offene Vorgänge, Rückmeldungen und Abschlüsse im gleichen Kontext ab.'
+        : 'Process open workflows, replies, and completions inside the same context.',
+      scope: locale === 'de'
+        ? 'Operativer Modus für deine eigenen Vorgänge'
+        : 'Operational mode for your own workflows',
+    };
+  }
+
+  return {
+    title: locale === 'de' ? 'Aufträge entdecken' : 'Discover requests',
+    description: locale === 'de'
+      ? 'Finde passende Anfragen, vergleiche Regionen und beobachte den Markt im aktuellen Kontext.'
+      : 'Find matching requests, compare regions, and observe the market inside the current context.',
+    railDescription: locale === 'de'
+      ? 'Nutze denselben Kontext, um Nachfrage, Regionen und Marktbewegung zu vergleichen.'
+      : 'Use the same context to compare demand, regions, and market movement.',
+    scope: locale === 'de'
+      ? 'Marktmodus für öffentliche Nachfrage'
+      : 'Market mode for public demand',
+  };
+}
+
+function buildPrivateSortOptions(locale: Locale): FilterOption[] {
+  return locale === 'de'
+    ? [
+      { value: 'activity', label: 'Neueste Aktivität' },
+      { value: 'deadline', label: 'Bald fällig' },
+      { value: 'newest', label: 'Neu erstellt' },
+      { value: 'budget', label: 'Höchstes Budget' },
+    ]
+    : [
+      { value: 'activity', label: 'Latest activity' },
+      { value: 'deadline', label: 'Due soon' },
+      { value: 'newest', label: 'Newest' },
+      { value: 'budget', label: 'Highest budget' },
+    ];
+}
+
 function fillWorkspaceModeTemplate(template: string, mode: string) {
   return template.replace('{mode}', mode);
 }
@@ -443,6 +512,105 @@ function buildSharedContextControlsProps({
   const categoryChip = model.chips.find((chip) => chip.key === 'category');
   const serviceChip = model.chips.find((chip) => chip.key === 'service');
   const rangeChip = model.chips.find((chip) => chip.key === 'range');
+  const statsCopy = getWorkspaceStatisticsCopy(locale);
+  const requestsScopeControl = model.scopeSwitch ? (
+    <nav className="requests-scope-switch" aria-label={locale === 'de' ? 'Auftragsmodus' : 'Request scope'}>
+      {model.scopeSwitch.map((item) => (
+        <Link
+          key={item.key}
+          href={item.href}
+          prefetch={false}
+          className={`requests-scope-switch__item${item.isActive ? ' is-active' : ''}`.trim()}
+          aria-current={item.isActive ? 'page' : undefined}
+        >
+          {item.label}
+        </Link>
+      ))}
+    </nav>
+  ) : null;
+  const myWorkInlineControl = model.requestsScope === 'my' ? (
+    <div className="workspace-shared-context-controls__combined-row">
+      {requestsScopeControl}
+      <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
+        <button
+          type="button"
+          aria-pressed={model.controls.role === 'customer'}
+          className={`howitworks-tab ${model.controls.role === 'customer' ? 'is-active' : ''}`.trim()}
+          onClick={() => model.controls.onRoleChange('customer')}
+        >
+          {statsCopy.viewerModeCustomerLabel}
+        </button>
+        <button
+          type="button"
+          aria-pressed={model.controls.role === 'provider'}
+          className={`howitworks-tab ${model.controls.role === 'provider' ? 'is-active' : ''}`.trim()}
+          onClick={() => model.controls.onRoleChange('provider')}
+        >
+          {statsCopy.viewerModeProviderLabel}
+        </button>
+      </div>
+
+      <div
+        className="workspace-shared-context-controls__slash-tabs"
+        role="group"
+        aria-label={locale === 'de' ? 'Status' : 'State'}
+      >
+        {(locale === 'de'
+          ? [
+            { key: 'all', label: 'Alle Stati' },
+            { key: 'open', label: 'Offen' },
+            { key: 'clarifying', label: 'In Klärung' },
+            { key: 'active', label: 'In Arbeit' },
+            { key: 'completed', label: 'Abgeschlossen' },
+          ]
+          : [
+            { key: 'all', label: 'All states' },
+            { key: 'open', label: 'Open' },
+            { key: 'clarifying', label: 'Clarifying' },
+            { key: 'active', label: 'Active' },
+            { key: 'completed', label: 'Completed' },
+          ]).map((item) => {
+          const isActive = model.controls.state === item.key;
+
+          return (
+            <button
+              key={item.key}
+              type="button"
+              aria-pressed={isActive}
+              className={`workspace-shared-context-controls__slash-tab ${isActive ? 'is-active' : ''}`.trim()}
+              onClick={() => model.controls.onStateChange(item.key)}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  ) : requestsScopeControl ? (
+    <div className="workspace-shared-context-controls__combined-row">
+      {requestsScopeControl}
+    </div>
+  ) : model.activePublicSection === 'stats' ? (
+    <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
+      <button
+        type="button"
+        aria-pressed={model.controls.viewerMode === 'provider'}
+        className={`howitworks-tab ${model.controls.viewerMode === 'provider' ? 'is-active' : ''}`.trim()}
+        onClick={() => model.controls.onViewerModeChange('provider')}
+      >
+        {statsCopy.viewerModeProviderLabel}
+      </button>
+      <button
+        type="button"
+        aria-pressed={model.controls.viewerMode === 'customer'}
+        className={`howitworks-tab ${model.controls.viewerMode === 'customer' ? 'is-active' : ''}`.trim()}
+        onClick={() => model.controls.onViewerModeChange('customer')}
+      >
+        {statsCopy.viewerModeCustomerLabel}
+      </button>
+    </div>
+  ) : null;
+  const extraFilters = model.requestsScope === 'my' ? undefined : undefined;
 
   return {
     title: model.copy.sharedContextLabel,
@@ -497,6 +665,8 @@ function buildSharedContextControlsProps({
       onChange: model.controls.onSortChange,
       summaryLabel: model.controls.sortOptions.find((item) => item.value === model.controls.sortBy)?.label ?? '',
     },
+    extraFilters,
+    inlineControl: myWorkInlineControl,
     onReset: model.controls.onReset,
   };
 }
@@ -506,19 +676,28 @@ export function useWorkspaceSharedContext({
   locale,
   activePublicSection,
   activeWorkspaceTab,
+  preferredRequestsRole = null,
 }: {
   t: Translator;
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
 }): WorkspaceSharedContext {
+  const auth = useAuthSnapshot();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const copy = React.useMemo(() => getWorkspaceModeCopy(locale), [locale]);
   const sectionParam = searchParams.get('section');
   const hasExplicitWorkspaceTab = isWorkspaceTab(searchParams.get('tab'));
-  const range = searchParams.get('range');
+  const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), auth.status === 'authenticated');
+  const requestRole = resolveWorkspaceRequestsRole(searchParams.get('role'));
+  const requestState = resolveWorkspaceRequestsState(searchParams.get('state'));
+  const viewerMode = searchParams.get('viewerMode') === 'customer'
+    ? 'customer'
+    : 'provider';
+  const range = searchParams.get('period') ?? searchParams.get('range');
   const [, startTransition] = React.useTransition();
   const {
     categoryKey,
@@ -539,6 +718,7 @@ export function useWorkspaceSharedContext({
     shouldLoadCatalog: true,
     activePublicSection,
   });
+  const privateSortOptions = React.useMemo(() => buildPrivateSortOptions(locale), [locale]);
 
   const rawSearch = searchParams.toString();
   const currentRange = React.useMemo(
@@ -555,6 +735,9 @@ export function useWorkspaceSharedContext({
     }),
     [activePublicSection, activeWorkspaceTab, hasExplicitWorkspaceTab, pathname, sectionParam],
   );
+  const effectiveRequestRole = requestRole === 'all'
+    ? (preferredRequestsRole ?? 'all')
+    : requestRole;
 
   const replaceSharedContext = React.useCallback((mutate: (params: URLSearchParams) => void) => {
     const current = searchParams.toString();
@@ -570,8 +753,34 @@ export function useWorkspaceSharedContext({
 
   const onRangeChange = React.useCallback((next: WorkspaceStatisticsRange) => {
     replaceSharedContext((params) => {
+      params.set('period', next);
       params.set('range', next);
       params.delete('statsCityPage');
+    });
+  }, [replaceSharedContext]);
+
+  const onRoleChange = React.useCallback((next: string) => {
+    replaceSharedContext((params) => {
+      params.set('role', next);
+    });
+  }, [replaceSharedContext]);
+
+  const onStateChange = React.useCallback((next: string) => {
+    replaceSharedContext((params) => {
+      params.set('state', next);
+    });
+  }, [replaceSharedContext]);
+
+  const onViewerModeChange = React.useCallback((next: 'provider' | 'customer') => {
+    replaceSharedContext((params) => {
+      params.set('viewerMode', next);
+    });
+  }, [replaceSharedContext]);
+
+  const onPrivateSortChange = React.useCallback((next: string) => {
+    replaceSharedContext((params) => {
+      params.set('sort', next);
+      params.delete('page');
     });
   }, [replaceSharedContext]);
 
@@ -670,12 +879,45 @@ export function useWorkspaceSharedContext({
     [activeMode, copy.modes.actions.description, copy.modes.actions.label, copy.modes.analysis.description, copy.modes.analysis.label, copy.modes.overview.description, copy.modes.overview.label, copy.modes.providers.description, copy.modes.providers.label, copy.modes.requests.description, copy.modes.requests.label, rawSearch],
   );
 
-  const activeModeCopy = copy.modes[activeMode];
+  const activeModeCopy = activeMode === 'requests'
+    ? {
+      ...copy.modes.requests,
+      ...getRequestsScopeTitle(locale, requestsScope),
+    }
+    : copy.modes[activeMode];
   const activeModeHref = modeItems.find((item) => item.isActive)?.href ?? '/workspace';
+  const scopeSwitch = React.useMemo(
+    () => (activeMode === 'requests'
+      ? [
+        {
+          key: 'market' as const,
+          label: locale === 'de' ? 'Markt' : 'Market',
+          href: buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'market' }),
+          isActive: requestsScope === 'market',
+        },
+        {
+          key: 'my' as const,
+          label: locale === 'de' ? 'Meine Arbeit' : 'My work',
+          href: auth.status === 'authenticated'
+            ? buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' })
+            : `/auth/login?next=${encodeURIComponent(buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' }))}`,
+          isActive: requestsScope === 'my',
+        },
+      ]
+      : null),
+    [activeMode, auth.status, locale, rawSearch, requestsScope],
+  );
+  const effectiveSortBy = requestsScope === 'my'
+    ? (searchParams.get('sort') ?? 'activity')
+    : sortBy;
+  const effectiveSortOptions = requestsScope === 'my' ? privateSortOptions : sortOptions;
 
   return React.useMemo(
     () => ({
       activeMode,
+      activePublicSection,
+      requestsScope,
+      scopeSwitch,
       modeItems,
       title: activeModeCopy.title,
       description: activeModeCopy.description,
@@ -688,23 +930,30 @@ export function useWorkspaceSharedContext({
         cityOptions,
         categoryOptions,
         serviceOptions,
-        sortOptions,
+        sortOptions: effectiveSortOptions,
         cityId,
         categoryKey,
         subcategoryKey,
-        sortBy,
+        sortBy: effectiveSortBy,
         range: currentRange,
+        role: effectiveRequestRole,
+        state: requestState,
+        viewerMode,
         onCityChange: onCityChangeTracked,
         onCategoryChange: onCategoryChangeTracked,
         onSubcategoryChange: onSubcategoryChangeTracked,
-        onSortChange: onSortChangeTracked,
+        onSortChange: requestsScope === 'my' ? onPrivateSortChange : onSortChangeTracked,
         onRangeChange,
+        onRoleChange,
+        onStateChange,
+        onViewerModeChange,
         onReset,
         closeLabel: t(I18N_KEYS.auth.closeDialog),
       },
     }),
     [
       activeMode,
+      activePublicSection,
       activeModeCopy.description,
       activeModeCopy.railDescription,
       activeModeCopy.scope,
@@ -717,18 +966,27 @@ export function useWorkspaceSharedContext({
       cityOptions,
       copy,
       currentRange,
+      effectiveRequestRole,
+      effectiveSortBy,
+      effectiveSortOptions,
       modeItems,
       onCategoryChangeTracked,
       onCityChangeTracked,
+      onPrivateSortChange,
+      onRoleChange,
       onSortChangeTracked,
+      onStateChange,
       onSubcategoryChangeTracked,
+      onViewerModeChange,
       onRangeChange,
       onReset,
+      requestState,
+      requestsScope,
       serviceOptions,
-      sortBy,
-      sortOptions,
+      scopeSwitch,
       subcategoryKey,
       t,
+      viewerMode,
     ],
   );
 }
@@ -738,17 +996,20 @@ export function WorkspaceModeHeader({
   locale,
   activePublicSection,
   activeWorkspaceTab,
+  preferredRequestsRole = null,
 }: {
   t: Translator;
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
 }) {
   const model = useWorkspaceSharedContext({
     t,
     locale,
     activePublicSection,
     activeWorkspaceTab,
+    preferredRequestsRole,
   });
   const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
   return (
@@ -795,10 +1056,12 @@ export function WorkspaceMobileContextSection({
   locale,
   activePublicSection,
   activeWorkspaceTab,
+  preferredRequestsRole = null,
 }: {
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
 }) {
   const t = useT();
   const model = useWorkspaceSharedContext({
@@ -806,6 +1069,7 @@ export function WorkspaceMobileContextSection({
     locale,
     activePublicSection,
     activeWorkspaceTab,
+    preferredRequestsRole,
   });
   const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
 
@@ -826,6 +1090,7 @@ export function WorkspaceContextFocusPanel({
   locale,
   activePublicSection,
   activeWorkspaceTab,
+  preferredRequestsRole = null,
   className,
   panelRef,
 }: {
@@ -833,6 +1098,7 @@ export function WorkspaceContextFocusPanel({
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
   className?: string;
   panelRef?: React.Ref<HTMLElement>;
 }) {
@@ -841,6 +1107,7 @@ export function WorkspaceContextFocusPanel({
     locale,
     activePublicSection,
     activeWorkspaceTab,
+    preferredRequestsRole,
   });
   const statsCopy = React.useMemo(() => getWorkspaceStatisticsCopy(locale), [locale]);
   const focusCopy = React.useMemo(() => getWorkspaceFocusRecommendationCopy(locale), [locale]);
@@ -975,6 +1242,7 @@ export function WorkspaceContextAside({
   locale,
   activePublicSection,
   activeWorkspaceTab,
+  preferredRequestsRole = null,
   className,
   topSlot,
   panelRef,
@@ -984,6 +1252,7 @@ export function WorkspaceContextAside({
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
   className?: string;
   topSlot?: React.ReactNode;
   panelRef?: React.Ref<HTMLElement>;
@@ -998,6 +1267,7 @@ export function WorkspaceContextAside({
         locale={locale}
         activePublicSection={activePublicSection}
         activeWorkspaceTab={activeWorkspaceTab}
+        preferredRequestsRole={preferredRequestsRole}
         panelRef={panelRef}
       />
 

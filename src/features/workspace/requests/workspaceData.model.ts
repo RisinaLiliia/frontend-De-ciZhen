@@ -2,6 +2,7 @@
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
 
 type WorkspaceDataPlanArgs = {
   isAuthed: boolean;
@@ -9,6 +10,8 @@ type WorkspaceDataPlanArgs = {
   isWorkspacePublicSection: boolean;
   shouldLoadPrivateData: boolean;
   activeWorkspaceTab: WorkspaceTab;
+  requestsScope?: WorkspaceRequestsScope;
+  activePublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | 'profile' | null;
   hasAccessToken: boolean;
 };
 
@@ -17,6 +20,7 @@ export type WorkspaceDataLoadPlan = {
   shouldLoadPrivateOverview: boolean;
   shouldLoadMyRequests: boolean;
   shouldLoadMyOffers: boolean;
+  shouldLoadMyClientOffers: boolean;
   shouldLoadMyContracts: boolean;
   shouldLoadFavoriteRequests: boolean;
   shouldLoadFavoriteProviders: boolean;
@@ -35,20 +39,32 @@ export function resolveWorkspaceDataPlan({
   isWorkspacePublicSection,
   shouldLoadPrivateData,
   activeWorkspaceTab,
+  requestsScope = 'market',
+  activePublicSection = null,
   hasAccessToken,
 }: WorkspaceDataPlanArgs): WorkspaceDataLoadPlan {
+  const shouldLoadUnifiedPrivateRequests =
+    isWorkspaceAuthed &&
+    shouldLoadPrivateData &&
+    requestsScope === 'my' &&
+    activePublicSection === 'requests';
   const shouldLoadPublicRequests = isWorkspacePublicSection || !isWorkspaceAuthed;
   const shouldLoadPrivateOverview = isWorkspaceAuthed && shouldLoadPrivateData && hasAccessToken;
   const shouldLoadMyRequests =
-    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-requests';
+    shouldLoadUnifiedPrivateRequests
+    || (isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-requests');
   const shouldLoadMyOffers =
-    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-offers';
+    shouldLoadUnifiedPrivateRequests
+    || (isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-offers');
+  const shouldLoadMyClientOffers = shouldLoadUnifiedPrivateRequests;
   const shouldLoadMyContracts =
-    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'completed-jobs';
+    shouldLoadUnifiedPrivateRequests
+    || (isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'completed-jobs');
   const shouldLoadFavoriteRequests =
     isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'favorites';
   const shouldLoadFavoriteProviders = isAuthed && shouldLoadPrivateData;
-  const shouldLoadOfferRequests = isWorkspaceAuthed && activeWorkspaceTab === 'my-offers';
+  const shouldLoadOfferRequests =
+    shouldLoadMyOffers && (shouldLoadUnifiedPrivateRequests || activeWorkspaceTab === 'my-offers');
   const shouldLoadReviews =
     isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'reviews';
   const shouldLoadProviders = !isWorkspacePublicSection && shouldLoadPrivateData;
@@ -58,6 +74,7 @@ export function resolveWorkspaceDataPlan({
     shouldLoadPrivateOverview,
     shouldLoadMyRequests,
     shouldLoadMyOffers,
+    shouldLoadMyClientOffers,
     shouldLoadMyContracts,
     shouldLoadFavoriteRequests,
     shouldLoadFavoriteProviders,

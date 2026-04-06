@@ -18,6 +18,8 @@ import {
 type SourcesParams = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isAuthed' | 'isWorkspaceAuthed'> & {
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
+  activeRequestsPeriod?: WorkspaceBranchProps['routeState']['activeRequestsPeriod'];
 };
 
 export function useWorkspacePrivateSources({
@@ -27,6 +29,8 @@ export function useWorkspacePrivateSources({
   isWorkspaceAuthed,
   activePublicSection,
   activeWorkspaceTab,
+  requestsScope = 'market',
+  activeRequestsPeriod = '30d',
 }: SourcesParams) {
   const {
     cities,
@@ -61,6 +65,9 @@ export function useWorkspacePrivateSources({
       isAuthed,
       isWorkspaceAuthed,
       activeWorkspaceTab,
+      activePublicSection,
+      requestsScope,
+      activeRequestsPeriod,
     }),
   );
 

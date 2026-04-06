@@ -14,6 +14,9 @@ import {
 } from '@/features/workspace/requests/workspaceData.queries';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
+import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
+import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 
 type Params = {
   filter: WorkspacePublicOverviewQuery;
@@ -23,6 +26,9 @@ type Params = {
   isWorkspacePublicSection: boolean;
   shouldLoadPrivateData: boolean;
   activeWorkspaceTab: WorkspaceTab;
+  activePublicSection?: PublicWorkspaceSection | null;
+  requestsScope: WorkspaceRequestsScope;
+  activeRequestsPeriod: WorkspaceRequestsPeriodDto;
 };
 
 export function useWorkspaceData(params: Params) {
@@ -34,6 +40,9 @@ export function useWorkspaceData(params: Params) {
     isWorkspacePublicSection,
     shouldLoadPrivateData,
     activeWorkspaceTab,
+    activePublicSection = null,
+    requestsScope,
+    activeRequestsPeriod,
   } = params;
   const hasAccessToken = Boolean(getAccessToken());
   const loadPlan = React.useMemo(
@@ -44,14 +53,18 @@ export function useWorkspaceData(params: Params) {
         isWorkspacePublicSection,
         shouldLoadPrivateData,
         activeWorkspaceTab,
+        activePublicSection,
+        requestsScope,
         hasAccessToken,
       }),
     [
       activeWorkspaceTab,
+      activePublicSection,
       hasAccessToken,
       isAuthed,
       isWorkspaceAuthed,
       isWorkspacePublicSection,
+      requestsScope,
       shouldLoadPrivateData,
     ],
   );
@@ -62,9 +75,11 @@ export function useWorkspaceData(params: Params) {
         filter,
         loadPlan,
         hasAccessToken,
+        activeRequestsPeriod,
       }),
     [
       filter,
+      activeRequestsPeriod,
       hasAccessToken,
       loadPlan,
     ],
@@ -81,9 +96,15 @@ export function useWorkspaceData(params: Params) {
   const allRequestsSummary = publicSummaryOverview?.summary;
   const publicCityActivity = publicSummaryOverview?.cityActivity;
 
-  const { data: workspacePrivateOverview } = useQuery(workspaceDataQueries.privateOverview);
+  const {
+    data: workspacePrivateOverview,
+    isLoading: isWorkspacePrivateOverviewLoading,
+  } = useQuery(workspaceDataQueries.privateOverview);
 
   const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery(workspaceDataQueries.myOffers);
+  const { data: myClientOffers = [], isLoading: isMyClientOffersLoading } = useQuery(
+    workspaceDataQueries.myClientOffers,
+  );
 
   const myOfferRequestIds = React.useMemo(
     () => buildWorkspaceOfferRequestIds(myOffers),
@@ -137,8 +158,11 @@ export function useWorkspaceData(params: Params) {
     isPublicSummaryLoading,
     isPublicSummaryError,
     workspacePrivateOverview,
+    isWorkspacePrivateOverviewLoading,
     myOffers,
     isMyOffersLoading,
+    myClientOffers,
+    isMyClientOffersLoading,
     myOfferRequestsById,
     favoriteRequests,
     isFavoriteRequestsLoading,

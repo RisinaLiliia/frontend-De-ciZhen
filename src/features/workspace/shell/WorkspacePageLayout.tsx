@@ -43,12 +43,14 @@ type Props = {
   isWorkspaceAuthed: boolean;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
   t: Translator;
   locale: Locale;
   intro: React.ReactNode;
   explore: ExploreProps;
   privateMain: React.ReactNode;
   publicMain: React.ReactNode;
+  privateAside?: React.ReactNode;
   asideTopSlot?: React.ReactNode;
   overviewDecisionPanelRef?: React.Ref<HTMLElement>;
   workspaceAsideBaseProps: WorkspaceAsideBaseProps;
@@ -61,12 +63,14 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   isWorkspaceAuthed,
   activePublicSection,
   activeWorkspaceTab,
+  preferredRequestsRole = null,
   t,
   locale,
   intro,
   explore,
   privateMain,
   publicMain,
+  privateAside,
   asideTopSlot,
   overviewDecisionPanelRef,
   workspaceAsideBaseProps,
@@ -94,6 +98,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       intro as React.ReactElement<{
         navHeaderSlot?: React.ReactNode;
         leftColumnSlot?: React.ReactNode;
+        preferredRequestsRole?: 'customer' | 'provider' | null;
       }>,
       {
         navHeaderSlot: (
@@ -102,11 +107,12 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
             locale={locale}
             activePublicSection={activePublicSection}
             activeWorkspaceTab={activeWorkspaceTab}
+            preferredRequestsRole={preferredRequestsRole}
           />
         ),
       },
     );
-  }, [activePublicSection, activeWorkspaceTab, intro, locale, t]);
+  }, [activePublicSection, activeWorkspaceTab, intro, locale, preferredRequestsRole, t]);
 
   const contextualAside = (
     <WorkspaceContextAside
@@ -114,8 +120,9 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       locale={locale}
       activePublicSection={activePublicSection}
       activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
       className={isOverviewPrivateMode ? 'workspace-context-rail--overview' : undefined}
-      topSlot={isOverviewPrivateMode ? asideTopSlot : undefined}
+      topSlot={asideTopSlot}
       panelRef={isOverviewPrivateMode ? overviewDecisionPanelRef : undefined}
     >
       {!isOverviewPrivateMode ? (
@@ -157,7 +164,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       <WorkspaceFrame
         intro={introWithWorkspaceChrome}
         main={privateMain}
-        aside={contextualAside}
+        aside={privateAside ?? contextualAside}
         frameClassName={overviewGridClassName}
         contentClassName={overviewFrameClassName}
       />

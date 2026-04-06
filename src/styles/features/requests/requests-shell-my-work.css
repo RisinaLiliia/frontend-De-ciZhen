@@ -1,0 +1,385 @@
+/* src/styles/features/requests/requests-shell-my-work.css */
+@layer components {
+  .requests-scope-switch {
+    display: inline-flex;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    white-space: nowrap;
+  }
+
+  .requests-scope-switch__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    margin-bottom: -1px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-bottom-color: transparent;
+    border-radius: 12px 12px 0 0;
+    color: var(--c-text-muted);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .requests-scope-switch__item:hover {
+    color: var(--c-text);
+    background: color-mix(in oklab, white 92%, var(--c-panel) 8%);
+    border-color: color-mix(in oklab, var(--control-border-hover) 78%, transparent);
+  }
+
+  .requests-scope-switch__item:focus-visible {
+    outline: none;
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c-primary) 34%, transparent);
+  }
+
+  .requests-scope-switch__item.is-active {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-primary) 10%, white 90%),
+        color-mix(in oklab, var(--c-primary) 16%, white 84%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 84%, transparent),
+      0 18px 34px color-mix(in oklab, var(--c-primary) 12%, transparent);
+  }
+
+  html.dark .requests-scope-switch__item:hover {
+    background: color-mix(in oklab, var(--c-panel) 88%, white 12%);
+    border-color: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+  }
+
+  html.dark .requests-scope-switch__item:focus-visible {
+    border-color: color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c-primary) 38%, transparent);
+  }
+
+  html.dark .requests-scope-switch__item.is-active {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 78%, var(--c-primary) 22%),
+        color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+      0 18px 34px color-mix(in oklab, var(--c-primary) 12%, transparent);
+  }
+
+  .my-requests-view {
+    display: grid;
+    gap: 16px;
+  }
+
+  .my-requests-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .my-requests-summary__card {
+    display: grid;
+    gap: 8px;
+    align-items: start;
+    padding: 14px 16px;
+    border: 1px solid var(--border-default);
+    border-radius: 18px;
+    background:
+      radial-gradient(circle at top right, color-mix(in srgb, var(--brand) 10%, transparent), transparent 50%),
+      var(--surface-base);
+    text-align: left;
+    transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+  }
+
+  .my-requests-summary__card:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--brand) 35%, var(--border-default));
+  }
+
+  .my-requests-summary__card.is-active {
+    border-color: color-mix(in srgb, var(--brand) 45%, var(--border-default));
+    background:
+      radial-gradient(circle at top right, color-mix(in srgb, var(--brand) 15%, transparent), transparent 50%),
+      color-mix(in srgb, var(--surface-base) 86%, var(--brand) 14%);
+  }
+
+  .my-requests-summary__label {
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+  }
+
+  .my-requests-summary__value {
+    font-size: clamp(22px, 3.4vw, 30px);
+    line-height: 1;
+  }
+
+  .my-requests-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .my-request-card {
+    display: grid;
+    gap: 14px;
+  }
+
+  .my-request-card__topline,
+  .my-request-card__meta,
+  .my-request-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .my-request-card__badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-base) 88%, var(--border-default) 12%);
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+    font-weight: 600;
+  }
+
+  .my-request-card__badge--category {
+    color: var(--text-default);
+  }
+
+  .my-request-card__badge--state.is-open,
+  .my-request-card__badge--urgency.is-low {
+    background: color-mix(in srgb, var(--status-info, #3d7cff) 14%, var(--surface-base));
+    color: color-mix(in srgb, var(--status-info, #3d7cff) 80%, black 10%);
+  }
+
+  .my-request-card__badge--state.is-clarifying,
+  .my-request-card__badge--urgency.is-medium {
+    background: color-mix(in srgb, #f7b955 18%, var(--surface-base));
+    color: #8a5a00;
+  }
+
+  .my-request-card__badge--state.is-active {
+    background: color-mix(in srgb, #40a96b 18%, var(--surface-base));
+    color: #13663b;
+  }
+
+  .my-request-card__badge--state.is-completed,
+  .my-request-card__badge--urgency.is-high {
+    background: color-mix(in srgb, #d86666 16%, var(--surface-base));
+    color: #8f1f1f;
+  }
+
+  .my-request-card__title {
+    margin: 0;
+    font-size: clamp(20px, 2.8vw, 26px);
+    line-height: 1.15;
+  }
+
+  .my-request-card__copy {
+    display: grid;
+    gap: 8px;
+  }
+
+  .my-request-card__meta {
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+  }
+
+  .my-request-card__progress {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .my-request-card__progress-step {
+    display: grid;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+
+  .my-request-card__progress-dot {
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--border-default) 82%, transparent);
+  }
+
+  .my-request-card__progress-step.is-done .my-request-card__progress-dot {
+    background: color-mix(in srgb, #40a96b 65%, transparent);
+  }
+
+  .my-request-card__progress-step.is-current {
+    color: var(--text-default);
+  }
+
+  .my-request-card__progress-step.is-current .my-request-card__progress-dot {
+    background: color-mix(in srgb, var(--brand) 70%, transparent);
+  }
+
+  .my-request-card__activity {
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-size: var(--fs-small);
+    font-weight: 600;
+  }
+
+  .my-request-card__activity.is-info {
+    background: color-mix(in srgb, var(--brand) 10%, var(--surface-base));
+  }
+
+  .my-request-card__activity.is-warning {
+    background: color-mix(in srgb, #f7b955 14%, var(--surface-base));
+  }
+
+  .my-request-card__activity.is-success {
+    background: color-mix(in srgb, #40a96b 14%, var(--surface-base));
+  }
+
+  .my-request-card__activity.is-neutral {
+    background: color-mix(in srgb, var(--surface-base) 84%, var(--border-default) 16%);
+  }
+
+  .my-request-card__secondary-action {
+    white-space: nowrap;
+  }
+
+  .my-requests-rail {
+    display: grid;
+    gap: 14px;
+    position: sticky;
+    top: calc(var(--topbar-height, 72px) + 16px);
+  }
+
+  .my-requests-rail__panel {
+    display: grid;
+    gap: 12px;
+  }
+
+  .my-requests-rail__eyebrow {
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .my-requests-rail__panel h3 {
+    margin: 0;
+    font-size: var(--fs-h4, 20px);
+  }
+
+  .my-requests-rail__panel p {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .my-requests-rail__meta {
+    display: grid;
+    gap: 10px;
+  }
+
+  .my-requests-rail__meta > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 10px;
+    border-top: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  }
+
+  .my-requests-rail__meta dt,
+  .my-requests-rail__steps {
+    color: var(--text-muted);
+  }
+
+  .my-requests-rail__steps {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .my-requests-empty,
+  .my-requests-auth-gate {
+    display: grid;
+    gap: 12px;
+    padding: 20px;
+  }
+
+  .my-requests-empty h3,
+  .my-requests-auth-gate h3 {
+    margin: 0;
+  }
+
+  .my-requests-empty p,
+  .my-requests-auth-gate p {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .my-requests-empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .my-requests-view__mobile-rail {
+    display: none;
+  }
+
+  @media (max-width: 1099px) {
+    .my-requests-view__mobile-rail {
+      display: grid;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .my-requests-summary {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 699px) {
+    .requests-scope-switch {
+      width: 100%;
+    }
+
+    .requests-scope-switch__item {
+      flex: 1 1 0;
+      min-width: 0;
+      padding-inline: 10px;
+    }
+
+    .my-requests-summary {
+      display: flex;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scroll-snap-type: x proximity;
+    }
+
+    .my-requests-summary__card {
+      min-width: 180px;
+      scroll-snap-align: start;
+    }
+
+    .my-request-card__progress {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}

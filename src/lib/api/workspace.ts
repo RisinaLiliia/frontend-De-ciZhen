@@ -3,6 +3,11 @@ import type {
   WorkspacePrivateOverviewDto,
   WorkspacePublicOverviewDto,
   WorkspacePublicRequestsBatchResponseDto,
+  WorkspaceRequestsPeriodDto,
+  WorkspaceRequestsResponseDto,
+  WorkspaceRequestsRoleDto,
+  WorkspaceRequestsScopeDto,
+  WorkspaceRequestsStateDto,
   WorkspaceStatisticsOverviewDto,
   WorkspaceStatisticsRange,
   WorkspaceStatisticsViewerMode,
@@ -45,8 +50,42 @@ export function getWorkspacePublicOverview(params: WorkspacePublicOverviewQuery 
   return apiGet<WorkspacePublicOverviewDto>(`/workspace/public${suffix ? `?${suffix}` : ''}`);
 }
 
-export function getWorkspacePrivateOverview() {
-  return apiGet<WorkspacePrivateOverviewDto>('/workspace/private');
+export type WorkspacePrivateOverviewQuery = {
+  period?: WorkspaceRequestsPeriodDto | null;
+};
+
+export function getWorkspacePrivateOverview(query: WorkspacePrivateOverviewQuery = {}) {
+  const qs = new URLSearchParams();
+  if (query.period) qs.set('period', query.period);
+  return apiGet<WorkspacePrivateOverviewDto>(`/workspace/private${qs.toString() ? `?${qs.toString()}` : ''}`);
+}
+
+export type WorkspaceRequestsQuery = {
+  scope?: WorkspaceRequestsScopeDto;
+  role?: WorkspaceRequestsRoleDto;
+  state?: WorkspaceRequestsStateDto;
+  city?: string | null;
+  category?: string | null;
+  service?: string | null;
+  period?: WorkspaceRequestsPeriodDto;
+  sort?: string | null;
+  page?: number;
+  limit?: number;
+};
+
+export function getWorkspaceRequests(query: WorkspaceRequestsQuery = {}) {
+  const qs = new URLSearchParams();
+  if (query.scope) qs.set('scope', query.scope);
+  if (query.role) qs.set('role', query.role);
+  if (query.state) qs.set('state', query.state);
+  if (query.city) qs.set('city', query.city);
+  if (query.category) qs.set('category', query.category);
+  if (query.service) qs.set('service', query.service);
+  if (query.period) qs.set('period', query.period);
+  if (query.sort) qs.set('sort', query.sort);
+  if (typeof query.page === 'number') qs.set('page', String(Math.max(1, Math.trunc(query.page))));
+  if (typeof query.limit === 'number') qs.set('limit', String(Math.min(100, Math.max(1, Math.trunc(query.limit)))));
+  return apiGet<WorkspaceRequestsResponseDto>(`/workspace/requests${qs.toString() ? `?${qs.toString()}` : ''}`);
 }
 
 export type WorkspaceStatisticsQuery = {

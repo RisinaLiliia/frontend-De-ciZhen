@@ -20,7 +20,7 @@ export const workspaceQK = {
     args.cityActivityLimit,
   ] as const,
   workspacePublicSummary: (cityActivityLimit: number) => ['workspace-public-summary', cityActivityLimit] as const,
-  workspacePrivateOverview: () => ['workspace-private-overview'] as const,
+  workspacePrivateOverview: (period?: string | null) => ['workspace-private-overview', period ?? 'default'] as const,
   requestsPublic: (args: {
     cityId: string | undefined;
     categoryKey: string | undefined;
@@ -43,6 +43,7 @@ export const workspaceQK = {
   requestsPublicCityActivity: (locale: string, limit: number) =>
     ['requests-public-city-activity', locale, limit] as const,
   offersMy: () => ['offers-my'] as const,
+  offersMyClient: () => ['offers-my-client'] as const,
   requestsByMyOfferIds: (locale: string, requestIds: readonly string[]) =>
     ['requests-by-my-offer-ids', locale, ...requestIds] as const,
   favoriteRequests: () => ['favorite-requests'] as const,

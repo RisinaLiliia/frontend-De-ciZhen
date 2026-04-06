@@ -4,7 +4,7 @@ import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { listMyRequests } from '@/lib/api/requests';
 import { listPublicProviders } from '@/lib/api/providers';
 import { listMyContracts } from '@/lib/api/contracts';
-import { listMyProviderOffers } from '@/lib/api/offers';
+import { listMyClientOffers, listMyProviderOffers } from '@/lib/api/offers';
 import { listFavorites } from '@/lib/api/favorites';
 import { listMyReviews } from '@/lib/api/reviews';
 import {
@@ -13,6 +13,7 @@ import {
   getWorkspacePublicRequestsBatch,
 } from '@/lib/api/workspace';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
+import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
@@ -38,12 +39,14 @@ type WorkspaceDataQueriesArgs = {
   filter: WorkspacePublicOverviewQuery;
   loadPlan: WorkspaceDataLoadPlan;
   hasAccessToken: boolean;
+  activeRequestsPeriod: WorkspaceRequestsPeriodDto;
 };
 
 export function buildWorkspaceDataQueries({
   filter,
   loadPlan,
   hasAccessToken,
+  activeRequestsPeriod,
 }: WorkspaceDataQueriesArgs) {
   return {
     publicOverview: buildStableWorkspaceQuery({
@@ -79,17 +82,22 @@ export function buildWorkspaceDataQueries({
         }),
     }),
     privateOverview: buildStableWorkspaceQuery({
-      queryKey: workspaceQK.workspacePrivateOverview(),
+      queryKey: workspaceQK.workspacePrivateOverview(activeRequestsPeriod),
       enabled: loadPlan.shouldLoadPrivateOverview,
       queryFn: () =>
         hasAccessToken
-          ? withStatusFallback(() => getWorkspacePrivateOverview(), null, [401, 403])
+          ? withStatusFallback(() => getWorkspacePrivateOverview({ period: activeRequestsPeriod }), null, [401, 403])
           : Promise.resolve(null),
     }),
     myOffers: {
       queryKey: workspaceQK.offersMy(),
       enabled: loadPlan.shouldLoadMyOffers,
       queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
+    },
+    myClientOffers: {
+      queryKey: workspaceQK.offersMyClient(),
+      enabled: loadPlan.shouldLoadMyClientOffers,
+      queryFn: () => withStatusFallback(() => listMyClientOffers(), []),
     },
     favoriteRequests: {
       queryKey: workspaceQK.favoriteRequests(),

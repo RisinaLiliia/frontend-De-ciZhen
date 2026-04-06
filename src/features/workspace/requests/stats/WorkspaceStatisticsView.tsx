@@ -68,8 +68,6 @@ export function WorkspaceStatisticsView({
     hasBackgroundError,
     mode,
     modeLabel,
-    viewerMode,
-    setViewerMode,
     context,
     sectionMeta,
     activityTitle,
@@ -414,29 +412,6 @@ export function WorkspaceStatisticsView({
                 <span className="workspace-statistics__mode-badge">{modeLabel}</span>
                 <span className="section-subtitle">{copy.kpiTitle} · {context.scopeLabel}</span>
               </div>
-              {isPersonalizedMode ? (
-                <div className="workspace-statistics__viewer-mode">
-                  <span className="workspace-statistics__viewer-mode-label">{copy.viewerModeLabel}</span>
-                  <div className="howitworks-tabs" role="group" aria-label={copy.viewerModeLabel}>
-                    <button
-                      type="button"
-                      aria-pressed={viewerMode === 'provider'}
-                      className={`howitworks-tab ${viewerMode === 'provider' ? 'is-active' : ''}`.trim()}
-                      onClick={() => setViewerMode('provider')}
-                    >
-                      {copy.viewerModeProviderLabel}
-                    </button>
-                    <button
-                      type="button"
-                      aria-pressed={viewerMode === 'customer'}
-                      className={`howitworks-tab ${viewerMode === 'customer' ? 'is-active' : ''}`.trim()}
-                      onClick={() => setViewerMode('customer')}
-                    >
-                      {copy.viewerModeCustomerLabel}
-                    </button>
-                  </div>
-                </div>
-              ) : null}
             </div>
 
             {hasBackgroundError && !isLoading && !isError ? (

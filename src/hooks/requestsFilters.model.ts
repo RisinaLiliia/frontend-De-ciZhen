@@ -6,8 +6,11 @@ import {
 } from '@/lib/requests/pagination';
 
 export const REQUESTS_FILTER_QUERY_KEYS = new Set([
+  'city',
   'cityId',
+  'category',
   'categoryKey',
+  'service',
   'subcategoryKey',
   'serviceKey',
   'sort',
@@ -55,9 +58,12 @@ export function resolveRequestsFilterQueryParams(
   const limit = requestedLimit <= REQUESTS_PAGE_SIZE_SINGLE ? REQUESTS_PAGE_SIZE_SINGLE : REQUESTS_PAGE_SIZE;
 
   return {
-    categoryParam: searchParams.get('categoryKey') ?? ALL_OPTION_KEY,
-    subcategoryParam: searchParams.get('subcategoryKey') ?? searchParams.get('serviceKey') ?? ALL_OPTION_KEY,
-    cityId: searchParams.get('cityId') ?? ALL_OPTION_KEY,
+    categoryParam: searchParams.get('category') ?? searchParams.get('categoryKey') ?? ALL_OPTION_KEY,
+    subcategoryParam: searchParams.get('service')
+      ?? searchParams.get('subcategoryKey')
+      ?? searchParams.get('serviceKey')
+      ?? ALL_OPTION_KEY,
+    cityId: searchParams.get('city') ?? searchParams.get('cityId') ?? ALL_OPTION_KEY,
     sortBy: (searchParams.get('sort') as PublicRequestsSort | null) ?? defaultSort,
     page: readPositiveInt(searchParams.get('page'), 1),
     limit,

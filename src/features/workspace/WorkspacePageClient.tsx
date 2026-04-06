@@ -38,6 +38,7 @@ function WorkspacePageView({
   const routeState = useWorkspaceRouteState({
     forcedPublicSection,
     forcedWorkspaceTab,
+    isAuthed,
     searchParams,
     workspacePath: WORKSPACE_PATH,
     t,

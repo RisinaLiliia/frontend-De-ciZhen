@@ -5,6 +5,7 @@ import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 export const EMPTY_WORKSPACE_PRIVATE_OVERVIEW: WorkspacePrivateOverviewDto = {
   updatedAt: '',
   user: { userId: '', role: 'client' },
+  preferredRole: 'customer',
   requestsByStatus: {
     draft: 0,
     published: 0,

@@ -1,6 +1,5 @@
 'use client';
 
-import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import type { TabPayload } from '@/components/requests/requestsStatsPanel.types';
 import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
@@ -35,6 +34,7 @@ export type WorkspacePrivateIntroProps = {
   showQuickAction?: boolean;
   leftColumnSlot?: React.ReactNode;
   navHeaderSlot?: React.ReactNode;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
 };
 
 export function WorkspacePrivateIntro({
@@ -43,13 +43,15 @@ export function WorkspacePrivateIntro({
   activeWorkspaceTab,
   personalNavItems,
   hideNavBadges = false,
-  insightText,
-  activityProgress,
   quickActionHref = '/request/create',
   showQuickAction = true,
   leftColumnSlot,
   navHeaderSlot,
+  preferredRequestsRole = null,
 }: WorkspacePrivateIntroProps) {
+  void quickActionHref;
+  void showQuickAction;
+
   return (
     <section className="workspace-intro-shell">
       <div className="stack-md">
@@ -58,26 +60,21 @@ export function WorkspacePrivateIntro({
           headerSlot={navHeaderSlot}
           items={personalNavItems}
           hideDockBadges={hideNavBadges}
-          insightText={insightText}
-          progressPercent={activityProgress}
           surface="embedded"
         />
         <WorkspaceMobileContextSection
           locale={locale}
           activePublicSection={activePublicSection}
           activeWorkspaceTab={activeWorkspaceTab}
+          preferredRequestsRole={preferredRequestsRole}
         />
         {leftColumnSlot ? leftColumnSlot : null}
         <WorkspaceMobileSectionSheet
           locale={locale}
           activePublicSection={activePublicSection}
           activeWorkspaceTab={activeWorkspaceTab}
+          preferredRequestsRole={preferredRequestsRole}
         />
-        {showQuickAction ? (
-          <section className="panel stack-sm workspace-intro__mobile-hidden" aria-label="Workspace quick action">
-            <CreateRequestCard href={quickActionHref} />
-          </section>
-        ) : null}
       </div>
     </section>
   );

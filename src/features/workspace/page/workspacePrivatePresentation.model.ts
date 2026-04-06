@@ -28,6 +28,7 @@ type BuildPresentationArgs = {
   data: WorkspacePrivateDataFlowResult;
   WorkspacePrivateIntroComponent: WorkspacePresentationArgs['WorkspacePrivateIntroComponent'];
   showQuickAction?: boolean;
+  preferredRequestsRole?: 'customer' | 'provider' | null;
   privateState: Pick<
     ReturnType<typeof useWorkspacePrivateState>,
     | 'topProviders'
@@ -46,6 +47,7 @@ type BuildPublicIntroArgs = {
     WorkspacePrivateDataFlowResult,
     | 'activePublicSection'
     | 'activeWorkspaceTab'
+    | 'workspacePrivateOverview'
     | 'allRequestsSummary'
     | 'publicCityActivity'
     | 'isPublicSummaryLoading'
@@ -156,6 +158,7 @@ export function buildWorkspacePrivatePresentationArgs({
   data,
   WorkspacePrivateIntroComponent,
   showQuickAction = data.activePublicSection !== 'stats',
+  preferredRequestsRole = null,
   privateState,
 }: BuildPresentationArgs): WorkspacePresentationArgs {
   return {
@@ -177,6 +180,7 @@ export function buildWorkspacePrivatePresentationArgs({
     topProviders: privateState.topProviders,
     favoriteProviderIds: data.favoriteProviderIds,
     showQuickAction,
+    preferredRequestsRole,
   };
 }
 
@@ -201,6 +205,7 @@ export function buildWorkspacePublicIntroProps({
     hideDemandMapOnMobile: data.activePublicSection !== 'stats',
     quickActionHref: '/request/create',
     showQuickAction: data.activePublicSection !== 'stats',
+    preferredRequestsRole: data.workspacePrivateOverview?.preferredRole ?? null,
   };
 }
 
