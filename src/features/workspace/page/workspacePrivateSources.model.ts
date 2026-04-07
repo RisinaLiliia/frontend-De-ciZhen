@@ -23,7 +23,10 @@ type BuildWorkspacePrivateSourcesDataArgsParams = Pick<
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
   requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
+  activeRequestsRole?: WorkspaceBranchProps['routeState']['activeRequestsRole'];
+  activeRequestsState?: WorkspaceBranchProps['routeState']['activeRequestsState'];
   activeRequestsPeriod?: WorkspaceBranchProps['routeState']['activeRequestsPeriod'];
+  activeRequestsSort?: WorkspaceBranchProps['routeState']['activeRequestsSort'];
 };
 
 type BuildWorkspacePrivateSourcesRequestsStateArgsParams = {
@@ -72,7 +75,10 @@ export function buildWorkspacePrivateSourcesDataArgs({
   activeWorkspaceTab,
   activePublicSection = null,
   requestsScope = 'market',
+  activeRequestsRole = 'all',
+  activeRequestsState = 'all',
   activeRequestsPeriod = '30d',
+  activeRequestsSort = null,
 }: BuildWorkspacePrivateSourcesDataArgsParams): Parameters<typeof useWorkspaceData>[0] {
   return {
     filter,
@@ -84,7 +90,10 @@ export function buildWorkspacePrivateSourcesDataArgs({
     activeWorkspaceTab,
     activePublicSection,
     requestsScope,
+    activeRequestsRole,
+    activeRequestsState,
     activeRequestsPeriod,
+    activeRequestsSort,
   };
 }
 
@@ -148,10 +157,13 @@ export function resolveWorkspacePrivateSourcesResult({
     isProvidersError: data.isProvidersError,
     workspacePrivateOverview: data.workspacePrivateOverview,
     isWorkspacePrivateOverviewLoading: data.isWorkspacePrivateOverviewLoading,
+    workspaceRequests: data.workspaceRequests,
+    isWorkspaceRequestsLoading: data.isWorkspaceRequestsLoading,
     myOffers: data.myOffers,
     myClientOffers: data.myClientOffers,
     myRequests: data.myRequests,
     myOfferRequestsById: data.myOfferRequestsById,
+    isMyOfferRequestsLoading: data.isMyOfferRequestsLoading,
     myProviderContracts: data.myProviderContracts,
     myClientContracts: data.myClientContracts,
     allMyContracts: collections.allMyContracts,

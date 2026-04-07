@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildMyRequestsViewModel } from '@/features/workspace/requests/myRequestsView.model';
+import {
+  buildMyRequestsViewModel,
+  buildMyRequestsViewModelFromResponse,
+} from '@/features/workspace/requests/myRequestsView.model';
 
 describe('myRequestsView.model', () => {
   it('builds customer and provider cards with role-aware state mapping', () => {
@@ -99,14 +102,88 @@ describe('myRequestsView.model', () => {
         ['cleaning-basic', { key: 'cleaning-basic', categoryKey: 'cleaning', i18n: { de: 'Grundreinigung', en: 'Basic cleaning' } }],
       ]),
       formatDate: (value) => String(value).slice(0, 10),
-      formatPrice: (value) => `${value} EUR`,
     });
 
-    expect(model.summary.find((item) => item.key === 'clarifying')?.value).toBe(1);
-    expect(model.summary.find((item) => item.key === 'active')?.value).toBe(1);
+    expect(model.response.summary?.items.find((item) => item.key === 'attention')?.value).toBe(1);
+    expect(model.response.summary?.items.find((item) => item.key === 'execution')?.value).toBe(1);
     expect(model.cards).toHaveLength(2);
-    expect(model.cards.find((card) => card.role === 'customer')?.state).toBe('clarifying');
-    expect(model.cards.find((card) => card.role === 'provider')?.state).toBe('active');
-    expect(model.rail.nextSteps.length).toBeGreaterThan(0);
+    expect(model.cards.find((card) => card.role === 'customer')?.workflowState).toBe('clarifying');
+    expect(model.cards.find((card) => card.role === 'provider')?.workflowState).toBe('active');
+    expect(model.response.sidePanel?.nextSteps?.length ?? 0).toBeGreaterThan(0);
+  });
+
+  it('adapts server-driven workspace requests response when request entities are available', () => {
+    const model = buildMyRequestsViewModelFromResponse({
+      response: {
+        section: 'requests',
+        scope: 'my',
+        header: { title: 'Meine Vorgänge' },
+        filters: {
+          role: 'all',
+          state: 'attention',
+          period: '30d',
+        },
+        summary: {
+          items: [
+            { key: 'all', label: 'Alle', value: 1 },
+            { key: 'attention', label: 'Aktiv', value: 1, isHighlighted: true },
+          ],
+        },
+        list: {
+          total: 1,
+          page: 1,
+          limit: 20,
+          hasMore: false,
+          items: [
+            {
+              id: 'customer:r1',
+              requestId: 'r1',
+              role: 'customer',
+              title: 'Wohnung reinigen',
+              category: 'Reinigung',
+              city: 'Berlin',
+              state: 'open',
+              stateLabel: 'Offen',
+              activity: null,
+              progress: {
+                currentStep: 'request',
+                steps: [
+                  { key: 'request', label: 'Anfrage', status: 'current' },
+                  { key: 'offers', label: 'Angebote', status: 'upcoming' },
+                  { key: 'selection', label: 'Auswahl', status: 'upcoming' },
+                  { key: 'contract', label: 'Vertrag', status: 'upcoming' },
+                  { key: 'done', label: 'Abschluss', status: 'upcoming' },
+                ],
+              },
+              quickActions: [],
+            },
+          ],
+        },
+        sidePanel: null,
+      },
+      myRequests: [
+        {
+          id: 'r1',
+          serviceKey: 'cleaning-basic',
+          cityId: 'berlin',
+          categoryKey: 'cleaning',
+          categoryName: 'Reinigung',
+          propertyType: 'apartment',
+          area: 80,
+          price: 140,
+          preferredDate: '2026-04-07T10:00:00.000Z',
+          isRecurring: false,
+          status: 'published',
+          createdAt: '2026-04-05T08:00:00.000Z',
+          title: 'Wohnung reinigen',
+        },
+      ],
+      myOfferRequestsById: new Map(),
+    });
+
+    expect(model).not.toBeNull();
+    expect(model?.cards).toHaveLength(1);
+    expect(model?.cards[0]?.request.id).toBe('r1');
+    expect(model?.emptyMode).toBe('none');
   });
 });

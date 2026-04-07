@@ -52,7 +52,7 @@ export type WorkspacePublicRequestsBatchResponseDto = {
 
 export type WorkspaceRequestsScopeDto = 'market' | 'my';
 export type WorkspaceRequestsRoleDto = 'all' | 'customer' | 'provider';
-export type WorkspaceRequestsStateDto = 'all' | 'open' | 'clarifying' | 'active' | 'completed';
+export type WorkspaceRequestsStateDto = 'all' | 'attention' | 'execution' | 'completed';
 export type WorkspaceRequestsPeriodDto = WorkspacePublicActivityRange;
 
 export type WorkspaceRequestsResponseDto = {
@@ -79,7 +79,7 @@ export type WorkspaceRequestsResponseDto = {
 
 export type WorkspaceRequestsSummaryDto = {
   items: Array<{
-    key: 'all' | 'open' | 'clarifying' | 'active' | 'completed' | 'pending';
+    key: 'all' | 'attention' | 'execution' | 'completed' | 'pending';
     label: string;
     value: number;
     isHighlighted?: boolean;
@@ -96,6 +96,7 @@ export type WorkspaceRequestsListDto = {
 
 export type WorkspaceMyRequestCardDto = {
   id: string;
+  requestId: string;
   role: 'customer' | 'provider';
   title: string;
   category: string;

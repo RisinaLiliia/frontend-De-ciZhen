@@ -4,28 +4,44 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { WorkspaceChipToggleGroup } from '@/features/workspace/requests/WorkspaceChipToggleGroup';
+import { RequestsListItem } from '@/components/requests/RequestsListItem';
+import type { RequestsListProps } from '@/components/requests/requestsList.types';
 import type {
-  MyRequestsRailModel,
   MyRequestsSummaryItem,
-  MyRequestsTabItem,
   MyRequestsViewCard,
   MyRequestsViewModel,
 } from '@/features/workspace/requests/myRequestsView.model';
+import type { WorkspaceMyRequestCardDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 
 type RequestsPrivateViewProps = {
+  t: RequestsListProps['t'];
   locale: Locale;
   isWorkspaceAuthed: boolean;
   guestLoginHref: string;
   model: MyRequestsViewModel;
   isLoading: boolean;
   isError: boolean;
+  listContext: Pick<
+    RequestsListProps,
+    | 'serviceByKey'
+    | 'categoryByKey'
+    | 'cityById'
+    | 'formatDate'
+    | 'formatPrice'
+    | 'offersByRequest'
+    | 'onSendOffer'
+    | 'onEditOffer'
+    | 'onWithdrawOffer'
+    | 'onOpenChatThread'
+    | 'pendingOfferRequestId'
+    | 'ownerRequestActions'
+  >;
 };
 
 type RailProps = {
   locale: Locale;
-  rail: MyRequestsRailModel;
+  rail: NonNullable<MyRequestsViewModel['response']['sidePanel']>;
   className?: string;
 };
 
@@ -63,79 +79,77 @@ function SummaryCard({
   );
 }
 
-function renderUrgencyLabel(locale: Locale, urgency: MyRequestsViewCard['urgency']) {
-  if (!urgency) return null;
-  if (locale === 'de') {
-    if (urgency === 'high') return 'Dringend';
-    if (urgency === 'medium') return 'Bald fällig';
-    return 'Im Blick';
-  }
-
-  if (urgency === 'high') return 'Urgent';
-  if (urgency === 'medium') return 'Due soon';
-  return 'Watch';
+function WorkflowProgress({
+  locale,
+  steps,
+}: {
+  locale: Locale;
+  steps: WorkspaceMyRequestCardDto['progress']['steps'];
+}) {
+  return (
+    <div
+      className="my-request-card__progress"
+      role="list"
+      aria-label={locale === 'de' ? 'Fortschritt der Anfrage' : 'Request progress'}
+    >
+      {steps.map((step) => (
+        <div
+          key={step.key}
+          className={`my-request-card__progress-step is-${step.status}`.trim()}
+          role="listitem"
+        >
+          <span className="my-request-card__progress-dot" />
+          <span>{step.label}</span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function MyRequestCard({
+  t,
   locale,
   card,
+  index,
+  listContext,
 }: {
+  t: RequestsListProps['t'];
   locale: Locale;
   card: MyRequestsViewCard;
+  index: number;
+  listContext: RequestsPrivateViewProps['listContext'];
 }) {
+  const isProviderCard = card.role === 'provider';
+
   return (
     <article className="panel my-request-card">
-      <div className="my-request-card__topline">
-        <span className="my-request-card__badge my-request-card__badge--category">{card.category}</span>
-        <span className="my-request-card__badge">{card.roleLabel}</span>
-        <span className={`my-request-card__badge my-request-card__badge--state is-${card.state}`}>{card.stateLabel}</span>
-        {card.urgency ? (
-          <span className={`my-request-card__badge my-request-card__badge--urgency is-${card.urgency}`}>
-            {renderUrgencyLabel(locale, card.urgency)}
-          </span>
-        ) : null}
-      </div>
-
-      <div className="my-request-card__header">
-        <div className="my-request-card__copy">
-          <h3 className="my-request-card__title">{card.title}</h3>
-          <div className="my-request-card__meta">
-            {card.city ? <span>{card.city}</span> : null}
-            {card.createdAt ? <span>{locale === 'de' ? `Erstellt ${card.createdAt}` : `Created ${card.createdAt}`}</span> : null}
-            {card.nextEventAt ? <span>{locale === 'de' ? `Nächster Schritt ${card.nextEventAt}` : `Next ${card.nextEventAt}`}</span> : null}
-            {card.budgetLabel ? <span>{card.budgetLabel}</span> : null}
-          </div>
-        </div>
-      </div>
-
-      <div className="my-request-card__progress">
-        {card.progressSteps.map((step) => (
-          <div
-            key={step.key}
-            className={`my-request-card__progress-step is-${step.status}`.trim()}
-          >
-            <span className="my-request-card__progress-dot" />
-            <span>{step.label}</span>
-          </div>
-        ))}
-      </div>
-
-      {card.activity ? (
-        <div className={`my-request-card__activity is-${card.activity.tone}`.trim()}>
-          {card.activity.label}
+      <WorkflowProgress locale={locale} steps={card.item.progress.steps} />
+      {card.item.activity ? (
+        <div className={`my-request-card__activity is-${card.item.activity.tone ?? 'neutral'}`.trim()}>
+          {card.item.activity.label}
         </div>
       ) : null}
-
-      <div className="my-request-card__actions">
-        <Link href={card.primaryAction.href} prefetch={false} className="btn-primary">
-          {card.primaryAction.label}
-        </Link>
-        {card.secondaryActions.map((action) => (
-          <Link key={action.key} href={action.href} prefetch={false} className="btn-secondary my-request-card__secondary-action">
-            {action.label}
-          </Link>
-        ))}
-      </div>
+      <RequestsListItem
+        item={card.request}
+        index={index}
+        t={t}
+        locale={locale}
+        serviceByKey={listContext.serviceByKey}
+        categoryByKey={listContext.categoryByKey}
+        cityById={listContext.cityById}
+        formatDate={listContext.formatDate}
+        formatPrice={listContext.formatPrice}
+        enableOfferActions={isProviderCard}
+        showFavoriteButton={false}
+        hideRecurringBadge={isProviderCard}
+        offersByRequest={isProviderCard ? listContext.offersByRequest : undefined}
+        onSendOffer={isProviderCard ? listContext.onSendOffer : undefined}
+        onEditOffer={isProviderCard ? listContext.onEditOffer : undefined}
+        onWithdrawOffer={isProviderCard ? listContext.onWithdrawOffer : undefined}
+        onOpenChatThread={isProviderCard ? listContext.onOpenChatThread : undefined}
+        pendingOfferRequestId={listContext.pendingOfferRequestId ?? null}
+        ownerRequestActions={isProviderCard ? undefined : listContext.ownerRequestActions}
+      />
     </article>
   );
 }
@@ -244,9 +258,11 @@ export function RequestsPrivateActionRail({
           <span className="my-requests-rail__eyebrow">{locale === 'de' ? 'Aktueller Fokus' : 'Current focus'}</span>
           <h3>{rail.focus.title}</h3>
           <p>{rail.focus.description}</p>
-          <Link href={rail.focus.href} prefetch={false} className="btn-primary">
-            {rail.focus.ctaLabel}
-          </Link>
+          {rail.focus.cta?.href ? (
+            <Link href={rail.focus.cta.href} prefetch={false} className="btn-primary">
+              {rail.focus.cta.label}
+            </Link>
+          ) : null}
         </section>
       ) : null}
 
@@ -255,13 +271,18 @@ export function RequestsPrivateActionRail({
           <span className="my-requests-rail__eyebrow">{locale === 'de' ? 'KI-Empfehlung' : 'AI recommendation'}</span>
           <h3>{rail.recommendation.title}</h3>
           <p>{rail.recommendation.description}</p>
+          {rail.recommendation.cta?.href ? (
+            <Link href={rail.recommendation.cta.href} prefetch={false} className="btn-secondary">
+              {rail.recommendation.cta.label}
+            </Link>
+          ) : null}
         </section>
       ) : null}
 
-      {rail.contextItems.map((item) => (
+      {(rail.contextItems ?? []).map((item) => (
         <section key={item.title} className="panel my-requests-rail__panel">
           <h3>{item.title}</h3>
-          <p>{item.description}</p>
+          {item.description ? <p>{item.description}</p> : null}
           {item.meta?.length ? (
             <dl className="my-requests-rail__meta">
               {item.meta.map((entry) => (
@@ -272,14 +293,19 @@ export function RequestsPrivateActionRail({
               ))}
             </dl>
           ) : null}
+          {item.cta?.href ? (
+            <Link href={item.cta.href} prefetch={false} className="btn-secondary">
+              {item.cta.label}
+            </Link>
+          ) : null}
         </section>
       ))}
 
-      {rail.nextSteps.length ? (
+      {(rail.nextSteps?.length ?? 0) > 0 ? (
         <section className="panel my-requests-rail__panel">
           <span className="my-requests-rail__eyebrow">{locale === 'de' ? 'Nächste Schritte' : 'Next steps'}</span>
           <ol className="my-requests-rail__steps">
-            {rail.nextSteps.map((step) => (
+            {rail.nextSteps?.map((step) => (
               <li key={step.id}>{step.title}</li>
             ))}
           </ol>
@@ -290,19 +316,16 @@ export function RequestsPrivateActionRail({
 }
 
 export function RequestsPrivateView({
+  t,
   locale,
   isWorkspaceAuthed,
   guestLoginHref,
   model,
   isLoading,
   isError,
+  listContext,
 }: RequestsPrivateViewProps) {
   const setStateFilter = useStateFilterMutation();
-
-  const stateTabs = model.tabs.map((item: MyRequestsTabItem) => ({
-    key: item.key,
-    label: `${item.label} ${item.count}`,
-  }));
 
   if (!isWorkspaceAuthed) {
     return <AuthGate locale={locale} guestLoginHref={guestLoginHref} />;
@@ -324,18 +347,11 @@ export function RequestsPrivateView({
     <section className="my-requests-view">
       {isLoading ? <SummarySkeleton /> : (
         <div className="my-requests-summary">
-          {model.summary.map((item) => (
+          {(model.response.summary?.items ?? []).map((item) => (
             <SummaryCard key={item.key} item={item} onSelect={setStateFilter} />
           ))}
         </div>
       )}
-
-      <WorkspaceChipToggleGroup
-        items={stateTabs}
-        selectedKey={model.activeState}
-        onSelect={(key) => setStateFilter(String(key))}
-        ariaLabel={locale === 'de' ? 'Statusfilter' : 'Status filter'}
-      />
 
       {isLoading ? <CardSkeletonList /> : null}
 
@@ -345,15 +361,24 @@ export function RequestsPrivateView({
       {!isLoading && model.cards.length > 0 ? (
         <>
           <div className="my-requests-list">
-            {model.cards.map((card) => (
-              <MyRequestCard key={card.id} locale={locale} card={card} />
+            {model.cards.map((card, index) => (
+              <MyRequestCard
+                key={card.id}
+                t={t}
+                locale={locale}
+                card={card}
+                index={index}
+                listContext={listContext}
+              />
             ))}
           </div>
-          <RequestsPrivateActionRail
-            locale={locale}
-            rail={model.rail}
-            className="my-requests-view__mobile-rail"
-          />
+          {model.response.sidePanel ? (
+            <RequestsPrivateActionRail
+              locale={locale}
+              rail={model.response.sidePanel}
+              className="my-requests-view__mobile-rail"
+            />
+          ) : null}
         </>
       ) : null}
     </section>

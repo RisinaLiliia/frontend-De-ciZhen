@@ -21,6 +21,20 @@ export const workspaceQK = {
   ] as const,
   workspacePublicSummary: (cityActivityLimit: number) => ['workspace-public-summary', cityActivityLimit] as const,
   workspacePrivateOverview: (period?: string | null) => ['workspace-private-overview', period ?? 'default'] as const,
+  workspaceRequests: (args: {
+    scope: string;
+    role: string;
+    state: string;
+    period: string;
+    sort: string | null;
+  }) => [
+    'workspace-requests',
+    args.scope,
+    args.role,
+    args.state,
+    args.period,
+    args.sort ?? 'default',
+  ] as const,
   requestsPublic: (args: {
     cityId: string | undefined;
     categoryKey: string | undefined;

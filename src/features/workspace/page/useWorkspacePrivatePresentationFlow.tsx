@@ -17,7 +17,10 @@ import {
   useWorkspacePrivateState,
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
-import { buildMyRequestsViewModel } from '@/features/workspace/requests/myRequestsView.model';
+import {
+  buildMyRequestsViewModel,
+  buildMyRequestsViewModelFromResponse,
+} from '@/features/workspace/requests/myRequestsView.model';
 import {
   useWorkspaceContentData,
   useWorkspacePresentation,
@@ -236,24 +239,39 @@ export function useWorkspacePrivatePresentationFlow({
   const isUnifiedPrivateRequests =
     data.activePublicSection === 'requests' &&
     data.requestsScope === 'my';
-  const privateRequestsLoading = data.isMyRequestsLoading
-    || data.isMyOffersLoading
-    || data.isMyClientOffersLoading
-    || data.isProviderContractsLoading
-    || data.isClientContractsLoading
-    || (data.activeRequestsRole === 'all' && data.isWorkspacePrivateOverviewLoading);
+  const privateRequestsLoading = data.workspaceRequests
+    ? data.isWorkspaceRequestsLoading || data.isMyRequestsLoading || data.isMyOfferRequestsLoading
+    : data.isWorkspaceRequestsLoading
+      || data.isMyRequestsLoading
+      || data.isMyOffersLoading
+      || data.isMyClientOffersLoading
+      || data.isProviderContractsLoading
+      || data.isClientContractsLoading
+      || (data.activeRequestsRole === 'all' && data.isWorkspacePrivateOverviewLoading);
   const preferredRequestsRole = data.workspacePrivateOverview?.preferredRole ?? null;
   const effectiveRequestsRole = data.activeRequestsRole === 'all'
     ? preferredRequestsRole
     : data.activeRequestsRole;
   const privateRequestsModel = React.useMemo(
-    () =>
-      buildMyRequestsViewModel({
+    () => {
+      const serverModel = data.workspaceRequests
+        ? buildMyRequestsViewModelFromResponse({
+          response: data.workspaceRequests,
+          myRequests: data.myRequests,
+          myOfferRequestsById: data.myOfferRequestsById,
+        })
+        : null;
+
+      if (serverModel) {
+        return serverModel;
+      }
+
+      return buildMyRequestsViewModel({
         locale: branch.locale,
         role: effectiveRequestsRole ?? 'all',
         state: data.activeRequestsState,
         period: data.activeRequestsPeriod,
-        sort: searchParams.get('sort'),
+        sort: data.activeRequestsSort,
         myRequests: data.myRequests,
         myOffers: data.myOffers,
         myClientOffers: data.myClientOffers,
@@ -264,9 +282,10 @@ export function useWorkspacePrivatePresentationFlow({
         categoryByKey: data.categoryByKey,
         serviceByKey: data.serviceByKey,
         formatDate: (value) => data.formatDate.format(new Date(value)),
-        formatPrice: (value) => data.formatPrice.format(value),
-      }),
+      });
+    },
     [
+      data.activeRequestsSort,
       branch.locale,
       data.activeRequestsPeriod,
       data.activeRequestsState,
@@ -274,21 +293,22 @@ export function useWorkspacePrivatePresentationFlow({
       data.cityById,
       effectiveRequestsRole,
       data.formatDate,
-      data.formatPrice,
       data.myClientContracts,
       data.myClientOffers,
       data.myOfferRequestsById,
       data.myOffers,
       data.myProviderContracts,
       data.myRequests,
+      data.workspaceRequests,
       data.serviceByKey,
-      searchParams,
     ],
   );
   const privateAside = isUnifiedPrivateRequests ? (
     <div className="stack-md">
       {privateInsightTopSlot}
-      <RequestsPrivateActionRail locale={branch.locale} rail={privateRequestsModel.rail} />
+      {privateRequestsModel.response.sidePanel ? (
+        <RequestsPrivateActionRail locale={branch.locale} rail={privateRequestsModel.response.sidePanel} />
+      ) : null}
     </div>
   ) : undefined;
 
@@ -316,12 +336,27 @@ export function useWorkspacePrivatePresentationFlow({
     />
   ) : isUnifiedPrivateRequests ? (
     <RequestsPrivateView
+      t={branch.t}
       locale={branch.locale}
       isWorkspaceAuthed={branch.isWorkspaceAuthed}
       guestLoginHref={data.guestLoginHref}
       model={privateRequestsModel}
       isLoading={privateRequestsLoading}
       isError={false}
+      listContext={{
+        serviceByKey: data.serviceByKey,
+        categoryByKey: data.categoryByKey,
+        cityById: data.cityById,
+        formatDate: data.formatDate,
+        formatPrice: data.formatPrice,
+        offersByRequest: data.offersByRequest,
+        onSendOffer: data.onOpenOfferSheet,
+        onEditOffer: data.onOpenOfferSheet,
+        onWithdrawOffer: data.onWithdrawOffer,
+        onOpenChatThread: data.onOpenChatThread,
+        pendingOfferRequestId: data.pendingOfferRequestId,
+        ownerRequestActions: data.ownerRequestActions,
+      }}
     />
   ) : (
     <WorkspaceContent {...workspaceContentProps} />

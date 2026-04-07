@@ -2,7 +2,7 @@ import { buildWorkspaceHref } from '@/features/workspace/shell/workspaceLinks';
 
 export type WorkspaceRequestsScope = 'market' | 'my';
 export type WorkspaceRequestsRole = 'all' | 'customer' | 'provider';
-export type WorkspaceRequestsState = 'all' | 'open' | 'clarifying' | 'active' | 'completed';
+export type WorkspaceRequestsState = 'all' | 'attention' | 'execution' | 'completed';
 export type WorkspaceRequestsPeriod = '24h' | '7d' | '30d' | '90d';
 
 export function resolveWorkspaceRequestsScope(
@@ -21,9 +21,9 @@ export function resolveWorkspaceRequestsRole(value: string | null): WorkspaceReq
 }
 
 export function resolveWorkspaceRequestsState(value: string | null): WorkspaceRequestsState {
-  if (value === 'open' || value === 'clarifying' || value === 'active' || value === 'completed') {
-    return value;
-  }
+  if (value === 'attention' || value === 'open' || value === 'clarifying') return 'attention';
+  if (value === 'execution' || value === 'active') return 'execution';
+  if (value === 'completed') return 'completed';
   return 'all';
 }
 

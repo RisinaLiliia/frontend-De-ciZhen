@@ -30,7 +30,11 @@ describe('workspaceData.queries', () => {
       },
       loadPlan,
       hasAccessToken: false,
+      requestsScope: 'market',
+      activeRequestsRole: 'all',
+      activeRequestsState: 'all',
       activeRequestsPeriod: '30d',
+      activeRequestsSort: null,
     });
 
     expect(queries.publicOverview.enabled).toBe(true);
@@ -49,6 +53,7 @@ describe('workspaceData.queries', () => {
       'workspace-public-summary',
       WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
     ]);
+    expect(queries.workspaceRequests.enabled).toBe(false);
   });
 
   it('keeps private overview query inert without an access token', async () => {
@@ -65,11 +70,50 @@ describe('workspaceData.queries', () => {
       filter: {},
       loadPlan,
       hasAccessToken: false,
+      requestsScope: 'my',
+      activeRequestsRole: 'all',
+      activeRequestsState: 'attention',
       activeRequestsPeriod: '30d',
+      activeRequestsSort: 'activity',
     });
 
     expect(queries.privateOverview.enabled).toBe(false);
     await expect(queries.privateOverview.queryFn()).resolves.toBeNull();
+    await expect(queries.workspaceRequests.queryFn()).resolves.toBeNull();
+  });
+
+  it('builds workspace requests query from private scope filters', () => {
+    const loadPlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: false,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'my-requests',
+      activePublicSection: 'requests',
+      requestsScope: 'my',
+      hasAccessToken: true,
+    });
+
+    const queries = buildWorkspaceDataQueries({
+      filter: {},
+      loadPlan,
+      hasAccessToken: true,
+      requestsScope: 'my',
+      activeRequestsRole: 'provider',
+      activeRequestsState: 'execution',
+      activeRequestsPeriod: '7d',
+      activeRequestsSort: 'deadline',
+    });
+
+    expect(queries.workspaceRequests.enabled).toBe(true);
+    expect(queries.workspaceRequests.queryKey).toEqual([
+      'workspace-requests',
+      'my',
+      'provider',
+      'execution',
+      '7d',
+      'deadline',
+    ]);
   });
 
   it('builds offer request batch query only when ids exist', () => {
