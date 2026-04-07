@@ -95,38 +95,141 @@
 
   .my-requests-summary__card {
     display: grid;
-    gap: 8px;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
     align-items: start;
-    padding: 14px 16px;
-    border: 1px solid var(--border-default);
-    border-radius: 18px;
+    min-height: 152px;
+    padding: 16px 18px;
+    border: 1px solid color-mix(in srgb, var(--border-default) 82%, white 18%);
+    border-radius: 20px;
     background:
-      radial-gradient(circle at top right, color-mix(in srgb, var(--brand) 10%, transparent), transparent 50%),
-      var(--surface-base);
+      linear-gradient(180deg, color-mix(in srgb, white 72%, transparent), transparent 42%),
+      radial-gradient(circle at top right, color-mix(in srgb, var(--brand) 8%, transparent), transparent 54%),
+      color-mix(in srgb, var(--surface-base) 84%, white 16%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 72%, transparent),
+      0 10px 26px color-mix(in srgb, #102040 5%, transparent);
     text-align: left;
-    transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      box-shadow 160ms ease,
+      transform 160ms ease;
   }
 
   .my-requests-summary__card:hover {
-    transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--brand) 35%, var(--border-default));
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--brand) 24%, var(--border-default));
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 72%, transparent),
+      0 16px 34px color-mix(in srgb, #102040 8%, transparent);
   }
 
   .my-requests-summary__card.is-active {
-    border-color: color-mix(in srgb, var(--brand) 45%, var(--border-default));
-    background:
-      radial-gradient(circle at top right, color-mix(in srgb, var(--brand) 15%, transparent), transparent 50%),
-      color-mix(in srgb, var(--surface-base) 86%, var(--brand) 14%);
+    border-color: var(--surface-decision-active-border);
+    background: var(--surface-decision-active-bg);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 72%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--c-primary) 12%, transparent),
+      var(--surface-card-shadow-hover);
+  }
+
+  .my-requests-summary__card:focus-visible {
+    outline: none;
+    border-color: var(--surface-decision-active-border);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 72%, transparent),
+      0 0 0 3px var(--focus-ring-primary),
+      var(--surface-card-shadow-hover);
+  }
+
+  .my-requests-summary__card.is-active .my-requests-summary__value {
+    color: var(--surface-decision-active-value);
   }
 
   .my-requests-summary__label {
-    color: var(--text-muted);
-    font-size: var(--fs-small);
+    color: color-mix(in srgb, var(--text-muted) 92%, #5d6b86 8%);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.1;
+    text-transform: uppercase;
   }
 
   .my-requests-summary__value {
-    font-size: clamp(22px, 3.4vw, 30px);
-    line-height: 1;
+    color: color-mix(in srgb, var(--text-default) 94%, #081120 6%);
+    font-size: clamp(34px, 4vw, 46px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+
+  .my-requests-summary__helper {
+    align-self: end;
+    color: color-mix(in srgb, var(--text-muted) 88%, #70809d 12%);
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .my-requests-summary__accent {
+    width: 100%;
+    height: 4px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--border-default) 82%, white 18%);
+    transition: background-color 160ms ease, transform 160ms ease;
+  }
+
+  .my-requests-summary__card.is-all .my-requests-summary__accent {
+    background: color-mix(in oklab, var(--c-border) 64%, var(--c-text-muted) 36%);
+  }
+
+  .my-requests-summary__card.is-attention {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, white 62%, transparent), transparent 42%),
+      radial-gradient(circle at top right, color-mix(in srgb, #9fb4ff 16%, transparent), transparent 54%),
+      color-mix(in srgb, var(--surface-base) 78%, #eef4ff 22%);
+  }
+
+  .my-requests-summary__card.is-attention .my-requests-summary__accent {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-accent) 48%, white 52%) 0%,
+      color-mix(in oklab, var(--c-accent) 78%, var(--c-primary) 22%) 100%
+    );
+  }
+
+  .my-requests-summary__card.is-execution {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, white 66%, transparent), transparent 42%),
+      radial-gradient(circle at top right, color-mix(in srgb, #93c5fd 14%, transparent), transparent 54%),
+      color-mix(in srgb, var(--surface-base) 80%, #edf7ff 20%);
+  }
+
+  .my-requests-summary__card.is-execution .my-requests-summary__accent {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-primary) 34%, white 66%) 0%,
+      color-mix(in oklab, var(--c-primary) 58%, var(--c-panel) 42%) 100%
+    );
+  }
+
+  .my-requests-summary__card.is-completed {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, white 68%, transparent), transparent 42%),
+      radial-gradient(circle at top right, color-mix(in srgb, #b7dec8 16%, transparent), transparent 54%),
+      color-mix(in srgb, var(--surface-base) 82%, #f2f8f2 18%);
+  }
+
+  .my-requests-summary__card.is-completed .my-requests-summary__accent {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-success) 42%, white 58%) 0%,
+      color-mix(in oklab, var(--c-success) 70%, var(--c-panel) 30%) 100%
+    );
+  }
+
+  .my-requests-summary__card.is-active .my-requests-summary__accent {
+    transform: scaleX(1.02);
   }
 
   .my-requests-list {
@@ -369,17 +472,264 @@
     .my-requests-summary {
       display: flex;
       overflow-x: auto;
-      padding-bottom: 4px;
+      gap: 10px;
+      padding-bottom: 6px;
       scroll-snap-type: x proximity;
+      scroll-padding-inline: 1px;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
+    }
+
+    .my-requests-summary::-webkit-scrollbar {
+      display: none;
     }
 
     .my-requests-summary__card {
-      min-width: 180px;
+      min-width: min(78vw, 208px);
+      min-height: 132px;
+      padding: 14px 14px 12px;
+      gap: 8px;
       scroll-snap-align: start;
     }
 
+    .my-requests-summary__label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+    }
+
+    .my-requests-summary__value {
+      font-size: clamp(30px, 9vw, 40px);
+    }
+
+    .my-requests-summary__helper {
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .my-requests-summary__accent {
+      height: 3px;
+    }
+
+    .my-requests-view {
+      gap: 14px;
+    }
+
+    .my-requests-list {
+      gap: 12px;
+    }
+
+    .my-request-card {
+      gap: 12px;
+    }
+
     .my-request-card__progress {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scroll-snap-type: x proximity;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
+    }
+
+    .my-request-card__progress::-webkit-scrollbar {
+      display: none;
+    }
+
+    .my-request-card__progress-step {
+      flex: 0 0 108px;
+      gap: 5px;
+      font-size: 10px;
+      line-height: 1.25;
+      scroll-snap-align: start;
+    }
+
+    .my-request-card__progress-dot {
+      height: 5px;
+    }
+
+    .my-request-card__activity {
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .my-request-card .request-card {
+      min-height: 0;
+    }
+
+    .my-request-card .request-card:not(.request-card--no-media) {
+      grid-template-columns: minmax(0, 1fr) minmax(64px, 22%, 88px);
+    }
+
+    .my-request-card .request-card__media {
+      min-height: 100%;
+    }
+
+    .my-request-card .request-card__overlay {
+      top: 8px;
+      right: 8px;
+    }
+
+    .my-request-card .request-badges--media {
+      top: 40px;
+      right: 8px;
+      gap: 4px;
+    }
+
+    .my-request-card .request-badges .ui-badge {
+      min-height: 24px;
+      padding-inline: 9px;
+    }
+
+    .my-request-card .request-card__body {
+      gap: 6px;
+      padding: 12px;
+    }
+
+    .my-request-card .request-category-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .my-request-card .request-top__status {
+      min-width: 0;
+    }
+
+    .my-request-card .request-card__status-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 6px;
+      max-width: 100%;
+    }
+
+    .my-request-card .status-badge {
+      min-height: 24px;
+      padding-inline: 10px;
+      font-size: 10px;
+    }
+
+    .my-request-card .request-card__status-action {
+      min-height: 22px;
+    }
+
+    .my-request-card .request-card__status-action.offer-action-btn--icon-only {
+      --icon-only-size: 22px;
+    }
+
+    .my-request-card .offer-action-btn__icon svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .my-request-card .request-card__title {
+      font-size: 15px;
+      line-height: 1.3;
+    }
+
+    .my-request-card .request-card__excerpt {
+      font-size: 11px;
+      line-height: 1.38;
+    }
+
+    .my-request-card .request-card__meta,
+    .my-request-card .request-card__sub,
+    .my-request-card .request-tag {
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .my-request-card .request-card__price {
+      font-size: 12px;
+      gap: 6px;
+    }
+
+    .my-request-card .request-card__price .proof-price {
+      font-size: 16px;
+    }
+
+    .my-request-card .request-card__price-trend,
+    .my-request-card .request-category {
+      font-size: 10px;
+    }
+
+    .my-requests-empty,
+    .my-requests-auth-gate {
+      gap: 10px;
+      padding: 18px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .my-requests-summary__card {
+      min-width: min(82vw, 192px);
+      min-height: 126px;
+      padding: 13px 13px 11px;
+    }
+
+    .my-requests-summary__label {
+      font-size: 10px;
+      letter-spacing: 0.11em;
+    }
+
+    .my-requests-summary__value {
+      font-size: clamp(28px, 9.5vw, 36px);
+    }
+
+    .my-requests-summary__helper {
+      font-size: 11px;
+    }
+
+    .my-request-card__progress-step {
+      flex-basis: 102px;
+      font-size: 9.5px;
+    }
+
+    .my-request-card .request-card:not(.request-card--no-media) {
+      grid-template-columns: minmax(0, 1fr) minmax(56px, 20%, 76px);
+    }
+
+    .my-request-card .request-card__body {
+      padding: 11px;
+    }
+
+    .my-request-card .request-category-row {
+      gap: 7px;
+    }
+
+    .my-request-card .request-card__title {
+      font-size: 14px;
+    }
+
+    .my-request-card .request-card__excerpt,
+    .my-request-card .request-card__meta,
+    .my-request-card .request-card__sub,
+    .my-request-card .request-tag {
+      font-size: 10.5px;
+    }
+
+    .my-request-card .request-card__price .proof-price {
+      font-size: 15px;
+    }
+
+    .my-request-card .status-badge {
+      min-height: 22px;
+      padding-inline: 9px;
+      font-size: 9.5px;
+    }
+
+    .my-request-card .request-card__status-action.offer-action-btn--icon-only {
+      --icon-only-size: 21px;
+    }
+
+    .my-request-card .offer-action-btn__icon svg {
+      width: 11px;
+      height: 11px;
     }
   }
 }
