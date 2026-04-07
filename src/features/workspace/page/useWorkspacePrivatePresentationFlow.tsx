@@ -254,19 +254,7 @@ export function useWorkspacePrivatePresentationFlow({
     : data.activeRequestsRole;
   const privateRequestsModel = React.useMemo(
     () => {
-      const serverModel = data.workspaceRequests
-        ? buildMyRequestsViewModelFromResponse({
-          response: data.workspaceRequests,
-          myRequests: data.myRequests,
-          myOfferRequestsById: data.myOfferRequestsById,
-        })
-        : null;
-
-      if (serverModel) {
-        return serverModel;
-      }
-
-      return buildMyRequestsViewModel({
+      const localModel = buildMyRequestsViewModel({
         locale: branch.locale,
         role: effectiveRequestsRole ?? 'all',
         state: data.activeRequestsState,
@@ -283,6 +271,20 @@ export function useWorkspacePrivatePresentationFlow({
         serviceByKey: data.serviceByKey,
         formatDate: (value) => data.formatDate.format(new Date(value)),
       });
+
+      const serverModel = data.workspaceRequests
+        ? buildMyRequestsViewModelFromResponse({
+          response: data.workspaceRequests,
+          myRequests: data.myRequests,
+          myOfferRequestsById: data.myOfferRequestsById,
+        })
+        : null;
+
+      if (serverModel && (serverModel.cards.length > 0 || localModel.cards.length === 0)) {
+        return serverModel;
+      }
+
+      return localModel;
     },
     [
       data.activeRequestsSort,

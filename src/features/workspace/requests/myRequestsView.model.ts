@@ -216,6 +216,47 @@ function resolveCardRequest(args: {
   return args.myOfferRequestsById.get(args.item.requestId) ?? args.myRequestsById.get(args.item.requestId) ?? null;
 }
 
+function buildFallbackRequestFromCard(item: WorkspaceMyRequestCardDto): RequestResponseDto {
+  const fallbackDate = new Date(0).toISOString();
+
+  return {
+    id: item.requestId,
+    serviceKey: 'service',
+    cityId: item.city?.trim() || 'unknown',
+    cityName: item.city ?? null,
+    categoryKey: null,
+    categoryName: item.category ?? null,
+    subcategoryName: null,
+    propertyType: 'apartment',
+    area: 0,
+    price: item.budget ?? item.agreedPrice ?? null,
+    previousPrice: null,
+    priceTrend: null,
+    preferredDate: fallbackDate,
+    isRecurring: false,
+    title: item.title ?? null,
+    description: item.activity?.label ?? null,
+    photos: null,
+    imageUrl: null,
+    tags: null,
+    clientId: null,
+    clientName: null,
+    clientAvatarUrl: null,
+    clientCity: null,
+    clientRatingAvg: null,
+    clientRatingCount: null,
+    clientIsOnline: null,
+    clientLastSeenAt: null,
+    status:
+      item.state === 'completed'
+        ? 'closed'
+        : item.state === 'active'
+          ? 'matched'
+          : 'published',
+    createdAt: fallbackDate,
+  };
+}
+
 export function buildMyRequestsViewModelFromResponse(args: {
   response: WorkspaceRequestsResponseDto;
   myRequests: RequestResponseDto[];
@@ -229,11 +270,7 @@ export function buildMyRequestsViewModelFromResponse(args: {
       item,
       myRequestsById,
       myOfferRequestsById: args.myOfferRequestsById,
-    });
-
-    if (!request) {
-      return null;
-    }
+    }) ?? buildFallbackRequestFromCard(item);
 
     cards.push({
       id: item.id,
@@ -514,7 +551,10 @@ function buildProviderCard(args: {
     request: resolvedRequest,
     role: 'provider',
     workflowState: state,
-    sortActivityAt: parseDateToMs(contract?.updatedAt ?? offer.updatedAt ?? offer.createdAt) ?? offerCreatedAt,
+    sortActivityAt:
+      nextEventAt
+      ?? parseDateToMs(contract?.updatedAt ?? offer.updatedAt ?? offer.createdAt)
+      ?? offerCreatedAt,
     sortCreatedAt: offerCreatedAt,
     sortBudget: budgetValue ?? 0,
     sortDeadlineAt: nextEventAt,
