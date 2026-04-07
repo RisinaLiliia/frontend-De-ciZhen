@@ -15,7 +15,11 @@ import {
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
+import type {
+  WorkspaceRequestsRole,
+  WorkspaceRequestsScope,
+  WorkspaceRequestsState,
+} from '@/features/workspace/requests/workspaceRequestsScope.model';
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 
 type Params = {
@@ -28,7 +32,10 @@ type Params = {
   activeWorkspaceTab: WorkspaceTab;
   activePublicSection?: PublicWorkspaceSection | null;
   requestsScope: WorkspaceRequestsScope;
+  activeRequestsRole: WorkspaceRequestsRole;
+  activeRequestsState: WorkspaceRequestsState;
   activeRequestsPeriod: WorkspaceRequestsPeriodDto;
+  activeRequestsSort: string | null;
 };
 
 export function useWorkspaceData(params: Params) {
@@ -42,7 +49,10 @@ export function useWorkspaceData(params: Params) {
     activeWorkspaceTab,
     activePublicSection = null,
     requestsScope,
+    activeRequestsRole,
+    activeRequestsState,
     activeRequestsPeriod,
+    activeRequestsSort,
   } = params;
   const hasAccessToken = Boolean(getAccessToken());
   const loadPlan = React.useMemo(
@@ -75,13 +85,21 @@ export function useWorkspaceData(params: Params) {
         filter,
         loadPlan,
         hasAccessToken,
+        requestsScope,
+        activeRequestsRole,
+        activeRequestsState,
         activeRequestsPeriod,
+        activeRequestsSort,
       }),
     [
       filter,
+      activeRequestsRole,
       activeRequestsPeriod,
+      activeRequestsSort,
+      activeRequestsState,
       hasAccessToken,
       loadPlan,
+      requestsScope,
     ],
   );
 
@@ -100,6 +118,10 @@ export function useWorkspaceData(params: Params) {
     data: workspacePrivateOverview,
     isLoading: isWorkspacePrivateOverviewLoading,
   } = useQuery(workspaceDataQueries.privateOverview);
+  const {
+    data: workspaceRequests,
+    isLoading: isWorkspaceRequestsLoading,
+  } = useQuery(workspaceDataQueries.workspaceRequests);
 
   const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery(workspaceDataQueries.myOffers);
   const { data: myClientOffers = [], isLoading: isMyClientOffersLoading } = useQuery(
@@ -121,7 +143,10 @@ export function useWorkspaceData(params: Params) {
     [loadPlan.shouldLoadOfferRequests, locale, myOfferRequestIds],
   );
 
-  const { data: myOfferRequestsById = new Map() } = useQuery(myOfferRequestsQuery);
+  const {
+    data: myOfferRequestsById = new Map(),
+    isLoading: isMyOfferRequestsLoading,
+  } = useQuery(myOfferRequestsQuery);
 
   const { data: favoriteRequests = [], isLoading: isFavoriteRequestsLoading } = useQuery(
     workspaceDataQueries.favoriteRequests,
@@ -159,11 +184,14 @@ export function useWorkspaceData(params: Params) {
     isPublicSummaryError,
     workspacePrivateOverview,
     isWorkspacePrivateOverviewLoading,
+    workspaceRequests,
+    isWorkspaceRequestsLoading,
     myOffers,
     isMyOffersLoading,
     myClientOffers,
     isMyClientOffersLoading,
     myOfferRequestsById,
+    isMyOfferRequestsLoading,
     favoriteRequests,
     isFavoriteRequestsLoading,
     favoriteProviders,

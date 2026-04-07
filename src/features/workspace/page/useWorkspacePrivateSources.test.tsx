@@ -92,9 +92,12 @@ describe('useWorkspacePrivateSources', () => {
       isLoading: false,
       isError: false,
       allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
+      workspaceRequests: null,
+      isWorkspaceRequestsLoading: false,
       myOffers: [offer],
       isMyOffersLoading: false,
       myOfferRequestsById: new Map([['req-1', request]]),
+      isMyOfferRequestsLoading: false,
       favoriteRequests: [request],
       isFavoriteRequestsLoading: false,
       favoriteProviders: [provider],
@@ -142,6 +145,9 @@ describe('useWorkspacePrivateSources', () => {
         isWorkspaceAuthed
         activePublicSection="requests"
         activeWorkspaceTab="my-requests"
+        activeRequestsRole="provider"
+        activeRequestsState="execution"
+        activeRequestsSort="deadline"
       />,
     );
 
@@ -162,7 +168,10 @@ describe('useWorkspacePrivateSources', () => {
         isWorkspacePublicSection: false,
         shouldLoadPrivateData: true,
         activeWorkspaceTab: 'my-requests',
+        activeRequestsRole: 'provider',
+        activeRequestsState: 'execution',
         activeRequestsPeriod: '30d',
+        activeRequestsSort: 'deadline',
       }),
     );
 

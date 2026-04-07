@@ -22,6 +22,9 @@ describe('workspacePrivateSources.model', () => {
       isAuthed: true,
       isWorkspaceAuthed: true,
       activeWorkspaceTab: 'my-requests',
+      activeRequestsRole: 'provider',
+      activeRequestsState: 'execution',
+      activeRequestsSort: 'deadline',
     });
 
     expect(args).toMatchObject({
@@ -31,7 +34,10 @@ describe('workspacePrivateSources.model', () => {
       isWorkspacePublicSection: false,
       shouldLoadPrivateData: true,
       activeWorkspaceTab: 'my-requests',
+      activeRequestsRole: 'provider',
+      activeRequestsState: 'execution',
       activeRequestsPeriod: '30d',
+      activeRequestsSort: 'deadline',
     });
   });
 
@@ -90,9 +96,12 @@ describe('workspacePrivateSources.model', () => {
         isProvidersLoading: false,
         isProvidersError: false,
         workspacePrivateOverview: null,
+        workspaceRequests: null,
+        isWorkspaceRequestsLoading: false,
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
         myRequests: [{ id: 'req-1' }],
         myOfferRequestsById: new Map([['req-1', { id: 'req-1' }]]),
+        isMyOfferRequestsLoading: false,
         favoriteRequests: [{ id: 'req-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
         myReviews: [],
@@ -133,5 +142,6 @@ describe('workspacePrivateSources.model', () => {
     expect(result.requestsCount).toBe(2);
     expect(result.isProviderContractsLoading).toBe(true);
     expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));
+    expect(result.workspaceRequests).toBeNull();
   });
 });

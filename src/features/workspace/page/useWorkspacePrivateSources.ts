@@ -19,7 +19,10 @@ type SourcesParams = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isAuthed' | 'i
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
+  activeRequestsRole?: WorkspaceBranchProps['routeState']['activeRequestsRole'];
+  activeRequestsState?: WorkspaceBranchProps['routeState']['activeRequestsState'];
   activeRequestsPeriod?: WorkspaceBranchProps['routeState']['activeRequestsPeriod'];
+  activeRequestsSort?: WorkspaceBranchProps['routeState']['activeRequestsSort'];
 };
 
 export function useWorkspacePrivateSources({
@@ -30,7 +33,10 @@ export function useWorkspacePrivateSources({
   activePublicSection,
   activeWorkspaceTab,
   requestsScope = 'market',
+  activeRequestsRole = 'all',
+  activeRequestsState = 'all',
   activeRequestsPeriod = '30d',
+  activeRequestsSort = null,
 }: SourcesParams) {
   const {
     cities,
@@ -67,7 +73,10 @@ export function useWorkspacePrivateSources({
       activeWorkspaceTab,
       activePublicSection,
       requestsScope,
+      activeRequestsRole,
+      activeRequestsState,
       activeRequestsPeriod,
+      activeRequestsSort,
     }),
   );
 

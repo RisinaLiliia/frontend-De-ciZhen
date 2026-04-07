@@ -16,6 +16,7 @@ describe('workspaceData.model', () => {
     expect(plan).toMatchObject({
       shouldLoadPublicRequests: true,
       shouldLoadPrivateOverview: false,
+      shouldLoadWorkspaceRequests: false,
       shouldLoadMyRequests: false,
       shouldLoadMyOffers: false,
       shouldLoadMyContracts: false,
@@ -38,6 +39,7 @@ describe('workspaceData.model', () => {
     });
 
     expect(offersPlan.shouldLoadPrivateOverview).toBe(true);
+    expect(offersPlan.shouldLoadWorkspaceRequests).toBe(false);
     expect(offersPlan.shouldLoadMyOffers).toBe(true);
     expect(offersPlan.shouldLoadOfferRequests).toBe(true);
     expect(offersPlan.shouldLoadProviders).toBe(true);
@@ -53,6 +55,7 @@ describe('workspaceData.model', () => {
     });
 
     expect(reviewsPlan.shouldLoadReviews).toBe(true);
+    expect(reviewsPlan.shouldLoadWorkspaceRequests).toBe(false);
     expect(reviewsPlan.shouldLoadMyOffers).toBe(false);
   });
 

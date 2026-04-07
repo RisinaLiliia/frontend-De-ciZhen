@@ -78,6 +78,10 @@ export function useWorkspaceRouteState({
     () => resolveWorkspaceRequestsPeriod(searchParams.get('period') ?? searchParams.get('range')),
     [searchParams],
   );
+  const activeRequestsSort = React.useMemo(
+    () => searchParams.get('sort'),
+    [searchParams],
+  );
 
   const nextPath = React.useMemo(() => {
     const qs = searchParams?.toString();
@@ -103,6 +107,7 @@ export function useWorkspaceRouteState({
     activeRequestsRole,
     activeRequestsState,
     activeRequestsPeriod,
+    activeRequestsSort,
     nextPath,
     guestLoginHref,
     onGuestLockedAction,

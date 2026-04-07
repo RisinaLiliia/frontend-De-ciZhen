@@ -11,9 +11,15 @@ import {
   getWorkspacePrivateOverview,
   getWorkspacePublicOverview,
   getWorkspacePublicRequestsBatch,
+  getWorkspaceRequests,
 } from '@/lib/api/workspace';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
-import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
+import type {
+  WorkspaceRequestsPeriodDto,
+  WorkspaceRequestsRoleDto,
+  WorkspaceRequestsScopeDto,
+  WorkspaceRequestsStateDto,
+} from '@/lib/api/dto/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
@@ -39,14 +45,22 @@ type WorkspaceDataQueriesArgs = {
   filter: WorkspacePublicOverviewQuery;
   loadPlan: WorkspaceDataLoadPlan;
   hasAccessToken: boolean;
+  requestsScope: WorkspaceRequestsScopeDto;
+  activeRequestsRole: WorkspaceRequestsRoleDto;
+  activeRequestsState: WorkspaceRequestsStateDto;
   activeRequestsPeriod: WorkspaceRequestsPeriodDto;
+  activeRequestsSort: string | null;
 };
 
 export function buildWorkspaceDataQueries({
   filter,
   loadPlan,
   hasAccessToken,
+  requestsScope,
+  activeRequestsRole,
+  activeRequestsState,
   activeRequestsPeriod,
+  activeRequestsSort,
 }: WorkspaceDataQueriesArgs) {
   return {
     publicOverview: buildStableWorkspaceQuery({
@@ -87,6 +101,31 @@ export function buildWorkspaceDataQueries({
       queryFn: () =>
         hasAccessToken
           ? withStatusFallback(() => getWorkspacePrivateOverview({ period: activeRequestsPeriod }), null, [401, 403])
+          : Promise.resolve(null),
+    }),
+    workspaceRequests: buildStableWorkspaceQuery({
+      queryKey: workspaceQK.workspaceRequests({
+        scope: requestsScope,
+        role: activeRequestsRole,
+        state: activeRequestsState,
+        period: activeRequestsPeriod,
+        sort: activeRequestsSort,
+      }),
+      enabled: loadPlan.shouldLoadWorkspaceRequests,
+      queryFn: () =>
+        hasAccessToken
+          ? withStatusFallback(
+            () =>
+              getWorkspaceRequests({
+                scope: requestsScope,
+                role: activeRequestsRole,
+                state: activeRequestsState,
+                period: activeRequestsPeriod,
+                sort: activeRequestsSort,
+              }),
+            null,
+            [401, 403],
+          )
           : Promise.resolve(null),
     }),
     myOffers: {

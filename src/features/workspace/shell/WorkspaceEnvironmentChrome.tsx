@@ -557,17 +557,15 @@ function buildSharedContextControlsProps({
       >
         {(locale === 'de'
           ? [
-            { key: 'all', label: 'Alle Stati' },
-            { key: 'open', label: 'Offen' },
-            { key: 'clarifying', label: 'In Klärung' },
-            { key: 'active', label: 'In Arbeit' },
+            { key: 'all', label: 'Alle' },
+            { key: 'attention', label: 'Aktiv' },
+            { key: 'execution', label: 'In Ausführung' },
             { key: 'completed', label: 'Abgeschlossen' },
           ]
           : [
-            { key: 'all', label: 'All states' },
-            { key: 'open', label: 'Open' },
-            { key: 'clarifying', label: 'Clarifying' },
-            { key: 'active', label: 'Active' },
+            { key: 'all', label: 'All' },
+            { key: 'attention', label: 'Active' },
+            { key: 'execution', label: 'In execution' },
             { key: 'completed', label: 'Completed' },
           ]).map((item) => {
           const isActive = model.controls.state === item.key;
