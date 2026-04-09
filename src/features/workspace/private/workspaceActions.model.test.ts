@@ -5,6 +5,7 @@ import {
   buildWorkspaceOfferLoginHref,
   buildWorkspaceOfferSheetHref,
   buildWorkspaceOwnerRequestActions,
+  isWorkspaceChatConversationInput,
   resolveWorkspaceChatNavigation,
   resolveWorkspaceOfferById,
 } from './workspaceActions.model';
@@ -43,6 +44,13 @@ describe('workspaceActions.model', () => {
       fallbackHref: '/chat',
       conversationInput: null,
     });
+    expect(
+      isWorkspaceChatConversationInput({
+        relatedEntity: { type: 'offer', id: 'offer-2' },
+        participantUserId: 'provider-user-2',
+      }),
+    ).toBe(true);
+    expect(isWorkspaceChatConversationInput({ relatedEntity: { type: 'offer', id: '' } })).toBe(false);
   });
 
   it('builds owner actions and final workspace actions result', () => {
@@ -50,6 +58,7 @@ describe('workspaceActions.model', () => {
     const onOpenOfferSheet = vi.fn();
     const onWithdrawOffer = vi.fn();
     const onOpenChatThread = vi.fn();
+    const onOpenChatConversation = vi.fn();
 
     const ownerRequestActions = buildWorkspaceOwnerRequestActions({
       pendingDeleteRequestId: 'req-1',
@@ -61,11 +70,13 @@ describe('workspaceActions.model', () => {
       onOpenOfferSheet,
       onWithdrawOffer,
       onOpenChatThread,
+      onOpenChatConversation,
     });
 
     expect(ownerRequestActions.pendingDeleteRequestId).toBe('req-1');
     expect(result.pendingOfferRequestId).toBe('req-2');
     expect(result.ownerRequestActions.onDelete).toBe(onDelete);
     expect(result.onWithdrawOffer).toBe(onWithdrawOffer);
+    expect(result.onOpenChatConversation).toBe(onOpenChatConversation);
   });
 });

@@ -124,7 +124,7 @@ export function buildWorkspaceDataQueries({
                 sort: activeRequestsSort,
               }),
             null,
-            [401, 403, 404],
+            [401, 403],
           )
           : Promise.resolve(null),
     }),

@@ -74,6 +74,7 @@ describe('workspacePrivateInteractions.model', () => {
         onOpenOfferSheet: vi.fn(),
         onWithdrawOffer: vi.fn(),
         onOpenChatThread: vi.fn(),
+        onOpenChatConversation: vi.fn(),
       } as never,
       formatters: {
         localeTag: 'de-DE',

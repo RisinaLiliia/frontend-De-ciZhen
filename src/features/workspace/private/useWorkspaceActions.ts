@@ -16,6 +16,8 @@ import {
   buildWorkspaceOfferLoginHref,
   buildWorkspaceOfferSheetHref,
   buildWorkspaceOwnerRequestActions,
+  type WorkspaceChatConversationInput,
+  isWorkspaceChatConversationInput,
   resolveWorkspaceChatNavigation,
   resolveWorkspaceOfferById,
 } from '@/features/workspace/private/workspaceActions.model';
@@ -70,13 +72,32 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
 
   const onOpenChatThread = React.useCallback(
     async (offer: OfferDto) => {
+      const navigation = resolveWorkspaceChatNavigation(offer);
+      if (!navigation.conversationInput) {
+        router.push(navigation.fallbackHref);
+        return;
+      }
       try {
-        const navigation = resolveWorkspaceChatNavigation(offer);
-        if (!navigation.conversationInput) {
-          router.push(navigation.fallbackHref);
+        const conversation = await createConversation(navigation.conversationInput);
+        await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
+        router.push(`/chat?conversation=${encodeURIComponent(conversation.id)}`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+        router.push('/chat');
+      }
+    },
+    [qc, router, t],
+  );
+
+  const onOpenChatConversation = React.useCallback(
+    async (payload: WorkspaceChatConversationInput) => {
+      try {
+        if (!isWorkspaceChatConversationInput(payload)) {
+          router.push('/chat');
           return;
         }
-        const conversation = await createConversation(navigation.conversationInput);
+        const conversation = await createConversation(payload);
         await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
         router.push(`/chat?conversation=${encodeURIComponent(conversation.id)}`);
       } catch (error) {
@@ -127,8 +148,10 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         onOpenOfferSheet,
         onWithdrawOffer,
         onOpenChatThread,
+        onOpenChatConversation,
       }),
     [
+      onOpenChatConversation,
       onOpenChatThread,
       onOpenOfferSheet,
       onWithdrawOffer,

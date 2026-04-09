@@ -1,3 +1,4 @@
+import type { CreateConversationDto } from '@/lib/api/dto/chat';
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';
 
 export type WorkspacePublicActivityRange = '24h' | '7d' | '30d' | '90d';
@@ -128,6 +129,39 @@ export type WorkspaceMyRequestCardDto = {
     href?: string;
     action?: string;
   }>;
+  requestPreview: {
+    href: string;
+    imageUrl?: string | null;
+    imageCategoryKey?: string | null;
+    badgeLabel?: string | null;
+    categoryLabel: string;
+    title: string;
+    excerpt?: string | null;
+    cityLabel?: string | null;
+    dateLabel?: string | null;
+    priceLabel: string;
+    priceTrend?: 'up' | 'down' | null;
+    priceTrendLabel?: string | null;
+    tags: string[];
+  };
+  status: {
+    badgeLabel?: string | null;
+    badgeTone?: 'info' | 'warning' | 'success' | 'danger' | null;
+    actions: Array<{
+      key: string;
+      kind: 'link' | 'send_offer' | 'edit_offer' | 'withdraw_offer' | 'open_chat' | 'delete_request';
+      tone: 'primary' | 'secondary' | 'danger';
+      icon: 'briefcase' | 'chat' | 'edit' | 'send' | 'trash';
+      label: string;
+      href?: string | null;
+      requestId?: string | null;
+      offerId?: string | null;
+      chatInput?: Pick<
+        CreateConversationDto,
+        'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+      > | null;
+    }>;
+  };
 };
 
 export type WorkspaceRequestsSidePanelDto = {
@@ -196,6 +230,11 @@ export type WorkspacePrivateReviewsDto = {
   asClient: number;
 };
 
+export type WorkspacePrivateRatingSummaryDto = {
+  average: number;
+  count: number;
+};
+
 export type WorkspacePrivateProfilesDto = {
   providerCompleteness: number;
   clientCompleteness: number;
@@ -238,6 +277,7 @@ export type WorkspacePrivateOverviewDto = {
   clientContractsByStatus: WorkspacePrivateContractStatusCountsDto;
   favorites: WorkspacePrivateFavoritesDto;
   reviews: WorkspacePrivateReviewsDto;
+  ratingSummary?: WorkspacePrivateRatingSummaryDto;
   profiles: WorkspacePrivateProfilesDto;
   kpis: WorkspacePrivateKpisDto;
   insights: WorkspacePrivateInsightsDto;

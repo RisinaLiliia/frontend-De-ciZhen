@@ -83,6 +83,7 @@ describe('useWorkspacePrivateInteractions', () => {
       onOpenOfferSheet: vi.fn(),
       onWithdrawOffer: vi.fn(),
       onOpenChatThread: vi.fn(),
+      onOpenChatConversation: vi.fn(),
     } as never);
 
     useWorkspaceFormattersMock.mockReturnValue({

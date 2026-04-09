@@ -138,7 +138,6 @@ export function buildWorkspacePrivateStateArgs({
     activeWorkspaceTab: data.activeWorkspaceTab,
     activePublicSection: data.activePublicSection,
     userName: branch.auth.user?.name,
-    myOffers: data.myOffers,
     providers: data.providers,
     publicRequestsCount: data.platformRequestsTotal,
     publicProvidersCount: data.allRequestsSummary?.totalActiveProviders ?? data.providers.length,

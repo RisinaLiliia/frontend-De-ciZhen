@@ -18,7 +18,6 @@ import {
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
 import {
-  buildMyRequestsViewModel,
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
 import {
@@ -240,69 +239,75 @@ export function useWorkspacePrivatePresentationFlow({
     data.activePublicSection === 'requests' &&
     data.requestsScope === 'my';
   const privateRequestsLoading = data.workspaceRequests
-    ? data.isWorkspaceRequestsLoading || data.isMyRequestsLoading || data.isMyOfferRequestsLoading
-    : data.isWorkspaceRequestsLoading
-      || data.isMyRequestsLoading
-      || data.isMyOffersLoading
-      || data.isMyClientOffersLoading
-      || data.isProviderContractsLoading
-      || data.isClientContractsLoading
-      || (data.activeRequestsRole === 'all' && data.isWorkspacePrivateOverviewLoading);
+    ? data.isWorkspaceRequestsLoading
+    : data.isWorkspaceRequestsLoading || (data.activeRequestsRole === 'all' && data.isWorkspacePrivateOverviewLoading);
   const preferredRequestsRole = data.workspacePrivateOverview?.preferredRole ?? null;
   const effectiveRequestsRole = data.activeRequestsRole === 'all'
     ? preferredRequestsRole
     : data.activeRequestsRole;
   const privateRequestsModel = React.useMemo(
     () => {
-      const localModel = buildMyRequestsViewModel({
-        locale: branch.locale,
-        role: effectiveRequestsRole ?? 'all',
-        state: data.activeRequestsState,
-        period: data.activeRequestsPeriod,
-        sort: data.activeRequestsSort,
-        myRequests: data.myRequests,
-        myOffers: data.myOffers,
-        myClientOffers: data.myClientOffers,
-        myOfferRequestsById: data.myOfferRequestsById,
-        myProviderContracts: data.myProviderContracts,
-        myClientContracts: data.myClientContracts,
-        cityById: data.cityById,
-        categoryByKey: data.categoryByKey,
-        serviceByKey: data.serviceByKey,
-        formatDate: (value) => data.formatDate.format(new Date(value)),
-      });
-
-      const serverModel = data.workspaceRequests
-        ? buildMyRequestsViewModelFromResponse({
-          response: data.workspaceRequests,
-          myRequests: data.myRequests,
-          myOfferRequestsById: data.myOfferRequestsById,
-        })
-        : null;
-
-      if (serverModel && (serverModel.cards.length > 0 || localModel.cards.length === 0)) {
-        return serverModel;
+      if (data.workspaceRequests) {
+        return buildMyRequestsViewModelFromResponse(data.workspaceRequests);
       }
 
-      return localModel;
+      return buildMyRequestsViewModelFromResponse({
+        section: 'requests',
+        scope: 'my',
+        header: {
+          title: branch.locale === 'de' ? 'Meine Vorgänge' : 'My workflows',
+        },
+        filters: {
+          role: effectiveRequestsRole ?? 'all',
+          state: data.activeRequestsState,
+          period: data.activeRequestsPeriod,
+          sort: data.activeRequestsSort ?? 'activity',
+        },
+        summary: {
+          items: [
+            {
+              key: 'all',
+              label: branch.locale === 'de' ? 'Alle' : 'All',
+              value: 0,
+              isHighlighted: data.activeRequestsState === 'all',
+            },
+            {
+              key: 'attention',
+              label: branch.locale === 'de' ? 'Aktiv' : 'Active',
+              value: 0,
+              isHighlighted: data.activeRequestsState === 'attention',
+            },
+            {
+              key: 'execution',
+              label: branch.locale === 'de' ? 'In Ausführung' : 'In execution',
+              value: 0,
+              isHighlighted: data.activeRequestsState === 'execution',
+            },
+            {
+              key: 'completed',
+              label: branch.locale === 'de' ? 'Abgeschlossen' : 'Completed',
+              value: 0,
+              isHighlighted: data.activeRequestsState === 'completed',
+            },
+          ],
+        },
+        list: {
+          total: 0,
+          page: 1,
+          limit: 20,
+          hasMore: false,
+          items: [],
+        },
+        sidePanel: null,
+      });
     },
     [
-      data.activeRequestsSort,
       branch.locale,
       data.activeRequestsPeriod,
       data.activeRequestsState,
-      data.categoryByKey,
-      data.cityById,
       effectiveRequestsRole,
-      data.formatDate,
-      data.myClientContracts,
-      data.myClientOffers,
-      data.myOfferRequestsById,
-      data.myOffers,
-      data.myProviderContracts,
-      data.myRequests,
+      data.activeRequestsSort,
       data.workspaceRequests,
-      data.serviceByKey,
     ],
   );
   const privateAside = isUnifiedPrivateRequests ? (
@@ -338,24 +343,17 @@ export function useWorkspacePrivatePresentationFlow({
     />
   ) : isUnifiedPrivateRequests ? (
     <RequestsPrivateView
-      t={branch.t}
       locale={branch.locale}
       isWorkspaceAuthed={branch.isWorkspaceAuthed}
       guestLoginHref={data.guestLoginHref}
       model={privateRequestsModel}
       isLoading={privateRequestsLoading}
-      isError={false}
+      isError={data.isWorkspaceRequestsError}
       listContext={{
-        serviceByKey: data.serviceByKey,
-        categoryByKey: data.categoryByKey,
-        cityById: data.cityById,
-        formatDate: data.formatDate,
-        formatPrice: data.formatPrice,
-        offersByRequest: data.offersByRequest,
         onSendOffer: data.onOpenOfferSheet,
         onEditOffer: data.onOpenOfferSheet,
         onWithdrawOffer: data.onWithdrawOffer,
-        onOpenChatThread: data.onOpenChatThread,
+        onOpenChatConversation: data.onOpenChatConversation,
         pendingOfferRequestId: data.pendingOfferRequestId,
         ownerRequestActions: data.ownerRequestActions,
       }}

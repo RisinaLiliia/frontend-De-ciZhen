@@ -4,8 +4,17 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { RequestsListItem } from '@/components/requests/RequestsListItem';
-import type { RequestsListProps } from '@/components/requests/requestsList.types';
+import { RequestCard } from '@/components/requests/RequestCard';
+import { OfferActionButton } from '@/components/ui/OfferActionButton';
+import { LocationMeta } from '@/components/ui/LocationMeta';
+import {
+  IconBriefcase,
+  IconCalendar,
+  IconChat,
+  IconEdit,
+} from '@/components/ui/icons/icons';
+import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
+import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import type {
   MyRequestsSummaryItem,
   MyRequestsViewCard,
@@ -13,30 +22,23 @@ import type {
 } from '@/features/workspace/requests/myRequestsView.model';
 import type { WorkspaceMyRequestCardDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
+import { pickRequestImage } from '@/lib/requests/images';
 
 type RequestsPrivateViewProps = {
-  t: RequestsListProps['t'];
   locale: Locale;
   isWorkspaceAuthed: boolean;
   guestLoginHref: string;
   model: MyRequestsViewModel;
   isLoading: boolean;
   isError: boolean;
-  listContext: Pick<
-    RequestsListProps,
-    | 'serviceByKey'
-    | 'categoryByKey'
-    | 'cityById'
-    | 'formatDate'
-    | 'formatPrice'
-    | 'offersByRequest'
-    | 'onSendOffer'
-    | 'onEditOffer'
-    | 'onWithdrawOffer'
-    | 'onOpenChatThread'
-    | 'pendingOfferRequestId'
-    | 'ownerRequestActions'
-  >;
+  listContext: {
+    onSendOffer?: RequestsListProps['onSendOffer'];
+    onEditOffer?: RequestsListProps['onEditOffer'];
+    onWithdrawOffer?: RequestsListProps['onWithdrawOffer'];
+    onOpenChatConversation?: (payload: WorkspaceChatConversationInput) => void;
+    pendingOfferRequestId?: string | null;
+    ownerRequestActions?: OwnerRequestActions;
+  };
 };
 
 type RailProps = {
@@ -132,51 +134,196 @@ function WorkflowProgress({
 }
 
 function MyRequestCard({
-  t,
   locale,
   card,
   index,
   listContext,
 }: {
-  t: RequestsListProps['t'];
   locale: Locale;
   card: MyRequestsViewCard;
   index: number;
   listContext: RequestsPrivateViewProps['listContext'];
 }) {
-  const isProviderCard = card.role === 'provider';
+  const preview = card.requestPreview;
+  const meta: React.ReactNode[] = [];
+
+  if (preview.cityLabel) {
+    meta.push(<LocationMeta key="city" label={preview.cityLabel} />);
+  }
+
+  if (preview.dateLabel) {
+    meta.push(
+      <React.Fragment key="date">
+        <IconCalendar />
+        {preview.dateLabel}
+      </React.Fragment>,
+    );
+  }
 
   return (
     <article className="panel my-request-card">
-      <WorkflowProgress locale={locale} steps={card.item.progress.steps} />
-      {card.item.activity ? (
-        <div className={`my-request-card__activity is-${card.item.activity.tone ?? 'neutral'}`.trim()}>
-          {card.item.activity.label}
+      <WorkflowProgress locale={locale} steps={card.progress.steps} />
+      {card.activity ? (
+        <div className={`my-request-card__activity is-${card.activity.tone ?? 'neutral'}`.trim()}>
+          {card.activity.label}
         </div>
       ) : null}
-      <RequestsListItem
-        item={card.request}
-        index={index}
-        t={t}
-        locale={locale}
-        serviceByKey={listContext.serviceByKey}
-        categoryByKey={listContext.categoryByKey}
-        cityById={listContext.cityById}
-        formatDate={listContext.formatDate}
-        formatPrice={listContext.formatPrice}
-        enableOfferActions={isProviderCard}
-        showFavoriteButton={false}
-        hideRecurringBadge={isProviderCard}
-        offersByRequest={isProviderCard ? listContext.offersByRequest : undefined}
-        onSendOffer={isProviderCard ? listContext.onSendOffer : undefined}
-        onEditOffer={isProviderCard ? listContext.onEditOffer : undefined}
-        onWithdrawOffer={isProviderCard ? listContext.onWithdrawOffer : undefined}
-        onOpenChatThread={isProviderCard ? listContext.onOpenChatThread : undefined}
-        pendingOfferRequestId={listContext.pendingOfferRequestId ?? null}
-        ownerRequestActions={isProviderCard ? undefined : listContext.ownerRequestActions}
+      <RequestCard
+        prefetch={index < 2}
+        href={preview.href}
+        ariaLabel={locale === 'de' ? 'Anfrage öffnen' : 'Open request'}
+        imageSrc={preview.imageUrl || pickRequestImage(preview.imageCategoryKey ?? '')}
+        imageAlt=""
+        imagePriority={index === 0}
+        badges={preview.badgeLabel ? [{ label: preview.badgeLabel, variant: 'neutral', tone: 'outline', size: 'sm' }] : []}
+        category={preview.categoryLabel}
+        title={preview.title}
+        excerpt={preview.excerpt}
+        meta={meta}
+        priceLabel={preview.priceLabel}
+        priceTrend={preview.priceTrend ?? null}
+        priceTrendLabel={preview.priceTrendLabel ?? null}
+        tags={preview.tags}
+        mode="link"
+        statusSlot={<WorkspaceRequestStatusSlot card={card} listContext={listContext} />}
+        actionSlot={null}
       />
     </article>
   );
+}
+
+function WorkspaceRequestStatusSlot({
+  card,
+  listContext,
+}: {
+  card: MyRequestsViewCard;
+  listContext: RequestsPrivateViewProps['listContext'];
+}) {
+  const statusClassName = card.status.badgeTone ? `status-badge status-badge--${card.status.badgeTone}` : null;
+
+  return (
+    <span className="request-card__status-actions">
+      {card.status.badgeLabel && statusClassName ? (
+        <span className={statusClassName}>{card.status.badgeLabel}</span>
+      ) : null}
+      {card.status.actions.map((action) => {
+        const actionClassName = [
+          action.tone === 'primary' ? 'btn-primary' : 'btn-secondary',
+          'offer-action-btn',
+          'offer-action-btn--icon-only',
+          'request-card__status-action',
+          action.key === 'contract' ? 'request-card__status-action--contract' : '',
+          action.key === 'chat' ? 'request-card__status-action--chat' : '',
+          action.key === 'edit-request' || action.key === 'edit-offer' ? 'request-card__status-action--edit' : '',
+          action.kind === 'delete_request' || action.kind === 'withdraw_offer' ? 'request-card__status-action--danger' : '',
+        ].filter(Boolean).join(' ');
+
+        if (action.kind === 'link' && action.href) {
+          return (
+            <Link
+              key={action.key}
+              href={action.href}
+              prefetch={false}
+              className={actionClassName}
+              aria-label={action.label}
+              title={action.label}
+            >
+              <i className="offer-action-btn__icon">
+                {renderStatusActionIcon(action.icon)}
+              </i>
+            </Link>
+          );
+        }
+
+        if (action.kind === 'send_offer' && action.requestId) {
+          return (
+            <OfferActionButton
+              key={action.key}
+              kind="submit"
+              label={action.label}
+              ariaLabel={action.label}
+              title={action.label}
+              iconOnly
+              className="request-card__status-action request-card__status-action--submit"
+              onClick={() => listContext.onSendOffer?.(action.requestId!)}
+            />
+          );
+        }
+
+        if (action.kind === 'edit_offer' && action.requestId) {
+          return (
+            <OfferActionButton
+              key={action.key}
+              kind="edit"
+              label={action.label}
+              ariaLabel={action.label}
+              title={action.label}
+              iconOnly
+              className="request-card__status-action request-card__status-action--edit"
+              onClick={() => listContext.onEditOffer?.(action.requestId!)}
+            />
+          );
+        }
+
+        if (action.kind === 'withdraw_offer' && action.offerId) {
+          return (
+            <OfferActionButton
+              key={action.key}
+              kind="delete"
+              label={action.label}
+              ariaLabel={action.label}
+              title={action.label}
+              iconOnly
+              className="request-card__status-action request-card__status-action--danger"
+              disabled={listContext.pendingOfferRequestId === action.requestId}
+              onClick={() => listContext.onWithdrawOffer?.(action.offerId!)}
+            />
+          );
+        }
+
+        if (action.kind === 'delete_request' && action.requestId) {
+          return (
+            <OfferActionButton
+              key={action.key}
+              kind="delete"
+              label={action.label}
+              ariaLabel={action.label}
+              title={action.label}
+              iconOnly
+              className="request-card__status-action request-card__status-action--danger"
+              disabled={listContext.ownerRequestActions?.pendingDeleteRequestId === action.requestId}
+              onClick={() => listContext.ownerRequestActions?.onDelete?.(action.requestId!)}
+            />
+          );
+        }
+
+        if (action.kind === 'open_chat' && action.chatInput) {
+          return (
+            <button
+              key={action.key}
+              type="button"
+              className={actionClassName}
+              aria-label={action.label}
+              title={action.label}
+              onClick={() => listContext.onOpenChatConversation?.(action.chatInput!)}
+            >
+              <i className="offer-action-btn__icon">
+                {renderStatusActionIcon(action.icon)}
+              </i>
+            </button>
+          );
+        }
+
+        return null;
+      })}
+    </span>
+  );
+}
+
+function renderStatusActionIcon(icon: WorkspaceMyRequestCardDto['status']['actions'][number]['icon']) {
+  if (icon === 'chat') return <IconChat />;
+  if (icon === 'edit') return <IconEdit />;
+  return <IconBriefcase />;
 }
 
 function SummarySkeleton() {
@@ -341,7 +488,6 @@ export function RequestsPrivateActionRail({
 }
 
 export function RequestsPrivateView({
-  t,
   locale,
   isWorkspaceAuthed,
   guestLoginHref,
@@ -389,7 +535,6 @@ export function RequestsPrivateView({
             {model.cards.map((card, index) => (
               <MyRequestCard
                 key={card.id}
-                t={t}
                 locale={locale}
                 card={card}
                 index={index}

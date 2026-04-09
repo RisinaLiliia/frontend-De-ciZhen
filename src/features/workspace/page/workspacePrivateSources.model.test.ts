@@ -98,6 +98,7 @@ describe('workspacePrivateSources.model', () => {
         workspacePrivateOverview: null,
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
+        isWorkspaceRequestsError: false,
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
         myRequests: [{ id: 'req-1' }],
         myOfferRequestsById: new Map([['req-1', { id: 'req-1' }]]),

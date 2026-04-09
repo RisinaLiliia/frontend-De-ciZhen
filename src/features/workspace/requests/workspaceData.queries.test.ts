@@ -1,24 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
-import { ApiError } from '@/lib/api/http-error';
-import { getWorkspaceRequests } from '@/lib/api/workspace';
-
-vi.mock('@/lib/api/workspace', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/api/workspace')>('@/lib/api/workspace');
-  return {
-    ...actual,
-    getWorkspaceRequests: vi.fn(actual.getWorkspaceRequests),
-  };
-});
 
 import { resolveWorkspaceDataPlan } from './workspaceData.model';
 import {
   buildWorkspaceDataQueries,
   buildWorkspaceOfferRequestsQuery,
 } from './workspaceData.queries';
-
-const getWorkspaceRequestsMock = vi.mocked(getWorkspaceRequests);
 
 describe('workspaceData.queries', () => {
   it('builds public overview and summary query options from filter state', () => {
@@ -126,34 +114,6 @@ describe('workspaceData.queries', () => {
       '7d',
       'deadline',
     ]);
-  });
-
-  it('falls back to null when workspace requests endpoint is not available yet', async () => {
-    getWorkspaceRequestsMock.mockRejectedValueOnce(new ApiError('Not Found', 404));
-
-    const loadPlan = resolveWorkspaceDataPlan({
-      isAuthed: true,
-      isWorkspaceAuthed: true,
-      isWorkspacePublicSection: false,
-      shouldLoadPrivateData: true,
-      activeWorkspaceTab: 'my-requests',
-      activePublicSection: 'requests',
-      requestsScope: 'my',
-      hasAccessToken: true,
-    });
-
-    const queries = buildWorkspaceDataQueries({
-      filter: {},
-      loadPlan,
-      hasAccessToken: true,
-      requestsScope: 'my',
-      activeRequestsRole: 'customer',
-      activeRequestsState: 'attention',
-      activeRequestsPeriod: '30d',
-      activeRequestsSort: null,
-    });
-
-    await expect(queries.workspaceRequests.queryFn()).resolves.toBeNull();
   });
 
   it('builds offer request batch query only when ids exist', () => {

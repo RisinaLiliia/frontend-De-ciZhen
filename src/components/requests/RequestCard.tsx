@@ -5,6 +5,7 @@ import Image from 'next/image';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge, type BadgeSize, type BadgeTone, type BadgeVariant } from '@/components/ui/Badge';
+import { normalizeAppImageSrc, shouldBypassNextImageOptimization } from '@/lib/requests/images';
 
 export type RequestCardBadge = {
   label: string;
@@ -81,7 +82,8 @@ export function RequestCard({
           }
     ));
   const excerptText = excerpt?.trim() ?? '';
-  const safeImageSrc = imageSrc ?? '';
+  const safeImageSrc = normalizeAppImageSrc(imageSrc);
+  const shouldBypassOptimization = shouldBypassNextImageOptimization(safeImageSrc);
   const isLinkMode = mode === 'link';
   const cardClassName = `request-card request-card--media-right request-card-link ${
     !hasImage ? 'request-card--no-media' : ''
@@ -153,6 +155,7 @@ export function RequestCard({
             sizes={imageSizes}
             quality={imageQuality}
             priority={imagePriority}
+            unoptimized={shouldBypassOptimization}
             className="request-card__image"
           />
         </div>

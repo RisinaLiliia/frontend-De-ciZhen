@@ -1,6 +1,5 @@
 'use client';
 
-import type { OfferDto } from '@/lib/api/dto/offers';
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import type { useWorkspacePrivateNavModel } from '@/features/workspace/requests/useWorkspacePrivateNavModel';
 import type { useWorkspacePrivateStatsModel } from '@/features/workspace/requests/useWorkspacePrivateStatsModel';
@@ -20,14 +19,14 @@ export function resolveWorkspacePrivateOverview(
 
 export function resolveWorkspacePrivateMeta(params: {
   overview: WorkspacePrivateOverviewDto;
-  myOffers: OfferDto[];
 }) {
-  const ratedOffer = params.myOffers.find((offer) => typeof offer.providerRatingAvg === 'number');
+  const ratingAverage = Number(params.overview.ratingSummary?.average ?? 0);
+  const ratingCount = Number(params.overview.ratingSummary?.count ?? params.overview.reviews.asProvider ?? 0);
 
   return {
     activityProgress: clampPercent(params.overview.kpis.activityProgress),
-    navRatingValue: (ratedOffer?.providerRatingAvg ?? 0).toFixed(1),
-    navReviewsCount: ratedOffer?.providerRatingCount ?? params.overview.reviews.asProvider,
+    navRatingValue: ratingAverage.toFixed(1),
+    navReviewsCount: Math.max(0, ratingCount),
   };
 }
 
