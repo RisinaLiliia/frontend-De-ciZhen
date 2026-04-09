@@ -2,7 +2,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
-import type { OfferDto } from '@/lib/api/dto/offers';
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
 import { useWorkspacePrivateState } from '@/features/workspace/requests/useWorkspacePrivateState';
@@ -25,7 +24,6 @@ function makeArgs(overrides: Partial<StateArgs> = {}): StateArgs {
     activeWorkspaceTab: 'my-requests',
     activePublicSection: null,
     userName: 'Anna',
-    myOffers: [],
     providers: [],
     publicRequestsCount: 10,
     publicProvidersCount: 4,
@@ -79,18 +77,14 @@ describe('useWorkspacePrivateState', () => {
     overview.insights.providerCompletedDeltaKind = 'percent';
     overview.insights.providerCompletedDeltaPercent = 18;
     overview.insights.providerCompletedThisMonth = 4;
-
-    const ratedOffer = {
-      id: 'offer-1',
-      requestId: 'req-1',
-      providerRatingAvg: 4.74,
-      providerRatingCount: 8,
-    } as OfferDto;
+    overview.ratingSummary = {
+      average: 4.74,
+      count: 8,
+    };
 
     render(
       <StateProbe
         {...makeArgs({
-          myOffers: [ratedOffer],
           workspacePrivateOverview: overview,
         })}
       />,

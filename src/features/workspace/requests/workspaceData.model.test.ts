@@ -29,6 +29,24 @@ describe('workspaceData.model', () => {
   });
 
   it('resolves load plan for authenticated private tabs', () => {
+    const myScopePlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: false,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'my-requests',
+      activePublicSection: 'requests',
+      requestsScope: 'my',
+      hasAccessToken: true,
+    });
+
+    expect(myScopePlan.shouldLoadWorkspaceRequests).toBe(true);
+    expect(myScopePlan.shouldLoadMyRequests).toBe(false);
+    expect(myScopePlan.shouldLoadMyOffers).toBe(true);
+    expect(myScopePlan.shouldLoadMyClientOffers).toBe(false);
+    expect(myScopePlan.shouldLoadMyContracts).toBe(false);
+    expect(myScopePlan.shouldLoadOfferRequests).toBe(false);
+
     const offersPlan = resolveWorkspaceDataPlan({
       isAuthed: true,
       isWorkspaceAuthed: true,

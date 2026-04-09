@@ -94,6 +94,7 @@ describe('useWorkspacePrivateSources', () => {
       allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
       workspaceRequests: null,
       isWorkspaceRequestsLoading: false,
+      isWorkspaceRequestsError: false,
       myOffers: [offer],
       isMyOffersLoading: false,
       myOfferRequestsById: new Map([['req-1', request]]),

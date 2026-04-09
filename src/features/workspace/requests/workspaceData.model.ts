@@ -53,20 +53,27 @@ export function resolveWorkspaceDataPlan({
   const shouldLoadPrivateOverview = isWorkspaceAuthed && shouldLoadPrivateData && hasAccessToken;
   const shouldLoadWorkspaceRequests = shouldLoadUnifiedPrivateRequests;
   const shouldLoadMyRequests =
-    shouldLoadUnifiedPrivateRequests
-    || (isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-requests');
+    !shouldLoadUnifiedPrivateRequests
+    && isWorkspaceAuthed
+    && shouldLoadPrivateData
+    && activeWorkspaceTab === 'my-requests';
   const shouldLoadMyOffers =
     shouldLoadUnifiedPrivateRequests
-    || (isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'my-offers');
-  const shouldLoadMyClientOffers = shouldLoadUnifiedPrivateRequests;
+    || (
+      isWorkspaceAuthed
+      && shouldLoadPrivateData
+      && activeWorkspaceTab === 'my-offers'
+    );
+  const shouldLoadMyClientOffers = false;
   const shouldLoadMyContracts =
-    shouldLoadUnifiedPrivateRequests
-    || (isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'completed-jobs');
+    !shouldLoadUnifiedPrivateRequests
+    && isWorkspaceAuthed
+    && shouldLoadPrivateData
+    && activeWorkspaceTab === 'completed-jobs';
   const shouldLoadFavoriteRequests =
     isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'favorites';
   const shouldLoadFavoriteProviders = isAuthed && shouldLoadPrivateData;
-  const shouldLoadOfferRequests =
-    shouldLoadMyOffers && (shouldLoadUnifiedPrivateRequests || activeWorkspaceTab === 'my-offers');
+  const shouldLoadOfferRequests = shouldLoadMyOffers && activeWorkspaceTab === 'my-offers';
   const shouldLoadReviews =
     isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'reviews';
   const shouldLoadProviders = !isWorkspacePublicSection && shouldLoadPrivateData;

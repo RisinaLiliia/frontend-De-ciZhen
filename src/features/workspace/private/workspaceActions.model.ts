@@ -1,6 +1,12 @@
 'use client';
 
 import type { OfferDto } from '@/lib/api/dto/offers';
+import type { CreateConversationDto } from '@/lib/api/dto/chat';
+
+export type WorkspaceChatConversationInput = Pick<
+  CreateConversationDto,
+  'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+>;
 
 export function buildWorkspaceOfferSheetHref(requestId: string) {
   return `/requests/${requestId}?offer=1`;
@@ -39,6 +45,17 @@ export function resolveWorkspaceChatNavigation(offer: OfferDto) {
   };
 }
 
+export function isWorkspaceChatConversationInput(value: unknown): value is WorkspaceChatConversationInput {
+  const candidate = value as Partial<WorkspaceChatConversationInput> | null;
+  return Boolean(
+    candidate
+    && candidate.relatedEntity
+    && candidate.relatedEntity.type
+    && candidate.relatedEntity.id
+    && candidate.participantUserId,
+  );
+}
+
 export function buildWorkspaceOwnerRequestActions(args: {
   pendingDeleteRequestId: string | null;
   onDelete: (requestId: string) => void;
@@ -55,6 +72,7 @@ export function buildWorkspaceActionsResult(args: {
   onOpenOfferSheet: (requestId: string) => void;
   onWithdrawOffer: (offerId: string) => void;
   onOpenChatThread: (offer: OfferDto) => void;
+  onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 }) {
   return {
     pendingOfferRequestId: args.pendingOfferRequestId,
@@ -62,5 +80,6 @@ export function buildWorkspaceActionsResult(args: {
     onOpenOfferSheet: args.onOpenOfferSheet,
     onWithdrawOffer: args.onWithdrawOffer,
     onOpenChatThread: args.onOpenChatThread,
+    onOpenChatConversation: args.onOpenChatConversation,
   };
 }

@@ -47,6 +47,7 @@ export const EMPTY_WORKSPACE_PRIVATE_OVERVIEW: WorkspacePrivateOverviewDto = {
   },
   favorites: { requests: 0, providers: 0 },
   reviews: { asProvider: 0, asClient: 0 },
+  ratingSummary: { average: 0, count: 0 },
   profiles: { providerCompleteness: 0, clientCompleteness: 0 },
   kpis: {
     myOpenRequests: 0,

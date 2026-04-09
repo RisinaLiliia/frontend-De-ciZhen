@@ -121,6 +121,7 @@ export function useWorkspaceData(params: Params) {
   const {
     data: workspaceRequests,
     isLoading: isWorkspaceRequestsLoading,
+    isError: isWorkspaceRequestsError,
   } = useQuery(workspaceDataQueries.workspaceRequests);
 
   const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery(workspaceDataQueries.myOffers);
@@ -186,6 +187,7 @@ export function useWorkspaceData(params: Params) {
     isWorkspacePrivateOverviewLoading,
     workspaceRequests,
     isWorkspaceRequestsLoading,
+    isWorkspaceRequestsError,
     myOffers,
     isMyOffersLoading,
     myClientOffers,

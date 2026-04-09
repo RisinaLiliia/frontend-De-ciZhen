@@ -15,20 +15,16 @@ describe('workspacePrivateState.model', () => {
     expect(resolveWorkspacePrivateOverview(null)).toEqual(EMPTY_WORKSPACE_PRIVATE_OVERVIEW);
   });
 
-  it('derives activity progress and rating meta from overview and offers', () => {
+  it('derives activity progress and rating meta from overview', () => {
     const overview = structuredClone(EMPTY_WORKSPACE_PRIVATE_OVERVIEW);
     overview.kpis.activityProgress = 132;
-    overview.reviews.asProvider = 6;
+    overview.ratingSummary = {
+      average: 4.74,
+      count: 8,
+    };
 
     const meta = resolveWorkspacePrivateMeta({
       overview,
-      myOffers: [
-        {
-          requestId: 'req-1',
-          providerRatingAvg: 4.74,
-          providerRatingCount: 8,
-        },
-      ] as never[],
     });
 
     expect(meta.activityProgress).toBe(100);

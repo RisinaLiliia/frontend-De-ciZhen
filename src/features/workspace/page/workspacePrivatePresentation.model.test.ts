@@ -59,6 +59,7 @@ function createData() {
     onOpenOfferSheet: vi.fn(),
     onWithdrawOffer: vi.fn(),
     onOpenChatThread: vi.fn(),
+    onOpenChatConversation: vi.fn(),
     pendingOfferRequestId: null,
     pendingFavoriteRequestIds: new Set<string>(),
     serviceByKey: new Map(),

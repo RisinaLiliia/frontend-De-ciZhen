@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 
-import type { OfferDto } from '@/lib/api/dto/offers';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -28,7 +27,6 @@ type Params = {
   activeWorkspaceTab: WorkspaceTab;
   activePublicSection?: PublicWorkspaceSection | null;
   userName?: string | null;
-  myOffers: OfferDto[];
   providers: ProviderPublicDto[];
   publicRequestsCount: number;
   publicProvidersCount: number;
@@ -49,7 +47,6 @@ export function useWorkspacePrivateState({
   activeWorkspaceTab,
   activePublicSection = null,
   userName,
-  myOffers,
   providers,
   publicRequestsCount,
   publicProvidersCount,
@@ -67,8 +64,8 @@ export function useWorkspacePrivateState({
     [workspacePrivateOverview],
   );
   const { activityProgress, navRatingValue, navReviewsCount } = React.useMemo(
-    () => resolveWorkspacePrivateMeta({ overview, myOffers }),
-    [myOffers, overview],
+    () => resolveWorkspacePrivateMeta({ overview }),
+    [overview],
   );
 
   const nav = useWorkspacePrivateNavModel(

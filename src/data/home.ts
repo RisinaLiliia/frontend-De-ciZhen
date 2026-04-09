@@ -20,37 +20,37 @@ export const HOME_SERVICES: Array<{
     key: 'cleaning',
     href: '/workspace?section=requests',
     labelKey: I18N_KEYS.homePublic.serviceCleaning,
-    imageSrc: '/Reinigung im modernen Wohnzimmer.jpg',
+    imageSrc: '/request-fallbacks/cleaning.jpg',
   },
   {
     key: 'electric',
     href: '/workspace?section=requests',
     labelKey: I18N_KEYS.homePublic.serviceElectric,
-    imageSrc: '/Elektriker bei der Arbeit an Schaltschrank.jpg',
+    imageSrc: '/request-fallbacks/electric.jpg',
   },
   {
     key: 'plumbing',
     href: '/workspace?section=requests',
     labelKey: I18N_KEYS.homePublic.servicePlumbing,
-    imageSrc: '/Freundlicher Klempner bei der Arbeit.jpg',
+    imageSrc: '/request-fallbacks/plumbing.jpg',
   },
   {
     key: 'repair',
     href: '/workspace?section=requests',
     labelKey: I18N_KEYS.homePublic.serviceRepair,
-    imageSrc: '/Techniker repariert Smartphone in Werkstatt.jpg',
+    imageSrc: '/request-fallbacks/repair.jpg',
   },
   {
     key: 'moving',
     href: '/workspace?section=requests',
     labelKey: I18N_KEYS.homePublic.serviceMoving,
-    imageSrc: '/Lädt Kisten aus einem Transporter.jpg',
+    imageSrc: '/request-fallbacks/moving.jpg',
   },
   {
     key: 'assembly',
     href: '/workspace?section=requests',
     labelKey: I18N_KEYS.homePublic.serviceAssembly,
-    imageSrc: '/Techniker repariert Smartphone in Werkstatt.jpg',
+    imageSrc: '/request-fallbacks/repair.jpg',
   },
 ];
 

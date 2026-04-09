@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { IconEdit, IconTrash } from '@/components/ui/icons/icons';
+import { normalizeAppImageSrc, shouldBypassNextImageOptimization } from '@/lib/requests/images';
 
 type RequestOwnerEditPanelProps = {
   isEditMode: boolean;
@@ -160,13 +161,15 @@ export function RequestOwnerEditPanel({
           {Array.from({ length: 4 }).map((_, index) => {
             const src = photos[index];
             if (src) {
+              const safeSrc = normalizeAppImageSrc(src);
               return (
                 <div key={`${src}-${index}`} className="request-detail__owner-photo">
                   <Image
-                    src={src}
+                    src={safeSrc}
                     alt=""
                     fill
                     sizes="(max-width: 768px) 50vw, 180px"
+                    unoptimized={shouldBypassNextImageOptimization(safeSrc)}
                     className="request-detail__owner-photo-img"
                   />
                   {isEditMode ? (
@@ -225,4 +228,3 @@ export function RequestOwnerEditPanel({
     </section>
   );
 }
-

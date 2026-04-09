@@ -40,6 +40,7 @@ export type WorkspacePrivateInteractionsResult = {
   onOpenOfferSheet: WorkspaceActionsResult['onOpenOfferSheet'];
   onWithdrawOffer: WorkspaceActionsResult['onWithdrawOffer'];
   onOpenChatThread: WorkspaceActionsResult['onOpenChatThread'];
+  onOpenChatConversation: WorkspaceActionsResult['onOpenChatConversation'];
   localeTag: WorkspaceFormattersResult['localeTag'];
   formatNumber: WorkspaceFormattersResult['formatNumber'];
   formatDate: WorkspaceFormattersResult['formatDate'];
@@ -180,6 +181,7 @@ export function resolveWorkspacePrivateInteractionsResult({
     onOpenOfferSheet: actions.onOpenOfferSheet,
     onWithdrawOffer: actions.onWithdrawOffer,
     onOpenChatThread: actions.onOpenChatThread,
+    onOpenChatConversation: actions.onOpenChatConversation,
     localeTag: formatters.localeTag,
     formatNumber: formatters.formatNumber,
     formatDate: formatters.formatDate,

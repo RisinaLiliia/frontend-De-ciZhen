@@ -159,6 +159,7 @@ export function resolveWorkspacePrivateSourcesResult({
     isWorkspacePrivateOverviewLoading: data.isWorkspacePrivateOverviewLoading,
     workspaceRequests: data.workspaceRequests,
     isWorkspaceRequestsLoading: data.isWorkspaceRequestsLoading,
+    isWorkspaceRequestsError: data.isWorkspaceRequestsError,
     myOffers: data.myOffers,
     myClientOffers: data.myClientOffers,
     myRequests: data.myRequests,
