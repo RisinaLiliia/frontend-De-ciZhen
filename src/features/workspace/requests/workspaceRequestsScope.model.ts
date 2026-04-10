@@ -9,9 +9,8 @@ export function resolveWorkspaceRequestsScope(
   value: string | null,
   isAuthed: boolean,
 ): WorkspaceRequestsScope {
-  if (value === 'my') return 'my';
+  if (value === 'my') return isAuthed ? 'my' : 'market';
   if (value === 'market') return 'market';
-  void isAuthed;
   return 'market';
 }
 

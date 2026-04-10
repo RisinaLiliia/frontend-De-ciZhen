@@ -55,6 +55,14 @@ export type WorkspaceRequestsScopeDto = 'market' | 'my';
 export type WorkspaceRequestsRoleDto = 'all' | 'customer' | 'provider';
 export type WorkspaceRequestsStateDto = 'all' | 'attention' | 'execution' | 'completed';
 export type WorkspaceRequestsPeriodDto = WorkspacePublicActivityRange;
+export type WorkspaceRequestDecisionActionTypeDto =
+  | 'review_offers'
+  | 'reply_required'
+  | 'confirm_contract'
+  | 'confirm_completion'
+  | 'overdue_followup'
+  | 'none';
+export type WorkspaceRequestDecisionPriorityLevelDto = 'high' | 'medium' | 'low' | 'none';
 
 export type WorkspaceRequestsResponseDto = {
   section: 'requests';
@@ -75,6 +83,7 @@ export type WorkspaceRequestsResponseDto = {
   };
   summary?: WorkspaceRequestsSummaryDto | null;
   list: WorkspaceRequestsListDto;
+  decisionPanel?: WorkspaceRequestsDecisionPanelDto | null;
   sidePanel?: WorkspaceRequestsSidePanelDto | null;
 };
 
@@ -161,6 +170,61 @@ export type WorkspaceMyRequestCardDto = {
         'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
       > | null;
     }>;
+  };
+  decision: {
+    needsAction: boolean;
+    actionType: WorkspaceRequestDecisionActionTypeDto;
+    actionPriority: number;
+    actionPriorityLevel: WorkspaceRequestDecisionPriorityLevelDto;
+    actionLabel?: string | null;
+    actionReason?: string | null;
+    lastRelevantActivityAt?: string | null;
+    primaryAction?: {
+      key: string;
+      kind: 'link' | 'send_offer' | 'edit_offer' | 'withdraw_offer' | 'open_chat' | 'delete_request';
+      tone: 'primary' | 'secondary' | 'danger';
+      icon: 'briefcase' | 'chat' | 'edit' | 'send' | 'trash';
+      label: string;
+      href?: string | null;
+      requestId?: string | null;
+      offerId?: string | null;
+      chatInput?: Pick<
+        CreateConversationDto,
+        'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+      > | null;
+    } | null;
+  };
+};
+
+export type WorkspaceRequestsDecisionPanelDto = {
+  summary: {
+    totalNeedsAction: number;
+    highPriorityCount: number;
+    newOffersCount: number;
+    replyRequiredCount: number;
+    confirmCompletionCount: number;
+    overdueCount: number;
+  };
+  primaryAction: {
+    label: string;
+    mode: 'decision';
+    targetFilter: 'needs_action';
+  };
+  queue: Array<{
+    requestId: string;
+    title: string;
+    actionType: Exclude<WorkspaceRequestDecisionActionTypeDto, 'none'>;
+    actionLabel: string;
+    actionPriority: number;
+    actionPriorityLevel: Exclude<WorkspaceRequestDecisionPriorityLevelDto, 'none'>;
+    actionReason?: string | null;
+    categoryLabel?: string | null;
+    cityLabel?: string | null;
+  }>;
+  overview: {
+    highUrgency: number;
+    inProgress: number;
+    completedThisPeriod: number;
   };
 };
 

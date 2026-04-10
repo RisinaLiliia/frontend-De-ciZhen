@@ -4,7 +4,6 @@ import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { buildRequestsListProps } from '@/components/requests/requestsListProps';
-import { ActivityInsight } from '@/components/ui/ActivityInsight';
 import { trackUXEvent } from '@/lib/analytics';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import {
@@ -18,8 +17,10 @@ import {
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
 import {
+  createEmptyMyRequestsResponse,
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
+import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
   useWorkspaceContentData,
   useWorkspacePresentation,
@@ -121,18 +122,6 @@ export function useWorkspacePrivatePresentationFlow({
     watchKey: isOverviewMode,
   });
   const overviewStatisticsModel = useWorkspaceStatisticsModel({ locale: branch.locale });
-
-  const privateInsightTopSlot = !isOverviewMode && isWorkspaceAuthed && privateState.insightText ? (
-    <section className="panel workspace-context-rail__panel workspace-context-rail__panel--insight">
-      <span className="workspace-environment__eyebrow">
-        {branch.locale === 'de' ? 'Arbeitslage' : 'Work snapshot'}
-      </span>
-      <ActivityInsight
-        text={privateState.insightText}
-        progressPercent={privateState.activityProgress}
-      />
-    </section>
-  ) : null;
 
   const overviewRailTopSlot = isOverviewMode ? (
     <>
@@ -251,55 +240,13 @@ export function useWorkspacePrivatePresentationFlow({
         return buildMyRequestsViewModelFromResponse(data.workspaceRequests);
       }
 
-      return buildMyRequestsViewModelFromResponse({
-        section: 'requests',
-        scope: 'my',
-        header: {
-          title: branch.locale === 'de' ? 'Meine Vorgänge' : 'My workflows',
-        },
-        filters: {
-          role: effectiveRequestsRole ?? 'all',
-          state: data.activeRequestsState,
-          period: data.activeRequestsPeriod,
-          sort: data.activeRequestsSort ?? 'activity',
-        },
-        summary: {
-          items: [
-            {
-              key: 'all',
-              label: branch.locale === 'de' ? 'Alle' : 'All',
-              value: 0,
-              isHighlighted: data.activeRequestsState === 'all',
-            },
-            {
-              key: 'attention',
-              label: branch.locale === 'de' ? 'Aktiv' : 'Active',
-              value: 0,
-              isHighlighted: data.activeRequestsState === 'attention',
-            },
-            {
-              key: 'execution',
-              label: branch.locale === 'de' ? 'In Ausführung' : 'In execution',
-              value: 0,
-              isHighlighted: data.activeRequestsState === 'execution',
-            },
-            {
-              key: 'completed',
-              label: branch.locale === 'de' ? 'Abgeschlossen' : 'Completed',
-              value: 0,
-              isHighlighted: data.activeRequestsState === 'completed',
-            },
-          ],
-        },
-        list: {
-          total: 0,
-          page: 1,
-          limit: 20,
-          hasMore: false,
-          items: [],
-        },
-        sidePanel: null,
-      });
+      return buildMyRequestsViewModelFromResponse(createEmptyMyRequestsResponse({
+        locale: branch.locale,
+        role: effectiveRequestsRole ?? 'all',
+        state: data.activeRequestsState,
+        period: data.activeRequestsPeriod,
+        sort: data.activeRequestsSort ?? 'activity',
+      }));
     },
     [
       branch.locale,
@@ -310,11 +257,26 @@ export function useWorkspacePrivatePresentationFlow({
       data.workspaceRequests,
     ],
   );
+  const {
+    state: decisionState,
+    queueIds: decisionQueueIds,
+    enterDecisionMode,
+    openDecisionItem,
+    exitDecisionMode,
+  } = useDecisionMode({
+    panel: privateRequestsModel.response.decisionPanel,
+  });
   const privateAside = isUnifiedPrivateRequests ? (
     <div className="stack-md">
-      {privateInsightTopSlot}
-      {privateRequestsModel.response.sidePanel ? (
-        <RequestsPrivateActionRail locale={branch.locale} rail={privateRequestsModel.response.sidePanel} />
+      {privateRequestsModel.response.decisionPanel ? (
+        <RequestsPrivateActionRail
+          locale={branch.locale}
+          panel={privateRequestsModel.response.decisionPanel}
+          mode={decisionState.mode}
+          activeRequestId={decisionState.activeRequestId}
+          onStartDecisionMode={() => enterDecisionMode()}
+          onOpenQueueItem={openDecisionItem}
+        />
       ) : null}
     </div>
   ) : undefined;
@@ -349,6 +311,11 @@ export function useWorkspacePrivatePresentationFlow({
       model={privateRequestsModel}
       isLoading={privateRequestsLoading}
       isError={data.isWorkspaceRequestsError}
+      decisionState={decisionState}
+      decisionQueueIds={decisionQueueIds}
+      onEnterDecisionMode={enterDecisionMode}
+      onOpenDecisionItem={openDecisionItem}
+      onExitDecisionMode={exitDecisionMode}
       listContext={{
         onSendOffer: data.onOpenOfferSheet,
         onEditOffer: data.onOpenOfferSheet,
@@ -369,7 +336,7 @@ export function useWorkspacePrivatePresentationFlow({
     onToggleProviderFavorite,
     workspaceIntroNode: resolvedWorkspaceIntroNode,
     workspaceAsideBaseProps,
-    asideTopSlot: overviewRailTopSlot ?? privateInsightTopSlot,
+    asideTopSlot: overviewRailTopSlot,
     privateAside,
     preferredRequestsRole,
     overviewDecisionPanelRef: overviewFocusPanelRef,

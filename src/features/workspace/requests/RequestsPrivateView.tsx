@@ -15,12 +15,16 @@ import {
 } from '@/components/ui/icons/icons';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
+import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
+import { DecisionPanel } from '@/features/workspace/requests/components/DecisionPanel';
 import type {
   MyRequestsSummaryItem,
   MyRequestsViewCard,
   MyRequestsViewModel,
 } from '@/features/workspace/requests/myRequestsView.model';
-import type { WorkspaceMyRequestCardDto } from '@/lib/api/dto/workspace';
+import type { ActiveDecisionState, WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
+import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
+import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 import { pickRequestImage } from '@/lib/requests/images';
 
@@ -31,6 +35,11 @@ type RequestsPrivateViewProps = {
   model: MyRequestsViewModel;
   isLoading: boolean;
   isError: boolean;
+  decisionState: ActiveDecisionState;
+  decisionQueueIds: string[];
+  onEnterDecisionMode: (requestId?: string | null) => void;
+  onOpenDecisionItem: (requestId: string) => void;
+  onExitDecisionMode: () => void;
   listContext: {
     onSendOffer?: RequestsListProps['onSendOffer'];
     onEditOffer?: RequestsListProps['onEditOffer'];
@@ -43,7 +52,11 @@ type RequestsPrivateViewProps = {
 
 type RailProps = {
   locale: Locale;
-  rail: NonNullable<MyRequestsViewModel['response']['sidePanel']>;
+  panel: WorkspaceRequestsDecisionPanelDto;
+  mode: WorkQueueMode;
+  activeRequestId: string | null;
+  onStartDecisionMode: () => void;
+  onOpenQueueItem: (requestId: string) => void;
   className?: string;
 };
 
@@ -133,15 +146,69 @@ function WorkflowProgress({
   );
 }
 
+function DecisionActionBanner({
+  locale,
+  card,
+  listContext,
+}: {
+  locale: Locale;
+  card: MyRequestsViewCard;
+  listContext: RequestsPrivateViewProps['listContext'];
+}) {
+  const action = card.decision.primaryAction;
+  if (!card.decision.needsAction || !action) return null;
+
+  const description = card.decision.actionReason
+    ?? (locale === 'de' ? 'Dieser Vorgang wartet auf deinen nächsten Schritt.' : 'This workflow is waiting for your next step.');
+
+  const ctaLabel = card.decision.actionLabel ?? action.label;
+
+  return (
+    <div className={`my-request-card__decision is-${card.decision.actionPriorityLevel}`.trim()}>
+      <div className="my-request-card__decision-copy">
+        <strong>{ctaLabel}</strong>
+        <span>{description}</span>
+      </div>
+      {action.kind === 'link' && action.href ? (
+        <Link href={action.href} prefetch={false} className="btn-primary my-request-card__decision-cta">
+          {ctaLabel}
+        </Link>
+      ) : null}
+      {action.kind === 'open_chat' && action.chatInput ? (
+        <button
+          type="button"
+          className="btn-primary my-request-card__decision-cta"
+          onClick={() => listContext.onOpenChatConversation?.(action.chatInput!)}
+        >
+          {ctaLabel}
+        </button>
+      ) : null}
+      {action.kind === 'delete_request' && action.requestId ? (
+        <button
+          type="button"
+          className="btn-primary my-request-card__decision-cta"
+          onClick={() => listContext.ownerRequestActions?.onDelete?.(action.requestId!)}
+        >
+          {ctaLabel}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
 function MyRequestCard({
   locale,
   card,
   index,
+  mode,
+  isActive,
   listContext,
 }: {
   locale: Locale;
   card: MyRequestsViewCard;
   index: number;
+  mode: WorkQueueMode;
+  isActive: boolean;
   listContext: RequestsPrivateViewProps['listContext'];
 }) {
   const preview = card.requestPreview;
@@ -161,8 +228,20 @@ function MyRequestCard({
   }
 
   return (
-    <article className="panel my-request-card">
+    <article
+      className={[
+        'panel',
+        'my-request-card',
+        mode === 'decision' ? 'my-request-card--decision' : '',
+        isActive ? 'my-request-card--active' : '',
+        mode === 'decision' && !isActive ? 'my-request-card--idle' : '',
+      ].filter(Boolean).join(' ')}
+      data-request-id={card.requestId}
+    >
       <WorkflowProgress locale={locale} steps={card.progress.steps} />
+      {mode === 'decision' && isActive ? (
+        <DecisionActionBanner locale={locale} card={card} listContext={listContext} />
+      ) : null}
       {card.activity ? (
         <div className={`my-request-card__activity is-${card.activity.tone ?? 'neutral'}`.trim()}>
           {card.activity.label}
@@ -420,69 +499,23 @@ function AuthGate({
 
 export function RequestsPrivateActionRail({
   locale,
-  rail,
+  panel,
+  mode,
+  activeRequestId,
+  onStartDecisionMode,
+  onOpenQueueItem,
   className,
 }: RailProps) {
   return (
     <div className={['my-requests-rail', className ?? ''].filter(Boolean).join(' ')}>
-      {rail.focus ? (
-        <section className="panel my-requests-rail__panel">
-          <span className="my-requests-rail__eyebrow">{locale === 'de' ? 'Aktueller Fokus' : 'Current focus'}</span>
-          <h3>{rail.focus.title}</h3>
-          <p>{rail.focus.description}</p>
-          {rail.focus.cta?.href ? (
-            <Link href={rail.focus.cta.href} prefetch={false} className="btn-primary">
-              {rail.focus.cta.label}
-            </Link>
-          ) : null}
-        </section>
-      ) : null}
-
-      {rail.recommendation ? (
-        <section className="panel my-requests-rail__panel">
-          <span className="my-requests-rail__eyebrow">{locale === 'de' ? 'KI-Empfehlung' : 'AI recommendation'}</span>
-          <h3>{rail.recommendation.title}</h3>
-          <p>{rail.recommendation.description}</p>
-          {rail.recommendation.cta?.href ? (
-            <Link href={rail.recommendation.cta.href} prefetch={false} className="btn-secondary">
-              {rail.recommendation.cta.label}
-            </Link>
-          ) : null}
-        </section>
-      ) : null}
-
-      {(rail.contextItems ?? []).map((item) => (
-        <section key={item.title} className="panel my-requests-rail__panel">
-          <h3>{item.title}</h3>
-          {item.description ? <p>{item.description}</p> : null}
-          {item.meta?.length ? (
-            <dl className="my-requests-rail__meta">
-              {item.meta.map((entry) => (
-                <div key={entry.label}>
-                  <dt>{entry.label}</dt>
-                  <dd>{entry.value}</dd>
-                </div>
-              ))}
-            </dl>
-          ) : null}
-          {item.cta?.href ? (
-            <Link href={item.cta.href} prefetch={false} className="btn-secondary">
-              {item.cta.label}
-            </Link>
-          ) : null}
-        </section>
-      ))}
-
-      {(rail.nextSteps?.length ?? 0) > 0 ? (
-        <section className="panel my-requests-rail__panel">
-          <span className="my-requests-rail__eyebrow">{locale === 'de' ? 'Nächste Schritte' : 'Next steps'}</span>
-          <ol className="my-requests-rail__steps">
-            {rail.nextSteps?.map((step) => (
-              <li key={step.id}>{step.title}</li>
-            ))}
-          </ol>
-        </section>
-      ) : null}
+      <DecisionPanel
+        locale={locale}
+        panel={panel}
+        isDecisionMode={mode === 'decision'}
+        activeRequestId={activeRequestId}
+        onStartDecisionMode={onStartDecisionMode}
+        onOpenQueueItem={onOpenQueueItem}
+      />
     </div>
   );
 }
@@ -494,9 +527,26 @@ export function RequestsPrivateView({
   model,
   isLoading,
   isError,
+  decisionState,
+  decisionQueueIds,
+  onEnterDecisionMode,
+  onOpenDecisionItem,
+  onExitDecisionMode,
   listContext,
 }: RequestsPrivateViewProps) {
   const setStateFilter = useStateFilterMutation();
+  const visibleCards = React.useMemo(() => {
+    if (decisionState.mode !== 'decision') return model.cards;
+    return sortCardsForDecisionMode(model.cards, model.response.decisionPanel);
+  }, [decisionState.mode, model.cards, model.response.decisionPanel]);
+  const cardRefs = React.useRef(new Map<string, HTMLElement>());
+
+  React.useEffect(() => {
+    if (decisionState.mode !== 'decision' || !decisionState.activeRequestId) return;
+    const node = cardRefs.current.get(decisionState.activeRequestId);
+    if (!node) return;
+    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [decisionState.activeRequestId, decisionState.mode]);
 
   if (!isWorkspaceAuthed) {
     return <AuthGate locale={locale} guestLoginHref={guestLoginHref} />;
@@ -529,26 +579,73 @@ export function RequestsPrivateView({
       {!isLoading && model.emptyMode === 'empty' ? <EmptyState locale={locale} mode="empty" /> : null}
       {!isLoading && model.emptyMode === 'filtered' ? <EmptyState locale={locale} mode="filtered" /> : null}
 
-      {!isLoading && model.cards.length > 0 ? (
+      {!isLoading && visibleCards.length > 0 ? (
         <>
+          {decisionState.mode === 'decision' ? (
+            <DecisionModeBar
+              locale={locale}
+              completedInSession={decisionState.completedInSession}
+              remainingCount={decisionQueueIds.length}
+              onExit={onExitDecisionMode}
+            />
+          ) : null}
           <div className="my-requests-list">
-            {model.cards.map((card, index) => (
-              <MyRequestCard
+            {visibleCards.map((card, index) => (
+              <div
                 key={card.id}
-                locale={locale}
-                card={card}
-                index={index}
-                listContext={listContext}
-              />
+                ref={(node) => {
+                  if (node) {
+                    cardRefs.current.set(card.requestId, node);
+                    return;
+                  }
+                  cardRefs.current.delete(card.requestId);
+                }}
+              >
+                <MyRequestCard
+                  locale={locale}
+                  card={card}
+                  index={index}
+                  mode={decisionState.mode}
+                  isActive={decisionState.activeRequestId === card.requestId}
+                  listContext={listContext}
+                />
+              </div>
             ))}
           </div>
-          {model.response.sidePanel ? (
+          {model.response.decisionPanel ? (
             <RequestsPrivateActionRail
               locale={locale}
-              rail={model.response.sidePanel}
+              panel={model.response.decisionPanel}
+              mode={decisionState.mode}
+              activeRequestId={decisionState.activeRequestId}
+              onStartDecisionMode={() => onEnterDecisionMode()}
+              onOpenQueueItem={onOpenDecisionItem}
               className="my-requests-view__mobile-rail"
             />
           ) : null}
+        </>
+      ) : null}
+      {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && model.response.decisionPanel ? (
+        <>
+          <DecisionModeBar
+            locale={locale}
+            completedInSession={decisionState.completedInSession}
+            remainingCount={0}
+            onExit={onExitDecisionMode}
+          />
+          <section className="panel my-requests-empty my-requests-empty--success">
+            <h3>{locale === 'de' ? 'Alle offenen Entscheidungen erledigt' : 'All open decisions completed'}</h3>
+            <p>
+              {locale === 'de'
+                ? 'Deine Decision Queue ist leer. Du kannst zum normalen Listenmodus zurückkehren.'
+                : 'Your decision queue is empty. You can return to the default list mode.'}
+            </p>
+            <div className="my-requests-empty__actions">
+              <button type="button" className="btn-primary" onClick={onExitDecisionMode}>
+                {locale === 'de' ? 'Modus beenden' : 'Exit mode'}
+              </button>
+            </div>
+          </section>
         </>
       ) : null}
     </section>

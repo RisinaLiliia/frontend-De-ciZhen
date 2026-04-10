@@ -11,8 +11,12 @@ describe('workspaceRequestsScope.model', () => {
     expect(resolveWorkspaceRequestsScope(null, true)).toBe('market');
   });
 
-  it('preserves explicit my scope so guest auth gate can handle it', () => {
-    expect(resolveWorkspaceRequestsScope('my', false)).toBe('my');
+  it('downgrades explicit my scope to market for guests', () => {
+    expect(resolveWorkspaceRequestsScope('my', false)).toBe('market');
+  });
+
+  it('preserves explicit my scope for authenticated users', () => {
+    expect(resolveWorkspaceRequestsScope('my', true)).toBe('my');
   });
 
   it('builds market href and clears my-only params', () => {

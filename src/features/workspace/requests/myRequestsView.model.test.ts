@@ -82,8 +82,39 @@ describe('myRequestsView.model', () => {
                 },
               ],
             },
+            decision: {
+              needsAction: false,
+              actionType: 'none',
+              actionPriority: 0,
+              actionPriorityLevel: 'none',
+              actionLabel: null,
+              actionReason: null,
+              lastRelevantActivityAt: null,
+              primaryAction: null,
+            },
           },
         ],
+      },
+      decisionPanel: {
+        summary: {
+          totalNeedsAction: 0,
+          highPriorityCount: 0,
+          newOffersCount: 0,
+          replyRequiredCount: 0,
+          confirmCompletionCount: 0,
+          overdueCount: 0,
+        },
+        primaryAction: {
+          label: 'Jetzt handeln',
+          mode: 'decision',
+          targetFilter: 'needs_action',
+        },
+        queue: [],
+        overview: {
+          highUrgency: 0,
+          inProgress: 1,
+          completedThisPeriod: 0,
+        },
       },
       sidePanel: null,
     });
@@ -113,6 +144,27 @@ describe('myRequestsView.model', () => {
         limit: 20,
         hasMore: false,
         items: [],
+      },
+      decisionPanel: {
+        summary: {
+          totalNeedsAction: 0,
+          highPriorityCount: 0,
+          newOffersCount: 0,
+          replyRequiredCount: 0,
+          confirmCompletionCount: 0,
+          overdueCount: 0,
+        },
+        primaryAction: {
+          label: 'Jetzt handeln',
+          mode: 'decision',
+          targetFilter: 'needs_action',
+        },
+        queue: [],
+        overview: {
+          highUrgency: 0,
+          inProgress: 0,
+          completedThisPeriod: 0,
+        },
       },
       sidePanel: null,
     });

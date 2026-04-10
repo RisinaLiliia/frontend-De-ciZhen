@@ -6,14 +6,17 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell.container';
 
 const {
+  useRouterMock,
   useSearchParamsMock,
   useAuthSnapshotMock,
 } = vi.hoisted(() => ({
+  useRouterMock: vi.fn(),
   useSearchParamsMock: vi.fn(),
   useAuthSnapshotMock: vi.fn(),
 }));
 
 vi.mock('next/navigation', () => ({
+  useRouter: () => useRouterMock(),
   useSearchParams: () => useSearchParamsMock(),
 }));
 
@@ -56,6 +59,9 @@ describe('WorkspaceShell', () => {
     vi.clearAllMocks();
     mockSearchParams('');
     mockAuth('unauthenticated');
+    useRouterMock.mockReturnValue({
+      replace: vi.fn(),
+    });
   });
 
   afterEach(() => {
@@ -115,5 +121,19 @@ describe('WorkspaceShell', () => {
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('null');
     expect(node.getAttribute('data-workspace-tab')).toBe('null');
+  });
+
+  it('replaces guest my-scope requests url with market scope', () => {
+    const replace = vi.fn();
+    useRouterMock.mockReturnValue({ replace });
+    mockSearchParams('section=requests&scope=my&role=provider&state=attention');
+    mockAuth('unauthenticated');
+
+    render(<WorkspaceShell />);
+
+    expect(replace).toHaveBeenCalledWith(
+      '/workspace?section=requests&scope=market',
+      { scroll: false },
+    );
   });
 });
