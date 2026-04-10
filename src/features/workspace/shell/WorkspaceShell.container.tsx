@@ -1,11 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import WorkspacePageClient from '@/features/workspace/WorkspacePageClient';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
-import { isWorkspaceTab, type WorkspaceTab } from '@/features/workspace/requests';
+import {
+  buildWorkspaceRequestsScopeHref,
+  isWorkspaceTab,
+  type WorkspaceTab,
+} from '@/features/workspace/requests';
 
 import {
   type PublicWorkspaceSection,
@@ -21,6 +25,7 @@ export function WorkspaceShell({
   forcedPublicSection = null,
   forcedWorkspaceTab = null,
 }: WorkspaceShellProps = {}) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const auth = useAuthSnapshot();
 
@@ -41,6 +46,20 @@ export function WorkspaceShell({
       ?? resolvedSection
       ?? (isOverviewRoute ? null : (auth.status === 'unauthenticated' ? 'requests' : null)));
   const resolvedPublicSection = resolvedWorkspaceTab ? null : activePublicSection;
+
+  React.useEffect(() => {
+    if (auth.status !== 'unauthenticated') return;
+    if (resolvedSection !== 'requests') return;
+    if (searchParams.get('scope') !== 'my') return;
+
+    router.replace(
+      buildWorkspaceRequestsScopeHref({
+        currentSearch: searchParams,
+        scope: 'market',
+      }),
+      { scroll: false },
+    );
+  }, [auth.status, resolvedSection, router, searchParams]);
 
   return (
     <WorkspacePageClient

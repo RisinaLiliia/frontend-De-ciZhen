@@ -8,13 +8,15 @@ import { useWorkspaceRouteState } from '@/features/workspace/shell/useWorkspaceR
 type ProbeProps = {
   query: string;
   forcedPublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | null;
+  isAuthed?: boolean;
 };
 
-function Probe({ query, forcedPublicSection = null }: ProbeProps) {
+function Probe({ query, forcedPublicSection = null, isAuthed = false }: ProbeProps) {
   const searchParams = new URLSearchParams(query) as unknown as ReadonlyURLSearchParams;
   const state = useWorkspaceRouteState({
     forcedPublicSection,
     forcedWorkspaceTab: null,
+    isAuthed,
     searchParams,
     workspacePath: '/workspace',
     t: (key) => String(key),
@@ -26,6 +28,7 @@ function Probe({ query, forcedPublicSection = null }: ProbeProps) {
       data-public-section={state.activePublicSection ?? 'null'}
       data-is-public={String(state.isWorkspacePublicSection)}
       data-tab={state.activeWorkspaceTab}
+      data-scope={state.requestsScope}
     />
   );
 }
@@ -60,5 +63,23 @@ describe('useWorkspaceRouteState', () => {
     expect(node.getAttribute('data-public-section')).toBe('providers');
     expect(node.getAttribute('data-is-public')).toBe('true');
     expect(node.getAttribute('data-tab')).toBe('my-requests');
+  });
+
+  it('normalizes my scope to public market for guests', () => {
+    render(<Probe query="section=requests&scope=my" />);
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('requests');
+    expect(node.getAttribute('data-is-public')).toBe('true');
+    expect(node.getAttribute('data-scope')).toBe('market');
+  });
+
+  it('keeps my scope private for authenticated users', () => {
+    render(<Probe query="section=requests&scope=my" isAuthed />);
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('requests');
+    expect(node.getAttribute('data-is-public')).toBe('false');
+    expect(node.getAttribute('data-scope')).toBe('my');
   });
 });
