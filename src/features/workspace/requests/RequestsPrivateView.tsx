@@ -5,14 +5,8 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { RequestCard } from '@/components/requests/RequestCard';
-import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { LocationMeta } from '@/components/ui/LocationMeta';
-import {
-  IconBriefcase,
-  IconCalendar,
-  IconChat,
-  IconEdit,
-} from '@/components/ui/icons/icons';
+import { IconCalendar } from '@/components/ui/icons/icons';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
@@ -23,6 +17,10 @@ import type {
   MyRequestsViewModel,
 } from '@/features/workspace/requests/myRequestsView.model';
 import type { ActiveDecisionState, WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
+import {
+  buildPrivateRequestCardChrome,
+  type PrivateRequestCardAction,
+} from '@/features/workspace/requests/requestsPrivateCard.model';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
 import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
@@ -146,51 +144,163 @@ function WorkflowProgress({
   );
 }
 
-function DecisionActionBanner({
-  locale,
-  card,
+function RequestActionControl({
+  action,
+  variant,
   listContext,
 }: {
-  locale: Locale;
-  card: MyRequestsViewCard;
+  action: PrivateRequestCardAction;
+  variant: 'primary' | 'secondary';
   listContext: RequestsPrivateViewProps['listContext'];
 }) {
-  const action = card.decision.primaryAction;
-  if (!card.decision.needsAction || !action) return null;
+  const className = [
+    variant === 'primary' ? 'btn-primary' : 'btn-secondary',
+    'my-request-card__action-btn',
+    `my-request-card__action-btn--${variant}`,
+  ].join(' ');
 
-  const description = card.decision.actionReason
-    ?? (locale === 'de' ? 'Dieser Vorgang wartet auf deinen nächsten Schritt.' : 'This workflow is waiting for your next step.');
+  if (action.kind === 'link' && action.href) {
+    return (
+      <Link href={action.href} prefetch={false} className={className}>
+        {action.label}
+      </Link>
+    );
+  }
 
-  const ctaLabel = card.decision.actionLabel ?? action.label;
+  if (action.kind === 'open_chat' && action.chatInput) {
+    return (
+      <button
+        type="button"
+        className={className}
+        onClick={() => listContext.onOpenChatConversation?.(action.chatInput!)}
+      >
+        {action.label}
+      </button>
+    );
+  }
+
+  if (action.kind === 'send_offer' && action.requestId) {
+    return (
+      <button
+        type="button"
+        className={className}
+        onClick={() => listContext.onSendOffer?.(action.requestId!)}
+      >
+        {action.label}
+      </button>
+    );
+  }
+
+  if (action.kind === 'edit_offer' && action.requestId) {
+    return (
+      <button
+        type="button"
+        className={className}
+        onClick={() => listContext.onEditOffer?.(action.requestId!)}
+      >
+        {action.label}
+      </button>
+    );
+  }
+
+  if (action.kind === 'withdraw_offer' && action.offerId) {
+    return (
+      <button
+        type="button"
+        className={className}
+        disabled={listContext.pendingOfferRequestId === action.requestId}
+        onClick={() => listContext.onWithdrawOffer?.(action.offerId!)}
+      >
+        {action.label}
+      </button>
+    );
+  }
+
+  if (action.kind === 'delete_request' && action.requestId) {
+    return (
+      <button
+        type="button"
+        className={className}
+        disabled={listContext.ownerRequestActions?.pendingDeleteRequestId === action.requestId}
+        onClick={() => listContext.ownerRequestActions?.onDelete?.(action.requestId!)}
+      >
+        {action.label}
+      </button>
+    );
+  }
+
+  return null;
+}
+
+function RequestSignalPills({
+  chrome,
+}: {
+  chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
+}) {
+  if (chrome.signalPills.length === 0) return null;
 
   return (
-    <div className={`my-request-card__decision is-${card.decision.actionPriorityLevel}`.trim()}>
-      <div className="my-request-card__decision-copy">
-        <strong>{ctaLabel}</strong>
-        <span>{description}</span>
+    <div className="my-request-card__signals">
+      {chrome.signalPills.map((signal) => (
+        <span key={signal.key} className={`my-request-card__signal is-${signal.tone}`.trim()}>
+          {signal.label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function RequestOwnerInsights({
+  chrome,
+}: {
+  chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
+}) {
+  if (chrome.signalPills.length === 0 && chrome.insights.length === 0) return null;
+
+  return (
+    <div className="my-request-card__owner-content">
+      <RequestSignalPills chrome={chrome} />
+      {chrome.insights.length > 0 ? (
+        <div className={`my-request-card__insights my-request-card__insights--${Math.min(chrome.insights.length, 2)}`.trim()}>
+          {chrome.insights.map((item) => (
+            <article key={item.key} className={`my-request-card__insight is-${item.tone}`.trim()}>
+              <strong className="my-request-card__insight-title">{item.title}</strong>
+              <p className="my-request-card__insight-copy">{item.description}</p>
+            </article>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function RequestCardTopSlot({
+  chrome,
+  locale,
+  steps,
+}: {
+  chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
+  locale: Locale;
+  steps: WorkspaceMyRequestCardDto['progress']['steps'];
+}) {
+  return (
+    <div className="my-request-card__topslot">
+      <div className="my-request-card__header-main">
+        {chrome.priorityLabel ? (
+          <span className={`my-request-card__priority is-${chrome.priorityTone}`.trim()}>
+            {chrome.priorityLabel}
+          </span>
+        ) : null}
+        <WorkflowProgress locale={locale} steps={steps} />
       </div>
-      {action.kind === 'link' && action.href ? (
-        <Link href={action.href} prefetch={false} className="btn-primary my-request-card__decision-cta">
-          {ctaLabel}
-        </Link>
-      ) : null}
-      {action.kind === 'open_chat' && action.chatInput ? (
-        <button
-          type="button"
-          className="btn-primary my-request-card__decision-cta"
-          onClick={() => listContext.onOpenChatConversation?.(action.chatInput!)}
-        >
-          {ctaLabel}
-        </button>
-      ) : null}
-      {action.kind === 'delete_request' && action.requestId ? (
-        <button
-          type="button"
-          className="btn-primary my-request-card__decision-cta"
-          onClick={() => listContext.ownerRequestActions?.onDelete?.(action.requestId!)}
-        >
-          {ctaLabel}
-        </button>
+      {chrome.contextPills.length > 0 ? (
+        <div className="my-request-card__context">
+          {chrome.contextPills.map((item) => (
+            <span key={item} className="my-request-card__context-pill">
+              {item}
+            </span>
+          ))}
+        </div>
       ) : null}
     </div>
   );
@@ -212,6 +322,10 @@ function MyRequestCard({
   listContext: RequestsPrivateViewProps['listContext'];
 }) {
   const preview = card.requestPreview;
+  const chrome = React.useMemo(
+    () => buildPrivateRequestCardChrome({ card, locale }),
+    [card, locale],
+  );
   const meta: React.ReactNode[] = [];
 
   if (preview.cityLabel) {
@@ -228,9 +342,8 @@ function MyRequestCard({
   }
 
   return (
-    <article
+    <div
       className={[
-        'panel',
         'my-request-card',
         mode === 'decision' ? 'my-request-card--decision' : '',
         isActive ? 'my-request-card--active' : '',
@@ -238,18 +351,10 @@ function MyRequestCard({
       ].filter(Boolean).join(' ')}
       data-request-id={card.requestId}
     >
-      <WorkflowProgress locale={locale} steps={card.progress.steps} />
-      {mode === 'decision' && isActive ? (
-        <DecisionActionBanner locale={locale} card={card} listContext={listContext} />
-      ) : null}
-      {card.activity ? (
-        <div className={`my-request-card__activity is-${card.activity.tone ?? 'neutral'}`.trim()}>
-          {card.activity.label}
-        </div>
-      ) : null}
       <RequestCard
         prefetch={index < 2}
         href={preview.href}
+        className="my-request-card__surface"
         ariaLabel={locale === 'de' ? 'Anfrage öffnen' : 'Open request'}
         imageSrc={preview.imageUrl || pickRequestImage(preview.imageCategoryKey ?? '')}
         imageAlt=""
@@ -264,145 +369,51 @@ function MyRequestCard({
         priceTrendLabel={preview.priceTrendLabel ?? null}
         tags={preview.tags}
         mode="link"
-        statusSlot={<WorkspaceRequestStatusSlot card={card} listContext={listContext} />}
-        actionSlot={null}
+        isActive={isActive}
+        topSlot={<RequestCardTopSlot chrome={chrome} locale={locale} steps={card.progress.steps} />}
+        statusSlot={<WorkspaceRequestStatusSlot card={card} />}
+        contentSlot={<RequestOwnerInsights chrome={chrome} />}
+        actionSlot={(chrome.primaryAction || chrome.secondaryAction) ? (
+          <div className="my-request-card__action-row">
+            {chrome.secondaryAction ? (
+              <RequestActionControl
+                action={chrome.secondaryAction}
+                variant="secondary"
+                listContext={listContext}
+              />
+            ) : (
+              <Link href={preview.href} prefetch={false} className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary">
+                {locale === 'de' ? 'Details öffnen' : 'Open details'}
+              </Link>
+            )}
+            {chrome.primaryAction ? (
+              <RequestActionControl
+                action={chrome.primaryAction}
+                variant="primary"
+                listContext={listContext}
+              />
+            ) : null}
+          </div>
+        ) : null}
       />
-    </article>
+    </div>
   );
 }
 
 function WorkspaceRequestStatusSlot({
   card,
-  listContext,
 }: {
   card: MyRequestsViewCard;
-  listContext: RequestsPrivateViewProps['listContext'];
 }) {
   const statusClassName = card.status.badgeTone ? `status-badge status-badge--${card.status.badgeTone}` : null;
 
   return (
-    <span className="request-card__status-actions">
+    <span className="request-card__status-actions my-request-card__status-slot">
       {card.status.badgeLabel && statusClassName ? (
-        <span className={statusClassName}>{card.status.badgeLabel}</span>
+        <span className={`${statusClassName} my-request-card__status-badge`.trim()}>{card.status.badgeLabel}</span>
       ) : null}
-      {card.status.actions.map((action) => {
-        const actionClassName = [
-          action.tone === 'primary' ? 'btn-primary' : 'btn-secondary',
-          'offer-action-btn',
-          'offer-action-btn--icon-only',
-          'request-card__status-action',
-          action.key === 'contract' ? 'request-card__status-action--contract' : '',
-          action.key === 'chat' ? 'request-card__status-action--chat' : '',
-          action.key === 'edit-request' || action.key === 'edit-offer' ? 'request-card__status-action--edit' : '',
-          action.kind === 'delete_request' || action.kind === 'withdraw_offer' ? 'request-card__status-action--danger' : '',
-        ].filter(Boolean).join(' ');
-
-        if (action.kind === 'link' && action.href) {
-          return (
-            <Link
-              key={action.key}
-              href={action.href}
-              prefetch={false}
-              className={actionClassName}
-              aria-label={action.label}
-              title={action.label}
-            >
-              <i className="offer-action-btn__icon">
-                {renderStatusActionIcon(action.icon)}
-              </i>
-            </Link>
-          );
-        }
-
-        if (action.kind === 'send_offer' && action.requestId) {
-          return (
-            <OfferActionButton
-              key={action.key}
-              kind="submit"
-              label={action.label}
-              ariaLabel={action.label}
-              title={action.label}
-              iconOnly
-              className="request-card__status-action request-card__status-action--submit"
-              onClick={() => listContext.onSendOffer?.(action.requestId!)}
-            />
-          );
-        }
-
-        if (action.kind === 'edit_offer' && action.requestId) {
-          return (
-            <OfferActionButton
-              key={action.key}
-              kind="edit"
-              label={action.label}
-              ariaLabel={action.label}
-              title={action.label}
-              iconOnly
-              className="request-card__status-action request-card__status-action--edit"
-              onClick={() => listContext.onEditOffer?.(action.requestId!)}
-            />
-          );
-        }
-
-        if (action.kind === 'withdraw_offer' && action.offerId) {
-          return (
-            <OfferActionButton
-              key={action.key}
-              kind="delete"
-              label={action.label}
-              ariaLabel={action.label}
-              title={action.label}
-              iconOnly
-              className="request-card__status-action request-card__status-action--danger"
-              disabled={listContext.pendingOfferRequestId === action.requestId}
-              onClick={() => listContext.onWithdrawOffer?.(action.offerId!)}
-            />
-          );
-        }
-
-        if (action.kind === 'delete_request' && action.requestId) {
-          return (
-            <OfferActionButton
-              key={action.key}
-              kind="delete"
-              label={action.label}
-              ariaLabel={action.label}
-              title={action.label}
-              iconOnly
-              className="request-card__status-action request-card__status-action--danger"
-              disabled={listContext.ownerRequestActions?.pendingDeleteRequestId === action.requestId}
-              onClick={() => listContext.ownerRequestActions?.onDelete?.(action.requestId!)}
-            />
-          );
-        }
-
-        if (action.kind === 'open_chat' && action.chatInput) {
-          return (
-            <button
-              key={action.key}
-              type="button"
-              className={actionClassName}
-              aria-label={action.label}
-              title={action.label}
-              onClick={() => listContext.onOpenChatConversation?.(action.chatInput!)}
-            >
-              <i className="offer-action-btn__icon">
-                {renderStatusActionIcon(action.icon)}
-              </i>
-            </button>
-          );
-        }
-
-        return null;
-      })}
     </span>
   );
-}
-
-function renderStatusActionIcon(icon: WorkspaceMyRequestCardDto['status']['actions'][number]['icon']) {
-  if (icon === 'chat') return <IconChat />;
-  if (icon === 'edit') return <IconEdit />;
-  return <IconBriefcase />;
 }
 
 function SummarySkeleton() {

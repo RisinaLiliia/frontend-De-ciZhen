@@ -20,6 +20,7 @@ export type RequestCardBadge = {
 export type RequestCardProps = {
   href: string;
   badges: Array<string | RequestCardBadge>;
+  className?: string;
   category: string;
   title: string;
   excerpt?: string | null;
@@ -34,8 +35,10 @@ export type RequestCardProps = {
   imageAlt?: string;
   tags?: Array<React.ReactNode>;
   mode?: 'link' | 'static';
+  topSlot?: React.ReactNode;
   statusSlot?: React.ReactNode;
   overlaySlot?: React.ReactNode;
+  contentSlot?: React.ReactNode;
   actionSlot?: React.ReactNode;
   prefetch?: boolean;
   imagePriority?: boolean;
@@ -46,6 +49,7 @@ export type RequestCardProps = {
 export function RequestCard({
   href,
   badges,
+  className,
   category,
   title,
   excerpt = null,
@@ -59,8 +63,10 @@ export function RequestCard({
   imageSrc,
   imageAlt,
   mode = 'link',
+  topSlot,
   statusSlot,
   overlaySlot,
+  contentSlot,
   actionSlot,
   prefetch = false,
   imagePriority = false,
@@ -87,7 +93,7 @@ export function RequestCard({
   const isLinkMode = mode === 'link';
   const cardClassName = `request-card request-card--media-right request-card-link ${
     !hasImage ? 'request-card--no-media' : ''
-  } ${isActive ? 'is-active' : ''} ${isLinkMode ? 'request-card--link' : ''}`.trim();
+  } ${isActive ? 'is-active' : ''} ${isLinkMode ? 'request-card--link' : ''} ${className ?? ''}`.trim();
   const prefetchedRef = React.useRef(false);
 
   const isInteractiveTarget = React.useCallback((target: EventTarget | null) => {
@@ -161,6 +167,7 @@ export function RequestCard({
         </div>
       ) : null}
       <div className="request-card__body">
+        {topSlot ? <div className="request-card__top">{topSlot}</div> : null}
         <div className="request-category-row">
           <div className="request-category">{category}</div>
           {statusSlot ? <span className="request-top__status">{statusSlot}</span> : null}
@@ -215,6 +222,7 @@ export function RequestCard({
               ))}
             </div>
           ) : null}
+          {contentSlot}
         </div>
 
         <div className="request-card__footer">
