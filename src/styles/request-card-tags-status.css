@@ -40,6 +40,7 @@
   .requests-list.is-double .request-card__body {
     grid-template-rows:
       auto
+      auto
       minmax(calc(2 * var(--lh-title) * 1em), auto)
       minmax(calc(2 * 1.4em), auto)
       minmax(calc((2 * 1.3em) + var(--space-1)), auto)
