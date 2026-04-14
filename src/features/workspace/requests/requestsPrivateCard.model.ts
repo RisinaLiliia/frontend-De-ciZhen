@@ -84,7 +84,7 @@ function resolvePriorityLabel(locale: Locale, card: WorkspaceMyRequestCardDto) {
   return null;
 }
 
-function resolveContextPills(card: WorkspaceMyRequestCardDto) {
+function resolveContextPills() {
   return [];
 }
 
