@@ -23,6 +23,19 @@
     min-width: 0;
   }
 
+  .request-card__main {
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .request-card__copy {
+    display: grid;
+    gap: var(--space-2);
+    min-width: 0;
+    min-height: 0;
+    align-content: start;
+  }
+
   .request-card__title {
     font-size: 16px;
     font-weight: 700;

@@ -119,27 +119,111 @@ function SummaryCard({
 
 function WorkflowProgress({
   locale,
+  card,
   steps,
 }: {
   locale: Locale;
+  card: WorkspaceMyRequestCardDto;
   steps: WorkspaceMyRequestCardDto['progress']['steps'];
 }) {
+  const activeIndex = React.useMemo(
+    () => Math.max(0, steps.findIndex((step) => step.status === 'current')),
+    [steps],
+  );
+  const progressPercent = React.useMemo(() => {
+    if (steps.length <= 0) return 0;
+    if (steps.every((step) => step.status === 'done')) return 100;
+    return Math.round(((activeIndex + 1) / steps.length) * 100);
+  }, [activeIndex, steps]);
+
+  const resolveStepMeta = React.useCallback((step: WorkspaceMyRequestCardDto['progress']['steps'][number]) => {
+    if (step.key === 'request') {
+      return card.createdAt?.trim()
+        || (locale === 'de' ? 'Erstellt' : 'Created');
+    }
+
+    if (step.key === 'offers') {
+      if (card.decision.actionType === 'review_offers' && card.decision.actionLabel?.trim()) {
+        return card.decision.actionLabel.trim();
+      }
+
+      if (step.status === 'done') {
+        return locale === 'de' ? 'Erhalten' : 'Received';
+      }
+
+      if (step.status === 'current') {
+        return locale === 'de' ? 'Ausstehend' : 'Pending';
+      }
+
+      return locale === 'de' ? 'Noch offen' : 'Not started';
+    }
+
+    if (step.key === 'selection') {
+      if (step.status === 'done') {
+        return locale === 'de' ? 'Getroffen' : 'Selected';
+      }
+
+      if (step.status === 'current') {
+        return locale === 'de' ? 'Ausstehend' : 'Pending';
+      }
+
+      return locale === 'de' ? 'Noch offen' : 'Not started';
+    }
+
+    if (step.key === 'contract') {
+      if (step.status === 'done') {
+        return locale === 'de' ? 'Bestätigt' : 'Confirmed';
+      }
+
+      if (step.status === 'current') {
+        return card.nextEventAt?.trim()
+          ? (locale === 'de' ? `Aktiv · ${card.nextEventAt}` : `Active · ${card.nextEventAt}`)
+          : (locale === 'de' ? 'Aktiv' : 'Active');
+      }
+
+      return locale === 'de' ? 'Noch nicht erstellt' : 'Not created yet';
+    }
+
+    if (card.state === 'completed') {
+      return locale === 'de' ? 'Abgeschlossen' : 'Completed';
+    }
+
+    if (card.state === 'active') {
+      return locale === 'de' ? 'In Arbeit' : 'In progress';
+    }
+
+    return locale === 'de' ? 'Noch nicht gestartet' : 'Not started';
+  }, [card, locale]);
+
   return (
-    <div
-      className="my-request-card__progress"
-      role="list"
-      aria-label={locale === 'de' ? 'Fortschritt der Anfrage' : 'Request progress'}
-    >
-      {steps.map((step) => (
+    <div className="my-request-card__progress-scroll">
+      <div className="my-request-card__progress-shell">
         <div
-          key={step.key}
-          className={`my-request-card__progress-step is-${step.status}`.trim()}
-          role="listitem"
+          className="my-request-card__progress"
+          role="list"
+          aria-label={locale === 'de' ? 'Fortschritt der Anfrage' : 'Request progress'}
         >
-          <span className="my-request-card__progress-dot" />
-          <span>{step.label}</span>
+          {steps.map((step) => (
+            <div
+              key={step.key}
+              className={`my-request-card__progress-step is-${step.status}`.trim()}
+              role="listitem"
+            >
+              <span className="my-request-card__progress-dot" />
+              <span className="my-request-card__progress-copy">
+                <span className="my-request-card__progress-label">{step.label}</span>
+                <span className="my-request-card__progress-meta">{resolveStepMeta(step)}</span>
+              </span>
+            </div>
+          ))}
         </div>
-      ))}
+        <div className="my-request-card__progress-rail" aria-hidden="true">
+          <span
+            className="my-request-card__progress-rail-fill"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -277,10 +361,12 @@ function RequestOwnerInsights({
 function RequestCardTopSlot({
   chrome,
   locale,
+  card,
   steps,
 }: {
   chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
   locale: Locale;
+  card: WorkspaceMyRequestCardDto;
   steps: WorkspaceMyRequestCardDto['progress']['steps'];
 }) {
   return (
@@ -291,7 +377,7 @@ function RequestCardTopSlot({
             {chrome.priorityLabel}
           </span>
         ) : null}
-        <WorkflowProgress locale={locale} steps={steps} />
+        <WorkflowProgress locale={locale} card={card} steps={steps} />
       </div>
       {chrome.contextPills.length > 0 ? (
         <div className="my-request-card__context">
@@ -341,6 +427,14 @@ function MyRequestCard({
     );
   }
 
+  if (preview.priceLabel) {
+    meta.push(
+      <span key="price" className="request-meta-item request-meta-item--price" data-meta-item="true">
+        <span className="proof-price">{preview.priceLabel}</span>
+      </span>,
+    );
+  }
+
   return (
     <div
       className={[
@@ -359,18 +453,22 @@ function MyRequestCard({
         imageSrc={preview.imageUrl || pickRequestImage(preview.imageCategoryKey ?? '')}
         imageAlt=""
         imagePriority={index === 0}
-        badges={preview.badgeLabel ? [{ label: preview.badgeLabel, variant: 'neutral', tone: 'outline', size: 'sm' }] : []}
+        mediaPlacement="body"
+        badges={[]}
         category={preview.categoryLabel}
         title={preview.title}
+        titleClassName="section-title"
         excerpt={preview.excerpt}
+        excerptClassName="section-subtitle"
         meta={meta}
         priceLabel={preview.priceLabel}
         priceTrend={preview.priceTrend ?? null}
         priceTrendLabel={preview.priceTrendLabel ?? null}
+        hideFooterPrice
         tags={preview.tags}
         mode="link"
         isActive={isActive}
-        topSlot={<RequestCardTopSlot chrome={chrome} locale={locale} steps={card.progress.steps} />}
+        topSlot={<RequestCardTopSlot chrome={chrome} locale={locale} card={card} steps={card.progress.steps} />}
         statusSlot={<WorkspaceRequestStatusSlot card={card} />}
         contentSlot={<RequestOwnerInsights chrome={chrome} />}
         actionSlot={(chrome.primaryAction || chrome.secondaryAction) ? (

@@ -85,13 +85,7 @@ function resolvePriorityLabel(locale: Locale, card: WorkspaceMyRequestCardDto) {
 }
 
 function resolveContextPills(card: WorkspaceMyRequestCardDto) {
-  const pills = [
-    card.requestPreview.cityLabel,
-    card.subcategory,
-    card.requestPreview.badgeLabel,
-  ].filter((item): item is string => Boolean(item?.trim()));
-
-  return pills.slice(0, 2);
+  return [];
 }
 
 function resolveSignalPills(card: WorkspaceMyRequestCardDto): PrivateRequestCardChrome['signalPills'] {

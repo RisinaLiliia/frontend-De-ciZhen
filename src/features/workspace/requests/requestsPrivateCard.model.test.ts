@@ -116,7 +116,7 @@ describe('requestsPrivateCard.model', () => {
         tone: 'warning',
       },
     ]);
-    expect(chrome.contextPills).toEqual(['Stuttgart', 'Badezimmer']);
+    expect(chrome.contextPills).toEqual([]);
   });
 
   it('falls back to status and quick actions when no decision action exists', () => {
@@ -211,5 +211,6 @@ describe('requestsPrivateCard.model', () => {
     expect(chrome.secondaryAction?.label).toBe('Chat');
     expect(chrome.signalPills.map((item) => item.label)).toEqual(['Angenommen']);
     expect(chrome.insights).toEqual([]);
+    expect(chrome.contextPills).toEqual([]);
   });
 });

@@ -23,7 +23,9 @@ export type RequestCardProps = {
   className?: string;
   category: string;
   title: string;
+  titleClassName?: string;
   excerpt?: string | null;
+  excerptClassName?: string;
   meta: Array<React.ReactNode>;
   bottomMeta?: Array<React.ReactNode>;
   priceLabel: string;
@@ -44,6 +46,8 @@ export type RequestCardProps = {
   imagePriority?: boolean;
   imageQuality?: number;
   imageSizes?: string;
+  mediaPlacement?: 'shell' | 'body';
+  hideFooterPrice?: boolean;
 };
 
 export function RequestCard({
@@ -52,7 +56,9 @@ export function RequestCard({
   className,
   category,
   title,
+  titleClassName,
   excerpt = null,
+  excerptClassName,
   meta,
   bottomMeta = [],
   priceLabel,
@@ -72,6 +78,8 @@ export function RequestCard({
   imagePriority = false,
   imageQuality = 62,
   imageSizes = '(max-width: 640px) 96px, (max-width: 1024px) 140px, 180px',
+  mediaPlacement = 'shell',
+  hideFooterPrice = false,
 }: RequestCardProps) {
   const router = useRouter();
   const hasImage = Boolean(imageSrc);
@@ -91,15 +99,18 @@ export function RequestCard({
   const safeImageSrc = normalizeAppImageSrc(imageSrc);
   const shouldBypassOptimization = shouldBypassNextImageOptimization(safeImageSrc);
   const isLinkMode = mode === 'link';
+  const usesInlineMedia = hasImage && mediaPlacement === 'body';
   const cardClassName = `request-card request-card--media-right request-card-link ${
     !hasImage ? 'request-card--no-media' : ''
-  } ${isActive ? 'is-active' : ''} ${isLinkMode ? 'request-card--link' : ''} ${className ?? ''}`.trim();
+  } ${usesInlineMedia ? 'request-card--media-inline' : ''} ${isActive ? 'is-active' : ''} ${
+    isLinkMode ? 'request-card--link' : ''
+  } ${className ?? ''}`.trim();
   const prefetchedRef = React.useRef(false);
 
   const isInteractiveTarget = React.useCallback((target: EventTarget | null) => {
     if (!(target instanceof Element)) return false;
     return Boolean(
-      target.closest('a,button,input,textarea,select,[role=\"button\"],[data-card-action=\"true\"]'),
+      target.closest('a,button,input,textarea,select,[role="button"],[data-card-action="true"]'),
     );
   }, []);
 
@@ -132,10 +143,73 @@ export function RequestCard({
     [isInteractiveTarget, openCard],
   );
 
+  const mainCopy = (
+    <div className="request-card__copy">
+      <div className="request-category-row">
+        <div className="request-category">{category}</div>
+        {statusSlot ? <span className="request-top__status">{statusSlot}</span> : null}
+      </div>
+      <div className={['request-card__title', titleClassName ?? ''].filter(Boolean).join(' ')}>
+        {title}
+      </div>
+      <p
+        className={['request-card__excerpt', excerptClassName ?? ''].filter(Boolean).join(' ')}
+        title={excerptText || undefined}
+        aria-hidden={excerptText ? undefined : true}
+      >
+        {excerptText}
+      </p>
+
+      <div className="request-card__meta">
+        {meta.map((item, index) => {
+          if (typeof item === 'string') {
+            return (
+              <span key={`${item}-${index}`} className="request-meta-item">
+                {item}
+              </span>
+            );
+          }
+          if (
+            React.isValidElement<{ 'data-meta-item'?: boolean }>(item) &&
+            item.props?.['data-meta-item']
+          ) {
+            return <React.Fragment key={`node-${index}`}>{item}</React.Fragment>;
+          }
+          return (
+            <span key={`node-${index}`} className="request-meta-item">
+              {item}
+            </span>
+          );
+        })}
+      </div>
+
+      <div className="request-card__content">
+        {visibleBadges.length && !hasImage ? (
+          <div className="request-badges" aria-hidden="true">
+            {visibleBadges.map((badge) => (
+              <Badge
+                key={badge.label}
+                variant={badge.variant}
+                tone={badge.tone}
+                size={badge.size}
+                className={badge.className}
+                title={badge.title}
+                aria-label={badge.ariaLabel}
+              >
+                {badge.label}
+              </Badge>
+            ))}
+          </div>
+        ) : null}
+        {contentSlot}
+      </div>
+    </div>
+  );
+
   const cardContent = (
     <>
       {overlaySlot ? <div className="request-card__overlay">{overlaySlot}</div> : null}
-      {visibleBadges.length && hasImage ? (
+      {visibleBadges.length && hasImage && !usesInlineMedia ? (
         <div className="request-badges request-badges--media" aria-hidden="true">
           {visibleBadges.map((badge) => (
             <Badge
@@ -152,7 +226,7 @@ export function RequestCard({
           ))}
         </div>
       ) : null}
-      {hasImage ? (
+      {hasImage && !usesInlineMedia ? (
         <div className="request-card__media">
           <Image
             src={safeImageSrc}
@@ -168,104 +242,80 @@ export function RequestCard({
       ) : null}
       <div className="request-card__body">
         {topSlot ? <div className="request-card__top">{topSlot}</div> : null}
-        <div className="request-category-row">
-          <div className="request-category">{category}</div>
-          {statusSlot ? <span className="request-top__status">{statusSlot}</span> : null}
-        </div>
-        <div className="request-card__title">{title}</div>
-        <p
-          className="request-card__excerpt"
-          title={excerptText || undefined}
-          aria-hidden={excerptText ? undefined : true}
-        >
-          {excerptText}
-        </p>
-
-        <div className="request-card__meta">
-          {meta.map((item, index) => {
-            if (typeof item === 'string') {
-              return (
-                <span key={`${item}-${index}`} className="request-meta-item">
-                  {item}
-                </span>
-              );
-            }
-            if (
-              React.isValidElement<{ 'data-meta-item'?: boolean }>(item) &&
-              item.props?.['data-meta-item']
-            ) {
-              return <React.Fragment key={`node-${index}`}>{item}</React.Fragment>;
-            }
-            return (
-              <span key={`node-${index}`} className="request-meta-item">
-                {item}
-              </span>
-            );
-          })}
-        </div>
-
-        <div className="request-card__content">
-          {visibleBadges.length && !hasImage ? (
-            <div className="request-badges" aria-hidden="true">
-              {visibleBadges.map((badge) => (
-                <Badge
-                  key={badge.label}
-                  variant={badge.variant}
-                  tone={badge.tone}
-                  size={badge.size}
-                  className={badge.className}
-                  title={badge.title}
-                  aria-label={badge.ariaLabel}
-                >
-                  {badge.label}
-                </Badge>
-              ))}
+        {usesInlineMedia ? (
+          <div className="request-card__main request-card__main--with-media">
+            {mainCopy}
+            <div className="request-card__media request-card__media--inline">
+              <Image
+                src={safeImageSrc}
+                alt={imageAlt ?? ''}
+                fill
+                sizes={imageSizes}
+                quality={imageQuality}
+                priority={imagePriority}
+                unoptimized={shouldBypassOptimization}
+                className="request-card__image"
+              />
             </div>
-          ) : null}
-          {contentSlot}
-        </div>
-
-        <div className="request-card__footer">
-          <div className="request-card__price">
-            <span className="proof-price">{priceLabel}</span>
-            {priceTrend ? (
-              <span
-                className={`request-card__price-trend ${
-                  priceTrend === 'down' ? 'is-down' : 'is-up'
-                }`.trim()}
-                title={priceTrendLabel ?? undefined}
-              >
-                <span aria-hidden="true">{priceTrend === 'down' ? '↓' : '↑'}</span>
-                {priceTrendLabel ? <span>{priceTrendLabel}</span> : null}
-              </span>
-            ) : null}
-            {bottomMeta.length ? (
-              <span className="request-card__sub">
-                {bottomMeta.map((item, index) => (
-                  <span key={`bottom-${index}`} className="meta-item">
-                    {item}
-                  </span>
-                ))}
-              </span>
-            ) : null}
           </div>
-          {actionSlot ? <div className="request-card__actions">{actionSlot}</div> : null}
-        </div>
+        ) : (
+          <>
+            {mainCopy}
+          </>
+        )}
+
+        {(actionSlot || !hideFooterPrice || bottomMeta.length) ? (
+          <div className="request-card__footer">
+            {!hideFooterPrice ? (
+              <div className="request-card__price">
+                <span className="proof-price">{priceLabel}</span>
+                {priceTrend ? (
+                  <span
+                    className={`request-card__price-trend ${
+                      priceTrend === 'down' ? 'is-down' : 'is-up'
+                    }`.trim()}
+                    title={priceTrendLabel ?? undefined}
+                  >
+                    <span aria-hidden="true">{priceTrend === 'down' ? '↓' : '↑'}</span>
+                    {priceTrendLabel ? <span>{priceTrendLabel}</span> : null}
+                  </span>
+                ) : null}
+                {bottomMeta.length ? (
+                  <span className="request-card__sub">
+                    {bottomMeta.map((item, index) => (
+                      <span key={`bottom-${index}`} className="meta-item">
+                        {item}
+                      </span>
+                    ))}
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
+            {actionSlot ? <div className="request-card__actions">{actionSlot}</div> : null}
+          </div>
+        ) : null}
       </div>
     </>
   );
 
+  if (!isLinkMode) {
+    return (
+      <article className={cardClassName} aria-label={ariaLabel}>
+        {cardContent}
+      </article>
+    );
+  }
+
   return (
     <article
       className={cardClassName}
-      aria-label={ariaLabel ?? title}
-      role={isLinkMode ? 'link' : undefined}
-      tabIndex={isLinkMode ? 0 : undefined}
-      onClick={isLinkMode ? handleClick : undefined}
-      onKeyDown={isLinkMode ? handleKeyDown : undefined}
-      onMouseEnter={isLinkMode ? prefetchCard : undefined}
-      onFocus={isLinkMode ? prefetchCard : undefined}
-      data-prefetch={prefetch ? 'true' : 'false'}
+      aria-label={ariaLabel}
+      role="link"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      onPointerEnter={prefetchCard}
+      onFocus={prefetchCard}
     >
       {cardContent}
     </article>

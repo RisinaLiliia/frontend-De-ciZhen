@@ -48,6 +48,7 @@
   .request-card--media-right .request-card__media {
     order: 2;
     aspect-ratio: 5 / 6;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   }
 
   .request-card--media-right .request-card__body {
@@ -79,6 +80,10 @@
   }
 
   .request-card--no-media {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .request-card--media-inline {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -115,6 +120,11 @@
     border-radius: 0;
     background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
     z-index: 0;
+  }
+
+  .request-card__media--inline {
+    min-height: 0;
+    border-radius: 0;
   }
 
   .request-card__image {

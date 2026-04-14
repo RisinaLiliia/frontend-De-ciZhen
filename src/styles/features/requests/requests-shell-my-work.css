@@ -256,14 +256,27 @@
   }
 
   .my-request-card__topslot {
-    justify-content: space-between;
+    display: grid;
     gap: 12px;
   }
 
   .my-request-card__header-main {
-    flex: 1 1 420px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     min-width: 0;
     gap: 12px;
+    align-items: start;
+  }
+
+  .my-request-card__header-main .my-request-card__priority {
+    display: inline-flex;
+    width: auto;
+    max-width: fit-content;
+    min-width: 0;
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    justify-self: start;
+    box-sizing: border-box;
   }
 
   .my-request-card__priority,
@@ -426,30 +439,39 @@
     color: var(--text-muted);
   }
 
-  .my-request-card__progress {
-    display: flex;
+  .my-request-card__progress-scroll {
+    display: block;
     flex: 1 1 auto;
-    flex-wrap: nowrap;
-    gap: 8px;
     min-width: 0;
     overflow-x: auto;
     scrollbar-width: none;
   }
 
-  .my-request-card__progress::-webkit-scrollbar {
+  .my-request-card__progress-scroll::-webkit-scrollbar {
     display: none;
+  }
+
+  .my-request-card__progress-shell {
+    display: grid;
+    gap: 10px;
+    min-width: max-content;
+  }
+
+  .my-request-card__progress {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    min-width: max-content;
   }
 
   .my-request-card__progress-step {
     position: relative;
     display: inline-flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     flex: 0 0 auto;
     color: var(--text-muted);
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
+    min-width: 0;
   }
 
   .my-request-card__progress-dot {
@@ -457,6 +479,28 @@
     height: 10px;
     border-radius: 999px;
     background: color-mix(in srgb, var(--border-default) 82%, white 18%);
+    flex: 0 0 auto;
+  }
+
+  .my-request-card__progress-copy {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .my-request-card__progress-label {
+    color: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .my-request-card__progress-meta {
+    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-text) 12%);
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: nowrap;
   }
 
   .my-request-card__progress-step.is-done .my-request-card__progress-dot {
@@ -473,10 +517,34 @@
 
   .my-request-card__progress-step:not(:last-child)::after {
     content: '';
+    position: absolute;
+    top: 4px;
+    left: calc(100% + 4px);
     width: 20px;
     height: 2px;
     border-radius: 999px;
     background: color-mix(in oklab, var(--c-border) 72%, white 28%);
+  }
+
+  .my-request-card__progress-rail {
+    position: relative;
+    height: 5px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-border) 72%, white 28%);
+    overflow: hidden;
+  }
+
+  .my-request-card__progress-rail-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-accent) 74%, white 26%) 0%,
+      color-mix(in oklab, var(--c-primary) 82%, white 18%) 100%
+    );
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--c-primary) 12%, transparent);
+    transition: width 180ms ease;
   }
 
   .my-request-card .request-card {
@@ -493,6 +561,33 @@
     padding: 18px;
   }
 
+  .my-request-card .request-card--media-inline .request-card__body {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .my-request-card .request-card__main--with-media {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, clamp(72px, 22%, 180px));
+    grid-template-areas: 'copy media';
+    grid-auto-flow: column;
+    gap: var(--space-3);
+    align-items: stretch;
+  }
+
+  .my-request-card .request-card__copy {
+    grid-area: copy;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .my-request-card .request-card__media--inline {
+    grid-area: media;
+    width: 100%;
+    min-height: 0;
+    justify-self: stretch;
+    align-self: stretch;
+  }
+
   .my-request-card .request-card__top {
     padding-bottom: 2px;
     border-bottom: 1px solid color-mix(in oklab, var(--c-border) 72%, white 28%);
@@ -506,22 +601,30 @@
     text-transform: uppercase;
   }
 
-  .my-request-card .request-card__title {
-    font-size: clamp(26px, 2.8vw, 38px);
-    line-height: 1.14;
-    letter-spacing: -0.03em;
+  .my-request-card .request-card__title.section-title {
+    min-height: calc(2 * var(--lh-title) * 1em);
   }
 
-  .my-request-card .request-card__excerpt {
+  .my-request-card .request-card__excerpt.section-subtitle {
     max-width: 64ch;
-    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--c-text) 18%);
-    font-size: 18px;
-    line-height: 1.5;
+    min-height: calc(2 * 1.35em);
+    max-height: calc(2 * 1.35em);
   }
 
   .my-request-card .request-card__meta {
     gap: 10px;
     color: var(--text-muted);
+  }
+
+  .my-request-card .request-card__meta .request-meta-item--price {
+    margin-left: auto;
+    color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
+  }
+
+  .my-request-card .request-card__meta .request-meta-item--price .proof-price {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
   }
 
   .my-request-card .request-card__price .proof-price {
@@ -1027,17 +1130,23 @@
       padding: 12px 13px;
     }
 
-    .my-request-card__progress {
-      gap: 10px;
+    .my-request-card__progress-scroll {
       padding-bottom: 2px;
       scroll-snap-type: x proximity;
       overscroll-behavior-x: contain;
     }
 
+    .my-request-card__progress-shell {
+      gap: 8px;
+    }
+
+    .my-request-card__progress {
+      gap: 10px;
+    }
+
     .my-request-card__progress-step {
       flex-basis: auto;
       gap: 6px;
-      font-size: 10px;
       scroll-snap-align: start;
     }
 
@@ -1046,15 +1155,28 @@
       height: 8px;
     }
 
+    .my-request-card__progress-label {
+      font-size: 10px;
+    }
+
+    .my-request-card__progress-meta {
+      font-size: 9px;
+    }
+
     .my-request-card__progress-step:not(:last-child)::after {
+      top: 3px;
       width: 14px;
+    }
+
+    .my-request-card__progress-rail {
+      height: 4px;
     }
 
     .my-request-card .request-card {
       min-height: 0;
     }
 
-    .my-request-card .request-card:not(.request-card--no-media) {
+    .my-request-card .request-card:not(.request-card--no-media):not(.request-card--media-inline) {
       grid-template-columns: minmax(0, 1fr) minmax(64px, 22%, 88px);
     }
 
@@ -1081,6 +1203,16 @@
     .my-request-card .request-card__body {
       gap: 8px;
       padding: 12px;
+    }
+
+    .my-request-card .request-card__main--with-media {
+      grid-template-columns: minmax(0, 1fr) minmax(0, clamp(64px, 24%, 96px));
+      grid-template-areas: 'copy media';
+      gap: var(--space-3);
+    }
+
+    .my-request-card .request-card__media--inline {
+      min-height: 0;
     }
 
     .my-request-card .request-card__top {
@@ -1115,14 +1247,13 @@
       font-size: 10px;
     }
 
-    .my-request-card .request-card__title {
-      font-size: 18px;
-      line-height: 1.28;
+    .my-request-card .request-card__title.section-title {
+      min-height: calc(2 * var(--lh-title) * 1em);
     }
 
-    .my-request-card .request-card__excerpt {
-      font-size: 12px;
-      line-height: 1.45;
+    .my-request-card .request-card__excerpt.section-subtitle {
+      min-height: calc(2 * 1.35em);
+      max-height: calc(2 * 1.35em);
     }
 
     .my-request-card .request-card__meta,
@@ -1130,6 +1261,10 @@
     .my-request-card .request-tag {
       font-size: 11px;
       line-height: 1.3;
+    }
+
+    .my-request-card .request-card__meta .request-meta-item--price .proof-price {
+      font-size: 12px;
     }
 
     .my-request-card .request-card__price {
@@ -1154,6 +1289,7 @@
     }
 
     .my-request-card__header-main {
+      grid-template-columns: minmax(0, 1fr);
       gap: 10px;
     }
 
@@ -1225,10 +1361,22 @@
     }
 
     .my-request-card__progress-step {
+      gap: 5px;
+    }
+
+    .my-request-card__progress-label {
       font-size: 9.5px;
     }
 
-    .my-request-card .request-card:not(.request-card--no-media) {
+    .my-request-card__progress-meta {
+      font-size: 8.5px;
+    }
+
+    .my-request-card__progress-rail {
+      height: 3px;
+    }
+
+    .my-request-card .request-card:not(.request-card--no-media):not(.request-card--media-inline) {
       grid-template-columns: minmax(0, 1fr) minmax(56px, 20%, 76px);
     }
 
@@ -1236,19 +1384,29 @@
       padding: 11px;
     }
 
+    .my-request-card .request-card__main--with-media {
+      grid-template-columns: minmax(0, 1fr) minmax(0, clamp(56px, 20%, 96px));
+      grid-template-areas: 'copy media';
+      gap: var(--space-3);
+    }
+
     .my-request-card .request-category-row {
       gap: 7px;
     }
 
-    .my-request-card .request-card__title {
-      font-size: 17px;
+    .my-request-card .request-card__title.section-title {
+      min-height: calc(2 * var(--lh-title) * 1em);
     }
 
-    .my-request-card .request-card__excerpt,
+    .my-request-card .request-card__excerpt.section-subtitle,
     .my-request-card .request-card__meta,
     .my-request-card .request-card__sub,
     .my-request-card .request-tag {
       font-size: 10.5px;
+    }
+
+    .my-request-card .request-card__meta .request-meta-item--price .proof-price {
+      font-size: 11.5px;
     }
 
     .my-request-card .request-card__price .proof-price {
