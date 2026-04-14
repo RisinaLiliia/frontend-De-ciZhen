@@ -212,7 +212,7 @@ export function buildPrivateRequestCardChrome(args: {
   return {
     priorityLabel: resolvePriorityLabel(locale, card),
     priorityTone: card.decision.actionPriorityLevel,
-    contextPills: resolveContextPills(card),
+    contextPills: resolveContextPills(),
     signalPills: resolveSignalPills(card),
     insights: resolveInsights({ card, locale }),
     primaryAction,
