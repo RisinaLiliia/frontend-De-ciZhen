@@ -340,6 +340,12 @@
     align-items: stretch;
   }
 
+  .my-request-card__footer-stack {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+  }
+
   .my-request-card__insights {
     display: grid;
     gap: 12px;
@@ -556,9 +562,9 @@
     overflow: hidden;
   }
 
-  .my-request-card .request-card__body {
-    gap: 10px;
-    padding: 18px;
+  .my-request-card .request-card__top {
+    padding-bottom: 2px;
+    border-bottom: 1px solid color-mix(in oklab, var(--c-border) 72%, white 28%);
   }
 
   .my-request-card .request-card--media-inline .request-card__body {
@@ -569,15 +575,18 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, clamp(72px, 22%, 180px));
     grid-template-areas: 'copy media';
-    grid-auto-flow: column;
     gap: var(--space-3);
     align-items: stretch;
+    min-width: 0;
+    min-height: 0;
   }
 
   .my-request-card .request-card__copy {
     grid-area: copy;
-    gap: 10px;
-    min-width: 0;
+  }
+
+  .my-request-card .request-card--media-inline .request-card__copy .request-card__price {
+    padding-top: 0;
   }
 
   .my-request-card .request-card__media--inline {
@@ -586,50 +595,7 @@
     min-height: 0;
     justify-self: stretch;
     align-self: stretch;
-  }
-
-  .my-request-card .request-card__top {
-    padding-bottom: 2px;
-    border-bottom: 1px solid color-mix(in oklab, var(--c-border) 72%, white 28%);
-  }
-
-  .my-request-card .request-category {
-    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-text) 12%);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .my-request-card .request-card__title.section-title {
-    min-height: calc(2 * var(--lh-title) * 1em);
-  }
-
-  .my-request-card .request-card__excerpt.section-subtitle {
-    max-width: 64ch;
-    min-height: calc(2 * 1.35em);
-    max-height: calc(2 * 1.35em);
-  }
-
-  .my-request-card .request-card__meta {
-    gap: 10px;
-    color: var(--text-muted);
-  }
-
-  .my-request-card .request-card__meta .request-meta-item--price {
-    margin-left: auto;
-    color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
-  }
-
-  .my-request-card .request-card__meta .request-meta-item--price .proof-price {
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 1.3;
-  }
-
-  .my-request-card .request-card__price .proof-price {
-    color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
-    font-size: 20px;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   }
 
   .my-request-card__status-slot {
@@ -1184,6 +1150,16 @@
       min-height: 100%;
     }
 
+    .my-request-card .request-card__main--with-media {
+      grid-template-columns: minmax(0, 1fr) minmax(0, clamp(64px, 24%, 96px));
+      grid-template-areas: 'copy media';
+      gap: var(--space-3);
+    }
+
+    .my-request-card .request-card__media--inline {
+      min-height: 0;
+    }
+
     .my-request-card .request-card__overlay {
       top: 8px;
       right: 8px;
@@ -1200,33 +1176,10 @@
       padding-inline: 9px;
     }
 
-    .my-request-card .request-card__body {
-      gap: 8px;
-      padding: 12px;
-    }
-
-    .my-request-card .request-card__main--with-media {
-      grid-template-columns: minmax(0, 1fr) minmax(0, clamp(64px, 24%, 96px));
-      grid-template-areas: 'copy media';
-      gap: var(--space-3);
-    }
-
-    .my-request-card .request-card__media--inline {
-      min-height: 0;
-    }
-
     .my-request-card .request-card__top {
       gap: 8px;
       padding-bottom: 0;
       border-bottom: 0;
-    }
-
-    .my-request-card .request-category-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      align-items: start;
-      gap: 8px;
-      min-height: 0;
     }
 
     .my-request-card .request-top__status {
@@ -1247,37 +1200,6 @@
       font-size: 10px;
     }
 
-    .my-request-card .request-card__title.section-title {
-      min-height: calc(2 * var(--lh-title) * 1em);
-    }
-
-    .my-request-card .request-card__excerpt.section-subtitle {
-      min-height: calc(2 * 1.35em);
-      max-height: calc(2 * 1.35em);
-    }
-
-    .my-request-card .request-card__meta,
-    .my-request-card .request-card__sub,
-    .my-request-card .request-tag {
-      font-size: 11px;
-      line-height: 1.3;
-    }
-
-    .my-request-card .request-card__meta .request-meta-item--price .proof-price {
-      font-size: 12px;
-    }
-
-    .my-request-card .request-card__price {
-      font-size: 12px;
-      gap: 6px;
-    }
-
-    .my-request-card .request-card__price .proof-price {
-      font-size: 16px;
-    }
-
-    .my-request-card .request-card__price-trend,
-    .my-request-card .request-category,
     .my-request-card__priority,
     .my-request-card__context-pill,
     .my-request-card__signal {
@@ -1380,37 +1302,10 @@
       grid-template-columns: minmax(0, 1fr) minmax(56px, 20%, 76px);
     }
 
-    .my-request-card .request-card__body {
-      padding: 11px;
-    }
-
     .my-request-card .request-card__main--with-media {
       grid-template-columns: minmax(0, 1fr) minmax(0, clamp(56px, 20%, 96px));
       grid-template-areas: 'copy media';
       gap: var(--space-3);
-    }
-
-    .my-request-card .request-category-row {
-      gap: 7px;
-    }
-
-    .my-request-card .request-card__title.section-title {
-      min-height: calc(2 * var(--lh-title) * 1em);
-    }
-
-    .my-request-card .request-card__excerpt.section-subtitle,
-    .my-request-card .request-card__meta,
-    .my-request-card .request-card__sub,
-    .my-request-card .request-tag {
-      font-size: 10.5px;
-    }
-
-    .my-request-card .request-card__meta .request-meta-item--price .proof-price {
-      font-size: 11.5px;
-    }
-
-    .my-request-card .request-card__price .proof-price {
-      font-size: 15px;
     }
 
     .my-request-card .status-badge {

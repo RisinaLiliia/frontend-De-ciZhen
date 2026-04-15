@@ -49,7 +49,14 @@ export function resolveWorkspaceDataPlan({
     shouldLoadPrivateData &&
     requestsScope === 'my' &&
     activePublicSection === 'requests';
-  const shouldLoadPublicRequests = isWorkspacePublicSection || !isWorkspaceAuthed;
+  const shouldLoadPrivateOverviewRequests =
+    isWorkspaceAuthed &&
+    shouldLoadPrivateData &&
+    activePublicSection === null;
+  const shouldLoadPublicRequests =
+    isWorkspacePublicSection ||
+    !isWorkspaceAuthed ||
+    shouldLoadPrivateOverviewRequests;
   const shouldLoadPrivateOverview = isWorkspaceAuthed && shouldLoadPrivateData && hasAccessToken;
   const shouldLoadWorkspaceRequests = shouldLoadUnifiedPrivateRequests;
   const shouldLoadMyRequests =

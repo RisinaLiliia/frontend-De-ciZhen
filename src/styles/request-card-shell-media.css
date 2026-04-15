@@ -55,6 +55,10 @@
     order: 1;
   }
 
+  .request-card--media-inline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   @media (max-width: 640px) {
     .request-card:not(.request-card--no-media) {
       grid-template-columns: minmax(0, 1fr) minmax(0, clamp(64px, 24%, 96px));
@@ -80,10 +84,6 @@
   }
 
   .request-card--no-media {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .request-card--media-inline {
     grid-template-columns: minmax(0, 1fr);
   }
 
