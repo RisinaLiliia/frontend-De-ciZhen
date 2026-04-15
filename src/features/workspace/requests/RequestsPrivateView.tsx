@@ -336,14 +336,16 @@ function RequestSignalPills({
 
 function RequestOwnerInsights({
   chrome,
+  includeSignals = true,
 }: {
   chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
+  includeSignals?: boolean;
 }) {
-  if (chrome.signalPills.length === 0 && chrome.insights.length === 0) return null;
+  if ((!includeSignals || chrome.signalPills.length === 0) && chrome.insights.length === 0) return null;
 
   return (
     <div className="my-request-card__owner-content">
-      <RequestSignalPills chrome={chrome} />
+      {includeSignals ? <RequestSignalPills chrome={chrome} /> : null}
       {chrome.insights.length > 0 ? (
         <div className={`my-request-card__insights my-request-card__insights--${Math.min(chrome.insights.length, 2)}`.trim()}>
           {chrome.insights.map((item) => (
@@ -427,14 +429,6 @@ function MyRequestCard({
     );
   }
 
-  if (preview.priceLabel) {
-    meta.push(
-      <span key="price" className="request-meta-item request-meta-item--price" data-meta-item="true">
-        <span className="proof-price">{preview.priceLabel}</span>
-      </span>,
-    );
-  }
-
   return (
     <div
       className={[
@@ -453,43 +447,45 @@ function MyRequestCard({
         imageSrc={preview.imageUrl || pickRequestImage(preview.imageCategoryKey ?? '')}
         imageAlt=""
         imagePriority={index === 0}
-        mediaPlacement="body"
         badges={[]}
         category={preview.categoryLabel}
         title={preview.title}
-        titleClassName="section-title"
         excerpt={preview.excerpt}
-        excerptClassName="section-subtitle"
+        mediaPlacement="body"
+        pricePlacement="body"
         meta={meta}
         priceLabel={preview.priceLabel}
         priceTrend={preview.priceTrend ?? null}
         priceTrendLabel={preview.priceTrendLabel ?? null}
-        hideFooterPrice
         tags={preview.tags}
         mode="link"
         isActive={isActive}
         topSlot={<RequestCardTopSlot chrome={chrome} locale={locale} card={card} steps={card.progress.steps} />}
         statusSlot={<WorkspaceRequestStatusSlot card={card} />}
-        contentSlot={<RequestOwnerInsights chrome={chrome} />}
-        actionSlot={(chrome.primaryAction || chrome.secondaryAction) ? (
-          <div className="my-request-card__action-row">
-            {chrome.secondaryAction ? (
-              <RequestActionControl
-                action={chrome.secondaryAction}
-                variant="secondary"
-                listContext={listContext}
-              />
-            ) : (
-              <Link href={preview.href} prefetch={false} className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary">
-                {locale === 'de' ? 'Details öffnen' : 'Open details'}
-              </Link>
-            )}
-            {chrome.primaryAction ? (
-              <RequestActionControl
-                action={chrome.primaryAction}
-                variant="primary"
-                listContext={listContext}
-              />
+        actionSlot={(chrome.insights.length > 0 || chrome.primaryAction || chrome.secondaryAction) ? (
+          <div className="my-request-card__footer-stack">
+            <RequestOwnerInsights chrome={chrome} includeSignals={false} />
+            {(chrome.primaryAction || chrome.secondaryAction) ? (
+              <div className="my-request-card__action-row">
+                {chrome.secondaryAction ? (
+                  <RequestActionControl
+                    action={chrome.secondaryAction}
+                    variant="secondary"
+                    listContext={listContext}
+                  />
+                ) : (
+                  <Link href={preview.href} prefetch={false} className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary">
+                    {locale === 'de' ? 'Details öffnen' : 'Open details'}
+                  </Link>
+                )}
+                {chrome.primaryAction ? (
+                  <RequestActionControl
+                    action={chrome.primaryAction}
+                    variant="primary"
+                    listContext={listContext}
+                  />
+                ) : null}
+              </div>
             ) : null}
           </div>
         ) : null}

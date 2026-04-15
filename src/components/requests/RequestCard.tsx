@@ -46,8 +46,9 @@ export type RequestCardProps = {
   imagePriority?: boolean;
   imageQuality?: number;
   imageSizes?: string;
-  mediaPlacement?: 'shell' | 'body';
   hideFooterPrice?: boolean;
+  mediaPlacement?: 'shell' | 'body';
+  pricePlacement?: 'footer' | 'body';
 };
 
 export function RequestCard({
@@ -78,8 +79,9 @@ export function RequestCard({
   imagePriority = false,
   imageQuality = 62,
   imageSizes = '(max-width: 640px) 96px, (max-width: 1024px) 140px, 180px',
-  mediaPlacement = 'shell',
   hideFooterPrice = false,
+  mediaPlacement = 'shell',
+  pricePlacement = 'footer',
 }: RequestCardProps) {
   const router = useRouter();
   const hasImage = Boolean(imageSrc);
@@ -100,11 +102,13 @@ export function RequestCard({
   const shouldBypassOptimization = shouldBypassNextImageOptimization(safeImageSrc);
   const isLinkMode = mode === 'link';
   const usesInlineMedia = hasImage && mediaPlacement === 'body';
+  const showsBodyPrice = !hideFooterPrice && pricePlacement === 'body';
+  const showsFooterPrice = !hideFooterPrice && pricePlacement !== 'body';
+  const hasInlineBadges = visibleBadges.length > 0 && !hasImage;
+  const hasContentSection = hasInlineBadges || Boolean(contentSlot);
   const cardClassName = `request-card request-card--media-right request-card-link ${
     !hasImage ? 'request-card--no-media' : ''
-  } ${usesInlineMedia ? 'request-card--media-inline' : ''} ${isActive ? 'is-active' : ''} ${
-    isLinkMode ? 'request-card--link' : ''
-  } ${className ?? ''}`.trim();
+  } ${usesInlineMedia ? 'request-card--media-inline' : ''} ${isActive ? 'is-active' : ''} ${isLinkMode ? 'request-card--link' : ''} ${className ?? ''}`.trim();
   const prefetchedRef = React.useRef(false);
 
   const isInteractiveTarget = React.useCallback((target: EventTarget | null) => {
@@ -143,8 +147,8 @@ export function RequestCard({
     [isInteractiveTarget, openCard],
   );
 
-  const mainCopy = (
-    <div className="request-card__copy">
+  const mainCopyContent = (
+    <>
       <div className="request-category-row">
         <div className="request-category">{category}</div>
         {statusSlot ? <span className="request-top__status">{statusSlot}</span> : null}
@@ -183,33 +187,60 @@ export function RequestCard({
         })}
       </div>
 
-      <div className="request-card__content">
-        {visibleBadges.length && !hasImage ? (
-          <div className="request-badges" aria-hidden="true">
-            {visibleBadges.map((badge) => (
-              <Badge
-                key={badge.label}
-                variant={badge.variant}
-                tone={badge.tone}
-                size={badge.size}
-                className={badge.className}
-                title={badge.title}
-                aria-label={badge.ariaLabel}
-              >
-                {badge.label}
-              </Badge>
-            ))}
-          </div>
-        ) : null}
-        {contentSlot}
-      </div>
-    </div>
+      {hasContentSection ? (
+        <div className="request-card__content">
+          {hasInlineBadges ? (
+            <div className="request-badges" aria-hidden="true">
+              {visibleBadges.map((badge) => (
+                <Badge
+                  key={badge.label}
+                  variant={badge.variant}
+                  tone={badge.tone}
+                  size={badge.size}
+                  className={badge.className}
+                  title={badge.title}
+                  aria-label={badge.ariaLabel}
+                >
+                  {badge.label}
+                </Badge>
+              ))}
+            </div>
+          ) : null}
+          {contentSlot}
+        </div>
+      ) : null}
+      {showsBodyPrice ? (
+        <div className="request-card__price">
+          <span className="proof-price">{priceLabel}</span>
+          {priceTrend ? (
+            <span
+              className={`request-card__price-trend ${
+                priceTrend === 'down' ? 'is-down' : 'is-up'
+              }`.trim()}
+              title={priceTrendLabel ?? undefined}
+            >
+              <span aria-hidden="true">{priceTrend === 'down' ? '↓' : '↑'}</span>
+              {priceTrendLabel ? <span>{priceTrendLabel}</span> : null}
+            </span>
+          ) : null}
+          {bottomMeta.length ? (
+            <span className="request-card__sub">
+              {bottomMeta.map((item, index) => (
+                <span key={`bottom-${index}`} className="meta-item">
+                  {item}
+                </span>
+              ))}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+    </>
   );
 
   const cardContent = (
     <>
       {overlaySlot ? <div className="request-card__overlay">{overlaySlot}</div> : null}
-      {visibleBadges.length && hasImage && !usesInlineMedia ? (
+      {visibleBadges.length && hasImage ? (
         <div className="request-badges request-badges--media" aria-hidden="true">
           {visibleBadges.map((badge) => (
             <Badge
@@ -244,7 +275,7 @@ export function RequestCard({
         {topSlot ? <div className="request-card__top">{topSlot}</div> : null}
         {usesInlineMedia ? (
           <div className="request-card__main request-card__main--with-media">
-            {mainCopy}
+            <div className="request-card__copy">{mainCopyContent}</div>
             <div className="request-card__media request-card__media--inline">
               <Image
                 src={safeImageSrc}
@@ -259,14 +290,12 @@ export function RequestCard({
             </div>
           </div>
         ) : (
-          <>
-            {mainCopy}
-          </>
+          mainCopyContent
         )}
 
-        {(actionSlot || !hideFooterPrice || bottomMeta.length) ? (
+        {(actionSlot || showsFooterPrice || (bottomMeta.length && !showsBodyPrice)) ? (
           <div className="request-card__footer">
-            {!hideFooterPrice ? (
+            {showsFooterPrice ? (
               <div className="request-card__price">
                 <span className="proof-price">{priceLabel}</span>
                 {priceTrend ? (
