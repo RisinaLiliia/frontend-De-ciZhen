@@ -65,6 +65,7 @@ import {
   resolveConversationSubline,
   resolveConversationUnreadCount,
 } from '@/features/chat/chat.model';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
 import styles from './ChatWorkspacePage.module.css';
 
 const CONVERSATIONS_QUERY_KEY = ['chat', 'conversations'] as const;
@@ -735,9 +736,9 @@ export function ChatWorkspacePage() {
   const profileHref = counterpart?.userId ? `/profile/${counterpart.userId}` : null;
   const secondaryHref =
     selectedConversation?.relatedEntity.type === 'order'
-      ? '/workspace?tab=completed-jobs'
+      ? DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF
       : selectedConversation?.relatedEntity.type === 'offer'
-        ? '/workspace?tab=my-offers'
+        ? DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF
         : null;
   const secondaryLabel =
     selectedConversation?.relatedEntity.type === 'order'

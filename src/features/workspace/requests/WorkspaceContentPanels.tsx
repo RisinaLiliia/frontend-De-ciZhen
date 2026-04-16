@@ -110,7 +110,7 @@ export function WorkspaceContentPanels({
             emptyTitle={t(I18N_KEYS.requestsPage.workspaceContractsEmptyTitle)}
             emptyHint={t(I18N_KEYS.requestsPage.workspaceContractsEmptyHint)}
             emptyCtaLabel={t(I18N_KEYS.requestsPage.workspaceContractsEmptyCta)}
-            emptyCtaHref="/workspace?tab=my-offers"
+            emptyCtaHref="/workspace?section=requests&scope=my&period=90d&range=90d"
           >
             <RequestsList {...contractsListProps} />
           </WorkspaceContentState>

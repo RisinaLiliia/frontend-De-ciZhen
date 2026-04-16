@@ -6,6 +6,7 @@ import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { IconBriefcase, IconChat } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
 import type { RequestListStatusActions, RequestListStatusPresentation } from './requestListStatus.types';
 
 type RequestListOfferStatusActionsProps = {
@@ -89,7 +90,7 @@ export function RequestListOfferStatusActions({
       {status.offerCardState === 'accepted' ? (
         <>
           <Link
-            href="/workspace?tab=completed-jobs"
+            href={DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF}
             prefetch={false}
             className="btn-primary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--contract"
             aria-label={t(I18N_KEYS.requestDetails.responseViewContract)}

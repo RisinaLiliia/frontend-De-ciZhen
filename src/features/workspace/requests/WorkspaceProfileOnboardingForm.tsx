@@ -159,7 +159,7 @@ export function WorkspaceProfileOnboardingForm() {
 
         setLastMode('provider');
         toast.success(t(I18N_KEYS.requestsPage.profileOnboardingSuccess));
-        router.replace('/workspace?tab=my-offers');
+        router.replace('/workspace?section=requests&scope=my&period=90d&range=90d');
         router.refresh();
       } catch (error) {
         const message = getRegisterErrorMessage(error, t);

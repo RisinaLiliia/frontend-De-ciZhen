@@ -92,7 +92,7 @@ describe('useWorkspacePrivateState', () => {
 
     const node = screen.getByTestId('state');
     expect(node.getAttribute('data-nav-title')).toContain('Anna');
-    expect(node.getAttribute('data-nav-count')).toBe('8');
+    expect(node.getAttribute('data-nav-count')).toBe('6');
     expect(node.getAttribute('data-my-requests-value')).toBe('12');
     expect(node.getAttribute('data-my-requests-locked')).toBe('false');
     expect(node.getAttribute('data-reviews-rating')).toBe('4.7');
@@ -100,7 +100,7 @@ describe('useWorkspacePrivateState', () => {
     expect(node.getAttribute('data-stats-first')).toBe('provider');
     expect(node.getAttribute('data-top-providers')).toBe('0');
     expect(node.getAttribute('data-primary-count')).toBe('4');
-    expect(node.getAttribute('data-secondary-count')).toBe('4');
+    expect(node.getAttribute('data-secondary-count')).toBe('2');
   });
 
   it('locks private tabs for guests and keeps public items available', () => {
@@ -116,10 +116,10 @@ describe('useWorkspacePrivateState', () => {
     );
 
     const node = screen.getByTestId('state');
-    expect(node.getAttribute('data-nav-count')).toBe('8');
+    expect(node.getAttribute('data-nav-count')).toBe('7');
     expect(node.getAttribute('data-my-requests-locked')).toBe('true');
     expect(node.getAttribute('data-my-requests-value')).toBe('');
     expect(node.getAttribute('data-primary-count')).toBe('4');
-    expect(node.getAttribute('data-secondary-count')).toBe('4');
+    expect(node.getAttribute('data-secondary-count')).toBe('3');
   });
 });

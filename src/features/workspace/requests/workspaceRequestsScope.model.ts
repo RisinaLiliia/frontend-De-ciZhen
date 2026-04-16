@@ -5,6 +5,10 @@ export type WorkspaceRequestsRole = 'all' | 'customer' | 'provider';
 export type WorkspaceRequestsState = 'all' | 'attention' | 'execution' | 'completed';
 export type WorkspaceRequestsPeriod = '24h' | '7d' | '30d' | '90d';
 
+export const DEFAULT_PRIVATE_WORKSPACE_REQUESTS_PERIOD: WorkspaceRequestsPeriod = '90d';
+export const DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF =
+  '/workspace?section=requests&scope=my&period=90d&range=90d';
+
 export function resolveWorkspaceRequestsScope(
   value: string | null,
   isAuthed: boolean,
@@ -42,5 +46,66 @@ export function buildWorkspaceRequestsScopeHref(params: {
       scope: params.scope,
     },
     removeKeys: params.scope === 'market' ? ['role', 'state', 'tab'] : ['tab'],
+  });
+}
+
+function resolveLegacyWorkspaceRole(tab: string | null): WorkspaceRequestsRole | undefined {
+  if (tab === 'my-requests') return 'customer';
+  if (tab === 'my-offers') return 'provider';
+  return undefined;
+}
+
+function resolveLegacyWorkspaceState(
+  tab: string | null,
+  status: string | null,
+): WorkspaceRequestsState | undefined {
+  if (status === 'open') return 'attention';
+  if (status === 'in_progress') return 'execution';
+  if (status === 'completed') return 'completed';
+  if (tab === 'completed-jobs') return 'execution';
+  return undefined;
+}
+
+export function buildWorkspacePrivateRequestsHref(params: {
+  currentSearch: string | URLSearchParams;
+  role?: WorkspaceRequestsRole | null;
+  state?: WorkspaceRequestsState | null;
+}) {
+  const searchParams =
+    typeof params.currentSearch === 'string'
+      ? new URLSearchParams(params.currentSearch)
+      : new URLSearchParams(params.currentSearch.toString());
+  const period = resolveWorkspaceRequestsPeriod(
+    searchParams.get('period') ?? searchParams.get('range'),
+  );
+
+  return buildWorkspaceHref({
+    currentSearch: searchParams,
+    section: 'requests',
+    patch: {
+      scope: 'my',
+      period,
+      range: period,
+      role: params.role ?? undefined,
+      state: params.state ?? undefined,
+    },
+    removeKeys: ['tab', 'status', 'fav', 'reviewRole'],
+  });
+}
+
+export function buildLegacyWorkspaceTabRedirectHref(params: {
+  currentSearch: string | URLSearchParams;
+}) {
+  const searchParams =
+    typeof params.currentSearch === 'string'
+      ? new URLSearchParams(params.currentSearch)
+      : new URLSearchParams(params.currentSearch.toString());
+  const legacyTab = searchParams.get('tab');
+  const legacyStatus = searchParams.get('status');
+
+  return buildWorkspacePrivateRequestsHref({
+    currentSearch: searchParams,
+    role: resolveLegacyWorkspaceRole(legacyTab),
+    state: resolveLegacyWorkspaceState(legacyTab, legacyStatus),
   });
 }

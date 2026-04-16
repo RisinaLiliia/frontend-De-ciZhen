@@ -22,7 +22,7 @@ import { useRequestDetailsPresentation } from '@/features/requests/details/useRe
 import { useRequestDetailsPageData } from '@/features/requests/details/useRequestDetailsPageData';
 import { RequestDetailsPageView } from '@/features/requests/details/RequestDetailsPageView';
 
-const WORKSPACE_MY_REQUESTS_URL = '/workspace?tab=my-requests';
+const WORKSPACE_MY_REQUESTS_URL = '/workspace?section=requests&scope=my&period=90d&range=90d';
 const WORKSPACE_PUBLIC_REQUESTS_URL = '/workspace?section=requests';
 const WORKSPACE_GUEST_REQUESTS_URL = '/workspace?section=requests';
 

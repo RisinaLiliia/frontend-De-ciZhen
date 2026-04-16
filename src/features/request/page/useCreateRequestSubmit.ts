@@ -103,7 +103,11 @@ export function useCreateRequestSubmit({
 
         clearDraft();
         toast.success(t(submitIntent === 'publish' ? 'request.published' : 'request.created'));
-        router.push(submitIntent === 'publish' ? '/workspace?section=requests' : '/workspace?tab=my-requests');
+        router.push(
+          submitIntent === 'publish'
+            ? '/workspace?section=requests'
+            : '/workspace?section=requests&scope=my&period=90d&range=90d',
+        );
       } catch (error) {
         if (error instanceof ApiError && error.status === 401) {
           toast.message(t('requestDetails.loginRequired'));

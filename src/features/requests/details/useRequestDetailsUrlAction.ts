@@ -2,6 +2,7 @@ import * as React from 'react';
 import { toast } from 'sonner';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
 
 type Translate = (key: I18nKey) => string;
 
@@ -55,7 +56,7 @@ export function useRequestDetailsUrlAction({
       if (isOwner) {
         toast.message(t(I18N_KEYS.requestDetails.selfBidError));
       } else if (isOfferAccepted) {
-        router.push('/workspace?tab=completed-jobs');
+        router.push(DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF);
       } else {
         onOpenOfferForm();
       }
@@ -93,4 +94,3 @@ export function useRequestDetailsUrlAction({
     t,
   ]);
 }
-
