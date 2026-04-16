@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
 
 export default function OffersPage() {
   const params = useParams();
@@ -47,7 +48,7 @@ export default function OffersPage() {
       toast.success(t(I18N_KEYS.offers.accepted));
       await qc.invalidateQueries({ queryKey: ['offers', requestId] });
       await qc.invalidateQueries({ queryKey: ['client-contracts'] });
-      router.push('/workspace?tab=completed-jobs');
+      router.push(DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF);
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);

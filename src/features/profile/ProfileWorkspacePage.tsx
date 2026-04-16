@@ -250,9 +250,9 @@ export default function ProfileWorkspacePage() {
   };
 
   const overview = [
-    { label: t(I18N_KEYS.client.profileOverviewRequestsLabel), value: overviewCounts.requests, href: '/workspace?tab=my-requests' },
-    { label: t(I18N_KEYS.client.profileOverviewOffersLabel), value: overviewCounts.offers, href: '/workspace?tab=my-offers' },
-    { label: t(I18N_KEYS.client.profileOverviewContractsLabel), value: overviewCounts.contracts, href: '/workspace?tab=completed-jobs' },
+    { label: t(I18N_KEYS.client.profileOverviewRequestsLabel), value: overviewCounts.requests, href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
+    { label: t(I18N_KEYS.client.profileOverviewOffersLabel), value: overviewCounts.offers, href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
+    { label: t(I18N_KEYS.client.profileOverviewContractsLabel), value: overviewCounts.contracts, href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
     { label: t(I18N_KEYS.client.profileOverviewInboxLabel), value: overviewCounts.inbox, href: '/chat' },
   ];
 

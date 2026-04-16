@@ -58,7 +58,7 @@ describe('useWorkspacePublicState', () => {
     const node = screen.getByTestId('state');
     expect(node.getAttribute('data-nav-title')).toContain('Anna');
     expect(node.getAttribute('data-nav-subtitle')).toBe('requestsPage.navSubtitle');
-    expect(node.getAttribute('data-nav-count')).toBe('8');
+    expect(node.getAttribute('data-nav-count')).toBe('7');
     expect(node.getAttribute('data-requests-value')).toBe('24');
     expect(node.getAttribute('data-requests-has-callback')).toBe('true');
     expect(node.getAttribute('data-reviews-rating')).toBe('4.8');
@@ -77,7 +77,7 @@ describe('useWorkspacePublicState', () => {
     );
 
     const node = screen.getByTestId('state');
-    expect(node.getAttribute('data-nav-count')).toBe('8');
+    expect(node.getAttribute('data-nav-count')).toBe('6');
     expect(node.getAttribute('data-reviews-rating')).toBe('4.8');
     expect(node.getAttribute('data-progress')).toBe('12');
   });

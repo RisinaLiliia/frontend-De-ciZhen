@@ -7,6 +7,7 @@ import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { providerQK } from '@/features/provider/queries';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
 
 type Translate = (key: I18nKey) => string;
 
@@ -140,7 +141,7 @@ export function useRequestOfferActions({
       return;
     }
     if (isOfferAccepted) {
-      router.push('/workspace?tab=completed-jobs');
+      router.push(DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF);
       return;
     }
     openOfferForm();
@@ -280,4 +281,3 @@ export function useRequestOfferActions({
     handleOfferSuccessBack,
   };
 }
-

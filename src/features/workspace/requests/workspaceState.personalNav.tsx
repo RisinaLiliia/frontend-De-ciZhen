@@ -2,9 +2,7 @@
 
 import {
   IconBriefcase,
-  IconCheck,
   IconHeart,
-  IconSend,
   IconUser,
 } from '@/components/ui/icons/icons';
 import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
@@ -51,28 +49,22 @@ function buildWorkspacePersonalizedSecondaryNavItems({
   activeWorkspaceTab,
   hasActivePublicSection,
   myRequestsTotal,
-  sentCount,
-  completedJobsCount,
   favoriteRequestCount,
   setWorkspaceTab,
-  includeCompletedJobsInSecondary,
 }: Pick<
   BuildWorkspacePersonalNavItemsArgs,
   | 't'
   | 'activeWorkspaceTab'
   | 'myRequestsTotal'
-  | 'sentCount'
-  | 'completedJobsCount'
   | 'favoriteRequestCount'
   | 'setWorkspaceTab'
-  | 'includeCompletedJobsInSecondary'
 > & {
   hasActivePublicSection: boolean;
 }): PersonalNavItem[] {
   return [
     {
       key: 'my-requests',
-      href: '/workspace?tab=my-requests',
+      href: '/workspace?section=requests&scope=my&period=90d&range=90d',
       label: t(I18N_KEYS.requestsPage.navMyOrders),
       icon: <IconBriefcase />,
       badgeValue: normalizeWorkspaceNavCount(myRequestsTotal),
@@ -83,34 +75,6 @@ function buildWorkspacePersonalizedSecondaryNavItems({
       match: 'exact',
       tier: 'secondary',
     },
-    {
-      key: 'my-offers',
-      href: '/workspace?tab=my-offers',
-      label: t(I18N_KEYS.requestsPage.navMyOffers),
-      icon: <IconSend />,
-      badgeValue: normalizeWorkspaceNavCount(sentCount),
-      value: normalizeWorkspaceNavCount(sentCount),
-      hint: t(I18N_KEYS.requestsPage.summarySent),
-      onClick: () => setWorkspaceTab('my-offers'),
-      forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-offers',
-      match: 'exact',
-      tier: 'secondary',
-    },
-    ...(includeCompletedJobsInSecondary
-      ? [{
-          key: 'completed-jobs',
-          href: '/workspace?tab=completed-jobs',
-          label: t(I18N_KEYS.requestsPage.navCompletedJobs),
-          icon: <IconCheck />,
-          badgeValue: normalizeWorkspaceNavCount(completedJobsCount),
-          value: normalizeWorkspaceNavCount(completedJobsCount),
-          hint: t(I18N_KEYS.provider.jobs),
-          onClick: () => setWorkspaceTab('completed-jobs'),
-          forceActive: !hasActivePublicSection && activeWorkspaceTab === 'completed-jobs',
-          match: 'exact' as const,
-          tier: 'secondary' as const,
-        }]
-      : []),
     {
       key: 'my-favorites',
       href: '/workspace?tab=favorites',
@@ -158,7 +122,7 @@ function buildWorkspaceGuestSecondaryNavItems({
     },
     {
       key: 'my-requests',
-      href: '/workspace?tab=my-requests',
+      href: '/workspace?section=requests&scope=my&period=90d&range=90d',
       label: t(I18N_KEYS.requestsPage.navGuestOrders),
       icon: <IconBriefcase />,
       badgeValue: 0,
@@ -167,19 +131,6 @@ function buildWorkspaceGuestSecondaryNavItems({
       lockedHref: guestLoginHref,
       onClick: onGuestLockedAction,
       forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-requests',
-      match: 'exact',
-      tier: 'secondary',
-    },
-    {
-      key: 'my-offers',
-      href: '/workspace?tab=my-offers',
-      label: t(I18N_KEYS.requestsPage.navGuestOffers),
-      icon: <IconSend />,
-      hint: t(I18N_KEYS.requestsPage.summarySent),
-      disabled: true,
-      lockedHref: guestLoginHref,
-      onClick: onGuestLockedAction,
-      forceActive: !hasActivePublicSection && activeWorkspaceTab === 'my-offers',
       match: 'exact',
       tier: 'secondary',
     },
@@ -207,8 +158,6 @@ export function buildWorkspacePersonalNavItems({
   publicProvidersCount,
   publicStatsCount,
   myRequestsTotal,
-  sentCount,
-  completedJobsCount,
   favoriteRequestCount,
   navRatingValue,
   navReviewsCount,
@@ -219,7 +168,6 @@ export function buildWorkspacePersonalNavItems({
   reviewsHref,
   reviewsMatch = 'prefix',
   reviewsForceActive,
-  includeCompletedJobsInSecondary = true,
 }: BuildWorkspacePersonalNavItemsArgs): PersonalNavItem[] {
   const hasActivePublicSection = isWorkspacePublicSection(activePublicSection);
   const publicPrimaryItems = buildPublicNavItems({
@@ -250,11 +198,8 @@ export function buildWorkspacePersonalNavItems({
         activeWorkspaceTab,
         hasActivePublicSection,
         myRequestsTotal,
-        sentCount,
-        completedJobsCount,
         favoriteRequestCount,
         setWorkspaceTab,
-        includeCompletedJobsInSecondary,
       }),
     ];
   }

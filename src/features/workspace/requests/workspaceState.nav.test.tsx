@@ -61,12 +61,11 @@ describe('workspaceState.nav', () => {
       'public-stats',
       'reviews',
       'my-requests',
-      'my-offers',
-      'completed-jobs',
       'my-favorites',
     ]);
     expect(items.find((item) => item.key === 'reviews')?.rating?.value).toBe('4.7');
-    expect(items.find((item) => item.key === 'my-offers')?.forceActive).toBe(true);
+    expect(items.find((item) => item.key === 'my-offers')).toBeUndefined();
+    expect(items.find((item) => item.key === 'completed-jobs')).toBeUndefined();
   });
 
   it('builds guest workspace nav with locked private tabs and profile entry', () => {

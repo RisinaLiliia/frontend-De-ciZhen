@@ -1,5 +1,5 @@
-import { WorkspaceShellPage } from '@/features/workspace/shell/WorkspaceShellPage';
+import { redirect } from 'next/navigation';
 
 export default function ProviderContractsLegacyPage() {
-  return <WorkspaceShellPage forcedWorkspaceTab="completed-jobs" />;
+  redirect('/workspace?section=requests&scope=my&period=90d&range=90d');
 }

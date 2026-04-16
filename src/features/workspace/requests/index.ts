@@ -48,7 +48,10 @@ export {
   REQUESTS_TAB_STORAGE_KEY,
 } from './workspace.types';
 export {
+  buildLegacyWorkspaceTabRedirectHref,
+  buildWorkspacePrivateRequestsHref,
   buildWorkspaceRequestsScopeHref,
+  DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF,
   resolveWorkspaceRequestsPeriod,
   resolveWorkspaceRequestsRole,
   resolveWorkspaceRequestsScope,
