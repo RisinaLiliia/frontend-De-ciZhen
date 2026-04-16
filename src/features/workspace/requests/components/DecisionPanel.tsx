@@ -60,7 +60,7 @@ export function DecisionPanel({
         <p className="my-decision-panel__text">{summaryText}</p>
         <button
           type="button"
-          className="btn-primary my-decision-panel__primary"
+          className="auth-social__btn auth-social__btn--google workspace-ai-card__action my-decision-panel__primary"
           onClick={onStartDecisionMode}
           disabled={panel.summary.totalNeedsAction === 0}
         >

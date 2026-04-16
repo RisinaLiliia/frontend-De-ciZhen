@@ -238,7 +238,7 @@ function RequestActionControl({
   listContext: RequestsPrivateViewProps['listContext'];
 }) {
   const className = [
-    variant === 'primary' ? 'btn-primary' : 'btn-secondary',
+    variant === 'primary' ? 'btn-ghost is-primary' : 'btn-secondary',
     'my-request-card__action-btn',
     `my-request-card__action-btn--${variant}`,
   ].join(' ');
@@ -360,6 +360,58 @@ function RequestOwnerInsights({
   );
 }
 
+function RequestOwnerFooterNote({
+  chrome,
+  card,
+  locale,
+}: {
+  chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
+  card: MyRequestsViewCard;
+  locale: Locale;
+}) {
+  const noteFromInsights = chrome.insights
+    .map((item) => item.description.trim())
+    .find(Boolean);
+  const noteFromDecision = card.decision.actionReason?.trim();
+  const noteFromActivity = card.activity?.label?.trim();
+
+  let fallbackNote: string;
+  if (card.decision.actionType === 'review_offers') {
+    fallbackNote = locale === 'de'
+      ? 'Du hast offene Entscheidungen. Wir helfen dir bei der Auswahl.'
+      : 'You have open decisions. We help you with the selection.';
+  } else if (card.decision.actionType === 'confirm_contract') {
+    fallbackNote = locale === 'de'
+      ? 'Die nächsten Schritte hängen von deiner Vertragsbestätigung ab.'
+      : 'The next steps depend on your contract confirmation.';
+  } else if (card.decision.actionType === 'reply_required') {
+    fallbackNote = locale === 'de'
+      ? 'Es gibt offene Rückmeldungen. Antworte, damit der Vorgang weiterläuft.'
+      : 'There are open replies pending. Respond to keep the workflow moving.';
+  } else if (card.decision.actionType === 'confirm_completion') {
+    fallbackNote = locale === 'de'
+      ? 'Bestätige den Abschluss, damit der Vorgang sauber beendet wird.'
+      : 'Confirm completion to close the workflow cleanly.';
+  } else {
+    fallbackNote = locale === 'de'
+      ? 'Behalte diesen Vorgang im Blick und steuere die nächsten Schritte direkt hier.'
+      : 'Keep this workflow in view and manage the next steps here.';
+  }
+
+  const note = noteFromInsights || noteFromDecision || noteFromActivity || fallbackNote;
+
+  if (!note) return null;
+
+  return (
+    <div className={`my-request-card__footer-note is-${chrome.insights[0]?.tone ?? 'neutral'}`.trim()}>
+      <span className="my-request-card__footer-note-icon" aria-hidden="true">
+        i
+      </span>
+      <p className="my-request-card__footer-note-copy">{note}</p>
+    </div>
+  );
+}
+
 function RequestCardTopSlot({
   chrome,
   locale,
@@ -465,28 +517,31 @@ function MyRequestCard({
         actionSlot={(chrome.insights.length > 0 || chrome.primaryAction || chrome.secondaryAction) ? (
           <div className="my-request-card__footer-stack">
             <RequestOwnerInsights chrome={chrome} includeSignals={false} />
-            {(chrome.primaryAction || chrome.secondaryAction) ? (
-              <div className="my-request-card__action-row">
-                {chrome.secondaryAction ? (
-                  <RequestActionControl
-                    action={chrome.secondaryAction}
-                    variant="secondary"
-                    listContext={listContext}
-                  />
-                ) : (
-                  <Link href={preview.href} prefetch={false} className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary">
-                    {locale === 'de' ? 'Details öffnen' : 'Open details'}
-                  </Link>
-                )}
-                {chrome.primaryAction ? (
-                  <RequestActionControl
-                    action={chrome.primaryAction}
-                    variant="primary"
-                    listContext={listContext}
-                  />
-                ) : null}
-              </div>
-            ) : null}
+            <div className="my-request-card__footer-bar">
+              <RequestOwnerFooterNote chrome={chrome} card={card} locale={locale} />
+              {(chrome.primaryAction || chrome.secondaryAction) ? (
+                <div className="my-request-card__action-row">
+                  {chrome.secondaryAction ? (
+                    <RequestActionControl
+                      action={chrome.secondaryAction}
+                      variant="secondary"
+                      listContext={listContext}
+                    />
+                  ) : (
+                    <Link href={preview.href} prefetch={false} className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary">
+                      {locale === 'de' ? 'Details öffnen' : 'Open details'}
+                    </Link>
+                  )}
+                  {chrome.primaryAction ? (
+                    <RequestActionControl
+                      action={chrome.primaryAction}
+                      variant="primary"
+                      listContext={listContext}
+                    />
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
           </div>
         ) : null}
       />
