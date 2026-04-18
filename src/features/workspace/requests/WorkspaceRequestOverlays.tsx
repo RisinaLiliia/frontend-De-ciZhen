@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 import {
   RequestOfferSheet,
@@ -12,26 +11,24 @@ import {
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
-import { providerQK } from '@/features/provider/queries';
 import { useRequestOwnerEdit } from '@/features/requests/details/useRequestOwnerEdit';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import {
+  fetchWorkspaceManagedRequest,
+  useWorkspaceProviderOfferSheetActions,
+  useWorkspaceRequestDecisionActions,
+  useWorkspaceRequestOfferActions,
+} from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
-import { completeContract, confirmContract, listMyContracts } from '@/lib/api/contracts';
+import { listMyContracts } from '@/lib/api/contracts';
 import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import {
-  acceptOffer,
-  createOffer,
-  declineOffer,
-  deleteOffer,
   listMyProviderOffers,
   listOffersByRequest,
-  updateOffer,
 } from '@/lib/api/offers';
-import { ApiError } from '@/lib/api/http-error';
-import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -131,25 +128,6 @@ function resolveContractStatusBadge(locale: Locale, status: ContractDto['status'
   };
 }
 
-async function fetchWorkspaceManagedRequest(requestId: string, locale: Locale) {
-  try {
-    const request = await getMyRequestById(requestId);
-    return {
-      request,
-      source: 'owner' as const,
-    };
-  } catch (error) {
-    if (!(error instanceof ApiError) || (error.status !== 403 && error.status !== 404)) {
-      throw error;
-    }
-  }
-
-  return {
-    request: await getPublicRequestById(requestId, { locale }),
-    source: 'public' as const,
-  };
-}
-
 function WorkspaceRequestOffersSection({
   locale,
   requestId,
@@ -159,56 +137,17 @@ function WorkspaceRequestOffersSection({
   requestId: string;
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 }) {
-  const t = useT();
-  const qc = useQueryClient();
   const { data: offers = [], isLoading, isError } = useQuery({
     queryKey: ['workspace-request-offers', requestId],
     queryFn: () => withStatusFallback(() => listOffersByRequest(requestId), [] as OfferDto[]),
     staleTime: 30_000,
     refetchOnWindowFocus: false,
   });
-  const [pendingOfferActionId, setPendingOfferActionId] = React.useState<string | null>(null);
-
-  const invalidateOfferState = React.useCallback(async () => {
-    await Promise.all([
-      qc.invalidateQueries({ queryKey: ['workspace-request-offers', requestId] }),
-      qc.invalidateQueries({ queryKey: workspaceQK.offersMyClient() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
-      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
-      qc.invalidateQueries({ queryKey: ['request-detail', requestId] }),
-    ]);
-  }, [qc, requestId]);
-
-  const handleAccept = React.useCallback(async (offerId: string) => {
-    if (pendingOfferActionId === offerId) return;
-    setPendingOfferActionId(offerId);
-    try {
-      await acceptOffer(offerId);
-      toast.success(locale === 'de' ? 'Angebot angenommen.' : 'Offer accepted.');
-      await invalidateOfferState();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    } finally {
-      setPendingOfferActionId(null);
-    }
-  }, [invalidateOfferState, locale, pendingOfferActionId, t]);
-
-  const handleDecline = React.useCallback(async (offerId: string) => {
-    if (pendingOfferActionId === offerId) return;
-    setPendingOfferActionId(offerId);
-    try {
-      await declineOffer(offerId);
-      toast.success(locale === 'de' ? 'Angebot abgelehnt.' : 'Offer declined.');
-      await invalidateOfferState();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    } finally {
-      setPendingOfferActionId(null);
-    }
-  }, [invalidateOfferState, locale, pendingOfferActionId, t]);
+  const {
+    acceptRequestOffer,
+    declineRequestOffer,
+    pendingOfferActionId,
+  } = useWorkspaceRequestOfferActions({ locale, requestId });
 
   const acceptedOfferId = offers.find((offer) => offer.status === 'accepted')?.id ?? null;
   const actionableOffers = offers.filter((offer) => offer.status !== 'withdrawn');
@@ -332,7 +271,7 @@ function WorkspaceRequestOffersSection({
                     className="btn-ghost is-primary"
                     disabled={!canAccept || isBusy}
                     onClick={() => {
-                      void handleAccept(offer.id);
+                      void acceptRequestOffer(offer.id);
                     }}
                   >
                     {isBusy && pendingOfferActionId === offer.id
@@ -344,7 +283,7 @@ function WorkspaceRequestOffersSection({
                     className="btn-secondary"
                     disabled={!canDecline || isBusy}
                     onClick={() => {
-                      void handleDecline(offer.id);
+                      void declineRequestOffer(offer.id);
                     }}
                   >
                     {locale === 'de' ? 'Ablehnen' : 'Decline'}
@@ -368,17 +307,22 @@ function WorkspaceRequestDecisionSection({
   card: MyRequestsViewCard;
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 }) {
-  const t = useT();
-  const qc = useQueryClient();
   const [startAt, setStartAt] = React.useState(() => toDateTimeLocalValue());
   const [durationMin, setDurationMin] = React.useState('120');
   const [note, setNote] = React.useState('');
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { data: contracts = [] } = useQuery({
     queryKey: workspaceQK.contractsMyClient(),
     queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), [] as ContractDto[]),
     staleTime: 30_000,
     refetchOnWindowFocus: false,
+  });
+  const {
+    completeRequestContract,
+    confirmRequestContract,
+    isSubmittingDecision,
+  } = useWorkspaceRequestDecisionActions({
+    locale,
+    requestId: card.requestId,
   });
 
   const contract = React.useMemo(
@@ -397,50 +341,6 @@ function WorkspaceRequestDecisionSection({
     if (!contract?.createdAt) return;
     setStartAt((current) => (current ? current : toDateTimeLocalValue(contract.createdAt)));
   }, [contract?.createdAt]);
-
-  const invalidateDecisionState = React.useCallback(async () => {
-    await Promise.all([
-      qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
-      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
-      qc.invalidateQueries({ queryKey: ['request-detail', card.requestId] }),
-    ]);
-  }, [card.requestId, qc]);
-
-  const handleConfirmContract = React.useCallback(async () => {
-    if (!contract?.id || !startAt) return;
-    setIsSubmitting(true);
-    try {
-      await confirmContract(contract.id, {
-        startAt: new Date(startAt).toISOString(),
-        durationMin: durationMin.trim() ? Number(durationMin) : undefined,
-        note: note.trim() || undefined,
-      });
-      toast.success(locale === 'de' ? 'Vertrag bestätigt.' : 'Contract confirmed.');
-      await invalidateDecisionState();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [contract?.id, durationMin, invalidateDecisionState, locale, note, startAt, t]);
-
-  const handleCompleteContract = React.useCallback(async () => {
-    if (!contract?.id) return;
-    setIsSubmitting(true);
-    try {
-      await completeContract(contract.id);
-      toast.success(locale === 'de' ? 'Abschluss bestätigt.' : 'Completion confirmed.');
-      await invalidateDecisionState();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [contract?.id, invalidateDecisionState, locale, t]);
 
   if (card.decision.actionType === 'review_offers' || card.decision.actionType === 'none') {
     return null;
@@ -496,7 +396,7 @@ function WorkspaceRequestDecisionSection({
                 type="datetime-local"
                 value={startAt}
                 onChange={(event) => setStartAt(event.target.value)}
-                disabled={isSubmitting || contract.status !== 'pending'}
+                disabled={isSubmittingDecision || contract.status !== 'pending'}
               />
             </label>
             <label className="my-request-decision-form__field">
@@ -507,7 +407,7 @@ function WorkspaceRequestDecisionSection({
                 step={15}
                 value={durationMin}
                 onChange={(event) => setDurationMin(event.target.value)}
-                disabled={isSubmitting || contract.status !== 'pending'}
+                disabled={isSubmittingDecision || contract.status !== 'pending'}
               />
             </label>
             <label className="my-request-decision-form__field">
@@ -515,7 +415,7 @@ function WorkspaceRequestDecisionSection({
               <Textarea
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
-                disabled={isSubmitting || contract.status !== 'pending'}
+                disabled={isSubmittingDecision || contract.status !== 'pending'}
                 placeholder={locale === 'de' ? 'Optionaler Hinweis für den Vertrag' : 'Optional note for the contract'}
               />
             </label>
@@ -525,20 +425,26 @@ function WorkspaceRequestDecisionSection({
                   type="button"
                   className="btn-secondary"
                   onClick={() => onOpenChatConversation(chatInput)}
-                  disabled={isSubmitting}
+                  disabled={isSubmittingDecision}
                 >
                   {chatLabel}
                 </button>
               ) : null}
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={() => {
-                  void handleConfirmContract();
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={() => {
+                  if (!contract?.id || !startAt) return;
+                  void confirmRequestContract({
+                    contractId: contract.id,
+                    startAt,
+                    durationMin,
+                    note,
+                  });
                 }}
-                disabled={isSubmitting || contract.status !== 'pending' || !startAt}
+                disabled={isSubmittingDecision || contract.status !== 'pending' || !startAt}
               >
-                {isSubmitting
+                {isSubmittingDecision
                   ? (locale === 'de' ? 'Speichern…' : 'Saving…')
                   : (locale === 'de' ? 'Vertrag bestätigen' : 'Confirm contract')}
               </button>
@@ -561,20 +467,21 @@ function WorkspaceRequestDecisionSection({
                 type="button"
                 className="btn-secondary"
                 onClick={() => onOpenChatConversation(chatInput)}
-                disabled={isSubmitting}
+                disabled={isSubmittingDecision}
               >
                 {chatLabel}
               </button>
             ) : null}
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => {
-                void handleCompleteContract();
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => {
+                if (!contract?.id) return;
+                void completeRequestContract(contract.id);
               }}
-              disabled={isSubmitting || contract.status === 'completed' || contract.status === 'cancelled'}
+              disabled={isSubmittingDecision || contract.status === 'completed' || contract.status === 'cancelled'}
             >
-              {isSubmitting
+              {isSubmittingDecision
                 ? (locale === 'de' ? 'Speichern…' : 'Saving…')
                 : (locale === 'de' ? 'Abschluss bestätigen' : 'Confirm completion')}
             </button>
@@ -875,7 +782,6 @@ export function WorkspaceManagedOfferSheet({
   onClose: () => void;
 }) {
   const t = useT();
-  const qc = useQueryClient();
   const { data, isLoading, isError } = useQuery({
     queryKey: ['request-detail', requestId, locale],
     queryFn: () => fetchWorkspaceManagedRequest(requestId, locale),
@@ -898,7 +804,6 @@ export function WorkspaceManagedOfferSheet({
   const [offerComment, setOfferComment] = React.useState('');
   const [offerAvailability, setOfferAvailability] = React.useState('');
   const [offerSheetMode, setOfferSheetMode] = React.useState<'form' | 'success'>('form');
-  const [isSubmittingOffer, setIsSubmittingOffer] = React.useState(false);
 
   React.useEffect(() => {
     if (!request) return;
@@ -922,99 +827,23 @@ export function WorkspaceManagedOfferSheet({
     setOfferAvailability('');
   }, [existingResponse, request]);
 
-  const invalidateWorkspaceState = React.useCallback(async () => {
-    await Promise.all([
-      qc.invalidateQueries({ queryKey: workspaceQK.offersMy() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
-      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
-      qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
-    ]);
-  }, [qc]);
-
   const resetDraft = React.useCallback(() => {
     setOfferSheetMode('form');
     setOfferAmount('');
     setOfferComment('');
     setOfferAvailability('');
   }, []);
-
-  const handleOfferSubmit = React.useCallback(async () => {
-    if (!request) return;
-    const parsedAmount = Number(offerAmount);
-    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-      toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
-      return;
-    }
-
-    setIsSubmittingOffer(true);
-    try {
-      const payload = {
-        amount: parsedAmount,
-        message: offerComment.trim() || undefined,
-        availabilityNote: offerAvailability.trim() || undefined,
-      };
-
-      if (existingResponse?.id) {
-        await updateOffer(existingResponse.id, payload);
-        toast.success(t(I18N_KEYS.requestDetails.responseUpdated));
-        await invalidateWorkspaceState();
-        onClose();
-        return;
-      }
-
-      await createOffer({
-        requestId: request.id,
-        ...payload,
-      });
-      await invalidateWorkspaceState();
-      setOfferSheetMode('success');
-    } catch (error) {
-      if (error instanceof ApiError && (error.status === 404 || error.status === 405)) {
-        toast.message(t(I18N_KEYS.requestDetails.responseEditUnavailable));
-      } else if (error instanceof ApiError && error.status === 409) {
-        toast.message(t(I18N_KEYS.requestDetails.responseAlready));
-        await invalidateWorkspaceState();
-        onClose();
-      } else if (error instanceof ApiError && error.status === 403) {
-        toast.error(error.message || t(I18N_KEYS.requestDetails.responseFailed));
-      } else {
-        toast.error(t(I18N_KEYS.requestDetails.responseFailed));
-      }
-    } finally {
-      setIsSubmittingOffer(false);
-    }
-  }, [
-    existingResponse?.id,
-    invalidateWorkspaceState,
-    offerAmount,
-    offerAvailability,
-    offerComment,
+  const {
+    cancelProviderOffer,
+    isSubmittingOffer,
+    submitProviderOffer,
+  } = useWorkspaceProviderOfferSheetActions({
     onClose,
+    onResetDraft: resetDraft,
     request,
-    t,
-  ]);
-
-  const handleOfferCancel = React.useCallback(async () => {
-    if (!existingResponse?.id) {
-      resetDraft();
-      onClose();
-      return;
-    }
-
-    setIsSubmittingOffer(true);
-    try {
-      await deleteOffer(existingResponse.id);
-      await invalidateWorkspaceState();
-      toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
-      resetDraft();
-      onClose();
-    } catch {
-      toast.error(t(I18N_KEYS.requestDetails.responseFailed));
-    } finally {
-      setIsSubmittingOffer(false);
-    }
-  }, [existingResponse?.id, invalidateWorkspaceState, onClose, resetDraft, t]);
+    requestId,
+    existingResponse,
+  });
 
   const handleSuccessBack = React.useCallback(() => {
     resetDraft();
@@ -1092,11 +921,19 @@ export function WorkspaceManagedOfferSheet({
       onAvailabilityChange={setOfferAvailability}
       onClose={onClose}
       onCancel={() => {
-        void handleOfferCancel();
+        void cancelProviderOffer();
       }}
       onSuccessBack={handleSuccessBack}
       onSubmit={() => {
-        void handleOfferSubmit();
+        void submitProviderOffer({
+          amountValue: offerAmount,
+          commentValue: offerComment,
+          availabilityValue: offerAvailability,
+        }).then((result) => {
+          if (result === 'created') {
+            setOfferSheetMode('success');
+          }
+        });
       }}
     />
   );
