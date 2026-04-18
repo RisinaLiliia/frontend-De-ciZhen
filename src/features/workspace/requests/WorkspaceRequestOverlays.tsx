@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import {
   RequestOfferSheet,
@@ -13,23 +13,25 @@ import { Textarea } from '@/components/ui/Textarea';
 import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
 import { useRequestOwnerEdit } from '@/features/requests/details/useRequestOwnerEdit';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import {
-  fetchWorkspaceManagedRequest,
   useWorkspaceProviderOfferSheetActions,
   useWorkspaceRequestDecisionActions,
   useWorkspaceRequestOfferActions,
 } from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
+import {
+  cardlessTitle,
+  formatDialogDate,
+  formatDialogPrice,
+  formatOfferTimestamp,
+  resolveOfferStatusBadge,
+  toDateTimeLocalValue,
+  useWorkspaceManagedRequestData,
+  useWorkspaceProviderOfferSheetData,
+  useWorkspaceRequestDecisionData,
+  useWorkspaceRequestOffersData,
+} from '@/features/workspace/requests/useWorkspaceRequestOverlayData';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
-import { listMyContracts } from '@/lib/api/contracts';
-import type { ContractDto } from '@/lib/api/dto/contracts';
-import type { OfferDto } from '@/lib/api/dto/offers';
-import {
-  listMyProviderOffers,
-  listOffersByRequest,
-} from '@/lib/api/offers';
-import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
@@ -37,96 +39,6 @@ import {
   normalizeAppImageSrc,
   shouldBypassNextImageOptimization,
 } from '@/lib/requests/images';
-
-function formatDialogDate(locale: Locale, value?: string | null) {
-  if (!value) return null;
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return null;
-  return new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(date);
-}
-
-function formatDialogPrice(locale: Locale, value?: number | null) {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return null;
-  return new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US', {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function formatOfferTimestamp(locale: Locale, value?: string | null) {
-  if (!value) return null;
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return null;
-  return new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
-    day: '2-digit',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date);
-}
-
-function toDateTimeLocalValue(value?: string | null) {
-  const date = value ? new Date(value) : new Date(Date.now() + 60 * 60 * 1000);
-  if (!Number.isFinite(date.getTime())) return '';
-  const offset = date.getTimezoneOffset();
-  const localDate = new Date(date.getTime() - offset * 60 * 1000);
-  return localDate.toISOString().slice(0, 16);
-}
-
-function resolveOfferStatusBadge(locale: Locale, status: OfferDto['status']) {
-  if (status === 'accepted') {
-    return {
-      label: locale === 'de' ? 'Angenommen' : 'Accepted',
-      className: 'status-badge status-badge--success',
-    };
-  }
-  if (status === 'declined') {
-    return {
-      label: locale === 'de' ? 'Abgelehnt' : 'Declined',
-      className: 'status-badge status-badge--danger',
-    };
-  }
-  if (status === 'withdrawn') {
-    return {
-      label: locale === 'de' ? 'Zurückgezogen' : 'Withdrawn',
-      className: 'status-badge status-badge--warning',
-    };
-  }
-  return {
-    label: locale === 'de' ? 'Neu' : 'New',
-    className: 'status-badge status-badge--info',
-  };
-}
-
-function resolveContractStatusBadge(locale: Locale, status: ContractDto['status']) {
-  if (status === 'completed') {
-    return {
-      label: locale === 'de' ? 'Abgeschlossen' : 'Completed',
-      className: 'status-badge status-badge--success',
-    };
-  }
-  if (status === 'confirmed' || status === 'in_progress') {
-    return {
-      label: locale === 'de' ? 'Bestätigt' : 'Confirmed',
-      className: 'status-badge status-badge--success',
-    };
-  }
-  if (status === 'cancelled') {
-    return {
-      label: locale === 'de' ? 'Storniert' : 'Cancelled',
-      className: 'status-badge status-badge--danger',
-    };
-  }
-  return {
-    label: locale === 'de' ? 'Ausstehend' : 'Pending',
-    className: 'status-badge status-badge--warning',
-  };
-}
 
 function WorkspaceRequestOffersSection({
   locale,
@@ -137,20 +49,12 @@ function WorkspaceRequestOffersSection({
   requestId: string;
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 }) {
-  const { data: offers = [], isLoading, isError } = useQuery({
-    queryKey: ['workspace-request-offers', requestId],
-    queryFn: () => withStatusFallback(() => listOffersByRequest(requestId), [] as OfferDto[]),
-    staleTime: 30_000,
-    refetchOnWindowFocus: false,
-  });
+  const { actionableOffers, acceptedOfferId, isError, isLoading } = useWorkspaceRequestOffersData(requestId);
   const {
     acceptRequestOffer,
     declineRequestOffer,
     pendingOfferActionId,
   } = useWorkspaceRequestOfferActions({ locale, requestId });
-
-  const acceptedOfferId = offers.find((offer) => offer.status === 'accepted')?.id ?? null;
-  const actionableOffers = offers.filter((offer) => offer.status !== 'withdrawn');
 
   return (
     <div className="my-request-dialog__section">
@@ -310,12 +214,6 @@ function WorkspaceRequestDecisionSection({
   const [startAt, setStartAt] = React.useState(() => toDateTimeLocalValue());
   const [durationMin, setDurationMin] = React.useState('120');
   const [note, setNote] = React.useState('');
-  const { data: contracts = [] } = useQuery({
-    queryKey: workspaceQK.contractsMyClient(),
-    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), [] as ContractDto[]),
-    staleTime: 30_000,
-    refetchOnWindowFocus: false,
-  });
   const {
     completeRequestContract,
     confirmRequestContract,
@@ -324,18 +222,12 @@ function WorkspaceRequestDecisionSection({
     locale,
     requestId: card.requestId,
   });
-
-  const contract = React.useMemo(
-    () => contracts.find((item) => item.requestId === card.requestId) ?? null,
-    [card.requestId, contracts],
-  );
-  const chatAction = React.useMemo(
-    () => card.status.actions.find((action) => action.kind === 'open_chat' && Boolean(action.chatInput))
-      ?? (card.decision.primaryAction?.kind === 'open_chat' ? card.decision.primaryAction : null),
-    [card.decision.primaryAction, card.status.actions],
-  );
-  const chatInput = chatAction?.chatInput ?? null;
-  const chatLabel = chatAction?.label ?? (locale === 'de' ? 'Chat' : 'Chat');
+  const {
+    chatInput,
+    chatLabel,
+    contract,
+    contractMeta,
+  } = useWorkspaceRequestDecisionData({ card, locale });
 
   React.useEffect(() => {
     if (!contract?.createdAt) return;
@@ -345,14 +237,6 @@ function WorkspaceRequestDecisionSection({
   if (card.decision.actionType === 'review_offers' || card.decision.actionType === 'none') {
     return null;
   }
-
-  const contractPrice = contract?.priceAmount != null
-    ? formatDialogPrice(locale, contract.priceAmount)
-    : null;
-  const contractMeta = [
-    contractPrice,
-    contract?.status ? resolveContractStatusBadge(locale, contract.status).label : null,
-  ].filter(Boolean).join(' · ');
 
   return (
     <div className="my-request-dialog__section my-request-dialog__section--decision">
@@ -430,10 +314,10 @@ function WorkspaceRequestDecisionSection({
                   {chatLabel}
                 </button>
               ) : null}
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={() => {
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => {
                   if (!contract?.id || !startAt) return;
                   void confirmRequestContract({
                     contractId: contract.id,
@@ -472,10 +356,10 @@ function WorkspaceRequestDecisionSection({
                 {chatLabel}
               </button>
             ) : null}
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={() => {
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => {
                 if (!contract?.id) return;
                 void completeRequestContract(contract.id);
               }}
@@ -498,10 +382,6 @@ function WorkspaceRequestDecisionSection({
   );
 }
 
-function cardlessTitle(locale: Locale) {
-  return locale === 'de' ? 'Anfrage' : 'Request';
-}
-
 export function WorkspaceManagedRequestDialog({
   locale,
   card,
@@ -519,12 +399,9 @@ export function WorkspaceManagedRequestDialog({
 }) {
   const t = useT();
   const qc = useQueryClient();
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['request-detail', card.requestId, locale],
-    queryFn: () => fetchWorkspaceManagedRequest(card.requestId, locale),
-    staleTime: 60_000,
-    retry: 0,
-    refetchOnWindowFocus: false,
+  const { data, isLoading, isError } = useWorkspaceManagedRequestData({
+    locale,
+    requestId: card.requestId,
   });
   const request = data?.request ?? null;
   const isOwner = data?.source === 'owner';
@@ -782,24 +659,10 @@ export function WorkspaceManagedOfferSheet({
   onClose: () => void;
 }) {
   const t = useT();
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['request-detail', requestId, locale],
-    queryFn: () => fetchWorkspaceManagedRequest(requestId, locale),
-    staleTime: 60_000,
-    retry: 0,
-    refetchOnWindowFocus: false,
+  const { existingResponse, isError, isLoading, request } = useWorkspaceProviderOfferSheetData({
+    locale,
+    requestId,
   });
-  const request = data?.request ?? null;
-  const { data: myOffers = [] } = useQuery({
-    queryKey: workspaceQK.offersMy(),
-    queryFn: () => withStatusFallback(() => listMyProviderOffers(), [] as OfferDto[]),
-    staleTime: 30_000,
-    refetchOnWindowFocus: false,
-  });
-  const existingResponse = React.useMemo(
-    () => myOffers.find((item) => item.requestId === requestId) ?? null,
-    [myOffers, requestId],
-  );
   const [offerAmount, setOfferAmount] = React.useState('');
   const [offerComment, setOfferComment] = React.useState('');
   const [offerAvailability, setOfferAvailability] = React.useState('');
