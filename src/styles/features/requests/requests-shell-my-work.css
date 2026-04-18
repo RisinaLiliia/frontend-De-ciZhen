@@ -1763,10 +1763,9 @@
     padding: 32px 24px;
   }
 
-  .my-request-chat-dialog__frame {
+  .my-request-chat-dialog__content {
     width: 100%;
-    height: min(78vh, 880px);
-    border: 0;
+    min-height: min(78vh, 880px);
     background: var(--surface);
   }
 
@@ -1796,8 +1795,8 @@
       flex-direction: column;
     }
 
-    .my-request-chat-dialog__frame {
-      height: 72vh;
+    .my-request-chat-dialog__content {
+      min-height: 72vh;
     }
   }
 }

@@ -18,6 +18,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { IconCalendar } from '@/components/ui/icons/icons';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import { providerQK } from '@/features/provider/queries';
+import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
 import { useRequestOwnerEdit } from '@/features/requests/details/useRequestOwnerEdit';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import { isWorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
@@ -1966,10 +1967,9 @@ function WorkspaceChatDialog({
             ×
           </button>
         </div>
-        <iframe
-          src={`/chat?conversation=${encodeURIComponent(conversationId)}`}
-          title={locale === 'de' ? 'Workspace-Chat' : 'Workspace chat'}
-          className="my-request-chat-dialog__frame"
+        <ChatWorkspacePage
+          embeddedConversationId={conversationId}
+          className="my-request-chat-dialog__content"
         />
       </div>
     </div>

@@ -11,9 +11,25 @@
   overflow: hidden;
 }
 
+.shellEmbedded {
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100%;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .sidebarPane,
 .threadPane {
   min-width: 0;
+}
+
+.threadPaneEmbedded {
+  min-height: min(78vh, 880px);
+  background:
+    radial-gradient(circle at top right, color-mix(in oklab, var(--c-primary) 6%, transparent), transparent 42%),
+    linear-gradient(180deg, color-mix(in oklab, var(--c-surface) 96%, var(--c-panel) 4%), color-mix(in oklab, var(--c-panel) 90%, var(--c-surface) 10%));
 }
 
 .sidebarPane {
