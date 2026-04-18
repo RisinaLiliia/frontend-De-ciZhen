@@ -46,6 +46,7 @@ export default function RequestDetailsPage() {
 
   const isAuthed = authStatus === 'authenticated';
   const profileId = authUser?.id ?? authMe?.id ?? null;
+  const currentUserId = authUser?.id ?? authMe?.id ?? null;
   const profileHref = profileId ? `/profile/${encodeURIComponent(profileId)}` : '/profile';
 
   const {
@@ -70,7 +71,7 @@ export default function RequestDetailsPage() {
     qc,
   });
 
-  const isOwner = isAuthed && Boolean(request?.clientId) && request?.clientId === authUser?.id;
+  const isOwner = isAuthed && Boolean(request?.clientId) && request?.clientId === currentUserId;
   const shouldOpenOwnerEdit = searchParams?.get('edit') === '1';
   const isOfferAccepted = existingResponse?.status === 'accepted';
   const showOfferCta = !isOwner;
@@ -86,6 +87,7 @@ export default function RequestDetailsPage() {
     ownerPhotos,
     isSavingOwner,
     isUploadingOwnerPhoto,
+    activeOwnerSubmitIntent,
     ownerPriceTrend,
     setIsOwnerEditMode,
     setOwnerTitle,
@@ -245,6 +247,7 @@ export default function RequestDetailsPage() {
       ownerPhotos={ownerPhotos}
       isSavingOwner={isSavingOwner}
       isUploadingOwnerPhoto={isUploadingOwnerPhoto}
+      activeOwnerSubmitIntent={activeOwnerSubmitIntent}
       ownerPriceTrend={ownerPriceTrend}
       onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
       onOwnerClearText={handleOwnerClearText}

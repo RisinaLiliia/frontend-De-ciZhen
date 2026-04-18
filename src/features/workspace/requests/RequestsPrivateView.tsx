@@ -3,10 +3,11 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
+import { toast } from 'sonner';
 import { RequestCard } from '@/components/requests/RequestCard';
 import { LocationMeta } from '@/components/ui/LocationMeta';
 import { IconCalendar } from '@/components/ui/icons/icons';
+import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
@@ -16,15 +17,28 @@ import type {
   MyRequestsViewCard,
   MyRequestsViewModel,
 } from '@/features/workspace/requests/myRequestsView.model';
+import {
+  WorkspaceChatDialog,
+  WorkspaceManagedOfferSheet,
+  WorkspaceManagedRequestDialog,
+} from '@/features/workspace/requests/WorkspaceRequestOverlays';
+import {
+  type RequestDialogIntent,
+  type WorkspaceRequestOverlayListContext,
+  useWorkspaceRequestOverlayFlow,
+} from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type { ActiveDecisionState, WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
 import {
   buildPrivateRequestCardChrome,
   type PrivateRequestCardAction,
 } from '@/features/workspace/requests/requestsPrivateCard.model';
+import { resolveOwnerMenuActions } from '@/features/workspace/requests/requestOwnerMenu.model';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
 import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
-import { pickRequestImage } from '@/lib/requests/images';
+import {
+  pickRequestImage,
+} from '@/lib/requests/images';
 
 type RequestsPrivateViewProps = {
   locale: Locale;
@@ -71,6 +85,10 @@ function useStateFilterMutation() {
     const query = params.toString();
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }, [pathname, router, searchParams]);
+}
+
+function resolveRequestDialogIntent(action: { key: string }): RequestDialogIntent {
+  return action.key === 'edit-request' ? 'edit' : 'view';
 }
 
 function SummaryCard({
@@ -235,13 +253,25 @@ function RequestActionControl({
 }: {
   action: PrivateRequestCardAction;
   variant: 'primary' | 'secondary';
-  listContext: RequestsPrivateViewProps['listContext'];
+  listContext: WorkspaceRequestOverlayListContext;
 }) {
   const className = [
     variant === 'primary' ? 'btn-ghost is-primary' : 'btn-secondary',
     'my-request-card__action-btn',
     `my-request-card__action-btn--${variant}`,
   ].join(' ');
+
+  if (action.kind === 'link' && action.requestId && listContext.onOpenRequest) {
+    return (
+      <button
+        type="button"
+        className={className}
+        onClick={() => listContext.onOpenRequest?.(action.requestId!, resolveRequestDialogIntent(action))}
+      >
+        {action.label}
+      </button>
+    );
+  }
 
   if (action.kind === 'link' && action.href) {
     return (
@@ -417,29 +447,252 @@ function RequestCardTopSlot({
   locale,
   card,
   steps,
+  ownerRequestActions,
+  onOpenRequest,
 }: {
   chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
   locale: Locale;
   card: WorkspaceMyRequestCardDto;
   steps: WorkspaceMyRequestCardDto['progress']['steps'];
+  ownerRequestActions?: OwnerRequestActions;
+  onOpenRequest?: WorkspaceRequestOverlayListContext['onOpenRequest'];
 }) {
+  const statusClassName = card.status.badgeTone ? `status-badge status-badge--${card.status.badgeTone}` : null;
+
   return (
     <div className="my-request-card__topslot">
+      {(statusClassName || card.role === 'customer') ? (
+        <div className="my-request-card__topbar">
+          <div className="my-request-card__topbar-start">
+            {card.status.badgeLabel && statusClassName ? (
+              <span className={`${statusClassName} my-request-card__status-badge`.trim()}>
+                {card.status.badgeLabel}
+              </span>
+            ) : null}
+          </div>
+          <div className="my-request-card__topbar-end">
+            {card.role === 'customer' ? (
+              <RequestOwnerMenu
+                locale={locale}
+                card={card}
+                ownerRequestActions={ownerRequestActions}
+                onOpenRequest={onOpenRequest}
+              />
+            ) : null}
+          </div>
+        </div>
+      ) : null}
       <div className="my-request-card__header-main">
-        {chrome.priorityLabel ? (
-          <span className={`my-request-card__priority is-${chrome.priorityTone}`.trim()}>
-            {chrome.priorityLabel}
-          </span>
-        ) : null}
         <WorkflowProgress locale={locale} card={card} steps={steps} />
       </div>
       {chrome.contextPills.length > 0 ? (
-        <div className="my-request-card__context">
+        <div className="my-request-card__context my-request-card__context--top">
           {chrome.contextPills.map((item) => (
             <span key={item} className="my-request-card__context-pill">
               {item}
             </span>
           ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function RequestOwnerMenu({
+  locale,
+  card,
+  ownerRequestActions,
+  onOpenRequest,
+}: {
+  locale: Locale;
+  card: WorkspaceMyRequestCardDto;
+  ownerRequestActions?: OwnerRequestActions;
+  onOpenRequest?: WorkspaceRequestOverlayListContext['onOpenRequest'];
+}) {
+  const menuRef = React.useRef<HTMLDivElement | null>(null);
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!menuRef.current) return;
+      if (menuRef.current.contains(event.target as Node)) return;
+      setIsOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setIsOpen(false);
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  const requestHref = card.requestPreview.href || `/requests/${card.requestId}`;
+  const menuActions = React.useMemo(
+    () => resolveOwnerMenuActions({ card, locale }),
+    [card, locale],
+  );
+
+  const closeMenu = React.useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  const handleShare = React.useCallback(async (shareHref?: string | null) => {
+    closeMenu();
+
+    if (typeof window === 'undefined') return;
+
+    const shareUrl = new URL(shareHref || requestHref, window.location.origin).toString();
+
+    try {
+      if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+        await navigator.share({
+          title: card.requestPreview.title,
+          url: shareUrl,
+        });
+      } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success(locale === 'de' ? 'Link kopiert.' : 'Link copied.');
+      } else {
+        window.prompt(locale === 'de' ? 'Link teilen' : 'Share link', shareUrl);
+      }
+    } catch {
+      toast.error(locale === 'de' ? 'Link konnte nicht geteilt werden.' : 'Could not share link.');
+    }
+  }, [card.requestPreview.title, closeMenu, locale, requestHref]);
+
+  const handleDelete = React.useCallback((requestId: string) => {
+    closeMenu();
+
+    if (typeof window !== 'undefined') {
+      const confirmed = window.confirm(
+        locale === 'de'
+          ? 'Diese Anfrage endgültig löschen?'
+          : 'Delete this request permanently?',
+      );
+      if (!confirmed) return;
+    }
+
+    ownerRequestActions?.onDelete?.(requestId);
+  }, [closeMenu, locale, ownerRequestActions]);
+
+  return (
+    <div ref={menuRef} className="my-request-card__owner-menu" data-card-action="true">
+      <MoreDotsLink
+        label={locale === 'de' ? 'Anfrage-Menü öffnen' : 'Open request menu'}
+        className={`my-request-card__owner-menu-trigger ${isOpen ? 'is-open' : ''}`.trim()}
+        onClick={() => setIsOpen((prev) => !prev)}
+      />
+      {isOpen ? (
+        <div className="my-request-card__owner-menu-surface" role="menu">
+          {menuActions.map((action) => {
+            if (action.kind === 'link' && action.href) {
+              if (action.requestId && onOpenRequest) {
+                return (
+                  <button
+                    key={action.key}
+                    type="button"
+                    className="my-request-card__owner-menu-item"
+                    role="menuitem"
+                    onClick={() => {
+                      closeMenu();
+                      onOpenRequest(action.requestId!, resolveRequestDialogIntent(action));
+                    }}
+                  >
+                    {action.label}
+                  </button>
+                );
+              }
+
+              return (
+                <Link
+                  key={action.key}
+                  href={action.href}
+                  prefetch={false}
+                  className="my-request-card__owner-menu-item"
+                  role="menuitem"
+                  onClick={closeMenu}
+                >
+                  {action.label}
+                </Link>
+              );
+            }
+
+            if (action.kind === 'share_request') {
+              return (
+                <button
+                  key={action.key}
+                  type="button"
+                  className="my-request-card__owner-menu-item"
+                  role="menuitem"
+                  onClick={() => void handleShare(action.href)}
+                >
+                  {action.label}
+                </button>
+              );
+            }
+
+            if (action.kind === 'duplicate_request' && action.requestId) {
+              return (
+                <button
+                  key={action.key}
+                  type="button"
+                  className="my-request-card__owner-menu-item"
+                  role="menuitem"
+                  disabled={ownerRequestActions?.pendingDuplicateRequestId === action.requestId}
+                  onClick={() => {
+                    closeMenu();
+                    ownerRequestActions?.onDuplicate?.(action.requestId!);
+                  }}
+                >
+                  {action.label}
+                </button>
+              );
+            }
+
+            if (action.kind === 'archive_request' && action.requestId) {
+              return (
+                <button
+                  key={action.key}
+                  type="button"
+                  className="my-request-card__owner-menu-item"
+                  role="menuitem"
+                  disabled={ownerRequestActions?.pendingArchiveRequestId === action.requestId}
+                  onClick={() => {
+                    closeMenu();
+                    ownerRequestActions?.onArchive?.(action.requestId!);
+                  }}
+                >
+                  {action.label}
+                </button>
+              );
+            }
+
+            if (action.kind === 'delete_request' && action.requestId) {
+              return (
+                <button
+                  key={action.key}
+                  type="button"
+                  className="my-request-card__owner-menu-item is-danger"
+                  role="menuitem"
+                  disabled={ownerRequestActions?.pendingDeleteRequestId === action.requestId}
+                  onClick={() => handleDelete(action.requestId!)}
+                >
+                  {action.label}
+                </button>
+              );
+            }
+
+            return null;
+          })}
         </div>
       ) : null}
     </div>
@@ -459,7 +712,7 @@ function MyRequestCard({
   index: number;
   mode: WorkQueueMode;
   isActive: boolean;
-  listContext: RequestsPrivateViewProps['listContext'];
+  listContext: WorkspaceRequestOverlayListContext;
 }) {
   const preview = card.requestPreview;
   const chrome = React.useMemo(
@@ -511,9 +764,19 @@ function MyRequestCard({
         priceTrendLabel={preview.priceTrendLabel ?? null}
         tags={preview.tags}
         mode="link"
+        onOpen={() => listContext.onOpenRequest?.(card.requestId, 'view')}
         isActive={isActive}
-        topSlot={<RequestCardTopSlot chrome={chrome} locale={locale} card={card} steps={card.progress.steps} />}
-        statusSlot={<WorkspaceRequestStatusSlot card={card} />}
+        topSlot={(
+          <RequestCardTopSlot
+            chrome={chrome}
+            locale={locale}
+            card={card}
+            steps={card.progress.steps}
+            ownerRequestActions={listContext.ownerRequestActions}
+            onOpenRequest={listContext.onOpenRequest}
+          />
+        )}
+        statusSlot={<WorkspaceRequestStatusSlot chrome={chrome} />}
         actionSlot={(chrome.insights.length > 0 || chrome.primaryAction || chrome.secondaryAction) ? (
           <div className="my-request-card__footer-stack">
             <RequestOwnerInsights chrome={chrome} includeSignals={false} />
@@ -528,9 +791,13 @@ function MyRequestCard({
                       listContext={listContext}
                     />
                   ) : (
-                    <Link href={preview.href} prefetch={false} className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary">
+                    <button
+                      type="button"
+                      className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary"
+                      onClick={() => listContext.onOpenRequest?.(card.requestId, 'view')}
+                    >
                       {locale === 'de' ? 'Details öffnen' : 'Open details'}
-                    </Link>
+                    </button>
                   )}
                   {chrome.primaryAction ? (
                     <RequestActionControl
@@ -550,16 +817,16 @@ function MyRequestCard({
 }
 
 function WorkspaceRequestStatusSlot({
-  card,
+  chrome,
 }: {
-  card: MyRequestsViewCard;
+  chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
 }) {
-  const statusClassName = card.status.badgeTone ? `status-badge status-badge--${card.status.badgeTone}` : null;
-
   return (
     <span className="request-card__status-actions my-request-card__status-slot">
-      {card.status.badgeLabel && statusClassName ? (
-        <span className={`${statusClassName} my-request-card__status-badge`.trim()}>{card.status.badgeLabel}</span>
+      {chrome.priorityLabel ? (
+        <span className={`my-request-card__priority is-${chrome.priorityTone}`.trim()}>
+          {chrome.priorityLabel}
+        </span>
       ) : null}
     </span>
   );
@@ -700,6 +967,22 @@ export function RequestsPrivateView({
     return sortCardsForDecisionMode(model.cards, model.response.decisionPanel);
   }, [decisionState.mode, model.cards, model.response.decisionPanel]);
   const cardRefs = React.useRef(new Map<string, HTMLElement>());
+  const {
+    activeChatState,
+    activeOfferRequestId,
+    activeRequestCard,
+    activeRequestState,
+    closeChat,
+    closeOfferSheet,
+    closeRequest,
+    effectiveListContext,
+    openChatConversation,
+    openOfferSheet,
+  } = useWorkspaceRequestOverlayFlow({
+    locale,
+    cards: model.cards,
+    listContext,
+  });
 
   React.useEffect(() => {
     if (decisionState.mode !== 'decision' || !decisionState.activeRequestId) return;
@@ -738,7 +1021,6 @@ export function RequestsPrivateView({
 
       {!isLoading && model.emptyMode === 'empty' ? <EmptyState locale={locale} mode="empty" /> : null}
       {!isLoading && model.emptyMode === 'filtered' ? <EmptyState locale={locale} mode="filtered" /> : null}
-
       {!isLoading && visibleCards.length > 0 ? (
         <>
           {decisionState.mode === 'decision' ? (
@@ -767,7 +1049,7 @@ export function RequestsPrivateView({
                   index={index}
                   mode={decisionState.mode}
                   isActive={decisionState.activeRequestId === card.requestId}
-                  listContext={listContext}
+                  listContext={effectiveListContext}
                 />
               </div>
             ))}
@@ -784,6 +1066,33 @@ export function RequestsPrivateView({
             />
           ) : null}
         </>
+      ) : null}
+      {activeRequestState && activeRequestCard ? (
+        <WorkspaceManagedRequestDialog
+          locale={locale}
+          card={activeRequestCard}
+          initialIntent={activeRequestState.intent}
+          onClose={closeRequest}
+          onOpenOfferSheet={openOfferSheet}
+          onOpenChatConversation={(payload) => {
+            void openChatConversation(payload);
+          }}
+        />
+      ) : null}
+      {activeOfferRequestId ? (
+        <WorkspaceManagedOfferSheet
+          locale={locale}
+          requestId={activeOfferRequestId}
+          onClose={closeOfferSheet}
+        />
+      ) : null}
+      {activeChatState ? (
+        <WorkspaceChatDialog
+          locale={locale}
+          conversationId={activeChatState.conversationId}
+          title={activeChatState.title}
+          onClose={closeChat}
+        />
       ) : null}
       {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && model.response.decisionPanel ? (
         <>

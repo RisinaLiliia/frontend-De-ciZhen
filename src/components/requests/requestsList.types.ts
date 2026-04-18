@@ -7,6 +7,10 @@ import type { OfferDto } from '@/lib/api/dto/offers';
 
 export type OwnerRequestActions = {
   onDelete?: (requestId: string) => void;
+  onArchive?: (requestId: string) => void;
+  onDuplicate?: (requestId: string) => void;
+  pendingArchiveRequestId?: string | null;
+  pendingDuplicateRequestId?: string | null;
   pendingDeleteRequestId?: string | null;
 };
 

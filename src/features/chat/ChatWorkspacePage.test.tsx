@@ -250,6 +250,15 @@ function renderPage() {
   );
 }
 
+function renderEmbeddedPage(conversationId: string) {
+  const queryClient = createQueryClient();
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <ChatWorkspacePage embeddedConversationId={conversationId} />
+    </QueryClientProvider>,
+  );
+}
+
 beforeEach(() => {
   vi.clearAllMocks();
   navigationState.reset();
@@ -371,5 +380,14 @@ describe('ChatWorkspacePage', () => {
     expect(await screen.findByText('Noch keine Unterhaltungen')).not.toBeNull();
     expect(screen.getByText('Sobald Sie mit einem Anbieter oder Kunden schreiben, erscheint die Konversation hier.')).not.toBeNull();
     expect(screen.queryByRole('link', { name: /anfragen/i })).toBeNull();
+  });
+
+  it('renders embedded mode without sidebar routing controls', async () => {
+    renderEmbeddedPage('conv-1');
+
+    expect(await screen.findByText('Robin Service')).not.toBeNull();
+    expect(screen.queryByRole('option', { name: /Robin Service/i })).toBeNull();
+    expect(screen.queryByPlaceholderText('Suche nach Name oder Anfrage')).toBeNull();
+    expect(navigationState.replace).not.toHaveBeenCalled();
   });
 });

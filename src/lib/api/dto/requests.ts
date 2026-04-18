@@ -33,6 +33,12 @@ export type DeleteMyRequestResponseDto = {
   deletedRequestId: string;
 };
 
+export type ArchiveMyRequestResponseDto = {
+  ok: true;
+  archivedRequestId: string;
+  archivedAt: string;
+};
+
 export type RequestResponseDto = {
   id: string;
   serviceKey: string;

@@ -26,10 +26,6 @@ const nextConfig: NextConfig = {
     if (!API_BASE) return [];
     return [
       {
-        source: '/api/:path*',
-        destination: `${API_BASE}/:path*`,
-      },
-      {
         source: '/presence/:path*',
         destination: `${API_BASE}/presence/:path*`,
       },

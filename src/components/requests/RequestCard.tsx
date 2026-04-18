@@ -49,6 +49,7 @@ export type RequestCardProps = {
   hideFooterPrice?: boolean;
   mediaPlacement?: 'shell' | 'body';
   pricePlacement?: 'footer' | 'body';
+  onOpen?: () => void;
 };
 
 export function RequestCard({
@@ -82,6 +83,7 @@ export function RequestCard({
   hideFooterPrice = false,
   mediaPlacement = 'shell',
   pricePlacement = 'footer',
+  onOpen,
 }: RequestCardProps) {
   const router = useRouter();
   const hasImage = Boolean(imageSrc);
@@ -119,15 +121,20 @@ export function RequestCard({
   }, []);
 
   const openCard = React.useCallback(() => {
+    if (onOpen) {
+      onOpen();
+      return;
+    }
     if (!href) return;
     router.push(href);
-  }, [href, router]);
+  }, [href, onOpen, router]);
 
   const prefetchCard = React.useCallback(() => {
+    if (onOpen) return;
     if (!prefetch || !href || prefetchedRef.current) return;
     prefetchedRef.current = true;
     router.prefetch(href);
-  }, [href, prefetch, router]);
+  }, [href, onOpen, prefetch, router]);
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {

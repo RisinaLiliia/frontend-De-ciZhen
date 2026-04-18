@@ -864,6 +864,8 @@ export const I18N_KEYS = {
     requestDeleteConfirmCta: 'client.requestDeleteConfirmCta',
     requestUpdated: 'client.requestUpdated',
     requestDeleted: 'client.requestDeleted',
+    requestArchived: 'client.requestArchived',
+    requestDuplicated: 'client.requestDuplicated',
     requestTitleMinError: 'client.requestTitleMinError',
     requestPriceInvalidError: 'client.requestPriceInvalidError',
     profileUnsavedChangesConfirm: 'client.profileUnsavedChangesConfirm',

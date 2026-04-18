@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import { deleteOffer } from '@/lib/api/offers';
-import { deleteMyRequest } from '@/lib/api/requests';
+import { archiveMyRequest, deleteMyRequest, duplicateMyRequest } from '@/lib/api/requests';
 import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -38,7 +38,17 @@ type Args = {
 
 export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args) {
   const [pendingOfferRequestId, setPendingOfferRequestId] = React.useState<string | null>(null);
+  const [pendingArchiveRequestId, setPendingArchiveRequestId] = React.useState<string | null>(null);
+  const [pendingDuplicateRequestId, setPendingDuplicateRequestId] = React.useState<string | null>(null);
   const [pendingDeleteRequestId, setPendingDeleteRequestId] = React.useState<string | null>(null);
+
+  const invalidateWorkspaceRequests = React.useCallback(async () => {
+    await Promise.all([
+      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
+      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
+      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
+    ]);
+  }, [qc]);
 
   const onOpenOfferSheet = React.useCallback(
     (requestId: string) => {
@@ -109,6 +119,50 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
     [qc, router, t],
   );
 
+  const onArchiveMyRequest = React.useCallback(
+    async (requestId: string) => {
+      if (pendingArchiveRequestId === requestId) return;
+      setPendingArchiveRequestId(requestId);
+      try {
+        await archiveMyRequest(requestId);
+        toast.success(t(I18N_KEYS.client.requestArchived));
+        await invalidateWorkspaceRequests();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+      } finally {
+        setPendingArchiveRequestId(null);
+      }
+    },
+    [invalidateWorkspaceRequests, pendingArchiveRequestId, t],
+  );
+
+  const onArchiveMyRequestVoid = React.useCallback((requestId: string) => {
+    void onArchiveMyRequest(requestId);
+  }, [onArchiveMyRequest]);
+
+  const onDuplicateMyRequest = React.useCallback(
+    async (requestId: string) => {
+      if (pendingDuplicateRequestId === requestId) return;
+      setPendingDuplicateRequestId(requestId);
+      try {
+        await duplicateMyRequest(requestId);
+        toast.success(t(I18N_KEYS.client.requestDuplicated));
+        await invalidateWorkspaceRequests();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+      } finally {
+        setPendingDuplicateRequestId(null);
+      }
+    },
+    [invalidateWorkspaceRequests, pendingDuplicateRequestId, t],
+  );
+
+  const onDuplicateMyRequestVoid = React.useCallback((requestId: string) => {
+    void onDuplicateMyRequest(requestId);
+  }, [onDuplicateMyRequest]);
+
   const onDeleteMyRequest = React.useCallback(
     async (requestId: string) => {
       if (pendingDeleteRequestId === requestId) return;
@@ -116,7 +170,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
       try {
         await deleteMyRequest(requestId);
         toast.success(t(I18N_KEYS.client.requestDeleted));
-        await qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() });
+        await invalidateWorkspaceRequests();
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
         toast.error(message);
@@ -124,7 +178,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         setPendingDeleteRequestId(null);
       }
     },
-    [pendingDeleteRequestId, qc, t],
+    [invalidateWorkspaceRequests, pendingDeleteRequestId, t],
   );
 
   const onDeleteMyRequestVoid = React.useCallback((requestId: string) => {
@@ -134,10 +188,21 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
   const ownerRequestActions = React.useMemo(
     () =>
       buildWorkspaceOwnerRequestActions({
+        pendingArchiveRequestId,
+        pendingDuplicateRequestId,
         onDelete: onDeleteMyRequestVoid,
+        onArchive: onArchiveMyRequestVoid,
+        onDuplicate: onDuplicateMyRequestVoid,
         pendingDeleteRequestId,
       }),
-    [onDeleteMyRequestVoid, pendingDeleteRequestId],
+    [
+      onArchiveMyRequestVoid,
+      onDeleteMyRequestVoid,
+      onDuplicateMyRequestVoid,
+      pendingArchiveRequestId,
+      pendingDeleteRequestId,
+      pendingDuplicateRequestId,
+    ],
   );
 
   return React.useMemo(

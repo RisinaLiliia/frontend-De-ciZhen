@@ -834,6 +834,8 @@ export const en: DeDictionary = {
     requestDeleteConfirmCta: 'Delete',
     requestUpdated: 'Request updated',
     requestDeleted: 'Request deleted',
+    requestArchived: 'Request archived',
+    requestDuplicated: 'Request duplicated',
     requestTitleMinError: 'Title must be at least 3 characters',
     requestPriceInvalidError: 'Price must be a positive number',
     profileUnsavedChangesConfirm: 'You have unsaved changes. Leave this page?',

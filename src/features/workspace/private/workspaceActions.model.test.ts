@@ -54,6 +54,8 @@ describe('workspaceActions.model', () => {
   });
 
   it('builds owner actions and final workspace actions result', () => {
+    const onArchive = vi.fn();
+    const onDuplicate = vi.fn();
     const onDelete = vi.fn();
     const onOpenOfferSheet = vi.fn();
     const onWithdrawOffer = vi.fn();
@@ -61,7 +63,11 @@ describe('workspaceActions.model', () => {
     const onOpenChatConversation = vi.fn();
 
     const ownerRequestActions = buildWorkspaceOwnerRequestActions({
+      pendingArchiveRequestId: 'req-2',
+      pendingDuplicateRequestId: 'req-3',
       pendingDeleteRequestId: 'req-1',
+      onArchive,
+      onDuplicate,
       onDelete,
     });
     const result = buildWorkspaceActionsResult({
@@ -73,7 +79,11 @@ describe('workspaceActions.model', () => {
       onOpenChatConversation,
     });
 
+    expect(ownerRequestActions.pendingArchiveRequestId).toBe('req-2');
+    expect(ownerRequestActions.pendingDuplicateRequestId).toBe('req-3');
     expect(ownerRequestActions.pendingDeleteRequestId).toBe('req-1');
+    expect(ownerRequestActions.onArchive).toBe(onArchive);
+    expect(ownerRequestActions.onDuplicate).toBe(onDuplicate);
     expect(result.pendingOfferRequestId).toBe('req-2');
     expect(result.ownerRequestActions.onDelete).toBe(onDelete);
     expect(result.onWithdrawOffer).toBe(onWithdrawOffer);

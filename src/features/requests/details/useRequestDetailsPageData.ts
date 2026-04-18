@@ -2,11 +2,12 @@ import * as React from 'react';
 import type { QueryClient } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 
-import { getPublicRequestById } from '@/lib/api/requests';
+import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
 import { listMyProviderOffers } from '@/lib/api/offers';
 import { listFavorites } from '@/lib/api/favorites';
 import { getMyProviderProfile } from '@/lib/api/providers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import { ApiError } from '@/lib/api/http-error';
 import { useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -54,7 +55,19 @@ export function useRequestDetailsPageData({
   } = useQuery({
     queryKey: ['request-detail', requestId, locale],
     enabled: isHydrated && Boolean(requestId),
-    queryFn: () => getPublicRequestById(String(requestId), { locale }),
+    queryFn: async () => {
+      const id = String(requestId);
+      if (authStatus === 'authenticated') {
+        try {
+          return await getMyRequestById(id);
+        } catch (error) {
+          if (!(error instanceof ApiError) || (error.status !== 403 && error.status !== 404)) {
+            throw error;
+          }
+        }
+      }
+      return getPublicRequestById(id, { locale });
+    },
     staleTime: 60_000,
     retry: 0,
     refetchOnWindowFocus: false,

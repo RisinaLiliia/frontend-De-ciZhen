@@ -834,6 +834,8 @@ export const de = {
     requestDeleteConfirmCta: 'Löschen',
     requestUpdated: 'Anfrage aktualisiert',
     requestDeleted: 'Anfrage gelöscht',
+    requestArchived: 'Anfrage archiviert',
+    requestDuplicated: 'Anfrage dupliziert',
     requestTitleMinError: 'Der Titel muss mindestens 3 Zeichen haben',
     requestPriceInvalidError: 'Der Preis muss eine positive Zahl sein',
     profileUnsavedChangesConfirm: 'Du hast ungespeicherte Änderungen. Seite wirklich verlassen?',

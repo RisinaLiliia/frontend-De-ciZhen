@@ -72,7 +72,7 @@ describe('requestsPrivateCard.model', () => {
               tone: 'secondary',
               icon: 'edit',
               label: 'Bearbeiten',
-              href: '/requests/req-1?edit=1',
+              href: '/requests/req-1/edit',
               requestId: 'req-1',
             },
           ],
@@ -212,5 +212,75 @@ describe('requestsPrivateCard.model', () => {
     expect(chrome.signalPills.map((item) => item.label)).toEqual(['Angenommen']);
     expect(chrome.insights).toEqual([]);
     expect(chrome.contextPills).toEqual([]);
+  });
+
+  it('routes card edit-request actions to request details instead of edit form', () => {
+    const chrome = buildPrivateRequestCardChrome({
+      locale: 'de',
+      card: {
+        id: 'customer:req-3',
+        requestId: 'req-3',
+        role: 'customer',
+        title: 'Heizung prüfen',
+        category: 'Heizung',
+        subcategory: null,
+        city: 'Karlsruhe',
+        state: 'open',
+        stateLabel: 'Offen',
+        activity: null,
+        progress: {
+          currentStep: 'request',
+          steps: [],
+        },
+        quickActions: [],
+        requestPreview: {
+          href: '/requests/req-3',
+          imageUrl: null,
+          imageCategoryKey: 'heating',
+          badgeLabel: null,
+          categoryLabel: 'Heizung',
+          title: 'Heizung prüfen',
+          excerpt: null,
+          cityLabel: 'Karlsruhe',
+          dateLabel: '20.04.2026',
+          priceLabel: '120 €',
+          priceTrend: null,
+          priceTrendLabel: null,
+          tags: [],
+        },
+        status: {
+          badgeLabel: 'Entwurf',
+          badgeTone: 'info',
+          actions: [
+            {
+              key: 'edit-request',
+              kind: 'link',
+              tone: 'primary',
+              icon: 'edit',
+              label: 'Bearbeiten',
+              href: '/requests/req-3/edit',
+              requestId: 'req-3',
+            },
+          ],
+        },
+        decision: {
+          needsAction: false,
+          actionType: 'none',
+          actionPriority: 0,
+          actionPriorityLevel: 'none',
+          actionLabel: null,
+          actionReason: null,
+          lastRelevantActivityAt: null,
+          primaryAction: null,
+        },
+      },
+    });
+
+    expect(chrome.primaryAction).toEqual(
+      expect.objectContaining({
+        key: 'edit-request',
+        href: '/requests/req-3',
+      }),
+    );
   });
 });

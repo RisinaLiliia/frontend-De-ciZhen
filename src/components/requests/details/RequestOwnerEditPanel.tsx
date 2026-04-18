@@ -8,8 +8,10 @@ import { normalizeAppImageSrc, shouldBypassNextImageOptimization } from '@/lib/r
 
 type RequestOwnerEditPanelProps = {
   isEditMode: boolean;
+  showPublishAction: boolean;
   isSaving: boolean;
   isUploadingPhoto: boolean;
+  activeSubmitIntent: 'draft' | 'publish' | null;
   titleValue: string;
   descriptionValue: string;
   priceValue: string;
@@ -28,6 +30,7 @@ type RequestOwnerEditPanelProps = {
   photosHintLabel: string;
   cancelLabel: string;
   saveLabel: string;
+  publishLabel: string;
   priceTrendDownLabel: string;
   priceTrendUpLabel: string;
   onToggleEdit: () => void;
@@ -38,13 +41,15 @@ type RequestOwnerEditPanelProps = {
   onPhotoPick: (files: FileList | null) => void;
   onRemovePhoto: (index: number) => void;
   onCancelEdit: () => void;
-  onSave: () => void;
+  onSave: (intent?: 'draft' | 'publish') => void;
 };
 
 export function RequestOwnerEditPanel({
   isEditMode,
+  showPublishAction,
   isSaving,
   isUploadingPhoto,
+  activeSubmitIntent,
   titleValue,
   descriptionValue,
   priceValue,
@@ -63,6 +68,7 @@ export function RequestOwnerEditPanel({
   photosHintLabel,
   cancelLabel,
   saveLabel,
+  publishLabel,
   priceTrendDownLabel,
   priceTrendUpLabel,
   onToggleEdit,
@@ -217,12 +223,23 @@ export function RequestOwnerEditPanel({
           </Button>
           <Button
             type="button"
-            onClick={onSave}
-            loading={isSaving}
+            variant="ghost"
+            onClick={() => onSave('draft')}
+            loading={isSaving && activeSubmitIntent === 'draft'}
             disabled={!titleValue.trim()}
           >
             {saveLabel}
           </Button>
+          {showPublishAction ? (
+            <Button
+              type="button"
+              onClick={() => onSave('publish')}
+              loading={isSaving && activeSubmitIntent === 'publish'}
+              disabled={!titleValue.trim()}
+            >
+              {publishLabel}
+            </Button>
+          ) : null}
         </div>
       ) : null}
     </section>

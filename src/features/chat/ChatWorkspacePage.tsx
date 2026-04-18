@@ -186,7 +186,15 @@ function ConversationAvatar({
   );
 }
 
-export function ChatWorkspacePage() {
+type ChatWorkspacePageProps = {
+  embeddedConversationId?: string | null;
+  className?: string;
+};
+
+export function ChatWorkspacePage({
+  embeddedConversationId = null,
+  className,
+}: ChatWorkspacePageProps = {}) {
   const user = useAuthUser();
   const { locale } = useI18n();
   const copy = React.useMemo(() => getChatPageCopy(locale), [locale]);
@@ -194,14 +202,17 @@ export function ChatWorkspacePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const isEmbedded = Boolean(embeddedConversationId);
   const currentUserId = user?.id ?? null;
-  const conversationParam = searchParams.get('conversation');
-  const filter = resolveChatListFilter(
-    searchParams.get('filter'),
-    searchParams.get('role'),
-    searchParams.get('state'),
-  );
-  const [searchInput, setSearchInput] = React.useState(searchParams.get('search') ?? '');
+  const conversationParam = isEmbedded ? embeddedConversationId : searchParams.get('conversation');
+  const filter = isEmbedded
+    ? 'all'
+    : resolveChatListFilter(
+      searchParams.get('filter'),
+      searchParams.get('role'),
+      searchParams.get('state'),
+    );
+  const [searchInput, setSearchInput] = React.useState(isEmbedded ? '' : (searchParams.get('search') ?? ''));
   const deferredSearch = React.useDeferredValue(searchInput.trim());
   const [isInfoOpen, setInfoOpen] = React.useState(false);
   const [composerValue, setComposerValue] = React.useState('');
@@ -211,27 +222,31 @@ export function ChatWorkspacePage() {
 
   const updateRoute = React.useCallback(
     (updates: Record<string, string | null | undefined>) => {
+      if (isEmbedded) return;
       const next = patchChatSearchParams(new URLSearchParams(searchParams.toString()), updates);
       const query = next.toString();
       router.replace(query ? `/chat?${query}` : '/chat', { scroll: false });
     },
-    [router, searchParams],
+    [isEmbedded, router, searchParams],
   );
 
   React.useEffect(() => {
+    if (isEmbedded) return;
     const nextSearch = searchParams.get('search') ?? '';
     if (nextSearch !== searchInput) {
       setSearchInput(nextSearch);
     }
-  }, [searchInput, searchParams]);
+  }, [isEmbedded, searchInput, searchParams]);
 
   React.useEffect(() => {
+    if (isEmbedded) return;
     const currentSearch = searchParams.get('search') ?? '';
     if (deferredSearch === currentSearch) return;
     updateRoute({ search: deferredSearch, conversation: conversationParam, filter });
-  }, [conversationParam, deferredSearch, filter, searchParams, updateRoute]);
+  }, [conversationParam, deferredSearch, filter, isEmbedded, searchParams, updateRoute]);
 
   const conversationsQuery = useQuery({
+    enabled: !isEmbedded,
     queryKey: [...CONVERSATIONS_QUERY_KEY, filter, deferredSearch],
     queryFn: () =>
       listConversations({
@@ -242,20 +257,24 @@ export function ChatWorkspacePage() {
   });
 
   const allConversations = React.useMemo(
-    () => conversationsQuery.data?.items ?? [],
-    [conversationsQuery.data?.items],
+    () => (isEmbedded ? [] : (conversationsQuery.data?.items ?? [])),
+    [conversationsQuery.data?.items, isEmbedded],
   );
   const selectedConversationFromList = React.useMemo(
     () => (
+      isEmbedded
+        ? null
+        : (
       conversationParam
         ? allConversations.find((item) => item.id === conversationParam) ?? null
         : allConversations[0] ?? null
+        )
     ),
-    [allConversations, conversationParam],
+    [allConversations, conversationParam, isEmbedded],
   );
   const selectedConversationQuery = useQuery({
     queryKey: ['chat', 'conversation', conversationParam],
-    enabled: Boolean(conversationParam && !selectedConversationFromList),
+    enabled: Boolean(conversationParam && (isEmbedded || !selectedConversationFromList)),
     queryFn: () => withStatusFallback(() => getConversation(String(conversationParam)), null),
   });
   const allConversationsWithSelected = React.useMemo(() => {
@@ -292,6 +311,7 @@ export function ChatWorkspacePage() {
       : null);
 
   React.useEffect(() => {
+    if (isEmbedded) return;
     if (conversationsQuery.isLoading || selectedConversationQuery.isLoading) return;
     if (!conversationParam) {
       if (!firstVisibleConversationId) return;
@@ -312,6 +332,7 @@ export function ChatWorkspacePage() {
     selectedConversation,
     selectedConversationQuery.isLoading,
     updateRoute,
+    isEmbedded,
   ]);
 
   React.useEffect(() => {
@@ -753,7 +774,9 @@ export function ChatWorkspacePage() {
     { key: 'provider', label: copy.filterProvider },
     { key: 'archived', label: copy.filterArchived },
   ] as const;
-  const hasConversations = allConversationsWithSelected.length > 0;
+  const hasConversations = isEmbedded
+    ? Boolean(selectedConversation)
+    : allConversationsWithSelected.length > 0;
   const showSearchEmpty =
     conversations.length === 0 && (Boolean(deferredSearch) || filter !== 'all');
   const composerDisabled = !selectedConversation || selectedConversation.state === 'closed';
@@ -761,8 +784,14 @@ export function ChatWorkspacePage() {
   return (
     <RequireAuth>
       <section
-        className={`${styles.shell} ${selectedConversation ? styles.shellThreadSelected : ''}`.trim()}
+        className={[
+          styles.shell,
+          selectedConversation ? styles.shellThreadSelected : '',
+          isEmbedded ? styles.shellEmbedded : '',
+          className ?? '',
+        ].filter(Boolean).join(' ')}
       >
+        {!isEmbedded ? (
         <aside className={styles.sidebarPane}>
           <div className={styles.sidebarHeader}>
             <div className={styles.sidebarTitleRow}>
@@ -877,8 +906,9 @@ export function ChatWorkspacePage() {
             )}
           </div>
         </aside>
+        ) : null}
 
-        <section className={styles.threadPane}>
+        <section className={`${styles.threadPane} ${isEmbedded ? styles.threadPaneEmbedded : ''}`.trim()}>
           {!selectedConversation ? (
             <div className={`${styles.threadEmptyState} ${styles.threadEmptyStateCentered}`.trim()}>
               <h2 className={styles.emptyTitle}>
@@ -897,6 +927,7 @@ export function ChatWorkspacePage() {
                     className={styles.mobileBackButton}
                     onClick={() => updateRoute({ conversation: null, filter })}
                     aria-label={copy.backToChats}
+                    hidden={isEmbedded}
                   >
                     <IconChevronLeft />
                   </button>
@@ -1151,23 +1182,25 @@ export function ChatWorkspacePage() {
                   </div>
                 </section>
 
-                <div className={styles.infoActions}>
-                  {requestHref ? (
-                    <Link href={requestHref} prefetch={false} className="btn-secondary">
-                      {copy.openRequest}
-                    </Link>
-                  ) : null}
-                  {profileHref ? (
-                    <Link href={profileHref} prefetch={false} className="btn-ghost">
-                      {copy.openProfile}
-                    </Link>
-                  ) : null}
-                  {secondaryHref && secondaryLabel ? (
-                    <Link href={secondaryHref} prefetch={false} className="btn-ghost">
-                      {secondaryLabel}
-                    </Link>
-                  ) : null}
-                </div>
+                {!isEmbedded ? (
+                  <div className={styles.infoActions}>
+                    {requestHref ? (
+                      <Link href={requestHref} prefetch={false} className="btn-secondary">
+                        {copy.openRequest}
+                      </Link>
+                    ) : null}
+                    {profileHref ? (
+                      <Link href={profileHref} prefetch={false} className="btn-ghost">
+                        {copy.openProfile}
+                      </Link>
+                    ) : null}
+                    {secondaryHref && secondaryLabel ? (
+                      <Link href={secondaryHref} prefetch={false} className="btn-ghost">
+                        {secondaryLabel}
+                      </Link>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
             </aside>
           </>
