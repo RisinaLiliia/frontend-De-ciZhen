@@ -1614,10 +1614,105 @@
     font-size: 15px;
   }
 
+  .my-request-dialog__section-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .my-request-dialog__section-subtitle {
+    margin: 0;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+
+  .my-request-dialog__section-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+    font-weight: 700;
+  }
+
   .my-request-dialog__section p {
     margin: 0;
     color: var(--muted-foreground);
     line-height: 1.6;
+  }
+
+  .my-request-dialog__offer-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .my-request-offer-card {
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 20px;
+    border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    background: color-mix(in srgb, var(--surface-2) 72%, transparent);
+  }
+
+  .my-request-offer-card.is-accepted {
+    border-color: color-mix(in srgb, var(--success) 45%, var(--border));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--success) 18%, transparent);
+  }
+
+  .my-request-offer-card__head,
+  .my-request-offer-card__status,
+  .my-request-offer-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .my-request-offer-card__identity {
+    display: grid;
+    gap: 4px;
+  }
+
+  .my-request-offer-card__identity span,
+  .my-request-offer-card__meta {
+    color: var(--muted-foreground);
+    font-size: 13px;
+  }
+
+  .my-request-offer-card__status {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .my-request-offer-card__price {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .my-request-offer-card__body {
+    display: grid;
+    gap: 10px;
+  }
+
+  .my-request-offer-card__message {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .my-request-offer-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+
+  .my-request-offer-card__actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .my-request-dialog__photos {
@@ -1665,8 +1760,16 @@
 
     .my-request-dialog__toolbar .btn-secondary,
     .my-request-dialog__actions .btn-primary,
-    .my-request-dialog__actions .btn-secondary {
+    .my-request-dialog__actions .btn-secondary,
+    .my-request-offer-card__actions .btn-ghost,
+    .my-request-offer-card__actions .btn-secondary {
       width: 100%;
+    }
+
+    .my-request-offer-card__head,
+    .my-request-offer-card__status {
+      align-items: flex-start;
+      flex-direction: column;
     }
 
     .my-request-chat-dialog__frame {

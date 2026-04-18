@@ -38,7 +38,15 @@ import { sortCardsForDecisionMode } from '@/features/workspace/requests/requests
 import { createConversation } from '@/lib/api/chat';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
-import { deleteOffer, listMyProviderOffers, updateOffer, createOffer } from '@/lib/api/offers';
+import {
+  acceptOffer,
+  createOffer,
+  declineOffer,
+  deleteOffer,
+  listMyProviderOffers,
+  listOffersByRequest,
+  updateOffer,
+} from '@/lib/api/offers';
 import { ApiError } from '@/lib/api/http-error';
 import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
@@ -893,6 +901,43 @@ function formatDialogPrice(locale: Locale, value?: number | null) {
   }).format(value);
 }
 
+function formatOfferTimestamp(locale: Locale, value?: string | null) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return null;
+  return new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+}
+
+function resolveOfferStatusBadge(locale: Locale, status: OfferDto['status']) {
+  if (status === 'accepted') {
+    return {
+      label: locale === 'de' ? 'Angenommen' : 'Accepted',
+      className: 'status-badge status-badge--success',
+    };
+  }
+  if (status === 'declined') {
+    return {
+      label: locale === 'de' ? 'Abgelehnt' : 'Declined',
+      className: 'status-badge status-badge--danger',
+    };
+  }
+  if (status === 'withdrawn') {
+    return {
+      label: locale === 'de' ? 'Zurückgezogen' : 'Withdrawn',
+      className: 'status-badge status-badge--warning',
+    };
+  }
+  return {
+    label: locale === 'de' ? 'Neu' : 'New',
+    className: 'status-badge status-badge--info',
+  };
+}
+
 function WorkspaceManagedRequestDialog({
   locale,
   card,
@@ -1059,6 +1104,13 @@ function WorkspaceManagedRequestDialog({
                     void ownerEdit.handleOwnerSave(intent);
                   }}
                 />
+                {!ownerEdit.isOwnerEditMode ? (
+                  <WorkspaceRequestOffersSection
+                    locale={locale}
+                    requestId={card.requestId}
+                    onOpenChatConversation={onOpenChatConversation}
+                  />
+                ) : null}
               </>
             ) : null}
 
@@ -1143,6 +1195,215 @@ function WorkspaceManagedRequestDialog({
           </div>
         ) : null}
       </div>
+    </div>
+  );
+}
+
+function WorkspaceRequestOffersSection({
+  locale,
+  requestId,
+  onOpenChatConversation,
+}: {
+  locale: Locale;
+  requestId: string;
+  onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
+}) {
+  const t = useT();
+  const qc = useQueryClient();
+  const { data: offers = [], isLoading, isError } = useQuery({
+    queryKey: ['workspace-request-offers', requestId],
+    queryFn: () => withStatusFallback(() => listOffersByRequest(requestId), [] as OfferDto[]),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
+  });
+  const [pendingOfferActionId, setPendingOfferActionId] = React.useState<string | null>(null);
+
+  const invalidateOfferState = React.useCallback(async () => {
+    await Promise.all([
+      qc.invalidateQueries({ queryKey: ['workspace-request-offers', requestId] }),
+      qc.invalidateQueries({ queryKey: workspaceQK.offersMyClient() }),
+      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
+      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
+      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
+      qc.invalidateQueries({ queryKey: ['request-detail', requestId] }),
+    ]);
+  }, [qc, requestId]);
+
+  const handleAccept = React.useCallback(async (offerId: string) => {
+    if (pendingOfferActionId === offerId) return;
+    setPendingOfferActionId(offerId);
+    try {
+      await acceptOffer(offerId);
+      toast.success(locale === 'de' ? 'Angebot angenommen.' : 'Offer accepted.');
+      await invalidateOfferState();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+      toast.error(message);
+    } finally {
+      setPendingOfferActionId(null);
+    }
+  }, [invalidateOfferState, locale, pendingOfferActionId, t]);
+
+  const handleDecline = React.useCallback(async (offerId: string) => {
+    if (pendingOfferActionId === offerId) return;
+    setPendingOfferActionId(offerId);
+    try {
+      await declineOffer(offerId);
+      toast.success(locale === 'de' ? 'Angebot abgelehnt.' : 'Offer declined.');
+      await invalidateOfferState();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+      toast.error(message);
+    } finally {
+      setPendingOfferActionId(null);
+    }
+  }, [invalidateOfferState, locale, pendingOfferActionId, t]);
+
+  const acceptedOfferId = offers.find((offer) => offer.status === 'accepted')?.id ?? null;
+  const actionableOffers = offers.filter((offer) => offer.status !== 'withdrawn');
+
+  return (
+    <div className="my-request-dialog__section">
+      <div className="my-request-dialog__section-head">
+        <div>
+          <h3>{locale === 'de' ? 'Angebote' : 'Offers'}</h3>
+          <p className="my-request-dialog__section-subtitle">
+            {locale === 'de'
+              ? 'Treffe die Entscheidung direkt in diesem Workspace.'
+              : 'Make the decision directly in this workspace.'}
+          </p>
+        </div>
+        <span className="my-request-dialog__section-count">
+          {actionableOffers.length}
+        </span>
+      </div>
+
+      {isLoading ? (
+        <div className="my-request-dialog__offer-list">
+          {Array.from({ length: 2 }).map((_, index) => (
+            <article key={`offer-skeleton-${index}`} className="my-request-offer-card">
+              <div className="skeleton h-6 w-32" />
+              <div className="skeleton h-4 w-24" />
+              <div className="skeleton h-16 w-full" />
+            </article>
+          ))}
+        </div>
+      ) : null}
+
+      {!isLoading && isError ? (
+        <p className="my-request-dialog__section-subtitle">
+          {locale === 'de' ? 'Angebote konnten nicht geladen werden.' : 'Offers could not be loaded.'}
+        </p>
+      ) : null}
+
+      {!isLoading && !isError && actionableOffers.length === 0 ? (
+        <p className="my-request-dialog__section-subtitle">
+          {locale === 'de'
+            ? 'Noch keine aktiven Angebote für diese Anfrage.'
+            : 'No active offers for this request yet.'}
+        </p>
+      ) : null}
+
+      {!isLoading && !isError && actionableOffers.length > 0 ? (
+        <div className="my-request-dialog__offer-list">
+          {actionableOffers.map((offer) => {
+            const statusBadge = resolveOfferStatusBadge(locale, offer.status);
+            const isAccepted = offer.status === 'accepted';
+            const isDeclined = offer.status === 'declined';
+            const isBusy = pendingOfferActionId === offer.id;
+            const isDecisionLocked = Boolean(acceptedOfferId && acceptedOfferId !== offer.id);
+            const canAccept = !isAccepted && !isDeclined && !isDecisionLocked;
+            const canDecline = !isAccepted && !isDeclined;
+            const offerAmount = formatDialogPrice(locale, offer.amount);
+            const sentAt = formatOfferTimestamp(locale, offer.createdAt);
+            const availability = offer.availabilityNote?.trim() || formatOfferTimestamp(locale, offer.availableAt);
+
+            return (
+              <article key={offer.id} className={`my-request-offer-card ${isAccepted ? 'is-accepted' : ''}`.trim()}>
+                <div className="my-request-offer-card__head">
+                  <div className="my-request-offer-card__identity">
+                    <strong>{offer.providerDisplayName?.trim() || (locale === 'de' ? 'Dienstleister' : 'Provider')}</strong>
+                    <span>{sentAt || '—'}</span>
+                  </div>
+                  <div className="my-request-offer-card__status">
+                    {offerAmount ? (
+                      <strong className="my-request-offer-card__price">{offerAmount}</strong>
+                    ) : null}
+                    <span className={statusBadge.className}>{statusBadge.label}</span>
+                  </div>
+                </div>
+
+                {(offer.message?.trim() || availability || offer.providerCompletedJobs || offer.providerRatingAvg) ? (
+                  <div className="my-request-offer-card__body">
+                    {offer.message?.trim() ? (
+                      <p className="my-request-offer-card__message">{offer.message.trim()}</p>
+                    ) : null}
+                    <div className="my-request-offer-card__meta">
+                      {availability ? (
+                        <span>{locale === 'de' ? `Verfügbarkeit: ${availability}` : `Availability: ${availability}`}</span>
+                      ) : null}
+                      {typeof offer.providerCompletedJobs === 'number' ? (
+                        <span>
+                          {locale === 'de'
+                            ? `${offer.providerCompletedJobs} Aufträge abgeschlossen`
+                            : `${offer.providerCompletedJobs} jobs completed`}
+                        </span>
+                      ) : null}
+                      {typeof offer.providerRatingAvg === 'number' ? (
+                        <span>
+                          {locale === 'de'
+                            ? `Bewertung ${offer.providerRatingAvg.toFixed(1)}`
+                            : `Rating ${offer.providerRatingAvg.toFixed(1)}`}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className="my-request-offer-card__actions">
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    disabled={!offer.providerUserId || isBusy}
+                    onClick={() => onOpenChatConversation({
+                      relatedEntity: { type: 'offer', id: offer.id },
+                      participantUserId: offer.providerUserId,
+                      participantRole: 'provider',
+                      requestId: offer.requestId,
+                      providerUserId: offer.providerUserId,
+                      offerId: offer.id,
+                    })}
+                  >
+                    {locale === 'de' ? 'Chat' : 'Chat'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-ghost is-primary"
+                    disabled={!canAccept || isBusy}
+                    onClick={() => {
+                      void handleAccept(offer.id);
+                    }}
+                  >
+                    {isBusy && pendingOfferActionId === offer.id
+                      ? (locale === 'de' ? 'Speichern…' : 'Saving…')
+                      : (locale === 'de' ? 'Annehmen' : 'Accept')}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    disabled={!canDecline || isBusy}
+                    onClick={() => {
+                      void handleDecline(offer.id);
+                    }}
+                  >
+                    {locale === 'de' ? 'Ablehnen' : 'Decline'}
+                  </button>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 }
