@@ -21,7 +21,6 @@ import { providerQK } from '@/features/provider/queries';
 import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
 import { useRequestOwnerEdit } from '@/features/requests/details/useRequestOwnerEdit';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
-import { isWorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
 import { DecisionPanel } from '@/features/workspace/requests/components/DecisionPanel';
@@ -30,6 +29,11 @@ import type {
   MyRequestsViewCard,
   MyRequestsViewModel,
 } from '@/features/workspace/requests/myRequestsView.model';
+import {
+  type RequestDialogIntent,
+  type WorkspaceRequestOverlayListContext,
+  useWorkspaceRequestOverlayFlow,
+} from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type { ActiveDecisionState, WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
 import {
   buildPrivateRequestCardChrome,
@@ -38,7 +42,6 @@ import {
 import { resolveOwnerMenuActions } from '@/features/workspace/requests/requestOwnerMenu.model';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
-import { createConversation } from '@/lib/api/chat';
 import { completeContract, confirmContract, listMyContracts } from '@/lib/api/contracts';
 import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
@@ -94,17 +97,6 @@ type RailProps = {
   onStartDecisionMode: () => void;
   onOpenQueueItem: (requestId: string) => void;
   className?: string;
-};
-
-type RequestDialogIntent = 'view' | 'edit';
-
-type RequestsPrivateListContext = RequestsPrivateViewProps['listContext'] & {
-  onOpenRequest?: (requestId: string, intent?: RequestDialogIntent) => void;
-};
-
-type ManagedRequestState = {
-  requestId: string;
-  intent: RequestDialogIntent;
 };
 
 function useStateFilterMutation() {
@@ -307,7 +299,7 @@ function RequestActionControl({
 }: {
   action: PrivateRequestCardAction;
   variant: 'primary' | 'secondary';
-  listContext: RequestsPrivateListContext;
+  listContext: WorkspaceRequestOverlayListContext;
 }) {
   const className = [
     variant === 'primary' ? 'btn-ghost is-primary' : 'btn-secondary',
@@ -509,7 +501,7 @@ function RequestCardTopSlot({
   card: WorkspaceMyRequestCardDto;
   steps: WorkspaceMyRequestCardDto['progress']['steps'];
   ownerRequestActions?: OwnerRequestActions;
-  onOpenRequest?: RequestsPrivateListContext['onOpenRequest'];
+  onOpenRequest?: WorkspaceRequestOverlayListContext['onOpenRequest'];
 }) {
   const statusClassName = card.status.badgeTone ? `status-badge status-badge--${card.status.badgeTone}` : null;
 
@@ -561,7 +553,7 @@ function RequestOwnerMenu({
   locale: Locale;
   card: WorkspaceMyRequestCardDto;
   ownerRequestActions?: OwnerRequestActions;
-  onOpenRequest?: RequestsPrivateListContext['onOpenRequest'];
+  onOpenRequest?: WorkspaceRequestOverlayListContext['onOpenRequest'];
 }) {
   const menuRef = React.useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -766,7 +758,7 @@ function MyRequestCard({
   index: number;
   mode: WorkQueueMode;
   isActive: boolean;
-  listContext: RequestsPrivateListContext;
+  listContext: WorkspaceRequestOverlayListContext;
 }) {
   const preview = card.requestPreview;
   const chrome = React.useMemo(
@@ -2106,78 +2098,27 @@ export function RequestsPrivateView({
   listContext,
 }: RequestsPrivateViewProps) {
   const setStateFilter = useStateFilterMutation();
-  const t = useT();
-  const qc = useQueryClient();
-  const requestsById = React.useMemo(
-    () => new Map(model.cards.map((card) => [card.requestId, card])),
-    [model.cards],
-  );
   const visibleCards = React.useMemo(() => {
     if (decisionState.mode !== 'decision') return model.cards;
     return sortCardsForDecisionMode(model.cards, model.response.decisionPanel);
   }, [decisionState.mode, model.cards, model.response.decisionPanel]);
   const cardRefs = React.useRef(new Map<string, HTMLElement>());
-  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(null);
-  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(null);
-  const [activeChatState, setActiveChatState] = React.useState<{
-    conversationId: string;
-    title: string;
-  } | null>(null);
-  const activeRequestCard = activeRequestState
-    ? requestsById.get(activeRequestState.requestId) ?? null
-    : null;
-
-  const openRequest = React.useCallback((requestId: string, intent: RequestDialogIntent = 'view') => {
-    if (!requestsById.has(requestId)) return;
-    setActiveOfferRequestId(null);
-    setActiveChatState(null);
-    setActiveRequestState({ requestId, intent });
-  }, [requestsById]);
-
-  const openOfferSheet = React.useCallback((requestId: string) => {
-    if (!requestsById.has(requestId)) return;
-    setActiveRequestState(null);
-    setActiveChatState(null);
-    setActiveOfferRequestId(requestId);
-  }, [requestsById]);
-
-  const openChatConversation = React.useCallback(async (payload: WorkspaceChatConversationInput) => {
-    try {
-      if (!isWorkspaceChatConversationInput(payload)) {
-        toast.error(locale === 'de' ? 'Chat konnte nicht geöffnet werden.' : 'Chat could not be opened.');
-        return;
-      }
-
-      const conversation = await createConversation(payload);
-      await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
-      const requestTitle = payload.requestId
-        ? requestsById.get(payload.requestId)?.requestPreview.title?.trim()
-        : '';
-
-      setActiveRequestState(null);
-      setActiveOfferRequestId(null);
-      setActiveChatState({
-        conversationId: conversation.id,
-        title: requestTitle || (locale === 'de' ? 'Nachrichten' : 'Messages'),
-      });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    }
-  }, [locale, qc, requestsById, t]);
-
-  const effectiveListContext = React.useMemo<RequestsPrivateListContext>(
-    () => ({
-      ...listContext,
-      onSendOffer: openOfferSheet,
-      onEditOffer: openOfferSheet,
-      onOpenChatConversation: (payload) => {
-        void openChatConversation(payload);
-      },
-      onOpenRequest: openRequest,
-    }),
-    [listContext, openChatConversation, openOfferSheet, openRequest],
-  );
+  const {
+    activeChatState,
+    activeOfferRequestId,
+    activeRequestCard,
+    activeRequestState,
+    closeChat,
+    closeOfferSheet,
+    closeRequest,
+    effectiveListContext,
+    openChatConversation,
+    openOfferSheet,
+  } = useWorkspaceRequestOverlayFlow({
+    locale,
+    cards: model.cards,
+    listContext,
+  });
 
   React.useEffect(() => {
     if (decisionState.mode !== 'decision' || !decisionState.activeRequestId) return;
@@ -2185,18 +2126,6 @@ export function RequestsPrivateView({
     if (!node) return;
     node.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [decisionState.activeRequestId, decisionState.mode]);
-
-  React.useEffect(() => {
-    if (!activeRequestState) return;
-    if (activeRequestCard) return;
-    setActiveRequestState(null);
-  }, [activeRequestCard, activeRequestState]);
-
-  React.useEffect(() => {
-    if (!activeOfferRequestId) return;
-    if (requestsById.has(activeOfferRequestId)) return;
-    setActiveOfferRequestId(null);
-  }, [activeOfferRequestId, requestsById]);
 
   if (!isWorkspaceAuthed) {
     return <AuthGate locale={locale} guestLoginHref={guestLoginHref} />;
@@ -2279,7 +2208,7 @@ export function RequestsPrivateView({
           locale={locale}
           card={activeRequestCard}
           initialIntent={activeRequestState.intent}
-          onClose={() => setActiveRequestState(null)}
+          onClose={closeRequest}
           onOpenOfferSheet={openOfferSheet}
           onOpenChatConversation={(payload) => {
             void openChatConversation(payload);
@@ -2290,7 +2219,7 @@ export function RequestsPrivateView({
         <WorkspaceManagedOfferSheet
           locale={locale}
           requestId={activeOfferRequestId}
-          onClose={() => setActiveOfferRequestId(null)}
+          onClose={closeOfferSheet}
         />
       ) : null}
       {activeChatState ? (
@@ -2298,7 +2227,7 @@ export function RequestsPrivateView({
           locale={locale}
           conversationId={activeChatState.conversationId}
           title={activeChatState.title}
-          onClose={() => setActiveChatState(null)}
+          onClose={closeChat}
         />
       ) : null}
       {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && model.response.decisionPanel ? (
