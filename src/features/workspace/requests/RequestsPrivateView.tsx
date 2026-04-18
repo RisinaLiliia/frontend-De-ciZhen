@@ -12,7 +12,9 @@ import {
   RequestOwnerEditPanel,
 } from '@/components/requests/details';
 import { RequestCard } from '@/components/requests/RequestCard';
+import { Input } from '@/components/ui/Input';
 import { LocationMeta } from '@/components/ui/LocationMeta';
+import { Textarea } from '@/components/ui/Textarea';
 import { IconCalendar } from '@/components/ui/icons/icons';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import { providerQK } from '@/features/provider/queries';
@@ -36,6 +38,8 @@ import { resolveOwnerMenuActions } from '@/features/workspace/requests/requestOw
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
 import { createConversation } from '@/lib/api/chat';
+import { completeContract, confirmContract, listMyContracts } from '@/lib/api/contracts';
+import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import {
@@ -913,6 +917,14 @@ function formatOfferTimestamp(locale: Locale, value?: string | null) {
   }).format(date);
 }
 
+function toDateTimeLocalValue(value?: string | null) {
+  const date = value ? new Date(value) : new Date(Date.now() + 60 * 60 * 1000);
+  if (!Number.isFinite(date.getTime())) return '';
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60 * 1000);
+  return localDate.toISOString().slice(0, 16);
+}
+
 function resolveOfferStatusBadge(locale: Locale, status: OfferDto['status']) {
   if (status === 'accepted') {
     return {
@@ -935,6 +947,31 @@ function resolveOfferStatusBadge(locale: Locale, status: OfferDto['status']) {
   return {
     label: locale === 'de' ? 'Neu' : 'New',
     className: 'status-badge status-badge--info',
+  };
+}
+
+function resolveContractStatusBadge(locale: Locale, status: ContractDto['status']) {
+  if (status === 'completed') {
+    return {
+      label: locale === 'de' ? 'Abgeschlossen' : 'Completed',
+      className: 'status-badge status-badge--success',
+    };
+  }
+  if (status === 'confirmed' || status === 'in_progress') {
+    return {
+      label: locale === 'de' ? 'Bestätigt' : 'Confirmed',
+      className: 'status-badge status-badge--success',
+    };
+  }
+  if (status === 'cancelled') {
+    return {
+      label: locale === 'de' ? 'Storniert' : 'Cancelled',
+      className: 'status-badge status-badge--danger',
+    };
+  }
+  return {
+    label: locale === 'de' ? 'Ausstehend' : 'Pending',
+    className: 'status-badge status-badge--warning',
   };
 }
 
@@ -1104,6 +1141,13 @@ function WorkspaceManagedRequestDialog({
                     void ownerEdit.handleOwnerSave(intent);
                   }}
                 />
+                {!ownerEdit.isOwnerEditMode ? (
+                  <WorkspaceRequestDecisionSection
+                    locale={locale}
+                    card={card}
+                    onOpenChatConversation={onOpenChatConversation}
+                  />
+                ) : null}
                 {!ownerEdit.isOwnerEditMode ? (
                   <WorkspaceRequestOffersSection
                     locale={locale}
@@ -1403,6 +1447,236 @@ function WorkspaceRequestOffersSection({
             );
           })}
         </div>
+      ) : null}
+    </div>
+  );
+}
+
+function WorkspaceRequestDecisionSection({
+  locale,
+  card,
+  onOpenChatConversation,
+}: {
+  locale: Locale;
+  card: MyRequestsViewCard;
+  onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
+}) {
+  const t = useT();
+  const qc = useQueryClient();
+  const [startAt, setStartAt] = React.useState(() => toDateTimeLocalValue());
+  const [durationMin, setDurationMin] = React.useState('120');
+  const [note, setNote] = React.useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const { data: contracts = [] } = useQuery({
+    queryKey: workspaceQK.contractsMyClient(),
+    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), [] as ContractDto[]),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
+  });
+
+  const contract = React.useMemo(
+    () => contracts.find((item) => item.requestId === card.requestId) ?? null,
+    [card.requestId, contracts],
+  );
+  const chatAction = React.useMemo(
+    () => card.status.actions.find((action) => action.kind === 'open_chat' && Boolean(action.chatInput))
+      ?? (card.decision.primaryAction?.kind === 'open_chat' ? card.decision.primaryAction : null),
+    [card.decision.primaryAction, card.status.actions],
+  );
+
+  React.useEffect(() => {
+    if (!contract?.createdAt) return;
+    setStartAt((current) => (current ? current : toDateTimeLocalValue(contract.createdAt)));
+  }, [contract?.createdAt]);
+
+  const invalidateDecisionState = React.useCallback(async () => {
+    await Promise.all([
+      qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
+      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
+      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
+      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
+      qc.invalidateQueries({ queryKey: ['request-detail', card.requestId] }),
+    ]);
+  }, [card.requestId, qc]);
+
+  const handleConfirmContract = React.useCallback(async () => {
+    if (!contract?.id || !startAt) return;
+    setIsSubmitting(true);
+    try {
+      await confirmContract(contract.id, {
+        startAt: new Date(startAt).toISOString(),
+        durationMin: durationMin.trim() ? Number(durationMin) : undefined,
+        note: note.trim() || undefined,
+      });
+      toast.success(locale === 'de' ? 'Vertrag bestätigt.' : 'Contract confirmed.');
+      await invalidateDecisionState();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [contract?.id, durationMin, invalidateDecisionState, locale, note, startAt, t]);
+
+  const handleCompleteContract = React.useCallback(async () => {
+    if (!contract?.id) return;
+    setIsSubmitting(true);
+    try {
+      await completeContract(contract.id);
+      toast.success(locale === 'de' ? 'Abschluss bestätigt.' : 'Completion confirmed.');
+      await invalidateDecisionState();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [contract?.id, invalidateDecisionState, locale, t]);
+
+  if (card.decision.actionType === 'review_offers' || card.decision.actionType === 'none') {
+    return null;
+  }
+
+  const contractPrice = contract?.priceAmount != null
+    ? formatDialogPrice(locale, contract.priceAmount)
+    : null;
+  const contractMeta = [
+    contractPrice,
+    contract?.status ? resolveContractStatusBadge(locale, contract.status).label : null,
+  ].filter(Boolean).join(' · ');
+
+  return (
+    <div className="my-request-dialog__section my-request-dialog__section--decision">
+      <div className="my-request-dialog__section-head">
+        <div>
+          <h3>{card.decision.actionLabel?.trim() || (locale === 'de' ? 'Nächster Schritt' : 'Next step')}</h3>
+          <p className="my-request-dialog__section-subtitle">
+            {card.decision.actionReason?.trim()
+              || (locale === 'de'
+                ? 'Bearbeite den nächsten Schritt direkt hier im Workspace.'
+                : 'Handle the next step directly here in the workspace.')}
+          </p>
+        </div>
+        <span className="my-request-dialog__section-count">
+          {card.decision.actionPriorityLevel === 'high' ? '!' : 'i'}
+        </span>
+      </div>
+
+      {contractMeta ? (
+        <p className="my-request-dialog__section-subtitle">{contractMeta}</p>
+      ) : null}
+
+      {(card.decision.actionType === 'reply_required' || card.decision.actionType === 'overdue_followup') && chatAction?.chatInput ? (
+        <div className="my-request-dialog__actions">
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={() => onOpenChatConversation(chatAction.chatInput!)}
+          >
+            {chatAction.label}
+          </button>
+        </div>
+      ) : null}
+
+      {card.decision.actionType === 'confirm_contract' ? (
+        contract ? (
+          <div className="my-request-decision-form">
+            <label className="my-request-decision-form__field">
+              <span>{locale === 'de' ? 'Start' : 'Start'}</span>
+              <Input
+                type="datetime-local"
+                value={startAt}
+                onChange={(event) => setStartAt(event.target.value)}
+                disabled={isSubmitting || contract.status !== 'pending'}
+              />
+            </label>
+            <label className="my-request-decision-form__field">
+              <span>{locale === 'de' ? 'Dauer (Min.)' : 'Duration (min)'}</span>
+              <Input
+                type="number"
+                min={15}
+                step={15}
+                value={durationMin}
+                onChange={(event) => setDurationMin(event.target.value)}
+                disabled={isSubmitting || contract.status !== 'pending'}
+              />
+            </label>
+            <label className="my-request-decision-form__field">
+              <span>{locale === 'de' ? 'Hinweis' : 'Note'}</span>
+              <Textarea
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                disabled={isSubmitting || contract.status !== 'pending'}
+                placeholder={locale === 'de' ? 'Optionaler Hinweis für den Vertrag' : 'Optional note for the contract'}
+              />
+            </label>
+            <div className="my-request-dialog__actions">
+              {chatAction?.chatInput ? (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => onOpenChatConversation(chatAction.chatInput!)}
+                  disabled={isSubmitting}
+                >
+                  {chatAction.label}
+                </button>
+              ) : null}
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => {
+                  void handleConfirmContract();
+                }}
+                disabled={isSubmitting || contract.status !== 'pending' || !startAt}
+              >
+                {isSubmitting
+                  ? (locale === 'de' ? 'Speichern…' : 'Saving…')
+                  : (locale === 'de' ? 'Vertrag bestätigen' : 'Confirm contract')}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="my-request-dialog__section-subtitle">
+            {locale === 'de'
+              ? 'Vertragsdaten sind noch nicht verfügbar.'
+              : 'Contract details are not available yet.'}
+          </p>
+        )
+      ) : null}
+
+      {card.decision.actionType === 'confirm_completion' ? (
+        contract ? (
+          <div className="my-request-dialog__actions">
+            {chatAction?.chatInput ? (
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => onOpenChatConversation(chatAction.chatInput!)}
+                disabled={isSubmitting}
+              >
+                {chatAction.label}
+              </button>
+            ) : null}
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => {
+                void handleCompleteContract();
+              }}
+              disabled={isSubmitting || contract.status === 'completed' || contract.status === 'cancelled'}
+            >
+              {isSubmitting
+                ? (locale === 'de' ? 'Speichern…' : 'Saving…')
+                : (locale === 'de' ? 'Abschluss bestätigen' : 'Confirm completion')}
+            </button>
+          </div>
+        ) : (
+          <p className="my-request-dialog__section-subtitle">
+            {locale === 'de'
+              ? 'Für diese Anfrage wurde noch kein Vertrag gefunden.'
+              : 'No contract has been found for this request yet.'}
+          </p>
+        )
       ) : null}
     </div>
   );

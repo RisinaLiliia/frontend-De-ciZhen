@@ -1621,6 +1621,14 @@
     gap: 12px;
   }
 
+  .my-request-dialog__section--decision {
+    padding: 18px;
+    border-radius: 22px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--surface-2) 92%, white 8%), color-mix(in srgb, var(--surface-2) 78%, transparent));
+    border: 1px solid color-mix(in srgb, var(--border) 68%, transparent);
+  }
+
   .my-request-dialog__section-subtitle {
     margin: 0;
     color: var(--muted-foreground);
@@ -1648,6 +1656,22 @@
   .my-request-dialog__offer-list {
     display: grid;
     gap: 12px;
+  }
+
+  .my-request-decision-form {
+    display: grid;
+    gap: 14px;
+  }
+
+  .my-request-decision-form__field {
+    display: grid;
+    gap: 8px;
+  }
+
+  .my-request-decision-form__field > span {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted-foreground);
   }
 
   .my-request-offer-card {
