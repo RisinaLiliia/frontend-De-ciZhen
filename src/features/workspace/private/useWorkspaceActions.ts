@@ -146,10 +146,9 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
       if (pendingDuplicateRequestId === requestId) return;
       setPendingDuplicateRequestId(requestId);
       try {
-        const duplicate = await duplicateMyRequest(requestId);
+        await duplicateMyRequest(requestId);
         toast.success(t(I18N_KEYS.client.requestDuplicated));
         await invalidateWorkspaceRequests();
-        router.push(`/requests/${duplicate.id}`);
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
         toast.error(message);
@@ -157,7 +156,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         setPendingDuplicateRequestId(null);
       }
     },
-    [invalidateWorkspaceRequests, pendingDuplicateRequestId, router, t],
+    [invalidateWorkspaceRequests, pendingDuplicateRequestId, t],
   );
 
   const onDuplicateMyRequestVoid = React.useCallback((requestId: string) => {

@@ -61,7 +61,7 @@ describe('useWorkspaceActions', () => {
     cleanup();
   });
 
-  it('opens duplicated requests in the existing request detail route', async () => {
+  it('duplicates requests without leaving the workspace flow', async () => {
     render(<UseWorkspaceActionsProbe />);
 
     await act(async () => {
@@ -70,7 +70,7 @@ describe('useWorkspaceActions', () => {
 
     await waitFor(() => {
       expect(duplicateMyRequestMock).toHaveBeenCalledWith('req-1');
-      expect(pushSpy).toHaveBeenCalledWith('/requests/dup-1');
+      expect(pushSpy).not.toHaveBeenCalled();
     });
   });
 });

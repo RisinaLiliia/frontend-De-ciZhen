@@ -1,15 +1,24 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import {
+  RequestOfferSheet,
+  RequestOwnerEditPanel,
+} from '@/components/requests/details';
 import { RequestCard } from '@/components/requests/RequestCard';
 import { LocationMeta } from '@/components/ui/LocationMeta';
 import { IconCalendar } from '@/components/ui/icons/icons';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
+import { providerQK } from '@/features/provider/queries';
+import { useRequestOwnerEdit } from '@/features/requests/details/useRequestOwnerEdit';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
+import { isWorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
 import { DecisionPanel } from '@/features/workspace/requests/components/DecisionPanel';
@@ -24,10 +33,23 @@ import {
   type PrivateRequestCardAction,
 } from '@/features/workspace/requests/requestsPrivateCard.model';
 import { resolveOwnerMenuActions } from '@/features/workspace/requests/requestOwnerMenu.model';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
+import { createConversation } from '@/lib/api/chat';
+import type { OfferDto } from '@/lib/api/dto/offers';
 import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
+import { deleteOffer, listMyProviderOffers, updateOffer, createOffer } from '@/lib/api/offers';
+import { ApiError } from '@/lib/api/http-error';
+import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
+import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { pickRequestImage } from '@/lib/requests/images';
+import { useT } from '@/lib/i18n/useT';
+import {
+  normalizeAppImageSrc,
+  pickRequestImage,
+  shouldBypassNextImageOptimization,
+} from '@/lib/requests/images';
 
 type RequestsPrivateViewProps = {
   locale: Locale;
@@ -61,6 +83,17 @@ type RailProps = {
   className?: string;
 };
 
+type RequestDialogIntent = 'view' | 'edit';
+
+type RequestsPrivateListContext = RequestsPrivateViewProps['listContext'] & {
+  onOpenRequest?: (requestId: string, intent?: RequestDialogIntent) => void;
+};
+
+type ManagedRequestState = {
+  requestId: string;
+  intent: RequestDialogIntent;
+};
+
 function useStateFilterMutation() {
   const router = useRouter();
   const pathname = usePathname();
@@ -74,6 +107,29 @@ function useStateFilterMutation() {
     const query = params.toString();
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }, [pathname, router, searchParams]);
+}
+
+function resolveRequestDialogIntent(action: { key: string }): RequestDialogIntent {
+  return action.key === 'edit-request' ? 'edit' : 'view';
+}
+
+async function fetchWorkspaceManagedRequest(requestId: string, locale: Locale) {
+  try {
+    const request = await getMyRequestById(requestId);
+    return {
+      request,
+      source: 'owner' as const,
+    };
+  } catch (error) {
+    if (!(error instanceof ApiError) || (error.status !== 403 && error.status !== 404)) {
+      throw error;
+    }
+  }
+
+  return {
+    request: await getPublicRequestById(requestId, { locale }),
+    source: 'public' as const,
+  };
 }
 
 function SummaryCard({
@@ -238,13 +294,25 @@ function RequestActionControl({
 }: {
   action: PrivateRequestCardAction;
   variant: 'primary' | 'secondary';
-  listContext: RequestsPrivateViewProps['listContext'];
+  listContext: RequestsPrivateListContext;
 }) {
   const className = [
     variant === 'primary' ? 'btn-ghost is-primary' : 'btn-secondary',
     'my-request-card__action-btn',
     `my-request-card__action-btn--${variant}`,
   ].join(' ');
+
+  if (action.kind === 'link' && action.requestId && listContext.onOpenRequest) {
+    return (
+      <button
+        type="button"
+        className={className}
+        onClick={() => listContext.onOpenRequest?.(action.requestId!, resolveRequestDialogIntent(action))}
+      >
+        {action.label}
+      </button>
+    );
+  }
 
   if (action.kind === 'link' && action.href) {
     return (
@@ -421,12 +489,14 @@ function RequestCardTopSlot({
   card,
   steps,
   ownerRequestActions,
+  onOpenRequest,
 }: {
   chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
   locale: Locale;
   card: WorkspaceMyRequestCardDto;
   steps: WorkspaceMyRequestCardDto['progress']['steps'];
   ownerRequestActions?: OwnerRequestActions;
+  onOpenRequest?: RequestsPrivateListContext['onOpenRequest'];
 }) {
   const statusClassName = card.status.badgeTone ? `status-badge status-badge--${card.status.badgeTone}` : null;
 
@@ -447,6 +517,7 @@ function RequestCardTopSlot({
                 locale={locale}
                 card={card}
                 ownerRequestActions={ownerRequestActions}
+                onOpenRequest={onOpenRequest}
               />
             ) : null}
           </div>
@@ -472,10 +543,12 @@ function RequestOwnerMenu({
   locale,
   card,
   ownerRequestActions,
+  onOpenRequest,
 }: {
   locale: Locale;
   card: WorkspaceMyRequestCardDto;
   ownerRequestActions?: OwnerRequestActions;
+  onOpenRequest?: RequestsPrivateListContext['onOpenRequest'];
 }) {
   const menuRef = React.useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -563,6 +636,23 @@ function RequestOwnerMenu({
         <div className="my-request-card__owner-menu-surface" role="menu">
           {menuActions.map((action) => {
             if (action.kind === 'link' && action.href) {
+              if (action.requestId && onOpenRequest) {
+                return (
+                  <button
+                    key={action.key}
+                    type="button"
+                    className="my-request-card__owner-menu-item"
+                    role="menuitem"
+                    onClick={() => {
+                      closeMenu();
+                      onOpenRequest(action.requestId!, resolveRequestDialogIntent(action));
+                    }}
+                  >
+                    {action.label}
+                  </button>
+                );
+              }
+
               return (
                 <Link
                   key={action.key}
@@ -663,7 +753,7 @@ function MyRequestCard({
   index: number;
   mode: WorkQueueMode;
   isActive: boolean;
-  listContext: RequestsPrivateViewProps['listContext'];
+  listContext: RequestsPrivateListContext;
 }) {
   const preview = card.requestPreview;
   const chrome = React.useMemo(
@@ -715,6 +805,7 @@ function MyRequestCard({
         priceTrendLabel={preview.priceTrendLabel ?? null}
         tags={preview.tags}
         mode="link"
+        onOpen={() => listContext.onOpenRequest?.(card.requestId, 'view')}
         isActive={isActive}
         topSlot={(
           <RequestCardTopSlot
@@ -723,6 +814,7 @@ function MyRequestCard({
             card={card}
             steps={card.progress.steps}
             ownerRequestActions={listContext.ownerRequestActions}
+            onOpenRequest={listContext.onOpenRequest}
           />
         )}
         statusSlot={<WorkspaceRequestStatusSlot chrome={chrome} />}
@@ -740,9 +832,13 @@ function MyRequestCard({
                       listContext={listContext}
                     />
                   ) : (
-                    <Link href={preview.href} prefetch={false} className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary">
+                    <button
+                      type="button"
+                      className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary"
+                      onClick={() => listContext.onOpenRequest?.(card.requestId, 'view')}
+                    >
                       {locale === 'de' ? 'Details öffnen' : 'Open details'}
-                    </Link>
+                    </button>
                   )}
                   {chrome.primaryAction ? (
                     <RequestActionControl
@@ -774,6 +870,574 @@ function WorkspaceRequestStatusSlot({
         </span>
       ) : null}
     </span>
+  );
+}
+
+function formatDialogDate(locale: Locale, value?: string | null) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return null;
+  return new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+}
+
+function formatDialogPrice(locale: Locale, value?: number | null) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+  return new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US', {
+    style: 'currency',
+    currency: 'EUR',
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function WorkspaceManagedRequestDialog({
+  locale,
+  card,
+  initialIntent,
+  onClose,
+  onOpenOfferSheet,
+  onOpenChatConversation,
+}: {
+  locale: Locale;
+  card: MyRequestsViewCard;
+  initialIntent: RequestDialogIntent;
+  onClose: () => void;
+  onOpenOfferSheet: (requestId: string) => void;
+  onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
+}) {
+  const t = useT();
+  const qc = useQueryClient();
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['request-detail', card.requestId, locale],
+    queryFn: () => fetchWorkspaceManagedRequest(card.requestId, locale),
+    staleTime: 60_000,
+    retry: 0,
+    refetchOnWindowFocus: false,
+  });
+  const request = data?.request ?? null;
+  const isOwner = data?.source === 'owner';
+  const ownerEdit = useRequestOwnerEdit({
+    request,
+    isOwner,
+    showOwnerBadge: isOwner,
+    shouldOpenOwnerEdit: initialIntent === 'edit',
+    qc,
+    t,
+  });
+  const visiblePhotos = ownerEdit.isOwnerEditMode
+    ? ownerEdit.ownerPhotos
+    : (request?.photos ?? []).filter(Boolean).slice(0, 4);
+  const statusLabel = card.status.badgeLabel?.trim() || request?.status?.trim() || null;
+  const dateLabel = formatDialogDate(locale, request?.preferredDate) || card.requestPreview.dateLabel || null;
+  const priceLabel = formatDialogPrice(locale, request?.price) || card.requestPreview.priceLabel || null;
+  const cityLabel = request?.cityName?.trim() || card.requestPreview.cityLabel || null;
+  const description = (ownerEdit.isOwnerEditMode
+    ? ownerEdit.ownerDescription
+    : request?.description)?.trim() || card.requestPreview.excerpt?.trim() || null;
+  const offerAction = card.status.actions.find(
+    (action) => action.kind === 'send_offer' || action.kind === 'edit_offer',
+  );
+  const chatAction = card.status.actions.find(
+    (action) => action.kind === 'open_chat' && Boolean(action.chatInput),
+  );
+
+  return (
+    <div
+      className="dc-modal my-request-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={`workspace-request-dialog-${card.requestId}`}
+    >
+      <button
+        type="button"
+        className="dc-modal__backdrop"
+        onClick={onClose}
+        aria-label={locale === 'de' ? 'Dialog schließen' : 'Close dialog'}
+      />
+      <div className="dc-modal__panel dc-modal__panel--wide my-request-dialog__panel">
+        <div className="my-request-dialog__header">
+          <div className="my-request-dialog__header-copy">
+            <span className="my-request-dialog__eyebrow">{card.requestPreview.categoryLabel}</span>
+            <h2 id={`workspace-request-dialog-${card.requestId}`} className="my-request-dialog__title">
+              {ownerEdit.isOwnerEditMode && ownerEdit.ownerTitle.trim()
+                ? ownerEdit.ownerTitle.trim()
+                : card.requestPreview.title}
+            </h2>
+            <div className="my-request-dialog__meta">
+              {cityLabel ? <span>{cityLabel}</span> : null}
+              {dateLabel ? <span>{dateLabel}</span> : null}
+              {priceLabel ? <span>{priceLabel}</span> : null}
+              {statusLabel ? <span>{statusLabel}</span> : null}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="my-request-dialog__close"
+            onClick={onClose}
+            aria-label={locale === 'de' ? 'Dialog schließen' : 'Close dialog'}
+          >
+            ×
+          </button>
+        </div>
+
+        {isLoading ? (
+          <div className="my-request-dialog__state">
+            <div className="skeleton h-8 w-56" />
+            <div className="skeleton h-24 w-full" />
+            <div className="skeleton h-10 w-40" />
+          </div>
+        ) : null}
+
+        {!isLoading && (isError || !request) ? (
+          <div className="my-request-dialog__state">
+            <h3>{locale === 'de' ? 'Anfrage konnte nicht geladen werden.' : 'Request could not be loaded.'}</h3>
+            <p>{locale === 'de' ? 'Bitte versuche es erneut.' : 'Please try again.'}</p>
+          </div>
+        ) : null}
+
+        {!isLoading && request ? (
+          <div className="my-request-dialog__body">
+            {isOwner ? (
+              <>
+                {!ownerEdit.isOwnerEditMode ? (
+                  <div className="my-request-dialog__toolbar">
+                    <span className="my-request-dialog__badge">{statusLabel ?? request.status}</span>
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      onClick={() => ownerEdit.setIsOwnerEditMode(true)}
+                    >
+                      {locale === 'de' ? 'Bearbeiten' : 'Edit'}
+                    </button>
+                  </div>
+                ) : null}
+                <RequestOwnerEditPanel
+                  isEditMode={ownerEdit.isOwnerEditMode}
+                  showPublishAction={request.status === 'draft'}
+                  isSaving={ownerEdit.isSavingOwner}
+                  isUploadingPhoto={ownerEdit.isUploadingOwnerPhoto}
+                  activeSubmitIntent={ownerEdit.activeOwnerSubmitIntent}
+                  titleValue={ownerEdit.ownerTitle}
+                  descriptionValue={ownerEdit.ownerDescription}
+                  priceValue={ownerEdit.ownerPrice}
+                  priceTrend={ownerEdit.ownerPriceTrend}
+                  photos={ownerEdit.ownerPhotos}
+                  ownerEditLabel={t(I18N_KEYS.requestDetails.ownerEdit)}
+                  ownerClearLabel={t(I18N_KEYS.requestDetails.ownerClear)}
+                  titlePlaceholder={t(I18N_KEYS.request.titlePlaceholder)}
+                  titleLabel={t(I18N_KEYS.request.titleLabel)}
+                  descriptionPlaceholder={t(I18N_KEYS.request.descriptionPlaceholder)}
+                  descriptionLabel={t(I18N_KEYS.request.descriptionLabel)}
+                  pricePlaceholder={t(I18N_KEYS.request.pricePlaceholder)}
+                  priceLabel={t(I18N_KEYS.request.priceLabel)}
+                  removePhotoLabel={t(I18N_KEYS.request.removePhoto)}
+                  addPhotoLabel={t(I18N_KEYS.request.photosButton)}
+                  photosHintLabel={t(I18N_KEYS.requestDetails.ownerPhotosHint)}
+                  cancelLabel={t(I18N_KEYS.requestDetails.ownerCancel)}
+                  saveLabel={request.status === 'draft'
+                    ? t(I18N_KEYS.request.submitDraft)
+                    : t(I18N_KEYS.requestDetails.ownerSave)}
+                  publishLabel={t(I18N_KEYS.request.submitPublish)}
+                  priceTrendDownLabel={t(I18N_KEYS.requestDetails.ownerPriceTrendDown)}
+                  priceTrendUpLabel={t(I18N_KEYS.requestDetails.ownerPriceTrendUp)}
+                  onToggleEdit={() => ownerEdit.setIsOwnerEditMode((prev) => !prev)}
+                  onClearText={ownerEdit.handleOwnerClearText}
+                  onTitleChange={ownerEdit.setOwnerTitle}
+                  onDescriptionChange={ownerEdit.setOwnerDescription}
+                  onPriceChange={ownerEdit.setOwnerPrice}
+                  onPhotoPick={(files) => {
+                    void ownerEdit.handleOwnerPhotoPick(files);
+                  }}
+                  onRemovePhoto={(index) => {
+                    ownerEdit.setOwnerPhotos((prev) => prev.filter((_, currentIndex) => currentIndex !== index));
+                  }}
+                  onCancelEdit={() => ownerEdit.setIsOwnerEditMode(false)}
+                  onSave={(intent) => {
+                    void ownerEdit.handleOwnerSave(intent);
+                  }}
+                />
+              </>
+            ) : null}
+
+            {!isOwner ? (
+              <>
+                {visiblePhotos.length > 0 ? (
+                  <div className="my-request-dialog__photos">
+                    {visiblePhotos.map((photo, index) => {
+                      const safeSrc = normalizeAppImageSrc(photo);
+                      return (
+                        <div key={`${photo}-${index}`} className="my-request-dialog__photo">
+                          <Image
+                            src={safeSrc}
+                            alt=""
+                            fill
+                            sizes="(max-width: 768px) 50vw, 200px"
+                            unoptimized={shouldBypassNextImageOptimization(safeSrc)}
+                            className="my-request-dialog__photo-img"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
+                {description ? (
+                  <div className="my-request-dialog__section">
+                    <h3>{locale === 'de' ? 'Beschreibung' : 'Description'}</h3>
+                    <p>{description}</p>
+                  </div>
+                ) : null}
+                {(offerAction || chatAction) ? (
+                  <div className="my-request-dialog__actions">
+                    {offerAction ? (
+                      <button
+                        type="button"
+                        className="btn-primary"
+                        onClick={() => onOpenOfferSheet(card.requestId)}
+                      >
+                        {offerAction.label}
+                      </button>
+                    ) : null}
+                    {chatAction?.chatInput ? (
+                      <button
+                        type="button"
+                        className="btn-secondary"
+                        onClick={() => onOpenChatConversation(chatAction.chatInput!)}
+                      >
+                        {chatAction.label}
+                      </button>
+                    ) : null}
+                  </div>
+                ) : null}
+              </>
+            ) : null}
+
+            {isOwner && !ownerEdit.isOwnerEditMode && description ? (
+              <div className="my-request-dialog__section">
+                <h3>{locale === 'de' ? 'Beschreibung' : 'Description'}</h3>
+                <p>{description}</p>
+              </div>
+            ) : null}
+
+            {isOwner && !ownerEdit.isOwnerEditMode && visiblePhotos.length > 0 ? (
+              <div className="my-request-dialog__photos">
+                {visiblePhotos.map((photo, index) => {
+                  const safeSrc = normalizeAppImageSrc(photo);
+                  return (
+                    <div key={`${photo}-${index}`} className="my-request-dialog__photo">
+                      <Image
+                        src={safeSrc}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) 50vw, 200px"
+                        unoptimized={shouldBypassNextImageOptimization(safeSrc)}
+                        className="my-request-dialog__photo-img"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function WorkspaceManagedOfferSheet({
+  locale,
+  requestId,
+  onClose,
+}: {
+  locale: Locale;
+  requestId: string;
+  onClose: () => void;
+}) {
+  const t = useT();
+  const qc = useQueryClient();
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['request-detail', requestId, locale],
+    queryFn: () => fetchWorkspaceManagedRequest(requestId, locale),
+    staleTime: 60_000,
+    retry: 0,
+    refetchOnWindowFocus: false,
+  });
+  const request = data?.request ?? null;
+  const { data: myOffers = [] } = useQuery({
+    queryKey: workspaceQK.offersMy(),
+    queryFn: () => withStatusFallback(() => listMyProviderOffers(), [] as OfferDto[]),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
+  });
+  const existingResponse = React.useMemo(
+    () => myOffers.find((item) => item.requestId === requestId) ?? null,
+    [myOffers, requestId],
+  );
+  const [offerAmount, setOfferAmount] = React.useState('');
+  const [offerComment, setOfferComment] = React.useState('');
+  const [offerAvailability, setOfferAvailability] = React.useState('');
+  const [offerSheetMode, setOfferSheetMode] = React.useState<'form' | 'success'>('form');
+  const [isSubmittingOffer, setIsSubmittingOffer] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!request) return;
+    if (existingResponse) {
+      setOfferAmount(
+        typeof existingResponse.amount === 'number'
+          ? String(Math.max(1, Math.round(existingResponse.amount)))
+          : '',
+      );
+      setOfferComment(existingResponse.message ?? '');
+      setOfferAvailability(existingResponse.availabilityNote ?? existingResponse.availableAt ?? '');
+      return;
+    }
+
+    setOfferAmount(
+      typeof request.price === 'number' && Number.isFinite(request.price)
+        ? String(Math.max(1, Math.round(request.price)))
+        : '',
+    );
+    setOfferComment('');
+    setOfferAvailability('');
+  }, [existingResponse, request]);
+
+  const invalidateWorkspaceState = React.useCallback(async () => {
+    await Promise.all([
+      qc.invalidateQueries({ queryKey: workspaceQK.offersMy() }),
+      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
+      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
+      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
+      qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
+    ]);
+  }, [qc]);
+
+  const resetDraft = React.useCallback(() => {
+    setOfferSheetMode('form');
+    setOfferAmount('');
+    setOfferComment('');
+    setOfferAvailability('');
+  }, []);
+
+  const handleOfferSubmit = React.useCallback(async () => {
+    if (!request) return;
+    const parsedAmount = Number(offerAmount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
+      return;
+    }
+
+    setIsSubmittingOffer(true);
+    try {
+      const payload = {
+        amount: parsedAmount,
+        message: offerComment.trim() || undefined,
+        availabilityNote: offerAvailability.trim() || undefined,
+      };
+
+      if (existingResponse?.id) {
+        await updateOffer(existingResponse.id, payload);
+        toast.success(t(I18N_KEYS.requestDetails.responseUpdated));
+        await invalidateWorkspaceState();
+        onClose();
+        return;
+      }
+
+      await createOffer({
+        requestId: request.id,
+        ...payload,
+      });
+      await invalidateWorkspaceState();
+      setOfferSheetMode('success');
+    } catch (error) {
+      if (error instanceof ApiError && (error.status === 404 || error.status === 405)) {
+        toast.message(t(I18N_KEYS.requestDetails.responseEditUnavailable));
+      } else if (error instanceof ApiError && error.status === 409) {
+        toast.message(t(I18N_KEYS.requestDetails.responseAlready));
+        await invalidateWorkspaceState();
+        onClose();
+      } else if (error instanceof ApiError && error.status === 403) {
+        toast.error(error.message || t(I18N_KEYS.requestDetails.responseFailed));
+      } else {
+        toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+      }
+    } finally {
+      setIsSubmittingOffer(false);
+    }
+  }, [
+    existingResponse?.id,
+    invalidateWorkspaceState,
+    offerAmount,
+    offerAvailability,
+    offerComment,
+    onClose,
+    request,
+    t,
+  ]);
+
+  const handleOfferCancel = React.useCallback(async () => {
+    if (!existingResponse?.id) {
+      resetDraft();
+      onClose();
+      return;
+    }
+
+    setIsSubmittingOffer(true);
+    try {
+      await deleteOffer(existingResponse.id);
+      await invalidateWorkspaceState();
+      toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
+      resetDraft();
+      onClose();
+    } catch {
+      toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+    } finally {
+      setIsSubmittingOffer(false);
+    }
+  }, [existingResponse?.id, invalidateWorkspaceState, onClose, resetDraft, t]);
+
+  const handleSuccessBack = React.useCallback(() => {
+    resetDraft();
+    onClose();
+  }, [onClose, resetDraft]);
+
+  if (isLoading || (!request && !isError)) {
+    return (
+      <div className="dc-modal my-request-dialog" role="dialog" aria-modal="true">
+        <button
+          type="button"
+          className="dc-modal__backdrop"
+          onClick={onClose}
+          aria-label={locale === 'de' ? 'Dialog schließen' : 'Close dialog'}
+        />
+        <div className="dc-modal__panel dc-modal__panel--compact my-request-dialog__panel">
+          <div className="my-request-dialog__state">
+            <div className="skeleton h-8 w-48" />
+            <div className="skeleton h-24 w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!request) {
+    return null;
+  }
+
+  return (
+    <RequestOfferSheet
+      isOpen={true}
+      mode={offerSheetMode}
+      title={existingResponse
+        ? t(I18N_KEYS.requestDetails.responseEditTitle)
+        : t(I18N_KEYS.requestDetails.responseFormTitle)}
+      previewTitle={request.title?.trim() || cardlessTitle(locale)}
+      previewCity={request.cityName?.trim() || '—'}
+      previewDate={formatDialogDate(locale, request.preferredDate) || '—'}
+      previewPrice={formatDialogPrice(locale, request.price)}
+      amountLabel={t(I18N_KEYS.requestDetails.responseAmountLabel)}
+      amountValue={offerAmount}
+      amountPlaceholder="120"
+      commentLabel={t(I18N_KEYS.requestDetails.responseCommentLabel)}
+      commentValue={offerComment}
+      commentPlaceholder={t(I18N_KEYS.requestDetails.responseCommentPlaceholder)}
+      availabilityLabel={t(I18N_KEYS.requestDetails.responseAvailabilityLabel)}
+      availabilityValue={offerAvailability}
+      availabilityPlaceholder={t(I18N_KEYS.requestDetails.responseAvailabilityPlaceholder)}
+      submitLabel={existingResponse
+        ? t(I18N_KEYS.requestDetails.responseEditSubmit)
+        : t(I18N_KEYS.requestDetails.responseSubmit)}
+      submitKind={existingResponse ? 'edit' : 'submit'}
+      cancelLabel={existingResponse
+        ? t(I18N_KEYS.requestDetails.responseCancel)
+        : t(I18N_KEYS.common.back)}
+      cancelKind={existingResponse ? 'delete' : 'back'}
+      closeLabel={t(I18N_KEYS.requestDetails.responseClose)}
+      successTitle={t(I18N_KEYS.requestDetails.responseSuccessTitle)}
+      successBody={t(I18N_KEYS.requestDetails.responseSuccessBody)}
+      successSubline={t(I18N_KEYS.requestDetails.responseSuccessSubline)}
+      successTipTitle={t(I18N_KEYS.requestDetails.responseSuccessTipTitle)}
+      successTipCardTitle={t(I18N_KEYS.requestDetails.responseSuccessTipCardTitle)}
+      successTipCardBody={locale === 'de'
+        ? 'Vervollständige dein Profil später im Workspace, falls du mehr Vertrauen aufbauen willst.'
+        : 'You can complete your profile later in the workspace if you want to build more trust.'}
+      successProfileCta={t(I18N_KEYS.requestDetails.responseProfileCta)}
+      successContinueCta={t(I18N_KEYS.requestDetails.responseContinueCta)}
+      successProfileHref="/workspace?section=requests&scope=my"
+      showProfileAdvice={false}
+      profileStatusLabel={locale === 'de' ? 'Workspace' : 'Workspace'}
+      isSubmitting={isSubmittingOffer}
+      onAmountChange={setOfferAmount}
+      onCommentChange={setOfferComment}
+      onAvailabilityChange={setOfferAvailability}
+      onClose={onClose}
+      onCancel={() => {
+        void handleOfferCancel();
+      }}
+      onSuccessBack={handleSuccessBack}
+      onSubmit={() => {
+        void handleOfferSubmit();
+      }}
+    />
+  );
+}
+
+function cardlessTitle(locale: Locale) {
+  return locale === 'de' ? 'Anfrage' : 'Request';
+}
+
+function WorkspaceChatDialog({
+  locale,
+  conversationId,
+  title,
+  onClose,
+}: {
+  locale: Locale;
+  conversationId: string;
+  title: string;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className="dc-modal my-request-chat-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={`workspace-chat-dialog-${conversationId}`}
+    >
+      <button
+        type="button"
+        className="dc-modal__backdrop"
+        onClick={onClose}
+        aria-label={locale === 'de' ? 'Chat schließen' : 'Close chat'}
+      />
+      <div className="dc-modal__panel dc-modal__panel--wide my-request-chat-dialog__panel">
+        <div className="my-request-chat-dialog__header">
+          <div>
+            <span className="my-request-chat-dialog__eyebrow">
+              {locale === 'de' ? 'Nachrichten' : 'Messages'}
+            </span>
+            <h2 id={`workspace-chat-dialog-${conversationId}`} className="my-request-chat-dialog__title">
+              {title}
+            </h2>
+          </div>
+          <button
+            type="button"
+            className="my-request-chat-dialog__close"
+            onClick={onClose}
+            aria-label={locale === 'de' ? 'Chat schließen' : 'Close chat'}
+          >
+            ×
+          </button>
+        </div>
+        <iframe
+          src={`/chat?conversation=${encodeURIComponent(conversationId)}`}
+          title={locale === 'de' ? 'Workspace-Chat' : 'Workspace chat'}
+          className="my-request-chat-dialog__frame"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -907,11 +1571,78 @@ export function RequestsPrivateView({
   listContext,
 }: RequestsPrivateViewProps) {
   const setStateFilter = useStateFilterMutation();
+  const t = useT();
+  const qc = useQueryClient();
+  const requestsById = React.useMemo(
+    () => new Map(model.cards.map((card) => [card.requestId, card])),
+    [model.cards],
+  );
   const visibleCards = React.useMemo(() => {
     if (decisionState.mode !== 'decision') return model.cards;
     return sortCardsForDecisionMode(model.cards, model.response.decisionPanel);
   }, [decisionState.mode, model.cards, model.response.decisionPanel]);
   const cardRefs = React.useRef(new Map<string, HTMLElement>());
+  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(null);
+  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(null);
+  const [activeChatState, setActiveChatState] = React.useState<{
+    conversationId: string;
+    title: string;
+  } | null>(null);
+  const activeRequestCard = activeRequestState
+    ? requestsById.get(activeRequestState.requestId) ?? null
+    : null;
+
+  const openRequest = React.useCallback((requestId: string, intent: RequestDialogIntent = 'view') => {
+    if (!requestsById.has(requestId)) return;
+    setActiveOfferRequestId(null);
+    setActiveChatState(null);
+    setActiveRequestState({ requestId, intent });
+  }, [requestsById]);
+
+  const openOfferSheet = React.useCallback((requestId: string) => {
+    if (!requestsById.has(requestId)) return;
+    setActiveRequestState(null);
+    setActiveChatState(null);
+    setActiveOfferRequestId(requestId);
+  }, [requestsById]);
+
+  const openChatConversation = React.useCallback(async (payload: WorkspaceChatConversationInput) => {
+    try {
+      if (!isWorkspaceChatConversationInput(payload)) {
+        toast.error(locale === 'de' ? 'Chat konnte nicht geöffnet werden.' : 'Chat could not be opened.');
+        return;
+      }
+
+      const conversation = await createConversation(payload);
+      await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
+      const requestTitle = payload.requestId
+        ? requestsById.get(payload.requestId)?.requestPreview.title?.trim()
+        : '';
+
+      setActiveRequestState(null);
+      setActiveOfferRequestId(null);
+      setActiveChatState({
+        conversationId: conversation.id,
+        title: requestTitle || (locale === 'de' ? 'Nachrichten' : 'Messages'),
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+      toast.error(message);
+    }
+  }, [locale, qc, requestsById, t]);
+
+  const effectiveListContext = React.useMemo<RequestsPrivateListContext>(
+    () => ({
+      ...listContext,
+      onSendOffer: openOfferSheet,
+      onEditOffer: openOfferSheet,
+      onOpenChatConversation: (payload) => {
+        void openChatConversation(payload);
+      },
+      onOpenRequest: openRequest,
+    }),
+    [listContext, openChatConversation, openOfferSheet, openRequest],
+  );
 
   React.useEffect(() => {
     if (decisionState.mode !== 'decision' || !decisionState.activeRequestId) return;
@@ -919,6 +1650,18 @@ export function RequestsPrivateView({
     if (!node) return;
     node.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [decisionState.activeRequestId, decisionState.mode]);
+
+  React.useEffect(() => {
+    if (!activeRequestState) return;
+    if (activeRequestCard) return;
+    setActiveRequestState(null);
+  }, [activeRequestCard, activeRequestState]);
+
+  React.useEffect(() => {
+    if (!activeOfferRequestId) return;
+    if (requestsById.has(activeOfferRequestId)) return;
+    setActiveOfferRequestId(null);
+  }, [activeOfferRequestId, requestsById]);
 
   if (!isWorkspaceAuthed) {
     return <AuthGate locale={locale} guestLoginHref={guestLoginHref} />;
@@ -978,7 +1721,7 @@ export function RequestsPrivateView({
                   index={index}
                   mode={decisionState.mode}
                   isActive={decisionState.activeRequestId === card.requestId}
-                  listContext={listContext}
+                  listContext={effectiveListContext}
                 />
               </div>
             ))}
@@ -995,6 +1738,33 @@ export function RequestsPrivateView({
             />
           ) : null}
         </>
+      ) : null}
+      {activeRequestState && activeRequestCard ? (
+        <WorkspaceManagedRequestDialog
+          locale={locale}
+          card={activeRequestCard}
+          initialIntent={activeRequestState.intent}
+          onClose={() => setActiveRequestState(null)}
+          onOpenOfferSheet={openOfferSheet}
+          onOpenChatConversation={(payload) => {
+            void openChatConversation(payload);
+          }}
+        />
+      ) : null}
+      {activeOfferRequestId ? (
+        <WorkspaceManagedOfferSheet
+          locale={locale}
+          requestId={activeOfferRequestId}
+          onClose={() => setActiveOfferRequestId(null)}
+        />
+      ) : null}
+      {activeChatState ? (
+        <WorkspaceChatDialog
+          locale={locale}
+          conversationId={activeChatState.conversationId}
+          title={activeChatState.title}
+          onClose={() => setActiveChatState(null)}
+        />
       ) : null}
       {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && model.response.decisionPanel ? (
         <>

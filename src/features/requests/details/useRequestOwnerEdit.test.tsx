@@ -4,6 +4,7 @@ import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useRequestOwnerEdit } from '@/features/requests/details/useRequestOwnerEdit';
+import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { publishMyRequest, updateMyRequest, uploadRequestPhotos } from '@/lib/api/requests';
 
 vi.mock('sonner', () => ({
@@ -29,7 +30,7 @@ const qcMock = {
   invalidateQueries: vi.fn(),
 };
 
-const OWNER_DRAFT_REQUEST = {
+const OWNER_DRAFT_REQUEST: RequestResponseDto = {
   id: 'req-1',
   title: 'Draft request',
   serviceKey: 'home_cleaning',
@@ -44,7 +45,7 @@ const OWNER_DRAFT_REQUEST = {
   createdAt: '2026-04-17T10:00:00.000Z',
   clientId: 'u1',
   price: 120,
-} as const;
+};
 
 function Probe() {
   const ownerEdit = useRequestOwnerEdit({
