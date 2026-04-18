@@ -158,7 +158,7 @@ Backward-compatible redirects are still present for older links:
 ```text
 Next.js Frontend (App Router)
         |
-        |  /api/*  and  /presence/*
+        |  /api/* (BFF proxy route)  and  /presence/* (rewrite / socket entry)
         v
 NestJS Backend (REST + Presence)
         |
@@ -179,6 +179,10 @@ Persistence / External services
   - `401` retry via `/auth/refresh`
   - cookie-based refresh flow (`credentials: include`)
   - per-request `x-request-id` header for backend log correlation
+- HTTP requests go through `src/app/api/[...path]/route.ts`:
+  - browser always calls same-origin `/api/*`
+  - Next route handler proxies to configured backend base
+  - avoids dev/prod drift between request list, duplicate, archive, delete, and public request reads
 - `/workspace` is the single workspace runtime entrypoint:
   - authenticated users -> private workspace shell
   - guests -> public workspace shell
@@ -309,7 +313,7 @@ npm run start
 Notes:
 - Node.js 20+ is required
 - Backend must be reachable through configured API base env vars
-- Next.js rewrites are defined in `next.config.ts` for `/api/*` and `/presence/*`
+- Next.js route handler proxies `/api/*`; `next.config.ts` keeps `/presence/*` rewrite
 - Runtime env validation is executed in `src/lib/config/env.server.ts` (fail-fast on invalid prod env)
 
 ## Release Gate

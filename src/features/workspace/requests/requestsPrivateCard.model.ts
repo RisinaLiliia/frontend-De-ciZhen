@@ -34,18 +34,51 @@ export type PrivateRequestCardChrome = {
   secondaryAction: PrivateRequestCardAction | null;
 };
 
+function normalizeCardLinkHref(args: {
+  key: string;
+  href?: string | null;
+  card: WorkspaceMyRequestCardDto;
+}) {
+  const { key, href, card } = args;
+  if (key === 'edit-request' && card.requestPreview.href) {
+    return card.requestPreview.href;
+  }
+  return href ?? '';
+}
+
+function normalizeCardAction(
+  action: PrivateRequestCardAction,
+  card: WorkspaceMyRequestCardDto,
+): PrivateRequestCardAction {
+  if (action.kind !== 'link') return action;
+
+  return {
+    ...action,
+    href: normalizeCardLinkHref({
+      key: action.key,
+      href: action.href,
+      card,
+    }),
+    requestId: action.requestId ?? card.requestId,
+  };
+}
+
 function normalizeQuickActions(card: WorkspaceMyRequestCardDto): PrivateRequestCardAction[] {
   return card.quickActions
     .filter((action): action is WorkspaceMyRequestCardDto['quickActions'][number] & { href: string } => Boolean(action.href))
-    .map((action) => ({
-      key: `quick:${action.key}`,
-      kind: 'link',
-      tone: action.tone === 'primary' ? 'primary' : 'secondary',
-      icon: 'briefcase',
-      label: action.label,
-      href: action.href,
-      requestId: card.requestId,
-    }));
+    .map((action) =>
+      normalizeCardAction(
+        {
+          key: `quick:${action.key}`,
+          kind: 'link',
+          tone: action.tone === 'primary' ? 'primary' : 'secondary',
+          icon: 'briefcase',
+          label: action.label,
+          href: action.href,
+          requestId: card.requestId,
+        },
+        card,
+      ));
 }
 
 function isSameAction(
@@ -174,12 +207,14 @@ function resolveInsights(args: {
 }
 
 function resolvePrimaryAction(card: WorkspaceMyRequestCardDto): PrivateRequestCardAction | null {
-  if (card.decision.primaryAction) return card.decision.primaryAction;
+  if (card.decision.primaryAction) {
+    return normalizeCardAction(card.decision.primaryAction, card);
+  }
 
   const statusPrimary = card.status.actions.find(
     (action) => action.tone === 'primary' || action.key === 'open' || action.key === 'chat',
   );
-  if (statusPrimary) return statusPrimary;
+  if (statusPrimary) return normalizeCardAction(statusPrimary, card);
 
   const quickPrimary = normalizeQuickActions(card).find((action) => action.tone === 'primary');
   if (quickPrimary) return quickPrimary;
@@ -197,7 +232,7 @@ function resolveSecondaryAction(
     return action.key === 'chat' || action.key === 'open' || action.key === 'contract' || action.key === 'edit-request' || action.key === 'edit-offer';
   });
 
-  if (statusSecondary) return statusSecondary;
+  if (statusSecondary) return normalizeCardAction(statusSecondary, card);
 
   return normalizeQuickActions(card).find((action) => !isSameAction(action, primaryAction)) ?? null;
 }

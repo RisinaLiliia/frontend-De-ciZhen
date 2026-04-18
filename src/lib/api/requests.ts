@@ -2,6 +2,7 @@
 import { apiDelete, apiGet, apiPatch, apiPost, apiPostForm } from '@/lib/api/http';
 import { REQUESTS_PAGE_SIZE } from '@/lib/requests/pagination';
 import type {
+  ArchiveMyRequestResponseDto,
   CreateRequestDto,
   DeleteMyRequestResponseDto,
   PublicRequestsResponseDto,
@@ -92,6 +93,10 @@ export function getPublicRequestById(requestId: string, options?: { locale?: str
   return apiGet<RequestResponseDto>(`/requests/public/${requestId}`);
 }
 
+export function getMyRequestById(requestId: string) {
+  return apiGet<RequestResponseDto>(`/requests/my/${requestId}`);
+}
+
 export function listMyRequests(params?: {
   status?: string;
   from?: string;
@@ -115,4 +120,12 @@ export function updateMyRequest(requestId: string, payload: UpdateMyRequestDto) 
 
 export function deleteMyRequest(requestId: string) {
   return apiDelete<DeleteMyRequestResponseDto>(`/requests/my/${requestId}`);
+}
+
+export function duplicateMyRequest(requestId: string) {
+  return apiPost<undefined, RequestResponseDto>(`/requests/my/${requestId}/duplicate`, undefined);
+}
+
+export function archiveMyRequest(requestId: string) {
+  return apiPost<undefined, ArchiveMyRequestResponseDto>(`/requests/my/${requestId}/archive`, undefined);
 }

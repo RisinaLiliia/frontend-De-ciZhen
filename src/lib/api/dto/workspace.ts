@@ -158,9 +158,9 @@ export type WorkspaceMyRequestCardDto = {
     badgeTone?: 'info' | 'warning' | 'success' | 'danger' | null;
     actions: Array<{
       key: string;
-      kind: 'link' | 'send_offer' | 'edit_offer' | 'withdraw_offer' | 'open_chat' | 'delete_request';
+      kind: 'link' | 'send_offer' | 'edit_offer' | 'withdraw_offer' | 'open_chat' | 'duplicate_request' | 'share_request' | 'archive_request' | 'delete_request';
       tone: 'primary' | 'secondary' | 'danger';
-      icon: 'briefcase' | 'chat' | 'edit' | 'send' | 'trash';
+      icon: 'briefcase' | 'chat' | 'edit' | 'send' | 'trash' | 'copy' | 'share' | 'archive';
       label: string;
       href?: string | null;
       requestId?: string | null;
@@ -181,9 +181,9 @@ export type WorkspaceMyRequestCardDto = {
     lastRelevantActivityAt?: string | null;
     primaryAction?: {
       key: string;
-      kind: 'link' | 'send_offer' | 'edit_offer' | 'withdraw_offer' | 'open_chat' | 'delete_request';
+      kind: 'link' | 'send_offer' | 'edit_offer' | 'withdraw_offer' | 'open_chat' | 'duplicate_request' | 'share_request' | 'archive_request' | 'delete_request';
       tone: 'primary' | 'secondary' | 'danger';
-      icon: 'briefcase' | 'chat' | 'edit' | 'send' | 'trash';
+      icon: 'briefcase' | 'chat' | 'edit' | 'send' | 'trash' | 'copy' | 'share' | 'archive';
       label: string;
       href?: string | null;
       requestId?: string | null;

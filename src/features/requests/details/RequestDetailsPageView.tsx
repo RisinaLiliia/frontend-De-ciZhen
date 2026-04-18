@@ -60,6 +60,7 @@ type Props = {
   ownerPhotos: string[];
   isSavingOwner: boolean;
   isUploadingOwnerPhoto: boolean;
+  activeOwnerSubmitIntent: 'draft' | 'publish' | null;
   ownerPriceTrend: 'up' | 'down' | null;
   onToggleOwnerEdit: () => void;
   onOwnerClearText: () => void;
@@ -69,7 +70,7 @@ type Props = {
   onOwnerPhotoPick: (files: FileList | null) => void;
   onOwnerPhotoRemove: (index: number) => void;
   onOwnerCancelEdit: () => void;
-  onOwnerSave: () => void;
+  onOwnerSave: (intent?: 'draft' | 'publish') => void;
   formatPriceValue: (value: number) => string;
   similarTitle: string;
   similarFallbackMessage: string | undefined;
@@ -126,6 +127,7 @@ export function RequestDetailsPageView({
   ownerPhotos,
   isSavingOwner,
   isUploadingOwnerPhoto,
+  activeOwnerSubmitIntent,
   ownerPriceTrend,
   onToggleOwnerEdit,
   onOwnerClearText,
@@ -193,8 +195,10 @@ export function RequestDetailsPageView({
           {showOwnerBadge ? (
             <RequestOwnerEditPanel
               isEditMode={isOwnerEditMode}
+              showPublishAction={request.status === 'draft'}
               isSaving={isSavingOwner}
               isUploadingPhoto={isUploadingOwnerPhoto}
+              activeSubmitIntent={activeOwnerSubmitIntent}
               titleValue={ownerTitle}
               descriptionValue={ownerDescription}
               priceValue={ownerPrice}
@@ -212,7 +216,10 @@ export function RequestDetailsPageView({
               addPhotoLabel={t(I18N_KEYS.request.photosButton)}
               photosHintLabel={t(I18N_KEYS.requestDetails.ownerPhotosHint)}
               cancelLabel={t(I18N_KEYS.requestDetails.ownerCancel)}
-              saveLabel={t(I18N_KEYS.requestDetails.ownerSave)}
+              saveLabel={request.status === 'draft'
+                ? t(I18N_KEYS.request.submitDraft)
+                : t(I18N_KEYS.requestDetails.ownerSave)}
+              publishLabel={t(I18N_KEYS.request.submitPublish)}
               priceTrendDownLabel={t(I18N_KEYS.requestDetails.ownerPriceTrendDown)}
               priceTrendUpLabel={t(I18N_KEYS.requestDetails.ownerPriceTrendUp)}
               onToggleEdit={onToggleOwnerEdit}

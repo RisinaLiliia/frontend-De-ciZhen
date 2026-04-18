@@ -25,6 +25,10 @@ export type CityLookup = Map<string, { i18n: Record<string, string> }>;
 
 export type OwnerRequestActions = {
   onDelete?: (requestId: string) => void;
+  onArchive?: (requestId: string) => void;
+  onDuplicate?: (requestId: string) => void;
+  pendingArchiveRequestId?: string | null;
+  pendingDuplicateRequestId?: string | null;
   pendingDeleteRequestId?: string | null;
 };
 
