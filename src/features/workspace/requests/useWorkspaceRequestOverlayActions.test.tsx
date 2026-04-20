@@ -233,6 +233,7 @@ describe('useWorkspaceRequestOverlayActions', () => {
     expect(acceptOfferMock).toHaveBeenCalledWith('offer-1');
     expect(toast.success).toHaveBeenCalledWith('Angebot angenommen.');
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['workspace-request-offers', 'req-1'] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: workspaceQK.contractsMyClient() });
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: workspaceQK.requestsMy() });
   });
 

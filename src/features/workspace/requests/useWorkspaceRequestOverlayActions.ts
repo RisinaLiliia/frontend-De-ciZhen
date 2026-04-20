@@ -35,6 +35,7 @@ function useWorkspaceRequestOverlayInvalidation(requestId: string) {
     await Promise.all([
       qc.invalidateQueries({ queryKey: ['workspace-request-offers', requestId] }),
       qc.invalidateQueries({ queryKey: workspaceQK.offersMyClient() }),
+      qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
       qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
       qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
       qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
