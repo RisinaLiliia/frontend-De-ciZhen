@@ -100,30 +100,34 @@ export function useWorkspaceRequestOfferActions({
   const [pendingOfferActionId, setPendingOfferActionId] = React.useState<string | null>(null);
 
   const acceptRequestOffer = React.useCallback(async (offerId: string) => {
-    if (pendingOfferActionId === offerId) return;
+    if (pendingOfferActionId === offerId) return false;
     setPendingOfferActionId(offerId);
     try {
       await acceptOffer(offerId);
       toast.success(locale === 'de' ? 'Angebot angenommen.' : 'Offer accepted.');
       await invalidateOfferReviewState();
+      return true;
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
+      return false;
     } finally {
       setPendingOfferActionId(null);
     }
   }, [invalidateOfferReviewState, locale, pendingOfferActionId, t]);
 
   const declineRequestOffer = React.useCallback(async (offerId: string) => {
-    if (pendingOfferActionId === offerId) return;
+    if (pendingOfferActionId === offerId) return false;
     setPendingOfferActionId(offerId);
     try {
       await declineOffer(offerId);
       toast.success(locale === 'de' ? 'Angebot abgelehnt.' : 'Offer declined.');
       await invalidateOfferReviewState();
+      return true;
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
+      return false;
     } finally {
       setPendingOfferActionId(null);
     }
@@ -167,9 +171,11 @@ export function useWorkspaceRequestDecisionActions({
       });
       toast.success(locale === 'de' ? 'Vertrag bestätigt.' : 'Contract confirmed.');
       await invalidateDecisionState();
+      return true;
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
+      return false;
     } finally {
       setIsSubmittingDecision(false);
     }
@@ -181,9 +187,11 @@ export function useWorkspaceRequestDecisionActions({
       await completeContract(contractId);
       toast.success(locale === 'de' ? 'Abschluss bestätigt.' : 'Completion confirmed.');
       await invalidateDecisionState();
+      return true;
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
+      return false;
     } finally {
       setIsSubmittingDecision(false);
     }

@@ -23,6 +23,7 @@ import {
   formatDialogDate,
   formatDialogPrice,
   formatOfferTimestamp,
+  resolveContractStatusBadge,
   resolveOfferStatusBadge,
   toDateTimeLocalValue,
   useWorkspaceManagedRequestData,
@@ -40,6 +41,37 @@ import {
   shouldBypassNextImageOptimization,
 } from '@/lib/requests/images';
 
+function WorkspaceInlineStateCard({
+  locale,
+  title,
+  body,
+  tone,
+}: {
+  locale: Locale;
+  title: string;
+  body: string;
+  tone: 'empty' | 'error' | 'info';
+}) {
+  const icon = tone === 'error'
+    ? '!'
+    : tone === 'empty'
+      ? '0'
+      : 'i';
+
+  return (
+    <div className={`my-request-inline-state my-request-inline-state--${tone}`.trim()} role={tone === 'error' ? 'alert' : 'status'}>
+      <span className="my-request-inline-state__icon" aria-hidden="true">{icon}</span>
+      <div className="my-request-inline-state__copy">
+        <strong>{title}</strong>
+        <p>{body}</p>
+      </div>
+      <span className="my-request-inline-state__meta">
+        {locale === 'de' ? 'Inline' : 'Inline'}
+      </span>
+    </div>
+  );
+}
+
 function WorkspaceRequestOffersSection({
   locale,
   requestId,
@@ -55,6 +87,39 @@ function WorkspaceRequestOffersSection({
     declineRequestOffer,
     pendingOfferActionId,
   } = useWorkspaceRequestOfferActions({ locale, requestId });
+  const [optimisticOffers, setOptimisticOffers] = React.useState(actionableOffers);
+
+  React.useEffect(() => {
+    setOptimisticOffers(actionableOffers);
+  }, [actionableOffers]);
+
+  const activeOffers = optimisticOffers;
+  const optimisticAcceptedOfferId = activeOffers.find((offer) => offer.status === 'accepted')?.id ?? acceptedOfferId ?? null;
+
+  const handleAccept = React.useCallback(async (offerId: string) => {
+    const previous = activeOffers;
+    setOptimisticOffers((current) => current.map((offer) => {
+      if (offer.id === offerId) {
+        return { ...offer, status: 'accepted' };
+      }
+      return offer.status === 'withdrawn' ? offer : { ...offer };
+    }));
+    const ok = await acceptRequestOffer(offerId);
+    if (!ok) {
+      setOptimisticOffers(previous);
+    }
+  }, [acceptRequestOffer, activeOffers]);
+
+  const handleDecline = React.useCallback(async (offerId: string) => {
+    const previous = activeOffers;
+    setOptimisticOffers((current) => current.map((offer) => (
+      offer.id === offerId ? { ...offer, status: 'declined' } : offer
+    )));
+    const ok = await declineRequestOffer(offerId);
+    if (!ok) {
+      setOptimisticOffers(previous);
+    }
+  }, [activeOffers, declineRequestOffer]);
 
   return (
     <div className="my-request-dialog__section">
@@ -68,7 +133,7 @@ function WorkspaceRequestOffersSection({
           </p>
         </div>
         <span className="my-request-dialog__section-count">
-          {actionableOffers.length}
+          {activeOffers.length}
         </span>
       </div>
 
@@ -85,27 +150,35 @@ function WorkspaceRequestOffersSection({
       ) : null}
 
       {!isLoading && isError ? (
-        <p className="my-request-dialog__section-subtitle">
-          {locale === 'de' ? 'Angebote konnten nicht geladen werden.' : 'Offers could not be loaded.'}
-        </p>
+        <WorkspaceInlineStateCard
+          locale={locale}
+          tone="error"
+          title={locale === 'de' ? 'Angebote konnten nicht geladen werden' : 'Offers could not be loaded'}
+          body={locale === 'de'
+            ? 'Der Entscheidungsbereich bleibt geöffnet. Bitte versuche es erneut oder öffne den Chat direkt aus der Karte.'
+            : 'The decision area stays open. Please try again or open the chat directly from the card.'}
+        />
       ) : null}
 
-      {!isLoading && !isError && actionableOffers.length === 0 ? (
-        <p className="my-request-dialog__section-subtitle">
-          {locale === 'de'
-            ? 'Noch keine aktiven Angebote für diese Anfrage.'
-            : 'No active offers for this request yet.'}
-        </p>
+      {!isLoading && !isError && activeOffers.length === 0 ? (
+        <WorkspaceInlineStateCard
+          locale={locale}
+          tone="empty"
+          title={locale === 'de' ? 'Noch keine aktiven Angebote' : 'No active offers yet'}
+          body={locale === 'de'
+            ? 'Sobald Dienstleister reagieren, kannst du Annahme oder Ablehnung direkt hier erledigen.'
+            : 'As soon as providers respond, you can accept or decline directly here.'}
+        />
       ) : null}
 
-      {!isLoading && !isError && actionableOffers.length > 0 ? (
+      {!isLoading && !isError && activeOffers.length > 0 ? (
         <div className="my-request-dialog__offer-list">
-          {actionableOffers.map((offer) => {
+          {activeOffers.map((offer) => {
             const statusBadge = resolveOfferStatusBadge(locale, offer.status);
             const isAccepted = offer.status === 'accepted';
             const isDeclined = offer.status === 'declined';
             const isBusy = pendingOfferActionId === offer.id;
-            const isDecisionLocked = Boolean(acceptedOfferId && acceptedOfferId !== offer.id);
+            const isDecisionLocked = Boolean(optimisticAcceptedOfferId && optimisticAcceptedOfferId !== offer.id);
             const canAccept = !isAccepted && !isDeclined && !isDecisionLocked;
             const canDecline = !isAccepted && !isDeclined;
             const offerAmount = formatDialogPrice(locale, offer.amount);
@@ -175,7 +248,7 @@ function WorkspaceRequestOffersSection({
                     className="btn-ghost is-primary"
                     disabled={!canAccept || isBusy}
                     onClick={() => {
-                      void acceptRequestOffer(offer.id);
+                      void handleAccept(offer.id);
                     }}
                   >
                     {isBusy && pendingOfferActionId === offer.id
@@ -187,7 +260,7 @@ function WorkspaceRequestOffersSection({
                     className="btn-secondary"
                     disabled={!canDecline || isBusy}
                     onClick={() => {
-                      void declineRequestOffer(offer.id);
+                      void handleDecline(offer.id);
                     }}
                   >
                     {locale === 'de' ? 'Ablehnen' : 'Decline'}
@@ -228,6 +301,11 @@ function WorkspaceRequestDecisionSection({
     contract,
     contractMeta,
   } = useWorkspaceRequestDecisionData({ card, locale });
+  const [optimisticContractStatus, setOptimisticContractStatus] = React.useState<NonNullable<typeof contract>['status'] | null>(contract?.status ?? null);
+
+  React.useEffect(() => {
+    setOptimisticContractStatus(contract?.status ?? null);
+  }, [contract?.status]);
 
   React.useEffect(() => {
     if (!contract?.createdAt) return;
@@ -237,6 +315,18 @@ function WorkspaceRequestDecisionSection({
   if (card.decision.actionType === 'review_offers' || card.decision.actionType === 'none') {
     return null;
   }
+
+  const effectiveContract = contract
+    ? { ...contract, status: optimisticContractStatus ?? contract.status }
+    : null;
+  const effectiveContractMeta = effectiveContract?.priceAmount != null
+    ? [
+      formatDialogPrice(locale, effectiveContract.priceAmount),
+      resolveContractStatusBadge(locale, effectiveContract.status).label,
+    ]
+      .filter(Boolean)
+      .join(' · ')
+    : contractMeta;
 
   return (
     <div className="my-request-dialog__section my-request-dialog__section--decision">
@@ -255,12 +345,12 @@ function WorkspaceRequestDecisionSection({
         </span>
       </div>
 
-      {contractMeta ? (
-        <p className="my-request-dialog__section-subtitle">{contractMeta}</p>
+      {effectiveContractMeta ? (
+        <p className="my-request-dialog__section-subtitle">{effectiveContractMeta}</p>
       ) : null}
 
       {(card.decision.actionType === 'reply_required' || card.decision.actionType === 'overdue_followup') && chatInput ? (
-        <div className="my-request-dialog__actions">
+        <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
           <button
             type="button"
             className="btn-primary"
@@ -272,7 +362,7 @@ function WorkspaceRequestDecisionSection({
       ) : null}
 
       {card.decision.actionType === 'confirm_contract' ? (
-        contract ? (
+        effectiveContract ? (
           <div className="my-request-decision-form">
             <label className="my-request-decision-form__field">
               <span>{locale === 'de' ? 'Start' : 'Start'}</span>
@@ -280,7 +370,7 @@ function WorkspaceRequestDecisionSection({
                 type="datetime-local"
                 value={startAt}
                 onChange={(event) => setStartAt(event.target.value)}
-                disabled={isSubmittingDecision || contract.status !== 'pending'}
+                disabled={isSubmittingDecision || effectiveContract.status !== 'pending'}
               />
             </label>
             <label className="my-request-decision-form__field">
@@ -291,7 +381,7 @@ function WorkspaceRequestDecisionSection({
                 step={15}
                 value={durationMin}
                 onChange={(event) => setDurationMin(event.target.value)}
-                disabled={isSubmittingDecision || contract.status !== 'pending'}
+                disabled={isSubmittingDecision || effectiveContract.status !== 'pending'}
               />
             </label>
             <label className="my-request-decision-form__field">
@@ -299,11 +389,11 @@ function WorkspaceRequestDecisionSection({
               <Textarea
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
-                disabled={isSubmittingDecision || contract.status !== 'pending'}
+                disabled={isSubmittingDecision || effectiveContract.status !== 'pending'}
                 placeholder={locale === 'de' ? 'Optionaler Hinweis für den Vertrag' : 'Optional note for the contract'}
               />
             </label>
-            <div className="my-request-dialog__actions">
+            <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
               {chatInput ? (
                 <button
                   type="button"
@@ -318,15 +408,21 @@ function WorkspaceRequestDecisionSection({
                 type="button"
                 className="btn-primary"
                 onClick={() => {
-                  if (!contract?.id || !startAt) return;
+                  if (!effectiveContract?.id || !startAt) return;
+                  const previousStatus = optimisticContractStatus;
+                  setOptimisticContractStatus('confirmed');
                   void confirmRequestContract({
-                    contractId: contract.id,
+                    contractId: effectiveContract.id,
                     startAt,
                     durationMin,
                     note,
+                  }).then((ok) => {
+                    if (!ok) {
+                      setOptimisticContractStatus(previousStatus);
+                    }
                   });
                 }}
-                disabled={isSubmittingDecision || contract.status !== 'pending' || !startAt}
+                disabled={isSubmittingDecision || effectiveContract.status !== 'pending' || !startAt}
               >
                 {isSubmittingDecision
                   ? (locale === 'de' ? 'Speichern…' : 'Saving…')
@@ -335,17 +431,20 @@ function WorkspaceRequestDecisionSection({
             </div>
           </div>
         ) : (
-          <p className="my-request-dialog__section-subtitle">
-            {locale === 'de'
-              ? 'Vertragsdaten sind noch nicht verfügbar.'
-              : 'Contract details are not available yet.'}
-          </p>
+          <WorkspaceInlineStateCard
+            locale={locale}
+            tone="info"
+            title={locale === 'de' ? 'Vertragsdaten fehlen noch' : 'Contract details are not available yet'}
+            body={locale === 'de'
+              ? 'Sobald das Angebot in einen Vertrag überführt wurde, kannst du Start, Dauer und Bestätigung direkt hier abschließen.'
+              : 'As soon as the offer is converted into a contract, you can confirm start, duration, and completion directly here.'}
+          />
         )
       ) : null}
 
       {card.decision.actionType === 'confirm_completion' ? (
-        contract ? (
-          <div className="my-request-dialog__actions">
+        effectiveContract ? (
+          <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
             {chatInput ? (
               <button
                 type="button"
@@ -360,10 +459,16 @@ function WorkspaceRequestDecisionSection({
               type="button"
               className="btn-primary"
               onClick={() => {
-                if (!contract?.id) return;
-                void completeRequestContract(contract.id);
+                if (!effectiveContract?.id) return;
+                const previousStatus = optimisticContractStatus;
+                setOptimisticContractStatus('completed');
+                void completeRequestContract(effectiveContract.id).then((ok) => {
+                  if (!ok) {
+                    setOptimisticContractStatus(previousStatus);
+                  }
+                });
               }}
-              disabled={isSubmittingDecision || contract.status === 'completed' || contract.status === 'cancelled'}
+              disabled={isSubmittingDecision || effectiveContract.status === 'completed' || effectiveContract.status === 'cancelled'}
             >
               {isSubmittingDecision
                 ? (locale === 'de' ? 'Speichern…' : 'Saving…')
@@ -371,11 +476,14 @@ function WorkspaceRequestDecisionSection({
             </button>
           </div>
         ) : (
-          <p className="my-request-dialog__section-subtitle">
-            {locale === 'de'
-              ? 'Für diese Anfrage wurde noch kein Vertrag gefunden.'
-              : 'No contract has been found for this request yet.'}
-          </p>
+          <WorkspaceInlineStateCard
+            locale={locale}
+            tone="empty"
+            title={locale === 'de' ? 'Noch kein Vertrag gefunden' : 'No contract found yet'}
+            body={locale === 'de'
+              ? 'Die Abschlussbestätigung wird hier sichtbar, sobald der Auftrag aktiv als Vertrag geführt wird.'
+              : 'Completion confirmation will appear here as soon as the request is tracked as an active contract.'}
+          />
         )
       ) : null}
     </div>
@@ -481,8 +589,14 @@ export function WorkspaceManagedRequestDialog({
 
         {!isLoading && (isError || !request) ? (
           <div className="my-request-dialog__state">
-            <h3>{locale === 'de' ? 'Anfrage konnte nicht geladen werden.' : 'Request could not be loaded.'}</h3>
-            <p>{locale === 'de' ? 'Bitte versuche es erneut.' : 'Please try again.'}</p>
+            <WorkspaceInlineStateCard
+              locale={locale}
+              tone="error"
+              title={locale === 'de' ? 'Anfrage konnte nicht geladen werden' : 'Request could not be loaded'}
+              body={locale === 'de'
+                ? 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.'
+                : 'The workspace stays in place. Please try again without leaving this page.'}
+            />
           </div>
         ) : null}
 
