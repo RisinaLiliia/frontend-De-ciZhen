@@ -713,10 +713,12 @@ export function WorkspaceManagedOfferSheet({
   locale,
   requestId,
   onClose,
+  surface = 'modal',
 }: {
   locale: Locale;
   requestId: string;
   onClose: () => void;
+  surface?: 'modal' | 'embedded';
 }) {
   const t = useT();
   const { existingResponse, isError, isLoading, request } = useWorkspaceProviderOfferSheetData({
@@ -774,7 +776,12 @@ export function WorkspaceManagedOfferSheet({
   }, [onClose, resetDraft]);
 
   if (isLoading || (!request && !isError)) {
-    return (
+    return surface === 'embedded' ? (
+      <div className="my-request-dialog__state">
+        <div className="skeleton h-8 w-48" />
+        <div className="skeleton h-24 w-full" />
+      </div>
+    ) : (
       <WorkspaceCompactModalPortal
         locale={locale}
         ariaLabel={locale === 'de' ? 'Angebot' : 'Offer'}
@@ -789,7 +796,18 @@ export function WorkspaceManagedOfferSheet({
   }
 
   if (!request && isError) {
-    return (
+    return surface === 'embedded' ? (
+      <div className="my-request-dialog__state">
+        <WorkspaceInlineStateCard
+          locale={locale}
+          tone="error"
+          title={locale === 'de' ? 'Angebot konnte nicht geladen werden' : 'Offer could not be loaded'}
+          body={locale === 'de'
+            ? 'Bitte versuche es erneut, ohne den Workspace zu verlassen.'
+            : 'Please try again without leaving the workspace.'}
+        />
+      </div>
+    ) : (
       <WorkspaceCompactModalPortal
         locale={locale}
         ariaLabel={locale === 'de' ? 'Angebot' : 'Offer'}
@@ -856,6 +874,8 @@ export function WorkspaceManagedOfferSheet({
       showProfileAdvice={false}
       profileStatusLabel={locale === 'de' ? 'Workspace' : 'Workspace'}
       isSubmitting={isSubmittingOffer}
+      surface={surface}
+      showCloseButton={surface !== 'embedded'}
       onAmountChange={setOfferAmount}
       onCommentChange={setOfferComment}
       onAvailabilityChange={setOfferAvailability}

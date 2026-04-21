@@ -5,8 +5,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
+import { IconHeart, IconSend, IconShare, IconTrash } from '@/components/ui/icons/icons';
 import { deleteOffer } from '@/lib/api/offers';
 import { useAuthStatus, useAuthUser, useAuthMe } from '@/hooks/useAuthSnapshot';
 import { useRequestDetailsContentState } from '@/features/requests/details/useRequestDetailsContentState';
@@ -22,6 +22,26 @@ import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/re
 import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
 import { resolveOfferCardState } from '@/features/requests/uiState';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
+
+function RequestDetailInteractionMenuItem({
+  children,
+  icon,
+  className,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  icon: React.ReactNode;
+}) {
+  return (
+    <button
+      {...props}
+      type={props.type ?? 'button'}
+      className={`my-request-card__owner-menu-item ${className ?? ''}`.trim()}
+    >
+      <span className="my-request-card__owner-menu-item-label">{children}</span>
+      <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">{icon}</span>
+    </button>
+  );
+}
 
 function RequestDetailInteractionMenu({
   locale,
@@ -82,23 +102,22 @@ function RequestDetailInteractionMenu({
       {isOpen ? (
         <div className="my-request-card__owner-menu-surface" role="menu">
           {canEditOffer ? (
-            <button
-              type="button"
-              className="my-request-card__owner-menu-item"
+            <RequestDetailInteractionMenuItem
               role="menuitem"
+              icon={<IconSend />}
               onClick={() => {
                 setIsOpen(false);
                 onEditOffer();
               }}
             >
               {locale === 'de' ? 'Angebot bearbeiten' : 'Edit offer'}
-            </button>
+            </RequestDetailInteractionMenuItem>
           ) : null}
           {canDeleteOffer ? (
-            <button
-              type="button"
-              className="my-request-card__owner-menu-item is-danger"
+            <RequestDetailInteractionMenuItem
+              className="is-danger"
               role="menuitem"
+              icon={<IconTrash />}
               disabled={isDeletingOffer}
               onClick={() => {
                 setIsOpen(false);
@@ -106,12 +125,11 @@ function RequestDetailInteractionMenu({
               }}
             >
               {locale === 'de' ? 'Angebot löschen' : 'Delete offer'}
-            </button>
+            </RequestDetailInteractionMenuItem>
           ) : null}
-          <button
-            type="button"
-            className="my-request-card__owner-menu-item"
+          <RequestDetailInteractionMenuItem
             role="menuitem"
+            icon={<IconHeart />}
             disabled={isSavePending}
             onClick={() => {
               setIsOpen(false);
@@ -121,18 +139,17 @@ function RequestDetailInteractionMenu({
             {isSaved
               ? (locale === 'de' ? 'Gespeichert' : 'Saved')
               : (locale === 'de' ? 'In Favoriten' : 'Save')}
-          </button>
-          <button
-            type="button"
-            className="my-request-card__owner-menu-item"
+          </RequestDetailInteractionMenuItem>
+          <RequestDetailInteractionMenuItem
             role="menuitem"
+            icon={<IconShare />}
             onClick={() => {
               setIsOpen(false);
               onShare();
             }}
           >
             {locale === 'de' ? 'Teilen' : 'Share'}
-          </button>
+          </RequestDetailInteractionMenuItem>
         </div>
       ) : null}
     </div>
@@ -147,6 +164,7 @@ export function WorkspacePublicRequestDialog({
   onOpenRequest,
   onOpenOfferSheet,
   onOpenChatConversation,
+  surface = 'modal',
 }: {
   locale: Locale;
   requestId: string;
@@ -155,6 +173,7 @@ export function WorkspacePublicRequestDialog({
   onOpenRequest: (requestId: string, intent?: RequestDialogIntent) => void;
   onOpenOfferSheet: (requestId: string) => void;
   onOpenChatConversation: (payload: WorkspaceChatConversationInput, title?: string) => void;
+  surface?: 'modal' | 'embedded';
 }) {
   const t = useT();
   const authStatus = useAuthStatus();
@@ -374,34 +393,115 @@ export function WorkspacePublicRequestDialog({
     return (
       <span className="request-card__status-actions request-detail__status-actions">
         <span className={`${getStatusBadgeClass(offerCardState)} capitalize`}>{statusLabel}</span>
-        {offerCardState === 'sent' ? (
-          <>
-            <OfferActionButton
-              kind="edit"
-              label={t(I18N_KEYS.requestDetails.responseEditCta)}
-              ariaLabel={t(I18N_KEYS.requestDetails.responseEditTooltip)}
-              title={t(I18N_KEYS.requestDetails.responseEditTooltip)}
-              iconOnly
-              className="request-card__status-action request-card__status-action--edit"
-              onClick={handleEditOffer}
-            />
-            <OfferActionButton
-              kind="delete"
-              label={t(I18N_KEYS.requestDetails.responseCancel)}
-              ariaLabel={t(I18N_KEYS.requestDetails.responseCancel)}
-              title={t(I18N_KEYS.requestDetails.responseCancel)}
-              iconOnly
-              className="request-card__status-action request-card__status-action--danger"
-              onClick={() => {
-                void handleDeleteOffer();
-              }}
-              disabled={isDeletingOffer}
-            />
-          </>
-        ) : null}
       </span>
     );
-  }, [handleDeleteOffer, handleEditOffer, isDeletingOffer, offerCardState, t]);
+  }, [offerCardState, t]);
+
+  const content = hasResolvedContent ? (
+    <RequestDetailsContent
+      t={t}
+      request={resolvedRequest!}
+      viewModel={resolvedViewModel!}
+      surface="dialog"
+      statusBadgeContent={offerStatusBadge ?? undefined}
+      headerActionSlot={!isOwner ? (
+        <RequestDetailInteractionMenu
+          locale={locale}
+          isSaved={isSaved}
+          isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
+          canEditOffer={offerCardState === 'sent'}
+          canDeleteOffer={offerCardState === 'sent'}
+          isDeletingOffer={isDeletingOffer}
+          onToggleFavorite={handleFavorite}
+          onEditOffer={handleEditOffer}
+          onDeleteOffer={() => {
+            void handleDeleteOffer();
+          }}
+          onShare={() => {
+            void handleShare();
+          }}
+        />
+      ) : undefined}
+      requestStatusView={requestStatusView}
+      requestPriceTrend={requestPriceTrend}
+      requestPriceTrendLabel={requestPriceTrendLabel}
+      applyLabel={applyLabel}
+      applyState={applyState}
+      applyTitle={applyTitle}
+      showOfferCta={!isOwner}
+      showChatCta={!isOwner}
+      showFavoriteCta={!isOwner}
+      showOwnerBadge={showOwnerBadge}
+      isSaved={isSaved}
+      isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
+      onApply={handleApply}
+      onChat={handleChat}
+      onFavorite={handleFavorite}
+      isOwnerEditMode={isOwnerEditMode}
+      ownerTitle={ownerTitle}
+      ownerDescription={ownerDescription}
+      ownerPrice={ownerPrice}
+      ownerPhotos={ownerPhotos}
+      isSavingOwner={isSavingOwner}
+      isUploadingOwnerPhoto={isUploadingOwnerPhoto}
+      activeOwnerSubmitIntent={activeOwnerSubmitIntent}
+      ownerPriceTrend={ownerPriceTrend}
+      onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
+      onOwnerClearText={handleOwnerClearText}
+      onOwnerTitleChange={setOwnerTitle}
+      onOwnerDescriptionChange={setOwnerDescription}
+      onOwnerPriceChange={setOwnerPrice}
+      onOwnerPhotoPick={(files) => {
+        void handleOwnerPhotoPick(files);
+      }}
+      onOwnerPhotoRemove={(index) => {
+        setOwnerPhotos((prev) => prev.filter((_, photoIndex) => photoIndex !== index));
+      }}
+      onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
+      onOwnerSave={(intent) => {
+        void handleOwnerSave(intent);
+      }}
+      formatPriceValue={formatPriceValue}
+      similarTitle={similarTitle}
+      similarFallbackMessage={similarFallbackMessage}
+      similarForRender={similarForRender}
+      similarHref={similarHref}
+      onOpenSimilarRequest={(nextRequestId) => onOpenRequest(nextRequestId, 'view')}
+    />
+  ) : null;
+
+  if (surface === 'embedded') {
+    if (isPending) {
+      return (
+        <div className="my-request-dialog__state">
+          <div className="skeleton h-8 w-56" />
+          <div className="skeleton h-24 w-full" />
+          <div className="skeleton h-10 w-40" />
+        </div>
+      );
+    }
+
+    if (hasDialogError) {
+      return (
+        <div className="my-request-dialog__state">
+          <div className="my-request-inline-state my-request-inline-state--error" role="alert">
+            <span className="my-request-inline-state__icon" aria-hidden="true">!</span>
+            <div className="my-request-inline-state__copy">
+              <strong>{locale === 'de' ? 'Anfrage konnte nicht geladen werden' : 'Request could not be loaded'}</strong>
+              <p>{locale === 'de'
+                ? 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.'
+                : 'The workspace stays in place. Please try again without leaving this page.'}</p>
+            </div>
+            <span className="my-request-inline-state__meta">
+              {locale === 'de' ? 'Inline' : 'Inline'}
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    return content;
+  }
 
   return (
     <WorkspaceRequestDialogShell
@@ -415,78 +515,7 @@ export function WorkspacePublicRequestDialog({
         ? 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.'
         : 'The workspace stays in place. Please try again without leaving this page.'}
     >
-      {hasResolvedContent ? (
-        <RequestDetailsContent
-          t={t}
-          request={resolvedRequest!}
-          viewModel={resolvedViewModel!}
-          surface="dialog"
-          statusBadgeContent={offerStatusBadge ?? undefined}
-          headerActionSlot={!isOwner ? (
-            <RequestDetailInteractionMenu
-              locale={locale}
-              isSaved={isSaved}
-              isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
-              canEditOffer={offerCardState === 'sent'}
-              canDeleteOffer={offerCardState === 'sent'}
-              isDeletingOffer={isDeletingOffer}
-              onToggleFavorite={handleFavorite}
-              onEditOffer={handleEditOffer}
-              onDeleteOffer={() => {
-                void handleDeleteOffer();
-              }}
-              onShare={() => {
-                void handleShare();
-              }}
-            />
-          ) : undefined}
-          requestStatusView={requestStatusView}
-          requestPriceTrend={requestPriceTrend}
-          requestPriceTrendLabel={requestPriceTrendLabel}
-          applyLabel={applyLabel}
-          applyState={applyState}
-          applyTitle={applyTitle}
-          showOfferCta={!isOwner}
-          showChatCta={!isOwner}
-          showFavoriteCta={!isOwner}
-          showOwnerBadge={showOwnerBadge}
-          isSaved={isSaved}
-          isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
-          onApply={handleApply}
-          onChat={handleChat}
-          onFavorite={handleFavorite}
-          isOwnerEditMode={isOwnerEditMode}
-          ownerTitle={ownerTitle}
-          ownerDescription={ownerDescription}
-          ownerPrice={ownerPrice}
-          ownerPhotos={ownerPhotos}
-          isSavingOwner={isSavingOwner}
-          isUploadingOwnerPhoto={isUploadingOwnerPhoto}
-          activeOwnerSubmitIntent={activeOwnerSubmitIntent}
-          ownerPriceTrend={ownerPriceTrend}
-          onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
-          onOwnerClearText={handleOwnerClearText}
-          onOwnerTitleChange={setOwnerTitle}
-          onOwnerDescriptionChange={setOwnerDescription}
-          onOwnerPriceChange={setOwnerPrice}
-          onOwnerPhotoPick={(files) => {
-            void handleOwnerPhotoPick(files);
-          }}
-          onOwnerPhotoRemove={(index) => {
-            setOwnerPhotos((prev) => prev.filter((_, photoIndex) => photoIndex !== index));
-          }}
-          onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
-          onOwnerSave={(intent) => {
-            void handleOwnerSave(intent);
-          }}
-          formatPriceValue={formatPriceValue}
-          similarTitle={similarTitle}
-          similarFallbackMessage={similarFallbackMessage}
-          similarForRender={similarForRender}
-          similarHref={similarHref}
-          onOpenSimilarRequest={(nextRequestId) => onOpenRequest(nextRequestId, 'view')}
-        />
-      ) : null}
+      {content}
     </WorkspaceRequestDialogShell>
   );
 }

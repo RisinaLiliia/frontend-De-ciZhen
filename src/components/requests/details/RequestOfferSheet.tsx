@@ -11,6 +11,7 @@ import { focusIfPresent, getTrapFocusTarget, resolveInitialFocusTarget } from '@
 
 type RequestOfferSheetProps = {
   isOpen: boolean;
+  surface?: 'modal' | 'embedded';
   mode: 'form' | 'success';
   title: string;
   previewTitle: string;
@@ -53,6 +54,7 @@ type RequestOfferSheetProps = {
   onCancel: () => void;
   onSuccessBack: () => void;
   onSubmit: () => void;
+  showCloseButton?: boolean;
 };
 
 function getFocusableElements(container: HTMLElement) {
@@ -71,6 +73,7 @@ function getFocusableElements(container: HTMLElement) {
 
 export function RequestOfferSheet({
   isOpen,
+  surface = 'modal',
   mode,
   title,
   previewTitle,
@@ -113,6 +116,7 @@ export function RequestOfferSheet({
   onCancel,
   onSuccessBack,
   onSubmit,
+  showCloseButton = true,
 }: RequestOfferSheetProps) {
   const dialogTitleId = React.useId();
   const amountInputId = React.useId();
@@ -127,7 +131,7 @@ export function RequestOfferSheet({
   }, []);
 
   React.useEffect(() => {
-    if (!isOpen || !isMounted) return;
+    if (!isOpen || !isMounted || surface !== 'modal') return;
 
     const panel = panelRef.current;
     const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -175,32 +179,39 @@ export function RequestOfferSheet({
       document.removeEventListener('keydown', onKeyDown);
       focusIfPresent(previouslyFocused);
     };
-  }, [isMounted, isOpen, onClose]);
+  }, [isMounted, isOpen, onClose, surface]);
 
   if (!isOpen || !isMounted) return null;
 
-  return createPortal((
+  const content = (
     <div
-      className="dc-modal request-offer-sheet"
-      role="dialog"
-      aria-modal="true"
+      className={surface === 'modal' ? 'dc-modal request-offer-sheet' : 'request-offer-sheet request-offer-sheet--embedded'}
+      role={surface === 'modal' ? 'dialog' : 'group'}
+      aria-modal={surface === 'modal' ? 'true' : undefined}
       aria-labelledby={dialogTitleId}
     >
-      <button type="button" className="dc-modal__backdrop request-offer-sheet__backdrop" onClick={onClose} aria-label={closeLabel} />
-      <div ref={panelRef} className="dc-modal__panel dc-modal__panel--compact request-offer-sheet__panel">
+      {surface === 'modal' ? (
+        <button type="button" className="dc-modal__backdrop request-offer-sheet__backdrop" onClick={onClose} aria-label={closeLabel} />
+      ) : null}
+      <div
+        ref={panelRef}
+        className={`${surface === 'modal' ? 'dc-modal__panel dc-modal__panel--compact ' : ''}request-offer-sheet__panel ${surface === 'embedded' ? 'request-offer-sheet__panel--embedded' : ''}`.trim()}
+      >
         <div className="request-offer-sheet__header">
           {mode === 'form' ? (
             <h2 id={dialogTitleId} className="typo-h3">{title}</h2>
           ) : null}
-          <button
-            ref={closeButtonRef}
-            type="button"
-            className="request-offer-sheet__close"
-            onClick={onClose}
-            aria-label={closeLabel}
-          >
-            ×
-          </button>
+          {showCloseButton ? (
+            <button
+              ref={closeButtonRef}
+              type="button"
+              className="request-offer-sheet__close"
+              onClick={onClose}
+              aria-label={closeLabel}
+            >
+              ×
+            </button>
+          ) : null}
           <RequestMetaInline
             title={previewTitle}
             city={previewCity}
@@ -310,7 +321,7 @@ export function RequestOfferSheet({
               <OfferActionButton
                 kind={submitKind}
                 label={submitLabel}
-                className="request-detail__cta-btn"
+                className={`request-detail__cta-btn ${submitKind === 'edit' ? 'is-edit' : ''}`.trim()}
                 onClick={onSubmit}
                 disabled={isSubmitting}
               />
@@ -319,5 +330,11 @@ export function RequestOfferSheet({
         )}
       </div>
     </div>
-  ), document.body);
+  );
+
+  if (surface === 'embedded') {
+    return content;
+  }
+
+  return createPortal(content, document.body);
 }

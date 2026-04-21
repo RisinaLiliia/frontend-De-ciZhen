@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { WorkspacePublicRequestDialog } from '@/features/workspace/requests/WorkspacePublicRequestDialog';
@@ -84,15 +84,28 @@ vi.mock('@/features/requests/details/useRequestDetailsContentState', () => ({
 }));
 
 vi.mock('@/features/requests/details/RequestDetailsContent', () => ({
-  RequestDetailsContent: ({ onApply }: { onApply: () => void }) => (
-    <button type="button" onClick={onApply}>
-      request-details-content
-    </button>
+  RequestDetailsContent: ({
+    onApply,
+    headerActionSlot,
+    statusBadgeContent,
+  }: {
+    onApply: () => void;
+    headerActionSlot?: React.ReactNode;
+    statusBadgeContent?: React.ReactNode;
+  }) => (
+    <div>
+      <div>{headerActionSlot}</div>
+      <div>{statusBadgeContent}</div>
+      <button type="button" onClick={onApply}>
+        request-details-content
+      </button>
+    </div>
   ),
 }));
 
 describe('WorkspacePublicRequestDialog', () => {
   afterEach(() => {
+    cleanup();
     authStatusValue = 'guest';
     authUserValue = null;
     requestDetailsPageDataValue = defaultRequestDetailsPageData;
@@ -240,5 +253,64 @@ describe('WorkspacePublicRequestDialog', () => {
     await waitFor(() => {
       expect(onOpenOfferSheet).toHaveBeenCalledWith('req-1');
     });
+  });
+
+  it('renders sent offer actions only inside the more menu', async () => {
+    authStatusValue = 'authenticated';
+    authUserValue = { id: 'provider-1' };
+
+    requestDetailsPageDataValue = {
+      request: {
+        id: 'req-1',
+        clientId: 'client-1',
+        title: 'Test request',
+      },
+      isLoading: false,
+      isError: false,
+      providerProfile: null,
+      existingResponse: {
+        id: 'offer-1',
+        requestId: 'req-1',
+        status: 'sent',
+      },
+      pendingFavoriteRequestIds: new Set<string>(),
+      toggleRequestFavorite: vi.fn(),
+      isSaved: true,
+    };
+    requestDetailsContentStateValue = {
+      ...defaultRequestDetailsContentState,
+      applyLabel: 'Angebot bearbeiten',
+      applyState: 'edit',
+      requestStatusView: { token: 'sent', label: 'Review' },
+      viewModel: {
+        title: 'Test request',
+      },
+    };
+
+    render(
+      <WorkspacePublicRequestDialog
+        locale="de"
+        requestId="req-1"
+        initialIntent="view"
+        onClose={vi.fn()}
+        onOpenRequest={vi.fn()}
+        onOpenOfferSheet={vi.fn()}
+        onOpenChatConversation={vi.fn()}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Aktionen öffnen' })).toBeTruthy();
+    });
+
+    expect(screen.queryByLabelText('requestDetails.responseEditTooltip')).toBeNull();
+    expect(screen.queryByLabelText('requestDetails.responseCancel')).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Aktionen öffnen' }));
+
+    expect(screen.getByRole('menuitem', { name: 'Angebot bearbeiten' })).toBeTruthy();
+    expect(screen.getByRole('menuitem', { name: 'Angebot löschen' })).toBeTruthy();
+    expect(screen.getByRole('menuitem', { name: 'Gespeichert' })).toBeTruthy();
+    expect(screen.getByRole('menuitem', { name: 'Teilen' })).toBeTruthy();
   });
 });

@@ -52,6 +52,7 @@ export function WorkspaceRequestDialogShell({
   isError,
   errorTitle,
   errorBody,
+  bodyVariant = 'details',
   children,
 }: {
   locale: Locale;
@@ -61,6 +62,7 @@ export function WorkspaceRequestDialogShell({
   isError: boolean;
   errorTitle: string;
   errorBody: string;
+  bodyVariant?: 'details' | 'default';
   children: React.ReactNode;
 }) {
   const panelRef = React.useRef<HTMLDivElement | null>(null);
@@ -161,7 +163,7 @@ export function WorkspaceRequestDialogShell({
         ) : null}
 
         {!isLoading && !isError ? (
-          <div className="my-request-dialog__body my-request-dialog__body--details">
+          <div className={`my-request-dialog__body ${bodyVariant === 'details' ? 'my-request-dialog__body--details' : ''}`.trim()}>
             {children}
           </div>
         ) : null}

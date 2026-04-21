@@ -10,14 +10,25 @@ type Props = {
   forceFallback?: boolean;
   ariaLabel?: string;
   label?: string;
+  onClick?: () => void;
 };
 
-export function BackButton({ fallbackHref = '/', forceFallback = false, ariaLabel, label }: Props) {
+export function BackButton({
+  fallbackHref = '/',
+  forceFallback = false,
+  ariaLabel,
+  label,
+  onClick,
+}: Props) {
   const router = useRouter();
   const t = useT();
   const text = label ?? t(I18N_KEYS.common.back);
 
   const handleClick = () => {
+    if (onClick) {
+      onClick();
+      return;
+    }
     if (forceFallback) {
       router.push(fallbackHref);
       return;

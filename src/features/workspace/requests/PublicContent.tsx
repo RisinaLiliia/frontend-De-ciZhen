@@ -12,8 +12,7 @@ import {
   DEFAULT_REQUESTS_LIST_DENSITY,
   type RequestsListDensity,
 } from '@/lib/requests/pagination';
-import { WorkspaceChatDialog, WorkspaceManagedOfferSheet } from '@/features/workspace/requests/WorkspaceRequestOverlays';
-import { WorkspacePublicRequestDialog } from '@/features/workspace/requests/WorkspacePublicRequestDialog';
+import { WorkspacePublicRequestSessionDialog } from '@/features/workspace/requests/WorkspacePublicRequestSessionDialog';
 import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
 import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 
@@ -74,7 +73,7 @@ export function PublicContent({
     activeRequestState,
     closeChat,
     closeOfferSheet,
-    closeRequest,
+    dismissSession,
     openChatConversation,
     openOfferSheet,
     openRequest,
@@ -180,32 +179,18 @@ export function PublicContent({
         <RequestsList {...requestsListPropsWithOverlay} />
       </RequestsPaginatedPanel>
 
-      {activeRequestState ? (
-        <WorkspacePublicRequestDialog
+      {(activeRequestState || activeOfferRequestId || activeChatState) ? (
+        <WorkspacePublicRequestSessionDialog
           locale={requestsListProps.locale}
-          requestId={activeRequestState.requestId}
-          initialIntent={activeRequestState.intent}
-          onClose={closeRequest}
+          activeRequestState={activeRequestState}
+          activeOfferRequestId={activeOfferRequestId}
+          activeChatState={activeChatState}
+          onDismissSession={dismissSession}
+          onCloseOfferSheet={closeOfferSheet}
+          onCloseChat={closeChat}
           onOpenRequest={openRequest}
           onOpenOfferSheet={openOfferSheet}
           onOpenChatConversation={openChatConversation}
-        />
-      ) : null}
-
-      {activeOfferRequestId ? (
-        <WorkspaceManagedOfferSheet
-          locale={requestsListProps.locale}
-          requestId={activeOfferRequestId}
-          onClose={closeOfferSheet}
-        />
-      ) : null}
-
-      {activeChatState ? (
-        <WorkspaceChatDialog
-          locale={requestsListProps.locale}
-          conversationId={activeChatState.conversationId}
-          title={activeChatState.title}
-          onClose={closeChat}
         />
       ) : null}
     </>

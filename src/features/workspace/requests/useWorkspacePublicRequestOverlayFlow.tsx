@@ -104,6 +104,13 @@ export function useWorkspacePublicRequestOverlayFlow({
     setReturnRequestState(null);
   }, [returnRequestState]);
 
+  const dismissSession = React.useCallback(() => {
+    setReturnRequestState(null);
+    setActiveChatState(null);
+    setActiveOfferRequestId(null);
+    setActiveRequestState(null);
+  }, []);
+
   return {
     activeChatState,
     activeOfferRequestId,
@@ -111,6 +118,7 @@ export function useWorkspacePublicRequestOverlayFlow({
     closeChat,
     closeOfferSheet,
     closeRequest,
+    dismissSession,
     openChatConversation,
     openOfferSheet,
     openRequest,
