@@ -103,7 +103,7 @@
 
   .workspace-mode-nav {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: var(--space-2);
     align-items: stretch;
   }
@@ -135,7 +135,6 @@
       background var(--transition-fast);
     -webkit-backdrop-filter: blur(16px);
     backdrop-filter: blur(16px);
-    grid-column: span 2;
   }
 
   .workspace-mode-nav__item:hover {
@@ -157,14 +156,6 @@
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, white 90%, transparent),
       0 26px 48px color-mix(in oklab, var(--c-primary) 16%, transparent);
-  }
-
-  .workspace-mode-nav__item[data-mode-key='analysis'] {
-    grid-column: 1 / span 3;
-  }
-
-  .workspace-mode-nav__item[data-mode-key='actions'] {
-    grid-column: 4 / span 3;
   }
 
   .workspace-mode-nav__icon,
