@@ -58,6 +58,7 @@ export function WorkspacePrivateIntro({
         <PersonalNavSection
           className="personal-nav--left"
           headerSlot={navHeaderSlot}
+          headerPlacement="after"
           items={personalNavItems}
           hideDockBadges={hideNavBadges}
           surface="embedded"

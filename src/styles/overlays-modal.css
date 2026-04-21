@@ -5,7 +5,8 @@
     --dc-modal-max-height: min(88vh, 760px);
     position: fixed;
     inset: 0;
-    z-index: 70;
+    z-index: 1600;
+    isolation: isolate;
     display: grid;
     place-items: center;
     padding: var(--space-6);

@@ -2,7 +2,6 @@
 import type { ReactNode } from 'react';
 import { IconCalendar, IconChat, IconPin } from '@/components/ui/icons/icons';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
-import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 type RequestDetailMetaRowsProps = {
   cityLabel: string;
@@ -30,23 +29,19 @@ type RequestDetailAsideProps = {
   dateLabel: string;
   ctaApplyLabel: string;
   ctaChatLabel: string;
-  ctaSaveLabel: string;
-  isSaved: boolean;
-  isSavePending?: boolean;
   onApply: () => void;
   onChat: () => void;
-  onToggleSave: () => void;
   applyDisabled?: boolean;
   applyState?: 'default' | 'done' | 'edit' | 'accepted';
   applyTitle?: string;
   applyHint?: string;
   showApply?: boolean;
   showChat?: boolean;
-  showSave?: boolean;
   notice?: ReactNode;
   extraActions?: ReactNode;
   metaContent?: ReactNode;
   metaClassName?: string;
+  showMeta?: boolean;
   children?: ReactNode;
 };
 
@@ -55,23 +50,19 @@ export function RequestDetailAside({
   dateLabel,
   ctaApplyLabel,
   ctaChatLabel,
-  ctaSaveLabel,
-  isSaved,
-  isSavePending = false,
   onApply,
   onChat,
-  onToggleSave,
   applyDisabled,
   applyState = 'default',
   applyTitle,
   applyHint,
   showApply = true,
   showChat = true,
-  showSave = true,
   notice,
   extraActions,
   metaContent,
   metaClassName,
+  showMeta = true,
   children,
 }: RequestDetailAsideProps) {
   const isEditState = applyState === 'edit';
@@ -79,7 +70,7 @@ export function RequestDetailAside({
 
   return (
     <aside className="panel request-detail__panel request-detail__aside">
-      {metaContent ?? <RequestDetailMetaRows cityLabel={cityLabel} dateLabel={dateLabel} className={metaClassName} />}
+      {showMeta ? (metaContent ?? <RequestDetailMetaRows cityLabel={cityLabel} dateLabel={dateLabel} className={metaClassName} />) : null}
 
       {notice ? <div className="request-detail__notice">{notice}</div> : null}
 
@@ -118,16 +109,6 @@ export function RequestDetailAside({
             <span>{ctaChatLabel}</span>
             <IconChat />
           </button>
-        ) : null}
-        {showSave ? (
-          <FavoriteButton
-            variant="cta"
-            isFavorite={isSaved}
-            isPending={isSavePending}
-            ariaLabel={ctaSaveLabel}
-            label={ctaSaveLabel}
-            onToggle={onToggleSave}
-          />
         ) : null}
       </div>
       <div className="request-detail__aside-spacer" />

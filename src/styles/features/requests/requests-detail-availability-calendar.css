@@ -8,11 +8,32 @@
     height: 100%;
   }
 
+  .request-detail--dialog .request-detail__aside {
+    gap: var(--space-3);
+    height: auto;
+  }
+
   .request-detail__meta {
     display: grid;
     gap: var(--space-2);
     font-size: 14px;
     color: var(--c-text);
+  }
+
+  .request-detail--dialog .request-detail__meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2-5);
+  }
+
+  .request-detail__summary-meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .request-detail__summary-meta .request-detail__meta-item {
+    min-width: 0;
   }
 
   .request-detail__meta-item {
@@ -157,6 +178,15 @@
     .request-detail__availability-calendar-popover .dc-popover-panel[data-align='end'] {
       right: auto;
       left: 0;
+    }
+
+    .request-detail--dialog .request-detail__meta {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .request-detail__summary-meta {
+      display: grid;
+      gap: var(--space-2);
     }
   }
 

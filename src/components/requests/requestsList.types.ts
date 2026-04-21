@@ -31,6 +31,7 @@ export type RequestsListProps = {
   offersByRequest?: Map<string, OfferDto>;
   favoriteRequestIds?: Set<string>;
   onToggleFavorite?: (requestId: string) => void;
+  onOpenRequest?: (requestId: string) => void;
   onSendOffer?: (requestId: string) => void;
   onEditOffer?: (requestId: string) => void;
   onWithdrawOffer?: (offerId: string) => void;

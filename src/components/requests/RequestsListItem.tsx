@@ -30,6 +30,7 @@ type RequestListItemProps = {
   offersByRequest?: Map<string, OfferDto>;
   favoriteRequestIds?: Set<string>;
   onToggleFavorite?: (requestId: string) => void;
+  onOpenRequest?: (requestId: string) => void;
   onSendOffer?: (requestId: string) => void;
   onEditOffer?: (requestId: string) => void;
   onWithdrawOffer?: (offerId: string) => void;
@@ -55,6 +56,7 @@ export function RequestsListItem({
   offersByRequest,
   favoriteRequestIds,
   onToggleFavorite,
+  onOpenRequest,
   onSendOffer,
   onEditOffer,
   onWithdrawOffer,
@@ -103,6 +105,7 @@ export function RequestsListItem({
       priceTrendLabel={view.card.priceTrendLabel}
       tags={[view.card.categoryLabel, view.card.serviceLabel, ...view.card.tags.slice(0, 2)]}
       mode="link"
+      onOpen={onOpenRequest ? () => onOpenRequest(item.id) : undefined}
       statusSlot={(
         <RequestListStatusSlot
           status={view.status}

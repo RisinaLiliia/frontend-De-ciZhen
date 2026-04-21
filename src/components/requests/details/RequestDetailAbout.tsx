@@ -57,7 +57,7 @@ export function RequestDetailAbout({
 
   return (
     <div className={cn('request-detail__section request-detail__section--grow', className)}>
-      <h2 className="request-detail__section-title">{title}</h2>
+      {title ? <h2 className="request-detail__section-title">{title}</h2> : null}
       <p
         id={textId}
         ref={textRef}
@@ -70,7 +70,7 @@ export function RequestDetailAbout({
       >
         {description}
       </p>
-      {canExpand ? (
+      {canExpand && expandLabel && collapseLabel ? (
         <button
           type="button"
           className="request-detail__text-toggle"

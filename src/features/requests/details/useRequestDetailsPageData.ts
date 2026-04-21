@@ -2,18 +2,17 @@ import * as React from 'react';
 import type { QueryClient } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 
-import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
 import { listMyProviderOffers } from '@/lib/api/offers';
 import { listFavorites } from '@/lib/api/favorites';
 import { getMyProviderProfile } from '@/lib/api/providers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
-import { ApiError } from '@/lib/api/http-error';
 import { useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { providerQK } from '@/features/provider/queries';
 import type { AuthStatus } from '@/features/auth/store';
+import { fetchManagedRequestDetails } from '@/features/requests/details/requestDetails.data';
 
 type RouterLike = {
   push: (href: string) => void;
@@ -34,6 +33,8 @@ type Params = {
   searchParams: SearchParamsLike;
   router: RouterLike;
   qc: QueryClient;
+  attemptOwner?: boolean;
+  preferOwner?: boolean;
 };
 
 export function useRequestDetailsPageData({
@@ -47,27 +48,23 @@ export function useRequestDetailsPageData({
   searchParams,
   router,
   qc,
+  attemptOwner = authStatus === 'authenticated',
+  preferOwner = false,
 }: Params) {
   const {
     data: request,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['request-detail', requestId, locale],
+    queryKey: ['request-detail', requestId, locale, preferOwner ? 'owner' : 'default'],
     enabled: isHydrated && Boolean(requestId),
-    queryFn: async () => {
-      const id = String(requestId);
-      if (authStatus === 'authenticated') {
-        try {
-          return await getMyRequestById(id);
-        } catch (error) {
-          if (!(error instanceof ApiError) || (error.status !== 403 && error.status !== 404)) {
-            throw error;
-          }
-        }
-      }
-      return getPublicRequestById(id, { locale });
-    },
+    queryFn: async () => (await fetchManagedRequestDetails({
+      requestId: String(requestId),
+      locale,
+      qc,
+      attemptOwner,
+      preferOwner,
+    })).request,
     staleTime: 60_000,
     retry: 0,
     refetchOnWindowFocus: false,

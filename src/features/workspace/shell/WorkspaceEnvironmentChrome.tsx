@@ -1030,6 +1030,7 @@ export function WorkspaceModeHeader({
             href={item.href}
             prefetch={false}
             className={`workspace-mode-nav__item${item.isActive ? ' is-active' : ''}`.trim()}
+            data-mode-key={item.key}
             aria-current={item.isActive ? 'page' : undefined}
           >
             <span className="workspace-mode-nav__icon" aria-hidden="true">{item.icon}</span>

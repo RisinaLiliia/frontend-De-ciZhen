@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
+import { createPortal } from 'react-dom';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
@@ -119,14 +120,25 @@ export function RequestOfferSheet({
   const availabilityInputId = React.useId();
   const panelRef = React.useRef<HTMLDivElement | null>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement | null>(null);
+  const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
-    if (!isOpen) return;
+    setIsMounted(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (!isOpen || !isMounted) return;
 
     const panel = panelRef.current;
     const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
     document.body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
 
     window.requestAnimationFrame(() => {
       if (!panel) return;
@@ -159,14 +171,15 @@ export function RequestOfferSheet({
 
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPaddingRight;
       document.removeEventListener('keydown', onKeyDown);
       focusIfPresent(previouslyFocused);
     };
-  }, [isOpen, onClose]);
+  }, [isMounted, isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !isMounted) return null;
 
-  return (
+  return createPortal((
     <div
       className="dc-modal request-offer-sheet"
       role="dialog"
@@ -306,5 +319,5 @@ export function RequestOfferSheet({
         )}
       </div>
     </div>
-  );
+  ), document.body);
 }

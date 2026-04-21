@@ -71,7 +71,7 @@ describe('buildRequestDetailsViewModel', () => {
 
   it('uses correct status label based on online flag', () => {
     const online = buildRequestDetailsViewModel({
-      request: baseRequest({ clientName: 'Liliia' }),
+      request: baseRequest({ clientId: 'client-1', clientName: 'Liliia' }),
       t,
       formatPrice,
       formatDate,
@@ -86,6 +86,7 @@ describe('buildRequestDetailsViewModel', () => {
     });
     expect(online.clientStatus).toBe('online');
     expect(online.clientStatusLabel).toBe(I18N_KEYS.requestDetails.clientOnline);
+    expect(online.clientProfileHref).toBe('/profile/client-1');
     expect(offline.clientStatus).toBe('offline');
     expect(offline.clientStatusLabel).toBe(I18N_KEYS.requestDetails.clientActive);
   });

@@ -1521,6 +1521,7 @@
 
   .my-request-dialog__panel,
   .my-request-chat-dialog__panel {
+    position: relative;
     padding: 0;
     overflow: hidden;
   }
@@ -1589,12 +1590,30 @@
     cursor: pointer;
   }
 
+  .my-request-dialog__close--floating {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 4;
+  }
+
   .my-request-dialog__body {
     display: grid;
     gap: 20px;
     padding: 24px;
     max-height: min(72vh, 920px);
     overflow-y: auto;
+  }
+
+  .my-request-dialog__panel--details {
+    --dc-modal-max-width: 1040px;
+  }
+
+  .my-request-dialog__body--details {
+    padding-top: 72px;
+    max-height: none;
+    overflow: visible;
+    gap: 0;
   }
 
   .my-request-dialog__toolbar,

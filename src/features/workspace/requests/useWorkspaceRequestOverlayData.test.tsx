@@ -209,5 +209,11 @@ describe('useWorkspaceRequestOverlayData', () => {
       expect(node.getAttribute('data-request-id')).toBe('req-1');
       expect(node.getAttribute('data-existing-offer-id')).toBe('offer-mine');
     });
+
+    expect(fetchWorkspaceManagedRequestMock).toHaveBeenCalledWith(expect.objectContaining({
+      requestId: 'req-1',
+      locale: 'de',
+      attemptOwner: false,
+    }));
   });
 });

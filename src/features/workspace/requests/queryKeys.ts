@@ -35,6 +35,18 @@ export const workspaceQK = {
     args.period,
     args.sort ?? 'default',
   ] as const,
+  managedRequest: (args: {
+    requestId: string;
+    locale: string;
+    attemptOwner: boolean;
+    preferOwner: boolean;
+  }) => [
+    'workspace-managed-request',
+    args.requestId,
+    args.locale,
+    args.attemptOwner ? 'owner-attempt' : 'public-only',
+    args.preferOwner ? 'prefer-owner' : 'default',
+  ] as const,
   requestsPublic: (args: {
     cityId: string | undefined;
     categoryKey: string | undefined;
