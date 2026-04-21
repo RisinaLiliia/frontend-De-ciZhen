@@ -223,7 +223,7 @@ export function RequestOwnerEditPanel({
           </Button>
           <Button
             type="button"
-            variant="ghost"
+            variant="primary"
             onClick={() => onSave('draft')}
             loading={isSaving && activeSubmitIntent === 'draft'}
             disabled={!titleValue.trim()}

@@ -34,6 +34,7 @@ type PersonalNavSectionProps = {
   title?: string;
   subtitle?: string;
   headerSlot?: ReactNode;
+  headerPlacement?: 'before' | 'after';
   insightText?: string;
   progressPercent?: number;
   items: PersonalNavItem[];
@@ -46,6 +47,7 @@ export const PersonalNavSection = React.memo(function PersonalNavSection({
   title,
   subtitle,
   headerSlot,
+  headerPlacement = 'before',
   insightText,
   progressPercent,
   items,
@@ -229,28 +231,33 @@ export const PersonalNavSection = React.memo(function PersonalNavSection({
     );
   };
 
+  const renderedTrack = hasVisibleItems ? (
+    hasTieredLayout ? (
+      <div className="personal-nav__track personal-nav__track--dock" role="group" aria-label="Workspace navigation tabs">
+        {dockItems.map(renderItem)}
+      </div>
+    ) : (
+      <div className="personal-nav__track">{items.map(renderItem)}</div>
+    )
+  ) : null;
+
+  const renderedHeader = title ? (
+    <div className="personal-nav__title-row">
+      {headerSlot ? <div className="personal-nav__header-slot">{headerSlot}</div> : null}
+      <div className="personal-nav__title-copy">
+        <h2 className="personal-nav__title">{title}</h2>
+        {subtitle ? <p className="personal-nav__subtitle">{subtitle}</p> : null}
+      </div>
+    </div>
+  ) : headerSlot ? (
+    <div className="personal-nav__header-slot">{headerSlot}</div>
+  ) : null;
+
   return (
     <section className={`${surface === 'panel' ? 'panel ' : ''}personal-nav${surface === 'embedded' ? ' personal-nav--embedded' : ''} ${className ?? ''}`.trim()}>
-      {title ? (
-        <div className="personal-nav__title-row">
-          {headerSlot ? <div className="personal-nav__header-slot">{headerSlot}</div> : null}
-          <div className="personal-nav__title-copy">
-            <h2 className="personal-nav__title">{title}</h2>
-            {subtitle ? <p className="personal-nav__subtitle">{subtitle}</p> : null}
-          </div>
-        </div>
-      ) : headerSlot ? (
-        <div className="personal-nav__header-slot">{headerSlot}</div>
-      ) : null}
-      {hasVisibleItems ? (
-        hasTieredLayout ? (
-          <div className="personal-nav__track personal-nav__track--dock" role="group" aria-label="Workspace navigation tabs">
-            {dockItems.map(renderItem)}
-          </div>
-        ) : (
-          <div className="personal-nav__track">{items.map(renderItem)}</div>
-        )
-      ) : null}
+      {headerPlacement === 'before' ? renderedHeader : null}
+      {renderedTrack}
+      {headerPlacement === 'after' ? renderedHeader : null}
       {insightText ? (
         <ActivityInsight text={insightText} progressPercent={progressPercent ?? 0} />
       ) : null}

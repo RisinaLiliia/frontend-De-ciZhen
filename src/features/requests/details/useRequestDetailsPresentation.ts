@@ -93,10 +93,6 @@ export function useRequestDetailsPresentation({
     () => (hasOffer ? t(I18N_KEYS.requestDetails.responseEditTooltip) : undefined),
     [hasOffer, t],
   );
-  const viewOffersLabel = React.useMemo(
-    () => t(I18N_KEYS.requestDetails.viewOffers),
-    [t],
-  );
   const requestStatusView = React.useMemo(
     () =>
       request
@@ -124,7 +120,6 @@ export function useRequestDetailsPresentation({
     applyLabel,
     applyState,
     applyTitle,
-    viewOffersLabel,
     requestStatusView,
     requestPriceTrend,
     requestPriceTrendLabel,

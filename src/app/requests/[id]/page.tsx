@@ -8,19 +8,19 @@ import { toast } from 'sonner';
 import {
   RequestDetailError,
   RequestDetailLoading,
+  RequestOfferSheet,
 } from '@/components/requests/details';
+import { PageShell } from '@/components/layout/PageShell';
+import { AuthActions } from '@/components/layout/AuthActions';
 import { useAuthMe, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
+import { useRequestDetailsContentState } from '@/features/requests/details/useRequestDetailsContentState';
 import { useRequestOfferActions } from '@/features/requests/details/useRequestOfferActions';
-import { useRequestDetailsRelated } from '@/features/requests/details/useRequestDetailsRelated';
-import { useRequestOwnerEdit } from '@/features/requests/details/useRequestOwnerEdit';
-import { useRequestDetailsViewModel } from '@/features/requests/details/useRequestDetailsViewModel';
 import { useRequestDetailsUrlAction } from '@/features/requests/details/useRequestDetailsUrlAction';
-import { useRequestDetailsPresentation } from '@/features/requests/details/useRequestDetailsPresentation';
 import { useRequestDetailsPageData } from '@/features/requests/details/useRequestDetailsPageData';
-import { RequestDetailsPageView } from '@/features/requests/details/RequestDetailsPageView';
+import { RequestDetailsContent } from '@/features/requests/details/RequestDetailsContent';
 
 const WORKSPACE_MY_REQUESTS_URL = '/workspace?section=requests&scope=my&period=90d&range=90d';
 const WORKSPACE_PUBLIC_REQUESTS_URL = '/workspace?section=requests';
@@ -48,6 +48,7 @@ export default function RequestDetailsPage() {
   const profileId = authUser?.id ?? authMe?.id ?? null;
   const currentUserId = authUser?.id ?? authMe?.id ?? null;
   const profileHref = profileId ? `/profile/${encodeURIComponent(profileId)}` : '/profile';
+  const shouldOpenOwnerEdit = searchParams?.get('edit') === '1';
 
   const {
     request,
@@ -69,42 +70,15 @@ export default function RequestDetailsPage() {
     searchParams,
     router,
     qc,
+    preferOwner: shouldOpenOwnerEdit,
   });
 
   const isOwner = isAuthed && Boolean(request?.clientId) && request?.clientId === currentUserId;
-  const shouldOpenOwnerEdit = searchParams?.get('edit') === '1';
   const isOfferAccepted = existingResponse?.status === 'accepted';
   const showOfferCta = !isOwner;
   const showChatCta = !isOwner;
   const showFavoriteCta = !isOwner;
   const showOwnerBadge = isAuthed && isOwner;
-
-  const {
-    isOwnerEditMode,
-    ownerTitle,
-    ownerDescription,
-    ownerPrice,
-    ownerPhotos,
-    isSavingOwner,
-    isUploadingOwnerPhoto,
-    activeOwnerSubmitIntent,
-    ownerPriceTrend,
-    setIsOwnerEditMode,
-    setOwnerTitle,
-    setOwnerDescription,
-    setOwnerPrice,
-    setOwnerPhotos,
-    handleOwnerClearText,
-    handleOwnerPhotoPick,
-    handleOwnerSave,
-  } = useRequestOwnerEdit({
-    request,
-    isOwner,
-    showOwnerBadge,
-    shouldOpenOwnerEdit,
-    qc,
-    t,
-  });
 
   const {
     offerAmount,
@@ -160,21 +134,48 @@ export default function RequestDetailsPage() {
     void toggleRequestFavorite(request.id);
   }, [isOwner, request, t, toggleRequestFavorite]);
 
-  const { viewModel, formatPriceValue } = useRequestDetailsViewModel({
-    request,
-    locale,
-    t,
-  });
   const {
-    similarTitle,
+    activeOwnerSubmitIntent,
+    applyLabel,
+    applyState,
+    applyTitle,
+    formatPriceValue,
+    handleOwnerClearText,
+    handleOwnerPhotoPick,
+    handleOwnerSave,
+    isOwnerEditMode,
+    isProviderProfileComplete,
+    isSavingOwner,
+    isUploadingOwnerPhoto,
+    ownerDescription,
+    ownerPhotos,
+    ownerPrice,
+    ownerPriceTrend,
+    ownerTitle,
+    requestPriceTrend,
+    requestPriceTrendLabel,
+    requestStatusView,
+    setIsOwnerEditMode,
+    setOwnerDescription,
+    setOwnerPhotos,
+    setOwnerPrice,
+    setOwnerTitle,
     similarFallbackMessage,
     similarForRender,
     similarHref,
-  } = useRequestDetailsRelated({
+    similarTitle,
+    viewModel,
+  } = useRequestDetailsContentState({
     request,
     locale,
-    isHydrated,
     t,
+    isHydrated,
+    qc,
+    isOwner,
+    shouldOpenOwnerEdit,
+    hasOffer,
+    isOfferAccepted,
+    providerProfile,
   });
 
   useRequestDetailsUrlAction({
@@ -193,23 +194,6 @@ export default function RequestDetailsPage() {
     },
   });
 
-  const {
-    applyLabel,
-    applyState,
-    applyTitle,
-    viewOffersLabel,
-    requestStatusView,
-    requestPriceTrend,
-    requestPriceTrendLabel,
-    isProviderProfileComplete,
-  } = useRequestDetailsPresentation({
-    request,
-    hasOffer,
-    isOfferAccepted,
-    providerProfile,
-    t,
-  });
-
   if (!isHydrated || isLoading) {
     return <RequestDetailLoading />;
   }
@@ -218,81 +202,125 @@ export default function RequestDetailsPage() {
   }
 
   return (
-    <RequestDetailsPageView
-      t={t}
+    <PageShell
+      right={<AuthActions />}
+      showBack
       backHref={isAuthed ? WORKSPACE_MY_REQUESTS_URL : WORKSPACE_GUEST_REQUESTS_URL}
-      profileHref={profileHref}
-      request={request}
-      viewModel={viewModel}
-      requestStatusView={requestStatusView}
-      requestPriceTrend={requestPriceTrend}
-      requestPriceTrendLabel={requestPriceTrendLabel}
-      applyLabel={applyLabel}
-      applyState={applyState}
-      applyTitle={applyTitle}
-      viewOffersLabel={viewOffersLabel}
-      showOfferCta={showOfferCta}
-      showChatCta={showChatCta}
-      showFavoriteCta={showFavoriteCta}
-      showOwnerBadge={showOwnerBadge}
-      isSaved={isSaved}
-      isSavePending={pendingFavoriteRequestIds.has(request.id)}
-      onApply={handleApply}
-      onChat={handleChat}
-      onFavorite={handleFavorite}
-      isOwnerEditMode={isOwnerEditMode}
-      ownerTitle={ownerTitle}
-      ownerDescription={ownerDescription}
-      ownerPrice={ownerPrice}
-      ownerPhotos={ownerPhotos}
-      isSavingOwner={isSavingOwner}
-      isUploadingOwnerPhoto={isUploadingOwnerPhoto}
-      activeOwnerSubmitIntent={activeOwnerSubmitIntent}
-      ownerPriceTrend={ownerPriceTrend}
-      onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
-      onOwnerClearText={handleOwnerClearText}
-      onOwnerTitleChange={setOwnerTitle}
-      onOwnerDescriptionChange={setOwnerDescription}
-      onOwnerPriceChange={setOwnerPrice}
-      onOwnerPhotoPick={(files) => {
-        void handleOwnerPhotoPick(files);
-      }}
-      onOwnerPhotoRemove={(index) =>
-        setOwnerPhotos((prev) => prev.filter((_, photoIndex) => photoIndex !== index))
-      }
-      onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
-      onOwnerSave={() => {
-        void handleOwnerSave();
-      }}
-      formatPriceValue={formatPriceValue}
-      similarTitle={similarTitle}
-      similarFallbackMessage={similarFallbackMessage}
-      similarForRender={similarForRender}
-      similarHref={similarHref}
-      isOfferSheetOpen={isOfferSheetOpen}
-      offerSheetMode={offerSheetMode}
-      hasOffer={hasOffer}
-      hasExistingResponse={Boolean(existingResponse?.id)}
-      offerAmount={offerAmount}
-      offerComment={offerComment}
-      offerAvailability={offerAvailability}
-      isSubmittingOffer={isSubmittingOffer}
-      onOfferAmountChange={setOfferAmount}
-      onOfferCommentChange={setOfferComment}
-      onOfferAvailabilityChange={setOfferAvailability}
-      onOfferClose={closeOfferSheet}
-      onOfferCancel={handleOfferCancel}
-      onOfferSuccessBack={handleOfferSuccessBack}
-      onOfferSubmit={handleOfferSubmit}
-      profileAvatarUrl={authMe?.avatar?.url ?? null}
-      profileName={authMe?.name ?? authUser?.name ?? null}
-      profileOnline={authStatus === 'authenticated'}
-      profileStatusLabel={
-        authStatus === 'authenticated'
-          ? t(I18N_KEYS.requestDetails.clientOnline)
-          : t(I18N_KEYS.requestDetails.clientActive)
-      }
-      isProviderProfileComplete={isProviderProfileComplete}
-    />
+      mainClassName="pb-6"
+    >
+      <RequestDetailsContent
+        t={t}
+        request={request}
+        viewModel={viewModel}
+        requestStatusView={requestStatusView}
+        requestPriceTrend={requestPriceTrend}
+        requestPriceTrendLabel={requestPriceTrendLabel}
+        applyLabel={applyLabel}
+        applyState={applyState}
+        applyTitle={applyTitle}
+        showOfferCta={showOfferCta}
+        showChatCta={showChatCta}
+        showFavoriteCta={showFavoriteCta}
+        showOwnerBadge={showOwnerBadge}
+        isSaved={isSaved}
+        isSavePending={pendingFavoriteRequestIds.has(request.id)}
+        onApply={handleApply}
+        onChat={handleChat}
+        onFavorite={handleFavorite}
+        isOwnerEditMode={isOwnerEditMode}
+        ownerTitle={ownerTitle}
+        ownerDescription={ownerDescription}
+        ownerPrice={ownerPrice}
+        ownerPhotos={ownerPhotos}
+        isSavingOwner={isSavingOwner}
+        isUploadingOwnerPhoto={isUploadingOwnerPhoto}
+        activeOwnerSubmitIntent={activeOwnerSubmitIntent}
+        ownerPriceTrend={ownerPriceTrend}
+        onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
+        onOwnerClearText={handleOwnerClearText}
+        onOwnerTitleChange={setOwnerTitle}
+        onOwnerDescriptionChange={setOwnerDescription}
+        onOwnerPriceChange={setOwnerPrice}
+        onOwnerPhotoPick={(files) => {
+          void handleOwnerPhotoPick(files);
+        }}
+        onOwnerPhotoRemove={(index) =>
+          setOwnerPhotos((prev) => prev.filter((_, photoIndex) => photoIndex !== index))
+        }
+        onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
+        onOwnerSave={() => {
+          void handleOwnerSave();
+        }}
+        formatPriceValue={formatPriceValue}
+        similarTitle={similarTitle}
+        similarFallbackMessage={similarFallbackMessage}
+        similarForRender={similarForRender}
+        similarHref={similarHref}
+      />
+
+      <RequestOfferSheet
+        isOpen={isOfferSheetOpen}
+        mode={offerSheetMode}
+        title={
+          offerSheetMode === 'success'
+            ? t(I18N_KEYS.requestDetails.responseSuccessTitle)
+            : hasOffer
+              ? t(I18N_KEYS.requestDetails.responseEditTitle)
+              : t(I18N_KEYS.requestDetails.responseFormTitle)
+        }
+        previewTitle={viewModel.title}
+        previewCity={viewModel.cityLabel}
+        previewDate={viewModel.preferredDateLabel}
+        previewPrice={viewModel.priceLabel}
+        amountLabel={t(I18N_KEYS.requestDetails.responseAmountLabel)}
+        amountValue={offerAmount}
+        amountPlaceholder="120"
+        commentLabel={t(I18N_KEYS.requestDetails.responseCommentLabel)}
+        commentValue={offerComment}
+        commentPlaceholder={t(I18N_KEYS.requestDetails.responseCommentPlaceholder)}
+        availabilityLabel={t(I18N_KEYS.requestDetails.responseAvailabilityLabel)}
+        availabilityValue={offerAvailability}
+        availabilityPlaceholder={t(I18N_KEYS.requestDetails.responseAvailabilityPlaceholder)}
+        submitLabel={
+          hasOffer
+            ? t(I18N_KEYS.requestDetails.responseEditSubmit)
+            : t(I18N_KEYS.requestDetails.responseSubmit)
+        }
+        submitKind={hasOffer ? 'edit' : 'submit'}
+        closeLabel={t(I18N_KEYS.requestDetails.responseClose)}
+        successTitle={t(I18N_KEYS.requestDetails.responseSuccessTitle)}
+        successBody={t(I18N_KEYS.requestDetails.responseSuccessBody)}
+        successSubline={t(I18N_KEYS.requestDetails.responseSuccessSubline)}
+        successTipTitle={t(I18N_KEYS.requestDetails.responseSuccessTipTitle)}
+        successTipCardTitle={t(I18N_KEYS.requestDetails.responseSuccessTipCardTitle)}
+        successTipCardBody={t(I18N_KEYS.requestDetails.responseSuccessTipCardBody)}
+        successProfileCta={t(I18N_KEYS.requestDetails.responseProfileCta)}
+        successContinueCta={t(I18N_KEYS.requestDetails.responseContinueCta)}
+        successProfileHref={`${profileHref}?highlight=offer&next=${encodeURIComponent(`/requests/${request.id}`)}`}
+        showProfileAdvice={!isProviderProfileComplete}
+        profileAvatarUrl={authMe?.avatar?.url ?? null}
+        profileName={authMe?.name ?? authUser?.name ?? null}
+        profileOnline={authStatus === 'authenticated'}
+        profileStatusLabel={
+          authStatus === 'authenticated'
+            ? t(I18N_KEYS.requestDetails.clientOnline)
+            : t(I18N_KEYS.requestDetails.clientActive)
+        }
+        isSubmitting={isSubmittingOffer}
+        onAmountChange={setOfferAmount}
+        onCommentChange={setOfferComment}
+        onAvailabilityChange={setOfferAvailability}
+        onClose={closeOfferSheet}
+        cancelLabel={
+          Boolean(existingResponse?.id)
+            ? t(I18N_KEYS.requestDetails.responseCancel)
+            : t(I18N_KEYS.common.back)
+        }
+        cancelKind={Boolean(existingResponse?.id) ? 'delete' : 'back'}
+        onCancel={handleOfferCancel}
+        onSuccessBack={handleOfferSuccessBack}
+        onSubmit={handleOfferSubmit}
+      />
+    </PageShell>
   );
 }

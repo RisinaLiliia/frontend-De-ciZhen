@@ -15,6 +15,7 @@ type RequestDetailSimilarProps = {
   openRequestLabel: string;
   priceOnRequestLabel: string;
   getImage: (item: RequestResponseDto) => string;
+  onOpenRequest?: (requestId: string) => void;
 };
 
 export function RequestDetailSimilar({
@@ -29,6 +30,7 @@ export function RequestDetailSimilar({
   openRequestLabel,
   priceOnRequestLabel,
   getImage,
+  onOpenRequest,
 }: RequestDetailSimilarProps) {
   return (
     <div className="request-detail__section request-detail__similar">
@@ -48,6 +50,7 @@ export function RequestDetailSimilar({
                   key={item.id}
                   href={`/requests/${item.id}`}
                   ariaLabel={openRequestLabel}
+                  onOpen={onOpenRequest ? () => onOpenRequest(item.id) : undefined}
                   imageSrc={getImage(item)}
                   imageAlt=""
                   badges={[{ label: item.isRecurring ? recurringLabel : onceLabel, variant: 'neutral', tone: 'outline', size: 'sm' }]}

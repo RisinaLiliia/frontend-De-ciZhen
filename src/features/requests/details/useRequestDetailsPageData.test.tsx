@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useRequestDetailsPageData } from '@/features/requests/details/useRequestDetailsPageData';
 import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
 import { useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
+import { ApiError } from '@/lib/api/http-error';
 
 vi.mock('@/lib/api/requests', () => ({
   getMyRequestById: vi.fn(),
@@ -47,7 +48,15 @@ function createQueryClient() {
   });
 }
 
-function Probe() {
+function Probe({
+  qc,
+  attemptOwner,
+  preferOwner = false,
+}: {
+  qc: QueryClient;
+  attemptOwner?: boolean;
+  preferOwner?: boolean;
+}) {
   const result = useRequestDetailsPageData({
     t: (key) => String(key),
     locale: 'de',
@@ -58,7 +67,9 @@ function Probe() {
     pathname: '/requests/req-1',
     searchParams: null,
     router: { push: vi.fn() },
-    qc: createQueryClient(),
+    qc,
+    attemptOwner,
+    preferOwner,
   });
 
   return (
@@ -113,7 +124,7 @@ describe('useRequestDetailsPageData', () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <Probe />
+        <Probe qc={queryClient} />
       </QueryClientProvider>,
     );
 
@@ -123,5 +134,53 @@ describe('useRequestDetailsPageData', () => {
 
     expect(getMyRequestByIdMock).toHaveBeenCalledWith('req-1');
     expect(getPublicRequestByIdMock).not.toHaveBeenCalled();
+  });
+
+  it('keeps owner edit on cached my-request data instead of falling back to public', async () => {
+    const queryClient = createQueryClient();
+    queryClient.setQueryData(['requests-my'], [{
+      id: 'req-1',
+      title: 'Cached owner request',
+      serviceKey: 'home_cleaning',
+      cityId: 'c1',
+      propertyType: 'apartment',
+      area: 55,
+      preferredDate: '2026-04-22T10:00:00.000Z',
+      isRecurring: false,
+      status: 'draft',
+      createdAt: '2026-04-17T10:00:00.000Z',
+      clientId: 'u1',
+    }]);
+    getMyRequestByIdMock.mockRejectedValueOnce(new ApiError('not found', 404));
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Probe qc={queryClient} preferOwner />
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('state').getAttribute('data-request-status')).toBe('draft');
+    });
+
+    expect(getMyRequestByIdMock).toHaveBeenCalledWith('req-1');
+    expect(getPublicRequestByIdMock).not.toHaveBeenCalled();
+  });
+
+  it('loads public detail directly when owner fetch is disabled', async () => {
+    const queryClient = createQueryClient();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Probe qc={queryClient} attemptOwner={false} />
+      </QueryClientProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('state').getAttribute('data-request-status')).toBe('published');
+    });
+
+    expect(getMyRequestByIdMock).not.toHaveBeenCalled();
+    expect(getPublicRequestByIdMock).toHaveBeenCalledWith('req-1', { locale: 'de' });
   });
 });

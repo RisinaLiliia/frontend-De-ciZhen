@@ -84,15 +84,10 @@ export default function ProviderPublicProfilePage() {
               className="request-detail__mobile-cta--inline request-detail__mobile-cta--provider-inline"
               ctaApplyLabel={model.t(I18N_KEYS.requestDetails.ctaApply)}
               ctaChatLabel={model.t(I18N_KEYS.requestDetails.ctaChat)}
-              ctaSaveLabel={model.t(I18N_KEYS.requestDetails.ctaSave)}
-              isSaved={model.isSaved}
-              isSavePending={model.pendingFavoriteProviderIds.has(model.provider.id)}
               onApply={model.handleApply}
               onChat={model.handleChat}
-              onToggleSave={model.handleFavorite}
               showApply
               showChat
-              showSave
               compactIcons
             />
           </div>
@@ -153,15 +148,10 @@ export default function ProviderPublicProfilePage() {
           }
           ctaApplyLabel={model.t(I18N_KEYS.requestDetails.ctaApply)}
           ctaChatLabel={model.t(I18N_KEYS.requestDetails.ctaChat)}
-          ctaSaveLabel={model.t(I18N_KEYS.requestDetails.ctaSave)}
-          isSaved={model.isSaved}
-          isSavePending={model.pendingFavoriteProviderIds.has(model.provider.id)}
           onApply={model.handleApply}
           onChat={model.handleChat}
-          onToggleSave={model.handleFavorite}
           showApply
           showChat
-          showSave
         >
           <ProviderSimilarSection
             t={model.t}

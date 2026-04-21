@@ -26,7 +26,7 @@ export function RequestDetailClient({
 }: RequestDetailClientProps) {
   return (
     <div className="request-detail__section request-detail__client">
-      <h3 className="request-detail__section-title">{title}</h3>
+      {title ? <h3 className="request-detail__section-title">{title}</h3> : null}
       <div className="request-detail__client-card">
         <UserHeaderCard
           name={name}

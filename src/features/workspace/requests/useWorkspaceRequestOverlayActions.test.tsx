@@ -203,12 +203,66 @@ describe('useWorkspaceRequestOverlayActions', () => {
       title: 'Öffentliche Anfrage',
     } as never);
 
-    const result = await fetchWorkspaceManagedRequest('req-1', 'de');
+    const result = await fetchWorkspaceManagedRequest({
+      requestId: 'req-1',
+      locale: 'de',
+      qc: createQueryClient(),
+      attemptOwner: true,
+    });
 
     expect(getMyRequestByIdMock).toHaveBeenCalledWith('req-1');
     expect(getPublicRequestByIdMock).toHaveBeenCalledWith('req-1', { locale: 'de' });
     expect(result.source).toBe('public');
     expect(result.request.id).toBe('req-1');
+  });
+
+  it('uses cached owner request for edit intent instead of calling public endpoint', async () => {
+    const queryClient = createQueryClient();
+    queryClient.setQueryData(['requests-my'], [{
+      id: 'req-1',
+      title: 'Cached owner request',
+      serviceKey: 'home_cleaning',
+      cityId: 'c1',
+      propertyType: 'apartment',
+      area: 55,
+      preferredDate: '2026-04-22T10:00:00.000Z',
+      isRecurring: false,
+      status: 'draft',
+      createdAt: '2026-04-17T10:00:00.000Z',
+      clientId: 'u1',
+    }]);
+    getMyRequestByIdMock.mockRejectedValueOnce(new ApiError('forbidden', 404));
+
+    const result = await fetchWorkspaceManagedRequest({
+      requestId: 'req-1',
+      locale: 'de',
+      qc: queryClient,
+      attemptOwner: true,
+      preferOwner: true,
+    });
+
+    expect(getMyRequestByIdMock).toHaveBeenCalledWith('req-1');
+    expect(getPublicRequestByIdMock).not.toHaveBeenCalled();
+    expect(result.source).toBe('owner');
+    expect(result.request.title).toBe('Cached owner request');
+  });
+
+  it('loads public request directly when owner attempt is disabled', async () => {
+    getPublicRequestByIdMock.mockResolvedValueOnce({
+      id: 'req-1',
+      title: 'Öffentliche Anfrage',
+    } as never);
+
+    const result = await fetchWorkspaceManagedRequest({
+      requestId: 'req-1',
+      locale: 'de',
+      qc: createQueryClient(),
+      attemptOwner: false,
+    });
+
+    expect(getMyRequestByIdMock).not.toHaveBeenCalled();
+    expect(getPublicRequestByIdMock).toHaveBeenCalledWith('req-1', { locale: 'de' });
+    expect(result.source).toBe('public');
   });
 
   it('accepts an offer, tracks pending state, and invalidates workspace offer queries', async () => {

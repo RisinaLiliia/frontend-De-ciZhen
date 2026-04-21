@@ -47,6 +47,26 @@ function patchRequestListPayload(
   };
 }
 
+function patchWorkspaceManagedRequestPayload(
+  payload: unknown,
+  requestId: string,
+  patchedRequest: RequestResponseDto,
+) {
+  if (!payload || typeof payload !== 'object') return payload;
+  if (!('request' in (payload as Record<string, unknown>))) return payload;
+
+  const currentRequest = (payload as { request?: RequestResponseDto | null }).request;
+  if (!currentRequest || currentRequest.id !== requestId) return payload;
+
+  return {
+    ...(payload as Record<string, unknown>),
+    request: {
+      ...currentRequest,
+      ...patchedRequest,
+    },
+  };
+}
+
 export function useRequestOwnerEdit({
   request,
   isOwner,
@@ -171,6 +191,10 @@ export function useRequestOwnerEdit({
 
       setOwnerPriceTrend(derivedTrend);
       qc.setQueriesData({ queryKey: ['request-detail', request.id] }, patchedRequest);
+      qc.setQueriesData(
+        { queryKey: ['workspace-managed-request', request.id] },
+        (current) => patchWorkspaceManagedRequestPayload(current, request.id, patchedRequest),
+      );
 
       const patchList = (payload: unknown) => patchRequestListPayload(payload, request.id, patchedRequest);
       qc.setQueriesData({ queryKey: ['requests-explorer-public'] }, patchList);

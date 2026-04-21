@@ -1,24 +1,18 @@
 // src/components/requests/details/RequestDetailMobileCta.tsx
 import { IconChat } from '@/components/ui/icons/icons';
 import { OfferActionButton } from '@/components/ui/OfferActionButton';
-import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 
 type RequestDetailMobileCtaProps = {
   ctaApplyLabel: string;
   ctaChatLabel: string;
-  ctaSaveLabel: string;
-  isSaved: boolean;
-  isSavePending?: boolean;
   onApply: () => void;
   onChat: () => void;
-  onToggleSave: () => void;
   applyDisabled?: boolean;
   applyState?: 'default' | 'done' | 'edit' | 'accepted';
   applyTitle?: string;
   applyHint?: string;
   showApply?: boolean;
   showChat?: boolean;
-  showSave?: boolean;
   notice?: React.ReactNode;
   extraActions?: React.ReactNode;
   compactIcons?: boolean;
@@ -28,19 +22,14 @@ type RequestDetailMobileCtaProps = {
 export function RequestDetailMobileCta({
   ctaApplyLabel,
   ctaChatLabel,
-  ctaSaveLabel,
-  isSaved,
-  isSavePending = false,
   onApply,
   onChat,
-  onToggleSave,
   applyDisabled,
   applyState = 'default',
   applyTitle,
   applyHint,
   showApply = true,
   showChat = true,
-  showSave = true,
   notice,
   extraActions,
   compactIcons = false,
@@ -102,26 +91,6 @@ export function RequestDetailMobileCta({
               <span>{ctaChatLabel}</span>
               <IconChat />
             </button>
-          )
-        ) : null}
-        {showSave ? (
-          compactIcons ? (
-            <FavoriteButton
-              variant="compact"
-              isFavorite={isSaved}
-              isPending={isSavePending}
-              ariaLabel={ctaSaveLabel}
-              onToggle={onToggleSave}
-            />
-          ) : (
-            <FavoriteButton
-              variant="cta"
-              isFavorite={isSaved}
-              isPending={isSavePending}
-              ariaLabel={ctaSaveLabel}
-              label={ctaSaveLabel}
-              onToggle={onToggleSave}
-            />
           )
         ) : null}
       </div>

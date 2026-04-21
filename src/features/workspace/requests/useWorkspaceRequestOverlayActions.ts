@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { providerQK } from '@/features/provider/queries';
@@ -16,7 +16,7 @@ import {
   updateOffer,
 } from '@/lib/api/offers';
 import { ApiError } from '@/lib/api/http-error';
-import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
+import { fetchManagedRequestDetails } from '@/features/requests/details/requestDetails.data';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
@@ -40,6 +40,7 @@ function useWorkspaceRequestOverlayInvalidation(requestId: string) {
       qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
       qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
       qc.invalidateQueries({ queryKey: ['request-detail', requestId] }),
+      qc.invalidateQueries({ queryKey: ['workspace-managed-request', requestId] }),
     ]);
   }, [qc, requestId]);
 
@@ -50,6 +51,7 @@ function useWorkspaceRequestOverlayInvalidation(requestId: string) {
       qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
       qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
       qc.invalidateQueries({ queryKey: ['request-detail', requestId] }),
+      qc.invalidateQueries({ queryKey: ['workspace-managed-request', requestId] }),
     ]);
   }, [qc, requestId]);
 
@@ -70,23 +72,20 @@ function useWorkspaceRequestOverlayInvalidation(requestId: string) {
   };
 }
 
-export async function fetchWorkspaceManagedRequest(requestId: string, locale: Locale) {
-  try {
-    const request = await getMyRequestById(requestId);
-    return {
-      request,
-      source: 'owner' as const,
-    };
-  } catch (error) {
-    if (!(error instanceof ApiError) || (error.status !== 403 && error.status !== 404)) {
-      throw error;
-    }
-  }
-
-  return {
-    request: await getPublicRequestById(requestId, { locale }),
-    source: 'public' as const,
-  };
+export async function fetchWorkspaceManagedRequest(params: {
+  requestId: string;
+  locale: Locale;
+  qc: QueryClient;
+  attemptOwner?: boolean;
+  preferOwner?: boolean;
+}) {
+  return fetchManagedRequestDetails({
+    requestId: params.requestId,
+    locale: params.locale,
+    qc: params.qc,
+    attemptOwner: params.attemptOwner ?? false,
+    preferOwner: params.preferOwner,
+  });
 }
 
 export function useWorkspaceRequestOfferActions({

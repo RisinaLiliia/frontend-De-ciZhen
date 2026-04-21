@@ -23,6 +23,7 @@ type BuildRequestsListPropsArgs = {
   offersByRequest?: Map<string, OfferDto>;
   favoriteRequestIds?: Set<string>;
   onToggleFavorite?: (requestId: string) => void;
+  onOpenRequest?: (requestId: string) => void;
   onSendOffer?: (requestId: string) => void;
   onEditOffer?: (requestId: string) => void;
   onWithdrawOffer?: (offerId: string) => void;
@@ -49,6 +50,7 @@ export function buildRequestsListProps({
   offersByRequest,
   favoriteRequestIds,
   onToggleFavorite,
+  onOpenRequest,
   onSendOffer,
   onEditOffer,
   onWithdrawOffer,
@@ -74,6 +76,7 @@ export function buildRequestsListProps({
     offersByRequest,
     favoriteRequestIds,
     onToggleFavorite,
+    onOpenRequest,
     onSendOffer,
     onEditOffer,
     onWithdrawOffer,

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
@@ -110,13 +110,30 @@ export function cardlessTitle(locale: Locale) {
 export function useWorkspaceManagedRequestData({
   locale,
   requestId,
+  attemptOwner = false,
+  preferOwner = false,
 }: {
   locale: Locale;
   requestId: string;
+  attemptOwner?: boolean;
+  preferOwner?: boolean;
 }) {
+  const qc = useQueryClient();
+
   return useQuery({
-    queryKey: ['request-detail', requestId, locale],
-    queryFn: () => fetchWorkspaceManagedRequest(requestId, locale),
+    queryKey: workspaceQK.managedRequest({
+      requestId,
+      locale,
+      attemptOwner,
+      preferOwner,
+    }),
+    queryFn: () => fetchWorkspaceManagedRequest({
+      requestId,
+      locale,
+      qc,
+      attemptOwner,
+      preferOwner,
+    }),
     staleTime: 60_000,
     retry: 0,
     refetchOnWindowFocus: false,
@@ -190,7 +207,7 @@ export function useWorkspaceProviderOfferSheetData({
   locale: Locale;
   requestId: string;
 }) {
-  const requestQuery = useWorkspaceManagedRequestData({ locale, requestId });
+  const requestQuery = useWorkspaceManagedRequestData({ locale, requestId, attemptOwner: false });
   const { data: myOffers = [] } = useQuery({
     queryKey: workspaceQK.offersMy(),
     queryFn: () => withStatusFallback(() => listMyProviderOffers(), [] as OfferDto[]),

@@ -24,6 +24,7 @@ function RequestsListComponent({
   offersByRequest,
   favoriteRequestIds,
   onToggleFavorite,
+  onOpenRequest,
   onSendOffer,
   onEditOffer,
   onWithdrawOffer,
@@ -91,6 +92,7 @@ function RequestsListComponent({
             offersByRequest={offersByRequest}
             favoriteRequestIds={favoriteRequestIds}
             onToggleFavorite={onToggleFavorite}
+            onOpenRequest={onOpenRequest}
             onSendOffer={onSendOffer}
             onEditOffer={onEditOffer}
             onWithdrawOffer={onWithdrawOffer}
@@ -123,6 +125,7 @@ function areRequestsListPropsEqual(prev: RequestsListProps, next: RequestsListPr
     prev.offersByRequest === next.offersByRequest &&
     prev.favoriteRequestIds === next.favoriteRequestIds &&
     prev.onToggleFavorite === next.onToggleFavorite &&
+    prev.onOpenRequest === next.onOpenRequest &&
     prev.onSendOffer === next.onSendOffer &&
     prev.onEditOffer === next.onEditOffer &&
     prev.onWithdrawOffer === next.onWithdrawOffer &&
