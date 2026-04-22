@@ -18,25 +18,25 @@ type UseRequestOwnerEditParams = {
 };
 
 function resolveRequestPriceTrend(request: RequestResponseDto) {
-  const explicitTrend =
-    request.priceTrend === 'down' || request.priceTrend === 'up' ? request.priceTrend : null;
-  return (
-    explicitTrend ??
-    (typeof request.previousPrice === 'number' && typeof request.price === 'number'
-      ? request.price < request.previousPrice
-        ? 'down'
-        : request.price > request.previousPrice
-          ? 'up'
-          : null
-      : null)
-  );
+  return request.priceTrend === 'down' || request.priceTrend === 'up'
+    ? request.priceTrend
+    : null;
 }
 
-function patchRequestListPayload(
+function patchRequestCollectionPayload(
   payload: unknown,
   requestId: string,
   patchedRequest: RequestResponseDto,
 ) {
+  if (Array.isArray(payload)) {
+    return payload.map((item) => {
+      if (!item || typeof item !== 'object' || !('id' in item)) return item;
+      return (item as RequestResponseDto).id === requestId
+        ? { ...(item as RequestResponseDto), ...patchedRequest }
+        : item;
+    });
+  }
+
   if (!payload || typeof payload !== 'object') return payload;
   if (!('items' in (payload as Record<string, unknown>))) return payload;
   const currentItems = (payload as { items?: RequestResponseDto[] }).items;
@@ -162,48 +162,20 @@ export function useRequestOwnerEdit({
         intent === 'publish' && updated.status === 'draft'
           ? await publishMyRequest(request.id)
           : updated;
-
-      const prevPrice = typeof request.price === 'number' ? request.price : null;
-      const nextPrice = typeof finalRequest.price === 'number' ? finalRequest.price : null;
-      const explicitTrend =
-        finalRequest.priceTrend === 'down' || finalRequest.priceTrend === 'up'
-          ? finalRequest.priceTrend
-          : null;
-      const derivedTrend =
-        explicitTrend ??
-        (prevPrice != null && nextPrice != null
-          ? nextPrice < prevPrice
-            ? 'down'
-            : nextPrice > prevPrice
-              ? 'up'
-              : null
-          : null);
-      const patchedRequest: RequestResponseDto = {
-        ...finalRequest,
-        previousPrice:
-          typeof finalRequest.previousPrice === 'number'
-            ? finalRequest.previousPrice
-            : derivedTrend && prevPrice != null
-              ? prevPrice
-              : null,
-        priceTrend: derivedTrend,
-      };
-
-      setOwnerPriceTrend(derivedTrend);
-      qc.setQueriesData({ queryKey: ['request-detail', request.id] }, patchedRequest);
+      setOwnerPriceTrend(resolveRequestPriceTrend(finalRequest));
+      qc.setQueriesData({ queryKey: ['request-detail', request.id] }, finalRequest);
       qc.setQueriesData(
         { queryKey: ['workspace-managed-request', request.id] },
-        (current) => patchWorkspaceManagedRequestPayload(current, request.id, patchedRequest),
+        (current) => patchWorkspaceManagedRequestPayload(current, request.id, finalRequest),
       );
 
-      const patchList = (payload: unknown) => patchRequestListPayload(payload, request.id, patchedRequest);
-      qc.setQueriesData({ queryKey: ['requests-explorer-public'] }, patchList);
-      qc.setQueriesData({ queryKey: ['requests-public'] }, patchList);
-      qc.setQueriesData({ queryKey: ['requests-my'] }, patchList);
-      qc.setQueriesData({ queryKey: ['workspace-requests'] }, patchList);
-      qc.setQueriesData({ queryKey: ['home-nearby-requests'] }, patchList);
-      qc.setQueriesData({ queryKey: ['requests-latest'] }, patchList);
-      qc.setQueriesData({ queryKey: ['request-similar'] }, patchList);
+      const patchCollection = (payload: unknown) => patchRequestCollectionPayload(payload, request.id, finalRequest);
+      qc.setQueriesData({ queryKey: ['requests-explorer-public'] }, patchCollection);
+      qc.setQueriesData({ queryKey: ['requests-public'] }, patchCollection);
+      qc.setQueriesData({ queryKey: ['requests-my'] }, patchCollection);
+      qc.setQueriesData({ queryKey: ['home-nearby-requests'] }, patchCollection);
+      qc.setQueriesData({ queryKey: ['requests-latest'] }, patchCollection);
+      qc.setQueriesData({ queryKey: ['request-similar'] }, patchCollection);
 
       qc.invalidateQueries({ queryKey: ['requests-explorer-public'] });
       qc.invalidateQueries({ queryKey: ['requests-public'] });

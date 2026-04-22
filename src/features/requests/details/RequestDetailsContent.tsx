@@ -73,6 +73,7 @@ type Props = {
   similarForRender?: RequestResponseDto[];
   similarHref?: string;
   onOpenSimilarRequest?: (requestId: string) => void;
+  showSimilarSection?: boolean;
   asideChildren?: React.ReactNode;
   asideExtraActions?: React.ReactNode;
   mobileExtraActions?: React.ReactNode;
@@ -124,6 +125,7 @@ export function RequestDetailsContent({
   similarForRender = [],
   similarHref,
   onOpenSimilarRequest,
+  showSimilarSection = true,
   asideChildren,
   asideExtraActions,
   mobileExtraActions,
@@ -385,7 +387,7 @@ export function RequestDetailsContent({
         extraActions={asideExtraActions}
       >
         {asideChildren}
-        {similarTitle && similarHref ? (
+        {showSimilarSection && similarTitle && similarHref ? (
           <RequestDetailSimilar
             title={similarTitle}
             message={similarFallbackMessage}

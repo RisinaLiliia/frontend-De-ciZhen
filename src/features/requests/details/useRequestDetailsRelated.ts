@@ -16,6 +16,7 @@ type UseRequestDetailsRelatedParams = {
   request: RequestResponseDto | null | undefined;
   locale: Locale;
   isHydrated: boolean;
+  enabled?: boolean;
   t: Translate;
 };
 
@@ -23,12 +24,13 @@ export function useRequestDetailsRelated({
   request,
   locale,
   isHydrated,
+  enabled = true,
   t,
 }: UseRequestDetailsRelatedParams) {
   const hasSimilarSeed = Boolean(request?.categoryKey || request?.serviceKey);
   const similarQuery = useQuery({
     queryKey: ['request-similar', request?.id, request?.categoryKey, request?.serviceKey, locale],
-    enabled: isHydrated && Boolean(request?.id) && hasSimilarSeed,
+    enabled: enabled && isHydrated && Boolean(request?.id) && hasSimilarSeed,
     queryFn: () =>
       listPublicRequests({
         locale,
@@ -56,7 +58,10 @@ export function useRequestDetailsRelated({
     return items.filter((item) => item.id !== request.id).slice(0, SIMILAR_LIMIT);
   }, [request, similarQuery.data?.items]);
 
-  const shouldLoadLatest = Boolean(request?.id) && (!hasSimilarSeed || (similarQuery.isFetched && similar.length === 0));
+  const shouldLoadLatest =
+    enabled
+    && Boolean(request?.id)
+    && (!hasSimilarSeed || (similarQuery.isFetched && similar.length === 0));
   const { data: latestData } = useQuery({
     queryKey: ['requests-latest', locale],
     enabled: isHydrated && shouldLoadLatest,
@@ -106,4 +111,3 @@ export function useRequestDetailsRelated({
     similarHref,
   };
 }
-

@@ -3,7 +3,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import type { Locale } from '@/lib/i18n/t';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { ApiError } from '@/lib/api/http-error';
-import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
+import { getMyRequestById, getPublicRequestById, listMyRequests } from '@/lib/api/requests';
 
 function isRequestResponseDto(value: unknown): value is RequestResponseDto {
   return Boolean(
@@ -45,6 +45,20 @@ export function getCachedOwnerRequest(
   return null;
 }
 
+async function loadOwnerRequestFromBackendList(
+  qc: QueryClient,
+  requestId: string,
+) {
+  const list = await qc.ensureQueryData({
+    queryKey: ['requests-my'],
+    queryFn: () => listMyRequests(),
+  });
+
+  return Array.isArray(list)
+    ? list.find((item) => item.id === requestId) ?? null
+    : null;
+}
+
 export async function fetchManagedRequestDetails(params: {
   requestId: string;
   locale: Locale;
@@ -77,6 +91,20 @@ export async function fetchManagedRequestDetails(params: {
           request: cachedOwnerRequest,
           source: 'owner' as const,
         };
+      }
+
+      try {
+        const ownerRequestFromList = await loadOwnerRequestFromBackendList(qc, requestId);
+        if (ownerRequestFromList) {
+          return {
+            request: ownerRequestFromList,
+            source: 'owner' as const,
+          };
+        }
+      } catch (listError) {
+        if (!(listError instanceof ApiError) || (listError.status !== 401 && listError.status !== 403 && listError.status !== 404)) {
+          throw listError;
+        }
       }
 
       if (preferOwner) {

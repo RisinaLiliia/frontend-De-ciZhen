@@ -74,6 +74,8 @@ function PrivateFlowProbe() {
   return (
     <>
       <button type="button" onClick={() => flow.openRequest('req-1', 'view')}>open-request</button>
+      <button type="button" onClick={() => flow.openOfferSheet('req-1')}>open-offer</button>
+      <button type="button" onClick={flow.closeOfferSheet}>close-offer</button>
       <button
         type="button"
         onClick={() => {
@@ -91,6 +93,7 @@ function PrivateFlowProbe() {
       <div
         data-testid="private-flow-state"
         data-request-id={flow.activeRequestState?.requestId ?? ''}
+        data-offer-id={flow.activeOfferRequestId ?? ''}
         data-chat-id={flow.activeChatState?.conversationId ?? ''}
       />
     </>
@@ -137,5 +140,20 @@ describe('workspace overlay return flow', () => {
 
     expect(screen.getByTestId('private-flow-state').getAttribute('data-request-id')).toBe('req-1');
     expect(screen.getByTestId('private-flow-state').getAttribute('data-chat-id')).toBe('');
+  });
+
+  it('returns to private request detail after closing offer sheet opened from the dialog', () => {
+    renderWithClient(<PrivateFlowProbe />);
+
+    fireEvent.click(screen.getByText('open-request'));
+    fireEvent.click(screen.getByText('open-offer'));
+
+    expect(screen.getByTestId('private-flow-state').getAttribute('data-request-id')).toBe('');
+    expect(screen.getByTestId('private-flow-state').getAttribute('data-offer-id')).toBe('req-1');
+
+    fireEvent.click(screen.getByText('close-offer'));
+
+    expect(screen.getByTestId('private-flow-state').getAttribute('data-request-id')).toBe('req-1');
+    expect(screen.getByTestId('private-flow-state').getAttribute('data-offer-id')).toBe('');
   });
 });

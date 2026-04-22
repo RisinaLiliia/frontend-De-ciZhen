@@ -5,6 +5,14 @@ import type { Locale } from '@/lib/i18n/t';
 
 export type OwnerMenuAction = WorkspaceMyRequestCardDto['status']['actions'][number];
 
+export function hasOwnerRequestManagementCapability(card: Pick<WorkspaceMyRequestCardDto, 'status'>) {
+  return card.status.actions.some((action) =>
+    action.key === 'edit-request'
+    || action.kind === 'duplicate_request'
+    || action.kind === 'archive_request'
+    || action.kind === 'delete_request');
+}
+
 export function resolveOwnerMenuActions(params: {
   card: WorkspaceMyRequestCardDto;
   locale: Locale;

@@ -6,7 +6,14 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { RequestCard } from '@/components/requests/RequestCard';
 import { LocationMeta } from '@/components/ui/LocationMeta';
-import { IconCalendar } from '@/components/ui/icons/icons';
+import {
+  IconArchive,
+  IconCalendar,
+  IconCopy,
+  IconEdit,
+  IconShare,
+  IconTrash,
+} from '@/components/ui/icons/icons';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
@@ -17,11 +24,7 @@ import type {
   MyRequestsViewCard,
   MyRequestsViewModel,
 } from '@/features/workspace/requests/myRequestsView.model';
-import {
-  WorkspaceChatDialog,
-  WorkspaceManagedOfferSheet,
-  WorkspaceManagedRequestDialog,
-} from '@/features/workspace/requests/WorkspaceRequestOverlays';
+import { WorkspacePrivateRequestSessionDialog } from '@/features/workspace/requests/WorkspacePrivateRequestSessionDialog';
 import {
   type RequestDialogIntent,
   type WorkspaceRequestOverlayListContext,
@@ -32,7 +35,10 @@ import {
   buildPrivateRequestCardChrome,
   type PrivateRequestCardAction,
 } from '@/features/workspace/requests/requestsPrivateCard.model';
-import { resolveOwnerMenuActions } from '@/features/workspace/requests/requestOwnerMenu.model';
+import {
+  hasOwnerRequestManagementCapability,
+  resolveOwnerMenuActions,
+} from '@/features/workspace/requests/requestOwnerMenu.model';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
 import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
@@ -89,6 +95,62 @@ function useStateFilterMutation() {
 
 function resolveRequestDialogIntent(action: { key: string }): RequestDialogIntent {
   return action.key === 'edit-request' ? 'edit' : 'view';
+}
+
+function resolveCardOpenIntent(card: Pick<WorkspaceMyRequestCardDto, 'status'>): RequestDialogIntent {
+  return hasOwnerRequestManagementCapability(card) ? 'edit' : 'view';
+}
+
+function resolveOwnerMenuActionIcon(icon: WorkspaceMyRequestCardDto['status']['actions'][number]['icon']) {
+  if (icon === 'edit') return <IconEdit />;
+  if (icon === 'copy') return <IconCopy />;
+  if (icon === 'share') return <IconShare />;
+  if (icon === 'archive') return <IconArchive />;
+  if (icon === 'trash') return <IconTrash />;
+  return null;
+}
+
+function OwnerMenuActionButton({
+  children,
+  icon,
+  className,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  icon?: React.ReactNode;
+}) {
+  return (
+    <button
+      {...props}
+      type={props.type ?? 'button'}
+      className={`my-request-card__owner-menu-item ${className ?? ''}`.trim()}
+    >
+      <span className="my-request-card__owner-menu-item-label">{children}</span>
+      {icon ? (
+        <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">{icon}</span>
+      ) : null}
+    </button>
+  );
+}
+
+function OwnerMenuActionLink({
+  children,
+  icon,
+  className,
+  ...props
+}: React.ComponentProps<typeof Link> & {
+  icon?: React.ReactNode;
+}) {
+  return (
+    <Link
+      {...props}
+      className={`my-request-card__owner-menu-item ${className ?? ''}`.trim()}
+    >
+      <span className="my-request-card__owner-menu-item-label">{children}</span>
+      {icon ? (
+        <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">{icon}</span>
+      ) : null}
+    </Link>
+  );
 }
 
 function SummaryCard({
@@ -594,59 +656,57 @@ function RequestOwnerMenu({
       {isOpen ? (
         <div className="my-request-card__owner-menu-surface" role="menu">
           {menuActions.map((action) => {
+            const actionIcon = resolveOwnerMenuActionIcon(action.icon);
             if (action.kind === 'link' && action.href) {
               if (action.requestId && onOpenRequest) {
                 return (
-                  <button
+                  <OwnerMenuActionButton
                     key={action.key}
-                    type="button"
-                    className="my-request-card__owner-menu-item"
                     role="menuitem"
+                    icon={actionIcon}
                     onClick={() => {
                       closeMenu();
                       onOpenRequest(action.requestId!, resolveRequestDialogIntent(action));
                     }}
                   >
                     {action.label}
-                  </button>
+                  </OwnerMenuActionButton>
                 );
               }
 
               return (
-                <Link
+                <OwnerMenuActionLink
                   key={action.key}
                   href={action.href}
                   prefetch={false}
-                  className="my-request-card__owner-menu-item"
                   role="menuitem"
+                  icon={actionIcon}
                   onClick={closeMenu}
                 >
                   {action.label}
-                </Link>
+                </OwnerMenuActionLink>
               );
             }
 
             if (action.kind === 'share_request') {
               return (
-                <button
+                <OwnerMenuActionButton
                   key={action.key}
-                  type="button"
-                  className="my-request-card__owner-menu-item"
                   role="menuitem"
+                  icon={actionIcon}
                   onClick={() => void handleShare(action.href)}
                 >
                   {action.label}
-                </button>
+                </OwnerMenuActionButton>
               );
             }
 
             if (action.kind === 'duplicate_request' && action.requestId) {
               return (
-                <button
+                <OwnerMenuActionButton
                   key={action.key}
-                  type="button"
-                  className="my-request-card__owner-menu-item"
                   role="menuitem"
+                  icon={actionIcon}
                   disabled={ownerRequestActions?.pendingDuplicateRequestId === action.requestId}
                   onClick={() => {
                     closeMenu();
@@ -654,17 +714,16 @@ function RequestOwnerMenu({
                   }}
                 >
                   {action.label}
-                </button>
+                </OwnerMenuActionButton>
               );
             }
 
             if (action.kind === 'archive_request' && action.requestId) {
               return (
-                <button
+                <OwnerMenuActionButton
                   key={action.key}
-                  type="button"
-                  className="my-request-card__owner-menu-item"
                   role="menuitem"
+                  icon={actionIcon}
                   disabled={ownerRequestActions?.pendingArchiveRequestId === action.requestId}
                   onClick={() => {
                     closeMenu();
@@ -672,22 +731,22 @@ function RequestOwnerMenu({
                   }}
                 >
                   {action.label}
-                </button>
+                </OwnerMenuActionButton>
               );
             }
 
             if (action.kind === 'delete_request' && action.requestId) {
               return (
-                <button
+                <OwnerMenuActionButton
                   key={action.key}
-                  type="button"
-                  className="my-request-card__owner-menu-item is-danger"
+                  className="is-danger"
                   role="menuitem"
+                  icon={actionIcon}
                   disabled={ownerRequestActions?.pendingDeleteRequestId === action.requestId}
                   onClick={() => handleDelete(action.requestId!)}
                 >
                   {action.label}
-                </button>
+                </OwnerMenuActionButton>
               );
             }
 
@@ -719,6 +778,7 @@ function MyRequestCard({
     () => buildPrivateRequestCardChrome({ card, locale }),
     [card, locale],
   );
+  const cardOpenIntent = React.useMemo(() => resolveCardOpenIntent(card), [card]);
   const meta: React.ReactNode[] = [];
 
   if (preview.cityLabel) {
@@ -764,7 +824,7 @@ function MyRequestCard({
         priceTrendLabel={preview.priceTrendLabel ?? null}
         tags={preview.tags}
         mode="link"
-        onOpen={() => listContext.onOpenRequest?.(card.requestId, 'view')}
+        onOpen={() => listContext.onOpenRequest?.(card.requestId, cardOpenIntent)}
         isActive={isActive}
         topSlot={(
           <RequestCardTopSlot
@@ -794,7 +854,7 @@ function MyRequestCard({
                     <button
                       type="button"
                       className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary"
-                      onClick={() => listContext.onOpenRequest?.(card.requestId, 'view')}
+                      onClick={() => listContext.onOpenRequest?.(card.requestId, cardOpenIntent)}
                     >
                       {locale === 'de' ? 'Details öffnen' : 'Open details'}
                     </button>
@@ -1067,31 +1127,20 @@ export function RequestsPrivateView({
           ) : null}
         </>
       ) : null}
-      {activeRequestState && activeRequestCard ? (
-        <WorkspaceManagedRequestDialog
+      {(activeRequestState && activeRequestCard) || activeOfferRequestId || activeChatState ? (
+        <WorkspacePrivateRequestSessionDialog
           locale={locale}
-          card={activeRequestCard}
-          initialIntent={activeRequestState.intent}
-          onClose={closeRequest}
+          activeRequestState={activeRequestState}
+          activeRequestCard={activeRequestCard}
+          activeOfferRequestId={activeOfferRequestId}
+          activeChatState={activeChatState}
+          onDismissSession={closeRequest}
+          onCloseOfferSheet={closeOfferSheet}
+          onCloseChat={closeChat}
           onOpenOfferSheet={openOfferSheet}
           onOpenChatConversation={(payload) => {
             void openChatConversation(payload);
           }}
-        />
-      ) : null}
-      {activeOfferRequestId ? (
-        <WorkspaceManagedOfferSheet
-          locale={locale}
-          requestId={activeOfferRequestId}
-          onClose={closeOfferSheet}
-        />
-      ) : null}
-      {activeChatState ? (
-        <WorkspaceChatDialog
-          locale={locale}
-          conversationId={activeChatState.conversationId}
-          title={activeChatState.title}
-          onClose={closeChat}
         />
       ) : null}
       {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && model.response.decisionPanel ? (
