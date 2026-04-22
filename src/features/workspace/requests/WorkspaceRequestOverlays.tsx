@@ -559,6 +559,7 @@ export function WorkspaceManagedRequestDialog({
 }) {
   const t = useT();
   const qc = useQueryClient();
+  const isCustomerRequest = card.role === 'customer';
   const canManageRequest = React.useMemo(
     () => hasOwnerRequestManagementCapability(card),
     [card],
@@ -566,7 +567,7 @@ export function WorkspaceManagedRequestDialog({
   const { data, isLoading, isError } = useWorkspaceManagedRequestData({
     locale,
     requestId: card.requestId,
-    attemptOwner: canManageRequest,
+    attemptOwner: isCustomerRequest,
     preferOwner: canManageRequest && initialIntent === 'edit',
   });
   const request = data?.request ?? null;
@@ -628,6 +629,7 @@ export function WorkspaceManagedRequestDialog({
   const resolvedRequest = request ?? null;
   const resolvedViewModel = viewModel ?? null;
   const hasResolvedContent = Boolean(resolvedRequest && resolvedViewModel);
+  const showManagedRequestSidebar = isCustomerRequest && !isOwnerEditMode;
   const content = hasResolvedContent ? (
     <RequestDetailsContent
       t={t}
@@ -684,8 +686,8 @@ export function WorkspaceManagedRequestDialog({
       similarFallbackMessage={similarFallbackMessage}
       similarForRender={similarForRender}
       similarHref={similarHref}
-      showSimilarSection={!isOwner}
-      asideChildren={isOwner && !isOwnerEditMode ? (
+      showSimilarSection={!showManagedRequestSidebar && !isOwner}
+      asideChildren={showManagedRequestSidebar ? (
         <>
           <WorkspaceRequestDecisionSection
             locale={locale}
