@@ -290,6 +290,36 @@ export function IconShare() {
   );
 }
 
+export function IconCopy() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="2" />
+      <path
+        d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconArchive() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M4 7.5h16v10.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7.5Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path d="M3 4h18v3.5H3V4Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M10 12h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function IconDownload() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

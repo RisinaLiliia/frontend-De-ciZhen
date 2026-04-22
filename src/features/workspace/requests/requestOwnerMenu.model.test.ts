@@ -1,8 +1,45 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveOwnerMenuActions } from '@/features/workspace/requests/requestOwnerMenu.model';
+import {
+  hasOwnerRequestManagementCapability,
+  resolveOwnerMenuActions,
+} from '@/features/workspace/requests/requestOwnerMenu.model';
 
 describe('requestOwnerMenu.model', () => {
+  it('detects backend owner management capability from card actions', () => {
+    expect(hasOwnerRequestManagementCapability({
+      status: {
+        actions: [
+          {
+            key: 'edit-request',
+            kind: 'link',
+            tone: 'secondary',
+            icon: 'edit',
+            label: 'Bearbeiten',
+            href: '/requests/req-1/edit',
+            requestId: 'req-1',
+          },
+        ],
+      },
+    } as never)).toBe(true);
+
+    expect(hasOwnerRequestManagementCapability({
+      status: {
+        actions: [
+          {
+            key: 'open',
+            kind: 'link',
+            tone: 'secondary',
+            icon: 'briefcase',
+            label: 'Öffnen',
+            href: '/requests/req-1',
+            requestId: 'req-1',
+          },
+        ],
+      },
+    } as never)).toBe(false);
+  });
+
   it('keeps only backend-owned owner menu actions in stable order', () => {
     const actions = resolveOwnerMenuActions({
       locale: 'de',

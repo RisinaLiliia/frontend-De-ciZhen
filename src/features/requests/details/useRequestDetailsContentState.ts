@@ -24,6 +24,7 @@ type UseRequestDetailsContentStateParams = {
   isOfferAccepted: boolean;
   providerProfile: ProviderProfileDto | null;
   isHydrated?: boolean;
+  includeRelated?: boolean;
 };
 
 export function useRequestDetailsContentState({
@@ -37,6 +38,7 @@ export function useRequestDetailsContentState({
   isOfferAccepted,
   providerProfile,
   isHydrated = true,
+  includeRelated = true,
 }: UseRequestDetailsContentStateParams) {
   const { viewModel, formatPriceValue } = useRequestDetailsViewModel({
     request,
@@ -52,6 +54,7 @@ export function useRequestDetailsContentState({
     request,
     locale,
     isHydrated,
+    enabled: includeRelated,
     t,
   });
   const ownerEdit = useRequestOwnerEdit({

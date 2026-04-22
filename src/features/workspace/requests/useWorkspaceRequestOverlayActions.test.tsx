@@ -31,6 +31,7 @@ vi.mock('@/lib/i18n/useT', () => ({
 vi.mock('@/lib/api/requests', () => ({
   getMyRequestById: vi.fn(),
   getPublicRequestById: vi.fn(),
+  listMyRequests: vi.fn(),
 }));
 
 vi.mock('@/lib/api/offers', () => ({
@@ -52,10 +53,11 @@ import {
   createOffer,
   deleteOffer,
 } from '@/lib/api/offers';
-import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
+import { getMyRequestById, getPublicRequestById, listMyRequests } from '@/lib/api/requests';
 
 const getMyRequestByIdMock = vi.mocked(getMyRequestById);
 const getPublicRequestByIdMock = vi.mocked(getPublicRequestById);
+const listMyRequestsMock = vi.mocked(listMyRequests);
 const acceptOfferMock = vi.mocked(acceptOffer);
 const createOfferMock = vi.mocked(createOffer);
 const deleteOfferMock = vi.mocked(deleteOffer);
@@ -190,6 +192,7 @@ function ProviderOfferActionsProbe({
 describe('useWorkspaceRequestOverlayActions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    listMyRequestsMock.mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -245,6 +248,37 @@ describe('useWorkspaceRequestOverlayActions', () => {
     expect(getPublicRequestByIdMock).not.toHaveBeenCalled();
     expect(result.source).toBe('owner');
     expect(result.request.title).toBe('Cached owner request');
+  });
+
+  it('falls back to backend my-requests list when owner detail endpoint returns 404', async () => {
+    getMyRequestByIdMock.mockRejectedValueOnce(new ApiError('missing', 404));
+    listMyRequestsMock.mockResolvedValueOnce([
+      {
+        id: 'req-1',
+        title: 'Owner request from list',
+        serviceKey: 'home_cleaning',
+        cityId: 'c1',
+        propertyType: 'apartment',
+        area: 55,
+        preferredDate: '2026-04-22T10:00:00.000Z',
+        isRecurring: false,
+        status: 'published',
+        createdAt: '2026-04-17T10:00:00.000Z',
+      },
+    ] as never);
+
+    const result = await fetchWorkspaceManagedRequest({
+      requestId: 'req-1',
+      locale: 'de',
+      qc: createQueryClient(),
+      attemptOwner: true,
+    });
+
+    expect(getMyRequestByIdMock).toHaveBeenCalledWith('req-1');
+    expect(listMyRequestsMock).toHaveBeenCalledTimes(1);
+    expect(getPublicRequestByIdMock).not.toHaveBeenCalled();
+    expect(result.source).toBe('owner');
+    expect(result.request.title).toBe('Owner request from list');
   });
 
   it('loads public request directly when owner attempt is disabled', async () => {

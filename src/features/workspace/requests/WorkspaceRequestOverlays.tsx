@@ -32,6 +32,7 @@ import {
   useWorkspaceRequestDecisionData,
   useWorkspaceRequestOffersData,
 } from '@/features/workspace/requests/useWorkspaceRequestOverlayData';
+import { hasOwnerRequestManagementCapability } from '@/features/workspace/requests/requestOwnerMenu.model';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -546,6 +547,7 @@ export function WorkspaceManagedRequestDialog({
   onClose,
   onOpenOfferSheet,
   onOpenChatConversation,
+  surface = 'modal',
 }: {
   locale: Locale;
   card: MyRequestsViewCard;
@@ -553,17 +555,23 @@ export function WorkspaceManagedRequestDialog({
   onClose: () => void;
   onOpenOfferSheet: (requestId: string) => void;
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
+  surface?: 'modal' | 'embedded';
 }) {
   const t = useT();
   const qc = useQueryClient();
+  const isCustomerRequest = card.role === 'customer';
+  const canManageRequest = React.useMemo(
+    () => hasOwnerRequestManagementCapability(card),
+    [card],
+  );
   const { data, isLoading, isError } = useWorkspaceManagedRequestData({
     locale,
     requestId: card.requestId,
-    attemptOwner: true,
-    preferOwner: initialIntent === 'edit',
+    attemptOwner: isCustomerRequest,
+    preferOwner: canManageRequest && initialIntent === 'edit',
   });
   const request = data?.request ?? null;
-  const isOwner = data?.source === 'owner';
+  const isOwner = canManageRequest && data?.source === 'owner';
   const {
     activeOwnerSubmitIntent,
     applyLabel,
@@ -604,6 +612,7 @@ export function WorkspaceManagedRequestDialog({
     hasOffer: false,
     isOfferAccepted: false,
     providerProfile: null,
+    includeRelated: !canManageRequest,
   });
   const offerAction = card.status.actions.find(
     (action) => action.kind === 'send_offer' || action.kind === 'edit_offer',
@@ -620,6 +629,113 @@ export function WorkspaceManagedRequestDialog({
   const resolvedRequest = request ?? null;
   const resolvedViewModel = viewModel ?? null;
   const hasResolvedContent = Boolean(resolvedRequest && resolvedViewModel);
+  const showManagedRequestSidebar = isCustomerRequest && !isOwnerEditMode;
+  const content = hasResolvedContent ? (
+    <RequestDetailsContent
+      t={t}
+      request={resolvedRequest!}
+      viewModel={resolvedViewModel!}
+      surface="dialog"
+      requestStatusView={requestStatusView}
+      requestPriceTrend={requestPriceTrend}
+      requestPriceTrendLabel={requestPriceTrendLabel}
+      applyLabel={effectiveApplyLabel}
+      applyState={effectiveApplyState}
+      applyTitle={effectiveApplyTitle}
+      showOfferCta={!isOwner && Boolean(offerAction)}
+      showChatCta={!isOwner && Boolean(chatInput)}
+      showFavoriteCta={false}
+      showOwnerBadge={isOwner}
+      isSaved={false}
+      isSavePending={false}
+      onApply={() => {
+        if (!offerAction) return;
+        onOpenOfferSheet(card.requestId);
+      }}
+      onChat={() => {
+        if (!chatInput) return;
+        onOpenChatConversation(chatInput);
+      }}
+      onFavorite={() => {}}
+      isOwnerEditMode={isOwnerEditMode}
+      ownerTitle={ownerTitle}
+      ownerDescription={ownerDescription}
+      ownerPrice={ownerPrice}
+      ownerPhotos={ownerPhotos}
+      isSavingOwner={isSavingOwner}
+      isUploadingOwnerPhoto={isUploadingOwnerPhoto}
+      activeOwnerSubmitIntent={activeOwnerSubmitIntent}
+      ownerPriceTrend={ownerPriceTrend}
+      onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
+      onOwnerClearText={handleOwnerClearText}
+      onOwnerTitleChange={setOwnerTitle}
+      onOwnerDescriptionChange={setOwnerDescription}
+      onOwnerPriceChange={setOwnerPrice}
+      onOwnerPhotoPick={(files) => {
+        void handleOwnerPhotoPick(files);
+      }}
+      onOwnerPhotoRemove={(index) => {
+        setOwnerPhotos((prev) => prev.filter((_, currentIndex) => currentIndex !== index));
+      }}
+      onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
+      onOwnerSave={(intent) => {
+        void handleOwnerSave(intent);
+      }}
+      formatPriceValue={formatPriceValue}
+      similarTitle={similarTitle}
+      similarFallbackMessage={similarFallbackMessage}
+      similarForRender={similarForRender}
+      similarHref={similarHref}
+      showSimilarSection={!showManagedRequestSidebar && !isOwner}
+      asideChildren={showManagedRequestSidebar ? (
+        <>
+          <WorkspaceRequestDecisionSection
+            locale={locale}
+            card={card}
+            onOpenChatConversation={onOpenChatConversation}
+          />
+          <WorkspaceRequestOffersSection
+            locale={locale}
+            requestId={card.requestId}
+            onOpenChatConversation={onOpenChatConversation}
+          />
+        </>
+      ) : null}
+    />
+  ) : null;
+
+  if (surface === 'embedded') {
+    if (isLoading) {
+      return (
+        <div className="my-request-dialog__state">
+          <div className="skeleton h-8 w-56" />
+          <div className="skeleton h-24 w-full" />
+          <div className="skeleton h-10 w-40" />
+        </div>
+      );
+    }
+
+    if (isError || !hasResolvedContent) {
+      return (
+        <div className="my-request-dialog__state">
+          <div className="my-request-inline-state my-request-inline-state--error" role="alert">
+            <span className="my-request-inline-state__icon" aria-hidden="true">!</span>
+            <div className="my-request-inline-state__copy">
+              <strong>{locale === 'de' ? 'Anfrage konnte nicht geladen werden' : 'Request could not be loaded'}</strong>
+              <p>{locale === 'de'
+                ? 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.'
+                : 'The workspace stays in place. Please try again without leaving this page.'}</p>
+            </div>
+            <span className="my-request-inline-state__meta">
+              {locale === 'de' ? 'Inline' : 'Inline'}
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    return content;
+  }
 
   return (
     <WorkspaceRequestDialogShell
@@ -633,78 +749,7 @@ export function WorkspaceManagedRequestDialog({
         ? 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.'
         : 'The workspace stays in place. Please try again without leaving this page.'}
     >
-      {hasResolvedContent ? (
-        <RequestDetailsContent
-          t={t}
-          request={resolvedRequest!}
-          viewModel={resolvedViewModel!}
-          surface="dialog"
-          requestStatusView={requestStatusView}
-          requestPriceTrend={requestPriceTrend}
-          requestPriceTrendLabel={requestPriceTrendLabel}
-          applyLabel={effectiveApplyLabel}
-          applyState={effectiveApplyState}
-          applyTitle={effectiveApplyTitle}
-          showOfferCta={!isOwner && Boolean(offerAction)}
-          showChatCta={!isOwner && Boolean(chatInput)}
-          showFavoriteCta={false}
-          showOwnerBadge={isOwner}
-          isSaved={false}
-          isSavePending={false}
-          onApply={() => {
-            if (!offerAction) return;
-            onOpenOfferSheet(card.requestId);
-          }}
-          onChat={() => {
-            if (!chatInput) return;
-            onOpenChatConversation(chatInput);
-          }}
-          onFavorite={() => {}}
-          isOwnerEditMode={isOwnerEditMode}
-          ownerTitle={ownerTitle}
-          ownerDescription={ownerDescription}
-          ownerPrice={ownerPrice}
-          ownerPhotos={ownerPhotos}
-          isSavingOwner={isSavingOwner}
-          isUploadingOwnerPhoto={isUploadingOwnerPhoto}
-          activeOwnerSubmitIntent={activeOwnerSubmitIntent}
-          ownerPriceTrend={ownerPriceTrend}
-          onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
-          onOwnerClearText={handleOwnerClearText}
-          onOwnerTitleChange={setOwnerTitle}
-          onOwnerDescriptionChange={setOwnerDescription}
-          onOwnerPriceChange={setOwnerPrice}
-          onOwnerPhotoPick={(files) => {
-            void handleOwnerPhotoPick(files);
-          }}
-          onOwnerPhotoRemove={(index) => {
-            setOwnerPhotos((prev) => prev.filter((_, currentIndex) => currentIndex !== index));
-          }}
-          onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
-          onOwnerSave={(intent) => {
-            void handleOwnerSave(intent);
-          }}
-          formatPriceValue={formatPriceValue}
-          similarTitle={similarTitle}
-          similarFallbackMessage={similarFallbackMessage}
-          similarForRender={similarForRender}
-          similarHref={similarHref}
-          asideChildren={isOwner && !isOwnerEditMode ? (
-            <>
-              <WorkspaceRequestDecisionSection
-                locale={locale}
-                card={card}
-                onOpenChatConversation={onOpenChatConversation}
-              />
-              <WorkspaceRequestOffersSection
-                locale={locale}
-                requestId={card.requestId}
-                onOpenChatConversation={onOpenChatConversation}
-              />
-            </>
-          ) : null}
-        />
-      ) : null}
+      {content}
     </WorkspaceRequestDialogShell>
   );
 }

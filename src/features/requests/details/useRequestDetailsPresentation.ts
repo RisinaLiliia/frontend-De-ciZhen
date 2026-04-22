@@ -44,11 +44,9 @@ function resolveRequestStatusView(request: RequestResponseDto, t: Translate): Re
 }
 
 function resolveRequestPriceTrend(request: RequestResponseDto): 'up' | 'down' | null {
-  if (request.priceTrend === 'down' || request.priceTrend === 'up') return request.priceTrend;
-  if (typeof request.previousPrice !== 'number' || typeof request.price !== 'number') return null;
-  if (request.price < request.previousPrice) return 'down';
-  if (request.price > request.previousPrice) return 'up';
-  return null;
+  return request.priceTrend === 'down' || request.priceTrend === 'up'
+    ? request.priceTrend
+    : null;
 }
 
 function resolveRequestPriceTrendLabel(request: RequestResponseDto, t: Translate): string | null {
