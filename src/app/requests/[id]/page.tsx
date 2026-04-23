@@ -148,8 +148,10 @@ export default function RequestDetailsPage() {
     isSavingOwner,
     isUploadingOwnerPhoto,
     ownerDescription,
+    ownerCityId,
     ownerPhotos,
     ownerPrice,
+    ownerPreferredDate,
     ownerPriceTrend,
     ownerTitle,
     requestPriceTrend,
@@ -157,8 +159,10 @@ export default function RequestDetailsPage() {
     requestStatusView,
     setIsOwnerEditMode,
     setOwnerDescription,
+    setOwnerCityId,
     setOwnerPhotos,
     setOwnerPrice,
+    setOwnerPreferredDate,
     setOwnerTitle,
     similarFallbackMessage,
     similarForRender,
@@ -210,6 +214,7 @@ export default function RequestDetailsPage() {
     >
       <RequestDetailsContent
         t={t}
+        locale={locale}
         request={request}
         viewModel={viewModel}
         requestStatusView={requestStatusView}
@@ -231,6 +236,8 @@ export default function RequestDetailsPage() {
         ownerTitle={ownerTitle}
         ownerDescription={ownerDescription}
         ownerPrice={ownerPrice}
+        ownerCityId={ownerCityId}
+        ownerPreferredDate={ownerPreferredDate}
         ownerPhotos={ownerPhotos}
         isSavingOwner={isSavingOwner}
         isUploadingOwnerPhoto={isUploadingOwnerPhoto}
@@ -241,6 +248,8 @@ export default function RequestDetailsPage() {
         onOwnerTitleChange={setOwnerTitle}
         onOwnerDescriptionChange={setOwnerDescription}
         onOwnerPriceChange={setOwnerPrice}
+        onOwnerCityChange={setOwnerCityId}
+        onOwnerPreferredDateChange={setOwnerPreferredDate}
         onOwnerPhotoPick={(files) => {
           void handleOwnerPhotoPick(files);
         }}

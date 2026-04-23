@@ -138,10 +138,19 @@ function WorkspaceRequestOffersSection({
     pendingOfferActionId,
   } = useWorkspaceRequestOfferActions({ locale, requestId });
   const [optimisticOffers, setOptimisticOffers] = React.useState(actionableOffers);
+  const actionableOffersSignature = React.useMemo(
+    () => actionableOffers.map((offer) => `${offer.id}:${offer.status}:${offer.updatedAt ?? offer.createdAt ?? ''}`).join('|'),
+    [actionableOffers],
+  );
 
   React.useEffect(() => {
-    setOptimisticOffers(actionableOffers);
-  }, [actionableOffers]);
+    setOptimisticOffers((current) => {
+      const currentSignature = current
+        .map((offer) => `${offer.id}:${offer.status}:${offer.updatedAt ?? offer.createdAt ?? ''}`)
+        .join('|');
+      return currentSignature === actionableOffersSignature ? current : actionableOffers;
+    });
+  }, [actionableOffers, actionableOffersSignature]);
 
   const activeOffers = optimisticOffers;
   const optimisticAcceptedOfferId = activeOffers.find((offer) => offer.status === 'accepted')?.id ?? acceptedOfferId ?? null;
@@ -588,14 +597,18 @@ export function WorkspaceManagedRequestDialog({
     ownerPhotos,
     ownerPrice,
     ownerPriceTrend,
+    ownerCityId,
     ownerTitle,
+    ownerPreferredDate,
     requestPriceTrend,
     requestPriceTrendLabel,
     requestStatusView,
     setIsOwnerEditMode,
     setOwnerDescription,
+    setOwnerCityId,
     setOwnerPhotos,
     setOwnerPrice,
+    setOwnerPreferredDate,
     setOwnerTitle,
     similarTitle,
     similarFallbackMessage,
@@ -633,6 +646,7 @@ export function WorkspaceManagedRequestDialog({
   const content = hasResolvedContent ? (
     <RequestDetailsContent
       t={t}
+      locale={locale}
       request={resolvedRequest!}
       viewModel={resolvedViewModel!}
       surface="dialog"
@@ -661,6 +675,8 @@ export function WorkspaceManagedRequestDialog({
       ownerTitle={ownerTitle}
       ownerDescription={ownerDescription}
       ownerPrice={ownerPrice}
+      ownerCityId={ownerCityId}
+      ownerPreferredDate={ownerPreferredDate}
       ownerPhotos={ownerPhotos}
       isSavingOwner={isSavingOwner}
       isUploadingOwnerPhoto={isUploadingOwnerPhoto}
@@ -671,6 +687,8 @@ export function WorkspaceManagedRequestDialog({
       onOwnerTitleChange={setOwnerTitle}
       onOwnerDescriptionChange={setOwnerDescription}
       onOwnerPriceChange={setOwnerPrice}
+      onOwnerCityChange={setOwnerCityId}
+      onOwnerPreferredDateChange={setOwnerPreferredDate}
       onOwnerPhotoPick={(files) => {
         void handleOwnerPhotoPick(files);
       }}

@@ -23,6 +23,20 @@ function resolveRequestPriceTrend(request: RequestResponseDto) {
     : null;
 }
 
+function toDateInputValue(value?: string | null) {
+  const date = value ? new Date(value) : new Date();
+  if (!Number.isFinite(date.getTime())) return '';
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60 * 1000);
+  return localDate.toISOString().slice(0, 10);
+}
+
+function toPreferredDateIso(value: string) {
+  if (!value) return null;
+  const date = new Date(`${value}T09:00:00`);
+  return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+}
+
 function patchRequestCollectionPayload(
   payload: unknown,
   requestId: string,
@@ -79,6 +93,8 @@ export function useRequestOwnerEdit({
   const [ownerTitle, setOwnerTitle] = React.useState('');
   const [ownerDescription, setOwnerDescription] = React.useState('');
   const [ownerPrice, setOwnerPrice] = React.useState('');
+  const [ownerCityId, setOwnerCityId] = React.useState('');
+  const [ownerPreferredDate, setOwnerPreferredDate] = React.useState('');
   const [ownerPhotos, setOwnerPhotos] = React.useState<string[]>([]);
   const [isSavingOwner, setIsSavingOwner] = React.useState(false);
   const [isUploadingOwnerPhoto, setIsUploadingOwnerPhoto] = React.useState(false);
@@ -92,6 +108,8 @@ export function useRequestOwnerEdit({
     setOwnerPrice(
       typeof request.price === 'number' && Number.isFinite(request.price) ? String(Math.round(request.price)) : '',
     );
+    setOwnerCityId(request.cityId ?? '');
+    setOwnerPreferredDate(toDateInputValue(request.preferredDate));
     setOwnerPhotos((request.photos ?? []).filter(Boolean).slice(0, 4));
     setOwnerPriceTrend(resolveRequestPriceTrend(request));
   }, [request]);
@@ -142,6 +160,16 @@ export function useRequestOwnerEdit({
     const nextTitle = ownerTitle.trim();
     if (!nextTitle) return;
     const nextDescription = ownerDescription.trim();
+    const nextCityId = ownerCityId.trim();
+    if (!nextCityId) {
+      toast.message(t(I18N_KEYS.request.errorCityRequired));
+      return;
+    }
+    const nextPreferredDate = toPreferredDateIso(ownerPreferredDate);
+    if (!nextPreferredDate) {
+      toast.message(t(I18N_KEYS.request.errorDateRequired));
+      return;
+    }
     const parsedPrice = ownerPrice.trim() === '' ? undefined : Number(ownerPrice);
     if (parsedPrice !== undefined && (!Number.isFinite(parsedPrice) || parsedPrice <= 0)) {
       toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
@@ -153,6 +181,8 @@ export function useRequestOwnerEdit({
     try {
       const updated = await updateMyRequest(request.id, {
         title: nextTitle,
+        cityId: nextCityId,
+        preferredDate: nextPreferredDate,
         description: nextDescription || undefined,
         price: parsedPrice,
         photos: ownerPhotos,
@@ -199,13 +229,15 @@ export function useRequestOwnerEdit({
       setIsSavingOwner(false);
       setActiveOwnerSubmitIntent(null);
     }
-  }, [isOwner, ownerDescription, ownerPhotos, ownerPrice, ownerTitle, qc, request, t]);
+  }, [isOwner, ownerCityId, ownerDescription, ownerPhotos, ownerPreferredDate, ownerPrice, ownerTitle, qc, request, t]);
 
   return {
     isOwnerEditMode,
     ownerTitle,
     ownerDescription,
     ownerPrice,
+    ownerCityId,
+    ownerPreferredDate,
     ownerPhotos,
     isSavingOwner,
     isUploadingOwnerPhoto,
@@ -215,6 +247,8 @@ export function useRequestOwnerEdit({
     setOwnerTitle,
     setOwnerDescription,
     setOwnerPrice,
+    setOwnerCityId,
+    setOwnerPreferredDate,
     setOwnerPhotos,
     handleOwnerClearText,
     handleOwnerPhotoPick,

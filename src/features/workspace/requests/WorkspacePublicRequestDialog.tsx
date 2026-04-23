@@ -230,8 +230,10 @@ export function WorkspacePublicRequestDialog({
     isSavingOwner,
     isUploadingOwnerPhoto,
     ownerDescription,
+    ownerCityId,
     ownerPhotos,
     ownerPrice,
+    ownerPreferredDate,
     ownerPriceTrend,
     ownerTitle,
     requestPriceTrend,
@@ -239,8 +241,10 @@ export function WorkspacePublicRequestDialog({
     requestStatusView,
     setIsOwnerEditMode,
     setOwnerDescription,
+    setOwnerCityId,
     setOwnerPhotos,
     setOwnerPrice,
+    setOwnerPreferredDate,
     setOwnerTitle,
     similarFallbackMessage,
     similarForRender,
@@ -400,6 +404,7 @@ export function WorkspacePublicRequestDialog({
   const content = hasResolvedContent ? (
     <RequestDetailsContent
       t={t}
+      locale={locale}
       request={resolvedRequest!}
       viewModel={resolvedViewModel!}
       surface="dialog"
@@ -441,6 +446,8 @@ export function WorkspacePublicRequestDialog({
       ownerTitle={ownerTitle}
       ownerDescription={ownerDescription}
       ownerPrice={ownerPrice}
+      ownerCityId={ownerCityId}
+      ownerPreferredDate={ownerPreferredDate}
       ownerPhotos={ownerPhotos}
       isSavingOwner={isSavingOwner}
       isUploadingOwnerPhoto={isUploadingOwnerPhoto}
@@ -451,6 +458,8 @@ export function WorkspacePublicRequestDialog({
       onOwnerTitleChange={setOwnerTitle}
       onOwnerDescriptionChange={setOwnerDescription}
       onOwnerPriceChange={setOwnerPrice}
+      onOwnerCityChange={setOwnerCityId}
+      onOwnerPreferredDateChange={setOwnerPreferredDate}
       onOwnerPhotoPick={(files) => {
         void handleOwnerPhotoPick(files);
       }}

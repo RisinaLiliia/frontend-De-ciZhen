@@ -85,6 +85,7 @@ export function RequestsListItem({
     <RequestCard
       prefetch={index < 2}
       href={view.card.detailsHref}
+      className={view.card.isInactive ? 'request-card--inactive' : undefined}
       ariaLabel={t(I18N_KEYS.requestsPage.openRequest)}
       imageSrc={view.card.imageSrc}
       imageAlt=""
@@ -106,6 +107,11 @@ export function RequestsListItem({
       tags={[view.card.categoryLabel, view.card.serviceLabel, ...view.card.tags.slice(0, 2)]}
       mode="link"
       onOpen={onOpenRequest ? () => onOpenRequest(item.id) : undefined}
+      contentSlot={view.card.isInactive && view.card.inactiveMessage ? (
+        <div className="request-card__inactive-message">
+          {view.card.inactiveMessage}
+        </div>
+      ) : null}
       statusSlot={(
         <RequestListStatusSlot
           status={view.status}

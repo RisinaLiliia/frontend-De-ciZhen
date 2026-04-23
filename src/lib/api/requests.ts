@@ -18,6 +18,10 @@ export function publishMyRequest(requestId: string) {
   return apiPost<undefined, RequestResponseDto>(`/requests/my/${requestId}/publish`, undefined);
 }
 
+export function unpublishMyRequest(requestId: string) {
+  return apiPost<undefined, RequestResponseDto>(`/requests/my/${requestId}/unpublish`, undefined);
+}
+
 export function uploadRequestPhotos(files: File[]) {
   const formData = new FormData();
   files.forEach((file) => formData.append('photos', file));

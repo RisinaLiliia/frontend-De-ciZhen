@@ -57,15 +57,21 @@ describe('workspaceActions.model', () => {
     const onArchive = vi.fn();
     const onDuplicate = vi.fn();
     const onDelete = vi.fn();
+    const onPublish = vi.fn();
+    const onUnpublish = vi.fn();
     const onOpenOfferSheet = vi.fn();
     const onWithdrawOffer = vi.fn();
     const onOpenChatThread = vi.fn();
     const onOpenChatConversation = vi.fn();
 
     const ownerRequestActions = buildWorkspaceOwnerRequestActions({
+      pendingPublishRequestId: 'req-4',
+      pendingUnpublishRequestId: 'req-5',
       pendingArchiveRequestId: 'req-2',
       pendingDuplicateRequestId: 'req-3',
       pendingDeleteRequestId: 'req-1',
+      onPublish,
+      onUnpublish,
       onArchive,
       onDuplicate,
       onDelete,
@@ -82,6 +88,10 @@ describe('workspaceActions.model', () => {
     expect(ownerRequestActions.pendingArchiveRequestId).toBe('req-2');
     expect(ownerRequestActions.pendingDuplicateRequestId).toBe('req-3');
     expect(ownerRequestActions.pendingDeleteRequestId).toBe('req-1');
+    expect(ownerRequestActions.pendingPublishRequestId).toBe('req-4');
+    expect(ownerRequestActions.pendingUnpublishRequestId).toBe('req-5');
+    expect(ownerRequestActions.onPublish).toBe(onPublish);
+    expect(ownerRequestActions.onUnpublish).toBe(onUnpublish);
     expect(ownerRequestActions.onArchive).toBe(onArchive);
     expect(ownerRequestActions.onDuplicate).toBe(onDuplicate);
     expect(result.pendingOfferRequestId).toBe('req-2');

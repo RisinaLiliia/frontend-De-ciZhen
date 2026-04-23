@@ -17,6 +17,20 @@
     gap: var(--space-2);
   }
 
+  .request-detail__owner-label {
+    color: var(--c-text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  .request-detail__owner-meta-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(160px, 0.45fr);
+    gap: var(--space-2);
+    align-items: start;
+  }
+
   .request-detail__owner-price-row {
     display: flex;
     align-items: center;
@@ -87,6 +101,12 @@
     padding-inline: var(--space-3);
     height: 36px;
     font-size: 13px;
+  }
+
+  @media (max-width: 640px) {
+    .request-detail__owner-meta-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   .request-detail__text {

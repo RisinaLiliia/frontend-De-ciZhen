@@ -6,6 +6,7 @@ import type { RequestDetailsViewModel } from '@/features/requests/details/viewMo
 import { getStatusBadgeClass } from '@/lib/statusBadge';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
 import {
   RequestDetailAbout,
   RequestDetailAside,
@@ -29,6 +30,7 @@ type ApplyState = 'accepted' | 'edit' | 'default';
 
 type Props = {
   t: (key: I18nKey) => string;
+  locale: Locale;
   request: RequestResponseDto;
   viewModel: RequestDetailsViewModel;
   surface?: 'page' | 'dialog';
@@ -53,6 +55,8 @@ type Props = {
   ownerTitle: string;
   ownerDescription: string;
   ownerPrice: string;
+  ownerCityId: string;
+  ownerPreferredDate: string;
   ownerPhotos: string[];
   isSavingOwner: boolean;
   isUploadingOwnerPhoto: boolean;
@@ -63,6 +67,8 @@ type Props = {
   onOwnerTitleChange: (value: string) => void;
   onOwnerDescriptionChange: (value: string) => void;
   onOwnerPriceChange: (value: string) => void;
+  onOwnerCityChange: (value: string) => void;
+  onOwnerPreferredDateChange: (value: string) => void;
   onOwnerPhotoPick: (files: FileList | null) => void;
   onOwnerPhotoRemove: (index: number) => void;
   onOwnerCancelEdit: () => void;
@@ -81,6 +87,7 @@ type Props = {
 
 export function RequestDetailsContent({
   t,
+  locale,
   request,
   viewModel,
   surface = 'page',
@@ -105,6 +112,8 @@ export function RequestDetailsContent({
   ownerTitle,
   ownerDescription,
   ownerPrice,
+  ownerCityId,
+  ownerPreferredDate,
   ownerPhotos,
   isSavingOwner,
   isUploadingOwnerPhoto,
@@ -115,6 +124,8 @@ export function RequestDetailsContent({
   onOwnerTitleChange,
   onOwnerDescriptionChange,
   onOwnerPriceChange,
+  onOwnerCityChange,
+  onOwnerPreferredDateChange,
   onOwnerPhotoPick,
   onOwnerPhotoRemove,
   onOwnerCancelEdit,
@@ -246,10 +257,16 @@ export function RequestDetailsContent({
               titleValue={ownerTitle}
               descriptionValue={ownerDescription}
               priceValue={ownerPrice}
+              cityValue={ownerCityId}
+              preferredDateValue={ownerPreferredDate}
               priceTrend={ownerPriceTrend}
               photos={ownerPhotos}
+              locale={locale}
               ownerEditLabel={t(I18N_KEYS.requestDetails.ownerEdit)}
               ownerClearLabel={t(I18N_KEYS.requestDetails.ownerClear)}
+              cityPlaceholder={t(I18N_KEYS.home.cityPlaceholder)}
+              cityLabel={t(I18N_KEYS.home.cityAria)}
+              preferredDateLabel={t(I18N_KEYS.request.preferredDate)}
               titlePlaceholder={t(I18N_KEYS.request.titlePlaceholder)}
               titleLabel={t(I18N_KEYS.request.titleLabel)}
               descriptionPlaceholder={t(I18N_KEYS.request.descriptionPlaceholder)}
@@ -271,6 +288,8 @@ export function RequestDetailsContent({
               onTitleChange={onOwnerTitleChange}
               onDescriptionChange={onOwnerDescriptionChange}
               onPriceChange={onOwnerPriceChange}
+              onCityChange={onOwnerCityChange}
+              onPreferredDateChange={onOwnerPreferredDateChange}
               onPhotoPick={onOwnerPhotoPick}
               onRemovePhoto={onOwnerPhotoRemove}
               onCancelEdit={onOwnerCancelEdit}

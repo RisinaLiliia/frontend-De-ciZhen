@@ -63,6 +63,29 @@ export type WorkspaceRequestDecisionActionTypeDto =
   | 'overdue_followup'
   | 'none';
 export type WorkspaceRequestDecisionPriorityLevelDto = 'high' | 'medium' | 'low' | 'none';
+export type WorkspaceRequestCardActionKindDto =
+  | 'link'
+  | 'send_offer'
+  | 'edit_offer'
+  | 'withdraw_offer'
+  | 'open_chat'
+  | 'publish_request'
+  | 'unpublish_request'
+  | 'review_responses'
+  | 'duplicate_request'
+  | 'share_request'
+  | 'archive_request'
+  | 'delete_request';
+export type WorkspaceRequestCardActionIconDto =
+  | 'briefcase'
+  | 'chat'
+  | 'edit'
+  | 'send'
+  | 'trash'
+  | 'copy'
+  | 'share'
+  | 'archive'
+  | 'pause';
 
 export type WorkspaceRequestsResponseDto = {
   section: 'requests';
@@ -158,9 +181,9 @@ export type WorkspaceMyRequestCardDto = {
     badgeTone?: 'info' | 'warning' | 'success' | 'danger' | null;
     actions: Array<{
       key: string;
-      kind: 'link' | 'send_offer' | 'edit_offer' | 'withdraw_offer' | 'open_chat' | 'duplicate_request' | 'share_request' | 'archive_request' | 'delete_request';
+      kind: WorkspaceRequestCardActionKindDto;
       tone: 'primary' | 'secondary' | 'danger';
-      icon: 'briefcase' | 'chat' | 'edit' | 'send' | 'trash' | 'copy' | 'share' | 'archive';
+      icon: WorkspaceRequestCardActionIconDto;
       label: string;
       href?: string | null;
       requestId?: string | null;
@@ -181,9 +204,9 @@ export type WorkspaceMyRequestCardDto = {
     lastRelevantActivityAt?: string | null;
     primaryAction?: {
       key: string;
-      kind: 'link' | 'send_offer' | 'edit_offer' | 'withdraw_offer' | 'open_chat' | 'duplicate_request' | 'share_request' | 'archive_request' | 'delete_request';
+      kind: WorkspaceRequestCardActionKindDto;
       tone: 'primary' | 'secondary' | 'danger';
-      icon: 'briefcase' | 'chat' | 'edit' | 'send' | 'trash' | 'copy' | 'share' | 'archive';
+      icon: WorkspaceRequestCardActionIconDto;
       label: string;
       href?: string | null;
       requestId?: string | null;

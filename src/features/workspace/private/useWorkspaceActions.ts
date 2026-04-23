@@ -1,12 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import type { QueryClient } from '@tanstack/react-query';
+import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import { deleteOffer } from '@/lib/api/offers';
-import { archiveMyRequest, deleteMyRequest, duplicateMyRequest } from '@/lib/api/requests';
+import { archiveMyRequest, deleteMyRequest, duplicateMyRequest, publishMyRequest, unpublishMyRequest } from '@/lib/api/requests';
 import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -36,17 +36,40 @@ type Args = {
   router: RouterLike;
 };
 
+const requestLifecyclePublicQueryKeys: QueryKey[] = [
+  ['requests-explorer-public'],
+  ['requests-public'],
+  ['workspace-public-overview'],
+  ['workspace-public-summary'],
+  ['requests-public-summary-total'],
+  ['requests-public-city-activity'],
+  ['home-nearby-requests'],
+  ['requests-latest'],
+  ['request-similar'],
+];
+
 export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args) {
   const [pendingOfferRequestId, setPendingOfferRequestId] = React.useState<string | null>(null);
+  const [pendingPublishRequestId, setPendingPublishRequestId] = React.useState<string | null>(null);
+  const [pendingUnpublishRequestId, setPendingUnpublishRequestId] = React.useState<string | null>(null);
   const [pendingArchiveRequestId, setPendingArchiveRequestId] = React.useState<string | null>(null);
   const [pendingDuplicateRequestId, setPendingDuplicateRequestId] = React.useState<string | null>(null);
   const [pendingDeleteRequestId, setPendingDeleteRequestId] = React.useState<string | null>(null);
 
   const invalidateWorkspaceRequests = React.useCallback(async () => {
+    const queryKeys: QueryKey[] = [
+      workspaceQK.requestsMy(),
+      ['workspace-requests'],
+      ['workspace-private-overview'],
+      workspaceQK.favoriteRequests(),
+      workspaceQK.offersMy(),
+      workspaceQK.offersMyClient(),
+      workspaceQK.chatInbox(),
+      ...requestLifecyclePublicQueryKeys,
+    ];
+
     await Promise.all([
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
-      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
+      ...queryKeys.map((queryKey) => qc.invalidateQueries({ queryKey })),
     ]);
   }, [qc]);
 
@@ -141,6 +164,50 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
     void onArchiveMyRequest(requestId);
   }, [onArchiveMyRequest]);
 
+  const onPublishMyRequest = React.useCallback(
+    async (requestId: string) => {
+      if (pendingPublishRequestId === requestId) return;
+      setPendingPublishRequestId(requestId);
+      try {
+        await publishMyRequest(requestId);
+        toast.success(t(I18N_KEYS.client.requestPublished));
+        await invalidateWorkspaceRequests();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+      } finally {
+        setPendingPublishRequestId(null);
+      }
+    },
+    [invalidateWorkspaceRequests, pendingPublishRequestId, t],
+  );
+
+  const onPublishMyRequestVoid = React.useCallback((requestId: string) => {
+    void onPublishMyRequest(requestId);
+  }, [onPublishMyRequest]);
+
+  const onUnpublishMyRequest = React.useCallback(
+    async (requestId: string) => {
+      if (pendingUnpublishRequestId === requestId) return;
+      setPendingUnpublishRequestId(requestId);
+      try {
+        await unpublishMyRequest(requestId);
+        toast.success(t(I18N_KEYS.client.requestUnpublished));
+        await invalidateWorkspaceRequests();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+      } finally {
+        setPendingUnpublishRequestId(null);
+      }
+    },
+    [invalidateWorkspaceRequests, pendingUnpublishRequestId, t],
+  );
+
+  const onUnpublishMyRequestVoid = React.useCallback((requestId: string) => {
+    void onUnpublishMyRequest(requestId);
+  }, [onUnpublishMyRequest]);
+
   const onDuplicateMyRequest = React.useCallback(
     async (requestId: string) => {
       if (pendingDuplicateRequestId === requestId) return;
@@ -190,6 +257,10 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
       buildWorkspaceOwnerRequestActions({
         pendingArchiveRequestId,
         pendingDuplicateRequestId,
+        pendingPublishRequestId,
+        pendingUnpublishRequestId,
+        onPublish: onPublishMyRequestVoid,
+        onUnpublish: onUnpublishMyRequestVoid,
         onDelete: onDeleteMyRequestVoid,
         onArchive: onArchiveMyRequestVoid,
         onDuplicate: onDuplicateMyRequestVoid,
@@ -199,9 +270,13 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
       onArchiveMyRequestVoid,
       onDeleteMyRequestVoid,
       onDuplicateMyRequestVoid,
+      onPublishMyRequestVoid,
+      onUnpublishMyRequestVoid,
       pendingArchiveRequestId,
       pendingDeleteRequestId,
       pendingDuplicateRequestId,
+      pendingPublishRequestId,
+      pendingUnpublishRequestId,
     ],
   );
 

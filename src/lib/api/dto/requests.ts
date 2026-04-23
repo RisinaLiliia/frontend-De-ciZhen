@@ -17,6 +17,7 @@ export type CreateRequestDto = {
 
 export type UpdateMyRequestDto = {
   title?: string;
+  cityId?: string;
   propertyType?: 'apartment' | 'house';
   area?: number;
   price?: number;
@@ -31,6 +32,10 @@ export type UpdateMyRequestDto = {
 export type DeleteMyRequestResponseDto = {
   ok: true;
   deletedRequestId: string;
+  result: 'deleted' | 'cancelled';
+  removedFromPublicFeed: boolean;
+  retainedForParticipants: boolean;
+  purgeAt?: string | null;
 };
 
 export type ArchiveMyRequestResponseDto = {
@@ -68,6 +73,12 @@ export type RequestResponseDto = {
   clientIsOnline?: boolean | null;
   clientLastSeenAt?: string | null;
   status: RequestStatus;
+  publishedAt?: string | null;
+  cancelledAt?: string | null;
+  purgeAt?: string | null;
+  isInactive?: boolean | null;
+  inactiveReason?: 'cancelled_by_customer' | null;
+  inactiveMessage?: string | null;
   createdAt: string;
 };
 
