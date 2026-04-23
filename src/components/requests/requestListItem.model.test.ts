@@ -35,6 +35,7 @@ describe('requestListItem.model', () => {
       description: 'Kitchen deep clean with windows',
       price: 120,
       previousPrice: 140,
+      priceTrend: 'down',
       tags: ['urgent', 'insured'],
     });
     const offer = {
@@ -78,6 +79,28 @@ describe('requestListItem.model', () => {
 
     expect(view.favorite.isFavorite).toBe(true);
     expect(view.favorite.isFavoritePending).toBe(true);
+  });
+
+  it('renders inactive request state from backend fields', () => {
+    const view = buildRequestListPresentation({
+      item: createRequest({
+        status: 'cancelled',
+        isInactive: true,
+        inactiveMessage: 'Dieser Auftrag wurde vom Auftraggeber storniert.',
+      }),
+      t,
+      locale: 'en',
+      serviceByKey: new Map(),
+      categoryByKey: new Map(),
+      cityById: new Map(),
+      formatPrice,
+      enableOfferActions: false,
+      pendingOfferRequestId: null,
+    });
+
+    expect(view.card.isInactive).toBe(true);
+    expect(view.card.inactiveMessage).toBe('Dieser Auftrag wurde vom Auftraggeber storniert.');
+    expect(view.status.ownerStatusLabel).toBe(I18N_KEYS.requestsPage.statusCancelled);
   });
 
   it('maps owner list state and pending delete independently from offer state', () => {

@@ -105,6 +105,30 @@
       0 10px 22px color-mix(in oklab, var(--c-primary) 10%, transparent);
   }
 
+  .request-card--inactive {
+    opacity: 0.72;
+    filter: saturate(0.72);
+  }
+
+  .request-card--inactive:hover {
+    transform: none;
+    border-color: color-mix(in oklab, var(--c-border) 72%, transparent);
+    box-shadow: var(--shadow-card);
+  }
+
+  .request-card__inactive-message {
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    padding: 0.45rem 0.65rem;
+    background: color-mix(in oklab, var(--c-danger) 10%, var(--c-panel) 90%);
+    color: color-mix(in oklab, var(--c-danger) 82%, var(--c-ink) 18%);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
   .request-card--link:focus-visible {
     outline: none;
     box-shadow:

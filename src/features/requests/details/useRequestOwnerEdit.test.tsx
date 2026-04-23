@@ -103,6 +103,8 @@ describe('useRequestOwnerEdit', () => {
         'req-1',
         expect.objectContaining({
           title: 'Draft request',
+          cityId: 'c1',
+          preferredDate: expect.any(String),
           description: 'details',
           photos: [],
           price: 120,

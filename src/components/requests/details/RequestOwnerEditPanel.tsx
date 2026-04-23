@@ -1,9 +1,11 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
+import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { IconEdit, IconTrash } from '@/components/ui/icons/icons';
+import type { Locale } from '@/lib/i18n/t';
 import { normalizeAppImageSrc, shouldBypassNextImageOptimization } from '@/lib/requests/images';
 
 type RequestOwnerEditPanelProps = {
@@ -15,10 +17,16 @@ type RequestOwnerEditPanelProps = {
   titleValue: string;
   descriptionValue: string;
   priceValue: string;
+  cityValue: string;
+  preferredDateValue: string;
   priceTrend: 'up' | 'down' | null;
   photos: string[];
+  locale: Locale;
   ownerEditLabel: string;
   ownerClearLabel: string;
+  cityPlaceholder: string;
+  cityLabel: string;
+  preferredDateLabel: string;
   titlePlaceholder: string;
   titleLabel: string;
   descriptionPlaceholder: string;
@@ -38,6 +46,8 @@ type RequestOwnerEditPanelProps = {
   onTitleChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
   onPriceChange: (value: string) => void;
+  onCityChange: (value: string) => void;
+  onPreferredDateChange: (value: string) => void;
   onPhotoPick: (files: FileList | null) => void;
   onRemovePhoto: (index: number) => void;
   onCancelEdit: () => void;
@@ -53,10 +63,16 @@ export function RequestOwnerEditPanel({
   titleValue,
   descriptionValue,
   priceValue,
+  cityValue,
+  preferredDateValue,
   priceTrend,
   photos,
+  locale,
   ownerEditLabel,
   ownerClearLabel,
+  cityPlaceholder,
+  cityLabel,
+  preferredDateLabel,
   titlePlaceholder,
   titleLabel,
   descriptionPlaceholder,
@@ -76,6 +92,8 @@ export function RequestOwnerEditPanel({
   onTitleChange,
   onDescriptionChange,
   onPriceChange,
+  onCityChange,
+  onPreferredDateChange,
   onPhotoPick,
   onRemovePhoto,
   onCancelEdit,
@@ -149,6 +167,32 @@ export function RequestOwnerEditPanel({
             {priceTrend === 'down' ? '↓' : '↑'} {priceTrend === 'down' ? priceTrendDownLabel : priceTrendUpLabel}
           </span>
         ) : null}
+      </div>
+
+      <div className="request-detail__owner-meta-grid">
+        <div className="request-detail__owner-field">
+          <span className="request-detail__owner-label">{cityLabel}</span>
+          <CitySearchSelect
+            mode="inline"
+            locale={locale}
+            value={cityValue}
+            onChange={onCityChange}
+            placeholder={cityPlaceholder}
+            ariaLabel={cityLabel}
+            searchPlaceholder={cityPlaceholder}
+            disabled={!isEditMode}
+          />
+        </div>
+        <div className="request-detail__owner-field">
+          <span className="request-detail__owner-label">{preferredDateLabel}</span>
+          <Input
+            type="date"
+            value={preferredDateValue}
+            onChange={(event) => onPreferredDateChange(event.target.value)}
+            disabled={!isEditMode}
+            aria-label={preferredDateLabel}
+          />
+        </div>
       </div>
 
       <div className="request-detail__owner-photos-wrap">
@@ -226,7 +270,7 @@ export function RequestOwnerEditPanel({
             variant="primary"
             onClick={() => onSave('draft')}
             loading={isSaving && activeSubmitIntent === 'draft'}
-            disabled={!titleValue.trim()}
+            disabled={!titleValue.trim() || !cityValue.trim() || !preferredDateValue}
           >
             {saveLabel}
           </Button>
@@ -235,7 +279,7 @@ export function RequestOwnerEditPanel({
               type="button"
               onClick={() => onSave('publish')}
               loading={isSaving && activeSubmitIntent === 'publish'}
-              disabled={!titleValue.trim()}
+              disabled={!titleValue.trim() || !cityValue.trim() || !preferredDateValue}
             >
               {publishLabel}
             </Button>

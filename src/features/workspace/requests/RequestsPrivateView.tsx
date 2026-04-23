@@ -355,6 +355,44 @@ function RequestActionControl({
     );
   }
 
+  if (action.kind === 'review_responses' && action.requestId) {
+    return (
+      <button
+        type="button"
+        className={className}
+        onClick={() => listContext.onOpenRequest?.(action.requestId!, 'view')}
+      >
+        {action.label}
+      </button>
+    );
+  }
+
+  if (action.kind === 'publish_request' && action.requestId) {
+    return (
+      <button
+        type="button"
+        className={className}
+        disabled={listContext.ownerRequestActions?.pendingPublishRequestId === action.requestId}
+        onClick={() => listContext.ownerRequestActions?.onPublish?.(action.requestId!)}
+      >
+        {action.label}
+      </button>
+    );
+  }
+
+  if (action.kind === 'unpublish_request' && action.requestId) {
+    return (
+      <button
+        type="button"
+        className={className}
+        disabled={listContext.ownerRequestActions?.pendingUnpublishRequestId === action.requestId}
+        onClick={() => listContext.ownerRequestActions?.onUnpublish?.(action.requestId!)}
+      >
+        {action.label}
+      </button>
+    );
+  }
+
   if (action.kind === 'send_offer' && action.requestId) {
     return (
       <button

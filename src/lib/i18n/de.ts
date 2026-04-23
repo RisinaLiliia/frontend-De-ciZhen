@@ -834,6 +834,8 @@ export const de = {
     requestDeleteConfirmCta: 'Löschen',
     requestUpdated: 'Anfrage aktualisiert',
     requestDeleted: 'Anfrage gelöscht',
+    requestPublished: 'Anfrage veröffentlicht',
+    requestUnpublished: 'Publikation aufgehoben',
     requestArchived: 'Anfrage archiviert',
     requestDuplicated: 'Anfrage dupliziert',
     requestTitleMinError: 'Der Titel muss mindestens 3 Zeichen haben',

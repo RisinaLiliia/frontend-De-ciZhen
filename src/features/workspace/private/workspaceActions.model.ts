@@ -57,17 +57,25 @@ export function isWorkspaceChatConversationInput(value: unknown): value is Works
 }
 
 export function buildWorkspaceOwnerRequestActions(args: {
+  pendingPublishRequestId: string | null;
+  pendingUnpublishRequestId: string | null;
   pendingArchiveRequestId: string | null;
   pendingDuplicateRequestId: string | null;
   pendingDeleteRequestId: string | null;
+  onPublish: (requestId: string) => void;
+  onUnpublish: (requestId: string) => void;
   onArchive: (requestId: string) => void;
   onDuplicate: (requestId: string) => void;
   onDelete: (requestId: string) => void;
 }) {
   return {
+    onPublish: args.onPublish,
+    onUnpublish: args.onUnpublish,
     onArchive: args.onArchive,
     onDuplicate: args.onDuplicate,
     onDelete: args.onDelete,
+    pendingPublishRequestId: args.pendingPublishRequestId,
+    pendingUnpublishRequestId: args.pendingUnpublishRequestId,
     pendingArchiveRequestId: args.pendingArchiveRequestId,
     pendingDuplicateRequestId: args.pendingDuplicateRequestId,
     pendingDeleteRequestId: args.pendingDeleteRequestId,

@@ -6,9 +6,13 @@ import type { Locale } from '@/lib/i18n/t';
 import type { OfferDto } from '@/lib/api/dto/offers';
 
 export type OwnerRequestActions = {
+  onPublish?: (requestId: string) => void;
+  onUnpublish?: (requestId: string) => void;
   onDelete?: (requestId: string) => void;
   onArchive?: (requestId: string) => void;
   onDuplicate?: (requestId: string) => void;
+  pendingPublishRequestId?: string | null;
+  pendingUnpublishRequestId?: string | null;
   pendingArchiveRequestId?: string | null;
   pendingDuplicateRequestId?: string | null;
   pendingDeleteRequestId?: string | null;

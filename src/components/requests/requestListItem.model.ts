@@ -24,6 +24,8 @@ export type RequestListCardPresentation = {
   priceTrend: 'up' | 'down' | null;
   priceTrendLabel: string | null;
   tags: string[];
+  isInactive: boolean;
+  inactiveMessage: string | null;
 };
 
 export type RequestListFavoritePresentation = {
@@ -82,15 +84,7 @@ export function buildRequestListPresentation({
   const priceValue = item.price ?? estimatePrice(item.area, item.propertyType);
   const explicitPriceTrend =
     item.priceTrend === 'down' || item.priceTrend === 'up' ? item.priceTrend : null;
-  const priceTrend =
-    explicitPriceTrend ??
-    (typeof item.previousPrice === 'number' && typeof item.price === 'number'
-      ? item.price < item.previousPrice
-        ? 'down'
-        : item.price > item.previousPrice
-          ? 'up'
-          : null
-      : null);
+  const priceTrend = explicitPriceTrend;
   const priceTrendLabel =
     priceTrend === 'down'
       ? t(I18N_KEYS.request.priceTrendDown)
@@ -120,6 +114,8 @@ export function buildRequestListPresentation({
       priceTrend,
       priceTrendLabel,
       tags: item.tags ?? [],
+      isInactive: item.isInactive === true || item.status === 'cancelled',
+      inactiveMessage: item.inactiveMessage?.trim() || null,
     },
     status: {
       detailsHref,

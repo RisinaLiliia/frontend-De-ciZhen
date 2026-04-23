@@ -8,6 +8,9 @@ export type OwnerMenuAction = WorkspaceMyRequestCardDto['status']['actions'][num
 export function hasOwnerRequestManagementCapability(card: Pick<WorkspaceMyRequestCardDto, 'status'>) {
   return card.status.actions.some((action) =>
     action.key === 'edit-request'
+    || action.kind === 'publish_request'
+    || action.kind === 'unpublish_request'
+    || action.kind === 'review_responses'
     || action.kind === 'duplicate_request'
     || action.kind === 'archive_request'
     || action.kind === 'delete_request');
