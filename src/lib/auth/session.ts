@@ -2,10 +2,26 @@
 import { buildApiUrl } from '@/lib/api/url';
 import type { RefreshResponseDto } from '@/lib/api/dto/auth';
 
-let refreshPromise: Promise<string | null> | null = null;
-let refreshSuppressed = false;
+const REFRESH_MAX_ATTEMPTS = 3;
+const REFRESH_RETRY_BASE_DELAY_MS = 300;
+const REFRESH_COOLDOWN_MS = 15_000;
 const SESSION_HINT_KEY = 'dc_auth_session_hint';
 const SESSION_HINT_COOKIE = 'dc_auth_session_hint';
+
+export type RefreshAccessTokenResult =
+  | { status: 'success'; accessToken: string }
+  | { status: 'unauthorized' }
+  | { status: 'unavailable' };
+
+let refreshPromise: Promise<RefreshAccessTokenResult> | null = null;
+let refreshSuppressed = false;
+let refreshCooldownUntil = 0;
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 function setSessionHintCookie(value: '1' | '', maxAgeSeconds: number) {
   if (typeof document === 'undefined') return;
@@ -22,12 +38,42 @@ function isProtectedPath(pathname: string): boolean {
   );
 }
 
+async function requestRefreshAccessToken(): Promise<RefreshAccessTokenResult> {
+  try {
+    const res = await fetch(buildApiUrl('/auth/refresh'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        clearSessionHint();
+        refreshSuppressed = true;
+        return { status: 'unauthorized' };
+      }
+      return { status: 'unavailable' };
+    }
+
+    const data = (await res.json()) as RefreshResponseDto;
+    if (!data?.accessToken) return { status: 'unavailable' };
+
+    refreshSuppressed = false;
+    refreshCooldownUntil = 0;
+    return { status: 'success', accessToken: data.accessToken };
+  } catch {
+    return { status: 'unavailable' };
+  }
+}
+
 export function allowRefreshAttempts() {
   refreshSuppressed = false;
+  refreshCooldownUntil = 0;
 }
 
 export function suppressRefreshAttempts() {
   refreshSuppressed = true;
+  refreshCooldownUntil = 0;
 }
 
 export function markSessionHint() {
@@ -48,38 +94,27 @@ export function shouldAttemptRefreshOnBootstrap(): boolean {
   return window.localStorage.getItem(SESSION_HINT_KEY) === '1';
 }
 
-export async function refreshAccessToken(): Promise<string | null> {
-  if (refreshSuppressed) return null;
+export async function refreshAccessToken(): Promise<RefreshAccessTokenResult> {
+  if (refreshSuppressed) return { status: 'unauthorized' };
   if (refreshPromise) return refreshPromise;
+  if (refreshCooldownUntil > Date.now()) return { status: 'unavailable' };
 
   refreshPromise = (async () => {
-    try {
-      const res = await fetch(buildApiUrl('/auth/refresh'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      });
-
-      if (!res.ok) {
-        if (res.status === 401 || res.status === 403) {
-          clearSessionHint();
-          refreshSuppressed = true;
-        } else if (res.status >= 500) {
-          refreshSuppressed = true;
-        }
-        return null;
+    for (let attempt = 1; attempt <= REFRESH_MAX_ATTEMPTS; attempt += 1) {
+      const result = await requestRefreshAccessToken();
+      if (result.status !== 'unavailable') return result;
+      if (attempt < REFRESH_MAX_ATTEMPTS) {
+        await sleep(REFRESH_RETRY_BASE_DELAY_MS * 2 ** (attempt - 1));
       }
-
-      const data = (await res.json()) as RefreshResponseDto;
-      if (!data?.accessToken) return null;
-      refreshSuppressed = false;
-      return data.accessToken;
-    } catch {
-      return null;
-    } finally {
-      refreshPromise = null;
     }
+
+    refreshCooldownUntil = Date.now() + REFRESH_COOLDOWN_MS;
+    return { status: 'unavailable' };
   })();
 
-  return refreshPromise;
+  try {
+    return await refreshPromise;
+  } finally {
+    refreshPromise = null;
+  }
 }
