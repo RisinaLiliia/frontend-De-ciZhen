@@ -60,6 +60,7 @@ export type WorkspaceRequestDecisionActionTypeDto =
   | 'reply_required'
   | 'confirm_contract'
   | 'confirm_completion'
+  | 'review_completion'
   | 'overdue_followup'
   | 'none';
 export type WorkspaceRequestDecisionPriorityLevelDto = 'high' | 'medium' | 'low' | 'none';
@@ -131,6 +132,16 @@ export type WorkspaceMyRequestCardDto = {
   id: string;
   requestId: string;
   role: 'customer' | 'provider';
+  ownerLifecycleStage?:
+    | 'draft'
+    | 'published'
+    | 'offers_received'
+    | 'contract_pending'
+    | 'in_progress'
+    | 'completion_pending'
+    | 'completed'
+    | 'reviewed'
+    | null;
   title: string;
   category: string;
   subcategory?: string | null;

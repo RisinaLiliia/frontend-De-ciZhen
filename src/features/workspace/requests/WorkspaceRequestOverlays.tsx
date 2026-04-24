@@ -7,6 +7,7 @@ import { createPortal } from 'react-dom';
 import {
   RequestOfferSheet,
 } from '@/components/requests/details';
+import { WorkspaceReviewRatingField } from '@/components/reviews/WorkspaceReviewRatingField';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
@@ -14,6 +15,7 @@ import { RequestDetailsContent } from '@/features/requests/details/RequestDetail
 import { useRequestDetailsContentState } from '@/features/requests/details/useRequestDetailsContentState';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import {
+  useWorkspaceCompletionReviewActions,
   useWorkspaceProviderOfferSheetActions,
   useWorkspaceRequestDecisionActions,
   useWorkspaceRequestOfferActions,
@@ -334,18 +336,84 @@ function WorkspaceRequestOffersSection({
   );
 }
 
+function WorkspaceSelectedProviderSummary({
+  locale,
+  offer,
+  contract,
+  bookingStartAt,
+}: {
+  locale: Locale;
+  offer: NonNullable<ReturnType<typeof useWorkspaceRequestDecisionData>['selectedOffer']>;
+  contract: ReturnType<typeof useWorkspaceRequestDecisionData>['contract'];
+  bookingStartAt?: string | null;
+}) {
+  const priceLabel = formatDialogPrice(locale, contract?.priceAmount ?? offer.amount);
+  const statusBadge = contract
+    ? resolveContractStatusBadge(locale, contract.status)
+    : resolveOfferStatusBadge(locale, offer.status);
+  const assignedAt = formatOfferTimestamp(locale, contract?.confirmedAt ?? contract?.createdAt ?? offer.updatedAt ?? offer.createdAt);
+  const scheduledAt = formatOfferTimestamp(locale, bookingStartAt ?? offer.availableAt ?? offer.requestPreferredDate);
+  const availability = offer.availabilityNote?.trim() || null;
+  const message = offer.message?.trim() || null;
+  const metaItems = [
+    assignedAt
+      ? `${locale === 'de' ? 'In Arbeit seit' : 'In progress since'}: ${assignedAt}`
+      : null,
+    scheduledAt
+      ? `${locale === 'de' ? 'Geplanter Termin' : 'Planned service date'}: ${scheduledAt}`
+      : null,
+    priceLabel
+      ? `${locale === 'de' ? 'Kosten' : 'Price'}: ${priceLabel}`
+      : null,
+  ].filter(Boolean);
+
+  return (
+    <article className="my-request-contract-card">
+      <div className="my-request-contract-card__head">
+        <div className="my-request-contract-card__identity">
+          <strong>{offer.providerDisplayName?.trim() || (locale === 'de' ? 'Gewählter Anbieter' : 'Selected provider')}</strong>
+          <span className={statusBadge.className}>{statusBadge.label}</span>
+        </div>
+        {priceLabel ? <strong className="my-request-contract-card__price">{priceLabel}</strong> : null}
+      </div>
+
+      {message ? <p className="my-request-contract-card__message">{message}</p> : null}
+
+      {metaItems.length > 0 ? (
+        <div className="my-request-contract-card__meta">
+          {metaItems.map((item) => (
+            <span key={item}>{item}</span>
+          ))}
+        </div>
+      ) : null}
+
+      {availability || contract?.priceDetails ? (
+        <div className="my-request-contract-card__note">
+          {availability || contract?.priceDetails}
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
 function WorkspaceRequestDecisionSection({
   locale,
   card,
+  initialIntent,
   onOpenChatConversation,
 }: {
   locale: Locale;
   card: MyRequestsViewCard;
+  initialIntent: RequestDialogIntent;
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 }) {
   const [startAt, setStartAt] = React.useState(() => toDateTimeLocalValue());
   const [durationMin, setDurationMin] = React.useState('120');
   const [note, setNote] = React.useState('');
+  const [reviewRating, setReviewRating] = React.useState(5);
+  const [reviewText, setReviewText] = React.useState('');
+  const [reviewPromptDismissed, setReviewPromptDismissed] = React.useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = React.useState(false);
   const {
     completeRequestContract,
     confirmRequestContract,
@@ -355,11 +423,19 @@ function WorkspaceRequestDecisionSection({
     requestId: card.requestId,
   });
   const {
+    booking,
     chatInput,
     chatLabel,
     contract,
     contractMeta,
+    reviewStatus,
+    selectedOffer,
+    suggestedStartAt,
   } = useWorkspaceRequestDecisionData({ card, locale });
+  const {
+    isSubmittingReview,
+    submitCompletionReview,
+  } = useWorkspaceCompletionReviewActions();
   const [optimisticContractStatus, setOptimisticContractStatus] = React.useState<NonNullable<typeof contract>['status'] | null>(contract?.status ?? null);
 
   React.useEffect(() => {
@@ -367,11 +443,30 @@ function WorkspaceRequestDecisionSection({
   }, [contract?.status]);
 
   React.useEffect(() => {
-    if (!contract?.createdAt) return;
-    setStartAt((current) => (current ? current : toDateTimeLocalValue(contract.createdAt)));
-  }, [contract?.createdAt]);
+    if (!suggestedStartAt) return;
+    setStartAt((current) => (current ? current : toDateTimeLocalValue(suggestedStartAt)));
+  }, [suggestedStartAt]);
 
-  if (card.decision.actionType === 'review_offers' || card.decision.actionType === 'none') {
+  React.useEffect(() => {
+    if (optimisticContractStatus !== 'completed') {
+      setReviewPromptDismissed(false);
+      setReviewSubmitted(false);
+      setReviewText('');
+      setReviewRating(5);
+    }
+  }, [optimisticContractStatus]);
+
+  const hasSavedClientReview = Boolean(reviewStatus?.clientReviewId);
+  const shouldShowReviewScene = initialIntent === 'review'
+    || card.decision.actionType === 'review_completion'
+    || hasSavedClientReview;
+
+  React.useEffect(() => {
+    if (!reviewStatus?.clientReviewId) return;
+    setReviewSubmitted(true);
+  }, [reviewStatus?.clientReviewId]);
+
+  if (card.decision.actionType === 'review_offers' || (card.decision.actionType === 'none' && !shouldShowReviewScene)) {
     return null;
   }
 
@@ -386,6 +481,14 @@ function WorkspaceRequestDecisionSection({
       .filter(Boolean)
       .join(' · ')
     : contractMeta;
+  const shouldShowReviewPrompt = Boolean(
+    effectiveContract?.status === 'completed'
+    && booking?.bookingId
+    && (reviewStatus?.canClientReviewProvider || initialIntent === 'review')
+    && !hasSavedClientReview
+    && !reviewPromptDismissed
+    && !reviewSubmitted,
+  );
 
   return (
     <div className="my-request-dialog__section my-request-dialog__section--decision">
@@ -406,6 +509,15 @@ function WorkspaceRequestDecisionSection({
 
       {effectiveContractMeta ? (
         <p className="my-request-dialog__section-subtitle">{effectiveContractMeta}</p>
+      ) : null}
+
+      {selectedOffer ? (
+        <WorkspaceSelectedProviderSummary
+          locale={locale}
+          offer={selectedOffer}
+          contract={effectiveContract}
+          bookingStartAt={booking?.startAt ?? null}
+        />
       ) : null}
 
       {(card.decision.actionType === 'reply_required' || card.decision.actionType === 'overdue_followup') && chatInput ? (
@@ -503,37 +615,113 @@ function WorkspaceRequestDecisionSection({
 
       {card.decision.actionType === 'confirm_completion' ? (
         effectiveContract ? (
-          <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
-            {chatInput ? (
+          <>
+            <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
+              {chatInput ? (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => onOpenChatConversation(chatInput)}
+                  disabled={isSubmittingDecision}
+                >
+                  {chatLabel}
+                </button>
+              ) : null}
               <button
                 type="button"
-                className="btn-secondary"
-                onClick={() => onOpenChatConversation(chatInput)}
-                disabled={isSubmittingDecision}
+                className="btn-primary"
+                onClick={() => {
+                  if (!effectiveContract?.id) return;
+                  const previousStatus = optimisticContractStatus;
+                  setOptimisticContractStatus('completed');
+                  void completeRequestContract(effectiveContract.id).then((ok) => {
+                    if (!ok) {
+                      setOptimisticContractStatus(previousStatus);
+                      return;
+                    }
+                    setReviewPromptDismissed(false);
+                  });
+                }}
+                disabled={isSubmittingDecision || effectiveContract.status === 'completed' || effectiveContract.status === 'cancelled'}
               >
-                {chatLabel}
+                {isSubmittingDecision
+                  ? (locale === 'de' ? 'Speichern…' : 'Saving…')
+                  : (locale === 'de' ? 'Leistung bestätigen' : 'Confirm completion')}
               </button>
+            </div>
+
+            {shouldShowReviewPrompt ? (
+              <div className="my-request-review-card">
+                <div className="my-request-review-card__head">
+                  <div>
+                    <h4>{locale === 'de' ? 'Bewertung hinterlassen' : 'Leave a review'}</h4>
+                    <p>
+                      {locale === 'de'
+                        ? 'Der Auftrag ist abgeschlossen. Bewerte die Zusammenarbeit mit dem gewählten Anbieter direkt hier.'
+                        : 'The job is completed. Rate your collaboration with the selected provider right here.'}
+                    </p>
+                  </div>
+                </div>
+                <WorkspaceReviewRatingField
+                  label={locale === 'de' ? 'Bewertung' : 'Rating'}
+                  value={reviewRating}
+                  onChange={setReviewRating}
+                />
+                <label className="my-request-decision-form__field">
+                  <span>{locale === 'de' ? 'Feedback' : 'Feedback'}</span>
+                  <Textarea
+                    value={reviewText}
+                    onChange={(event) => setReviewText(event.target.value)}
+                    placeholder={locale === 'de'
+                      ? 'Wie lief die Zusammenarbeit? Was war besonders gut?'
+                      : 'How did the collaboration go? What stood out?'}
+                    disabled={isSubmittingReview}
+                  />
+                </label>
+                <div className="my-request-review-card__actions">
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    disabled={isSubmittingReview}
+                    onClick={() => setReviewPromptDismissed(true)}
+                  >
+                    {locale === 'de' ? 'Später' : 'Later'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    disabled={isSubmittingReview || !booking?.bookingId}
+                    onClick={() => {
+                      if (!booking?.bookingId) return;
+                      void submitCompletionReview({
+                        bookingId: booking.bookingId,
+                        rating: reviewRating,
+                        text: reviewText,
+                      }).then((ok) => {
+                        if (!ok) return;
+                        setReviewSubmitted(true);
+                      });
+                    }}
+                  >
+                    {isSubmittingReview
+                      ? (locale === 'de' ? 'Senden…' : 'Submitting…')
+                      : (locale === 'de' ? 'Bewertung senden' : 'Submit review')}
+                  </button>
+                </div>
+              </div>
             ) : null}
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => {
-                if (!effectiveContract?.id) return;
-                const previousStatus = optimisticContractStatus;
-                setOptimisticContractStatus('completed');
-                void completeRequestContract(effectiveContract.id).then((ok) => {
-                  if (!ok) {
-                    setOptimisticContractStatus(previousStatus);
-                  }
-                });
-              }}
-              disabled={isSubmittingDecision || effectiveContract.status === 'completed' || effectiveContract.status === 'cancelled'}
-            >
-              {isSubmittingDecision
-                ? (locale === 'de' ? 'Speichern…' : 'Saving…')
-                : (locale === 'de' ? 'Abschluss bestätigen' : 'Confirm completion')}
-            </button>
-          </div>
+
+            {reviewSubmitted && !hasSavedClientReview ? (
+              <WorkspaceInlineStateCard
+                locale={locale}
+                tone="info"
+                title={locale === 'de' ? 'Bewertung gespeichert' : 'Review submitted'}
+                body={locale === 'de'
+                  ? 'Danke. Dein Feedback wurde gespeichert und ist jetzt Teil des Qualitätsverlaufs.'
+                  : 'Thanks. Your feedback has been saved and is now part of the quality history.'}
+              />
+            ) : null}
+          </>
         ) : (
           <WorkspaceInlineStateCard
             locale={locale}
@@ -542,6 +730,58 @@ function WorkspaceRequestDecisionSection({
             body={locale === 'de'
               ? 'Die Abschlussbestätigung wird hier sichtbar, sobald der Auftrag aktiv als Vertrag geführt wird.'
               : 'Completion confirmation will appear here as soon as the request is tracked as an active contract.'}
+          />
+        )
+      ) : null}
+
+      {shouldShowReviewScene ? (
+        effectiveContract ? (
+          hasSavedClientReview ? (
+            <article className="my-request-review-card">
+              <div className="my-request-review-card__head">
+                <div>
+                  <h4>{locale === 'de' ? 'Deine Bewertung' : 'Your review'}</h4>
+                  <p>
+                    {reviewStatus?.clientReviewedProviderAt
+                      ? (locale === 'de'
+                        ? `Gespeichert am ${formatOfferTimestamp(locale, reviewStatus.clientReviewedProviderAt)}`
+                        : `Saved on ${formatOfferTimestamp(locale, reviewStatus.clientReviewedProviderAt)}`)
+                      : (locale === 'de'
+                        ? 'Dein Feedback wurde bereits gespeichert.'
+                        : 'Your feedback has already been saved.')}
+                  </p>
+                </div>
+              </div>
+              <WorkspaceReviewRatingField
+                label={locale === 'de' ? 'Bewertung' : 'Rating'}
+                value={reviewStatus?.clientReviewRating ?? 5}
+                onChange={() => {}}
+                disabled
+              />
+              {reviewStatus?.clientReviewText ? (
+                <div className="my-request-contract-card__note">
+                  {reviewStatus.clientReviewText}
+                </div>
+              ) : null}
+            </article>
+          ) : shouldShowReviewPrompt ? null : (
+            <WorkspaceInlineStateCard
+              locale={locale}
+              tone="info"
+              title={locale === 'de' ? 'Bewertung verfügbar, sobald der Auftrag abgeschlossen ist' : 'Review available once the job is completed'}
+              body={locale === 'de'
+                ? 'Sobald die Leistung bestätigt ist, kannst du hier direkt eine Bewertung hinterlassen.'
+                : 'As soon as the work is confirmed, you can leave your review right here.'}
+            />
+          )
+        ) : (
+          <WorkspaceInlineStateCard
+            locale={locale}
+            tone="empty"
+            title={locale === 'de' ? 'Noch keine Bewertungsdaten verfügbar' : 'No review data available yet'}
+            body={locale === 'de'
+              ? 'Öffne diesen Schritt erneut, sobald ein Vertrag und eine abgeschlossene Leistung vorliegen.'
+              : 'Open this step again once a contract and a completed job are available.'}
           />
         )
       ) : null}
@@ -643,6 +883,21 @@ export function WorkspaceManagedRequestDialog({
   const resolvedViewModel = viewModel ?? null;
   const hasResolvedContent = Boolean(resolvedRequest && resolvedViewModel);
   const showManagedRequestSidebar = isCustomerRequest && !isOwnerEditMode;
+  const decisionSection = (
+    <WorkspaceRequestDecisionSection
+      locale={locale}
+      card={card}
+      initialIntent={initialIntent}
+      onOpenChatConversation={onOpenChatConversation}
+    />
+  );
+  const offersSection = (
+    <WorkspaceRequestOffersSection
+      locale={locale}
+      requestId={card.requestId}
+      onOpenChatConversation={onOpenChatConversation}
+    />
+  );
   const content = hasResolvedContent ? (
     <RequestDetailsContent
       t={t}
@@ -706,18 +961,26 @@ export function WorkspaceManagedRequestDialog({
       similarHref={similarHref}
       showSimilarSection={!showManagedRequestSidebar && !isOwner}
       asideChildren={showManagedRequestSidebar ? (
-        <>
-          <WorkspaceRequestDecisionSection
-            locale={locale}
-            card={card}
-            onOpenChatConversation={onOpenChatConversation}
-          />
-          <WorkspaceRequestOffersSection
-            locale={locale}
-            requestId={card.requestId}
-            onOpenChatConversation={onOpenChatConversation}
-          />
-        </>
+        initialIntent === 'responses'
+          ? (
+            <>
+              {offersSection}
+              {decisionSection}
+            </>
+          )
+          : initialIntent === 'review'
+            ? (
+              <>
+                {decisionSection}
+                {offersSection}
+              </>
+            )
+          : (
+            <>
+              {decisionSection}
+              {offersSection}
+            </>
+          )
       ) : null}
     />
   ) : null;

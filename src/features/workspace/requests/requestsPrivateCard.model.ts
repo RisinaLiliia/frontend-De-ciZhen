@@ -50,7 +50,9 @@ function normalizeCardAction(
   action: PrivateRequestCardAction,
   card: WorkspaceMyRequestCardDto,
 ): PrivateRequestCardAction {
-  if (action.kind !== 'link') return action;
+  if (action.kind !== 'link') {
+    return action;
+  }
 
   return {
     ...action,
@@ -170,6 +172,10 @@ function resolveInsightTitle(locale: Locale, card: WorkspaceMyRequestCardDto) {
     return locale === 'de' ? 'Abschluss' : 'Completion';
   }
 
+  if (card.decision.actionType === 'review_completion') {
+    return locale === 'de' ? 'Bewertung' : 'Review';
+  }
+
   return locale === 'de' ? 'Aktueller Stand' : 'Current status';
 }
 
@@ -229,7 +235,13 @@ function resolveSecondaryAction(
   const statusSecondary = card.status.actions.find((action) => {
     if (action.tone === 'danger') return false;
     if (isSameAction(action, primaryAction)) return false;
-    return action.key === 'chat' || action.key === 'open' || action.key === 'contract' || action.key === 'edit-request' || action.key === 'edit-offer';
+    return action.key === 'chat'
+      || action.key === 'open'
+      || action.key === 'contract'
+      || action.key === 'review'
+      || action.key === 'edit-request'
+      || action.key === 'edit-offer'
+      || action.key === 'duplicate-request';
   });
 
   if (statusSecondary) return normalizeCardAction(statusSecondary, card);

@@ -16,7 +16,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 
-export type RequestDialogIntent = 'view' | 'edit';
+export type RequestDialogIntent = 'view' | 'edit' | 'responses' | 'contract' | 'review';
 
 export type WorkspaceRequestOverlayListContext = {
   onSendOffer?: RequestsListProps['onSendOffer'];

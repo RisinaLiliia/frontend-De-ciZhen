@@ -8,6 +8,7 @@ import { providerQK } from '@/features/provider/queries';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { completeContract, confirmContract } from '@/lib/api/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
+import { createProviderReview } from '@/lib/api/reviews';
 import {
   acceptOffer,
   createOffer,
@@ -201,6 +202,52 @@ export function useWorkspaceRequestDecisionActions({
     completeRequestContract,
     confirmRequestContract,
     isSubmittingDecision,
+  };
+}
+
+export function useWorkspaceCompletionReviewActions() {
+  const t = useT();
+  const qc = useQueryClient();
+  const [isSubmittingReview, setIsSubmittingReview] = React.useState(false);
+
+  const submitCompletionReview = React.useCallback(async ({
+    bookingId,
+    rating,
+    text,
+  }: {
+    bookingId: string;
+    rating: number;
+    text: string;
+  }) => {
+    setIsSubmittingReview(true);
+    try {
+      await createProviderReview({
+        bookingId,
+        rating,
+        text: text.trim() || undefined,
+      });
+      toast.success(t(I18N_KEYS.requestsPage.userReviewFormSuccess));
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ['reviews-my'] }),
+        qc.invalidateQueries({ queryKey: ['bookings-my-reviewable'] }),
+        qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
+        qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
+        qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
+        qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
+      ]);
+      return true;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      toast.error(message || t(I18N_KEYS.requestsPage.userReviewFormError));
+      return false;
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  }, [qc, t]);
+
+  return {
+    isSubmittingReview,
+    submitCompletionReview,
   };
 }
 

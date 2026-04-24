@@ -4,12 +4,14 @@ type WorkspaceReviewRatingFieldProps = {
   label: string;
   value: number;
   onChange: (value: number) => void;
+  disabled?: boolean;
 };
 
 export function WorkspaceReviewRatingField({
   label,
   value,
   onChange,
+  disabled = false,
 }: WorkspaceReviewRatingFieldProps) {
   return (
     <div className="form-group">
@@ -26,8 +28,12 @@ export function WorkspaceReviewRatingField({
               type="button"
               className={`icon-button icon-button--md provider-reviews-hub__star-btn ${score <= value ? '' : 'typo-muted'}`.trim()}
               aria-pressed={value === score}
-              onClick={() => onChange(score)}
+              onClick={() => {
+                if (disabled) return;
+                onChange(score);
+              }}
               aria-label={`${score}`}
+              disabled={disabled}
             >
               {score <= value ? '★' : '☆'}
             </button>
