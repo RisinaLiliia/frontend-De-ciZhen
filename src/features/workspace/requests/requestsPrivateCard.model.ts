@@ -49,7 +49,6 @@ function normalizeCardLinkHref(args: {
 function normalizeCardAction(
   action: PrivateRequestCardAction,
   card: WorkspaceMyRequestCardDto,
-  _locale?: Locale,
 ): PrivateRequestCardAction {
   if (action.kind !== 'link') {
     return action;

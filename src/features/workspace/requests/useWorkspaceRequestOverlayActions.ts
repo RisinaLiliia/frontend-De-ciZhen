@@ -205,11 +205,7 @@ export function useWorkspaceRequestDecisionActions({
   };
 }
 
-export function useWorkspaceCompletionReviewActions({
-  locale,
-}: {
-  locale: Locale;
-}) {
+export function useWorkspaceCompletionReviewActions() {
   const t = useT();
   const qc = useQueryClient();
   const [isSubmittingReview, setIsSubmittingReview] = React.useState(false);

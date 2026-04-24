@@ -435,7 +435,7 @@ function WorkspaceRequestDecisionSection({
   const {
     isSubmittingReview,
     submitCompletionReview,
-  } = useWorkspaceCompletionReviewActions({ locale });
+  } = useWorkspaceCompletionReviewActions();
   const [optimisticContractStatus, setOptimisticContractStatus] = React.useState<NonNullable<typeof contract>['status'] | null>(contract?.status ?? null);
 
   React.useEffect(() => {

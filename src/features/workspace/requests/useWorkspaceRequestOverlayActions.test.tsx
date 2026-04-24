@@ -197,9 +197,7 @@ function ProviderOfferActionsProbe({
 }
 
 function CompletionReviewProbe() {
-  const state = useWorkspaceCompletionReviewActions({
-    locale: 'de',
-  });
+  const state = useWorkspaceCompletionReviewActions();
 
   return (
     <>
