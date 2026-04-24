@@ -1778,6 +1778,66 @@
     gap: 14px;
   }
 
+  .my-request-contract-card,
+  .my-request-review-card {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 20px;
+    border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+  }
+
+  .my-request-contract-card__head,
+  .my-request-review-card__head,
+  .my-request-review-card__actions {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .my-request-contract-card__identity {
+    display: grid;
+    gap: 6px;
+  }
+
+  .my-request-contract-card__price {
+    font-size: 18px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .my-request-contract-card__message,
+  .my-request-contract-card__note,
+  .my-request-review-card__head p {
+    margin: 0;
+    color: var(--muted-foreground);
+    line-height: 1.6;
+  }
+
+  .my-request-contract-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    color: var(--muted-foreground);
+    font-size: 13px;
+  }
+
+  .my-request-review-card__head {
+    align-items: flex-start;
+  }
+
+  .my-request-review-card__head h4 {
+    margin: 0 0 4px;
+    font-size: 15px;
+  }
+
+  .my-request-review-card__actions {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
   .my-request-decision-form__field {
     display: grid;
     gap: 8px;
@@ -1919,7 +1979,9 @@
     }
 
     .my-request-offer-card__head,
-    .my-request-offer-card__status {
+    .my-request-offer-card__status,
+    .my-request-contract-card__head,
+    .my-request-review-card__actions {
       align-items: flex-start;
       flex-direction: column;
     }

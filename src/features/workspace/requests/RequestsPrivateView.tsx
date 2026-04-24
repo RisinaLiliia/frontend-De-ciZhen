@@ -94,6 +94,9 @@ function useStateFilterMutation() {
 }
 
 function resolveRequestDialogIntent(action: { key: string }): RequestDialogIntent {
+  if (action.key === 'contract') return 'contract';
+  if (action.key === 'review') return 'review';
+  if (action.key === 'review-responses') return 'responses';
   return action.key === 'edit-request' ? 'edit' : 'view';
 }
 
@@ -360,7 +363,7 @@ function RequestActionControl({
       <button
         type="button"
         className={className}
-        onClick={() => listContext.onOpenRequest?.(action.requestId!, 'view')}
+        onClick={() => listContext.onOpenRequest?.(action.requestId!, 'responses')}
       >
         {action.label}
       </button>
@@ -522,6 +525,10 @@ function RequestOwnerFooterNote({
     fallbackNote = locale === 'de'
       ? 'Bestätige den Abschluss, damit der Vorgang sauber beendet wird.'
       : 'Confirm completion to close the workflow cleanly.';
+  } else if (card.decision.actionType === 'review_completion') {
+    fallbackNote = locale === 'de'
+      ? 'Der Auftrag ist abgeschlossen. Hinterlasse jetzt dein Feedback zum Anbieter.'
+      : 'The job is completed. Leave your feedback for the provider now.';
   } else {
     fallbackNote = locale === 'de'
       ? 'Behalte diesen Vorgang im Blick und steuere die nächsten Schritte direkt hier.'

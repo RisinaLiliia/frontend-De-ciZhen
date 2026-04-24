@@ -166,6 +166,7 @@ export function useWorkspaceRequestDecisionData({
   card: MyRequestsViewCard;
   locale: Locale;
 }) {
+  const { offers = [] } = useWorkspaceRequestOffersData(card.requestId);
   const { data: contracts = [] } = useQuery({
     queryKey: workspaceQK.contractsMyClient(),
     queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), [] as ContractDto[]),
@@ -176,6 +177,20 @@ export function useWorkspaceRequestDecisionData({
   const contract = React.useMemo(
     () => contracts.find((item) => item.requestId === card.requestId) ?? null,
     [card.requestId, contracts],
+  );
+  const selectedOffer = React.useMemo(
+    () => offers.find((item) => item.status === 'accepted')
+      ?? offers.find((item) => Boolean(contract?.offerId) && item.id === contract?.offerId)
+      ?? null,
+    [contract?.offerId, offers],
+  );
+  const booking = contract?.booking ?? null;
+  const suggestedStartAt = React.useMemo(
+    () => booking?.startAt
+      ?? selectedOffer?.availableAt
+      ?? selectedOffer?.requestPreferredDate
+      ?? null,
+    [booking?.startAt, selectedOffer?.availableAt, selectedOffer?.requestPreferredDate],
   );
   const chatAction = React.useMemo(
     () => card.status.actions.find((action) => action.kind === 'open_chat' && Boolean(action.chatInput))
@@ -195,8 +210,12 @@ export function useWorkspaceRequestDecisionData({
   return {
     chatInput,
     chatLabel,
+    booking,
     contract,
     contractMeta,
+    reviewStatus: contract?.reviewStatus ?? null,
+    selectedOffer,
+    suggestedStartAt,
   };
 }
 

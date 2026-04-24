@@ -283,4 +283,259 @@ describe('requestsPrivateCard.model', () => {
       }),
     );
   });
+
+  it('respects backend lifecycle ctas for contract and draft states', () => {
+    const contractChrome = buildPrivateRequestCardChrome({
+      locale: 'de',
+      card: {
+        id: 'customer:req-4',
+        requestId: 'req-4',
+        role: 'customer',
+        title: 'Malerarbeiten',
+        category: 'Renovierung',
+        subcategory: null,
+        city: 'Berlin',
+        state: 'active',
+        stateLabel: 'In Arbeit',
+        activity: null,
+        progress: {
+          currentStep: 'contract',
+          steps: [],
+        },
+        quickActions: [],
+        requestPreview: {
+          href: '/requests/req-4',
+          imageUrl: null,
+          imageCategoryKey: 'renovation',
+          badgeLabel: null,
+          categoryLabel: 'Renovierung',
+          title: 'Malerarbeiten',
+          excerpt: null,
+          cityLabel: 'Berlin',
+          dateLabel: '24.04.2026',
+          priceLabel: '400 €',
+          priceTrend: null,
+          priceTrendLabel: null,
+          tags: [],
+        },
+        status: {
+          badgeLabel: 'Aktiv',
+          badgeTone: 'success',
+          actions: [
+            {
+              key: 'contract',
+              kind: 'link',
+              tone: 'primary',
+              icon: 'briefcase',
+              label: 'Vertrag ansehen',
+              href: '/requests/req-4',
+              requestId: 'req-4',
+            },
+            {
+              key: 'chat',
+              kind: 'open_chat',
+              tone: 'secondary',
+              icon: 'chat',
+              label: 'Chat',
+              requestId: 'req-4',
+              chatInput: {
+                relatedEntity: { type: 'request', id: 'req-4' },
+                participantUserId: 'provider-4',
+                participantRole: 'provider',
+                requestId: 'req-4',
+                providerUserId: 'provider-4',
+                contractId: 'contract-4',
+              },
+            },
+          ],
+        },
+        decision: {
+          needsAction: true,
+          actionType: 'confirm_contract',
+          actionPriority: 90,
+          actionPriorityLevel: 'high',
+          actionLabel: 'Vertrag ansehen',
+          actionReason: 'Die nächsten Schritte hängen von deiner Vertragsbestätigung ab.',
+          lastRelevantActivityAt: '2026-04-22T09:00:00.000Z',
+          primaryAction: {
+            key: 'contract',
+            kind: 'link',
+            tone: 'primary',
+            icon: 'briefcase',
+            label: 'Vertrag ansehen',
+            href: '/requests/req-4',
+            requestId: 'req-4',
+          },
+        },
+      },
+    });
+
+    expect(contractChrome.primaryAction).toEqual(
+      expect.objectContaining({
+        key: 'contract',
+        label: 'Vertrag ansehen',
+        href: '/requests/req-4',
+      }),
+    );
+    expect(contractChrome.secondaryAction).toEqual(
+      expect.objectContaining({
+        key: 'chat',
+        label: 'Chat',
+      }),
+    );
+
+    const publishChrome = buildPrivateRequestCardChrome({
+      locale: 'de',
+      card: {
+        id: 'customer:req-5',
+        requestId: 'req-5',
+        role: 'customer',
+        title: 'Neue Anfrage',
+        category: 'Reinigung',
+        subcategory: null,
+        city: 'Berlin',
+        state: 'open',
+        stateLabel: 'Offen',
+        activity: null,
+        progress: {
+          currentStep: 'request',
+          steps: [],
+        },
+        quickActions: [],
+        requestPreview: {
+          href: '/requests/req-5',
+          imageUrl: null,
+          imageCategoryKey: 'cleaning',
+          badgeLabel: null,
+          categoryLabel: 'Reinigung',
+          title: 'Neue Anfrage',
+          excerpt: null,
+          cityLabel: 'Berlin',
+          dateLabel: '25.04.2026',
+          priceLabel: '120 €',
+          priceTrend: null,
+          priceTrendLabel: null,
+          tags: [],
+        },
+        status: {
+          badgeLabel: 'Entwurf',
+          badgeTone: 'info',
+          actions: [
+            {
+              key: 'publish-request',
+              kind: 'publish_request',
+              tone: 'primary',
+              icon: 'send',
+              label: 'Jetzt veröffentlichen',
+              requestId: 'req-5',
+            },
+          ],
+        },
+        decision: {
+          needsAction: false,
+          actionType: 'none',
+          actionPriority: 0,
+          actionPriorityLevel: 'none',
+          actionLabel: null,
+          actionReason: null,
+          lastRelevantActivityAt: null,
+          primaryAction: null,
+        },
+      },
+    });
+
+    expect(publishChrome.primaryAction?.label).toBe('Jetzt veröffentlichen');
+  });
+
+  it('keeps duplicate as the reviewed secondary action', () => {
+    const chrome = buildPrivateRequestCardChrome({
+      locale: 'de',
+      card: {
+        id: 'customer:req-6',
+        requestId: 'req-6',
+        role: 'customer',
+        ownerLifecycleStage: 'reviewed',
+        title: 'Elektrik prüfen',
+        category: 'Elektrik',
+        subcategory: null,
+        city: 'Berlin',
+        state: 'completed',
+        stateLabel: 'Abgeschlossen',
+        activity: {
+          label: 'Auftrag abgeschlossen und bewertet',
+          tone: 'success',
+        },
+        progress: {
+          currentStep: 'done',
+          steps: [],
+        },
+        quickActions: [],
+        requestPreview: {
+          href: '/requests/req-6',
+          imageUrl: null,
+          imageCategoryKey: 'electrical',
+          badgeLabel: null,
+          categoryLabel: 'Elektrik',
+          title: 'Elektrik prüfen',
+          excerpt: null,
+          cityLabel: 'Berlin',
+          dateLabel: '26.04.2026',
+          priceLabel: '180 €',
+          priceTrend: null,
+          priceTrendLabel: null,
+          tags: [],
+        },
+        status: {
+          badgeLabel: 'Abgeschlossen',
+          badgeTone: 'success',
+          actions: [
+            {
+              key: 'review',
+              kind: 'link',
+              tone: 'primary',
+              icon: 'briefcase',
+              label: 'Bewertung ansehen',
+              href: '/requests/req-6',
+              requestId: 'req-6',
+            },
+            {
+              key: 'duplicate-request',
+              kind: 'duplicate_request',
+              tone: 'secondary',
+              icon: 'copy',
+              label: 'Duplizieren',
+              requestId: 'req-6',
+            },
+            {
+              key: 'open',
+              kind: 'link',
+              tone: 'secondary',
+              icon: 'briefcase',
+              label: 'Details ansehen',
+              href: '/requests/req-6',
+              requestId: 'req-6',
+            },
+          ],
+        },
+        decision: {
+          needsAction: false,
+          actionType: 'none',
+          actionPriority: 0,
+          actionPriorityLevel: 'none',
+          actionLabel: null,
+          actionReason: null,
+          lastRelevantActivityAt: null,
+          primaryAction: null,
+        },
+      },
+    });
+
+    expect(chrome.primaryAction?.label).toBe('Bewertung ansehen');
+    expect(chrome.secondaryAction).toEqual(
+      expect.objectContaining({
+        key: 'duplicate-request',
+        label: 'Duplizieren',
+      }),
+    );
+  });
 });

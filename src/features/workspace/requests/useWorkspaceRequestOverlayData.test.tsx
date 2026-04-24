@@ -77,6 +77,7 @@ function OffersProbe() {
 function DecisionProbe() {
   const card = {
     requestId: 'req-1',
+    role: 'customer',
     status: {
       actions: [],
     },
@@ -105,6 +106,9 @@ function DecisionProbe() {
       data-contract-meta={state.contractMeta}
       data-chat-label={state.chatLabel}
       data-chat-user={state.chatInput?.participantUserId ?? ''}
+      data-selected-offer-id={state.selectedOffer?.id ?? ''}
+      data-booking-id={state.booking?.bookingId ?? ''}
+      data-suggested-start-at={state.suggestedStartAt ?? ''}
     />
   );
 }
@@ -159,8 +163,28 @@ describe('useWorkspaceRequestOverlayData', () => {
       {
         id: 'contract-1',
         requestId: 'req-1',
+        offerId: 'offer-accepted',
         status: 'confirmed',
         priceAmount: 210,
+        booking: {
+          bookingId: 'booking-1',
+          startAt: '2026-04-20T10:00:00.000Z',
+          durationMin: 120,
+          endAt: '2026-04-20T12:00:00.000Z',
+          status: 'confirmed',
+        },
+        reviewStatus: {
+          canClientReviewProvider: false,
+          clientReviewId: null,
+          clientReviewedProviderAt: null,
+          clientReviewRating: null,
+          clientReviewText: null,
+          canProviderReviewClient: false,
+          providerReviewId: null,
+          providerReviewedClientAt: null,
+          providerReviewRating: null,
+          providerReviewText: null,
+        },
       },
     ] as never);
     listMyProviderOffersMock.mockResolvedValue([
@@ -198,6 +222,9 @@ describe('useWorkspaceRequestOverlayData', () => {
       expect(node.getAttribute('data-contract-meta')).toContain('Bestätigt');
       expect(node.getAttribute('data-chat-label')).toBe('Zum Chat');
       expect(node.getAttribute('data-chat-user')).toBe('provider-1');
+      expect(node.getAttribute('data-selected-offer-id')).toBe('offer-accepted');
+      expect(node.getAttribute('data-booking-id')).toBe('booking-1');
+      expect(node.getAttribute('data-suggested-start-at')).toBe('2026-04-20T10:00:00.000Z');
     });
   });
 

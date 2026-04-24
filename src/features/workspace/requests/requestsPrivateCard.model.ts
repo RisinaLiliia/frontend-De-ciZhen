@@ -49,8 +49,11 @@ function normalizeCardLinkHref(args: {
 function normalizeCardAction(
   action: PrivateRequestCardAction,
   card: WorkspaceMyRequestCardDto,
+  _locale?: Locale,
 ): PrivateRequestCardAction {
-  if (action.kind !== 'link') return action;
+  if (action.kind !== 'link') {
+    return action;
+  }
 
   return {
     ...action,
@@ -170,6 +173,10 @@ function resolveInsightTitle(locale: Locale, card: WorkspaceMyRequestCardDto) {
     return locale === 'de' ? 'Abschluss' : 'Completion';
   }
 
+  if (card.decision.actionType === 'review_completion') {
+    return locale === 'de' ? 'Bewertung' : 'Review';
+  }
+
   return locale === 'de' ? 'Aktueller Stand' : 'Current status';
 }
 
@@ -206,15 +213,15 @@ function resolveInsights(args: {
   return items.slice(0, 2);
 }
 
-function resolvePrimaryAction(card: WorkspaceMyRequestCardDto): PrivateRequestCardAction | null {
+function resolvePrimaryAction(card: WorkspaceMyRequestCardDto, locale: Locale): PrivateRequestCardAction | null {
   if (card.decision.primaryAction) {
-    return normalizeCardAction(card.decision.primaryAction, card);
+    return normalizeCardAction(card.decision.primaryAction, card, locale);
   }
 
   const statusPrimary = card.status.actions.find(
     (action) => action.tone === 'primary' || action.key === 'open' || action.key === 'chat',
   );
-  if (statusPrimary) return normalizeCardAction(statusPrimary, card);
+  if (statusPrimary) return normalizeCardAction(statusPrimary, card, locale);
 
   const quickPrimary = normalizeQuickActions(card).find((action) => action.tone === 'primary');
   if (quickPrimary) return quickPrimary;
@@ -225,14 +232,21 @@ function resolvePrimaryAction(card: WorkspaceMyRequestCardDto): PrivateRequestCa
 function resolveSecondaryAction(
   card: WorkspaceMyRequestCardDto,
   primaryAction: PrivateRequestCardAction | null,
+  locale: Locale,
 ): PrivateRequestCardAction | null {
   const statusSecondary = card.status.actions.find((action) => {
     if (action.tone === 'danger') return false;
     if (isSameAction(action, primaryAction)) return false;
-    return action.key === 'chat' || action.key === 'open' || action.key === 'contract' || action.key === 'edit-request' || action.key === 'edit-offer';
+    return action.key === 'chat'
+      || action.key === 'open'
+      || action.key === 'contract'
+      || action.key === 'review'
+      || action.key === 'edit-request'
+      || action.key === 'edit-offer'
+      || action.key === 'duplicate-request';
   });
 
-  if (statusSecondary) return normalizeCardAction(statusSecondary, card);
+  if (statusSecondary) return normalizeCardAction(statusSecondary, card, locale);
 
   return normalizeQuickActions(card).find((action) => !isSameAction(action, primaryAction)) ?? null;
 }
@@ -242,7 +256,7 @@ export function buildPrivateRequestCardChrome(args: {
   locale: Locale;
 }): PrivateRequestCardChrome {
   const { card, locale } = args;
-  const primaryAction = resolvePrimaryAction(card);
+  const primaryAction = resolvePrimaryAction(card, locale);
 
   return {
     priorityLabel: resolvePriorityLabel(locale, card),
@@ -251,6 +265,6 @@ export function buildPrivateRequestCardChrome(args: {
     signalPills: resolveSignalPills(card),
     insights: resolveInsights({ card, locale }),
     primaryAction,
-    secondaryAction: resolveSecondaryAction(card, primaryAction),
+    secondaryAction: resolveSecondaryAction(card, primaryAction, locale),
   };
 }

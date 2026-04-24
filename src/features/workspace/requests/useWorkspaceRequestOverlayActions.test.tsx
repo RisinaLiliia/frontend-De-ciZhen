@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import {
   fetchWorkspaceManagedRequest,
+  useWorkspaceCompletionReviewActions,
   useWorkspaceProviderOfferSheetActions,
   useWorkspaceRequestDecisionActions,
   useWorkspaceRequestOfferActions,
@@ -47,12 +48,17 @@ vi.mock('@/lib/api/contracts', () => ({
   completeContract: vi.fn(),
 }));
 
+vi.mock('@/lib/api/reviews', () => ({
+  createProviderReview: vi.fn(),
+}));
+
 import { completeContract, confirmContract } from '@/lib/api/contracts';
 import {
   acceptOffer,
   createOffer,
   deleteOffer,
 } from '@/lib/api/offers';
+import { createProviderReview } from '@/lib/api/reviews';
 import { getMyRequestById, getPublicRequestById, listMyRequests } from '@/lib/api/requests';
 
 const getMyRequestByIdMock = vi.mocked(getMyRequestById);
@@ -63,6 +69,7 @@ const createOfferMock = vi.mocked(createOffer);
 const deleteOfferMock = vi.mocked(deleteOffer);
 const confirmContractMock = vi.mocked(confirmContract);
 const completeContractMock = vi.mocked(completeContract);
+const createProviderReviewMock = vi.mocked(createProviderReview);
 
 function createQueryClient() {
   return new QueryClient({
@@ -185,6 +192,30 @@ function ProviderOfferActionsProbe({
       </button>
       <div data-testid="submit-result">{result}</div>
       <div data-testid="pending-provider">{String(state.isSubmittingOffer)}</div>
+    </>
+  );
+}
+
+function CompletionReviewProbe() {
+  const state = useWorkspaceCompletionReviewActions({
+    locale: 'de',
+  });
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => {
+          void state.submitCompletionReview({
+            bookingId: 'booking-1',
+            rating: 5,
+            text: 'Sehr gut',
+          });
+        }}
+      >
+        review
+      </button>
+      <div data-testid="pending-review">{String(state.isSubmittingReview)}</div>
     </>
   );
 }
@@ -418,6 +449,30 @@ describe('useWorkspaceRequestOverlayActions', () => {
     });
 
     expect(toast.success).toHaveBeenCalledWith('Abschluss bestätigt.');
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['workspace-private-overview'] });
+  });
+
+  it('submits provider review after completion and invalidates review queries', async () => {
+    createProviderReviewMock.mockResolvedValueOnce({ id: 'review-1' } as never);
+
+    const { queryClient } = renderWithClient(<CompletionReviewProbe />);
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+
+    fireEvent.click(screen.getByText('review'));
+
+    await waitFor(() => {
+      expect(createProviderReviewMock).toHaveBeenCalledWith({
+        bookingId: 'booking-1',
+        rating: 5,
+        text: 'Sehr gut',
+      });
+    });
+
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['reviews-my'] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['bookings-my-reviewable'] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: workspaceQK.contractsMyClient() });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: workspaceQK.requestsMy() });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['workspace-requests'] });
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['workspace-private-overview'] });
   });
 });
