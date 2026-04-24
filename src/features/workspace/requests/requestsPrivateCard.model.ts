@@ -212,15 +212,15 @@ function resolveInsights(args: {
   return items.slice(0, 2);
 }
 
-function resolvePrimaryAction(card: WorkspaceMyRequestCardDto, locale: Locale): PrivateRequestCardAction | null {
+function resolvePrimaryAction(card: WorkspaceMyRequestCardDto): PrivateRequestCardAction | null {
   if (card.decision.primaryAction) {
-    return normalizeCardAction(card.decision.primaryAction, card, locale);
+    return normalizeCardAction(card.decision.primaryAction, card);
   }
 
   const statusPrimary = card.status.actions.find(
     (action) => action.tone === 'primary' || action.key === 'open' || action.key === 'chat',
   );
-  if (statusPrimary) return normalizeCardAction(statusPrimary, card, locale);
+  if (statusPrimary) return normalizeCardAction(statusPrimary, card);
 
   const quickPrimary = normalizeQuickActions(card).find((action) => action.tone === 'primary');
   if (quickPrimary) return quickPrimary;
@@ -231,7 +231,6 @@ function resolvePrimaryAction(card: WorkspaceMyRequestCardDto, locale: Locale): 
 function resolveSecondaryAction(
   card: WorkspaceMyRequestCardDto,
   primaryAction: PrivateRequestCardAction | null,
-  locale: Locale,
 ): PrivateRequestCardAction | null {
   const statusSecondary = card.status.actions.find((action) => {
     if (action.tone === 'danger') return false;
@@ -245,7 +244,7 @@ function resolveSecondaryAction(
       || action.key === 'duplicate-request';
   });
 
-  if (statusSecondary) return normalizeCardAction(statusSecondary, card, locale);
+  if (statusSecondary) return normalizeCardAction(statusSecondary, card);
 
   return normalizeQuickActions(card).find((action) => !isSameAction(action, primaryAction)) ?? null;
 }
@@ -255,7 +254,7 @@ export function buildPrivateRequestCardChrome(args: {
   locale: Locale;
 }): PrivateRequestCardChrome {
   const { card, locale } = args;
-  const primaryAction = resolvePrimaryAction(card, locale);
+  const primaryAction = resolvePrimaryAction(card);
 
   return {
     priorityLabel: resolvePriorityLabel(locale, card),
@@ -264,6 +263,6 @@ export function buildPrivateRequestCardChrome(args: {
     signalPills: resolveSignalPills(card),
     insights: resolveInsights({ card, locale }),
     primaryAction,
-    secondaryAction: resolveSecondaryAction(card, primaryAction, locale),
+    secondaryAction: resolveSecondaryAction(card, primaryAction),
   };
 }
