@@ -6,6 +6,7 @@ import { withStatusFallback } from '@/lib/api/withStatusFallback';
 
 export const providerQK = {
   myProfile: () => ['provider', 'me', 'profile'] as const,
+  publicSelf: (authMeId: string | null | undefined) => ['provider-public-self', authMeId ?? 'anonymous'] as const,
 };
 
 export function useMyProviderProfile(enabled = true) {

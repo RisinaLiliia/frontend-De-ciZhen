@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { createPlatformReview } from '@/lib/api/reviews';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { useWorkspacePlatformReviewsOverview } from '@/features/workspace/requests/useWorkspacePlatformReviewsOverview';
 
 type Translate = (key: I18nKey) => string;
@@ -48,7 +49,7 @@ export function WorkspacePlatformReviewsRail({
       setDraftText('');
       if (!isAuthenticated) setDraftAuthorName('');
       toast.success(t(I18N_KEYS.requestsPage.platformReviewFormSuccess));
-      await queryClient.invalidateQueries({ queryKey: ['platform-reviews-overview'] });
+      await queryClient.invalidateQueries({ queryKey: workspaceQK.platformReviewsOverviewPrefix() });
     },
     onError: () => {
       toast.error(t(I18N_KEYS.requestsPage.platformReviewFormError));

@@ -8,6 +8,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type RouterLike = {
   push: (href: string) => void;
@@ -69,7 +70,7 @@ export function useRequestFavoriteToggle({
           await addFavorite('request', requestId, request);
           toast.success(t(I18N_KEYS.requestDetails.saved));
         }
-        await qc.invalidateQueries({ queryKey: ['favorite-requests'] });
+        await qc.invalidateQueries({ queryKey: workspaceQK.favoriteRequests() });
       } catch {
         toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
       } finally {
@@ -133,7 +134,7 @@ export function useProviderFavoriteToggle({
           await addFavorite('provider', providerId, provider);
           toast.success(t(I18N_KEYS.requestDetails.saved));
         }
-        await qc.invalidateQueries({ queryKey: ['favorite-providers'] });
+        await qc.invalidateQueries({ queryKey: workspaceQK.favoriteProviders() });
       } catch {
         toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
       } finally {
@@ -153,4 +154,3 @@ export function useProviderFavoriteToggle({
     toggleProviderFavorite,
   };
 }
-

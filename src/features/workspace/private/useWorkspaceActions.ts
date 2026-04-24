@@ -37,15 +37,15 @@ type Args = {
 };
 
 const requestLifecyclePublicQueryKeys: QueryKey[] = [
-  ['requests-explorer-public'],
-  ['requests-public'],
-  ['workspace-public-overview'],
-  ['workspace-public-summary'],
-  ['requests-public-summary-total'],
-  ['requests-public-city-activity'],
-  ['home-nearby-requests'],
-  ['requests-latest'],
-  ['request-similar'],
+  workspaceQK.requestsExplorerPublicPrefix(),
+  workspaceQK.requestsPublicPrefix(),
+  workspaceQK.workspacePublicOverviewPrefix(),
+  workspaceQK.workspacePublicSummaryPrefix(),
+  workspaceQK.requestsPublicSummaryTotalPrefix(),
+  workspaceQK.requestsPublicCityActivityPrefix(),
+  workspaceQK.homeNearbyRequestsPrefix(),
+  workspaceQK.requestsLatestPrefix(),
+  workspaceQK.requestSimilarPrefix(),
 ];
 
 export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args) {
@@ -59,8 +59,8 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
   const invalidateWorkspaceRequests = React.useCallback(async () => {
     const queryKeys: QueryKey[] = [
       workspaceQK.requestsMy(),
-      ['workspace-requests'],
-      ['workspace-private-overview'],
+      workspaceQK.workspaceRequestsPrefix(),
+      workspaceQK.workspacePrivateOverviewPrefix(),
       workspaceQK.favoriteRequests(),
       workspaceQK.offersMy(),
       workspaceQK.offersMyClient(),

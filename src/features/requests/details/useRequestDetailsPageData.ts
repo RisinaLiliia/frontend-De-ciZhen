@@ -13,6 +13,7 @@ import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { providerQK } from '@/features/provider/queries';
 import type { AuthStatus } from '@/features/auth/store';
 import { fetchManagedRequestDetails } from '@/features/requests/details/requestDetails.data';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type RouterLike = {
   push: (href: string) => void;
@@ -56,7 +57,11 @@ export function useRequestDetailsPageData({
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['request-detail', requestId, locale, preferOwner ? 'owner' : 'default'],
+    queryKey: workspaceQK.requestDetailData({
+      requestId,
+      locale,
+      preferOwner,
+    }),
     enabled: isHydrated && Boolean(requestId),
     queryFn: async () => (await fetchManagedRequestDetails({
       requestId: String(requestId),
@@ -71,7 +76,7 @@ export function useRequestDetailsPageData({
   });
 
   const { data: myResponses } = useQuery({
-    queryKey: ['offers-my'],
+    queryKey: workspaceQK.offersMy(),
     enabled: isHydrated && authStatus === 'authenticated',
     queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
     staleTime: 30_000,
@@ -87,7 +92,7 @@ export function useRequestDetailsPageData({
   });
 
   const { data: favoriteRequests = [] } = useQuery({
-    queryKey: ['favorite-requests'],
+    queryKey: workspaceQK.favoriteRequests(),
     enabled: isHydrated && authStatus === 'authenticated',
     queryFn: () => withStatusFallback(() => listFavorites('request'), []),
     staleTime: 30_000,

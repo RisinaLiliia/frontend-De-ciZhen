@@ -18,6 +18,7 @@ import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { providerQK } from '@/features/provider/queries';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests/workspaceRequestsScope.model';
 import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
 import { resolveOfferCardState } from '@/features/requests/uiState';
@@ -350,9 +351,9 @@ export function WorkspacePublicRequestDialog({
       await deleteOffer(existingResponse.id);
       toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
       await Promise.all([
-        qc.invalidateQueries({ queryKey: ['offers-my'] }),
-        qc.invalidateQueries({ queryKey: ['request-detail', requestId] }),
-        qc.invalidateQueries({ queryKey: ['workspace-managed-request', requestId] }),
+        qc.invalidateQueries({ queryKey: workspaceQK.offersMy() }),
+        qc.invalidateQueries({ queryKey: workspaceQK.requestDetail(requestId) }),
+        qc.invalidateQueries({ queryKey: workspaceQK.managedRequestPrefix(requestId) }),
         qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
       ]);
     } catch {

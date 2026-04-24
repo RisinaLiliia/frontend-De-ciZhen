@@ -38,10 +38,10 @@ function useWorkspaceRequestOverlayInvalidation(requestId: string) {
       qc.invalidateQueries({ queryKey: workspaceQK.offersMyClient() }),
       qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
       qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
-      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
-      qc.invalidateQueries({ queryKey: ['request-detail', requestId] }),
-      qc.invalidateQueries({ queryKey: ['workspace-managed-request', requestId] }),
+      qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() }),
+      qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() }),
+      qc.invalidateQueries({ queryKey: workspaceQK.requestDetail(requestId) }),
+      qc.invalidateQueries({ queryKey: workspaceQK.managedRequestPrefix(requestId) }),
     ]);
   }, [qc, requestId]);
 
@@ -49,10 +49,10 @@ function useWorkspaceRequestOverlayInvalidation(requestId: string) {
     await Promise.all([
       qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
       qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
-      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
-      qc.invalidateQueries({ queryKey: ['request-detail', requestId] }),
-      qc.invalidateQueries({ queryKey: ['workspace-managed-request', requestId] }),
+      qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() }),
+      qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() }),
+      qc.invalidateQueries({ queryKey: workspaceQK.requestDetail(requestId) }),
+      qc.invalidateQueries({ queryKey: workspaceQK.managedRequestPrefix(requestId) }),
     ]);
   }, [qc, requestId]);
 
@@ -60,8 +60,8 @@ function useWorkspaceRequestOverlayInvalidation(requestId: string) {
     await Promise.all([
       qc.invalidateQueries({ queryKey: workspaceQK.offersMy() }),
       qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
-      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
+      qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() }),
+      qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() }),
       qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
     ]);
   }, [qc]);
@@ -228,12 +228,12 @@ export function useWorkspaceCompletionReviewActions() {
       });
       toast.success(t(I18N_KEYS.requestsPage.userReviewFormSuccess));
       await Promise.all([
-        qc.invalidateQueries({ queryKey: ['reviews-my'] }),
-        qc.invalidateQueries({ queryKey: ['bookings-my-reviewable'] }),
+        qc.invalidateQueries({ queryKey: workspaceQK.reviewsMyPrefix() }),
+        qc.invalidateQueries({ queryKey: workspaceQK.bookingsMyReviewable() }),
         qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
         qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-        qc.invalidateQueries({ queryKey: ['workspace-requests'] }),
-        qc.invalidateQueries({ queryKey: ['workspace-private-overview'] }),
+        qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() }),
+        qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() }),
       ]);
       return true;
     } catch (error) {

@@ -70,7 +70,7 @@ type BuildPublicIntroArgs = {
 
 export function buildWorkspacePublicReviewsQuery() {
   return queryOptions({
-    queryKey: ['platform-reviews-overview', 'summary'] as const,
+    queryKey: workspaceQK.platformReviewsOverviewSummary(),
     queryFn: () =>
       withStatusFallback(
         () => getPlatformReviewsOverview({ limit: 1, offset: 0, sort: 'created_desc' }),

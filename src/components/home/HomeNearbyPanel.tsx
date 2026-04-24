@@ -36,6 +36,7 @@ import {
   resolveHomeNearbySubtitleKey,
   shouldUseHomeNearbyFallback,
 } from '@/components/home/homeNearbyPanel.model';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type HomeNearbyPanelProps = {
   t: (key: I18nKey) => string;
@@ -88,7 +89,7 @@ export function HomeNearbyPanel({
   const fallbackLimit = Math.max(FALLBACK_FETCH_LIMIT, targetItems * 2);
 
   const { data, isLoading, isError } = useQuery<PublicRequestsResponseDto & { usedFallback?: boolean }>({
-    queryKey: ['home-nearby-requests', cityId, targetItems, locale],
+    queryKey: workspaceQK.homeNearbyRequests(cityId, targetItems, locale),
     queryFn: async () => {
       const primary = await listPublicRequests({
         locale,
@@ -118,12 +119,12 @@ export function HomeNearbyPanel({
     retry: 1,
   });
   const { data: favoriteRequests = [] } = useQuery({
-    queryKey: ['favorite-requests'],
+    queryKey: workspaceQK.favoriteRequests(),
     enabled: isAuthed,
     queryFn: () => withStatusFallback(() => listFavorites('request'), [], [401, 403]),
   });
   const { data: myOffers = [] } = useQuery({
-    queryKey: ['offers-my'],
+    queryKey: workspaceQK.offersMy(),
     enabled: isAuthed,
     queryFn: () => withStatusFallback(() => listMyProviderOffers(), [], [401, 403]),
   });
@@ -197,7 +198,7 @@ export function HomeNearbyPanel({
       try {
         await deleteOffer(offerId);
         toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
-        await qc.invalidateQueries({ queryKey: ['offers-my'] });
+        await qc.invalidateQueries({ queryKey: workspaceQK.offersMy() });
       } catch {
         toast.error(t(I18N_KEYS.requestDetails.responseFailed));
       } finally {
