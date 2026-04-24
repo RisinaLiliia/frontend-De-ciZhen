@@ -107,7 +107,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
     async (offer: OfferDto) => {
       const navigation = resolveWorkspaceChatNavigation(offer);
       if (!navigation.conversationInput) {
-        router.push(navigation.fallbackHref);
+        toast.message(t(I18N_KEYS.requestDetails.chatSoon));
         return;
       }
       try {
@@ -117,7 +117,6 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
         toast.error(message);
-        router.push('/chat');
       }
     },
     [qc, router, t],
@@ -127,7 +126,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
     async (payload: WorkspaceChatConversationInput) => {
       try {
         if (!isWorkspaceChatConversationInput(payload)) {
-          router.push('/chat');
+          toast.message(t(I18N_KEYS.requestDetails.chatSoon));
           return;
         }
         const conversation = await createConversation(payload);
@@ -136,7 +135,6 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
         toast.error(message);
-        router.push('/chat');
       }
     },
     [qc, router, t],

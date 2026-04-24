@@ -27,7 +27,6 @@ describe('workspaceActions.model', () => {
 
     expect(offer?.id).toBe('offer-2');
     expect(resolveWorkspaceChatNavigation(offer as never)).toEqual({
-      fallbackHref: '/chat',
       conversationInput: {
         relatedEntity: {
           type: 'offer',
@@ -41,7 +40,6 @@ describe('workspaceActions.model', () => {
       },
     });
     expect(resolveWorkspaceChatNavigation({ id: 'offer-3', requestId: '' } as never)).toEqual({
-      fallbackHref: '/chat',
       conversationInput: null,
     });
     expect(

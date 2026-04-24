@@ -447,6 +447,69 @@ describe('requestsPrivateCard.model', () => {
     expect(publishChrome.primaryAction?.label).toBe('Jetzt veröffentlichen');
   });
 
+  it('ignores generic chat quick links when deriving workflow actions', () => {
+    const chrome = buildPrivateRequestCardChrome({
+      locale: 'de',
+      card: {
+        id: 'customer:req-chat',
+        requestId: 'req-chat',
+        role: 'customer',
+        title: 'Anfrage mit Quick Chat',
+        category: 'Reinigung',
+        subcategory: null,
+        city: 'Berlin',
+        state: 'active',
+        stateLabel: 'In Arbeit',
+        activity: null,
+        progress: {
+          currentStep: 'contract',
+          steps: [],
+        },
+        quickActions: [
+          {
+            key: 'chat',
+            label: 'Chat',
+            tone: 'secondary',
+            href: '/chat',
+          },
+        ],
+        requestPreview: {
+          href: '/requests/req-chat',
+          imageUrl: null,
+          imageCategoryKey: 'cleaning',
+          badgeLabel: null,
+          categoryLabel: 'Reinigung',
+          title: 'Anfrage mit Quick Chat',
+          excerpt: null,
+          cityLabel: 'Berlin',
+          dateLabel: '25.04.2026',
+          priceLabel: '100 €',
+          priceTrend: null,
+          priceTrendLabel: null,
+          tags: [],
+        },
+        status: {
+          badgeLabel: 'Aktiv',
+          badgeTone: 'success',
+          actions: [],
+        },
+        decision: {
+          needsAction: false,
+          actionType: 'none',
+          actionPriority: 0,
+          actionPriorityLevel: 'none',
+          actionLabel: null,
+          actionReason: null,
+          lastRelevantActivityAt: null,
+          primaryAction: null,
+        },
+      },
+    });
+
+    expect(chrome.primaryAction).toBeNull();
+    expect(chrome.secondaryAction).toBeNull();
+  });
+
   it('keeps duplicate as the reviewed secondary action', () => {
     const chrome = buildPrivateRequestCardChrome({
       locale: 'de',
