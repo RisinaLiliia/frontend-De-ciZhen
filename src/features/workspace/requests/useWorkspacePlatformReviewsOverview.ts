@@ -10,6 +10,7 @@ import type {
   NormalizedProviderReview,
   ProviderReviewsDistribution,
 } from '@/features/providers/publicProfile/useProviderReviewsModel';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
 
 const EMPTY_PLATFORM_OVERVIEW = {
@@ -83,7 +84,12 @@ export function useWorkspacePlatformReviewsOverview({
   const sortValue = reviewSort === 'top' ? 'rating_desc' : 'created_desc';
 
   const platformQuery = useQuery({
-    queryKey: ['platform-reviews-overview', sortValue, reviewRange, page, limit],
+    queryKey: workspaceQK.platformReviewsOverview({
+      sort: sortValue,
+      range: reviewRange,
+      page,
+      limit,
+    }),
     queryFn: () =>
       withStatusFallback(
         () =>

@@ -3,6 +3,7 @@ import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dt
 import type { PublicRequestsFilter } from '@/lib/api/requests';
 import type { Locale } from '@/lib/i18n/t';
 import { hasDefaultPublicFilter } from '@/components/requests/requestsExplorer.model';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type BuildPublicRequestsQueryStateArgs = {
   filter: PublicRequestsFilter;
@@ -45,16 +46,15 @@ export function buildRequestsExplorerPublicRequestsQueryState({
   initialPublicRequests,
 }: BuildPublicRequestsQueryStateArgs) {
   return {
-    queryKey: [
-      'requests-explorer-public',
-      filter.cityId,
-      filter.categoryKey,
-      filter.subcategoryKey,
-      filter.sort,
-      filter.page,
-      filter.limit,
+    queryKey: workspaceQK.requestsExplorerPublic({
+      cityId: filter.cityId,
+      categoryKey: filter.categoryKey,
+      subcategoryKey: filter.subcategoryKey,
+      sort: filter.sort,
+      page: filter.page,
+      limit: filter.limit,
       locale,
-    ] as const,
+    }),
     enabled: !isProvidersView,
     placeholderData: !isProvidersView
       ? resolveMatchingInitialPublicRequests({

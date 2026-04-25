@@ -37,15 +37,15 @@ type Args = {
 };
 
 const requestLifecyclePublicQueryKeys: QueryKey[] = [
-  ['requests-explorer-public'],
-  ['requests-public'],
-  ['workspace-public-overview'],
-  ['workspace-public-summary'],
-  ['requests-public-summary-total'],
-  ['requests-public-city-activity'],
-  ['home-nearby-requests'],
-  ['requests-latest'],
-  ['request-similar'],
+  workspaceQK.requestsExplorerPublicPrefix(),
+  workspaceQK.requestsPublicPrefix(),
+  workspaceQK.workspacePublicOverviewPrefix(),
+  workspaceQK.workspacePublicSummaryPrefix(),
+  workspaceQK.requestsPublicSummaryTotalPrefix(),
+  workspaceQK.requestsPublicCityActivityPrefix(),
+  workspaceQK.homeNearbyRequestsPrefix(),
+  workspaceQK.requestsLatestPrefix(),
+  workspaceQK.requestSimilarPrefix(),
 ];
 
 export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args) {
@@ -59,8 +59,8 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
   const invalidateWorkspaceRequests = React.useCallback(async () => {
     const queryKeys: QueryKey[] = [
       workspaceQK.requestsMy(),
-      ['workspace-requests'],
-      ['workspace-private-overview'],
+      workspaceQK.workspaceRequestsPrefix(),
+      workspaceQK.workspacePrivateOverviewPrefix(),
       workspaceQK.favoriteRequests(),
       workspaceQK.offersMy(),
       workspaceQK.offersMyClient(),
@@ -107,7 +107,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
     async (offer: OfferDto) => {
       const navigation = resolveWorkspaceChatNavigation(offer);
       if (!navigation.conversationInput) {
-        router.push(navigation.fallbackHref);
+        toast.message(t(I18N_KEYS.requestDetails.chatSoon));
         return;
       }
       try {
@@ -117,7 +117,6 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
         toast.error(message);
-        router.push('/chat');
       }
     },
     [qc, router, t],
@@ -127,7 +126,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
     async (payload: WorkspaceChatConversationInput) => {
       try {
         if (!isWorkspaceChatConversationInput(payload)) {
-          router.push('/chat');
+          toast.message(t(I18N_KEYS.requestDetails.chatSoon));
           return;
         }
         const conversation = await createConversation(payload);
@@ -136,7 +135,6 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
         toast.error(message);
-        router.push('/chat');
       }
     },
     [qc, router, t],

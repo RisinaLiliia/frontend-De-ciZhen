@@ -28,6 +28,7 @@ import { useI18n } from '@/lib/i18n/I18nProvider';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
 import { WorkspacePlatformReviewComposer } from '@/components/reviews/WorkspacePlatformReviewComposer';
 import { WorkspaceUserReviewComposer } from '@/components/reviews/WorkspaceUserReviewComposer';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import {
   buildWorkspaceLocaleTag,
   buildWorkspacePlatformReviewDistribution,
@@ -109,7 +110,11 @@ export function WorkspaceReviewsPanel({
   const sortValue = reviewSort === 'top' ? 'rating_desc' : 'created_desc';
 
   const platformQuery = useQuery({
-    queryKey: ['platform-reviews-overview', sortValue, reviewPage],
+    queryKey: workspaceQK.platformReviewsOverview({
+      sort: sortValue,
+      page: reviewPage,
+      limit: REVIEWS_PAGE_SIZE,
+    }),
     enabled: source === 'platform',
     queryFn: () =>
       withStatusFallback(
@@ -127,7 +132,7 @@ export function WorkspaceReviewsPanel({
   });
 
   const userCompletedBookingsQuery = useQuery({
-    queryKey: ['bookings-my-reviewable'],
+    queryKey: workspaceQK.bookingsMyReviewable(),
     enabled: source === 'user' && isAuthenticated,
     queryFn: () =>
       withStatusFallback(
@@ -156,7 +161,7 @@ export function WorkspaceReviewsPanel({
   );
 
   const reviewableRequestsQuery = useQuery({
-    queryKey: ['workspace-review-booking-requests', reviewableRequestIds],
+    queryKey: workspaceQK.workspaceReviewBookingRequests(reviewableRequestIds),
     enabled: source === 'user' && isAuthenticated && reviewableRequestIds.length > 0,
     queryFn: () =>
       withStatusFallback(
@@ -273,7 +278,7 @@ export function WorkspaceReviewsPanel({
       setDraftText('');
       if (!isAuthenticated) setDraftAuthorName('');
       toast.success(t(I18N_KEYS.requestsPage.platformReviewFormSuccess));
-      await queryClient.invalidateQueries({ queryKey: ['platform-reviews-overview'] });
+      await queryClient.invalidateQueries({ queryKey: workspaceQK.platformReviewsOverviewPrefix() });
     },
     onError: () => {
       toast.error(t(I18N_KEYS.requestsPage.platformReviewFormError));
@@ -305,8 +310,8 @@ export function WorkspaceReviewsPanel({
       setDraftRating(5);
       toast.success(t(I18N_KEYS.requestsPage.userReviewFormSuccess));
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['reviews-my'] }),
-        queryClient.invalidateQueries({ queryKey: ['bookings-my-reviewable'] }),
+        queryClient.invalidateQueries({ queryKey: workspaceQK.reviewsMyPrefix() }),
+        queryClient.invalidateQueries({ queryKey: workspaceQK.bookingsMyReviewable() }),
       ]);
     },
     onError: (error) => {

@@ -144,14 +144,14 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
       set({ status: 'loading', error: null });
 
-      const token = await refreshAccessToken();
-      if (!token) {
+      const refreshResult = await refreshAccessToken();
+      if (refreshResult.status !== 'success') {
         setUnauthenticatedState();
         return;
       }
 
       try {
-        setAuthenticatedTokenState(token);
+        setAuthenticatedTokenState(refreshResult.accessToken);
         const me = await getMe();
         get().setMe(me);
       } catch {

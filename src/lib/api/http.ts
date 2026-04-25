@@ -71,12 +71,24 @@ async function apiRequest<T>(
 
   if (res.status === 401 && retry && !init?.skipAuthRefresh && Boolean(accessToken)) {
     const refreshed = await refreshAccessToken();
-    if (refreshed) {
-      setAccessToken(refreshed);
+    if (refreshed.status === 'success') {
+      setAccessToken(refreshed.accessToken);
       return apiRequest<T>(method, path, body, init, false, requestId);
     }
-    setAccessToken(null);
-    clearAuth();
+    if (refreshed.status === 'unauthorized') {
+      setAccessToken(null);
+      clearAuth();
+    } else {
+      throw new ApiError('Session refresh is temporarily unavailable', 503, {
+        statusCode: 503,
+        message: 'Session refresh is temporarily unavailable',
+        error: 'Service Unavailable',
+        errorCode: 'AUTH_REFRESH_UNAVAILABLE',
+        timestamp: new Date().toISOString(),
+        path,
+        requestId,
+      });
+    }
   }
 
   if (!res.ok) {

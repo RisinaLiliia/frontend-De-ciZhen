@@ -5,6 +5,7 @@ import { publishMyRequest, updateMyRequest, uploadRequestPhotos } from '@/lib/ap
 import { ApiError } from '@/lib/api/http-error';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type Translate = (key: I18nKey) => string;
 
@@ -193,28 +194,28 @@ export function useRequestOwnerEdit({
           ? await publishMyRequest(request.id)
           : updated;
       setOwnerPriceTrend(resolveRequestPriceTrend(finalRequest));
-      qc.setQueriesData({ queryKey: ['request-detail', request.id] }, finalRequest);
+      qc.setQueriesData({ queryKey: workspaceQK.requestDetail(request.id) }, finalRequest);
       qc.setQueriesData(
-        { queryKey: ['workspace-managed-request', request.id] },
+        { queryKey: workspaceQK.managedRequestPrefix(request.id) },
         (current) => patchWorkspaceManagedRequestPayload(current, request.id, finalRequest),
       );
 
       const patchCollection = (payload: unknown) => patchRequestCollectionPayload(payload, request.id, finalRequest);
-      qc.setQueriesData({ queryKey: ['requests-explorer-public'] }, patchCollection);
-      qc.setQueriesData({ queryKey: ['requests-public'] }, patchCollection);
-      qc.setQueriesData({ queryKey: ['requests-my'] }, patchCollection);
-      qc.setQueriesData({ queryKey: ['home-nearby-requests'] }, patchCollection);
-      qc.setQueriesData({ queryKey: ['requests-latest'] }, patchCollection);
-      qc.setQueriesData({ queryKey: ['request-similar'] }, patchCollection);
+      qc.setQueriesData({ queryKey: workspaceQK.requestsExplorerPublicPrefix() }, patchCollection);
+      qc.setQueriesData({ queryKey: workspaceQK.requestsPublicPrefix() }, patchCollection);
+      qc.setQueriesData({ queryKey: workspaceQK.requestsMy() }, patchCollection);
+      qc.setQueriesData({ queryKey: workspaceQK.homeNearbyRequestsPrefix() }, patchCollection);
+      qc.setQueriesData({ queryKey: workspaceQK.requestsLatestPrefix() }, patchCollection);
+      qc.setQueriesData({ queryKey: workspaceQK.requestSimilarPrefix() }, patchCollection);
 
-      qc.invalidateQueries({ queryKey: ['requests-explorer-public'] });
-      qc.invalidateQueries({ queryKey: ['requests-public'] });
-      qc.invalidateQueries({ queryKey: ['requests-my'] });
-      qc.invalidateQueries({ queryKey: ['workspace-requests'] });
-      qc.invalidateQueries({ queryKey: ['workspace-private-overview'] });
-      qc.invalidateQueries({ queryKey: ['requests-latest'] });
-      qc.invalidateQueries({ queryKey: ['request-similar'] });
-      qc.invalidateQueries({ queryKey: ['home-nearby-requests'] });
+      qc.invalidateQueries({ queryKey: workspaceQK.requestsExplorerPublicPrefix() });
+      qc.invalidateQueries({ queryKey: workspaceQK.requestsPublicPrefix() });
+      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() });
+      qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() });
+      qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() });
+      qc.invalidateQueries({ queryKey: workspaceQK.requestsLatestPrefix() });
+      qc.invalidateQueries({ queryKey: workspaceQK.requestSimilarPrefix() });
+      qc.invalidateQueries({ queryKey: workspaceQK.homeNearbyRequestsPrefix() });
 
       setIsOwnerEditMode(false);
       toast.success(

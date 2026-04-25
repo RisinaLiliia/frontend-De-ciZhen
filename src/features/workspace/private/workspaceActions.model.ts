@@ -24,13 +24,11 @@ export function resolveWorkspaceChatNavigation(offer: OfferDto) {
   const providerUserId = offer.providerUserId?.trim();
   if (!providerUserId || !offer.requestId) {
     return {
-      fallbackHref: '/chat',
       conversationInput: null,
     };
   }
 
   return {
-    fallbackHref: '/chat',
     conversationInput: {
       relatedEntity: {
         type: 'offer' as const,

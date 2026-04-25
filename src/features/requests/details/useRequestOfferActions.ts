@@ -8,6 +8,7 @@ import { providerQK } from '@/features/provider/queries';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type Translate = (key: I18nKey) => string;
 
@@ -177,7 +178,7 @@ export function useRequestOfferActions({
         setOfferSheetMode('success');
       }
       await Promise.all([
-        qc.invalidateQueries({ queryKey: ['offers-my'] }),
+        qc.invalidateQueries({ queryKey: workspaceQK.offersMy() }),
         qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
       ]);
     } catch (error) {
@@ -236,7 +237,7 @@ export function useRequestOfferActions({
       setOfferSheetInUrl(false);
       toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
       await Promise.all([
-        qc.invalidateQueries({ queryKey: ['offers-my'] }),
+        qc.invalidateQueries({ queryKey: workspaceQK.offersMy() }),
         qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
       ]);
     } catch {

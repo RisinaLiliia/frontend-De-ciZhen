@@ -8,7 +8,9 @@ import { listConversations } from '@/lib/api/chat';
 import { listFavorites } from '@/lib/api/favorites';
 import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import { providerQK } from '@/features/provider/queries';
 import { findProviderPublicByUserId } from '@/features/profile/profileWorkspace.presentation';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type UseProfileWorkspaceDataParams = {
   authMeId?: string | null;
@@ -20,36 +22,36 @@ export function useProfileWorkspaceData({
   hasProviderProfile,
 }: UseProfileWorkspaceDataParams) {
   const { data: myRequests = [] } = useQuery({
-    queryKey: ['requests-my'],
+    queryKey: workspaceQK.requestsMy(),
     queryFn: () => withStatusFallback(() => listMyRequests(), []),
   });
   const { data: providerOffers = [] } = useQuery({
-    queryKey: ['offers-my'],
+    queryKey: workspaceQK.offersMy(),
     queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
   });
   const { data: clientOffers = [] } = useQuery({
-    queryKey: ['offers-my-client'],
+    queryKey: workspaceQK.offersMyClient(),
     queryFn: () => withStatusFallback(() => listMyClientOffers(), []),
   });
   const { data: contracts = [] } = useQuery({
-    queryKey: ['contracts-my-all'],
+    queryKey: workspaceQK.contractsMyAll(),
     queryFn: () => withStatusFallback(() => listMyContracts({ role: 'all' }), []),
   });
   const { data: inbox = [] } = useQuery({
-    queryKey: ['chat-inbox', 'all'],
+    queryKey: workspaceQK.chatInboxAll(),
     queryFn: async () =>
       withStatusFallback(async () => (await listConversations()).items, []),
   });
   const { data: favoriteRequests = [] } = useQuery({
-    queryKey: ['favorite-requests'],
+    queryKey: workspaceQK.favoriteRequests(),
     queryFn: () => withStatusFallback(() => listFavorites('request'), []),
   });
   const { data: favoriteProviders = [] } = useQuery({
-    queryKey: ['favorite-providers'],
+    queryKey: workspaceQK.favoriteProviders(),
     queryFn: () => withStatusFallback(() => listFavorites('provider'), []),
   });
   const { data: myProviderPublic } = useQuery({
-    queryKey: ['provider-public-self', authMeId],
+    queryKey: providerQK.publicSelf(authMeId),
     enabled: Boolean(authMeId),
     queryFn: async () => {
       const list = await listPublicProviders();
@@ -57,7 +59,7 @@ export function useProfileWorkspaceData({
     },
   });
   const { data: myProviderProfile } = useQuery({
-    queryKey: ['provider-profile-self', authMeId],
+    queryKey: providerQK.myProfile(),
     enabled: Boolean(authMeId && hasProviderProfile),
     queryFn: () => withStatusFallback(() => getMyProviderProfile(), null),
   });

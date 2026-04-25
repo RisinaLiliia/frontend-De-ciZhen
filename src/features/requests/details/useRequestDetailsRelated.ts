@@ -5,6 +5,7 @@ import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { Locale } from '@/lib/i18n/t';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 const SIMILAR_LIMIT = 2;
 const SIMILAR_FETCH_LIMIT = 8;
@@ -29,7 +30,12 @@ export function useRequestDetailsRelated({
 }: UseRequestDetailsRelatedParams) {
   const hasSimilarSeed = Boolean(request?.categoryKey || request?.serviceKey);
   const similarQuery = useQuery({
-    queryKey: ['request-similar', request?.id, request?.categoryKey, request?.serviceKey, locale],
+    queryKey: workspaceQK.requestSimilar({
+      requestId: request?.id,
+      categoryKey: request?.categoryKey,
+      serviceKey: request?.serviceKey,
+      locale,
+    }),
     enabled: enabled && isHydrated && Boolean(request?.id) && hasSimilarSeed,
     queryFn: () =>
       listPublicRequests({
@@ -63,7 +69,7 @@ export function useRequestDetailsRelated({
     && Boolean(request?.id)
     && (!hasSimilarSeed || (similarQuery.isFetched && similar.length === 0));
   const { data: latestData } = useQuery({
-    queryKey: ['requests-latest', locale],
+    queryKey: workspaceQK.requestsLatest(locale),
     enabled: isHydrated && shouldLoadLatest,
     queryFn: () =>
       listPublicRequests({

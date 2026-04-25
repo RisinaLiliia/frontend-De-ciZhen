@@ -46,6 +46,11 @@ function normalizeCardLinkHref(args: {
   return href ?? '';
 }
 
+function isGenericChatHref(href?: string | null) {
+  if (!href) return false;
+  return /^\/chat(?:[/?#]|$)/.test(href);
+}
+
 function normalizeCardAction(
   action: PrivateRequestCardAction,
   card: WorkspaceMyRequestCardDto,
@@ -67,7 +72,10 @@ function normalizeCardAction(
 
 function normalizeQuickActions(card: WorkspaceMyRequestCardDto): PrivateRequestCardAction[] {
   return card.quickActions
-    .filter((action): action is WorkspaceMyRequestCardDto['quickActions'][number] & { href: string } => Boolean(action.href))
+    .filter(
+      (action): action is WorkspaceMyRequestCardDto['quickActions'][number] & { href: string } =>
+        Boolean(action.href) && !isGenericChatHref(action.href),
+    )
     .map((action) =>
       normalizeCardAction(
         {
@@ -218,7 +226,10 @@ function resolvePrimaryAction(card: WorkspaceMyRequestCardDto): PrivateRequestCa
   }
 
   const statusPrimary = card.status.actions.find(
-    (action) => action.tone === 'primary' || action.key === 'open' || action.key === 'chat',
+    (action) =>
+      action.tone === 'primary'
+      || (action.kind === 'link' && action.key === 'open')
+      || action.kind === 'open_chat',
   );
   if (statusPrimary) return normalizeCardAction(statusPrimary, card);
 
@@ -235,7 +246,7 @@ function resolveSecondaryAction(
   const statusSecondary = card.status.actions.find((action) => {
     if (action.tone === 'danger') return false;
     if (isSameAction(action, primaryAction)) return false;
-    return action.key === 'chat'
+    return action.kind === 'open_chat'
       || action.key === 'open'
       || action.key === 'contract'
       || action.key === 'review'

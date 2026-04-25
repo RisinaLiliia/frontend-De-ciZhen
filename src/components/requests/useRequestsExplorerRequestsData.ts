@@ -28,6 +28,7 @@ import {
   resolveRequestsExplorerLoginHref,
   resolveRequestsExplorerOfferHref,
 } from '@/components/requests/requestsExplorerRequestsData.model';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type Params = {
   t: (key: I18nKey) => string;
@@ -108,7 +109,7 @@ export function useRequestsExplorerRequestsData({
   const requests = React.useMemo(() => publicRequests?.items ?? [], [publicRequests?.items]);
 
   const { data: myOffers = [] } = useQuery({
-    queryKey: ['offers-my'],
+    queryKey: workspaceQK.offersMy(),
     enabled: !isProvidersView && isAuthed,
     queryFn: () => withStatusFallback(() => listMyProviderOffers(), [], [401, 403]),
   });
@@ -123,7 +124,7 @@ export function useRequestsExplorerRequestsData({
   );
 
   const { data: favoriteRequests = [] } = useQuery({
-    queryKey: ['favorite-requests'],
+    queryKey: workspaceQK.favoriteRequests(),
     enabled: !isProvidersView && isAuthed,
     queryFn: () => withStatusFallback(() => listFavorites('request'), [], [401, 403]),
   });
@@ -172,7 +173,7 @@ export function useRequestsExplorerRequestsData({
       try {
         await deleteOffer(offerId);
         toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
-        await qc.invalidateQueries({ queryKey: ['offers-my'] });
+        await qc.invalidateQueries({ queryKey: workspaceQK.offersMy() });
       } catch {
         toast.error(t(I18N_KEYS.requestDetails.responseFailed));
       } finally {
