@@ -194,8 +194,9 @@ export function useWorkspaceRequestDecisionData({
   );
   const chatAction = React.useMemo(
     () => card.status.actions.find((action) => action.kind === 'open_chat' && Boolean(action.chatInput))
-      ?? (card.decision.primaryAction?.kind === 'open_chat' ? card.decision.primaryAction : null),
-    [card.decision.primaryAction, card.status.actions],
+      ?? (card.secondaryAction?.kind === 'open_chat' ? card.secondaryAction : null)
+      ?? (card.primaryAction?.kind === 'open_chat' ? card.primaryAction : null),
+    [card.primaryAction, card.secondaryAction, card.status.actions],
   );
   const chatInput = chatAction?.chatInput ?? null;
   const chatLabel = chatAction?.label ?? (locale === 'de' ? 'Chat' : 'Chat');

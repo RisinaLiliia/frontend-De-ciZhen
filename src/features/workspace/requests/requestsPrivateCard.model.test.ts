@@ -77,6 +77,15 @@ describe('requestsPrivateCard.model', () => {
             },
           ],
         },
+        primaryAction: {
+          key: 'open',
+          kind: 'link',
+          tone: 'primary',
+          icon: 'briefcase',
+          label: 'Angebote prüfen',
+          href: '/requests/req-1',
+          requestId: 'req-1',
+        },
         decision: {
           needsAction: true,
           actionType: 'review_offers',
@@ -348,6 +357,15 @@ describe('requestsPrivateCard.model', () => {
               },
             },
           ],
+        },
+        primaryAction: {
+          key: 'contract',
+          kind: 'link',
+          tone: 'primary',
+          icon: 'briefcase',
+          label: 'Vertrag ansehen',
+          href: '/requests/req-4',
+          requestId: 'req-4',
         },
         decision: {
           needsAction: true,

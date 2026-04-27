@@ -66,7 +66,7 @@ Behavior:
 
 - entering decision mode filters the left column to `decision.needsAction === true`
 - card order follows backend `decisionPanel.queue`
-- active card CTA comes from backend `decision.primaryAction`
+- active card CTA comes from backend `primaryAction`
 - when the active request drops out of the queue after a refresh, the next request becomes active automatically
 
 ## Rendering

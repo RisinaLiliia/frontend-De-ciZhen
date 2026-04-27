@@ -225,10 +225,6 @@ function resolvePrimaryAction(card: WorkspaceMyRequestCardDto): PrivateRequestCa
     return normalizeCardAction(card.primaryAction, card);
   }
 
-  if (card.decision.primaryAction) {
-    return normalizeCardAction(card.decision.primaryAction, card);
-  }
-
   const statusPrimary = card.status.actions.find(
     (action) =>
       action.tone === 'primary'
