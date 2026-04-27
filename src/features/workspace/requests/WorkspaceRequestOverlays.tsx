@@ -15,6 +15,10 @@ import {
   WorkspaceRequestOffersSection,
 } from '@/features/workspace/requests/WorkspaceManagedRequestSections';
 import { hasOwnerRequestManagementCapability } from '@/features/workspace/requests/requestOwnerMenu.model';
+import {
+  resolveWorkspaceRequestChatAction,
+  resolveWorkspaceRequestOfferAction,
+} from '@/features/workspace/requests/workspaceRequestActionResolvers';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { Locale } from '@/lib/i18n/t';
@@ -100,12 +104,8 @@ export function WorkspaceManagedRequestDialog({
     providerProfile: null,
     includeRelated: !canManageRequest,
   });
-  const offerAction = card.status.actions.find(
-    (action) => action.kind === 'send_offer' || action.kind === 'edit_offer',
-  );
-  const chatAction = card.status.actions.find(
-    (action) => action.kind === 'open_chat' && Boolean(action.chatInput),
-  );
+  const offerAction = resolveWorkspaceRequestOfferAction(card);
+  const chatAction = resolveWorkspaceRequestChatAction(card);
   const chatInput = chatAction?.chatInput ?? null;
   const effectiveApplyLabel = offerAction?.label ?? applyLabel;
   const effectiveApplyState = offerAction?.kind === 'edit_offer' ? 'edit' : applyState;
