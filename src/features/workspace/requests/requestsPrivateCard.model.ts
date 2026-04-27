@@ -221,6 +221,10 @@ function resolveInsights(args: {
 }
 
 function resolvePrimaryAction(card: WorkspaceMyRequestCardDto): PrivateRequestCardAction | null {
+  if (card.primaryAction) {
+    return normalizeCardAction(card.primaryAction, card);
+  }
+
   if (card.decision.primaryAction) {
     return normalizeCardAction(card.decision.primaryAction, card);
   }
@@ -243,6 +247,10 @@ function resolveSecondaryAction(
   card: WorkspaceMyRequestCardDto,
   primaryAction: PrivateRequestCardAction | null,
 ): PrivateRequestCardAction | null {
+  if (card.secondaryAction && !isSameAction(card.secondaryAction, primaryAction)) {
+    return normalizeCardAction(card.secondaryAction, card);
+  }
+
   const statusSecondary = card.status.actions.find((action) => {
     if (action.tone === 'danger') return false;
     if (isSameAction(action, primaryAction)) return false;

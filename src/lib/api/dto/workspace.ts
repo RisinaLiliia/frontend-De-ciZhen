@@ -142,6 +142,18 @@ export type WorkspaceMyRequestCardDto = {
     | 'completed'
     | 'reviewed'
     | null;
+  lifecycleState?:
+    | 'draft'
+    | 'published'
+    | 'published_with_responses'
+    | 'contract_pending'
+    | 'in_progress'
+    | 'completion_pending'
+    | 'completed'
+    | 'reviewed'
+    | 'cancelled'
+    | 'inactive_retained'
+    | null;
   title: string;
   category: string;
   subcategory?: string | null;
@@ -157,6 +169,20 @@ export type WorkspaceMyRequestCardDto = {
     label: string;
     tone?: 'info' | 'warning' | 'success' | 'neutral';
   } | null;
+  visibility?: {
+    inPublicFeed: boolean;
+    retainedForParticipants: boolean;
+    isInactive: boolean;
+    inactiveReason?: 'cancelled_by_customer' | null;
+    inactiveMessage?: string | null;
+    purgeAt?: string | null;
+    canRestore?: boolean;
+  };
+  responseCount?: number | null;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  canDuplicate?: boolean;
+  canRestore?: boolean;
   progress: {
     currentStep: 'request' | 'offers' | 'selection' | 'contract' | 'done';
     steps: Array<{
@@ -205,6 +231,34 @@ export type WorkspaceMyRequestCardDto = {
       > | null;
     }>;
   };
+  primaryAction?: {
+    key: string;
+    kind: WorkspaceRequestCardActionKindDto;
+    tone: 'primary' | 'secondary' | 'danger';
+    icon: WorkspaceRequestCardActionIconDto;
+    label: string;
+    href?: string | null;
+    requestId?: string | null;
+    offerId?: string | null;
+    chatInput?: Pick<
+      CreateConversationDto,
+      'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+    > | null;
+  } | null;
+  secondaryAction?: {
+    key: string;
+    kind: WorkspaceRequestCardActionKindDto;
+    tone: 'primary' | 'secondary' | 'danger';
+    icon: WorkspaceRequestCardActionIconDto;
+    label: string;
+    href?: string | null;
+    requestId?: string | null;
+    offerId?: string | null;
+    chatInput?: Pick<
+      CreateConversationDto,
+      'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+    > | null;
+  } | null;
   decision: {
     needsAction: boolean;
     actionType: WorkspaceRequestDecisionActionTypeDto;
