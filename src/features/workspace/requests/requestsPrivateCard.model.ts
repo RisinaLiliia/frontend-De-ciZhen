@@ -1,19 +1,14 @@
 'use client';
 
 import type { WorkspaceMyRequestCardDto } from '@/lib/api/dto/workspace';
+import {
+  resolveWorkspaceRequestPrimaryCardAction,
+  resolveWorkspaceRequestSecondaryCardAction,
+  type WorkspaceRequestCardAction as PrivateRequestCardAction,
+} from '@/features/workspace/requests/workspaceRequestCardActionResolvers';
 import type { Locale } from '@/lib/i18n/t';
 
-type CardAction = WorkspaceMyRequestCardDto['status']['actions'][number];
-
-export type PrivateRequestCardAction = CardAction | {
-  key: string;
-  kind: 'link';
-  tone: 'primary' | 'secondary';
-  icon: 'briefcase';
-  label: string;
-  href: string;
-  requestId: string | null;
-};
+export type { PrivateRequestCardAction };
 
 export type PrivateRequestCardChrome = {
   priorityLabel: string | null;
@@ -33,83 +28,6 @@ export type PrivateRequestCardChrome = {
   primaryAction: PrivateRequestCardAction | null;
   secondaryAction: PrivateRequestCardAction | null;
 };
-
-function normalizeCardLinkHref(args: {
-  key: string;
-  href?: string | null;
-  card: WorkspaceMyRequestCardDto;
-}) {
-  const { key, href, card } = args;
-  if (key === 'edit-request' && card.requestPreview.href) {
-    return card.requestPreview.href;
-  }
-  return href ?? '';
-}
-
-function isGenericChatHref(href?: string | null) {
-  if (!href) return false;
-  return /^\/chat(?:[/?#]|$)/.test(href);
-}
-
-function normalizeCardAction(
-  action: PrivateRequestCardAction,
-  card: WorkspaceMyRequestCardDto,
-): PrivateRequestCardAction {
-  if (action.kind !== 'link') {
-    return action;
-  }
-
-  return {
-    ...action,
-    href: normalizeCardLinkHref({
-      key: action.key,
-      href: action.href,
-      card,
-    }),
-    requestId: action.requestId ?? card.requestId,
-  };
-}
-
-function normalizeQuickActions(card: WorkspaceMyRequestCardDto): PrivateRequestCardAction[] {
-  return card.quickActions
-    .filter(
-      (action): action is WorkspaceMyRequestCardDto['quickActions'][number] & { href: string } =>
-        Boolean(action.href) && !isGenericChatHref(action.href),
-    )
-    .map((action) =>
-      normalizeCardAction(
-        {
-          key: `quick:${action.key}`,
-          kind: 'link',
-          tone: action.tone === 'primary' ? 'primary' : 'secondary',
-          icon: 'briefcase',
-          label: action.label,
-          href: action.href,
-          requestId: card.requestId,
-        },
-        card,
-      ));
-}
-
-function isSameAction(
-  left: PrivateRequestCardAction | null | undefined,
-  right: PrivateRequestCardAction | null | undefined,
-) {
-  if (!left || !right) return false;
-  const sameHref =
-    left.kind === 'link'
-    && right.kind === 'link'
-    && (left.href ?? null) === (right.href ?? null)
-    && (left.requestId ?? null) === (right.requestId ?? null);
-  const sameOffer =
-    left.kind === right.kind
-    &&
-    ('offerId' in left ? left.offerId ?? null : null) !== null
-    && ('offerId' in left ? left.offerId ?? null : null) === ('offerId' in right ? right.offerId ?? null : null);
-  const sameKindAndKey = left.kind === right.kind && left.key === right.key;
-
-  return sameHref || sameOffer || sameKindAndKey;
-}
 
 function resolvePriorityLabel(locale: Locale, card: WorkspaceMyRequestCardDto) {
   if (card.decision.needsAction) {
@@ -220,56 +138,12 @@ function resolveInsights(args: {
   return items.slice(0, 2);
 }
 
-function resolvePrimaryAction(card: WorkspaceMyRequestCardDto): PrivateRequestCardAction | null {
-  if (card.primaryAction) {
-    return normalizeCardAction(card.primaryAction, card);
-  }
-
-  const statusPrimary = card.status.actions.find(
-    (action) =>
-      action.tone === 'primary'
-      || (action.kind === 'link' && action.key === 'open')
-      || action.kind === 'open_chat',
-  );
-  if (statusPrimary) return normalizeCardAction(statusPrimary, card);
-
-  const quickPrimary = normalizeQuickActions(card).find((action) => action.tone === 'primary');
-  if (quickPrimary) return quickPrimary;
-
-  return normalizeQuickActions(card)[0] ?? null;
-}
-
-function resolveSecondaryAction(
-  card: WorkspaceMyRequestCardDto,
-  primaryAction: PrivateRequestCardAction | null,
-): PrivateRequestCardAction | null {
-  if (card.secondaryAction && !isSameAction(card.secondaryAction, primaryAction)) {
-    return normalizeCardAction(card.secondaryAction, card);
-  }
-
-  const statusSecondary = card.status.actions.find((action) => {
-    if (action.tone === 'danger') return false;
-    if (isSameAction(action, primaryAction)) return false;
-    return action.kind === 'open_chat'
-      || action.key === 'open'
-      || action.key === 'contract'
-      || action.key === 'review'
-      || action.key === 'edit-request'
-      || action.key === 'edit-offer'
-      || action.key === 'duplicate-request';
-  });
-
-  if (statusSecondary) return normalizeCardAction(statusSecondary, card);
-
-  return normalizeQuickActions(card).find((action) => !isSameAction(action, primaryAction)) ?? null;
-}
-
 export function buildPrivateRequestCardChrome(args: {
   card: WorkspaceMyRequestCardDto;
   locale: Locale;
 }): PrivateRequestCardChrome {
   const { card, locale } = args;
-  const primaryAction = resolvePrimaryAction(card);
+  const primaryAction = resolveWorkspaceRequestPrimaryCardAction(card);
 
   return {
     priorityLabel: resolvePriorityLabel(locale, card),
@@ -278,6 +152,6 @@ export function buildPrivateRequestCardChrome(args: {
     signalPills: resolveSignalPills(card),
     insights: resolveInsights({ card, locale }),
     primaryAction,
-    secondaryAction: resolveSecondaryAction(card, primaryAction),
+    secondaryAction: resolveWorkspaceRequestSecondaryCardAction(card, primaryAction),
   };
 }
