@@ -100,7 +100,9 @@ function resolveRequestDialogIntent(action: { key: string }): RequestDialogInten
   return action.key === 'edit-request' ? 'edit' : 'view';
 }
 
-function resolveCardOpenIntent(card: Pick<WorkspaceMyRequestCardDto, 'status'>): RequestDialogIntent {
+function resolveCardOpenIntent(
+  card: Pick<WorkspaceMyRequestCardDto, 'role' | 'status' | 'canEdit' | 'canDelete' | 'canDuplicate' | 'canRestore'>,
+): RequestDialogIntent {
   return hasOwnerRequestManagementCapability(card) ? 'edit' : 'view';
 }
 

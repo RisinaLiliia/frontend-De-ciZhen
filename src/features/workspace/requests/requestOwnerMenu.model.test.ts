@@ -6,8 +6,22 @@ import {
 } from '@/features/workspace/requests/requestOwnerMenu.model';
 
 describe('requestOwnerMenu.model', () => {
-  it('detects backend owner management capability from card actions', () => {
+  it('detects owner management capability from card-level permissions first', () => {
     expect(hasOwnerRequestManagementCapability({
+      role: 'customer',
+      canEdit: true,
+      canDelete: false,
+      canDuplicate: false,
+      canRestore: false,
+      status: {
+        actions: [],
+      },
+    } as never)).toBe(true);
+  });
+
+  it('falls back to backend owner management actions when permissions are absent', () => {
+    expect(hasOwnerRequestManagementCapability({
+      role: 'customer',
       status: {
         actions: [
           {
@@ -24,6 +38,7 @@ describe('requestOwnerMenu.model', () => {
     } as never)).toBe(true);
 
     expect(hasOwnerRequestManagementCapability({
+      role: 'customer',
       status: {
         actions: [
           {

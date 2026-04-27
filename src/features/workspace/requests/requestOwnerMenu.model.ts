@@ -4,7 +4,14 @@ import type { WorkspaceMyRequestCardDto } from '@/lib/api/dto/workspace';
 
 export type OwnerMenuAction = WorkspaceMyRequestCardDto['status']['actions'][number];
 
-export function hasOwnerRequestManagementCapability(card: Pick<WorkspaceMyRequestCardDto, 'status'>) {
+export function hasOwnerRequestManagementCapability(card: Pick<
+  WorkspaceMyRequestCardDto,
+  'role' | 'status' | 'canEdit' | 'canDelete' | 'canDuplicate' | 'canRestore'
+>) {
+  if (card.role === 'customer' && (card.canEdit || card.canDelete || card.canDuplicate || card.canRestore)) {
+    return true;
+  }
+
   return card.status.actions.some((action) =>
     action.key === 'edit-request'
     || action.kind === 'publish_request'
