@@ -13,6 +13,10 @@ Private requests (`/workspace?section=requests&scope=my`) follow a contract-driv
   - top filter cards (`Alle`, `Aktiv`, `In Ausführung`, `Abgeschlossen`)
 - `list.items[]`
   - shared request card preview + workflow progress
+  - `lifecycleState`
+  - `visibility`
+  - `primaryAction`
+  - `secondaryAction`
   - `decision`
     - `needsAction`
     - `actionType`
@@ -44,6 +48,7 @@ Supported owner-menu actions:
 Frontend responsibilities are intentionally small:
 
 - render menu items in backend order
+- prefer backend `primaryAction` and `secondaryAction` for card CTA rendering
 - execute `duplicate/archive/delete` mutations through request APIs
 - execute `share_request` with `navigator.share` or clipboard fallback
 - keep hard-delete confirmation in UI before calling `delete_request`

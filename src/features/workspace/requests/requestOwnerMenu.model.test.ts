@@ -42,7 +42,6 @@ describe('requestOwnerMenu.model', () => {
 
   it('keeps only backend-owned owner menu actions in stable order', () => {
     const actions = resolveOwnerMenuActions({
-      locale: 'de',
       card: {
         id: 'customer:req-1',
         requestId: 'req-1',
@@ -151,9 +150,8 @@ describe('requestOwnerMenu.model', () => {
     ]);
   });
 
-  it('adds missing owner actions as frontend fallback when backend payload is partial', () => {
+  it('does not invent missing owner actions when backend payload is partial', () => {
     const actions = resolveOwnerMenuActions({
-      locale: 'de',
       card: {
         id: 'customer:req-2',
         requestId: 'req-2',
@@ -219,12 +217,6 @@ describe('requestOwnerMenu.model', () => {
       },
     });
 
-    expect(actions.map((action) => action.key)).toEqual([
-      'edit-request',
-      'duplicate-request',
-      'share-request',
-      'archive-request',
-      'delete-request',
-    ]);
+    expect(actions.map((action) => action.key)).toEqual(['edit-request', 'delete-request']);
   });
 });

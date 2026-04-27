@@ -644,8 +644,8 @@ function RequestOwnerMenu({
 
   const requestHref = card.requestPreview.href || `/requests/${card.requestId}`;
   const menuActions = React.useMemo(
-    () => resolveOwnerMenuActions({ card, locale }),
-    [card, locale],
+    () => resolveOwnerMenuActions({ card }),
+    [card],
   );
 
   const closeMenu = React.useCallback(() => {
