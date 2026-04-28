@@ -2,6 +2,7 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+  container-type: inline-size;
   gap: 0;
   min-height: calc(100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px) - var(--space-8));
   border: 1px solid var(--surface-card-border);
@@ -337,6 +338,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
+  min-width: 0;
   padding: var(--space-4) var(--space-5);
   border-bottom: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
   background: color-mix(in oklab, var(--c-panel) 78%, transparent);
@@ -387,6 +389,7 @@
 .contextBar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   min-width: 0;
   padding: 10px var(--space-5);
@@ -516,6 +519,7 @@
   color: var(--c-text);
   line-height: 1.5;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .messageMeta {
@@ -536,6 +540,7 @@
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .attachmentLink:hover,
@@ -642,6 +647,7 @@
 .infoHeadline {
   font-size: 22px;
   line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .infoMetaList {
@@ -672,6 +678,7 @@
   color: var(--c-text);
   font-size: 14px;
   font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .participantCard {
@@ -691,9 +698,9 @@
   gap: var(--space-3);
 }
 
-@media (max-width: 1023px) {
+@container (max-width: 1023px) {
   .shell {
-    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+    grid-template-columns: minmax(248px, 296px) minmax(0, 1fr);
   }
 
   .messageStack {
@@ -701,7 +708,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@container (max-width: 767px) {
   .shell {
     grid-template-columns: minmax(0, 1fr);
     min-height: calc(100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px) - var(--space-6));
@@ -748,5 +755,38 @@
     border-top: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
     border-radius: 24px 24px 0 0;
     box-shadow: 0 -16px 40px color-mix(in oklab, var(--c-ink) 14%, transparent);
+  }
+}
+
+@container (max-width: 560px) {
+  .threadHeader {
+    align-items: flex-start;
+  }
+
+  .infoButton {
+    align-self: flex-start;
+  }
+
+  .conversationTopRow,
+  .conversationBottomRow {
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .contextBar {
+    gap: 6px;
+  }
+
+  .composerInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sendButton {
+    width: 100%;
+    border-radius: 16px;
+  }
+
+  .messageStack {
+    max-width: 100%;
   }
 }

@@ -24,6 +24,7 @@
 
 .legalHeader {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--space-3);
@@ -63,6 +64,7 @@
   letter-spacing: -0.02em;
   color: var(--c-text);
   font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .subtitle {
@@ -71,6 +73,7 @@
   color: var(--c-text-muted);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
+  overflow-wrap: anywhere;
 }
 
 .brandBadge {
@@ -117,6 +120,7 @@
 .metaActions {
   margin-left: auto;
   display: inline-flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
