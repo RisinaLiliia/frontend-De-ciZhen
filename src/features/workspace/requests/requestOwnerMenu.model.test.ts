@@ -1,13 +1,53 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  hasOwnerRequestEditCapability,
   hasOwnerRequestManagementCapability,
   resolveOwnerMenuActions,
 } from '@/features/workspace/requests/requestOwnerMenu.model';
 
 describe('requestOwnerMenu.model', () => {
-  it('detects backend owner management capability from card actions', () => {
+  it('detects edit capability only from canEdit or edit action', () => {
+    expect(hasOwnerRequestEditCapability({
+      role: 'customer',
+      canEdit: true,
+      status: { actions: [] },
+    } as never)).toBe(true);
+
+    expect(hasOwnerRequestEditCapability({
+      role: 'customer',
+      canEdit: false,
+      status: {
+        actions: [
+          {
+            key: 'duplicate-request',
+            kind: 'duplicate_request',
+            tone: 'secondary',
+            icon: 'copy',
+            label: 'Duplizieren',
+            requestId: 'req-1',
+          },
+        ],
+      },
+    } as never)).toBe(false);
+  });
+
+  it('detects owner management capability from card-level permissions first', () => {
     expect(hasOwnerRequestManagementCapability({
+      role: 'customer',
+      canEdit: true,
+      canDelete: false,
+      canDuplicate: false,
+      canRestore: false,
+      status: {
+        actions: [],
+      },
+    } as never)).toBe(true);
+  });
+
+  it('falls back to backend owner management actions when permissions are absent', () => {
+    expect(hasOwnerRequestManagementCapability({
+      role: 'customer',
       status: {
         actions: [
           {
@@ -24,6 +64,7 @@ describe('requestOwnerMenu.model', () => {
     } as never)).toBe(true);
 
     expect(hasOwnerRequestManagementCapability({
+      role: 'customer',
       status: {
         actions: [
           {
@@ -40,9 +81,8 @@ describe('requestOwnerMenu.model', () => {
     } as never)).toBe(false);
   });
 
-  it('keeps only backend-owned owner menu actions in stable order', () => {
+  it('keeps only backend-owned owner menu actions in backend order', () => {
     const actions = resolveOwnerMenuActions({
-      locale: 'de',
       card: {
         id: 'customer:req-1',
         requestId: 'req-1',
@@ -86,12 +126,11 @@ describe('requestOwnerMenu.model', () => {
               requestId: 'req-1',
             },
             {
-              key: 'edit-request',
-              kind: 'link',
+              key: 'archive-request',
+              kind: 'archive_request',
               tone: 'secondary',
-              icon: 'edit',
-              label: 'Bearbeiten',
-              href: '/requests/req-1/edit',
+              icon: 'archive',
+              label: 'Archivieren',
               requestId: 'req-1',
             },
             {
@@ -112,11 +151,12 @@ describe('requestOwnerMenu.model', () => {
               requestId: 'req-1',
             },
             {
-              key: 'archive-request',
-              kind: 'archive_request',
+              key: 'edit-request',
+              kind: 'link',
               tone: 'secondary',
-              icon: 'archive',
-              label: 'Archivieren',
+              icon: 'edit',
+              label: 'Bearbeiten',
+              href: '/requests/req-1/edit',
               requestId: 'req-1',
             },
             {
@@ -143,17 +183,16 @@ describe('requestOwnerMenu.model', () => {
     });
 
     expect(actions.map((action) => action.key)).toEqual([
-      'edit-request',
+      'archive-request',
       'duplicate-request',
       'share-request',
-      'archive-request',
+      'edit-request',
       'delete-request',
     ]);
   });
 
-  it('adds missing owner actions as frontend fallback when backend payload is partial', () => {
+  it('does not invent missing owner actions when backend payload is partial', () => {
     const actions = resolveOwnerMenuActions({
-      locale: 'de',
       card: {
         id: 'customer:req-2',
         requestId: 'req-2',
@@ -219,12 +258,6 @@ describe('requestOwnerMenu.model', () => {
       },
     });
 
-    expect(actions.map((action) => action.key)).toEqual([
-      'edit-request',
-      'duplicate-request',
-      'share-request',
-      'archive-request',
-      'delete-request',
-    ]);
+    expect(actions.map((action) => action.key)).toEqual(['edit-request', 'delete-request']);
   });
 });

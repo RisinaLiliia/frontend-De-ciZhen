@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { resolveWorkspaceRequestChatAction } from '@/features/workspace/requests/workspaceRequestActionResolvers';
 import { fetchWorkspaceManagedRequest } from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
 import { listMyContracts } from '@/lib/api/contracts';
 import type { ContractDto } from '@/lib/api/dto/contracts';
@@ -193,9 +194,8 @@ export function useWorkspaceRequestDecisionData({
     [booking?.startAt, selectedOffer?.availableAt, selectedOffer?.requestPreferredDate],
   );
   const chatAction = React.useMemo(
-    () => card.status.actions.find((action) => action.kind === 'open_chat' && Boolean(action.chatInput))
-      ?? (card.decision.primaryAction?.kind === 'open_chat' ? card.decision.primaryAction : null),
-    [card.decision.primaryAction, card.status.actions],
+    () => resolveWorkspaceRequestChatAction(card),
+    [card],
   );
   const chatInput = chatAction?.chatInput ?? null;
   const chatLabel = chatAction?.label ?? (locale === 'de' ? 'Chat' : 'Chat');

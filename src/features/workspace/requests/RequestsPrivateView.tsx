@@ -36,7 +36,7 @@ import {
   type PrivateRequestCardAction,
 } from '@/features/workspace/requests/requestsPrivateCard.model';
 import {
-  hasOwnerRequestManagementCapability,
+  hasOwnerRequestEditCapability,
   resolveOwnerMenuActions,
 } from '@/features/workspace/requests/requestOwnerMenu.model';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
@@ -100,8 +100,10 @@ function resolveRequestDialogIntent(action: { key: string }): RequestDialogInten
   return action.key === 'edit-request' ? 'edit' : 'view';
 }
 
-function resolveCardOpenIntent(card: Pick<WorkspaceMyRequestCardDto, 'status'>): RequestDialogIntent {
-  return hasOwnerRequestManagementCapability(card) ? 'edit' : 'view';
+function resolveCardOpenIntent(
+  card: Pick<WorkspaceMyRequestCardDto, 'role' | 'status' | 'canEdit'>,
+): RequestDialogIntent {
+  return hasOwnerRequestEditCapability(card) ? 'edit' : 'view';
 }
 
 function resolveOwnerMenuActionIcon(icon: WorkspaceMyRequestCardDto['status']['actions'][number]['icon']) {
@@ -644,8 +646,8 @@ function RequestOwnerMenu({
 
   const requestHref = card.requestPreview.href || `/requests/${card.requestId}`;
   const menuActions = React.useMemo(
-    () => resolveOwnerMenuActions({ card, locale }),
-    [card, locale],
+    () => resolveOwnerMenuActions({ card }),
+    [card],
   );
 
   const closeMenu = React.useCallback(() => {

@@ -78,19 +78,20 @@ function DecisionProbe() {
   const card = {
     requestId: 'req-1',
     role: 'customer',
+    primaryAction: {
+      kind: 'open_chat',
+      label: 'Zum Chat',
+      chatInput: {
+        participantUserId: 'provider-1',
+        participantRole: 'provider',
+        requestId: 'req-1',
+      },
+    },
     status: {
       actions: [],
     },
     decision: {
-      primaryAction: {
-        kind: 'open_chat',
-        label: 'Zum Chat',
-        chatInput: {
-          participantUserId: 'provider-1',
-          participantRole: 'provider',
-          requestId: 'req-1',
-        },
-      },
+      primaryAction: null,
     },
   } as unknown as MyRequestsViewCard;
 
@@ -212,7 +213,7 @@ describe('useWorkspaceRequestOverlayData', () => {
     });
   });
 
-  it('builds decision data with contract meta and chat fallback from primary action', async () => {
+  it('builds decision data with contract meta and chat context from card actions', async () => {
     renderWithQueryClient(<DecisionProbe />);
 
     await waitFor(() => {
