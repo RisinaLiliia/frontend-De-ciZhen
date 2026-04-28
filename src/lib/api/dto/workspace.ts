@@ -183,6 +183,16 @@ export type WorkspaceMyRequestCardDto = {
   canDelete?: boolean;
   canDuplicate?: boolean;
   canRestore?: boolean;
+  capabilities?: {
+    canManage: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
+    canDuplicate: boolean;
+    canRestore: boolean;
+    canReviewOffers: boolean;
+    canPublish: boolean;
+    canUnpublish: boolean;
+  };
   progress: {
     currentStep: 'request' | 'offers' | 'selection' | 'contract' | 'done';
     steps: Array<{
@@ -231,6 +241,20 @@ export type WorkspaceMyRequestCardDto = {
       > | null;
     }>;
   };
+  menuActions?: Array<{
+    key: string;
+    kind: WorkspaceRequestCardActionKindDto;
+    tone: 'primary' | 'secondary' | 'danger';
+    icon: WorkspaceRequestCardActionIconDto;
+    label: string;
+    href?: string | null;
+    requestId?: string | null;
+    offerId?: string | null;
+    chatInput?: Pick<
+      CreateConversationDto,
+      'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+    > | null;
+  }>;
   primaryAction?: {
     key: string;
     kind: WorkspaceRequestCardActionKindDto;
