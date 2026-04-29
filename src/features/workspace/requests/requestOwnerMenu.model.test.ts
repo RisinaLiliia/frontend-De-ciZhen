@@ -35,6 +35,9 @@ describe('requestOwnerMenu.model', () => {
   it('detects owner management capability from card-level permissions first', () => {
     expect(hasOwnerRequestManagementCapability({
       role: 'customer',
+      capabilities: {
+        canManage: true,
+      },
       canEdit: true,
       canDelete: false,
       canDuplicate: false,
@@ -81,7 +84,7 @@ describe('requestOwnerMenu.model', () => {
     } as never)).toBe(false);
   });
 
-  it('keeps only backend-owned owner menu actions in backend order', () => {
+  it('prefers backend menuActions and keeps backend order', () => {
     const actions = resolveOwnerMenuActions({
       card: {
         id: 'customer:req-1',
@@ -169,6 +172,25 @@ describe('requestOwnerMenu.model', () => {
             },
           ],
         },
+        menuActions: [
+          {
+            key: 'archive-request',
+            kind: 'archive_request',
+            tone: 'secondary',
+            icon: 'archive',
+            label: 'Archivieren',
+            requestId: 'req-1',
+          },
+          {
+            key: 'edit-request',
+            kind: 'link',
+            tone: 'secondary',
+            icon: 'edit',
+            label: 'Bearbeiten',
+            href: '/requests/req-1/edit',
+            requestId: 'req-1',
+          },
+        ],
         decision: {
           needsAction: false,
           actionType: 'none',
@@ -182,13 +204,7 @@ describe('requestOwnerMenu.model', () => {
       },
     });
 
-    expect(actions.map((action) => action.key)).toEqual([
-      'archive-request',
-      'duplicate-request',
-      'share-request',
-      'edit-request',
-      'delete-request',
-    ]);
+    expect(actions.map((action) => action.key)).toEqual(['archive-request', 'edit-request']);
   });
 
   it('does not invent missing owner actions when backend payload is partial', () => {

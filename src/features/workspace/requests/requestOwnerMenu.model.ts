@@ -6,8 +6,12 @@ export type OwnerMenuAction = WorkspaceMyRequestCardDto['status']['actions'][num
 
 export function hasOwnerRequestEditCapability(card: Pick<
   WorkspaceMyRequestCardDto,
-  'role' | 'status' | 'canEdit'
+  'role' | 'status' | 'canEdit' | 'capabilities'
 >) {
+  if (card.capabilities?.canEdit) {
+    return true;
+  }
+
   if (card.role === 'customer' && card.canEdit) {
     return true;
   }
@@ -17,8 +21,12 @@ export function hasOwnerRequestEditCapability(card: Pick<
 
 export function hasOwnerRequestManagementCapability(card: Pick<
   WorkspaceMyRequestCardDto,
-  'role' | 'status' | 'canEdit' | 'canDelete' | 'canDuplicate' | 'canRestore'
+  'role' | 'status' | 'canEdit' | 'canDelete' | 'canDuplicate' | 'canRestore' | 'capabilities'
 >) {
+  if (card.capabilities?.canManage) {
+    return true;
+  }
+
   if (card.role === 'customer' && (card.canEdit || card.canDelete || card.canDuplicate || card.canRestore)) {
     return true;
   }
@@ -37,7 +45,11 @@ export function resolveOwnerMenuActions(params: {
   card: WorkspaceMyRequestCardDto;
 }) {
   const { card } = params;
-  return card.status.actions.filter(
+  const sourceActions = card.menuActions && card.menuActions.length > 0
+    ? card.menuActions
+    : card.status.actions;
+
+  return sourceActions.filter(
     (action): action is OwnerMenuAction =>
       (action.kind === 'link' && action.key === 'edit-request' && Boolean(action.href))
       || action.kind === 'duplicate_request'
