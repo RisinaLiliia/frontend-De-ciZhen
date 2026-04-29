@@ -1,4 +1,7 @@
 /* src/components/home/HomeTopProvidersPanel.tsx */
+/* src/components/home/HomeTopProvidersPanel.tsx */
+'use client';
+
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';

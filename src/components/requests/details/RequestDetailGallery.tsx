@@ -1,6 +1,10 @@
 // src/components/requests/details/RequestDetailGallery.tsx
 import Image from 'next/image';
-import { normalizeAppImageSrc, shouldBypassNextImageOptimization } from '@/lib/requests/images';
+import {
+  normalizeAppImageSrc,
+  optimizeAppImageSrc,
+  shouldBypassNextImageOptimization,
+} from '@/lib/requests/images';
 
 type RequestDetailGalleryProps = {
   images: string[];
@@ -15,7 +19,7 @@ export function RequestDetailGallery({ images, title, surface = 'default' }: Req
     const primaryImage = images[0];
     if (!primaryImage) return null;
 
-    const safeSrc = normalizeAppImageSrc(primaryImage);
+    const safeSrc = optimizeAppImageSrc(normalizeAppImageSrc(primaryImage), 'detail');
 
     return (
       <div className="request-card__media request-card__media--inline request-detail__gallery request-detail__gallery--dialog">
@@ -34,7 +38,7 @@ export function RequestDetailGallery({ images, title, surface = 'default' }: Req
   return (
     <div className="request-detail__gallery">
       {images.map((src, index) => {
-        const safeSrc = normalizeAppImageSrc(src);
+        const safeSrc = optimizeAppImageSrc(normalizeAppImageSrc(src), 'detail');
 
         return (
           <div key={`${src}-${index}`} className="request-detail__photo">

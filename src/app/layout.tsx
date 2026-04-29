@@ -3,15 +3,11 @@ import type { Metadata } from 'next';
 import '../styles/globals.css';
 import { AppThemeProvider } from '@/lib/theme/ThemeProvider';
 import { QueryProvider } from '@/lib/query/QueryProvider';
-import { AppToaster } from '@/components/ui/Toaster';
 import { I18nProvider } from '@/lib/i18n/I18nProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
-import { PresenceProvider } from '@/lib/presence/PresenceProvider';
 import { ConsentProvider } from '@/lib/consent/ConsentProvider';
-import { GoogleAnalyticsManager } from '@/components/analytics/GoogleAnalyticsManager';
-import { CookieConsentLayer } from '@/components/legal/CookieConsentLayer';
-import { ConsentManageFooter } from '@/components/legal/ConsentManageFooter';
 import { assertServerEnv } from '@/lib/config/env.server';
+import { DeferredGlobalChrome } from '@/components/app/DeferredGlobalChrome';
 
 export const metadata: Metadata = {
   title: {
@@ -49,14 +45,10 @@ export default function RootLayout({
             <ConsentProvider>
               <QueryProvider>
                 <AuthProvider>
-                  <PresenceProvider />
-                  <GoogleAnalyticsManager />
                   {children}
-                  <ConsentManageFooter />
                   {authModal}
-                  <CookieConsentLayer />
+                  <DeferredGlobalChrome />
                 </AuthProvider>
-                <AppToaster />
               </QueryProvider>
             </ConsentProvider>
           </I18nProvider>
