@@ -5,7 +5,11 @@ import Image from 'next/image';
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge, type BadgeSize, type BadgeTone, type BadgeVariant } from '@/components/ui/Badge';
-import { normalizeAppImageSrc, shouldBypassNextImageOptimization } from '@/lib/requests/images';
+import {
+  normalizeAppImageSrc,
+  optimizeAppImageSrc,
+  shouldBypassNextImageOptimization,
+} from '@/lib/requests/images';
 
 export type RequestCardBadge = {
   label: string;
@@ -101,7 +105,8 @@ export function RequestCard({
     ));
   const excerptText = excerpt?.trim() ?? '';
   const safeImageSrc = normalizeAppImageSrc(imageSrc);
-  const shouldBypassOptimization = shouldBypassNextImageOptimization(safeImageSrc);
+  const optimizedImageSrc = optimizeAppImageSrc(safeImageSrc, 'card');
+  const shouldBypassOptimization = shouldBypassNextImageOptimization(optimizedImageSrc);
   const isLinkMode = mode === 'link';
   const usesInlineMedia = hasImage && mediaPlacement === 'body';
   const showsBodyPrice = !hideFooterPrice && pricePlacement === 'body';
@@ -267,7 +272,7 @@ export function RequestCard({
       {hasImage && !usesInlineMedia ? (
         <div className="request-card__media">
           <Image
-            src={safeImageSrc}
+            src={optimizedImageSrc}
             alt={imageAlt ?? ''}
             fill
             sizes={imageSizes}
@@ -285,7 +290,7 @@ export function RequestCard({
             <div className="request-card__copy">{mainCopyContent}</div>
             <div className="request-card__media request-card__media--inline">
               <Image
-                src={safeImageSrc}
+                src={optimizedImageSrc}
                 alt={imageAlt ?? ''}
                 fill
                 sizes={imageSizes}

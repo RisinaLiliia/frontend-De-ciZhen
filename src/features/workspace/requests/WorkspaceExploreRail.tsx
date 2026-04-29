@@ -81,6 +81,10 @@ export function isWorkspaceExploreRailSection(section: PublicWorkspaceSection) {
   );
 }
 
+function shouldShowWorkspaceExploreRailMap(section: PublicWorkspaceSection) {
+  return section === 'stats';
+}
+
 export function WorkspaceExploreRail({
   activeSection,
   t,
@@ -94,13 +98,14 @@ export function WorkspaceExploreRail({
 }: Props) {
   const isSidebarReady = useDeferredMount(140);
   const isRailSection = isWorkspaceExploreRailSection(activeSection);
+  const shouldShowRailMap = shouldShowWorkspaceExploreRailMap(activeSection);
   const {
     data: publicSummaryOverview,
     isLoading: isPublicSummaryLoading,
     isError: isPublicSummaryError,
   } = useQuery({
     queryKey: workspaceQK.workspacePublicSummary(WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
-    enabled: isRailSection,
+    enabled: shouldShowRailMap,
     queryFn: () =>
       getWorkspacePublicOverview({
         page: 1,
@@ -113,7 +118,7 @@ export function WorkspaceExploreRail({
 
   const publicCityActivity = publicSummaryOverview?.cityActivity;
   const publicSummary = publicSummaryOverview?.summary;
-  const showRailMap = isRailSection
+  const showRailMap = shouldShowRailMap
     && Boolean(publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError);
 
   return (

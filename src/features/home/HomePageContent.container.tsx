@@ -1,33 +1,63 @@
 'use client';
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { HomeHero } from '@/components/home/HomeHero';
 import { HomeHeroAnimatedPreview } from '@/components/home/HomeHeroAnimatedPreview';
 import { HomeHowItWorksPanel } from '@/components/home/HomeHowItWorksPanel';
-import { HomeNearbyPanel } from '@/components/home/HomeNearbyPanel';
-import { HomePlatformActivityPanelContainer } from '@/components/home/HomePlatformActivityPanelContainer';
 import { HomePopularServicesPanel } from '@/components/home/HomePopularServicesPanel';
 import { HomeProofPanel } from '@/components/home/HomeProofPanel';
 import { HomeQuickSearchPanel } from '@/components/home/HomeQuickSearchPanel';
 import { HomeStatsPanel } from '@/components/home/HomeStatsPanel';
-import { HomeTopProvidersPanel } from '@/components/home/HomeTopProvidersPanel';
 import { HomeTrustLivePanel } from '@/components/home/HomeTrustLivePanel';
+import { HomePanelPlaceholder } from '@/components/home/HomePanelPlaceholder';
 import { HOME_PROOF_CASES, HOME_SERVICES } from '@/data/home';
-import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { useGeoRegion } from '@/hooks/useGeoRegion';
+import { useDeferredMount } from '@/hooks/useDeferredMount';
 import { useMockCategoryCounts } from '@/hooks/useMockCategoryCounts';
 import { useMockLiveStats } from '@/hooks/useMockLiveStats';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import type { ProofCase } from '@/types/home';
-import { Skeleton } from '@/components/ui/Skeleton';
+
+const DeferredHomePlatformActivityPanelContainer = dynamic(
+  () =>
+    import('@/components/home/HomePlatformActivityPanelContainer').then(
+      (mod) => mod.HomePlatformActivityPanelContainer,
+    ),
+  {
+    ssr: false,
+    loading: () => <HomePanelPlaceholder className="home-activity-panel" minHeight={284} bodyRows={3} />,
+  },
+);
+
+const DeferredHomeNearbyPanel = dynamic(
+  () => import('@/components/home/HomeNearbyPanel').then((mod) => mod.HomeNearbyPanel),
+  {
+    ssr: false,
+    loading: () => <HomePanelPlaceholder className="home-nearby-panel" minHeight={472} bodyRows={3} />,
+  },
+);
+
+const DeferredHomeTopProvidersPanel = dynamic(
+  () => import('@/components/home/HomeTopProvidersPanel').then((mod) => mod.HomeTopProvidersPanel),
+  {
+    ssr: false,
+    loading: () => (
+      <HomePanelPlaceholder
+        className="hide-mobile top-providers-panel"
+        minHeight={472}
+        bodyRows={4}
+      />
+    ),
+  },
+);
 
 export function HomePageContentContainer() {
   const t = useT();
   const { locale } = useI18n();
   const router = useRouter();
-  const status = useAuthStatus();
   const isDemo = process.env.NEXT_PUBLIC_DEMO !== 'false';
   const heroVariant = process.env.NEXT_PUBLIC_HERO_VARIANT ?? 'animated';
   const heroAnimationMode = process.env.NEXT_PUBLIC_HERO_ANIMATION_MODE === 'showcase' ? 'showcase' : 'subtle';
@@ -84,43 +114,8 @@ export function HomePageContentContainer() {
     [proofCases],
   );
   const proofIndex = 0;
-
-  if (status === 'loading' || status === 'idle') {
-    return (
-      <>
-        <section className="stack-sm">
-          <Skeleton className="h-8 w-52" />
-          <Skeleton className="h-4 w-80" />
-        </section>
-        <div className="home-grid">
-          <div className="stack-md">
-            <section className="home-skeleton-card stack-sm">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-20 w-full" />
-            </section>
-            <section className="home-skeleton-card stack-sm">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-10 w-full" />
-            </section>
-            <section className="home-skeleton-card stack-sm">
-              <Skeleton className="h-4 w-28" />
-              <Skeleton className="h-24 w-full" />
-            </section>
-          </div>
-          <aside className="stack-md hide-mobile">
-            <section className="home-skeleton-card stack-sm">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-28 w-full" />
-            </section>
-            <section className="home-skeleton-card stack-sm">
-              <Skeleton className="h-4 w-28" />
-              <Skeleton className="h-28 w-full" />
-            </section>
-          </aside>
-        </div>
-      </>
-    );
-  }
+  const isActivityReady = useDeferredMount(1200);
+  const isDiscoveryReady = useDeferredMount(2200);
 
   return (
     <div className="home-grid">
@@ -158,7 +153,11 @@ export function HomePageContentContainer() {
           </div>
 
           <div className="home-combined-top__right">
-            <HomePlatformActivityPanelContainer t={t} locale={locale} />
+            {isActivityReady ? (
+              <DeferredHomePlatformActivityPanelContainer t={t} locale={locale} />
+            ) : (
+              <HomePanelPlaceholder className="home-activity-panel" minHeight={284} bodyRows={3} />
+            )}
           </div>
         </section>
       </section>
@@ -172,20 +171,24 @@ export function HomePageContentContainer() {
               categoryCounts={categoryCounts}
               viewAllHref="/workspace?section=requests"
             />
-            <HomeNearbyPanel
-              t={t}
-              viewAllHref="/workspace?section=requests"
-              regionOverride={region}
-              disableGeoLookup
-            />
+            {isDiscoveryReady ? (
+              <DeferredHomeNearbyPanel
+                t={t}
+                viewAllHref="/workspace?section=requests"
+                regionOverride={region}
+                disableGeoLookup
+              />
+            ) : (
+              <HomePanelPlaceholder className="home-nearby-panel" minHeight={472} bodyRows={3} />
+            )}
           </>
         </div>
         <div className="home-combined__right">
-          <HomeTopProvidersPanel
-            t={t}
-            locale={locale}
-            limit={4}
-          />
+          {isDiscoveryReady ? (
+            <DeferredHomeTopProvidersPanel t={t} locale={locale} limit={4} />
+          ) : (
+            <HomePanelPlaceholder className="hide-mobile top-providers-panel" minHeight={472} bodyRows={4} />
+          )}
         </div>
       </section>
 

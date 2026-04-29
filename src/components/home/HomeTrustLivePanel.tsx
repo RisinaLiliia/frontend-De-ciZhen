@@ -1,6 +1,3 @@
-/* src/components/home/HomeTrustLivePanel.tsx */
-'use client';
-
 import Link from 'next/link';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';

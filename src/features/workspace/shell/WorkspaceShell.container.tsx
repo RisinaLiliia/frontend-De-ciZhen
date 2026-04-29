@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import WorkspacePageClient from '@/features/workspace/WorkspacePageClient';
+import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import {
   buildLegacyWorkspaceTabRedirectHref,
@@ -11,6 +12,7 @@ import {
   isWorkspaceTab,
   type WorkspaceTab,
 } from '@/features/workspace/requests';
+import { shouldAttemptRefreshOnBootstrap } from '@/lib/auth/session';
 
 import {
   type PublicWorkspaceSection,
@@ -43,6 +45,10 @@ export function WorkspaceShell({
     !hasExplicitWorkspaceTab &&
     (forcedPublicSection ?? resolvedSection) === 'reviews';
   const resolvedWorkspaceTab = shouldPromoteReviewsSectionToTab ? 'reviews' : forcedWorkspaceTab;
+  const shouldBlockOnAuthBootstrap = React.useMemo(() => {
+    if (auth.status !== 'idle' && auth.status !== 'loading') return false;
+    return shouldAttemptRefreshOnBootstrap();
+  }, [auth.status]);
   const activePublicSection = auth.status === 'loading' || auth.status === 'idle'
     ? (forcedPublicSection ?? resolvedSection ?? (isOverviewRoute ? null : 'requests'))
     : (forcedPublicSection
@@ -85,6 +91,10 @@ export function WorkspaceShell({
       { scroll: false },
     );
   }, [auth.status, resolvedSection, router, searchParams]);
+
+  if (shouldBlockOnAuthBootstrap) {
+    return <LoadingScreen />;
+  }
 
   return (
     <WorkspacePageClient

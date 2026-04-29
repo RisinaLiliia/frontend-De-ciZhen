@@ -3,6 +3,8 @@
 @layer components {
   .workspace-shared-context-controls {
     --workspace-context-control-font-size: 12px;
+    display: grid;
+    gap: var(--workspace-environment-card-gap);
   }
 
   .workspace-environment,
@@ -224,11 +226,6 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--c-text-muted);
-  }
-
-  .workspace-shared-context-controls {
-    display: grid;
-    gap: var(--workspace-environment-card-gap);
   }
 
   .workspace-mobile-context-section {

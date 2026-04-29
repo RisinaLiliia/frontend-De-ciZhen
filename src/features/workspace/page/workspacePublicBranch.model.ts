@@ -182,7 +182,8 @@ export function buildWorkspacePublicIntroProps({
     summary: platformSummary,
     isMapLoading: isSummaryLoading,
     isMapError: isSummaryError,
-    hideDemandMapOnMobile: activePublicSection !== 'stats',
+    showDemandMap: activePublicSection === 'stats',
+    hideDemandMapOnMobile: true,
     quickActionHref: '/request/create',
     showQuickAction: activePublicSection !== 'stats',
   };
