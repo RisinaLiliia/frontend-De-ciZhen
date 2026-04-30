@@ -21,10 +21,6 @@ type Args = {
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
   WorkspacePrivateIntroComponent: React.ComponentType<WorkspacePrivateIntroProps>;
-  personalNavItems: WorkspacePrivateIntroProps['personalNavItems'];
-  hideNavBadges?: boolean;
-  insightText: string;
-  activityProgress: number;
   statsOrder: WorkspacePrivateIntroProps['statsOrder'];
   providerStatsPayload: WorkspacePrivateIntroProps['providerStatsPayload'];
   clientStatsPayload: WorkspacePrivateIntroProps['clientStatsPayload'];
@@ -43,10 +39,6 @@ export function useWorkspacePresentation({
   activePublicSection,
   activeWorkspaceTab,
   WorkspacePrivateIntroComponent,
-  personalNavItems,
-  hideNavBadges = false,
-  insightText,
-  activityProgress,
   statsOrder,
   providerStatsPayload,
   clientStatsPayload,
@@ -66,10 +58,6 @@ export function useWorkspacePresentation({
           locale,
           activePublicSection,
           activeWorkspaceTab,
-          personalNavItems,
-          hideNavBadges,
-          insightText,
-          activityProgress,
           statsOrder,
           providerStatsPayload,
           clientStatsPayload,
@@ -81,18 +69,14 @@ export function useWorkspacePresentation({
     ),
     [
       WorkspacePrivateIntroComponent,
-      activityProgress,
       activePublicSection,
       activeWorkspaceTab,
       clientStatsPayload,
       createRequestHref,
       locale,
-      personalNavItems,
-      hideNavBadges,
       providerStatsPayload,
       statsOrder,
       t,
-      insightText,
       showQuickAction,
       preferredRequestsRole,
     ],

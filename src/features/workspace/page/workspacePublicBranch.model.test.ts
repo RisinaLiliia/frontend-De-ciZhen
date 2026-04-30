@@ -75,15 +75,9 @@ describe('workspacePublicBranch.model', () => {
       branch: {
         t: (key) => String(key),
         locale: 'en',
-        isPersonalized: false,
       },
       activePublicSection: 'stats',
       activeWorkspaceTab: 'my-requests',
-      state: {
-        personalNavItems: [],
-        insightText: 'ignored',
-        activityProgress: 68,
-      },
       cityActivity: {
         totalActiveCities: 0,
         totalActiveRequests: 0,
@@ -96,7 +90,6 @@ describe('workspacePublicBranch.model', () => {
 
     expect(exploreWithSeed.preferInitialPublicRequests).toBe(true);
     expect(exploreWithSeed.initialPublicRequestsError).toBe(true);
-    expect(introProps.insightText).toBe('');
     expect(introProps.activePublicSection).toBe('stats');
     expect(introProps.activeWorkspaceTab).toBe('my-requests');
     expect(introProps.hideDemandMapOnMobile).toBe(false);

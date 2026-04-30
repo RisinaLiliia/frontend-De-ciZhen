@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import * as workspaceApi from '@/lib/api/workspace';
 
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
 
@@ -8,7 +10,22 @@ import {
   buildWorkspaceOfferRequestsQuery,
 } from './workspaceData.queries';
 
+vi.mock('@/lib/api/workspace', async () => {
+  const actual = await vi.importActual<typeof import('@/lib/api/workspace')>('@/lib/api/workspace');
+
+  return {
+    ...actual,
+    getWorkspaceRequests: vi.fn(),
+  };
+});
+
+const getWorkspaceRequestsMock = vi.mocked(workspaceApi.getWorkspaceRequests);
+
 describe('workspaceData.queries', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('builds public overview and summary query options from filter state', () => {
     const loadPlan = resolveWorkspaceDataPlan({
       isAuthed: false,
@@ -55,7 +72,7 @@ describe('workspaceData.queries', () => {
       'workspace-public-summary',
       WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
     ]);
-    expect(queries.workspaceRequests.enabled).toBe(true);
+    expect(queries.workspaceRequests.enabled).toBe(false);
     expect(queries.workspaceRequests.queryKey).toEqual([
       'workspace-requests',
       'market',
@@ -69,6 +86,40 @@ describe('workspaceData.queries', () => {
       3,
       24,
     ]);
+  });
+
+  it('keeps market workspace requests disabled even for authenticated users', async () => {
+    const loadPlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: true,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'my-requests',
+      activePublicSection: 'requests',
+      requestsScope: 'market',
+      hasAccessToken: true,
+    });
+
+    const queries = buildWorkspaceDataQueries({
+      filter: {
+        cityId: 'berlin',
+        categoryKey: 'design',
+        subcategoryKey: 'logo',
+        page: 3,
+        limit: 24,
+      },
+      loadPlan,
+      hasAccessToken: true,
+      requestsScope: 'market',
+      activeRequestsRole: 'provider',
+      activeRequestsState: 'execution',
+      activeRequestsPeriod: '30d',
+      activeRequestsSort: 'date_desc',
+    });
+
+    expect(queries.workspaceRequests.enabled).toBe(false);
+    await queries.workspaceRequests.queryFn();
+    expect(getWorkspaceRequestsMock).not.toHaveBeenCalled();
   });
 
   it('keeps private overview query inert without an access token', async () => {

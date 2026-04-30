@@ -90,7 +90,6 @@ export function useWorkspacePrivatePresentationFlow({
         const publicIntroProps = buildWorkspacePublicIntroProps({
           branch,
           data,
-          personalNavItems: privateState.personalNavItems,
         });
 
         return (

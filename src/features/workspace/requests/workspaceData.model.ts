@@ -5,6 +5,7 @@ import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types
 import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
 
 type WorkspaceDataPlanArgs = {
+  enabled?: boolean;
   isAuthed: boolean;
   isWorkspaceAuthed: boolean;
   isWorkspacePublicSection: boolean;
@@ -35,6 +36,7 @@ export function buildWorkspaceOfferRequestIds(myOffers: OfferDto[]) {
 }
 
 export function resolveWorkspaceDataPlan({
+  enabled = true,
   isAuthed,
   isWorkspaceAuthed,
   isWorkspacePublicSection,
@@ -44,14 +46,29 @@ export function resolveWorkspaceDataPlan({
   activePublicSection = null,
   hasAccessToken,
 }: WorkspaceDataPlanArgs): WorkspaceDataLoadPlan {
+  if (!enabled) {
+    return {
+      shouldLoadPublicRequests: false,
+      shouldLoadPrivateOverview: false,
+      shouldLoadWorkspaceRequests: false,
+      shouldLoadMyRequests: false,
+      shouldLoadMyOffers: false,
+      shouldLoadMyClientOffers: false,
+      shouldLoadMyContracts: false,
+      shouldLoadFavoriteRequests: false,
+      shouldLoadFavoriteProviders: false,
+      shouldLoadOfferRequests: false,
+      shouldLoadReviews: false,
+      shouldLoadProviders: false,
+    };
+  }
+
   const shouldLoadUnifiedPrivateRequests =
     isWorkspaceAuthed &&
     shouldLoadPrivateData &&
     requestsScope === 'my' &&
     activePublicSection === 'requests';
-  const shouldLoadUnifiedMarketRequests =
-    activePublicSection === 'requests' &&
-    requestsScope === 'market';
+  const shouldLoadUnifiedMarketRequests = false;
   const shouldLoadPublicRequestUserState =
     shouldLoadUnifiedMarketRequests &&
     isAuthed &&

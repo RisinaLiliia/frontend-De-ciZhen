@@ -3,16 +3,16 @@
 import Link from 'next/link';
 
 import { CountBadge } from '@/components/ui/CountBadge';
-import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import {
   formatWorkspaceMobileSheetBadgeValue,
   resolveWorkspaceMobileSheetBadgeValue,
 } from '@/features/workspace/requests/workspaceMobileSectionSheet.model';
+import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
 
 type WorkspaceMobileSectionSheetCardProps = {
-  item: PersonalNavItem;
+  item: WorkspaceNavItem;
   active: boolean;
-  onSelect: (item: PersonalNavItem) => void;
+  onSelect: (item: WorkspaceNavItem) => void;
 };
 
 export function WorkspaceMobileSectionSheetCard({

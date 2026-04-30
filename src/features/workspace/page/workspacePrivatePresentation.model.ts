@@ -5,7 +5,6 @@ import type { ComponentProps } from 'react';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import type { WorkspacePublicIntro } from '@/features/workspace';
-import { buildWorkspaceLocalNavItems } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
 import type { useWorkspaceContentData, useWorkspacePresentation } from '@/features/workspace';
 import type {
   useWorkspacePrivateState,
@@ -32,9 +31,6 @@ type BuildPresentationArgs = {
   privateState: Pick<
     ReturnType<typeof useWorkspacePrivateState>,
     | 'topProviders'
-    | 'activityProgress'
-    | 'personalNavItems'
-    | 'insightText'
     | 'providerStatsPayload'
     | 'clientStatsPayload'
     | 'statsOrder'
@@ -53,7 +49,6 @@ type BuildPublicIntroArgs = {
     | 'isPublicSummaryLoading'
     | 'isPublicSummaryError'
   >;
-  personalNavItems: ReturnType<typeof useWorkspacePrivateState>['personalNavItems'];
 };
 
 type BuildPrivateViewModelArgs = {
@@ -166,10 +161,6 @@ export function buildWorkspacePrivatePresentationArgs({
     activePublicSection: data.activePublicSection,
     activeWorkspaceTab: data.activeWorkspaceTab,
     WorkspacePrivateIntroComponent,
-    personalNavItems: buildWorkspaceLocalNavItems(privateState.personalNavItems),
-    hideNavBadges: data.activePublicSection === 'stats',
-    insightText: privateState.insightText,
-    activityProgress: privateState.activityProgress,
     statsOrder: privateState.statsOrder,
     providerStatsPayload: privateState.providerStatsPayload,
     clientStatsPayload: privateState.clientStatsPayload,
@@ -186,17 +177,12 @@ export function buildWorkspacePrivatePresentationArgs({
 export function buildWorkspacePublicIntroProps({
   branch,
   data,
-  personalNavItems,
 }: BuildPublicIntroArgs): ComponentProps<typeof WorkspacePublicIntro> {
   return {
     t: branch.t,
     locale: branch.locale,
     activePublicSection: data.activePublicSection,
     activeWorkspaceTab: data.activeWorkspaceTab,
-    personalNavItems: buildWorkspaceLocalNavItems(personalNavItems),
-    hideNavBadges: data.activePublicSection === 'stats',
-    insightText: '',
-    activityProgress: 0,
     cityActivity: data.publicCityActivity,
     summary: data.allRequestsSummary,
     isMapLoading: data.isPublicSummaryLoading,

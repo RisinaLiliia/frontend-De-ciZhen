@@ -67,11 +67,11 @@ export function DecisionPanel({
             ? (
               panel.summary.totalNeedsAction > 0
                 ? (locale === 'de'
-                  ? 'Marktsignale brauchen Aufmerksamkeit'
-                  : 'Market signals need attention')
+                  ? 'Vorgänge brauchen Aufmerksamkeit'
+                  : 'Items need attention')
                 : (locale === 'de'
-                  ? 'Keine offenen Marktsignale'
-                  : 'No open market signals')
+                  ? 'Keine offenen Vorgänge'
+                  : 'No open items')
             )
             : (
               panel.summary.totalNeedsAction > 0
@@ -145,17 +145,11 @@ export function DecisionPanel({
 
       <section className="panel my-decision-panel__overview">
         <span className="my-decision-panel__eyebrow">
-          {variant === 'market'
-            ? (locale === 'de' ? 'Marktlage' : 'Market load')
-            : (locale === 'de' ? 'Arbeitslage' : 'Workload')}
+          {locale === 'de' ? 'Arbeitslage' : 'Workload'}
         </span>
         <dl className="my-decision-panel__overview-grid">
           <div>
-            <dt>
-              {variant === 'market'
-                ? (locale === 'de' ? 'Hohe Nachfrage' : 'High demand')
-                : (locale === 'de' ? 'Hohe Dringlichkeit' : 'High urgency')}
-            </dt>
+            <dt>{locale === 'de' ? 'Hohe Dringlichkeit' : 'High urgency'}</dt>
             <dd>{panel.overview.highUrgency}</dd>
           </div>
           <div>

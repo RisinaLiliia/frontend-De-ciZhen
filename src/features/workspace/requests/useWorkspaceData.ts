@@ -23,6 +23,7 @@ import type {
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 
 type Params = {
+  enabled?: boolean;
   filter: WorkspacePublicOverviewQuery;
   locale: string;
   isAuthed: boolean;
@@ -40,6 +41,7 @@ type Params = {
 
 export function useWorkspaceData(params: Params) {
   const {
+    enabled = true,
     filter,
     locale,
     isAuthed,
@@ -58,6 +60,7 @@ export function useWorkspaceData(params: Params) {
   const loadPlan = React.useMemo(
     () =>
       resolveWorkspaceDataPlan({
+        enabled,
         isAuthed,
         isWorkspaceAuthed,
         isWorkspacePublicSection,
@@ -70,6 +73,7 @@ export function useWorkspaceData(params: Params) {
     [
       activeWorkspaceTab,
       activePublicSection,
+      enabled,
       hasAccessToken,
       isAuthed,
       isWorkspaceAuthed,
@@ -82,6 +86,7 @@ export function useWorkspaceData(params: Params) {
   const workspaceDataQueries = React.useMemo(
     () =>
       buildWorkspaceDataQueries({
+        enabled,
         filter,
         loadPlan,
         hasAccessToken,
@@ -93,6 +98,7 @@ export function useWorkspaceData(params: Params) {
       }),
     [
       filter,
+      enabled,
       activeRequestsRole,
       activeRequestsPeriod,
       activeRequestsSort,

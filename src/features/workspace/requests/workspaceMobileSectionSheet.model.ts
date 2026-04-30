@@ -1,10 +1,10 @@
 'use client';
 
-import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
+import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
 
 type SearchParamsLike = Pick<URLSearchParams, 'get'>;
 
-export function parseWorkspaceMobileSheetNumericValue(value: PersonalNavItem['value']) {
+export function parseWorkspaceMobileSheetNumericValue(value: WorkspaceNavItem['value']) {
   if (typeof value === 'number' && Number.isFinite(value)) {
     return Math.max(0, Math.round(value));
   }
@@ -15,7 +15,7 @@ export function parseWorkspaceMobileSheetNumericValue(value: PersonalNavItem['va
   return Number.isFinite(parsed) ? Math.max(0, parsed) : null;
 }
 
-export function resolveWorkspaceMobileSheetBadgeValue(item: PersonalNavItem) {
+export function resolveWorkspaceMobileSheetBadgeValue(item: WorkspaceNavItem) {
   const count = typeof item.badgeValue === 'number'
     ? Math.max(0, Math.round(item.badgeValue))
     : parseWorkspaceMobileSheetNumericValue(item.value);
@@ -40,7 +40,7 @@ export function formatWorkspaceMobileSheetBadgeValue(value: number) {
   return value > 99 ? '99+' : String(value);
 }
 
-export function splitWorkspaceMobileSheetItems(items: PersonalNavItem[]) {
+export function splitWorkspaceMobileSheetItems(items: WorkspaceNavItem[]) {
   return {
     primaryItems: items.filter((item) => item.tier !== 'secondary'),
     secondaryItems: items.filter((item) => item.tier === 'secondary'),
@@ -48,7 +48,7 @@ export function splitWorkspaceMobileSheetItems(items: PersonalNavItem[]) {
 }
 
 export function hasWorkspaceMobileSheetHrefMatch(
-  item: PersonalNavItem,
+  item: WorkspaceNavItem,
   pathname: string,
   searchParams: SearchParamsLike,
 ) {
@@ -75,7 +75,7 @@ export function hasWorkspaceMobileSheetHrefMatch(
 }
 
 export function isWorkspaceMobileSheetItemActive(
-  item: PersonalNavItem,
+  item: WorkspaceNavItem,
   pathname: string,
   searchParams: SearchParamsLike,
 ) {

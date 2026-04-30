@@ -23,10 +23,14 @@ export function useWorkspacePublicPresentationFlow({
   branch,
   data,
 }: UseWorkspacePublicPresentationFlowParams) {
+  const isRequestsSection = data.activePublicSection === 'requests';
   const {
     publicMain: publicRequestsMain,
     publicAside: publicRequestsAside,
-  } = useWorkspacePublicRequestsSection({ branch });
+  } = useWorkspacePublicRequestsSection({
+    branch,
+    enabled: isRequestsSection,
+  });
   const workspaceIntroNode = React.useMemo(
     () => (
       <WorkspacePublicIntro

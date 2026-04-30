@@ -15,9 +15,6 @@ describe('workspacePublicPresentationFlow.model', () => {
       } as never,
       data: {
         activePublicSection: 'stats',
-        activityProgress: 72,
-        personalNavItems: [{ key: 'requests', href: '/workspace', label: 'Requests', icon: null }],
-        insightText: 'Insight',
         cityActivity: [{ cityId: 'berlin', requests: 3 }],
         platformSummary: { totalPublishedRequests: 24, totalActiveProviders: 9 },
         isSummaryLoading: false,
@@ -26,8 +23,6 @@ describe('workspacePublicPresentationFlow.model', () => {
     });
 
     expect(args.activePublicSection).toBe('stats');
-    expect(args.state.activityProgress).toBe(72);
-    expect(args.state.personalNavItems).toHaveLength(1);
     expect(args.cityActivity).toEqual([{ cityId: 'berlin', requests: 3 }]);
     expect(args.isSummaryError).toBe(true);
   });

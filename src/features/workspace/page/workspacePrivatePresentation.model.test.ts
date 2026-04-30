@@ -107,7 +107,6 @@ describe('workspacePrivatePresentation.model', () => {
     const publicIntroProps = buildWorkspacePublicIntroProps({
       branch: branch as never,
       data: data as never,
-      personalNavItems: [],
     });
 
     expect(privateStateArgs.publicProvidersCount).toBe(1);

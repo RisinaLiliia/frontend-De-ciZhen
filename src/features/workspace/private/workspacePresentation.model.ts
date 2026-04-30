@@ -21,10 +21,6 @@ type BuildWorkspacePrivateIntroPropsArgs = {
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
-  personalNavItems: WorkspacePrivateIntroProps['personalNavItems'];
-  hideNavBadges?: boolean;
-  insightText: string;
-  activityProgress: number;
   statsOrder: WorkspacePrivateIntroProps['statsOrder'];
   providerStatsPayload: WorkspacePrivateIntroProps['providerStatsPayload'];
   clientStatsPayload: WorkspacePrivateIntroProps['clientStatsPayload'];
@@ -46,10 +42,6 @@ export function buildWorkspacePrivateIntroProps({
   locale,
   activePublicSection,
   activeWorkspaceTab,
-  personalNavItems,
-  hideNavBadges = false,
-  insightText,
-  activityProgress,
   statsOrder,
   providerStatsPayload,
   clientStatsPayload,
@@ -61,10 +53,6 @@ export function buildWorkspacePrivateIntroProps({
     locale,
     activePublicSection,
     activeWorkspaceTab,
-    personalNavItems,
-    hideNavBadges,
-    insightText,
-    activityProgress,
     statsOrder,
     statsFallbackTitle: t(I18N_KEYS.requestsPage.statsProviderTitle),
     statsTabsLabel: {

@@ -120,8 +120,7 @@ export function RequestsExplorerRequestsContent({
       resultsLabel={t(I18N_KEYS.requestsPage.countLabel)}
       onPrevPage={onPrevPage}
       onNextPage={onNextPage}
-      listDensity={listDensity}
-      initialListDensity={resolveRequestsListDensityForPageSize(limit)}
+      listDensity={listDensity ?? resolveRequestsListDensityForPageSize(limit)}
       onListDensityChange={onListDensityChange}
       showFilterControls={showTopFilters}
       showResultsSummary={showResultsSummary}

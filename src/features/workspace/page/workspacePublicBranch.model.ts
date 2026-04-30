@@ -14,14 +14,12 @@ import {
   WorkspacePageLayout,
   WorkspacePublicIntro,
 } from '@/features/workspace';
-import { buildWorkspaceLocalNavItems } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
 import {
   PUBLIC_REQUESTS_SEED_LIMIT,
 } from '@/features/workspace/page/workspacePage.constants';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 
 type PublicIntroProps = ComponentProps<typeof WorkspacePublicIntro>;
-type PublicStateModel = Pick<PublicIntroProps, 'activityProgress' | 'personalNavItems' | 'insightText'>;
 
 export const EMPTY_PLATFORM_REVIEWS_OVERVIEW = {
   items: [],
@@ -58,10 +56,9 @@ type BuildExploreWithSeedArgs = {
 };
 
 type BuildPublicIntroArgs = {
-  branch: Pick<WorkspaceBranchProps, 't' | 'locale' | 'isPersonalized'>;
+  branch: Pick<WorkspaceBranchProps, 't' | 'locale'>;
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
-  state: PublicStateModel;
   cityActivity: PublicIntroProps['cityActivity'];
   platformSummary: PublicIntroProps['summary'];
   isSummaryLoading: boolean;
@@ -164,7 +161,6 @@ export function buildWorkspacePublicIntroProps({
   branch,
   activePublicSection,
   activeWorkspaceTab,
-  state,
   cityActivity,
   platformSummary,
   isSummaryLoading,
@@ -175,9 +171,6 @@ export function buildWorkspacePublicIntroProps({
     locale: branch.locale,
     activePublicSection,
     activeWorkspaceTab,
-    personalNavItems: buildWorkspaceLocalNavItems(state.personalNavItems),
-    insightText: branch.isPersonalized ? state.insightText : '',
-    activityProgress: state.activityProgress,
     cityActivity,
     summary: platformSummary,
     isMapLoading: isSummaryLoading,

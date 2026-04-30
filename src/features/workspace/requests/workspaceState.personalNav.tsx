@@ -5,7 +5,7 @@ import {
   IconHeart,
   IconUser,
 } from '@/components/ui/icons/icons';
-import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
+import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
@@ -60,7 +60,7 @@ function buildWorkspacePersonalizedSecondaryNavItems({
   | 'setWorkspaceTab'
 > & {
   hasActivePublicSection: boolean;
-}): PersonalNavItem[] {
+}): WorkspaceNavItem[] {
   return [
     {
       key: 'my-requests',
@@ -109,7 +109,7 @@ function buildWorkspaceGuestSecondaryNavItems({
   | 'setWorkspaceTab'
 > & {
   hasActivePublicSection: boolean;
-}): PersonalNavItem[] {
+}): WorkspaceNavItem[] {
   return [
     {
       key: 'guest-profile',
@@ -168,7 +168,7 @@ export function buildWorkspacePersonalNavItems({
   reviewsHref,
   reviewsMatch = 'prefix',
   reviewsForceActive,
-}: BuildWorkspacePersonalNavItemsArgs): PersonalNavItem[] {
+}: BuildWorkspacePersonalNavItemsArgs): WorkspaceNavItem[] {
   const hasActivePublicSection = isWorkspacePublicSection(activePublicSection);
   const publicPrimaryItems = buildPublicNavItems({
     t,
