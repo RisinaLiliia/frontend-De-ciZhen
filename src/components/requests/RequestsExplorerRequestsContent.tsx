@@ -11,6 +11,10 @@ export function RequestsExplorerRequestsContent({
   locale,
   emptyCtaHref,
   showTopFilters,
+  showResultsSummary = true,
+  showResultsCount = true,
+  showDensityToggle = true,
+  showPaginationControls = true,
   categoryOptions,
   serviceOptions,
   cityOptions,
@@ -48,6 +52,7 @@ export function RequestsExplorerRequestsContent({
   page,
   limit,
   setPage,
+  listDensity,
   onListDensityChange,
 }: RequestsExplorerRequestsContentProps) {
   const onPrevPage = () => setPage(Math.max(1, page - 1));
@@ -115,9 +120,14 @@ export function RequestsExplorerRequestsContent({
       resultsLabel={t(I18N_KEYS.requestsPage.countLabel)}
       onPrevPage={onPrevPage}
       onNextPage={onNextPage}
+      listDensity={listDensity}
       initialListDensity={resolveRequestsListDensityForPageSize(limit)}
       onListDensityChange={onListDensityChange}
       showFilterControls={showTopFilters}
+      showResultsSummary={showResultsSummary}
+      showResultsCount={showResultsCount}
+      showDensityToggle={showDensityToggle}
+      showPaginationControls={showPaginationControls}
     />
   );
 }

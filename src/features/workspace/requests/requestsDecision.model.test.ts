@@ -117,4 +117,12 @@ describe('requestsDecision.model', () => {
       panel,
     })).toBe('2 neue Angebote, 1 offene Rückmeldung');
   });
+
+  it('builds market-focused summary copy for public rails', () => {
+    expect(buildDecisionPanelSummaryText({
+      locale: 'de',
+      panel,
+      variant: 'market',
+    })).toBe('1 Segmente sind hoch priorisiert, 2 neue Marktsignale');
+  });
 });

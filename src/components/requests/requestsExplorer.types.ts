@@ -79,6 +79,10 @@ export type RequestsExplorerRequestsContentProps = {
   locale: Locale;
   emptyCtaHref: string;
   showTopFilters: boolean;
+  showResultsSummary?: boolean;
+  showResultsCount?: boolean;
+  showDensityToggle?: boolean;
+  showPaginationControls?: boolean;
   totalResultsLabel: string;
   requests: RequestResponseDto[];
   isLoading: boolean;
@@ -93,5 +97,6 @@ export type RequestsExplorerRequestsContentProps = {
   toggleRequestFavorite: (requestId: string) => Promise<void> | void;
   formatDate: Intl.DateTimeFormat;
   formatPrice: Intl.NumberFormat;
+  listDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
 } & RequestsExplorerSharedFilters & RequestsExplorerCatalogIndex;

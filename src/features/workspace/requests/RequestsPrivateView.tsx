@@ -19,8 +19,11 @@ import type { WorkspaceChatConversationInput } from '@/features/workspace/privat
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
 import { DecisionPanel } from '@/features/workspace/requests/components/DecisionPanel';
+import {
+  WorkspaceRequestsSummaryStrip,
+  WorkspaceRequestsSummaryStripSkeleton,
+} from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
 import type {
-  MyRequestsSummaryItem,
   MyRequestsViewCard,
   MyRequestsViewModel,
 } from '@/features/workspace/requests/myRequestsView.model';
@@ -76,6 +79,7 @@ type RailProps = {
   onStartDecisionMode: () => void;
   onOpenQueueItem: (requestId: string) => void;
   className?: string;
+  variant?: 'private' | 'market';
 };
 
 function useStateFilterMutation() {
@@ -155,50 +159,6 @@ function OwnerMenuActionLink({
         <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">{icon}</span>
       ) : null}
     </Link>
-  );
-}
-
-function SummaryCard({
-  locale,
-  item,
-  onSelect,
-}: {
-  locale: Locale;
-  item: MyRequestsSummaryItem;
-  onSelect: (nextState: string) => void;
-}) {
-  const helperText = (() => {
-    if (locale === 'de') {
-      if (item.key === 'all') return 'Gesamter Überblick';
-      if (item.key === 'attention') return 'Wartet auf Aktion';
-      if (item.key === 'execution') return 'Vertrag läuft';
-      if (item.key === 'completed') return 'Erledigt';
-      return 'Zur Prüfung';
-    }
-
-    if (item.key === 'all') return 'Full overview';
-    if (item.key === 'attention') return 'Needs action';
-    if (item.key === 'execution') return 'Work in progress';
-    if (item.key === 'completed') return 'Done';
-    return 'Pending review';
-  })();
-
-  return (
-    <button
-      type="button"
-      className={[
-        'my-requests-summary__card',
-        `is-${item.key}`,
-        item.isHighlighted ? 'is-active' : '',
-      ].filter(Boolean).join(' ')}
-      onClick={() => onSelect(item.key)}
-      aria-pressed={item.isHighlighted}
-    >
-      <span className="my-requests-summary__label">{item.label}</span>
-      <strong className="my-requests-summary__value">{item.value}</strong>
-      <span className="my-requests-summary__helper">{helperText}</span>
-      <span className="my-requests-summary__accent" aria-hidden="true" />
-    </button>
   );
 }
 
@@ -939,19 +899,6 @@ function WorkspaceRequestStatusSlot({
   );
 }
 
-function SummarySkeleton() {
-  return (
-    <div className="my-requests-summary">
-      {Array.from({ length: 4 }).map((_, index) => (
-        <div key={`summary-skeleton-${index}`} className="my-requests-summary__card">
-          <div className="skeleton h-4 w-20" />
-          <div className="skeleton h-7 w-12" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function CardSkeletonList() {
   return (
     <div className="my-requests-list">
@@ -1039,6 +986,7 @@ export function RequestsPrivateActionRail({
   onStartDecisionMode,
   onOpenQueueItem,
   className,
+  variant = 'private',
 }: RailProps) {
   return (
     <div className={['my-requests-rail', className ?? ''].filter(Boolean).join(' ')}>
@@ -1049,6 +997,7 @@ export function RequestsPrivateActionRail({
         activeRequestId={activeRequestId}
         onStartDecisionMode={onStartDecisionMode}
         onOpenQueueItem={onOpenQueueItem}
+        variant={variant}
       />
     </div>
   );
@@ -1116,12 +1065,12 @@ export function RequestsPrivateView({
 
   return (
     <section className="my-requests-view">
-      {isLoading ? <SummarySkeleton /> : (
-        <div className="my-requests-summary">
-          {(model.response.summary?.items ?? []).map((item) => (
-            <SummaryCard key={item.key} locale={locale} item={item} onSelect={setStateFilter} />
-          ))}
-        </div>
+      {isLoading ? <WorkspaceRequestsSummaryStripSkeleton /> : (
+        <WorkspaceRequestsSummaryStrip
+          locale={locale}
+          items={model.response.summary?.items ?? []}
+          onSelect={setStateFilter}
+        />
       )}
 
       {isLoading ? <CardSkeletonList /> : null}

@@ -49,6 +49,13 @@ export function resolveWorkspaceDataPlan({
     shouldLoadPrivateData &&
     requestsScope === 'my' &&
     activePublicSection === 'requests';
+  const shouldLoadUnifiedMarketRequests =
+    activePublicSection === 'requests' &&
+    requestsScope === 'market';
+  const shouldLoadPublicRequestUserState =
+    shouldLoadUnifiedMarketRequests &&
+    isAuthed &&
+    shouldLoadPrivateData;
   const shouldLoadPrivateOverviewRequests =
     isWorkspaceAuthed &&
     shouldLoadPrivateData &&
@@ -58,7 +65,7 @@ export function resolveWorkspaceDataPlan({
     !isWorkspaceAuthed ||
     shouldLoadPrivateOverviewRequests;
   const shouldLoadPrivateOverview = isWorkspaceAuthed && shouldLoadPrivateData && hasAccessToken;
-  const shouldLoadWorkspaceRequests = shouldLoadUnifiedPrivateRequests;
+  const shouldLoadWorkspaceRequests = shouldLoadUnifiedPrivateRequests || shouldLoadUnifiedMarketRequests;
   const shouldLoadMyRequests =
     !shouldLoadUnifiedPrivateRequests
     && isWorkspaceAuthed
@@ -66,6 +73,7 @@ export function resolveWorkspaceDataPlan({
     && activeWorkspaceTab === 'my-requests';
   const shouldLoadMyOffers =
     shouldLoadUnifiedPrivateRequests
+    || shouldLoadPublicRequestUserState
     || (
       isWorkspaceAuthed
       && shouldLoadPrivateData
@@ -78,8 +86,9 @@ export function resolveWorkspaceDataPlan({
     && shouldLoadPrivateData
     && activeWorkspaceTab === 'completed-jobs';
   const shouldLoadFavoriteRequests =
-    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'favorites';
-  const shouldLoadFavoriteProviders = isAuthed && shouldLoadPrivateData;
+    shouldLoadPublicRequestUserState
+    || (isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'favorites');
+  const shouldLoadFavoriteProviders = isAuthed && shouldLoadPrivateData && !isWorkspacePublicSection;
   const shouldLoadOfferRequests = shouldLoadMyOffers && activeWorkspaceTab === 'my-offers';
   const shouldLoadReviews =
     isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'reviews';

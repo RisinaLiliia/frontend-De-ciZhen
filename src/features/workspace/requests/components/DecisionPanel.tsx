@@ -13,6 +13,7 @@ type DecisionPanelProps = {
   activeRequestId: string | null;
   onStartDecisionMode: () => void;
   onOpenQueueItem: (requestId: string) => void;
+  variant?: 'private' | 'market';
 };
 
 export function DecisionPanel({
@@ -22,12 +23,25 @@ export function DecisionPanel({
   activeRequestId,
   onStartDecisionMode,
   onOpenQueueItem,
+  variant = 'private',
 }: DecisionPanelProps) {
   const summaryText = React.useMemo(
-    () => buildDecisionPanelSummaryText({ locale, panel }),
-    [locale, panel],
+    () => buildDecisionPanelSummaryText({ locale, panel, variant }),
+    [locale, panel, variant],
   );
   const priorityLabel = React.useCallback((level: 'high' | 'medium' | 'low') => {
+    if (variant === 'market') {
+      if (locale === 'de') {
+        if (level === 'high') return 'Hoch';
+        if (level === 'medium') return 'Mittel';
+        return 'Neu';
+      }
+
+      if (level === 'high') return 'High';
+      if (level === 'medium') return 'Medium';
+      return 'New';
+    }
+
     if (locale === 'de') {
       if (level === 'high') return 'Hoch';
       if (level === 'medium') return 'Mittel';
@@ -37,7 +51,7 @@ export function DecisionPanel({
     if (level === 'high') return 'High';
     if (level === 'medium') return 'Medium';
     return 'Low';
-  }, [locale]);
+  }, [locale, variant]);
 
   return (
     <div className="my-decision-panel">
@@ -49,13 +63,25 @@ export function DecisionPanel({
           {panel.summary.totalNeedsAction}
         </strong>
         <h3 className="my-decision-panel__title">
-          {panel.summary.totalNeedsAction > 0
-            ? (locale === 'de'
-              ? 'Vorgänge brauchen deine Entscheidung'
-              : 'Items need your decision')
-            : (locale === 'de'
-              ? 'Keine offenen Entscheidungen'
-              : 'No open decisions')}
+          {variant === 'market'
+            ? (
+              panel.summary.totalNeedsAction > 0
+                ? (locale === 'de'
+                  ? 'Marktsignale brauchen Aufmerksamkeit'
+                  : 'Market signals need attention')
+                : (locale === 'de'
+                  ? 'Keine offenen Marktsignale'
+                  : 'No open market signals')
+            )
+            : (
+              panel.summary.totalNeedsAction > 0
+                ? (locale === 'de'
+                  ? 'Vorgänge brauchen deine Entscheidung'
+                  : 'Items need your decision')
+                : (locale === 'de'
+                  ? 'Keine offenen Entscheidungen'
+                  : 'No open decisions')
+            )}
         </h3>
         <p className="my-decision-panel__text">{summaryText}</p>
         <button
@@ -99,12 +125,16 @@ export function DecisionPanel({
           </ul>
         ) : (
           <p className="my-decision-panel__empty">
-            {locale === 'de'
-              ? 'Deine Vorgänge sind aktuell im Fluss.'
-              : 'Your workflows are currently moving.'}
+            {variant === 'market'
+              ? (locale === 'de'
+                ? 'Der Markt ist aktuell im Fluss.'
+                : 'The market is currently moving.')
+              : (locale === 'de'
+                ? 'Deine Vorgänge sind aktuell im Fluss.'
+                : 'Your workflows are currently moving.')}
           </p>
         )}
-        {isDecisionMode && panel.queue.length > 0 ? (
+        {variant === 'private' && isDecisionMode && panel.queue.length > 0 ? (
           <p className="my-decision-panel__hint">
             {locale === 'de'
               ? 'Decision Mode priorisiert diese Vorgänge automatisch.'
@@ -115,11 +145,17 @@ export function DecisionPanel({
 
       <section className="panel my-decision-panel__overview">
         <span className="my-decision-panel__eyebrow">
-          {locale === 'de' ? 'Arbeitslage' : 'Workload'}
+          {variant === 'market'
+            ? (locale === 'de' ? 'Marktlage' : 'Market load')
+            : (locale === 'de' ? 'Arbeitslage' : 'Workload')}
         </span>
         <dl className="my-decision-panel__overview-grid">
           <div>
-            <dt>{locale === 'de' ? 'Hohe Dringlichkeit' : 'High urgency'}</dt>
+            <dt>
+              {variant === 'market'
+                ? (locale === 'de' ? 'Hohe Nachfrage' : 'High demand')
+                : (locale === 'de' ? 'Hohe Dringlichkeit' : 'High urgency')}
+            </dt>
             <dd>{panel.overview.highUrgency}</dd>
           </div>
           <div>

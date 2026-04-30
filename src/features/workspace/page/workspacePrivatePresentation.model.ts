@@ -203,7 +203,7 @@ export function buildWorkspacePublicIntroProps({
     isMapError: data.isPublicSummaryError,
     hideDemandMapOnMobile: data.activePublicSection !== 'stats',
     quickActionHref: '/request/create',
-    showQuickAction: data.activePublicSection !== 'stats',
+    showQuickAction: data.activePublicSection !== 'stats' && data.activePublicSection !== 'requests',
     preferredRequestsRole: data.workspacePrivateOverview?.preferredRole ?? null,
   };
 }

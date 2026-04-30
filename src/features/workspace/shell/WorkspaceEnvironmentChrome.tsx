@@ -15,6 +15,7 @@ import {
   IconUser,
 } from '@/components/ui/icons/icons';
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
+import { RequestsViewToggle } from '@/components/requests/RequestsViewToggle';
 import { WorkspaceDecisionActionCard } from '@/features/workspace/requests/components/WorkspaceDecisionActionCard';
 import { WorkspaceDecisionRecommendationModal } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationModal';
 import { WorkspaceDecisionRecommendationSection } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationSection';
@@ -27,6 +28,11 @@ import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
+import {
+  resolveRequestsListDensityForPageSize,
+  resolveRequestsPageSizeForDensity,
+  type RequestsListDensity,
+} from '@/lib/requests/pagination';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import {
@@ -105,6 +111,8 @@ type WorkspaceSharedContext = {
     value: string;
     icon: React.ReactNode;
   }>;
+  requestsListDensity: RequestsListDensity | null;
+  onRequestsListDensityChange: ((value: RequestsListDensity) => void) | null;
   copy: WorkspaceModeCopy;
   controls: {
     cityOptions: FilterOption[];
@@ -528,6 +536,15 @@ function buildSharedContextControlsProps({
       ))}
     </nav>
   ) : null;
+  const requestsViewToggle = model.requestsListDensity && model.onRequestsListDensityChange ? (
+    <div className="workspace-shared-context-controls__view-toggle">
+      <RequestsViewToggle
+        t={t}
+        listDensity={model.requestsListDensity}
+        onChange={model.onRequestsListDensityChange}
+      />
+    </div>
+  ) : null;
   const myWorkInlineControl = model.requestsScope === 'my' ? (
     <div className="workspace-shared-context-controls__combined-row">
       {requestsScopeControl}
@@ -583,10 +600,12 @@ function buildSharedContextControlsProps({
           );
         })}
       </div>
+      {requestsViewToggle}
     </div>
-  ) : requestsScopeControl ? (
+  ) : (requestsScopeControl || requestsViewToggle) ? (
     <div className="workspace-shared-context-controls__combined-row">
       {requestsScopeControl}
+      {requestsViewToggle}
     </div>
   ) : model.activePublicSection === 'stats' ? (
     <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
@@ -702,6 +721,7 @@ export function useWorkspaceSharedContext({
     subcategoryKey,
     cityId,
     sortBy,
+    limit,
     categoryOptions,
     cityOptions,
     serviceOptions,
@@ -736,6 +756,10 @@ export function useWorkspaceSharedContext({
   const effectiveRequestRole = requestRole === 'all'
     ? (preferredRequestsRole ?? 'all')
     : requestRole;
+  const requestsListDensity = React.useMemo(
+    () => (activeMode === 'requests' ? resolveRequestsListDensityForPageSize(limit) : null),
+    [activeMode, limit],
+  );
 
   const replaceSharedContext = React.useCallback((mutate: (params: URLSearchParams) => void) => {
     const current = searchParams.toString();
@@ -779,6 +803,12 @@ export function useWorkspaceSharedContext({
     replaceSharedContext((params) => {
       params.set('sort', next);
       params.delete('page');
+    });
+  }, [replaceSharedContext]);
+  const onRequestsListDensityChange = React.useCallback((next: RequestsListDensity) => {
+    replaceSharedContext((params) => {
+      params.set('limit', String(resolveRequestsPageSizeForDensity(next)));
+      params.set('page', '1');
     });
   }, [replaceSharedContext]);
 
@@ -923,6 +953,8 @@ export function useWorkspaceSharedContext({
       scope: activeModeCopy.scope,
       activeModeHref,
       chips,
+      requestsListDensity,
+      onRequestsListDensityChange: activeMode === 'requests' ? onRequestsListDensityChange : null,
       copy,
       controls: {
         cityOptions,
@@ -970,6 +1002,7 @@ export function useWorkspaceSharedContext({
       modeItems,
       onCategoryChangeTracked,
       onCityChangeTracked,
+      onRequestsListDensityChange,
       onPrivateSortChange,
       onRoleChange,
       onSortChangeTracked,
@@ -979,6 +1012,7 @@ export function useWorkspaceSharedContext({
       onRangeChange,
       onReset,
       requestState,
+      requestsListDensity,
       requestsScope,
       serviceOptions,
       scopeSwitch,

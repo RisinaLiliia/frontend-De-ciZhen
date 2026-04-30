@@ -104,6 +104,8 @@ describe('workspacePublicPresentation.model', () => {
       activeWorkspaceTab: 'my-requests',
       exploreWithSeed,
       workspaceIntroNode,
+      publicRequestsMain: null,
+      publicRequestsAside: null,
     });
 
     expect(layoutProps.isWorkspacePublicSection).toBe(true);
@@ -111,6 +113,7 @@ describe('workspacePublicPresentation.model', () => {
     expect(layoutProps.explore).toBe(exploreWithSeed);
     expect(layoutProps.privateMain).toBeNull();
     expect(layoutProps.publicMain).toBeNull();
+    expect(layoutProps.publicAside).toBeUndefined();
     expect(
       buildWorkspacePublicRenderMetricPayload({
         isAuthed: false,

@@ -1,6 +1,7 @@
 'use client';
 
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
+import { RequestsViewToggle } from '@/components/requests/RequestsViewToggle';
 import { CountBadge } from '@/components/ui/CountBadge';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { hasRequestsPagination } from './requestsFilters.model';
@@ -17,41 +18,38 @@ export function RequestsResultsSummary({
   onPrevPage,
   onNextPage,
   onListDensityChange,
+  showResultsCount = true,
+  showDensityToggle = true,
+  showPaginationControls = true,
 }: RequestsResultsSummaryProps) {
-  const hasPagination = hasRequestsPagination({ onPrevPage, onNextPage });
-  const hasDensityToggle = typeof onListDensityChange === 'function';
+  const hasPagination = showPaginationControls && hasRequestsPagination({ onPrevPage, onNextPage });
+  const hasDensityToggle = showDensityToggle && typeof onListDensityChange === 'function';
   const controlsDisabled = isPending;
+  const hasVisibleResultsCount = showResultsCount;
+
+  if (!hasVisibleResultsCount && !hasDensityToggle && !hasPagination) {
+    return null;
+  }
 
   return (
     <div className="requests-filter-summary">
-      <div className="requests-results" aria-live="polite">
-        <span className="typo-small">{resultsLabel ?? t(I18N_KEYS.requestsPage.countLabel)}</span>
-        <CountBadge as="strong" value={totalResults} />
-        {isPending ? <span className="sr-only">{t(I18N_KEYS.requestsPage.updatingLabel)}</span> : null}
-      </div>
+      {hasVisibleResultsCount ? (
+        <div className="requests-results" aria-live="polite">
+          <span className="typo-small">{resultsLabel ?? t(I18N_KEYS.requestsPage.countLabel)}</span>
+          <CountBadge as="strong" value={totalResults} />
+          {isPending ? <span className="sr-only">{t(I18N_KEYS.requestsPage.updatingLabel)}</span> : null}
+        </div>
+      ) : (
+        <div aria-hidden="true" />
+      )}
       {(hasDensityToggle || hasPagination) ? (
         <div className="requests-filter-summary__controls">
           {hasDensityToggle ? (
-            <div className="requests-view-toggle" role="group" aria-label={t(I18N_KEYS.requestsPage.viewModeLabel)}>
-              <button
-                type="button"
-                className={`requests-view-toggle__btn ${listDensity === 'single' ? 'is-active' : ''}`.trim()}
-                aria-label={t(I18N_KEYS.requestsPage.viewModeSingle)}
-                aria-pressed={listDensity === 'single'}
-                onClick={() => onListDensityChange?.('single')}
-              >
-                <span className="requests-layout-icon requests-layout-icon--single" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className={`requests-view-toggle__btn ${listDensity === 'double' ? 'is-active' : ''}`.trim()}
-                aria-label={t(I18N_KEYS.requestsPage.viewModeDouble)}
-                aria-pressed={listDensity === 'double'}
-                onClick={() => onListDensityChange?.('double')}
-              >
-                <span className="requests-layout-icon requests-layout-icon--double" aria-hidden="true" />
-              </button>
-            </div>
+            <RequestsViewToggle
+              t={t}
+              listDensity={listDensity}
+              onChange={(value) => onListDensityChange?.(value)}
+            />
           ) : null}
           {hasPagination ? (
             <RequestsPageNav

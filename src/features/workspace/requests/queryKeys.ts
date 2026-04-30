@@ -47,15 +47,25 @@ export const workspaceQK = {
     scope: string;
     role: string;
     state: string;
+    city: string | null | undefined;
+    category: string | null | undefined;
+    service: string | null | undefined;
     period: string;
     sort: string | null;
+    page: number | undefined;
+    limit: number | undefined;
   }) => [
     'workspace-requests',
     args.scope,
     args.role,
     args.state,
+    args.city ?? 'all-cities',
+    args.category ?? 'all-categories',
+    args.service ?? 'all-services',
     args.period,
     args.sort ?? 'default',
+    args.page ?? 1,
+    args.limit ?? 20,
   ] as const,
   workspaceRequestsPrefix: () => ['workspace-requests'] as const,
   managedRequest: (args: {

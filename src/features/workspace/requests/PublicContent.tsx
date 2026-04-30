@@ -14,6 +14,11 @@ import {
 } from '@/lib/requests/pagination';
 import { WorkspacePublicRequestSessionDialog } from '@/features/workspace/requests/WorkspacePublicRequestSessionDialog';
 import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
+import type { MyRequestsSummaryItem } from '@/features/workspace/requests/myRequestsView.model';
+import {
+  WorkspaceRequestsSummaryStrip,
+  WorkspaceRequestsSummaryStripSkeleton,
+} from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
 import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 
 type StatusFilter = {
@@ -38,9 +43,17 @@ type Props = {
   resultsLabel: string;
   onPrevPage: () => void;
   onNextPage: () => void;
+  listDensity?: RequestsListDensity;
   initialListDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
   showFilterControls?: boolean;
+  showResultsSummary?: boolean;
+  showResultsCount?: boolean;
+  showDensityToggle?: boolean;
+  showPaginationControls?: boolean;
+  summaryItems?: MyRequestsSummaryItem[];
+  onSummaryItemSelect?: (key: string) => void;
+  summaryVariant?: 'private' | 'market';
 };
 
 export function PublicContent({
@@ -60,13 +73,24 @@ export function PublicContent({
   resultsLabel,
   onPrevPage,
   onNextPage,
+  listDensity: controlledListDensity,
   initialListDensity,
   onListDensityChange,
   showFilterControls = true,
+  showResultsSummary = true,
+  showResultsCount = true,
+  showDensityToggle = true,
+  showPaginationControls = true,
+  summaryItems,
+  onSummaryItemSelect,
+  summaryVariant = 'private',
 }: Props) {
   const authStatus = useAuthStatus();
-  const [listDensity, setListDensity] = React.useState<RequestsListDensity>(initialListDensity ?? DEFAULT_REQUESTS_LIST_DENSITY);
+  const [uncontrolledListDensity, setUncontrolledListDensity] = React.useState<RequestsListDensity>(
+    initialListDensity ?? DEFAULT_REQUESTS_LIST_DENSITY,
+  );
   const prevInitialDensityRef = React.useRef<RequestsListDensity | undefined>(initialListDensity);
+  const listDensity = controlledListDensity ?? uncontrolledListDensity;
   const {
     activeChatState,
     activeOfferRequestId,
@@ -83,21 +107,23 @@ export function PublicContent({
   });
 
   React.useEffect(() => {
-    if (initialListDensity == null) return;
+    if (controlledListDensity != null || initialListDensity == null) return;
 
     if (prevInitialDensityRef.current !== initialListDensity) {
-      setListDensity(initialListDensity);
+      setUncontrolledListDensity(initialListDensity);
       prevInitialDensityRef.current = initialListDensity;
     }
-  }, [initialListDensity]);
+  }, [controlledListDensity, initialListDensity]);
 
   const handleListDensityChange = React.useCallback((nextDensity: RequestsListDensity) => {
-    setListDensity((currentDensity) => {
-      if (currentDensity === nextDensity) return currentDensity;
-      return nextDensity;
-    });
+    if (controlledListDensity == null) {
+      setUncontrolledListDensity((currentDensity) => {
+        if (currentDensity === nextDensity) return currentDensity;
+        return nextDensity;
+      });
+    }
     onListDensityChange?.(nextDensity);
-  }, [onListDensityChange]);
+  }, [controlledListDensity, onListDensityChange]);
 
   const requestsListPropsWithOverlay = React.useMemo(
     () => ({
@@ -124,7 +150,7 @@ export function PublicContent({
       listDensity={listDensity}
       onListDensityChange={handleListDensityChange}
     />
-  ) : (
+  ) : showResultsSummary ? (
     <RequestsResultsSummary
       t={t}
       totalResults={filtersProps.totalResults}
@@ -136,20 +162,34 @@ export function PublicContent({
       onPrevPage={onPrevPage}
       onNextPage={onNextPage}
       onListDensityChange={handleListDensityChange}
+      showResultsCount={showResultsCount}
+      showDensityToggle={showDensityToggle}
+      showPaginationControls={showPaginationControls}
     />
-  );
+  ) : null;
 
-  const secondarySlot = (
+  const secondarySlot = statusFilters.length > 0 ? (
     <WorkspaceChipToggleGroup
       items={statusFilters}
       selectedKey={activeStatusFilter}
       onSelect={onStatusFilterChange}
       ariaLabel={t(I18N_KEYS.requestsPage.statusFiltersLabel)}
     />
-  );
+  ) : null;
 
   return (
     <>
+      {isLoading && summaryItems == null && onSummaryItemSelect ? (
+        <WorkspaceRequestsSummaryStripSkeleton />
+      ) : null}
+      {summaryItems && onSummaryItemSelect ? (
+        <WorkspaceRequestsSummaryStrip
+          locale={requestsListProps.locale}
+          items={summaryItems}
+          onSelect={onSummaryItemSelect}
+          variant={summaryVariant}
+        />
+      ) : null}
       <RequestsPaginatedPanel
         t={t}
         page={page}

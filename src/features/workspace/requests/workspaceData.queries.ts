@@ -108,25 +108,37 @@ export function buildWorkspaceDataQueries({
         scope: requestsScope,
         role: activeRequestsRole,
         state: activeRequestsState,
+        city: requestsScope === 'market' ? (filter.cityId ?? null) : null,
+        category: requestsScope === 'market' ? (filter.categoryKey ?? null) : null,
+        service: requestsScope === 'market' ? (filter.subcategoryKey ?? null) : null,
         period: activeRequestsPeriod,
         sort: activeRequestsSort,
+        page: requestsScope === 'market' ? filter.page : undefined,
+        limit: requestsScope === 'market' ? filter.limit : undefined,
       }),
       enabled: loadPlan.shouldLoadWorkspaceRequests,
-      queryFn: () =>
-        hasAccessToken
-          ? withStatusFallback(
-            () =>
-              getWorkspaceRequests({
-                scope: requestsScope,
-                role: activeRequestsRole,
-                state: activeRequestsState,
-                period: activeRequestsPeriod,
-                sort: activeRequestsSort,
-              }),
-            null,
-            [401, 403],
-          )
-          : Promise.resolve(null),
+      queryFn: () => {
+        const query = {
+          scope: requestsScope,
+          role: requestsScope === 'market' ? undefined : activeRequestsRole,
+          state: activeRequestsState,
+          city: requestsScope === 'market' ? (filter.cityId ?? null) : null,
+          category: requestsScope === 'market' ? (filter.categoryKey ?? null) : null,
+          service: requestsScope === 'market' ? (filter.subcategoryKey ?? null) : null,
+          period: activeRequestsPeriod,
+          sort: activeRequestsSort,
+          page: requestsScope === 'market' ? filter.page : undefined,
+          limit: requestsScope === 'market' ? filter.limit : undefined,
+        } as const;
+
+        if (requestsScope === 'market') {
+          return getWorkspaceRequests(query);
+        }
+
+        return hasAccessToken
+          ? withStatusFallback(() => getWorkspaceRequests(query), null, [401, 403])
+          : Promise.resolve(null);
+      },
     }),
     myOffers: {
       queryKey: workspaceQK.offersMy(),

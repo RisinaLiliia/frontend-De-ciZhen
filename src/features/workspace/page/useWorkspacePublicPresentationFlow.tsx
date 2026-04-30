@@ -12,6 +12,7 @@ import {
   buildWorkspacePublicIntroArgs,
   resolveWorkspacePublicPresentationFlowResult,
 } from '@/features/workspace/page/workspacePublicPresentationFlow.model';
+import { useWorkspacePublicRequestsSection } from '@/features/workspace/page/useWorkspacePublicRequestsSection';
 
 type UseWorkspacePublicPresentationFlowParams = {
   branch: WorkspaceBranchProps;
@@ -22,6 +23,10 @@ export function useWorkspacePublicPresentationFlow({
   branch,
   data,
 }: UseWorkspacePublicPresentationFlowParams) {
+  const {
+    publicMain: publicRequestsMain,
+    publicAside: publicRequestsAside,
+  } = useWorkspacePublicRequestsSection({ branch });
   const workspaceIntroNode = React.useMemo(
     () => (
       <WorkspacePublicIntro
@@ -42,10 +47,14 @@ export function useWorkspacePublicPresentationFlow({
         branch,
         data,
         workspaceIntroNode,
+        publicRequestsMain,
+        publicRequestsAside,
       }),
     [
       branch,
       data,
+      publicRequestsAside,
+      publicRequestsMain,
       workspaceIntroNode,
     ],
   );
