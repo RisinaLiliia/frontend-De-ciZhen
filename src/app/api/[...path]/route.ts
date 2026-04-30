@@ -37,6 +37,7 @@ async function handle(request: NextRequest, context: { params: Promise<{ path?: 
     });
 
     const headers = new Headers(response.headers);
+    headers.delete('content-encoding');
     headers.delete('content-length');
     return new NextResponse(response.body, {
       status: response.status,
