@@ -58,8 +58,8 @@ type BuildPublicLayoutPropsArgs = Pick<WorkspaceBranchProps, 't' | 'locale' | 'i
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   exploreWithSeed: ComponentProps<typeof WorkspacePageLayout>['explore'];
   workspaceIntroNode: ReactNode;
-  publicRequestsMain: ReactNode;
-  publicRequestsAside: ReactNode;
+  publicRequestsMain?: ReactNode;
+  publicRequestsAside?: ReactNode;
 };
 
 export function buildWorkspacePublicNavigationArgs({
@@ -167,7 +167,7 @@ export function buildWorkspacePublicLayoutProps({
     intro: workspaceIntroNode,
     explore: exploreWithSeed,
     privateMain: null,
-    publicMain: isUnifiedPublicRequests ? publicRequestsMain : null,
+    publicMain: isUnifiedPublicRequests ? (publicRequestsMain ?? null) : null,
     publicAside: isUnifiedPublicRequests ? publicRequestsAside : undefined,
     workspaceAsideBaseProps: EMPTY_ASIDE_BASE_PROPS,
     pendingFavoriteProviderIds: EMPTY_PROVIDER_IDS,

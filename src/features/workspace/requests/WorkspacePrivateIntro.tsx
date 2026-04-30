@@ -1,6 +1,5 @@
 'use client';
 
-import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import type { TabPayload } from '@/components/requests/requestsStatsPanel.types';
 import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
 import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
@@ -17,10 +16,6 @@ export type WorkspacePrivateIntroProps = {
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
-  personalNavItems: PersonalNavItem[];
-  hideNavBadges?: boolean;
-  insightText: string;
-  activityProgress: number;
   statsOrder: StatsOrderItem[];
   statsFallbackTitle: string;
   statsTabsLabel: {
@@ -32,8 +27,8 @@ export type WorkspacePrivateIntroProps = {
   clientStatsPayload: TabPayload;
   quickActionHref?: string;
   showQuickAction?: boolean;
-  leftColumnSlot?: React.ReactNode;
   navHeaderSlot?: React.ReactNode;
+  leftColumnSlot?: React.ReactNode;
   preferredRequestsRole?: 'customer' | 'provider' | null;
 };
 
@@ -41,12 +36,10 @@ export function WorkspacePrivateIntro({
   locale,
   activePublicSection,
   activeWorkspaceTab,
-  personalNavItems,
-  hideNavBadges = false,
   quickActionHref = '/request/create',
   showQuickAction = true,
-  leftColumnSlot,
   navHeaderSlot,
+  leftColumnSlot,
   preferredRequestsRole = null,
 }: WorkspacePrivateIntroProps) {
   void quickActionHref;
@@ -55,14 +48,7 @@ export function WorkspacePrivateIntro({
   return (
     <section className="workspace-intro-shell">
       <div className="stack-md">
-        <PersonalNavSection
-          className="personal-nav--left"
-          headerSlot={navHeaderSlot}
-          headerPlacement="after"
-          items={personalNavItems}
-          hideDockBadges={hideNavBadges}
-          surface="embedded"
-        />
+        {navHeaderSlot ? navHeaderSlot : null}
         <WorkspaceMobileContextSection
           locale={locale}
           activePublicSection={activePublicSection}

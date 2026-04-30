@@ -44,7 +44,6 @@ type Props = {
   onPrevPage: () => void;
   onNextPage: () => void;
   listDensity?: RequestsListDensity;
-  initialListDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
   showFilterControls?: boolean;
   showResultsSummary?: boolean;
@@ -73,8 +72,7 @@ export function PublicContent({
   resultsLabel,
   onPrevPage,
   onNextPage,
-  listDensity: controlledListDensity,
-  initialListDensity,
+  listDensity = DEFAULT_REQUESTS_LIST_DENSITY,
   onListDensityChange,
   showFilterControls = true,
   showResultsSummary = true,
@@ -86,11 +84,6 @@ export function PublicContent({
   summaryVariant = 'private',
 }: Props) {
   const authStatus = useAuthStatus();
-  const [uncontrolledListDensity, setUncontrolledListDensity] = React.useState<RequestsListDensity>(
-    initialListDensity ?? DEFAULT_REQUESTS_LIST_DENSITY,
-  );
-  const prevInitialDensityRef = React.useRef<RequestsListDensity | undefined>(initialListDensity);
-  const listDensity = controlledListDensity ?? uncontrolledListDensity;
   const {
     activeChatState,
     activeOfferRequestId,
@@ -105,25 +98,9 @@ export function PublicContent({
     locale: requestsListProps.locale,
     requests: requestsListProps.requests,
   });
-
-  React.useEffect(() => {
-    if (controlledListDensity != null || initialListDensity == null) return;
-
-    if (prevInitialDensityRef.current !== initialListDensity) {
-      setUncontrolledListDensity(initialListDensity);
-      prevInitialDensityRef.current = initialListDensity;
-    }
-  }, [controlledListDensity, initialListDensity]);
-
   const handleListDensityChange = React.useCallback((nextDensity: RequestsListDensity) => {
-    if (controlledListDensity == null) {
-      setUncontrolledListDensity((currentDensity) => {
-        if (currentDensity === nextDensity) return currentDensity;
-        return nextDensity;
-      });
-    }
     onListDensityChange?.(nextDensity);
-  }, [controlledListDensity, onListDensityChange]);
+  }, [onListDensityChange]);
 
   const requestsListPropsWithOverlay = React.useMemo(
     () => ({

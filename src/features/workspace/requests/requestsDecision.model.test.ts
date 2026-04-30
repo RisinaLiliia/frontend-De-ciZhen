@@ -123,6 +123,6 @@ describe('requestsDecision.model', () => {
       locale: 'de',
       panel,
       variant: 'market',
-    })).toBe('1 Segmente sind hoch priorisiert, 2 neue Marktsignale');
+    })).toBe('1 hohe Priorität, 2 neu');
   });
 });

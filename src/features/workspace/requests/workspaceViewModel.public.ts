@@ -191,7 +191,7 @@ export function buildWorkspacePublicContentProps({
     resultsLabel: t(I18N_KEYS.requestsPage.resultsLabel),
     onPrevPage,
     onNextPage,
-    initialListDensity: resolveRequestsListDensityForPageSize(limit),
+    listDensity: resolveRequestsListDensityForPageSize(limit),
     onListDensityChange: (density) => setLimit(resolveRequestsPageSizeForDensity(density)),
   };
 }

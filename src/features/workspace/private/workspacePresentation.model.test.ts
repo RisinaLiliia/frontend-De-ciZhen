@@ -12,10 +12,6 @@ describe('workspacePresentation.model', () => {
       locale: 'de',
       activePublicSection: 'requests',
       activeWorkspaceTab: 'my-offers',
-      personalNavItems: [{ key: 'requests', label: 'Requests', href: '/workspace', icon: null }],
-      hideNavBadges: true,
-      insightText: 'Insight',
-      activityProgress: 75,
       statsOrder: [{ tab: 'provider', title: 'Provider stats' }],
       providerStatsPayload: {
         kpis: [],
@@ -71,7 +67,6 @@ describe('workspacePresentation.model', () => {
       showQuickAction: false,
     });
 
-    expect(props.hideNavBadges).toBe(true);
     expect(props.locale).toBe('de');
     expect(props.activePublicSection).toBe('requests');
     expect(props.activeWorkspaceTab).toBe('my-offers');

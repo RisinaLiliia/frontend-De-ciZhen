@@ -13,9 +13,6 @@ describe('workspacePublicDataFlow.model', () => {
       proofIndex: 1,
     } as const;
     const publicState = {
-      personalNavItems: [{ key: 'requests', href: '/workspace', label: 'Requests', icon: null }],
-      activityProgress: 72,
-      insightText: 'Insight',
       publicNavItems: [],
       navHeader: null,
       reviewsMeta: null,
@@ -49,7 +46,5 @@ describe('workspacePublicDataFlow.model', () => {
     expect(result.cityActivity).toEqual([{ cityId: 'berlin', requests: 3 }]);
     expect(result.platformSummary).toEqual({ totalPublishedRequests: 24, totalActiveProviders: 9 });
     expect(result.isSummaryError).toBe(true);
-    expect(result.activityProgress).toBe(72);
-    expect(result.personalNavItems).toEqual(publicState.personalNavItems);
   });
 });

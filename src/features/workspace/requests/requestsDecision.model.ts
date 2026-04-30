@@ -67,28 +67,28 @@ export function buildDecisionPanelSummaryText(params: {
     if (panel.summary.overdueCount > 0) {
       parts.push(
         params.locale === 'de'
-          ? `${panel.summary.overdueCount} Anfragen sind älter als 24 Stunden`
-          : `${panel.summary.overdueCount} requests are older than 24 hours`,
+          ? `${panel.summary.overdueCount} überfällig`
+          : `${panel.summary.overdueCount} overdue`,
       );
     }
 
     if (panel.summary.highPriorityCount > 0) {
       parts.push(
         params.locale === 'de'
-          ? `${panel.summary.highPriorityCount} Segmente sind hoch priorisiert`
-          : `${panel.summary.highPriorityCount} segments are high priority`,
+          ? `${panel.summary.highPriorityCount} hohe Priorität`
+          : `${panel.summary.highPriorityCount} high priority`,
       );
     }
 
     if (panel.summary.newOffersCount > 0) {
       parts.push(
         params.locale === 'de'
-          ? `${panel.summary.newOffersCount} neue Marktsignale`
-          : `${panel.summary.newOffersCount} new market signals`,
+          ? `${panel.summary.newOffersCount} neu`
+          : `${panel.summary.newOffersCount} new`,
       );
     }
 
-    return parts.slice(0, 2).join(params.locale === 'de' ? ', ' : ', ');
+    return parts.slice(0, 2).join(', ');
   }
 
   if (!panel || panel.summary.totalNeedsAction === 0) {

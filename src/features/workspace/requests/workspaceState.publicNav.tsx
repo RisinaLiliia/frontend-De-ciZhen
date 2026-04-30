@@ -6,7 +6,7 @@ import {
   IconStar,
   IconUser,
 } from '@/components/ui/icons/icons';
-import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
+import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import {
@@ -41,7 +41,7 @@ export function buildPublicNavItems({
   publicStatsCount,
   activePublicSection,
   markPublicRequestsSeen,
-}: BuildPublicNavItemsArgs): PersonalNavItem[] {
+}: BuildPublicNavItemsArgs): WorkspaceNavItem[] {
   return [
     {
       key: 'public-requests',
@@ -84,7 +84,7 @@ export function buildWorkspaceReviewsNavItem({
   reviewsHref,
   reviewsMatch,
   reviewsForceActive,
-}: BuildWorkspaceReviewsNavItemArgs): PersonalNavItem {
+}: BuildWorkspaceReviewsNavItemArgs): WorkspaceNavItem {
   return {
     key: 'reviews',
     href: reviewsHref,

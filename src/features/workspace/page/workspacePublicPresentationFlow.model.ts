@@ -12,14 +12,11 @@ import {
 type WorkspacePublicDataFlowResult = ReturnType<typeof useWorkspacePublicDataFlow>;
 
 type BuildWorkspacePublicIntroArgsParams = {
-  branch: Pick<WorkspaceBranchProps, 't' | 'locale' | 'isPersonalized'>;
+  branch: Pick<WorkspaceBranchProps, 't' | 'locale'>;
   data: Pick<
     WorkspacePublicDataFlowResult,
     | 'activePublicSection'
     | 'activeWorkspaceTab'
-    | 'activityProgress'
-    | 'personalNavItems'
-    | 'insightText'
     | 'cityActivity'
     | 'platformSummary'
     | 'isSummaryLoading'
@@ -38,8 +35,8 @@ type ResolveWorkspacePublicPresentationFlowResultParams = {
     | 'exploreWithSeed'
   >;
   workspaceIntroNode: ReactNode;
-  publicRequestsMain: ReactNode;
-  publicRequestsAside: ReactNode;
+  publicRequestsMain?: ReactNode;
+  publicRequestsAside?: ReactNode;
 };
 
 export function buildWorkspacePublicIntroArgs({
@@ -50,11 +47,6 @@ export function buildWorkspacePublicIntroArgs({
     branch,
     activePublicSection: data.activePublicSection,
     activeWorkspaceTab: data.activeWorkspaceTab,
-    state: {
-      activityProgress: data.activityProgress,
-      personalNavItems: data.personalNavItems,
-      insightText: data.insightText,
-    },
     cityActivity: data.cityActivity,
     platformSummary: data.platformSummary,
     isSummaryLoading: data.isSummaryLoading,

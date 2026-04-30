@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
-import { PersonalNavSection, type PersonalNavItem } from '@/components/layout/PersonalNavSection';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/requests/WorkspacePublicDemandMapPanel';
 import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
 import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
@@ -19,18 +18,14 @@ type WorkspacePublicIntroProps = {
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
-  personalNavItems: PersonalNavItem[];
-  hideNavBadges?: boolean;
-  insightText: string;
-  activityProgress: number;
   cityActivity: WorkspacePublicCityActivityDto | null | undefined;
   summary?: WorkspacePublicSummaryDto | null;
   isMapLoading?: boolean;
   isMapError?: boolean;
   quickActionHref?: string;
   showQuickAction?: boolean;
-  leftColumnSlot?: React.ReactNode;
   navHeaderSlot?: React.ReactNode;
+  leftColumnSlot?: React.ReactNode;
   showDemandMap?: boolean;
   hideDemandMapOnMobile?: boolean;
   preferredRequestsRole?: 'customer' | 'provider' | null;
@@ -41,18 +36,14 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   locale,
   activePublicSection,
   activeWorkspaceTab,
-  personalNavItems,
-  hideNavBadges = false,
-  insightText,
-  activityProgress,
   cityActivity,
   summary,
   isMapLoading = false,
   isMapError = false,
   quickActionHref = '/request/create',
   showQuickAction = true,
-  leftColumnSlot,
   navHeaderSlot,
+  leftColumnSlot,
   showDemandMap = true,
   hideDemandMapOnMobile = true,
   preferredRequestsRole = null,
@@ -62,16 +53,7 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   return (
     <section className="workspace-intro-shell">
       <div className="stack-md">
-        <PersonalNavSection
-          className="personal-nav--left"
-          headerSlot={navHeaderSlot}
-          headerPlacement="after"
-          items={personalNavItems}
-          hideDockBadges={hideNavBadges}
-          insightText={insightText}
-          progressPercent={activityProgress}
-          surface="embedded"
-        />
+        {navHeaderSlot ? navHeaderSlot : null}
         <WorkspaceMobileContextSection
           locale={locale}
           activePublicSection={activePublicSection}

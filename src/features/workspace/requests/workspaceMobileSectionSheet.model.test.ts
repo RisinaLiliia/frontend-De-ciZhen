@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { PersonalNavItem } from '@/components/layout/PersonalNavSection';
+import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
 
 import {
   formatWorkspaceMobileSheetBadgeValue,
@@ -11,7 +11,7 @@ import {
   splitWorkspaceMobileSheetItems,
 } from './workspaceMobileSectionSheet.model';
 
-const baseItem: PersonalNavItem = {
+const baseItem: WorkspaceNavItem = {
   key: 'public-requests',
   href: '/workspace?section=requests',
   label: 'Requests',

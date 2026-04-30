@@ -42,6 +42,7 @@ function buildStableWorkspaceQuery<TQueryKey extends readonly unknown[], TQueryF
 }
 
 type WorkspaceDataQueriesArgs = {
+  enabled?: boolean;
   filter: WorkspacePublicOverviewQuery;
   loadPlan: WorkspaceDataLoadPlan;
   hasAccessToken: boolean;
@@ -53,6 +54,7 @@ type WorkspaceDataQueriesArgs = {
 };
 
 export function buildWorkspaceDataQueries({
+  enabled = true,
   filter,
   loadPlan,
   hasAccessToken,
@@ -87,7 +89,7 @@ export function buildWorkspaceDataQueries({
     }),
     publicSummary: buildStableWorkspaceQuery({
       queryKey: workspaceQK.workspacePublicSummary(WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
-      enabled: true,
+      enabled,
       queryFn: () =>
         getWorkspacePublicOverview({
           page: 1,
@@ -118,18 +120,27 @@ export function buildWorkspaceDataQueries({
       }),
       enabled: loadPlan.shouldLoadWorkspaceRequests,
       queryFn: () => {
-        const query = {
-          scope: requestsScope,
-          role: requestsScope === 'market' ? undefined : activeRequestsRole,
-          state: activeRequestsState,
-          city: requestsScope === 'market' ? (filter.cityId ?? null) : null,
-          category: requestsScope === 'market' ? (filter.categoryKey ?? null) : null,
-          service: requestsScope === 'market' ? (filter.subcategoryKey ?? null) : null,
-          period: activeRequestsPeriod,
-          sort: activeRequestsSort,
-          page: requestsScope === 'market' ? filter.page : undefined,
-          limit: requestsScope === 'market' ? filter.limit : undefined,
-        } as const;
+        if (!loadPlan.shouldLoadWorkspaceRequests) {
+          return Promise.resolve(null);
+        }
+
+        const query = requestsScope === 'market'
+          ? {
+            scope: requestsScope,
+            city: filter.cityId ?? null,
+            category: filter.categoryKey ?? null,
+            service: filter.subcategoryKey ?? null,
+            sort: activeRequestsSort,
+            page: filter.page,
+            limit: filter.limit,
+          }
+          : {
+            scope: requestsScope,
+            role: activeRequestsRole,
+            state: activeRequestsState,
+            period: activeRequestsPeriod,
+            sort: activeRequestsSort,
+          };
 
         if (requestsScope === 'market') {
           return getWorkspaceRequests(query);

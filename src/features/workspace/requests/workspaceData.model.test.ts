@@ -89,6 +89,23 @@ describe('workspaceData.model', () => {
     expect(reviewsPlan.shouldLoadMyOffers).toBe(false);
   });
 
+  it('does not load unified market requests in the public requests section', () => {
+    const marketPlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: true,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'my-requests',
+      activePublicSection: 'requests',
+      requestsScope: 'market',
+      hasAccessToken: true,
+    });
+
+    expect(marketPlan.shouldLoadWorkspaceRequests).toBe(false);
+    expect(marketPlan.shouldLoadMyOffers).toBe(false);
+    expect(marketPlan.shouldLoadFavoriteRequests).toBe(false);
+  });
+
   it('builds unique offer request ids preserving first-seen order', () => {
     const ids = buildWorkspaceOfferRequestIds([
       { requestId: 'req-2' },
