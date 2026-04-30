@@ -57,11 +57,15 @@ describe('workspacePublicPresentationFlow.model', () => {
         exploreWithSeed,
       } as never,
       workspaceIntroNode: 'intro',
+      publicRequestsMain: 'main',
+      publicRequestsAside: 'aside',
     });
 
     expect(result.workspaceLayoutProps.intro).toBe('intro');
     expect(result.workspaceLayoutProps.explore).toBe(exploreWithSeed);
     expect(result.workspaceLayoutProps.isWorkspacePublicSection).toBe(true);
+    expect(result.workspaceLayoutProps.publicMain).toBe('main');
+    expect(result.workspaceLayoutProps.publicAside).toBe('aside');
     expect(result.renderMetricPayload).toEqual({
       isAuthed: true,
       activeWorkspaceTab: 'my-requests',

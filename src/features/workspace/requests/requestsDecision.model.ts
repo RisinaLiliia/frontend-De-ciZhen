@@ -50,8 +50,47 @@ export function resolveDecisionActiveRequestId(params: {
 export function buildDecisionPanelSummaryText(params: {
   locale: Locale;
   panel: WorkspaceRequestsDecisionPanelDto | null | undefined;
+  variant?: 'private' | 'market';
 }): string {
   const panel = params.panel;
+  const variant = params.variant ?? 'private';
+
+  if (variant === 'market') {
+    if (!panel || panel.summary.totalNeedsAction === 0) {
+      return params.locale === 'de'
+        ? 'Der Markt ist aktuell im Fluss.'
+        : 'The market is currently moving.';
+    }
+
+    const parts: string[] = [];
+
+    if (panel.summary.overdueCount > 0) {
+      parts.push(
+        params.locale === 'de'
+          ? `${panel.summary.overdueCount} Anfragen sind älter als 24 Stunden`
+          : `${panel.summary.overdueCount} requests are older than 24 hours`,
+      );
+    }
+
+    if (panel.summary.highPriorityCount > 0) {
+      parts.push(
+        params.locale === 'de'
+          ? `${panel.summary.highPriorityCount} Segmente sind hoch priorisiert`
+          : `${panel.summary.highPriorityCount} segments are high priority`,
+      );
+    }
+
+    if (panel.summary.newOffersCount > 0) {
+      parts.push(
+        params.locale === 'de'
+          ? `${panel.summary.newOffersCount} neue Marktsignale`
+          : `${panel.summary.newOffersCount} new market signals`,
+      );
+    }
+
+    return parts.slice(0, 2).join(params.locale === 'de' ? ', ' : ', ');
+  }
+
   if (!panel || panel.summary.totalNeedsAction === 0) {
     return params.locale === 'de'
       ? 'Deine Vorgänge sind aktuell im Fluss.'

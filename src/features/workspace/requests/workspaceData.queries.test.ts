@@ -16,6 +16,8 @@ describe('workspaceData.queries', () => {
       isWorkspacePublicSection: true,
       shouldLoadPrivateData: false,
       activeWorkspaceTab: 'my-requests',
+      activePublicSection: 'requests',
+      requestsScope: 'market',
       hasAccessToken: false,
     });
 
@@ -53,7 +55,20 @@ describe('workspaceData.queries', () => {
       'workspace-public-summary',
       WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
     ]);
-    expect(queries.workspaceRequests.enabled).toBe(false);
+    expect(queries.workspaceRequests.enabled).toBe(true);
+    expect(queries.workspaceRequests.queryKey).toEqual([
+      'workspace-requests',
+      'market',
+      'all',
+      'all',
+      'berlin',
+      'design',
+      'logo',
+      '30d',
+      'default',
+      3,
+      24,
+    ]);
   });
 
   it('keeps private overview query inert without an access token', async () => {
@@ -111,8 +126,13 @@ describe('workspaceData.queries', () => {
       'my',
       'provider',
       'execution',
+      'all-cities',
+      'all-categories',
+      'all-services',
       '7d',
       'deadline',
+      1,
+      20,
     ]);
   });
 

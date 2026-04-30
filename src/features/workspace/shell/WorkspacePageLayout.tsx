@@ -51,6 +51,7 @@ type Props = {
   privateMain: React.ReactNode;
   publicMain: React.ReactNode;
   privateAside?: React.ReactNode;
+  publicAside?: React.ReactNode;
   asideTopSlot?: React.ReactNode;
   overviewDecisionPanelRef?: React.Ref<HTMLElement>;
   workspaceAsideBaseProps: WorkspaceAsideBaseProps;
@@ -71,6 +72,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   privateMain,
   publicMain,
   privateAside,
+  publicAside,
   asideTopSlot,
   overviewDecisionPanelRef,
   workspaceAsideBaseProps,
@@ -136,7 +138,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     </WorkspaceContextAside>
   );
 
-  if (isWorkspacePublicSection) {
+  if (isWorkspacePublicSection && publicMain == null) {
     return (
       <WorkspaceExploreSection
         intro={introWithWorkspaceChrome}
@@ -155,6 +157,18 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
         preferInitialPublicRequests={explore.preferInitialPublicRequests}
         initialPublicRequestsLoading={explore.initialPublicRequestsLoading}
         initialPublicRequestsError={explore.initialPublicRequestsError}
+      />
+    );
+  }
+
+  if (isWorkspacePublicSection) {
+    return (
+      <WorkspaceFrame
+        intro={introWithWorkspaceChrome}
+        main={publicMain}
+        aside={publicAside ?? contextualAside}
+        frameClassName={overviewGridClassName}
+        contentClassName={overviewFrameClassName}
       />
     );
   }

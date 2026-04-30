@@ -10,6 +10,10 @@ export type { WorkspacePrivateIntroProps } from './WorkspacePrivateIntro';
 export { WorkspacePublicIntro } from './WorkspacePublicIntro';
 export { RequestsPrivateActionRail, RequestsPrivateView } from './RequestsPrivateView';
 export { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
+export {
+  WorkspaceRequestsSummaryStrip,
+  WorkspaceRequestsSummaryStripSkeleton,
+} from './components/WorkspaceRequestsSummaryStrip';
 export { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
 export { WorkspacePublicStatsPanel } from './WorkspacePublicStatsPanel';
 export { useWorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsModel';

@@ -38,6 +38,8 @@ type ResolveWorkspacePublicPresentationFlowResultParams = {
     | 'exploreWithSeed'
   >;
   workspaceIntroNode: ReactNode;
+  publicRequestsMain: ReactNode;
+  publicRequestsAside: ReactNode;
 };
 
 export function buildWorkspacePublicIntroArgs({
@@ -64,6 +66,8 @@ export function resolveWorkspacePublicPresentationFlowResult({
   branch,
   data,
   workspaceIntroNode,
+  publicRequestsMain,
+  publicRequestsAside,
 }: ResolveWorkspacePublicPresentationFlowResultParams) {
   return {
     workspaceLayoutProps: buildWorkspacePublicLayoutProps({
@@ -74,6 +78,8 @@ export function resolveWorkspacePublicPresentationFlowResult({
       activeWorkspaceTab: data.activeWorkspaceTab,
       exploreWithSeed: data.exploreWithSeed,
       workspaceIntroNode,
+      publicRequestsMain,
+      publicRequestsAside,
     }),
     renderMetricPayload: buildWorkspacePublicRenderMetricPayload({
       isAuthed: branch.isAuthed,
