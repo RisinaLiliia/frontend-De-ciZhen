@@ -28,6 +28,31 @@ afterEach(() => {
 });
 
 describe('workspace api proxy route', () => {
+  it('drops upstream content-encoding headers before returning proxied responses', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(
+      JSON.stringify({ ok: true }),
+      {
+        status: 200,
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'content-encoding': 'gzip',
+          'content-length': '999',
+        },
+      },
+    )));
+
+    const request = new NextRequest('http://localhost:3000/api/providers');
+
+    const response = await GET(request, {
+      params: Promise.resolve({ path: ['providers'] }),
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-encoding')).toBeNull();
+    expect(response.headers.get('content-length')).toBeNull();
+    await expect(response.json()).resolves.toEqual({ ok: true });
+  });
+
   it('returns a structured 503 payload when the backend is unavailable', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('fetch failed')));
 
