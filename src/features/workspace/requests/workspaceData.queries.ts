@@ -127,6 +127,8 @@ export function buildWorkspaceDataQueries({
         const query = requestsScope === 'market'
           ? {
             scope: requestsScope,
+            state: activeRequestsState,
+            period: activeRequestsPeriod,
             city: filter.cityId ?? null,
             category: filter.categoryKey ?? null,
             service: filter.subcategoryKey ?? null,

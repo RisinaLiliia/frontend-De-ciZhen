@@ -72,7 +72,7 @@ describe('workspaceData.queries', () => {
       'workspace-public-summary',
       WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
     ]);
-    expect(queries.workspaceRequests.enabled).toBe(false);
+    expect(queries.workspaceRequests.enabled).toBe(true);
     expect(queries.workspaceRequests.queryKey).toEqual([
       'workspace-requests',
       'market',
@@ -88,7 +88,7 @@ describe('workspaceData.queries', () => {
     ]);
   });
 
-  it('keeps market workspace requests disabled even for authenticated users', async () => {
+  it('builds market workspace requests from the unified server contract', async () => {
     const loadPlan = resolveWorkspaceDataPlan({
       isAuthed: true,
       isWorkspaceAuthed: true,
@@ -117,9 +117,19 @@ describe('workspaceData.queries', () => {
       activeRequestsSort: 'date_desc',
     });
 
-    expect(queries.workspaceRequests.enabled).toBe(false);
+    expect(queries.workspaceRequests.enabled).toBe(true);
     await queries.workspaceRequests.queryFn();
-    expect(getWorkspaceRequestsMock).not.toHaveBeenCalled();
+    expect(getWorkspaceRequestsMock).toHaveBeenCalledWith({
+      scope: 'market',
+      state: 'execution',
+      period: '30d',
+      city: 'berlin',
+      category: 'design',
+      service: 'logo',
+      sort: 'date_desc',
+      page: 3,
+      limit: 24,
+    });
   });
 
   it('keeps private overview query inert without an access token', async () => {

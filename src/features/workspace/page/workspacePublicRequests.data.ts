@@ -2,14 +2,11 @@
 
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type {
-  WorkspaceRequestsDecisionPanelDto,
   WorkspaceRequestsResponseDto,
 } from '@/lib/api/dto/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 
 type WorkspaceSummaryItems = NonNullable<NonNullable<WorkspaceRequestsResponseDto['summary']>['items']>;
-type WorkspaceDecisionQueueItem = WorkspaceRequestsDecisionPanelDto['queue'][number];
-const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 export type ResolvedWorkspacePublicRequestsData = {
   fallbackRequests: RequestResponseDto[];
@@ -22,7 +19,7 @@ export type ResolvedWorkspacePublicRequestsData = {
   resolvedLimit: number;
   resolvedTotalResults: number;
   summaryItems: NonNullable<WorkspaceRequestsResponseDto['summary']>['items'];
-  decisionPanel: WorkspaceRequestsDecisionPanelDto;
+  decisionPanel: WorkspaceRequestsResponseDto['decisionPanel'];
   publicListPage: number;
   publicListLimit: number;
   publicListTotalPages: number;
@@ -96,112 +93,7 @@ export function normalizeSummaryItems(params: {
     });
   }
 
-  return summaryItems.map((item) => (
-    item.key === 'all'
-      ? {
-        ...item,
-        value: platformTotal,
-      }
-      : item
-  ));
-}
-
-function resolveRequestTimestamp(request: RequestResponseDto) {
-  const source = request.publishedAt ?? request.createdAt ?? request.preferredDate;
-  const timestamp = Date.parse(source);
-  return Number.isFinite(timestamp) ? timestamp : null;
-}
-
-function isRequestOlderThan24h(request: RequestResponseDto, nowMs: number) {
-  const timestamp = resolveRequestTimestamp(request);
-  if (timestamp == null) return false;
-  return nowMs - timestamp >= DAY_IN_MS;
-}
-
-function buildQueueItem(params: {
-  request: RequestResponseDto;
-  actionType: WorkspaceDecisionQueueItem['actionType'];
-  actionLabel: string;
-  actionPriority: number;
-  actionPriorityLevel: WorkspaceDecisionQueueItem['actionPriorityLevel'];
-  actionReason?: string | null;
-}): WorkspaceDecisionQueueItem {
-  const { request, actionType, actionLabel, actionPriority, actionPriorityLevel, actionReason } = params;
-
-  return {
-    requestId: request.id,
-    title: request.title?.trim() || request.subcategoryName?.trim() || request.categoryName?.trim() || request.serviceKey,
-    actionType,
-    actionLabel,
-    actionPriority,
-    actionPriorityLevel,
-    actionReason: actionReason ?? null,
-    categoryLabel: request.categoryName?.trim() || request.categoryKey?.trim() || null,
-    cityLabel: request.cityName?.trim() || request.clientCity?.trim() || null,
-  };
-}
-
-export function buildFallbackDecisionPanel(params: {
-  locale: WorkspaceBranchProps['locale'];
-  requests: RequestResponseDto[];
-  nowMs?: number;
-}): WorkspaceRequestsDecisionPanelDto {
-  const { locale, requests, nowMs = Date.now() } = params;
-  const isDe = locale === 'de';
-  const publishedRequests = requests.filter((request) => request.status === 'published');
-  const matchedRequests = requests.filter((request) => request.status === 'matched');
-  const closedRequests = requests.filter((request) => request.status === 'closed');
-  const overdueRequests = publishedRequests.filter((request) => isRequestOlderThan24h(request, nowMs));
-  const recentPublishedRequests = publishedRequests.filter((request) => !isRequestOlderThan24h(request, nowMs));
-
-  const queue: WorkspaceDecisionQueueItem[] = [
-    ...matchedRequests.map((request) => buildQueueItem({
-      request,
-      actionType: 'confirm_contract',
-      actionLabel: isDe ? 'Vertrag ansehen' : 'View contract',
-      actionPriority: 90,
-      actionPriorityLevel: 'high',
-      actionReason: isDe ? 'Bereits vergeben' : 'Already assigned',
-    })),
-    ...overdueRequests.map((request) => buildQueueItem({
-      request,
-      actionType: 'overdue_followup',
-      actionLabel: isDe ? 'Seit 24h ohne Aktion' : 'No action for 24h',
-      actionPriority: 70,
-      actionPriorityLevel: 'medium',
-      actionReason: isDe ? 'Offene Nachfrage' : 'Open demand',
-    })),
-    ...recentPublishedRequests.map((request) => buildQueueItem({
-      request,
-      actionType: 'review_offers',
-      actionLabel: isDe ? 'Neu im Markt' : 'New on market',
-      actionPriority: 50,
-      actionPriorityLevel: 'low',
-      actionReason: isDe ? 'Neues Marktsignal' : 'New market signal',
-    })),
-  ].slice(0, 5);
-
-  return {
-    summary: {
-      totalNeedsAction: matchedRequests.length + overdueRequests.length + recentPublishedRequests.length,
-      highPriorityCount: matchedRequests.length,
-      newOffersCount: recentPublishedRequests.length,
-      replyRequiredCount: 0,
-      confirmCompletionCount: 0,
-      overdueCount: overdueRequests.length,
-    },
-    primaryAction: {
-      label: isDe ? 'Markt prüfen' : 'Review market',
-      mode: 'decision',
-      targetFilter: 'needs_action',
-    },
-    queue,
-    overview: {
-      highUrgency: publishedRequests.length,
-      inProgress: matchedRequests.length,
-      completedThisPeriod: closedRequests.length,
-    },
-  };
+  return summaryItems;
 }
 
 export function resolveWorkspacePublicRequestsData(params: {
@@ -238,7 +130,9 @@ export function resolveWorkspacePublicRequestsData(params: {
     || (marketRequests.length === 0 && marketResponse.list.total > 0 && fallbackRequests.length > 0);
   const publicRequestsTotal = publicRequestsTotalValue ?? fallbackRequests.length;
   const requests = shouldUseFallbackList ? fallbackRequests : marketRequests;
-  const publicRequestsListItems = filterPublicRequestsByState(publicRequestsItems ?? requests, activeRequestsState);
+  const publicRequestsListItems = shouldUseFallbackList
+    ? filterPublicRequestsByState(publicRequestsItems ?? requests, activeRequestsState)
+    : requests;
   const platformTotal = platformRequestsTotal
     ?? publicRequestsTotal
     ?? marketResponse.list.total;
@@ -272,12 +166,7 @@ export function resolveWorkspacePublicRequestsData(params: {
   const publicListTotalPages = activeRequestsState === 'all'
     ? Math.max(1, Math.ceil(publicRequestsTotal / Math.max(1, publicListLimit)))
     : 1;
-  const decisionPanel = hasMarketContract && marketResponse.decisionPanel
-    ? marketResponse.decisionPanel
-    : buildFallbackDecisionPanel({
-      locale,
-      requests: publicRequestsListItems,
-    });
+  const decisionPanel = hasMarketContract ? (marketResponse.decisionPanel ?? null) : null;
 
   return {
     fallbackRequests,

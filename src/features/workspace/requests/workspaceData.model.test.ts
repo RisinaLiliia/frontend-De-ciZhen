@@ -89,7 +89,7 @@ describe('workspaceData.model', () => {
     expect(reviewsPlan.shouldLoadMyOffers).toBe(false);
   });
 
-  it('does not load unified market requests in the public requests section', () => {
+  it('loads unified market requests in the public requests section', () => {
     const marketPlan = resolveWorkspaceDataPlan({
       isAuthed: true,
       isWorkspaceAuthed: true,
@@ -101,9 +101,9 @@ describe('workspaceData.model', () => {
       hasAccessToken: true,
     });
 
-    expect(marketPlan.shouldLoadWorkspaceRequests).toBe(false);
-    expect(marketPlan.shouldLoadMyOffers).toBe(false);
-    expect(marketPlan.shouldLoadFavoriteRequests).toBe(false);
+    expect(marketPlan.shouldLoadWorkspaceRequests).toBe(true);
+    expect(marketPlan.shouldLoadMyOffers).toBe(true);
+    expect(marketPlan.shouldLoadFavoriteRequests).toBe(true);
   });
 
   it('builds unique offer request ids preserving first-seen order', () => {

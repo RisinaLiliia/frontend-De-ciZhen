@@ -159,7 +159,9 @@ export type WorkspaceMyRequestCardDto = {
   subcategory?: string | null;
   city?: string | null;
   createdAt?: string | null;
+  createdAtIso?: string | null;
   nextEventAt?: string | null;
+  nextEventAtIso?: string | null;
   budget?: number | null;
   agreedPrice?: number | null;
   state: 'open' | 'clarifying' | 'active' | 'completed';
