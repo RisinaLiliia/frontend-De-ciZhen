@@ -5,7 +5,7 @@ import * as React from 'react';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/requests/WorkspacePublicDemandMapPanel';
 import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
-import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
+import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceModeHeader';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { WorkspacePublicCityActivityDto } from '@/lib/api/dto/workspace';

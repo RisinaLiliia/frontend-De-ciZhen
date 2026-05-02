@@ -9,14 +9,10 @@ import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePa
 type WorkspaceSummaryItems = NonNullable<NonNullable<WorkspaceRequestsResponseDto['summary']>['items']>;
 
 export type ResolvedWorkspacePublicRequestsData = {
-  fallbackRequests: RequestResponseDto[];
-  shouldUseFallbackList: boolean;
   requests: RequestResponseDto[];
   publicRequestsListItems: RequestResponseDto[];
   publicRequestsTotal: number;
   platformTotal: number;
-  resolvedPage: number;
-  resolvedLimit: number;
   resolvedTotalResults: number;
   summaryItems: NonNullable<WorkspaceRequestsResponseDto['summary']>['items'];
   decisionPanel: WorkspaceRequestsResponseDto['decisionPanel'];
@@ -24,17 +20,6 @@ export type ResolvedWorkspacePublicRequestsData = {
   publicListLimit: number;
   publicListTotalPages: number;
 };
-
-export function filterPublicRequestsByState(
-  requests: RequestResponseDto[],
-  state: WorkspaceBranchProps['routeState']['activeRequestsState'],
-) {
-  if (state === 'all') return requests;
-  if (state === 'attention') return requests.filter((request) => request.status === 'published');
-  if (state === 'execution') return requests.filter((request) => request.status === 'matched');
-  if (state === 'completed') return requests.filter((request) => request.status === 'closed');
-  return requests;
-}
 
 export function buildFallbackSummaryItems(params: {
   locale: WorkspaceBranchProps['locale'];
@@ -101,7 +86,6 @@ export function resolveWorkspacePublicRequestsData(params: {
   activeRequestsState: WorkspaceBranchProps['routeState']['activeRequestsState'];
   hasMarketContract: boolean;
   marketResponse: WorkspaceRequestsResponseDto;
-  marketRequests: RequestResponseDto[];
   publicRequestsItems?: RequestResponseDto[];
   publicRequestsTotalValue?: number;
   publicRequestsPage?: number;
@@ -115,7 +99,6 @@ export function resolveWorkspacePublicRequestsData(params: {
     activeRequestsState,
     hasMarketContract,
     marketResponse,
-    marketRequests,
     publicRequestsItems,
     publicRequestsTotalValue,
     publicRequestsPage,
@@ -125,58 +108,35 @@ export function resolveWorkspacePublicRequestsData(params: {
     platformRequestsTotal,
   } = params;
 
-  const fallbackRequests = publicRequestsItems ?? [];
-  const shouldUseFallbackList = !hasMarketContract
-    || (marketRequests.length === 0 && marketResponse.list.total > 0 && fallbackRequests.length > 0);
-  const publicRequestsTotal = publicRequestsTotalValue ?? fallbackRequests.length;
-  const requests = shouldUseFallbackList ? fallbackRequests : marketRequests;
-  const publicRequestsListItems = shouldUseFallbackList
-    ? filterPublicRequestsByState(publicRequestsItems ?? requests, activeRequestsState)
-    : requests;
+  const requests = publicRequestsItems ?? [];
+  const publicRequestsTotal = publicRequestsTotalValue ?? requests.length;
+  const publicRequestsListItems = requests;
   const platformTotal = platformRequestsTotal
     ?? publicRequestsTotal
     ?? marketResponse.list.total;
-  const resolvedPage = shouldUseFallbackList
-    ? (publicRequestsPage ?? filtersPage)
-    : (hasMarketContract ? marketResponse.list.page : (publicRequestsPage ?? filtersPage));
-  const resolvedLimit = shouldUseFallbackList
-    ? (publicRequestsLimit ?? filtersLimit)
-    : (hasMarketContract ? marketResponse.list.limit : (publicRequestsLimit ?? filtersLimit));
-  const resolvedTotalResults = shouldUseFallbackList
-    ? publicRequestsTotal
-    : (hasMarketContract ? marketResponse.list.total : publicRequestsTotal);
+  const resolvedTotalResults = publicRequestsTotal;
   const summaryItems = normalizeSummaryItems({
     locale,
     state: activeRequestsState,
     summaryItems: hasMarketContract ? (marketResponse.summary?.items ?? []) : [],
     platformTotal,
-    fallbackRequests,
+    fallbackRequests: requests,
   }) ?? buildFallbackSummaryItems({
       locale,
       state: activeRequestsState,
-      requests: fallbackRequests,
+      requests,
       total: platformTotal,
     });
-  const publicListPage = activeRequestsState === 'all'
-    ? (publicRequestsPage ?? resolvedPage)
-    : 1;
-  const publicListLimit = activeRequestsState === 'all'
-    ? (publicRequestsLimit ?? resolvedLimit)
-    : Math.max(1, publicRequestsListItems.length || resolvedLimit);
-  const publicListTotalPages = activeRequestsState === 'all'
-    ? Math.max(1, Math.ceil(publicRequestsTotal / Math.max(1, publicListLimit)))
-    : 1;
+  const publicListPage = publicRequestsPage ?? filtersPage;
+  const publicListLimit = publicRequestsLimit ?? filtersLimit;
+  const publicListTotalPages = Math.max(1, Math.ceil(publicRequestsTotal / Math.max(1, publicListLimit)));
   const decisionPanel = hasMarketContract ? (marketResponse.decisionPanel ?? null) : null;
 
   return {
-    fallbackRequests,
-    shouldUseFallbackList,
     requests,
     publicRequestsListItems,
     publicRequestsTotal,
     platformTotal,
-    resolvedPage,
-    resolvedLimit,
     resolvedTotalResults,
     summaryItems,
     decisionPanel,

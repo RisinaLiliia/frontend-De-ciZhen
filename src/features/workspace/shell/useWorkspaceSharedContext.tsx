@@ -13,35 +13,8 @@ import {
   IconSettings,
   IconUser,
 } from '@/components/ui/icons/icons';
-import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import { RequestsViewToggle } from '@/components/requests/RequestsViewToggle';
-import { WorkspaceDecisionActionCard } from '@/features/workspace/requests/components/WorkspaceDecisionActionCard';
-import { WorkspaceDecisionRecommendationModal } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationModal';
-import { WorkspaceDecisionRecommendationSection } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationSection';
-import { getWorkspaceStatisticsCopy } from '@/features/workspace/requests/stats/workspaceStatistics.copy';
-import { useWorkspacePublicFilters } from '@/features/workspace/public/useWorkspacePublicFilters';
-import {
-  buildModeHref,
-  getRequestsScopeTitle,
-  getWorkspaceFocusRecommendationCopy,
-  getWorkspaceModeCopy,
-  resolveRangeLabel,
-  type WorkspaceModeCopy,
-} from '@/features/workspace/shell/workspaceEnvironment.copy';
-import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
-import { resolveActiveWorkspaceMode, type WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
-import { RANGE_OPTIONS, rangeLabelShort } from '@/features/workspace/requests/stats/components/statisticsContext.constants';
-import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
-import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
-import type { Locale } from '@/lib/i18n/t';
-import { useT } from '@/lib/i18n/useT';
-import {
-  resolveRequestsListDensityForPageSize,
-  resolveRequestsPageSizeForDensity,
-  type RequestsListDensity,
-} from '@/lib/requests/pagination';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
+import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import {
   buildWorkspaceRequestsScopeHref,
   isWorkspaceTab,
@@ -51,8 +24,32 @@ import {
   type WorkspaceRequestsScope,
   type WorkspaceTab,
 } from '@/features/workspace/requests';
+import { RANGE_OPTIONS, rangeLabelShort } from '@/features/workspace/requests/stats/components/statisticsContext.constants';
+import { getWorkspaceStatisticsCopy } from '@/features/workspace/requests/stats/workspaceStatistics.copy';
+import { useWorkspacePublicFilters } from '@/features/workspace/public/useWorkspacePublicFilters';
+import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
+import {
+  buildModeHref,
+  getRequestsScopeTitle,
+  getWorkspaceModeCopy,
+  resolveRangeLabel,
+  type WorkspaceModeCopy,
+} from '@/features/workspace/shell/workspaceEnvironment.copy';
+import { resolveActiveWorkspaceMode, type WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
+import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
+import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
+import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
+import {
+  resolveRequestsListDensityForPageSize,
+  resolveRequestsPageSizeForDensity,
+  type RequestsListDensity,
+} from '@/lib/requests/pagination';
 
 type Translator = (key: I18nKey) => string;
+
+const CLEAR_QUERY_KEYS = ['city', 'cityId', 'category', 'categoryKey', 'service', 'subcategoryKey', 'serviceKey', 'period', 'range', 'sort', 'page', 'role', 'state'] as const;
 
 export type WorkspaceModeItem = {
   key: WorkspaceModeKey;
@@ -63,7 +60,7 @@ export type WorkspaceModeItem = {
   isActive: boolean;
 };
 
-type WorkspaceSharedContext = {
+export type WorkspaceSharedContext = {
   activeMode: WorkspaceModeKey;
   activePublicSection: PublicWorkspaceSection | null;
   requestsScope: WorkspaceRequestsScope;
@@ -113,7 +110,6 @@ type WorkspaceSharedContext = {
     closeLabel: string;
   };
 };
-const CLEAR_QUERY_KEYS = ['city', 'cityId', 'category', 'categoryKey', 'service', 'subcategoryKey', 'serviceKey', 'period', 'range', 'sort', 'page', 'role', 'state'] as const;
 
 function resolveWorkspaceSharedRange(value: string | null): WorkspaceStatisticsRange {
   if (value === '24h' || value === '7d' || value === '30d' || value === '90d') return value;
@@ -136,22 +132,22 @@ function buildPrivateSortOptions(locale: Locale): FilterOption[] {
     ];
 }
 
-function fillWorkspaceModeTemplate(template: string, mode: string) {
+export function fillWorkspaceModeTemplate(template: string, mode: string) {
   return template.replace('{mode}', mode);
 }
 
-function getWorkspaceChipValue(
+export function getWorkspaceChipValue(
   chips: WorkspaceSharedContext['chips'],
   key: WorkspaceSharedContext['chips'][number]['key'],
 ) {
   return chips.find((chip) => chip.key === key)?.value ?? '';
 }
 
-function joinWorkspaceContext(parts: Array<string | null | undefined>) {
+export function joinWorkspaceContext(parts: Array<string | null | undefined>) {
   return parts.filter((part): part is string => Boolean(part && part.trim())).join(' · ');
 }
 
-function buildSharedContextControlsProps({
+export function buildSharedContextControlsProps({
   model,
   t,
   locale,
@@ -159,7 +155,7 @@ function buildSharedContextControlsProps({
   model: WorkspaceSharedContext;
   t: Translator;
   locale: Locale;
-}) {
+}): React.ComponentProps<typeof WorkspaceSharedContextControls> {
   const cityChip = model.chips.find((chip) => chip.key === 'city');
   const categoryChip = model.chips.find((chip) => chip.key === 'category');
   const serviceChip = model.chips.find((chip) => chip.key === 'service');
@@ -666,291 +662,3 @@ export function useWorkspaceSharedContext({
     ],
   );
 }
-
-export function WorkspaceModeHeader({
-  t,
-  locale,
-  activePublicSection,
-  activeWorkspaceTab,
-  preferredRequestsRole = null,
-}: {
-  t: Translator;
-  locale: Locale;
-  activePublicSection: PublicWorkspaceSection | null;
-  activeWorkspaceTab: WorkspaceTab;
-  preferredRequestsRole?: 'customer' | 'provider' | null;
-}) {
-  const model = useWorkspaceSharedContext({
-    t,
-    locale,
-    activePublicSection,
-    activeWorkspaceTab,
-    preferredRequestsRole,
-  });
-  const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
-  return (
-    <section className="workspace-environment">
-      <div className="workspace-environment__hero">
-        <div className="workspace-environment__copy">
-          <span className="workspace-environment__eyebrow">{model.copy.eyebrow}</span>
-          <div className="workspace-environment__heading">
-            <h1 className="workspace-environment__title">{model.title}</h1>
-            <p className="workspace-environment__description">{model.description}</p>
-          </div>
-        </div>
-        <div className="workspace-environment__shell-hint">{model.copy.shellHint}</div>
-      </div>
-
-      <nav className="workspace-mode-nav" aria-label={locale === 'de' ? 'Workspace-Modi' : 'Workspace modes'}>
-        {model.modeItems.map((item) => (
-          <Link
-            key={item.key}
-            href={item.href}
-            prefetch={false}
-            className={`workspace-mode-nav__item${item.isActive ? ' is-active' : ''}`.trim()}
-            data-mode-key={item.key}
-            aria-current={item.isActive ? 'page' : undefined}
-          >
-            <span className="workspace-mode-nav__icon" aria-hidden="true">{item.icon}</span>
-            <span className="workspace-mode-nav__copy">
-              <strong className="workspace-mode-nav__label">{item.label}</strong>
-              <span className="workspace-mode-nav__description">{item.description}</span>
-            </span>
-          </Link>
-        ))}
-      </nav>
-
-      <WorkspaceSharedContextControls
-        {...sharedContextControlsProps}
-        surface="shell"
-        className="workspace-shared-context-controls--header"
-      />
-    </section>
-  );
-}
-
-export function WorkspaceMobileContextSection({
-  locale,
-  activePublicSection,
-  activeWorkspaceTab,
-  preferredRequestsRole = null,
-}: {
-  locale: Locale;
-  activePublicSection: PublicWorkspaceSection | null;
-  activeWorkspaceTab: WorkspaceTab;
-  preferredRequestsRole?: 'customer' | 'provider' | null;
-}) {
-  const t = useT();
-  const model = useWorkspaceSharedContext({
-    t,
-    locale,
-    activePublicSection,
-    activeWorkspaceTab,
-    preferredRequestsRole,
-  });
-  const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
-
-  return (
-    <div className="workspace-mobile-context-section">
-      <WorkspaceSharedContextControls
-        {...sharedContextControlsProps}
-        surface="shell"
-        mobileBehavior="inline"
-        className="workspace-mobile-context-section__controls"
-      />
-    </div>
-  );
-}
-
-export function WorkspaceContextFocusPanel({
-  t,
-  locale,
-  activePublicSection,
-  activeWorkspaceTab,
-  preferredRequestsRole = null,
-  className,
-  panelRef,
-}: {
-  t: Translator;
-  locale: Locale;
-  activePublicSection: PublicWorkspaceSection | null;
-  activeWorkspaceTab: WorkspaceTab;
-  preferredRequestsRole?: 'customer' | 'provider' | null;
-  className?: string;
-  panelRef?: React.Ref<HTMLElement>;
-}) {
-  const model = useWorkspaceSharedContext({
-    t,
-    locale,
-    activePublicSection,
-    activeWorkspaceTab,
-    preferredRequestsRole,
-  });
-  const statsCopy = React.useMemo(() => getWorkspaceStatisticsCopy(locale), [locale]);
-  const focusCopy = React.useMemo(() => getWorkspaceFocusRecommendationCopy(locale), [locale]);
-  const focusActionLabel = React.useMemo(
-    () => fillWorkspaceModeTemplate(model.copy.rail.openModeTemplate, model.title),
-    [model.copy.rail.openModeTemplate, model.title],
-  );
-  const [isFocusOpen, setIsFocusOpen] = React.useState(false);
-  const [isAnalyzingFocus, setIsAnalyzingFocus] = React.useState(false);
-  const cityValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'city'), [model.chips]);
-  const categoryValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'category'), [model.chips]);
-  const serviceValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'service'), [model.chips]);
-  const rangeValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'range'), [model.chips]);
-  const selectedService = serviceValue !== model.copy.contextFallbacks.service ? serviceValue : '';
-  const selectedCategory = categoryValue !== model.copy.contextFallbacks.category ? categoryValue : '';
-  const selectedCity = cityValue !== model.copy.contextFallbacks.city ? cityValue : '';
-  const focusContextLabel = React.useMemo(() => {
-    const primaryScope = selectedService || selectedCategory;
-    return joinWorkspaceContext([primaryScope, selectedCity]) || focusCopy.defaultContextLabel;
-  }, [focusCopy.defaultContextLabel, selectedCategory, selectedCity, selectedService]);
-  const focusScopeMetric = React.useMemo(
-    () => joinWorkspaceContext([selectedService || selectedCategory, selectedCity, rangeValue]) || model.scope,
-    [model.scope, rangeValue, selectedCategory, selectedCity, selectedService],
-  );
-  const focusModeCopy = focusCopy.modes[model.activeMode];
-  const focusHeroTitle = React.useMemo(
-    () => fillWorkspaceModeTemplate(focusModeCopy.heroTitleTemplate, model.title),
-    [focusModeCopy.heroTitleTemplate, model.title],
-  );
-  const openFocusRecommendation = React.useCallback(() => {
-    setIsAnalyzingFocus(true);
-    setIsFocusOpen(true);
-  }, []);
-  const closeFocusRecommendation = React.useCallback(() => {
-    setIsFocusOpen(false);
-    setIsAnalyzingFocus(false);
-  }, []);
-  const focusScopeText = React.useMemo(() => {
-    if (locale === 'de') {
-      return `Der aktuelle Workspace-Kontext bleibt über alle Modi hinweg aktiv: ${focusScopeMetric}. ${model.scope}.`;
-    }
-    return `The current workspace context stays active across modes: ${focusScopeMetric}. ${model.scope}.`;
-  }, [focusScopeMetric, locale, model.scope]);
-  const focusActionText = React.useMemo(
-    () => `${focusModeCopy.actionText} ${model.railDescription}`,
-    [focusModeCopy.actionText, model.railDescription],
-  );
-
-  React.useEffect(() => {
-    if (!isFocusOpen || !isAnalyzingFocus) return;
-    const timeoutId = window.setTimeout(() => {
-      setIsAnalyzingFocus(false);
-    }, 1400);
-    return () => window.clearTimeout(timeoutId);
-  }, [isAnalyzingFocus, isFocusOpen]);
-
-  return (
-    <section
-      ref={panelRef}
-      className={['panel', 'workspace-context-rail__panel', 'workspace-context-rail__panel--focus', className ?? ''].filter(Boolean).join(' ')}
-    >
-      <span className="workspace-environment__eyebrow">{model.copy.rail.nextStepTitle}</span>
-      <span className="section-subtitle workspace-context-rail__subtitle-placeholder" aria-hidden="true">
-        &nbsp;
-      </span>
-      <WorkspaceDecisionActionCard
-        className="workspace-context-rail__decision"
-        layout="stacked"
-        avatarLabel={statsCopy.insightsAssistantAvatarLabel}
-        name={statsCopy.insightsAssistantName}
-        role={statsCopy.priceRecommendationLabel}
-        description={model.railDescription}
-        actionLabel={focusActionLabel}
-        onActionClick={openFocusRecommendation}
-        actionAriaHasPopup
-      />
-      <WorkspaceDecisionRecommendationModal
-        assistantAvatarLabel={statsCopy.insightsAssistantAvatarLabel}
-        assistantName={statsCopy.insightsAssistantName}
-        assistantRole={statsCopy.priceRecommendationLabel}
-        loadingLabel={focusCopy.loadingLabel}
-        loadingBody={focusCopy.loadingBody}
-        title={focusCopy.title}
-        titleContext={focusContextLabel}
-        summaryLabel={model.title}
-        closeLabel={model.controls.closeLabel}
-        isOpen={isFocusOpen}
-        isLoading={isAnalyzingFocus}
-        onClose={closeFocusRecommendation}
-      >
-        <article className="workspace-decision-modal__content-stack form-stack">
-          <WorkspaceDecisionRecommendationSection
-            badgeLabel={focusCopy.recommendationLabel}
-            badgeTone="info"
-            tone="performance"
-            metric={model.title}
-            title={focusHeroTitle}
-            text={focusModeCopy.heroText}
-            featured
-            className="workspace-decision-modal__hero"
-          />
-          <WorkspaceDecisionRecommendationSection
-            badgeLabel={focusCopy.scopeLabel}
-            badgeTone="info"
-            tone="performance"
-            metric={focusScopeMetric}
-            text={focusScopeText}
-            className="workspace-decision-modal__section"
-          />
-          <WorkspaceDecisionRecommendationSection
-            badgeLabel={focusCopy.actionLabel}
-            badgeTone="success"
-            tone="opportunity"
-            text={focusActionText}
-            className="workspace-decision-modal__section"
-          />
-          <WorkspaceDecisionRecommendationSection
-            badgeLabel={focusCopy.switchLabel}
-            badgeTone="warning"
-            tone="promotion"
-            text={focusModeCopy.switchText}
-            className="workspace-decision-modal__section"
-          />
-        </article>
-      </WorkspaceDecisionRecommendationModal>
-    </section>
-  );
-}
-
-export function WorkspaceContextAside({
-  t,
-  locale,
-  activePublicSection,
-  activeWorkspaceTab,
-  preferredRequestsRole = null,
-  className,
-  topSlot,
-  panelRef,
-  children,
-}: {
-  t: Translator;
-  locale: Locale;
-  activePublicSection: PublicWorkspaceSection | null;
-  activeWorkspaceTab: WorkspaceTab;
-  preferredRequestsRole?: 'customer' | 'provider' | null;
-  className?: string;
-  topSlot?: React.ReactNode;
-  panelRef?: React.Ref<HTMLElement>;
-  children?: React.ReactNode;
-}) {
-  return (
-    <div className={['workspace-statistics-layout', 'workspace-context-rail', className ?? ''].filter(Boolean).join(' ')}>
-      {topSlot}
-
-      <WorkspaceContextFocusPanel
-        t={t}
-        locale={locale}
-        activePublicSection={activePublicSection}
-        activeWorkspaceTab={activeWorkspaceTab}
-        preferredRequestsRole={preferredRequestsRole}
-        panelRef={panelRef}
-      />
-
-      {children}
-    </div>
-  );
-}
-
-export type { WorkspaceModeKey };

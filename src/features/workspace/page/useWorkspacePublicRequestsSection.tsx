@@ -20,7 +20,6 @@ import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePa
 import { useWorkspacePrivateInteractions } from '@/features/workspace/page/useWorkspacePrivateInteractions';
 import {
   buildEmptyWorkspaceMarketRequestsResponse,
-  mapWorkspaceRequestsResponseToPublicRequests,
 } from '@/features/workspace/page/workspacePublicRequests.model';
 import {
   buildWorkspacePublicRequestsAsideProps,
@@ -79,7 +78,11 @@ export function useWorkspacePublicRequestsSection({
 
   const data = useWorkspaceData({
     enabled,
-    filter: filters.filter,
+    filter: {
+      ...filters.filter,
+      state: activeRequestsState,
+      period: activeRequestsPeriod,
+    },
     locale,
     isAuthed,
     isWorkspaceAuthed,
@@ -115,10 +118,6 @@ export function useWorkspacePublicRequestsSection({
     ],
   );
   const hasMarketContract = data.workspaceRequests != null;
-  const marketRequests = React.useMemo(
-    () => mapWorkspaceRequestsResponseToPublicRequests(marketResponse),
-    [marketResponse],
-  );
   const {
     requests,
     publicRequestsListItems,
@@ -134,7 +133,6 @@ export function useWorkspacePublicRequestsSection({
       activeRequestsState,
       hasMarketContract,
       marketResponse,
-      marketRequests,
       publicRequestsItems: data.publicRequests?.items,
       publicRequestsTotalValue: data.publicRequests?.total,
       publicRequestsPage: data.publicRequests?.page,
@@ -154,7 +152,6 @@ export function useWorkspacePublicRequestsSection({
       filters.page,
       hasMarketContract,
       locale,
-      marketRequests,
       marketResponse,
     ],
   );
@@ -233,8 +230,7 @@ export function useWorkspacePublicRequestsSection({
           t,
           locale,
           emptyCtaHref: '/workspace?section=requests&scope=market',
-          showTopFilters: false,
-          showResultsSummary: false,
+          topBar: { kind: 'none' },
           categoryOptions: filters.categoryOptions,
           serviceOptions: filters.serviceOptions,
           cityOptions: filters.cityOptions,

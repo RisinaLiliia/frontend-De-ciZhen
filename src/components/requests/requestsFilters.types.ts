@@ -87,7 +87,9 @@ export type RequestsResultsSummaryProps = Pick<
   | 'onNextPage'
   | 'onListDensityChange'
 > & {
-  showResultsCount?: boolean;
-  showDensityToggle?: boolean;
-  showPaginationControls?: boolean;
+  controls?: {
+    resultsCount?: boolean;
+    densityToggle?: boolean;
+    pagination?: boolean;
+  };
 };

@@ -78,11 +78,17 @@ export type RequestsExplorerRequestsContentProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   emptyCtaHref: string;
-  showTopFilters: boolean;
-  showResultsSummary?: boolean;
-  showResultsCount?: boolean;
-  showDensityToggle?: boolean;
-  showPaginationControls?: boolean;
+  topBar:
+    | { kind: 'filters' }
+    | {
+      kind: 'summary';
+      controls?: {
+        resultsCount?: boolean;
+        densityToggle?: boolean;
+        pagination?: boolean;
+      };
+    }
+    | { kind: 'none' };
   totalResultsLabel: string;
   requests: RequestResponseDto[];
   isLoading: boolean;

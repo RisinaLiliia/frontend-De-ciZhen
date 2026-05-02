@@ -7,7 +7,7 @@ import { useT } from '@/lib/i18n/useT';
 import { useWorkspaceMobileSectionSheet } from '@/features/workspace/requests/useWorkspaceMobileSectionSheet';
 import {
   useWorkspaceSharedContext,
-} from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
+} from '@/features/workspace/shell/useWorkspaceSharedContext';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { Locale } from '@/lib/i18n/t';

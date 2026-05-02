@@ -26,6 +26,18 @@ type StatusFilter = {
   label: string;
 };
 
+type PublicContentHeader =
+  | { kind: 'filters' }
+  | {
+    kind: 'summary';
+    controls?: {
+      resultsCount?: boolean;
+      densityToggle?: boolean;
+      pagination?: boolean;
+    };
+  }
+  | { kind: 'none' };
+
 type Props = {
   t: (key: I18nKey) => string;
   filtersProps: React.ComponentProps<typeof RequestsFilters>;
@@ -45,11 +57,7 @@ type Props = {
   onNextPage: () => void;
   listDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
-  showFilterControls?: boolean;
-  showResultsSummary?: boolean;
-  showResultsCount?: boolean;
-  showDensityToggle?: boolean;
-  showPaginationControls?: boolean;
+  header?: PublicContentHeader;
   summaryItems?: MyRequestsSummaryItem[];
   onSummaryItemSelect?: (key: string) => void;
   summaryVariant?: 'private' | 'market';
@@ -74,11 +82,7 @@ export function PublicContent({
   onNextPage,
   listDensity = DEFAULT_REQUESTS_LIST_DENSITY,
   onListDensityChange,
-  showFilterControls = true,
-  showResultsSummary = true,
-  showResultsCount = true,
-  showDensityToggle = true,
-  showPaginationControls = true,
+  header = { kind: 'filters' },
   summaryItems,
   onSummaryItemSelect,
   summaryVariant = 'private',
@@ -116,7 +120,7 @@ export function PublicContent({
     [authStatus, openOfferSheet, openRequest, requestsListProps],
   );
 
-  const topSlot = showFilterControls ? (
+  const topSlot = header.kind === 'filters' ? (
     <RequestsFilters
       {...filtersProps}
       resultsLabel={resultsLabel}
@@ -127,7 +131,7 @@ export function PublicContent({
       listDensity={listDensity}
       onListDensityChange={handleListDensityChange}
     />
-  ) : showResultsSummary ? (
+  ) : header.kind === 'summary' ? (
     <RequestsResultsSummary
       t={t}
       totalResults={filtersProps.totalResults}
@@ -139,9 +143,7 @@ export function PublicContent({
       onPrevPage={onPrevPage}
       onNextPage={onNextPage}
       onListDensityChange={handleListDensityChange}
-      showResultsCount={showResultsCount}
-      showDensityToggle={showDensityToggle}
-      showPaginationControls={showPaginationControls}
+      controls={header.controls}
     />
   ) : null;
 

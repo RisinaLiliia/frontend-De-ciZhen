@@ -82,12 +82,6 @@ export function mapWorkspaceRequestCardToPublicRequest(
   };
 }
 
-export function mapWorkspaceRequestsResponseToPublicRequests(
-  response: WorkspaceRequestsResponseDto | null | undefined,
-): RequestResponseDto[] {
-  return response?.list.items.map(mapWorkspaceRequestCardToPublicRequest) ?? [];
-}
-
 export function buildEmptyWorkspaceMarketRequestsResponse(params: {
   locale: Locale;
   state: WorkspaceRequestsStateDto;
