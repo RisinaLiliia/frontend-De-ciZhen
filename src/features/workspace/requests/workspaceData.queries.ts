@@ -71,6 +71,8 @@ export function buildWorkspaceDataQueries({
         categoryKey: filter.categoryKey,
         subcategoryKey: filter.subcategoryKey,
         sort: filter.sort,
+        state: filter.state,
+        period: filter.period,
         page: filter.page,
         limit: filter.limit,
         activityRange: undefined,
@@ -83,6 +85,8 @@ export function buildWorkspaceDataQueries({
           categoryKey: filter.categoryKey,
           subcategoryKey: filter.subcategoryKey,
           sort: filter.sort,
+          state: filter.state,
+          period: filter.period,
           page: filter.page,
           limit: filter.limit,
         }),
@@ -127,6 +131,8 @@ export function buildWorkspaceDataQueries({
         const query = requestsScope === 'market'
           ? {
             scope: requestsScope,
+            state: activeRequestsState,
+            period: activeRequestsPeriod,
             city: filter.cityId ?? null,
             category: filter.categoryKey ?? null,
             service: filter.subcategoryKey ?? null,

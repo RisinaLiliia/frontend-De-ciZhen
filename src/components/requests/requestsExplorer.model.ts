@@ -167,7 +167,9 @@ export function buildRequestsExplorerRequestsContentProps({
     t,
     locale,
     emptyCtaHref,
-    showTopFilters,
+    topBar: showTopFilters
+      ? { kind: 'filters' }
+      : { kind: 'summary' },
     ...sharedFilters,
     totalResultsLabel: requestsData.totalResultsLabel,
     requests: requestsData.requests,

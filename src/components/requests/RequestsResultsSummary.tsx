@@ -18,14 +18,12 @@ export function RequestsResultsSummary({
   onPrevPage,
   onNextPage,
   onListDensityChange,
-  showResultsCount = true,
-  showDensityToggle = true,
-  showPaginationControls = true,
+  controls,
 }: RequestsResultsSummaryProps) {
-  const hasPagination = showPaginationControls && hasRequestsPagination({ onPrevPage, onNextPage });
-  const hasDensityToggle = showDensityToggle && typeof onListDensityChange === 'function';
+  const hasPagination = (controls?.pagination ?? true) && hasRequestsPagination({ onPrevPage, onNextPage });
+  const hasDensityToggle = (controls?.densityToggle ?? true) && typeof onListDensityChange === 'function';
   const controlsDisabled = isPending;
-  const hasVisibleResultsCount = showResultsCount;
+  const hasVisibleResultsCount = controls?.resultsCount ?? true;
 
   if (!hasVisibleResultsCount && !hasDensityToggle && !hasPagination) {
     return null;

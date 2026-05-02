@@ -163,6 +163,6 @@ describe('requestsExplorer.model', () => {
     expect(requestsContent.setPage).toBe(setPage);
     expect(requestsContent.totalPages).toBe(6);
     expect(requestsContent.emptyCtaHref).toBe('/workspace?section=requests');
-    expect(requestsContent.showTopFilters).toBe(true);
+    expect(requestsContent.topBar).toEqual({ kind: 'filters' });
   });
 });

@@ -87,6 +87,8 @@ export function buildWorkspacePublicSnapshotQuery() {
       categoryKey: undefined,
       subcategoryKey: undefined,
       sort: 'date_desc',
+      state: undefined,
+      period: undefined,
       page: 1,
       limit: PUBLIC_REQUESTS_SEED_LIMIT,
       activityRange: '30d',

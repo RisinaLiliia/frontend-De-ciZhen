@@ -10,11 +10,7 @@ export function RequestsExplorerRequestsContent({
   t,
   locale,
   emptyCtaHref,
-  showTopFilters,
-  showResultsSummary = true,
-  showResultsCount = true,
-  showDensityToggle = true,
-  showPaginationControls = true,
+  topBar,
   categoryOptions,
   serviceOptions,
   cityOptions,
@@ -122,11 +118,7 @@ export function RequestsExplorerRequestsContent({
       onNextPage={onNextPage}
       listDensity={listDensity ?? resolveRequestsListDensityForPageSize(limit)}
       onListDensityChange={onListDensityChange}
-      showFilterControls={showTopFilters}
-      showResultsSummary={showResultsSummary}
-      showResultsCount={showResultsCount}
-      showDensityToggle={showDensityToggle}
-      showPaginationControls={showPaginationControls}
+      header={topBar}
     />
   );
 }

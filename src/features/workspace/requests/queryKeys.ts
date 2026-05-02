@@ -23,6 +23,8 @@ export const workspaceQK = {
     categoryKey: string | undefined;
     subcategoryKey: string | undefined;
     sort: string | undefined;
+    state: string | undefined;
+    period: string | undefined;
     page: number | undefined;
     limit: number | undefined;
     activityRange: string | undefined;
@@ -33,6 +35,8 @@ export const workspaceQK = {
     args.categoryKey,
     args.subcategoryKey,
     args.sort,
+    args.state,
+    args.period,
     args.page,
     args.limit,
     args.activityRange,

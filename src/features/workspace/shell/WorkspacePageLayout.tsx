@@ -10,10 +10,8 @@ import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
-import {
-  WorkspaceContextAside,
-  WorkspaceModeHeader,
-} from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
+import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
+import { WorkspaceModeHeader } from '@/features/workspace/shell/WorkspaceModeHeader';
 import { isWorkspaceTab } from '@/features/workspace/requests';
 import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 

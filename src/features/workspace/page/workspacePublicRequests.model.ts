@@ -17,6 +17,19 @@ function mapWorkspaceRequestStateToPublicStatus(state: WorkspaceMyRequestCardDto
   return 'published';
 }
 
+function resolveIsoDate(...values: Array<string | null | undefined>) {
+  for (const value of values) {
+    const raw = String(value ?? '').trim();
+    if (!raw) continue;
+    const timestamp = Date.parse(raw);
+    if (Number.isFinite(timestamp)) {
+      return new Date(timestamp).toISOString();
+    }
+  }
+
+  return new Date().toISOString();
+}
+
 export function mapWorkspaceRequestCardToPublicRequest(
   card: WorkspaceMyRequestCardDto,
 ): RequestResponseDto {
@@ -27,7 +40,8 @@ export function mapWorkspaceRequestCardToPublicRequest(
   const description = preview.excerpt?.trim() || null;
   const serviceKey = card.subcategory?.trim() || card.category?.trim() || 'service';
   const categoryKey = card.category?.trim() || preview.categoryLabel?.trim() || 'category';
-  const preferredDate = card.nextEventAt?.trim() || card.createdAt?.trim() || new Date().toISOString();
+  const preferredDate = resolveIsoDate(card.nextEventAtIso, card.nextEventAt, card.createdAtIso, card.createdAt);
+  const createdAt = resolveIsoDate(card.createdAtIso, card.createdAt, preferredDate);
 
   return {
     id: card.requestId,
@@ -58,20 +72,14 @@ export function mapWorkspaceRequestCardToPublicRequest(
     clientIsOnline: null,
     clientLastSeenAt: null,
     status: mapWorkspaceRequestStateToPublicStatus(card.state),
-    publishedAt: card.createdAt?.trim() || null,
+    publishedAt: createdAt,
     cancelledAt: null,
     purgeAt: card.visibility?.purgeAt ?? null,
     isInactive: card.visibility?.isInactive ?? false,
     inactiveReason: card.visibility?.inactiveReason ?? null,
     inactiveMessage: card.visibility?.inactiveMessage?.trim() || null,
-    createdAt: card.createdAt?.trim() || preferredDate,
+    createdAt,
   };
-}
-
-export function mapWorkspaceRequestsResponseToPublicRequests(
-  response: WorkspaceRequestsResponseDto | null | undefined,
-): RequestResponseDto[] {
-  return response?.list.items.map(mapWorkspaceRequestCardToPublicRequest) ?? [];
 }
 
 export function buildEmptyWorkspaceMarketRequestsResponse(params: {

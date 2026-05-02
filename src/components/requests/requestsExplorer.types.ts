@@ -5,6 +5,7 @@ import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dt
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { RequestsListDensity } from '@/lib/requests/pagination';
+import type { RequestsListShellHeaderMode } from '@/components/requests/RequestsListShellHeader';
 
 export type RequestsExplorerProps = {
   t: (key: I18nKey) => string;
@@ -78,11 +79,7 @@ export type RequestsExplorerRequestsContentProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   emptyCtaHref: string;
-  showTopFilters: boolean;
-  showResultsSummary?: boolean;
-  showResultsCount?: boolean;
-  showDensityToggle?: boolean;
-  showPaginationControls?: boolean;
+  topBar: RequestsListShellHeaderMode;
   totalResultsLabel: string;
   requests: RequestResponseDto[];
   isLoading: boolean;

@@ -28,7 +28,7 @@ import {
   WorkspacePrivateIntro,
   WorkspacePublicIntro,
 } from '@/features/workspace';
-import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceEnvironmentChrome';
+import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import { isWorkspaceTab } from '@/features/workspace/requests';

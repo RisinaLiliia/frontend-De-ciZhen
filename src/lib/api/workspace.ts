@@ -18,6 +18,8 @@ export type WorkspacePublicOverviewQuery = {
   categoryKey?: string;
   subcategoryKey?: string;
   sort?: 'date_desc' | 'date_asc' | 'price_asc' | 'price_desc';
+  state?: WorkspaceRequestsStateDto;
+  period?: WorkspaceRequestsPeriodDto;
   priceMin?: number;
   priceMax?: number;
   page?: number;
@@ -32,6 +34,8 @@ function buildWorkspacePublicOverviewQuery(params: WorkspacePublicOverviewQuery 
   if (params.categoryKey) qs.set('categoryKey', params.categoryKey);
   if (params.subcategoryKey) qs.set('subcategoryKey', params.subcategoryKey);
   if (params.sort) qs.set('sort', params.sort);
+  if (params.state) qs.set('state', params.state);
+  if (params.period) qs.set('period', params.period);
   if (typeof params.priceMin === 'number') qs.set('priceMin', String(params.priceMin));
   if (typeof params.priceMax === 'number') qs.set('priceMax', String(params.priceMax));
   if (typeof params.page === 'number') qs.set('page', String(Math.max(1, Math.trunc(params.page))));

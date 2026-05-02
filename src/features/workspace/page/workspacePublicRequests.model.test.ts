@@ -15,8 +15,10 @@ describe('workspacePublicRequests.model', () => {
       category: 'plumbing',
       subcategory: 'drain-cleaning',
       city: 'Berlin',
-      createdAt: '2026-04-20T09:00:00.000Z',
-      nextEventAt: '2026-04-22T10:00:00.000Z',
+      createdAt: '20.04.2026',
+      createdAtIso: '2026-04-20T09:00:00.000Z',
+      nextEventAt: '22.04.2026',
+      nextEventAtIso: '2026-04-22T10:00:00.000Z',
       budget: 140,
       agreedPrice: null,
       state: 'active',
@@ -63,6 +65,45 @@ describe('workspacePublicRequests.model', () => {
       status: 'matched',
       tags: ['Sanitär', 'Rohr'],
     });
+  });
+
+  it('falls back to a valid ISO date when card date labels are localized', () => {
+    const result = mapWorkspaceRequestCardToPublicRequest({
+      id: 'market:req-2',
+      requestId: 'req-2',
+      role: 'provider',
+      title: 'Fenster putzen',
+      category: 'cleaning',
+      city: 'Berlin',
+      createdAt: '20.04.2026',
+      nextEventAt: '22.04.2026',
+      budget: 90,
+      agreedPrice: null,
+      state: 'open',
+      stateLabel: 'Aktiv',
+      progress: {
+        currentStep: 'request',
+        steps: [],
+      },
+      quickActions: [],
+      requestPreview: {
+        href: '/requests/req-2',
+        categoryLabel: 'Reinigung',
+        title: 'Fenster putzen',
+        priceLabel: '90 €',
+        tags: [],
+      },
+      status: { actions: [] },
+      decision: {
+        needsAction: true,
+        actionType: 'review_offers',
+        actionPriority: 40,
+        actionPriorityLevel: 'low',
+      },
+    });
+
+    expect(() => new Date(result.preferredDate).toISOString()).not.toThrow();
+    expect(() => new Date(result.createdAt).toISOString()).not.toThrow();
   });
 
   it('builds a stable empty market response for loading and empty states', () => {
