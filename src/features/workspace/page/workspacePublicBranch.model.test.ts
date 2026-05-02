@@ -25,6 +25,8 @@ describe('workspacePublicBranch.model', () => {
       undefined,
       undefined,
       'date_desc',
+      undefined,
+      undefined,
       1,
       REQUESTS_PAGE_SIZE,
       '30d',
