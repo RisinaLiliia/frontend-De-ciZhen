@@ -25,7 +25,6 @@ import { setAccessToken } from '@/lib/auth/token';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
-import type { Locale } from '@/lib/i18n/t';
 import { getWorkspaceProfile, registerWorkspaceProfile, saveWorkspaceProfile } from '@/lib/api/workspace';
 import { WorkspaceProfileOnboardingAccountSection } from './WorkspaceProfileOnboardingAccountSection';
 import { WorkspaceProfileOnboardingAvatarField } from './WorkspaceProfileOnboardingAvatarField';
@@ -277,7 +276,7 @@ function AuthenticatedWorkspaceProfileForm({
       phone: profile?.common.phone ?? '',
     });
     setCustomerBioDraft(profile?.customer.bio ?? '');
-  }, [profile?.common.city, profile?.common.name, profile?.common.phone, profile?.customer.bio]);
+  }, [profile?.common.city, profile?.common.cityId, profile?.common.name, profile?.common.phone, profile?.customer.bio]);
 
   React.useEffect(() => {
     setProviderForm({
