@@ -13,10 +13,41 @@ export type ProfileOnboardingValues = {
   name: string;
   cityId: string;
   categoryKey: string;
+  serviceKey: string;
   description: string;
   email: string;
   password: string;
   acceptPrivacyPolicy: boolean;
+};
+
+type WorkspaceProfileSaveFormInput = {
+  name: string;
+  city: string;
+  phone: string;
+  customerBio?: string;
+  providerDisplayName?: string;
+  providerBio?: string;
+  providerCategoryKey?: string;
+  providerServiceKey?: string;
+  providerBasePrice?: string;
+  avatarFile?: File | null;
+};
+
+type WorkspaceProfileRegisterFormInput = {
+  viewerMode: 'provider' | 'customer';
+  name: string;
+  email: string;
+  password: string;
+  cityId: string;
+  acceptPrivacyPolicy: boolean;
+  phone?: string;
+  customerBio?: string;
+  providerDisplayName?: string;
+  providerBio?: string;
+  providerCategoryKey?: string;
+  providerServiceKey?: string;
+  providerBasePrice?: string;
+  avatarFile?: File | null;
 };
 
 export function buildProfileOnboardingSchema(t: (key: I18nKey) => string) {
@@ -29,6 +60,7 @@ export function buildProfileOnboardingSchema(t: (key: I18nKey) => string) {
       .max(50, t(I18N_KEYS.auth.errorNameMin)),
     cityId: z.string().trim().min(1, t(I18N_KEYS.requestsPage.profileOnboardingCityRequired)),
     categoryKey: z.string().trim(),
+    serviceKey: z.string().trim(),
     description: z.string().trim().max(500, t(I18N_KEYS.requestsPage.profileOnboardingDescriptionMax)),
     email: z
       .string()
@@ -69,6 +101,28 @@ export function buildProfileCategoryOptions(categories: ServiceCategory[], local
     }));
 }
 
+export function buildProfileServiceOptions(
+  services: Service[],
+  categoryKey: string,
+  locale: Locale,
+): Option[] {
+  if (!categoryKey) return [];
+
+  return services
+    .filter((service) => service.categoryKey === categoryKey)
+    .slice()
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map((service) => ({
+      value: service.key,
+      label: pickI18n(service.i18n, locale) || service.key,
+    }));
+}
+
+export function resolveProfileServiceCategoryKey(serviceKey: string | undefined | null, services: Service[]) {
+  if (!serviceKey) return '';
+  return services.find((service) => service.key === serviceKey)?.categoryKey ?? '';
+}
+
 export function buildPasswordChecks(password: string) {
   return {
     length: password.length >= 8,
@@ -90,22 +144,45 @@ export function resolveCategoryServiceKeys(categoryKey: string, services: Servic
     .map((service) => service.key);
 }
 
-export function resolveProfileOnboardingSubmission(
-  values: ProfileOnboardingValues,
-  cities: City[],
-  locale: Locale,
-  services: Service[],
-  fallbackCityLabel?: string | null,
-) {
-  const selectedCity = cities.find((city) => city.id === values.cityId);
-  const cityLabel = selectedCity
-    ? pickI18n(selectedCity.i18n, locale) || selectedCity.key
-    : fallbackCityLabel?.trim() || null;
-  if (!cityLabel) return null;
+function appendFormValue(formData: FormData, key: string, value: string | boolean | null | undefined) {
+  if (value === undefined || value === null) return;
+  formData.append(key, typeof value === 'boolean' ? String(value) : value);
+}
 
-  return {
-    cityLabel,
-    description: values.description.trim(),
-    selectedCategoryServiceKeys: resolveCategoryServiceKeys(values.categoryKey, services),
-  };
+export function buildWorkspaceProfileSaveFormData(input: WorkspaceProfileSaveFormInput) {
+  const formData = new FormData();
+  appendFormValue(formData, 'name', input.name.trim());
+  appendFormValue(formData, 'city', input.city.trim());
+  appendFormValue(formData, 'phone', input.phone.trim());
+  appendFormValue(formData, 'customerBio', input.customerBio?.trim());
+  appendFormValue(formData, 'providerDisplayName', input.providerDisplayName?.trim());
+  appendFormValue(formData, 'providerBio', input.providerBio?.trim());
+  appendFormValue(formData, 'providerCategoryKey', input.providerCategoryKey?.trim());
+  appendFormValue(formData, 'providerServiceKey', input.providerServiceKey?.trim());
+  appendFormValue(formData, 'providerBasePrice', input.providerBasePrice?.trim());
+  if (input.avatarFile) {
+    formData.append('avatar', input.avatarFile);
+  }
+  return formData;
+}
+
+export function buildWorkspaceProfileRegisterFormData(input: WorkspaceProfileRegisterFormInput) {
+  const formData = new FormData();
+  appendFormValue(formData, 'viewerMode', input.viewerMode);
+  appendFormValue(formData, 'name', input.name.trim());
+  appendFormValue(formData, 'email', input.email.trim());
+  appendFormValue(formData, 'password', input.password);
+  appendFormValue(formData, 'cityId', input.cityId.trim());
+  appendFormValue(formData, 'acceptPrivacyPolicy', input.acceptPrivacyPolicy);
+  appendFormValue(formData, 'phone', input.phone?.trim());
+  appendFormValue(formData, 'customerBio', input.customerBio?.trim());
+  appendFormValue(formData, 'providerDisplayName', input.providerDisplayName?.trim());
+  appendFormValue(formData, 'providerBio', input.providerBio?.trim());
+  appendFormValue(formData, 'providerCategoryKey', input.providerCategoryKey?.trim());
+  appendFormValue(formData, 'providerServiceKey', input.providerServiceKey?.trim());
+  appendFormValue(formData, 'providerBasePrice', input.providerBasePrice?.trim());
+  if (input.avatarFile) {
+    formData.append('avatar', input.avatarFile);
+  }
+  return formData;
 }

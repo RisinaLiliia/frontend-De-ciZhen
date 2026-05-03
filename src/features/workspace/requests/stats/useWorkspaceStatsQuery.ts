@@ -18,6 +18,7 @@ import { hydrateAuthenticatedStatisticsPayload } from './statisticsAuthenticated
 import { parsePageParam } from './statisticsPagination.utils';
 import { workspaceStatisticsDecisionDashboardSchema } from './workspaceStatisticsDecisionDashboard.schema';
 import type { WorkspaceStatisticsFilters } from './workspaceStatistics.model';
+import { resolveWorkspaceViewerMode } from '@/features/workspace/requests/workspaceViewerMode.model';
 
 const CITY_LIST_PAGE_SIZE = 10;
 const CITY_PAGE_QUERY_KEY = 'statsCityPage';
@@ -68,11 +69,9 @@ export function useWorkspaceStatsQuery({
       regionId: null,
       categoryKey: resolveNullableFilter(searchParams.get('categoryKey')),
       subcategoryKey: resolveNullableFilter(searchParams.get('subcategoryKey')),
-      viewerMode: searchParams.get('viewerMode') === 'customer'
-        ? 'customer'
-        : searchParams.get('viewerMode') === 'provider'
-          ? 'provider'
-          : null,
+      viewerMode: searchParams.get('viewerMode')
+        ? resolveWorkspaceViewerMode(searchParams.get('viewerMode'))
+        : null,
     }),
     [searchParams],
   );

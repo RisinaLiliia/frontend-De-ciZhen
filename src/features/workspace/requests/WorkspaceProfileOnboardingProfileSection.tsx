@@ -4,8 +4,6 @@ import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { Field } from '@/components/ui/Field';
 import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
-import { Select, type Option } from '@/components/ui/Select';
-import { Textarea } from '@/components/ui/Textarea';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
@@ -19,15 +17,9 @@ type WorkspaceProfileOnboardingProfileSectionProps = {
   locale: Locale;
   loading: boolean;
   requiredHint: string;
-  categoryOptions: Option[];
   isCitiesLoading: boolean;
   isCitiesError: boolean;
-  isCategoriesLoading: boolean;
-  isCategoriesError: boolean;
   cityIdValue: string;
-  categoryKeyValue: string;
-  nameValue: string;
-  descriptionLength: number;
   avatarPreviewUrl: string | null;
   avatarActionLabel: string;
   avatarInitial: string;
@@ -46,14 +38,9 @@ export function WorkspaceProfileOnboardingProfileSection({
   locale,
   loading,
   requiredHint,
-  categoryOptions,
   isCitiesLoading,
   isCitiesError,
-  isCategoriesLoading,
-  isCategoriesError,
   cityIdValue,
-  categoryKeyValue,
-  descriptionLength,
   avatarPreviewUrl,
   avatarActionLabel,
   avatarInitial,
@@ -122,47 +109,6 @@ export function WorkspaceProfileOnboardingProfileSection({
           </Field>
           {errors.cityId ? <p className="auth-form-error">{errors.cityId.message}</p> : null}
         </div>
-      </div>
-
-      <div className="form-group">
-        <FormLabel htmlFor="workspace-profile-service">
-          {t(I18N_KEYS.requestsPage.categoryLabel)}
-        </FormLabel>
-        <Field>
-          <Select
-            id="workspace-profile-service"
-            options={categoryOptions}
-            value={categoryKeyValue || undefined}
-            onChange={(value) => {
-              setValue('categoryKey', value, {
-                shouldDirty: true,
-                shouldValidate: true,
-              });
-            }}
-            placeholder={isCategoriesLoading ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.request.categoryPlaceholder)}
-            disabled={isCategoriesLoading || isCategoriesError || loading}
-            aria-label={t(I18N_KEYS.requestsPage.categoryLabel)}
-          />
-          <input type="hidden" {...register('categoryKey')} />
-        </Field>
-      </div>
-
-      <div className="form-group">
-        <div className="request-form__meta">
-          <FormLabel htmlFor="workspace-profile-description">
-            {t(I18N_KEYS.provider.bio)}
-          </FormLabel>
-          <span className="form-counter">{descriptionLength}/500</span>
-        </div>
-        <Textarea
-          id="workspace-profile-description"
-          maxLength={500}
-          aria-invalid={errors.description ? 'true' : 'false'}
-          placeholder={t(I18N_KEYS.client.profileBioPlaceholder)}
-          {...register('description')}
-        />
-        <p className="typo-small">{t(I18N_KEYS.requestsPage.profileOnboardingDescriptionHint)}</p>
-        {errors.description ? <p className="auth-form-error">{errors.description.message}</p> : null}
       </div>
     </section>
   );

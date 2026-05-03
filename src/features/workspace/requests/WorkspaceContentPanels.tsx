@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import { RequestsList } from '@/components/requests/RequestsList';
 import { WorkspaceReviewsPanel } from '@/components/reviews/WorkspaceReviewsPanel';
@@ -10,6 +11,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
 import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 import { WorkspaceProfileOnboardingForm } from './WorkspaceProfileOnboardingForm';
+import { resolveWorkspaceViewerMode } from './workspaceViewerMode.model';
 import type { FavoritesView, WorkspaceTab } from './workspace.types';
 
 type WorkspaceContentPanelsProps = {
@@ -65,6 +67,9 @@ export function WorkspaceContentPanels({
   favoriteProvidersNode,
   reviewsState,
 }: WorkspaceContentPanelsProps) {
+  const searchParams = useSearchParams();
+  const viewerMode = resolveWorkspaceViewerMode(searchParams.get('viewerMode'));
+
   return (
     <section
       id="requests-list"
@@ -177,7 +182,7 @@ export function WorkspaceContentPanels({
         </div>
       ) : null}
 
-      {activeWorkspaceTab === 'profile' ? <WorkspaceProfileOnboardingForm /> : null}
+      {activeWorkspaceTab === 'profile' ? <WorkspaceProfileOnboardingForm viewerMode={viewerMode} /> : null}
     </section>
   );
 }

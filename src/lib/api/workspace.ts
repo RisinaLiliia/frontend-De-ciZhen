@@ -1,5 +1,9 @@
-import { apiGet, apiPost } from '@/lib/api/http';
+import { apiGet, apiPatchForm, apiPost, apiPostForm } from '@/lib/api/http';
 import type {
+  AuthResponseDto,
+} from '@/lib/api/dto/auth';
+import type {
+  WorkspaceProfileDto,
   WorkspacePrivateOverviewDto,
   WorkspacePublicOverviewDto,
   WorkspacePublicRequestsBatchResponseDto,
@@ -143,4 +147,16 @@ export function getWorkspacePublicRequestsBatch(ids: string[]) {
     '/workspace/public/requests-batch',
     { ids: normalizedIds },
   );
+}
+
+export function getWorkspaceProfile() {
+  return apiGet<WorkspaceProfileDto>('/workspace/profile');
+}
+
+export function saveWorkspaceProfile(payload: FormData) {
+  return apiPatchForm<WorkspaceProfileDto>('/workspace/profile', payload);
+}
+
+export function registerWorkspaceProfile(payload: FormData) {
+  return apiPostForm<AuthResponseDto>('/workspace/profile/register', payload);
 }

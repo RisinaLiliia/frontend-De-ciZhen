@@ -45,18 +45,23 @@ export function useWorkspaceRouteState({
   const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
   const sectionParam = searchParams.get('section');
   const resolvedPublicSection = forcedPublicSection ?? resolvePublicWorkspaceSection(sectionParam);
+  const isProfilePrivateMode =
+    !forcedWorkspaceTab &&
+    !hasExplicitWorkspaceTab &&
+    isAuthed &&
+    resolvedPublicSection === 'profile';
   const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), isAuthed);
   const isRequestsSection = !forcedWorkspaceTab && !hasExplicitWorkspaceTab && resolvedPublicSection === 'requests';
   const isPrivateRequestsScope = isRequestsSection && requestsScope === 'my';
 
-  const activePublicSection = forcedWorkspaceTab || hasExplicitWorkspaceTab
+  const activePublicSection = forcedWorkspaceTab || hasExplicitWorkspaceTab || isProfilePrivateMode
     ? null
     : resolvedPublicSection;
   const isWorkspacePublicSection = activePublicSection !== null && !isPrivateRequestsScope;
 
   const activeWorkspaceTab = React.useMemo(
-    () => forcedWorkspaceTab ?? resolveWorkspaceTab(tabParam),
-    [forcedWorkspaceTab, tabParam],
+    () => forcedWorkspaceTab ?? (isProfilePrivateMode ? 'profile' : resolveWorkspaceTab(tabParam)),
+    [forcedWorkspaceTab, isProfilePrivateMode, tabParam],
   );
   const activeStatusFilter = React.useMemo(
     () => resolveStatusFilter(searchParams.get('status')),
