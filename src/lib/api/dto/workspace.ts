@@ -51,6 +51,34 @@ export type WorkspacePublicRequestsBatchResponseDto = {
   missingIds: string[];
 };
 
+export type WorkspaceProfileViewerModeDto = 'provider' | 'customer';
+
+export type WorkspaceProfileDto = {
+  common: {
+    name: string;
+    email: string;
+    city: string | null;
+    cityId: string | null;
+    phone: string | null;
+    avatarUrl: string | null;
+  };
+  customer: {
+    bio: string | null;
+  };
+  provider: {
+    displayName: string | null;
+    bio: string | null;
+    cityId: string | null;
+    selectedCategoryKey: string | null;
+    selectedServiceKey: string | null;
+    serviceKeys: string[];
+    basePrice: number | null;
+    status: 'draft' | 'active' | 'suspended' | null;
+    isBlocked: boolean;
+    isProfileComplete: boolean;
+  };
+};
+
 export type WorkspaceRequestsScopeDto = 'market' | 'my';
 export type WorkspaceRequestsRoleDto = 'all' | 'customer' | 'provider';
 export type WorkspaceRequestsStateDto = 'all' | 'attention' | 'execution' | 'completed';

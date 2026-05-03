@@ -38,6 +38,17 @@ export function useWorkspaceProfileOnboardingAvatar() {
     });
   }, []);
 
+  const resetAvatarSelection = React.useCallback(() => {
+    setAvatarFile(null);
+    setAvatarPreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    if (avatarInputRef.current) {
+      avatarInputRef.current.value = '';
+    }
+  }, []);
+
   return {
     avatarFile,
     avatarPreviewUrl,
@@ -45,5 +56,6 @@ export function useWorkspaceProfileOnboardingAvatar() {
     onAvatarSelected,
     openAvatarPicker,
     onAvatarClear,
+    resetAvatarSelection,
   };
 }

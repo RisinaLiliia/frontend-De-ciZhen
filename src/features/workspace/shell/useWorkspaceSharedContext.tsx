@@ -18,6 +18,7 @@ import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import {
   buildWorkspaceRequestsScopeHref,
   isWorkspaceTab,
+  resolveWorkspaceViewerMode,
   resolveWorkspaceRequestsRole,
   resolveWorkspaceRequestsScope,
   resolveWorkspaceRequestsState,
@@ -63,6 +64,7 @@ export type WorkspaceModeItem = {
 export type WorkspaceSharedContext = {
   activeMode: WorkspaceModeKey;
   activePublicSection: PublicWorkspaceSection | null;
+  activeWorkspaceTab: WorkspaceTab;
   requestsScope: WorkspaceRequestsScope;
   scopeSwitch: Array<{
     key: WorkspaceRequestsScope;
@@ -185,7 +187,49 @@ export function buildSharedContextControlsProps({
       />
     </div>
   ) : null;
-  const myWorkInlineControl = model.requestsScope === 'my' ? (
+  const viewerModeInlineControl = (
+    <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
+      <button
+        type="button"
+        aria-pressed={model.controls.viewerMode === 'provider'}
+        className={`howitworks-tab ${model.controls.viewerMode === 'provider' ? 'is-active' : ''}`.trim()}
+        onClick={() => model.controls.onViewerModeChange('provider')}
+      >
+        {statsCopy.viewerModeProviderLabel}
+      </button>
+      <button
+        type="button"
+        aria-pressed={model.controls.viewerMode === 'customer'}
+        className={`howitworks-tab ${model.controls.viewerMode === 'customer' ? 'is-active' : ''}`.trim()}
+        onClick={() => model.controls.onViewerModeChange('customer')}
+      >
+        {statsCopy.viewerModeCustomerLabel}
+      </button>
+    </div>
+  );
+  const profileViewerModeInlineControl = (
+    <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
+      <button
+        type="button"
+        aria-pressed={model.controls.viewerMode === 'customer'}
+        className={`howitworks-tab ${model.controls.viewerMode === 'customer' ? 'is-active' : ''}`.trim()}
+        onClick={() => model.controls.onViewerModeChange('customer')}
+      >
+        {statsCopy.viewerModeProviderLabel}
+      </button>
+      <button
+        type="button"
+        aria-pressed={model.controls.viewerMode === 'provider'}
+        className={`howitworks-tab ${model.controls.viewerMode === 'provider' ? 'is-active' : ''}`.trim()}
+        onClick={() => model.controls.onViewerModeChange('provider')}
+      >
+        {statsCopy.viewerModeCustomerLabel}
+      </button>
+    </div>
+  );
+  const shouldShowProfileViewerModeControl =
+    model.activeWorkspaceTab === 'profile' || model.activePublicSection === 'profile';
+  const myWorkInlineControl = shouldShowProfileViewerModeControl ? profileViewerModeInlineControl : model.requestsScope === 'my' ? (
     <div className="workspace-shared-context-controls__combined-row">
       {requestsScopeControl}
       <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
@@ -248,24 +292,7 @@ export function buildSharedContextControlsProps({
       {requestsViewToggle}
     </div>
   ) : model.activePublicSection === 'stats' ? (
-    <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'provider'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'provider' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('provider')}
-      >
-        {statsCopy.viewerModeProviderLabel}
-      </button>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'customer'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'customer' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('customer')}
-      >
-        {statsCopy.viewerModeCustomerLabel}
-      </button>
-    </div>
+    viewerModeInlineControl
   ) : null;
   const extraFilters = model.requestsScope === 'my' ? undefined : undefined;
 
@@ -351,9 +378,7 @@ export function useWorkspaceSharedContext({
   const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), auth.status === 'authenticated');
   const requestRole = resolveWorkspaceRequestsRole(searchParams.get('role'));
   const requestState = resolveWorkspaceRequestsState(searchParams.get('state'));
-  const viewerMode = searchParams.get('viewerMode') === 'customer'
-    ? 'customer'
-    : 'provider';
+  const viewerMode = resolveWorkspaceViewerMode(searchParams.get('viewerMode'));
   const range = searchParams.get('period') ?? searchParams.get('range');
   const [, startTransition] = React.useTransition();
   const {
@@ -584,6 +609,7 @@ export function useWorkspaceSharedContext({
     () => ({
       activeMode,
       activePublicSection,
+      activeWorkspaceTab,
       requestsScope,
       scopeSwitch,
       modeItems,
@@ -624,6 +650,7 @@ export function useWorkspaceSharedContext({
     [
       activeMode,
       activePublicSection,
+      activeWorkspaceTab,
       activeModeCopy.description,
       activeModeCopy.railDescription,
       activeModeCopy.scope,

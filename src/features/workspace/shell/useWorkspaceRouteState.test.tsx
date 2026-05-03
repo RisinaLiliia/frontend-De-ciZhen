@@ -82,4 +82,13 @@ describe('useWorkspaceRouteState', () => {
     expect(node.getAttribute('data-is-public')).toBe('false');
     expect(node.getAttribute('data-scope')).toBe('my');
   });
+
+  it('treats profile section as a private workspace tab for authenticated users', () => {
+    render(<Probe query="section=profile&period=90d&range=90d" isAuthed />);
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('null');
+    expect(node.getAttribute('data-is-public')).toBe('false');
+    expect(node.getAttribute('data-tab')).toBe('profile');
+  });
 });

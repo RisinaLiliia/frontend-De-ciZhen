@@ -2,12 +2,14 @@
 
 import * as React from 'react';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
+import { resolveWorkspaceViewerMode } from './workspaceViewerMode.model';
 import { WorkspaceExploreRail, isWorkspaceExploreRailSection } from './WorkspaceExploreRail';
 import { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
 import { WorkspaceSectionErrorBoundary } from './WorkspaceSectionErrorBoundary';
@@ -94,6 +96,8 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
   initialPublicRequestsLoading,
   initialPublicRequestsError,
 }: WorkspaceExploreSectionProps) {
+  const searchParams = useSearchParams();
+  const viewerMode = resolveWorkspaceViewerMode(searchParams.get('viewerMode'));
   const isDesktop = useIsDesktop();
   const isRailSection = isDesktop && isWorkspaceExploreRailSection(activeSection);
   const exploreGridClassName = activeSection === 'reviews'
@@ -138,7 +142,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
           {activeSection === 'reviews' ? (
             <PlatformReviewsPanel t={t} locale={locale} showInlineRail={!isDesktop} />
           ) : activeSection === 'profile' ? (
-            <ProfileOnboardingPanel />
+            <ProfileOnboardingPanel viewerMode={viewerMode} />
           ) : (
             <ExploreRequestsPanel
               t={t}

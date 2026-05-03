@@ -13,6 +13,7 @@ type WorkspaceProfileOnboardingAvatarFieldProps = {
   avatarPreviewUrl: string | null;
   avatarActionLabel: string;
   avatarInitial: string;
+  showClearAction?: boolean;
   avatarInputRef: React.RefObject<HTMLInputElement | null>;
   onAvatarSelected: (event: React.ChangeEvent<HTMLInputElement>) => void;
   openAvatarPicker: () => void;
@@ -25,6 +26,7 @@ export function WorkspaceProfileOnboardingAvatarField({
   avatarPreviewUrl,
   avatarActionLabel,
   avatarInitial,
+  showClearAction = Boolean(avatarPreviewUrl),
   avatarInputRef,
   onAvatarSelected,
   openAvatarPicker,
@@ -63,7 +65,7 @@ export function WorkspaceProfileOnboardingAvatarField({
           >
             {avatarActionLabel}
           </button>
-          {avatarPreviewUrl ? (
+          {showClearAction ? (
             <button
               type="button"
               className="workspace-profile-onboarding__avatar-action workspace-profile-onboarding__avatar-action--danger"

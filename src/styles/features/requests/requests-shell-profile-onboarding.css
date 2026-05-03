@@ -47,6 +47,10 @@
     justify-content: flex-start;
   }
 
+  .workspace-profile-onboarding__section {
+    padding-top: var(--space-1);
+  }
+
   .workspace-profile-onboarding__avatar-stack {
     display: inline-flex;
     flex-direction: column;

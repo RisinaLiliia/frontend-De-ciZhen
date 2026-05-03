@@ -4,9 +4,10 @@ import {
   buildPasswordChecks,
   buildProfileCategoryOptions,
   buildProfileCityOptions,
+  buildWorkspaceProfileRegisterFormData,
+  buildWorkspaceProfileSaveFormData,
   resolveAvatarInitial,
   resolveCategoryServiceKeys,
-  resolveProfileOnboardingSubmission,
 } from './workspaceProfileOnboarding.model';
 
 describe('workspaceProfileOnboarding.model', () => {
@@ -77,59 +78,47 @@ describe('workspaceProfileOnboarding.model', () => {
     expect(resolveCategoryServiceKeys('', [])).toEqual([]);
   });
 
-  it('resolves onboarding submission payload with city label and service keys', () => {
-    expect(resolveProfileOnboardingSubmission({
-      name: 'Maria',
-      cityId: 'ber',
-      categoryKey: 'cleaning',
-      description: '  Fast and careful  ',
-      email: 'maria@example.com',
-      password: 'Abcdef1!',
-      acceptPrivacyPolicy: true,
-    }, [
-      {
-        id: 'ber',
-        key: 'berlin',
-        name: 'Berlin',
-        i18n: { en: 'Berlin' },
-        countryCode: 'DE',
-        stateName: 'Berlin',
-        districtName: null,
-        postalCodes: ['10115'],
-        isActive: true,
-        sortOrder: 1,
-      },
-    ], 'en', [
-      { key: 'deep-clean', categoryKey: 'cleaning', i18n: { en: 'Deep clean' }, isActive: true, sortOrder: 1 },
-      { key: 'repair-door', categoryKey: 'repair', i18n: { en: 'Repair door' }, isActive: true, sortOrder: 2 },
-    ])).toEqual({
-      cityLabel: 'Berlin',
-      description: 'Fast and careful',
-      selectedCategoryServiceKeys: ['deep-clean'],
+  it('builds workspace profile save form data', () => {
+    const formData = buildWorkspaceProfileSaveFormData({
+      name: ' Maria ',
+      city: ' Berlin ',
+      phone: ' +49123 ',
+      customerBio: ' Customer bio ',
+      providerDisplayName: ' Provider ',
+      providerBio: ' Provider bio ',
+      providerCategoryKey: ' cleaning ',
+      providerServiceKey: ' home_cleaning ',
+      providerBasePrice: ' 40 ',
     });
 
-    expect(resolveProfileOnboardingSubmission({
-      name: 'Maria',
-      cityId: 'missing',
-      categoryKey: '',
-      description: '',
-      email: 'maria@example.com',
-      password: 'Abcdef1!',
-      acceptPrivacyPolicy: true,
-    }, [], 'en', [])).toBeNull();
+    expect(formData.get('name')).toBe('Maria');
+    expect(formData.get('city')).toBe('Berlin');
+    expect(formData.get('phone')).toBe('+49123');
+    expect(formData.get('customerBio')).toBe('Customer bio');
+    expect(formData.get('providerDisplayName')).toBe('Provider');
+    expect(formData.get('providerBio')).toBe('Provider bio');
+    expect(formData.get('providerCategoryKey')).toBe('cleaning');
+    expect(formData.get('providerServiceKey')).toBe('home_cleaning');
+    expect(formData.get('providerBasePrice')).toBe('40');
+  });
 
-    expect(resolveProfileOnboardingSubmission({
-      name: 'Maria',
-      cityId: 'missing',
-      categoryKey: '',
-      description: '',
-      email: 'maria@example.com',
-      password: 'Abcdef1!',
+  it('builds workspace profile registration form data', () => {
+    const formData = buildWorkspaceProfileRegisterFormData({
+      viewerMode: 'provider',
+      name: ' Maria ',
+      email: ' maria@example.com ',
+      password: 'Password1!',
+      cityId: ' city-1 ',
       acceptPrivacyPolicy: true,
-    }, [], 'en', [], 'Berlin')).toEqual({
-      cityLabel: 'Berlin',
-      description: '',
-      selectedCategoryServiceKeys: [],
+      providerCategoryKey: ' cleaning ',
     });
+
+    expect(formData.get('viewerMode')).toBe('provider');
+    expect(formData.get('name')).toBe('Maria');
+    expect(formData.get('email')).toBe('maria@example.com');
+    expect(formData.get('password')).toBe('Password1!');
+    expect(formData.get('cityId')).toBe('city-1');
+    expect(formData.get('acceptPrivacyPolicy')).toBe('true');
+    expect(formData.get('providerCategoryKey')).toBe('cleaning');
   });
 });

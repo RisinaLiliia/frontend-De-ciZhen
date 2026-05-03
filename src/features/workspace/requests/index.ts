@@ -61,6 +61,7 @@ export {
   resolveWorkspaceRequestsScope,
   resolveWorkspaceRequestsState,
 } from './workspaceRequestsScope.model';
+export { resolveWorkspaceViewerMode } from './workspaceViewerMode.model';
 export type {
   FavoritesView,
   WorkspaceStatusFilter,
@@ -72,3 +73,4 @@ export type {
   WorkspaceRequestsScope,
   WorkspaceRequestsState,
 } from './workspaceRequestsScope.model';
+export type { WorkspaceViewerMode } from './workspaceViewerMode.model';
