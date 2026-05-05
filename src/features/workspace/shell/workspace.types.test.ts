@@ -12,7 +12,11 @@ describe('resolvePublicWorkspaceSection', () => {
     expect(resolvePublicWorkspaceSection('providers')).toBe('providers');
     expect(resolvePublicWorkspaceSection('stats')).toBe('stats');
     expect(resolvePublicWorkspaceSection('reviews')).toBe('reviews');
-    expect(resolvePublicWorkspaceSection('profile')).toBe('profile');
+    expect(resolvePublicWorkspaceSection('actions')).toBe('actions');
+  });
+
+  it('maps legacy profile alias to actions', () => {
+    expect(resolvePublicWorkspaceSection('profile')).toBe('actions');
   });
 
   it('returns null for unknown values', () => {

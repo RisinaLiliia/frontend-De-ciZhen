@@ -41,6 +41,18 @@ describe('workspaceData.model', () => {
     expect(overviewPlan.shouldLoadPublicRequests).toBe(true);
     expect(overviewPlan.shouldLoadPrivateOverview).toBe(true);
 
+    const actionsPlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: false,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'profile',
+      hasAccessToken: true,
+    });
+
+    expect(actionsPlan.shouldLoadPublicRequests).toBe(false);
+    expect(actionsPlan.shouldLoadPrivateOverview).toBe(true);
+
     const myScopePlan = resolveWorkspaceDataPlan({
       isAuthed: true,
       isWorkspaceAuthed: true,
@@ -87,6 +99,7 @@ describe('workspaceData.model', () => {
     expect(reviewsPlan.shouldLoadReviews).toBe(true);
     expect(reviewsPlan.shouldLoadWorkspaceRequests).toBe(false);
     expect(reviewsPlan.shouldLoadMyOffers).toBe(false);
+    expect(reviewsPlan.shouldLoadPublicRequests).toBe(false);
   });
 
   it('loads unified market requests in the public requests section', () => {

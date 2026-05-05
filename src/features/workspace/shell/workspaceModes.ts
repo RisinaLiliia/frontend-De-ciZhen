@@ -21,7 +21,7 @@ export function resolveActiveWorkspaceMode({
   if (activePublicSection === 'requests') return 'requests';
   if (activePublicSection === 'providers') return 'providers';
   if (activePublicSection === 'stats' || activePublicSection === 'reviews') return 'analysis';
-  if (activePublicSection === 'profile') return 'actions';
+  if (activePublicSection === 'actions') return 'actions';
 
   const isWorkspaceRoot = pathname === '/workspace';
   if (isWorkspaceRoot && sectionParam === 'overview') {

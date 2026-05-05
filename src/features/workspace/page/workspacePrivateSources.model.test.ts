@@ -2,12 +2,83 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   buildWorkspacePrivateSourcesCollectionsArgs,
+  buildWorkspacePrivateSourcesIdleRequestsStateArgs,
+  shouldLoadWorkspacePrivatePublicRequestsState,
+  shouldLoadWorkspacePrivateCatalog,
+  shouldBuildWorkspacePrivateRequestCollections,
   buildWorkspacePrivateSourcesDataArgs,
   buildWorkspacePrivateSourcesRequestsStateArgs,
   resolveWorkspacePrivateSourcesResult,
 } from './workspacePrivateSources.model';
 
 describe('workspacePrivateSources.model', () => {
+  it('disables private catalog loading for actions/profile and reviews', () => {
+    expect(
+      shouldLoadWorkspacePrivateCatalog({
+        activePublicSection: 'actions',
+        activeWorkspaceTab: 'my-requests',
+      }),
+    ).toBe(false);
+
+    expect(
+      shouldLoadWorkspacePrivateCatalog({
+        activePublicSection: null,
+        activeWorkspaceTab: 'profile',
+      }),
+    ).toBe(false);
+
+    expect(
+      shouldLoadWorkspacePrivateCatalog({
+        activePublicSection: null,
+        activeWorkspaceTab: 'reviews',
+      }),
+    ).toBe(false);
+
+    expect(
+      shouldLoadWorkspacePrivateCatalog({
+        activePublicSection: 'requests',
+        activeWorkspaceTab: 'my-requests',
+      }),
+    ).toBe(true);
+  });
+
+  it('loads private public-requests state only for overview my-requests mode', () => {
+    expect(
+      shouldLoadWorkspacePrivatePublicRequestsState({
+        activePublicSection: null,
+        activeWorkspaceTab: 'my-requests',
+      }),
+    ).toBe(true);
+
+    expect(
+      shouldLoadWorkspacePrivatePublicRequestsState({
+        activePublicSection: null,
+        activeWorkspaceTab: 'profile',
+      }),
+    ).toBe(false);
+
+    expect(
+      shouldLoadWorkspacePrivatePublicRequestsState({
+        activePublicSection: 'requests',
+        activeWorkspaceTab: 'my-requests',
+      }),
+    ).toBe(false);
+
+    expect(
+      shouldBuildWorkspacePrivateRequestCollections({
+        activePublicSection: 'actions',
+        activeWorkspaceTab: 'profile',
+      }),
+    ).toBe(false);
+
+    expect(
+      shouldBuildWorkspacePrivateRequestCollections({
+        activePublicSection: null,
+        activeWorkspaceTab: 'my-offers',
+      }),
+    ).toBe(true);
+  });
+
   it('builds workspace data args for private sources flow', () => {
     const args = buildWorkspacePrivateSourcesDataArgs({
       filter: {
@@ -63,6 +134,8 @@ describe('workspacePrivateSources.model', () => {
     });
 
     const collectionsArgs = buildWorkspacePrivateSourcesCollectionsArgs({
+      activePublicSection: null,
+      activeWorkspaceTab: 'my-requests',
       requests: [{ id: 'req-1' }] as never,
       data: {
         favoriteRequests: [{ id: 'req-1' }],
@@ -81,8 +154,24 @@ describe('workspacePrivateSources.model', () => {
 
     expect(requestsStateArgs.isWorkspacePublicSection).toBe(false);
     expect(requestsStateArgs.categoryKey).toBe('cat-1');
+    expect(collectionsArgs.includeRequestCollections).toBe(true);
     expect(collectionsArgs.locale).toBe('de');
     expect(collectionsArgs.requests).toEqual([{ id: 'req-1' }]);
+  });
+
+  it('builds idle requests-state args for private tabs without overview market state', () => {
+    const args = buildWorkspacePrivateSourcesIdleRequestsStateArgs({
+      allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
+      limit: 20,
+      page: 2,
+      setPage: vi.fn(),
+      activePublicSection: null,
+    });
+
+    expect(args.publicRequests).toBeUndefined();
+    expect(args.allRequestsSummary?.totalPublishedRequests).toBe(12);
+    expect(args.hasActivePublicFilter).toBe(false);
+    expect(args.cityId).toBe('all');
   });
 
   it('resolves final private sources payload from hook results', () => {

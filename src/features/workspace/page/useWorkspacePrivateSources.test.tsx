@@ -144,7 +144,7 @@ describe('useWorkspacePrivateSources', () => {
         locale="de"
         isAuthed
         isWorkspaceAuthed
-        activePublicSection="requests"
+        activePublicSection={null}
         activeWorkspaceTab="my-requests"
         activeRequestsRole="provider"
         activeRequestsState="execution"
@@ -178,7 +178,7 @@ describe('useWorkspacePrivateSources', () => {
 
     expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        activePublicSection: 'requests',
+        activePublicSection: null,
         isWorkspacePublicSection: false,
         categoryKey: 'cat-1',
       }),
@@ -187,6 +187,34 @@ describe('useWorkspacePrivateSources', () => {
     expect(useWorkspaceCollectionsMock).toHaveBeenCalledWith(
       expect.objectContaining({
         locale: 'de',
+      }),
+    );
+  });
+
+  it('disables catalog loading for private actions/profile flow', () => {
+    const t: WorkspaceBranchProps['t'] = (key) => String(key);
+
+    render(
+      <SourcesProbe
+        t={t}
+        locale="de"
+        isAuthed
+        isWorkspaceAuthed
+        activePublicSection={null}
+        activeWorkspaceTab="profile"
+      />,
+    );
+
+    expect(useWorkspacePublicFiltersMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        shouldLoadCatalog: false,
+      }),
+    );
+
+    expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        publicRequests: undefined,
+        hasActivePublicFilter: false,
       }),
     );
   });

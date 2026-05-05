@@ -15,6 +15,16 @@ type WorkspaceDataResult = ReturnType<typeof useWorkspaceData>;
 type WorkspacePublicRequestsStateResult = ReturnType<typeof useWorkspacePublicRequestsState>;
 type WorkspaceCollectionsResult = ReturnType<typeof useWorkspaceCollections>;
 
+type BuildWorkspacePrivateCatalogLoadArgs = {
+  activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
+  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+};
+
+type BuildWorkspacePrivatePublicRequestsStateLoadArgs = {
+  activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
+  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+};
+
 type BuildWorkspacePrivateSourcesDataArgsParams = Pick<
   WorkspaceBranchProps,
   'locale' | 'isAuthed' | 'isWorkspaceAuthed'
@@ -46,6 +56,8 @@ type BuildWorkspacePrivateSourcesRequestsStateArgsParams = {
 };
 
 type BuildWorkspacePrivateSourcesCollectionsArgsParams = {
+  activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
+  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   requests: WorkspacePublicRequestsStateResult['requests'];
   data: Pick<
     WorkspaceDataResult,
@@ -66,6 +78,33 @@ type ResolveWorkspacePrivateSourcesResultParams = {
   collections: WorkspaceCollectionsResult;
   publicRequestsState: WorkspacePublicRequestsStateResult;
 };
+
+export function shouldLoadWorkspacePrivateCatalog({
+  activePublicSection = null,
+  activeWorkspaceTab,
+}: BuildWorkspacePrivateCatalogLoadArgs) {
+  if (activePublicSection === 'actions') return false;
+  if (activeWorkspaceTab === 'reviews') return false;
+  if (activeWorkspaceTab === 'profile') return false;
+  return true;
+}
+
+export function shouldLoadWorkspacePrivatePublicRequestsState({
+  activePublicSection = null,
+  activeWorkspaceTab,
+}: BuildWorkspacePrivatePublicRequestsStateLoadArgs) {
+  return activePublicSection === null && activeWorkspaceTab === 'my-requests';
+}
+
+export function shouldBuildWorkspacePrivateRequestCollections({
+  activePublicSection = null,
+  activeWorkspaceTab,
+}: BuildWorkspacePrivatePublicRequestsStateLoadArgs) {
+  if (activePublicSection === 'actions') return false;
+  if (activeWorkspaceTab === 'reviews') return false;
+  if (activeWorkspaceTab === 'profile') return false;
+  return true;
+}
 
 export function buildWorkspacePrivateSourcesDataArgs({
   filter,
@@ -120,13 +159,44 @@ export function buildWorkspacePrivateSourcesRequestsStateArgs({
   };
 }
 
+export function buildWorkspacePrivateSourcesIdleRequestsStateArgs(params: {
+  allRequestsSummary: BuildWorkspacePrivateSourcesRequestsStateArgsParams['data']['allRequestsSummary'];
+  limit: number;
+  page: number;
+  setPage: (page: number) => void;
+  activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
+}) : Parameters<typeof useWorkspacePublicRequestsState>[0] {
+  return {
+    publicRequests: undefined,
+    allRequestsSummary: params.allRequestsSummary,
+    limit: params.limit,
+    page: params.page,
+    setPage: params.setPage,
+    isWorkspacePublicSection: false,
+    activePublicSection: params.activePublicSection,
+    isLoading: false,
+    isError: false,
+    hasActivePublicFilter: false,
+    cityId: 'all',
+    categoryKey: 'all',
+    subcategoryKey: 'all',
+    sortBy: 'date_desc',
+  };
+}
+
 export function buildWorkspacePrivateSourcesCollectionsArgs({
+  activePublicSection,
+  activeWorkspaceTab,
   requests,
   data,
   catalogIndex,
   locale,
 }: BuildWorkspacePrivateSourcesCollectionsArgsParams): Parameters<typeof useWorkspaceCollections>[0] {
   return {
+    includeRequestCollections: shouldBuildWorkspacePrivateRequestCollections({
+      activePublicSection,
+      activeWorkspaceTab,
+    }),
     requests,
     favoriteRequests: data.favoriteRequests,
     providers: data.providers,

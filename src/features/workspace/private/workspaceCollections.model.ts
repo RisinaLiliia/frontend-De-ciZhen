@@ -24,6 +24,7 @@ type WorkspaceCollectionsCatalog = {
 };
 
 export type WorkspaceCollectionsArgs = {
+  includeRequestCollections?: boolean;
   requests: RequestResponseDto[];
   favoriteRequests: RequestResponseDto[];
   providers: ProviderPublicDto[];
@@ -37,6 +38,7 @@ export type WorkspaceCollectionsArgs = {
 };
 
 export function buildWorkspaceCollections({
+  includeRequestCollections = true,
   requests,
   favoriteRequests,
   providers,
@@ -48,13 +50,21 @@ export function buildWorkspaceCollections({
   serviceByKey,
   locale,
 }: WorkspaceCollectionsArgs) {
-  const favoriteRequestIds = buildFavoriteRequestIds(favoriteRequests);
-  const requestById = buildRequestById(requests, favoriteRequests);
+  const favoriteRequestIds = includeRequestCollections
+    ? buildFavoriteRequestIds(favoriteRequests)
+    : new Set<string>();
+  const requestById = includeRequestCollections
+    ? buildRequestById(requests, favoriteRequests)
+    : new Map<string, RequestResponseDto>();
   const providerById = buildProviderById(providers, favoriteProviders);
   const favoriteProviderLookup = buildProviderFavoriteLookup(favoriteProviders);
   const favoriteProviderIds = buildFavoriteProviderIds(providers, favoriteProviderLookup);
-  const offersByRequest = buildOffersByRequest(myOffers);
-  const allMyContracts = buildAllMyContracts(myProviderContracts, myClientContracts);
+  const offersByRequest = includeRequestCollections
+    ? buildOffersByRequest(myOffers)
+    : new Map<string, OfferDto>();
+  const allMyContracts = includeRequestCollections
+    ? buildAllMyContracts(myProviderContracts, myClientContracts)
+    : [];
   const favoriteProviderCityLabelById = buildFavoriteProviderCityLabelById(
     favoriteProviders,
     cityById,

@@ -27,7 +27,7 @@ function createModel(
     description: copy.modes.actions.description,
     railDescription: copy.modes.actions.railDescription,
     scope: copy.modes.actions.scope,
-    activeModeHref: '/workspace?section=profile',
+    activeModeHref: '/workspace?section=actions',
     chips: [
       { key: 'city', label: 'Ort', value: 'Alle Staedte', icon: <span /> },
       { key: 'category', label: 'Kategorie', value: 'Alle Kategorien', icon: <span /> },
@@ -66,9 +66,9 @@ function createModel(
 }
 
 describe('buildSharedContextControlsProps', () => {
-  it('renders viewer mode toggle for public profile section', () => {
+  it('renders viewer mode toggle for public actions section', () => {
     const props = buildSharedContextControlsProps({
-      model: createModel({ activePublicSection: 'profile' }),
+      model: createModel({ activePublicSection: 'actions' }),
       t: (key) => String(key),
       locale: 'de',
     });
@@ -81,7 +81,7 @@ describe('buildSharedContextControlsProps', () => {
 
   it('maps profile labels to inverted audience semantics without changing canonical viewerMode', () => {
     const props = buildSharedContextControlsProps({
-      model: createModel({ activePublicSection: 'profile' }),
+      model: createModel({ activePublicSection: 'actions' }),
       t: (key) => String(key),
       locale: 'de',
     });

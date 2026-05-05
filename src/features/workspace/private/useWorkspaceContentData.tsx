@@ -12,15 +12,26 @@ type Args = {
   derivedArgs: WorkspaceDerivedArgs;
   contractArgs: ContractRequestsDataArgs;
   cardsArgs: WorkspaceCardsArgs;
+  contractRequestsEnabled?: boolean;
+  favoriteProviderCardsEnabled?: boolean;
 };
 
-export function useWorkspaceContentData({ derivedArgs, contractArgs, cardsArgs }: Args) {
+export function useWorkspaceContentData({
+  derivedArgs,
+  contractArgs,
+  cardsArgs,
+  contractRequestsEnabled = true,
+  favoriteProviderCardsEnabled = true,
+}: Args) {
   const derived = useWorkspaceDerived(derivedArgs);
   const contract = useWorkspaceContractRequestsData({
     ...contractArgs,
-    filteredContracts: derived.filteredContracts,
+    filteredContracts: contractRequestsEnabled ? derived.filteredContracts : [],
   });
-  const cards = useWorkspaceCards(cardsArgs);
+  const cards = useWorkspaceCards({
+    ...cardsArgs,
+    enabled: favoriteProviderCardsEnabled,
+  });
 
   return buildWorkspaceContentDataResult({
     derived,

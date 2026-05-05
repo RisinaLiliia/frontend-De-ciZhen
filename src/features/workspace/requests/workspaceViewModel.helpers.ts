@@ -20,6 +20,27 @@ export function buildWorkspaceState(isLoading: boolean, isEmpty: boolean) {
   };
 }
 
+export function buildEmptyWorkspaceListProps(
+  context: WorkspaceListContext,
+  params?: {
+    isLoading?: boolean;
+    isError?: boolean;
+  },
+): RequestsListProps {
+  return {
+    t: context.t,
+    locale: context.locale,
+    requests: [],
+    isLoading: params?.isLoading ?? false,
+    isError: params?.isError ?? false,
+    serviceByKey: context.serviceByKey,
+    categoryByKey: context.categoryByKey,
+    cityById: context.cityById,
+    formatDate: context.formatDate,
+    formatPrice: context.formatPrice,
+  };
+}
+
 export function buildWorkspacePager({ page, totalPages, setPage }: WorkspacePagerArgs) {
   return {
     onPrevPage: () => setPage(Math.max(1, page - 1)),

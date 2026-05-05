@@ -12,7 +12,7 @@ type WorkspaceDataPlanArgs = {
   shouldLoadPrivateData: boolean;
   activeWorkspaceTab: WorkspaceTab;
   requestsScope?: WorkspaceRequestsScope;
-  activePublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | 'profile' | null;
+  activePublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | 'actions' | null;
   hasAccessToken: boolean;
 };
 
@@ -79,7 +79,8 @@ export function resolveWorkspaceDataPlan({
   const shouldLoadPrivateOverviewRequests =
     isWorkspaceAuthed &&
     shouldLoadPrivateData &&
-    activePublicSection === null;
+    activePublicSection === null &&
+    activeWorkspaceTab === 'my-requests';
   const shouldLoadPublicRequests =
     isWorkspacePublicSection ||
     !isWorkspaceAuthed ||

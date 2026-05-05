@@ -82,6 +82,47 @@ describe('workspaceViewModel.model', () => {
     expect(workspaceContentProps.favoritesState.resolvedView).toBe('requests');
   });
 
+  it('avoids building inactive private tab lists with live request items', () => {
+    const privateInput: PrivateInput = {
+      ...createBaseInput(),
+      isWorkspaceAuthed: true,
+      activeWorkspaceTab: 'profile',
+      showWorkspaceHeader: true,
+      showWorkspaceHeading: true,
+      primaryAction: { href: '/request/create', label: 'Create' },
+      onPrimaryActionClick: vi.fn(),
+      isMyRequestsLoading: false,
+      filteredMyRequests: [{ id: 'req-1' }] as never[],
+      ownerRequestActions: {},
+      isMyOffersLoading: false,
+      filteredMyOffers: [{ id: 'offer-1' }] as never[],
+      myOfferRequests: [{ id: 'req-2' }] as never[],
+      isProviderContractsLoading: false,
+      isClientContractsLoading: false,
+      filteredContracts: [{ id: 'contract-1' }] as never[],
+      contractRequests: [{ id: 'req-3' }] as never[],
+      contractOffersByRequest: new Map(),
+      isFavoritesLoading: false,
+      favoritesItems: [{ id: 'fav-1' }],
+      hasFavoriteRequests: true,
+      hasFavoriteProviders: false,
+      resolvedFavoritesView: 'requests',
+      setFavoritesView: vi.fn(),
+      favoriteRequests: [{ id: 'req-4' }] as never[],
+      isFavoriteRequestsLoading: false,
+      favoriteProviderCards: null,
+      isMyReviewsLoading: false,
+      myReviews: [],
+    };
+
+    const { workspaceContentProps } = buildWorkspacePrivateViewModel(privateInput);
+
+    expect(workspaceContentProps.myRequestsListProps.requests).toEqual([]);
+    expect(workspaceContentProps.myOffersListProps.requests).toEqual([]);
+    expect(workspaceContentProps.contractsListProps.requests).toEqual([]);
+    expect(workspaceContentProps.favoriteRequestsListProps.requests).toEqual([]);
+  });
+
   it('builds public workspace content props with pagination and status handlers', () => {
     const setPage = vi.fn();
     const setLimit = vi.fn();

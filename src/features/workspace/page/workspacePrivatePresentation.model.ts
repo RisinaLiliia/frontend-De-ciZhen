@@ -86,6 +86,18 @@ type BuildPrivateViewModelArgs = {
   onPrimaryActionClick: WorkspacePrivateViewModelInput['onPrimaryActionClick'];
 };
 
+export function shouldBuildWorkspacePrivateContractRequests(
+  activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'],
+) {
+  return activeWorkspaceTab === 'completed-jobs';
+}
+
+export function shouldBuildWorkspacePrivateFavoriteProviderCards(
+  activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'],
+) {
+  return activeWorkspaceTab === 'favorites';
+}
+
 export function buildWorkspacePrivateContentDataArgs({
   branch,
   data,
@@ -109,6 +121,9 @@ export function buildWorkspacePrivateContentDataArgs({
       isWorkspaceAuthed: branch.isWorkspaceAuthed,
       locale: branch.locale,
     },
+    contractRequestsEnabled: shouldBuildWorkspacePrivateContractRequests(
+      data.activeWorkspaceTab,
+    ),
     cardsArgs: {
       t: branch.t,
       locale: branch.locale,
@@ -119,6 +134,9 @@ export function buildWorkspacePrivateContentDataArgs({
       favoriteProviderRoleLabelById: data.favoriteProviderRoleLabelById,
       favoriteProviderCityLabelById: data.favoriteProviderCityLabelById,
     },
+    favoriteProviderCardsEnabled: shouldBuildWorkspacePrivateFavoriteProviderCards(
+      data.activeWorkspaceTab,
+    ),
   };
 }
 

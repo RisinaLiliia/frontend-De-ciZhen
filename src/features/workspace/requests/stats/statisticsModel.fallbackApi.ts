@@ -264,7 +264,7 @@ export async function getWorkspaceStatisticsFallback(
     },
     insights,
     growthCards: [
-      { key: 'highlight_profile', href: '/workspace?section=profile' },
+      { key: 'highlight_profile', href: '/workspace?section=actions' },
       { key: 'local_ads', href: '/workspace?section=requests' },
       { key: 'premium_tools', href: '/provider/onboarding' },
     ],

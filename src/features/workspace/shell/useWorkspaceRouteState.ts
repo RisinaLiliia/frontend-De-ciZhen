@@ -49,7 +49,7 @@ export function useWorkspaceRouteState({
     !forcedWorkspaceTab &&
     !hasExplicitWorkspaceTab &&
     isAuthed &&
-    resolvedPublicSection === 'profile';
+    resolvedPublicSection === 'actions';
   const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), isAuthed);
   const isRequestsSection = !forcedWorkspaceTab && !hasExplicitWorkspaceTab && resolvedPublicSection === 'requests';
   const isPrivateRequestsScope = isRequestsSection && requestsScope === 'my';

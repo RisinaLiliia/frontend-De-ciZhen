@@ -141,7 +141,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
         <div>
           {activeSection === 'reviews' ? (
             <PlatformReviewsPanel t={t} locale={locale} showInlineRail={!isDesktop} />
-          ) : activeSection === 'profile' ? (
+          ) : activeSection === 'actions' ? (
             <ProfileOnboardingPanel viewerMode={viewerMode} />
           ) : (
             <ExploreRequestsPanel

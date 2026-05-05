@@ -77,7 +77,7 @@ export function isWorkspaceExploreRailSection(section: PublicWorkspaceSection) {
     section === 'requests'
     || section === 'providers'
     || section === 'reviews'
-    || section === 'profile'
+    || section === 'actions'
   );
 }
 

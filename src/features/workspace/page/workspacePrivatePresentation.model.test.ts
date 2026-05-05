@@ -7,6 +7,8 @@ import {
   buildWorkspacePrivateStateArgs,
   buildWorkspacePrivateViewModelInput,
   buildWorkspacePublicIntroProps,
+  shouldBuildWorkspacePrivateContractRequests,
+  shouldBuildWorkspacePrivateFavoriteProviderCards,
 } from './workspacePrivatePresentation.model';
 
 function createBranch() {
@@ -93,7 +95,16 @@ describe('workspacePrivatePresentation.model', () => {
 
     expect(args.derivedArgs.activeWorkspaceTab).toBe('my-offers');
     expect(args.contractArgs.locale).toBe('en');
+    expect(args.contractRequestsEnabled).toBe(false);
     expect(args.cardsArgs.pendingFavoriteProviderIds).toEqual(new Set(['provider-2']));
+    expect(args.favoriteProviderCardsEnabled).toBe(false);
+  });
+
+  it('enables private contract requests and favorite provider cards only for the tabs that render them', () => {
+    expect(shouldBuildWorkspacePrivateContractRequests('completed-jobs')).toBe(true);
+    expect(shouldBuildWorkspacePrivateContractRequests('profile')).toBe(false);
+    expect(shouldBuildWorkspacePrivateFavoriteProviderCards('favorites')).toBe(true);
+    expect(shouldBuildWorkspacePrivateFavoriteProviderCards('reviews')).toBe(false);
   });
 
   it('builds private state args with provider-count fallback and public intro props', () => {

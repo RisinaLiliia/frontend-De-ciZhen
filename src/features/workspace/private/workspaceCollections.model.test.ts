@@ -36,4 +36,27 @@ describe('workspaceCollections.model', () => {
     expect(result.favoriteProviderCityLabelById.get('provider-1')).toBe('Berlin');
     expect(result.favoriteProviderRoleLabelById.get('provider-1')).toBe('Elektriker');
   });
+
+  it('can skip request-side collections when only provider-side state is needed', () => {
+    const result = buildWorkspaceCollections({
+      includeRequestCollections: false,
+      requests: [{ id: 'req-1' }] as never,
+      favoriteRequests: [{ id: 'req-2' }] as never,
+      providers: [{ id: 'provider-1' }] as never,
+      favoriteProviders: [{ id: 'provider-1' }] as never,
+      myOffers: [{ id: 'offer-1', requestId: 'req-1' }] as never,
+      myProviderContracts: [{ id: 'contract-1', updatedAt: '2026-03-19T10:00:00.000Z' }] as never,
+      myClientContracts: [{ id: 'contract-2', updatedAt: '2026-03-22T10:00:00.000Z' }] as never,
+      cityById: new Map(),
+      serviceByKey: new Map(),
+      locale: 'de',
+    });
+
+    expect(result.favoriteRequestIds).toEqual(new Set());
+    expect(result.requestById).toEqual(new Map());
+    expect(result.offersByRequest).toEqual(new Map());
+    expect(result.allMyContracts).toEqual([]);
+    expect(result.providerById.get('provider-1')).toEqual({ id: 'provider-1' });
+    expect(result.favoriteProviderLookup).toEqual(new Set(['provider-1']));
+  });
 });

@@ -228,7 +228,7 @@ export function buildSharedContextControlsProps({
     </div>
   );
   const shouldShowProfileViewerModeControl =
-    model.activeWorkspaceTab === 'profile' || model.activePublicSection === 'profile';
+    model.activeWorkspaceTab === 'profile' || model.activePublicSection === 'actions';
   const myWorkInlineControl = shouldShowProfileViewerModeControl ? profileViewerModeInlineControl : model.requestsScope === 'my' ? (
     <div className="workspace-shared-context-controls__combined-row">
       {requestsScopeControl}
