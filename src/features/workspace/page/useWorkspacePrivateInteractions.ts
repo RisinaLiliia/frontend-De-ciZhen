@@ -19,6 +19,7 @@ import {
   buildWorkspacePrivateTabPersistenceArgs,
   resolveWorkspacePrivateInteractionsResult,
   shouldBuildWorkspacePrivateProviderInteractions,
+  shouldBuildWorkspacePrivateRequestFavoriteInteractions,
   shouldBuildWorkspacePrivateRequestInteractions,
   type WorkspacePrivateInteractionsParams,
   type WorkspacePrivateInteractionsResult,
@@ -46,6 +47,11 @@ export function useWorkspacePrivateInteractions({
   const router = useRouter();
   const qc = useQueryClient();
   const shouldBuildRequestInteractions = shouldBuildWorkspacePrivateRequestInteractions(activeWorkspaceTab);
+  const shouldBuildRequestFavoriteInteractions = shouldBuildWorkspacePrivateRequestFavoriteInteractions({
+    activePublicSection,
+    activeWorkspaceTab,
+    requestsScope,
+  });
   const shouldBuildProviderInteractions = shouldBuildWorkspacePrivateProviderInteractions({
     activePublicSection,
     requestsScope,
@@ -53,7 +59,7 @@ export function useWorkspacePrivateInteractions({
 
   const favoriteToggles = useWorkspaceFavoriteToggles(
     buildWorkspacePrivateFavoriteToggleArgs({
-      includeRequestToggle: shouldBuildRequestInteractions,
+      includeRequestToggle: shouldBuildRequestFavoriteInteractions,
       includeProviderToggle: shouldBuildProviderInteractions,
       isAuthed,
       nextPath,

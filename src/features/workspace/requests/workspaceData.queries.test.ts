@@ -229,6 +229,7 @@ describe('workspaceData.queries', () => {
       1,
       20,
     ]);
+    expect(queries.favoriteRequests.enabled).toBe(false);
   });
 
   it('builds offer request batch query only when ids exist', () => {

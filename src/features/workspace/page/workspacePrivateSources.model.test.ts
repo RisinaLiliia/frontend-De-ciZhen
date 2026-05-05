@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  buildWorkspacePrivateCatalogIndexArgs,
   buildWorkspacePrivateSourcesCollectionsArgs,
   buildWorkspacePrivateSourcesIdleRequestsStateArgs,
   shouldLoadWorkspacePrivatePublicRequestsState,
@@ -16,7 +17,7 @@ import {
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
 
 describe('workspacePrivateSources.model', () => {
-  it('disables private catalog loading for actions/profile and reviews', () => {
+  it('disables private catalog loading for actions/profile, reviews, and unified private requests', () => {
     expect(
       shouldLoadWorkspacePrivateCatalog({
         activePublicSection: 'actions',
@@ -35,6 +36,14 @@ describe('workspacePrivateSources.model', () => {
       shouldLoadWorkspacePrivateCatalog({
         activePublicSection: null,
         activeWorkspaceTab: 'reviews',
+      }),
+    ).toBe(false);
+
+    expect(
+      shouldLoadWorkspacePrivateCatalog({
+        activePublicSection: 'requests',
+        activeWorkspaceTab: 'my-requests',
+        requestsScope: 'my',
       }),
     ).toBe(false);
 
@@ -201,6 +210,22 @@ describe('workspacePrivateSources.model', () => {
     expect(collectionsArgs.includeFavoriteProviderPresentation).toBe(false);
     expect(collectionsArgs.locale).toBe('de');
     expect(collectionsArgs.requests).toEqual([{ id: 'req-1' }]);
+  });
+
+  it('builds catalog index args for enabled and disabled private catalog paths', () => {
+    const args = buildWorkspacePrivateCatalogIndexArgs({
+      enabled: false,
+      services: [{ key: 'svc-1' }] as never,
+      categories: [{ key: 'cat-1' }] as never,
+      cities: [{ id: 'city-1' }] as never,
+    });
+
+    expect(args).toMatchObject({
+      enabled: false,
+      services: [{ key: 'svc-1' }],
+      categories: [{ key: 'cat-1' }],
+      cities: [{ id: 'city-1' }],
+    });
   });
 
   it('builds idle requests-state args for private tabs without overview market state', () => {

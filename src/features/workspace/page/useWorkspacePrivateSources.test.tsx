@@ -213,6 +213,12 @@ describe('useWorkspacePrivateSources', () => {
       }),
     );
 
+    expect(useCatalogIndexMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        enabled: false,
+      }),
+    );
+
     expect(useWorkspaceDataMock).toHaveBeenCalledWith(
       expect.objectContaining({
         activeWorkspaceTab: 'profile',
@@ -224,6 +230,43 @@ describe('useWorkspacePrivateSources', () => {
       expect.objectContaining({
         publicRequests: undefined,
         hasActivePublicFilter: false,
+      }),
+    );
+  });
+
+  it('disables private catalog loading for unified private requests flow', () => {
+    const t: WorkspaceBranchProps['t'] = (key) => String(key);
+
+    render(
+      <SourcesProbe
+        t={t}
+        locale="de"
+        isAuthed
+        isWorkspaceAuthed
+        activePublicSection="requests"
+        activeWorkspaceTab="my-requests"
+        requestsScope="my"
+      />,
+    );
+
+    expect(useWorkspacePublicFiltersMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        shouldLoadCatalog: false,
+      }),
+    );
+
+    expect(useWorkspaceDataMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        activePublicSection: 'requests',
+        requestsScope: 'my',
+        activeWorkspaceTab: 'my-requests',
+        publicSummaryCityActivityLimit: 1,
+      }),
+    );
+
+    expect(useCatalogIndexMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        enabled: false,
       }),
     );
   });

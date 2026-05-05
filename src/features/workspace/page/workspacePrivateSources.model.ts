@@ -19,6 +19,7 @@ type WorkspaceCollectionsResult = ReturnType<typeof useWorkspaceCollections>;
 type BuildWorkspacePrivateCatalogLoadArgs = {
   activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
 };
 
 type BuildWorkspacePrivatePublicRequestsStateLoadArgs = {
@@ -74,6 +75,13 @@ type BuildWorkspacePrivateSourcesCollectionsArgsParams = {
   locale: WorkspaceBranchProps['locale'];
 };
 
+type BuildWorkspacePrivateCatalogIndexArgsParams = Pick<
+  WorkspacePublicFiltersResult,
+  'services' | 'categories' | 'cities'
+> & {
+  enabled: boolean;
+};
+
 type ResolveWorkspacePrivateSourcesResultParams = {
   data: WorkspaceDataResult;
   catalogIndex: CatalogIndexResult;
@@ -84,7 +92,9 @@ type ResolveWorkspacePrivateSourcesResultParams = {
 export function shouldLoadWorkspacePrivateCatalog({
   activePublicSection = null,
   activeWorkspaceTab,
+  requestsScope = 'market',
 }: BuildWorkspacePrivateCatalogLoadArgs) {
+  if (activePublicSection === 'requests' && requestsScope === 'my') return false;
   if (activePublicSection === 'actions') return false;
   if (activeWorkspaceTab === 'reviews') return false;
   if (activeWorkspaceTab === 'profile') return false;
@@ -191,6 +201,20 @@ export function buildWorkspacePrivateSourcesRequestsStateArgs({
     categoryKey: filters.categoryKey,
     subcategoryKey: filters.subcategoryKey,
     sortBy: filters.sortBy,
+  };
+}
+
+export function buildWorkspacePrivateCatalogIndexArgs({
+  enabled,
+  services,
+  categories,
+  cities,
+}: BuildWorkspacePrivateCatalogIndexArgsParams): Parameters<typeof useCatalogIndex>[0] {
+  return {
+    enabled,
+    services,
+    categories,
+    cities,
   };
 }
 

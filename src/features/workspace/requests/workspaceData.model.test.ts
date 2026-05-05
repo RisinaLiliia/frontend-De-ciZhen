@@ -69,6 +69,7 @@ describe('workspaceData.model', () => {
     expect(myScopePlan.shouldLoadMyOffers).toBe(false);
     expect(myScopePlan.shouldLoadMyContracts).toBe(false);
     expect(myScopePlan.shouldLoadOfferRequests).toBe(false);
+    expect(myScopePlan.shouldLoadFavoriteRequests).toBe(false);
     expect(myScopePlan.shouldLoadProviders).toBe(false);
     expect(myScopePlan.shouldLoadFavoriteProviders).toBe(false);
 

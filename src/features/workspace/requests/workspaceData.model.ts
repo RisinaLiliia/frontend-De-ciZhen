@@ -109,7 +109,12 @@ export function resolveWorkspaceDataPlan({
     && activeWorkspaceTab === 'completed-jobs';
   const shouldLoadFavoriteRequests =
     shouldLoadPublicRequestUserState
-    || (isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'favorites');
+    || (
+      !shouldLoadUnifiedPrivateRequests
+      && isWorkspaceAuthed
+      && shouldLoadPrivateData
+      && activeWorkspaceTab === 'favorites'
+    );
   const shouldLoadFavoriteProviders =
     isAuthed &&
     shouldLoadPrivateData &&
