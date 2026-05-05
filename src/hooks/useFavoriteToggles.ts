@@ -28,6 +28,7 @@ type UseRequestFavoriteToggleParams = {
 };
 
 type UseProviderFavoriteToggleParams = {
+  enabled?: boolean;
   isAuthed: boolean;
   nextPath: string;
   router: RouterLike;
@@ -94,6 +95,7 @@ export function useRequestFavoriteToggle({
 }
 
 export function useProviderFavoriteToggle({
+  enabled = true,
   isAuthed,
   nextPath,
   router,
@@ -116,6 +118,7 @@ export function useProviderFavoriteToggle({
 
   const toggleProviderFavorite = React.useCallback(
     async (providerId: string) => {
+      if (!enabled) return;
       if (!isAuthed) {
         router.push(`/auth/login?next=${encodeURIComponent(nextPath)}`);
         toast.message(t(I18N_KEYS.requestDetails.favoritesSoon));
@@ -148,7 +151,7 @@ export function useProviderFavoriteToggle({
         });
       }
     },
-    [isAuthed, isProviderSaved, nextPath, pendingFavoriteProviderIds, providerById, qc, router, t],
+    [enabled, isAuthed, isProviderSaved, nextPath, pendingFavoriteProviderIds, providerById, qc, router, t],
   );
 
   return {

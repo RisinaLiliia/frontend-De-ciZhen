@@ -9,6 +9,7 @@ import {
   buildWorkspacePrivateSeenTotalArgs,
   buildWorkspacePrivateTabPersistenceArgs,
   resolveWorkspacePrivateInteractionsResult,
+  shouldBuildWorkspacePrivateProviderInteractions,
   shouldBuildWorkspacePrivateRequestInteractions,
 } from './workspacePrivateInteractions.model';
 
@@ -20,6 +21,7 @@ describe('workspacePrivateInteractions.model', () => {
 
     const favoriteToggleArgs = buildWorkspacePrivateFavoriteToggleArgs({
       includeRequestToggle: false,
+      includeProviderToggle: false,
       isAuthed: true,
       nextPath: '/workspace?tab=favorites',
       router,
@@ -54,8 +56,21 @@ describe('workspacePrivateInteractions.model', () => {
     expect(shouldBuildWorkspacePrivateRequestInteractions('profile')).toBe(false);
     expect(shouldBuildWorkspacePrivateRequestInteractions('reviews')).toBe(false);
     expect(shouldBuildWorkspacePrivateRequestInteractions('favorites')).toBe(true);
+    expect(
+      shouldBuildWorkspacePrivateProviderInteractions({
+        activePublicSection: 'requests',
+        requestsScope: 'my',
+      }),
+    ).toBe(false);
+    expect(
+      shouldBuildWorkspacePrivateProviderInteractions({
+        activePublicSection: null,
+        requestsScope: 'market',
+      }),
+    ).toBe(true);
     expect(favoriteToggleArgs.nextPath).toBe('/workspace?tab=favorites');
     expect(favoriteToggleArgs.includeRequestToggle).toBe(false);
+    expect(favoriteToggleArgs.includeProviderToggle).toBe(false);
     expect(actionsArgs.enabled).toBe(false);
     expect(actionsArgs.myOffers).toHaveLength(1);
     expect(seenArgs).toEqual({

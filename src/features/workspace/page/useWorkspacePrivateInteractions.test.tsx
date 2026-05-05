@@ -120,7 +120,9 @@ describe('useWorkspacePrivateInteractions', () => {
       isAuthed: true,
       isWorkspaceAuthed: true,
       authUserId: 'user-1',
+      activePublicSection: null,
       activeWorkspaceTab: 'favorites',
+      requestsScope: 'market',
       nextPath: '/workspace?tab=favorites',
       platformRequestsTotal: 21,
       myOffers: [offer],
@@ -140,6 +142,7 @@ describe('useWorkspacePrivateInteractions', () => {
     expect(useWorkspaceFavoriteTogglesMock).toHaveBeenCalledWith(
       expect.objectContaining({
         includeRequestToggle: true,
+        includeProviderToggle: true,
         nextPath: '/workspace?tab=favorites',
         favoriteRequestIds: args.favoriteRequestIds,
         requestById: args.requestById,
@@ -178,7 +181,9 @@ describe('useWorkspacePrivateInteractions', () => {
         isAuthed
         isWorkspaceAuthed
         authUserId="user-1"
+        activePublicSection={null}
         activeWorkspaceTab="profile"
+        requestsScope="market"
         nextPath="/workspace?section=actions"
         platformRequestsTotal={21}
         myOffers={[]}
@@ -192,12 +197,43 @@ describe('useWorkspacePrivateInteractions', () => {
     expect(useWorkspaceFavoriteTogglesMock).toHaveBeenCalledWith(
       expect.objectContaining({
         includeRequestToggle: false,
+        includeProviderToggle: true,
       }),
     );
 
     expect(useWorkspaceActionsMock).toHaveBeenCalledWith(
       expect.objectContaining({
         enabled: false,
+      }),
+    );
+  });
+
+  it('disables provider-side favorite path for unified private requests flow', () => {
+    const t: WorkspaceBranchProps['t'] = (key) => String(key);
+
+    render(
+      <InteractionsProbe
+        t={t}
+        locale="de"
+        isAuthed
+        isWorkspaceAuthed
+        authUserId="user-1"
+        activePublicSection="requests"
+        activeWorkspaceTab="my-requests"
+        requestsScope="my"
+        nextPath="/workspace?section=requests&scope=my"
+        platformRequestsTotal={21}
+        myOffers={[]}
+        favoriteRequestIds={new Set()}
+        requestById={new Map()}
+        favoriteProviderLookup={new Set(['provider-1'])}
+        providerById={new Map([['provider-1', { id: 'provider-1' } as ProviderPublicDto]])}
+      />,
+    );
+
+    expect(useWorkspaceFavoriteTogglesMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        includeProviderToggle: false,
       }),
     );
   });

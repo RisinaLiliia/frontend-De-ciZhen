@@ -18,6 +18,7 @@ import {
   buildWorkspacePrivateSeenTotalArgs,
   buildWorkspacePrivateTabPersistenceArgs,
   resolveWorkspacePrivateInteractionsResult,
+  shouldBuildWorkspacePrivateProviderInteractions,
   shouldBuildWorkspacePrivateRequestInteractions,
   type WorkspacePrivateInteractionsParams,
   type WorkspacePrivateInteractionsResult,
@@ -31,7 +32,9 @@ export function useWorkspacePrivateInteractions({
   isAuthed,
   isWorkspaceAuthed,
   authUserId,
+  activePublicSection,
   activeWorkspaceTab,
+  requestsScope = 'market',
   nextPath,
   platformRequestsTotal,
   myOffers,
@@ -43,10 +46,15 @@ export function useWorkspacePrivateInteractions({
   const router = useRouter();
   const qc = useQueryClient();
   const shouldBuildRequestInteractions = shouldBuildWorkspacePrivateRequestInteractions(activeWorkspaceTab);
+  const shouldBuildProviderInteractions = shouldBuildWorkspacePrivateProviderInteractions({
+    activePublicSection,
+    requestsScope,
+  });
 
   const favoriteToggles = useWorkspaceFavoriteToggles(
     buildWorkspacePrivateFavoriteToggleArgs({
       includeRequestToggle: shouldBuildRequestInteractions,
+      includeProviderToggle: shouldBuildProviderInteractions,
       isAuthed,
       nextPath,
       router,

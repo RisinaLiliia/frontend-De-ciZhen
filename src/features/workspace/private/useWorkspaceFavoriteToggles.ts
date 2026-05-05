@@ -20,6 +20,7 @@ type Translator = (key: I18nKey) => string;
 
 type Args = {
   includeRequestToggle?: boolean;
+  includeProviderToggle?: boolean;
   isAuthed: boolean;
   nextPath: string;
   router: RouterLike;
@@ -33,6 +34,7 @@ type Args = {
 
 export function useWorkspaceFavoriteToggles({
   includeRequestToggle = true,
+  includeProviderToggle = true,
   isAuthed,
   nextPath,
   router,
@@ -61,6 +63,7 @@ export function useWorkspaceFavoriteToggles({
     pendingFavoriteProviderIds,
     toggleProviderFavorite,
   } = useProviderFavoriteToggle({
+    enabled: includeProviderToggle,
     isAuthed,
     nextPath,
     router,
