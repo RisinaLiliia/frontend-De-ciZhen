@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 
 import { useWorkspaceActions } from '@/features/workspace/private/useWorkspaceActions';
 import { createConversation } from '@/lib/api/chat';
+import { deleteOffer } from '@/lib/api/offers';
 import { duplicateMyRequest, publishMyRequest, unpublishMyRequest } from '@/lib/api/requests';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 
@@ -27,6 +28,10 @@ vi.mock('@/lib/api/requests', () => ({
 
 vi.mock('@/lib/api/chat', () => ({
   createConversation: vi.fn(),
+}));
+
+vi.mock('@/lib/api/offers', () => ({
+  deleteOffer: vi.fn(),
 }));
 
 function UseWorkspaceActionsProbe() {
@@ -89,6 +94,13 @@ function UseWorkspaceActionsProbe() {
       >
         chat-invalid
       </button>
+      <button
+        type="button"
+        data-testid="withdraw-with-request-id"
+        onClick={() => actions.onWithdrawOffer('offer-unknown', 'req-explicit')}
+      >
+        withdraw-with-request-id
+      </button>
     </>
   );
 }
@@ -97,6 +109,7 @@ const duplicateMyRequestMock = vi.mocked(duplicateMyRequest);
 const publishMyRequestMock = vi.mocked(publishMyRequest);
 const unpublishMyRequestMock = vi.mocked(unpublishMyRequest);
 const createConversationMock = vi.mocked(createConversation);
+const deleteOfferMock = vi.mocked(deleteOffer);
 const toastSuccessMock = vi.mocked(toast.success);
 const toastMessageMock = vi.mocked(toast.message);
 const toastErrorMock = vi.mocked(toast.error);
@@ -111,6 +124,7 @@ describe('useWorkspaceActions', () => {
     publishMyRequestMock.mockResolvedValue({ id: 'req-1' } as never);
     unpublishMyRequestMock.mockResolvedValue({ id: 'req-1' } as never);
     createConversationMock.mockResolvedValue({ id: 'conv-1' } as never);
+    deleteOfferMock.mockResolvedValue(undefined as never);
   });
 
   afterEach(() => {
@@ -208,6 +222,20 @@ describe('useWorkspaceActions', () => {
     await waitFor(() => {
       expect(toastErrorMock).toHaveBeenCalledWith('boom');
       expect(pushSpy).not.toHaveBeenCalledWith('/chat');
+    });
+  });
+
+  it('withdraws an offer when request id is provided directly by the UI contract', async () => {
+    render(<UseWorkspaceActionsProbe />);
+
+    await act(async () => {
+      screen.getByTestId('withdraw-with-request-id').click();
+    });
+
+    await waitFor(() => {
+      expect(deleteOfferMock).toHaveBeenCalledWith('offer-unknown');
+      expect(toastSuccessMock).toHaveBeenCalledWith(I18N_KEYS.requestDetails.responseCancelled);
+      expect(invalidateQueriesSpy).toHaveBeenCalledWith({ queryKey: ['offers-my'] });
     });
   });
 });

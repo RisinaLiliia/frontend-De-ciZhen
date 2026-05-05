@@ -10,6 +10,9 @@ import {
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import {
   buildWorkspacePrivateSourcesCollectionsArgs,
+  buildWorkspacePrivateSourcesIdleRequestsStateArgs,
+  shouldLoadWorkspacePrivateCatalog,
+  shouldLoadWorkspacePrivatePublicRequestsState,
   buildWorkspacePrivateSourcesDataArgs,
   buildWorkspacePrivateSourcesRequestsStateArgs,
   resolveWorkspacePrivateSourcesResult,
@@ -38,6 +41,14 @@ export function useWorkspacePrivateSources({
   activeRequestsPeriod = '30d',
   activeRequestsSort = null,
 }: SourcesParams) {
+  const shouldLoadCatalog = shouldLoadWorkspacePrivateCatalog({
+    activePublicSection,
+    activeWorkspaceTab,
+  });
+  const shouldLoadPublicRequestsState = shouldLoadWorkspacePrivatePublicRequestsState({
+    activePublicSection,
+    activeWorkspaceTab,
+  });
   const {
     cities,
     categories,
@@ -54,7 +65,7 @@ export function useWorkspacePrivateSources({
   } = useWorkspacePublicFilters({
     t,
     locale,
-    shouldLoadCatalog: true,
+    shouldLoadCatalog,
     activePublicSection,
   });
 
@@ -81,25 +92,36 @@ export function useWorkspacePrivateSources({
   );
 
   const publicRequestsState = useWorkspacePublicRequestsState(
-    buildWorkspacePrivateSourcesRequestsStateArgs({
-      filters: {
+    shouldLoadPublicRequestsState
+      ? buildWorkspacePrivateSourcesRequestsStateArgs({
+        filters: {
+          limit,
+          page,
+          setPage,
+          hasActivePublicFilter,
+          cityId,
+          categoryKey,
+          subcategoryKey,
+          sortBy,
+        },
+        data,
+        activePublicSection,
+      })
+      : buildWorkspacePrivateSourcesIdleRequestsStateArgs({
+        allRequestsSummary: data.allRequestsSummary,
         limit,
         page,
         setPage,
-        hasActivePublicFilter,
-        cityId,
-        categoryKey,
-        subcategoryKey,
-        sortBy,
-      },
-      data,
-      activePublicSection,
-    }),
+        activePublicSection,
+      }),
   );
 
   const catalogIndex = { serviceByKey, categoryByKey, cityById };
   const collections = useWorkspaceCollections(
     buildWorkspacePrivateSourcesCollectionsArgs({
+      activePublicSection,
+      activeWorkspaceTab,
+      requestsScope,
       requests: publicRequestsState.requests,
       data,
       catalogIndex,

@@ -113,10 +113,10 @@ function buildWorkspaceGuestSecondaryNavItems({
   return [
     {
       key: 'guest-profile',
-      href: '/workspace?section=profile',
+      href: '/workspace?section=actions',
       label: t(I18N_KEYS.auth.profileLabel),
       icon: <IconUser />,
-      forceActive: activePublicSection === 'profile',
+      forceActive: activePublicSection === 'actions',
       match: 'prefix',
       tier: 'secondary',
     },

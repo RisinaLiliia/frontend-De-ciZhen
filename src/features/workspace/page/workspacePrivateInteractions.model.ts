@@ -13,6 +13,9 @@ import type {
 } from '@/features/workspace';
 import { WORKSPACE_PATH } from '@/features/workspace/page/workspacePage.constants';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
 
 export type WorkspacePrivateInteractionsParams = {
   t: WorkspaceBranchProps['t'];
@@ -20,7 +23,9 @@ export type WorkspacePrivateInteractionsParams = {
   isAuthed: boolean;
   isWorkspaceAuthed: boolean;
   authUserId?: string | null;
+  activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
   nextPath: WorkspaceBranchProps['routeState']['nextPath'];
   platformRequestsTotal: number;
   myOffers: Parameters<typeof useWorkspaceActions>[0]['myOffers'];
@@ -29,6 +34,17 @@ export type WorkspacePrivateInteractionsParams = {
   favoriteProviderLookup: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteProviderLookup'];
   providerById: Parameters<typeof useWorkspaceFavoriteToggles>[0]['providerById'];
 };
+
+export function shouldBuildWorkspacePrivateRequestInteractions(activeWorkspaceTab: WorkspaceTab) {
+  return activeWorkspaceTab !== 'profile' && activeWorkspaceTab !== 'reviews';
+}
+
+export function shouldBuildWorkspacePrivateProviderInteractions(params: {
+  activePublicSection: PublicWorkspaceSection | null;
+  requestsScope: WorkspaceRequestsScope;
+}) {
+  return !(params.activePublicSection === 'requests' && params.requestsScope === 'my');
+}
 
 export type WorkspacePrivateInteractionsResult = {
   pendingFavoriteRequestIds: FavoriteTogglesResult['pendingFavoriteRequestIds'];
@@ -92,6 +108,8 @@ type ResolveResultParams = {
 };
 
 export function buildWorkspacePrivateFavoriteToggleArgs({
+  includeRequestToggle = true,
+  includeProviderToggle = true,
   isAuthed,
   nextPath,
   router,
@@ -101,8 +119,13 @@ export function buildWorkspacePrivateFavoriteToggleArgs({
   requestById,
   favoriteProviderLookup,
   providerById,
-}: BuildFavoriteToggleArgsParams): Parameters<typeof useWorkspaceFavoriteToggles>[0] {
+}: BuildFavoriteToggleArgsParams & {
+  includeRequestToggle?: boolean;
+  includeProviderToggle?: boolean;
+}): Parameters<typeof useWorkspaceFavoriteToggles>[0] {
   return {
+    includeRequestToggle,
+    includeProviderToggle,
     isAuthed,
     nextPath,
     router,
@@ -116,13 +139,17 @@ export function buildWorkspacePrivateFavoriteToggleArgs({
 }
 
 export function buildWorkspacePrivateActionsArgs({
+  enabled = true,
   isAuthed,
   myOffers,
   t,
   qc,
   router,
-}: BuildActionsArgsParams): Parameters<typeof useWorkspaceActions>[0] {
+}: BuildActionsArgsParams & {
+  enabled?: boolean;
+}): Parameters<typeof useWorkspaceActions>[0] {
   return {
+    enabled,
     isAuthed,
     myOffers,
     t,

@@ -8,12 +8,23 @@ import type {
   useWorkspacePublicRequestsState,
 } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
 
 type WorkspacePublicFiltersResult = ReturnType<typeof useWorkspacePublicFilters>;
 type CatalogIndexResult = ReturnType<typeof useCatalogIndex>;
 type WorkspaceDataResult = ReturnType<typeof useWorkspaceData>;
 type WorkspacePublicRequestsStateResult = ReturnType<typeof useWorkspacePublicRequestsState>;
 type WorkspaceCollectionsResult = ReturnType<typeof useWorkspaceCollections>;
+
+type BuildWorkspacePrivateCatalogLoadArgs = {
+  activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
+  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+};
+
+type BuildWorkspacePrivatePublicRequestsStateLoadArgs = {
+  activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
+  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+};
 
 type BuildWorkspacePrivateSourcesDataArgsParams = Pick<
   WorkspaceBranchProps,
@@ -46,6 +57,9 @@ type BuildWorkspacePrivateSourcesRequestsStateArgsParams = {
 };
 
 type BuildWorkspacePrivateSourcesCollectionsArgsParams = {
+  activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
+  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
   requests: WorkspacePublicRequestsStateResult['requests'];
   data: Pick<
     WorkspaceDataResult,
@@ -66,6 +80,62 @@ type ResolveWorkspacePrivateSourcesResultParams = {
   collections: WorkspaceCollectionsResult;
   publicRequestsState: WorkspacePublicRequestsStateResult;
 };
+
+export function shouldLoadWorkspacePrivateCatalog({
+  activePublicSection = null,
+  activeWorkspaceTab,
+}: BuildWorkspacePrivateCatalogLoadArgs) {
+  if (activePublicSection === 'actions') return false;
+  if (activeWorkspaceTab === 'reviews') return false;
+  if (activeWorkspaceTab === 'profile') return false;
+  return true;
+}
+
+export function shouldLoadWorkspacePrivatePublicRequestsState({
+  activePublicSection = null,
+  activeWorkspaceTab,
+}: BuildWorkspacePrivatePublicRequestsStateLoadArgs) {
+  return activePublicSection === null && activeWorkspaceTab === 'my-requests';
+}
+
+export function shouldBuildWorkspacePrivateRequestCollections({
+  activePublicSection = null,
+  activeWorkspaceTab,
+  requestsScope = 'market',
+}: BuildWorkspacePrivatePublicRequestsStateLoadArgs & {
+  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
+}) {
+  if (activePublicSection === 'requests' && requestsScope === 'my') return false;
+  if (activePublicSection === 'actions') return false;
+  if (activeWorkspaceTab === 'reviews') return false;
+  if (activeWorkspaceTab === 'profile') return false;
+  return true;
+}
+
+export function shouldBuildWorkspacePrivateFavoriteProviderPresentation(
+  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'],
+) {
+  return activeWorkspaceTab === 'favorites';
+}
+
+export function shouldBuildWorkspacePrivateFavoriteProviderBackfill(
+  activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'],
+) {
+  return activeWorkspaceTab === 'favorites';
+}
+
+export function resolveWorkspacePrivatePublicSummaryCityActivityLimit({
+  activePublicSection = null,
+  activeWorkspaceTab,
+}: BuildWorkspacePrivatePublicRequestsStateLoadArgs) {
+  const shouldLoadFullMapSummary =
+    activePublicSection === null &&
+    activeWorkspaceTab === 'my-requests';
+
+  return shouldLoadFullMapSummary
+    ? WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT
+    : 1;
+}
 
 export function buildWorkspacePrivateSourcesDataArgs({
   filter,
@@ -94,6 +164,10 @@ export function buildWorkspacePrivateSourcesDataArgs({
     activeRequestsState,
     activeRequestsPeriod,
     activeRequestsSort,
+    publicSummaryCityActivityLimit: resolveWorkspacePrivatePublicSummaryCityActivityLimit({
+      activePublicSection,
+      activeWorkspaceTab,
+    }),
   };
 }
 
@@ -120,20 +194,63 @@ export function buildWorkspacePrivateSourcesRequestsStateArgs({
   };
 }
 
+export function buildWorkspacePrivateSourcesIdleRequestsStateArgs(params: {
+  allRequestsSummary: BuildWorkspacePrivateSourcesRequestsStateArgsParams['data']['allRequestsSummary'];
+  limit: number;
+  page: number;
+  setPage: (page: number) => void;
+  activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
+}) : Parameters<typeof useWorkspacePublicRequestsState>[0] {
+  return {
+    publicRequests: undefined,
+    allRequestsSummary: params.allRequestsSummary,
+    limit: params.limit,
+    page: params.page,
+    setPage: params.setPage,
+    isWorkspacePublicSection: false,
+    activePublicSection: params.activePublicSection,
+    isLoading: false,
+    isError: false,
+    hasActivePublicFilter: false,
+    cityId: 'all',
+    categoryKey: 'all',
+    subcategoryKey: 'all',
+    sortBy: 'date_desc',
+  };
+}
+
 export function buildWorkspacePrivateSourcesCollectionsArgs({
+  activePublicSection,
+  activeWorkspaceTab,
+  requestsScope = 'market',
   requests,
   data,
   catalogIndex,
   locale,
 }: BuildWorkspacePrivateSourcesCollectionsArgsParams): Parameters<typeof useWorkspaceCollections>[0] {
+  const includeRequestCollections = shouldBuildWorkspacePrivateRequestCollections({
+    activePublicSection,
+    activeWorkspaceTab,
+    requestsScope,
+  });
+  const includeFavoriteProviderBackfill = shouldBuildWorkspacePrivateFavoriteProviderBackfill(
+    activeWorkspaceTab,
+  );
+  const includeFavoriteProviderPresentation = shouldBuildWorkspacePrivateFavoriteProviderPresentation(
+    activeWorkspaceTab,
+  );
+
   return {
-    requests,
-    favoriteRequests: data.favoriteRequests,
+    includeRequestCollections,
+    includeFavoriteProviderBackfill,
+    includeFavoriteProviderPresentation,
+    requests: includeRequestCollections ? requests : [],
+    favoriteRequests: includeRequestCollections ? data.favoriteRequests : [],
     providers: data.providers,
     favoriteProviders: data.favoriteProviders,
-    myOffers: data.myOffers,
-    myProviderContracts: data.myProviderContracts,
-    myClientContracts: data.myClientContracts,
+    myOffers: includeRequestCollections ? data.myOffers : [],
+    myProviderContracts: includeRequestCollections ? data.myProviderContracts : [],
+    myClientContracts: includeRequestCollections ? data.myClientContracts : [],
     cityById: catalogIndex.cityById,
     serviceByKey: catalogIndex.serviceByKey,
     locale,
@@ -161,7 +278,6 @@ export function resolveWorkspacePrivateSourcesResult({
     isWorkspaceRequestsLoading: data.isWorkspaceRequestsLoading,
     isWorkspaceRequestsError: data.isWorkspaceRequestsError,
     myOffers: data.myOffers,
-    myClientOffers: data.myClientOffers,
     myRequests: data.myRequests,
     myOfferRequestsById: data.myOfferRequestsById,
     isMyOfferRequestsLoading: data.isMyOfferRequestsLoading,
@@ -186,7 +302,6 @@ export function resolveWorkspacePrivateSourcesResult({
     cityById: catalogIndex.cityById,
     isMyRequestsLoading: data.isMyRequestsLoading,
     isMyOffersLoading: data.isMyOffersLoading,
-    isMyClientOffersLoading: data.isMyClientOffersLoading,
     isProviderContractsLoading: data.isProviderContractsLoading,
     isClientContractsLoading: data.isClientContractsLoading,
     isMyReviewsLoading: data.isMyReviewsLoading,

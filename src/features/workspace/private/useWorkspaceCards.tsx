@@ -13,6 +13,7 @@ type Translator = (key: I18nKey) => string;
 type Args = {
   t: Translator;
   locale: Locale;
+  enabled?: boolean;
   favoriteProviders: ProviderPublicDto[];
   favoriteProviderLookup: ReadonlySet<string>;
   pendingFavoriteProviderIds: ReadonlySet<string>;
@@ -24,6 +25,7 @@ type Args = {
 export function useWorkspaceCards({
   t,
   locale,
+  enabled = true,
   favoriteProviders,
   favoriteProviderLookup,
   pendingFavoriteProviderIds,
@@ -31,35 +33,38 @@ export function useWorkspaceCards({
   favoriteProviderRoleLabelById,
   favoriteProviderCityLabelById,
 }: Args) {
-  const favoriteProviderCards = React.useMemo(
-    () =>
-      buildWorkspaceFavoriteProviderCardModels({
-        t,
-        locale,
-        favoriteProviders,
-        favoriteProviderLookup,
-        pendingFavoriteProviderIds,
-        onToggleProviderFavorite,
-        favoriteProviderRoleLabelById,
-        favoriteProviderCityLabelById,
-      }).map((item) => (
-        <ProviderCard
-          key={item.key}
-          variant="list"
-          {...item.props}
-        />
-      )),
-    [
-      favoriteProviderCityLabelById,
-      favoriteProviderLookup,
-      favoriteProviderRoleLabelById,
-      favoriteProviders,
-      locale,
-      onToggleProviderFavorite,
-      pendingFavoriteProviderIds,
+  const favoriteProviderCards = React.useMemo<React.ReactNode[]>(() => {
+    if (!enabled) {
+      return [];
+    }
+
+    return buildWorkspaceFavoriteProviderCardModels({
       t,
-    ],
-  );
+      locale,
+      favoriteProviders,
+      favoriteProviderLookup,
+      pendingFavoriteProviderIds,
+      onToggleProviderFavorite,
+      favoriteProviderRoleLabelById,
+      favoriteProviderCityLabelById,
+    }).map((item) => (
+      <ProviderCard
+        key={item.key}
+        variant="list"
+        {...item.props}
+      />
+    ));
+  }, [
+    enabled,
+    favoriteProviderCityLabelById,
+    favoriteProviderLookup,
+    favoriteProviderRoleLabelById,
+    favoriteProviders,
+    locale,
+    onToggleProviderFavorite,
+    pendingFavoriteProviderIds,
+    t,
+  ]);
 
   return {
     favoriteProviderCards,

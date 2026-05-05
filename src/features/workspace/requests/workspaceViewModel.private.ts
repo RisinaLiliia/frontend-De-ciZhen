@@ -4,6 +4,7 @@ import type { ComponentProps } from 'react';
 
 import type { WorkspaceContent } from '@/features/workspace/requests/WorkspaceContent';
 import {
+  buildEmptyWorkspaceListProps,
   buildWorkspaceFavoriteRequestsListProps,
   buildWorkspaceOfferRequestsListProps,
   buildWorkspaceOwnerRequestsListProps,
@@ -51,6 +52,33 @@ export function buildWorkspacePrivateContentProps(
   } = params;
   const listContext = buildWorkspaceListContext(params);
   const contractsLoading = isProviderContractsLoading || isClientContractsLoading;
+  const emptyListProps = buildEmptyWorkspaceListProps(listContext);
+  const myRequestsListProps = activeWorkspaceTab === 'my-requests'
+    ? buildWorkspaceOwnerRequestsListProps(listContext, {
+      requests: filteredMyRequests,
+      isLoading: isMyRequestsLoading,
+      ownerRequestActions,
+    })
+    : emptyListProps;
+  const myOffersListProps = activeWorkspaceTab === 'my-offers'
+    ? buildWorkspaceOfferRequestsListProps(listContext, {
+      requests: myOfferRequests,
+      isLoading: isMyOffersLoading,
+    })
+    : emptyListProps;
+  const contractsListProps = activeWorkspaceTab === 'completed-jobs'
+    ? buildWorkspaceOfferRequestsListProps(listContext, {
+      requests: contractRequests,
+      isLoading: contractsLoading,
+      offersByRequest: contractOffersByRequest,
+    })
+    : emptyListProps;
+  const favoriteRequestsListProps = activeWorkspaceTab === 'favorites'
+    ? buildWorkspaceFavoriteRequestsListProps(listContext, {
+      requests: favoriteRequests,
+      isLoading: isFavoriteRequestsLoading,
+    })
+    : emptyListProps;
 
   return {
     t,
@@ -64,22 +92,11 @@ export function buildWorkspacePrivateContentProps(
     activeStatusFilter,
     setStatusFilter,
     myRequestsState: buildWorkspaceState(isMyRequestsLoading, filteredMyRequests.length === 0),
-    myRequestsListProps: buildWorkspaceOwnerRequestsListProps(listContext, {
-      requests: filteredMyRequests,
-      isLoading: isMyRequestsLoading,
-      ownerRequestActions,
-    }),
+    myRequestsListProps,
     myOffersState: buildWorkspaceState(isMyOffersLoading, filteredMyOffers.length === 0),
-    myOffersListProps: buildWorkspaceOfferRequestsListProps(listContext, {
-      requests: myOfferRequests,
-      isLoading: isMyOffersLoading,
-    }),
+    myOffersListProps,
     contractsState: buildWorkspaceState(contractsLoading, filteredContracts.length === 0),
-    contractsListProps: buildWorkspaceOfferRequestsListProps(listContext, {
-      requests: contractRequests,
-      isLoading: contractsLoading,
-      offersByRequest: contractOffersByRequest,
-    }),
+    contractsListProps,
     favoritesState: {
       ...buildWorkspaceState(isFavoritesLoading, favoritesItems.length === 0),
       hasFavoriteRequests,
@@ -87,10 +104,7 @@ export function buildWorkspacePrivateContentProps(
       resolvedView: resolvedFavoritesView,
     },
     onFavoritesViewChange: setFavoritesView,
-    favoriteRequestsListProps: buildWorkspaceFavoriteRequestsListProps(listContext, {
-      requests: favoriteRequests,
-      isLoading: isFavoriteRequestsLoading,
-    }),
+    favoriteRequestsListProps,
     favoriteProvidersNode: favoriteProviderCards,
     reviewsState: { isLoading: isMyReviewsLoading, items: myReviews },
   };

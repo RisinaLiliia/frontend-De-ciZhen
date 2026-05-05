@@ -8,6 +8,9 @@ import {
 } from '@/features/workspace/private/workspaceCollections.model';
 
 export function useWorkspaceCollections({
+  includeRequestCollections = true,
+  includeFavoriteProviderBackfill = true,
+  includeFavoriteProviderPresentation = true,
   requests,
   favoriteRequests,
   providers,
@@ -22,6 +25,9 @@ export function useWorkspaceCollections({
   return React.useMemo(
     () =>
       buildWorkspaceCollections({
+        includeRequestCollections,
+        includeFavoriteProviderBackfill,
+        includeFavoriteProviderPresentation,
         requests,
         favoriteRequests,
         providers,
@@ -35,8 +41,11 @@ export function useWorkspaceCollections({
       }),
     [
       cityById,
+      includeFavoriteProviderBackfill,
       favoriteProviders,
       favoriteRequests,
+      includeFavoriteProviderPresentation,
+      includeRequestCollections,
       locale,
       myClientContracts,
       myOffers,

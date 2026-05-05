@@ -22,6 +22,10 @@ type BuildArgs = {
   data: WorkspacePrivateDataFlowResult;
 };
 
+type BuildContentDataArgs = BuildArgs & {
+  enabled?: boolean;
+};
+
 type BuildPresentationArgs = {
   branch: WorkspaceBranchProps;
   data: WorkspacePrivateDataFlowResult;
@@ -84,13 +88,28 @@ type BuildPrivateViewModelArgs = {
   >;
   viewModelPatch: ReturnType<typeof useWorkspaceContentData>['viewModelPatch'];
   onPrimaryActionClick: WorkspacePrivateViewModelInput['onPrimaryActionClick'];
+  enabled?: WorkspacePrivateViewModelInput['enabled'];
 };
+
+export function shouldBuildWorkspacePrivateContractRequests(
+  activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'],
+) {
+  return activeWorkspaceTab === 'completed-jobs';
+}
+
+export function shouldBuildWorkspacePrivateFavoriteProviderCards(
+  activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'],
+) {
+  return activeWorkspaceTab === 'favorites';
+}
 
 export function buildWorkspacePrivateContentDataArgs({
   branch,
   data,
-}: BuildArgs): WorkspaceContentDataArgs {
+  enabled,
+}: BuildContentDataArgs): WorkspaceContentDataArgs {
   return {
+    enabled,
     derivedArgs: {
       t: branch.t,
       activeStatusFilter: data.activeStatusFilter,
@@ -109,6 +128,9 @@ export function buildWorkspacePrivateContentDataArgs({
       isWorkspaceAuthed: branch.isWorkspaceAuthed,
       locale: branch.locale,
     },
+    contractRequestsEnabled: shouldBuildWorkspacePrivateContractRequests(
+      data.activeWorkspaceTab,
+    ),
     cardsArgs: {
       t: branch.t,
       locale: branch.locale,
@@ -119,6 +141,9 @@ export function buildWorkspacePrivateContentDataArgs({
       favoriteProviderRoleLabelById: data.favoriteProviderRoleLabelById,
       favoriteProviderCityLabelById: data.favoriteProviderCityLabelById,
     },
+    favoriteProviderCardsEnabled: shouldBuildWorkspacePrivateFavoriteProviderCards(
+      data.activeWorkspaceTab,
+    ),
   };
 }
 
@@ -132,6 +157,7 @@ export function buildWorkspacePrivateStateArgs({
     isPersonalized: branch.isPersonalized,
     activeWorkspaceTab: data.activeWorkspaceTab,
     activePublicSection: data.activePublicSection,
+    requestsScope: data.requestsScope,
     userName: branch.auth.user?.name,
     providers: data.providers,
     publicRequestsCount: data.platformRequestsTotal,
@@ -199,8 +225,10 @@ export function buildWorkspacePrivateViewModelInput({
   data,
   viewModelPatch,
   onPrimaryActionClick,
+  enabled,
 }: BuildPrivateViewModelArgs): WorkspacePrivateViewModelInput {
   return {
+    enabled,
     t: branch.t,
     locale: branch.locale,
     isWorkspaceAuthed: branch.isWorkspaceAuthed,

@@ -8,10 +8,12 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
 import {
   buildWorkspacePrivateNavModelArgs,
   buildWorkspacePrivateStatsModelArgs,
   buildWorkspacePrivateTopProvidersArgs,
+  shouldBuildWorkspacePrivateTopProviders,
   resolveWorkspacePrivateMeta,
   resolveWorkspacePrivateOverview,
   resolveWorkspacePrivateStateResult,
@@ -26,6 +28,7 @@ type Params = {
   isPersonalized: boolean;
   activeWorkspaceTab: WorkspaceTab;
   activePublicSection?: PublicWorkspaceSection | null;
+  requestsScope?: WorkspaceRequestsScope;
   userName?: string | null;
   providers: ProviderPublicDto[];
   publicRequestsCount: number;
@@ -46,6 +49,7 @@ export function useWorkspacePrivateState({
   isPersonalized,
   activeWorkspaceTab,
   activePublicSection = null,
+  requestsScope = 'market',
   userName,
   providers,
   publicRequestsCount,
@@ -100,7 +104,16 @@ export function useWorkspacePrivateState({
   );
 
   const topProviders = useWorkspacePrivateTopProviders(
-    buildWorkspacePrivateTopProvidersArgs({ t, locale, providers }),
+    buildWorkspacePrivateTopProvidersArgs({
+      t,
+      locale,
+      providers: shouldBuildWorkspacePrivateTopProviders({
+        activePublicSection,
+        requestsScope,
+      })
+        ? providers
+        : [],
+    }),
   );
 
   return resolveWorkspacePrivateStateResult({

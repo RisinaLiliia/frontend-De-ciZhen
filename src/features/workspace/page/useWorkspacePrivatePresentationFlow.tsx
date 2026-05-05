@@ -63,9 +63,17 @@ export function useWorkspacePrivatePresentationFlow({
       sectionParam: searchParams.get('section'),
       hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
     });
+  const isUnifiedPrivateRequests =
+    activePublicSection === 'requests' &&
+    data.requestsScope === 'my';
+  const shouldRenderWorkspaceContent = !isOverviewMode && !isUnifiedPrivateRequests;
 
   const { viewModelPatch, primaryAction } = useWorkspaceContentData(
-    buildWorkspacePrivateContentDataArgs({ branch, data }),
+    buildWorkspacePrivateContentDataArgs({
+      branch,
+      data,
+      enabled: shouldRenderWorkspaceContent,
+    }),
   );
 
   const privateState = useWorkspacePrivateState(
@@ -171,11 +179,28 @@ export function useWorkspacePrivatePresentationFlow({
       data,
       viewModelPatch,
       onPrimaryActionClick,
+      enabled: shouldRenderWorkspaceContent,
     }),
   );
 
   const activeOffersListProps = React.useMemo(
-    () =>
+    () => {
+      if (!isOverviewMode) {
+        return buildRequestsListProps({
+          t: branch.t,
+          locale: branch.locale,
+          requests: [],
+          isLoading: false,
+          isError: false,
+          serviceByKey: data.serviceByKey,
+          categoryByKey: data.categoryByKey,
+          cityById: data.cityById,
+          formatDate: data.formatDate,
+          formatPrice: data.formatPrice,
+        });
+      }
+
+      return (
       buildRequestsListProps({
         t: branch.t,
         locale: branch.locale,
@@ -199,7 +224,9 @@ export function useWorkspacePrivatePresentationFlow({
         onOpenChatThread: data.onOpenChatThread,
         pendingOfferRequestId: data.pendingOfferRequestId,
         pendingFavoriteRequestIds: data.pendingFavoriteRequestIds,
-      }),
+      })
+      );
+    },
     [
       branch.isPersonalized,
       branch.locale,
@@ -220,12 +247,10 @@ export function useWorkspacePrivatePresentationFlow({
       data.pendingOfferRequestId,
       data.publicRequests,
       data.serviceByKey,
+      isOverviewMode,
     ],
   );
 
-  const isUnifiedPrivateRequests =
-    data.activePublicSection === 'requests' &&
-    data.requestsScope === 'my';
   const privateRequestsLoading = data.workspaceRequests
     ? data.isWorkspaceRequestsLoading
     : data.isWorkspaceRequestsLoading || (data.activeRequestsRole === 'all' && data.isWorkspacePrivateOverviewLoading);
@@ -325,7 +350,7 @@ export function useWorkspacePrivatePresentationFlow({
       }}
     />
   ) : (
-    <WorkspaceContent {...workspaceContentProps} />
+    workspaceContentProps ? <WorkspaceContent {...workspaceContentProps} /> : null
   );
 
   return {

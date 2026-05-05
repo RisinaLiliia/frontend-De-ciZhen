@@ -2,7 +2,10 @@
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
-import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
+import type {
+  WorkspaceRequestsRole,
+  WorkspaceRequestsScope,
+} from '@/features/workspace/requests/workspaceRequestsScope.model';
 
 type WorkspaceDataPlanArgs = {
   enabled?: boolean;
@@ -12,7 +15,8 @@ type WorkspaceDataPlanArgs = {
   shouldLoadPrivateData: boolean;
   activeWorkspaceTab: WorkspaceTab;
   requestsScope?: WorkspaceRequestsScope;
-  activePublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | 'profile' | null;
+  activeRequestsRole?: WorkspaceRequestsRole;
+  activePublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | 'actions' | null;
   hasAccessToken: boolean;
 };
 
@@ -22,7 +26,6 @@ export type WorkspaceDataLoadPlan = {
   shouldLoadWorkspaceRequests: boolean;
   shouldLoadMyRequests: boolean;
   shouldLoadMyOffers: boolean;
-  shouldLoadMyClientOffers: boolean;
   shouldLoadMyContracts: boolean;
   shouldLoadFavoriteRequests: boolean;
   shouldLoadFavoriteProviders: boolean;
@@ -53,7 +56,6 @@ export function resolveWorkspaceDataPlan({
       shouldLoadWorkspaceRequests: false,
       shouldLoadMyRequests: false,
       shouldLoadMyOffers: false,
-      shouldLoadMyClientOffers: false,
       shouldLoadMyContracts: false,
       shouldLoadFavoriteRequests: false,
       shouldLoadFavoriteProviders: false,
@@ -79,7 +81,8 @@ export function resolveWorkspaceDataPlan({
   const shouldLoadPrivateOverviewRequests =
     isWorkspaceAuthed &&
     shouldLoadPrivateData &&
-    activePublicSection === null;
+    activePublicSection === null &&
+    activeWorkspaceTab === 'my-requests';
   const shouldLoadPublicRequests =
     isWorkspacePublicSection ||
     !isWorkspaceAuthed ||
@@ -92,14 +95,13 @@ export function resolveWorkspaceDataPlan({
     && shouldLoadPrivateData
     && activeWorkspaceTab === 'my-requests';
   const shouldLoadMyOffers =
-    shouldLoadUnifiedPrivateRequests
-    || shouldLoadPublicRequestUserState
+    shouldLoadPublicRequestUserState
     || (
-      isWorkspaceAuthed
+      !shouldLoadUnifiedPrivateRequests
+      && isWorkspaceAuthed
       && shouldLoadPrivateData
       && activeWorkspaceTab === 'my-offers'
     );
-  const shouldLoadMyClientOffers = false;
   const shouldLoadMyContracts =
     !shouldLoadUnifiedPrivateRequests
     && isWorkspaceAuthed
@@ -108,11 +110,18 @@ export function resolveWorkspaceDataPlan({
   const shouldLoadFavoriteRequests =
     shouldLoadPublicRequestUserState
     || (isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'favorites');
-  const shouldLoadFavoriteProviders = isAuthed && shouldLoadPrivateData && !isWorkspacePublicSection;
+  const shouldLoadFavoriteProviders =
+    isAuthed &&
+    shouldLoadPrivateData &&
+    !isWorkspacePublicSection &&
+    !shouldLoadUnifiedPrivateRequests;
   const shouldLoadOfferRequests = shouldLoadMyOffers && activeWorkspaceTab === 'my-offers';
   const shouldLoadReviews =
     isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'reviews';
-  const shouldLoadProviders = !isWorkspacePublicSection && shouldLoadPrivateData;
+  const shouldLoadProviders =
+    !isWorkspacePublicSection &&
+    shouldLoadPrivateData &&
+    !shouldLoadUnifiedPrivateRequests;
 
   return {
     shouldLoadPublicRequests,
@@ -120,7 +129,6 @@ export function resolveWorkspaceDataPlan({
     shouldLoadWorkspaceRequests,
     shouldLoadMyRequests,
     shouldLoadMyOffers,
-    shouldLoadMyClientOffers,
     shouldLoadMyContracts,
     shouldLoadFavoriteRequests,
     shouldLoadFavoriteProviders,

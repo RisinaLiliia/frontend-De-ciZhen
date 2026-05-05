@@ -4,12 +4,21 @@ import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import type { useWorkspacePrivateNavModel } from '@/features/workspace/requests/useWorkspacePrivateNavModel';
 import type { useWorkspacePrivateStatsModel } from '@/features/workspace/requests/useWorkspacePrivateStatsModel';
 import type { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
+import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
 import { clampPercent } from '@/features/workspace/requests/workspaceState.metrics';
 import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
 
 type WorkspacePrivateNavModelArgs = Parameters<typeof useWorkspacePrivateNavModel>[0];
 type WorkspacePrivateStatsModelArgs = Parameters<typeof useWorkspacePrivateStatsModel>[0];
 type WorkspacePrivateTopProvidersArgs = Parameters<typeof useWorkspacePrivateTopProviders>[0];
+
+export function shouldBuildWorkspacePrivateTopProviders(params: {
+  activePublicSection: PublicWorkspaceSection | null;
+  requestsScope: WorkspaceRequestsScope;
+}) {
+  return !(params.activePublicSection === 'requests' && params.requestsScope === 'my');
+}
 
 export function resolveWorkspacePrivateOverview(
   overview: WorkspacePrivateOverviewDto | null | undefined,

@@ -7,7 +7,7 @@ import { useWorkspaceRouteState } from '@/features/workspace/shell/useWorkspaceR
 
 type ProbeProps = {
   query: string;
-  forcedPublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | null;
+  forcedPublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | 'actions' | null;
   isAuthed?: boolean;
 };
 
@@ -83,7 +83,16 @@ describe('useWorkspaceRouteState', () => {
     expect(node.getAttribute('data-scope')).toBe('my');
   });
 
-  it('treats profile section as a private workspace tab for authenticated users', () => {
+  it('treats actions section as a private workspace tab for authenticated users', () => {
+    render(<Probe query="section=actions&period=90d&range=90d" isAuthed />);
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('null');
+    expect(node.getAttribute('data-is-public')).toBe('false');
+    expect(node.getAttribute('data-tab')).toBe('profile');
+  });
+
+  it('keeps legacy profile section as an alias for actions', () => {
     render(<Probe query="section=profile&period=90d&range=90d" isAuthed />);
     const node = screen.getByTestId('state');
 

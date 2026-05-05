@@ -7,6 +7,8 @@ import {
   buildWorkspacePrivateStateArgs,
   buildWorkspacePrivateViewModelInput,
   buildWorkspacePublicIntroProps,
+  shouldBuildWorkspacePrivateContractRequests,
+  shouldBuildWorkspacePrivateFavoriteProviderCards,
 } from './workspacePrivatePresentation.model';
 
 function createBranch() {
@@ -92,8 +94,18 @@ describe('workspacePrivatePresentation.model', () => {
     });
 
     expect(args.derivedArgs.activeWorkspaceTab).toBe('my-offers');
+    expect(args.enabled).toBeUndefined();
     expect(args.contractArgs.locale).toBe('en');
+    expect(args.contractRequestsEnabled).toBe(false);
     expect(args.cardsArgs.pendingFavoriteProviderIds).toEqual(new Set(['provider-2']));
+    expect(args.favoriteProviderCardsEnabled).toBe(false);
+  });
+
+  it('enables private contract requests and favorite provider cards only for the tabs that render them', () => {
+    expect(shouldBuildWorkspacePrivateContractRequests('completed-jobs')).toBe(true);
+    expect(shouldBuildWorkspacePrivateContractRequests('profile')).toBe(false);
+    expect(shouldBuildWorkspacePrivateFavoriteProviderCards('favorites')).toBe(true);
+    expect(shouldBuildWorkspacePrivateFavoriteProviderCards('reviews')).toBe(false);
   });
 
   it('builds private state args with provider-count fallback and public intro props', () => {
@@ -147,5 +159,15 @@ describe('workspacePrivatePresentation.model', () => {
     expect(input.activeWorkspaceTab).toBe('my-offers');
     expect(input.isClientContractsLoading).toBe(true);
     expect(input.primaryAction.href).toBe('/request/create');
+  });
+
+  it('passes content-data enabled flag through the private flow builder', () => {
+    const args = buildWorkspacePrivateContentDataArgs({
+      branch: createBranch() as never,
+      data: createData() as never,
+      enabled: false,
+    });
+
+    expect(args.enabled).toBe(false);
   });
 });

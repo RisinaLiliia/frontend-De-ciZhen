@@ -358,6 +358,6 @@ export function buildModeHref({
     return toWorkspaceHref(next);
   }
 
-  next.set('section', 'profile');
+  next.set('section', 'actions');
   return toWorkspaceHref(next);
 }

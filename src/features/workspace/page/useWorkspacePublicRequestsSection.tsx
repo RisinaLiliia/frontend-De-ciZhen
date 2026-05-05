@@ -17,7 +17,7 @@ import {
   resolveRequestsListDensityForPageSize,
 } from '@/lib/requests/pagination';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import { useWorkspacePrivateInteractions } from '@/features/workspace/page/useWorkspacePrivateInteractions';
+import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
 import {
   buildEmptyWorkspaceMarketRequestsResponse,
 } from '@/features/workspace/page/workspacePublicRequests.model';
@@ -50,7 +50,6 @@ export function useWorkspacePublicRequestsSection({
   const {
     t,
     locale,
-    auth,
     isAuthed,
     isWorkspaceAuthed,
     routeState,
@@ -78,6 +77,9 @@ export function useWorkspacePublicRequestsSection({
 
   const data = useWorkspaceData({
     enabled,
+    includePrivateOverview: false,
+    includePublicSummary: false,
+    publicSummaryCityActivityLimit: 1,
     filter: {
       ...filters.filter,
       state: activeRequestsState,
@@ -163,15 +165,11 @@ export function useWorkspacePublicRequestsSection({
     () => new Set((data.favoriteRequests ?? []).map((request) => request.id)),
     [data.favoriteRequests],
   );
-  const interactions = useWorkspacePrivateInteractions({
+  const interactions = useWorkspaceRequestUserInteractions({
     t,
     locale,
     isAuthed,
-    isWorkspaceAuthed,
-    authUserId: auth.user?.id,
-    activeWorkspaceTab,
     nextPath,
-    platformRequestsTotal: data.allRequestsSummary?.totalPublishedRequests ?? marketResponse.list.total,
     myOffers: data.myOffers,
     favoriteRequestIds,
     requestById,

@@ -24,6 +24,9 @@ type WorkspaceCollectionsCatalog = {
 };
 
 export type WorkspaceCollectionsArgs = {
+  includeRequestCollections?: boolean;
+  includeFavoriteProviderBackfill?: boolean;
+  includeFavoriteProviderPresentation?: boolean;
   requests: RequestResponseDto[];
   favoriteRequests: RequestResponseDto[];
   providers: ProviderPublicDto[];
@@ -37,6 +40,9 @@ export type WorkspaceCollectionsArgs = {
 };
 
 export function buildWorkspaceCollections({
+  includeRequestCollections = true,
+  includeFavoriteProviderBackfill = true,
+  includeFavoriteProviderPresentation = true,
   requests,
   favoriteRequests,
   providers,
@@ -48,23 +54,38 @@ export function buildWorkspaceCollections({
   serviceByKey,
   locale,
 }: WorkspaceCollectionsArgs) {
-  const favoriteRequestIds = buildFavoriteRequestIds(favoriteRequests);
-  const requestById = buildRequestById(requests, favoriteRequests);
-  const providerById = buildProviderById(providers, favoriteProviders);
+  const favoriteRequestIds = includeRequestCollections
+    ? buildFavoriteRequestIds(favoriteRequests)
+    : new Set<string>();
+  const requestById = includeRequestCollections
+    ? buildRequestById(requests, favoriteRequests)
+    : new Map<string, RequestResponseDto>();
+  const providerById = buildProviderById(
+    providers,
+    includeFavoriteProviderBackfill ? favoriteProviders : [],
+  );
   const favoriteProviderLookup = buildProviderFavoriteLookup(favoriteProviders);
   const favoriteProviderIds = buildFavoriteProviderIds(providers, favoriteProviderLookup);
-  const offersByRequest = buildOffersByRequest(myOffers);
-  const allMyContracts = buildAllMyContracts(myProviderContracts, myClientContracts);
-  const favoriteProviderCityLabelById = buildFavoriteProviderCityLabelById(
-    favoriteProviders,
-    cityById,
-    locale,
-  );
-  const favoriteProviderRoleLabelById = buildFavoriteProviderRoleLabelById(
-    favoriteProviders,
-    serviceByKey,
-    locale,
-  );
+  const offersByRequest = includeRequestCollections
+    ? buildOffersByRequest(myOffers)
+    : new Map<string, OfferDto>();
+  const allMyContracts = includeRequestCollections
+    ? buildAllMyContracts(myProviderContracts, myClientContracts)
+    : [];
+  const favoriteProviderCityLabelById = includeFavoriteProviderPresentation
+    ? buildFavoriteProviderCityLabelById(
+      favoriteProviders,
+      cityById,
+      locale,
+    )
+    : new Map<string, string>();
+  const favoriteProviderRoleLabelById = includeFavoriteProviderPresentation
+    ? buildFavoriteProviderRoleLabelById(
+      favoriteProviders,
+      serviceByKey,
+      locale,
+    )
+    : new Map<string, string>();
 
   return {
     favoriteRequestIds,

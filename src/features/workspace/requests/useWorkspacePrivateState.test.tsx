@@ -5,6 +5,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
 import { useWorkspacePrivateState } from '@/features/workspace/requests/useWorkspacePrivateState';
+import { shouldBuildWorkspacePrivateTopProviders } from '@/features/workspace/requests/workspacePrivateState.model';
 
 type StateArgs = Parameters<typeof useWorkspacePrivateState>[0];
 
@@ -23,6 +24,7 @@ function makeArgs(overrides: Partial<StateArgs> = {}): StateArgs {
     isPersonalized: true,
     activeWorkspaceTab: 'my-requests',
     activePublicSection: null,
+    requestsScope: 'market',
     userName: 'Anna',
     providers: [],
     publicRequestsCount: 10,
@@ -121,5 +123,30 @@ describe('useWorkspacePrivateState', () => {
     expect(node.getAttribute('data-my-requests-value')).toBe('');
     expect(node.getAttribute('data-primary-count')).toBe('4');
     expect(node.getAttribute('data-secondary-count')).toBe('3');
+  });
+
+  it('skips top providers in unified private requests mode', () => {
+    expect(shouldBuildWorkspacePrivateTopProviders({
+      activePublicSection: 'requests',
+      requestsScope: 'my',
+    })).toBe(false);
+
+    expect(shouldBuildWorkspacePrivateTopProviders({
+      activePublicSection: 'requests',
+      requestsScope: 'market',
+    })).toBe(true);
+
+    render(
+      <StateProbe
+        {...makeArgs({
+          activePublicSection: 'requests',
+          requestsScope: 'my',
+          providers: [{ id: 'provider-1', ratingAvg: 4.9, reviewCount: 10 } as never],
+        })}
+      />,
+    );
+
+    const node = screen.getByTestId('state');
+    expect(node.getAttribute('data-top-providers')).toBe('0');
   });
 });

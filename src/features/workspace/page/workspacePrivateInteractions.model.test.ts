@@ -9,6 +9,8 @@ import {
   buildWorkspacePrivateSeenTotalArgs,
   buildWorkspacePrivateTabPersistenceArgs,
   resolveWorkspacePrivateInteractionsResult,
+  shouldBuildWorkspacePrivateProviderInteractions,
+  shouldBuildWorkspacePrivateRequestInteractions,
 } from './workspacePrivateInteractions.model';
 
 describe('workspacePrivateInteractions.model', () => {
@@ -18,6 +20,8 @@ describe('workspacePrivateInteractions.model', () => {
     const t = (key: string) => key;
 
     const favoriteToggleArgs = buildWorkspacePrivateFavoriteToggleArgs({
+      includeRequestToggle: false,
+      includeProviderToggle: false,
       isAuthed: true,
       nextPath: '/workspace?tab=favorites',
       router,
@@ -29,6 +33,7 @@ describe('workspacePrivateInteractions.model', () => {
       providerById: new Map([['provider-1', { id: 'provider-1' }]]) as never,
     });
     const actionsArgs = buildWorkspacePrivateActionsArgs({
+      enabled: false,
       isAuthed: true,
       myOffers: [{ id: 'offer-1', requestId: 'req-1' }] as never,
       t: t as never,
@@ -48,7 +53,25 @@ describe('workspacePrivateInteractions.model', () => {
       activeWorkspaceTab: 'favorites',
     });
 
+    expect(shouldBuildWorkspacePrivateRequestInteractions('profile')).toBe(false);
+    expect(shouldBuildWorkspacePrivateRequestInteractions('reviews')).toBe(false);
+    expect(shouldBuildWorkspacePrivateRequestInteractions('favorites')).toBe(true);
+    expect(
+      shouldBuildWorkspacePrivateProviderInteractions({
+        activePublicSection: 'requests',
+        requestsScope: 'my',
+      }),
+    ).toBe(false);
+    expect(
+      shouldBuildWorkspacePrivateProviderInteractions({
+        activePublicSection: null,
+        requestsScope: 'market',
+      }),
+    ).toBe(true);
     expect(favoriteToggleArgs.nextPath).toBe('/workspace?tab=favorites');
+    expect(favoriteToggleArgs.includeRequestToggle).toBe(false);
+    expect(favoriteToggleArgs.includeProviderToggle).toBe(false);
+    expect(actionsArgs.enabled).toBe(false);
     expect(actionsArgs.myOffers).toHaveLength(1);
     expect(seenArgs).toEqual({
       isAuthed: true,

@@ -29,6 +29,7 @@ type RouterLike = {
 type Translator = (key: I18nKey) => string;
 
 type Args = {
+  enabled?: boolean;
   isAuthed: boolean;
   myOffers: OfferDto[];
   t: Translator;
@@ -48,7 +49,14 @@ const requestLifecyclePublicQueryKeys: QueryKey[] = [
   workspaceQK.requestSimilarPrefix(),
 ];
 
-export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args) {
+export function useWorkspaceActions({
+  enabled = true,
+  isAuthed,
+  myOffers,
+  t,
+  qc,
+  router,
+}: Args) {
   const [pendingOfferRequestId, setPendingOfferRequestId] = React.useState<string | null>(null);
   const [pendingPublishRequestId, setPendingPublishRequestId] = React.useState<string | null>(null);
   const [pendingUnpublishRequestId, setPendingUnpublishRequestId] = React.useState<string | null>(null);
@@ -75,6 +83,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
 
   const onOpenOfferSheet = React.useCallback(
     (requestId: string) => {
+      if (!enabled) return;
       if (!isAuthed) {
         toast.message(t(I18N_KEYS.requestDetails.loginRequired));
         router.push(buildWorkspaceOfferLoginHref(requestId));
@@ -82,14 +91,15 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
       }
       router.push(buildWorkspaceOfferSheetHref(requestId));
     },
-    [isAuthed, router, t],
+    [enabled, isAuthed, router, t],
   );
 
   const onWithdrawOffer = React.useCallback(
-    async (offerId: string) => {
-      const offer = resolveWorkspaceOfferById(myOffers, offerId);
-      if (!offer) return;
-      setPendingOfferRequestId(offer.requestId);
+    async (offerId: string, requestId?: string) => {
+      if (!enabled) return;
+      const resolvedRequestId = requestId ?? resolveWorkspaceOfferById(myOffers, offerId)?.requestId ?? null;
+      if (!resolvedRequestId) return;
+      setPendingOfferRequestId(resolvedRequestId);
       try {
         await deleteOffer(offerId);
         toast.success(t(I18N_KEYS.requestDetails.responseCancelled));
@@ -100,11 +110,12 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         setPendingOfferRequestId(null);
       }
     },
-    [myOffers, qc, t],
+    [enabled, myOffers, qc, t],
   );
 
   const onOpenChatThread = React.useCallback(
     async (offer: OfferDto) => {
+      if (!enabled) return;
       const navigation = resolveWorkspaceChatNavigation(offer);
       if (!navigation.conversationInput) {
         toast.message(t(I18N_KEYS.requestDetails.chatSoon));
@@ -119,11 +130,12 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         toast.error(message);
       }
     },
-    [qc, router, t],
+    [enabled, qc, router, t],
   );
 
   const onOpenChatConversation = React.useCallback(
     async (payload: WorkspaceChatConversationInput) => {
+      if (!enabled) return;
       try {
         if (!isWorkspaceChatConversationInput(payload)) {
           toast.message(t(I18N_KEYS.requestDetails.chatSoon));
@@ -137,11 +149,12 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         toast.error(message);
       }
     },
-    [qc, router, t],
+    [enabled, qc, router, t],
   );
 
   const onArchiveMyRequest = React.useCallback(
     async (requestId: string) => {
+      if (!enabled) return;
       if (pendingArchiveRequestId === requestId) return;
       setPendingArchiveRequestId(requestId);
       try {
@@ -155,7 +168,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         setPendingArchiveRequestId(null);
       }
     },
-    [invalidateWorkspaceRequests, pendingArchiveRequestId, t],
+    [enabled, invalidateWorkspaceRequests, pendingArchiveRequestId, t],
   );
 
   const onArchiveMyRequestVoid = React.useCallback((requestId: string) => {
@@ -164,6 +177,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
 
   const onPublishMyRequest = React.useCallback(
     async (requestId: string) => {
+      if (!enabled) return;
       if (pendingPublishRequestId === requestId) return;
       setPendingPublishRequestId(requestId);
       try {
@@ -177,7 +191,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         setPendingPublishRequestId(null);
       }
     },
-    [invalidateWorkspaceRequests, pendingPublishRequestId, t],
+    [enabled, invalidateWorkspaceRequests, pendingPublishRequestId, t],
   );
 
   const onPublishMyRequestVoid = React.useCallback((requestId: string) => {
@@ -186,6 +200,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
 
   const onUnpublishMyRequest = React.useCallback(
     async (requestId: string) => {
+      if (!enabled) return;
       if (pendingUnpublishRequestId === requestId) return;
       setPendingUnpublishRequestId(requestId);
       try {
@@ -199,7 +214,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         setPendingUnpublishRequestId(null);
       }
     },
-    [invalidateWorkspaceRequests, pendingUnpublishRequestId, t],
+    [enabled, invalidateWorkspaceRequests, pendingUnpublishRequestId, t],
   );
 
   const onUnpublishMyRequestVoid = React.useCallback((requestId: string) => {
@@ -208,6 +223,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
 
   const onDuplicateMyRequest = React.useCallback(
     async (requestId: string) => {
+      if (!enabled) return;
       if (pendingDuplicateRequestId === requestId) return;
       setPendingDuplicateRequestId(requestId);
       try {
@@ -221,7 +237,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         setPendingDuplicateRequestId(null);
       }
     },
-    [invalidateWorkspaceRequests, pendingDuplicateRequestId, t],
+    [enabled, invalidateWorkspaceRequests, pendingDuplicateRequestId, t],
   );
 
   const onDuplicateMyRequestVoid = React.useCallback((requestId: string) => {
@@ -230,6 +246,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
 
   const onDeleteMyRequest = React.useCallback(
     async (requestId: string) => {
+      if (!enabled) return;
       if (pendingDeleteRequestId === requestId) return;
       setPendingDeleteRequestId(requestId);
       try {
@@ -243,7 +260,7 @@ export function useWorkspaceActions({ isAuthed, myOffers, t, qc, router }: Args)
         setPendingDeleteRequestId(null);
       }
     },
-    [invalidateWorkspaceRequests, pendingDeleteRequestId, t],
+    [enabled, invalidateWorkspaceRequests, pendingDeleteRequestId, t],
   );
 
   const onDeleteMyRequestVoid = React.useCallback((requestId: string) => {

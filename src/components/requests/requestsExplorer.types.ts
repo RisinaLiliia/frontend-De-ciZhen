@@ -90,7 +90,7 @@ export type RequestsExplorerRequestsContentProps = {
   pendingOfferRequestId: string | null;
   totalPages: number;
   openOfferSheet: (requestId: string) => void;
-  onWithdrawOffer?: (offerId: string) => void;
+  onWithdrawOffer?: (offerId: string, requestId?: string) => void;
   toggleRequestFavorite: (requestId: string) => Promise<void> | void;
   formatDate: Intl.DateTimeFormat;
   formatPrice: Intl.NumberFormat;

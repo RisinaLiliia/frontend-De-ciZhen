@@ -11,6 +11,7 @@ import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspa
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspaceData } from '@/features/workspace/requests';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
+import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
 import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
@@ -144,7 +145,7 @@ describe('useWorkspacePrivateSources', () => {
         locale="de"
         isAuthed
         isWorkspaceAuthed
-        activePublicSection="requests"
+        activePublicSection={null}
         activeWorkspaceTab="my-requests"
         activeRequestsRole="provider"
         activeRequestsState="execution"
@@ -173,12 +174,13 @@ describe('useWorkspacePrivateSources', () => {
         activeRequestsState: 'execution',
         activeRequestsPeriod: '30d',
         activeRequestsSort: 'deadline',
+        publicSummaryCityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
       }),
     );
 
     expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        activePublicSection: 'requests',
+        activePublicSection: null,
         isWorkspacePublicSection: false,
         categoryKey: 'cat-1',
       }),
@@ -187,6 +189,41 @@ describe('useWorkspacePrivateSources', () => {
     expect(useWorkspaceCollectionsMock).toHaveBeenCalledWith(
       expect.objectContaining({
         locale: 'de',
+      }),
+    );
+  });
+
+  it('disables catalog loading for private actions/profile flow', () => {
+    const t: WorkspaceBranchProps['t'] = (key) => String(key);
+
+    render(
+      <SourcesProbe
+        t={t}
+        locale="de"
+        isAuthed
+        isWorkspaceAuthed
+        activePublicSection={null}
+        activeWorkspaceTab="profile"
+      />,
+    );
+
+    expect(useWorkspacePublicFiltersMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        shouldLoadCatalog: false,
+      }),
+    );
+
+    expect(useWorkspaceDataMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        activeWorkspaceTab: 'profile',
+        publicSummaryCityActivityLimit: 1,
+      }),
+    );
+
+    expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        publicRequests: undefined,
+        hasActivePublicFilter: false,
       }),
     );
   });

@@ -81,7 +81,7 @@ export function RequestListOfferStatusActions({
               title={t(I18N_KEYS.requestDetails.responseCancel)}
               iconOnly
               className="request-card__status-action request-card__status-action--danger"
-              onClick={() => onWithdrawOffer(offerId)}
+              onClick={() => onWithdrawOffer(offerId, status.itemId)}
               disabled={status.isPendingWithdraw}
             />
           ) : null}

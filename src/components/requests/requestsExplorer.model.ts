@@ -81,7 +81,7 @@ type BuildRequestsContentArgs = {
     pendingOfferRequestId: string | null;
     totalPages: number;
     openOfferSheet: (requestId: string) => void;
-    onWithdrawOffer?: (offerId: string) => void;
+    onWithdrawOffer?: (offerId: string, requestId?: string) => void;
     toggleRequestFavorite: (requestId: string) => Promise<void> | void;
   };
   catalogIndex: RequestsExplorerCatalogIndex;

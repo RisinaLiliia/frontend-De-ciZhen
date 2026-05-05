@@ -1,16 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
 
 import { getAccessToken } from '@/lib/auth/token';
 import {
-  buildWorkspaceOfferRequestIds,
   resolveWorkspaceDataPlan,
 } from '@/features/workspace/requests/workspaceData.model';
 import {
   buildWorkspaceDataQueries,
-  buildWorkspaceOfferRequestsQuery,
 } from '@/features/workspace/requests/workspaceData.queries';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
@@ -21,9 +18,14 @@ import type {
   WorkspaceRequestsState,
 } from '@/features/workspace/requests/workspaceRequestsScope.model';
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
+import { useWorkspaceContractData } from '@/features/workspace/requests/useWorkspaceContractData';
+import { useWorkspaceLegacyPrivateData } from '@/features/workspace/requests/useWorkspaceLegacyPrivateData';
 
 type Params = {
   enabled?: boolean;
+  includePrivateOverview?: boolean;
+  includePublicSummary?: boolean;
+  publicSummaryCityActivityLimit?: number;
   filter: WorkspacePublicOverviewQuery;
   locale: string;
   isAuthed: boolean;
@@ -42,6 +44,9 @@ type Params = {
 export function useWorkspaceData(params: Params) {
   const {
     enabled = true,
+    includePrivateOverview = true,
+    includePublicSummary = true,
+    publicSummaryCityActivityLimit,
     filter,
     locale,
     isAuthed,
@@ -68,6 +73,7 @@ export function useWorkspaceData(params: Params) {
         activeWorkspaceTab,
         activePublicSection,
         requestsScope,
+        activeRequestsRole,
         hasAccessToken,
       }),
     [
@@ -78,6 +84,7 @@ export function useWorkspaceData(params: Params) {
       isAuthed,
       isWorkspaceAuthed,
       isWorkspacePublicSection,
+      activeRequestsRole,
       requestsScope,
       shouldLoadPrivateData,
     ],
@@ -90,6 +97,7 @@ export function useWorkspaceData(params: Params) {
         filter,
         loadPlan,
         hasAccessToken,
+        publicSummaryCityActivityLimit,
         requestsScope,
         activeRequestsRole,
         activeRequestsState,
@@ -105,115 +113,25 @@ export function useWorkspaceData(params: Params) {
       activeRequestsState,
       hasAccessToken,
       loadPlan,
+      publicSummaryCityActivityLimit,
       requestsScope,
     ],
   );
 
-  const { data: publicOverview, isLoading, isError } = useQuery(workspaceDataQueries.publicOverview);
-  const publicRequests = publicOverview?.requests;
+  const contractData = useWorkspaceContractData({
+    workspaceDataQueries,
+    includePrivateOverview,
+    includePublicSummary,
+  });
 
-  const {
-    data: publicSummaryOverview,
-    isLoading: isPublicSummaryLoading,
-    isError: isPublicSummaryError,
-  } = useQuery(workspaceDataQueries.publicSummary);
-  const allRequestsSummary = publicSummaryOverview?.summary;
-  const publicCityActivity = publicSummaryOverview?.cityActivity;
-
-  const {
-    data: workspacePrivateOverview,
-    isLoading: isWorkspacePrivateOverviewLoading,
-  } = useQuery(workspaceDataQueries.privateOverview);
-  const {
-    data: workspaceRequests,
-    isLoading: isWorkspaceRequestsLoading,
-    isError: isWorkspaceRequestsError,
-  } = useQuery(workspaceDataQueries.workspaceRequests);
-
-  const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery(workspaceDataQueries.myOffers);
-  const { data: myClientOffers = [], isLoading: isMyClientOffersLoading } = useQuery(
-    workspaceDataQueries.myClientOffers,
-  );
-
-  const myOfferRequestIds = React.useMemo(
-    () => buildWorkspaceOfferRequestIds(myOffers),
-    [myOffers],
-  );
-
-  const myOfferRequestsQuery = React.useMemo(
-    () =>
-      buildWorkspaceOfferRequestsQuery({
-        locale,
-        requestIds: myOfferRequestIds,
-        enabled: loadPlan.shouldLoadOfferRequests,
-      }),
-    [loadPlan.shouldLoadOfferRequests, locale, myOfferRequestIds],
-  );
-
-  const {
-    data: myOfferRequestsById = new Map(),
-    isLoading: isMyOfferRequestsLoading,
-  } = useQuery(myOfferRequestsQuery);
-
-  const { data: favoriteRequests = [], isLoading: isFavoriteRequestsLoading } = useQuery(
-    workspaceDataQueries.favoriteRequests,
-  );
-
-  const { data: favoriteProviders = [], isLoading: isFavoriteProvidersLoading } = useQuery(
-    workspaceDataQueries.favoriteProviders,
-  );
-
-  const { data: myReviews = [], isLoading: isMyReviewsLoading } = useQuery(workspaceDataQueries.myReviews);
-
-  const { data: myRequests = [], isLoading: isMyRequestsLoading } = useQuery(workspaceDataQueries.myRequests);
-
-  const { data: myProviderContracts = [], isLoading: isProviderContractsLoading } = useQuery(
-    workspaceDataQueries.myProviderContracts,
-  );
-
-  const { data: myClientContracts = [], isLoading: isClientContractsLoading } = useQuery(
-    workspaceDataQueries.myClientContracts,
-  );
-
-  const {
-    data: providers = [],
-    isLoading: isProvidersLoading,
-    isError: isProvidersError,
-  } = useQuery(workspaceDataQueries.providers);
+  const legacyPrivateData = useWorkspaceLegacyPrivateData({
+    workspaceDataQueries,
+    locale,
+    shouldLoadOfferRequests: loadPlan.shouldLoadOfferRequests,
+  });
 
   return {
-    publicRequests,
-    isLoading,
-    isError,
-    allRequestsSummary,
-    publicCityActivity,
-    isPublicSummaryLoading,
-    isPublicSummaryError,
-    workspacePrivateOverview,
-    isWorkspacePrivateOverviewLoading,
-    workspaceRequests,
-    isWorkspaceRequestsLoading,
-    isWorkspaceRequestsError,
-    myOffers,
-    isMyOffersLoading,
-    myClientOffers,
-    isMyClientOffersLoading,
-    myOfferRequestsById,
-    isMyOfferRequestsLoading,
-    favoriteRequests,
-    isFavoriteRequestsLoading,
-    favoriteProviders,
-    isFavoriteProvidersLoading,
-    myReviews,
-    isMyReviewsLoading,
-    myRequests,
-    isMyRequestsLoading,
-    myProviderContracts,
-    isProviderContractsLoading,
-    myClientContracts,
-    isClientContractsLoading,
-    providers,
-    isProvidersLoading,
-    isProvidersError,
+    ...contractData,
+    ...legacyPrivateData,
   };
 }
