@@ -25,6 +25,8 @@ type WorkspaceCollectionsCatalog = {
 
 export type WorkspaceCollectionsArgs = {
   includeRequestCollections?: boolean;
+  includeFavoriteProviderBackfill?: boolean;
+  includeFavoriteProviderPresentation?: boolean;
   requests: RequestResponseDto[];
   favoriteRequests: RequestResponseDto[];
   providers: ProviderPublicDto[];
@@ -39,6 +41,8 @@ export type WorkspaceCollectionsArgs = {
 
 export function buildWorkspaceCollections({
   includeRequestCollections = true,
+  includeFavoriteProviderBackfill = true,
+  includeFavoriteProviderPresentation = true,
   requests,
   favoriteRequests,
   providers,
@@ -56,7 +60,10 @@ export function buildWorkspaceCollections({
   const requestById = includeRequestCollections
     ? buildRequestById(requests, favoriteRequests)
     : new Map<string, RequestResponseDto>();
-  const providerById = buildProviderById(providers, favoriteProviders);
+  const providerById = buildProviderById(
+    providers,
+    includeFavoriteProviderBackfill ? favoriteProviders : [],
+  );
   const favoriteProviderLookup = buildProviderFavoriteLookup(favoriteProviders);
   const favoriteProviderIds = buildFavoriteProviderIds(providers, favoriteProviderLookup);
   const offersByRequest = includeRequestCollections
@@ -65,16 +72,20 @@ export function buildWorkspaceCollections({
   const allMyContracts = includeRequestCollections
     ? buildAllMyContracts(myProviderContracts, myClientContracts)
     : [];
-  const favoriteProviderCityLabelById = buildFavoriteProviderCityLabelById(
-    favoriteProviders,
-    cityById,
-    locale,
-  );
-  const favoriteProviderRoleLabelById = buildFavoriteProviderRoleLabelById(
-    favoriteProviders,
-    serviceByKey,
-    locale,
-  );
+  const favoriteProviderCityLabelById = includeFavoriteProviderPresentation
+    ? buildFavoriteProviderCityLabelById(
+      favoriteProviders,
+      cityById,
+      locale,
+    )
+    : new Map<string, string>();
+  const favoriteProviderRoleLabelById = includeFavoriteProviderPresentation
+    ? buildFavoriteProviderRoleLabelById(
+      favoriteProviders,
+      serviceByKey,
+      locale,
+    )
+    : new Map<string, string>();
 
   return {
     favoriteRequestIds,

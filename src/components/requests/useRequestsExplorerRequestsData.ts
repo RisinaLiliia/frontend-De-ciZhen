@@ -166,8 +166,8 @@ export function useRequestsExplorerRequestsData({
   );
 
   const withdrawOffer = React.useCallback(
-    async (offerId: string) => {
-      const offerRequestId = findOfferRequestId(myOffers, offerId);
+    async (offerId: string, requestId?: string) => {
+      const offerRequestId = requestId ?? findOfferRequestId(myOffers, offerId);
       if (!offerRequestId) return;
       setPendingOfferRequestId(offerRequestId);
       try {
@@ -183,8 +183,8 @@ export function useRequestsExplorerRequestsData({
     [myOffers, qc, t],
   );
 
-  const onWithdrawOffer = React.useCallback((offerId: string) => {
-    void withdrawOffer(offerId);
+  const onWithdrawOffer = React.useCallback((offerId: string, requestId?: string) => {
+    void withdrawOffer(offerId, requestId);
   }, [withdrawOffer]);
 
   const totalResults = publicRequests?.total ?? requests.length;

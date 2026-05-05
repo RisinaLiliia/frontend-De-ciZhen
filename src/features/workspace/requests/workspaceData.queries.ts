@@ -4,7 +4,7 @@ import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { listMyRequests } from '@/lib/api/requests';
 import { listPublicProviders } from '@/lib/api/providers';
 import { listMyContracts } from '@/lib/api/contracts';
-import { listMyClientOffers, listMyProviderOffers } from '@/lib/api/offers';
+import { listMyProviderOffers } from '@/lib/api/offers';
 import { listFavorites } from '@/lib/api/favorites';
 import { listMyReviews } from '@/lib/api/reviews';
 import {
@@ -46,6 +46,7 @@ type WorkspaceDataQueriesArgs = {
   filter: WorkspacePublicOverviewQuery;
   loadPlan: WorkspaceDataLoadPlan;
   hasAccessToken: boolean;
+  publicSummaryCityActivityLimit?: number;
   requestsScope: WorkspaceRequestsScopeDto;
   activeRequestsRole: WorkspaceRequestsRoleDto;
   activeRequestsState: WorkspaceRequestsStateDto;
@@ -53,17 +54,37 @@ type WorkspaceDataQueriesArgs = {
   activeRequestsSort: string | null;
 };
 
-export function buildWorkspaceDataQueries({
+type BuildWorkspaceContractQueriesArgs = Pick<
+  WorkspaceDataQueriesArgs,
+  | 'enabled'
+  | 'filter'
+  | 'loadPlan'
+  | 'hasAccessToken'
+  | 'publicSummaryCityActivityLimit'
+  | 'requestsScope'
+  | 'activeRequestsRole'
+  | 'activeRequestsState'
+  | 'activeRequestsPeriod'
+  | 'activeRequestsSort'
+>;
+
+type BuildWorkspaceLegacyPrivateQueriesArgs = Pick<
+  WorkspaceDataQueriesArgs,
+  'loadPlan'
+>;
+
+function buildWorkspaceContractQueries({
   enabled = true,
   filter,
   loadPlan,
   hasAccessToken,
+  publicSummaryCityActivityLimit = WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
   requestsScope,
   activeRequestsRole,
   activeRequestsState,
   activeRequestsPeriod,
   activeRequestsSort,
-}: WorkspaceDataQueriesArgs) {
+}: BuildWorkspaceContractQueriesArgs) {
   return {
     publicOverview: buildStableWorkspaceQuery({
       queryKey: workspaceQK.workspacePublicOverview({
@@ -92,13 +113,13 @@ export function buildWorkspaceDataQueries({
         }),
     }),
     publicSummary: buildStableWorkspaceQuery({
-      queryKey: workspaceQK.workspacePublicSummary(WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
+      queryKey: workspaceQK.workspacePublicSummary(publicSummaryCityActivityLimit),
       enabled,
       queryFn: () =>
         getWorkspacePublicOverview({
           page: 1,
           limit: 1,
-          cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
+          cityActivityLimit: publicSummaryCityActivityLimit,
         }),
     }),
     privateOverview: buildStableWorkspaceQuery({
@@ -157,15 +178,17 @@ export function buildWorkspaceDataQueries({
           : Promise.resolve(null);
       },
     }),
+  };
+}
+
+function buildWorkspaceLegacyPrivateQueries({
+  loadPlan,
+}: BuildWorkspaceLegacyPrivateQueriesArgs) {
+  return {
     myOffers: {
       queryKey: workspaceQK.offersMy(),
       enabled: loadPlan.shouldLoadMyOffers,
       queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
-    },
-    myClientOffers: {
-      queryKey: workspaceQK.offersMyClient(),
-      enabled: loadPlan.shouldLoadMyClientOffers,
-      queryFn: () => withStatusFallback(() => listMyClientOffers(), []),
     },
     favoriteRequests: {
       queryKey: workspaceQK.favoriteRequests(),
@@ -206,6 +229,13 @@ export function buildWorkspaceDataQueries({
       refetchOnMount: true as const,
       refetchOnWindowFocus: true as const,
     },
+  };
+}
+
+export function buildWorkspaceDataQueries(args: WorkspaceDataQueriesArgs) {
+  return {
+    ...buildWorkspaceContractQueries(args),
+    ...buildWorkspaceLegacyPrivateQueries(args),
   };
 }
 

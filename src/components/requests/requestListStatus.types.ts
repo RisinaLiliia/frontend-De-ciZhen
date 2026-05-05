@@ -24,6 +24,6 @@ export type RequestListStatusActions = {
   ownerRequestActions?: OwnerRequestActions;
   onSendOffer?: (requestId: string) => void;
   onEditOffer?: (requestId: string) => void;
-  onWithdrawOffer?: (offerId: string) => void;
+  onWithdrawOffer?: (offerId: string, requestId?: string) => void;
   onOpenChatThread?: (offer: OfferDto) => void;
 };

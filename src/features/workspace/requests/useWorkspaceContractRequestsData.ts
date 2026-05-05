@@ -10,20 +10,28 @@ import { getWorkspacePublicRequestsBatch } from '@/lib/api/workspace';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type Params = {
+  enabled?: boolean;
   filteredContracts: ContractDto[];
   isWorkspaceAuthed: boolean;
   locale: string;
 };
 
-export function useWorkspaceContractRequestsData({ filteredContracts, isWorkspaceAuthed, locale }: Params) {
+export function useWorkspaceContractRequestsData({
+  enabled = true,
+  filteredContracts,
+  isWorkspaceAuthed,
+  locale,
+}: Params) {
   const contractRequestIds = React.useMemo(
-    () => Array.from(new Set(filteredContracts.map((item) => item.requestId).filter(Boolean))),
-    [filteredContracts],
+    () => (enabled
+      ? Array.from(new Set(filteredContracts.map((item) => item.requestId).filter(Boolean)))
+      : []),
+    [enabled, filteredContracts],
   );
 
   const { data: contractRequestsById = new Map<string, RequestResponseDto>() } = useQuery({
     queryKey: workspaceQK.requestsByContractIds(locale, contractRequestIds),
-    enabled: isWorkspaceAuthed && contractRequestIds.length > 0,
+    enabled: enabled && isWorkspaceAuthed && contractRequestIds.length > 0,
     queryFn: async () => {
       const batch = await getWorkspacePublicRequestsBatch(contractRequestIds);
       return new Map<string, RequestResponseDto>(batch.items.map((request) => [request.id, request]));
@@ -31,6 +39,10 @@ export function useWorkspaceContractRequestsData({ filteredContracts, isWorkspac
   });
 
   const contractRequests = React.useMemo(() => {
+    if (!enabled) {
+      return [];
+    }
+
     const fallbackDate = new Date().toISOString();
     const items: RequestResponseDto[] = [];
     const seen = new Set<string>();
@@ -81,9 +93,13 @@ export function useWorkspaceContractRequestsData({ filteredContracts, isWorkspac
     });
 
     return items;
-  }, [contractRequestsById, filteredContracts]);
+  }, [contractRequestsById, enabled, filteredContracts]);
 
   const contractOffersByRequest = React.useMemo(() => {
+    if (!enabled) {
+      return new Map<string, OfferDto>();
+    }
+
     const map = new Map<string, OfferDto>();
     filteredContracts.forEach((item) => {
       map.set(item.requestId, {
@@ -102,7 +118,7 @@ export function useWorkspaceContractRequestsData({ filteredContracts, isWorkspac
       });
     });
     return map;
-  }, [filteredContracts]);
+  }, [enabled, filteredContracts]);
 
   return {
     contractRequests,

@@ -13,6 +13,7 @@ import type {
 } from '@/features/workspace';
 import { WORKSPACE_PATH } from '@/features/workspace/page/workspacePage.constants';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 
 export type WorkspacePrivateInteractionsParams = {
   t: WorkspaceBranchProps['t'];
@@ -29,6 +30,10 @@ export type WorkspacePrivateInteractionsParams = {
   favoriteProviderLookup: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteProviderLookup'];
   providerById: Parameters<typeof useWorkspaceFavoriteToggles>[0]['providerById'];
 };
+
+export function shouldBuildWorkspacePrivateRequestInteractions(activeWorkspaceTab: WorkspaceTab) {
+  return activeWorkspaceTab !== 'profile' && activeWorkspaceTab !== 'reviews';
+}
 
 export type WorkspacePrivateInteractionsResult = {
   pendingFavoriteRequestIds: FavoriteTogglesResult['pendingFavoriteRequestIds'];
@@ -92,6 +97,7 @@ type ResolveResultParams = {
 };
 
 export function buildWorkspacePrivateFavoriteToggleArgs({
+  includeRequestToggle = true,
   isAuthed,
   nextPath,
   router,
@@ -101,8 +107,11 @@ export function buildWorkspacePrivateFavoriteToggleArgs({
   requestById,
   favoriteProviderLookup,
   providerById,
-}: BuildFavoriteToggleArgsParams): Parameters<typeof useWorkspaceFavoriteToggles>[0] {
+}: BuildFavoriteToggleArgsParams & {
+  includeRequestToggle?: boolean;
+}): Parameters<typeof useWorkspaceFavoriteToggles>[0] {
   return {
+    includeRequestToggle,
     isAuthed,
     nextPath,
     router,
@@ -116,13 +125,17 @@ export function buildWorkspacePrivateFavoriteToggleArgs({
 }
 
 export function buildWorkspacePrivateActionsArgs({
+  enabled = true,
   isAuthed,
   myOffers,
   t,
   qc,
   router,
-}: BuildActionsArgsParams): Parameters<typeof useWorkspaceActions>[0] {
+}: BuildActionsArgsParams & {
+  enabled?: boolean;
+}): Parameters<typeof useWorkspaceActions>[0] {
   return {
+    enabled,
     isAuthed,
     myOffers,
     t,

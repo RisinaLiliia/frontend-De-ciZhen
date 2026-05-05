@@ -59,4 +59,46 @@ describe('workspaceCollections.model', () => {
     expect(result.providerById.get('provider-1')).toEqual({ id: 'provider-1' });
     expect(result.favoriteProviderLookup).toEqual(new Set(['provider-1']));
   });
+
+  it('can skip favorite-provider presentation labels outside favorites rendering', () => {
+    const result = buildWorkspaceCollections({
+      includeFavoriteProviderPresentation: false,
+      requests: [] as never,
+      favoriteRequests: [] as never,
+      providers: [{ id: 'provider-1' }] as never,
+      favoriteProviders: [
+        { id: 'provider-1', cityId: 'city-1', serviceKey: 'svc-1' },
+      ] as never,
+      myOffers: [] as never,
+      myProviderContracts: [] as never,
+      myClientContracts: [] as never,
+      cityById: new Map([['city-1', { i18n: { de: 'Berlin' } }]]),
+      serviceByKey: new Map([['svc-1', { i18n: { de: 'Elektriker' } }]]),
+      locale: 'de',
+    });
+
+    expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));
+    expect(result.favoriteProviderCityLabelById).toEqual(new Map());
+    expect(result.favoriteProviderRoleLabelById).toEqual(new Map());
+  });
+
+  it('can skip favorite-provider backfill outside favorites rendering', () => {
+    const result = buildWorkspaceCollections({
+      includeFavoriteProviderBackfill: false,
+      requests: [] as never,
+      favoriteRequests: [] as never,
+      providers: [{ id: 'provider-1' }] as never,
+      favoriteProviders: [{ id: 'provider-2' }] as never,
+      myOffers: [] as never,
+      myProviderContracts: [] as never,
+      myClientContracts: [] as never,
+      cityById: new Map(),
+      serviceByKey: new Map(),
+      locale: 'de',
+    });
+
+    expect(result.providerById.get('provider-1')).toEqual({ id: 'provider-1' });
+    expect(result.providerById.has('provider-2')).toBe(false);
+    expect(result.favoriteProviderLookup).toEqual(new Set(['provider-2']));
+  });
 });

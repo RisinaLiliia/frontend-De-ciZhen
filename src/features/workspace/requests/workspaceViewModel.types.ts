@@ -43,7 +43,7 @@ export type BaseInput = {
   favoriteRequestIds: Set<string>;
   onToggleRequestFavorite: (requestId: string) => void;
   onOpenOfferSheet: (requestId: string) => void;
-  onWithdrawOffer: (requestId: string) => void;
+  onWithdrawOffer: (offerId: string, requestId?: string) => void;
   onOpenChatThread: (offer: OfferDto) => void;
   pendingOfferRequestId: string | null;
   pendingFavoriteRequestIds: Set<string>;

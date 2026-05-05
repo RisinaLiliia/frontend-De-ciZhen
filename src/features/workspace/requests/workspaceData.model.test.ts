@@ -66,10 +66,26 @@ describe('workspaceData.model', () => {
 
     expect(myScopePlan.shouldLoadWorkspaceRequests).toBe(true);
     expect(myScopePlan.shouldLoadMyRequests).toBe(false);
-    expect(myScopePlan.shouldLoadMyOffers).toBe(true);
-    expect(myScopePlan.shouldLoadMyClientOffers).toBe(false);
+    expect(myScopePlan.shouldLoadMyOffers).toBe(false);
     expect(myScopePlan.shouldLoadMyContracts).toBe(false);
     expect(myScopePlan.shouldLoadOfferRequests).toBe(false);
+    expect(myScopePlan.shouldLoadProviders).toBe(false);
+    expect(myScopePlan.shouldLoadFavoriteProviders).toBe(false);
+
+    const customerScopePlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: false,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'my-requests',
+      activePublicSection: 'requests',
+      requestsScope: 'my',
+      activeRequestsRole: 'customer',
+      hasAccessToken: true,
+    });
+
+    expect(customerScopePlan.shouldLoadWorkspaceRequests).toBe(true);
+    expect(customerScopePlan.shouldLoadMyOffers).toBe(false);
 
     const offersPlan = resolveWorkspaceDataPlan({
       isAuthed: true,

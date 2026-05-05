@@ -11,6 +11,7 @@ import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspa
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspaceData } from '@/features/workspace/requests';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
+import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
 import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
@@ -173,6 +174,7 @@ describe('useWorkspacePrivateSources', () => {
         activeRequestsState: 'execution',
         activeRequestsPeriod: '30d',
         activeRequestsSort: 'deadline',
+        publicSummaryCityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
       }),
     );
 
@@ -208,6 +210,13 @@ describe('useWorkspacePrivateSources', () => {
     expect(useWorkspacePublicFiltersMock).toHaveBeenCalledWith(
       expect.objectContaining({
         shouldLoadCatalog: false,
+      }),
+    );
+
+    expect(useWorkspaceDataMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        activeWorkspaceTab: 'profile',
+        publicSummaryCityActivityLimit: 1,
       }),
     );
 

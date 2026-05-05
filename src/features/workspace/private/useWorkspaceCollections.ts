@@ -9,6 +9,8 @@ import {
 
 export function useWorkspaceCollections({
   includeRequestCollections = true,
+  includeFavoriteProviderBackfill = true,
+  includeFavoriteProviderPresentation = true,
   requests,
   favoriteRequests,
   providers,
@@ -24,6 +26,8 @@ export function useWorkspaceCollections({
     () =>
       buildWorkspaceCollections({
         includeRequestCollections,
+        includeFavoriteProviderBackfill,
+        includeFavoriteProviderPresentation,
         requests,
         favoriteRequests,
         providers,
@@ -37,8 +41,10 @@ export function useWorkspaceCollections({
       }),
     [
       cityById,
+      includeFavoriteProviderBackfill,
       favoriteProviders,
       favoriteRequests,
+      includeFavoriteProviderPresentation,
       includeRequestCollections,
       locale,
       myClientContracts,

@@ -17,6 +17,7 @@ type RouterLike = {
 type Translator = (key: I18nKey) => string;
 
 type UseRequestFavoriteToggleParams = {
+  enabled?: boolean;
   isAuthed: boolean;
   nextPath: string;
   router: RouterLike;
@@ -37,6 +38,7 @@ type UseProviderFavoriteToggleParams = {
 };
 
 export function useRequestFavoriteToggle({
+  enabled = true,
   isAuthed,
   nextPath,
   router,
@@ -49,6 +51,7 @@ export function useRequestFavoriteToggle({
 
   const toggleRequestFavorite = React.useCallback(
     async (requestId: string) => {
+      if (!enabled) return;
       if (!isAuthed) {
         router.push(`/auth/login?next=${encodeURIComponent(nextPath)}`);
         toast.message(t(I18N_KEYS.requestDetails.favoritesSoon));
@@ -81,7 +84,7 @@ export function useRequestFavoriteToggle({
         });
       }
     },
-    [favoriteRequestIds, isAuthed, nextPath, pendingFavoriteRequestIds, qc, requestById, router, t],
+    [enabled, favoriteRequestIds, isAuthed, nextPath, pendingFavoriteRequestIds, qc, requestById, router, t],
   );
 
   return {

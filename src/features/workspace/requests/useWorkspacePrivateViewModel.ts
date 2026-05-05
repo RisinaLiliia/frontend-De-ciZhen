@@ -1,11 +1,22 @@
 'use client';
 
 import * as React from 'react';
+import type { ComponentProps } from 'react';
 
 import { buildWorkspacePrivateViewModel } from '@/features/workspace/requests/workspaceViewModel.model';
+import type { WorkspaceContent } from '@/features/workspace/requests/WorkspaceContent';
 import type { PrivateInput } from '@/features/workspace/requests/workspaceViewModel.types';
 
-export function useWorkspacePrivateViewModel(params: PrivateInput) {
+type UseWorkspacePrivateViewModelParams = PrivateInput & {
+  enabled?: boolean;
+};
+
+export function useWorkspacePrivateViewModel({
+  enabled = true,
+  ...params
+}: UseWorkspacePrivateViewModelParams): {
+  workspaceContentProps: ComponentProps<typeof WorkspaceContent> | null;
+} {
   const {
     t,
     locale,
@@ -57,8 +68,12 @@ export function useWorkspacePrivateViewModel(params: PrivateInput) {
   } = params;
 
   const workspaceContentProps = React.useMemo(
-    () =>
-      buildWorkspacePrivateViewModel({
+    () => {
+      if (!enabled) {
+        return null;
+      }
+
+      return buildWorkspacePrivateViewModel({
         t,
         locale,
         isWorkspaceAuthed,
@@ -106,7 +121,8 @@ export function useWorkspacePrivateViewModel(params: PrivateInput) {
         cityById,
         formatDate,
         formatPrice,
-      }).workspaceContentProps,
+      }).workspaceContentProps;
+    },
     [
       activeStatusFilter,
       activeWorkspaceTab,
@@ -134,6 +150,7 @@ export function useWorkspacePrivateViewModel(params: PrivateInput) {
       isMyReviewsLoading,
       isPersonalized,
       isProviderContractsLoading,
+      enabled,
       locale,
       myOfferRequests,
       myReviews,

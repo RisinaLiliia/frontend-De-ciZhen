@@ -38,7 +38,7 @@ export type RequestsListProps = {
   onOpenRequest?: (requestId: string) => void;
   onSendOffer?: (requestId: string) => void;
   onEditOffer?: (requestId: string) => void;
-  onWithdrawOffer?: (offerId: string) => void;
+  onWithdrawOffer?: (offerId: string, requestId?: string) => void;
   onOpenChatThread?: (offer: OfferDto) => void;
   pendingOfferRequestId?: string | null;
   pendingFavoriteRequestIds?: Set<string>;

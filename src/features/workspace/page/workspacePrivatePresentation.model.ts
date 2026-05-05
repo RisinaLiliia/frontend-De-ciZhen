@@ -22,6 +22,10 @@ type BuildArgs = {
   data: WorkspacePrivateDataFlowResult;
 };
 
+type BuildContentDataArgs = BuildArgs & {
+  enabled?: boolean;
+};
+
 type BuildPresentationArgs = {
   branch: WorkspaceBranchProps;
   data: WorkspacePrivateDataFlowResult;
@@ -84,6 +88,7 @@ type BuildPrivateViewModelArgs = {
   >;
   viewModelPatch: ReturnType<typeof useWorkspaceContentData>['viewModelPatch'];
   onPrimaryActionClick: WorkspacePrivateViewModelInput['onPrimaryActionClick'];
+  enabled?: WorkspacePrivateViewModelInput['enabled'];
 };
 
 export function shouldBuildWorkspacePrivateContractRequests(
@@ -101,8 +106,10 @@ export function shouldBuildWorkspacePrivateFavoriteProviderCards(
 export function buildWorkspacePrivateContentDataArgs({
   branch,
   data,
-}: BuildArgs): WorkspaceContentDataArgs {
+  enabled,
+}: BuildContentDataArgs): WorkspaceContentDataArgs {
   return {
+    enabled,
     derivedArgs: {
       t: branch.t,
       activeStatusFilter: data.activeStatusFilter,
@@ -150,6 +157,7 @@ export function buildWorkspacePrivateStateArgs({
     isPersonalized: branch.isPersonalized,
     activeWorkspaceTab: data.activeWorkspaceTab,
     activePublicSection: data.activePublicSection,
+    requestsScope: data.requestsScope,
     userName: branch.auth.user?.name,
     providers: data.providers,
     publicRequestsCount: data.platformRequestsTotal,
@@ -217,8 +225,10 @@ export function buildWorkspacePrivateViewModelInput({
   data,
   viewModelPatch,
   onPrimaryActionClick,
+  enabled,
 }: BuildPrivateViewModelArgs): WorkspacePrivateViewModelInput {
   return {
+    enabled,
     t: branch.t,
     locale: branch.locale,
     isWorkspaceAuthed: branch.isWorkspaceAuthed,

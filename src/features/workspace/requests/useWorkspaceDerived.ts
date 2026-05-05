@@ -17,6 +17,7 @@ import {
 import { getWorkspacePrimaryActionByTab, getWorkspaceStatusFilters } from '@/features/workspace/requests/workspace.content';
 
 type Params = {
+  enabled?: boolean;
   t: (key: I18nKey) => string;
   activeStatusFilter: WorkspaceStatusFilter;
   activeWorkspaceTab: WorkspaceTab;
@@ -32,6 +33,7 @@ type Params = {
 };
 
 export function useWorkspaceDerived({
+  enabled = true,
   t,
   activeStatusFilter,
   activeWorkspaceTab,
@@ -45,24 +47,50 @@ export function useWorkspaceDerived({
   isFavoriteRequestsLoading,
   isFavoriteProvidersLoading,
 }: Params) {
-  const filteredMyRequests = React.useMemo(
+  const showWorkspaceHeader = activeWorkspaceTab !== 'favorites' && activeWorkspaceTab !== 'profile';
+  const showWorkspaceHeading = showWorkspaceHeader;
+  const statusFilters = React.useMemo(
     () =>
+      activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews' || activeWorkspaceTab === 'profile'
+        ? []
+        : getWorkspaceStatusFilters(t),
+    [activeWorkspaceTab, t],
+  );
+  const primaryAction = React.useMemo(() => {
+    const actionsByTab = getWorkspacePrimaryActionByTab(t);
+    return actionsByTab[activeWorkspaceTab] ?? actionsByTab['my-requests']!;
+  }, [activeWorkspaceTab, t]);
+  const shouldBuildMyRequests = enabled && activeWorkspaceTab === 'my-requests';
+  const shouldBuildMyOffers = enabled && activeWorkspaceTab === 'my-offers';
+  const shouldBuildContracts = enabled && activeWorkspaceTab === 'completed-jobs';
+  const shouldBuildFavorites = enabled && activeWorkspaceTab === 'favorites';
+
+  const filteredMyRequests = React.useMemo(
+    () => !shouldBuildMyRequests
+      ? []
+      :
       myRequests.filter(
         (item) =>
           activeStatusFilter === 'all' || mapRequestStatusToFilter(item.status) === activeStatusFilter,
       ),
-    [activeStatusFilter, myRequests],
+    [activeStatusFilter, myRequests, shouldBuildMyRequests],
   );
 
   const filteredMyOffers = React.useMemo(
-    () =>
+    () => !shouldBuildMyOffers
+      ? []
+      :
       myOffers.filter(
         (item) => activeStatusFilter === 'all' || mapOfferStatusToFilter(item.status) === activeStatusFilter,
       ),
-    [activeStatusFilter, myOffers],
+    [activeStatusFilter, myOffers, shouldBuildMyOffers],
   );
 
   const myOfferRequests = React.useMemo(() => {
+    if (!shouldBuildMyOffers) {
+      return [];
+    }
+
     const items: RequestResponseDto[] = [];
     const seen = new Set<string>();
 
@@ -74,20 +102,22 @@ export function useWorkspaceDerived({
     });
 
     return items;
-  }, [filteredMyOffers, myOfferRequestsById]);
+  }, [filteredMyOffers, myOfferRequestsById, shouldBuildMyOffers]);
 
   const filteredContracts = React.useMemo(
-    () =>
+    () => !shouldBuildContracts
+      ? []
+      :
       allMyContracts.filter(
         (item) =>
           activeStatusFilter === 'all' || mapContractStatusToFilter(item.status) === activeStatusFilter,
       ),
-    [activeStatusFilter, allMyContracts],
+    [activeStatusFilter, allMyContracts, shouldBuildContracts],
   );
 
-  const hasFavoriteRequests = favoriteRequests.length > 0;
-  const hasFavoriteProviders = favoriteProviders.length > 0;
-  const areFavoritesLoaded = !isFavoriteRequestsLoading && !isFavoriteProvidersLoading;
+  const hasFavoriteRequests = shouldBuildFavorites && favoriteRequests.length > 0;
+  const hasFavoriteProviders = shouldBuildFavorites && favoriteProviders.length > 0;
+  const areFavoritesLoaded = shouldBuildFavorites && !isFavoriteRequestsLoading && !isFavoriteProvidersLoading;
 
   const resolvedFavoritesView = React.useMemo<FavoritesView>(() => {
     if (
@@ -101,24 +131,15 @@ export function useWorkspaceDerived({
     return activeFavoritesView;
   }, [activeFavoritesView, areFavoritesLoaded, hasFavoriteProviders, hasFavoriteRequests]);
 
-  const favoritesItems = resolvedFavoritesView === 'requests' ? favoriteRequests : favoriteProviders;
+  const favoritesItems = !shouldBuildFavorites
+    ? []
+    : resolvedFavoritesView === 'requests'
+      ? favoriteRequests
+      : favoriteProviders;
   const isFavoritesLoading =
-    resolvedFavoritesView === 'requests' ? isFavoriteRequestsLoading : isFavoriteProvidersLoading;
-
-  const showWorkspaceHeader = activeWorkspaceTab !== 'favorites' && activeWorkspaceTab !== 'profile';
-  const showWorkspaceHeading = showWorkspaceHeader;
-  const statusFilters = React.useMemo(
-    () =>
-      activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews' || activeWorkspaceTab === 'profile'
-        ? []
-        : getWorkspaceStatusFilters(t),
-    [activeWorkspaceTab, t],
-  );
-
-  const primaryAction = React.useMemo(() => {
-    const actionsByTab = getWorkspacePrimaryActionByTab(t);
-    return actionsByTab[activeWorkspaceTab] ?? actionsByTab['my-requests']!;
-  }, [activeWorkspaceTab, t]);
+    shouldBuildFavorites
+      ? (resolvedFavoritesView === 'requests' ? isFavoriteRequestsLoading : isFavoriteProvidersLoading)
+      : false;
 
   return {
     filteredMyRequests,

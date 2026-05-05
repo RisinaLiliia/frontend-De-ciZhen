@@ -84,7 +84,7 @@ export function buildWorkspaceActionsResult(args: {
   pendingOfferRequestId: string | null;
   ownerRequestActions: ReturnType<typeof buildWorkspaceOwnerRequestActions>;
   onOpenOfferSheet: (requestId: string) => void;
-  onWithdrawOffer: (offerId: string) => void;
+  onWithdrawOffer: (offerId: string, requestId?: string) => void;
   onOpenChatThread: (offer: OfferDto) => void;
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 }) {

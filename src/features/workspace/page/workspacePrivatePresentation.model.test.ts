@@ -94,6 +94,7 @@ describe('workspacePrivatePresentation.model', () => {
     });
 
     expect(args.derivedArgs.activeWorkspaceTab).toBe('my-offers');
+    expect(args.enabled).toBeUndefined();
     expect(args.contractArgs.locale).toBe('en');
     expect(args.contractRequestsEnabled).toBe(false);
     expect(args.cardsArgs.pendingFavoriteProviderIds).toEqual(new Set(['provider-2']));
@@ -158,5 +159,15 @@ describe('workspacePrivatePresentation.model', () => {
     expect(input.activeWorkspaceTab).toBe('my-offers');
     expect(input.isClientContractsLoading).toBe(true);
     expect(input.primaryAction.href).toBe('/request/create');
+  });
+
+  it('passes content-data enabled flag through the private flow builder', () => {
+    const args = buildWorkspacePrivateContentDataArgs({
+      branch: createBranch() as never,
+      data: createData() as never,
+      enabled: false,
+    });
+
+    expect(args.enabled).toBe(false);
   });
 });

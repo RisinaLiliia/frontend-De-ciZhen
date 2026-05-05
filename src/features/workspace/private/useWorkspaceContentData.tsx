@@ -9,6 +9,7 @@ type ContractRequestsDataArgs = Omit<Parameters<typeof useWorkspaceContractReque
 type WorkspaceCardsArgs = Parameters<typeof useWorkspaceCards>[0];
 
 type Args = {
+  enabled?: boolean;
   derivedArgs: WorkspaceDerivedArgs;
   contractArgs: ContractRequestsDataArgs;
   cardsArgs: WorkspaceCardsArgs;
@@ -17,20 +18,25 @@ type Args = {
 };
 
 export function useWorkspaceContentData({
+  enabled = true,
   derivedArgs,
   contractArgs,
   cardsArgs,
   contractRequestsEnabled = true,
   favoriteProviderCardsEnabled = true,
 }: Args) {
-  const derived = useWorkspaceDerived(derivedArgs);
+  const derived = useWorkspaceDerived({
+    ...derivedArgs,
+    enabled,
+  });
   const contract = useWorkspaceContractRequestsData({
+    enabled,
     ...contractArgs,
-    filteredContracts: contractRequestsEnabled ? derived.filteredContracts : [],
+    filteredContracts: enabled && contractRequestsEnabled ? derived.filteredContracts : [],
   });
   const cards = useWorkspaceCards({
     ...cardsArgs,
-    enabled: favoriteProviderCardsEnabled,
+    enabled: enabled && favoriteProviderCardsEnabled,
   });
 
   return buildWorkspaceContentDataResult({

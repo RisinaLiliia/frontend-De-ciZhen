@@ -121,6 +121,7 @@ export function useWorkspacePrivateSources({
     buildWorkspacePrivateSourcesCollectionsArgs({
       activePublicSection,
       activeWorkspaceTab,
+      requestsScope,
       requests: publicRequestsState.requests,
       data,
       catalogIndex,

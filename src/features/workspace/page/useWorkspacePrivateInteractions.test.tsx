@@ -139,6 +139,7 @@ describe('useWorkspacePrivateInteractions', () => {
 
     expect(useWorkspaceFavoriteTogglesMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        includeRequestToggle: true,
         nextPath: '/workspace?tab=favorites',
         favoriteRequestIds: args.favoriteRequestIds,
         requestById: args.requestById,
@@ -147,6 +148,7 @@ describe('useWorkspacePrivateInteractions', () => {
 
     expect(useWorkspaceActionsMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        enabled: true,
         isAuthed: true,
         myOffers: args.myOffers,
       }),
@@ -164,5 +166,39 @@ describe('useWorkspacePrivateInteractions', () => {
       isWorkspacePublicSection: false,
       activeWorkspaceTab: 'favorites',
     });
+  });
+
+  it('disables request-side favorite and action paths for profile tab', () => {
+    const t: WorkspaceBranchProps['t'] = (key) => String(key);
+
+    render(
+      <InteractionsProbe
+        t={t}
+        locale="de"
+        isAuthed
+        isWorkspaceAuthed
+        authUserId="user-1"
+        activeWorkspaceTab="profile"
+        nextPath="/workspace?section=actions"
+        platformRequestsTotal={21}
+        myOffers={[]}
+        favoriteRequestIds={new Set()}
+        requestById={new Map()}
+        favoriteProviderLookup={new Set(['provider-1'])}
+        providerById={new Map([['provider-1', { id: 'provider-1' } as ProviderPublicDto]])}
+      />,
+    );
+
+    expect(useWorkspaceFavoriteTogglesMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        includeRequestToggle: false,
+      }),
+    );
+
+    expect(useWorkspaceActionsMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        enabled: false,
+      }),
+    );
   });
 });

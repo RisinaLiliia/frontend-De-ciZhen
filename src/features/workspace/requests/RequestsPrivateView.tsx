@@ -388,7 +388,7 @@ function RequestActionControl({
         type="button"
         className={className}
         disabled={listContext.pendingOfferRequestId === action.requestId}
-        onClick={() => listContext.onWithdrawOffer?.(action.offerId!)}
+        onClick={() => listContext.onWithdrawOffer?.(action.offerId!, action.requestId!)}
       >
         {action.label}
       </button>

@@ -92,6 +92,34 @@ describe('workspaceData.queries', () => {
     ]);
   });
 
+  it('allows a reduced city-activity payload for lightweight public summary consumers', () => {
+    const loadPlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: false,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'profile',
+      hasAccessToken: true,
+    });
+
+    const queries = buildWorkspaceDataQueries({
+      filter: {},
+      loadPlan,
+      hasAccessToken: true,
+      publicSummaryCityActivityLimit: 1,
+      requestsScope: 'market',
+      activeRequestsRole: 'all',
+      activeRequestsState: 'all',
+      activeRequestsPeriod: '30d',
+      activeRequestsSort: null,
+    });
+
+    expect(queries.publicSummary.queryKey).toEqual([
+      'workspace-public-summary',
+      1,
+    ]);
+  });
+
   it('builds market workspace requests from the unified server contract', async () => {
     const loadPlan = resolveWorkspaceDataPlan({
       isAuthed: true,
