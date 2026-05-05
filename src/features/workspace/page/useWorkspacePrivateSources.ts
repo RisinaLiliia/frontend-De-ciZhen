@@ -83,6 +83,7 @@ export function useWorkspacePrivateSources({
   const data = useWorkspaceData(
     buildWorkspacePrivateSourcesDataArgs({
       filter,
+      shouldLoadCatalog,
       locale,
       isAuthed,
       isWorkspaceAuthed,

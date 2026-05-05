@@ -221,6 +221,7 @@ describe('useWorkspacePrivateSources', () => {
 
     expect(useWorkspaceDataMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        filter: {},
         activeWorkspaceTab: 'profile',
         publicSummaryCityActivityLimit: 1,
       }),
@@ -257,6 +258,7 @@ describe('useWorkspacePrivateSources', () => {
 
     expect(useWorkspaceDataMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        filter: {},
         activePublicSection: 'requests',
         requestsScope: 'my',
         activeWorkspaceTab: 'my-requests',

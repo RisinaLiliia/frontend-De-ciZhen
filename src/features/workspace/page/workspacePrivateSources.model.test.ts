@@ -139,6 +139,30 @@ describe('workspacePrivateSources.model', () => {
     });
   });
 
+  it('drops public filter coupling from private data args when catalog is disabled', () => {
+    const args = buildWorkspacePrivateSourcesDataArgs({
+      filter: {
+        cityId: 'berlin',
+        categoryKey: 'design',
+        subcategoryKey: 'logo',
+        sort: 'date_desc',
+        page: 3,
+        limit: 24,
+      },
+      shouldLoadCatalog: false,
+      locale: 'de',
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      activePublicSection: 'requests',
+      activeWorkspaceTab: 'my-requests',
+      requestsScope: 'my',
+    });
+
+    expect(args.filter).toEqual({});
+    expect(args.requestsScope).toBe('my');
+    expect(args.activePublicSection).toBe('requests');
+  });
+
   it('uses minimal public summary city-activity payload outside private overview my-requests mode', () => {
     expect(
       resolveWorkspacePrivatePublicSummaryCityActivityLimit({
