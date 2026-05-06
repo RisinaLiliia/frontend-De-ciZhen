@@ -53,6 +53,33 @@ function PublicRequestsStateProbe() {
   );
 }
 
+function DisabledPublicRequestsStateProbe({
+  setPage,
+}: {
+  setPage: ReturnType<typeof vi.fn>;
+}) {
+  useWorkspacePublicRequestsState({
+    publicRequests: { items: [], total: 0 },
+    allRequestsSummary: { totalPublishedRequests: 24, totalActiveProviders: 8 },
+    limit: 20,
+    page: 3,
+    setPage,
+    enablePageClamp: false,
+    enableEmptyStateTracking: false,
+    isWorkspacePublicSection: false,
+    activePublicSection: null,
+    isLoading: false,
+    isError: false,
+    hasActivePublicFilter: false,
+    cityId: 'all',
+    categoryKey: 'all',
+    subcategoryKey: 'all',
+    sortBy: 'date_desc',
+  });
+
+  return <div data-testid="state-disabled" />;
+}
+
 describe('workspace canonical requests hooks', () => {
   it('usePublicRequestsSeenTotal exposes only requests API', () => {
     render(<PublicRequestsSeenProbe />);
@@ -66,5 +93,13 @@ describe('workspace canonical requests hooks', () => {
     const node = screen.getByTestId('state');
     expect(node.getAttribute('data-total')).toBe('24');
     expect(node.getAttribute('data-has-legacy')).toBe('false');
+  });
+
+  it('does not clamp page in disabled idle mode', () => {
+    const setPage = vi.fn();
+
+    render(<DisabledPublicRequestsStateProbe setPage={setPage} />);
+
+    expect(setPage).not.toHaveBeenCalled();
   });
 });

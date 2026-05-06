@@ -120,6 +120,33 @@ describe('workspaceData.queries', () => {
     ]);
   });
 
+  it('can disable optional contract queries in the query plan', () => {
+    const loadPlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: false,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'my-requests',
+      hasAccessToken: true,
+    });
+
+    const queries = buildWorkspaceDataQueries({
+      filter: {},
+      loadPlan,
+      hasAccessToken: true,
+      includePublicSummary: false,
+      includePrivateOverview: false,
+      requestsScope: 'my',
+      activeRequestsRole: 'all',
+      activeRequestsState: 'all',
+      activeRequestsPeriod: '30d',
+      activeRequestsSort: null,
+    });
+
+    expect(queries.publicSummary.enabled).toBe(false);
+    expect(queries.privateOverview.enabled).toBe(false);
+  });
+
   it('builds market workspace requests from the unified server contract', async () => {
     const loadPlan = resolveWorkspaceDataPlan({
       isAuthed: true,

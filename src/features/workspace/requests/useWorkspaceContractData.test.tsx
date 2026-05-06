@@ -12,9 +12,8 @@ vi.mock('@tanstack/react-query', () => ({
 
 const useQueryMock = vi.mocked(useQuery);
 
-function Probe({ includePublicSummary = true }: { includePublicSummary?: boolean }) {
+function Probe({ summaryEnabled = true }: { summaryEnabled?: boolean }) {
   const result = useWorkspaceContractData({
-    includePublicSummary,
     workspaceDataQueries: {
       publicOverview: {
         queryKey: ['workspace-public-overview'],
@@ -23,7 +22,7 @@ function Probe({ includePublicSummary = true }: { includePublicSummary?: boolean
       },
       publicSummary: {
         queryKey: ['workspace-public-summary', 1],
-        enabled: true,
+        enabled: summaryEnabled,
         queryFn: vi.fn(),
       },
       privateOverview: {
@@ -61,11 +60,10 @@ describe('useWorkspaceContractData', () => {
       .mockReturnValueOnce({ data: null, isLoading: false } as never)
       .mockReturnValueOnce({ data: null, isLoading: false, isError: false } as never);
 
-    render(<Probe includePublicSummary={false} />);
+    render(<Probe summaryEnabled={false} />);
 
     const summaryQueryArgs = useQueryMock.mock.calls[1]?.[0] as unknown as {
       enabled?: boolean;
-      queryFn: () => Promise<null>;
     };
     expect(summaryQueryArgs.enabled).toBe(false);
     expect(screen.getByTestId('contract-data').getAttribute('data-has-summary')).toBe('false');

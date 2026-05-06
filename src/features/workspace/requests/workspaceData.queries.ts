@@ -43,6 +43,8 @@ function buildStableWorkspaceQuery<TQueryKey extends readonly unknown[], TQueryF
 
 type WorkspaceDataQueriesArgs = {
   enabled?: boolean;
+  includePrivateOverview?: boolean;
+  includePublicSummary?: boolean;
   filter: WorkspacePublicOverviewQuery;
   loadPlan: WorkspaceDataLoadPlan;
   hasAccessToken: boolean;
@@ -57,6 +59,8 @@ type WorkspaceDataQueriesArgs = {
 type BuildWorkspaceContractQueriesArgs = Pick<
   WorkspaceDataQueriesArgs,
   | 'enabled'
+  | 'includePrivateOverview'
+  | 'includePublicSummary'
   | 'filter'
   | 'loadPlan'
   | 'hasAccessToken'
@@ -75,6 +79,8 @@ type BuildWorkspaceLegacyPrivateQueriesArgs = Pick<
 
 function buildWorkspaceContractQueries({
   enabled = true,
+  includePrivateOverview = true,
+  includePublicSummary = true,
   filter,
   loadPlan,
   hasAccessToken,
@@ -114,7 +120,7 @@ function buildWorkspaceContractQueries({
     }),
     publicSummary: buildStableWorkspaceQuery({
       queryKey: workspaceQK.workspacePublicSummary(publicSummaryCityActivityLimit),
-      enabled,
+      enabled: enabled && includePublicSummary,
       queryFn: () =>
         getWorkspacePublicOverview({
           page: 1,
@@ -124,7 +130,7 @@ function buildWorkspaceContractQueries({
     }),
     privateOverview: buildStableWorkspaceQuery({
       queryKey: workspaceQK.workspacePrivateOverview(activeRequestsPeriod),
-      enabled: loadPlan.shouldLoadPrivateOverview,
+      enabled: loadPlan.shouldLoadPrivateOverview && includePrivateOverview,
       queryFn: () =>
         hasAccessToken
           ? withStatusFallback(() => getWorkspacePrivateOverview({ period: activeRequestsPeriod }), null, [401, 403])

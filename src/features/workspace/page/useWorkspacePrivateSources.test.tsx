@@ -181,6 +181,8 @@ describe('useWorkspacePrivateSources', () => {
     expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
       expect.objectContaining({
         activePublicSection: null,
+        enablePageClamp: true,
+        enableEmptyStateTracking: true,
         isWorkspacePublicSection: false,
         categoryKey: 'cat-1',
       }),
@@ -229,6 +231,8 @@ describe('useWorkspacePrivateSources', () => {
 
     expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        enablePageClamp: false,
+        enableEmptyStateTracking: false,
         publicRequests: undefined,
         hasActivePublicFilter: false,
       }),

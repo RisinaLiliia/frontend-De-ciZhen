@@ -17,6 +17,8 @@ export type WorkspacePublicRequestsStateArgs = {
   allRequestsSummary: WorkspacePublicRequestsSummary | undefined;
   limit: number;
   page?: number;
+  enablePageClamp?: boolean;
+  enableEmptyStateTracking?: boolean;
   isWorkspacePublicSection: boolean;
   activePublicSection: PublicWorkspaceSection | null;
   isLoading: boolean;
