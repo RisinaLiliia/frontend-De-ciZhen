@@ -15,9 +15,6 @@ describe('workspacePublicRequests.data', () => {
     });
 
     const result = resolveWorkspacePublicRequestsData({
-      locale: 'de',
-      activeRequestsState: 'all',
-      hasMarketContract: false,
       marketResponse,
       publicRequestsItems: [],
       publicRequestsTotalValue: 0,
@@ -25,7 +22,6 @@ describe('workspacePublicRequests.data', () => {
       publicRequestsLimit: 20,
       filtersPage: 1,
       filtersLimit: 20,
-      platformRequestsTotal: 0,
     });
 
     expect(result.decisionPanel).toEqual(
@@ -39,5 +35,44 @@ describe('workspacePublicRequests.data', () => {
         },
       }),
     );
+    expect(result.summaryItems).toEqual([
+      expect.objectContaining({ key: 'all', value: 0 }),
+      expect.objectContaining({ key: 'attention', value: 0 }),
+      expect.objectContaining({ key: 'execution', value: 0 }),
+      expect.objectContaining({ key: 'completed', value: 0 }),
+    ]);
+  });
+
+  it('keeps public KPI state owned by the market contract instead of deriving it from fallback list data', () => {
+    const marketResponse = buildEmptyWorkspaceMarketRequestsResponse({
+      locale: 'de',
+      state: 'all',
+      period: '30d',
+      sort: 'date_desc',
+      page: 1,
+      limit: 20,
+    });
+
+    const result = resolveWorkspacePublicRequestsData({
+      marketResponse,
+      publicRequestsItems: [
+        { id: 'req-1', status: 'published' },
+        { id: 'req-2', status: 'matched' },
+        { id: 'req-3', status: 'closed' },
+      ] as never,
+      publicRequestsTotalValue: 3,
+      publicRequestsPage: 1,
+      publicRequestsLimit: 20,
+      filtersPage: 1,
+      filtersLimit: 20,
+    });
+
+    expect(result.publicRequestsListItems).toHaveLength(3);
+    expect(result.summaryItems).toEqual([
+      expect.objectContaining({ key: 'all', value: 0 }),
+      expect.objectContaining({ key: 'attention', value: 0 }),
+      expect.objectContaining({ key: 'execution', value: 0 }),
+      expect.objectContaining({ key: 'completed', value: 0 }),
+    ]);
   });
 });
