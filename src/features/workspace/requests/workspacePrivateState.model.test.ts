@@ -4,6 +4,7 @@ import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/
 import {
   buildWorkspacePrivateNavModelArgs,
   buildWorkspacePrivateStatsModelArgs,
+  resolveWorkspacePreferredRequestsRole,
   buildWorkspacePrivateTopProvidersArgs,
   resolveWorkspacePrivateMeta,
   resolveWorkspacePrivateOverview,
@@ -30,6 +31,13 @@ describe('workspacePrivateState.model', () => {
     expect(meta.activityProgress).toBe(100);
     expect(meta.navRatingValue).toBe('4.7');
     expect(meta.navReviewsCount).toBe(8);
+  });
+
+  it('derives preferred requests role from overview', () => {
+    const overview = structuredClone(EMPTY_WORKSPACE_PRIVATE_OVERVIEW);
+    overview.preferredRole = 'provider';
+
+    expect(resolveWorkspacePreferredRequestsRole(overview)).toBe('provider');
   });
 
   it('builds private state sub-hook args and final state result from overview counters', () => {
@@ -81,6 +89,7 @@ describe('workspacePrivateState.model', () => {
       resolveWorkspacePrivateStateResult({
         topProviders: [],
         activityProgress: 100,
+        preferredRequestsRole: 'provider',
         nav: {
           navTitle: 'Title',
           navSubtitle: 'Subtitle',
@@ -99,6 +108,7 @@ describe('workspacePrivateState.model', () => {
       navTitle: 'Title',
       navSubtitle: 'Subtitle',
       activityProgress: 100,
+      preferredRequestsRole: 'provider',
       personalNavItems: [],
       insightText: '',
       hasAnyStatsActivity: true,

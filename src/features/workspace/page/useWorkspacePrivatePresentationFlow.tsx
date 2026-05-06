@@ -86,7 +86,7 @@ export function useWorkspacePrivatePresentationFlow({
       data,
       WorkspacePrivateIntroComponent: WorkspacePrivateIntro,
       showQuickAction: data.activePublicSection !== 'stats' && !isOverviewMode,
-      preferredRequestsRole: data.workspacePrivateOverview?.preferredRole ?? null,
+      preferredRequestsRole: privateState.preferredRequestsRole,
       privateState,
     }),
   );
@@ -97,7 +97,10 @@ export function useWorkspacePrivatePresentationFlow({
       (() => {
         const publicIntroProps = buildWorkspacePublicIntroProps({
           branch,
-          data,
+          data: {
+            ...data,
+            preferredRequestsRole: privateState.preferredRequestsRole,
+          },
         });
 
         return (
@@ -254,7 +257,7 @@ export function useWorkspacePrivatePresentationFlow({
   const privateRequestsLoading = data.workspaceRequests
     ? data.isWorkspaceRequestsLoading
     : data.isWorkspaceRequestsLoading || (data.activeRequestsRole === 'all' && data.isWorkspacePrivateOverviewLoading);
-  const preferredRequestsRole = data.workspacePrivateOverview?.preferredRole ?? null;
+  const preferredRequestsRole = privateState.preferredRequestsRole;
   const effectiveRequestsRole = data.activeRequestsRole === 'all'
     ? preferredRequestsRole
     : data.activeRequestsRole;

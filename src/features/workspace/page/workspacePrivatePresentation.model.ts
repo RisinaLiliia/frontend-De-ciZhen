@@ -37,6 +37,7 @@ type BuildPresentationArgs = {
     | 'topProviders'
     | 'providerStatsPayload'
     | 'clientStatsPayload'
+    | 'preferredRequestsRole'
     | 'statsOrder'
   >;
 };
@@ -47,12 +48,13 @@ type BuildPublicIntroArgs = {
     WorkspacePrivateDataFlowResult,
     | 'activePublicSection'
     | 'activeWorkspaceTab'
-    | 'workspacePrivateOverview'
     | 'allRequestsSummary'
     | 'publicCityActivity'
     | 'isPublicSummaryLoading'
     | 'isPublicSummaryError'
-  >;
+  > & {
+    preferredRequestsRole?: 'customer' | 'provider' | null;
+  };
 };
 
 type BuildPrivateViewModelArgs = {
@@ -196,7 +198,7 @@ export function buildWorkspacePrivatePresentationArgs({
     topProviders: privateState.topProviders,
     favoriteProviderIds: data.favoriteProviderIds,
     showQuickAction,
-    preferredRequestsRole,
+    preferredRequestsRole: preferredRequestsRole ?? privateState.preferredRequestsRole,
   };
 }
 
@@ -216,7 +218,7 @@ export function buildWorkspacePublicIntroProps({
     hideDemandMapOnMobile: data.activePublicSection !== 'stats',
     quickActionHref: '/request/create',
     showQuickAction: data.activePublicSection !== 'stats' && data.activePublicSection !== 'requests',
-    preferredRequestsRole: data.workspacePrivateOverview?.preferredRole ?? null,
+    preferredRequestsRole: data.preferredRequestsRole ?? null,
   };
 }
 

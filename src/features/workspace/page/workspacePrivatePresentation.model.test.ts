@@ -46,6 +46,7 @@ function createData() {
     platformRequestsTotal: 12,
     allRequestsSummary: undefined,
     workspacePrivateOverview: { profileCompletion: 75 },
+    preferredRequestsRole: 'provider',
     setWorkspaceTab: vi.fn(),
     markPublicRequestsSeen: vi.fn(),
     guestLoginHref: '/auth/login',
@@ -127,6 +128,7 @@ describe('workspacePrivatePresentation.model', () => {
     expect(publicIntroProps.activeWorkspaceTab).toBe('my-offers');
     expect(publicIntroProps.quickActionHref).toBe('/request/create');
     expect(publicIntroProps.hideDemandMapOnMobile).toBe(true);
+    expect(publicIntroProps.preferredRequestsRole).toBe('provider');
   });
 
   it('builds private view model input by merging flow data with patch', () => {
