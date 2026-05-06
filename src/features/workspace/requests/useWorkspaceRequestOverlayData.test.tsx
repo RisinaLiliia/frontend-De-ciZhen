@@ -114,6 +114,34 @@ function DecisionProbe() {
   );
 }
 
+function ProviderDecisionProbe() {
+  const card = {
+    requestId: 'req-1',
+    role: 'provider',
+    primaryAction: null,
+    status: {
+      actions: [],
+    },
+    decision: {
+      actionType: 'reply_required',
+      primaryAction: null,
+    },
+  } as unknown as MyRequestsViewCard;
+
+  const state = useWorkspaceRequestDecisionData({
+    card,
+    locale: 'de',
+  });
+
+  return (
+    <div
+      data-testid="provider-decision-state"
+      data-contract-id={state.contract?.id ?? ''}
+      data-selected-offer-id={state.selectedOffer?.id ?? ''}
+    />
+  );
+}
+
 function ProviderOfferSheetProbe() {
   const state = useWorkspaceProviderOfferSheetData({
     locale: 'de',
@@ -227,6 +255,18 @@ describe('useWorkspaceRequestOverlayData', () => {
       expect(node.getAttribute('data-booking-id')).toBe('booking-1');
       expect(node.getAttribute('data-suggested-start-at')).toBe('2026-04-20T10:00:00.000Z');
     });
+  });
+
+  it('does not load client contracts for provider-side decision cards', async () => {
+    renderWithQueryClient(<ProviderDecisionProbe />);
+
+    await waitFor(() => {
+      const node = screen.getByTestId('provider-decision-state');
+      expect(node.getAttribute('data-contract-id')).toBe('');
+      expect(node.getAttribute('data-selected-offer-id')).toBe('offer-accepted');
+    });
+
+    expect(listMyContractsMock).not.toHaveBeenCalled();
   });
 
   it('combines managed request detail with provider offer response state', async () => {
