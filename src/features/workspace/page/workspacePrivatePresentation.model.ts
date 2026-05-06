@@ -57,6 +57,11 @@ type BuildPublicIntroArgs = {
   };
 };
 
+type BuildWorkspacePublicSummaryViewArgs = Pick<
+  WorkspacePrivateDataFlowResult,
+  'allRequestsSummary' | 'publicCityActivity' | 'isPublicSummaryLoading' | 'isPublicSummaryError'
+>;
+
 type BuildPrivateViewModelArgs = {
   branch: WorkspaceBranchProps;
   data: Pick<
@@ -218,19 +223,29 @@ export function buildWorkspacePublicIntroProps({
   branch,
   data,
 }: BuildPublicIntroArgs): ComponentProps<typeof WorkspacePublicIntro> {
+  const publicSummaryView = buildWorkspacePublicSummaryView(data);
+
   return {
     t: branch.t,
     locale: branch.locale,
     activePublicSection: data.activePublicSection,
     activeWorkspaceTab: data.activeWorkspaceTab,
-    cityActivity: data.publicCityActivity,
-    summary: data.allRequestsSummary,
-    isMapLoading: data.isPublicSummaryLoading,
-    isMapError: data.isPublicSummaryError,
+    ...publicSummaryView,
     hideDemandMapOnMobile: data.activePublicSection !== 'stats',
     quickActionHref: '/request/create',
     showQuickAction: data.activePublicSection !== 'stats' && data.activePublicSection !== 'requests',
     preferredRequestsRole: data.preferredRequestsRole ?? null,
+  };
+}
+
+export function buildWorkspacePublicSummaryView(
+  data: BuildWorkspacePublicSummaryViewArgs,
+) {
+  return {
+    cityActivity: data.publicCityActivity,
+    summary: data.allRequestsSummary,
+    isMapLoading: data.isPublicSummaryLoading,
+    isMapError: data.isPublicSummaryError,
   };
 }
 

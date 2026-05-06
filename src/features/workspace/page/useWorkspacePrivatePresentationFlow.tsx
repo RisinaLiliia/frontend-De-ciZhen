@@ -35,6 +35,7 @@ import { isWorkspaceTab } from '@/features/workspace/requests';
 import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 import {
   buildWorkspacePrivateContentDataArgs,
+  buildWorkspacePublicSummaryView,
   resolveWorkspaceEffectiveRequestsRole,
   resolveWorkspacePrivateRequestsLoading,
   buildWorkspacePrivatePresentationArgs,
@@ -134,16 +135,17 @@ export function useWorkspacePrivatePresentationFlow({
     watchKey: isOverviewMode,
   });
   const overviewStatisticsModel = useWorkspaceStatisticsModel({ locale: branch.locale });
+  const publicSummaryView = buildWorkspacePublicSummaryView(data);
 
   const overviewRailTopSlot = isOverviewMode ? (
     <>
       <WorkspacePublicDemandMapPanel
         t={branch.t}
         locale={branch.locale}
-        cityActivity={data.publicCityActivity}
-        summary={data.allRequestsSummary}
-        isLoading={data.isPublicSummaryLoading}
-        isError={data.isPublicSummaryError}
+        cityActivity={publicSummaryView.cityActivity}
+        summary={publicSummaryView.summary}
+        isLoading={publicSummaryView.isMapLoading}
+        isError={publicSummaryView.isMapError}
         className="workspace-overview__rail-panel--map"
         onSelectCity={overviewStatisticsModel.setCityId}
         style={

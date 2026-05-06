@@ -7,6 +7,7 @@ import {
   buildWorkspacePrivateStateArgs,
   buildWorkspacePrivateViewModelInput,
   buildWorkspacePublicIntroProps,
+  buildWorkspacePublicSummaryView,
   resolveWorkspaceEffectiveRequestsRole,
   resolveWorkspacePrivateRequestsLoading,
   shouldBuildWorkspacePrivateContractRequests,
@@ -130,6 +131,7 @@ describe('workspacePrivatePresentation.model', () => {
     expect(publicIntroProps.activeWorkspaceTab).toBe('my-offers');
     expect(publicIntroProps.quickActionHref).toBe('/request/create');
     expect(publicIntroProps.hideDemandMapOnMobile).toBe(true);
+    expect(publicIntroProps.isMapLoading).toBe(false);
     expect(publicIntroProps.preferredRequestsRole).toBe('provider');
   });
 
@@ -218,5 +220,15 @@ describe('workspacePrivatePresentation.model', () => {
         isWorkspacePrivateOverviewLoading: true,
       }),
     ).toBe(false);
+  });
+
+  it('builds one shared public summary view model for intro and overview map consumers', () => {
+    const data = createData();
+    const summaryView = buildWorkspacePublicSummaryView(data as never);
+
+    expect(summaryView.cityActivity).toEqual([]);
+    expect(summaryView.summary).toBeUndefined();
+    expect(summaryView.isMapLoading).toBe(false);
+    expect(summaryView.isMapError).toBe(false);
   });
 });
