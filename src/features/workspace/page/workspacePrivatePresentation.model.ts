@@ -93,6 +93,18 @@ type BuildPrivateViewModelArgs = {
   enabled?: WorkspacePrivateViewModelInput['enabled'];
 };
 
+type ResolveWorkspaceEffectiveRequestsRoleArgs = {
+  activeRequestsRole: WorkspacePrivateDataFlowResult['activeRequestsRole'];
+  preferredRequestsRole: 'customer' | 'provider' | null;
+};
+
+type ResolveWorkspacePrivateRequestsLoadingArgs = {
+  workspaceRequests: WorkspacePrivateDataFlowResult['workspaceRequests'];
+  isWorkspaceRequestsLoading: WorkspacePrivateDataFlowResult['isWorkspaceRequestsLoading'];
+  activeRequestsRole: WorkspacePrivateDataFlowResult['activeRequestsRole'];
+  isWorkspacePrivateOverviewLoading: WorkspacePrivateDataFlowResult['isWorkspacePrivateOverviewLoading'];
+};
+
 export function shouldBuildWorkspacePrivateContractRequests(
   activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'],
 ) {
@@ -264,4 +276,29 @@ export function buildWorkspacePrivateViewModelInput({
     isMyReviewsLoading: data.isMyReviewsLoading,
     myReviews: data.myReviews,
   };
+}
+
+export function resolveWorkspaceEffectiveRequestsRole({
+  activeRequestsRole,
+  preferredRequestsRole,
+}: ResolveWorkspaceEffectiveRequestsRoleArgs) {
+  return activeRequestsRole === 'all'
+    ? preferredRequestsRole
+    : activeRequestsRole;
+}
+
+export function resolveWorkspacePrivateRequestsLoading({
+  workspaceRequests,
+  isWorkspaceRequestsLoading,
+  activeRequestsRole,
+  isWorkspacePrivateOverviewLoading,
+}: ResolveWorkspacePrivateRequestsLoadingArgs) {
+  if (workspaceRequests) {
+    return isWorkspaceRequestsLoading;
+  }
+
+  return isWorkspaceRequestsLoading || (
+    activeRequestsRole === 'all' &&
+    isWorkspacePrivateOverviewLoading
+  );
 }

@@ -35,6 +35,8 @@ import { isWorkspaceTab } from '@/features/workspace/requests';
 import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 import {
   buildWorkspacePrivateContentDataArgs,
+  resolveWorkspaceEffectiveRequestsRole,
+  resolveWorkspacePrivateRequestsLoading,
   buildWorkspacePrivatePresentationArgs,
   buildWorkspacePrivateStateArgs,
   buildWorkspacePrivateViewModelInput,
@@ -254,13 +256,17 @@ export function useWorkspacePrivatePresentationFlow({
     ],
   );
 
-  const privateRequestsLoading = data.workspaceRequests
-    ? data.isWorkspaceRequestsLoading
-    : data.isWorkspaceRequestsLoading || (data.activeRequestsRole === 'all' && data.isWorkspacePrivateOverviewLoading);
   const preferredRequestsRole = privateState.preferredRequestsRole;
-  const effectiveRequestsRole = data.activeRequestsRole === 'all'
-    ? preferredRequestsRole
-    : data.activeRequestsRole;
+  const privateRequestsLoading = resolveWorkspacePrivateRequestsLoading({
+    workspaceRequests: data.workspaceRequests,
+    isWorkspaceRequestsLoading: data.isWorkspaceRequestsLoading,
+    activeRequestsRole: data.activeRequestsRole,
+    isWorkspacePrivateOverviewLoading: data.isWorkspacePrivateOverviewLoading,
+  });
+  const effectiveRequestsRole = resolveWorkspaceEffectiveRequestsRole({
+    activeRequestsRole: data.activeRequestsRole,
+    preferredRequestsRole,
+  });
   const privateRequestsModel = React.useMemo(
     () => {
       if (data.workspaceRequests) {

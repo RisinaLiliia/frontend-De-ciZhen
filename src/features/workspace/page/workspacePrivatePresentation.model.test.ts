@@ -7,6 +7,8 @@ import {
   buildWorkspacePrivateStateArgs,
   buildWorkspacePrivateViewModelInput,
   buildWorkspacePublicIntroProps,
+  resolveWorkspaceEffectiveRequestsRole,
+  resolveWorkspacePrivateRequestsLoading,
   shouldBuildWorkspacePrivateContractRequests,
   shouldBuildWorkspacePrivateFavoriteProviderCards,
 } from './workspacePrivatePresentation.model';
@@ -171,5 +173,50 @@ describe('workspacePrivatePresentation.model', () => {
     });
 
     expect(args.enabled).toBe(false);
+  });
+
+  it('resolves effective requests role from preferred role only for the all mode', () => {
+    expect(
+      resolveWorkspaceEffectiveRequestsRole({
+        activeRequestsRole: 'all',
+        preferredRequestsRole: 'provider',
+      }),
+    ).toBe('provider');
+
+    expect(
+      resolveWorkspaceEffectiveRequestsRole({
+        activeRequestsRole: 'customer',
+        preferredRequestsRole: 'provider',
+      }),
+    ).toBe('customer');
+  });
+
+  it('keeps private requests loading scoped to the fallback overview path', () => {
+    expect(
+      resolveWorkspacePrivateRequestsLoading({
+        workspaceRequests: { requests: [] } as never,
+        isWorkspaceRequestsLoading: true,
+        activeRequestsRole: 'all',
+        isWorkspacePrivateOverviewLoading: false,
+      }),
+    ).toBe(true);
+
+    expect(
+      resolveWorkspacePrivateRequestsLoading({
+        workspaceRequests: null,
+        isWorkspaceRequestsLoading: false,
+        activeRequestsRole: 'all',
+        isWorkspacePrivateOverviewLoading: true,
+      }),
+    ).toBe(true);
+
+    expect(
+      resolveWorkspacePrivateRequestsLoading({
+        workspaceRequests: null,
+        isWorkspaceRequestsLoading: false,
+        activeRequestsRole: 'provider',
+        isWorkspacePrivateOverviewLoading: true,
+      }),
+    ).toBe(false);
   });
 });
