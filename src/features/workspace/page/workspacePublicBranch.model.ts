@@ -53,6 +53,7 @@ type BuildExploreWithSeedArgs = {
   platformSnapshot: PlatformSnapshot;
   isSummaryLoading: boolean;
   isSummaryError: boolean;
+  enableSeed?: boolean;
 };
 
 type BuildPublicIntroArgs = {
@@ -109,6 +110,12 @@ export function buildWorkspacePublicSnapshotQuery() {
   });
 }
 
+export function shouldLoadWorkspacePublicShellSnapshot(
+  activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'],
+) {
+  return activePublicSection !== 'requests';
+}
+
 export function resolveWorkspacePublicBranchSnapshot({
   platformSnapshot,
   platformReviewsOverview,
@@ -135,7 +142,12 @@ export function buildWorkspacePublicExploreWithSeed({
   platformSnapshot,
   isSummaryLoading,
   isSummaryError,
+  enableSeed = true,
 }: BuildExploreWithSeedArgs): ExploreProps {
+  if (!enableSeed) {
+    return explore;
+  }
+
   return {
     ...explore,
     initialPublicRequests: platformSnapshot?.requests,
@@ -168,18 +180,20 @@ export function buildWorkspacePublicIntroProps({
   isSummaryLoading,
   isSummaryError,
 }: BuildPublicIntroArgs): PublicIntroProps {
+  const isRequestsSection = activePublicSection === 'requests';
+
   return {
     t: branch.t,
     locale: branch.locale,
     activePublicSection,
     activeWorkspaceTab,
-    cityActivity,
-    summary: platformSummary,
-    isMapLoading: isSummaryLoading,
-    isMapError: isSummaryError,
+    cityActivity: isRequestsSection ? null : cityActivity,
+    summary: isRequestsSection ? null : platformSummary,
+    isMapLoading: isRequestsSection ? false : isSummaryLoading,
+    isMapError: isRequestsSection ? false : isSummaryError,
     showDemandMap: activePublicSection === 'stats',
     hideDemandMapOnMobile: activePublicSection !== 'stats',
     quickActionHref: '/request/create',
-    showQuickAction: activePublicSection !== 'stats' && activePublicSection !== 'requests',
+    showQuickAction: activePublicSection !== 'stats' && !isRequestsSection,
   };
 }

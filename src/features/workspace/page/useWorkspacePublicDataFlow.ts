@@ -16,6 +16,7 @@ import {
   buildWorkspacePublicReviewsQuery,
   buildWorkspacePublicSnapshotQuery,
   resolveWorkspacePublicBranchSnapshot,
+  shouldLoadWorkspacePublicShellSnapshot,
 } from '@/features/workspace/page/workspacePublicBranch.model';
 import { resolveWorkspacePublicDataFlowResult } from '@/features/workspace/page/workspacePublicDataFlow.model';
 import {
@@ -34,13 +35,17 @@ export function useWorkspacePublicDataFlow({
   routeState,
 }: WorkspaceBranchProps) {
   const { activePublicSection, activeWorkspaceTab, guestLoginHref, onGuestLockedAction } = routeState;
+  const shouldLoadShellSnapshot = shouldLoadWorkspacePublicShellSnapshot(activePublicSection);
 
   const { data: platformReviewsOverview } = useQuery(buildWorkspacePublicReviewsQuery());
   const {
     data: platformSnapshot,
     isLoading: isSummaryLoading,
     isError: isSummaryError,
-  } = useQuery(buildWorkspacePublicSnapshotQuery());
+  } = useQuery({
+    ...buildWorkspacePublicSnapshotQuery(),
+    enabled: shouldLoadShellSnapshot,
+  });
 
   const {
     platformRequestsTotal,
@@ -57,8 +62,14 @@ export function useWorkspacePublicDataFlow({
   const { localeTag, formatNumber } = useWorkspaceFormatters(locale);
   const explore = useExploreSidebar(t);
   const exploreWithSeed = React.useMemo(
-    () => buildWorkspacePublicExploreWithSeed({ explore, platformSnapshot, isSummaryLoading, isSummaryError }),
-    [explore, isSummaryError, isSummaryLoading, platformSnapshot],
+    () => buildWorkspacePublicExploreWithSeed({
+      explore,
+      platformSnapshot,
+      isSummaryLoading,
+      isSummaryError,
+      enableSeed: shouldLoadShellSnapshot,
+    }),
+    [explore, isSummaryError, isSummaryLoading, platformSnapshot, shouldLoadShellSnapshot],
   );
 
   const { setWorkspaceTab } = useWorkspaceNavigation(

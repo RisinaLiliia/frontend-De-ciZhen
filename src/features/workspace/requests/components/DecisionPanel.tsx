@@ -52,6 +52,20 @@ export function DecisionPanel({
     if (level === 'medium') return 'Medium';
     return 'Low';
   }, [locale, variant]);
+  const overviewEyebrow = variant === 'market'
+    ? (locale === 'de' ? 'Marktlage' : 'Market workload')
+    : (locale === 'de' ? 'Arbeitslage' : 'Workload');
+  const overviewLabels = variant === 'market'
+    ? {
+        highUrgency: locale === 'de' ? 'Hohe Nachfrage' : 'High demand',
+        inProgress: locale === 'de' ? 'In Ausführung' : 'In execution',
+        completedThisPeriod: locale === 'de' ? 'Abgeschlossen' : 'Completed',
+      }
+    : {
+        highUrgency: locale === 'de' ? 'Hohe Dringlichkeit' : 'High urgency',
+        inProgress: locale === 'de' ? 'In Arbeit' : 'In progress',
+        completedThisPeriod: locale === 'de' ? 'Abgeschlossen' : 'Completed',
+      };
 
   return (
     <div className="my-decision-panel">
@@ -145,19 +159,19 @@ export function DecisionPanel({
 
       <section className="panel my-decision-panel__overview">
         <span className="my-decision-panel__eyebrow">
-          {locale === 'de' ? 'Arbeitslage' : 'Workload'}
+          {overviewEyebrow}
         </span>
         <dl className="my-decision-panel__overview-grid">
           <div>
-            <dt>{locale === 'de' ? 'Hohe Dringlichkeit' : 'High urgency'}</dt>
+            <dt>{overviewLabels.highUrgency}</dt>
             <dd>{panel.overview.highUrgency}</dd>
           </div>
           <div>
-            <dt>{locale === 'de' ? 'In Arbeit' : 'In progress'}</dt>
+            <dt>{overviewLabels.inProgress}</dt>
             <dd>{panel.overview.inProgress}</dd>
           </div>
           <div>
-            <dt>{locale === 'de' ? 'Abgeschlossen' : 'Completed'}</dt>
+            <dt>{overviewLabels.completedThisPeriod}</dt>
             <dd>{panel.overview.completedThisPeriod}</dd>
           </div>
         </dl>

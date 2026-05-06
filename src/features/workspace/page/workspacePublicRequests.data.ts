@@ -130,7 +130,7 @@ export function resolveWorkspacePublicRequestsData(params: {
   const publicListPage = publicRequestsPage ?? filtersPage;
   const publicListLimit = publicRequestsLimit ?? filtersLimit;
   const publicListTotalPages = Math.max(1, Math.ceil(publicRequestsTotal / Math.max(1, publicListLimit)));
-  const decisionPanel = hasMarketContract ? (marketResponse.decisionPanel ?? null) : null;
+  const decisionPanel = marketResponse.decisionPanel ?? null;
 
   return {
     requests,
