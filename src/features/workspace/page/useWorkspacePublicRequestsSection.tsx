@@ -131,9 +131,6 @@ export function useWorkspacePublicRequestsSection({
     resolvedTotalResults,
   } = React.useMemo(
     () => resolveWorkspacePublicRequestsData({
-      locale,
-      activeRequestsState,
-      hasMarketContract,
       marketResponse,
       publicRequestsItems: data.publicRequests?.items,
       publicRequestsTotalValue: data.publicRequests?.total,
@@ -141,19 +138,14 @@ export function useWorkspacePublicRequestsSection({
       publicRequestsLimit: data.publicRequests?.limit,
       filtersPage: filters.page,
       filtersLimit: filters.limit,
-      platformRequestsTotal: data.allRequestsSummary?.totalPublishedRequests,
     }),
     [
-      activeRequestsState,
-      data.allRequestsSummary?.totalPublishedRequests,
       data.publicRequests?.items,
       data.publicRequests?.limit,
       data.publicRequests?.page,
       data.publicRequests?.total,
       filters.limit,
       filters.page,
-      hasMarketContract,
-      locale,
       marketResponse,
     ],
   );

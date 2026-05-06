@@ -10,6 +10,7 @@ import {
   buildWorkspacePrivateTabPersistenceArgs,
   resolveWorkspacePrivateInteractionsResult,
   shouldBuildWorkspacePrivateProviderInteractions,
+  shouldBuildWorkspacePrivateRequestFavoriteInteractions,
   shouldBuildWorkspacePrivateRequestInteractions,
 } from './workspacePrivateInteractions.model';
 
@@ -56,6 +57,20 @@ describe('workspacePrivateInteractions.model', () => {
     expect(shouldBuildWorkspacePrivateRequestInteractions('profile')).toBe(false);
     expect(shouldBuildWorkspacePrivateRequestInteractions('reviews')).toBe(false);
     expect(shouldBuildWorkspacePrivateRequestInteractions('favorites')).toBe(true);
+    expect(
+      shouldBuildWorkspacePrivateRequestFavoriteInteractions({
+        activePublicSection: 'requests',
+        activeWorkspaceTab: 'my-requests',
+        requestsScope: 'my',
+      }),
+    ).toBe(false);
+    expect(
+      shouldBuildWorkspacePrivateRequestFavoriteInteractions({
+        activePublicSection: null,
+        activeWorkspaceTab: 'favorites',
+        requestsScope: 'market',
+      }),
+    ).toBe(true);
     expect(
       shouldBuildWorkspacePrivateProviderInteractions({
         activePublicSection: 'requests',

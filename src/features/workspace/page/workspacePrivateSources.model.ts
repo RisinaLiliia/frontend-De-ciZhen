@@ -19,6 +19,7 @@ type WorkspaceCollectionsResult = ReturnType<typeof useWorkspaceCollections>;
 type BuildWorkspacePrivateCatalogLoadArgs = {
   activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
+  requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
 };
 
 type BuildWorkspacePrivatePublicRequestsStateLoadArgs = {
@@ -31,6 +32,7 @@ type BuildWorkspacePrivateSourcesDataArgsParams = Pick<
   'locale' | 'isAuthed' | 'isWorkspaceAuthed'
 > & {
   filter: WorkspacePublicFiltersResult['filter'];
+  shouldLoadCatalog?: boolean;
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
   requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
@@ -74,6 +76,13 @@ type BuildWorkspacePrivateSourcesCollectionsArgsParams = {
   locale: WorkspaceBranchProps['locale'];
 };
 
+type BuildWorkspacePrivateCatalogIndexArgsParams = Pick<
+  WorkspacePublicFiltersResult,
+  'services' | 'categories' | 'cities'
+> & {
+  enabled: boolean;
+};
+
 type ResolveWorkspacePrivateSourcesResultParams = {
   data: WorkspaceDataResult;
   catalogIndex: CatalogIndexResult;
@@ -84,7 +93,9 @@ type ResolveWorkspacePrivateSourcesResultParams = {
 export function shouldLoadWorkspacePrivateCatalog({
   activePublicSection = null,
   activeWorkspaceTab,
+  requestsScope = 'market',
 }: BuildWorkspacePrivateCatalogLoadArgs) {
+  if (activePublicSection === 'requests' && requestsScope === 'my') return false;
   if (activePublicSection === 'actions') return false;
   if (activeWorkspaceTab === 'reviews') return false;
   if (activeWorkspaceTab === 'profile') return false;
@@ -139,6 +150,7 @@ export function resolveWorkspacePrivatePublicSummaryCityActivityLimit({
 
 export function buildWorkspacePrivateSourcesDataArgs({
   filter,
+  shouldLoadCatalog = true,
   locale,
   isAuthed,
   isWorkspaceAuthed,
@@ -151,7 +163,7 @@ export function buildWorkspacePrivateSourcesDataArgs({
   activeRequestsSort = null,
 }: BuildWorkspacePrivateSourcesDataArgsParams): Parameters<typeof useWorkspaceData>[0] {
   return {
-    filter,
+    filter: shouldLoadCatalog ? filter : {},
     locale,
     isAuthed,
     isWorkspaceAuthed,
@@ -182,6 +194,8 @@ export function buildWorkspacePrivateSourcesRequestsStateArgs({
     limit: filters.limit,
     page: filters.page,
     setPage: filters.setPage,
+    enablePageClamp: true,
+    enableEmptyStateTracking: true,
     isWorkspacePublicSection: false,
     activePublicSection,
     isLoading: data.isLoading,
@@ -191,6 +205,20 @@ export function buildWorkspacePrivateSourcesRequestsStateArgs({
     categoryKey: filters.categoryKey,
     subcategoryKey: filters.subcategoryKey,
     sortBy: filters.sortBy,
+  };
+}
+
+export function buildWorkspacePrivateCatalogIndexArgs({
+  enabled,
+  services,
+  categories,
+  cities,
+}: BuildWorkspacePrivateCatalogIndexArgsParams): Parameters<typeof useCatalogIndex>[0] {
+  return {
+    enabled,
+    services,
+    categories,
+    cities,
   };
 }
 
@@ -207,6 +235,8 @@ export function buildWorkspacePrivateSourcesIdleRequestsStateArgs(params: {
     limit: params.limit,
     page: params.page,
     setPage: params.setPage,
+    enablePageClamp: false,
+    enableEmptyStateTracking: false,
     isWorkspacePublicSection: false,
     activePublicSection: params.activePublicSection,
     isLoading: false,

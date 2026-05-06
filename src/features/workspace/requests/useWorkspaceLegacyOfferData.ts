@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
+import type { OfferDto } from '@/lib/api/dto/offers';
 
 import {
   buildWorkspaceOfferRequestsQuery,
@@ -10,6 +11,8 @@ import {
 import { buildWorkspaceOfferRequestIds } from '@/features/workspace/requests/workspaceData.model';
 
 type WorkspaceDataQueries = ReturnType<typeof buildWorkspaceDataQueries>;
+type WorkspaceLegacyOfferQuery = WorkspaceDataQueries['myOffers'];
+type WorkspaceLegacyOfferRequestsQuery = ReturnType<typeof buildWorkspaceOfferRequestsQuery>;
 
 type Args = {
   workspaceDataQueries: WorkspaceDataQueries;
@@ -22,10 +25,25 @@ export function useWorkspaceLegacyOfferData({
   locale,
   shouldLoadOfferRequests,
 }: Args) {
-  const { data: myOffers = [], isLoading: isMyOffersLoading } = useQuery(workspaceDataQueries.myOffers);
+  const offerQueryEntries = React.useMemo(
+    (): Array<{ key: 'myOffers'; query: WorkspaceLegacyOfferQuery }> =>
+      workspaceDataQueries.myOffers.enabled
+        ? [{ key: 'myOffers', query: workspaceDataQueries.myOffers }]
+        : [],
+    [workspaceDataQueries.myOffers],
+  );
+
+  const offerQueryResults = useQueries({
+    queries: offerQueryEntries.map((entry) => entry.query),
+  });
+
+  const myOffersData = offerQueryResults[0]?.data as OfferDto[] | undefined;
+  const myOffers = myOffersData ?? [];
+  const isMyOffersLoading = offerQueryResults[0]?.isLoading ?? false;
+
   const myOfferRequestIds = React.useMemo(
-    () => buildWorkspaceOfferRequestIds(myOffers),
-    [myOffers],
+    () => buildWorkspaceOfferRequestIds(myOffersData ?? []),
+    [myOffersData],
   );
 
   const myOfferRequestsQuery = React.useMemo(
@@ -38,10 +56,21 @@ export function useWorkspaceLegacyOfferData({
     [locale, myOfferRequestIds, shouldLoadOfferRequests],
   );
 
-  const {
-    data: myOfferRequestsById = new Map(),
-    isLoading: isMyOfferRequestsLoading,
-  } = useQuery(myOfferRequestsQuery);
+  const offerRequestQueryEntries = React.useMemo(
+    (): Array<{ key: 'myOfferRequests'; query: WorkspaceLegacyOfferRequestsQuery }> =>
+      myOfferRequestsQuery.enabled
+        ? [{ key: 'myOfferRequests', query: myOfferRequestsQuery }]
+        : [],
+    [myOfferRequestsQuery],
+  );
+
+  const offerRequestQueryResults = useQueries({
+    queries: offerRequestQueryEntries.map((entry) => entry.query),
+  });
+
+  const myOfferRequestsById =
+    (offerRequestQueryResults[0]?.data as ReturnType<typeof myOfferRequestsQuery.queryFn> extends Promise<infer TResult> ? TResult : never) ?? new Map();
+  const isMyOfferRequestsLoading = offerRequestQueryResults[0]?.isLoading ?? false;
 
   return {
     myOffers,

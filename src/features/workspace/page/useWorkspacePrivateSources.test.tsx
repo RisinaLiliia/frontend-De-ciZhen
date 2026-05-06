@@ -181,6 +181,8 @@ describe('useWorkspacePrivateSources', () => {
     expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
       expect.objectContaining({
         activePublicSection: null,
+        enablePageClamp: true,
+        enableEmptyStateTracking: true,
         isWorkspacePublicSection: false,
         categoryKey: 'cat-1',
       }),
@@ -213,8 +215,15 @@ describe('useWorkspacePrivateSources', () => {
       }),
     );
 
+    expect(useCatalogIndexMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        enabled: false,
+      }),
+    );
+
     expect(useWorkspaceDataMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        filter: {},
         activeWorkspaceTab: 'profile',
         publicSummaryCityActivityLimit: 1,
       }),
@@ -222,8 +231,48 @@ describe('useWorkspacePrivateSources', () => {
 
     expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        enablePageClamp: false,
+        enableEmptyStateTracking: false,
         publicRequests: undefined,
         hasActivePublicFilter: false,
+      }),
+    );
+  });
+
+  it('disables private catalog loading for unified private requests flow', () => {
+    const t: WorkspaceBranchProps['t'] = (key) => String(key);
+
+    render(
+      <SourcesProbe
+        t={t}
+        locale="de"
+        isAuthed
+        isWorkspaceAuthed
+        activePublicSection="requests"
+        activeWorkspaceTab="my-requests"
+        requestsScope="my"
+      />,
+    );
+
+    expect(useWorkspacePublicFiltersMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        shouldLoadCatalog: false,
+      }),
+    );
+
+    expect(useWorkspaceDataMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filter: {},
+        activePublicSection: 'requests',
+        requestsScope: 'my',
+        activeWorkspaceTab: 'my-requests',
+        publicSummaryCityActivityLimit: 1,
+      }),
+    );
+
+    expect(useCatalogIndexMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        enabled: false,
       }),
     );
   });

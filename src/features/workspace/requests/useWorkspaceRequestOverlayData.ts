@@ -168,8 +168,10 @@ export function useWorkspaceRequestDecisionData({
   locale: Locale;
 }) {
   const { offers = [] } = useWorkspaceRequestOffersData(card.requestId);
+  const shouldLoadClientContracts = card.role === 'customer';
   const { data: contracts = [] } = useQuery({
     queryKey: workspaceQK.contractsMyClient(),
+    enabled: shouldLoadClientContracts,
     queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), [] as ContractDto[]),
     staleTime: 30_000,
     refetchOnWindowFocus: false,

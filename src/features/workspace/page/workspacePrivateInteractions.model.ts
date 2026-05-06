@@ -39,6 +39,15 @@ export function shouldBuildWorkspacePrivateRequestInteractions(activeWorkspaceTa
   return activeWorkspaceTab !== 'profile' && activeWorkspaceTab !== 'reviews';
 }
 
+export function shouldBuildWorkspacePrivateRequestFavoriteInteractions(params: {
+  activePublicSection: PublicWorkspaceSection | null;
+  activeWorkspaceTab: WorkspaceTab;
+  requestsScope: WorkspaceRequestsScope;
+}) {
+  if (params.activePublicSection === 'requests' && params.requestsScope === 'my') return false;
+  return shouldBuildWorkspacePrivateRequestInteractions(params.activeWorkspaceTab);
+}
+
 export function shouldBuildWorkspacePrivateProviderInteractions(params: {
   activePublicSection: PublicWorkspaceSection | null;
   requestsScope: WorkspaceRequestsScope;

@@ -39,6 +39,12 @@ export function resolveWorkspacePrivateMeta(params: {
   };
 }
 
+export function resolveWorkspacePreferredRequestsRole(
+  overview: WorkspacePrivateOverviewDto,
+) {
+  return overview.preferredRole ?? null;
+}
+
 export function buildWorkspacePrivateNavModelArgs(params: {
   t: WorkspacePrivateNavModelArgs['t'];
   formatNumber: WorkspacePrivateNavModelArgs['formatNumber'];
@@ -111,6 +117,7 @@ export function buildWorkspacePrivateTopProvidersArgs(params: {
 export function resolveWorkspacePrivateStateResult(params: {
   topProviders: ReturnType<typeof useWorkspacePrivateTopProviders>;
   activityProgress: number;
+  preferredRequestsRole: 'customer' | 'provider' | null;
   nav: ReturnType<typeof useWorkspacePrivateNavModel>;
   stats: ReturnType<typeof useWorkspacePrivateStatsModel>;
 }) {
@@ -119,6 +126,7 @@ export function resolveWorkspacePrivateStateResult(params: {
     navTitle: params.nav.navTitle,
     navSubtitle: params.nav.navSubtitle,
     activityProgress: params.activityProgress,
+    preferredRequestsRole: params.preferredRequestsRole,
     personalNavItems: params.nav.personalNavItems,
     insightText: params.stats.insightText,
     hasAnyStatsActivity: params.stats.hasAnyStatsActivity,

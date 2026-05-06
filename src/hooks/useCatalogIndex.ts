@@ -8,23 +8,28 @@ type CategoryItem = { key: string; i18n: Record<string, string> };
 type CityItem = { id: string; i18n: Record<string, string> };
 
 export function useCatalogIndex({
+  enabled = true,
   services,
   categories,
   cities,
 }: {
+  enabled?: boolean;
   services: ServiceItem[];
   categories: CategoryItem[];
   cities: CityItem[];
 }) {
   const serviceByKey = React.useMemo(
-    () => new Map(services.map((service) => [service.key, service])),
-    [services],
+    () => enabled ? new Map(services.map((service) => [service.key, service])) : new Map(),
+    [enabled, services],
   );
   const categoryByKey = React.useMemo(
-    () => new Map(categories.map((category) => [category.key, category])),
-    [categories],
+    () => enabled ? new Map(categories.map((category) => [category.key, category])) : new Map(),
+    [categories, enabled],
   );
-  const cityById = React.useMemo(() => new Map(cities.map((city) => [city.id, city])), [cities]);
+  const cityById = React.useMemo(
+    () => enabled ? new Map(cities.map((city) => [city.id, city])) : new Map(),
+    [cities, enabled],
+  );
 
   return { serviceByKey, categoryByKey, cityById };
 }

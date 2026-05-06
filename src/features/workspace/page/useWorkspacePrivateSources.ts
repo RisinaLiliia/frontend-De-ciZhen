@@ -9,6 +9,7 @@ import {
 } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import {
+  buildWorkspacePrivateCatalogIndexArgs,
   buildWorkspacePrivateSourcesCollectionsArgs,
   buildWorkspacePrivateSourcesIdleRequestsStateArgs,
   shouldLoadWorkspacePrivateCatalog,
@@ -44,6 +45,7 @@ export function useWorkspacePrivateSources({
   const shouldLoadCatalog = shouldLoadWorkspacePrivateCatalog({
     activePublicSection,
     activeWorkspaceTab,
+    requestsScope,
   });
   const shouldLoadPublicRequestsState = shouldLoadWorkspacePrivatePublicRequestsState({
     activePublicSection,
@@ -69,15 +71,19 @@ export function useWorkspacePrivateSources({
     activePublicSection,
   });
 
-  const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
-    services,
-    categories,
-    cities,
-  });
+  const { serviceByKey, categoryByKey, cityById } = useCatalogIndex(
+    buildWorkspacePrivateCatalogIndexArgs({
+      enabled: shouldLoadCatalog,
+      services,
+      categories,
+      cities,
+    }),
+  );
 
   const data = useWorkspaceData(
     buildWorkspacePrivateSourcesDataArgs({
       filter,
+      shouldLoadCatalog,
       locale,
       isAuthed,
       isWorkspaceAuthed,

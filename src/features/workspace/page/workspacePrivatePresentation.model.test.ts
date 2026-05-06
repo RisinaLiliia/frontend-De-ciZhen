@@ -7,6 +7,9 @@ import {
   buildWorkspacePrivateStateArgs,
   buildWorkspacePrivateViewModelInput,
   buildWorkspacePublicIntroProps,
+  buildWorkspacePublicSummaryView,
+  resolveWorkspaceEffectiveRequestsRole,
+  resolveWorkspacePrivateRequestsLoading,
   shouldBuildWorkspacePrivateContractRequests,
   shouldBuildWorkspacePrivateFavoriteProviderCards,
 } from './workspacePrivatePresentation.model';
@@ -46,6 +49,7 @@ function createData() {
     platformRequestsTotal: 12,
     allRequestsSummary: undefined,
     workspacePrivateOverview: { profileCompletion: 75 },
+    preferredRequestsRole: 'provider',
     setWorkspaceTab: vi.fn(),
     markPublicRequestsSeen: vi.fn(),
     guestLoginHref: '/auth/login',
@@ -127,6 +131,8 @@ describe('workspacePrivatePresentation.model', () => {
     expect(publicIntroProps.activeWorkspaceTab).toBe('my-offers');
     expect(publicIntroProps.quickActionHref).toBe('/request/create');
     expect(publicIntroProps.hideDemandMapOnMobile).toBe(true);
+    expect(publicIntroProps.isMapLoading).toBe(false);
+    expect(publicIntroProps.preferredRequestsRole).toBe('provider');
   });
 
   it('builds private view model input by merging flow data with patch', () => {
@@ -169,5 +175,60 @@ describe('workspacePrivatePresentation.model', () => {
     });
 
     expect(args.enabled).toBe(false);
+  });
+
+  it('resolves effective requests role from preferred role only for the all mode', () => {
+    expect(
+      resolveWorkspaceEffectiveRequestsRole({
+        activeRequestsRole: 'all',
+        preferredRequestsRole: 'provider',
+      }),
+    ).toBe('provider');
+
+    expect(
+      resolveWorkspaceEffectiveRequestsRole({
+        activeRequestsRole: 'customer',
+        preferredRequestsRole: 'provider',
+      }),
+    ).toBe('customer');
+  });
+
+  it('keeps private requests loading scoped to the fallback overview path', () => {
+    expect(
+      resolveWorkspacePrivateRequestsLoading({
+        workspaceRequests: { requests: [] } as never,
+        isWorkspaceRequestsLoading: true,
+        activeRequestsRole: 'all',
+        isWorkspacePrivateOverviewLoading: false,
+      }),
+    ).toBe(true);
+
+    expect(
+      resolveWorkspacePrivateRequestsLoading({
+        workspaceRequests: null,
+        isWorkspaceRequestsLoading: false,
+        activeRequestsRole: 'all',
+        isWorkspacePrivateOverviewLoading: true,
+      }),
+    ).toBe(true);
+
+    expect(
+      resolveWorkspacePrivateRequestsLoading({
+        workspaceRequests: null,
+        isWorkspaceRequestsLoading: false,
+        activeRequestsRole: 'provider',
+        isWorkspacePrivateOverviewLoading: true,
+      }),
+    ).toBe(false);
+  });
+
+  it('builds one shared public summary view model for intro and overview map consumers', () => {
+    const data = createData();
+    const summaryView = buildWorkspacePublicSummaryView(data as never);
+
+    expect(summaryView.cityActivity).toEqual([]);
+    expect(summaryView.summary).toBeUndefined();
+    expect(summaryView.isMapLoading).toBe(false);
+    expect(summaryView.isMapError).toBe(false);
   });
 });

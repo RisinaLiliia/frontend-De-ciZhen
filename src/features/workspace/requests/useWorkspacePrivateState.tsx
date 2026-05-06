@@ -11,6 +11,7 @@ import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspac
 import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
 import {
   buildWorkspacePrivateNavModelArgs,
+  resolveWorkspacePreferredRequestsRole,
   buildWorkspacePrivateStatsModelArgs,
   buildWorkspacePrivateTopProvidersArgs,
   shouldBuildWorkspacePrivateTopProviders,
@@ -71,6 +72,10 @@ export function useWorkspacePrivateState({
     () => resolveWorkspacePrivateMeta({ overview }),
     [overview],
   );
+  const preferredRequestsRole = React.useMemo(
+    () => resolveWorkspacePreferredRequestsRole(overview),
+    [overview],
+  );
 
   const nav = useWorkspacePrivateNavModel(
     buildWorkspacePrivateNavModelArgs({
@@ -119,6 +124,7 @@ export function useWorkspacePrivateState({
   return resolveWorkspacePrivateStateResult({
     topProviders,
     activityProgress,
+    preferredRequestsRole,
     nav,
     stats,
   });

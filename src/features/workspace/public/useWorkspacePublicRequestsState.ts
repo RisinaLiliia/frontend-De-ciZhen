@@ -20,6 +20,8 @@ export function useWorkspacePublicRequestsState({
   limit,
   page,
   setPage,
+  enablePageClamp = true,
+  enableEmptyStateTracking = true,
   isWorkspacePublicSection,
   activePublicSection,
   isLoading,
@@ -41,12 +43,14 @@ export function useWorkspacePublicRequestsState({
   );
 
   React.useEffect(() => {
+    if (!enablePageClamp) return;
     if (!setPage) return;
     const nextPage = resolveWorkspacePublicRequestsPageClamp(page, totalPages);
     if (nextPage !== null) setPage(nextPage);
-  }, [page, setPage, totalPages]);
+  }, [enablePageClamp, page, setPage, totalPages]);
 
   React.useEffect(() => {
+    if (!enableEmptyStateTracking) return;
     const payload = resolveWorkspacePublicEmptyResultPayload({
       isWorkspacePublicSection,
       activePublicSection,
@@ -65,6 +69,7 @@ export function useWorkspacePublicRequestsState({
     activePublicSection,
     categoryKey,
     cityId,
+    enableEmptyStateTracking,
     hasActivePublicFilter,
     isError,
     isLoading,

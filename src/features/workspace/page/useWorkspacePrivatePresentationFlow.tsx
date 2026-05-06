@@ -35,6 +35,9 @@ import { isWorkspaceTab } from '@/features/workspace/requests';
 import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 import {
   buildWorkspacePrivateContentDataArgs,
+  buildWorkspacePublicSummaryView,
+  resolveWorkspaceEffectiveRequestsRole,
+  resolveWorkspacePrivateRequestsLoading,
   buildWorkspacePrivatePresentationArgs,
   buildWorkspacePrivateStateArgs,
   buildWorkspacePrivateViewModelInput,
@@ -86,7 +89,7 @@ export function useWorkspacePrivatePresentationFlow({
       data,
       WorkspacePrivateIntroComponent: WorkspacePrivateIntro,
       showQuickAction: data.activePublicSection !== 'stats' && !isOverviewMode,
-      preferredRequestsRole: data.workspacePrivateOverview?.preferredRole ?? null,
+      preferredRequestsRole: privateState.preferredRequestsRole,
       privateState,
     }),
   );
@@ -97,7 +100,10 @@ export function useWorkspacePrivatePresentationFlow({
       (() => {
         const publicIntroProps = buildWorkspacePublicIntroProps({
           branch,
-          data,
+          data: {
+            ...data,
+            preferredRequestsRole: privateState.preferredRequestsRole,
+          },
         });
 
         return (
@@ -129,16 +135,17 @@ export function useWorkspacePrivatePresentationFlow({
     watchKey: isOverviewMode,
   });
   const overviewStatisticsModel = useWorkspaceStatisticsModel({ locale: branch.locale });
+  const publicSummaryView = buildWorkspacePublicSummaryView(data);
 
   const overviewRailTopSlot = isOverviewMode ? (
     <>
       <WorkspacePublicDemandMapPanel
         t={branch.t}
         locale={branch.locale}
-        cityActivity={data.publicCityActivity}
-        summary={data.allRequestsSummary}
-        isLoading={data.isPublicSummaryLoading}
-        isError={data.isPublicSummaryError}
+        cityActivity={publicSummaryView.cityActivity}
+        summary={publicSummaryView.summary}
+        isLoading={publicSummaryView.isMapLoading}
+        isError={publicSummaryView.isMapError}
         className="workspace-overview__rail-panel--map"
         onSelectCity={overviewStatisticsModel.setCityId}
         style={
@@ -251,13 +258,17 @@ export function useWorkspacePrivatePresentationFlow({
     ],
   );
 
-  const privateRequestsLoading = data.workspaceRequests
-    ? data.isWorkspaceRequestsLoading
-    : data.isWorkspaceRequestsLoading || (data.activeRequestsRole === 'all' && data.isWorkspacePrivateOverviewLoading);
-  const preferredRequestsRole = data.workspacePrivateOverview?.preferredRole ?? null;
-  const effectiveRequestsRole = data.activeRequestsRole === 'all'
-    ? preferredRequestsRole
-    : data.activeRequestsRole;
+  const preferredRequestsRole = privateState.preferredRequestsRole;
+  const privateRequestsLoading = resolveWorkspacePrivateRequestsLoading({
+    workspaceRequests: data.workspaceRequests,
+    isWorkspaceRequestsLoading: data.isWorkspaceRequestsLoading,
+    activeRequestsRole: data.activeRequestsRole,
+    isWorkspacePrivateOverviewLoading: data.isWorkspacePrivateOverviewLoading,
+  });
+  const effectiveRequestsRole = resolveWorkspaceEffectiveRequestsRole({
+    activeRequestsRole: data.activeRequestsRole,
+    preferredRequestsRole,
+  });
   const privateRequestsModel = React.useMemo(
     () => {
       if (data.workspaceRequests) {

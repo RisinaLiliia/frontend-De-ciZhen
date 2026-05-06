@@ -8,15 +8,9 @@ type WorkspaceDataQueries = ReturnType<typeof buildWorkspaceDataQueries>;
 
 type Args = {
   workspaceDataQueries: WorkspaceDataQueries;
-  includePrivateOverview?: boolean;
-  includePublicSummary?: boolean;
 };
 
-export function useWorkspaceContractData({
-  workspaceDataQueries,
-  includePrivateOverview = true,
-  includePublicSummary = true,
-}: Args) {
+export function useWorkspaceContractData({ workspaceDataQueries }: Args) {
   const { data: publicOverview, isLoading, isError } = useQuery(workspaceDataQueries.publicOverview);
   const publicRequests = publicOverview?.requests;
 
@@ -24,26 +18,14 @@ export function useWorkspaceContractData({
     data: publicSummaryOverview,
     isLoading: isPublicSummaryLoading,
     isError: isPublicSummaryError,
-  } = useQuery({
-    ...workspaceDataQueries.publicSummary,
-    enabled: workspaceDataQueries.publicSummary.enabled && includePublicSummary,
-    queryFn: includePublicSummary
-      ? workspaceDataQueries.publicSummary.queryFn
-      : async () => null,
-  });
+  } = useQuery(workspaceDataQueries.publicSummary);
   const allRequestsSummary = publicSummaryOverview?.summary;
   const publicCityActivity = publicSummaryOverview?.cityActivity;
 
   const {
     data: workspacePrivateOverview,
     isLoading: isWorkspacePrivateOverviewLoading,
-  } = useQuery({
-    ...workspaceDataQueries.privateOverview,
-    enabled: workspaceDataQueries.privateOverview.enabled && includePrivateOverview,
-    queryFn: includePrivateOverview
-      ? workspaceDataQueries.privateOverview.queryFn
-      : async () => null,
-  });
+  } = useQuery(workspaceDataQueries.privateOverview);
   const {
     data: workspaceRequests,
     isLoading: isWorkspaceRequestsLoading,

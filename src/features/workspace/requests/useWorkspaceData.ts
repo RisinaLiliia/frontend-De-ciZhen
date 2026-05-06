@@ -94,6 +94,8 @@ export function useWorkspaceData(params: Params) {
     () =>
       buildWorkspaceDataQueries({
         enabled,
+        includePrivateOverview,
+        includePublicSummary,
         filter,
         loadPlan,
         hasAccessToken,
@@ -107,6 +109,8 @@ export function useWorkspaceData(params: Params) {
     [
       filter,
       enabled,
+      includePrivateOverview,
+      includePublicSummary,
       activeRequestsRole,
       activeRequestsPeriod,
       activeRequestsSort,
@@ -120,8 +124,6 @@ export function useWorkspaceData(params: Params) {
 
   const contractData = useWorkspaceContractData({
     workspaceDataQueries,
-    includePrivateOverview,
-    includePublicSummary,
   });
 
   const legacyPrivateData = useWorkspaceLegacyPrivateData({

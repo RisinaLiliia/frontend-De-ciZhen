@@ -37,6 +37,7 @@ type BuildPresentationArgs = {
     | 'topProviders'
     | 'providerStatsPayload'
     | 'clientStatsPayload'
+    | 'preferredRequestsRole'
     | 'statsOrder'
   >;
 };
@@ -47,13 +48,19 @@ type BuildPublicIntroArgs = {
     WorkspacePrivateDataFlowResult,
     | 'activePublicSection'
     | 'activeWorkspaceTab'
-    | 'workspacePrivateOverview'
     | 'allRequestsSummary'
     | 'publicCityActivity'
     | 'isPublicSummaryLoading'
     | 'isPublicSummaryError'
-  >;
+  > & {
+    preferredRequestsRole?: 'customer' | 'provider' | null;
+  };
 };
+
+type BuildWorkspacePublicSummaryViewArgs = Pick<
+  WorkspacePrivateDataFlowResult,
+  'allRequestsSummary' | 'publicCityActivity' | 'isPublicSummaryLoading' | 'isPublicSummaryError'
+>;
 
 type BuildPrivateViewModelArgs = {
   branch: WorkspaceBranchProps;
@@ -89,6 +96,18 @@ type BuildPrivateViewModelArgs = {
   viewModelPatch: ReturnType<typeof useWorkspaceContentData>['viewModelPatch'];
   onPrimaryActionClick: WorkspacePrivateViewModelInput['onPrimaryActionClick'];
   enabled?: WorkspacePrivateViewModelInput['enabled'];
+};
+
+type ResolveWorkspaceEffectiveRequestsRoleArgs = {
+  activeRequestsRole: WorkspacePrivateDataFlowResult['activeRequestsRole'];
+  preferredRequestsRole: 'customer' | 'provider' | null;
+};
+
+type ResolveWorkspacePrivateRequestsLoadingArgs = {
+  workspaceRequests: WorkspacePrivateDataFlowResult['workspaceRequests'];
+  isWorkspaceRequestsLoading: WorkspacePrivateDataFlowResult['isWorkspaceRequestsLoading'];
+  activeRequestsRole: WorkspacePrivateDataFlowResult['activeRequestsRole'];
+  isWorkspacePrivateOverviewLoading: WorkspacePrivateDataFlowResult['isWorkspacePrivateOverviewLoading'];
 };
 
 export function shouldBuildWorkspacePrivateContractRequests(
@@ -196,7 +215,7 @@ export function buildWorkspacePrivatePresentationArgs({
     topProviders: privateState.topProviders,
     favoriteProviderIds: data.favoriteProviderIds,
     showQuickAction,
-    preferredRequestsRole,
+    preferredRequestsRole: preferredRequestsRole ?? privateState.preferredRequestsRole,
   };
 }
 
@@ -204,19 +223,29 @@ export function buildWorkspacePublicIntroProps({
   branch,
   data,
 }: BuildPublicIntroArgs): ComponentProps<typeof WorkspacePublicIntro> {
+  const publicSummaryView = buildWorkspacePublicSummaryView(data);
+
   return {
     t: branch.t,
     locale: branch.locale,
     activePublicSection: data.activePublicSection,
     activeWorkspaceTab: data.activeWorkspaceTab,
+    ...publicSummaryView,
+    hideDemandMapOnMobile: data.activePublicSection !== 'stats',
+    quickActionHref: '/request/create',
+    showQuickAction: data.activePublicSection !== 'stats' && data.activePublicSection !== 'requests',
+    preferredRequestsRole: data.preferredRequestsRole ?? null,
+  };
+}
+
+export function buildWorkspacePublicSummaryView(
+  data: BuildWorkspacePublicSummaryViewArgs,
+) {
+  return {
     cityActivity: data.publicCityActivity,
     summary: data.allRequestsSummary,
     isMapLoading: data.isPublicSummaryLoading,
     isMapError: data.isPublicSummaryError,
-    hideDemandMapOnMobile: data.activePublicSection !== 'stats',
-    quickActionHref: '/request/create',
-    showQuickAction: data.activePublicSection !== 'stats' && data.activePublicSection !== 'requests',
-    preferredRequestsRole: data.workspacePrivateOverview?.preferredRole ?? null,
   };
 }
 
@@ -262,4 +291,29 @@ export function buildWorkspacePrivateViewModelInput({
     isMyReviewsLoading: data.isMyReviewsLoading,
     myReviews: data.myReviews,
   };
+}
+
+export function resolveWorkspaceEffectiveRequestsRole({
+  activeRequestsRole,
+  preferredRequestsRole,
+}: ResolveWorkspaceEffectiveRequestsRoleArgs) {
+  return activeRequestsRole === 'all'
+    ? preferredRequestsRole
+    : activeRequestsRole;
+}
+
+export function resolveWorkspacePrivateRequestsLoading({
+  workspaceRequests,
+  isWorkspaceRequestsLoading,
+  activeRequestsRole,
+  isWorkspacePrivateOverviewLoading,
+}: ResolveWorkspacePrivateRequestsLoadingArgs) {
+  if (workspaceRequests) {
+    return isWorkspaceRequestsLoading;
+  }
+
+  return isWorkspaceRequestsLoading || (
+    activeRequestsRole === 'all' &&
+    isWorkspacePrivateOverviewLoading
+  );
 }

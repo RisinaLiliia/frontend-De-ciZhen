@@ -10,6 +10,7 @@ import {
   buildWorkspacePublicReviewsQuery,
   buildWorkspacePublicSnapshotQuery,
   resolveWorkspacePublicBranchSnapshot,
+  shouldLoadWorkspacePublicShellSnapshot,
   shouldAutoMarkPublicRequestsSeen,
 } from './workspacePublicBranch.model';
 
@@ -104,5 +105,51 @@ describe('workspacePublicBranch.model', () => {
         isSummaryError: false,
       }),
     ).toBe(true);
+  });
+
+  it('keeps requests intro free from legacy market-map payload and seed wiring', () => {
+    const exploreWithoutSeed = buildWorkspacePublicExploreWithSeed({
+      explore: {
+        exploreListDensity: 'single' as const,
+        setExploreListDensity: () => undefined,
+        sidebarNearbyLimit: 5,
+        sidebarTopProvidersLimit: 5,
+        sidebarProofCases: [],
+        proofIndex: 0,
+      },
+      platformSnapshot: { requests: [{ id: 'req-1' }] } as never,
+      isSummaryLoading: true,
+      isSummaryError: true,
+      enableSeed: false,
+    });
+    const introProps = buildWorkspacePublicIntroProps({
+      branch: {
+        t: (key) => String(key),
+        locale: 'de',
+      },
+      activePublicSection: 'requests',
+      activeWorkspaceTab: 'my-requests',
+      cityActivity: {
+        totalActiveCities: 1,
+        totalActiveRequests: 2,
+        items: [],
+      },
+      platformSummary: {
+        totalPublishedRequests: 10,
+        totalActiveProviders: 3,
+      } as never,
+      isSummaryLoading: true,
+      isSummaryError: true,
+    });
+
+    expect(exploreWithoutSeed.initialPublicRequests).toBeUndefined();
+    expect(exploreWithoutSeed.preferInitialPublicRequests).toBeUndefined();
+    expect(introProps.cityActivity).toBeNull();
+    expect(introProps.summary).toBeNull();
+    expect(introProps.isMapLoading).toBe(false);
+    expect(introProps.isMapError).toBe(false);
+    expect(introProps.showQuickAction).toBe(false);
+    expect(shouldLoadWorkspacePublicShellSnapshot('requests')).toBe(false);
+    expect(shouldLoadWorkspacePublicShellSnapshot('stats')).toBe(true);
   });
 });
