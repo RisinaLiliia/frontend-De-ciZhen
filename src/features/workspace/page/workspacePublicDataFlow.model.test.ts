@@ -47,4 +47,39 @@ describe('workspacePublicDataFlow.model', () => {
     expect(result.platformSummary).toEqual({ totalPublishedRequests: 24, totalActiveProviders: 9 });
     expect(result.isSummaryError).toBe(true);
   });
+
+  it('drops explore seed data from the active requests workspace contract', () => {
+    const result = resolveWorkspacePublicDataFlowResult({
+      routeState: {
+        activePublicSection: 'requests',
+        activeWorkspaceTab: 'my-requests',
+      },
+      snapshot: {
+        platformRequestsTotal: 24,
+        platformProvidersTotal: 9,
+        platformRatingAvg: 4.8,
+        platformReviewsCount: 11,
+        cityActivity: [{ cityId: 'berlin', requests: 3 }],
+        platformSummary: { totalPublishedRequests: 24, totalActiveProviders: 9 },
+      } as never,
+      localeTag: 'de-DE',
+      exploreWithSeed: {
+        exploreListDensity: 'single' as const,
+        setExploreListDensity: vi.fn(),
+        sidebarNearbyLimit: 5,
+        sidebarTopProvidersLimit: 3,
+        sidebarProofCases: [],
+        proofIndex: 1,
+      } as never,
+      isSummaryLoading: false,
+      isSummaryError: false,
+      publicState: {
+        publicNavItems: [],
+        navHeader: null,
+        reviewsMeta: null,
+      } as never,
+    });
+
+    expect(result.exploreWithSeed).toBeNull();
+  });
 });

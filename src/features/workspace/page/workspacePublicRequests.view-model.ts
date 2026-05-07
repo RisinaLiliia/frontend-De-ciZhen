@@ -4,7 +4,10 @@ import type { ComponentProps } from 'react';
 
 import { RequestsExplorerRequestsContent } from '@/components/requests/RequestsExplorerRequestsContent';
 import { RequestsPrivateActionRail } from '@/features/workspace/requests';
-import { WorkspaceRequestsSummaryStrip } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
+import {
+  buildRequestsWorkspaceDecisionRailProps,
+  buildRequestsWorkspaceSummaryStripProps,
+} from '@/features/workspace/requests/requestsWorkspaceSurface.model';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { WorkspaceRequestsResponseDto } from '@/lib/api/dto/workspace';
 
@@ -12,13 +15,13 @@ export function buildWorkspacePublicRequestsSummaryStripProps(params: {
   locale: WorkspaceBranchProps['locale'];
   items: NonNullable<NonNullable<WorkspaceRequestsResponseDto['summary']>['items']>;
   onSelect: (key: string) => void;
-}): ComponentProps<typeof WorkspaceRequestsSummaryStrip> {
-  return {
+}) {
+  return buildRequestsWorkspaceSummaryStripProps({
     locale: params.locale,
     items: params.items,
     onSelect: params.onSelect,
     variant: 'market',
-  };
+  });
 }
 
 export function buildWorkspacePublicRequestsListProps(
@@ -33,7 +36,7 @@ export function buildWorkspacePublicRequestsAsideProps(params: {
   onStartDecisionMode: () => void;
   onOpenQueueItem: (requestId: string) => void;
 }): ComponentProps<typeof RequestsPrivateActionRail> {
-  return {
+  return buildRequestsWorkspaceDecisionRailProps({
     locale: params.locale,
     panel: params.panel,
     mode: 'default',
@@ -41,5 +44,5 @@ export function buildWorkspacePublicRequestsAsideProps(params: {
     onStartDecisionMode: params.onStartDecisionMode,
     onOpenQueueItem: params.onOpenQueueItem,
     variant: 'market',
-  };
+  });
 }

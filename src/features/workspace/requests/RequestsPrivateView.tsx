@@ -23,6 +23,10 @@ import {
   WorkspaceRequestsSummaryStrip,
   WorkspaceRequestsSummaryStripSkeleton,
 } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
+import {
+  buildRequestsWorkspaceDecisionRailProps,
+  buildRequestsWorkspaceSummaryStripProps,
+} from '@/features/workspace/requests/requestsWorkspaceSurface.model';
 import type {
   MyRequestsViewCard,
   MyRequestsViewModel,
@@ -1067,9 +1071,11 @@ export function RequestsPrivateView({
     <section className="my-requests-view">
       {isLoading ? <WorkspaceRequestsSummaryStripSkeleton /> : (
         <WorkspaceRequestsSummaryStrip
-          locale={locale}
-          items={model.response.summary?.items ?? []}
-          onSelect={setStateFilter}
+          {...buildRequestsWorkspaceSummaryStripProps({
+            locale,
+            items: model.response.summary?.items ?? [],
+            onSelect: setStateFilter,
+          })}
         />
       )}
 
@@ -1112,13 +1118,15 @@ export function RequestsPrivateView({
           </div>
           {model.response.decisionPanel ? (
             <RequestsPrivateActionRail
-              locale={locale}
-              panel={model.response.decisionPanel}
-              mode={decisionState.mode}
-              activeRequestId={decisionState.activeRequestId}
-              onStartDecisionMode={() => onEnterDecisionMode()}
-              onOpenQueueItem={onOpenDecisionItem}
-              className="my-requests-view__mobile-rail"
+              {...buildRequestsWorkspaceDecisionRailProps({
+                locale,
+                panel: model.response.decisionPanel,
+                mode: decisionState.mode,
+                activeRequestId: decisionState.activeRequestId,
+                onStartDecisionMode: () => onEnterDecisionMode(),
+                onOpenQueueItem: onOpenDecisionItem,
+                className: 'my-requests-view__mobile-rail',
+              })}
             />
           ) : null}
         </>

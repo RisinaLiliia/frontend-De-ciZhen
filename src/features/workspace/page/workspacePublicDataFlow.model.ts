@@ -16,7 +16,7 @@ type ResolveWorkspacePublicDataFlowResultArgs = {
   >;
   snapshot: WorkspacePublicSnapshotResult;
   localeTag: string;
-  exploreWithSeed: WorkspacePublicExploreWithSeedResult;
+  exploreWithSeed?: WorkspacePublicExploreWithSeedResult | null;
   isSummaryLoading: boolean;
   isSummaryError: boolean;
   publicState: WorkspacePublicStateResult;
@@ -36,7 +36,7 @@ export function resolveWorkspacePublicDataFlowResult({
     activeWorkspaceTab: routeState.activeWorkspaceTab,
     platformRequestsTotal: snapshot.platformRequestsTotal,
     localeTag,
-    exploreWithSeed,
+    exploreWithSeed: routeState.activePublicSection === 'requests' ? null : (exploreWithSeed ?? null),
     cityActivity: snapshot.cityActivity,
     platformSummary: snapshot.platformSummary,
     isSummaryLoading,

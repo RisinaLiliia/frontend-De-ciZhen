@@ -7,10 +7,6 @@ import { RequestsExplorerRequestsContent } from '@/components/requests/RequestsE
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { useWorkspaceData } from '@/features/workspace/requests';
 import { RequestsPrivateActionRail } from '@/features/workspace/requests';
-import {
-  WorkspaceRequestsSummaryStrip,
-  WorkspaceRequestsSummaryStripSkeleton,
-} from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
 import { useWorkspacePublicFilters } from '@/features/workspace';
 import { buildOffersByRequestMap } from '@/components/requests/requestsExplorer.model';
 import {
@@ -204,17 +200,6 @@ export function useWorkspacePublicRequestsSection({
 
   const publicMain = (
     <div className="stack-md">
-      {hasMarketContract && data.isWorkspaceRequestsLoading ? (
-        <WorkspaceRequestsSummaryStripSkeleton />
-      ) : (
-        <WorkspaceRequestsSummaryStrip
-          {...buildWorkspacePublicRequestsSummaryStripProps({
-            locale,
-            items: summaryItems,
-            onSelect: setRequestsState,
-          })}
-        />
-      )}
       <RequestsExplorerRequestsContent
         {...buildWorkspacePublicRequestsListProps({
           t,
@@ -261,6 +246,12 @@ export function useWorkspacePublicRequestsSection({
           limit: publicListLimit,
           setPage: filters.setPage,
           listDensity: publicListDensity,
+          summaryStripProps: buildWorkspacePublicRequestsSummaryStripProps({
+            locale,
+            items: summaryItems,
+            onSelect: setRequestsState,
+          }),
+          isSummaryStripLoading: hasMarketContract && data.isWorkspaceRequestsLoading,
         })}
       />
     </div>

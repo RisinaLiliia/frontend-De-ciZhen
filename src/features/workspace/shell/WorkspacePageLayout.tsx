@@ -45,7 +45,7 @@ type Props = {
   t: Translator;
   locale: Locale;
   intro: React.ReactNode;
-  explore: ExploreProps;
+  explore?: ExploreProps | null;
   privateMain: React.ReactNode;
   publicMain: React.ReactNode;
   privateAside?: React.ReactNode;
@@ -137,6 +137,10 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   );
 
   if (isWorkspacePublicSection && publicMain == null) {
+    if (!explore) {
+      return null;
+    }
+
     return (
       <WorkspaceExploreSection
         intro={introWithWorkspaceChrome}

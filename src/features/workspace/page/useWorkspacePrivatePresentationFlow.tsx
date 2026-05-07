@@ -20,6 +20,7 @@ import {
   createEmptyMyRequestsResponse,
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
+import { buildRequestsWorkspaceDecisionRailProps } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
   useWorkspaceContentData,
@@ -305,12 +306,14 @@ export function useWorkspacePrivatePresentationFlow({
     <div className="stack-md">
       {privateRequestsModel.response.decisionPanel ? (
         <RequestsPrivateActionRail
-          locale={branch.locale}
-          panel={privateRequestsModel.response.decisionPanel}
-          mode={decisionState.mode}
-          activeRequestId={decisionState.activeRequestId}
-          onStartDecisionMode={() => enterDecisionMode()}
-          onOpenQueueItem={openDecisionItem}
+          {...buildRequestsWorkspaceDecisionRailProps({
+            locale: branch.locale,
+            panel: privateRequestsModel.response.decisionPanel,
+            mode: decisionState.mode,
+            activeRequestId: decisionState.activeRequestId,
+            onStartDecisionMode: () => enterDecisionMode(),
+            onOpenQueueItem: openDecisionItem,
+          })}
         />
       ) : null}
     </div>

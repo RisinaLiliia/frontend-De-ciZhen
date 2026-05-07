@@ -41,7 +41,7 @@ export const EMPTY_PLATFORM_REVIEWS_OVERVIEW = {
 
 type PlatformReviewsOverview = ReviewOverviewDto;
 type PlatformSnapshot = WorkspacePublicOverviewDto | undefined;
-type ExploreProps = ComponentProps<typeof WorkspacePageLayout>['explore'];
+type ExploreProps = NonNullable<ComponentProps<typeof WorkspacePageLayout>['explore']>;
 
 type ResolvePublicBranchSnapshotArgs = {
   platformSnapshot: PlatformSnapshot;

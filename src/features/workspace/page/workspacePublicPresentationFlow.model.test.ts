@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
   buildWorkspacePublicIntroArgs,
@@ -28,15 +28,6 @@ describe('workspacePublicPresentationFlow.model', () => {
   });
 
   it('assembles public presentation layout props and render metric payload', () => {
-    const exploreWithSeed = {
-      exploreListDensity: 'single' as const,
-      setExploreListDensity: vi.fn(),
-      sidebarNearbyLimit: 5,
-      sidebarTopProvidersLimit: 3,
-      sidebarProofCases: [],
-      proofIndex: 1,
-    } as const;
-
     const result = resolveWorkspacePublicPresentationFlowResult({
       branch: {
         t: (key: string) => key,
@@ -49,7 +40,7 @@ describe('workspacePublicPresentationFlow.model', () => {
         activeWorkspaceTab: 'my-requests',
         platformRequestsTotal: 24,
         localeTag: 'de-DE',
-        exploreWithSeed,
+        exploreWithSeed: null,
       } as never,
       workspaceIntroNode: 'intro',
       publicRequestsMain: 'main',
@@ -57,7 +48,7 @@ describe('workspacePublicPresentationFlow.model', () => {
     });
 
     expect(result.workspaceLayoutProps.intro).toBe('intro');
-    expect(result.workspaceLayoutProps.explore).toBe(exploreWithSeed);
+    expect(result.workspaceLayoutProps.explore).toBeNull();
     expect(result.workspaceLayoutProps.isWorkspacePublicSection).toBe(true);
     expect(result.workspaceLayoutProps.publicMain).toBe('main');
     expect(result.workspaceLayoutProps.publicAside).toBe('aside');
