@@ -94,8 +94,9 @@ export function useWorkspacePublicRequestsSection({
     activeRequestsPeriod,
     activeRequestsSort: activeRequestsSort ?? filters.sortBy,
   });
+  const { contractData, legacyPrivateData } = data;
 
-  const marketResponse = data.workspaceRequests;
+  const marketResponse = contractData.workspaceRequests;
   const hasMarketContract = marketResponse != null;
   const {
     requests,
@@ -109,18 +110,18 @@ export function useWorkspacePublicRequestsSection({
   } = React.useMemo(
     () => resolveWorkspacePublicRequestsData({
       marketResponse,
-      publicRequestsItems: data.publicRequests?.items,
-      publicRequestsTotalValue: data.publicRequests?.total,
-      publicRequestsPage: data.publicRequests?.page,
-      publicRequestsLimit: data.publicRequests?.limit,
+      publicRequestsItems: contractData.publicRequests?.items,
+      publicRequestsTotalValue: contractData.publicRequests?.total,
+      publicRequestsPage: contractData.publicRequests?.page,
+      publicRequestsLimit: contractData.publicRequests?.limit,
       filtersPage: filters.page,
       filtersLimit: filters.limit,
     }),
     [
-      data.publicRequests?.items,
-      data.publicRequests?.limit,
-      data.publicRequests?.page,
-      data.publicRequests?.total,
+      contractData.publicRequests?.items,
+      contractData.publicRequests?.limit,
+      contractData.publicRequests?.page,
+      contractData.publicRequests?.total,
       filters.limit,
       filters.page,
       marketResponse,
@@ -131,23 +132,22 @@ export function useWorkspacePublicRequestsSection({
     [requests],
   );
   const favoriteRequestIds = React.useMemo(
-    () => new Set((data.favoriteRequests ?? []).map((request) => request.id)),
-    [data.favoriteRequests],
+    () => new Set((legacyPrivateData.favoriteRequests ?? []).map((request) => request.id)),
+    [legacyPrivateData.favoriteRequests],
   );
   const interactions = useWorkspaceRequestUserInteractions({
     t,
     locale,
     isAuthed,
     nextPath,
-    myOffers: data.myOffers,
     favoriteRequestIds,
     requestById,
     favoriteProviderLookup: new Set(),
     providerById: new Map(),
   });
   const offersByRequest = React.useMemo(
-    () => buildOffersByRequestMap(data.myOffers),
-    [data.myOffers],
+    () => buildOffersByRequestMap(legacyPrivateData.myOffers),
+    [legacyPrivateData.myOffers],
   );
 
   const setRequestsState = React.useCallback((nextState: string) => {
@@ -237,8 +237,8 @@ export function useWorkspacePublicRequestsSection({
               activeRequestsState === 'all' ? resolvedTotalResults : publicRequestsListItems.length,
             ),
             requests: publicRequestsListItems,
-            isLoading: data.isLoading,
-            isError: data.isError,
+            isLoading: contractData.isLoading,
+            isError: contractData.isError,
             offersByRequest,
             favoriteRequestIds,
             pendingFavoriteRequestIds: interactions.pendingFavoriteRequestIds,
@@ -262,7 +262,7 @@ export function useWorkspacePublicRequestsSection({
               onSelect: setRequestsState,
             })
             : undefined,
-          isSummaryStripLoading: !hasMarketContract && data.isWorkspaceRequestsLoading,
+          isSummaryStripLoading: !hasMarketContract && contractData.isWorkspaceRequestsLoading,
         }))}
       />
     </div>

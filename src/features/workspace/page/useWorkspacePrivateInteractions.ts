@@ -38,7 +38,6 @@ export function useWorkspacePrivateInteractions({
   requestsScope = 'market',
   nextPath,
   platformRequestsTotal,
-  myOffers,
   favoriteRequestIds,
   requestById,
   favoriteProviderLookup,
@@ -77,7 +76,6 @@ export function useWorkspacePrivateInteractions({
     buildWorkspacePrivateActionsArgs({
       enabled: shouldBuildRequestInteractions,
       isAuthed,
-      myOffers,
       t,
       qc,
       router,

@@ -19,7 +19,6 @@ type Params = {
   locale: WorkspaceBranchProps['locale'];
   isAuthed: boolean;
   nextPath: string;
-  myOffers: Parameters<typeof useWorkspaceActions>[0]['myOffers'];
   favoriteRequestIds: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteRequestIds'];
   requestById: Parameters<typeof useWorkspaceFavoriteToggles>[0]['requestById'];
   favoriteProviderLookup: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteProviderLookup'];
@@ -31,7 +30,6 @@ export function useWorkspaceRequestUserInteractions({
   locale,
   isAuthed,
   nextPath,
-  myOffers,
   favoriteRequestIds,
   requestById,
   favoriteProviderLookup,
@@ -57,7 +55,6 @@ export function useWorkspaceRequestUserInteractions({
   const actions = useWorkspaceActions(
     buildWorkspacePrivateActionsArgs({
       isAuthed,
-      myOffers,
       t,
       qc,
       router,

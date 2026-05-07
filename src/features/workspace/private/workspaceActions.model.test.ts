@@ -7,7 +7,6 @@ import {
   buildWorkspaceOwnerRequestActions,
   isWorkspaceChatConversationInput,
   resolveWorkspaceChatNavigation,
-  resolveWorkspaceOfferById,
 } from './workspaceActions.model';
 
 describe('workspaceActions.model', () => {
@@ -16,16 +15,9 @@ describe('workspaceActions.model', () => {
     expect(buildWorkspaceOfferLoginHref('req-1')).toBe('/auth/login?next=%2Frequests%2Freq-1%3Foffer%3D1');
   });
 
-  it('resolves latest matching offer and chat navigation payload', () => {
-    const offer = resolveWorkspaceOfferById(
-      [
-        { id: 'offer-1', requestId: 'req-1' },
-        { id: 'offer-2', requestId: 'req-2', providerUserId: 'provider-user-2' },
-      ] as never,
-      'offer-2',
-    );
+  it('builds chat navigation payload from a contextual offer', () => {
+    const offer = { id: 'offer-2', requestId: 'req-2', providerUserId: 'provider-user-2' };
 
-    expect(offer?.id).toBe('offer-2');
     expect(resolveWorkspaceChatNavigation(offer as never)).toEqual({
       conversationInput: {
         relatedEntity: {

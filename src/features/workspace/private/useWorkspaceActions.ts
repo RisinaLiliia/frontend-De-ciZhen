@@ -19,7 +19,6 @@ import {
   type WorkspaceChatConversationInput,
   isWorkspaceChatConversationInput,
   resolveWorkspaceChatNavigation,
-  resolveWorkspaceOfferById,
 } from '@/features/workspace/private/workspaceActions.model';
 
 type RouterLike = {
@@ -31,7 +30,6 @@ type Translator = (key: I18nKey) => string;
 type Args = {
   enabled?: boolean;
   isAuthed: boolean;
-  myOffers: OfferDto[];
   t: Translator;
   qc: QueryClient;
   router: RouterLike;
@@ -52,7 +50,6 @@ const requestLifecyclePublicQueryKeys: QueryKey[] = [
 export function useWorkspaceActions({
   enabled = true,
   isAuthed,
-  myOffers,
   t,
   qc,
   router,
@@ -97,7 +94,7 @@ export function useWorkspaceActions({
   const onWithdrawOffer = React.useCallback(
     async (offerId: string, requestId?: string) => {
       if (!enabled) return;
-      const resolvedRequestId = requestId ?? resolveWorkspaceOfferById(myOffers, offerId)?.requestId ?? null;
+      const resolvedRequestId = requestId ?? null;
       if (!resolvedRequestId) return;
       setPendingOfferRequestId(resolvedRequestId);
       try {
@@ -110,7 +107,7 @@ export function useWorkspaceActions({
         setPendingOfferRequestId(null);
       }
     },
-    [enabled, myOffers, qc, t],
+    [enabled, qc, t],
   );
 
   const onOpenChatThread = React.useCallback(

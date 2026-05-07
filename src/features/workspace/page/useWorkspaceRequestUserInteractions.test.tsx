@@ -101,7 +101,6 @@ describe('useWorkspaceRequestUserInteractions', () => {
         locale="de"
         isAuthed={true}
         nextPath="/workspace?section=requests&scope=market"
-        myOffers={[{ id: 'offer-1', requestId: 'req-1' }] as never}
         favoriteRequestIds={new Set(['req-1'])}
         requestById={new Map([['req-1', { id: 'req-1' }]]) as never}
         favoriteProviderLookup={new Set()}

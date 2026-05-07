@@ -52,7 +52,6 @@ export function useWorkspacePrivateDataFlow({
     requestsScope,
     nextPath,
     platformRequestsTotal: sources.platformRequestsTotal,
-    myOffers: sources.myOffers,
     favoriteRequestIds: sources.favoriteRequestIds,
     requestById: sources.requestById,
     favoriteProviderLookup: sources.favoriteProviderLookup,

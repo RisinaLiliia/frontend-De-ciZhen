@@ -28,7 +28,6 @@ export type WorkspacePrivateInteractionsParams = {
   requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
   nextPath: WorkspaceBranchProps['routeState']['nextPath'];
   platformRequestsTotal: number;
-  myOffers: Parameters<typeof useWorkspaceActions>[0]['myOffers'];
   favoriteRequestIds: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteRequestIds'];
   requestById: Parameters<typeof useWorkspaceFavoriteToggles>[0]['requestById'];
   favoriteProviderLookup: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteProviderLookup'];
@@ -101,7 +100,6 @@ type BuildFavoriteToggleArgsParams = Pick<
 type BuildActionsArgsParams = Pick<
   InteractionsParams,
   | 'isAuthed'
-  | 'myOffers'
   | 't'
 > & {
   router: AppRouterInstance;
@@ -150,7 +148,6 @@ export function buildWorkspacePrivateFavoriteToggleArgs({
 export function buildWorkspacePrivateActionsArgs({
   enabled = true,
   isAuthed,
-  myOffers,
   t,
   qc,
   router,
@@ -160,7 +157,6 @@ export function buildWorkspacePrivateActionsArgs({
   return {
     enabled,
     isAuthed,
-    myOffers,
     t,
     qc,
     router,
