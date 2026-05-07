@@ -3,9 +3,12 @@
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { RequestsExplorerRequestsContent } from '@/components/requests/RequestsExplorerRequestsContent';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import { useWorkspaceData } from '@/features/workspace/requests';
+import {
+  buildRequestsWorkspacePublicBody,
+  RequestsWorkspaceBody,
+  useWorkspaceData,
+} from '@/features/workspace/requests';
 import { RequestsPrivateActionRail } from '@/features/workspace/requests';
 import { useWorkspacePublicFilters } from '@/features/workspace';
 import {
@@ -245,8 +248,8 @@ export function useWorkspacePublicRequestsSection({
 
   const publicMain = (
     <div className="stack-md">
-      <RequestsExplorerRequestsContent
-        {...buildWorkspacePublicRequestsListProps({
+      <RequestsWorkspaceBody
+        body={buildRequestsWorkspacePublicBody(buildWorkspacePublicRequestsListProps({
           t,
           locale,
           emptyCtaHref: '/workspace?section=requests&scope=market',
@@ -280,7 +283,7 @@ export function useWorkspacePublicRequestsSection({
             onSelect: setRequestsState,
           }),
           isSummaryStripLoading: hasMarketContract && data.isWorkspaceRequestsLoading,
-        })}
+        }))}
       />
     </div>
   );

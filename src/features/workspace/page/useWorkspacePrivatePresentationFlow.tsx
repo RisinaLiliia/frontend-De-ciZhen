@@ -7,8 +7,9 @@ import { buildRequestsListProps } from '@/components/requests/requestsListProps'
 import { trackUXEvent } from '@/lib/analytics';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import {
+  buildRequestsWorkspacePrivateBody,
   RequestsPrivateActionRail,
-  RequestsPrivateView,
+  RequestsWorkspaceBody,
   WorkspaceOverviewMain,
   WorkspaceOverviewInsightsPanel,
   WorkspacePublicDemandMapPanel,
@@ -342,26 +343,28 @@ export function useWorkspacePrivatePresentationFlow({
       onToggleProviderFavorite={onToggleProviderFavorite}
     />
   ) : isUnifiedPrivateRequests ? (
-    <RequestsPrivateView
-      locale={branch.locale}
-      isWorkspaceAuthed={branch.isWorkspaceAuthed}
-      guestLoginHref={data.guestLoginHref}
-      model={privateRequestsModel}
-      isLoading={privateRequestsLoading}
-      isError={data.isWorkspaceRequestsError}
-      decisionState={decisionState}
-      decisionQueueIds={decisionQueueIds}
-      onEnterDecisionMode={enterDecisionMode}
-      onOpenDecisionItem={openDecisionItem}
-      onExitDecisionMode={exitDecisionMode}
-      listContext={{
-        onSendOffer: data.onOpenOfferSheet,
-        onEditOffer: data.onOpenOfferSheet,
-        onWithdrawOffer: data.onWithdrawOffer,
-        onOpenChatConversation: data.onOpenChatConversation,
-        pendingOfferRequestId: data.pendingOfferRequestId,
-        ownerRequestActions: data.ownerRequestActions,
-      }}
+    <RequestsWorkspaceBody
+      body={buildRequestsWorkspacePrivateBody({
+        locale: branch.locale,
+        isWorkspaceAuthed: branch.isWorkspaceAuthed,
+        guestLoginHref: data.guestLoginHref,
+        model: privateRequestsModel,
+        isLoading: privateRequestsLoading,
+        isError: data.isWorkspaceRequestsError,
+        decisionState,
+        decisionQueueIds,
+        onEnterDecisionMode: enterDecisionMode,
+        onOpenDecisionItem: openDecisionItem,
+        onExitDecisionMode: exitDecisionMode,
+        listContext: {
+          onSendOffer: data.onOpenOfferSheet,
+          onEditOffer: data.onOpenOfferSheet,
+          onWithdrawOffer: data.onWithdrawOffer,
+          onOpenChatConversation: data.onOpenChatConversation,
+          pendingOfferRequestId: data.pendingOfferRequestId,
+          ownerRequestActions: data.ownerRequestActions,
+        },
+      })}
     />
   ) : (
     workspaceContentProps ? <WorkspaceContent {...workspaceContentProps} /> : null

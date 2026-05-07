@@ -9,6 +9,11 @@ export { WorkspacePrivateIntro } from './WorkspacePrivateIntro';
 export type { WorkspacePrivateIntroProps } from './WorkspacePrivateIntro';
 export { WorkspacePublicIntro } from './WorkspacePublicIntro';
 export { RequestsPrivateActionRail, RequestsPrivateView } from './RequestsPrivateView';
+export {
+  buildRequestsWorkspacePrivateBody,
+  buildRequestsWorkspacePublicBody,
+  RequestsWorkspaceBody,
+} from './RequestsWorkspaceBody';
 export { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 export {
   WorkspaceRequestsSummaryStrip,
