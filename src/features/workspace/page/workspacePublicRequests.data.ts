@@ -18,7 +18,7 @@ export type ResolvedWorkspacePublicRequestsData = {
 };
 
 export function resolveWorkspacePublicRequestsData(params: {
-  marketResponse: WorkspaceRequestsResponseDto;
+  marketResponse?: WorkspaceRequestsResponseDto | null;
   publicRequestsItems?: RequestResponseDto[];
   publicRequestsTotalValue?: number;
   publicRequestsPage?: number;
@@ -40,11 +40,11 @@ export function resolveWorkspacePublicRequestsData(params: {
   const publicRequestsTotal = publicRequestsTotalValue ?? requests.length;
   const publicRequestsListItems = requests;
   const resolvedTotalResults = publicRequestsTotal;
-  const summaryItems = marketResponse.summary?.items ?? [];
+  const summaryItems = marketResponse?.summary?.items ?? [];
   const publicListPage = publicRequestsPage ?? filtersPage;
   const publicListLimit = publicRequestsLimit ?? filtersLimit;
   const publicListTotalPages = Math.max(1, Math.ceil(publicRequestsTotal / Math.max(1, publicListLimit)));
-  const decisionPanel = marketResponse.decisionPanel ?? null;
+  const decisionPanel = marketResponse?.decisionPanel ?? null;
 
   return {
     requests,

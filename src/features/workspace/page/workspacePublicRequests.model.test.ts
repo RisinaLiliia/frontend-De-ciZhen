@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  buildEmptyWorkspaceMarketRequestsResponse,
   mapWorkspaceRequestCardToPublicRequest,
 } from '@/features/workspace/page/workspacePublicRequests.model';
 
@@ -104,30 +103,5 @@ describe('workspacePublicRequests.model', () => {
 
     expect(() => new Date(result.preferredDate).toISOString()).not.toThrow();
     expect(() => new Date(result.createdAt).toISOString()).not.toThrow();
-  });
-
-  it('builds a stable empty market response for loading and empty states', () => {
-    const result = buildEmptyWorkspaceMarketRequestsResponse({
-      locale: 'de',
-      state: 'attention',
-      period: '30d',
-      sort: 'date_desc',
-      page: 2,
-      limit: 20,
-    });
-
-    expect(result.scope).toBe('market');
-    expect(result.summary?.items.map((item) => item.label)).toEqual([
-      'Alle',
-      'Aktiv',
-      'In Ausführung',
-      'Abgeschlossen',
-    ]);
-    expect(result.list).toMatchObject({
-      total: 0,
-      page: 2,
-      limit: 20,
-    });
-    expect(result.decisionPanel?.primaryAction.label).toBe('Markt prüfen');
   });
 });

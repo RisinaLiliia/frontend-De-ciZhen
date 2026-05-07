@@ -50,7 +50,7 @@ export function buildWorkspacePublicRequestsListProps(params: {
   catalogIndex: RequestsExplorerCatalogIndex;
   formatDate: Intl.DateTimeFormat;
   formatPrice: Intl.NumberFormat;
-  summaryStripProps: ReturnType<typeof buildWorkspacePublicRequestsSummaryStripProps>;
+  summaryStripProps?: ReturnType<typeof buildWorkspacePublicRequestsSummaryStripProps>;
   isSummaryStripLoading: boolean;
 }) {
   return buildRequestsExplorerRequestsContentProps({

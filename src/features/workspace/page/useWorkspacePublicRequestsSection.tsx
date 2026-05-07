@@ -18,9 +18,6 @@ import {
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
 import {
-  buildEmptyWorkspaceMarketRequestsResponse,
-} from '@/features/workspace/page/workspacePublicRequests.model';
-import {
   buildWorkspacePublicRequestsAsideProps,
   buildWorkspacePublicRequestsListProps,
   buildWorkspacePublicRequestsSummaryStripProps,
@@ -98,27 +95,8 @@ export function useWorkspacePublicRequestsSection({
     activeRequestsSort: activeRequestsSort ?? filters.sortBy,
   });
 
-  const marketResponse = React.useMemo(
-    () => data.workspaceRequests ?? buildEmptyWorkspaceMarketRequestsResponse({
-      locale,
-      state: activeRequestsState,
-      period: activeRequestsPeriod,
-      sort: activeRequestsSort ?? filters.sortBy,
-      page: filters.page,
-      limit: filters.limit,
-    }),
-    [
-      activeRequestsPeriod,
-      activeRequestsSort,
-      activeRequestsState,
-      data.workspaceRequests,
-      filters.limit,
-      filters.page,
-      filters.sortBy,
-      locale,
-    ],
-  );
-  const hasMarketContract = data.workspaceRequests != null;
+  const marketResponse = data.workspaceRequests;
+  const hasMarketContract = marketResponse != null;
   const {
     requests,
     publicRequestsListItems,
@@ -277,12 +255,14 @@ export function useWorkspacePublicRequestsSection({
           },
           formatDate: interactions.formatDate,
           formatPrice: interactions.formatPrice,
-          summaryStripProps: buildWorkspacePublicRequestsSummaryStripProps({
-            locale,
-            items: summaryItems,
-            onSelect: setRequestsState,
-          }),
-          isSummaryStripLoading: hasMarketContract && data.isWorkspaceRequestsLoading,
+          summaryStripProps: hasMarketContract
+            ? buildWorkspacePublicRequestsSummaryStripProps({
+              locale,
+              items: summaryItems,
+              onSelect: setRequestsState,
+            })
+            : undefined,
+          isSummaryStripLoading: !hasMarketContract && data.isWorkspaceRequestsLoading,
         }))}
       />
     </div>

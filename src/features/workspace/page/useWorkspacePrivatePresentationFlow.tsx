@@ -18,7 +18,6 @@ import {
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
 import {
-  createEmptyMyRequestsResponse,
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
 import { buildRequestsWorkspaceDecisionRailProps } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
@@ -38,7 +37,6 @@ import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceMod
 import {
   buildWorkspacePrivateContentDataArgs,
   buildWorkspacePublicSummaryView,
-  resolveWorkspaceEffectiveRequestsRole,
   resolveWorkspacePrivateRequestsLoading,
   buildWorkspacePrivatePresentationArgs,
   buildWorkspacePrivateStateArgs,
@@ -267,32 +265,9 @@ export function useWorkspacePrivatePresentationFlow({
     activeRequestsRole: data.activeRequestsRole,
     isWorkspacePrivateOverviewLoading: data.isWorkspacePrivateOverviewLoading,
   });
-  const effectiveRequestsRole = resolveWorkspaceEffectiveRequestsRole({
-    activeRequestsRole: data.activeRequestsRole,
-    preferredRequestsRole,
-  });
   const privateRequestsModel = React.useMemo(
-    () => {
-      if (data.workspaceRequests) {
-        return buildMyRequestsViewModelFromResponse(data.workspaceRequests);
-      }
-
-      return buildMyRequestsViewModelFromResponse(createEmptyMyRequestsResponse({
-        locale: branch.locale,
-        role: effectiveRequestsRole ?? 'all',
-        state: data.activeRequestsState,
-        period: data.activeRequestsPeriod,
-        sort: data.activeRequestsSort ?? 'activity',
-      }));
-    },
-    [
-      branch.locale,
-      data.activeRequestsPeriod,
-      data.activeRequestsState,
-      effectiveRequestsRole,
-      data.activeRequestsSort,
-      data.workspaceRequests,
-    ],
+    () => buildMyRequestsViewModelFromResponse(data.workspaceRequests),
+    [data.workspaceRequests],
   );
   const {
     state: decisionState,
@@ -301,11 +276,11 @@ export function useWorkspacePrivatePresentationFlow({
     openDecisionItem,
     exitDecisionMode,
   } = useDecisionMode({
-    panel: privateRequestsModel.response.decisionPanel,
+    panel: privateRequestsModel.response?.decisionPanel,
   });
   const privateAside = isUnifiedPrivateRequests ? (
     <div className="stack-md">
-      {privateRequestsModel.response.decisionPanel ? (
+      {privateRequestsModel.response?.decisionPanel ? (
         <RequestsPrivateActionRail
           {...buildRequestsWorkspaceDecisionRailProps({
             locale: branch.locale,

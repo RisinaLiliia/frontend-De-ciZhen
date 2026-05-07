@@ -172,4 +172,12 @@ describe('myRequestsView.model', () => {
     expect(model.cards).toHaveLength(0);
     expect(model.emptyMode).toBe('empty');
   });
+
+  it('keeps the model idle when the backend contract is not available yet', () => {
+    const model = buildMyRequestsViewModelFromResponse(null);
+
+    expect(model.response).toBeNull();
+    expect(model.cards).toEqual([]);
+    expect(model.emptyMode).toBe('none');
+  });
 });
