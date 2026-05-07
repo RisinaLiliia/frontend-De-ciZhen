@@ -2,7 +2,10 @@
 
 import type { ComponentProps } from 'react';
 
-import { I18N_KEYS } from '@/lib/i18n/keys';
+import {
+  buildRequestsPublicContentProps,
+  buildRequestsPublicFiltersProps,
+} from '@/components/requests/requestsPublicContent.model';
 import type { PublicContent } from '@/features/workspace/requests/PublicContent';
 import type { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { buildWorkspacePublicRequestsListProps } from '@/features/workspace/requests/workspaceViewModel.helpers';
@@ -94,7 +97,7 @@ export function buildWorkspacePublicFiltersProps({
   onSortChangeTracked,
   onResetTracked,
 }: BuildPublicFiltersArgs): ComponentProps<typeof RequestsFilters> {
-  return {
+  return buildRequestsPublicFiltersProps({
     t,
     locale,
     categoryOptions,
@@ -115,7 +118,7 @@ export function buildWorkspacePublicFiltersProps({
     onCityChange: onCityChangeTracked,
     onSortChange: onSortChangeTracked,
     onReset: onResetTracked,
-  };
+  });
 }
 
 export function buildWorkspacePublicContentProps({
@@ -170,7 +173,7 @@ export function buildWorkspacePublicContentProps({
     formatPrice,
   });
 
-  return {
+  return buildRequestsPublicContentProps({
     t,
     filtersProps,
     statusFilters,
@@ -188,10 +191,9 @@ export function buildWorkspacePublicContentProps({
     }),
     page,
     totalPages,
-    resultsLabel: t(I18N_KEYS.requestsPage.resultsLabel),
     onPrevPage,
     onNextPage,
     listDensity: resolveRequestsListDensityForPageSize(limit),
     onListDensityChange: (density) => setLimit(resolveRequestsPageSizeForDensity(density)),
-  };
+  });
 }

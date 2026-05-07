@@ -1,6 +1,10 @@
 'use client';
 
 import { buildRequestsListProps } from '@/components/requests/requestsListProps';
+import {
+  buildRequestsPublicContentProps,
+  buildRequestsPublicFiltersProps,
+} from '@/components/requests/requestsPublicContent.model';
 import { PublicContent } from '@/features/workspace/requests';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { resolveRequestsListDensityForPageSize } from '@/lib/requests/pagination';
@@ -58,71 +62,73 @@ export function RequestsExplorerRequestsContent({
 
   return (
     <PublicContent
-      t={t}
-      filtersProps={{
+      {...buildRequestsPublicContentProps({
         t,
-        locale,
-        categoryOptions,
-        serviceOptions,
-        cityOptions,
-        sortOptions,
-        categoryKey,
-        subcategoryKey,
-        cityId,
-        sortBy,
-        totalResults: totalResultsLabel,
-        isCategoriesLoading,
-        isServicesLoading,
-        isPending,
-        appliedChips: appliedFilterChips,
-        onCategoryChange,
-        onSubcategoryChange,
-        onCityChange,
-        onSortChange,
-        onReset,
-      }}
-      statusFilters={[]}
-      activeStatusFilter="all"
-      onStatusFilterChange={() => {}}
-      isLoading={isLoading}
-      isError={isError}
-      requestsCount={requests.length}
-      hasActivePublicFilter={appliedFilterChips.length > 0}
-      emptyCtaHref={emptyCtaHref}
-      requestsListProps={buildRequestsListProps({
-        t,
-        locale,
-        requests,
+        filtersProps: buildRequestsPublicFiltersProps({
+          t,
+          locale,
+          categoryOptions,
+          serviceOptions,
+          cityOptions,
+          sortOptions,
+          categoryKey,
+          subcategoryKey,
+          cityId,
+          sortBy,
+          totalResults: totalResultsLabel,
+          isCategoriesLoading,
+          isServicesLoading,
+          isPending,
+          appliedChips: appliedFilterChips,
+          onCategoryChange,
+          onSubcategoryChange,
+          onCityChange,
+          onSortChange,
+          onReset,
+        }),
+        statusFilters: [],
+        activeStatusFilter: 'all',
+        onStatusFilterChange: () => {},
         isLoading,
         isError,
-        serviceByKey,
-        categoryByKey,
-        cityById,
-        formatDate,
-        formatPrice,
-        enableOfferActions: true,
-        offersByRequest,
-        favoriteRequestIds,
-        pendingFavoriteRequestIds,
-        onToggleFavorite: (requestId) => {
-          void toggleRequestFavorite(requestId);
-        },
-        onSendOffer: openOfferSheet,
-        onEditOffer: openOfferSheet,
-        onWithdrawOffer,
-        pendingOfferRequestId,
-        showFavoriteButton: true,
+        requestsCount: requests.length,
+        hasActivePublicFilter: appliedFilterChips.length > 0,
+        emptyCtaHref,
+        requestsListProps: buildRequestsListProps({
+          t,
+          locale,
+          requests,
+          isLoading,
+          isError,
+          serviceByKey,
+          categoryByKey,
+          cityById,
+          formatDate,
+          formatPrice,
+          enableOfferActions: true,
+          offersByRequest,
+          favoriteRequestIds,
+          pendingFavoriteRequestIds,
+          onToggleFavorite: (requestId) => {
+            void toggleRequestFavorite(requestId);
+          },
+          onSendOffer: openOfferSheet,
+          onEditOffer: openOfferSheet,
+          onWithdrawOffer,
+          pendingOfferRequestId,
+          showFavoriteButton: true,
+        }),
+        page,
+        totalPages,
+        resultsLabel: t(I18N_KEYS.requestsPage.countLabel),
+        onPrevPage,
+        onNextPage,
+        listDensity: listDensity ?? resolveRequestsListDensityForPageSize(limit),
+        onListDensityChange,
+        header: topBar,
+        summaryStripProps,
+        isSummaryStripLoading,
       })}
-      page={page}
-      totalPages={totalPages}
-      resultsLabel={t(I18N_KEYS.requestsPage.countLabel)}
-      onPrevPage={onPrevPage}
-      onNextPage={onNextPage}
-      listDensity={listDensity ?? resolveRequestsListDensityForPageSize(limit)}
-      onListDensityChange={onListDensityChange}
-      header={topBar}
-      summaryStripProps={summaryStripProps}
-      isSummaryStripLoading={isSummaryStripLoading}
     />
   );
 }
