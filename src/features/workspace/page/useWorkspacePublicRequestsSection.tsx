@@ -3,24 +3,20 @@
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { RequestsExplorerRequestsContent } from '@/components/requests/RequestsExplorerRequestsContent';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import { useWorkspaceData } from '@/features/workspace/requests';
+import {
+  buildRequestsWorkspacePublicBody,
+  RequestsWorkspaceBody,
+  useWorkspaceData,
+} from '@/features/workspace/requests';
 import { RequestsPrivateActionRail } from '@/features/workspace/requests';
-import {
-  WorkspaceRequestsSummaryStrip,
-  WorkspaceRequestsSummaryStripSkeleton,
-} from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
 import { useWorkspacePublicFilters } from '@/features/workspace';
-import { buildOffersByRequestMap } from '@/components/requests/requestsExplorer.model';
 import {
-  resolveRequestsListDensityForPageSize,
-} from '@/lib/requests/pagination';
+  buildOffersByRequestMap,
+  pickRequestsExplorerSharedFilters,
+} from '@/components/requests/requestsExplorer.model';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
-import {
-  buildEmptyWorkspaceMarketRequestsResponse,
-} from '@/features/workspace/page/workspacePublicRequests.model';
 import {
   buildWorkspacePublicRequestsAsideProps,
   buildWorkspacePublicRequestsListProps,
@@ -98,28 +94,10 @@ export function useWorkspacePublicRequestsSection({
     activeRequestsPeriod,
     activeRequestsSort: activeRequestsSort ?? filters.sortBy,
   });
+  const { contractData, legacyPrivateData } = data;
 
-  const marketResponse = React.useMemo(
-    () => data.workspaceRequests ?? buildEmptyWorkspaceMarketRequestsResponse({
-      locale,
-      state: activeRequestsState,
-      period: activeRequestsPeriod,
-      sort: activeRequestsSort ?? filters.sortBy,
-      page: filters.page,
-      limit: filters.limit,
-    }),
-    [
-      activeRequestsPeriod,
-      activeRequestsSort,
-      activeRequestsState,
-      data.workspaceRequests,
-      filters.limit,
-      filters.page,
-      filters.sortBy,
-      locale,
-    ],
-  );
-  const hasMarketContract = data.workspaceRequests != null;
+  const marketResponse = contractData.workspaceRequests;
+  const hasMarketContract = marketResponse != null;
   const {
     requests,
     publicRequestsListItems,
@@ -132,18 +110,18 @@ export function useWorkspacePublicRequestsSection({
   } = React.useMemo(
     () => resolveWorkspacePublicRequestsData({
       marketResponse,
-      publicRequestsItems: data.publicRequests?.items,
-      publicRequestsTotalValue: data.publicRequests?.total,
-      publicRequestsPage: data.publicRequests?.page,
-      publicRequestsLimit: data.publicRequests?.limit,
+      publicRequestsItems: contractData.publicRequests?.items,
+      publicRequestsTotalValue: contractData.publicRequests?.total,
+      publicRequestsPage: contractData.publicRequests?.page,
+      publicRequestsLimit: contractData.publicRequests?.limit,
       filtersPage: filters.page,
       filtersLimit: filters.limit,
     }),
     [
-      data.publicRequests?.items,
-      data.publicRequests?.limit,
-      data.publicRequests?.page,
-      data.publicRequests?.total,
+      contractData.publicRequests?.items,
+      contractData.publicRequests?.limit,
+      contractData.publicRequests?.page,
+      contractData.publicRequests?.total,
       filters.limit,
       filters.page,
       marketResponse,
@@ -154,23 +132,22 @@ export function useWorkspacePublicRequestsSection({
     [requests],
   );
   const favoriteRequestIds = React.useMemo(
-    () => new Set((data.favoriteRequests ?? []).map((request) => request.id)),
-    [data.favoriteRequests],
+    () => new Set((legacyPrivateData.favoriteRequests ?? []).map((request) => request.id)),
+    [legacyPrivateData.favoriteRequests],
   );
   const interactions = useWorkspaceRequestUserInteractions({
     t,
     locale,
     isAuthed,
     nextPath,
-    myOffers: data.myOffers,
     favoriteRequestIds,
     requestById,
     favoriteProviderLookup: new Set(),
     providerById: new Map(),
   });
   const offersByRequest = React.useMemo(
-    () => buildOffersByRequestMap(data.myOffers),
-    [data.myOffers],
+    () => buildOffersByRequestMap(legacyPrivateData.myOffers),
+    [legacyPrivateData.myOffers],
   );
 
   const setRequestsState = React.useCallback((nextState: string) => {
@@ -193,7 +170,52 @@ export function useWorkspacePublicRequestsSection({
     router.push(`/requests/${requestId}`);
   }, [router]);
 
-  const publicListDensity = resolveRequestsListDensityForPageSize(filters.limit);
+  const sharedFilters = React.useMemo(
+    () => pickRequestsExplorerSharedFilters({
+      categoryOptions: filters.categoryOptions,
+      serviceOptions: filters.serviceOptions,
+      cityOptions: filters.cityOptions,
+      sortOptions: filters.sortOptions,
+      categoryKey: filters.categoryKey,
+      subcategoryKey: filters.subcategoryKey,
+      cityId: filters.cityId,
+      sortBy: filters.sortBy,
+      page: publicListPage,
+      limit: publicListLimit,
+      isCategoriesLoading: filters.isCategoriesLoading,
+      isServicesLoading: filters.isServicesLoading,
+      isPending: filters.isFiltersPending,
+      appliedFilterChips: filters.appliedFilterChips,
+      onCategoryChange: filters.onCategoryChangeTracked,
+      onSubcategoryChange: filters.onSubcategoryChangeTracked,
+      onCityChange: filters.onCityChangeTracked,
+      onSortChange: filters.onSortChangeTracked,
+      onReset: filters.onResetTracked,
+      setPage: filters.setPage,
+    }),
+    [
+      filters.appliedFilterChips,
+      filters.categoryKey,
+      filters.categoryOptions,
+      filters.cityId,
+      filters.cityOptions,
+      filters.isCategoriesLoading,
+      filters.isFiltersPending,
+      filters.isServicesLoading,
+      filters.onCategoryChangeTracked,
+      filters.onCityChangeTracked,
+      filters.onResetTracked,
+      filters.onSortChangeTracked,
+      filters.onSubcategoryChangeTracked,
+      filters.serviceOptions,
+      filters.setPage,
+      filters.sortBy,
+      filters.sortOptions,
+      filters.subcategoryKey,
+      publicListLimit,
+      publicListPage,
+    ],
+  );
 
   if (!enabled) {
     return {
@@ -204,64 +226,44 @@ export function useWorkspacePublicRequestsSection({
 
   const publicMain = (
     <div className="stack-md">
-      {hasMarketContract && data.isWorkspaceRequestsLoading ? (
-        <WorkspaceRequestsSummaryStripSkeleton />
-      ) : (
-        <WorkspaceRequestsSummaryStrip
-          {...buildWorkspacePublicRequestsSummaryStripProps({
-            locale,
-            items: summaryItems,
-            onSelect: setRequestsState,
-          })}
-        />
-      )}
-      <RequestsExplorerRequestsContent
-        {...buildWorkspacePublicRequestsListProps({
+      <RequestsWorkspaceBody
+        body={buildRequestsWorkspacePublicBody(buildWorkspacePublicRequestsListProps({
           t,
           locale,
           emptyCtaHref: '/workspace?section=requests&scope=market',
-          topBar: { kind: 'none' },
-          categoryOptions: filters.categoryOptions,
-          serviceOptions: filters.serviceOptions,
-          cityOptions: filters.cityOptions,
-          sortOptions: filters.sortOptions,
-          categoryKey: filters.categoryKey,
-          subcategoryKey: filters.subcategoryKey,
-          cityId: filters.cityId,
-          sortBy: filters.sortBy,
-          totalResultsLabel: interactions.formatNumber.format(
-            activeRequestsState === 'all' ? resolvedTotalResults : publicRequestsListItems.length,
-          ),
-          isCategoriesLoading: filters.isCategoriesLoading,
-          isServicesLoading: filters.isServicesLoading,
-          isPending: filters.isFiltersPending,
-          appliedFilterChips: filters.appliedFilterChips,
-          onCategoryChange: filters.onCategoryChangeTracked,
-          onSubcategoryChange: filters.onSubcategoryChangeTracked,
-          onCityChange: filters.onCityChangeTracked,
-          onSortChange: filters.onSortChangeTracked,
-          onReset: filters.onResetTracked,
-          requests: publicRequestsListItems,
-          isLoading: data.isLoading,
-          isError: data.isError,
-          offersByRequest,
-          favoriteRequestIds,
-          pendingFavoriteRequestIds: interactions.pendingFavoriteRequestIds,
-          pendingOfferRequestId: interactions.pendingOfferRequestId,
-          totalPages: publicListTotalPages,
-          openOfferSheet: interactions.onOpenOfferSheet,
-          onWithdrawOffer: interactions.onWithdrawOffer,
-          toggleRequestFavorite: interactions.onToggleRequestFavorite,
-          serviceByKey,
-          categoryByKey,
-          cityById,
+          sharedFilters,
+          requestsData: {
+            totalResultsLabel: interactions.formatNumber.format(
+              activeRequestsState === 'all' ? resolvedTotalResults : publicRequestsListItems.length,
+            ),
+            requests: publicRequestsListItems,
+            isLoading: contractData.isLoading,
+            isError: contractData.isError,
+            offersByRequest,
+            favoriteRequestIds,
+            pendingFavoriteRequestIds: interactions.pendingFavoriteRequestIds,
+            pendingOfferRequestId: interactions.pendingOfferRequestId,
+            totalPages: publicListTotalPages,
+            openOfferSheet: interactions.onOpenOfferSheet,
+            onWithdrawOffer: interactions.onWithdrawOffer,
+            toggleRequestFavorite: interactions.onToggleRequestFavorite,
+          },
+          catalogIndex: {
+            serviceByKey,
+            categoryByKey,
+            cityById,
+          },
           formatDate: interactions.formatDate,
           formatPrice: interactions.formatPrice,
-          page: publicListPage,
-          limit: publicListLimit,
-          setPage: filters.setPage,
-          listDensity: publicListDensity,
-        })}
+          summaryStripProps: hasMarketContract
+            ? buildWorkspacePublicRequestsSummaryStripProps({
+              locale,
+              items: summaryItems,
+              onSelect: setRequestsState,
+            })
+            : undefined,
+          isSummaryStripLoading: !hasMarketContract && contractData.isWorkspaceRequestsLoading,
+        }))}
       />
     </div>
   );

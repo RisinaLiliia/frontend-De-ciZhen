@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import type { ComponentProps } from 'react';
 
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { RequestsListShellHeader } from '@/components/requests/RequestsListShellHeader';
@@ -15,11 +16,8 @@ import {
 } from '@/lib/requests/pagination';
 import { WorkspacePublicRequestSessionDialog } from '@/features/workspace/requests/WorkspacePublicRequestSessionDialog';
 import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
-import type { MyRequestsSummaryItem } from '@/features/workspace/requests/myRequestsView.model';
-import {
-  WorkspaceRequestsSummaryStrip,
-  WorkspaceRequestsSummaryStripSkeleton,
-} from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
+import { RequestsWorkspaceSummary } from '@/features/workspace/requests/components/RequestsWorkspaceSummary';
+import type { WorkspaceRequestsSummaryStrip } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
 import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 import type { RequestsListShellHeaderMode } from '@/components/requests/RequestsListShellHeader';
 
@@ -46,9 +44,8 @@ type Props = {
   listDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
   header?: RequestsListShellHeaderMode;
-  summaryItems?: MyRequestsSummaryItem[];
-  onSummaryItemSelect?: (key: string) => void;
-  summaryVariant?: 'private' | 'market';
+  summaryStripProps?: ComponentProps<typeof WorkspaceRequestsSummaryStrip>;
+  isSummaryStripLoading?: boolean;
 };
 
 export function PublicContent({
@@ -71,9 +68,8 @@ export function PublicContent({
   listDensity = DEFAULT_REQUESTS_LIST_DENSITY,
   onListDensityChange,
   header = { kind: 'filters' },
-  summaryItems,
-  onSummaryItemSelect,
-  summaryVariant = 'private',
+  summaryStripProps,
+  isSummaryStripLoading = false,
 }: Props) {
   const authStatus = useAuthStatus();
   const {
@@ -119,17 +115,10 @@ export function PublicContent({
 
   return (
     <>
-      {isLoading && summaryItems == null && onSummaryItemSelect ? (
-        <WorkspaceRequestsSummaryStripSkeleton />
-      ) : null}
-      {summaryItems && onSummaryItemSelect ? (
-        <WorkspaceRequestsSummaryStrip
-          locale={requestsListProps.locale}
-          items={summaryItems}
-          onSelect={onSummaryItemSelect}
-          variant={summaryVariant}
-        />
-      ) : null}
+      <RequestsWorkspaceSummary
+        summaryStripProps={summaryStripProps}
+        isLoading={isSummaryStripLoading}
+      />
       <RequestsPaginatedPanel
         t={t}
         page={page}

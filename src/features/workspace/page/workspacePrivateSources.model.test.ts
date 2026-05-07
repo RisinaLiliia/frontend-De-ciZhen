@@ -198,7 +198,7 @@ describe('workspacePrivateSources.model', () => {
         subcategoryKey: 'all',
         sortBy: 'date_desc',
       },
-      data: {
+      contractData: {
         publicRequests: { items: [{ id: 'req-1' }], total: 1 },
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
         isLoading: false,
@@ -212,7 +212,7 @@ describe('workspacePrivateSources.model', () => {
       activeWorkspaceTab: 'my-requests',
       requestsScope: 'market',
       requests: [{ id: 'req-1' }] as never,
-      data: {
+      legacyPrivateData: {
         favoriteRequests: [{ id: 'req-1' }],
         providers: [{ id: 'provider-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
@@ -273,7 +273,7 @@ describe('workspacePrivateSources.model', () => {
       activeWorkspaceTab: 'profile',
       requestsScope: 'market',
       requests: [{ id: 'req-1' }] as never,
-      data: {
+      legacyPrivateData: {
         favoriteRequests: [{ id: 'req-1' }],
         providers: [{ id: 'provider-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
@@ -304,7 +304,7 @@ describe('workspacePrivateSources.model', () => {
       activeWorkspaceTab: 'my-requests',
       requestsScope: 'my',
       requests: [{ id: 'req-1' }] as never,
-      data: {
+      legacyPrivateData: {
         favoriteRequests: [{ id: 'req-1' }],
         providers: [{ id: 'provider-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
@@ -327,22 +327,29 @@ describe('workspacePrivateSources.model', () => {
 
   it('resolves final private sources payload from hook results', () => {
     const result = resolveWorkspacePrivateSourcesResult({
-      data: {
+      contractData: {
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
         publicCityActivity: { totalActiveCities: 0, totalActiveRequests: 0, items: [] },
         isPublicSummaryLoading: false,
         isPublicSummaryError: false,
-        providers: [{ id: 'provider-1' }],
-        isProvidersLoading: false,
-        isProvidersError: false,
         workspacePrivateOverview: null,
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
         isWorkspaceRequestsError: false,
+        isWorkspacePrivateOverviewLoading: false,
+        isError: false,
+        isLoading: true,
+      } as never,
+      legacyPrivateData: {
+        providers: [{ id: 'provider-1' }],
+        isProvidersLoading: false,
+        isProvidersError: false,
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
         myRequests: [{ id: 'req-1' }],
         myOfferRequestsById: new Map([['req-1', { id: 'req-1' }]]),
         isMyOfferRequestsLoading: false,
+        myProviderContracts: [],
+        myClientContracts: [],
         favoriteRequests: [{ id: 'req-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
         myReviews: [],
@@ -353,7 +360,6 @@ describe('workspacePrivateSources.model', () => {
         isProviderContractsLoading: true,
         isClientContractsLoading: false,
         isMyReviewsLoading: false,
-        isLoading: true,
       } as never,
       catalogIndex: {
         serviceByKey: new Map([['svc-1', { i18n: { de: 'Painter' } }]]),
@@ -379,7 +385,7 @@ describe('workspacePrivateSources.model', () => {
 
     expect(result.platformRequestsTotal).toBe(12);
     expect(result.publicRequests).toEqual([{ id: 'req-1' }, { id: 'req-2' }]);
-    expect(result.isPublicRequestsError).toBeUndefined();
+    expect(result.isPublicRequestsError).toBe(false);
     expect(result.requestsCount).toBe(2);
     expect(result.isProviderContractsLoading).toBe(true);
     expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));

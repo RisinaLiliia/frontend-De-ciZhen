@@ -7,8 +7,9 @@ import { buildRequestsListProps } from '@/components/requests/requestsListProps'
 import { trackUXEvent } from '@/lib/analytics';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import {
+  buildRequestsWorkspacePrivateBody,
   RequestsPrivateActionRail,
-  RequestsPrivateView,
+  RequestsWorkspaceBody,
   WorkspaceOverviewMain,
   WorkspaceOverviewInsightsPanel,
   WorkspacePublicDemandMapPanel,
@@ -17,9 +18,9 @@ import {
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
 import {
-  createEmptyMyRequestsResponse,
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
+import { buildRequestsWorkspaceDecisionRailProps } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
   useWorkspaceContentData,
@@ -36,7 +37,6 @@ import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceMod
 import {
   buildWorkspacePrivateContentDataArgs,
   buildWorkspacePublicSummaryView,
-  resolveWorkspaceEffectiveRequestsRole,
   resolveWorkspacePrivateRequestsLoading,
   buildWorkspacePrivatePresentationArgs,
   buildWorkspacePrivateStateArgs,
@@ -265,32 +265,9 @@ export function useWorkspacePrivatePresentationFlow({
     activeRequestsRole: data.activeRequestsRole,
     isWorkspacePrivateOverviewLoading: data.isWorkspacePrivateOverviewLoading,
   });
-  const effectiveRequestsRole = resolveWorkspaceEffectiveRequestsRole({
-    activeRequestsRole: data.activeRequestsRole,
-    preferredRequestsRole,
-  });
   const privateRequestsModel = React.useMemo(
-    () => {
-      if (data.workspaceRequests) {
-        return buildMyRequestsViewModelFromResponse(data.workspaceRequests);
-      }
-
-      return buildMyRequestsViewModelFromResponse(createEmptyMyRequestsResponse({
-        locale: branch.locale,
-        role: effectiveRequestsRole ?? 'all',
-        state: data.activeRequestsState,
-        period: data.activeRequestsPeriod,
-        sort: data.activeRequestsSort ?? 'activity',
-      }));
-    },
-    [
-      branch.locale,
-      data.activeRequestsPeriod,
-      data.activeRequestsState,
-      effectiveRequestsRole,
-      data.activeRequestsSort,
-      data.workspaceRequests,
-    ],
+    () => buildMyRequestsViewModelFromResponse(data.workspaceRequests),
+    [data.workspaceRequests],
   );
   const {
     state: decisionState,
@@ -299,18 +276,20 @@ export function useWorkspacePrivatePresentationFlow({
     openDecisionItem,
     exitDecisionMode,
   } = useDecisionMode({
-    panel: privateRequestsModel.response.decisionPanel,
+    panel: privateRequestsModel.response?.decisionPanel,
   });
   const privateAside = isUnifiedPrivateRequests ? (
     <div className="stack-md">
-      {privateRequestsModel.response.decisionPanel ? (
+      {privateRequestsModel.response?.decisionPanel ? (
         <RequestsPrivateActionRail
-          locale={branch.locale}
-          panel={privateRequestsModel.response.decisionPanel}
-          mode={decisionState.mode}
-          activeRequestId={decisionState.activeRequestId}
-          onStartDecisionMode={() => enterDecisionMode()}
-          onOpenQueueItem={openDecisionItem}
+          {...buildRequestsWorkspaceDecisionRailProps({
+            locale: branch.locale,
+            panel: privateRequestsModel.response.decisionPanel,
+            mode: decisionState.mode,
+            activeRequestId: decisionState.activeRequestId,
+            onStartDecisionMode: () => enterDecisionMode(),
+            onOpenQueueItem: openDecisionItem,
+          })}
         />
       ) : null}
     </div>
@@ -339,26 +318,28 @@ export function useWorkspacePrivatePresentationFlow({
       onToggleProviderFavorite={onToggleProviderFavorite}
     />
   ) : isUnifiedPrivateRequests ? (
-    <RequestsPrivateView
-      locale={branch.locale}
-      isWorkspaceAuthed={branch.isWorkspaceAuthed}
-      guestLoginHref={data.guestLoginHref}
-      model={privateRequestsModel}
-      isLoading={privateRequestsLoading}
-      isError={data.isWorkspaceRequestsError}
-      decisionState={decisionState}
-      decisionQueueIds={decisionQueueIds}
-      onEnterDecisionMode={enterDecisionMode}
-      onOpenDecisionItem={openDecisionItem}
-      onExitDecisionMode={exitDecisionMode}
-      listContext={{
-        onSendOffer: data.onOpenOfferSheet,
-        onEditOffer: data.onOpenOfferSheet,
-        onWithdrawOffer: data.onWithdrawOffer,
-        onOpenChatConversation: data.onOpenChatConversation,
-        pendingOfferRequestId: data.pendingOfferRequestId,
-        ownerRequestActions: data.ownerRequestActions,
-      }}
+    <RequestsWorkspaceBody
+      body={buildRequestsWorkspacePrivateBody({
+        locale: branch.locale,
+        isWorkspaceAuthed: branch.isWorkspaceAuthed,
+        guestLoginHref: data.guestLoginHref,
+        model: privateRequestsModel,
+        isLoading: privateRequestsLoading,
+        isError: data.isWorkspaceRequestsError,
+        decisionState,
+        decisionQueueIds,
+        onEnterDecisionMode: enterDecisionMode,
+        onOpenDecisionItem: openDecisionItem,
+        onExitDecisionMode: exitDecisionMode,
+        listContext: {
+          onSendOffer: data.onOpenOfferSheet,
+          onEditOffer: data.onOpenOfferSheet,
+          onWithdrawOffer: data.onWithdrawOffer,
+          onOpenChatConversation: data.onOpenChatConversation,
+          pendingOfferRequestId: data.pendingOfferRequestId,
+          ownerRequestActions: data.ownerRequestActions,
+        },
+      })}
     />
   ) : (
     workspaceContentProps ? <WorkspaceContent {...workspaceContentProps} /> : null

@@ -133,7 +133,7 @@ export function useWorkspaceData(params: Params) {
   });
 
   return {
-    ...contractData,
-    ...legacyPrivateData,
+    contractData,
+    legacyPrivateData,
   };
 }

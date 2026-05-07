@@ -14,7 +14,6 @@ import {
 } from '@/features/workspace';
 import { useWorkspacePrivateInteractions } from '@/features/workspace/page/useWorkspacePrivateInteractions';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import type { OfferDto } from '@/lib/api/dto/offers';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 
@@ -110,7 +109,6 @@ describe('useWorkspacePrivateInteractions', () => {
   it('wires toggles/actions/navigation side-effects and exposes interaction payload', () => {
     const t: WorkspaceBranchProps['t'] = (key) => String(key);
 
-    const offer = { id: 'offer-1', requestId: 'req-1' } as OfferDto;
     const request = { id: 'req-1' } as RequestResponseDto;
     const provider = { id: 'provider-1' } as ProviderPublicDto;
 
@@ -125,7 +123,6 @@ describe('useWorkspacePrivateInteractions', () => {
       requestsScope: 'market',
       nextPath: '/workspace?tab=favorites',
       platformRequestsTotal: 21,
-      myOffers: [offer],
       favoriteRequestIds: new Set(['req-1']),
       requestById: new Map([['req-1', request]]),
       favoriteProviderLookup: new Set(['provider-1']),
@@ -153,7 +150,6 @@ describe('useWorkspacePrivateInteractions', () => {
       expect.objectContaining({
         enabled: true,
         isAuthed: true,
-        myOffers: args.myOffers,
       }),
     );
 
@@ -186,7 +182,6 @@ describe('useWorkspacePrivateInteractions', () => {
         requestsScope="market"
         nextPath="/workspace?section=actions"
         platformRequestsTotal={21}
-        myOffers={[]}
         favoriteRequestIds={new Set()}
         requestById={new Map()}
         favoriteProviderLookup={new Set(['provider-1'])}
@@ -223,7 +218,6 @@ describe('useWorkspacePrivateInteractions', () => {
         requestsScope="my"
         nextPath="/workspace?section=requests&scope=my"
         platformRequestsTotal={21}
-        myOffers={[]}
         favoriteRequestIds={new Set()}
         requestById={new Map()}
         favoriteProviderLookup={new Set(['provider-1'])}

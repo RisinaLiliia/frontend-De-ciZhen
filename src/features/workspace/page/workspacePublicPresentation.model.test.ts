@@ -130,4 +130,22 @@ describe('workspacePublicPresentation.model', () => {
       localeTag: 'de-DE',
     });
   });
+
+  it('does not keep explore seed props on the active public requests layout path', () => {
+    const layoutProps = buildWorkspacePublicLayoutProps({
+      t: (key) => String(key),
+      locale: 'de',
+      isWorkspaceAuthed: false,
+      activePublicSection: 'requests',
+      activeWorkspaceTab: 'my-requests',
+      exploreWithSeed: null,
+      workspaceIntroNode: 'intro',
+      publicRequestsMain: 'main',
+      publicRequestsAside: 'aside',
+    });
+
+    expect(layoutProps.explore).toBeNull();
+    expect(layoutProps.publicMain).toBe('main');
+    expect(layoutProps.publicAside).toBe('aside');
+  });
 });

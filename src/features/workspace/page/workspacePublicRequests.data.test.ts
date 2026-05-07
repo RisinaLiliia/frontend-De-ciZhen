@@ -1,21 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildEmptyWorkspaceMarketRequestsResponse } from './workspacePublicRequests.model';
 import { resolveWorkspacePublicRequestsData } from './workspacePublicRequests.data';
 
 describe('workspacePublicRequests.data', () => {
-  it('keeps the market decision rail available on the fallback response path', () => {
-    const marketResponse = buildEmptyWorkspaceMarketRequestsResponse({
-      locale: 'de',
-      state: 'all',
-      period: '30d',
-      sort: 'date_desc',
-      page: 1,
-      limit: 20,
-    });
-
+  it('keeps market KPI and rail absent when the backend contract is not available', () => {
     const result = resolveWorkspacePublicRequestsData({
-      marketResponse,
+      marketResponse: null,
       publicRequestsItems: [],
       publicRequestsTotalValue: 0,
       publicRequestsPage: 1,
@@ -24,37 +14,13 @@ describe('workspacePublicRequests.data', () => {
       filtersLimit: 20,
     });
 
-    expect(result.decisionPanel).toEqual(
-      expect.objectContaining({
-        primaryAction: expect.objectContaining({ label: 'Markt prüfen' }),
-        queue: [],
-        overview: {
-          highUrgency: 0,
-          inProgress: 0,
-          completedThisPeriod: 0,
-        },
-      }),
-    );
-    expect(result.summaryItems).toEqual([
-      expect.objectContaining({ key: 'all', value: 0 }),
-      expect.objectContaining({ key: 'attention', value: 0 }),
-      expect.objectContaining({ key: 'execution', value: 0 }),
-      expect.objectContaining({ key: 'completed', value: 0 }),
-    ]);
+    expect(result.decisionPanel).toBeNull();
+    expect(result.summaryItems).toEqual([]);
   });
 
   it('keeps public KPI state owned by the market contract instead of deriving it from fallback list data', () => {
-    const marketResponse = buildEmptyWorkspaceMarketRequestsResponse({
-      locale: 'de',
-      state: 'all',
-      period: '30d',
-      sort: 'date_desc',
-      page: 1,
-      limit: 20,
-    });
-
     const result = resolveWorkspacePublicRequestsData({
-      marketResponse,
+      marketResponse: null,
       publicRequestsItems: [
         { id: 'req-1', status: 'published' },
         { id: 'req-2', status: 'matched' },
@@ -68,11 +34,6 @@ describe('workspacePublicRequests.data', () => {
     });
 
     expect(result.publicRequestsListItems).toHaveLength(3);
-    expect(result.summaryItems).toEqual([
-      expect.objectContaining({ key: 'all', value: 0 }),
-      expect.objectContaining({ key: 'attention', value: 0 }),
-      expect.objectContaining({ key: 'execution', value: 0 }),
-      expect.objectContaining({ key: 'completed', value: 0 }),
-    ]);
+    expect(result.summaryItems).toEqual([]);
   });
 });

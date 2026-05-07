@@ -19,10 +19,11 @@ import type { WorkspaceChatConversationInput } from '@/features/workspace/privat
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
 import { DecisionPanel } from '@/features/workspace/requests/components/DecisionPanel';
+import { RequestsWorkspaceSummary } from '@/features/workspace/requests/components/RequestsWorkspaceSummary';
 import {
-  WorkspaceRequestsSummaryStrip,
-  WorkspaceRequestsSummaryStripSkeleton,
-} from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
+  buildRequestsWorkspaceDecisionRailProps,
+  buildRequestsWorkspaceSummaryStripProps,
+} from '@/features/workspace/requests/requestsWorkspaceSurface.model';
 import type {
   MyRequestsViewCard,
   MyRequestsViewModel,
@@ -1020,8 +1021,8 @@ export function RequestsPrivateView({
   const setStateFilter = useStateFilterMutation();
   const visibleCards = React.useMemo(() => {
     if (decisionState.mode !== 'decision') return model.cards;
-    return sortCardsForDecisionMode(model.cards, model.response.decisionPanel);
-  }, [decisionState.mode, model.cards, model.response.decisionPanel]);
+    return sortCardsForDecisionMode(model.cards, model.response?.decisionPanel);
+  }, [decisionState.mode, model.cards, model.response]);
   const cardRefs = React.useRef(new Map<string, HTMLElement>());
   const {
     activeChatState,
@@ -1065,13 +1066,18 @@ export function RequestsPrivateView({
 
   return (
     <section className="my-requests-view">
-      {isLoading ? <WorkspaceRequestsSummaryStripSkeleton /> : (
-        <WorkspaceRequestsSummaryStrip
-          locale={locale}
-          items={model.response.summary?.items ?? []}
-          onSelect={setStateFilter}
-        />
-      )}
+      <RequestsWorkspaceSummary
+        summaryStripProps={
+          !isLoading && model.response
+            ? buildRequestsWorkspaceSummaryStripProps({
+              locale,
+              items: model.response.summary?.items ?? [],
+              onSelect: setStateFilter,
+            })
+            : undefined
+        }
+        isLoading={isLoading}
+      />
 
       {isLoading ? <CardSkeletonList /> : null}
 
@@ -1110,15 +1116,17 @@ export function RequestsPrivateView({
               </div>
             ))}
           </div>
-          {model.response.decisionPanel ? (
+          {model.response?.decisionPanel ? (
             <RequestsPrivateActionRail
-              locale={locale}
-              panel={model.response.decisionPanel}
-              mode={decisionState.mode}
-              activeRequestId={decisionState.activeRequestId}
-              onStartDecisionMode={() => onEnterDecisionMode()}
-              onOpenQueueItem={onOpenDecisionItem}
-              className="my-requests-view__mobile-rail"
+              {...buildRequestsWorkspaceDecisionRailProps({
+                locale,
+                panel: model.response.decisionPanel,
+                mode: decisionState.mode,
+                activeRequestId: decisionState.activeRequestId,
+                onStartDecisionMode: () => onEnterDecisionMode(),
+                onOpenQueueItem: onOpenDecisionItem,
+                className: 'my-requests-view__mobile-rail',
+              })}
             />
           ) : null}
         </>
@@ -1139,7 +1147,7 @@ export function RequestsPrivateView({
           }}
         />
       ) : null}
-      {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && model.response.decisionPanel ? (
+      {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && model.response?.decisionPanel ? (
         <>
           <DecisionModeBar
             locale={locale}

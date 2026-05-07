@@ -37,10 +37,6 @@ vi.mock('@/lib/api/offers', () => ({
 function UseWorkspaceActionsProbe() {
   const actions = useWorkspaceActions({
     isAuthed: true,
-    myOffers: [
-      { id: 'offer-1', requestId: 'req-1', providerUserId: 'provider-1' },
-      { id: 'offer-missing', requestId: 'req-2' },
-    ] as never,
     t: (key) => String(key),
     qc: {
       invalidateQueries: invalidateQueriesSpy,

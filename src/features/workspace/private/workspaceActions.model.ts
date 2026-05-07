@@ -16,10 +16,6 @@ export function buildWorkspaceOfferLoginHref(requestId: string) {
   return `/auth/login?next=${encodeURIComponent(buildWorkspaceOfferSheetHref(requestId))}`;
 }
 
-export function resolveWorkspaceOfferById(myOffers: OfferDto[], offerId: string) {
-  return myOffers.find((item) => item.id === offerId);
-}
-
 export function resolveWorkspaceChatNavigation(offer: OfferDto) {
   const providerUserId = offer.providerUserId?.trim();
   if (!providerUserId || !offer.requestId) {

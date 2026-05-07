@@ -56,7 +56,7 @@ type BuildPublicRenderMetricPayloadArgs = {
 type BuildPublicLayoutPropsArgs = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isWorkspaceAuthed'> & {
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
-  exploreWithSeed: ComponentProps<typeof WorkspacePageLayout>['explore'];
+  exploreWithSeed?: ComponentProps<typeof WorkspacePageLayout>['explore'];
   workspaceIntroNode: ReactNode;
   publicRequestsMain?: ReactNode;
   publicRequestsAside?: ReactNode;
@@ -165,7 +165,7 @@ export function buildWorkspacePublicLayoutProps({
     t,
     locale,
     intro: workspaceIntroNode,
-    explore: exploreWithSeed,
+    explore: exploreWithSeed ?? null,
     privateMain: null,
     publicMain: isUnifiedPublicRequests ? (publicRequestsMain ?? null) : null,
     publicAside: isUnifiedPublicRequests ? publicRequestsAside : undefined,

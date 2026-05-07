@@ -36,7 +36,6 @@ describe('workspacePrivateInteractions.model', () => {
     const actionsArgs = buildWorkspacePrivateActionsArgs({
       enabled: false,
       isAuthed: true,
-      myOffers: [{ id: 'offer-1', requestId: 'req-1' }] as never,
       t: t as never,
       qc,
       router,
@@ -87,7 +86,6 @@ describe('workspacePrivateInteractions.model', () => {
     expect(favoriteToggleArgs.includeRequestToggle).toBe(false);
     expect(favoriteToggleArgs.includeProviderToggle).toBe(false);
     expect(actionsArgs.enabled).toBe(false);
-    expect(actionsArgs.myOffers).toHaveLength(1);
     expect(seenArgs).toEqual({
       isAuthed: true,
       userId: 'user-1',
