@@ -19,10 +19,7 @@ import type { WorkspaceChatConversationInput } from '@/features/workspace/privat
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
 import { DecisionPanel } from '@/features/workspace/requests/components/DecisionPanel';
-import {
-  WorkspaceRequestsSummaryStrip,
-  WorkspaceRequestsSummaryStripSkeleton,
-} from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
+import { RequestsWorkspaceSummary } from '@/features/workspace/requests/components/RequestsWorkspaceSummary';
 import {
   buildRequestsWorkspaceDecisionRailProps,
   buildRequestsWorkspaceSummaryStripProps,
@@ -1069,15 +1066,14 @@ export function RequestsPrivateView({
 
   return (
     <section className="my-requests-view">
-      {isLoading ? <WorkspaceRequestsSummaryStripSkeleton /> : (
-        <WorkspaceRequestsSummaryStrip
-          {...buildRequestsWorkspaceSummaryStripProps({
-            locale,
-            items: model.response.summary?.items ?? [],
-            onSelect: setStateFilter,
-          })}
-        />
-      )}
+      <RequestsWorkspaceSummary
+        summaryStripProps={isLoading ? undefined : buildRequestsWorkspaceSummaryStripProps({
+          locale,
+          items: model.response.summary?.items ?? [],
+          onSelect: setStateFilter,
+        })}
+        isLoading={isLoading}
+      />
 
       {isLoading ? <CardSkeletonList /> : null}
 

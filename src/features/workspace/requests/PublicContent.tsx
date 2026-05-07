@@ -16,10 +16,8 @@ import {
 } from '@/lib/requests/pagination';
 import { WorkspacePublicRequestSessionDialog } from '@/features/workspace/requests/WorkspacePublicRequestSessionDialog';
 import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
-import {
-  WorkspaceRequestsSummaryStrip,
-  WorkspaceRequestsSummaryStripSkeleton,
-} from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
+import { RequestsWorkspaceSummary } from '@/features/workspace/requests/components/RequestsWorkspaceSummary';
+import type { WorkspaceRequestsSummaryStrip } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
 import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 import type { RequestsListShellHeaderMode } from '@/components/requests/RequestsListShellHeader';
 
@@ -117,10 +115,10 @@ export function PublicContent({
 
   return (
     <>
-      {isSummaryStripLoading && !summaryStripProps ? (
-        <WorkspaceRequestsSummaryStripSkeleton />
-      ) : null}
-      {summaryStripProps ? <WorkspaceRequestsSummaryStrip {...summaryStripProps} /> : null}
+      <RequestsWorkspaceSummary
+        summaryStripProps={summaryStripProps}
+        isLoading={isSummaryStripLoading}
+      />
       <RequestsPaginatedPanel
         t={t}
         page={page}
