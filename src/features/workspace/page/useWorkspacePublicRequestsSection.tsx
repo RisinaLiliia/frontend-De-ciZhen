@@ -8,10 +8,10 @@ import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { useWorkspaceData } from '@/features/workspace/requests';
 import { RequestsPrivateActionRail } from '@/features/workspace/requests';
 import { useWorkspacePublicFilters } from '@/features/workspace';
-import { buildOffersByRequestMap } from '@/components/requests/requestsExplorer.model';
 import {
-  resolveRequestsListDensityForPageSize,
-} from '@/lib/requests/pagination';
+  buildOffersByRequestMap,
+  pickRequestsExplorerSharedFilters,
+} from '@/components/requests/requestsExplorer.model';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
 import {
@@ -189,7 +189,52 @@ export function useWorkspacePublicRequestsSection({
     router.push(`/requests/${requestId}`);
   }, [router]);
 
-  const publicListDensity = resolveRequestsListDensityForPageSize(filters.limit);
+  const sharedFilters = React.useMemo(
+    () => pickRequestsExplorerSharedFilters({
+      categoryOptions: filters.categoryOptions,
+      serviceOptions: filters.serviceOptions,
+      cityOptions: filters.cityOptions,
+      sortOptions: filters.sortOptions,
+      categoryKey: filters.categoryKey,
+      subcategoryKey: filters.subcategoryKey,
+      cityId: filters.cityId,
+      sortBy: filters.sortBy,
+      page: publicListPage,
+      limit: publicListLimit,
+      isCategoriesLoading: filters.isCategoriesLoading,
+      isServicesLoading: filters.isServicesLoading,
+      isPending: filters.isFiltersPending,
+      appliedFilterChips: filters.appliedFilterChips,
+      onCategoryChange: filters.onCategoryChangeTracked,
+      onSubcategoryChange: filters.onSubcategoryChangeTracked,
+      onCityChange: filters.onCityChangeTracked,
+      onSortChange: filters.onSortChangeTracked,
+      onReset: filters.onResetTracked,
+      setPage: filters.setPage,
+    }),
+    [
+      filters.appliedFilterChips,
+      filters.categoryKey,
+      filters.categoryOptions,
+      filters.cityId,
+      filters.cityOptions,
+      filters.isCategoriesLoading,
+      filters.isFiltersPending,
+      filters.isServicesLoading,
+      filters.onCategoryChangeTracked,
+      filters.onCityChangeTracked,
+      filters.onResetTracked,
+      filters.onSortChangeTracked,
+      filters.onSubcategoryChangeTracked,
+      filters.serviceOptions,
+      filters.setPage,
+      filters.sortBy,
+      filters.sortOptions,
+      filters.subcategoryKey,
+      publicListLimit,
+      publicListPage,
+    ],
+  );
 
   if (!enabled) {
     return {
@@ -205,47 +250,30 @@ export function useWorkspacePublicRequestsSection({
           t,
           locale,
           emptyCtaHref: '/workspace?section=requests&scope=market',
-          topBar: { kind: 'none' },
-          categoryOptions: filters.categoryOptions,
-          serviceOptions: filters.serviceOptions,
-          cityOptions: filters.cityOptions,
-          sortOptions: filters.sortOptions,
-          categoryKey: filters.categoryKey,
-          subcategoryKey: filters.subcategoryKey,
-          cityId: filters.cityId,
-          sortBy: filters.sortBy,
-          totalResultsLabel: interactions.formatNumber.format(
-            activeRequestsState === 'all' ? resolvedTotalResults : publicRequestsListItems.length,
-          ),
-          isCategoriesLoading: filters.isCategoriesLoading,
-          isServicesLoading: filters.isServicesLoading,
-          isPending: filters.isFiltersPending,
-          appliedFilterChips: filters.appliedFilterChips,
-          onCategoryChange: filters.onCategoryChangeTracked,
-          onSubcategoryChange: filters.onSubcategoryChangeTracked,
-          onCityChange: filters.onCityChangeTracked,
-          onSortChange: filters.onSortChangeTracked,
-          onReset: filters.onResetTracked,
-          requests: publicRequestsListItems,
-          isLoading: data.isLoading,
-          isError: data.isError,
-          offersByRequest,
-          favoriteRequestIds,
-          pendingFavoriteRequestIds: interactions.pendingFavoriteRequestIds,
-          pendingOfferRequestId: interactions.pendingOfferRequestId,
-          totalPages: publicListTotalPages,
-          openOfferSheet: interactions.onOpenOfferSheet,
-          onWithdrawOffer: interactions.onWithdrawOffer,
-          toggleRequestFavorite: interactions.onToggleRequestFavorite,
-          serviceByKey,
-          categoryByKey,
-          cityById,
+          sharedFilters,
+          requestsData: {
+            totalResultsLabel: interactions.formatNumber.format(
+              activeRequestsState === 'all' ? resolvedTotalResults : publicRequestsListItems.length,
+            ),
+            requests: publicRequestsListItems,
+            isLoading: data.isLoading,
+            isError: data.isError,
+            offersByRequest,
+            favoriteRequestIds,
+            pendingFavoriteRequestIds: interactions.pendingFavoriteRequestIds,
+            pendingOfferRequestId: interactions.pendingOfferRequestId,
+            totalPages: publicListTotalPages,
+            openOfferSheet: interactions.onOpenOfferSheet,
+            onWithdrawOffer: interactions.onWithdrawOffer,
+            toggleRequestFavorite: interactions.onToggleRequestFavorite,
+          },
+          catalogIndex: {
+            serviceByKey,
+            categoryByKey,
+            cityById,
+          },
           formatDate: interactions.formatDate,
           formatPrice: interactions.formatPrice,
-          page: publicListPage,
-          limit: publicListLimit,
-          setPage: filters.setPage,
-          listDensity: publicListDensity,
           summaryStripProps: buildWorkspacePublicRequestsSummaryStripProps({
             locale,
             items: summaryItems,

@@ -165,4 +165,66 @@ describe('requestsExplorer.model', () => {
     expect(requestsContent.emptyCtaHref).toBe('/workspace?section=requests');
     expect(requestsContent.topBar).toEqual({ kind: 'filters' });
   });
+
+  it('passes summary strip surface props through the shared requests content builder', () => {
+    const setPage = () => {};
+    const summaryStripProps = {
+      locale: 'de' as const,
+      items: [{ key: 'all' as const, label: 'Alle', value: 8, isHighlighted: true }],
+      onSelect: () => {},
+      variant: 'market' as const,
+    };
+
+    const requestsContent = buildRequestsExplorerRequestsContentProps({
+      t: (key) => key,
+      locale: 'de',
+      emptyCtaHref: '/workspace?section=requests',
+      sharedFilters: {
+        categoryOptions: [],
+        serviceOptions: [],
+        cityOptions: [],
+        sortOptions: [],
+        categoryKey: '',
+        subcategoryKey: '',
+        cityId: '',
+        sortBy: 'date_desc',
+        page: 1,
+        limit: 20,
+        isCategoriesLoading: false,
+        isServicesLoading: false,
+        isPending: false,
+        appliedFilterChips: [],
+        onCategoryChange: () => {},
+        onSubcategoryChange: () => {},
+        onCityChange: () => {},
+        onSortChange: () => {},
+        onReset: () => {},
+        setPage,
+      },
+      requestsData: {
+        totalResultsLabel: '4',
+        requests: [],
+        isLoading: false,
+        isError: false,
+        pendingOfferRequestId: null,
+        totalPages: 1,
+        openOfferSheet: () => {},
+        toggleRequestFavorite: () => {},
+      },
+      catalogIndex: {
+        serviceByKey: new Map(),
+        categoryByKey: new Map(),
+        cityById: new Map(),
+      },
+      formatDate: new Intl.DateTimeFormat('de-DE'),
+      formatPrice: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }),
+      showTopFilters: false,
+      summaryStripProps,
+      isSummaryStripLoading: true,
+    });
+
+    expect(requestsContent.summaryStripProps).toEqual(summaryStripProps);
+    expect(requestsContent.isSummaryStripLoading).toBe(true);
+    expect(requestsContent.topBar).toEqual({ kind: 'summary' });
+  });
 });
