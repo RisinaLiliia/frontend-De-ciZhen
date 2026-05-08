@@ -12,16 +12,13 @@ import type { WorkspaceRequestsScope } from '@/features/workspace/requests/works
 import {
   buildWorkspacePrivateNavModelArgs,
   resolveWorkspacePreferredRequestsRole,
-  buildWorkspacePrivateStatsModelArgs,
   buildWorkspacePrivateTopProvidersArgs,
   shouldBuildWorkspacePrivateTopProviders,
   resolveWorkspacePrivateMeta,
   resolveWorkspacePrivateOverview,
   resolveWorkspacePrivateStateResult,
 } from '@/features/workspace/requests/workspacePrivateState.model';
-import { resolveWorkspacePrivateStatsInput } from '@/features/workspace/requests/workspacePrivateStats.model';
 import { useWorkspacePrivateNavModel } from '@/features/workspace/requests/useWorkspacePrivateNavModel';
-import { useWorkspacePrivateStatsModel } from '@/features/workspace/requests/useWorkspacePrivateStatsModel';
 import { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
 
 type Params = {
@@ -43,7 +40,6 @@ type Params = {
   guestLoginHref: string;
   onGuestLockedAction: () => void;
   formatNumber: Intl.NumberFormat;
-  chartMonthLabel: Intl.DateTimeFormat;
 };
 
 export function useWorkspacePrivateState({
@@ -65,7 +61,6 @@ export function useWorkspacePrivateState({
   guestLoginHref,
   onGuestLockedAction,
   formatNumber,
-  chartMonthLabel,
 }: Params) {
   const overview = React.useMemo(
     () => resolveWorkspacePrivateOverview(workspacePrivateOverview),
@@ -78,10 +73,6 @@ export function useWorkspacePrivateState({
   const preferredRequestsRole = React.useMemo(
     () => explicitPreferredRequestsRole ?? resolveWorkspacePreferredRequestsRole(overview),
     [explicitPreferredRequestsRole, overview],
-  );
-  const statsInput = React.useMemo(
-    () => resolveWorkspacePrivateStatsInput(overview),
-    [overview],
   );
 
   const nav = useWorkspacePrivateNavModel(
@@ -105,16 +96,6 @@ export function useWorkspacePrivateState({
     }),
   );
 
-  const stats = useWorkspacePrivateStatsModel(
-    buildWorkspacePrivateStatsModelArgs({
-      t,
-      locale,
-      statsInput,
-      chartMonthLabel,
-      formatNumber,
-    }),
-  );
-
   const topProviders = useWorkspacePrivateTopProviders(
     buildWorkspacePrivateTopProvidersArgs({
       t,
@@ -133,6 +114,5 @@ export function useWorkspacePrivateState({
     activityProgress,
     preferredRequestsRole,
     nav,
-    stats,
   });
 }

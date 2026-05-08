@@ -191,7 +191,6 @@ export function buildWorkspacePrivateStateArgs({
     guestLoginHref: data.guestLoginHref,
     onGuestLockedAction: data.onGuestLockedAction,
     formatNumber: data.formatNumber,
-    chartMonthLabel: data.chartMonthLabel,
   };
 }
 

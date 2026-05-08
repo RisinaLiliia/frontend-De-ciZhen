@@ -2,7 +2,6 @@
 
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import type { useWorkspacePrivateNavModel } from '@/features/workspace/requests/useWorkspacePrivateNavModel';
-import type { useWorkspacePrivateStatsModel } from '@/features/workspace/requests/useWorkspacePrivateStatsModel';
 import type { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
@@ -10,7 +9,6 @@ import { clampPercent } from '@/features/workspace/requests/workspaceState.metri
 import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
 
 type WorkspacePrivateNavModelArgs = Parameters<typeof useWorkspacePrivateNavModel>[0];
-type WorkspacePrivateStatsModelArgs = Parameters<typeof useWorkspacePrivateStatsModel>[0];
 type WorkspacePrivateTopProvidersArgs = Parameters<typeof useWorkspacePrivateTopProviders>[0];
 
 export function shouldBuildWorkspacePrivateTopProviders(params: {
@@ -86,22 +84,6 @@ export function buildWorkspacePrivateNavModelArgs(params: {
   };
 }
 
-export function buildWorkspacePrivateStatsModelArgs(params: {
-  t: WorkspacePrivateStatsModelArgs['t'];
-  locale: WorkspacePrivateStatsModelArgs['locale'];
-  statsInput: WorkspacePrivateStatsModelArgs['statsInput'];
-  chartMonthLabel: WorkspacePrivateStatsModelArgs['chartMonthLabel'];
-  formatNumber: WorkspacePrivateStatsModelArgs['formatNumber'];
-}): WorkspacePrivateStatsModelArgs {
-  return {
-    t: params.t,
-    locale: params.locale,
-    statsInput: params.statsInput,
-    chartMonthLabel: params.chartMonthLabel,
-    formatNumber: params.formatNumber,
-  };
-}
-
 export function buildWorkspacePrivateTopProvidersArgs(params: {
   t: WorkspacePrivateTopProvidersArgs['t'];
   locale: WorkspacePrivateTopProvidersArgs['locale'];
@@ -119,7 +101,6 @@ export function resolveWorkspacePrivateStateResult(params: {
   activityProgress: number;
   preferredRequestsRole: 'customer' | 'provider' | null;
   nav: ReturnType<typeof useWorkspacePrivateNavModel>;
-  stats: ReturnType<typeof useWorkspacePrivateStatsModel>;
 }) {
   return {
     topProviders: params.topProviders,
@@ -128,10 +109,5 @@ export function resolveWorkspacePrivateStateResult(params: {
     activityProgress: params.activityProgress,
     preferredRequestsRole: params.preferredRequestsRole,
     personalNavItems: params.nav.personalNavItems,
-    insightText: params.stats.insightText,
-    hasAnyStatsActivity: params.stats.hasAnyStatsActivity,
-    providerStatsPayload: params.stats.providerStatsPayload,
-    clientStatsPayload: params.stats.clientStatsPayload,
-    statsOrder: params.stats.statsOrder,
   };
 }

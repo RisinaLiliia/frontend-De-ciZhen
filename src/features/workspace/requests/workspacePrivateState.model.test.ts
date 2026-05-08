@@ -3,14 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
 import {
   buildWorkspacePrivateNavModelArgs,
-  buildWorkspacePrivateStatsModelArgs,
   resolveWorkspacePreferredRequestsRole,
   buildWorkspacePrivateTopProvidersArgs,
   resolveWorkspacePrivateMeta,
   resolveWorkspacePrivateOverview,
   resolveWorkspacePrivateStateResult,
 } from './workspacePrivateState.model';
-import { resolveWorkspacePrivateStatsInput } from './workspacePrivateStats.model';
 
 describe('workspacePrivateState.model', () => {
   it('falls back to empty overview when private overview is missing', () => {
@@ -66,13 +64,6 @@ describe('workspacePrivateState.model', () => {
       guestLoginHref: '/auth/login',
       onGuestLockedAction: () => undefined,
     });
-    const statsArgs = buildWorkspacePrivateStatsModelArgs({
-      t: (key) => String(key),
-      locale: 'de',
-      statsInput: resolveWorkspacePrivateStatsInput(overview),
-      chartMonthLabel: new Intl.DateTimeFormat('de-DE', { month: 'short' }),
-      formatNumber: new Intl.NumberFormat('de-DE'),
-    });
     const topProvidersArgs = buildWorkspacePrivateTopProvidersArgs({
       t: (key) => String(key),
       locale: 'de',
@@ -83,7 +74,6 @@ describe('workspacePrivateState.model', () => {
     expect(navArgs.sentCount).toBe(7);
     expect(navArgs.completedJobsCount).toBe(3);
     expect(navArgs.favoriteRequestCount).toBe(5);
-    expect(statsArgs.statsInput).toEqual(resolveWorkspacePrivateStatsInput(overview));
     expect(topProvidersArgs.providers).toEqual([]);
 
     expect(
@@ -96,13 +86,6 @@ describe('workspacePrivateState.model', () => {
           navSubtitle: 'Subtitle',
           personalNavItems: [],
         },
-        stats: {
-          insightText: '',
-          hasAnyStatsActivity: true,
-          providerStatsPayload: null,
-          clientStatsPayload: null,
-          statsOrder: [{ tab: 'provider', label: 'Provider' }],
-        } as never,
       }),
     ).toEqual({
       topProviders: [],
@@ -111,11 +94,6 @@ describe('workspacePrivateState.model', () => {
       activityProgress: 100,
       preferredRequestsRole: 'provider',
       personalNavItems: [],
-      insightText: '',
-      hasAnyStatsActivity: true,
-      providerStatsPayload: null,
-      clientStatsPayload: null,
-      statsOrder: [{ tab: 'provider', label: 'Provider' }],
     });
   });
 });

@@ -36,7 +36,6 @@ function makeArgs(overrides: Partial<StateArgs> = {}): StateArgs {
     guestLoginHref: '/auth/login?next=%2Fworkspace',
     onGuestLockedAction: vi.fn(),
     formatNumber: new Intl.NumberFormat('de-DE'),
-    chartMonthLabel: new Intl.DateTimeFormat('de-DE', { month: 'short' }),
     ...overrides,
   };
 }
@@ -57,7 +56,6 @@ function StateProbe(props: StateArgs) {
       data-my-requests-locked={String(Boolean(myRequestsItem?.lockedHref))}
       data-reviews-rating={String(reviewsItem?.rating?.value ?? '')}
       data-progress={String(state.activityProgress)}
-      data-stats-first={state.statsOrder[0]?.tab ?? ''}
       data-top-providers={String(state.topProviders.length)}
       data-preferred-role={state.preferredRequestsRole ?? ''}
       data-primary-count={String(primaryItemsCount)}
@@ -100,7 +98,6 @@ describe('useWorkspacePrivateState', () => {
     expect(node.getAttribute('data-my-requests-locked')).toBe('false');
     expect(node.getAttribute('data-reviews-rating')).toBe('4.7');
     expect(node.getAttribute('data-progress')).toBe('100');
-    expect(node.getAttribute('data-stats-first')).toBe('provider');
     expect(node.getAttribute('data-top-providers')).toBe('0');
     expect(node.getAttribute('data-primary-count')).toBe('4');
     expect(node.getAttribute('data-secondary-count')).toBe('2');
