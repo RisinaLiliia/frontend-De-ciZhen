@@ -135,6 +135,23 @@ describe('workspacePrivatePresentation.model', () => {
     expect(publicIntroProps.preferredRequestsRole).toBe('provider');
   });
 
+  it('passes explicit preferred role for unified private requests with a concrete route role', () => {
+    const branch = createBranch();
+    const data = {
+      ...createData(),
+      activeWorkspaceTab: 'my-requests',
+      requestsScope: 'my',
+      activeRequestsRole: 'customer',
+    };
+
+    const privateStateArgs = buildWorkspacePrivateStateArgs({
+      branch: branch as never,
+      data: data as never,
+    });
+
+    expect(privateStateArgs.explicitPreferredRequestsRole).toBe('customer');
+  });
+
   it('builds private view model input by merging flow data with patch', () => {
     const onPrimaryActionClick = vi.fn();
     const input = buildWorkspacePrivateViewModelInput({

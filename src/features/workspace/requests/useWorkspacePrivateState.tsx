@@ -36,6 +36,7 @@ type Params = {
   publicProvidersCount: number;
   publicStatsCount: number;
   workspacePrivateOverview?: WorkspacePrivateOverviewDto | null;
+  explicitPreferredRequestsRole?: 'customer' | 'provider' | null;
   setWorkspaceTab: (tab: WorkspaceTab) => void;
   markPublicRequestsSeen: () => void;
   guestLoginHref: string;
@@ -57,6 +58,7 @@ export function useWorkspacePrivateState({
   publicProvidersCount,
   publicStatsCount,
   workspacePrivateOverview,
+  explicitPreferredRequestsRole = null,
   setWorkspaceTab,
   markPublicRequestsSeen,
   guestLoginHref,
@@ -73,8 +75,8 @@ export function useWorkspacePrivateState({
     [overview],
   );
   const preferredRequestsRole = React.useMemo(
-    () => resolveWorkspacePreferredRequestsRole(overview),
-    [overview],
+    () => explicitPreferredRequestsRole ?? resolveWorkspacePreferredRequestsRole(overview),
+    [explicitPreferredRequestsRole, overview],
   );
 
   const nav = useWorkspacePrivateNavModel(

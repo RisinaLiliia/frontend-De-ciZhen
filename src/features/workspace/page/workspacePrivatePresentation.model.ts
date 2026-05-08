@@ -183,6 +183,12 @@ export function buildWorkspacePrivateStateArgs({
     publicProvidersCount: data.allRequestsSummary?.totalActiveProviders ?? data.providers.length,
     publicStatsCount: data.platformRequestsTotal,
     workspacePrivateOverview: data.workspacePrivateOverview,
+    explicitPreferredRequestsRole:
+      data.activePublicSection === 'requests' &&
+      data.requestsScope === 'my' &&
+      data.activeRequestsRole !== 'all'
+        ? data.activeRequestsRole
+        : null,
     setWorkspaceTab: data.setWorkspaceTab,
     markPublicRequestsSeen: data.markPublicRequestsSeen,
     guestLoginHref: data.guestLoginHref,

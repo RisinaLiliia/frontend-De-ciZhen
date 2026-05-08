@@ -59,6 +59,7 @@ function StateProbe(props: StateArgs) {
       data-progress={String(state.activityProgress)}
       data-stats-first={state.statsOrder[0]?.tab ?? ''}
       data-top-providers={String(state.topProviders.length)}
+      data-preferred-role={state.preferredRequestsRole ?? ''}
       data-primary-count={String(primaryItemsCount)}
       data-secondary-count={String(secondaryItemsCount)}
     />
@@ -148,5 +149,22 @@ describe('useWorkspacePrivateState', () => {
 
     const node = screen.getByTestId('state');
     expect(node.getAttribute('data-top-providers')).toBe('0');
+  });
+
+  it('prefers an explicit requests role over overview preferred role when provided', () => {
+    const overview = makeOverview();
+    overview.preferredRole = 'provider';
+
+    render(
+      <StateProbe
+        {...makeArgs({
+          workspacePrivateOverview: overview,
+          explicitPreferredRequestsRole: 'customer',
+        })}
+      />,
+    );
+
+    const node = screen.getByTestId('state');
+    expect(node.getAttribute('data-preferred-role')).toBe('customer');
   });
 });

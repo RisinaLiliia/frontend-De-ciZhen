@@ -233,9 +233,7 @@ export function useWorkspacePublicRequestsSection({
           emptyCtaHref: '/workspace?section=requests&scope=market',
           sharedFilters,
           requestsData: {
-            totalResultsLabel: interactions.formatNumber.format(
-              activeRequestsState === 'all' ? resolvedTotalResults : publicRequestsListItems.length,
-            ),
+            totalResultsLabel: interactions.formatNumber.format(resolvedTotalResults),
             requests: publicRequestsListItems,
             isLoading: contractData.isLoading,
             isError: contractData.isError,
