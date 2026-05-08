@@ -2,10 +2,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
-import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
 import { useWorkspacePrivateState } from '@/features/workspace/requests/useWorkspacePrivateState';
-import { shouldBuildWorkspacePrivateTopProviders } from '@/features/workspace/requests/workspacePrivateState.model';
+import {
+  resolveWorkspacePrivateOverviewState,
+  shouldBuildWorkspacePrivateTopProviders,
+} from '@/features/workspace/requests/workspacePrivateState.model';
 
 type StateArgs = Parameters<typeof useWorkspacePrivateState>[0];
 
@@ -13,7 +15,7 @@ afterEach(() => {
   cleanup();
 });
 
-function makeOverview(): WorkspacePrivateOverviewDto {
+function makeOverview() {
   return structuredClone(EMPTY_WORKSPACE_PRIVATE_OVERVIEW);
 }
 
@@ -30,13 +32,12 @@ function makeArgs(overrides: Partial<StateArgs> = {}): StateArgs {
     publicRequestsCount: 10,
     publicProvidersCount: 4,
     publicStatsCount: 10,
-    workspacePrivateOverview: makeOverview(),
+    privateOverviewState: resolveWorkspacePrivateOverviewState(makeOverview()),
     setWorkspaceTab: vi.fn(),
     markPublicRequestsSeen: vi.fn(),
     guestLoginHref: '/auth/login?next=%2Fworkspace',
     onGuestLockedAction: vi.fn(),
     formatNumber: new Intl.NumberFormat('de-DE'),
-    chartMonthLabel: new Intl.DateTimeFormat('de-DE', { month: 'short' }),
     ...overrides,
   };
 }
@@ -57,8 +58,8 @@ function StateProbe(props: StateArgs) {
       data-my-requests-locked={String(Boolean(myRequestsItem?.lockedHref))}
       data-reviews-rating={String(reviewsItem?.rating?.value ?? '')}
       data-progress={String(state.activityProgress)}
-      data-stats-first={state.statsOrder[0]?.tab ?? ''}
       data-top-providers={String(state.topProviders.length)}
+      data-preferred-role={state.preferredRequestsRole ?? ''}
       data-primary-count={String(primaryItemsCount)}
       data-secondary-count={String(secondaryItemsCount)}
     />
@@ -87,7 +88,7 @@ describe('useWorkspacePrivateState', () => {
     render(
       <StateProbe
         {...makeArgs({
-          workspacePrivateOverview: overview,
+          privateOverviewState: resolveWorkspacePrivateOverviewState(overview),
         })}
       />,
     );
@@ -99,7 +100,6 @@ describe('useWorkspacePrivateState', () => {
     expect(node.getAttribute('data-my-requests-locked')).toBe('false');
     expect(node.getAttribute('data-reviews-rating')).toBe('4.7');
     expect(node.getAttribute('data-progress')).toBe('100');
-    expect(node.getAttribute('data-stats-first')).toBe('provider');
     expect(node.getAttribute('data-top-providers')).toBe('0');
     expect(node.getAttribute('data-primary-count')).toBe('4');
     expect(node.getAttribute('data-secondary-count')).toBe('2');
@@ -148,5 +148,24 @@ describe('useWorkspacePrivateState', () => {
 
     const node = screen.getByTestId('state');
     expect(node.getAttribute('data-top-providers')).toBe('0');
+  });
+
+  it('prefers an explicit requests role over overview preferred role when provided', () => {
+    const overview = makeOverview();
+    overview.preferredRole = 'provider';
+
+    render(
+      <StateProbe
+        {...makeArgs({
+          privateOverviewState: {
+            ...resolveWorkspacePrivateOverviewState(overview),
+            preferredRequestsRole: 'customer',
+          },
+        })}
+      />,
+    );
+
+    const node = screen.getByTestId('state');
+    expect(node.getAttribute('data-preferred-role')).toBe('customer');
   });
 });

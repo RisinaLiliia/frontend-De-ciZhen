@@ -4,6 +4,7 @@ import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type {
   WorkspaceRequestsResponseDto,
 } from '@/lib/api/dto/workspace';
+import { mapWorkspaceRequestCardToPublicRequest } from '@/features/workspace/page/workspacePublicRequests.model';
 
 export type ResolvedWorkspacePublicRequestsData = {
   requests: RequestResponseDto[];
@@ -36,13 +37,14 @@ export function resolveWorkspacePublicRequestsData(params: {
     filtersLimit,
   } = params;
 
-  const requests = publicRequestsItems ?? [];
-  const publicRequestsTotal = publicRequestsTotalValue ?? requests.length;
+  const marketListItems = marketResponse?.list.items?.map(mapWorkspaceRequestCardToPublicRequest) ?? [];
+  const requests = marketResponse ? marketListItems : (publicRequestsItems ?? []);
+  const publicRequestsTotal = marketResponse?.list.total ?? publicRequestsTotalValue ?? requests.length;
   const publicRequestsListItems = requests;
   const resolvedTotalResults = publicRequestsTotal;
   const summaryItems = marketResponse?.summary?.items ?? [];
-  const publicListPage = publicRequestsPage ?? filtersPage;
-  const publicListLimit = publicRequestsLimit ?? filtersLimit;
+  const publicListPage = marketResponse?.list.page ?? publicRequestsPage ?? filtersPage;
+  const publicListLimit = marketResponse?.list.limit ?? publicRequestsLimit ?? filtersLimit;
   const publicListTotalPages = Math.max(1, Math.ceil(publicRequestsTotal / Math.max(1, publicListLimit)));
   const decisionPanel = marketResponse?.decisionPanel ?? null;
 

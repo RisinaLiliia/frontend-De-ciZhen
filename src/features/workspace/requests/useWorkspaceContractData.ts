@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import type { buildWorkspaceDataQueries } from '@/features/workspace/requests/workspaceData.queries';
+import { resolveWorkspacePrivateOverviewState } from '@/features/workspace/requests/workspacePrivateState.model';
 
 type WorkspaceDataQueries = ReturnType<typeof buildWorkspaceDataQueries>;
 
@@ -40,8 +41,9 @@ export function useWorkspaceContractData({ workspaceDataQueries }: Args) {
     publicCityActivity,
     isPublicSummaryLoading,
     isPublicSummaryError,
-    workspacePrivateOverview,
-    isWorkspacePrivateOverviewLoading,
+    privateOverviewState: resolveWorkspacePrivateOverviewState(workspacePrivateOverview),
+    isWorkspacePrivateRequestsFallbackLoading:
+      !workspaceRequests && isWorkspacePrivateOverviewLoading,
     workspaceRequests,
     isWorkspaceRequestsLoading,
     isWorkspaceRequestsError,

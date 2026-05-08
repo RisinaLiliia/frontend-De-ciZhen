@@ -7,6 +7,7 @@ import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useW
 import type { WorkspacePublicIntro } from '@/features/workspace';
 import type { useWorkspaceContentData, useWorkspacePresentation } from '@/features/workspace';
 import type {
+  WorkspacePrivateOverviewState,
   useWorkspacePrivateState,
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
@@ -35,10 +36,7 @@ type BuildPresentationArgs = {
   privateState: Pick<
     ReturnType<typeof useWorkspacePrivateState>,
     | 'topProviders'
-    | 'providerStatsPayload'
-    | 'clientStatsPayload'
     | 'preferredRequestsRole'
-    | 'statsOrder'
   >;
 };
 
@@ -107,7 +105,7 @@ type ResolveWorkspacePrivateRequestsLoadingArgs = {
   workspaceRequests: WorkspacePrivateDataFlowResult['workspaceRequests'];
   isWorkspaceRequestsLoading: WorkspacePrivateDataFlowResult['isWorkspaceRequestsLoading'];
   activeRequestsRole: WorkspacePrivateDataFlowResult['activeRequestsRole'];
-  isWorkspacePrivateOverviewLoading: WorkspacePrivateDataFlowResult['isWorkspacePrivateOverviewLoading'];
+  isWorkspacePrivateRequestsFallbackLoading: WorkspacePrivateDataFlowResult['isWorkspacePrivateRequestsFallbackLoading'];
 };
 
 export function shouldBuildWorkspacePrivateContractRequests(
@@ -170,6 +168,19 @@ export function buildWorkspacePrivateStateArgs({
   branch,
   data,
 }: BuildArgs): WorkspacePrivateStateArgs {
+  const privateOverviewState: WorkspacePrivateOverviewState | null =
+    data.privateOverviewState
+      ? {
+        ...data.privateOverviewState,
+        preferredRequestsRole:
+          data.activePublicSection === 'requests' &&
+          data.requestsScope === 'my' &&
+          data.activeRequestsRole !== 'all'
+            ? data.activeRequestsRole
+            : data.privateOverviewState.preferredRequestsRole,
+      }
+      : null;
+
   return {
     t: branch.t,
     locale: branch.locale,
@@ -182,13 +193,12 @@ export function buildWorkspacePrivateStateArgs({
     publicRequestsCount: data.platformRequestsTotal,
     publicProvidersCount: data.allRequestsSummary?.totalActiveProviders ?? data.providers.length,
     publicStatsCount: data.platformRequestsTotal,
-    workspacePrivateOverview: data.workspacePrivateOverview,
+    privateOverviewState,
     setWorkspaceTab: data.setWorkspaceTab,
     markPublicRequestsSeen: data.markPublicRequestsSeen,
     guestLoginHref: data.guestLoginHref,
     onGuestLockedAction: data.onGuestLockedAction,
     formatNumber: data.formatNumber,
-    chartMonthLabel: data.chartMonthLabel,
   };
 }
 
@@ -206,9 +216,6 @@ export function buildWorkspacePrivatePresentationArgs({
     activePublicSection: data.activePublicSection,
     activeWorkspaceTab: data.activeWorkspaceTab,
     WorkspacePrivateIntroComponent,
-    statsOrder: privateState.statsOrder,
-    providerStatsPayload: privateState.providerStatsPayload,
-    clientStatsPayload: privateState.clientStatsPayload,
     createRequestHref: '/request/create',
     isProvidersLoading: data.isProvidersLoading,
     isProvidersError: data.isProvidersError,
@@ -306,7 +313,7 @@ export function resolveWorkspacePrivateRequestsLoading({
   workspaceRequests,
   isWorkspaceRequestsLoading,
   activeRequestsRole,
-  isWorkspacePrivateOverviewLoading,
+  isWorkspacePrivateRequestsFallbackLoading,
 }: ResolveWorkspacePrivateRequestsLoadingArgs) {
   if (workspaceRequests) {
     return isWorkspaceRequestsLoading;
@@ -314,6 +321,6 @@ export function resolveWorkspacePrivateRequestsLoading({
 
   return isWorkspaceRequestsLoading || (
     activeRequestsRole === 'all' &&
-    isWorkspacePrivateOverviewLoading
+    isWorkspacePrivateRequestsFallbackLoading
   );
 }

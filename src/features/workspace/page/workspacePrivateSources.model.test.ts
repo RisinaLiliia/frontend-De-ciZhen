@@ -212,11 +212,13 @@ describe('workspacePrivateSources.model', () => {
       activeWorkspaceTab: 'my-requests',
       requestsScope: 'market',
       requests: [{ id: 'req-1' }] as never,
-      legacyPrivateData: {
+      requestUserStateData: {
         favoriteRequests: [{ id: 'req-1' }],
+        myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
+      } as never,
+      legacyPrivateData: {
         providers: [{ id: 'provider-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
-        myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
       } as never,
@@ -273,11 +275,13 @@ describe('workspacePrivateSources.model', () => {
       activeWorkspaceTab: 'profile',
       requestsScope: 'market',
       requests: [{ id: 'req-1' }] as never,
-      legacyPrivateData: {
+      requestUserStateData: {
         favoriteRequests: [{ id: 'req-1' }],
+        myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
+      } as never,
+      legacyPrivateData: {
         providers: [{ id: 'provider-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
-        myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
       } as never,
@@ -304,11 +308,13 @@ describe('workspacePrivateSources.model', () => {
       activeWorkspaceTab: 'my-requests',
       requestsScope: 'my',
       requests: [{ id: 'req-1' }] as never,
-      legacyPrivateData: {
+      requestUserStateData: {
         favoriteRequests: [{ id: 'req-1' }],
+        myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
+      } as never,
+      legacyPrivateData: {
         providers: [{ id: 'provider-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
-        myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
       } as never,
@@ -332,31 +338,42 @@ describe('workspacePrivateSources.model', () => {
         publicCityActivity: { totalActiveCities: 0, totalActiveRequests: 0, items: [] },
         isPublicSummaryLoading: false,
         isPublicSummaryError: false,
-        workspacePrivateOverview: null,
+        privateOverviewState: {
+          activityProgress: 0,
+          navRatingValue: '0.0',
+          navReviewsCount: 0,
+          preferredRequestsRole: 'customer',
+          myRequestsTotal: 0,
+          sentCount: 0,
+          completedJobsCount: 0,
+          favoriteRequestCount: 0,
+        },
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
         isWorkspaceRequestsError: false,
-        isWorkspacePrivateOverviewLoading: false,
+        isWorkspacePrivateRequestsFallbackLoading: false,
         isError: false,
         isLoading: true,
+      } as never,
+      requestUserStateData: {
+        myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
+        myOfferRequestsById: new Map([['req-1', { id: 'req-1' }]]),
+        isMyOfferRequestsLoading: false,
+        favoriteRequests: [{ id: 'req-1' }],
+        isFavoriteRequestsLoading: false,
+        isMyOffersLoading: false,
       } as never,
       legacyPrivateData: {
         providers: [{ id: 'provider-1' }],
         isProvidersLoading: false,
         isProvidersError: false,
-        myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
         myRequests: [{ id: 'req-1' }],
-        myOfferRequestsById: new Map([['req-1', { id: 'req-1' }]]),
-        isMyOfferRequestsLoading: false,
         myProviderContracts: [],
         myClientContracts: [],
-        favoriteRequests: [{ id: 'req-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
         myReviews: [],
-        isFavoriteRequestsLoading: false,
         isFavoriteProvidersLoading: false,
         isMyRequestsLoading: false,
-        isMyOffersLoading: false,
         isProviderContractsLoading: true,
         isClientContractsLoading: false,
         isMyReviewsLoading: false,
@@ -389,6 +406,16 @@ describe('workspacePrivateSources.model', () => {
     expect(result.requestsCount).toBe(2);
     expect(result.isProviderContractsLoading).toBe(true);
     expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));
+    expect(result.privateOverviewState).toEqual({
+      activityProgress: 0,
+      navRatingValue: '0.0',
+      navReviewsCount: 0,
+      preferredRequestsRole: 'customer',
+      myRequestsTotal: 0,
+      sentCount: 0,
+      completedJobsCount: 0,
+      favoriteRequestCount: 0,
+    });
     expect(result.workspaceRequests).toBeNull();
   });
 });

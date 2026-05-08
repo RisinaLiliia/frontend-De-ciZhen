@@ -37,6 +37,19 @@ import {
   type WorkspaceModeCopy,
 } from '@/features/workspace/shell/workspaceEnvironment.copy';
 import { resolveActiveWorkspaceMode, type WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
+import {
+  resolveWorkspaceViewerModeToggleItems,
+  shouldShowWorkspaceProfileViewerModeControl,
+} from '@/features/workspace/shell/workspaceSharedContext.model';
+import {
+  buildWorkspacePrivateSortOptions,
+  getWorkspaceChipLabels,
+  getWorkspaceRangeGroupLabel,
+  getWorkspaceRequestsScopeAriaLabel,
+  getWorkspaceScopeSwitchLabels,
+  getWorkspaceStateAriaLabel,
+  getWorkspaceStateToggleItems,
+} from '@/features/workspace/shell/workspaceSharedContext.copy';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
@@ -118,22 +131,6 @@ function resolveWorkspaceSharedRange(value: string | null): WorkspaceStatisticsR
   return '30d';
 }
 
-function buildPrivateSortOptions(locale: Locale): FilterOption[] {
-  return locale === 'de'
-    ? [
-      { value: 'activity', label: 'Neueste Aktivität' },
-      { value: 'deadline', label: 'Bald fällig' },
-      { value: 'newest', label: 'Neu erstellt' },
-      { value: 'budget', label: 'Höchstes Budget' },
-    ]
-    : [
-      { value: 'activity', label: 'Latest activity' },
-      { value: 'deadline', label: 'Due soon' },
-      { value: 'newest', label: 'Newest' },
-      { value: 'budget', label: 'Highest budget' },
-    ];
-}
-
 export function fillWorkspaceModeTemplate(template: string, mode: string) {
   return template.replace('{mode}', mode);
 }
@@ -163,8 +160,9 @@ export function buildSharedContextControlsProps({
   const serviceChip = model.chips.find((chip) => chip.key === 'service');
   const rangeChip = model.chips.find((chip) => chip.key === 'range');
   const statsCopy = getWorkspaceStatisticsCopy(locale);
+  const stateToggleItems = getWorkspaceStateToggleItems(locale);
   const requestsScopeControl = model.scopeSwitch ? (
-    <nav className="requests-scope-switch" aria-label={locale === 'de' ? 'Auftragsmodus' : 'Request scope'}>
+    <nav className="requests-scope-switch" aria-label={getWorkspaceRequestsScopeAriaLabel(locale)}>
       {model.scopeSwitch.map((item) => (
         <Link
           key={item.key}
@@ -187,49 +185,39 @@ export function buildSharedContextControlsProps({
       />
     </div>
   ) : null;
-  const viewerModeInlineControl = (
+  const renderViewerModeInlineControl = (
+    items: ReturnType<typeof resolveWorkspaceViewerModeToggleItems>,
+  ) => (
     <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'provider'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'provider' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('provider')}
-      >
-        {statsCopy.viewerModeProviderLabel}
-      </button>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'customer'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'customer' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('customer')}
-      >
-        {statsCopy.viewerModeCustomerLabel}
-      </button>
+      {items.map((item) => (
+        <button
+          key={item.value}
+          type="button"
+          aria-pressed={item.isActive}
+          className={`howitworks-tab ${item.isActive ? 'is-active' : ''}`.trim()}
+          onClick={() => model.controls.onViewerModeChange(item.value)}
+        >
+          {item.label}
+        </button>
+      ))}
     </div>
   );
-  const profileViewerModeInlineControl = (
-    <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'customer'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'customer' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('customer')}
-      >
-        {statsCopy.viewerModeProviderLabel}
-      </button>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'provider'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'provider' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('provider')}
-      >
-        {statsCopy.viewerModeCustomerLabel}
-      </button>
-    </div>
+  const viewerModeInlineControl = renderViewerModeInlineControl(
+    resolveWorkspaceViewerModeToggleItems({
+      viewerMode: model.controls.viewerMode,
+      providerLabel: statsCopy.viewerModeProviderLabel,
+      customerLabel: statsCopy.viewerModeCustomerLabel,
+      invertLabels: shouldShowWorkspaceProfileViewerModeControl({
+        activeWorkspaceTab: model.activeWorkspaceTab,
+        activePublicSection: model.activePublicSection,
+      }),
+    }),
   );
-  const shouldShowProfileViewerModeControl =
-    model.activeWorkspaceTab === 'profile' || model.activePublicSection === 'actions';
-  const myWorkInlineControl = shouldShowProfileViewerModeControl ? profileViewerModeInlineControl : model.requestsScope === 'my' ? (
+  const shouldShowProfileViewerModeControl = shouldShowWorkspaceProfileViewerModeControl({
+    activeWorkspaceTab: model.activeWorkspaceTab,
+    activePublicSection: model.activePublicSection,
+  });
+  const myWorkInlineControl = shouldShowProfileViewerModeControl ? viewerModeInlineControl : model.requestsScope === 'my' ? (
     <div className="workspace-shared-context-controls__combined-row">
       {requestsScopeControl}
       <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
@@ -254,21 +242,9 @@ export function buildSharedContextControlsProps({
       <div
         className="workspace-shared-context-controls__slash-tabs"
         role="group"
-        aria-label={locale === 'de' ? 'Status' : 'State'}
+        aria-label={getWorkspaceStateAriaLabel(locale)}
       >
-        {(locale === 'de'
-          ? [
-            { key: 'all', label: 'Alle' },
-            { key: 'attention', label: 'Aktiv' },
-            { key: 'execution', label: 'In Ausführung' },
-            { key: 'completed', label: 'Abgeschlossen' },
-          ]
-          : [
-            { key: 'all', label: 'All' },
-            { key: 'attention', label: 'Active' },
-            { key: 'execution', label: 'In execution' },
-            { key: 'completed', label: 'Completed' },
-          ]).map((item) => {
+        {stateToggleItems.map((item) => {
           const isActive = model.controls.state === item.key;
 
           return (
@@ -338,7 +314,7 @@ export function buildSharedContextControlsProps({
         value: option,
         label: rangeLabelShort(option),
       })),
-      groupLabel: locale === 'de' ? 'Zeitraum' : 'Range',
+      groupLabel: getWorkspaceRangeGroupLabel(locale),
       onChange: model.controls.onRangeChange,
       summaryLabel: rangeChip?.value ?? model.copy.contextFallbacks.range,
     },
@@ -401,7 +377,9 @@ export function useWorkspaceSharedContext({
     shouldLoadCatalog: true,
     activePublicSection,
   });
-  const privateSortOptions = React.useMemo(() => buildPrivateSortOptions(locale), [locale]);
+  const privateSortOptions = React.useMemo(() => buildWorkspacePrivateSortOptions(locale), [locale]);
+  const chipLabels = React.useMemo(() => getWorkspaceChipLabels(locale), [locale]);
+  const scopeSwitchLabels = React.useMemo(() => getWorkspaceScopeSwitchLabels(locale), [locale]);
 
   const rawSearch = searchParams.toString();
   const currentRange = React.useMemo(
@@ -500,30 +478,30 @@ export function useWorkspaceSharedContext({
     () => [
       {
         key: 'city' as const,
-        label: locale === 'de' ? 'Ort' : 'Location',
+        label: chipLabels.city,
         value: selectedCityLabel,
         icon: <IconPin />,
       },
       {
         key: 'category' as const,
-        label: locale === 'de' ? 'Kategorie' : 'Category',
+        label: chipLabels.category,
         value: selectedCategoryLabel,
         icon: <IconBriefcase />,
       },
       {
         key: 'range' as const,
-        label: locale === 'de' ? 'Zeitraum' : 'Range',
+        label: chipLabels.range,
         value: resolveRangeLabel(locale, range, copy.contextFallbacks.range),
         icon: <IconCalendar />,
       },
       {
         key: 'service' as const,
-        label: locale === 'de' ? 'Service' : 'Service',
+        label: chipLabels.service,
         value: selectedServiceLabel,
         icon: <IconFilter />,
       },
     ],
-    [copy.contextFallbacks.range, locale, range, selectedCategoryLabel, selectedCityLabel, selectedServiceLabel],
+    [chipLabels, copy.contextFallbacks.range, locale, range, selectedCategoryLabel, selectedCityLabel, selectedServiceLabel],
   );
 
   const modeItems = React.useMemo<WorkspaceModeItem[]>(
@@ -584,13 +562,13 @@ export function useWorkspaceSharedContext({
       ? [
         {
           key: 'market' as const,
-          label: locale === 'de' ? 'Markt' : 'Market',
+          label: scopeSwitchLabels.market,
           href: buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'market' }),
           isActive: requestsScope === 'market',
         },
         {
           key: 'my' as const,
-          label: locale === 'de' ? 'Meine Arbeit' : 'My work',
+          label: scopeSwitchLabels.my,
           href: auth.status === 'authenticated'
             ? buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' })
             : `/auth/login?next=${encodeURIComponent(buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' }))}`,
@@ -598,7 +576,7 @@ export function useWorkspaceSharedContext({
         },
       ]
       : null),
-    [activeMode, auth.status, locale, rawSearch, requestsScope],
+    [activeMode, auth.status, rawSearch, requestsScope, scopeSwitchLabels],
   );
   const effectiveSortBy = requestsScope === 'my'
     ? (searchParams.get('sort') ?? 'activity')

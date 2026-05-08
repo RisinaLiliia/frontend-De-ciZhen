@@ -29,6 +29,7 @@ export { useWorkspaceDerived } from './useWorkspaceDerived';
 export { useWorkspacePublicState } from './useWorkspacePublicState';
 export { useWorkspacePrivateState } from './useWorkspacePrivateState';
 export { useWorkspacePrivateViewModel, useWorkspacePublicViewModel } from './useWorkspaceViewModel';
+export type { WorkspacePrivateOverviewState } from './workspacePrivateState.model';
 
 export {
   getWorkspacePrimaryActionByTab,

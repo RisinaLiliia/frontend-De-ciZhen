@@ -5,7 +5,12 @@ import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { providerQK } from '@/features/provider/queries';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import {
+  buildWorkspaceCompletionReviewMutationQueryKeys,
+  buildWorkspaceDecisionMutationQueryKeys,
+  buildWorkspaceOfferReviewMutationQueryKeys,
+  buildWorkspaceProviderOfferMutationQueryKeys,
+} from '@/features/workspace/requests/workspaceInvalidation.model';
 import { completeContract, confirmContract } from '@/lib/api/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import { createProviderReview } from '@/lib/api/reviews';
@@ -34,34 +39,22 @@ function useWorkspaceRequestOverlayInvalidation(requestId: string) {
 
   const invalidateOfferReviewState = React.useCallback(async () => {
     await Promise.all([
-      qc.invalidateQueries({ queryKey: ['workspace-request-offers', requestId] }),
-      qc.invalidateQueries({ queryKey: workspaceQK.offersMyClient() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.requestDetail(requestId) }),
-      qc.invalidateQueries({ queryKey: workspaceQK.managedRequestPrefix(requestId) }),
+      ...buildWorkspaceOfferReviewMutationQueryKeys(requestId).map((queryKey) =>
+        qc.invalidateQueries({ queryKey })),
     ]);
   }, [qc, requestId]);
 
   const invalidateDecisionState = React.useCallback(async () => {
     await Promise.all([
-      qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.requestDetail(requestId) }),
-      qc.invalidateQueries({ queryKey: workspaceQK.managedRequestPrefix(requestId) }),
+      ...buildWorkspaceDecisionMutationQueryKeys(requestId).map((queryKey) =>
+        qc.invalidateQueries({ queryKey })),
     ]);
   }, [qc, requestId]);
 
   const invalidateProviderOfferState = React.useCallback(async () => {
     await Promise.all([
-      qc.invalidateQueries({ queryKey: workspaceQK.offersMy() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() }),
-      qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() }),
+      ...buildWorkspaceProviderOfferMutationQueryKeys().map((queryKey) =>
+        qc.invalidateQueries({ queryKey })),
       qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
     ]);
   }, [qc]);
@@ -228,12 +221,8 @@ export function useWorkspaceCompletionReviewActions() {
       });
       toast.success(t(I18N_KEYS.requestsPage.userReviewFormSuccess));
       await Promise.all([
-        qc.invalidateQueries({ queryKey: workspaceQK.reviewsMyPrefix() }),
-        qc.invalidateQueries({ queryKey: workspaceQK.bookingsMyReviewable() }),
-        qc.invalidateQueries({ queryKey: workspaceQK.contractsMyClient() }),
-        qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() }),
-        qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() }),
-        qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() }),
+        ...buildWorkspaceCompletionReviewMutationQueryKeys().map((queryKey) =>
+          qc.invalidateQueries({ queryKey })),
       ]);
       return true;
     } catch (error) {

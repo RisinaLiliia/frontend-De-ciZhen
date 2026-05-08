@@ -48,7 +48,16 @@ function createData() {
     providers: [{ id: 'provider-1' }],
     platformRequestsTotal: 12,
     allRequestsSummary: undefined,
-    workspacePrivateOverview: { profileCompletion: 75 },
+    privateOverviewState: {
+      activityProgress: 75,
+      navRatingValue: '4.8',
+      navReviewsCount: 12,
+      preferredRequestsRole: 'provider',
+      myRequestsTotal: 6,
+      sentCount: 4,
+      completedJobsCount: 2,
+      favoriteRequestCount: 3,
+    },
     preferredRequestsRole: 'provider',
     setWorkspaceTab: vi.fn(),
     markPublicRequestsSeen: vi.fn(),
@@ -135,6 +144,23 @@ describe('workspacePrivatePresentation.model', () => {
     expect(publicIntroProps.preferredRequestsRole).toBe('provider');
   });
 
+  it('passes explicit preferred role for unified private requests with a concrete route role', () => {
+    const branch = createBranch();
+    const data = {
+      ...createData(),
+      activeWorkspaceTab: 'my-requests',
+      requestsScope: 'my',
+      activeRequestsRole: 'customer',
+    };
+
+    const privateStateArgs = buildWorkspacePrivateStateArgs({
+      branch: branch as never,
+      data: data as never,
+    });
+
+    expect(privateStateArgs.privateOverviewState?.preferredRequestsRole).toBe('customer');
+  });
+
   it('builds private view model input by merging flow data with patch', () => {
     const onPrimaryActionClick = vi.fn();
     const input = buildWorkspacePrivateViewModelInput({
@@ -199,7 +225,7 @@ describe('workspacePrivatePresentation.model', () => {
         workspaceRequests: { requests: [] } as never,
         isWorkspaceRequestsLoading: true,
         activeRequestsRole: 'all',
-        isWorkspacePrivateOverviewLoading: false,
+        isWorkspacePrivateRequestsFallbackLoading: false,
       }),
     ).toBe(true);
 
@@ -208,7 +234,7 @@ describe('workspacePrivatePresentation.model', () => {
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
         activeRequestsRole: 'all',
-        isWorkspacePrivateOverviewLoading: true,
+        isWorkspacePrivateRequestsFallbackLoading: true,
       }),
     ).toBe(true);
 
@@ -217,7 +243,7 @@ describe('workspacePrivatePresentation.model', () => {
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
         activeRequestsRole: 'provider',
-        isWorkspacePrivateOverviewLoading: true,
+        isWorkspacePrivateRequestsFallbackLoading: true,
       }),
     ).toBe(false);
   });

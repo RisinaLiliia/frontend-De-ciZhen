@@ -43,6 +43,7 @@ function Probe({ summaryEnabled = true }: { summaryEnabled?: boolean }) {
       data-testid="contract-data"
       data-has-summary={String(Boolean(result.allRequestsSummary))}
       data-summary-loading={String(result.isPublicSummaryLoading)}
+      data-private-fallback-loading={String(result.isWorkspacePrivateRequestsFallbackLoading)}
     />
   );
 }
@@ -67,5 +68,19 @@ describe('useWorkspaceContractData', () => {
     };
     expect(summaryQueryArgs.enabled).toBe(false);
     expect(screen.getByTestId('contract-data').getAttribute('data-has-summary')).toBe('false');
+  });
+
+  it('normalizes private requests fallback loading from private overview loading only when workspace requests are missing', () => {
+    useQueryMock
+      .mockReturnValueOnce({ data: undefined, isLoading: false, isError: false } as never)
+      .mockReturnValueOnce({ data: undefined, isLoading: false, isError: false } as never)
+      .mockReturnValueOnce({ data: null, isLoading: true } as never)
+      .mockReturnValueOnce({ data: null, isLoading: false, isError: false } as never);
+
+    render(<Probe />);
+
+    expect(
+      screen.getByTestId('contract-data').getAttribute('data-private-fallback-loading'),
+    ).toBe('true');
   });
 });
