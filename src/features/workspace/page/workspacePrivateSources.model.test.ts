@@ -351,7 +351,7 @@ describe('workspacePrivateSources.model', () => {
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
         isWorkspaceRequestsError: false,
-        isWorkspacePrivateOverviewLoading: false,
+        isWorkspacePrivateRequestsFallbackLoading: false,
         isError: false,
         isLoading: true,
       } as never,

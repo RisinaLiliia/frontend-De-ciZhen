@@ -263,7 +263,7 @@ export function useWorkspacePrivatePresentationFlow({
     workspaceRequests: data.workspaceRequests,
     isWorkspaceRequestsLoading: data.isWorkspaceRequestsLoading,
     activeRequestsRole: data.activeRequestsRole,
-    isWorkspacePrivateOverviewLoading: data.isWorkspacePrivateOverviewLoading,
+    isWorkspacePrivateRequestsFallbackLoading: data.isWorkspacePrivateRequestsFallbackLoading,
   });
   const privateRequestsModel = React.useMemo(
     () => buildMyRequestsViewModelFromResponse(data.workspaceRequests),

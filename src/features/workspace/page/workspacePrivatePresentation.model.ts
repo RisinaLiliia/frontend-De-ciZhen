@@ -105,7 +105,7 @@ type ResolveWorkspacePrivateRequestsLoadingArgs = {
   workspaceRequests: WorkspacePrivateDataFlowResult['workspaceRequests'];
   isWorkspaceRequestsLoading: WorkspacePrivateDataFlowResult['isWorkspaceRequestsLoading'];
   activeRequestsRole: WorkspacePrivateDataFlowResult['activeRequestsRole'];
-  isWorkspacePrivateOverviewLoading: WorkspacePrivateDataFlowResult['isWorkspacePrivateOverviewLoading'];
+  isWorkspacePrivateRequestsFallbackLoading: WorkspacePrivateDataFlowResult['isWorkspacePrivateRequestsFallbackLoading'];
 };
 
 export function shouldBuildWorkspacePrivateContractRequests(
@@ -313,7 +313,7 @@ export function resolveWorkspacePrivateRequestsLoading({
   workspaceRequests,
   isWorkspaceRequestsLoading,
   activeRequestsRole,
-  isWorkspacePrivateOverviewLoading,
+  isWorkspacePrivateRequestsFallbackLoading,
 }: ResolveWorkspacePrivateRequestsLoadingArgs) {
   if (workspaceRequests) {
     return isWorkspaceRequestsLoading;
@@ -321,6 +321,6 @@ export function resolveWorkspacePrivateRequestsLoading({
 
   return isWorkspaceRequestsLoading || (
     activeRequestsRole === 'all' &&
-    isWorkspacePrivateOverviewLoading
+    isWorkspacePrivateRequestsFallbackLoading
   );
 }

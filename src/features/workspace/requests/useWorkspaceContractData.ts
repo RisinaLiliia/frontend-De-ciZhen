@@ -43,6 +43,8 @@ export function useWorkspaceContractData({ workspaceDataQueries }: Args) {
     isPublicSummaryError,
     privateOverviewState: resolveWorkspacePrivateOverviewState(workspacePrivateOverview),
     isWorkspacePrivateOverviewLoading,
+    isWorkspacePrivateRequestsFallbackLoading:
+      !workspaceRequests && isWorkspacePrivateOverviewLoading,
     workspaceRequests,
     isWorkspaceRequestsLoading,
     isWorkspaceRequestsError,

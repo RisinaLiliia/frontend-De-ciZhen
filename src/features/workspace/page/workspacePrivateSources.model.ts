@@ -314,7 +314,7 @@ export function resolveWorkspacePrivateSourcesResult({
     isProvidersLoading: legacyPrivateData.isProvidersLoading,
     isProvidersError: legacyPrivateData.isProvidersError,
     privateOverviewState: contractData.privateOverviewState,
-    isWorkspacePrivateOverviewLoading: contractData.isWorkspacePrivateOverviewLoading,
+    isWorkspacePrivateRequestsFallbackLoading: contractData.isWorkspacePrivateRequestsFallbackLoading,
     workspaceRequests: contractData.workspaceRequests,
     isWorkspaceRequestsLoading: contractData.isWorkspaceRequestsLoading,
     isWorkspaceRequestsError: contractData.isWorkspaceRequestsError,

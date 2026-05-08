@@ -225,7 +225,7 @@ describe('workspacePrivatePresentation.model', () => {
         workspaceRequests: { requests: [] } as never,
         isWorkspaceRequestsLoading: true,
         activeRequestsRole: 'all',
-        isWorkspacePrivateOverviewLoading: false,
+        isWorkspacePrivateRequestsFallbackLoading: false,
       }),
     ).toBe(true);
 
@@ -234,7 +234,7 @@ describe('workspacePrivatePresentation.model', () => {
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
         activeRequestsRole: 'all',
-        isWorkspacePrivateOverviewLoading: true,
+        isWorkspacePrivateRequestsFallbackLoading: true,
       }),
     ).toBe(true);
 
@@ -243,7 +243,7 @@ describe('workspacePrivatePresentation.model', () => {
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
         activeRequestsRole: 'provider',
-        isWorkspacePrivateOverviewLoading: true,
+        isWorkspacePrivateRequestsFallbackLoading: true,
       }),
     ).toBe(false);
   });

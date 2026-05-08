@@ -107,7 +107,7 @@ describe('useWorkspacePrivateSources', () => {
           completedJobsCount: 0,
           favoriteRequestCount: 0,
         },
-        isWorkspacePrivateOverviewLoading: false,
+        isWorkspacePrivateRequestsFallbackLoading: false,
         publicCityActivity: null,
         isPublicSummaryLoading: false,
         isPublicSummaryError: false,
