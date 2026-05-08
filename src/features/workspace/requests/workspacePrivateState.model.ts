@@ -89,14 +89,14 @@ export function buildWorkspacePrivateNavModelArgs(params: {
 export function buildWorkspacePrivateStatsModelArgs(params: {
   t: WorkspacePrivateStatsModelArgs['t'];
   locale: WorkspacePrivateStatsModelArgs['locale'];
-  overview: WorkspacePrivateStatsModelArgs['overview'];
+  statsInput: WorkspacePrivateStatsModelArgs['statsInput'];
   chartMonthLabel: WorkspacePrivateStatsModelArgs['chartMonthLabel'];
   formatNumber: WorkspacePrivateStatsModelArgs['formatNumber'];
 }): WorkspacePrivateStatsModelArgs {
   return {
     t: params.t,
     locale: params.locale,
-    overview: params.overview,
+    statsInput: params.statsInput,
     chartMonthLabel: params.chartMonthLabel,
     formatNumber: params.formatNumber,
   };

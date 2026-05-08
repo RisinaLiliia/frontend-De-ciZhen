@@ -19,6 +19,7 @@ import {
   resolveWorkspacePrivateOverview,
   resolveWorkspacePrivateStateResult,
 } from '@/features/workspace/requests/workspacePrivateState.model';
+import { resolveWorkspacePrivateStatsInput } from '@/features/workspace/requests/workspacePrivateStats.model';
 import { useWorkspacePrivateNavModel } from '@/features/workspace/requests/useWorkspacePrivateNavModel';
 import { useWorkspacePrivateStatsModel } from '@/features/workspace/requests/useWorkspacePrivateStatsModel';
 import { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
@@ -78,6 +79,10 @@ export function useWorkspacePrivateState({
     () => explicitPreferredRequestsRole ?? resolveWorkspacePreferredRequestsRole(overview),
     [explicitPreferredRequestsRole, overview],
   );
+  const statsInput = React.useMemo(
+    () => resolveWorkspacePrivateStatsInput(overview),
+    [overview],
+  );
 
   const nav = useWorkspacePrivateNavModel(
     buildWorkspacePrivateNavModelArgs({
@@ -104,7 +109,7 @@ export function useWorkspacePrivateState({
     buildWorkspacePrivateStatsModelArgs({
       t,
       locale,
-      overview,
+      statsInput,
       chartMonthLabel,
       formatNumber,
     }),

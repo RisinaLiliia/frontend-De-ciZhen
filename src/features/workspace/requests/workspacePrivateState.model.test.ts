@@ -10,6 +10,7 @@ import {
   resolveWorkspacePrivateOverview,
   resolveWorkspacePrivateStateResult,
 } from './workspacePrivateState.model';
+import { resolveWorkspacePrivateStatsInput } from './workspacePrivateStats.model';
 
 describe('workspacePrivateState.model', () => {
   it('falls back to empty overview when private overview is missing', () => {
@@ -68,7 +69,7 @@ describe('workspacePrivateState.model', () => {
     const statsArgs = buildWorkspacePrivateStatsModelArgs({
       t: (key) => String(key),
       locale: 'de',
-      overview,
+      statsInput: resolveWorkspacePrivateStatsInput(overview),
       chartMonthLabel: new Intl.DateTimeFormat('de-DE', { month: 'short' }),
       formatNumber: new Intl.NumberFormat('de-DE'),
     });
@@ -82,7 +83,7 @@ describe('workspacePrivateState.model', () => {
     expect(navArgs.sentCount).toBe(7);
     expect(navArgs.completedJobsCount).toBe(3);
     expect(navArgs.favoriteRequestCount).toBe(5);
-    expect(statsArgs.overview).toBe(overview);
+    expect(statsArgs.statsInput).toEqual(resolveWorkspacePrivateStatsInput(overview));
     expect(topProvidersArgs.providers).toEqual([]);
 
     expect(

@@ -13,58 +13,106 @@ import {
 
 type Translator = (key: I18nKey) => string;
 
+export type WorkspacePrivateStatsInput = {
+  requestsByStatusTotal: WorkspacePrivateOverviewDto['requestsByStatus']['total'];
+  providerOffersSent: WorkspacePrivateOverviewDto['providerOffersByStatus']['sent'];
+  providerOffersAccepted: WorkspacePrivateOverviewDto['providerOffersByStatus']['accepted'];
+  providerOffersDeclined: WorkspacePrivateOverviewDto['providerOffersByStatus']['declined'];
+  providerContractsCompleted: WorkspacePrivateOverviewDto['providerContractsByStatus']['completed'];
+  myOpenRequestsCount: WorkspacePrivateOverviewDto['kpis']['myOpenRequests'];
+  recentOffers7d: WorkspacePrivateOverviewDto['kpis']['recentOffers7d'];
+  providerActiveContractsCount: WorkspacePrivateOverviewDto['kpis']['providerActiveContracts'];
+  clientActiveContractsCount: WorkspacePrivateOverviewDto['kpis']['clientActiveContracts'];
+  clientContractsCompleted: WorkspacePrivateOverviewDto['clientContractsByStatus']['completed'];
+  acceptanceRate: WorkspacePrivateOverviewDto['kpis']['acceptanceRate'];
+  avgResponseMinutes: WorkspacePrivateOverviewDto['kpis']['avgResponseMinutes'];
+  providerProfileCompleteness: WorkspacePrivateOverviewDto['profiles']['providerCompleteness'];
+  clientProfileCompleteness: WorkspacePrivateOverviewDto['profiles']['clientCompleteness'];
+  providerCompletedThisMonth: WorkspacePrivateOverviewDto['insights']['providerCompletedThisMonth'];
+  providerCompletedDeltaKind: WorkspacePrivateOverviewDto['insights']['providerCompletedDeltaKind'];
+  providerCompletedDeltaPercent: WorkspacePrivateOverviewDto['insights']['providerCompletedDeltaPercent'];
+  providerMonthlySeries: WorkspacePrivateOverviewDto['providerMonthlySeries'];
+  clientMonthlySeries: WorkspacePrivateOverviewDto['clientMonthlySeries'];
+};
+
 type BuildWorkspacePrivateStatsModelArgs = {
   t: Translator;
   locale: Locale;
-  overview: WorkspacePrivateOverviewDto;
+  statsInput: WorkspacePrivateStatsInput;
   chartMonthLabel: Intl.DateTimeFormat;
   formatNumber: Intl.NumberFormat;
 };
 
-export function resolveCompletedMoMDelta(overview: WorkspacePrivateOverviewDto): DeltaResult {
+export function resolveWorkspacePrivateStatsInput(
+  overview: WorkspacePrivateOverviewDto,
+): WorkspacePrivateStatsInput {
+  return {
+    requestsByStatusTotal: overview.requestsByStatus.total,
+    providerOffersSent: overview.providerOffersByStatus.sent,
+    providerOffersAccepted: overview.providerOffersByStatus.accepted,
+    providerOffersDeclined: overview.providerOffersByStatus.declined,
+    providerContractsCompleted: overview.providerContractsByStatus.completed,
+    myOpenRequestsCount: overview.kpis.myOpenRequests,
+    recentOffers7d: overview.kpis.recentOffers7d,
+    providerActiveContractsCount: overview.kpis.providerActiveContracts,
+    clientActiveContractsCount: overview.kpis.clientActiveContracts,
+    clientContractsCompleted: overview.clientContractsByStatus.completed,
+    acceptanceRate: overview.kpis.acceptanceRate,
+    avgResponseMinutes: overview.kpis.avgResponseMinutes,
+    providerProfileCompleteness: overview.profiles.providerCompleteness,
+    clientProfileCompleteness: overview.profiles.clientCompleteness,
+    providerCompletedThisMonth: overview.insights.providerCompletedThisMonth,
+    providerCompletedDeltaKind: overview.insights.providerCompletedDeltaKind,
+    providerCompletedDeltaPercent: overview.insights.providerCompletedDeltaPercent,
+    providerMonthlySeries: overview.providerMonthlySeries,
+    clientMonthlySeries: overview.clientMonthlySeries,
+  };
+}
+
+export function resolveCompletedMoMDelta(statsInput: WorkspacePrivateStatsInput): DeltaResult {
   if (
-    overview.insights.providerCompletedDeltaKind === 'percent' &&
-    typeof overview.insights.providerCompletedDeltaPercent === 'number'
+    statsInput.providerCompletedDeltaKind === 'percent' &&
+    typeof statsInput.providerCompletedDeltaPercent === 'number'
   ) {
     return {
       kind: 'percent',
-      value: overview.insights.providerCompletedDeltaPercent,
+      value: statsInput.providerCompletedDeltaPercent,
     };
   }
-  if (overview.insights.providerCompletedDeltaKind === 'new') return { kind: 'new' };
+  if (statsInput.providerCompletedDeltaKind === 'new') return { kind: 'new' };
   return { kind: 'none' };
 }
 
 export function buildWorkspacePrivateStatsModel({
   t,
   locale,
-  overview,
+  statsInput,
   chartMonthLabel,
   formatNumber,
 }: BuildWorkspacePrivateStatsModelArgs) {
-  const myRequestsTotal = overview.requestsByStatus.total;
-  const sentCount = overview.providerOffersByStatus.sent;
-  const acceptedCount = overview.providerOffersByStatus.accepted;
-  const declinedCount = overview.providerOffersByStatus.declined;
-  const completedJobsCount = overview.providerContractsByStatus.completed;
-  const myOpenRequestsCount = overview.kpis.myOpenRequests;
-  const recentOffers7d = overview.kpis.recentOffers7d;
-  const providerActiveContractsCount = overview.kpis.providerActiveContracts;
-  const clientActiveContractsCount = overview.kpis.clientActiveContracts;
-  const clientCompletedContractsCount = overview.clientContractsByStatus.completed;
-  const acceptanceRate = clampPercent(overview.kpis.acceptanceRate);
-  const avgResponseMinutes = overview.kpis.avgResponseMinutes;
-  const providerProfileCompleteness = overview.profiles.providerCompleteness;
-  const clientProfileCompleteness = overview.profiles.clientCompleteness;
+  const myRequestsTotal = statsInput.requestsByStatusTotal;
+  const sentCount = statsInput.providerOffersSent;
+  const acceptedCount = statsInput.providerOffersAccepted;
+  const declinedCount = statsInput.providerOffersDeclined;
+  const completedJobsCount = statsInput.providerContractsCompleted;
+  const myOpenRequestsCount = statsInput.myOpenRequestsCount;
+  const recentOffers7d = statsInput.recentOffers7d;
+  const providerActiveContractsCount = statsInput.providerActiveContractsCount;
+  const clientActiveContractsCount = statsInput.clientActiveContractsCount;
+  const clientCompletedContractsCount = statsInput.clientContractsCompleted;
+  const acceptanceRate = clampPercent(statsInput.acceptanceRate);
+  const avgResponseMinutes = statsInput.avgResponseMinutes;
+  const providerProfileCompleteness = statsInput.providerProfileCompleteness;
+  const clientProfileCompleteness = statsInput.clientProfileCompleteness;
 
-  const completedMoMDelta = resolveCompletedMoMDelta(overview);
+  const completedMoMDelta = resolveCompletedMoMDelta(statsInput);
   const completedMoMLabel = formatMoMDeltaLabel(completedMoMDelta, locale);
-  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${overview.insights.providerCompletedThisMonth} ${t(
+  const insightText = `${t(I18N_KEYS.requestsPage.navInsightClosedPrefix)} ${statsInput.providerCompletedThisMonth} ${t(
     I18N_KEYS.requestsPage.navInsightClosedSuffix,
   )} ${completedMoMLabel}`;
 
-  const providerChartPoints = mapMonthlySeries(overview.providerMonthlySeries, chartMonthLabel);
-  const clientChartPoints = mapMonthlySeries(overview.clientMonthlySeries, chartMonthLabel);
+  const providerChartPoints = mapMonthlySeries(statsInput.providerMonthlySeries, chartMonthLabel);
+  const clientChartPoints = mapMonthlySeries(statsInput.clientMonthlySeries, chartMonthLabel);
   const providerHint = getProviderHint(t, providerProfileCompleteness, recentOffers7d, acceptanceRate);
   const clientHint = getClientHint(t, myRequestsTotal, myOpenRequestsCount);
 

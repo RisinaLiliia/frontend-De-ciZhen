@@ -37,6 +37,10 @@ import {
   type WorkspaceModeCopy,
 } from '@/features/workspace/shell/workspaceEnvironment.copy';
 import { resolveActiveWorkspaceMode, type WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
+import {
+  resolveWorkspaceViewerModeToggleItems,
+  shouldShowWorkspaceProfileViewerModeControl,
+} from '@/features/workspace/shell/workspaceSharedContext.model';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
@@ -187,49 +191,39 @@ export function buildSharedContextControlsProps({
       />
     </div>
   ) : null;
-  const viewerModeInlineControl = (
+  const renderViewerModeInlineControl = (
+    items: ReturnType<typeof resolveWorkspaceViewerModeToggleItems>,
+  ) => (
     <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'provider'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'provider' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('provider')}
-      >
-        {statsCopy.viewerModeProviderLabel}
-      </button>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'customer'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'customer' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('customer')}
-      >
-        {statsCopy.viewerModeCustomerLabel}
-      </button>
+      {items.map((item) => (
+        <button
+          key={item.value}
+          type="button"
+          aria-pressed={item.isActive}
+          className={`howitworks-tab ${item.isActive ? 'is-active' : ''}`.trim()}
+          onClick={() => model.controls.onViewerModeChange(item.value)}
+        >
+          {item.label}
+        </button>
+      ))}
     </div>
   );
-  const profileViewerModeInlineControl = (
-    <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'customer'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'customer' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('customer')}
-      >
-        {statsCopy.viewerModeProviderLabel}
-      </button>
-      <button
-        type="button"
-        aria-pressed={model.controls.viewerMode === 'provider'}
-        className={`howitworks-tab ${model.controls.viewerMode === 'provider' ? 'is-active' : ''}`.trim()}
-        onClick={() => model.controls.onViewerModeChange('provider')}
-      >
-        {statsCopy.viewerModeCustomerLabel}
-      </button>
-    </div>
+  const viewerModeInlineControl = renderViewerModeInlineControl(
+    resolveWorkspaceViewerModeToggleItems({
+      viewerMode: model.controls.viewerMode,
+      providerLabel: statsCopy.viewerModeProviderLabel,
+      customerLabel: statsCopy.viewerModeCustomerLabel,
+      invertLabels: shouldShowWorkspaceProfileViewerModeControl({
+        activeWorkspaceTab: model.activeWorkspaceTab,
+        activePublicSection: model.activePublicSection,
+      }),
+    }),
   );
-  const shouldShowProfileViewerModeControl =
-    model.activeWorkspaceTab === 'profile' || model.activePublicSection === 'actions';
-  const myWorkInlineControl = shouldShowProfileViewerModeControl ? profileViewerModeInlineControl : model.requestsScope === 'my' ? (
+  const shouldShowProfileViewerModeControl = shouldShowWorkspaceProfileViewerModeControl({
+    activeWorkspaceTab: model.activeWorkspaceTab,
+    activePublicSection: model.activePublicSection,
+  });
+  const myWorkInlineControl = shouldShowProfileViewerModeControl ? viewerModeInlineControl : model.requestsScope === 'my' ? (
     <div className="workspace-shared-context-controls__combined-row">
       {requestsScopeControl}
       <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>

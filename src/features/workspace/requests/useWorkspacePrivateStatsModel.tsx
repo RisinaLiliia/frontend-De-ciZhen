@@ -4,15 +4,17 @@ import * as React from 'react';
 
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
-import { buildWorkspacePrivateStatsModel } from '@/features/workspace/requests/workspacePrivateStats.model';
+import {
+  buildWorkspacePrivateStatsModel,
+  type WorkspacePrivateStatsInput,
+} from '@/features/workspace/requests/workspacePrivateStats.model';
 
 type Translator = (key: I18nKey) => string;
 
 type Params = {
   t: Translator;
   locale: Locale;
-  overview: WorkspacePrivateOverviewDto;
+  statsInput: WorkspacePrivateStatsInput;
   chartMonthLabel: Intl.DateTimeFormat;
   formatNumber: Intl.NumberFormat;
 };
@@ -20,7 +22,7 @@ type Params = {
 export function useWorkspacePrivateStatsModel({
   t,
   locale,
-  overview,
+  statsInput,
   chartMonthLabel,
   formatNumber,
 }: Params) {
@@ -29,10 +31,10 @@ export function useWorkspacePrivateStatsModel({
       buildWorkspacePrivateStatsModel({
         t,
         locale,
-        overview,
+        statsInput,
         chartMonthLabel,
         formatNumber,
       }),
-    [chartMonthLabel, formatNumber, locale, overview, t],
+    [chartMonthLabel, formatNumber, locale, statsInput, t],
   );
 }

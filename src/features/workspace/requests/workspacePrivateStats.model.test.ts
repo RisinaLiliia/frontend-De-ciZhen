@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
-import { buildWorkspacePrivateStatsModel, resolveCompletedMoMDelta } from './workspacePrivateStats.model';
+import {
+  buildWorkspacePrivateStatsModel,
+  resolveCompletedMoMDelta,
+  resolveWorkspacePrivateStatsInput,
+} from './workspacePrivateStats.model';
 
 function makeOverview() {
   return structuredClone(EMPTY_WORKSPACE_PRIVATE_OVERVIEW);
@@ -12,11 +16,11 @@ describe('workspacePrivateStats.model', () => {
     const percentOverview = makeOverview();
     percentOverview.insights.providerCompletedDeltaKind = 'percent';
     percentOverview.insights.providerCompletedDeltaPercent = 18;
-    expect(resolveCompletedMoMDelta(percentOverview)).toEqual({ kind: 'percent', value: 18 });
+    expect(resolveCompletedMoMDelta(resolveWorkspacePrivateStatsInput(percentOverview))).toEqual({ kind: 'percent', value: 18 });
 
     const newOverview = makeOverview();
     newOverview.insights.providerCompletedDeltaKind = 'new';
-    expect(resolveCompletedMoMDelta(newOverview)).toEqual({ kind: 'new' });
+    expect(resolveCompletedMoMDelta(resolveWorkspacePrivateStatsInput(newOverview))).toEqual({ kind: 'new' });
   });
 
   it('builds provider-first stats payload when provider activity dominates', () => {
@@ -44,7 +48,7 @@ describe('workspacePrivateStats.model', () => {
     const model = buildWorkspacePrivateStatsModel({
       t: (key) => String(key),
       locale: 'en',
-      overview,
+      statsInput: resolveWorkspacePrivateStatsInput(overview),
       chartMonthLabel: new Intl.DateTimeFormat('en-US', { month: 'short' }),
       formatNumber: new Intl.NumberFormat('en-US'),
     });
