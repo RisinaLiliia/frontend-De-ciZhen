@@ -103,13 +103,15 @@ describe('useWorkspacePrivateSources', () => {
         isPublicSummaryLoading: false,
         isPublicSummaryError: false,
       },
-      legacyPrivateData: {
+      requestUserStateData: {
         myOffers: [offer],
         isMyOffersLoading: false,
         myOfferRequestsById: new Map([['req-1', request]]),
         isMyOfferRequestsLoading: false,
         favoriteRequests: [request],
         isFavoriteRequestsLoading: false,
+      },
+      legacyPrivateData: {
         favoriteProviders: [provider],
         isFavoriteProvidersLoading: false,
         myReviews: [],

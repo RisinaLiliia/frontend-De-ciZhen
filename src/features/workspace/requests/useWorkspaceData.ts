@@ -20,6 +20,7 @@ import type {
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 import { useWorkspaceContractData } from '@/features/workspace/requests/useWorkspaceContractData';
 import { useWorkspaceLegacyPrivateData } from '@/features/workspace/requests/useWorkspaceLegacyPrivateData';
+import { useWorkspaceRequestUserStateData } from '@/features/workspace/requests/useWorkspaceRequestUserStateData';
 
 type Params = {
   enabled?: boolean;
@@ -126,14 +127,19 @@ export function useWorkspaceData(params: Params) {
     workspaceDataQueries,
   });
 
-  const legacyPrivateData = useWorkspaceLegacyPrivateData({
+  const requestUserStateData = useWorkspaceRequestUserStateData({
     workspaceDataQueries,
     locale,
     shouldLoadOfferRequests: loadPlan.shouldLoadOfferRequests,
   });
 
+  const legacyPrivateData = useWorkspaceLegacyPrivateData({
+    workspaceDataQueries,
+  });
+
   return {
     contractData,
+    requestUserStateData,
     legacyPrivateData,
   };
 }

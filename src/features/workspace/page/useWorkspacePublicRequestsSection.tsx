@@ -94,7 +94,7 @@ export function useWorkspacePublicRequestsSection({
     activeRequestsPeriod,
     activeRequestsSort: activeRequestsSort ?? filters.sortBy,
   });
-  const { contractData, legacyPrivateData } = data;
+  const { contractData, requestUserStateData } = data;
 
   const marketResponse = contractData.workspaceRequests;
   const hasMarketContract = marketResponse != null;
@@ -132,8 +132,8 @@ export function useWorkspacePublicRequestsSection({
     [requests],
   );
   const favoriteRequestIds = React.useMemo(
-    () => new Set((legacyPrivateData.favoriteRequests ?? []).map((request) => request.id)),
-    [legacyPrivateData.favoriteRequests],
+    () => new Set((requestUserStateData.favoriteRequests ?? []).map((request) => request.id)),
+    [requestUserStateData.favoriteRequests],
   );
   const interactions = useWorkspaceRequestUserInteractions({
     t,
@@ -146,8 +146,8 @@ export function useWorkspacePublicRequestsSection({
     providerById: new Map(),
   });
   const offersByRequest = React.useMemo(
-    () => buildOffersByRequestMap(legacyPrivateData.myOffers),
-    [legacyPrivateData.myOffers],
+    () => buildOffersByRequestMap(requestUserStateData.myOffers),
+    [requestUserStateData.myOffers],
   );
 
   const setRequestsState = React.useCallback((nextState: string) => {

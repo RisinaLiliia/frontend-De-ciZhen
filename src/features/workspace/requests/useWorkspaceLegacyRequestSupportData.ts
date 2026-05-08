@@ -7,7 +7,6 @@ import type { buildWorkspaceDataQueries } from '@/features/workspace/requests/wo
 
 type WorkspaceDataQueries = ReturnType<typeof buildWorkspaceDataQueries>;
 type WorkspaceLegacyRequestQuery =
-  | WorkspaceDataQueries['favoriteRequests']
   | WorkspaceDataQueries['myReviews']
   | WorkspaceDataQueries['myRequests']
   | WorkspaceDataQueries['myProviderContracts']
@@ -21,7 +20,6 @@ export function useWorkspaceLegacyRequestSupportData({ workspaceDataQueries }: A
   const queryEntries = React.useMemo(
     (): Array<{ key: string; query: WorkspaceLegacyRequestQuery }> =>
       [
-        { key: 'favoriteRequests', query: workspaceDataQueries.favoriteRequests },
         { key: 'myReviews', query: workspaceDataQueries.myReviews },
         { key: 'myRequests', query: workspaceDataQueries.myRequests },
         { key: 'myProviderContracts', query: workspaceDataQueries.myProviderContracts },
@@ -39,9 +37,6 @@ export function useWorkspaceLegacyRequestSupportData({ workspaceDataQueries }: A
     [queryEntries, queryResults],
   );
 
-  const favoriteRequests =
-    (queryResultByKey.get('favoriteRequests')?.data as ReturnType<typeof workspaceDataQueries.favoriteRequests.queryFn> extends Promise<infer TResult> ? TResult : never) ?? [];
-  const isFavoriteRequestsLoading = queryResultByKey.get('favoriteRequests')?.isLoading ?? false;
   const myReviews =
     (queryResultByKey.get('myReviews')?.data as ReturnType<typeof workspaceDataQueries.myReviews.queryFn> extends Promise<infer TResult> ? TResult : never) ?? [];
   const isMyReviewsLoading = queryResultByKey.get('myReviews')?.isLoading ?? false;
@@ -56,8 +51,6 @@ export function useWorkspaceLegacyRequestSupportData({ workspaceDataQueries }: A
   const isClientContractsLoading = queryResultByKey.get('myClientContracts')?.isLoading ?? false;
 
   return {
-    favoriteRequests,
-    isFavoriteRequestsLoading,
     myReviews,
     isMyReviewsLoading,
     myRequests,
