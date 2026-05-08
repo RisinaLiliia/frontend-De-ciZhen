@@ -11,6 +11,7 @@ import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { workspaceQK } from '@/features/workspace/requests';
+import { buildWorkspaceOwnerRequestMutationQueryKeys } from '@/features/workspace/requests/workspaceInvalidation.model';
 import {
   buildWorkspaceActionsResult,
   buildWorkspaceOfferLoginHref,
@@ -35,18 +36,6 @@ type Args = {
   router: RouterLike;
 };
 
-const requestLifecyclePublicQueryKeys: QueryKey[] = [
-  workspaceQK.requestsExplorerPublicPrefix(),
-  workspaceQK.requestsPublicPrefix(),
-  workspaceQK.workspacePublicOverviewPrefix(),
-  workspaceQK.workspacePublicSummaryPrefix(),
-  workspaceQK.requestsPublicSummaryTotalPrefix(),
-  workspaceQK.requestsPublicCityActivityPrefix(),
-  workspaceQK.homeNearbyRequestsPrefix(),
-  workspaceQK.requestsLatestPrefix(),
-  workspaceQK.requestSimilarPrefix(),
-];
-
 export function useWorkspaceActions({
   enabled = true,
   isAuthed,
@@ -62,16 +51,7 @@ export function useWorkspaceActions({
   const [pendingDeleteRequestId, setPendingDeleteRequestId] = React.useState<string | null>(null);
 
   const invalidateWorkspaceRequests = React.useCallback(async () => {
-    const queryKeys: QueryKey[] = [
-      workspaceQK.requestsMy(),
-      workspaceQK.workspaceRequestsPrefix(),
-      workspaceQK.workspacePrivateOverviewPrefix(),
-      workspaceQK.favoriteRequests(),
-      workspaceQK.offersMy(),
-      workspaceQK.offersMyClient(),
-      workspaceQK.chatInbox(),
-      ...requestLifecyclePublicQueryKeys,
-    ];
+    const queryKeys: QueryKey[] = buildWorkspaceOwnerRequestMutationQueryKeys();
 
     await Promise.all([
       ...queryKeys.map((queryKey) => qc.invalidateQueries({ queryKey })),
