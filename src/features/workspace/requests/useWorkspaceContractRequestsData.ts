@@ -43,7 +43,6 @@ export function useWorkspaceContractRequestsData({
       return [];
     }
 
-    const fallbackDate = new Date().toISOString();
     const items: RequestResponseDto[] = [];
     const seen = new Set<string>();
 
@@ -53,43 +52,7 @@ export function useWorkspaceContractRequestsData({
       const request = contractRequestsById.get(item.requestId);
       if (request) {
         items.push(request);
-        return;
       }
-
-      items.push({
-        id: item.requestId,
-        serviceKey: 'service',
-        cityId: 'city',
-        cityName: null,
-        categoryKey: null,
-        categoryName: null,
-        subcategoryName: null,
-        propertyType: 'apartment',
-        area: 0,
-        price: item.priceAmount ?? null,
-        preferredDate: item.updatedAt || item.createdAt || fallbackDate,
-        isRecurring: false,
-        title: `Contract #${item.id.slice(-6)}`,
-        description: null,
-        photos: null,
-        imageUrl: null,
-        tags: null,
-        clientId: item.clientId,
-        clientName: null,
-        clientAvatarUrl: null,
-        clientCity: null,
-        clientRatingAvg: null,
-        clientRatingCount: null,
-        clientIsOnline: null,
-        clientLastSeenAt: null,
-        status:
-          item.status === 'completed'
-            ? 'closed'
-            : item.status === 'cancelled'
-              ? 'cancelled'
-              : 'matched',
-        createdAt: item.createdAt,
-      });
     });
 
     return items;
