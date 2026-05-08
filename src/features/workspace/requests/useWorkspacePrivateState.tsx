@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
-import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
@@ -11,12 +10,10 @@ import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspac
 import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
 import {
   buildWorkspacePrivateNavModelArgs,
-  resolveWorkspacePreferredRequestsRole,
   buildWorkspacePrivateTopProvidersArgs,
   shouldBuildWorkspacePrivateTopProviders,
-  resolveWorkspacePrivateMeta,
-  resolveWorkspacePrivateOverview,
   resolveWorkspacePrivateStateResult,
+  type WorkspacePrivateOverviewState,
 } from '@/features/workspace/requests/workspacePrivateState.model';
 import { useWorkspacePrivateNavModel } from '@/features/workspace/requests/useWorkspacePrivateNavModel';
 import { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
@@ -33,8 +30,7 @@ type Params = {
   publicRequestsCount: number;
   publicProvidersCount: number;
   publicStatsCount: number;
-  workspacePrivateOverview?: WorkspacePrivateOverviewDto | null;
-  explicitPreferredRequestsRole?: 'customer' | 'provider' | null;
+  privateOverviewState?: WorkspacePrivateOverviewState | null;
   setWorkspaceTab: (tab: WorkspaceTab) => void;
   markPublicRequestsSeen: () => void;
   guestLoginHref: string;
@@ -54,25 +50,26 @@ export function useWorkspacePrivateState({
   publicRequestsCount,
   publicProvidersCount,
   publicStatsCount,
-  workspacePrivateOverview,
-  explicitPreferredRequestsRole = null,
+  privateOverviewState = null,
   setWorkspaceTab,
   markPublicRequestsSeen,
   guestLoginHref,
   onGuestLockedAction,
   formatNumber,
 }: Params) {
-  const overview = React.useMemo(
-    () => resolveWorkspacePrivateOverview(workspacePrivateOverview),
-    [workspacePrivateOverview],
-  );
-  const { activityProgress, navRatingValue, navReviewsCount } = React.useMemo(
-    () => resolveWorkspacePrivateMeta({ overview }),
-    [overview],
-  );
-  const preferredRequestsRole = React.useMemo(
-    () => explicitPreferredRequestsRole ?? resolveWorkspacePreferredRequestsRole(overview),
-    [explicitPreferredRequestsRole, overview],
+  const resolvedPrivateOverviewState = React.useMemo<WorkspacePrivateOverviewState>(
+    () =>
+      privateOverviewState ?? {
+        activityProgress: 0,
+        navRatingValue: '0.0',
+        navReviewsCount: 0,
+        preferredRequestsRole: null,
+        myRequestsTotal: 0,
+        sentCount: 0,
+        completedJobsCount: 0,
+        favoriteRequestCount: 0,
+      },
+    [privateOverviewState],
   );
 
   const nav = useWorkspacePrivateNavModel(
@@ -86,9 +83,7 @@ export function useWorkspacePrivateState({
       publicRequestsCount,
       publicProvidersCount,
       publicStatsCount,
-      overview,
-      navRatingValue,
-      navReviewsCount,
+      privateOverviewState: resolvedPrivateOverviewState,
       setWorkspaceTab,
       markPublicRequestsSeen,
       guestLoginHref,
@@ -111,8 +106,7 @@ export function useWorkspacePrivateState({
 
   return resolveWorkspacePrivateStateResult({
     topProviders,
-    activityProgress,
-    preferredRequestsRole,
+    privateOverviewState: resolvedPrivateOverviewState,
     nav,
   });
 }

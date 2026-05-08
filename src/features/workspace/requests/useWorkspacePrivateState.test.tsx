@@ -2,10 +2,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
-import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
 import { useWorkspacePrivateState } from '@/features/workspace/requests/useWorkspacePrivateState';
-import { shouldBuildWorkspacePrivateTopProviders } from '@/features/workspace/requests/workspacePrivateState.model';
+import {
+  resolveWorkspacePrivateOverviewState,
+  shouldBuildWorkspacePrivateTopProviders,
+} from '@/features/workspace/requests/workspacePrivateState.model';
 
 type StateArgs = Parameters<typeof useWorkspacePrivateState>[0];
 
@@ -13,7 +15,7 @@ afterEach(() => {
   cleanup();
 });
 
-function makeOverview(): WorkspacePrivateOverviewDto {
+function makeOverview() {
   return structuredClone(EMPTY_WORKSPACE_PRIVATE_OVERVIEW);
 }
 
@@ -30,7 +32,7 @@ function makeArgs(overrides: Partial<StateArgs> = {}): StateArgs {
     publicRequestsCount: 10,
     publicProvidersCount: 4,
     publicStatsCount: 10,
-    workspacePrivateOverview: makeOverview(),
+    privateOverviewState: resolveWorkspacePrivateOverviewState(makeOverview()),
     setWorkspaceTab: vi.fn(),
     markPublicRequestsSeen: vi.fn(),
     guestLoginHref: '/auth/login?next=%2Fworkspace',
@@ -86,7 +88,7 @@ describe('useWorkspacePrivateState', () => {
     render(
       <StateProbe
         {...makeArgs({
-          workspacePrivateOverview: overview,
+          privateOverviewState: resolveWorkspacePrivateOverviewState(overview),
         })}
       />,
     );
@@ -155,8 +157,10 @@ describe('useWorkspacePrivateState', () => {
     render(
       <StateProbe
         {...makeArgs({
-          workspacePrivateOverview: overview,
-          explicitPreferredRequestsRole: 'customer',
+          privateOverviewState: {
+            ...resolveWorkspacePrivateOverviewState(overview),
+            preferredRequestsRole: 'customer',
+          },
         })}
       />,
     );

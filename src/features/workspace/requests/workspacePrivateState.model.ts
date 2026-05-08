@@ -11,6 +11,17 @@ import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/
 type WorkspacePrivateNavModelArgs = Parameters<typeof useWorkspacePrivateNavModel>[0];
 type WorkspacePrivateTopProvidersArgs = Parameters<typeof useWorkspacePrivateTopProviders>[0];
 
+export type WorkspacePrivateOverviewState = {
+  activityProgress: number;
+  navRatingValue: string;
+  navReviewsCount: number;
+  preferredRequestsRole: 'customer' | 'provider' | null;
+  myRequestsTotal: number;
+  sentCount: number;
+  completedJobsCount: number;
+  favoriteRequestCount: number;
+};
+
 export function shouldBuildWorkspacePrivateTopProviders(params: {
   activePublicSection: PublicWorkspaceSection | null;
   requestsScope: WorkspaceRequestsScope;
@@ -24,23 +35,25 @@ export function resolveWorkspacePrivateOverview(
   return overview ?? EMPTY_WORKSPACE_PRIVATE_OVERVIEW;
 }
 
-export function resolveWorkspacePrivateMeta(params: {
-  overview: WorkspacePrivateOverviewDto;
-}) {
-  const ratingAverage = Number(params.overview.ratingSummary?.average ?? 0);
-  const ratingCount = Number(params.overview.ratingSummary?.count ?? params.overview.reviews.asProvider ?? 0);
+export function resolveWorkspacePrivateOverviewState(
+  overview: WorkspacePrivateOverviewDto | null | undefined,
+): WorkspacePrivateOverviewState {
+  const resolvedOverview = resolveWorkspacePrivateOverview(overview);
+  const ratingAverage = Number(resolvedOverview.ratingSummary?.average ?? 0);
+  const ratingCount = Number(
+    resolvedOverview.ratingSummary?.count ?? resolvedOverview.reviews.asProvider ?? 0,
+  );
 
   return {
-    activityProgress: clampPercent(params.overview.kpis.activityProgress),
+    activityProgress: clampPercent(resolvedOverview.kpis.activityProgress),
     navRatingValue: ratingAverage.toFixed(1),
     navReviewsCount: Math.max(0, ratingCount),
+    preferredRequestsRole: resolvedOverview.preferredRole ?? null,
+    myRequestsTotal: resolvedOverview.requestsByStatus.total,
+    sentCount: resolvedOverview.providerOffersByStatus.sent,
+    completedJobsCount: resolvedOverview.providerContractsByStatus.completed,
+    favoriteRequestCount: resolvedOverview.favorites.requests,
   };
-}
-
-export function resolveWorkspacePreferredRequestsRole(
-  overview: WorkspacePrivateOverviewDto,
-) {
-  return overview.preferredRole ?? null;
 }
 
 export function buildWorkspacePrivateNavModelArgs(params: {
@@ -53,9 +66,7 @@ export function buildWorkspacePrivateNavModelArgs(params: {
   publicRequestsCount: WorkspacePrivateNavModelArgs['publicRequestsCount'];
   publicProvidersCount: WorkspacePrivateNavModelArgs['publicProvidersCount'];
   publicStatsCount: WorkspacePrivateNavModelArgs['publicStatsCount'];
-  overview: WorkspacePrivateOverviewDto;
-  navRatingValue: string;
-  navReviewsCount: number;
+  privateOverviewState: WorkspacePrivateOverviewState;
   setWorkspaceTab: WorkspacePrivateNavModelArgs['setWorkspaceTab'];
   markPublicRequestsSeen: WorkspacePrivateNavModelArgs['markPublicRequestsSeen'];
   guestLoginHref: WorkspacePrivateNavModelArgs['guestLoginHref'];
@@ -71,12 +82,12 @@ export function buildWorkspacePrivateNavModelArgs(params: {
     publicRequestsCount: params.publicRequestsCount,
     publicProvidersCount: params.publicProvidersCount,
     publicStatsCount: params.publicStatsCount,
-    myRequestsTotal: params.overview.requestsByStatus.total,
-    sentCount: params.overview.providerOffersByStatus.sent,
-    completedJobsCount: params.overview.providerContractsByStatus.completed,
-    favoriteRequestCount: params.overview.favorites.requests,
-    navRatingValue: params.navRatingValue,
-    navReviewsCount: params.navReviewsCount,
+    myRequestsTotal: params.privateOverviewState.myRequestsTotal,
+    sentCount: params.privateOverviewState.sentCount,
+    completedJobsCount: params.privateOverviewState.completedJobsCount,
+    favoriteRequestCount: params.privateOverviewState.favoriteRequestCount,
+    navRatingValue: params.privateOverviewState.navRatingValue,
+    navReviewsCount: params.privateOverviewState.navReviewsCount,
     setWorkspaceTab: params.setWorkspaceTab,
     markPublicRequestsSeen: params.markPublicRequestsSeen,
     guestLoginHref: params.guestLoginHref,
@@ -98,16 +109,15 @@ export function buildWorkspacePrivateTopProvidersArgs(params: {
 
 export function resolveWorkspacePrivateStateResult(params: {
   topProviders: ReturnType<typeof useWorkspacePrivateTopProviders>;
-  activityProgress: number;
-  preferredRequestsRole: 'customer' | 'provider' | null;
+  privateOverviewState: WorkspacePrivateOverviewState;
   nav: ReturnType<typeof useWorkspacePrivateNavModel>;
 }) {
   return {
     topProviders: params.topProviders,
     navTitle: params.nav.navTitle,
     navSubtitle: params.nav.navSubtitle,
-    activityProgress: params.activityProgress,
-    preferredRequestsRole: params.preferredRequestsRole,
+    activityProgress: params.privateOverviewState.activityProgress,
+    preferredRequestsRole: params.privateOverviewState.preferredRequestsRole,
     personalNavItems: params.nav.personalNavItems,
   };
 }

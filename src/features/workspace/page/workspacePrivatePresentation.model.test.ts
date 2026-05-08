@@ -48,7 +48,16 @@ function createData() {
     providers: [{ id: 'provider-1' }],
     platformRequestsTotal: 12,
     allRequestsSummary: undefined,
-    workspacePrivateOverview: { profileCompletion: 75 },
+    privateOverviewState: {
+      activityProgress: 75,
+      navRatingValue: '4.8',
+      navReviewsCount: 12,
+      preferredRequestsRole: 'provider',
+      myRequestsTotal: 6,
+      sentCount: 4,
+      completedJobsCount: 2,
+      favoriteRequestCount: 3,
+    },
     preferredRequestsRole: 'provider',
     setWorkspaceTab: vi.fn(),
     markPublicRequestsSeen: vi.fn(),
@@ -149,7 +158,7 @@ describe('workspacePrivatePresentation.model', () => {
       data: data as never,
     });
 
-    expect(privateStateArgs.explicitPreferredRequestsRole).toBe('customer');
+    expect(privateStateArgs.privateOverviewState?.preferredRequestsRole).toBe('customer');
   });
 
   it('builds private view model input by merging flow data with patch', () => {

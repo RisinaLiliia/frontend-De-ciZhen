@@ -7,6 +7,7 @@ import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useW
 import type { WorkspacePublicIntro } from '@/features/workspace';
 import type { useWorkspaceContentData, useWorkspacePresentation } from '@/features/workspace';
 import type {
+  WorkspacePrivateOverviewState,
   useWorkspacePrivateState,
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
@@ -167,6 +168,19 @@ export function buildWorkspacePrivateStateArgs({
   branch,
   data,
 }: BuildArgs): WorkspacePrivateStateArgs {
+  const privateOverviewState: WorkspacePrivateOverviewState | null =
+    data.privateOverviewState
+      ? {
+        ...data.privateOverviewState,
+        preferredRequestsRole:
+          data.activePublicSection === 'requests' &&
+          data.requestsScope === 'my' &&
+          data.activeRequestsRole !== 'all'
+            ? data.activeRequestsRole
+            : data.privateOverviewState.preferredRequestsRole,
+      }
+      : null;
+
   return {
     t: branch.t,
     locale: branch.locale,
@@ -179,13 +193,7 @@ export function buildWorkspacePrivateStateArgs({
     publicRequestsCount: data.platformRequestsTotal,
     publicProvidersCount: data.allRequestsSummary?.totalActiveProviders ?? data.providers.length,
     publicStatsCount: data.platformRequestsTotal,
-    workspacePrivateOverview: data.workspacePrivateOverview,
-    explicitPreferredRequestsRole:
-      data.activePublicSection === 'requests' &&
-      data.requestsScope === 'my' &&
-      data.activeRequestsRole !== 'all'
-        ? data.activeRequestsRole
-        : null,
+    privateOverviewState,
     setWorkspaceTab: data.setWorkspaceTab,
     markPublicRequestsSeen: data.markPublicRequestsSeen,
     guestLoginHref: data.guestLoginHref,

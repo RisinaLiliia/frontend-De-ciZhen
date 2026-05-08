@@ -397,6 +397,16 @@ describe('workspacePrivateSources.model', () => {
     expect(result.requestsCount).toBe(2);
     expect(result.isProviderContractsLoading).toBe(true);
     expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));
+    expect(result.privateOverviewState).toEqual({
+      activityProgress: 0,
+      navRatingValue: '0.0',
+      navReviewsCount: 0,
+      preferredRequestsRole: 'customer',
+      myRequestsTotal: 0,
+      sentCount: 0,
+      completedJobsCount: 0,
+      favoriteRequestCount: 0,
+    });
     expect(result.workspaceRequests).toBeNull();
   });
 });
