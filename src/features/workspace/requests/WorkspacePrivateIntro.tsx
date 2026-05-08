@@ -1,30 +1,15 @@
 'use client';
 
-import type { TabPayload } from '@/components/requests/requestsStatsPanel.types';
 import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
 import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceModeHeader';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type { Locale } from '@/lib/i18n/t';
 
-type StatsOrderItem = {
-  tab: 'provider' | 'client';
-  title: string;
-};
-
 export type WorkspacePrivateIntroProps = {
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
-  statsOrder: StatsOrderItem[];
-  statsFallbackTitle: string;
-  statsTabsLabel: {
-    provider: string;
-    client: string;
-  };
-  statsErrorLabel: string;
-  providerStatsPayload: TabPayload;
-  clientStatsPayload: TabPayload;
   quickActionHref?: string;
   showQuickAction?: boolean;
   navHeaderSlot?: React.ReactNode;

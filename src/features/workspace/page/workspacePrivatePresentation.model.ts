@@ -35,10 +35,7 @@ type BuildPresentationArgs = {
   privateState: Pick<
     ReturnType<typeof useWorkspacePrivateState>,
     | 'topProviders'
-    | 'providerStatsPayload'
-    | 'clientStatsPayload'
     | 'preferredRequestsRole'
-    | 'statsOrder'
   >;
 };
 
@@ -212,9 +209,6 @@ export function buildWorkspacePrivatePresentationArgs({
     activePublicSection: data.activePublicSection,
     activeWorkspaceTab: data.activeWorkspaceTab,
     WorkspacePrivateIntroComponent,
-    statsOrder: privateState.statsOrder,
-    providerStatsPayload: privateState.providerStatsPayload,
-    clientStatsPayload: privateState.clientStatsPayload,
     createRequestHref: '/request/create',
     isProvidersLoading: data.isProvidersLoading,
     isProvidersError: data.isProvidersError,

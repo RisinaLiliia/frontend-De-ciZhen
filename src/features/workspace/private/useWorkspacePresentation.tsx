@@ -21,9 +21,6 @@ type Args = {
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
   WorkspacePrivateIntroComponent: React.ComponentType<WorkspacePrivateIntroProps>;
-  statsOrder: WorkspacePrivateIntroProps['statsOrder'];
-  providerStatsPayload: WorkspacePrivateIntroProps['providerStatsPayload'];
-  clientStatsPayload: WorkspacePrivateIntroProps['clientStatsPayload'];
   createRequestHref: string;
   isProvidersLoading: boolean;
   isProvidersError: boolean;
@@ -39,9 +36,6 @@ export function useWorkspacePresentation({
   activePublicSection,
   activeWorkspaceTab,
   WorkspacePrivateIntroComponent,
-  statsOrder,
-  providerStatsPayload,
-  clientStatsPayload,
   createRequestHref,
   isProvidersLoading,
   isProvidersError,
@@ -54,13 +48,9 @@ export function useWorkspacePresentation({
     () => (
       <WorkspacePrivateIntroComponent
         {...buildWorkspacePrivateIntroProps({
-          t,
           locale,
           activePublicSection,
           activeWorkspaceTab,
-          statsOrder,
-          providerStatsPayload,
-          clientStatsPayload,
           createRequestHref,
           showQuickAction,
           preferredRequestsRole,
@@ -71,12 +61,8 @@ export function useWorkspacePresentation({
       WorkspacePrivateIntroComponent,
       activePublicSection,
       activeWorkspaceTab,
-      clientStatsPayload,
       createRequestHref,
       locale,
-      providerStatsPayload,
-      statsOrder,
-      t,
       showQuickAction,
       preferredRequestsRole,
     ],

@@ -6,63 +6,11 @@ import {
 } from './workspacePresentation.model';
 
 describe('workspacePresentation.model', () => {
-  it('builds private intro props with translated stats labels and quick action config', () => {
+  it('builds private intro props with quick action config', () => {
     const props = buildWorkspacePrivateIntroProps({
-      t: (key) => String(key),
       locale: 'de',
       activePublicSection: 'requests',
       activeWorkspaceTab: 'my-offers',
-      statsOrder: [{ tab: 'provider', title: 'Provider stats' }],
-      providerStatsPayload: {
-        kpis: [],
-        chartTitle: 'Provider chart',
-        chartPoints: [],
-        secondary: {
-          leftLabel: 'Left',
-          leftValue: '0',
-          centerLabel: 'Center',
-          centerValue: '0',
-          rightLabel: 'Right',
-          rightValue: '0',
-          progressLabel: 'Progress',
-          progressValue: 0,
-          responseLabel: 'Response',
-          responseValue: '0%',
-        },
-        hint: {
-          text: 'Hint',
-          ctaLabel: 'Open',
-          ctaHref: '/workspace',
-        },
-        emptyTitle: 'Empty',
-        emptyCtaLabel: 'Create',
-        emptyCtaHref: '/request/create',
-      },
-      clientStatsPayload: {
-        kpis: [],
-        chartTitle: 'Client chart',
-        chartPoints: [],
-        secondary: {
-          leftLabel: 'Left',
-          leftValue: '0',
-          centerLabel: 'Center',
-          centerValue: '0',
-          rightLabel: 'Right',
-          rightValue: '0',
-          progressLabel: 'Progress',
-          progressValue: 0,
-          responseLabel: 'Response',
-          responseValue: '0%',
-        },
-        hint: {
-          text: 'Hint',
-          ctaLabel: 'Open',
-          ctaHref: '/workspace',
-        },
-        emptyTitle: 'Empty',
-        emptyCtaLabel: 'Create',
-        emptyCtaHref: '/request/create',
-      },
       createRequestHref: '/request/create',
       showQuickAction: false,
     });
@@ -70,8 +18,6 @@ describe('workspacePresentation.model', () => {
     expect(props.locale).toBe('de');
     expect(props.activePublicSection).toBe('requests');
     expect(props.activeWorkspaceTab).toBe('my-offers');
-    expect(props.statsTabsLabel.provider).toBe('homePublic.howItWorksProviderTab');
-    expect(props.statsErrorLabel).toBe('requestsPage.statsLoadError');
     expect(props.quickActionHref).toBe('/request/create');
     expect(props.showQuickAction).toBe(false);
   });

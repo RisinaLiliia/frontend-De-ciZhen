@@ -17,13 +17,9 @@ export type WorkspaceAsideBaseProps = Omit<
 >;
 
 type BuildWorkspacePrivateIntroPropsArgs = {
-  t: Translator;
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
-  statsOrder: WorkspacePrivateIntroProps['statsOrder'];
-  providerStatsPayload: WorkspacePrivateIntroProps['providerStatsPayload'];
-  clientStatsPayload: WorkspacePrivateIntroProps['clientStatsPayload'];
   createRequestHref: string;
   showQuickAction?: boolean;
   preferredRequestsRole?: WorkspacePrivateIntroProps['preferredRequestsRole'];
@@ -38,13 +34,9 @@ type BuildWorkspaceAsideBasePropsArgs = {
 };
 
 export function buildWorkspacePrivateIntroProps({
-  t,
   locale,
   activePublicSection,
   activeWorkspaceTab,
-  statsOrder,
-  providerStatsPayload,
-  clientStatsPayload,
   createRequestHref,
   showQuickAction = true,
   preferredRequestsRole = null,
@@ -53,15 +45,6 @@ export function buildWorkspacePrivateIntroProps({
     locale,
     activePublicSection,
     activeWorkspaceTab,
-    statsOrder,
-    statsFallbackTitle: t(I18N_KEYS.requestsPage.statsProviderTitle),
-    statsTabsLabel: {
-      provider: t(I18N_KEYS.homePublic.howItWorksProviderTab),
-      client: t(I18N_KEYS.homePublic.howItWorksClientTab),
-    },
-    statsErrorLabel: t(I18N_KEYS.requestsPage.statsLoadError),
-    providerStatsPayload,
-    clientStatsPayload,
     quickActionHref: createRequestHref,
     showQuickAction,
     preferredRequestsRole,
