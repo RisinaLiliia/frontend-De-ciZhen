@@ -9,7 +9,6 @@ import type {
 } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
-import { resolveWorkspacePrivateOverviewState } from '@/features/workspace/requests/workspacePrivateState.model';
 
 type WorkspacePublicFiltersResult = ReturnType<typeof useWorkspacePublicFilters>;
 type CatalogIndexResult = ReturnType<typeof useCatalogIndex>;
@@ -314,7 +313,7 @@ export function resolveWorkspacePrivateSourcesResult({
     providers: legacyPrivateData.providers,
     isProvidersLoading: legacyPrivateData.isProvidersLoading,
     isProvidersError: legacyPrivateData.isProvidersError,
-    privateOverviewState: resolveWorkspacePrivateOverviewState(contractData.workspacePrivateOverview),
+    privateOverviewState: contractData.privateOverviewState,
     isWorkspacePrivateOverviewLoading: contractData.isWorkspacePrivateOverviewLoading,
     workspaceRequests: contractData.workspaceRequests,
     isWorkspaceRequestsLoading: contractData.isWorkspaceRequestsLoading,
