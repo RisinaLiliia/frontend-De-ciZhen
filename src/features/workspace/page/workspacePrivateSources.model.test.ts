@@ -202,7 +202,7 @@ describe('workspacePrivateSources.model', () => {
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
       } as never,
       legacyPublicOverviewData: {
-        publicRequests: { items: [{ id: 'req-1' }], total: 1 },
+        overviewRequests: { items: [{ id: 'req-1' }], total: 1 },
         isLoading: false,
         isError: false,
       } as never,
@@ -356,7 +356,7 @@ describe('workspacePrivateSources.model', () => {
         isWorkspacePrivateRequestsFallbackLoading: false,
       } as never,
       legacyPublicOverviewData: {
-        publicRequests: { items: [{ id: 'req-1' }], total: 1 },
+        overviewRequests: { items: [{ id: 'req-1' }], total: 1 },
         isLoading: true,
         isError: false,
       } as never,

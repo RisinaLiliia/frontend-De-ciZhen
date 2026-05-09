@@ -94,7 +94,7 @@ describe('useWorkspaceData', () => {
       isWorkspaceRequestsLoading: false,
     } as never);
     useWorkspaceLegacyPublicOverviewDataMock.mockReturnValue({
-      publicRequests: { items: [], total: 0 },
+      overviewRequests: { items: [], total: 0 },
       isLoading: false,
       isError: false,
     } as never);
@@ -110,7 +110,7 @@ describe('useWorkspaceData', () => {
 
     const node = screen.getByTestId('workspace-data');
     expect(node.getAttribute('data-contract-keys')).toContain('workspaceRequests');
-    expect(node.getAttribute('data-legacy-public-overview-keys')).toContain('publicRequests');
+    expect(node.getAttribute('data-legacy-public-overview-keys')).toContain('overviewRequests');
     expect(node.getAttribute('data-request-user-state-keys')).toContain('myOffers');
     expect(node.getAttribute('data-legacy-keys')).toContain('myRequests');
     expect(node.getAttribute('data-has-flat-workspace-requests')).toBe('false');

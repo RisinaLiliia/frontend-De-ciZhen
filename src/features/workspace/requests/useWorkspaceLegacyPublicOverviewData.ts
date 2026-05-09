@@ -14,7 +14,7 @@ export function useWorkspaceLegacyPublicOverviewData({ workspaceDataQueries }: A
   const { data: publicOverview, isLoading, isError } = useQuery(workspaceDataQueries.publicOverview);
 
   return {
-    publicRequests: publicOverview?.requests,
+    overviewRequests: publicOverview?.requests,
     isLoading,
     isError,
   };

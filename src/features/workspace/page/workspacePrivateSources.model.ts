@@ -59,7 +59,7 @@ type BuildWorkspacePrivateSourcesRequestsStateArgsParams = {
     | 'sortBy'
   >;
   contractData: Pick<WorkspaceContractDataResult, 'allRequestsSummary'>;
-  legacyPublicOverviewData: Pick<WorkspaceLegacyPublicOverviewDataResult, 'publicRequests' | 'isLoading' | 'isError'>;
+  legacyPublicOverviewData: Pick<WorkspaceLegacyPublicOverviewDataResult, 'overviewRequests' | 'isLoading' | 'isError'>;
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
 };
 
@@ -201,7 +201,7 @@ export function buildWorkspacePrivateSourcesRequestsStateArgs({
   activePublicSection,
 }: BuildWorkspacePrivateSourcesRequestsStateArgsParams): Parameters<typeof useWorkspacePublicRequestsState>[0] {
   return {
-    publicRequests: legacyPublicOverviewData.publicRequests,
+    publicRequests: legacyPublicOverviewData.overviewRequests,
     allRequestsSummary: contractData.allRequestsSummary,
     limit: filters.limit,
     page: filters.page,

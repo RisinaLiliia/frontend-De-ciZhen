@@ -14,7 +14,7 @@ describe('workspaceData.model', () => {
     });
 
     expect(plan).toMatchObject({
-      shouldLoadPublicRequests: true,
+      shouldLoadLegacyPublicOverview: true,
       shouldLoadPrivateOverview: false,
       shouldLoadWorkspaceRequests: false,
       shouldLoadMyRequests: false,
@@ -38,7 +38,7 @@ describe('workspaceData.model', () => {
       hasAccessToken: true,
     });
 
-    expect(overviewPlan.shouldLoadPublicRequests).toBe(true);
+    expect(overviewPlan.shouldLoadLegacyPublicOverview).toBe(true);
     expect(overviewPlan.shouldLoadPrivateOverview).toBe(true);
 
     const actionsPlan = resolveWorkspaceDataPlan({
@@ -50,7 +50,7 @@ describe('workspaceData.model', () => {
       hasAccessToken: true,
     });
 
-    expect(actionsPlan.shouldLoadPublicRequests).toBe(false);
+    expect(actionsPlan.shouldLoadLegacyPublicOverview).toBe(false);
     expect(actionsPlan.shouldLoadPrivateOverview).toBe(true);
 
     const myScopePlan = resolveWorkspaceDataPlan({
@@ -116,7 +116,7 @@ describe('workspaceData.model', () => {
     expect(reviewsPlan.shouldLoadReviews).toBe(true);
     expect(reviewsPlan.shouldLoadWorkspaceRequests).toBe(false);
     expect(reviewsPlan.shouldLoadMyOffers).toBe(false);
-    expect(reviewsPlan.shouldLoadPublicRequests).toBe(false);
+    expect(reviewsPlan.shouldLoadLegacyPublicOverview).toBe(false);
   });
 
   it('loads unified market requests in the public requests section', () => {
@@ -132,7 +132,7 @@ describe('workspaceData.model', () => {
     });
 
     expect(marketPlan.shouldLoadWorkspaceRequests).toBe(true);
-    expect(marketPlan.shouldLoadPublicRequests).toBe(false);
+    expect(marketPlan.shouldLoadLegacyPublicOverview).toBe(false);
     expect(marketPlan.shouldLoadMyOffers).toBe(false);
     expect(marketPlan.shouldLoadFavoriteRequests).toBe(false);
   });

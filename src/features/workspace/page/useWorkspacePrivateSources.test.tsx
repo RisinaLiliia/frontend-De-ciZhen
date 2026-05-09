@@ -110,7 +110,7 @@ describe('useWorkspacePrivateSources', () => {
         isPublicSummaryError: false,
       },
       legacyPublicOverviewData: {
-        publicRequests: { items: [request], total: 1 },
+        overviewRequests: { items: [request], total: 1 },
         isLoading: false,
         isError: false,
       },
