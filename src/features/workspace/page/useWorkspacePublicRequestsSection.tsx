@@ -10,13 +10,11 @@ import {
   useWorkspaceData,
 } from '@/features/workspace/requests';
 import { RequestsPrivateActionRail } from '@/features/workspace/requests';
-import { useWorkspacePublicFilters } from '@/features/workspace';
+import { useWorkspaceFormatters, useWorkspacePublicFilters } from '@/features/workspace';
 import {
-  buildOffersByRequestMap,
   pickRequestsExplorerSharedFilters,
 } from '@/components/requests/requestsExplorer.model';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
 import {
   buildWorkspacePublicRequestsAsideProps,
   buildWorkspacePublicRequestsListProps,
@@ -56,7 +54,6 @@ export function useWorkspacePublicRequestsSection({
     activeRequestsState,
     activeRequestsPeriod,
     activeRequestsSort,
-    nextPath,
   } = routeState;
 
   const filters = useWorkspacePublicFilters({
@@ -94,12 +91,11 @@ export function useWorkspacePublicRequestsSection({
     activeRequestsPeriod,
     activeRequestsSort: activeRequestsSort ?? filters.sortBy,
   });
-  const { contractData, requestUserStateData } = data;
+  const { contractData } = data;
+  const { formatNumber, formatDate, formatPrice } = useWorkspaceFormatters(locale);
 
   const marketResponse = contractData.workspaceRequests;
-  const hasMarketContract = marketResponse != null;
   const {
-    requests,
     publicRequestsListItems,
     summaryItems,
     decisionPanel,
@@ -110,45 +106,21 @@ export function useWorkspacePublicRequestsSection({
   } = React.useMemo(
     () => resolveWorkspacePublicRequestsData({
       marketResponse,
-      publicRequestsItems: contractData.publicRequests?.items,
-      publicRequestsTotalValue: contractData.publicRequests?.total,
-      publicRequestsPage: contractData.publicRequests?.page,
-      publicRequestsLimit: contractData.publicRequests?.limit,
       filtersPage: filters.page,
       filtersLimit: filters.limit,
     }),
     [
-      contractData.publicRequests?.items,
-      contractData.publicRequests?.limit,
-      contractData.publicRequests?.page,
-      contractData.publicRequests?.total,
       filters.limit,
       filters.page,
       marketResponse,
     ],
   );
-  const requestById = React.useMemo(
-    () => new Map(requests.map((request) => [request.id, request])),
-    [requests],
-  );
-  const favoriteRequestIds = React.useMemo(
-    () => new Set((requestUserStateData.favoriteRequests ?? []).map((request) => request.id)),
-    [requestUserStateData.favoriteRequests],
-  );
-  const interactions = useWorkspaceRequestUserInteractions({
-    t,
-    locale,
-    isAuthed,
-    nextPath,
-    favoriteRequestIds,
-    requestById,
-    favoriteProviderLookup: new Set(),
-    providerById: new Map(),
-  });
-  const offersByRequest = React.useMemo(
-    () => buildOffersByRequestMap(requestUserStateData.myOffers),
-    [requestUserStateData.myOffers],
-  );
+  const openOfferSheet = React.useCallback<(requestId: string) => void>(() => {
+    return;
+  }, []);
+  const toggleRequestFavorite = React.useCallback<(requestId: string) => void>(() => {
+    return;
+  }, []);
 
   const setRequestsState = React.useCallback((nextState: string) => {
     const nextParams = new URLSearchParams(searchParams.toString());
@@ -233,34 +205,32 @@ export function useWorkspacePublicRequestsSection({
           emptyCtaHref: '/workspace?section=requests&scope=market',
           sharedFilters,
           requestsData: {
-            totalResultsLabel: interactions.formatNumber.format(resolvedTotalResults),
+            totalResultsLabel: formatNumber.format(resolvedTotalResults),
             requests: publicRequestsListItems,
-            isLoading: contractData.isLoading,
-            isError: contractData.isError,
-            offersByRequest,
-            favoriteRequestIds,
-            pendingFavoriteRequestIds: interactions.pendingFavoriteRequestIds,
-            pendingOfferRequestId: interactions.pendingOfferRequestId,
+            isLoading: contractData.isWorkspaceRequestsLoading,
+            isError: contractData.isWorkspaceRequestsError,
+            enableOfferActions: false,
+            showFavoriteButton: false,
+            pendingOfferRequestId: null,
             totalPages: publicListTotalPages,
-            openOfferSheet: interactions.onOpenOfferSheet,
-            onWithdrawOffer: interactions.onWithdrawOffer,
-            toggleRequestFavorite: interactions.onToggleRequestFavorite,
+            openOfferSheet,
+            toggleRequestFavorite,
           },
           catalogIndex: {
             serviceByKey,
             categoryByKey,
             cityById,
           },
-          formatDate: interactions.formatDate,
-          formatPrice: interactions.formatPrice,
-          summaryStripProps: hasMarketContract
+          formatDate,
+          formatPrice,
+          summaryStripProps: marketResponse
             ? buildWorkspacePublicRequestsSummaryStripProps({
               locale,
               items: summaryItems,
               onSelect: setRequestsState,
             })
             : undefined,
-          isSummaryStripLoading: !hasMarketContract && contractData.isWorkspaceRequestsLoading,
+          isSummaryStripLoading: contractData.isWorkspaceRequestsLoading,
         }))}
       />
     </div>

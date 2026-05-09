@@ -26,7 +26,7 @@ describe('workspaceData.queries', () => {
     vi.clearAllMocks();
   });
 
-  it('builds public overview and summary query options from filter state', () => {
+  it('keeps legacy public overview disabled for unified market requests while still building market contract queries', () => {
     const loadPlan = resolveWorkspaceDataPlan({
       isAuthed: false,
       isWorkspaceAuthed: false,
@@ -58,7 +58,7 @@ describe('workspaceData.queries', () => {
       activeRequestsSort: null,
     });
 
-    expect(queries.publicOverview.enabled).toBe(true);
+    expect(queries.publicOverview.enabled).toBe(false);
     expect(queries.publicOverview.queryKey).toEqual([
       'workspace-public-overview',
       'berlin',

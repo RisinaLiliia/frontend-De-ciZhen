@@ -276,11 +276,11 @@ export function useWorkspacePrivatePresentationFlow({
     openDecisionItem,
     exitDecisionMode,
   } = useDecisionMode({
-    panel: privateRequestsModel.response?.decisionPanel,
+    panel: privateRequestsModel.response ? privateRequestsModel.response.decisionPanel : null,
   });
   const privateAside = isUnifiedPrivateRequests ? (
     <div className="stack-md">
-      {privateRequestsModel.response?.decisionPanel ? (
+      {privateRequestsModel.response ? (
         <RequestsPrivateActionRail
           {...buildRequestsWorkspaceDecisionRailProps({
             locale: branch.locale,

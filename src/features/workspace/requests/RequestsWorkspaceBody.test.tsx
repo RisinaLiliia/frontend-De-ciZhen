@@ -80,7 +80,27 @@ describe('RequestsWorkspaceBody', () => {
             hasMore: false,
             items: [],
           },
-          decisionPanel: null,
+          decisionPanel: {
+            summary: {
+              totalNeedsAction: 0,
+              highPriorityCount: 0,
+              newOffersCount: 0,
+              replyRequiredCount: 0,
+              confirmCompletionCount: 0,
+              overdueCount: 0,
+            },
+            primaryAction: {
+              label: 'Jetzt handeln',
+              mode: 'decision',
+              targetFilter: 'needs_action',
+            },
+            queue: [],
+            overview: {
+              highUrgency: 0,
+              inProgress: 0,
+              completedThisPeriod: 0,
+            },
+          },
           sidePanel: null,
         },
         cards: [],

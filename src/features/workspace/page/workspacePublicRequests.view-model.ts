@@ -38,6 +38,8 @@ export function buildWorkspacePublicRequestsListProps(params: {
     requests: Parameters<typeof buildRequestsExplorerRequestsContentProps>[0]['requestsData']['requests'];
     isLoading: boolean;
     isError: boolean;
+    enableOfferActions?: Parameters<typeof buildRequestsExplorerRequestsContentProps>[0]['requestsData']['enableOfferActions'];
+    showFavoriteButton?: Parameters<typeof buildRequestsExplorerRequestsContentProps>[0]['requestsData']['showFavoriteButton'];
     offersByRequest?: Parameters<typeof buildRequestsExplorerRequestsContentProps>[0]['requestsData']['offersByRequest'];
     favoriteRequestIds?: Parameters<typeof buildRequestsExplorerRequestsContentProps>[0]['requestsData']['favoriteRequestIds'];
     pendingFavoriteRequestIds?: Parameters<typeof buildRequestsExplorerRequestsContentProps>[0]['requestsData']['pendingFavoriteRequestIds'];

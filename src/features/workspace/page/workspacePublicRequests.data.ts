@@ -12,7 +12,7 @@ export type ResolvedWorkspacePublicRequestsData = {
   publicRequestsTotal: number;
   resolvedTotalResults: number;
   summaryItems: NonNullable<WorkspaceRequestsResponseDto['summary']>['items'];
-  decisionPanel: WorkspaceRequestsResponseDto['decisionPanel'];
+  decisionPanel: WorkspaceRequestsResponseDto['decisionPanel'] | null;
   publicListPage: number;
   publicListLimit: number;
   publicListTotalPages: number;
@@ -20,33 +20,25 @@ export type ResolvedWorkspacePublicRequestsData = {
 
 export function resolveWorkspacePublicRequestsData(params: {
   marketResponse?: WorkspaceRequestsResponseDto | null;
-  publicRequestsItems?: RequestResponseDto[];
-  publicRequestsTotalValue?: number;
-  publicRequestsPage?: number;
-  publicRequestsLimit?: number;
   filtersPage: number;
   filtersLimit: number;
 }) : ResolvedWorkspacePublicRequestsData {
   const {
     marketResponse,
-    publicRequestsItems,
-    publicRequestsTotalValue,
-    publicRequestsPage,
-    publicRequestsLimit,
     filtersPage,
     filtersLimit,
   } = params;
 
   const marketListItems = marketResponse?.list.items?.map(mapWorkspaceRequestCardToPublicRequest) ?? [];
-  const requests = marketResponse ? marketListItems : (publicRequestsItems ?? []);
-  const publicRequestsTotal = marketResponse?.list.total ?? publicRequestsTotalValue ?? requests.length;
+  const requests = marketListItems;
+  const publicRequestsTotal = marketResponse?.list.total ?? 0;
   const publicRequestsListItems = requests;
   const resolvedTotalResults = publicRequestsTotal;
-  const summaryItems = marketResponse?.summary?.items ?? [];
-  const publicListPage = marketResponse?.list.page ?? publicRequestsPage ?? filtersPage;
-  const publicListLimit = marketResponse?.list.limit ?? publicRequestsLimit ?? filtersLimit;
+  const summaryItems = marketResponse?.summary.items ?? [];
+  const publicListPage = marketResponse?.list.page ?? filtersPage;
+  const publicListLimit = marketResponse?.list.limit ?? filtersLimit;
   const publicListTotalPages = Math.max(1, Math.ceil(publicRequestsTotal / Math.max(1, publicListLimit)));
-  const decisionPanel = marketResponse?.decisionPanel ?? null;
+  const decisionPanel = marketResponse ? marketResponse.decisionPanel : null;
 
   return {
     requests,

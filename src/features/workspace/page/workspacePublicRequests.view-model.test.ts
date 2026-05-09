@@ -60,6 +60,8 @@ describe('workspacePublicRequests.view-model', () => {
         requests: [],
         isLoading: false,
         isError: false,
+        enableOfferActions: false,
+        showFavoriteButton: false,
         pendingOfferRequestId: null,
         totalPages: 1,
         openOfferSheet: vi.fn(),
@@ -74,7 +76,11 @@ describe('workspacePublicRequests.view-model', () => {
       formatPrice: new Intl.NumberFormat('de-DE'),
       summaryStripProps,
       isSummaryStripLoading: true,
-    }).summaryStripProps).toEqual(summaryStripProps);
+    })).toMatchObject({
+      summaryStripProps,
+      enableOfferActions: false,
+      showFavoriteButton: false,
+    });
   });
 
   it('builds a market decision rail contract for the shared requests surface', () => {

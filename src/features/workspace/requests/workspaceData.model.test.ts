@@ -132,8 +132,9 @@ describe('workspaceData.model', () => {
     });
 
     expect(marketPlan.shouldLoadWorkspaceRequests).toBe(true);
-    expect(marketPlan.shouldLoadMyOffers).toBe(true);
-    expect(marketPlan.shouldLoadFavoriteRequests).toBe(true);
+    expect(marketPlan.shouldLoadPublicRequests).toBe(false);
+    expect(marketPlan.shouldLoadMyOffers).toBe(false);
+    expect(marketPlan.shouldLoadFavoriteRequests).toBe(false);
   });
 
   it('builds unique offer request ids preserving first-seen order', () => {

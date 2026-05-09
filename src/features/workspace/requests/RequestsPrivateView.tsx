@@ -1019,10 +1019,11 @@ export function RequestsPrivateView({
   listContext,
 }: RequestsPrivateViewProps) {
   const setStateFilter = useStateFilterMutation();
+  const decisionPanel = model.response ? model.response.decisionPanel : null;
   const visibleCards = React.useMemo(() => {
     if (decisionState.mode !== 'decision') return model.cards;
-    return sortCardsForDecisionMode(model.cards, model.response?.decisionPanel);
-  }, [decisionState.mode, model.cards, model.response]);
+    return sortCardsForDecisionMode(model.cards, decisionPanel);
+  }, [decisionPanel, decisionState.mode, model.cards]);
   const cardRefs = React.useRef(new Map<string, HTMLElement>());
   const {
     activeChatState,
@@ -1071,7 +1072,7 @@ export function RequestsPrivateView({
           !isLoading && model.response
             ? buildRequestsWorkspaceSummaryStripProps({
               locale,
-              items: model.response.summary?.items ?? [],
+              items: model.response.summary.items,
               onSelect: setStateFilter,
             })
             : undefined
@@ -1116,11 +1117,11 @@ export function RequestsPrivateView({
               </div>
             ))}
           </div>
-          {model.response?.decisionPanel ? (
+          {decisionPanel ? (
             <RequestsPrivateActionRail
               {...buildRequestsWorkspaceDecisionRailProps({
                 locale,
-                panel: model.response.decisionPanel,
+                panel: decisionPanel,
                 mode: decisionState.mode,
                 activeRequestId: decisionState.activeRequestId,
                 onStartDecisionMode: () => onEnterDecisionMode(),
@@ -1147,7 +1148,7 @@ export function RequestsPrivateView({
           }}
         />
       ) : null}
-      {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && model.response?.decisionPanel ? (
+      {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && decisionPanel ? (
         <>
           <DecisionModeBar
             locale={locale}
