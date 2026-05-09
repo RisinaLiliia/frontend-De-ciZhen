@@ -15,11 +15,6 @@ const useQueryMock = vi.mocked(useQuery);
 function Probe({ summaryEnabled = true }: { summaryEnabled?: boolean }) {
   const result = useWorkspaceContractData({
     workspaceDataQueries: {
-      publicOverview: {
-        queryKey: ['workspace-public-overview'],
-        enabled: true,
-        queryFn: vi.fn(),
-      },
       publicSummary: {
         queryKey: ['workspace-public-summary', 1],
         enabled: summaryEnabled,
@@ -57,13 +52,12 @@ describe('useWorkspaceContractData', () => {
   it('disables the public summary query when explicitly excluded', () => {
     useQueryMock
       .mockReturnValueOnce({ data: undefined, isLoading: false, isError: false } as never)
-      .mockReturnValueOnce({ data: undefined, isLoading: false, isError: false } as never)
       .mockReturnValueOnce({ data: null, isLoading: false } as never)
       .mockReturnValueOnce({ data: null, isLoading: false, isError: false } as never);
 
     render(<Probe summaryEnabled={false} />);
 
-    const summaryQueryArgs = useQueryMock.mock.calls[1]?.[0] as unknown as {
+    const summaryQueryArgs = useQueryMock.mock.calls[0]?.[0] as unknown as {
       enabled?: boolean;
     };
     expect(summaryQueryArgs.enabled).toBe(false);
@@ -72,7 +66,6 @@ describe('useWorkspaceContractData', () => {
 
   it('normalizes private requests fallback loading from private overview loading only when workspace requests are missing', () => {
     useQueryMock
-      .mockReturnValueOnce({ data: undefined, isLoading: false, isError: false } as never)
       .mockReturnValueOnce({ data: undefined, isLoading: false, isError: false } as never)
       .mockReturnValueOnce({ data: null, isLoading: true } as never)
       .mockReturnValueOnce({ data: null, isLoading: false, isError: false } as never);

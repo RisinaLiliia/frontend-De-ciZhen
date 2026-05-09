@@ -19,6 +19,7 @@ import type {
 } from '@/features/workspace/requests/workspaceRequestsScope.model';
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 import { useWorkspaceContractData } from '@/features/workspace/requests/useWorkspaceContractData';
+import { useWorkspaceLegacyPublicOverviewData } from '@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData';
 import { useWorkspaceLegacyPrivateData } from '@/features/workspace/requests/useWorkspaceLegacyPrivateData';
 import { useWorkspaceRequestUserStateData } from '@/features/workspace/requests/useWorkspaceRequestUserStateData';
 
@@ -127,6 +128,10 @@ export function useWorkspaceData(params: Params) {
     workspaceDataQueries,
   });
 
+  const legacyPublicOverviewData = useWorkspaceLegacyPublicOverviewData({
+    workspaceDataQueries,
+  });
+
   const requestUserStateData = useWorkspaceRequestUserStateData({
     workspaceDataQueries,
     locale,
@@ -139,6 +144,7 @@ export function useWorkspaceData(params: Params) {
 
   return {
     contractData,
+    legacyPublicOverviewData,
     requestUserStateData,
     legacyPrivateData,
   };

@@ -57,7 +57,14 @@ export function useWorkspacePrivatePresentationFlow({
   const searchParams = useSearchParams();
   const currentSearch = searchParams.toString();
   const { isWorkspaceAuthed } = branch;
-  const { activePublicSection, activeWorkspaceTab, pendingFavoriteProviderIds, onToggleProviderFavorite, isLoading, requestsCount } = data;
+  const {
+    activePublicSection,
+    activeWorkspaceTab,
+    pendingFavoriteProviderIds,
+    onToggleProviderFavorite,
+    overviewRequestsListState,
+    requestsCount,
+  } = data;
   const isOverviewMode =
     isWorkspaceOverviewMode({
       activePublicSection,
@@ -211,9 +218,9 @@ export function useWorkspacePrivatePresentationFlow({
       buildRequestsListProps({
         t: branch.t,
         locale: branch.locale,
-        requests: data.publicRequests,
-        isLoading: data.isLoading,
-        isError: data.isPublicRequestsError,
+        requests: overviewRequestsListState.requests,
+        isLoading: overviewRequestsListState.isLoading,
+        isError: overviewRequestsListState.isError,
         serviceByKey: data.serviceByKey,
         categoryByKey: data.categoryByKey,
         cityById: data.cityById,
@@ -243,8 +250,8 @@ export function useWorkspacePrivatePresentationFlow({
       data.favoriteRequestIds,
       data.formatDate,
       data.formatPrice,
-      data.isLoading,
-      data.isPublicRequestsError,
+      overviewRequestsListState.isLoading,
+      overviewRequestsListState.isError,
       data.offersByRequest,
       data.onOpenChatThread,
       data.onOpenOfferSheet,
@@ -252,7 +259,7 @@ export function useWorkspacePrivatePresentationFlow({
       data.onWithdrawOffer,
       data.pendingFavoriteRequestIds,
       data.pendingOfferRequestId,
-      data.publicRequests,
+      overviewRequestsListState.requests,
       data.serviceByKey,
       isOverviewMode,
     ],
@@ -358,7 +365,7 @@ export function useWorkspacePrivatePresentationFlow({
     overviewDecisionPanelRef: overviewFocusPanelRef,
     privateMain,
     primaryAction,
-    isLoading,
+    isLoading: overviewRequestsListState.isLoading,
     requestsCount,
   };
 }

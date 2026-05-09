@@ -96,7 +96,7 @@ export function useWorkspacePrivateSources({
       activeRequestsSort,
     }),
   );
-  const { contractData, requestUserStateData, legacyPrivateData } = data;
+  const { contractData, legacyPublicOverviewData, requestUserStateData, legacyPrivateData } = data;
 
   const publicRequestsState = useWorkspacePublicRequestsState(
     shouldLoadPublicRequestsState
@@ -112,6 +112,7 @@ export function useWorkspacePrivateSources({
           sortBy,
         },
         contractData,
+        legacyPublicOverviewData,
         activePublicSection,
       })
       : buildWorkspacePrivateSourcesIdleRequestsStateArgs({
@@ -139,6 +140,7 @@ export function useWorkspacePrivateSources({
 
   return resolveWorkspacePrivateSourcesResult({
     contractData,
+    legacyPublicOverviewData,
     requestUserStateData,
     legacyPrivateData,
     catalogIndex,

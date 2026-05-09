@@ -8,6 +8,7 @@ import { getAccessToken } from '@/lib/auth/token';
 import { resolveWorkspaceDataPlan } from './workspaceData.model';
 import { buildWorkspaceDataQueries } from './workspaceData.queries';
 import { useWorkspaceContractData } from './useWorkspaceContractData';
+import { useWorkspaceLegacyPublicOverviewData } from './useWorkspaceLegacyPublicOverviewData';
 import { useWorkspaceLegacyPrivateData } from './useWorkspaceLegacyPrivateData';
 import { useWorkspaceRequestUserStateData } from './useWorkspaceRequestUserStateData';
 
@@ -27,6 +28,10 @@ vi.mock('./useWorkspaceContractData', () => ({
   useWorkspaceContractData: vi.fn(),
 }));
 
+vi.mock('./useWorkspaceLegacyPublicOverviewData', () => ({
+  useWorkspaceLegacyPublicOverviewData: vi.fn(),
+}));
+
 vi.mock('./useWorkspaceLegacyPrivateData', () => ({
   useWorkspaceLegacyPrivateData: vi.fn(),
 }));
@@ -39,6 +44,7 @@ const getAccessTokenMock = vi.mocked(getAccessToken);
 const resolveWorkspaceDataPlanMock = vi.mocked(resolveWorkspaceDataPlan);
 const buildWorkspaceDataQueriesMock = vi.mocked(buildWorkspaceDataQueries);
 const useWorkspaceContractDataMock = vi.mocked(useWorkspaceContractData);
+const useWorkspaceLegacyPublicOverviewDataMock = vi.mocked(useWorkspaceLegacyPublicOverviewData);
 const useWorkspaceLegacyPrivateDataMock = vi.mocked(useWorkspaceLegacyPrivateData);
 const useWorkspaceRequestUserStateDataMock = vi.mocked(useWorkspaceRequestUserStateData);
 
@@ -62,6 +68,7 @@ function Probe() {
     <div
       data-testid="workspace-data"
       data-contract-keys={Object.keys(result.contractData).sort().join(',')}
+      data-legacy-public-overview-keys={Object.keys(result.legacyPublicOverviewData).sort().join(',')}
       data-request-user-state-keys={Object.keys(result.requestUserStateData).sort().join(',')}
       data-legacy-keys={Object.keys(result.legacyPrivateData).sort().join(',')}
       data-has-flat-workspace-requests={String('workspaceRequests' in result)}
@@ -86,6 +93,11 @@ describe('useWorkspaceData', () => {
       workspaceRequests: { requests: [] },
       isWorkspaceRequestsLoading: false,
     } as never);
+    useWorkspaceLegacyPublicOverviewDataMock.mockReturnValue({
+      publicRequests: { items: [], total: 0 },
+      isLoading: false,
+      isError: false,
+    } as never);
     useWorkspaceRequestUserStateDataMock.mockReturnValue({
       myOffers: [],
       favoriteRequests: [],
@@ -98,6 +110,7 @@ describe('useWorkspaceData', () => {
 
     const node = screen.getByTestId('workspace-data');
     expect(node.getAttribute('data-contract-keys')).toContain('workspaceRequests');
+    expect(node.getAttribute('data-legacy-public-overview-keys')).toContain('publicRequests');
     expect(node.getAttribute('data-request-user-state-keys')).toContain('myOffers');
     expect(node.getAttribute('data-legacy-keys')).toContain('myRequests');
     expect(node.getAttribute('data-has-flat-workspace-requests')).toBe('false');

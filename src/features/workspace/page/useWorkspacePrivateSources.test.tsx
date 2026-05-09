@@ -90,9 +90,6 @@ describe('useWorkspacePrivateSources', () => {
 
     useWorkspaceDataMock.mockReturnValue({
       contractData: {
-        publicRequests: { items: [request], total: 1 },
-        isLoading: false,
-        isError: false,
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
@@ -111,6 +108,11 @@ describe('useWorkspacePrivateSources', () => {
         publicCityActivity: null,
         isPublicSummaryLoading: false,
         isPublicSummaryError: false,
+      },
+      legacyPublicOverviewData: {
+        publicRequests: { items: [request], total: 1 },
+        isLoading: false,
+        isError: false,
       },
       requestUserStateData: {
         myOffers: [offer],

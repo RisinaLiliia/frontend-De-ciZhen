@@ -199,8 +199,10 @@ describe('workspacePrivateSources.model', () => {
         sortBy: 'date_desc',
       },
       contractData: {
-        publicRequests: { items: [{ id: 'req-1' }], total: 1 },
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
+      } as never,
+      legacyPublicOverviewData: {
+        publicRequests: { items: [{ id: 'req-1' }], total: 1 },
         isLoading: false,
         isError: false,
       } as never,
@@ -352,8 +354,11 @@ describe('workspacePrivateSources.model', () => {
         isWorkspaceRequestsLoading: false,
         isWorkspaceRequestsError: false,
         isWorkspacePrivateRequestsFallbackLoading: false,
-        isError: false,
+      } as never,
+      legacyPublicOverviewData: {
+        publicRequests: { items: [{ id: 'req-1' }], total: 1 },
         isLoading: true,
+        isError: false,
       } as never,
       requestUserStateData: {
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
@@ -401,8 +406,11 @@ describe('workspacePrivateSources.model', () => {
     });
 
     expect(result.platformRequestsTotal).toBe(12);
-    expect(result.publicRequests).toEqual([{ id: 'req-1' }, { id: 'req-2' }]);
-    expect(result.isPublicRequestsError).toBe(false);
+    expect(result.overviewRequestsListState).toEqual({
+      requests: [{ id: 'req-1' }, { id: 'req-2' }],
+      isLoading: true,
+      isError: false,
+    });
     expect(result.requestsCount).toBe(2);
     expect(result.isProviderContractsLoading).toBe(true);
     expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));

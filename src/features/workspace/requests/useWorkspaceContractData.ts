@@ -12,9 +12,6 @@ type Args = {
 };
 
 export function useWorkspaceContractData({ workspaceDataQueries }: Args) {
-  const { data: publicOverview, isLoading, isError } = useQuery(workspaceDataQueries.publicOverview);
-  const publicRequests = publicOverview?.requests;
-
   const {
     data: publicSummaryOverview,
     isLoading: isPublicSummaryLoading,
@@ -34,9 +31,6 @@ export function useWorkspaceContractData({ workspaceDataQueries }: Args) {
   } = useQuery(workspaceDataQueries.workspaceRequests);
 
   return {
-    publicRequests,
-    isLoading,
-    isError,
     allRequestsSummary,
     publicCityActivity,
     isPublicSummaryLoading,

@@ -14,6 +14,7 @@ type WorkspacePublicFiltersResult = ReturnType<typeof useWorkspacePublicFilters>
 type CatalogIndexResult = ReturnType<typeof useCatalogIndex>;
 type WorkspaceDataResult = ReturnType<typeof useWorkspaceData>;
 type WorkspaceContractDataResult = WorkspaceDataResult['contractData'];
+type WorkspaceLegacyPublicOverviewDataResult = WorkspaceDataResult['legacyPublicOverviewData'];
 type WorkspaceRequestUserStateDataResult = WorkspaceDataResult['requestUserStateData'];
 type WorkspaceLegacyPrivateDataResult = WorkspaceDataResult['legacyPrivateData'];
 type WorkspacePublicRequestsStateResult = ReturnType<typeof useWorkspacePublicRequestsState>;
@@ -57,7 +58,8 @@ type BuildWorkspacePrivateSourcesRequestsStateArgsParams = {
     | 'subcategoryKey'
     | 'sortBy'
   >;
-  contractData: Pick<WorkspaceContractDataResult, 'publicRequests' | 'allRequestsSummary' | 'isLoading' | 'isError'>;
+  contractData: Pick<WorkspaceContractDataResult, 'allRequestsSummary'>;
+  legacyPublicOverviewData: Pick<WorkspaceLegacyPublicOverviewDataResult, 'publicRequests' | 'isLoading' | 'isError'>;
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
 };
 
@@ -91,6 +93,7 @@ type BuildWorkspacePrivateCatalogIndexArgsParams = Pick<
 
 type ResolveWorkspacePrivateSourcesResultParams = {
   contractData: WorkspaceContractDataResult;
+  legacyPublicOverviewData: WorkspaceLegacyPublicOverviewDataResult;
   requestUserStateData: WorkspaceRequestUserStateDataResult;
   legacyPrivateData: WorkspaceLegacyPrivateDataResult;
   catalogIndex: CatalogIndexResult;
@@ -194,10 +197,11 @@ export function buildWorkspacePrivateSourcesDataArgs({
 export function buildWorkspacePrivateSourcesRequestsStateArgs({
   filters,
   contractData,
+  legacyPublicOverviewData,
   activePublicSection,
 }: BuildWorkspacePrivateSourcesRequestsStateArgsParams): Parameters<typeof useWorkspacePublicRequestsState>[0] {
   return {
-    publicRequests: contractData.publicRequests,
+    publicRequests: legacyPublicOverviewData.publicRequests,
     allRequestsSummary: contractData.allRequestsSummary,
     limit: filters.limit,
     page: filters.page,
@@ -206,8 +210,8 @@ export function buildWorkspacePrivateSourcesRequestsStateArgs({
     enableEmptyStateTracking: true,
     isWorkspacePublicSection: false,
     activePublicSection,
-    isLoading: contractData.isLoading,
-    isError: contractData.isError,
+    isLoading: legacyPublicOverviewData.isLoading,
+    isError: legacyPublicOverviewData.isError,
     hasActivePublicFilter: filters.hasActivePublicFilter,
     cityId: filters.cityId,
     categoryKey: filters.categoryKey,
@@ -298,6 +302,7 @@ export function buildWorkspacePrivateSourcesCollectionsArgs({
 
 export function resolveWorkspacePrivateSourcesResult({
   contractData,
+  legacyPublicOverviewData,
   requestUserStateData,
   legacyPrivateData,
   catalogIndex,
@@ -306,7 +311,11 @@ export function resolveWorkspacePrivateSourcesResult({
 }: ResolveWorkspacePrivateSourcesResultParams) {
   return {
     allRequestsSummary: contractData.allRequestsSummary,
-    publicRequests: publicRequestsState.requests,
+    overviewRequestsListState: {
+      requests: publicRequestsState.requests,
+      isLoading: legacyPublicOverviewData.isLoading,
+      isError: legacyPublicOverviewData.isError,
+    },
     publicCityActivity: contractData.publicCityActivity,
     isPublicSummaryLoading: contractData.isPublicSummaryLoading,
     isPublicSummaryError: contractData.isPublicSummaryError,
@@ -347,8 +356,6 @@ export function resolveWorkspacePrivateSourcesResult({
     isClientContractsLoading: legacyPrivateData.isClientContractsLoading,
     isMyReviewsLoading: legacyPrivateData.isMyReviewsLoading,
     platformRequestsTotal: publicRequestsState.platformRequestsTotal,
-    isPublicRequestsError: contractData.isError,
-    isLoading: contractData.isLoading,
     requestsCount: publicRequestsState.requests.length,
   };
 }
