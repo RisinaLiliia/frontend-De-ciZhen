@@ -75,6 +75,8 @@ type BuildRequestsContentArgs = {
     requests: RequestsExplorerRequestsContentProps['requests'];
     isLoading: boolean;
     isError: boolean;
+    enableOfferActions?: RequestsExplorerRequestsContentProps['enableOfferActions'];
+    showFavoriteButton?: RequestsExplorerRequestsContentProps['showFavoriteButton'];
     offersByRequest?: RequestsExplorerRequestsContentProps['offersByRequest'];
     favoriteRequestIds?: RequestsExplorerRequestsContentProps['favoriteRequestIds'];
     pendingFavoriteRequestIds?: RequestsExplorerRequestsContentProps['pendingFavoriteRequestIds'];
@@ -179,6 +181,8 @@ export function buildRequestsExplorerRequestsContentProps({
     requests: requestsData.requests,
     isLoading: requestsData.isLoading,
     isError: requestsData.isError,
+    enableOfferActions: requestsData.enableOfferActions,
+    showFavoriteButton: requestsData.showFavoriteButton,
     offersByRequest: requestsData.offersByRequest,
     favoriteRequestIds: requestsData.favoriteRequestIds,
     pendingFavoriteRequestIds: requestsData.pendingFavoriteRequestIds,

@@ -74,19 +74,18 @@ export function resolveWorkspaceDataPlan({
     isWorkspacePublicSection &&
     activePublicSection === 'requests' &&
     requestsScope === 'market';
-  const shouldLoadPublicRequestUserState =
-    shouldLoadUnifiedMarketRequests &&
-    isAuthed &&
-    shouldLoadPrivateData;
+  const shouldLoadPublicRequestUserState = false;
   const shouldLoadPrivateOverviewRequests =
     isWorkspaceAuthed &&
     shouldLoadPrivateData &&
     activePublicSection === null &&
     activeWorkspaceTab === 'my-requests';
   const shouldLoadPublicRequests =
-    isWorkspacePublicSection ||
-    !isWorkspaceAuthed ||
-    shouldLoadPrivateOverviewRequests;
+    !shouldLoadUnifiedMarketRequests && (
+      isWorkspacePublicSection ||
+      !isWorkspaceAuthed ||
+      shouldLoadPrivateOverviewRequests
+    );
   const shouldLoadPrivateOverview = isWorkspaceAuthed && shouldLoadPrivateData && hasAccessToken;
   const shouldLoadWorkspaceRequests = shouldLoadUnifiedPrivateRequests || shouldLoadUnifiedMarketRequests;
   const shouldLoadMyRequests =

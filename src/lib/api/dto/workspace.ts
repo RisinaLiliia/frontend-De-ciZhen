@@ -133,9 +133,9 @@ export type WorkspaceRequestsResponseDto = {
     state?: WorkspaceRequestsStateDto;
     sort?: string;
   };
-  summary?: WorkspaceRequestsSummaryDto | null;
+  summary: WorkspaceRequestsSummaryDto;
   list: WorkspaceRequestsListDto;
-  decisionPanel?: WorkspaceRequestsDecisionPanelDto | null;
+  decisionPanel: WorkspaceRequestsDecisionPanelDto;
   sidePanel?: WorkspaceRequestsSidePanelDto | null;
 };
 

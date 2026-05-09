@@ -87,6 +87,8 @@ export type RequestsExplorerRequestsContentProps = {
   requests: RequestResponseDto[];
   isLoading: boolean;
   isError: boolean;
+  enableOfferActions?: boolean;
+  showFavoriteButton?: boolean;
   offersByRequest?: Map<string, OfferDto>;
   favoriteRequestIds?: Set<string>;
   pendingFavoriteRequestIds?: Set<string>;
