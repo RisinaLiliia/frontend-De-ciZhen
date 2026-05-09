@@ -411,7 +411,7 @@ describe('workspacePrivateSources.model', () => {
       isLoading: true,
       isError: false,
     });
-    expect(result.requestsCount).toBe(2);
+    expect(result.overviewRequestsCount).toBe(2);
     expect(result.isProviderContractsLoading).toBe(true);
     expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));
     expect(result.privateOverviewState).toEqual({

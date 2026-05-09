@@ -95,7 +95,7 @@ function createData() {
     favoriteProviderIds: new Set(['provider-1']),
     setStatusFilter: vi.fn(),
     isLoading: false,
-    requestsCount: 12,
+    overviewRequestsCount: 12,
   };
 }
 

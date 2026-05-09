@@ -355,7 +355,7 @@ export function resolveWorkspacePrivateSourcesResult({
     isProviderContractsLoading: legacyPrivateData.isProviderContractsLoading,
     isClientContractsLoading: legacyPrivateData.isClientContractsLoading,
     isMyReviewsLoading: legacyPrivateData.isMyReviewsLoading,
-    platformRequestsTotal: publicRequestsState.platformRequestsTotal,
-    requestsCount: publicRequestsState.requests.length,
+    platformRequestsTotal: contractData.allRequestsSummary?.totalPublishedRequests ?? 0,
+    overviewRequestsCount: publicRequestsState.requests.length,
   };
 }

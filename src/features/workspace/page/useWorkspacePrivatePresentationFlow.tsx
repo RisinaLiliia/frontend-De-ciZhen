@@ -63,7 +63,7 @@ export function useWorkspacePrivatePresentationFlow({
     pendingFavoriteProviderIds,
     onToggleProviderFavorite,
     overviewRequestsListState,
-    requestsCount,
+    overviewRequestsCount,
   } = data;
   const isOverviewMode =
     isWorkspaceOverviewMode({
@@ -366,6 +366,6 @@ export function useWorkspacePrivatePresentationFlow({
     privateMain,
     primaryAction,
     isLoading: overviewRequestsListState.isLoading,
-    requestsCount,
+    overviewRequestsCount,
   };
 }

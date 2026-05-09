@@ -32,14 +32,14 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
     privateMain,
     primaryAction,
     isLoading,
-    requestsCount,
+    overviewRequestsCount,
   } = useWorkspacePrivateBranchModel(props);
 
   useDevRenderMetric('workspace.private', () => ({
     isAuthed,
     activeWorkspaceTab,
     isLoading,
-    requestsCount,
+    overviewRequestsCount,
   }));
 
   return (
