@@ -218,11 +218,13 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyPrivateData: {
-        providers: [{ id: 'provider-1' }],
-        favoriteProviders: [{ id: 'provider-1' }],
+      legacyRequestSupportData: {
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
+      } as never,
+      legacyProviderSupportData: {
+        providers: [{ id: 'provider-1' }],
+        favoriteProviders: [{ id: 'provider-1' }],
       } as never,
       catalogIndex: {
         cityById: new Map([['city-1', { id: 'city-1', i18n: { de: 'Berlin' } }]]),
@@ -281,11 +283,13 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyPrivateData: {
-        providers: [{ id: 'provider-1' }],
-        favoriteProviders: [{ id: 'provider-1' }],
+      legacyRequestSupportData: {
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
+      } as never,
+      legacyProviderSupportData: {
+        providers: [{ id: 'provider-1' }],
+        favoriteProviders: [{ id: 'provider-1' }],
       } as never,
       catalogIndex: {
         cityById: new Map(),
@@ -314,11 +318,13 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyPrivateData: {
-        providers: [{ id: 'provider-1' }],
-        favoriteProviders: [{ id: 'provider-1' }],
+      legacyRequestSupportData: {
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
+      } as never,
+      legacyProviderSupportData: {
+        providers: [{ id: 'provider-1' }],
+        favoriteProviders: [{ id: 'provider-1' }],
       } as never,
       catalogIndex: {
         cityById: new Map(),
@@ -368,20 +374,22 @@ describe('workspacePrivateSources.model', () => {
         isFavoriteRequestsLoading: false,
         isMyOffersLoading: false,
       } as never,
-      legacyPrivateData: {
-        providers: [{ id: 'provider-1' }],
-        isProvidersLoading: false,
-        isProvidersError: false,
+      legacyRequestSupportData: {
         myRequests: [{ id: 'req-1' }],
         myProviderContracts: [],
         myClientContracts: [],
-        favoriteProviders: [{ id: 'provider-1' }],
         myReviews: [],
-        isFavoriteProvidersLoading: false,
         isMyRequestsLoading: false,
         isProviderContractsLoading: true,
         isClientContractsLoading: false,
         isMyReviewsLoading: false,
+      } as never,
+      legacyProviderSupportData: {
+        providers: [{ id: 'provider-1' }],
+        isProvidersLoading: false,
+        isProvidersError: false,
+        favoriteProviders: [{ id: 'provider-1' }],
+        isFavoriteProvidersLoading: false,
       } as never,
       catalogIndex: {
         serviceByKey: new Map([['svc-1', { i18n: { de: 'Painter' } }]]),

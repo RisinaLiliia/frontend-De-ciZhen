@@ -16,7 +16,8 @@ type WorkspaceDataResult = ReturnType<typeof useWorkspaceData>;
 type WorkspaceContractDataResult = WorkspaceDataResult['contractData'];
 type WorkspaceLegacyPublicOverviewDataResult = WorkspaceDataResult['legacyPublicOverviewData'];
 type WorkspaceRequestUserStateDataResult = WorkspaceDataResult['requestUserStateData'];
-type WorkspaceLegacyPrivateDataResult = WorkspaceDataResult['legacyPrivateData'];
+type WorkspaceLegacyRequestSupportDataResult = WorkspaceDataResult['legacyRequestSupportData'];
+type WorkspaceLegacyProviderSupportDataResult = WorkspaceDataResult['legacyProviderSupportData'];
 type WorkspacePublicRequestsStateResult = ReturnType<typeof useWorkspacePublicRequestsState>;
 type WorkspaceCollectionsResult = ReturnType<typeof useWorkspaceCollections>;
 
@@ -73,12 +74,15 @@ type BuildWorkspacePrivateSourcesCollectionsArgsParams = {
     | 'favoriteRequests'
     | 'myOffers'
   >;
-  legacyPrivateData: Pick<
-    WorkspaceLegacyPrivateDataResult,
-    | 'providers'
-    | 'favoriteProviders'
+  legacyRequestSupportData: Pick<
+    WorkspaceLegacyRequestSupportDataResult,
     | 'myProviderContracts'
     | 'myClientContracts'
+  >;
+  legacyProviderSupportData: Pick<
+    WorkspaceLegacyProviderSupportDataResult,
+    | 'providers'
+    | 'favoriteProviders'
   >;
   catalogIndex: Pick<CatalogIndexResult, 'cityById' | 'serviceByKey'>;
   locale: WorkspaceBranchProps['locale'];
@@ -95,7 +99,8 @@ type ResolveWorkspacePrivateSourcesResultParams = {
   contractData: WorkspaceContractDataResult;
   legacyPublicOverviewData: WorkspaceLegacyPublicOverviewDataResult;
   requestUserStateData: WorkspaceRequestUserStateDataResult;
-  legacyPrivateData: WorkspaceLegacyPrivateDataResult;
+  legacyRequestSupportData: WorkspaceLegacyRequestSupportDataResult;
+  legacyProviderSupportData: WorkspaceLegacyProviderSupportDataResult;
   catalogIndex: CatalogIndexResult;
   collections: WorkspaceCollectionsResult;
   publicRequestsState: WorkspacePublicRequestsStateResult;
@@ -267,7 +272,8 @@ export function buildWorkspacePrivateSourcesCollectionsArgs({
   requestsScope = 'market',
   requests,
   requestUserStateData,
-  legacyPrivateData,
+  legacyRequestSupportData,
+  legacyProviderSupportData,
   catalogIndex,
   locale,
 }: BuildWorkspacePrivateSourcesCollectionsArgsParams): Parameters<typeof useWorkspaceCollections>[0] {
@@ -289,11 +295,11 @@ export function buildWorkspacePrivateSourcesCollectionsArgs({
     includeFavoriteProviderPresentation,
     requests: includeRequestCollections ? requests : [],
     favoriteRequests: includeRequestCollections ? requestUserStateData.favoriteRequests : [],
-    providers: legacyPrivateData.providers,
-    favoriteProviders: legacyPrivateData.favoriteProviders,
+    providers: legacyProviderSupportData.providers,
+    favoriteProviders: legacyProviderSupportData.favoriteProviders,
     myOffers: includeRequestCollections ? requestUserStateData.myOffers : [],
-    myProviderContracts: includeRequestCollections ? legacyPrivateData.myProviderContracts : [],
-    myClientContracts: includeRequestCollections ? legacyPrivateData.myClientContracts : [],
+    myProviderContracts: includeRequestCollections ? legacyRequestSupportData.myProviderContracts : [],
+    myClientContracts: includeRequestCollections ? legacyRequestSupportData.myClientContracts : [],
     cityById: catalogIndex.cityById,
     serviceByKey: catalogIndex.serviceByKey,
     locale,
@@ -304,7 +310,8 @@ export function resolveWorkspacePrivateSourcesResult({
   contractData,
   legacyPublicOverviewData,
   requestUserStateData,
-  legacyPrivateData,
+  legacyRequestSupportData,
+  legacyProviderSupportData,
   catalogIndex,
   collections,
   publicRequestsState,
@@ -319,27 +326,27 @@ export function resolveWorkspacePrivateSourcesResult({
     publicCityActivity: contractData.publicCityActivity,
     isPublicSummaryLoading: contractData.isPublicSummaryLoading,
     isPublicSummaryError: contractData.isPublicSummaryError,
-    providers: legacyPrivateData.providers,
-    isProvidersLoading: legacyPrivateData.isProvidersLoading,
-    isProvidersError: legacyPrivateData.isProvidersError,
+    providers: legacyProviderSupportData.providers,
+    isProvidersLoading: legacyProviderSupportData.isProvidersLoading,
+    isProvidersError: legacyProviderSupportData.isProvidersError,
     privateOverviewState: contractData.privateOverviewState,
     isWorkspacePrivateRequestsFallbackLoading: contractData.isWorkspacePrivateRequestsFallbackLoading,
     workspaceRequests: contractData.workspaceRequests,
     isWorkspaceRequestsLoading: contractData.isWorkspaceRequestsLoading,
     isWorkspaceRequestsError: contractData.isWorkspaceRequestsError,
     myOffers: requestUserStateData.myOffers,
-    myRequests: legacyPrivateData.myRequests,
+    myRequests: legacyRequestSupportData.myRequests,
     myOfferRequestsById: requestUserStateData.myOfferRequestsById,
     isMyOfferRequestsLoading: requestUserStateData.isMyOfferRequestsLoading,
-    myProviderContracts: legacyPrivateData.myProviderContracts,
-    myClientContracts: legacyPrivateData.myClientContracts,
+    myProviderContracts: legacyRequestSupportData.myProviderContracts,
+    myClientContracts: legacyRequestSupportData.myClientContracts,
     allMyContracts: collections.allMyContracts,
     favoriteRequests: requestUserStateData.favoriteRequests,
-    favoriteProviders: legacyPrivateData.favoriteProviders,
+    favoriteProviders: legacyProviderSupportData.favoriteProviders,
     favoriteProviderIds: collections.favoriteProviderIds,
-    myReviews: legacyPrivateData.myReviews,
+    myReviews: legacyRequestSupportData.myReviews,
     isFavoriteRequestsLoading: requestUserStateData.isFavoriteRequestsLoading,
-    isFavoriteProvidersLoading: legacyPrivateData.isFavoriteProvidersLoading,
+    isFavoriteProvidersLoading: legacyProviderSupportData.isFavoriteProvidersLoading,
     offersByRequest: collections.offersByRequest,
     favoriteRequestIds: collections.favoriteRequestIds,
     favoriteProviderLookup: collections.favoriteProviderLookup,
@@ -350,11 +357,11 @@ export function resolveWorkspacePrivateSourcesResult({
     serviceByKey: catalogIndex.serviceByKey,
     categoryByKey: catalogIndex.categoryByKey,
     cityById: catalogIndex.cityById,
-    isMyRequestsLoading: legacyPrivateData.isMyRequestsLoading,
+    isMyRequestsLoading: legacyRequestSupportData.isMyRequestsLoading,
     isMyOffersLoading: requestUserStateData.isMyOffersLoading,
-    isProviderContractsLoading: legacyPrivateData.isProviderContractsLoading,
-    isClientContractsLoading: legacyPrivateData.isClientContractsLoading,
-    isMyReviewsLoading: legacyPrivateData.isMyReviewsLoading,
+    isProviderContractsLoading: legacyRequestSupportData.isProviderContractsLoading,
+    isClientContractsLoading: legacyRequestSupportData.isClientContractsLoading,
+    isMyReviewsLoading: legacyRequestSupportData.isMyReviewsLoading,
     platformRequestsTotal: contractData.allRequestsSummary?.totalPublishedRequests ?? 0,
     overviewRequestsCount: publicRequestsState.requests.length,
   };

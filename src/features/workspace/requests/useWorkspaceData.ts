@@ -20,7 +20,8 @@ import type {
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 import { useWorkspaceContractData } from '@/features/workspace/requests/useWorkspaceContractData';
 import { useWorkspaceLegacyPublicOverviewData } from '@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData';
-import { useWorkspaceLegacyPrivateData } from '@/features/workspace/requests/useWorkspaceLegacyPrivateData';
+import { useWorkspaceLegacyProviderSupportData } from '@/features/workspace/requests/useWorkspaceLegacyProviderSupportData';
+import { useWorkspaceLegacyRequestSupportData } from '@/features/workspace/requests/useWorkspaceLegacyRequestSupportData';
 import { useWorkspaceRequestUserStateData } from '@/features/workspace/requests/useWorkspaceRequestUserStateData';
 
 type Params = {
@@ -138,7 +139,11 @@ export function useWorkspaceData(params: Params) {
     shouldLoadOfferRequests: loadPlan.shouldLoadOfferRequests,
   });
 
-  const legacyPrivateData = useWorkspaceLegacyPrivateData({
+  const legacyRequestSupportData = useWorkspaceLegacyRequestSupportData({
+    workspaceDataQueries,
+  });
+
+  const legacyProviderSupportData = useWorkspaceLegacyProviderSupportData({
     workspaceDataQueries,
   });
 
@@ -146,6 +151,7 @@ export function useWorkspaceData(params: Params) {
     contractData,
     legacyPublicOverviewData,
     requestUserStateData,
-    legacyPrivateData,
+    legacyRequestSupportData,
+    legacyProviderSupportData,
   };
 }

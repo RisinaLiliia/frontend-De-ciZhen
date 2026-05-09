@@ -122,9 +122,7 @@ describe('useWorkspacePrivateSources', () => {
         favoriteRequests: [request],
         isFavoriteRequestsLoading: false,
       },
-      legacyPrivateData: {
-        favoriteProviders: [provider],
-        isFavoriteProvidersLoading: false,
+      legacyRequestSupportData: {
         myReviews: [],
         isMyReviewsLoading: false,
         myRequests: [request],
@@ -133,6 +131,10 @@ describe('useWorkspacePrivateSources', () => {
         isProviderContractsLoading: false,
         myClientContracts: [contract],
         isClientContractsLoading: false,
+      },
+      legacyProviderSupportData: {
+        favoriteProviders: [provider],
+        isFavoriteProvidersLoading: false,
         providers: [provider],
         isProvidersLoading: false,
         isProvidersError: false,
