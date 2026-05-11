@@ -67,6 +67,7 @@ type BuildPrivateViewModelArgs = {
     | 'activeWorkspaceTab'
     | 'activeStatusFilter'
     | 'setStatusFilter'
+    | 'myRequestsState'
     | 'offersByRequest'
     | 'favoriteRequestIds'
     | 'onToggleRequestFavorite'
@@ -80,16 +81,13 @@ type BuildPrivateViewModelArgs = {
     | 'cityById'
     | 'formatDate'
     | 'formatPrice'
-    | 'isMyRequestsLoading'
     | 'ownerRequestActions'
     | 'isMyOffersLoading'
-    | 'isProviderContractsLoading'
-    | 'isClientContractsLoading'
+    | 'contractsState'
     | 'setFavoritesView'
     | 'favoriteRequests'
     | 'isFavoriteRequestsLoading'
-    | 'isMyReviewsLoading'
-    | 'myReviews'
+    | 'reviewsState'
   >;
   viewModelPatch: ReturnType<typeof useWorkspaceContentData>['viewModelPatch'];
   onPrimaryActionClick: WorkspacePrivateViewModelInput['onPrimaryActionClick'];
@@ -132,10 +130,10 @@ export function buildWorkspacePrivateContentDataArgs({
       activeStatusFilter: data.activeStatusFilter,
       activeWorkspaceTab: data.activeWorkspaceTab,
       activeFavoritesView: data.activeFavoritesView,
-      myRequests: data.myRequests,
+      myRequests: data.myRequestsState.items,
       myOffers: data.myOffers,
       myOfferRequestsById: data.myOfferRequestsById,
-      allMyContracts: data.allMyContracts,
+      allMyContracts: data.contractsState.allContracts,
       favoriteRequests: data.favoriteRequests,
       favoriteProviders: data.favoriteProviders,
       isFavoriteRequestsLoading: data.isFavoriteRequestsLoading,
@@ -287,16 +285,16 @@ export function buildWorkspacePrivateViewModelInput({
     cityById: data.cityById,
     formatDate: data.formatDate,
     formatPrice: data.formatPrice,
-    isMyRequestsLoading: data.isMyRequestsLoading,
+    isMyRequestsLoading: data.myRequestsState.isLoading,
     ownerRequestActions: data.ownerRequestActions,
     isMyOffersLoading: data.isMyOffersLoading,
-    isProviderContractsLoading: data.isProviderContractsLoading,
-    isClientContractsLoading: data.isClientContractsLoading,
+    isProviderContractsLoading: data.contractsState.isProviderLoading,
+    isClientContractsLoading: data.contractsState.isClientLoading,
     setFavoritesView: data.setFavoritesView,
     favoriteRequests: data.favoriteRequests,
     isFavoriteRequestsLoading: data.isFavoriteRequestsLoading,
-    isMyReviewsLoading: data.isMyReviewsLoading,
-    myReviews: data.myReviews,
+    isMyReviewsLoading: data.reviewsState.isLoading,
+    myReviews: data.reviewsState.items,
   };
 }
 

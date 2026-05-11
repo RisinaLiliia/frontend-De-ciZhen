@@ -423,8 +423,22 @@ describe('workspacePrivateSources.model', () => {
       isLoading: true,
       isError: false,
     });
+    expect(result.myRequestsState).toEqual({
+      items: [{ id: 'req-1' }],
+      isLoading: false,
+    });
+    expect(result.contractsState).toEqual({
+      providerContracts: [],
+      clientContracts: [],
+      allContracts: [{ id: 'contract-1' }],
+      isProviderLoading: true,
+      isClientLoading: false,
+    });
+    expect(result.reviewsState).toEqual({
+      items: [],
+      isLoading: false,
+    });
     expect(result.overviewRequestsCount).toBe(2);
-    expect(result.isProviderContractsLoading).toBe(true);
     expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));
     expect(result.privateOverviewState).toEqual({
       activityProgress: 0,
