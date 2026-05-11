@@ -46,7 +46,7 @@ function SourcesProbe(props: SourcesArgs) {
       data-testid="sources"
       data-platform-total={String(result.platformRequestsTotal)}
       data-requests-count={String(result.overviewRequestsCount)}
-      data-favorite-provider-count={String(result.favoriteProviderIds.size)}
+      data-favorite-provider-count={String(result.favoriteProvidersState.ids.size)}
     />
   );
 }

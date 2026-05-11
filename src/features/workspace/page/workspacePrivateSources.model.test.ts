@@ -439,7 +439,20 @@ describe('workspacePrivateSources.model', () => {
       isLoading: false,
     });
     expect(result.overviewRequestsCount).toBe(2);
-    expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));
+    expect(result.providerDirectoryState).toEqual({
+      items: [{ id: 'provider-1' }],
+      isLoading: false,
+      isError: false,
+      byId: new Map([['provider-1', { id: 'provider-1' }]]),
+    });
+    expect(result.favoriteProvidersState).toEqual({
+      items: [{ id: 'provider-1' }],
+      isLoading: false,
+      ids: new Set(['provider-1']),
+      lookup: new Set(['provider-1']),
+      roleLabelsById: new Map([['provider-1', 'Painter']]),
+      cityLabelsById: new Map([['provider-1', 'Berlin']]),
+    });
     expect(result.privateOverviewState).toEqual({
       activityProgress: 0,
       navRatingValue: '0.0',

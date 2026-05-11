@@ -54,8 +54,8 @@ export function useWorkspacePrivateDataFlow({
     platformRequestsTotal: sources.platformRequestsTotal,
     favoriteRequestIds: sources.favoriteRequestIds,
     requestById: sources.requestById,
-    favoriteProviderLookup: sources.favoriteProviderLookup,
-    providerById: sources.providerById,
+    favoriteProviderLookup: sources.favoriteProvidersState.lookup,
+    providerById: sources.providerDirectoryState.byId,
   });
 
   return {
