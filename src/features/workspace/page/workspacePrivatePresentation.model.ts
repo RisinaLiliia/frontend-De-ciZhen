@@ -67,6 +67,7 @@ type BuildPrivateViewModelArgs = {
     | 'activeWorkspaceTab'
     | 'activeStatusFilter'
     | 'setStatusFilter'
+    | 'myRequestsState'
     | 'offersByRequest'
     | 'favoriteRequestIds'
     | 'onToggleRequestFavorite'
@@ -80,16 +81,13 @@ type BuildPrivateViewModelArgs = {
     | 'cityById'
     | 'formatDate'
     | 'formatPrice'
-    | 'isMyRequestsLoading'
     | 'ownerRequestActions'
     | 'isMyOffersLoading'
-    | 'isProviderContractsLoading'
-    | 'isClientContractsLoading'
+    | 'contractsState'
     | 'setFavoritesView'
     | 'favoriteRequests'
     | 'isFavoriteRequestsLoading'
-    | 'isMyReviewsLoading'
-    | 'myReviews'
+    | 'reviewsState'
   >;
   viewModelPatch: ReturnType<typeof useWorkspaceContentData>['viewModelPatch'];
   onPrimaryActionClick: WorkspacePrivateViewModelInput['onPrimaryActionClick'];
@@ -132,14 +130,14 @@ export function buildWorkspacePrivateContentDataArgs({
       activeStatusFilter: data.activeStatusFilter,
       activeWorkspaceTab: data.activeWorkspaceTab,
       activeFavoritesView: data.activeFavoritesView,
-      myRequests: data.myRequests,
+      myRequests: data.myRequestsState.items,
       myOffers: data.myOffers,
       myOfferRequestsById: data.myOfferRequestsById,
-      allMyContracts: data.allMyContracts,
+      allMyContracts: data.contractsState.allContracts,
       favoriteRequests: data.favoriteRequests,
-      favoriteProviders: data.favoriteProviders,
+      favoriteProviders: data.favoriteProvidersState.items,
       isFavoriteRequestsLoading: data.isFavoriteRequestsLoading,
-      isFavoriteProvidersLoading: data.isFavoriteProvidersLoading,
+      isFavoriteProvidersLoading: data.favoriteProvidersState.isLoading,
     },
     contractArgs: {
       isWorkspaceAuthed: branch.isWorkspaceAuthed,
@@ -151,12 +149,12 @@ export function buildWorkspacePrivateContentDataArgs({
     cardsArgs: {
       t: branch.t,
       locale: branch.locale,
-      favoriteProviders: data.favoriteProviders,
-      favoriteProviderLookup: data.favoriteProviderLookup,
+      favoriteProviders: data.favoriteProvidersState.items,
+      favoriteProviderLookup: data.favoriteProvidersState.lookup,
       pendingFavoriteProviderIds: data.pendingFavoriteProviderIds,
       onToggleProviderFavorite: data.onToggleProviderFavorite,
-      favoriteProviderRoleLabelById: data.favoriteProviderRoleLabelById,
-      favoriteProviderCityLabelById: data.favoriteProviderCityLabelById,
+      favoriteProviderRoleLabelById: data.favoriteProvidersState.roleLabelsById,
+      favoriteProviderCityLabelById: data.favoriteProvidersState.cityLabelsById,
     },
     favoriteProviderCardsEnabled: shouldBuildWorkspacePrivateFavoriteProviderCards(
       data.activeWorkspaceTab,
@@ -189,9 +187,9 @@ export function buildWorkspacePrivateStateArgs({
     activePublicSection: data.activePublicSection,
     requestsScope: data.requestsScope,
     userName: branch.auth.user?.name,
-    providers: data.providers,
+    providers: data.providerDirectoryState.items,
     publicRequestsCount: data.platformRequestsTotal,
-    publicProvidersCount: data.allRequestsSummary?.totalActiveProviders ?? data.providers.length,
+    publicProvidersCount: data.allRequestsSummary?.totalActiveProviders ?? data.providerDirectoryState.items.length,
     publicStatsCount: data.platformRequestsTotal,
     privateOverviewState,
     setWorkspaceTab: data.setWorkspaceTab,
@@ -217,10 +215,10 @@ export function buildWorkspacePrivatePresentationArgs({
     activeWorkspaceTab: data.activeWorkspaceTab,
     WorkspacePrivateIntroComponent,
     createRequestHref: '/request/create',
-    isProvidersLoading: data.isProvidersLoading,
-    isProvidersError: data.isProvidersError,
+    isProvidersLoading: data.providerDirectoryState.isLoading,
+    isProvidersError: data.providerDirectoryState.isError,
     topProviders: privateState.topProviders,
-    favoriteProviderIds: data.favoriteProviderIds,
+    favoriteProviderIds: data.favoriteProvidersState.ids,
     showQuickAction,
     preferredRequestsRole: preferredRequestsRole ?? privateState.preferredRequestsRole,
   };
@@ -287,16 +285,16 @@ export function buildWorkspacePrivateViewModelInput({
     cityById: data.cityById,
     formatDate: data.formatDate,
     formatPrice: data.formatPrice,
-    isMyRequestsLoading: data.isMyRequestsLoading,
+    isMyRequestsLoading: data.myRequestsState.isLoading,
     ownerRequestActions: data.ownerRequestActions,
     isMyOffersLoading: data.isMyOffersLoading,
-    isProviderContractsLoading: data.isProviderContractsLoading,
-    isClientContractsLoading: data.isClientContractsLoading,
+    isProviderContractsLoading: data.contractsState.isProviderLoading,
+    isClientContractsLoading: data.contractsState.isClientLoading,
     setFavoritesView: data.setFavoritesView,
     favoriteRequests: data.favoriteRequests,
     isFavoriteRequestsLoading: data.isFavoriteRequestsLoading,
-    isMyReviewsLoading: data.isMyReviewsLoading,
-    myReviews: data.myReviews,
+    isMyReviewsLoading: data.reviewsState.isLoading,
+    myReviews: data.reviewsState.items,
   };
 }
 

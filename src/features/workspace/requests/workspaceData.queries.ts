@@ -105,7 +105,7 @@ function buildWorkspaceContractQueries({
         activityRange: undefined,
         cityActivityLimit: undefined,
       }),
-      enabled: loadPlan.shouldLoadPublicRequests,
+      enabled: loadPlan.shouldLoadLegacyPublicOverview,
       queryFn: () =>
         getWorkspacePublicOverview({
           cityId: filter.cityId,

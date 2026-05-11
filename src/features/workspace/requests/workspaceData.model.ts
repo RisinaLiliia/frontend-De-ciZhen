@@ -21,7 +21,7 @@ type WorkspaceDataPlanArgs = {
 };
 
 export type WorkspaceDataLoadPlan = {
-  shouldLoadPublicRequests: boolean;
+  shouldLoadLegacyPublicOverview: boolean;
   shouldLoadPrivateOverview: boolean;
   shouldLoadWorkspaceRequests: boolean;
   shouldLoadMyRequests: boolean;
@@ -51,7 +51,7 @@ export function resolveWorkspaceDataPlan({
 }: WorkspaceDataPlanArgs): WorkspaceDataLoadPlan {
   if (!enabled) {
     return {
-      shouldLoadPublicRequests: false,
+      shouldLoadLegacyPublicOverview: false,
       shouldLoadPrivateOverview: false,
       shouldLoadWorkspaceRequests: false,
       shouldLoadMyRequests: false,
@@ -80,7 +80,7 @@ export function resolveWorkspaceDataPlan({
     shouldLoadPrivateData &&
     activePublicSection === null &&
     activeWorkspaceTab === 'my-requests';
-  const shouldLoadPublicRequests =
+  const shouldLoadLegacyPublicOverview =
     !shouldLoadUnifiedMarketRequests && (
       isWorkspacePublicSection ||
       !isWorkspaceAuthed ||
@@ -128,7 +128,7 @@ export function resolveWorkspaceDataPlan({
     !shouldLoadUnifiedPrivateRequests;
 
   return {
-    shouldLoadPublicRequests,
+    shouldLoadLegacyPublicOverview,
     shouldLoadPrivateOverview,
     shouldLoadWorkspaceRequests,
     shouldLoadMyRequests,

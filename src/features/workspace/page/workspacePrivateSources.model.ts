@@ -14,8 +14,12 @@ type WorkspacePublicFiltersResult = ReturnType<typeof useWorkspacePublicFilters>
 type CatalogIndexResult = ReturnType<typeof useCatalogIndex>;
 type WorkspaceDataResult = ReturnType<typeof useWorkspaceData>;
 type WorkspaceContractDataResult = WorkspaceDataResult['contractData'];
+type WorkspaceLegacyPublicOverviewDataResult = WorkspaceDataResult['legacyPublicOverviewData'];
 type WorkspaceRequestUserStateDataResult = WorkspaceDataResult['requestUserStateData'];
-type WorkspaceLegacyPrivateDataResult = WorkspaceDataResult['legacyPrivateData'];
+type WorkspaceLegacyMyRequestsDataResult = WorkspaceDataResult['legacyMyRequestsData'];
+type WorkspaceLegacyContractSupportDataResult = WorkspaceDataResult['legacyContractSupportData'];
+type WorkspaceLegacyReviewSupportDataResult = WorkspaceDataResult['legacyReviewSupportData'];
+type WorkspaceLegacyProviderSupportDataResult = WorkspaceDataResult['legacyProviderSupportData'];
 type WorkspacePublicRequestsStateResult = ReturnType<typeof useWorkspacePublicRequestsState>;
 type WorkspaceCollectionsResult = ReturnType<typeof useWorkspaceCollections>;
 
@@ -57,7 +61,8 @@ type BuildWorkspacePrivateSourcesRequestsStateArgsParams = {
     | 'subcategoryKey'
     | 'sortBy'
   >;
-  contractData: Pick<WorkspaceContractDataResult, 'publicRequests' | 'allRequestsSummary' | 'isLoading' | 'isError'>;
+  contractData: Pick<WorkspaceContractDataResult, 'allRequestsSummary'>;
+  legacyPublicOverviewData: Pick<WorkspaceLegacyPublicOverviewDataResult, 'overviewRequests' | 'isLoading' | 'isError'>;
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
 };
 
@@ -71,12 +76,15 @@ type BuildWorkspacePrivateSourcesCollectionsArgsParams = {
     | 'favoriteRequests'
     | 'myOffers'
   >;
-  legacyPrivateData: Pick<
-    WorkspaceLegacyPrivateDataResult,
-    | 'providers'
-    | 'favoriteProviders'
+  legacyContractSupportData: Pick<
+    WorkspaceLegacyContractSupportDataResult,
     | 'myProviderContracts'
     | 'myClientContracts'
+  >;
+  legacyProviderSupportData: Pick<
+    WorkspaceLegacyProviderSupportDataResult,
+    | 'providers'
+    | 'favoriteProviders'
   >;
   catalogIndex: Pick<CatalogIndexResult, 'cityById' | 'serviceByKey'>;
   locale: WorkspaceBranchProps['locale'];
@@ -91,8 +99,12 @@ type BuildWorkspacePrivateCatalogIndexArgsParams = Pick<
 
 type ResolveWorkspacePrivateSourcesResultParams = {
   contractData: WorkspaceContractDataResult;
+  legacyPublicOverviewData: WorkspaceLegacyPublicOverviewDataResult;
   requestUserStateData: WorkspaceRequestUserStateDataResult;
-  legacyPrivateData: WorkspaceLegacyPrivateDataResult;
+  legacyMyRequestsData: WorkspaceLegacyMyRequestsDataResult;
+  legacyContractSupportData: WorkspaceLegacyContractSupportDataResult;
+  legacyReviewSupportData: WorkspaceLegacyReviewSupportDataResult;
+  legacyProviderSupportData: WorkspaceLegacyProviderSupportDataResult;
   catalogIndex: CatalogIndexResult;
   collections: WorkspaceCollectionsResult;
   publicRequestsState: WorkspacePublicRequestsStateResult;
@@ -194,10 +206,11 @@ export function buildWorkspacePrivateSourcesDataArgs({
 export function buildWorkspacePrivateSourcesRequestsStateArgs({
   filters,
   contractData,
+  legacyPublicOverviewData,
   activePublicSection,
 }: BuildWorkspacePrivateSourcesRequestsStateArgsParams): Parameters<typeof useWorkspacePublicRequestsState>[0] {
   return {
-    publicRequests: contractData.publicRequests,
+    publicRequests: legacyPublicOverviewData.overviewRequests,
     allRequestsSummary: contractData.allRequestsSummary,
     limit: filters.limit,
     page: filters.page,
@@ -206,8 +219,8 @@ export function buildWorkspacePrivateSourcesRequestsStateArgs({
     enableEmptyStateTracking: true,
     isWorkspacePublicSection: false,
     activePublicSection,
-    isLoading: contractData.isLoading,
-    isError: contractData.isError,
+    isLoading: legacyPublicOverviewData.isLoading,
+    isError: legacyPublicOverviewData.isError,
     hasActivePublicFilter: filters.hasActivePublicFilter,
     cityId: filters.cityId,
     categoryKey: filters.categoryKey,
@@ -263,7 +276,8 @@ export function buildWorkspacePrivateSourcesCollectionsArgs({
   requestsScope = 'market',
   requests,
   requestUserStateData,
-  legacyPrivateData,
+  legacyContractSupportData,
+  legacyProviderSupportData,
   catalogIndex,
   locale,
 }: BuildWorkspacePrivateSourcesCollectionsArgsParams): Parameters<typeof useWorkspaceCollections>[0] {
@@ -285,11 +299,11 @@ export function buildWorkspacePrivateSourcesCollectionsArgs({
     includeFavoriteProviderPresentation,
     requests: includeRequestCollections ? requests : [],
     favoriteRequests: includeRequestCollections ? requestUserStateData.favoriteRequests : [],
-    providers: legacyPrivateData.providers,
-    favoriteProviders: legacyPrivateData.favoriteProviders,
+    providers: legacyProviderSupportData.providers,
+    favoriteProviders: legacyProviderSupportData.favoriteProviders,
     myOffers: includeRequestCollections ? requestUserStateData.myOffers : [],
-    myProviderContracts: includeRequestCollections ? legacyPrivateData.myProviderContracts : [],
-    myClientContracts: includeRequestCollections ? legacyPrivateData.myClientContracts : [],
+    myProviderContracts: includeRequestCollections ? legacyContractSupportData.myProviderContracts : [],
+    myClientContracts: includeRequestCollections ? legacyContractSupportData.myClientContracts : [],
     cityById: catalogIndex.cityById,
     serviceByKey: catalogIndex.serviceByKey,
     locale,
@@ -298,57 +312,73 @@ export function buildWorkspacePrivateSourcesCollectionsArgs({
 
 export function resolveWorkspacePrivateSourcesResult({
   contractData,
+  legacyPublicOverviewData,
   requestUserStateData,
-  legacyPrivateData,
+  legacyMyRequestsData,
+  legacyContractSupportData,
+  legacyReviewSupportData,
+  legacyProviderSupportData,
   catalogIndex,
   collections,
   publicRequestsState,
 }: ResolveWorkspacePrivateSourcesResultParams) {
   return {
     allRequestsSummary: contractData.allRequestsSummary,
-    publicRequests: publicRequestsState.requests,
+    overviewRequestsListState: {
+      requests: publicRequestsState.requests,
+      isLoading: legacyPublicOverviewData.isLoading,
+      isError: legacyPublicOverviewData.isError,
+    },
     publicCityActivity: contractData.publicCityActivity,
     isPublicSummaryLoading: contractData.isPublicSummaryLoading,
     isPublicSummaryError: contractData.isPublicSummaryError,
-    providers: legacyPrivateData.providers,
-    isProvidersLoading: legacyPrivateData.isProvidersLoading,
-    isProvidersError: legacyPrivateData.isProvidersError,
+    providerDirectoryState: {
+      items: legacyProviderSupportData.providers,
+      isLoading: legacyProviderSupportData.isProvidersLoading,
+      isError: legacyProviderSupportData.isProvidersError,
+      byId: collections.providerById,
+    },
     privateOverviewState: contractData.privateOverviewState,
     isWorkspacePrivateRequestsFallbackLoading: contractData.isWorkspacePrivateRequestsFallbackLoading,
     workspaceRequests: contractData.workspaceRequests,
     isWorkspaceRequestsLoading: contractData.isWorkspaceRequestsLoading,
     isWorkspaceRequestsError: contractData.isWorkspaceRequestsError,
     myOffers: requestUserStateData.myOffers,
-    myRequests: legacyPrivateData.myRequests,
+    myRequestsState: {
+      items: legacyMyRequestsData.myRequests,
+      isLoading: legacyMyRequestsData.isMyRequestsLoading,
+    },
     myOfferRequestsById: requestUserStateData.myOfferRequestsById,
     isMyOfferRequestsLoading: requestUserStateData.isMyOfferRequestsLoading,
-    myProviderContracts: legacyPrivateData.myProviderContracts,
-    myClientContracts: legacyPrivateData.myClientContracts,
-    allMyContracts: collections.allMyContracts,
+    contractsState: {
+      providerContracts: legacyContractSupportData.myProviderContracts,
+      clientContracts: legacyContractSupportData.myClientContracts,
+      allContracts: collections.allMyContracts,
+      isProviderLoading: legacyContractSupportData.isProviderContractsLoading,
+      isClientLoading: legacyContractSupportData.isClientContractsLoading,
+    },
     favoriteRequests: requestUserStateData.favoriteRequests,
-    favoriteProviders: legacyPrivateData.favoriteProviders,
-    favoriteProviderIds: collections.favoriteProviderIds,
-    myReviews: legacyPrivateData.myReviews,
+    favoriteProvidersState: {
+      items: legacyProviderSupportData.favoriteProviders,
+      isLoading: legacyProviderSupportData.isFavoriteProvidersLoading,
+      ids: collections.favoriteProviderIds,
+      lookup: collections.favoriteProviderLookup,
+      roleLabelsById: collections.favoriteProviderRoleLabelById,
+      cityLabelsById: collections.favoriteProviderCityLabelById,
+    },
+    reviewsState: {
+      items: legacyReviewSupportData.myReviews,
+      isLoading: legacyReviewSupportData.isMyReviewsLoading,
+    },
     isFavoriteRequestsLoading: requestUserStateData.isFavoriteRequestsLoading,
-    isFavoriteProvidersLoading: legacyPrivateData.isFavoriteProvidersLoading,
     offersByRequest: collections.offersByRequest,
     favoriteRequestIds: collections.favoriteRequestIds,
-    favoriteProviderLookup: collections.favoriteProviderLookup,
     requestById: collections.requestById,
-    providerById: collections.providerById,
-    favoriteProviderRoleLabelById: collections.favoriteProviderRoleLabelById,
-    favoriteProviderCityLabelById: collections.favoriteProviderCityLabelById,
     serviceByKey: catalogIndex.serviceByKey,
     categoryByKey: catalogIndex.categoryByKey,
     cityById: catalogIndex.cityById,
-    isMyRequestsLoading: legacyPrivateData.isMyRequestsLoading,
     isMyOffersLoading: requestUserStateData.isMyOffersLoading,
-    isProviderContractsLoading: legacyPrivateData.isProviderContractsLoading,
-    isClientContractsLoading: legacyPrivateData.isClientContractsLoading,
-    isMyReviewsLoading: legacyPrivateData.isMyReviewsLoading,
-    platformRequestsTotal: publicRequestsState.platformRequestsTotal,
-    isPublicRequestsError: contractData.isError,
-    isLoading: contractData.isLoading,
-    requestsCount: publicRequestsState.requests.length,
+    platformRequestsTotal: contractData.allRequestsSummary?.totalPublishedRequests ?? 0,
+    overviewRequestsCount: publicRequestsState.requests.length,
   };
 }

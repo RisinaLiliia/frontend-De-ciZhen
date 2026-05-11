@@ -199,8 +199,10 @@ describe('workspacePrivateSources.model', () => {
         sortBy: 'date_desc',
       },
       contractData: {
-        publicRequests: { items: [{ id: 'req-1' }], total: 1 },
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
+      } as never,
+      legacyPublicOverviewData: {
+        overviewRequests: { items: [{ id: 'req-1' }], total: 1 },
         isLoading: false,
         isError: false,
       } as never,
@@ -216,11 +218,13 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyPrivateData: {
-        providers: [{ id: 'provider-1' }],
-        favoriteProviders: [{ id: 'provider-1' }],
+      legacyContractSupportData: {
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
+      } as never,
+      legacyProviderSupportData: {
+        providers: [{ id: 'provider-1' }],
+        favoriteProviders: [{ id: 'provider-1' }],
       } as never,
       catalogIndex: {
         cityById: new Map([['city-1', { id: 'city-1', i18n: { de: 'Berlin' } }]]),
@@ -279,11 +283,13 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyPrivateData: {
-        providers: [{ id: 'provider-1' }],
-        favoriteProviders: [{ id: 'provider-1' }],
+      legacyContractSupportData: {
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
+      } as never,
+      legacyProviderSupportData: {
+        providers: [{ id: 'provider-1' }],
+        favoriteProviders: [{ id: 'provider-1' }],
       } as never,
       catalogIndex: {
         cityById: new Map(),
@@ -312,11 +318,13 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyPrivateData: {
-        providers: [{ id: 'provider-1' }],
-        favoriteProviders: [{ id: 'provider-1' }],
+      legacyContractSupportData: {
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
+      } as never,
+      legacyProviderSupportData: {
+        providers: [{ id: 'provider-1' }],
+        favoriteProviders: [{ id: 'provider-1' }],
       } as never,
       catalogIndex: {
         cityById: new Map(),
@@ -352,8 +360,11 @@ describe('workspacePrivateSources.model', () => {
         isWorkspaceRequestsLoading: false,
         isWorkspaceRequestsError: false,
         isWorkspacePrivateRequestsFallbackLoading: false,
-        isError: false,
+      } as never,
+      legacyPublicOverviewData: {
+        overviewRequests: { items: [{ id: 'req-1' }], total: 1 },
         isLoading: true,
+        isError: false,
       } as never,
       requestUserStateData: {
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
@@ -363,20 +374,26 @@ describe('workspacePrivateSources.model', () => {
         isFavoriteRequestsLoading: false,
         isMyOffersLoading: false,
       } as never,
-      legacyPrivateData: {
+      legacyMyRequestsData: {
+        myRequests: [{ id: 'req-1' }],
+        isMyRequestsLoading: false,
+      } as never,
+      legacyContractSupportData: {
+        myProviderContracts: [],
+        myClientContracts: [],
+        isProviderContractsLoading: true,
+        isClientContractsLoading: false,
+      } as never,
+      legacyReviewSupportData: {
+        myReviews: [],
+        isMyReviewsLoading: false,
+      } as never,
+      legacyProviderSupportData: {
         providers: [{ id: 'provider-1' }],
         isProvidersLoading: false,
         isProvidersError: false,
-        myRequests: [{ id: 'req-1' }],
-        myProviderContracts: [],
-        myClientContracts: [],
         favoriteProviders: [{ id: 'provider-1' }],
-        myReviews: [],
         isFavoriteProvidersLoading: false,
-        isMyRequestsLoading: false,
-        isProviderContractsLoading: true,
-        isClientContractsLoading: false,
-        isMyReviewsLoading: false,
       } as never,
       catalogIndex: {
         serviceByKey: new Map([['svc-1', { i18n: { de: 'Painter' } }]]),
@@ -401,11 +418,41 @@ describe('workspacePrivateSources.model', () => {
     });
 
     expect(result.platformRequestsTotal).toBe(12);
-    expect(result.publicRequests).toEqual([{ id: 'req-1' }, { id: 'req-2' }]);
-    expect(result.isPublicRequestsError).toBe(false);
-    expect(result.requestsCount).toBe(2);
-    expect(result.isProviderContractsLoading).toBe(true);
-    expect(result.favoriteProviderIds).toEqual(new Set(['provider-1']));
+    expect(result.overviewRequestsListState).toEqual({
+      requests: [{ id: 'req-1' }, { id: 'req-2' }],
+      isLoading: true,
+      isError: false,
+    });
+    expect(result.myRequestsState).toEqual({
+      items: [{ id: 'req-1' }],
+      isLoading: false,
+    });
+    expect(result.contractsState).toEqual({
+      providerContracts: [],
+      clientContracts: [],
+      allContracts: [{ id: 'contract-1' }],
+      isProviderLoading: true,
+      isClientLoading: false,
+    });
+    expect(result.reviewsState).toEqual({
+      items: [],
+      isLoading: false,
+    });
+    expect(result.overviewRequestsCount).toBe(2);
+    expect(result.providerDirectoryState).toEqual({
+      items: [{ id: 'provider-1' }],
+      isLoading: false,
+      isError: false,
+      byId: new Map([['provider-1', { id: 'provider-1' }]]),
+    });
+    expect(result.favoriteProvidersState).toEqual({
+      items: [{ id: 'provider-1' }],
+      isLoading: false,
+      ids: new Set(['provider-1']),
+      lookup: new Set(['provider-1']),
+      roleLabelsById: new Map([['provider-1', 'Painter']]),
+      cityLabelsById: new Map([['provider-1', 'Berlin']]),
+    });
     expect(result.privateOverviewState).toEqual({
       activityProgress: 0,
       navRatingValue: '0.0',

@@ -96,7 +96,15 @@ export function useWorkspacePrivateSources({
       activeRequestsSort,
     }),
   );
-  const { contractData, requestUserStateData, legacyPrivateData } = data;
+  const {
+    contractData,
+    legacyPublicOverviewData,
+    requestUserStateData,
+    legacyMyRequestsData,
+    legacyContractSupportData,
+    legacyReviewSupportData,
+    legacyProviderSupportData,
+  } = data;
 
   const publicRequestsState = useWorkspacePublicRequestsState(
     shouldLoadPublicRequestsState
@@ -112,6 +120,7 @@ export function useWorkspacePrivateSources({
           sortBy,
         },
         contractData,
+        legacyPublicOverviewData,
         activePublicSection,
       })
       : buildWorkspacePrivateSourcesIdleRequestsStateArgs({
@@ -131,7 +140,8 @@ export function useWorkspacePrivateSources({
       requestsScope,
       requests: publicRequestsState.requests,
       requestUserStateData,
-      legacyPrivateData,
+      legacyContractSupportData,
+      legacyProviderSupportData,
       catalogIndex,
       locale,
     }),
@@ -139,8 +149,12 @@ export function useWorkspacePrivateSources({
 
   return resolveWorkspacePrivateSourcesResult({
     contractData,
+    legacyPublicOverviewData,
     requestUserStateData,
-    legacyPrivateData,
+    legacyMyRequestsData,
+    legacyContractSupportData,
+    legacyReviewSupportData,
+    legacyProviderSupportData,
     catalogIndex,
     collections,
     publicRequestsState,

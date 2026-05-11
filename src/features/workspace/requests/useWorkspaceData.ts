@@ -19,7 +19,9 @@ import type {
 } from '@/features/workspace/requests/workspaceRequestsScope.model';
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 import { useWorkspaceContractData } from '@/features/workspace/requests/useWorkspaceContractData';
-import { useWorkspaceLegacyPrivateData } from '@/features/workspace/requests/useWorkspaceLegacyPrivateData';
+import { useWorkspaceLegacyPublicOverviewData } from '@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData';
+import { useWorkspaceLegacyProviderSupportData } from '@/features/workspace/requests/useWorkspaceLegacyProviderSupportData';
+import { useWorkspaceLegacyRequestSupportData } from '@/features/workspace/requests/useWorkspaceLegacyRequestSupportData';
 import { useWorkspaceRequestUserStateData } from '@/features/workspace/requests/useWorkspaceRequestUserStateData';
 
 type Params = {
@@ -127,19 +129,42 @@ export function useWorkspaceData(params: Params) {
     workspaceDataQueries,
   });
 
+  const legacyPublicOverviewData = useWorkspaceLegacyPublicOverviewData({
+    workspaceDataQueries,
+  });
+
   const requestUserStateData = useWorkspaceRequestUserStateData({
     workspaceDataQueries,
     locale,
     shouldLoadOfferRequests: loadPlan.shouldLoadOfferRequests,
   });
 
-  const legacyPrivateData = useWorkspaceLegacyPrivateData({
+  const legacyRequestSupportData = useWorkspaceLegacyRequestSupportData({
+    workspaceDataQueries,
+  });
+
+  const legacyProviderSupportData = useWorkspaceLegacyProviderSupportData({
     workspaceDataQueries,
   });
 
   return {
     contractData,
+    legacyPublicOverviewData,
     requestUserStateData,
-    legacyPrivateData,
+    legacyMyRequestsData: {
+      myRequests: legacyRequestSupportData.myRequests,
+      isMyRequestsLoading: legacyRequestSupportData.isMyRequestsLoading,
+    },
+    legacyContractSupportData: {
+      myProviderContracts: legacyRequestSupportData.myProviderContracts,
+      isProviderContractsLoading: legacyRequestSupportData.isProviderContractsLoading,
+      myClientContracts: legacyRequestSupportData.myClientContracts,
+      isClientContractsLoading: legacyRequestSupportData.isClientContractsLoading,
+    },
+    legacyReviewSupportData: {
+      myReviews: legacyRequestSupportData.myReviews,
+      isMyReviewsLoading: legacyRequestSupportData.isMyReviewsLoading,
+    },
+    legacyProviderSupportData,
   };
 }

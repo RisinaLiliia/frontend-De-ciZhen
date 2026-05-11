@@ -45,8 +45,8 @@ function SourcesProbe(props: SourcesArgs) {
     <div
       data-testid="sources"
       data-platform-total={String(result.platformRequestsTotal)}
-      data-requests-count={String(result.requestsCount)}
-      data-favorite-provider-count={String(result.favoriteProviderIds.size)}
+      data-requests-count={String(result.overviewRequestsCount)}
+      data-favorite-provider-count={String(result.favoriteProvidersState.ids.size)}
     />
   );
 }
@@ -90,9 +90,6 @@ describe('useWorkspacePrivateSources', () => {
 
     useWorkspaceDataMock.mockReturnValue({
       contractData: {
-        publicRequests: { items: [request], total: 1 },
-        isLoading: false,
-        isError: false,
         allRequestsSummary: { totalPublishedRequests: 12, totalActiveProviders: 5 },
         workspaceRequests: null,
         isWorkspaceRequestsLoading: false,
@@ -112,6 +109,11 @@ describe('useWorkspacePrivateSources', () => {
         isPublicSummaryLoading: false,
         isPublicSummaryError: false,
       },
+      legacyPublicOverviewData: {
+        overviewRequests: { items: [request], total: 1 },
+        isLoading: false,
+        isError: false,
+      },
       requestUserStateData: {
         myOffers: [offer],
         isMyOffersLoading: false,
@@ -120,17 +122,23 @@ describe('useWorkspacePrivateSources', () => {
         favoriteRequests: [request],
         isFavoriteRequestsLoading: false,
       },
-      legacyPrivateData: {
-        favoriteProviders: [provider],
-        isFavoriteProvidersLoading: false,
-        myReviews: [],
-        isMyReviewsLoading: false,
+      legacyMyRequestsData: {
         myRequests: [request],
         isMyRequestsLoading: false,
+      },
+      legacyContractSupportData: {
         myProviderContracts: [contract],
         isProviderContractsLoading: false,
         myClientContracts: [contract],
         isClientContractsLoading: false,
+      },
+      legacyReviewSupportData: {
+        myReviews: [],
+        isMyReviewsLoading: false,
+      },
+      legacyProviderSupportData: {
+        favoriteProviders: [provider],
+        isFavoriteProvidersLoading: false,
         providers: [provider],
         isProvidersLoading: false,
         isProvidersError: false,
