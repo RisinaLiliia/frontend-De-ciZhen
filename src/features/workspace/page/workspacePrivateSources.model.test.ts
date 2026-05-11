@@ -218,7 +218,7 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyRequestSupportData: {
+      legacyContractSupportData: {
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
       } as never,
@@ -283,7 +283,7 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyRequestSupportData: {
+      legacyContractSupportData: {
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
       } as never,
@@ -318,7 +318,7 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyRequestSupportData: {
+      legacyContractSupportData: {
         myProviderContracts: [{ id: 'contract-1' }],
         myClientContracts: [{ id: 'contract-2' }],
       } as never,
@@ -374,14 +374,18 @@ describe('workspacePrivateSources.model', () => {
         isFavoriteRequestsLoading: false,
         isMyOffersLoading: false,
       } as never,
-      legacyRequestSupportData: {
+      legacyMyRequestsData: {
         myRequests: [{ id: 'req-1' }],
+        isMyRequestsLoading: false,
+      } as never,
+      legacyContractSupportData: {
         myProviderContracts: [],
         myClientContracts: [],
-        myReviews: [],
-        isMyRequestsLoading: false,
         isProviderContractsLoading: true,
         isClientContractsLoading: false,
+      } as never,
+      legacyReviewSupportData: {
+        myReviews: [],
         isMyReviewsLoading: false,
       } as never,
       legacyProviderSupportData: {

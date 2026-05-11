@@ -151,7 +151,20 @@ export function useWorkspaceData(params: Params) {
     contractData,
     legacyPublicOverviewData,
     requestUserStateData,
-    legacyRequestSupportData,
+    legacyMyRequestsData: {
+      myRequests: legacyRequestSupportData.myRequests,
+      isMyRequestsLoading: legacyRequestSupportData.isMyRequestsLoading,
+    },
+    legacyContractSupportData: {
+      myProviderContracts: legacyRequestSupportData.myProviderContracts,
+      isProviderContractsLoading: legacyRequestSupportData.isProviderContractsLoading,
+      myClientContracts: legacyRequestSupportData.myClientContracts,
+      isClientContractsLoading: legacyRequestSupportData.isClientContractsLoading,
+    },
+    legacyReviewSupportData: {
+      myReviews: legacyRequestSupportData.myReviews,
+      isMyReviewsLoading: legacyRequestSupportData.isMyReviewsLoading,
+    },
     legacyProviderSupportData,
   };
 }

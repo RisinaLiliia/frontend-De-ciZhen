@@ -76,7 +76,9 @@ function Probe() {
       data-contract-keys={Object.keys(result.contractData).sort().join(',')}
       data-legacy-public-overview-keys={Object.keys(result.legacyPublicOverviewData).sort().join(',')}
       data-request-user-state-keys={Object.keys(result.requestUserStateData).sort().join(',')}
-      data-legacy-request-keys={Object.keys(result.legacyRequestSupportData).sort().join(',')}
+      data-legacy-my-requests-keys={Object.keys(result.legacyMyRequestsData).sort().join(',')}
+      data-legacy-contract-keys={Object.keys(result.legacyContractSupportData).sort().join(',')}
+      data-legacy-review-keys={Object.keys(result.legacyReviewSupportData).sort().join(',')}
       data-legacy-provider-keys={Object.keys(result.legacyProviderSupportData).sort().join(',')}
       data-has-flat-workspace-requests={String('workspaceRequests' in result)}
       data-has-flat-my-offers={String('myOffers' in result)}
@@ -122,7 +124,9 @@ describe('useWorkspaceData', () => {
     expect(node.getAttribute('data-contract-keys')).toContain('workspaceRequests');
     expect(node.getAttribute('data-legacy-public-overview-keys')).toContain('overviewRequests');
     expect(node.getAttribute('data-request-user-state-keys')).toContain('myOffers');
-    expect(node.getAttribute('data-legacy-request-keys')).toContain('myRequests');
+    expect(node.getAttribute('data-legacy-my-requests-keys')).toContain('myRequests');
+    expect(node.getAttribute('data-legacy-contract-keys')).toContain('myProviderContracts');
+    expect(node.getAttribute('data-legacy-review-keys')).toContain('myReviews');
     expect(node.getAttribute('data-legacy-provider-keys')).toContain('providers');
     expect(node.getAttribute('data-has-flat-workspace-requests')).toBe('false');
     expect(node.getAttribute('data-has-flat-my-offers')).toBe('false');
