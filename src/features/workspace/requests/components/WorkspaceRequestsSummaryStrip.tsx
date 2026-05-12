@@ -10,6 +10,7 @@ type WorkspaceRequestsSummaryStripProps = {
   items: MyRequestsSummaryItem[];
   onSelect: (nextState: string) => void;
   variant?: SummaryVariant;
+  className?: string;
 };
 
 function buildHelperText(locale: Locale, key: MyRequestsSummaryItem['key'], variant: SummaryVariant) {
@@ -49,9 +50,10 @@ export function WorkspaceRequestsSummaryStrip({
   items,
   onSelect,
   variant = 'private',
+  className,
 }: WorkspaceRequestsSummaryStripProps) {
   return (
-    <div className="my-requests-summary">
+    <div className={['my-requests-summary', className ?? ''].filter(Boolean).join(' ')}>
       {items.map((item) => (
         <button
           key={item.key}
@@ -76,9 +78,13 @@ export function WorkspaceRequestsSummaryStrip({
   );
 }
 
-export function WorkspaceRequestsSummaryStripSkeleton() {
+export function WorkspaceRequestsSummaryStripSkeleton({
+  className,
+}: {
+  className?: string;
+}) {
   return (
-    <div className="my-requests-summary">
+    <div className={['my-requests-summary', className ?? ''].filter(Boolean).join(' ')}>
       {Array.from({ length: 4 }).map((_, index) => (
         <div key={`summary-skeleton-${index}`} className="my-requests-summary__card">
           <div className="skeleton h-4 w-20" />

@@ -8,7 +8,6 @@ import { buildRequestsListProps } from '@/components/requests/requestsListProps'
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import {
   buildRequestsWorkspacePrivateBody,
-  RequestsPrivateActionRail,
   RequestsWorkspaceBody,
   WorkspaceOverviewMain,
   WorkspaceOverviewInsightsPanel,
@@ -17,11 +16,11 @@ import {
   useWorkspacePrivateState,
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
+import { WorkspaceRequestsAside } from '@/features/workspace/requests/components/WorkspaceRequestsAside';
 import {
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
 import { buildWorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
-import { buildRequestsWorkspaceDecisionRailProps } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
   useWorkspaceContentData,
@@ -252,20 +251,17 @@ export function useWorkspacePrivatePresentationFlow({
     panel: privateRequestsModel.response ? privateRequestsModel.response.decisionPanel : null,
   });
   const privateAside = isUnifiedPrivateRequests ? (
-    <div className="stack-md">
-      {privateRequestsModel.response ? (
-        <RequestsPrivateActionRail
-          {...buildRequestsWorkspaceDecisionRailProps({
-            locale: branch.locale,
-            panel: privateRequestsModel.response.decisionPanel,
-            mode: decisionState.mode,
-            activeRequestId: decisionState.activeRequestId,
-            onStartDecisionMode: () => enterDecisionMode(),
-            onOpenQueueItem: openDecisionItem,
-          })}
-        />
-      ) : null}
-    </div>
+    <WorkspaceRequestsAside
+      locale={branch.locale}
+      variant="private"
+      summaryItems={privateRequestsModel.response?.summary.items}
+      isSummaryLoading={privateRequestsLoading}
+      panel={privateRequestsModel.response?.decisionPanel}
+      mode={decisionState.mode}
+      activeRequestId={decisionState.activeRequestId}
+      onStartDecisionMode={() => enterDecisionMode()}
+      onOpenQueueItem={openDecisionItem}
+    />
   ) : undefined;
 
   const privateMain = isOverviewMode ? (
