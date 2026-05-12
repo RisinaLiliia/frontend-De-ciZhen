@@ -13,19 +13,9 @@ import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
 import { WorkspacePlatformReviewsRail } from './WorkspacePlatformReviewsRail';
+import { WorkspaceProvidersAside } from './WorkspaceProvidersAside';
 import { workspaceQK } from './queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from './workspace.constants';
-
-const NearbyProvidersPanel = dynamic(
-  () => import('@/components/home/HomeNearbyPanel').then((mod) => mod.HomeNearbyPanel),
-  {
-    loading: () => (
-      <section className="panel">
-        <div className="skeleton h-64 w-full" />
-      </section>
-    ),
-  },
-);
 
 const TopProvidersPanel = dynamic(
   () => import('@/components/home/HomeTopProvidersPanel').then((mod) => mod.HomeTopProvidersPanel),
@@ -90,7 +80,6 @@ export function WorkspaceExploreRail({
   t,
   locale,
   exploreListDensity,
-  sidebarNearbyLimit,
   sidebarTopProvidersLimit,
   sidebarProofCases,
   proofIndex,
@@ -121,6 +110,10 @@ export function WorkspaceExploreRail({
   const showRailMap = shouldShowRailMap
     && Boolean(publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError);
 
+  if (activeSection === 'providers') {
+    return <WorkspaceProvidersAside t={t} locale={locale} />;
+  }
+
   return (
     <aside className="stack-md hide-below-desktop">
       {isSidebarReady ? (
@@ -144,14 +137,7 @@ export function WorkspaceExploreRail({
             </section>
           ) : null}
 
-          {activeSection === 'reviews' ? null : activeSection === 'providers' ? (
-            <NearbyProvidersPanel
-              t={t}
-              viewAllHref="/workspace?section=requests"
-              itemsLimit={sidebarNearbyLimit}
-              visibleRows={sidebarNearbyLimit}
-            />
-          ) : (
+          {activeSection === 'reviews' ? null : (
             <TopProvidersPanel t={t} locale={locale} limit={sidebarTopProvidersLimit} />
           )}
 
