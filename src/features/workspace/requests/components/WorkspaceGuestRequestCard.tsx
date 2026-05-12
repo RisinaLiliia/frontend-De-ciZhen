@@ -23,7 +23,9 @@ type WorkspaceGuestRequestCardProps = {
   priceTrendLabel?: string | null;
   badgeLabel?: string | null;
   bottomMeta?: React.ReactNode[];
+  statusSlot?: React.ReactNode;
   overlaySlot?: React.ReactNode;
+  contentSlot?: React.ReactNode;
   actionSlot?: React.ReactNode;
   onOpen?: () => void;
   isActive?: boolean;
@@ -49,7 +51,9 @@ export function WorkspaceGuestRequestCard({
   priceTrendLabel = null,
   badgeLabel = null,
   bottomMeta = [],
+  statusSlot,
   overlaySlot,
+  contentSlot,
   actionSlot,
   onOpen,
   isActive = false,
@@ -96,12 +100,13 @@ export function WorkspaceGuestRequestCard({
       mode="link"
       onOpen={onOpen}
       isActive={isActive}
-      statusSlot={badgeLabel ? (
+      statusSlot={statusSlot ?? (badgeLabel ? (
         <Badge variant="opportunity" tone="soft" size="sm">
           {badgeLabel}
         </Badge>
-      ) : null}
+      ) : null)}
       overlaySlot={overlaySlot}
+      contentSlot={contentSlot}
       actionSlot={actionSlot}
     />
   );

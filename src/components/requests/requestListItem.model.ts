@@ -1,11 +1,9 @@
 'use client';
 
-import { resolveOfferCardState } from '@/features/requests/uiState';
-import { pickI18n } from '@/lib/i18n/helpers';
-import { I18N_KEYS } from '@/lib/i18n/keys';
-import { pickRequestImage } from '@/lib/requests/images';
+import { buildPublicRequestCardPresentation } from '@/components/requests/publicRequestCard.model';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { RequestListStatusPresentation } from './requestListStatus.types';
@@ -70,81 +68,39 @@ export function buildRequestListPresentation({
   pendingFavoriteRequestIds,
   ownerRequestActions,
 }: BuildRequestListPresentationParams): RequestListPresentation {
-  const localizedServiceLabel = pickServiceLabel(item.serviceKey, serviceByKey, locale);
-  const serviceLabel = localizedServiceLabel || item.subcategoryName || item.serviceKey;
-  const fallbackCategoryKey = item.categoryKey ?? serviceByKey.get(item.serviceKey)?.categoryKey ?? '';
-  const localizedCategoryLabel = pickCategoryLabel(fallbackCategoryKey, categoryByKey, locale);
-  const categoryLabel = localizedCategoryLabel || item.categoryName || fallbackCategoryKey;
-  const cityLabel = cityById.has(item.cityId)
-    ? pickI18n(cityById.get(item.cityId)!.i18n, locale)
-    : item.cityName ?? item.cityId;
-  const recurringLabel = item.isRecurring
-    ? t(I18N_KEYS.client.recurringLabel)
-    : t(I18N_KEYS.client.onceLabel);
-  const priceValue = item.price ?? estimatePrice(item.area, item.propertyType);
-  const explicitPriceTrend =
-    item.priceTrend === 'down' || item.priceTrend === 'up' ? item.priceTrend : null;
-  const priceTrend = explicitPriceTrend;
-  const priceTrendLabel =
-    priceTrend === 'down'
-      ? t(I18N_KEYS.request.priceTrendDown)
-      : priceTrend === 'up'
-        ? t(I18N_KEYS.request.priceTrendUp)
-        : null;
-  const imageSrc =
-    (item.photos?.length ? item.photos[0] : null) || item.imageUrl || pickRequestImage(item.categoryKey ?? '');
-  const title = item.title?.trim() || item.description?.trim() || serviceLabel;
-  const excerptSource = item.description?.trim() ?? '';
-  const detailsHref = `/requests/${item.id}`;
-  const itemOffer = enableOfferActions ? offersByRequest?.get(item.id) : undefined;
-  const offerCardState = resolveOfferCardState(itemOffer);
+  const publicPresentation = buildPublicRequestCardPresentation({
+    item,
+    t,
+    locale,
+    serviceByKey,
+    categoryByKey,
+    cityById,
+    formatPrice,
+    enableOfferActions,
+    offersByRequest,
+    favoriteRequestIds,
+    pendingOfferRequestId,
+    pendingFavoriteRequestIds,
+  });
   const isOwnerRequestList = Boolean(ownerRequestActions);
 
   return {
-    card: {
-      detailsHref,
-      imageSrc,
-      title,
-      excerpt: excerptSource && excerptSource !== title ? excerptSource : null,
-      categoryLabel,
-      serviceLabel,
-      cityLabel,
-      recurringLabel,
-      priceLabel: formatPrice.format(priceValue),
-      priceTrend,
-      priceTrendLabel,
-      tags: item.tags ?? [],
-      isInactive: item.isInactive === true || item.status === 'cancelled',
-      inactiveMessage: item.inactiveMessage?.trim() || null,
-    },
+    card: publicPresentation.card,
     status: {
-      detailsHref,
+      detailsHref: publicPresentation.card.detailsHref,
       itemId: item.id,
       itemStatus: item.status,
-      itemOffer,
-      offerCardState,
-      statusLabel: mapOfferStatusLabel(offerCardState, t),
-      badgeStatus: offerCardState === 'none' ? null : offerCardState,
+      itemOffer: publicPresentation.status.itemOffer,
+      offerCardState: publicPresentation.status.offerCardState,
+      statusLabel: publicPresentation.status.statusLabel,
+      badgeStatus: publicPresentation.status.badgeStatus,
       ownerStatusLabel: mapRequestStatusLabel(item.status, t),
       isOwnerRequestList,
-      isPendingWithdraw: pendingOfferRequestId === item.id,
+      isPendingWithdraw: publicPresentation.status.isPendingWithdraw,
       isPendingOwnerDelete: ownerRequestActions?.pendingDeleteRequestId === item.id,
     },
-    favorite: {
-      isFavorite: favoriteRequestIds?.has(item.id) ?? false,
-      isFavoritePending: pendingFavoriteRequestIds?.has(item.id) ?? false,
-    },
+    favorite: publicPresentation.favorite,
   };
-}
-
-function mapOfferStatusLabel(
-  offerCardState: ReturnType<typeof resolveOfferCardState>,
-  t: (key: I18nKey) => string,
-) {
-  if (offerCardState === 'accepted') return t(I18N_KEYS.requestDetails.statusAccepted);
-  if (offerCardState === 'declined') return t(I18N_KEYS.requestDetails.statusDeclined);
-  if (offerCardState === 'sent') return t(I18N_KEYS.requestDetails.statusReview);
-  return null;
 }
 
 function mapRequestStatusLabel(status: string | undefined, t: (key: I18nKey) => string) {
@@ -155,29 +111,4 @@ function mapRequestStatusLabel(status: string | undefined, t: (key: I18nKey) => 
     return t(I18N_KEYS.requestsPage.statusInProgress);
   }
   return t(I18N_KEYS.requestsPage.statusOpen);
-}
-
-function pickServiceLabel(
-  serviceKey: string,
-  serviceByKey: Map<string, { i18n: Record<string, string> }>,
-  locale: Locale,
-) {
-  const service = serviceByKey.get(serviceKey);
-  if (!service) return serviceKey;
-  return pickI18n(service.i18n, locale);
-}
-
-function pickCategoryLabel(
-  categoryKey: string,
-  categoryByKey: Map<string, { i18n: Record<string, string> }>,
-  locale: Locale,
-) {
-  const category = categoryByKey.get(categoryKey);
-  if (!category) return categoryKey;
-  return pickI18n(category.i18n, locale);
-}
-
-function estimatePrice(area: number, propertyType: string) {
-  const basisPoints = propertyType === 'house' ? 14375 : 11500;
-  return Math.max(35, Math.round((area * basisPoints) / 10000));
 }

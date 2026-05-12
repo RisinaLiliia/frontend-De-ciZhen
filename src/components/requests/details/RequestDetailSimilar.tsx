@@ -1,6 +1,6 @@
 // src/components/requests/details/RequestDetailSimilar.tsx
-import { RequestCard } from '@/components/requests/RequestCard';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
+import { WorkspaceGuestRequestCard } from '@/features/workspace/requests/components/WorkspaceGuestRequestCard';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 
 type RequestDetailSimilarProps = {
@@ -46,20 +46,21 @@ export function RequestDetailSimilar({
               const itemPrice =
                 item.price != null ? formatPrice(item.price) : priceOnRequestLabel;
               return (
-                <RequestCard
+                <WorkspaceGuestRequestCard
                   key={item.id}
                   href={`/requests/${item.id}`}
                   ariaLabel={openRequestLabel}
                   onOpen={onOpenRequest ? () => onOpenRequest(item.id) : undefined}
                   imageSrc={getImage(item)}
                   imageAlt=""
-                  badges={[{ label: item.isRecurring ? recurringLabel : onceLabel, variant: 'neutral', tone: 'outline', size: 'sm' }]}
-                  category={item.categoryName ?? item.categoryKey ?? ''}
+                  className="workspace-guest-request-card workspace-guest-request-card--detail"
+                  categoryLabel={item.categoryName ?? item.categoryKey ?? ''}
                   title={itemTitle}
                   excerpt={excerpt}
-                  meta={[item.cityName ?? item.cityId]}
+                  cityLabel={item.cityName ?? item.cityId}
                   bottomMeta={[item.subcategoryName ?? item.serviceKey]}
                   priceLabel={itemPrice}
+                  badgeLabel={item.isRecurring ? recurringLabel : onceLabel}
                 />
               );
             })}

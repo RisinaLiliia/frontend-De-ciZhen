@@ -9,6 +9,8 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import { useGeoRegion } from '@/hooks/useGeoRegion';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
+import { PublicRequestCardStatusSlot } from '@/components/requests/PublicRequestCardStatusSlot';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -17,7 +19,7 @@ import { listPublicRequests } from '@/lib/api/requests';
 import { deleteOffer, listMyProviderOffers } from '@/lib/api/offers';
 import { listFavorites } from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
-import { RequestsList } from '@/components/requests/RequestsList';
+import { buildPublicRequestCardPresentation } from '@/components/requests/publicRequestCard.model';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -36,6 +38,7 @@ import {
   resolveHomeNearbySubtitleKey,
   shouldUseHomeNearbyFallback,
 } from '@/components/home/homeNearbyPanel.model';
+import { WorkspaceGuestRequestCard } from '@/features/workspace/requests/components/WorkspaceGuestRequestCard';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type HomeNearbyPanelProps = {
@@ -215,6 +218,9 @@ export function HomeNearbyPanel({
     () => buildHomeNearbyPanelStyle({ targetItems, visibleRows }),
     [targetItems, visibleRows],
   );
+  const openRequest = React.useCallback((requestId: string) => {
+    router.push(`/requests/${requestId}`);
+  }, [router]);
 
   return (
     <Card className="home-nearby-panel" style={panelStyle}>
@@ -228,30 +234,75 @@ export function HomeNearbyPanel({
         {!isLoading && !isError && requests.length === 0 ? (
           <div className="card text-center typo-muted">{t(I18N_KEYS.homePublic.nearbyEmptyHint)}</div>
         ) : (
-          <RequestsList
-            t={t}
-            locale={locale}
-            requests={requests}
-            isLoading={isLoading}
-            isError={isError}
-            serviceByKey={serviceByKey}
-            categoryByKey={categoryByKey}
-            cityById={cityById}
-            formatDate={formatDate}
-            formatPrice={formatPrice}
-            enableOfferActions={true}
-            offersByRequest={offersByRequest}
-            favoriteRequestIds={favoriteRequestIds}
-            pendingFavoriteRequestIds={pendingFavoriteRequestIds}
-            onToggleFavorite={(requestId) => {
-              void toggleRequestFavorite(requestId);
-            }}
-            onSendOffer={openOfferSheet}
-            onEditOffer={openOfferSheet}
-            onWithdrawOffer={onWithdrawOffer}
-            pendingOfferRequestId={pendingOfferRequestId}
-            showFavoriteButton
-          />
+          requests.map((item, index) => {
+            const view = buildPublicRequestCardPresentation({
+              item,
+              t,
+              locale,
+              serviceByKey,
+              categoryByKey,
+              cityById,
+              formatPrice,
+              formatDate,
+              enableOfferActions: true,
+              offersByRequest,
+              favoriteRequestIds,
+              pendingOfferRequestId,
+              pendingFavoriteRequestIds,
+            });
+
+            return (
+              <div key={item.id} className="workspace-guest-request-card-shell">
+                <WorkspaceGuestRequestCard
+                  prefetch={index < 2}
+                  href={view.card.detailsHref}
+                  className="workspace-guest-request-card workspace-guest-request-card--home"
+                  ariaLabel={t(I18N_KEYS.requestsPage.openRequest)}
+                  imageSrc={view.card.imageSrc}
+                  imageAlt=""
+                  imagePriority={index === 0}
+                  categoryLabel={view.card.categoryLabel}
+                  title={view.card.title}
+                  excerpt={view.card.excerpt}
+                  cityLabel={view.card.cityLabel}
+                  dateLabel={view.card.dateLabel}
+                  priceLabel={view.card.priceLabel}
+                  priceTrend={view.card.priceTrend}
+                  priceTrendLabel={view.card.priceTrendLabel}
+                  badgeLabel={view.card.recurringLabel}
+                  onOpen={() => openRequest(item.id)}
+                  contentSlot={view.card.isInactive && view.card.inactiveMessage ? (
+                    <div className="request-card__inactive-message">
+                      {view.card.inactiveMessage}
+                    </div>
+                  ) : null}
+                  statusSlot={(
+                    <PublicRequestCardStatusSlot
+                      status={view.status}
+                      actions={{
+                        t,
+                        onSendOffer: openOfferSheet,
+                        onEditOffer: openOfferSheet,
+                        onWithdrawOffer: onWithdrawOffer,
+                      }}
+                    />
+                  )}
+                  overlaySlot={(
+                    <FavoriteButton
+                      variant="icon"
+                      isFavorite={view.favorite.isFavorite}
+                      isPending={view.favorite.isFavoritePending}
+                      onToggle={() => {
+                        void toggleRequestFavorite(item.id);
+                      }}
+                      ariaLabel={t(I18N_KEYS.requestDetails.ctaSave)}
+                      title={t(I18N_KEYS.requestDetails.ctaSave)}
+                    />
+                  )}
+                />
+              </div>
+            );
+          })
         )}
       </div>
 

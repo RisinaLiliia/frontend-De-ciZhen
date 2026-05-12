@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
@@ -20,12 +19,11 @@ import {
 } from '@/components/ui/icons/icons';
 import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
 import { DecisionPanel } from '@/features/workspace/requests/components/DecisionPanel';
-import { RequestsWorkspaceSummary } from '@/features/workspace/requests/components/RequestsWorkspaceSummary';
+import { WorkspaceRequestsSectionSummary } from '@/features/workspace/requests/components/WorkspaceRequestsSectionSummary';
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { WorkspaceGuestRequestCard } from '@/features/workspace/requests/components/WorkspaceGuestRequestCard';
 import {
   buildRequestsWorkspaceDecisionRailProps,
-  buildRequestsWorkspaceSummaryStripProps,
 } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
 import {
   buildPrivateRequestCardChrome,
@@ -98,21 +96,6 @@ function RequestsListPagination({
       />
     </div>
   );
-}
-
-function useStateFilterMutation(scope: 'market' | 'my') {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  return React.useCallback((nextState: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('section', 'requests');
-    params.set('scope', scope);
-    params.set('state', nextState);
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [pathname, router, scope, searchParams]);
 }
 
 function resolveRequestDialogIntent(action: { key: string }): RequestDialogIntent {
@@ -1165,7 +1148,6 @@ export function WorkspaceRequestsView({
     secondaryCtaHref,
     favoriteState = null,
   } = surface;
-  const setStateFilter = useStateFilterMutation(variant === 'market' ? 'market' : 'my');
   const decisionPanel = model.response ? model.response.decisionPanel : null;
   const visibleCards = React.useMemo(() => {
     if (decisionState.mode !== 'decision') return model.cards;
@@ -1246,18 +1228,12 @@ export function WorkspaceRequestsView({
 
   return (
     <section className="my-requests-view">
-      <RequestsWorkspaceSummary
-        summaryStripProps={
-          !isLoading && model.response
-            ? buildRequestsWorkspaceSummaryStripProps({
-              locale,
-              items: model.response.summary.items,
-              onSelect: setStateFilter,
-              variant,
-            })
-            : undefined
-        }
+      <WorkspaceRequestsSectionSummary
+        locale={locale}
+        items={model.response?.summary.items}
+        variant={variant}
         isLoading={isLoading}
+        className="my-requests-summary--mobile-only"
       />
 
       {isLoading ? <CardSkeletonList /> : null}

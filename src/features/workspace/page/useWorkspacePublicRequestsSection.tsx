@@ -8,7 +8,7 @@ import {
   RequestsWorkspaceBody,
   useWorkspaceData,
 } from '@/features/workspace/requests';
-import { RequestsPrivateActionRail } from '@/features/workspace/requests';
+import { WorkspaceRequestsAside } from '@/features/workspace/requests/components/WorkspaceRequestsAside';
 import {
   buildWorkspaceRequestsSurfaceModel,
   buildWorkspaceRequestsViewModelFromResponse,
@@ -16,9 +16,6 @@ import {
 import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
 import { useWorkspacePublicFilters } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import {
-  buildWorkspacePublicRequestsAsideProps,
-} from '@/features/workspace/page/workspacePublicRequests.view-model';
 import type { ActiveDecisionState } from '@/features/workspace/requests/requestsDecision.model';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { resolveRequestsListDensityForPageSize } from '@/lib/requests/pagination';
@@ -205,18 +202,17 @@ export function useWorkspacePublicRequestsSection({
     </div>
   );
 
-  const publicAside = decisionPanel ? (
-    <div className="stack-md">
-      <RequestsPrivateActionRail
-        {...buildWorkspacePublicRequestsAsideProps({
-          locale,
-          panel: decisionPanel,
-          onStartDecisionMode: openMarketStats,
-          onOpenQueueItem: openQueueItem,
-        })}
-      />
-    </div>
-  ) : null;
+  const publicAside = (
+    <WorkspaceRequestsAside
+      locale={locale}
+      variant="market"
+      summaryItems={marketResponse?.summary.items}
+      isSummaryLoading={contractData.isWorkspaceRequestsLoading}
+      panel={decisionPanel}
+      onStartDecisionMode={openMarketStats}
+      onOpenQueueItem={openQueueItem}
+    />
+  );
 
   return {
     publicMain,
