@@ -232,7 +232,10 @@ describe('workspaceData.queries', () => {
     });
 
     const queries = buildWorkspaceDataQueries({
-      filter: {},
+      filter: {
+        page: 4,
+        limit: 10,
+      },
       loadPlan,
       hasAccessToken: true,
       requestsScope: 'my',
@@ -253,10 +256,48 @@ describe('workspaceData.queries', () => {
       'all-services',
       '7d',
       'deadline',
-      1,
-      20,
+      4,
+      10,
     ]);
     expect(queries.favoriteRequests.enabled).toBe(false);
+  });
+
+  it('passes pagination to private workspace requests queries', async () => {
+    const loadPlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: false,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'my-requests',
+      activePublicSection: 'requests',
+      requestsScope: 'my',
+      hasAccessToken: true,
+    });
+
+    const queries = buildWorkspaceDataQueries({
+      filter: {
+        page: 2,
+        limit: 10,
+      },
+      loadPlan,
+      hasAccessToken: true,
+      requestsScope: 'my',
+      activeRequestsRole: 'customer',
+      activeRequestsState: 'attention',
+      activeRequestsPeriod: '90d',
+      activeRequestsSort: 'activity',
+    });
+
+    await queries.workspaceRequests.queryFn();
+    expect(getWorkspaceRequestsMock).toHaveBeenCalledWith({
+      scope: 'my',
+      role: 'customer',
+      state: 'attention',
+      period: '90d',
+      sort: 'activity',
+      page: 2,
+      limit: 10,
+    });
   });
 
   it('builds offer request batch query only when ids exist', () => {

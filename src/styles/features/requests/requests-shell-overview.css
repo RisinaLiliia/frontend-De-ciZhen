@@ -201,9 +201,53 @@
   }
 
   .workspace-overview__providers .provider-card,
-  .workspace-overview__opportunities .request-card {
+  .workspace-overview__opportunities .request-card,
+  .workspace-guest-request-card {
     min-height: var(--workspace-overview-card-min-height, 184px);
     align-content: start;
+  }
+
+  .workspace-guest-request-card-shell {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    container-type: inline-size;
+  }
+
+  .workspace-guest-request-card {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .workspace-guest-request-card .request-card__body {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .workspace-guest-request-card__footer {
+    display: grid;
+    gap: 10px;
+  }
+
+  .workspace-guest-request-card__action-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .workspace-guest-request-card .my-request-card__action-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    padding-inline: 18px;
+    justify-content: center;
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 1.1;
   }
 
   .workspace-context-rail--overview .workspace-insights-panel--rail-balanced {
@@ -348,7 +392,8 @@
     }
 
     .workspace-overview__providers .provider-card,
-    .workspace-overview__opportunities .request-card {
+    .workspace-overview__opportunities .request-card,
+    .workspace-guest-request-card {
       min-height: var(--workspace-overview-card-min-height);
     }
 
@@ -441,18 +486,21 @@
       line-height: 1.35;
     }
 
-    .workspace-overview__opportunities .request-card {
+    .workspace-overview__opportunities .request-card,
+    .workspace-guest-request-card {
       min-height: 152px;
       gap: 10px;
       grid-template-columns: minmax(0, 1fr) minmax(72px, 25%, 108px);
     }
 
-    .workspace-overview__opportunities .request-card__overlay {
+    .workspace-overview__opportunities .request-card__overlay,
+    .workspace-guest-request-card .request-card__overlay {
       top: 8px;
       right: 8px;
     }
 
-    .workspace-overview__opportunities .request-card__body {
+    .workspace-overview__opportunities .request-card__body,
+    .workspace-guest-request-card .request-card__body {
       gap: 6px;
       padding: 12px;
       grid-template-rows:
@@ -464,7 +512,8 @@
         auto;
     }
 
-    .workspace-overview__opportunities .request-card__title {
+    .workspace-overview__opportunities .request-card__title,
+    .workspace-guest-request-card .request-card__title {
       font-size: 14px;
       line-height: 1.24;
       min-height: calc(2 * 1.24em);
@@ -472,28 +521,48 @@
 
     .workspace-overview__opportunities .request-card__excerpt,
     .workspace-overview__opportunities .request-card__meta,
-    .workspace-overview__opportunities .request-card__price {
+    .workspace-overview__opportunities .request-card__price,
+    .workspace-guest-request-card .request-card__excerpt,
+    .workspace-guest-request-card .request-card__meta,
+    .workspace-guest-request-card .request-card__price {
       font-size: 11px;
     }
 
-    .workspace-overview__opportunities .request-card__meta {
+    .workspace-overview__opportunities .request-card__meta,
+    .workspace-guest-request-card .request-card__meta {
       gap: var(--space-2);
       min-height: calc((2 * 1.25em) + var(--space-0-5));
       padding-top: 0;
     }
 
-    .workspace-overview__opportunities .request-meta-item svg {
+    .workspace-overview__opportunities .request-meta-item svg,
+    .workspace-guest-request-card .request-meta-item svg {
       width: 14px;
       height: 14px;
     }
 
-    .workspace-overview__opportunities .request-card__price .proof-price {
+    .workspace-overview__opportunities .request-card__price .proof-price,
+    .workspace-guest-request-card .request-card__price .proof-price {
       font-size: 15px;
     }
 
-    .workspace-overview__opportunities .request-card__price-trend {
+    .workspace-overview__opportunities .request-card__price-trend,
+    .workspace-guest-request-card .request-card__price-trend {
       padding: 2px 6px;
       font-size: 10px;
+    }
+  }
+
+  @container (max-width: 560px) {
+    .workspace-guest-request-card__action-row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-guest-request-card .my-request-card__action-btn {
+      min-height: 42px;
+      white-space: normal;
+      line-height: 1.2;
+      text-align: center;
     }
   }
 

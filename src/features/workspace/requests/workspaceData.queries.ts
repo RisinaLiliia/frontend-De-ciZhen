@@ -146,8 +146,8 @@ function buildWorkspaceContractQueries({
         service: requestsScope === 'market' ? (filter.subcategoryKey ?? null) : null,
         period: activeRequestsPeriod,
         sort: activeRequestsSort,
-        page: requestsScope === 'market' ? filter.page : undefined,
-        limit: requestsScope === 'market' ? filter.limit : undefined,
+        page: filter.page,
+        limit: filter.limit,
       }),
       enabled: loadPlan.shouldLoadWorkspaceRequests,
       queryFn: () => {
@@ -173,15 +173,16 @@ function buildWorkspaceContractQueries({
             state: activeRequestsState,
             period: activeRequestsPeriod,
             sort: activeRequestsSort,
+            page: filter.page,
+            limit: filter.limit,
           };
-
-        if (requestsScope === 'market') {
-          return getWorkspaceRequests(query);
-        }
-
-        return hasAccessToken
-          ? withStatusFallback(() => getWorkspaceRequests(query), null, [401, 403])
-          : Promise.resolve(null);
+        return requestsScope === 'market'
+          ? getWorkspaceRequests(query)
+          : (
+            hasAccessToken
+              ? withStatusFallback(() => getWorkspaceRequests(query), null, [401, 403])
+              : Promise.resolve(null)
+          );
       },
     }),
   };
