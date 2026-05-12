@@ -2,21 +2,20 @@
 
 import type { ComponentProps } from 'react';
 
-import { RequestsExplorerRequestsContent } from '@/components/requests/RequestsExplorerRequestsContent';
-import { RequestsPrivateView } from '@/features/workspace/requests/RequestsPrivateView';
+import { WorkspaceRequestsView } from '@/features/workspace/requests/RequestsPrivateView';
 
 export type RequestsWorkspaceBodyVariant =
   | {
     kind: 'public';
-    props: ComponentProps<typeof RequestsExplorerRequestsContent>;
+    props: ComponentProps<typeof WorkspaceRequestsView>;
   }
   | {
     kind: 'private';
-    props: ComponentProps<typeof RequestsPrivateView>;
+    props: ComponentProps<typeof WorkspaceRequestsView>;
   };
 
 export function buildRequestsWorkspacePublicBody(
-  props: ComponentProps<typeof RequestsExplorerRequestsContent>,
+  props: ComponentProps<typeof WorkspaceRequestsView>,
 ): RequestsWorkspaceBodyVariant {
   return {
     kind: 'public',
@@ -25,7 +24,7 @@ export function buildRequestsWorkspacePublicBody(
 }
 
 export function buildRequestsWorkspacePrivateBody(
-  props: ComponentProps<typeof RequestsPrivateView>,
+  props: ComponentProps<typeof WorkspaceRequestsView>,
 ): RequestsWorkspaceBodyVariant {
   return {
     kind: 'private',
@@ -38,9 +37,5 @@ export function RequestsWorkspaceBody({
 }: {
   body: RequestsWorkspaceBodyVariant;
 }) {
-  if (body.kind === 'public') {
-    return <RequestsExplorerRequestsContent {...body.props} />;
-  }
-
-  return <RequestsPrivateView {...body.props} />;
+  return <WorkspaceRequestsView {...body.props} />;
 }

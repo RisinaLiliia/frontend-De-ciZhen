@@ -237,6 +237,16 @@
     gap: 14px;
   }
 
+  .my-requests-list--market-double {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .my-requests-list--market-single {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
   .my-requests-list > div {
     width: 100%;
     min-width: 0;
@@ -1344,6 +1354,11 @@
 
     .my-requests-list {
       gap: 12px;
+    }
+
+    .my-requests-list--market-double,
+    .my-requests-list--market-single {
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .my-request-card {

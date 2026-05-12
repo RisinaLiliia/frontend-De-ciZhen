@@ -3,26 +3,22 @@
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import {
   buildRequestsWorkspacePublicBody,
   RequestsWorkspaceBody,
   useWorkspaceData,
 } from '@/features/workspace/requests';
 import { RequestsPrivateActionRail } from '@/features/workspace/requests';
-import { useWorkspaceFormatters, useWorkspacePublicFilters } from '@/features/workspace';
-import {
-  pickRequestsExplorerSharedFilters,
-} from '@/components/requests/requestsExplorer.model';
+import { buildWorkspaceRequestsViewModelFromResponse } from '@/features/workspace/requests/workspaceRequestsView.model';
+import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
+import { useWorkspacePublicFilters } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import {
   buildWorkspacePublicRequestsAsideProps,
-  buildWorkspacePublicRequestsListProps,
-  buildWorkspacePublicRequestsSummaryStripProps,
 } from '@/features/workspace/page/workspacePublicRequests.view-model';
-import {
-  resolveWorkspacePublicRequestsData,
-} from '@/features/workspace/page/workspacePublicRequests.data';
+import type { ActiveDecisionState } from '@/features/workspace/requests/requestsDecision.model';
+import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import { resolveRequestsListDensityForPageSize } from '@/lib/requests/pagination';
 
 type UseWorkspacePublicRequestsSectionParams = {
   branch: WorkspaceBranchProps;
@@ -54,6 +50,8 @@ export function useWorkspacePublicRequestsSection({
     activeRequestsState,
     activeRequestsPeriod,
     activeRequestsSort,
+    guestLoginHref,
+    nextPath,
   } = routeState;
 
   const filters = useWorkspacePublicFilters({
@@ -62,11 +60,10 @@ export function useWorkspacePublicRequestsSection({
     shouldLoadCatalog: enabled,
     activePublicSection,
   });
-  const { serviceByKey, categoryByKey, cityById } = useCatalogIndex({
-    services: filters.services,
-    categories: filters.categories,
-    cities: filters.cities,
-  });
+  const {
+    page: publicPage,
+    setPage: setPublicPage,
+  } = filters;
 
   const data = useWorkspaceData({
     enabled,
@@ -91,45 +88,66 @@ export function useWorkspacePublicRequestsSection({
     activeRequestsPeriod,
     activeRequestsSort: activeRequestsSort ?? filters.sortBy,
   });
-  const { contractData } = data;
-  const { formatNumber, formatDate, formatPrice } = useWorkspaceFormatters(locale);
+  const { contractData, requestUserStateData } = data;
 
   const marketResponse = contractData.workspaceRequests;
-  const {
-    publicRequestsListItems,
-    summaryItems,
-    decisionPanel,
-    publicListPage,
-    publicListLimit,
-    publicListTotalPages,
-    resolvedTotalResults,
-  } = React.useMemo(
-    () => resolveWorkspacePublicRequestsData({
-      marketResponse,
-      filtersPage: filters.page,
-      filtersLimit: filters.limit,
-    }),
-    [
-      filters.limit,
-      filters.page,
-      marketResponse,
-    ],
+  const marketModel = React.useMemo(
+    () => buildWorkspaceRequestsViewModelFromResponse(marketResponse),
+    [marketResponse],
   );
-  const openOfferSheet = React.useCallback<(requestId: string) => void>(() => {
-    return;
-  }, []);
-  const toggleRequestFavorite = React.useCallback<(requestId: string) => void>(() => {
-    return;
-  }, []);
+  const marketListDensity = React.useMemo(
+    () => resolveRequestsListDensityForPageSize(filters.limit),
+    [filters.limit],
+  );
+  const marketTotalPages = React.useMemo(() => {
+    if (!marketResponse) return 1;
+    return Math.max(1, Math.ceil(marketResponse.list.total / Math.max(1, marketResponse.list.limit)));
+  }, [marketResponse]);
+  const decisionPanel = marketResponse?.decisionPanel ?? null;
+  const marketDecisionState = React.useMemo<ActiveDecisionState>(
+    () => ({
+      mode: 'default',
+      activeRequestId: null,
+      completedInSession: 0,
+    }),
+    [],
+  );
+  const marketPagination = React.useMemo(() => {
+    if (!marketResponse) return null;
+    return {
+      page: marketResponse.list.page,
+      totalPages: marketTotalPages,
+      onPageChange: setPublicPage,
+    };
+  }, [marketResponse, marketTotalPages, setPublicPage]);
 
-  const setRequestsState = React.useCallback((nextState: string) => {
-    const nextParams = new URLSearchParams(searchParams.toString());
-    nextParams.set('section', 'requests');
-    nextParams.set('scope', 'market');
-    nextParams.set('state', nextState);
-    nextParams.set('page', '1');
-    router.replace(buildWorkspaceHref(pathname, nextParams), { scroll: false });
-  }, [pathname, router, searchParams]);
+  React.useEffect(() => {
+    if (!marketResponse) return;
+    if (publicPage <= marketTotalPages) return;
+    setPublicPage(marketTotalPages);
+  }, [marketResponse, marketTotalPages, publicPage, setPublicPage]);
+
+  const favoriteRequestIds = React.useMemo(
+    () => new Set(requestUserStateData.favoriteRequests.map((request) => request.id)),
+    [requestUserStateData.favoriteRequests],
+  );
+  const favoriteRequestById = React.useMemo<ReadonlyMap<string, RequestResponseDto>>(
+    () =>
+      new Map(
+        requestUserStateData.favoriteRequests.map((request) => [request.id, request] as const),
+      ),
+    [requestUserStateData.favoriteRequests],
+  );
+  const requestUserInteractions = useWorkspaceRequestUserInteractions({
+    t,
+    locale,
+    isAuthed,
+    nextPath,
+    favoriteRequestIds,
+    requestById: favoriteRequestById,
+    favoriteProviderLookup: new Set(),
+    providerById: new Map(),
+  });
 
   const openMarketStats = React.useCallback(() => {
     const nextParams = new URLSearchParams(searchParams.toString());
@@ -142,53 +160,6 @@ export function useWorkspacePublicRequestsSection({
     router.push(`/requests/${requestId}`);
   }, [router]);
 
-  const sharedFilters = React.useMemo(
-    () => pickRequestsExplorerSharedFilters({
-      categoryOptions: filters.categoryOptions,
-      serviceOptions: filters.serviceOptions,
-      cityOptions: filters.cityOptions,
-      sortOptions: filters.sortOptions,
-      categoryKey: filters.categoryKey,
-      subcategoryKey: filters.subcategoryKey,
-      cityId: filters.cityId,
-      sortBy: filters.sortBy,
-      page: publicListPage,
-      limit: publicListLimit,
-      isCategoriesLoading: filters.isCategoriesLoading,
-      isServicesLoading: filters.isServicesLoading,
-      isPending: filters.isFiltersPending,
-      appliedFilterChips: filters.appliedFilterChips,
-      onCategoryChange: filters.onCategoryChangeTracked,
-      onSubcategoryChange: filters.onSubcategoryChangeTracked,
-      onCityChange: filters.onCityChangeTracked,
-      onSortChange: filters.onSortChangeTracked,
-      onReset: filters.onResetTracked,
-      setPage: filters.setPage,
-    }),
-    [
-      filters.appliedFilterChips,
-      filters.categoryKey,
-      filters.categoryOptions,
-      filters.cityId,
-      filters.cityOptions,
-      filters.isCategoriesLoading,
-      filters.isFiltersPending,
-      filters.isServicesLoading,
-      filters.onCategoryChangeTracked,
-      filters.onCityChangeTracked,
-      filters.onResetTracked,
-      filters.onSortChangeTracked,
-      filters.onSubcategoryChangeTracked,
-      filters.serviceOptions,
-      filters.setPage,
-      filters.sortBy,
-      filters.sortOptions,
-      filters.subcategoryKey,
-      publicListLimit,
-      publicListPage,
-    ],
-  );
-
   if (!enabled) {
     return {
       publicMain: null,
@@ -199,39 +170,34 @@ export function useWorkspacePublicRequestsSection({
   const publicMain = (
     <div className="stack-md">
       <RequestsWorkspaceBody
-        body={buildRequestsWorkspacePublicBody(buildWorkspacePublicRequestsListProps({
-          t,
+        body={buildRequestsWorkspacePublicBody({
+          variant: 'market',
           locale,
+          isWorkspaceAuthed,
+          guestLoginHref,
+          listDensity: marketListDensity,
+          pagination: marketPagination,
+          favoriteState: {
+            favoriteRequestIds,
+            pendingFavoriteRequestIds: requestUserInteractions.pendingFavoriteRequestIds,
+            onToggleRequestFavorite: requestUserInteractions.onToggleRequestFavorite,
+          },
+          model: marketModel,
+          isLoading: contractData.isWorkspaceRequestsLoading,
+          isError: contractData.isWorkspaceRequestsError,
+          decisionState: marketDecisionState,
+          decisionQueueIds: [],
+          onEnterDecisionMode: openMarketStats,
+          onOpenDecisionItem: openQueueItem,
+          onExitDecisionMode: () => {},
+          listContext: {
+            onOpenRequest: (requestId) => openQueueItem(requestId),
+            onSendOffer: (requestId) => openQueueItem(requestId),
+            onEditOffer: (requestId) => openQueueItem(requestId),
+          },
           emptyCtaHref: '/workspace?section=requests&scope=market',
-          sharedFilters,
-          requestsData: {
-            totalResultsLabel: formatNumber.format(resolvedTotalResults),
-            requests: publicRequestsListItems,
-            isLoading: contractData.isWorkspaceRequestsLoading,
-            isError: contractData.isWorkspaceRequestsError,
-            enableOfferActions: false,
-            showFavoriteButton: false,
-            pendingOfferRequestId: null,
-            totalPages: publicListTotalPages,
-            openOfferSheet,
-            toggleRequestFavorite,
-          },
-          catalogIndex: {
-            serviceByKey,
-            categoryByKey,
-            cityById,
-          },
-          formatDate,
-          formatPrice,
-          summaryStripProps: marketResponse
-            ? buildWorkspacePublicRequestsSummaryStripProps({
-              locale,
-              items: summaryItems,
-              onSelect: setRequestsState,
-            })
-            : undefined,
-          isSummaryStripLoading: contractData.isWorkspaceRequestsLoading,
-        }))}
+          secondaryCtaHref: '/workspace?section=providers',
+        })}
       />
     </div>
   );

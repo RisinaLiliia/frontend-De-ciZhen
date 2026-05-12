@@ -2,6 +2,7 @@
 
 import type { ComponentProps } from 'react';
 
+import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import type { WorkspacePublicIntro } from '@/features/workspace';
@@ -11,6 +12,7 @@ import type {
   useWorkspacePrivateState,
   useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
+import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 
 type WorkspacePrivateDataFlowResult = ReturnType<typeof useWorkspacePrivateDataFlow>;
 type WorkspaceContentDataArgs = Parameters<typeof useWorkspaceContentData>[0];
@@ -106,6 +108,37 @@ type ResolveWorkspacePrivateRequestsLoadingArgs = {
   isWorkspacePrivateRequestsFallbackLoading: WorkspacePrivateDataFlowResult['isWorkspacePrivateRequestsFallbackLoading'];
 };
 
+type ResolveWorkspacePrivateRenderModesArgs = {
+  activePublicSection: WorkspacePrivateDataFlowResult['activePublicSection'];
+  activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'];
+  pathname: string;
+  sectionParam: string | null;
+  hasExplicitWorkspaceTab: boolean;
+  requestsScope: WorkspacePrivateDataFlowResult['requestsScope'];
+};
+
+type BuildWorkspacePrivateOverviewListPropsArgs = {
+  branch: WorkspaceBranchProps;
+  data: Pick<
+    WorkspacePrivateDataFlowResult,
+    | 'overviewRequestsListState'
+    | 'serviceByKey'
+    | 'categoryByKey'
+    | 'cityById'
+    | 'formatDate'
+    | 'formatPrice'
+    | 'offersByRequest'
+    | 'favoriteRequestIds'
+    | 'onToggleRequestFavorite'
+    | 'onOpenOfferSheet'
+    | 'onWithdrawOffer'
+    | 'onOpenChatThread'
+    | 'pendingOfferRequestId'
+    | 'pendingFavoriteRequestIds'
+  >;
+  isOverviewMode: boolean;
+};
+
 export function shouldBuildWorkspacePrivateContractRequests(
   activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'],
 ) {
@@ -116,6 +149,78 @@ export function shouldBuildWorkspacePrivateFavoriteProviderCards(
   activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'],
 ) {
   return activeWorkspaceTab === 'favorites';
+}
+
+export function resolveWorkspacePrivateRenderModes({
+  activePublicSection,
+  activeWorkspaceTab,
+  pathname,
+  sectionParam,
+  hasExplicitWorkspaceTab,
+  requestsScope,
+}: ResolveWorkspacePrivateRenderModesArgs) {
+  const isOverviewMode = isWorkspaceOverviewMode({
+    activePublicSection,
+    activeWorkspaceTab,
+    pathname,
+    sectionParam,
+    hasExplicitWorkspaceTab,
+  });
+  const isUnifiedPrivateRequests =
+    activePublicSection === 'requests' &&
+    requestsScope === 'my';
+
+  return {
+    isOverviewMode,
+    isUnifiedPrivateRequests,
+    shouldRenderWorkspaceContent: !isOverviewMode && !isUnifiedPrivateRequests,
+  };
+}
+
+export function buildWorkspacePrivateOverviewListPropsArgs({
+  branch,
+  data,
+  isOverviewMode,
+}: BuildWorkspacePrivateOverviewListPropsArgs): Parameters<typeof buildRequestsListProps>[0] {
+  if (!isOverviewMode) {
+    return {
+      t: branch.t,
+      locale: branch.locale,
+      requests: [],
+      isLoading: false,
+      isError: false,
+      serviceByKey: data.serviceByKey,
+      categoryByKey: data.categoryByKey,
+      cityById: data.cityById,
+      formatDate: data.formatDate,
+      formatPrice: data.formatPrice,
+    };
+  }
+
+  return {
+    t: branch.t,
+    locale: branch.locale,
+    requests: data.overviewRequestsListState.requests,
+    isLoading: data.overviewRequestsListState.isLoading,
+    isError: data.overviewRequestsListState.isError,
+    serviceByKey: data.serviceByKey,
+    categoryByKey: data.categoryByKey,
+    cityById: data.cityById,
+    formatDate: data.formatDate,
+    formatPrice: data.formatPrice,
+    enableOfferActions: true,
+    hideRecurringBadge: branch.isPersonalized,
+    showFavoriteButton: true,
+    offersByRequest: data.offersByRequest,
+    favoriteRequestIds: data.favoriteRequestIds,
+    onToggleFavorite: data.onToggleRequestFavorite,
+    onSendOffer: data.onOpenOfferSheet,
+    onEditOffer: data.onOpenOfferSheet,
+    onWithdrawOffer: data.onWithdrawOffer,
+    onOpenChatThread: data.onOpenChatThread,
+    pendingOfferRequestId: data.pendingOfferRequestId,
+    pendingFavoriteRequestIds: data.pendingFavoriteRequestIds,
+  };
 }
 
 export function buildWorkspacePrivateContentDataArgs({

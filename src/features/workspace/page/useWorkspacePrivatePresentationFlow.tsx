@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import { trackUXEvent } from '@/lib/analytics';
+import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import {
   buildRequestsWorkspacePrivateBody,
@@ -33,11 +33,12 @@ import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/Workspace
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import { isWorkspaceTab } from '@/features/workspace/requests';
-import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 import {
   buildWorkspacePrivateContentDataArgs,
+  buildWorkspacePrivateOverviewListPropsArgs,
   buildWorkspacePublicSummaryView,
   resolveWorkspacePrivateRequestsLoading,
+  resolveWorkspacePrivateRenderModes,
   buildWorkspacePrivatePresentationArgs,
   buildWorkspacePrivateStateArgs,
   buildWorkspacePrivateViewModelInput,
@@ -65,18 +66,15 @@ export function useWorkspacePrivatePresentationFlow({
     overviewRequestsListState,
     overviewRequestsCount,
   } = data;
-  const isOverviewMode =
-    isWorkspaceOverviewMode({
+  const { isOverviewMode, isUnifiedPrivateRequests, shouldRenderWorkspaceContent } =
+    resolveWorkspacePrivateRenderModes({
       activePublicSection,
       activeWorkspaceTab,
       pathname,
       sectionParam: searchParams.get('section'),
       hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
+      requestsScope: data.requestsScope,
     });
-  const isUnifiedPrivateRequests =
-    activePublicSection === 'requests' &&
-    data.requestsScope === 'my';
-  const shouldRenderWorkspaceContent = !isOverviewMode && !isUnifiedPrivateRequests;
 
   const { viewModelPatch, primaryAction } = useWorkspaceContentData(
     buildWorkspacePrivateContentDataArgs({
@@ -198,74 +196,20 @@ export function useWorkspacePrivatePresentationFlow({
   );
 
   const activeOffersListProps = React.useMemo(
-    () => {
-      if (!isOverviewMode) {
-        return buildRequestsListProps({
-          t: branch.t,
-          locale: branch.locale,
-          requests: [],
-          isLoading: false,
-          isError: false,
-          serviceByKey: data.serviceByKey,
-          categoryByKey: data.categoryByKey,
-          cityById: data.cityById,
-          formatDate: data.formatDate,
-          formatPrice: data.formatPrice,
-        });
-      }
-
-      return (
-      buildRequestsListProps({
-        t: branch.t,
-        locale: branch.locale,
-        requests: overviewRequestsListState.requests,
-        isLoading: overviewRequestsListState.isLoading,
-        isError: overviewRequestsListState.isError,
-        serviceByKey: data.serviceByKey,
-        categoryByKey: data.categoryByKey,
-        cityById: data.cityById,
-        formatDate: data.formatDate,
-        formatPrice: data.formatPrice,
-        enableOfferActions: true,
-        hideRecurringBadge: branch.isPersonalized,
-        showFavoriteButton: true,
-        offersByRequest: data.offersByRequest,
-        favoriteRequestIds: data.favoriteRequestIds,
-        onToggleFavorite: data.onToggleRequestFavorite,
-        onSendOffer: data.onOpenOfferSheet,
-        onEditOffer: data.onOpenOfferSheet,
-        onWithdrawOffer: data.onWithdrawOffer,
-        onOpenChatThread: data.onOpenChatThread,
-        pendingOfferRequestId: data.pendingOfferRequestId,
-        pendingFavoriteRequestIds: data.pendingFavoriteRequestIds,
-      })
-      );
-    },
-    [
-      branch.isPersonalized,
-      branch.locale,
-      branch.t,
-      data.categoryByKey,
-      data.cityById,
-      data.favoriteRequestIds,
-      data.formatDate,
-      data.formatPrice,
-      overviewRequestsListState.isLoading,
-      overviewRequestsListState.isError,
-      data.offersByRequest,
-      data.onOpenChatThread,
-      data.onOpenOfferSheet,
-      data.onToggleRequestFavorite,
-      data.onWithdrawOffer,
-      data.pendingFavoriteRequestIds,
-      data.pendingOfferRequestId,
-      overviewRequestsListState.requests,
-      data.serviceByKey,
-      isOverviewMode,
-    ],
+    () =>
+      buildRequestsListProps(buildWorkspacePrivateOverviewListPropsArgs({
+        branch,
+        data,
+        isOverviewMode,
+      })),
+    [branch, data, isOverviewMode],
   );
 
   const preferredRequestsRole = privateState.preferredRequestsRole;
+  const {
+    requestsPage,
+    setRequestsPage,
+  } = data;
   const privateRequestsLoading = resolveWorkspacePrivateRequestsLoading({
     workspaceRequests: data.workspaceRequests,
     isWorkspaceRequestsLoading: data.isWorkspaceRequestsLoading,
@@ -276,6 +220,27 @@ export function useWorkspacePrivatePresentationFlow({
     () => buildMyRequestsViewModelFromResponse(data.workspaceRequests),
     [data.workspaceRequests],
   );
+  const privateTotalPages = React.useMemo(() => {
+    if (!privateRequestsModel.response) return 1;
+    return Math.max(
+      1,
+      Math.ceil(privateRequestsModel.response.list.total / Math.max(1, privateRequestsModel.response.list.limit)),
+    );
+  }, [privateRequestsModel.response]);
+  const privatePagination = React.useMemo(() => {
+    if (!privateRequestsModel.response) return null;
+    return {
+      page: privateRequestsModel.response.list.page,
+      totalPages: privateTotalPages,
+      onPageChange: setRequestsPage,
+    };
+  }, [privateRequestsModel.response, privateTotalPages, setRequestsPage]);
+
+  React.useEffect(() => {
+    if (!privateRequestsModel.response) return;
+    if (requestsPage <= privateTotalPages) return;
+    setRequestsPage(privateTotalPages);
+  }, [privateRequestsModel.response, privateTotalPages, requestsPage, setRequestsPage]);
   const {
     state: decisionState,
     queueIds: decisionQueueIds,
@@ -330,6 +295,7 @@ export function useWorkspacePrivatePresentationFlow({
         locale: branch.locale,
         isWorkspaceAuthed: branch.isWorkspaceAuthed,
         guestLoginHref: data.guestLoginHref,
+        pagination: privatePagination,
         model: privateRequestsModel,
         isLoading: privateRequestsLoading,
         isError: data.isWorkspaceRequestsError,

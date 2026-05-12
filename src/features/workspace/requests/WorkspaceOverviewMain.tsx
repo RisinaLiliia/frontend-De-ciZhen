@@ -6,15 +6,11 @@ import Link from 'next/link';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
-import { RequestCard } from '@/components/requests/RequestCard';
 import { buildRequestListPresentation } from '@/components/requests/requestListItem.model';
 import type { RequestsListProps } from '@/components/requests/requestsList.types';
 import { ProviderList } from '@/components/providers/ProviderList';
-import { Badge } from '@/components/ui/Badge';
-import { LocationMeta } from '@/components/ui/LocationMeta';
 import type { TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
-import { IconCalendar } from '@/components/ui/icons/icons';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -24,6 +20,7 @@ import type { WorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsMod
 import { StatisticsDecisionAiCard } from './stats/components/StatisticsDecisionAiCard';
 import { StatisticsMetricSignalCard } from './stats/components/StatisticsMetricSignalCard';
 import { StatisticsDemandPanelSection } from './stats/WorkspaceStatisticsSections';
+import { WorkspaceGuestRequestCard } from './components/WorkspaceGuestRequestCard';
 
 type WorkspaceOverviewMainProps = {
   locale: Locale;
@@ -264,30 +261,24 @@ function WorkspaceOpportunityCards({
   return (
     <div className="workspace-overview__opportunities">
       {cards.map((card) => (
-        <RequestCard
+        <WorkspaceGuestRequestCard
           key={card.key}
           href={card.href}
           ariaLabel={card.presentation.card.title}
+          className="workspace-guest-request-card workspace-guest-request-card--overview"
           prefetch={card.prefetch}
           imageSrc={card.presentation.card.imageSrc}
           imageAlt=""
-          badges={[]}
-          category={card.presentation.card.categoryLabel}
+          categoryLabel={card.presentation.card.categoryLabel}
           title={card.presentation.card.title}
           excerpt={card.presentation.card.excerpt}
-          meta={[
-            <LocationMeta key="city" label={card.presentation.card.cityLabel} />,
-            <React.Fragment key="date">
-              <IconCalendar />
-              {requestsListProps.formatDate.format(new Date(card.preferredDate))}
-            </React.Fragment>,
-          ]}
+          cityLabel={card.presentation.card.cityLabel}
+          dateLabel={requestsListProps.formatDate.format(new Date(card.preferredDate))}
           bottomMeta={[card.demandLabel, card.competitionLabel]}
           priceLabel={card.presentation.card.priceLabel}
           priceTrend={card.presentation.card.priceTrend}
           priceTrendLabel={card.presentation.card.priceTrendLabel}
-          mode="link"
-          statusSlot={<Badge variant="opportunity" tone="soft" size="sm">{copy.opportunityBadge}</Badge>}
+          badgeLabel={copy.opportunityBadge}
           overlaySlot={
             requestsListProps.showFavoriteButton ? (
               <FavoriteButton

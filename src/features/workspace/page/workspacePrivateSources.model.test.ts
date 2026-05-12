@@ -115,6 +115,8 @@ describe('workspacePrivateSources.model', () => {
         page: 1,
         limit: 20,
       },
+      page: 1,
+      limit: 20,
       locale: 'de',
       isAuthed: true,
       isWorkspaceAuthed: true,
@@ -149,6 +151,8 @@ describe('workspacePrivateSources.model', () => {
         page: 3,
         limit: 24,
       },
+      page: 3,
+      limit: 24,
       shouldLoadCatalog: false,
       locale: 'de',
       isAuthed: true,
@@ -158,7 +162,7 @@ describe('workspacePrivateSources.model', () => {
       requestsScope: 'my',
     });
 
-    expect(args.filter).toEqual({});
+    expect(args.filter).toEqual({ page: 3, limit: 24 });
     expect(args.requestsScope).toBe('my');
     expect(args.activePublicSection).toBe('requests');
   });
@@ -415,6 +419,11 @@ describe('workspacePrivateSources.model', () => {
         platformRequestsTotal: 12,
         requests: [{ id: 'req-1' }, { id: 'req-2' }],
       } as never,
+      filters: {
+        page: 3,
+        limit: 10,
+        setPage: vi.fn(),
+      },
     });
 
     expect(result.platformRequestsTotal).toBe(12);
@@ -464,5 +473,7 @@ describe('workspacePrivateSources.model', () => {
       favoriteRequestCount: 0,
     });
     expect(result.workspaceRequests).toBeNull();
+    expect(result.requestsPage).toBe(3);
+    expect(result.requestsLimit).toBe(10);
   });
 });

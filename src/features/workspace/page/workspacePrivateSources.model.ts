@@ -39,6 +39,8 @@ type BuildWorkspacePrivateSourcesDataArgsParams = Pick<
   'locale' | 'isAuthed' | 'isWorkspaceAuthed'
 > & {
   filter: WorkspacePublicFiltersResult['filter'];
+  page: WorkspacePublicFiltersResult['page'];
+  limit: WorkspacePublicFiltersResult['limit'];
   shouldLoadCatalog?: boolean;
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   activePublicSection?: WorkspaceBranchProps['routeState']['activePublicSection'];
@@ -108,6 +110,12 @@ type ResolveWorkspacePrivateSourcesResultParams = {
   catalogIndex: CatalogIndexResult;
   collections: WorkspaceCollectionsResult;
   publicRequestsState: WorkspacePublicRequestsStateResult;
+  filters: Pick<
+    WorkspacePublicFiltersResult,
+    | 'page'
+    | 'limit'
+    | 'setPage'
+  >;
 };
 
 export function shouldLoadWorkspacePrivateCatalog({
@@ -170,6 +178,8 @@ export function resolveWorkspacePrivatePublicSummaryCityActivityLimit({
 
 export function buildWorkspacePrivateSourcesDataArgs({
   filter,
+  page,
+  limit,
   shouldLoadCatalog = true,
   locale,
   isAuthed,
@@ -183,7 +193,7 @@ export function buildWorkspacePrivateSourcesDataArgs({
   activeRequestsSort = null,
 }: BuildWorkspacePrivateSourcesDataArgsParams): Parameters<typeof useWorkspaceData>[0] {
   return {
-    filter: shouldLoadCatalog ? filter : {},
+    filter: shouldLoadCatalog ? filter : { page, limit },
     locale,
     isAuthed,
     isWorkspaceAuthed,
@@ -321,6 +331,7 @@ export function resolveWorkspacePrivateSourcesResult({
   catalogIndex,
   collections,
   publicRequestsState,
+  filters,
 }: ResolveWorkspacePrivateSourcesResultParams) {
   return {
     allRequestsSummary: contractData.allRequestsSummary,
@@ -380,5 +391,8 @@ export function resolveWorkspacePrivateSourcesResult({
     isMyOffersLoading: requestUserStateData.isMyOffersLoading,
     platformRequestsTotal: contractData.allRequestsSummary?.totalPublishedRequests ?? 0,
     overviewRequestsCount: publicRequestsState.requests.length,
+    requestsPage: filters.page,
+    requestsLimit: filters.limit,
+    setRequestsPage: filters.setPage,
   };
 }

@@ -83,6 +83,8 @@ export function useWorkspacePrivateSources({
   const data = useWorkspaceData(
     buildWorkspacePrivateSourcesDataArgs({
       filter,
+      page,
+      limit,
       shouldLoadCatalog,
       locale,
       isAuthed,
@@ -158,5 +160,10 @@ export function useWorkspacePrivateSources({
     catalogIndex,
     collections,
     publicRequestsState,
+    filters: {
+      page,
+      limit,
+      setPage,
+    },
   });
 }
