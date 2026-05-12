@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
-import { buildRequestListPresentation } from '@/components/requests/requestListItem.model';
+import { buildPublicRequestCardPresentation } from '@/components/requests/publicRequestCard.model';
 import type { RequestsListProps } from '@/components/requests/requestsList.types';
 import { ProviderList } from '@/components/providers/ProviderList';
 import type { TopProviderItem } from '@/components/providers/TopProvidersPanel';
@@ -215,7 +215,7 @@ function WorkspaceOpportunityCards({
     () =>
       recentRequests.map((request, index) => {
         const categoryKey = resolveRequestCategoryKey(request, requestsListProps);
-        const presentation = buildRequestListPresentation({
+        const presentation = buildPublicRequestCardPresentation({
           item: request,
           t: requestsListProps.t,
           locale,
@@ -223,6 +223,7 @@ function WorkspaceOpportunityCards({
           categoryByKey: requestsListProps.categoryByKey,
           cityById: requestsListProps.cityById,
           formatPrice: requestsListProps.formatPrice,
+          formatDate: requestsListProps.formatDate,
           enableOfferActions: false,
           favoriteRequestIds: requestsListProps.favoriteRequestIds,
           pendingOfferRequestId: null,
@@ -273,7 +274,7 @@ function WorkspaceOpportunityCards({
           title={card.presentation.card.title}
           excerpt={card.presentation.card.excerpt}
           cityLabel={card.presentation.card.cityLabel}
-          dateLabel={requestsListProps.formatDate.format(new Date(card.preferredDate))}
+          dateLabel={card.presentation.card.dateLabel}
           bottomMeta={[card.demandLabel, card.competitionLabel]}
           priceLabel={card.presentation.card.priceLabel}
           priceTrend={card.presentation.card.priceTrend}
