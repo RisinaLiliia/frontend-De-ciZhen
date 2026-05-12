@@ -4,10 +4,11 @@ import {
   buildRequestsWorkspacePrivateBody,
   buildRequestsWorkspacePublicBody,
 } from './RequestsWorkspaceBody';
+import { buildWorkspaceRequestsSurfaceModel } from './workspaceRequestsView.model';
 
 describe('RequestsWorkspaceBody', () => {
   it('builds an explicit public body variant', () => {
-    const body = buildRequestsWorkspacePublicBody({
+    const body = buildRequestsWorkspacePublicBody(buildWorkspaceRequestsSurfaceModel({
       variant: 'market',
       locale: 'de',
       isWorkspaceAuthed: false,
@@ -80,19 +81,20 @@ describe('RequestsWorkspaceBody', () => {
       },
       emptyCtaHref: '/workspace?section=requests&scope=market',
       secondaryCtaHref: '/workspace?section=providers',
-    });
+    }));
 
     expect(body.kind).toBe('public');
     if (body.kind !== 'public') {
       throw new Error('Expected public body variant');
     }
-    expect(body.props.emptyCtaHref).toBe('/workspace?section=requests&scope=market');
-    expect(body.props.variant).toBe('market');
-    expect(body.props.pagination?.totalPages).toBe(3);
+    expect(body.surface.emptyCtaHref).toBe('/workspace?section=requests&scope=market');
+    expect(body.surface.variant).toBe('market');
+    expect(body.surface.pagination?.totalPages).toBe(3);
   });
 
   it('builds an explicit private body variant', () => {
-    const body = buildRequestsWorkspacePrivateBody({
+    const body = buildRequestsWorkspacePrivateBody(buildWorkspaceRequestsSurfaceModel({
+      variant: 'private',
       locale: 'de',
       isWorkspaceAuthed: true,
       guestLoginHref: '/auth/login',
@@ -160,13 +162,13 @@ describe('RequestsWorkspaceBody', () => {
       onOpenDecisionItem: vi.fn(),
       onExitDecisionMode: vi.fn(),
       listContext: {},
-    });
+    }));
 
     expect(body.kind).toBe('private');
     if (body.kind !== 'private') {
       throw new Error('Expected private body variant');
     }
-    expect(body.props.guestLoginHref).toBe('/auth/login');
-    expect(body.props.pagination?.page).toBe(2);
+    expect(body.surface.guestLoginHref).toBe('/auth/login');
+    expect(body.surface.pagination?.page).toBe(2);
   });
 });

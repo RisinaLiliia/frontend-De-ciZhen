@@ -6,6 +6,6 @@ import type { WorkspaceRequestsViewProps, WorkspaceRequestsViewVariant } from '@
 export { RequestsPrivateActionRail, WorkspaceRequestsView };
 export type { WorkspaceRequestsViewProps, WorkspaceRequestsViewVariant };
 
-export function RequestsPrivateView(props: Omit<WorkspaceRequestsViewProps, 'variant'>) {
-  return <WorkspaceRequestsView {...props} variant="private" />;
+export function RequestsPrivateView(props: WorkspaceRequestsViewProps) {
+  return <WorkspaceRequestsView {...props} />;
 }

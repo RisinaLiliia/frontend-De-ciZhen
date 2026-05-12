@@ -1,34 +1,33 @@
 'use client';
 
-import type { ComponentProps } from 'react';
-
 import { WorkspaceRequestsView } from '@/features/workspace/requests/RequestsPrivateView';
+import type { WorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 
 export type RequestsWorkspaceBodyVariant =
   | {
     kind: 'public';
-    props: ComponentProps<typeof WorkspaceRequestsView>;
+    surface: WorkspaceRequestsSurfaceModel;
   }
   | {
     kind: 'private';
-    props: ComponentProps<typeof WorkspaceRequestsView>;
+    surface: WorkspaceRequestsSurfaceModel;
   };
 
 export function buildRequestsWorkspacePublicBody(
-  props: ComponentProps<typeof WorkspaceRequestsView>,
+  surface: WorkspaceRequestsSurfaceModel,
 ): RequestsWorkspaceBodyVariant {
   return {
     kind: 'public',
-    props,
+    surface,
   };
 }
 
 export function buildRequestsWorkspacePrivateBody(
-  props: ComponentProps<typeof WorkspaceRequestsView>,
+  surface: WorkspaceRequestsSurfaceModel,
 ): RequestsWorkspaceBodyVariant {
   return {
     kind: 'private',
-    props,
+    surface,
   };
 }
 
@@ -37,5 +36,5 @@ export function RequestsWorkspaceBody({
 }: {
   body: RequestsWorkspaceBodyVariant;
 }) {
-  return <WorkspaceRequestsView {...body.props} />;
+  return <WorkspaceRequestsView surface={body.surface} />;
 }

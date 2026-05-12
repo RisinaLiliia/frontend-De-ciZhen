@@ -9,7 +9,10 @@ import {
   useWorkspaceData,
 } from '@/features/workspace/requests';
 import { RequestsPrivateActionRail } from '@/features/workspace/requests';
-import { buildWorkspaceRequestsViewModelFromResponse } from '@/features/workspace/requests/workspaceRequestsView.model';
+import {
+  buildWorkspaceRequestsSurfaceModel,
+  buildWorkspaceRequestsViewModelFromResponse,
+} from '@/features/workspace/requests/workspaceRequestsView.model';
 import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
 import { useWorkspacePublicFilters } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
@@ -170,7 +173,7 @@ export function useWorkspacePublicRequestsSection({
   const publicMain = (
     <div className="stack-md">
       <RequestsWorkspaceBody
-        body={buildRequestsWorkspacePublicBody({
+        body={buildRequestsWorkspacePublicBody(buildWorkspaceRequestsSurfaceModel({
           variant: 'market',
           locale,
           isWorkspaceAuthed,
@@ -197,7 +200,7 @@ export function useWorkspacePublicRequestsSection({
           },
           emptyCtaHref: '/workspace?section=requests&scope=market',
           secondaryCtaHref: '/workspace?section=providers',
-        })}
+        }))}
       />
     </div>
   );

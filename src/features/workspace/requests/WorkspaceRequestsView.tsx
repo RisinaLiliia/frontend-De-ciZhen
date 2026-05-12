@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { RequestCard } from '@/components/requests/RequestCard';
-import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
+import type { OwnerRequestActions } from '@/components/requests/requestsList.types';
 import { LocationMeta } from '@/components/ui/LocationMeta';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import {
@@ -18,7 +18,6 @@ import {
   IconShare,
   IconTrash,
 } from '@/components/ui/icons/icons';
-import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
 import { DecisionPanel } from '@/features/workspace/requests/components/DecisionPanel';
 import { RequestsWorkspaceSummary } from '@/features/workspace/requests/components/RequestsWorkspaceSummary';
@@ -36,7 +35,7 @@ import {
   hasOwnerRequestEditCapability,
   resolveOwnerMenuActions,
 } from '@/features/workspace/requests/requestOwnerMenu.model';
-import type { ActiveDecisionState, WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
+import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
 import { WorkspacePrivateRequestSessionDialog } from '@/features/workspace/requests/WorkspacePrivateRequestSessionDialog';
 import {
@@ -45,51 +44,18 @@ import {
   useWorkspaceRequestOverlayFlow,
 } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type {
+  WorkspaceRequestsSurfaceModel,
   WorkspaceRequestsViewCard,
-  WorkspaceRequestsViewModel,
+  WorkspaceRequestsViewVariant,
 } from '@/features/workspace/requests/workspaceRequestsView.model';
 import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 import { pickRequestImage } from '@/lib/requests/images';
-import type { RequestsListDensity } from '@/lib/requests/pagination';
 
-export type WorkspaceRequestsViewVariant = 'private' | 'market';
+export type { WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
 
 export type WorkspaceRequestsViewProps = {
-  variant?: WorkspaceRequestsViewVariant;
-  locale: Locale;
-  isWorkspaceAuthed: boolean;
-  guestLoginHref: string;
-  listDensity?: RequestsListDensity | null;
-  pagination?: {
-    page: number;
-    totalPages: number;
-    onPageChange: (page: number) => void;
-  } | null;
-  favoriteState?: {
-    favoriteRequestIds: ReadonlySet<string>;
-    pendingFavoriteRequestIds: ReadonlySet<string>;
-    onToggleRequestFavorite: (requestId: string) => void;
-  } | null;
-  model: WorkspaceRequestsViewModel;
-  isLoading: boolean;
-  isError: boolean;
-  decisionState: ActiveDecisionState;
-  decisionQueueIds: string[];
-  onEnterDecisionMode: (requestId?: string | null) => void;
-  onOpenDecisionItem: (requestId: string) => void;
-  onExitDecisionMode: () => void;
-  listContext: {
-    onSendOffer?: RequestsListProps['onSendOffer'];
-    onEditOffer?: RequestsListProps['onEditOffer'];
-    onWithdrawOffer?: RequestsListProps['onWithdrawOffer'];
-    onOpenChatConversation?: (payload: WorkspaceChatConversationInput) => void;
-    pendingOfferRequestId?: string | null;
-    ownerRequestActions?: OwnerRequestActions;
-    onOpenRequest?: (requestId: string, intent?: RequestDialogIntent) => void;
-  };
-  emptyCtaHref?: string;
-  secondaryCtaHref?: string;
+  surface: WorkspaceRequestsSurfaceModel;
 };
 
 type RailProps = {
@@ -859,7 +825,7 @@ function WorkspaceRequestCard({
   mode: WorkQueueMode;
   isActive: boolean;
   listContext: WorkspaceRequestOverlayListContext;
-  favoriteState?: WorkspaceRequestsViewProps['favoriteState'];
+  favoriteState?: WorkspaceRequestsSurfaceModel['favoriteState'];
 }) {
   const preview = card.requestPreview;
   const chrome = React.useMemo(
@@ -1177,25 +1143,28 @@ export function RequestsPrivateActionRail({
 }
 
 export function WorkspaceRequestsView({
-  variant = 'private',
-  locale,
-  isWorkspaceAuthed,
-  guestLoginHref,
-  listDensity = null,
-  pagination = null,
-  model,
-  isLoading,
-  isError,
-  decisionState,
-  decisionQueueIds,
-  onEnterDecisionMode,
-  onOpenDecisionItem,
-  onExitDecisionMode,
-  listContext,
-  emptyCtaHref,
-  secondaryCtaHref,
-  favoriteState = null,
+  surface,
 }: WorkspaceRequestsViewProps) {
+  const {
+    variant,
+    locale,
+    isWorkspaceAuthed,
+    guestLoginHref,
+    listDensity = null,
+    pagination = null,
+    model,
+    isLoading,
+    isError,
+    decisionState,
+    decisionQueueIds,
+    onEnterDecisionMode,
+    onOpenDecisionItem,
+    onExitDecisionMode,
+    listContext,
+    emptyCtaHref,
+    secondaryCtaHref,
+    favoriteState = null,
+  } = surface;
   const setStateFilter = useStateFilterMutation(variant === 'market' ? 'market' : 'my');
   const decisionPanel = model.response ? model.response.decisionPanel : null;
   const visibleCards = React.useMemo(() => {

@@ -20,6 +20,7 @@ import {
 import {
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
+import { buildWorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 import { buildRequestsWorkspaceDecisionRailProps } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
@@ -291,7 +292,8 @@ export function useWorkspacePrivatePresentationFlow({
     />
   ) : isUnifiedPrivateRequests ? (
     <RequestsWorkspaceBody
-      body={buildRequestsWorkspacePrivateBody({
+      body={buildRequestsWorkspacePrivateBody(buildWorkspaceRequestsSurfaceModel({
+        variant: 'private',
         locale: branch.locale,
         isWorkspaceAuthed: branch.isWorkspaceAuthed,
         guestLoginHref: data.guestLoginHref,
@@ -312,7 +314,7 @@ export function useWorkspacePrivatePresentationFlow({
           pendingOfferRequestId: data.pendingOfferRequestId,
           ownerRequestActions: data.ownerRequestActions,
         },
-      })}
+      }))}
     />
   ) : (
     workspaceContentProps ? <WorkspaceContent {...workspaceContentProps} /> : null
