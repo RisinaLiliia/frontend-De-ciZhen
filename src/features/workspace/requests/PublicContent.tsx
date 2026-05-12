@@ -6,7 +6,8 @@ import type { ComponentProps } from 'react';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { RequestsListShellHeader } from '@/components/requests/RequestsListShellHeader';
 import { RequestsPaginatedPanel } from '@/components/requests/RequestsPaginatedPanel';
-import { RequestsList } from '@/components/requests/RequestsList';
+import { PublicRequestsCardList } from '@/components/requests/PublicRequestsCardList';
+import type { RequestsListProps } from '@/components/requests/requestsList.types';
 import type { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -35,7 +36,7 @@ type Props = {
   requestsCount: number;
   hasActivePublicFilter: boolean;
   emptyCtaHref: string;
-  requestsListProps: React.ComponentProps<typeof RequestsList>;
+  requestsListProps: RequestsListProps;
   page: number;
   totalPages: number;
   resultsLabel: string;
@@ -158,7 +159,7 @@ export function PublicContent({
         emptyCtaLabel={hasActivePublicFilter ? t(I18N_KEYS.requestsPage.clearFilters) : undefined}
         emptyCtaHref={hasActivePublicFilter ? emptyCtaHref : undefined}
       >
-        <RequestsList {...requestsListPropsWithOverlay} />
+        <PublicRequestsCardList {...requestsListPropsWithOverlay} />
       </RequestsPaginatedPanel>
 
       {(activeRequestState || activeOfferRequestId || activeChatState) ? (
