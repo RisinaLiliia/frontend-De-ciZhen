@@ -2,13 +2,11 @@
 
 import * as React from 'react';
 
-import { RequestsFilters, RequestsResultsSummary } from '@/components/requests/RequestsFilters';
+import { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { RequestsPaginatedPanel } from '@/components/requests/RequestsPaginatedPanel';
 import { selectRequestsAppliedChipsForContentType } from '@/components/requests/requestsFilters.model';
 import { ProviderCard } from '@/components/providers/ProviderCard';
-import { mapPublicProviderToCard } from '@/components/providers/providerCardMapper';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import { ALL_OPTION_KEY } from '@/features/workspace/requests';
 import type { RequestsExplorerProvidersContentProps } from '@/components/requests/requestsExplorer.types';
 
 export function RequestsExplorerProvidersContent({
@@ -25,6 +23,8 @@ export function RequestsExplorerProvidersContent({
   totalProvidersLabel,
   page,
   totalProviderPages,
+  emptyTitle,
+  emptyHint,
   isCategoriesLoading,
   isServicesLoading,
   isPending,
@@ -40,7 +40,7 @@ export function RequestsExplorerProvidersContent({
   isProvidersLoading,
   isProvidersError,
   filteredProvidersCount,
-  pagedProviders,
+  providerCards,
   favoriteProviderIds,
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
@@ -79,20 +79,7 @@ export function RequestsExplorerProvidersContent({
       onPrevPage={onPrevPage}
       onNextPage={onNextPage}
     />
-  ) : (
-    <RequestsResultsSummary
-      t={t}
-      totalResults={totalProvidersLabel}
-      resultsLabel={t(I18N_KEYS.requestsPage.providersResultsLabel)}
-      page={page}
-      totalPages={totalProviderPages}
-      isPending={isPending}
-      listDensity={providersListDensity}
-      onListDensityChange={onListDensityChange}
-      onPrevPage={onPrevPage}
-      onNextPage={onNextPage}
-    />
-  );
+  ) : null;
 
   return (
     <RequestsPaginatedPanel
@@ -101,42 +88,54 @@ export function RequestsExplorerProvidersContent({
       totalPages={totalProviderPages}
       onPrevPage={onPrevPage}
       onNextPage={onNextPage}
+      panelClassName="requests-panel--plain"
       topSlot={topSlot}
       listId="providers-list"
       listAriaLabel={t(I18N_KEYS.requestsPage.providersResultsLabel)}
       listDensity={providersListDensity}
       isLoading={isProvidersLoading}
+      isError={isProvidersError}
       isEmpty={!isProvidersError && filteredProvidersCount === 0}
-      emptyTitle={t(I18N_KEYS.requestsPage.emptyProvidersFilteredTitle)}
-      emptyHint={t(I18N_KEYS.requestsPage.emptyProvidersFilteredHint)}
+      emptyTitle={emptyTitle}
+      emptyHint={emptyHint}
+      errorTitle={t(I18N_KEYS.common.loadErrorShort)}
+      errorHint={t(I18N_KEYS.common.loadError)}
     >
-      {pagedProviders.map((provider) => (
-        <ProviderCard
-          key={provider.id}
-          variant="list"
-          canToggleFavorite
-          isFavorite={favoriteProviderIds.has(provider.id)}
-          isFavoritePending={pendingFavoriteProviderIds.has(provider.id)}
-          onToggleFavorite={(providerId) => {
-            void onToggleProviderFavorite(providerId);
-          }}
-          provider={{
-            ...mapPublicProviderToCard({
-              t,
-              locale,
-              provider,
-              roleLabel: subcategoryKey !== ALL_OPTION_KEY
-                ? (serviceOptions.find((item) => item.value === subcategoryKey)?.label ?? '')
-                : '',
-              cityLabel: cityOptions.find((item) => item.value === provider.cityId)?.label ?? '',
-              profileHref: `/providers/${provider.id}`,
-              reviewsHref: `/providers/${provider.id}#reviews`,
-              ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
-              status: 'online',
-            }),
-            reviewPreview: t(I18N_KEYS.homePublic.providerReviewPreviewDefault),
-          }}
-        />
+      {providerCards.map((item) => (
+        <div key={item.id} className="workspace-provider-card-shell">
+          <ProviderCard
+            variant="list"
+            canToggleFavorite
+            className="workspace-provider-card"
+            isFavorite={favoriteProviderIds.has(item.id)}
+            isFavoritePending={pendingFavoriteProviderIds.has(item.id)}
+            favoriteAriaLabel={t(I18N_KEYS.requestDetails.ctaSave)}
+            onToggleFavorite={(providerId) => {
+              void onToggleProviderFavorite(providerId);
+            }}
+            provider={{
+              ...item.card,
+              badges: item.card.badges.map((badge) => ({
+                ...badge,
+                tooltip: badge.tooltip ?? undefined,
+              })),
+              avatarUrl: item.card.avatarUrl ?? undefined,
+              cityLabel: item.card.cityLabel ?? undefined,
+              responseTime: item.card.responseTime ?? undefined,
+              responseTimeLabel: item.card.responseTimeLabel ?? undefined,
+              responseRate: item.card.responseRate ?? undefined,
+              responseRateLabel: item.card.responseRateLabel ?? undefined,
+              aboutPreview: item.card.aboutPreview ?? undefined,
+              reviewPreview: item.card.reviewPreview ?? undefined,
+              availabilityDatePrefix: item.card.availabilityDatePrefix ?? undefined,
+              availabilityDateLabel: item.card.availabilityDateLabel ?? undefined,
+              availabilityDateIso: item.card.availabilityDateIso ?? undefined,
+              pricingPrefixLabel: item.card.pricingPrefixLabel ?? undefined,
+              pricingValueLabel: item.card.pricingValueLabel ?? undefined,
+              pricingSuffixLabel: item.card.pricingSuffixLabel ?? undefined,
+            }}
+          />
+        </div>
       ))}
     </RequestsPaginatedPanel>
   );

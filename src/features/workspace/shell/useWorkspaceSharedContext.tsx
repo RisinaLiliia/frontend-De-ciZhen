@@ -400,8 +400,8 @@ export function useWorkspaceSharedContext({
     ? (preferredRequestsRole ?? 'all')
     : requestRole;
   const requestsListDensity = React.useMemo(
-    () => (activeMode === 'requests' ? resolveRequestsListDensityForPageSize(limit) : null),
-    [activeMode, limit],
+    () => ((activeMode === 'requests' || activePublicSection === 'providers') ? resolveRequestsListDensityForPageSize(limit) : null),
+    [activeMode, activePublicSection, limit],
   );
 
   const replaceSharedContext = React.useCallback((mutate: (params: URLSearchParams) => void) => {
@@ -598,7 +598,10 @@ export function useWorkspaceSharedContext({
       activeModeHref,
       chips,
       requestsListDensity,
-      onRequestsListDensityChange: activeMode === 'requests' ? onRequestsListDensityChange : null,
+      onRequestsListDensityChange:
+        activeMode === 'requests' || activePublicSection === 'providers'
+          ? onRequestsListDensityChange
+          : null,
       copy,
       controls: {
         cityOptions,

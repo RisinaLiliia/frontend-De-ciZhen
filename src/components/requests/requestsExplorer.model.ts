@@ -52,11 +52,13 @@ type BuildProvidersContentArgs = {
   providersData: {
     totalProvidersLabel: string;
     totalProviderPages: number;
+    emptyTitle: string;
+    emptyHint: string;
     providersListDensity: RequestsListDensity;
     isProvidersLoading: boolean;
     isProvidersError: boolean;
     filteredProvidersCount: number;
-    pagedProviders: RequestsExplorerProvidersContentProps['pagedProviders'];
+    providerCards: RequestsExplorerProvidersContentProps['providerCards'];
     favoriteProviderIds: Set<string>;
     pendingFavoriteProviderIds: Set<string>;
     toggleProviderFavorite: (providerId: string) => void | Promise<void>;
@@ -141,13 +143,15 @@ export function buildRequestsExplorerProvidersContentProps({
     ...sharedFilters,
     totalProvidersLabel: providersData.totalProvidersLabel,
     totalProviderPages: providersData.totalProviderPages,
+    emptyTitle: providersData.emptyTitle,
+    emptyHint: providersData.emptyHint,
     onSetPage: sharedFilters.setPage,
     providersListDensity: providersData.providersListDensity,
     onListDensityChange: onListDensityChange ?? (() => undefined),
     isProvidersLoading: providersData.isProvidersLoading,
     isProvidersError: providersData.isProvidersError,
     filteredProvidersCount: providersData.filteredProvidersCount,
-    pagedProviders: providersData.pagedProviders,
+    providerCards: providersData.providerCards,
     favoriteProviderIds: providersData.favoriteProviderIds,
     pendingFavoriteProviderIds: providersData.pendingFavoriteProviderIds,
     onToggleProviderFavorite: providersData.toggleProviderFavorite,

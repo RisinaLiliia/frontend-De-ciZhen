@@ -91,6 +91,9 @@ export type WorkspaceProvidersQuery = {
   subcategoryKey?: string | null;
   period?: WorkspaceRequestsPeriodDto;
   viewerMode?: WorkspaceProvidersViewerModeDto | null;
+  sort?: 'date_desc' | 'date_asc' | 'price_asc' | 'price_desc' | null;
+  page?: number;
+  limit?: number;
 };
 
 export function getWorkspaceRequests(query: WorkspaceRequestsQuery = {}) {
@@ -115,6 +118,9 @@ export function getWorkspaceProviders(query: WorkspaceProvidersQuery = {}) {
   if (query.subcategoryKey) qs.set('subcategoryKey', query.subcategoryKey);
   if (query.period) qs.set('period', query.period);
   if (query.viewerMode) qs.set('viewerMode', query.viewerMode);
+  if (query.sort) qs.set('sort', query.sort);
+  if (typeof query.page === 'number') qs.set('page', String(Math.max(1, Math.trunc(query.page))));
+  if (typeof query.limit === 'number') qs.set('limit', String(Math.min(100, Math.max(1, Math.trunc(query.limit)))));
   return apiGet<WorkspaceProvidersResponseDto>(`/workspace/providers${qs.toString() ? `?${qs.toString()}` : ''}`);
 }
 

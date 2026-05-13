@@ -152,6 +152,9 @@ export type WorkspaceProvidersResponseDto = {
     subcategoryKey?: string | null;
     period?: WorkspaceRequestsPeriodDto;
     viewerMode?: WorkspaceProvidersViewerModeDto | null;
+    sort?: 'date_desc' | 'date_asc' | 'price_asc' | 'price_desc';
+    page?: number;
+    limit?: number;
   };
   summary: {
     items: Array<{
@@ -191,6 +194,57 @@ export type WorkspaceProvidersResponseDto = {
       key: 'available' | 'top_rated' | 'trusted';
       label: string;
       value: number;
+    }>;
+  };
+  list: {
+    totalCount: number;
+    totalLabel: string;
+    sort: 'date_desc' | 'date_asc' | 'price_asc' | 'price_desc';
+    page: number;
+    limit: number;
+    totalPages: number;
+    emptyTitle: string;
+    emptyHint: string;
+    items: Array<{
+      id: string;
+      userId?: string | null;
+      isFavorite: boolean;
+      card: {
+        id: string;
+        badges: Array<{
+          variant: 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'risk' | 'opportunity';
+          size: 'sm' | 'md';
+          tone: 'soft' | 'outline' | 'solid';
+          label: string;
+          tooltip?: string | null;
+        }>;
+        isVerified: boolean;
+        status: 'online' | 'offline';
+        statusLabel: string;
+        avatarUrl?: string | null;
+        name: string;
+        role: string;
+        cityLabel?: string | null;
+        rating: string;
+        responseTime?: string | null;
+        responseTimeLabel?: string | null;
+        responseRate?: number | null;
+        responseRateLabel?: string | null;
+        aboutPreview?: string | null;
+        reviewsCount: number;
+        reviewsLabel: string;
+        reviewPreview?: string | null;
+        availabilityDatePrefix?: string | null;
+        availabilityDateLabel?: string | null;
+        availabilityDateIso?: string | null;
+        pricingPrefixLabel?: string | null;
+        pricingValueLabel?: string | null;
+        pricingSuffixLabel?: string | null;
+        servicePreview: string[];
+        ctaLabel: string;
+        profileHref: string;
+        reviewsHref: string;
+      };
     }>;
   };
 };

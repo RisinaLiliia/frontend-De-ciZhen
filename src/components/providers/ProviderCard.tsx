@@ -48,6 +48,7 @@ type ProviderCardProps = {
   canToggleFavorite?: boolean;
   isFavorite?: boolean;
   isFavoritePending?: boolean;
+  favoriteAriaLabel?: string;
   onToggleFavorite?: (providerId: string) => void;
   className?: string;
 };
@@ -58,6 +59,7 @@ export function ProviderCard({
   canToggleFavorite = false,
   isFavorite = false,
   isFavoritePending = false,
+  favoriteAriaLabel,
   onToggleFavorite,
   className,
 }: ProviderCardProps) {
@@ -81,7 +83,7 @@ export function ProviderCard({
           variant="icon"
           isFavorite={isFavorite}
           isPending={isFavoritePending}
-          ariaLabel={`Favorite ${provider.name}`}
+          ariaLabel={favoriteAriaLabel ?? `Favorite ${provider.name}`}
           onToggle={() => onToggleFavorite?.(provider.id)}
         />
       ) : null}

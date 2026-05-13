@@ -19,6 +19,7 @@ import {
   buildRequestsExplorerRequestsContentProps,
   pickRequestsExplorerSharedFilters,
 } from '@/components/requests/requestsExplorer.model';
+import { resolveWorkspaceViewerMode } from '@/features/workspace/requests';
 import { resolveRequestsPageSizeForDensity } from '@/lib/requests/pagination';
 import type { RequestsExplorerProps } from '@/components/requests/requestsExplorer.types';
 
@@ -45,6 +46,8 @@ export function RequestsExplorer({
   const searchParams = useSearchParams();
   const qc = useQueryClient();
   const isProvidersView = contentType === 'providers';
+  const viewerMode = resolveWorkspaceViewerMode(searchParams.get('viewerMode'));
+  const period = searchParams.get('period') ?? searchParams.get('range');
 
   const filters = useRequestsExplorerFilters({ t, locale });
   const sharedFilters = pickRequestsExplorerSharedFilters(filters);
@@ -57,8 +60,6 @@ export function RequestsExplorer({
   );
 
   const providersData = useProvidersExploreData({
-    locale,
-    isAuthed,
     isProvidersView,
     cityId: filters.cityId,
     subcategoryKey: filters.subcategoryKey,
@@ -67,19 +68,20 @@ export function RequestsExplorer({
     page: filters.page,
     limit: filters.limit,
     setPage: filters.setPage,
-    services: filters.services,
-    cityOptions: filters.cityOptions,
+    period,
+    viewerMode,
   });
   const {
     isProvidersLoading,
     isProvidersError,
     providerById,
-    favoriteProviderLookup,
     favoriteProviderIds,
-    pagedProviders,
+    providerCards,
     totalProviderPages,
     totalProvidersLabel,
     filteredProvidersCount,
+    emptyTitle,
+    emptyHint,
     providersListDensity,
   } = providersData;
 
@@ -140,7 +142,7 @@ export function RequestsExplorer({
     router,
     t,
     qc,
-    favoriteProviderLookup,
+    favoriteProviderIds,
     providerById,
   });
 
@@ -151,11 +153,13 @@ export function RequestsExplorer({
     providersData: {
       totalProvidersLabel,
       totalProviderPages,
+      emptyTitle,
+      emptyHint,
       providersListDensity,
       isProvidersLoading,
       isProvidersError,
       filteredProvidersCount,
-      pagedProviders,
+      providerCards,
       favoriteProviderIds,
       pendingFavoriteProviderIds,
       toggleProviderFavorite,

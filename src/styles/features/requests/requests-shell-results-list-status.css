@@ -51,6 +51,44 @@
     align-items: flex-start;
   }
 
+  .requests-panel--plain {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .requests-panel--plain:hover,
+  .requests-panel--plain:focus-within,
+  .requests-panel--plain:focus-visible {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .workspace-provider-card-shell {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    align-content: start;
+    container-type: inline-size;
+  }
+
+  .workspace-provider-card {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .requests-list .workspace-provider-card {
+    height: 100%;
+  }
+
+  .requests-list .workspace-provider-card-shell {
+    height: 100%;
+  }
+
   .offer-actions {
     display: flex;
     flex-wrap: wrap;

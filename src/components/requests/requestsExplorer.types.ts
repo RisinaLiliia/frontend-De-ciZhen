@@ -2,8 +2,8 @@ import type { ComponentProps } from 'react';
 
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import type { WorkspaceRequestsSummaryStrip } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
+import type { WorkspaceProvidersResponseDto } from '@/lib/api/dto/workspace';
 import type { OfferDto } from '@/lib/api/dto/offers';
-import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -65,13 +65,15 @@ export type RequestsExplorerProvidersContentProps = {
   locale: Locale;
   totalProvidersLabel: string;
   totalProviderPages: number;
+  emptyTitle: string;
+  emptyHint: string;
   onSetPage: (page: number) => void;
   providersListDensity: RequestsListDensity;
   onListDensityChange: (value: RequestsListDensity) => void;
   isProvidersLoading: boolean;
   isProvidersError: boolean;
   filteredProvidersCount: number;
-  pagedProviders: ProviderPublicDto[];
+  providerCards: WorkspaceProvidersResponseDto['list']['items'];
   favoriteProviderIds: Set<string>;
   pendingFavoriteProviderIds: Set<string>;
   onToggleProviderFavorite: (providerId: string) => void | Promise<void>;
