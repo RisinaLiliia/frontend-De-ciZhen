@@ -85,6 +85,17 @@
       flex: 1 1 auto;
     }
 
+    .requests-grid--equal-cols > aside.workspace-section-aside {
+      display: block;
+      height: auto;
+      align-self: start;
+    }
+
+    .requests-grid--equal-cols > aside.workspace-section-aside > * {
+      flex: 0 0 auto;
+      height: auto;
+    }
+
   }
 
 }

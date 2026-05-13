@@ -12,6 +12,7 @@ type SummaryItem = {
   value: string | number;
   helper: string;
   tone?: 'all' | 'attention' | 'execution' | 'completed';
+  isHighlighted?: boolean;
 };
 
 type DecisionPanel = React.ComponentProps<typeof WorkspaceSectionDecisionPanel>['panel'];
@@ -40,7 +41,7 @@ export function WorkspaceSectionAside({
   }
 
   return (
-    <aside className={['stack-md', hideBelowDesktop ? 'hide-below-desktop' : '', className ?? ''].filter(Boolean).join(' ')}>
+    <aside className={['stack-md', 'workspace-section-aside', hideBelowDesktop ? 'hide-below-desktop' : '', className ?? ''].filter(Boolean).join(' ')}>
       <WorkspaceSummaryGrid
         items={summaryItems}
         isLoading={isLoading}

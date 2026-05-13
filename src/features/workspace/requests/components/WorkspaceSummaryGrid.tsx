@@ -6,18 +6,21 @@ type WorkspaceSummaryGridItem = {
   value: string | number;
   helper: string;
   tone?: 'all' | 'attention' | 'execution' | 'completed';
+  isHighlighted?: boolean;
 };
 
 type Props = {
   items?: WorkspaceSummaryGridItem[] | null;
   isLoading?: boolean;
   className?: string;
+  onSelect?: (key: string) => void;
 };
 
 export function WorkspaceSummaryGrid({
   items,
   isLoading = false,
   className,
+  onSelect,
 }: Props) {
   if (isLoading && (!items || items.length === 0)) {
     return (
@@ -38,20 +41,26 @@ export function WorkspaceSummaryGrid({
 
   return (
     <div className={['my-requests-summary', className ?? ''].filter(Boolean).join(' ')}>
-      {items.map((item) => (
-        <div
+      {items.map((item, index) => {
+        const isHighlighted = item.isHighlighted ?? index === 0;
+        return (
+        <button
           key={item.key}
+          type="button"
           className={[
             'my-requests-summary__card',
             `is-${item.tone ?? 'all'}`,
+            isHighlighted ? 'is-active' : '',
           ].filter(Boolean).join(' ')}
+          aria-pressed={isHighlighted}
+          onClick={() => onSelect?.(item.key)}
         >
           <span className="my-requests-summary__label">{item.label}</span>
           <strong className="my-requests-summary__value">{item.value}</strong>
           <span className="my-requests-summary__helper">{item.helper}</span>
           <span className="my-requests-summary__accent" aria-hidden="true" />
-        </div>
-      ))}
+        </button>
+      )})}
     </div>
   );
 }

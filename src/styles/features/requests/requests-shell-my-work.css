@@ -1012,6 +1012,15 @@
     box-sizing: border-box;
   }
 
+  .my-decision-panel__primary:focus-visible,
+  .my-decision-panel__queue-item:focus-visible {
+    outline: none;
+    border-color: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--c-primary) 14%, transparent),
+      0 14px 30px color-mix(in oklab, var(--c-ink) 6%, transparent);
+  }
+
   .my-decision-panel__section-head {
     display: flex;
     align-items: center;

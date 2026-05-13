@@ -1,15 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { useQueryClient } from '@tanstack/react-query';
 
-import { TopProvidersPanel } from '@/components/providers/TopProvidersPanel';
-import { useCities } from '@/features/catalog/queries';
-import { useAuthStatus } from '@/hooks/useAuthSnapshot';
-import { useProviderFavoriteToggle } from '@/hooks/useFavoriteToggles';
-import { buildProviderFavoriteLookup, listFavorites } from '@/lib/api/favorites';
 import { listPublicProviders } from '@/lib/api/providers';
 import { getWorkspaceProviders } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
@@ -18,14 +12,6 @@ import type { Locale } from '@/lib/i18n/t';
 import { ALL_OPTION_KEY, resolveWorkspaceRequestsPeriod } from '@/features/workspace/requests';
 import { WorkspaceSectionAside } from '@/features/workspace/requests/components/WorkspaceSectionAside';
 import { WorkspaceSectionDecisionPanel } from '@/features/workspace/requests/components/WorkspaceSectionDecisionPanel';
-import {
-  buildHomeCityLabelById,
-  buildHomeFavoriteProviderIds,
-  buildHomeTopProviderCards,
-  buildHomeTopProvidersById,
-  buildHomeTopProvidersNextPath,
-  rankHomeTopProviders,
-} from '@/components/home/homeTopProvidersPanel.model';
 
 type Props = {
   t: (key: I18nKey) => string;
@@ -41,15 +27,9 @@ function normalizeFilter(value: string | null) {
 }
 
 export function WorkspaceProvidersAside({
-  t,
   locale,
 }: Props) {
-  const authStatus = useAuthStatus();
-  const isAuthed = authStatus === 'authenticated';
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const qc = useQueryClient();
   const cityId = normalizeFilter(searchParams.get('cityId'));
   const categoryKey = normalizeFilter(searchParams.get('categoryKey'));
   const subcategoryKey = normalizeFilter(searchParams.get('subcategoryKey'));
@@ -94,76 +74,6 @@ export function WorkspaceProvidersAside({
     gcTime: 15 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
-  const { data: favoriteProviders = [] } = useQuery({
-    queryKey: ['favorite-providers'],
-    enabled: shouldUseLegacyFallback && isAuthed,
-    queryFn: () => withStatusFallback(() => listFavorites('provider'), [], [401, 403]),
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-  });
-
-  const providerById = React.useMemo(
-    () => buildHomeTopProvidersById(providers),
-    [providers],
-  );
-  const favoriteProviderLookup = React.useMemo(
-    () => buildProviderFavoriteLookup(favoriteProviders),
-    [favoriteProviders],
-  );
-  const favoriteProviderIds = React.useMemo(
-    () => buildHomeFavoriteProviderIds({ providers, favoriteProviderLookup }),
-    [favoriteProviderLookup, providers],
-  );
-  const nextPath = React.useMemo(() => {
-    const qs = searchParams?.toString() ?? '';
-    return buildHomeTopProvidersNextPath(pathname, qs);
-  }, [pathname, searchParams]);
-  const {
-    pendingFavoriteProviderIds,
-    toggleProviderFavorite,
-  } = useProviderFavoriteToggle({
-    isAuthed,
-    nextPath,
-    router,
-    t,
-    qc,
-    favoriteProviderLookup,
-    providerById,
-  });
-  const topProviders = React.useMemo(
-    () => rankHomeTopProviders(providers, 3),
-    [providers],
-  );
-  const providerCityIds = React.useMemo(
-    () =>
-      Array.from(
-        new Set(
-          topProviders
-            .map((provider) => provider.cityId?.trim() ?? '')
-            .filter((value) => value.length > 0),
-        ),
-      ),
-    [topProviders],
-  );
-  const { data: cities = [] } = useCities('DE', {
-    ids: providerCityIds,
-    enabled: shouldUseLegacyFallback && providerCityIds.length > 0,
-    limit: providerCityIds.length || 1,
-  });
-  const cityLabelById = React.useMemo(
-    () => buildHomeCityLabelById({ cities, locale }),
-    [cities, locale],
-  );
-  const mappedProviders = React.useMemo(
-    () =>
-      buildHomeTopProviderCards({
-        t,
-        locale,
-        providers: topProviders,
-        cityLabelById,
-      }),
-    [cityLabelById, locale, t, topProviders],
-  );
   const legacySummaryItems = React.useMemo(() => {
     const availableCount = providers.filter((provider) => provider.availabilityState === 'open').length;
     const topRatedCount = providers.filter((provider) => provider.ratingAvg >= 4.8 && provider.ratingCount >= 10).length;
@@ -214,6 +124,31 @@ export function WorkspaceProvidersAside({
   );
   const asideSummaryItems = contractData ? summaryItems : legacySummaryItems;
   const asideIsLoading = contractData ? isContractLoading : isLegacyProvidersLoading;
+  const fallbackQueue = React.useMemo(
+    () =>
+      providers
+        .slice()
+        .sort((left, right) => {
+          const leftScore = (left.ratingAvg ?? 0) * 100 + (left.completedJobs ?? 0);
+          const rightScore = (right.ratingAvg ?? 0) * 100 + (right.completedJobs ?? 0);
+          return rightScore - leftScore;
+        })
+        .slice(0, 5)
+        .map((provider) => ({
+          id: provider.id,
+          title: provider.displayName?.trim() || (locale === 'de' ? 'Anbieter' : 'Provider'),
+          actionLabel: provider.serviceKey?.trim()
+            || (provider.availabilityState === 'open'
+              ? (locale === 'de' ? 'Direkt verfügbar' : 'Available now')
+              : (locale === 'de' ? 'Profil prüfen' : 'Review profile')),
+          actionPriorityLevel: provider.availabilityState === 'open' ? 'high' as const : 'medium' as const,
+          actionReason: provider.cityName?.trim()
+            || provider.bio?.trim()
+            || null,
+          href: `/providers/${provider.id}`,
+        })),
+    [locale, providers],
+  );
 
   return (
     <WorkspaceSectionAside
@@ -240,7 +175,7 @@ export function WorkspaceProvidersAside({
             locale={locale}
             panel={{
               eyebrow: locale === 'de' ? 'Decision Panel' : 'Decision panel',
-              totalNeedsAction: mappedProviders.length,
+              totalNeedsAction: fallbackQueue.length,
               title: locale === 'de' ? 'Anbieter im Fokus' : 'Providers in focus',
               text: locale === 'de'
                 ? 'Fallback auf den bestehenden Anbieter-Feed, bis der neue Workspace-Contract verfügbar ist.'
@@ -250,14 +185,7 @@ export function WorkspaceProvidersAside({
                 href: '/workspace?section=providers',
               },
               queueTitle: locale === 'de' ? 'Action Queue' : 'Action queue',
-              queue: mappedProviders.slice(0, 3).map((provider) => ({
-                id: provider.id,
-                title: provider.name,
-                actionLabel: provider.servicePreview?.slice(0, 2).join(' · ') || provider.role,
-                actionPriorityLevel: 'medium',
-                actionReason: provider.aboutPreview ?? provider.reviewPreview ?? null,
-                href: provider.profileHref,
-              })),
+              queue: fallbackQueue,
               emptyText: locale === 'de'
                 ? 'Derzeit sind keine priorisierten Anbieter verfügbar.'
                 : 'There are no prioritized providers right now.',
@@ -279,23 +207,6 @@ export function WorkspaceProvidersAside({
                   value: providers.filter((provider) => provider.completedJobs >= 10 || provider.ratingCount >= 15).length,
                 },
               ],
-            }}
-          />
-          <TopProvidersPanel
-            title={locale === 'de' ? 'Provider Panel' : 'Provider panel'}
-            subtitle={
-              locale === 'de'
-                ? 'Bewährte und aktuell verfügbare Anbieter im aktuellen Kontext.'
-                : 'Trusted and currently available providers in the current context.'
-            }
-            ctaLabel={locale === 'de' ? 'Alle Anbieter öffnen' : 'Open all providers'}
-            ctaHref="/workspace?section=providers"
-            providers={mappedProviders}
-            className="workspace-providers-aside__panel"
-            favoriteProviderIds={favoriteProviderIds}
-            pendingFavoriteProviderIds={pendingFavoriteProviderIds}
-            onToggleFavorite={(providerId) => {
-              void toggleProviderFavorite(providerId);
             }}
           />
         </>

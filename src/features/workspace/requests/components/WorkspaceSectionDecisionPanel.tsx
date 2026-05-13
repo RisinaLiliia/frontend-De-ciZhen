@@ -21,6 +21,7 @@ type DecisionOverviewItem = {
 
 type Props = {
   locale: Locale;
+  activeItemId?: string | null;
   panel: {
     eyebrow: string;
     totalNeedsAction: number;
@@ -52,6 +53,7 @@ function priorityLabel(locale: Locale, level: 'high' | 'medium' | 'low') {
 
 export function WorkspaceSectionDecisionPanel({
   locale,
+  activeItemId = null,
   panel,
 }: Props) {
   return (
@@ -77,7 +79,14 @@ export function WorkspaceSectionDecisionPanel({
           <ul className="my-decision-panel__queue-list">
             {panel.queue.map((item) => (
               <li key={item.id}>
-                <Link href={item.href} className="my-decision-panel__queue-item">
+                <Link
+                  href={item.href}
+                  aria-current={item.id === activeItemId ? 'true' : undefined}
+                  className={[
+                    'my-decision-panel__queue-item',
+                    item.id === activeItemId ? 'is-active' : '',
+                  ].filter(Boolean).join(' ')}
+                >
                   <span className="my-decision-panel__queue-copy">
                     <strong>{item.title}</strong>
                     <span>{item.actionLabel}</span>
