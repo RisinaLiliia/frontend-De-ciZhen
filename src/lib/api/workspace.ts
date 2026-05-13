@@ -5,8 +5,12 @@ import type {
 import type {
   WorkspaceProfileDto,
   WorkspacePrivateOverviewDto,
+  WorkspaceActionsResponseDto,
+  WorkspaceProvidersResponseDto,
+  WorkspaceProvidersViewerModeDto,
   WorkspacePublicOverviewDto,
   WorkspacePublicRequestsBatchResponseDto,
+  WorkspaceReviewsResponseDto,
   WorkspaceRequestsPeriodDto,
   WorkspaceRequestsResponseDto,
   WorkspaceRequestsRoleDto,
@@ -81,6 +85,14 @@ export type WorkspaceRequestsQuery = {
   limit?: number;
 };
 
+export type WorkspaceProvidersQuery = {
+  cityId?: string | null;
+  categoryKey?: string | null;
+  subcategoryKey?: string | null;
+  period?: WorkspaceRequestsPeriodDto;
+  viewerMode?: WorkspaceProvidersViewerModeDto | null;
+};
+
 export function getWorkspaceRequests(query: WorkspaceRequestsQuery = {}) {
   const qs = new URLSearchParams();
   if (query.scope) qs.set('scope', query.scope);
@@ -94,6 +106,32 @@ export function getWorkspaceRequests(query: WorkspaceRequestsQuery = {}) {
   if (typeof query.page === 'number') qs.set('page', String(Math.max(1, Math.trunc(query.page))));
   if (typeof query.limit === 'number') qs.set('limit', String(Math.min(100, Math.max(1, Math.trunc(query.limit)))));
   return apiGet<WorkspaceRequestsResponseDto>(`/workspace/requests${qs.toString() ? `?${qs.toString()}` : ''}`);
+}
+
+export function getWorkspaceProviders(query: WorkspaceProvidersQuery = {}) {
+  const qs = new URLSearchParams();
+  if (query.cityId) qs.set('cityId', query.cityId);
+  if (query.categoryKey) qs.set('categoryKey', query.categoryKey);
+  if (query.subcategoryKey) qs.set('subcategoryKey', query.subcategoryKey);
+  if (query.period) qs.set('period', query.period);
+  if (query.viewerMode) qs.set('viewerMode', query.viewerMode);
+  return apiGet<WorkspaceProvidersResponseDto>(`/workspace/providers${qs.toString() ? `?${qs.toString()}` : ''}`);
+}
+
+export type WorkspaceReviewsQuery = {
+  range?: WorkspaceRequestsPeriodDto;
+  sort?: 'created_desc' | 'rating_desc';
+};
+
+export function getWorkspaceReviews(query: WorkspaceReviewsQuery = {}) {
+  const qs = new URLSearchParams();
+  if (query.range) qs.set('range', query.range);
+  if (query.sort) qs.set('sort', query.sort);
+  return apiGet<WorkspaceReviewsResponseDto>(`/workspace/reviews${qs.toString() ? `?${qs.toString()}` : ''}`);
+}
+
+export function getWorkspaceActions() {
+  return apiGet<WorkspaceActionsResponseDto>('/workspace/actions');
 }
 
 export type WorkspaceStatisticsQuery = {

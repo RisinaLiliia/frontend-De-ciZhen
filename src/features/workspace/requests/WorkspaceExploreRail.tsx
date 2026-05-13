@@ -11,9 +11,10 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import { WorkspaceActionsAside } from './WorkspaceActionsAside';
 import { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
-import { WorkspacePlatformReviewsRail } from './WorkspacePlatformReviewsRail';
 import { WorkspaceProvidersAside } from './WorkspaceProvidersAside';
+import { WorkspaceReviewsAside } from './WorkspaceReviewsAside';
 import { workspaceQK } from './queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from './workspace.constants';
 
@@ -114,12 +115,18 @@ export function WorkspaceExploreRail({
     return <WorkspaceProvidersAside t={t} locale={locale} />;
   }
 
+  if (activeSection === 'reviews') {
+    return <WorkspaceReviewsAside t={t} locale={locale} />;
+  }
+
+  if (activeSection === 'actions') {
+    return <WorkspaceActionsAside t={t} locale={locale} />;
+  }
+
   return (
     <aside className="stack-md hide-below-desktop">
       {isSidebarReady ? (
         <>
-          {activeSection === 'reviews' ? <WorkspacePlatformReviewsRail t={t} /> : null}
-
           {showRailMap ? (
             <WorkspacePublicDemandMapPanel
               t={t}
@@ -137,11 +144,9 @@ export function WorkspaceExploreRail({
             </section>
           ) : null}
 
-          {activeSection === 'reviews' ? null : (
-            <TopProvidersPanel t={t} locale={locale} limit={sidebarTopProvidersLimit} />
-          )}
+          <TopProvidersPanel t={t} locale={locale} limit={sidebarTopProvidersLimit} />
 
-          {activeSection === 'reviews' ? null : (exploreListDensity === 'double') ? (
+          {(exploreListDensity === 'double') ? (
             <ProofPanel
               t={t}
               proofCases={sidebarProofCases}

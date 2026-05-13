@@ -83,6 +83,7 @@ export type WorkspaceRequestsScopeDto = 'market' | 'my';
 export type WorkspaceRequestsRoleDto = 'all' | 'customer' | 'provider';
 export type WorkspaceRequestsStateDto = 'all' | 'attention' | 'execution' | 'completed';
 export type WorkspaceRequestsPeriodDto = WorkspacePublicActivityRange;
+export type WorkspaceProvidersViewerModeDto = 'customer' | 'provider';
 export type WorkspaceRequestDecisionActionTypeDto =
   | 'review_offers'
   | 'reply_required'
@@ -137,6 +138,164 @@ export type WorkspaceRequestsResponseDto = {
   list: WorkspaceRequestsListDto;
   decisionPanel: WorkspaceRequestsDecisionPanelDto;
   sidePanel?: WorkspaceRequestsSidePanelDto | null;
+};
+
+export type WorkspaceProvidersResponseDto = {
+  section: 'providers';
+  header: {
+    title: string;
+    subtitle?: string | null;
+  };
+  filters: {
+    cityId?: string | null;
+    categoryKey?: string | null;
+    subcategoryKey?: string | null;
+    period?: WorkspaceRequestsPeriodDto;
+    viewerMode?: WorkspaceProvidersViewerModeDto | null;
+  };
+  summary: {
+    items: Array<{
+      key: 'all' | 'available' | 'top_rated' | 'trusted';
+      label: string;
+      value: number;
+      helper: string;
+      tone: 'all' | 'attention' | 'execution' | 'completed';
+    }>;
+  };
+  decisionPanel: {
+    eyebrow: string;
+    totalNeedsAction: number;
+    title: string;
+    text: string;
+    primaryAction: {
+      label: string;
+      href: string;
+      targetFilter: 'recommended';
+    };
+    queueTitle: string;
+    queue: Array<{
+      providerId: string;
+      title: string;
+      actionType: 'review_provider' | 'contact_provider' | 'open_availability' | 'review_trust';
+      actionLabel: string;
+      actionPriority: number;
+      actionPriorityLevel: 'high' | 'medium' | 'low';
+      actionReason?: string | null;
+      categoryLabel?: string | null;
+      cityLabel?: string | null;
+      href: string;
+    }>;
+    emptyText: string;
+    overviewEyebrow: string;
+    overview: Array<{
+      key: 'available' | 'top_rated' | 'trusted';
+      label: string;
+      value: number;
+    }>;
+  };
+};
+
+export type WorkspaceReviewsResponseDto = {
+  section: 'reviews';
+  header: {
+    title: string;
+    subtitle?: string | null;
+  };
+  filters: {
+    range?: WorkspaceRequestsPeriodDto;
+    sort?: 'created_desc' | 'rating_desc';
+  };
+  summary: {
+    items: Array<{
+      key: 'all' | 'positive' | 'critical' | 'recent';
+      label: string;
+      value: number;
+      helper: string;
+      tone: 'all' | 'attention' | 'execution' | 'completed';
+    }>;
+  };
+  decisionPanel: {
+    eyebrow: string;
+    totalNeedsAction: number;
+    title: string;
+    text: string;
+    primaryAction: {
+      label: string;
+      href: string;
+      targetFilter: 'focus';
+    };
+    queueTitle: string;
+    queue: Array<{
+      reviewId: string;
+      title: string;
+      actionType: 'review_feedback';
+      actionLabel: string;
+      actionPriority: number;
+      actionPriorityLevel: 'high' | 'medium' | 'low';
+      actionReason?: string | null;
+      href: string;
+    }>;
+    emptyText: string;
+    overviewEyebrow: string;
+    overview: Array<{
+      key: 'avg' | 'positive' | 'critical';
+      label: string;
+      value: string;
+    }>;
+  };
+  composer: {
+    enabled: boolean;
+    requiresAuthorName: boolean;
+  };
+};
+
+export type WorkspaceActionsResponseDto = {
+  section: 'actions';
+  header: {
+    title: string;
+    subtitle?: string | null;
+  };
+  filters: {
+    viewerMode?: WorkspaceProvidersViewerModeDto | null;
+  };
+  summary: {
+    items: Array<{
+      key: 'account' | 'customer' | 'provider' | 'activation';
+      label: string;
+      value: number;
+      helper: string;
+      tone: 'all' | 'attention' | 'execution' | 'completed';
+    }>;
+  };
+  decisionPanel: {
+    eyebrow: string;
+    totalNeedsAction: number;
+    title: string;
+    text: string;
+    primaryAction: {
+      label: string;
+      href: string;
+      targetFilter: 'setup';
+    };
+    queueTitle: string;
+    queue: Array<{
+      actionId: string;
+      title: string;
+      actionType: 'complete_profile' | 'activate_profile' | 'create_account';
+      actionLabel: string;
+      actionPriority: number;
+      actionPriorityLevel: 'high' | 'medium' | 'low';
+      actionReason?: string | null;
+      href: string;
+    }>;
+    emptyText: string;
+    overviewEyebrow: string;
+    overview: Array<{
+      key: 'account' | 'customer' | 'provider';
+      label: string;
+      value: string;
+    }>;
+  };
 };
 
 export type WorkspaceRequestsSummaryDto = {
