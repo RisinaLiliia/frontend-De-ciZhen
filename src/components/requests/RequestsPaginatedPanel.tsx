@@ -21,9 +21,12 @@ type RequestsPaginatedPanelProps = {
   panelClassName?: string;
   listClassName?: string;
   isLoading: boolean;
+  isError?: boolean;
   isEmpty: boolean;
   emptyTitle: string;
   emptyHint: string;
+  errorTitle?: string;
+  errorHint?: string;
   emptyCtaLabel?: string;
   emptyCtaHref?: string;
   children: React.ReactNode;
@@ -43,9 +46,12 @@ export function RequestsPaginatedPanel({
   panelClassName,
   listClassName,
   isLoading,
+  isError = false,
   isEmpty,
   emptyTitle,
   emptyHint,
+  errorTitle,
+  errorHint,
   emptyCtaLabel,
   emptyCtaHref,
   children,
@@ -68,9 +74,12 @@ export function RequestsPaginatedPanel({
       >
         <WorkspaceContentState
           isLoading={isLoading}
+          isError={isError}
           isEmpty={isEmpty}
           emptyTitle={emptyTitle}
           emptyHint={emptyHint}
+          errorTitle={errorTitle}
+          errorHint={errorHint}
           emptyCtaLabel={emptyCtaLabel}
           emptyCtaHref={emptyCtaHref}
         >

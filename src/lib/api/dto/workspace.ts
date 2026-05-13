@@ -83,6 +83,7 @@ export type WorkspaceRequestsScopeDto = 'market' | 'my';
 export type WorkspaceRequestsRoleDto = 'all' | 'customer' | 'provider';
 export type WorkspaceRequestsStateDto = 'all' | 'attention' | 'execution' | 'completed';
 export type WorkspaceRequestsPeriodDto = WorkspacePublicActivityRange;
+export type WorkspaceProvidersViewerModeDto = 'customer' | 'provider';
 export type WorkspaceRequestDecisionActionTypeDto =
   | 'review_offers'
   | 'reply_required'
@@ -137,6 +138,218 @@ export type WorkspaceRequestsResponseDto = {
   list: WorkspaceRequestsListDto;
   decisionPanel: WorkspaceRequestsDecisionPanelDto;
   sidePanel?: WorkspaceRequestsSidePanelDto | null;
+};
+
+export type WorkspaceProvidersResponseDto = {
+  section: 'providers';
+  header: {
+    title: string;
+    subtitle?: string | null;
+  };
+  filters: {
+    cityId?: string | null;
+    categoryKey?: string | null;
+    subcategoryKey?: string | null;
+    period?: WorkspaceRequestsPeriodDto;
+    viewerMode?: WorkspaceProvidersViewerModeDto | null;
+    sort?: 'date_desc' | 'date_asc' | 'price_asc' | 'price_desc';
+    page?: number;
+    limit?: number;
+  };
+  summary: {
+    items: Array<{
+      key: 'all' | 'available' | 'top_rated' | 'trusted';
+      label: string;
+      value: number;
+      helper: string;
+      tone: 'all' | 'attention' | 'execution' | 'completed';
+    }>;
+  };
+  decisionPanel: {
+    eyebrow: string;
+    totalNeedsAction: number;
+    title: string;
+    text: string;
+    primaryAction: {
+      label: string;
+      href: string;
+      targetFilter: 'recommended';
+    };
+    queueTitle: string;
+    queue: Array<{
+      providerId: string;
+      title: string;
+      actionType: 'review_provider' | 'contact_provider' | 'open_availability' | 'review_trust';
+      actionLabel: string;
+      actionPriority: number;
+      actionPriorityLevel: 'high' | 'medium' | 'low';
+      actionReason?: string | null;
+      categoryLabel?: string | null;
+      cityLabel?: string | null;
+      href: string;
+    }>;
+    emptyText: string;
+    overviewEyebrow: string;
+    overview: Array<{
+      key: 'available' | 'top_rated' | 'trusted';
+      label: string;
+      value: number;
+    }>;
+  };
+  list: {
+    totalCount: number;
+    totalLabel: string;
+    sort: 'date_desc' | 'date_asc' | 'price_asc' | 'price_desc';
+    page: number;
+    limit: number;
+    totalPages: number;
+    emptyTitle: string;
+    emptyHint: string;
+    items: Array<{
+      id: string;
+      userId?: string | null;
+      isFavorite: boolean;
+      card: {
+        id: string;
+        badges: Array<{
+          variant: 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'risk' | 'opportunity';
+          size: 'sm' | 'md';
+          tone: 'soft' | 'outline' | 'solid';
+          label: string;
+          tooltip?: string | null;
+        }>;
+        isVerified: boolean;
+        status: 'online' | 'offline';
+        statusLabel: string;
+        avatarUrl?: string | null;
+        name: string;
+        role: string;
+        cityLabel?: string | null;
+        rating: string;
+        responseTime?: string | null;
+        responseTimeLabel?: string | null;
+        responseRate?: number | null;
+        responseRateLabel?: string | null;
+        aboutPreview?: string | null;
+        reviewsCount: number;
+        reviewsLabel: string;
+        reviewPreview?: string | null;
+        availabilityDatePrefix?: string | null;
+        availabilityDateLabel?: string | null;
+        availabilityDateIso?: string | null;
+        pricingPrefixLabel?: string | null;
+        pricingValueLabel?: string | null;
+        pricingSuffixLabel?: string | null;
+        servicePreview: string[];
+        ctaLabel: string;
+        profileHref: string;
+        reviewsHref: string;
+      };
+    }>;
+  };
+};
+
+export type WorkspaceReviewsResponseDto = {
+  section: 'reviews';
+  header: {
+    title: string;
+    subtitle?: string | null;
+  };
+  filters: {
+    range?: WorkspaceRequestsPeriodDto;
+    sort?: 'created_desc' | 'rating_desc';
+  };
+  summary: {
+    items: Array<{
+      key: 'all' | 'positive' | 'critical' | 'recent';
+      label: string;
+      value: number;
+      helper: string;
+      tone: 'all' | 'attention' | 'execution' | 'completed';
+    }>;
+  };
+  decisionPanel: {
+    eyebrow: string;
+    totalNeedsAction: number;
+    title: string;
+    text: string;
+    primaryAction: {
+      label: string;
+      href: string;
+      targetFilter: 'focus';
+    };
+    queueTitle: string;
+    queue: Array<{
+      reviewId: string;
+      title: string;
+      actionType: 'review_feedback';
+      actionLabel: string;
+      actionPriority: number;
+      actionPriorityLevel: 'high' | 'medium' | 'low';
+      actionReason?: string | null;
+      href: string;
+    }>;
+    emptyText: string;
+    overviewEyebrow: string;
+    overview: Array<{
+      key: 'avg' | 'positive' | 'critical';
+      label: string;
+      value: string;
+    }>;
+  };
+  composer: {
+    enabled: boolean;
+    requiresAuthorName: boolean;
+  };
+};
+
+export type WorkspaceActionsResponseDto = {
+  section: 'actions';
+  header: {
+    title: string;
+    subtitle?: string | null;
+  };
+  filters: {
+    viewerMode?: WorkspaceProvidersViewerModeDto | null;
+  };
+  summary: {
+    items: Array<{
+      key: 'account' | 'customer' | 'provider' | 'activation';
+      label: string;
+      value: number;
+      helper: string;
+      tone: 'all' | 'attention' | 'execution' | 'completed';
+    }>;
+  };
+  decisionPanel: {
+    eyebrow: string;
+    totalNeedsAction: number;
+    title: string;
+    text: string;
+    primaryAction: {
+      label: string;
+      href: string;
+      targetFilter: 'setup';
+    };
+    queueTitle: string;
+    queue: Array<{
+      actionId: string;
+      title: string;
+      actionType: 'complete_profile' | 'activate_profile' | 'create_account';
+      actionLabel: string;
+      actionPriority: number;
+      actionPriorityLevel: 'high' | 'medium' | 'low';
+      actionReason?: string | null;
+      href: string;
+    }>;
+    emptyText: string;
+    overviewEyebrow: string;
+    overview: Array<{
+      key: 'account' | 'customer' | 'provider';
+      label: string;
+      value: string;
+    }>;
+  };
 };
 
 export type WorkspaceRequestsSummaryDto = {

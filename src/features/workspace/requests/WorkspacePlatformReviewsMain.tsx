@@ -14,7 +14,7 @@ import {
 import { useWorkspacePlatformReviewsOverview } from '@/features/workspace/requests/useWorkspacePlatformReviewsOverview';
 import { WorkspaceReviewsShellControls } from '@/features/workspace/requests/WorkspaceReviewsShellControls';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
-import { WorkspacePlatformReviewsRail } from '@/features/workspace/requests/WorkspacePlatformReviewsRail';
+import { WorkspaceReviewsAside } from '@/features/workspace/requests/WorkspaceReviewsAside';
 
 type Translate = (key: I18nKey) => string;
 
@@ -66,7 +66,7 @@ export function WorkspacePlatformReviewsMain({
     <>
       {showInlineRail ? (
         <div className="workspace-platform-reviews__mobile-rail">
-          <WorkspacePlatformReviewsRail t={t} />
+          <WorkspaceReviewsAside t={t} locale={locale} hideBelowDesktop={false} />
         </div>
       ) : null}
 

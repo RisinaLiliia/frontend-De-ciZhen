@@ -72,6 +72,42 @@ export const workspaceQK = {
     args.limit ?? 20,
   ] as const,
   workspaceRequestsPrefix: () => ['workspace-requests'] as const,
+  workspaceProvidersMain: (args: {
+    cityId: string | undefined;
+    categoryKey: string | undefined;
+    subcategoryKey: string | undefined;
+    period: string | undefined;
+    viewerMode: string | undefined;
+    sort: string | undefined;
+    page: number | undefined;
+    limit: number | undefined;
+  }) => [
+    'workspace-providers-main',
+    args.cityId ?? '',
+    args.categoryKey ?? '',
+    args.subcategoryKey ?? '',
+    args.period ?? '',
+    args.viewerMode ?? '',
+    args.sort ?? 'date_desc',
+    args.page ?? 1,
+    args.limit ?? 20,
+  ] as const,
+  workspaceProvidersMainPrefix: () => ['workspace-providers-main'] as const,
+  workspaceProvidersOverview: (args: {
+    cityId: string | undefined;
+    categoryKey: string | undefined;
+    subcategoryKey: string | undefined;
+    period: string | undefined;
+    viewerMode: string | undefined;
+  }) => [
+    'workspace-providers-overview',
+    args.cityId ?? '',
+    args.categoryKey ?? '',
+    args.subcategoryKey ?? '',
+    args.period ?? '',
+    args.viewerMode ?? '',
+  ] as const,
+  workspaceProvidersOverviewPrefix: () => ['workspace-providers-overview'] as const,
   managedRequest: (args: {
     requestId: string;
     locale: string;

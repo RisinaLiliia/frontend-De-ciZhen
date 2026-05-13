@@ -3,9 +3,12 @@ import * as React from 'react';
 
 type WorkspaceContentStateProps = {
   isLoading: boolean;
+  isError?: boolean;
   isEmpty: boolean;
   emptyTitle: string;
   emptyHint: string;
+  errorTitle?: string;
+  errorHint?: string;
   emptyCtaLabel?: string;
   emptyCtaHref?: string;
   skeletonCount?: number;
@@ -34,9 +37,12 @@ function WorkspaceListSkeleton({ count = 3 }: { count?: number }) {
 
 export function WorkspaceContentState({
   isLoading,
+  isError = false,
   isEmpty,
   emptyTitle,
   emptyHint,
+  errorTitle,
+  errorHint,
   emptyCtaLabel,
   emptyCtaHref,
   skeletonCount = 3,
@@ -56,6 +62,15 @@ export function WorkspaceContentState({
             {emptyCtaLabel}
           </Link>
         ) : null}
+      </article>
+    );
+  }
+
+  if (isError) {
+    return (
+      <article className="card stack-xs workspace-empty" role="status" aria-live="polite">
+        <p className="text-sm font-semibold">{errorTitle ?? emptyTitle}</p>
+        <p className="typo-small">{errorHint ?? emptyHint}</p>
       </article>
     );
   }

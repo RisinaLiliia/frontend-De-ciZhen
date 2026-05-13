@@ -15,6 +15,7 @@ type RouterLike = {
 };
 
 type Translator = (key: I18nKey) => string;
+type ProviderFavoriteSnapshot = Pick<ProviderPublicDto, 'id' | 'userId'>;
 
 type UseRequestFavoriteToggleParams = {
   enabled?: boolean;
@@ -34,8 +35,9 @@ type UseProviderFavoriteToggleParams = {
   router: RouterLike;
   t: Translator;
   qc: QueryClient;
-  favoriteProviderLookup: ReadonlySet<string>;
-  providerById: ReadonlyMap<string, ProviderPublicDto>;
+  favoriteProviderIds?: ReadonlySet<string>;
+  favoriteProviderLookup?: ReadonlySet<string>;
+  providerById: ReadonlyMap<string, ProviderFavoriteSnapshot>;
 };
 
 export function useRequestFavoriteToggle({
@@ -101,6 +103,7 @@ export function useProviderFavoriteToggle({
   router,
   t,
   qc,
+  favoriteProviderIds,
   favoriteProviderLookup,
   providerById,
 }: UseProviderFavoriteToggleParams) {
@@ -108,12 +111,15 @@ export function useProviderFavoriteToggle({
 
   const isProviderSaved = React.useCallback(
     (providerId: string) => {
+      if (favoriteProviderIds) {
+        return favoriteProviderIds.has(providerId);
+      }
       const provider = providerById.get(providerId);
-      return provider
+      return provider && favoriteProviderLookup
         ? isProviderInFavoriteLookup(favoriteProviderLookup, provider)
-        : favoriteProviderLookup.has(providerId);
+        : favoriteProviderLookup?.has(providerId) ?? false;
     },
-    [favoriteProviderLookup, providerById],
+    [favoriteProviderIds, favoriteProviderLookup, providerById],
   );
 
   const toggleProviderFavorite = React.useCallback(
@@ -140,7 +146,11 @@ export function useProviderFavoriteToggle({
           await addFavorite('provider', providerId, provider);
           toast.success(t(I18N_KEYS.requestDetails.saved));
         }
-        await qc.invalidateQueries({ queryKey: workspaceQK.favoriteProviders() });
+        await Promise.all([
+          qc.invalidateQueries({ queryKey: workspaceQK.workspaceProvidersMainPrefix() }),
+          qc.invalidateQueries({ queryKey: workspaceQK.workspaceProvidersOverviewPrefix() }),
+          qc.invalidateQueries({ queryKey: workspaceQK.favoriteProviders() }),
+        ]);
       } catch {
         toast.error(t(I18N_KEYS.requestDetails.favoritesFailed));
       } finally {

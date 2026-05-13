@@ -118,12 +118,11 @@
 
   .provider-card__top {
     height: 100%;
-    padding: var(--provider-card-block-pad) var(--provider-card-inline-pad);
+    padding:
+      var(--provider-card-top-reserve)
+      var(--provider-card-inline-pad)
+      var(--provider-card-block-pad);
     pointer-events: none;
-  }
-
-  .provider-card.has-corner-badge .provider-card__top {
-    padding-top: var(--provider-card-top-reserve);
   }
 
   .provider-card__top .rating-summary {

@@ -5,7 +5,8 @@ import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 
 type FavoriteResultDto = { ok: true };
 type FavoriteType = 'provider' | 'request';
-type FavoriteSnapshot = RequestResponseDto | ProviderPublicDto;
+type ProviderFavoriteSnapshot = Pick<ProviderPublicDto, 'id' | 'userId'>;
+type FavoriteSnapshot = RequestResponseDto | ProviderFavoriteSnapshot;
 
 const OBJECT_ID_RE = /^[a-fA-F0-9]{24}$/;
 
@@ -103,7 +104,7 @@ export function addFavorite(
 export function addFavorite(
   type: 'provider',
   targetId: string,
-  snapshot?: ProviderPublicDto,
+  snapshot?: ProviderFavoriteSnapshot,
 ): Promise<FavoriteResultDto>;
 export async function addFavorite(
   type: FavoriteType,
@@ -125,7 +126,7 @@ export function removeFavorite(
 export function removeFavorite(
   type: 'provider',
   targetId: string,
-  snapshot?: ProviderPublicDto,
+  snapshot?: ProviderFavoriteSnapshot,
 ): Promise<FavoriteResultDto>;
 export async function removeFavorite(
   type: FavoriteType,
