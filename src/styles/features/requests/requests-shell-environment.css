@@ -318,7 +318,7 @@
 
   .workspace-shared-context-controls__combined-row {
     display: grid;
-    grid-template-columns: max-content minmax(0, 1fr) max-content max-content;
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
     align-items: end;
     gap: var(--space-3);
     width: 100%;
@@ -376,12 +376,6 @@
     white-space: nowrap;
   }
 
-  .workspace-shared-context-controls__view-toggle {
-    grid-column: 4;
-    justify-self: end;
-    align-self: center;
-  }
-
   .workspace-shared-context-controls__slash-tab {
     position: relative;
     align-self: flex-end;
@@ -436,11 +430,17 @@
     display: grid;
     gap: var(--space-2);
     align-items: start;
-    grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) auto auto;
   }
 
   .workspace-shared-context-controls__sort-filter {
     min-width: min(100%, 240px);
+  }
+
+  .workspace-shared-context-controls__action-row-control {
+    display: inline-flex;
+    align-items: center;
+    justify-self: end;
   }
 
   .workspace-shared-context-controls__range-toolbar {
@@ -653,13 +653,6 @@
       0 18px 34px color-mix(in oklab, var(--c-primary) 12%, transparent);
   }
 
-  @media (min-width: 768px) {
-    .workspace-shared-context-controls__range-row {
-      grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) auto;
-      align-items: center;
-    }
-  }
-
   @media (max-width: 1199px) {
     .workspace-mode-nav {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -860,8 +853,7 @@
 
     .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch,
     .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs,
-    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .workspace-shared-context-controls__slash-tabs,
-    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .workspace-shared-context-controls__view-toggle {
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .workspace-shared-context-controls__slash-tabs {
       grid-column: auto;
       justify-self: stretch;
       width: 100%;
@@ -946,11 +938,6 @@
       text-align: center;
       line-height: 1.2;
       box-shadow: inset 0 1px 0 color-mix(in oklab, white 74%, transparent);
-    }
-
-    .workspace-mobile-context-section__controls .workspace-shared-context-controls__view-toggle {
-      display: flex;
-      justify-content: center;
     }
 
     .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch .requests-scope-switch__item.is-active,

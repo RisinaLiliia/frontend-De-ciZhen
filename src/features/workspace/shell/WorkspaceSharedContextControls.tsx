@@ -59,6 +59,7 @@ type WorkspaceSharedContextControlsProps = {
     onChange: (value: string) => void;
     summaryLabel: string;
   };
+  actionRowControl?: React.ReactNode;
   extraFilters?: Array<{
     key: string;
     value: string;
@@ -93,6 +94,7 @@ export function WorkspaceSharedContextControls({
   service,
   range,
   sort,
+  actionRowControl,
   extraFilters,
   inlineControl,
   onReset,
@@ -219,6 +221,11 @@ export function WorkspaceSharedContextControls({
                 className="requests-select workspace-shared-context-controls__select"
                 ariaLabel={sort.ariaLabel}
               />
+            </div>
+          ) : null}
+          {!mobile && actionRowControl ? (
+            <div className="workspace-shared-context-controls__action-row-control">
+              {actionRowControl}
             </div>
           ) : null}
           <button
