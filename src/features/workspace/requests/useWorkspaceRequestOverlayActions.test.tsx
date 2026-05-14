@@ -109,7 +109,6 @@ function renderWithClient(node: React.ReactNode, queryClient = createQueryClient
 
 function OfferActionsProbe() {
   const state = useWorkspaceRequestOfferActions({
-    locale: 'de',
     requestId: 'req-1',
   });
 
@@ -125,7 +124,6 @@ function OfferActionsProbe() {
 
 function DecisionActionsProbe() {
   const state = useWorkspaceRequestDecisionActions({
-    locale: 'de',
     requestId: 'req-1',
   });
 
@@ -348,7 +346,7 @@ describe('useWorkspaceRequestOverlayActions', () => {
     });
 
     expect(acceptOfferMock).toHaveBeenCalledWith('offer-1');
-    expect(toast.success).toHaveBeenCalledWith('Angebot angenommen.');
+    expect(toast.success).toHaveBeenCalledWith('offers.accepted');
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['workspace-request-offers', 'req-1'] });
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: workspaceQK.contractsMyClient() });
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: workspaceQK.requestsMy() });
@@ -378,7 +376,7 @@ describe('useWorkspaceRequestOverlayActions', () => {
       durationMin: 90,
       note: 'Werkzeug mitbringen',
     });
-    expect(toast.success).toHaveBeenCalledWith('Vertrag bestätigt.');
+    expect(toast.success).toHaveBeenCalledWith('contracts.confirmed');
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: workspaceQK.contractsMyClient() });
   });
 
@@ -446,7 +444,7 @@ describe('useWorkspaceRequestOverlayActions', () => {
       expect(completeContractMock).toHaveBeenCalledWith('contract-1');
     });
 
-    expect(toast.success).toHaveBeenCalledWith('Abschluss bestätigt.');
+    expect(toast.success).toHaveBeenCalledWith('contracts.completed');
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['workspace-private-overview'] });
   });
 

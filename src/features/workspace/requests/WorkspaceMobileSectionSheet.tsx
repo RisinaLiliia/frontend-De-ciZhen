@@ -62,7 +62,7 @@ export function WorkspaceMobileSectionSheet({
         </header>
         <div className="workspace-mobile-nav-sheet__body">
           <section className="workspace-mobile-nav-sheet__section">
-            <nav className="workspace-mode-nav workspace-mode-nav--sheet" aria-label={locale === 'de' ? 'Workspace-Modi' : 'Workspace modes'}>
+            <nav className="workspace-mode-nav workspace-mode-nav--sheet" aria-label={t(I18N_KEYS.workspace.modeNavAriaLabel)}>
               {model.modeItems.map((item) => (
                 <Link
                   key={item.key}

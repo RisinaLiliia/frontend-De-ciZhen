@@ -5,7 +5,9 @@ import {
   IconTrophyGold,
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { useT } from '@/lib/i18n/useT';
 import type { WorkspaceStatisticsModel } from '../../workspaceStatistics.model';
 import { StatisticsSignalMeter } from '../../components/StatisticsSignalMeter';
 import { StatisticsStatusBadge } from '../../components/StatisticsStatusBadge';
@@ -33,6 +35,7 @@ export function OpportunityAnalysisCard({
   axes: OpportunityAxis[];
   summary: string;
 }) {
+  const t = useT();
   const radarPoints = React.useMemo(
     () => buildOpportunityRadarPoints(axes.map((axis) => axis.value)),
     [axes],
@@ -51,14 +54,15 @@ export function OpportunityAnalysisCard({
   const featuredStatus = item.rank === 1 && item.status === 'balanced' ? 'good' : item.status;
   const statusClass = opportunityStatusClassName(featuredStatus);
   const reasons = React.useMemo(
-    () => buildOpportunityReasons({ locale, item }),
-    [item, locale],
+    () => buildOpportunityReasons({ copy, locale, item }),
+    [copy, item, locale],
   );
 
   return (
     <article
       className={`stat-card workspace-statistics-opportunity__item workspace-statistics-opportunity__item--analysis is-${item.tone}`.trim()}
-      aria-label={locale === 'de' ? `Detailanalyse für ${item.city}` : `Detailed analysis for ${item.city}`}
+      aria-label={t(I18N_KEYS.workspace.statsOpportunityDetailAnalysisTemplate)
+        .replace('{city}', item.city)}
     >
       <div className="workspace-statistics-opportunity__analysis-overview">
         <div className="workspace-statistics-opportunity__analysis-identity">
@@ -88,7 +92,7 @@ export function OpportunityAnalysisCard({
       <StatisticsStatusBadge
         className="workspace-statistics-opportunity__status workspace-statistics-opportunity__status--analysis"
         tone={statusClass}
-        label={opportunityStatusLabel(featuredStatus, locale)}
+        label={opportunityStatusLabel(featuredStatus, copy)}
       />
 
       <div className="workspace-statistics-opportunity__analysis-body">
@@ -163,7 +167,7 @@ export function OpportunityAnalysisCard({
         </ul>
       </div>
 
-      <p className="workspace-statistics-opportunity__summary" aria-label={locale === 'de' ? 'Opportunity Zusammenfassung' : 'Opportunity summary'}>
+      <p className="workspace-statistics-opportunity__summary" aria-label={t(I18N_KEYS.workspace.statsOpportunitySummaryAriaLabel)}>
         {summary}
       </p>
 

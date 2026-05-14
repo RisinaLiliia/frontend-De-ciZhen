@@ -86,6 +86,15 @@ describe('requestsPrivateCard.model', () => {
           href: '/requests/req-1',
           requestId: 'req-1',
         },
+        secondaryAction: {
+          key: 'edit-request',
+          kind: 'link',
+          tone: 'secondary',
+          icon: 'edit',
+          label: 'Bearbeiten',
+          href: '/requests/req-1/edit',
+          requestId: 'req-1',
+        },
         decision: {
           needsAction: true,
           actionType: 'review_offers',
@@ -128,7 +137,7 @@ describe('requestsPrivateCard.model', () => {
     expect(chrome.contextPills).toEqual([]);
   });
 
-  it('falls back to status and quick actions when no decision action exists', () => {
+  it('renders backend-owned status actions when no decision CTA is required', () => {
     const chrome = buildPrivateRequestCardChrome({
       locale: 'de',
       card: {
@@ -202,6 +211,33 @@ describe('requestsPrivateCard.model', () => {
             },
           ],
         },
+        primaryAction: {
+          key: 'contract',
+          kind: 'link',
+          tone: 'primary',
+          icon: 'briefcase',
+          label: 'Vertrag',
+          href: '/workspace?tab=completed-jobs',
+          requestId: 'req-2',
+          offerId: 'offer-2',
+        },
+        secondaryAction: {
+          key: 'chat',
+          kind: 'open_chat',
+          tone: 'secondary',
+          icon: 'chat',
+          label: 'Chat',
+          requestId: 'req-2',
+          offerId: 'offer-2',
+          chatInput: {
+            relatedEntity: { type: 'offer', id: 'offer-2' },
+            participantUserId: 'provider-1',
+            participantRole: 'provider',
+            requestId: 'req-2',
+            providerUserId: 'provider-1',
+            offerId: 'offer-2',
+          },
+        },
         decision: {
           needsAction: false,
           actionType: 'none',
@@ -223,7 +259,7 @@ describe('requestsPrivateCard.model', () => {
     expect(chrome.contextPills).toEqual([]);
   });
 
-  it('routes card edit-request actions to request details instead of edit form', () => {
+  it('uses backend-owned edit-request actions and still normalizes the details href', () => {
     const chrome = buildPrivateRequestCardChrome({
       locale: 'de',
       card: {
@@ -271,6 +307,15 @@ describe('requestsPrivateCard.model', () => {
               requestId: 'req-3',
             },
           ],
+        },
+        primaryAction: {
+          key: 'edit-request',
+          kind: 'link',
+          tone: 'primary',
+          icon: 'edit',
+          label: 'Bearbeiten',
+          href: '/requests/req-3/edit',
+          requestId: 'req-3',
         },
         decision: {
           needsAction: false,
@@ -367,6 +412,22 @@ describe('requestsPrivateCard.model', () => {
           href: '/requests/req-4',
           requestId: 'req-4',
         },
+        secondaryAction: {
+          key: 'chat',
+          kind: 'open_chat',
+          tone: 'secondary',
+          icon: 'chat',
+          label: 'Chat',
+          requestId: 'req-4',
+          chatInput: {
+            relatedEntity: { type: 'request', id: 'req-4' },
+            participantUserId: 'provider-4',
+            participantRole: 'provider',
+            requestId: 'req-4',
+            providerUserId: 'provider-4',
+            contractId: 'contract-4',
+          },
+        },
         decision: {
           needsAction: true,
           actionType: 'confirm_contract',
@@ -449,6 +510,14 @@ describe('requestsPrivateCard.model', () => {
             },
           ],
         },
+        primaryAction: {
+          key: 'publish-request',
+          kind: 'publish_request',
+          tone: 'primary',
+          icon: 'send',
+          label: 'Jetzt veröffentlichen',
+          requestId: 'req-5',
+        },
         decision: {
           needsAction: false,
           actionType: 'none',
@@ -528,7 +597,7 @@ describe('requestsPrivateCard.model', () => {
     expect(chrome.secondaryAction).toBeNull();
   });
 
-  it('keeps duplicate as the reviewed secondary action', () => {
+  it('renders backend-owned review and duplicate actions without local fallback selection', () => {
     const chrome = buildPrivateRequestCardChrome({
       locale: 'de',
       card: {
@@ -597,6 +666,23 @@ describe('requestsPrivateCard.model', () => {
               requestId: 'req-6',
             },
           ],
+        },
+        primaryAction: {
+          key: 'review',
+          kind: 'link',
+          tone: 'primary',
+          icon: 'briefcase',
+          label: 'Bewertung ansehen',
+          href: '/requests/req-6',
+          requestId: 'req-6',
+        },
+        secondaryAction: {
+          key: 'duplicate-request',
+          kind: 'duplicate_request',
+          tone: 'secondary',
+          icon: 'copy',
+          label: 'Duplizieren',
+          requestId: 'req-6',
         },
         decision: {
           needsAction: false,

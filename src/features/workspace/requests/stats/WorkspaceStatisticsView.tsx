@@ -110,7 +110,11 @@ export function WorkspaceStatisticsView({
     if (filters.cityId) return context.cityLabel;
     return null;
   }, [context.categoryLabel, context.cityLabel, filters.categoryKey, filters.cityId]);
-  const opportunityTitle = focusLabel ? `${copy.opportunityTitle} ${locale === 'de' ? 'für' : 'for'} ${focusLabel}` : copy.opportunityTitle;
+  const opportunityTitle = focusLabel
+    ? t(I18N_KEYS.workspace.statsOpportunityTitleWithFocus)
+      .replace('{title}', copy.opportunityTitle)
+      .replace('{focus}', focusLabel)
+    : copy.opportunityTitle;
   const growthSubtitle = focusLabel
     ? `${copy.growthSubtitle} · ${focusLabel}`
     : copy.growthSubtitle;
@@ -171,7 +175,6 @@ export function WorkspaceStatisticsView({
 
       if (isPersonalizedMode && userIntelligence) {
         return withActionLabel(buildPersonalizedDecisionPlan({
-          locale,
           copy,
           personalizedPricing,
           risks: rightRailRisks,
@@ -536,7 +539,6 @@ export function WorkspaceStatisticsView({
 
               <StatisticsPriceRecommendationPanel
                 copy={copy}
-                locale={locale}
                 priceIntelligence={activePriceIntelligence}
               />
             </div>

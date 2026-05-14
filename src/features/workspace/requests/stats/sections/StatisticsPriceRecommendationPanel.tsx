@@ -5,7 +5,6 @@ import { WorkspaceDecisionActionCard } from '@/features/workspace/requests/compo
 import { WorkspaceDecisionRecommendationModal } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationModal';
 import { WorkspaceDecisionRecommendationSection } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationSection';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
-import type { Locale } from '@/lib/i18n/t';
 import { buildPriceStrategyOptions } from '../statisticsDecisionEngine.utils';
 
 function fillTemplate(template: string, values: Record<string, string>): string {
@@ -14,11 +13,9 @@ function fillTemplate(template: string, values: Record<string, string>): string 
 
 export function StatisticsPriceRecommendationPanel({
   copy,
-  locale,
   priceIntelligence,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
-  locale: Locale;
   priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
 }) {
   const [isStrategyOpen, setIsStrategyOpen] = React.useState(false);
@@ -51,8 +48,8 @@ export function StatisticsPriceRecommendationPanel({
     Boolean(priceIntelligence.recommendedRangeLabel) ||
     Boolean(priceIntelligence.marketAverageLabel);
   const strategyOptions = React.useMemo(
-    () => buildPriceStrategyOptions({ locale, copy, priceIntelligence }),
-    [copy, locale, priceIntelligence],
+    () => buildPriceStrategyOptions({ copy, priceIntelligence }),
+    [copy, priceIntelligence],
   );
 
   const openStrategy = React.useCallback(() => {

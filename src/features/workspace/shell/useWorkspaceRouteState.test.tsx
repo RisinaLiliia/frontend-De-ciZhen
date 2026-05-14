@@ -7,7 +7,7 @@ import { useWorkspaceRouteState } from '@/features/workspace/shell/useWorkspaceR
 
 type ProbeProps = {
   query: string;
-  forcedPublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | 'actions' | null;
+  forcedPublicSection?: 'requests' | 'providers' | 'stats' | 'actions' | null;
   isAuthed?: boolean;
 };
 
@@ -83,21 +83,29 @@ describe('useWorkspaceRouteState', () => {
     expect(node.getAttribute('data-scope')).toBe('my');
   });
 
-  it('treats actions section as a private workspace tab for authenticated users', () => {
+  it('keeps actions section as a section-based mode for authenticated users', () => {
     render(<Probe query="section=actions&period=90d&range=90d" isAuthed />);
     const node = screen.getByTestId('state');
 
-    expect(node.getAttribute('data-public-section')).toBe('null');
-    expect(node.getAttribute('data-is-public')).toBe('false');
-    expect(node.getAttribute('data-tab')).toBe('profile');
+    expect(node.getAttribute('data-public-section')).toBe('actions');
+    expect(node.getAttribute('data-is-public')).toBe('true');
+    expect(node.getAttribute('data-tab')).toBe('my-requests');
   });
 
   it('keeps legacy profile section as an alias for actions', () => {
     render(<Probe query="section=profile&period=90d&range=90d" isAuthed />);
     const node = screen.getByTestId('state');
 
-    expect(node.getAttribute('data-public-section')).toBe('null');
-    expect(node.getAttribute('data-is-public')).toBe('false');
-    expect(node.getAttribute('data-tab')).toBe('profile');
+    expect(node.getAttribute('data-public-section')).toBe('actions');
+    expect(node.getAttribute('data-is-public')).toBe('true');
+    expect(node.getAttribute('data-tab')).toBe('my-requests');
+  });
+
+  it('maps legacy reviews section alias to stats', () => {
+    render(<Probe query="section=reviews" />);
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('stats');
+    expect(node.getAttribute('data-is-public')).toBe('true');
   });
 });

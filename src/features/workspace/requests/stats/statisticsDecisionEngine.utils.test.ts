@@ -198,7 +198,6 @@ describe('statisticsDecisionEngine.utils', () => {
     const copy = getWorkspaceStatisticsCopy('de');
     const selectedOpportunity = makeOpportunity();
     const decisionPlan = buildPersonalizedDecisionPlan({
-      locale: 'de',
       copy,
       personalizedPricing: makePersonalizedPricing(),
       risks: makePrioritySection('risks'),
@@ -221,7 +220,6 @@ describe('statisticsDecisionEngine.utils', () => {
   it('builds strategy price options from the recommended corridor', () => {
     const copy = getWorkspaceStatisticsCopy('de');
     const strategyOptions = buildPriceStrategyOptions({
-      locale: 'de',
       copy,
       priceIntelligence: makePriceIntelligence(),
     });
@@ -234,8 +232,10 @@ describe('statisticsDecisionEngine.utils', () => {
   });
 
   it('explains why an opportunity is attractive based on market balance and pricing', () => {
+    const copy = getWorkspaceStatisticsCopy('en');
     const reasons = buildOpportunityReasons({
       locale: 'en',
+      copy,
       item: makeOpportunity({
         metrics: [
           { key: 'demand', value: 9.2, semanticTone: 'very-high', semanticKey: 'very_high' },

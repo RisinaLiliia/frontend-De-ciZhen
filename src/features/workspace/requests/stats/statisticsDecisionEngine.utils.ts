@@ -34,13 +34,11 @@ type DecisionPlanArgs = {
 };
 
 type PriceStrategyArgs = {
-  locale: Locale;
   copy: WorkspaceStatisticsCopy;
   priceIntelligence: WorkspaceStatisticsPriceIntelligenceView;
 };
 
 type PersonalizedDecisionPlanArgs = {
-  locale: Locale;
   copy: WorkspaceStatisticsCopy;
   personalizedPricing: WorkspaceStatisticsPersonalizedPricingView | null;
   risks: WorkspaceStatisticsPrioritySectionView | null;
@@ -67,24 +65,23 @@ function formatPriceRangeLabel(priceIntelligence: WorkspaceStatisticsPriceIntell
 
 export function buildOpportunityReasons(params: {
   locale: Locale;
+  copy: WorkspaceStatisticsCopy;
   item: WorkspaceStatisticsOpportunityRadarItemView;
   priceIntelligence?: WorkspaceStatisticsPriceIntelligenceView | null;
 }) {
-  const { locale, item, priceIntelligence } = params;
+  const { locale, copy, item, priceIntelligence } = params;
   const reasons: string[] = [];
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
 
   if (typeof item.marketBalanceRatio === 'number' && item.marketBalanceRatio >= 2) {
     reasons.push(
-      locale === 'de'
-        ? `Hohe Nachfrage bei relativ niedriger Anbieterzahl (${item.marketBalanceRatio.toFixed(1)}x Marktbalance).`
-        : `Strong demand with relatively low provider pressure (${item.marketBalanceRatio.toFixed(1)}x market balance).`,
+      copy.decisionReasonMarketBalanceTemplate.replace('{ratio}', item.marketBalanceRatio.toFixed(1)),
     );
   } else if (typeof item.providers === 'number' && item.providers > 0) {
     reasons.push(
-      locale === 'de'
-        ? `${item.demand.toLocaleString(localeTag)} Nachfrage-Signale treffen auf nur ${item.providers.toLocaleString(localeTag)} aktive Anbieter.`
-        : `${item.demand.toLocaleString(localeTag)} demand signals currently meet only ${item.providers.toLocaleString(localeTag)} active providers.`,
+      copy.decisionReasonDemandProvidersTemplate
+        .replace('{demand}', item.demand.toLocaleString(localeTag))
+        .replace('{providers}', item.providers.toLocaleString(localeTag)),
     );
   }
 
@@ -96,19 +93,17 @@ export function buildOpportunityReasons(params: {
 
   strongestMetrics.forEach((metric) => {
     if (metric.key === 'growth') {
-      reasons.push(locale === 'de' ? 'Das Segment zeigt zusätzlich klares Wachstum.' : 'The segment also shows clear growth.');
+      reasons.push(copy.decisionReasonGrowth);
     } else if (metric.key === 'activity') {
-      reasons.push(locale === 'de' ? 'Die Marktaktivität ist hoch genug für schnelle Reaktionen und Abschlüsse.' : 'Market activity is high enough to support fast response and conversion.');
+      reasons.push(copy.decisionReasonActivity);
     } else if (metric.key === 'demand') {
-      reasons.push(locale === 'de' ? 'Die Nachfrage ist im aktuellen Zeitraum überdurchschnittlich stark.' : 'Demand is above average in the current time range.');
+      reasons.push(copy.decisionReasonDemand);
     }
   });
 
   if (priceIntelligence?.recommendedRangeLabel) {
     reasons.push(
-      locale === 'de'
-        ? `Der Preis-Korridor ${priceIntelligence.recommendedRangeLabel} wird aktuell durch Marktdaten gestützt.`
-        : `The ${priceIntelligence.recommendedRangeLabel} pricing corridor is currently supported by market data.`,
+      copy.decisionReasonPriceCorridorTemplate.replace('{range}', priceIntelligence.recommendedRangeLabel),
     );
   }
 
@@ -128,30 +123,24 @@ export function buildDecisionPlan({
   const priceLabel = formatPriceRangeLabel(priceIntelligence);
   const summary = decisionInsight.trim().length > 0
     ? decisionInsight
-    : (
-      locale === 'de'
-        ? 'Nutze den aktuellen Kontext, um Fokus, Preis und Reaktionszeit sauber auszurichten.'
-        : 'Use the current context to align focus, pricing, and response speed.'
-    );
+    : copy.decisionSummaryFallback;
   const reasons = selectedOpportunity
-    ? buildOpportunityReasons({ locale, item: selectedOpportunity, priceIntelligence })
+    ? buildOpportunityReasons({ locale, copy, item: selectedOpportunity, priceIntelligence })
     : (
       priceLabel
         ? [
-          locale === 'de'
-            ? `Im Bereich ${priceLabel} liegen aktuell die besten Abschlusschancen.`
-            : `Current close-rate signals are strongest around ${priceLabel}.`,
+          copy.decisionReasonPriceCorridorTemplate.replace('{range}', priceLabel),
         ]
         : []
     );
   const steps = [
     focusLabel
-      ? (locale === 'de' ? `Fokus: ${focusLabel}` : `Focus: ${focusLabel}`)
-      : (locale === 'de' ? 'Fokus: Globalen Markt beobachten und dann Opportunity wählen' : 'Focus: review the global market, then choose an opportunity'),
+      ? copy.decisionFocusStepTemplate.replace('{value}', focusLabel)
+      : copy.decisionFocusFallback,
     priceLabel
-      ? (locale === 'de' ? `Preis: ${priceLabel}` : `Price: ${priceLabel}`)
-      : (locale === 'de' ? 'Preis: Erst nach belastbaren Marktpreisen skalieren' : 'Price: scale only after reliable pricing signals'),
-    locale === 'de' ? 'Reaktionszeit: unter 2h halten' : 'Response time: keep it under 2h',
+      ? copy.decisionPriceStepTemplate.replace('{value}', priceLabel)
+      : copy.decisionPriceFallback,
+    copy.decisionResponseTimeStep,
   ];
   const shouldApplyFocus = Boolean(
     selectedOpportunity && (
@@ -172,7 +161,6 @@ export function buildDecisionPlan({
 }
 
 export function buildPersonalizedDecisionPlan({
-  locale,
   copy,
   personalizedPricing,
   risks,
@@ -195,11 +183,7 @@ export function buildPersonalizedDecisionPlan({
 
   const summary = primaryStep
     ? `${primaryStep.title}: ${primaryStep.detail}`
-    : (
-      locale === 'de'
-        ? 'Priorisiert Chancen, Risiken und nächste Schritte für dein aktuelles Markt-Setup.'
-        : 'Prioritizes opportunities, risks, and next steps for your current market setup.'
-    );
+    : copy.personalizedDecisionSummaryFallback;
 
   const reasons = [
     topRisk?.body ?? null,
@@ -221,7 +205,6 @@ export function buildPersonalizedDecisionPlan({
 }
 
 export function buildPriceStrategyOptions({
-  locale,
   copy,
   priceIntelligence,
 }: PriceStrategyArgs): WorkspacePriceStrategyOption[] {
@@ -234,25 +217,19 @@ export function buildPriceStrategyOptions({
       key: 'entry',
       label: copy.priceStrategyEntryLabel,
       priceLabel: entryPrice,
-      description: locale === 'de'
-        ? 'Für schnelle Abschlüsse und einen leichten Markteintritt.'
-        : 'For faster closes and easier market entry.',
+      description: copy.priceStrategyEntryDescription,
     },
     {
       key: 'growth',
       label: copy.priceStrategyGrowthLabel,
       priceLabel: growthPrice,
-      description: locale === 'de'
-        ? 'Für stabile Conversion bei gesunder Marge.'
-        : 'For stable conversion with healthy margin.',
+      description: copy.priceStrategyGrowthDescription,
     },
     {
       key: 'scale',
       label: copy.priceStrategyScaleLabel,
       priceLabel: scalePrice,
-      description: locale === 'de'
-        ? 'Nur mit starkem Profil, schneller Antwort und klarer Differenzierung.'
-        : 'Only with a strong profile, fast response, and clear differentiation.',
+      description: copy.priceStrategyScaleDescription,
     },
   ];
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import { useWorkspaceData } from '@/features/workspace/requests';
+import { useWorkspaceData, useWorkspaceProviderSupportData } from '@/features/workspace/requests';
 import {
   useWorkspaceCollections,
   useWorkspacePublicFilters,
@@ -102,11 +102,11 @@ export function useWorkspacePrivateSources({
     contractData,
     legacyPublicOverviewData,
     requestUserStateData,
-    legacyMyRequestsData,
-    legacyContractSupportData,
-    legacyReviewSupportData,
-    legacyProviderSupportData,
   } = data;
+  const providerSupportData = useWorkspaceProviderSupportData({
+    enabled: activePublicSection === null,
+    isAuthed,
+  });
 
   const publicRequestsState = useWorkspacePublicRequestsState(
     shouldLoadPublicRequestsState
@@ -142,8 +142,7 @@ export function useWorkspacePrivateSources({
       requestsScope,
       requests: publicRequestsState.requests,
       requestUserStateData,
-      legacyContractSupportData,
-      legacyProviderSupportData,
+      providerSupportData,
       catalogIndex,
       locale,
     }),
@@ -153,10 +152,7 @@ export function useWorkspacePrivateSources({
     contractData,
     legacyPublicOverviewData,
     requestUserStateData,
-    legacyMyRequestsData,
-    legacyContractSupportData,
-    legacyReviewSupportData,
-    legacyProviderSupportData,
+    providerSupportData,
     catalogIndex,
     collections,
     publicRequestsState,

@@ -9,6 +9,7 @@ import {
 import {
   buildWorkspaceDataQueries,
 } from '@/features/workspace/requests/workspaceData.queries';
+import { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
@@ -20,8 +21,6 @@ import type {
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 import { useWorkspaceContractData } from '@/features/workspace/requests/useWorkspaceContractData';
 import { useWorkspaceLegacyPublicOverviewData } from '@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData';
-import { useWorkspaceLegacyProviderSupportData } from '@/features/workspace/requests/useWorkspaceLegacyProviderSupportData';
-import { useWorkspaceLegacyRequestSupportData } from '@/features/workspace/requests/useWorkspaceLegacyRequestSupportData';
 import { useWorkspaceRequestUserStateData } from '@/features/workspace/requests/useWorkspaceRequestUserStateData';
 
 type Params = {
@@ -129,42 +128,24 @@ export function useWorkspaceData(params: Params) {
     workspaceDataQueries,
   });
 
+  const workspaceRequestUserStateQueries = React.useMemo(
+    () => buildWorkspaceRequestUserStateQueries({ loadPlan }),
+    [loadPlan],
+  );
+
   const legacyPublicOverviewData = useWorkspaceLegacyPublicOverviewData({
     workspaceDataQueries,
   });
 
   const requestUserStateData = useWorkspaceRequestUserStateData({
-    workspaceDataQueries,
+    workspaceRequestUserStateQueries,
     locale,
     shouldLoadOfferRequests: loadPlan.shouldLoadOfferRequests,
-  });
-
-  const legacyRequestSupportData = useWorkspaceLegacyRequestSupportData({
-    workspaceDataQueries,
-  });
-
-  const legacyProviderSupportData = useWorkspaceLegacyProviderSupportData({
-    workspaceDataQueries,
   });
 
   return {
     contractData,
     legacyPublicOverviewData,
     requestUserStateData,
-    legacyMyRequestsData: {
-      myRequests: legacyRequestSupportData.myRequests,
-      isMyRequestsLoading: legacyRequestSupportData.isMyRequestsLoading,
-    },
-    legacyContractSupportData: {
-      myProviderContracts: legacyRequestSupportData.myProviderContracts,
-      isProviderContractsLoading: legacyRequestSupportData.isProviderContractsLoading,
-      myClientContracts: legacyRequestSupportData.myClientContracts,
-      isClientContractsLoading: legacyRequestSupportData.isClientContractsLoading,
-    },
-    legacyReviewSupportData: {
-      myReviews: legacyRequestSupportData.myReviews,
-      isMyReviewsLoading: legacyRequestSupportData.isMyReviewsLoading,
-    },
-    legacyProviderSupportData,
   };
 }

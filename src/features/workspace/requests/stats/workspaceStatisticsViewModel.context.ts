@@ -143,7 +143,7 @@ export function buildInsights(params: {
     context: item.context,
     title: (item.title ?? '').trim() || undefined,
     text: resolveInsightText(copy, item),
-    evidence: formatInsightEvidence(item.metrics, locale, formatNumber),
+    evidence: formatInsightEvidence(item.metrics, locale, formatNumber, copy),
   }));
 }
 

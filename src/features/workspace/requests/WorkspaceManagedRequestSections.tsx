@@ -22,8 +22,18 @@ import {
   useWorkspaceRequestOffersData,
 } from '@/features/workspace/requests/useWorkspaceRequestOverlayData';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { t as translate } from '@/lib/i18n/t';
+import { useT } from '@/lib/i18n/useT';
 import { WorkspaceInlineStateCard } from '@/features/workspace/requests/WorkspaceOverlayPrimitives';
+
+function fillTemplate(template: string, values: Record<string, string>) {
+  return Object.entries(values).reduce(
+    (result, [token, value]) => result.replace(`{${token}}`, value),
+    template,
+  );
+}
 
 function WorkspaceSelectedProviderSummary({
   locale,
@@ -36,23 +46,24 @@ function WorkspaceSelectedProviderSummary({
   contract: ReturnType<typeof useWorkspaceRequestDecisionData>['contract'];
   bookingStartAt?: string | null;
 }) {
+  const t = (key: string) => translate(key as never, locale);
   const priceLabel = formatDialogPrice(locale, contract?.priceAmount ?? offer.amount);
   const statusBadge = contract
-    ? resolveContractStatusBadge(locale, contract.status)
-    : resolveOfferStatusBadge(locale, offer.status);
+    ? resolveContractStatusBadge(t, contract.status)
+    : resolveOfferStatusBadge(t, offer.status);
   const assignedAt = formatOfferTimestamp(locale, contract?.confirmedAt ?? contract?.createdAt ?? offer.updatedAt ?? offer.createdAt);
   const scheduledAt = formatOfferTimestamp(locale, bookingStartAt ?? offer.availableAt ?? offer.requestPreferredDate);
   const availability = offer.availabilityNote?.trim() || null;
   const message = offer.message?.trim() || null;
   const metaItems = [
     assignedAt
-      ? `${locale === 'de' ? 'In Arbeit seit' : 'In progress since'}: ${assignedAt}`
+      ? fillTemplate(t(I18N_KEYS.requestDetails.workspaceMetaInProgressSince), { value: assignedAt })
       : null,
     scheduledAt
-      ? `${locale === 'de' ? 'Geplanter Termin' : 'Planned service date'}: ${scheduledAt}`
+      ? fillTemplate(t(I18N_KEYS.requestDetails.workspaceMetaPlannedDate), { value: scheduledAt })
       : null,
     priceLabel
-      ? `${locale === 'de' ? 'Kosten' : 'Price'}: ${priceLabel}`
+      ? fillTemplate(t(I18N_KEYS.requestDetails.workspaceMetaPrice), { value: priceLabel })
       : null,
   ].filter(Boolean);
 
@@ -60,7 +71,7 @@ function WorkspaceSelectedProviderSummary({
     <article className="my-request-contract-card">
       <div className="my-request-contract-card__head">
         <div className="my-request-contract-card__identity">
-          <strong>{offer.providerDisplayName?.trim() || (locale === 'de' ? 'Gewählter Anbieter' : 'Selected provider')}</strong>
+          <strong>{offer.providerDisplayName?.trim() || t(I18N_KEYS.requestDetails.workspaceSelectedProviderFallback)}</strong>
           <span className={statusBadge.className}>{statusBadge.label}</span>
         </div>
         {priceLabel ? <strong className="my-request-contract-card__price">{priceLabel}</strong> : null}
@@ -94,12 +105,13 @@ export function WorkspaceRequestOffersSection({
   requestId: string;
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 }) {
+  const t = useT();
   const { actionableOffers, acceptedOfferId, isError, isLoading } = useWorkspaceRequestOffersData(requestId);
   const {
     acceptRequestOffer,
     declineRequestOffer,
     pendingOfferActionId,
-  } = useWorkspaceRequestOfferActions({ locale, requestId });
+  } = useWorkspaceRequestOfferActions({ requestId });
   const [optimisticOffers, setOptimisticOffers] = React.useState(actionableOffers);
   const actionableOffersSignature = React.useMemo(
     () => actionableOffers.map((offer) => `${offer.id}:${offer.status}:${offer.updatedAt ?? offer.createdAt ?? ''}`).join('|'),
@@ -147,12 +159,8 @@ export function WorkspaceRequestOffersSection({
     <div className="my-request-dialog__section">
       <div className="my-request-dialog__section-head">
         <div>
-          <h3>{locale === 'de' ? 'Angebote' : 'Offers'}</h3>
-          <p className="my-request-dialog__section-subtitle">
-            {locale === 'de'
-              ? 'Treffe die Entscheidung direkt in diesem Workspace.'
-              : 'Make the decision directly in this workspace.'}
-          </p>
+          <h3>{t(I18N_KEYS.requestDetails.workspaceOffersTitle)}</h3>
+          <p className="my-request-dialog__section-subtitle">{t(I18N_KEYS.requestDetails.workspaceOffersSubtitle)}</p>
         </div>
         <span className="my-request-dialog__section-count">
           {activeOffers.length}
@@ -175,10 +183,8 @@ export function WorkspaceRequestOffersSection({
         <WorkspaceInlineStateCard
           locale={locale}
           tone="error"
-          title={locale === 'de' ? 'Angebote konnten nicht geladen werden' : 'Offers could not be loaded'}
-          body={locale === 'de'
-            ? 'Der Entscheidungsbereich bleibt geöffnet. Bitte versuche es erneut oder öffne den Chat direkt aus der Karte.'
-            : 'The decision area stays open. Please try again or open the chat directly from the card.'}
+          title={t(I18N_KEYS.requestDetails.workspaceOffersLoadErrorTitle)}
+          body={t(I18N_KEYS.requestDetails.workspaceOffersLoadErrorBody)}
         />
       ) : null}
 
@@ -186,17 +192,15 @@ export function WorkspaceRequestOffersSection({
         <WorkspaceInlineStateCard
           locale={locale}
           tone="empty"
-          title={locale === 'de' ? 'Noch keine aktiven Angebote' : 'No active offers yet'}
-          body={locale === 'de'
-            ? 'Sobald Dienstleister reagieren, kannst du Annahme oder Ablehnung direkt hier erledigen.'
-            : 'As soon as providers respond, you can accept or decline directly here.'}
+          title={t(I18N_KEYS.requestDetails.workspaceOffersEmptyTitle)}
+          body={t(I18N_KEYS.requestDetails.workspaceOffersEmptyBody)}
         />
       ) : null}
 
       {!isLoading && !isError && activeOffers.length > 0 ? (
         <div className="my-request-dialog__offer-list">
           {activeOffers.map((offer) => {
-            const statusBadge = resolveOfferStatusBadge(locale, offer.status);
+            const statusBadge = resolveOfferStatusBadge(t, offer.status);
             const isAccepted = offer.status === 'accepted';
             const isDeclined = offer.status === 'declined';
             const isBusy = pendingOfferActionId === offer.id;
@@ -211,7 +215,7 @@ export function WorkspaceRequestOffersSection({
               <article key={offer.id} className={`my-request-offer-card ${isAccepted ? 'is-accepted' : ''}`.trim()}>
                 <div className="my-request-offer-card__head">
                   <div className="my-request-offer-card__identity">
-                    <strong>{offer.providerDisplayName?.trim() || (locale === 'de' ? 'Dienstleister' : 'Provider')}</strong>
+                    <strong>{offer.providerDisplayName?.trim() || t(I18N_KEYS.requestDetails.workspaceProviderFallback)}</strong>
                     <span>{sentAt || '—'}</span>
                   </div>
                   <div className="my-request-offer-card__status">
@@ -229,20 +233,16 @@ export function WorkspaceRequestOffersSection({
                     ) : null}
                     <div className="my-request-offer-card__meta">
                       {availability ? (
-                        <span>{locale === 'de' ? `Verfügbarkeit: ${availability}` : `Availability: ${availability}`}</span>
+                        <span>{fillTemplate(t(I18N_KEYS.requestDetails.workspaceAvailabilityTemplate), { value: availability })}</span>
                       ) : null}
                       {typeof offer.providerCompletedJobs === 'number' ? (
                         <span>
-                          {locale === 'de'
-                            ? `${offer.providerCompletedJobs} Aufträge abgeschlossen`
-                            : `${offer.providerCompletedJobs} jobs completed`}
+                          {fillTemplate(t(I18N_KEYS.requestDetails.workspaceCompletedJobsTemplate), { value: String(offer.providerCompletedJobs) })}
                         </span>
                       ) : null}
                       {typeof offer.providerRatingAvg === 'number' ? (
                         <span>
-                          {locale === 'de'
-                            ? `Bewertung ${offer.providerRatingAvg.toFixed(1)}`
-                            : `Rating ${offer.providerRatingAvg.toFixed(1)}`}
+                          {fillTemplate(t(I18N_KEYS.requestDetails.workspaceRatingTemplate), { value: offer.providerRatingAvg.toFixed(1) })}
                         </span>
                       ) : null}
                     </div>
@@ -263,7 +263,7 @@ export function WorkspaceRequestOffersSection({
                       offerId: offer.id,
                     })}
                   >
-                    {locale === 'de' ? 'Chat' : 'Chat'}
+                    {t(I18N_KEYS.requestsPage.navChat)}
                   </button>
                   <button
                     type="button"
@@ -274,8 +274,8 @@ export function WorkspaceRequestOffersSection({
                     }}
                   >
                     {isBusy && pendingOfferActionId === offer.id
-                      ? (locale === 'de' ? 'Speichern…' : 'Saving…')
-                      : (locale === 'de' ? 'Annehmen' : 'Accept')}
+                      ? t(I18N_KEYS.requestDetails.workspaceSavingCta)
+                      : t(I18N_KEYS.requestDetails.workspaceAcceptCta)}
                   </button>
                   <button
                     type="button"
@@ -285,7 +285,7 @@ export function WorkspaceRequestOffersSection({
                       void handleDecline(offer.id);
                     }}
                   >
-                    {locale === 'de' ? 'Ablehnen' : 'Decline'}
+                    {t(I18N_KEYS.requestDetails.workspaceDeclineCta)}
                   </button>
                 </div>
               </article>
@@ -308,6 +308,7 @@ export function WorkspaceRequestDecisionSection({
   initialIntent: RequestDialogIntent;
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 }) {
+  const t = useT();
   const [startAt, setStartAt] = React.useState(() => toDateTimeLocalValue());
   const [durationMin, setDurationMin] = React.useState('120');
   const [note, setNote] = React.useState('');
@@ -320,7 +321,6 @@ export function WorkspaceRequestDecisionSection({
     confirmRequestContract,
     isSubmittingDecision,
   } = useWorkspaceRequestDecisionActions({
-    locale,
     requestId: card.requestId,
   });
   const {
@@ -377,7 +377,7 @@ export function WorkspaceRequestDecisionSection({
   const effectiveContractMeta = effectiveContract?.priceAmount != null
     ? [
       formatDialogPrice(locale, effectiveContract.priceAmount),
-      resolveContractStatusBadge(locale, effectiveContract.status).label,
+      resolveContractStatusBadge(t, effectiveContract.status).label,
     ]
       .filter(Boolean)
       .join(' · ')
@@ -395,12 +395,10 @@ export function WorkspaceRequestDecisionSection({
     <div className="my-request-dialog__section my-request-dialog__section--decision">
       <div className="my-request-dialog__section-head">
         <div>
-          <h3>{card.decision.actionLabel?.trim() || (locale === 'de' ? 'Nächster Schritt' : 'Next step')}</h3>
+          <h3>{card.decision.actionLabel?.trim() || t(I18N_KEYS.requestDetails.workspaceNextStepTitle)}</h3>
           <p className="my-request-dialog__section-subtitle">
             {card.decision.actionReason?.trim()
-              || (locale === 'de'
-                ? 'Bearbeite den nächsten Schritt direkt hier im Workspace.'
-                : 'Handle the next step directly here in the workspace.')}
+              || t(I18N_KEYS.requestDetails.workspaceNextStepBody)}
           </p>
         </div>
         <span className="my-request-dialog__section-count">
@@ -437,7 +435,7 @@ export function WorkspaceRequestDecisionSection({
         effectiveContract ? (
           <div className="my-request-decision-form">
             <label className="my-request-decision-form__field">
-              <span>{locale === 'de' ? 'Start' : 'Start'}</span>
+              <span>{t(I18N_KEYS.requestDetails.workspaceContractStartLabel)}</span>
               <Input
                 type="datetime-local"
                 value={startAt}
@@ -446,7 +444,7 @@ export function WorkspaceRequestDecisionSection({
               />
             </label>
             <label className="my-request-decision-form__field">
-              <span>{locale === 'de' ? 'Dauer (Min.)' : 'Duration (min)'}</span>
+              <span>{t(I18N_KEYS.requestDetails.workspaceContractDurationLabel)}</span>
               <Input
                 type="number"
                 min={15}
@@ -457,12 +455,12 @@ export function WorkspaceRequestDecisionSection({
               />
             </label>
             <label className="my-request-decision-form__field">
-              <span>{locale === 'de' ? 'Hinweis' : 'Note'}</span>
+              <span>{t(I18N_KEYS.requestDetails.workspaceContractNoteLabel)}</span>
               <Textarea
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
                 disabled={isSubmittingDecision || effectiveContract.status !== 'pending'}
-                placeholder={locale === 'de' ? 'Optionaler Hinweis für den Vertrag' : 'Optional note for the contract'}
+                placeholder={t(I18N_KEYS.requestDetails.workspaceContractNotePlaceholder)}
               />
             </label>
             <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
@@ -497,8 +495,8 @@ export function WorkspaceRequestDecisionSection({
                 disabled={isSubmittingDecision || effectiveContract.status !== 'pending' || !startAt}
               >
                 {isSubmittingDecision
-                  ? (locale === 'de' ? 'Speichern…' : 'Saving…')
-                  : (locale === 'de' ? 'Vertrag bestätigen' : 'Confirm contract')}
+                  ? t(I18N_KEYS.requestDetails.workspaceSavingCta)
+                  : t(I18N_KEYS.requestDetails.workspaceConfirmContractCta)}
               </button>
             </div>
           </div>
@@ -506,10 +504,8 @@ export function WorkspaceRequestDecisionSection({
           <WorkspaceInlineStateCard
             locale={locale}
             tone="info"
-            title={locale === 'de' ? 'Vertragsdaten fehlen noch' : 'Contract details are not available yet'}
-            body={locale === 'de'
-              ? 'Sobald das Angebot in einen Vertrag überführt wurde, kannst du Start, Dauer und Bestätigung direkt hier abschließen.'
-              : 'As soon as the offer is converted into a contract, you can confirm start, duration, and completion directly here.'}
+            title={t(I18N_KEYS.requestDetails.workspaceContractMissingTitle)}
+            body={t(I18N_KEYS.requestDetails.workspaceContractMissingBody)}
           />
         )
       ) : null}
@@ -546,8 +542,8 @@ export function WorkspaceRequestDecisionSection({
                 disabled={isSubmittingDecision || effectiveContract.status === 'completed' || effectiveContract.status === 'cancelled'}
               >
                 {isSubmittingDecision
-                  ? (locale === 'de' ? 'Speichern…' : 'Saving…')
-                  : (locale === 'de' ? 'Leistung bestätigen' : 'Confirm completion')}
+                  ? t(I18N_KEYS.requestDetails.workspaceSavingCta)
+                  : t(I18N_KEYS.requestDetails.workspaceConfirmCompletionCta)}
               </button>
             </div>
 
@@ -555,27 +551,21 @@ export function WorkspaceRequestDecisionSection({
               <div className="my-request-review-card">
                 <div className="my-request-review-card__head">
                   <div>
-                    <h4>{locale === 'de' ? 'Bewertung hinterlassen' : 'Leave a review'}</h4>
-                    <p>
-                      {locale === 'de'
-                        ? 'Der Auftrag ist abgeschlossen. Bewerte die Zusammenarbeit mit dem gewählten Anbieter direkt hier.'
-                        : 'The job is completed. Rate your collaboration with the selected provider right here.'}
-                    </p>
+                    <h4>{t(I18N_KEYS.requestDetails.workspaceLeaveReviewTitle)}</h4>
+                    <p>{t(I18N_KEYS.requestDetails.workspaceLeaveReviewBody)}</p>
                   </div>
                 </div>
                 <WorkspaceReviewRatingField
-                  label={locale === 'de' ? 'Bewertung' : 'Rating'}
+                  label={t(I18N_KEYS.requestDetails.workspaceReviewLabel)}
                   value={reviewRating}
                   onChange={setReviewRating}
                 />
                 <label className="my-request-decision-form__field">
-                  <span>{locale === 'de' ? 'Feedback' : 'Feedback'}</span>
+                  <span>{t(I18N_KEYS.requestDetails.workspaceFeedbackLabel)}</span>
                   <Textarea
                     value={reviewText}
                     onChange={(event) => setReviewText(event.target.value)}
-                    placeholder={locale === 'de'
-                      ? 'Wie lief die Zusammenarbeit? Was war besonders gut?'
-                      : 'How did the collaboration go? What stood out?'}
+                    placeholder={t(I18N_KEYS.requestDetails.workspaceFeedbackPlaceholder)}
                     disabled={isSubmittingReview}
                   />
                 </label>
@@ -586,7 +576,7 @@ export function WorkspaceRequestDecisionSection({
                     disabled={isSubmittingReview}
                     onClick={() => setReviewPromptDismissed(true)}
                   >
-                    {locale === 'de' ? 'Später' : 'Later'}
+                    {t(I18N_KEYS.requestDetails.workspaceReviewLaterCta)}
                   </button>
                   <button
                     type="button"
@@ -605,8 +595,8 @@ export function WorkspaceRequestDecisionSection({
                     }}
                   >
                     {isSubmittingReview
-                      ? (locale === 'de' ? 'Senden…' : 'Submitting…')
-                      : (locale === 'de' ? 'Bewertung senden' : 'Submit review')}
+                      ? t(I18N_KEYS.requestDetails.workspaceSavingCta)
+                      : t(I18N_KEYS.requestDetails.workspaceSubmitReviewCta)}
                   </button>
                 </div>
               </div>
@@ -616,10 +606,8 @@ export function WorkspaceRequestDecisionSection({
               <WorkspaceInlineStateCard
                 locale={locale}
                 tone="info"
-                title={locale === 'de' ? 'Bewertung gespeichert' : 'Review submitted'}
-                body={locale === 'de'
-                  ? 'Danke. Dein Feedback wurde gespeichert und ist jetzt Teil des Qualitätsverlaufs.'
-                  : 'Thanks. Your feedback has been saved and is now part of the quality history.'}
+                title={t(I18N_KEYS.requestDetails.workspaceReviewSubmittedTitle)}
+                body={t(I18N_KEYS.requestDetails.workspaceReviewSubmittedBody)}
               />
             ) : null}
           </>
@@ -627,10 +615,8 @@ export function WorkspaceRequestDecisionSection({
           <WorkspaceInlineStateCard
             locale={locale}
             tone="empty"
-            title={locale === 'de' ? 'Noch kein Vertrag gefunden' : 'No contract found yet'}
-            body={locale === 'de'
-              ? 'Die Abschlussbestätigung wird hier sichtbar, sobald der Auftrag aktiv als Vertrag geführt wird.'
-              : 'Completion confirmation will appear here as soon as the request is tracked as an active contract.'}
+            title={t(I18N_KEYS.requestDetails.workspaceNoContractTitle)}
+            body={t(I18N_KEYS.requestDetails.workspaceNoContractBody)}
           />
         )
       ) : null}
@@ -641,20 +627,16 @@ export function WorkspaceRequestDecisionSection({
             <article className="my-request-review-card">
               <div className="my-request-review-card__head">
                 <div>
-                  <h4>{locale === 'de' ? 'Deine Bewertung' : 'Your review'}</h4>
+                  <h4>{t(I18N_KEYS.requestDetails.workspaceYourReviewTitle)}</h4>
                   <p>
                     {reviewStatus?.clientReviewedProviderAt
-                      ? (locale === 'de'
-                        ? `Gespeichert am ${formatOfferTimestamp(locale, reviewStatus.clientReviewedProviderAt)}`
-                        : `Saved on ${formatOfferTimestamp(locale, reviewStatus.clientReviewedProviderAt)}`)
-                      : (locale === 'de'
-                        ? 'Dein Feedback wurde bereits gespeichert.'
-                        : 'Your feedback has already been saved.')}
+                      ? fillTemplate(t(I18N_KEYS.requestDetails.workspaceReviewSavedAt), { value: formatOfferTimestamp(locale, reviewStatus.clientReviewedProviderAt) || '—' })
+                      : t(I18N_KEYS.requestDetails.workspaceReviewAlreadySaved)}
                   </p>
                 </div>
               </div>
               <WorkspaceReviewRatingField
-                label={locale === 'de' ? 'Bewertung' : 'Rating'}
+                label={t(I18N_KEYS.requestDetails.workspaceReviewLabel)}
                 value={reviewStatus?.clientReviewRating ?? 5}
                 onChange={() => {}}
                 disabled
@@ -669,20 +651,16 @@ export function WorkspaceRequestDecisionSection({
             <WorkspaceInlineStateCard
               locale={locale}
               tone="info"
-              title={locale === 'de' ? 'Bewertung verfügbar, sobald der Auftrag abgeschlossen ist' : 'Review available once the job is completed'}
-              body={locale === 'de'
-                ? 'Sobald die Leistung bestätigt ist, kannst du hier direkt eine Bewertung hinterlassen.'
-                : 'As soon as the work is confirmed, you can leave your review right here.'}
+              title={t(I18N_KEYS.requestDetails.workspaceReviewAvailableTitle)}
+              body={t(I18N_KEYS.requestDetails.workspaceReviewAvailableBody)}
             />
           )
         ) : (
           <WorkspaceInlineStateCard
             locale={locale}
             tone="empty"
-            title={locale === 'de' ? 'Noch keine Bewertungsdaten verfügbar' : 'No review data available yet'}
-            body={locale === 'de'
-              ? 'Öffne diesen Schritt erneut, sobald ein Vertrag und eine abgeschlossene Leistung vorliegen.'
-              : 'Open this step again once a contract and a completed job are available.'}
+            title={t(I18N_KEYS.requestDetails.workspaceNoReviewDataTitle)}
+            body={t(I18N_KEYS.requestDetails.workspaceNoReviewDataBody)}
           />
         )
       ) : null}

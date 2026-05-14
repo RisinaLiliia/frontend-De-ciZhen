@@ -1,4 +1,3 @@
-import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type {
@@ -20,31 +19,31 @@ import type {
 type UserIntelligenceSource = NonNullable<WorkspaceStatisticsDecisionDashboardDto['userIntelligence']>;
 
 function formatMetricValue(params: {
+  copy: WorkspaceStatisticsCopy;
   value: number | null;
   unit: 'percent' | 'minutes' | 'count';
   formatNumber: Intl.NumberFormat;
-  locale: Locale;
 }) {
-  const { value, unit, formatNumber, locale } = params;
+  const { copy, value, unit, formatNumber } = params;
   if (value === null || !Number.isFinite(value)) return '—';
   if (unit === 'percent') return `${Math.round(value)}%`;
-  if (unit === 'minutes') return locale === 'de' ? `${Math.round(value)} Min.` : `${Math.round(value)} min`;
+  if (unit === 'minutes') return `${Math.round(value)} ${copy.activityMinutesShortLabel}`;
   return formatNumber.format(Math.round(value));
 }
 
 function formatDelta(params: {
+  copy: WorkspaceStatisticsCopy;
   userValue: number | null;
   marketValue: number | null;
   unit: 'percent' | 'minutes' | 'count';
   formatNumber: Intl.NumberFormat;
-  locale: Locale;
 }) {
-  const { userValue, marketValue, unit, formatNumber, locale } = params;
+  const { copy, userValue, marketValue, unit, formatNumber } = params;
   if (userValue === null || marketValue === null) return '—';
   const delta = userValue - marketValue;
-  if (Math.abs(delta) < 0.01) return locale === 'de' ? 'Auf Marktniveau' : 'At market level';
+  if (Math.abs(delta) < 0.01) return copy.userAtMarketLevelLabel;
   if (unit === 'percent') return `${delta > 0 ? '+' : ''}${Math.round(delta)} pp`;
-  if (unit === 'minutes') return `${delta > 0 ? '+' : ''}${Math.round(delta)} ${locale === 'de' ? 'Min.' : 'min'}`;
+  if (unit === 'minutes') return `${delta > 0 ? '+' : ''}${Math.round(delta)} ${copy.activityMinutesShortLabel}`;
   return `${delta > 0 ? '+' : ''}${formatNumber.format(Math.round(delta))}`;
 }
 
@@ -54,15 +53,15 @@ function formatCurrencyMetric(value: number | null, formatCurrency: Intl.NumberF
 }
 
 function formatCurrencyDelta(params: {
+  copy: WorkspaceStatisticsCopy;
   userValue: number | null;
   marketValue: number | null;
   formatCurrency: Intl.NumberFormat;
-  locale: Locale;
 }) {
-  const { userValue, marketValue, formatCurrency, locale } = params;
+  const { copy, userValue, marketValue, formatCurrency } = params;
   if (userValue === null || marketValue === null) return '—';
   const delta = userValue - marketValue;
-  if (Math.abs(delta) < 0.01) return locale === 'de' ? 'Auf Marktniveau' : 'At market level';
+  if (Math.abs(delta) < 0.01) return copy.userAtMarketLevelLabel;
   const absLabel = formatCurrency.format(Math.abs(delta));
   return delta > 0 ? `+${absLabel}` : `-${absLabel}`;
 }
@@ -112,7 +111,7 @@ function resolveRiskItem(
       body: copy.userRiskSlowResponseBody
         .replace('{user}', String(Math.round(item.value ?? 0)))
         .replace('{market}', String(Math.round(item.secondaryValue ?? 0))),
-      metric: item.value !== null && item.value !== undefined ? `${Math.round(item.value)} Min.` : null,
+      metric: item.value !== null && item.value !== undefined ? `${Math.round(item.value)} ${copy.activityMinutesShortLabel}` : null,
       tone: 'warning',
     };
   }
@@ -308,9 +307,8 @@ export function buildDecisionLayerSignals(params: {
   source: WorkspaceStatisticsDecisionDashboardDto['decisionLayer'] | undefined | null;
   formatCurrency: Intl.NumberFormat;
   formatNumber: Intl.NumberFormat;
-  locale: Locale;
 }): WorkspaceStatisticsActivitySignalView[] {
-  const { copy, source, formatCurrency, formatNumber, locale } = params;
+  const { copy, source, formatCurrency, formatNumber } = params;
   if (!source) return [];
 
   return source.metrics.map((metric) => {
@@ -318,35 +316,35 @@ export function buildDecisionLayerSignals(params: {
     const marketValue = unit === 'currency'
       ? formatCurrencyMetric(metric.marketValue, formatCurrency)
       : formatMetricValue({
+        copy,
         value: metric.marketValue,
         unit,
         formatNumber,
-        locale,
       });
     const userValue = unit === 'currency'
       ? formatCurrencyMetric(metric.userValue, formatCurrency)
       : formatMetricValue({
+        copy,
         value: metric.userValue,
         unit,
         formatNumber,
-        locale,
       });
 
     const gapLabel = metric.gapPercent !== null && metric.unit === 'percent'
       ? `${metric.gapPercent > 0 ? '+' : ''}${Math.round(metric.gapPercent)} pp`
       : unit === 'currency'
         ? formatCurrencyDelta({
+          copy,
           userValue: metric.userValue,
           marketValue: metric.marketValue,
           formatCurrency,
-          locale,
         })
         : formatDelta({
+          copy,
           userValue: metric.userValue,
           marketValue: metric.marketValue,
           unit,
           formatNumber,
-          locale,
         });
     const actionLabel = resolveActionCodeLabel(copy, metric.primaryActionCode);
     const tone: WorkspaceStatisticsActivitySignalView['tone'] = metric.status === 'good'
@@ -409,17 +407,12 @@ function resolveRecommendationTone(
 }
 
 function resolveRecommendationReliabilityLabel(
-  locale: Locale,
+  copy: WorkspaceStatisticsCopy,
   reliability: 'high' | 'medium' | 'low',
 ): string {
-  if (locale === 'de') {
-    if (reliability === 'high') return 'Hohe Sicherheit';
-    if (reliability === 'medium') return 'Mittlere Sicherheit';
-    return 'Niedrige Sicherheit';
-  }
-  if (reliability === 'high') return 'High confidence';
-  if (reliability === 'medium') return 'Medium confidence';
-  return 'Low confidence';
+  if (reliability === 'high') return copy.userRecommendationReliabilityHigh;
+  if (reliability === 'medium') return copy.userRecommendationReliabilityMedium;
+  return copy.userRecommendationReliabilityLow;
 }
 
 function resolveRecommendationPriorityLabel(
@@ -441,13 +434,12 @@ function resolveRecommendationPriorityTone(
 
 export function buildRecommendationPrioritySection(params: {
   copy: WorkspaceStatisticsCopy;
-  locale: Locale;
   source: WorkspaceStatisticsDecisionDashboardDto['risks'] | WorkspaceStatisticsDecisionDashboardDto['opportunities'] | undefined | null;
   fallbackTitle: string;
   fallbackSubtitle: string;
   fallbackItems: WorkspaceStatisticsPriorityItemView[];
 }): WorkspaceStatisticsPrioritySectionView | null {
-  const { locale, source, fallbackTitle, fallbackSubtitle, fallbackItems } = params;
+  const { copy, source, fallbackTitle, fallbackSubtitle, fallbackItems } = params;
   if (!source) {
     return fallbackItems.length > 0
       ? {
@@ -463,7 +455,7 @@ export function buildRecommendationPrioritySection(params: {
     key: `${item.code}-${index}`,
     title: item.title,
     body: item.description,
-    metric: item.context?.trim() || resolveRecommendationReliabilityLabel(locale, item.reliability),
+    metric: item.context?.trim() || resolveRecommendationReliabilityLabel(copy, item.reliability),
     tone: resolveRecommendationTone(item.type),
   }));
 
@@ -479,13 +471,12 @@ export function buildRecommendationPrioritySection(params: {
 
 export function buildRecommendationActionSection(params: {
   copy: WorkspaceStatisticsCopy;
-  locale: Locale;
   source: WorkspaceStatisticsDecisionDashboardDto['nextSteps'] | undefined | null;
   fallbackTitle: string;
   fallbackSubtitle: string;
   fallbackSteps: WorkspaceStatisticsActionStepView[];
 }): WorkspaceStatisticsActionSectionView | null {
-  const { copy, locale, source, fallbackTitle, fallbackSubtitle, fallbackSteps } = params;
+  const { copy, source, fallbackTitle, fallbackSubtitle, fallbackSteps } = params;
   if (!source) {
     return fallbackSteps.length > 0
       ? {
@@ -511,7 +502,7 @@ export function buildRecommendationActionSection(params: {
         : item.priority === 'medium'
           ? copy.userActionImpactMedium
           : copy.userActionImpactLow,
-      effectLabel: item.action?.label?.trim() || item.context?.trim() || resolveRecommendationReliabilityLabel(locale, item.reliability),
+      effectLabel: item.action?.label?.trim() || item.context?.trim() || resolveRecommendationReliabilityLabel(copy, item.reliability),
     };
   });
 
@@ -714,7 +705,11 @@ function buildFunnelSignals(params: {
     metrics.push({
       key: 'funnel-gap',
       label: profileGap.title,
-      value: profileGap.tone === 'warning' ? 'High' : profileGap.tone === 'positive' ? 'Low' : 'Medium',
+      value: profileGap.tone === 'warning'
+        ? copy.userRiskSeverityHigh
+        : profileGap.tone === 'positive'
+          ? copy.userRiskSeverityLow
+          : copy.userRiskSeverityMedium,
       hint: profileGap.summary,
       tone: profileGap.tone,
     });
@@ -738,9 +733,8 @@ export function buildUserIntelligence(params: {
   source: WorkspaceStatisticsDecisionDashboardDto['userIntelligence'] | undefined | null;
   formatCurrency: Intl.NumberFormat;
   formatNumber: Intl.NumberFormat;
-  locale: Locale;
 }): WorkspaceStatisticsUserIntelligenceView | null {
-  const { copy, source, formatCurrency, formatNumber, locale } = params;
+  const { copy, source, formatCurrency, formatNumber } = params;
   if (!source) return null;
 
   const formulaMetrics: WorkspaceStatisticsBenchmarkMetricView[] = source.formulaMetrics.map((metric) => ({
@@ -749,32 +743,32 @@ export function buildUserIntelligence(params: {
     userValue: metric.unit === 'currency'
       ? formatCurrencyMetric(metric.userValue, formatCurrency)
       : formatMetricValue({
+        copy,
         value: metric.userValue,
         unit: metric.unit,
         formatNumber,
-        locale,
       }),
     marketValue: metric.unit === 'currency'
       ? formatCurrencyMetric(metric.marketValue, formatCurrency)
       : formatMetricValue({
+        copy,
         value: metric.marketValue,
         unit: metric.unit,
         formatNumber,
-        locale,
       }),
     delta: metric.unit === 'currency'
       ? formatCurrencyDelta({
+        copy,
         userValue: metric.userValue,
         marketValue: metric.marketValue,
         formatCurrency,
-        locale,
       })
       : formatDelta({
+        copy,
         userValue: metric.userValue,
         marketValue: metric.marketValue,
         unit: metric.unit,
         formatNumber,
-        locale,
       }),
     tone: metric.tone,
     statusLabel: null,
@@ -784,23 +778,23 @@ export function buildUserIntelligence(params: {
     key: metric.key,
     label: resolveComparisonLabel(copy, metric.key),
     userValue: formatMetricValue({
+      copy,
       value: metric.userValue,
       unit: metric.unit,
       formatNumber,
-      locale,
     }),
     marketValue: formatMetricValue({
+      copy,
       value: metric.marketValue,
       unit: metric.unit,
       formatNumber,
-      locale,
     }),
     delta: formatDelta({
+      copy,
       userValue: metric.userValue,
       marketValue: metric.marketValue,
       unit: metric.unit,
       formatNumber,
-      locale,
     }),
     tone: metric.tone,
     statusLabel: resolveStatusLabel(copy, metric.status),
@@ -846,10 +840,10 @@ export function buildUserIntelligence(params: {
     ? (() => {
       const priceGap = source.pricing.currentPrice !== null && source.pricing.marketAverage !== null
         ? formatCurrencyDelta({
+          copy,
           userValue: source.pricing.currentPrice,
           marketValue: source.pricing.marketAverage,
           formatCurrency,
-          locale,
         })
         : '—';
       const adjustPriceStep = nextSteps.find((item) => item.code === 'adjust_price') ?? null;

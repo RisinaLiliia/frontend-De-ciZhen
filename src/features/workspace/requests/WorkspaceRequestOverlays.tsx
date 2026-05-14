@@ -21,6 +21,7 @@ import {
 } from '@/features/workspace/requests/workspaceRequestActionResolvers';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 
@@ -235,13 +236,11 @@ export function WorkspaceManagedRequestDialog({
           <div className="my-request-inline-state my-request-inline-state--error" role="alert">
             <span className="my-request-inline-state__icon" aria-hidden="true">!</span>
             <div className="my-request-inline-state__copy">
-              <strong>{locale === 'de' ? 'Anfrage konnte nicht geladen werden' : 'Request could not be loaded'}</strong>
-              <p>{locale === 'de'
-                ? 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.'
-                : 'The workspace stays in place. Please try again without leaving this page.'}</p>
+              <strong>{t(I18N_KEYS.requestDetails.workspaceLoadErrorTitle)}</strong>
+              <p>{t(I18N_KEYS.requestDetails.workspaceLoadErrorBody)}</p>
             </div>
             <span className="my-request-inline-state__meta">
-              {locale === 'de' ? 'Inline' : 'Inline'}
+              {t(I18N_KEYS.requestDetails.workspaceInlineMeta)}
             </span>
           </div>
         </div>
@@ -258,10 +257,8 @@ export function WorkspaceManagedRequestDialog({
       onClose={onClose}
       isLoading={isLoading}
       isError={!isLoading && (isError || !hasResolvedContent)}
-      errorTitle={locale === 'de' ? 'Anfrage konnte nicht geladen werden' : 'Request could not be loaded'}
-      errorBody={locale === 'de'
-        ? 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.'
-        : 'The workspace stays in place. Please try again without leaving this page.'}
+      errorTitle={t(I18N_KEYS.requestDetails.workspaceLoadErrorTitle)}
+      errorBody={t(I18N_KEYS.requestDetails.workspaceLoadErrorBody)}
     >
       {content}
     </WorkspaceRequestDialogShell>

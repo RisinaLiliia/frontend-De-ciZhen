@@ -1,10 +1,14 @@
 'use client';
 
+import {
+  buildLegacyWorkspaceTabRedirectHref,
+} from '@/features/workspace/requests/workspaceRequestsScope.model';
 import type {
   FavoritesView,
   WorkspaceStatusFilter,
   WorkspaceTab,
 } from '@/features/workspace/requests';
+import { buildWorkspaceHref } from '@/features/workspace/shell/workspaceLinks';
 
 type BuildWorkspaceNavigationHrefArgs = {
   search: string;
@@ -24,11 +28,6 @@ type BuildWorkspaceFavoritesViewHrefArgs = BuildWorkspaceNavigationHrefArgs & {
   view: FavoritesView;
 };
 
-function toWorkspaceHref(workspacePath: string, params: URLSearchParams) {
-  const query = params.toString();
-  return query ? `${workspacePath}?${query}` : workspacePath;
-}
-
 export function buildWorkspaceCurrentHref({
   search,
   workspacePath,
@@ -42,12 +41,16 @@ export function buildWorkspaceTabHref({
   tab,
 }: BuildWorkspaceTabHrefArgs) {
   const next = new URLSearchParams(search);
-  next.delete('section');
   next.set('tab', tab);
   next.set('status', 'all');
   if (tab !== 'favorites') next.delete('fav');
   next.delete('reviewRole');
-  return toWorkspaceHref(workspacePath, next);
+  const redirectedHref = buildLegacyWorkspaceTabRedirectHref({
+    currentSearch: next,
+  });
+  return redirectedHref.startsWith('/workspace')
+    ? redirectedHref.replace('/workspace', workspacePath)
+    : redirectedHref;
 }
 
 export function buildWorkspaceStatusFilterHref({
@@ -57,11 +60,15 @@ export function buildWorkspaceStatusFilterHref({
   status,
 }: BuildWorkspaceStatusFilterHrefArgs) {
   const next = new URLSearchParams(search);
-  next.delete('section');
   next.set('tab', activeWorkspaceTab);
   next.set('status', status);
   next.delete('reviewRole');
-  return toWorkspaceHref(workspacePath, next);
+  const redirectedHref = buildLegacyWorkspaceTabRedirectHref({
+    currentSearch: next,
+  });
+  return redirectedHref.startsWith('/workspace')
+    ? redirectedHref.replace('/workspace', workspacePath)
+    : redirectedHref;
 }
 
 export function buildWorkspaceFavoritesViewHref({
@@ -69,10 +76,12 @@ export function buildWorkspaceFavoritesViewHref({
   workspacePath,
   view,
 }: BuildWorkspaceFavoritesViewHrefArgs) {
-  const next = new URLSearchParams(search);
-  next.delete('section');
-  next.set('tab', 'favorites');
-  next.set('fav', view);
-  next.delete('reviewRole');
-  return toWorkspaceHref(workspacePath, next);
+  return buildWorkspaceHref({
+    currentSearch: search,
+    section: view === 'providers' ? 'providers' : 'requests',
+    patch: view === 'providers'
+      ? undefined
+      : { scope: 'market' },
+    removeKeys: ['tab', 'status', 'reviewRole', 'fav'],
+  }).replace('/workspace', workspacePath);
 }

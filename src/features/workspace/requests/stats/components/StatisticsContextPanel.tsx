@@ -3,7 +3,9 @@
 import { IconDownload } from '@/components/ui/icons/icons';
 import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { useT } from '@/lib/i18n/useT';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import {
   ALL_CATEGORIES_VALUE,
@@ -50,11 +52,12 @@ export function StatisticsContextPanel({
   closeLabel?: string;
   locale: Locale;
 }) {
+  const t = useT();
   const cityValue = filters.cityId ?? ALL_CITIES_VALUE;
   const categoryValue = filters.categoryKey ?? ALL_CATEGORIES_VALUE;
-  const loadingLabel = locale === 'de' ? 'Aktualisiere…' : 'Refreshing…';
-  const emptyLabel = locale === 'de' ? 'Keine Ergebnisse' : 'No results';
-  const errorLabel = locale === 'de' ? 'Daten konnten nicht geladen werden.' : 'Data could not be loaded.';
+  const loadingLabel = t(I18N_KEYS.common.refreshing);
+  const emptyLabel = t(I18N_KEYS.common.noResults);
+  const errorLabel = t(I18N_KEYS.common.loadErrorShort);
   const selectedCityLabel = cityOptions.find((option) => option.value === cityValue)?.label ?? copy.contextAllCitiesLabel;
   const selectedCategoryLabel = categoryOptions.find((option) => option.value === categoryValue)?.label ?? copy.contextAllCategoriesLabel;
   const summaryBlock = showSummary ? (

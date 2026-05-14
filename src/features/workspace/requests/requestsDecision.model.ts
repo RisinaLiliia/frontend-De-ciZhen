@@ -4,7 +4,8 @@ import type {
   WorkspaceMyRequestCardDto,
   WorkspaceRequestsDecisionPanelDto,
 } from '@/lib/api/dto/workspace';
-import type { Locale } from '@/lib/i18n/t';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate, type Locale } from '@/lib/i18n/t';
 
 export type WorkQueueMode = 'default' | 'decision';
 
@@ -54,82 +55,51 @@ export function buildDecisionPanelSummaryText(params: {
 }): string {
   const panel = params.panel;
   const variant = params.variant ?? 'private';
+  const t = (key: string) => translate(key as never, params.locale);
 
   if (variant === 'market') {
     if (!panel || panel.summary.totalNeedsAction === 0) {
-      return params.locale === 'de'
-        ? 'Der Markt ist aktuell im Fluss.'
-        : 'The market is currently moving.';
+      return t(I18N_KEYS.requestsPage.decisionPanelMarketMoving);
     }
 
     const parts: string[] = [];
 
     if (panel.summary.overdueCount > 0) {
-      parts.push(
-        params.locale === 'de'
-          ? `${panel.summary.overdueCount} überfällig`
-          : `${panel.summary.overdueCount} overdue`,
-      );
+      parts.push(t(I18N_KEYS.requestsPage.decisionPanelMarketOverdueTemplate).replace('{count}', String(panel.summary.overdueCount)));
     }
 
     if (panel.summary.highPriorityCount > 0) {
-      parts.push(
-        params.locale === 'de'
-          ? `${panel.summary.highPriorityCount} hohe Priorität`
-          : `${panel.summary.highPriorityCount} high priority`,
-      );
+      parts.push(t(I18N_KEYS.requestsPage.decisionPanelMarketHighPriorityTemplate).replace('{count}', String(panel.summary.highPriorityCount)));
     }
 
     if (panel.summary.newOffersCount > 0) {
-      parts.push(
-        params.locale === 'de'
-          ? `${panel.summary.newOffersCount} neu`
-          : `${panel.summary.newOffersCount} new`,
-      );
+      parts.push(t(I18N_KEYS.requestsPage.decisionPanelMarketNewTemplate).replace('{count}', String(panel.summary.newOffersCount)));
     }
 
     return parts.slice(0, 2).join(', ');
   }
 
   if (!panel || panel.summary.totalNeedsAction === 0) {
-    return params.locale === 'de'
-      ? 'Deine Vorgänge sind aktuell im Fluss.'
-      : 'Your workflows are currently moving.';
+    return t(I18N_KEYS.requestsPage.decisionPanelPrivateMoving);
   }
 
   const parts: string[] = [];
 
   if (panel.summary.newOffersCount > 0) {
-    parts.push(
-      params.locale === 'de'
-        ? `${panel.summary.newOffersCount} neue Angebote`
-        : `${panel.summary.newOffersCount} new offers`,
-    );
+    parts.push(t(I18N_KEYS.requestsPage.decisionPanelPrivateNewOffersTemplate).replace('{count}', String(panel.summary.newOffersCount)));
   }
 
   if (panel.summary.replyRequiredCount > 0) {
-    parts.push(
-      params.locale === 'de'
-        ? `${panel.summary.replyRequiredCount} offene Rückmeldung`
-        : `${panel.summary.replyRequiredCount} reply required`,
-    );
+    parts.push(t(I18N_KEYS.requestsPage.decisionPanelPrivateReplyRequiredTemplate).replace('{count}', String(panel.summary.replyRequiredCount)));
   }
 
   if (panel.summary.confirmCompletionCount > 0) {
-    parts.push(
-      params.locale === 'de'
-        ? `${panel.summary.confirmCompletionCount} Bestätigung offen`
-        : `${panel.summary.confirmCompletionCount} completion to confirm`,
-    );
+    parts.push(t(I18N_KEYS.requestsPage.decisionPanelPrivateConfirmCompletionTemplate).replace('{count}', String(panel.summary.confirmCompletionCount)));
   }
 
   if (panel.summary.overdueCount > 0) {
-    parts.push(
-      params.locale === 'de'
-        ? `${panel.summary.overdueCount} überfällig`
-        : `${panel.summary.overdueCount} overdue`,
-    );
+    parts.push(t(I18N_KEYS.requestsPage.decisionPanelPrivateOverdueTemplate).replace('{count}', String(panel.summary.overdueCount)));
   }
 
-  return parts.slice(0, 2).join(params.locale === 'de' ? ', ' : ', ');
+  return parts.slice(0, 2).join(', ');
 }

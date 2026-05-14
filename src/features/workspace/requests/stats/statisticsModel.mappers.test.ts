@@ -17,6 +17,7 @@ import {
   toHint,
   toTrend,
 } from './statisticsModel.mappers';
+import { getWorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 
 describe('statisticsModel.mappers', () => {
@@ -36,8 +37,9 @@ describe('statisticsModel.mappers', () => {
   });
 
   it('builds trend hint and trend direction for KPI deltas', () => {
-    expect(toHint(12, 0, '7d', 'de')).toContain('neu');
-    expect(toHint(10, 14, '30d', 'de')).toContain('seit letzter Periode');
+    const copy = getWorkspaceStatisticsCopy('de');
+    expect(toHint(12, 0, '7d', 'de', copy)).toContain('neu');
+    expect(toHint(10, 14, '30d', 'de', copy)).toContain('seit letzter Periode');
     expect(toTrend(20, 10)).toEqual({ direction: 'up', percent: 100 });
     expect(toTrend(10, 20)).toEqual({ direction: 'down', percent: -50 });
     expect(toTrend(0, 0)).toEqual({ direction: 'flat', percent: 0 });

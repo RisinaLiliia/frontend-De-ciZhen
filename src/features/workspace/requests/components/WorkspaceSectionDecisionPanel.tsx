@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 
-import type { Locale } from '@/lib/i18n/t';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate, type Locale } from '@/lib/i18n/t';
 
 type DecisionQueueItem = {
   id: string;
@@ -40,15 +41,10 @@ type Props = {
 };
 
 function priorityLabel(locale: Locale, level: 'high' | 'medium' | 'low') {
-  if (locale === 'de') {
-    if (level === 'high') return 'Hoch';
-    if (level === 'medium') return 'Mittel';
-    return 'Niedrig';
-  }
-
-  if (level === 'high') return 'High';
-  if (level === 'medium') return 'Medium';
-  return 'Low';
+  const t = (i18nKey: string) => translate(i18nKey as never, locale);
+  if (level === 'high') return t(I18N_KEYS.requestsPage.decisionPanelPriorityHigh);
+  if (level === 'medium') return t(I18N_KEYS.requestsPage.decisionPanelPriorityMedium);
+  return t(I18N_KEYS.requestsPage.decisionPanelPriorityLow);
 }
 
 export function WorkspaceSectionDecisionPanel({

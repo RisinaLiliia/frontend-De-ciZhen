@@ -143,20 +143,15 @@ export function opportunityStatusClassName(
   return 'low';
 }
 
-export function opportunityStatusLabel(status: OpportunityStatus, locale: Locale): string {
-  if (locale === 'de') {
-    if (status === 'very_high') return 'Sehr hohe Chance';
-    if (status === 'good') return 'Gute Chance';
-    if (status === 'balanced') return 'Ausgeglichen';
-    if (status === 'competitive') return 'Viele Anbieter';
-    return 'Niedrige Chance';
-  }
-
-  if (status === 'very_high') return 'Very high opportunity';
-  if (status === 'good') return 'Good opportunity';
-  if (status === 'balanced') return 'Balanced';
-  if (status === 'competitive') return 'Competitive';
-  return 'Low opportunity';
+export function opportunityStatusLabel(
+  status: OpportunityStatus,
+  copy: WorkspaceStatisticsModel['copy'],
+): string {
+  if (status === 'very_high') return copy.opportunityStatusVeryHigh;
+  if (status === 'good') return copy.opportunityStatusGood;
+  if (status === 'balanced') return copy.opportunityStatusBalanced;
+  if (status === 'competitive') return copy.opportunityStatusCompetitive;
+  return copy.opportunityStatusLow;
 }
 
 export function opportunitySummaryLabel(
@@ -173,26 +168,26 @@ export function opportunitySummaryLabel(
 }
 
 export function buildOpportunityReasons(params: {
+  copy: WorkspaceStatisticsModel['copy'];
   locale: Locale;
   item: OpportunityItem;
 }): string[] {
-  const { locale, item } = params;
+  const { copy, locale, item } = params;
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const reasons: string[] = [];
 
   if (typeof item.marketBalanceRatio === 'number' && item.marketBalanceRatio >= 2) {
     reasons.push(
-      locale === 'de'
-        ? `Mehr Nachfrage als Anbieter (${item.marketBalanceRatio.toFixed(1)}x Marktbalance).`
-        : `Demand currently exceeds provider pressure (${item.marketBalanceRatio.toFixed(1)}x market balance).`,
+      copy.decisionReasonMarketBalanceTemplate
+        .replace('{ratio}', item.marketBalanceRatio.toFixed(1)),
     );
   }
 
   if (typeof item.providers === 'number' && item.providers > 0) {
     reasons.push(
-      locale === 'de'
-        ? `${item.demand.toLocaleString(localeTag)} Nachfrage-Signale bei nur ${item.providers.toLocaleString(localeTag)} aktiven Anbietern.`
-        : `${item.demand.toLocaleString(localeTag)} demand signals with only ${item.providers.toLocaleString(localeTag)} active providers.`,
+      copy.decisionReasonDemandProvidersTemplate
+        .replace('{demand}', item.demand.toLocaleString(localeTag))
+        .replace('{providers}', item.providers.toLocaleString(localeTag)),
     );
   }
 
@@ -202,11 +197,11 @@ export function buildOpportunityReasons(params: {
     .find((metric) => metric.key !== 'competition');
 
   if (strongestMetric?.key === 'growth') {
-    reasons.push(locale === 'de' ? 'Das Segment zeigt zusätzlich starkes Wachstum.' : 'This segment also shows strong growth.');
+    reasons.push(copy.decisionReasonGrowth);
   } else if (strongestMetric?.key === 'activity') {
-    reasons.push(locale === 'de' ? 'Die Marktaktivität ist hoch genug für schnelle Abschlüsse.' : 'Market activity is high enough to support faster closes.');
+    reasons.push(copy.decisionReasonActivity);
   } else if (strongestMetric?.key === 'demand') {
-    reasons.push(locale === 'de' ? 'Die Nachfrage liegt klar über dem Durchschnitt.' : 'Demand is clearly above average.');
+    reasons.push(copy.decisionReasonDemand);
   }
 
   return Array.from(new Set(reasons)).slice(0, 3);
@@ -219,7 +214,7 @@ export function opportunityCardAriaLabel(params: {
 }): string {
   const { item, copy, locale } = params;
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
-  const status = opportunityStatusLabel(item.status, locale);
+  const status = opportunityStatusLabel(item.status, copy);
   const demand = item.demand.toLocaleString(localeTag);
   const providers = item.providers === null ? '—' : item.providers.toLocaleString(localeTag);
   const balance = item.marketBalanceRatio === null ? '—' : item.marketBalanceRatio.toFixed(2);

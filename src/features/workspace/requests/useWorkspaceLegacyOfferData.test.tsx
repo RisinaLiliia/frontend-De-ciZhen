@@ -14,7 +14,7 @@ const useQueriesMock = vi.mocked(useQueries);
 
 function DisabledProbe() {
   const result = useWorkspaceLegacyOfferData({
-    workspaceDataQueries: {
+    workspaceRequestUserStateQueries: {
       myOffers: {
         queryKey: ['offers-my'],
         enabled: false,
@@ -36,7 +36,7 @@ function DisabledProbe() {
 
 function EnabledProbe() {
   const result = useWorkspaceLegacyOfferData({
-    workspaceDataQueries: {
+    workspaceRequestUserStateQueries: {
       myOffers: {
         queryKey: ['offers-my'],
         enabled: true,

@@ -29,7 +29,7 @@ describe('workspaceState.nav', () => {
     expect(items[0]?.forceActive).toBe(true);
   });
 
-  it('builds personalized workspace nav with reviews and secondary tabs', () => {
+  it('builds personalized workspace nav with canonical sections and secondary tabs', () => {
     const items = buildWorkspacePersonalNavItems({
       t: (key) => String(key),
       formatNumber: new Intl.NumberFormat('de-DE'),
@@ -43,15 +43,10 @@ describe('workspaceState.nav', () => {
       sentCount: 7,
       completedJobsCount: 3,
       favoriteRequestCount: 5,
-      navRatingValue: '4.7',
-      navReviewsCount: 11,
       markPublicRequestsSeen: vi.fn(),
       setWorkspaceTab: vi.fn(),
       guestLoginHref: '/auth/login',
       onGuestLockedAction: vi.fn(),
-      reviewsHref: '/workspace?tab=reviews',
-      reviewsMatch: 'exact',
-      reviewsForceActive: false,
       includeCompletedJobsInSecondary: true,
     });
 
@@ -59,11 +54,9 @@ describe('workspaceState.nav', () => {
       'public-requests',
       'public-providers',
       'public-stats',
-      'reviews',
       'my-requests',
       'my-favorites',
     ]);
-    expect(items.find((item) => item.key === 'reviews')?.rating?.value).toBe('4.7');
     expect(items.find((item) => item.key === 'my-offers')).toBeUndefined();
     expect(items.find((item) => item.key === 'completed-jobs')).toBeUndefined();
   });
@@ -82,14 +75,10 @@ describe('workspaceState.nav', () => {
       sentCount: 0,
       completedJobsCount: 0,
       favoriteRequestCount: 0,
-      navRatingValue: '4.7',
-      navReviewsCount: 11,
       markPublicRequestsSeen: vi.fn(),
       setWorkspaceTab: vi.fn(),
       guestLoginHref: '/auth/login',
       onGuestLockedAction: vi.fn(),
-      reviewsHref: '/workspace?section=reviews',
-      reviewsForceActive: false,
     });
 
     expect(buildWorkspaceNavHeader({ t: (key) => String(key), userName: 'Anna' }).navTitle).toContain('Anna');

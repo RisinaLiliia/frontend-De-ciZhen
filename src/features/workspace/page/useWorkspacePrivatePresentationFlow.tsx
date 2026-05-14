@@ -4,6 +4,7 @@ import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { trackUXEvent } from '@/lib/analytics';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import {
@@ -14,7 +15,6 @@ import {
   WorkspacePublicDemandMapPanel,
   useWorkspaceStatisticsModel,
   useWorkspacePrivateState,
-  useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
 import { WorkspaceRequestsAside } from '@/features/workspace/requests/components/WorkspaceRequestsAside';
 import {
@@ -23,9 +23,7 @@ import {
 import { buildWorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
-  useWorkspaceContentData,
   useWorkspacePresentation,
-  WorkspaceContent,
   WorkspacePrivateIntro,
   WorkspacePublicIntro,
 } from '@/features/workspace';
@@ -34,14 +32,12 @@ import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePa
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import { isWorkspaceTab } from '@/features/workspace/requests';
 import {
-  buildWorkspacePrivateContentDataArgs,
   buildWorkspacePrivateOverviewListPropsArgs,
   buildWorkspacePublicSummaryView,
   resolveWorkspacePrivateRequestsLoading,
   resolveWorkspacePrivateRenderModes,
   buildWorkspacePrivatePresentationArgs,
   buildWorkspacePrivateStateArgs,
-  buildWorkspacePrivateViewModelInput,
   buildWorkspacePublicIntroProps,
 } from '@/features/workspace/page/workspacePrivatePresentation.model';
 
@@ -66,7 +62,7 @@ export function useWorkspacePrivatePresentationFlow({
     overviewRequestsListState,
     overviewRequestsCount,
   } = data;
-  const { isOverviewMode, isUnifiedPrivateRequests, shouldRenderWorkspaceContent } =
+  const { isOverviewMode, isUnifiedPrivateRequests } =
     resolveWorkspacePrivateRenderModes({
       activePublicSection,
       activeWorkspaceTab,
@@ -75,13 +71,12 @@ export function useWorkspacePrivatePresentationFlow({
       hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
       requestsScope: data.requestsScope,
     });
-
-  const { viewModelPatch, primaryAction } = useWorkspaceContentData(
-    buildWorkspacePrivateContentDataArgs({
-      branch,
-      data,
-      enabled: shouldRenderWorkspaceContent,
+  const primaryAction = React.useMemo(
+    () => ({
+      href: '/request/create',
+      label: branch.t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta),
     }),
+    [branch],
   );
 
   const privateState = useWorkspacePrivateState(
@@ -183,16 +178,6 @@ export function useWorkspacePrivatePresentationFlow({
   const onPrimaryActionClick = React.useCallback(
     () => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab }),
     [activeWorkspaceTab],
-  );
-
-  const { workspaceContentProps } = useWorkspacePrivateViewModel(
-    buildWorkspacePrivateViewModelInput({
-      branch,
-      data,
-      viewModelPatch,
-      onPrimaryActionClick,
-      enabled: shouldRenderWorkspaceContent,
-    }),
   );
 
   const activeOffersListProps = React.useMemo(
@@ -312,9 +297,7 @@ export function useWorkspacePrivatePresentationFlow({
         },
       }))}
     />
-  ) : (
-    workspaceContentProps ? <WorkspaceContent {...workspaceContentProps} /> : null
-  );
+  ) : null;
 
   return {
     activePublicSection,

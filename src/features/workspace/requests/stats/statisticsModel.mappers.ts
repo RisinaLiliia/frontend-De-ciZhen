@@ -9,6 +9,7 @@ import type {
 } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
+import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 
 export function formatDateLabel(timestamp: string, range: WorkspaceStatisticsRange, locale: Locale) {
   const date = new Date(timestamp);
@@ -70,21 +71,30 @@ export function formatPercent(value: number) {
   return `${Math.max(0, Math.round(value))}%`;
 }
 
-export function formatMinutes(value: number | null, locale: Locale) {
+export function formatMinutes(value: number | null, locale: Locale, copy?: Pick<WorkspaceStatisticsCopy, 'activityMinutesShortLabel'>) {
   if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return '—';
-  return locale === 'de' ? `~${Math.round(value)} Min.` : `~${Math.round(value)} min`;
+  return `~${Math.round(value)} ${copy?.activityMinutesShortLabel ?? (locale === 'de' ? 'Min.' : 'min')}`;
 }
 
-function formatInsightMetricKey(key: string, locale: Locale): string {
-  if (key === 'requests') return locale === 'de' ? 'Anfragen' : 'Requests';
-  if (key === 'providers') return locale === 'de' ? 'Anbieter' : 'Providers';
-  if (key === 'ratio') return locale === 'de' ? 'Verhältnis' : 'Ratio';
-  if (key === 'sharePercent') return locale === 'de' ? 'Anteil' : 'Share';
-  if (key === 'responseMinutes') return locale === 'de' ? 'Antwortzeit' : 'Response time';
-  if (key === 'successRatePercent') return locale === 'de' ? 'Erfolgsquote' : 'Success rate';
-  if (key === 'profileCompleteness') return locale === 'de' ? 'Profil' : 'Profile';
-  if (key === 'providerSearchCount') return locale === 'de' ? 'Anbieter-Suchen' : 'Provider searches';
-  if (key === 'unansweredRequests24h') return locale === 'de' ? 'Offen >24h' : 'Open >24h';
+function formatInsightMetricKey(key: string, copy?: Pick<WorkspaceStatisticsCopy,
+  | 'insightMetricRequestsLabel'
+  | 'insightMetricProvidersLabel'
+  | 'insightMetricRatioLabel'
+  | 'insightMetricShareLabel'
+  | 'insightMetricResponseTimeLabel'
+  | 'insightMetricSuccessRateLabel'
+  | 'insightMetricProfileLabel'
+  | 'insightMetricProviderSearchesLabel'
+  | 'insightMetricUnansweredLabel'>): string {
+  if (key === 'requests') return copy?.insightMetricRequestsLabel ?? 'Requests';
+  if (key === 'providers') return copy?.insightMetricProvidersLabel ?? 'Providers';
+  if (key === 'ratio') return copy?.insightMetricRatioLabel ?? 'Ratio';
+  if (key === 'sharePercent') return copy?.insightMetricShareLabel ?? 'Share';
+  if (key === 'responseMinutes') return copy?.insightMetricResponseTimeLabel ?? 'Response time';
+  if (key === 'successRatePercent') return copy?.insightMetricSuccessRateLabel ?? 'Success rate';
+  if (key === 'profileCompleteness') return copy?.insightMetricProfileLabel ?? 'Profile';
+  if (key === 'providerSearchCount') return copy?.insightMetricProviderSearchesLabel ?? 'Provider searches';
+  if (key === 'unansweredRequests24h') return copy?.insightMetricUnansweredLabel ?? 'Open >24h';
   return key;
 }
 
@@ -92,10 +102,20 @@ export function formatInsightEvidence(
   metrics: Array<{ key: string; value: string | number }> | undefined,
   locale: Locale,
   formatNumber: Intl.NumberFormat,
+  copy?: Pick<WorkspaceStatisticsCopy,
+    | 'insightMetricRequestsLabel'
+    | 'insightMetricProvidersLabel'
+    | 'insightMetricRatioLabel'
+    | 'insightMetricShareLabel'
+    | 'insightMetricResponseTimeLabel'
+    | 'insightMetricSuccessRateLabel'
+    | 'insightMetricProfileLabel'
+    | 'insightMetricProviderSearchesLabel'
+    | 'insightMetricUnansweredLabel'>,
 ): string | undefined {
   if (!Array.isArray(metrics) || metrics.length === 0) return undefined;
   const tokens = metrics.slice(0, 3).map((metric) => {
-    const label = formatInsightMetricKey(metric.key, locale);
+    const label = formatInsightMetricKey(metric.key, copy);
     const value = typeof metric.value === 'number' ? formatNumber.format(metric.value) : metric.value;
     return `${label}: ${value}`;
   });
@@ -190,34 +210,34 @@ export function toHint(
   baseline: number,
   range: WorkspaceStatisticsRange,
   locale: Locale,
+  copy?: Pick<WorkspaceStatisticsCopy,
+    | 'trendStableLabel'
+    | 'trendNewTemplate'
+    | 'trendSinceLastPeriodTemplate'
+    | 'trendContextTodayLabel'
+    | 'trendContextWeekLabel'
+    | 'trendContextMonthLabel'
+    | 'trendContext90DaysLabel'>,
 ) {
   const context =
-    locale === 'de'
-      ? range === '24h'
-        ? 'heute'
-        : range === '7d'
-          ? 'diese Woche'
-          : range === '30d'
-            ? 'diesen Monat'
-            : 'in 90 Tagen'
-      : range === '24h'
-        ? 'today'
-        : range === '7d'
-          ? 'this week'
-          : range === '30d'
-            ? 'this month'
-            : 'in 90 days';
+    range === '24h'
+      ? copy?.trendContextTodayLabel ?? (locale === 'de' ? 'heute' : 'today')
+      : range === '7d'
+        ? copy?.trendContextWeekLabel ?? (locale === 'de' ? 'diese Woche' : 'this week')
+        : range === '30d'
+          ? copy?.trendContextMonthLabel ?? (locale === 'de' ? 'diesen Monat' : 'this month')
+          : copy?.trendContext90DaysLabel ?? (locale === 'de' ? 'in 90 Tagen' : 'in 90 days');
 
   if (baseline <= 0) {
-    if (value <= 0) return locale === 'de' ? 'Trend stabil' : 'Trend stable';
-    return locale === 'de' ? `+${value} neu ${context}` : `+${value} new ${context}`;
+    if (value <= 0) return copy?.trendStableLabel ?? (locale === 'de' ? 'Trend stabil' : 'Trend stable');
+    return (copy?.trendNewTemplate ?? (locale === 'de' ? '+{value} neu {context}' : '+{value} new {context}'))
+      .replace('{value}', String(value))
+      .replace('{context}', context);
   }
   const delta = value - baseline;
-  if (delta === 0) return locale === 'de' ? 'Trend stabil' : 'Trend stable';
-  if (locale === 'de') {
-    return `${delta > 0 ? '+' : ''}${delta} seit letzter Periode`;
-  }
-  return `${delta > 0 ? '+' : ''}${delta} since last period`;
+  if (delta === 0) return copy?.trendStableLabel ?? (locale === 'de' ? 'Trend stabil' : 'Trend stable');
+  return (copy?.trendSinceLastPeriodTemplate ?? (locale === 'de' ? '{delta} seit letzter Periode' : '{delta} since last period'))
+    .replace('{delta}', `${delta > 0 ? '+' : ''}${delta}`);
 }
 
 export function toTrend(value: number, baseline: number): KpiCardTrend {
@@ -256,11 +276,15 @@ export function resolveMarketBalanceRatio(params: {
   return demandActivity / Math.max(1, supplyActivity);
 }
 
-export function formatReviewCountHint(count: number, locale: Locale, formatNumber: Intl.NumberFormat): string {
-  if (locale === 'de') {
-    return `${formatNumber.format(count)} ${count === 1 ? 'Bewertung' : 'Bewertungen'}`;
-  }
-  return `${formatNumber.format(count)} ${count === 1 ? 'review' : 'reviews'}`;
+export function formatReviewCountHint(
+  count: number,
+  locale: Locale,
+  formatNumber: Intl.NumberFormat,
+  copy?: Pick<WorkspaceStatisticsCopy, 'reviewSingularLabel' | 'reviewPluralLabel'>,
+): string {
+  const singular = copy?.reviewSingularLabel ?? (locale === 'de' ? 'Bewertung' : 'review');
+  const plural = copy?.reviewPluralLabel ?? (locale === 'de' ? 'Bewertungen' : 'reviews');
+  return `${formatNumber.format(count)} ${count === 1 ? singular : plural}`;
 }
 
 export function normalizeLegacyRange(range: WorkspaceStatisticsRange): PlatformActivityRange {

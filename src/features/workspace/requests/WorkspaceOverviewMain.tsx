@@ -47,57 +47,29 @@ type WorkspaceOverviewMainProps = {
   onToggleProviderFavorite: (providerId: string) => void;
 };
 
-function getOverviewCopy(locale: Locale) {
-  if (locale === 'en') {
-    return {
-      snapshotTitle: 'Platform overview',
-      snapshotSubtitle: 'What matters now, where the opportunity is, and what to do next.',
-      focusLabel: 'Focus mode',
-      quickActionsTitle: 'Quick actions',
-      quickActionsSubtitle: 'Jump to the next decision without leaving this workspace.',
-      quickActionsSecondary: {
-        requests: 'Open requests',
-        providers: 'Find providers',
-        analysis: 'Open analysis',
-      },
-      offersTitle: 'Active offers',
-      offersSubtitle: 'Recent demand with market signals for faster analysis.',
-      offersCta: 'Open analysis',
-      topProvidersTitle: 'Top providers',
-      topProvidersSubtitle: 'Verified providers with fast replies and visible activity here.',
-      opportunityBadge: 'Opportunity',
-      demandHigh: 'High demand',
-      demandMedium: 'Stable demand',
-      demandLow: 'Selective demand',
-      competitionLow: 'Few providers',
-      competitionBalanced: 'Balanced supply',
-      competitionHigh: 'Higher competition',
-    };
-  }
-
+function getOverviewCopy(t: WorkspaceOverviewMainProps['t']) {
   return {
-    snapshotTitle: 'Plattformüberblick',
-    snapshotSubtitle: 'Was jetzt passiert, wo Chancen liegen und was als Nächstes zu tun ist.',
-    focusLabel: 'Focus Mode',
-    quickActionsTitle: 'Schnellaktionen',
-    quickActionsSubtitle: 'Direkt zur nächsten Entscheidung, ohne den Workspace-Kontext zu verlassen.',
+    snapshotTitle: t(I18N_KEYS.workspace.overviewSnapshotTitle),
+    snapshotSubtitle: t(I18N_KEYS.workspace.overviewSnapshotSubtitle),
+    focusLabel: t(I18N_KEYS.workspace.overviewFocusLabel),
+    quickActionsTitle: t(I18N_KEYS.workspace.overviewQuickActionsTitle),
+    quickActionsSubtitle: t(I18N_KEYS.workspace.overviewQuickActionsSubtitle),
     quickActionsSecondary: {
-      requests: 'Aufträge öffnen',
-      providers: 'Anbieter suchen',
-      analysis: 'Analyse öffnen',
+      requests: t(I18N_KEYS.workspace.overviewQuickActionRequests),
+      providers: t(I18N_KEYS.workspace.overviewQuickActionProviders),
+      analysis: t(I18N_KEYS.workspace.overviewQuickActionAnalysis),
     },
-    offersTitle: 'Aktive Angebote',
-    offersSubtitle: 'Neue Nachfrage mit Marktsignalen für den direkten Analyse-Einstieg.',
-    offersCta: 'Analyse öffnen',
-    topProvidersTitle: 'Top Anbieter',
-    topProvidersSubtitle: 'Verifiziert, schnell in der Antwort und aktiv im aktuellen Kontext.',
-    opportunityBadge: 'Chance',
-    demandHigh: 'Hohe Nachfrage',
-    demandMedium: 'Stabile Nachfrage',
-    demandLow: 'Selektive Nachfrage',
-    competitionLow: 'Wenig Anbieter',
-    competitionBalanced: 'Ausgeglichen',
-    competitionHigh: 'Mehr Wettbewerb',
+    offersTitle: t(I18N_KEYS.workspace.overviewOffersTitle),
+    offersSubtitle: t(I18N_KEYS.workspace.overviewOffersSubtitle),
+    offersCta: t(I18N_KEYS.workspace.openAnalysisCta),
+    topProvidersSubtitle: t(I18N_KEYS.workspace.overviewTopProvidersSubtitle),
+    opportunityBadge: t(I18N_KEYS.workspace.overviewOpportunityBadge),
+    demandHigh: t(I18N_KEYS.workspace.overviewDemandHigh),
+    demandMedium: t(I18N_KEYS.workspace.overviewDemandMedium),
+    demandLow: t(I18N_KEYS.workspace.overviewDemandLow),
+    competitionLow: t(I18N_KEYS.workspace.overviewCompetitionLow),
+    competitionBalanced: t(I18N_KEYS.workspace.overviewCompetitionBalanced),
+    competitionHigh: t(I18N_KEYS.workspace.overviewCompetitionHigh),
   };
 }
 
@@ -318,7 +290,7 @@ export function WorkspaceOverviewMain({
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
 }: WorkspaceOverviewMainProps) {
-  const copy = React.useMemo(() => getOverviewCopy(locale), [locale]);
+  const copy = React.useMemo(() => getOverviewCopy(t), [t]);
   const snapshotItems = React.useMemo(
     () => buildPlatformSnapshotItems(statisticsModel),
     [statisticsModel],

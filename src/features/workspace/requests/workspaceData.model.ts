@@ -16,7 +16,7 @@ type WorkspaceDataPlanArgs = {
   activeWorkspaceTab: WorkspaceTab;
   requestsScope?: WorkspaceRequestsScope;
   activeRequestsRole?: WorkspaceRequestsRole;
-  activePublicSection?: 'requests' | 'providers' | 'stats' | 'reviews' | 'actions' | null;
+  activePublicSection?: 'requests' | 'providers' | 'stats' | 'actions' | null;
   hasAccessToken: boolean;
 };
 
@@ -24,14 +24,9 @@ export type WorkspaceDataLoadPlan = {
   shouldLoadLegacyPublicOverview: boolean;
   shouldLoadPrivateOverview: boolean;
   shouldLoadWorkspaceRequests: boolean;
-  shouldLoadMyRequests: boolean;
   shouldLoadMyOffers: boolean;
-  shouldLoadMyContracts: boolean;
   shouldLoadFavoriteRequests: boolean;
-  shouldLoadFavoriteProviders: boolean;
   shouldLoadOfferRequests: boolean;
-  shouldLoadReviews: boolean;
-  shouldLoadProviders: boolean;
 };
 
 export function buildWorkspaceOfferRequestIds(myOffers: OfferDto[]) {
@@ -40,7 +35,6 @@ export function buildWorkspaceOfferRequestIds(myOffers: OfferDto[]) {
 
 export function resolveWorkspaceDataPlan({
   enabled = true,
-  isAuthed,
   isWorkspaceAuthed,
   isWorkspacePublicSection,
   shouldLoadPrivateData,
@@ -54,14 +48,9 @@ export function resolveWorkspaceDataPlan({
       shouldLoadLegacyPublicOverview: false,
       shouldLoadPrivateOverview: false,
       shouldLoadWorkspaceRequests: false,
-      shouldLoadMyRequests: false,
       shouldLoadMyOffers: false,
-      shouldLoadMyContracts: false,
       shouldLoadFavoriteRequests: false,
-      shouldLoadFavoriteProviders: false,
       shouldLoadOfferRequests: false,
-      shouldLoadReviews: false,
-      shouldLoadProviders: false,
     };
   }
 
@@ -74,7 +63,6 @@ export function resolveWorkspaceDataPlan({
     isWorkspacePublicSection &&
     activePublicSection === 'requests' &&
     requestsScope === 'market';
-  const shouldLoadPublicRequestUserState = false;
   const shouldLoadPrivateOverviewRequests =
     isWorkspaceAuthed &&
     shouldLoadPrivateData &&
@@ -86,58 +74,25 @@ export function resolveWorkspaceDataPlan({
       !isWorkspaceAuthed ||
       shouldLoadPrivateOverviewRequests
     );
+  const isLegacyPrivateTabMode = activePublicSection === null;
   const shouldLoadPrivateOverview = isWorkspaceAuthed && shouldLoadPrivateData && hasAccessToken;
   const shouldLoadWorkspaceRequests = shouldLoadUnifiedPrivateRequests || shouldLoadUnifiedMarketRequests;
-  const shouldLoadMyRequests =
-    !shouldLoadUnifiedPrivateRequests
-    && isWorkspaceAuthed
-    && shouldLoadPrivateData
-    && activeWorkspaceTab === 'my-requests';
   const shouldLoadMyOffers =
-    shouldLoadPublicRequestUserState
-    || (
-      !shouldLoadUnifiedPrivateRequests
-      && isWorkspaceAuthed
-      && shouldLoadPrivateData
-      && activeWorkspaceTab === 'my-offers'
-    );
-  const shouldLoadMyContracts =
-    !shouldLoadUnifiedPrivateRequests
-    && isWorkspaceAuthed
-    && shouldLoadPrivateData
-    && activeWorkspaceTab === 'completed-jobs';
+    isLegacyPrivateTabMode &&
+    isWorkspaceAuthed &&
+    shouldLoadPrivateData;
   const shouldLoadFavoriteRequests =
-    shouldLoadPublicRequestUserState
-    || (
-      !shouldLoadUnifiedPrivateRequests
-      && isWorkspaceAuthed
-      && shouldLoadPrivateData
-      && activeWorkspaceTab === 'favorites'
-    );
-  const shouldLoadFavoriteProviders =
-    isAuthed &&
-    shouldLoadPrivateData &&
-    !isWorkspacePublicSection &&
-    !shouldLoadUnifiedPrivateRequests;
-  const shouldLoadOfferRequests = shouldLoadMyOffers && activeWorkspaceTab === 'my-offers';
-  const shouldLoadReviews =
-    isWorkspaceAuthed && shouldLoadPrivateData && activeWorkspaceTab === 'reviews';
-  const shouldLoadProviders =
-    !isWorkspacePublicSection &&
-    shouldLoadPrivateData &&
-    !shouldLoadUnifiedPrivateRequests;
+    isLegacyPrivateTabMode &&
+    isWorkspaceAuthed &&
+    shouldLoadPrivateData;
+  const shouldLoadOfferRequests = shouldLoadMyOffers;
 
   return {
     shouldLoadLegacyPublicOverview,
     shouldLoadPrivateOverview,
     shouldLoadWorkspaceRequests,
-    shouldLoadMyRequests,
     shouldLoadMyOffers,
-    shouldLoadMyContracts,
     shouldLoadFavoriteRequests,
-    shouldLoadFavoriteProviders,
     shouldLoadOfferRequests,
-    shouldLoadReviews,
-    shouldLoadProviders,
   };
 }

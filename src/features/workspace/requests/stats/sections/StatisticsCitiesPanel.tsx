@@ -55,12 +55,12 @@ export function StatisticsCitiesPanel({
   t: TranslateFn;
 }) {
   const cityValue = activeCityId ?? '';
-  const loadingLabel = locale === 'de' ? 'Aktualisiere…' : 'Refreshing…';
-  const emptyLabel = locale === 'de' ? 'Keine Ergebnisse' : 'No results';
-  const errorLabel = locale === 'de' ? 'Daten konnten nicht geladen werden.' : 'Data could not be loaded.';
+  const loadingLabel = t(I18N_KEYS.common.refreshing);
+  const emptyLabel = t(I18N_KEYS.common.noResults);
+  const errorLabel = t(I18N_KEYS.common.loadErrorShort);
   const selectedCityLabel = cityOptions.find((option) => option.value === cityValue)?.label ?? copy.citiesFilterPlaceholder;
-  const placeholderCityLabel = locale === 'de' ? 'Weitere Vergleichsdaten fehlen' : 'Additional comparison data unavailable';
-  const placeholderSignalLabel = locale === 'de' ? 'Keine Daten' : 'No data';
+  const placeholderCityLabel = t(I18N_KEYS.workspace.statsAdditionalComparisonUnavailable);
+  const placeholderSignalLabel = t(I18N_KEYS.workspace.statsNoDataLabel);
   const minimumVisibleRows = 3;
   const placeholderRowCount = Math.max(0, minimumVisibleRows - visibleCityRows.length);
 

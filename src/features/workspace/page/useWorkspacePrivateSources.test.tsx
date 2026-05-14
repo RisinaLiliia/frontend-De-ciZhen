@@ -9,7 +9,7 @@ import {
 } from '@/features/workspace';
 import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspacePrivateSources';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import { useWorkspaceData } from '@/features/workspace/requests';
+import { useWorkspaceData, useWorkspaceProviderSupportData } from '@/features/workspace/requests';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
 import type { ContractDto } from '@/lib/api/dto/contracts';
@@ -23,6 +23,7 @@ vi.mock('@/hooks/useCatalogIndex', () => ({
 
 vi.mock('@/features/workspace/requests', () => ({
   useWorkspaceData: vi.fn(),
+  useWorkspaceProviderSupportData: vi.fn(),
 }));
 
 vi.mock('@/features/workspace', () => ({
@@ -34,6 +35,7 @@ vi.mock('@/features/workspace', () => ({
 const useWorkspacePublicFiltersMock = vi.mocked(useWorkspacePublicFilters);
 const useCatalogIndexMock = vi.mocked(useCatalogIndex);
 const useWorkspaceDataMock = vi.mocked(useWorkspaceData);
+const useWorkspaceProviderSupportDataMock = vi.mocked(useWorkspaceProviderSupportData);
 const useWorkspacePublicRequestsStateMock = vi.mocked(useWorkspacePublicRequestsState);
 const useWorkspaceCollectionsMock = vi.mocked(useWorkspaceCollections);
 
@@ -122,27 +124,14 @@ describe('useWorkspacePrivateSources', () => {
         favoriteRequests: [request],
         isFavoriteRequestsLoading: false,
       },
-      legacyMyRequestsData: {
-        myRequests: [request],
-        isMyRequestsLoading: false,
-      },
-      legacyContractSupportData: {
-        myProviderContracts: [contract],
-        isProviderContractsLoading: false,
-        myClientContracts: [contract],
-        isClientContractsLoading: false,
-      },
-      legacyReviewSupportData: {
-        myReviews: [],
-        isMyReviewsLoading: false,
-      },
-      legacyProviderSupportData: {
-        favoriteProviders: [provider],
-        isFavoriteProvidersLoading: false,
-        providers: [provider],
-        isProvidersLoading: false,
-        isProvidersError: false,
-      },
+    } as never);
+
+    useWorkspaceProviderSupportDataMock.mockReturnValue({
+      favoriteProviders: [provider],
+      isFavoriteProvidersLoading: false,
+      providers: [provider],
+      isProvidersLoading: false,
+      isProvidersError: false,
     } as never);
 
     useWorkspacePublicRequestsStateMock.mockReturnValue({
@@ -222,7 +211,7 @@ describe('useWorkspacePrivateSources', () => {
     );
   });
 
-  it('disables catalog loading for private actions/profile flow', () => {
+  it('keeps catalog loading enabled for the private overview flow', () => {
     const t: WorkspaceBranchProps['t'] = (key) => String(key);
 
     render(
@@ -232,36 +221,34 @@ describe('useWorkspacePrivateSources', () => {
         isAuthed
         isWorkspaceAuthed
         activePublicSection={null}
-        activeWorkspaceTab="profile"
+        activeWorkspaceTab="my-requests"
       />,
     );
 
     expect(useWorkspacePublicFiltersMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        shouldLoadCatalog: false,
+        shouldLoadCatalog: true,
       }),
     );
 
     expect(useCatalogIndexMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        enabled: false,
+        enabled: true,
       }),
     );
 
     expect(useWorkspaceDataMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { page: 2, limit: 20 },
-        activeWorkspaceTab: 'profile',
-        publicSummaryCityActivityLimit: 1,
+        activeWorkspaceTab: 'my-requests',
+        publicSummaryCityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
       }),
     );
 
     expect(useWorkspacePublicRequestsStateMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        enablePageClamp: false,
-        enableEmptyStateTracking: false,
-        publicRequests: undefined,
-        hasActivePublicFilter: false,
+        enablePageClamp: true,
+        enableEmptyStateTracking: true,
+        hasActivePublicFilter: true,
       }),
     );
   });

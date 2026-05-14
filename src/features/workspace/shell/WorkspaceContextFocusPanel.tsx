@@ -14,7 +14,7 @@ import {
   useWorkspaceSharedContext,
 } from '@/features/workspace/shell/useWorkspaceSharedContext';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import type { I18nKey } from '@/lib/i18n/keys';
+import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceTab } from '@/features/workspace/requests';
 
@@ -81,11 +81,10 @@ export function WorkspaceContextFocusPanel({
     setIsAnalyzingFocus(false);
   }, []);
   const focusScopeText = React.useMemo(() => {
-    if (locale === 'de') {
-      return `Der aktuelle Workspace-Kontext bleibt über alle Modi hinweg aktiv: ${focusScopeMetric}. ${model.scope}.`;
-    }
-    return `The current workspace context stays active across modes: ${focusScopeMetric}. ${model.scope}.`;
-  }, [focusScopeMetric, locale, model.scope]);
+    return t(I18N_KEYS.workspace.focusScopeTextTemplate)
+      .replace('{context}', focusScopeMetric)
+      .replace('{scope}', model.scope);
+  }, [focusScopeMetric, model.scope, t]);
   const focusActionText = React.useMemo(
     () => `${focusModeCopy.actionText} ${model.railDescription}`,
     [focusModeCopy.actionText, model.railDescription],

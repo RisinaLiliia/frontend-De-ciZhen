@@ -43,7 +43,6 @@ function renderWithClient(node: React.ReactNode) {
 
 function PublicFlowProbe() {
   const flow = useWorkspacePublicRequestOverlayFlow({
-    locale: 'de',
     requests: [{ id: 'req-1', title: 'Anfrage 1' }] as never[],
   });
 
@@ -63,7 +62,6 @@ function PublicFlowProbe() {
 
 function PrivateFlowProbe() {
   const flow = useWorkspaceRequestOverlayFlow({
-    locale: 'de',
     cards: [{
       requestId: 'req-1',
       requestPreview: { title: 'Anfrage 1' },

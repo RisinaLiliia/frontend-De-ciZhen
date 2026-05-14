@@ -8,7 +8,8 @@ import { WorkspacePublicRequestDialog } from '@/features/workspace/requests/Work
 import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
 import { WorkspaceManagedOfferSheet } from '@/features/workspace/requests/WorkspaceRequestOverlays';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
-import type { Locale } from '@/lib/i18n/t';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate, type Locale } from '@/lib/i18n/t';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 
 type ChatState = {
@@ -58,15 +59,14 @@ export function WorkspacePublicRequestSessionDialog({
 
   const requestId = activeRequestState?.requestId ?? activeOfferRequestId ?? null;
   const requestIntent = activeRequestState?.intent ?? 'view';
+  const t = (key: typeof I18N_KEYS.workspace[keyof typeof I18N_KEYS.workspace] | typeof I18N_KEYS.requestDetails[keyof typeof I18N_KEYS.requestDetails] | typeof I18N_KEYS.requestsPage[keyof typeof I18N_KEYS.requestsPage]) => translate(key, locale);
   const ariaLabel = scene === 'chat'
-    ? activeChatState?.title || (locale === 'de' ? 'Nachrichten' : 'Messages')
+    ? activeChatState?.title || t(I18N_KEYS.workspace.messagesTitle)
     : scene === 'offer_edit'
-      ? (locale === 'de' ? 'Angebot bearbeiten' : 'Edit offer')
-      : (locale === 'de' ? 'Anfrage' : 'Request');
-  const sceneTitle = locale === 'de' ? 'Chat' : 'Chat';
-  const sceneSubtitle = activeChatState?.title || (locale === 'de'
-    ? 'Unterhaltung zur Anfrage'
-    : 'Conversation for this request');
+      ? t(I18N_KEYS.requestDetails.workspaceEditOffer)
+      : t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle);
+  const sceneTitle = t(I18N_KEYS.requestsPage.navChat);
+  const sceneSubtitle = activeChatState?.title || t(I18N_KEYS.workspace.requestConversationSubtitle);
 
   return (
     <WorkspaceRequestDialogShell

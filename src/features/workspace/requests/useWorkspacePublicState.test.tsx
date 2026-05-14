@@ -34,7 +34,6 @@ function makeArgs(overrides: Partial<StateArgs> = {}): StateArgs {
 function StateProbe(props: StateArgs) {
   const state = useWorkspacePublicState(props);
   const requestsItem = state.personalNavItems.find((item) => item.key === 'public-requests');
-  const reviewsItem = state.personalNavItems.find((item) => item.key === 'reviews');
 
   return (
     <div
@@ -44,7 +43,6 @@ function StateProbe(props: StateArgs) {
       data-nav-count={String(state.personalNavItems.length)}
       data-requests-value={String(requestsItem?.value ?? '')}
       data-requests-has-callback={String(typeof requestsItem?.onClick === 'function')}
-      data-reviews-rating={String(reviewsItem?.rating?.value ?? '')}
       data-progress={String(state.activityProgress)}
       data-insight={state.insightText}
     />
@@ -58,27 +56,25 @@ describe('useWorkspacePublicState', () => {
     const node = screen.getByTestId('state');
     expect(node.getAttribute('data-nav-title')).toContain('Anna');
     expect(node.getAttribute('data-nav-subtitle')).toBe('requestsPage.navSubtitle');
-    expect(node.getAttribute('data-nav-count')).toBe('7');
+    expect(node.getAttribute('data-nav-count')).toBe('6');
     expect(node.getAttribute('data-requests-value')).toBe('24');
     expect(node.getAttribute('data-requests-has-callback')).toBe('true');
-    expect(node.getAttribute('data-reviews-rating')).toBe('4.8');
     expect(node.getAttribute('data-progress')).toBe('12');
     expect(node.getAttribute('data-insight')).toBe('');
   });
 
   it('keeps personalized mode compatible with the same public-state contract', () => {
     render(
-      <StateProbe
-        {...makeArgs({
-          isPersonalized: true,
-          activePublicSection: 'reviews',
-        })}
-      />,
-    );
+        <StateProbe
+          {...makeArgs({
+            isPersonalized: true,
+            activePublicSection: 'stats',
+          })}
+        />,
+      );
 
     const node = screen.getByTestId('state');
-    expect(node.getAttribute('data-nav-count')).toBe('6');
-    expect(node.getAttribute('data-reviews-rating')).toBe('4.8');
+    expect(node.getAttribute('data-nav-count')).toBe('5');
     expect(node.getAttribute('data-progress')).toBe('12');
   });
 });

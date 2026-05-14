@@ -3,15 +3,11 @@ import { describe, expect, it, vi } from 'vitest';
 import type { I18nKey } from '@/lib/i18n/keys';
 
 import {
-  buildWorkspacePrivateContentDataArgs,
   buildWorkspacePrivateStateArgs,
-  buildWorkspacePrivateViewModelInput,
   buildWorkspacePublicIntroProps,
   buildWorkspacePublicSummaryView,
   resolveWorkspaceEffectiveRequestsRole,
   resolveWorkspacePrivateRequestsLoading,
-  shouldBuildWorkspacePrivateContractRequests,
-  shouldBuildWorkspacePrivateFavoriteProviderCards,
 } from './workspacePrivatePresentation.model';
 
 function createBranch() {
@@ -30,25 +26,6 @@ function createData() {
   return {
     activePublicSection: 'requests',
     activeWorkspaceTab: 'my-offers',
-    activeStatusFilter: 'all',
-    activeFavoritesView: 'requests',
-    myRequestsState: {
-      items: [{ id: 'req-1' }],
-      isLoading: false,
-    },
-    myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
-    myOfferRequestsById: new Map([['req-1', { id: 'req-1' }]]),
-    contractsState: {
-      providerContracts: [],
-      clientContracts: [],
-      allContracts: [],
-      isProviderLoading: false,
-      isClientLoading: true,
-    },
-    favoriteRequests: [{ id: 'fav-req-1' }],
-    isFavoriteRequestsLoading: false,
-    pendingFavoriteProviderIds: new Set(['provider-2']),
-    onToggleProviderFavorite: vi.fn(),
     providerDirectoryState: {
       items: [{ id: 'provider-1' }],
       isLoading: false,
@@ -75,65 +52,20 @@ function createData() {
       completedJobsCount: 2,
       favoriteRequestCount: 3,
     },
-    preferredRequestsRole: 'provider',
     setWorkspaceTab: vi.fn(),
     markPublicRequestsSeen: vi.fn(),
     guestLoginHref: '/auth/login',
     onGuestLockedAction: vi.fn(),
     formatNumber: new Intl.NumberFormat('en'),
-    chartMonthLabel: 'March',
     publicCityActivity: [],
     isPublicSummaryLoading: false,
     isPublicSummaryError: false,
-    offersByRequest: new Map(),
-    favoriteRequestIds: new Set(['req-1']),
-    onToggleRequestFavorite: vi.fn(),
-    onOpenOfferSheet: vi.fn(),
-    onWithdrawOffer: vi.fn(),
-    onOpenChatThread: vi.fn(),
-    onOpenChatConversation: vi.fn(),
-    pendingOfferRequestId: null,
-    pendingFavoriteRequestIds: new Set<string>(),
-    serviceByKey: new Map(),
-    categoryByKey: new Map(),
-    cityById: new Map(),
-    formatDate: new Intl.DateTimeFormat('en'),
-    formatPrice: new Intl.NumberFormat('en'),
-    ownerRequestActions: {},
-    isMyOffersLoading: false,
-    setFavoritesView: vi.fn(),
-    reviewsState: {
-      items: [],
-      isLoading: false,
-    },
-    setStatusFilter: vi.fn(),
-    isLoading: false,
-    overviewRequestsCount: 12,
+    requestsScope: 'market',
+    activeRequestsRole: 'all',
   };
 }
 
 describe('workspacePrivatePresentation.model', () => {
-  it('builds content data args for derived, contract and cards hooks', () => {
-    const args = buildWorkspacePrivateContentDataArgs({
-      branch: createBranch() as never,
-      data: createData() as never,
-    });
-
-    expect(args.derivedArgs.activeWorkspaceTab).toBe('my-offers');
-    expect(args.enabled).toBeUndefined();
-    expect(args.contractArgs.locale).toBe('en');
-    expect(args.contractRequestsEnabled).toBe(false);
-    expect(args.cardsArgs.pendingFavoriteProviderIds).toEqual(new Set(['provider-2']));
-    expect(args.favoriteProviderCardsEnabled).toBe(false);
-  });
-
-  it('enables private contract requests and favorite provider cards only for the tabs that render them', () => {
-    expect(shouldBuildWorkspacePrivateContractRequests('completed-jobs')).toBe(true);
-    expect(shouldBuildWorkspacePrivateContractRequests('profile')).toBe(false);
-    expect(shouldBuildWorkspacePrivateFavoriteProviderCards('favorites')).toBe(true);
-    expect(shouldBuildWorkspacePrivateFavoriteProviderCards('reviews')).toBe(false);
-  });
-
   it('builds private state args with provider-count fallback and public intro props', () => {
     const branch = createBranch();
     const data = createData();
@@ -154,7 +86,6 @@ describe('workspacePrivatePresentation.model', () => {
     expect(publicIntroProps.quickActionHref).toBe('/request/create');
     expect(publicIntroProps.hideDemandMapOnMobile).toBe(true);
     expect(publicIntroProps.isMapLoading).toBe(false);
-    expect(publicIntroProps.preferredRequestsRole).toBe('provider');
   });
 
   it('passes explicit preferred role for unified private requests with a concrete route role', () => {
@@ -172,48 +103,6 @@ describe('workspacePrivatePresentation.model', () => {
     });
 
     expect(privateStateArgs.privateOverviewState?.preferredRequestsRole).toBe('customer');
-  });
-
-  it('builds private view model input by merging flow data with patch', () => {
-    const onPrimaryActionClick = vi.fn();
-    const input = buildWorkspacePrivateViewModelInput({
-      branch: createBranch() as never,
-      data: createData() as never,
-      viewModelPatch: {
-        showWorkspaceHeader: true,
-        showWorkspaceHeading: true,
-        primaryAction: { href: '/request/create', label: 'Create' },
-        statusFilters: [],
-        filteredMyRequests: [],
-        filteredMyOffers: [],
-        myOfferRequests: [],
-        filteredContracts: [],
-        hasFavoriteRequests: true,
-        hasFavoriteProviders: false,
-        resolvedFavoritesView: 'requests',
-        favoritesItems: [],
-        isFavoritesLoading: false,
-        contractRequests: [],
-        contractOffersByRequest: new Map(),
-        favoriteProviderCards: [],
-      },
-      onPrimaryActionClick,
-    });
-
-    expect(input.onPrimaryActionClick).toBe(onPrimaryActionClick);
-    expect(input.activeWorkspaceTab).toBe('my-offers');
-    expect(input.isClientContractsLoading).toBe(true);
-    expect(input.primaryAction.href).toBe('/request/create');
-  });
-
-  it('passes content-data enabled flag through the private flow builder', () => {
-    const args = buildWorkspacePrivateContentDataArgs({
-      branch: createBranch() as never,
-      data: createData() as never,
-      enabled: false,
-    });
-
-    expect(args.enabled).toBe(false);
   });
 
   it('resolves effective requests role from preferred role only for the all mode', () => {
@@ -250,24 +139,21 @@ describe('workspacePrivatePresentation.model', () => {
         isWorkspacePrivateRequestsFallbackLoading: true,
       }),
     ).toBe(true);
-
-    expect(
-      resolveWorkspacePrivateRequestsLoading({
-        workspaceRequests: null,
-        isWorkspaceRequestsLoading: false,
-        activeRequestsRole: 'provider',
-        isWorkspacePrivateRequestsFallbackLoading: true,
-      }),
-    ).toBe(false);
   });
 
-  it('builds one shared public summary view model for intro and overview map consumers', () => {
-    const data = createData();
-    const summaryView = buildWorkspacePublicSummaryView(data as never);
-
-    expect(summaryView.cityActivity).toEqual([]);
-    expect(summaryView.summary).toBeUndefined();
-    expect(summaryView.isMapLoading).toBe(false);
-    expect(summaryView.isMapError).toBe(false);
+  it('builds public summary view from canonical summary payloads', () => {
+    expect(
+      buildWorkspacePublicSummaryView({
+        allRequestsSummary: { totalPublishedRequests: 2 } as never,
+        publicCityActivity: { items: [] } as never,
+        isPublicSummaryLoading: false,
+        isPublicSummaryError: true,
+      }),
+    ).toEqual({
+      cityActivity: { items: [] },
+      summary: { totalPublishedRequests: 2 },
+      isMapLoading: false,
+      isMapError: true,
+    });
   });
 });

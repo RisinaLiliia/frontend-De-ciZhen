@@ -6,31 +6,31 @@ import type { OfferDto } from '@/lib/api/dto/offers';
 
 import {
   buildWorkspaceOfferRequestsQuery,
-  type buildWorkspaceDataQueries,
 } from '@/features/workspace/requests/workspaceData.queries';
+import { type buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 import { buildWorkspaceOfferRequestIds } from '@/features/workspace/requests/workspaceData.model';
 
-type WorkspaceDataQueries = ReturnType<typeof buildWorkspaceDataQueries>;
-type WorkspaceLegacyOfferQuery = WorkspaceDataQueries['myOffers'];
+type WorkspaceRequestUserStateQueries = ReturnType<typeof buildWorkspaceRequestUserStateQueries>;
+type WorkspaceLegacyOfferQuery = WorkspaceRequestUserStateQueries['myOffers'];
 type WorkspaceLegacyOfferRequestsQuery = ReturnType<typeof buildWorkspaceOfferRequestsQuery>;
 
 type Args = {
-  workspaceDataQueries: WorkspaceDataQueries;
+  workspaceRequestUserStateQueries: WorkspaceRequestUserStateQueries;
   locale: string;
   shouldLoadOfferRequests: boolean;
 };
 
 export function useWorkspaceLegacyOfferData({
-  workspaceDataQueries,
+  workspaceRequestUserStateQueries,
   locale,
   shouldLoadOfferRequests,
 }: Args) {
   const offerQueryEntries = React.useMemo(
     (): Array<{ key: 'myOffers'; query: WorkspaceLegacyOfferQuery }> =>
-      workspaceDataQueries.myOffers.enabled
-        ? [{ key: 'myOffers', query: workspaceDataQueries.myOffers }]
+      workspaceRequestUserStateQueries.myOffers.enabled
+        ? [{ key: 'myOffers', query: workspaceRequestUserStateQueries.myOffers }]
         : [],
-    [workspaceDataQueries.myOffers],
+    [workspaceRequestUserStateQueries.myOffers],
   );
 
   const offerQueryResults = useQueries({

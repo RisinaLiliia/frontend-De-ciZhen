@@ -38,9 +38,8 @@ This feature is the frontend shell for the workspace decision dashboard at `/wor
   - resolves position, risks, opportunities, pricing gap, and action steps from backend-shaped `userIntelligence`
 - `statisticsUserIntelligence.utils.ts`
   - temporary compatibility builder for legacy personalized payloads
-  - derives formula metrics, benchmark gaps, canonical `decisionLayer`, decision signals, and prioritized actions from one dashboard payload
-  - now reuses canonical `personalizedPricing`, `risks`, `opportunities`, and `nextSteps` when backend already sends them
-  - must disappear once backend ships `userIntelligence` natively
+  - kept only as a transitional utility while old payloads are removed from the codebase
+  - main stats normalization path must not depend on these builders once backend ships canonical sections
 - `WorkspaceStatisticsView.tsx`
   - presentation shell for the stats page
 - `sections/*`
@@ -73,17 +72,15 @@ This feature is the frontend shell for the workspace decision dashboard at `/wor
 - when `funnelComparison` exists, frontend should not backfill its summary or drop-off diagnosis from `userIntelligence.profileGap` or legacy `profileFunnel`
 - in personalized mode, funnel summary and conversion should prefer canonical `funnelComparison.stages` over legacy `profileFunnel.summaryText` or `profileFunnel.totalConversionPercent`
 - in personalized mode, the funnel shape itself should also prefer canonical `funnelComparison.stages`; `profileFunnel.stages` should remain a compatibility fallback only
-- when `userIntelligence` is missing, compatibility fallback may still exist, but it should preferentially reuse canonical section payloads instead of re-deriving semantics from raw payload fields
+- when `userIntelligence` is missing, compatibility fallback may still exist outside the main normalized dashboard path, but production normalization should prefer backend sections without rebuilding their semantics in React
 - in focus mode, `opportunityRadar` is not a generic leaderboard
 - rank `1` is the selected city, ranks `2..3` are comparison cities
 - each opportunity item should carry its own `priceIntelligence` so price panels and KI can switch by selection without recomputing analytics in UI
 - personalized mode is now `Market × User = Decision Engine`
 - authenticated stats should answer: market, user, gap, action
 - client-side derivation exists only as temporary compatibility support for older payloads
-- any client-side derivation for `decisionLayer` is temporary compatibility only
-- any client-side derivation for `personalizedPricing`, `categoryFit`, or `cityComparison` is temporary compatibility only
-- any client-side derivation for `userIntelligence` is temporary compatibility only
-- remaining transitional builders are `buildCompatibilityUserIntelligence` and `buildCompatibilityFunnelComparison`
+- production stats normalization must not client-build `decisionLayer`, `personalizedPricing`, `categoryFit`, `cityComparison`, `funnelComparison`, or `userIntelligence`
+- any client-side derivation for `userIntelligence` is temporary compatibility only and should stay outside the canonical dashboard path
 - the third activity line for authenticated stats is currently a temporary context-aligned compatibility overlay
 - it is derived from personalized totals under the current market timeline until backend ships `activity.userSeries`
 

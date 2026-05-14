@@ -17,25 +17,11 @@ import {
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
 
 describe('workspacePrivateSources.model', () => {
-  it('disables private catalog loading for actions/profile, reviews, and unified private requests', () => {
+  it('disables private catalog loading for actions and unified private requests', () => {
     expect(
       shouldLoadWorkspacePrivateCatalog({
         activePublicSection: 'actions',
         activeWorkspaceTab: 'my-requests',
-      }),
-    ).toBe(false);
-
-    expect(
-      shouldLoadWorkspacePrivateCatalog({
-        activePublicSection: null,
-        activeWorkspaceTab: 'profile',
-      }),
-    ).toBe(false);
-
-    expect(
-      shouldLoadWorkspacePrivateCatalog({
-        activePublicSection: null,
-        activeWorkspaceTab: 'reviews',
       }),
     ).toBe(false);
 
@@ -65,8 +51,8 @@ describe('workspacePrivateSources.model', () => {
 
     expect(
       shouldLoadWorkspacePrivatePublicRequestsState({
-        activePublicSection: null,
-        activeWorkspaceTab: 'profile',
+        activePublicSection: 'actions',
+        activeWorkspaceTab: 'my-requests',
       }),
     ).toBe(false);
 
@@ -95,14 +81,18 @@ describe('workspacePrivateSources.model', () => {
       shouldBuildWorkspacePrivateRequestCollections({
         activePublicSection: 'requests',
         activeWorkspaceTab: 'my-requests',
-        requestsScope: 'my',
       }),
     ).toBe(false);
 
-    expect(shouldBuildWorkspacePrivateFavoriteProviderBackfill('favorites')).toBe(true);
-    expect(shouldBuildWorkspacePrivateFavoriteProviderBackfill('profile')).toBe(false);
-    expect(shouldBuildWorkspacePrivateFavoriteProviderPresentation('favorites')).toBe(true);
-    expect(shouldBuildWorkspacePrivateFavoriteProviderPresentation('profile')).toBe(false);
+    expect(
+      shouldBuildWorkspacePrivateRequestCollections({
+        activePublicSection: 'providers',
+        activeWorkspaceTab: 'my-requests',
+      }),
+    ).toBe(false);
+
+    expect(shouldBuildWorkspacePrivateFavoriteProviderBackfill()).toBe(true);
+    expect(shouldBuildWorkspacePrivateFavoriteProviderPresentation()).toBe(false);
   });
 
   it('builds workspace data args for private sources flow', () => {
@@ -222,11 +212,7 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyContractSupportData: {
-        myProviderContracts: [{ id: 'contract-1' }],
-        myClientContracts: [{ id: 'contract-2' }],
-      } as never,
-      legacyProviderSupportData: {
+      providerSupportData: {
         providers: [{ id: 'provider-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
       } as never,
@@ -240,7 +226,7 @@ describe('workspacePrivateSources.model', () => {
     expect(requestsStateArgs.isWorkspacePublicSection).toBe(false);
     expect(requestsStateArgs.categoryKey).toBe('cat-1');
     expect(collectionsArgs.includeRequestCollections).toBe(true);
-    expect(collectionsArgs.includeFavoriteProviderBackfill).toBe(false);
+    expect(collectionsArgs.includeFavoriteProviderBackfill).toBe(true);
     expect(collectionsArgs.includeFavoriteProviderPresentation).toBe(false);
     expect(collectionsArgs.locale).toBe('de');
     expect(collectionsArgs.requests).toEqual([{ id: 'req-1' }]);
@@ -279,19 +265,15 @@ describe('workspacePrivateSources.model', () => {
 
   it('passes idle request-side collections for private tabs that do not render request data', () => {
     const args = buildWorkspacePrivateSourcesCollectionsArgs({
-      activePublicSection: null,
-      activeWorkspaceTab: 'profile',
+      activePublicSection: 'actions',
+      activeWorkspaceTab: 'my-requests',
       requestsScope: 'market',
       requests: [{ id: 'req-1' }] as never,
       requestUserStateData: {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyContractSupportData: {
-        myProviderContracts: [{ id: 'contract-1' }],
-        myClientContracts: [{ id: 'contract-2' }],
-      } as never,
-      legacyProviderSupportData: {
+      providerSupportData: {
         providers: [{ id: 'provider-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
       } as never,
@@ -322,11 +304,7 @@ describe('workspacePrivateSources.model', () => {
         favoriteRequests: [{ id: 'req-1' }],
         myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       } as never,
-      legacyContractSupportData: {
-        myProviderContracts: [{ id: 'contract-1' }],
-        myClientContracts: [{ id: 'contract-2' }],
-      } as never,
-      legacyProviderSupportData: {
+      providerSupportData: {
         providers: [{ id: 'provider-1' }],
         favoriteProviders: [{ id: 'provider-1' }],
       } as never,
@@ -378,21 +356,7 @@ describe('workspacePrivateSources.model', () => {
         isFavoriteRequestsLoading: false,
         isMyOffersLoading: false,
       } as never,
-      legacyMyRequestsData: {
-        myRequests: [{ id: 'req-1' }],
-        isMyRequestsLoading: false,
-      } as never,
-      legacyContractSupportData: {
-        myProviderContracts: [],
-        myClientContracts: [],
-        isProviderContractsLoading: true,
-        isClientContractsLoading: false,
-      } as never,
-      legacyReviewSupportData: {
-        myReviews: [],
-        isMyReviewsLoading: false,
-      } as never,
-      legacyProviderSupportData: {
+      providerSupportData: {
         providers: [{ id: 'provider-1' }],
         isProvidersLoading: false,
         isProvidersError: false,
@@ -405,7 +369,7 @@ describe('workspacePrivateSources.model', () => {
         cityById: new Map([['city-1', { i18n: { de: 'Berlin' } }]]),
       } as never,
       collections: {
-        allMyContracts: [{ id: 'contract-1' }],
+        allMyContracts: [],
         favoriteProviderIds: new Set(['provider-1']),
         offersByRequest: new Map([['req-1', { id: 'offer-1' }]]),
         favoriteRequestIds: new Set(['req-1']),
@@ -431,21 +395,6 @@ describe('workspacePrivateSources.model', () => {
       requests: [{ id: 'req-1' }, { id: 'req-2' }],
       isLoading: true,
       isError: false,
-    });
-    expect(result.myRequestsState).toEqual({
-      items: [{ id: 'req-1' }],
-      isLoading: false,
-    });
-    expect(result.contractsState).toEqual({
-      providerContracts: [],
-      clientContracts: [],
-      allContracts: [{ id: 'contract-1' }],
-      isProviderLoading: true,
-      isClientLoading: false,
-    });
-    expect(result.reviewsState).toEqual({
-      items: [],
-      isLoading: false,
     });
     expect(result.overviewRequestsCount).toBe(2);
     expect(result.providerDirectoryState).toEqual({

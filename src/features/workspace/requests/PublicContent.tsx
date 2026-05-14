@@ -84,7 +84,6 @@ export function PublicContent({
     openOfferSheet,
     openRequest,
   } = useWorkspacePublicRequestOverlayFlow({
-    locale: requestsListProps.locale,
     requests: requestsListProps.requests,
   });
   const handleListDensityChange = React.useCallback((nextDensity: RequestsListDensity) => {

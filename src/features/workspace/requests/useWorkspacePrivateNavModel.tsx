@@ -21,8 +21,6 @@ type Params = {
   sentCount: number;
   completedJobsCount: number;
   favoriteRequestCount: number;
-  navRatingValue: string;
-  navReviewsCount: number;
   setWorkspaceTab: (tab: WorkspaceTab) => void;
   markPublicRequestsSeen: () => void;
   guestLoginHref: string;
@@ -43,8 +41,6 @@ export function useWorkspacePrivateNavModel({
   sentCount,
   completedJobsCount,
   favoriteRequestCount,
-  navRatingValue,
-  navReviewsCount,
   setWorkspaceTab,
   markPublicRequestsSeen,
   guestLoginHref,
@@ -64,18 +60,10 @@ export function useWorkspacePrivateNavModel({
     sentCount,
     completedJobsCount,
     favoriteRequestCount,
-    navRatingValue,
-    navReviewsCount,
     markPublicRequestsSeen,
     setWorkspaceTab,
     guestLoginHref,
     onGuestLockedAction,
-    reviewsHref: isPersonalized ? '/workspace?tab=reviews' : '/workspace?section=reviews',
-    reviewsMatch: isPersonalized ? 'exact' : 'prefix',
-    reviewsForceActive:
-      isPersonalized
-        ? activePublicSection === null && activeWorkspaceTab === 'reviews'
-        : activePublicSection === 'reviews',
     includeCompletedJobsInSecondary: true,
   });
 }

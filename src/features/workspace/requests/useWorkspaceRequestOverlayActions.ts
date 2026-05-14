@@ -83,10 +83,8 @@ export async function fetchWorkspaceManagedRequest(params: {
 }
 
 export function useWorkspaceRequestOfferActions({
-  locale,
   requestId,
 }: {
-  locale: Locale;
   requestId: string;
 }) {
   const t = useT();
@@ -98,7 +96,7 @@ export function useWorkspaceRequestOfferActions({
     setPendingOfferActionId(offerId);
     try {
       await acceptOffer(offerId);
-      toast.success(locale === 'de' ? 'Angebot angenommen.' : 'Offer accepted.');
+      toast.success(t(I18N_KEYS.offers.accepted));
       await invalidateOfferReviewState();
       return true;
     } catch (error) {
@@ -108,14 +106,14 @@ export function useWorkspaceRequestOfferActions({
     } finally {
       setPendingOfferActionId(null);
     }
-  }, [invalidateOfferReviewState, locale, pendingOfferActionId, t]);
+  }, [invalidateOfferReviewState, pendingOfferActionId, t]);
 
   const declineRequestOffer = React.useCallback(async (offerId: string) => {
     if (pendingOfferActionId === offerId) return false;
     setPendingOfferActionId(offerId);
     try {
       await declineOffer(offerId);
-      toast.success(locale === 'de' ? 'Angebot abgelehnt.' : 'Offer declined.');
+      toast.success(t(I18N_KEYS.offers.declined));
       await invalidateOfferReviewState();
       return true;
     } catch (error) {
@@ -125,7 +123,7 @@ export function useWorkspaceRequestOfferActions({
     } finally {
       setPendingOfferActionId(null);
     }
-  }, [invalidateOfferReviewState, locale, pendingOfferActionId, t]);
+  }, [invalidateOfferReviewState, pendingOfferActionId, t]);
 
   return {
     acceptRequestOffer,
@@ -135,10 +133,8 @@ export function useWorkspaceRequestOfferActions({
 }
 
 export function useWorkspaceRequestDecisionActions({
-  locale,
   requestId,
 }: {
-  locale: Locale;
   requestId: string;
 }) {
   const t = useT();
@@ -163,7 +159,7 @@ export function useWorkspaceRequestDecisionActions({
         durationMin: durationMin.trim() ? Number(durationMin) : undefined,
         note: note.trim() || undefined,
       });
-      toast.success(locale === 'de' ? 'Vertrag bestätigt.' : 'Contract confirmed.');
+      toast.success(t(I18N_KEYS.contracts.confirmed));
       await invalidateDecisionState();
       return true;
     } catch (error) {
@@ -173,13 +169,13 @@ export function useWorkspaceRequestDecisionActions({
     } finally {
       setIsSubmittingDecision(false);
     }
-  }, [invalidateDecisionState, locale, t]);
+  }, [invalidateDecisionState, t]);
 
   const completeRequestContract = React.useCallback(async (contractId: string) => {
     setIsSubmittingDecision(true);
     try {
       await completeContract(contractId);
-      toast.success(locale === 'de' ? 'Abschluss bestätigt.' : 'Completion confirmed.');
+      toast.success(t(I18N_KEYS.contracts.completed));
       await invalidateDecisionState();
       return true;
     } catch (error) {
@@ -189,7 +185,7 @@ export function useWorkspaceRequestDecisionActions({
     } finally {
       setIsSubmittingDecision(false);
     }
-  }, [invalidateDecisionState, locale, t]);
+  }, [invalidateDecisionState, t]);
 
   return {
     completeRequestContract,

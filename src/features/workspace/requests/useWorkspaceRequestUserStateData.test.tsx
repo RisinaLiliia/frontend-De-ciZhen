@@ -20,7 +20,7 @@ const useWorkspaceFavoriteRequestDataMock = vi.mocked(useWorkspaceFavoriteReques
 
 function Probe() {
   const result = useWorkspaceRequestUserStateData({
-    workspaceDataQueries: {} as never,
+    workspaceRequestUserStateQueries: {} as never,
     locale: 'de',
     shouldLoadOfferRequests: false,
   });

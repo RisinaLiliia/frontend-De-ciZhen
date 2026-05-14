@@ -36,15 +36,8 @@ export function WorkspaceShell({
   const tabParam = searchParams.get('tab');
   const isOverviewRoute = sectionParam === 'overview';
   const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
-  const hasLegacyRequestsTab =
-    tabParam === 'my-requests' || tabParam === 'my-offers' || tabParam === 'completed-jobs';
   const resolvedSection = resolvePublicWorkspaceSection(sectionParam);
-  const shouldPromoteReviewsSectionToTab =
-    auth.status === 'authenticated' &&
-    !forcedWorkspaceTab &&
-    !hasExplicitWorkspaceTab &&
-    (forcedPublicSection ?? resolvedSection) === 'reviews';
-  const resolvedWorkspaceTab = shouldPromoteReviewsSectionToTab ? 'reviews' : forcedWorkspaceTab;
+  const resolvedWorkspaceTab = forcedWorkspaceTab;
   const shouldBlockOnAuthBootstrap = React.useMemo(() => {
     if (auth.status !== 'idle' && auth.status !== 'loading') return false;
     return shouldAttemptRefreshOnBootstrap();
@@ -57,7 +50,7 @@ export function WorkspaceShell({
   const resolvedPublicSection = resolvedWorkspaceTab ? null : activePublicSection;
 
   React.useEffect(() => {
-    if (!hasLegacyRequestsTab) return;
+    if (!hasExplicitWorkspaceTab) return;
     if (auth.status === 'authenticated') {
       router.replace(
         buildLegacyWorkspaceTabRedirectHref({
@@ -69,14 +62,24 @@ export function WorkspaceShell({
     }
     if (auth.status !== 'unauthenticated') return;
 
+    if (tabParam === 'my-requests' || tabParam === 'my-offers' || tabParam === 'completed-jobs') {
+      router.replace(
+        buildWorkspaceRequestsScopeHref({
+          currentSearch: searchParams,
+          scope: 'market',
+        }),
+        { scroll: false },
+      );
+      return;
+    }
+
     router.replace(
-      buildWorkspaceRequestsScopeHref({
+      buildLegacyWorkspaceTabRedirectHref({
         currentSearch: searchParams,
-        scope: 'market',
       }),
       { scroll: false },
     );
-  }, [auth.status, hasLegacyRequestsTab, router, searchParams]);
+  }, [auth.status, hasExplicitWorkspaceTab, router, searchParams, tabParam]);
 
   React.useEffect(() => {
     if (auth.status !== 'unauthenticated') return;

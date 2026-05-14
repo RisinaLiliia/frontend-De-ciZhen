@@ -3,6 +3,8 @@
 import * as React from 'react';
 
 import type { Locale } from '@/lib/i18n/t';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate } from '@/lib/i18n/t';
 import { buildWorkspaceHref } from '@/features/workspace/shell/workspaceLinks';
 import { WorkspaceInsightsPanel, type WorkspaceInsightsPanelItem } from '@/features/workspace/requests/components/WorkspaceInsightsPanel';
 import type { WorkspaceStatisticsModel } from '@/features/workspace/requests/stats/workspaceStatistics.model';
@@ -23,7 +25,7 @@ export function WorkspaceOverviewInsightsPanel({
   panelRef,
   style,
 }: WorkspaceOverviewInsightsPanelProps) {
-  const defaultCtaLabel = locale === 'en' ? 'Open analysis' : 'Analyse ansehen';
+  const defaultCtaLabel = translate(I18N_KEYS.workspace.openAnalysisCta, locale);
   const analysisHref = React.useMemo(
     () => buildWorkspaceHref({ currentSearch, section: 'stats', removeKeys: ['page'] }),
     [currentSearch],

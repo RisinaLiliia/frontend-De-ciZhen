@@ -13,7 +13,6 @@ import {
 } from '@/features/workspace/private/workspaceActions.model';
 import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 
 export type RequestDialogIntent = 'view' | 'edit' | 'responses' | 'contract' | 'review';
@@ -39,13 +38,11 @@ type WorkspaceChatDialogState = {
 };
 
 type Params = {
-  locale: Locale;
   cards: MyRequestsViewCard[];
   listContext: Omit<WorkspaceRequestOverlayListContext, 'onOpenRequest'>;
 };
 
 export function useWorkspaceRequestOverlayFlow({
-  locale,
   cards,
   listContext,
 }: Params) {
@@ -98,7 +95,7 @@ export function useWorkspaceRequestOverlayFlow({
   const openChatConversation = React.useCallback(async (payload: WorkspaceChatConversationInput) => {
     try {
       if (!isWorkspaceChatConversationInput(payload)) {
-        toast.error(locale === 'de' ? 'Chat konnte nicht geöffnet werden.' : 'Chat could not be opened.');
+        toast.error(t(I18N_KEYS.workspace.chatOpenError));
         return;
       }
 
@@ -113,13 +110,13 @@ export function useWorkspaceRequestOverlayFlow({
       setActiveOfferRequestId(null);
       setActiveChatState({
         conversationId: conversation.id,
-        title: requestTitle || (locale === 'de' ? 'Nachrichten' : 'Messages'),
+        title: requestTitle || t(I18N_KEYS.workspace.messagesTitle),
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
     }
-  }, [locale, qc, requestsById, t]);
+  }, [qc, requestsById, t]);
 
   const closeChat = React.useCallback(() => {
     setActiveChatState(null);

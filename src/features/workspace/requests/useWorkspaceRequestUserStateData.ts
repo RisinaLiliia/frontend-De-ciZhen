@@ -2,29 +2,29 @@
 
 import { useWorkspaceLegacyOfferData } from '@/features/workspace/requests/useWorkspaceLegacyOfferData';
 import { useWorkspaceFavoriteRequestData } from '@/features/workspace/requests/useWorkspaceFavoriteRequestData';
-import type { buildWorkspaceDataQueries } from '@/features/workspace/requests/workspaceData.queries';
+import type { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 
-type WorkspaceDataQueries = ReturnType<typeof buildWorkspaceDataQueries>;
+type WorkspaceRequestUserStateQueries = ReturnType<typeof buildWorkspaceRequestUserStateQueries>;
 
 type Args = {
-  workspaceDataQueries: WorkspaceDataQueries;
+  workspaceRequestUserStateQueries: WorkspaceRequestUserStateQueries;
   locale: string;
   shouldLoadOfferRequests: boolean;
 };
 
 export function useWorkspaceRequestUserStateData({
-  workspaceDataQueries,
+  workspaceRequestUserStateQueries,
   locale,
   shouldLoadOfferRequests,
 }: Args) {
   const offerData = useWorkspaceLegacyOfferData({
-    workspaceDataQueries,
+    workspaceRequestUserStateQueries,
     locale,
     shouldLoadOfferRequests,
   });
 
   const favoriteRequestData = useWorkspaceFavoriteRequestData({
-    workspaceDataQueries,
+    workspaceRequestUserStateQueries,
   });
 
   return {
