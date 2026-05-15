@@ -3,8 +3,8 @@
 import type { Ref } from 'react';
 import Link from 'next/link';
 
-import { Badge } from '@/components/ui/Badge';
 import { IconPin } from '@/components/ui/icons/icons';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
 export function StatisticsGrowthPanel({
@@ -63,8 +63,8 @@ export function StatisticsGrowthPanel({
         >
           <div className="workspace-statistics-growth__featured-head">
             <div className="workspace-statistics-growth__badges">
-              <Badge variant="info" size="sm">{copy.growthFeaturedBadge}</Badge>
-              <Badge variant="warning" size="sm">{copy.growthPriorityHigh}</Badge>
+              <WorkspaceBadge variant="info">{copy.growthFeaturedBadge}</WorkspaceBadge>
+              <WorkspaceBadge variant="priority">{copy.growthPriorityHigh}</WorkspaceBadge>
             </div>
           </div>
 

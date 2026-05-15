@@ -726,7 +726,7 @@
     border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   }
 
-  .my-request-card__status-badge {
+  .my-request-card__state-chip {
     min-height: 30px;
     padding-inline: 12px;
     font-size: 11px;
@@ -1516,7 +1516,7 @@
       max-width: 100%;
     }
 
-    .my-request-card .status-badge {
+    .my-request-card .ui-badge {
       min-height: 24px;
       padding-inline: 10px;
       font-size: 10px;
@@ -1640,7 +1640,7 @@
       gap: var(--space-3);
     }
 
-    .my-request-card .status-badge {
+    .my-request-card .ui-badge {
       min-height: 22px;
       padding-inline: 9px;
       font-size: 9.5px;

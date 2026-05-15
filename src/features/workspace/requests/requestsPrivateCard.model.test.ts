@@ -55,7 +55,7 @@ describe('requestsPrivateCard.model', () => {
         },
         status: {
           badgeLabel: 'Neue Antworten',
-          badgeTone: 'warning',
+          badgeVariant: 'warning',
           actions: [
             {
               key: 'open',
@@ -180,7 +180,7 @@ describe('requestsPrivateCard.model', () => {
         },
         status: {
           badgeLabel: 'Angenommen',
-          badgeTone: 'success',
+          badgeVariant: 'success',
           actions: [
             {
               key: 'contract',
@@ -295,7 +295,7 @@ describe('requestsPrivateCard.model', () => {
         },
         status: {
           badgeLabel: 'Entwurf',
-          badgeTone: 'info',
+          badgeVariant: 'info',
           actions: [
             {
               key: 'edit-request',
@@ -374,7 +374,7 @@ describe('requestsPrivateCard.model', () => {
         },
         status: {
           badgeLabel: 'Aktiv',
-          badgeTone: 'success',
+          badgeVariant: 'success',
           actions: [
             {
               key: 'contract',
@@ -498,7 +498,7 @@ describe('requestsPrivateCard.model', () => {
         },
         status: {
           badgeLabel: 'Entwurf',
-          badgeTone: 'info',
+          badgeVariant: 'info',
           actions: [
             {
               key: 'publish-request',
@@ -577,7 +577,7 @@ describe('requestsPrivateCard.model', () => {
         },
         status: {
           badgeLabel: 'Aktiv',
-          badgeTone: 'success',
+          badgeVariant: 'success',
           actions: [],
         },
         decision: {
@@ -637,7 +637,7 @@ describe('requestsPrivateCard.model', () => {
         },
         status: {
           badgeLabel: 'Abgeschlossen',
-          badgeTone: 'success',
+          badgeVariant: 'success',
           actions: [
             {
               key: 'review',

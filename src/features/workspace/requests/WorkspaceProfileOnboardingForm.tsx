@@ -26,6 +26,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { getWorkspaceProfile, registerWorkspaceProfile, saveWorkspaceProfile } from '@/lib/api/workspace';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 import { WorkspaceProfileOnboardingAccountSection } from './WorkspaceProfileOnboardingAccountSection';
 import { WorkspaceProfileOnboardingAvatarField } from './WorkspaceProfileOnboardingAvatarField';
 import { WorkspaceProfileOnboardingProfileSection } from './WorkspaceProfileOnboardingProfileSection';
@@ -444,9 +445,9 @@ function AuthenticatedWorkspaceProfileForm({
     <div className="stack-md">
       <article className="card stack-md workspace-profile-onboarding" aria-labelledby="workspace-profile-auth-title">
         <header className="stack-sm">
-          <span className="status-badge status-badge--info workspace-profile-onboarding__step">
+          <WorkspaceBadge variant="info" className="workspace-profile-onboarding__step">
             {t(I18N_KEYS.requestsPage.profileOnboardingStep)}
-          </span>
+          </WorkspaceBadge>
           <h2 id="workspace-profile-auth-title" className="typo-h3">
             {t(I18N_KEYS.provider.onboardingTitle)}
           </h2>
@@ -744,9 +745,9 @@ function AnonymousWorkspaceProfileForm({
   return (
     <article className="card stack-md workspace-profile-onboarding" aria-labelledby="workspace-profile-onboarding-title">
       <header className="stack-sm">
-        <span className="status-badge status-badge--info workspace-profile-onboarding__step">
+        <WorkspaceBadge variant="info" className="workspace-profile-onboarding__step">
           {t(I18N_KEYS.requestsPage.profileOnboardingStep)}
-        </span>
+        </WorkspaceBadge>
         <h2 id="workspace-profile-onboarding-title" className="typo-h3">
           {t(I18N_KEYS.provider.onboardingTitle)}
         </h2>

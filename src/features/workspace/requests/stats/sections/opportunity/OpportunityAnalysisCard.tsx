@@ -9,8 +9,8 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 import type { WorkspaceStatisticsModel } from '../../workspaceStatistics.model';
+import { OpportunityToneBadge } from '../../components/OpportunityToneBadge';
 import { StatisticsSignalMeter } from '../../components/StatisticsSignalMeter';
-import { StatisticsStatusBadge } from '../../components/StatisticsStatusBadge';
 import type { OpportunityAxis, OpportunityItem } from './opportunity.utils';
 import {
   buildOpportunityRadarAxisEndpoints,
@@ -89,7 +89,7 @@ export function OpportunityAnalysisCard({
         </div>
       </div>
 
-      <StatisticsStatusBadge
+      <OpportunityToneBadge
         className="workspace-statistics-opportunity__status workspace-statistics-opportunity__status--analysis"
         tone={statusClass}
         label={opportunityStatusLabel(featuredStatus, copy)}

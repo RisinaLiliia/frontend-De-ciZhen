@@ -15,6 +15,12 @@ import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
+import type { WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
+
+export type WorkspaceStatusBadgeView = {
+  label: string;
+  variant: WorkspaceBadgeVariant;
+};
 
 export function formatDialogDate(locale: Locale, value?: string | null) {
   if (!value) return null;
@@ -59,56 +65,56 @@ export function toDateTimeLocalValue(value?: string | null) {
 export function resolveOfferStatusBadge(
   t: (key: I18nKey) => string,
   status: OfferDto['status'],
-) {
+): WorkspaceStatusBadgeView {
   if (status === 'accepted') {
     return {
       label: t(I18N_KEYS.requestDetails.statusAccepted),
-      className: 'status-badge status-badge--success',
+      variant: 'success',
     };
   }
   if (status === 'declined') {
     return {
       label: t(I18N_KEYS.requestDetails.statusDeclined),
-      className: 'status-badge status-badge--danger',
+      variant: 'risk',
     };
   }
   if (status === 'withdrawn') {
     return {
       label: t(I18N_KEYS.requestDetails.statusWithdrawn),
-      className: 'status-badge status-badge--warning',
+      variant: 'warning',
     };
   }
   return {
     label: t(I18N_KEYS.requestsPage.decisionPanelPriorityNew),
-    className: 'status-badge status-badge--info',
+    variant: 'info',
   };
 }
 
 export function resolveContractStatusBadge(
   t: (key: I18nKey) => string,
   status: ContractDto['status'],
-) {
+): WorkspaceStatusBadgeView {
   if (status === 'completed') {
     return {
       label: t(I18N_KEYS.workspace.stateCompletedLabel),
-      className: 'status-badge status-badge--success',
+      variant: 'success',
     };
   }
   if (status === 'confirmed' || status === 'in_progress') {
     return {
       label: t(I18N_KEYS.requestDetails.statusConfirmed),
-      className: 'status-badge status-badge--success',
+      variant: 'success',
     };
   }
   if (status === 'cancelled') {
     return {
       label: t(I18N_KEYS.requestDetails.statusCancelled),
-      className: 'status-badge status-badge--danger',
+      variant: 'risk',
     };
   }
   return {
     label: t(I18N_KEYS.requestDetails.statusPending),
-    className: 'status-badge status-badge--warning',
+    variant: 'warning',
   };
 }
 

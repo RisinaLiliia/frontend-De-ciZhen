@@ -36,6 +36,7 @@ import {
 import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
 import { WorkspacePrivateRequestSessionDialog } from '@/features/workspace/requests/WorkspacePrivateRequestSessionDialog';
+import { WorkspaceBadge, type WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
 import {
   type RequestDialogIntent,
   type WorkspaceRequestOverlayListContext,
@@ -46,7 +47,7 @@ import type {
   WorkspaceRequestsViewCard,
   WorkspaceRequestsViewVariant,
 } from '@/features/workspace/requests/workspaceRequestsView.model';
-import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
+import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 import { pickRequestImage } from '@/lib/requests/images';
@@ -118,14 +119,14 @@ function resolveRequestDialogIntent(action: { key: string }): RequestDialogInten
 }
 
 function resolveCardOpenIntent(
-  card: Pick<WorkspaceMyRequestCardDto, 'role' | 'status' | 'canEdit'>,
+  card: Pick<WorkspaceRequestsViewCard, 'role' | 'status' | 'canEdit'>,
   variant: WorkspaceRequestsViewVariant,
 ): RequestDialogIntent {
   if (variant === 'market') return 'view';
   return hasOwnerRequestEditCapability(card) ? 'edit' : 'view';
 }
 
-function resolveOwnerMenuActionIcon(icon: WorkspaceMyRequestCardDto['status']['actions'][number]['icon']) {
+function resolveOwnerMenuActionIcon(icon: WorkspaceRequestsViewCard['status']['actions'][number]['icon']) {
   if (icon === 'edit') return <IconEdit />;
   if (icon === 'copy') return <IconCopy />;
   if (icon === 'share') return <IconShare />;
@@ -183,8 +184,8 @@ function WorkflowProgress({
   steps,
 }: {
   locale: Locale;
-  card: WorkspaceMyRequestCardDto;
-  steps: WorkspaceMyRequestCardDto['progress']['steps'];
+  card: WorkspaceRequestsViewCard;
+  steps: WorkspaceRequestsViewCard['progress']['steps'];
 }) {
   const activeIndex = React.useMemo(
     () => Math.max(0, steps.findIndex((step) => step.status === 'current')),
@@ -196,7 +197,7 @@ function WorkflowProgress({
     return Math.round(((activeIndex + 1) / steps.length) * 100);
   }, [activeIndex, steps]);
 
-  const resolveStepMeta = React.useCallback((step: WorkspaceMyRequestCardDto['progress']['steps'][number]) => {
+  const resolveStepMeta = React.useCallback((step: WorkspaceRequestsViewCard['progress']['steps'][number]) => {
     if (step.key === 'request') {
       return card.createdAt?.trim()
         || tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowCreatedMeta);
@@ -543,24 +544,24 @@ function RequestCardTopSlot({
 }: {
   chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
   locale: Locale;
-  card: WorkspaceMyRequestCardDto;
-  steps: WorkspaceMyRequestCardDto['progress']['steps'];
+  card: WorkspaceRequestsViewCard;
+  steps: WorkspaceRequestsViewCard['progress']['steps'];
   ownerRequestActions?: OwnerRequestActions;
   onOpenRequest?: WorkspaceRequestOverlayListContext['onOpenRequest'];
   workspaceVariant: WorkspaceRequestsViewVariant;
 }) {
-  const statusClassName = card.status.badgeTone ? `status-badge status-badge--${card.status.badgeTone}` : null;
+  const statusVariant: WorkspaceBadgeVariant = card.status.badgeVariant ?? 'neutral';
   const showOwnerMenu = workspaceVariant === 'private' && card.role === 'customer';
 
   return (
     <div className="my-request-card__topslot">
-      {(statusClassName || showOwnerMenu) ? (
+      {(card.status.badgeLabel || showOwnerMenu) ? (
         <div className="my-request-card__topbar">
           <div className="my-request-card__topbar-start">
-            {card.status.badgeLabel && statusClassName ? (
-              <span className={`${statusClassName} my-request-card__status-badge`.trim()}>
+            {card.status.badgeLabel ? (
+              <WorkspaceBadge variant={statusVariant} className="my-request-card__state-chip">
                 {card.status.badgeLabel}
-              </span>
+              </WorkspaceBadge>
             ) : null}
           </div>
           <div className="my-request-card__topbar-end">
@@ -598,7 +599,7 @@ function RequestOwnerMenu({
   onOpenRequest,
 }: {
   locale: Locale;
-  card: WorkspaceMyRequestCardDto;
+  card: WorkspaceRequestsViewCard;
   ownerRequestActions?: OwnerRequestActions;
   onOpenRequest?: WorkspaceRequestOverlayListContext['onOpenRequest'];
 }) {

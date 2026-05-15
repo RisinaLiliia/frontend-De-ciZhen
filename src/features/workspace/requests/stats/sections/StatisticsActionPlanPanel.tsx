@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/ui/Badge';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
 export function StatisticsActionPlanPanel({
@@ -26,9 +26,9 @@ export function StatisticsActionPlanPanel({
             <li key={step.key} className="stat-card workspace-statistics-user-actions__item">
               <div className="workspace-statistics-user-actions__head">
                 <span className="workspace-statistics-user-actions__index">{index + 1}.</span>
-                <Badge variant={step.priorityTone === 'warning' ? 'warning' : step.priorityTone === 'info' ? 'info' : 'success'} size="sm">
+                <WorkspaceBadge variant={step.priorityTone === 'warning' ? 'priority' : step.priorityTone === 'info' ? 'info' : 'success'}>
                   {step.priorityLabel}
-                </Badge>
+                </WorkspaceBadge>
               </div>
               <strong className="workspace-statistics-user-actions__title">{step.title}</strong>
               <p className="workspace-statistics-user-actions__detail">{step.detail}</p>

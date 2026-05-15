@@ -21,8 +21,8 @@ import { providerQK } from '@/features/provider/queries';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests/workspaceRequestsScope.model';
 import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 import { resolveOfferCardState } from '@/features/requests/uiState';
-import { getStatusBadgeClass } from '@/lib/statusBadge';
 
 function RequestDetailInteractionMenuItem({
   children,
@@ -392,10 +392,15 @@ export function WorkspacePublicRequestDialog({
       : offerCardState === 'declined'
         ? t(I18N_KEYS.requestDetails.statusDeclined)
         : t(I18N_KEYS.requestDetails.statusReview);
+    const statusVariant = offerCardState === 'accepted'
+      ? 'success'
+      : offerCardState === 'declined'
+        ? 'risk'
+        : 'info';
 
     return (
       <span className="request-card__status-actions request-detail__status-actions">
-        <span className={`${getStatusBadgeClass(offerCardState)} capitalize`}>{statusLabel}</span>
+        <WorkspaceBadge variant={statusVariant} className="capitalize">{statusLabel}</WorkspaceBadge>
       </span>
     );
   }, [offerCardState, t]);

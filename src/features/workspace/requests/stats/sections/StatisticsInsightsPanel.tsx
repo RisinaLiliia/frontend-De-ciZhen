@@ -2,8 +2,8 @@
 
 import type { Ref } from 'react';
 
-import type { BadgeVariant } from '@/components/ui/Badge';
 import { WorkspaceInsightsPanel, type WorkspaceInsightsPanelItem } from '@/features/workspace/requests/components/WorkspaceInsightsPanel';
+import type { WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
 export function splitInsightEvidence(evidence: string | undefined): string[] {
@@ -17,7 +17,7 @@ export function splitInsightEvidence(evidence: string | undefined): string[] {
 export function resolveInsightBadge(
   item: WorkspaceStatisticsModel['insights'][number],
   copy: WorkspaceStatisticsModel['copy'],
-): { label: string; tone: BadgeVariant } {
+): { label: string; tone: WorkspaceBadgeVariant } {
   if (item.kind === 'opportunity' || item.kind === 'demand') {
     return { label: copy.insightsTypeChanceLabel, tone: 'opportunity' };
   }

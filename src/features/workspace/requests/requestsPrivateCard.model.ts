@@ -1,10 +1,10 @@
 'use client';
 
-import type { WorkspaceMyRequestCardDto } from '@/lib/api/dto/workspace';
 import {
   normalizeWorkspaceRequestCardAction,
   type WorkspaceRequestCardAction as PrivateRequestCardAction,
 } from '@/features/workspace/requests/workspaceRequestCardActionResolvers';
+import type { WorkspaceRequestsViewCard } from '@/features/workspace/requests/workspaceRequestsView.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 
@@ -29,7 +29,7 @@ export type PrivateRequestCardChrome = {
   secondaryAction: PrivateRequestCardAction | null;
 };
 
-function resolvePriorityLabel(locale: Locale, card: WorkspaceMyRequestCardDto) {
+function resolvePriorityLabel(locale: Locale, card: WorkspaceRequestsViewCard) {
   if (card.decision.needsAction) {
     return translate(I18N_KEYS.requestsPage.workspacePriorityActionRequired, locale);
   }
@@ -49,7 +49,7 @@ function resolveContextPills() {
   return [];
 }
 
-function resolveSignalPills(card: WorkspaceMyRequestCardDto): PrivateRequestCardChrome['signalPills'] {
+function resolveSignalPills(card: WorkspaceRequestsViewCard): PrivateRequestCardChrome['signalPills'] {
   const pills: PrivateRequestCardChrome['signalPills'] = [];
 
   if (card.decision.needsAction && card.decision.actionLabel) {
@@ -68,11 +68,11 @@ function resolveSignalPills(card: WorkspaceMyRequestCardDto): PrivateRequestCard
       key: 'status',
       label: card.status.badgeLabel,
       tone:
-        card.status.badgeTone === 'danger'
-          ? 'warning'
-          : card.status.badgeTone === 'success'
-            ? 'success'
-            : card.status.badgeTone === 'warning'
+        card.status.badgeVariant === 'success'
+          ? 'success'
+          : card.status.badgeVariant === 'warning'
+            || card.status.badgeVariant === 'risk'
+            || card.status.badgeVariant === 'priority'
               ? 'warning'
               : 'info',
     });
@@ -81,7 +81,7 @@ function resolveSignalPills(card: WorkspaceMyRequestCardDto): PrivateRequestCard
   return pills.slice(0, 2);
 }
 
-function resolveInsightTitle(locale: Locale, card: WorkspaceMyRequestCardDto) {
+function resolveInsightTitle(locale: Locale, card: WorkspaceRequestsViewCard) {
   if (card.decision.actionType === 'review_offers') {
     return translate(I18N_KEYS.requestsPage.workspaceInsightOffers, locale);
   }
@@ -106,7 +106,7 @@ function resolveInsightTitle(locale: Locale, card: WorkspaceMyRequestCardDto) {
 }
 
 function resolveInsights(args: {
-  card: WorkspaceMyRequestCardDto;
+  card: WorkspaceRequestsViewCard;
   locale: Locale;
 }): PrivateRequestCardChrome['insights'] {
   const { card, locale } = args;
@@ -139,7 +139,7 @@ function resolveInsights(args: {
 }
 
 export function buildPrivateRequestCardChrome(args: {
-  card: WorkspaceMyRequestCardDto;
+  card: WorkspaceRequestsViewCard;
   locale: Locale;
 }): PrivateRequestCardChrome {
   const { card, locale } = args;

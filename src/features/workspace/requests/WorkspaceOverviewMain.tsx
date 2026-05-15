@@ -21,6 +21,7 @@ import { StatisticsDecisionAiCard } from './stats/components/StatisticsDecisionA
 import { StatisticsMetricSignalCard } from './stats/components/StatisticsMetricSignalCard';
 import { StatisticsDemandPanelSection } from './stats/WorkspaceStatisticsSections';
 import { WorkspaceGuestRequestCard } from './components/WorkspaceGuestRequestCard';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 type WorkspaceOverviewMainProps = {
   locale: Locale;
@@ -334,9 +335,9 @@ export function WorkspaceOverviewMain({
               </p>
               {isFocusMode ? (
                 <div className="chip-row workspace-overview__focus-row">
-                  <span className="status-badge status-badge--info">
+                  <WorkspaceBadge variant="info">
                     {copy.focusLabel}: {statisticsModel.context.stickyLabel}
-                  </span>
+                  </WorkspaceBadge>
                 </div>
               ) : null}
             </div>
