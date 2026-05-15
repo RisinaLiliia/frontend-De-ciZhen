@@ -8,6 +8,10 @@ import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import {
+  workspaceRequestsPanelShell,
+  workspaceStatsChartPanelShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 import { WorkspacePublicDemandMapPanel } from '../WorkspacePublicDemandMapPanel';
 import { workspaceQK } from '../queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '../workspace.constants';
@@ -388,7 +392,7 @@ export function WorkspaceStatisticsView({
       <section className="workspace-statistics workspace-statistics__column">
         <section
           ref={statisticsPanelRef}
-          className="panel requests-panel workspace-statistics__intro"
+          className={workspaceRequestsPanelShell('workspace-statistics__intro')}
           style={introPanelMinHeight ? { minHeight: `${introPanelMinHeight}px` } : undefined}
         >
           <StatisticsContextPanel
@@ -457,7 +461,7 @@ export function WorkspaceStatisticsView({
                 className="workspace-statistics__grid workspace-statistics__grid--primary"
                 style={primaryGridMinHeight ? { minHeight: `${primaryGridMinHeight}px` } : undefined}
               >
-                <section className="panel requests-stats-chart">
+                <section className={workspaceStatsChartPanelShell()}>
                   <header className="section-heading workspace-statistics__tile-header">
                     <p className="section-title">{activityTitle}</p>
                     <p className="section-subtitle">{activitySubtitle}</p>
@@ -565,7 +569,7 @@ export function WorkspaceStatisticsView({
 
         <section
           ref={profilePanelRef}
-          className="panel requests-stats-chart workspace-statistics__profile-panel"
+          className={workspaceStatsChartPanelShell('workspace-statistics__profile-panel')}
         >
           <header className="section-heading workspace-statistics__tile-header workspace-statistics__tile-header--profile">
             <div className="workspace-statistics__profile-title-row">

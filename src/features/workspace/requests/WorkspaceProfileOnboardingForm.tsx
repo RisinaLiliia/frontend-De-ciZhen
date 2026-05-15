@@ -27,6 +27,7 @@ import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { getWorkspaceProfile, registerWorkspaceProfile, saveWorkspaceProfile } from '@/lib/api/workspace';
 import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
+import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { WorkspaceProfileOnboardingAccountSection } from './WorkspaceProfileOnboardingAccountSection';
 import { WorkspaceProfileOnboardingAvatarField } from './WorkspaceProfileOnboardingAvatarField';
 import { WorkspaceProfileOnboardingProfileSection } from './WorkspaceProfileOnboardingProfileSection';
@@ -443,7 +444,7 @@ function AuthenticatedWorkspaceProfileForm({
 
   return (
     <div className="stack-md">
-      <article className="card stack-md workspace-profile-onboarding" aria-labelledby="workspace-profile-auth-title">
+      <article className={workspaceCardShell('stack-md', 'workspace-profile-onboarding')} aria-labelledby="workspace-profile-auth-title">
         <header className="stack-sm">
           <WorkspaceBadge variant="info" className="workspace-profile-onboarding__step">
             {t(I18N_KEYS.requestsPage.profileOnboardingStep)}
@@ -743,7 +744,7 @@ function AnonymousWorkspaceProfileForm({
   );
 
   return (
-    <article className="card stack-md workspace-profile-onboarding" aria-labelledby="workspace-profile-onboarding-title">
+    <article className={workspaceCardShell('stack-md', 'workspace-profile-onboarding')} aria-labelledby="workspace-profile-onboarding-title">
       <header className="stack-sm">
         <WorkspaceBadge variant="info" className="workspace-profile-onboarding__step">
           {t(I18N_KEYS.requestsPage.profileOnboardingStep)}

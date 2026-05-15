@@ -5,6 +5,11 @@ import Link from 'next/link';
 
 import { IconPin } from '@/components/ui/icons/icons';
 import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
+import {
+  workspacePanelShell,
+  workspaceStatCardShell,
+  workspaceStatLinkCardShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
 export function StatisticsGrowthPanel({
@@ -47,7 +52,7 @@ export function StatisticsGrowthPanel({
   return (
     <section
       ref={panelRef}
-      className="panel stack-sm workspace-statistics__growth workspace-statistics__rail-panel workspace-statistics__rail-panel--growth"
+      className={workspacePanelShell('stack-sm', 'workspace-statistics__growth', 'workspace-statistics__rail-panel', 'workspace-statistics__rail-panel--growth')}
       style={panelMinHeight ? { minHeight: `${panelMinHeight}px` } : undefined}
     >
       <header className="section-heading workspace-statistics__tile-header">
@@ -59,7 +64,7 @@ export function StatisticsGrowthPanel({
         <Link
           href={featuredCard.href}
           prefetch={false}
-          className="stat-card stat-link workspace-statistics-growth__featured"
+          className={workspaceStatLinkCardShell('workspace-statistics-growth__featured')}
         >
           <div className="workspace-statistics-growth__featured-head">
             <div className="workspace-statistics-growth__badges">
@@ -128,7 +133,7 @@ export function StatisticsGrowthPanel({
                 key={card.key}
                 href={card.href}
                 prefetch={false}
-                className={`stat-card stat-link workspace-statistics-growth__card is-${card.key}`.trim()}
+                className={workspaceStatLinkCardShell('workspace-statistics-growth__card', `is-${card.key}`)}
               >
                 <div className="workspace-statistics-growth__card-copy">
                   <p className="workspace-statistics-growth__title">{card.title}</p>
@@ -151,11 +156,11 @@ export function StatisticsGrowthPanel({
                       </strong>
                     </div>
                     <div className="workspace-statistics-context__health-grid workspace-statistics-growth__market-health-grid">
-                      <article className={`stat-card workspace-statistics-context__health-card is-${marketMeta.demand.tone}`.trim()}>
+                      <article className={workspaceStatCardShell('workspace-statistics-context__health-card', `is-${marketMeta.demand.tone}`)}>
                         <span className="stat-label">{copy.growthDemandLabel}</span>
                         <strong className="stat-value">{marketMeta.demand.label}</strong>
                       </article>
-                      <article className={`stat-card workspace-statistics-context__health-card is-${marketMeta.competition.tone}`.trim()}>
+                      <article className={workspaceStatCardShell('workspace-statistics-context__health-card', `is-${marketMeta.competition.tone}`)}>
                         <span className="stat-label">{copy.growthCompetitionLabel}</span>
                         <strong className="stat-value">{marketMeta.competition.label}</strong>
                       </article>

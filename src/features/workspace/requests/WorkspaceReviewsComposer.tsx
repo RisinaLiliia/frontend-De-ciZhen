@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { createPlatformReview } from '@/lib/api/reviews';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceRequestsPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 type Props = {
   t: (key: I18nKey) => string;
@@ -48,7 +49,7 @@ export function WorkspaceReviewsComposer({
   });
 
   return (
-    <section className="panel requests-panel workspace-platform-reviews">
+    <section className={workspaceRequestsPanelShell('workspace-platform-reviews')}>
       <SectionHeader
         title={t(I18N_KEYS.requestsPage.platformReviewFormTitle)}
         subtitle={t(I18N_KEYS.requestsPage.platformReviewFormHint)}
