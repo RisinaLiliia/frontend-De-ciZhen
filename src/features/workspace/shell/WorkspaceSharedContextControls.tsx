@@ -8,6 +8,7 @@ import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import { WorkspaceChipToggleGroup } from '@/features/workspace/requests/WorkspaceChipToggleGroup';
 import { IconFilter } from '@/components/ui/icons/icons';
+import { WorkspaceButton } from '@/features/workspace/shared/WorkspaceButton';
 import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
@@ -228,25 +229,27 @@ export function WorkspaceSharedContextControls({
               {actionRowControl}
             </div>
           ) : null}
-          <button
+          <WorkspaceButton
             type="button"
+            variant="ghost"
             className="panel-action icon-button--hint workspace-shared-context-controls__action requests-clear requests-clear--icon"
             onClick={onReset}
             aria-label={resetLabel}
             title={resetLabel}
           >
             <IconFilter />
-          </button>
+          </WorkspaceButton>
           {mobile && action ? (
-            <button
+            <WorkspaceButton
               type="button"
+              variant="secondary"
               className="workspace-shared-context-controls__secondary-button"
               aria-label={action.label}
               title={action.tooltip ?? action.label}
               onClick={action.onClick}
             >
               {action.icon ?? action.label}
-            </button>
+            </WorkspaceButton>
           ) : null}
         </div>
       </div>
