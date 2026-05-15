@@ -28,8 +28,7 @@ export function resolveWorkspaceMobileSheetBadgeValue(item: WorkspaceNavItem) {
     item.key === 'my-requests';
   const showWhenPositive =
     item.key === 'my-offers' ||
-    item.key === 'my-favorites' ||
-    item.key === 'reviews';
+    item.key === 'my-favorites';
 
   if (showAlways) return count;
   if (showWhenPositive) return count > 0 ? count : null;

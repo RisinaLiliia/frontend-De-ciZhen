@@ -16,7 +16,7 @@ import type { RequestDialogIntent } from '@/features/workspace/requests/useWorks
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
-import { I18N_KEYS } from '@/lib/i18n/keys';
+import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { providerQK } from '@/features/provider/queries';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests/workspaceRequestsScope.model';
@@ -45,7 +45,7 @@ function RequestDetailInteractionMenuItem({
 }
 
 function RequestDetailInteractionMenu({
-  locale,
+  t,
   isSaved,
   isSavePending,
   canEditOffer,
@@ -56,7 +56,7 @@ function RequestDetailInteractionMenu({
   onDeleteOffer,
   onShare,
 }: {
-  locale: Locale;
+  t: (key: I18nKey) => string;
   isSaved: boolean;
   isSavePending: boolean;
   canEditOffer: boolean;
@@ -96,7 +96,7 @@ function RequestDetailInteractionMenu({
   return (
     <div ref={menuRef} className="my-request-card__owner-menu request-detail__interaction-menu" data-card-action="true">
       <MoreDotsLink
-        label={locale === 'de' ? 'Aktionen öffnen' : 'Open actions'}
+        label={t(I18N_KEYS.requestDetails.workspaceActionsOpen)}
         className={`my-request-card__owner-menu-trigger ${isOpen ? 'is-open' : ''}`.trim()}
         onClick={() => setIsOpen((prev) => !prev)}
       />
@@ -111,7 +111,7 @@ function RequestDetailInteractionMenu({
                 onEditOffer();
               }}
             >
-              {locale === 'de' ? 'Angebot bearbeiten' : 'Edit offer'}
+              {t(I18N_KEYS.requestDetails.workspaceEditOffer)}
             </RequestDetailInteractionMenuItem>
           ) : null}
           {canDeleteOffer ? (
@@ -125,7 +125,7 @@ function RequestDetailInteractionMenu({
                 onDeleteOffer();
               }}
             >
-              {locale === 'de' ? 'Angebot löschen' : 'Delete offer'}
+              {t(I18N_KEYS.requestDetails.workspaceDeleteOffer)}
             </RequestDetailInteractionMenuItem>
           ) : null}
           <RequestDetailInteractionMenuItem
@@ -137,9 +137,7 @@ function RequestDetailInteractionMenu({
               onToggleFavorite();
             }}
           >
-            {isSaved
-              ? (locale === 'de' ? 'Gespeichert' : 'Saved')
-              : (locale === 'de' ? 'In Favoriten' : 'Save')}
+            {isSaved ? t(I18N_KEYS.requestDetails.saved) : t(I18N_KEYS.requestDetails.ctaSave)}
           </RequestDetailInteractionMenuItem>
           <RequestDetailInteractionMenuItem
             role="menuitem"
@@ -149,7 +147,7 @@ function RequestDetailInteractionMenu({
               onShare();
             }}
           >
-            {locale === 'de' ? 'Teilen' : 'Share'}
+            {t(I18N_KEYS.requestDetails.workspaceShare)}
           </RequestDetailInteractionMenuItem>
         </div>
       ) : null}
@@ -372,19 +370,19 @@ export function WorkspacePublicRequestDialog({
     try {
       if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
         await navigator.share({
-          title: request?.title?.trim() || viewModel?.title || (locale === 'de' ? 'Anfrage' : 'Request'),
+          title: request?.title?.trim() || viewModel?.title || t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle),
           url: shareUrl,
         });
       } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareUrl);
-        toast.success(locale === 'de' ? 'Link kopiert.' : 'Link copied.');
+        toast.success(t(I18N_KEYS.requestDetails.workspaceLinkCopied));
       } else {
-        window.prompt(locale === 'de' ? 'Link teilen' : 'Share link', shareUrl);
+        window.prompt(t(I18N_KEYS.requestDetails.workspaceShareLink), shareUrl);
       }
     } catch {
-      toast.error(locale === 'de' ? 'Link konnte nicht geteilt werden.' : 'Could not share link.');
+      toast.error(t(I18N_KEYS.requestDetails.workspaceShareFailed));
     }
-  }, [locale, request?.id, request?.title, requestId, viewModel?.title]);
+  }, [request?.id, request?.title, requestId, t, viewModel?.title]);
 
   const offerStatusBadge = React.useMemo(() => {
     if (offerCardState === 'none') return null;
@@ -412,7 +410,7 @@ export function WorkspacePublicRequestDialog({
       statusBadgeContent={offerStatusBadge ?? undefined}
       headerActionSlot={!isOwner ? (
         <RequestDetailInteractionMenu
-          locale={locale}
+          t={t}
           isSaved={isSaved}
           isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
           canEditOffer={offerCardState === 'sent'}
@@ -497,13 +495,11 @@ export function WorkspacePublicRequestDialog({
           <div className="my-request-inline-state my-request-inline-state--error" role="alert">
             <span className="my-request-inline-state__icon" aria-hidden="true">!</span>
             <div className="my-request-inline-state__copy">
-              <strong>{locale === 'de' ? 'Anfrage konnte nicht geladen werden' : 'Request could not be loaded'}</strong>
-              <p>{locale === 'de'
-                ? 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.'
-                : 'The workspace stays in place. Please try again without leaving this page.'}</p>
+              <strong>{t(I18N_KEYS.requestDetails.workspaceLoadErrorTitle)}</strong>
+              <p>{t(I18N_KEYS.requestDetails.workspaceLoadErrorBody)}</p>
             </div>
             <span className="my-request-inline-state__meta">
-              {locale === 'de' ? 'Inline' : 'Inline'}
+              {t(I18N_KEYS.requestDetails.workspaceInlineMeta)}
             </span>
           </div>
         </div>
@@ -516,14 +512,12 @@ export function WorkspacePublicRequestDialog({
   return (
     <WorkspaceRequestDialogShell
       locale={locale}
-      ariaLabel={request?.title?.trim() || viewModel?.title || (locale === 'de' ? 'Anfrage' : 'Request')}
+      ariaLabel={request?.title?.trim() || viewModel?.title || t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle)}
       onClose={onClose}
       isLoading={isPending}
       isError={hasDialogError}
-      errorTitle={locale === 'de' ? 'Anfrage konnte nicht geladen werden' : 'Request could not be loaded'}
-      errorBody={locale === 'de'
-        ? 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.'
-        : 'The workspace stays in place. Please try again without leaving this page.'}
+      errorTitle={t(I18N_KEYS.requestDetails.workspaceLoadErrorTitle)}
+      errorBody={t(I18N_KEYS.requestDetails.workspaceLoadErrorBody)}
     >
       {content}
     </WorkspaceRequestDialogShell>

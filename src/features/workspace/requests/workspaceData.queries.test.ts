@@ -9,6 +9,7 @@ import {
   buildWorkspaceDataQueries,
   buildWorkspaceOfferRequestsQuery,
 } from './workspaceData.queries';
+import { buildWorkspaceRequestUserStateQueries } from './workspaceRequestUserState.queries';
 
 vi.mock('@/lib/api/workspace', async () => {
   const actual = await vi.importActual<typeof import('@/lib/api/workspace')>('@/lib/api/workspace');
@@ -259,7 +260,8 @@ describe('workspaceData.queries', () => {
       4,
       10,
     ]);
-    expect(queries.favoriteRequests.enabled).toBe(false);
+    const userStateQueries = buildWorkspaceRequestUserStateQueries({ loadPlan });
+    expect(userStateQueries.favoriteRequests.enabled).toBe(false);
   });
 
   it('passes pagination to private workspace requests queries', async () => {
@@ -315,5 +317,22 @@ describe('workspaceData.queries', () => {
     expect(disabledQuery.enabled).toBe(false);
     expect(enabledQuery.enabled).toBe(true);
     expect(enabledQuery.queryKey).toEqual(['requests-by-my-offer-ids', 'ru', 'req-2', 'req-1']);
+  });
+
+  it('keeps request user-state queries disabled for section-based non-request workspace modes', () => {
+    const loadPlan = resolveWorkspaceDataPlan({
+      isAuthed: true,
+      isWorkspaceAuthed: true,
+      isWorkspacePublicSection: false,
+      shouldLoadPrivateData: true,
+      activeWorkspaceTab: 'my-requests',
+      activePublicSection: 'providers',
+      hasAccessToken: true,
+    });
+
+    const userStateQueries = buildWorkspaceRequestUserStateQueries({ loadPlan });
+
+    expect(userStateQueries.myOffers.enabled).toBe(false);
+    expect(userStateQueries.favoriteRequests.enabled).toBe(false);
   });
 });

@@ -3,14 +3,12 @@
 import {
   IconBriefcase,
   IconCheck,
-  IconStar,
   IconUser,
 } from '@/components/ui/icons/icons';
 import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import {
-  normalizeWorkspaceNavCount,
   type WorkspaceNavTranslator,
 } from '@/features/workspace/requests/workspaceState.nav.shared';
 
@@ -22,15 +20,6 @@ export type BuildPublicNavItemsArgs = {
   publicStatsCount: number;
   activePublicSection: PublicWorkspaceSection | null;
   markPublicRequestsSeen: () => void;
-};
-
-type BuildWorkspaceReviewsNavItemArgs = {
-  t: WorkspaceNavTranslator;
-  navRatingValue: string;
-  navReviewsCount: number;
-  reviewsHref: string;
-  reviewsMatch: 'exact' | 'prefix';
-  reviewsForceActive: boolean;
 };
 
 export function buildPublicNavItems({
@@ -75,29 +64,4 @@ export function buildPublicNavItems({
       forceActive: activePublicSection === 'stats',
     },
   ];
-}
-
-export function buildWorkspaceReviewsNavItem({
-  t,
-  navRatingValue,
-  navReviewsCount,
-  reviewsHref,
-  reviewsMatch,
-  reviewsForceActive,
-}: BuildWorkspaceReviewsNavItemArgs): WorkspaceNavItem {
-  return {
-    key: 'reviews',
-    href: reviewsHref,
-    label: t(I18N_KEYS.requestsPage.navReviews),
-    icon: <IconStar />,
-    badgeValue: normalizeWorkspaceNavCount(navReviewsCount),
-    rating: {
-      value: navRatingValue,
-      reviewsCount: normalizeWorkspaceNavCount(navReviewsCount),
-      reviewsLabel: t(I18N_KEYS.homePublic.reviews),
-    },
-    forceActive: reviewsForceActive,
-    match: reviewsMatch,
-    tier: 'primary',
-  };
 }

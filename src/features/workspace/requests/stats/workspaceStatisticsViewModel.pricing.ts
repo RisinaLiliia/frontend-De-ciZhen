@@ -1,4 +1,3 @@
-import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type { WorkspaceStatisticsPriceIntelligenceView } from './workspaceStatistics.model';
@@ -6,17 +5,16 @@ import type { WorkspaceStatisticsPriceIntelligenceView } from './workspaceStatis
 function formatCurrencyRangeCompact(params: {
   min: number;
   max: number;
-  locale: Locale;
   localeTag: string;
 }): string {
-  const numberFormatter = new Intl.NumberFormat(params.localeTag, {
+  const currencyFormatter = new Intl.NumberFormat(params.localeTag, {
+    style: 'currency',
+    currency: 'EUR',
     maximumFractionDigits: 0,
   });
-  const minLabel = numberFormatter.format(params.min);
-  const maxLabel = numberFormatter.format(params.max);
-  return params.locale === 'de'
-    ? `${minLabel}\u2013${maxLabel} \u20ac`
-    : `\u20ac${minLabel}\u2013\u20ac${maxLabel}`;
+  const minLabel = currencyFormatter.format(params.min);
+  const maxLabel = currencyFormatter.format(params.max);
+  return `${minLabel}\u2013${maxLabel}`;
 }
 
 export function buildPriceIntelligence(params: {
@@ -24,7 +22,6 @@ export function buildPriceIntelligence(params: {
   source: WorkspaceStatisticsDecisionDashboardDto['priceIntelligence'] | undefined;
   contextCityFallback: string | null;
   contextCategoryFallback: string | null;
-  locale: Locale;
   localeTag: string;
   formatCurrency: Intl.NumberFormat;
 }): WorkspaceStatisticsPriceIntelligenceView {
@@ -33,7 +30,6 @@ export function buildPriceIntelligence(params: {
     source,
     contextCityFallback,
     contextCategoryFallback,
-    locale,
     localeTag,
     formatCurrency,
   } = params;
@@ -79,7 +75,6 @@ export function buildPriceIntelligence(params: {
       ? formatCurrencyRangeCompact({
           min: recommendedMin,
           max: recommendedMax,
-          locale,
           localeTag,
         })
       : null;

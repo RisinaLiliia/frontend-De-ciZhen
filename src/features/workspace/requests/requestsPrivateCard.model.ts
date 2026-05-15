@@ -2,11 +2,11 @@
 
 import type { WorkspaceMyRequestCardDto } from '@/lib/api/dto/workspace';
 import {
-  resolveWorkspaceRequestPrimaryCardAction,
-  resolveWorkspaceRequestSecondaryCardAction,
+  normalizeWorkspaceRequestCardAction,
   type WorkspaceRequestCardAction as PrivateRequestCardAction,
 } from '@/features/workspace/requests/workspaceRequestCardActionResolvers';
-import type { Locale } from '@/lib/i18n/t';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate, type Locale } from '@/lib/i18n/t';
 
 export type { PrivateRequestCardAction };
 
@@ -31,15 +31,15 @@ export type PrivateRequestCardChrome = {
 
 function resolvePriorityLabel(locale: Locale, card: WorkspaceMyRequestCardDto) {
   if (card.decision.needsAction) {
-    return locale === 'de' ? 'Handlungsbedarf' : 'Action required';
+    return translate(I18N_KEYS.requestsPage.workspacePriorityActionRequired, locale);
   }
 
   if (card.state === 'active') {
-    return locale === 'de' ? 'In Arbeit' : 'In progress';
+    return translate(I18N_KEYS.requestsPage.statusInProgress, locale);
   }
 
   if (card.state === 'completed') {
-    return locale === 'de' ? 'Abgeschlossen' : 'Completed';
+    return translate(I18N_KEYS.requestsPage.statusCompleted, locale);
   }
 
   return null;
@@ -83,26 +83,26 @@ function resolveSignalPills(card: WorkspaceMyRequestCardDto): PrivateRequestCard
 
 function resolveInsightTitle(locale: Locale, card: WorkspaceMyRequestCardDto) {
   if (card.decision.actionType === 'review_offers') {
-    return locale === 'de' ? 'Angebote' : 'Offers';
+    return translate(I18N_KEYS.requestsPage.workspaceInsightOffers, locale);
   }
 
   if (card.decision.actionType === 'reply_required') {
-    return locale === 'de' ? 'Rückmeldungen' : 'Replies';
+    return translate(I18N_KEYS.requestsPage.workspaceInsightReplies, locale);
   }
 
   if (card.decision.actionType === 'confirm_contract') {
-    return locale === 'de' ? 'Vertrag' : 'Contract';
+    return translate(I18N_KEYS.requestsPage.workspaceInsightContract, locale);
   }
 
   if (card.decision.actionType === 'confirm_completion') {
-    return locale === 'de' ? 'Abschluss' : 'Completion';
+    return translate(I18N_KEYS.requestsPage.workspaceInsightCompletion, locale);
   }
 
   if (card.decision.actionType === 'review_completion') {
-    return locale === 'de' ? 'Bewertung' : 'Review';
+    return translate(I18N_KEYS.requestsPage.workspaceInsightReview, locale);
   }
 
-  return locale === 'de' ? 'Aktueller Stand' : 'Current status';
+  return translate(I18N_KEYS.requestsPage.workspaceInsightCurrentStatus, locale);
 }
 
 function resolveInsights(args: {
@@ -129,7 +129,7 @@ function resolveInsights(args: {
   if (activityDescription && activityDescription !== decisionDescription) {
     items.push({
       key: 'activity',
-      title: locale === 'de' ? 'Status' : 'Status',
+      title: translate(I18N_KEYS.requestsPage.workspaceInsightStatus, locale),
       description: activityDescription,
       tone: card.activity?.tone ?? 'neutral',
     });
@@ -143,7 +143,21 @@ export function buildPrivateRequestCardChrome(args: {
   locale: Locale;
 }): PrivateRequestCardChrome {
   const { card, locale } = args;
-  const primaryAction = resolveWorkspaceRequestPrimaryCardAction(card);
+  if (card.chrome) {
+    return {
+      priorityLabel: card.chrome.priorityLabel ?? null,
+      priorityTone: card.chrome.priorityTone,
+      contextPills: [],
+      signalPills: card.chrome.signalPills,
+      insights: card.chrome.insights,
+      primaryAction: card.primaryAction
+        ? normalizeWorkspaceRequestCardAction(card.primaryAction, card)
+        : null,
+      secondaryAction: card.secondaryAction
+        ? normalizeWorkspaceRequestCardAction(card.secondaryAction, card)
+        : null,
+    };
+  }
 
   return {
     priorityLabel: resolvePriorityLabel(locale, card),
@@ -151,7 +165,11 @@ export function buildPrivateRequestCardChrome(args: {
     contextPills: resolveContextPills(),
     signalPills: resolveSignalPills(card),
     insights: resolveInsights({ card, locale }),
-    primaryAction,
-    secondaryAction: resolveWorkspaceRequestSecondaryCardAction(card, primaryAction),
+    primaryAction: card.primaryAction
+      ? normalizeWorkspaceRequestCardAction(card.primaryAction, card)
+      : null,
+    secondaryAction: card.secondaryAction
+      ? normalizeWorkspaceRequestCardAction(card.secondaryAction, card)
+      : null,
   };
 }

@@ -96,7 +96,7 @@ export function WorkspaceManagedOfferSheet({
     ) : (
       <WorkspaceCompactModalPortal
         locale={locale}
-        ariaLabel={locale === 'de' ? 'Angebot' : 'Offer'}
+        ariaLabel={t(I18N_KEYS.requestDetails.workspaceOfferFallbackTitle)}
         onClose={onClose}
       >
         <div className="my-request-dialog__state">
@@ -113,26 +113,22 @@ export function WorkspaceManagedOfferSheet({
         <WorkspaceInlineStateCard
           locale={locale}
           tone="error"
-          title={locale === 'de' ? 'Angebot konnte nicht geladen werden' : 'Offer could not be loaded'}
-          body={locale === 'de'
-            ? 'Bitte versuche es erneut, ohne den Workspace zu verlassen.'
-            : 'Please try again without leaving the workspace.'}
+          title={t(I18N_KEYS.requestDetails.workspaceOfferLoadErrorTitle)}
+          body={t(I18N_KEYS.requestDetails.workspaceOfferLoadErrorBody)}
         />
       </div>
     ) : (
       <WorkspaceCompactModalPortal
         locale={locale}
-        ariaLabel={locale === 'de' ? 'Angebot' : 'Offer'}
+        ariaLabel={t(I18N_KEYS.requestDetails.workspaceOfferFallbackTitle)}
         onClose={onClose}
       >
         <div className="my-request-dialog__state">
           <WorkspaceInlineStateCard
             locale={locale}
             tone="error"
-            title={locale === 'de' ? 'Angebot konnte nicht geladen werden' : 'Offer could not be loaded'}
-            body={locale === 'de'
-              ? 'Bitte versuche es erneut, ohne den Workspace zu verlassen.'
-              : 'Please try again without leaving the workspace.'}
+            title={t(I18N_KEYS.requestDetails.workspaceOfferLoadErrorTitle)}
+            body={t(I18N_KEYS.requestDetails.workspaceOfferLoadErrorBody)}
           />
         </div>
       </WorkspaceCompactModalPortal>
@@ -150,7 +146,7 @@ export function WorkspaceManagedOfferSheet({
       title={existingResponse
         ? t(I18N_KEYS.requestDetails.responseEditTitle)
         : t(I18N_KEYS.requestDetails.responseFormTitle)}
-      previewTitle={request.title?.trim() || cardlessTitle(locale)}
+      previewTitle={request.title?.trim() || cardlessTitle(t)}
       previewCity={request.cityName?.trim() || '—'}
       previewDate={formatDialogDate(locale, request.preferredDate) || '—'}
       previewPrice={formatDialogPrice(locale, request.price)}
@@ -177,14 +173,12 @@ export function WorkspaceManagedOfferSheet({
       successSubline={t(I18N_KEYS.requestDetails.responseSuccessSubline)}
       successTipTitle={t(I18N_KEYS.requestDetails.responseSuccessTipTitle)}
       successTipCardTitle={t(I18N_KEYS.requestDetails.responseSuccessTipCardTitle)}
-      successTipCardBody={locale === 'de'
-        ? 'Vervollständige dein Profil später im Workspace, falls du mehr Vertrauen aufbauen willst.'
-        : 'You can complete your profile later in the workspace if you want to build more trust.'}
+      successTipCardBody={t(I18N_KEYS.requestDetails.workspaceOfferSuccessTipCardBody)}
       successProfileCta={t(I18N_KEYS.requestDetails.responseProfileCta)}
       successContinueCta={t(I18N_KEYS.requestDetails.responseContinueCta)}
       successProfileHref="/workspace?section=requests&scope=my"
       showProfileAdvice={false}
-      profileStatusLabel={locale === 'de' ? 'Workspace' : 'Workspace'}
+      profileStatusLabel={t(I18N_KEYS.requestDetails.workspaceProfileStatusLabel)}
       isSubmitting={isSubmittingOffer}
       surface={surface}
       showCloseButton={surface !== 'embedded'}
@@ -212,7 +206,6 @@ export function WorkspaceManagedOfferSheet({
 }
 
 export function WorkspaceChatDialog({
-  locale,
   conversationId,
   title,
   onClose,
@@ -222,6 +215,7 @@ export function WorkspaceChatDialog({
   title: string;
   onClose: () => void;
 }) {
+  const t = useT();
   return (
     <div
       className="dc-modal my-request-chat-dialog"
@@ -233,13 +227,13 @@ export function WorkspaceChatDialog({
         type="button"
         className="dc-modal__backdrop"
         onClick={onClose}
-        aria-label={locale === 'de' ? 'Chat schließen' : 'Close chat'}
+        aria-label={t(I18N_KEYS.requestDetails.workspaceChatCloseLabel)}
       />
       <div className="dc-modal__panel dc-modal__panel--wide my-request-chat-dialog__panel">
         <div className="my-request-chat-dialog__header">
           <div>
             <span className="my-request-chat-dialog__eyebrow">
-              {locale === 'de' ? 'Nachrichten' : 'Messages'}
+              {t(I18N_KEYS.workspace.messagesTitle)}
             </span>
             <h2 id={`workspace-chat-dialog-${conversationId}`} className="my-request-chat-dialog__title">
               {title}
@@ -249,7 +243,7 @@ export function WorkspaceChatDialog({
             type="button"
             className="my-request-chat-dialog__close"
             onClick={onClose}
-            aria-label={locale === 'de' ? 'Chat schließen' : 'Close chat'}
+            aria-label={t(I18N_KEYS.requestDetails.workspaceChatCloseLabel)}
           >
             ×
           </button>

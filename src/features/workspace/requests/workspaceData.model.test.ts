@@ -17,18 +17,13 @@ describe('workspaceData.model', () => {
       shouldLoadLegacyPublicOverview: true,
       shouldLoadPrivateOverview: false,
       shouldLoadWorkspaceRequests: false,
-      shouldLoadMyRequests: false,
       shouldLoadMyOffers: false,
-      shouldLoadMyContracts: false,
       shouldLoadFavoriteRequests: false,
-      shouldLoadFavoriteProviders: false,
       shouldLoadOfferRequests: false,
-      shouldLoadReviews: false,
-      shouldLoadProviders: false,
     });
   });
 
-  it('resolves load plan for authenticated private tabs', () => {
+  it('resolves load plan for authenticated private workspace modes', () => {
     const overviewPlan = resolveWorkspaceDataPlan({
       isAuthed: true,
       isWorkspaceAuthed: true,
@@ -40,18 +35,8 @@ describe('workspaceData.model', () => {
 
     expect(overviewPlan.shouldLoadLegacyPublicOverview).toBe(true);
     expect(overviewPlan.shouldLoadPrivateOverview).toBe(true);
-
-    const actionsPlan = resolveWorkspaceDataPlan({
-      isAuthed: true,
-      isWorkspaceAuthed: true,
-      isWorkspacePublicSection: false,
-      shouldLoadPrivateData: true,
-      activeWorkspaceTab: 'profile',
-      hasAccessToken: true,
-    });
-
-    expect(actionsPlan.shouldLoadLegacyPublicOverview).toBe(false);
-    expect(actionsPlan.shouldLoadPrivateOverview).toBe(true);
+    expect(overviewPlan.shouldLoadMyOffers).toBe(true);
+    expect(overviewPlan.shouldLoadFavoriteRequests).toBe(true);
 
     const myScopePlan = resolveWorkspaceDataPlan({
       isAuthed: true,
@@ -65,13 +50,9 @@ describe('workspaceData.model', () => {
     });
 
     expect(myScopePlan.shouldLoadWorkspaceRequests).toBe(true);
-    expect(myScopePlan.shouldLoadMyRequests).toBe(false);
     expect(myScopePlan.shouldLoadMyOffers).toBe(false);
-    expect(myScopePlan.shouldLoadMyContracts).toBe(false);
     expect(myScopePlan.shouldLoadOfferRequests).toBe(false);
     expect(myScopePlan.shouldLoadFavoriteRequests).toBe(false);
-    expect(myScopePlan.shouldLoadProviders).toBe(false);
-    expect(myScopePlan.shouldLoadFavoriteProviders).toBe(false);
 
     const customerScopePlan = resolveWorkspaceDataPlan({
       isAuthed: true,
@@ -88,35 +69,20 @@ describe('workspaceData.model', () => {
     expect(customerScopePlan.shouldLoadWorkspaceRequests).toBe(true);
     expect(customerScopePlan.shouldLoadMyOffers).toBe(false);
 
-    const offersPlan = resolveWorkspaceDataPlan({
+    const providersSectionPlan = resolveWorkspaceDataPlan({
       isAuthed: true,
       isWorkspaceAuthed: true,
       isWorkspacePublicSection: false,
       shouldLoadPrivateData: true,
-      activeWorkspaceTab: 'my-offers',
+      activeWorkspaceTab: 'my-requests',
+      activePublicSection: 'providers',
       hasAccessToken: true,
     });
 
-    expect(offersPlan.shouldLoadPrivateOverview).toBe(true);
-    expect(offersPlan.shouldLoadWorkspaceRequests).toBe(false);
-    expect(offersPlan.shouldLoadMyOffers).toBe(true);
-    expect(offersPlan.shouldLoadOfferRequests).toBe(true);
-    expect(offersPlan.shouldLoadProviders).toBe(true);
-    expect(offersPlan.shouldLoadFavoriteProviders).toBe(true);
-
-    const reviewsPlan = resolveWorkspaceDataPlan({
-      isAuthed: true,
-      isWorkspaceAuthed: true,
-      isWorkspacePublicSection: false,
-      shouldLoadPrivateData: true,
-      activeWorkspaceTab: 'reviews',
-      hasAccessToken: true,
-    });
-
-    expect(reviewsPlan.shouldLoadReviews).toBe(true);
-    expect(reviewsPlan.shouldLoadWorkspaceRequests).toBe(false);
-    expect(reviewsPlan.shouldLoadMyOffers).toBe(false);
-    expect(reviewsPlan.shouldLoadLegacyPublicOverview).toBe(false);
+    expect(providersSectionPlan.shouldLoadWorkspaceRequests).toBe(false);
+    expect(providersSectionPlan.shouldLoadMyOffers).toBe(false);
+    expect(providersSectionPlan.shouldLoadFavoriteRequests).toBe(false);
+    expect(providersSectionPlan.shouldLoadLegacyPublicOverview).toBe(false);
   });
 
   it('loads unified market requests in the public requests section', () => {

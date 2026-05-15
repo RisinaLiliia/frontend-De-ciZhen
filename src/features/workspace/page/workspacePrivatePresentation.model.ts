@@ -6,27 +6,20 @@ import { buildRequestsListProps } from '@/components/requests/requestsListProps'
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import type { WorkspacePublicIntro } from '@/features/workspace';
-import type { useWorkspaceContentData, useWorkspacePresentation } from '@/features/workspace';
+import type { useWorkspacePresentation } from '@/features/workspace';
 import type {
   WorkspacePrivateOverviewState,
   useWorkspacePrivateState,
-  useWorkspacePrivateViewModel,
 } from '@/features/workspace/requests';
 import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 
 type WorkspacePrivateDataFlowResult = ReturnType<typeof useWorkspacePrivateDataFlow>;
-type WorkspaceContentDataArgs = Parameters<typeof useWorkspaceContentData>[0];
 type WorkspacePrivateStateArgs = Parameters<typeof useWorkspacePrivateState>[0];
 type WorkspacePresentationArgs = Parameters<typeof useWorkspacePresentation>[0];
-type WorkspacePrivateViewModelInput = Parameters<typeof useWorkspacePrivateViewModel>[0];
 
 type BuildArgs = {
   branch: WorkspaceBranchProps;
   data: WorkspacePrivateDataFlowResult;
-};
-
-type BuildContentDataArgs = BuildArgs & {
-  enabled?: boolean;
 };
 
 type BuildPresentationArgs = {
@@ -61,40 +54,6 @@ type BuildWorkspacePublicSummaryViewArgs = Pick<
   WorkspacePrivateDataFlowResult,
   'allRequestsSummary' | 'publicCityActivity' | 'isPublicSummaryLoading' | 'isPublicSummaryError'
 >;
-
-type BuildPrivateViewModelArgs = {
-  branch: WorkspaceBranchProps;
-  data: Pick<
-    WorkspacePrivateDataFlowResult,
-    | 'activeWorkspaceTab'
-    | 'activeStatusFilter'
-    | 'setStatusFilter'
-    | 'myRequestsState'
-    | 'offersByRequest'
-    | 'favoriteRequestIds'
-    | 'onToggleRequestFavorite'
-    | 'onOpenOfferSheet'
-    | 'onWithdrawOffer'
-    | 'onOpenChatThread'
-    | 'pendingOfferRequestId'
-    | 'pendingFavoriteRequestIds'
-    | 'serviceByKey'
-    | 'categoryByKey'
-    | 'cityById'
-    | 'formatDate'
-    | 'formatPrice'
-    | 'ownerRequestActions'
-    | 'isMyOffersLoading'
-    | 'contractsState'
-    | 'setFavoritesView'
-    | 'favoriteRequests'
-    | 'isFavoriteRequestsLoading'
-    | 'reviewsState'
-  >;
-  viewModelPatch: ReturnType<typeof useWorkspaceContentData>['viewModelPatch'];
-  onPrimaryActionClick: WorkspacePrivateViewModelInput['onPrimaryActionClick'];
-  enabled?: WorkspacePrivateViewModelInput['enabled'];
-};
 
 type ResolveWorkspaceEffectiveRequestsRoleArgs = {
   activeRequestsRole: WorkspacePrivateDataFlowResult['activeRequestsRole'];
@@ -139,18 +98,6 @@ type BuildWorkspacePrivateOverviewListPropsArgs = {
   isOverviewMode: boolean;
 };
 
-export function shouldBuildWorkspacePrivateContractRequests(
-  activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'],
-) {
-  return activeWorkspaceTab === 'completed-jobs';
-}
-
-export function shouldBuildWorkspacePrivateFavoriteProviderCards(
-  activeWorkspaceTab: WorkspacePrivateDataFlowResult['activeWorkspaceTab'],
-) {
-  return activeWorkspaceTab === 'favorites';
-}
-
 export function resolveWorkspacePrivateRenderModes({
   activePublicSection,
   activeWorkspaceTab,
@@ -173,7 +120,6 @@ export function resolveWorkspacePrivateRenderModes({
   return {
     isOverviewMode,
     isUnifiedPrivateRequests,
-    shouldRenderWorkspaceContent: !isOverviewMode && !isUnifiedPrivateRequests,
   };
 }
 
@@ -220,50 +166,6 @@ export function buildWorkspacePrivateOverviewListPropsArgs({
     onOpenChatThread: data.onOpenChatThread,
     pendingOfferRequestId: data.pendingOfferRequestId,
     pendingFavoriteRequestIds: data.pendingFavoriteRequestIds,
-  };
-}
-
-export function buildWorkspacePrivateContentDataArgs({
-  branch,
-  data,
-  enabled,
-}: BuildContentDataArgs): WorkspaceContentDataArgs {
-  return {
-    enabled,
-    derivedArgs: {
-      t: branch.t,
-      activeStatusFilter: data.activeStatusFilter,
-      activeWorkspaceTab: data.activeWorkspaceTab,
-      activeFavoritesView: data.activeFavoritesView,
-      myRequests: data.myRequestsState.items,
-      myOffers: data.myOffers,
-      myOfferRequestsById: data.myOfferRequestsById,
-      allMyContracts: data.contractsState.allContracts,
-      favoriteRequests: data.favoriteRequests,
-      favoriteProviders: data.favoriteProvidersState.items,
-      isFavoriteRequestsLoading: data.isFavoriteRequestsLoading,
-      isFavoriteProvidersLoading: data.favoriteProvidersState.isLoading,
-    },
-    contractArgs: {
-      isWorkspaceAuthed: branch.isWorkspaceAuthed,
-      locale: branch.locale,
-    },
-    contractRequestsEnabled: shouldBuildWorkspacePrivateContractRequests(
-      data.activeWorkspaceTab,
-    ),
-    cardsArgs: {
-      t: branch.t,
-      locale: branch.locale,
-      favoriteProviders: data.favoriteProvidersState.items,
-      favoriteProviderLookup: data.favoriteProvidersState.lookup,
-      pendingFavoriteProviderIds: data.pendingFavoriteProviderIds,
-      onToggleProviderFavorite: data.onToggleProviderFavorite,
-      favoriteProviderRoleLabelById: data.favoriteProvidersState.roleLabelsById,
-      favoriteProviderCityLabelById: data.favoriteProvidersState.cityLabelsById,
-    },
-    favoriteProviderCardsEnabled: shouldBuildWorkspacePrivateFavoriteProviderCards(
-      data.activeWorkspaceTab,
-    ),
   };
 }
 
@@ -356,50 +258,6 @@ export function buildWorkspacePublicSummaryView(
     summary: data.allRequestsSummary,
     isMapLoading: data.isPublicSummaryLoading,
     isMapError: data.isPublicSummaryError,
-  };
-}
-
-export function buildWorkspacePrivateViewModelInput({
-  branch,
-  data,
-  viewModelPatch,
-  onPrimaryActionClick,
-  enabled,
-}: BuildPrivateViewModelArgs): WorkspacePrivateViewModelInput {
-  return {
-    enabled,
-    t: branch.t,
-    locale: branch.locale,
-    isWorkspaceAuthed: branch.isWorkspaceAuthed,
-    activeWorkspaceTab: data.activeWorkspaceTab,
-    ...viewModelPatch,
-    onPrimaryActionClick,
-    activeStatusFilter: data.activeStatusFilter,
-    setStatusFilter: data.setStatusFilter,
-    isPersonalized: branch.isPersonalized,
-    offersByRequest: data.offersByRequest,
-    favoriteRequestIds: data.favoriteRequestIds,
-    onToggleRequestFavorite: data.onToggleRequestFavorite,
-    onOpenOfferSheet: data.onOpenOfferSheet,
-    onWithdrawOffer: data.onWithdrawOffer,
-    onOpenChatThread: data.onOpenChatThread,
-    pendingOfferRequestId: data.pendingOfferRequestId,
-    pendingFavoriteRequestIds: data.pendingFavoriteRequestIds,
-    serviceByKey: data.serviceByKey,
-    categoryByKey: data.categoryByKey,
-    cityById: data.cityById,
-    formatDate: data.formatDate,
-    formatPrice: data.formatPrice,
-    isMyRequestsLoading: data.myRequestsState.isLoading,
-    ownerRequestActions: data.ownerRequestActions,
-    isMyOffersLoading: data.isMyOffersLoading,
-    isProviderContractsLoading: data.contractsState.isProviderLoading,
-    isClientContractsLoading: data.contractsState.isClientLoading,
-    setFavoritesView: data.setFavoritesView,
-    favoriteRequests: data.favoriteRequests,
-    isFavoriteRequestsLoading: data.isFavoriteRequestsLoading,
-    isMyReviewsLoading: data.reviewsState.isLoading,
-    myReviews: data.reviewsState.items,
   };
 }
 

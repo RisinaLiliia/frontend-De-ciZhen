@@ -43,7 +43,7 @@ export function useWorkspacePublicState({
   onGuestLockedAction,
   formatNumber,
 }: Params) {
-  const { activityProgress, insightText, navRatingValue, navReviewsCount } = React.useMemo(
+  const { activityProgress, insightText } = React.useMemo(
     () => resolveWorkspacePublicMeta({ platformRatingAvg, platformReviewsCount }),
     [platformRatingAvg, platformReviewsCount],
   );
@@ -58,8 +58,6 @@ export function useWorkspacePublicState({
     publicRequestsCount,
     publicProvidersCount,
     publicStatsCount,
-    navRatingValue,
-    navReviewsCount,
     setWorkspaceTab,
     markPublicRequestsSeen,
     guestLoginHref,

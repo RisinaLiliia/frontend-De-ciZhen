@@ -21,7 +21,7 @@ describe('workspaceNavigation.model', () => {
         workspacePath: '/workspace',
         tab: 'my-requests',
       }),
-    ).toBe('/workspace?tab=my-requests&status=all');
+    ).toBe('/workspace?section=requests&scope=my&period=30d&range=30d&role=customer');
 
     expect(
       buildWorkspaceTabHref({
@@ -29,7 +29,7 @@ describe('workspaceNavigation.model', () => {
         workspacePath: '/workspace',
         tab: 'favorites',
       }),
-    ).toBe('/workspace?tab=favorites&status=all');
+    ).toBe('/workspace?section=providers');
   });
 
   it('builds status and favorites hrefs with correct workspace query policy', () => {
@@ -40,7 +40,7 @@ describe('workspaceNavigation.model', () => {
         activeWorkspaceTab: 'my-offers',
         status: 'in_progress',
       }),
-    ).toBe('/workspace?tab=my-offers&status=in_progress');
+    ).toBe('/workspace?section=requests&scope=my&period=30d&range=30d&role=provider&state=execution');
 
     expect(
       buildWorkspaceFavoritesViewHref({
@@ -48,6 +48,6 @@ describe('workspaceNavigation.model', () => {
         workspacePath: '/workspace',
         view: 'providers',
       }),
-    ).toBe('/workspace?tab=favorites&status=all&fav=providers');
+    ).toBe('/workspace?section=providers');
   });
 });

@@ -3,21 +3,21 @@
 import * as React from 'react';
 import { useQueries } from '@tanstack/react-query';
 
-import type { buildWorkspaceDataQueries } from '@/features/workspace/requests/workspaceData.queries';
+import type { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 
-type WorkspaceDataQueries = ReturnType<typeof buildWorkspaceDataQueries>;
+type WorkspaceRequestUserStateQueries = ReturnType<typeof buildWorkspaceRequestUserStateQueries>;
 
 type Args = {
-  workspaceDataQueries: WorkspaceDataQueries;
+  workspaceRequestUserStateQueries: WorkspaceRequestUserStateQueries;
 };
 
-export function useWorkspaceFavoriteRequestData({ workspaceDataQueries }: Args) {
+export function useWorkspaceFavoriteRequestData({ workspaceRequestUserStateQueries }: Args) {
   const queryEntries = React.useMemo(
     () =>
-      workspaceDataQueries.favoriteRequests.enabled
-        ? [{ key: 'favoriteRequests' as const, query: workspaceDataQueries.favoriteRequests }]
+      workspaceRequestUserStateQueries.favoriteRequests.enabled
+        ? [{ key: 'favoriteRequests' as const, query: workspaceRequestUserStateQueries.favoriteRequests }]
         : [],
-    [workspaceDataQueries.favoriteRequests],
+    [workspaceRequestUserStateQueries.favoriteRequests],
   );
 
   const queryResults = useQueries({
@@ -25,7 +25,7 @@ export function useWorkspaceFavoriteRequestData({ workspaceDataQueries }: Args) 
   });
 
   const favoriteRequests =
-    (queryResults[0]?.data as ReturnType<typeof workspaceDataQueries.favoriteRequests.queryFn> extends Promise<infer TResult> ? TResult : never) ?? [];
+    (queryResults[0]?.data as ReturnType<typeof workspaceRequestUserStateQueries.favoriteRequests.queryFn> extends Promise<infer TResult> ? TResult : never) ?? [];
   const isFavoriteRequestsLoading = queryResults[0]?.isLoading ?? false;
 
   return {

@@ -260,18 +260,14 @@ export function buildSharedContextControlsProps({
           );
         })}
       </div>
-      {requestsViewToggle}
     </div>
-  ) : (requestsScopeControl || requestsViewToggle) ? (
+  ) : requestsScopeControl ? (
     <div className="workspace-shared-context-controls__combined-row">
       {requestsScopeControl}
-      {requestsViewToggle}
     </div>
   ) : model.activePublicSection === 'stats' ? (
     viewerModeInlineControl
   ) : null;
-  const extraFilters = model.requestsScope === 'my' ? undefined : undefined;
-
   return {
     title: model.copy.sharedContextLabel,
     locale,
@@ -325,7 +321,8 @@ export function buildSharedContextControlsProps({
       onChange: model.controls.onSortChange,
       summaryLabel: model.controls.sortOptions.find((item) => item.value === model.controls.sortBy)?.label ?? '',
     },
-    extraFilters,
+    actionRowControl: requestsViewToggle,
+    extraFilters: undefined,
     inlineControl: myWorkInlineControl,
     onReset: model.controls.onReset,
   };

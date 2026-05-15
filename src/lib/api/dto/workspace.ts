@@ -549,6 +549,21 @@ export type WorkspaceMyRequestCardDto = {
       > | null;
     } | null;
   };
+  chrome?: {
+    priorityLabel?: string | null;
+    priorityTone: 'high' | 'medium' | 'low' | 'none';
+    signalPills: Array<{
+      key: string;
+      label: string;
+      tone: 'info' | 'warning' | 'success' | 'neutral';
+    }>;
+    insights: Array<{
+      key: string;
+      title: string;
+      description: string;
+      tone: 'info' | 'warning' | 'success' | 'neutral';
+    }>;
+  } | null;
 };
 
 export type WorkspaceRequestsDecisionPanelDto = {

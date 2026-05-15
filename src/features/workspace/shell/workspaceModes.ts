@@ -20,7 +20,7 @@ export function resolveActiveWorkspaceMode({
 }: ResolveActiveWorkspaceModeArgs): WorkspaceModeKey {
   if (activePublicSection === 'requests') return 'requests';
   if (activePublicSection === 'providers') return 'providers';
-  if (activePublicSection === 'stats' || activePublicSection === 'reviews') return 'analysis';
+  if (activePublicSection === 'stats') return 'analysis';
   if (activePublicSection === 'actions') return 'actions';
 
   const isWorkspaceRoot = pathname === '/workspace';

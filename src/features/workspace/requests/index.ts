@@ -26,6 +26,7 @@ export { useWorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsModel
 
 export { useWorkspaceContractRequestsData } from './useWorkspaceContractRequestsData';
 export { useWorkspaceData } from './useWorkspaceData';
+export { useWorkspaceProviderSupportData } from './useWorkspaceProviderSupportData';
 export { useWorkspaceDerived } from './useWorkspaceDerived';
 export { useWorkspacePublicState } from './useWorkspacePublicState';
 export { useWorkspacePrivateState } from './useWorkspacePrivateState';

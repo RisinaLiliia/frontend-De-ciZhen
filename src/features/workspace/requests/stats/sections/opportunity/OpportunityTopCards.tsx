@@ -53,7 +53,7 @@ export function OpportunityTopCards({
                 label={copy.opportunityScoreLabel}
                 value={`${item.score.toFixed(1)} / 10`}
                 progressPercent={item.score * 10}
-                semanticLabel={opportunityStatusLabel(item.status, locale)}
+                semanticLabel={opportunityStatusLabel(item.status, copy)}
                 semanticTone={opportunityStatusClassName(item.status)}
               />
 

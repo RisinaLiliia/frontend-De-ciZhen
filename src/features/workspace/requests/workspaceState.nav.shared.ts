@@ -16,7 +16,7 @@ export function normalizeWorkspaceNavCount(value: number) {
 }
 
 export function isWorkspacePublicSection(value: PublicWorkspaceSection | null) {
-  return value === 'requests' || value === 'providers' || value === 'stats' || value === 'reviews' || value === 'actions';
+  return value === 'requests' || value === 'providers' || value === 'stats' || value === 'actions';
 }
 
 export function buildWorkspaceNavHeader({ t, userName }: BuildWorkspaceNavHeaderArgs) {

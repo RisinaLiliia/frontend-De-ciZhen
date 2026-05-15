@@ -86,8 +86,6 @@ export function buildWorkspacePrivateNavModelArgs(params: {
     sentCount: params.privateOverviewState.sentCount,
     completedJobsCount: params.privateOverviewState.completedJobsCount,
     favoriteRequestCount: params.privateOverviewState.favoriteRequestCount,
-    navRatingValue: params.privateOverviewState.navRatingValue,
-    navReviewsCount: params.privateOverviewState.navReviewsCount,
     setWorkspaceTab: params.setWorkspaceTab,
     markPublicRequestsSeen: params.markPublicRequestsSeen,
     guestLoginHref: params.guestLoginHref,

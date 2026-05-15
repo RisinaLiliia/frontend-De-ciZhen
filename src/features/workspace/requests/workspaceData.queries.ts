@@ -1,12 +1,6 @@
 'use client';
 
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
-import { listMyRequests } from '@/lib/api/requests';
-import { listPublicProviders } from '@/lib/api/providers';
-import { listMyContracts } from '@/lib/api/contracts';
-import { listMyProviderOffers } from '@/lib/api/offers';
-import { listFavorites } from '@/lib/api/favorites';
-import { listMyReviews } from '@/lib/api/reviews';
 import {
   getWorkspacePrivateOverview,
   getWorkspacePublicOverview,
@@ -26,8 +20,6 @@ import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace
 import type { WorkspaceDataLoadPlan } from '@/features/workspace/requests/workspaceData.model';
 
 const DEFAULT_STALE_TIME_MS = 60_000;
-const PROVIDERS_STALE_TIME_MS = 30_000;
-const PROVIDERS_GC_TIME_MS = 5 * 60 * 1000;
 
 function buildStableWorkspaceQuery<TQueryKey extends readonly unknown[], TQueryFnData>(params: {
   queryKey: TQueryKey;
@@ -70,11 +62,6 @@ type BuildWorkspaceContractQueriesArgs = Pick<
   | 'activeRequestsState'
   | 'activeRequestsPeriod'
   | 'activeRequestsSort'
->;
-
-type BuildWorkspaceLegacyPrivateQueriesArgs = Pick<
-  WorkspaceDataQueriesArgs,
-  'loadPlan'
 >;
 
 function buildWorkspaceContractQueries({
@@ -188,62 +175,8 @@ function buildWorkspaceContractQueries({
   };
 }
 
-function buildWorkspaceLegacyPrivateQueries({
-  loadPlan,
-}: BuildWorkspaceLegacyPrivateQueriesArgs) {
-  return {
-    myOffers: {
-      queryKey: workspaceQK.offersMy(),
-      enabled: loadPlan.shouldLoadMyOffers,
-      queryFn: () => withStatusFallback(() => listMyProviderOffers(), []),
-    },
-    favoriteRequests: {
-      queryKey: workspaceQK.favoriteRequests(),
-      enabled: loadPlan.shouldLoadFavoriteRequests,
-      queryFn: () => withStatusFallback(() => listFavorites('request'), []),
-    },
-    favoriteProviders: {
-      queryKey: workspaceQK.favoriteProviders(),
-      enabled: loadPlan.shouldLoadFavoriteProviders,
-      queryFn: () => withStatusFallback(() => listFavorites('provider'), []),
-    },
-    myReviews: {
-      queryKey: workspaceQK.reviewsMy(),
-      enabled: loadPlan.shouldLoadReviews,
-      queryFn: () => withStatusFallback(() => listMyReviews({ role: 'all' }), []),
-    },
-    myRequests: {
-      queryKey: workspaceQK.requestsMy(),
-      enabled: loadPlan.shouldLoadMyRequests,
-      queryFn: () => withStatusFallback(() => listMyRequests(), []),
-    },
-    myProviderContracts: {
-      queryKey: workspaceQK.contractsMyProvider(),
-      enabled: loadPlan.shouldLoadMyContracts,
-      queryFn: () => withStatusFallback(() => listMyContracts({ role: 'provider' }), []),
-    },
-    myClientContracts: {
-      queryKey: workspaceQK.contractsMyClient(),
-      enabled: loadPlan.shouldLoadMyContracts,
-      queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), []),
-    },
-    providers: {
-      queryKey: workspaceQK.providersPublic(),
-      enabled: loadPlan.shouldLoadProviders,
-      queryFn: () => listPublicProviders(),
-      staleTime: PROVIDERS_STALE_TIME_MS,
-      gcTime: PROVIDERS_GC_TIME_MS,
-      refetchOnMount: true as const,
-      refetchOnWindowFocus: true as const,
-    },
-  };
-}
-
 export function buildWorkspaceDataQueries(args: WorkspaceDataQueriesArgs) {
-  return {
-    ...buildWorkspaceContractQueries(args),
-    ...buildWorkspaceLegacyPrivateQueries(args),
-  };
+  return buildWorkspaceContractQueries(args);
 }
 
 type WorkspaceOfferRequestsQueryArgs = {

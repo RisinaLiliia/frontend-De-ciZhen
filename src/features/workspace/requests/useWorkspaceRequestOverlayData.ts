@@ -12,7 +12,9 @@ import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import { listMyProviderOffers, listOffersByRequest } from '@/lib/api/offers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { useT } from '@/lib/i18n/useT';
 
 export function formatDialogDate(locale: Locale, value?: string | null) {
   if (!value) return null;
@@ -54,58 +56,64 @@ export function toDateTimeLocalValue(value?: string | null) {
   return localDate.toISOString().slice(0, 16);
 }
 
-export function resolveOfferStatusBadge(locale: Locale, status: OfferDto['status']) {
+export function resolveOfferStatusBadge(
+  t: (key: I18nKey) => string,
+  status: OfferDto['status'],
+) {
   if (status === 'accepted') {
     return {
-      label: locale === 'de' ? 'Angenommen' : 'Accepted',
+      label: t(I18N_KEYS.requestDetails.statusAccepted),
       className: 'status-badge status-badge--success',
     };
   }
   if (status === 'declined') {
     return {
-      label: locale === 'de' ? 'Abgelehnt' : 'Declined',
+      label: t(I18N_KEYS.requestDetails.statusDeclined),
       className: 'status-badge status-badge--danger',
     };
   }
   if (status === 'withdrawn') {
     return {
-      label: locale === 'de' ? 'Zurückgezogen' : 'Withdrawn',
+      label: t(I18N_KEYS.requestDetails.statusWithdrawn),
       className: 'status-badge status-badge--warning',
     };
   }
   return {
-    label: locale === 'de' ? 'Neu' : 'New',
+    label: t(I18N_KEYS.requestsPage.decisionPanelPriorityNew),
     className: 'status-badge status-badge--info',
   };
 }
 
-export function resolveContractStatusBadge(locale: Locale, status: ContractDto['status']) {
+export function resolveContractStatusBadge(
+  t: (key: I18nKey) => string,
+  status: ContractDto['status'],
+) {
   if (status === 'completed') {
     return {
-      label: locale === 'de' ? 'Abgeschlossen' : 'Completed',
+      label: t(I18N_KEYS.workspace.stateCompletedLabel),
       className: 'status-badge status-badge--success',
     };
   }
   if (status === 'confirmed' || status === 'in_progress') {
     return {
-      label: locale === 'de' ? 'Bestätigt' : 'Confirmed',
+      label: t(I18N_KEYS.requestDetails.statusConfirmed),
       className: 'status-badge status-badge--success',
     };
   }
   if (status === 'cancelled') {
     return {
-      label: locale === 'de' ? 'Storniert' : 'Cancelled',
+      label: t(I18N_KEYS.requestDetails.statusCancelled),
       className: 'status-badge status-badge--danger',
     };
   }
   return {
-    label: locale === 'de' ? 'Ausstehend' : 'Pending',
+    label: t(I18N_KEYS.requestDetails.statusPending),
     className: 'status-badge status-badge--warning',
   };
 }
 
-export function cardlessTitle(locale: Locale) {
-  return locale === 'de' ? 'Anfrage' : 'Request';
+export function cardlessTitle(t: (key: I18nKey) => string) {
+  return t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle);
 }
 
 export function useWorkspaceManagedRequestData({
@@ -167,6 +175,7 @@ export function useWorkspaceRequestDecisionData({
   card: MyRequestsViewCard;
   locale: Locale;
 }) {
+  const t = useT();
   const { offers = [] } = useWorkspaceRequestOffersData(card.requestId);
   const shouldLoadClientContracts = card.role === 'customer';
   const { data: contracts = [] } = useQuery({
@@ -200,13 +209,13 @@ export function useWorkspaceRequestDecisionData({
     [card],
   );
   const chatInput = chatAction?.chatInput ?? null;
-  const chatLabel = chatAction?.label ?? (locale === 'de' ? 'Chat' : 'Chat');
+  const chatLabel = chatAction?.label ?? t(I18N_KEYS.requestDetails.ctaChat);
   const contractPrice = contract?.priceAmount != null
     ? formatDialogPrice(locale, contract.priceAmount)
     : null;
   const contractMeta = [
     contractPrice,
-    contract?.status ? resolveContractStatusBadge(locale, contract.status).label : null,
+    contract?.status ? resolveContractStatusBadge(t, contract.status).label : null,
   ].filter(Boolean).join(' · ');
 
   return {

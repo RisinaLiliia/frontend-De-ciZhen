@@ -1,76 +1,52 @@
 'use client';
 
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate } from '@/lib/i18n/t';
 import type { Locale } from '@/lib/i18n/t';
 
 export function buildWorkspacePrivateSortOptions(locale: Locale): FilterOption[] {
-  return locale === 'de'
-    ? [
-      { value: 'activity', label: 'Neueste Aktivität' },
-      { value: 'deadline', label: 'Bald fällig' },
-      { value: 'newest', label: 'Neu erstellt' },
-      { value: 'budget', label: 'Höchstes Budget' },
-    ]
-    : [
-      { value: 'activity', label: 'Latest activity' },
-      { value: 'deadline', label: 'Due soon' },
-      { value: 'newest', label: 'Newest' },
-      { value: 'budget', label: 'Highest budget' },
-    ];
+  return [
+    { value: 'activity', label: translate(I18N_KEYS.workspace.privateSortActivity, locale) },
+    { value: 'deadline', label: translate(I18N_KEYS.workspace.privateSortDeadline, locale) },
+    { value: 'newest', label: translate(I18N_KEYS.workspace.privateSortNewest, locale) },
+    { value: 'budget', label: translate(I18N_KEYS.workspace.privateSortBudget, locale) },
+  ];
 }
 
 export function getWorkspaceRequestsScopeAriaLabel(locale: Locale) {
-  return locale === 'de' ? 'Auftragsmodus' : 'Request scope';
+  return translate(I18N_KEYS.workspace.requestsScopeAriaLabel, locale);
 }
 
 export function getWorkspaceStateAriaLabel(locale: Locale) {
-  return locale === 'de' ? 'Status' : 'State';
+  return translate(I18N_KEYS.workspace.stateAriaLabel, locale);
 }
 
 export function getWorkspaceRangeGroupLabel(locale: Locale) {
-  return locale === 'de' ? 'Zeitraum' : 'Range';
+  return translate(I18N_KEYS.workspace.rangeAriaLabel, locale);
 }
 
 export function getWorkspaceScopeSwitchLabels(locale: Locale) {
-  return locale === 'de'
-    ? {
-      market: 'Markt',
-      my: 'Meine Arbeit',
-    }
-    : {
-      market: 'Market',
-      my: 'My work',
-    };
+  return {
+    market: translate(I18N_KEYS.workspace.scopeMarketLabel, locale),
+    my: translate(I18N_KEYS.workspace.scopeMyLabel, locale),
+  };
 }
 
 export function getWorkspaceChipLabels(locale: Locale) {
-  return locale === 'de'
-    ? {
-      city: 'Ort',
-      category: 'Kategorie',
-      range: 'Zeitraum',
-      service: 'Service',
-    }
-    : {
-      city: 'Location',
-      category: 'Category',
-      range: 'Range',
-      service: 'Service',
-    };
+  return {
+    city: translate(I18N_KEYS.workspace.chipCityLabel, locale),
+    category: translate(I18N_KEYS.workspace.chipCategoryLabel, locale),
+    range: translate(I18N_KEYS.workspace.chipRangeLabel, locale),
+    service: translate(I18N_KEYS.workspace.chipServiceLabel, locale),
+  };
 }
 
 export function getWorkspaceStateToggleItems(locale: Locale) {
-  return locale === 'de'
-    ? [
-      { key: 'all', label: 'Alle' },
-      { key: 'attention', label: 'Aktiv' },
-      { key: 'execution', label: 'In Ausführung' },
-      { key: 'completed', label: 'Abgeschlossen' },
-    ]
-    : [
-      { key: 'all', label: 'All' },
-      { key: 'attention', label: 'Active' },
-      { key: 'execution', label: 'In execution' },
-      { key: 'completed', label: 'Completed' },
-    ];
+  return [
+    { key: 'all', label: translate(I18N_KEYS.workspace.stateAllLabel, locale) },
+    { key: 'attention', label: translate(I18N_KEYS.workspace.stateAttentionLabel, locale) },
+    { key: 'execution', label: translate(I18N_KEYS.workspace.stateExecutionLabel, locale) },
+    { key: 'completed', label: translate(I18N_KEYS.workspace.stateCompletedLabel, locale) },
+  ];
 }

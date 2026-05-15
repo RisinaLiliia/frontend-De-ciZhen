@@ -37,17 +37,6 @@ const WorkspaceStatisticsExperience = dynamic(
   },
 );
 
-const PlatformReviewsPanel = dynamic(
-  () => import('@/features/workspace/requests/WorkspacePlatformReviewsPanel').then((mod) => mod.WorkspacePlatformReviewsPanel),
-  {
-    loading: () => (
-      <section className="panel">
-        <div className="skeleton h-96 w-full" />
-      </section>
-    ),
-  },
-);
-
 const ProfileOnboardingPanel = dynamic(
   () => import('@/features/workspace/requests/WorkspaceProfileOnboardingForm').then((mod) => mod.WorkspaceProfileOnboardingForm),
   {
@@ -100,9 +89,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
   const viewerMode = resolveWorkspaceViewerMode(searchParams.get('viewerMode'));
   const isDesktop = useIsDesktop();
   const isRailSection = isDesktop && isWorkspaceExploreRailSection(activeSection);
-  const exploreGridClassName = activeSection === 'reviews'
-    ? 'requests-grid'
-    : 'requests-grid requests-grid--equal-cols';
+  const exploreGridClassName = 'requests-grid requests-grid--equal-cols';
   const renderedIntro = React.useMemo(() => {
     if (!isRailSection || !React.isValidElement(intro)) return intro;
 
@@ -139,9 +126,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
     <WorkspaceOverlaySurface intro={renderedIntro}>
       <div className={exploreGridClassName}>
         <div>
-          {activeSection === 'reviews' ? (
-            <PlatformReviewsPanel t={t} locale={locale} showInlineRail={!isDesktop} />
-          ) : activeSection === 'actions' ? (
+          {activeSection === 'actions' ? (
             <ProfileOnboardingPanel viewerMode={viewerMode} />
           ) : (
             <ExploreRequestsPanel

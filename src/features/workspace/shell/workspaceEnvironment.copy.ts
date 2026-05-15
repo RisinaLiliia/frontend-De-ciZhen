@@ -2,7 +2,8 @@
 
 import type { WorkspaceRequestsScope } from '@/features/workspace/requests';
 import type { WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
-import type { Locale } from '@/lib/i18n/t';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate, type Locale } from '@/lib/i18n/t';
 
 const SHARED_QUERY_KEYS = ['city', 'category', 'service', 'period', 'range'] as const;
 
@@ -278,39 +279,27 @@ export function getWorkspaceModeCopy(locale: Locale): WorkspaceModeCopy {
 
 export function resolveRangeLabel(locale: Locale, value: string | null, fallback: string) {
   if (value === '24h') return '24h';
-  if (value === '7d') return locale === 'de' ? '7 Tage' : '7 days';
-  if (value === '30d') return locale === 'de' ? '30 Tage' : '30 days';
-  if (value === '90d') return locale === 'de' ? '90 Tage' : '90 days';
+  if (value === '7d') return translate(I18N_KEYS.workspace.range7dLabel, locale);
+  if (value === '30d') return translate(I18N_KEYS.workspace.range30dLabel, locale);
+  if (value === '90d') return translate(I18N_KEYS.workspace.range90dLabel, locale);
   return fallback;
 }
 
 export function getRequestsScopeTitle(locale: Locale, scope: WorkspaceRequestsScope) {
   if (scope === 'my') {
     return {
-      title: locale === 'de' ? 'Meine Arbeit' : 'My work',
-      description: locale === 'de'
-        ? 'Verwalte deine Anfragen, laufenden Vorgänge, Rückmeldungen und Abschlüsse in einer Arbeitsumgebung.'
-        : 'Manage your requests, workflows, replies, and completions in one operating environment.',
-      railDescription: locale === 'de'
-        ? 'Arbeite offene Vorgänge, Rückmeldungen und Abschlüsse im gleichen Kontext ab.'
-        : 'Process open workflows, replies, and completions inside the same context.',
-      scope: locale === 'de'
-        ? 'Operativer Modus für deine eigenen Vorgänge'
-        : 'Operational mode for your own workflows',
+      title: translate(I18N_KEYS.workspace.myScopeTitle, locale),
+      description: translate(I18N_KEYS.workspace.myScopeDescription, locale),
+      railDescription: translate(I18N_KEYS.workspace.myScopeRailDescription, locale),
+      scope: translate(I18N_KEYS.workspace.myScopeContext, locale),
     };
   }
 
   return {
-    title: locale === 'de' ? 'Aufträge entdecken' : 'Discover requests',
-    description: locale === 'de'
-      ? 'Finde passende Anfragen, vergleiche Regionen und beobachte den Markt im aktuellen Kontext.'
-      : 'Find matching requests, compare regions, and observe the market inside the current context.',
-    railDescription: locale === 'de'
-      ? 'Nutze denselben Kontext, um Nachfrage, Regionen und Marktbewegung zu vergleichen.'
-      : 'Use the same context to compare demand, regions, and market movement.',
-    scope: locale === 'de'
-      ? 'Marktmodus für öffentliche Nachfrage'
-      : 'Market mode for public demand',
+    title: translate(I18N_KEYS.workspace.marketScopeTitle, locale),
+    description: translate(I18N_KEYS.workspace.marketScopeDescription, locale),
+    railDescription: translate(I18N_KEYS.workspace.marketScopeRailDescription, locale),
+    scope: translate(I18N_KEYS.workspace.marketScopeContext, locale),
   };
 }
 

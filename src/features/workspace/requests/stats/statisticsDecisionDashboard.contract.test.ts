@@ -423,7 +423,7 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
     expect(() => workspaceStatisticsDecisionDashboardSchema.parse(result)).not.toThrow();
   });
 
-  it('adds compatibility user intelligence for personalized payloads when backend has not sent it yet', () => {
+  it('does not fabricate user intelligence when personalized payload has not sent it yet', () => {
     const personalized = createPayload();
     personalized.mode = 'personalized';
     personalized.kpis.requestsTotal = 58;
@@ -447,28 +447,11 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
       categoryKey: null,
     });
 
-    expect(normalized.userIntelligence?.formulaMetrics).toHaveLength(8);
-    expect(normalized.userIntelligence?.decisionMetrics).toHaveLength(3);
-    expect(normalized.userIntelligence?.signals.length).toBeGreaterThan(0);
-    expect(normalized.userIntelligence?.signals.some((item) => item.code === 'slow_response')).toBe(true);
-    expect(normalized.userIntelligence?.signals.some((item) => item.actionCode === 'respond_faster')).toBe(true);
-    expect(normalized.decisionLayer?.metrics).toHaveLength(6);
-    expect(normalized.decisionLayer?.primaryAction?.code).toBeTruthy();
-    expect(normalized.personalizedPricing?.position).toBeTruthy();
-    expect(normalized.categoryFit?.items.length).toBeGreaterThan(0);
-    expect(normalized.cityComparison?.items.length).toBeGreaterThan(0);
-    expect(normalized.funnelComparison?.stages).toHaveLength(5);
-    expect(normalized.funnelComparison?.summary).toContain('Du verlierst aktuell');
-    expect(normalized.funnelComparison?.largestDropOffStage).toBeTruthy();
-    expect(normalized.funnelComparison?.nextAction).toBeTruthy();
-    expect(normalized.userIntelligence?.performancePosition.percentile).not.toBeNull();
-    expect(normalized.userIntelligence?.risks.length).toBeGreaterThan(0);
-    expect(normalized.userIntelligence?.opportunities.length).toBeGreaterThan(0);
-    expect(normalized.userIntelligence?.nextSteps.length).toBeGreaterThan(0);
+    expect(normalized.userIntelligence).toBeNull();
     expect(() => workspaceStatisticsDecisionDashboardSchema.parse(normalized)).not.toThrow();
   });
 
-  it('aligns decision layer offer rate and completed jobs with canonical funnel comparison values', () => {
+  it('keeps backend-owned decision layer metrics unchanged when funnel comparison is also present', () => {
     const personalized = createPayload();
     personalized.mode = 'personalized';
     personalized.decisionLayer = {
@@ -587,93 +570,72 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
     const offerRate = normalized.decisionLayer?.metrics.find((metric) => metric.id === 'offer_rate');
     const completedJobs = normalized.decisionLayer?.metrics.find((metric) => metric.id === 'completed_jobs');
 
-    expect(offerRate?.marketValue).toBe(67);
-    expect(offerRate?.userValue).toBe(100);
-    expect(offerRate?.gapPercent).toBe(33);
-    expect(completedJobs?.marketValue).toBe(18);
-    expect(completedJobs?.userValue).toBe(0);
-    expect(completedJobs?.gapAbsolute).toBe(-18);
+    expect(offerRate?.marketValue).toBe(12);
+    expect(offerRate?.userValue).toBe(99);
+    expect(offerRate?.gapPercent).toBe(87);
+    expect(completedJobs?.marketValue).toBe(999);
+    expect(completedJobs?.userValue).toBe(888);
+    expect(completedJobs?.gapAbsolute).toBe(-111);
   });
 
-  it('reuses canonical personalized sections as compatibility sources for userIntelligence', () => {
+  it('prefers backend-owned user intelligence when the personalized payload sends it', () => {
     const personalized = createPayload();
     personalized.mode = 'personalized';
-    personalized.personalizedPricing = {
-      title: 'Preisstrategie',
-      subtitle: 'Server pricing',
-      contextLabel: 'Berlin · Cleaning',
-      marketAverage: 78,
-      recommendedMin: 65,
-      recommendedMax: 90,
-      userPrice: 95,
-      gapAbsolute: 17,
-      comparisonReliability: 'high',
-      position: 'above',
-      effect: 'warning',
-      actionCode: 'adjust_price',
-      summary: 'Server-side pricing summary',
-    };
-    personalized.risks = {
-      title: 'Risiken',
-      subtitle: 'Server risks',
-      hasReliableItems: true,
-      items: [{
-        code: 'high_unanswered_requests',
-        type: 'risk',
-        priority: 'high',
-        title: 'Zu viele offene Anfragen',
-        description: 'Mehrere Vorgänge warten zu lange.',
-        confidence: 0.86,
-        reliability: 'high',
-        context: '18 offen',
-        actionCode: 'follow_up_unanswered',
-        action: {
-          code: 'follow_up_unanswered',
-          label: 'Offene Vorgänge priorisieren',
-          target: '/workspace?tab=my-requests',
+    personalized.userIntelligence = {
+      comparisonLabel: 'Provider vs Market',
+      formulaMetrics: [],
+      decisionMetrics: [],
+      signals: [
+        {
+          id: 'signal-price-above',
+          type: 'performance',
+          code: 'price_above_market',
+          severity: 'high',
+          metricKey: 'avg_order_value',
+          actionCode: 'adjust_price',
         },
+      ],
+      performancePosition: {
+        percentile: 74,
+        categoryPercentile: 81,
+        cityPercentile: 69,
+        bucket: 'top',
+        categoryLabel: 'Cleaning',
+        cityLabel: 'Berlin',
+      },
+      profileGap: {
+        fromStage: 'offers',
+        toStage: 'confirmations',
+        lossPercent: 45,
+        lostCount: 12,
+        tone: 'warning',
+      },
+      risks: [{
+        id: 'risk-high-unanswered',
+        code: 'high_unanswered',
+        severity: 'high',
+        value: 18,
+        secondaryValue: 54,
       }],
-    };
-    personalized.opportunities = {
-      title: 'Chancen',
-      subtitle: 'Server opportunities',
-      hasReliableItems: true,
-      items: [{
-        code: 'city_opportunity_high',
-        type: 'opportunity',
-        priority: 'medium',
-        title: 'Berlin hat Nachfrage',
-        description: 'Hier gibt es aktuell Spielraum.',
-        confidence: 0.79,
-        reliability: 'medium',
-        context: 'Berlin',
-        actionCode: 'focus_market',
-        action: {
-          code: 'focus_market',
-          label: 'Marktfokus schärfen',
-          target: '/workspace?section=stats&focus=cities',
-        },
+      opportunities: [{
+        id: 'opportunity-high-demand-city',
+        code: 'high_demand_city',
+        severity: 'medium',
+        cityLabel: 'Berlin',
       }],
-    };
-    personalized.nextSteps = {
-      title: 'Nächste Schritte',
-      subtitle: 'Server steps',
-      hasReliableItems: true,
-      items: [{
+      pricing: {
+        currentPrice: 95,
+        recommendedMin: 65,
+        recommendedMax: 90,
+        marketAverage: 78,
+        status: 'above',
+        conversionImpact: 'warning',
+      },
+      nextSteps: [{
+        id: 'step-respond-faster',
         code: 'respond_faster',
-        type: 'performance',
         priority: 'high',
-        title: 'Antworte schneller',
-        description: 'Halte die Reaktionszeit niedrig.',
-        confidence: 0.82,
-        reliability: 'high',
-        context: 'Berlin',
-        actionCode: 'respond_faster',
-        action: {
-          code: 'respond_faster',
-          label: 'Schneller reagieren',
-          target: '/workspace?tab=my-requests',
-        },
+        cityLabel: 'Berlin',
       }],
     };
 

@@ -62,7 +62,7 @@ function resolveLegacyWorkspaceState(
   if (status === 'open') return 'attention';
   if (status === 'in_progress') return 'execution';
   if (status === 'completed') return 'completed';
-  if (tab === 'completed-jobs') return 'execution';
+  if (tab === 'completed-jobs') return 'completed';
   return undefined;
 }
 
@@ -102,6 +102,30 @@ export function buildLegacyWorkspaceTabRedirectHref(params: {
       : new URLSearchParams(params.currentSearch.toString());
   const legacyTab = searchParams.get('tab');
   const legacyStatus = searchParams.get('status');
+
+  if (legacyTab === 'reviews') {
+    return buildWorkspaceHref({
+      currentSearch: searchParams,
+      section: 'reviews',
+      removeKeys: ['tab', 'status', 'fav', 'reviewRole'],
+    });
+  }
+
+  if (legacyTab === 'profile') {
+    return buildWorkspaceHref({
+      currentSearch: searchParams,
+      section: 'actions',
+      removeKeys: ['tab', 'status', 'fav', 'reviewRole'],
+    });
+  }
+
+  if (legacyTab === 'favorites') {
+    return buildWorkspaceHref({
+      currentSearch: searchParams,
+      section: 'providers',
+      removeKeys: ['tab', 'status', 'fav', 'reviewRole'],
+    });
+  }
 
   return buildWorkspacePrivateRequestsHref({
     currentSearch: searchParams,

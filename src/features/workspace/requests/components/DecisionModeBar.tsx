@@ -1,5 +1,7 @@
 'use client';
 
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate } from '@/lib/i18n/t';
 import type { Locale } from '@/lib/i18n/t';
 
 type DecisionModeBarProps = {
@@ -17,30 +19,29 @@ export function DecisionModeBar({
 }: DecisionModeBarProps) {
   const totalCount = completedInSession + remainingCount;
   const hasCompletedAll = totalCount > 0 && remainingCount === 0;
+  const t = (key: string) => translate(key as never, locale);
 
   return (
     <section className="panel my-decision-mode">
       <div className="my-decision-mode__copy">
         <span className="my-decision-mode__eyebrow">
-          {locale === 'de' ? 'Decision Mode' : 'Decision mode'}
+          {t(I18N_KEYS.requestsPage.decisionModeLabel)}
         </span>
         <strong className="my-decision-mode__title">
           {hasCompletedAll
-            ? (locale === 'de' ? 'Alle offenen Entscheidungen erledigt' : 'All open decisions completed')
-            : (locale === 'de' ? 'Bearbeite offene Vorgänge' : 'Handle open workflows')}
+            ? t(I18N_KEYS.requestsPage.workspaceDecisionDoneTitle)
+            : t(I18N_KEYS.requestsPage.decisionModeHandleOpen)}
         </strong>
         <span className="my-decision-mode__progress">
           {totalCount > 0
-            ? (locale === 'de'
-              ? `${completedInSession} von ${totalCount} erledigt`
-              : `${completedInSession} of ${totalCount} completed`)
-            : (locale === 'de'
-              ? 'Keine offenen Entscheidungen'
-              : 'No open decisions')}
+            ? t(I18N_KEYS.requestsPage.decisionModeProgressTemplate)
+              .replace('{completed}', String(completedInSession))
+              .replace('{total}', String(totalCount))
+            : t(I18N_KEYS.requestsPage.decisionModeNoOpen)}
         </span>
       </div>
       <button type="button" className="btn-secondary my-decision-mode__exit" onClick={onExit}>
-        {locale === 'de' ? 'Modus beenden' : 'Exit mode'}
+        {t(I18N_KEYS.requestsPage.workspaceDecisionDoneCta)}
       </button>
     </section>
   );

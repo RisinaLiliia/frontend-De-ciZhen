@@ -70,7 +70,7 @@ export function WorkspacePlatformReviewsMain({
         </div>
       ) : null}
 
-      <WorkspaceReviewsShellControls t={t} locale={locale} />
+      <WorkspaceReviewsShellControls t={t} />
 
       <RequestsResultsSummary
         t={t}

@@ -1,4 +1,3 @@
-import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type {
   WorkspaceStatisticsCityRowView,
@@ -47,21 +46,19 @@ export function buildCityRows(
 
 export function buildOpportunityRadar(params: {
   copy: Parameters<typeof buildPriceIntelligenceView>[0]['copy'];
-  locale: Locale;
   localeTag: string;
   formatCurrency: Intl.NumberFormat;
   source: WorkspaceStatisticsDecisionDashboardDto['opportunityRadar'] | undefined;
 }): WorkspaceStatisticsOpportunityRadarItemView[] {
   const {
     copy,
-    locale,
     localeTag,
     formatCurrency,
     source,
   } = params;
   if (!source?.length) return [];
 
-  const fallbackCategory = locale === 'de' ? 'Generalistisch' : 'General';
+  const fallbackCategory = copy.fallbackGeneralCategoryLabel;
   return source.map((item, index) => {
     const hrefParams = new URLSearchParams({ section: 'requests' });
     if (item.cityId) hrefParams.set('cityId', item.cityId);
@@ -98,7 +95,6 @@ export function buildOpportunityRadar(params: {
             source: item.priceIntelligence,
             contextCityFallback: item.city,
             contextCategoryFallback: item.category ?? fallbackCategory,
-            locale,
             localeTag,
             formatCurrency,
           })

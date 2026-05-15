@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 
-import type { Locale } from '@/lib/i18n/t';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate, type Locale } from '@/lib/i18n/t';
 
 export function WorkspaceInlineStateCard({
   locale,
@@ -30,7 +31,7 @@ export function WorkspaceInlineStateCard({
         <p>{body}</p>
       </div>
       <span className="my-request-inline-state__meta">
-        {locale === 'de' ? 'Inline' : 'Inline'}
+        {translate(I18N_KEYS.requestDetails.workspaceInlineMeta, locale)}
       </span>
     </div>
   );
@@ -79,7 +80,7 @@ export function WorkspaceCompactModalPortal({
         type="button"
         className="dc-modal__backdrop"
         onClick={onClose}
-        aria-label={locale === 'de' ? 'Dialog schließen' : 'Close dialog'}
+        aria-label={translate(I18N_KEYS.workspace.dialogCloseLabel, locale)}
       />
       <div className="dc-modal__panel dc-modal__panel--compact my-request-dialog__panel">
         {children}

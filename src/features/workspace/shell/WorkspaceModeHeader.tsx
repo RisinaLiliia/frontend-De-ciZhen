@@ -7,7 +7,7 @@ import {
   buildSharedContextControlsProps,
   useWorkspaceSharedContext,
 } from '@/features/workspace/shell/useWorkspaceSharedContext';
-import { type I18nKey } from '@/lib/i18n/keys';
+import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
@@ -50,7 +50,7 @@ export function WorkspaceModeHeader({
         <div className="workspace-environment__shell-hint">{model.copy.shellHint}</div>
       </div>
 
-      <nav className="workspace-mode-nav" aria-label={locale === 'de' ? 'Workspace-Modi' : 'Workspace modes'}>
+      <nav className="workspace-mode-nav" aria-label={t(I18N_KEYS.workspace.modeNavAriaLabel)}>
         {model.modeItems.map((item) => (
           <Link
             key={item.key}

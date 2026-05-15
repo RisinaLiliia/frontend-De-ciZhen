@@ -89,22 +89,23 @@ export function buildActivitySignals(params: {
   locale: Locale;
 }): WorkspaceStatisticsActivitySignalView[] {
   const { activityMetrics, copy, formatCurrency, formatNumber, locale } = params;
-  const responseValue = formatMinutes(activityMetrics.responseMedianMinutes, locale);
+  const responseValue = formatMinutes(activityMetrics.responseMedianMinutes, locale, copy);
   const responseHint = responseValue === '—'
     ? copy.activityNoResponse
-    : locale === 'de'
-      ? 'Zeit bis zum ersten Angebot'
-      : 'Time to first offer';
-  const revenueHint = `${copy.activityGmvLabel}: ${formatCurrency.format(activityMetrics.gmvAmount)} · ${activityMetrics.takeRatePercent}% ${copy.activityTakeRateSuffix}`;
+    : copy.activityResponseFirstOfferHint;
+  const revenueHint = copy.activityRevenueSignalTemplate
+    .replace('{gmv}', `${copy.activityGmvLabel}: ${formatCurrency.format(activityMetrics.gmvAmount)}`)
+    .replace('{takeRate}', String(activityMetrics.takeRatePercent))
+    .replace('{suffix}', copy.activityTakeRateSuffix);
 
   return [
     {
       key: 'offer-rate',
       label: copy.activityOfferRateLabel,
       value: formatPercent(activityMetrics.offerRatePercent),
-      hint: locale === 'de'
-        ? (activityMetrics.offerRatePercent >= 50 ? 'Signal: Nachfrage wird solide in Angebote umgewandelt' : 'Risiko: Zu wenig Nachfrage wird in Angebote überführt')
-        : (activityMetrics.offerRatePercent >= 50 ? 'Signal: demand is converting into offers' : 'Risk: too little demand is converting into offers'),
+      hint: activityMetrics.offerRatePercent >= 50
+        ? copy.activityOfferRateHintPositive
+        : copy.activityOfferRateHintNegative,
       tone: activityMetrics.offerRateTone,
     },
     {
@@ -113,39 +114,37 @@ export function buildActivitySignals(params: {
       value: responseValue,
       hint: responseValue === '—'
         ? responseHint
-        : (locale === 'de' ? 'Aktion: erstes Angebot möglichst unter 2h senden' : 'Action: keep the first offer below 2h'),
+        : copy.activityResponseActionHint,
       tone: activityMetrics.responseMedianTone,
     },
     {
       key: 'unanswered',
       label: copy.activityUnansweredLabel,
       value: formatNumber.format(activityMetrics.unansweredRequests24h),
-      hint: locale === 'de' ? 'Risiko: verlorene Aufträge ohne schnelle Reaktion' : 'Risk: lost jobs without a fast response',
+      hint: copy.activityUnansweredRiskHint,
       tone: activityMetrics.unansweredTone,
     },
     {
       key: 'cancellation',
       label: copy.activityCancellationLabel,
       value: formatPercent(activityMetrics.cancellationRatePercent),
-      hint: locale === 'de'
-        ? (activityMetrics.cancellationRatePercent <= 10 ? 'Signal: stabile Abschlussqualität' : 'Risiko: instabile Abschlussqualität')
-        : (activityMetrics.cancellationRatePercent <= 10 ? 'Signal: stable close quality' : 'Risk: unstable close quality'),
+      hint: activityMetrics.cancellationRatePercent <= 10
+        ? copy.activityCancellationStableHint
+        : copy.activityCancellationUnstableHint,
       tone: activityMetrics.cancellationTone,
     },
     {
       key: 'completed',
       label: copy.activityCompletedLabel,
       value: formatNumber.format(activityMetrics.completedJobs),
-      hint: locale === 'de' ? 'Signal: bewiesene Lieferfähigkeit im aktuellen Markt' : 'Signal: proven delivery capacity in the current market',
+      hint: copy.activityCompletedSignalHint,
       tone: activityMetrics.completedTone,
     },
     {
       key: 'revenue',
       label: copy.activityRevenueLabel,
       value: formatCurrency.format(activityMetrics.platformRevenueAmount),
-      hint: locale === 'de'
-        ? `Signal: Monetarisierung funktioniert. ${revenueHint}`
-        : `Signal: monetization is working. ${revenueHint}`,
+      hint: revenueHint,
       tone: activityMetrics.revenueTone,
     },
   ];
@@ -168,14 +167,14 @@ export function buildKpis(params: {
       key: 'requests-total',
       label: copy.requestsLabel,
       value: formatNumber.format(data.kpis.requestsTotal),
-      hint: toHint(totals.latestRequests, totals.previousRequests, range, locale),
+      hint: toHint(totals.latestRequests, totals.previousRequests, range, locale, copy),
       tone: totals.latestRequests >= totals.previousRequests ? 'positive' : 'neutral',
     },
     {
       key: 'offers-total',
       label: copy.offersLabel,
       value: formatNumber.format(data.kpis.offersTotal),
-      hint: toHint(totals.latestOffers, totals.previousOffers, range, locale),
+      hint: toHint(totals.latestOffers, totals.previousOffers, range, locale, copy),
       tone: totals.latestOffers >= totals.previousOffers ? 'positive' : 'neutral',
     },
     {
@@ -205,7 +204,7 @@ export function buildKpis(params: {
       key: 'rating-avg',
       label: copy.kpiAverageRatingLabel,
       value: data.summary.platformRatingAvg > 0 ? data.summary.platformRatingAvg.toFixed(1) : '—',
-      hint: formatReviewCountHint(data.summary.platformRatingCount, locale, formatNumber),
+      hint: formatReviewCountHint(data.summary.platformRatingCount, locale, formatNumber, copy),
       tone: data.summary.platformRatingAvg >= 4 ? 'positive' : 'neutral',
     },
   ];
@@ -252,7 +251,7 @@ export function buildKpis(params: {
     {
       key: 'response-time',
       label: copy.kpiResponseTimeLabel,
-      value: formatMinutes(data.kpis.avgResponseMinutes, locale),
+      value: formatMinutes(data.kpis.avgResponseMinutes, locale, copy),
       hint: typeof avgResponseMinutes !== 'number'
         ? copy.kpiNoResponseTimeData
         : isFastResponse

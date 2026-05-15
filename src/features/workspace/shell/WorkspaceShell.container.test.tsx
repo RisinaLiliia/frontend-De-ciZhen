@@ -68,29 +68,29 @@ describe('WorkspaceShell', () => {
     cleanup();
   });
 
-  it('promotes reviews section to private reviews tab for authenticated users', () => {
+  it('maps reviews alias to stats for authenticated users', () => {
     mockSearchParams('section=reviews');
     mockAuth('authenticated');
 
     render(<WorkspaceShell />);
 
     const node = screen.getByTestId('workspace-page-client');
-    expect(node.getAttribute('data-public-section')).toBe('null');
-    expect(node.getAttribute('data-workspace-tab')).toBe('reviews');
+    expect(node.getAttribute('data-public-section')).toBe('stats');
+    expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 
-  it('keeps reviews section public for unauthenticated users', () => {
+  it('maps reviews alias to stats for unauthenticated users', () => {
     mockSearchParams('section=reviews');
     mockAuth('unauthenticated');
 
     render(<WorkspaceShell />);
 
     const node = screen.getByTestId('workspace-page-client');
-    expect(node.getAttribute('data-public-section')).toBe('reviews');
+    expect(node.getAttribute('data-public-section')).toBe('stats');
     expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 
-  it('keeps forced workspace tab precedence over promoted reviews tab', () => {
+  it('keeps forced workspace tab precedence when provided explicitly', () => {
     mockSearchParams('section=reviews');
     mockAuth('authenticated');
 

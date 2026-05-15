@@ -193,9 +193,8 @@ export function useWorkspaceStatsViewModel({
       source: data?.userIntelligence,
       formatCurrency,
       formatNumber,
-      locale,
     });
-  }, [copy, data?.userIntelligence, formatCurrency, formatNumber, locale]);
+  }, [copy, data?.userIntelligence, formatCurrency, formatNumber]);
 
   const activitySignals: WorkspaceStatisticsActivitySignalView[] = (() => {
     if (mode === 'personalized' && data?.decisionLayer) {
@@ -204,7 +203,6 @@ export function useWorkspaceStatsViewModel({
         source: data.decisionLayer,
         formatCurrency,
         formatNumber,
-        locale,
       });
     }
 
@@ -322,12 +320,11 @@ export function useWorkspaceStatsViewModel({
   const opportunityRadar = React.useMemo<WorkspaceStatisticsOpportunityRadarItemView[]>(() => {
     return buildOpportunityRadar({
       copy,
-      locale,
       localeTag,
       formatCurrency,
       source: data?.opportunityRadar,
     });
-  }, [copy, data?.opportunityRadar, formatCurrency, locale, localeTag]);
+  }, [copy, data?.opportunityRadar, formatCurrency, localeTag]);
 
   const priceIntelligence = React.useMemo<WorkspaceStatisticsPriceIntelligenceView>(() => {
     const contextCityFallback = data?.decisionContext.city.label ?? selectedCityOption?.label ?? null;
@@ -337,7 +334,6 @@ export function useWorkspaceStatsViewModel({
       source: data?.priceIntelligence,
       contextCityFallback,
       contextCategoryFallback,
-      locale,
       localeTag,
       formatCurrency,
     });
@@ -347,7 +343,6 @@ export function useWorkspaceStatsViewModel({
     data?.decisionContext.category.label,
     data?.decisionContext.city.label,
     formatCurrency,
-    locale,
     localeTag,
     selectedCategoryOption,
     selectedCityOption,
@@ -382,35 +377,32 @@ export function useWorkspaceStatsViewModel({
   const rightRailRisks = React.useMemo(
     () => buildRecommendationPrioritySection({
       copy,
-      locale,
       source: data?.risks,
       fallbackTitle: copy.userRisksTitle,
       fallbackSubtitle: copy.userRisksSubtitle,
       fallbackItems: userIntelligence?.risks ?? [],
     }),
-    [copy, data?.risks, locale, userIntelligence?.risks],
+    [copy, data?.risks, userIntelligence?.risks],
   );
   const rightRailOpportunities = React.useMemo(
     () => buildRecommendationPrioritySection({
       copy,
-      locale,
       source: data?.opportunities,
       fallbackTitle: copy.userOpportunitiesTitle,
       fallbackSubtitle: copy.userOpportunitiesSubtitle,
       fallbackItems: userIntelligence?.opportunities ?? [],
     }),
-    [copy, data?.opportunities, locale, userIntelligence?.opportunities],
+    [copy, data?.opportunities, userIntelligence?.opportunities],
   );
   const rightRailNextSteps = React.useMemo(
     () => buildRecommendationActionSection({
       copy,
-      locale,
       source: data?.nextSteps,
       fallbackTitle: copy.userActionsTitle,
       fallbackSubtitle: copy.userActionsSubtitle,
       fallbackSteps: userIntelligence?.nextSteps ?? [],
     }),
-    [copy, data?.nextSteps, locale, userIntelligence?.nextSteps],
+    [copy, data?.nextSteps, userIntelligence?.nextSteps],
   );
 
   const funnel = React.useMemo<WorkspaceStatisticsFunnelItemView[]>(() => {

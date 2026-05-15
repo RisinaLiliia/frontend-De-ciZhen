@@ -10,16 +10,13 @@ import {
   WORKSPACE_REVIEW_RANGE_OPTIONS,
 } from '@/features/workspace/requests/workspaceReviewControls';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
-import type { Locale } from '@/lib/i18n/t';
 
 type WorkspaceReviewsShellControlsProps = {
   t: (key: I18nKey) => string;
-  locale: Locale;
 };
 
 export function WorkspaceReviewsShellControls({
   t,
-  locale,
 }: WorkspaceReviewsShellControlsProps) {
   const {
     reviewSort,
@@ -30,17 +27,17 @@ export function WorkspaceReviewsShellControls({
   } = useWorkspaceReviewControlsState();
 
   const sortLabel = reviewSort === 'top'
-    ? (locale === 'de' ? 'Top bewertet' : 'Top rated')
-    : (locale === 'de' ? 'Neueste' : 'Latest');
+    ? t(I18N_KEYS.workspace.reviewSortTop)
+    : t(I18N_KEYS.workspace.reviewSortLatest);
 
   const controlsContent = (
     <div className="workspace-reviews-shell-controls">
       <div className="workspace-reviews-shell-controls__group workspace-reviews-shell-controls__group--range">
         <RangeActionToolbar
-          groupLabel={locale === 'de' ? 'Zeitraum' : 'Time range'}
+          groupLabel={t(I18N_KEYS.workspace.rangeAriaLabel)}
           options={WORKSPACE_REVIEW_RANGE_OPTIONS.map((option) => ({
             value: option,
-            label: getWorkspaceReviewRangeLabel(option, locale),
+            label: getWorkspaceReviewRangeLabel(option, t),
           }))}
           value={reviewRange}
           onChange={setReviewRange}
@@ -51,8 +48,8 @@ export function WorkspaceReviewsShellControls({
         <RangeActionToolbar<ProviderReviewSort>
           groupLabel={t(I18N_KEYS.requestsPage.sortLabel)}
           options={[
-            { value: 'latest', label: locale === 'de' ? 'Neueste' : 'Latest' },
-            { value: 'top', label: locale === 'de' ? 'Top bewertet' : 'Top rated' },
+            { value: 'latest', label: t(I18N_KEYS.workspace.reviewSortLatest) },
+            { value: 'top', label: t(I18N_KEYS.workspace.reviewSortTop) },
           ]}
           value={reviewSort}
           onChange={setReviewSort}
@@ -60,8 +57,8 @@ export function WorkspaceReviewsShellControls({
         <button
           type="button"
           className="panel-action icon-button--hint workspace-control-shell__action workspace-reviews-shell-controls__reset"
-          aria-label={locale === 'de' ? 'Filter zurücksetzen' : 'Reset filters'}
-          title={locale === 'de' ? 'Filter zurücksetzen' : 'Reset filters'}
+          aria-label={t(I18N_KEYS.requestsPage.clearFilters)}
+          title={t(I18N_KEYS.requestsPage.clearFilters)}
           onClick={resetReviewControls}
         >
           <IconFilter />
@@ -76,12 +73,12 @@ export function WorkspaceReviewsShellControls({
         {controlsContent}
       </div>
       <WorkspaceMobileFiltersSheet
-        title={locale === 'de' ? 'Bewertungsfilter' : 'Review filters'}
+        title={t(I18N_KEYS.workspace.reviewFiltersTitle)}
         closeLabel={t(I18N_KEYS.auth.closeDialog)}
-        triggerLabel={locale === 'de' ? 'Filter' : 'Filters'}
+        triggerLabel={t(I18N_KEYS.requestsPage.filterRegionLabel)}
         summary={(
           <>
-            <span className="workspace-mobile-filters__summary-chip">{getWorkspaceReviewRangeLabel(reviewRange, locale)}</span>
+            <span className="workspace-mobile-filters__summary-chip">{getWorkspaceReviewRangeLabel(reviewRange, t)}</span>
             <span className="workspace-mobile-filters__summary-chip">{sortLabel}</span>
           </>
         )}

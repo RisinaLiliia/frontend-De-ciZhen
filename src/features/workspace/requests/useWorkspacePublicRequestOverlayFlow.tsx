@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 
 import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
@@ -25,10 +24,8 @@ type ManagedRequestState = {
 };
 
 export function useWorkspacePublicRequestOverlayFlow({
-  locale,
   requests,
 }: {
-  locale: Locale;
   requests: RequestResponseDto[];
 }) {
   const t = useT();
@@ -75,7 +72,7 @@ export function useWorkspacePublicRequestOverlayFlow({
   const openChatConversation = React.useCallback(async (payload: WorkspaceChatConversationInput, title?: string) => {
     try {
       if (!isWorkspaceChatConversationInput(payload)) {
-        toast.error(locale === 'de' ? 'Chat konnte nicht geöffnet werden.' : 'Chat could not be opened.');
+        toast.error(t(I18N_KEYS.workspace.chatOpenError));
         return;
       }
 
@@ -90,13 +87,13 @@ export function useWorkspacePublicRequestOverlayFlow({
       setActiveOfferRequestId(null);
       setActiveChatState({
         conversationId: conversation.id,
-        title: title?.trim() || fallbackTitle || (locale === 'de' ? 'Nachrichten' : 'Messages'),
+        title: title?.trim() || fallbackTitle || t(I18N_KEYS.workspace.messagesTitle),
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
       toast.error(message);
     }
-  }, [locale, qc, requestsById, t]);
+  }, [qc, requestsById, t]);
 
   const closeChat = React.useCallback(() => {
     setActiveChatState(null);

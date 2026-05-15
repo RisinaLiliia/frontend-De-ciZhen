@@ -47,7 +47,8 @@ import type {
   WorkspaceRequestsViewVariant,
 } from '@/features/workspace/requests/workspaceRequestsView.model';
 import type { WorkspaceMyRequestCardDto, WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
-import type { Locale } from '@/lib/i18n/t';
+import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import { t as translate, type Locale } from '@/lib/i18n/t';
 import { pickRequestImage } from '@/lib/requests/images';
 
 export type { WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
@@ -66,6 +67,17 @@ type RailProps = {
   className?: string;
   variant?: WorkspaceRequestsViewVariant;
 };
+
+function tx(locale: Locale, key: I18nKey) {
+  return translate(key, locale);
+}
+
+function fillLocaleTemplate(locale: Locale, key: I18nKey, values: Record<string, string>) {
+  return Object.entries(values).reduce(
+    (result, [token, value]) => result.replace(`{${token}}`, value),
+    tx(locale, key),
+  );
+}
 
 function RequestsListPagination({
   locale,
@@ -88,11 +100,11 @@ function RequestsListPagination({
         totalPages={safeTotalPages}
         onPrevPage={() => onPageChange(Math.max(1, safePage - 1))}
         onNextPage={() => onPageChange(Math.min(safeTotalPages, safePage + 1))}
-        ariaLabel={locale === 'de' ? 'Seitennavigation für Anfragen' : 'Requests page navigation'}
-        prevAriaLabel={locale === 'de' ? 'Vorherige Seite' : 'Previous page'}
-        nextAriaLabel={locale === 'de' ? 'Nächste Seite' : 'Next page'}
-        prevTitle={locale === 'de' ? 'Vorherige Seite' : 'Previous page'}
-        nextTitle={locale === 'de' ? 'Nächste Seite' : 'Next page'}
+        ariaLabel={tx(locale, I18N_KEYS.requestsPage.workspaceRequestPageNavigationLabel)}
+        prevAriaLabel={tx(locale, I18N_KEYS.requestsPage.paginationPrev)}
+        nextAriaLabel={tx(locale, I18N_KEYS.requestsPage.paginationNext)}
+        prevTitle={tx(locale, I18N_KEYS.requestsPage.paginationPrev)}
+        nextTitle={tx(locale, I18N_KEYS.requestsPage.paginationNext)}
       />
     </div>
   );
@@ -187,7 +199,7 @@ function WorkflowProgress({
   const resolveStepMeta = React.useCallback((step: WorkspaceMyRequestCardDto['progress']['steps'][number]) => {
     if (step.key === 'request') {
       return card.createdAt?.trim()
-        || (locale === 'de' ? 'Erstellt' : 'Created');
+        || tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowCreatedMeta);
     }
 
     if (step.key === 'offers') {
@@ -196,51 +208,51 @@ function WorkflowProgress({
       }
 
       if (step.status === 'done') {
-        return locale === 'de' ? 'Erhalten' : 'Received';
+        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowReceivedMeta);
       }
 
       if (step.status === 'current') {
-        return locale === 'de' ? 'Ausstehend' : 'Pending';
+        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowPendingMeta);
       }
 
-      return locale === 'de' ? 'Noch offen' : 'Not started';
+      return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotStartedMeta);
     }
 
     if (step.key === 'selection') {
       if (step.status === 'done') {
-        return locale === 'de' ? 'Getroffen' : 'Selected';
+        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowSelectedMeta);
       }
 
       if (step.status === 'current') {
-        return locale === 'de' ? 'Ausstehend' : 'Pending';
+        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowPendingMeta);
       }
 
-      return locale === 'de' ? 'Noch offen' : 'Not started';
+      return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotStartedMeta);
     }
 
     if (step.key === 'contract') {
       if (step.status === 'done') {
-        return locale === 'de' ? 'Bestätigt' : 'Confirmed';
+        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowConfirmedMeta);
       }
 
       if (step.status === 'current') {
         return card.nextEventAt?.trim()
-          ? (locale === 'de' ? `Aktiv · ${card.nextEventAt}` : `Active · ${card.nextEventAt}`)
-          : (locale === 'de' ? 'Aktiv' : 'Active');
+          ? fillLocaleTemplate(locale, I18N_KEYS.requestsPage.workspaceWorkflowActiveWithDate, { date: card.nextEventAt })
+          : tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowActiveMeta);
       }
 
-      return locale === 'de' ? 'Noch nicht erstellt' : 'Not created yet';
+      return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotCreatedMeta);
     }
 
     if (card.state === 'completed') {
-      return locale === 'de' ? 'Abgeschlossen' : 'Completed';
+      return tx(locale, I18N_KEYS.requestsPage.statusCompleted);
     }
 
     if (card.state === 'active') {
-      return locale === 'de' ? 'In Arbeit' : 'In progress';
+      return tx(locale, I18N_KEYS.requestsPage.statusInProgress);
     }
 
-    return locale === 'de' ? 'Noch nicht gestartet' : 'Not started';
+    return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotStartedMeta);
   }, [card, locale]);
 
   return (
@@ -249,7 +261,7 @@ function WorkflowProgress({
         <div
           className="my-request-card__progress"
           role="list"
-          aria-label={locale === 'de' ? 'Fortschritt der Anfrage' : 'Request progress'}
+          aria-label={tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowProgressLabel)}
         >
           {steps.map((step) => (
             <div
@@ -491,33 +503,19 @@ function RequestOwnerFooterNote({
 
   let fallbackNote: string;
   if (workspaceVariant === 'market') {
-    fallbackNote = locale === 'de'
-      ? 'Öffne die Details, um diesen Marktvorgang im Kontext zu prüfen.'
-      : 'Open the details to review this market item in context.';
+    fallbackNote = tx(locale, I18N_KEYS.requestsPage.workspaceFooterNoteMarket);
   } else if (card.decision.actionType === 'review_offers') {
-    fallbackNote = locale === 'de'
-      ? 'Du hast offene Entscheidungen. Wir helfen dir bei der Auswahl.'
-      : 'You have open decisions. We help you with the selection.';
+    fallbackNote = tx(locale, I18N_KEYS.requestsPage.workspaceFooterNoteReviewOffers);
   } else if (card.decision.actionType === 'confirm_contract') {
-    fallbackNote = locale === 'de'
-      ? 'Die nächsten Schritte hängen von deiner Vertragsbestätigung ab.'
-      : 'The next steps depend on your contract confirmation.';
+    fallbackNote = tx(locale, I18N_KEYS.requestsPage.workspaceFooterNoteConfirmContract);
   } else if (card.decision.actionType === 'reply_required') {
-    fallbackNote = locale === 'de'
-      ? 'Es gibt offene Rückmeldungen. Antworte, damit der Vorgang weiterläuft.'
-      : 'There are open replies pending. Respond to keep the workflow moving.';
+    fallbackNote = tx(locale, I18N_KEYS.requestsPage.workspaceFooterNoteReplyRequired);
   } else if (card.decision.actionType === 'confirm_completion') {
-    fallbackNote = locale === 'de'
-      ? 'Bestätige den Abschluss, damit der Vorgang sauber beendet wird.'
-      : 'Confirm completion to close the workflow cleanly.';
+    fallbackNote = tx(locale, I18N_KEYS.requestsPage.workspaceFooterNoteConfirmCompletion);
   } else if (card.decision.actionType === 'review_completion') {
-    fallbackNote = locale === 'de'
-      ? 'Der Auftrag ist abgeschlossen. Hinterlasse jetzt dein Feedback zum Anbieter.'
-      : 'The job is completed. Leave your feedback for the provider now.';
+    fallbackNote = tx(locale, I18N_KEYS.requestsPage.workspaceFooterNoteReviewCompletion);
   } else {
-    fallbackNote = locale === 'de'
-      ? 'Behalte diesen Vorgang im Blick und steuere die nächsten Schritte direkt hier.'
-      : 'Keep this workflow in view and manage the next steps here.';
+    fallbackNote = tx(locale, I18N_KEYS.requestsPage.workspaceFooterNoteDefault);
   }
 
   const note = noteFromInsights || noteFromDecision || noteFromActivity || fallbackNote;
@@ -655,12 +653,12 @@ function RequestOwnerMenu({
         });
       } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareUrl);
-        toast.success(locale === 'de' ? 'Link kopiert.' : 'Link copied.');
+        toast.success(tx(locale, I18N_KEYS.requestDetails.workspaceLinkCopied));
       } else {
-        window.prompt(locale === 'de' ? 'Link teilen' : 'Share link', shareUrl);
+        window.prompt(tx(locale, I18N_KEYS.requestDetails.workspaceShareLink), shareUrl);
       }
     } catch {
-      toast.error(locale === 'de' ? 'Link konnte nicht geteilt werden.' : 'Could not share link.');
+      toast.error(tx(locale, I18N_KEYS.requestDetails.workspaceShareFailed));
     }
   }, [card.requestPreview.title, closeMenu, locale, requestHref]);
 
@@ -669,9 +667,7 @@ function RequestOwnerMenu({
 
     if (typeof window !== 'undefined') {
       const confirmed = window.confirm(
-        locale === 'de'
-          ? 'Diese Anfrage endgültig löschen?'
-          : 'Delete this request permanently?',
+        tx(locale, I18N_KEYS.requestsPage.workspaceDeleteRequestConfirm),
       );
       if (!confirmed) return;
     }
@@ -682,7 +678,7 @@ function RequestOwnerMenu({
   return (
     <div ref={menuRef} className="my-request-card__owner-menu" data-card-action="true">
       <MoreDotsLink
-        label={locale === 'de' ? 'Anfrage-Menü öffnen' : 'Open request menu'}
+        label={tx(locale, I18N_KEYS.requestsPage.workspaceOpenRequestMenu)}
         className={`my-request-card__owner-menu-trigger ${isOpen ? 'is-open' : ''}`.trim()}
         onClick={() => setIsOpen((prev) => !prev)}
       />
@@ -848,7 +844,7 @@ function WorkspaceRequestCard({
             'workspace-guest-request-card--market',
             marketActions.length > 0 ? 'workspace-guest-request-card--with-actions' : '',
           ].filter(Boolean).join(' ')}
-          ariaLabel={locale === 'de' ? 'Anfrage öffnen' : 'Open request'}
+          ariaLabel={tx(locale, I18N_KEYS.requestsPage.openRequest)}
           imageSrc={preview.imageUrl || pickRequestImage(preview.imageCategoryKey ?? '')}
           imageAlt=""
           imagePriority={index === 0}
@@ -868,8 +864,8 @@ function WorkspaceRequestCard({
               isFavorite={favoriteState.favoriteRequestIds.has(card.requestId)}
               isPending={favoriteState.pendingFavoriteRequestIds.has(card.requestId)}
               onToggle={() => favoriteState.onToggleRequestFavorite(card.requestId)}
-              ariaLabel={locale === 'de' ? 'Anfrage merken' : 'Save request'}
-              title={locale === 'de' ? 'Anfrage merken' : 'Save request'}
+              ariaLabel={tx(locale, I18N_KEYS.requestsPage.workspaceSaveRequest)}
+              title={tx(locale, I18N_KEYS.requestsPage.workspaceSaveRequest)}
               className="workspace-guest-request-card__favorite-btn"
             />
           ) : null}
@@ -907,7 +903,7 @@ function WorkspaceRequestCard({
         prefetch={index < 2}
         href={preview.href}
         className="my-request-card__surface"
-        ariaLabel={locale === 'de' ? 'Anfrage öffnen' : 'Open request'}
+        ariaLabel={tx(locale, I18N_KEYS.requestsPage.openRequest)}
         imageSrc={preview.imageUrl || pickRequestImage(preview.imageCategoryKey ?? '')}
         imageAlt=""
         imagePriority={index === 0}
@@ -962,7 +958,7 @@ function WorkspaceRequestCard({
                       className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary"
                       onClick={() => listContext.onOpenRequest?.(card.requestId, cardOpenIntent)}
                     >
-                      {locale === 'de' ? 'Details öffnen' : 'Open details'}
+                      {tx(locale, I18N_KEYS.requestsPage.workspaceOpenDetails)}
                     </button>
                   )}
                   {chrome.primaryAction ? (
@@ -1034,38 +1030,32 @@ function EmptyState({
     <section className="panel my-requests-empty">
       <h3>{mode === 'empty'
         ? (isMarket
-          ? (locale === 'de' ? 'Noch keine Marktvorgänge' : 'No market items yet')
-          : (locale === 'de' ? 'Noch keine eigenen Vorgänge' : 'No own workflows yet'))
+          ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketEmptyTitle)
+          : tx(locale, I18N_KEYS.requestsPage.workspacePrivateEmptyTitle))
         : (isMarket
-          ? (locale === 'de' ? 'Keine Marktvorgänge für diesen Filter' : 'No market items for this filter')
-          : (locale === 'de' ? 'Keine Vorgänge für diesen Filter' : 'No items for this filter'))}
+          ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketFilteredTitle)
+          : tx(locale, I18N_KEYS.requestsPage.workspacePrivateFilteredTitle))}
       </h3>
       <p>
         {mode === 'empty'
           ? (isMarket
-            ? (locale === 'de'
-              ? 'Sobald neue Anfragen im Markt eintreffen, erscheinen sie hier in derselben Arbeitsoberfläche.'
-              : 'As new requests enter the market, they will appear here in the same workspace surface.')
-            : (locale === 'de'
-              ? 'Sobald du eine Anfrage erstellst oder auf passende Aufträge reagierst, erscheint deine Arbeit hier.'
-              : 'Once you create a request or respond to matching jobs, your work will appear here.'))
-          : (locale === 'de'
-            ? 'Passe Status, Rolle oder Zeitraum an.'
-            : 'Adjust status, role, or period.')}
+            ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketEmptyHint)
+            : tx(locale, I18N_KEYS.requestsPage.workspacePrivateEmptyHint))
+          : tx(locale, I18N_KEYS.requestsPage.workspaceFilteredHint)}
       </p>
       <div className="my-requests-empty__actions">
         {emptyCtaHref ? (
           <Link href={emptyCtaHref} prefetch={false} className="btn-primary">
             {isMarket
-              ? (locale === 'de' ? 'Markt aktualisieren' : 'Refresh market')
-              : (locale === 'de' ? 'Anfrage erstellen' : 'Create request')}
+              ? tx(locale, I18N_KEYS.requestsPage.workspaceRefreshMarketCta)
+              : tx(locale, I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta)}
           </Link>
         ) : null}
         {secondaryCtaHref ? (
           <Link href={secondaryCtaHref} prefetch={false} className="btn-secondary">
             {isMarket
-              ? (locale === 'de' ? 'Zu Anbietern' : 'Go to providers')
-              : (locale === 'de' ? 'Zum Markt' : 'Go to market')}
+              ? tx(locale, I18N_KEYS.requestsPage.workspaceGoToProvidersCta)
+              : tx(locale, I18N_KEYS.requestsPage.workspaceGoToMarketCta)}
           </Link>
         ) : null}
       </div>
@@ -1082,18 +1072,14 @@ function AuthGate({
 }) {
   return (
     <section className="panel my-requests-auth-gate">
-      <h3>{locale === 'de' ? 'Meine Arbeit ist nur nach Anmeldung verfügbar' : 'My work is only available after sign-in'}</h3>
-      <p>
-        {locale === 'de'
-          ? 'Melde dich an, um deine eigenen Anfragen, Vorgänge und Abschlüsse im Workspace zu verwalten.'
-          : 'Sign in to manage your requests, workflows, and completions inside the workspace.'}
-      </p>
+      <h3>{tx(locale, I18N_KEYS.requestsPage.workspaceAuthGateTitle)}</h3>
+      <p>{tx(locale, I18N_KEYS.requestsPage.workspaceAuthGateHint)}</p>
       <div className="my-requests-empty__actions">
         <Link href={guestLoginHref} prefetch={false} className="btn-primary">
-          {locale === 'de' ? 'Anmelden' : 'Sign in'}
+          {tx(locale, I18N_KEYS.auth.loginCta)}
         </Link>
         <Link href="/workspace?section=requests&scope=market" prefetch={false} className="btn-secondary">
-          {locale === 'de' ? 'Zum Markt' : 'Go to market'}
+          {tx(locale, I18N_KEYS.requestsPage.workspaceGoToMarketCta)}
         </Link>
       </div>
     </section>
@@ -1184,7 +1170,6 @@ export function WorkspaceRequestsView({
     openChatConversation,
     openOfferSheet,
   } = useWorkspaceRequestOverlayFlow({
-    locale,
     cards: model.cards,
     listContext: overlayInputContext,
   });
@@ -1215,12 +1200,12 @@ export function WorkspaceRequestsView({
     return (
       <section className="panel my-requests-empty">
         <h3>{variant === 'market'
-          ? (locale === 'de' ? 'Die Marktansicht konnte nicht geladen werden.' : 'The market view could not be loaded.')
-          : (locale === 'de' ? 'Deine Arbeitsansicht konnte nicht geladen werden.' : 'Your work view could not be loaded.')}
+          ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketLoadErrorTitle)
+          : tx(locale, I18N_KEYS.requestsPage.workspacePrivateLoadErrorTitle)}
         </h3>
-        <p>{locale === 'de' ? 'Bitte versuche es erneut.' : 'Please try again.'}</p>
+        <p>{tx(locale, I18N_KEYS.requestsPage.workspaceReloadHint)}</p>
         <button type="button" className="btn-primary" onClick={() => window.location.reload()}>
-          {locale === 'de' ? 'Neu laden' : 'Reload'}
+          {tx(locale, I18N_KEYS.common.retry)}
         </button>
       </section>
     );
@@ -1346,15 +1331,11 @@ export function WorkspaceRequestsView({
             onExit={onExitDecisionMode}
           />
           <section className="panel my-requests-empty my-requests-empty--success">
-            <h3>{locale === 'de' ? 'Alle offenen Entscheidungen erledigt' : 'All open decisions completed'}</h3>
-            <p>
-              {locale === 'de'
-                ? 'Deine Decision Queue ist leer. Du kannst zum normalen Listenmodus zurückkehren.'
-                : 'Your decision queue is empty. You can return to the default list mode.'}
-            </p>
+            <h3>{tx(locale, I18N_KEYS.requestsPage.workspaceDecisionDoneTitle)}</h3>
+            <p>{tx(locale, I18N_KEYS.requestsPage.workspaceDecisionDoneHint)}</p>
             <div className="my-requests-empty__actions">
               <button type="button" className="btn-primary" onClick={onExitDecisionMode}>
-                {locale === 'de' ? 'Modus beenden' : 'Exit mode'}
+                {tx(locale, I18N_KEYS.requestsPage.workspaceDecisionDoneCta)}
               </button>
             </div>
           </section>

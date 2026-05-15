@@ -59,7 +59,35 @@ export type WorkspaceStatisticsCopy = {
   activityGmvLabel: string;
   activityRevenueLabel: string;
   activityNoResponse: string;
+  activityMinutesShortLabel: string;
   activityTakeRateSuffix: string;
+  activityOfferRateHintPositive: string;
+  activityOfferRateHintNegative: string;
+  activityResponseFirstOfferHint: string;
+  activityResponseActionHint: string;
+  activityUnansweredRiskHint: string;
+  activityCancellationStableHint: string;
+  activityCancellationUnstableHint: string;
+  activityCompletedSignalHint: string;
+  activityRevenueSignalTemplate: string;
+  trendStableLabel: string;
+  trendNewTemplate: string;
+  trendSinceLastPeriodTemplate: string;
+  trendContextTodayLabel: string;
+  trendContextWeekLabel: string;
+  trendContextMonthLabel: string;
+  trendContext90DaysLabel: string;
+  reviewSingularLabel: string;
+  reviewPluralLabel: string;
+  insightMetricRequestsLabel: string;
+  insightMetricProvidersLabel: string;
+  insightMetricRatioLabel: string;
+  insightMetricShareLabel: string;
+  insightMetricResponseTimeLabel: string;
+  insightMetricSuccessRateLabel: string;
+  insightMetricProfileLabel: string;
+  insightMetricProviderSearchesLabel: string;
+  insightMetricUnansweredLabel: string;
   demandTitle: string;
   demandSubtitle: string;
   demandExpandListLabel: string;
@@ -106,6 +134,11 @@ export type WorkspaceStatisticsCopy = {
   opportunitySummaryCompetitive: string;
   opportunitySummaryLowDemand: string;
   opportunitySummaryLow: string;
+  opportunityStatusVeryHigh: string;
+  opportunityStatusGood: string;
+  opportunityStatusBalanced: string;
+  opportunityStatusCompetitive: string;
+  opportunityStatusLow: string;
   opportunityWhyLabel: string;
   priceTitle: string;
   priceSubtitle: string;
@@ -140,6 +173,9 @@ export type WorkspaceStatisticsCopy = {
   priceStrategyEntryLabel: string;
   priceStrategyGrowthLabel: string;
   priceStrategyScaleLabel: string;
+  priceStrategyEntryDescription: string;
+  priceStrategyGrowthDescription: string;
+  priceStrategyScaleDescription: string;
   priceRecommendationFallbackTemplate: string;
   priceSignalLabel: string;
   priceGuidanceNote: string;
@@ -177,10 +213,24 @@ export type WorkspaceStatisticsCopy = {
   decisionStrategyLoadingBody: string;
   decisionApplyStrategyLabel: string;
   decisionOpenRequestsLabel: string;
+  decisionReasonMarketBalanceTemplate: string;
+  decisionReasonDemandProvidersTemplate: string;
+  decisionReasonGrowth: string;
+  decisionReasonActivity: string;
+  decisionReasonDemand: string;
+  decisionReasonPriceCorridorTemplate: string;
+  decisionSummaryFallback: string;
+  decisionFocusStepTemplate: string;
+  decisionFocusFallback: string;
+  decisionPriceStepTemplate: string;
+  decisionPriceFallback: string;
+  decisionResponseTimeStep: string;
+  personalizedDecisionSummaryFallback: string;
   userComparisonLabel: string;
   userDecisionSubtitle: string;
   userGapTitle: string;
   userGapSummaryTemplate: string;
+  userAtMarketLevelLabel: string;
   userPositionTitle: string;
   userPositionSubtitle: string;
   userPositionTopPrefix: string;
@@ -233,6 +283,9 @@ export type WorkspaceStatisticsCopy = {
   userFitLabel: string;
   userFitHighLabel: string;
   userRecommendationLabel: string;
+  userRecommendationReliabilityHigh: string;
+  userRecommendationReliabilityMedium: string;
+  userRecommendationReliabilityLow: string;
   userActionPriorityHigh: string;
   userActionPriorityMedium: string;
   userActionPriorityLow: string;
@@ -315,6 +368,7 @@ export type WorkspaceStatisticsCopy = {
   emptyCities: string;
   emptyInsights: string;
   emptyActivity: string;
+  fallbackGeneralCategoryLabel: string;
   peakLabel: string;
   bestWindowLabel: string;
   updatedLabel: string;
@@ -416,7 +470,35 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   activityGmvLabel: 'GMV',
   activityRevenueLabel: 'Plattform-Umsatz',
   activityNoResponse: 'Keine Antwortdaten',
+  activityMinutesShortLabel: 'Min.',
   activityTakeRateSuffix: 'Take Rate',
+  activityOfferRateHintPositive: 'Signal: Nachfrage wird solide in Angebote umgewandelt',
+  activityOfferRateHintNegative: 'Risiko: Zu wenig Nachfrage wird in Angebote überführt',
+  activityResponseFirstOfferHint: 'Zeit bis zum ersten Angebot',
+  activityResponseActionHint: 'Aktion: erstes Angebot möglichst unter 2h senden',
+  activityUnansweredRiskHint: 'Risiko: verlorene Aufträge ohne schnelle Reaktion',
+  activityCancellationStableHint: 'Signal: stabile Abschlussqualität',
+  activityCancellationUnstableHint: 'Risiko: instabile Abschlussqualität',
+  activityCompletedSignalHint: 'Signal: bewiesene Lieferfähigkeit im aktuellen Markt',
+  activityRevenueSignalTemplate: 'Signal: Monetarisierung funktioniert. {gmv} · {takeRate}% {suffix}',
+  trendStableLabel: 'Trend stabil',
+  trendNewTemplate: '+{value} neu {context}',
+  trendSinceLastPeriodTemplate: '{delta} seit letzter Periode',
+  trendContextTodayLabel: 'heute',
+  trendContextWeekLabel: 'diese Woche',
+  trendContextMonthLabel: 'diesen Monat',
+  trendContext90DaysLabel: 'in 90 Tagen',
+  reviewSingularLabel: 'Bewertung',
+  reviewPluralLabel: 'Bewertungen',
+  insightMetricRequestsLabel: 'Anfragen',
+  insightMetricProvidersLabel: 'Anbieter',
+  insightMetricRatioLabel: 'Verhältnis',
+  insightMetricShareLabel: 'Anteil',
+  insightMetricResponseTimeLabel: 'Antwortzeit',
+  insightMetricSuccessRateLabel: 'Erfolgsquote',
+  insightMetricProfileLabel: 'Profil',
+  insightMetricProviderSearchesLabel: 'Anbieter-Suchen',
+  insightMetricUnansweredLabel: 'Offen >24h',
   demandTitle: 'Nachfrage nach Kategorien',
   demandSubtitle: 'Wo aktuell die meisten Aufträge entstehen',
   demandExpandListLabel: 'Alle Kategorien anzeigen',
@@ -470,6 +552,11 @@ const COPY_DE: WorkspaceStatisticsCopy = {
     'Aktuell ist die Nachfrage in diesem Segment begrenzt. Prüfe Alternativen mit stärkerem Wachstum oder niedrigerem Wettbewerbsdruck.',
   opportunitySummaryLow:
     'Die Opportunity ist derzeit niedrig. Neue Chancen entstehen meist mit zusätzlicher Nachfrage oder besserer Marktaktivität.',
+  opportunityStatusVeryHigh: 'Sehr hohe Chance',
+  opportunityStatusGood: 'Gute Chance',
+  opportunityStatusBalanced: 'Ausgeglichen',
+  opportunityStatusCompetitive: 'Viele Anbieter',
+  opportunityStatusLow: 'Niedrige Chance',
   opportunityWhyLabel: 'Warum gute Chance?',
   priceTitle: 'Preis-Intelligenz',
   priceSubtitle: 'Empfohlene Preisbereiche',
@@ -507,6 +594,9 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   priceStrategyEntryLabel: 'Einstieg',
   priceStrategyGrowthLabel: 'Wachstum',
   priceStrategyScaleLabel: 'Skalierung',
+  priceStrategyEntryDescription: 'Für schnelle Abschlüsse und einen leichten Markteintritt.',
+  priceStrategyGrowthDescription: 'Für stabile Conversion bei gesunder Marge.',
+  priceStrategyScaleDescription: 'Nur mit starkem Profil, schneller Antwort und klarer Differenzierung.',
   priceRecommendationFallbackTemplate: 'Der Preisbereich {range} zeigt aktuell die höchste Abschlussrate{citySuffix}.',
   priceSignalLabel: 'Preis Signal',
   priceGuidanceNote: 'Orientierung für neue Angebote im gewählten Zeitraum.',
@@ -544,10 +634,24 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   decisionStrategyLoadingBody: 'Fokus, Preis und Reaktionszeit werden auf Basis von Nachfrage, Wettbewerb und Conversion-Signalen vorbereitet.',
   decisionApplyStrategyLabel: 'Strategie anwenden',
   decisionOpenRequestsLabel: 'Passende Aufträge öffnen',
+  decisionReasonMarketBalanceTemplate: 'Hohe Nachfrage bei relativ niedriger Anbieterzahl ({ratio}x Marktbalance).',
+  decisionReasonDemandProvidersTemplate: '{demand} Nachfrage-Signale treffen auf nur {providers} aktive Anbieter.',
+  decisionReasonGrowth: 'Das Segment zeigt zusätzlich klares Wachstum.',
+  decisionReasonActivity: 'Die Marktaktivität ist hoch genug für schnelle Reaktionen und Abschlüsse.',
+  decisionReasonDemand: 'Die Nachfrage ist im aktuellen Zeitraum überdurchschnittlich stark.',
+  decisionReasonPriceCorridorTemplate: 'Der Preis-Korridor {range} wird aktuell durch Marktdaten gestützt.',
+  decisionSummaryFallback: 'Nutze den aktuellen Kontext, um Fokus, Preis und Reaktionszeit sauber auszurichten.',
+  decisionFocusStepTemplate: 'Fokus: {value}',
+  decisionFocusFallback: 'Fokus: Globalen Markt beobachten und dann Opportunity wählen',
+  decisionPriceStepTemplate: 'Preis: {value}',
+  decisionPriceFallback: 'Preis: Erst nach belastbaren Marktpreisen skalieren',
+  decisionResponseTimeStep: 'Reaktionszeit: unter 2h halten',
+  personalizedDecisionSummaryFallback: 'Priorisiert Chancen, Risiken und nächste Schritte für dein aktuelles Markt-Setup.',
   userComparisonLabel: 'User vs Markt',
   userDecisionSubtitle: 'Vergleicht deine Performance mit dem aktuellen Markt',
   userGapTitle: 'Gap Analysis',
   userGapSummaryTemplate: 'Du verlierst {percent}% zwischen Angebot → Antwort. Das betrifft aktuell {count} Vorgänge.',
+  userAtMarketLevelLabel: 'Auf Marktniveau',
   userPositionTitle: 'Performance vs Market',
   userPositionSubtitle: 'Deine Position im aktuellen Marktumfeld',
   userPositionTopPrefix: 'Top',
@@ -600,6 +704,9 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   userFitLabel: 'Dein Fit',
   userFitHighLabel: 'hoch',
   userRecommendationLabel: 'Empfehlung',
+  userRecommendationReliabilityHigh: 'Hohe Sicherheit',
+  userRecommendationReliabilityMedium: 'Mittlere Sicherheit',
+  userRecommendationReliabilityLow: 'Niedrige Sicherheit',
   userActionPriorityHigh: 'High',
   userActionPriorityMedium: 'Medium',
   userActionPriorityLow: 'Low',
@@ -682,6 +789,7 @@ const COPY_DE: WorkspaceStatisticsCopy = {
   emptyCities: 'Noch keine Städtedaten verfügbar.',
   emptyInsights: 'Noch keine Insights verfügbar.',
   emptyActivity: 'Noch keine Aktivitätsdaten.',
+  fallbackGeneralCategoryLabel: 'Generalistisch',
   peakLabel: 'Höchster Aktivitätspunkt',
   bestWindowLabel: 'Bestes Zeitfenster',
   updatedLabel: 'Letzte Aktualisierung',
@@ -784,7 +892,35 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   activityGmvLabel: 'GMV',
   activityRevenueLabel: 'Platform revenue',
   activityNoResponse: 'No response data',
+  activityMinutesShortLabel: 'min',
   activityTakeRateSuffix: 'Take rate',
+  activityOfferRateHintPositive: 'Signal: demand is converting into offers',
+  activityOfferRateHintNegative: 'Risk: too little demand is converting into offers',
+  activityResponseFirstOfferHint: 'Time to first offer',
+  activityResponseActionHint: 'Action: keep the first offer below 2h',
+  activityUnansweredRiskHint: 'Risk: lost jobs without a fast response',
+  activityCancellationStableHint: 'Signal: stable close quality',
+  activityCancellationUnstableHint: 'Risk: unstable close quality',
+  activityCompletedSignalHint: 'Signal: proven delivery capacity in the current market',
+  activityRevenueSignalTemplate: 'Signal: monetization is working. {gmv} · {takeRate}% {suffix}',
+  trendStableLabel: 'Trend stable',
+  trendNewTemplate: '+{value} new {context}',
+  trendSinceLastPeriodTemplate: '{delta} since last period',
+  trendContextTodayLabel: 'today',
+  trendContextWeekLabel: 'this week',
+  trendContextMonthLabel: 'this month',
+  trendContext90DaysLabel: 'in 90 days',
+  reviewSingularLabel: 'review',
+  reviewPluralLabel: 'reviews',
+  insightMetricRequestsLabel: 'Requests',
+  insightMetricProvidersLabel: 'Providers',
+  insightMetricRatioLabel: 'Ratio',
+  insightMetricShareLabel: 'Share',
+  insightMetricResponseTimeLabel: 'Response time',
+  insightMetricSuccessRateLabel: 'Success rate',
+  insightMetricProfileLabel: 'Profile',
+  insightMetricProviderSearchesLabel: 'Provider searches',
+  insightMetricUnansweredLabel: 'Open >24h',
   demandTitle: 'Demand by category',
   demandSubtitle: 'Where market demand is currently highest',
   demandExpandListLabel: 'Show all categories',
@@ -838,6 +974,11 @@ const COPY_EN: WorkspaceStatisticsCopy = {
     'Demand in this segment is currently limited. Consider alternatives with stronger growth or lower competitive pressure.',
   opportunitySummaryLow:
     'Opportunity is currently low. Better demand or higher market activity is needed before scaling efforts here.',
+  opportunityStatusVeryHigh: 'Very high opportunity',
+  opportunityStatusGood: 'Good opportunity',
+  opportunityStatusBalanced: 'Balanced',
+  opportunityStatusCompetitive: 'Competitive',
+  opportunityStatusLow: 'Low opportunity',
   opportunityWhyLabel: 'Why this is a good opportunity',
   priceTitle: 'Price intelligence',
   priceSubtitle: 'Recommended price ranges',
@@ -875,6 +1016,9 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   priceStrategyEntryLabel: 'Entry',
   priceStrategyGrowthLabel: 'Growth',
   priceStrategyScaleLabel: 'Scale',
+  priceStrategyEntryDescription: 'For faster closes and easier market entry.',
+  priceStrategyGrowthDescription: 'For stable conversion with healthy margin.',
+  priceStrategyScaleDescription: 'Only with a strong profile, fast response, and clear differentiation.',
   priceRecommendationFallbackTemplate: 'The range {range} currently shows the highest close rate{citySuffix}.',
   priceSignalLabel: 'Price signal',
   priceGuidanceNote: 'Reference range for new offers in the selected period.',
@@ -912,10 +1056,24 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   decisionStrategyLoadingBody: 'Focus, pricing, and response speed are being prepared from demand, competition, and conversion signals.',
   decisionApplyStrategyLabel: 'Apply strategy',
   decisionOpenRequestsLabel: 'Open matching requests',
+  decisionReasonMarketBalanceTemplate: 'Strong demand with relatively low provider pressure ({ratio}x market balance).',
+  decisionReasonDemandProvidersTemplate: '{demand} demand signals currently meet only {providers} active providers.',
+  decisionReasonGrowth: 'The segment also shows clear growth.',
+  decisionReasonActivity: 'Market activity is high enough to support fast response and conversion.',
+  decisionReasonDemand: 'Demand is above average in the current time range.',
+  decisionReasonPriceCorridorTemplate: 'The {range} pricing corridor is currently supported by market data.',
+  decisionSummaryFallback: 'Use the current context to align focus, pricing, and response speed.',
+  decisionFocusStepTemplate: 'Focus: {value}',
+  decisionFocusFallback: 'Focus: review the global market, then choose an opportunity',
+  decisionPriceStepTemplate: 'Price: {value}',
+  decisionPriceFallback: 'Price: scale only after reliable pricing signals',
+  decisionResponseTimeStep: 'Response time: keep it under 2h',
+  personalizedDecisionSummaryFallback: 'Prioritizes opportunities, risks, and next steps for your current market setup.',
   userComparisonLabel: 'User vs Market',
   userDecisionSubtitle: 'Compares your performance with the current market',
   userGapTitle: 'Gap analysis',
   userGapSummaryTemplate: 'You lose {percent}% between offer → response. That currently affects {count} cases.',
+  userAtMarketLevelLabel: 'At market level',
   userPositionTitle: 'Performance vs market',
   userPositionSubtitle: 'Your current market position',
   userPositionTopPrefix: 'Top',
@@ -968,6 +1126,9 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   userFitLabel: 'Your fit',
   userFitHighLabel: 'high',
   userRecommendationLabel: 'Recommendation',
+  userRecommendationReliabilityHigh: 'High confidence',
+  userRecommendationReliabilityMedium: 'Medium confidence',
+  userRecommendationReliabilityLow: 'Low confidence',
   userActionPriorityHigh: 'High',
   userActionPriorityMedium: 'Medium',
   userActionPriorityLow: 'Low',
@@ -1050,6 +1211,7 @@ const COPY_EN: WorkspaceStatisticsCopy = {
   emptyCities: 'No city demand data yet.',
   emptyInsights: 'No insights available yet.',
   emptyActivity: 'No activity data yet.',
+  fallbackGeneralCategoryLabel: 'General',
   peakLabel: 'Peak activity point',
   bestWindowLabel: 'Best time window',
   updatedLabel: 'Last updated',

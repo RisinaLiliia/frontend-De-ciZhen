@@ -122,11 +122,12 @@ describe('opportunity.utils', () => {
 
   it('exposes labels/statuses for de/en and summary mapping', () => {
     const copy = getWorkspaceStatisticsCopy('de');
+    const copyEn = getWorkspaceStatisticsCopy('en');
 
     expect(opportunityToneLabel('supply-heavy', copy)).toBe(copy.opportunityToneSupplyHeavy);
     expect(opportunityStatusClassName('very_high')).toBe('very-high');
-    expect(opportunityStatusLabel('competitive', 'de')).toBe('Viele Anbieter');
-    expect(opportunityStatusLabel('competitive', 'en')).toBe('Competitive');
+    expect(opportunityStatusLabel('competitive', copy)).toBe(copy.opportunityStatusCompetitive);
+    expect(opportunityStatusLabel('competitive', copyEn)).toBe(copyEn.opportunityStatusCompetitive);
     expect(opportunitySummaryLabel('balanced_competitive', copy)).toBe(copy.opportunitySummaryBalancedCompetitive);
   });
 

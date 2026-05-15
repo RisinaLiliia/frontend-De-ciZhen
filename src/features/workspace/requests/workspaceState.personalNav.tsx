@@ -11,7 +11,6 @@ import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import {
   buildPublicNavItems,
-  buildWorkspaceReviewsNavItem,
 } from '@/features/workspace/requests/workspaceState.publicNav';
 import {
   isWorkspacePublicSection,
@@ -32,21 +31,17 @@ export type BuildWorkspacePersonalNavItemsArgs = {
   sentCount: number;
   completedJobsCount: number;
   favoriteRequestCount: number;
-  navRatingValue: string;
-  navReviewsCount: number;
   markPublicRequestsSeen: () => void;
   setWorkspaceTab: (tab: WorkspaceTab) => void;
   guestLoginHref: string;
   onGuestLockedAction: () => void;
-  reviewsHref: string;
-  reviewsMatch?: 'exact' | 'prefix';
-  reviewsForceActive: boolean;
   includeCompletedJobsInSecondary?: boolean;
 };
 
 function buildWorkspacePersonalizedSecondaryNavItems({
   t,
   activeWorkspaceTab,
+  activePublicSection,
   hasActivePublicSection,
   myRequestsTotal,
   favoriteRequestCount,
@@ -55,6 +50,7 @@ function buildWorkspacePersonalizedSecondaryNavItems({
   BuildWorkspacePersonalNavItemsArgs,
   | 't'
   | 'activeWorkspaceTab'
+  | 'activePublicSection'
   | 'myRequestsTotal'
   | 'favoriteRequestCount'
   | 'setWorkspaceTab'
@@ -77,15 +73,14 @@ function buildWorkspacePersonalizedSecondaryNavItems({
     },
     {
       key: 'my-favorites',
-      href: '/workspace?tab=favorites',
+      href: '/workspace?section=providers',
       label: t(I18N_KEYS.requestsPage.navFavorites),
       icon: <IconHeart />,
       badgeValue: normalizeWorkspaceNavCount(favoriteRequestCount),
       value: normalizeWorkspaceNavCount(favoriteRequestCount),
       hint: t(I18N_KEYS.requestDetails.ctaSave),
-      onClick: () => setWorkspaceTab('favorites'),
-      forceActive: !hasActivePublicSection && activeWorkspaceTab === 'favorites',
-      match: 'exact',
+      forceActive: activePublicSection === 'providers',
+      match: 'prefix',
       tier: 'secondary',
     },
   ];
@@ -98,7 +93,6 @@ function buildWorkspaceGuestSecondaryNavItems({
   hasActivePublicSection,
   guestLoginHref,
   onGuestLockedAction,
-  setWorkspaceTab,
 }: Pick<
   BuildWorkspacePersonalNavItemsArgs,
   | 't'
@@ -106,7 +100,6 @@ function buildWorkspaceGuestSecondaryNavItems({
   | 'activePublicSection'
   | 'guestLoginHref'
   | 'onGuestLockedAction'
-  | 'setWorkspaceTab'
 > & {
   hasActivePublicSection: boolean;
 }): WorkspaceNavItem[] {
@@ -136,13 +129,12 @@ function buildWorkspaceGuestSecondaryNavItems({
     },
     {
       key: 'my-favorites',
-      href: '/workspace?tab=favorites',
+      href: '/workspace?section=providers',
       label: t(I18N_KEYS.requestsPage.navFavorites),
       icon: <IconHeart />,
       hint: t(I18N_KEYS.requestDetails.ctaSave),
-      onClick: () => setWorkspaceTab('favorites'),
-      forceActive: !hasActivePublicSection && activeWorkspaceTab === 'favorites',
-      match: 'exact',
+      forceActive: activePublicSection === 'providers',
+      match: 'prefix',
       tier: 'secondary',
     },
   ];
@@ -159,15 +151,10 @@ export function buildWorkspacePersonalNavItems({
   publicStatsCount,
   myRequestsTotal,
   favoriteRequestCount,
-  navRatingValue,
-  navReviewsCount,
   markPublicRequestsSeen,
   setWorkspaceTab,
   guestLoginHref,
   onGuestLockedAction,
-  reviewsHref,
-  reviewsMatch = 'prefix',
-  reviewsForceActive,
 }: BuildWorkspacePersonalNavItemsArgs): WorkspaceNavItem[] {
   const hasActivePublicSection = isWorkspacePublicSection(activePublicSection);
   const publicPrimaryItems = buildPublicNavItems({
@@ -180,22 +167,13 @@ export function buildWorkspacePersonalNavItems({
     markPublicRequestsSeen,
   }).map((item) => ({ ...item, tier: 'primary' as const }));
 
-  const reviewsItem = buildWorkspaceReviewsNavItem({
-    t,
-    navRatingValue,
-    navReviewsCount,
-    reviewsHref,
-    reviewsMatch,
-    reviewsForceActive,
-  });
-
   if (isPersonalized) {
     return [
       ...publicPrimaryItems,
-      reviewsItem,
       ...buildWorkspacePersonalizedSecondaryNavItems({
         t,
         activeWorkspaceTab,
+        activePublicSection,
         hasActivePublicSection,
         myRequestsTotal,
         favoriteRequestCount,
@@ -206,7 +184,6 @@ export function buildWorkspacePersonalNavItems({
 
   return [
     ...publicPrimaryItems,
-    reviewsItem,
     ...buildWorkspaceGuestSecondaryNavItems({
       t,
       activeWorkspaceTab,
@@ -214,7 +191,6 @@ export function buildWorkspacePersonalNavItems({
       hasActivePublicSection,
       guestLoginHref,
       onGuestLockedAction,
-      setWorkspaceTab,
     }),
   ];
 }

@@ -4,7 +4,8 @@ import * as React from 'react';
 
 import { buildDecisionPanelSummaryText } from '@/features/workspace/requests/requestsDecision.model';
 import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
-import type { Locale } from '@/lib/i18n/t';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { t as translate, type Locale } from '@/lib/i18n/t';
 
 type DecisionPanelProps = {
   locale: Locale;
@@ -25,53 +26,42 @@ export function DecisionPanel({
   onOpenQueueItem,
   variant = 'private',
 }: DecisionPanelProps) {
+  const t = (key: string) => translate(key as never, locale);
   const summaryText = React.useMemo(
     () => buildDecisionPanelSummaryText({ locale, panel, variant }),
     [locale, panel, variant],
   );
-  const priorityLabel = React.useCallback((level: 'high' | 'medium' | 'low') => {
+  const priorityLabel = (level: 'high' | 'medium' | 'low') => {
     if (variant === 'market') {
-      if (locale === 'de') {
-        if (level === 'high') return 'Hoch';
-        if (level === 'medium') return 'Mittel';
-        return 'Neu';
-      }
-
-      if (level === 'high') return 'High';
-      if (level === 'medium') return 'Medium';
-      return 'New';
+      if (level === 'high') return t(I18N_KEYS.requestsPage.decisionPanelPriorityHigh);
+      if (level === 'medium') return t(I18N_KEYS.requestsPage.decisionPanelPriorityMedium);
+      return t(I18N_KEYS.requestsPage.decisionPanelPriorityNew);
     }
 
-    if (locale === 'de') {
-      if (level === 'high') return 'Hoch';
-      if (level === 'medium') return 'Mittel';
-      return 'Niedrig';
-    }
-
-    if (level === 'high') return 'High';
-    if (level === 'medium') return 'Medium';
-    return 'Low';
-  }, [locale, variant]);
+    if (level === 'high') return t(I18N_KEYS.requestsPage.decisionPanelPriorityHigh);
+    if (level === 'medium') return t(I18N_KEYS.requestsPage.decisionPanelPriorityMedium);
+    return t(I18N_KEYS.requestsPage.decisionPanelPriorityLow);
+  };
   const overviewEyebrow = variant === 'market'
-    ? (locale === 'de' ? 'Marktlage' : 'Market workload')
-    : (locale === 'de' ? 'Arbeitslage' : 'Workload');
+    ? t(I18N_KEYS.requestsPage.decisionPanelMarketOverviewEyebrow)
+    : t(I18N_KEYS.requestsPage.decisionPanelPrivateOverviewEyebrow);
   const overviewLabels = variant === 'market'
     ? {
-        highUrgency: locale === 'de' ? 'Hohe Nachfrage' : 'High demand',
-        inProgress: locale === 'de' ? 'In Ausführung' : 'In execution',
-        completedThisPeriod: locale === 'de' ? 'Abgeschlossen' : 'Completed',
+        highUrgency: t(I18N_KEYS.requestsPage.decisionPanelOverviewHighDemand),
+        inProgress: t(I18N_KEYS.requestsPage.decisionPanelOverviewInExecution),
+        completedThisPeriod: t(I18N_KEYS.requestsPage.statusCompleted),
       }
     : {
-        highUrgency: locale === 'de' ? 'Hohe Dringlichkeit' : 'High urgency',
-        inProgress: locale === 'de' ? 'In Arbeit' : 'In progress',
-        completedThisPeriod: locale === 'de' ? 'Abgeschlossen' : 'Completed',
+        highUrgency: t(I18N_KEYS.requestsPage.decisionPanelOverviewHighUrgency),
+        inProgress: t(I18N_KEYS.requestsPage.statusInProgress),
+        completedThisPeriod: t(I18N_KEYS.requestsPage.statusCompleted),
       };
 
   return (
     <div className="my-decision-panel">
       <section className="panel my-decision-panel__summary">
         <span className="my-decision-panel__eyebrow">
-          {locale === 'de' ? 'Decision Panel' : 'Decision panel'}
+          {t(I18N_KEYS.requestsPage.decisionPanelTitle)}
         </span>
         <strong className="my-decision-panel__count">
           {panel.summary.totalNeedsAction}
@@ -80,21 +70,13 @@ export function DecisionPanel({
           {variant === 'market'
             ? (
               panel.summary.totalNeedsAction > 0
-                ? (locale === 'de'
-                  ? 'Vorgänge brauchen Aufmerksamkeit'
-                  : 'Items need attention')
-                : (locale === 'de'
-                  ? 'Keine offenen Vorgänge'
-                  : 'No open items')
+                ? t(I18N_KEYS.requestsPage.decisionPanelMarketNeedsAttention)
+                : t(I18N_KEYS.requestsPage.decisionPanelMarketNoOpenItems)
             )
             : (
               panel.summary.totalNeedsAction > 0
-                ? (locale === 'de'
-                  ? 'Vorgänge brauchen deine Entscheidung'
-                  : 'Items need your decision')
-                : (locale === 'de'
-                  ? 'Keine offenen Entscheidungen'
-                  : 'No open decisions')
+                ? t(I18N_KEYS.requestsPage.decisionPanelPrivateNeedsDecision)
+                : t(I18N_KEYS.requestsPage.decisionPanelPrivateNoOpenItems)
             )}
         </h3>
         <p className="my-decision-panel__text">{summaryText}</p>
@@ -111,7 +93,7 @@ export function DecisionPanel({
       <section className="panel my-decision-panel__queue">
         <div className="my-decision-panel__section-head">
           <span className="my-decision-panel__eyebrow">
-            {locale === 'de' ? 'Action Queue' : 'Action queue'}
+            {t(I18N_KEYS.requestsPage.decisionPanelQueueTitle)}
           </span>
         </div>
         {panel.queue.length > 0 ? (
@@ -140,19 +122,13 @@ export function DecisionPanel({
         ) : (
           <p className="my-decision-panel__empty">
             {variant === 'market'
-              ? (locale === 'de'
-                ? 'Der Markt ist aktuell im Fluss.'
-                : 'The market is currently moving.')
-              : (locale === 'de'
-                ? 'Deine Vorgänge sind aktuell im Fluss.'
-                : 'Your workflows are currently moving.')}
+              ? t(I18N_KEYS.requestsPage.decisionPanelMarketMoving)
+              : t(I18N_KEYS.requestsPage.decisionPanelPrivateMoving)}
           </p>
         )}
         {variant === 'private' && isDecisionMode && panel.queue.length > 0 ? (
           <p className="my-decision-panel__hint">
-            {locale === 'de'
-              ? 'Decision Mode priorisiert diese Vorgänge automatisch.'
-              : 'Decision mode keeps these items in priority order.'}
+            {t(I18N_KEYS.requestsPage.decisionPanelAutoPriorityHint)}
           </p>
         ) : null}
       </section>

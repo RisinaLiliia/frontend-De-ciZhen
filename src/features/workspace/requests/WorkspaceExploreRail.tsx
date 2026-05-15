@@ -14,7 +14,6 @@ import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspac
 import { WorkspaceActionsAside } from './WorkspaceActionsAside';
 import { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
 import { WorkspaceProvidersAside } from './WorkspaceProvidersAside';
-import { WorkspaceReviewsAside } from './WorkspaceReviewsAside';
 import { workspaceQK } from './queryKeys';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from './workspace.constants';
 
@@ -67,7 +66,6 @@ export function isWorkspaceExploreRailSection(section: PublicWorkspaceSection) {
   return (
     section === 'requests'
     || section === 'providers'
-    || section === 'reviews'
     || section === 'actions'
   );
 }
@@ -113,10 +111,6 @@ export function WorkspaceExploreRail({
 
   if (activeSection === 'providers') {
     return <WorkspaceProvidersAside t={t} locale={locale} />;
-  }
-
-  if (activeSection === 'reviews') {
-    return <WorkspaceReviewsAside t={t} locale={locale} />;
   }
 
   if (activeSection === 'actions') {
