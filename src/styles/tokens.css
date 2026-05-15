@@ -42,6 +42,39 @@
   );
   --surface-card-shadow: var(--shadow-card);
   --surface-card-shadow-hover: var(--shadow-card-hover, var(--shadow-card));
+    /* De'ciZhen calm workspace tokens */
+  --dc-bg: #f7f6f2;
+  --dc-surface: #ffffff;
+  --dc-surface-muted: #fbfaf7;
+
+  --dc-border: #e5e0d8;
+  --dc-border-soft: #f1ede6;
+
+  --dc-text: #121418;
+  --dc-text-muted: #667085;
+  --dc-text-soft: #8a9099;
+
+  --dc-primary: #2f3a56;
+  --dc-primary-hover: #253049;
+  --dc-primary-soft: #eef1f6;
+
+  --dc-sage: #6f8f74;
+  --dc-sage-soft: #eef4ef;
+
+  --dc-sand: #c9a56a;
+  --dc-sand-soft: #faf1e2;
+
+  --dc-blue: #5b7c99;
+  --dc-blue-soft: #eef4f8;
+
+  --dc-radius-sm: 8px;
+  --dc-radius-md: 12px;
+  --dc-radius-lg: 16px;
+  --dc-radius-xl: 22px;
+
+  --dc-shadow-card: 0 1px 2px rgba(18, 20, 24, 0.04);
+  --dc-shadow-panel: 0 12px 32px rgba(18, 20, 24, 0.06);
+
 
   /* Global controls system */
   --control-bg: color-mix(in oklab, var(--c-surface) 88%, var(--c-panel) 12%);
