@@ -4,6 +4,7 @@ import { IconFilter } from '@/components/ui/icons/icons';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import type { ProviderReviewSort } from '@/features/providers/publicProfile/useProviderReviewsModel';
 import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
+import { WorkspaceButton } from '@/features/workspace/shared/WorkspaceButton';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
 import {
   getWorkspaceReviewRangeLabel,
@@ -54,15 +55,16 @@ export function WorkspaceReviewsShellControls({
           value={reviewSort}
           onChange={setReviewSort}
         />
-        <button
+        <WorkspaceButton
           type="button"
+          variant="ghost"
           className="panel-action icon-button--hint workspace-control-shell__action workspace-reviews-shell-controls__reset"
           aria-label={t(I18N_KEYS.requestsPage.clearFilters)}
           title={t(I18N_KEYS.requestsPage.clearFilters)}
           onClick={resetReviewControls}
         >
           <IconFilter />
-        </button>
+        </WorkspaceButton>
       </div>
     </div>
   );
