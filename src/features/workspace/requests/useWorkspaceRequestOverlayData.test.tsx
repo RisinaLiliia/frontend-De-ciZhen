@@ -29,6 +29,21 @@ vi.mock('@/lib/api/withStatusFallback', () => ({
   withStatusFallback: (fn: () => Promise<unknown>) => fn(),
 }));
 
+vi.mock('@/lib/i18n/useT', () => ({
+  useT: () => ((key: string) => ({
+    'requestDetails.statusAccepted': 'Akzeptiert',
+    'requestDetails.statusDeclined': 'Abgelehnt',
+    'requestDetails.statusWithdrawn': 'Zurückgezogen',
+    'requestDetails.statusConfirmed': 'Bestätigt',
+    'requestDetails.statusCancelled': 'Storniert',
+    'requestDetails.statusPending': 'Ausstehend',
+    'requestDetails.ctaChat': 'Zum Chat',
+    'requestsPage.decisionPanelPriorityNew': 'Neu',
+    'workspace.stateCompletedLabel': 'Abgeschlossen',
+    'requestDetails.workspaceRequestFallbackTitle': 'Anfrage',
+  }[key] ?? key)),
+}));
+
 import { fetchWorkspaceManagedRequest } from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
 import { listMyContracts } from '@/lib/api/contracts';
 import { listMyProviderOffers, listOffersByRequest } from '@/lib/api/offers';
