@@ -1,13 +1,12 @@
 'use client';
 
-import Link from 'next/link';
-
+import { WorkspaceModeNav } from '@/features/workspace/shell/WorkspaceModeNav';
 import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 import {
   buildSharedContextControlsProps,
   useWorkspaceSharedContext,
 } from '@/features/workspace/shell/useWorkspaceSharedContext';
-import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import { type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
@@ -50,26 +49,7 @@ export function WorkspaceModeHeader({
         <div className="workspace-environment__shell-hint">{model.copy.shellHint}</div>
       </div>
 
-      {model.activeMode === 'overview' ? (
-        <nav className="workspace-mode-nav" aria-label={t(I18N_KEYS.workspace.modeNavAriaLabel)}>
-          {model.modeItems.map((item) => (
-            <Link
-              key={item.key}
-              href={item.href}
-              prefetch={false}
-              className={`workspace-mode-nav__item${item.isActive ? ' is-active' : ''}`.trim()}
-              data-mode-key={item.key}
-              aria-current={item.isActive ? 'page' : undefined}
-            >
-              <span className="workspace-mode-nav__icon" aria-hidden="true">{item.icon}</span>
-              <span className="workspace-mode-nav__copy">
-                <strong className="workspace-mode-nav__label">{item.label}</strong>
-                <span className="workspace-mode-nav__description">{item.description}</span>
-              </span>
-            </Link>
-          ))}
-        </nav>
-      ) : null}
+      {model.activeMode === 'overview' ? <WorkspaceModeNav items={model.modeItems} t={t} /> : null}
 
       <WorkspaceSharedContextControls
         {...sharedContextControlsProps}
