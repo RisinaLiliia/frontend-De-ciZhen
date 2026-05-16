@@ -1,6 +1,5 @@
 'use client';
 
-import { WorkspaceModeNav } from '@/features/workspace/shell/WorkspaceModeNav';
 import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 import {
   buildSharedContextControlsProps,
@@ -48,8 +47,6 @@ export function WorkspaceModeHeader({
         </div>
         <div className="workspace-environment__shell-hint">{model.copy.shellHint}</div>
       </div>
-
-      {model.activeMode === 'overview' ? <WorkspaceModeNav items={model.modeItems} t={t} /> : null}
 
       <WorkspaceSharedContextControls
         {...sharedContextControlsProps}
