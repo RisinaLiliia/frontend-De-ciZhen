@@ -398,6 +398,12 @@
       box-shadow var(--transition-fast);
   }
 
+  /* Presentational boundary for the workspace filter bar (layout-neutral) */
+  .workspace-filter-bar {
+    min-width: 0;
+    width: 100%;
+  }
+
   .workspace-shared-context-controls__slash-tab:hover {
     color: var(--c-text);
     background: color-mix(in oklab, white 92%, var(--c-panel) 8%);
