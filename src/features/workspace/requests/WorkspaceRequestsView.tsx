@@ -51,6 +51,7 @@ import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace'
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 import { pickRequestImage } from '@/lib/requests/images';
+import { workspaceRightRailPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 export type { WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
 
@@ -1098,7 +1099,7 @@ export function RequestsPrivateActionRail({
   variant = 'private',
 }: RailProps) {
   return (
-    <div className={['my-requests-rail', className ?? ''].filter(Boolean).join(' ')}>
+    <div className={workspaceRightRailPanelShell('my-requests-rail', className)}>
       <DecisionPanel
         locale={locale}
         panel={panel}
