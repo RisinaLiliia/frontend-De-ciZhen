@@ -10,6 +10,7 @@ import { WorkspaceChipToggleGroup } from '@/features/workspace/requests/Workspac
 import { IconFilter } from '@/components/ui/icons/icons';
 import { WorkspaceButton } from '@/features/workspace/shared/WorkspaceButton';
 import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
+import { WorkspaceFilterBar } from '@/features/workspace/shared/WorkspaceFilterBar';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 
@@ -159,7 +160,7 @@ export function WorkspaceSharedContextControls({
           </div>
         ) : null}
 
-        <div className="requests-filter-grid requests-filter-grid--primary workspace-shared-context-controls__filters-grid">
+        <WorkspaceFilterBar className="requests-filter-grid requests-filter-grid--primary workspace-shared-context-controls__filters-grid">
           <div className="requests-filter">
             <div className="requests-select-wrap">
               <CitySearchSelect
@@ -202,7 +203,7 @@ export function WorkspaceSharedContextControls({
               />
             </div>
           ) : null}
-        </div>
+        </WorkspaceFilterBar>
 
         <div className="workspace-shared-context-controls__range-row">
           <RangeActionToolbar
