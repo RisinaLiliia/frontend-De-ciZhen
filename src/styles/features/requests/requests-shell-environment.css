@@ -2,9 +2,9 @@
 
 @layer components {
   .workspace-shared-context-controls {
-    --workspace-context-control-font-size: 12px;
+    --workspace-context-control-font-size: 11px;
     display: grid;
-    gap: var(--workspace-environment-card-gap);
+    gap: calc(var(--workspace-environment-card-gap) - var(--space-1));
   }
 
   .workspace-environment,
@@ -268,7 +268,7 @@
 
   .workspace-shared-context-controls__body {
     display: grid;
-    gap: var(--space-3);
+    gap: var(--space-2);
   }
 
   .workspace-shared-context-controls__filters-grid {
@@ -288,8 +288,8 @@
     gap: var(--space-2);
     min-width: 0;
     flex-wrap: nowrap;
-    padding: 8px;
-    border-radius: 16px;
+    padding: 6px;
+    border-radius: 12px;
     border: 1px solid color-mix(in oklab, white 68%, var(--c-border) 32%);
     background:
       linear-gradient(
@@ -301,7 +301,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
-    scroll-padding-inline: 8px;
+    scroll-padding-inline: 6px;
   }
 
   .workspace-shared-context-controls__control-cluster::-webkit-scrollbar {

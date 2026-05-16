@@ -46,7 +46,7 @@ export function WorkspaceButton({
     <button
       type={type ?? 'button'}
       className={cn(
-        'inline-flex items-center justify-center font-semibold rounded-[var(--dc-radius-md)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dc-primary-soft)] disabled:opacity-60 disabled:pointer-events-none',
+        'inline-flex items-center justify-center font-semibold rounded-(--dc-radius-md) transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--dc-primary-soft) disabled:opacity-60 disabled:pointer-events-none',
         variantClasses[variant],
         sizeClasses[size],
         fullWidth && 'w-full',
