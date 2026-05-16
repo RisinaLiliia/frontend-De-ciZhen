@@ -2,8 +2,11 @@
 
 import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-
-import { WorkspaceExploreSection, WorkspaceFrame, WorkspaceTopProvidersAside } from '@/features/workspace/requests';
+import {
+  WorkspaceExploreSection,
+  WorkspaceFrame,
+  WorkspaceTopProvidersAside,
+} from '@/features/workspace/requests';
 import type { WorkspaceTab } from '@/features/workspace/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -12,6 +15,7 @@ import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspac
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
 import { WorkspaceModeHeader } from '@/features/workspace/shell/WorkspaceModeHeader';
+import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 import { isWorkspaceTab } from '@/features/workspace/requests';
 import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 
@@ -88,7 +92,9 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       sectionParam: searchParams.get('section'),
       hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
     });
-  const overviewFrameClassName = isOverviewPrivateMode ? 'workspace-frame__flow--overview' : undefined;
+  const overviewFrameClassName = isOverviewPrivateMode
+    ? 'workspace-frame__flow--overview'
+    : undefined;
   const overviewGridClassName = isOverviewPrivateMode ? 'workspace-frame--overview' : undefined;
 
   const introWithWorkspaceChrome = React.useMemo(() => {
@@ -114,6 +120,16 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     );
   }, [activePublicSection, activeWorkspaceTab, intro, locale, preferredRequestsRole, t]);
 
+  const workspaceSidebar = (
+    <WorkspaceSidebar
+      t={t}
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
+    />
+  );
+
   const contextualAside = (
     <WorkspaceContextAside
       t={t}
@@ -128,7 +144,9 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       {!isOverviewPrivateMode ? (
         <WorkspaceTopProvidersAside
           {...workspaceAsideBaseProps}
-          ctaHref={isWorkspaceAuthed ? '/workspace?section=requests' : '/workspace?section=providers'}
+          ctaHref={
+            isWorkspaceAuthed ? '/workspace?section=requests' : '/workspace?section=providers'
+          }
           pendingFavoriteProviderIds={pendingFavoriteProviderIds}
           onToggleFavorite={onToggleProviderFavorite}
         />
@@ -169,6 +187,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
         intro={introWithWorkspaceChrome}
         main={publicMain}
         aside={publicAside ?? contextualAside}
+        sidebar={workspaceSidebar}
         frameClassName={overviewGridClassName}
         contentClassName={overviewFrameClassName}
       />
@@ -181,6 +200,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
         intro={introWithWorkspaceChrome}
         main={privateMain}
         aside={privateAside ?? contextualAside}
+        sidebar={workspaceSidebar}
         frameClassName={overviewGridClassName}
         contentClassName={overviewFrameClassName}
       />
@@ -192,6 +212,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       intro={introWithWorkspaceChrome}
       main={publicMain}
       aside={contextualAside}
+      sidebar={workspaceSidebar}
       frameClassName={overviewGridClassName}
       contentClassName={overviewFrameClassName}
     />
