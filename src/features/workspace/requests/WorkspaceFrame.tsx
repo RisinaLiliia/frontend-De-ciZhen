@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import type { ReactNode } from 'react';
 import { TopProvidersPanel, type TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
@@ -10,6 +9,7 @@ type WorkspaceFrameProps = {
   intro?: ReactNode;
   main: ReactNode;
   aside: ReactNode;
+  sidebar?: ReactNode;
   frameClassName?: string;
   contentClassName?: string;
 };
@@ -18,30 +18,35 @@ export function WorkspaceFrame({
   intro,
   main,
   aside,
+  sidebar,
   frameClassName,
   contentClassName,
 }: WorkspaceFrameProps) {
   const desktopAsideClassName = ['stack-md', 'hide-below-desktop'].filter(Boolean).join(' ');
   const contentWrapperClassName = ['stack-md', contentClassName ?? ''].filter(Boolean).join(' ');
-  const gridClassName = ['requests-grid', intro ? 'requests-grid--equal-cols' : '', frameClassName ?? ''].filter(Boolean).join(' ');
+  const gridClassName = [
+    'requests-grid',
+    intro ? 'requests-grid--equal-cols' : '',
+    frameClassName ?? '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  if (intro) {
-    return (
-      <WorkspaceOverlaySurface intro={intro}>
-        <div className={gridClassName}>
-          <div className={contentWrapperClassName}>{main}</div>
-          <aside className={desktopAsideClassName}>{aside}</aside>
-        </div>
-      </WorkspaceOverlaySurface>
-    );
-  }
-
-  return (
-    <div className={gridClassName}>
-      <div className={contentWrapperClassName}>{main}</div>
-      <aside className={desktopAsideClassName}>{aside}</aside>
+  const body = (
+    <div className={sidebar ? 'workspace-frame__body' : undefined}>
+      {sidebar ? <div className="workspace-frame__sidebar">{sidebar}</div> : null}
+      <div className={gridClassName}>
+        <div className={contentWrapperClassName}>{main}</div>
+        <aside className={desktopAsideClassName}>{aside}</aside>
+      </div>
     </div>
   );
+
+  if (intro) {
+    return <WorkspaceOverlaySurface intro={intro}>{body}</WorkspaceOverlaySurface>;
+  }
+
+  return body;
 }
 
 type WorkspaceTopProvidersAsideProps = {
