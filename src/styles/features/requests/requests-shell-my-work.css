@@ -1324,6 +1324,13 @@
     }
   }
 
+  @media (max-width: 1199px) {
+    .my-requests-rail {
+      position: static;
+      top: auto;
+    }
+  }
+
   @media (max-width: 699px) {
     .requests-scope-switch {
       width: 100%;
@@ -1378,6 +1385,10 @@
 
     .my-requests-summary__accent {
       height: 3px;
+    }
+
+    .my-requests-rail {
+      display: none;
     }
 
     .my-requests-view {
