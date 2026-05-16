@@ -11,6 +11,10 @@ import {
 } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import {
+  workspacePanelShell,
+  workspaceStatCardShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import type { TranslateFn } from './statisticsSections.types';
 import { citySignalIcon, citySignalLabel } from './statisticsSections.utils';
@@ -65,7 +69,7 @@ export function StatisticsCitiesPanel({
   const placeholderRowCount = Math.max(0, minimumVisibleRows - visibleCityRows.length);
 
   return (
-    <section ref={panelRef} className="panel requests-stats-chart workspace-statistics__cities-panel">
+    <section ref={panelRef} className={workspacePanelShell('requests-stats-chart', 'workspace-statistics__cities-panel')}>
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.citiesTitle}</p>
         <p className="section-subtitle">{subtitle ?? copy.citiesSubtitle}</p>
@@ -116,7 +120,11 @@ export function StatisticsCitiesPanel({
               >
                 <button
                   type="button"
-                  className={`stat-card workspace-statistics-city-list__item${activeCityId === item.cityId ? ' is-active' : ''}${isCompetitor ? ' is-competitor' : ''}`.trim()}
+                  className={workspaceStatCardShell(
+                    'workspace-statistics-city-list__item',
+                    activeCityId === item.cityId && 'is-active',
+                    isCompetitor && 'is-competitor',
+                  )}
                   aria-pressed={activeCityId === item.cityId}
                   aria-label={`${copy.citiesColumnRank} ${rank}. ${item.name}. ${copy.citiesColumnRequests}: ${requestsLabel}. ${copy.citiesColumnJobSearches}: ${jobSearchesLabel}. ${copy.citiesColumnProviderSearches}: ${providerSearchesLabel}. ${copy.citiesColumnMarketBalance}: ${marketBalanceLabel}. ${signalLabel}.`}
                   onClick={() => onSelectCity(activeCityId === item.cityId ? null : item.cityId)}
@@ -163,7 +171,7 @@ export function StatisticsCitiesPanel({
               className="workspace-statistics-city-list__item-shell workspace-statistics-city-list__item-shell--placeholder"
               aria-hidden="true"
             >
-              <div className="stat-card workspace-statistics-city-list__item workspace-statistics-city-list__item--placeholder">
+              <div className={workspaceStatCardShell('workspace-statistics-city-list__item', 'workspace-statistics-city-list__item--placeholder')}>
                 <span className="workspace-statistics-city-list__rank-cell">
                   <span className="workspace-statistics-city-list__rank">—</span>
                 </span>

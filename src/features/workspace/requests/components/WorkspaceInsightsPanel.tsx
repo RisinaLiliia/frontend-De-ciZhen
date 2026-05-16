@@ -1,14 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { Badge, type BadgeVariant } from '@/components/ui/Badge';
+import {
+  WorkspaceBadge,
+  type WorkspaceBadgeVariant,
+} from '@/features/workspace/shared/WorkspaceBadge';
 
 export type WorkspaceInsightsPanelItem = {
   key: string;
   level?: 'info' | 'trend' | 'warning';
   kind?: 'demand' | 'opportunity' | 'performance' | 'growth' | 'risk' | 'promotion' | 'other';
   badgeLabel: string;
-  badgeTone: BadgeVariant;
+  badgeTone: WorkspaceBadgeVariant;
   title?: string;
   text: string;
   evidence?: string;
@@ -146,14 +149,12 @@ export function WorkspaceInsightsPanel({
             <article className={buildInsightClassName(featuredItem, true)}>
               <span className="workspace-statistics-insights__content">
                 <span className="workspace-statistics-insights__eyebrow">
-                  <Badge
+                  <WorkspaceBadge
                     variant={featuredItem.badgeTone}
-                    tone="soft"
-                    size="sm"
                     className="workspace-statistics-insights__chip"
                   >
                     {featuredItem.badgeLabel}
-                  </Badge>
+                  </WorkspaceBadge>
                   {featuredLabel ? (
                     <span className="workspace-statistics-insights__featured-label">{featuredLabel}</span>
                   ) : null}
@@ -185,14 +186,12 @@ export function WorkspaceInsightsPanel({
                 <li key={item.key} className={buildInsightClassName(item)}>
                   <span className="workspace-statistics-insights__content">
                     <span className="workspace-statistics-insights__eyebrow">
-                      <Badge
+                      <WorkspaceBadge
                         variant={item.badgeTone}
-                        tone="soft"
-                        size="sm"
                         className="workspace-statistics-insights__chip"
                       >
                         {item.badgeLabel}
-                      </Badge>
+                      </WorkspaceBadge>
                     </span>
                     {item.title ? <strong className="workspace-statistics-insights__title">{item.title}</strong> : null}
                     <span className="workspace-statistics-insights__text">{item.text}</span>

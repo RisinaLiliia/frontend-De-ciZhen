@@ -3,6 +3,10 @@
 import * as React from 'react';
 
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
+import {
+  workspacePanelShell,
+  workspaceStatLinkCardShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { paginateItems } from '../statisticsPagination.utils';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
@@ -36,7 +40,7 @@ export function StatisticsDemandPanel({
   className?: string;
 }) {
   return (
-    <section className={['panel', 'requests-stats-chart', 'workspace-statistics__demand-panel', className].filter(Boolean).join(' ')}>
+    <section className={workspacePanelShell('requests-stats-chart', 'workspace-statistics__demand-panel', className)}>
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.demandTitle}</p>
         <p className="section-subtitle">{subtitle ?? copy.demandSubtitle}</p>
@@ -74,7 +78,7 @@ export function StatisticsDemandPanel({
                   return onSelectCategory && row.categoryKey ? (
                     <button
                       type="button"
-                      className="stat-card stat-link workspace-statistics-demand__row workspace-statistics-demand__row-button"
+                      className={workspaceStatLinkCardShell('workspace-statistics-demand__row', 'workspace-statistics-demand__row-button')}
                       aria-label={`${row.categoryName}. ${copy.citiesColumnRequests}: ${row.requestCount}. ${row.sharePercent}%.`}
                       onClick={() => onSelectCategory(row.categoryKey ?? null)}
                     >
@@ -82,7 +86,7 @@ export function StatisticsDemandPanel({
                     </button>
                   ) : (
                     <div
-                      className="stat-card stat-link workspace-statistics-demand__row"
+                      className={workspaceStatLinkCardShell('workspace-statistics-demand__row')}
                       aria-label={`${row.categoryName}. ${copy.citiesColumnRequests}: ${row.requestCount}. ${row.sharePercent}%.`}
                     >
                       {content}

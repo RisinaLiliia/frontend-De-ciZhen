@@ -16,11 +16,13 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { buildWorkspaceHref } from '@/features/workspace/shell/workspaceLinks';
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsModel';
 import { StatisticsDecisionAiCard } from './stats/components/StatisticsDecisionAiCard';
 import { StatisticsMetricSignalCard } from './stats/components/StatisticsMetricSignalCard';
 import { StatisticsDemandPanelSection } from './stats/WorkspaceStatisticsSections';
 import { WorkspaceGuestRequestCard } from './components/WorkspaceGuestRequestCard';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 type WorkspaceOverviewMainProps = {
   locale: Locale;
@@ -325,7 +327,7 @@ export function WorkspaceOverviewMain({
   return (
     <section className="workspace-statistics-layout workspace-overview">
       <div ref={heroRef} className="workspace-overview__hero">
-        <section className="panel workspace-overview__panel workspace-overview__panel--snapshot">
+        <section className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--snapshot')}>
           <div className="panel-header">
             <div className="section-heading workspace-statistics__tile-header">
               <p className="section-title">{copy.snapshotTitle}</p>
@@ -334,9 +336,9 @@ export function WorkspaceOverviewMain({
               </p>
               {isFocusMode ? (
                 <div className="chip-row workspace-overview__focus-row">
-                  <span className="status-badge status-badge--info">
+                  <WorkspaceBadge variant="info">
                     {copy.focusLabel}: {statisticsModel.context.stickyLabel}
-                  </span>
+                  </WorkspaceBadge>
                 </div>
               ) : null}
             </div>
@@ -374,7 +376,7 @@ export function WorkspaceOverviewMain({
       ) : null}
 
       <div className="workspace-overview__grid">
-        <section className="panel workspace-overview__panel workspace-overview__panel--providers">
+        <section className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--providers')}>
           <div className="panel-header">
             <div className="section-heading workspace-statistics__tile-header">
               <p className="section-title">{topProvidersTitle}</p>
@@ -391,7 +393,10 @@ export function WorkspaceOverviewMain({
           />
         </section>
 
-        <section ref={offersPanelRef} className="panel workspace-overview__panel workspace-overview__panel--offers">
+        <section
+          ref={offersPanelRef}
+          className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--offers')}
+        >
           <div className="panel-header">
             <div className="section-heading workspace-statistics__tile-header">
               <p className="section-title">{copy.offersTitle}</p>
@@ -409,7 +414,7 @@ export function WorkspaceOverviewMain({
       </div>
 
       <section
-        className="panel workspace-overview__panel workspace-overview__panel--actions"
+        className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--actions')}
         style={actionsStyle}
       >
         <div className="panel-header">

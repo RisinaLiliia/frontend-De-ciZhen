@@ -3,9 +3,9 @@
 import * as React from 'react';
 
 import { RequestCard } from '@/components/requests/RequestCard';
-import { Badge } from '@/components/ui/Badge';
 import { LocationMeta } from '@/components/ui/LocationMeta';
 import { IconCalendar } from '@/components/ui/icons/icons';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 type WorkspaceGuestRequestCardProps = {
   href: string;
@@ -101,9 +101,9 @@ export function WorkspaceGuestRequestCard({
       onOpen={onOpen}
       isActive={isActive}
       statusSlot={statusSlot ?? (badgeLabel ? (
-        <Badge variant="opportunity" tone="soft" size="sm">
+        <WorkspaceBadge variant="opportunity">
           {badgeLabel}
-        </Badge>
+        </WorkspaceBadge>
       ) : null)}
       overlaySlot={overlaySlot}
       contentSlot={contentSlot}

@@ -3,6 +3,7 @@
 import type { Ref } from 'react';
 
 import type { Locale } from '@/lib/i18n/t';
+import { workspaceStatsChartPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import { OpportunityAnalysisCard } from './opportunity/OpportunityAnalysisCard';
 import { OpportunityTopCards } from './opportunity/OpportunityTopCards';
@@ -36,7 +37,7 @@ export function StatisticsOpportunityPanel({
   const analysisSummary = analysisItem ? opportunitySummaryLabel(analysisItem.summaryKey, copy) : '';
 
   return (
-    <section ref={panelRef} className="panel requests-stats-chart workspace-statistics-opportunity">
+    <section ref={panelRef} className={workspaceStatsChartPanelShell('workspace-statistics-opportunity')}>
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{title ?? copy.opportunityTitle}</p>
         <p className="section-subtitle">{copy.opportunitySubtitle}</p>

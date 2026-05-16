@@ -1,12 +1,13 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { workspacePanelShell, workspaceRequestsPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 export const PublicContent = dynamic(
   () => import('@/features/workspace/requests/PublicContent').then((mod) => mod.PublicContent),
   {
     loading: () => (
-      <section className="panel requests-panel">
+      <section className={workspaceRequestsPanelShell()}>
         <div className="skeleton h-96 w-full" />
       </section>
     ),
@@ -17,7 +18,7 @@ export const WorkspaceContent = dynamic(
   () => import('@/features/workspace/requests/WorkspaceContent').then((mod) => mod.WorkspaceContent),
   {
     loading: () => (
-      <section className="panel requests-panel">
+      <section className={workspaceRequestsPanelShell()}>
         <div className="skeleton h-96 w-full" />
       </section>
     ),
@@ -29,7 +30,7 @@ export const WorkspacePrivateIntro = dynamic(
   {
     loading: () => (
       <section className="workspace-intro-shell">
-        <div className="panel">
+        <div className={workspacePanelShell()}>
           <div className="skeleton h-48 w-full" />
         </div>
       </section>
@@ -42,7 +43,7 @@ export const WorkspacePublicIntro = dynamic(
   {
     loading: () => (
       <section className="workspace-intro-shell">
-        <div className="panel">
+        <div className={workspacePanelShell()}>
           <div className="skeleton h-48 w-full" />
         </div>
       </section>

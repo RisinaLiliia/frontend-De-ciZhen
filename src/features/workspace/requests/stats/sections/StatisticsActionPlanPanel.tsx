@@ -1,6 +1,10 @@
 'use client';
 
-import { Badge } from '@/components/ui/Badge';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
+import {
+  workspacePanelShell,
+  workspaceStatCardShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 
 export function StatisticsActionPlanPanel({
@@ -15,7 +19,7 @@ export function StatisticsActionPlanPanel({
   steps: NonNullable<WorkspaceStatisticsModel['userIntelligence']>['nextSteps'];
 }) {
   return (
-    <section className="panel workspace-statistics-user-panel workspace-statistics-user-panel--actions">
+    <section className={workspacePanelShell('workspace-statistics-user-panel', 'workspace-statistics-user-panel--actions')}>
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{title ?? copy.userActionsTitle}</p>
         <p className="section-subtitle">{subtitle ?? copy.userActionsSubtitle}</p>
@@ -23,12 +27,12 @@ export function StatisticsActionPlanPanel({
       {steps.length > 0 ? (
         <ol className="workspace-statistics-user-actions">
           {steps.map((step, index) => (
-            <li key={step.key} className="stat-card workspace-statistics-user-actions__item">
+            <li key={step.key} className={workspaceStatCardShell('workspace-statistics-user-actions__item')}>
               <div className="workspace-statistics-user-actions__head">
                 <span className="workspace-statistics-user-actions__index">{index + 1}.</span>
-                <Badge variant={step.priorityTone === 'warning' ? 'warning' : step.priorityTone === 'info' ? 'info' : 'success'} size="sm">
+                <WorkspaceBadge variant={step.priorityTone === 'warning' ? 'priority' : step.priorityTone === 'info' ? 'info' : 'success'}>
                   {step.priorityLabel}
-                </Badge>
+                </WorkspaceBadge>
               </div>
               <strong className="workspace-statistics-user-actions__title">{step.title}</strong>
               <p className="workspace-statistics-user-actions__detail">{step.detail}</p>

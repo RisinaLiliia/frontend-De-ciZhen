@@ -3,7 +3,7 @@ import type {
   WorkspaceStatisticsOverviewDto,
 } from '@/lib/api/dto/workspace';
 
-export type WorkspaceStatisticsSource = 'bff' | 'fallback';
+export type WorkspaceStatisticsSource = 'bff';
 
 export type WorkspaceStatisticsCitySourceDto = Omit<
   WorkspaceStatisticsCityDemandDto,

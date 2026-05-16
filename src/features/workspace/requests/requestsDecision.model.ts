@@ -1,9 +1,7 @@
 'use client';
 
-import type {
-  WorkspaceMyRequestCardDto,
-  WorkspaceRequestsDecisionPanelDto,
-} from '@/lib/api/dto/workspace';
+import type { WorkspaceRequestsViewCard } from '@/features/workspace/requests/workspaceRequestsView.model';
+import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 
@@ -22,9 +20,9 @@ export function resolveDecisionQueueIds(
 }
 
 export function sortCardsForDecisionMode(
-  cards: WorkspaceMyRequestCardDto[],
+  cards: WorkspaceRequestsViewCard[],
   panel: WorkspaceRequestsDecisionPanelDto | null | undefined,
-): WorkspaceMyRequestCardDto[] {
+): WorkspaceRequestsViewCard[] {
   const queueIds = resolveDecisionQueueIds(panel);
   if (queueIds.length === 0) return [];
 
@@ -32,7 +30,7 @@ export function sortCardsForDecisionMode(
 
   return queueIds
     .map((requestId) => cardByRequestId.get(requestId) ?? null)
-    .filter((card): card is WorkspaceMyRequestCardDto => Boolean(card));
+    .filter((card): card is WorkspaceRequestsViewCard => Boolean(card));
 }
 
 export function resolveDecisionActiveRequestId(params: {

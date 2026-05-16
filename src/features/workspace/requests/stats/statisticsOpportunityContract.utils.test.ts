@@ -5,7 +5,7 @@ import { ensureStatisticsOpportunityContract } from './statisticsOpportunityCont
 
 function createSourcePayload(): WorkspaceStatisticsOverviewSourceDto {
   return {
-    __source: 'fallback',
+   __source: 'bff', 
     updatedAt: '2026-03-14T10:00:00.000Z',
     mode: 'platform',
     range: '30d',

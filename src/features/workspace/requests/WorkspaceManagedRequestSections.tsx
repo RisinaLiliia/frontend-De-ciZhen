@@ -27,6 +27,7 @@ import type { Locale } from '@/lib/i18n/t';
 import { t as translate } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 import { WorkspaceInlineStateCard } from '@/features/workspace/requests/WorkspaceOverlayPrimitives';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 function fillTemplate(template: string, values: Record<string, string>) {
   return Object.entries(values).reduce(
@@ -72,7 +73,7 @@ function WorkspaceSelectedProviderSummary({
       <div className="my-request-contract-card__head">
         <div className="my-request-contract-card__identity">
           <strong>{offer.providerDisplayName?.trim() || t(I18N_KEYS.requestDetails.workspaceSelectedProviderFallback)}</strong>
-          <span className={statusBadge.className}>{statusBadge.label}</span>
+          <WorkspaceBadge variant={statusBadge.variant}>{statusBadge.label}</WorkspaceBadge>
         </div>
         {priceLabel ? <strong className="my-request-contract-card__price">{priceLabel}</strong> : null}
       </div>
@@ -222,7 +223,7 @@ export function WorkspaceRequestOffersSection({
                     {offerAmount ? (
                       <strong className="my-request-offer-card__price">{offerAmount}</strong>
                     ) : null}
-                    <span className={statusBadge.className}>{statusBadge.label}</span>
+                    <WorkspaceBadge variant={statusBadge.variant}>{statusBadge.label}</WorkspaceBadge>
                   </div>
                 </div>
 

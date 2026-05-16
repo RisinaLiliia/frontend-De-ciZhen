@@ -122,6 +122,8 @@ describe('myRequestsView.model', () => {
     expect(model.cards).toHaveLength(1);
     expect(model.cards[0]?.requestPreview.title).toBe('Büro reinigen');
     expect(model.cards[0]?.status.badgeLabel).toBe('Angenommen');
+    expect(model.cards[0]?.status.badgeVariant).toBe('success');
+    expect('badgeTone' in (model.cards[0]?.status ?? {})).toBe(false);
     expect(model.emptyMode).toBe('none');
   });
 

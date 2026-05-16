@@ -1,11 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { Badge, type BadgeVariant } from '@/components/ui/Badge';
+import {
+  WorkspaceBadge,
+  type WorkspaceBadgeVariant,
+} from '@/features/workspace/shared/WorkspaceBadge';
 
 type WorkspaceDecisionRecommendationSectionProps = {
   badgeLabel: string;
-  badgeTone: BadgeVariant;
+  badgeTone: WorkspaceBadgeVariant;
   tone: 'performance' | 'opportunity' | 'promotion';
   text: React.ReactNode;
   metric?: React.ReactNode;
@@ -35,9 +38,9 @@ export function WorkspaceDecisionRecommendationSection({
     <section className={rootClassName}>
       <div className="workspace-statistics-insights__content">
         <div className="workspace-statistics-insights__eyebrow">
-          <Badge variant={badgeTone} tone="soft" size="sm" className="workspace-statistics-insights__chip">
+          <WorkspaceBadge variant={badgeTone} className="workspace-statistics-insights__chip">
             {badgeLabel}
-          </Badge>
+          </WorkspaceBadge>
           {metric ? (
             <span className="workspace-statistics-insights__metric">{metric}</span>
           ) : null}

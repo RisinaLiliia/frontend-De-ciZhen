@@ -8,6 +8,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
+import { workspaceRequestsPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 import { WorkspaceContentPanels } from './WorkspaceContentPanels';
 import type { FavoritesView, WorkspaceStatusFilter, WorkspaceTab } from './workspace.types';
@@ -95,7 +96,10 @@ export function WorkspaceContent({
   );
 
   return (
-    <section className="panel requests-panel" aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}>
+    <section
+      className={workspaceRequestsPanelShell()}
+      aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}
+    >
       {showWorkspaceHeader ? (
         <SectionHeader
           className="requests-header"

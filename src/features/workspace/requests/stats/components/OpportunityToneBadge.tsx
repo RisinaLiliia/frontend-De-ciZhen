@@ -1,25 +1,25 @@
 'use client';
 
-export type StatisticsStatusBadgeTone =
+export type OpportunityToneBadgeTone =
   | 'very-high'
   | 'good'
   | 'balanced'
   | 'competitive'
   | 'low';
 
-export function StatisticsStatusBadge({
+export function OpportunityToneBadge({
   label,
   tone,
   className,
 }: {
   label: string;
-  tone: StatisticsStatusBadgeTone;
+  tone: OpportunityToneBadgeTone;
   className?: string;
 }) {
   return (
     <span
       className={[
-        'workspace-statistics-status-badge',
+        'workspace-opportunity-tone-badge',
         `is-${tone}`,
         className,
       ].filter(Boolean).join(' ')}
