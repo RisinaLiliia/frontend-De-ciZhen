@@ -32,21 +32,29 @@ export function WorkspaceFrame({
     .filter(Boolean)
     .join(' ');
 
-  const body = (
-    <div className={sidebar ? 'workspace-frame__body' : undefined}>
-      {sidebar ? <div className="workspace-frame__sidebar">{sidebar}</div> : null}
-      <div className={gridClassName}>
-        <div className={contentWrapperClassName}>{main}</div>
-        <aside className={desktopAsideClassName}>{aside}</aside>
-      </div>
+  const grid = (
+    <div className={gridClassName}>
+      <div className={contentWrapperClassName}>{main}</div>
+      <aside className={desktopAsideClassName}>{aside}</aside>
     </div>
   );
 
-  if (intro) {
-    return <WorkspaceOverlaySurface intro={intro}>{body}</WorkspaceOverlaySurface>;
+  const content = intro ? (
+    <WorkspaceOverlaySurface intro={intro}>{grid}</WorkspaceOverlaySurface>
+  ) : (
+    grid
+  );
+
+  if (sidebar) {
+    return (
+      <div className="workspace-frame__body">
+        <div className="workspace-frame__sidebar">{sidebar}</div>
+        <div className="workspace-frame__content">{content}</div>
+      </div>
+    );
   }
 
-  return body;
+  return content;
 }
 
 type WorkspaceTopProvidersAsideProps = {
