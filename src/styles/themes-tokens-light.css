@@ -1,98 +1,97 @@
 /* src/styles/themes-tokens-light.css */
+
 :root {
   /* Tailwind/shadcn-compatible semantic tokens (HSL channels) */
-  --bg: 220 25% 95%;
-  --surface: 220 35% 98%;
-  --panel: 0 0% 100%;
-  --text: 222 47% 11%;
-  --muted: 215 16% 47%;
-  --border: 220 20% 86%;
-  --primary: 220 53% 36%;
-  --accent: 38 91% 55%;
+  --bg: 40 24% 96%;
+  --surface: 0 0% 100%;
+  --panel: 40 33% 99%;
+  --text: 225 14% 8%;
+  --muted: 218 13% 40%;
+  --border: 36 20% 87%;
+  --primary: 224 29% 26%;
+  --accent: 37 45% 60%;
   --background: var(--bg);
   --foreground: var(--text);
 
-  --c-bg: #f5f7fb;
-  --c-bg-gradient: radial-gradient(
-      circle at 20% 10%,
-      color-mix(in oklab, var(--c-panel) 72%, transparent),
-      transparent
-    ),
-    radial-gradient(
-      circle at 88% 6%,
-      color-mix(in oklab, var(--c-accent) 10%, transparent),
-      transparent
-    ),
-    linear-gradient(180deg, #f5f7fb 0%, #eff3f9 100%);
-  --c-surface: #fbfcff;
-  --c-panel: #ffffff;
-  --c-text: #0f172a;
-  --c-muted: #5b677a;
-  --c-text-muted: #5b677a;
-  --c-border: #e6eaf2;
+  /* Legacy color aliases mapped to the new minimal color system */
+  --c-bg: var(--color-background);
+  --c-bg-gradient: linear-gradient(180deg, var(--color-background) 0%, var(--color-stone) 100%);
 
-  --c-primary: #2b4da2;
+  --c-surface: var(--color-surface-muted);
+  --c-panel: var(--color-surface);
+  --c-text: var(--color-text);
+  --c-muted: var(--color-text-muted);
+  --c-text-muted: var(--color-text-muted);
+  --c-border: var(--color-border);
+
+  --c-primary: var(--color-primary);
   --c-primary-contrast: #ffffff;
-  --c-accent: #f5a21c;
-  --c-accent-contrast: #0b1220;
-  --c-success: #16a34a;
-  --c-danger: #ef4444;
-  --c-warning: var(--c-accent);
-  --c-info: var(--c-primary);
-  --c-success-soft: color-mix(in oklab, var(--c-success) 14%, var(--c-panel) 86%);
-  --c-danger-soft: color-mix(in oklab, var(--c-danger) 14%, var(--c-panel) 86%);
-  --c-warning-soft: color-mix(in oklab, var(--c-warning) 14%, var(--c-panel) 86%);
-  --c-info-soft: color-mix(in oklab, var(--c-info) 12%, var(--c-panel) 88%);
-  --c-ink: #0f172a;
-  --c-hero-tint-primary: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
-  --c-hero-tint-accent: color-mix(in oklab, var(--c-accent) 10%, var(--c-panel) 90%);
-  --c-glow-primary: color-mix(in oklab, var(--c-primary) 12%, transparent);
-  --c-glow-accent: color-mix(in oklab, var(--c-accent) 14%, transparent);
-  --c-hero-shot-stroke: color-mix(in oklab, var(--c-primary) 90%, var(--c-hero-tint-primary) 10%);
-  --c-hero-shot-floor: color-mix(in oklab, var(--c-primary) 26%, var(--c-border) 74%);
-  --c-hero-shot-hoop: color-mix(in oklab, var(--c-accent) 82%, var(--c-hero-tint-accent) 18%);
-  --c-hero-shot-backboard-fill: color-mix(in oklab, var(--c-panel) 94%, var(--c-primary) 6%);
-  --c-hero-shot-backboard-stroke: color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
-  --c-hero-shot-net: color-mix(in oklab, var(--c-primary) 62%, var(--c-panel) 38%);
-  --c-hero-shot-ball-fill: color-mix(in oklab, var(--c-accent) 88%, var(--c-hero-tint-accent) 12%);
-  --c-hero-shot-ball-stroke: color-mix(in oklab, var(--c-primary) 88%, var(--c-hero-tint-primary) 12%);
-  --c-hero-shot-ball-line: color-mix(in oklab, var(--c-ink) 68%, transparent);
-  --hero-shot-floor-opacity: 0.7;
-  --hero-shot-trace-opacity: 0.34;
-  --c-glass-hi: color-mix(in oklab, var(--c-panel) 90%, transparent);
-  --c-glass-shadow: color-mix(in oklab, var(--c-ink) 12%, transparent);
-  --c-hi: color-mix(in oklab, var(--c-panel) 14%, transparent);
-  --c-hi-strong: color-mix(in oklab, var(--c-panel) 22%, transparent);
-  --c-online: #22c55e;
+
+  --c-accent: var(--color-warning);
+  --c-accent-contrast: var(--color-text);
+
+  --c-success: var(--color-success);
+  --c-danger: #b85c5c;
+  --c-warning: var(--color-warning);
+  --c-info: var(--color-info);
+
+  --c-success-soft: var(--color-success-soft);
+  --c-danger-soft: #f6eeee;
+  --c-warning-soft: var(--color-warning-soft);
+  --c-info-soft: var(--color-info-soft);
+
+  --c-ink: var(--color-ink);
+
+  /* Soft hero/effect aliases kept for existing UI */
+  --c-hero-tint-primary: color-mix(in oklab, var(--color-primary) 10%, var(--color-surface) 90%);
+  --c-hero-tint-accent: color-mix(in oklab, var(--color-warning) 10%, var(--color-surface) 90%);
+
+  --c-glow-primary: color-mix(in oklab, var(--color-primary) 10%, transparent);
+  --c-glow-accent: color-mix(in oklab, var(--color-warning) 12%, transparent);
+
+  --c-hero-shot-stroke: color-mix(in oklab, var(--color-primary) 82%, var(--color-surface) 18%);
+  --c-hero-shot-floor: color-mix(in oklab, var(--color-primary) 18%, var(--color-border) 82%);
+  --c-hero-shot-hoop: color-mix(in oklab, var(--color-warning) 78%, var(--color-surface) 22%);
+  --c-hero-shot-backboard-fill: color-mix(in oklab, var(--color-surface) 96%, var(--color-primary) 4%);
+  --c-hero-shot-backboard-stroke: color-mix(in oklab, var(--color-primary) 16%, var(--color-border) 84%);
+  --c-hero-shot-net: color-mix(in oklab, var(--color-primary) 52%, var(--color-surface) 48%);
+  --c-hero-shot-ball-fill: color-mix(in oklab, var(--color-warning) 82%, var(--color-surface) 18%);
+  --c-hero-shot-ball-stroke: color-mix(in oklab, var(--color-primary) 76%, var(--color-surface) 24%);
+  --c-hero-shot-ball-line: color-mix(in oklab, var(--color-ink) 58%, transparent);
+
+  --hero-shot-floor-opacity: 0.6;
+  --hero-shot-trace-opacity: 0.26;
+
+  --c-glass-hi: color-mix(in oklab, var(--color-surface) 86%, transparent);
+  --c-glass-shadow: color-mix(in oklab, var(--color-ink) 9%, transparent);
+  --c-hi: color-mix(in oklab, var(--color-surface) 12%, transparent);
+  --c-hi-strong: color-mix(in oklab, var(--color-surface) 20%, transparent);
+
+  --c-online: var(--color-success);
   --c-offline: #9ca3af;
-  --c-overlay: color-mix(in oklab, #081021 44%, transparent);
-  --c-topbar: color-mix(in oklab, var(--c-panel) 88%, transparent);
-  --c-avatar-provider: #3a6df0;
-  --c-avatar-provider-light: #78b3ff;
-  --c-avatar-client: #ffb347;
-  --c-avatar-client-light: #ff7a59;
+  --c-overlay: color-mix(in oklab, var(--color-ink) 42%, transparent);
+  --c-topbar: color-mix(in oklab, var(--color-surface) 88%, transparent);
 
-  --shadow-card:
-    0 10px 24px color-mix(in oklab, var(--c-ink) 8%, transparent),
-    0 2px 6px color-mix(in oklab, var(--c-ink) 4%, transparent);
-  --shadow-card-hover:
-    0 14px 30px color-mix(in oklab, var(--c-ink) 10%, transparent),
-    0 4px 10px color-mix(in oklab, var(--c-ink) 5%, transparent);
-  --c-elev-shadow: 0 32px 72px color-mix(in oklab, #0b1220 36%, transparent);
-  --btn-primary-bg: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--c-accent) 92%, white 8%) 0%,
-    color-mix(in oklab, var(--c-accent) 82%, black 18%) 100%
-  );
-  --btn-primary-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 25%, transparent);
-  --btn-secondary-bg: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--c-panel) 96%, var(--c-surface) 4%),
-    color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%)
-  );
-  --btn-secondary-border: 1px solid color-mix(in oklab, var(--c-border) 82%, var(--c-text) 18%);
-  --btn-secondary-shadow-hover: 0 10px 22px color-mix(in oklab, var(--c-ink) 10%, transparent);
+  --c-avatar-provider: var(--color-primary);
+  --c-avatar-provider-light: color-mix(in oklab, var(--color-primary) 48%, white 52%);
+  --c-avatar-client: var(--color-warning);
+  --c-avatar-client-light: color-mix(in oklab, var(--color-warning) 48%, white 52%);
 
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(18, 20, 24, 0.04);
+  --shadow-card-hover: 0 8px 24px rgba(18, 20, 24, 0.06);
+  --shadow-panel: 0 12px 32px rgba(18, 20, 24, 0.06);
+  --c-elev-shadow: 0 24px 60px rgba(18, 20, 24, 0.1);
+
+  /* Buttons */
+  --btn-primary-bg: var(--color-primary);
+  --btn-primary-shadow: 0 8px 18px color-mix(in oklab, var(--color-primary) 16%, transparent);
+
+  --btn-secondary-bg: var(--color-surface);
+  --btn-secondary-border: 1px solid var(--color-border);
+  --btn-secondary-shadow-hover: 0 8px 20px rgba(18, 20, 24, 0.06);
+
+  /* Type scale */
   --fs-h1: 28px;
   --fs-h2: 22px;
   --fs-h3: 18px;
@@ -103,10 +102,12 @@
   --lh-title: 1.25;
   --lh-body: 1.5;
 
+  /* Controls */
   --btn-h: 44px;
   --btn-font: 13px;
   --btn-pad-x: 16px;
 
+  /* Layout */
   --form-max: 360px;
   --page-max: 1120px;
 }
