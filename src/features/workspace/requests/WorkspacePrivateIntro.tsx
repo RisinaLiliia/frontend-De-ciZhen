@@ -1,6 +1,5 @@
 'use client';
 
-import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
 import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceModeHeader';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
@@ -41,12 +40,6 @@ export function WorkspacePrivateIntro({
           preferredRequestsRole={preferredRequestsRole}
         />
         {leftColumnSlot ? leftColumnSlot : null}
-        <WorkspaceMobileSectionSheet
-          locale={locale}
-          activePublicSection={activePublicSection}
-          activeWorkspaceTab={activeWorkspaceTab}
-          preferredRequestsRole={preferredRequestsRole}
-        />
       </div>
     </section>
   );

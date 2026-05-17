@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/requests/WorkspacePublicDemandMapPanel';
-import { WorkspaceMobileSectionSheet } from '@/features/workspace/requests/WorkspaceMobileSectionSheet';
 import { WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceModeHeader';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
@@ -61,12 +60,6 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
           preferredRequestsRole={preferredRequestsRole}
         />
         {leftColumnSlot ? leftColumnSlot : null}
-        <WorkspaceMobileSectionSheet
-          locale={locale}
-          activePublicSection={activePublicSection}
-          activeWorkspaceTab={activeWorkspaceTab}
-          preferredRequestsRole={preferredRequestsRole}
-        />
         {showMarketMap ? (
           <div className={hideDemandMapOnMobile ? 'workspace-intro__mobile-hidden' : undefined}>
             <WorkspacePublicDemandMapPanel
