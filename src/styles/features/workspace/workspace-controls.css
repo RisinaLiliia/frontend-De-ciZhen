@@ -1,0 +1,566 @@
+/* src/styles/features/workspace/workspace-controls.css */
+
+@layer components {
+  .workspace-shared-context-controls {
+    --workspace-context-control-font-size: 11px;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .workspace-filter-bar {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .workspace-shared-context-controls--embedded {
+    gap: var(--space-3);
+  }
+
+  .workspace-shared-context-controls__desktop {
+    display: block;
+  }
+
+  .workspace-shared-context-controls__mobile,
+  .workspace-shared-context-controls__mobile--inline {
+    display: none;
+  }
+
+  .workspace-shared-context-controls__mobile--inline {
+    gap: var(--space-2);
+  }
+
+  .workspace-shared-context-controls__summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .workspace-shared-context-controls__surface {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .workspace-shared-context-controls__body {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .workspace-shared-context-controls__filters-grid {
+    gap: var(--space-2);
+    align-items: start;
+  }
+
+  .workspace-shared-context-controls__control-row {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .workspace-shared-context-controls__control-cluster {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    flex-wrap: nowrap;
+    padding: var(--space-1-5);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-padding-inline: var(--space-1-5);
+  }
+
+  .workspace-shared-context-controls__control-cluster::-webkit-scrollbar,
+  .workspace-shared-context-controls__combined-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .workspace-shared-context-controls__inline-control {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .workspace-shared-context-controls__combined-row {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    align-items: end;
+    gap: var(--space-3);
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .workspace-shared-context-controls__combined-row > .requests-scope-switch {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .workspace-shared-context-controls__combined-row > .howitworks-tabs {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    grid-column: 2;
+    justify-self: center;
+    min-width: 0;
+  }
+
+  .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab,
+  .workspace-shared-context-controls__slash-tab,
+  .workspace-shared-context-controls__surface .dc-select-trigger,
+  .workspace-shared-context-controls__surface .dc-city-search-input,
+  .workspace-shared-context-controls__range-toolbar .home-activity__range {
+    font-size: var(--workspace-context-control-font-size);
+  }
+
+  .workspace-shared-context-controls__combined-states,
+  .workspace-shared-context-controls__chip-group {
+    width: auto;
+    flex-wrap: nowrap;
+  }
+
+  .workspace-shared-context-controls__combined-states {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .workspace-shared-context-controls__slash-tabs {
+    display: inline-flex;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    gap: var(--space-2);
+    grid-column: 3;
+    justify-self: end;
+    padding: 0;
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  .workspace-shared-context-controls__slash-tab {
+    position: relative;
+    align-self: flex-end;
+    margin-bottom: -1px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-bottom-color: transparent;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .workspace-shared-context-controls__slash-tab:hover {
+    color: var(--color-text);
+    background: var(--color-surface-muted);
+    border-color: var(--color-border-soft);
+  }
+
+  .workspace-shared-context-controls__slash-tab:focus-visible {
+    outline: none;
+    color: var(--color-text);
+    border-color: var(--color-primary-border);
+    box-shadow: var(--control-focus-ring);
+  }
+
+  .workspace-shared-context-controls__slash-tab.is-active {
+    color: var(--color-primary);
+    font-weight: 700;
+    border-color: var(--color-primary-border);
+    background: var(--color-primary-soft);
+  }
+
+  .workspace-shared-context-controls__range-row {
+    display: grid;
+    gap: var(--space-2);
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) auto auto;
+  }
+
+  .workspace-shared-context-controls__sort-filter {
+    min-width: min(100%, 240px);
+  }
+
+  .workspace-shared-context-controls__action-row-control {
+    display: inline-flex;
+    align-items: center;
+    justify-self: end;
+  }
+
+  .workspace-shared-context-controls__range-toolbar {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .workspace-shared-context-controls__range-toolbar .home-activity__ranges {
+    flex-wrap: wrap;
+  }
+
+  .workspace-shared-context-controls__action,
+  .workspace-shared-context-controls__secondary-button {
+    min-height: 40px;
+    width: 40px;
+    min-width: 40px;
+    padding: 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--workspace-environment-label-size);
+    font-weight: 650;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .workspace-shared-context-controls__action:hover,
+  .workspace-shared-context-controls__secondary-button:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-muted);
+    transform: translateY(-1px);
+  }
+
+  .workspace-shared-context-controls__mobile--inline .workspace-shared-context-controls__surface {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .workspace-shared-context-controls__mobile--inline .workspace-shared-context-controls__action {
+    justify-self: start;
+  }
+
+  .workspace-context-strip {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .workspace-context-strip__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .workspace-context-strip__label {
+    font-size: var(--workspace-environment-label-size);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .workspace-context-strip__chips {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .workspace-context-strip__chip {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-2);
+    align-items: center;
+    min-width: 0;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface-muted);
+  }
+
+  .workspace-context-strip__chip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-md);
+    color: var(--color-primary);
+    background: var(--color-primary-soft);
+    flex: 0 0 auto;
+  }
+
+  .workspace-context-strip__chip-copy {
+    display: grid;
+    gap: var(--space-0-5);
+    min-width: 0;
+  }
+
+  .workspace-context-strip__chip-value {
+    color: var(--color-text);
+    font-weight: 700;
+  }
+
+  .workspace-context-strip__chip-label {
+    color: var(--color-text-muted);
+    font-size: var(--workspace-environment-label-size);
+    line-height: var(--workspace-environment-body-line-height);
+  }
+
+  .workspace-mobile-context-section {
+    display: none;
+  }
+
+  .workspace-mobile-context-section__controls {
+    width: 100%;
+  }
+
+  @media (max-width: 1199px) {
+    .workspace-context-strip__chips {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .workspace-context-strip__header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .workspace-context-strip__chips {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-shared-context-controls--header {
+      display: none;
+    }
+
+    .workspace-mobile-context-section {
+      display: grid;
+      gap: var(--space-2);
+      margin-top: -2px;
+    }
+
+    .workspace-shared-context-controls__desktop {
+      display: none;
+    }
+
+    .workspace-shared-context-controls__mobile {
+      display: block;
+    }
+
+    .workspace-shared-context-controls__mobile--inline {
+      display: grid;
+    }
+
+    .workspace-mobile-context-section__controls {
+      padding: var(--space-3);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border-soft);
+      background: var(--color-surface);
+      box-shadow: var(--shadow-card);
+    }
+
+    .workspace-mobile-context-section__controls.workspace-context-strip {
+      gap: var(--space-3);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-strip__header {
+      align-items: flex-start;
+      gap: var(--space-1-5);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-strip__label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__summary {
+      gap: var(--space-1-5);
+      margin-top: -2px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
+      min-height: 28px;
+      padding-inline: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--color-border-soft);
+      background: var(--color-surface-muted);
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      color: var(--color-text-muted);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip:first-child {
+      background: var(--color-primary-soft);
+      border-color: var(--color-primary-border);
+      color: var(--color-primary);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__body {
+      gap: var(--space-2);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__filters-grid,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-row {
+      gap: var(--space-2);
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__control-cluster {
+      padding: var(--space-1-5);
+      border-radius: var(--radius-md);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-3);
+      align-items: stretch;
+      overflow: visible;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__inline-control {
+      display: block;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .workspace-shared-context-controls__slash-tabs {
+      grid-column: auto;
+      justify-self: stretch;
+      width: 100%;
+      min-width: 0;
+      padding: var(--space-1-5);
+      border: 1px solid var(--color-border-soft);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-muted);
+      box-shadow: none;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-1-5);
+      white-space: normal;
+      overflow: visible;
+      border-bottom: 0;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch .requests-scope-switch__item,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 38px;
+      margin-bottom: 0;
+      padding: 8px 10px;
+      border: 1px solid var(--color-border-soft);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      text-align: center;
+      line-height: 1.2;
+      white-space: normal;
+      box-shadow: none;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch .requests-scope-switch__item.is-active,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab.is-active,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tab.is-active {
+      color: var(--color-primary);
+      border-color: var(--color-primary-border);
+      background: var(--color-primary-soft);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__select {
+      min-height: 42px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-toolbar {
+      padding: var(--space-2);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border-soft);
+      background: var(--color-surface-muted);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-toolbar .home-activity__ranges {
+      gap: var(--space-1-5);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__action {
+      width: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      border-radius: var(--radius-md);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__sort-filter {
+      min-width: 0;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .workspace-mobile-context-section {
+      gap: var(--space-2);
+    }
+
+    .workspace-mobile-context-section__controls {
+      padding: var(--space-2-5);
+      border-radius: var(--radius-lg);
+    }
+
+    .workspace-mobile-context-section__controls.workspace-context-strip {
+      gap: var(--space-2-5);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
+      min-height: 26px;
+      padding-inline: 9px;
+      font-size: 9px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row {
+      gap: var(--space-2-5);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .workspace-shared-context-controls__slash-tabs {
+      padding: var(--space-1);
+      border-radius: var(--radius-md);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__select {
+      min-height: 42px;
+      font-size: 12px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-toolbar {
+      padding: var(--space-1-5);
+      border-radius: var(--radius-md);
+    }
+  }
+}

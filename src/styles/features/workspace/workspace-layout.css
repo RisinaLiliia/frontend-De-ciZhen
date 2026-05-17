@@ -1,0 +1,127 @@
+/* src/styles/features/workspace/workspace-layout.css */
+
+@layer components {
+  .workspace-shell {
+    width: min(100%, var(--shell-max-width));
+    min-height: 100dvh;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: var(--shell-sidebar-width) minmax(0, 1fr);
+    background: var(--color-background);
+    color: var(--color-text);
+  }
+
+  .workspace-shell__sidebar {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    min-width: 0;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border-soft);
+    z-index: 20;
+  }
+
+  .workspace-shell__main {
+    min-width: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-background);
+  }
+
+  .workspace-main {
+    min-width: 0;
+    width: 100%;
+    flex: 1;
+  }
+
+  .workspace-page-frame {
+    width: 100%;
+    max-width: var(--shell-content-max-width);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--shell-rail-width);
+    gap: var(--layout-section-gap);
+    align-items: start;
+    padding-inline: var(--shell-inline-padding);
+    padding-bottom: var(--space-8);
+  }
+
+  .workspace-page-frame--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workspace-page-frame__content,
+  .workspace-page-frame__rail {
+    min-width: 0;
+  }
+
+  .workspace-page-frame__rail {
+    align-self: start;
+    position: sticky;
+    top: 88px;
+  }
+
+  .workspace-frame__body {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: var(--shell-sidebar-width) minmax(0, 1fr);
+    background: var(--color-background);
+  }
+
+  .workspace-frame__sidebar {
+    min-width: 0;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border-soft);
+  }
+
+  .workspace-frame__content {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .workspace-shell .workspace-overlay-surface,
+  .workspace-shell .workspace-overlay-surface > *,
+  .workspace-frame__content .workspace-overlay-surface,
+  .workspace-frame__content .workspace-overlay-surface > * {
+    width: 100%;
+    max-width: none;
+  }
+
+  @media (max-width: 1199px) {
+    .workspace-shell,
+    .workspace-frame__body {
+      width: 100%;
+      max-width: none;
+      display: block;
+    }
+
+    .workspace-shell__sidebar,
+    .workspace-frame__sidebar {
+      display: none;
+    }
+
+    .workspace-page-frame {
+      max-width: var(--shell-content-max-width);
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-page-frame__rail {
+      position: static;
+      margin-top: var(--layout-section-gap);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .workspace-page-frame {
+      max-width: none;
+      display: block;
+      padding-inline: var(--shell-inline-padding);
+      padding-bottom: calc(var(--space-8) + 72px);
+    }
+
+    .workspace-page-frame__rail {
+      margin-top: var(--space-4);
+    }
+  }
+}
