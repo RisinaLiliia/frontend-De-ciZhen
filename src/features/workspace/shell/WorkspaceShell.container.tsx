@@ -17,7 +17,7 @@ import { shouldAttemptRefreshOnBootstrap } from '@/lib/auth/session';
 import {
   type PublicWorkspaceSection,
   resolvePublicWorkspaceSection,
-} from '@/features/workspace/shell/workspace.types';
+} from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 
 type WorkspaceShellProps = {
   forcedPublicSection?: PublicWorkspaceSection | null;

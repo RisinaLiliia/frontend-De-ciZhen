@@ -3,7 +3,7 @@
 import { WorkspaceModeNav } from '@/features/workspace/shell/WorkspaceModeNav';
 import { useWorkspaceSharedContext } from '@/features/workspace/shell/useWorkspaceSharedContext';
 import type { WorkspaceTab } from '@/features/workspace/requests';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 

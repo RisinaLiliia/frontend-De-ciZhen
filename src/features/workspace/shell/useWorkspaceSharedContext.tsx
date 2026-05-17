@@ -36,7 +36,10 @@ import {
   resolveRangeLabel,
   type WorkspaceModeCopy,
 } from '@/features/workspace/shell/workspaceEnvironment.copy';
-import { resolveActiveWorkspaceMode, type WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
+import {
+  resolveActiveWorkspaceMode,
+  type WorkspaceModeKey,
+} from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
 import {
   resolveWorkspaceViewerModeToggleItems,
   shouldShowWorkspaceProfileViewerModeControl,
@@ -50,7 +53,7 @@ import {
   getWorkspaceStateAriaLabel,
   getWorkspaceStateToggleItems,
 } from '@/features/workspace/shell/workspaceSharedContext.copy';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';

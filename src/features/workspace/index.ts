@@ -1,8 +1,19 @@
-export { useWorkspaceRouteState } from './shell/useWorkspaceRouteState';
+export { useWorkspaceRouteState } from './context/workspaceUrlState';
 export { WorkspacePageLayout } from './shell/WorkspacePageLayout';
-export type { PublicWorkspaceSection } from './shell/workspace.types';
+export type { PublicWorkspaceSection } from './navigation/resolveActiveWorkspaceSection';
 
 export { PublicContent, ProofReviewCard, WorkspaceContent, WorkspacePrivateIntro, WorkspacePublicIntro } from './shell/workspace.dynamic';
+export {
+  WorkspaceBottomNav,
+  WorkspacePageFrame,
+  WorkspaceResponsiveFrame,
+  WorkspaceShell,
+  WorkspaceTopbar,
+} from './shell';
+export type {
+  WorkspaceSectionLayout,
+  WorkspaceSectionRenderModel,
+} from './shell';
 
 export { useWorkspaceFormatters } from './shared/useWorkspaceFormatters';
 
