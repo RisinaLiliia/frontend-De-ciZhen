@@ -1,4 +1,5 @@
 /* src/styles/overlays-select-popover.css */
+
 @layer components {
   .dc-select-trigger {
     display: flex;
@@ -12,8 +13,8 @@
     z-index: 50;
     max-height: 260px;
     overflow: hidden;
-    background: var(--c-surface);
-    border: 1px solid var(--c-border);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
     padding: var(--space-1-5);
@@ -35,9 +36,12 @@
     font-family: var(--font-sans);
     font-size: var(--fs-body);
     line-height: var(--lh-body);
-    color: var(--c-text);
+    color: var(--color-text);
     cursor: pointer;
     user-select: none;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast);
   }
 
   .dc-select-item[data-disabled] {
@@ -47,11 +51,14 @@
 
   .dc-select-item[data-highlighted] {
     outline: none;
-    background: color-mix(in oklab, var(--c-accent) 18%, transparent);
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
   }
 
   .dc-select-item[data-state='checked'] {
-    background: color-mix(in oklab, var(--c-accent) 26%, transparent);
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    font-weight: 600;
   }
 
   .dc-popover {
@@ -88,10 +95,10 @@
     width: max-content;
     min-width: min(260px, calc(100vw - 24px));
     max-width: calc(100vw - 24px);
-    background: var(--c-surface);
-    border: 1px solid var(--c-border);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-panel);
     padding: var(--space-3);
   }
 
@@ -134,7 +141,7 @@
   }
 
   .dc-city-search-trigger__label.is-placeholder {
-    color: var(--c-muted);
+    color: var(--color-text-muted);
   }
 
   .dc-city-search-panel {
@@ -177,8 +184,8 @@
     z-index: 30;
     border: 1px solid var(--control-border);
     border-radius: var(--radius-md);
-    background: var(--surface-card);
-    box-shadow: var(--shadow-lg);
+    background: var(--surface-card-bg);
+    box-shadow: var(--shadow-panel);
     padding: var(--space-2);
   }
 
@@ -187,8 +194,8 @@
     position: relative;
     border: 1px solid var(--control-border);
     border-radius: var(--radius-md);
-    background: var(--surface-card);
-    box-shadow: var(--shadow-lg);
+    background: var(--surface-card-bg);
+    box-shadow: var(--shadow-card);
   }
 
   .dc-city-search-preview {
@@ -198,8 +205,7 @@
     align-items: center;
     width: 100%;
     padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--control-border);
-    color: var(--c-text);
+    color: var(--color-text);
     font: inherit;
     text-align: left;
     cursor: pointer;
@@ -212,7 +218,7 @@
     justify-content: center;
     width: 20px;
     height: 20px;
-    color: color-mix(in oklab, var(--c-primary) 72%, var(--c-accent) 28%);
+    color: var(--color-primary);
   }
 
   .dc-city-search-preview__body {
@@ -231,7 +237,7 @@
   }
 
   .dc-city-search-preview__meta {
-    color: var(--c-muted);
+    color: var(--color-text-muted);
     font-size: var(--fs-small);
     line-height: var(--lh-small);
   }
@@ -239,8 +245,8 @@
   .dc-city-search-preview:hover,
   .dc-city-search-preview:focus-visible {
     outline: none;
-    border-color: color-mix(in oklab, var(--c-primary) 18%, var(--control-border) 82%);
-    background: color-mix(in oklab, var(--c-accent) 10%, var(--surface-card) 90%);
+    border-color: var(--color-primary-border);
+    background: var(--color-primary-soft);
   }
 
   .dc-city-search-option {
@@ -252,10 +258,13 @@
     border-radius: var(--radius-md);
     background: transparent;
     padding: var(--space-2) var(--space-3);
-    color: var(--c-text);
+    color: var(--color-text);
     font: inherit;
     text-align: left;
     cursor: pointer;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast);
   }
 
   .dc-city-search-option__body {
@@ -274,7 +283,7 @@
   }
 
   .dc-city-search-option__meta {
-    color: var(--c-muted);
+    color: var(--color-text-muted);
     font-size: var(--fs-small);
     line-height: var(--lh-small);
   }
@@ -283,17 +292,20 @@
   .dc-city-search-option.is-active,
   .dc-city-search-option:focus-visible {
     outline: none;
-    background: color-mix(in oklab, var(--c-accent) 18%, transparent);
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
   }
 
   .dc-city-search-option.is-selected {
-    background: color-mix(in oklab, var(--c-accent) 26%, transparent);
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    font-weight: 600;
   }
 
   .dc-city-search-state {
     margin: 0;
     padding: var(--space-2) var(--space-1);
-    color: var(--c-muted);
+    color: var(--color-text-muted);
     font-size: var(--fs-small);
     line-height: var(--lh-small);
   }
@@ -314,6 +326,4 @@
       right: auto;
     }
   }
-
-
 }
