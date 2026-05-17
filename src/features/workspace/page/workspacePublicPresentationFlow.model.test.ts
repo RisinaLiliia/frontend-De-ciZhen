@@ -28,6 +28,13 @@ describe('workspacePublicPresentationFlow.model', () => {
   });
 
   it('assembles public presentation layout props and render metric payload', () => {
+    const publicSectionModel = {
+      section: 'requests' as const,
+      content: 'main',
+      aiRail: 'aside',
+      layout: 'withRail' as const,
+    };
+
     const result = resolveWorkspacePublicPresentationFlowResult({
       branch: {
         t: (key: string) => key,
@@ -43,15 +50,12 @@ describe('workspacePublicPresentationFlow.model', () => {
         exploreWithSeed: null,
       } as never,
       workspaceIntroNode: 'intro',
-      publicRequestsMain: 'main',
-      publicRequestsAside: 'aside',
+      publicSectionModel,
     });
 
     expect(result.workspaceLayoutProps.intro).toBe('intro');
-    expect(result.workspaceLayoutProps.explore).toBeNull();
     expect(result.workspaceLayoutProps.isWorkspacePublicSection).toBe(true);
-    expect(result.workspaceLayoutProps.publicMain).toBe('main');
-    expect(result.workspaceLayoutProps.publicAside).toBe('aside');
+    expect(result.workspaceLayoutProps.sectionModel).toBe(publicSectionModel);
     expect(result.renderMetricPayload).toEqual({
       isAuthed: true,
       activeWorkspaceTab: 'my-requests',

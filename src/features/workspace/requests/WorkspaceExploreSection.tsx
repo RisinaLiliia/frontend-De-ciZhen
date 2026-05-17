@@ -49,7 +49,7 @@ const ProfileOnboardingPanel = dynamic(
 );
 
 type WorkspaceExploreSectionProps = {
-  intro: React.ReactNode;
+  intro?: React.ReactNode | null;
   activeSection: PublicWorkspaceSection;
   isWorkspaceAuthed: boolean;
   t: (key: I18nKey) => string;
@@ -65,6 +65,7 @@ type WorkspaceExploreSectionProps = {
   preferInitialPublicRequests?: boolean;
   initialPublicRequestsLoading?: boolean;
   initialPublicRequestsError?: boolean;
+  renderIntro?: boolean;
 };
 
 export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSection({
@@ -84,14 +85,16 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
   preferInitialPublicRequests,
   initialPublicRequestsLoading,
   initialPublicRequestsError,
+  renderIntro = true,
 }: WorkspaceExploreSectionProps) {
   const searchParams = useSearchParams();
   const viewerMode = resolveWorkspaceViewerMode(searchParams.get('viewerMode'));
   const isDesktop = useIsDesktop();
   const isRailSection = isDesktop && isWorkspaceExploreRailSection(activeSection);
   const exploreGridClassName = 'requests-grid requests-grid--equal-cols';
+  const shouldRenderIntro = renderIntro && intro != null;
   const renderedIntro = React.useMemo(() => {
-    if (!isRailSection || !React.isValidElement(intro)) return intro;
+    if (!shouldRenderIntro || !isRailSection || !React.isValidElement(intro)) return intro;
 
     return React.cloneElement(
       intro as React.ReactElement<{
@@ -103,7 +106,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
         showQuickAction: false,
       },
     );
-  }, [intro, isRailSection]);
+  }, [intro, isRailSection, shouldRenderIntro]);
 
   if (activeSection === 'stats') {
     return (
@@ -113,7 +116,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
         </section>
       )}>
         <WorkspaceStatisticsExperience
-          intro={intro}
+          intro={shouldRenderIntro ? renderedIntro : null}
           isWorkspaceAuthed={isWorkspaceAuthed}
           t={t}
           locale={locale}
@@ -122,44 +125,52 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
     );
   }
 
-  return (
-    <WorkspaceOverlaySurface intro={renderedIntro}>
-      <div className={exploreGridClassName}>
-        <div>
-          {activeSection === 'actions' ? (
-            <ProfileOnboardingPanel viewerMode={viewerMode} />
-          ) : (
-            <ExploreRequestsPanel
-              t={t}
-              locale={locale}
-              contentType={activeSection === 'providers' ? 'providers' : 'requests'}
-              showHeading={false}
-              showBack={false}
-              backHref="/"
-              onListDensityChange={onListDensityChange}
-              showTopFilters={false}
-              initialPublicRequests={initialPublicRequests}
-              preferInitialPublicRequests={preferInitialPublicRequests}
-              initialPublicRequestsLoading={initialPublicRequestsLoading}
-              initialPublicRequestsError={initialPublicRequestsError}
-            />
-          )}
-        </div>
-
-        {isDesktop ? (
-          <WorkspaceExploreRail
-            activeSection={activeSection}
+  const content = (
+    <div className={exploreGridClassName}>
+      <div>
+        {activeSection === 'actions' ? (
+          <ProfileOnboardingPanel viewerMode={viewerMode} />
+        ) : (
+          <ExploreRequestsPanel
             t={t}
             locale={locale}
-            exploreListDensity={exploreListDensity}
-            sidebarNearbyLimit={sidebarNearbyLimit}
-            sidebarTopProvidersLimit={sidebarTopProvidersLimit}
-            sidebarProofCases={sidebarProofCases}
-            proofIndex={proofIndex}
-            trustPanelClassName={trustPanelClassName}
+            contentType={activeSection === 'providers' ? 'providers' : 'requests'}
+            showHeading={false}
+            showBack={false}
+            backHref="/"
+            onListDensityChange={onListDensityChange}
+            showTopFilters={false}
+            initialPublicRequests={initialPublicRequests}
+            preferInitialPublicRequests={preferInitialPublicRequests}
+            initialPublicRequestsLoading={initialPublicRequestsLoading}
+            initialPublicRequestsError={initialPublicRequestsError}
           />
-        ) : null}
+        )}
       </div>
+
+      {isDesktop ? (
+        <WorkspaceExploreRail
+          activeSection={activeSection}
+          t={t}
+          locale={locale}
+          exploreListDensity={exploreListDensity}
+          sidebarNearbyLimit={sidebarNearbyLimit}
+          sidebarTopProvidersLimit={sidebarTopProvidersLimit}
+          sidebarProofCases={sidebarProofCases}
+          proofIndex={proofIndex}
+          trustPanelClassName={trustPanelClassName}
+        />
+      ) : null}
+    </div>
+  );
+
+  if (!shouldRenderIntro) {
+    return content;
+  }
+
+  return (
+    <WorkspaceOverlaySurface intro={renderedIntro}>
+      {content}
     </WorkspaceOverlaySurface>
   );
 });

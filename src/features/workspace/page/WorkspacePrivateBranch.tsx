@@ -1,9 +1,6 @@
 'use client';
 
 import { useDevRenderMetric } from '@/lib/perf/useDevRenderMetric';
-import {
-  EMPTY_EXPLORE,
-} from '@/features/workspace/page/workspacePage.constants';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspacePrivateBranchModel } from '@/features/workspace/page/useWorkspacePrivateBranchModel';
 import {
@@ -26,10 +23,9 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
     workspaceIntroNode,
     workspaceAsideBaseProps,
     asideTopSlot,
-    privateAside,
     preferredRequestsRole,
     overviewDecisionPanelRef,
-    privateMain,
+    sectionModel,
     primaryAction,
     isLoading,
     overviewRequestsCount,
@@ -53,10 +49,7 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
         t={t}
         locale={locale}
         intro={workspaceIntroNode}
-        explore={EMPTY_EXPLORE}
-        privateMain={privateMain}
-        publicMain={privateMain}
-        privateAside={privateAside}
+        sectionModel={sectionModel}
         asideTopSlot={asideTopSlot}
         overviewDecisionPanelRef={overviewDecisionPanelRef}
         workspaceAsideBaseProps={workspaceAsideBaseProps}

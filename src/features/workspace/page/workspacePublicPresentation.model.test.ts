@@ -87,13 +87,10 @@ describe('workspacePublicPresentation.model', () => {
 
   it('builds layout props and render metric payload for the public branch shell', () => {
     const workspaceIntroNode = 'intro';
-    const exploreWithSeed = {
-      exploreListDensity: 'single' as const,
-      setExploreListDensity: () => undefined,
-      sidebarNearbyLimit: 5,
-      sidebarTopProvidersLimit: 5,
-      sidebarProofCases: [],
-      proofIndex: 0,
+    const publicSectionModel = {
+      section: 'stats' as const,
+      content: 'content',
+      layout: 'singleColumn' as const,
     };
 
     const layoutProps = buildWorkspacePublicLayoutProps({
@@ -102,18 +99,13 @@ describe('workspacePublicPresentation.model', () => {
       isWorkspaceAuthed: false,
       activePublicSection: 'stats',
       activeWorkspaceTab: 'my-requests',
-      exploreWithSeed,
       workspaceIntroNode,
-      publicRequestsMain: null,
-      publicRequestsAside: null,
+      publicSectionModel,
     });
 
     expect(layoutProps.isWorkspacePublicSection).toBe(true);
     expect(layoutProps.intro).toBe(workspaceIntroNode);
-    expect(layoutProps.explore).toBe(exploreWithSeed);
-    expect(layoutProps.privateMain).toBeNull();
-    expect(layoutProps.publicMain).toBeNull();
-    expect(layoutProps.publicAside).toBeUndefined();
+    expect(layoutProps.sectionModel).toBe(publicSectionModel);
     expect(
       buildWorkspacePublicRenderMetricPayload({
         isAuthed: false,
@@ -131,21 +123,24 @@ describe('workspacePublicPresentation.model', () => {
     });
   });
 
-  it('does not keep explore seed props on the active public requests layout path', () => {
+  it('keeps the active public requests branch on the normalized section-model path', () => {
+    const publicSectionModel = {
+      section: 'requests' as const,
+      content: 'main',
+      aiRail: 'aside',
+      layout: 'withRail' as const,
+    };
+
     const layoutProps = buildWorkspacePublicLayoutProps({
       t: (key) => String(key),
       locale: 'de',
       isWorkspaceAuthed: false,
       activePublicSection: 'requests',
       activeWorkspaceTab: 'my-requests',
-      exploreWithSeed: null,
       workspaceIntroNode: 'intro',
-      publicRequestsMain: 'main',
-      publicRequestsAside: 'aside',
+      publicSectionModel,
     });
 
-    expect(layoutProps.explore).toBeNull();
-    expect(layoutProps.publicMain).toBe('main');
-    expect(layoutProps.publicAside).toBe('aside');
+    expect(layoutProps.sectionModel).toBe(publicSectionModel);
   });
 });

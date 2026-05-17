@@ -4,20 +4,23 @@ import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import {
   WorkspaceExploreSection,
-  WorkspaceFrame,
   WorkspaceTopProvidersAside,
 } from '@/features/workspace/requests';
+import { useIsDesktop } from '@/features/workspace/requests/useIsDesktop';
 import type { WorkspaceTab } from '@/features/workspace/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
+import { WorkspaceBottomNav } from '@/features/workspace/shell/WorkspaceBottomNav';
 import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
-import { WorkspaceModeHeader } from '@/features/workspace/shell/WorkspaceModeHeader';
+import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
+import { WorkspaceTopbar } from '@/features/workspace/shell/WorkspaceTopbar';
+import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import { isWorkspaceTab } from '@/features/workspace/requests';
-import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
+import { isWorkspaceOverviewMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
 
 type Translator = (key: I18nKey) => string;
 
@@ -49,9 +52,10 @@ type Props = {
   t: Translator;
   locale: Locale;
   intro: React.ReactNode;
+  sectionModel?: WorkspaceSectionRenderModel | null;
   explore?: ExploreProps | null;
-  privateMain: React.ReactNode;
-  publicMain: React.ReactNode;
+  privateMain?: React.ReactNode;
+  publicMain?: React.ReactNode;
   privateAside?: React.ReactNode;
   publicAside?: React.ReactNode;
   asideTopSlot?: React.ReactNode;
@@ -60,6 +64,47 @@ type Props = {
   pendingFavoriteProviderIds: Set<string>;
   onToggleProviderFavorite: (providerId: string) => void;
 };
+
+function decorateWorkspacePublicIntro({
+  intro,
+  activeSection,
+  isDesktop,
+}: {
+  intro: React.ReactNode;
+  activeSection: PublicWorkspaceSection | null;
+  isDesktop: boolean;
+}) {
+  if (!React.isValidElement(intro)) return intro;
+
+  if (activeSection === 'stats') {
+    return React.cloneElement(
+      intro as React.ReactElement<{
+        showDemandMap?: boolean;
+      }>,
+      {
+        showDemandMap: false,
+      },
+    );
+  }
+
+  const shouldHideRailMirroredIntro =
+    isDesktop && (activeSection === 'providers' || activeSection === 'actions');
+
+  if (!shouldHideRailMirroredIntro) {
+    return intro;
+  }
+
+  return React.cloneElement(
+    intro as React.ReactElement<{
+      showDemandMap?: boolean;
+      showQuickAction?: boolean;
+    }>,
+    {
+      showDemandMap: false,
+      showQuickAction: false,
+    },
+  );
+}
 
 export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   isWorkspacePublicSection,
@@ -70,9 +115,10 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   t,
   locale,
   intro,
+  sectionModel,
   explore,
-  privateMain,
-  publicMain,
+  privateMain = null,
+  publicMain = null,
   privateAside,
   publicAside,
   asideTopSlot,
@@ -83,6 +129,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
 }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isDesktop = useIsDesktop();
   const isOverviewPrivateMode =
     !isWorkspacePublicSection &&
     isWorkspaceOverviewMode({
@@ -96,29 +143,32 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     ? 'workspace-frame__flow--overview'
     : undefined;
   const overviewGridClassName = isOverviewPrivateMode ? 'workspace-frame--overview' : undefined;
-
-  const introWithWorkspaceChrome = React.useMemo(() => {
-    if (!React.isValidElement(intro)) return intro;
-
-    return React.cloneElement(
-      intro as React.ReactElement<{
-        navHeaderSlot?: React.ReactNode;
-        leftColumnSlot?: React.ReactNode;
-        preferredRequestsRole?: 'customer' | 'provider' | null;
-      }>,
-      {
-        navHeaderSlot: (
-          <WorkspaceModeHeader
-            t={t}
-            locale={locale}
-            activePublicSection={activePublicSection}
-            activeWorkspaceTab={activeWorkspaceTab}
-            preferredRequestsRole={preferredRequestsRole}
-          />
-        ),
-      },
-    );
-  }, [activePublicSection, activeWorkspaceTab, intro, locale, preferredRequestsRole, t]);
+  const workspaceTopbar = (
+    <WorkspaceTopbar
+      t={t}
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
+    />
+  );
+  const workspaceBottomNav = (
+    <WorkspaceBottomNav
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
+    />
+  );
+  const publicShellIntro = React.useMemo(
+    () =>
+      decorateWorkspacePublicIntro({
+        intro,
+        activeSection: activePublicSection,
+        isDesktop,
+      }),
+    [activePublicSection, intro, isDesktop],
+  );
 
   const workspaceSidebar = (
     <WorkspaceSidebar
@@ -154,67 +204,104 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     </WorkspaceContextAside>
   );
 
-  if (isWorkspacePublicSection && publicMain == null) {
-    if (!explore) {
-      return null;
+  const resolvedSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(() => {
+    if (sectionModel) {
+      return sectionModel;
     }
 
-    return (
-      <WorkspaceExploreSection
-        intro={introWithWorkspaceChrome}
-        activeSection={activePublicSection ?? 'requests'}
-        isWorkspaceAuthed={isWorkspaceAuthed}
-        t={t}
-        locale={locale}
-        onListDensityChange={explore.setExploreListDensity}
-        exploreListDensity={explore.exploreListDensity}
-        sidebarNearbyLimit={explore.sidebarNearbyLimit}
-        sidebarTopProvidersLimit={explore.sidebarTopProvidersLimit}
-        sidebarProofCases={explore.sidebarProofCases}
-        proofIndex={explore.proofIndex}
-        trustPanelClassName={explore.trustPanelClassName}
-        initialPublicRequests={explore.initialPublicRequests}
-        preferInitialPublicRequests={explore.preferInitialPublicRequests}
-        initialPublicRequestsLoading={explore.initialPublicRequestsLoading}
-        initialPublicRequestsError={explore.initialPublicRequestsError}
-      />
-    );
+    if (isWorkspacePublicSection && publicMain == null) {
+      if (!explore) {
+        return null;
+      }
+
+      return {
+        section: activePublicSection ?? 'requests',
+        content: (
+          <WorkspaceExploreSection
+            activeSection={activePublicSection ?? 'requests'}
+            isWorkspaceAuthed={isWorkspaceAuthed}
+            t={t}
+            locale={locale}
+            onListDensityChange={explore.setExploreListDensity}
+            exploreListDensity={explore.exploreListDensity}
+            sidebarNearbyLimit={explore.sidebarNearbyLimit}
+            sidebarTopProvidersLimit={explore.sidebarTopProvidersLimit}
+            sidebarProofCases={explore.sidebarProofCases}
+            proofIndex={explore.proofIndex}
+            trustPanelClassName={explore.trustPanelClassName}
+            initialPublicRequests={explore.initialPublicRequests}
+            preferInitialPublicRequests={explore.preferInitialPublicRequests}
+            initialPublicRequestsLoading={explore.initialPublicRequestsLoading}
+            initialPublicRequestsError={explore.initialPublicRequestsError}
+            renderIntro={false}
+          />
+        ),
+        layout: 'singleColumn',
+      };
+    }
+
+    if (isWorkspacePublicSection) {
+      return {
+        section: activePublicSection ?? 'requests',
+        content: publicMain,
+        aiRail: publicAside,
+        layout: 'withRail',
+      };
+    }
+
+    if (isWorkspaceAuthed) {
+      return {
+        section: isOverviewPrivateMode ? 'overview' : (activePublicSection ?? 'requests'),
+        content: privateMain,
+        aiRail: privateAside,
+        layout: 'withRail',
+      };
+    }
+
+    return {
+      section: activePublicSection ?? 'requests',
+      content: publicMain,
+      layout: 'withRail',
+    };
+  }, [
+    activePublicSection,
+    explore,
+    isOverviewPrivateMode,
+    isWorkspaceAuthed,
+    isWorkspacePublicSection,
+    locale,
+    privateAside,
+    privateMain,
+    publicAside,
+    publicMain,
+    sectionModel,
+    t,
+  ]);
+
+  if (!resolvedSectionModel) {
+    return null;
   }
 
-  if (isWorkspacePublicSection) {
-    return (
-      <WorkspaceFrame
-        intro={introWithWorkspaceChrome}
-        main={publicMain}
-        aside={publicAside ?? contextualAside}
-        sidebar={workspaceSidebar}
-        frameClassName={overviewGridClassName}
-        contentClassName={overviewFrameClassName}
-      />
-    );
-  }
-
-  if (isWorkspaceAuthed) {
-    return (
-      <WorkspaceFrame
-        intro={introWithWorkspaceChrome}
-        main={privateMain}
-        aside={privateAside ?? contextualAside}
-        sidebar={workspaceSidebar}
-        frameClassName={overviewGridClassName}
-        contentClassName={overviewFrameClassName}
-      />
-    );
-  }
+  const resolvedIntro =
+    isWorkspacePublicSection && resolvedSectionModel.layout === 'singleColumn'
+      ? publicShellIntro
+      : intro;
+  const resolvedAiRail =
+    resolvedSectionModel.layout === 'singleColumn'
+      ? undefined
+      : (resolvedSectionModel.aiRail ?? contextualAside);
 
   return (
-    <WorkspaceFrame
-      intro={introWithWorkspaceChrome}
-      main={publicMain}
-      aside={contextualAside}
+    <WorkspaceShell
+      intro={resolvedIntro}
+      topbar={workspaceTopbar}
       sidebar={workspaceSidebar}
+      aiRail={resolvedAiRail}
+      bottomNav={workspaceBottomNav}
       frameClassName={overviewGridClassName}
       contentClassName={overviewFrameClassName}
-    />
+    >
+      {resolvedSectionModel.content}
+    </WorkspaceShell>
   );
 });

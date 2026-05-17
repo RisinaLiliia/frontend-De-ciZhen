@@ -6,6 +6,7 @@ import type {
   usePublicRequestsSeenTotal,
   useWorkspaceNavigation,
   WorkspacePageLayout,
+  WorkspaceSectionRenderModel,
 } from '@/features/workspace';
 import type { useWorkspacePublicState } from '@/features/workspace/requests';
 import {
@@ -56,10 +57,8 @@ type BuildPublicRenderMetricPayloadArgs = {
 type BuildPublicLayoutPropsArgs = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isWorkspaceAuthed'> & {
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
-  exploreWithSeed?: ComponentProps<typeof WorkspacePageLayout>['explore'];
   workspaceIntroNode: ReactNode;
-  publicRequestsMain?: ReactNode;
-  publicRequestsAside?: ReactNode;
+  publicSectionModel: WorkspaceSectionRenderModel;
 };
 
 export function buildWorkspacePublicNavigationArgs({
@@ -150,13 +149,9 @@ export function buildWorkspacePublicLayoutProps({
   isWorkspaceAuthed,
   activePublicSection,
   activeWorkspaceTab,
-  exploreWithSeed,
   workspaceIntroNode,
-  publicRequestsMain,
-  publicRequestsAside,
+  publicSectionModel,
 }: BuildPublicLayoutPropsArgs): ComponentProps<typeof WorkspacePageLayout> {
-  const isUnifiedPublicRequests = activePublicSection === 'requests';
-
   return {
     isWorkspacePublicSection: true,
     isWorkspaceAuthed,
@@ -165,10 +160,7 @@ export function buildWorkspacePublicLayoutProps({
     t,
     locale,
     intro: workspaceIntroNode,
-    explore: exploreWithSeed ?? null,
-    privateMain: null,
-    publicMain: isUnifiedPublicRequests ? (publicRequestsMain ?? null) : null,
-    publicAside: isUnifiedPublicRequests ? publicRequestsAside : undefined,
+    sectionModel: publicSectionModel,
     workspaceAsideBaseProps: EMPTY_ASIDE_BASE_PROPS,
     pendingFavoriteProviderIds: EMPTY_PROVIDER_IDS,
     onToggleProviderFavorite: NOOP_PROVIDER_TOGGLE,

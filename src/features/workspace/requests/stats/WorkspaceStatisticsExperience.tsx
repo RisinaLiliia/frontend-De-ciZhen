@@ -20,7 +20,7 @@ export function WorkspaceStatisticsExperience({
   t,
   locale,
 }: {
-  intro: React.ReactNode;
+  intro?: React.ReactNode | null;
   isWorkspaceAuthed: boolean;
   t: (key: I18nKey) => string;
   locale: Locale;
@@ -59,15 +59,23 @@ export function WorkspaceStatisticsExperience({
     );
   }, [intro]);
 
+  const content = (
+    <div className="workspace-statistics-experience__content">
+      <WorkspaceStatisticsPanel
+        t={t}
+        locale={locale}
+        model={model}
+      />
+    </div>
+  );
+
+  if (!intro) {
+    return content;
+  }
+
   return (
     <WorkspaceOverlaySurface intro={overlayIntro()}>
-      <div className="workspace-statistics-experience__content">
-        <WorkspaceStatisticsPanel
-          t={t}
-          locale={locale}
-          model={model}
-        />
-      </div>
+      {content}
     </WorkspaceOverlaySurface>
   );
 }

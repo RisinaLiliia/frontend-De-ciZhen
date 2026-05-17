@@ -26,6 +26,7 @@ import {
   useWorkspacePresentation,
   WorkspacePrivateIntro,
   WorkspacePublicIntro,
+  type WorkspaceSectionRenderModel,
 } from '@/features/workspace';
 import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
@@ -298,6 +299,12 @@ export function useWorkspacePrivatePresentationFlow({
       }))}
     />
   ) : null;
+  const sectionModel = React.useMemo<WorkspaceSectionRenderModel>(() => ({
+    section: isOverviewMode ? 'overview' : (activePublicSection ?? 'requests'),
+    content: privateMain,
+    aiRail: privateAside,
+    layout: 'withRail',
+  }), [activePublicSection, isOverviewMode, privateAside, privateMain]);
 
   return {
     activePublicSection,
@@ -307,10 +314,9 @@ export function useWorkspacePrivatePresentationFlow({
     workspaceIntroNode: resolvedWorkspaceIntroNode,
     workspaceAsideBaseProps,
     asideTopSlot: overviewRailTopSlot,
-    privateAside,
     preferredRequestsRole,
     overviewDecisionPanelRef: overviewFocusPanelRef,
-    privateMain,
+    sectionModel,
     primaryAction,
     isLoading: overviewRequestsListState.isLoading,
     overviewRequestsCount,

@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 
+import type { WorkspaceSectionRenderModel } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { useWorkspacePublicDataFlow } from '@/features/workspace/page/useWorkspacePublicDataFlow';
 import {
@@ -35,8 +36,7 @@ type ResolveWorkspacePublicPresentationFlowResultParams = {
     | 'exploreWithSeed'
   >;
   workspaceIntroNode: ReactNode;
-  publicRequestsMain?: ReactNode;
-  publicRequestsAside?: ReactNode;
+  publicSectionModel: WorkspaceSectionRenderModel;
 };
 
 export function buildWorkspacePublicIntroArgs({
@@ -58,8 +58,7 @@ export function resolveWorkspacePublicPresentationFlowResult({
   branch,
   data,
   workspaceIntroNode,
-  publicRequestsMain,
-  publicRequestsAside,
+  publicSectionModel,
 }: ResolveWorkspacePublicPresentationFlowResultParams) {
   return {
     workspaceLayoutProps: buildWorkspacePublicLayoutProps({
@@ -68,10 +67,8 @@ export function resolveWorkspacePublicPresentationFlowResult({
       isWorkspaceAuthed: branch.isWorkspaceAuthed,
       activePublicSection: data.activePublicSection,
       activeWorkspaceTab: data.activeWorkspaceTab,
-      exploreWithSeed: data.exploreWithSeed,
       workspaceIntroNode,
-      publicRequestsMain,
-      publicRequestsAside,
+      publicSectionModel,
     }),
     renderMetricPayload: buildWorkspacePublicRenderMetricPayload({
       isAuthed: branch.isAuthed,
