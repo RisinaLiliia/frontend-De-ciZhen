@@ -1,5 +1,7 @@
 /* src/styles/tokens.css */
+
 :root {
+  /* Spacing */
   --space-0-5: 2px;
   --space-0-75: 3px;
   --space-1: 4px;
@@ -14,10 +16,19 @@
   --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
+
+  /* Radius */
+  --radius-xs: 6px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --font-sans: Inter, system-ui, sans-serif;
+  --radius-xl: 22px;
+  --radius-2xl: 28px;
+
+  /* Typography */
+  --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Motion */
   --transition-fast: 150ms;
   --transition: 220ms;
   --motion-fast: 120ms;
@@ -26,87 +37,151 @@
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
 
+  /* Global minimal color system */
+  --color-ivory: #f7f6f2;
+  --color-stone: #ece8e1;
+  --color-ink: #121418;
+
+  --color-background: #f7f6f2;
+  --color-surface: #ffffff;
+  --color-surface-muted: #fbfaf7;
+  --color-surface-soft: #f4f2ed;
+
+  --color-border: #e5e0d8;
+  --color-border-soft: #f1ede6;
+  --color-border-strong: #d8d1c6;
+
+  --color-text: #121418;
+  --color-text-muted: #667085;
+  --color-text-soft: #8a9099;
+
+  --color-primary: #2f3a56;
+  --color-primary-hover: #253049;
+  --color-primary-soft: #eef1f6;
+  --color-primary-border: #d9dee8;
+
+  --color-success: #6f8f74;
+  --color-success-soft: #eef4ef;
+  --color-success-border: #dce9df;
+
+  --color-warning: #c9a56a;
+  --color-warning-soft: #faf1e2;
+  --color-warning-border: #eeddbf;
+
+  --color-info: #5b7c99;
+  --color-info-soft: #eef4f8;
+  --color-info-border: #dbe9f1;
+
+  /* Semantic aliases */
+  --app-bg: var(--color-background);
+  --app-surface: var(--color-surface);
+  --app-surface-muted: var(--color-surface-muted);
+  --app-border: var(--color-border);
+  --app-border-soft: var(--color-border-soft);
+  --app-text: var(--color-text);
+  --app-text-muted: var(--color-text-muted);
+  --app-text-soft: var(--color-text-soft);
+  --app-primary: var(--color-primary);
+  --app-primary-hover: var(--color-primary-hover);
+  --app-primary-soft: var(--color-primary-soft);
+
+  /* Compatibility aliases for existing project tokens */
+  --dc-bg: var(--color-background);
+  --dc-surface: var(--color-surface);
+  --dc-surface-muted: var(--color-surface-muted);
+  --dc-border: var(--color-border);
+  --dc-border-soft: var(--color-border-soft);
+  --dc-text: var(--color-text);
+  --dc-text-muted: var(--color-text-muted);
+  --dc-text-soft: var(--color-text-soft);
+  --dc-primary: var(--color-primary);
+  --dc-primary-hover: var(--color-primary-hover);
+  --dc-primary-soft: var(--color-primary-soft);
+  --dc-sage: var(--color-success);
+  --dc-sage-soft: var(--color-success-soft);
+  --dc-sand: var(--color-warning);
+  --dc-sand-soft: var(--color-warning-soft);
+  --dc-blue: var(--color-info);
+  --dc-blue-soft: var(--color-info-soft);
+
+  /* HSL compatibility values used by Tailwind theme tokens */
+  --background: 40 24% 96%;
+  --foreground: 225 14% 8%;
+  --bg: 40 24% 96%;
+  --surface: 0 0% 100%;
+  --panel: 40 33% 99%;
+  --text: 225 14% 8%;
+  --muted: 218 13% 40%;
+  --border: 36 20% 87%;
+  --primary: 224 29% 26%;
+  --accent: 37 45% 60%;
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(18, 20, 24, 0.04);
+  --shadow-card-hover: 0 8px 24px rgba(18, 20, 24, 0.06);
+  --shadow-panel: 0 12px 32px rgba(18, 20, 24, 0.06);
+  --shadow-floating: 0 18px 48px rgba(18, 20, 24, 0.08);
+
+  --dc-radius-sm: var(--radius-sm);
+  --dc-radius-md: var(--radius-md);
+  --dc-radius-lg: var(--radius-lg);
+  --dc-radius-xl: var(--radius-xl);
+  --dc-shadow-card: var(--shadow-card);
+  --dc-shadow-panel: var(--shadow-panel);
+
   /* Global surface system */
-  --surface-card-border: color-mix(in oklab, var(--c-border) 64%, transparent);
-  --surface-card-border-hover: color-mix(in oklab, var(--c-border) 78%, var(--c-panel) 22%);
-  --surface-card-border-focus: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
-  --surface-card-bg: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--c-panel) 98%, transparent),
-    color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%)
-  );
-  --surface-card-bg-hover: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--c-panel) 99%, transparent),
-    color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%)
-  );
+  --surface-card-border: color-mix(in oklab, var(--color-border) 72%, transparent);
+  --surface-card-border-hover: color-mix(in oklab, var(--color-border) 84%, var(--color-primary) 16%);
+  --surface-card-border-focus: color-mix(in oklab, var(--color-primary) 34%, var(--color-border) 66%);
+  --surface-card-bg: var(--color-surface);
+  --surface-card-bg-hover: var(--color-surface-muted);
   --surface-card-shadow: var(--shadow-card);
-  --surface-card-shadow-hover: var(--shadow-card-hover, var(--shadow-card));
-    /* De'ciZhen calm workspace tokens */
-  --dc-bg: #f7f6f2;
-  --dc-surface: #ffffff;
-  --dc-surface-muted: #fbfaf7;
-
-  --dc-border: #e5e0d8;
-  --dc-border-soft: #f1ede6;
-
-  --dc-text: #121418;
-  --dc-text-muted: #667085;
-  --dc-text-soft: #8a9099;
-
-  --dc-primary: #2f3a56;
-  --dc-primary-hover: #253049;
-  --dc-primary-soft: #eef1f6;
-
-  --dc-sage: #6f8f74;
-  --dc-sage-soft: #eef4ef;
-
-  --dc-sand: #c9a56a;
-  --dc-sand-soft: #faf1e2;
-
-  --dc-blue: #5b7c99;
-  --dc-blue-soft: #eef4f8;
-
-  --dc-radius-sm: 8px;
-  --dc-radius-md: 12px;
-  --dc-radius-lg: 16px;
-  --dc-radius-xl: 22px;
-
-  --dc-shadow-card: 0 1px 2px rgba(18, 20, 24, 0.04);
-  --dc-shadow-panel: 0 12px 32px rgba(18, 20, 24, 0.06);
-
+  --surface-card-shadow-hover: var(--shadow-card-hover);
 
   /* Global controls system */
-  --control-bg: color-mix(in oklab, var(--c-surface) 88%, var(--c-panel) 12%);
-  --control-bg-hover: color-mix(in oklab, var(--c-surface) 80%, var(--c-panel) 20%);
-  --control-border: color-mix(in oklab, var(--c-border) 78%, transparent);
-  --control-border-hover: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
-  --control-focus-ring: 0 0 0 3px color-mix(in oklab, var(--c-text) 12%, transparent);
+  --control-bg: var(--color-surface);
+  --control-bg-hover: var(--color-surface-muted);
+  --control-border: var(--color-border);
+  --control-border-hover: color-mix(in oklab, var(--color-border) 70%, var(--color-primary) 30%);
+  --control-focus-ring: 0 0 0 3px color-mix(in oklab, var(--color-primary) 14%, transparent);
 
-  --surface-soft-border: color-mix(in oklab, var(--c-border) 65%, transparent);
-  --surface-soft-bg: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
-  --surface-soft-bg-strong: color-mix(in oklab, var(--c-panel) 94%, var(--c-border) 6%);
-  --focus-ring-primary: color-mix(in oklab, var(--c-primary) 18%, transparent);
-  --surface-decision-active-border: color-mix(in oklab, var(--c-primary) 44%, var(--c-accent) 18%, var(--surface-soft-border) 38%);
-  --surface-decision-active-bg: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--c-hero-tint-accent) 84%, var(--c-panel) 16%) 0%,
-    color-mix(in oklab, var(--c-hero-tint-primary) 90%, var(--c-panel) 10%) 100%
+  --surface-soft-border: var(--color-border-soft);
+  --surface-soft-bg: var(--color-surface-muted);
+  --surface-soft-bg-strong: var(--color-surface-soft);
+  --focus-ring-primary: color-mix(in oklab, var(--color-primary) 18%, transparent);
+
+  --surface-decision-active-border: color-mix(
+    in oklab,
+    var(--color-primary) 30%,
+    var(--color-border) 70%
   );
-  --surface-decision-active-value: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
+  --surface-decision-active-bg: var(--color-primary-soft);
+  --surface-decision-active-value: var(--color-primary);
 
   /* Global shell geometry shared by topbar/main/footer */
-  --shell-max-width: 1280px;
-  --shell-topbar-max-width: calc(var(--shell-max-width) - 16px);
+  --shell-sidebar-width: 232px;
+  --shell-rail-width: 300px;
+  --shell-content-max-width: 1440px;
+  --shell-max-width: calc(var(--shell-sidebar-width) + var(--shell-content-max-width));
+  --shell-topbar-max-width: var(--shell-content-max-width);
   --shell-inline-padding: clamp(16px, 2vw, 24px);
   --shell-topbar-offset: clamp(8px, 1.5vw, 16px);
   --section-top-offset: clamp(24px, 3vw, 40px);
-  --layout-section-gap: var(--space-5);
+  --layout-section-gap: var(--space-6);
+}
+
+@media (max-width: 1199px) {
+  :root {
+    --shell-content-max-width: 920px;
+    --shell-inline-padding: 20px;
+    --layout-section-gap: var(--space-5);
+  }
 }
 
 @media (max-width: 768px) {
   :root {
-    --shell-inline-padding: 12px;
+    --shell-content-max-width: none;
+    --shell-inline-padding: 16px;
     --shell-topbar-offset: 8px;
     --section-top-offset: clamp(14px, 4vw, 22px);
     --layout-section-gap: var(--space-4);
