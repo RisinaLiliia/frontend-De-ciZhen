@@ -2,10 +2,7 @@
 
 import * as React from 'react';
 
-import {
-  WorkspaceFrame,
-  WorkspaceOverlaySurface,
-} from '@/features/workspace/requests';
+import { WorkspaceOverlaySurface } from '@/features/workspace/requests';
 import type { WorkspacePageFrameProps } from '@/features/workspace/shell/WorkspaceShell.types';
 
 export function WorkspacePageFrame({
@@ -16,39 +13,40 @@ export function WorkspacePageFrame({
   frameClassName,
   contentClassName,
 }: WorkspacePageFrameProps) {
-  if (aiRail == null) {
-    const contentWrapperClassName = ['stack-md', contentClassName ?? ''].filter(Boolean).join(' ');
-    const mainNode = (
-      <div className={frameClassName}>
-        <div className={contentWrapperClassName}>{main}</div>
+  const frameClasses = ['workspace-shell', frameClassName ?? ''].filter(Boolean).join(' ');
+  const mainClasses = ['workspace-main', contentClassName ?? ''].filter(Boolean).join(' ');
+  const pageFrameClasses = [
+    'workspace-page-frame',
+    aiRail == null ? 'workspace-page-frame--single' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const pageContent = (
+    <main className={mainClasses}>
+      <div className={pageFrameClasses}>
+        <section className="workspace-page-frame__content">{main}</section>
+
+        {aiRail ? (
+          <aside className="workspace-page-frame__rail" aria-label="Workspace AI tools">
+            {aiRail}
+          </aside>
+        ) : null}
       </div>
-    );
-    const content = intro ? (
-      <WorkspaceOverlaySurface intro={intro}>{mainNode}</WorkspaceOverlaySurface>
-    ) : (
-      mainNode
-    );
-
-    if (sidebar) {
-      return (
-        <div className="workspace-frame__body">
-          <div className="workspace-frame__sidebar">{sidebar}</div>
-          <div className="workspace-frame__content">{content}</div>
-        </div>
-      );
-    }
-
-    return content;
-  }
+    </main>
+  );
 
   return (
-    <WorkspaceFrame
-      intro={intro}
-      main={main}
-      aside={aiRail}
-      sidebar={sidebar}
-      frameClassName={frameClassName}
-      contentClassName={contentClassName}
-    />
+    <div className={frameClasses}>
+      {sidebar ? <div className="workspace-shell__sidebar">{sidebar}</div> : null}
+
+      <div className="workspace-shell__main">
+        {intro ? (
+          <WorkspaceOverlaySurface intro={intro}>{pageContent}</WorkspaceOverlaySurface>
+        ) : (
+          pageContent
+        )}
+      </div>
+    </div>
   );
 }
