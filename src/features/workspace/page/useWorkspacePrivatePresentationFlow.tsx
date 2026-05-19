@@ -28,18 +28,19 @@ import {
 import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
 import { WorkspaceChatIntro } from '@/features/chat/WorkspaceChatIntro';
 import { WorkspaceChatRail } from '@/features/chat/WorkspaceChatRail';
-import { WorkspaceProfilePage } from '@/features/profile/WorkspaceProfilePage';
 import { WorkspaceSettingsIntro } from '@/features/profile/WorkspaceSettingsIntro';
 import { WorkspaceSettingsPage } from '@/features/profile/WorkspaceSettingsPage';
+import { useExploreSidebar } from '@/features/workspace/explore/useExploreSidebar';
 import { WorkspaceHelpIntro } from '@/features/workspace/help/WorkspaceHelpIntro';
 import { WorkspaceHelpPage } from '@/features/workspace/help/WorkspaceHelpPage';
 import {
+  buildWorkspaceExploreSectionModel,
   buildWorkspaceChatSectionModel,
   buildWorkspaceHelpSectionModel,
   buildWorkspaceOverviewSectionModel,
-  buildWorkspaceProfileSectionModel,
   buildWorkspaceSettingsSectionModel,
   buildWorkspaceStandardSectionModel,
+  resolveWorkspaceExploreSection,
   resolveWorkspaceStandardSection,
 } from '@/features/workspace/page/sections/workspaceSectionAdapters';
 import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
@@ -150,6 +151,7 @@ export function useWorkspacePrivatePresentationFlow({
   });
   const overviewStatisticsModel = useWorkspaceStatisticsModel({ locale: branch.locale });
   const publicSummaryView = buildWorkspacePublicSummaryView(data);
+  const privateExplore = useExploreSidebar(branch.t);
 
   const overviewRailTopSlot = isOverviewMode ? (
     <>
@@ -206,9 +208,12 @@ export function useWorkspacePrivatePresentationFlow({
 
   const preferredRequestsRole = privateState.preferredRequestsRole;
   const isChatSection = activePublicSection === 'chat';
-  const isProfileSection = activePublicSection === 'profile';
   const isSettingsSection = activePublicSection === 'settings';
   const isHelpSection = activePublicSection === 'help';
+  const isExploreSection =
+    activePublicSection === 'providers'
+    || activePublicSection === 'stats'
+    || activePublicSection === 'profile';
   const {
     requestsPage,
     setRequestsPage,
@@ -337,16 +342,6 @@ export function useWorkspacePrivatePresentationFlow({
     ),
     [isSettingsSection],
   );
-  const profileSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
-    () => (
-      isProfileSection
-        ? buildWorkspaceProfileSectionModel({
-          content: <WorkspaceProfilePage />,
-        })
-        : null
-    ),
-    [isProfileSection],
-  );
   const helpSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
     () => (
       isHelpSection
@@ -357,7 +352,7 @@ export function useWorkspacePrivatePresentationFlow({
     ),
     [isHelpSection],
   );
-  const sectionModel = React.useMemo<WorkspaceSectionRenderModel>(() => {
+  const sectionModel: WorkspaceSectionRenderModel = (() => {
     if (chatSectionModel) {
       return chatSectionModel;
     }
@@ -366,8 +361,12 @@ export function useWorkspacePrivatePresentationFlow({
       return settingsSectionModel;
     }
 
-    if (profileSectionModel) {
-      return profileSectionModel;
+    if (isExploreSection) {
+      return buildWorkspaceExploreSectionModel({
+        branch,
+        section: resolveWorkspaceExploreSection(activePublicSection),
+        explore: privateExplore,
+      });
     }
 
     if (helpSectionModel) {
@@ -386,16 +385,7 @@ export function useWorkspacePrivatePresentationFlow({
       content: privateMain,
       aiRail: privateAside,
     });
-  }, [
-    activePublicSection,
-    chatSectionModel,
-    helpSectionModel,
-    isOverviewMode,
-    privateAside,
-    privateMain,
-    profileSectionModel,
-    settingsSectionModel,
-  ]);
+  })();
 
   return {
     activePublicSection,
