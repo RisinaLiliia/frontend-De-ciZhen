@@ -8,8 +8,8 @@
     font-size: var(--btn-font);
     padding: 0 var(--btn-pad-x);
     background: var(--btn-primary-bg);
-    color: var(--c-accent-contrast);
-    border: 1px solid color-mix(in oklab, var(--c-accent) 34%, var(--c-border) 66%);
+    color: var(--btn-primary-color, var(--c-primary-contrast));
+    border: 1px solid color-mix(in oklab, var(--c-primary) 72%, black 28%);
     box-shadow: var(--btn-primary-shadow);
     transition:
       transform var(--transition-fast),
@@ -21,8 +21,9 @@
 
   .btn-primary:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--c-accent) 42%, var(--c-border) 58%);
-    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-accent) 25%, transparent);
+    background: var(--c-primary-hover);
+    border-color: color-mix(in oklab, var(--c-primary-hover) 78%, black 22%);
+    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-primary) 24%, transparent);
   }
 
   .btn-primary:active {
@@ -37,8 +38,8 @@
   .btn-primary:focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 3px color-mix(in oklab, var(--c-accent) 35%, transparent),
-      0 10px 24px color-mix(in oklab, var(--c-accent) 20%, transparent);
+      0 0 0 3px color-mix(in oklab, var(--c-primary) 18%, transparent),
+      0 10px 24px color-mix(in oklab, var(--c-primary) 20%, transparent);
   }
 
   .btn-secondary {
@@ -48,9 +49,9 @@
     font-size: var(--btn-font);
     padding: 0 var(--btn-pad-x);
     background: var(--btn-secondary-bg);
-    color: var(--c-primary);
+    color: var(--c-text);
     border: var(--btn-secondary-border);
-    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-primary) 9%, transparent);
+    box-shadow: 0 4px 14px color-mix(in oklab, var(--c-ink) 5%, transparent);
     transition:
       transform var(--transition-fast),
       background var(--transition-fast),
@@ -60,7 +61,8 @@
 
   .btn-secondary:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--c-primary) 60%, var(--c-border) 40%);
+    background: var(--c-surface);
+    border-color: color-mix(in oklab, var(--c-border) 64%, var(--c-primary) 36%);
     box-shadow: var(--btn-secondary-shadow-hover);
   }
 

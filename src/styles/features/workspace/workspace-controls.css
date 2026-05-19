@@ -44,7 +44,7 @@
 
   .workspace-shared-context-controls__body {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
   .workspace-shared-context-controls__filters-grid {
@@ -61,17 +61,16 @@
     grid-column: 1 / -1;
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
     min-width: 0;
     flex-wrap: nowrap;
-    padding: var(--space-1-5);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border-soft);
-    background: var(--color-surface);
+    padding: 0;
+    border: 0;
+    background: transparent;
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
-    scroll-padding-inline: var(--space-1-5);
+    scroll-padding-inline: 0;
   }
 
   .workspace-shared-context-controls__control-cluster::-webkit-scrollbar,
@@ -90,7 +89,7 @@
   .workspace-shared-context-controls__combined-row {
     display: grid;
     grid-template-columns: max-content minmax(0, 1fr) max-content;
-    align-items: end;
+    align-items: center;
     gap: var(--space-3);
     width: 100%;
     min-width: 0;
@@ -191,14 +190,47 @@
     grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) auto auto;
   }
 
+  .workspace-shared-context-controls__footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .workspace-shared-context-controls__footer-meta {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .workspace-shared-context-controls__sort-group {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .workspace-shared-context-controls__footer-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .workspace-shared-context-controls__footer-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    flex: 0 0 auto;
+  }
+
   .workspace-shared-context-controls__sort-filter {
-    min-width: min(100%, 240px);
+    min-width: min(100%, 220px);
   }
 
   .workspace-shared-context-controls__action-row-control {
     display: inline-flex;
     align-items: center;
-    justify-self: end;
   }
 
   .workspace-shared-context-controls__range-toolbar {
@@ -250,7 +282,7 @@
   .workspace-context-strip {
     display: grid;
     gap: var(--space-3);
-    padding: var(--space-4);
+    padding: 18px 20px;
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border-soft);
     background: var(--color-surface);
@@ -262,6 +294,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
+    margin-bottom: -2px;
   }
 
   .workspace-context-strip__label {
@@ -270,6 +303,40 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-text-muted);
+  }
+
+  .workspace-shared-context-controls__period-filter .requests-select,
+  .workspace-shared-context-controls__sort-filter .requests-select {
+    min-width: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .workspace-shared-context-controls__filters-grid.requests-filter-grid--primary {
+      grid-template-columns: minmax(0, 1.1fr) repeat(3, minmax(0, 0.8fr));
+    }
+
+    .workspace-shared-context-controls__surface .requests-select,
+    .workspace-shared-context-controls__surface .dc-city-search-input,
+    .workspace-shared-context-controls__range-toolbar .home-activity__range {
+      font-size: 12px;
+    }
+
+    .workspace-shared-context-controls__sort-filter {
+      max-width: 220px;
+    }
+
+    .workspace-shared-context-controls__footer-actions .requests-view-toggle {
+      border-radius: var(--radius-md);
+      background: var(--color-surface-muted);
+      border-color: var(--color-border-soft);
+    }
+
+    .workspace-shared-context-controls__action {
+      width: 38px;
+      min-width: 38px;
+      min-height: 38px;
+      border-radius: var(--radius-md);
+    }
   }
 
   .workspace-context-strip__chips {
@@ -413,6 +480,10 @@
 
     .workspace-mobile-context-section__controls .workspace-shared-context-controls__body {
       gap: var(--space-2);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__footer-row {
+      display: none;
     }
 
     .workspace-mobile-context-section__controls .workspace-shared-context-controls__filters-grid,

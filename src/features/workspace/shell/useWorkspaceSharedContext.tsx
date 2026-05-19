@@ -7,14 +7,15 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   IconBriefcase,
   IconCalendar,
-  IconCheck,
   IconFilter,
   IconPin,
-  IconSettings,
-  IconUser,
 } from '@/components/ui/icons/icons';
 import { RequestsViewToggle } from '@/components/requests/RequestsViewToggle';
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
+import {
+  buildWorkspaceModeItems,
+  type WorkspaceModeItem,
+} from '@/features/workspace/navigation/workspaceSection.model';
 import {
   buildWorkspaceRequestsScopeHref,
   isWorkspaceTab,
@@ -24,13 +25,11 @@ import {
   resolveWorkspaceRequestsState,
   type WorkspaceRequestsScope,
   type WorkspaceTab,
-} from '@/features/workspace/requests';
-import { RANGE_OPTIONS, rangeLabelShort } from '@/features/workspace/requests/stats/components/statisticsContext.constants';
-import { getWorkspaceStatisticsCopy } from '@/features/workspace/requests/stats/workspaceStatistics.copy';
+} from '@/features/workspace/state';
+import { getWorkspaceStatisticsCopy, RANGE_OPTIONS, rangeLabelShort } from '@/features/workspace/stats';
 import { useWorkspacePublicFilters } from '@/features/workspace/public/useWorkspacePublicFilters';
 import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 import {
-  buildModeHref,
   getRequestsScopeTitle,
   getWorkspaceModeCopy,
   resolveRangeLabel,
@@ -67,15 +66,6 @@ import {
 type Translator = (key: I18nKey) => string;
 
 const CLEAR_QUERY_KEYS = ['city', 'cityId', 'category', 'categoryKey', 'service', 'subcategoryKey', 'serviceKey', 'period', 'range', 'sort', 'page', 'role', 'state'] as const;
-
-export type WorkspaceModeItem = {
-  key: WorkspaceModeKey;
-  label: string;
-  description: string;
-  href: string;
-  icon: React.ReactNode;
-  isActive: boolean;
-};
 
 export type WorkspaceSharedContext = {
   activeMode: WorkspaceModeKey;
@@ -505,49 +495,12 @@ export function useWorkspaceSharedContext({
   );
 
   const modeItems = React.useMemo<WorkspaceModeItem[]>(
-    () => [
-      {
-        key: 'overview',
-        label: copy.modes.overview.label,
-        description: copy.modes.overview.description,
-        href: buildModeHref({ currentSearch: rawSearch, mode: 'overview' }),
-        icon: <IconCheck />,
-        isActive: activeMode === 'overview',
-      },
-      {
-        key: 'requests',
-        label: copy.modes.requests.label,
-        description: copy.modes.requests.description,
-        href: buildModeHref({ currentSearch: rawSearch, mode: 'requests' }),
-        icon: <IconBriefcase />,
-        isActive: activeMode === 'requests',
-      },
-      {
-        key: 'providers',
-        label: copy.modes.providers.label,
-        description: copy.modes.providers.description,
-        href: buildModeHref({ currentSearch: rawSearch, mode: 'providers' }),
-        icon: <IconUser />,
-        isActive: activeMode === 'providers',
-      },
-      {
-        key: 'analysis',
-        label: copy.modes.analysis.label,
-        description: copy.modes.analysis.description,
-        href: buildModeHref({ currentSearch: rawSearch, mode: 'analysis' }),
-        icon: <IconFilter />,
-        isActive: activeMode === 'analysis',
-      },
-      {
-        key: 'actions',
-        label: copy.modes.actions.label,
-        description: copy.modes.actions.description,
-        href: buildModeHref({ currentSearch: rawSearch, mode: 'actions' }),
-        icon: <IconSettings />,
-        isActive: activeMode === 'actions',
-      },
-    ],
-    [activeMode, copy.modes.actions.description, copy.modes.actions.label, copy.modes.analysis.description, copy.modes.analysis.label, copy.modes.overview.description, copy.modes.overview.label, copy.modes.providers.description, copy.modes.providers.label, copy.modes.requests.description, copy.modes.requests.label, rawSearch],
+    () => buildWorkspaceModeItems({
+      activeMode,
+      copy,
+      currentSearch: rawSearch,
+    }),
+    [activeMode, copy, rawSearch],
   );
 
   const activeModeCopy = activeMode === 'requests'

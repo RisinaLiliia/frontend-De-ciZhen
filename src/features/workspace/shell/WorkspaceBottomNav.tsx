@@ -1,11 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
 
 import {
   useWorkspaceSharedContext,
 } from '@/features/workspace/shell/useWorkspaceSharedContext';
+import { WorkspaceModeNav } from '@/features/workspace/shell/WorkspaceModeNav';
 import type { WorkspaceBottomNavProps } from '@/features/workspace/shell/WorkspaceShell.types';
 import { useWorkspaceMobileSectionSheet } from '@/features/workspace/requests/useWorkspaceMobileSectionSheet';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -56,24 +56,12 @@ export function WorkspaceBottomNav({
         </header>
         <div className="workspace-mobile-nav-sheet__body">
           <section className="workspace-mobile-nav-sheet__section">
-            <nav className="workspace-mode-nav workspace-mode-nav--sheet" aria-label={t(I18N_KEYS.workspace.modeNavAriaLabel)}>
-              {model.modeItems.map((item) => (
-                <Link
-                  key={item.key}
-                  href={item.href}
-                  prefetch={false}
-                  className={`workspace-mode-nav__item${item.isActive ? ' is-active' : ''}`.trim()}
-                  aria-current={item.isActive ? 'page' : undefined}
-                  onClick={() => setOpen(false)}
-                >
-                  <span className="workspace-mode-nav__icon" aria-hidden="true">{item.icon}</span>
-                  <span className="workspace-mode-nav__copy">
-                    <strong className="workspace-mode-nav__label">{item.label}</strong>
-                    <span className="workspace-mode-nav__description">{item.description}</span>
-                  </span>
-                </Link>
-              ))}
-            </nav>
+            <WorkspaceModeNav
+              items={model.modeItems}
+              t={t}
+              className="workspace-mode-nav--sheet"
+              onItemClick={() => setOpen(false)}
+            />
           </section>
         </div>
       </section>

@@ -37,9 +37,9 @@
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
 
-  /* Global minimal color system */
+  /* Workspace-wide color system */
   --color-ivory: #f7f6f2;
-  --color-stone: #ecebe6;
+  --color-stone: #ece8e0;
   --color-ink: #121418;
 
   --color-background: #f7f6f2;
@@ -58,7 +58,8 @@
   --color-primary: #2f3a56;
   --color-primary-hover: #253049;
   --color-primary-soft: #eef1f6;
-  --color-primary-border: #d9dee8;
+  --color-primary-border: #d7deea;
+  --color-primary-contrast: #ffffff;
 
   --color-success: #6f8f74;
   --color-success-soft: #eef4ef;
@@ -71,6 +72,33 @@
   --color-info: #5b7c99;
   --color-info-soft: #eef4f8;
   --color-info-border: #dbe9f1;
+
+  --color-danger: #b85c5c;
+  --color-danger-soft: #f6eeee;
+  --color-danger-border: #ebd3d3;
+
+  /* Workspace semantic aliases */
+  --workspace-bg: var(--color-background);
+  --workspace-surface: var(--color-surface);
+  --workspace-surface-muted: var(--color-surface-muted);
+  --workspace-border: var(--color-border);
+  --workspace-border-soft: var(--color-border-soft);
+  --workspace-border-strong: var(--color-border-strong);
+  --workspace-text: var(--color-text);
+  --workspace-text-muted: var(--color-text-muted);
+  --workspace-text-soft: var(--color-text-soft);
+  --workspace-primary: var(--color-primary);
+  --workspace-primary-hover: var(--color-primary-hover);
+  --workspace-primary-soft: var(--color-primary-soft);
+  --workspace-primary-contrast: var(--color-primary-contrast);
+  --workspace-success: var(--color-success);
+  --workspace-success-soft: var(--color-success-soft);
+  --workspace-warning: var(--color-warning);
+  --workspace-warning-soft: var(--color-warning-soft);
+  --workspace-info: var(--color-info);
+  --workspace-info-soft: var(--color-info-soft);
+  --workspace-danger: var(--color-danger);
+  --workspace-danger-soft: var(--color-danger-soft);
 
   /* Semantic aliases */
   --app-bg: var(--color-background);
@@ -97,12 +125,15 @@
   --dc-primary: var(--color-primary);
   --dc-primary-hover: var(--color-primary-hover);
   --dc-primary-soft: var(--color-primary-soft);
+  --dc-primary-contrast: var(--color-primary-contrast);
   --dc-sage: var(--color-success);
   --dc-sage-soft: var(--color-success-soft);
   --dc-sand: var(--color-warning);
   --dc-sand-soft: var(--color-warning-soft);
   --dc-blue: var(--color-info);
   --dc-blue-soft: var(--color-info-soft);
+  --dc-danger: var(--color-danger);
+  --dc-danger-soft: var(--color-danger-soft);
 
   /* HSL compatibility values used by Tailwind theme tokens */
   --background: 40 24% 96%;
@@ -128,22 +159,25 @@
   --dc-radius-xl: var(--radius-xl);
   --dc-shadow-card: var(--shadow-card);
   --dc-shadow-panel: var(--shadow-panel);
+  --dc-shadow-floating: var(--shadow-floating);
 
   /* Global surface system */
-  --surface-card-border: color-mix(in oklab, var(--color-border) 72%, transparent);
-  --surface-card-border-hover: color-mix(in oklab, var(--color-border) 84%, var(--color-primary) 16%);
-  --surface-card-border-focus: color-mix(in oklab, var(--color-primary) 34%, var(--color-border) 66%);
+  --surface-card-border: color-mix(in oklab, var(--color-border) 88%, transparent);
+  --surface-card-border-hover: color-mix(in oklab, var(--color-border) 76%, var(--color-primary) 24%);
+  --surface-card-border-focus: color-mix(in oklab, var(--color-primary) 32%, var(--color-border) 68%);
   --surface-card-bg: var(--color-surface);
-  --surface-card-bg-hover: var(--color-surface-muted);
+  --surface-card-bg-hover: var(--color-surface);
   --surface-card-shadow: var(--shadow-card);
   --surface-card-shadow-hover: var(--shadow-card-hover);
+  --surface-panel-shadow: var(--shadow-panel);
+  --surface-right-rail-shadow: 0 10px 30px rgba(18, 20, 24, 0.05);
 
   /* Global controls system */
   --control-bg: var(--color-surface);
   --control-bg-hover: var(--color-surface-muted);
   --control-border: var(--color-border);
-  --control-border-hover: color-mix(in oklab, var(--color-border) 70%, var(--color-primary) 30%);
-  --control-focus-ring: 0 0 0 3px color-mix(in oklab, var(--color-primary) 14%, transparent);
+  --control-border-hover: color-mix(in oklab, var(--color-border) 68%, var(--color-primary) 32%);
+  --control-focus-ring: 0 0 0 3px color-mix(in oklab, var(--color-primary) 16%, transparent);
 
   --surface-soft-border: var(--color-border-soft);
   --surface-soft-bg: var(--color-surface-muted);

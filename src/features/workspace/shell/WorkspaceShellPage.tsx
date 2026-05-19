@@ -1,9 +1,7 @@
 'use client';
 
-import { AuthActions } from '@/components/layout/AuthActions';
-import { PageShell } from '@/components/layout/PageShell';
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell.container';
-import type { WorkspaceTab } from '@/features/workspace/requests';
+import type { WorkspaceTab } from '@/features/workspace/state';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 
 type WorkspaceShellPageProps = {
@@ -16,17 +14,11 @@ export function WorkspaceShellPage({
   forcedWorkspaceTab = null,
 }: WorkspaceShellPageProps = {}) {
   return (
-    <PageShell
-      right={<AuthActions />}
-      showBack={false}
-      topbarOverlay={true}
-      mainClassName="pb-6 requests-screen"
-      withSpacer={true}
-    >
+    <div className="workspace-route-shell requests-screen">
       <WorkspaceShell
         forcedPublicSection={forcedPublicSection}
         forcedWorkspaceTab={forcedWorkspaceTab}
       />
-    </PageShell>
+    </div>
   );
 }

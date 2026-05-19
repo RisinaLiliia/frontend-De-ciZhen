@@ -1,6 +1,7 @@
 'use client';
 
 import type { OfferDto } from '@/lib/api/dto/offers';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
 import type {
   WorkspaceRequestsRole,
@@ -16,7 +17,7 @@ type WorkspaceDataPlanArgs = {
   activeWorkspaceTab: WorkspaceTab;
   requestsScope?: WorkspaceRequestsScope;
   activeRequestsRole?: WorkspaceRequestsRole;
-  activePublicSection?: 'requests' | 'providers' | 'stats' | 'actions' | null;
+  activePublicSection?: PublicWorkspaceSection | null;
   hasAccessToken: boolean;
 };
 

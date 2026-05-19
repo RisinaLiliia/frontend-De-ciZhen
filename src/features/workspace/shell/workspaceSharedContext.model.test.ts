@@ -44,7 +44,7 @@ describe('workspaceSharedContext.model', () => {
     expect(
       shouldShowWorkspaceProfileViewerModeControl({
         activeWorkspaceTab: 'my-requests',
-        activePublicSection: 'actions',
+        activePublicSection: 'profile',
       }),
     ).toBe(true);
 

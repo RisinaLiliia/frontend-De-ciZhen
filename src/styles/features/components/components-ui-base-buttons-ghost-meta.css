@@ -7,9 +7,9 @@
     height: calc(var(--btn-h) - 10px);
     font-size: calc(var(--btn-font) - 1px);
     padding: 0 calc(var(--btn-pad-x) - 6px);
-    background: var(--control-bg);
-    border: 1px solid var(--control-border);
-    color: var(--c-text);
+    background: transparent;
+    border: 1px solid color-mix(in oklab, var(--control-border) 78%, transparent);
+    color: var(--c-text-muted);
     transition:
       transform var(--transition-fast),
       border-color var(--transition-fast),
@@ -71,7 +71,8 @@
     transform: translateY(-1px);
     border-color: var(--control-border-hover);
     background: var(--control-bg-hover);
-    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 12%, transparent);
+    color: var(--c-text);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
   }
 
   .btn-ghost:active {
@@ -84,9 +85,9 @@
   }
 
   .btn-ghost.is-accent {
-    border-color: color-mix(in oklab, var(--c-accent) 34%, var(--c-border) 66%);
+    border-color: color-mix(in oklab, var(--c-accent) 32%, var(--c-border) 68%);
     color: var(--c-accent);
-    background: color-mix(in oklab, var(--c-accent) 8%, var(--c-panel) 92%);
+    background: color-mix(in oklab, var(--c-accent) 10%, var(--c-panel) 90%);
   }
 
   .btn-ghost.is-accent:hover {
@@ -95,9 +96,9 @@
   }
 
   .btn-ghost.is-primary {
-    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
-    color: var(--c-text);
-    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
+    border-color: color-mix(in oklab, var(--c-primary) 26%, var(--c-border) 74%);
+    color: var(--c-primary);
+    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
   }
 
   .btn-ghost.is-primary:hover {

@@ -3,10 +3,10 @@
 import * as React from 'react';
 
 import type { I18nKey } from '@/lib/i18n/keys';
-import type { WorkspacePrivateIntroProps } from '@/features/workspace/requests';
+import type { WorkspacePrivateIntroProps } from '@/features/workspace/intro';
 import type { Locale } from '@/lib/i18n/t';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/state';
 import {
   buildWorkspaceAsideBaseProps,
   buildWorkspacePrivateIntroProps,
@@ -21,12 +21,10 @@ type Args = {
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
   WorkspacePrivateIntroComponent: React.ComponentType<WorkspacePrivateIntroProps>;
-  createRequestHref: string;
   isProvidersLoading: boolean;
   isProvidersError: boolean;
   topProviders: WorkspaceAsideBaseProps['providers'];
   favoriteProviderIds: WorkspaceAsideBaseProps['favoriteProviderIds'];
-  showQuickAction?: boolean;
   preferredRequestsRole?: WorkspacePrivateIntroProps['preferredRequestsRole'];
 };
 
@@ -36,12 +34,10 @@ export function useWorkspacePresentation({
   activePublicSection,
   activeWorkspaceTab,
   WorkspacePrivateIntroComponent,
-  createRequestHref,
   isProvidersLoading,
   isProvidersError,
   topProviders,
   favoriteProviderIds,
-  showQuickAction = true,
   preferredRequestsRole = null,
 }: Args) {
   const workspaceIntroNode = React.useMemo(
@@ -51,8 +47,6 @@ export function useWorkspacePresentation({
           locale,
           activePublicSection,
           activeWorkspaceTab,
-          createRequestHref,
-          showQuickAction,
           preferredRequestsRole,
         })}
       />
@@ -61,9 +55,7 @@ export function useWorkspacePresentation({
       WorkspacePrivateIntroComponent,
       activePublicSection,
       activeWorkspaceTab,
-      createRequestHref,
       locale,
-      showQuickAction,
       preferredRequestsRole,
     ],
   );

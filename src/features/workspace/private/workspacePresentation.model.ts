@@ -2,12 +2,13 @@
 
 import type { ComponentProps } from 'react';
 
-import { WorkspaceTopProvidersAside, type WorkspacePrivateIntroProps } from '@/features/workspace/requests';
+import { WorkspaceTopProvidersAside } from '@/features/workspace/requests';
+import type { WorkspacePrivateIntroProps } from '@/features/workspace/intro';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/state';
 
 type Translator = (key: I18nKey) => string;
 
@@ -20,8 +21,6 @@ type BuildWorkspacePrivateIntroPropsArgs = {
   locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
-  createRequestHref: string;
-  showQuickAction?: boolean;
   preferredRequestsRole?: WorkspacePrivateIntroProps['preferredRequestsRole'];
 };
 
@@ -37,16 +36,12 @@ export function buildWorkspacePrivateIntroProps({
   locale,
   activePublicSection,
   activeWorkspaceTab,
-  createRequestHref,
-  showQuickAction = true,
   preferredRequestsRole = null,
 }: BuildWorkspacePrivateIntroPropsArgs): WorkspacePrivateIntroProps {
   return {
     locale,
     activePublicSection,
     activeWorkspaceTab,
-    quickActionHref: createRequestHref,
-    showQuickAction,
     preferredRequestsRole,
   };
 }

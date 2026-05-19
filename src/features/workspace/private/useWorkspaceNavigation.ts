@@ -9,7 +9,7 @@ import type {
   FavoritesView,
   WorkspaceStatusFilter,
   WorkspaceTab,
-} from '@/features/workspace/requests';
+} from '@/features/workspace/state';
 import {
   buildWorkspaceCurrentHref,
   buildWorkspaceFavoritesViewHref,

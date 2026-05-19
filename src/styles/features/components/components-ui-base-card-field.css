@@ -8,7 +8,7 @@
     --card-border-focus: var(--surface-card-border-focus);
     --card-shadow-base: var(--surface-card-shadow);
     --card-shadow-hover: var(--surface-card-shadow-hover);
-    --card-focus-ring: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+    --card-focus-ring: 0 0 0 3px color-mix(in oklab, var(--c-primary) 14%, transparent);
     --card-shadow-focus:
       var(--card-shadow-base),
       var(--card-focus-ring),

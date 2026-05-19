@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { trackUXEvent } from '@/lib/analytics';
-import type { WorkspaceTab } from '@/features/workspace/requests';
+import type { WorkspaceTab } from '@/features/workspace/state';
 
 type Props = {
   isWorkspaceAuthed: boolean;

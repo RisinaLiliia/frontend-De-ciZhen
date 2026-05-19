@@ -1,13 +1,6 @@
 export { PublicContent } from './PublicContent';
 export { WorkspaceContent } from './WorkspaceContent';
-export { WorkspaceOverviewMain } from './WorkspaceOverviewMain';
-export { WorkspaceOverviewInsightsPanel } from './WorkspaceOverviewInsightsPanel';
-export { WorkspaceExploreSection } from './WorkspaceExploreSection';
 export { WorkspaceFrame, WorkspaceTopProvidersAside } from './WorkspaceFrame';
-export { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
-export { WorkspacePrivateIntro } from './WorkspacePrivateIntro';
-export type { WorkspacePrivateIntroProps } from './WorkspacePrivateIntro';
-export { WorkspacePublicIntro } from './WorkspacePublicIntro';
 export { RequestsPrivateActionRail, RequestsPrivateView, WorkspaceRequestsView } from './RequestsPrivateView';
 export type { WorkspaceRequestsViewProps, WorkspaceRequestsViewVariant } from './RequestsPrivateView';
 export {
@@ -20,9 +13,7 @@ export {
   WorkspaceRequestsSummaryStrip,
   WorkspaceRequestsSummaryStripSkeleton,
 } from './components/WorkspaceRequestsSummaryStrip';
-export { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
 export { WorkspacePublicStatsPanel } from './WorkspacePublicStatsPanel';
-export { useWorkspaceStatisticsModel } from './stats/useWorkspaceStatisticsModel';
 
 export { useWorkspaceContractRequestsData } from './useWorkspaceContractRequestsData';
 export { useWorkspaceData } from './useWorkspaceData';
@@ -58,7 +49,7 @@ export {
   resolveStatusFilter,
   resolveWorkspaceTab,
   REQUESTS_TAB_STORAGE_KEY,
-} from './workspace.types';
+} from '../state';
 export {
   buildLegacyWorkspaceTabRedirectHref,
   buildWorkspacePrivateRequestsHref,
@@ -68,17 +59,17 @@ export {
   resolveWorkspaceRequestsRole,
   resolveWorkspaceRequestsScope,
   resolveWorkspaceRequestsState,
-} from './workspaceRequestsScope.model';
-export { resolveWorkspaceViewerMode } from './workspaceViewerMode.model';
+} from '../state';
+export { resolveWorkspaceViewerMode } from '../state';
 export type {
   FavoritesView,
   WorkspaceStatusFilter,
   WorkspaceTab,
-} from './workspace.types';
+} from '../state';
 export type {
   WorkspaceRequestsPeriod,
   WorkspaceRequestsRole,
   WorkspaceRequestsScope,
   WorkspaceRequestsState,
-} from './workspaceRequestsScope.model';
-export type { WorkspaceViewerMode } from './workspaceViewerMode.model';
+} from '../state';
+export type { WorkspaceViewerMode } from '../state';

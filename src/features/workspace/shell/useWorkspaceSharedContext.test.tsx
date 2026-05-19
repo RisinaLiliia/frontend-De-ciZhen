@@ -17,17 +17,17 @@ function createModel(
   const copy = getWorkspaceModeCopy('de');
 
   return {
-    activeMode: 'actions',
+    activeMode: 'profile',
     activePublicSection: null,
     activeWorkspaceTab: 'my-requests',
     requestsScope: 'market',
     scopeSwitch: null,
     modeItems: [],
-    title: copy.modes.actions.title,
-    description: copy.modes.actions.description,
-    railDescription: copy.modes.actions.railDescription,
-    scope: copy.modes.actions.scope,
-    activeModeHref: '/workspace?section=actions',
+    title: copy.modes.profile.title,
+    description: copy.modes.profile.description,
+    railDescription: copy.modes.profile.railDescription,
+    scope: copy.modes.profile.scope,
+    activeModeHref: '/workspace?section=profile',
     chips: [
       { key: 'city', label: 'Ort', value: 'Alle Staedte', icon: <span /> },
       { key: 'category', label: 'Kategorie', value: 'Alle Kategorien', icon: <span /> },
@@ -68,7 +68,7 @@ function createModel(
 describe('buildSharedContextControlsProps', () => {
   it('renders viewer mode toggle for public actions section', () => {
     const props = buildSharedContextControlsProps({
-      model: createModel({ activePublicSection: 'actions' }),
+      model: createModel({ activePublicSection: 'profile' }),
       t: (key) => String(key),
       locale: 'de',
     });
@@ -81,7 +81,7 @@ describe('buildSharedContextControlsProps', () => {
 
   it('maps profile labels to inverted audience semantics without changing canonical viewerMode', () => {
     const props = buildSharedContextControlsProps({
-      model: createModel({ activePublicSection: 'actions' }),
+      model: createModel({ activePublicSection: 'profile' }),
       t: (key) => String(key),
       locale: 'de',
     });

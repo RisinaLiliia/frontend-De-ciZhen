@@ -1,7 +1,7 @@
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import type { WorkspaceTab } from '@/features/workspace/requests';
+import type { WorkspaceTab } from '@/features/workspace/state';
 
-export type WorkspaceModeKey = 'overview' | 'requests' | 'providers' | 'analysis' | 'actions';
+export type WorkspaceModeKey = 'overview' | 'requests' | 'providers' | 'analysis' | 'profile' | 'chat';
 
 type ResolveActiveWorkspaceModeArgs = {
   activePublicSection: PublicWorkspaceSection | null;
@@ -21,7 +21,8 @@ export function resolveActiveWorkspaceMode({
   if (activePublicSection === 'requests') return 'requests';
   if (activePublicSection === 'providers') return 'providers';
   if (activePublicSection === 'stats') return 'analysis';
-  if (activePublicSection === 'actions') return 'actions';
+  if (activePublicSection === 'profile') return 'profile';
+  if (activePublicSection === 'chat') return 'chat';
 
   const isWorkspaceRoot = pathname === '/workspace';
   if (isWorkspaceRoot && sectionParam === 'overview') {
@@ -34,7 +35,7 @@ export function resolveActiveWorkspaceMode({
 
   if (activeWorkspaceTab === 'my-offers' || activeWorkspaceTab === 'completed-jobs') return 'requests';
   if (activeWorkspaceTab === 'reviews') return 'analysis';
-  if (activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'profile') return 'actions';
+  if (activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'profile') return 'profile';
   return 'overview';
 }
 

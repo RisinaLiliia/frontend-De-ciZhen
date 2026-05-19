@@ -10,12 +10,11 @@ import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import {
   buildRequestsWorkspacePrivateBody,
   RequestsWorkspaceBody,
-  WorkspaceOverviewMain,
-  WorkspaceOverviewInsightsPanel,
-  WorkspacePublicDemandMapPanel,
-  useWorkspaceStatisticsModel,
   useWorkspacePrivateState,
 } from '@/features/workspace/requests';
+import { WorkspacePrivateIntro, WorkspacePublicIntro } from '@/features/workspace/intro';
+import { WorkspaceOverviewInsightsPanel, WorkspaceOverviewMain, WorkspacePublicDemandMapPanel } from '@/features/workspace/overview';
+import { useWorkspaceStatisticsModel } from '@/features/workspace/stats';
 import { WorkspaceRequestsAside } from '@/features/workspace/requests/components/WorkspaceRequestsAside';
 import {
   buildMyRequestsViewModelFromResponse,
@@ -24,14 +23,29 @@ import { buildWorkspaceRequestsSurfaceModel } from '@/features/workspace/request
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
   useWorkspacePresentation,
-  WorkspacePrivateIntro,
-  WorkspacePublicIntro,
   type WorkspaceSectionRenderModel,
 } from '@/features/workspace';
+import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
+import { WorkspaceChatIntro } from '@/features/chat/WorkspaceChatIntro';
+import { WorkspaceChatRail } from '@/features/chat/WorkspaceChatRail';
+import { WorkspaceProfilePage } from '@/features/profile/WorkspaceProfilePage';
+import { WorkspaceSettingsIntro } from '@/features/profile/WorkspaceSettingsIntro';
+import { WorkspaceSettingsPage } from '@/features/profile/WorkspaceSettingsPage';
+import { WorkspaceHelpIntro } from '@/features/workspace/help/WorkspaceHelpIntro';
+import { WorkspaceHelpPage } from '@/features/workspace/help/WorkspaceHelpPage';
+import {
+  buildWorkspaceChatSectionModel,
+  buildWorkspaceHelpSectionModel,
+  buildWorkspaceOverviewSectionModel,
+  buildWorkspaceProfileSectionModel,
+  buildWorkspaceSettingsSectionModel,
+  buildWorkspaceStandardSectionModel,
+  resolveWorkspaceStandardSection,
+} from '@/features/workspace/page/sections/workspaceSectionAdapters';
 import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
-import { isWorkspaceTab } from '@/features/workspace/requests';
+import { isWorkspaceTab } from '@/features/workspace/state';
 import {
   buildWorkspacePrivateOverviewListPropsArgs,
   buildWorkspacePublicSummaryView,
@@ -89,7 +103,6 @@ export function useWorkspacePrivatePresentationFlow({
       branch,
       data,
       WorkspacePrivateIntroComponent: WorkspacePrivateIntro,
-      showQuickAction: data.activePublicSection !== 'stats' && !isOverviewMode,
       preferredRequestsRole: privateState.preferredRequestsRole,
       privateState,
     }),
@@ -192,6 +205,10 @@ export function useWorkspacePrivatePresentationFlow({
   );
 
   const preferredRequestsRole = privateState.preferredRequestsRole;
+  const isChatSection = activePublicSection === 'chat';
+  const isProfileSection = activePublicSection === 'profile';
+  const isSettingsSection = activePublicSection === 'settings';
+  const isHelpSection = activePublicSection === 'help';
   const {
     requestsPage,
     setRequestsPage,
@@ -299,19 +316,99 @@ export function useWorkspacePrivatePresentationFlow({
       }))}
     />
   ) : null;
-  const sectionModel = React.useMemo<WorkspaceSectionRenderModel>(() => ({
-    section: isOverviewMode ? 'overview' : (activePublicSection ?? 'requests'),
-    content: privateMain,
-    aiRail: privateAside,
-    layout: 'withRail',
-  }), [activePublicSection, isOverviewMode, privateAside, privateMain]);
+  const chatSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
+    () => (
+      isChatSection
+        ? buildWorkspaceChatSectionModel({
+          content: <ChatWorkspacePage basePath="/workspace" className="workspace-chat-page" />,
+          aiRail: <WorkspaceChatRail />,
+        })
+        : null
+    ),
+    [isChatSection],
+  );
+  const settingsSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
+    () => (
+      isSettingsSection
+        ? buildWorkspaceSettingsSectionModel({
+          content: <WorkspaceSettingsPage />,
+        })
+        : null
+    ),
+    [isSettingsSection],
+  );
+  const profileSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
+    () => (
+      isProfileSection
+        ? buildWorkspaceProfileSectionModel({
+          content: <WorkspaceProfilePage />,
+        })
+        : null
+    ),
+    [isProfileSection],
+  );
+  const helpSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
+    () => (
+      isHelpSection
+        ? buildWorkspaceHelpSectionModel({
+          content: <WorkspaceHelpPage />,
+        })
+        : null
+    ),
+    [isHelpSection],
+  );
+  const sectionModel = React.useMemo<WorkspaceSectionRenderModel>(() => {
+    if (chatSectionModel) {
+      return chatSectionModel;
+    }
+
+    if (settingsSectionModel) {
+      return settingsSectionModel;
+    }
+
+    if (profileSectionModel) {
+      return profileSectionModel;
+    }
+
+    if (helpSectionModel) {
+      return helpSectionModel;
+    }
+
+    if (isOverviewMode) {
+      return buildWorkspaceOverviewSectionModel({
+        content: privateMain,
+        aiRail: privateAside,
+      });
+    }
+
+    return buildWorkspaceStandardSectionModel({
+      section: resolveWorkspaceStandardSection(activePublicSection),
+      content: privateMain,
+      aiRail: privateAside,
+    });
+  }, [
+    activePublicSection,
+    chatSectionModel,
+    helpSectionModel,
+    isOverviewMode,
+    privateAside,
+    privateMain,
+    profileSectionModel,
+    settingsSectionModel,
+  ]);
 
   return {
     activePublicSection,
     activeWorkspaceTab,
     pendingFavoriteProviderIds,
     onToggleProviderFavorite,
-    workspaceIntroNode: resolvedWorkspaceIntroNode,
+    workspaceIntroNode: isChatSection
+      ? <WorkspaceChatIntro />
+      : isSettingsSection
+        ? <WorkspaceSettingsIntro />
+        : isHelpSection
+          ? <WorkspaceHelpIntro />
+        : resolvedWorkspaceIntroNode,
     workspaceAsideBaseProps,
     asideTopSlot: overviewRailTopSlot,
     preferredRequestsRole,

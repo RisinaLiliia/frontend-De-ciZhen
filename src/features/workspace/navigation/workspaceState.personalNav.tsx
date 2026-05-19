@@ -13,7 +13,7 @@ import {
   normalizeWorkspaceNavCount,
   type WorkspaceNavTranslator,
 } from '@/features/workspace/navigation/workspaceState.nav.shared';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/state';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 
 export type BuildWorkspacePersonalNavItemsArgs = {
@@ -104,10 +104,10 @@ function buildWorkspaceGuestSecondaryNavItems({
   return [
     {
       key: 'guest-profile',
-      href: '/workspace?section=actions',
+      href: '/workspace?section=profile',
       label: t(I18N_KEYS.auth.profileLabel),
       icon: <IconUser />,
-      forceActive: activePublicSection === 'actions',
+      forceActive: activePublicSection === 'profile',
       match: 'prefix',
       tier: 'secondary',
     },

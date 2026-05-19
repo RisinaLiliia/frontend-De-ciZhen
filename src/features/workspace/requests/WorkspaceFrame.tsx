@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { TopProvidersPanel, type TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
-import { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
+import { WorkspaceOverlaySurface } from '@/features/workspace/shared/WorkspaceOverlaySurface';
 
 type WorkspaceFrameProps = {
   intro?: ReactNode;

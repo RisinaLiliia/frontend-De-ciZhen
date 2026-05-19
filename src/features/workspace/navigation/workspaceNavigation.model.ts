@@ -2,12 +2,12 @@
 
 import {
   buildLegacyWorkspaceTabRedirectHref,
-} from '@/features/workspace/requests/workspaceRequestsScope.model';
+} from '@/features/workspace/state';
 import type {
   FavoritesView,
   WorkspaceStatusFilter,
   WorkspaceTab,
-} from '@/features/workspace/requests';
+} from '@/features/workspace/state';
 import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
 
 type BuildWorkspaceNavigationHrefArgs = {

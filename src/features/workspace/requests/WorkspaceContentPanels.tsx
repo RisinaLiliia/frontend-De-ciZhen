@@ -131,7 +131,7 @@ export function WorkspaceContentPanels({
               emptyTitle={t(I18N_KEYS.requestsPage.favoritesGuestGateTitle)}
               emptyHint={t(I18N_KEYS.requestsPage.favoritesGuestGateHint)}
               emptyCtaLabel={t(I18N_KEYS.requestsPage.favoritesGuestGateCta)}
-              emptyCtaHref="/workspace?section=actions"
+              emptyCtaHref="/workspace?section=profile"
             >
               <></>
             </WorkspaceContentState>

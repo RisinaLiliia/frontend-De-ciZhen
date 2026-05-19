@@ -6,15 +6,15 @@ import { toast } from 'sonner';
 
 import {
   isWorkspaceTab,
-  resolveWorkspaceRequestsPeriod,
-  resolveWorkspaceRequestsRole,
-  resolveWorkspaceRequestsScope,
-  resolveWorkspaceRequestsState,
   resolveFavoritesView,
   resolveStatusFilter,
   type WorkspaceTab,
   resolveWorkspaceTab,
-} from '@/features/workspace/requests';
+  resolveWorkspaceRequestsPeriod,
+  resolveWorkspaceRequestsRole,
+  resolveWorkspaceRequestsScope,
+  resolveWorkspaceRequestsState,
+} from '@/features/workspace/state';
 import {
   type PublicWorkspaceSection,
   resolvePublicWorkspaceSection,
@@ -48,11 +48,19 @@ export function useWorkspaceRouteState({
   const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), isAuthed);
   const isRequestsSection = !forcedWorkspaceTab && !hasExplicitWorkspaceTab && resolvedPublicSection === 'requests';
   const isPrivateRequestsScope = isRequestsSection && requestsScope === 'my';
+  const isChatSection = resolvedPublicSection === 'chat';
+  const isSettingsSection = resolvedPublicSection === 'settings';
+  const isHelpSection = resolvedPublicSection === 'help';
 
   const activePublicSection = forcedWorkspaceTab || hasExplicitWorkspaceTab
     ? null
     : resolvedPublicSection;
-  const isWorkspacePublicSection = activePublicSection !== null && !isPrivateRequestsScope;
+  const isWorkspacePublicSection =
+    activePublicSection !== null
+    && !isPrivateRequestsScope
+    && !isChatSection
+    && !isSettingsSection
+    && !isHelpSection;
 
   const activeWorkspaceTab = React.useMemo(
     () => forcedWorkspaceTab ?? resolveWorkspaceTab(tabParam),

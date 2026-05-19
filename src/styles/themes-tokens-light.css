@@ -31,12 +31,12 @@
   --c-accent-contrast: var(--color-text);
 
   --c-success: var(--color-success);
-  --c-danger: #b85c5c;
+  --c-danger: var(--color-danger);
   --c-warning: var(--color-warning);
   --c-info: var(--color-info);
 
   --c-success-soft: var(--color-success-soft);
-  --c-danger-soft: #f6eeee;
+  --c-danger-soft: var(--color-danger-soft);
   --c-warning-soft: var(--color-warning-soft);
   --c-info-soft: var(--color-info-soft);
 
@@ -86,6 +86,7 @@
   /* Buttons */
   --btn-primary-bg: var(--color-primary);
   --btn-primary-shadow: 0 8px 18px color-mix(in oklab, var(--color-primary) 16%, transparent);
+  --btn-primary-color: var(--color-primary-contrast);
 
   --btn-secondary-bg: var(--color-surface);
   --btn-secondary-border: 1px solid var(--color-border);

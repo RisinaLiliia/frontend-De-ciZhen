@@ -1,60 +1,55 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import {
-  BarChart3,
-  BriefcaseBusiness,
-  ClipboardList,
-  HelpCircle,
-  Home,
-  Inbox,
-  MessageSquare,
-  Settings,
-  User,
-  Users,
-} from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
+import { resolveActiveWorkspaceNavigationSection } from '@/features/workspace/navigation/resolveActiveWorkspaceNavigationSection';
+import { workspaceNavigationItems } from '@/features/workspace/navigation/workspaceNavigation.config';
+import type { WorkspaceNavigationSection } from '@/features/workspace/navigation/workspaceNavigation.config';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import type { WorkspaceTab } from '@/features/workspace/requests';
-import type { I18nKey } from '@/lib/i18n/keys';
-import type { Locale } from '@/lib/i18n/t';
-
-type Translator = (key: I18nKey) => string;
+import type { WorkspaceTab } from '@/features/workspace/state';
+import { useAuthMe, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 
 type WorkspaceSidebarProps = {
-  t: Translator;
-  locale: Locale;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
   preferredRequestsRole?: 'customer' | 'provider' | null;
+  activeNavigationSection?: WorkspaceNavigationSection | null;
 };
-
-const NAV_ITEMS = [
-  { section: 'overview', label: 'Dashboard', href: '/workspace?section=overview', icon: Home },
-  { section: 'requests', label: 'Anfragen', href: '/workspace?section=requests', icon: Inbox, badge: '12' },
-  { section: 'offers', label: 'Angebote', href: '/workspace?section=offers', icon: MessageSquare },
-  { section: 'contracts', label: 'Aufträge', href: '/workspace?section=contracts', icon: ClipboardList },
-  { section: 'providers', label: 'Anbieter', href: '/workspace?section=providers', icon: Users },
-  { section: 'analysis', label: 'Analyse', href: '/workspace?section=statistics', icon: BarChart3 },
-  { section: 'chat', label: 'Nachrichten', href: '/workspace?section=chat', icon: MessageSquare },
-  { section: 'profile', label: 'Profil', href: '/workspace?section=actions', icon: User },
-] as const;
 
 export function WorkspaceSidebar({
   activePublicSection,
   activeWorkspaceTab,
+  activeNavigationSection = null,
 }: WorkspaceSidebarProps) {
-  const activeSection = activePublicSection ?? activeWorkspaceTab;
+  const searchParams = useSearchParams();
+  const authStatus = useAuthStatus();
+  const authUser = useAuthUser();
+  const authMe = useAuthMe();
+  const activeSection = activeNavigationSection ?? resolveActiveWorkspaceNavigationSection({
+    sectionParam: searchParams.get('section'),
+    activePublicSection,
+    activeWorkspaceTab,
+    requestsScope: searchParams.get('scope'),
+    requestsRole: searchParams.get('role'),
+    requestsState: searchParams.get('state'),
+  });
+  const primaryItems = workspaceNavigationItems.filter((item) => item.group === 'main');
+  const supportItems = workspaceNavigationItems.filter((item) => item.group === 'support');
+  const profileName = authMe?.name?.trim() || authUser?.name?.trim() || null;
+  const profileInitial = (profileName?.charAt(0) ?? 'D').toUpperCase();
+  const profileRole = authUser?.role === 'provider' ? 'Provider' : 'Client';
 
   return (
     <aside className="workspace-sidebar" aria-label="Workspace navigation">
-      <div className="workspace-sidebar__brand">
-        <span className="workspace-sidebar__logo-mark">D</span>
-        <strong className="workspace-sidebar__title">De&apos;ciZhen</strong>
-      </div>
+      <Link href="/" prefetch={false} className="workspace-sidebar__brand brand">
+        <Image src="/logo.svg" alt="De’ciZhen" className="brand__logo" width={26} height={26} />
+        <span className="brand__text truncate">De’ciZhen</span>
+      </Link>
 
       <nav className="workspace-sidebar__nav" aria-label="Main workspace navigation">
-        {NAV_ITEMS.map((item) => {
+        {primaryItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.section === activeSection;
 
@@ -79,23 +74,37 @@ export function WorkspaceSidebar({
       </nav>
 
       <div className="workspace-sidebar__footer">
-        <Link href="/workspace?section=settings" className="workspace-sidebar__item">
-          <Settings aria-hidden="true" size={17} strokeWidth={1.8} />
-          <span>Einstellungen</span>
-        </Link>
+        {supportItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = item.section === activeSection;
 
-        <Link href="/workspace?section=help" className="workspace-sidebar__item">
-          <HelpCircle aria-hidden="true" size={17} strokeWidth={1.8} />
-          <span>Hilfe</span>
-        </Link>
+          return (
+            <Link
+              key={item.section}
+              href={item.href}
+              className={
+                isActive
+                  ? 'workspace-sidebar__item workspace-sidebar__item--active'
+                  : 'workspace-sidebar__item'
+              }
+            >
+              <Icon aria-hidden="true" size={17} strokeWidth={1.8} />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
 
-        <div className="workspace-sidebar__user">
-          <div className="workspace-sidebar__avatar">L</div>
-          <div>
-            <strong>Lilia Müller</strong>
-            <span>Admin</span>
+        {authStatus === 'authenticated' ? (
+          <div className="workspace-sidebar__account">
+            <div className="workspace-sidebar__user">
+              <div className="workspace-sidebar__avatar">{profileInitial}</div>
+              <div>
+                <strong>{profileName ?? 'De’ciZhen User'}</strong>
+                <span>{profileRole}</span>
+              </div>
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </aside>
   );

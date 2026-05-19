@@ -1,7 +1,7 @@
 'use client';
 
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/state';
 
 type WorkspaceViewerMode = 'provider' | 'customer';
 
@@ -15,7 +15,7 @@ export function shouldShowWorkspaceProfileViewerModeControl(params: {
   activeWorkspaceTab: WorkspaceTab;
   activePublicSection: PublicWorkspaceSection | null;
 }) {
-  return params.activeWorkspaceTab === 'profile' || params.activePublicSection === 'actions';
+  return params.activeWorkspaceTab === 'profile' || params.activePublicSection === 'profile';
 }
 
 export function resolveWorkspaceViewerModeToggleItems(params: {

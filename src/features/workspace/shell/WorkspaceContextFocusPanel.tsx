@@ -5,7 +5,7 @@ import * as React from 'react';
 import { WorkspaceDecisionActionCard } from '@/features/workspace/requests/components/WorkspaceDecisionActionCard';
 import { WorkspaceDecisionRecommendationModal } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationModal';
 import { WorkspaceDecisionRecommendationSection } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationSection';
-import { getWorkspaceStatisticsCopy } from '@/features/workspace/requests/stats/workspaceStatistics.copy';
+import { getWorkspaceStatisticsCopy } from '@/features/workspace/stats';
 import { getWorkspaceFocusRecommendationCopy } from '@/features/workspace/shell/workspaceEnvironment.copy';
 import {
   fillWorkspaceModeTemplate,
@@ -16,7 +16,7 @@ import {
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceTab } from '@/features/workspace/requests';
+import type { WorkspaceTab } from '@/features/workspace/state';
 
 type Translator = (key: I18nKey) => string;
 

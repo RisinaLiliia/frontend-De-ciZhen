@@ -65,7 +65,7 @@ import {
   resolveConversationSubline,
   resolveConversationUnreadCount,
 } from '@/features/chat/chat.model';
-import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
 import styles from './ChatWorkspacePage.module.css';
 
 const CONVERSATIONS_QUERY_KEY = ['chat', 'conversations'] as const;
@@ -189,11 +189,13 @@ function ConversationAvatar({
 type ChatWorkspacePageProps = {
   embeddedConversationId?: string | null;
   className?: string;
+  basePath?: string;
 };
 
 export function ChatWorkspacePage({
   embeddedConversationId = null,
   className,
+  basePath = '/chat',
 }: ChatWorkspacePageProps = {}) {
   const user = useAuthUser();
   const { locale } = useI18n();
@@ -225,9 +227,9 @@ export function ChatWorkspacePage({
       if (isEmbedded) return;
       const next = patchChatSearchParams(new URLSearchParams(searchParams.toString()), updates);
       const query = next.toString();
-      router.replace(query ? `/chat?${query}` : '/chat', { scroll: false });
+      router.replace(query ? `${basePath}?${query}` : basePath, { scroll: false });
     },
-    [isEmbedded, router, searchParams],
+    [basePath, isEmbedded, router, searchParams],
   );
 
   React.useEffect(() => {

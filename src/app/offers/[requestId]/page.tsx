@@ -19,7 +19,7 @@ import Link from 'next/link';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
-import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
 
 export default function OffersPage() {
   const params = useParams();

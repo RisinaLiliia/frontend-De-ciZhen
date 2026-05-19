@@ -6,20 +6,16 @@ import {
 } from './workspacePresentation.model';
 
 describe('workspacePresentation.model', () => {
-  it('builds private intro props with quick action config', () => {
+  it('builds private intro props without legacy quick action config', () => {
     const props = buildWorkspacePrivateIntroProps({
       locale: 'de',
       activePublicSection: 'requests',
       activeWorkspaceTab: 'my-offers',
-      createRequestHref: '/request/create',
-      showQuickAction: false,
     });
 
     expect(props.locale).toBe('de');
     expect(props.activePublicSection).toBe('requests');
     expect(props.activeWorkspaceTab).toBe('my-offers');
-    expect(props.quickActionHref).toBe('/request/create');
-    expect(props.showQuickAction).toBe(false);
   });
 
   it('builds aside base props with translated labels and provider state', () => {

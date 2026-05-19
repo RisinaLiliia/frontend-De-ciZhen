@@ -2,8 +2,9 @@
 
 import type { ReactNode } from 'react';
 
+import type { WorkspaceNavigationSection } from '@/features/workspace/navigation/workspaceNavigation.config';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/state';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 
@@ -18,9 +19,8 @@ export type WorkspaceResponsiveContextProps = {
 
 export type WorkspaceSidebarProps = WorkspaceResponsiveContextProps & {
   t: WorkspaceTranslator;
+  activeNavigationSection?: WorkspaceNavigationSection | null;
 };
-
-export type WorkspaceTopbarProps = WorkspaceSidebarProps;
 
 export type WorkspaceBottomNavProps = WorkspaceResponsiveContextProps;
 
@@ -39,6 +39,9 @@ export type WorkspacePageFrameProps = {
 };
 
 export type WorkspaceSectionLayout = 'default' | 'singleColumn' | 'withRail';
+export type WorkspaceSectionRailPolicy = 'contextual' | 'custom' | 'none';
+export type WorkspaceSectionHeaderPolicy = 'workspace' | 'custom';
+export type WorkspaceSectionFilterPolicy = 'sharedContext' | 'none';
 
 export type WorkspaceSectionRenderModel = {
   section: PublicWorkspaceSection | 'overview';
@@ -49,12 +52,14 @@ export type WorkspaceSectionRenderModel = {
   content: ReactNode;
   aiRail?: ReactNode;
   layout?: WorkspaceSectionLayout;
+  railPolicy?: WorkspaceSectionRailPolicy;
+  headerPolicy?: WorkspaceSectionHeaderPolicy;
+  filterPolicy?: WorkspaceSectionFilterPolicy;
 };
 
 export type WorkspaceShellProps = {
   children: ReactNode;
   intro?: ReactNode;
-  topbar?: ReactNode;
   sidebar?: ReactNode;
   aiRail?: ReactNode;
   bottomNav?: ReactNode;

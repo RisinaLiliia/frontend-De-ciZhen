@@ -180,7 +180,7 @@ describe('useWorkspacePrivateInteractions', () => {
         activePublicSection={null}
         activeWorkspaceTab="profile"
         requestsScope="market"
-        nextPath="/workspace?section=actions"
+        nextPath="/workspace?section=profile"
         platformRequestsTotal={21}
         favoriteRequestIds={new Set()}
         requestById={new Map()}

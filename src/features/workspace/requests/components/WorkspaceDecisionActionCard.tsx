@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { StatisticsKiCard } from '@/features/workspace/requests/stats/components/StatisticsKiCard';
+import { StatisticsKiCard } from '@/features/workspace/stats/components/StatisticsKiCard';
 
 type WorkspaceDecisionActionCardProps = {
   stamp?: string;

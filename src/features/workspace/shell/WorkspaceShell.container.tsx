@@ -11,7 +11,7 @@ import {
   buildWorkspaceRequestsScopeHref,
   isWorkspaceTab,
   type WorkspaceTab,
-} from '@/features/workspace/requests';
+} from '@/features/workspace/state';
 import { shouldAttemptRefreshOnBootstrap } from '@/lib/auth/session';
 
 import {
@@ -31,23 +31,42 @@ export function WorkspaceShell({
   const router = useRouter();
   const searchParams = useSearchParams();
   const auth = useAuthSnapshot();
+  const [bootstrapRefreshIntent, setBootstrapRefreshIntent] = React.useState(true);
 
   const sectionParam = searchParams.get('section');
+  const isLegacyStatisticsRoute = sectionParam === 'statistics';
   const tabParam = searchParams.get('tab');
   const isOverviewRoute = sectionParam === 'overview';
   const hasExplicitWorkspaceTab = isWorkspaceTab(tabParam);
-  const resolvedSection = resolvePublicWorkspaceSection(sectionParam);
+  const resolvedSection = isLegacyStatisticsRoute
+    ? 'stats'
+    : resolvePublicWorkspaceSection(sectionParam);
   const resolvedWorkspaceTab = forcedWorkspaceTab;
+
+  React.useEffect(() => {
+    setBootstrapRefreshIntent(shouldAttemptRefreshOnBootstrap());
+  }, []);
+
   const shouldBlockOnAuthBootstrap = React.useMemo(() => {
     if (auth.status !== 'idle' && auth.status !== 'loading') return false;
-    return shouldAttemptRefreshOnBootstrap();
-  }, [auth.status]);
+    return bootstrapRefreshIntent;
+  }, [auth.status, bootstrapRefreshIntent]);
   const activePublicSection = auth.status === 'loading' || auth.status === 'idle'
     ? (forcedPublicSection ?? resolvedSection ?? (isOverviewRoute ? null : 'requests'))
     : (forcedPublicSection
       ?? resolvedSection
       ?? (isOverviewRoute ? null : (auth.status === 'unauthenticated' ? 'requests' : null)));
   const resolvedPublicSection = resolvedWorkspaceTab ? null : activePublicSection;
+
+  React.useEffect(() => {
+    if (!isLegacyStatisticsRoute) return;
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.set('section', 'stats');
+    const nextQuery = nextParams.toString();
+
+    router.replace(nextQuery ? `/workspace?${nextQuery}` : '/workspace', { scroll: false });
+  }, [isLegacyStatisticsRoute, router, searchParams]);
 
   React.useEffect(() => {
     if (!hasExplicitWorkspaceTab) return;

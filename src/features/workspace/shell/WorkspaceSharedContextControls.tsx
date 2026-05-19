@@ -118,6 +118,10 @@ export function WorkspaceSharedContextControls({
       ? 'workspace-shared-context-controls__control-row'
       : 'workspace-shared-context-controls__control-cluster',
   ].join(' ');
+  const rangeSelectOptions = range.options.map((option) => ({
+    value: option.value,
+    label: option.label,
+  }));
 
   const renderContent = (mobile: boolean) => (
     <div className="requests-filters requests-filters--surface-embedded requests-filters--shell workspace-shared-context-controls__surface">
@@ -203,56 +207,102 @@ export function WorkspaceSharedContextControls({
               />
             </div>
           ) : null}
-        </WorkspaceFilterBar>
 
-        <div className="workspace-shared-context-controls__range-row">
-          <RangeActionToolbar
-            className="workspace-shared-context-controls__range-toolbar"
-            groupLabel={range.groupLabel}
-            options={mobile ? (range.mobileOptions ?? range.options) : range.options}
-            value={range.value}
-            onChange={range.onChange}
-            action={!mobile ? action : undefined}
-          />
-          {sort ? (
-            <div className="requests-filter workspace-shared-context-controls__sort-filter">
+          {!mobile ? (
+            <div className="requests-filter workspace-shared-context-controls__period-filter">
               <RequestsFilterSelect
-                options={sort.options}
-                value={sort.value}
-                onChange={sort.onChange}
+                options={rangeSelectOptions}
+                value={range.value}
+                onChange={(next) => range.onChange(next as WorkspaceStatisticsRange)}
                 className="requests-select workspace-shared-context-controls__select"
-                ariaLabel={sort.ariaLabel}
+                ariaLabel={range.groupLabel}
               />
             </div>
           ) : null}
-          {!mobile && actionRowControl ? (
-            <div className="workspace-shared-context-controls__action-row-control">
-              {actionRowControl}
-            </div>
-          ) : null}
-          <WorkspaceButton
-            type="button"
-            variant="ghost"
-            className="panel-action icon-button--hint workspace-shared-context-controls__action requests-clear requests-clear--icon"
-            onClick={onReset}
-            aria-label={resetLabel}
-            title={resetLabel}
-          >
-            <IconFilter />
-          </WorkspaceButton>
-          {mobile && action ? (
+        </WorkspaceFilterBar>
+
+        {mobile ? (
+          <div className="workspace-shared-context-controls__range-row">
+            <RangeActionToolbar
+              className="workspace-shared-context-controls__range-toolbar"
+              groupLabel={range.groupLabel}
+              options={range.mobileOptions ?? range.options}
+              value={range.value}
+              onChange={range.onChange}
+            />
+            {sort ? (
+              <div className="requests-filter workspace-shared-context-controls__sort-filter">
+                <RequestsFilterSelect
+                  options={sort.options}
+                  value={sort.value}
+                  onChange={sort.onChange}
+                  className="requests-select workspace-shared-context-controls__select"
+                  ariaLabel={sort.ariaLabel}
+                />
+              </div>
+            ) : null}
             <WorkspaceButton
               type="button"
-              variant="secondary"
-              className="workspace-shared-context-controls__secondary-button"
-              aria-label={action.label}
-              title={action.tooltip ?? action.label}
-              onClick={action.onClick}
+              variant="ghost"
+              className="panel-action icon-button--hint workspace-shared-context-controls__action requests-clear requests-clear--icon"
+              onClick={onReset}
+              aria-label={resetLabel}
+              title={resetLabel}
             >
-              {action.icon ?? action.label}
+              <IconFilter />
             </WorkspaceButton>
-          ) : null}
-        </div>
+            {action ? (
+              <WorkspaceButton
+                type="button"
+                variant="secondary"
+                className="workspace-shared-context-controls__secondary-button"
+                aria-label={action.label}
+                title={action.tooltip ?? action.label}
+                onClick={action.onClick}
+              >
+                {action.icon ?? action.label}
+              </WorkspaceButton>
+            ) : null}
+          </div>
+        ) : (
+          <div className="workspace-shared-context-controls__footer-row">
+            <div className="workspace-shared-context-controls__footer-meta">
+              {sort ? (
+                <div className="workspace-shared-context-controls__sort-group">
+                  <span className="workspace-shared-context-controls__footer-label">
+                    {sort.ariaLabel}
+                  </span>
+                  <div className="requests-filter workspace-shared-context-controls__sort-filter">
+                    <RequestsFilterSelect
+                      options={sort.options}
+                      value={sort.value}
+                      onChange={sort.onChange}
+                      className="requests-select workspace-shared-context-controls__select"
+                      ariaLabel={sort.ariaLabel}
+                    />
+                  </div>
+                </div>
+              ) : null}
+            </div>
+            <div className="workspace-shared-context-controls__footer-actions">
+              {!mobile && actionRowControl ? (
+                <div className="workspace-shared-context-controls__action-row-control">
+                  {actionRowControl}
+                </div>
+              ) : null}
+              <WorkspaceButton
+                type="button"
+                variant="ghost"
+                className="panel-action icon-button--hint workspace-shared-context-controls__action requests-clear requests-clear--icon"
+                onClick={onReset}
+                aria-label={resetLabel}
+                title={resetLabel}
+              >
+                <IconFilter />
+              </WorkspaceButton>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

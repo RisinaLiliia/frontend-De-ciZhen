@@ -3,9 +3,9 @@
 import type { ComponentProps } from 'react';
 
 import { buildRequestsListProps } from '@/components/requests/requestsListProps';
+import type { WorkspacePublicIntro } from '@/features/workspace/intro';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
-import type { WorkspacePublicIntro } from '@/features/workspace';
 import type { useWorkspacePresentation } from '@/features/workspace';
 import type {
   WorkspacePrivateOverviewState,
@@ -26,7 +26,6 @@ type BuildPresentationArgs = {
   branch: WorkspaceBranchProps;
   data: WorkspacePrivateDataFlowResult;
   WorkspacePrivateIntroComponent: WorkspacePresentationArgs['WorkspacePrivateIntroComponent'];
-  showQuickAction?: boolean;
   preferredRequestsRole?: 'customer' | 'provider' | null;
   privateState: Pick<
     ReturnType<typeof useWorkspacePrivateState>,
@@ -211,7 +210,6 @@ export function buildWorkspacePrivatePresentationArgs({
   branch,
   data,
   WorkspacePrivateIntroComponent,
-  showQuickAction = data.activePublicSection !== 'stats',
   preferredRequestsRole = null,
   privateState,
 }: BuildPresentationArgs): WorkspacePresentationArgs {
@@ -221,12 +219,10 @@ export function buildWorkspacePrivatePresentationArgs({
     activePublicSection: data.activePublicSection,
     activeWorkspaceTab: data.activeWorkspaceTab,
     WorkspacePrivateIntroComponent,
-    createRequestHref: '/request/create',
     isProvidersLoading: data.providerDirectoryState.isLoading,
     isProvidersError: data.providerDirectoryState.isError,
     topProviders: privateState.topProviders,
     favoriteProviderIds: data.favoriteProvidersState.ids,
-    showQuickAction,
     preferredRequestsRole: preferredRequestsRole ?? privateState.preferredRequestsRole,
   };
 }

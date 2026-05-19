@@ -20,7 +20,7 @@ describe('workspacePrivateSources.model', () => {
   it('disables private catalog loading for actions and unified private requests', () => {
     expect(
       shouldLoadWorkspacePrivateCatalog({
-        activePublicSection: 'actions',
+        activePublicSection: 'profile',
         activeWorkspaceTab: 'my-requests',
       }),
     ).toBe(false);
@@ -51,7 +51,7 @@ describe('workspacePrivateSources.model', () => {
 
     expect(
       shouldLoadWorkspacePrivatePublicRequestsState({
-        activePublicSection: 'actions',
+        activePublicSection: 'profile',
         activeWorkspaceTab: 'my-requests',
       }),
     ).toBe(false);
@@ -65,7 +65,7 @@ describe('workspacePrivateSources.model', () => {
 
     expect(
       shouldBuildWorkspacePrivateRequestCollections({
-        activePublicSection: 'actions',
+        activePublicSection: 'profile',
         activeWorkspaceTab: 'profile',
       }),
     ).toBe(false);
@@ -265,7 +265,7 @@ describe('workspacePrivateSources.model', () => {
 
   it('passes idle request-side collections for private tabs that do not render request data', () => {
     const args = buildWorkspacePrivateSourcesCollectionsArgs({
-      activePublicSection: 'actions',
+      activePublicSection: 'profile',
       activeWorkspaceTab: 'my-requests',
       requestsScope: 'market',
       requests: [{ id: 'req-1' }] as never,

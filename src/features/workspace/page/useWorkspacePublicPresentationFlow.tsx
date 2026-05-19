@@ -4,8 +4,12 @@ import * as React from 'react';
 
 import type { WorkspaceSectionRenderModel } from '@/features/workspace';
 import { WorkspacePublicIntro } from '@/features/workspace';
-import { WorkspaceExploreSection } from '@/features/workspace/requests';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import {
+  buildWorkspaceExploreSectionModel,
+  buildWorkspacePublicRequestsSectionModel,
+  resolveWorkspaceExploreSection,
+} from '@/features/workspace/page/sections/workspaceSectionAdapters';
 import { useWorkspacePublicDataFlow } from '@/features/workspace/page/useWorkspacePublicDataFlow';
 import {
   buildWorkspacePublicIntroProps,
@@ -48,50 +52,19 @@ export function useWorkspacePublicPresentationFlow({
   );
   const publicSectionModel = React.useMemo<WorkspaceSectionRenderModel>(() => {
     if (isRequestsSection) {
-      return {
-        section: 'requests',
+      return buildWorkspacePublicRequestsSectionModel({
         content: publicRequestsMain,
         aiRail: publicRequestsAside,
-        layout: 'withRail',
-      };
+      });
     }
 
-    if (!data.exploreWithSeed) {
-      return {
-        section: data.activePublicSection ?? 'requests',
-        content: null,
-        layout: 'singleColumn',
-      };
-    }
-
-    return {
-      section: data.activePublicSection ?? 'requests',
-      content: (
-        <WorkspaceExploreSection
-          activeSection={data.activePublicSection ?? 'requests'}
-          isWorkspaceAuthed={branch.isWorkspaceAuthed}
-          t={branch.t}
-          locale={branch.locale}
-          onListDensityChange={data.exploreWithSeed.setExploreListDensity}
-          exploreListDensity={data.exploreWithSeed.exploreListDensity}
-          sidebarNearbyLimit={data.exploreWithSeed.sidebarNearbyLimit}
-          sidebarTopProvidersLimit={data.exploreWithSeed.sidebarTopProvidersLimit}
-          sidebarProofCases={data.exploreWithSeed.sidebarProofCases}
-          proofIndex={data.exploreWithSeed.proofIndex}
-          trustPanelClassName={data.exploreWithSeed.trustPanelClassName}
-          initialPublicRequests={data.exploreWithSeed.initialPublicRequests}
-          preferInitialPublicRequests={data.exploreWithSeed.preferInitialPublicRequests}
-          initialPublicRequestsLoading={data.exploreWithSeed.initialPublicRequestsLoading}
-          initialPublicRequestsError={data.exploreWithSeed.initialPublicRequestsError}
-          renderIntro={false}
-        />
-      ),
-      layout: 'singleColumn',
-    };
+    return buildWorkspaceExploreSectionModel({
+      branch,
+      section: resolveWorkspaceExploreSection(data.activePublicSection),
+      explore: data.exploreWithSeed,
+    });
   }, [
-    branch.isWorkspaceAuthed,
-    branch.locale,
-    branch.t,
+    branch,
     data.activePublicSection,
     data.exploreWithSeed,
     isRequestsSection,

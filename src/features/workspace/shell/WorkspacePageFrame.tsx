@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { WorkspaceOverlaySurface } from '@/features/workspace/requests';
+import { WorkspaceOverlaySurface } from '@/features/workspace/shared/WorkspaceOverlaySurface';
 import type { WorkspacePageFrameProps } from '@/features/workspace/shell/WorkspaceShell.types';
 
 export function WorkspacePageFrame({

@@ -1,5 +1,6 @@
 'use client';
 
+import { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
 import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 import {
   buildSharedContextControlsProps,
@@ -9,7 +10,7 @@ import { type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import type { WorkspaceTab } from '@/features/workspace/requests';
+import type { WorkspaceTab } from '@/features/workspace/state';
 
 type Translator = (key: I18nKey) => string;
 
@@ -36,24 +37,13 @@ export function WorkspaceModeHeader({
   const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
 
   return (
-    <section className="workspace-environment">
-      <div className="workspace-environment__hero">
-        <div className="workspace-environment__copy">
-          <span className="workspace-environment__eyebrow">{model.copy.eyebrow}</span>
-          <div className="workspace-environment__heading">
-            <h1 className="workspace-environment__title">{model.title}</h1>
-            <p className="workspace-environment__description">{model.description}</p>
-          </div>
-        </div>
-        <div className="workspace-environment__shell-hint">{model.copy.shellHint}</div>
-      </div>
-
-      <WorkspaceSharedContextControls
-        {...sharedContextControlsProps}
-        surface="shell"
-        className="workspace-shared-context-controls--header"
-      />
-    </section>
+    <WorkspaceSectionHeader
+      eyebrow={model.copy.eyebrow}
+      title={model.title}
+      description={model.description}
+      shellHint={model.copy.shellHint}
+      sharedContextControlsProps={sharedContextControlsProps}
+    />
   );
 }
 

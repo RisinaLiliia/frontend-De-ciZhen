@@ -9,10 +9,12 @@ const {
   useRouterMock,
   useSearchParamsMock,
   useAuthSnapshotMock,
+  shouldAttemptRefreshOnBootstrapMock,
 } = vi.hoisted(() => ({
   useRouterMock: vi.fn(),
   useSearchParamsMock: vi.fn(),
   useAuthSnapshotMock: vi.fn(),
+  shouldAttemptRefreshOnBootstrapMock: vi.fn(),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -22,6 +24,10 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/hooks/useAuthSnapshot', () => ({
   useAuthSnapshot: () => useAuthSnapshotMock(),
+}));
+
+vi.mock('@/lib/auth/session', () => ({
+  shouldAttemptRefreshOnBootstrap: () => shouldAttemptRefreshOnBootstrapMock(),
 }));
 
 vi.mock('@/features/workspace/WorkspacePageClient', () => ({
@@ -59,6 +65,7 @@ describe('WorkspaceShell', () => {
     vi.clearAllMocks();
     mockSearchParams('');
     mockAuth('unauthenticated');
+    shouldAttemptRefreshOnBootstrapMock.mockReturnValue(false);
     useRouterMock.mockReturnValue({
       replace: vi.fn(),
     });
@@ -87,6 +94,33 @@ describe('WorkspaceShell', () => {
 
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('stats');
+    expect(node.getAttribute('data-workspace-tab')).toBe('null');
+  });
+
+  it('redirects legacy statistics section to canonical stats route', () => {
+    const replace = vi.fn();
+    useRouterMock.mockReturnValue({ replace });
+    mockSearchParams('section=statistics&period=90d');
+    mockAuth('unauthenticated');
+
+    render(<WorkspaceShell />);
+
+    const node = screen.getByTestId('workspace-page-client');
+    expect(node.getAttribute('data-public-section')).toBe('stats');
+    expect(replace).toHaveBeenCalledWith(
+      '/workspace?section=stats&period=90d',
+      { scroll: false },
+    );
+  });
+
+  it('keeps chat as a canonical workspace section', () => {
+    mockSearchParams('section=chat&conversation=custom-thread-1');
+    mockAuth('authenticated');
+
+    render(<WorkspaceShell />);
+
+    const node = screen.getByTestId('workspace-page-client');
+    expect(node.getAttribute('data-public-section')).toBe('chat');
     expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 
@@ -135,5 +169,15 @@ describe('WorkspaceShell', () => {
       '/workspace?section=requests&scope=market',
       { scroll: false },
     );
+  });
+
+  it('keeps bootstrap loading screen while refresh intent is active', () => {
+    shouldAttemptRefreshOnBootstrapMock.mockReturnValue(true);
+    mockAuth('loading');
+
+    const { container } = render(<WorkspaceShell />);
+
+    expect(screen.queryByTestId('workspace-page-client')).toBeNull();
+    expect(container.querySelector('.min-h-dvh')).not.toBeNull();
   });
 });

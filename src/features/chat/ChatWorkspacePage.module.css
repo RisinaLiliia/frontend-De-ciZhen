@@ -5,10 +5,10 @@
   container-type: inline-size;
   gap: 0;
   min-height: calc(100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px) - var(--space-8));
-  border: 1px solid var(--surface-card-border);
-  border-radius: 28px;
-  background: color-mix(in oklab, var(--c-panel) 92%, var(--c-surface) 8%);
-  box-shadow: var(--surface-card-shadow);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
@@ -28,24 +28,21 @@
 
 .threadPaneEmbedded {
   min-height: min(78vh, 880px);
-  background:
-    radial-gradient(circle at top right, color-mix(in oklab, var(--c-primary) 6%, transparent), transparent 42%),
-    linear-gradient(180deg, color-mix(in oklab, var(--c-surface) 96%, var(--c-panel) 4%), color-mix(in oklab, var(--c-panel) 90%, var(--c-surface) 10%));
+  background: var(--color-surface);
 }
 
 .sidebarPane {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  border-right: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
-  background:
-    linear-gradient(180deg, color-mix(in oklab, var(--c-panel) 96%, var(--c-surface) 4%), color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%));
+  border-right: 1px solid var(--color-border-soft);
+  background: var(--color-surface-muted);
 }
 
 .sidebarHeader {
   display: grid;
   gap: var(--space-4);
   padding: var(--space-5);
-  border-bottom: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
+  border-bottom: 1px solid var(--color-border-soft);
 }
 
 .sidebarTitleRow {
@@ -70,8 +67,8 @@
   min-height: 24px;
   padding: 0 7px;
   border-radius: 999px;
-  background: var(--c-accent);
-  color: var(--c-accent-contrast);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
   font-size: 12px;
   font-weight: 800;
 }
@@ -86,7 +83,7 @@
   position: absolute;
   left: 14px;
   display: inline-flex;
-  color: var(--c-muted);
+  color: var(--color-text-muted);
 }
 
 .searchInput {
@@ -102,10 +99,10 @@
 .filterChip {
   min-height: 34px;
   padding: 0 12px;
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--color-border-soft);
   border-radius: 999px;
-  background: color-mix(in oklab, var(--c-panel) 90%, var(--c-surface) 10%);
-  color: var(--c-text-muted);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
   font-size: 13px;
   font-weight: 700;
   transition:
@@ -116,14 +113,14 @@
 
 .filterChip:hover,
 .filterChip:focus-visible {
-  border-color: var(--control-border-hover);
-  color: var(--c-text);
+  border-color: var(--color-border);
+  color: var(--color-text);
 }
 
 .filterChipActive {
-  border-color: color-mix(in oklab, var(--c-primary) 24%, var(--control-border) 76%);
-  background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
-  color: var(--c-primary);
+  border-color: var(--color-primary-border);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
 }
 
 .sidebarBody {
@@ -145,7 +142,7 @@
   width: 100%;
   padding: 12px;
   border: 1px solid transparent;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   background: transparent;
   text-align: left;
   transition:
@@ -156,14 +153,14 @@
 
 .conversationItem:hover,
 .conversationItem:focus-visible {
-  border-color: color-mix(in oklab, var(--surface-card-border) 90%, transparent);
-  background: color-mix(in oklab, var(--c-panel) 88%, var(--c-surface) 12%);
+  border-color: var(--color-border-soft);
+  background: var(--color-surface);
   transform: translateY(-1px);
 }
 
 .conversationItemActive {
-  border-color: color-mix(in oklab, var(--c-primary) 16%, var(--surface-card-border) 84%);
-  background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+  border-color: var(--color-primary-border);
+  background: var(--color-primary-soft);
 }
 
 .conversationBody {
@@ -187,7 +184,7 @@
 .participantName,
 .emptyTitle {
   margin: 0;
-  color: var(--c-text);
+  color: var(--color-text);
 }
 
 .conversationName {
@@ -212,7 +209,7 @@
 .infoLabel,
 .participantMeta {
   margin: 0;
-  color: var(--c-text-muted);
+  color: var(--color-text-muted);
 }
 
 .conversationTime,
@@ -236,8 +233,8 @@
   align-items: center;
   padding: 2px 8px;
   border-radius: 999px;
-  background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
-  color: var(--c-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
   font-size: 11px;
   font-weight: 700;
   flex-shrink: 0;
@@ -288,13 +285,14 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-soft);
   background: linear-gradient(
     135deg,
-    color-mix(in oklab, var(--c-primary) 16%, var(--c-panel) 84%),
-    color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%)
+    color-mix(in oklab, var(--color-primary) 12%, var(--color-surface) 88%),
+    color-mix(in oklab, var(--color-accent) 10%, var(--color-surface) 90%)
   );
-  color: var(--c-primary);
+  color: var(--color-primary);
   font-size: 15px;
   font-weight: 800;
   flex-shrink: 0;
@@ -306,9 +304,9 @@
   bottom: 1px;
   width: 10px;
   height: 10px;
-  border: 2px solid var(--c-panel);
+  border: 2px solid var(--color-surface);
   border-radius: 999px;
-  background: #1fb56a;
+  background: var(--color-success);
 }
 
 .sidebarSkeletonBody {
@@ -328,9 +326,7 @@
   position: relative;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
-  background:
-    radial-gradient(circle at top right, color-mix(in oklab, var(--c-primary) 6%, transparent), transparent 42%),
-    linear-gradient(180deg, color-mix(in oklab, var(--c-surface) 94%, var(--c-panel) 6%), color-mix(in oklab, var(--c-panel) 88%, var(--c-surface) 12%));
+  background: var(--color-surface);
 }
 
 .threadHeader {
@@ -340,9 +336,9 @@
   gap: var(--space-4);
   min-width: 0;
   padding: var(--space-4) var(--space-5);
-  border-bottom: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
-  background: color-mix(in oklab, var(--c-panel) 78%, transparent);
-  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--color-border-soft);
+  background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(12px);
 }
 
 .threadHeaderMain {
@@ -380,10 +376,10 @@
   justify-content: center;
   width: 38px;
   height: 38px;
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--color-border-soft);
   border-radius: 12px;
-  background: color-mix(in oklab, var(--c-panel) 90%, transparent);
-  color: var(--c-text);
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 .contextBar {
@@ -393,9 +389,9 @@
   gap: 10px;
   min-width: 0;
   padding: 10px var(--space-5);
-  border-bottom: 1px solid color-mix(in oklab, var(--surface-card-border) 80%, transparent);
-  background: color-mix(in oklab, var(--c-panel) 72%, transparent);
-  color: var(--c-text-muted);
+  border-bottom: 1px solid var(--color-border-soft);
+  background: color-mix(in oklab, var(--color-surface-muted) 90%, transparent);
+  color: var(--color-text-muted);
   font-size: 13px;
 }
 
@@ -413,14 +409,14 @@
 }
 
 .contextBarText {
-  color: var(--c-text);
+  color: var(--color-text);
 }
 
 .contextBarDot {
   width: 4px;
   height: 4px;
   border-radius: 999px;
-  background: var(--c-text-muted);
+  background: var(--color-text-muted);
   flex-shrink: 0;
 }
 
@@ -439,10 +435,10 @@
 .loadOlderButton {
   min-height: 34px;
   padding: 0 14px;
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--color-border-soft);
   border-radius: 999px;
-  background: color-mix(in oklab, var(--c-panel) 90%, transparent);
-  color: var(--c-text);
+  background: var(--color-surface);
+  color: var(--color-text);
   font-size: 12px;
   font-weight: 700;
 }
@@ -463,10 +459,10 @@
   align-items: center;
   min-height: 28px;
   padding: 0 12px;
-  border: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
+  border: 1px solid var(--color-border-soft);
   border-radius: 999px;
-  background: color-mix(in oklab, var(--c-panel) 82%, transparent);
-  color: var(--c-text-muted);
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
   font-size: 12px;
   font-weight: 700;
 }
@@ -498,25 +494,21 @@
 
 .messageBubble {
   padding: 10px 14px;
-  border: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
+  border: 1px solid var(--color-border-soft);
   border-radius: 18px 18px 18px 8px;
-  background: color-mix(in oklab, var(--c-panel) 96%, var(--c-surface) 4%);
-  box-shadow: 0 8px 22px color-mix(in oklab, var(--c-ink) 6%, transparent);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .messageBubbleOwn {
-  border-color: color-mix(in oklab, var(--c-primary) 14%, transparent);
+  border-color: var(--color-primary-border);
   border-radius: 18px 18px 8px 18px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%),
-    color-mix(in oklab, var(--c-accent) 8%, var(--c-panel) 92%)
-  );
+  background: color-mix(in oklab, var(--color-primary) 8%, var(--color-surface) 92%);
 }
 
 .messageText {
   margin: 0;
-  color: var(--c-text);
+  color: var(--color-text);
   line-height: 1.5;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -536,7 +528,7 @@
 }
 
 .attachmentLink {
-  color: var(--c-primary);
+  color: var(--color-primary);
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
@@ -552,9 +544,9 @@
   display: grid;
   gap: 8px;
   padding: var(--space-4) var(--space-5);
-  border-top: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
-  background: color-mix(in oklab, var(--c-panel) 84%, transparent);
-  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--color-border-soft);
+  background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(12px);
 }
 
 .composerInner {
@@ -579,8 +571,8 @@
   height: 44px;
   border: none;
   border-radius: 14px;
-  background: var(--c-primary);
-  color: var(--c-primary-contrast, white);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast, white);
   transition:
     transform var(--transition-fast),
     opacity var(--transition);
@@ -601,7 +593,7 @@
   inset: 0;
   z-index: 35;
   border: none;
-  background: color-mix(in oklab, var(--c-ink) 48%, transparent);
+  background: color-mix(in oklab, var(--color-text) 42%, transparent);
 }
 
 .infoDrawer {
@@ -613,9 +605,9 @@
   grid-template-rows: auto minmax(0, 1fr);
   width: min(360px, 100%);
   height: 100%;
-  border-left: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
-  background: color-mix(in oklab, var(--c-panel) 97%, var(--c-surface) 3%);
-  box-shadow: -16px 0 40px color-mix(in oklab, var(--c-ink) 14%, transparent);
+  border-left: 1px solid var(--color-border-soft);
+  background: var(--color-surface);
+  box-shadow: -16px 0 40px color-mix(in oklab, var(--color-text) 10%, transparent);
 }
 
 .infoDrawerHeader {
@@ -624,7 +616,7 @@
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-5);
-  border-bottom: 1px solid color-mix(in oklab, var(--surface-card-border) 85%, transparent);
+  border-bottom: 1px solid var(--color-border-soft);
 }
 
 .infoDrawerTitle {
@@ -669,13 +661,13 @@
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
-  color: var(--c-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
 }
 
 .infoValue {
   margin: 4px 0 0;
-  color: var(--c-text);
+  color: var(--color-text);
   font-size: 14px;
   font-weight: 700;
   overflow-wrap: anywhere;
@@ -744,7 +736,7 @@
     max-width: 88%;
   }
 
-  .infoDrawer {
+    .infoDrawer {
     position: fixed;
     top: auto;
     bottom: 0;
@@ -752,9 +744,9 @@
     max-height: min(72dvh, 640px);
     height: auto;
     border-left: none;
-    border-top: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
+    border-top: 1px solid var(--color-border-soft);
     border-radius: 24px 24px 0 0;
-    box-shadow: 0 -16px 40px color-mix(in oklab, var(--c-ink) 14%, transparent);
+    box-shadow: 0 -16px 40px color-mix(in oklab, var(--color-text) 10%, transparent);
   }
 }
 

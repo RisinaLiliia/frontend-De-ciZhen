@@ -1,6 +1,6 @@
 'use client';
 
-import type { WorkspaceRequestsScope } from '@/features/workspace/requests';
+import type { WorkspaceRequestsScope } from '@/features/workspace/state';
 import type { WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
@@ -93,11 +93,17 @@ export function getWorkspaceFocusRecommendationCopy(locale: Locale): WorkspaceFo
           actionText: 'Validate pricing, demand, and competition inside the same context before sending offers or changing activation priorities.',
           switchText: 'Switch back to Requests when the decision is ready for execution, and to Actions when profile, setup, or visibility changes are the real blocker.',
         },
-        actions: {
+        profile: {
           heroTitleTemplate: 'Prioritize {mode}',
-          heroText: 'Actions is currently the strongest next step when activation, profile quality, or setup is limiting performance.',
+          heroText: 'Profile is currently the strongest next step when activation readiness, profile quality, or setup is limiting performance.',
           actionText: 'Use this mode to improve readiness, tighten profile quality, and complete operational setup without losing the shared market frame.',
           switchText: 'Switch to Analysis when you need clearer market direction first, and to Requests once the setup is strong enough for direct execution.',
+        },
+        chat: {
+          heroTitleTemplate: 'Prioritize {mode}',
+          heroText: 'Chat is currently the strongest next step when open conversations, reply speed, and follow-through need direct attention.',
+          actionText: 'Use the current workspace context to answer active conversations faster and move requests into the next concrete step.',
+          switchText: 'Switch to Requests when execution details are ready, and to Analysis when pricing or timing still needs validation before you reply.',
         },
       },
     };
@@ -137,11 +143,17 @@ export function getWorkspaceFocusRecommendationCopy(locale: Locale): WorkspaceFo
         actionText: 'Prüfe Pricing, Nachfrage und Wettbewerb im gleichen Kontext, bevor du Angebote verschickst oder Aktivierungen umpriorisierst.',
         switchText: 'Wechsle zurück in Aufträge, sobald die Entscheidung reif für Ausführung ist, und in Aktionen, wenn Profil, Setup oder Sichtbarkeit der eigentliche Engpass sind.',
       },
-      actions: {
+        profile: {
+          heroTitleTemplate: '{mode} priorisieren',
+          heroText: 'Profil ist aktuell der sinnvollste nächste Schritt, wenn Einsatzbereitschaft, Profilqualität oder Setup die Leistung begrenzen.',
+          actionText: 'Nutze diesen Modus, um Einsatzbereitschaft, Profilqualität und operative Basis zu stärken, ohne den gemeinsamen Marktkontext zu verlieren.',
+          switchText: 'Wechsle in Analyse, wenn du zuerst eine klarere Marktrichtung brauchst, und in Aufträge, sobald das Setup stark genug für direkte Ausführung ist.',
+        },
+      chat: {
         heroTitleTemplate: '{mode} priorisieren',
-        heroText: 'Aktionen ist aktuell der sinnvollste nächste Schritt, wenn Aktivierung, Profilqualität oder Setup die Leistung begrenzen.',
-        actionText: 'Nutze diesen Modus, um Einsatzbereitschaft, Profilqualität und operative Basis zu stärken, ohne den gemeinsamen Marktkontext zu verlieren.',
-        switchText: 'Wechsle in Analyse, wenn du zuerst eine klarere Marktrichtung brauchst, und in Aufträge, sobald das Setup stark genug für direkte Ausführung ist.',
+        heroText: 'Nachrichten ist aktuell der sinnvollste nächste Schritt, wenn offene Gespräche, Antwortgeschwindigkeit und nächste Zusagen direkte Aufmerksamkeit brauchen.',
+        actionText: 'Nutze den aktuellen Workspace-Kontext, um aktive Gespräche schneller zu beantworten und Anfragen in den nächsten konkreten Schritt zu führen.',
+        switchText: 'Wechsle in Aufträge, wenn die Ausführung bereit ist, und in Analyse, wenn Preis oder Timing vor der Antwort noch geklärt werden müssen.',
       },
     },
   };
@@ -202,12 +214,19 @@ export function getWorkspaceModeCopy(locale: Locale): WorkspaceModeCopy {
           railDescription: 'Analytics uses the same shared context, including the selected time range.',
           scope: 'Decision mode for market intelligence',
         },
-        actions: {
-          label: 'Actions',
-          title: 'Actions',
+        profile: {
+          label: 'Profile',
+          title: 'Profile',
           description: 'Profile, setup, and activation tools remain in the same operating shell.',
-          railDescription: 'Use this mode to configure actions without losing the current market frame.',
-          scope: 'Activation mode for profile and setup',
+          railDescription: 'Use this mode to improve profile readiness without losing the current market frame.',
+          scope: 'Profile mode for setup and activation',
+        },
+        chat: {
+          label: 'Messages',
+          title: 'Messages',
+          description: 'Keep conversations, request context, and follow-up actions inside the same workspace shell.',
+          railDescription: 'Messages now stay tied to the same shared context and execution flow.',
+          scope: 'Conversation mode for active threads and follow-up',
         },
       },
     };
@@ -266,12 +285,19 @@ export function getWorkspaceModeCopy(locale: Locale): WorkspaceModeCopy {
         railDescription: 'Die Analyse nutzt denselben gemeinsamen Kontext inklusive Zeitraum.',
         scope: 'Entscheidungsmodus für Marktintelligenz',
       },
-      actions: {
-        label: 'Aktionen',
-        title: 'Aktionen',
+      profile: {
+        label: 'Profil',
+        title: 'Profil',
         description: 'Profil, Setup und Aktivierungen bleiben in derselben Arbeitsumgebung.',
-        railDescription: 'Nutze diesen Modus für Aktivierungen, ohne den aktuellen Markt-Kontext zu verlieren.',
-        scope: 'Aktivierungsmodus für Profil und Setup',
+        railDescription: 'Nutze diesen Modus, um Profil und Einsatzbereitschaft zu verbessern, ohne den aktuellen Markt-Kontext zu verlieren.',
+        scope: 'Profilmodus für Setup und Aktivierung',
+      },
+      chat: {
+        label: 'Nachrichten',
+        title: 'Nachrichten',
+        description: 'Halte Gespräche, Anfrage-Kontext und Follow-ups in derselben Workspace-Shell.',
+        railDescription: 'Nachrichten bleiben jetzt mit demselben gemeinsamen Kontext und Ausführungsfluss verbunden.',
+        scope: 'Gesprächsmodus für aktive Threads und Follow-ups',
       },
     },
   };
@@ -347,6 +373,11 @@ export function buildModeHref({
     return toWorkspaceHref(next);
   }
 
-  next.set('section', 'actions');
+  if (mode === 'chat') {
+    next.set('section', 'chat');
+    return toWorkspaceHref(next);
+  }
+
+  next.set('section', 'profile');
   return toWorkspaceHref(next);
 }

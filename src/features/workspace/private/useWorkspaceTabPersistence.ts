@@ -5,7 +5,7 @@ import * as React from 'react';
 import {
   REQUESTS_TAB_STORAGE_KEY,
   type WorkspaceTab,
-} from '@/features/workspace/requests';
+} from '@/features/workspace/state';
 
 type Args = {
   isWorkspaceAuthed: boolean;

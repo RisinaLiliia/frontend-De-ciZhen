@@ -26,7 +26,7 @@ export const WorkspaceContent = dynamic(
 );
 
 export const WorkspacePrivateIntro = dynamic(
-  () => import('@/features/workspace/requests/WorkspacePrivateIntro').then((mod) => mod.WorkspacePrivateIntro),
+  () => import('@/features/workspace/intro/WorkspacePrivateIntro').then((mod) => mod.WorkspacePrivateIntro),
   {
     loading: () => (
       <section className="workspace-intro-shell">
@@ -39,7 +39,7 @@ export const WorkspacePrivateIntro = dynamic(
 );
 
 export const WorkspacePublicIntro = dynamic(
-  () => import('@/features/workspace/requests/WorkspacePublicIntro').then((mod) => mod.WorkspacePublicIntro),
+  () => import('@/features/workspace/intro/WorkspacePublicIntro').then((mod) => mod.WorkspacePublicIntro),
   {
     loading: () => (
       <section className="workspace-intro-shell">

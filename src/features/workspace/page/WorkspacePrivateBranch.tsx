@@ -56,12 +56,14 @@ export function WorkspacePrivateBranch(props: WorkspaceBranchProps) {
         pendingFavoriteProviderIds={pendingFavoriteProviderIds}
         onToggleProviderFavorite={onToggleProviderFavorite}
       />
-      <WorkspaceMobilePrimaryAction
-        isWorkspaceAuthed={isWorkspaceAuthed}
-        activeWorkspaceTab={activeWorkspaceTab}
-        href={primaryAction.href}
-        label={primaryAction.label}
-      />
+      {activePublicSection !== 'chat' && activePublicSection !== 'settings' && activePublicSection !== 'help' ? (
+        <WorkspaceMobilePrimaryAction
+          isWorkspaceAuthed={isWorkspaceAuthed}
+          activeWorkspaceTab={activeWorkspaceTab}
+          href={primaryAction.href}
+          label={primaryAction.label}
+        />
+      ) : null}
     </>
   );
 }

@@ -7,7 +7,7 @@ import { useWorkspaceRouteState } from '@/features/workspace/shell/useWorkspaceR
 
 type ProbeProps = {
   query: string;
-  forcedPublicSection?: 'requests' | 'providers' | 'stats' | 'actions' | null;
+  forcedPublicSection?: 'requests' | 'providers' | 'stats' | 'profile' | 'chat' | 'settings' | 'help' | null;
   isAuthed?: boolean;
 };
 
@@ -83,20 +83,20 @@ describe('useWorkspaceRouteState', () => {
     expect(node.getAttribute('data-scope')).toBe('my');
   });
 
-  it('keeps actions section as a section-based mode for authenticated users', () => {
+  it('keeps profile section as a section-based mode for authenticated users', () => {
     render(<Probe query="section=actions&period=90d&range=90d" isAuthed />);
     const node = screen.getByTestId('state');
 
-    expect(node.getAttribute('data-public-section')).toBe('actions');
+    expect(node.getAttribute('data-public-section')).toBe('profile');
     expect(node.getAttribute('data-is-public')).toBe('true');
     expect(node.getAttribute('data-tab')).toBe('my-requests');
   });
 
-  it('keeps legacy profile section as an alias for actions', () => {
+  it('keeps profile as the canonical public section', () => {
     render(<Probe query="section=profile&period=90d&range=90d" isAuthed />);
     const node = screen.getByTestId('state');
 
-    expect(node.getAttribute('data-public-section')).toBe('actions');
+    expect(node.getAttribute('data-public-section')).toBe('profile');
     expect(node.getAttribute('data-is-public')).toBe('true');
     expect(node.getAttribute('data-tab')).toBe('my-requests');
   });
@@ -107,5 +107,29 @@ describe('useWorkspaceRouteState', () => {
 
     expect(node.getAttribute('data-public-section')).toBe('stats');
     expect(node.getAttribute('data-is-public')).toBe('true');
+  });
+
+  it('keeps chat as a workspace section but routes it through the private shell', () => {
+    render(<Probe query="section=chat&conversation=thread-1" isAuthed />);
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('chat');
+    expect(node.getAttribute('data-is-public')).toBe('false');
+  });
+
+  it('keeps settings as a workspace section and routes it through the private shell', () => {
+    render(<Probe query="section=settings" />);
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('settings');
+    expect(node.getAttribute('data-is-public')).toBe('false');
+  });
+
+  it('keeps help as a workspace section and routes it through the private shell', () => {
+    render(<Probe query="section=help" />);
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('help');
+    expect(node.getAttribute('data-is-public')).toBe('false');
   });
 });

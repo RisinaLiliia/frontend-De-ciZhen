@@ -12,9 +12,12 @@ vi.mock('next/navigation', () => ({
 }));
 
 vi.mock('@/features/workspace/requests', () => ({
-  WorkspaceExploreSection: () => <div data-testid="workspace-explore-section" />,
   WorkspaceTopProvidersAside: () => <div data-testid="workspace-top-providers-aside" />,
   isWorkspaceTab: (value: string | null) => value === 'my-requests' || value === 'my-offers' || value === 'completed-jobs' || value === 'reviews' || value === 'favorites' || value === 'profile',
+}));
+
+vi.mock('@/features/workspace/explore', () => ({
+  WorkspaceExploreSection: () => <div data-testid="workspace-explore-section" />,
 }));
 
 vi.mock('@/features/workspace/requests/useIsDesktop', () => ({
@@ -25,18 +28,15 @@ vi.mock('@/features/workspace/shell/WorkspaceShell', () => ({
   WorkspaceShell: ({
     children,
     sidebar,
-    topbar,
     bottomNav,
   }: {
     children: React.ReactNode;
     sidebar?: React.ReactNode;
-    topbar?: React.ReactNode;
     bottomNav?: React.ReactNode;
   }) => (
     <div
       data-testid="workspace-shell"
       data-has-sidebar={sidebar ? 'true' : 'false'}
-      data-has-topbar={topbar ? 'true' : 'false'}
       data-has-bottom-nav={bottomNav ? 'true' : 'false'}
     >
       {children}
@@ -46,10 +46,6 @@ vi.mock('@/features/workspace/shell/WorkspaceShell', () => ({
 
 vi.mock('@/features/workspace/shell/WorkspaceSidebar', () => ({
   WorkspaceSidebar: () => <div data-testid="workspace-sidebar" />,
-}));
-
-vi.mock('@/features/workspace/shell/WorkspaceTopbar', () => ({
-  WorkspaceTopbar: () => <div data-testid="workspace-topbar" />,
 }));
 
 vi.mock('@/features/workspace/shell/WorkspaceBottomNav', () => ({
@@ -100,7 +96,6 @@ describe('WorkspacePageLayout', () => {
 
     const shell = screen.getByTestId('workspace-shell');
     expect(shell.getAttribute('data-has-sidebar')).toBe('true');
-    expect(shell.getAttribute('data-has-topbar')).toBe('true');
     expect(shell.getAttribute('data-has-bottom-nav')).toBe('true');
     expect(screen.getByTestId('workspace-explore-section')).toBeTruthy();
   });

@@ -14,8 +14,7 @@ import type {
 import { WORKSPACE_PATH } from '@/features/workspace/page/workspacePage.constants';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
-import type { WorkspaceRequestsScope } from '@/features/workspace/requests/workspaceRequestsScope.model';
+import type { WorkspaceRequestsScope, WorkspaceTab } from '@/features/workspace/state';
 
 export type WorkspacePrivateInteractionsParams = {
   t: WorkspaceBranchProps['t'];
