@@ -12,7 +12,7 @@ import type {
   FavoritesView,
   WorkspaceStatusFilter,
   WorkspaceTab,
-} from '@/features/workspace/requests/workspace.types';
+} from '@/features/workspace/state';
 
 export type FilterOption = { value: string; label: string };
 export type FilterChip = { key: string; label: string; onRemove: () => void };

@@ -5,7 +5,7 @@ import { publishMyRequest, updateMyRequest, uploadRequestPhotos } from '@/lib/ap
 import { ApiError } from '@/lib/api/http-error';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 
 type Translate = (key: I18nKey) => string;
 

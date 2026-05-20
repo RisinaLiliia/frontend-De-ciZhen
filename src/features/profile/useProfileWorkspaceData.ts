@@ -10,7 +10,7 @@ import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { providerQK } from '@/features/provider/queries';
 import { findProviderPublicByUserId } from '@/features/profile/profileWorkspace.presentation';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 
 type UseProfileWorkspaceDataParams = {
   authMeId?: string | null;

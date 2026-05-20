@@ -4,8 +4,9 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { getWorkspaceProviders } from '@/lib/api/workspace';
-import { ALL_OPTION_KEY, resolveWorkspaceRequestsPeriod, type WorkspaceViewerMode } from '@/features/workspace/requests';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
+import { ALL_OPTION_KEY } from '@/features/workspace/shared';
+import { resolveWorkspaceRequestsPeriod, type WorkspaceViewerMode } from '@/features/workspace/state';
 import {
   resolveRequestsListDensityForPageSize,
   type RequestsListDensity,

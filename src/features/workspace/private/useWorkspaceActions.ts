@@ -10,7 +10,7 @@ import { archiveMyRequest, deleteMyRequest, duplicateMyRequest, publishMyRequest
 import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
-import { workspaceQK } from '@/features/workspace/requests';
+import { workspaceQK } from '@/features/workspace/data';
 import { buildWorkspaceOwnerRequestMutationQueryKeys } from '@/features/workspace/requests/workspaceInvalidation.model';
 import {
   buildWorkspaceActionsResult,

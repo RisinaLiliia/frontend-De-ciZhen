@@ -2,7 +2,7 @@ import * as React from 'react';
 import { toast } from 'sonner';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
-import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
 
 type Translate = (key: I18nKey) => string;
 

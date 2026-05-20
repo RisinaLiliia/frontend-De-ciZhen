@@ -2,11 +2,11 @@
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/state';
 import type {
   WorkspaceRequestsRole,
   WorkspaceRequestsScope,
-} from '@/features/workspace/requests/workspaceRequestsScope.model';
+} from '@/features/workspace/state';
 
 type WorkspaceDataPlanArgs = {
   enabled?: boolean;

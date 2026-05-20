@@ -1,6 +1,6 @@
 // src/components/requests/details/RequestDetailSimilar.tsx
+import { WorkspaceGuestRequestCard } from '@/components/requests/WorkspaceGuestRequestCard';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
-import { WorkspaceGuestRequestCard } from '@/features/workspace/requests/components/WorkspaceGuestRequestCard';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 
 type RequestDetailSimilarProps = {

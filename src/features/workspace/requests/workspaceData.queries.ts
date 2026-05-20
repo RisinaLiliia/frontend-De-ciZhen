@@ -15,8 +15,7 @@ import type {
   WorkspaceRequestsStateDto,
 } from '@/lib/api/dto/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
-import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
+import { workspaceQK, WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
 import type { WorkspaceDataLoadPlan } from '@/features/workspace/requests/workspaceData.model';
 
 const DEFAULT_STALE_TIME_MS = 60_000;

@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   WorkspaceRequestsSummaryStrip,
   WorkspaceRequestsSummaryStripSkeleton,
-} from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
+} from './WorkspaceRequestsSummaryStrip';
 import type { WorkspaceRequestsSummaryItem, WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
 import type { Locale } from '@/lib/i18n/t';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { WorkspaceRequestsView } from '@/features/workspace/requests/RequestsPrivateView';
+import { WorkspaceRequestsView } from './WorkspaceRequestsView';
 import type { WorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 
 export type RequestsWorkspaceBodyVariant =

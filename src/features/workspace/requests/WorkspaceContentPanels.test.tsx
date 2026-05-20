@@ -12,7 +12,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(queryString),
 }));
 
-vi.mock('@/features/workspace/requests/WorkspaceProfileOnboardingForm', () => ({
+vi.mock('@/features/profile/onboarding', () => ({
   WorkspaceProfileOnboardingForm: ({ viewerMode }: { viewerMode: 'provider' | 'customer' }) => (
     <div data-testid="workspace-profile-form" data-viewer-mode={viewerMode} />
   ),

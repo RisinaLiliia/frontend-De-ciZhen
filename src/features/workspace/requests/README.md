@@ -71,9 +71,9 @@ Behavior:
 
 ## Rendering
 
-- `RequestsPrivateView.tsx`
+- `WorkspaceRequestsView.tsx`
   - renders summary cards, decision mode bar, and request cards
-- `components/DecisionPanel.tsx`
+- `../ai-rail/WorkspaceDecisionPanel.tsx`
   - renders the right-column decision summary, queue, and overview
-- `components/DecisionModeBar.tsx`
+- `../ai-rail/WorkspaceDecisionModeBar.tsx`
   - renders the left-column mode state and progress

@@ -2,7 +2,7 @@
 
 import type { QueryKey } from '@tanstack/react-query';
 
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 
 export function buildWorkspacePublicRequestLifecycleQueryKeys(): QueryKey[] {
   return [

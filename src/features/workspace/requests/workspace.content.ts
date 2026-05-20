@@ -1,4 +1,4 @@
-import type { WorkspaceStatusFilter, WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceStatusFilter, WorkspaceTab } from '@/features/workspace/state';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 

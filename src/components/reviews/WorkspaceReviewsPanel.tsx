@@ -28,7 +28,7 @@ import { useI18n } from '@/lib/i18n/I18nProvider';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
 import { WorkspacePlatformReviewComposer } from '@/components/reviews/WorkspacePlatformReviewComposer';
 import { WorkspaceUserReviewComposer } from '@/components/reviews/WorkspaceUserReviewComposer';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import {
   buildWorkspaceLocaleTag,
   buildWorkspacePlatformReviewDistribution,

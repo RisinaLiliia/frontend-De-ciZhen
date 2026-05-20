@@ -12,7 +12,7 @@ import {
   useWorkspaceRequestDecisionActions,
   useWorkspaceRequestOfferActions,
 } from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import { ApiError } from '@/lib/api/http-error';
 
 const toast = vi.hoisted(() => ({

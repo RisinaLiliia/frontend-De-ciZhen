@@ -2,7 +2,7 @@
 
 import type { ComponentProps } from 'react';
 
-import { RequestsPrivateActionRail } from '@/features/workspace/requests';
+import { WorkspaceRequestsActionRail } from '@/features/workspace/ai-rail/WorkspaceRequestsActionRail';
 import {
   buildRequestsWorkspaceDecisionRailProps,
 } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
@@ -14,7 +14,7 @@ export function buildWorkspacePublicRequestsAsideProps(params: {
   panel: NonNullable<WorkspaceRequestsResponseDto['decisionPanel']>;
   onStartDecisionMode: () => void;
   onOpenQueueItem: (requestId: string) => void;
-}): ComponentProps<typeof RequestsPrivateActionRail> {
+}): ComponentProps<typeof WorkspaceRequestsActionRail> {
   return buildRequestsWorkspaceDecisionRailProps({
     locale: params.locale,
     panel: params.panel,

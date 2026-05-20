@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 
-import { WorkspaceSectionDecisionPanel } from '@/features/workspace/requests/components/WorkspaceSectionDecisionPanel';
-import { WorkspaceSummaryGrid } from '@/features/workspace/requests/components/WorkspaceSummaryGrid';
 import type { Locale } from '@/lib/i18n/t';
+import { WorkspaceSectionDecisionPanel } from './WorkspaceSectionDecisionPanel';
+import { WorkspaceSummaryGrid } from './WorkspaceSummaryGrid';
 
 type SummaryItem = {
   key: string;

@@ -6,7 +6,6 @@ import {
   buildRequestsPublicContentProps,
   buildRequestsPublicFiltersProps,
 } from '@/components/requests/requestsPublicContent.model';
-import type { PublicContent } from '@/features/workspace/requests/PublicContent';
 import type { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { buildWorkspacePublicRequestsListProps } from '@/features/workspace/requests/workspaceViewModel.helpers';
 import { buildWorkspaceListContext } from '@/features/workspace/requests/workspaceViewModel.shared';
@@ -14,6 +13,7 @@ import { resolveRequestsListDensityForPageSize, resolveRequestsPageSizeForDensit
 import type {
   PublicInput,
 } from '@/features/workspace/requests/workspaceViewModel.types';
+import type { PublicContentProps } from '@/features/workspace/requests/PublicContent';
 
 type BuildPublicFiltersArgs = Pick<
   PublicInput,
@@ -153,7 +153,7 @@ export function buildWorkspacePublicContentProps({
   onStatusFilterChange,
   onPrevPage,
   onNextPage,
-}: BuildPublicContentArgs): ComponentProps<typeof PublicContent> {
+}: BuildPublicContentArgs): PublicContentProps {
   const listContext = buildWorkspaceListContext({
     t,
     locale,

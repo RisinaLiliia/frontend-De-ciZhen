@@ -11,6 +11,7 @@ import { useGeoRegion } from '@/hooks/useGeoRegion';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { PublicRequestCardActionRow } from '@/components/requests/PublicRequestCardActionRow';
+import { WorkspaceGuestRequestCard } from '@/components/requests/WorkspaceGuestRequestCard';
 import { useCities, useServiceCategories, useServices } from '@/features/catalog/queries';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { useI18n } from '@/lib/i18n/I18nProvider';
@@ -38,8 +39,7 @@ import {
   resolveHomeNearbySubtitleKey,
   shouldUseHomeNearbyFallback,
 } from '@/components/home/homeNearbyPanel.model';
-import { WorkspaceGuestRequestCard } from '@/features/workspace/requests/components/WorkspaceGuestRequestCard';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 
 type HomeNearbyPanelProps = {
   t: (key: I18nKey) => string;

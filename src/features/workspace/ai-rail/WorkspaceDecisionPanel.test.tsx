@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DecisionPanel } from './DecisionPanel';
+import { WorkspaceDecisionPanel } from './WorkspaceDecisionPanel';
 
 const panel = {
   summary: {
@@ -25,10 +25,10 @@ const panel = {
   },
 };
 
-describe('DecisionPanel', () => {
+describe('WorkspaceDecisionPanel', () => {
   it('renders market-specific workload copy for the public workspace rail', () => {
     const html = renderToStaticMarkup(
-      <DecisionPanel
+      <WorkspaceDecisionPanel
         locale="de"
         panel={panel}
         isDecisionMode={false}

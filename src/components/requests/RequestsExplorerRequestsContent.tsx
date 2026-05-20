@@ -5,7 +5,7 @@ import {
   buildRequestsPublicContentProps,
   buildRequestsPublicFiltersProps,
 } from '@/components/requests/requestsPublicContent.model';
-import { PublicContent } from '@/features/workspace/requests';
+import { PublicContent } from '@/features/workspace/requests/PublicContent';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { resolveRequestsListDensityForPageSize } from '@/lib/requests/pagination';
 import type { RequestsExplorerRequestsContentProps } from '@/components/requests/requestsExplorer.types';

@@ -3,7 +3,7 @@ import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dt
 import type { PublicRequestsFilter } from '@/lib/api/requests';
 import type { Locale } from '@/lib/i18n/t';
 import { hasDefaultPublicFilter } from '@/components/requests/requestsExplorer.model';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 
 type BuildPublicRequestsQueryStateArgs = {
   filter: PublicRequestsFilter;

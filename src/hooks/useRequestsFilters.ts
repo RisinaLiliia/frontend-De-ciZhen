@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { ALL_OPTION_KEY } from '@/features/workspace/requests';
+import { ALL_OPTION_KEY } from '@/features/workspace/shared';
 import type { PublicRequestsSort } from '@/lib/api/requests';
 import {
   buildPublicRequestsFilterPayload,

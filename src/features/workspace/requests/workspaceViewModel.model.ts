@@ -1,14 +1,12 @@
 'use client';
 
-import type { ComponentProps } from 'react';
-
-import type { PublicContent } from '@/features/workspace/requests/PublicContent';
-import type { WorkspaceContent } from '@/features/workspace/requests/WorkspaceContent';
 import type {
   PrivateInput,
   PublicInput,
 } from '@/features/workspace/requests/workspaceViewModel.types';
-import type { WorkspaceStatusFilter } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceStatusFilter } from '@/features/workspace/state';
+import type { PublicContentProps } from '@/features/workspace/requests/PublicContent';
+import type { WorkspaceContentProps } from '@/features/workspace/requests/workspaceContent.types';
 import { buildWorkspacePager } from '@/features/workspace/requests/workspaceViewModel.helpers';
 import { buildWorkspacePrivateContentProps } from '@/features/workspace/requests/workspaceViewModel.private';
 import {
@@ -17,7 +15,7 @@ import {
 } from '@/features/workspace/requests/workspaceViewModel.public';
 
 export function buildWorkspacePrivateViewModel(params: PrivateInput): {
-  workspaceContentProps: ComponentProps<typeof WorkspaceContent>;
+  workspaceContentProps: WorkspaceContentProps;
 } {
   return {
     workspaceContentProps: buildWorkspacePrivateContentProps(params),
@@ -25,7 +23,7 @@ export function buildWorkspacePrivateViewModel(params: PrivateInput): {
 }
 
 export function buildWorkspacePublicViewModel(params: PublicInput): {
-  publicContentProps: ComponentProps<typeof PublicContent>;
+  publicContentProps: PublicContentProps;
 } {
   const onStatusFilterChange = (status: string) => params.setStatusFilter(status as WorkspaceStatusFilter);
   const { onPrevPage, onNextPage } = buildWorkspacePager({

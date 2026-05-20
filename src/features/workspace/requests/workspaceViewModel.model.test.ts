@@ -14,7 +14,7 @@ import type {
   PrivateInput,
   PublicInput,
 } from './workspaceViewModel.types';
-import type { WorkspaceStatusFilter } from './workspace.types';
+import type { WorkspaceStatusFilter } from '../state';
 
 function createBaseInput(): BaseInput {
   return {

@@ -7,8 +7,8 @@ import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { providerQK } from '@/features/provider/queries';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
-import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
+import { workspaceQK } from '@/features/workspace/data';
 
 type Translate = (key: I18nKey) => string;
 

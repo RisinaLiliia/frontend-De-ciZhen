@@ -8,7 +8,7 @@ import type {
   WorkspacePageLayout,
   WorkspaceSectionRenderModel,
 } from '@/features/workspace';
-import type { useWorkspacePublicState } from '@/features/workspace/requests';
+import type { useWorkspacePublicState } from '@/features/workspace/requests/useWorkspacePublicState';
 import {
   EMPTY_ASIDE_BASE_PROPS,
   EMPTY_PROVIDER_IDS,

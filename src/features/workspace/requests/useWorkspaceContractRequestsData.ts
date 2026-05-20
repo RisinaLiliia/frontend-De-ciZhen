@@ -7,7 +7,7 @@ import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { getWorkspacePublicRequestsBatch } from '@/lib/api/workspace';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 
 type Params = {
   enabled?: boolean;

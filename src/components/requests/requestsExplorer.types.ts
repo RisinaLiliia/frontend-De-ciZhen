@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
-import type { WorkspaceRequestsSummaryStrip } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
+import type { WorkspaceRequestsSummaryStrip } from '@/features/workspace/ai-rail/WorkspaceRequestsSummaryStrip';
 import type { WorkspaceProvidersResponseDto } from '@/lib/api/dto/workspace';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';

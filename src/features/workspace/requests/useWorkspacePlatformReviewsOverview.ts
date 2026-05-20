@@ -10,7 +10,7 @@ import type {
   NormalizedProviderReview,
   ProviderReviewsDistribution,
 } from '@/features/providers/publicProfile/useProviderReviewsModel';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
 
 const EMPTY_PLATFORM_OVERVIEW = {

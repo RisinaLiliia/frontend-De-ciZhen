@@ -6,7 +6,7 @@ import { t as translate, type Locale } from '@/lib/i18n/t';
 
 type SummaryVariant = 'private' | 'market';
 
-type WorkspaceRequestsSummaryStripProps = {
+export type WorkspaceRequestsSummaryStripProps = {
   locale: Locale;
   items: MyRequestsSummaryItem[];
   onSelect: (nextState: string) => void;

@@ -1,8 +1,5 @@
 'use client';
 
-import type { ComponentProps } from 'react';
-
-import type { WorkspaceContent } from '@/features/workspace/requests/WorkspaceContent';
 import {
   buildEmptyWorkspaceListProps,
   buildWorkspaceFavoriteRequestsListProps,
@@ -12,10 +9,11 @@ import {
 } from '@/features/workspace/requests/workspaceViewModel.helpers';
 import { buildWorkspaceListContext } from '@/features/workspace/requests/workspaceViewModel.shared';
 import type { PrivateInput } from '@/features/workspace/requests/workspaceViewModel.types';
+import type { WorkspaceContentProps } from '@/features/workspace/requests/workspaceContent.types';
 
 export function buildWorkspacePrivateContentProps(
   params: PrivateInput,
-): ComponentProps<typeof WorkspaceContent> {
+): WorkspaceContentProps {
   const {
     t,
     isWorkspaceAuthed,

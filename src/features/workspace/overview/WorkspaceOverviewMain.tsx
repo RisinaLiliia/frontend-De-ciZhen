@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { RequestsList } from '@/components/requests/RequestsList';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
+import { WorkspaceGuestRequestCard } from '@/components/requests/WorkspaceGuestRequestCard';
 import { buildPublicRequestCardPresentation } from '@/components/requests/publicRequestCard.model';
 import type { RequestsListProps } from '@/components/requests/requestsList.types';
 import { ProviderList } from '@/components/providers/ProviderList';
@@ -21,7 +22,6 @@ import type { WorkspaceStatisticsModel } from '@/features/workspace/stats';
 import { StatisticsDecisionAiCard } from '@/features/workspace/stats/components/StatisticsDecisionAiCard';
 import { StatisticsMetricSignalCard } from '@/features/workspace/stats/components/StatisticsMetricSignalCard';
 import { StatisticsDemandPanelSection } from '@/features/workspace/stats/WorkspaceStatisticsSections';
-import { WorkspaceGuestRequestCard } from '@/features/workspace/requests/components/WorkspaceGuestRequestCard';
 import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 type WorkspaceOverviewMainProps = {

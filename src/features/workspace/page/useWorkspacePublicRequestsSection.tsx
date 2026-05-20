@@ -3,12 +3,12 @@
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import { WorkspaceRequestsSectionRail } from '@/features/workspace/ai-rail';
 import {
   buildRequestsWorkspacePublicBody,
   RequestsWorkspaceBody,
-  useWorkspaceData,
-} from '@/features/workspace/requests';
-import { WorkspaceRequestsAside } from '@/features/workspace/requests/components/WorkspaceRequestsAside';
+} from '@/features/workspace/requests/RequestsWorkspaceBody';
+import { useWorkspaceData } from '@/features/workspace/requests/useWorkspaceData';
 import {
   buildWorkspaceRequestsSurfaceModel,
   buildWorkspaceRequestsViewModelFromResponse,
@@ -203,7 +203,7 @@ export function useWorkspacePublicRequestsSection({
   );
 
   const publicAside = (
-    <WorkspaceRequestsAside
+    <WorkspaceRequestsSectionRail
       locale={locale}
       variant="market"
       summaryItems={marketResponse?.summary.items}

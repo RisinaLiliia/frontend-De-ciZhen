@@ -7,10 +7,8 @@ import type { WorkspacePublicIntro } from '@/features/workspace/intro';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import type { useWorkspacePresentation } from '@/features/workspace';
-import type {
-  WorkspacePrivateOverviewState,
-  useWorkspacePrivateState,
-} from '@/features/workspace/requests';
+import type { useWorkspacePrivateState } from '@/features/workspace/requests/useWorkspacePrivateState';
+import type { WorkspacePrivateOverviewState } from '@/features/workspace/requests/workspacePrivateState.model';
 import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
 
 type WorkspacePrivateDataFlowResult = ReturnType<typeof useWorkspacePrivateDataFlow>;

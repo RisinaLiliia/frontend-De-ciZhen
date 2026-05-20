@@ -13,7 +13,7 @@ import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { providerQK } from '@/features/provider/queries';
 import type { AuthStatus } from '@/features/auth/store';
 import { fetchManagedRequestDetails } from '@/features/requests/details/requestDetails.data';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 
 type RouterLike = {
   push: (href: string) => void;

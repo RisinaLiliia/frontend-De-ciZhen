@@ -2,9 +2,9 @@
 
 import type { ComponentProps } from 'react';
 
+import { WorkspaceRequestsActionRail } from '@/features/workspace/ai-rail/WorkspaceRequestsActionRail';
+import { WorkspaceRequestsSummaryStrip } from '@/features/workspace/ai-rail/WorkspaceRequestsSummaryStrip';
 import type { MyRequestsSummaryItem } from '@/features/workspace/requests/myRequestsView.model';
-import { RequestsPrivateActionRail } from '@/features/workspace/requests/RequestsPrivateView';
-import { WorkspaceRequestsSummaryStrip } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
 import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 
@@ -27,13 +27,13 @@ export function buildRequestsWorkspaceSummaryStripProps(params: {
 export function buildRequestsWorkspaceDecisionRailProps(params: {
   locale: Locale;
   panel: WorkspaceRequestsDecisionPanelDto;
-  mode: ComponentProps<typeof RequestsPrivateActionRail>['mode'];
+  mode: ComponentProps<typeof WorkspaceRequestsActionRail>['mode'];
   activeRequestId: string | null;
   onStartDecisionMode: () => void;
   onOpenQueueItem: (requestId: string) => void;
   className?: string;
   variant?: RequestsWorkspaceSurfaceVariant;
-}): ComponentProps<typeof RequestsPrivateActionRail> {
+}): ComponentProps<typeof WorkspaceRequestsActionRail> {
   return {
     locale: params.locale,
     panel: params.panel,

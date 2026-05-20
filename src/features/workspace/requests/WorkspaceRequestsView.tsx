@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { RequestCard } from '@/components/requests/RequestCard';
+import { WorkspaceGuestRequestCard } from '@/components/requests/WorkspaceGuestRequestCard';
 import type { OwnerRequestActions } from '@/components/requests/requestsList.types';
 import { LocationMeta } from '@/components/ui/LocationMeta';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
@@ -17,11 +18,10 @@ import {
   IconShare,
   IconTrash,
 } from '@/components/ui/icons/icons';
-import { DecisionModeBar } from '@/features/workspace/requests/components/DecisionModeBar';
-import { DecisionPanel } from '@/features/workspace/requests/components/DecisionPanel';
-import { WorkspaceRequestsSectionSummary } from '@/features/workspace/requests/components/WorkspaceRequestsSectionSummary';
+import { WorkspaceRequestsActionRail } from '@/features/workspace/ai-rail/WorkspaceRequestsActionRail';
+import { WorkspaceDecisionModeBar } from '@/features/workspace/ai-rail/WorkspaceDecisionModeBar';
+import { WorkspaceRequestsSectionSummary } from '@/features/workspace/ai-rail/WorkspaceRequestsSectionSummary';
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
-import { WorkspaceGuestRequestCard } from '@/features/workspace/requests/components/WorkspaceGuestRequestCard';
 import {
   buildRequestsWorkspaceDecisionRailProps,
 } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
@@ -47,27 +47,14 @@ import type {
   WorkspaceRequestsViewCard,
   WorkspaceRequestsViewVariant,
 } from '@/features/workspace/requests/workspaceRequestsView.model';
-import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 import { pickRequestImage } from '@/lib/requests/images';
-import { workspaceRightRailPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 export type { WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
 
 export type WorkspaceRequestsViewProps = {
   surface: WorkspaceRequestsSurfaceModel;
-};
-
-type RailProps = {
-  locale: Locale;
-  panel: WorkspaceRequestsDecisionPanelDto;
-  mode: WorkQueueMode;
-  activeRequestId: string | null;
-  onStartDecisionMode: () => void;
-  onOpenQueueItem: (requestId: string) => void;
-  className?: string;
-  variant?: WorkspaceRequestsViewVariant;
 };
 
 function tx(locale: Locale, key: I18nKey) {
@@ -1088,30 +1075,7 @@ function AuthGate({
   );
 }
 
-export function RequestsPrivateActionRail({
-  locale,
-  panel,
-  mode,
-  activeRequestId,
-  onStartDecisionMode,
-  onOpenQueueItem,
-  className,
-  variant = 'private',
-}: RailProps) {
-  return (
-    <div className={workspaceRightRailPanelShell('my-requests-rail', className)}>
-      <DecisionPanel
-        locale={locale}
-        panel={panel}
-        isDecisionMode={mode === 'decision'}
-        activeRequestId={activeRequestId}
-        onStartDecisionMode={onStartDecisionMode}
-        onOpenQueueItem={onOpenQueueItem}
-        variant={variant}
-      />
-    </div>
-  );
-}
+export { WorkspaceRequestsActionRail as RequestsPrivateActionRail };
 
 export function WorkspaceRequestsView({
   surface,
@@ -1246,7 +1210,7 @@ export function WorkspaceRequestsView({
       {!isLoading && visibleCards.length > 0 ? (
         <>
           {decisionState.mode === 'decision' ? (
-            <DecisionModeBar
+            <WorkspaceDecisionModeBar
               locale={locale}
               completedInSession={decisionState.completedInSession}
               remainingCount={decisionQueueIds.length}
@@ -1285,7 +1249,7 @@ export function WorkspaceRequestsView({
             ))}
           </div>
           {decisionPanel ? (
-            <RequestsPrivateActionRail
+            <WorkspaceRequestsActionRail
               {...buildRequestsWorkspaceDecisionRailProps({
                 locale,
                 panel: decisionPanel,
@@ -1326,7 +1290,7 @@ export function WorkspaceRequestsView({
       ) : null}
       {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && decisionPanel ? (
         <>
-          <DecisionModeBar
+          <WorkspaceDecisionModeBar
             locale={locale}
             completedInSession={decisionState.completedInSession}
             remainingCount={0}

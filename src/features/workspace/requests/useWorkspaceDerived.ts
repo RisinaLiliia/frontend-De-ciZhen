@@ -13,7 +13,7 @@ import {
   type FavoritesView,
   type WorkspaceStatusFilter,
   type WorkspaceTab,
-} from '@/features/workspace/requests/workspace.types';
+} from '@/features/workspace/state';
 import { getWorkspacePrimaryActionByTab, getWorkspaceStatusFilters } from '@/features/workspace/requests/workspace.content';
 
 type Params = {

@@ -5,7 +5,7 @@ import { RequestsFilterControlsBody } from '@/components/requests/RequestsFilter
 import { RequestsMobileFilterToolbar } from '@/components/requests/RequestsMobileFilterToolbar';
 import { RequestsResultsSummary } from '@/components/requests/RequestsResultsSummary';
 import { useRequestsFilterControls } from '@/components/requests/useRequestsFilterControls';
-import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
+import { WorkspaceMobileFiltersSheet } from '@/features/workspace/shared';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { buildRequestsFilterControlsViewModel } from './requestsFilterControls.model';
 import type {

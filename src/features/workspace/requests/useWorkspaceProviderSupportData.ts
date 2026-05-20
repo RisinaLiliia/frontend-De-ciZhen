@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { listFavorites } from '@/lib/api/favorites';
 import { listPublicProviders } from '@/lib/api/providers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 
 const PROVIDERS_STALE_TIME_MS = 30_000;
 const PROVIDERS_GC_TIME_MS = 5 * 60 * 1000;

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import { resolveWorkspaceRequestChatAction } from '@/features/workspace/requests/workspaceRequestActionResolvers';
 import { fetchWorkspaceManagedRequest } from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
 import { listMyContracts } from '@/lib/api/contracts';

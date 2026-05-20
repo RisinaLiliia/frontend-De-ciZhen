@@ -9,7 +9,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Textarea } from '@/components/ui/Textarea';
 import { createPlatformReview } from '@/lib/api/reviews';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import { workspaceRequestsPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 type Props = {

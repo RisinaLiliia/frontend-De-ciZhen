@@ -1,10 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import type { ComponentProps } from 'react';
 
 import { buildWorkspacePrivateViewModel } from '@/features/workspace/requests/workspaceViewModel.model';
-import type { WorkspaceContent } from '@/features/workspace/requests/WorkspaceContent';
+import type { WorkspaceContentProps } from '@/features/workspace/requests/workspaceContent.types';
 import type { PrivateInput } from '@/features/workspace/requests/workspaceViewModel.types';
 
 type UseWorkspacePrivateViewModelParams = PrivateInput & {
@@ -15,7 +14,7 @@ export function useWorkspacePrivateViewModel({
   enabled = true,
   ...params
 }: UseWorkspacePrivateViewModelParams): {
-  workspaceContentProps: ComponentProps<typeof WorkspaceContent> | null;
+  workspaceContentProps: WorkspaceContentProps | null;
 } {
   const {
     t,

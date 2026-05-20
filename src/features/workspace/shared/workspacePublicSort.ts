@@ -1,11 +1,6 @@
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { PublicRequestsSort } from '@/lib/api/requests';
-import {
-  ALL_OPTION_KEY,
-  WORKSPACE_PUBLIC_ORDERS_SEEN_TOTAL_KEY_PREFIX,
-  WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX,
-} from '@/features/workspace/shared';
 
 export type SortKey = PublicRequestsSort;
 
@@ -20,9 +15,3 @@ export const SORT_OPTIONS: SortOption[] = [
   { value: 'price_asc', labelKey: I18N_KEYS.requestsPage.sortPriceAsc },
   { value: 'price_desc', labelKey: I18N_KEYS.requestsPage.sortPriceDesc },
 ];
-
-export {
-  ALL_OPTION_KEY,
-  WORKSPACE_PUBLIC_ORDERS_SEEN_TOTAL_KEY_PREFIX,
-  WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX,
-};

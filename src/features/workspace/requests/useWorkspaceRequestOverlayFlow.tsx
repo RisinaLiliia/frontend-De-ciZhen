@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import {
   type WorkspaceChatConversationInput,
   isWorkspaceChatConversationInput,

@@ -7,18 +7,18 @@ import { trackUXEvent } from '@/lib/analytics';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
-import {
-  buildRequestsWorkspacePrivateBody,
-  RequestsWorkspaceBody,
-  useWorkspacePrivateState,
-} from '@/features/workspace/requests';
 import { WorkspacePrivateIntro, WorkspacePublicIntro } from '@/features/workspace/intro';
 import { WorkspaceOverviewInsightsPanel, WorkspaceOverviewMain, WorkspacePublicDemandMapPanel } from '@/features/workspace/overview';
 import { useWorkspaceStatisticsModel } from '@/features/workspace/stats';
-import { WorkspaceRequestsAside } from '@/features/workspace/requests/components/WorkspaceRequestsAside';
+import { WorkspaceRequestsSectionRail } from '@/features/workspace/ai-rail';
+import {
+  buildRequestsWorkspacePrivateBody,
+  RequestsWorkspaceBody,
+} from '@/features/workspace/requests/RequestsWorkspaceBody';
 import {
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
+import { useWorkspacePrivateState } from '@/features/workspace/requests/useWorkspacePrivateState';
 import { buildWorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
@@ -259,7 +259,7 @@ export function useWorkspacePrivatePresentationFlow({
     panel: privateRequestsModel.response ? privateRequestsModel.response.decisionPanel : null,
   });
   const privateAside = isUnifiedPrivateRequests ? (
-    <WorkspaceRequestsAside
+    <WorkspaceRequestsSectionRail
       locale={branch.locale}
       variant="private"
       summaryItems={privateRequestsModel.response?.summary.items}

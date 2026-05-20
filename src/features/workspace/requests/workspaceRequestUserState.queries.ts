@@ -3,7 +3,7 @@
 import { listFavorites } from '@/lib/api/favorites';
 import { listMyProviderOffers } from '@/lib/api/offers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import type { WorkspaceDataLoadPlan } from '@/features/workspace/requests/workspaceData.model';
 
 type BuildWorkspaceRequestUserStateQueriesArgs = {

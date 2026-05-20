@@ -1,5 +1,13 @@
 export { WorkspaceDecisionActionCard } from './WorkspaceDecisionActionCard';
+export { WorkspaceDecisionModeBar } from './WorkspaceDecisionModeBar';
+export { WorkspaceDecisionPanel } from './WorkspaceDecisionPanel';
 export { WorkspaceDecisionRecommendationModal } from './WorkspaceDecisionRecommendationModal';
 export { WorkspaceDecisionRecommendationSection } from './WorkspaceDecisionRecommendationSection';
 export { WorkspaceInsightsPanel } from './WorkspaceInsightsPanel';
+export { WorkspaceRequestsActionRail } from './WorkspaceRequestsActionRail';
+export { WorkspaceRequestsSectionRail } from './WorkspaceRequestsSectionRail';
+export { WorkspaceRequestsSectionSummary } from './WorkspaceRequestsSectionSummary';
+export { WorkspaceRequestsSummaryStrip, WorkspaceRequestsSummaryStripSkeleton } from './WorkspaceRequestsSummaryStrip';
 export type { WorkspaceInsightsPanelItem } from './WorkspaceInsightsPanel';
+export type { WorkspaceDecisionModeBarProps } from './WorkspaceDecisionModeBar';
+export type { WorkspaceRequestsSummaryStripProps } from './WorkspaceRequestsSummaryStrip';

@@ -1,6 +1,7 @@
 'use client';
 
-import type { useWorkspaceContractRequestsData, useWorkspaceDerived } from '@/features/workspace/requests';
+import type { useWorkspaceContractRequestsData } from '@/features/workspace/requests/useWorkspaceContractRequestsData';
+import type { useWorkspaceDerived } from '@/features/workspace/requests/useWorkspaceDerived';
 import type { useWorkspaceCards } from '@/features/workspace/private/useWorkspaceCards';
 
 type WorkspaceDerivedResult = ReturnType<typeof useWorkspaceDerived>;

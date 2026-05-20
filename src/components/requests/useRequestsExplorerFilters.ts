@@ -11,7 +11,7 @@ import {
   buildRequestsExplorerServiceOptions,
   buildRequestsExplorerSortOptions,
 } from '@/components/requests/requestsExplorerFilters.model';
-import { ALL_OPTION_KEY } from '@/features/workspace/requests';
+import { ALL_OPTION_KEY } from '@/features/workspace/shared';
 import { useWorkspaceFormatters } from '@/features/workspace/shared/useWorkspaceFormatters';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';

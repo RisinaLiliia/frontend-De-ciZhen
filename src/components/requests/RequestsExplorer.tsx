@@ -19,7 +19,7 @@ import {
   buildRequestsExplorerRequestsContentProps,
   pickRequestsExplorerSharedFilters,
 } from '@/components/requests/requestsExplorer.model';
-import { resolveWorkspaceViewerMode } from '@/features/workspace/requests';
+import { resolveWorkspaceViewerMode } from '@/features/workspace/state';
 import { resolveRequestsPageSizeForDensity } from '@/lib/requests/pagination';
 import type { RequestsExplorerProps } from '@/components/requests/requestsExplorer.types';
 

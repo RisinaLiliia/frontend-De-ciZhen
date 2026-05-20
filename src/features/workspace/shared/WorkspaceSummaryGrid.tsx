@@ -44,23 +44,24 @@ export function WorkspaceSummaryGrid({
       {items.map((item, index) => {
         const isHighlighted = item.isHighlighted ?? index === 0;
         return (
-        <button
-          key={item.key}
-          type="button"
-          className={[
-            'my-requests-summary__card',
-            `is-${item.tone ?? 'all'}`,
-            isHighlighted ? 'is-active' : '',
-          ].filter(Boolean).join(' ')}
-          aria-pressed={isHighlighted}
-          onClick={() => onSelect?.(item.key)}
-        >
-          <span className="my-requests-summary__label">{item.label}</span>
-          <strong className="my-requests-summary__value">{item.value}</strong>
-          <span className="my-requests-summary__helper">{item.helper}</span>
-          <span className="my-requests-summary__accent" aria-hidden="true" />
-        </button>
-      )})}
+          <button
+            key={item.key}
+            type="button"
+            className={[
+              'my-requests-summary__card',
+              `is-${item.tone ?? 'all'}`,
+              isHighlighted ? 'is-active' : '',
+            ].filter(Boolean).join(' ')}
+            aria-pressed={isHighlighted}
+            onClick={() => onSelect?.(item.key)}
+          >
+            <span className="my-requests-summary__label">{item.label}</span>
+            <strong className="my-requests-summary__value">{item.value}</strong>
+            <span className="my-requests-summary__helper">{item.helper}</span>
+            <span className="my-requests-summary__accent" aria-hidden="true" />
+          </button>
+        );
+      })}
     </div>
   );
 }

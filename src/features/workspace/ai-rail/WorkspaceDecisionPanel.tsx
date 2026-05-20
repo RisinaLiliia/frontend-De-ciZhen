@@ -7,7 +7,7 @@ import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace'
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 
-type DecisionPanelProps = {
+export type WorkspaceDecisionPanelProps = {
   locale: Locale;
   panel: WorkspaceRequestsDecisionPanelDto;
   isDecisionMode: boolean;
@@ -17,7 +17,7 @@ type DecisionPanelProps = {
   variant?: 'private' | 'market';
 };
 
-export function DecisionPanel({
+export function WorkspaceDecisionPanel({
   locale,
   panel,
   isDecisionMode,
@@ -25,7 +25,7 @@ export function DecisionPanel({
   onStartDecisionMode,
   onOpenQueueItem,
   variant = 'private',
-}: DecisionPanelProps) {
+}: WorkspaceDecisionPanelProps) {
   const t = (key: string) => translate(key as never, locale);
   const summaryText = React.useMemo(
     () => buildDecisionPanelSummaryText({ locale, panel, variant }),

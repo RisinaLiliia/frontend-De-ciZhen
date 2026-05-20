@@ -5,7 +5,7 @@ import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { Locale } from '@/lib/i18n/t';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 
 const SIMILAR_LIMIT = 2;
 const SIMILAR_FETCH_LIMIT = 8;

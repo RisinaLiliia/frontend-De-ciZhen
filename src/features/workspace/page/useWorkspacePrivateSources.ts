@@ -1,7 +1,8 @@
 'use client';
 
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import { useWorkspaceData, useWorkspaceProviderSupportData } from '@/features/workspace/requests';
+import { useWorkspaceData } from '@/features/workspace/requests/useWorkspaceData';
+import { useWorkspaceProviderSupportData } from '@/features/workspace/requests/useWorkspaceProviderSupportData';
 import {
   useWorkspaceCollections,
   useWorkspacePublicFilters,

@@ -10,7 +10,9 @@ export { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
 export { WorkspacePanelShell } from './WorkspacePanelShell';
 export { WorkspaceRightRailPanel } from './WorkspaceRightRailPanel';
 export { WorkspaceSectionAside } from './WorkspaceSectionAside';
+export { WorkspaceSectionDecisionPanel } from './WorkspaceSectionDecisionPanel';
 export { WorkspaceSectionErrorBoundary } from './WorkspaceSectionErrorBoundary';
+export { WorkspaceSummaryGrid } from './WorkspaceSummaryGrid';
 export { WorkspaceTopProvidersAside } from './WorkspaceTopProvidersAside';
 export { useIsDesktop } from './useIsDesktop';
 export { useWorkspaceFormatters } from './useWorkspaceFormatters';
@@ -19,6 +21,8 @@ export {
   WORKSPACE_PUBLIC_ORDERS_SEEN_TOTAL_KEY_PREFIX,
   WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX,
 } from './workspacePublic.constants';
+export { SORT_OPTIONS } from './workspacePublicSort';
+export type { SortKey, SortOption } from './workspacePublicSort';
 export {
   workspaceCardShell,
   workspaceElevatedCardShell,

@@ -15,14 +15,16 @@ import {
   DEFAULT_REQUESTS_LIST_DENSITY,
   type RequestsListDensity,
 } from '@/lib/requests/pagination';
+import {
+  WorkspaceRequestsSummaryStrip,
+  WorkspaceRequestsSummaryStripSkeleton,
+} from '@/features/workspace/ai-rail/WorkspaceRequestsSummaryStrip';
+import { WorkspaceChipToggleGroup } from '@/features/workspace/shared';
 import { WorkspacePublicRequestSessionDialog } from '@/features/workspace/requests/WorkspacePublicRequestSessionDialog';
 import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
-import { RequestsWorkspaceSummary } from '@/features/workspace/requests/components/RequestsWorkspaceSummary';
-import type { WorkspaceRequestsSummaryStrip } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
-import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 import type { RequestsListShellHeaderMode } from '@/components/requests/RequestsListShellHeader';
 
-type Props = {
+export type PublicContentProps = {
   t: (key: I18nKey) => string;
   filtersProps: React.ComponentProps<typeof RequestsFilters>;
   statusFilters: Array<{
@@ -71,7 +73,7 @@ export function PublicContent({
   header = { kind: 'filters' },
   summaryStripProps,
   isSummaryStripLoading = false,
-}: Props) {
+}: PublicContentProps) {
   const authStatus = useAuthStatus();
   const {
     activeChatState,
@@ -115,10 +117,10 @@ export function PublicContent({
 
   return (
     <>
-      <RequestsWorkspaceSummary
-        summaryStripProps={summaryStripProps}
-        isLoading={isSummaryStripLoading}
-      />
+      {isSummaryStripLoading && !summaryStripProps ? (
+        <WorkspaceRequestsSummaryStripSkeleton />
+      ) : null}
+      {summaryStripProps ? <WorkspaceRequestsSummaryStrip {...summaryStripProps} /> : null}
       <RequestsPaginatedPanel
         t={t}
         page={page}

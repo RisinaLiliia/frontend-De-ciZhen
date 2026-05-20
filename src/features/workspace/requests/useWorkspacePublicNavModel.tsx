@@ -1,7 +1,7 @@
 'use client';
 
 import type { I18nKey } from '@/lib/i18n/keys';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/state';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { useWorkspaceNavModel } from '@/features/workspace/requests/useWorkspaceNavModel';
 

@@ -1,11 +1,11 @@
 'use client';
 
-import { WorkspaceRequestsSectionSummary } from '@/features/workspace/requests/components/WorkspaceRequestsSectionSummary';
-import { RequestsPrivateActionRail } from '@/features/workspace/requests/RequestsPrivateView';
 import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
 import type { WorkspaceRequestsSummaryItem, WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
 import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
+import { WorkspaceRequestsActionRail } from './WorkspaceRequestsActionRail';
+import { WorkspaceRequestsSectionSummary } from './WorkspaceRequestsSectionSummary';
 
 type Props = {
   locale: Locale;
@@ -19,7 +19,7 @@ type Props = {
   onOpenQueueItem: (requestId: string) => void;
 };
 
-export function WorkspaceRequestsAside({
+export function WorkspaceRequestsSectionRail({
   locale,
   variant,
   summaryItems,
@@ -44,7 +44,7 @@ export function WorkspaceRequestsAside({
         className="my-requests-summary--rail"
       />
       {panel ? (
-        <RequestsPrivateActionRail
+        <WorkspaceRequestsActionRail
           locale={locale}
           panel={panel}
           mode={mode}

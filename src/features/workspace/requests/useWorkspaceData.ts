@@ -10,14 +10,14 @@ import {
   buildWorkspaceDataQueries,
 } from '@/features/workspace/requests/workspaceData.queries';
 import { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/state';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import type {
   WorkspaceRequestsRole,
   WorkspaceRequestsScope,
   WorkspaceRequestsState,
-} from '@/features/workspace/requests/workspaceRequestsScope.model';
+} from '@/features/workspace/state';
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 import { useWorkspaceContractData } from '@/features/workspace/requests/useWorkspaceContractData';
 import { useWorkspaceLegacyPublicOverviewData } from '@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData';

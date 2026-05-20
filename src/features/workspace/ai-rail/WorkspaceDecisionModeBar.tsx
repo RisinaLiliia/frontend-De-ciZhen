@@ -4,19 +4,19 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate } from '@/lib/i18n/t';
 import type { Locale } from '@/lib/i18n/t';
 
-type DecisionModeBarProps = {
+export type WorkspaceDecisionModeBarProps = {
   locale: Locale;
   completedInSession: number;
   remainingCount: number;
   onExit: () => void;
 };
 
-export function DecisionModeBar({
+export function WorkspaceDecisionModeBar({
   locale,
   completedInSession,
   remainingCount,
   onExit,
-}: DecisionModeBarProps) {
+}: WorkspaceDecisionModeBarProps) {
   const totalCount = completedInSession + remainingCount;
   const hasCompletedAll = totalCount > 0 && remainingCount === 0;
   const t = (key: string) => translate(key as never, locale);

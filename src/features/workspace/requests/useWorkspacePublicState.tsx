@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import type { I18nKey } from '@/lib/i18n/keys';
-import type { WorkspaceTab } from '@/features/workspace/requests/workspace.types';
+import type { WorkspaceTab } from '@/features/workspace/state';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { resolveWorkspacePublicMeta } from '@/features/workspace/requests/workspacePublicState.model';
 import { useWorkspacePublicNavModel } from '@/features/workspace/requests/useWorkspacePublicNavModel';
