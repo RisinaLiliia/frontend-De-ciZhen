@@ -325,7 +325,13 @@ export function useWorkspacePrivatePresentationFlow({
     () => (
       isChatSection
         ? buildWorkspaceChatSectionModel({
-          content: <ChatWorkspacePage basePath="/workspace" className="workspace-chat-page" />,
+          content: (
+            <ChatWorkspacePage
+              basePath="/workspace"
+              className="workspace-chat-page"
+              preferDesktopSplit
+            />
+          ),
           aiRail: <WorkspaceChatRail />,
         })
         : null

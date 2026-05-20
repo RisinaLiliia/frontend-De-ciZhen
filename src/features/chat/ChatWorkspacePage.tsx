@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { createPortal } from 'react-dom';
 import { io, type Socket } from 'socket.io-client';
 import {
   useInfiniteQuery,
@@ -190,12 +191,14 @@ type ChatWorkspacePageProps = {
   embeddedConversationId?: string | null;
   className?: string;
   basePath?: string;
+  preferDesktopSplit?: boolean;
 };
 
 export function ChatWorkspacePage({
   embeddedConversationId = null,
   className,
   basePath = '/chat',
+  preferDesktopSplit = false,
 }: ChatWorkspacePageProps = {}) {
   const user = useAuthUser();
   const { locale } = useI18n();
@@ -782,12 +785,123 @@ export function ChatWorkspacePage({
   const showSearchEmpty =
     conversations.length === 0 && (Boolean(deferredSearch) || filter !== 'all');
   const composerDisabled = !selectedConversation || selectedConversation.state === 'closed';
+  const infoDrawerOverlay = selectedConversation && isInfoOpen && typeof document !== 'undefined'
+    ? createPortal(
+        <>
+          <button
+            type="button"
+            className={styles.drawerBackdrop}
+            aria-label={copy.close}
+            onClick={() => setInfoOpen(false)}
+          />
+          <aside className={styles.infoDrawer} role="dialog" aria-modal="true" aria-label={copy.infoTitle}>
+            <div className={styles.infoDrawerHeader}>
+              <h2 className={styles.infoDrawerTitle}>{copy.infoTitle}</h2>
+              <Button
+                variant="ghost"
+                fullWidth={false}
+                onClick={() => setInfoOpen(false)}
+                className={styles.infoDrawerClose}
+              >
+                {copy.close}
+              </Button>
+            </div>
+
+            <div className={styles.infoDrawerBody}>
+              <section className={styles.infoSection}>
+                <p className={styles.infoLabel}>{copy.relatedTo}</p>
+                <h3 className={styles.infoHeadline}>
+                  {relatedEntityTitle ?? selectedConversation.relatedEntity.id}
+                </h3>
+                <div className={styles.infoMetaList}>
+                  <div className={styles.infoMetaRow}>
+                    <span className={styles.infoMetaIcon} aria-hidden="true">
+                      <IconCheck />
+                    </span>
+                    <div>
+                      <p className={styles.infoLabel}>Status</p>
+                      <p className={styles.infoValue}>{contextStatus}</p>
+                    </div>
+                  </div>
+
+                  <div className={styles.infoMetaRow}>
+                    <span className={styles.infoMetaIcon} aria-hidden="true">
+                      <IconCalendar />
+                    </span>
+                    <div>
+                      <p className={styles.infoLabel}>Aktualisiert</p>
+                      <p className={styles.infoValue}>
+                        {formatSidebarTime(selectedConversation.updatedAt, localeTag)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className={styles.infoMetaRow}>
+                    <span className={styles.infoMetaIcon} aria-hidden="true">
+                      <IconPin />
+                    </span>
+                    <div>
+                      <p className={styles.infoLabel}>Budget</p>
+                      <p className={styles.infoValue}>
+                        {contextAmount != null
+                          ? new Intl.NumberFormat(localeTag, {
+                              style: 'currency',
+                              currency: 'EUR',
+                              maximumFractionDigits: 0,
+                            }).format(contextAmount)
+                          : copy.amountOpen}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section className={styles.infoSection}>
+                <p className={styles.infoLabel}>{copy.participantTitle}</p>
+                <div className={styles.participantCard}>
+                  <ConversationAvatar
+                    name={counterpartName}
+                    isOnline={counterpart?.isOnline}
+                  />
+                  <div className={styles.participantBody}>
+                    <h3 className={styles.participantName}>{counterpartName}</h3>
+                    <p className={styles.participantMeta}>{counterpartPresence}</p>
+                  </div>
+                </div>
+              </section>
+
+              {!isEmbedded ? (
+                <div className={styles.infoActions}>
+                  {requestHref ? (
+                    <Link href={requestHref} prefetch={false} className="btn-secondary">
+                      {copy.openRequest}
+                    </Link>
+                  ) : null}
+                  {profileHref ? (
+                    <Link href={profileHref} prefetch={false} className="btn-ghost">
+                      {copy.openProfile}
+                    </Link>
+                  ) : null}
+                  {secondaryHref && secondaryLabel ? (
+                    <Link href={secondaryHref} prefetch={false} className="btn-ghost">
+                      {secondaryLabel}
+                    </Link>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+          </aside>
+        </>,
+        document.body,
+      )
+    : null;
 
   return (
     <RequireAuth>
       <section
         className={[
           styles.shell,
+          preferDesktopSplit ? styles.shellDesktopPreferred : '',
           selectedConversation ? styles.shellThreadSelected : '',
           isEmbedded ? styles.shellEmbedded : '',
           className ?? '',
@@ -854,12 +968,17 @@ export function ChatWorkspacePage({
                   const preview = resolveConversationPreview(conversation, copy);
                   const subline = resolveConversationSubline(conversation, currentUserId, copy);
                   const counterpartParticipant = resolveConversationCounterpart(conversation, currentUserId);
+                  const nameId = `conversation-name-${conversation.id}`;
+                  const previewId = `conversation-preview-${conversation.id}`;
+                  const sublineId = `conversation-subline-${conversation.id}`;
                   return (
                     <button
                       key={conversation.id}
                       type="button"
                       role="option"
                       aria-selected={active}
+                      aria-labelledby={nameId}
+                      aria-describedby={`${previewId} ${sublineId}`}
                       className={`${styles.conversationItem} ${active ? styles.conversationItemActive : ''}`.trim()}
                       onClick={() => updateRoute({ conversation: conversation.id, filter })}
                       onKeyDown={(event) => {
@@ -877,7 +996,10 @@ export function ChatWorkspacePage({
 
                       <div className={styles.conversationBody}>
                         <div className={styles.conversationTopRow}>
-                          <p className={`${styles.conversationName} ${unread > 0 ? styles.conversationNameUnread : ''}`.trim()}>
+                          <p
+                            id={nameId}
+                            className={`${styles.conversationName} ${unread > 0 ? styles.conversationNameUnread : ''}`.trim()}
+                          >
                             {displayName}
                           </p>
                           <span className={styles.conversationTime}>
@@ -886,7 +1008,7 @@ export function ChatWorkspacePage({
                         </div>
 
                         <div className={styles.conversationBottomRow}>
-                          <p className={styles.conversationPreview}>
+                          <p id={previewId} className={styles.conversationPreview}>
                             <span className={styles.conversationTag}>
                               {resolveConversationEntityLabel(copy, conversation)}
                             </span>
@@ -899,7 +1021,7 @@ export function ChatWorkspacePage({
                           ) : null}
                         </div>
 
-                        <p className={styles.conversationSubline}>{subline}</p>
+                        <p id={sublineId} className={styles.conversationSubline}>{subline}</p>
                       </div>
                     </button>
                   );
@@ -1100,113 +1222,7 @@ export function ChatWorkspacePage({
           )}
         </section>
 
-        {selectedConversation && isInfoOpen ? (
-          <>
-            <button
-              type="button"
-              className={styles.drawerBackdrop}
-              aria-label={copy.close}
-              onClick={() => setInfoOpen(false)}
-            />
-            <aside className={styles.infoDrawer} role="dialog" aria-modal="true" aria-label={copy.infoTitle}>
-              <div className={styles.infoDrawerHeader}>
-                <h2 className={styles.infoDrawerTitle}>{copy.infoTitle}</h2>
-                <Button
-                  variant="ghost"
-                  fullWidth={false}
-                  onClick={() => setInfoOpen(false)}
-                  className={styles.infoDrawerClose}
-                >
-                  {copy.close}
-                </Button>
-              </div>
-
-              <div className={styles.infoDrawerBody}>
-                <section className={styles.infoSection}>
-                  <p className={styles.infoLabel}>{copy.relatedTo}</p>
-                  <h3 className={styles.infoHeadline}>
-                    {relatedEntityTitle ?? selectedConversation.relatedEntity.id}
-                  </h3>
-                  <div className={styles.infoMetaList}>
-                    <div className={styles.infoMetaRow}>
-                      <span className={styles.infoMetaIcon} aria-hidden="true">
-                        <IconCheck />
-                      </span>
-                      <div>
-                        <p className={styles.infoLabel}>Status</p>
-                        <p className={styles.infoValue}>{contextStatus}</p>
-                      </div>
-                    </div>
-
-                    <div className={styles.infoMetaRow}>
-                      <span className={styles.infoMetaIcon} aria-hidden="true">
-                        <IconCalendar />
-                      </span>
-                      <div>
-                        <p className={styles.infoLabel}>Aktualisiert</p>
-                        <p className={styles.infoValue}>
-                          {formatSidebarTime(selectedConversation.updatedAt, localeTag)}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className={styles.infoMetaRow}>
-                      <span className={styles.infoMetaIcon} aria-hidden="true">
-                        <IconPin />
-                      </span>
-                      <div>
-                        <p className={styles.infoLabel}>Budget</p>
-                        <p className={styles.infoValue}>
-                          {contextAmount != null
-                            ? new Intl.NumberFormat(localeTag, {
-                                style: 'currency',
-                                currency: 'EUR',
-                                maximumFractionDigits: 0,
-                              }).format(contextAmount)
-                            : copy.amountOpen}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                <section className={styles.infoSection}>
-                  <p className={styles.infoLabel}>{copy.participantTitle}</p>
-                  <div className={styles.participantCard}>
-                    <ConversationAvatar
-                      name={counterpartName}
-                      isOnline={counterpart?.isOnline}
-                    />
-                    <div className={styles.participantBody}>
-                      <h3 className={styles.participantName}>{counterpartName}</h3>
-                      <p className={styles.participantMeta}>{counterpartPresence}</p>
-                    </div>
-                  </div>
-                </section>
-
-                {!isEmbedded ? (
-                  <div className={styles.infoActions}>
-                    {requestHref ? (
-                      <Link href={requestHref} prefetch={false} className="btn-secondary">
-                        {copy.openRequest}
-                      </Link>
-                    ) : null}
-                    {profileHref ? (
-                      <Link href={profileHref} prefetch={false} className="btn-ghost">
-                        {copy.openProfile}
-                      </Link>
-                    ) : null}
-                    {secondaryHref && secondaryLabel ? (
-                      <Link href={secondaryHref} prefetch={false} className="btn-ghost">
-                        {secondaryLabel}
-                      </Link>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
-            </aside>
-          </>
-        ) : null}
+        {infoDrawerOverlay}
       </section>
     </RequireAuth>
   );

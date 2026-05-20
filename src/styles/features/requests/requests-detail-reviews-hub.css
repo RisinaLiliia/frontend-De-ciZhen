@@ -107,7 +107,7 @@
     border: 1px solid var(--surface-soft-border);
     border-radius: 999px;
     background: var(--surface-soft-bg-strong);
-    color: var(--c-text-muted);
+    color: color-mix(in oklab, var(--c-text) 68%, var(--c-text-muted) 32%);
     font-size: 12px;
     padding: 6px 10px;
   }
@@ -338,6 +338,7 @@
   #platform-reviews .provider-reviews-hub__sort-btn {
     min-height: 34px;
     padding-inline: 12px;
+    color: var(--c-text);
   }
 
   #platform-reviews .provider-reviews-hub__list {

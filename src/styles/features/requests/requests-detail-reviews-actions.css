@@ -1,6 +1,10 @@
 /* src/styles/features/requests/requests-detail-reviews-actions.css */
 
 @layer components {
+  .request-detail--provider .provider-reviews-hub__sort-btn {
+    color: var(--c-text);
+  }
+
   @media (max-width: 767px) {
     .request-detail--provider .request-detail__panel,
     .request-detail--provider .request-detail__section,
