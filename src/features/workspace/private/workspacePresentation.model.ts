@@ -2,7 +2,7 @@
 
 import type { ComponentProps } from 'react';
 
-import { WorkspaceTopProvidersAside } from '@/features/workspace/requests';
+import { WorkspaceTopProvidersAside } from '@/features/workspace/shared';
 import type { WorkspacePrivateIntroProps } from '@/features/workspace/intro';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';

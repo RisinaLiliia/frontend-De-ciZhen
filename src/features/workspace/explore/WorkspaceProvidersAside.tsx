@@ -4,10 +4,9 @@ import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 
-import { ALL_OPTION_KEY } from '@/features/workspace/requests';
+import { workspaceQK } from '@/features/workspace/data';
+import { ALL_OPTION_KEY, WorkspaceSectionAside } from '@/features/workspace/shared';
 import { resolveWorkspaceRequestsPeriod } from '@/features/workspace/state';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
-import { WorkspaceSectionAside } from '@/features/workspace/requests/components/WorkspaceSectionAside';
 import { getWorkspaceProviders } from '@/lib/api/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';

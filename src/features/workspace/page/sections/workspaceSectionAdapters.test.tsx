@@ -25,7 +25,7 @@ describe('workspaceSectionAdapters', () => {
     expect(model.railPolicy).toBe('custom');
   });
 
-  it('builds explore section for providers as single column', () => {
+  it('builds explore section for providers with explicit content and rail layout', () => {
     const model = buildWorkspaceExploreSectionModel({
       branch: {
         isWorkspaceAuthed: true,
@@ -33,12 +33,44 @@ describe('workspaceSectionAdapters', () => {
         t: (key) => String(key),
       },
       section: 'providers',
-      explore: null,
+      explore: {
+        exploreListDensity: 'single',
+        setExploreListDensity: () => undefined,
+        sidebarNearbyLimit: 2,
+        sidebarTopProvidersLimit: 2,
+        sidebarProofCases: [],
+        proofIndex: 0,
+      },
     });
 
     expect(model.section).toBe('providers');
-    expect(model.layout).toBe('singleColumn');
-    expect(model.railPolicy).toBe('none');
+    expect(model.layout).toBe('withRail');
+    expect(model.railPolicy).toBe('custom');
+    expect(model.aiRail).toBeTruthy();
+  });
+
+  it('builds stats section through the same explicit content and rail contract', () => {
+    const model = buildWorkspaceExploreSectionModel({
+      branch: {
+        isWorkspaceAuthed: true,
+        locale: 'de',
+        t: (key) => String(key),
+      },
+      section: 'stats',
+      explore: {
+        exploreListDensity: 'single',
+        setExploreListDensity: () => undefined,
+        sidebarNearbyLimit: 2,
+        sidebarTopProvidersLimit: 2,
+        sidebarProofCases: [],
+        proofIndex: 0,
+      },
+    });
+
+    expect(model.section).toBe('stats');
+    expect(model.layout).toBe('withRail');
+    expect(model.railPolicy).toBe('custom');
+    expect(model.aiRail).toBeTruthy();
   });
 
   it('builds overview and standard sections through dedicated adapters', () => {
@@ -55,7 +87,7 @@ describe('workspaceSectionAdapters', () => {
     expect(requests.section).toBe('requests');
   });
 
-  it('builds chat section with custom header and custom rail policy', () => {
+  it('builds chat section through the shared section render model', () => {
     const chat = buildWorkspaceChatSectionModel({
       content: <div>chat</div>,
       aiRail: <aside>chat rail</aside>,
@@ -64,6 +96,7 @@ describe('workspaceSectionAdapters', () => {
     expect(chat.section).toBe('chat');
     expect(chat.headerPolicy).toBe('custom');
     expect(chat.railPolicy).toBe('custom');
+    expect(chat.layout).toBe('withRail');
   });
 
   it('builds help section as a single-column support page', () => {

@@ -124,6 +124,22 @@ describe('WorkspaceShell', () => {
     expect(node.getAttribute('data-workspace-tab')).toBe('null');
   });
 
+  it('redirects guest chat access to login while preserving workspace next path', () => {
+    const replace = vi.fn();
+    useRouterMock.mockReturnValue({ replace });
+    mockSearchParams('section=chat&conversation=custom-thread-1');
+    mockAuth('unauthenticated');
+
+    const { container } = render(<WorkspaceShell />);
+
+    expect(screen.queryByTestId('workspace-page-client')).toBeNull();
+    expect(container.querySelector('.min-h-dvh')).not.toBeNull();
+    expect(replace).toHaveBeenCalledWith(
+      '/auth/login?next=%2Fworkspace%3Fsection%3Dchat%26conversation%3Dcustom-thread-1',
+      { scroll: false },
+    );
+  });
+
   it('keeps forced workspace tab precedence when provided explicitly', () => {
     mockSearchParams('section=reviews');
     mockAuth('authenticated');

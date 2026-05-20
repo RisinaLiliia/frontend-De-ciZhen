@@ -11,17 +11,15 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams('section=providers'),
 }));
 
-vi.mock('@/features/workspace/requests', () => ({
+vi.mock('@/features/workspace/shared', () => ({
   WorkspaceTopProvidersAside: () => <div data-testid="workspace-top-providers-aside" />,
-  isWorkspaceTab: (value: string | null) => value === 'my-requests' || value === 'my-offers' || value === 'completed-jobs' || value === 'reviews' || value === 'favorites' || value === 'profile',
+  useIsDesktop: () => true,
 }));
 
 vi.mock('@/features/workspace/explore', () => ({
   WorkspaceExploreSection: () => <div data-testid="workspace-explore-section" />,
-}));
-
-vi.mock('@/features/workspace/requests/useIsDesktop', () => ({
-  useIsDesktop: () => true,
+  WorkspaceExploreRail: () => <div data-testid="workspace-explore-rail" />,
+  isWorkspaceExploreRailSection: (section: string) => section === 'providers' || section === 'profile' || section === 'requests',
 }));
 
 vi.mock('@/features/workspace/shell/WorkspaceShell', () => ({

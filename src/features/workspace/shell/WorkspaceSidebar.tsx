@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import { resolveActiveWorkspaceNavigationSection } from '@/features/workspace/navigation/resolveActiveWorkspaceNavigationSection';
-import { workspaceNavigationItems } from '@/features/workspace/navigation/workspaceNavigation.config';
+import { resolveVisibleWorkspaceNavigationItems } from '@/features/workspace/navigation/workspaceNavigation.config';
 import type { WorkspaceNavigationSection } from '@/features/workspace/navigation/workspaceNavigation.config';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceTab } from '@/features/workspace/state';
@@ -35,8 +35,9 @@ export function WorkspaceSidebar({
     requestsRole: searchParams.get('role'),
     requestsState: searchParams.get('state'),
   });
-  const primaryItems = workspaceNavigationItems.filter((item) => item.group === 'main');
-  const supportItems = workspaceNavigationItems.filter((item) => item.group === 'support');
+  const visibleNavigationItems = resolveVisibleWorkspaceNavigationItems(authStatus === 'authenticated');
+  const primaryItems = visibleNavigationItems.filter((item) => item.group === 'main');
+  const supportItems = visibleNavigationItems.filter((item) => item.group === 'support');
   const profileName = authMe?.name?.trim() || authUser?.name?.trim() || null;
   const profileInitial = (profileName?.charAt(0) ?? 'D').toUpperCase();
   const profileRole = authUser?.role === 'provider' ? 'Provider' : 'Client';

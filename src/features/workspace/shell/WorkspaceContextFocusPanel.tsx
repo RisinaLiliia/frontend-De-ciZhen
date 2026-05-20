@@ -2,9 +2,11 @@
 
 import * as React from 'react';
 
-import { WorkspaceDecisionActionCard } from '@/features/workspace/requests/components/WorkspaceDecisionActionCard';
-import { WorkspaceDecisionRecommendationModal } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationModal';
-import { WorkspaceDecisionRecommendationSection } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationSection';
+import {
+  WorkspaceDecisionActionCard,
+  WorkspaceDecisionRecommendationModal,
+  WorkspaceDecisionRecommendationSection,
+} from '@/features/workspace/ai-rail';
 import { getWorkspaceStatisticsCopy } from '@/features/workspace/stats';
 import { getWorkspaceFocusRecommendationCopy } from '@/features/workspace/shell/workspaceEnvironment.copy';
 import {

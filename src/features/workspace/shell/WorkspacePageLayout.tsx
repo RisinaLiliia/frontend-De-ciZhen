@@ -6,9 +6,7 @@ import {
   resolveWorkspacePublicIntroDecorations,
   type WorkspaceSectionKey,
 } from '@/features/workspace/navigation/workspaceSection.contract';
-import {
-  WorkspaceTopProvidersAside,
-} from '@/features/workspace/requests';
+import { WorkspaceTopProvidersAside, useIsDesktop } from '@/features/workspace/shared';
 import {
   buildWorkspaceExploreSectionModel,
   buildWorkspaceOverviewSectionModel,
@@ -17,7 +15,6 @@ import {
   resolveWorkspaceExploreSection,
   resolveWorkspaceStandardSection,
 } from '@/features/workspace/page/sections/workspaceSectionAdapters';
-import { useIsDesktop } from '@/features/workspace/requests/useIsDesktop';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';

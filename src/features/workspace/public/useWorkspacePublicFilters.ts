@@ -20,7 +20,7 @@ import { trackSearchEvent as postSearchEvent } from '@/lib/api/analytics';
 import { isAnalyticsConsentGranted } from '@/lib/consent/runtime';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { ALL_OPTION_KEY } from '@/features/workspace/requests';
+import { ALL_OPTION_KEY } from '@/features/workspace/shared';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 
 type Translator = (key: I18nKey) => string;

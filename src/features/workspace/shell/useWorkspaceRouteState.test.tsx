@@ -83,22 +83,36 @@ describe('useWorkspaceRouteState', () => {
     expect(node.getAttribute('data-scope')).toBe('my');
   });
 
-  it('keeps profile section as a section-based mode for authenticated users', () => {
+  it('routes authenticated legacy profile alias through the private workspace shell', () => {
     render(<Probe query="section=actions&period=90d&range=90d" isAuthed />);
     const node = screen.getByTestId('state');
 
     expect(node.getAttribute('data-public-section')).toBe('profile');
-    expect(node.getAttribute('data-is-public')).toBe('true');
+    expect(node.getAttribute('data-is-public')).toBe('false');
     expect(node.getAttribute('data-tab')).toBe('my-requests');
   });
 
-  it('keeps profile as the canonical public section', () => {
+  it('routes authenticated profile through the private workspace shell', () => {
     render(<Probe query="section=profile&period=90d&range=90d" isAuthed />);
     const node = screen.getByTestId('state');
 
     expect(node.getAttribute('data-public-section')).toBe('profile');
-    expect(node.getAttribute('data-is-public')).toBe('true');
+    expect(node.getAttribute('data-is-public')).toBe('false');
     expect(node.getAttribute('data-tab')).toBe('my-requests');
+  });
+
+  it('routes authenticated providers and stats through the private workspace shell', () => {
+    const { rerender } = render(<Probe query="section=providers" isAuthed />);
+    let node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('providers');
+    expect(node.getAttribute('data-is-public')).toBe('false');
+
+    rerender(<Probe query="section=stats" isAuthed />);
+    node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-public-section')).toBe('stats');
+    expect(node.getAttribute('data-is-public')).toBe('false');
   });
 
   it('maps legacy reviews section alias to stats', () => {

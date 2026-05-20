@@ -6,9 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { useDeferredMount } from '@/hooks/useDeferredMount';
+import { workspaceQK, WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/overview';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
-import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';

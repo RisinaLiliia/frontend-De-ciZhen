@@ -1,20 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
-import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import {
   workspaceRequestsPanelShell,
   workspaceStatsChartPanelShell,
 } from '@/features/workspace/shared/workspaceSurfaceShell';
-import { WorkspacePublicDemandMapPanel } from '../overview/WorkspacePublicDemandMapPanel';
-import { workspaceQK } from '../requests/queryKeys';
-import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '../requests/workspace.constants';
 import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
 import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { buildDecisionPlan, buildPersonalizedDecisionPlan } from './statisticsDecisionEngine.utils';
@@ -38,12 +33,14 @@ type WorkspaceStatisticsViewProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   model: WorkspaceStatisticsModel;
+  slot?: 'full' | 'content' | 'rail';
 };
 
 export function WorkspaceStatisticsView({
   t,
   locale,
   model,
+  slot = 'full',
 }: WorkspaceStatisticsViewProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -57,7 +54,6 @@ export function WorkspaceStatisticsView({
   const funnelContainerRef = React.useRef<HTMLOListElement | null>(null);
   const statisticsPanelRef = React.useRef<HTMLElement | null>(null);
   const primaryGridRef = React.useRef<HTMLDivElement | null>(null);
-  const mapPanelRef = React.useRef<HTMLElement | null>(null);
   const profilePanelRef = React.useRef<HTMLElement | null>(null);
   const citiesPanelRef = React.useRef<HTMLElement | null>(null);
   const insightsPanelRef = React.useRef<HTMLElement | null>(null);
@@ -236,33 +232,6 @@ export function WorkspaceStatisticsView({
     mode: 'sourceHeight',
     watchKey: `${cityListRows.length}-${cityListPage}-${insights.length}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
   });
-  const {
-    data: publicSummaryOverview,
-    isLoading: isPublicSummaryLoading,
-    isError: isPublicSummaryError,
-  } = useQuery({
-    queryKey: workspaceQK.workspacePublicSummary(WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT),
-    queryFn: () =>
-      getWorkspacePublicOverview({
-        page: 1,
-        limit: 1,
-        cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
-    }),
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-    enabled: !isPersonalizedMode,
-  });
-  const publicCityActivity = publicSummaryOverview?.cityActivity;
-  const publicSummary = publicSummaryOverview?.summary;
-  const showDemandMapPanel = !isPersonalizedMode && Boolean(
-    publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError,
-  );
-  const mapPanelMinHeight = useSyncedPanelMinHeight({
-    sourceRef: statisticsPanelRef,
-    targetRef: mapPanelRef,
-    mode: 'sourceHeight',
-    watchKey: `${showDemandMapPanel ? 1 : 0}-${isError ? 1 : 0}-${isLoading ? 1 : 0}`,
-  });
   const primaryGridMinHeight = useSyncedPanelMinHeight({
     sourceRef: profilePanelRef,
     targetRef: primaryGridRef,
@@ -387,9 +356,8 @@ export function WorkspaceStatisticsView({
     router.push(`${pathname}?${next.toString()}`, { scroll: false });
   }, [decisionPlan.shouldApplyFocus, model, pathname, router, searchParams, selectedOpportunity]);
 
-  return (
-    <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout">
-      <section className="workspace-statistics workspace-statistics__column">
+  const contentSection = (
+    <section className="workspace-statistics workspace-statistics__column">
         <section
           ref={statisticsPanelRef}
           className={workspaceRequestsPanelShell('workspace-statistics__intro')}
@@ -548,25 +516,11 @@ export function WorkspaceStatisticsView({
             </div>
           </>
         )}
-      </section>
+    </section>
+  );
 
-      <aside className="stack-md workspace-statistics__rail">
-        {showDemandMapPanel ? (
-          <div className="workspace-statistics__rail-map">
-            <WorkspacePublicDemandMapPanel
-              t={t}
-              locale={locale}
-              cityActivity={publicCityActivity}
-              summary={publicSummary}
-              isLoading={isPublicSummaryLoading}
-              isError={isPublicSummaryError}
-              panelRef={mapPanelRef}
-              style={mapPanelMinHeight ? { minHeight: `${mapPanelMinHeight}px`, height: `${mapPanelMinHeight}px` } : undefined}
-              className="workspace-statistics__rail-panel workspace-statistics__rail-panel--map"
-            />
-          </div>
-        ) : null}
-
+  const railSection = (
+    <aside className="stack-md workspace-statistics__rail">
         <section
           ref={profilePanelRef}
           className={workspaceStatsChartPanelShell('workspace-statistics__profile-panel')}
@@ -725,7 +679,21 @@ export function WorkspaceStatisticsView({
             )}
           </>
         )}
-      </aside>
+    </aside>
+  );
+
+  if (slot === 'content') {
+    return contentSection;
+  }
+
+  if (slot === 'rail') {
+    return railSection;
+  }
+
+  return (
+    <div className="requests-grid requests-grid--equal-cols workspace-statistics-layout">
+      {contentSection}
+      {railSection}
     </div>
   );
 }

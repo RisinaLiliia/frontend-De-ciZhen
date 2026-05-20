@@ -6,8 +6,8 @@ import { getWorkspaceReviews } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { WorkspaceSectionAside } from '@/features/workspace/shared';
 import { WorkspaceReviewsComposer } from '@/features/workspace/requests/WorkspaceReviewsComposer';
-import { WorkspaceSectionAside } from '@/features/workspace/requests/components/WorkspaceSectionAside';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
 
 type Props = {

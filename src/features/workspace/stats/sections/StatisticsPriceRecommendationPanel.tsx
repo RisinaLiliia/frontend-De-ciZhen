@@ -1,9 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { WorkspaceDecisionActionCard } from '@/features/workspace/requests/components/WorkspaceDecisionActionCard';
-import { WorkspaceDecisionRecommendationModal } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationModal';
-import { WorkspaceDecisionRecommendationSection } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationSection';
+import {
+  WorkspaceDecisionActionCard,
+  WorkspaceDecisionRecommendationModal,
+  WorkspaceDecisionRecommendationSection,
+} from '@/features/workspace/ai-rail';
 import { workspaceStatsChartPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import { buildPriceStrategyOptions } from '../statisticsDecisionEngine.utils';

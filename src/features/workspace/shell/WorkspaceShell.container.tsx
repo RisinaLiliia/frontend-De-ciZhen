@@ -42,6 +42,7 @@ export function WorkspaceShell({
     ? 'stats'
     : resolvePublicWorkspaceSection(sectionParam);
   const resolvedWorkspaceTab = forcedWorkspaceTab;
+  const isGuestChatSection = auth.status === 'unauthenticated' && resolvedSection === 'chat';
 
   React.useEffect(() => {
     setBootstrapRefreshIntent(shouldAttemptRefreshOnBootstrap());
@@ -114,7 +115,15 @@ export function WorkspaceShell({
     );
   }, [auth.status, resolvedSection, router, searchParams]);
 
-  if (shouldBlockOnAuthBootstrap) {
+  React.useEffect(() => {
+    if (!isGuestChatSection) return;
+
+    const nextQuery = searchParams.toString();
+    const nextPath = nextQuery ? `/workspace?${nextQuery}` : '/workspace?section=chat';
+    router.replace(`/auth/login?next=${encodeURIComponent(nextPath)}`, { scroll: false });
+  }, [isGuestChatSection, router, searchParams]);
+
+  if (shouldBlockOnAuthBootstrap || isGuestChatSection) {
     return <LoadingScreen />;
   }
 

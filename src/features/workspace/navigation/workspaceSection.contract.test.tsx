@@ -30,10 +30,21 @@ describe('workspaceSection.contract', () => {
     });
   });
 
-  it('keeps stats as single-column and rail-free by default', () => {
+  it('keeps providers and profile intros free from legacy quick actions on mobile too', () => {
+    expect(resolveWorkspacePublicIntroDecorations({ section: 'providers', isDesktop: false })).toEqual({
+      showDemandMap: false,
+      showQuickAction: false,
+    });
+    expect(resolveWorkspacePublicIntroDecorations({ section: 'profile', isDesktop: false })).toEqual({
+      showDemandMap: false,
+      showQuickAction: false,
+    });
+  });
+
+  it('keeps stats on the shared with-rail layout contract', () => {
     const contract = getWorkspaceSectionContract('stats');
 
-    expect(contract.defaultLayout).toBe('singleColumn');
+    expect(contract.defaultLayout).toBe('withRail');
     expect(contract.railPolicy).toBe('none');
   });
 

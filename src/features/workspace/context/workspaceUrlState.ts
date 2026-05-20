@@ -51,6 +51,11 @@ export function useWorkspaceRouteState({
   const isChatSection = resolvedPublicSection === 'chat';
   const isSettingsSection = resolvedPublicSection === 'settings';
   const isHelpSection = resolvedPublicSection === 'help';
+  const isAuthedShellSection =
+    isAuthed &&
+    (resolvedPublicSection === 'providers'
+      || resolvedPublicSection === 'stats'
+      || resolvedPublicSection === 'profile');
 
   const activePublicSection = forcedWorkspaceTab || hasExplicitWorkspaceTab
     ? null
@@ -60,7 +65,8 @@ export function useWorkspaceRouteState({
     && !isPrivateRequestsScope
     && !isChatSection
     && !isSettingsSection
-    && !isHelpSection;
+    && !isHelpSection
+    && !isAuthedShellSection;
 
   const activeWorkspaceTab = React.useMemo(
     () => forcedWorkspaceTab ?? resolveWorkspaceTab(tabParam),

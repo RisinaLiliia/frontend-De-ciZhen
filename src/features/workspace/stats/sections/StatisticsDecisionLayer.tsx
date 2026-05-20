@@ -2,8 +2,10 @@
 
 import * as React from 'react';
 
-import { WorkspaceDecisionRecommendationModal } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationModal';
-import { WorkspaceDecisionRecommendationSection } from '@/features/workspace/requests/components/WorkspaceDecisionRecommendationSection';
+import {
+  WorkspaceDecisionRecommendationModal,
+  WorkspaceDecisionRecommendationSection,
+} from '@/features/workspace/ai-rail';
 import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
 import type { WorkspaceDecisionPlan } from '../statisticsDecisionEngine.utils';
 import { StatisticsDecisionAiCard } from '../components/StatisticsDecisionAiCard';

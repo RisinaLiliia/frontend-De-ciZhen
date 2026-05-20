@@ -63,18 +63,18 @@ const WORKSPACE_SECTION_CONTRACTS: Record<WorkspaceSectionKey, WorkspaceSectionC
   },
   providers: {
     key: 'providers',
-    defaultLayout: 'singleColumn',
+    defaultLayout: 'withRail',
     railPolicy: 'none',
     headerPolicy: 'workspace',
     filterPolicy: 'sharedContext',
     intro: {
-      hideDemandMapOnDesktop: true,
-      hideQuickActionOnDesktop: true,
+      hideDemandMapAlways: true,
+      hideQuickActionAlways: true,
     },
   },
   stats: {
     key: 'stats',
-    defaultLayout: 'singleColumn',
+    defaultLayout: 'withRail',
     railPolicy: 'none',
     headerPolicy: 'workspace',
     filterPolicy: 'sharedContext',
@@ -85,13 +85,13 @@ const WORKSPACE_SECTION_CONTRACTS: Record<WorkspaceSectionKey, WorkspaceSectionC
   },
   profile: {
     key: 'profile',
-    defaultLayout: 'singleColumn',
+    defaultLayout: 'withRail',
     railPolicy: 'none',
     headerPolicy: 'workspace',
     filterPolicy: 'sharedContext',
     intro: {
-      hideDemandMapOnDesktop: true,
-      hideQuickActionOnDesktop: true,
+      hideDemandMapAlways: true,
+      hideQuickActionAlways: true,
     },
   },
   settings: {

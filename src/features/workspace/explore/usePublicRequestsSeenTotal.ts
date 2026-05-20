@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX } from '@/features/workspace/requests';
+import { WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX } from '@/features/workspace/shared';
 
 type Args = {
   isAuthed: boolean;

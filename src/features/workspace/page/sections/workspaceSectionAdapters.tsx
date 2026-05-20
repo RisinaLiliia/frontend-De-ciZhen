@@ -2,11 +2,16 @@
 
 import type * as React from 'react';
 
-import { WorkspaceExploreSection } from '@/features/workspace/explore';
+import {
+  WorkspaceExploreRail,
+  WorkspaceExploreSection,
+  isWorkspaceExploreRailSection,
+} from '@/features/workspace/explore';
 import { buildWorkspaceSectionRenderModel } from '@/features/workspace/navigation/workspaceSection.contract';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import { WorkspaceStatisticsExperience } from '@/features/workspace/stats';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import type { ProofCase } from '@/types/home';
 
@@ -55,10 +60,6 @@ type BuildWorkspaceSettingsSectionModelArgs = {
   content: React.ReactNode;
 };
 
-type BuildWorkspaceProfileSectionModelArgs = {
-  content: React.ReactNode;
-};
-
 type BuildWorkspaceHelpSectionModelArgs = {
   content: React.ReactNode;
 };
@@ -95,12 +96,48 @@ export function buildWorkspaceExploreSectionModel({
   section,
   explore,
 }: BuildWorkspaceExploreSectionModelArgs): WorkspaceSectionRenderModel {
+  if (section === 'stats') {
+    return buildWorkspaceSectionRenderModel({
+      section,
+      content: (
+        <WorkspaceStatisticsExperience
+          isWorkspaceAuthed={branch.isWorkspaceAuthed}
+          t={branch.t}
+          locale={branch.locale}
+          slot="content"
+        />
+      ),
+      aiRail: (
+        <WorkspaceStatisticsExperience
+          isWorkspaceAuthed={branch.isWorkspaceAuthed}
+          t={branch.t}
+          locale={branch.locale}
+          slot="rail"
+        />
+      ),
+      layout: 'withRail',
+    });
+  }
+
+  const rail = explore && isWorkspaceExploreRailSection(section) ? (
+    <WorkspaceExploreRail
+      activeSection={section}
+      t={branch.t}
+      locale={branch.locale}
+      exploreListDensity={explore.exploreListDensity}
+      sidebarNearbyLimit={explore.sidebarNearbyLimit}
+      sidebarTopProvidersLimit={explore.sidebarTopProvidersLimit}
+      sidebarProofCases={explore.sidebarProofCases}
+      proofIndex={explore.proofIndex}
+      trustPanelClassName={explore.trustPanelClassName}
+    />
+  ) : undefined;
+
   return buildWorkspaceSectionRenderModel({
     section,
     content: explore ? (
       <WorkspaceExploreSection
         activeSection={section}
-        isWorkspaceAuthed={branch.isWorkspaceAuthed}
         t={branch.t}
         locale={branch.locale}
         onListDensityChange={explore.setExploreListDensity}
@@ -115,8 +152,10 @@ export function buildWorkspaceExploreSectionModel({
         initialPublicRequestsLoading={explore.initialPublicRequestsLoading}
         initialPublicRequestsError={explore.initialPublicRequestsError}
         renderIntro={false}
+        renderRail={false}
       />
     ) : null,
+    aiRail: rail,
   });
 }
 
@@ -151,8 +190,6 @@ export function buildWorkspaceChatSectionModel({
     section: 'chat',
     content,
     aiRail,
-    headerPolicy: 'custom',
-    railPolicy: 'custom',
   });
 }
 
@@ -164,16 +201,6 @@ export function buildWorkspaceSettingsSectionModel({
     content,
     headerPolicy: 'custom',
     filterPolicy: 'none',
-    railPolicy: 'none',
-  });
-}
-
-export function buildWorkspaceProfileSectionModel({
-  content,
-}: BuildWorkspaceProfileSectionModelArgs): WorkspaceSectionRenderModel {
-  return buildWorkspaceSectionRenderModel({
-    section: 'profile',
-    content,
     railPolicy: 'none',
   });
 }

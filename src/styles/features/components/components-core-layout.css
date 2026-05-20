@@ -16,6 +16,16 @@
     gap: var(--layout-section-gap);
   }
 
+  .workspace-explore-grid {
+    display: grid;
+    gap: var(--layout-section-gap);
+    min-width: 0;
+  }
+
+  .workspace-explore-grid--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   @media (max-width: 1023px) {
     .hide-below-desktop {
       display: none !important;
@@ -32,6 +42,22 @@
     .requests-grid {
       grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
       align-items: start;
+    }
+
+    .workspace-explore-grid--with-rail {
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+      align-items: stretch;
+    }
+
+    .workspace-explore-grid--with-rail > div {
+      display: flex;
+      align-items: stretch;
+      min-height: 100%;
+    }
+
+    .workspace-explore-grid--with-rail > div > * {
+      flex: 1 1 auto;
+      min-height: 100%;
     }
 
     .requests-grid--balanced,

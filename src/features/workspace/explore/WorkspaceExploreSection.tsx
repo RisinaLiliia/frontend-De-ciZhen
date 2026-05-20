@@ -5,13 +5,13 @@ import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
-import { WorkspaceStatisticsExperience } from '@/features/workspace/stats';
-import { WorkspaceOverlaySurface } from '@/features/workspace/shared/WorkspaceOverlaySurface';
-import { WorkspaceSectionErrorBoundary } from '@/features/workspace/shared/WorkspaceSectionErrorBoundary';
-import { useIsDesktop } from '@/features/workspace/requests/useIsDesktop';
+import {
+  WorkspaceOverlaySurface,
+  useIsDesktop,
+} from '@/features/workspace/shared';
 import { resolveWorkspaceViewerMode } from '@/features/workspace/state';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
-import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import { WorkspaceExploreRail, isWorkspaceExploreRailSection } from './WorkspaceExploreRail';
@@ -28,7 +28,7 @@ const ExploreRequestsPanel = dynamic(
 );
 
 const ProfileOnboardingPanel = dynamic(
-  () => import('@/features/workspace/requests/WorkspaceProfileOnboardingForm').then((mod) => mod.WorkspaceProfileOnboardingForm),
+  () => import('@/features/profile/onboarding').then((mod) => mod.WorkspaceProfileOnboardingForm),
   {
     loading: () => (
       <section className="panel">
@@ -41,7 +41,6 @@ const ProfileOnboardingPanel = dynamic(
 type WorkspaceExploreSectionProps = {
   intro?: React.ReactNode | null;
   activeSection: PublicWorkspaceSection;
-  isWorkspaceAuthed: boolean;
   t: (key: I18nKey) => string;
   locale: Locale;
   onListDensityChange: (value: 'single' | 'double') => void;
@@ -56,12 +55,12 @@ type WorkspaceExploreSectionProps = {
   initialPublicRequestsLoading?: boolean;
   initialPublicRequestsError?: boolean;
   renderIntro?: boolean;
+  renderRail?: boolean;
 };
 
 export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSection({
   intro,
   activeSection,
-  isWorkspaceAuthed,
   t,
   locale,
   onListDensityChange,
@@ -76,12 +75,18 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
   initialPublicRequestsLoading,
   initialPublicRequestsError,
   renderIntro = true,
+  renderRail = true,
 }: WorkspaceExploreSectionProps) {
   const searchParams = useSearchParams();
   const viewerMode = resolveWorkspaceViewerMode(searchParams.get('viewerMode'));
   const isDesktop = useIsDesktop();
   const isRailSection = isDesktop && isWorkspaceExploreRailSection(activeSection);
-  const exploreGridClassName = 'requests-grid requests-grid--equal-cols';
+  const exploreGridClassName = [
+    'workspace-explore-grid',
+    renderRail && isDesktop ? 'workspace-explore-grid--with-rail' : 'workspace-explore-grid--single',
+  ]
+    .filter(Boolean)
+    .join(' ');
   const shouldRenderIntro = renderIntro && intro != null;
   const renderedIntro = React.useMemo(() => {
     if (!shouldRenderIntro || !isRailSection || !React.isValidElement(intro)) return intro;
@@ -97,23 +102,6 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
       },
     );
   }, [intro, isRailSection, shouldRenderIntro]);
-
-  if (activeSection === 'stats') {
-    return (
-      <WorkspaceSectionErrorBoundary logLabel="WorkspaceExploreSection error boundary" fallback={(
-        <section className="panel">
-          <div className="panel__body">{t(I18N_KEYS.requestsPage.statsLoadError)}</div>
-        </section>
-      )}>
-        <WorkspaceStatisticsExperience
-          intro={shouldRenderIntro ? renderedIntro : null}
-          isWorkspaceAuthed={isWorkspaceAuthed}
-          t={t}
-          locale={locale}
-        />
-      </WorkspaceSectionErrorBoundary>
-    );
-  }
 
   const content = (
     <div className={exploreGridClassName}>
@@ -138,7 +126,7 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
         )}
       </div>
 
-      {isDesktop ? (
+      {isDesktop && renderRail ? (
         <WorkspaceExploreRail
           activeSection={activeSection}
           t={t}

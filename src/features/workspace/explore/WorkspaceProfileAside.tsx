@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-import { WorkspaceSectionAside } from '@/features/workspace/requests/components/WorkspaceSectionAside';
+import { WorkspaceSectionAside } from '@/features/workspace/shared';
 import { getWorkspaceActions } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import type { I18nKey } from '@/lib/i18n/keys';

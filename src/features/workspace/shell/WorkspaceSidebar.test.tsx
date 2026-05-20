@@ -47,6 +47,8 @@ describe('WorkspaceSidebar', () => {
 
     expect(screen.queryByRole('button', { name: 'auth.loginCta' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'auth.registerCta' })).toBeNull();
+    expect(screen.queryByRole('link', { name: /Angebote/i })).toBeNull();
+    expect(screen.queryByRole('link', { name: /Aufträge/i })).toBeNull();
   });
 
   it('allows explicit active navigation override for chat shell pages', () => {
@@ -64,9 +66,13 @@ describe('WorkspaceSidebar', () => {
 
     const chatLink = screen.getByRole('link', { name: /Nachrichten/i });
     const requestsLink = screen.getByRole('link', { name: /Anfragen/i });
+    const offersLink = screen.getByRole('link', { name: /Angebote/i });
+    const contractsLink = screen.getByRole('link', { name: /Aufträge/i });
 
     expect(chatLink.className).toContain('workspace-sidebar__item--active');
     expect(requestsLink.className).not.toContain('workspace-sidebar__item--active');
+    expect(offersLink).toBeTruthy();
+    expect(contractsLink).toBeTruthy();
     expect(screen.getByText('Lilia Müller')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'auth.logoutLabel' })).toBeNull();
   });

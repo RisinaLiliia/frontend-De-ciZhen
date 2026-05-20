@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  resolveVisibleWorkspaceNavigationItems,
   workspaceChatHref,
   workspaceNavigationItems,
 } from '@/features/workspace/navigation/workspaceNavigation.config';
@@ -33,6 +34,16 @@ describe('workspaceNavigationItems', () => {
     expect(contractsItem).toBeDefined();
     expect(contractsItem?.section).toBe('contracts');
     expect(contractsItem?.href).toBe('/workspace?section=requests&scope=my&state=execution&period=90d&range=90d');
+  });
+
+  it('hides Angebote and Aufträge from guest navigation and restores them for authenticated users', () => {
+    const guestLabels = resolveVisibleWorkspaceNavigationItems(false).map((item) => item.label);
+    const authedLabels = resolveVisibleWorkspaceNavigationItems(true).map((item) => item.label);
+
+    expect(guestLabels).not.toContain('Angebote');
+    expect(guestLabels).not.toContain('Aufträge');
+    expect(authedLabels).toContain('Angebote');
+    expect(authedLabels).toContain('Aufträge');
   });
 
   it('routes Profil sidebar item to the canonical profile section', () => {

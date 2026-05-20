@@ -14,7 +14,7 @@ import {
   buildWorkspacePrivateSourcesRequestsStateArgs,
   resolveWorkspacePrivateSourcesResult,
 } from './workspacePrivateSources.model';
-import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
+import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
 
 describe('workspacePrivateSources.model', () => {
   it('disables private catalog loading for actions and unified private requests', () => {

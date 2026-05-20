@@ -72,6 +72,6 @@ export { WorkspaceMobilePrimaryAction } from './private/WorkspaceMobilePrimaryAc
 
 export { useWorkspacePublicFilters } from './public/useWorkspacePublicFilters';
 export { useWorkspacePublicRequestsState } from './public/useWorkspacePublicRequestsState';
-export { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from './requests';
+export { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT, workspaceQK } from './data';
 
 export type { WorkspaceTab } from './requests';

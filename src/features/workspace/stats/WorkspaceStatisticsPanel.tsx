@@ -10,12 +10,14 @@ type WorkspaceStatisticsPanelProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   model?: WorkspaceStatisticsModel;
+  slot?: 'full' | 'content' | 'rail';
 };
 
 export function WorkspaceStatisticsPanel({
   t,
   locale,
   model: providedModel,
+  slot = 'full',
 }: WorkspaceStatisticsPanelProps) {
   if (providedModel) {
     return (
@@ -23,16 +25,18 @@ export function WorkspaceStatisticsPanel({
         t={t}
         locale={locale}
         model={providedModel}
+        slot={slot}
       />
     );
   }
 
-  return <WorkspaceStatisticsPanelWithModel t={t} locale={locale} />;
+  return <WorkspaceStatisticsPanelWithModel t={t} locale={locale} slot={slot} />;
 }
 
 function WorkspaceStatisticsPanelWithModel({
   t,
   locale,
+  slot = 'full',
 }: Omit<WorkspaceStatisticsPanelProps, 'model'>) {
   const model = useDecisionDashboardModel({ locale });
   return (
@@ -40,6 +44,7 @@ function WorkspaceStatisticsPanelWithModel({
       t={t}
       locale={locale}
       model={model}
+      slot={slot}
     />
   );
 }

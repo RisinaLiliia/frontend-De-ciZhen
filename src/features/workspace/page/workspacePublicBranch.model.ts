@@ -8,7 +8,7 @@ import type { WorkspacePublicOverviewDto } from '@/lib/api/dto/workspace';
 import { getPlatformReviewsOverview } from '@/lib/api/reviews';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import {
   WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
   WorkspacePageLayout,
@@ -181,6 +181,10 @@ export function buildWorkspacePublicIntroProps({
   isSummaryError,
 }: BuildPublicIntroArgs): PublicIntroProps {
   const isRequestsSection = activePublicSection === 'requests';
+  const isExploreSectionWithoutLegacyQuickAction =
+    activePublicSection === 'providers'
+    || activePublicSection === 'profile'
+    || activePublicSection === 'stats';
 
   return {
     t: branch.t,
@@ -191,9 +195,9 @@ export function buildWorkspacePublicIntroProps({
     summary: isRequestsSection ? null : platformSummary,
     isMapLoading: isRequestsSection ? false : isSummaryLoading,
     isMapError: isRequestsSection ? false : isSummaryError,
-    showDemandMap: activePublicSection === 'stats',
-    hideDemandMapOnMobile: activePublicSection !== 'stats',
+    showDemandMap: false,
+    hideDemandMapOnMobile: true,
     quickActionHref: '/request/create',
-    showQuickAction: activePublicSection !== 'stats' && !isRequestsSection,
+    showQuickAction: !isRequestsSection && !isExploreSectionWithoutLegacyQuickAction,
   };
 }

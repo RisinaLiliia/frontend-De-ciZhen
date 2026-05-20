@@ -11,7 +11,7 @@ import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspa
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspaceData, useWorkspaceProviderSupportData } from '@/features/workspace/requests';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
-import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/requests/workspace.constants';
+import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
 import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';

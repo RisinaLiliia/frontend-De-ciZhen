@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import { getWorkspacePrivateOverview } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { type I18nKey } from '@/lib/i18n/keys';
@@ -19,11 +19,13 @@ export function WorkspaceStatisticsExperience({
   isWorkspaceAuthed,
   t,
   locale,
+  slot = 'full',
 }: {
   intro?: React.ReactNode | null;
   isWorkspaceAuthed: boolean;
   t: (key: I18nKey) => string;
   locale: Locale;
+  slot?: 'full' | 'content' | 'rail';
 }) {
   const searchParams = useSearchParams();
   const privateOverviewPeriod: WorkspaceStatisticsRange = (() => {
@@ -65,6 +67,7 @@ export function WorkspaceStatisticsExperience({
         t={t}
         locale={locale}
         model={model}
+        slot={slot}
       />
     </div>
   );

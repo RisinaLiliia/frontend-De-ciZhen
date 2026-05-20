@@ -6,11 +6,13 @@ import { RequestsFilterSelect } from '@/components/requests/RequestsFilterSelect
 import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
-import { WorkspaceChipToggleGroup } from '@/features/workspace/requests/WorkspaceChipToggleGroup';
 import { IconFilter } from '@/components/ui/icons/icons';
-import { WorkspaceButton } from '@/features/workspace/shared/WorkspaceButton';
-import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
-import { WorkspaceFilterBar } from '@/features/workspace/shared/WorkspaceFilterBar';
+import {
+  WorkspaceButton,
+  WorkspaceChipToggleGroup,
+  WorkspaceFilterBar,
+  WorkspaceMobileFiltersSheet,
+} from '@/features/workspace/shared';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 
