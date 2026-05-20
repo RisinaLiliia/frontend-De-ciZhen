@@ -8,7 +8,7 @@ import {
   buildWorkspaceProfileSaveFormData,
   resolveAvatarInitial,
   resolveCategoryServiceKeys,
-} from './workspaceProfileOnboarding.model';
+} from '@/features/profile/onboarding/workspaceProfileOnboarding.model';
 
 describe('workspaceProfileOnboarding.model', () => {
   it('builds sorted city and category options', () => {
