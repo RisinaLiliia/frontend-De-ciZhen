@@ -13,8 +13,8 @@ import {
   fillWorkspaceModeTemplate,
   getWorkspaceChipValue,
   joinWorkspaceContext,
-  useWorkspaceSharedContext,
-} from '@/features/workspace/shell/useWorkspaceSharedContext';
+  useWorkspaceContext,
+} from '@/features/workspace/context';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -39,7 +39,7 @@ export function WorkspaceContextFocusPanel({
   className?: string;
   panelRef?: React.Ref<HTMLElement>;
 }) {
-  const model = useWorkspaceSharedContext({
+  const model = useWorkspaceContext({
     t,
     locale,
     activePublicSection,

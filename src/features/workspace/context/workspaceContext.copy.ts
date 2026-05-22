@@ -1,6 +1,6 @@
 'use client';
 
-import type { FilterOption } from '@/components/requests/requestsFilters.types';
+import type { Option as FilterOption } from '@/components/ui/Select';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate } from '@/lib/i18n/t';
 import type { Locale } from '@/lib/i18n/t';

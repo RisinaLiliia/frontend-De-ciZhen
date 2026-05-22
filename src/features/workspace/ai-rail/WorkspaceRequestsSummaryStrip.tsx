@@ -39,25 +39,25 @@ export function WorkspaceRequestsSummaryStrip({
   className,
 }: WorkspaceRequestsSummaryStripProps) {
   return (
-    <div className={['my-requests-summary', className ?? ''].filter(Boolean).join(' ')}>
+    <div className={['workspace-summary-grid', className ?? ''].filter(Boolean).join(' ')}>
       {items.map((item) => (
         <button
           key={item.key}
           type="button"
           className={[
-            'my-requests-summary__card',
+            'workspace-summary-grid__card',
             `is-${item.key}`,
             item.isHighlighted ? 'is-active' : '',
           ].filter(Boolean).join(' ')}
           onClick={() => onSelect(item.key)}
           aria-pressed={item.isHighlighted}
         >
-          <span className="my-requests-summary__label">{item.label}</span>
-          <strong className="my-requests-summary__value">{item.value}</strong>
-          <span className="my-requests-summary__helper">
+          <span className="workspace-summary-grid__label">{item.label}</span>
+          <strong className="workspace-summary-grid__value">{item.value}</strong>
+          <span className="workspace-summary-grid__helper">
             {buildHelperText(locale, item.key, variant)}
           </span>
-          <span className="my-requests-summary__accent" aria-hidden="true" />
+          <span className="workspace-summary-grid__accent" aria-hidden="true" />
         </button>
       ))}
     </div>
@@ -70,9 +70,9 @@ export function WorkspaceRequestsSummaryStripSkeleton({
   className?: string;
 }) {
   return (
-    <div className={['my-requests-summary', className ?? ''].filter(Boolean).join(' ')}>
+    <div className={['workspace-summary-grid', className ?? ''].filter(Boolean).join(' ')}>
       {Array.from({ length: 4 }).map((_, index) => (
-        <div key={`summary-skeleton-${index}`} className="my-requests-summary__card">
+        <div key={`summary-skeleton-${index}`} className="workspace-summary-grid__card">
           <div className="skeleton h-4 w-20" />
           <div className="skeleton h-7 w-12" />
         </div>

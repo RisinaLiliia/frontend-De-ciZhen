@@ -87,26 +87,26 @@
     gap: 16px;
   }
 
-  .my-requests-summary {
+  .workspace-summary-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
   }
 
-  .my-requests-summary.my-requests-summary--mobile-only {
+  .workspace-summary-grid.workspace-summary-grid--mobile-only {
     display: none !important;
   }
 
-  .my-requests-summary.my-requests-summary--rail {
+  .workspace-summary-grid.workspace-summary-grid--rail {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
-  .my-requests-summary--rail .my-requests-summary__card {
+  .workspace-summary-grid--rail .workspace-summary-grid__card {
     min-height: 136px;
     padding: 14px 16px;
   }
 
-  .my-requests-summary__card {
+  .workspace-summary-grid__card {
     display: grid;
     grid-template-rows: auto auto 1fr auto;
     gap: 10px;
@@ -130,7 +130,7 @@
       transform 160ms ease;
   }
 
-  .my-requests-summary__card:hover {
+  .workspace-summary-grid__card:hover {
     transform: translateY(-2px);
     border-color: color-mix(in srgb, var(--brand) 24%, var(--border-default));
     box-shadow:
@@ -138,7 +138,7 @@
       0 16px 34px color-mix(in srgb, #102040 8%, transparent);
   }
 
-  .my-requests-summary__card.is-active {
+  .workspace-summary-grid__card.is-active {
     border-color: var(--surface-decision-active-border);
     background: var(--surface-decision-active-bg);
     box-shadow:
@@ -147,7 +147,7 @@
       var(--surface-card-shadow-hover);
   }
 
-  .my-requests-summary__card:focus-visible {
+  .workspace-summary-grid__card:focus-visible {
     outline: none;
     border-color: var(--surface-decision-active-border);
     box-shadow:
@@ -156,11 +156,11 @@
       var(--surface-card-shadow-hover);
   }
 
-  .my-requests-summary__card.is-active .my-requests-summary__value {
+  .workspace-summary-grid__card.is-active .workspace-summary-grid__value {
     color: var(--surface-decision-active-value);
   }
 
-  .my-requests-summary__label {
+  .workspace-summary-grid__label {
     color: color-mix(in srgb, var(--text-muted) 92%, #5d6b86 8%);
     font-size: 12px;
     font-weight: 700;
@@ -169,7 +169,7 @@
     text-transform: uppercase;
   }
 
-  .my-requests-summary__value {
+  .workspace-summary-grid__value {
     color: color-mix(in srgb, var(--text-default) 94%, #081120 6%);
     font-size: clamp(34px, 4vw, 46px);
     font-weight: 700;
@@ -177,14 +177,14 @@
     letter-spacing: -0.04em;
   }
 
-  .my-requests-summary__helper {
+  .workspace-summary-grid__helper {
     align-self: end;
     color: color-mix(in srgb, var(--text-muted) 88%, #70809d 12%);
     font-size: 13px;
     line-height: 1.3;
   }
 
-  .my-requests-summary__accent {
+  .workspace-summary-grid__accent {
     width: 100%;
     height: 4px;
     border-radius: 999px;
@@ -192,18 +192,18 @@
     transition: background-color 160ms ease, transform 160ms ease;
   }
 
-  .my-requests-summary__card.is-all .my-requests-summary__accent {
+  .workspace-summary-grid__card.is-all .workspace-summary-grid__accent {
     background: color-mix(in oklab, var(--c-border) 64%, var(--c-text-muted) 36%);
   }
 
-  .my-requests-summary__card.is-attention {
+  .workspace-summary-grid__card.is-attention {
     background:
       linear-gradient(180deg, color-mix(in srgb, white 62%, transparent), transparent 42%),
       radial-gradient(circle at top right, color-mix(in srgb, #9fb4ff 16%, transparent), transparent 54%),
       color-mix(in srgb, var(--surface-base) 78%, #eef4ff 22%);
   }
 
-  .my-requests-summary__card.is-attention .my-requests-summary__accent {
+  .workspace-summary-grid__card.is-attention .workspace-summary-grid__accent {
     background: linear-gradient(
       90deg,
       color-mix(in oklab, var(--c-accent) 48%, white 52%) 0%,
@@ -211,14 +211,14 @@
     );
   }
 
-  .my-requests-summary__card.is-execution {
+  .workspace-summary-grid__card.is-execution {
     background:
       linear-gradient(180deg, color-mix(in srgb, white 66%, transparent), transparent 42%),
       radial-gradient(circle at top right, color-mix(in srgb, #93c5fd 14%, transparent), transparent 54%),
       color-mix(in srgb, var(--surface-base) 80%, #edf7ff 20%);
   }
 
-  .my-requests-summary__card.is-execution .my-requests-summary__accent {
+  .workspace-summary-grid__card.is-execution .workspace-summary-grid__accent {
     background: linear-gradient(
       90deg,
       color-mix(in oklab, var(--c-primary) 34%, white 66%) 0%,
@@ -226,14 +226,14 @@
     );
   }
 
-  .my-requests-summary__card.is-completed {
+  .workspace-summary-grid__card.is-completed {
     background:
       linear-gradient(180deg, color-mix(in srgb, white 68%, transparent), transparent 42%),
       radial-gradient(circle at top right, color-mix(in srgb, #b7dec8 16%, transparent), transparent 54%),
       color-mix(in srgb, var(--surface-base) 82%, #f2f8f2 18%);
   }
 
-  .my-requests-summary__card.is-completed .my-requests-summary__accent {
+  .workspace-summary-grid__card.is-completed .workspace-summary-grid__accent {
     background: linear-gradient(
       90deg,
       color-mix(in oklab, var(--c-success) 42%, white 58%) 0%,
@@ -241,7 +241,7 @@
     );
   }
 
-  .my-requests-summary__card.is-active .my-requests-summary__accent {
+  .workspace-summary-grid__card.is-active .workspace-summary-grid__accent {
     transform: scaleX(1.02);
   }
 
@@ -947,20 +947,20 @@
     opacity: 0.82;
   }
 
-  .my-decision-panel {
+  .workspace-decision-panel {
     display: grid;
     gap: 14px;
   }
 
-  .my-decision-panel__summary,
-  .my-decision-panel__queue,
-  .my-decision-panel__overview,
+  .workspace-decision-panel__summary,
+  .workspace-decision-panel__queue,
+  .workspace-decision-panel__overview,
   .my-decision-mode {
     display: grid;
     gap: 12px;
   }
 
-  .my-decision-panel__summary {
+  .workspace-decision-panel__summary {
     padding: 20px;
     border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
     border-radius: 22px;
@@ -968,7 +968,7 @@
     box-shadow: var(--surface-card-shadow);
   }
 
-  .my-decision-panel__eyebrow,
+  .workspace-decision-panel__eyebrow,
   .my-decision-mode__eyebrow {
     color: var(--text-muted);
     font-size: 12px;
@@ -978,33 +978,33 @@
     text-transform: uppercase;
   }
 
-  .my-decision-panel__count {
+  .workspace-decision-panel__count {
     font-size: clamp(34px, 4vw, 48px);
     line-height: 0.95;
     letter-spacing: -0.04em;
   }
 
-  .my-decision-panel__title,
+  .workspace-decision-panel__title,
   .my-decision-mode__title {
     margin: 0;
     font-size: 20px;
     line-height: 1.2;
   }
 
-  .my-decision-panel__text,
-  .my-decision-panel__empty,
-  .my-decision-panel__hint,
+  .workspace-decision-panel__text,
+  .workspace-decision-panel__empty,
+  .workspace-decision-panel__hint,
   .my-decision-mode__progress {
     margin: 0;
     color: var(--text-muted);
   }
 
-  .my-decision-panel__primary {
+  .workspace-decision-panel__primary {
     width: 100%;
     justify-content: center;
   }
 
-  .my-decision-panel__primary.workspace-ai-card__action.auth-social__btn {
+  .workspace-decision-panel__primary.workspace-ai-card__action.auth-social__btn {
     width: 100%;
     min-width: 0;
     min-height: 42px;
@@ -1012,8 +1012,8 @@
     box-sizing: border-box;
   }
 
-  .my-decision-panel__primary:focus-visible,
-  .my-decision-panel__queue-item:focus-visible {
+  .workspace-decision-panel__primary:focus-visible,
+  .workspace-decision-panel__queue-item:focus-visible {
     outline: none;
     border-color: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
     box-shadow:
@@ -1021,14 +1021,14 @@
       0 14px 30px color-mix(in oklab, var(--c-ink) 6%, transparent);
   }
 
-  .my-decision-panel__section-head {
+  .workspace-decision-panel__section-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
   }
 
-  .my-decision-panel__queue-list {
+  .workspace-decision-panel__queue-list {
     display: grid;
     gap: 10px;
     margin: 0;
@@ -1036,7 +1036,7 @@
     list-style: none;
   }
 
-  .my-decision-panel__queue-item {
+  .workspace-decision-panel__queue-item {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px;
@@ -1052,31 +1052,31 @@
       transform 160ms ease;
   }
 
-  .my-decision-panel__queue-item:hover,
-  .my-decision-panel__queue-item.is-active {
+  .workspace-decision-panel__queue-item:hover,
+  .workspace-decision-panel__queue-item.is-active {
     transform: translateY(-1px);
     border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
     box-shadow: 0 14px 30px color-mix(in oklab, var(--c-ink) 6%, transparent);
   }
 
-  .my-decision-panel__queue-copy {
+  .workspace-decision-panel__queue-copy {
     display: grid;
     gap: 3px;
     min-width: 0;
   }
 
-  .my-decision-panel__queue-copy strong {
+  .workspace-decision-panel__queue-copy strong {
     font-size: 14px;
     line-height: 1.25;
   }
 
-  .my-decision-panel__queue-copy span {
+  .workspace-decision-panel__queue-copy span {
     color: var(--text-muted);
     font-size: 12px;
     line-height: 1.35;
   }
 
-  .my-decision-panel__priority {
+  .workspace-decision-panel__priority {
     align-self: start;
     display: inline-flex;
     align-items: center;
@@ -1091,22 +1091,22 @@
     text-transform: uppercase;
   }
 
-  .my-decision-panel__priority.is-high {
+  .workspace-decision-panel__priority.is-high {
     background: color-mix(in oklab, var(--c-danger, #d96b5f) 18%, white 82%);
     color: color-mix(in oklab, var(--c-danger, #d96b5f) 70%, var(--c-text) 30%);
   }
 
-  .my-decision-panel__priority.is-medium {
+  .workspace-decision-panel__priority.is-medium {
     background: color-mix(in oklab, var(--c-accent) 16%, white 84%);
     color: color-mix(in oklab, var(--c-accent) 72%, var(--c-text) 28%);
   }
 
-  .my-decision-panel__overview-grid {
+  .workspace-decision-panel__overview-grid {
     display: grid;
     gap: 10px;
   }
 
-  .my-decision-panel__overview-grid > div {
+  .workspace-decision-panel__overview-grid > div {
     display: flex;
     justify-content: space-between;
     gap: 12px;
@@ -1114,11 +1114,11 @@
     border-top: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
   }
 
-  .my-decision-panel__overview-grid dt {
+  .workspace-decision-panel__overview-grid dt {
     color: var(--text-muted);
   }
 
-  .my-decision-panel__overview-grid dd {
+  .workspace-decision-panel__overview-grid dd {
     margin: 0;
     font-weight: 700;
   }
@@ -1313,13 +1313,13 @@
   }
 
   @media (max-width: 899px) {
-    .my-requests-summary {
+    .workspace-summary-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 1023px) {
-    .my-requests-summary.my-requests-summary--mobile-only {
+    .workspace-summary-grid.workspace-summary-grid--mobile-only {
       display: grid !important;
     }
   }
@@ -1342,7 +1342,7 @@
       padding-inline: 10px;
     }
 
-    .my-requests-summary {
+    .workspace-summary-grid {
       display: flex;
       overflow-x: auto;
       gap: 10px;
@@ -1353,15 +1353,15 @@
       overscroll-behavior-x: contain;
     }
 
-    .my-requests-summary.my-requests-summary--mobile-only {
+    .workspace-summary-grid.workspace-summary-grid--mobile-only {
       display: flex !important;
     }
 
-    .my-requests-summary::-webkit-scrollbar {
+    .workspace-summary-grid::-webkit-scrollbar {
       display: none;
     }
 
-    .my-requests-summary__card {
+    .workspace-summary-grid__card {
       min-width: min(78vw, 208px);
       min-height: 132px;
       padding: 14px 14px 12px;
@@ -1369,21 +1369,21 @@
       scroll-snap-align: start;
     }
 
-    .my-requests-summary__label {
+    .workspace-summary-grid__label {
       font-size: 11px;
       letter-spacing: 0.12em;
     }
 
-    .my-requests-summary__value {
+    .workspace-summary-grid__value {
       font-size: clamp(30px, 9vw, 40px);
     }
 
-    .my-requests-summary__helper {
+    .workspace-summary-grid__helper {
       font-size: 12px;
       line-height: 1.25;
     }
 
-    .my-requests-summary__accent {
+    .workspace-summary-grid__accent {
       height: 3px;
     }
 
@@ -1412,20 +1412,20 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .my-decision-panel__summary {
+    .workspace-decision-panel__summary {
       padding: 18px;
     }
 
-    .my-decision-panel__count {
+    .workspace-decision-panel__count {
       font-size: clamp(30px, 9vw, 40px);
     }
 
-    .my-decision-panel__title,
+    .workspace-decision-panel__title,
     .my-decision-mode__title {
       font-size: 18px;
     }
 
-    .my-decision-panel__queue-item {
+    .workspace-decision-panel__queue-item {
       padding: 12px 13px;
     }
 
@@ -1606,22 +1606,22 @@
   }
 
   @media (max-width: 420px) {
-    .my-requests-summary__card {
+    .workspace-summary-grid__card {
       min-width: min(82vw, 192px);
       min-height: 126px;
       padding: 13px 13px 11px;
     }
 
-    .my-requests-summary__label {
+    .workspace-summary-grid__label {
       font-size: 10px;
       letter-spacing: 0.11em;
     }
 
-    .my-requests-summary__value {
+    .workspace-summary-grid__value {
       font-size: clamp(28px, 9.5vw, 36px);
     }
 
-    .my-requests-summary__helper {
+    .workspace-summary-grid__helper {
       font-size: 11px;
     }
 
@@ -1657,7 +1657,7 @@
       font-size: 9.5px;
     }
 
-    .my-decision-panel__queue-item {
+    .workspace-decision-panel__queue-item {
       grid-template-columns: minmax(0, 1fr);
     }
   }

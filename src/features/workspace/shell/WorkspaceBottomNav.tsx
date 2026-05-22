@@ -3,8 +3,8 @@
 import * as React from 'react';
 
 import {
-  useWorkspaceSharedContext,
-} from '@/features/workspace/shell/useWorkspaceSharedContext';
+  useWorkspaceContext,
+} from '@/features/workspace/context';
 import { WorkspaceModeNav } from '@/features/workspace/shell/WorkspaceModeNav';
 import type { WorkspaceBottomNavProps } from '@/features/workspace/shell/WorkspaceShell.types';
 import { useWorkspaceMobileSectionSheet } from '@/features/workspace/requests/useWorkspaceMobileSectionSheet';
@@ -20,7 +20,7 @@ export function WorkspaceBottomNav({
   const t = useT();
   const { open, setOpen, panelRef, closeButtonRef } = useWorkspaceMobileSectionSheet();
   const titleId = React.useId();
-  const model = useWorkspaceSharedContext({
+  const model = useWorkspaceContext({
     t,
     locale,
     activePublicSection,

@@ -5,44 +5,12 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { WorkspaceModeHeader } from '@/features/workspace/shell/WorkspaceModeHeader';
 
-vi.mock('@/features/workspace/shell/useWorkspaceSharedContext', () => ({
-  useWorkspaceSharedContext: () => ({
+vi.mock('@/features/workspace/context', () => ({
+  useWorkspaceContext: () => ({
     title: 'Anfragen',
     description: 'Finde passende Auftraege im Markt.',
-    copy: {
-      eyebrow: 'Workspace',
-      shellHint: 'One-window workspace',
-    },
     controls: {},
   }),
-  buildSharedContextControlsProps: () => ({
-    cityOptions: [],
-    categoryOptions: [],
-    serviceOptions: [],
-    sortOptions: [],
-    cityId: '',
-    categoryKey: '',
-    subcategoryKey: '',
-    sortBy: '',
-    range: '30d',
-    role: 'customer',
-    state: 'open',
-    viewerMode: 'customer',
-    onCityChange: vi.fn(),
-    onCategoryChange: vi.fn(),
-    onSubcategoryChange: vi.fn(),
-    onSortChange: vi.fn(),
-    onRangeChange: vi.fn(),
-    onRoleChange: vi.fn(),
-    onStateChange: vi.fn(),
-    onViewerModeChange: vi.fn(),
-    onReset: vi.fn(),
-    closeLabel: 'Close',
-  }),
-}));
-
-vi.mock('@/features/workspace/shell/WorkspaceSharedContextControls', () => ({
-  WorkspaceSharedContextControls: () => <div data-testid="workspace-shared-context-controls" />,
 }));
 
 vi.mock('@/features/workspace/shell/WorkspaceHeaderAuthActions', () => ({
@@ -59,7 +27,7 @@ vi.mock('@/features/workspace/shell/WorkspaceHeaderUtilityBar', () => ({
 }));
 
 describe('WorkspaceModeHeader', () => {
-  it('renders workspace heading and controls without top navigation', () => {
+  it('renders workspace heading and hero shell without top navigation', () => {
     const { container } = render(
       <WorkspaceModeHeader
         t={(key) => key}
@@ -71,7 +39,6 @@ describe('WorkspaceModeHeader', () => {
 
     expect(screen.getByText('Anfragen')).toBeTruthy();
     expect(screen.getByTestId('workspace-header-utility-bar')).toBeTruthy();
-    expect(screen.getByTestId('workspace-shared-context-controls')).toBeTruthy();
     expect(container.querySelector('.workspace-mode-nav')).toBeNull();
   });
 });

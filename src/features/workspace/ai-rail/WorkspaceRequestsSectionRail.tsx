@@ -4,6 +4,7 @@ import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecisi
 import type { WorkspaceRequestsSummaryItem, WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
 import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
+import { WorkspaceRightRailStack } from '@/features/workspace/shared';
 import { WorkspaceRequestsActionRail } from './WorkspaceRequestsActionRail';
 import { WorkspaceRequestsSectionSummary } from './WorkspaceRequestsSectionSummary';
 
@@ -35,13 +36,13 @@ export function WorkspaceRequestsSectionRail({
   }
 
   return (
-    <div className="stack-md">
+    <WorkspaceRightRailStack>
       <WorkspaceRequestsSectionSummary
         locale={locale}
         items={summaryItems}
         variant={variant}
         isLoading={isSummaryLoading}
-        className="my-requests-summary--rail"
+        className="workspace-summary-grid--rail"
       />
       {panel ? (
         <WorkspaceRequestsActionRail
@@ -54,6 +55,6 @@ export function WorkspaceRequestsSectionRail({
           variant={variant}
         />
       ) : null}
-    </div>
+    </WorkspaceRightRailStack>
   );
 }

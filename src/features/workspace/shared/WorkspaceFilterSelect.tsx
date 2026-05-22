@@ -4,35 +4,38 @@ import * as React from 'react';
 
 import { Select, type Option } from '@/components/ui/Select';
 
-type RequestsFilterSelectProps = {
+type WorkspaceFilterSelectProps = {
   options: Option[];
   value: string;
   onChange: (value: string) => void;
   ariaLabel: string;
   disabled?: boolean;
   className?: string;
+  contentClassName?: string;
 };
 
-export function RequestsFilterSelect({
+export function WorkspaceFilterSelect({
   options,
   value,
   onChange,
   ariaLabel,
   disabled = false,
   className,
-}: RequestsFilterSelectProps) {
+  contentClassName,
+}: WorkspaceFilterSelectProps) {
   const resolvedValue = React.useMemo(
     () => (options.some((option) => option.value === value) ? value : undefined),
     [options, value],
   );
 
   return (
-    <div className="requests-select-wrap">
+    <div className="workspace-context-select-wrap">
       <Select
         options={options}
         value={resolvedValue}
         onChange={onChange}
         className={className}
+        contentClassName={contentClassName}
         aria-label={ariaLabel}
         disabled={disabled}
       />

@@ -9,6 +9,7 @@ import type { WorkspaceShellProps } from '@/features/workspace/shell/WorkspaceSh
 export function WorkspaceShell({
   children,
   intro,
+  filters,
   sidebar,
   aiRail,
   bottomNav,
@@ -19,6 +20,7 @@ export function WorkspaceShell({
     <WorkspaceResponsiveFrame bottomNav={bottomNav}>
       <WorkspacePageFrame
         intro={intro}
+        filters={filters}
         main={children}
         aiRail={aiRail}
         sidebar={sidebar}

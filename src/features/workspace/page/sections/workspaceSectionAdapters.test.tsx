@@ -3,7 +3,6 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  buildWorkspaceChatSectionModel,
   buildWorkspaceHelpSectionModel,
   buildWorkspaceExploreSectionModel,
   buildWorkspaceOverviewSectionModel,
@@ -87,14 +86,15 @@ describe('workspaceSectionAdapters', () => {
     expect(requests.section).toBe('requests');
   });
 
-  it('builds chat section through the shared section render model', () => {
-    const chat = buildWorkspaceChatSectionModel({
+  it('builds chat through the standard section render model', () => {
+    const chat = buildWorkspaceStandardSectionModel({
+      section: 'chat',
       content: <div>chat</div>,
       aiRail: <aside>chat rail</aside>,
     });
 
     expect(chat.section).toBe('chat');
-    expect(chat.headerPolicy).toBe('custom');
+    expect(chat.headerPolicy).toBe('workspace');
     expect(chat.railPolicy).toBe('custom');
     expect(chat.layout).toBe('withRail');
   });

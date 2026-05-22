@@ -12,16 +12,17 @@ export { WorkspaceModeHeader, WorkspaceMobileContextSection } from '@/features/w
 export { WorkspacePageLayout } from '@/features/workspace/shell/WorkspacePageLayout';
 export { WorkspaceResponsiveFrame } from '@/features/workspace/shell/WorkspaceResponsiveFrame';
 export { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
+export { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 export { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
-export { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 export { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 export {
-  buildSharedContextControlsProps,
+  WorkspaceContextControls,
+  buildWorkspaceContextControlsProps,
   fillWorkspaceModeTemplate,
   getWorkspaceChipValue,
   joinWorkspaceContext,
-  useWorkspaceSharedContext,
-} from '@/features/workspace/shell/useWorkspaceSharedContext';
+  useWorkspaceContext,
+} from '@/features/workspace/context';
 export { resolveActiveWorkspaceMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
 export type { WorkspaceModeKey } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
 export type {

@@ -10,5 +10,5 @@ export { StatisticsPriceRecommendationPanel } from './sections/StatisticsPriceRe
 export { StatisticsInsightsPanel } from './sections/StatisticsInsightsPanel';
 export { StatisticsGrowthPanel } from './sections/StatisticsGrowthPanel';
 export { StatisticsPerformancePositionPanel } from './sections/StatisticsPerformancePositionPanel';
-export { StatisticsPriorityPanel } from './sections/StatisticsPriorityPanel';
+export { StatisticsRecommendationsPanel } from './sections/StatisticsRecommendationsPanel';
 export { StatisticsActionPlanPanel } from './sections/StatisticsActionPlanPanel';

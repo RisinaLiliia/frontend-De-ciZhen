@@ -48,12 +48,13 @@ describe('workspaceSection.contract', () => {
     expect(contract.railPolicy).toBe('none');
   });
 
-  it('keeps chat as a custom-header rail section', () => {
+  it('keeps chat on the shared workspace section contract', () => {
     const contract = getWorkspaceSectionContract('chat');
 
     expect(contract.defaultLayout).toBe('withRail');
-    expect(contract.headerPolicy).toBe('custom');
-    expect(contract.railPolicy).toBe('custom');
+    expect(contract.headerPolicy).toBe('workspace');
+    expect(contract.railPolicy).toBe('none');
+    expect(contract.filterPolicy).toBe('sharedContext');
   });
 
   it('keeps help as a single-column custom-header support section', () => {

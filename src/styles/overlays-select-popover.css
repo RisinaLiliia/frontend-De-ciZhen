@@ -5,38 +5,58 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .dc-select-trigger__label {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  .dc-select-trigger > svg {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    color: var(--color-text-soft);
   }
 
   .dc-select-content {
-    width: var(--radix-select-trigger-width);
-    max-width: min(var(--radix-select-trigger-width), calc(100vw - 32px));
+    width: max(var(--radix-select-trigger-width), 252px);
+    min-width: min(252px, calc(100vw - 32px));
+    max-width: min(320px, calc(100vw - 32px));
     z-index: 50;
     max-height: 260px;
     overflow: hidden;
     background: var(--color-surface);
     border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-    padding: var(--space-1-5);
+    box-shadow: var(--shadow-panel);
+    padding: 8px;
   }
 
   .dc-select-viewport {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
-    padding: var(--space-0-5);
+    gap: 0;
+    padding: 0;
   }
 
   .dc-select-item {
-    height: 44px;
+    min-height: 38px;
     display: flex;
     align-items: center;
     border-radius: var(--radius-md);
-    padding: 0 var(--space-3);
+    padding: 0 10px;
     font-family: var(--font-sans);
-    font-size: var(--fs-body);
-    line-height: var(--lh-body);
+    font-size: 13px;
+    font-weight: 550;
+    line-height: 1.35;
     color: var(--color-text);
+    white-space: nowrap;
     cursor: pointer;
     user-select: none;
     transition:
@@ -146,9 +166,9 @@
 
   .dc-city-search-panel {
     display: flex;
-    width: min(360px, calc(100vw - 32px));
+    width: min(320px, calc(100vw - 32px));
     flex-direction: column;
-    gap: var(--space-3);
+    gap: 10px;
   }
 
   .dc-city-search-input {
@@ -182,11 +202,11 @@
     left: 0;
     right: 0;
     z-index: 30;
-    border: 1px solid var(--control-border);
-    border-radius: var(--radius-md);
-    background: var(--surface-card-bg);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
     box-shadow: var(--shadow-panel);
-    padding: var(--space-2);
+    padding: 8px;
   }
 
   .dc-city-search-preview,
@@ -251,15 +271,17 @@
 
   .dc-city-search-option {
     display: flex;
-    min-height: 44px;
+    min-height: 38px;
     width: 100%;
     align-items: center;
     border: 0;
     border-radius: var(--radius-md);
     background: transparent;
-    padding: var(--space-2) var(--space-3);
+    padding: 8px 10px;
     color: var(--color-text);
-    font: inherit;
+    font-size: 13px;
+    font-weight: 550;
+    line-height: 1.35;
     text-align: left;
     cursor: pointer;
     transition:

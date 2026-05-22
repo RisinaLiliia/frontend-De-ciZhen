@@ -9,9 +9,9 @@ import {
   IconCalendar,
   IconFilter,
   IconPin,
+  IconRotateCcw,
 } from '@/components/ui/icons/icons';
-import { RequestsViewToggle } from '@/components/requests/RequestsViewToggle';
-import type { FilterOption } from '@/components/requests/requestsFilters.types';
+import type { Option as FilterOption } from '@/components/ui/Select';
 import {
   buildWorkspaceModeItems,
   type WorkspaceModeItem,
@@ -28,7 +28,8 @@ import {
 } from '@/features/workspace/state';
 import { getWorkspaceStatisticsCopy, RANGE_OPTIONS, rangeLabelShort } from '@/features/workspace/stats';
 import { useWorkspacePublicFilters } from '@/features/workspace/public/useWorkspacePublicFilters';
-import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
+import { WorkspaceViewToggle } from '@/features/workspace/shared/WorkspaceViewToggle';
+import { WorkspaceContextControls } from '@/features/workspace/context/WorkspaceContextControls';
 import {
   getRequestsScopeTitle,
   getWorkspaceModeCopy,
@@ -42,7 +43,7 @@ import {
 import {
   resolveWorkspaceViewerModeToggleItems,
   shouldShowWorkspaceProfileViewerModeControl,
-} from '@/features/workspace/shell/workspaceSharedContext.model';
+} from '@/features/workspace/context/workspaceContext.model';
 import {
   buildWorkspacePrivateSortOptions,
   getWorkspaceChipLabels,
@@ -51,7 +52,7 @@ import {
   getWorkspaceScopeSwitchLabels,
   getWorkspaceStateAriaLabel,
   getWorkspaceStateToggleItems,
-} from '@/features/workspace/shell/workspaceSharedContext.copy';
+} from '@/features/workspace/context/workspaceContext.copy';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
@@ -67,7 +68,7 @@ type Translator = (key: I18nKey) => string;
 
 const CLEAR_QUERY_KEYS = ['city', 'cityId', 'category', 'categoryKey', 'service', 'subcategoryKey', 'serviceKey', 'period', 'range', 'sort', 'page', 'role', 'state'] as const;
 
-export type WorkspaceSharedContext = {
+export type WorkspaceContextModel = {
   activeMode: WorkspaceModeKey;
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
@@ -129,8 +130,8 @@ export function fillWorkspaceModeTemplate(template: string, mode: string) {
 }
 
 export function getWorkspaceChipValue(
-  chips: WorkspaceSharedContext['chips'],
-  key: WorkspaceSharedContext['chips'][number]['key'],
+  chips: WorkspaceContextModel['chips'],
+  key: WorkspaceContextModel['chips'][number]['key'],
 ) {
   return chips.find((chip) => chip.key === key)?.value ?? '';
 }
@@ -139,15 +140,15 @@ export function joinWorkspaceContext(parts: Array<string | null | undefined>) {
   return parts.filter((part): part is string => Boolean(part && part.trim())).join(' · ');
 }
 
-export function buildSharedContextControlsProps({
+export function buildWorkspaceContextControlsProps({
   model,
   t,
   locale,
 }: {
-  model: WorkspaceSharedContext;
+  model: WorkspaceContextModel;
   t: Translator;
   locale: Locale;
-}): React.ComponentProps<typeof WorkspaceSharedContextControls> {
+}): React.ComponentProps<typeof WorkspaceContextControls> {
   const cityChip = model.chips.find((chip) => chip.key === 'city');
   const categoryChip = model.chips.find((chip) => chip.key === 'category');
   const serviceChip = model.chips.find((chip) => chip.key === 'service');
@@ -155,13 +156,16 @@ export function buildSharedContextControlsProps({
   const statsCopy = getWorkspaceStatisticsCopy(locale);
   const stateToggleItems = getWorkspaceStateToggleItems(locale);
   const requestsScopeControl = model.scopeSwitch ? (
-    <nav className="requests-scope-switch" aria-label={getWorkspaceRequestsScopeAriaLabel(locale)}>
+    <nav
+      className="workspace-context-scope-switch"
+      aria-label={getWorkspaceRequestsScopeAriaLabel(locale)}
+    >
       {model.scopeSwitch.map((item) => (
         <Link
           key={item.key}
           href={item.href}
           prefetch={false}
-          className={`requests-scope-switch__item${item.isActive ? ' is-active' : ''}`.trim()}
+          className={`workspace-context-scope-switch__item${item.isActive ? ' is-active' : ''}`.trim()}
           aria-current={item.isActive ? 'page' : undefined}
         >
           {item.label}
@@ -170,8 +174,8 @@ export function buildSharedContextControlsProps({
     </nav>
   ) : null;
   const requestsViewToggle = model.requestsListDensity && model.onRequestsListDensityChange ? (
-    <div className="workspace-shared-context-controls__view-toggle">
-      <RequestsViewToggle
+    <div className="workspace-context-controls__view-toggle">
+      <WorkspaceViewToggle
         t={t}
         listDensity={model.requestsListDensity}
         onChange={model.onRequestsListDensityChange}
@@ -181,13 +185,13 @@ export function buildSharedContextControlsProps({
   const renderViewerModeInlineControl = (
     items: ReturnType<typeof resolveWorkspaceViewerModeToggleItems>,
   ) => (
-    <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
+    <div className="workspace-context-toggle-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
       {items.map((item) => (
         <button
           key={item.value}
           type="button"
           aria-pressed={item.isActive}
-          className={`howitworks-tab ${item.isActive ? 'is-active' : ''}`.trim()}
+          className={`workspace-context-toggle-tab ${item.isActive ? 'is-active' : ''}`.trim()}
           onClick={() => model.controls.onViewerModeChange(item.value)}
         >
           {item.label}
@@ -211,13 +215,13 @@ export function buildSharedContextControlsProps({
     activePublicSection: model.activePublicSection,
   });
   const myWorkInlineControl = shouldShowProfileViewerModeControl ? viewerModeInlineControl : model.requestsScope === 'my' ? (
-    <div className="workspace-shared-context-controls__combined-row">
+    <div className="workspace-context-controls__combined-row">
       {requestsScopeControl}
-      <div className="howitworks-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
+      <div className="workspace-context-toggle-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
         <button
           type="button"
           aria-pressed={model.controls.role === 'customer'}
-          className={`howitworks-tab ${model.controls.role === 'customer' ? 'is-active' : ''}`.trim()}
+          className={`workspace-context-toggle-tab ${model.controls.role === 'customer' ? 'is-active' : ''}`.trim()}
           onClick={() => model.controls.onRoleChange('customer')}
         >
           {statsCopy.viewerModeCustomerLabel}
@@ -225,7 +229,7 @@ export function buildSharedContextControlsProps({
         <button
           type="button"
           aria-pressed={model.controls.role === 'provider'}
-          className={`howitworks-tab ${model.controls.role === 'provider' ? 'is-active' : ''}`.trim()}
+          className={`workspace-context-toggle-tab ${model.controls.role === 'provider' ? 'is-active' : ''}`.trim()}
           onClick={() => model.controls.onRoleChange('provider')}
         >
           {statsCopy.viewerModeProviderLabel}
@@ -233,7 +237,7 @@ export function buildSharedContextControlsProps({
       </div>
 
       <div
-        className="workspace-shared-context-controls__slash-tabs"
+        className="workspace-context-controls__state-tabs"
         role="group"
         aria-label={getWorkspaceStateAriaLabel(locale)}
       >
@@ -245,7 +249,7 @@ export function buildSharedContextControlsProps({
               key={item.key}
               type="button"
               aria-pressed={isActive}
-              className={`workspace-shared-context-controls__slash-tab ${isActive ? 'is-active' : ''}`.trim()}
+              className={`workspace-context-controls__state-tab ${isActive ? 'is-active' : ''}`.trim()}
               onClick={() => model.controls.onStateChange(item.key)}
             >
               {item.label}
@@ -255,7 +259,7 @@ export function buildSharedContextControlsProps({
       </div>
     </div>
   ) : requestsScopeControl ? (
-    <div className="workspace-shared-context-controls__combined-row">
+    <div className="workspace-context-controls__combined-row">
       {requestsScopeControl}
     </div>
   ) : model.activePublicSection === 'stats' ? (
@@ -264,12 +268,12 @@ export function buildSharedContextControlsProps({
   return {
     title: model.copy.sharedContextLabel,
     locale,
-    resetLabel: t(I18N_KEYS.requestsPage.clearFilters),
+    resetLabel: t(I18N_KEYS.workspace.contextResetLabel),
     closeLabel: model.controls.closeLabel,
     city: {
       value: model.controls.cityId,
       allOption: model.controls.cityOptions.find((item) => item.value === 'all'),
-      ariaLabel: t(I18N_KEYS.requestsPage.cityLabel),
+      ariaLabel: t(I18N_KEYS.workspace.contextCityLabel),
       onChange: model.controls.onCityChange,
       summaryLabel: cityChip?.value ?? model.copy.contextFallbacks.city,
       placeholder: cityChip?.value ?? model.copy.contextFallbacks.city,
@@ -281,14 +285,14 @@ export function buildSharedContextControlsProps({
     category: {
       value: model.controls.categoryKey,
       options: model.controls.categoryOptions,
-      ariaLabel: t(I18N_KEYS.requestsPage.categoryLabel),
+      ariaLabel: t(I18N_KEYS.workspace.contextCategoryLabel),
       onChange: model.controls.onCategoryChange,
       summaryLabel: categoryChip?.value ?? model.copy.contextFallbacks.category,
     },
     service: {
       value: model.controls.subcategoryKey,
       options: model.controls.serviceOptions,
-      ariaLabel: t(I18N_KEYS.requestsPage.serviceLabel),
+      ariaLabel: t(I18N_KEYS.workspace.contextServiceLabel),
       onChange: model.controls.onSubcategoryChange,
       summaryLabel: serviceChip?.value ?? model.copy.contextFallbacks.service,
       disabled: model.controls.categoryKey === 'all',
@@ -310,7 +314,7 @@ export function buildSharedContextControlsProps({
     sort: {
       value: model.controls.sortBy,
       options: model.controls.sortOptions,
-      ariaLabel: t(I18N_KEYS.requestsPage.sortLabel),
+      ariaLabel: t(I18N_KEYS.workspace.contextSortLabel),
       onChange: model.controls.onSortChange,
       summaryLabel: model.controls.sortOptions.find((item) => item.value === model.controls.sortBy)?.label ?? '',
     },
@@ -318,10 +322,15 @@ export function buildSharedContextControlsProps({
     extraFilters: undefined,
     inlineControl: myWorkInlineControl,
     onReset: model.controls.onReset,
+    action: {
+      label: t(I18N_KEYS.workspace.contextResetLabel),
+      icon: <IconRotateCcw />,
+      onClick: model.controls.onReset,
+    },
   };
 }
 
-export function useWorkspaceSharedContext({
+export function useWorkspaceContext({
   t,
   locale,
   activePublicSection,
@@ -333,7 +342,7 @@ export function useWorkspaceSharedContext({
   activePublicSection: PublicWorkspaceSection | null;
   activeWorkspaceTab: WorkspaceTab;
   preferredRequestsRole?: 'customer' | 'provider' | null;
-}): WorkspaceSharedContext {
+}): WorkspaceContextModel {
   const auth = useAuthSnapshot();
   const router = useRouter();
   const pathname = usePathname();

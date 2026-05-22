@@ -87,7 +87,7 @@
     .provider-status-dot,
     .home-stats__live-badge,
     .home-stats__live,
-    .requests-select-icon--city::after,
+    .dc-leading-icon--city::after,
     .request-card-link.is-active {
       animation: none !important;
     }

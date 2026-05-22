@@ -35,7 +35,6 @@ import { WorkspaceHelpIntro } from '@/features/workspace/help/WorkspaceHelpIntro
 import { WorkspaceHelpPage } from '@/features/workspace/help/WorkspaceHelpPage';
 import {
   buildWorkspaceExploreSectionModel,
-  buildWorkspaceChatSectionModel,
   buildWorkspaceHelpSectionModel,
   buildWorkspaceOverviewSectionModel,
   buildWorkspaceSettingsSectionModel,
@@ -324,7 +323,8 @@ export function useWorkspacePrivatePresentationFlow({
   const chatSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
     () => (
       isChatSection
-        ? buildWorkspaceChatSectionModel({
+        ? buildWorkspaceStandardSectionModel({
+          section: 'chat',
           content: (
             <ChatWorkspacePage
               basePath="/workspace"

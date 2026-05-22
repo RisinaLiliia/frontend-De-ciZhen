@@ -127,7 +127,6 @@
     position: relative;
     min-width: 180px;
     width: 100%;
-    padding-right: calc(var(--space-8) + var(--space-1-5));
   }
 
   .requests-filters .dc-select-trigger {
@@ -150,20 +149,6 @@
     box-shadow: var(--control-focus-ring);
   }
 
-  .requests-select::after {
-    content: '';
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    width: 16px;
-    height: 16px;
-    transform: translateY(-50%);
-    background-color: var(--c-text-muted);
-    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='m6 9 6 6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>")
-      no-repeat center / contain;
-    pointer-events: none;
-  }
-
   .requests-select.is-city {
     padding-left: calc(var(--space-8) + var(--space-2));
   }
@@ -183,7 +168,7 @@
     padding-right: var(--space-3);
   }
 
-  .requests-select-icon {
+  .dc-leading-icon {
     position: absolute;
     left: 14px;
     top: 50%;
@@ -198,7 +183,7 @@
     z-index: 2;
   }
 
-  .requests-select-icon svg {
+  .dc-leading-icon svg {
     width: 16px;
     height: 16px;
   }

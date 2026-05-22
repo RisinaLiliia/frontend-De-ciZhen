@@ -3,9 +3,7 @@
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import {
-  buildSharedContextControlsProps,
   WorkspaceSectionHeader,
-  useWorkspaceSharedContext,
 } from '@/features/workspace/shell';
 import { getChatPageCopy } from '@/features/chat/chat.model';
 
@@ -18,24 +16,13 @@ function getChatWorkspaceDescription(locale: string) {
 }
 
 export function WorkspaceChatIntro() {
-  const t = useT();
   const { locale } = useI18n();
   const chatCopy = getChatPageCopy(locale);
-  const model = useWorkspaceSharedContext({
-    t,
-    locale,
-    activePublicSection: 'chat',
-    activeWorkspaceTab: 'my-requests',
-  });
-  const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
 
   return (
     <WorkspaceSectionHeader
-      eyebrow="Workspace"
       title={chatCopy.title}
       description={getChatWorkspaceDescription(locale)}
-      shellHint={model.copy.shellHint}
-      sharedContextControlsProps={sharedContextControlsProps}
     />
   );
 }

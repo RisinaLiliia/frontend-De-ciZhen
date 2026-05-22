@@ -7,9 +7,10 @@ import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import {
+  WorkspaceRightRailStack,
   workspaceRequestsPanelShell,
   workspaceStatsChartPanelShell,
-} from '@/features/workspace/shared/workspaceSurfaceShell';
+} from '@/features/workspace/shared';
 import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
 import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { buildDecisionPlan, buildPersonalizedDecisionPlan } from './statisticsDecisionEngine.utils';
@@ -24,9 +25,9 @@ import {
   StatisticsInsightsPanel,
   StatisticsOpportunityPanel,
   StatisticsPerformancePositionPanel,
-  StatisticsPriorityPanel,
   StatisticsPricePanel,
   StatisticsPriceRecommendationPanel,
+  StatisticsRecommendationsPanel,
 } from './WorkspaceStatisticsSections';
 
 type WorkspaceStatisticsViewProps = {
@@ -520,7 +521,7 @@ export function WorkspaceStatisticsView({
   );
 
   const railSection = (
-    <aside className="stack-md workspace-statistics__rail">
+    <WorkspaceRightRailStack className="workspace-statistics__rail">
         <section
           ref={profilePanelRef}
           className={workspaceStatsChartPanelShell('workspace-statistics__profile-panel')}
@@ -635,19 +636,24 @@ export function WorkspaceStatisticsView({
                   copy={copy}
                   position={userIntelligence?.performancePosition ?? null}
                 />
-                <StatisticsPriorityPanel
-                  title={rightRailRisks?.title ?? copy.userRisksTitle}
-                  subtitle={rightRailRisks?.subtitle ?? copy.userRisksSubtitle}
-                  badgeLabel={copy.insightsTypeRiskLabel}
-                  badgeVariant="risk"
-                  items={rightRailRisks?.items ?? []}
-                />
-                <StatisticsPriorityPanel
-                  title={rightRailOpportunities?.title ?? copy.userOpportunitiesTitle}
-                  subtitle={rightRailOpportunities?.subtitle ?? copy.userOpportunitiesSubtitle}
-                  badgeLabel={copy.insightsTypeChanceLabel}
-                  badgeVariant="opportunity"
-                  items={rightRailOpportunities?.items ?? []}
+                <StatisticsRecommendationsPanel
+                  copy={copy}
+                  groups={[
+                    {
+                      title: rightRailRisks?.title ?? copy.userRisksTitle,
+                      subtitle: rightRailRisks?.subtitle ?? copy.userRisksSubtitle,
+                      badgeLabel: copy.insightsTypeRiskLabel,
+                      badgeVariant: 'risk',
+                      items: rightRailRisks?.items ?? [],
+                    },
+                    {
+                      title: rightRailOpportunities?.title ?? copy.userOpportunitiesTitle,
+                      subtitle: rightRailOpportunities?.subtitle ?? copy.userOpportunitiesSubtitle,
+                      badgeLabel: copy.insightsTypeChanceLabel,
+                      badgeVariant: 'opportunity',
+                      items: rightRailOpportunities?.items ?? [],
+                    },
+                  ]}
                 />
                 <StatisticsActionPlanPanel
                   copy={copy}
@@ -679,7 +685,7 @@ export function WorkspaceStatisticsView({
             )}
           </>
         )}
-    </aside>
+    </WorkspaceRightRailStack>
   );
 
   if (slot === 'content') {

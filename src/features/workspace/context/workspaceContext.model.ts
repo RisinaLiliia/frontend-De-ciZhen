@@ -1,6 +1,6 @@
 'use client';
 
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceTab } from '@/features/workspace/state';
 
 type WorkspaceViewerMode = 'provider' | 'customer';

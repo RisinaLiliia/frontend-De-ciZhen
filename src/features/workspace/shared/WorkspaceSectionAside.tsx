@@ -3,6 +3,7 @@
 import * as React from 'react';
 
 import type { Locale } from '@/lib/i18n/t';
+import { WorkspaceRightRailStack } from './WorkspaceRightRailStack';
 import { WorkspaceSectionDecisionPanel } from './WorkspaceSectionDecisionPanel';
 import { WorkspaceSummaryGrid } from './WorkspaceSummaryGrid';
 
@@ -41,10 +42,9 @@ export function WorkspaceSectionAside({
   }
 
   return (
-    <aside
+    <WorkspaceRightRailStack
+      as="aside"
       className={[
-        'stack-md',
-        'workspace-section-aside',
         hideBelowDesktop ? 'hide-below-desktop' : '',
         className ?? '',
       ].filter(Boolean).join(' ')}
@@ -52,10 +52,10 @@ export function WorkspaceSectionAside({
       <WorkspaceSummaryGrid
         items={summaryItems}
         isLoading={isLoading}
-        className="my-requests-summary--rail"
+        className="workspace-summary-grid--rail"
       />
       {panel ? <WorkspaceSectionDecisionPanel locale={locale} panel={panel} /> : null}
       {children}
-    </aside>
+    </WorkspaceRightRailStack>
   );
 }

@@ -24,9 +24,9 @@ export function WorkspaceSummaryGrid({
 }: Props) {
   if (isLoading && (!items || items.length === 0)) {
     return (
-      <div className={['my-requests-summary', className ?? ''].filter(Boolean).join(' ')}>
+      <div className={['workspace-summary-grid', className ?? ''].filter(Boolean).join(' ')}>
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={`summary-skeleton-${index}`} className="my-requests-summary__card">
+          <div key={`summary-skeleton-${index}`} className="workspace-summary-grid__card">
             <div className="skeleton h-4 w-20" />
             <div className="skeleton h-7 w-12" />
           </div>
@@ -40,7 +40,7 @@ export function WorkspaceSummaryGrid({
   }
 
   return (
-    <div className={['my-requests-summary', className ?? ''].filter(Boolean).join(' ')}>
+    <div className={['workspace-summary-grid', className ?? ''].filter(Boolean).join(' ')}>
       {items.map((item, index) => {
         const isHighlighted = item.isHighlighted ?? index === 0;
         return (
@@ -48,17 +48,17 @@ export function WorkspaceSummaryGrid({
             key={item.key}
             type="button"
             className={[
-              'my-requests-summary__card',
+              'workspace-summary-grid__card',
               `is-${item.tone ?? 'all'}`,
               isHighlighted ? 'is-active' : '',
             ].filter(Boolean).join(' ')}
             aria-pressed={isHighlighted}
             onClick={() => onSelect?.(item.key)}
           >
-            <span className="my-requests-summary__label">{item.label}</span>
-            <strong className="my-requests-summary__value">{item.value}</strong>
-            <span className="my-requests-summary__helper">{item.helper}</span>
-            <span className="my-requests-summary__accent" aria-hidden="true" />
+            <span className="workspace-summary-grid__label">{item.label}</span>
+            <strong className="workspace-summary-grid__value">{item.value}</strong>
+            <span className="workspace-summary-grid__helper">{item.helper}</span>
+            <span className="workspace-summary-grid__accent" aria-hidden="true" />
           </button>
         );
       })}

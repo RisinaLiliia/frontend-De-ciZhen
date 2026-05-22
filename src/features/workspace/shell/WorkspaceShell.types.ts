@@ -31,6 +31,7 @@ export type WorkspaceResponsiveFrameProps = {
 
 export type WorkspacePageFrameProps = {
   intro?: ReactNode;
+  filters?: ReactNode;
   main: ReactNode;
   aiRail?: ReactNode;
   sidebar?: ReactNode;
@@ -60,6 +61,7 @@ export type WorkspaceSectionRenderModel = {
 export type WorkspaceShellProps = {
   children: ReactNode;
   intro?: ReactNode;
+  filters?: ReactNode;
   sidebar?: ReactNode;
   aiRail?: ReactNode;
   bottomNav?: ReactNode;

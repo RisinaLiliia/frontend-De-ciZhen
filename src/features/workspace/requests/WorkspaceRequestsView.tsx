@@ -1184,7 +1184,7 @@ export function WorkspaceRequestsView({
         items={model.response?.summary.items}
         variant={variant}
         isLoading={isLoading}
-        className="my-requests-summary--mobile-only"
+        className="workspace-summary-grid--mobile-only"
       />
 
       {isLoading ? <CardSkeletonList /> : null}

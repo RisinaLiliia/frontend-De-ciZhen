@@ -7,6 +7,7 @@ import type { WorkspacePageFrameProps } from '@/features/workspace/shell/Workspa
 
 export function WorkspacePageFrame({
   intro,
+  filters,
   main,
   aiRail,
   sidebar,
@@ -17,6 +18,7 @@ export function WorkspacePageFrame({
   const mainClasses = ['workspace-main', contentClassName ?? ''].filter(Boolean).join(' ');
   const pageFrameClasses = [
     'workspace-page-frame',
+    intro ? 'workspace-page-frame--inside-overlay' : '',
     aiRail == null ? 'workspace-page-frame--single' : '',
   ]
     .filter(Boolean)
@@ -25,7 +27,10 @@ export function WorkspacePageFrame({
   const pageContent = (
     <main className={mainClasses}>
       <div className={pageFrameClasses}>
-        <section className="workspace-page-frame__content">{main}</section>
+        <section className="workspace-page-frame__content">
+          {filters ? <div className="workspace-page-frame__filters">{filters}</div> : null}
+          {main}
+        </section>
 
         {aiRail ? (
           <aside className="workspace-page-frame__rail" aria-label="Workspace AI tools">

@@ -399,7 +399,7 @@
       var(--workspace-control-embedded-shadow);
   }
 
-  .workspace-control-shell .requests-filters--surface-embedded .requests-select-icon {
+  .workspace-control-shell .requests-filters--surface-embedded .dc-leading-icon {
     color: color-mix(in oklab, var(--c-accent) 58%, var(--c-text-muted) 42%);
   }
 

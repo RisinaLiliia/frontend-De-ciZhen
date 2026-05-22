@@ -23,6 +23,7 @@ import type { PublicWorkspaceSection } from '@/features/workspace/navigation/res
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { WorkspaceBottomNav } from '@/features/workspace/shell/WorkspaceBottomNav';
 import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
+import { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
@@ -271,10 +272,21 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     shouldUseContextualRail
       ? contextualAside
       : (resolvedSectionModel.layout === 'singleColumn' ? undefined : resolvedSectionModel.aiRail);
+  const resolvedFilters =
+    resolvedSectionModel.filters
+    ?? (resolvedSectionModel.filterPolicy === 'sharedContext' ? (
+      <WorkspaceSectionSharedContext
+        locale={locale}
+        activePublicSection={activePublicSection}
+        activeWorkspaceTab={activeWorkspaceTab}
+        preferredRequestsRole={preferredRequestsRole}
+      />
+    ) : undefined);
 
   return (
     <WorkspaceShell
       intro={resolvedIntro}
+      filters={resolvedFilters}
       sidebar={workspaceSidebar}
       aiRail={resolvedAiRail}
       bottomNav={workspaceBottomNav}

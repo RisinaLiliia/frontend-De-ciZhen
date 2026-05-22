@@ -51,11 +51,6 @@ type BuildWorkspaceStandardSectionModelArgs = {
   aiRail?: React.ReactNode;
 };
 
-type BuildWorkspaceChatSectionModelArgs = {
-  content: React.ReactNode;
-  aiRail: React.ReactNode;
-};
-
 type BuildWorkspaceSettingsSectionModelArgs = {
   content: React.ReactNode;
 };
@@ -141,18 +136,10 @@ export function buildWorkspaceExploreSectionModel({
         t={branch.t}
         locale={branch.locale}
         onListDensityChange={explore.setExploreListDensity}
-        exploreListDensity={explore.exploreListDensity}
-        sidebarNearbyLimit={explore.sidebarNearbyLimit}
-        sidebarTopProvidersLimit={explore.sidebarTopProvidersLimit}
-        sidebarProofCases={explore.sidebarProofCases}
-        proofIndex={explore.proofIndex}
-        trustPanelClassName={explore.trustPanelClassName}
         initialPublicRequests={explore.initialPublicRequests}
         preferInitialPublicRequests={explore.preferInitialPublicRequests}
         initialPublicRequestsLoading={explore.initialPublicRequestsLoading}
         initialPublicRequestsError={explore.initialPublicRequestsError}
-        renderIntro={false}
-        renderRail={false}
       />
     ) : null,
     aiRail: rail,
@@ -177,17 +164,6 @@ export function buildWorkspaceStandardSectionModel({
 }: BuildWorkspaceStandardSectionModelArgs): WorkspaceSectionRenderModel {
   return buildWorkspaceSectionRenderModel({
     section,
-    content,
-    aiRail,
-  });
-}
-
-export function buildWorkspaceChatSectionModel({
-  content,
-  aiRail,
-}: BuildWorkspaceChatSectionModelArgs): WorkspaceSectionRenderModel {
-  return buildWorkspaceSectionRenderModel({
-    section: 'chat',
     content,
     aiRail,
   });

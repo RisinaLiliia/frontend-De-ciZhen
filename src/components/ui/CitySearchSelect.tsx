@@ -367,7 +367,7 @@ export function CitySearchSelect({
     return (
       <div className={cn('dc-city-search', 'dc-city-search--inline', className)}>
         <div className="dc-city-search-input-wrap">
-          <span className="requests-select-icon dc-city-search-input__icon" aria-hidden="true">
+          <span className="dc-leading-icon dc-leading-icon--city dc-city-search-input__icon" aria-hidden="true">
             <IconPin />
           </span>
           <Input

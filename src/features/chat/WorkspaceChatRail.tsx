@@ -8,6 +8,7 @@ import {
   WorkspaceContextFocusPanel,
 } from '@/features/workspace/shell';
 import { workspacePanelShell } from '@/features/workspace';
+import { WorkspaceRightRailStack } from '@/features/workspace/shared';
 
 function getChatRailCopy(locale: string) {
   if (locale === 'en') {
@@ -21,9 +22,6 @@ function getChatRailCopy(locale: string) {
         { href: '/workspace?section=requests&scope=my', label: 'My requests' },
         { href: '/workspace?section=stats', label: 'Analysis' },
       ],
-      contextEyebrow: 'Context',
-      contextTitle: 'Messages stay inside the workspace',
-      contextBody: 'The conversation view now uses the same shell, controls, and right rail as the rest of the product.',
     };
   }
 
@@ -37,9 +35,6 @@ function getChatRailCopy(locale: string) {
       { href: '/workspace?section=requests&scope=my', label: 'Meine Anfragen' },
       { href: '/workspace?section=stats', label: 'Analyse' },
     ],
-    contextEyebrow: 'Kontext',
-    contextTitle: 'Nachrichten bleiben im Workspace',
-    contextBody: 'Die Gesprächsansicht nutzt jetzt dieselbe Shell, dieselben Controls und dieselbe rechte AI-Spalte wie der Rest des Produkts.',
   };
 }
 
@@ -49,7 +44,7 @@ export function WorkspaceChatRail() {
   const copy = getChatRailCopy(locale);
 
   return (
-    <div className="workspace-context-rail">
+    <WorkspaceRightRailStack className="workspace-context-rail">
       <section className={workspacePanelShell('workspace-context-rail__panel')}>
         <span className="workspace-environment__eyebrow">{copy.inboxEyebrow}</span>
         <h2 className="workspace-context-rail__title">{copy.inboxTitle}</h2>
@@ -74,12 +69,6 @@ export function WorkspaceChatRail() {
           ))}
         </div>
       </section>
-
-      <section className={workspacePanelShell('workspace-context-rail__panel')}>
-        <span className="workspace-environment__eyebrow">{copy.contextEyebrow}</span>
-        <h2 className="workspace-context-rail__title">{copy.contextTitle}</h2>
-        <p className="workspace-context-rail__description">{copy.contextBody}</p>
-      </section>
-    </div>
+    </WorkspaceRightRailStack>
   );
 }

@@ -1,11 +1,11 @@
 'use client';
 
 import { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
-import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
 import {
-  buildSharedContextControlsProps,
-  useWorkspaceSharedContext,
-} from '@/features/workspace/shell/useWorkspaceSharedContext';
+  WorkspaceContextControls,
+  buildWorkspaceContextControlsProps,
+  useWorkspaceContext,
+} from '@/features/workspace/context';
 import { type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
@@ -27,22 +27,18 @@ export function WorkspaceModeHeader({
   activeWorkspaceTab: WorkspaceTab;
   preferredRequestsRole?: 'customer' | 'provider' | null;
 }) {
-  const model = useWorkspaceSharedContext({
+  const model = useWorkspaceContext({
     t,
     locale,
     activePublicSection,
     activeWorkspaceTab,
     preferredRequestsRole,
   });
-  const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
 
   return (
     <WorkspaceSectionHeader
-      eyebrow={model.copy.eyebrow}
       title={model.title}
       description={model.description}
-      shellHint={model.copy.shellHint}
-      sharedContextControlsProps={sharedContextControlsProps}
     />
   );
 }
@@ -59,18 +55,18 @@ export function WorkspaceMobileContextSection({
   preferredRequestsRole?: 'customer' | 'provider' | null;
 }) {
   const t = useT();
-  const model = useWorkspaceSharedContext({
+  const model = useWorkspaceContext({
     t,
     locale,
     activePublicSection,
     activeWorkspaceTab,
     preferredRequestsRole,
   });
-  const sharedContextControlsProps = buildSharedContextControlsProps({ model, t, locale });
+  const sharedContextControlsProps = buildWorkspaceContextControlsProps({ model, t, locale });
 
   return (
     <div className="workspace-mobile-context-section">
-      <WorkspaceSharedContextControls
+      <WorkspaceContextControls
         {...sharedContextControlsProps}
         surface="shell"
         mobileBehavior="inline"

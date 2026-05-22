@@ -58,15 +58,15 @@ export function WorkspaceDecisionPanel({
       };
 
   return (
-    <div className="my-decision-panel">
-      <section className="panel my-decision-panel__summary">
-        <span className="my-decision-panel__eyebrow">
+    <div className="workspace-decision-panel">
+      <section className="panel workspace-decision-panel__summary">
+        <span className="workspace-decision-panel__eyebrow">
           {t(I18N_KEYS.requestsPage.decisionPanelTitle)}
         </span>
-        <strong className="my-decision-panel__count">
+        <strong className="workspace-decision-panel__count">
           {panel.summary.totalNeedsAction}
         </strong>
-        <h3 className="my-decision-panel__title">
+        <h3 className="workspace-decision-panel__title">
           {variant === 'market'
             ? (
               panel.summary.totalNeedsAction > 0
@@ -79,10 +79,10 @@ export function WorkspaceDecisionPanel({
                 : t(I18N_KEYS.requestsPage.decisionPanelPrivateNoOpenItems)
             )}
         </h3>
-        <p className="my-decision-panel__text">{summaryText}</p>
+        <p className="workspace-decision-panel__text">{summaryText}</p>
         <button
           type="button"
-          className="auth-social__btn auth-social__btn--google workspace-ai-card__action my-decision-panel__primary"
+          className="auth-social__btn auth-social__btn--google workspace-ai-card__action workspace-decision-panel__primary"
           onClick={onStartDecisionMode}
           disabled={panel.summary.totalNeedsAction === 0}
         >
@@ -90,29 +90,29 @@ export function WorkspaceDecisionPanel({
         </button>
       </section>
 
-      <section className="panel my-decision-panel__queue">
-        <div className="my-decision-panel__section-head">
-          <span className="my-decision-panel__eyebrow">
+      <section className="panel workspace-decision-panel__queue">
+        <div className="workspace-decision-panel__section-head">
+          <span className="workspace-decision-panel__eyebrow">
             {t(I18N_KEYS.requestsPage.decisionPanelQueueTitle)}
           </span>
         </div>
         {panel.queue.length > 0 ? (
-          <ul className="my-decision-panel__queue-list">
+          <ul className="workspace-decision-panel__queue-list">
             {panel.queue.slice(0, 5).map((item) => (
               <li key={item.requestId}>
                 <button
                   type="button"
                   className={[
-                    'my-decision-panel__queue-item',
+                    'workspace-decision-panel__queue-item',
                     item.requestId === activeRequestId ? 'is-active' : '',
                   ].filter(Boolean).join(' ')}
                   onClick={() => onOpenQueueItem(item.requestId)}
                 >
-                  <span className="my-decision-panel__queue-copy">
+                  <span className="workspace-decision-panel__queue-copy">
                     <strong>{item.title}</strong>
                     <span>{item.actionLabel}</span>
                   </span>
-                  <span className={`my-decision-panel__priority is-${item.actionPriorityLevel}`}>
+                  <span className={`workspace-decision-panel__priority is-${item.actionPriorityLevel}`}>
                     {priorityLabel(item.actionPriorityLevel)}
                   </span>
                 </button>
@@ -120,24 +120,24 @@ export function WorkspaceDecisionPanel({
             ))}
           </ul>
         ) : (
-          <p className="my-decision-panel__empty">
+          <p className="workspace-decision-panel__empty">
             {variant === 'market'
               ? t(I18N_KEYS.requestsPage.decisionPanelMarketMoving)
               : t(I18N_KEYS.requestsPage.decisionPanelPrivateMoving)}
           </p>
         )}
         {variant === 'private' && isDecisionMode && panel.queue.length > 0 ? (
-          <p className="my-decision-panel__hint">
+          <p className="workspace-decision-panel__hint">
             {t(I18N_KEYS.requestsPage.decisionPanelAutoPriorityHint)}
           </p>
         ) : null}
       </section>
 
-      <section className="panel my-decision-panel__overview">
-        <span className="my-decision-panel__eyebrow">
+      <section className="panel workspace-decision-panel__overview">
+        <span className="workspace-decision-panel__eyebrow">
           {overviewEyebrow}
         </span>
-        <dl className="my-decision-panel__overview-grid">
+        <dl className="workspace-decision-panel__overview-grid">
           <div>
             <dt>{overviewLabels.highUrgency}</dt>
             <dd>{panel.overview.highUrgency}</dd>

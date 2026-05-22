@@ -9,6 +9,7 @@ import { useDeferredMount } from '@/hooks/useDeferredMount';
 import { workspaceQK, WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/overview';
 import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import { WorkspaceRightRailStack } from '@/features/workspace/shared';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -117,7 +118,7 @@ export function WorkspaceExploreRail({
   }
 
   return (
-    <aside className="stack-md hide-below-desktop">
+    <WorkspaceRightRailStack className="hide-below-desktop">
       {isSidebarReady ? (
         <>
           {showRailMap ? (
@@ -145,9 +146,9 @@ export function WorkspaceExploreRail({
               proofCases={sidebarProofCases}
               proofIndex={sidebarProofCases.length ? proofIndex % sidebarProofCases.length : 0}
             />
-          ) : null}
-
-          <TrustLivePanel className={trustPanelClassName} t={t} />
+          ) : (
+            <TrustLivePanel className={trustPanelClassName} t={t} />
+          )}
         </>
       ) : (
         <>
@@ -162,6 +163,6 @@ export function WorkspaceExploreRail({
           </section>
         </>
       )}
-    </aside>
+    </WorkspaceRightRailStack>
   );
 }

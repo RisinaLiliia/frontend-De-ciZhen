@@ -10,22 +10,19 @@ import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
-import { WorkspaceOverlaySurface } from '../shared/WorkspaceOverlaySurface';
 import { useDecisionDashboardModel } from './useDecisionDashboardModel';
 import { WorkspaceStatisticsPanel } from './WorkspaceStatisticsPanel';
 
 export function WorkspaceStatisticsExperience({
-  intro,
   isWorkspaceAuthed,
   t,
   locale,
-  slot = 'full',
+  slot,
 }: {
-  intro?: React.ReactNode | null;
   isWorkspaceAuthed: boolean;
   t: (key: I18nKey) => string;
   locale: Locale;
-  slot?: 'full' | 'content' | 'rail';
+  slot: 'content' | 'rail';
 }) {
   const searchParams = useSearchParams();
   const privateOverviewPeriod: WorkspaceStatisticsRange = (() => {
@@ -46,22 +43,7 @@ export function WorkspaceStatisticsExperience({
     privateOverview: isWorkspaceAuthed ? (workspacePrivateOverview ?? null) : null,
   });
 
-  const overlayIntro = React.useCallback(() => {
-    if (!React.isValidElement(intro)) {
-      return intro;
-    }
-
-    return React.cloneElement(
-      intro as React.ReactElement<{
-        showDemandMap?: boolean;
-      }>,
-      {
-        showDemandMap: false,
-      },
-    );
-  }, [intro]);
-
-  const content = (
+  return (
     <div className="workspace-statistics-experience__content">
       <WorkspaceStatisticsPanel
         t={t}
@@ -70,15 +52,5 @@ export function WorkspaceStatisticsExperience({
         slot={slot}
       />
     </div>
-  );
-
-  if (!intro) {
-    return content;
-  }
-
-  return (
-    <WorkspaceOverlaySurface intro={overlayIntro()}>
-      {content}
-    </WorkspaceOverlaySurface>
   );
 }

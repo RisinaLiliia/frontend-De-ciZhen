@@ -1,17 +1,6 @@
 /* src/styles/features/workspace/workspace-context.css */
 
 @layer components {
-  .workspace-context-strip {
-    display: grid;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border-soft);
-    background: var(--color-surface);
-    box-shadow: var(--shadow-card);
-  }
-
-  .workspace-context-strip__header,
   .workspace-context-brief__head {
     display: flex;
     align-items: flex-start;
@@ -19,21 +8,6 @@
     gap: var(--space-3);
   }
 
-  .workspace-context-strip__label {
-    font-size: var(--workspace-environment-label-size);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .workspace-context-strip__chips {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-2);
-  }
-
-  .workspace-context-strip__chip,
   .workspace-context-brief__metric {
     display: grid;
     gap: var(--space-1);
@@ -44,36 +18,11 @@
     background: var(--color-surface-muted);
   }
 
-  .workspace-context-strip__chip {
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-  }
-
-  .workspace-context-strip__chip-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: var(--radius-md);
-    color: var(--color-primary);
-    background: var(--color-primary-soft);
-    flex: 0 0 auto;
-  }
-
-  .workspace-context-strip__chip-copy {
-    display: grid;
-    gap: var(--space-0-5);
-    min-width: 0;
-  }
-
-  .workspace-context-strip__chip-value,
   .workspace-context-brief__metric-value {
     color: var(--color-text);
     font-weight: 700;
   }
 
-  .workspace-context-strip__chip-label,
   .workspace-context-brief__metric-label {
     color: var(--color-text-muted);
     font-size: var(--workspace-environment-label-size);
@@ -117,20 +66,12 @@
     overflow: hidden;
   }
 
-  @media (max-width: 1199px) {
-    .workspace-context-strip__chips {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
   @media (max-width: 767px) {
-    .workspace-context-strip__header,
     .workspace-context-brief__head {
       flex-direction: column;
       align-items: stretch;
     }
 
-    .workspace-context-strip__chips,
     .workspace-context-brief__metrics {
       grid-template-columns: minmax(0, 1fr);
     }

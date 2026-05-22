@@ -892,6 +892,35 @@
     list-style: none;
   }
 
+  .workspace-statistics-user-priority__groups {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .workspace-statistics-user-priority__group {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .workspace-statistics-user-priority__group-head {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .workspace-statistics-user-priority__group-title {
+    margin: 0;
+    font-size: var(--fs-body);
+    line-height: var(--lh-title);
+    font-weight: 700;
+    color: var(--c-text);
+  }
+
+  .workspace-statistics-user-priority__group-subtitle {
+    margin: 0;
+    font-size: var(--fs-small);
+    color: var(--c-text-muted);
+  }
+
   .workspace-statistics-user-priority__item,
   .workspace-statistics-user-actions__item {
     display: grid;

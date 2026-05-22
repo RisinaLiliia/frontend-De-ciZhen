@@ -3,6 +3,7 @@
 
 import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
+import { IconChevronDown } from '@/components/ui/icons/icons';
 import { cn } from '@/lib/utils/cn';
 
 export type Option = { value: string; label: string; key?: string };
@@ -16,6 +17,7 @@ type Props = {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  contentClassName?: string;
   'aria-label'?: string;
 };
 
@@ -28,6 +30,7 @@ export function Select({
   placeholder = 'Auswählen…',
   disabled,
   className,
+  contentClassName,
   ...a11y
 }: Props) {
   const items = React.useMemo(() => options.filter((o) => o.value !== ''), [options]);
@@ -40,12 +43,13 @@ export function Select({
       disabled={disabled}
     >
       <SelectPrimitive.Trigger id={id} className={cn('field dc-select-trigger', className)} {...a11y}>
-        <SelectPrimitive.Value placeholder={placeholder} />
+        <SelectPrimitive.Value placeholder={placeholder} className="dc-select-trigger__label" />
+        <IconChevronDown />
       </SelectPrimitive.Trigger>
 
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
-          className="dc-select-content"
+          className={cn('dc-select-content', contentClassName)}
           position="popper"
           side="bottom"
           align="start"

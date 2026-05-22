@@ -8,10 +8,8 @@ import { t as translate, type Locale } from '@/lib/i18n/t';
 const SHARED_QUERY_KEYS = ['city', 'category', 'service', 'period', 'range'] as const;
 
 export type WorkspaceModeCopy = {
-  eyebrow: string;
   sharedContextLabel: string;
   clearContextLabel: string;
-  shellHint: string;
   contextFallbacks: {
     city: string;
     category: string;
@@ -162,10 +160,8 @@ export function getWorkspaceFocusRecommendationCopy(locale: Locale): WorkspaceFo
 export function getWorkspaceModeCopy(locale: Locale): WorkspaceModeCopy {
   if (locale === 'en') {
     return {
-      eyebrow: 'Unified Workspace',
       sharedContextLabel: 'Shared context',
       clearContextLabel: 'Reset context',
-      shellHint: 'One shell / one context / focused modes',
       contextFallbacks: {
         city: 'All cities',
         category: 'All categories',
@@ -233,10 +229,8 @@ export function getWorkspaceModeCopy(locale: Locale): WorkspaceModeCopy {
   }
 
   return {
-    eyebrow: 'Ein Workspace',
     sharedContextLabel: 'Gemeinsamer Kontext',
     clearContextLabel: 'Kontext zurücksetzen',
-    shellHint: 'Ein Shell / ein Kontext / klare Modi',
     contextFallbacks: {
       city: 'Alle Städte',
       category: 'Alle Kategorien',

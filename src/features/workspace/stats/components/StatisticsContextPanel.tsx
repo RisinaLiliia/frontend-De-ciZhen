@@ -1,7 +1,7 @@
 'use client';
 
 import { IconDownload } from '@/components/ui/icons/icons';
-import { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
+import { WorkspaceContextControls } from '@/features/workspace/context';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -95,7 +95,7 @@ export function StatisticsContextPanel({
   ) : null;
 
   const controlsInner = (
-    <WorkspaceSharedContextControls
+    <WorkspaceContextControls
       title={copy.contextTitle}
       locale={locale}
       resetLabel={copy.contextResetLabel}

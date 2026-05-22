@@ -1,6 +1,6 @@
 'use client';
 
-import type * as React from 'react';
+import * as React from 'react';
 
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type {
@@ -119,8 +119,8 @@ const WORKSPACE_SECTION_CONTRACTS: Record<WorkspaceSectionKey, WorkspaceSectionC
   chat: {
     key: 'chat',
     defaultLayout: 'withRail',
-    railPolicy: 'custom',
-    headerPolicy: 'custom',
+    railPolicy: 'none',
+    headerPolicy: 'workspace',
     filterPolicy: 'sharedContext',
     intro: {
       hideDemandMapAlways: true,
@@ -131,6 +131,10 @@ const WORKSPACE_SECTION_CONTRACTS: Record<WorkspaceSectionKey, WorkspaceSectionC
 
 export function getWorkspaceSectionContract(section: WorkspaceSectionKey): WorkspaceSectionContract {
   return WORKSPACE_SECTION_CONTRACTS[section];
+}
+
+function sectionClassSuffix(section: WorkspaceSectionKey) {
+  return section === 'overview' ? 'overview' : section;
 }
 
 export function buildWorkspaceSectionRenderModel({
@@ -148,6 +152,8 @@ export function buildWorkspaceSectionRenderModel({
 }: WorkspaceSectionRenderModelInput): WorkspaceSectionRenderModel {
   const contract = getWorkspaceSectionContract(section);
   const resolvedRailPolicy = railPolicy ?? (aiRail ? 'custom' : contract.railPolicy);
+  const bodyClassName = `workspace-section-body workspace-section-body--${sectionClassSuffix(section)}`;
+  const railClassName = `workspace-section-rail workspace-section-rail--${sectionClassSuffix(section)}`;
 
   return {
     section,
@@ -155,8 +161,8 @@ export function buildWorkspaceSectionRenderModel({
     subtitle,
     headerAccessory,
     filters,
-    content,
-    aiRail,
+    content: React.createElement('div', { className: bodyClassName }, content),
+    aiRail: aiRail ? React.createElement('div', { className: railClassName }, aiRail) : undefined,
     layout: layout ?? contract.defaultLayout,
     railPolicy: resolvedRailPolicy,
     headerPolicy: headerPolicy ?? contract.headerPolicy,

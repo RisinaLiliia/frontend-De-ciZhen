@@ -4,7 +4,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
-import { buildSharedContextControlsProps, type WorkspaceSharedContext } from '@/features/workspace/shell/useWorkspaceSharedContext';
+import { buildWorkspaceContextControlsProps, type WorkspaceContextModel } from '@/features/workspace/context/useWorkspaceContext';
 import { getWorkspaceModeCopy } from '@/features/workspace/shell/workspaceEnvironment.copy';
 
 afterEach(() => {
@@ -12,8 +12,8 @@ afterEach(() => {
 });
 
 function createModel(
-  overrides: Partial<WorkspaceSharedContext> = {},
-): WorkspaceSharedContext {
+  overrides: Partial<WorkspaceContextModel> = {},
+): WorkspaceContextModel {
   const copy = getWorkspaceModeCopy('de');
 
   return {
@@ -65,9 +65,9 @@ function createModel(
   };
 }
 
-describe('buildSharedContextControlsProps', () => {
+describe('buildWorkspaceContextControlsProps', () => {
   it('renders viewer mode toggle for public actions section', () => {
-    const props = buildSharedContextControlsProps({
+    const props = buildWorkspaceContextControlsProps({
       model: createModel({ activePublicSection: 'profile' }),
       t: (key) => String(key),
       locale: 'de',
@@ -80,7 +80,7 @@ describe('buildSharedContextControlsProps', () => {
   });
 
   it('maps profile labels to inverted audience semantics without changing canonical viewerMode', () => {
-    const props = buildSharedContextControlsProps({
+    const props = buildWorkspaceContextControlsProps({
       model: createModel({ activePublicSection: 'profile' }),
       t: (key) => String(key),
       locale: 'de',

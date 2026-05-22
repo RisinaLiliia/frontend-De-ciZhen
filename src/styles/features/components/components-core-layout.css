@@ -72,54 +72,18 @@
       height: 100%;
     }
 
-    .requests-grid--balanced > .stack-md,
-    .requests-grid--balanced > aside.stack-md,
-    .requests-grid--equal-cols > .stack-md,
-    .requests-grid--equal-cols > aside.stack-md {
+    .requests-grid--balanced > .workspace-right-rail-stack,
+    .requests-grid--equal-cols > .workspace-right-rail-stack {
       height: 100%;
     }
 
-    .requests-grid--balanced > aside.stack-md {
-      display: flex;
-      align-items: stretch;
+    .requests-grid--balanced > .workspace-right-rail-stack {
+      align-self: stretch;
     }
 
-    .requests-grid--equal-cols > aside.stack-md {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .requests-grid--balanced > aside.stack-md > :only-child {
-      flex: 1 1 auto;
-      height: 100%;
-    }
-
-    .requests-grid--equal-cols > div {
-      display: flex;
-      align-items: stretch;
-      height: 100%;
+    .requests-grid--equal-cols > .workspace-right-rail-stack {
       min-height: 100%;
-    }
-
-    .requests-grid--equal-cols > div > * {
-      flex: 1 1 auto;
-      min-height: 100%;
-    }
-
-    .requests-grid--equal-cols > aside.stack-md > :last-child {
-      flex: 1 1 auto;
-    }
-
-    .requests-grid--equal-cols > aside.workspace-section-aside {
-      display: block;
-      height: auto;
-      align-self: start;
-    }
-
-    .requests-grid--equal-cols > aside.workspace-section-aside > * {
-      flex: 0 0 auto;
-      height: auto;
+      align-self: stretch;
     }
 
   }
