@@ -1,7 +1,6 @@
 'use client';
 
 import { useI18n } from '@/lib/i18n/I18nProvider';
-import { useT } from '@/lib/i18n/useT';
 import {
   WorkspaceSectionHeader,
 } from '@/features/workspace/shell';
