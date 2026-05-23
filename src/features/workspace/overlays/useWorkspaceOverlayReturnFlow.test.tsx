@@ -5,8 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
-import { useWorkspaceRequestOverlayFlow } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/overlays/useWorkspacePublicRequestOverlayFlow';
+import { useWorkspaceRequestOverlayFlow } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 
 vi.mock('@/lib/i18n/useT', () => ({

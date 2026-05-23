@@ -6,12 +6,12 @@ import { WorkspaceReviewRatingField } from '@/components/reviews/WorkspaceReview
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
-import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 import {
   useWorkspaceCompletionReviewActions,
   useWorkspaceRequestDecisionActions,
   useWorkspaceRequestOfferActions,
-} from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
+} from '@/features/workspace/overlays/useWorkspaceRequestOverlayActions';
 import {
   formatDialogPrice,
   formatOfferTimestamp,
@@ -20,7 +20,7 @@ import {
   toDateTimeLocalValue,
   useWorkspaceRequestDecisionData,
   useWorkspaceRequestOffersData,
-} from '@/features/workspace/requests/useWorkspaceRequestOverlayData';
+} from '@/features/workspace/overlays/useWorkspaceRequestOverlayData';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';

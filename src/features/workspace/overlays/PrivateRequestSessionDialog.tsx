@@ -9,7 +9,7 @@ import {
   WorkspaceManagedOfferSheet,
   WorkspaceManagedRequestDialog,
 } from '@/features/workspace/overlays/RequestOverlays';
-import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';

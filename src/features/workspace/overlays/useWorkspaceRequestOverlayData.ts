@@ -6,7 +6,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { workspaceQK } from '@/features/workspace/data';
 import { resolveWorkspaceRequestChatAction } from '@/features/workspace/requests/workspaceRequestActionResolvers';
-import { fetchWorkspaceManagedRequest } from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
+import { fetchWorkspaceManagedRequest } from '@/features/workspace/overlays/useWorkspaceRequestOverlayActions';
 import { listMyContracts } from '@/lib/api/contracts';
 import type { ContractDto } from '@/lib/api/dto/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';

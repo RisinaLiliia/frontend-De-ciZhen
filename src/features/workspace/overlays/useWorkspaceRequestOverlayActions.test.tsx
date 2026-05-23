@@ -11,7 +11,7 @@ import {
   useWorkspaceProviderOfferSheetActions,
   useWorkspaceRequestDecisionActions,
   useWorkspaceRequestOfferActions,
-} from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
+} from '@/features/workspace/overlays/useWorkspaceRequestOverlayActions';
 import { workspaceQK } from '@/features/workspace/data';
 import { ApiError } from '@/lib/api/http-error';
 

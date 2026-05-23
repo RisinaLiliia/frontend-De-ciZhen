@@ -10,9 +10,9 @@ import {
   useWorkspaceProviderOfferSheetData,
   useWorkspaceRequestDecisionData,
   useWorkspaceRequestOffersData,
-} from '@/features/workspace/requests/useWorkspaceRequestOverlayData';
+} from '@/features/workspace/overlays/useWorkspaceRequestOverlayData';
 
-vi.mock('@/features/workspace/requests/useWorkspaceRequestOverlayActions', () => ({
+vi.mock('@/features/workspace/overlays/useWorkspaceRequestOverlayActions', () => ({
   fetchWorkspaceManagedRequest: vi.fn(),
 }));
 
@@ -44,7 +44,7 @@ vi.mock('@/lib/i18n/useT', () => ({
   }[key] ?? key)),
 }));
 
-import { fetchWorkspaceManagedRequest } from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
+import { fetchWorkspaceManagedRequest } from '@/features/workspace/overlays/useWorkspaceRequestOverlayActions';
 import { listMyContracts } from '@/lib/api/contracts';
 import { listMyProviderOffers, listOffersByRequest } from '@/lib/api/offers';
 

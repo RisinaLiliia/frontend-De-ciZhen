@@ -3,7 +3,7 @@
 import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { ActiveDecisionState } from '@/features/workspace/requests/requestsDecision.model';
-import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 import type { WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
 import type {
   WorkspaceMyRequestCardDto,

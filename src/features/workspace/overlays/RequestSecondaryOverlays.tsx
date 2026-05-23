@@ -6,13 +6,13 @@ import { RequestOfferSheet } from '@/components/requests/details';
 import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
 import {
   useWorkspaceProviderOfferSheetActions,
-} from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
+} from '@/features/workspace/overlays/useWorkspaceRequestOverlayActions';
 import {
   cardlessTitle,
   formatDialogDate,
   formatDialogPrice,
   useWorkspaceProviderOfferSheetData,
-} from '@/features/workspace/requests/useWorkspaceRequestOverlayData';
+} from '@/features/workspace/overlays/useWorkspaceRequestOverlayData';
 import {
   WorkspaceCompactModalPortal,
   WorkspaceInlineStateCard,

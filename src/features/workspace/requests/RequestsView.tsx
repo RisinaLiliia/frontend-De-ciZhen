@@ -41,7 +41,7 @@ import {
   type RequestDialogIntent,
   type WorkspaceRequestOverlayListContext,
   useWorkspaceRequestOverlayFlow,
-} from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+} from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 import type {
   WorkspaceRequestsSurfaceModel,
   WorkspaceRequestsViewCard,

@@ -7,7 +7,7 @@ import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
 import { PublicRequestDialog } from '@/features/workspace/overlays/PublicRequestDialog';
 import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
 import { WorkspaceManagedOfferSheet } from '@/features/workspace/overlays/RequestOverlays';
-import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';

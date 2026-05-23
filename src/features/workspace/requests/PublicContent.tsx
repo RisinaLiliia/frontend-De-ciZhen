@@ -21,7 +21,7 @@ import {
 } from '@/features/workspace/ai-rail/WorkspaceRequestsSummaryStrip';
 import { WorkspaceChipToggleGroup } from '@/features/workspace/shared';
 import { PublicRequestSessionDialog } from '@/features/workspace/overlays/PublicRequestSessionDialog';
-import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
+import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/overlays/useWorkspacePublicRequestOverlayFlow';
 import type { RequestsListShellHeaderMode } from '@/components/requests/RequestsListShellHeader';
 
 export type PublicContentProps = {

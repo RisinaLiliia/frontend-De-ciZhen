@@ -15,7 +15,7 @@ import {
   useRequestDetailsContentState,
   useRequestDetailsPageData,
 } from '@/features/workspace/requests/workspaceRequestDetailsFacade';
-import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';

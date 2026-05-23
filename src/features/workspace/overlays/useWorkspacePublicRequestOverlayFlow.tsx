@@ -10,7 +10,7 @@ import { useT } from '@/lib/i18n/useT';
 import { workspaceQK } from '@/features/workspace/data';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import { isWorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
-import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 
 type WorkspaceChatDialogState = {

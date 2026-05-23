@@ -11,7 +11,7 @@ import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequest
 import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
 import {
   useWorkspaceManagedRequestData,
-} from '@/features/workspace/requests/useWorkspaceRequestOverlayData';
+} from '@/features/workspace/overlays/useWorkspaceRequestOverlayData';
 import {
   WorkspaceRequestDecisionSection,
   WorkspaceRequestOffersSection,
@@ -21,7 +21,7 @@ import {
   resolveWorkspaceRequestChatAction,
   resolveWorkspaceRequestOfferAction,
 } from '@/features/workspace/requests/workspaceRequestActionResolvers';
-import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
