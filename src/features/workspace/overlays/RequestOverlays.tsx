@@ -15,7 +15,7 @@ import {
 import {
   WorkspaceRequestDecisionSection,
   WorkspaceRequestOffersSection,
-} from '@/features/workspace/requests/ManagedRequestSections';
+} from '@/features/workspace/requests/management/ManagedRequestSections';
 import { hasOwnerRequestManagementCapability } from '@/features/workspace/requests/requestOwnerMenu.model';
 import {
   resolveWorkspaceRequestChatAction,
