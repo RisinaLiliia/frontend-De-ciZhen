@@ -16,7 +16,7 @@ import {
 } from './statisticsDecisionDashboard.contract';
 import { hydrateAuthenticatedStatisticsPayload } from './statisticsAuthenticatedPayload.utils';
 import { parsePageParam } from './statisticsPagination.utils';
-import { workspaceStatisticsDecisionDashboardSchema } from './workspaceStatisticsDecisionDashboard.schema';
+import { workspaceStatisticsDecisionDashboardSchema } from './statisticsDecisionDashboard.schema';
 import type { WorkspaceStatisticsFilters } from './statistics.model';
 import { resolveWorkspaceViewerMode } from '@/features/workspace/state';
 

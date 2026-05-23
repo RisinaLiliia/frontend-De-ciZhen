@@ -2,8 +2,8 @@
 
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
-import { useWorkspaceStatsQuery } from './useWorkspaceStatsQuery';
-import { useWorkspaceStatsViewModel } from './useWorkspaceStatsViewModel';
+import { useWorkspaceStatsQuery } from './useStatsQuery';
+import { useWorkspaceStatsViewModel } from './useStatsViewModel';
 import type {
   WorkspaceStatisticsActivitySignalView,
   WorkspaceStatisticsCityRowView,

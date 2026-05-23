@@ -10,7 +10,7 @@ import type {
 import { normalizeWorkspaceDecisionDashboardResponse } from './statisticsDecisionDashboard.contract';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
-import { useWorkspaceStatsViewModel } from './useWorkspaceStatsViewModel';
+import { useWorkspaceStatsViewModel } from './useStatsViewModel';
 import type { WorkspaceStatisticsFilters } from './statistics.model';
 
 afterEach(() => {

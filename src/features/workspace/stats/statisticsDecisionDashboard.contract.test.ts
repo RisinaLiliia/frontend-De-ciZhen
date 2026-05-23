@@ -4,7 +4,7 @@ import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import { hydrateAuthenticatedStatisticsPayload } from './statisticsAuthenticatedPayload.utils';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 import { normalizeWorkspaceDecisionDashboardResponse } from './statisticsDecisionDashboard.contract';
-import { workspaceStatisticsDecisionDashboardSchema } from './workspaceStatisticsDecisionDashboard.schema';
+import { workspaceStatisticsDecisionDashboardSchema } from './statisticsDecisionDashboard.schema';
 
 function createPayload(): WorkspaceStatisticsOverviewSourceDto {
   return {

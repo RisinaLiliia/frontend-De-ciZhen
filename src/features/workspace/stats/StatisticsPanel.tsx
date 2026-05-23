@@ -2,7 +2,7 @@
 
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { useDecisionDashboardModel } from './useDecisionDashboardModel';
+import { useDecisionDashboardModel } from './useStatisticsDashboard';
 import { StatisticsView } from './StatisticsView';
 import type { WorkspaceStatisticsModel } from './statistics.model';
 

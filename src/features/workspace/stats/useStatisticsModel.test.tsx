@@ -279,7 +279,7 @@ describe('useWorkspaceStatisticsModel', () => {
       .mockResolvedValueOnce(createStatsOverview('90d'))
       .mockResolvedValueOnce(createStatsOverview('90d'));
 
-    const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
+    const { useWorkspaceStatisticsModel } = await import('./useStatisticsModel');
     const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
     const queryClient = createQueryClient();
 
@@ -355,7 +355,7 @@ describe('useWorkspaceStatisticsModel', () => {
   it('surfaces error state when BFF request fails', async () => {
     getWorkspaceStatisticsMock.mockRejectedValueOnce(new Error('failed'));
 
-    const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
+    const { useWorkspaceStatisticsModel } = await import('./useStatisticsModel');
     const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
     const queryClient = createQueryClient();
 
@@ -377,7 +377,7 @@ describe('useWorkspaceStatisticsModel', () => {
       .mockResolvedValueOnce(createStatsOverview('30d'))
       .mockRejectedValueOnce(new Error('failed refetch'));
 
-    const { useWorkspaceStatisticsModel } = await import('./useWorkspaceStatisticsModel');
+    const { useWorkspaceStatisticsModel } = await import('./useStatisticsModel');
     const Probe = createProbe(useWorkspaceStatisticsModel as StatsHook);
     const queryClient = createQueryClient();
 

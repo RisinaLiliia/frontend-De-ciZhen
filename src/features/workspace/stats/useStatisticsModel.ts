@@ -10,6 +10,6 @@ export type {
   WorkspaceStatisticsModel,
   WorkspaceStatisticsOpportunityRadarItemView,
   WorkspaceStatisticsPriceIntelligenceView,
-} from './useDecisionDashboardModel';
+} from './useStatisticsDashboard';
 
-export { useDecisionDashboardModel as useWorkspaceStatisticsModel } from './useDecisionDashboardModel';
+export { useDecisionDashboardModel as useWorkspaceStatisticsModel } from './useStatisticsDashboard';
