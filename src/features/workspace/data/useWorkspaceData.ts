@@ -20,7 +20,7 @@ import type {
 } from '@/features/workspace/state';
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
 import { useWorkspaceContractData } from '@/features/workspace/contracts/useWorkspaceContractData';
-import { useWorkspaceLegacyPublicOverviewData } from '@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData';
+import { useWorkspacePublicOverviewData } from '@/features/workspace/requests/useWorkspacePublicOverviewData';
 import { useWorkspaceRequestUserStateData } from '@/features/workspace/requests/useWorkspaceRequestUserStateData';
 
 type Params = {
@@ -133,7 +133,7 @@ export function useWorkspaceData(params: Params) {
     [loadPlan],
   );
 
-  const legacyPublicOverviewData = useWorkspaceLegacyPublicOverviewData({
+  const legacyPublicOverviewData = useWorkspacePublicOverviewData({
     workspaceDataQueries,
   });
 

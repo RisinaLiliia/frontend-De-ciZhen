@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import { useQueries } from '@tanstack/react-query';
 
-import { useWorkspaceLegacyOfferData } from './useWorkspaceLegacyOfferData';
+import { useWorkspaceOfferData } from './useWorkspaceOfferData';
 
 vi.mock('@tanstack/react-query', () => ({
   useQueries: vi.fn(),
@@ -13,7 +13,7 @@ vi.mock('@tanstack/react-query', () => ({
 const useQueriesMock = vi.mocked(useQueries);
 
 function DisabledProbe() {
-  const result = useWorkspaceLegacyOfferData({
+  const result = useWorkspaceOfferData({
     workspaceRequestUserStateQueries: {
       myOffers: {
         queryKey: ['offers-my'],
@@ -35,7 +35,7 @@ function DisabledProbe() {
 }
 
 function EnabledProbe() {
-  const result = useWorkspaceLegacyOfferData({
+  const result = useWorkspaceOfferData({
     workspaceRequestUserStateQueries: {
       myOffers: {
         queryKey: ['offers-my'],
@@ -56,7 +56,7 @@ function EnabledProbe() {
   );
 }
 
-describe('useWorkspaceLegacyOfferData', () => {
+describe('useWorkspaceOfferData', () => {
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();

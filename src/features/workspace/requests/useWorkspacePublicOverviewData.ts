@@ -10,7 +10,7 @@ type Args = {
   workspaceDataQueries: WorkspaceDataQueries;
 };
 
-export function useWorkspaceLegacyPublicOverviewData({ workspaceDataQueries }: Args) {
+export function useWorkspacePublicOverviewData({ workspaceDataQueries }: Args) {
   const { data: publicOverview, isLoading, isError } = useQuery(workspaceDataQueries.publicOverview);
 
   return {

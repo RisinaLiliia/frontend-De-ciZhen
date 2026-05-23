@@ -20,7 +20,7 @@ type Args = {
   shouldLoadOfferRequests: boolean;
 };
 
-export function useWorkspaceLegacyOfferData({
+export function useWorkspaceOfferData({
   workspaceRequestUserStateQueries,
   locale,
   shouldLoadOfferRequests,

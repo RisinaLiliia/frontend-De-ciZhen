@@ -9,7 +9,7 @@ import { resolveWorkspaceDataPlan } from './workspaceData.model';
 import { buildWorkspaceDataQueries } from './workspaceData.queries';
 import { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 import { useWorkspaceContractData } from '@/features/workspace/contracts/useWorkspaceContractData';
-import { useWorkspaceLegacyPublicOverviewData } from '@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData';
+import { useWorkspacePublicOverviewData } from '@/features/workspace/requests/useWorkspacePublicOverviewData';
 import { useWorkspaceRequestUserStateData } from '@/features/workspace/requests/useWorkspaceRequestUserStateData';
 
 vi.mock('@/lib/auth/token', () => ({
@@ -32,8 +32,8 @@ vi.mock('@/features/workspace/contracts/useWorkspaceContractData', () => ({
   useWorkspaceContractData: vi.fn(),
 }));
 
-vi.mock('@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData', () => ({
-  useWorkspaceLegacyPublicOverviewData: vi.fn(),
+vi.mock('@/features/workspace/requests/useWorkspacePublicOverviewData', () => ({
+  useWorkspacePublicOverviewData: vi.fn(),
 }));
 
 vi.mock('@/features/workspace/requests/useWorkspaceRequestUserStateData', () => ({
@@ -45,7 +45,7 @@ const resolveWorkspaceDataPlanMock = vi.mocked(resolveWorkspaceDataPlan);
 const buildWorkspaceDataQueriesMock = vi.mocked(buildWorkspaceDataQueries);
 const buildWorkspaceRequestUserStateQueriesMock = vi.mocked(buildWorkspaceRequestUserStateQueries);
 const useWorkspaceContractDataMock = vi.mocked(useWorkspaceContractData);
-const useWorkspaceLegacyPublicOverviewDataMock = vi.mocked(useWorkspaceLegacyPublicOverviewData);
+const useWorkspacePublicOverviewDataMock = vi.mocked(useWorkspacePublicOverviewData);
 const useWorkspaceRequestUserStateDataMock = vi.mocked(useWorkspaceRequestUserStateData);
 
 function Probe() {
@@ -97,7 +97,7 @@ describe('useWorkspaceData', () => {
       workspaceRequests: { requests: [] },
       isWorkspaceRequestsLoading: false,
     } as never);
-    useWorkspaceLegacyPublicOverviewDataMock.mockReturnValue({
+    useWorkspacePublicOverviewDataMock.mockReturnValue({
       overviewRequests: { items: [], total: 0 },
       isLoading: false,
       isError: false,

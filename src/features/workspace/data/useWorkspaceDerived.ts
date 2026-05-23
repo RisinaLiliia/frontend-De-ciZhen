@@ -14,7 +14,7 @@ import {
   type WorkspaceStatusFilter,
   type WorkspaceTab,
 } from '@/features/workspace/state';
-import { getWorkspacePrimaryActionByTab, getWorkspaceStatusFilters } from '@/features/workspace/requests/workspace.content';
+import { getWorkspacePrimaryActionByTab, getWorkspaceStatusFilters } from '@/features/workspace/requests/requests.content';
 
 type Params = {
   enabled?: boolean;
