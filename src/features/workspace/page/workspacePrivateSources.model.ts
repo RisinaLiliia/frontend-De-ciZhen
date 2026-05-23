@@ -2,7 +2,7 @@
 
 import type { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import type { useWorkspaceData } from '@/features/workspace/data/useWorkspaceData';
-import type { useWorkspaceProviderSupportData } from '@/features/workspace/requests/useWorkspaceProviderSupportData';
+import type { useWorkspaceProviderSupportData } from '@/features/workspace/providers/useWorkspaceProviderSupportData';
 import type {
   useWorkspaceCollections,
   useWorkspacePublicFilters,

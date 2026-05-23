@@ -10,7 +10,7 @@ import {
 import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspacePrivateSources';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspaceData } from '@/features/workspace/data/useWorkspaceData';
-import { useWorkspaceProviderSupportData } from '@/features/workspace/requests/useWorkspaceProviderSupportData';
+import { useWorkspaceProviderSupportData } from '@/features/workspace/providers/useWorkspaceProviderSupportData';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
 import type { ContractDto } from '@/lib/api/dto/contracts';
@@ -26,7 +26,7 @@ vi.mock('@/features/workspace/data/useWorkspaceData', () => ({
   useWorkspaceData: vi.fn(),
 }));
 
-vi.mock('@/features/workspace/requests/useWorkspaceProviderSupportData', () => ({
+vi.mock('@/features/workspace/providers/useWorkspaceProviderSupportData', () => ({
   useWorkspaceProviderSupportData: vi.fn(),
 }));
 
