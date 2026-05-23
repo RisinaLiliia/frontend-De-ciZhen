@@ -16,7 +16,7 @@ import {
 import {
   WorkspaceCompactModalPortal,
   WorkspaceInlineStateCard,
-} from '@/features/workspace/requests/WorkspaceOverlayPrimitives';
+} from '@/features/workspace/overlays/WorkspaceOverlayPrimitives';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';

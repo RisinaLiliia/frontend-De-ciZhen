@@ -35,7 +35,7 @@ import {
 } from '@/features/workspace/requests/requestOwnerMenu.model';
 import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
-import { PrivateRequestSessionDialog } from '@/features/workspace/requests/PrivateRequestSessionDialog';
+import { PrivateRequestSessionDialog } from '@/features/workspace/overlays/PrivateRequestSessionDialog';
 import { WorkspaceBadge, type WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
 import {
   type RequestDialogIntent,

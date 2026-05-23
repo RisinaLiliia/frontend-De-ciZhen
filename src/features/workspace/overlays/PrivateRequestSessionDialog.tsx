@@ -4,10 +4,13 @@ import * as React from 'react';
 
 import { BackButton } from '@/components/layout/BackButton';
 import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
-import { PublicRequestDialog } from '@/features/workspace/requests/PublicRequestDialog';
-import { RequestDialogShell } from '@/features/workspace/requests/RequestDialogShell';
-import { WorkspaceManagedOfferSheet } from '@/features/workspace/requests/RequestOverlays';
+import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
+import {
+  WorkspaceManagedOfferSheet,
+  WorkspaceManagedRequestDialog,
+} from '@/features/workspace/overlays/RequestOverlays';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
+import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
@@ -25,25 +28,25 @@ type RequestState = {
 type Props = {
   locale: Locale;
   activeRequestState: RequestState | null;
+  activeRequestCard: MyRequestsViewCard | null;
   activeOfferRequestId: string | null;
   activeChatState: ChatState | null;
   onDismissSession: () => void;
   onCloseOfferSheet: () => void;
   onCloseChat: () => void;
-  onOpenRequest: (requestId: string, intent?: RequestDialogIntent) => void;
   onOpenOfferSheet: (requestId: string) => void;
-  onOpenChatConversation: (payload: WorkspaceChatConversationInput, title?: string) => void;
+  onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 };
 
-export function PublicRequestSessionDialog({
+export function PrivateRequestSessionDialog({
   locale,
   activeRequestState,
+  activeRequestCard,
   activeOfferRequestId,
   activeChatState,
   onDismissSession,
   onCloseOfferSheet,
   onCloseChat,
-  onOpenRequest,
   onOpenOfferSheet,
   onOpenChatConversation,
 }: Props) {
@@ -51,20 +54,18 @@ export function PublicRequestSessionDialog({
     ? 'chat'
     : activeOfferRequestId
       ? 'offer_edit'
-      : activeRequestState
+      : activeRequestState && activeRequestCard
         ? 'detail'
         : null;
 
   if (!scene) return null;
 
-  const requestId = activeRequestState?.requestId ?? activeOfferRequestId ?? null;
-  const requestIntent = activeRequestState?.intent ?? 'view';
-  const t = (key: typeof I18N_KEYS.workspace[keyof typeof I18N_KEYS.workspace] | typeof I18N_KEYS.requestDetails[keyof typeof I18N_KEYS.requestDetails] | typeof I18N_KEYS.requestsPage[keyof typeof I18N_KEYS.requestsPage]) => translate(key, locale);
+  const t = (key: typeof I18N_KEYS.workspace[keyof typeof I18N_KEYS.workspace] | typeof I18N_KEYS.requestDetails[keyof typeof I18N_KEYS.requestDetails] | typeof I18N_KEYS.auth[keyof typeof I18N_KEYS.auth] | typeof I18N_KEYS.requestsPage[keyof typeof I18N_KEYS.requestsPage]) => translate(key, locale);
   const ariaLabel = scene === 'chat'
     ? activeChatState?.title || t(I18N_KEYS.workspace.messagesTitle)
     : scene === 'offer_edit'
       ? t(I18N_KEYS.requestDetails.workspaceEditOffer)
-      : t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle);
+      : activeRequestCard?.requestPreview.title || t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle);
   const sceneTitle = t(I18N_KEYS.requestsPage.navChat);
   const sceneSubtitle = activeChatState?.title || t(I18N_KEYS.workspace.requestConversationSubtitle);
 
@@ -79,13 +80,12 @@ export function PublicRequestSessionDialog({
       errorBody=""
       bodyVariant={scene === 'detail' ? 'details' : 'default'}
     >
-      {scene === 'detail' && requestId ? (
-        <PublicRequestDialog
+      {scene === 'detail' && activeRequestState && activeRequestCard ? (
+        <WorkspaceManagedRequestDialog
           locale={locale}
-          requestId={requestId}
-          initialIntent={requestIntent}
+          card={activeRequestCard}
+          initialIntent={activeRequestState.intent}
           onClose={onDismissSession}
-          onOpenRequest={onOpenRequest}
           onOpenOfferSheet={onOpenOfferSheet}
           onOpenChatConversation={onOpenChatConversation}
           surface="embedded"

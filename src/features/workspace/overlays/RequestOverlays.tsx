@@ -8,7 +8,7 @@ import {
   useRequestDetailsContentState,
 } from '@/features/workspace/requests/workspaceRequestDetailsFacade';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
-import { RequestDialogShell } from '@/features/workspace/requests/RequestDialogShell';
+import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
 import {
   useWorkspaceManagedRequestData,
 } from '@/features/workspace/requests/useWorkspaceRequestOverlayData';
@@ -27,7 +27,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 
-export { WorkspaceChatDialog, WorkspaceManagedOfferSheet } from '@/features/workspace/requests/RequestSecondaryOverlays';
+export { WorkspaceChatDialog, WorkspaceManagedOfferSheet } from '@/features/workspace/overlays/RequestSecondaryOverlays';
 
 export function WorkspaceManagedRequestDialog({
   locale,

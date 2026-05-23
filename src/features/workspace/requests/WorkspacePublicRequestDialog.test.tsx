@@ -3,7 +3,7 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { PublicRequestDialog } from '@/features/workspace/requests/PublicRequestDialog';
+import { PublicRequestDialog } from '@/features/workspace/overlays/PublicRequestDialog';
 
 let authStatusValue: 'guest' | 'authenticated' = 'guest';
 let authUserValue: { id: string } | null = null;

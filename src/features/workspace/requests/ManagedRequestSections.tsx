@@ -26,7 +26,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { t as translate } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
-import { WorkspaceInlineStateCard } from '@/features/workspace/requests/WorkspaceOverlayPrimitives';
+import { WorkspaceInlineStateCard } from '@/features/workspace/overlays/WorkspaceOverlayPrimitives';
 import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 function fillTemplate(template: string, values: Record<string, string>) {

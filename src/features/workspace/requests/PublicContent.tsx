@@ -20,7 +20,7 @@ import {
   WorkspaceRequestsSummaryStripSkeleton,
 } from '@/features/workspace/ai-rail/WorkspaceRequestsSummaryStrip';
 import { WorkspaceChipToggleGroup } from '@/features/workspace/shared';
-import { PublicRequestSessionDialog } from '@/features/workspace/requests/PublicRequestSessionDialog';
+import { PublicRequestSessionDialog } from '@/features/workspace/overlays/PublicRequestSessionDialog';
 import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
 import type { RequestsListShellHeaderMode } from '@/components/requests/RequestsListShellHeader';
 

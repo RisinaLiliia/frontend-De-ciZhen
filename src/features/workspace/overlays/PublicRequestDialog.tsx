@@ -23,7 +23,7 @@ import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { providerQK } from '@/features/provider/queries';
 import { workspaceQK } from '@/features/workspace/data';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
-import { RequestDialogShell } from '@/features/workspace/requests/RequestDialogShell';
+import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
 import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 function RequestDetailInteractionMenuItem({
