@@ -4,9 +4,9 @@ import * as React from 'react';
 
 import { BackButton } from '@/components/layout/BackButton';
 import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
-import { WorkspacePublicRequestDialog } from '@/features/workspace/requests/WorkspacePublicRequestDialog';
-import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
-import { WorkspaceManagedOfferSheet } from '@/features/workspace/requests/WorkspaceRequestOverlays';
+import { PublicRequestDialog } from '@/features/workspace/requests/PublicRequestDialog';
+import { RequestDialogShell } from '@/features/workspace/requests/RequestDialogShell';
+import { WorkspaceManagedOfferSheet } from '@/features/workspace/requests/RequestOverlays';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
@@ -35,7 +35,7 @@ type Props = {
   onOpenChatConversation: (payload: WorkspaceChatConversationInput, title?: string) => void;
 };
 
-export function WorkspacePublicRequestSessionDialog({
+export function PublicRequestSessionDialog({
   locale,
   activeRequestState,
   activeOfferRequestId,
@@ -69,7 +69,7 @@ export function WorkspacePublicRequestSessionDialog({
   const sceneSubtitle = activeChatState?.title || t(I18N_KEYS.workspace.requestConversationSubtitle);
 
   return (
-    <WorkspaceRequestDialogShell
+    <RequestDialogShell
       locale={locale}
       ariaLabel={ariaLabel}
       onClose={onDismissSession}
@@ -80,7 +80,7 @@ export function WorkspacePublicRequestSessionDialog({
       bodyVariant={scene === 'detail' ? 'details' : 'default'}
     >
       {scene === 'detail' && requestId ? (
-        <WorkspacePublicRequestDialog
+        <PublicRequestDialog
           locale={locale}
           requestId={requestId}
           initialIntent={requestIntent}
@@ -121,6 +121,6 @@ export function WorkspacePublicRequestSessionDialog({
           />
         </>
       ) : null}
-    </WorkspaceRequestDialogShell>
+    </RequestDialogShell>
   );
 }

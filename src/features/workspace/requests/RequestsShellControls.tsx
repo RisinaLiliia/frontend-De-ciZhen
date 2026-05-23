@@ -12,7 +12,7 @@ type WorkspaceRequestsShellControlsProps = {
   contentType?: 'requests' | 'providers';
 };
 
-export function WorkspaceRequestsShellControls({
+export function RequestsShellControls({
   t,
   locale,
   contentType = 'requests',

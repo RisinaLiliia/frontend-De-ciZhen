@@ -20,7 +20,7 @@ import {
   WorkspaceRequestsSummaryStripSkeleton,
 } from '@/features/workspace/ai-rail/WorkspaceRequestsSummaryStrip';
 import { WorkspaceChipToggleGroup } from '@/features/workspace/shared';
-import { WorkspacePublicRequestSessionDialog } from '@/features/workspace/requests/WorkspacePublicRequestSessionDialog';
+import { PublicRequestSessionDialog } from '@/features/workspace/requests/PublicRequestSessionDialog';
 import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
 import type { RequestsListShellHeaderMode } from '@/components/requests/RequestsListShellHeader';
 
@@ -164,7 +164,7 @@ export function PublicContent({
       </RequestsPaginatedPanel>
 
       {(activeRequestState || activeOfferRequestId || activeChatState) ? (
-        <WorkspacePublicRequestSessionDialog
+        <PublicRequestSessionDialog
           locale={requestsListProps.locale}
           activeRequestState={activeRequestState}
           activeOfferRequestId={activeOfferRequestId}

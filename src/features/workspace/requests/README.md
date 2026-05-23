@@ -71,7 +71,7 @@ Behavior:
 
 ## Rendering
 
-- `WorkspaceRequestsView.tsx`
+- `RequestsView.tsx`
   - renders summary cards, decision mode bar, and request cards
 - `../ai-rail/WorkspaceDecisionPanel.tsx`
   - renders the right-column decision summary, queue, and overview

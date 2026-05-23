@@ -23,7 +23,7 @@ import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { providerQK } from '@/features/provider/queries';
 import { workspaceQK } from '@/features/workspace/data';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
-import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
+import { RequestDialogShell } from '@/features/workspace/requests/RequestDialogShell';
 import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 function RequestDetailInteractionMenuItem({
@@ -157,7 +157,7 @@ function RequestDetailInteractionMenu({
   );
 }
 
-export function WorkspacePublicRequestDialog({
+export function PublicRequestDialog({
   locale,
   requestId,
   initialIntent,
@@ -517,7 +517,7 @@ export function WorkspacePublicRequestDialog({
   }
 
   return (
-    <WorkspaceRequestDialogShell
+    <RequestDialogShell
       locale={locale}
       ariaLabel={request?.title?.trim() || viewModel?.title || t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle)}
       onClose={onClose}
@@ -527,6 +527,6 @@ export function WorkspacePublicRequestDialog({
       errorBody={t(I18N_KEYS.requestDetails.workspaceLoadErrorBody)}
     >
       {content}
-    </WorkspaceRequestDialogShell>
+    </RequestDialogShell>
   );
 }

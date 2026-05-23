@@ -45,7 +45,7 @@ function WorkspaceInlineErrorState({
   );
 }
 
-export function WorkspaceRequestDialogShell({
+export function RequestDialogShell({
   locale,
   ariaLabel,
   onClose,

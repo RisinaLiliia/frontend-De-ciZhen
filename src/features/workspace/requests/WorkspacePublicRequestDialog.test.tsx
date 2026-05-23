@@ -3,7 +3,7 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { WorkspacePublicRequestDialog } from '@/features/workspace/requests/WorkspacePublicRequestDialog';
+import { PublicRequestDialog } from '@/features/workspace/requests/PublicRequestDialog';
 
 let authStatusValue: 'guest' | 'authenticated' = 'guest';
 let authUserValue: { id: string } | null = null;
@@ -109,7 +109,7 @@ vi.mock('@/features/requests/details/RequestDetailsContent', () => ({
   ),
 }));
 
-describe('WorkspacePublicRequestDialog', () => {
+describe('PublicRequestDialog', () => {
   afterEach(() => {
     cleanup();
     authStatusValue = 'guest';
@@ -164,7 +164,7 @@ describe('WorkspacePublicRequestDialog', () => {
     };
 
     render(
-      <WorkspacePublicRequestDialog
+      <PublicRequestDialog
         locale="de"
         requestId="req-1"
         initialIntent="view"
@@ -239,7 +239,7 @@ describe('WorkspacePublicRequestDialog', () => {
     };
 
     render(
-      <WorkspacePublicRequestDialog
+      <PublicRequestDialog
         locale="de"
         requestId="req-1"
         initialIntent="view"
@@ -294,7 +294,7 @@ describe('WorkspacePublicRequestDialog', () => {
     };
 
     render(
-      <WorkspacePublicRequestDialog
+      <PublicRequestDialog
         locale="de"
         requestId="req-1"
         initialIntent="view"

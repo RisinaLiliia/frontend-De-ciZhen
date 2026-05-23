@@ -8,14 +8,14 @@ import {
   useRequestDetailsContentState,
 } from '@/features/workspace/requests/workspaceRequestDetailsFacade';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
-import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
+import { RequestDialogShell } from '@/features/workspace/requests/RequestDialogShell';
 import {
   useWorkspaceManagedRequestData,
 } from '@/features/workspace/requests/useWorkspaceRequestOverlayData';
 import {
   WorkspaceRequestDecisionSection,
   WorkspaceRequestOffersSection,
-} from '@/features/workspace/requests/WorkspaceManagedRequestSections';
+} from '@/features/workspace/requests/ManagedRequestSections';
 import { hasOwnerRequestManagementCapability } from '@/features/workspace/requests/requestOwnerMenu.model';
 import {
   resolveWorkspaceRequestChatAction,
@@ -27,7 +27,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 
-export { WorkspaceChatDialog, WorkspaceManagedOfferSheet } from '@/features/workspace/requests/WorkspaceSecondaryOverlays';
+export { WorkspaceChatDialog, WorkspaceManagedOfferSheet } from '@/features/workspace/requests/RequestSecondaryOverlays';
 
 export function WorkspaceManagedRequestDialog({
   locale,
@@ -253,7 +253,7 @@ export function WorkspaceManagedRequestDialog({
   }
 
   return (
-    <WorkspaceRequestDialogShell
+    <RequestDialogShell
       locale={locale}
       ariaLabel={card.requestPreview.title}
       onClose={onClose}
@@ -263,6 +263,6 @@ export function WorkspaceManagedRequestDialog({
       errorBody={t(I18N_KEYS.requestDetails.workspaceLoadErrorBody)}
     >
       {content}
-    </WorkspaceRequestDialogShell>
+    </RequestDialogShell>
   );
 }

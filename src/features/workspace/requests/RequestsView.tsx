@@ -35,7 +35,7 @@ import {
 } from '@/features/workspace/requests/requestOwnerMenu.model';
 import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
-import { WorkspacePrivateRequestSessionDialog } from '@/features/workspace/requests/WorkspacePrivateRequestSessionDialog';
+import { PrivateRequestSessionDialog } from '@/features/workspace/requests/PrivateRequestSessionDialog';
 import { WorkspaceBadge, type WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
 import {
   type RequestDialogIntent,
@@ -1077,7 +1077,7 @@ function AuthGate({
 
 export { WorkspaceRequestsActionRail as RequestsPrivateActionRail };
 
-export function WorkspaceRequestsView({
+export function RequestsView({
   surface,
 }: WorkspaceRequestsViewProps) {
   const {
@@ -1273,7 +1273,7 @@ export function WorkspaceRequestsView({
         </>
       ) : null}
       {variant === 'private' && ((activeRequestState && activeRequestCard) || activeOfferRequestId || activeChatState) ? (
-        <WorkspacePrivateRequestSessionDialog
+        <PrivateRequestSessionDialog
           locale={locale}
           activeRequestState={activeRequestState}
           activeRequestCard={activeRequestCard}

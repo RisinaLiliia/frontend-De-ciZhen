@@ -4,11 +4,11 @@ import * as React from 'react';
 
 import { BackButton } from '@/components/layout/BackButton';
 import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
-import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
+import { RequestDialogShell } from '@/features/workspace/requests/RequestDialogShell';
 import {
   WorkspaceManagedOfferSheet,
   WorkspaceManagedRequestDialog,
-} from '@/features/workspace/requests/WorkspaceRequestOverlays';
+} from '@/features/workspace/requests/RequestOverlays';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -38,7 +38,7 @@ type Props = {
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 };
 
-export function WorkspacePrivateRequestSessionDialog({
+export function PrivateRequestSessionDialog({
   locale,
   activeRequestState,
   activeRequestCard,
@@ -70,7 +70,7 @@ export function WorkspacePrivateRequestSessionDialog({
   const sceneSubtitle = activeChatState?.title || t(I18N_KEYS.workspace.requestConversationSubtitle);
 
   return (
-    <WorkspaceRequestDialogShell
+    <RequestDialogShell
       locale={locale}
       ariaLabel={ariaLabel}
       onClose={onDismissSession}
@@ -121,6 +121,6 @@ export function WorkspacePrivateRequestSessionDialog({
           />
         </>
       ) : null}
-    </WorkspaceRequestDialogShell>
+    </RequestDialogShell>
   );
 }
