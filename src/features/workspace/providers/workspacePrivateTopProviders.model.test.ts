@@ -4,7 +4,7 @@ import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import {
   buildWorkspacePrivateTopProviders,
   rankWorkspaceTopProviders,
-} from '@/features/workspace/requests/workspacePrivateTopProviders.model';
+} from '@/features/workspace/providers/workspacePrivateTopProviders.model';
 
 function provider(overrides: Partial<ProviderPublicDto> = {}): ProviderPublicDto {
   return {

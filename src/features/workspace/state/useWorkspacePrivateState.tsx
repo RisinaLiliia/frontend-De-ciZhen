@@ -16,7 +16,7 @@ import {
   type WorkspacePrivateOverviewState,
 } from '@/features/workspace/state/workspacePrivateState.model';
 import { useWorkspacePrivateNavModel } from '@/features/workspace/navigation/useWorkspacePrivateNavModel';
-import { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
+import { useWorkspacePrivateTopProviders } from '@/features/workspace/providers/useWorkspacePrivateTopProviders';
 
 type Params = {
   t: (key: I18nKey) => string;

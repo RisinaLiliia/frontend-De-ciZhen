@@ -5,7 +5,7 @@ import * as React from 'react';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { buildWorkspacePrivateTopProviders } from '@/features/workspace/requests/workspacePrivateTopProviders.model';
+import { buildWorkspacePrivateTopProviders } from '@/features/workspace/providers/workspacePrivateTopProviders.model';
 
 type Translator = (key: I18nKey) => string;
 
