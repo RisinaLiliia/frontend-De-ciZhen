@@ -37,11 +37,11 @@
 
   .workspace-page-frame {
     width: 100%;
-    max-width: var(--shell-content-max-width);
+    max-width: var(--workspace-content-max-width);
     margin-inline: auto;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) var(--shell-rail-width);
-    gap: var(--layout-section-gap);
+    grid-template-columns: minmax(0, 1fr) var(--workspace-rail-width);
+    gap: var(--workspace-grid-gap);
     align-items: start;
     padding-inline: var(--shell-inline-padding);
     padding-bottom: var(--space-8);
@@ -158,7 +158,7 @@
     }
 
     .workspace-page-frame {
-      max-width: var(--shell-content-max-width);
+      max-width: var(--workspace-content-max-width);
       grid-template-columns: minmax(0, 1fr);
     }
 

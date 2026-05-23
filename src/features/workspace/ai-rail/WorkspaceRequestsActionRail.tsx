@@ -1,6 +1,5 @@
 'use client';
 
-import { workspaceRightRailPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { WorkspaceDecisionPanel, type WorkspaceDecisionPanelProps } from './WorkspaceDecisionPanel';
 
 export type WorkspaceRequestsActionRailProps = Omit<WorkspaceDecisionPanelProps, 'isDecisionMode'> & {
@@ -19,7 +18,7 @@ export function WorkspaceRequestsActionRail({
   variant = 'private',
 }: WorkspaceRequestsActionRailProps) {
   return (
-    <div className={workspaceRightRailPanelShell('my-requests-rail', className)}>
+    <div className={['my-requests-rail', className ?? ''].filter(Boolean).join(' ')}>
       <WorkspaceDecisionPanel
         locale={locale}
         panel={panel}

@@ -1,0 +1,45 @@
+@layer components {
+  .app-title-xl {
+    font-size: var(--app-title-xl-size);
+    line-height: var(--app-title-xl-line-height);
+    font-weight: 750;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+  }
+
+  .app-title-lg,
+  .app-section-title {
+    font-size: var(--app-title-lg-size);
+    line-height: var(--app-title-lg-line-height);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .app-title-md,
+  .app-card-title {
+    font-size: var(--app-title-md-size);
+    line-height: var(--app-title-md-line-height);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+  }
+
+  .app-text {
+    font-size: var(--app-text-size);
+    line-height: var(--app-text-line-height);
+    color: var(--color-text);
+  }
+
+  .app-text-muted {
+    font-size: var(--app-text-muted-size);
+    line-height: var(--app-text-muted-line-height);
+    color: var(--color-text-muted);
+  }
+
+  .app-caption {
+    font-size: var(--app-caption-size);
+    line-height: var(--app-caption-line-height);
+    color: var(--color-text-muted);
+  }
+}

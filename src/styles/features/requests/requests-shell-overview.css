@@ -4,20 +4,20 @@
   .workspace-overview,
   .workspace-context-rail--overview {
     --workspace-overview-section-gap: var(--layout-section-gap);
-    --workspace-overview-cluster-gap: var(--space-4);
-    --workspace-overview-panel-gap: var(--space-4);
-    --workspace-overview-content-gap: var(--space-3);
-    --workspace-overview-heading-gap: var(--space-2);
-    --workspace-overview-panel-pad: var(--home-panel-padding, 18px);
-    --workspace-overview-panel-radius: var(--radius-lg);
-    --workspace-overview-card-min-height: 176px;
-    --workspace-overview-insights-item-gap: var(--space-2);
+    --workspace-overview-cluster-gap: var(--layout-gap-md);
+    --workspace-overview-panel-gap: var(--layout-gap-md);
+    --workspace-overview-content-gap: var(--layout-gap-sm);
+    --workspace-overview-heading-gap: var(--layout-gap-xs);
+    --workspace-overview-panel-pad: var(--density-comfortable-pad);
+    --workspace-overview-panel-radius: var(--radius-xl);
+    --workspace-overview-card-min-height: var(--density-comfortable-min-height);
+    --workspace-overview-insights-item-gap: var(--layout-gap-xs);
     --workspace-overview-insights-card-pad: var(--provider-card-inline-pad, 16px);
     --workspace-overview-insights-copy-size: var(--workspace-statistics-copy-size-tight, var(--fs-small));
-    --workspace-overview-insights-copy-line-height: 1.45;
-    --workspace-overview-insights-support-line-height: 1.35;
-    --workspace-overview-insights-stack-gap: var(--space-2);
-    --workspace-overview-insights-head-min-height: calc(var(--workspace-statistics-section-header-min-h) + var(--space-4));
+    --workspace-overview-insights-copy-line-height: var(--app-text-muted-line-height);
+    --workspace-overview-insights-support-line-height: var(--app-caption-line-height);
+    --workspace-overview-insights-stack-gap: var(--layout-gap-xs);
+    --workspace-overview-insights-head-min-height: calc(var(--workspace-statistics-section-header-min-h) + var(--layout-gap-md));
     --workspace-overview-insights-title-lines: 2;
     --workspace-overview-insights-text-lines: 3;
     --workspace-overview-insights-evidence-lines: 2;
@@ -72,6 +72,8 @@
 
   .workspace-overview__panel .section-title,
   .workspace-context-rail--overview .section-title {
+    font-size: var(--app-title-md-size);
+    line-height: var(--app-title-md-line-height);
     letter-spacing: -0.015em;
     font-weight: 700;
   }
@@ -79,8 +81,9 @@
   .workspace-overview__panel .section-subtitle,
   .workspace-context-rail--overview .section-subtitle {
     max-width: 34ch;
-    line-height: 1.45;
-    color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
+    font-size: var(--app-text-muted-size);
+    line-height: var(--app-text-muted-line-height);
+    color: var(--color-text-muted);
   }
 
   .workspace-overview__panel .nearby-more {
@@ -90,8 +93,7 @@
     justify-content: center;
     gap: 4px;
     border-radius: 10px;
-    background: color-mix(in oklab, var(--c-panel) 92%, var(--surface-soft-bg) 8%);
-    box-shadow: inset 0 1px 0 color-mix(in oklab, white 62%, transparent);
+    background: var(--color-surface-muted);
     flex-shrink: 0;
   }
 
@@ -148,12 +150,7 @@
     align-self: end;
     padding: var(--space-2-5);
     border-radius: calc(var(--workspace-overview-panel-radius) - 4px);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%),
-        color-mix(in oklab, var(--surface-soft-bg) 96%, var(--c-primary) 4%)
-      );
+    background: var(--color-surface-muted);
   }
 
   .workspace-overview__snapshot-ai .workspace-statistics-ki__head {
@@ -161,8 +158,8 @@
   }
 
   .workspace-overview__snapshot-ai .workspace-statistics-ki__text {
-    font-size: 13px;
-    line-height: 1.5;
+    font-size: var(--app-text-muted-size);
+    line-height: var(--app-text-muted-line-height);
   }
 
   .workspace-overview__panel--actions,
@@ -228,13 +225,13 @@
 
   .workspace-guest-request-card__footer {
     display: grid;
-    gap: 10px;
+    gap: var(--layout-gap-xs);
   }
 
   .workspace-guest-request-card__action-row {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: var(--layout-gap-xs);
     width: 100%;
     min-width: 0;
   }
@@ -246,7 +243,7 @@
     padding-inline: 18px;
     justify-content: center;
     white-space: nowrap;
-    font-size: 12px;
+    font-size: var(--app-caption-size);
     line-height: 1.1;
   }
 

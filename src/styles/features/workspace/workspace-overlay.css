@@ -4,16 +4,16 @@
   .workspace-environment,
   .workspace-context-brief,
   .workspace-context-rail {
-    --workspace-environment-section-gap: var(--space-4);
-    --workspace-environment-card-gap: var(--space-3);
-    --workspace-environment-card-pad: var(--space-4);
+    --workspace-environment-section-gap: var(--layout-gap-md);
+    --workspace-environment-card-gap: var(--layout-gap-sm);
+    --workspace-environment-card-pad: var(--density-comfortable-pad);
     --workspace-environment-chip-pad: var(--space-2);
-    --workspace-environment-title-size: var(--fs-h2);
-    --workspace-environment-body-size: 17px;
-    --workspace-environment-label-size: var(--fs-small);
-    --workspace-environment-title-line-height: var(--lh-title);
-    --workspace-environment-body-line-height: 1.5;
-    --workspace-environment-tight-line-height: var(--lh-tight);
+    --workspace-environment-title-size: var(--app-title-lg-size);
+    --workspace-environment-body-size: var(--app-text-size);
+    --workspace-environment-label-size: var(--app-caption-size);
+    --workspace-environment-title-line-height: var(--app-title-lg-line-height);
+    --workspace-environment-body-line-height: var(--app-text-line-height);
+    --workspace-environment-tight-line-height: 1.15;
   }
 
   .workspace-environment {
@@ -157,7 +157,7 @@
     text-decoration: none;
     font-size: 13px;
     font-weight: 700;
-    box-shadow: 0 10px 20px color-mix(in oklab, var(--color-primary) 14%, transparent);
+    box-shadow: none;
     transition:
       background var(--transition-fast),
       transform var(--transition-fast),
@@ -187,7 +187,7 @@
   .workspace-environment__primary-cta:hover {
     background: var(--dc-primary-hover);
     color: var(--color-primary-contrast);
-    box-shadow: 0 16px 28px color-mix(in oklab, var(--color-primary) 18%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   .workspace-environment__hero {
@@ -463,13 +463,13 @@
     .workspace-environment,
     .workspace-context-brief,
     .workspace-context-rail {
-      --workspace-environment-section-gap: var(--space-3);
-      --workspace-environment-card-gap: var(--space-2);
-      --workspace-environment-card-pad: var(--space-3);
-      --workspace-environment-title-size: clamp(22px, 6vw, 28px);
-      --workspace-environment-body-size: 13px;
-      --workspace-environment-label-size: 11px;
-      --workspace-environment-body-line-height: 1.45;
+      --workspace-environment-section-gap: var(--layout-gap-sm);
+      --workspace-environment-card-gap: var(--layout-gap-xs);
+      --workspace-environment-card-pad: var(--density-compact-pad);
+      --workspace-environment-title-size: var(--app-title-lg-size);
+      --workspace-environment-body-size: var(--app-text-muted-size);
+      --workspace-environment-label-size: var(--app-caption-size);
+      --workspace-environment-body-line-height: var(--app-text-muted-line-height);
     }
 
     .workspace-environment__hero,
@@ -498,9 +498,7 @@
 
   @media (max-width: 420px) {
     .workspace-environment {
-      --workspace-environment-card-pad: var(--space-2-5);
-      --workspace-environment-body-size: 12px;
-      --workspace-environment-label-size: 10px;
+      --workspace-environment-card-pad: var(--density-compact-pad-sm);
     }
   }
 

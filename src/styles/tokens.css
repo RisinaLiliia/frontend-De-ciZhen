@@ -17,6 +17,21 @@
   --space-6: 24px;
   --space-8: 32px;
 
+  /* Layout rhythm */
+  --layout-gap-xs: var(--space-2);
+  --layout-gap-sm: var(--space-3);
+  --layout-gap-md: var(--space-4);
+  --layout-gap-lg: var(--space-6);
+  --layout-gap-xl: var(--space-8);
+
+  /* Density */
+  --density-comfortable-pad: var(--space-4-5);
+  --density-comfortable-pad-lg: var(--space-5);
+  --density-compact-pad: var(--space-3-5);
+  --density-compact-pad-sm: var(--space-3);
+  --density-comfortable-min-height: 184px;
+  --density-compact-min-height: 152px;
+
   /* Radius */
   --radius-xs: 6px;
   --radius-sm: 8px;
@@ -153,6 +168,20 @@
   --shadow-panel: 0 12px 32px rgba(18, 20, 24, 0.06);
   --shadow-floating: 0 18px 48px rgba(18, 20, 24, 0.08);
 
+  /* Semantic typography scale */
+  --app-title-xl-size: clamp(28px, 3vw, 36px);
+  --app-title-xl-line-height: 1.05;
+  --app-title-lg-size: 22px;
+  --app-title-lg-line-height: 1.18;
+  --app-title-md-size: 17px;
+  --app-title-md-line-height: 1.3;
+  --app-text-size: 15px;
+  --app-text-line-height: 1.5;
+  --app-text-muted-size: 14px;
+  --app-text-muted-line-height: 1.45;
+  --app-caption-size: 12px;
+  --app-caption-line-height: 1.35;
+
   --dc-radius-sm: var(--radius-sm);
   --dc-radius-md: var(--radius-md);
   --dc-radius-lg: var(--radius-lg);
@@ -196,28 +225,41 @@
   --shell-sidebar-width: 232px;
   --shell-rail-width: 300px;
   --shell-content-max-width: 1440px;
+  --workspace-content-max-width: var(--shell-content-max-width);
+  --workspace-rail-width: var(--shell-rail-width);
+  --workspace-grid-gap: var(--layout-gap-lg);
   --shell-max-width: calc(var(--shell-sidebar-width) + var(--shell-content-max-width));
   --shell-topbar-max-width: var(--shell-content-max-width);
   --shell-inline-padding: clamp(16px, 2vw, 24px);
   --shell-topbar-offset: clamp(8px, 1.5vw, 16px);
   --section-top-offset: clamp(24px, 3vw, 40px);
-  --layout-section-gap: var(--space-6);
+  --layout-section-gap: var(--workspace-grid-gap);
 }
 
 @media (max-width: 1199px) {
   :root {
     --shell-content-max-width: 920px;
+    --workspace-content-max-width: var(--shell-content-max-width);
     --shell-inline-padding: 20px;
-    --layout-section-gap: var(--space-5);
+    --workspace-grid-gap: var(--layout-gap-md);
   }
 }
 
 @media (max-width: 768px) {
   :root {
     --shell-content-max-width: none;
+    --workspace-content-max-width: var(--shell-content-max-width);
     --shell-inline-padding: 16px;
     --shell-topbar-offset: 8px;
     --section-top-offset: clamp(14px, 4vw, 22px);
-    --layout-section-gap: var(--space-4);
+    --workspace-grid-gap: var(--layout-gap-md);
+    --density-comfortable-pad: var(--space-4);
+    --density-comfortable-pad-lg: var(--space-4-5);
+    --app-title-xl-size: clamp(24px, 6vw, 30px);
+    --app-title-lg-size: 20px;
+    --app-title-md-size: 16px;
+    --app-text-size: 14px;
+    --app-text-muted-size: 13px;
+    --app-caption-size: 11px;
   }
 }

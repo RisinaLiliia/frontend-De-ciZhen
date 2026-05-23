@@ -350,31 +350,26 @@
       z-index: 42;
       display: grid;
       grid-template-columns: repeat(var(--topbar-mobile-columns, 3), minmax(0, 1fr));
-      gap: 6px;
-      padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
-      border-top: 1px solid color-mix(in oklab, var(--c-border) 58%, transparent);
-      background:
-        linear-gradient(
-          180deg,
-          color-mix(in oklab, var(--c-bg) 88%, transparent),
-          color-mix(in oklab, var(--c-bg) 96%, black 4%)
-        );
+      gap: var(--layout-gap-xs);
+      padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--color-border-soft);
+      background: color-mix(in oklab, var(--color-surface) 92%, transparent);
       backdrop-filter: blur(10px);
     }
 
     .topbar-nav__mobile-item {
-      min-height: 58px;
+      min-height: calc(var(--space-8) + var(--space-6) + var(--space-0-5));
       border-radius: 14px;
-      border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
-      background: color-mix(in oklab, var(--c-panel) 86%, transparent);
-      color: var(--c-text-muted);
+      border: 1px solid var(--color-border-soft);
+      background: color-mix(in oklab, var(--color-surface-muted) 88%, transparent);
+      color: var(--color-text-muted);
       text-decoration: none;
       display: inline-flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      font-size: 11px;
+      gap: var(--space-0-75);
+      font-size: var(--app-caption-size);
       font-weight: 700;
       letter-spacing: 0.01em;
       transition:
@@ -391,19 +386,17 @@
 
     .topbar-nav__mobile-item .topbar-nav__label {
       display: inline-flex;
-      font-size: 10px;
-      line-height: 1;
-      color: color-mix(in oklab, var(--c-text-muted) 88%, transparent);
+      font-size: var(--app-caption-size);
+      line-height: var(--app-caption-line-height);
+      color: var(--color-text-muted);
       transition: color var(--transition-fast);
     }
 
     .topbar-nav__mobile-item.is-active {
-      color: var(--c-text);
-      border-color: color-mix(in oklab, white 12%, var(--c-border) 88%);
-      background: color-mix(in oklab, white 6%, var(--c-panel) 94%);
-      box-shadow:
-        inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
-        0 8px 18px color-mix(in oklab, var(--c-ink) 16%, transparent);
+      color: var(--color-text);
+      border-color: var(--color-primary-border);
+      background: var(--color-primary-soft);
+      box-shadow: var(--shadow-card);
     }
 
     .topbar-nav__mobile-item.is-active .topbar-nav__label {
@@ -411,10 +404,8 @@
     }
 
     .topbar-nav__mobile-item:focus-visible {
-      border-color: color-mix(in oklab, white 16%, var(--c-border) 84%);
-      box-shadow:
-        0 0 0 3px color-mix(in oklab, white 7%, transparent),
-        0 8px 18px color-mix(in oklab, var(--c-ink) 16%, transparent);
+      border-color: var(--color-primary-border);
+      box-shadow: var(--control-focus-ring);
     }
 
     .topbar-nav__mobile-item--create {
@@ -463,9 +454,7 @@
       border: 1px solid color-mix(in oklab, var(--c-accent) 44%, var(--c-border) 56%);
       background: color-mix(in oklab, var(--c-panel) 90%, var(--c-accent) 10%);
       color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
-      box-shadow:
-        0 8px 16px color-mix(in oklab, var(--c-ink) 12%, transparent),
-        inset 0 1px 0 color-mix(in oklab, white 14%, transparent);
+      box-shadow: var(--shadow-card);
     }
 
     .topbar-nav__mobile-item--create .topbar-nav__icon svg {
@@ -488,9 +477,7 @@
           color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%) 0%,
           color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%) 100%
         );
-      box-shadow:
-        0 0 0 3px color-mix(in oklab, var(--c-accent) 10%, transparent),
-        0 8px 18px color-mix(in oklab, var(--c-ink) 16%, transparent);
+      box-shadow: var(--control-focus-ring);
     }
   }
 }

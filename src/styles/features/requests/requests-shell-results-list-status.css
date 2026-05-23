@@ -3,12 +3,12 @@
 @layer components {
   .requests-list {
     display: grid;
-    gap: var(--space-2-5);
+    gap: var(--layout-gap-sm);
   }
 
   .requests-list--stable {
-    --requests-row-height: 184px;
-    --requests-row-gap: var(--space-2-5);
+    --requests-row-height: var(--density-comfortable-min-height);
+    --requests-row-gap: var(--layout-gap-sm);
     --requests-visible-rows: 10;
   }
 
@@ -18,12 +18,12 @@
 
   .requests-list.is-double {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-2-5);
+    gap: var(--layout-gap-sm);
   }
 
   .requests-list--stable.is-double {
     --requests-row-height: 194px;
-    --requests-row-gap: var(--space-2-5);
+    --requests-row-gap: var(--layout-gap-sm);
     --requests-visible-rows: 5;
   }
 
@@ -92,7 +92,7 @@
   .offer-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2);
+    gap: var(--layout-gap-xs);
   }
 
   .offer-actions__btn {

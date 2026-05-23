@@ -12,7 +12,7 @@
   @media (max-width: 767px) {
     .workspace-mobile-context-section {
       display: grid;
-      gap: var(--space-2);
+      gap: var(--layout-gap-xs);
       margin-top: -2px;
     }
 
@@ -29,7 +29,7 @@
     }
 
     .workspace-mobile-context-section__controls {
-      padding: var(--space-3);
+      padding: var(--density-compact-pad-sm);
       border-radius: var(--radius-lg);
       border: 1px solid var(--color-border-soft);
       background: var(--color-surface);
@@ -37,7 +37,7 @@
     }
 
     .workspace-mobile-context-section__controls.workspace-context-controls {
-      gap: var(--space-3);
+      gap: var(--layout-gap-xs);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__header {
@@ -46,7 +46,7 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__label {
-      font-size: 10px;
+      font-size: var(--app-caption-size);
       letter-spacing: 0.12em;
     }
 
@@ -56,14 +56,14 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
-      min-height: 28px;
-      padding-inline: 10px;
+      min-height: calc(var(--space-5) + var(--space-1));
+      padding-inline: var(--space-2-5);
       border-radius: 999px;
       border: 1px solid var(--color-border-soft);
       background: var(--color-surface-muted);
-      font-size: 10px;
+      font-size: var(--app-caption-size);
       font-weight: 700;
-      line-height: 1;
+      line-height: var(--app-caption-line-height);
       letter-spacing: 0.01em;
       color: var(--color-text-muted);
     }
@@ -77,7 +77,7 @@
     .workspace-mobile-context-section__controls .workspace-context-controls__body,
     .workspace-mobile-context-section__controls .workspace-context-controls__filters-grid,
     .workspace-mobile-context-section__controls .workspace-context-controls__range-row {
-      gap: var(--space-2);
+      gap: var(--layout-gap-xs);
       grid-template-columns: minmax(0, 1fr);
     }
 
@@ -89,7 +89,7 @@
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
-      gap: var(--space-3);
+      gap: var(--layout-gap-xs);
       align-items: stretch;
       overflow: visible;
     }
@@ -119,7 +119,7 @@
     .workspace-mobile-context-section__controls .workspace-context-controls__state-tabs {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-1-5);
+      gap: var(--space-1);
       white-space: normal;
       overflow: visible;
       border-bottom: 0;
@@ -132,15 +132,15 @@
       align-items: center;
       justify-content: center;
       min-width: 0;
-      min-height: 38px;
+      min-height: calc(var(--space-8) + var(--space-1-5));
       margin-bottom: 0;
-      padding: 8px 10px;
+      padding: var(--space-2) var(--space-2-5);
       border: 1px solid var(--color-border-soft);
       border-radius: var(--radius-md);
       background: var(--color-surface);
       color: var(--color-text-muted);
       text-align: center;
-      line-height: 1.2;
+      line-height: var(--app-caption-line-height);
       white-space: normal;
       box-shadow: none;
     }
@@ -154,9 +154,9 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__select {
-      min-height: 42px;
+      min-height: calc(var(--space-8) + var(--space-2-5));
       border-radius: var(--radius-md);
-      font-size: 13px;
+      font-size: var(--app-text-muted-size);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar {
@@ -167,7 +167,7 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar .home-activity__ranges {
-      gap: var(--space-1-5);
+      gap: var(--space-1);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__action {
@@ -184,26 +184,26 @@
 
   @media (max-width: 420px) {
     .workspace-mobile-context-section {
-      gap: var(--space-2);
+      gap: var(--layout-gap-xs);
     }
 
     .workspace-mobile-context-section__controls {
-      padding: var(--space-2-5);
+      padding: var(--density-compact-pad-sm);
       border-radius: var(--radius-lg);
     }
 
     .workspace-mobile-context-section__controls.workspace-context-controls {
-      gap: var(--space-2-5);
+      gap: var(--layout-gap-xs);
     }
 
     .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
-      min-height: 26px;
-      padding-inline: 9px;
-      font-size: 9px;
+      min-height: var(--space-6);
+      padding-inline: var(--space-2);
+      font-size: var(--app-caption-size);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row {
-      gap: var(--space-2-5);
+      gap: var(--layout-gap-xs);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-scope-switch,
@@ -214,8 +214,8 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__select {
-      min-height: 42px;
-      font-size: 12px;
+      min-height: calc(var(--space-8) + var(--space-2));
+      font-size: var(--app-caption-size);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar {

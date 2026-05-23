@@ -10,6 +10,7 @@
 @import './primitives/controls.css';
 @import './primitives/badges.css';
 @import './primitives/layout.css';
+@import './primitives/typography.css';
 @import './components.css';
 @import './request-card.css';
 @import './home.css';
