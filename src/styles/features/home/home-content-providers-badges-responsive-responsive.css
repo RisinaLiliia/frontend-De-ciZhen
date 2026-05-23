@@ -56,12 +56,9 @@
   @media (hover: hover) {
     .provider-card:hover {
       transform: translateY(-2px);
-      border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
-      box-shadow:
-        var(--shadow-card),
-        0 14px 30px color-mix(in oklab, var(--c-primary) 14%, transparent);
+      border-color: var(--color-border);
+      box-shadow: var(--shadow-card-hover);
     }
-
   }
 
   @media (max-width: 900px) {
@@ -100,6 +97,4 @@
     }
 
   }
-
-
 }

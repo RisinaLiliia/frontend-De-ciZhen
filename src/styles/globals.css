@@ -6,6 +6,10 @@
 @import './tokens.css';
 @import './themes.css';
 @import './base.css';
+@import './primitives/surface.css';
+@import './primitives/controls.css';
+@import './primitives/badges.css';
+@import './primitives/layout.css';
 @import './components.css';
 @import './request-card.css';
 @import './home.css';
@@ -14,27 +18,10 @@
 @import './overlays.css';
 
 @layer utilities {
-  .dc-surface {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-soft);
-    box-shadow: var(--shadow-card);
-  }
-
-  .dc-surface-muted {
-    background: var(--color-surface-muted);
-    border: 1px solid var(--color-border-soft);
-  }
-
-  .dc-panel {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-soft);
-    box-shadow: var(--shadow-panel);
-  }
-
   .dc-glow {
     box-shadow:
-      0 8px 20px color-mix(in oklab, var(--color-primary) 9%, transparent),
-      0 0 0 1px color-mix(in oklab, var(--color-border) 62%, transparent);
+      var(--shadow-card),
+      0 0 0 1px color-mix(in oklab, var(--color-primary) 10%, transparent);
   }
 
   .dc-glow-hover {
@@ -47,8 +34,8 @@
   .dc-glow-hover:hover {
     transform: translateY(-1px);
     box-shadow:
-      0 12px 28px color-mix(in oklab, var(--color-primary) 11%, transparent),
-      0 0 0 1px color-mix(in oklab, var(--color-border) 62%, transparent);
+      var(--shadow-card-hover),
+      0 0 0 1px color-mix(in oklab, var(--color-primary) 14%, transparent);
   }
 
   [data-motion-paused='true'],

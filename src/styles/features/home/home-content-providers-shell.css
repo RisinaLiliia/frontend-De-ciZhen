@@ -29,23 +29,7 @@
     display: grid;
     gap: var(--space-3);
     padding: 0;
-    border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background:
-      linear-gradient(
-        90deg,
-        color-mix(in oklab, var(--c-panel) 98%, transparent) 0%,
-        color-mix(in oklab, var(--c-panel) 94%, transparent) 45%,
-        color-mix(in oklab, var(--c-ink) 85%, transparent) 100%
-      ),
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--c-panel) 98%, transparent),
-        color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%)
-      );
-    box-shadow:
-      var(--shadow-card),
-      0 10px 24px color-mix(in oklab, var(--c-primary) 8%, transparent);
+    border-radius: inherit;
     position: relative;
     container-type: inline-size;
     min-width: 0;
@@ -58,16 +42,6 @@
       box-shadow var(--transition);
   }
 
-  html:not(.dark) .provider-card {
-    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
-    background: linear-gradient(
-      180deg,
-      var(--c-panel) 0%,
-      color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%
-    );
-    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 18%, transparent);
-  }
-
   .provider-card__overlay-link {
     position: absolute;
     inset: 0;
@@ -77,10 +51,10 @@
   }
 
   .provider-card:focus-within {
-    border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
+    border-color: var(--color-primary-border);
     box-shadow:
       var(--shadow-card),
-      0 0 0 3px var(--focus-ring-primary);
+      0 0 0 3px color-mix(in oklab, var(--color-primary) 14%, transparent);
   }
 
   .provider-card__favorite {
@@ -130,6 +104,4 @@
     z-index: 3;
     pointer-events: auto;
   }
-
-
 }

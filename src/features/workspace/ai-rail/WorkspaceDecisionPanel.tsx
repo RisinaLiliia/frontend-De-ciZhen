@@ -59,7 +59,7 @@ export function WorkspaceDecisionPanel({
 
   return (
     <div className="workspace-decision-panel">
-      <section className="panel workspace-decision-panel__summary">
+      <section className="app-rail-panel workspace-decision-panel__summary">
         <span className="workspace-decision-panel__eyebrow">
           {t(I18N_KEYS.requestsPage.decisionPanelTitle)}
         </span>
@@ -82,7 +82,7 @@ export function WorkspaceDecisionPanel({
         <p className="workspace-decision-panel__text">{summaryText}</p>
         <button
           type="button"
-          className="auth-social__btn auth-social__btn--google workspace-ai-card__action workspace-decision-panel__primary"
+          className="app-button-primary workspace-ai-card__action workspace-decision-panel__primary"
           onClick={onStartDecisionMode}
           disabled={panel.summary.totalNeedsAction === 0}
         >
@@ -90,7 +90,7 @@ export function WorkspaceDecisionPanel({
         </button>
       </section>
 
-      <section className="panel workspace-decision-panel__queue">
+      <section className="app-rail-panel workspace-decision-panel__queue">
         <div className="workspace-decision-panel__section-head">
           <span className="workspace-decision-panel__eyebrow">
             {t(I18N_KEYS.requestsPage.decisionPanelQueueTitle)}
@@ -133,7 +133,7 @@ export function WorkspaceDecisionPanel({
         ) : null}
       </section>
 
-      <section className="panel workspace-decision-panel__overview">
+      <section className="app-rail-panel workspace-decision-panel__overview">
         <span className="workspace-decision-panel__eyebrow">
           {overviewEyebrow}
         </span>

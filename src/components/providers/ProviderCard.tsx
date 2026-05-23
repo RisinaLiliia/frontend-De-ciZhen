@@ -69,7 +69,7 @@ export function ProviderCard({
 
   return (
     <div
-      className={`provider-card ${variant === 'grid' ? 'is-grid' : 'is-list'} ${canToggleFavorite ? 'has-favorite-toggle' : ''} ${showCornerBadge ? 'has-corner-badge' : ''} ${className ?? ''}`.trim()}
+      className={`provider-card app-card ${variant === 'grid' ? 'is-grid' : 'is-list'} ${canToggleFavorite ? 'has-favorite-toggle' : ''} ${showCornerBadge ? 'has-corner-badge' : ''} ${className ?? ''}`.trim()}
     >
       <Link
         href={provider.profileHref}

@@ -22,7 +22,7 @@
   .workspace-context-controls--embedded {
     gap: var(--space-3);
     padding: 18px 20px;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     border: 1px solid var(--color-border-soft);
     background: var(--color-surface);
     box-shadow: var(--shadow-card);
@@ -174,7 +174,7 @@
     flex-wrap: nowrap;
     gap: var(--space-2);
     padding: 0;
-    border-bottom: 1px solid color-mix(in oklab, var(--color-primary) 18%, var(--color-border) 82%);
+    border-bottom: 1px solid var(--color-border-soft);
     white-space: nowrap;
   }
 
@@ -227,7 +227,7 @@
     border-radius: 999px;
     border: 1px solid var(--workspace-context-control-border);
     background: var(--color-surface);
-    box-shadow: 0 8px 18px color-mix(in oklab, var(--color-border-soft) 16%, transparent);
+    box-shadow: none;
   }
 
   .workspace-context-toggle-tab {
@@ -259,7 +259,7 @@
   .workspace-context-toggle-tab.is-active {
     color: var(--color-primary);
     background: var(--color-primary-soft);
-    box-shadow: 0 8px 16px color-mix(in oklab, var(--color-primary) 10%, transparent);
+    box-shadow: none;
   }
 
   .workspace-context-controls__combined-row > .workspace-context-toggle-tabs .workspace-context-toggle-tab,
@@ -430,14 +430,14 @@
   .workspace-view-toggle__btn,
   .workspace-context-controls__action,
   .workspace-context-controls__secondary-button {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    min-height: 34px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     padding: 0;
     border: 1px solid transparent;
-    border-radius: 10px;
-    background: transparent;
+    border-radius: 12px;
+    background: var(--color-surface);
     color: var(--color-text-muted);
     box-shadow: none;
     appearance: none;
@@ -460,7 +460,7 @@
   .workspace-context-controls__secondary-button:hover {
     color: var(--color-text);
     background: var(--color-surface-muted);
-    border-color: var(--color-border-soft);
+    border-color: var(--color-border);
   }
 
   .workspace-view-toggle__btn:focus-visible,
@@ -595,7 +595,7 @@
     min-width: 168px;
     padding: 0;
     border: 0;
-    border-radius: 8px;
+    border-radius: 12px;
     background: transparent;
     box-shadow: none;
     color: var(--color-text);

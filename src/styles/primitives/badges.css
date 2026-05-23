@@ -1,0 +1,97 @@
+@layer components {
+  :is(.app-badge, .ui-badge, .badge, .status-badge) {
+    --badge-accent: color-mix(in oklab, var(--c-text-muted) 78%, var(--c-border) 22%);
+    --badge-bg: color-mix(in oklab, var(--badge-accent) 9%, var(--c-panel) 91%);
+    --badge-border: color-mix(in oklab, var(--badge-accent) 18%, var(--c-border) 82%);
+    --badge-text: color-mix(in oklab, var(--badge-accent) 62%, var(--c-text) 38%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    min-height: 28px;
+    padding-inline: 12px;
+    border-radius: 999px;
+    border: 1px solid var(--badge-border);
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .app-badge,
+  .ui-badge,
+  .badge,
+  .status-badge {
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 65%, transparent);
+  }
+
+  .ui-badge--sm,
+  .app-badge--sm {
+    min-height: 28px;
+    padding-inline: 12px;
+    font-size: 12px;
+  }
+
+  .ui-badge--md,
+  .app-badge--md {
+    min-height: 32px;
+    padding-inline: 14px;
+    font-size: 13px;
+  }
+
+  :is(.ui-badge--soft, .app-badge--soft, .badge, .status-badge) {
+    --badge-bg: color-mix(in oklab, var(--badge-accent) 10%, var(--c-panel) 90%);
+    --badge-border: color-mix(in oklab, var(--badge-accent) 16%, var(--c-border) 84%);
+    --badge-text: color-mix(in oklab, var(--badge-accent) 78%, var(--c-text) 22%);
+  }
+
+  :is(.ui-badge--outline, .app-badge--outline) {
+    --badge-bg: color-mix(in oklab, white 78%, transparent);
+    --badge-border: color-mix(in oklab, var(--badge-accent) 16%, var(--c-border) 84%);
+    --badge-text: color-mix(in oklab, var(--badge-accent) 56%, var(--c-text) 44%);
+  }
+
+  :is(.ui-badge--solid, .app-badge--solid) {
+    --badge-bg: color-mix(in oklab, var(--badge-accent) 84%, white 16%);
+    --badge-border: color-mix(in oklab, var(--badge-accent) 90%, black 10%);
+    --badge-text: white;
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--badge-accent) 14%, transparent);
+  }
+
+  :is(.ui-badge--neutral, .app-badge--neutral) {
+    --badge-accent: color-mix(in oklab, var(--c-text-muted) 78%, var(--c-border) 22%);
+  }
+
+  :is(.ui-badge--info, .app-badge--info, .status-badge--info) {
+    --badge-accent: var(--c-info);
+  }
+
+  :is(.ui-badge--success, .app-badge--success, .status-badge--success) {
+    --badge-accent: var(--c-success);
+  }
+
+  :is(.ui-badge--warning, .app-badge--warning, .status-badge--warning) {
+    --badge-accent: var(--c-warning);
+  }
+
+  :is(.ui-badge--risk, .app-badge--risk, .status-badge--danger) {
+    --badge-accent: var(--c-danger);
+  }
+
+  :is(.ui-badge--opportunity, .app-badge--opportunity) {
+    --badge-accent: color-mix(in oklab, var(--c-info) 60%, var(--c-success) 40%);
+  }
+
+  :is(.app-badge, .ui-badge, .badge, .status-badge):focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 22%, transparent);
+  }
+}

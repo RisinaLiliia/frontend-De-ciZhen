@@ -936,11 +936,10 @@
   }
 
   .my-request-card--active .request-card {
-    border-color: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
+    border-color: var(--color-primary-border);
     box-shadow:
-      inset 0 1px 0 color-mix(in oklab, white 74%, transparent),
       0 0 0 1px color-mix(in oklab, var(--c-primary) 14%, transparent),
-      0 22px 48px color-mix(in oklab, var(--c-primary) 10%, transparent);
+      var(--shadow-card-hover);
   }
 
   .my-request-card--idle {
@@ -962,10 +961,10 @@
 
   .workspace-decision-panel__summary {
     padding: 20px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
-    border-radius: 22px;
+    border: 1px solid var(--color-primary-border);
+    border-radius: var(--radius-xl);
     background: var(--surface-decision-active-bg);
-    box-shadow: var(--surface-card-shadow);
+    box-shadow: var(--shadow-card);
   }
 
   .workspace-decision-panel__eyebrow,
@@ -1004,7 +1003,7 @@
     justify-content: center;
   }
 
-  .workspace-decision-panel__primary.workspace-ai-card__action.auth-social__btn {
+  .workspace-decision-panel__primary.workspace-ai-card__action {
     width: 100%;
     min-width: 0;
     min-height: 42px;
@@ -1015,10 +1014,8 @@
   .workspace-decision-panel__primary:focus-visible,
   .workspace-decision-panel__queue-item:focus-visible {
     outline: none;
-    border-color: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
-    box-shadow:
-      0 0 0 3px color-mix(in oklab, var(--c-primary) 14%, transparent),
-      0 14px 30px color-mix(in oklab, var(--c-ink) 6%, transparent);
+    border-color: var(--color-primary-border);
+    box-shadow: var(--control-focus-ring);
   }
 
   .workspace-decision-panel__section-head {
@@ -1042,9 +1039,9 @@
     gap: 10px;
     width: 100%;
     padding: 14px 15px;
-    border: 1px solid color-mix(in oklab, var(--c-border) 84%, white 16%);
+    border: 1px solid var(--color-border-soft);
     border-radius: 16px;
-    background: color-mix(in oklab, var(--surface-base) 92%, white 8%);
+    background: var(--color-surface);
     text-align: left;
     transition:
       border-color 160ms ease,
@@ -1055,8 +1052,8 @@
   .workspace-decision-panel__queue-item:hover,
   .workspace-decision-panel__queue-item.is-active {
     transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
-    box-shadow: 0 14px 30px color-mix(in oklab, var(--c-ink) 6%, transparent);
+    border-color: var(--color-primary-border);
+    box-shadow: var(--shadow-card);
   }
 
   .workspace-decision-panel__queue-copy {
@@ -1083,7 +1080,7 @@
     min-height: 24px;
     padding: 0 9px;
     border-radius: 999px;
-    background: color-mix(in oklab, var(--c-border) 80%, white 20%);
+    background: var(--color-surface-muted);
     color: var(--text-muted);
     font-size: 10px;
     font-weight: 700;
@@ -1111,7 +1108,7 @@
     justify-content: space-between;
     gap: 12px;
     padding-top: 10px;
-    border-top: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+    border-top: 1px solid var(--color-border-soft);
   }
 
   .workspace-decision-panel__overview-grid dt {

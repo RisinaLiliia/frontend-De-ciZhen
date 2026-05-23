@@ -4,16 +4,11 @@ type WorkspaceShellClassValue = string | false | null | undefined;
 export type WorkspaceSurfaceVariant = 'card' | 'panel' | 'rightRail' | 'muted' | 'elevated';
 
 const WORKSPACE_SURFACE_CLASS_MAP: Record<WorkspaceSurfaceVariant, string> = {
-  card:
-    'rounded-[var(--dc-radius-lg)] border border-[var(--dc-border-soft)] bg-[var(--dc-surface)] shadow-[var(--dc-shadow-card)]',
-  panel:
-    'rounded-[var(--dc-radius-xl)] border border-[var(--dc-border)] bg-[var(--dc-surface)] shadow-[var(--dc-shadow-panel)]',
-  rightRail:
-    'rounded-[var(--dc-radius-lg)] border border-[var(--dc-border-soft)] bg-[var(--dc-surface)] shadow-[var(--surface-right-rail-shadow)]',
-  muted:
-    'rounded-[var(--dc-radius-lg)] border border-[var(--dc-border-soft)] bg-[var(--dc-surface-muted)]',
-  elevated:
-    'rounded-[var(--dc-radius-xl)] border border-[var(--dc-border)] bg-[var(--dc-surface)] shadow-[var(--dc-shadow-panel)]',
+  card: 'app-card',
+  panel: 'app-panel',
+  rightRail: 'app-rail-panel',
+  muted: 'app-muted',
+  elevated: 'app-panel',
 };
 
 export function workspaceSurfaceShell(
@@ -24,7 +19,7 @@ export function workspaceSurfaceShell(
 }
 
 export function workspacePanelShell(...classNames: WorkspaceShellClassValue[]) {
-  return cn('panel', workspaceSurfaceShell('panel'), ...classNames);
+  return cn(workspaceSurfaceShell('panel'), ...classNames);
 }
 
 export function workspaceRequestsPanelShell(...classNames: WorkspaceShellClassValue[]) {
@@ -32,7 +27,7 @@ export function workspaceRequestsPanelShell(...classNames: WorkspaceShellClassVa
 }
 
 export function workspaceCardShell(...classNames: WorkspaceShellClassValue[]) {
-  return cn('card', workspaceSurfaceShell('card'), ...classNames);
+  return cn(workspaceSurfaceShell('card'), ...classNames);
 }
 
 export function workspaceStatCardShell(...classNames: WorkspaceShellClassValue[]) {
@@ -52,7 +47,7 @@ export function workspaceMutedPanelShell(...classNames: WorkspaceShellClassValue
 }
 
 export function workspaceElevatedCardShell(...classNames: WorkspaceShellClassValue[]) {
-  return cn('card', workspaceSurfaceShell('elevated'), ...classNames);
+  return cn(workspaceSurfaceShell('elevated'), ...classNames);
 }
 
 export function workspaceStatsChartPanelShell(...classNames: WorkspaceShellClassValue[]) {
