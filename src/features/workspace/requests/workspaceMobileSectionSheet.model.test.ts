@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
+import type { WorkspaceNavItem } from '@/features/workspace/navigation/workspaceNavItem.types';
 
 import {
   formatWorkspaceMobileSheetBadgeValue,

@@ -2,11 +2,9 @@
 
 import * as React from 'react';
 
-import {
-  buildWorkspaceNavHeader,
-  buildWorkspacePersonalNavItems,
-} from '@/features/workspace/requests/workspaceState.nav';
-import type { BuildWorkspacePersonalNavItemsArgs } from '@/features/workspace/requests/workspaceState.personalNav';
+import { buildWorkspaceNavHeader } from '@/features/workspace/navigation/workspaceState.nav.shared';
+import { buildWorkspacePersonalNavItems } from '@/features/workspace/navigation/workspaceState.personalNav';
+import type { BuildWorkspacePersonalNavItemsArgs } from '@/features/workspace/navigation/workspaceState.personalNav';
 
 type WorkspaceNavModelParams = BuildWorkspacePersonalNavItemsArgs & {
   userName?: string | null;

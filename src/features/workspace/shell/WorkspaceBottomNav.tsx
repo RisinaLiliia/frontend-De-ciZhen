@@ -7,7 +7,7 @@ import {
 } from '@/features/workspace/context';
 import { WorkspaceModeNav } from '@/features/workspace/shell/WorkspaceModeNav';
 import type { WorkspaceBottomNavProps } from '@/features/workspace/shell/WorkspaceShell.types';
-import { useWorkspaceMobileSectionSheet } from '@/features/workspace/requests/useWorkspaceMobileSectionSheet';
+import { useWorkspaceMobileSectionSheet } from '@/features/workspace/shell/useWorkspaceMobileSectionSheet';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
 

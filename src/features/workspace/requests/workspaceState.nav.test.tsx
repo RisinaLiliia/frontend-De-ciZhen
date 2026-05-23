@@ -1,10 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  buildPublicNavItems,
-  buildWorkspaceNavHeader,
-  buildWorkspacePersonalNavItems,
-} from '@/features/workspace/requests/workspaceState.nav';
+import { buildPublicNavItems } from '@/features/workspace/navigation/workspaceState.publicNav';
+import { buildWorkspaceNavHeader } from '@/features/workspace/navigation/workspaceState.nav.shared';
+import { buildWorkspacePersonalNavItems } from '@/features/workspace/navigation/workspaceState.personalNav';
 
 describe('workspaceState.nav', () => {
   it('builds public primary nav items with stable counters and request seen callback', () => {
