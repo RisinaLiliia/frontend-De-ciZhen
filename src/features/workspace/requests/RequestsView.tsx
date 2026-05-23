@@ -21,7 +21,6 @@ import {
 import { WorkspaceRequestsActionRail } from '@/features/workspace/ai-rail/WorkspaceRequestsActionRail';
 import { WorkspaceDecisionModeBar } from '@/features/workspace/ai-rail/WorkspaceDecisionModeBar';
 import { WorkspaceRequestsSectionSummary } from '@/features/workspace/ai-rail/WorkspaceRequestsSectionSummary';
-import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import {
   buildRequestsWorkspaceDecisionRailProps,
 } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
@@ -52,6 +51,7 @@ import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 import { pickRequestImage } from '@/lib/requests/images';
 import { AuthGate, CardSkeletonList, EmptyState } from '@/features/workspace/requests/RequestsViewStates';
+import { RequestsListPagination } from '@/features/workspace/requests/RequestsListPagination';
 
 export type { WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
 
@@ -67,37 +67,6 @@ function fillLocaleTemplate(locale: Locale, key: I18nKey, values: Record<string,
   return Object.entries(values).reduce(
     (result, [token, value]) => result.replace(`{${token}}`, value),
     tx(locale, key),
-  );
-}
-
-function RequestsListPagination({
-  locale,
-  page,
-  totalPages,
-  onPageChange,
-}: {
-  locale: Locale;
-  page: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}) {
-  const safeTotalPages = Math.max(1, totalPages);
-  const safePage = Math.min(safeTotalPages, Math.max(1, page));
-
-  return (
-    <div className="requests-pagination">
-      <RequestsPageNav
-        page={safePage}
-        totalPages={safeTotalPages}
-        onPrevPage={() => onPageChange(Math.max(1, safePage - 1))}
-        onNextPage={() => onPageChange(Math.min(safeTotalPages, safePage + 1))}
-        ariaLabel={tx(locale, I18N_KEYS.requestsPage.workspaceRequestPageNavigationLabel)}
-        prevAriaLabel={tx(locale, I18N_KEYS.requestsPage.paginationPrev)}
-        nextAriaLabel={tx(locale, I18N_KEYS.requestsPage.paginationNext)}
-        prevTitle={tx(locale, I18N_KEYS.requestsPage.paginationPrev)}
-        nextTitle={tx(locale, I18N_KEYS.requestsPage.paginationNext)}
-      />
-    </div>
   );
 }
 
