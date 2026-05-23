@@ -9,7 +9,7 @@ import {
   resolveGrowthCard,
   resolveInsightText,
   type WorkspaceStatisticsCopy,
-} from './workspaceStatistics.copy';
+} from './statistics.copy';
 import { inferInsightType } from './statisticsInsights.utils';
 import { formatInsightEvidence } from './statisticsModel.mappers';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
@@ -18,7 +18,7 @@ import type {
   WorkspaceStatisticsGrowthCardView,
   WorkspaceStatisticsInsightView,
   WorkspaceStatisticsModel,
-} from './workspaceStatistics.model';
+} from './statistics.model';
 
 export function normalizeNullableFilterValue(value: string | null | undefined): string | null {
   const normalized = String(value ?? '').trim();

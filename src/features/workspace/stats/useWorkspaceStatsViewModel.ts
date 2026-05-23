@@ -10,7 +10,7 @@ import type {
   WorkspaceStatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
-import { getWorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import { getWorkspaceStatisticsCopy } from './statistics.copy';
 import {
   formatDateLabel,
   formatDateTimeLabel,
@@ -30,7 +30,7 @@ import type {
   WorkspaceStatisticsOpportunityRadarItemView,
   WorkspaceStatisticsPriceIntelligenceView,
   WorkspaceStatisticsUserIntelligenceView,
-} from './workspaceStatistics.model';
+} from './statistics.model';
 import {
   buildActivitySignals,
   buildActivityTrend,

@@ -1,4 +1,4 @@
-import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import type { WorkspaceStatisticsCopy } from './statistics.copy';
 
 export function formatMetricValue(params: {
   copy: WorkspaceStatisticsCopy;

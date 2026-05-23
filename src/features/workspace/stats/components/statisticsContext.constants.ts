@@ -1,5 +1,5 @@
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 
 export const ALL_CITIES_VALUE = '__all_cities__';
 export const ALL_CATEGORIES_VALUE = '__all_categories__';

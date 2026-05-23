@@ -3,8 +3,8 @@ import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisi
 import type {
   WorkspaceStatisticsFunnelComparisonView,
   WorkspaceStatisticsFunnelItemView,
-} from './workspaceStatistics.model';
-import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+} from './statistics.model';
+import type { WorkspaceStatisticsCopy } from './statistics.copy';
 
 function resolveActionLabel(copy: WorkspaceStatisticsCopy, actionCode: string | null): string | null {
   if (actionCode === 'respond_faster') return copy.userActionRespondTitle;

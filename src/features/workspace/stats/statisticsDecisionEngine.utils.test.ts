@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getWorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import { getWorkspaceStatisticsCopy } from './statistics.copy';
 import {
   buildDecisionPlan,
   buildPersonalizedDecisionPlan,
@@ -13,7 +13,7 @@ import type {
   WorkspaceStatisticsPersonalizedPricingView,
   WorkspaceStatisticsPriceIntelligenceView,
   WorkspaceStatisticsPrioritySectionView,
-} from './workspaceStatistics.model';
+} from './statistics.model';
 
 function makeOpportunity(
   overrides: Partial<WorkspaceStatisticsOpportunityRadarItemView> = {},

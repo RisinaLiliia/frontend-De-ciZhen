@@ -17,7 +17,7 @@ import {
   toHint,
   toTrend,
 } from './statisticsModel.mappers';
-import { getWorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import { getWorkspaceStatisticsCopy } from './statistics.copy';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 
 describe('statisticsModel.mappers', () => {

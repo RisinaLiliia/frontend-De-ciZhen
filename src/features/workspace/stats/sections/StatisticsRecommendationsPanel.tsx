@@ -8,7 +8,7 @@ import {
 import type {
   WorkspaceStatisticsPriorityItemView,
   WorkspaceStatisticsModel,
-} from '../workspaceStatistics.model';
+} from '../statistics.model';
 
 type RecommendationGroup = {
   title: string;

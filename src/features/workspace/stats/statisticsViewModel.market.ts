@@ -2,8 +2,8 @@ import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisi
 import type {
   WorkspaceStatisticsCityRowView,
   WorkspaceStatisticsOpportunityRadarItemView,
-} from './workspaceStatistics.model';
-import { buildPriceIntelligence as buildPriceIntelligenceView } from './workspaceStatisticsViewModel.pricing';
+} from './statistics.model';
+import { buildPriceIntelligence as buildPriceIntelligenceView } from './statisticsViewModel.pricing';
 
 export function buildCityRows(
   source: WorkspaceStatisticsDecisionDashboardDto['demand']['cities'] | undefined,

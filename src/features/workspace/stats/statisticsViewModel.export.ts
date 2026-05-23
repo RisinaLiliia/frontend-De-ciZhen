@@ -5,7 +5,7 @@ import type {
   WorkspaceStatisticsCityRowView,
   WorkspaceStatisticsFunnelItemView,
   WorkspaceStatisticsKpiView,
-} from './workspaceStatistics.model';
+} from './statistics.model';
 
 function exportCsv(rows: string[][], filename: string) {
   const body = rows

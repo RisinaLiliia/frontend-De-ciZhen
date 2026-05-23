@@ -4,7 +4,7 @@ import type { Ref } from 'react';
 
 import { WorkspaceInsightsPanel, type WorkspaceInsightsPanelItem } from '@/features/workspace/ai-rail';
 import type { WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 
 export function splitInsightEvidence(evidence: string | undefined): string[] {
   if (!evidence) return [];

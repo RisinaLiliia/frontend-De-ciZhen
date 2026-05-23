@@ -9,7 +9,7 @@ import type {
 } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
-import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import type { WorkspaceStatisticsCopy } from './statistics.copy';
 
 export function formatDateLabel(timestamp: string, range: WorkspaceStatisticsRange, locale: Locale) {
   const date = new Date(timestamp);

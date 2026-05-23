@@ -15,7 +15,7 @@ import {
   workspacePanelShell,
   workspaceStatCardShell,
 } from '@/features/workspace/shared/workspaceSurfaceShell';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 import type { TranslateFn } from './statisticsSections.types';
 import { citySignalIcon, citySignalLabel } from './statisticsSections.utils';
 

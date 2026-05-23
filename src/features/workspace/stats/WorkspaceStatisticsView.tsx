@@ -11,7 +11,7 @@ import {
   workspaceRequestsPanelShell,
   workspaceStatsChartPanelShell,
 } from '@/features/workspace/shared';
-import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from './statistics.model';
 import { StatisticsContextPanel } from './components/StatisticsContextPanel';
 import { buildDecisionPlan, buildPersonalizedDecisionPlan } from './statisticsDecisionEngine.utils';
 import { buildEmptyFunnelItems, buildFunnelVisualRows } from './statisticsFunnel.utils';

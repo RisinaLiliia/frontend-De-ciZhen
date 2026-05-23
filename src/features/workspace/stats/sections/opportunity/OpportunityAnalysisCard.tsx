@@ -8,7 +8,7 @@ import {
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
-import type { WorkspaceStatisticsModel } from '../../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../../statistics.model';
 import { OpportunityToneBadge } from '../../components/OpportunityToneBadge';
 import { StatisticsSignalMeter } from '../../components/StatisticsSignalMeter';
 import type { OpportunityAxis, OpportunityItem } from './opportunity.utils';

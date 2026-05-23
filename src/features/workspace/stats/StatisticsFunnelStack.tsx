@@ -1,4 +1,4 @@
-import type { WorkspaceStatisticsModel } from './workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from './statistics.model';
 import type { WorkspaceStatisticsFunnelVisualRow } from './statisticsFunnel.utils';
 
 export function StatisticsFunnelStack({

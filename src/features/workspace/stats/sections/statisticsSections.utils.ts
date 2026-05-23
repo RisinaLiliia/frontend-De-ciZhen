@@ -1,4 +1,4 @@
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 
 export function citySignalLabel(
   signal: WorkspaceStatisticsModel['cityRows'][number]['signal'],

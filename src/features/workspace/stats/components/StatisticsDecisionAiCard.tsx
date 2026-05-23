@@ -2,7 +2,7 @@
 
 import type { MouseEventHandler } from 'react';
 
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 import type { WorkspaceDecisionPlan } from '../statisticsDecisionEngine.utils';
 import { StatisticsKiCard } from './StatisticsKiCard';
 

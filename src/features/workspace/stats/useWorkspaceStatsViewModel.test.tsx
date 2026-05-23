@@ -11,7 +11,7 @@ import { normalizeWorkspaceDecisionDashboardResponse } from './statisticsDecisio
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 import { useWorkspaceStatsViewModel } from './useWorkspaceStatsViewModel';
-import type { WorkspaceStatisticsFilters } from './workspaceStatistics.model';
+import type { WorkspaceStatisticsFilters } from './statistics.model';
 
 afterEach(() => {
   cleanup();

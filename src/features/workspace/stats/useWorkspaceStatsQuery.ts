@@ -17,7 +17,7 @@ import {
 import { hydrateAuthenticatedStatisticsPayload } from './statisticsAuthenticatedPayload.utils';
 import { parsePageParam } from './statisticsPagination.utils';
 import { workspaceStatisticsDecisionDashboardSchema } from './workspaceStatisticsDecisionDashboard.schema';
-import type { WorkspaceStatisticsFilters } from './workspaceStatistics.model';
+import type { WorkspaceStatisticsFilters } from './statistics.model';
 import { resolveWorkspaceViewerMode } from '@/features/workspace/state';
 
 const CITY_LIST_PAGE_SIZE = 10;

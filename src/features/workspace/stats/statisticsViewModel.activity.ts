@@ -3,7 +3,7 @@ import type {
   WorkspaceStatisticsRange,
 } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import type { WorkspaceStatisticsCopy } from './statistics.copy';
 import {
   formatMinutes,
   formatPercent,
@@ -15,7 +15,7 @@ import type {
   WorkspaceStatisticsActivitySignalView,
   WorkspaceStatisticsActivityTrendView,
   WorkspaceStatisticsKpiView,
-} from './workspaceStatistics.model';
+} from './statistics.model';
 
 export const DEFAULT_ACTIVITY_METRICS: WorkspaceStatisticsActivityMetricsDto = {
   offerRatePercent: 0,

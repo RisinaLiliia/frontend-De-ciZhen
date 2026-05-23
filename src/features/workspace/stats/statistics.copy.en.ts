@@ -1,4 +1,4 @@
-import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import type { WorkspaceStatisticsCopy } from './statistics.copy';
 
 export const COPY_EN: WorkspaceStatisticsCopy = {
   subtitle: 'Overview of performance, demand, and growth',

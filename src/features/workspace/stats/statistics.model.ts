@@ -6,7 +6,7 @@ import type {
   WorkspaceStatisticsRange,
   WorkspaceStatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
-import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import type { WorkspaceStatisticsCopy } from './statistics.copy';
 
 export type WorkspaceStatisticsKpiView = {
   key: string;

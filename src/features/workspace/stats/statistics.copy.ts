@@ -1,7 +1,7 @@
 import type { WorkspaceStatisticsGrowthCardDto, WorkspaceStatisticsInsightDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
-import { COPY_DE } from './workspaceStatistics.copy.de';
-import { COPY_EN } from './workspaceStatistics.copy.en';
+import { COPY_DE } from './statistics.copy.de';
+import { COPY_EN } from './statistics.copy.en';
 
 export type WorkspaceStatisticsCopy = {
   subtitle: string;

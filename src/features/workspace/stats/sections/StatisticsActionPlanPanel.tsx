@@ -5,7 +5,7 @@ import {
   workspacePanelShell,
   workspaceStatCardShell,
 } from '@/features/workspace/shared/workspaceSurfaceShell';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 
 export function StatisticsActionPlanPanel({
   copy,

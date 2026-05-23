@@ -1,6 +1,6 @@
-import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import type { WorkspaceStatisticsCopy } from './statistics.copy';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
-import type { WorkspaceStatisticsPriceIntelligenceView } from './workspaceStatistics.model';
+import type { WorkspaceStatisticsPriceIntelligenceView } from './statistics.model';
 
 function formatCurrencyRangeCompact(params: {
   min: number;

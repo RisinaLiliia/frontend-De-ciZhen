@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { getWorkspaceStatisticsCopy } from './workspaceStatistics.copy';
-import type { WorkspaceStatisticsFunnelItemView } from './workspaceStatistics.model';
+import { getWorkspaceStatisticsCopy } from './statistics.copy';
+import type { WorkspaceStatisticsFunnelItemView } from './statistics.model';
 import { buildFunnelVisualRows } from './statisticsFunnel.utils';
 
 function step(

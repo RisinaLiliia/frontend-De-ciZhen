@@ -3,16 +3,16 @@ export {
   buildActivityTrend,
   buildKpis,
   DEFAULT_ACTIVITY_METRICS,
-} from './workspaceStatisticsViewModel.activity';
+} from './statisticsViewModel.activity';
 
 export {
   buildCityRows,
   buildOpportunityRadar,
-} from './workspaceStatisticsViewModel.market';
+} from './statisticsViewModel.market';
 
 export {
   buildPriceIntelligence,
-} from './workspaceStatisticsViewModel.pricing';
+} from './statisticsViewModel.pricing';
 
 export {
   buildFunnel,
@@ -20,7 +20,7 @@ export {
   buildFunnelConversion,
   buildFunnelDropoff,
   buildFunnelSummary,
-} from './workspaceStatisticsViewModel.funnel';
+} from './statisticsViewModel.funnel';
 
 export {
   buildContext,
@@ -32,7 +32,7 @@ export {
   normalizeNullableFilterValue,
   resolveContextPeriodLabel,
   resolveDecisionInsight,
-} from './workspaceStatisticsViewModel.context';
+} from './statisticsViewModel.context';
 
 export {
   buildCategoryFit,
@@ -43,6 +43,6 @@ export {
   buildRecommendationActionSection,
   buildRecommendationPrioritySection,
   buildUserIntelligence,
-} from './workspaceStatisticsViewModel.user';
+} from './statisticsViewModel.user';
 
-export { exportWorkspaceStatisticsCsv } from './workspaceStatisticsViewModel.export';
+export { exportWorkspaceStatisticsCsv } from './statisticsViewModel.export';

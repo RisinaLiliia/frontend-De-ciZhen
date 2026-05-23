@@ -6,7 +6,7 @@ import {
   WorkspaceDecisionRecommendationModal,
   WorkspaceDecisionRecommendationSection,
 } from '@/features/workspace/ai-rail';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 import type { WorkspaceDecisionPlan } from '../statisticsDecisionEngine.utils';
 import { StatisticsDecisionAiCard } from '../components/StatisticsDecisionAiCard';
 import { StatisticsMetricSignalCard } from '../components/StatisticsMetricSignalCard';

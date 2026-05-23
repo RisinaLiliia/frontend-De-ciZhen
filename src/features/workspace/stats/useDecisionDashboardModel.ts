@@ -14,7 +14,7 @@ import type {
   WorkspaceStatisticsModel,
   WorkspaceStatisticsOpportunityRadarItemView,
   WorkspaceStatisticsPriceIntelligenceView,
-} from './workspaceStatistics.model';
+} from './statistics.model';
 
 export type {
   WorkspaceStatisticsActivitySignalView,

@@ -9,7 +9,7 @@ import {
 } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { paginateItems } from '../statisticsPagination.utils';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 import type { TranslateFn } from './statisticsSections.types';
 
 export function StatisticsDemandPanel({

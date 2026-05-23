@@ -1,5 +1,5 @@
-import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
-import type { WorkspaceStatisticsFunnelItemView } from './workspaceStatistics.model';
+import type { WorkspaceStatisticsCopy } from './statistics.copy';
+import type { WorkspaceStatisticsFunnelItemView } from './statistics.model';
 
 export const FUNNEL_MIN_WIDTH_PERCENT_DESKTOP = 40;
 export const FUNNEL_MIN_WIDTH_PERCENT_MOBILE_PLATFORM = 38;

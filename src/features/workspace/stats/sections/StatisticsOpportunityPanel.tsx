@@ -4,7 +4,7 @@ import type { Ref } from 'react';
 
 import type { Locale } from '@/lib/i18n/t';
 import { workspaceStatsChartPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 import { OpportunityAnalysisCard } from './opportunity/OpportunityAnalysisCard';
 import { OpportunityTopCards } from './opportunity/OpportunityTopCards';
 import {

@@ -1,6 +1,6 @@
 'use client';
 
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 import { StatisticsSignalMeter } from '../components/StatisticsSignalMeter';
 
 export function StatisticsPricePanel({

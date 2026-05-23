@@ -1,12 +1,12 @@
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceStatisticsCopy } from './workspaceStatistics.copy';
+import type { WorkspaceStatisticsCopy } from './statistics.copy';
 import type {
   WorkspaceStatisticsActionSectionView,
   WorkspaceStatisticsOpportunityRadarItemView,
   WorkspaceStatisticsPersonalizedPricingView,
   WorkspaceStatisticsPriceIntelligenceView,
   WorkspaceStatisticsPrioritySectionView,
-} from './workspaceStatistics.model';
+} from './statistics.model';
 
 export type WorkspaceDecisionPlan = {
   summary: string;

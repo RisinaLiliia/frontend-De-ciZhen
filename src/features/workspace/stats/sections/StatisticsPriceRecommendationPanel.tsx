@@ -7,7 +7,7 @@ import {
   WorkspaceDecisionRecommendationSection,
 } from '@/features/workspace/ai-rail';
 import { workspaceStatsChartPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
-import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+import type { WorkspaceStatisticsModel } from '../statistics.model';
 import { buildPriceStrategyOptions } from '../statisticsDecisionEngine.utils';
 
 function fillTemplate(template: string, values: Record<string, string>): string {

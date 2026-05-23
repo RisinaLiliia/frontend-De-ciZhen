@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getWorkspaceStatisticsCopy } from '../../workspaceStatistics.copy';
+import { getWorkspaceStatisticsCopy } from '../../statistics.copy';
 import {
   buildOpportunityAnalysisAxes,
   buildOpportunityRadarAxisEndpoints,
