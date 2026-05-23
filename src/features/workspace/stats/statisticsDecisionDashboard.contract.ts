@@ -15,7 +15,7 @@ import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.typ
 import {
   buildFocusedOpportunityRadar,
   ensureStatisticsOpportunityContract,
-} from './statisticsOpportunityContract.utils';
+} from './statisticsOpportunityContract.model';
 
 export type DecisionDashboardFilters = {
   period: WorkspaceStatisticsOverviewDto['range'];

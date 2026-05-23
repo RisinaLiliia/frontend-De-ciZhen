@@ -62,7 +62,7 @@ import {
   normalizeNullableFilterValue,
   resolveContextPeriodLabel,
   resolveDecisionInsight,
-} from './workspaceStatisticsViewModel.helpers';
+} from './statisticsViewModel.index';
 
 const CITY_LIST_FALLBACK_PAGE_SIZE = 10;
 

@@ -152,7 +152,7 @@ function resolveCategoryContext(
   payload: WorkspaceStatisticsOverviewSourceDto,
   preferredCategoryKey: string | null | undefined,
 ): { key: string | null; label: string | null } {
-  const categories: { categoryKey: string | null; categoryName: string; requestCount: number; sharePercent: number }[] = (payload.demand.categories ?? [])
+  const categories = (payload.demand.categories ?? [])
     .slice()
     .sort((a, b) => (b.sharePercent - a.sharePercent) || (b.requestCount - a.requestCount));
   const normalizedPreferred = normalizeText(preferredCategoryKey);

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
-import { ensureStatisticsOpportunityContract } from './statisticsOpportunityContract.utils';
+import { ensureStatisticsOpportunityContract } from './statisticsOpportunityContract.model';
 
 function createSourcePayload(): WorkspaceStatisticsOverviewSourceDto {
   return {

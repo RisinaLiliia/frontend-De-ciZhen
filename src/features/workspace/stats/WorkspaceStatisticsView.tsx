@@ -29,7 +29,7 @@ import {
   StatisticsPriceRecommendationPanel,
   StatisticsRecommendationsPanel,
 } from './WorkspaceStatisticsSections';
-import { resolveGrowthMarketContext } from './statisticsGrowthView.helpers';
+import { resolveGrowthMarketContext } from './statisticsGrowthContext.model';
 import { StatisticsFunnelStack } from './StatisticsFunnelStack';
 import { ActivityTrendChart } from './ActivityTrendChart';
 
