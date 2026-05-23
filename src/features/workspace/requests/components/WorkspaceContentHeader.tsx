@@ -8,7 +8,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { WorkspaceTab } from '../../state';
 import type { WorkspaceContentPrimaryAction } from '../workspaceContent.types';
-import { getWorkspaceSectionSubtitle, getWorkspaceTabTitles } from '../workspace.content';
+import { getWorkspaceSectionSubtitle, getWorkspaceTabTitles } from '../requests.content';
 
 type Props = {
   t: (key: I18nKey) => string;
