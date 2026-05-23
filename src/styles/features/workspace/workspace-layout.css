@@ -16,6 +16,8 @@
     top: 0;
     height: 100dvh;
     min-width: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     background: var(--color-surface);
     border-right: 1px solid var(--color-border-soft);
     z-index: 20;
@@ -173,7 +175,7 @@
       max-width: none;
       display: block;
       padding-inline: var(--shell-inline-padding);
-      padding-bottom: calc(var(--space-8) + 72px);
+      padding-bottom: calc(var(--space-8) + 72px + env(safe-area-inset-bottom));
     }
 
     .workspace-page-frame--inside-overlay {

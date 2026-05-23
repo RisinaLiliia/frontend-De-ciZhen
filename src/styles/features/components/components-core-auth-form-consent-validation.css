@@ -40,23 +40,6 @@
     height: 14px;
   }
 
-  .auth-field-valid-icon {
-    position: absolute;
-    right: 36px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-  }
-
-  .auth-field-valid-icon svg {
-    width: 13px;
-    height: 13px;
-  }
-
   .auth-password-rules {
     display: flex;
     flex-wrap: wrap;

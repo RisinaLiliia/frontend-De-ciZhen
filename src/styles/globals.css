@@ -9,8 +9,6 @@
 @import './primitives/surface.css';
 @import './primitives/controls.css';
 @import './primitives/badges.css';
-@import './primitives/layout.css';
-@import './primitives/typography.css';
 @import './components.css';
 @import './request-card.css';
 @import './home.css';
@@ -23,20 +21,6 @@
     box-shadow:
       var(--shadow-card),
       0 0 0 1px color-mix(in oklab, var(--color-primary) 10%, transparent);
-  }
-
-  .dc-glow-hover {
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition),
-      border-color var(--transition);
-  }
-
-  .dc-glow-hover:hover {
-    transform: translateY(-1px);
-    box-shadow:
-      var(--shadow-card-hover),
-      0 0 0 1px color-mix(in oklab, var(--color-primary) 14%, transparent);
   }
 
   [data-motion-paused='true'],

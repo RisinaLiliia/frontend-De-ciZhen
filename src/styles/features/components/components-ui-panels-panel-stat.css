@@ -68,18 +68,6 @@
     gap: var(--space-2);
   }
 
-  .stat-grid {
-    display: grid;
-    gap: var(--space-3);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media (min-width: 768px) {
-    .stat-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-
   .stat-card {
     background: var(--surface-soft-bg);
     border: 1px solid var(--c-border);
@@ -112,18 +100,6 @@
 
   .stat-live {
     animation: stat-tick 2.4s ease-in-out infinite;
-  }
-
-  .stat-subtitle {
-    margin-top: 6px;
-    font-size: 12px;
-    color: var(--c-text-muted);
-  }
-
-  .stat-location {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
   }
 
   .radar-dot {

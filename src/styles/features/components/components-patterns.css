@@ -1,7 +1,6 @@
 /* src/styles/features/components/components-patterns.css */
 
 @layer components {
-  .ui-inline-center,
   :is(
       .offer-actions__btn,
       .request-detail__cta .btn-primary,
@@ -16,9 +15,7 @@
     justify-content: center;
   }
 
-  .ui-soft-surface,
   :is(
-      .requests-provider-summary,
       .provider-reviews-hub__summary,
       .provider-reviews-hub__item
     ) {
@@ -26,7 +23,6 @@
     background: var(--soft-surface-bg, var(--surface-soft-bg-strong));
   }
 
-  .ui-icon-only-action,
   .offer-action-btn--icon-only {
     --icon-only-size: 24px;
     width: var(--icon-only-size);

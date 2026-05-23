@@ -30,23 +30,6 @@
     overflow-wrap: anywhere;
   }
 
-  .auth-form__link-btn {
-    width: fit-content;
-    align-self: flex-end;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
-    font-size: 12px;
-    line-height: 1.2;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .auth-form__link-btn:hover {
-    color: var(--c-primary);
-  }
-
   .form-label {
     display: inline-flex;
     align-items: center;

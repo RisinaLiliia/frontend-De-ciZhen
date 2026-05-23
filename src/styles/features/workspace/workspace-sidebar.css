@@ -6,9 +6,10 @@
     min-height: 100dvh;
     height: 100%;
     background: var(--color-surface);
-    padding: var(--space-6) var(--space-4);
+    padding: var(--space-6) var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
+    gap: var(--space-3);
     color: var(--color-text);
   }
 
@@ -17,7 +18,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2-5);
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-7);
     padding-inline: var(--space-2);
     color: var(--color-text);
     text-decoration: none;
@@ -31,13 +32,13 @@
   .workspace-sidebar__footer {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1-5);
+    gap: var(--space-1);
   }
 
   .workspace-sidebar__item {
-    min-height: 40px;
+    min-height: 44px;
     padding: 0 var(--space-3);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     gap: var(--space-2-5);
@@ -47,16 +48,31 @@
     text-decoration: none;
     border: 1px solid transparent;
     background: transparent;
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast);
   }
 
   .workspace-sidebar__item:hover {
     background: var(--color-surface-muted);
+    border-color: var(--color-border-soft);
+    transform: translateY(-1px);
+  }
+
+  .workspace-sidebar__item:focus-visible {
+    outline: none;
+    border-color: var(--color-primary-border);
+    background: var(--color-surface-muted);
+    box-shadow: var(--control-focus-ring);
   }
 
   .workspace-sidebar__item--active {
     background: var(--color-primary-soft);
     color: var(--color-primary);
     border-color: var(--color-primary-border);
+    transform: none;
   }
 
   .workspace-sidebar__badge {
@@ -64,7 +80,8 @@
     min-width: 22px;
     height: 22px;
     border-radius: 999px;
-    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface-muted);
     color: var(--color-text-muted);
     display: inline-flex;
     align-items: center;
@@ -83,7 +100,7 @@
     padding-top: var(--space-4);
     border-top: 1px solid var(--color-border-soft);
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-2-5);
   }
 
   .workspace-sidebar__auth-icons {
@@ -113,7 +130,7 @@
   }
 
   .workspace-sidebar__auth-icon--primary:hover {
-    background: var(--dc-primary-hover);
+    background: var(--color-primary-hover);
     color: var(--color-primary-contrast);
   }
 
@@ -138,7 +155,7 @@
   }
 
   .workspace-sidebar__auth-button--primary:hover {
-    background: var(--dc-primary-hover);
+    background: var(--color-primary-hover);
   }
 
   .workspace-sidebar__auth-button--secondary {
@@ -153,7 +170,7 @@
 
   .workspace-sidebar__user {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-2-5);
     min-width: 0;
   }
@@ -162,8 +179,9 @@
     width: 34px;
     height: 34px;
     border-radius: 999px;
-    background: var(--color-primary);
-    color: var(--color-surface);
+    border: 1px solid var(--color-primary-border);
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -177,11 +195,13 @@
 
   .workspace-sidebar__user strong {
     font-size: 13px;
+    line-height: 1.25;
     color: var(--color-text);
   }
 
   .workspace-sidebar__user span {
     font-size: 12px;
+    line-height: 1.35;
     color: var(--color-text-muted);
   }
 

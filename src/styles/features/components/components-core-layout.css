@@ -44,44 +44,18 @@
       align-items: start;
     }
 
-    .workspace-explore-grid--with-rail {
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
-      align-items: stretch;
-    }
-
-    .workspace-explore-grid--with-rail > div {
-      display: flex;
-      align-items: stretch;
-      min-height: 100%;
-    }
-
-    .workspace-explore-grid--with-rail > div > * {
-      flex: 1 1 auto;
-      min-height: 100%;
-    }
-
-    .requests-grid--balanced,
     .requests-grid--equal-cols {
       align-items: stretch;
     }
 
-    .requests-grid--balanced > *,
     .requests-grid--equal-cols > * {
       align-self: stretch;
       min-height: 100%;
       height: 100%;
     }
 
-    .requests-grid--balanced > .workspace-right-rail-stack,
     .requests-grid--equal-cols > .workspace-right-rail-stack {
       height: 100%;
-    }
-
-    .requests-grid--balanced > .workspace-right-rail-stack {
-      align-self: stretch;
-    }
-
-    .requests-grid--equal-cols > .workspace-right-rail-stack {
       min-height: 100%;
       align-self: stretch;
     }

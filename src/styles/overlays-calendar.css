@@ -110,15 +110,4 @@
   .dc-calendar .rdp-day_disabled {
     opacity: 0.35;
   }
-
-  .dc-date-hint {
-    margin-top: var(--space-2-5);
-    padding-top: var(--space-2-5);
-    border-top: 1px solid var(--color-border-soft);
-    display: flex;
-    gap: var(--space-2);
-    flex-wrap: wrap;
-    color: var(--color-text-muted);
-    font-size: var(--fs-small);
-  }
 }

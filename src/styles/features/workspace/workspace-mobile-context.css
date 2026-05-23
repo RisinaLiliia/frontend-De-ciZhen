@@ -12,8 +12,8 @@
   @media (max-width: 767px) {
     .workspace-mobile-context-section {
       display: grid;
-      gap: var(--layout-gap-xs);
-      margin-top: -2px;
+      gap: var(--space-2);
+      margin-top: 0;
     }
 
     .workspace-context-controls__desktop {
@@ -29,7 +29,7 @@
     }
 
     .workspace-mobile-context-section__controls {
-      padding: var(--density-compact-pad-sm);
+      padding: var(--density-compact-pad);
       border-radius: var(--radius-lg);
       border: 1px solid var(--color-border-soft);
       background: var(--color-surface);
@@ -37,7 +37,7 @@
     }
 
     .workspace-mobile-context-section__controls.workspace-context-controls {
-      gap: var(--layout-gap-xs);
+      gap: var(--space-2);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__header {
@@ -52,7 +52,7 @@
 
     .workspace-mobile-context-section__controls .workspace-context-controls__summary {
       gap: var(--space-1-5);
-      margin-top: -2px;
+      margin-top: 0;
     }
 
     .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
@@ -62,7 +62,7 @@
       border: 1px solid var(--color-border-soft);
       background: var(--color-surface-muted);
       font-size: var(--app-caption-size);
-      font-weight: 700;
+      font-weight: 650;
       line-height: var(--app-caption-line-height);
       letter-spacing: 0.01em;
       color: var(--color-text-muted);
@@ -77,19 +77,20 @@
     .workspace-mobile-context-section__controls .workspace-context-controls__body,
     .workspace-mobile-context-section__controls .workspace-context-controls__filters-grid,
     .workspace-mobile-context-section__controls .workspace-context-controls__range-row {
-      gap: var(--layout-gap-xs);
+      gap: var(--space-2);
       grid-template-columns: minmax(0, 1fr);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__control-cluster {
-      padding: var(--space-1-5);
+      padding: var(--space-2);
       border-radius: var(--radius-md);
+      background: var(--color-surface-muted);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
-      gap: var(--layout-gap-xs);
+      gap: var(--space-2);
       align-items: stretch;
       overflow: visible;
     }
@@ -107,7 +108,7 @@
       justify-self: stretch;
       width: 100%;
       min-width: 0;
-      padding: var(--space-1-5);
+      padding: var(--space-2);
       border: 1px solid var(--color-border-soft);
       border-radius: var(--radius-md);
       background: var(--color-surface-muted);
@@ -134,7 +135,7 @@
       min-width: 0;
       min-height: calc(var(--space-8) + var(--space-1-5));
       margin-bottom: 0;
-      padding: var(--space-2) var(--space-2-5);
+      padding: var(--space-2);
       border: 1px solid var(--color-border-soft);
       border-radius: var(--radius-md);
       background: var(--color-surface);
@@ -143,6 +144,7 @@
       line-height: var(--app-caption-line-height);
       white-space: normal;
       box-shadow: none;
+      font-weight: 600;
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-scope-switch .workspace-context-scope-switch__item.is-active,
@@ -154,9 +156,9 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__select {
-      min-height: calc(var(--space-8) + var(--space-2-5));
+      min-height: calc(var(--space-8) + var(--space-2));
       border-radius: var(--radius-md);
-      font-size: var(--app-text-muted-size);
+      font-size: 13px;
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar {
@@ -171,9 +173,9 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__action {
-      width: 40px;
-      min-width: 40px;
-      min-height: 40px;
+      width: 42px;
+      min-width: 42px;
+      min-height: 42px;
       border-radius: var(--radius-md);
     }
 
@@ -193,7 +195,7 @@
     }
 
     .workspace-mobile-context-section__controls.workspace-context-controls {
-      gap: var(--layout-gap-xs);
+      gap: var(--space-1-5);
     }
 
     .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
@@ -203,7 +205,7 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row {
-      gap: var(--layout-gap-xs);
+      gap: var(--space-1-5);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-scope-switch,
