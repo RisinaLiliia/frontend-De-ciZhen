@@ -1,7 +1,7 @@
 'use client';
 
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
-import type { useWorkspacePrivateNavModel } from '@/features/workspace/requests/useWorkspacePrivateNavModel';
+import type { useWorkspacePrivateNavModel } from '@/features/workspace/navigation/useWorkspacePrivateNavModel';
 import type { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceRequestsScope } from '@/features/workspace/state';

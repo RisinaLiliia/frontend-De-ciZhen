@@ -15,7 +15,7 @@ import {
   resolveWorkspacePrivateStateResult,
   type WorkspacePrivateOverviewState,
 } from '@/features/workspace/requests/workspacePrivateState.model';
-import { useWorkspacePrivateNavModel } from '@/features/workspace/requests/useWorkspacePrivateNavModel';
+import { useWorkspacePrivateNavModel } from '@/features/workspace/navigation/useWorkspacePrivateNavModel';
 import { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
 
 type Params = {

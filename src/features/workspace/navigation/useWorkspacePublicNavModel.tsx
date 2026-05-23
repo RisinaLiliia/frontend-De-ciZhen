@@ -3,7 +3,7 @@
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import { useWorkspaceNavModel } from '@/features/workspace/requests/useWorkspaceNavModel';
+import { useWorkspaceNavModel } from '@/features/workspace/navigation/useWorkspaceNavModel';
 
 type Translator = (key: I18nKey) => string;
 
@@ -17,17 +17,13 @@ type Params = {
   publicRequestsCount: number;
   publicProvidersCount: number;
   publicStatsCount: number;
-  myRequestsTotal: number;
-  sentCount: number;
-  completedJobsCount: number;
-  favoriteRequestCount: number;
   setWorkspaceTab: (tab: WorkspaceTab) => void;
   markPublicRequestsSeen: () => void;
   guestLoginHref: string;
   onGuestLockedAction: () => void;
 };
 
-export function useWorkspacePrivateNavModel({
+export function useWorkspacePublicNavModel({
   t,
   formatNumber,
   isPersonalized,
@@ -37,10 +33,6 @@ export function useWorkspacePrivateNavModel({
   publicRequestsCount,
   publicProvidersCount,
   publicStatsCount,
-  myRequestsTotal,
-  sentCount,
-  completedJobsCount,
-  favoriteRequestCount,
   setWorkspaceTab,
   markPublicRequestsSeen,
   guestLoginHref,
@@ -56,10 +48,10 @@ export function useWorkspacePrivateNavModel({
     publicRequestsCount,
     publicProvidersCount,
     publicStatsCount,
-    myRequestsTotal,
-    sentCount,
-    completedJobsCount,
-    favoriteRequestCount,
+    myRequestsTotal: 0,
+    sentCount: 0,
+    completedJobsCount: 0,
+    favoriteRequestCount: 0,
     markPublicRequestsSeen,
     setWorkspaceTab,
     guestLoginHref,

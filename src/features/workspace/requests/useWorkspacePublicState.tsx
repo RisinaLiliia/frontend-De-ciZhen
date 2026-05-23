@@ -6,7 +6,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { resolveWorkspacePublicMeta } from '@/features/workspace/requests/workspacePublicState.model';
-import { useWorkspacePublicNavModel } from '@/features/workspace/requests/useWorkspacePublicNavModel';
+import { useWorkspacePublicNavModel } from '@/features/workspace/navigation/useWorkspacePublicNavModel';
 
 type Params = {
   t: (key: I18nKey) => string;
