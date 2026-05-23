@@ -2,7 +2,7 @@
 
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell.container';
 import type { WorkspaceTab } from '@/features/workspace/state';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 
 type WorkspaceShellPageProps = {
   forcedPublicSection?: PublicWorkspaceSection | null;

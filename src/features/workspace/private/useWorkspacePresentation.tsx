@@ -5,7 +5,7 @@ import * as React from 'react';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { WorkspacePrivateIntroProps } from '@/features/workspace/intro';
 import type { Locale } from '@/lib/i18n/t';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import {
   buildWorkspaceAsideBaseProps,

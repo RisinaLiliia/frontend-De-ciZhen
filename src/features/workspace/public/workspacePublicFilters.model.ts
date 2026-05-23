@@ -2,7 +2,7 @@ import { ALL_OPTION_KEY } from '@/features/workspace/shared';
 import { pickI18n } from '@/lib/i18n/helpers';
 import type { CreateSearchEventDto } from '@/lib/api/analytics';
 import type { Locale } from '@/lib/i18n/t';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 
 type SearchSelection = {
   cityId: string;

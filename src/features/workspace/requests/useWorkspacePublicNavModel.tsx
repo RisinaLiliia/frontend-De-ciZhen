@@ -2,7 +2,7 @@
 
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { WorkspaceTab } from '@/features/workspace/state';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { useWorkspaceNavModel } from '@/features/workspace/requests/useWorkspaceNavModel';
 
 type Translator = (key: I18nKey) => string;

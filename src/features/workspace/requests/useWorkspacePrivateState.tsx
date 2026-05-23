@@ -6,7 +6,7 @@ import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceTab } from '@/features/workspace/state';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceRequestsScope } from '@/features/workspace/state';
 import {
   buildWorkspacePrivateNavModelArgs,

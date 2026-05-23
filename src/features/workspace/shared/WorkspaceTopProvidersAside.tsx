@@ -33,7 +33,7 @@ export function WorkspaceTopProvidersAside({
 }: WorkspaceTopProvidersAsideProps) {
   if (isLoading) {
     return (
-      <section className={workspacePanelShell('hide-below-desktop', 'top-providers-panel')}>
+      <section className={workspacePanelShell('hide-below-tablet', 'top-providers-panel')}>
         <div className="panel-header">
           <div className="skeleton is-wide h-5 w-40" />
         </div>
@@ -52,7 +52,7 @@ export function WorkspaceTopProvidersAside({
 
   if (isError) {
     return (
-      <section className={workspacePanelShell('hide-below-desktop', 'top-providers-panel')}>
+      <section className={workspacePanelShell('hide-below-tablet', 'top-providers-panel')}>
         <div className="panel-header">
           <div className="skeleton is-wide h-5 w-40" />
         </div>

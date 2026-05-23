@@ -5,7 +5,7 @@ import * as React from 'react';
 import type { Locale } from '@/lib/i18n/t';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate } from '@/lib/i18n/t';
-import { buildWorkspaceHref } from '@/features/workspace/shell/workspaceLinks';
+import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
 import { WorkspaceInsightsPanel, type WorkspaceInsightsPanelItem } from '@/features/workspace/ai-rail';
 import type { WorkspaceStatisticsModel } from '@/features/workspace/stats';
 import { resolveInsightBadge, splitInsightEvidence } from '@/features/workspace/stats/sections/StatisticsInsightsPanel';

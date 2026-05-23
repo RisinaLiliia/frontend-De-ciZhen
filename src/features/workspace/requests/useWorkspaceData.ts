@@ -12,7 +12,7 @@ import {
 import { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type {
   WorkspaceRequestsRole,
   WorkspaceRequestsScope,

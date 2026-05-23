@@ -7,19 +7,19 @@ import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { WorkspaceSectionAside } from '@/features/workspace/shared';
-import { WorkspaceReviewsComposer } from '@/features/workspace/requests/WorkspaceReviewsComposer';
-import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
+import { WorkspaceReviewsComposer } from '@/features/workspace/reviews/WorkspaceReviewsComposer';
+import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
 
 type Props = {
   t: (key: I18nKey) => string;
   locale: Locale;
-  hideBelowDesktop?: boolean;
+  hideBelowTablet?: boolean;
 };
 
 export function WorkspaceReviewsAside({
   t,
   locale,
-  hideBelowDesktop = true,
+  hideBelowTablet = true,
 }: Props) {
   const { reviewSort, reviewRange } = useWorkspaceReviewControlsState();
   const sort = reviewSort === 'top' ? 'rating_desc' : 'created_desc';
@@ -48,7 +48,7 @@ export function WorkspaceReviewsAside({
       locale={locale}
       summaryItems={data?.summary.items ?? null}
       isLoading={isLoading}
-      hideBelowDesktop={hideBelowDesktop}
+      hideBelowTablet={hideBelowTablet}
       panel={data ? {
         ...data.decisionPanel,
         queue: data.decisionPanel.queue.map((item) => ({

@@ -10,7 +10,7 @@ import {
   WorkspaceModeHeader,
 } from '@/features/workspace/shell/WorkspaceModeHeader';
 import type { WorkspaceTab } from '@/features/workspace/state';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspacePublicCityActivityDto } from '@/lib/api/dto/workspace';
 import type { WorkspacePublicSummaryDto } from '@/lib/api/dto/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';

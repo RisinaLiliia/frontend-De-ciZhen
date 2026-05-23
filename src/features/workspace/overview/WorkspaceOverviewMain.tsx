@@ -16,7 +16,7 @@ import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { buildWorkspaceHref } from '@/features/workspace/shell/workspaceLinks';
+import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '@/features/workspace/stats';
 import { StatisticsDecisionAiCard } from '@/features/workspace/stats/components/StatisticsDecisionAiCard';

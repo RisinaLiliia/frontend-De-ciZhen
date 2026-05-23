@@ -25,7 +25,7 @@ type Props = {
   panel?: DecisionPanel | null;
   children?: React.ReactNode;
   className?: string;
-  hideBelowDesktop?: boolean;
+  hideBelowTablet?: boolean;
 };
 
 export function WorkspaceSectionAside({
@@ -35,7 +35,7 @@ export function WorkspaceSectionAside({
   panel = null,
   children,
   className,
-  hideBelowDesktop = true,
+  hideBelowTablet = true,
 }: Props) {
   if (!summaryItems && !isLoading && !panel && !children) {
     return null;
@@ -45,7 +45,7 @@ export function WorkspaceSectionAside({
     <WorkspaceRightRailStack
       as="aside"
       className={[
-        hideBelowDesktop ? 'hide-below-desktop' : '',
+        hideBelowTablet ? 'hide-below-tablet' : '',
         className ?? '',
       ].filter(Boolean).join(' ')}
     >

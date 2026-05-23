@@ -8,7 +8,7 @@ import type { ReviewRange } from '@/lib/api/dto/reviews';
 import {
   DEFAULT_WORKSPACE_REVIEW_RANGE,
   DEFAULT_WORKSPACE_REVIEW_SORT,
-} from '@/features/workspace/requests/workspaceReviewControls';
+} from '@/features/workspace/reviews/workspaceReviewControls';
 
 const REVIEW_SORT_QUERY_KEY = 'reviewSort';
 const REVIEW_RANGE_QUERY_KEY = 'reviewRange';

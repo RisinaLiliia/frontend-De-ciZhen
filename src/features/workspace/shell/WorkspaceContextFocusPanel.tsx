@@ -15,7 +15,7 @@ import {
   joinWorkspaceContext,
   useWorkspaceContext,
 } from '@/features/workspace/context';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceTab } from '@/features/workspace/state';

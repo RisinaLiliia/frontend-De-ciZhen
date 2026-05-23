@@ -26,6 +26,7 @@ import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceConte
 import { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
+import { WorkspacePrimaryNavMobile } from '@/components/layout/WorkspacePrimaryNav';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import { isWorkspaceTab } from '@/features/workspace/state';
 import { isWorkspaceOverviewMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
@@ -252,12 +253,15 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   }
 
   const workspaceBottomNav = (
-    <WorkspaceBottomNav
-      locale={locale}
-      activePublicSection={activePublicSection}
-      activeWorkspaceTab={activeWorkspaceTab}
-      preferredRequestsRole={preferredRequestsRole}
-    />
+    <>
+      <WorkspaceBottomNav
+        locale={locale}
+        activePublicSection={activePublicSection}
+        activeWorkspaceTab={activeWorkspaceTab}
+        preferredRequestsRole={preferredRequestsRole}
+      />
+      <WorkspacePrimaryNavMobile />
+    </>
   );
 
   const resolvedIntro =

@@ -1,4 +1,4 @@
-import { buildWorkspaceHref } from '@/features/workspace/shell/workspaceLinks';
+import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
 
 export type WorkspaceRequestsScope = 'market' | 'my';
 export type WorkspaceRequestsRole = 'all' | 'customer' | 'provider';

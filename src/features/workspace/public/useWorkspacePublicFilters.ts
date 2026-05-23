@@ -21,7 +21,7 @@ import { isAnalyticsConsentGranted } from '@/lib/consent/runtime';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { ALL_OPTION_KEY } from '@/features/workspace/shared';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 
 type Translator = (key: I18nKey) => string;
 

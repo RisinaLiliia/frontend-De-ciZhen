@@ -3,13 +3,13 @@
 import { IconFilter } from '@/components/ui/icons/icons';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import type { ProviderReviewSort } from '@/features/providers/publicProfile/useProviderReviewsModel';
-import { WorkspaceMobileFiltersSheet } from '@/features/workspace/requests/WorkspaceMobileFiltersSheet';
+import { WorkspaceMobileFiltersSheet } from '@/features/workspace/shared';
 import { WorkspaceButton } from '@/features/workspace/shared/WorkspaceButton';
-import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
+import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
 import {
   getWorkspaceReviewRangeLabel,
   WORKSPACE_REVIEW_RANGE_OPTIONS,
-} from '@/features/workspace/requests/workspaceReviewControls';
+} from '@/features/workspace/reviews/workspaceReviewControls';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 
 type WorkspaceReviewsShellControlsProps = {

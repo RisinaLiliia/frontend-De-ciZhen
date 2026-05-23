@@ -4,7 +4,7 @@ import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { resolveWorkspaceViewerMode } from '@/features/workspace/state';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';

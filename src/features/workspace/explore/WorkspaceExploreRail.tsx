@@ -8,7 +8,7 @@ import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { useDeferredMount } from '@/hooks/useDeferredMount';
 import { workspaceQK, WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/overview';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { WorkspaceRightRailStack } from '@/features/workspace/shared';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -118,7 +118,7 @@ export function WorkspaceExploreRail({
   }
 
   return (
-    <WorkspaceRightRailStack className="hide-below-desktop">
+    <WorkspaceRightRailStack className="hide-below-tablet">
       {isSidebarReady ? (
         <>
           {showRailMap ? (

@@ -11,10 +11,10 @@ import {
   REQUESTS_PAGE_SIZE,
   type RequestsListDensity,
 } from '@/lib/requests/pagination';
-import { useWorkspacePlatformReviewsOverview } from '@/features/workspace/requests/useWorkspacePlatformReviewsOverview';
-import { WorkspaceReviewsShellControls } from '@/features/workspace/requests/WorkspaceReviewsShellControls';
-import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
-import { WorkspaceReviewsAside } from '@/features/workspace/requests/WorkspaceReviewsAside';
+import { useWorkspacePlatformReviewsOverview } from '@/features/workspace/reviews/useWorkspacePlatformReviewsOverview';
+import { WorkspaceReviewsShellControls } from '@/features/workspace/reviews/WorkspaceReviewsShellControls';
+import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
+import { WorkspaceReviewsAside } from '@/features/workspace/reviews/WorkspaceReviewsAside';
 import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 type Translate = (key: I18nKey) => string;
@@ -67,7 +67,7 @@ export function WorkspacePlatformReviewsMain({
     <>
       {showInlineRail ? (
         <div className="workspace-platform-reviews__mobile-rail">
-          <WorkspaceReviewsAside t={t} locale={locale} hideBelowDesktop={false} />
+          <WorkspaceReviewsAside t={t} locale={locale} hideBelowTablet={false} />
         </div>
       ) : null}
 

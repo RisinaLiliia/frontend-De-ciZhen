@@ -1,5 +1,5 @@
 import { ALL_OPTION_KEY } from '@/features/workspace/shared';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 
 export type WorkspacePublicRequestsResponse = {

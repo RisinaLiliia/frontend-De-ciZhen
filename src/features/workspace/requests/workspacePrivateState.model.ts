@@ -3,7 +3,7 @@
 import type { WorkspacePrivateOverviewDto } from '@/lib/api/dto/workspace';
 import type { useWorkspacePrivateNavModel } from '@/features/workspace/requests/useWorkspacePrivateNavModel';
 import type { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceRequestsScope } from '@/features/workspace/state';
 import { clampPercent } from '@/features/workspace/requests/workspaceState.metrics';
 import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
