@@ -1,4 +1,13 @@
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
+import {
+  average,
+  clampNumber,
+  clampUnit,
+  normalizeText,
+  roundRatio,
+  roundScore,
+  roundToNearestStep,
+} from './statisticsOpportunityMath';
 
 type OpportunityItem = NonNullable<WorkspaceStatisticsOverviewSourceDto['opportunityRadar']>[number];
 type OpportunityMetric = OpportunityItem['metrics'][number];
@@ -26,41 +35,6 @@ export type OpportunityClusterFilters = {
   limit?: number;
 };
 
-function clampUnit(value: number): number {
-  if (!Number.isFinite(value)) return 0;
-  return Math.max(0, Math.min(1, value));
-}
-
-function clampNumber(value: number, min: number, max: number): number {
-  if (!Number.isFinite(value)) return min;
-  return Math.max(min, Math.min(max, value));
-}
-
-function roundScore(value: number): number {
-  if (!Number.isFinite(value)) return 0;
-  return Math.round(value * 10) / 10;
-}
-
-function roundRatio(value: number): number {
-  if (!Number.isFinite(value)) return 0;
-  return Math.round(value * 100) / 100;
-}
-
-function roundToNearestStep(value: number, step: number): number {
-  if (!Number.isFinite(value)) return 0;
-  return Math.max(step, Math.round(value / step) * step);
-}
-
-function average(values: Array<number | null | undefined>): number | null {
-  const normalized = values.filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
-  if (normalized.length === 0) return null;
-  return normalized.reduce((sum, value) => sum + value, 0) / normalized.length;
-}
-
-function normalizeText(value: string | null | undefined): string | null {
-  const normalized = String(value ?? '').trim();
-  return normalized.length > 0 ? normalized : null;
-}
 
 function resolveCityKeyFromCity(city: CityRow): string {
   return city.cityId ?? city.citySlug;
