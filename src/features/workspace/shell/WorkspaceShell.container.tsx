@@ -23,7 +23,6 @@ export function WorkspaceShell({
   const [bootstrapRefreshIntent, setBootstrapRefreshIntent] = React.useState(true);
 
   const {
-    activePublicSection,
     resolvedPublicSection,
     isGuestChatSection,
   } = useWorkspaceShellLegacyRouting({
