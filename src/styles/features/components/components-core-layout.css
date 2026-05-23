@@ -26,8 +26,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  @media (max-width: 1023px) {
-    .hide-below-desktop {
+  @media (max-width: 767px) {
+    .hide-below-tablet {
       display: none !important;
     }
   }
