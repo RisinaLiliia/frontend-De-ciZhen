@@ -19,7 +19,7 @@ import type {
   WorkspaceRequestsState,
 } from '@/features/workspace/state';
 import type { WorkspaceRequestsPeriodDto } from '@/lib/api/dto/workspace';
-import { useWorkspaceContractData } from '@/features/workspace/requests/useWorkspaceContractData';
+import { useWorkspaceContractData } from '@/features/workspace/contracts/useWorkspaceContractData';
 import { useWorkspaceLegacyPublicOverviewData } from '@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData';
 import { useWorkspaceRequestUserStateData } from '@/features/workspace/requests/useWorkspaceRequestUserStateData';
 

@@ -8,7 +8,7 @@ import { getAccessToken } from '@/lib/auth/token';
 import { resolveWorkspaceDataPlan } from './workspaceData.model';
 import { buildWorkspaceDataQueries } from './workspaceData.queries';
 import { buildWorkspaceRequestUserStateQueries } from './workspaceRequestUserState.queries';
-import { useWorkspaceContractData } from './useWorkspaceContractData';
+import { useWorkspaceContractData } from '@/features/workspace/contracts/useWorkspaceContractData';
 import { useWorkspaceLegacyPublicOverviewData } from './useWorkspaceLegacyPublicOverviewData';
 import { useWorkspaceRequestUserStateData } from './useWorkspaceRequestUserStateData';
 
@@ -28,7 +28,7 @@ vi.mock('./workspaceRequestUserState.queries', () => ({
   buildWorkspaceRequestUserStateQueries: vi.fn(),
 }));
 
-vi.mock('./useWorkspaceContractData', () => ({
+vi.mock('@/features/workspace/contracts/useWorkspaceContractData', () => ({
   useWorkspaceContractData: vi.fn(),
 }));
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useWorkspaceContractRequestsData } from '@/features/workspace/requests/useWorkspaceContractRequestsData';
+import { useWorkspaceContractRequestsData } from '@/features/workspace/contracts/useWorkspaceContractRequestsData';
 import { useWorkspaceDerived } from '@/features/workspace/requests/useWorkspaceDerived';
 import { useWorkspaceCards } from '@/features/workspace/private/useWorkspaceCards';
 import { buildWorkspaceContentDataResult } from '@/features/workspace/private/workspaceContentData.model';
