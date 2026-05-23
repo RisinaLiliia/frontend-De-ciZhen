@@ -47,6 +47,7 @@ import type {
   WorkspaceRequestsViewCard,
   WorkspaceRequestsViewVariant,
 } from '@/features/workspace/requests/workspaceRequestsView.model';
+import { workspaceMutedPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 import { pickRequestImage } from '@/lib/requests/images';
@@ -988,7 +989,7 @@ function CardSkeletonList() {
   return (
     <div className="my-requests-list">
       {Array.from({ length: 4 }).map((_, index) => (
-        <article key={`card-skeleton-${index}`} className="panel my-request-card my-request-card--skeleton">
+        <article key={`card-skeleton-${index}`} className={workspaceMutedPanelShell('my-request-card', 'my-request-card--skeleton')}>
           <div className="skeleton h-5 w-40" />
           <div className="skeleton h-8 w-full" />
           <div className="skeleton h-4 w-72" />
@@ -1016,7 +1017,7 @@ function EmptyState({
   const isMarket = workspaceVariant === 'market';
 
   return (
-    <section className="panel my-requests-empty">
+    <section className={workspaceMutedPanelShell('my-requests-empty')}>
       <h3>{mode === 'empty'
         ? (isMarket
           ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketEmptyTitle)
@@ -1060,7 +1061,7 @@ function AuthGate({
   guestLoginHref: string;
 }) {
   return (
-    <section className="panel my-requests-auth-gate">
+    <section className={workspaceMutedPanelShell('my-requests-auth-gate')}>
       <h3>{tx(locale, I18N_KEYS.requestsPage.workspaceAuthGateTitle)}</h3>
       <p>{tx(locale, I18N_KEYS.requestsPage.workspaceAuthGateHint)}</p>
       <div className="my-requests-empty__actions">
@@ -1164,7 +1165,7 @@ export function RequestsView({
 
   if (isError && model.cards.length === 0 && model.emptyMode !== 'empty') {
     return (
-      <section className="panel my-requests-empty">
+      <section className={workspaceMutedPanelShell('my-requests-empty')}>
         <h3>{variant === 'market'
           ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketLoadErrorTitle)
           : tx(locale, I18N_KEYS.requestsPage.workspacePrivateLoadErrorTitle)}
@@ -1296,7 +1297,7 @@ export function RequestsView({
             remainingCount={0}
             onExit={onExitDecisionMode}
           />
-          <section className="panel my-requests-empty my-requests-empty--success">
+          <section className={workspaceMutedPanelShell('my-requests-empty', 'my-requests-empty--success')}>
             <h3>{tx(locale, I18N_KEYS.requestsPage.workspaceDecisionDoneTitle)}</h3>
             <p>{tx(locale, I18N_KEYS.requestsPage.workspaceDecisionDoneHint)}</p>
             <div className="my-requests-empty__actions">

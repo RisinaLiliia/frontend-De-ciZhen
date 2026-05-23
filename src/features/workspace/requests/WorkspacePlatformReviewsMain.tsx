@@ -15,6 +15,7 @@ import { useWorkspacePlatformReviewsOverview } from '@/features/workspace/reques
 import { WorkspaceReviewsShellControls } from '@/features/workspace/requests/WorkspaceReviewsShellControls';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/requests/useWorkspaceReviewControlsState';
 import { WorkspaceReviewsAside } from '@/features/workspace/requests/WorkspaceReviewsAside';
+import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 type Translate = (key: I18nKey) => string;
 
@@ -105,7 +106,7 @@ export function WorkspacePlatformReviewsMain({
       emptyHint={t(I18N_KEYS.requestsPage.platformReviewsEmptyHint)}
     >
       {visibleReviews.map((review) => (
-        <article key={review.id} className="provider-reviews-hub__item card">
+        <article key={review.id} className={workspaceCardShell('provider-reviews-hub__item')}>
           <div className="provider-reviews-hub__item-head">
             <p className="provider-reviews-hub__item-author">{review.authorName}</p>
             <p className="provider-reviews-hub__item-date">

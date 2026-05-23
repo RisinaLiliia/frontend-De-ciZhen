@@ -2,6 +2,7 @@
 
 import { TopProvidersPanel, type TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
+import { workspaceCardShell, workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 type WorkspaceTopProvidersAsideProps = {
   isLoading: boolean;
@@ -32,14 +33,14 @@ export function WorkspaceTopProvidersAside({
 }: WorkspaceTopProvidersAsideProps) {
   if (isLoading) {
     return (
-      <section className="panel hide-below-desktop top-providers-panel">
+      <section className={workspacePanelShell('hide-below-desktop', 'top-providers-panel')}>
         <div className="panel-header">
           <div className="skeleton is-wide h-5 w-40" />
         </div>
         <div className="skeleton is-wide h-4 w-48" />
         <div className="provider-list">
           {Array.from({ length: 2 }).map((_, index) => (
-            <div key={`provider-skeleton-${index}`} className="provider-card">
+            <div key={`provider-skeleton-${index}`} className={workspaceCardShell('provider-card')}>
               <UserHeaderCardSkeleton />
               <div className="skeleton is-wide h-10 w-full rounded-lg" />
             </div>
@@ -51,14 +52,14 @@ export function WorkspaceTopProvidersAside({
 
   if (isError) {
     return (
-      <section className="panel hide-below-desktop top-providers-panel">
+      <section className={workspacePanelShell('hide-below-desktop', 'top-providers-panel')}>
         <div className="panel-header">
           <div className="skeleton is-wide h-5 w-40" />
         </div>
         <div className="skeleton is-wide h-4 w-48" />
         <div className="provider-list">
           {Array.from({ length: 2 }).map((_, index) => (
-            <div key={`provider-error-skeleton-${index}`} className="provider-card">
+            <div key={`provider-error-skeleton-${index}`} className={workspaceCardShell('provider-card')}>
               <UserHeaderCardSkeleton />
               <div className="skeleton is-wide h-10 w-full rounded-lg" />
             </div>
