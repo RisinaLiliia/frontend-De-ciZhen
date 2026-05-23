@@ -21,6 +21,15 @@ import {
   formatDelta,
   formatMetricValue,
 } from './workspaceStatisticsUserFormatters';
+import {
+  resolveActivityLabel,
+  resolveFitLabel,
+  resolveOpportunityLabel,
+  resolveRecommendationPriorityLabel,
+  resolveRecommendationPriorityTone,
+  resolveRecommendationReliabilityLabel,
+  resolveRecommendationTone,
+} from './workspaceStatisticsUserLabels';
 
 type UserIntelligenceSource = NonNullable<WorkspaceStatisticsDecisionDashboardDto['userIntelligence']>;
 
@@ -333,61 +342,6 @@ export function buildDecisionLayerSignals(params: {
       tone,
     };
   }).slice(0, 6);
-}
-
-function resolveFitLabel(copy: WorkspaceStatisticsCopy, value: 'high' | 'medium' | 'low' | 'unknown') {
-  if (value === 'high') return copy.userFitHighLabel;
-  if (value === 'medium') return copy.userRiskSeverityMedium;
-  if (value === 'low') return copy.userRiskSeverityLow;
-  return '—';
-}
-
-function resolveOpportunityLabel(copy: WorkspaceStatisticsCopy, value: 'high' | 'medium' | 'low' | 'unknown') {
-  if (value === 'high') return copy.userRiskSeverityHigh;
-  if (value === 'medium') return copy.userRiskSeverityMedium;
-  if (value === 'low') return copy.userRiskSeverityLow;
-  return '—';
-}
-
-function resolveActivityLabel(copy: WorkspaceStatisticsCopy, value: 'high' | 'medium' | 'low' | 'unknown') {
-  if (value === 'high') return copy.contextHealthActivityHigh;
-  if (value === 'medium') return copy.contextHealthActivityStable;
-  if (value === 'low') return copy.contextHealthActivityLow;
-  return '—';
-}
-
-function resolveRecommendationTone(
-  type: 'risk' | 'opportunity' | 'performance' | 'growth' | 'promotion' | 'demand',
-): WorkspaceStatisticsPriorityItemView['tone'] {
-  if (type === 'risk') return 'warning';
-  if (type === 'opportunity' || type === 'demand') return 'positive';
-  return 'neutral';
-}
-
-function resolveRecommendationReliabilityLabel(
-  copy: WorkspaceStatisticsCopy,
-  reliability: 'high' | 'medium' | 'low',
-): string {
-  if (reliability === 'high') return copy.userRecommendationReliabilityHigh;
-  if (reliability === 'medium') return copy.userRecommendationReliabilityMedium;
-  return copy.userRecommendationReliabilityLow;
-}
-
-function resolveRecommendationPriorityLabel(
-  copy: WorkspaceStatisticsCopy,
-  priority: 'high' | 'medium' | 'low',
-): string {
-  if (priority === 'high') return copy.userActionPriorityHigh;
-  if (priority === 'medium') return copy.userActionPriorityMedium;
-  return copy.userActionPriorityLow;
-}
-
-function resolveRecommendationPriorityTone(
-  priority: 'high' | 'medium' | 'low',
-): WorkspaceStatisticsActionStepView['priorityTone'] {
-  if (priority === 'high') return 'warning';
-  if (priority === 'medium') return 'info';
-  return 'success';
 }
 
 export function buildRecommendationPrioritySection(params: {
