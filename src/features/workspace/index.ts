@@ -18,7 +18,7 @@ export type {
 
 export { PublicContent, ProofReviewCard, WorkspaceContent, WorkspacePrivateIntro, WorkspacePublicIntro } from './shell/workspace.dynamic';
 export { WorkspaceOverviewInsightsPanel, WorkspaceOverviewMain, WorkspacePublicDemandMapPanel } from './overview';
-export { WorkspaceStatisticsExperience, useWorkspaceStatisticsModel } from './stats';
+export { StatisticsExperience, useWorkspaceStatisticsModel } from './stats';
 export {
   WorkspaceBottomNav,
   WorkspaceModeNav,

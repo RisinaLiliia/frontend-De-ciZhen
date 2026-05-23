@@ -18,7 +18,7 @@ import type {
   WorkspaceRequestsStateDto,
   WorkspaceStatisticsOverviewDto,
   WorkspaceStatisticsRange,
-  WorkspaceStatisticsViewerMode,
+  StatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 
 export type WorkspacePublicOverviewQuery = {
@@ -146,7 +146,7 @@ export type WorkspaceStatisticsQuery = {
   regionId?: string | null;
   categoryKey?: string | null;
   subcategoryKey?: string | null;
-  viewerMode?: WorkspaceStatisticsViewerMode | null;
+  viewerMode?: StatisticsViewerMode | null;
   citiesPage?: number;
   citiesLimit?: number;
 };

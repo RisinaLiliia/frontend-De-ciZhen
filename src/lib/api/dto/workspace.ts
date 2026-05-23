@@ -720,7 +720,7 @@ export type WorkspacePrivateOverviewDto = {
 };
 
 export type WorkspaceStatisticsRange = WorkspacePublicActivityRange;
-export type WorkspaceStatisticsViewerMode = 'provider' | 'customer';
+export type StatisticsViewerMode = 'provider' | 'customer';
 
 export type WorkspaceStatisticsSummaryDto = {
   totalPublishedRequests: number;
@@ -1300,7 +1300,7 @@ export type WorkspaceStatisticsOverviewDto = {
   updatedAt: string;
   mode: 'platform' | 'personalized';
   range: WorkspaceStatisticsRange;
-  viewerMode?: WorkspaceStatisticsViewerMode | null;
+  viewerMode?: StatisticsViewerMode | null;
   decisionContext?: WorkspaceStatisticsDecisionContextDto;
   filterOptions?: WorkspaceStatisticsFilterOptionsDto;
   sectionMeta?: WorkspaceStatisticsSectionMetaDto;

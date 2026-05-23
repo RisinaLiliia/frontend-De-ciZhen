@@ -21,7 +21,7 @@ import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfac
 import type { WorkspaceStatisticsModel } from '@/features/workspace/stats';
 import { StatisticsDecisionAiCard } from '@/features/workspace/stats/components/StatisticsDecisionAiCard';
 import { StatisticsMetricSignalCard } from '@/features/workspace/stats/components/StatisticsMetricSignalCard';
-import { StatisticsDemandPanelSection } from '@/features/workspace/stats/WorkspaceStatisticsSections';
+import { StatisticsDemandPanelSection } from '@/features/workspace/stats/StatisticsSections';
 import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 type WorkspaceOverviewMainProps = {

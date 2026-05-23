@@ -11,7 +11,7 @@ import { buildWorkspaceSectionRenderModel } from '@/features/workspace/navigatio
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import { WorkspaceStatisticsExperience } from '@/features/workspace/stats';
+import { StatisticsExperience } from '@/features/workspace/stats';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import type { ProofCase } from '@/types/home';
 
@@ -95,7 +95,7 @@ export function buildWorkspaceExploreSectionModel({
     return buildWorkspaceSectionRenderModel({
       section,
       content: (
-        <WorkspaceStatisticsExperience
+        <StatisticsExperience
           isWorkspaceAuthed={branch.isWorkspaceAuthed}
           t={branch.t}
           locale={branch.locale}
@@ -103,7 +103,7 @@ export function buildWorkspaceExploreSectionModel({
         />
       ),
       aiRail: (
-        <WorkspaceStatisticsExperience
+        <StatisticsExperience
           isWorkspaceAuthed={branch.isWorkspaceAuthed}
           t={branch.t}
           locale={branch.locale}
