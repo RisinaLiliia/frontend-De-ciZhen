@@ -6,9 +6,9 @@ import {
   buildWorkspaceOfferRequestsListProps,
   buildWorkspaceOwnerRequestsListProps,
   buildWorkspaceState,
-} from '@/features/workspace/requests/workspaceViewModel.helpers';
-import { buildWorkspaceListContext } from '@/features/workspace/requests/workspaceViewModel.shared';
-import type { PrivateInput } from '@/features/workspace/requests/workspaceViewModel.types';
+} from '@/features/workspace/view-model/workspaceViewModel.helpers';
+import { buildWorkspaceListContext } from '@/features/workspace/view-model/workspaceViewModel.shared';
+import type { PrivateInput } from '@/features/workspace/view-model/workspaceViewModel.types';
 import type { WorkspaceContentProps } from '@/features/workspace/requests/workspaceContent.types';
 
 export function buildWorkspacePrivateContentProps(

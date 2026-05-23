@@ -7,12 +7,12 @@ import {
   buildRequestsPublicFiltersProps,
 } from '@/components/requests/requestsPublicContent.model';
 import type { RequestsFilters } from '@/components/requests/RequestsFilters';
-import { buildWorkspacePublicRequestsListProps } from '@/features/workspace/requests/workspaceViewModel.helpers';
-import { buildWorkspaceListContext } from '@/features/workspace/requests/workspaceViewModel.shared';
+import { buildWorkspacePublicRequestsListProps } from '@/features/workspace/view-model/workspaceViewModel.helpers';
+import { buildWorkspaceListContext } from '@/features/workspace/view-model/workspaceViewModel.shared';
 import { resolveRequestsListDensityForPageSize, resolveRequestsPageSizeForDensity } from '@/lib/requests/pagination';
 import type {
   PublicInput,
-} from '@/features/workspace/requests/workspaceViewModel.types';
+} from '@/features/workspace/view-model/workspaceViewModel.types';
 import type { PublicContentProps } from '@/features/workspace/requests/PublicContent';
 
 type BuildPublicFiltersArgs = Pick<

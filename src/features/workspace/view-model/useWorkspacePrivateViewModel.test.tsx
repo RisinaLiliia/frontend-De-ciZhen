@@ -13,7 +13,7 @@ const { buildWorkspacePrivateViewModelMock } = vi.hoisted(() => ({
   buildWorkspacePrivateViewModelMock: vi.fn(),
 }));
 
-vi.mock('@/features/workspace/requests/workspaceViewModel.model', () => ({
+vi.mock('@/features/workspace/view-model/workspaceViewModel.model', () => ({
   buildWorkspacePrivateViewModel: buildWorkspacePrivateViewModelMock,
 }));
 

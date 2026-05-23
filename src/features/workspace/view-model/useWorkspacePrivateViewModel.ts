@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 
-import { buildWorkspacePrivateViewModel } from '@/features/workspace/requests/workspaceViewModel.model';
+import { buildWorkspacePrivateViewModel } from '@/features/workspace/view-model/workspaceViewModel.model';
 import type { WorkspaceContentProps } from '@/features/workspace/requests/workspaceContent.types';
-import type { PrivateInput } from '@/features/workspace/requests/workspaceViewModel.types';
+import type { PrivateInput } from '@/features/workspace/view-model/workspaceViewModel.types';
 
 type UseWorkspacePrivateViewModelParams = PrivateInput & {
   enabled?: boolean;
