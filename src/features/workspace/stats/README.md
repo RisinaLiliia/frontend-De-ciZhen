@@ -13,7 +13,7 @@ This feature is the frontend shell for the workspace decision dashboard at `/wor
 - `statisticsDecisionDashboard.contract.ts`
   - compatibility normalizer
   - target shape for backend-driven `decisionContext`, `filterOptions`, `sectionMeta`, `exportMeta`, and personalized section payloads
-- `statisticsOpportunityContract.utils.ts`
+- `statisticsOpportunityContract.model.ts`
   - compatibility layer for opportunity cluster and pricing context
   - derives `focus city + nearby competitors + per-item priceIntelligence` until backend owns it natively
 - `workspaceStatisticsDecisionDashboard.schema.ts`
@@ -36,7 +36,7 @@ This feature is the frontend shell for the workspace decision dashboard at `/wor
 - `statisticsViewModel.user.ts`
   - personalized `user vs market` mapping
   - resolves position, risks, opportunities, pricing gap, and action steps from backend-shaped `userIntelligence`
-- `statisticsUserIntelligence.utils.ts`
+- `statisticsViewModel.user.ts`
   - temporary compatibility builder for legacy personalized payloads
   - kept only as a transitional utility while old payloads are removed from the codebase
   - main stats normalization path must not depend on these builders once backend ships canonical sections
