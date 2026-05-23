@@ -1,6 +1,6 @@
 'use client';
 
-import type { useWorkspacePublicState } from '@/features/workspace/requests/useWorkspacePublicState';
+import type { useWorkspacePublicState } from '@/features/workspace/state/useWorkspacePublicState';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { buildWorkspacePublicExploreWithSeed, resolveWorkspacePublicBranchSnapshot } from '@/features/workspace/page/workspacePublicBranch.model';
 

@@ -9,7 +9,7 @@ import {
   useWorkspaceFormatters,
   useWorkspaceNavigation,
 } from '@/features/workspace';
-import { useWorkspacePublicState } from '@/features/workspace/requests/useWorkspacePublicState';
+import { useWorkspacePublicState } from '@/features/workspace/state/useWorkspacePublicState';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import {
   buildWorkspacePublicExploreWithSeed,

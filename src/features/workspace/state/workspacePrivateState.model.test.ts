@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
+import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/state/workspacePrivateState.constants';
 import {
   buildWorkspacePrivateNavModelArgs,
   buildWorkspacePrivateTopProvidersArgs,

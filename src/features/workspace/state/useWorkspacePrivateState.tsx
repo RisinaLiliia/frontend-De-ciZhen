@@ -14,7 +14,7 @@ import {
   shouldBuildWorkspacePrivateTopProviders,
   resolveWorkspacePrivateStateResult,
   type WorkspacePrivateOverviewState,
-} from '@/features/workspace/requests/workspacePrivateState.model';
+} from '@/features/workspace/state/workspacePrivateState.model';
 import { useWorkspacePrivateNavModel } from '@/features/workspace/navigation/useWorkspacePrivateNavModel';
 import { useWorkspacePrivateTopProviders } from '@/features/workspace/requests/useWorkspacePrivateTopProviders';
 

@@ -18,7 +18,7 @@ import {
 import {
   buildMyRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/myRequestsView.model';
-import { useWorkspacePrivateState } from '@/features/workspace/requests/useWorkspacePrivateState';
+import { useWorkspacePrivateState } from '@/features/workspace/state/useWorkspacePrivateState';
 import { buildWorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
 import {
