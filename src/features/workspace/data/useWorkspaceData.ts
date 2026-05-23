@@ -5,10 +5,10 @@ import * as React from 'react';
 import { getAccessToken } from '@/lib/auth/token';
 import {
   resolveWorkspaceDataPlan,
-} from '@/features/workspace/requests/workspaceData.model';
+} from '@/features/workspace/data/workspaceData.model';
 import {
   buildWorkspaceDataQueries,
-} from '@/features/workspace/requests/workspaceData.queries';
+} from '@/features/workspace/data/workspaceData.queries';
 import { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { WorkspacePublicOverviewQuery } from '@/lib/api/workspace';

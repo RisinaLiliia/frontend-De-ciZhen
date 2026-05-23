@@ -7,10 +7,10 @@ import { useWorkspaceData } from './useWorkspaceData';
 import { getAccessToken } from '@/lib/auth/token';
 import { resolveWorkspaceDataPlan } from './workspaceData.model';
 import { buildWorkspaceDataQueries } from './workspaceData.queries';
-import { buildWorkspaceRequestUserStateQueries } from './workspaceRequestUserState.queries';
+import { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 import { useWorkspaceContractData } from '@/features/workspace/contracts/useWorkspaceContractData';
-import { useWorkspaceLegacyPublicOverviewData } from './useWorkspaceLegacyPublicOverviewData';
-import { useWorkspaceRequestUserStateData } from './useWorkspaceRequestUserStateData';
+import { useWorkspaceLegacyPublicOverviewData } from '@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData';
+import { useWorkspaceRequestUserStateData } from '@/features/workspace/requests/useWorkspaceRequestUserStateData';
 
 vi.mock('@/lib/auth/token', () => ({
   getAccessToken: vi.fn(),
@@ -24,7 +24,7 @@ vi.mock('./workspaceData.queries', () => ({
   buildWorkspaceDataQueries: vi.fn(),
 }));
 
-vi.mock('./workspaceRequestUserState.queries', () => ({
+vi.mock('@/features/workspace/requests/workspaceRequestUserState.queries', () => ({
   buildWorkspaceRequestUserStateQueries: vi.fn(),
 }));
 
@@ -32,11 +32,11 @@ vi.mock('@/features/workspace/contracts/useWorkspaceContractData', () => ({
   useWorkspaceContractData: vi.fn(),
 }));
 
-vi.mock('./useWorkspaceLegacyPublicOverviewData', () => ({
+vi.mock('@/features/workspace/requests/useWorkspaceLegacyPublicOverviewData', () => ({
   useWorkspaceLegacyPublicOverviewData: vi.fn(),
 }));
 
-vi.mock('./useWorkspaceRequestUserStateData', () => ({
+vi.mock('@/features/workspace/requests/useWorkspaceRequestUserStateData', () => ({
   useWorkspaceRequestUserStateData: vi.fn(),
 }));
 

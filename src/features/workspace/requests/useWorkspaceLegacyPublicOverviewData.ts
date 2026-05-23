@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-import type { buildWorkspaceDataQueries } from '@/features/workspace/requests/workspaceData.queries';
+import type { buildWorkspaceDataQueries } from '@/features/workspace/data/workspaceData.queries';
 
 type WorkspaceDataQueries = ReturnType<typeof buildWorkspaceDataQueries>;
 

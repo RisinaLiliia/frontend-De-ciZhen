@@ -6,9 +6,9 @@ import type { OfferDto } from '@/lib/api/dto/offers';
 
 import {
   buildWorkspaceOfferRequestsQuery,
-} from '@/features/workspace/requests/workspaceData.queries';
+} from '@/features/workspace/data/workspaceData.queries';
 import { type buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
-import { buildWorkspaceOfferRequestIds } from '@/features/workspace/requests/workspaceData.model';
+import { buildWorkspaceOfferRequestIds } from '@/features/workspace/data/workspaceData.model';
 
 type WorkspaceRequestUserStateQueries = ReturnType<typeof buildWorkspaceRequestUserStateQueries>;
 type WorkspaceLegacyOfferQuery = WorkspaceRequestUserStateQueries['myOffers'];

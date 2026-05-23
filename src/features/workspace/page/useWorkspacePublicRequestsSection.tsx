@@ -8,7 +8,7 @@ import {
   buildRequestsWorkspacePublicBody,
   RequestsWorkspaceBody,
 } from '@/features/workspace/requests/RequestsWorkspaceBody';
-import { useWorkspaceData } from '@/features/workspace/requests/useWorkspaceData';
+import { useWorkspaceData } from '@/features/workspace/data/useWorkspaceData';
 import {
   buildWorkspaceRequestsSurfaceModel,
   buildWorkspaceRequestsViewModelFromResponse,

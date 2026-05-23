@@ -9,7 +9,7 @@ import {
   buildWorkspaceDataQueries,
   buildWorkspaceOfferRequestsQuery,
 } from './workspaceData.queries';
-import { buildWorkspaceRequestUserStateQueries } from './workspaceRequestUserState.queries';
+import { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 
 vi.mock('@/lib/api/workspace', async () => {
   const actual = await vi.importActual<typeof import('@/lib/api/workspace')>('@/lib/api/workspace');

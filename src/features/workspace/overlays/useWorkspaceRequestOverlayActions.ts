@@ -10,7 +10,7 @@ import {
   buildWorkspaceDecisionMutationQueryKeys,
   buildWorkspaceOfferReviewMutationQueryKeys,
   buildWorkspaceProviderOfferMutationQueryKeys,
-} from '@/features/workspace/requests/workspaceInvalidation.model';
+} from '@/features/workspace/data/workspaceInvalidation.model';
 import { completeContract, confirmContract } from '@/lib/api/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import { createProviderReview } from '@/lib/api/reviews';
