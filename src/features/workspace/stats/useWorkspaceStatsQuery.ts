@@ -7,7 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type {
   WorkspacePrivateOverviewDto,
   WorkspaceStatisticsRange,
-  WorkspaceStatisticsViewerMode,
+  StatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 import { getWorkspaceStatistics } from '@/lib/api/workspace';
 import {
@@ -31,7 +31,7 @@ export type UseWorkspaceStatsQueryResult = {
   setCategoryKey: (next: string | null) => void;
   cityListPage: number;
   setCityListPage: (next: number) => void;
-  setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
+  setViewerMode: (next: StatisticsViewerMode) => void;
   resetFilters: () => void;
   data: WorkspaceStatisticsDecisionDashboardDto | undefined;
   isLoading: boolean;
@@ -136,7 +136,7 @@ export function useWorkspaceStatsQuery({
     });
   }, [replaceSearchParams]);
 
-  const setViewerMode = React.useCallback((next: WorkspaceStatisticsViewerMode) => {
+  const setViewerMode = React.useCallback((next: StatisticsViewerMode) => {
     replaceSearchParams((params) => {
       params.set('viewerMode', next);
     });

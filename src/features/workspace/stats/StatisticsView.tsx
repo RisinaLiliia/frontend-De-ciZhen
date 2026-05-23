@@ -28,24 +28,24 @@ import {
   StatisticsPricePanel,
   StatisticsPriceRecommendationPanel,
   StatisticsRecommendationsPanel,
-} from './WorkspaceStatisticsSections';
+} from './StatisticsSections';
 import { resolveGrowthMarketContext } from './statisticsGrowthContext.model';
 import { StatisticsFunnelStack } from './StatisticsFunnelStack';
 import { ActivityTrendChart } from './ActivityTrendChart';
 
-type WorkspaceStatisticsViewProps = {
+type StatisticsViewProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   model: WorkspaceStatisticsModel;
   slot?: 'full' | 'content' | 'rail';
 };
 
-export function WorkspaceStatisticsView({
+export function StatisticsView({
   t,
   locale,
   model,
   slot = 'full',
-}: WorkspaceStatisticsViewProps) {
+}: StatisticsViewProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

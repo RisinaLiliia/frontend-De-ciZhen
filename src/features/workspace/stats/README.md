@@ -40,7 +40,7 @@ This feature is the frontend shell for the workspace decision dashboard at `/wor
   - temporary compatibility builder for legacy personalized payloads
   - kept only as a transitional utility while old payloads are removed from the codebase
   - main stats normalization path must not depend on these builders once backend ships canonical sections
-- `WorkspaceStatisticsView.tsx`
+- `StatisticsView.tsx`
   - presentation shell for the stats page
 - `sections/*`
   - presentational modules for dashboard blocks

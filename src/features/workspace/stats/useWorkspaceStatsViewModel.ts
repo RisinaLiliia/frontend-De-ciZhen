@@ -7,7 +7,7 @@ import type {
   WorkspaceStatisticsActivityMetricsDto,
   WorkspaceStatisticsCategoryDemandDto,
   WorkspaceStatisticsRange,
-  WorkspaceStatisticsViewerMode,
+  StatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 import { getWorkspaceStatisticsCopy } from './statistics.copy';
@@ -76,7 +76,7 @@ type UseWorkspaceStatsViewModelParams = {
   setCategoryKey: (next: string | null) => void;
   cityListPage: number;
   setCityListPage: (next: number) => void;
-  setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
+  setViewerMode: (next: StatisticsViewerMode) => void;
   resetFilters: () => void;
   data: WorkspaceStatisticsDecisionDashboardDto | undefined;
   isLoading: boolean;

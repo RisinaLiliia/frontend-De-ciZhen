@@ -11,9 +11,9 @@ import { type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { useDecisionDashboardModel } from './useDecisionDashboardModel';
-import { WorkspaceStatisticsPanel } from './WorkspaceStatisticsPanel';
+import { StatisticsPanel } from './StatisticsPanel';
 
-export function WorkspaceStatisticsExperience({
+export function StatisticsExperience({
   isWorkspaceAuthed,
   t,
   locale,
@@ -45,7 +45,7 @@ export function WorkspaceStatisticsExperience({
 
   return (
     <div className="workspace-statistics-experience__content">
-      <WorkspaceStatisticsPanel
+      <StatisticsPanel
         t={t}
         locale={locale}
         model={model}

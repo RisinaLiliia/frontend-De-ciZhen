@@ -4,7 +4,7 @@ import type {
   WorkspaceStatisticsInsightDto,
   WorkspaceStatisticsOpportunityRadarItemDto,
   WorkspaceStatisticsRange,
-  WorkspaceStatisticsViewerMode,
+  StatisticsViewerMode,
 } from '@/lib/api/dto/workspace';
 import type { WorkspaceStatisticsCopy } from './statistics.copy';
 
@@ -299,7 +299,7 @@ export type WorkspaceStatisticsFilters = {
   regionId?: string | null;
   categoryKey: string | null;
   subcategoryKey?: string | null;
-  viewerMode?: WorkspaceStatisticsViewerMode | null;
+  viewerMode?: StatisticsViewerMode | null;
 };
 
 export type WorkspaceStatisticsContextMetricView = {
@@ -334,8 +334,8 @@ export type WorkspaceStatisticsModel = {
   setCategoryKey: (next: string | null) => void;
   cityListPage: number;
   setCityListPage: (next: number) => void;
-  viewerMode: WorkspaceStatisticsViewerMode | null;
-  setViewerMode: (next: WorkspaceStatisticsViewerMode) => void;
+  viewerMode: StatisticsViewerMode | null;
+  setViewerMode: (next: StatisticsViewerMode) => void;
   resetFilters: () => void;
   isLoading: boolean;
   isError: boolean;

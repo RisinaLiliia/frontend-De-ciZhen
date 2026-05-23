@@ -3,25 +3,25 @@
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useDecisionDashboardModel } from './useDecisionDashboardModel';
-import { WorkspaceStatisticsView } from './WorkspaceStatisticsView';
+import { StatisticsView } from './StatisticsView';
 import type { WorkspaceStatisticsModel } from './statistics.model';
 
-type WorkspaceStatisticsPanelProps = {
+type StatisticsPanelProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   model?: WorkspaceStatisticsModel;
   slot?: 'full' | 'content' | 'rail';
 };
 
-export function WorkspaceStatisticsPanel({
+export function StatisticsPanel({
   t,
   locale,
   model: providedModel,
   slot = 'full',
-}: WorkspaceStatisticsPanelProps) {
+}: StatisticsPanelProps) {
   if (providedModel) {
     return (
-      <WorkspaceStatisticsView
+      <StatisticsView
         t={t}
         locale={locale}
         model={providedModel}
@@ -30,17 +30,17 @@ export function WorkspaceStatisticsPanel({
     );
   }
 
-  return <WorkspaceStatisticsPanelWithModel t={t} locale={locale} slot={slot} />;
+  return <StatisticsPanelWithModel t={t} locale={locale} slot={slot} />;
 }
 
-function WorkspaceStatisticsPanelWithModel({
+function StatisticsPanelWithModel({
   t,
   locale,
   slot = 'full',
-}: Omit<WorkspaceStatisticsPanelProps, 'model'>) {
+}: Omit<StatisticsPanelProps, 'model'>) {
   const model = useDecisionDashboardModel({ locale });
   return (
-    <WorkspaceStatisticsView
+    <StatisticsView
       t={t}
       locale={locale}
       model={model}
