@@ -94,7 +94,7 @@ describe('WorkspacePageLayout', () => {
 
     const shell = screen.getByTestId('workspace-shell');
     expect(shell.getAttribute('data-has-sidebar')).toBe('true');
-    expect(shell.getAttribute('data-has-bottom-nav')).toBe('true');
+    expect(shell.getAttribute('data-has-bottom-nav')).toBe('false');
     expect(screen.getByTestId('workspace-explore-section')).toBeTruthy();
   });
 });
