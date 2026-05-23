@@ -148,13 +148,13 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     [activePublicSection, intro, isDesktop],
   );
 
-  const workspaceSidebar = (
+  const workspaceSidebar = isDesktop ? (
     <WorkspaceSidebar
       activePublicSection={activePublicSection}
       activeWorkspaceTab={activeWorkspaceTab}
       preferredRequestsRole={preferredRequestsRole}
     />
-  );
+  ) : null;
 
   const contextualAside = (
     <WorkspaceContextAside
@@ -252,7 +252,11 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     return null;
   }
 
-  const workspaceBottomNav = (
+  // Mobile nav and bottom nav only render on mobile/tablet breakpoints
+  // useIsDesktop hook returns true for >= 1024px (desktop)
+  // So we render mobile nav only when NOT desktop
+  const shouldRenderMobileNav = !isDesktop;
+  const workspaceBottomNav = shouldRenderMobileNav ? (
     <>
       <WorkspaceBottomNav
         locale={locale}
@@ -262,7 +266,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       />
       <WorkspacePrimaryNavMobile />
     </>
-  );
+  ) : null;
 
   const resolvedIntro =
     isWorkspacePublicSection && resolvedSectionModel.layout === 'singleColumn'
