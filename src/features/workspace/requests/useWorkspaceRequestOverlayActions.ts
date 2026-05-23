@@ -22,7 +22,7 @@ import {
   updateOffer,
 } from '@/lib/api/offers';
 import { ApiError } from '@/lib/api/http-error';
-import { fetchManagedRequestDetails } from '@/features/requests/details/requestDetails.data';
+import { fetchManagedRequestDetails } from '@/features/workspace/requests/workspaceRequestDetailsFacade';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';

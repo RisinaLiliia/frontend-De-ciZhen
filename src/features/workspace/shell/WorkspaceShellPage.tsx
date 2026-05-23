@@ -14,7 +14,7 @@ export function WorkspaceShellPage({
   forcedWorkspaceTab = null,
 }: WorkspaceShellPageProps = {}) {
   return (
-    <div className="workspace-route-shell requests-screen">
+    <div className="workspace-route-shell">
       <WorkspaceShell
         forcedPublicSection={forcedPublicSection}
         forcedWorkspaceTab={forcedWorkspaceTab}

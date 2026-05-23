@@ -23,7 +23,6 @@ export {
   WorkspaceBottomNav,
   WorkspaceModeNav,
   WorkspacePageFrame,
-  WorkspaceResponsiveFrame,
   WorkspaceShell,
   WorkspaceSectionHeader,
 } from './shell';
@@ -35,9 +34,7 @@ export type {
 export {
   WorkspaceBadge,
   WorkspaceButton,
-  WorkspaceCardShell,
   WorkspaceFilterBar,
-  WorkspacePanelShell,
   WorkspaceRightRailPanel,
   useWorkspaceFormatters,
   workspaceCardShell,

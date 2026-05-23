@@ -24,11 +24,6 @@ export type WorkspaceSidebarProps = WorkspaceResponsiveContextProps & {
 
 export type WorkspaceBottomNavProps = WorkspaceResponsiveContextProps;
 
-export type WorkspaceResponsiveFrameProps = {
-  children: ReactNode;
-  bottomNav?: ReactNode;
-};
-
 export type WorkspacePageFrameProps = {
   intro?: ReactNode;
   filters?: ReactNode;

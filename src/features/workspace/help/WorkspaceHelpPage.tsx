@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 
-import { WorkspaceButton, WorkspacePanelShell } from '@/features/workspace/shared';
+import { WorkspaceButton } from '@/features/workspace/shared';
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 
 function getWorkspaceHelpContent(locale: string) {
@@ -97,16 +98,16 @@ export function WorkspaceHelpPage() {
 
   return (
     <section className="stack-md">
-      <WorkspacePanelShell>
+      <section className={workspacePanelShell()}>
         <div className="stack-sm">
           <h2 className="typo-h3">{copy.overviewTitle}</h2>
           <p className="typo-small">{copy.overviewText}</p>
         </div>
-      </WorkspacePanelShell>
+      </section>
 
       <div className="grid gap-4 md:grid-cols-3">
         {copy.actions.map((item) => (
-          <WorkspacePanelShell key={item.title} className="h-full">
+          <section key={item.title} className={workspacePanelShell('h-full')}>
             <div className="flex h-full flex-col gap-4">
               <div className="stack-xs">
                 <h3 className="text-sm font-semibold">{item.title}</h3>
@@ -118,11 +119,11 @@ export function WorkspaceHelpPage() {
                 </Link>
               </div>
             </div>
-          </WorkspacePanelShell>
+          </section>
         ))}
       </div>
 
-      <WorkspacePanelShell>
+      <section className={workspacePanelShell()}>
         <div className="stack-md">
           <h2 className="typo-h3">{copy.faqTitle}</h2>
           <div className="grid gap-4 md:grid-cols-3">
@@ -134,7 +135,7 @@ export function WorkspaceHelpPage() {
             ))}
           </div>
         </div>
-      </WorkspacePanelShell>
+      </section>
     </section>
   );
 }

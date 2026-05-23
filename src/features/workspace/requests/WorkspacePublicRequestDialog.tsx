@@ -9,9 +9,12 @@ import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import { IconHeart, IconSend, IconShare, IconTrash } from '@/components/ui/icons/icons';
 import { deleteOffer } from '@/lib/api/offers';
 import { useAuthStatus, useAuthUser, useAuthMe } from '@/hooks/useAuthSnapshot';
-import { useRequestDetailsContentState } from '@/features/requests/details/useRequestDetailsContentState';
-import { useRequestDetailsPageData } from '@/features/requests/details/useRequestDetailsPageData';
-import { RequestDetailsContent } from '@/features/requests/details/RequestDetailsContent';
+import {
+  RequestDetailsContent,
+  resolveOfferCardState,
+  useRequestDetailsContentState,
+  useRequestDetailsPageData,
+} from '@/features/workspace/requests/workspaceRequestDetailsFacade';
 import type { RequestDialogIntent } from '@/features/workspace/requests/useWorkspaceRequestOverlayFlow';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { Locale } from '@/lib/i18n/t';
@@ -22,7 +25,6 @@ import { workspaceQK } from '@/features/workspace/data';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
 import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
 import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
-import { resolveOfferCardState } from '@/features/requests/uiState';
 
 function RequestDetailInteractionMenuItem({
   children,

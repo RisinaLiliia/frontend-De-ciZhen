@@ -10,7 +10,6 @@ export { WorkspaceModeNav } from '@/features/workspace/shell/WorkspaceModeNav';
 export { WorkspacePageFrame } from '@/features/workspace/shell/WorkspacePageFrame';
 export { WorkspaceModeHeader, WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceModeHeader';
 export { WorkspacePageLayout } from '@/features/workspace/shell/WorkspacePageLayout';
-export { WorkspaceResponsiveFrame } from '@/features/workspace/shell/WorkspaceResponsiveFrame';
 export { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
 export { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 export { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
@@ -28,7 +27,6 @@ export type { WorkspaceModeKey } from '@/features/workspace/navigation/resolveAc
 export type {
   WorkspaceBottomNavProps,
   WorkspacePageFrameProps,
-  WorkspaceResponsiveFrameProps,
   WorkspaceSectionLayout,
   WorkspaceSectionRenderModel,
   WorkspaceShellProps,

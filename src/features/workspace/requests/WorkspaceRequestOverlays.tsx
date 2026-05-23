@@ -3,8 +3,10 @@
 import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { RequestDetailsContent } from '@/features/requests/details/RequestDetailsContent';
-import { useRequestDetailsContentState } from '@/features/requests/details/useRequestDetailsContentState';
+import {
+  RequestDetailsContent,
+  useRequestDetailsContentState,
+} from '@/features/workspace/requests/workspaceRequestDetailsFacade';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { WorkspaceRequestDialogShell } from '@/features/workspace/requests/WorkspaceRequestDialogShell';
 import {
