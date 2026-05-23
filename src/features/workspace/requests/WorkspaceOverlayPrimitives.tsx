@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 export function WorkspaceInlineStateCard({
   locale,
@@ -82,7 +83,7 @@ export function WorkspaceCompactModalPortal({
         onClick={onClose}
         aria-label={translate(I18N_KEYS.workspace.dialogCloseLabel, locale)}
       />
-      <div className="dc-modal__panel dc-modal__panel--compact my-request-dialog__panel">
+      <div className={workspacePanelShell('my-request-dialog__panel', 'dc-modal__panel--compact')}>
         {children}
       </div>
     </div>
