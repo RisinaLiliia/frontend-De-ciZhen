@@ -25,7 +25,9 @@ export type WorkspaceSidebarProps = WorkspaceResponsiveContextProps & {
   variant?: 'static' | 'drawer';
 };
 
-export type WorkspaceBottomNavProps = WorkspaceResponsiveContextProps;
+export type WorkspaceBottomNavProps = WorkspaceResponsiveContextProps & {
+  mode: 'drawer' | 'bottomDock';
+};
 
 export type WorkspacePageFrameProps = {
   topBar?: ReactNode;

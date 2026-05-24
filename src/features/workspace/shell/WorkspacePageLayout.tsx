@@ -10,6 +10,7 @@ import {
   WorkspaceTopProvidersAside,
   useIsDesktop,
   useIsWideDesktop,
+  useMediaMatch,
 } from '@/features/workspace/shared';
 import {
   buildWorkspaceExploreSectionModel,
@@ -130,6 +131,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   const searchParams = useSearchParams();
   const isDesktop = useIsDesktop();
   const isWideDesktop = useIsWideDesktop();
+  const isMobile = useMediaMatch('(max-width: 767px)');
   const isOverviewPrivateMode =
     !isWorkspacePublicSection &&
     isWorkspaceOverviewMode({
@@ -164,7 +166,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   ) : null;
   const workspaceTopBar = (
     <WorkspaceTopBar
-      showNavigationToggle={!isWideDesktop}
+      showNavigationToggle={!isWideDesktop && !isMobile}
       compactUtility={!isWideDesktop}
     />
   );
@@ -265,12 +267,10 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     return null;
   }
 
-  // Responsive breakpoint contract:
-  // mobile 0-767px, tablet 768-1023px, desktop 1024px+
-  // useIsDesktop returns true for desktop widths only
-  const shouldRenderOverlayNav = !isWideDesktop;
-  const workspaceBottomNav = shouldRenderOverlayNav ? (
+  const overlayNavigationMode = isWideDesktop ? null : (isMobile ? 'bottomDock' : 'drawer');
+  const workspaceBottomNav = overlayNavigationMode ? (
     <WorkspaceBottomNav
+      mode={overlayNavigationMode}
       locale={locale}
       activePublicSection={activePublicSection}
       activeWorkspaceTab={activeWorkspaceTab}

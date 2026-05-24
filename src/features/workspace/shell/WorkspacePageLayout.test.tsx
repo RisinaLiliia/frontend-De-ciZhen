@@ -6,6 +6,10 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { WorkspacePageLayout } from '@/features/workspace/shell/WorkspacePageLayout';
 
+let isDesktopMock = true;
+let isWideDesktopMock = true;
+let isMobileMock = false;
+
 vi.mock('next/navigation', () => ({
   usePathname: () => '/workspace',
   useSearchParams: () => new URLSearchParams('section=providers'),
@@ -13,8 +17,9 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/features/workspace/shared', () => ({
   WorkspaceTopProvidersAside: () => <div data-testid="workspace-top-providers-aside" />,
-  useIsDesktop: () => true,
-  useIsWideDesktop: () => true,
+  useIsDesktop: () => isDesktopMock,
+  useIsWideDesktop: () => isWideDesktopMock,
+  useMediaMatch: () => isMobileMock,
 }));
 
 vi.mock('@/features/workspace/explore', () => ({
@@ -59,6 +64,10 @@ vi.mock('@/features/workspace/shell/WorkspaceContextFocusPanel', () => ({
 
 describe('WorkspacePageLayout', () => {
   it('renders public explore sections through WorkspaceShell', () => {
+    isDesktopMock = true;
+    isWideDesktopMock = true;
+    isMobileMock = false;
+
     render(
       <WorkspacePageLayout
         isWorkspacePublicSection={true}
@@ -97,5 +106,50 @@ describe('WorkspacePageLayout', () => {
     expect(shell.getAttribute('data-has-sidebar')).toBe('true');
     expect(shell.getAttribute('data-has-bottom-nav')).toBe('false');
     expect(screen.getByTestId('workspace-explore-section')).toBeTruthy();
+  });
+
+  it('mounts the workspace bottom nav on mobile widths', () => {
+    isDesktopMock = false;
+    isWideDesktopMock = false;
+    isMobileMock = true;
+
+    render(
+      <WorkspacePageLayout
+        isWorkspacePublicSection={true}
+        isWorkspaceAuthed={false}
+        activePublicSection="providers"
+        activeWorkspaceTab="my-requests"
+        t={(key) => key}
+        locale="de"
+        intro={<div>intro</div>}
+        explore={{
+          exploreListDensity: 'double',
+          setExploreListDensity: vi.fn(),
+          sidebarNearbyLimit: 3,
+          sidebarTopProvidersLimit: 3,
+          sidebarProofCases: [],
+          proofIndex: 0,
+        }}
+        privateMain={null}
+        publicMain={null}
+        workspaceAsideBaseProps={{
+          isLoading: false,
+          isError: false,
+          errorLabel: '',
+          title: '',
+          subtitle: '',
+          ctaLabel: '',
+          providers: [],
+          favoriteProviderIds: new Set(),
+        }}
+        pendingFavoriteProviderIds={new Set()}
+        onToggleProviderFavorite={vi.fn()}
+      />,
+    );
+
+    const shell = screen.getAllByTestId('workspace-shell').at(-1);
+    expect(shell).toBeTruthy();
+    expect(shell?.getAttribute('data-has-sidebar')).toBe('false');
+    expect(shell?.getAttribute('data-has-bottom-nav')).toBe('true');
   });
 });
