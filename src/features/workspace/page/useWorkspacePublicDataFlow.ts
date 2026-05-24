@@ -25,6 +25,10 @@ import {
   buildWorkspacePublicStateArgs,
 } from '@/features/workspace/page/workspacePublicPresentation.model';
 
+type Options = {
+  enabled?: boolean;
+};
+
 export function useWorkspacePublicDataFlow({
   t,
   locale,
@@ -33,11 +37,16 @@ export function useWorkspacePublicDataFlow({
   isWorkspaceAuthed,
   isPersonalized,
   routeState,
-}: WorkspaceBranchProps) {
+}: WorkspaceBranchProps, {
+  enabled = true,
+}: Options = {}) {
   const { activePublicSection, activeWorkspaceTab, guestLoginHref, onGuestLockedAction } = routeState;
-  const shouldLoadShellSnapshot = shouldLoadWorkspacePublicShellSnapshot(activePublicSection);
+  const shouldLoadShellSnapshot = enabled && shouldLoadWorkspacePublicShellSnapshot(activePublicSection);
 
-  const { data: platformReviewsOverview } = useQuery(buildWorkspacePublicReviewsQuery());
+  const { data: platformReviewsOverview } = useQuery({
+    ...buildWorkspacePublicReviewsQuery(),
+    enabled,
+  });
   const {
     data: platformSnapshot,
     isLoading: isSummaryLoading,

@@ -21,6 +21,7 @@ import {
 } from '@/features/workspace/page/workspacePrivateSources.model';
 
 type SourcesParams = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isAuthed' | 'isWorkspaceAuthed'> & {
+  enabled?: boolean;
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
@@ -31,6 +32,7 @@ type SourcesParams = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isAuthed' | 'i
 };
 
 export function useWorkspacePrivateSources({
+  enabled = true,
   t,
   locale,
   isAuthed,
@@ -43,12 +45,12 @@ export function useWorkspacePrivateSources({
   activeRequestsPeriod = '30d',
   activeRequestsSort = null,
 }: SourcesParams) {
-  const shouldLoadCatalog = shouldLoadWorkspacePrivateCatalog({
+  const shouldLoadCatalog = enabled && shouldLoadWorkspacePrivateCatalog({
     activePublicSection,
     activeWorkspaceTab,
     requestsScope,
   });
-  const shouldLoadPublicRequestsState = shouldLoadWorkspacePrivatePublicRequestsState({
+  const shouldLoadPublicRequestsState = enabled && shouldLoadWorkspacePrivatePublicRequestsState({
     activePublicSection,
     activeWorkspaceTab,
   });
@@ -83,6 +85,7 @@ export function useWorkspacePrivateSources({
 
   const data = useWorkspaceData(
     buildWorkspacePrivateSourcesDataArgs({
+      enabled,
       filter,
       page,
       limit,
@@ -105,7 +108,7 @@ export function useWorkspacePrivateSources({
     requestUserStateData,
   } = data;
   const providerSupportData = useWorkspaceProviderSupportData({
-    enabled: activePublicSection === null,
+    enabled: enabled && activePublicSection === null,
     isAuthed,
   });
 

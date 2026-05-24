@@ -28,6 +28,7 @@ import {
 type InteractionsParams = WorkspacePrivateInteractionsParams;
 
 export function useWorkspacePrivateInteractions({
+  enabled = true,
   t,
   locale,
   isAuthed,
@@ -42,16 +43,19 @@ export function useWorkspacePrivateInteractions({
   requestById,
   favoriteProviderLookup,
   providerById,
-}: InteractionsParams): WorkspacePrivateInteractionsResult {
+}: InteractionsParams & {
+  enabled?: boolean;
+}): WorkspacePrivateInteractionsResult {
   const router = useRouter();
   const qc = useQueryClient();
-  const shouldBuildRequestInteractions = shouldBuildWorkspacePrivateRequestInteractions(activeWorkspaceTab);
-  const shouldBuildRequestFavoriteInteractions = shouldBuildWorkspacePrivateRequestFavoriteInteractions({
+  const shouldBuildRequestInteractions =
+    enabled && shouldBuildWorkspacePrivateRequestInteractions(activeWorkspaceTab);
+  const shouldBuildRequestFavoriteInteractions = enabled && shouldBuildWorkspacePrivateRequestFavoriteInteractions({
     activePublicSection,
     activeWorkspaceTab,
     requestsScope,
   });
-  const shouldBuildProviderInteractions = shouldBuildWorkspacePrivateProviderInteractions({
+  const shouldBuildProviderInteractions = enabled && shouldBuildWorkspacePrivateProviderInteractions({
     activePublicSection,
     requestsScope,
   });
@@ -94,7 +98,7 @@ export function useWorkspacePrivateInteractions({
 
   useWorkspaceTabPersistence(
     buildWorkspacePrivateTabPersistenceArgs({
-      isWorkspaceAuthed,
+      isWorkspaceAuthed: enabled && isWorkspaceAuthed,
       activeWorkspaceTab,
     }),
   );

@@ -4,8 +4,15 @@ import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePa
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import { useWorkspacePrivatePresentationFlow } from '@/features/workspace/page/useWorkspacePrivatePresentationFlow';
 
-export function useWorkspacePrivateBranchModel(branch: WorkspaceBranchProps) {
-  const data = useWorkspacePrivateDataFlow(branch);
+type Options = {
+  enabled?: boolean;
+};
+
+export function useWorkspacePrivateBranchModel(
+  branch: WorkspaceBranchProps,
+  { enabled = true }: Options = {},
+) {
+  const data = useWorkspacePrivateDataFlow(branch, { enabled });
   return useWorkspacePrivatePresentationFlow({
     branch,
     data,

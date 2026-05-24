@@ -36,6 +36,7 @@ type BuildWorkspacePrivateSourcesDataArgsParams = Pick<
   WorkspaceBranchProps,
   'locale' | 'isAuthed' | 'isWorkspaceAuthed'
 > & {
+  enabled?: boolean;
   filter: WorkspacePublicFiltersResult['filter'];
   page: WorkspacePublicFiltersResult['page'];
   limit: WorkspacePublicFiltersResult['limit'];
@@ -152,6 +153,7 @@ export function resolveWorkspacePrivatePublicSummaryCityActivityLimit({
 }
 
 export function buildWorkspacePrivateSourcesDataArgs({
+  enabled = true,
   filter,
   page,
   limit,
@@ -168,6 +170,7 @@ export function buildWorkspacePrivateSourcesDataArgs({
   activeRequestsSort = null,
 }: BuildWorkspacePrivateSourcesDataArgsParams): Parameters<typeof useWorkspaceData>[0] {
   return {
+    enabled,
     filter: shouldLoadCatalog ? filter : { page, limit },
     locale,
     isAuthed,

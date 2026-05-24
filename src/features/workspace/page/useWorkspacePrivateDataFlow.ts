@@ -4,6 +4,10 @@ import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePa
 import { useWorkspacePrivateInteractions } from '@/features/workspace/page/useWorkspacePrivateInteractions';
 import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspacePrivateSources';
 
+type Options = {
+  enabled?: boolean;
+};
+
 export function useWorkspacePrivateDataFlow({
   t,
   locale,
@@ -11,7 +15,9 @@ export function useWorkspacePrivateDataFlow({
   isAuthed,
   isWorkspaceAuthed,
   routeState,
-}: WorkspaceBranchProps) {
+}: WorkspaceBranchProps, {
+  enabled = true,
+}: Options = {}) {
   const {
     activePublicSection,
     activeWorkspaceTab,
@@ -28,6 +34,7 @@ export function useWorkspacePrivateDataFlow({
   } = routeState;
 
   const sources = useWorkspacePrivateSources({
+    enabled,
     t,
     locale,
     isAuthed,
@@ -42,6 +49,7 @@ export function useWorkspacePrivateDataFlow({
   });
 
   const interactions = useWorkspacePrivateInteractions({
+    enabled,
     t,
     locale,
     isAuthed,
