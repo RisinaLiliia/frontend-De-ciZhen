@@ -35,7 +35,10 @@ export function WorkspaceSidebar({
     requestsRole: searchParams.get('role'),
     requestsState: searchParams.get('state'),
   });
-  const visibleNavigationItems = resolveVisibleWorkspaceNavigationItems(authStatus === 'authenticated');
+  const visibleNavigationItems = resolveVisibleWorkspaceNavigationItems({
+    isAuthed: authStatus === 'authenticated',
+    role: authUser?.role === 'provider' ? 'provider' : authUser?.role === 'client' ? 'client' : null,
+  });
   const primaryItems = visibleNavigationItems.filter((item) => item.group === 'main');
   const supportItems = visibleNavigationItems.filter((item) => item.group === 'support');
   const profileName = authMe?.name?.trim() || authUser?.name?.trim() || null;

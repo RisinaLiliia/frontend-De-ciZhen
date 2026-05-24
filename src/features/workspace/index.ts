@@ -25,6 +25,7 @@ export {
   WorkspacePageFrame,
   WorkspaceShell,
   WorkspaceSectionHeader,
+  WorkspaceTopBar,
 } from './shell';
 export type {
   WorkspaceSectionLayout,

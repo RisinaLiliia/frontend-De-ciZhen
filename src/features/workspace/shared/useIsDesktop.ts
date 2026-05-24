@@ -7,6 +7,7 @@ export function useIsDesktop() {
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
+    // Desktop breakpoint matches the workspace layout threshold.
     const media = window.matchMedia('(min-width: 1024px)');
     const update = () => setIsDesktop(media.matches);
     update();

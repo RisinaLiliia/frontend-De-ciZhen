@@ -1,7 +1,6 @@
 'use client';
 
 import { WorkspaceHeaderAuthActions } from '@/features/workspace/shell/WorkspaceHeaderAuthActions';
-import { WorkspaceHeaderUtilityBar } from '@/features/workspace/shell/WorkspaceHeaderUtilityBar';
 
 type WorkspaceSectionHeaderProps = {
   title: string;
@@ -14,8 +13,6 @@ export function WorkspaceSectionHeader({
 }: WorkspaceSectionHeaderProps) {
   return (
     <section className="workspace-environment">
-      <WorkspaceHeaderUtilityBar />
-
       <div className="workspace-environment__hero">
         <div className="workspace-environment__copy">
           <div className="workspace-environment__heading">

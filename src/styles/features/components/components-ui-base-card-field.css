@@ -1,6 +1,14 @@
 /* src/styles/features/components/components-ui-base-card-field.css */
 
 @layer components {
+  .field-shell--with-left-icon :is(.field, .dc-select-trigger, .dc-city-search-input) {
+    padding-left: calc(var(--spacing) * 11);
+  }
+
+  .field-shell--with-right-icon :is(.field, .dc-select-trigger, .dc-city-search-input) {
+    padding-right: calc(var(--spacing) * 11);
+  }
+
   .field-textarea {
     min-height: 120px;
     padding: 12px 14px;

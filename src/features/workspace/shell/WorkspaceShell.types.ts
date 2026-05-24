@@ -25,6 +25,7 @@ export type WorkspaceSidebarProps = WorkspaceResponsiveContextProps & {
 export type WorkspaceBottomNavProps = WorkspaceResponsiveContextProps;
 
 export type WorkspacePageFrameProps = {
+  topBar?: ReactNode;
   intro?: ReactNode;
   filters?: ReactNode;
   main: ReactNode;
@@ -55,6 +56,7 @@ export type WorkspaceSectionRenderModel = {
 
 export type WorkspaceShellProps = {
   children: ReactNode;
+  topBar?: ReactNode;
   intro?: ReactNode;
   filters?: ReactNode;
   sidebar?: ReactNode;

@@ -14,6 +14,7 @@ export { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSect
 export { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 export { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
 export { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
+export { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
 export {
   WorkspaceContextControls,
   buildWorkspaceContextControlsProps,

@@ -7,6 +7,7 @@ import type { WorkspaceShellProps } from '@/features/workspace/shell/WorkspaceSh
 
 export function WorkspaceShell({
   children,
+  topBar,
   intro,
   filters,
   sidebar,
@@ -18,6 +19,7 @@ export function WorkspaceShell({
   return (
     <>
       <WorkspacePageFrame
+        topBar={topBar}
         intro={intro}
         filters={filters}
         main={children}

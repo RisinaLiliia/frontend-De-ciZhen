@@ -22,12 +22,8 @@ vi.mock('@/features/workspace/shell/WorkspaceHeaderAccountMenu', () => ({
   WorkspaceHeaderNotificationsButton: () => <div data-testid="workspace-header-notifications" />,
 }));
 
-vi.mock('@/features/workspace/shell/WorkspaceHeaderUtilityBar', () => ({
-  WorkspaceHeaderUtilityBar: () => <div data-testid="workspace-header-utility-bar" />,
-}));
-
 describe('WorkspaceModeHeader', () => {
-  it('renders workspace heading and hero shell without top navigation', () => {
+  it('renders workspace heading and hero shell without embedded top bar or mode navigation', () => {
     const { container } = render(
       <WorkspaceModeHeader
         t={(key) => key}
@@ -38,7 +34,8 @@ describe('WorkspaceModeHeader', () => {
     );
 
     expect(screen.getByText('Anfragen')).toBeTruthy();
-    expect(screen.getByTestId('workspace-header-utility-bar')).toBeTruthy();
+    expect(screen.getByTestId('workspace-header-auth-actions')).toBeTruthy();
+    expect(container.querySelector('.workspace-environment__hero')).not.toBeNull();
     expect(container.querySelector('.workspace-mode-nav')).toBeNull();
   });
 });

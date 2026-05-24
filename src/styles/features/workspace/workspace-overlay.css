@@ -35,6 +35,12 @@
     box-shadow: none;
   }
 
+  .workspace-environment__utility--compact {
+    min-height: 0;
+    gap: var(--space-2);
+    justify-content: flex-end;
+  }
+
   .workspace-environment__search {
     position: relative;
     display: flex;
@@ -119,6 +125,12 @@
     justify-content: center;
   }
 
+  .workspace-environment__utility-icon--primary {
+    border-color: transparent;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+  }
+
   .workspace-account-menu__trigger-surface {
     display: inline-flex;
     align-items: center;
@@ -137,6 +149,12 @@
     border-color: var(--color-primary-border);
     color: var(--color-text);
     background: var(--color-surface-muted);
+  }
+
+  .workspace-environment__utility-icon--primary:hover {
+    border-color: transparent;
+    background: var(--color-primary-hover);
+    color: var(--color-primary-contrast);
   }
 
   .workspace-account-menu__avatar {
@@ -493,7 +511,7 @@
       align-items: stretch;
     }
 
-    .workspace-environment__utility {
+    .workspace-environment__utility:not(.workspace-environment__utility--compact) {
       display: none;
     }
 
@@ -517,13 +535,13 @@
     }
   }
 
-  @media (max-width: 1199px) {
-    .workspace-environment__utility {
+  @media (max-width: 1023px) {
+    .workspace-environment__utility:not(.workspace-environment__utility--compact) {
       display: none;
     }
   }
 
-  @media (min-width: 1200px) {
+  @media (min-width: 1024px) {
     .workspace-environment__utility {
       margin-bottom: var(--space-1);
     }

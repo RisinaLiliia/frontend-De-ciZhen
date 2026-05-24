@@ -6,6 +6,7 @@ import { WorkspaceOverlaySurface } from '@/features/workspace/shared/WorkspaceOv
 import type { WorkspacePageFrameProps } from '@/features/workspace/shell/WorkspaceShell.types';
 
 export function WorkspacePageFrame({
+  topBar,
   intro,
   filters,
   main,
@@ -46,6 +47,7 @@ export function WorkspacePageFrame({
       {sidebar ? <div className="workspace-shell__sidebar">{sidebar}</div> : null}
 
       <div className="workspace-shell__main">
+        {topBar ? <div className="workspace-shell__topbar">{topBar}</div> : null}
         {intro ? (
           <WorkspaceOverlaySurface intro={intro}>{pageContent}</WorkspaceOverlaySurface>
         ) : (

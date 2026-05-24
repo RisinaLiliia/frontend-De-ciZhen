@@ -26,7 +26,7 @@ import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceConte
 import { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
-import { WorkspacePrimaryNavMobile } from '@/components/layout/WorkspacePrimaryNav';
+import { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import { isWorkspaceTab } from '@/features/workspace/state';
 import { isWorkspaceOverviewMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
@@ -155,6 +155,12 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       preferredRequestsRole={preferredRequestsRole}
     />
   ) : null;
+  const workspaceTopBar = (
+    <WorkspaceTopBar
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+    />
+  );
 
   const contextualAside = (
     <WorkspaceContextAside
@@ -252,20 +258,17 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     return null;
   }
 
-  // Mobile nav and bottom nav only render on mobile/tablet breakpoints
-  // useIsDesktop hook returns true for >= 1024px (desktop)
-  // So we render mobile nav only when NOT desktop
+  // Responsive breakpoint contract:
+  // mobile 0-767px, tablet 768-1023px, desktop 1024px+
+  // useIsDesktop returns true for desktop widths only
   const shouldRenderMobileNav = !isDesktop;
   const workspaceBottomNav = shouldRenderMobileNav ? (
-    <>
-      <WorkspaceBottomNav
-        locale={locale}
-        activePublicSection={activePublicSection}
-        activeWorkspaceTab={activeWorkspaceTab}
-        preferredRequestsRole={preferredRequestsRole}
-      />
-      <WorkspacePrimaryNavMobile />
-    </>
+    <WorkspaceBottomNav
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
+    />
   ) : null;
 
   const resolvedIntro =
@@ -293,6 +296,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
 
   return (
     <WorkspaceShell
+      topBar={workspaceTopBar}
       intro={resolvedIntro}
       filters={resolvedFilters}
       sidebar={workspaceSidebar}

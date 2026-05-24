@@ -37,13 +37,22 @@ describe('workspaceNavigationItems', () => {
   });
 
   it('hides Angebote and Aufträge from guest navigation and restores them for authenticated users', () => {
-    const guestLabels = resolveVisibleWorkspaceNavigationItems(false).map((item) => item.label);
-    const authedLabels = resolveVisibleWorkspaceNavigationItems(true).map((item) => item.label);
+    const guestLabels = resolveVisibleWorkspaceNavigationItems({ isAuthed: false }).map((item) => item.label);
+    const providerLabels = resolveVisibleWorkspaceNavigationItems({
+      isAuthed: true,
+      role: 'provider',
+    }).map((item) => item.label);
+    const clientLabels = resolveVisibleWorkspaceNavigationItems({
+      isAuthed: true,
+      role: 'client',
+    }).map((item) => item.label);
 
     expect(guestLabels).not.toContain('Angebote');
     expect(guestLabels).not.toContain('Aufträge');
-    expect(authedLabels).toContain('Angebote');
-    expect(authedLabels).toContain('Aufträge');
+    expect(providerLabels).toContain('Angebote');
+    expect(providerLabels).toContain('Aufträge');
+    expect(clientLabels).not.toContain('Angebote');
+    expect(clientLabels).toContain('Aufträge');
   });
 
   it('routes Profil sidebar item to the canonical profile section', () => {

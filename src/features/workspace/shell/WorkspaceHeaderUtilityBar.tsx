@@ -12,22 +12,37 @@ import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
 
-export function WorkspaceHeaderUtilityBar() {
+export function WorkspaceHeaderUtilityBar({
+  compact = false,
+  className,
+}: {
+  compact?: boolean;
+  className?: string;
+} = {}) {
   const t = useT();
   const authStatus = useAuthStatus();
 
   return (
-    <div className="workspace-environment__utility" aria-label="Workspace tools">
-      <label className="workspace-environment__search" aria-label={t(I18N_KEYS.homePublic.searchPlaceholder)}>
-        <span className="workspace-environment__search-icon" aria-hidden="true">
-          <IconSearch />
-        </span>
-        <input
-          type="search"
-          className="workspace-environment__search-input"
-          placeholder={t(I18N_KEYS.homePublic.searchPlaceholder)}
-        />
-      </label>
+    <div
+      className={[
+        'workspace-environment__utility',
+        compact ? 'workspace-environment__utility--compact' : '',
+        className ?? '',
+      ].filter(Boolean).join(' ')}
+      aria-label="Workspace tools"
+    >
+      {!compact ? (
+        <label className="workspace-environment__search" aria-label={t(I18N_KEYS.homePublic.searchPlaceholder)}>
+          <span className="workspace-environment__search-icon" aria-hidden="true">
+            <IconSearch />
+          </span>
+          <input
+            type="search"
+            className="workspace-environment__search-input"
+            placeholder={t(I18N_KEYS.homePublic.searchPlaceholder)}
+          />
+        </label>
+      ) : null}
 
       {authStatus === 'authenticated' ? (
         <div className="workspace-environment__utility-actions">
@@ -40,15 +55,25 @@ export function WorkspaceHeaderUtilityBar() {
             <IconChat />
           </Link>
           <WorkspaceHeaderAccountMenu />
-          <Link href="/request/create" className="workspace-environment__primary-cta">
-            <span aria-hidden="true">
+          {compact ? (
+            <Link
+              href="/request/create"
+              className="workspace-environment__utility-icon workspace-environment__utility-icon--primary"
+              aria-label={t(I18N_KEYS.requestsPage.clientHintStableCta)}
+            >
               <IconPlus />
-            </span>
-            <span>{t(I18N_KEYS.requestsPage.clientHintStableCta)}</span>
-          </Link>
+            </Link>
+          ) : (
+            <Link href="/request/create" className="workspace-environment__primary-cta">
+              <span aria-hidden="true">
+                <IconPlus />
+              </span>
+              <span>{t(I18N_KEYS.requestsPage.clientHintStableCta)}</span>
+            </Link>
+          )}
         </div>
       ) : (
-        <WorkspaceHeaderAuthActions variant="buttons" />
+        <WorkspaceHeaderAuthActions variant={compact ? 'icons' : 'buttons'} />
       )}
     </div>
   );
