@@ -1,6 +1,7 @@
 'use client';
 
 import { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
+import { useWorkspaceSectionHeaderCopy } from '@/features/workspace/shell/useWorkspaceSectionHeaderCopy';
 import {
   WorkspaceContextControls,
   buildWorkspaceContextControlsProps,
@@ -27,7 +28,7 @@ export function WorkspaceModeHeader({
   activeWorkspaceTab: WorkspaceTab;
   preferredRequestsRole?: 'customer' | 'provider' | null;
 }) {
-  const model = useWorkspaceContext({
+  const header = useWorkspaceSectionHeaderCopy({
     t,
     locale,
     activePublicSection,
@@ -37,8 +38,8 @@ export function WorkspaceModeHeader({
 
   return (
     <WorkspaceSectionHeader
-      title={model.title}
-      description={model.description}
+      title={header.title}
+      description={header.description}
     />
   );
 }

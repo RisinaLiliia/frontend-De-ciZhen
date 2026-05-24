@@ -1,18 +1,27 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import { WorkspaceHeaderAuthActions } from '@/features/workspace/shell/WorkspaceHeaderAuthActions';
 
-type WorkspaceSectionHeaderProps = {
+export type WorkspaceSectionHeaderCopy = {
   title: string;
   description: string;
+};
+
+type WorkspaceSectionHeaderProps = WorkspaceSectionHeaderCopy & {
+  actions?: ReactNode;
+  className?: string;
 };
 
 export function WorkspaceSectionHeader({
   title,
   description,
+  actions,
+  className,
 }: WorkspaceSectionHeaderProps) {
   return (
-    <section className="workspace-environment">
+    <section className={['workspace-environment', className].filter(Boolean).join(' ')}>
       <div className="workspace-environment__hero">
         <div className="workspace-environment__copy">
           <div className="workspace-environment__heading">
@@ -21,7 +30,9 @@ export function WorkspaceSectionHeader({
           </div>
         </div>
         <div className="workspace-environment__hero-aside">
-          <WorkspaceHeaderAuthActions className="workspace-environment__auth-actions--hero" />
+          {actions ?? (
+            <WorkspaceHeaderAuthActions className="workspace-environment__auth-actions--hero" />
+          )}
         </div>
       </div>
     </section>

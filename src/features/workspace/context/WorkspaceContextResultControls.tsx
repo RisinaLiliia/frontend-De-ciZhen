@@ -51,16 +51,6 @@ export function WorkspaceContextResultControls({
             />
           </div>
         ) : null}
-        <WorkspaceButton
-          type="button"
-          variant="ghost"
-          className="workspace-context-controls__action workspace-context-controls__action--reset"
-          onClick={onReset}
-          aria-label={resetLabel}
-          title={resetLabel}
-        >
-          <IconRotateCcw />
-        </WorkspaceButton>
         {action ? (
           <WorkspaceButton
             type="button"

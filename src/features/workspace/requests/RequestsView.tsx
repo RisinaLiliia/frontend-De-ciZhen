@@ -309,13 +309,18 @@ function RequestCardTopSlot({
 
   return (
     <div className="my-request-card__topslot">
-      {(card.status.badgeLabel || showOwnerMenu) ? (
+      {(card.status.badgeLabel || chrome.priorityLabel || showOwnerMenu) ? (
         <div className="my-request-card__topbar">
           <div className="my-request-card__topbar-start">
             {card.status.badgeLabel ? (
               <WorkspaceBadge variant={statusVariant} className="my-request-card__state-chip">
                 {card.status.badgeLabel}
               </WorkspaceBadge>
+            ) : null}
+            {chrome.priorityLabel ? (
+              <span className={`my-request-card__priority is-${chrome.priorityTone}`.trim()}>
+                {chrome.priorityLabel}
+              </span>
             ) : null}
           </div>
           <div className="my-request-card__topbar-end">
@@ -687,7 +692,6 @@ function WorkspaceRequestCard({
             workspaceVariant={workspaceVariant}
           />
         )}
-        statusSlot={<WorkspaceRequestStatusSlot chrome={chrome} />}
         actionSlot={(chrome.insights.length > 0 || chrome.primaryAction || chrome.secondaryAction) ? (
           <div className="my-request-card__footer-stack">
             <RequestOwnerInsights chrome={chrome} includeSignals={false} />
@@ -731,22 +735,6 @@ function WorkspaceRequestCard({
         ) : null}
       />
     </div>
-  );
-}
-
-function WorkspaceRequestStatusSlot({
-  chrome,
-}: {
-  chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
-}) {
-  return (
-    <span className="request-card__status-actions my-request-card__status-slot">
-      {chrome.priorityLabel ? (
-        <span className={`my-request-card__priority is-${chrome.priorityTone}`.trim()}>
-          {chrome.priorityLabel}
-        </span>
-      ) : null}
-    </span>
   );
 }
 
