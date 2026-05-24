@@ -784,6 +784,7 @@ export const I18N_KEYS = {
     contextServiceLabel: 'workspace.contextServiceLabel',
     contextSortLabel: 'workspace.contextSortLabel',
     contextResetLabel: 'workspace.contextResetLabel',
+    contextApplyLabel: 'workspace.contextApplyLabel',
     scopeMarketLabel: 'workspace.scopeMarketLabel',
     scopeMyLabel: 'workspace.scopeMyLabel',
     chipCityLabel: 'workspace.chipCityLabel',

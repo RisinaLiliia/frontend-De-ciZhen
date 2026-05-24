@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  WorkspaceContextControls,
-  buildWorkspaceContextControlsProps,
+  WorkspaceContextPanel,
+  buildContextControlsProps,
   useWorkspaceContext,
 } from '@/features/workspace/context';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
@@ -29,10 +29,10 @@ export function WorkspaceSectionSharedContext({
     activeWorkspaceTab,
     preferredRequestsRole,
   });
-  const sharedContextControlsProps = buildWorkspaceContextControlsProps({ model, t, locale });
+  const sharedContextControlsProps = buildContextControlsProps({ model, t, locale });
 
   return (
-    <WorkspaceContextControls
+    <WorkspaceContextPanel
       {...sharedContextControlsProps}
       surface="shell"
       className="workspace-context-controls--column"

@@ -4,16 +4,17 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
-import { buildWorkspaceContextControlsProps, type WorkspaceContextModel } from '@/features/workspace/context/useWorkspaceContext';
+import {
+  buildContextControlsProps,
+  type WorkspaceContextModel,
+} from '@/features/workspace/context/useWorkspaceContext';
 import { getWorkspaceModeCopy } from '@/features/workspace/shell/workspaceEnvironment.copy';
 
 afterEach(() => {
   cleanup();
 });
 
-function createModel(
-  overrides: Partial<WorkspaceContextModel> = {},
-): WorkspaceContextModel {
+function createModel(overrides: Partial<WorkspaceContextModel> = {}): WorkspaceContextModel {
   const copy = getWorkspaceModeCopy('de');
 
   return {
@@ -65,9 +66,9 @@ function createModel(
   };
 }
 
-describe('buildWorkspaceContextControlsProps', () => {
+describe('buildContextControlsProps', () => {
   it('renders viewer mode toggle for public actions section', () => {
-    const props = buildWorkspaceContextControlsProps({
+    const props = buildContextControlsProps({
       model: createModel({ activePublicSection: 'profile' }),
       t: (key) => String(key),
       locale: 'de',
@@ -80,7 +81,7 @@ describe('buildWorkspaceContextControlsProps', () => {
   });
 
   it('maps profile labels to inverted audience semantics without changing canonical viewerMode', () => {
-    const props = buildWorkspaceContextControlsProps({
+    const props = buildContextControlsProps({
       model: createModel({ activePublicSection: 'profile' }),
       t: (key) => String(key),
       locale: 'de',
@@ -88,7 +89,11 @@ describe('buildWorkspaceContextControlsProps', () => {
 
     render(<>{props.inlineControl}</>);
 
-    expect(screen.getByRole('button', { name: 'Für Anbieter' }).getAttribute('aria-pressed')).toBe('false');
-    expect(screen.getByRole('button', { name: 'Für Auftraggeber' }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('button', { name: 'Für Anbieter' }).getAttribute('aria-pressed')).toBe(
+      'false',
+    );
+    expect(
+      screen.getByRole('button', { name: 'Für Auftraggeber' }).getAttribute('aria-pressed'),
+    ).toBe('true');
   });
 });

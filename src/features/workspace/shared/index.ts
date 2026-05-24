@@ -5,7 +5,6 @@ export type { WorkspaceButtonSize, WorkspaceButtonVariant } from './WorkspaceBut
 export { WorkspaceFilterBar } from './WorkspaceFilterBar';
 export { WorkspaceFilterSelect } from './WorkspaceFilterSelect';
 export { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
-export { WorkspaceMobileFiltersSheet } from './WorkspaceMobileFiltersSheet';
 export { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
 export { WorkspaceRightRailPanel } from './WorkspaceRightRailPanel';
 export { WorkspaceRightRailStack } from './WorkspaceRightRailStack';
@@ -15,7 +14,7 @@ export { WorkspaceSectionErrorBoundary } from './WorkspaceSectionErrorBoundary';
 export { WorkspaceSummaryGrid } from './WorkspaceSummaryGrid';
 export { WorkspaceTopProvidersAside } from './WorkspaceTopProvidersAside';
 export { WorkspaceViewToggle } from './WorkspaceViewToggle';
-export { useIsDesktop, useIsWideDesktop } from './useIsDesktop';
+export { useIsDesktop, useIsWideDesktop, useMediaMatch } from './useIsDesktop';
 export { useWorkspaceFormatters } from './useWorkspaceFormatters';
 export {
   ALL_OPTION_KEY,

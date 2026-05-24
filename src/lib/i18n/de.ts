@@ -751,6 +751,7 @@ export const de = {
     contextServiceLabel: 'Service',
     contextSortLabel: 'Sortierung',
     contextResetLabel: 'Filter zurücksetzen',
+    contextApplyLabel: 'Anwenden',
     scopeMarketLabel: 'Markt',
     scopeMyLabel: 'Meine Arbeit',
     chipCityLabel: 'Ort',

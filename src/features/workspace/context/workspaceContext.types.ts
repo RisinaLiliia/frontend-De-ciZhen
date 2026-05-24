@@ -55,11 +55,11 @@ export type WorkspaceContextAction = {
   tooltip?: string;
 };
 
-export type WorkspaceContextControlsProps = {
+export type WorkspaceContextPanelProps = {
   title: string;
   locale: Locale;
   resetLabel: string;
-  closeLabel: string;
+  applyLabel?: string;
   city: WorkspaceContextCityControl;
   category: WorkspaceContextSelectControl;
   service?: WorkspaceContextSelectControl;

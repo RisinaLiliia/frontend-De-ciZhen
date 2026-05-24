@@ -1,7 +1,7 @@
 'use client';
 
 import { IconDownload } from '@/components/ui/icons/icons';
-import { WorkspaceContextControls } from '@/features/workspace/context';
+import { WorkspaceContextPanel } from '@/features/workspace/context';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -31,7 +31,6 @@ export function StatisticsContextPanel({
   showSummary = true,
   showControls = true,
   controlsPosition = 'bottom',
-  closeLabel = 'Close',
   locale,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
@@ -49,7 +48,6 @@ export function StatisticsContextPanel({
   showSummary?: boolean;
   showControls?: boolean;
   controlsPosition?: 'top' | 'bottom';
-  closeLabel?: string;
   locale: Locale;
 }) {
   const t = useT();
@@ -95,11 +93,10 @@ export function StatisticsContextPanel({
   ) : null;
 
   const controlsInner = (
-    <WorkspaceContextControls
+    <WorkspaceContextPanel
       title={copy.contextTitle}
       locale={locale}
       resetLabel={copy.contextResetLabel}
-      closeLabel={closeLabel}
       city={{
         value: cityValue,
         allOption: { value: ALL_CITIES_VALUE, label: copy.contextAllCitiesLabel },

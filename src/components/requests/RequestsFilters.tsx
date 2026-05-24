@@ -4,8 +4,8 @@
 import { RequestsFilterControlsBody } from '@/components/requests/RequestsFilterControlsBody';
 import { RequestsMobileFilterToolbar } from '@/components/requests/RequestsMobileFilterToolbar';
 import { RequestsResultsSummary } from '@/components/requests/RequestsResultsSummary';
+import { WorkspaceContextMobileSheet } from '@/features/workspace/context/WorkspaceContextMobileSheet';
 import { useRequestsFilterControls } from '@/components/requests/useRequestsFilterControls';
-import { WorkspaceMobileFiltersSheet } from '@/features/workspace/shared';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { buildRequestsFilterControlsViewModel } from './requestsFilterControls.model';
 import type {
@@ -132,9 +132,8 @@ export function RequestsFilterControls({
       ) : null}
 
       {mobileMode === 'sheet' ? (
-        <WorkspaceMobileFiltersSheet
+        <WorkspaceContextMobileSheet
           title={t(I18N_KEYS.requestsPage.filterRegionLabel)}
-          closeLabel={t(I18N_KEYS.auth.closeDialog)}
           triggerLabel={t(I18N_KEYS.requestsPage.mobileFilterLabel)}
           summary={mobileSheetSummary}
           className="requests-filters__mobile-sheet"
@@ -145,7 +144,7 @@ export function RequestsFilterControls({
               {...controlsContentProps}
             />
           </div>
-        </WorkspaceMobileFiltersSheet>
+        </WorkspaceContextMobileSheet>
       ) : null}
 
       <RequestsFilterControlsBody

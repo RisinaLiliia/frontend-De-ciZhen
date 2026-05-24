@@ -3,8 +3,8 @@
 import { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
 import { useWorkspaceSectionHeaderCopy } from '@/features/workspace/shell/useWorkspaceSectionHeaderCopy';
 import {
-  WorkspaceContextControls,
-  buildWorkspaceContextControlsProps,
+  WorkspaceContextPanel,
+  buildContextControlsProps,
   useWorkspaceContext,
 } from '@/features/workspace/context';
 import { type I18nKey } from '@/lib/i18n/keys';
@@ -63,11 +63,11 @@ export function WorkspaceMobileContextSection({
     activeWorkspaceTab,
     preferredRequestsRole,
   });
-  const sharedContextControlsProps = buildWorkspaceContextControlsProps({ model, t, locale });
+  const sharedContextControlsProps = buildContextControlsProps({ model, t, locale });
 
   return (
     <div className="workspace-mobile-context-section">
-      <WorkspaceContextControls
+      <WorkspaceContextPanel
         {...sharedContextControlsProps}
         surface="shell"
         mobileBehavior="inline"

@@ -752,6 +752,7 @@ export const en: DeDictionary = {
     contextServiceLabel: 'Service',
     contextSortLabel: 'Sort by',
     contextResetLabel: 'Clear filters',
+    contextApplyLabel: 'Apply',
     scopeMarketLabel: 'Market',
     scopeMyLabel: 'My work',
     chipCityLabel: 'Location',

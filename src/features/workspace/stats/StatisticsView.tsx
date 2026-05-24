@@ -382,7 +382,6 @@ export function StatisticsView({
             onExport={model.onExport}
             surface="embedded"
             showControls={false}
-            closeLabel={t(I18N_KEYS.auth.closeDialog)}
           />
 
           <div className="workspace-statistics__decision-cluster">
@@ -706,4 +705,3 @@ export function StatisticsView({
     </div>
   );
 }
-

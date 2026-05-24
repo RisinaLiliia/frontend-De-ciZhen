@@ -17,8 +17,8 @@ export { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 export { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
 export { useWorkspaceSectionHeaderCopy } from '@/features/workspace/shell/useWorkspaceSectionHeaderCopy';
 export {
-  WorkspaceContextControls,
-  buildWorkspaceContextControlsProps,
+  WorkspaceContextPanel,
+  buildContextControlsProps,
   fillWorkspaceModeTemplate,
   getWorkspaceChipValue,
   joinWorkspaceContext,

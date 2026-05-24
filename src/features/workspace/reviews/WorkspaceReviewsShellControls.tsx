@@ -3,7 +3,6 @@
 import { IconFilter } from '@/components/ui/icons/icons';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
 import type { ProviderReviewSort } from '@/features/providers/publicProfile/useProviderReviewsModel';
-import { WorkspaceMobileFiltersSheet } from '@/features/workspace/shared';
 import { WorkspaceButton } from '@/features/workspace/shared/WorkspaceButton';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
 import {
@@ -26,10 +25,6 @@ export function WorkspaceReviewsShellControls({
     setReviewRange,
     resetReviewControls,
   } = useWorkspaceReviewControlsState();
-
-  const sortLabel = reviewSort === 'top'
-    ? t(I18N_KEYS.workspace.reviewSortTop)
-    : t(I18N_KEYS.workspace.reviewSortLatest);
 
   const controlsContent = (
     <div className="workspace-reviews-shell-controls">
@@ -74,20 +69,6 @@ export function WorkspaceReviewsShellControls({
       <div className="workspace-reviews-shell-controls__desktop">
         {controlsContent}
       </div>
-      <WorkspaceMobileFiltersSheet
-        title={t(I18N_KEYS.workspace.reviewFiltersTitle)}
-        closeLabel={t(I18N_KEYS.auth.closeDialog)}
-        triggerLabel={t(I18N_KEYS.requestsPage.filterRegionLabel)}
-        summary={(
-          <>
-            <span className="workspace-mobile-filters__summary-chip">{getWorkspaceReviewRangeLabel(reviewRange, t)}</span>
-            <span className="workspace-mobile-filters__summary-chip">{sortLabel}</span>
-          </>
-        )}
-        className="workspace-reviews-shell-controls__mobile"
-      >
-        {controlsContent}
-      </WorkspaceMobileFiltersSheet>
     </>
   );
 }

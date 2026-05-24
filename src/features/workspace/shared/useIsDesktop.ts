@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-function useMediaMatch(query: string) {
+export function useMediaMatch(query: string) {
   const [matches, setMatches] = React.useState(false);
 
   React.useEffect(() => {

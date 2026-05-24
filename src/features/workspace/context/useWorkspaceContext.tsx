@@ -9,7 +9,6 @@ import {
   IconCalendar,
   IconFilter,
   IconPin,
-  IconRotateCcw,
 } from '@/components/ui/icons/icons';
 import type { Option as FilterOption } from '@/components/ui/Select';
 import {
@@ -26,10 +25,14 @@ import {
   type WorkspaceRequestsScope,
   type WorkspaceTab,
 } from '@/features/workspace/state';
-import { getWorkspaceStatisticsCopy, RANGE_OPTIONS, rangeLabelShort } from '@/features/workspace/stats';
+import {
+  getWorkspaceStatisticsCopy,
+  RANGE_OPTIONS,
+  rangeLabelShort,
+} from '@/features/workspace/stats';
 import { useWorkspacePublicFilters } from '@/features/workspace/public/useWorkspacePublicFilters';
 import { WorkspaceViewToggle } from '@/features/workspace/shared/WorkspaceViewToggle';
-import { WorkspaceContextControls } from '@/features/workspace/context/WorkspaceContextControls';
+import { WorkspaceContextPanel } from '@/features/workspace/context/WorkspaceContextPanel';
 import {
   getRequestsScopeTitle,
   getWorkspaceModeCopy,
@@ -66,7 +69,21 @@ import {
 
 type Translator = (key: I18nKey) => string;
 
-const CLEAR_QUERY_KEYS = ['city', 'cityId', 'category', 'categoryKey', 'service', 'subcategoryKey', 'serviceKey', 'period', 'range', 'sort', 'page', 'role', 'state'] as const;
+const CLEAR_QUERY_KEYS = [
+  'city',
+  'cityId',
+  'category',
+  'categoryKey',
+  'service',
+  'subcategoryKey',
+  'serviceKey',
+  'period',
+  'range',
+  'sort',
+  'page',
+  'role',
+  'state',
+] as const;
 
 export type WorkspaceContextModel = {
   activeMode: WorkspaceModeKey;
@@ -140,7 +157,7 @@ export function joinWorkspaceContext(parts: Array<string | null | undefined>) {
   return parts.filter((part): part is string => Boolean(part && part.trim())).join(' · ');
 }
 
-export function buildWorkspaceContextControlsProps({
+export function buildContextControlsProps({
   model,
   t,
   locale,
@@ -148,7 +165,7 @@ export function buildWorkspaceContextControlsProps({
   model: WorkspaceContextModel;
   t: Translator;
   locale: Locale;
-}): React.ComponentProps<typeof WorkspaceContextControls> {
+}): React.ComponentProps<typeof WorkspaceContextPanel> {
   const cityChip = model.chips.find((chip) => chip.key === 'city');
   const categoryChip = model.chips.find((chip) => chip.key === 'category');
   const serviceChip = model.chips.find((chip) => chip.key === 'service');
@@ -173,19 +190,24 @@ export function buildWorkspaceContextControlsProps({
       ))}
     </nav>
   ) : null;
-  const requestsViewToggle = model.requestsListDensity && model.onRequestsListDensityChange ? (
-    <div className="workspace-context-controls__view-toggle">
-      <WorkspaceViewToggle
-        t={t}
-        listDensity={model.requestsListDensity}
-        onChange={model.onRequestsListDensityChange}
-      />
-    </div>
-  ) : null;
+  const requestsViewToggle =
+    model.requestsListDensity && model.onRequestsListDensityChange ? (
+      <div className="workspace-context-controls__view-toggle">
+        <WorkspaceViewToggle
+          t={t}
+          listDensity={model.requestsListDensity}
+          onChange={model.onRequestsListDensityChange}
+        />
+      </div>
+    ) : null;
   const renderViewerModeInlineControl = (
     items: ReturnType<typeof resolveWorkspaceViewerModeToggleItems>,
   ) => (
-    <div className="workspace-context-toggle-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
+    <div
+      className="workspace-context-toggle-tabs"
+      role="group"
+      aria-label={statsCopy.viewerModeLabel}
+    >
       {items.map((item) => (
         <button
           key={item.value}
@@ -214,10 +236,16 @@ export function buildWorkspaceContextControlsProps({
     activeWorkspaceTab: model.activeWorkspaceTab,
     activePublicSection: model.activePublicSection,
   });
-  const myWorkInlineControl = shouldShowProfileViewerModeControl ? viewerModeInlineControl : model.requestsScope === 'my' ? (
+  const myWorkInlineControl = shouldShowProfileViewerModeControl ? (
+    viewerModeInlineControl
+  ) : model.requestsScope === 'my' ? (
     <div className="workspace-context-controls__combined-row">
       {requestsScopeControl}
-      <div className="workspace-context-toggle-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
+      <div
+        className="workspace-context-toggle-tabs"
+        role="group"
+        aria-label={statsCopy.viewerModeLabel}
+      >
         <button
           type="button"
           aria-pressed={model.controls.role === 'customer'}
@@ -259,9 +287,7 @@ export function buildWorkspaceContextControlsProps({
       </div>
     </div>
   ) : requestsScopeControl ? (
-    <div className="workspace-context-controls__combined-row">
-      {requestsScopeControl}
-    </div>
+    <div className="workspace-context-controls__combined-row">{requestsScopeControl}</div>
   ) : model.activePublicSection === 'stats' ? (
     viewerModeInlineControl
   ) : null;
@@ -269,7 +295,6 @@ export function buildWorkspaceContextControlsProps({
     title: model.copy.sharedContextLabel,
     locale,
     resetLabel: t(I18N_KEYS.workspace.contextResetLabel),
-    closeLabel: model.controls.closeLabel,
     city: {
       value: model.controls.cityId,
       allOption: model.controls.cityOptions.find((item) => item.value === 'all'),
@@ -316,17 +341,16 @@ export function buildWorkspaceContextControlsProps({
       options: model.controls.sortOptions,
       ariaLabel: t(I18N_KEYS.workspace.contextSortLabel),
       onChange: model.controls.onSortChange,
-      summaryLabel: model.controls.sortOptions.find((item) => item.value === model.controls.sortBy)?.label ?? '',
+      summaryLabel:
+        model.controls.sortOptions.find((item) => item.value === model.controls.sortBy)?.label ??
+        '',
     },
     actionRowControl: requestsViewToggle,
     extraFilters: undefined,
     inlineControl: myWorkInlineControl,
     onReset: model.controls.onReset,
-    action: {
-      label: t(I18N_KEYS.workspace.contextResetLabel),
-      icon: <IconRotateCcw />,
-      onClick: model.controls.onReset,
-    },
+    applyLabel: t(I18N_KEYS.workspace.contextApplyLabel),
+    mobileTriggerLabel: t(I18N_KEYS.requestsPage.mobileFilterLabel),
   };
 }
 
@@ -350,7 +374,10 @@ export function useWorkspaceContext({
   const copy = React.useMemo(() => getWorkspaceModeCopy(locale), [locale]);
   const sectionParam = searchParams.get('section');
   const hasExplicitWorkspaceTab = isWorkspaceTab(searchParams.get('tab'));
-  const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), auth.status === 'authenticated');
+  const requestsScope = resolveWorkspaceRequestsScope(
+    searchParams.get('scope'),
+    auth.status === 'authenticated',
+  );
   const requestRole = resolveWorkspaceRequestsRole(searchParams.get('role'));
   const requestState = resolveWorkspaceRequestsState(searchParams.get('state'));
   const viewerMode = resolveWorkspaceViewerMode(searchParams.get('viewerMode'));
@@ -376,83 +403,107 @@ export function useWorkspaceContext({
     shouldLoadCatalog: true,
     activePublicSection,
   });
-  const privateSortOptions = React.useMemo(() => buildWorkspacePrivateSortOptions(locale), [locale]);
+  const privateSortOptions = React.useMemo(
+    () => buildWorkspacePrivateSortOptions(locale),
+    [locale],
+  );
   const chipLabels = React.useMemo(() => getWorkspaceChipLabels(locale), [locale]);
   const scopeSwitchLabels = React.useMemo(() => getWorkspaceScopeSwitchLabels(locale), [locale]);
 
   const rawSearch = searchParams.toString();
-  const currentRange = React.useMemo(
-    () => resolveWorkspaceSharedRange(range),
-    [range],
-  );
+  const currentRange = React.useMemo(() => resolveWorkspaceSharedRange(range), [range]);
   const activeMode = React.useMemo(
-    () => resolveActiveWorkspaceMode({
-      activePublicSection,
-      activeWorkspaceTab,
-      pathname,
-      sectionParam,
-      hasExplicitWorkspaceTab,
-    }),
+    () =>
+      resolveActiveWorkspaceMode({
+        activePublicSection,
+        activeWorkspaceTab,
+        pathname,
+        sectionParam,
+        hasExplicitWorkspaceTab,
+      }),
     [activePublicSection, activeWorkspaceTab, hasExplicitWorkspaceTab, pathname, sectionParam],
   );
-  const effectiveRequestRole = requestRole === 'all'
-    ? (preferredRequestsRole ?? 'all')
-    : requestRole;
+  const effectiveRequestRole =
+    requestRole === 'all' ? (preferredRequestsRole ?? 'all') : requestRole;
   const requestsListDensity = React.useMemo(
-    () => ((activeMode === 'requests' || activePublicSection === 'providers') ? resolveRequestsListDensityForPageSize(limit) : null),
+    () =>
+      activeMode === 'requests' || activePublicSection === 'providers'
+        ? resolveRequestsListDensityForPageSize(limit)
+        : null,
     [activeMode, activePublicSection, limit],
   );
 
-  const replaceSharedContext = React.useCallback((mutate: (params: URLSearchParams) => void) => {
-    const current = searchParams.toString();
-    const next = new URLSearchParams(current);
-    mutate(next);
-    const nextQuery = next.toString();
-    if (nextQuery === current) return;
+  const replaceSharedContext = React.useCallback(
+    (mutate: (params: URLSearchParams) => void) => {
+      const current = searchParams.toString();
+      const next = new URLSearchParams(current);
+      mutate(next);
+      const nextQuery = next.toString();
+      if (nextQuery === current) return;
 
-    startTransition(() => {
-      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
-    });
-  }, [pathname, router, searchParams]);
+      startTransition(() => {
+        router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+      });
+    },
+    [pathname, router, searchParams],
+  );
 
-  const onRangeChange = React.useCallback((next: WorkspaceStatisticsRange) => {
-    replaceSharedContext((params) => {
-      params.set('period', next);
-      params.set('range', next);
-      params.delete('statsCityPage');
-    });
-  }, [replaceSharedContext]);
+  const onRangeChange = React.useCallback(
+    (next: WorkspaceStatisticsRange) => {
+      replaceSharedContext((params) => {
+        params.set('period', next);
+        params.set('range', next);
+        params.delete('statsCityPage');
+      });
+    },
+    [replaceSharedContext],
+  );
 
-  const onRoleChange = React.useCallback((next: string) => {
-    replaceSharedContext((params) => {
-      params.set('role', next);
-    });
-  }, [replaceSharedContext]);
+  const onRoleChange = React.useCallback(
+    (next: string) => {
+      replaceSharedContext((params) => {
+        params.set('role', next);
+      });
+    },
+    [replaceSharedContext],
+  );
 
-  const onStateChange = React.useCallback((next: string) => {
-    replaceSharedContext((params) => {
-      params.set('state', next);
-    });
-  }, [replaceSharedContext]);
+  const onStateChange = React.useCallback(
+    (next: string) => {
+      replaceSharedContext((params) => {
+        params.set('state', next);
+      });
+    },
+    [replaceSharedContext],
+  );
 
-  const onViewerModeChange = React.useCallback((next: 'provider' | 'customer') => {
-    replaceSharedContext((params) => {
-      params.set('viewerMode', next);
-    });
-  }, [replaceSharedContext]);
+  const onViewerModeChange = React.useCallback(
+    (next: 'provider' | 'customer') => {
+      replaceSharedContext((params) => {
+        params.set('viewerMode', next);
+      });
+    },
+    [replaceSharedContext],
+  );
 
-  const onPrivateSortChange = React.useCallback((next: string) => {
-    replaceSharedContext((params) => {
-      params.set('sort', next);
-      params.delete('page');
-    });
-  }, [replaceSharedContext]);
-  const onRequestsListDensityChange = React.useCallback((next: RequestsListDensity) => {
-    replaceSharedContext((params) => {
-      params.set('limit', String(resolveRequestsPageSizeForDensity(next)));
-      params.set('page', '1');
-    });
-  }, [replaceSharedContext]);
+  const onPrivateSortChange = React.useCallback(
+    (next: string) => {
+      replaceSharedContext((params) => {
+        params.set('sort', next);
+        params.delete('page');
+      });
+    },
+    [replaceSharedContext],
+  );
+  const onRequestsListDensityChange = React.useCallback(
+    (next: RequestsListDensity) => {
+      replaceSharedContext((params) => {
+        params.set('limit', String(resolveRequestsPageSizeForDensity(next)));
+        params.set('page', '1');
+      });
+    },
+    [replaceSharedContext],
+  );
 
   const onReset = React.useCallback(() => {
     replaceSharedContext((params) => {
@@ -462,11 +513,15 @@ export function useWorkspaceContext({
   }, [replaceSharedContext]);
 
   const selectedCategoryLabel = React.useMemo(
-    () => categoryOptions.find((item) => item.value === categoryKey)?.label ?? copy.contextFallbacks.category,
+    () =>
+      categoryOptions.find((item) => item.value === categoryKey)?.label ??
+      copy.contextFallbacks.category,
     [categoryKey, categoryOptions, copy.contextFallbacks.category],
   );
   const selectedServiceLabel = React.useMemo(
-    () => serviceOptions.find((item) => item.value === subcategoryKey)?.label ?? copy.contextFallbacks.service,
+    () =>
+      serviceOptions.find((item) => item.value === subcategoryKey)?.label ??
+      copy.contextFallbacks.service,
     [copy.contextFallbacks.service, serviceOptions, subcategoryKey],
   );
   const selectedCityLabel = React.useMemo(
@@ -500,49 +555,60 @@ export function useWorkspaceContext({
         icon: <IconFilter />,
       },
     ],
-    [chipLabels, copy.contextFallbacks.range, locale, range, selectedCategoryLabel, selectedCityLabel, selectedServiceLabel],
+    [
+      chipLabels,
+      copy.contextFallbacks.range,
+      locale,
+      range,
+      selectedCategoryLabel,
+      selectedCityLabel,
+      selectedServiceLabel,
+    ],
   );
 
   const modeItems = React.useMemo<WorkspaceModeItem[]>(
-    () => buildWorkspaceModeItems({
-      activeMode,
-      copy,
-      currentSearch: rawSearch,
-    }),
+    () =>
+      buildWorkspaceModeItems({
+        activeMode,
+        copy,
+        currentSearch: rawSearch,
+      }),
     [activeMode, copy, rawSearch],
   );
 
-  const activeModeCopy = activeMode === 'requests'
-    ? {
-      ...copy.modes.requests,
-      ...getRequestsScopeTitle(locale, requestsScope),
-    }
-    : copy.modes[activeMode];
+  const activeModeCopy =
+    activeMode === 'requests'
+      ? {
+          ...copy.modes.requests,
+          ...getRequestsScopeTitle(locale, requestsScope),
+        }
+      : copy.modes[activeMode];
   const activeModeHref = modeItems.find((item) => item.isActive)?.href ?? '/workspace';
   const scopeSwitch = React.useMemo(
-    () => (activeMode === 'requests'
-      ? [
-        {
-          key: 'market' as const,
-          label: scopeSwitchLabels.market,
-          href: buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'market' }),
-          isActive: requestsScope === 'market',
-        },
-        {
-          key: 'my' as const,
-          label: scopeSwitchLabels.my,
-          href: auth.status === 'authenticated'
-            ? buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' })
-            : `/auth/login?next=${encodeURIComponent(buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' }))}`,
-          isActive: requestsScope === 'my',
-        },
-      ]
-      : null),
+    () =>
+      activeMode === 'requests'
+        ? [
+            {
+              key: 'market' as const,
+              label: scopeSwitchLabels.market,
+              href: buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'market' }),
+              isActive: requestsScope === 'market',
+            },
+            {
+              key: 'my' as const,
+              label: scopeSwitchLabels.my,
+              href:
+                auth.status === 'authenticated'
+                  ? buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' })
+                  : `/auth/login?next=${encodeURIComponent(buildWorkspaceRequestsScopeHref({ currentSearch: rawSearch, scope: 'my' }))}`,
+              isActive: requestsScope === 'my',
+            },
+          ]
+        : null,
     [activeMode, auth.status, rawSearch, requestsScope, scopeSwitchLabels],
   );
-  const effectiveSortBy = requestsScope === 'my'
-    ? (searchParams.get('sort') ?? 'activity')
-    : sortBy;
+  const effectiveSortBy =
+    requestsScope === 'my' ? (searchParams.get('sort') ?? 'activity') : sortBy;
   const effectiveSortOptions = requestsScope === 'my' ? privateSortOptions : sortOptions;
 
   return React.useMemo(

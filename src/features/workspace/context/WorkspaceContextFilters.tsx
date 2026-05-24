@@ -1,16 +1,15 @@
 'use client';
 
-import * as React from 'react';
-
 import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { WorkspaceFilterBar, WorkspaceFilterSelect } from '@/features/workspace/shared';
-import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
+import { WorkspaceContextMobileSheet } from './WorkspaceContextMobileSheet';
 import type {
   WorkspaceContextCityControl,
   WorkspaceContextRangeControl,
   WorkspaceContextSelectControl,
-} from '@/features/workspace/context/workspaceContext.types';
+} from './workspaceContext.types';
+import { buildRangeSelectOptions, resolveRangeValue } from './contextRange.model';
 
 type Props = {
   locale: Locale;
@@ -19,6 +18,9 @@ type Props = {
   service?: WorkspaceContextSelectControl;
   range: WorkspaceContextRangeControl;
   mobile: boolean;
+  title?: string;
+  applyLabel?: string;
+  mobileTriggerLabel?: string;
 };
 
 export function WorkspaceContextFilters({
@@ -28,14 +30,13 @@ export function WorkspaceContextFilters({
   service,
   range,
   mobile,
+  title,
+  applyLabel,
+  mobileTriggerLabel,
 }: Props) {
-  const rangeSelectOptions = range.options.map((option) => ({
-    value: option.value,
-    label: option.label,
-  }));
-
-  return (
-    <WorkspaceFilterBar className="workspace-context-controls__filters-grid">
+  const rangeSelectOptions = buildRangeSelectOptions(range);
+  const baseFields = (
+    <>
       <div className="workspace-context-controls__filter">
         <div className="workspace-context-select-wrap">
           <CitySearchSelect
@@ -78,18 +79,49 @@ export function WorkspaceContextFilters({
           />
         </div>
       ) : null}
+    </>
+  );
 
-      {!mobile ? (
+  if (mobile) {
+    return (
+      <div className="workspace-context-controls__mobile-toolbar">
+        <WorkspaceContextMobileSheet
+          title={title ?? mobileTriggerLabel ?? city.ariaLabel}
+          triggerLabel={mobileTriggerLabel ?? title ?? city.ariaLabel}
+          applyLabel={applyLabel}
+          className="workspace-context-controls__mobile-sheet"
+        >
+          <WorkspaceFilterBar className="workspace-context-controls__filters-grid workspace-context-controls__filters-grid--sheet">
+            {baseFields}
+          </WorkspaceFilterBar>
+        </WorkspaceContextMobileSheet>
+
         <div className="workspace-context-controls__filter workspace-context-controls__period-filter">
           <WorkspaceFilterSelect
             options={rangeSelectOptions}
             value={range.value}
-            onChange={(next) => range.onChange(next as WorkspaceStatisticsRange)}
+            onChange={(next) => range.onChange(resolveRangeValue(next))}
             className="workspace-context-select workspace-context-controls__select"
             ariaLabel={range.groupLabel}
           />
         </div>
-      ) : null}
+      </div>
+    );
+  }
+
+  return (
+    <WorkspaceFilterBar className="workspace-context-controls__filters-grid">
+      {baseFields}
+
+      <div className="workspace-context-controls__filter workspace-context-controls__period-filter">
+        <WorkspaceFilterSelect
+          options={rangeSelectOptions}
+          value={range.value}
+          onChange={(next) => range.onChange(resolveRangeValue(next))}
+          className="workspace-context-select workspace-context-controls__select"
+          ariaLabel={range.groupLabel}
+        />
+      </div>
     </WorkspaceFilterBar>
   );
 }

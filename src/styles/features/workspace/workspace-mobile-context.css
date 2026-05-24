@@ -1,6 +1,10 @@
 /* src/styles/features/workspace/workspace-mobile-context.css */
 
 @layer components {
+  .workspace-mobile-filters {
+    display: none;
+  }
+
   .workspace-mobile-context-section {
     display: none;
   }
@@ -12,196 +16,287 @@
   @media (max-width: 767px) {
     .workspace-mobile-context-section {
       display: grid;
-      gap: var(--space-2);
+      gap: 12px;
       margin-top: 0;
     }
 
-    .workspace-context-controls__desktop {
-      display: none;
-    }
-
-    .workspace-context-controls__mobile {
-      display: block;
-    }
-
-    .workspace-context-controls__mobile--inline {
+    .workspace-mobile-context-section__controls.workspace-context-controls,
+    .workspace-mobile-context-section__controls .workspace-context-controls__surface,
+    .workspace-mobile-context-section__controls .workspace-context-controls__body {
       display: grid;
-    }
-
-    .workspace-mobile-context-section__controls.workspace-context-controls {
-      gap: var(--space-1-5);
+      gap: 10px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__header {
-      align-items: flex-start;
-      gap: var(--space-1-5);
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__label {
-      font-size: var(--app-caption-size);
-      letter-spacing: 0.12em;
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__summary {
-      gap: var(--space-1-5);
-      margin-top: 0;
-    }
-
-    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
-      min-height: 28px;
-      padding-inline: 10px;
-      border-radius: 10px;
-      border: 1px solid var(--color-border-soft);
-      background: color-mix(in oklab, var(--color-surface) 82%, var(--color-surface-muted) 18%);
-      font-size: var(--app-caption-size);
-      font-weight: 600;
-      line-height: var(--app-caption-line-height);
-      letter-spacing: 0.01em;
-      color: var(--color-text-muted);
-    }
-
-    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip:first-child {
-      background: color-mix(in oklab, var(--color-surface) 82%, var(--color-surface-muted) 18%);
-      border-color: var(--color-border-soft);
-      color: var(--color-text-muted);
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__body,
-    .workspace-mobile-context-section__controls .workspace-context-controls__filters-grid,
-    .workspace-mobile-context-section__controls .workspace-context-controls__range-row {
-      gap: var(--space-2);
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__control-cluster {
-      padding: 0;
-      border-radius: 0;
-      background: transparent;
+      display: none;
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--space-2);
-      align-items: stretch;
+      display: block;
       overflow: visible;
     }
 
-    .workspace-mobile-context-section__controls .workspace-context-controls__inline-control {
-      display: block;
+    .workspace-mobile-context-section__controls .workspace-context-scope-switch,
+    .workspace-mobile-context-section__controls .workspace-context-toggle-tabs,
+    .workspace-mobile-context-section__controls .workspace-context-controls__state-tabs {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
       width: 100%;
-      min-width: 0;
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-scope-switch,
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-toggle-tabs,
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-controls__state-tabs {
-      grid-column: auto;
-      justify-self: stretch;
-      width: 100%;
-      min-width: 0;
       padding: 0;
       border: 0;
+      border-bottom: 1px solid color-mix(in oklab, var(--color-border-soft) 68%, transparent);
       border-radius: 0;
       background: transparent;
       box-shadow: none;
+      overflow-x: auto;
+      scrollbar-width: none;
+      white-space: nowrap;
     }
 
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-scope-switch,
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-toggle-tabs,
-    .workspace-mobile-context-section__controls .workspace-context-controls__state-tabs {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-1-5);
-      white-space: normal;
-      overflow: visible;
-      border-bottom: 0;
+    .workspace-mobile-context-section__controls .workspace-context-scope-switch::-webkit-scrollbar,
+    .workspace-mobile-context-section__controls .workspace-context-toggle-tabs::-webkit-scrollbar,
+    .workspace-mobile-context-section__controls .workspace-context-controls__state-tabs::-webkit-scrollbar {
+      display: none;
     }
 
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-scope-switch .workspace-context-scope-switch__item,
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-toggle-tabs .workspace-context-toggle-tab,
+    .workspace-mobile-context-section__controls .workspace-context-scope-switch__item,
+    .workspace-mobile-context-section__controls .workspace-context-toggle-tab,
     .workspace-mobile-context-section__controls .workspace-context-controls__state-tab {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 0;
-      min-height: var(--workspace-context-control-height);
-      margin-bottom: 0;
-      padding: 8px 10px;
-      border: 1px solid var(--workspace-context-control-border);
-      border-radius: var(--workspace-context-control-radius);
-      background: var(--workspace-context-control-bg);
+      min-height: 34px;
+      margin-bottom: -1px;
+      padding: 0 0 9px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      background: transparent;
       color: var(--color-text-muted);
-      text-align: center;
-      line-height: var(--app-caption-line-height);
-      white-space: normal;
       box-shadow: none;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-scope-switch .workspace-context-scope-switch__item.is-active,
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-toggle-tabs .workspace-context-toggle-tab.is-active,
+    .workspace-mobile-context-section__controls .workspace-context-scope-switch__item.is-active,
+    .workspace-mobile-context-section__controls .workspace-context-toggle-tab.is-active,
     .workspace-mobile-context-section__controls .workspace-context-controls__state-tab.is-active {
       color: var(--color-primary);
-      border-color: var(--color-primary-border);
-      background: var(--color-primary-soft);
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__select {
-      min-height: var(--workspace-context-control-height);
-      border-radius: var(--workspace-context-control-radius);
-      font-size: 13px;
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar {
-      padding: 0;
-      border-radius: 0;
-      border: 0;
+      border-bottom-color: var(--color-primary);
       background: transparent;
     }
 
-    .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar .home-activity__ranges {
-      gap: var(--space-1);
+    .workspace-mobile-context-section__controls .workspace-context-controls__mobile-toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(132px, 0.92fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-controls__filter,
+    .workspace-mobile-context-section__controls .workspace-context-controls__mobile-sheet,
+    .workspace-mobile-context-section__controls .workspace-context-controls__sort-filter {
+      min-width: 0;
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__sort-filter {
+      flex: 1 1 auto;
+    }
+
+    .workspace-mobile-filters {
+      display: grid;
       min-width: 0;
+    }
+
+    .workspace-mobile-filters__trigger,
+    .workspace-mobile-context-section__controls .workspace-context-controls__surface .dc-select-trigger,
+    .workspace-mobile-context-section__controls .workspace-context-controls__surface .dc-city-search-input,
+    .workspace-mobile-context-section__controls .workspace-context-select--sort-inline.dc-select-trigger {
+      min-height: 38px;
+      height: 38px;
+      width: 100%;
+      padding-inline: 12px;
+      border-radius: 12px;
+      border: 1px solid color-mix(in oklab, var(--color-border-soft) 58%, transparent);
+      background: color-mix(in oklab, var(--color-surface) 34%, transparent);
+      box-shadow: none;
+      color: var(--color-text);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.2;
+      backdrop-filter: blur(14px);
+    }
+
+    .workspace-mobile-filters__trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .workspace-mobile-filters__trigger:hover,
+    .workspace-mobile-context-section__controls .workspace-context-controls__surface .dc-select-trigger:hover,
+    .workspace-mobile-context-section__controls .workspace-context-controls__surface .dc-city-search-input:hover,
+    .workspace-mobile-context-section__controls .workspace-context-select--sort-inline.dc-select-trigger:hover {
+      background: color-mix(in oklab, var(--color-surface) 52%, transparent);
+      border-color: color-mix(in oklab, var(--color-border) 62%, transparent);
+    }
+
+    .workspace-mobile-filters__summary {
+      display: none;
+    }
+
+    .workspace-mobile-filters__cta {
+      white-space: nowrap;
+    }
+
+    .workspace-mobile-filters__sheet {
+      display: grid;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid color-mix(in oklab, var(--color-border-soft) 60%, transparent);
+      border-radius: 16px;
+      background: color-mix(in oklab, var(--color-surface) 84%, transparent);
+      box-shadow: 0 16px 34px rgb(15 23 42 / 0.08);
+      backdrop-filter: blur(18px);
+    }
+
+    .workspace-mobile-filters__sheet-body,
+    .workspace-mobile-context-section__controls .workspace-context-controls__filters-grid--sheet {
+      min-width: 0;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-controls__filters-grid--sheet {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-controls__filters-grid--sheet .workspace-context-select--city .dc-city-search-input,
+    .workspace-mobile-context-section__controls .workspace-context-controls__surface .workspace-context-select--city .dc-city-search-input {
+      padding-left: 44px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-controls__mobile-footer {
+      display: grid;
+      gap: 8px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-controls__footer-row--mobile {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-controls__sort-group--mobile {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-select--sort-inline {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-select--sort-inline .dc-select-trigger__label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-controls__footer-spacer {
+      min-height: 1px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-controls__footer-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-controls__footer-actions {
+      gap: 6px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-view-toggle {
+      display: inline-flex;
+    }
+
+    .workspace-mobile-filters__apply,
+    .workspace-mobile-context-section__controls .workspace-view-toggle__btn,
+    .workspace-mobile-context-section__controls .workspace-context-controls__action,
+    .workspace-mobile-context-section__controls .workspace-context-controls__secondary-button,
+    .workspace-mobile-context-section__controls .workspace-context-controls__reset-button {
+      min-height: 38px;
+      height: 38px;
+      padding-inline: 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.2;
+      box-shadow: none;
+      backdrop-filter: blur(14px);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-view-toggle__btn,
+    .workspace-mobile-context-section__controls .workspace-context-controls__action,
+    .workspace-mobile-context-section__controls .workspace-context-controls__secondary-button {
+      width: 38px;
+      min-width: 38px;
+      border-color: color-mix(in oklab, var(--color-border-soft) 58%, transparent);
+      background: color-mix(in oklab, var(--color-surface) 34%, transparent);
+    }
+
+    .workspace-mobile-filters__apply,
+    .workspace-mobile-context-section__controls .workspace-context-controls__reset-button {
+      border: 1px solid color-mix(in oklab, var(--color-border-soft) 58%, transparent);
+      background: color-mix(in oklab, var(--color-surface) 30%, transparent);
+      color: var(--color-text);
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .workspace-mobile-filters__apply:hover,
+    .workspace-mobile-context-section__controls .workspace-context-controls__reset-button:hover {
+      background: color-mix(in oklab, var(--color-surface) 46%, transparent);
+      border-color: color-mix(in oklab, var(--color-border) 62%, transparent);
     }
   }
 
   @media (max-width: 420px) {
     .workspace-mobile-context-section {
-      gap: var(--layout-gap-xs);
+      gap: 10px;
     }
 
-    .workspace-mobile-context-section__controls.workspace-context-controls {
-      gap: var(--space-1-5);
+    .workspace-mobile-context-section__controls.workspace-context-controls,
+    .workspace-mobile-context-section__controls .workspace-context-controls__surface,
+    .workspace-mobile-context-section__controls .workspace-context-controls__body {
+      gap: 8px;
     }
 
-    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
-      min-height: 26px;
-      padding-inline: 8px;
-      font-size: var(--app-caption-size);
+    .workspace-mobile-context-section__controls .workspace-context-controls__mobile-toolbar,
+    .workspace-mobile-context-section__controls .workspace-context-controls__footer-row--mobile {
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row {
-      gap: var(--space-1-5);
+    .workspace-mobile-context-section__controls .workspace-context-controls__footer-actions {
+      justify-content: flex-start;
     }
 
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-scope-switch,
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-toggle-tabs,
-    .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-controls__state-tabs {
-      padding: 0;
-      border-radius: 0;
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__select {
-      font-size: var(--app-caption-size);
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar {
-      padding: 0;
-      border-radius: 0;
+    .workspace-mobile-context-section__controls .workspace-context-controls__sort-group--mobile {
+      gap: 8px;
     }
   }
 }

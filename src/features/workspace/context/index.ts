@@ -1,6 +1,6 @@
-export { WorkspaceContextControls } from '@/features/workspace/context/WorkspaceContextControls';
+export { WorkspaceContextPanel } from '@/features/workspace/context/WorkspaceContextPanel';
 export {
-  buildWorkspaceContextControlsProps,
+  buildContextControlsProps,
   fillWorkspaceModeTemplate,
   getWorkspaceChipValue,
   joinWorkspaceContext,
@@ -20,3 +20,11 @@ export {
   shouldShowWorkspaceProfileViewerModeControl,
 } from '@/features/workspace/context/workspaceContext.model';
 export type { WorkspaceContextModel } from '@/features/workspace/context/useWorkspaceContext';
+export type {
+  WorkspaceContextAction,
+  WorkspaceContextCityControl,
+  WorkspaceContextExtraFilter,
+  WorkspaceContextPanelProps,
+  WorkspaceContextRangeControl,
+  WorkspaceContextSelectControl,
+} from '@/features/workspace/context/workspaceContext.types';
