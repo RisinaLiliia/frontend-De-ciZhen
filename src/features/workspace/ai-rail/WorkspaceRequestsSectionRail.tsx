@@ -4,7 +4,7 @@ import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecisi
 import type { WorkspaceRequestsSummaryItem, WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
 import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
-import { WorkspaceRightRailStack } from '@/features/workspace/shared';
+import { WorkspaceRightRailStack, useMediaMatch } from '@/features/workspace/shared';
 import { WorkspaceRequestsActionRail } from './WorkspaceRequestsActionRail';
 import { WorkspaceRequestsSectionSummary } from './WorkspaceRequestsSectionSummary';
 
@@ -31,6 +31,12 @@ export function WorkspaceRequestsSectionRail({
   onStartDecisionMode,
   onOpenQueueItem,
 }: Props) {
+  const isMobileOrTablet = useMediaMatch('(max-width: 1023px)');
+
+  if (isMobileOrTablet) {
+    return null;
+  }
+
   if (!summaryItems && !isSummaryLoading && !panel) {
     return null;
   }
