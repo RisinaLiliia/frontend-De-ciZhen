@@ -4,12 +4,14 @@ import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Bell, Menu } from 'lucide-react';
 
-import { WorkspaceMobileDock } from '@/components/layout/WorkspaceMobileDock';
-import type { WorkspaceMobileDockItem } from '@/components/layout/WorkspaceMobileDock';
+import {
+  WorkspaceNavigationDock,
+  type WorkspaceNavigationDockItem,
+} from '@/components/layout/workspace-navigation';
 import { IconChat, IconPlus, IconUser } from '@/components/ui/icons/icons';
 import { resolveActiveWorkspaceNavigationSection } from '@/features/workspace/navigation/resolveActiveWorkspaceNavigationSection';
 import { WorkspaceHeaderAccountMenu } from '@/features/workspace/shell/WorkspaceHeaderAccountMenu';
-import type { WorkspaceBottomNavProps } from '@/features/workspace/shell/WorkspaceShell.types';
+import type { WorkspaceMobileNavigationProps } from '@/features/workspace/shell/WorkspaceShell.types';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 import { useWorkspaceMobileSectionSheet } from '@/features/workspace/shell/useWorkspaceMobileSectionSheet';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -39,13 +41,13 @@ function getMobileDockCopy(locale: string) {
   };
 }
 
-export function WorkspaceBottomNav({
+export function WorkspaceMobileNavigation({
   mode,
   activePublicSection,
   activeWorkspaceTab,
   locale,
   preferredRequestsRole = null,
-}: WorkspaceBottomNavProps) {
+}: WorkspaceMobileNavigationProps) {
   const t = useT();
   const { open, setOpen, panelRef, closeButtonRef } = useWorkspaceMobileSectionSheet();
   const titleId = React.useId();
@@ -66,7 +68,7 @@ export function WorkspaceBottomNav({
   const isAuthenticated = authStatus === 'authenticated';
   const chatHref = isAuthenticated ? '/workspace?section=chat' : LOGIN_CHAT_URL;
   const profileHref = isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
-  const dockItems: WorkspaceMobileDockItem[] = [
+  const dockItems: WorkspaceNavigationDockItem[] = [
     {
       key: 'dashboard',
       label: copy.dashboard,
@@ -166,7 +168,7 @@ export function WorkspaceBottomNav({
 
   return (
     <>
-      <WorkspaceMobileDock items={dockItems} ariaLabel={t(I18N_KEYS.auth.navigationLabel)} />
+      <WorkspaceNavigationDock items={dockItems} ariaLabel={t(I18N_KEYS.auth.navigationLabel)} />
 
       {open ? (
         <div className="workspace-navigation-drawer" role="dialog" aria-modal="true" aria-labelledby={titleId}>

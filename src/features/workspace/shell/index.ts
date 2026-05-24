@@ -1,4 +1,4 @@
-export { WorkspaceBottomNav } from '@/features/workspace/shell/WorkspaceBottomNav';
+export { WorkspaceMobileNavigation } from '@/features/workspace/shell/WorkspaceMobileNavigation';
 export { WorkspaceContextAside, WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
 export {
   WorkspaceHeaderAccountMenu,
@@ -27,7 +27,7 @@ export {
 export { resolveActiveWorkspaceMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
 export type { WorkspaceModeKey } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
 export type {
-  WorkspaceBottomNavProps,
+  WorkspaceMobileNavigationProps,
   WorkspacePageFrameProps,
   WorkspaceSectionLayout,
   WorkspaceSectionRenderModel,

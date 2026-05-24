@@ -3,15 +3,16 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+
 import { IconBriefcase, IconChat, IconPlus, IconUser } from '@/components/ui/icons/icons';
-import { WorkspaceMobileDock } from '@/components/layout/WorkspaceMobileDock';
 import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { useSlidingIndicator } from '@/hooks/useSlidingIndicator';
-import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
+import { useT } from '@/lib/i18n/useT';
 import { WORKSPACE_MOBILE_NAV_OPEN_EVENT } from '@/lib/workspaceMobileNavigation';
+import { WorkspaceNavigationDock } from './WorkspaceNavigationDock';
 
-type TopNavItem = {
+type WorkspacePrimaryNavigationItem = {
   key: string;
   href: string;
   label: string;
@@ -30,13 +31,15 @@ const REQUEST_CREATE_URL = '/request/create';
 const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
 const AUTH_PROFILE_FALLBACK_URL = '/profile';
 
-function useTopNavItems(isAuthenticated: boolean, profileHref: string): TopNavItem[] {
+function useWorkspacePrimaryNavigationItems(
+  isAuthenticated: boolean,
+  profileHref: string,
+): WorkspacePrimaryNavigationItem[] {
   const t = useT();
-
   const workspaceHref = isAuthenticated ? AUTH_WORKSPACE_URL : WORKSPACE_PREVIEW_URL;
   const chatHref = isAuthenticated ? '/chat' : LOGIN_CHAT_URL;
 
-  const items: TopNavItem[] = [
+  const items: WorkspacePrimaryNavigationItem[] = [
     {
       key: 'workspace',
       href: workspaceHref,
@@ -78,7 +81,7 @@ function useTopNavItems(isAuthenticated: boolean, profileHref: string): TopNavIt
   return items;
 }
 
-function WorkspacePrimaryNav({
+function WorkspacePrimaryNavigation({
   className,
   itemClassName,
 }: {
@@ -95,7 +98,7 @@ function WorkspacePrimaryNav({
     isAuthenticated && typeof user?.id === 'string' && user.id.trim().length > 0
       ? `/profile/${encodeURIComponent(user.id)}`
       : AUTH_PROFILE_FALLBACK_URL;
-  const items = useTopNavItems(isAuthenticated, profileHref);
+  const items = useWorkspacePrimaryNavigationItems(isAuthenticated, profileHref);
   const params = new URLSearchParams(searchParams?.toString());
   const activeItemKey = items.find((item) => item.isActive(pathname, params))?.key ?? '';
   const { containerRef, indicatorStyle } = useSlidingIndicator<HTMLElement>({
@@ -138,16 +141,16 @@ function WorkspacePrimaryNav({
   );
 }
 
-export function WorkspacePrimaryNavDesktop() {
+export function WorkspacePrimaryNavigationDesktop() {
   return (
-    <WorkspacePrimaryNav
+    <WorkspacePrimaryNavigation
       className="topbar-nav topbar-nav--desktop"
       itemClassName="topbar-nav__item"
     />
   );
 }
 
-export function WorkspacePrimaryNavMobile() {
+export function WorkspacePrimaryNavigationMobile() {
   const status = useAuthStatus();
   const pathname = usePathname() ?? '/';
   const searchParams = useSearchParams();
@@ -158,7 +161,7 @@ export function WorkspacePrimaryNavMobile() {
     isAuthenticated && typeof user?.id === 'string' && user.id.trim().length > 0
       ? `/profile/${encodeURIComponent(user.id)}`
       : AUTH_PROFILE_FALLBACK_URL;
-  const items = useTopNavItems(isAuthenticated, profileHref)
+  const items = useWorkspacePrimaryNavigationItems(isAuthenticated, profileHref)
     .filter((item) => item.key !== 'profile')
     .map((item) => ({
       key: item.key,
@@ -174,7 +177,7 @@ export function WorkspacePrimaryNavMobile() {
     }));
 
   return (
-    <WorkspaceMobileDock
+    <WorkspaceNavigationDock
       items={items}
       ariaLabel={t(I18N_KEYS.auth.navigationLabel)}
     />

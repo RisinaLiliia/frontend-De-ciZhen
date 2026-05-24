@@ -25,7 +25,7 @@ export type WorkspaceSidebarProps = WorkspaceResponsiveContextProps & {
   variant?: 'static' | 'drawer';
 };
 
-export type WorkspaceBottomNavProps = WorkspaceResponsiveContextProps & {
+export type WorkspaceMobileNavigationProps = WorkspaceResponsiveContextProps & {
   mode: 'drawer' | 'bottomDock';
 };
 

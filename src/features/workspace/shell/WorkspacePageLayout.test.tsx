@@ -55,8 +55,8 @@ vi.mock('@/features/workspace/shell/WorkspaceSidebar', () => ({
   WorkspaceSidebar: () => <div data-testid="workspace-sidebar" />,
 }));
 
-vi.mock('@/features/workspace/shell/WorkspaceBottomNav', () => ({
-  WorkspaceBottomNav: () => <div data-testid="workspace-bottom-nav" />,
+vi.mock('@/features/workspace/shell/WorkspaceMobileNavigation', () => ({
+  WorkspaceMobileNavigation: () => <div data-testid="workspace-mobile-navigation" />,
 }));
 
 vi.mock('@/features/workspace/shell/WorkspaceContextFocusPanel', () => ({

@@ -26,7 +26,7 @@ import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
-import { WorkspaceBottomNav } from '@/features/workspace/shell/WorkspaceBottomNav';
+import { WorkspaceMobileNavigation } from '@/features/workspace/shell/WorkspaceMobileNavigation';
 import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
 import { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
@@ -268,8 +268,8 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   }
 
   const overlayNavigationMode = isWideDesktop ? null : (isMobile ? 'bottomDock' : 'drawer');
-  const workspaceBottomNav = overlayNavigationMode ? (
-    <WorkspaceBottomNav
+  const workspaceMobileNavigation = overlayNavigationMode ? (
+    <WorkspaceMobileNavigation
       mode={overlayNavigationMode}
       locale={locale}
       activePublicSection={activePublicSection}
@@ -308,7 +308,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       filters={resolvedFilters}
       sidebar={workspaceSidebar}
       aiRail={resolvedAiRail}
-      bottomNav={workspaceBottomNav}
+      bottomNav={workspaceMobileNavigation}
       frameClassName={overviewGridClassName}
       contentClassName={overviewFrameClassName}
     >

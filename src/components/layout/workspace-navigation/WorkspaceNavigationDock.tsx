@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
-export type WorkspaceMobileDockItem = {
+export type WorkspaceNavigationDockItem = {
   key: string;
   label: string;
   icon: ReactNode;
@@ -17,11 +17,11 @@ export type WorkspaceMobileDockItem = {
   render?: ReactNode;
 };
 
-export function WorkspaceMobileDock({
+export function WorkspaceNavigationDock({
   items,
   ariaLabel,
 }: {
-  items: WorkspaceMobileDockItem[];
+  items: WorkspaceNavigationDockItem[];
   ariaLabel: string;
 }) {
   return (
