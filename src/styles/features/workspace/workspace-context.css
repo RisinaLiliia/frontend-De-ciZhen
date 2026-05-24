@@ -47,12 +47,17 @@
 
   .workspace-context-rail {
     display: grid;
-    gap: var(--workspace-environment-section-gap);
+    gap: var(--space-3);
   }
 
   .workspace-context-rail__panel {
     display: grid;
-    gap: var(--space-3);
+    gap: var(--space-2-5);
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-soft);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-surface-muted) 8%);
+    box-shadow: none;
   }
 
   .workspace-context-rail__subtitle-placeholder {
@@ -74,6 +79,15 @@
 
     .workspace-context-brief__metrics {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-context-rail {
+      gap: var(--space-2-5);
+    }
+
+    .workspace-context-rail__panel {
+      padding: 14px;
+      border-radius: 16px;
     }
   }
 }

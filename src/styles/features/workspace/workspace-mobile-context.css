@@ -28,16 +28,8 @@
       display: grid;
     }
 
-    .workspace-mobile-context-section__controls {
-      padding: var(--density-compact-pad);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-border-soft);
-      background: var(--color-surface);
-      box-shadow: var(--shadow-card);
-    }
-
     .workspace-mobile-context-section__controls.workspace-context-controls {
-      gap: var(--space-2);
+      gap: var(--space-1-5);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__header {
@@ -56,22 +48,22 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
-      min-height: calc(var(--space-5) + var(--space-1));
-      padding-inline: var(--space-2-5);
-      border-radius: 999px;
+      min-height: 28px;
+      padding-inline: 10px;
+      border-radius: 10px;
       border: 1px solid var(--color-border-soft);
-      background: var(--color-surface-muted);
+      background: color-mix(in oklab, var(--color-surface) 82%, var(--color-surface-muted) 18%);
       font-size: var(--app-caption-size);
-      font-weight: 650;
+      font-weight: 600;
       line-height: var(--app-caption-line-height);
       letter-spacing: 0.01em;
       color: var(--color-text-muted);
     }
 
     .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip:first-child {
-      background: var(--color-primary-soft);
-      border-color: var(--color-primary-border);
-      color: var(--color-primary);
+      background: color-mix(in oklab, var(--color-surface) 82%, var(--color-surface-muted) 18%);
+      border-color: var(--color-border-soft);
+      color: var(--color-text-muted);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__body,
@@ -82,9 +74,9 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__control-cluster {
-      padding: var(--space-2);
-      border-radius: var(--radius-md);
-      background: var(--color-surface-muted);
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row {
@@ -108,10 +100,10 @@
       justify-self: stretch;
       width: 100%;
       min-width: 0;
-      padding: var(--space-2);
-      border: 1px solid var(--color-border-soft);
-      border-radius: var(--radius-md);
-      background: var(--color-surface-muted);
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
       box-shadow: none;
     }
 
@@ -120,7 +112,7 @@
     .workspace-mobile-context-section__controls .workspace-context-controls__state-tabs {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-1);
+      gap: var(--space-1-5);
       white-space: normal;
       overflow: visible;
       border-bottom: 0;
@@ -133,12 +125,12 @@
       align-items: center;
       justify-content: center;
       min-width: 0;
-      min-height: calc(var(--space-8) + var(--space-1-5));
+      min-height: var(--workspace-context-control-height);
       margin-bottom: 0;
-      padding: var(--space-2);
-      border: 1px solid var(--color-border-soft);
-      border-radius: var(--radius-md);
-      background: var(--color-surface);
+      padding: 8px 10px;
+      border: 1px solid var(--workspace-context-control-border);
+      border-radius: var(--workspace-context-control-radius);
+      background: var(--workspace-context-control-bg);
       color: var(--color-text-muted);
       text-align: center;
       line-height: var(--app-caption-line-height);
@@ -156,27 +148,20 @@
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__select {
-      min-height: calc(var(--space-8) + var(--space-2));
-      border-radius: var(--radius-md);
+      min-height: var(--workspace-context-control-height);
+      border-radius: var(--workspace-context-control-radius);
       font-size: 13px;
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar {
-      padding: var(--space-2);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--color-border-soft);
-      background: var(--color-surface-muted);
+      padding: 0;
+      border-radius: 0;
+      border: 0;
+      background: transparent;
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar .home-activity__ranges {
       gap: var(--space-1);
-    }
-
-    .workspace-mobile-context-section__controls .workspace-context-controls__action {
-      width: 42px;
-      min-width: 42px;
-      min-height: 42px;
-      border-radius: var(--radius-md);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__sort-filter {
@@ -189,18 +174,13 @@
       gap: var(--layout-gap-xs);
     }
 
-    .workspace-mobile-context-section__controls {
-      padding: var(--density-compact-pad-sm);
-      border-radius: var(--radius-lg);
-    }
-
     .workspace-mobile-context-section__controls.workspace-context-controls {
       gap: var(--space-1-5);
     }
 
     .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
-      min-height: var(--space-6);
-      padding-inline: var(--space-2);
+      min-height: 26px;
+      padding-inline: 8px;
       font-size: var(--app-caption-size);
     }
 
@@ -211,18 +191,17 @@
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-scope-switch,
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-toggle-tabs,
     .workspace-mobile-context-section__controls .workspace-context-controls__combined-row > .workspace-context-controls__state-tabs {
-      padding: var(--space-1);
-      border-radius: var(--radius-md);
+      padding: 0;
+      border-radius: 0;
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__select {
-      min-height: calc(var(--space-8) + var(--space-2));
       font-size: var(--app-caption-size);
     }
 
     .workspace-mobile-context-section__controls .workspace-context-controls__range-toolbar {
-      padding: var(--space-1-5);
-      border-radius: var(--radius-md);
+      padding: 0;
+      border-radius: 0;
     }
   }
 }

@@ -4,9 +4,9 @@
   .workspace-environment,
   .workspace-context-brief,
   .workspace-context-rail {
-    --workspace-environment-section-gap: var(--layout-gap-md);
-    --workspace-environment-card-gap: var(--layout-gap-sm);
-    --workspace-environment-card-pad: var(--density-comfortable-pad);
+    --workspace-environment-section-gap: clamp(14px, 1.6vw, 20px);
+    --workspace-environment-card-gap: var(--space-3);
+    --workspace-environment-card-pad: 16px;
     --workspace-environment-chip-pad: var(--space-2);
     --workspace-environment-title-size: var(--app-title-lg-size);
     --workspace-environment-body-size: var(--app-text-size);
@@ -227,7 +227,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: calc(var(--workspace-environment-section-gap) + var(--space-1));
+    gap: clamp(14px, 2vw, 24px);
   }
 
   .workspace-environment__hero-aside {
@@ -246,7 +246,7 @@
   .workspace-environment__copy,
   .workspace-environment__heading {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-1-5);
   }
 
   .workspace-environment__eyebrow,
@@ -496,9 +496,9 @@
     .workspace-environment,
     .workspace-context-brief,
     .workspace-context-rail {
-      --workspace-environment-section-gap: var(--layout-gap-sm);
-      --workspace-environment-card-gap: var(--layout-gap-xs);
-      --workspace-environment-card-pad: var(--density-compact-pad);
+      --workspace-environment-section-gap: var(--space-3);
+      --workspace-environment-card-gap: var(--space-2);
+      --workspace-environment-card-pad: 14px;
       --workspace-environment-title-size: var(--app-title-lg-size);
       --workspace-environment-body-size: var(--app-text-muted-size);
       --workspace-environment-label-size: var(--app-caption-size);
@@ -531,7 +531,7 @@
 
   @media (max-width: 420px) {
     .workspace-environment {
-      --workspace-environment-card-pad: var(--density-compact-pad-sm);
+      --workspace-environment-card-pad: 12px;
     }
   }
 
@@ -542,10 +542,6 @@
   }
 
   @media (min-width: 1024px) {
-    .workspace-environment__utility {
-      margin-bottom: var(--space-1);
-    }
-
     .workspace-environment__title {
       line-height: 1.04;
     }

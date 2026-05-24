@@ -90,7 +90,7 @@
     margin-inline: auto;
     display: grid;
     grid-template-columns: minmax(0, 1fr) var(--workspace-rail-width);
-    gap: var(--workspace-grid-gap);
+    gap: clamp(20px, 2vw, 28px);
     align-items: start;
     padding-inline: var(--shell-inline-padding);
     padding-bottom: var(--space-8);
@@ -114,7 +114,7 @@
   .workspace-page-frame__content {
     display: flex;
     flex-direction: column;
-    gap: var(--layout-section-gap);
+    gap: clamp(18px, 1.8vw, 24px);
   }
 
   .workspace-page-frame__filters {
@@ -130,19 +130,19 @@
   .workspace-section-body {
     display: flex;
     flex-direction: column;
-    gap: var(--layout-section-gap);
+    gap: clamp(18px, 1.8vw, 24px);
   }
 
   .workspace-section-rail {
     display: flex;
     flex-direction: column;
-    gap: var(--layout-section-gap);
+    gap: var(--space-4);
     align-items: stretch;
   }
 
   .workspace-right-rail-stack {
     display: grid;
-    gap: var(--layout-section-gap);
+    gap: var(--space-4);
     align-content: start;
     align-items: stretch;
     min-width: 0;
@@ -164,7 +164,17 @@
   .workspace-page-frame__rail {
     align-self: start;
     position: sticky;
-    top: 88px;
+    top: 84px;
+  }
+
+  .workspace-shell__main .workspace-primary-overlay-shell {
+    gap: clamp(16px, 1.8vw, 22px);
+    padding-top: calc(var(--space-4) + var(--section-top-offset, 0px));
+    padding-bottom: clamp(18px, 1.8vw, 24px);
+  }
+
+  .workspace-intro-shell > .stack-md {
+    gap: clamp(14px, 1.6vw, 20px);
   }
 
   .workspace-frame__body {
@@ -213,7 +223,7 @@
 
     .workspace-page-frame__rail {
       position: static;
-      margin-top: var(--layout-section-gap);
+      margin-top: var(--space-4);
     }
   }
 
@@ -256,6 +266,16 @@
       min-height: 64px;
       gap: var(--space-3);
       padding-block: var(--space-2-5);
+    }
+
+    .workspace-shell__main .workspace-primary-overlay-shell {
+      gap: var(--space-4);
+      padding-top: calc(var(--space-3) + var(--section-top-offset, 0px));
+      padding-bottom: var(--space-4);
+    }
+
+    .workspace-intro-shell > .stack-md {
+      gap: var(--space-3);
     }
   }
 }
