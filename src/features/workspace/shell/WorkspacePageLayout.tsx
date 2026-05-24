@@ -27,14 +27,14 @@ import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { WorkspaceMobileNavigation } from '@/features/workspace/shell/WorkspaceMobileNavigation';
-import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
+import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextAside';
 import { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 import { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
-import { isWorkspaceTab } from '@/features/workspace/state';
 import { isWorkspaceOverviewMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
+import { isWorkspaceTab } from '@/features/workspace/state';
 
 type Translator = (key: I18nKey) => string;
 
@@ -141,10 +141,6 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       sectionParam: searchParams.get('section'),
       hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
     });
-  const overviewFrameClassName = isOverviewPrivateMode
-    ? 'workspace-frame__flow--overview'
-    : undefined;
-  const overviewGridClassName = isOverviewPrivateMode ? 'workspace-frame--overview' : undefined;
   const publicShellIntro = React.useMemo(
     () =>
       decorateWorkspacePublicIntro({
@@ -169,30 +165,6 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       showNavigationToggle={!isWideDesktop}
       compactUtility={!isWideDesktop}
     />
-  );
-
-  const contextualAside = (
-    <WorkspaceContextAside
-      t={t}
-      locale={locale}
-      activePublicSection={activePublicSection}
-      activeWorkspaceTab={activeWorkspaceTab}
-      preferredRequestsRole={preferredRequestsRole}
-      className={isOverviewPrivateMode ? 'workspace-context-rail--overview' : undefined}
-      topSlot={asideTopSlot}
-      panelRef={isOverviewPrivateMode ? overviewDecisionPanelRef : undefined}
-    >
-      {!isOverviewPrivateMode ? (
-        <WorkspaceTopProvidersAside
-          {...workspaceAsideBaseProps}
-          ctaHref={
-            isWorkspaceAuthed ? '/workspace?section=requests' : '/workspace?section=providers'
-          }
-          pendingFavoriteProviderIds={pendingFavoriteProviderIds}
-          onToggleFavorite={onToggleProviderFavorite}
-        />
-      ) : null}
-    </WorkspaceContextAside>
   );
 
   const resolvedSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(() => {
@@ -267,6 +239,30 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     return null;
   }
 
+  const contextualAside = (
+    <WorkspaceContextAside
+      t={t}
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
+      className={resolvedSectionModel.contextualAiRailClassName}
+      topSlot={asideTopSlot}
+      panelRef={isOverviewPrivateMode ? overviewDecisionPanelRef : undefined}
+    >
+      {!isOverviewPrivateMode ? (
+        <WorkspaceTopProvidersAside
+          {...workspaceAsideBaseProps}
+          ctaHref={
+            isWorkspaceAuthed ? '/workspace?section=requests' : '/workspace?section=providers'
+          }
+          pendingFavoriteProviderIds={pendingFavoriteProviderIds}
+          onToggleFavorite={onToggleProviderFavorite}
+        />
+      ) : null}
+    </WorkspaceContextAside>
+  );
+
   const overlayNavigationMode = isWideDesktop ? null : (isMobile ? 'bottomDock' : 'drawer');
   const workspaceMobileNavigation = overlayNavigationMode ? (
     <WorkspaceMobileNavigation
@@ -309,8 +305,8 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       sidebar={workspaceSidebar}
       aiRail={resolvedAiRail}
       bottomNav={workspaceMobileNavigation}
-      frameClassName={overviewGridClassName}
-      contentClassName={overviewFrameClassName}
+      frameClassName={resolvedSectionModel.frameClassName}
+      contentClassName={resolvedSectionModel.contentClassName}
     >
       {resolvedSectionModel.content}
     </WorkspaceShell>

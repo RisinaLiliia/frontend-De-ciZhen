@@ -32,8 +32,10 @@ type WorkspaceOverviewMainProps = {
   heroRef?: React.Ref<HTMLDivElement>;
   offersPanelRef?: React.Ref<HTMLElement>;
   actionsStyle?: React.CSSProperties;
-  mobileRailTopSlot?: React.ReactNode;
-  mobileRailBottomSlot?: React.ReactNode;
+  mobileRail?: {
+    top?: React.ReactNode;
+    bottom?: React.ReactNode;
+  };
   primaryAction: {
     href: string;
     label: string;
@@ -169,6 +171,22 @@ function resolveCompetitionLabel(params: {
   return copy.competitionHigh;
 }
 
+function WorkspaceOverviewMobileRail({
+  position,
+  children,
+}: {
+  position: 'top' | 'bottom';
+  children?: React.ReactNode;
+}) {
+  if (!children) return null;
+
+  return (
+    <div className={`workspace-overview__mobile-rail workspace-overview__mobile-rail--${position}`}>
+      {children}
+    </div>
+  );
+}
+
 function WorkspaceOpportunityCards({
   locale,
   copy,
@@ -279,8 +297,7 @@ export function WorkspaceOverviewMain({
   heroRef,
   offersPanelRef,
   actionsStyle,
-  mobileRailTopSlot,
-  mobileRailBottomSlot,
+  mobileRail,
   primaryAction,
   onPrimaryActionClick,
   activeOffersListProps,
@@ -369,11 +386,9 @@ export function WorkspaceOverviewMain({
         />
       </div>
 
-      {mobileRailTopSlot ? (
-        <div className="workspace-overview__mobile-rail workspace-overview__mobile-rail--top">
-          {mobileRailTopSlot}
-        </div>
-      ) : null}
+      <WorkspaceOverviewMobileRail position="top">
+        {mobileRail?.top}
+      </WorkspaceOverviewMobileRail>
 
       <div className="workspace-overview__grid">
         <section className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--providers')}>
@@ -435,11 +450,9 @@ export function WorkspaceOverviewMain({
         </div>
       </section>
 
-      {mobileRailBottomSlot ? (
-        <div className="workspace-overview__mobile-rail workspace-overview__mobile-rail--bottom">
-          {mobileRailBottomSlot}
-        </div>
-      ) : null}
+      <WorkspaceOverviewMobileRail position="bottom">
+        {mobileRail?.bottom}
+      </WorkspaceOverviewMobileRail>
     </section>
   );
 }

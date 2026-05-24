@@ -53,6 +53,9 @@ export type WorkspaceSectionRenderModel = {
   filters?: ReactNode;
   content: ReactNode;
   aiRail?: ReactNode;
+  frameClassName?: string;
+  contentClassName?: string;
+  contextualAiRailClassName?: string;
   layout?: WorkspaceSectionLayout;
   railPolicy?: WorkspaceSectionRailPolicy;
   headerPolicy?: WorkspaceSectionHeaderPolicy;

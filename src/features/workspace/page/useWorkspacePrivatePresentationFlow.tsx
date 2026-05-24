@@ -6,10 +6,8 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { trackUXEvent } from '@/lib/analytics';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { buildRequestsListProps } from '@/components/requests/requestsListProps';
-import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import { WorkspacePrivateIntro, WorkspacePublicIntro } from '@/features/workspace/intro';
-import { WorkspaceOverviewInsightsPanel, WorkspaceOverviewMain, WorkspacePublicDemandMapPanel } from '@/features/workspace/overview';
-import { useWorkspaceStatisticsModel } from '@/features/workspace/stats';
+import { WorkspaceOverviewMain, useWorkspaceOverviewRail } from '@/features/workspace/overview';
 import { WorkspaceRequestsSectionRail } from '@/features/workspace/ai-rail';
 import {
   buildRequestsWorkspacePrivateBody,
@@ -42,7 +40,6 @@ import {
   resolveWorkspaceExploreSection,
   resolveWorkspaceStandardSection,
 } from '@/features/workspace/page/sections/workspaceSectionAdapters';
-import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
 import { isWorkspaceTab } from '@/features/workspace/state';
@@ -130,65 +127,25 @@ export function useWorkspacePrivatePresentationFlow({
       })()
     );
 
-  const overviewHeroRef = React.useRef<HTMLDivElement | null>(null);
-  const overviewOffersPanelRef = React.useRef<HTMLElement | null>(null);
-  const overviewFocusPanelRef = React.useRef<HTMLElement | null>(null);
-  const overviewMapMinHeight = useSyncedPanelMinHeight({
-    sourceRef: overviewHeroRef,
-    mode: 'sourceHeight',
-    watchKey: isOverviewMode,
-  });
-  const overviewInsightsMinHeight = useSyncedPanelMinHeight({
-    sourceRef: overviewOffersPanelRef,
-    mode: 'sourceHeight',
-    watchKey: isOverviewMode,
-  });
-  const overviewActionsMinHeight = useSyncedPanelMinHeight({
-    sourceRef: overviewFocusPanelRef,
-    mode: 'sourceHeight',
-    watchKey: isOverviewMode,
-  });
-  const overviewStatisticsModel = useWorkspaceStatisticsModel({ locale: branch.locale });
   const publicSummaryView = buildWorkspacePublicSummaryView(data);
   const privateExplore = useExploreSidebar(branch.t);
-
-  const overviewRailTopSlot = isOverviewMode ? (
-    <>
-      <WorkspacePublicDemandMapPanel
-        t={branch.t}
-        locale={branch.locale}
-        cityActivity={publicSummaryView.cityActivity}
-        summary={publicSummaryView.summary}
-        isLoading={publicSummaryView.isMapLoading}
-        isError={publicSummaryView.isMapError}
-        className="workspace-overview__rail-panel--map"
-        onSelectCity={overviewStatisticsModel.setCityId}
-        style={
-          overviewMapMinHeight
-            ? { minHeight: `${overviewMapMinHeight}px`, height: `${overviewMapMinHeight}px` }
-            : undefined
-        }
-      />
-      <WorkspaceOverviewInsightsPanel
-        locale={branch.locale}
-        currentSearch={currentSearch}
-        statisticsModel={overviewStatisticsModel}
-        style={
-          overviewInsightsMinHeight
-            ? { minHeight: `${overviewInsightsMinHeight}px`, height: `${overviewInsightsMinHeight}px` }
-            : undefined
-        }
-      />
-    </>
-  ) : null;
-  const overviewRailBottomSlot = isOverviewMode ? (
-    <WorkspaceContextFocusPanel
-      t={branch.t}
-      locale={branch.locale}
-      activePublicSection={activePublicSection}
-      activeWorkspaceTab={activeWorkspaceTab}
-    />
-  ) : null;
+  const {
+    statisticsModel: overviewStatisticsModel,
+    heroRef: overviewHeroRef,
+    offersPanelRef: overviewOffersPanelRef,
+    focusPanelRef: overviewFocusPanelRef,
+    actionsStyle: overviewActionsStyle,
+    asideTopSlot: overviewAsideTopSlot,
+    mobileRail: overviewMobileRail,
+  } = useWorkspaceOverviewRail({
+    isOverviewMode,
+    t: branch.t,
+    locale: branch.locale,
+    currentSearch,
+    activePublicSection,
+    activeWorkspaceTab,
+    publicSummaryView,
+  });
 
   const onPrimaryActionClick = React.useCallback(
     () => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab }),
@@ -279,9 +236,8 @@ export function useWorkspacePrivatePresentationFlow({
       statisticsModel={overviewStatisticsModel}
       heroRef={overviewHeroRef}
       offersPanelRef={overviewOffersPanelRef}
-      actionsStyle={overviewActionsMinHeight ? { minHeight: `${overviewActionsMinHeight}px` } : undefined}
-      mobileRailTopSlot={overviewRailTopSlot}
-      mobileRailBottomSlot={overviewRailBottomSlot}
+      actionsStyle={overviewActionsStyle}
+      mobileRail={overviewMobileRail}
       primaryAction={primaryAction}
       onPrimaryActionClick={onPrimaryActionClick}
       activeOffersListProps={activeOffersListProps}
@@ -406,7 +362,7 @@ export function useWorkspacePrivatePresentationFlow({
           ? <WorkspaceHelpIntro />
         : resolvedWorkspaceIntroNode,
     workspaceAsideBaseProps,
-    asideTopSlot: overviewRailTopSlot,
+    asideTopSlot: overviewAsideTopSlot,
     preferredRequestsRole,
     overviewDecisionPanelRef: overviewFocusPanelRef,
     sectionModel,

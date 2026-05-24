@@ -59,7 +59,7 @@ vi.mock('@/features/workspace/shell/WorkspaceMobileNavigation', () => ({
   WorkspaceMobileNavigation: () => <div data-testid="workspace-mobile-navigation" />,
 }));
 
-vi.mock('@/features/workspace/shell/WorkspaceContextFocusPanel', () => ({
+vi.mock('@/features/workspace/shell/WorkspaceContextAside', () => ({
   WorkspaceContextAside: ({ children }: { children?: React.ReactNode }) => (
     <aside data-testid="workspace-context-aside">{children}</aside>
   ),

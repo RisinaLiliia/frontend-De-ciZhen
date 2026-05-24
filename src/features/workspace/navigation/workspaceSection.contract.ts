@@ -31,6 +31,9 @@ type WorkspaceSectionRenderModelInput = {
   section: WorkspaceSectionKey;
   content: React.ReactNode;
   aiRail?: React.ReactNode;
+  frameClassName?: string;
+  contentClassName?: string;
+  contextualAiRailClassName?: string;
   layout?: WorkspaceSectionLayout;
   title?: string;
   subtitle?: string;
@@ -141,6 +144,9 @@ export function buildWorkspaceSectionRenderModel({
   section,
   content,
   aiRail,
+  frameClassName,
+  contentClassName,
+  contextualAiRailClassName,
   layout,
   title,
   subtitle,
@@ -163,6 +169,9 @@ export function buildWorkspaceSectionRenderModel({
     filters,
     content: React.createElement('div', { className: bodyClassName }, content),
     aiRail: aiRail ? React.createElement('div', { className: railClassName }, aiRail) : undefined,
+    frameClassName,
+    contentClassName,
+    contextualAiRailClassName,
     layout: layout ?? contract.defaultLayout,
     railPolicy: resolvedRailPolicy,
     headerPolicy: headerPolicy ?? contract.headerPolicy,

@@ -1,5 +1,6 @@
 export { WorkspaceMobileNavigation } from '@/features/workspace/shell/WorkspaceMobileNavigation';
-export { WorkspaceContextAside, WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
+export { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextAside';
+export { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
 export {
   WorkspaceHeaderAccountMenu,
   WorkspaceHeaderNotificationsButton,
