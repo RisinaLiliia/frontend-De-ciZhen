@@ -6,23 +6,18 @@ import { useSearchParams } from 'next/navigation';
 
 import { resolveActiveWorkspaceNavigationSection } from '@/features/workspace/navigation/resolveActiveWorkspaceNavigationSection';
 import { resolveVisibleWorkspaceNavigationItems } from '@/features/workspace/navigation/workspaceNavigation.config';
-import type { WorkspaceNavigationSection } from '@/features/workspace/navigation/workspaceNavigation.config';
-import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import type { WorkspaceTab } from '@/features/workspace/state';
+import type { WorkspaceSidebarProps } from '@/features/workspace/shell/WorkspaceShell.types';
 import { useAuthMe, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 
-type WorkspaceSidebarProps = {
-  activePublicSection: PublicWorkspaceSection | null;
-  activeWorkspaceTab: WorkspaceTab;
-  preferredRequestsRole?: 'customer' | 'provider' | null;
-  activeNavigationSection?: WorkspaceNavigationSection | null;
-};
-
-export function WorkspaceSidebar({
-  activePublicSection,
-  activeWorkspaceTab,
-  activeNavigationSection = null,
-}: WorkspaceSidebarProps) {
+export function WorkspaceSidebar(props: WorkspaceSidebarProps) {
+  const {
+    activePublicSection,
+    activeWorkspaceTab,
+    activeNavigationSection = null,
+    className,
+    onNavigate,
+    variant = 'static',
+  } = props;
   const searchParams = useSearchParams();
   const authStatus = useAuthStatus();
   const authUser = useAuthUser();
@@ -44,10 +39,13 @@ export function WorkspaceSidebar({
   const profileName = authMe?.name?.trim() || authUser?.name?.trim() || null;
   const profileInitial = (profileName?.charAt(0) ?? 'D').toUpperCase();
   const profileRole = authUser?.role === 'provider' ? 'Provider' : 'Client';
+  const rootClassName = ['workspace-sidebar', variant === 'drawer' ? 'workspace-sidebar--drawer' : '', className ?? '']
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <aside className="workspace-sidebar" aria-label="Workspace navigation">
-      <Link href="/" prefetch={false} className="workspace-sidebar__brand brand">
+    <aside className={rootClassName} aria-label="Workspace navigation">
+      <Link href="/" prefetch={false} className="workspace-sidebar__brand brand" onClick={onNavigate}>
         <Image src="/logo.svg" alt="De’ciZhen" className="brand__logo" width={26} height={26} />
         <span className="brand__text truncate">De’ciZhen</span>
       </Link>
@@ -66,6 +64,7 @@ export function WorkspaceSidebar({
                   ? 'workspace-sidebar__item workspace-sidebar__item--active'
                   : 'workspace-sidebar__item'
               }
+              onClick={onNavigate}
             >
               <Icon aria-hidden="true" size={17} strokeWidth={1.8} />
               <span>{item.label}</span>
@@ -91,6 +90,7 @@ export function WorkspaceSidebar({
                   ? 'workspace-sidebar__item workspace-sidebar__item--active'
                   : 'workspace-sidebar__item'
               }
+              onClick={onNavigate}
             >
               <Icon aria-hidden="true" size={17} strokeWidth={1.8} />
               <span>{item.label}</span>

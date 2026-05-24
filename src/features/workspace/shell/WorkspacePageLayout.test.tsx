@@ -14,6 +14,7 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/features/workspace/shared', () => ({
   WorkspaceTopProvidersAside: () => <div data-testid="workspace-top-providers-aside" />,
   useIsDesktop: () => true,
+  useIsWideDesktop: () => true,
 }));
 
 vi.mock('@/features/workspace/explore', () => ({

@@ -10,8 +10,15 @@
 
 @layer components {
   .workspace-route-shell {
-    --shell-topbar-height: 0px;
+    --shell-topbar-height: 72px;
     --shell-topbar-offset: 0px;
+    --shell-mobile-nav-height: 0px;
     min-height: 100dvh;
+  }
+
+  @media (max-width: 767px) {
+    .workspace-route-shell {
+      --shell-topbar-height: 64px;
+    }
   }
 }

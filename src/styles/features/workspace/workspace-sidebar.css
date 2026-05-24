@@ -13,6 +13,14 @@
     color: var(--color-text);
   }
 
+  .workspace-sidebar--drawer {
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    padding: 0;
+    background: transparent;
+  }
+
   .workspace-sidebar__brand {
     height: 40px;
     display: flex;
@@ -211,9 +219,13 @@
     color: var(--color-text-muted);
   }
 
-  @media (max-width: 1023px) {
+  @media (max-width: 1279px) {
     .workspace-sidebar {
       display: none;
+    }
+
+    .workspace-sidebar--drawer {
+      display: flex;
     }
   }
 }

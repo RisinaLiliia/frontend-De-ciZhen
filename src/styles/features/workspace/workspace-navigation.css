@@ -86,9 +86,79 @@
     color: color-mix(in oklab, var(--color-primary) 72%, var(--color-text-muted) 28%);
   }
 
+  .workspace-navigation-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 41;
+    pointer-events: none;
+  }
+
+  .workspace-navigation-drawer__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: color-mix(in oklab, var(--color-ink) 18%, transparent);
+    pointer-events: auto;
+  }
+
+  .workspace-navigation-drawer__surface {
+    position: relative;
+    z-index: 1;
+    width: min(320px, calc(100vw - 24px));
+    height: 100dvh;
+    padding:
+      calc(env(safe-area-inset-top) + var(--space-5))
+      var(--space-4)
+      calc(env(safe-area-inset-bottom) + var(--space-4));
+    border-right: 1px solid var(--color-border-soft);
+    background: color-mix(in oklab, var(--color-surface) 94%, var(--color-surface-muted) 6%);
+    box-shadow: 0 24px 48px color-mix(in oklab, var(--color-ink) 16%, transparent);
+    pointer-events: auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .workspace-navigation-drawer__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .workspace-navigation-drawer__title {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .workspace-navigation-drawer__close {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface);
+    color: var(--color-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+  }
+
   @media (max-width: 1023px) {
     .workspace-mode-nav {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .workspace-navigation-drawer {
+      display: none;
     }
   }
 
@@ -116,11 +186,21 @@
     .workspace-mode-nav__description {
       display: none;
     }
+
+    .workspace-navigation-drawer__surface {
+      width: min(360px, calc(100vw - 12px));
+      padding-inline: var(--space-3);
+    }
   }
 
   @media (max-width: 420px) {
     .workspace-mode-nav {
       grid-template-columns: 1fr;
+    }
+
+    .workspace-navigation-drawer__surface {
+      width: calc(100vw - 8px);
+      padding-inline: 12px;
     }
   }
 }

@@ -20,6 +20,9 @@ export type WorkspaceResponsiveContextProps = {
 export type WorkspaceSidebarProps = WorkspaceResponsiveContextProps & {
   t: WorkspaceTranslator;
   activeNavigationSection?: WorkspaceNavigationSection | null;
+  className?: string;
+  onNavigate?: () => void;
+  variant?: 'static' | 'drawer';
 };
 
 export type WorkspaceBottomNavProps = WorkspaceResponsiveContextProps;

@@ -40,6 +40,8 @@ describe('WorkspaceSidebar', () => {
 
     render(
       <WorkspaceSidebar
+        t={(key: string) => key}
+        locale="de"
         activePublicSection="requests"
         activeWorkspaceTab="my-requests"
       />,
@@ -58,6 +60,8 @@ describe('WorkspaceSidebar', () => {
 
     render(
       <WorkspaceSidebar
+        t={(key: string) => key}
+        locale="de"
         activePublicSection={null}
         activeWorkspaceTab="my-requests"
         activeNavigationSection="chat"

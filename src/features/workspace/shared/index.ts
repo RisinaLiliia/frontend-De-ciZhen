@@ -15,7 +15,7 @@ export { WorkspaceSectionErrorBoundary } from './WorkspaceSectionErrorBoundary';
 export { WorkspaceSummaryGrid } from './WorkspaceSummaryGrid';
 export { WorkspaceTopProvidersAside } from './WorkspaceTopProvidersAside';
 export { WorkspaceViewToggle } from './WorkspaceViewToggle';
-export { useIsDesktop } from './useIsDesktop';
+export { useIsDesktop, useIsWideDesktop } from './useIsDesktop';
 export { useWorkspaceFormatters } from './useWorkspaceFormatters';
 export {
   ALL_OPTION_KEY,

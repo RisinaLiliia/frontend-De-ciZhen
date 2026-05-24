@@ -2,14 +2,13 @@
 
 import * as React from 'react';
 
-export function useIsDesktop() {
-  const [isDesktop, setIsDesktop] = React.useState(false);
+function useMediaMatch(query: string) {
+  const [matches, setMatches] = React.useState(false);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
-    // Desktop breakpoint matches the workspace layout threshold.
-    const media = window.matchMedia('(min-width: 1024px)');
-    const update = () => setIsDesktop(media.matches);
+    const media = window.matchMedia(query);
+    const update = () => setMatches(media.matches);
     update();
 
     if (typeof media.addEventListener === 'function') {
@@ -19,7 +18,17 @@ export function useIsDesktop() {
 
     media.addListener(update);
     return () => media.removeListener(update);
-  }, []);
+  }, [query]);
 
-  return isDesktop;
+  return matches;
+}
+
+export function useIsDesktop() {
+  // Desktop breakpoint matches the workspace layout threshold.
+  return useMediaMatch('(min-width: 1024px)');
+}
+
+export function useIsWideDesktop() {
+  // Wide desktop keeps the sidebar pinned without squeezing content.
+  return useMediaMatch('(min-width: 1280px)');
 }

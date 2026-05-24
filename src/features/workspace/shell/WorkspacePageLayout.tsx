@@ -6,7 +6,11 @@ import {
   resolveWorkspacePublicIntroDecorations,
   type WorkspaceSectionKey,
 } from '@/features/workspace/navigation/workspaceSection.contract';
-import { WorkspaceTopProvidersAside, useIsDesktop } from '@/features/workspace/shared';
+import {
+  WorkspaceTopProvidersAside,
+  useIsDesktop,
+  useIsWideDesktop,
+} from '@/features/workspace/shared';
 import {
   buildWorkspaceExploreSectionModel,
   buildWorkspaceOverviewSectionModel,
@@ -125,6 +129,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isDesktop = useIsDesktop();
+  const isWideDesktop = useIsWideDesktop();
   const isOverviewPrivateMode =
     !isWorkspacePublicSection &&
     isWorkspaceOverviewMode({
@@ -148,8 +153,10 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     [activePublicSection, intro, isDesktop],
   );
 
-  const workspaceSidebar = isDesktop ? (
+  const workspaceSidebar = isDesktop && isWideDesktop ? (
     <WorkspaceSidebar
+      t={t}
+      locale={locale}
       activePublicSection={activePublicSection}
       activeWorkspaceTab={activeWorkspaceTab}
       preferredRequestsRole={preferredRequestsRole}
@@ -157,8 +164,8 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   ) : null;
   const workspaceTopBar = (
     <WorkspaceTopBar
-      activePublicSection={activePublicSection}
-      activeWorkspaceTab={activeWorkspaceTab}
+      showNavigationToggle={!isWideDesktop}
+      compactUtility={!isWideDesktop}
     />
   );
 
@@ -261,8 +268,8 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   // Responsive breakpoint contract:
   // mobile 0-767px, tablet 768-1023px, desktop 1024px+
   // useIsDesktop returns true for desktop widths only
-  const shouldRenderMobileNav = !isDesktop;
-  const workspaceBottomNav = shouldRenderMobileNav ? (
+  const shouldRenderOverlayNav = !isWideDesktop;
+  const workspaceBottomNav = shouldRenderOverlayNav ? (
     <WorkspaceBottomNav
       locale={locale}
       activePublicSection={activePublicSection}
