@@ -164,9 +164,9 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       preferredRequestsRole={preferredRequestsRole}
     />
   ) : null;
-  const workspaceTopBar = (
+  const workspaceTopBar = isMobile ? null : (
     <WorkspaceTopBar
-      showNavigationToggle={!isWideDesktop && !isMobile}
+      showNavigationToggle={!isWideDesktop}
       compactUtility={!isWideDesktop}
     />
   );

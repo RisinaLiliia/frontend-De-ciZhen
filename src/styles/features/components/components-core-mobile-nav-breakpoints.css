@@ -24,12 +24,12 @@
   }
 
   @media (max-width: 420px) {
-    .topbar-nav--mobile {
+    .workspace-mobile-dock {
       gap: 4px;
       padding-inline: 8px;
     }
 
-    .topbar-nav__mobile-item {
+    .workspace-mobile-dock__item {
       border-radius: 12px;
     }
 

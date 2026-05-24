@@ -177,6 +177,22 @@
     font-size: 13px;
   }
 
+  .workspace-account-menu__avatar--dock {
+    width: 40px;
+    height: 40px;
+    font-size: 13px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border-soft);
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      filter var(--transition-fast);
+  }
+
   .workspace-environment__primary-cta {
     display: inline-flex;
     align-items: center;
@@ -230,13 +246,6 @@
     gap: clamp(14px, 2vw, 24px);
   }
 
-  .workspace-environment__hero-aside {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-2);
-    flex: 0 0 auto;
-  }
-
   .workspace-environment__copy {
     flex: 1 1 auto;
     min-width: 0;
@@ -275,11 +284,19 @@
   .workspace-context-brief__description,
   .workspace-context-rail__description {
     margin: 0;
-    max-width: 72ch;
     font-size: var(--workspace-environment-body-size);
     line-height: var(--workspace-environment-body-line-height);
     color: var(--color-text-muted);
     text-wrap: pretty;
+  }
+
+  .workspace-environment__description {
+    max-width: 100%;
+  }
+
+  .workspace-context-brief__description,
+  .workspace-context-rail__description {
+    max-width: 72ch;
   }
 
   .workspace-context-brief__badge {
@@ -306,12 +323,16 @@
     flex-wrap: nowrap;
   }
 
-  .workspace-environment__auth-actions--hero {
-    display: flex;
-  }
-
   .workspace-account-menu {
     z-index: 70;
+  }
+
+  .workspace-account-menu--mobile-dock .dc-popover-panel {
+    left: 50%;
+    top: auto;
+    bottom: calc(100% + var(--space-2));
+    margin-top: 0;
+    transform: translateX(-50%);
   }
 
   .workspace-account-menu .dc-popover-panel {
@@ -515,11 +536,6 @@
       display: none;
     }
 
-    .workspace-environment__hero-aside {
-      justify-content: space-between;
-      width: 100%;
-    }
-
     .workspace-environment__copy {
       max-width: 100%;
     }
@@ -547,14 +563,11 @@
     }
 
     .workspace-environment__description {
-      max-width: min(68ch, 100%);
+      max-width: 96ch;
       white-space: normal;
       overflow: visible;
       text-overflow: clip;
     }
 
-    .workspace-environment__auth-actions--hero {
-      display: none;
-    }
   }
 }

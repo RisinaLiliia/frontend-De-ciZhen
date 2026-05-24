@@ -1,18 +1,43 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { Menu } from 'lucide-react';
+import { Bell, Menu } from 'lucide-react';
 
+import { WorkspaceMobileDock } from '@/components/layout/WorkspaceMobileDock';
+import type { WorkspaceMobileDockItem } from '@/components/layout/WorkspaceMobileDock';
+import { IconChat, IconPlus, IconUser } from '@/components/ui/icons/icons';
 import { resolveActiveWorkspaceNavigationSection } from '@/features/workspace/navigation/resolveActiveWorkspaceNavigationSection';
-import { resolveVisibleWorkspaceNavigationItems } from '@/features/workspace/navigation/workspaceNavigation.config';
+import { WorkspaceHeaderAccountMenu } from '@/features/workspace/shell/WorkspaceHeaderAccountMenu';
 import type { WorkspaceBottomNavProps } from '@/features/workspace/shell/WorkspaceShell.types';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 import { useWorkspaceMobileSectionSheet } from '@/features/workspace/shell/useWorkspaceMobileSectionSheet';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
-import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
+import { useAuthStatus } from '@/hooks/useAuthSnapshot';
+
+const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
+const AUTH_PROFILE_FALLBACK_URL = '/profile';
+
+function getMobileDockCopy(locale: string) {
+  if (locale === 'en') {
+    return {
+      dashboard: 'Dashboard',
+      create: 'Create',
+      notifications: 'Alerts',
+      profile: 'Profile',
+      unavailable: 'Coming soon',
+    };
+  }
+
+  return {
+    dashboard: 'Dashboard',
+    create: 'Anfrage',
+    notifications: 'Hinweise',
+    profile: 'Profil',
+    unavailable: 'Bald verfugbar',
+  };
+}
 
 export function WorkspaceBottomNav({
   mode,
@@ -27,7 +52,7 @@ export function WorkspaceBottomNav({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const authStatus = useAuthStatus();
-  const authUser = useAuthUser();
+  const copy = getMobileDockCopy(locale);
   const routeSignature = `${pathname}?${searchParams.toString()}`;
   const previousRouteRef = React.useRef(routeSignature);
   const activeSection = resolveActiveWorkspaceNavigationSection({
@@ -38,14 +63,63 @@ export function WorkspaceBottomNav({
     requestsRole: searchParams.get('role'),
     requestsState: searchParams.get('state'),
   });
-  const visibleNavigationItems = resolveVisibleWorkspaceNavigationItems({
-    isAuthed: authStatus === 'authenticated',
-    role: authUser?.role === 'provider' ? 'provider' : authUser?.role === 'client' ? 'client' : null,
-  });
-  const preferredSections = ['overview', 'requests', 'stats', 'profile'] as const;
-  const dockItems = preferredSections
-    .map((section) => visibleNavigationItems.find((item) => item.section === section))
-    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+  const isAuthenticated = authStatus === 'authenticated';
+  const chatHref = isAuthenticated ? '/workspace?section=chat' : LOGIN_CHAT_URL;
+  const profileHref = isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
+  const dockItems: WorkspaceMobileDockItem[] = [
+    {
+      key: 'dashboard',
+      label: copy.dashboard,
+      icon: <Menu size={18} strokeWidth={1.9} />,
+      onClick: () => setOpen(true),
+      active: open,
+    },
+    {
+      key: 'chat',
+      label: t(I18N_KEYS.requestsPage.navChat),
+      icon: <IconChat />,
+      href: chatHref,
+      active: activeSection === 'chat',
+    },
+    {
+      key: 'request-create',
+      label: copy.create,
+      icon: <IconPlus />,
+      href: '/request/create',
+      variant: 'primary' as const,
+      active: pathname === '/request/create',
+    },
+    {
+      key: 'notifications',
+      label: copy.notifications,
+      icon: <Bell size={18} strokeWidth={1.9} />,
+      title: copy.unavailable,
+    },
+  ];
+
+  if (isAuthenticated) {
+    dockItems.push({
+      key: 'profile-menu',
+      label: copy.profile,
+      icon: <IconUser />,
+      active: activeSection === 'profile',
+      render: (
+        <WorkspaceHeaderAccountMenu
+          triggerVariant="mobileDock"
+          dockLabel={copy.profile}
+          active={activeSection === 'profile'}
+        />
+      ),
+    });
+  } else {
+    dockItems.push({
+      key: 'profile',
+      label: copy.profile,
+      icon: <IconUser />,
+      href: profileHref,
+      active: activeSection === 'profile',
+    });
+  }
 
   React.useEffect(() => {
     if (previousRouteRef.current !== routeSignature && open) {
@@ -92,36 +166,7 @@ export function WorkspaceBottomNav({
 
   return (
     <>
-      <nav className="workspace-bottom-nav" aria-label={t(I18N_KEYS.auth.navigationLabel)}>
-        {dockItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = item.section === activeSection;
-
-          return (
-            <Link
-              key={item.section}
-              href={item.href}
-              className={['workspace-bottom-nav__item', isActive ? 'is-active' : ''].filter(Boolean).join(' ')}
-            >
-              <span className="workspace-bottom-nav__icon" aria-hidden="true">
-                <Icon size={18} strokeWidth={1.9} />
-              </span>
-              <span className="workspace-bottom-nav__label">{item.label}</span>
-            </Link>
-          );
-        })}
-        <button
-          type="button"
-          className={['workspace-bottom-nav__item', open ? 'is-active' : ''].filter(Boolean).join(' ')}
-          aria-label={t(I18N_KEYS.auth.navigationLabel)}
-          onClick={() => setOpen(true)}
-        >
-          <span className="workspace-bottom-nav__icon" aria-hidden="true">
-            <Menu size={18} strokeWidth={1.9} />
-          </span>
-          <span className="workspace-bottom-nav__label">Mehr</span>
-        </button>
-      </nav>
+      <WorkspaceMobileDock items={dockItems} ariaLabel={t(I18N_KEYS.auth.navigationLabel)} />
 
       {open ? (
         <div className="workspace-navigation-drawer" role="dialog" aria-modal="true" aria-labelledby={titleId}>

@@ -1,9 +1,10 @@
 'use client';
 
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { IconBriefcase, IconChat, IconPlus, IconUser } from '@/components/ui/icons/icons';
+import { WorkspaceMobileDock } from '@/components/layout/WorkspaceMobileDock';
 import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { useSlidingIndicator } from '@/hooks/useSlidingIndicator';
 import { useT } from '@/lib/i18n/useT';
@@ -23,20 +24,16 @@ type TopNavItem = {
 const isPathPrefix = (pathname: string, prefix: string) =>
   pathname === prefix || pathname.startsWith(`${prefix}/`);
 
-const DESKTOP_WORKSPACE_PREVIEW_URL = '/workspace?section=overview';
-const DESKTOP_AUTH_WORKSPACE_URL = '/workspace?section=overview';
-const MOBILE_WORKSPACE_PREVIEW_URL = '/workspace?section=overview';
-const MOBILE_AUTH_WORKSPACE_URL = '/workspace?section=overview';
+const WORKSPACE_PREVIEW_URL = '/workspace?section=overview';
+const AUTH_WORKSPACE_URL = '/workspace?section=overview';
 const REQUEST_CREATE_URL = '/request/create';
 const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
 const AUTH_PROFILE_FALLBACK_URL = '/profile';
 
-function useTopNavItems(isAuthenticated: boolean, profileHref: string, mobile: boolean): TopNavItem[] {
+function useTopNavItems(isAuthenticated: boolean, profileHref: string): TopNavItem[] {
   const t = useT();
 
-  const workspaceHref = mobile
-    ? (isAuthenticated ? MOBILE_AUTH_WORKSPACE_URL : MOBILE_WORKSPACE_PREVIEW_URL)
-    : (isAuthenticated ? DESKTOP_AUTH_WORKSPACE_URL : DESKTOP_WORKSPACE_PREVIEW_URL);
+  const workspaceHref = isAuthenticated ? AUTH_WORKSPACE_URL : WORKSPACE_PREVIEW_URL;
   const chatHref = isAuthenticated ? '/chat' : LOGIN_CHAT_URL;
 
   const items: TopNavItem[] = [
@@ -84,11 +81,9 @@ function useTopNavItems(isAuthenticated: boolean, profileHref: string, mobile: b
 function WorkspacePrimaryNav({
   className,
   itemClassName,
-  mobile = false,
 }: {
   className: string;
   itemClassName: string;
-  mobile?: boolean;
 }) {
   const status = useAuthStatus();
   const pathname = usePathname() ?? '/';
@@ -100,28 +95,20 @@ function WorkspacePrimaryNav({
     isAuthenticated && typeof user?.id === 'string' && user.id.trim().length > 0
       ? `/profile/${encodeURIComponent(user.id)}`
       : AUTH_PROFILE_FALLBACK_URL;
-  const items = useTopNavItems(isAuthenticated, profileHref, mobile);
-  const visibleItems = mobile ? items.filter((item) => item.key !== 'profile') : items;
+  const items = useTopNavItems(isAuthenticated, profileHref);
   const params = new URLSearchParams(searchParams?.toString());
-  const navStyle = mobile
-    ? ({ '--topbar-mobile-columns': String(visibleItems.length) } as CSSProperties)
-    : undefined;
-  const activeItemKey = visibleItems.find((item) => item.isActive(pathname, params))?.key ?? '';
+  const activeItemKey = items.find((item) => item.isActive(pathname, params))?.key ?? '';
   const { containerRef, indicatorStyle } = useSlidingIndicator<HTMLElement>({
     activeSelector: '.topbar-nav__item.is-active',
-    enabled: !mobile,
-    watchKey: `${pathname}|${activeItemKey}|${visibleItems.length}`,
+    enabled: true,
+    watchKey: `${pathname}|${activeItemKey}|${items.length}`,
   });
 
   return (
-    <nav className={className} aria-label={t(I18N_KEYS.auth.navigationLabel)} style={navStyle} ref={mobile ? undefined : containerRef}>
-      {!mobile && indicatorStyle ? <span className="topbar-nav__indicator" aria-hidden="true" style={indicatorStyle} /> : null}
-      {visibleItems.map((item) => {
+    <nav className={className} aria-label={t(I18N_KEYS.auth.navigationLabel)} ref={containerRef}>
+      {indicatorStyle ? <span className="topbar-nav__indicator" aria-hidden="true" style={indicatorStyle} /> : null}
+      {items.map((item) => {
         const active = item.isActive(pathname, params);
-        const shouldOpenMobileWorkspaceSheet =
-          mobile
-          && item.key === 'workspace'
-          && isPathPrefix(pathname, '/workspace');
         const iconClassName = item.iconPosition === 'trailing' ? 'topbar-nav__icon topbar-nav__icon--trailing' : 'topbar-nav__icon';
         const itemClasses = [
           itemClassName,
@@ -139,12 +126,6 @@ function WorkspacePrimaryNav({
             aria-current={active ? 'page' : undefined}
             aria-label={item.label}
             className={itemClasses}
-            onClick={(event) => {
-              if (shouldOpenMobileWorkspaceSheet) {
-                event.preventDefault();
-                window.dispatchEvent(new Event(WORKSPACE_MOBILE_NAV_OPEN_EVENT));
-              }
-            }}
           >
             <span className={iconClassName} aria-hidden="true">
               {item.icon}
@@ -167,11 +148,35 @@ export function WorkspacePrimaryNavDesktop() {
 }
 
 export function WorkspacePrimaryNavMobile() {
+  const status = useAuthStatus();
+  const pathname = usePathname() ?? '/';
+  const searchParams = useSearchParams();
+  const t = useT();
+  const user = useAuthUser();
+  const isAuthenticated = status === 'authenticated';
+  const profileHref =
+    isAuthenticated && typeof user?.id === 'string' && user.id.trim().length > 0
+      ? `/profile/${encodeURIComponent(user.id)}`
+      : AUTH_PROFILE_FALLBACK_URL;
+  const items = useTopNavItems(isAuthenticated, profileHref)
+    .filter((item) => item.key !== 'profile')
+    .map((item) => ({
+      key: item.key,
+      label: item.label,
+      icon: item.icon,
+      href: item.href,
+      active: item.isActive(pathname, new URLSearchParams(searchParams?.toString())),
+      onClick:
+        item.key === 'workspace' && isPathPrefix(pathname, '/workspace')
+          ? () => window.dispatchEvent(new Event(WORKSPACE_MOBILE_NAV_OPEN_EVENT))
+          : undefined,
+      variant: item.variant === 'create' ? 'primary' as const : 'default' as const,
+    }));
+
   return (
-    <WorkspacePrimaryNav
-      className="topbar-nav topbar-nav--mobile"
-      itemClassName="topbar-nav__mobile-item"
-      mobile
+    <WorkspaceMobileDock
+      items={items}
+      ariaLabel={t(I18N_KEYS.auth.navigationLabel)}
     />
   );
 }

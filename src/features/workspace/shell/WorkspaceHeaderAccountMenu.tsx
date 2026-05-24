@@ -37,7 +37,17 @@ function getAccountMenuCopy(locale: string) {
   };
 }
 
-export function WorkspaceHeaderAccountMenu({ className }: { className?: string } = {}) {
+export function WorkspaceHeaderAccountMenu({
+  className,
+  triggerVariant = 'topbar',
+  dockLabel,
+  active = false,
+}: {
+  className?: string;
+  triggerVariant?: 'topbar' | 'mobileDock';
+  dockLabel?: string;
+  active?: boolean;
+} = {}) {
   const t = useT();
   const { locale } = useI18n();
   const router = useRouter();
@@ -71,20 +81,34 @@ export function WorkspaceHeaderAccountMenu({ className }: { className?: string }
     return null;
   }
 
+  const isMobileDockTrigger = triggerVariant === 'mobileDock';
+  const trigger = isMobileDockTrigger ? (
+    <span className={['workspace-mobile-dock__profile-trigger', active || open ? 'is-active' : ''].filter(Boolean).join(' ')}>
+      <span className="workspace-account-menu__avatar workspace-account-menu__avatar--dock" aria-hidden="true">
+        {profileInitial}
+      </span>
+      {dockLabel ? <span className="workspace-mobile-dock__label workspace-mobile-dock__profile-label">{dockLabel}</span> : null}
+    </span>
+  ) : (
+    <span className="workspace-account-menu__trigger-surface">
+      <span className="workspace-account-menu__avatar" aria-hidden="true">
+        {profileInitial}
+      </span>
+      <ChevronDown size={16} strokeWidth={1.9} aria-hidden="true" />
+    </span>
+  );
+
   return (
     <Popover
       open={open}
       onOpenChange={setOpen}
       align="end"
-      className={['workspace-account-menu', className].filter(Boolean).join(' ')}
-      trigger={(
-        <span className="workspace-account-menu__trigger-surface">
-          <span className="workspace-account-menu__avatar" aria-hidden="true">
-            {profileInitial}
-          </span>
-          <ChevronDown size={16} strokeWidth={1.9} aria-hidden="true" />
-        </span>
-      )}
+      className={[
+        'workspace-account-menu',
+        isMobileDockTrigger ? 'workspace-account-menu--mobile-dock' : '',
+        className,
+      ].filter(Boolean).join(' ')}
+      trigger={trigger}
     >
       <div className="workspace-account-menu__panel">
         <div className="workspace-account-menu__summary">

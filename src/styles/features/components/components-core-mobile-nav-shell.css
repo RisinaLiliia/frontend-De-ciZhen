@@ -2,7 +2,7 @@
 
 @layer components {
   @media (min-width: 768px) {
-    .topbar-nav--mobile {
+    .workspace-mobile-dock {
       display: none;
     }
   }

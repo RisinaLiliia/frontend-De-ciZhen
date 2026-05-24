@@ -33,15 +33,18 @@ vi.mock('@/features/workspace/shell/WorkspaceShell', () => ({
     children,
     sidebar,
     bottomNav,
+    topBar,
   }: {
     children: React.ReactNode;
     sidebar?: React.ReactNode;
     bottomNav?: React.ReactNode;
+    topBar?: React.ReactNode;
   }) => (
     <div
       data-testid="workspace-shell"
       data-has-sidebar={sidebar ? 'true' : 'false'}
       data-has-bottom-nav={bottomNav ? 'true' : 'false'}
+      data-has-topbar={topBar ? 'true' : 'false'}
     >
       {children}
     </div>
@@ -105,6 +108,7 @@ describe('WorkspacePageLayout', () => {
     const shell = screen.getByTestId('workspace-shell');
     expect(shell.getAttribute('data-has-sidebar')).toBe('true');
     expect(shell.getAttribute('data-has-bottom-nav')).toBe('false');
+    expect(shell.getAttribute('data-has-topbar')).toBe('true');
     expect(screen.getByTestId('workspace-explore-section')).toBeTruthy();
   });
 
@@ -151,5 +155,6 @@ describe('WorkspacePageLayout', () => {
     expect(shell).toBeTruthy();
     expect(shell?.getAttribute('data-has-sidebar')).toBe('false');
     expect(shell?.getAttribute('data-has-bottom-nav')).toBe('true');
+    expect(shell?.getAttribute('data-has-topbar')).toBe('false');
   });
 });
