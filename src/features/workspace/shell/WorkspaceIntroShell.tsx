@@ -3,7 +3,6 @@
 type WorkspaceIntroShellProps = {
   navHeaderSlot?: React.ReactNode;
   header: React.ReactNode;
-  mobileContext?: React.ReactNode;
   leftColumnSlot?: React.ReactNode;
   children?: React.ReactNode;
 };
@@ -11,7 +10,6 @@ type WorkspaceIntroShellProps = {
 export function WorkspaceIntroShell({
   navHeaderSlot,
   header,
-  mobileContext,
   leftColumnSlot,
   children,
 }: WorkspaceIntroShellProps) {
@@ -20,7 +18,6 @@ export function WorkspaceIntroShell({
       <div className="stack-md">
         {navHeaderSlot ?? null}
         {header}
-        {mobileContext ?? null}
         {leftColumnSlot ?? null}
         {children ?? null}
       </div>

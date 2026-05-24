@@ -8,7 +8,7 @@ export { WorkspaceHeaderAuthActions } from '@/features/workspace/shell/Workspace
 export { WorkspaceHeaderUtilityBar } from '@/features/workspace/shell/WorkspaceHeaderUtilityBar';
 export { WorkspaceModeNav } from '@/features/workspace/shell/WorkspaceModeNav';
 export { WorkspacePageFrame } from '@/features/workspace/shell/WorkspacePageFrame';
-export { WorkspaceModeHeader, WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceModeHeader';
+export { WorkspaceModeHeader } from '@/features/workspace/shell/WorkspaceModeHeader';
 export { WorkspacePageLayout } from '@/features/workspace/shell/WorkspacePageLayout';
 export { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
 export { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';

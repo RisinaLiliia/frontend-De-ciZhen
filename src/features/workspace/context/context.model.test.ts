@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import {
   resolveWorkspaceViewerModeToggleItems,
   shouldShowWorkspaceProfileViewerModeControl,
-} from './workspaceContext.model';
+} from './context.model';
 
-describe('workspaceContext.model', () => {
+describe('context.model', () => {
   it('keeps canonical viewer-mode mapping for the regular toggle', () => {
     expect(
       resolveWorkspaceViewerModeToggleItems({

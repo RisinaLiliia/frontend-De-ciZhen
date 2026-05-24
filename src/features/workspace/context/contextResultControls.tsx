@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { IconRotateCcw } from '@/components/ui/icons/icons';
 import { WorkspaceButton, WorkspaceFilterSelect } from '@/features/workspace/shared';
-import type { WorkspaceContextAction, WorkspaceContextSelectControl } from './workspaceContext.types';
+import type { WorkspaceContextAction, WorkspaceContextSelectControl } from './context.types';
 
 type Props = {
   mobile: boolean;

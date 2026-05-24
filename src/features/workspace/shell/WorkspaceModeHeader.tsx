@@ -2,14 +2,8 @@
 
 import { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
 import { useWorkspaceSectionHeaderCopy } from '@/features/workspace/shell/useWorkspaceSectionHeaderCopy';
-import {
-  WorkspaceContextPanel,
-  buildContextControlsProps,
-  useWorkspaceContext,
-} from '@/features/workspace/context';
 import { type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { useT } from '@/lib/i18n/useT';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceTab } from '@/features/workspace/state';
 
@@ -41,38 +35,5 @@ export function WorkspaceModeHeader({
       title={header.title}
       description={header.description}
     />
-  );
-}
-
-export function WorkspaceMobileContextSection({
-  locale,
-  activePublicSection,
-  activeWorkspaceTab,
-  preferredRequestsRole = null,
-}: {
-  locale: Locale;
-  activePublicSection: PublicWorkspaceSection | null;
-  activeWorkspaceTab: WorkspaceTab;
-  preferredRequestsRole?: 'customer' | 'provider' | null;
-}) {
-  const t = useT();
-  const model = useWorkspaceContext({
-    t,
-    locale,
-    activePublicSection,
-    activeWorkspaceTab,
-    preferredRequestsRole,
-  });
-  const sharedContextControlsProps = buildContextControlsProps({ model, t, locale });
-
-  return (
-    <div className="workspace-mobile-context-section">
-      <WorkspaceContextPanel
-        {...sharedContextControlsProps}
-        surface="shell"
-        mobileBehavior="inline"
-        className="workspace-mobile-context-section__controls"
-      />
-    </div>
   );
 }

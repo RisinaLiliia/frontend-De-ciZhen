@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  WorkspaceMobileContextSection,
   WorkspaceModeHeader,
 } from '@/features/workspace/shell/WorkspaceModeHeader';
 import { WorkspaceIntroShell } from '@/features/workspace/shell/WorkspaceIntroShell';
@@ -35,14 +34,6 @@ export function WorkspacePrivateIntro({
       header={(
         <WorkspaceModeHeader
           t={t}
-          locale={locale}
-          activePublicSection={activePublicSection}
-          activeWorkspaceTab={activeWorkspaceTab}
-          preferredRequestsRole={preferredRequestsRole}
-        />
-      )}
-      mobileContext={(
-        <WorkspaceMobileContextSection
           locale={locale}
           activePublicSection={activePublicSection}
           activeWorkspaceTab={activeWorkspaceTab}

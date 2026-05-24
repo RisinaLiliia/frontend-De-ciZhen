@@ -8,9 +8,9 @@ import {
   getWorkspaceScopeSwitchLabels,
   getWorkspaceStateAriaLabel,
   getWorkspaceStateToggleItems,
-} from './workspaceContext.copy';
+} from './context.copy';
 
-describe('workspaceContext.copy', () => {
+describe('context.copy', () => {
   it('builds localized private sort options', () => {
     expect(buildWorkspacePrivateSortOptions('de')).toEqual([
       { value: 'activity', label: 'Neueste Aktivität' },

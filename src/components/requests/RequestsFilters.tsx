@@ -4,7 +4,7 @@
 import { RequestsFilterControlsBody } from '@/components/requests/RequestsFilterControlsBody';
 import { RequestsMobileFilterToolbar } from '@/components/requests/RequestsMobileFilterToolbar';
 import { RequestsResultsSummary } from '@/components/requests/RequestsResultsSummary';
-import { WorkspaceContextMobileSheet } from '@/features/workspace/context/WorkspaceContextMobileSheet';
+import { WorkspaceContextMobileSheet } from '@/features/workspace/context/contextMobileSheet';
 import { useRequestsFilterControls } from '@/components/requests/useRequestsFilterControls';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { buildRequestsFilterControlsViewModel } from './requestsFilterControls.model';

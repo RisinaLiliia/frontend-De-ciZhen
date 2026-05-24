@@ -3,13 +3,13 @@
 import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { WorkspaceFilterBar, WorkspaceFilterSelect } from '@/features/workspace/shared';
 import type { Locale } from '@/lib/i18n/t';
-import { WorkspaceContextMobileSheet } from './WorkspaceContextMobileSheet';
+import { WorkspaceContextMobileSheet } from './contextMobileSheet';
 import type {
   WorkspaceContextCityControl,
   WorkspaceContextRangeControl,
   WorkspaceContextSelectControl,
-} from './workspaceContext.types';
-import { buildRangeSelectOptions, resolveRangeValue } from './contextRange.model';
+} from './context.types';
+import { buildRangeSelectOptions, resolveRangeValue } from './range.model';
 
 type Props = {
   locale: Locale;

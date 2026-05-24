@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { WorkspaceChipToggleGroup, WorkspaceFilterSelect } from '@/features/workspace/shared';
-import type { WorkspaceContextExtraFilter } from './workspaceContext.types';
+import type { WorkspaceContextExtraFilter } from './context.types';
 
 type Props = {
   inlineControl?: React.ReactNode;

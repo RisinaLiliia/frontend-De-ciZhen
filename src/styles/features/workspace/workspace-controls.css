@@ -6,10 +6,14 @@
     --workspace-context-control-height: 38px;
     --workspace-context-control-radius: 11px;
     --workspace-context-control-padding-inline: 13px;
-    --workspace-context-control-bg: color-mix(in oklab, var(--color-surface) 38%, transparent);
-    --workspace-context-control-bg-hover: color-mix(in oklab, var(--color-surface) 58%, transparent);
-    --workspace-context-control-border: color-mix(in oklab, var(--color-border-soft) 58%, transparent);
-    --workspace-context-control-border-hover: color-mix(in oklab, var(--color-border) 62%, transparent);
+    --workspace-context-control-bg:
+      color-mix(in oklab, var(--color-surface) 94%, var(--color-surface-muted) 6%);
+    --workspace-context-control-bg-hover:
+      color-mix(in oklab, var(--color-surface) 86%, var(--color-surface-muted) 14%);
+    --workspace-context-control-border:
+      color-mix(in oklab, var(--color-border-soft) 84%, var(--color-surface) 16%);
+    --workspace-context-control-border-hover:
+      color-mix(in oklab, var(--color-border) 82%, var(--color-surface) 18%);
     display: grid;
     gap: var(--space-2);
   }
@@ -45,8 +49,7 @@
     box-shadow: none;
   }
 
-  .workspace-context-controls--column .workspace-context-controls__surface,
-  .workspace-mobile-context-section__controls .workspace-context-controls__surface {
+  .workspace-context-controls--column .workspace-context-controls__surface {
     display: grid;
     gap: 12px;
     padding: 0;
@@ -646,8 +649,7 @@
       min-width: 0;
     }
 
-    .workspace-context-controls--column .workspace-context-controls__surface,
-    .workspace-mobile-context-section__controls .workspace-context-controls__surface {
+    .workspace-context-controls--column .workspace-context-controls__surface {
       padding: 0;
       border-radius: 0;
       gap: 10px;

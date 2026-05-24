@@ -36,9 +36,9 @@
     top: 0;
     z-index: 24;
     border-bottom: 1px solid var(--color-border-soft);
-    background: color-mix(in oklab, var(--color-background) 92%, var(--color-surface) 8%);
-    -webkit-backdrop-filter: blur(18px) saturate(130%);
-    backdrop-filter: blur(18px) saturate(130%);
+    background: var(--color-background);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   .workspace-topbar {
@@ -203,6 +203,32 @@
     max-width: none;
   }
 
+  .workspace-shell .workspace-overlay-surface,
+  .workspace-frame__content .workspace-overlay-surface {
+    border: 0;
+    background: var(--color-background);
+    background-image: none;
+    box-shadow: none;
+  }
+
+  .workspace-shell .workspace-overlay-surface::before,
+  .workspace-frame__content .workspace-overlay-surface::before {
+    content: none;
+  }
+
+  html:not(.dark) .workspace-shell .workspace-overlay-surface,
+  html:not(.dark) .workspace-frame__content .workspace-overlay-surface {
+    background: var(--color-background);
+    background-image: none;
+    box-shadow: none;
+  }
+
+  html:not(.dark) .workspace-shell .workspace-overlay-surface::before,
+  html:not(.dark) .workspace-frame__content .workspace-overlay-surface::before {
+    content: none;
+    background: none;
+  }
+
   @media (max-width: 1279px) {
     .workspace-shell,
     .workspace-frame__body {
@@ -252,10 +278,6 @@
 
     .workspace-page-frame--inside-overlay {
       padding-inline: 0;
-    }
-
-    .workspace-page-frame__filters {
-      display: none;
     }
 
     .workspace-page-frame__rail {

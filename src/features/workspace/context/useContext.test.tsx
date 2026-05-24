@@ -7,7 +7,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import {
   buildContextControlsProps,
   type WorkspaceContextModel,
-} from '@/features/workspace/context/useWorkspaceContext';
+} from '@/features/workspace/context/useContext';
 import { getWorkspaceModeCopy } from '@/features/workspace/shell/workspaceEnvironment.copy';
 
 afterEach(() => {

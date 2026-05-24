@@ -1,5 +1,5 @@
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
-import type { WorkspaceContextRangeControl } from './workspaceContext.types';
+import type { WorkspaceContextRangeControl } from './context.types';
 
 export function buildRangeSelectOptions(range: WorkspaceContextRangeControl) {
   return range.options.map((option) => ({

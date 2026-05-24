@@ -32,7 +32,7 @@ import {
 } from '@/features/workspace/stats';
 import { useWorkspacePublicFilters } from '@/features/workspace/public/useWorkspacePublicFilters';
 import { WorkspaceViewToggle } from '@/features/workspace/shared/WorkspaceViewToggle';
-import { WorkspaceContextPanel } from '@/features/workspace/context/WorkspaceContextPanel';
+import { WorkspaceContextPanel } from '@/features/workspace/context/contextPanel';
 import {
   getRequestsScopeTitle,
   getWorkspaceModeCopy,
@@ -46,7 +46,7 @@ import {
 import {
   resolveWorkspaceViewerModeToggleItems,
   shouldShowWorkspaceProfileViewerModeControl,
-} from '@/features/workspace/context/workspaceContext.model';
+} from '@/features/workspace/context/context.model';
 import {
   buildWorkspacePrivateSortOptions,
   getWorkspaceChipLabels,
@@ -55,7 +55,7 @@ import {
   getWorkspaceScopeSwitchLabels,
   getWorkspaceStateAriaLabel,
   getWorkspaceStateToggleItems,
-} from '@/features/workspace/context/workspaceContext.copy';
+} from '@/features/workspace/context/context.copy';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { useAuthSnapshot } from '@/hooks/useAuthSnapshot';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';

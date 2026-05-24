@@ -1,10 +1,10 @@
 'use client';
 
 import { useMediaMatch } from '@/features/workspace/shared';
-import { WorkspaceContextFilters } from './WorkspaceContextFilters';
-import { WorkspaceContextInlineControls } from './WorkspaceContextInlineControls';
-import { WorkspaceContextResultControls } from './WorkspaceContextResultControls';
-import type { WorkspaceContextPanelProps } from './workspaceContext.types';
+import { WorkspaceContextFilters } from './contextFilters';
+import { WorkspaceContextInlineControls } from './contextInlineControls';
+import { WorkspaceContextResultControls } from './contextResultControls';
+import type { WorkspaceContextPanelProps } from './context.types';
 
 export function WorkspaceContextPanel({
   title,

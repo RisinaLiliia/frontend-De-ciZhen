@@ -1,11 +1,11 @@
-export { WorkspaceContextPanel } from '@/features/workspace/context/WorkspaceContextPanel';
+export { WorkspaceContextPanel } from '@/features/workspace/context/contextPanel';
 export {
   buildContextControlsProps,
   fillWorkspaceModeTemplate,
   getWorkspaceChipValue,
   joinWorkspaceContext,
   useWorkspaceContext,
-} from '@/features/workspace/context/useWorkspaceContext';
+} from '@/features/workspace/context/useContext';
 export {
   buildWorkspacePrivateSortOptions,
   getWorkspaceChipLabels,
@@ -14,12 +14,12 @@ export {
   getWorkspaceScopeSwitchLabels,
   getWorkspaceStateAriaLabel,
   getWorkspaceStateToggleItems,
-} from '@/features/workspace/context/workspaceContext.copy';
+} from '@/features/workspace/context/context.copy';
 export {
   resolveWorkspaceViewerModeToggleItems,
   shouldShowWorkspaceProfileViewerModeControl,
-} from '@/features/workspace/context/workspaceContext.model';
-export type { WorkspaceContextModel } from '@/features/workspace/context/useWorkspaceContext';
+} from '@/features/workspace/context/context.model';
+export type { WorkspaceContextModel } from '@/features/workspace/context/useContext';
 export type {
   WorkspaceContextAction,
   WorkspaceContextCityControl,
@@ -27,4 +27,4 @@ export type {
   WorkspaceContextPanelProps,
   WorkspaceContextRangeControl,
   WorkspaceContextSelectControl,
-} from '@/features/workspace/context/workspaceContext.types';
+} from '@/features/workspace/context/context.types';

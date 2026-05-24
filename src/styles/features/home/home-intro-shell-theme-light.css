@@ -29,6 +29,17 @@
       );
   }
 
+  html:not(.dark) .home-intro-shell {
+    background: var(--color-background);
+    background-image: none;
+    box-shadow: none;
+  }
+
+  html:not(.dark) .home-intro-shell::before {
+    content: none;
+    background: none;
+  }
+
   html:not(.dark) .home-intro-shell .hero-experiment {
     border: 0 !important;
     border-radius: 0 !important;

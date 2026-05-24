@@ -46,27 +46,27 @@ export function useWorkspaceRouteState({
   const sectionParam = searchParams.get('section');
   const resolvedPublicSection = forcedPublicSection ?? resolvePublicWorkspaceSection(sectionParam);
   const requestsScope = resolveWorkspaceRequestsScope(searchParams.get('scope'), isAuthed);
-  const isRequestsSection = !forcedWorkspaceTab && !hasExplicitWorkspaceTab && resolvedPublicSection === 'requests';
+  const isRequestsSection =
+    !forcedWorkspaceTab && !hasExplicitWorkspaceTab && resolvedPublicSection === 'requests';
   const isPrivateRequestsScope = isRequestsSection && requestsScope === 'my';
   const isChatSection = resolvedPublicSection === 'chat';
   const isSettingsSection = resolvedPublicSection === 'settings';
   const isHelpSection = resolvedPublicSection === 'help';
   const isAuthedShellSection =
     isAuthed &&
-    (resolvedPublicSection === 'providers'
-      || resolvedPublicSection === 'stats'
-      || resolvedPublicSection === 'profile');
+    (resolvedPublicSection === 'providers' ||
+      resolvedPublicSection === 'stats' ||
+      resolvedPublicSection === 'profile');
 
-  const activePublicSection = forcedWorkspaceTab || hasExplicitWorkspaceTab
-    ? null
-    : resolvedPublicSection;
+  const activePublicSection =
+    forcedWorkspaceTab || hasExplicitWorkspaceTab ? null : resolvedPublicSection;
   const isWorkspacePublicSection =
-    activePublicSection !== null
-    && !isPrivateRequestsScope
-    && !isChatSection
-    && !isSettingsSection
-    && !isHelpSection
-    && !isAuthedShellSection;
+    activePublicSection !== null &&
+    !isPrivateRequestsScope &&
+    !isChatSection &&
+    !isSettingsSection &&
+    !isHelpSection &&
+    !isAuthedShellSection;
 
   const activeWorkspaceTab = React.useMemo(
     () => forcedWorkspaceTab ?? resolveWorkspaceTab(tabParam),
@@ -92,10 +92,7 @@ export function useWorkspaceRouteState({
     () => resolveWorkspaceRequestsPeriod(searchParams.get('period') ?? searchParams.get('range')),
     [searchParams],
   );
-  const activeRequestsSort = React.useMemo(
-    () => searchParams.get('sort'),
-    [searchParams],
-  );
+  const activeRequestsSort = React.useMemo(() => searchParams.get('sort'), [searchParams]);
 
   const nextPath = React.useMemo(() => {
     const qs = searchParams?.toString();

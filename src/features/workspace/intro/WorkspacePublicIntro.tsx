@@ -6,7 +6,6 @@ import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/overview';
 import { WorkspaceIntroShell } from '@/features/workspace/shell/WorkspaceIntroShell';
 import {
-  WorkspaceMobileContextSection,
   WorkspaceModeHeader,
 } from '@/features/workspace/shell/WorkspaceModeHeader';
 import type { WorkspaceTab } from '@/features/workspace/state';
@@ -59,14 +58,6 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
       header={(
         <WorkspaceModeHeader
           t={t}
-          locale={locale}
-          activePublicSection={activePublicSection}
-          activeWorkspaceTab={activeWorkspaceTab}
-          preferredRequestsRole={preferredRequestsRole}
-        />
-      )}
-      mobileContext={(
-        <WorkspaceMobileContextSection
           locale={locale}
           activePublicSection={activePublicSection}
           activeWorkspaceTab={activeWorkspaceTab}
