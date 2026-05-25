@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 
-import { WorkspaceProfileOnboardingForm } from '@/features/profile/onboarding';
+import { WorkspaceProfileOnboardingForm } from '@/features/workspace/profile/onboarding';
 import { resolveWorkspaceViewerMode } from '../../state';
 
 export function WorkspaceProfileTabPanel() {

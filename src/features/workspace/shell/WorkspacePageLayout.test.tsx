@@ -28,13 +28,18 @@ vi.mock('@/features/workspace/shared', () => ({
 vi.mock('@/features/workspace/explore', () => ({
   WorkspaceExploreSection: () => <div data-testid="workspace-explore-section" />,
   WorkspaceExploreRail: () => <div data-testid="workspace-explore-rail" />,
-  isWorkspaceExploreRailSection: (section: string) => section === 'profile' || section === 'requests',
+  isWorkspaceExploreRailSection: (section: string) => section === 'requests',
 }));
 
 vi.mock('@/features/workspace/providers', () => ({
   WorkspaceProvidersSection: () => <div data-testid="workspace-providers-section" />,
   WorkspaceProvidersRail: () => <div data-testid="workspace-providers-rail" />,
   WorkspaceTopProvidersAside: () => <div data-testid="workspace-top-providers-aside" />,
+}));
+
+vi.mock('@/features/workspace/profile', () => ({
+  WorkspaceProfileSection: () => <div data-testid="workspace-profile-section" />,
+  WorkspaceProfileRail: () => <div data-testid="workspace-profile-rail" />,
 }));
 
 vi.mock('@/features/workspace/shell/WorkspaceShell', () => ({

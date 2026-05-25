@@ -8,14 +8,14 @@ import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 
-type Props = {
+type WorkspaceProfileRailProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
 };
 
 export function WorkspaceProfileRail({
   locale,
-}: Props) {
+}: WorkspaceProfileRailProps) {
   const {
     data,
     isLoading,
@@ -33,6 +33,7 @@ export function WorkspaceProfileRail({
   return (
     <WorkspaceSectionAside
       locale={locale}
+      className="workspace-profile-rail"
       summaryItems={data?.summary.items ?? null}
       isLoading={isLoading}
       panel={data ? {

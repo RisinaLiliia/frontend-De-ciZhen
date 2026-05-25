@@ -48,6 +48,30 @@ describe('workspaceSectionAdapters', () => {
     expect(model.aiRail).toBeTruthy();
   });
 
+  it('builds profile section through dedicated workspace profile ownership', () => {
+    const model = buildWorkspaceExploreSectionModel({
+      branch: {
+        isWorkspaceAuthed: true,
+        locale: 'de',
+        t: (key) => String(key),
+      },
+      section: 'profile',
+      explore: {
+        exploreListDensity: 'single',
+        setExploreListDensity: () => undefined,
+        sidebarNearbyLimit: 2,
+        sidebarTopProvidersLimit: 2,
+        sidebarProofCases: [],
+        proofIndex: 0,
+      },
+    });
+
+    expect(model.section).toBe('profile');
+    expect(model.layout).toBe('withRail');
+    expect(model.railPolicy).toBe('custom');
+    expect(model.aiRail).toBeTruthy();
+  });
+
   it('builds stats section through the same explicit content and rail contract', () => {
     const model = buildWorkspaceExploreSectionModel({
       branch: {

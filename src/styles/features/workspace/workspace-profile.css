@@ -1,6 +1,11 @@
-/* src/styles/features/requests/requests-shell-profile-onboarding.css */
+/* src/styles/features/workspace/workspace-profile.css */
 
 @layer components {
+  .workspace-profile-section,
+  .workspace-profile-rail {
+    min-width: 0;
+  }
+
   .workspace-profile-onboarding {
     border-color: color-mix(in oklab, var(--c-primary) 20%, var(--surface-card-border) 80%);
     background:

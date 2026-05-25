@@ -13,6 +13,10 @@ import {
   WorkspaceProvidersRail,
   WorkspaceProvidersSection,
 } from '@/features/workspace/providers';
+import {
+  WorkspaceProfileRail,
+  WorkspaceProfileSection,
+} from '@/features/workspace/profile';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { StatisticsExperience } from '@/features/workspace/stats';
@@ -133,6 +137,14 @@ export function buildWorkspaceExploreSectionModel({
         />
       ) : null,
       aiRail: <WorkspaceProvidersRail t={branch.t} locale={branch.locale} />,
+    });
+  }
+
+  if (section === 'profile') {
+    return buildWorkspaceSectionRenderModel({
+      section,
+      content: <WorkspaceProfileSection />,
+      aiRail: <WorkspaceProfileRail t={branch.t} locale={branch.locale} />,
     });
   }
 

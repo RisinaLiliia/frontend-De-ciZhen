@@ -14,7 +14,6 @@ import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
-import { WorkspaceProfileRail } from './WorkspaceProfileRail';
 
 const TopProvidersPanel = dynamic(
   () => import('@/components/home/HomeTopProvidersPanel').then((mod) => mod.HomeTopProvidersPanel),
@@ -62,10 +61,7 @@ type Props = {
 };
 
 export function isWorkspaceExploreRailSection(section: PublicWorkspaceSection) {
-  return (
-    section === 'requests'
-    || section === 'profile'
-  );
+  return section === 'requests';
 }
 
 function shouldShowWorkspaceExploreRailMap(section: PublicWorkspaceSection) {
@@ -106,10 +102,6 @@ export function WorkspaceExploreRail({
   const publicSummary = publicSummaryOverview?.summary;
   const showRailMap = shouldShowRailMap
     && Boolean(publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError);
-
-  if (activeSection === 'profile') {
-    return <WorkspaceProfileRail t={t} locale={locale} />;
-  }
 
   return (
     <WorkspaceRightRailStack className="hide-below-tablet">
