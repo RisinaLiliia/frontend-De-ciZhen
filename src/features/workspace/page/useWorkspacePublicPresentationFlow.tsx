@@ -7,6 +7,7 @@ import { WorkspacePublicIntro } from '@/features/workspace';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import {
   buildWorkspaceExploreSectionModel,
+  buildWorkspaceLegalSectionModel,
   buildWorkspacePublicRequestsSectionModel,
   resolveWorkspaceExploreSection,
 } from '@/features/workspace/page/sections/workspaceSectionAdapters';
@@ -14,6 +15,7 @@ import { useWorkspacePublicDataFlow } from '@/features/workspace/page/useWorkspa
 import {
   buildWorkspacePublicIntroProps,
 } from '@/features/workspace/page/workspacePublicBranch.model';
+import { WorkspaceLegalIntro } from '@/features/workspace/legal';
 import {
   buildWorkspacePublicIntroArgs,
   resolveWorkspacePublicPresentationFlowResult,
@@ -30,6 +32,10 @@ export function useWorkspacePublicPresentationFlow({
   data,
 }: UseWorkspacePublicPresentationFlowParams) {
   const isRequestsSection = data.activePublicSection === 'requests';
+  const legalSection =
+    data.activePublicSection === 'privacy' || data.activePublicSection === 'cookies'
+      ? data.activePublicSection
+      : null;
   const {
     publicMain: publicRequestsMain,
     publicAside: publicRequestsAside,
@@ -38,23 +44,35 @@ export function useWorkspacePublicPresentationFlow({
     enabled: isRequestsSection,
   });
   const workspaceIntroNode = React.useMemo(
-    () => (
-      <WorkspacePublicIntro
-        {...buildWorkspacePublicIntroProps(
-          buildWorkspacePublicIntroArgs({
-            branch,
-            data,
-          }),
-        )}
-      />
-    ),
-    [branch, data],
+    () => {
+      if (legalSection) {
+        return <WorkspaceLegalIntro section={legalSection} />;
+      }
+
+      return (
+        <WorkspacePublicIntro
+          {...buildWorkspacePublicIntroProps(
+            buildWorkspacePublicIntroArgs({
+              branch,
+              data,
+            }),
+          )}
+        />
+      );
+    },
+    [branch, data, legalSection],
   );
   const publicSectionModel = React.useMemo<WorkspaceSectionRenderModel>(() => {
     if (isRequestsSection) {
       return buildWorkspacePublicRequestsSectionModel({
         content: publicRequestsMain,
         aiRail: publicRequestsAside,
+      });
+    }
+
+    if (legalSection) {
+      return buildWorkspaceLegalSectionModel({
+        section: legalSection,
       });
     }
 
@@ -67,6 +85,7 @@ export function useWorkspacePublicPresentationFlow({
     branch,
     data.activePublicSection,
     data.exploreWithSeed,
+    legalSection,
     isRequestsSection,
     publicRequestsAside,
     publicRequestsMain,

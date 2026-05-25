@@ -5,7 +5,9 @@ export type PublicWorkspaceSection =
   | 'profile'
   | 'chat'
   | 'settings'
-  | 'help';
+  | 'help'
+  | 'privacy'
+  | 'cookies';
 export type PublicWorkspaceSectionParam = PublicWorkspaceSection | 'orders' | 'actions';
 
 export function resolvePublicWorkspaceSection(value: string | null): PublicWorkspaceSection | null {
@@ -17,6 +19,8 @@ export function resolvePublicWorkspaceSection(value: string | null): PublicWorks
     || value === 'chat'
     || value === 'settings'
     || value === 'help'
+    || value === 'privacy'
+    || value === 'cookies'
   ) {
     return value;
   }

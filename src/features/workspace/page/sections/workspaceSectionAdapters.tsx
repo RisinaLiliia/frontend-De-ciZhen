@@ -17,13 +17,18 @@ import {
   WorkspaceProfileRail,
   WorkspaceProfileSection,
 } from '@/features/workspace/profile';
+import { WorkspaceLegalSection } from '@/features/workspace/legal';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { StatisticsExperience } from '@/features/workspace/stats';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import type { ProofCase } from '@/types/home';
 
-type ExploreSectionKey = Exclude<PublicWorkspaceSection, 'requests' | 'chat' | 'settings' | 'help'>;
+type ExploreSectionKey = Exclude<
+  PublicWorkspaceSection,
+  'requests' | 'chat' | 'settings' | 'help' | 'privacy' | 'cookies'
+>;
+type LegalSectionKey = Extract<PublicWorkspaceSection, 'privacy' | 'cookies'>;
 
 type BuildWorkspacePublicRequestsSectionModelArgs = {
   content: React.ReactNode;
@@ -65,6 +70,10 @@ type BuildWorkspaceSettingsSectionModelArgs = {
 
 type BuildWorkspaceHelpSectionModelArgs = {
   content: React.ReactNode;
+};
+
+type BuildWorkspaceLegalSectionModelArgs = {
+  section: LegalSectionKey;
 };
 
 export function resolveWorkspaceExploreSection(
@@ -225,6 +234,18 @@ export function buildWorkspaceHelpSectionModel({
   return buildWorkspaceSectionRenderModel({
     section: 'help',
     content,
+    headerPolicy: 'custom',
+    filterPolicy: 'none',
+    railPolicy: 'none',
+  });
+}
+
+export function buildWorkspaceLegalSectionModel({
+  section,
+}: BuildWorkspaceLegalSectionModelArgs): WorkspaceSectionRenderModel {
+  return buildWorkspaceSectionRenderModel({
+    section,
+    content: <WorkspaceLegalSection type={section === 'privacy' ? 'privacy' : 'cookies'} />,
     headerPolicy: 'custom',
     filterPolicy: 'none',
     railPolicy: 'none',

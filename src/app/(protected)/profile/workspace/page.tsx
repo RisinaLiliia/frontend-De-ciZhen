@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import ProfileWorkspacePage from '@/features/profile/ProfileWorkspacePage';
+import { ProfileStandalonePage } from '@/features/profile/standalone';
 import { getUserIdFromRefreshToken } from '@/lib/auth/serverUserId';
 
 type ProfileWorkspaceAliasPageProps = {
@@ -13,7 +13,7 @@ export default async function ProfileWorkspaceAliasPage({ searchParams }: Profil
   const userId = getUserIdFromRefreshToken(refreshToken);
 
   if (!userId) {
-    return <ProfileWorkspacePage />;
+    return <ProfileStandalonePage />;
   }
 
   const params = await searchParams;

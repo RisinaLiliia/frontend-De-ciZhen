@@ -51,4 +51,23 @@ describe('resolveActiveWorkspaceNavigationSection', () => {
       requestsState: null,
     })).toBe('help');
   });
+
+  it('maps workspace legal sections onto the support lane', () => {
+    expect(resolveActiveWorkspaceNavigationSection({
+      sectionParam: 'privacy',
+      activePublicSection: 'privacy',
+      activeWorkspaceTab: 'my-requests',
+      requestsScope: null,
+      requestsRole: null,
+      requestsState: null,
+    })).toBe('help');
+    expect(resolveActiveWorkspaceNavigationSection({
+      sectionParam: 'cookies',
+      activePublicSection: 'cookies',
+      activeWorkspaceTab: 'my-requests',
+      requestsScope: null,
+      requestsRole: null,
+      requestsState: null,
+    })).toBe('help');
+  });
 });

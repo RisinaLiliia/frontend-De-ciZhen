@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildWorkspaceHelpSectionModel,
+  buildWorkspaceLegalSectionModel,
   buildWorkspaceExploreSectionModel,
   buildWorkspaceOverviewSectionModel,
   buildWorkspacePublicRequestsSectionModel,
@@ -131,6 +132,17 @@ describe('workspaceSectionAdapters', () => {
     expect(help.section).toBe('help');
     expect(help.layout).toBe('singleColumn');
     expect(help.filterPolicy).toBe('none');
+  });
+
+  it('builds workspace legal sections as single-column support pages', () => {
+    const privacy = buildWorkspaceLegalSectionModel({
+      section: 'privacy',
+    });
+
+    expect(privacy.section).toBe('privacy');
+    expect(privacy.layout).toBe('singleColumn');
+    expect(privacy.filterPolicy).toBe('none');
+    expect(privacy.railPolicy).toBe('none');
   });
 
   it('resolves explore and standard section fallbacks from nullable route state', () => {

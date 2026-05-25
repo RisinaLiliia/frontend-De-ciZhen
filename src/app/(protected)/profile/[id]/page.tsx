@@ -1,3 +1,3 @@
-import ProfileWorkspacePage from '@/features/profile/ProfileWorkspacePage';
+import { ProfileStandalonePage } from '@/features/profile/standalone';
 
-export default ProfileWorkspacePage;
+export default ProfileStandalonePage;

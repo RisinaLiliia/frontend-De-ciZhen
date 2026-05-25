@@ -40,6 +40,10 @@ export function resolveActiveWorkspaceNavigationSection({
     return activePublicSection;
   }
 
+  if (activePublicSection === 'privacy' || activePublicSection === 'cookies') {
+    return 'help';
+  }
+
   if (activeWorkspaceTab === 'my-offers') return 'offers';
   if (activeWorkspaceTab === 'completed-jobs') return 'contracts';
   if (activeWorkspaceTab === 'reviews') return 'stats';

@@ -6,7 +6,7 @@ import {
   findProviderPublicByUserId,
   resolveAvatarPreviewUrl,
   resolveProfileCompleteness,
-} from '@/features/profile/profileWorkspace.presentation';
+} from '@/features/profile/standalone/profileStandalone.presentation';
 
 function publicProvider(overrides: Partial<ProviderPublicDto> = {}): ProviderPublicDto {
   return {
@@ -32,7 +32,7 @@ function providerProfile(overrides: Partial<ProviderProfileDto> = {}): ProviderP
   };
 }
 
-describe('profileWorkspace.presentation', () => {
+describe('profileStandalone.presentation', () => {
   it('finds provider by userId first with legacy id fallback', () => {
     const list = [
       publicProvider({ id: 'provider-a', userId: 'user-a' }),

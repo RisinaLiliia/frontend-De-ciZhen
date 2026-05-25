@@ -9,18 +9,18 @@ import { listFavorites } from '@/lib/api/favorites';
 import { getMyProviderProfile, listPublicProviders } from '@/lib/api/providers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { providerQK } from '@/features/provider/queries';
-import { findProviderPublicByUserId } from '@/features/profile/profileWorkspace.presentation';
+import { findProviderPublicByUserId } from '@/features/profile/standalone/profileStandalone.presentation';
 import { workspaceQK } from '@/features/workspace/data';
 
-type UseProfileWorkspaceDataParams = {
+type UseProfileStandaloneDataParams = {
   authMeId?: string | null;
   hasProviderProfile: boolean;
 };
 
-export function useProfileWorkspaceData({
+export function useProfileStandaloneData({
   authMeId,
   hasProviderProfile,
-}: UseProfileWorkspaceDataParams) {
+}: UseProfileStandaloneDataParams) {
   const { data: myRequests = [] } = useQuery({
     queryKey: workspaceQK.requestsMy(),
     queryFn: () => withStatusFallback(() => listMyRequests(), []),

@@ -120,6 +120,28 @@ const WORKSPACE_SECTION_CONTRACTS: Record<WorkspaceSectionKey, WorkspaceSectionC
       hideQuickActionAlways: true,
     },
   },
+  privacy: {
+    key: 'privacy',
+    defaultLayout: 'singleColumn',
+    railPolicy: 'none',
+    headerPolicy: 'custom',
+    filterPolicy: 'none',
+    intro: {
+      hideDemandMapAlways: true,
+      hideQuickActionAlways: true,
+    },
+  },
+  cookies: {
+    key: 'cookies',
+    defaultLayout: 'singleColumn',
+    railPolicy: 'none',
+    headerPolicy: 'custom',
+    filterPolicy: 'none',
+    intro: {
+      hideDemandMapAlways: true,
+      hideQuickActionAlways: true,
+    },
+  },
   chat: {
     key: 'chat',
     defaultLayout: 'withRail',

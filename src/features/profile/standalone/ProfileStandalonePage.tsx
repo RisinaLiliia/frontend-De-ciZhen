@@ -18,13 +18,13 @@ import {
   computeManualProfileCompleteness,
   resolveAvatarPreviewUrl,
   resolveProfileCompleteness,
-} from '@/features/profile/profileWorkspace.presentation';
-import { useProfileWorkspaceData } from '@/features/profile/useProfileWorkspaceData';
+} from '@/features/profile/standalone/profileStandalone.presentation';
+import { useProfileStandaloneData } from '@/features/profile/standalone/useProfileStandaloneData';
 import { ProfileBioSection } from '@/features/profile/ProfileBioSection';
 import { ProfileOverviewSection } from '@/features/profile/ProfileOverviewSection';
 import { ProfileSettingsSection } from '@/features/profile/ProfileSettingsSection';
 
-export default function ProfileWorkspacePage() {
+export default function ProfileStandalonePage() {
   const t = useT();
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const authMe = useAuthMe();
@@ -81,7 +81,7 @@ export default function ProfileWorkspacePage() {
     dominantStats,
     overviewCounts,
     myProviderProfile,
-  } = useProfileWorkspaceData({
+  } = useProfileStandaloneData({
     authMeId: authMe?.id,
     hasProviderProfile,
   });
@@ -251,8 +251,8 @@ export default function ProfileWorkspacePage() {
 
   const overview = [
     { label: t(I18N_KEYS.client.profileOverviewRequestsLabel), value: overviewCounts.requests, href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
-    { label: t(I18N_KEYS.client.profileOverviewOffersLabel), value: overviewCounts.offers, href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
-    { label: t(I18N_KEYS.client.profileOverviewContractsLabel), value: overviewCounts.contracts, href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
+    { label: t(I18N_KEYS.client.profileOverviewOffersLabel), value: overviewCounts.offers, href: '/workspace?section=requests&scope=my&role=provider&period=90d&range=90d' },
+    { label: t(I18N_KEYS.client.profileOverviewContractsLabel), value: overviewCounts.contracts, href: '/workspace?section=requests&scope=my&state=execution&period=90d&range=90d' },
     { label: t(I18N_KEYS.client.profileOverviewInboxLabel), value: overviewCounts.inbox, href: '/chat' },
   ];
 

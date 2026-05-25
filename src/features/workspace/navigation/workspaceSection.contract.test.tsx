@@ -64,4 +64,16 @@ describe('workspaceSection.contract', () => {
     expect(contract.headerPolicy).toBe('custom');
     expect(contract.filterPolicy).toBe('none');
   });
+
+  it('keeps legal sections inside the single-column support contract too', () => {
+    const privacy = getWorkspaceSectionContract('privacy');
+    const cookies = getWorkspaceSectionContract('cookies');
+
+    expect(privacy.defaultLayout).toBe('singleColumn');
+    expect(privacy.headerPolicy).toBe('custom');
+    expect(privacy.filterPolicy).toBe('none');
+    expect(cookies.defaultLayout).toBe('singleColumn');
+    expect(cookies.headerPolicy).toBe('custom');
+    expect(cookies.filterPolicy).toBe('none');
+  });
 });
