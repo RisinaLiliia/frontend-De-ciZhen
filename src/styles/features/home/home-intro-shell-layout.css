@@ -66,9 +66,6 @@
     padding: var(--home-intro-padding);
     padding-top: calc(var(--shell-topbar-height) + var(--shell-topbar-offset, 0px) + var(--home-intro-padding));
     border-radius: 0 0 calc(var(--radius-lg) + 2px) calc(var(--radius-lg) + 2px);
-  }
-
-  .home-intro-shell {
     background: var(--color-background);
     background-image: none;
     box-shadow: none;
