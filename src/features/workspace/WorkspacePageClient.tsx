@@ -14,12 +14,10 @@ import {
   type PublicWorkspaceSection,
   type WorkspaceTab,
 } from '@/features/workspace';
+import { WORKSPACE_PATH } from '@/features/workspace/page/workspacePage.constants';
+import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { useWorkspacePrivateBranchModel } from '@/features/workspace/page/useWorkspacePrivateBranchModel';
 import { useWorkspacePublicBranchModel } from '@/features/workspace/page/useWorkspacePublicBranchModel';
-import {
-  WORKSPACE_PATH,
-  type WorkspaceBranchProps,
-} from '@/features/workspace/page/WorkspacePageBranches';
 
 type WorkspacePageClientProps = {
   activePublicSection?: PublicWorkspaceSection | null;

@@ -11,7 +11,7 @@
   - `npm run test:ci`
   - `npx vitest run src/features/workspace/shell/WorkspaceRouteShell.test.tsx src/features/workspace/shell/WorkspacePageLayout.test.tsx`
   - `npm run build`
-- `NEEDS CLEANUP` Ожидаемая цепочка `WorkspacePageClient -> WorkspacePublicBranch / WorkspacePrivateBranch` больше не является фактической: branch wrappers существуют, но route flow сейчас идёт через `useWorkspacePublicBranchModel` / `useWorkspacePrivateBranchModel` напрямую.
+- `PASS` Route flow упрощён до реального execution path без ложных branch wrappers: `WorkspacePageClient` использует `useWorkspacePublicBranchModel` / `useWorkspacePrivateBranchModel` напрямую.
 - `NEEDS CLEANUP` CSS ownership ещё не доведён до финального состояния: значимая часть statistics styles по-прежнему живёт в `src/styles/features/requests/requests-shell-statistics-*`.
 - `DOCUMENTED EXCEPTION` Часть legacy alias / fallback логики пока намеренно сохранена для route compatibility и безопасного перехода со старых query/state path.
 
@@ -51,7 +51,6 @@ Notes:
 - `PASS` Topbar, sidebar, bottom navigation и page frame контролируются через один layout contract: `WorkspacePageLayout` + `WorkspaceShell`.
 - `PASS` Public/private mode используют один shell path и расходятся на уровне branch model/data composition, а не на уровне независимых page shells.
 - `PASS` URL query state остаётся центральным driver для section/scope/filter state.
-- `NEEDS CLEANUP` `WorkspacePublicBranch.tsx` и `WorkspacePrivateBranch.tsx` больше не участвуют в реальном route flow, хотя по имени выглядят как canonical architecture layer.
 - `NEEDS CLEANUP` `useWorkspaceRouteState` сейчас живёт в `src/features/workspace/context/contextUrlState.ts`, что смазывает ownership между `context` и route/page state.
 - `DOCUMENTED EXCEPTION` `useWorkspaceShellLegacyRouting.tsx` и alias mapping в workspace state intentionally keep old route/query aliases alive.
 
@@ -85,14 +84,6 @@ Notes:
 
 ## Legacy/dead-code findings
 
-- `NEEDS CLEANUP` `WorkspacePublicBranch.tsx`
-- `NEEDS CLEANUP` `WorkspacePrivateBranch.tsx`
-- `NEEDS CLEANUP` `WorkspacePageBranches.tsx`
-
-Reason:
-
-- Эти файлы больше не выглядят частью реального execution path и сейчас создают ложное architectural ожидание.
-
 - `DOCUMENTED EXCEPTION` `useWorkspaceShellLegacyRouting.tsx`
 - `DOCUMENTED EXCEPTION` `workspaceRequestsScope.model.ts` legacy alias support
 - `DOCUMENTED EXCEPTION` `legacyPublicOverviewData` compatibility path в data/public overview flow
@@ -107,7 +98,6 @@ Reason:
 - `PASS` Providers больше не живут одновременно в `explore` и `providers`.
 - `PASS` Profile больше не живёт одновременно в `explore` и `profile`.
 - `PASS` Contextual rail ownership лучше разделён между `shell`, `ai-rail`, `overview`, `demand-map`.
-- `NEEDS CLEANUP` Branch wrapper components (`WorkspacePublicBranch`, `WorkspacePrivateBranch`) формируют structural duplication без активного runtime value.
 - `NEEDS CLEANUP` Полное отсутствие duplicated mobile/desktop content trees нельзя закрыть без ручного responsive smoke-check.
 
 ## Folder/naming findings
@@ -133,7 +123,7 @@ Reason:
 
 - Эти `copy` files выглядят нормально, если команда считает them canonical text catalogs. Их стоит воспринимать как intentional copy ownership, а не как legacy leftovers.
 
-- `NEEDS CLEANUP` Route/page naming в целом стало профессиональнее (`WorkspaceRoutePage`, `WorkspaceRouteShell`, `WorkspacePageLayout`), но branch layer naming сейчас вводит в заблуждение из-за неиспользуемых wrapper files.
+- `PASS` Route/page naming теперь отражает реальный flow: `WorkspaceRoutePage`, `WorkspaceRouteShell`, `WorkspacePageClient`, `WorkspacePageLayout`.
 
 ## Remaining risks
 
@@ -145,19 +135,15 @@ Reason:
 
 ## Recommended next PRs
 
-1. `refactor(workspace): remove unused branch wrappers or restore them as the actual route branch layer`
-   - убрать `WorkspacePublicBranch` / `WorkspacePrivateBranch` / `WorkspacePageBranches`, если они действительно мёртвые
-   - либо вернуть их в реальный route flow и убрать дублирование с direct model hooks
-
-2. `refactor(workspace): move route state ownership out of context`
+1. `refactor(workspace): move route state ownership out of context`
    - перенести `useWorkspaceRouteState` / related route-query helpers ближе к `page` или `shell`
 
-3. `refactor(stats): move statistics CSS out of requests shell styles`
+2. `refactor(stats): move statistics CSS out of requests shell styles`
    - довести CSS ownership до исходного target state
 
-4. `refactor(workspace): normalize remaining raw panel/card wrappers`
+3. `refactor(workspace): normalize remaining raw panel/card wrappers`
    - постепенно свести section-level surfaces к `workspaceSurfaceShell.ts`
 
-5. `test(workspace): run manual responsive QA matrix`
+4. `test(workspace): run manual responsive QA matrix`
    - проверить `375`, `425`, `768`, `1024`, `1280`, `1440`
    - отдельно подтвердить отсутствие duplicated rail/context blocks и overflow regressions
