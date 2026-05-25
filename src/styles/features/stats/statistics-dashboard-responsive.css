@@ -1,4 +1,4 @@
-/* requests-shell-statistics-dashboard-responsive.css */
+/* src/styles/features/stats/statistics-dashboard-responsive.css */
 
 @layer components {
   @media (min-width: 900px) {

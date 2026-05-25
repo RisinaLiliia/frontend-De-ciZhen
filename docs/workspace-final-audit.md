@@ -12,7 +12,7 @@
   - `npx vitest run src/features/workspace/shell/WorkspaceRouteShell.test.tsx src/features/workspace/shell/WorkspacePageLayout.test.tsx`
   - `npm run build`
 - `PASS` Route flow упрощён до реального execution path без ложных branch wrappers: `WorkspacePageClient` использует `useWorkspacePublicBranchModel` / `useWorkspacePrivateBranchModel` напрямую.
-- `NEEDS CLEANUP` CSS ownership ещё не доведён до финального состояния: значимая часть statistics styles по-прежнему живёт в `src/styles/features/requests/requests-shell-statistics-*`.
+- `PASS` CSS ownership стал чище: statistics partials больше не живут в `src/styles/features/requests/requests-shell-statistics-*`.
 - `DOCUMENTED EXCEPTION` Часть legacy alias / fallback логики пока намеренно сохранена для route compatibility и безопасного перехода со старых query/state path.
 
 ## Checked routes
@@ -79,7 +79,7 @@ Notes:
   - `workspaceStatLinkCardShell`
 - `NEEDS CLEANUP` В workspace TSX всё ещё есть raw `panel/card` class usage вместо системного surface helper contract.
 - `NEEDS CLEANUP` В feature CSS остаются локальные gradients/shadows/color-like declarations; часть из них token-driven и допустима, но overall design-system discipline ещё не везде одинаково строгая.
-- `NEEDS CLEANUP` Statistics CSS ownership всё ещё частично сидит в `requests` styles.
+- `PASS` Statistics CSS ownership живёт в `src/styles/features/stats/`.
 - `DOCUMENTED EXCEPTION` Не каждый grep hit по `box-shadow`, `rgba`, `linear-gradient` является bug: часть правил intentional и token-based.
 
 ## Legacy/dead-code findings
@@ -128,19 +128,15 @@ Reason:
 ## Remaining risks
 
 - Нет ручного browser QA на обязательных viewport widths.
-- Statistics visual/layout ownership всё ещё partially attached to requests CSS files.
 - Некоторые raw `panel/card` wrappers ещё обходят central surface helper API.
 - Legacy alias routing всё ещё существует; это снижает архитектурную чистоту, хотя и помогает compatibility.
 - Remaining route-state ownership smell по `context` слою в этом audit pass не обнаружен.
 
 ## Recommended next PRs
 
-1. `refactor(stats): move statistics CSS out of requests shell styles`
-   - довести CSS ownership до исходного target state
-
-2. `refactor(workspace): normalize remaining raw panel/card wrappers`
+1. `refactor(workspace): normalize remaining raw panel/card wrappers`
    - постепенно свести section-level surfaces к `workspaceSurfaceShell.ts`
 
-3. `test(workspace): run manual responsive QA matrix`
+2. `test(workspace): run manual responsive QA matrix`
    - проверить `375`, `425`, `768`, `1024`, `1280`, `1440`
    - отдельно подтвердить отсутствие duplicated rail/context blocks и overflow regressions

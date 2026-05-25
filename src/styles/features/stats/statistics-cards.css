@@ -1,6 +1,6 @@
 /* src/styles/features/stats/statistics-cards.css */
 
-@import '../requests/requests-shell-statistics-dashboard-signal.css';
-@import '../requests/requests-shell-statistics-dashboard-demand-cities.css';
-@import '../requests/requests-shell-statistics-dashboard-ki.css';
-@import '../requests/requests-shell-statistics-dashboard-insights-growth.css';
+@import './statistics-signal.css';
+@import './statistics-demand-cities.css';
+@import './statistics-ki.css';
+@import './statistics-insights.css';
