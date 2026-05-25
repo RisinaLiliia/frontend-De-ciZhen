@@ -13,7 +13,6 @@ export { WorkspaceSectionAside } from './WorkspaceSectionAside';
 export { WorkspaceSectionDecisionPanel } from './WorkspaceSectionDecisionPanel';
 export { WorkspaceSectionErrorBoundary } from './WorkspaceSectionErrorBoundary';
 export { WorkspaceSummaryGrid } from './WorkspaceSummaryGrid';
-export { WorkspaceTopProvidersAside } from './WorkspaceTopProvidersAside';
 export { WorkspaceViewToggle } from './WorkspaceViewToggle';
 export { useIsDesktop, useIsWideDesktop, useMediaMatch } from './useIsDesktop';
 export { useWorkspaceFormatters } from './useWorkspaceFormatters';

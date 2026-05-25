@@ -67,28 +67,6 @@
     transform: none;
   }
 
-  .workspace-provider-card-shell {
-    display: grid;
-    width: 100%;
-    min-width: 0;
-    align-content: start;
-    container-type: inline-size;
-  }
-
-  .workspace-provider-card {
-    width: 100%;
-    max-width: none;
-    min-width: 0;
-  }
-
-  .requests-list .workspace-provider-card {
-    height: 100%;
-  }
-
-  .requests-list .workspace-provider-card-shell {
-    height: 100%;
-  }
-
   .offer-actions {
     display: flex;
     flex-wrap: wrap;

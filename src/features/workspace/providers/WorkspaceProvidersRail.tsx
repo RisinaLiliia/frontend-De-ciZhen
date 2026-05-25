@@ -12,7 +12,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 
-type Props = {
+type WorkspaceProvidersRailProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
 };
@@ -28,7 +28,7 @@ function normalizeFilter(value: string | null) {
 export function WorkspaceProvidersRail({
   t,
   locale,
-}: Props) {
+}: WorkspaceProvidersRailProps) {
   const searchParams = useSearchParams();
   const cityId = normalizeFilter(searchParams.get('cityId'));
   const categoryKey = normalizeFilter(searchParams.get('categoryKey'));
@@ -79,6 +79,7 @@ export function WorkspaceProvidersRail({
   return (
     <WorkspaceSectionAside
       locale={locale}
+      className="workspace-providers-rail"
       summaryItems={summaryItems}
       isLoading={isContractLoading}
       panel={contractData ? {

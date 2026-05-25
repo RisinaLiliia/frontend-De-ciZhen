@@ -9,6 +9,10 @@ import {
 } from '@/features/workspace/explore';
 import { buildWorkspaceSectionRenderModel } from '@/features/workspace/navigation/workspaceSection.contract';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
+import {
+  WorkspaceProvidersRail,
+  WorkspaceProvidersSection,
+} from '@/features/workspace/providers';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import { StatisticsExperience } from '@/features/workspace/stats';
@@ -111,6 +115,24 @@ export function buildWorkspaceExploreSectionModel({
         />
       ),
       layout: 'withRail',
+    });
+  }
+
+  if (section === 'providers') {
+    return buildWorkspaceSectionRenderModel({
+      section,
+      content: explore ? (
+        <WorkspaceProvidersSection
+          t={branch.t}
+          locale={branch.locale}
+          onListDensityChange={explore.setExploreListDensity}
+          initialPublicRequests={explore.initialPublicRequests}
+          preferInitialPublicRequests={explore.preferInitialPublicRequests}
+          initialPublicRequestsLoading={explore.initialPublicRequestsLoading}
+          initialPublicRequestsError={explore.initialPublicRequestsError}
+        />
+      ) : null,
+      aiRail: <WorkspaceProvidersRail t={branch.t} locale={branch.locale} />,
     });
   }
 

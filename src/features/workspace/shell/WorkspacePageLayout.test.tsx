@@ -28,7 +28,13 @@ vi.mock('@/features/workspace/shared', () => ({
 vi.mock('@/features/workspace/explore', () => ({
   WorkspaceExploreSection: () => <div data-testid="workspace-explore-section" />,
   WorkspaceExploreRail: () => <div data-testid="workspace-explore-rail" />,
-  isWorkspaceExploreRailSection: (section: string) => section === 'providers' || section === 'profile' || section === 'requests',
+  isWorkspaceExploreRailSection: (section: string) => section === 'profile' || section === 'requests',
+}));
+
+vi.mock('@/features/workspace/providers', () => ({
+  WorkspaceProvidersSection: () => <div data-testid="workspace-providers-section" />,
+  WorkspaceProvidersRail: () => <div data-testid="workspace-providers-rail" />,
+  WorkspaceTopProvidersAside: () => <div data-testid="workspace-top-providers-aside" />,
 }));
 
 vi.mock('@/features/workspace/shell/WorkspaceShell', () => ({
@@ -106,7 +112,7 @@ describe('WorkspacePageLayout', () => {
     expect(shell.getAttribute('data-has-sidebar')).toBe('true');
     expect(shell.getAttribute('data-has-bottom-nav')).toBe('false');
     expect(shell.getAttribute('data-has-topbar')).toBe('true');
-    expect(screen.getByTestId('workspace-explore-section')).toBeTruthy();
+    expect(screen.getByTestId('workspace-providers-section')).toBeTruthy();
   });
 
   it('mounts the workspace bottom nav on mobile widths', () => {

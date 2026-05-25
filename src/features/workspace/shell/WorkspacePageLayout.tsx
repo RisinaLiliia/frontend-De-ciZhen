@@ -8,11 +8,11 @@ import {
 } from '@/features/workspace/navigation/workspaceSection.contract';
 import {
   WorkspaceContextRail,
-  WorkspaceTopProvidersAside,
   useIsDesktop,
   useIsWideDesktop,
   useMediaMatch,
 } from '@/features/workspace/shared';
+import { WorkspaceTopProvidersAside } from '@/features/workspace/providers';
 import {
   buildWorkspaceExploreSectionModel,
   buildWorkspaceOverviewSectionModel,

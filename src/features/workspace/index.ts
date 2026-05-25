@@ -20,6 +20,7 @@ export { PublicContent, ProofReviewCard, WorkspaceContent, WorkspacePrivateIntro
 export { WorkspaceOverviewInsightsPanel, WorkspaceOverviewMain } from './overview';
 export { WorkspacePublicDemandMapPanel } from './demand-map';
 export { StatisticsExperience, useWorkspaceStatisticsModel } from './stats';
+export { WorkspaceProvidersRail, WorkspaceProvidersSection, WorkspaceTopProvidersAside } from './providers';
 export {
   WorkspaceMobileNavigation,
   WorkspaceModeNav,
