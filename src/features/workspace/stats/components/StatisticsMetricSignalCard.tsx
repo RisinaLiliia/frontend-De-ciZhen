@@ -2,6 +2,8 @@
 
 import type { ReactNode } from 'react';
 
+import { workspaceStatCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+
 type StatisticsMetricSignalCardProps = {
   as?: 'div' | 'li';
   className?: string;
@@ -31,7 +33,12 @@ export function StatisticsMetricSignalCard({
 
   return (
     <Component
-      className={`stat-card workspace-statistics__activity-signal is-${tone}${tone === 'positive' ? ' dc-glow' : ''}${className ? ` ${className}` : ''}`.trim()}
+      className={workspaceStatCardShell(
+        'workspace-statistics__activity-signal',
+        `is-${tone}`,
+        tone === 'positive' ? 'dc-glow' : '',
+        className,
+      )}
     >
       <span className="workspace-statistics__activity-signal-label">{label}</span>
       {comparison ? (

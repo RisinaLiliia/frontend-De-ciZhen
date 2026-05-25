@@ -5,6 +5,7 @@ import * as React from 'react';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/demand-map';
 import { WorkspaceIntroShell } from '@/features/workspace/intro/WorkspaceIntroShell';
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import {
   WorkspaceModeHeader,
 } from '@/features/workspace/shell/WorkspaceModeHeader';
@@ -79,7 +80,7 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
         </div>
       ) : null}
       {showQuickAction ? (
-        <section className="panel stack-sm workspace-intro__mobile-hidden" aria-label="Workspace quick action">
+        <section className={workspacePanelShell('stack-sm', 'workspace-intro__mobile-hidden')} aria-label="Workspace quick action">
           <CreateRequestCard href={quickActionHref} />
         </section>
       ) : null}

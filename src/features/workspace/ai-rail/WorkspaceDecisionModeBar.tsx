@@ -1,5 +1,6 @@
 'use client';
 
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate } from '@/lib/i18n/t';
 import type { Locale } from '@/lib/i18n/t';
@@ -22,7 +23,7 @@ export function WorkspaceDecisionModeBar({
   const t = (key: string) => translate(key as never, locale);
 
   return (
-    <section className="panel my-decision-mode">
+    <section className={workspacePanelShell('my-decision-mode')}>
       <div className="my-decision-mode__copy">
         <span className="my-decision-mode__eyebrow">
           {t(I18N_KEYS.requestsPage.decisionModeLabel)}

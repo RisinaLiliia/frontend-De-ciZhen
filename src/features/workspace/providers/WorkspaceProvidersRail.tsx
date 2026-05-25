@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { workspaceQK } from '@/features/workspace/data';
 import { ALL_OPTION_KEY, WorkspaceSectionAside } from '@/features/workspace/shared';
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { resolveWorkspaceRequestsPeriod } from '@/features/workspace/state';
 import { getWorkspaceProviders } from '@/lib/api/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -95,7 +96,7 @@ export function WorkspaceProvidersRail({
       } : null}
     >
       {isContractError ? (
-        <section className="panel">
+        <section className={workspacePanelShell()}>
           <p className="typo-muted">{t(I18N_KEYS.common.loadError)}</p>
         </section>
       ) : null}

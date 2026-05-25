@@ -3,6 +3,7 @@
 import * as React from 'react';
 
 import { buildDecisionPanelSummaryText } from '@/features/workspace/requests/requestsDecision.model';
+import { workspaceRightRailPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
@@ -59,7 +60,7 @@ export function WorkspaceDecisionPanel({
 
   return (
     <div className="workspace-decision-panel">
-      <section className="app-rail-panel workspace-decision-panel__summary">
+      <section className={workspaceRightRailPanelShell('workspace-decision-panel__summary')}>
         <span className="workspace-decision-panel__eyebrow">
           {t(I18N_KEYS.requestsPage.decisionPanelTitle)}
         </span>
@@ -90,7 +91,7 @@ export function WorkspaceDecisionPanel({
         </button>
       </section>
 
-      <section className="app-rail-panel workspace-decision-panel__queue">
+      <section className={workspaceRightRailPanelShell('workspace-decision-panel__queue')}>
         <div className="workspace-decision-panel__section-head">
           <span className="workspace-decision-panel__eyebrow">
             {t(I18N_KEYS.requestsPage.decisionPanelQueueTitle)}
@@ -133,7 +134,7 @@ export function WorkspaceDecisionPanel({
         ) : null}
       </section>
 
-      <section className="app-rail-panel workspace-decision-panel__overview">
+      <section className={workspaceRightRailPanelShell('workspace-decision-panel__overview')}>
         <span className="workspace-decision-panel__eyebrow">
           {overviewEyebrow}
         </span>

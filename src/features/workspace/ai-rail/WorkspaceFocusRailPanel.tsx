@@ -14,6 +14,7 @@ import {
   useWorkspaceContext,
 } from '@/features/workspace/context';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import { getWorkspaceStatisticsCopy } from '@/features/workspace/stats';
 import { getWorkspaceFocusRecommendationCopy } from '@/features/workspace/navigation/workspaceMode.copy';
@@ -103,7 +104,12 @@ export function WorkspaceFocusRailPanel({
   return (
     <section
       ref={panelRef}
-      className={['panel', 'workspace-context-rail__panel', 'workspace-context-rail__panel--focus', className ?? ''].filter(Boolean).join(' ')}
+      className={[
+        workspacePanelShell(),
+        'workspace-context-rail__panel',
+        'workspace-context-rail__panel--focus',
+        className ?? '',
+      ].filter(Boolean).join(' ')}
     >
       <span className="workspace-environment__eyebrow">{model.copy.rail.nextStepTitle}</span>
       <span className="section-subtitle workspace-context-rail__subtitle-placeholder" aria-hidden="true">

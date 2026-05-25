@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { workspaceRightRailPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 
@@ -54,7 +55,7 @@ export function WorkspaceSectionDecisionPanel({
 }: Props) {
   return (
     <div className="workspace-decision-panel">
-      <section className="app-rail-panel workspace-decision-panel__summary">
+      <section className={workspaceRightRailPanelShell('workspace-decision-panel__summary')}>
         <span className="workspace-decision-panel__eyebrow">{panel.eyebrow}</span>
         <strong className="workspace-decision-panel__count">{panel.totalNeedsAction}</strong>
         <h3 className="workspace-decision-panel__title">{panel.title}</h3>
@@ -67,7 +68,7 @@ export function WorkspaceSectionDecisionPanel({
         </Link>
       </section>
 
-      <section className="app-rail-panel workspace-decision-panel__queue">
+      <section className={workspaceRightRailPanelShell('workspace-decision-panel__queue')}>
         <div className="workspace-decision-panel__section-head">
           <span className="workspace-decision-panel__eyebrow">{panel.queueTitle}</span>
         </div>
@@ -100,7 +101,7 @@ export function WorkspaceSectionDecisionPanel({
         )}
       </section>
 
-      <section className="app-rail-panel workspace-decision-panel__overview">
+      <section className={workspaceRightRailPanelShell('workspace-decision-panel__overview')}>
         <span className="workspace-decision-panel__eyebrow">{panel.overviewEyebrow}</span>
         <dl className="workspace-decision-panel__overview-grid">
           {panel.overview.map((item) => (

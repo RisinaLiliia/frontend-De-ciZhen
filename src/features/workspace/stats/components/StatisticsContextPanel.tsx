@@ -2,6 +2,11 @@
 
 import { IconDownload } from '@/components/ui/icons/icons';
 import { WorkspaceContextPanel } from '@/features/workspace/context';
+import {
+  workspacePanelShell,
+  workspaceStatCardShell,
+  workspaceStatsChartPanelShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsRange } from '@/lib/api/dto/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -65,7 +70,7 @@ export function StatisticsContextPanel({
           <strong className="workspace-statistics-context__summary-value">{context.stickyLabel}</strong>
           <p className="workspace-statistics-context__summary-text">{context.subtitle}</p>
         </div>
-        <article className={`stat-card workspace-statistics-context__trend-card is-${activityTrend.tone}`.trim()}>
+        <article className={workspaceStatCardShell('workspace-statistics-context__trend-card', `is-${activityTrend.tone}`)}>
           <span className="stat-label">{activityTrend.label}</span>
           <strong className="stat-value">{activityTrend.value}</strong>
         </article>
@@ -75,7 +80,7 @@ export function StatisticsContextPanel({
         {context.healthMetrics.map((metric) => (
           <article
             key={metric.key}
-            className={`stat-card workspace-statistics-context__health-card is-${metric.tone}`.trim()}
+            className={workspaceStatCardShell('workspace-statistics-context__health-card', `is-${metric.tone}`)}
           >
             <span className="stat-label">{metric.label}</span>
             <strong className="stat-value">{metric.value}</strong>
@@ -172,7 +177,13 @@ export function StatisticsContextPanel({
   );
 
   const sectionModifiers = `${surface === 'embedded' ? ' workspace-statistics-context--embedded' : ''}${showSummary ? '' : ' workspace-statistics-context--controls-only'}${showControls ? '' : ' workspace-statistics-context--summary-only'}`.trim();
-  const baseSectionClass = `${surface === 'panel' ? 'panel ' : ''}${showSummary && !showControls ? 'requests-stats-chart ' : ''}workspace-statistics-context${sectionModifiers ? ` ${sectionModifiers}` : ''}`.trim();
+  const baseSectionClass = [
+    surface === 'panel'
+      ? (showSummary && !showControls ? workspaceStatsChartPanelShell() : workspacePanelShell())
+      : '',
+    'workspace-statistics-context',
+    sectionModifiers,
+  ].filter(Boolean).join(' ');
 
   return (
     <section

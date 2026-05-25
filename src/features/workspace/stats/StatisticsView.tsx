@@ -8,6 +8,7 @@ import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import {
   WorkspaceRightRailStack,
+  workspacePanelShell,
   workspaceRequestsPanelShell,
   workspaceStatsChartPanelShell,
 } from '@/features/workspace/shared';
@@ -623,11 +624,11 @@ export function StatisticsView({
 
         {isLoading ? (
           <>
-            <section className="panel"><div className="skeleton h-36 w-full" /></section>
-            <section className="panel"><div className="skeleton h-48 w-full" /></section>
+            <section className={workspacePanelShell()}><div className="skeleton h-36 w-full" /></section>
+            <section className={workspacePanelShell()}><div className="skeleton h-48 w-full" /></section>
           </>
         ) : isError ? (
-          <section className="panel">
+          <section className={workspacePanelShell()}>
             <p className="typo-small">{t(I18N_KEYS.requestsPage.statsLoadError)}</p>
           </section>
         ) : (

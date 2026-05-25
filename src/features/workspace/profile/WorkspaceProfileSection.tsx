@@ -4,13 +4,14 @@ import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { resolveWorkspaceViewerMode } from '@/features/workspace/state';
 
 const WorkspaceProfileOnboardingPanel = dynamic(
   () => import('@/features/workspace/profile/onboarding').then((mod) => mod.WorkspaceProfileOnboardingForm),
   {
     loading: () => (
-      <section className="panel">
+      <section className={workspacePanelShell()}>
         <div className="skeleton h-96 w-full" />
       </section>
     ),

@@ -10,6 +10,7 @@ import { workspaceQK, WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/featu
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/demand-map';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { WorkspaceRightRailStack } from '@/features/workspace/shared';
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -19,7 +20,7 @@ const TopProvidersPanel = dynamic(
   () => import('@/components/home/HomeTopProvidersPanel').then((mod) => mod.HomeTopProvidersPanel),
   {
     loading: () => (
-      <section className="panel">
+      <section className={workspacePanelShell()}>
         <div className="skeleton h-64 w-full" />
       </section>
     ),
@@ -30,7 +31,7 @@ const ProofPanel = dynamic(
   () => import('@/components/home/HomeProofPanel').then((mod) => mod.HomeProofPanel),
   {
     loading: () => (
-      <section className="panel">
+      <section className={workspacePanelShell()}>
         <div className="skeleton h-64 w-full" />
       </section>
     ),
@@ -41,7 +42,7 @@ const TrustLivePanel = dynamic(
   () => import('@/components/home/HomeTrustLivePanel').then((mod) => mod.HomeTrustLivePanel),
   {
     loading: () => (
-      <section className="panel">
+      <section className={workspacePanelShell()}>
         <div className="skeleton h-64 w-full" />
       </section>
     ),
@@ -119,7 +120,7 @@ export function WorkspaceExploreRail({
           ) : null}
 
           {isRailSection ? (
-            <section className="panel stack-sm" aria-label="Workspace quick action">
+            <section className={workspacePanelShell('stack-sm')} aria-label="Workspace quick action">
               <CreateRequestCard href="/request/create" />
             </section>
           ) : null}
@@ -138,13 +139,13 @@ export function WorkspaceExploreRail({
         </>
       ) : (
         <>
-          <section className="panel">
+          <section className={workspacePanelShell()}>
             <div className="skeleton h-64 w-full" />
           </section>
-          <section className="panel">
+          <section className={workspacePanelShell()}>
             <div className="skeleton h-64 w-full" />
           </section>
-          <section className="panel">
+          <section className={workspacePanelShell()}>
             <div className="skeleton h-64 w-full" />
           </section>
         </>

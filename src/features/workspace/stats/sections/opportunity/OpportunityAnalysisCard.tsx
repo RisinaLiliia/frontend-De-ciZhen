@@ -5,6 +5,7 @@ import {
   IconTrophyGold,
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
+import { workspaceStatCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
@@ -60,7 +61,11 @@ export function OpportunityAnalysisCard({
 
   return (
     <article
-      className={`stat-card workspace-statistics-opportunity__item workspace-statistics-opportunity__item--analysis is-${item.tone}`.trim()}
+      className={workspaceStatCardShell(
+        'workspace-statistics-opportunity__item',
+        'workspace-statistics-opportunity__item--analysis',
+        `is-${item.tone}`,
+      )}
       aria-label={t(I18N_KEYS.workspace.statsOpportunityDetailAnalysisTemplate)
         .replace('{city}', item.city)}
     >

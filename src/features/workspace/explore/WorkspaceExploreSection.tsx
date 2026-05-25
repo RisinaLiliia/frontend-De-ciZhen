@@ -4,6 +4,7 @@ import * as React from 'react';
 import dynamic from 'next/dynamic';
 
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -12,7 +13,7 @@ const ExploreRequestsPanel = dynamic(
   () => import('@/components/home/HomeRequestsExplorePanel').then((mod) => mod.HomeRequestsExplorePanel),
   {
     loading: () => (
-      <section className="panel">
+      <section className={workspacePanelShell()}>
         <div className="skeleton h-96 w-full" />
       </section>
     ),

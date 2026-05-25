@@ -2,6 +2,10 @@
 
 import * as React from 'react';
 
+import {
+  workspacePanelShell,
+  workspaceStatCardShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 
@@ -52,7 +56,7 @@ export function WorkspacePublicDemandMapView({
       ref={panelRef}
       style={style}
       className={[
-        surface === 'panel' ? 'panel' : '',
+        surface === 'panel' ? workspacePanelShell() : '',
         'workspace-public-demand-map',
         surface === 'embedded' ? 'workspace-public-demand-map--embedded' : '',
         className ?? '',
@@ -86,11 +90,11 @@ export function WorkspacePublicDemandMapView({
       </div>
       {!isLoading && !isError ? (
         <div className="workspace-public-demand-map__meta workspace-public-demand-map__meta--footer">
-          <article className="stat-card workspace-public-demand-map__metric">
+          <article className={workspaceStatCardShell('workspace-public-demand-map__metric')}>
             <strong className="stat-value">{formatNumber.format(activeRequestsCount)}</strong>
             <span className="stat-label">{t(I18N_KEYS.homePublic.demandMapActiveRequests)}</span>
           </article>
-          <article className="stat-card workspace-public-demand-map__metric">
+          <article className={workspaceStatCardShell('workspace-public-demand-map__metric')}>
             <strong className="stat-value">{formatNumber.format(activeProvidersCount)}</strong>
             <span className="stat-label">{t(I18N_KEYS.homePublic.demandMapActiveProviders)}</span>
           </article>

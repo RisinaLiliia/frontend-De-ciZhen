@@ -1,5 +1,6 @@
 'use client';
 
+import { workspaceStatsChartPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 import { StatisticsSignalMeter } from '../components/StatisticsSignalMeter';
 
@@ -117,7 +118,7 @@ export function StatisticsPricePanel({
   const hasComparisonBar = comparisonProfilePercent !== null && comparisonMarketPercent !== null;
 
   return (
-    <section className={`panel requests-stats-chart workspace-statistics-price${className ? ` ${className}` : ''}`.trim()}>
+    <section className={workspaceStatsChartPanelShell('workspace-statistics-price', className)}>
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{title ?? personalizedPricing?.title ?? copy.priceTitle}</p>
         <p className="section-subtitle">{personalizedPricing?.subtitle ?? copy.priceSubtitle}</p>

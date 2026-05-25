@@ -5,6 +5,7 @@ import {
   IconTrophyGold,
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
+import { workspaceStatCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../../statistics.model';
 import { StatisticsSignalMeter } from '../../components/StatisticsSignalMeter';
@@ -33,7 +34,11 @@ export function OpportunityTopCards({
           >
             <button
               type="button"
-              className={`stat-card workspace-statistics-opportunity__item workspace-statistics-opportunity__item--compact is-${item.tone}`.trim()}
+              className={workspaceStatCardShell(
+                'workspace-statistics-opportunity__item',
+                'workspace-statistics-opportunity__item--compact',
+                `is-${item.tone}`,
+              )}
               aria-label={opportunityCardAriaLabel({ item, copy, locale })}
               onClick={() => onSelect(item.rank)}
             >

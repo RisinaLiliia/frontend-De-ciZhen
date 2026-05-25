@@ -6,7 +6,10 @@ import {
   WorkspaceDecisionRecommendationModal,
   WorkspaceDecisionRecommendationSection,
 } from '@/features/workspace/ai-rail';
-import { workspaceStatsChartPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+import {
+  workspaceStatCardShell,
+  workspaceStatsChartPanelShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 import { buildPriceStrategyOptions } from '../statisticsDecisionEngine.utils';
 
@@ -96,7 +99,7 @@ export function StatisticsPriceRecommendationPanel({
       />
       <div className="workspace-statistics-price__strategy-grid" aria-label={copy.priceStrategyTitle}>
         {strategyOptions.map((option) => (
-          <article key={option.key} className="stat-card workspace-statistics-price__strategy-card">
+          <article key={option.key} className={workspaceStatCardShell('workspace-statistics-price__strategy-card')}>
             <span className="workspace-statistics-price__strategy-label">{option.label}</span>
             <strong className="workspace-statistics-price__strategy-value">{option.priceLabel}</strong>
             <p className="workspace-statistics-price__strategy-copy">{option.description}</p>
