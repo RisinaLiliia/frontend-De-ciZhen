@@ -3,7 +3,7 @@
 import {
   WorkspaceModeHeader,
 } from '@/features/workspace/shell/WorkspaceModeHeader';
-import { WorkspaceIntroShell } from '@/features/workspace/shell/WorkspaceIntroShell';
+import { WorkspaceIntroShell } from '@/features/workspace/intro/WorkspaceIntroShell';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { Locale } from '@/lib/i18n/t';

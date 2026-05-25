@@ -25,7 +25,7 @@ function normalizeFilter(value: string | null) {
   return normalized;
 }
 
-export function WorkspaceProvidersAside({
+export function WorkspaceProvidersRail({
   t,
   locale,
 }: Props) {

@@ -157,6 +157,7 @@ export function buildWorkspaceOverviewSectionModel({
     frameClassName: 'workspace-frame--overview',
     contentClassName: 'workspace-frame__flow--overview',
     contextualAiRailClassName: 'workspace-context-rail--overview',
+    contextualAiRailUsesStatisticsLayout: false,
   });
 }
 

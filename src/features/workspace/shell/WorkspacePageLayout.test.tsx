@@ -17,6 +17,9 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/features/workspace/shared', () => ({
   WorkspaceTopProvidersAside: () => <div data-testid="workspace-top-providers-aside" />,
+  WorkspaceContextRail: ({ children }: { children?: React.ReactNode }) => (
+    <aside data-testid="workspace-context-rail">{children}</aside>
+  ),
   useIsDesktop: () => isDesktopMock,
   useIsWideDesktop: () => isWideDesktopMock,
   useMediaMatch: () => isMobileMock,
@@ -57,12 +60,6 @@ vi.mock('@/features/workspace/shell/WorkspaceSidebar', () => ({
 
 vi.mock('@/features/workspace/shell/WorkspaceMobileNavigation', () => ({
   WorkspaceMobileNavigation: () => <div data-testid="workspace-mobile-navigation" />,
-}));
-
-vi.mock('@/features/workspace/shell/WorkspaceContextAside', () => ({
-  WorkspaceContextAside: ({ children }: { children?: React.ReactNode }) => (
-    <aside data-testid="workspace-context-aside">{children}</aside>
-  ),
 }));
 
 describe('WorkspacePageLayout', () => {

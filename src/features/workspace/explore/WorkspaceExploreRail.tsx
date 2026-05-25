@@ -7,15 +7,15 @@ import { useQuery } from '@tanstack/react-query';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { useDeferredMount } from '@/hooks/useDeferredMount';
 import { workspaceQK, WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
-import { WorkspacePublicDemandMapPanel } from '@/features/workspace/overview';
+import { WorkspacePublicDemandMapPanel } from '@/features/workspace/demand-map';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import { WorkspaceRightRailStack } from '@/features/workspace/shared';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
-import { WorkspaceProfileAside } from './WorkspaceProfileAside';
-import { WorkspaceProvidersAside } from './WorkspaceProvidersAside';
+import { WorkspaceProfileRail } from './WorkspaceProfileRail';
+import { WorkspaceProvidersRail } from './WorkspaceProvidersRail';
 
 const TopProvidersPanel = dynamic(
   () => import('@/components/home/HomeTopProvidersPanel').then((mod) => mod.HomeTopProvidersPanel),
@@ -110,11 +110,11 @@ export function WorkspaceExploreRail({
     && Boolean(publicCityActivity || publicSummary || isPublicSummaryLoading || isPublicSummaryError);
 
   if (activeSection === 'providers') {
-    return <WorkspaceProvidersAside t={t} locale={locale} />;
+    return <WorkspaceProvidersRail t={t} locale={locale} />;
   }
 
   if (activeSection === 'profile') {
-    return <WorkspaceProfileAside t={t} locale={locale} />;
+    return <WorkspaceProfileRail t={t} locale={locale} />;
   }
 
   return (

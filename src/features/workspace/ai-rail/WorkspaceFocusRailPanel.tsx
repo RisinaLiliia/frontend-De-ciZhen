@@ -7,8 +7,6 @@ import {
   WorkspaceDecisionRecommendationModal,
   WorkspaceDecisionRecommendationSection,
 } from '@/features/workspace/ai-rail';
-import { getWorkspaceStatisticsCopy } from '@/features/workspace/stats';
-import { getWorkspaceFocusRecommendationCopy } from '@/features/workspace/shell/workspaceEnvironment.copy';
 import {
   fillWorkspaceModeTemplate,
   getWorkspaceChipValue,
@@ -16,13 +14,15 @@ import {
   useWorkspaceContext,
 } from '@/features/workspace/context';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
+import type { WorkspaceTab } from '@/features/workspace/state';
+import { getWorkspaceStatisticsCopy } from '@/features/workspace/stats';
+import { getWorkspaceFocusRecommendationCopy } from '@/features/workspace/navigation/workspaceMode.copy';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import type { WorkspaceTab } from '@/features/workspace/state';
 
 type Translator = (key: I18nKey) => string;
 
-export function WorkspaceContextFocusPanel({
+export function WorkspaceFocusRailPanel({
   t,
   locale,
   activePublicSection,

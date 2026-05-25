@@ -7,6 +7,7 @@ import {
   type WorkspaceSectionKey,
 } from '@/features/workspace/navigation/workspaceSection.contract';
 import {
+  WorkspaceContextRail,
   WorkspaceTopProvidersAside,
   useIsDesktop,
   useIsWideDesktop,
@@ -27,7 +28,6 @@ import type { ProofCase } from '@/types/home';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import { WorkspaceMobileNavigation } from '@/features/workspace/shell/WorkspaceMobileNavigation';
-import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextAside';
 import { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
@@ -239,14 +239,15 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     return null;
   }
 
-  const contextualAside = (
-    <WorkspaceContextAside
+  const contextualRail = (
+    <WorkspaceContextRail
       t={t}
       locale={locale}
       activePublicSection={activePublicSection}
       activeWorkspaceTab={activeWorkspaceTab}
       preferredRequestsRole={preferredRequestsRole}
       className={resolvedSectionModel.contextualAiRailClassName}
+      useStatisticsLayout={resolvedSectionModel.contextualAiRailUsesStatisticsLayout ?? true}
       topSlot={asideTopSlot}
       panelRef={isOverviewPrivateMode ? overviewDecisionPanelRef : undefined}
     >
@@ -260,7 +261,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
           onToggleFavorite={onToggleProviderFavorite}
         />
       ) : null}
-    </WorkspaceContextAside>
+    </WorkspaceContextRail>
   );
 
   const overlayNavigationMode = isWideDesktop ? null : (isMobile ? 'bottomDock' : 'drawer');
@@ -284,7 +285,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       && resolvedSectionModel.aiRail == null;
   const resolvedAiRail =
     shouldUseContextualRail
-      ? contextualAside
+      ? contextualRail
       : (resolvedSectionModel.layout === 'singleColumn' ? undefined : resolvedSectionModel.aiRail);
   const resolvedFilters =
     resolvedSectionModel.filters

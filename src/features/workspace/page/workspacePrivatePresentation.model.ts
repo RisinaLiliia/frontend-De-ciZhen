@@ -9,7 +9,7 @@ import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useW
 import type { useWorkspacePresentation } from '@/features/workspace';
 import type { useWorkspacePrivateState } from '@/features/workspace/state/useWorkspacePrivateState';
 import type { WorkspacePrivateOverviewState } from '@/features/workspace/state/workspacePrivateState.model';
-import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
+import { isWorkspaceOverviewMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
 
 type WorkspacePrivateDataFlowResult = ReturnType<typeof useWorkspacePrivateDataFlow>;
 type WorkspacePrivateStateArgs = Parameters<typeof useWorkspacePrivateState>[0];

@@ -1,21 +1,21 @@
 'use client';
 
-import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell.container';
+import { WorkspaceRouteShell } from '@/features/workspace/shell/WorkspaceRouteShell';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 
-type WorkspaceShellPageProps = {
+type WorkspaceRoutePageProps = {
   forcedPublicSection?: PublicWorkspaceSection | null;
   forcedWorkspaceTab?: WorkspaceTab | null;
 };
 
-export function WorkspaceShellPage({
+export function WorkspaceRoutePage({
   forcedPublicSection = null,
   forcedWorkspaceTab = null,
-}: WorkspaceShellPageProps = {}) {
+}: WorkspaceRoutePageProps = {}) {
   return (
     <div className="workspace-route-shell">
-      <WorkspaceShell
+      <WorkspaceRouteShell
         forcedPublicSection={forcedPublicSection}
         forcedWorkspaceTab={forcedWorkspaceTab}
       />

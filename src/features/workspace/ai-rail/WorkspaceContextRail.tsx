@@ -7,17 +7,18 @@ import type { WorkspaceTab } from '@/features/workspace/state';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 
-import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
+import { WorkspaceFocusRailPanel } from '@/features/workspace/ai-rail';
 
 type Translator = (key: I18nKey) => string;
 
-export function WorkspaceContextAside({
+export function WorkspaceContextRail({
   t,
   locale,
   activePublicSection,
   activeWorkspaceTab,
   preferredRequestsRole = null,
   className,
+  useStatisticsLayout = true,
   topSlot,
   panelRef,
   children,
@@ -28,15 +29,16 @@ export function WorkspaceContextAside({
   activeWorkspaceTab: WorkspaceTab;
   preferredRequestsRole?: 'customer' | 'provider' | null;
   className?: string;
+  useStatisticsLayout?: boolean;
   topSlot?: React.ReactNode;
   panelRef?: React.Ref<HTMLElement>;
   children?: React.ReactNode;
 }) {
   return (
-    <div className={['workspace-statistics-layout', 'workspace-context-rail', className ?? ''].filter(Boolean).join(' ')}>
+    <div className={[useStatisticsLayout ? 'workspace-statistics-layout' : '', 'workspace-context-rail', className ?? ''].filter(Boolean).join(' ')}>
       {topSlot}
 
-      <WorkspaceContextFocusPanel
+      <WorkspaceFocusRailPanel
         t={t}
         locale={locale}
         activePublicSection={activePublicSection}

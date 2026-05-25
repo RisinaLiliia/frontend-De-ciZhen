@@ -180,5 +180,4 @@ describe('mapHelpers', () => {
 
     expect(sortCitiesByActivity(cities).map((city) => city.id)).toEqual(['2', '3', '1']);
   });
-
 });

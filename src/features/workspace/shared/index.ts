@@ -2,6 +2,7 @@ export { WorkspaceBadge } from './WorkspaceBadge';
 export type { WorkspaceBadgeVariant } from './WorkspaceBadge';
 export { WorkspaceButton } from './WorkspaceButton';
 export type { WorkspaceButtonSize, WorkspaceButtonVariant } from './WorkspaceButton';
+export { WorkspaceContextRail } from '@/features/workspace/ai-rail/WorkspaceContextRail';
 export { WorkspaceFilterBar } from './WorkspaceFilterBar';
 export { WorkspaceFilterSelect } from './WorkspaceFilterSelect';
 export { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';

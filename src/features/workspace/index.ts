@@ -16,8 +16,9 @@ export type {
   WorkspaceSectionRailPolicy,
 } from './navigation/workspaceSection.contract';
 
-export { PublicContent, ProofReviewCard, WorkspaceContent, WorkspacePrivateIntro, WorkspacePublicIntro } from './shell/workspace.dynamic';
-export { WorkspaceOverviewInsightsPanel, WorkspaceOverviewMain, WorkspacePublicDemandMapPanel } from './overview';
+export { PublicContent, ProofReviewCard, WorkspaceContent, WorkspacePrivateIntro, WorkspacePublicIntro } from './workspace.lazy';
+export { WorkspaceOverviewInsightsPanel, WorkspaceOverviewMain } from './overview';
+export { WorkspacePublicDemandMapPanel } from './demand-map';
 export { StatisticsExperience, useWorkspaceStatisticsModel } from './stats';
 export {
   WorkspaceMobileNavigation,

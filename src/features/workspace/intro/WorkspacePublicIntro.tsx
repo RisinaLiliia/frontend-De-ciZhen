@@ -3,8 +3,8 @@
 import * as React from 'react';
 
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
-import { WorkspacePublicDemandMapPanel } from '@/features/workspace/overview';
-import { WorkspaceIntroShell } from '@/features/workspace/shell/WorkspaceIntroShell';
+import { WorkspacePublicDemandMapPanel } from '@/features/workspace/demand-map';
+import { WorkspaceIntroShell } from '@/features/workspace/intro/WorkspaceIntroShell';
 import {
   WorkspaceModeHeader,
 } from '@/features/workspace/shell/WorkspaceModeHeader';

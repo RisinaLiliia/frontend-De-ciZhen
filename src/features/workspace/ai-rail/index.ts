@@ -1,8 +1,10 @@
 export { WorkspaceDecisionActionCard } from './WorkspaceDecisionActionCard';
+export { WorkspaceContextRail } from './WorkspaceContextRail';
 export { WorkspaceDecisionModeBar } from './WorkspaceDecisionModeBar';
 export { WorkspaceDecisionPanel } from './WorkspaceDecisionPanel';
 export { WorkspaceDecisionRecommendationModal } from './WorkspaceDecisionRecommendationModal';
 export { WorkspaceDecisionRecommendationSection } from './WorkspaceDecisionRecommendationSection';
+export { WorkspaceFocusRailPanel } from './WorkspaceFocusRailPanel';
 export { WorkspaceInsightsPanel } from './WorkspaceInsightsPanel';
 export { WorkspaceRequestsActionRail } from './WorkspaceRequestsActionRail';
 export { WorkspaceRequestsSectionRail } from './WorkspaceRequestsSectionRail';

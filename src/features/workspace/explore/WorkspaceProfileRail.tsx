@@ -13,7 +13,7 @@ type Props = {
   locale: Locale;
 };
 
-export function WorkspaceProfileAside({
+export function WorkspaceProfileRail({
   locale,
 }: Props) {
   const {

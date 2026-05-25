@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { buildWorkspaceModeItems } from '@/features/workspace/navigation/workspaceSection.model';
-import { getWorkspaceModeCopy } from '@/features/workspace/shell/workspaceEnvironment.copy';
+import { getWorkspaceModeCopy } from '@/features/workspace/navigation/workspaceMode.copy';
 
 describe('buildWorkspaceModeItems', () => {
   it('builds all workspace sections from a single shared model', () => {

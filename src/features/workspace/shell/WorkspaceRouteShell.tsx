@@ -15,7 +15,7 @@ type WorkspaceShellProps = {
   forcedWorkspaceTab?: WorkspaceTab | null;
 };
 
-export function WorkspaceShell({
+export function WorkspaceRouteShell({
   forcedPublicSection = null,
   forcedWorkspaceTab = null,
 }: WorkspaceShellProps = {}) {

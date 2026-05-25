@@ -38,7 +38,7 @@ import {
   getWorkspaceModeCopy,
   resolveRangeLabel,
   type WorkspaceModeCopy,
-} from '@/features/workspace/shell/workspaceEnvironment.copy';
+} from '@/features/workspace/navigation/workspaceMode.copy';
 import {
   resolveActiveWorkspaceMode,
   type WorkspaceModeKey,

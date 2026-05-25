@@ -1,5 +1,5 @@
-import { WorkspaceShellPage } from '@/features/workspace/shell/WorkspaceShellPage';
+import { WorkspaceRoutePage } from '@/features/workspace/shell/WorkspaceRoutePage';
 
 export default function ClientHomeLegacyPage() {
-  return <WorkspaceShellPage forcedPublicSection="requests" />;
+  return <WorkspaceRoutePage forcedPublicSection="requests" />;
 }

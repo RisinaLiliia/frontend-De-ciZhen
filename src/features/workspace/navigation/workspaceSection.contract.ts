@@ -34,6 +34,7 @@ type WorkspaceSectionRenderModelInput = {
   frameClassName?: string;
   contentClassName?: string;
   contextualAiRailClassName?: string;
+  contextualAiRailUsesStatisticsLayout?: boolean;
   layout?: WorkspaceSectionLayout;
   title?: string;
   subtitle?: string;
@@ -147,6 +148,7 @@ export function buildWorkspaceSectionRenderModel({
   frameClassName,
   contentClassName,
   contextualAiRailClassName,
+  contextualAiRailUsesStatisticsLayout,
   layout,
   title,
   subtitle,
@@ -172,6 +174,7 @@ export function buildWorkspaceSectionRenderModel({
     frameClassName,
     contentClassName,
     contextualAiRailClassName,
+    contextualAiRailUsesStatisticsLayout,
     layout: layout ?? contract.defaultLayout,
     railPolicy: resolvedRailPolicy,
     headerPolicy: headerPolicy ?? contract.headerPolicy,

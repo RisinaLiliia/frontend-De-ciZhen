@@ -3,16 +3,16 @@
 import * as React from 'react';
 
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
+import { WorkspaceFocusRailPanel } from '@/features/workspace/ai-rail';
+import { WorkspacePublicDemandMapPanel } from '@/features/workspace/demand-map';
 import type { WorkspacePublicCityActivityDto, WorkspacePublicSummaryDto } from '@/lib/api/dto/workspace';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import { WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import { useWorkspaceStatisticsModel } from '@/features/workspace/stats';
 
 import { WorkspaceOverviewInsightsPanel } from './WorkspaceOverviewInsightsPanel';
-import { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';
 
 type Translator = (key: I18nKey) => string;
 
@@ -92,7 +92,7 @@ export function useWorkspaceOverviewRail({
   ) : null;
 
   const bottomRail = isOverviewMode ? (
-    <WorkspaceContextFocusPanel
+    <WorkspaceFocusRailPanel
       t={t}
       locale={locale}
       activePublicSection={activePublicSection}

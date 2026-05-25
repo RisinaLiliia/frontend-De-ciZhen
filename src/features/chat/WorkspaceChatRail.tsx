@@ -2,11 +2,9 @@
 
 import Link from 'next/link';
 
+import { WorkspaceFocusRailPanel } from '@/features/workspace/ai-rail';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
-import {
-  WorkspaceContextFocusPanel,
-} from '@/features/workspace/shell';
 import { workspacePanelShell } from '@/features/workspace';
 import { WorkspaceRightRailStack } from '@/features/workspace/shared';
 
@@ -51,7 +49,7 @@ export function WorkspaceChatRail() {
         <p className="workspace-context-rail__description">{copy.inboxBody}</p>
       </section>
 
-      <WorkspaceContextFocusPanel
+      <WorkspaceFocusRailPanel
         t={t}
         locale={locale}
         activePublicSection="chat"

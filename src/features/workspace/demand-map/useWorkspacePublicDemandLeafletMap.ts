@@ -262,7 +262,7 @@ export function useWorkspacePublicDemandLeafletMap({
       }
 
       if (typeof ResizeObserver === 'undefined') return;
-
+      initObserverRef.current?.disconnect();
       const observer = new ResizeObserver(() => {
         if (!hasVisibleMapSize()) return;
         observer.disconnect();
@@ -279,16 +279,13 @@ export function useWorkspacePublicDemandLeafletMap({
 
     return () => {
       isCancelled = true;
-      initObserverRef.current?.disconnect();
-      initObserverRef.current = null;
-      clearInvalidateTimers();
       destroy?.();
     };
-  }, []);
+  }, [activeRequestsLabel, cities, clusterIndex, formatNumber, hasCoordinates, onSelectCity]);
 
   React.useEffect(() => {
     renderMarkersRef.current();
-  }, [activeRequestsLabel, clusterIndex, formatNumber, hasCoordinates, onSelectCity]);
+  }, [cities, clusterIndex, hasCoordinates, formatNumber, activeRequestsLabel, onSelectCity]);
 
   return {
     mapCanvasRef,
@@ -296,16 +293,14 @@ export function useWorkspacePublicDemandLeafletMap({
   };
 }
 
-function renderCityMarker({
-  L,
-  layer,
-  item,
-  index,
-  maxCount,
-  formatNumber,
-  activeRequestsLabel,
-  onSelectCity,
-}: {
+function createTooltipNode(label: string) {
+  const node = document.createElement('span');
+  node.className = 'workspace-demand-map-tooltip__label';
+  node.textContent = label;
+  return node;
+}
+
+function renderCityMarker(params: {
   L: LeafletModule;
   layer: import('leaflet').LayerGroup;
   item: Extract<DemandClusterItem, { kind: 'city' }>;
@@ -315,41 +310,41 @@ function renderCityMarker({
   activeRequestsLabel: string;
   onSelectCity?: (cityId: string) => void;
 }) {
-  const intensity = item.count / Math.max(1, maxCount);
-  const dotSize = Math.round(10 + intensity * 12);
-  const pulseSize = dotSize + 16;
+  const {
+    L,
+    layer,
+    item,
+    index,
+    maxCount,
+    formatNumber,
+    activeRequestsLabel,
+    onSelectCity,
+  } = params;
+  const ratio = item.count / Math.max(1, maxCount);
+  const size = Math.round(18 + ratio * 14);
+  const markerLabel = `${item.name}: ${formatNumber.format(item.count)} ${activeRequestsLabel}`;
   const icon = L.divIcon({
-    className: 'workspace-demand-marker-icon',
-    iconSize: [pulseSize, pulseSize],
-    iconAnchor: [pulseSize / 2, pulseSize / 2],
-    tooltipAnchor: [0, -(pulseSize / 2 + 4)],
-    html: `<span class="workspace-demand-marker" style="--dot-size:${dotSize}px;--pulse-size:${pulseSize}px;--pulse-delay:${(index % 8) * 110}ms"><span class="workspace-demand-marker__pulse"></span><span class="workspace-demand-marker__dot"></span></span>`,
+    className: 'workspace-demand-map-marker-icon',
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    tooltipAnchor: [0, -(size / 2 + 4)],
+    html: `<span class="workspace-demand-map-marker workspace-demand-map-marker--${(index % 4) + 1}" style="--marker-size:${size}px"></span>`,
   });
-
   const marker = L.marker([item.lat, item.lng], {
     icon,
     keyboard: true,
-    title: item.name,
+    title: markerLabel,
   });
 
-  marker.bindTooltip(createTooltipNode(`${item.name}: ${formatNumber.format(item.count)} ${activeRequestsLabel}`), {
+  marker.bindTooltip(createTooltipNode(markerLabel), {
     direction: 'top',
     opacity: 0.96,
     className: 'workspace-demand-map-tooltip',
   });
 
-  marker.on('click', () => {
-    if (onSelectCity) {
-      onSelectCity(item.cityId);
-      return;
-    }
-    marker.openTooltip();
-  });
-  marker.addTo(layer);
-}
+  if (onSelectCity) {
+    marker.on('click', () => onSelectCity(item.cityId));
+  }
 
-function createTooltipNode(text: string): HTMLSpanElement {
-  const node = document.createElement('span');
-  node.textContent = text;
-  return node;
+  marker.addTo(layer);
 }

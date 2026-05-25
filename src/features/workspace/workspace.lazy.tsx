@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+
 import { workspacePanelShell, workspaceRequestsPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 export const PublicContent = dynamic(

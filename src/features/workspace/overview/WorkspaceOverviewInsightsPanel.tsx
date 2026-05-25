@@ -7,8 +7,8 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate } from '@/lib/i18n/t';
 import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
 import { WorkspaceInsightsPanel, type WorkspaceInsightsPanelItem } from '@/features/workspace/ai-rail';
+import { resolveInsightBadge, splitInsightEvidence } from '@/features/workspace/ai-rail/workspaceInsights.model';
 import type { WorkspaceStatisticsModel } from '@/features/workspace/stats';
-import { resolveInsightBadge, splitInsightEvidence } from '@/features/workspace/stats/sections/StatisticsInsightsPanel';
 
 type WorkspaceOverviewInsightsPanelProps = {
   locale: Locale;
@@ -73,7 +73,8 @@ export function WorkspaceOverviewInsightsPanel({
       assistantDescription={assistantDescription}
       featuredLabel={statisticsModel.copy.insightsFeaturedLabel}
       items={insights}
-      className="workspace-statistics-layout workspace-insights-panel--rail-balanced workspace-overview__panel workspace-overview__rail-panel--insights"
+      className="workspace-overview__insights-panel workspace-overview__panel workspace-overview__rail-panel--insights"
+      headerClassName="workspace-overview__tile-header"
       panelRef={panelRef}
       style={style}
       showHeader={false}

@@ -3,7 +3,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
-import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell.container';
+import { WorkspaceRouteShell } from '@/features/workspace/shell/WorkspaceRouteShell';
 
 const {
   useRouterMock,
@@ -60,7 +60,7 @@ function mockAuth(status: 'authenticated' | 'unauthenticated' | 'loading' | 'idl
   } as never);
 }
 
-describe('WorkspaceShell', () => {
+describe('WorkspaceRouteShell', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSearchParams('');
@@ -79,7 +79,7 @@ describe('WorkspaceShell', () => {
     mockSearchParams('section=reviews');
     mockAuth('authenticated');
 
-    render(<WorkspaceShell />);
+    render(<WorkspaceRouteShell />);
 
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('stats');
@@ -90,7 +90,7 @@ describe('WorkspaceShell', () => {
     mockSearchParams('section=reviews');
     mockAuth('unauthenticated');
 
-    render(<WorkspaceShell />);
+    render(<WorkspaceRouteShell />);
 
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('stats');
@@ -103,7 +103,7 @@ describe('WorkspaceShell', () => {
     mockSearchParams('section=statistics&period=90d');
     mockAuth('unauthenticated');
 
-    render(<WorkspaceShell />);
+    render(<WorkspaceRouteShell />);
 
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('stats');
@@ -117,7 +117,7 @@ describe('WorkspaceShell', () => {
     mockSearchParams('section=chat&conversation=custom-thread-1');
     mockAuth('authenticated');
 
-    render(<WorkspaceShell />);
+    render(<WorkspaceRouteShell />);
 
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('chat');
@@ -130,7 +130,7 @@ describe('WorkspaceShell', () => {
     mockSearchParams('section=chat&conversation=custom-thread-1');
     mockAuth('unauthenticated');
 
-    const { container } = render(<WorkspaceShell />);
+    const { container } = render(<WorkspaceRouteShell />);
 
     expect(screen.queryByTestId('workspace-page-client')).toBeNull();
     expect(container.querySelector('.min-h-dvh')).not.toBeNull();
@@ -144,7 +144,7 @@ describe('WorkspaceShell', () => {
     mockSearchParams('section=reviews');
     mockAuth('authenticated');
 
-    render(<WorkspaceShell forcedWorkspaceTab="my-offers" />);
+    render(<WorkspaceRouteShell forcedWorkspaceTab="my-offers" />);
 
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('null');
@@ -155,7 +155,7 @@ describe('WorkspaceShell', () => {
     mockSearchParams('section=overview');
     mockAuth('loading');
 
-    render(<WorkspaceShell />);
+    render(<WorkspaceRouteShell />);
 
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('null');
@@ -166,7 +166,7 @@ describe('WorkspaceShell', () => {
     mockSearchParams('section=overview');
     mockAuth('unauthenticated');
 
-    render(<WorkspaceShell />);
+    render(<WorkspaceRouteShell />);
 
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('null');
@@ -179,7 +179,7 @@ describe('WorkspaceShell', () => {
     mockSearchParams('section=requests&scope=my&role=provider&state=attention');
     mockAuth('unauthenticated');
 
-    render(<WorkspaceShell />);
+    render(<WorkspaceRouteShell />);
 
     expect(replace).toHaveBeenCalledWith(
       '/workspace?section=requests&scope=market',
@@ -191,7 +191,7 @@ describe('WorkspaceShell', () => {
     shouldAttemptRefreshOnBootstrapMock.mockReturnValue(true);
     mockAuth('loading');
 
-    const { container } = render(<WorkspaceShell />);
+    const { container } = render(<WorkspaceRouteShell />);
 
     expect(screen.queryByTestId('workspace-page-client')).toBeNull();
     expect(container.querySelector('.min-h-dvh')).not.toBeNull();

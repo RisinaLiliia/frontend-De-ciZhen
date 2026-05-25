@@ -22,6 +22,7 @@ type WorkspacePublicDemandMapPanelProps = {
   panelRef?: React.Ref<HTMLElement>;
   style?: React.CSSProperties;
   className?: string;
+  headerClassName?: string;
   onSelectCity?: (cityId: string) => void;
 };
 
@@ -36,6 +37,7 @@ export function WorkspacePublicDemandMapPanel({
   panelRef,
   style,
   className,
+  headerClassName,
   onSelectCity,
 }: WorkspacePublicDemandMapPanelProps) {
   const formatNumber = React.useMemo(
@@ -72,6 +74,7 @@ export function WorkspacePublicDemandMapPanel({
       panelRef={panelRef}
       style={style}
       className={className}
+      headerClassName={headerClassName}
       activeRequestsCount={activeRequestsCount}
       activeProvidersCount={activeProvidersCount}
       mapCanvasRef={mapCanvasRef}

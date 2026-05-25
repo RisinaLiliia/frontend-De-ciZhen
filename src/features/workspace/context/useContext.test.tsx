@@ -8,7 +8,7 @@ import {
   buildContextControlsProps,
   type WorkspaceContextModel,
 } from '@/features/workspace/context/useContext';
-import { getWorkspaceModeCopy } from '@/features/workspace/shell/workspaceEnvironment.copy';
+import { getWorkspaceModeCopy } from '@/features/workspace/navigation/workspaceMode.copy';
 
 afterEach(() => {
   cleanup();

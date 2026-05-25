@@ -33,6 +33,7 @@ type WorkspaceInsightsPanelProps = {
   featuredLabel?: string;
   items: WorkspaceInsightsPanelItem[];
   className?: string;
+  headerClassName?: string;
   panelRef?: React.Ref<HTMLElement>;
   style?: React.CSSProperties;
   showHeader?: boolean;
@@ -79,6 +80,7 @@ export function WorkspaceInsightsPanel({
   featuredLabel,
   items,
   className,
+  headerClassName,
   panelRef,
   style,
   showHeader = true,
@@ -119,7 +121,7 @@ export function WorkspaceInsightsPanel({
         <header
           className={[
             'section-heading',
-            'workspace-statistics__tile-header',
+            headerClassName ?? 'workspace-statistics__tile-header',
             'workspace-statistics-insights__header',
           ].filter(Boolean).join(' ')}
         >

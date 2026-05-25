@@ -15,6 +15,7 @@ type WorkspacePublicDemandMapViewProps = {
   panelRef?: React.Ref<HTMLElement>;
   style?: React.CSSProperties;
   className?: string;
+  headerClassName?: string;
   activeRequestsCount: number;
   activeProvidersCount: number;
   mapCanvasRef: React.RefObject<HTMLDivElement | null>;
@@ -36,6 +37,7 @@ export function WorkspacePublicDemandMapView({
   panelRef,
   style,
   className,
+  headerClassName,
   activeRequestsCount,
   activeProvidersCount,
   mapCanvasRef,
@@ -56,7 +58,7 @@ export function WorkspacePublicDemandMapView({
         className ?? '',
       ].filter(Boolean).join(' ')}
     >
-      <header className="workspace-public-demand-map__header workspace-statistics__tile-header">
+      <header className={['workspace-public-demand-map__header', headerClassName ?? 'workspace-statistics__tile-header'].filter(Boolean).join(' ')}>
         <p className="section-title">{t(I18N_KEYS.homePublic.demandMapTitle)}</p>
         <p className="section-subtitle">{t(I18N_KEYS.homePublic.demandMapSubtitle)}</p>
       </header>

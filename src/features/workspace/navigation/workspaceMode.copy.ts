@@ -1,7 +1,7 @@
 'use client';
 
 import type { WorkspaceRequestsScope } from '@/features/workspace/state';
-import type { WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
+import type { WorkspaceModeKey } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 

@@ -342,11 +342,11 @@ export function WorkspaceOverviewMain({
   const isFocusMode = statisticsModel.context.mode === 'focus';
 
   return (
-    <section className="workspace-statistics-layout workspace-overview">
+    <section className="workspace-overview">
       <div ref={heroRef} className="workspace-overview__hero">
         <section className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--snapshot')}>
           <div className="panel-header">
-            <div className="section-heading workspace-statistics__tile-header">
+            <div className="section-heading workspace-overview__tile-header">
               <p className="section-title">{copy.snapshotTitle}</p>
               <p className="section-subtitle">
                 {isFocusMode ? statisticsModel.context.subtitle : copy.snapshotSubtitle}
@@ -381,7 +381,8 @@ export function WorkspaceOverviewMain({
         <StatisticsDemandPanelSection
           model={statisticsModel}
           t={t}
-          className="workspace-overview__panel"
+          className="workspace-overview__panel workspace-overview__panel--demand workspace-overview__demand-panel"
+          headerClassName="workspace-overview__tile-header"
           onSelectCategory={statisticsModel.setCategoryKey}
         />
       </div>
@@ -393,7 +394,7 @@ export function WorkspaceOverviewMain({
       <div className="workspace-overview__grid">
         <section className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--providers')}>
           <div className="panel-header">
-            <div className="section-heading workspace-statistics__tile-header">
+            <div className="section-heading workspace-overview__tile-header">
               <p className="section-title">{topProvidersTitle}</p>
               <p className="section-subtitle">{resolvedTopProvidersSubtitle}</p>
             </div>
@@ -413,7 +414,7 @@ export function WorkspaceOverviewMain({
           className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--offers')}
         >
           <div className="panel-header">
-            <div className="section-heading workspace-statistics__tile-header">
+            <div className="section-heading workspace-overview__tile-header">
               <p className="section-title">{copy.offersTitle}</p>
               <p className="section-subtitle">{copy.offersSubtitle}</p>
             </div>
@@ -433,7 +434,7 @@ export function WorkspaceOverviewMain({
         style={actionsStyle}
       >
         <div className="panel-header">
-          <div className="section-heading workspace-statistics__tile-header">
+          <div className="section-heading workspace-overview__tile-header">
             <p className="section-title">{copy.quickActionsTitle}</p>
             <p className="section-subtitle">{copy.quickActionsSubtitle}</p>
           </div>

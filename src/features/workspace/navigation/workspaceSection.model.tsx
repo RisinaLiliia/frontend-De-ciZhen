@@ -9,9 +9,9 @@ import {
   IconFilter,
   IconUser,
 } from '@/components/ui/icons/icons';
-import type { WorkspaceModeCopy } from '@/features/workspace/shell/workspaceEnvironment.copy';
-import { buildModeHref } from '@/features/workspace/shell/workspaceEnvironment.copy';
 import type { WorkspaceModeKey } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
+import type { WorkspaceModeCopy } from '@/features/workspace/navigation/workspaceMode.copy';
+import { buildModeHref } from '@/features/workspace/navigation/workspaceMode.copy';
 
 export type WorkspaceModeItem = {
   key: WorkspaceModeKey;

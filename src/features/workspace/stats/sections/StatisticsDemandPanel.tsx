@@ -25,6 +25,7 @@ export function StatisticsDemandPanel({
   onSelectCategory,
   t,
   className,
+  headerClassName,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
   subtitle?: string;
@@ -38,10 +39,11 @@ export function StatisticsDemandPanel({
   onSelectCategory?: (next: string | null) => void;
   t: TranslateFn;
   className?: string;
+  headerClassName?: string;
 }) {
   return (
     <section className={workspacePanelShell('requests-stats-chart', 'workspace-statistics__demand-panel', className)}>
-      <header className="section-heading workspace-statistics__tile-header">
+      <header className={['section-heading', headerClassName ?? 'workspace-statistics__tile-header'].filter(Boolean).join(' ')}>
         <p className="section-title">{copy.demandTitle}</p>
         <p className="section-subtitle">{subtitle ?? copy.demandSubtitle}</p>
       </header>
@@ -132,6 +134,7 @@ export function StatisticsDemandPanelSection({
   t,
   pageSize = DEFAULT_DEMAND_PAGE_SIZE,
   className,
+  headerClassName,
   onSelectCategory,
   categoryFit,
 }: {
@@ -139,6 +142,7 @@ export function StatisticsDemandPanelSection({
   t: TranslateFn;
   pageSize?: number;
   className?: string;
+  headerClassName?: string;
   onSelectCategory?: (next: string | null) => void;
   categoryFit?: WorkspaceStatisticsModel['categoryFit'];
 }) {
@@ -172,6 +176,7 @@ export function StatisticsDemandPanelSection({
       onSelectCategory={onSelectCategory}
       t={t}
       className={className}
+      headerClassName={headerClassName}
     />
   );
 }

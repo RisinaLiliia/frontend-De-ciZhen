@@ -56,6 +56,7 @@ export type WorkspaceSectionRenderModel = {
   frameClassName?: string;
   contentClassName?: string;
   contextualAiRailClassName?: string;
+  contextualAiRailUsesStatisticsLayout?: boolean;
   layout?: WorkspaceSectionLayout;
   railPolicy?: WorkspaceSectionRailPolicy;
   headerPolicy?: WorkspaceSectionHeaderPolicy;
