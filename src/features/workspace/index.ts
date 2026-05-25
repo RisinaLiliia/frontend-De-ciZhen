@@ -1,4 +1,4 @@
-export { useWorkspaceRouteState } from './context/contextUrlState';
+export { useWorkspaceRouteState } from './page/useWorkspaceRouteState';
 export { WorkspacePageLayout } from './shell/WorkspacePageLayout';
 export type { PublicWorkspaceSection } from './navigation/resolveActiveWorkspaceSection';
 export { workspaceNavigationItems } from './navigation/workspaceNavigation.config';

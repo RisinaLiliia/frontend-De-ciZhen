@@ -51,7 +51,7 @@ Notes:
 - `PASS` Topbar, sidebar, bottom navigation и page frame контролируются через один layout contract: `WorkspacePageLayout` + `WorkspaceShell`.
 - `PASS` Public/private mode используют один shell path и расходятся на уровне branch model/data composition, а не на уровне независимых page shells.
 - `PASS` URL query state остаётся центральным driver для section/scope/filter state.
-- `NEEDS CLEANUP` `useWorkspaceRouteState` сейчас живёт в `src/features/workspace/context/contextUrlState.ts`, что смазывает ownership между `context` и route/page state.
+- `PASS` `useWorkspaceRouteState` теперь живёт в `src/features/workspace/page/useWorkspaceRouteState.ts`, то есть рядом с route/page state composition, а не внутри `context`.
 - `DOCUMENTED EXCEPTION` `useWorkspaceShellLegacyRouting.tsx` и alias mapping в workspace state intentionally keep old route/query aliases alive.
 
 ## Responsive shell status
@@ -131,19 +131,16 @@ Reason:
 - Statistics visual/layout ownership всё ещё partially attached to requests CSS files.
 - Некоторые raw `panel/card` wrappers ещё обходят central surface helper API.
 - Legacy alias routing всё ещё существует; это снижает архитектурную чистоту, хотя и помогает compatibility.
-- Route-state ownership между `context` и `page/shell` ещё неидеален.
+- Remaining route-state ownership smell по `context` слою в этом audit pass не обнаружен.
 
 ## Recommended next PRs
 
-1. `refactor(workspace): move route state ownership out of context`
-   - перенести `useWorkspaceRouteState` / related route-query helpers ближе к `page` или `shell`
-
-2. `refactor(stats): move statistics CSS out of requests shell styles`
+1. `refactor(stats): move statistics CSS out of requests shell styles`
    - довести CSS ownership до исходного target state
 
-3. `refactor(workspace): normalize remaining raw panel/card wrappers`
+2. `refactor(workspace): normalize remaining raw panel/card wrappers`
    - постепенно свести section-level surfaces к `workspaceSurfaceShell.ts`
 
-4. `test(workspace): run manual responsive QA matrix`
+3. `test(workspace): run manual responsive QA matrix`
    - проверить `375`, `425`, `768`, `1024`, `1280`, `1440`
    - отдельно подтвердить отсутствие duplicated rail/context blocks и overflow regressions
