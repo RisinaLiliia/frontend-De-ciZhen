@@ -69,7 +69,8 @@ export function WorkspaceMobileNavigation({
   const isAuthenticated = authStatus === 'authenticated';
   const chatHref = isAuthenticated ? '/workspace?section=chat' : LOGIN_CHAT_URL;
   const profileHref = isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
-  const isCreateOverlayActive = searchParams.get('requestCreate') === '1';
+  const isCreateOverlayActive = searchParams.get('mode') === 'create'
+    || searchParams.get('requestCreate') === '1';
   const dockItems: WorkspaceNavigationDockItem[] = [
     {
       key: 'dashboard',

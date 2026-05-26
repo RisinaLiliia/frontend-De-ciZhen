@@ -20,7 +20,7 @@ import type { WorkspaceChatConversationInput } from '@/features/workspace/privat
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
-import { providerQK } from '@/features/provider/queries';
+import { providerQK } from '@/features/providers/queries';
 import { workspaceQK } from '@/features/workspace/data';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
 import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';

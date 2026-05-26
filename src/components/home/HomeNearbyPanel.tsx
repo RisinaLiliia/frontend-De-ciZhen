@@ -40,6 +40,7 @@ import {
   shouldUseHomeNearbyFallback,
 } from '@/components/home/homeNearbyPanel.model';
 import { workspaceQK } from '@/features/workspace/data';
+import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 type HomeNearbyPanelProps = {
   t: (key: I18nKey) => string;
@@ -219,7 +220,12 @@ export function HomeNearbyPanel({
     [targetItems, visibleRows],
   );
   const openRequest = React.useCallback((requestId: string) => {
-    router.push(`/requests/${requestId}`);
+    router.push(
+      buildWorkspaceRequestDetailHref({
+        currentSearch: '',
+        requestId,
+      }),
+    );
   }, [router]);
 
   return (

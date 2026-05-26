@@ -8,6 +8,7 @@ import type { OfferDto } from '@/lib/api/dto/offers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 type ServiceCatalogEntry = {
   categoryKey: string;
@@ -114,7 +115,10 @@ export function buildPublicRequestCardPresentation({
     (item.photos?.length ? item.photos[0] : null) || item.imageUrl || pickRequestImage(item.categoryKey ?? '');
   const title = item.title?.trim() || item.description?.trim() || serviceLabel;
   const excerptSource = item.description?.trim() ?? '';
-  const detailsHref = `/requests/${item.id}`;
+  const detailsHref = buildWorkspaceRequestDetailHref({
+    currentSearch: '',
+    requestId: item.id,
+  });
   const preferredDate = item.preferredDate ? new Date(item.preferredDate) : null;
   const itemOffer = enableOfferActions ? offersByRequest?.get(item.id) : undefined;
   const offerCardState = resolveOfferCardState(itemOffer);

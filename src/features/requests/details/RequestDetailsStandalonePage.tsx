@@ -21,6 +21,7 @@ import { useRequestOfferActions } from '@/features/requests/details/useRequestOf
 import { useRequestDetailsUrlAction } from '@/features/requests/details/useRequestDetailsUrlAction';
 import { useRequestDetailsPageData } from '@/features/requests/details/useRequestDetailsPageData';
 import { RequestDetailsContent } from '@/features/requests/details/RequestDetailsContent';
+import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 const WORKSPACE_MY_REQUESTS_URL = '/workspace?section=requests&scope=my&period=90d&range=90d';
 const WORKSPACE_PUBLIC_REQUESTS_URL = '/workspace?section=requests';
@@ -304,7 +305,12 @@ export function RequestDetailsStandalonePage() {
         successTipCardBody={t(I18N_KEYS.requestDetails.responseSuccessTipCardBody)}
         successProfileCta={t(I18N_KEYS.requestDetails.responseProfileCta)}
         successContinueCta={t(I18N_KEYS.requestDetails.responseContinueCta)}
-        successProfileHref={`${profileHref}?highlight=offer&next=${encodeURIComponent(`/requests/${request.id}`)}`}
+        successProfileHref={`${profileHref}?highlight=offer&next=${encodeURIComponent(
+          buildWorkspaceRequestDetailHref({
+            currentSearch: '',
+            requestId: request.id,
+          }),
+        )}`}
         showProfileAdvice={!isProviderProfileComplete}
         profileAvatarUrl={authMe?.avatar?.url ?? null}
         profileName={authMe?.name ?? authUser?.name ?? null}

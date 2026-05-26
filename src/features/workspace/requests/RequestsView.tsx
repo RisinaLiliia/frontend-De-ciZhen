@@ -51,6 +51,8 @@ import type {
   WorkspaceRequestsViewVariant,
 } from '@/features/workspace/requests/workspaceRequestsView.model';
 import {
+  buildWorkspaceOwnRequestDetailHref,
+  buildWorkspaceRequestDetailHref,
   buildWorkspaceRequestOverlayHref,
   clearWorkspaceRequestOverlayHref,
   readWorkspaceRequestRouteState,
@@ -102,6 +104,23 @@ function resolveCardOpenIntent(
 ): RequestDialogIntent {
   if (variant === 'market') return 'view';
   return hasOwnerRequestEditCapability(card) ? 'edit' : 'view';
+}
+
+function resolveWorkspaceRequestHref(
+  card: Pick<WorkspaceRequestsViewCard, 'requestId'>,
+  workspaceVariant: WorkspaceRequestsViewVariant,
+) {
+  if (workspaceVariant === 'market') {
+    return buildWorkspaceRequestDetailHref({
+      currentSearch: '',
+      requestId: card.requestId,
+    });
+  }
+
+  return buildWorkspaceOwnRequestDetailHref({
+    currentSearch: '',
+    requestId: card.requestId,
+  });
 }
 
 function resolveOwnerMenuActionIcon(icon: WorkspaceRequestsViewCard['status']['actions'][number]['icon']) {
@@ -312,6 +331,7 @@ function RequestCardTopSlot({
   chrome,
   locale,
   card,
+  requestHref,
   steps,
   ownerRequestActions,
   onOpenRequest,
@@ -320,6 +340,7 @@ function RequestCardTopSlot({
   chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
   locale: Locale;
   card: WorkspaceRequestsViewCard;
+  requestHref: string;
   steps: WorkspaceRequestsViewCard['progress']['steps'];
   ownerRequestActions?: OwnerRequestActions;
   onOpenRequest?: WorkspaceRequestOverlayListContext['onOpenRequest'];
@@ -349,6 +370,7 @@ function RequestCardTopSlot({
               <RequestOwnerMenu
                 locale={locale}
                 card={card}
+                requestHref={requestHref}
                 ownerRequestActions={ownerRequestActions}
                 onOpenRequest={onOpenRequest}
               />
@@ -375,11 +397,13 @@ function RequestCardTopSlot({
 function RequestOwnerMenu({
   locale,
   card,
+  requestHref,
   ownerRequestActions,
   onOpenRequest,
 }: {
   locale: Locale;
   card: WorkspaceRequestsViewCard;
+  requestHref: string;
   ownerRequestActions?: OwnerRequestActions;
   onOpenRequest?: WorkspaceRequestOverlayListContext['onOpenRequest'];
 }) {
@@ -409,7 +433,6 @@ function RequestOwnerMenu({
     };
   }, [isOpen]);
 
-  const requestHref = card.requestPreview.href || `/requests/${card.requestId}`;
   const menuActions = React.useMemo(
     () => resolveOwnerMenuActions({ card }),
     [card],
@@ -504,7 +527,7 @@ function RequestOwnerMenu({
                   key={action.key}
                   role="menuitem"
                   icon={actionIcon}
-                  onClick={() => void handleShare(action.href)}
+                  onClick={() => void handleShare()}
                 >
                   {action.label}
                 </OwnerMenuActionButton>
@@ -592,6 +615,10 @@ function WorkspaceRequestCard({
     () => buildPrivateRequestCardChrome({ card, locale }),
     [card, locale],
   );
+  const requestHref = React.useMemo(
+    () => resolveWorkspaceRequestHref(card, workspaceVariant),
+    [card, workspaceVariant],
+  );
   const cardOpenIntent = React.useMemo(
     () => resolveCardOpenIntent(card, workspaceVariant),
     [card, workspaceVariant],
@@ -619,7 +646,7 @@ function WorkspaceRequestCard({
       <div className="workspace-guest-request-card-shell" data-request-id={card.requestId}>
         <WorkspaceGuestRequestCard
           prefetch={index < 2}
-          href={preview.href}
+          href={requestHref}
           className={[
             'workspace-guest-request-card',
             'workspace-guest-request-card--market',
@@ -683,7 +710,7 @@ function WorkspaceRequestCard({
     >
       <RequestCard
         prefetch={index < 2}
-        href={preview.href}
+        href={requestHref}
         className="my-request-card__surface"
         ariaLabel={tx(locale, I18N_KEYS.requestsPage.openRequest)}
         imageSrc={preview.imageUrl || pickRequestImage(preview.imageCategoryKey ?? '')}
@@ -708,6 +735,7 @@ function WorkspaceRequestCard({
             chrome={chrome}
             locale={locale}
             card={card}
+            requestHref={requestHref}
             steps={card.progress.steps}
             ownerRequestActions={listContext.ownerRequestActions}
             onOpenRequest={listContext.onOpenRequest}

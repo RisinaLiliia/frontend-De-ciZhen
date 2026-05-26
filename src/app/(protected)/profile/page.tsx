@@ -18,6 +18,6 @@ export default async function ProfileIndexPage({ searchParams }: ProfileIndexPag
     }
   });
 
-  const base = '/workspace?section=settings';
-  redirect(next.toString() ? `${base}?${next.toString()}` : base);
+  const base = '/workspace?section=profile';
+  redirect(next.toString() ? `${base}&${next.toString()}` : base);
 }

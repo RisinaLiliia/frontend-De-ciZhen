@@ -67,6 +67,7 @@ import {
   resolveConversationUnreadCount,
 } from '@/features/chat/chat.model';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
+import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import styles from './ChatWorkspacePage.module.css';
 
 const CONVERSATIONS_QUERY_KEY = ['chat', 'conversations'] as const;
@@ -758,7 +759,9 @@ export function ChatWorkspacePage({
     ?? requestQuery.data?.price
     ?? selectedConversation?.relatedEntity.amount
     ?? null;
-  const requestHref = requestId ? `/requests/${requestId}` : null;
+  const requestHref = requestId
+    ? buildWorkspaceRequestDetailHref({ currentSearch: '', requestId })
+    : null;
   const profileHref = null;
   const secondaryHref =
     selectedConversation?.relatedEntity.type === 'order'

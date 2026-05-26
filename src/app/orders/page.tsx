@@ -1,7 +1,5 @@
-'use client';
-
-import { WorkspaceRoutePage } from '@/features/workspace/shell/WorkspaceRoutePage';
+import { redirect } from 'next/navigation';
 
 export default function RequestsAliasPage() {
-  return <WorkspaceRoutePage forcedPublicSection="requests" />;
+  redirect('/workspace?section=requests');
 }

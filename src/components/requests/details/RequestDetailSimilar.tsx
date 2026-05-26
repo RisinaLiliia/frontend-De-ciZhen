@@ -2,6 +2,7 @@
 import { WorkspaceGuestRequestCard } from '@/components/requests/WorkspaceGuestRequestCard';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
+import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 type RequestDetailSimilarProps = {
   title: string;
@@ -48,7 +49,7 @@ export function RequestDetailSimilar({
               return (
                 <WorkspaceGuestRequestCard
                   key={item.id}
-                  href={`/requests/${item.id}`}
+                  href={buildWorkspaceRequestDetailHref({ currentSearch: '', requestId: item.id })}
                   ariaLabel={openRequestLabel}
                   onOpen={onOpenRequest ? () => onOpenRequest(item.id) : undefined}
                   imageSrc={getImage(item)}

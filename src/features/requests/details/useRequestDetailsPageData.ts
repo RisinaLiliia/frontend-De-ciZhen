@@ -10,7 +10,7 @@ import { useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
-import { providerQK } from '@/features/provider/queries';
+import { providerQK } from '@/features/providers/queries';
 import type { AuthStatus } from '@/features/auth/store';
 import { fetchManagedRequestDetails } from '@/features/requests/details/requestDetails.data';
 import { workspaceQK } from '@/features/workspace/data';

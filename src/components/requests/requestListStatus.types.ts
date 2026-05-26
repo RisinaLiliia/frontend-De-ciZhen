@@ -7,6 +7,7 @@ import type { OwnerRequestActions } from './requestsList.types';
 
 export type RequestListStatusPresentation = {
   detailsHref: string;
+  editHref: string;
   itemId: string;
   itemStatus: string | undefined;
   itemOffer: OfferDto | undefined;

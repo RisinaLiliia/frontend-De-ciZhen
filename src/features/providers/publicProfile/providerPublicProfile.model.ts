@@ -5,6 +5,7 @@ import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { getProviderCityKey, getProviderServiceKeys } from '@/features/providers/publicProfile/providerPublicProfile.presentation';
+import { buildWorkspaceProviderDetailHref } from '@/features/workspace/providers/workspaceProviderRoute.model';
 
 type Translate = (key: I18nKey) => string;
 
@@ -28,8 +29,12 @@ export function buildProviderPublicProfileCard(params: {
     t,
     locale,
     provider,
-    profileHref: profileHrefBuilder?.(provider.id) ?? `/providers/${provider.id}`,
-    reviewsHref: reviewsHrefBuilder?.(provider.id) ?? `/providers/${provider.id}#reviews`,
+    profileHref:
+      profileHrefBuilder?.(provider.id)
+      ?? buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id }),
+    reviewsHref:
+      reviewsHrefBuilder?.(provider.id)
+      ?? `${buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id })}#reviews`,
     ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
     status: 'online',
   });

@@ -18,6 +18,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
+import { buildWorkspaceProviderDetailHref } from '@/features/workspace/providers/workspaceProviderRoute.model';
 
 export function RequestOffersStandalonePage() {
   const params = useParams();
@@ -109,7 +110,13 @@ export function RequestOffersStandalonePage() {
                       ) : null}
                     </div>
                     <div className="mt-4 flex flex-wrap items-center gap-2">
-                      <Link href={`/providers/${item.providerUserId}`} className="badge">
+                      <Link
+                        href={buildWorkspaceProviderDetailHref({
+                          currentSearch: '',
+                          providerId: item.providerUserId ?? '',
+                        })}
+                        className="badge"
+                      >
                         {t(I18N_KEYS.offers.profileCta)}
                       </Link>
                       <button

@@ -1,8 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 
+import { providerQK } from '@/features/providers/queries';
+import type { ProviderPublicDto } from '@/lib/api/dto/providers';
+import { getPublicProviderById } from '@/lib/api/providers';
+import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { getWorkspaceProviders } from '@/lib/api/workspace';
 import { workspaceQK } from '@/features/workspace/data';
 import { ALL_OPTION_KEY } from '@/features/workspace/shared';
@@ -11,6 +15,7 @@ import {
   resolveRequestsListDensityForPageSize,
   type RequestsListDensity,
 } from '@/lib/requests/pagination';
+import { backfillProviderCardAvatarsFromCandidates } from '@/lib/providers/publicProvider';
 
 type Args = {
   isProvidersView: boolean;
@@ -69,6 +74,38 @@ export function useProvidersExploreData({
     refetchOnWindowFocus: false,
     retry: false,
   });
+  const missingAvatarProviderIds = React.useMemo(
+    () =>
+      Array.from(
+        new Set(
+          (contractData?.list.items ?? [])
+            .filter((item) => !item.card.avatarUrl?.trim())
+            .map((item) => item.id),
+        ),
+      ),
+    [contractData?.list.items],
+  );
+  const publicProviderDetailResults = useQueries({
+    queries: missingAvatarProviderIds.map((providerId) => ({
+      queryKey: providerQK.publicById(providerId),
+      enabled: isProvidersView,
+      queryFn: () => withStatusFallback(() => getPublicProviderById(providerId), null, [404]),
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+      retry: false,
+    })),
+  });
+  const publicProviderDetailCandidates = React.useMemo(
+    () =>
+      publicProviderDetailResults
+        .map((result) => result.data)
+        .filter((item): item is ProviderPublicDto => Boolean(item)),
+    [publicProviderDetailResults],
+  );
+  const providerCards = React.useMemo(
+    () => backfillProviderCardAvatarsFromCandidates(contractData?.list.items ?? [], publicProviderDetailCandidates),
+    [contractData?.list.items, publicProviderDetailCandidates],
+  );
 
   const providerById = React.useMemo(
     () =>
@@ -111,7 +148,7 @@ export function useProvidersExploreData({
     providerById,
     favoriteProviderIds,
     isProvidersError,
-    providerCards: contractData?.list.items ?? [],
+    providerCards,
     totalProviderPages: contractData?.list.totalPages ?? 1,
     totalProvidersLabel: contractData?.list.totalLabel ?? '0',
     filteredProvidersCount: contractData?.list.totalCount ?? 0,

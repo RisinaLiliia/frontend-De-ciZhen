@@ -1,5 +1,5 @@
-import { WorkspaceRoutePage } from '@/features/workspace/shell/WorkspaceRoutePage';
+import { redirect } from 'next/navigation';
 
 export default function ProviderRequestsLegacyPage() {
-  return <WorkspaceRoutePage forcedPublicSection="requests" />;
+  redirect('/workspace?section=requests&scope=my&period=90d&range=90d');
 }

@@ -18,6 +18,6 @@ export default async function ProfileLegacyPage({ searchParams }: ProfileLegacyP
     }
   });
 
-  const base = '/workspace?section=settings';
+  const base = '/workspace?section=profile';
   redirect(next.toString() ? `${base}&${next.toString()}` : base);
 }

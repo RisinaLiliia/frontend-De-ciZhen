@@ -7,6 +7,7 @@ import { pickI18n } from '@/lib/i18n/helpers';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { buildWorkspaceProviderDetailHref } from '@/features/workspace/providers/workspaceProviderRoute.model';
 
 type Translator = (key: I18nKey) => string;
 
@@ -72,8 +73,8 @@ export function buildHomeTopProviderCards(params: {
         (provider as { cityId?: string }).cityId
           ? params.cityLabelById.get((provider as { cityId?: string }).cityId ?? '') ?? ''
           : '',
-      profileHref: `/providers/${provider.id}`,
-      reviewsHref: `/providers/${provider.id}#reviews`,
+      profileHref: buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id }),
+      reviewsHref: `${buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id })}#reviews`,
       ctaLabel: params.t(I18N_KEYS.homePublic.topProvider1Cta),
       status: 'online',
     });

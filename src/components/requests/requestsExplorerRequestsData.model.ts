@@ -4,6 +4,7 @@ import type { PublicRequestsFilter } from '@/lib/api/requests';
 import type { Locale } from '@/lib/i18n/t';
 import { hasDefaultPublicFilter } from '@/components/requests/requestsExplorer.model';
 import { workspaceQK } from '@/features/workspace/data';
+import { buildWorkspaceRequestOverlayHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 type BuildPublicRequestsQueryStateArgs = {
   filter: PublicRequestsFilter;
@@ -79,7 +80,12 @@ export function findOfferRequestId(myOffers: OfferDto[], offerId: string) {
 }
 
 export function resolveRequestsExplorerOfferHref(requestId: string) {
-  return `/requests/${requestId}?offer=1`;
+  return buildWorkspaceRequestOverlayHref({
+    currentSearch: '',
+    requestId,
+    scope: 'market',
+    panel: 'offer',
+  });
 }
 
 export function resolveRequestsExplorerLoginHref(requestId: string) {

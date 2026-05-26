@@ -17,6 +17,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
+import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '@/features/workspace/stats';
 import { StatisticsDecisionAiCard } from '@/features/workspace/stats/components/StatisticsDecisionAiCard';
@@ -230,7 +231,7 @@ function WorkspaceOpportunityCards({
         return {
           key: request.id,
           prefetch: index < 2,
-          href: `/requests/${request.id}`,
+          href: buildWorkspaceRequestDetailHref({ currentSearch: '', requestId: request.id }),
           preferredDate: request.preferredDate,
           presentation,
           demandLabel: resolveDemandLabel({ copy, opportunity }),

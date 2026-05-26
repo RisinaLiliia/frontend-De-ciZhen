@@ -192,7 +192,10 @@ describe('useCreateRequestSubmit', () => {
     expect(nextUrl.pathname).toBe('/workspace');
     expect(nextUrl.searchParams.get('section')).toBe('requests');
     expect(nextUrl.searchParams.get('scope')).toBe('my');
-    expect(nextUrl.searchParams.get('requestCreate')).toBe('1');
+    expect(nextUrl.searchParams.get('mode')).toBe('create');
+    expect(nextUrl.searchParams.get('requestCreate')).toBeNull();
+    expect(nextUrl.searchParams.get('period')).toBe('90d');
+    expect(nextUrl.searchParams.get('range')).toBe('90d');
     expect(nextUrl.searchParams.get('service')).toBe('window-cleaning');
     expect(nextUrl.searchParams.get('city')).toBe('berlin');
     expect(nextUrl.searchParams.get('intent')).toBe('draft');

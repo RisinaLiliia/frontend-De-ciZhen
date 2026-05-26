@@ -13,14 +13,20 @@ import {
 } from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useProviderFavoriteToggle } from '@/hooks/useFavoriteToggles';
-import { useAuthStatus } from '@/hooks/useAuthSnapshot';
+import { useAuthMe, useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
 import { buildWorkspaceCreateRequestHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
+import { buildWorkspaceProviderDetailHref } from '@/features/workspace/providers/workspaceProviderRoute.model';
 import { createLongDateFormatter, toIsoDayLocal } from '@/lib/utils/date';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
+import { providerQK } from '@/features/providers/queries';
+import {
+  backfillOwnProviderAvatar,
+  backfillProviderAvatarFromCandidates,
+} from '@/lib/providers/publicProvider';
 import {
   buildProviderAvailabilityModel,
   getAvailableIsoDays,
@@ -54,6 +60,7 @@ export function useProviderPublicProfileModel({
   const t = useT();
   const { locale } = useI18n();
   const authStatus = useAuthStatus();
+  const authMe = useAuthMe();
   const qc = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();
@@ -63,18 +70,22 @@ export function useProviderPublicProfileModel({
   const isAuthed = authStatus === 'authenticated';
 
   const {
-    data: provider,
+    data: providerData,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['provider-detail', id],
+    queryKey: providerQK.publicById(typeof id === 'string' ? id : null),
     enabled: Boolean(id),
     queryFn: () => getPublicProviderById(String(id)),
   });
+  const baseProvider = React.useMemo(
+    () => backfillOwnProviderAvatar(providerData, authMe),
+    [authMe, providerData],
+  );
 
   const providerTargetUserId = React.useMemo(
-    () => resolveProviderTargetUserId(provider),
-    [provider],
+    () => resolveProviderTargetUserId(baseProvider),
+    [baseProvider],
   );
   const providerSlotsRange = React.useMemo(() => {
     const from = new Date();
@@ -116,10 +127,17 @@ export function useProviderPublicProfileModel({
   );
   const providerById = React.useMemo(() => {
     const map = new Map<string, ProviderPublicDto>();
-    if (provider) map.set(provider.id, provider);
+    if (baseProvider) map.set(baseProvider.id, baseProvider);
     return map;
-  }, [provider]);
-  const nextPath = nextPathOverride || pathname || `/providers/${id}`;
+  }, [baseProvider]);
+  const nextPath = nextPathOverride
+    || pathname
+    || (id
+      ? buildWorkspaceProviderDetailHref({
+          currentSearch: '',
+          providerId: String(id),
+        })
+      : '/workspace?section=providers');
   const {
     pendingFavoriteProviderIds,
     isProviderSaved,
@@ -134,9 +152,9 @@ export function useProviderPublicProfileModel({
     providerById,
   });
   const isSaved = React.useMemo(() => {
-    if (!provider) return false;
-    return isProviderSaved(provider.id);
-  }, [isProviderSaved, provider]);
+    if (!baseProvider) return false;
+    return isProviderSaved(baseProvider.id);
+  }, [baseProvider, isProviderSaved]);
 
   const requireAuth = React.useCallback(() => {
     router.push(`/auth/login?next=${encodeURIComponent(nextPath)}`);
@@ -175,9 +193,9 @@ export function useProviderPublicProfileModel({
   }, [id, isAuthed, requireAuth, router]);
 
   const handleFavorite = React.useCallback(() => {
-    if (!provider) return;
-    void toggleProviderFavorite(provider.id);
-  }, [provider, toggleProviderFavorite]);
+    if (!baseProvider) return;
+    void toggleProviderFavorite(baseProvider.id);
+  }, [baseProvider, toggleProviderFavorite]);
 
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const longDateFormatter = React.useMemo(
@@ -194,31 +212,18 @@ export function useProviderPublicProfileModel({
     [localeTag],
   );
 
-  const profileCard = React.useMemo(
-    () =>
-      (provider
-        ? buildProviderPublicProfileCard({
-          provider,
-          t,
-          locale,
-          profileHrefBuilder,
-          reviewsHrefBuilder,
-        })
-        : null),
-    [locale, profileHrefBuilder, provider, reviewsHrefBuilder, t],
-  );
-  const primaryServiceKey = React.useMemo(() => getPrimaryProviderServiceKey(provider), [provider]);
+  const primaryServiceKey = React.useMemo(() => getPrimaryProviderServiceKey(baseProvider), [baseProvider]);
 
   const { data: providers = [] } = useQuery({
-    queryKey: ['provider-similar-candidates', provider?.id, provider?.cityId, provider?.cityName, primaryServiceKey],
-    enabled: Boolean(provider?.id),
+    queryKey: ['provider-similar-candidates', baseProvider?.id, baseProvider?.cityId, baseProvider?.cityName, primaryServiceKey],
+    enabled: Boolean(baseProvider?.id),
     queryFn: async () => {
-      if (!provider) return [];
+      if (!baseProvider) return [];
 
       const byCityAndService = await withStatusFallback(
         () =>
           listPublicProviders({
-            cityId: provider.cityId || undefined,
+            cityId: baseProvider.cityId || undefined,
             serviceKey: primaryServiceKey,
           }),
         [],
@@ -242,6 +247,23 @@ export function useProviderPublicProfileModel({
     },
     staleTime: 120_000,
   });
+  const provider = React.useMemo(
+    () => backfillProviderAvatarFromCandidates(baseProvider, providers),
+    [baseProvider, providers],
+  );
+  const profileCard = React.useMemo(
+    () =>
+      (provider
+        ? buildProviderPublicProfileCard({
+          provider,
+          t,
+          locale,
+          profileHrefBuilder,
+          reviewsHrefBuilder,
+        })
+        : null),
+    [locale, profileHrefBuilder, provider, reviewsHrefBuilder, t],
+  );
 
   const similarProviders = React.useMemo(() => {
     if (!provider) return [] as ProviderPublicDto[];
@@ -393,6 +415,11 @@ export function useProviderPublicProfileModel({
     similarProvidersTitle,
     similarProvidersHint,
     similarCards,
-    reviewsHref: reviewsHrefBuilder?.(String(id)) ?? `/providers/${id}#reviews`,
+    reviewsHref:
+      reviewsHrefBuilder?.(String(id))
+      ?? `${buildWorkspaceProviderDetailHref({
+        currentSearch: '',
+        providerId: String(id),
+      })}#reviews`,
   };
 }

@@ -157,7 +157,6 @@ export const workspaceQK = {
   contractsMyAll: () => ['contracts-my-all'] as const,
   contractsMyProvider: () => ['contracts-my-provider'] as const,
   contractsMyClient: () => ['contracts-my-client'] as const,
-  providersPublic: () => ['providers-public'] as const,
   requestsByContractIds: (locale: string, requestIds: readonly string[]) =>
     ['requests-by-contract-ids', locale, ...requestIds] as const,
   chatInbox: () => ['chat-inbox'] as const,

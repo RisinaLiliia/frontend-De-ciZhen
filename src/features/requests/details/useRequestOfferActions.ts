@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { createOffer, deleteOffer, updateOffer } from '@/lib/api/offers';
 import { ApiError } from '@/lib/api/http-error';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
-import { providerQK } from '@/features/provider/queries';
+import { providerQK } from '@/features/providers/queries';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';

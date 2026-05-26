@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { providerQK } from '@/features/provider/queries';
+import { providerQK } from '@/features/providers/queries';
 import {
   buildWorkspaceCompletionReviewMutationQueryKeys,
   buildWorkspaceDecisionMutationQueryKeys,

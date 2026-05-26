@@ -51,7 +51,9 @@ describe('providerPublicProfile.model', () => {
       provider({ id: 'b', ratingAvg: 4.8, ratingCount: 100 }),
     )).toBeLessThan(0);
     expect(similarProviders.map((item) => item.id)).toEqual(['provider-2', 'provider-3']);
-    expect(buildProviderPublicProfileCard({ provider: baseProvider, t: t as never, locale: 'de' }).profileHref).toBe('/providers/provider-1');
+    expect(buildProviderPublicProfileCard({ provider: baseProvider, t: t as never, locale: 'de' }).profileHref).toBe(
+      '/workspace?section=providers&providerId=provider-1',
+    );
     expect(
       buildProviderPublicProfileCard({
         provider: baseProvider,

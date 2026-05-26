@@ -10,6 +10,7 @@ import { useSlidingIndicator } from '@/hooks/useSlidingIndicator';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
 import { WORKSPACE_MOBILE_NAV_OPEN_EVENT } from '@/lib/workspaceMobileNavigation';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { WorkspaceNavigationDock } from './WorkspaceNavigationDock';
 
 type WorkspacePrimaryNavigationItem = {
@@ -27,7 +28,6 @@ const isPathPrefix = (pathname: string, prefix: string) =>
 
 const WORKSPACE_PREVIEW_URL = '/workspace?section=overview';
 const AUTH_WORKSPACE_URL = '/workspace?section=overview';
-const REQUEST_CREATE_URL = '/request/create';
 const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
 const AUTH_PROFILE_FALLBACK_URL = '/workspace?section=profile';
 
@@ -52,12 +52,15 @@ function useWorkspacePrimaryNavigationItems(
     },
     {
       key: 'request-create',
-      href: REQUEST_CREATE_URL,
+      href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
       label: t(I18N_KEYS.auth.requestLabel),
       icon: <IconPlus />,
       variant: 'create',
       iconPosition: 'trailing',
-      isActive: (pathname) => isPathPrefix(pathname, '/request/create'),
+      isActive: (pathname, searchParams) =>
+        pathname === '/workspace'
+        && searchParams.get('section') === 'requests'
+        && searchParams.get('mode') === 'create',
     },
     {
       key: 'chat',
