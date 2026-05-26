@@ -37,7 +37,7 @@ describe('workspaceCards.model', () => {
     expect(props.onToggleFavorite).toBe(toggle);
     expect(props.provider.role).toBe('Elektriker');
     expect(props.provider.cityLabel).toBe('Berlin');
-    expect(props.provider.profileHref).toBe('/providers/provider-1');
+    expect(props.provider.profileHref).toBe('/workspace?section=providers&providerId=provider-1');
   });
 
   it('builds stable keyed models for all favorite providers', () => {

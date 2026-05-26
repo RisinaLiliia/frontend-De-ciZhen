@@ -186,7 +186,7 @@ describe('useWorkspaceActions', () => {
           offerId: 'offer-1',
         }),
       );
-      expect(pushSpy).toHaveBeenCalledWith('/chat?conversation=conv-1');
+      expect(pushSpy).toHaveBeenCalledWith('/workspace?section=chat&conversation=conv-1');
     });
   });
 
