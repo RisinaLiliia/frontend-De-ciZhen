@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
@@ -35,17 +36,25 @@ import {
 import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
 import { sortCardsForDecisionMode } from '@/features/workspace/requests/requestsDecision.model';
 import { PrivateRequestSessionDialog } from '@/features/workspace/overlays/PrivateRequestSessionDialog';
+import { PublicRequestSessionDialog } from '@/features/workspace/overlays/PublicRequestSessionDialog';
+import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/overlays/useWorkspacePublicRequestOverlayFlow';
 import { WorkspaceBadge, type WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
 import {
   type RequestDialogIntent,
   type WorkspaceRequestOverlayListContext,
   useWorkspaceRequestOverlayFlow,
 } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
+import { WorkspaceCreateRequestOverlay } from '@/features/request/CreateRequestPage';
 import type {
   WorkspaceRequestsSurfaceModel,
   WorkspaceRequestsViewCard,
   WorkspaceRequestsViewVariant,
 } from '@/features/workspace/requests/workspaceRequestsView.model';
+import {
+  buildWorkspaceRequestOverlayHref,
+  clearWorkspaceRequestOverlayHref,
+  readWorkspaceRequestRouteState,
+} from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { workspaceMutedPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
@@ -66,6 +75,18 @@ export type WorkspaceRequestsViewProps = {
 
 function tx(locale: Locale, key: I18nKey) {
   return translate(key, locale);
+}
+
+type WorkspaceRequestRouteState = ReturnType<typeof readWorkspaceRequestRouteState>;
+
+function areWorkspaceRequestRouteStatesEqual(
+  left: WorkspaceRequestRouteState,
+  right: WorkspaceRequestRouteState,
+) {
+  return left.requestCreate === right.requestCreate
+    && left.requestId === right.requestId
+    && left.requestIntent === right.requestIntent
+    && left.requestPanel === right.requestPanel;
 }
 
 function resolveRequestDialogIntent(action: { key: string }): RequestDialogIntent {
@@ -618,6 +639,7 @@ function WorkspaceRequestCard({
           priceTrendLabel={preview.priceTrendLabel ?? null}
           isActive={isActive}
           badgeLabel={preview.badgeLabel ?? null}
+          onOpen={() => listContext.onOpenRequest?.(card.requestId, cardOpenIntent)}
           overlaySlot={favoriteState ? (
             <FavoriteButton
               variant="icon"
@@ -638,7 +660,7 @@ function WorkspaceRequestCard({
                       action={action}
                       variant={actionIndex === marketActions.length - 1 ? 'primary' : 'secondary'}
                       listContext={listContext}
-                      preferInlineRequestOpen={false}
+                      preferInlineRequestOpen
                     />
                   ))}
               </div>
@@ -763,12 +785,43 @@ export function RequestsView({
     secondaryCtaHref,
     favoriteState = null,
   } = surface;
+  const searchParams = useSearchParams();
+  const nextRouteOverlayState = React.useMemo(
+    () => readWorkspaceRequestRouteState(searchParams),
+    [searchParams],
+  );
+  const [overlayRouteState, setOverlayRouteState] = React.useState<WorkspaceRequestRouteState>(nextRouteOverlayState);
+  const overlayOpenedInteractivelyRef = React.useRef(false);
   const decisionPanel = model.response ? model.response.decisionPanel : null;
   const visibleCards = React.useMemo(() => {
     if (decisionState.mode !== 'decision') return model.cards;
     return sortCardsForDecisionMode(model.cards, decisionPanel);
   }, [decisionPanel, decisionState.mode, model.cards]);
   const cardRefs = React.useRef(new Map<string, HTMLElement>());
+
+  React.useEffect(() => {
+    setOverlayRouteState((previous) => (
+      areWorkspaceRequestRouteStatesEqual(previous, nextRouteOverlayState)
+        ? previous
+        : nextRouteOverlayState
+    ));
+  }, [nextRouteOverlayState]);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const handlePopState = () => {
+      setOverlayRouteState(
+        readWorkspaceRequestRouteState(new URLSearchParams(window.location.search)),
+      );
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   const overlayInputContext = React.useMemo(
     () => ({
       onSendOffer: listContext.onSendOffer,
@@ -787,6 +840,32 @@ export function RequestsView({
       listContext.pendingOfferRequestId,
     ],
   );
+  const initialPrivateRequestState = React.useMemo(
+    () => (
+      variant === 'private'
+      && overlayRouteState.requestId
+      && overlayRouteState.requestPanel !== 'offer'
+        ? {
+            requestId: overlayRouteState.requestId,
+            intent: overlayRouteState.requestIntent,
+          }
+        : null
+    ),
+    [
+      overlayRouteState.requestId,
+      overlayRouteState.requestIntent,
+      overlayRouteState.requestPanel,
+      variant,
+    ],
+  );
+  const initialPrivateOfferRequestId = React.useMemo(
+    () => (
+      variant === 'private' && overlayRouteState.requestPanel === 'offer'
+        ? overlayRouteState.requestId
+        : null
+    ),
+    [overlayRouteState.requestId, overlayRouteState.requestPanel, variant],
+  );
   const {
     activeChatState,
     activeOfferRequestId,
@@ -794,25 +873,218 @@ export function RequestsView({
     activeRequestState,
     closeChat,
     closeOfferSheet,
-    closeRequest,
+    dismissSession,
     effectiveListContext,
     openChatConversation,
+    openRequest,
     openOfferSheet,
   } = useWorkspaceRequestOverlayFlow({
     cards: model.cards,
     listContext: overlayInputContext,
+    initialRequestState: initialPrivateRequestState,
+    initialOfferRequestId: initialPrivateOfferRequestId,
   });
+  const initialPublicRequestState = React.useMemo(
+    () => (
+      variant === 'market'
+      && overlayRouteState.requestId
+      && overlayRouteState.requestPanel !== 'offer'
+        ? {
+            requestId: overlayRouteState.requestId,
+            intent: overlayRouteState.requestIntent,
+          }
+        : null
+    ),
+    [
+      overlayRouteState.requestId,
+      overlayRouteState.requestIntent,
+      overlayRouteState.requestPanel,
+      variant,
+    ],
+  );
+  const initialPublicOfferRequestId = React.useMemo(
+    () => (
+      variant === 'market' && overlayRouteState.requestPanel === 'offer'
+        ? overlayRouteState.requestId
+        : null
+    ),
+    [overlayRouteState.requestId, overlayRouteState.requestPanel, variant],
+  );
+  const {
+    activeChatState: publicActiveChatState,
+    activeOfferRequestId: publicActiveOfferRequestId,
+    activeRequestState: publicActiveRequestState,
+    closeChat: closePublicChat,
+    closeOfferSheet: closePublicOfferSheet,
+    dismissSession: dismissPublicSession,
+    openChatConversation: openPublicChatConversation,
+    openOfferSheet: openPublicOfferSheet,
+    openRequest: openPublicRequest,
+  } = useWorkspacePublicRequestOverlayFlow({
+    requests: React.useMemo(
+      () => model.cards.map((card) => ({ id: card.requestId, title: card.requestPreview.title })),
+      [model.cards],
+    ),
+    initialRequestState: initialPublicRequestState,
+    initialOfferRequestId: initialPublicOfferRequestId,
+  });
+  const applyOverlayHref = React.useCallback((href: string, historyMode: 'push' | 'replace' = 'replace') => {
+    if (typeof window === 'undefined') return;
+
+    const url = new URL(href, window.location.origin);
+    const nextHref = `${url.pathname}${url.search}`;
+    const currentBrowserHref = `${window.location.pathname}${window.location.search}`;
+    if (nextHref === currentBrowserHref) return;
+
+    window.history[historyMode === 'push' ? 'pushState' : 'replaceState'](window.history.state, '', nextHref);
+    setOverlayRouteState(readWorkspaceRequestRouteState(url.searchParams));
+  }, []);
+  const openPrivateRequestRoute = React.useCallback((requestId: string, intent: RequestDialogIntent = 'view') => {
+    applyOverlayHref(buildWorkspaceRequestOverlayHref({
+      currentSearch: typeof window === 'undefined' ? searchParams : new URLSearchParams(window.location.search),
+      requestId,
+      scope: 'my',
+      intent,
+    }), 'push');
+  }, [applyOverlayHref, searchParams]);
+  const openMarketRequestRoute = React.useCallback((requestId: string, intent: RequestDialogIntent = 'view') => {
+    applyOverlayHref(buildWorkspaceRequestOverlayHref({
+      currentSearch: typeof window === 'undefined' ? searchParams : new URLSearchParams(window.location.search),
+      requestId,
+      scope: 'market',
+      intent,
+    }), 'push');
+  }, [applyOverlayHref, searchParams]);
+  const openPrivateRequestFromList = React.useCallback((requestId: string, intent: RequestDialogIntent = 'view') => {
+    overlayOpenedInteractivelyRef.current = true;
+    openPrivateRequestRoute(requestId, intent);
+  }, [openPrivateRequestRoute]);
+  const openMarketRequestFromList = React.useCallback((requestId: string, intent: RequestDialogIntent = 'view') => {
+    overlayOpenedInteractivelyRef.current = true;
+    openMarketRequestRoute(requestId, intent);
+  }, [openMarketRequestRoute]);
   const resolvedListContext = React.useMemo<WorkspaceRequestOverlayListContext>(
     () => (
       variant === 'private'
-        ? effectiveListContext
+        ? {
+            ...effectiveListContext,
+            onOpenRequest: openPrivateRequestFromList,
+          }
         : {
             ...overlayInputContext,
-            onOpenRequest: listContext.onOpenRequest,
+            onOpenRequest: openMarketRequestFromList,
+            onSendOffer: (requestId) => openPublicOfferSheet(requestId),
+            onEditOffer: (requestId) => openPublicOfferSheet(requestId),
+            onOpenChatConversation: (payload) => {
+              void openPublicChatConversation(payload);
+            },
           }
     ),
-    [effectiveListContext, listContext.onOpenRequest, overlayInputContext, variant],
+    [
+      effectiveListContext,
+      openMarketRequestFromList,
+      openPrivateRequestFromList,
+      openPublicChatConversation,
+      openPublicOfferSheet,
+      overlayInputContext,
+      variant,
+    ],
   );
+  const routeSyncEnabled = !isLoading;
+  const clearOverlayHref = React.useMemo(
+    () => clearWorkspaceRequestOverlayHref({
+      currentSearch: typeof window === 'undefined' ? searchParams : new URLSearchParams(window.location.search),
+    }),
+    [searchParams],
+  );
+  const closeInlineOverlay = React.useCallback(() => {
+    if (
+      typeof window !== 'undefined'
+      && overlayOpenedInteractivelyRef.current
+      && (overlayRouteState.requestCreate || overlayRouteState.requestId)
+      && window.history.length > 1
+    ) {
+      overlayOpenedInteractivelyRef.current = false;
+      window.history.back();
+      return;
+    }
+
+    overlayOpenedInteractivelyRef.current = false;
+    applyOverlayHref(clearOverlayHref, 'replace');
+  }, [applyOverlayHref, clearOverlayHref, overlayRouteState.requestCreate, overlayRouteState.requestId]);
+  React.useEffect(() => {
+    if (!routeSyncEnabled) return;
+
+    if (overlayRouteState.requestCreate) {
+      if (variant === 'private') {
+        dismissSession();
+      } else {
+        dismissPublicSession();
+      }
+      return;
+    }
+
+    if (!overlayRouteState.requestId) {
+      if (variant === 'private') {
+        if (activeRequestState || activeOfferRequestId) {
+          dismissSession();
+        }
+      } else if (publicActiveRequestState || publicActiveOfferRequestId) {
+        dismissPublicSession();
+      }
+      return;
+    }
+
+    if (variant === 'private') {
+      if (overlayRouteState.requestPanel === 'offer') {
+        if (activeOfferRequestId !== overlayRouteState.requestId) {
+          openOfferSheet(overlayRouteState.requestId);
+        }
+        return;
+      }
+
+      if (
+        activeRequestState?.requestId !== overlayRouteState.requestId
+        || activeRequestState?.intent !== overlayRouteState.requestIntent
+        || activeOfferRequestId
+      ) {
+        openRequest(overlayRouteState.requestId, overlayRouteState.requestIntent);
+      }
+      return;
+    }
+
+    if (overlayRouteState.requestPanel === 'offer') {
+      if (publicActiveOfferRequestId !== overlayRouteState.requestId) {
+        openPublicOfferSheet(overlayRouteState.requestId);
+      }
+      return;
+    }
+
+    if (
+      publicActiveRequestState?.requestId !== overlayRouteState.requestId
+      || publicActiveRequestState?.intent !== overlayRouteState.requestIntent
+      || publicActiveOfferRequestId
+    ) {
+      openPublicRequest(overlayRouteState.requestId, overlayRouteState.requestIntent);
+    }
+  }, [
+    activeOfferRequestId,
+    activeRequestState,
+    dismissPublicSession,
+    dismissSession,
+    openOfferSheet,
+    openPublicOfferSheet,
+    openPublicRequest,
+    openRequest,
+    publicActiveOfferRequestId,
+    publicActiveRequestState,
+    overlayRouteState.requestCreate,
+    overlayRouteState.requestId,
+    overlayRouteState.requestIntent,
+    overlayRouteState.requestPanel,
+    routeSyncEnabled,
+    variant,
+  ]);
 
   React.useEffect(() => {
     if (decisionState.mode !== 'decision' || !decisionState.activeRequestId) return;
@@ -840,6 +1112,51 @@ export function RequestsView({
     );
   }
 
+  const inlineOverlayNode = overlayRouteState.requestCreate ? (
+    <WorkspaceCreateRequestOverlay
+      onClose={closeInlineOverlay}
+    />
+  ) : null;
+  const privateInlineSessionActive = variant === 'private'
+    && !overlayRouteState.requestCreate
+    && ((activeRequestState && activeRequestCard) || activeOfferRequestId || activeChatState);
+  const publicInlineSessionActive = variant === 'market'
+    && !overlayRouteState.requestCreate
+    && (publicActiveRequestState || publicActiveOfferRequestId || publicActiveChatState);
+  const activeInlineOverlay = inlineOverlayNode
+    ?? (privateInlineSessionActive ? (
+      <PrivateRequestSessionDialog
+        locale={locale}
+        presentation="inline"
+        activeRequestState={activeRequestState}
+        activeRequestCard={activeRequestCard}
+        activeOfferRequestId={activeOfferRequestId}
+        activeChatState={activeChatState}
+        onDismissSession={closeInlineOverlay}
+        onCloseOfferSheet={closeOfferSheet}
+        onCloseChat={closeChat}
+        onOpenOfferSheet={openOfferSheet}
+        onOpenChatConversation={(payload) => {
+          void openChatConversation(payload);
+        }}
+      />
+    ) : null)
+    ?? (publicInlineSessionActive ? (
+      <PublicRequestSessionDialog
+        locale={locale}
+        presentation="inline"
+        activeRequestState={publicActiveRequestState}
+        activeOfferRequestId={publicActiveOfferRequestId}
+        activeChatState={publicActiveChatState}
+        onDismissSession={closeInlineOverlay}
+        onCloseOfferSheet={closePublicOfferSheet}
+        onCloseChat={closePublicChat}
+        onOpenRequest={openMarketRequestFromList}
+        onOpenOfferSheet={openPublicOfferSheet}
+        onOpenChatConversation={openPublicChatConversation}
+      />
+    ) : null);
+
   return (
     <section className="my-requests-view">
       <WorkspaceRequestsSectionSummary
@@ -851,8 +1168,13 @@ export function RequestsView({
       />
 
       {isLoading ? <CardSkeletonList /> : null}
+      {!isLoading && activeInlineOverlay ? (
+        <div className="my-requests-inline-stage">
+          {activeInlineOverlay}
+        </div>
+      ) : null}
 
-      {!isLoading && model.emptyMode === 'empty' ? (
+      {!isLoading && !activeInlineOverlay && model.emptyMode === 'empty' ? (
         <EmptyState
           locale={locale}
           mode="empty"
@@ -861,7 +1183,7 @@ export function RequestsView({
           secondaryCtaHref={secondaryCtaHref}
         />
       ) : null}
-      {!isLoading && model.emptyMode === 'filtered' ? (
+      {!isLoading && !activeInlineOverlay && model.emptyMode === 'filtered' ? (
         <EmptyState
           locale={locale}
           mode="filtered"
@@ -870,7 +1192,7 @@ export function RequestsView({
           secondaryCtaHref={secondaryCtaHref}
         />
       ) : null}
-      {!isLoading && visibleCards.length > 0 ? (
+      {!isLoading && !activeInlineOverlay && visibleCards.length > 0 ? (
         <>
           {decisionState.mode === 'decision' ? (
             <WorkspaceDecisionModeBar
@@ -919,7 +1241,10 @@ export function RequestsView({
                 mode: decisionState.mode,
                 activeRequestId: decisionState.activeRequestId,
                 onStartDecisionMode: () => onEnterDecisionMode(),
-                onOpenQueueItem: onOpenDecisionItem,
+                onOpenQueueItem:
+                  variant === 'market'
+                    ? (requestId) => openMarketRequestRoute(requestId, 'view')
+                    : onOpenDecisionItem,
                 className: 'my-requests-view__mobile-rail',
                 variant,
               })}
@@ -935,23 +1260,7 @@ export function RequestsView({
           ) : null}
         </>
       ) : null}
-      {variant === 'private' && ((activeRequestState && activeRequestCard) || activeOfferRequestId || activeChatState) ? (
-        <PrivateRequestSessionDialog
-          locale={locale}
-          activeRequestState={activeRequestState}
-          activeRequestCard={activeRequestCard}
-          activeOfferRequestId={activeOfferRequestId}
-          activeChatState={activeChatState}
-          onDismissSession={closeRequest}
-          onCloseOfferSheet={closeOfferSheet}
-          onCloseChat={closeChat}
-          onOpenOfferSheet={openOfferSheet}
-          onOpenChatConversation={(payload) => {
-            void openChatConversation(payload);
-          }}
-        />
-      ) : null}
-      {!isLoading && decisionState.mode === 'decision' && visibleCards.length === 0 && decisionPanel ? (
+      {!isLoading && !activeInlineOverlay && decisionState.mode === 'decision' && visibleCards.length === 0 && decisionPanel ? (
         <>
           <WorkspaceDecisionModeBar
             locale={locale}

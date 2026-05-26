@@ -5,6 +5,7 @@ import { ApiError } from '@/lib/api/http-error';
 import { createRequest, publishMyRequest, uploadRequestPhotos } from '@/lib/api/requests';
 import type { CreateRequestValues } from '@/features/request/create.schema';
 import { parseDateSafe, toIsoDayLocal } from '@/lib/utils/date';
+import { buildWorkspaceCreateRequestHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 type Translate = (key: I18nKey) => string;
 
@@ -30,7 +31,9 @@ type Params = {
 function buildCreateRequestNextPath(searchParams: { toString: () => string }, submitIntent: SubmitIntent) {
   const currentParams = new URLSearchParams(searchParams.toString());
   currentParams.set('intent', submitIntent);
-  return `/request/create${currentParams.toString() ? `?${currentParams.toString()}` : ''}`;
+  return buildWorkspaceCreateRequestHref({
+    currentSearch: currentParams,
+  });
 }
 
 export function useCreateRequestSubmit({

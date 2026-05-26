@@ -5,6 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import WorkspacePageClient from '@/features/workspace/WorkspacePageClient';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 const {
   routeStateRef,
@@ -167,7 +168,7 @@ describe('WorkspacePageClient', () => {
       overviewDecisionPanelRef: { current: null },
       sectionModel: null,
       primaryAction: {
-        href: '/request/create',
+        href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
         label: 'Create',
       },
       isLoading: false,

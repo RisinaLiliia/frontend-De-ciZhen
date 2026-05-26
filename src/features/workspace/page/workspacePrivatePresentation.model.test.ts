@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { I18nKey } from '@/lib/i18n/keys';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 import {
   buildWorkspacePrivateStateArgs,
@@ -83,7 +84,7 @@ describe('workspacePrivatePresentation.model', () => {
     expect(privateStateArgs.userName).toBe('Liliya');
     expect(publicIntroProps.activePublicSection).toBe('requests');
     expect(publicIntroProps.activeWorkspaceTab).toBe('my-offers');
-    expect(publicIntroProps.quickActionHref).toBe('/request/create');
+    expect(publicIntroProps.quickActionHref).toBe(DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF);
     expect(publicIntroProps.hideDemandMapOnMobile).toBe(true);
     expect(publicIntroProps.isMapLoading).toBe(false);
   });

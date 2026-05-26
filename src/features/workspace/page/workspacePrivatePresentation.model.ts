@@ -6,6 +6,7 @@ import { buildRequestsListProps } from '@/components/requests/requestsListProps'
 import type { WorkspacePublicIntro } from '@/features/workspace/intro';
 import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
 import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import type { useWorkspacePresentation } from '@/features/workspace';
 import type { useWorkspacePrivateState } from '@/features/workspace/state/useWorkspacePrivateState';
 import type { WorkspacePrivateOverviewState } from '@/features/workspace/state/workspacePrivateState.model';
@@ -238,7 +239,7 @@ export function buildWorkspacePublicIntroProps({
     activeWorkspaceTab: data.activeWorkspaceTab,
     ...publicSummaryView,
     hideDemandMapOnMobile: data.activePublicSection !== 'stats',
-    quickActionHref: '/request/create',
+    quickActionHref: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
     showQuickAction: data.activePublicSection !== 'stats' && data.activePublicSection !== 'requests',
     preferredRequestsRole: data.preferredRequestsRole ?? null,
   };

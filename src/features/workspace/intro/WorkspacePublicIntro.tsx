@@ -5,6 +5,7 @@ import * as React from 'react';
 import { CreateRequestCard } from '@/components/requests/CreateRequestCard';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/demand-map';
 import { WorkspaceIntroShell } from '@/features/workspace/intro/WorkspaceIntroShell';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import {
   WorkspaceModeHeader,
@@ -43,7 +44,7 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   summary,
   isMapLoading = false,
   isMapError = false,
-  quickActionHref = '/request/create',
+  quickActionHref = DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
   showQuickAction = true,
   navHeaderSlot,
   leftColumnSlot,

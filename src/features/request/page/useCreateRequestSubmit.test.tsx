@@ -188,10 +188,14 @@ describe('useCreateRequestSubmit', () => {
     expect(loginUrl.pathname).toBe('/auth/login');
 
     const next = loginUrl.searchParams.get('next') ?? '';
-    expect(next).toContain('/request/create');
-    expect(next).toContain('service=window-cleaning');
-    expect(next).toContain('city=berlin');
-    expect(next).toContain('intent=draft');
+    const nextUrl = new URL(next, 'http://localhost');
+    expect(nextUrl.pathname).toBe('/workspace');
+    expect(nextUrl.searchParams.get('section')).toBe('requests');
+    expect(nextUrl.searchParams.get('scope')).toBe('my');
+    expect(nextUrl.searchParams.get('requestCreate')).toBe('1');
+    expect(nextUrl.searchParams.get('service')).toBe('window-cleaning');
+    expect(nextUrl.searchParams.get('city')).toBe('berlin');
+    expect(nextUrl.searchParams.get('intent')).toBe('draft');
     expect(onSubmitIntentChange).toHaveBeenNthCalledWith(1, 'draft');
     expect(onSubmitIntentChange).toHaveBeenLastCalledWith(null);
   });

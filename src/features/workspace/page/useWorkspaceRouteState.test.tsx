@@ -29,6 +29,7 @@ function Probe({ query, forcedPublicSection = null, isAuthed = false }: ProbePro
       data-is-public={String(state.isWorkspacePublicSection)}
       data-tab={state.activeWorkspaceTab}
       data-scope={state.requestsScope}
+      data-next-path={state.nextPath}
     />
   );
 }
@@ -145,5 +146,14 @@ describe('useWorkspaceRouteState', () => {
 
     expect(node.getAttribute('data-public-section')).toBe('help');
     expect(node.getAttribute('data-is-public')).toBe('false');
+  });
+
+  it('removes request overlay query keys from nextPath', () => {
+    render(
+      <Probe query="section=requests&scope=market&period=90d&range=90d&requestId=req-1&requestPanel=offer" />,
+    );
+    const node = screen.getByTestId('state');
+
+    expect(node.getAttribute('data-next-path')).toBe('/workspace?section=requests&scope=market&period=90d&range=90d');
   });
 });

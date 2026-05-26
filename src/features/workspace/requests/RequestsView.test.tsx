@@ -7,6 +7,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { RequestsView } from '@/features/workspace/requests/RequestsView';
 import { buildWorkspaceRequestsSurfaceModel, type WorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    replace: vi.fn(),
+  }),
+  usePathname: () => '/workspace',
+  useSearchParams: () => new URLSearchParams('section=requests&scope=my&period=90d&range=90d'),
+}));
+
 vi.mock('@/components/favorites/FavoriteButton', () => ({
   FavoriteButton: () => null,
 }));
@@ -69,6 +77,24 @@ vi.mock('@/features/workspace/overlays/PrivateRequestSessionDialog', () => ({
   PrivateRequestSessionDialog: () => null,
 }));
 
+vi.mock('@/features/workspace/overlays/PublicRequestSessionDialog', () => ({
+  PublicRequestSessionDialog: () => null,
+}));
+
+vi.mock('@/features/workspace/overlays/useWorkspacePublicRequestOverlayFlow', () => ({
+  useWorkspacePublicRequestOverlayFlow: () => ({
+    activeChatState: null,
+    activeOfferRequestId: null,
+    activeRequestState: null,
+    closeChat: vi.fn(),
+    closeOfferSheet: vi.fn(),
+    dismissSession: vi.fn(),
+    openChatConversation: vi.fn(),
+    openOfferSheet: vi.fn(),
+    openRequest: vi.fn(),
+  }),
+}));
+
 vi.mock('@/features/workspace/overlays/useWorkspaceRequestOverlayFlow', () => ({
   useWorkspaceRequestOverlayFlow: ({ listContext }: { listContext: unknown }) => ({
     activeChatState: null,
@@ -78,9 +104,16 @@ vi.mock('@/features/workspace/overlays/useWorkspaceRequestOverlayFlow', () => ({
     closeChat: vi.fn(),
     closeOfferSheet: vi.fn(),
     closeRequest: vi.fn(),
+    dismissSession: vi.fn(),
     effectiveListContext: listContext,
+    openChatConversation: vi.fn(),
+    openRequest: vi.fn(),
     openOfferSheet: vi.fn(),
   }),
+}));
+
+vi.mock('@/features/request/CreateRequestPage', () => ({
+  WorkspaceCreateRequestOverlay: () => null,
 }));
 
 vi.mock('@/features/workspace/requests/RequestsViewStates', () => ({

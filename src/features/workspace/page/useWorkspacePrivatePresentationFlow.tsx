@@ -31,6 +31,7 @@ import { WorkspaceSettingsPage } from '@/features/workspace/profile/WorkspaceSet
 import { useExploreSidebar } from '@/features/workspace/explore/useExploreSidebar';
 import { WorkspaceHelpIntro } from '@/features/workspace/help/WorkspaceHelpIntro';
 import { WorkspaceHelpPage } from '@/features/workspace/help/WorkspaceHelpPage';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import {
   buildWorkspaceExploreSectionModel,
   buildWorkspaceHelpSectionModel,
@@ -85,7 +86,7 @@ export function useWorkspacePrivatePresentationFlow({
     });
   const primaryAction = React.useMemo(
     () => ({
-      href: '/request/create',
+      href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
       label: branch.t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta),
     }),
     [branch],

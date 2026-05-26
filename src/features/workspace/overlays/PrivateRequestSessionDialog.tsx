@@ -27,6 +27,7 @@ type RequestState = {
 
 type Props = {
   locale: Locale;
+  presentation?: 'modal' | 'inline';
   activeRequestState: RequestState | null;
   activeRequestCard: MyRequestsViewCard | null;
   activeOfferRequestId: string | null;
@@ -40,6 +41,7 @@ type Props = {
 
 export function PrivateRequestSessionDialog({
   locale,
+  presentation = 'modal',
   activeRequestState,
   activeRequestCard,
   activeOfferRequestId,
@@ -79,6 +81,7 @@ export function PrivateRequestSessionDialog({
       errorTitle=""
       errorBody=""
       bodyVariant={scene === 'detail' ? 'details' : 'default'}
+      presentation={presentation}
     >
       {scene === 'detail' && activeRequestState && activeRequestCard ? (
         <WorkspaceManagedRequestDialog

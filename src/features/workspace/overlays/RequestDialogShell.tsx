@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { focusIfPresent, getTrapFocusTarget, resolveInitialFocusTarget } from '@/lib/a11y/focusTrap';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
@@ -54,6 +55,7 @@ export function RequestDialogShell({
   errorTitle,
   errorBody,
   bodyVariant = 'details',
+  presentation = 'modal',
   children,
 }: {
   locale: Locale;
@@ -64,6 +66,7 @@ export function RequestDialogShell({
   errorTitle: string;
   errorBody: string;
   bodyVariant?: 'details' | 'default';
+  presentation?: 'modal' | 'inline';
   children: React.ReactNode;
 }) {
   const panelRef = React.useRef<HTMLDivElement | null>(null);
@@ -75,7 +78,7 @@ export function RequestDialogShell({
   }, []);
 
   React.useEffect(() => {
-    if (!isMounted) return;
+    if (presentation !== 'modal' || !isMounted) return;
 
     const panel = panelRef.current;
     const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -123,21 +126,44 @@ export function RequestDialogShell({
       document.removeEventListener('keydown', onKeyDown);
       focusIfPresent(previouslyFocused);
     };
-  }, [isMounted, onClose]);
+  }, [isMounted, onClose, presentation]);
 
-  if (!isMounted) return null;
+  React.useEffect(() => {
+    if (presentation !== 'inline') return;
 
-  return createPortal((
-    <div className="dc-modal my-request-dialog" role="dialog" aria-modal="true" aria-label={ariaLabel}>
-      <button
-        type="button"
-        className="dc-modal__backdrop"
-        onClick={onClose}
-        aria-label={translate(I18N_KEYS.workspace.dialogCloseLabel, locale)}
-      />
+    const panel = panelRef.current;
+    window.requestAnimationFrame(() => {
+      if (!panel) return;
+      const target = resolveInitialFocusTarget(closeButtonRef.current, getFocusableElements(panel));
+      focusIfPresent(target);
+    });
+  }, [presentation]);
+
+  const content = (
+    <section
+      className={presentation === 'inline' ? 'my-request-dialog my-request-dialog--inline' : 'dc-modal my-request-dialog'}
+      role={presentation === 'inline' ? 'region' : 'dialog'}
+      aria-modal={presentation === 'modal' ? 'true' : undefined}
+      aria-label={ariaLabel}
+    >
+      {presentation === 'modal' ? (
+        <button
+          type="button"
+          className="dc-modal__backdrop"
+          onClick={onClose}
+          aria-label={translate(I18N_KEYS.workspace.dialogCloseLabel, locale)}
+        />
+      ) : null}
       <div
         ref={panelRef}
-        className="dc-modal__panel dc-modal__panel--wide my-request-dialog__panel my-request-dialog__panel--details"
+        className={[
+          presentation === 'modal'
+            ? 'dc-modal__panel dc-modal__panel--wide'
+            : workspacePanelShell('my-request-dialog__panel--inline-shell'),
+          'my-request-dialog__panel',
+          'my-request-dialog__panel--details',
+          presentation === 'inline' ? 'my-request-dialog__panel--inline' : '',
+        ].filter(Boolean).join(' ')}
       >
         <button
           ref={closeButtonRef}
@@ -169,6 +195,14 @@ export function RequestDialogShell({
           </div>
         ) : null}
       </div>
-    </div>
-  ), document.body);
+    </section>
+  );
+
+  if (presentation === 'inline') {
+    return content;
+  }
+
+  if (!isMounted) return null;
+
+  return createPortal(content, document.body);
 }

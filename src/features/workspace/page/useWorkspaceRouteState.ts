@@ -19,10 +19,23 @@ import {
   type PublicWorkspaceSection,
   resolvePublicWorkspaceSection,
 } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
+import {
+  WORKSPACE_REQUEST_CREATE_QUERY_KEY,
+  WORKSPACE_REQUEST_ID_QUERY_KEY,
+  WORKSPACE_REQUEST_INTENT_QUERY_KEY,
+  WORKSPACE_REQUEST_PANEL_QUERY_KEY,
+} from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 
 type Translator = (key: I18nKey) => string;
+
+const WORKSPACE_OVERLAY_QUERY_KEYS = [
+  WORKSPACE_REQUEST_CREATE_QUERY_KEY,
+  WORKSPACE_REQUEST_ID_QUERY_KEY,
+  WORKSPACE_REQUEST_INTENT_QUERY_KEY,
+  WORKSPACE_REQUEST_PANEL_QUERY_KEY,
+] as const;
 
 type Args = {
   forcedPublicSection?: PublicWorkspaceSection | null;
@@ -95,7 +108,9 @@ export function useWorkspaceRouteState({
   const activeRequestsSort = React.useMemo(() => searchParams.get('sort'), [searchParams]);
 
   const nextPath = React.useMemo(() => {
-    const qs = searchParams?.toString();
+    const nextParams = new URLSearchParams(searchParams?.toString());
+    WORKSPACE_OVERLAY_QUERY_KEYS.forEach((key) => nextParams.delete(key));
+    const qs = nextParams.toString();
     return `${workspacePath}${qs ? `?${qs}` : ''}`;
   }, [searchParams, workspacePath]);
 

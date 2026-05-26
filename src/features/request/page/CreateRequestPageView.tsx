@@ -12,7 +12,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 
 type Translate = (key: I18nKey) => string;
 
-type Props = {
+export type CreateRequestPageViewProps = {
   t: Translate;
   requiredHint: string;
   locale: 'de' | 'en';
@@ -73,7 +73,7 @@ type Props = {
   activeSubmitIntent: 'draft' | 'publish' | null;
 };
 
-export function CreateRequestPageView({
+export function CreateRequestFormContent({
   t,
   requiredHint,
   locale,
@@ -125,80 +125,86 @@ export function CreateRequestPageView({
   onTagRemove,
   isSubmitting,
   activeSubmitIntent,
-}: Props) {
+}: CreateRequestPageViewProps) {
+  return (
+    <div className="container-mobile request-create">
+      <section className="text-center stack-sm">
+        <h1 className="typo-h1">{t('request.title')}</h1>
+        <p className="typo-muted">{t('request.subtitle')}</p>
+      </section>
+
+      <form className="card request-form" onSubmit={onSubmit}>
+        <CreateRequestBasicsSection
+          t={t}
+          requiredHint={requiredHint}
+          register={register}
+          categoryKey={categoryKey}
+          serviceKey={serviceKey}
+          categoryOptions={categoryOptions}
+          serviceOptions={serviceOptions}
+          titleValue={titleValue}
+          descriptionValue={descriptionValue}
+          serviceError={serviceError}
+          titleError={titleError}
+          photoItems={photoItems}
+          onCategoryChange={onCategoryChange}
+          onServiceChange={onServiceChange}
+          onPhotosSelected={onPhotosSelected}
+          onPhotoRemove={onPhotoRemove}
+        />
+
+        <CreateRequestDetailsSection
+          t={t}
+          requiredHint={requiredHint}
+          locale={locale}
+          register={register}
+          cityId={cityId}
+          cityError={cityError}
+          preferredDateError={preferredDateError}
+          areaError={areaError}
+          isDirectProviderFlow={isDirectProviderFlow}
+          providerId={providerId}
+          directProviderDisplayName={directProviderDisplayName}
+          directFlowText={directFlowText}
+          directAvailabilityLabel={directAvailabilityLabel}
+          directAvailabilityTone={directAvailabilityTone}
+          selectedDateLabel={selectedDateLabel}
+          selectedDayIso={selectedDayIso}
+          requestSelectedDateLabel={requestSelectedDateLabel}
+          directFlowCalendarConfig={directFlowCalendarConfig}
+          requestCalendarConfig={requestCalendarConfig}
+          isDirectProviderLoading={isDirectProviderLoading}
+          isProviderSlotsLoading={isProviderSlotsLoading}
+          availableDaysCount={availableDaysCount}
+          isCleaningCategory={isCleaningCategory}
+          propertyType={propertyType}
+          isRecurringValue={isRecurringValue}
+          tags={tags}
+          tagInput={tagInput}
+          onCityChange={onCityChange}
+          onSelectDirectIsoDay={onSelectDirectIsoDay}
+          onSelectRequestIsoDay={onSelectRequestIsoDay}
+          onPropertyTypeChange={onPropertyTypeChange}
+          onRecurringChange={onRecurringChange}
+          onTagInputChange={onTagInputChange}
+          onTagCommit={onTagCommit}
+          onTagRemove={onTagRemove}
+        />
+
+        <CreateRequestActions
+          t={t}
+          isSubmitting={isSubmitting}
+          activeSubmitIntent={activeSubmitIntent}
+        />
+      </form>
+    </div>
+  );
+}
+
+export function CreateRequestPageView(props: CreateRequestPageViewProps) {
   return (
     <PageShell right={<AuthActions />} withSpacer={false}>
-      <div className="container-mobile request-create">
-        <section className="text-center stack-sm">
-          <h1 className="typo-h1">{t('request.title')}</h1>
-          <p className="typo-muted">{t('request.subtitle')}</p>
-        </section>
-
-        <form className="card request-form" onSubmit={onSubmit}>
-          <CreateRequestBasicsSection
-            t={t}
-            requiredHint={requiredHint}
-            register={register}
-            categoryKey={categoryKey}
-            serviceKey={serviceKey}
-            categoryOptions={categoryOptions}
-            serviceOptions={serviceOptions}
-            titleValue={titleValue}
-            descriptionValue={descriptionValue}
-            serviceError={serviceError}
-            titleError={titleError}
-            photoItems={photoItems}
-            onCategoryChange={onCategoryChange}
-            onServiceChange={onServiceChange}
-            onPhotosSelected={onPhotosSelected}
-            onPhotoRemove={onPhotoRemove}
-          />
-
-          <CreateRequestDetailsSection
-            t={t}
-            requiredHint={requiredHint}
-            locale={locale}
-            register={register}
-            cityId={cityId}
-            cityError={cityError}
-            preferredDateError={preferredDateError}
-            areaError={areaError}
-            isDirectProviderFlow={isDirectProviderFlow}
-            providerId={providerId}
-            directProviderDisplayName={directProviderDisplayName}
-            directFlowText={directFlowText}
-            directAvailabilityLabel={directAvailabilityLabel}
-            directAvailabilityTone={directAvailabilityTone}
-            selectedDateLabel={selectedDateLabel}
-            selectedDayIso={selectedDayIso}
-            requestSelectedDateLabel={requestSelectedDateLabel}
-            directFlowCalendarConfig={directFlowCalendarConfig}
-            requestCalendarConfig={requestCalendarConfig}
-            isDirectProviderLoading={isDirectProviderLoading}
-            isProviderSlotsLoading={isProviderSlotsLoading}
-            availableDaysCount={availableDaysCount}
-            isCleaningCategory={isCleaningCategory}
-            propertyType={propertyType}
-            isRecurringValue={isRecurringValue}
-            tags={tags}
-            tagInput={tagInput}
-            onCityChange={onCityChange}
-            onSelectDirectIsoDay={onSelectDirectIsoDay}
-            onSelectRequestIsoDay={onSelectRequestIsoDay}
-            onPropertyTypeChange={onPropertyTypeChange}
-            onRecurringChange={onRecurringChange}
-            onTagInputChange={onTagInputChange}
-            onTagCommit={onTagCommit}
-            onTagRemove={onTagRemove}
-          />
-
-          <CreateRequestActions
-            t={t}
-            isSubmitting={isSubmitting}
-            activeSubmitIntent={activeSubmitIntent}
-          />
-        </form>
-      </div>
+      <CreateRequestFormContent {...props} />
     </PageShell>
   );
 }

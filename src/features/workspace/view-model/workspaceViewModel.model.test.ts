@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { I18nKey } from '@/lib/i18n/keys';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 import {
   buildWorkspacePrivateViewModel,
@@ -48,7 +49,7 @@ describe('workspaceViewModel.model', () => {
       activeWorkspaceTab: 'my-requests',
       showWorkspaceHeader: true,
       showWorkspaceHeading: true,
-      primaryAction: { href: '/request/create', label: 'Create' },
+      primaryAction: { href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF, label: 'Create' },
       onPrimaryActionClick: vi.fn(),
       isMyRequestsLoading: false,
       filteredMyRequests: [],
@@ -89,7 +90,7 @@ describe('workspaceViewModel.model', () => {
       activeWorkspaceTab: 'profile',
       showWorkspaceHeader: true,
       showWorkspaceHeading: true,
-      primaryAction: { href: '/request/create', label: 'Create' },
+      primaryAction: { href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF, label: 'Create' },
       onPrimaryActionClick: vi.fn(),
       isMyRequestsLoading: false,
       filteredMyRequests: [{ id: 'req-1' }] as never[],

@@ -5,6 +5,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { I18nKey } from '@/lib/i18n/keys';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 import { useWorkspacePrivateViewModel } from './useWorkspacePrivateViewModel';
 import type { BaseInput, PrivateInput } from './workspaceViewModel.types';
@@ -48,7 +49,7 @@ function createPrivateInput(): PrivateInput {
     activeWorkspaceTab: 'my-requests',
     showWorkspaceHeader: true,
     showWorkspaceHeading: true,
-    primaryAction: { href: '/request/create', label: 'Create' },
+    primaryAction: { href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF, label: 'Create' },
     onPrimaryActionClick: vi.fn(),
     isMyRequestsLoading: false,
     filteredMyRequests: [],

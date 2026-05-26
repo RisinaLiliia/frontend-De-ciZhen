@@ -2,6 +2,8 @@
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { CreateConversationDto } from '@/lib/api/dto/chat';
+import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
+import { buildWorkspaceRequestOverlayHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 export type WorkspaceChatConversationInput = Pick<
   CreateConversationDto,
@@ -9,11 +11,26 @@ export type WorkspaceChatConversationInput = Pick<
 >;
 
 export function buildWorkspaceOfferSheetHref(requestId: string) {
-  return `/requests/${requestId}?offer=1`;
+  return buildWorkspaceRequestOverlayHref({
+    currentSearch: '',
+    requestId,
+    scope: 'market',
+    panel: 'offer',
+  });
 }
 
 export function buildWorkspaceOfferLoginHref(requestId: string) {
   return `/auth/login?next=${encodeURIComponent(buildWorkspaceOfferSheetHref(requestId))}`;
+}
+
+export function buildWorkspaceChatConversationHref(conversationId: string) {
+  return buildWorkspaceHref({
+    currentSearch: '',
+    section: 'chat',
+    patch: {
+      conversation: conversationId,
+    },
+  });
 }
 
 export function resolveWorkspaceChatNavigation(offer: OfferDto) {

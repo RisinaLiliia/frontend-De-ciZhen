@@ -7,6 +7,7 @@ import {
   WorkspaceHeaderAccountMenu,
   WorkspaceHeaderNotificationsButton,
 } from '@/features/workspace/shell/WorkspaceHeaderAccountMenu';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { WorkspaceHeaderAuthActions } from '@/features/workspace/shell/WorkspaceHeaderAuthActions';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -57,14 +58,14 @@ export function WorkspaceHeaderUtilityBar({
           <WorkspaceHeaderAccountMenu />
           {compact ? (
             <Link
-              href="/request/create"
+              href={DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF}
               className="workspace-environment__utility-icon workspace-environment__utility-icon--primary"
               aria-label={t(I18N_KEYS.requestsPage.clientHintStableCta)}
             >
               <IconPlus />
             </Link>
           ) : (
-            <Link href="/request/create" className="workspace-environment__primary-cta">
+            <Link href={DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF} className="workspace-environment__primary-cta">
               <span aria-hidden="true">
                 <IconPlus />
               </span>

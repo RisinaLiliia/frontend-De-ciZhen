@@ -4,6 +4,7 @@ import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { WorkspaceRequestsSectionRail } from '@/features/workspace/ai-rail';
+import { buildWorkspaceRequestOverlayHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import {
   buildRequestsWorkspacePublicBody,
   RequestsWorkspaceBody,
@@ -157,8 +158,14 @@ export function useWorkspacePublicRequestsSection({
   }, [pathname, router, searchParams]);
 
   const openQueueItem = React.useCallback((requestId: string) => {
-    router.push(`/requests/${requestId}`);
-  }, [router]);
+    router.push(
+      buildWorkspaceRequestOverlayHref({
+        currentSearch: searchParams,
+        requestId,
+        scope: 'market',
+      }),
+    );
+  }, [router, searchParams]);
 
   if (!enabled) {
     return {

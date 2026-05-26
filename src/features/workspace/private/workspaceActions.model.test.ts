@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   buildWorkspaceActionsResult,
+  buildWorkspaceChatConversationHref,
   buildWorkspaceOfferLoginHref,
   buildWorkspaceOfferSheetHref,
   buildWorkspaceOwnerRequestActions,
@@ -11,8 +12,15 @@ import {
 
 describe('workspaceActions.model', () => {
   it('builds offer sheet and login hrefs for workspace actions', () => {
-    expect(buildWorkspaceOfferSheetHref('req-1')).toBe('/requests/req-1?offer=1');
-    expect(buildWorkspaceOfferLoginHref('req-1')).toBe('/auth/login?next=%2Frequests%2Freq-1%3Foffer%3D1');
+    expect(buildWorkspaceOfferSheetHref('req-1')).toBe(
+      '/workspace?section=requests&scope=market&requestId=req-1&requestPanel=offer',
+    );
+    expect(buildWorkspaceOfferLoginHref('req-1')).toBe(
+      '/auth/login?next=%2Fworkspace%3Fsection%3Drequests%26scope%3Dmarket%26requestId%3Dreq-1%26requestPanel%3Doffer',
+    );
+    expect(buildWorkspaceChatConversationHref('conv-1')).toBe(
+      '/workspace?section=chat&conversation=conv-1',
+    );
   });
 
   it('builds chat navigation payload from a contextual offer', () => {

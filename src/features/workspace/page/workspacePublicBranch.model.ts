@@ -9,6 +9,7 @@ import { getPlatformReviewsOverview } from '@/lib/api/reviews';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { workspaceQK } from '@/features/workspace/data';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import {
   WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
   WorkspacePageLayout,
@@ -197,7 +198,7 @@ export function buildWorkspacePublicIntroProps({
     isMapError: isRequestsSection ? false : isSummaryError,
     showDemandMap: false,
     hideDemandMapOnMobile: true,
-    quickActionHref: '/request/create',
+    quickActionHref: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
     showQuickAction: !isRequestsSection && !isExploreSectionWithoutLegacyQuickAction,
   };
 }

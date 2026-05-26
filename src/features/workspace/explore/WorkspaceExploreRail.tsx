@@ -9,6 +9,7 @@ import { useDeferredMount } from '@/hooks/useDeferredMount';
 import { workspaceQK, WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/demand-map';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { WorkspaceRightRailStack } from '@/features/workspace/shared';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { getWorkspacePublicOverview } from '@/lib/api/workspace';
@@ -121,7 +122,7 @@ export function WorkspaceExploreRail({
 
           {isRailSection ? (
             <section className={workspacePanelShell('stack-sm')} aria-label="Workspace quick action">
-              <CreateRequestCard href="/request/create" />
+              <CreateRequestCard href={DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF} />
             </section>
           ) : null}
 

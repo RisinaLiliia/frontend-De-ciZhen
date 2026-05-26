@@ -40,11 +40,15 @@ type WorkspaceChatDialogState = {
 type Params = {
   cards: MyRequestsViewCard[];
   listContext: Omit<WorkspaceRequestOverlayListContext, 'onOpenRequest'>;
+  initialRequestState?: ManagedRequestState | null;
+  initialOfferRequestId?: string | null;
 };
 
 export function useWorkspaceRequestOverlayFlow({
   cards,
   listContext,
+  initialRequestState = null,
+  initialOfferRequestId = null,
 }: Params) {
   const t = useT();
   const qc = useQueryClient();
@@ -52,8 +56,8 @@ export function useWorkspaceRequestOverlayFlow({
     () => new Map(cards.map((card) => [card.requestId, card])),
     [cards],
   );
-  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(null);
-  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(null);
+  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(initialRequestState);
+  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(initialOfferRequestId);
   const [activeChatState, setActiveChatState] = React.useState<WorkspaceChatDialogState | null>(null);
   const [returnRequestState, setReturnRequestState] = React.useState<ManagedRequestState | null>(null);
   const activeRequestStateRef = React.useRef<ManagedRequestState | null>(null);
@@ -124,6 +128,13 @@ export function useWorkspaceRequestOverlayFlow({
     setReturnRequestState(null);
   }, [returnRequestState]);
 
+  const dismissSession = React.useCallback(() => {
+    setReturnRequestState(null);
+    setActiveChatState(null);
+    setActiveOfferRequestId(null);
+    setActiveRequestState(null);
+  }, []);
+
   const effectiveListContext = React.useMemo<WorkspaceRequestOverlayListContext>(
     () => ({
       ...listContext,
@@ -157,6 +168,7 @@ export function useWorkspaceRequestOverlayFlow({
     closeChat,
     closeOfferSheet,
     closeRequest,
+    dismissSession,
     effectiveListContext,
     openChatConversation,
     openOfferSheet,

@@ -24,6 +24,7 @@ type RequestState = {
 
 type Props = {
   locale: Locale;
+  presentation?: 'modal' | 'inline';
   activeRequestState: RequestState | null;
   activeOfferRequestId: string | null;
   activeChatState: ChatState | null;
@@ -37,6 +38,7 @@ type Props = {
 
 export function PublicRequestSessionDialog({
   locale,
+  presentation = 'modal',
   activeRequestState,
   activeOfferRequestId,
   activeChatState,
@@ -78,6 +80,7 @@ export function PublicRequestSessionDialog({
       errorTitle=""
       errorBody=""
       bodyVariant={scene === 'detail' ? 'details' : 'default'}
+      presentation={presentation}
     >
       {scene === 'detail' && requestId ? (
         <PublicRequestDialog

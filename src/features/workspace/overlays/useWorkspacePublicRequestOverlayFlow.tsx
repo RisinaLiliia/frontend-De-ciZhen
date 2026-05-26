@@ -11,7 +11,6 @@ import { workspaceQK } from '@/features/workspace/data';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import { isWorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
 import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
-import type { RequestResponseDto } from '@/lib/api/dto/requests';
 
 type WorkspaceChatDialogState = {
   conversationId: string;
@@ -23,10 +22,19 @@ type ManagedRequestState = {
   intent: RequestDialogIntent;
 };
 
+type PublicRequestOverlaySeed = {
+  id: string;
+  title?: string | null;
+};
+
 export function useWorkspacePublicRequestOverlayFlow({
   requests,
+  initialRequestState = null,
+  initialOfferRequestId = null,
 }: {
-  requests: RequestResponseDto[];
+  requests: PublicRequestOverlaySeed[];
+  initialRequestState?: ManagedRequestState | null;
+  initialOfferRequestId?: string | null;
 }) {
   const t = useT();
   const qc = useQueryClient();
@@ -34,8 +42,8 @@ export function useWorkspacePublicRequestOverlayFlow({
     () => new Map(requests.map((request) => [request.id, request])),
     [requests],
   );
-  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(null);
-  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(null);
+  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(initialRequestState);
+  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(initialOfferRequestId);
   const [activeChatState, setActiveChatState] = React.useState<WorkspaceChatDialogState | null>(null);
   const [returnRequestState, setReturnRequestState] = React.useState<ManagedRequestState | null>(null);
   const activeRequestStateRef = React.useRef<ManagedRequestState | null>(null);

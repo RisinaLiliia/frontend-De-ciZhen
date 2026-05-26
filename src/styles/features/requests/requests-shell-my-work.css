@@ -1660,6 +1660,25 @@
     overflow: hidden;
   }
 
+  .my-requests-inline-stage {
+    display: grid;
+  }
+
+  .my-request-dialog--inline {
+    display: block;
+  }
+
+  .my-request-dialog__panel--inline-shell {
+    width: 100%;
+    max-width: none;
+  }
+
+  .my-request-dialog__panel--inline {
+    min-height: min(72vh, 920px);
+    border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    box-shadow: none;
+  }
+
   .my-request-dialog__header,
   .my-request-chat-dialog__header {
     display: flex;
@@ -1737,6 +1756,10 @@
     padding: var(--my-work-dialog-pad);
     max-height: min(72vh, 920px);
     overflow-y: auto;
+  }
+
+  .my-request-dialog--inline .my-request-dialog__body {
+    max-height: none;
   }
 
   .my-request-dialog__panel--details {

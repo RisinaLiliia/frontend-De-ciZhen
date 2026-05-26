@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 import { WorkspaceButton } from '@/features/workspace/shared';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 
@@ -28,7 +29,7 @@ function getWorkspaceHelpContent(locale: string) {
         {
           title: 'Create a request',
           body: 'Start a new workflow when the next step is execution instead of support.',
-          href: '/request/create',
+          href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
           cta: 'Create request',
         },
       ],
@@ -70,7 +71,7 @@ function getWorkspaceHelpContent(locale: string) {
       {
         title: 'Anfrage erstellen',
         body: 'Starte einen neuen Ablauf, wenn der nächste Schritt eher Ausführung als Support ist.',
-        href: '/request/create',
+        href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
         cta: 'Anfrage erstellen',
       },
     ],

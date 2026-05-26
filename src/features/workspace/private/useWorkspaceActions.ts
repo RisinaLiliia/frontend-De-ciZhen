@@ -14,6 +14,7 @@ import { workspaceQK } from '@/features/workspace/data';
 import { buildWorkspaceOwnerRequestMutationQueryKeys } from '@/features/workspace/data/workspaceInvalidation.model';
 import {
   buildWorkspaceActionsResult,
+  buildWorkspaceChatConversationHref,
   buildWorkspaceOfferLoginHref,
   buildWorkspaceOfferSheetHref,
   buildWorkspaceOwnerRequestActions,
@@ -101,7 +102,7 @@ export function useWorkspaceActions({
       try {
         const conversation = await createConversation(navigation.conversationInput);
         await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
-        router.push(`/chat?conversation=${encodeURIComponent(conversation.id)}`);
+        router.push(buildWorkspaceChatConversationHref(conversation.id));
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
         toast.error(message);
@@ -120,7 +121,7 @@ export function useWorkspaceActions({
         }
         const conversation = await createConversation(payload);
         await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
-        router.push(`/chat?conversation=${encodeURIComponent(conversation.id)}`);
+        router.push(buildWorkspaceChatConversationHref(conversation.id));
       } catch (error) {
         const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
         toast.error(message);

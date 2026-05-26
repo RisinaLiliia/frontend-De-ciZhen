@@ -10,6 +10,7 @@ import {
 } from '@/components/layout/workspace-navigation';
 import { IconChat, IconPlus, IconUser } from '@/components/ui/icons/icons';
 import { resolveActiveWorkspaceNavigationSection } from '@/features/workspace/navigation/resolveActiveWorkspaceNavigationSection';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { WorkspaceHeaderAccountMenu } from '@/features/workspace/shell/WorkspaceHeaderAccountMenu';
 import type { WorkspaceMobileNavigationProps } from '@/features/workspace/shell/WorkspaceShell.types';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
@@ -68,6 +69,7 @@ export function WorkspaceMobileNavigation({
   const isAuthenticated = authStatus === 'authenticated';
   const chatHref = isAuthenticated ? '/workspace?section=chat' : LOGIN_CHAT_URL;
   const profileHref = isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
+  const isCreateOverlayActive = searchParams.get('requestCreate') === '1';
   const dockItems: WorkspaceNavigationDockItem[] = [
     {
       key: 'dashboard',
@@ -87,9 +89,9 @@ export function WorkspaceMobileNavigation({
       key: 'request-create',
       label: copy.create,
       icon: <IconPlus />,
-      href: '/request/create',
+      href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
       variant: 'primary' as const,
-      active: pathname === '/request/create',
+      active: activeSection === 'requests' && isCreateOverlayActive,
     },
     {
       key: 'notifications',

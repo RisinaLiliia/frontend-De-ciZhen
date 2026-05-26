@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { buildWorkspaceContentDataResult, buildWorkspaceViewModelPatch } from './workspaceContentData.model';
 
 function createArgs() {
-  const primaryAction = { href: '/request/create', label: 'Create' };
+  const primaryAction = { href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF, label: 'Create' };
   const favoriteProviderCards = ['card-1'];
 
   return {
@@ -45,7 +46,7 @@ describe('workspaceContentData.model', () => {
   it('returns primary action together with the assembled patch', () => {
     const result = buildWorkspaceContentDataResult(createArgs());
 
-    expect(result.primaryAction.href).toBe('/request/create');
+    expect(result.primaryAction.href).toBe(DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF);
     expect(result.viewModelPatch.primaryAction.label).toBe('Create');
     expect(result.viewModelPatch.filteredContracts).toEqual([{ id: 'contract-1' }]);
   });

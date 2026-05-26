@@ -1,4 +1,5 @@
 import type { WorkspaceStatusFilter, WorkspaceTab } from '@/features/workspace/state';
+import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 
@@ -41,12 +42,12 @@ export function getWorkspacePrimaryActionByTab(
   t: Translate,
 ): Partial<Record<WorkspaceTab, { href: string; label: string }>> {
   return {
-    'my-requests': { label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta), href: '/request/create' },
+    'my-requests': { label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta), href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF },
     'my-offers': { label: t(I18N_KEYS.requestsPage.primaryActionFindNewOrders), href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
     'completed-jobs': { label: t(I18N_KEYS.requestsPage.primaryActionActiveOrders), href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
     favorites: { label: t(I18N_KEYS.requestsPage.primaryActionNewFavorites), href: '/workspace?section=requests' },
     reviews: { label: t(I18N_KEYS.requestsPage.navMyOrders), href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
-    profile: { label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta), href: '/request/create' },
+    profile: { label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta), href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF },
   };
 }
 
@@ -91,7 +92,7 @@ export function getClientHint(t: Translate, myRequestsCount: number, myOpenReque
     return {
       text: t(I18N_KEYS.requestsPage.clientHintNoRequestsText),
       ctaLabel: t(I18N_KEYS.requestsPage.clientHintNoRequestsCta),
-      ctaHref: '/request/create',
+      ctaHref: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
     };
   }
   if (myOpenRequestsCount > 0) {
@@ -104,6 +105,6 @@ export function getClientHint(t: Translate, myRequestsCount: number, myOpenReque
   return {
     text: t(I18N_KEYS.requestsPage.clientHintStableText),
     ctaLabel: t(I18N_KEYS.requestsPage.clientHintStableCta),
-    ctaHref: '/request/create',
+    ctaHref: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
   };
 }
