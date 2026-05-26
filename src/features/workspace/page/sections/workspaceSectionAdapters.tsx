@@ -154,6 +154,7 @@ export function buildWorkspaceExploreSectionModel({
       section,
       content: <WorkspaceProfileSection />,
       aiRail: <WorkspaceProfileRail t={branch.t} locale={branch.locale} />,
+      filterPolicy: 'none',
     });
   }
 

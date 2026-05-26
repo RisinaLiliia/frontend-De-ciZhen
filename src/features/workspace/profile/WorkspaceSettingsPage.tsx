@@ -2,12 +2,13 @@
 
 import { useTheme } from 'next-themes';
 
-import { ProfilePreferencesCards } from '@/features/profile/ProfilePreferencesCards';
+import { ProfilePreferencesCards } from '@/features/workspace/profile/ProfilePreferencesCards';
 import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { useConsent } from '@/lib/consent/ConsentProvider';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
+import { WorkspaceAccountSettingsSection } from './WorkspaceAccountSettingsSection';
 
 export function WorkspaceSettingsPage() {
   const t = useT();
@@ -23,6 +24,7 @@ export function WorkspaceSettingsPage() {
       </header>
 
       <div className="profile-settings__grid">
+        <WorkspaceAccountSettingsSection />
         <ProfilePreferencesCards
           t={t}
           locale={locale}

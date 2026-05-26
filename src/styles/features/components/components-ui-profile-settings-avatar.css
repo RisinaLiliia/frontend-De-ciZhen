@@ -1,12 +1,6 @@
 /* src/styles/features/components/components-ui-profile-settings-avatar.css */
 
 @layer components {
-  .profile-settings__avatar-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
   .profile-settings__avatar {
     position: relative;
     width: 64px;
@@ -57,19 +51,6 @@
   }
 
   @media (max-width: 720px) {
-    .profile-bio__footer {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .profile-bio__save-icon {
-      align-self: flex-end;
-    }
-
-    .profile-bio__actions {
-      align-self: flex-end;
-    }
-
     .profile-settings__choices {
       width: 100%;
       justify-content: space-between;
@@ -80,13 +61,5 @@
       gap: 8px;
       align-items: stretch;
     }
-
-    .profile-settings__avatar-row {
-      align-items: flex-start;
-      flex-direction: column;
-    }
   }
-
-
-
 }

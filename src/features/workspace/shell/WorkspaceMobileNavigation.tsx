@@ -20,7 +20,7 @@ import { useT } from '@/lib/i18n/useT';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 
 const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
-const AUTH_PROFILE_FALLBACK_URL = '/profile';
+const AUTH_PROFILE_FALLBACK_URL = '/workspace?section=profile';
 
 function getMobileDockCopy(locale: string) {
   if (locale === 'en') {

@@ -26,7 +26,6 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { getWorkspaceProfile, registerWorkspaceProfile, saveWorkspaceProfile } from '@/lib/api/workspace';
-import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { WorkspaceProfileOnboardingAccountSection } from './WorkspaceProfileOnboardingAccountSection';
 import { WorkspaceProfileOnboardingAvatarField } from './WorkspaceProfileOnboardingAvatarField';
@@ -443,76 +442,99 @@ function AuthenticatedWorkspaceProfileForm({
   const isBusy = loading || isProfileLoading || isSavingProfile;
 
   return (
-    <div className="stack-md">
-      <article className={workspaceCardShell('stack-md', 'workspace-profile-onboarding')} aria-labelledby="workspace-profile-auth-title">
-        <header className="stack-sm">
-          <WorkspaceBadge variant="info" className="workspace-profile-onboarding__step">
-            {t(I18N_KEYS.requestsPage.profileOnboardingStep)}
-          </WorkspaceBadge>
-          <h2 id="workspace-profile-auth-title" className="typo-h3">
-            {t(I18N_KEYS.provider.onboardingTitle)}
-          </h2>
-          <p className="typo-small">{t(I18N_KEYS.requestsPage.profileOnboardingSubtitle)}</p>
-        </header>
-
+    <div className="workspace-profile-section__content">
+      <article className={workspaceCardShell('stack-md', 'workspace-profile-onboarding')}>
         <div className="workspace-profile-onboarding__form">
-          <WorkspaceProfileOnboardingAvatarField
-            t={t}
-            loading={isBusy}
-            avatarPreviewUrl={effectiveAvatarUrl}
-            avatarActionLabel={avatarActionLabel}
-            avatarInitial={avatarInitial}
-            showClearAction={avatarFile != null}
-            avatarInputRef={avatarInputRef}
-            onAvatarSelected={onAvatarSelected}
-            openAvatarPicker={openAvatarPicker}
-            onAvatarClear={onAvatarClear}
-          />
+          <section className="workspace-profile-onboarding__identity">
+            <WorkspaceProfileOnboardingAvatarField
+              t={t}
+              loading={isBusy}
+              avatarPreviewUrl={effectiveAvatarUrl}
+              avatarActionLabel={avatarActionLabel}
+              avatarInitial={avatarInitial}
+              showClearAction={avatarFile != null}
+              avatarInputRef={avatarInputRef}
+              onAvatarSelected={onAvatarSelected}
+              openAvatarPicker={openAvatarPicker}
+              onAvatarClear={onAvatarClear}
+            />
 
-          <div className="request-form__row is-2">
-            <div className="form-group">
-              <FormLabel htmlFor="workspace-profile-auth-name" required requiredHint={requiredHint}>
-                {t(I18N_KEYS.auth.nameLabel)}
-              </FormLabel>
-              <Field>
-                <Input
-                  id="workspace-profile-auth-name"
-                  value={commonForm.name}
-                  onChange={(event) => setCommonForm((prev) => ({ ...prev, name: event.target.value }))}
-                  disabled={isBusy}
-                />
-              </Field>
-            </div>
+            <div className="workspace-profile-onboarding__identity-fields workspace-profile-onboarding__identity-fields--wide">
+              <div className="form-group">
+                <FormLabel htmlFor="workspace-profile-auth-name" required requiredHint={requiredHint}>
+                  {t(I18N_KEYS.auth.nameLabel)}
+                </FormLabel>
+                <Field>
+                  <Input
+                    id="workspace-profile-auth-name"
+                    value={commonForm.name}
+                    onChange={(event) => setCommonForm((prev) => ({ ...prev, name: event.target.value }))}
+                    disabled={isBusy}
+                  />
+                </Field>
+              </div>
 
-            <div className="form-group">
-              <FormLabel htmlFor="workspace-profile-auth-city" required requiredHint={requiredHint}>
-                {t(I18N_KEYS.provider.city)}
-              </FormLabel>
-              <Field>
-                <CitySearchSelect
-                  locale={locale}
-                  value={commonForm.cityId || ''}
-                  onChange={(value) => {
-                    setCommonForm((prev) => ({ ...prev, cityId: value }));
-                  }}
-                  placeholder={t(I18N_KEYS.home.cityPlaceholder)}
-                  disabled={isBusy}
-                  ariaLabel={t(I18N_KEYS.requestsPage.cityLabel)}
-                  searchPlaceholder={t(I18N_KEYS.home.cityPlaceholder)}
-                  loadingLabel={t(I18N_KEYS.common.refreshing)}
-                  emptyLabel={t(I18N_KEYS.common.noResults)}
-                  errorLabel={t(I18N_KEYS.common.loadErrorShort)}
-                  onSelectOption={(option) => {
-                    setCommonForm((prev) => ({
-                      ...prev,
-                      cityId: option.value,
-                      city: option.label,
-                    }));
-                  }}
-                />
-              </Field>
+              <div className="form-group">
+                <FormLabel htmlFor="workspace-profile-auth-city" required requiredHint={requiredHint}>
+                  {t(I18N_KEYS.provider.city)}
+                </FormLabel>
+                <Field>
+                  <CitySearchSelect
+                    locale={locale}
+                    value={commonForm.cityId || ''}
+                    onChange={(value) => {
+                      setCommonForm((prev) => ({ ...prev, cityId: value }));
+                    }}
+                    placeholder={t(I18N_KEYS.home.cityPlaceholder)}
+                    disabled={isBusy}
+                    ariaLabel={t(I18N_KEYS.requestsPage.cityLabel)}
+                    searchPlaceholder={t(I18N_KEYS.home.cityPlaceholder)}
+                    loadingLabel={t(I18N_KEYS.common.refreshing)}
+                    emptyLabel={t(I18N_KEYS.common.noResults)}
+                    errorLabel={t(I18N_KEYS.common.loadErrorShort)}
+                    onSelectOption={(option) => {
+                      setCommonForm((prev) => ({
+                        ...prev,
+                        cityId: option.value,
+                        city: option.label,
+                      }));
+                    }}
+                  />
+                </Field>
+              </div>
+
+              <div className="form-group">
+                <FormLabel htmlFor="workspace-profile-auth-email">
+                  {t(I18N_KEYS.auth.emailLabel)}
+                </FormLabel>
+                <Field>
+                  <Input
+                    id="workspace-profile-auth-email"
+                    type="email"
+                    value={profile?.common.email ?? ''}
+                    disabled
+                    readOnly
+                  />
+                </Field>
+              </div>
+
+              <div className="form-group">
+                <FormLabel htmlFor="workspace-profile-auth-phone">
+                  {t(I18N_KEYS.requestsPage.profileOnboardingPhoneLabel)}
+                </FormLabel>
+                <Field>
+                  <Input
+                    id="workspace-profile-auth-phone"
+                    type="tel"
+                    autoComplete="tel"
+                    value={commonForm.phone}
+                    onChange={(event) => setCommonForm((prev) => ({ ...prev, phone: event.target.value }))}
+                    disabled={isBusy}
+                  />
+                </Field>
+              </div>
             </div>
-          </div>
+          </section>
 
           <WorkspaceProfileOnboardingRoleSection
             viewerMode={viewerMode}
@@ -558,39 +580,6 @@ function AuthenticatedWorkspaceProfileForm({
           />
 
           <section className="stack-sm">
-            <div className="request-form__row is-2">
-              <div className="form-group">
-                <FormLabel htmlFor="workspace-profile-auth-email">
-                  {t(I18N_KEYS.auth.emailLabel)}
-                </FormLabel>
-                <Field>
-                  <Input
-                    id="workspace-profile-auth-email"
-                    type="email"
-                    value={profile?.common.email ?? ''}
-                    disabled
-                    readOnly
-                  />
-                </Field>
-              </div>
-
-              <div className="form-group">
-                <FormLabel htmlFor="workspace-profile-auth-phone">
-                  {t(I18N_KEYS.requestsPage.profileOnboardingPhoneLabel)}
-                </FormLabel>
-                <Field>
-                  <Input
-                    id="workspace-profile-auth-phone"
-                    type="tel"
-                    autoComplete="tel"
-                    value={commonForm.phone}
-                    onChange={(event) => setCommonForm((prev) => ({ ...prev, phone: event.target.value }))}
-                    disabled={isBusy}
-                  />
-                </Field>
-              </div>
-            </div>
-
             <div className="workspace-profile-onboarding__actions">
               <button
                 type="button"
@@ -744,17 +733,7 @@ function AnonymousWorkspaceProfileForm({
   );
 
   return (
-    <article className={workspaceCardShell('stack-md', 'workspace-profile-onboarding')} aria-labelledby="workspace-profile-onboarding-title">
-      <header className="stack-sm">
-        <WorkspaceBadge variant="info" className="workspace-profile-onboarding__step">
-          {t(I18N_KEYS.requestsPage.profileOnboardingStep)}
-        </WorkspaceBadge>
-        <h2 id="workspace-profile-onboarding-title" className="typo-h3">
-          {t(I18N_KEYS.provider.onboardingTitle)}
-        </h2>
-        <p className="typo-small">{t(I18N_KEYS.requestsPage.profileOnboardingSubtitle)}</p>
-      </header>
-
+    <article className={workspaceCardShell('stack-md', 'workspace-profile-onboarding')}>
       <form className="workspace-profile-onboarding__form" onSubmit={handleSubmit(onSubmit)} noValidate>
         <WorkspaceProfileOnboardingProfileSection
           t={t}

@@ -759,7 +759,7 @@ export function ChatWorkspacePage({
     ?? selectedConversation?.relatedEntity.amount
     ?? null;
   const requestHref = requestId ? `/requests/${requestId}` : null;
-  const profileHref = counterpart?.userId ? `/profile/${counterpart.userId}` : null;
+  const profileHref = null;
   const secondaryHref =
     selectedConversation?.relatedEntity.type === 'order'
       ? DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF

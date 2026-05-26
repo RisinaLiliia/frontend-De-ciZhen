@@ -92,7 +92,7 @@ const WORKSPACE_SECTION_CONTRACTS: Record<WorkspaceSectionKey, WorkspaceSectionC
     defaultLayout: 'withRail',
     railPolicy: 'none',
     headerPolicy: 'workspace',
-    filterPolicy: 'sharedContext',
+    filterPolicy: 'none',
     intro: {
       hideDemandMapAlways: true,
       hideQuickActionAlways: true,

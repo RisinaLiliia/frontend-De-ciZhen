@@ -63,7 +63,7 @@ export function getProviderHint(
         I18N_KEYS.requestsPage.providerHintProfileSuffix,
       )}`,
       ctaLabel: t(I18N_KEYS.requestsPage.providerHintProfileCta),
-      ctaHref: '/profile',
+      ctaHref: '/workspace?section=profile',
     };
   }
   if (recentOffers7d === 0) {

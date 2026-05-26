@@ -54,7 +54,7 @@ export function WorkspaceProfileOnboardingProfileSection({
   errors,
 }: WorkspaceProfileOnboardingProfileSectionProps) {
   return (
-    <section className="stack-sm">
+    <section className="workspace-profile-onboarding__identity">
       <WorkspaceProfileOnboardingAvatarField
         t={t}
         loading={loading}
@@ -66,7 +66,7 @@ export function WorkspaceProfileOnboardingProfileSection({
         openAvatarPicker={openAvatarPicker}
         onAvatarClear={onAvatarClear}
       />
-      <div className="request-form__row is-2">
+      <div className="workspace-profile-onboarding__identity-fields">
         <div className="form-group">
           <FormLabel htmlFor="workspace-profile-name" required requiredHint={requiredHint}>
             {t(I18N_KEYS.auth.nameLabel)}

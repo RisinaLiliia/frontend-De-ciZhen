@@ -45,9 +45,8 @@ export function RequestDetailsStandalonePage() {
   }, []);
 
   const isAuthed = authStatus === 'authenticated';
-  const profileId = authUser?.id ?? authMe?.id ?? null;
   const currentUserId = authUser?.id ?? authMe?.id ?? null;
-  const profileHref = profileId ? `/profile/${encodeURIComponent(profileId)}` : '/profile';
+  const profileHref = '/workspace?section=profile';
   const shouldOpenOwnerEdit = searchParams?.get('edit') === '1';
 
   const {

@@ -1,21 +1,10 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { ProfileStandalonePage } from '@/features/profile/standalone';
-import { getUserIdFromRefreshToken } from '@/lib/auth/serverUserId';
 
 type ProfileWorkspaceAliasPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default async function ProfileWorkspaceAliasPage({ searchParams }: ProfileWorkspaceAliasPageProps) {
-  const cookieStore = await cookies();
-  const refreshToken = cookieStore.get('refreshToken')?.value ?? null;
-  const userId = getUserIdFromRefreshToken(refreshToken);
-
-  if (!userId) {
-    return <ProfileStandalonePage />;
-  }
-
   const params = await searchParams;
   const next = new URLSearchParams();
 
@@ -29,5 +18,6 @@ export default async function ProfileWorkspaceAliasPage({ searchParams }: Profil
     }
   });
 
-  redirect(next.toString() ? `/profile/${encodeURIComponent(userId)}?${next.toString()}` : `/profile/${encodeURIComponent(userId)}`);
+  const base = '/workspace?section=settings';
+  redirect(next.toString() ? `${base}&${next.toString()}` : base);
 }

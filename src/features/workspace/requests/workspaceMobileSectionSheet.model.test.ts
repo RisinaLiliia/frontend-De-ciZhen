@@ -47,7 +47,7 @@ describe('workspaceMobileSectionSheet.model', () => {
     expect(
       isWorkspaceMobileSheetItemActive(
         { ...baseItem, href: '/workspace', match: 'prefix' },
-        '/workspace/profile',
+        '/workspace',
         new URLSearchParams(),
       ),
     ).toBe(true);

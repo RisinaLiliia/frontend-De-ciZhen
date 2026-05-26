@@ -41,10 +41,6 @@
     gap: 10px;
   }
 
-  .profile-settings__card--full {
-    grid-column: 1 / -1;
-  }
-
   .profile-settings__row {
     display: grid;
     grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);

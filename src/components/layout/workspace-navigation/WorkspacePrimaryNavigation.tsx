@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { IconBriefcase, IconChat, IconPlus, IconUser } from '@/components/ui/icons/icons';
-import { useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
+import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { useSlidingIndicator } from '@/hooks/useSlidingIndicator';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
@@ -29,7 +29,7 @@ const WORKSPACE_PREVIEW_URL = '/workspace?section=overview';
 const AUTH_WORKSPACE_URL = '/workspace?section=overview';
 const REQUEST_CREATE_URL = '/request/create';
 const LOGIN_CHAT_URL = '/auth/login?next=%2Fchat';
-const AUTH_PROFILE_FALLBACK_URL = '/profile';
+const AUTH_PROFILE_FALLBACK_URL = '/workspace?section=profile';
 
 function useWorkspacePrimaryNavigationItems(
   isAuthenticated: boolean,
@@ -74,7 +74,8 @@ function useWorkspacePrimaryNavigationItems(
       href: profileHref,
       label: t(I18N_KEYS.auth.profileLabel),
       icon: <IconUser />,
-      isActive: (pathname) => isPathPrefix(pathname, '/profile'),
+      isActive: (pathname, searchParams) =>
+        pathname === '/workspace' && searchParams.get('section') === 'profile',
     });
   }
 
@@ -92,12 +93,9 @@ function WorkspacePrimaryNavigation({
   const pathname = usePathname() ?? '/';
   const searchParams = useSearchParams();
   const t = useT();
-  const user = useAuthUser();
   const isAuthenticated = status === 'authenticated';
   const profileHref =
-    isAuthenticated && typeof user?.id === 'string' && user.id.trim().length > 0
-      ? `/profile/${encodeURIComponent(user.id)}`
-      : AUTH_PROFILE_FALLBACK_URL;
+    isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
   const items = useWorkspacePrimaryNavigationItems(isAuthenticated, profileHref);
   const params = new URLSearchParams(searchParams?.toString());
   const activeItemKey = items.find((item) => item.isActive(pathname, params))?.key ?? '';
@@ -155,12 +153,9 @@ export function WorkspacePrimaryNavigationMobile() {
   const pathname = usePathname() ?? '/';
   const searchParams = useSearchParams();
   const t = useT();
-  const user = useAuthUser();
   const isAuthenticated = status === 'authenticated';
   const profileHref =
-    isAuthenticated && typeof user?.id === 'string' && user.id.trim().length > 0
-      ? `/profile/${encodeURIComponent(user.id)}`
-      : AUTH_PROFILE_FALLBACK_URL;
+    isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
   const items = useWorkspacePrimaryNavigationItems(isAuthenticated, profileHref)
     .filter((item) => item.key !== 'profile')
     .map((item) => ({
