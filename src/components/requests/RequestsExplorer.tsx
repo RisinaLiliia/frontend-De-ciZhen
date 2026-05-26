@@ -19,6 +19,7 @@ import {
   buildRequestsExplorerRequestsContentProps,
   pickRequestsExplorerSharedFilters,
 } from '@/components/requests/requestsExplorer.model';
+import { buildWorkspaceProviderDetailHref } from '@/features/workspace/providers/workspaceProviderRoute.model';
 import { resolveWorkspaceViewerMode } from '@/features/workspace/state';
 import { resolveRequestsPageSizeForDensity } from '@/lib/requests/pagination';
 import type { RequestsExplorerProps } from '@/components/requests/requestsExplorer.types';
@@ -29,6 +30,7 @@ export function RequestsExplorer({
   t,
   locale,
   contentType = 'requests',
+  providerLinkMode = 'standalone',
   backHref = '/',
   emptyCtaHref = '/workspace?section=requests',
   showBack = false,
@@ -145,6 +147,24 @@ export function RequestsExplorer({
     favoriteProviderIds,
     providerById,
   });
+  const providerProfileHrefResolver = React.useMemo(
+    () =>
+      providerLinkMode === 'workspace' && isProvidersView
+        ? ((providerId: string) =>
+          buildWorkspaceProviderDetailHref({
+            currentSearch: searchParams,
+            providerId,
+          }))
+        : undefined,
+    [isProvidersView, providerLinkMode, searchParams],
+  );
+  const providerReviewsHrefResolver = React.useMemo(
+    () =>
+      providerProfileHrefResolver
+        ? ((providerId: string) => `${providerProfileHrefResolver(providerId)}#reviews`)
+        : undefined,
+    [providerProfileHrefResolver],
+  );
 
   const providersContentProps = buildRequestsExplorerProvidersContentProps({
     t,
@@ -163,6 +183,8 @@ export function RequestsExplorer({
       favoriteProviderIds,
       pendingFavoriteProviderIds,
       toggleProviderFavorite,
+      providerProfileHrefResolver,
+      providerReviewsHrefResolver,
     },
     showFilterControls: showTopFilters,
     onListDensityChange: handleProvidersListDensityChange,

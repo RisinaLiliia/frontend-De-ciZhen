@@ -45,6 +45,8 @@ export function RequestsExplorerProvidersContent({
   pendingFavoriteProviderIds,
   onToggleProviderFavorite,
   showFilterControls = true,
+  providerProfileHrefResolver,
+  providerReviewsHrefResolver,
 }: RequestsExplorerProvidersContentProps) {
   const onPrevPage = () => onSetPage(Math.max(1, page - 1));
   const onNextPage = () => onSetPage(Math.min(totalProviderPages, page + 1));
@@ -115,6 +117,8 @@ export function RequestsExplorerProvidersContent({
             }}
             provider={{
               ...item.card,
+              profileHref: providerProfileHrefResolver?.(item.id) ?? item.card.profileHref,
+              reviewsHref: providerReviewsHrefResolver?.(item.id) ?? item.card.reviewsHref,
               badges: item.card.badges.map((badge) => ({
                 ...badge,
                 tooltip: badge.tooltip ?? undefined,

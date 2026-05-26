@@ -6,6 +6,7 @@ import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import { isProviderInFavoriteLookup } from '@/lib/api/favorites';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { buildWorkspaceProviderDetailHref } from '@/features/workspace/providers/workspaceProviderRoute.model';
 
 type Translator = (key: I18nKey) => string;
 type FavoriteProviderCardProps = Omit<Parameters<typeof ProviderCard>[0], 'variant'>;
@@ -42,8 +43,8 @@ export function buildWorkspaceFavoriteProviderCardProps({
       provider,
       roleLabel: favoriteProviderRoleLabelById.get(provider.id) ?? '',
       cityLabel: favoriteProviderCityLabelById.get(provider.id) ?? '',
-      profileHref: `/providers/${provider.id}`,
-      reviewsHref: `/providers/${provider.id}#reviews`,
+      profileHref: buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id }),
+      reviewsHref: `${buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id })}#reviews`,
       ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
       status: 'online',
     }),

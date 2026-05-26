@@ -11,6 +11,7 @@ export type HomeRequestsExplorePanelProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   contentType?: 'requests' | 'providers';
+  providerLinkMode?: 'standalone' | 'workspace';
   backHref?: string;
   showBack?: boolean;
   showHeading?: boolean;
@@ -26,6 +27,7 @@ export function HomeRequestsExplorePanel({
   t,
   locale,
   contentType = 'requests',
+  providerLinkMode = 'standalone',
   backHref = '/',
   showBack = true,
   showHeading = true,
@@ -49,6 +51,7 @@ export function HomeRequestsExplorePanel({
         t={t}
         locale={locale}
         contentType={contentType}
+        providerLinkMode={providerLinkMode}
         showBack={showBack}
         backHref={backHref}
         emptyCtaHref={contentType === 'providers' ? '/workspace?section=providers' : '/workspace?section=requests'}

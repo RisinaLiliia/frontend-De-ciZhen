@@ -14,6 +14,7 @@ export type RequestsExplorerProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   contentType?: 'requests' | 'providers';
+  providerLinkMode?: 'standalone' | 'workspace';
   backHref?: string;
   emptyCtaHref?: string;
   showBack?: boolean;
@@ -78,6 +79,8 @@ export type RequestsExplorerProvidersContentProps = {
   pendingFavoriteProviderIds: Set<string>;
   onToggleProviderFavorite: (providerId: string) => void | Promise<void>;
   showFilterControls?: boolean;
+  providerProfileHrefResolver?: (providerId: string) => string;
+  providerReviewsHrefResolver?: (providerId: string) => string;
 } & RequestsExplorerSharedFilters;
 
 export type RequestsExplorerRequestsContentProps = {

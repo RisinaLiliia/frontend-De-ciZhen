@@ -62,6 +62,8 @@ type BuildProvidersContentArgs = {
     favoriteProviderIds: Set<string>;
     pendingFavoriteProviderIds: Set<string>;
     toggleProviderFavorite: (providerId: string) => void | Promise<void>;
+    providerProfileHrefResolver?: RequestsExplorerProvidersContentProps['providerProfileHrefResolver'];
+    providerReviewsHrefResolver?: RequestsExplorerProvidersContentProps['providerReviewsHrefResolver'];
   };
   onListDensityChange?: (value: RequestsListDensity) => void;
   showFilterControls: boolean;
@@ -155,6 +157,8 @@ export function buildRequestsExplorerProvidersContentProps({
     favoriteProviderIds: providersData.favoriteProviderIds,
     pendingFavoriteProviderIds: providersData.pendingFavoriteProviderIds,
     onToggleProviderFavorite: providersData.toggleProviderFavorite,
+    providerProfileHrefResolver: providersData.providerProfileHrefResolver,
+    providerReviewsHrefResolver: providersData.providerReviewsHrefResolver,
     showFilterControls,
   };
 }

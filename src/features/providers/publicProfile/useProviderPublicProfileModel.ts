@@ -17,6 +17,8 @@ import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
+import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
+import { buildWorkspaceCreateRequestHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { createLongDateFormatter, toIsoDayLocal } from '@/lib/utils/date';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import {
@@ -36,7 +38,19 @@ import {
   resolveProviderTargetUserId,
 } from '@/features/providers/publicProfile/providerPublicProfile.model';
 
-export function useProviderPublicProfileModel() {
+export type UseProviderPublicProfileModelArgs = {
+  providerId?: string | null;
+  nextPath?: string | null;
+  profileHrefBuilder?: (providerId: string) => string;
+  reviewsHrefBuilder?: (providerId: string) => string;
+};
+
+export function useProviderPublicProfileModel({
+  providerId: providerIdOverride = null,
+  nextPath: nextPathOverride = null,
+  profileHrefBuilder,
+  reviewsHrefBuilder,
+}: UseProviderPublicProfileModelArgs = {}) {
   const t = useT();
   const { locale } = useI18n();
   const authStatus = useAuthStatus();
@@ -44,7 +58,8 @@ export function useProviderPublicProfileModel() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
-  const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const routeId = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const id = providerIdOverride ?? routeId;
   const isAuthed = authStatus === 'authenticated';
 
   const {
@@ -104,7 +119,7 @@ export function useProviderPublicProfileModel() {
     if (provider) map.set(provider.id, provider);
     return map;
   }, [provider]);
-  const nextPath = pathname || `/providers/${id}`;
+  const nextPath = nextPathOverride || pathname || `/providers/${id}`;
   const {
     pendingFavoriteProviderIds,
     isProviderSaved,
@@ -134,7 +149,13 @@ export function useProviderPublicProfileModel() {
       requireAuth();
       return;
     }
-    router.push(`/request/create?providerId=${id}`);
+    router.push(
+      buildWorkspaceCreateRequestHref({
+        currentSearch: new URLSearchParams([
+          ['providerId', id],
+        ]),
+      }),
+    );
   }, [id, isAuthed, requireAuth, router]);
 
   const handleChat = React.useCallback(() => {
@@ -143,7 +164,14 @@ export function useProviderPublicProfileModel() {
       requireAuth();
       return;
     }
-    router.push(`/chat?provider=${id}`);
+    router.push(
+      buildWorkspaceHref({
+        currentSearch: new URLSearchParams([
+          ['provider', id],
+        ]),
+        section: 'chat',
+      }),
+    );
   }, [id, isAuthed, requireAuth, router]);
 
   const handleFavorite = React.useCallback(() => {
@@ -167,8 +195,17 @@ export function useProviderPublicProfileModel() {
   );
 
   const profileCard = React.useMemo(
-    () => (provider ? buildProviderPublicProfileCard({ provider, t, locale }) : null),
-    [locale, provider, t],
+    () =>
+      (provider
+        ? buildProviderPublicProfileCard({
+          provider,
+          t,
+          locale,
+          profileHrefBuilder,
+          reviewsHrefBuilder,
+        })
+        : null),
+    [locale, profileHrefBuilder, provider, reviewsHrefBuilder, t],
   );
   const primaryServiceKey = React.useMemo(() => getPrimaryProviderServiceKey(provider), [provider]);
 
@@ -215,8 +252,15 @@ export function useProviderPublicProfileModel() {
   }, [provider, providers]);
 
   const similarCards = React.useMemo(
-    () => buildProviderPublicProfileSimilarCards({ providers: similarProviders, t, locale }),
-    [locale, similarProviders, t],
+    () =>
+      buildProviderPublicProfileSimilarCards({
+        providers: similarProviders,
+        t,
+        locale,
+        profileHrefBuilder,
+        reviewsHrefBuilder,
+      }),
+    [locale, profileHrefBuilder, reviewsHrefBuilder, similarProviders, t],
   );
 
   const {
@@ -349,5 +393,6 @@ export function useProviderPublicProfileModel() {
     similarProvidersTitle,
     similarProvidersHint,
     similarCards,
+    reviewsHref: reviewsHrefBuilder?.(String(id)) ?? `/providers/${id}#reviews`,
   };
 }

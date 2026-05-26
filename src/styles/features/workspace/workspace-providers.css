@@ -9,6 +9,17 @@
     min-width: 0;
   }
 
+  .workspace-provider-detail-stage {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .workspace-provider-detail-stage__toolbar {
+    display: flex;
+    align-items: center;
+  }
+
   .workspace-provider-card-shell {
     display: grid;
     width: 100%;

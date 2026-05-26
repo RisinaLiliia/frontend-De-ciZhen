@@ -20,14 +20,16 @@ export function buildProviderPublicProfileCard(params: {
   provider: ProviderPublicDto;
   t: Translate;
   locale: Locale;
+  profileHrefBuilder?: (providerId: string) => string;
+  reviewsHrefBuilder?: (providerId: string) => string;
 }) {
-  const { provider, t, locale } = params;
+  const { provider, t, locale, profileHrefBuilder, reviewsHrefBuilder } = params;
   return mapPublicProviderToCard({
     t,
     locale,
     provider,
-    profileHref: `/providers/${provider.id}`,
-    reviewsHref: `/providers/${provider.id}#reviews`,
+    profileHref: profileHrefBuilder?.(provider.id) ?? `/providers/${provider.id}`,
+    reviewsHref: reviewsHrefBuilder?.(provider.id) ?? `/providers/${provider.id}#reviews`,
     ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
     status: 'online',
   });
@@ -62,12 +64,16 @@ export function buildProviderPublicProfileSimilarCards(params: {
   providers: ProviderPublicDto[];
   t: Translate;
   locale: Locale;
+  profileHrefBuilder?: (providerId: string) => string;
+  reviewsHrefBuilder?: (providerId: string) => string;
 }) {
   return params.providers.map((item) => ({
     ...buildProviderPublicProfileCard({
       provider: item,
       t: params.t,
       locale: params.locale,
+      profileHrefBuilder: params.profileHrefBuilder,
+      reviewsHrefBuilder: params.reviewsHrefBuilder,
     }),
     reviewPreview: params.t(I18N_KEYS.homePublic.providerReviewPreviewDefault),
   }));
