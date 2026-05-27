@@ -10,7 +10,7 @@ import { workspaceQK } from '@/features/workspace/data';
 import {
   type WorkspaceChatConversationInput,
   isWorkspaceChatConversationInput,
-} from '@/features/workspace/private/workspaceActions.model';
+} from '@/features/workspace/actions/workspaceActions.model';
 import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';

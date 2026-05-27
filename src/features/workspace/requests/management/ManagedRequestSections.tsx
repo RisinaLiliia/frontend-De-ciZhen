@@ -21,7 +21,7 @@ import {
   useWorkspaceRequestDecisionData,
   useWorkspaceRequestOffersData,
 } from '@/features/workspace/overlays/useWorkspaceRequestOverlayData';
-import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
+import type { WorkspaceChatConversationInput } from '@/features/workspace/actions/workspaceActions.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { t as translate } from '@/lib/i18n/t';

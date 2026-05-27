@@ -22,7 +22,7 @@ import {
   resolveWorkspaceRequestOfferAction,
 } from '@/features/workspace/requests/workspaceRequestActionResolvers';
 import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
-import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
+import type { WorkspaceChatConversationInput } from '@/features/workspace/actions/workspaceActions.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';

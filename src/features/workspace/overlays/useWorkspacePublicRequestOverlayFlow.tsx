@@ -8,8 +8,8 @@ import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useT } from '@/lib/i18n/useT';
 import { workspaceQK } from '@/features/workspace/data';
-import type { WorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
-import { isWorkspaceChatConversationInput } from '@/features/workspace/private/workspaceActions.model';
+import type { WorkspaceChatConversationInput } from '@/features/workspace/actions/workspaceActions.model';
+import { isWorkspaceChatConversationInput } from '@/features/workspace/actions/workspaceActions.model';
 import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
 
 type WorkspaceChatDialogState = {

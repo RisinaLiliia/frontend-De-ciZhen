@@ -21,7 +21,7 @@ import {
   type WorkspaceChatConversationInput,
   isWorkspaceChatConversationInput,
   resolveWorkspaceChatNavigation,
-} from '@/features/workspace/private/workspaceActions.model';
+} from '@/features/workspace/actions/workspaceActions.model';
 
 type RouterLike = {
   push: (href: string) => void;
