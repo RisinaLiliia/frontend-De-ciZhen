@@ -1,6 +1,26 @@
 /* src/styles/features/home/home-content.css */
 
-@import './home-content-proof.css';
-@import './home-content-nearby-activity.css';
-@import './home-content-providers.css';
+@import './home-content-layout-shell.css';
+@import './home-content-layout-grid.css';
+
+@import './home-content-layout-stats-core.css';
+@import './home-content-layout-stats-mobile.css';
+@import './home-content-layout-stats-desktop.css';
+
+@import './home-content-layout-trust-panel-shell.css';
+@import './home-content-layout-trust-panel-compact-light.css';
+@import './home-content-layout-trust-panel-motion-cta.css';
+
+@import './home-content-proof-proof.css';
+@import './home-content-proof-howitworks.css';
+@import './home-content-proof-motion-theme.css';
 @import './home-content-proof-responsive.css';
+
+@import './home-content-nearby-activity-nearby.css';
+@import './home-content-nearby-activity-motion.css';
+@import './home-content-nearby-activity-activity-list-ranges.css';
+@import './home-content-nearby-activity-activity-chart-state.css';
+
+@import './home-content-providers-shell.css';
+@import './home-content-providers-profile.css';
+@import './home-content-providers-profile-rating.css';
