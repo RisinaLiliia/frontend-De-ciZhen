@@ -2,7 +2,7 @@
 
 @layer components {
   .workspace-context-controls {
-    --workspace-context-control-font-size: 12px;
+    --workspace-context-control-font-size: var(--fs-12);
     --workspace-context-control-height: 38px;
     --workspace-context-control-radius: 11px;
     --workspace-context-control-padding-inline: 13px;
@@ -34,7 +34,7 @@
 
   .workspace-context-controls.workspace-context-controls--shell,
   .workspace-context-controls.workspace-context-controls--column {
-    gap: 10px;
+    gap: var(--space-2-5);
     padding: 0;
     border: 0;
     border-radius: 0;
@@ -51,7 +51,7 @@
 
   .workspace-context-controls--column .workspace-context-controls__surface {
     display: grid;
-    gap: 12px;
+    gap: var(--space-3);
     padding: 0;
     border: 0;
     border-radius: 0;
@@ -83,7 +83,7 @@
   .workspace-context-controls--shell .workspace-context-controls__body,
   .workspace-context-controls--column .workspace-context-controls__body {
     display: grid;
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 
   .workspace-context-controls__filters-grid {
@@ -94,7 +94,7 @@
       minmax(160px, 0.85fr)
       minmax(120px, 0.55fr);
     align-items: stretch;
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 
   .workspace-context-controls__filter {
@@ -184,7 +184,7 @@
     border-radius: 10px 10px 0 0;
     color: var(--color-text-muted);
     text-decoration: none;
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 600;
     line-height: 1.2;
     transition:
@@ -237,7 +237,7 @@
     border-radius: 0;
     background: transparent;
     color: var(--color-text-muted);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 650;
     line-height: 1.2;
     transition:
@@ -316,7 +316,7 @@
     border-radius: 10px 10px 0 0;
     background: transparent;
     color: var(--color-text-muted);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 600;
     line-height: 1.2;
     appearance: none;
@@ -368,12 +368,12 @@
   .workspace-context-controls__sort-group {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     min-width: 0;
   }
 
   .workspace-context-controls__footer-label {
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 600;
     line-height: 1;
     color: var(--color-text-muted);
@@ -401,7 +401,7 @@
   .workspace-context-controls__footer-actions .workspace-view-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--space-1);
     padding: 0;
     border: 0;
     border-radius: 0;
@@ -517,7 +517,7 @@
 
   .workspace-context-controls__surface .dc-select-trigger {
     justify-content: space-between;
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .workspace-context-controls__surface .dc-select-trigger:hover,
@@ -536,7 +536,7 @@
 
   .workspace-context-controls__surface .dc-select-trigger__label,
   .workspace-context-controls__surface .dc-city-search-input {
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 600;
     line-height: 1.35;
   }
@@ -567,7 +567,7 @@
   .workspace-context-controls__surface .workspace-context-select--sort-inline.dc-select-trigger {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     min-height: var(--workspace-context-control-height);
     height: var(--workspace-context-control-height);
     min-width: 168px;
@@ -590,7 +590,7 @@
   }
 
   .workspace-context-controls__surface .workspace-context-select--sort-inline .dc-select-trigger__label {
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 600;
     color: var(--color-text);
     white-space: nowrap;
@@ -617,14 +617,14 @@
   @media (min-width: 768px) and (max-width: 1023px) {
     .workspace-context-controls__filters-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      gap: var(--space-2-5);
     }
 
     .workspace-context-controls__footer-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: 10px;
+      gap: var(--space-2-5);
     }
 
     .workspace-context-controls__footer-meta {
@@ -635,7 +635,7 @@
       display: grid;
       grid-template-columns: max-content minmax(180px, 220px);
       align-items: center;
-      gap: 8px;
+      gap: var(--space-2);
       width: max-content;
       max-width: 100%;
     }
@@ -652,7 +652,7 @@
     .workspace-context-controls--column .workspace-context-controls__surface {
       padding: 0;
       border-radius: 0;
-      gap: 10px;
+      gap: var(--space-2-5);
     }
   }
 

@@ -53,7 +53,7 @@
       border: 1px solid var(--surface-soft-border);
       background: var(--surface-soft-bg-strong);
       color: var(--c-text);
-      font-size: 11px;
+      font-size: var(--fs-11);
       line-height: 1.1;
       white-space: nowrap;
       box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 12%, transparent);

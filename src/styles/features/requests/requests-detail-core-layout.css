@@ -131,13 +131,13 @@
   }
 
   .request-detail__notice-title {
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 600;
     color: var(--c-text);
   }
 
   .request-detail__notice-text {
-    font-size: 13px;
+    font-size: var(--fs-13);
     color: var(--c-text-muted);
   }
 
@@ -181,7 +181,7 @@
 
   .request-detail__price-prefix,
   .request-detail__price-suffix {
-    font-size: 14px;
+    font-size: var(--fs-14);
     font-weight: 500;
     color: var(--c-text-muted);
   }
@@ -329,7 +329,7 @@
   }
 
   .request-detail--dialog .request-detail__section-title {
-    font-size: 14px;
+    font-size: var(--fs-14);
     letter-spacing: -0.01em;
   }
 
@@ -368,7 +368,7 @@
 
     .request-detail__dialog-footer-bar.my-request-card__footer-bar {
       grid-template-columns: minmax(0, 1fr);
-      gap: 12px;
+      gap: var(--space-3);
     }
 
     .request-detail__dialog-actions.my-request-card__action-row {

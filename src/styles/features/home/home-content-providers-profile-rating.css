@@ -14,7 +14,7 @@
 
   .provider-rating-summary {
     margin-top: 0;
-    gap: 2px;
+    gap: var(--space-0-5);
   }
 
   .provider-rating-stack {
@@ -29,7 +29,7 @@
     min-height: calc(2 * 1.35em);
     max-height: calc(2 * 1.35em);
     color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-text) 12%);
-    font-size: 12px;
+    font-size: var(--fs-12);
     line-height: 1.35;
     font-style: normal;
     display: -webkit-box;
@@ -57,12 +57,12 @@
   }
 
   .provider-rating-summary .rating-summary__value {
-    font-size: 14px;
+    font-size: var(--fs-14);
     line-height: 1;
   }
 
   .provider-rating-summary .rating-summary__reviews {
-    font-size: 11px;
+    font-size: var(--fs-11);
   }
 
   .provider-rating-summary .rating-summary__trailing {
@@ -92,7 +92,7 @@
     min-height: calc(2 * 1.4em);
     max-height: calc(2 * 1.4em);
     color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
-    font-size: 12px;
+    font-size: var(--fs-12);
     line-height: 1.4;
     display: -webkit-box;
     line-clamp: 2;
@@ -172,7 +172,7 @@
     color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
     text-decoration: underline;
     text-underline-offset: 3px;
-    font-size: 11px;
+    font-size: var(--fs-11);
     font-weight: 600;
     line-height: 1.2;
     flex-basis: 100%;
@@ -313,7 +313,7 @@
     gap: var(--space-1-5);
     min-width: 0;
     color: var(--c-text-muted);
-    font-size: 12px;
+    font-size: var(--fs-12);
     line-height: 1.3;
   }
 
@@ -336,7 +336,7 @@
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
     background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     line-height: 1;
   }
@@ -350,7 +350,7 @@
   }
 
   .provider-main__detail-text.request-detail__availability-date {
-    font-size: 12px;
+    font-size: var(--fs-12);
     line-height: 1.3;
     flex-wrap: nowrap;
   }
@@ -362,7 +362,7 @@
 
   .provider-main__detail-text--price .request-detail__price-prefix,
   .provider-main__detail-text--price .request-detail__price-suffix {
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 500;
     color: var(--c-text-muted);
   }

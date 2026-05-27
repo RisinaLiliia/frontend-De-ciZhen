@@ -27,7 +27,7 @@
 
     .request-detail--provider .request-detail__price-prefix,
     .request-detail--provider .request-detail__price-suffix {
-      font-size: 12px;
+      font-size: var(--fs-12);
       line-height: 1.2;
     }
 

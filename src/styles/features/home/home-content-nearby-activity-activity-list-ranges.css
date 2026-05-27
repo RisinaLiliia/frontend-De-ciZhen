@@ -42,7 +42,7 @@
 
   .home-cta:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+    box-shadow: var(--shadow-focus);
   }
 
   .home-activity-panel {
@@ -51,14 +51,14 @@
 
   .home-activity__header {
     display: grid;
-    gap: 6px;
+    gap: var(--space-1-5);
   }
 
   .home-activity__header-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .home-activity__title {
@@ -74,7 +74,7 @@
 
   .home-activity__ranges {
     display: inline-flex;
-    gap: 6px;
+    gap: var(--space-1-5);
     padding: 4px;
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     border-radius: var(--radius-pill);
@@ -87,7 +87,7 @@
     padding: 0 10px;
     border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
     border-radius: var(--radius-pill);
-    font-size: 11px;
+    font-size: var(--fs-11);
     font-weight: 600;
     color: color-mix(in oklab, var(--c-primary) 60%, var(--c-text) 40%);
     background: color-mix(in oklab, var(--c-panel) 90%, var(--c-info-soft) 10%);

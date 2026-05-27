@@ -11,7 +11,7 @@
   }
 
   .auth-route-modal__panel {
-    gap: 14px;
+    gap: var(--space-3-5);
     overflow-x: hidden;
   }
 
@@ -33,7 +33,7 @@
   .form-label {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--space-1);
   }
 
   .form-label__required {
@@ -43,7 +43,7 @@
     width: 14px;
     height: 14px;
     border-radius: var(--radius-pill);
-    font-size: 11px;
+    font-size: var(--fs-11);
     font-weight: 700;
     line-height: 1;
     cursor: help;
@@ -54,7 +54,7 @@
 
   .auth-form-error {
     margin-top: 4px;
-    font-size: 12px;
+    font-size: var(--fs-12);
     line-height: 1.35;
     color: color-mix(in oklab, var(--c-danger) 85%, var(--c-text) 15%);
   }
@@ -66,8 +66,8 @@
     border: 1px solid var(--focus-ring-primary);
     background: color-mix(in oklab, var(--c-primary) 10%, transparent);
     display: grid;
-    gap: 6px;
-    font-size: 12px;
+    gap: var(--space-1-5);
+    font-size: var(--fs-12);
     line-height: 1.4;
     color: color-mix(in oklab, var(--c-text) 90%, white 10%);
   }

@@ -71,14 +71,14 @@
 
   .workspace-mode-nav__label {
     color: currentColor;
-    font-size: 14px;
+    font-size: var(--fs-14);
     line-height: 1.2;
     font-weight: 650;
   }
 
   .workspace-mode-nav__description {
     color: var(--color-text-muted);
-    font-size: 12px;
+    font-size: var(--fs-12);
     line-height: 1.35;
   }
 
@@ -128,7 +128,7 @@
 
   .workspace-navigation-drawer__title {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--fs-14);
     line-height: 1.2;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -180,7 +180,7 @@
     }
 
     .workspace-mode-nav__label {
-      font-size: 13px;
+      font-size: var(--fs-13);
     }
 
     .workspace-mode-nav__description {

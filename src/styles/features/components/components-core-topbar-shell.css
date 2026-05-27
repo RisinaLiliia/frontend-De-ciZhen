@@ -48,7 +48,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: var(--space-2);
     min-width: 0;
     position: relative;
     border-radius: var(--radius-xl);
@@ -94,7 +94,7 @@
   .topbar__inner--with-center {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: 12px;
+    gap: var(--space-3);
     align-items: center;
     min-width: 0;
   }

@@ -6,7 +6,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) 132px;
     align-items: stretch;
-    gap: 14px;
+    gap: var(--space-3-5);
     min-height: 142px;
     width: 100%;
     min-width: 0;
@@ -35,7 +35,7 @@
 
   .request-create-card__body {
     display: grid;
-    gap: 8px;
+    gap: var(--space-2);
     align-content: center;
     min-width: 0;
   }
@@ -121,7 +121,7 @@
     min-height: 112px;
     grid-template-columns: minmax(0, 1fr) 108px;
     padding: 12px;
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .request-create-card--compact .request-create-card__title {

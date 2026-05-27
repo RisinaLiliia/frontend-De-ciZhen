@@ -15,7 +15,7 @@
     .workspace-page-frame__filters .workspace-context-controls--column .workspace-context-controls__surface,
     .workspace-page-frame__filters .workspace-context-controls--column .workspace-context-controls__body {
       display: grid;
-      gap: 10px;
+      gap: var(--space-2-5);
       padding: 0;
       border: 0;
       border-radius: 0;
@@ -64,7 +64,7 @@
       background: transparent;
       color: var(--color-text-muted);
       box-shadow: none;
-      font-size: 12px;
+      font-size: var(--fs-12);
       font-weight: 650;
       line-height: 1.2;
       white-space: nowrap;
@@ -81,7 +81,7 @@
     .workspace-page-frame__filters .workspace-context-controls__mobile-toolbar {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(132px, 0.92fr);
-      gap: 8px;
+      gap: var(--space-2);
       align-items: stretch;
     }
 
@@ -113,7 +113,7 @@
       background: var(--color-surface);
       box-shadow: none;
       color: var(--color-text);
-      font-size: 12px;
+      font-size: var(--fs-12);
       font-weight: 600;
       line-height: 1.2;
       backdrop-filter: none;
@@ -123,7 +123,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: var(--space-2);
     }
 
     .workspace-mobile-filters__trigger:hover,
@@ -144,7 +144,7 @@
 
     .workspace-mobile-filters__sheet {
       display: grid;
-      gap: 12px;
+      gap: var(--space-3);
       padding: 12px;
       border: 1px solid color-mix(in oklab, var(--color-border-soft) 84%, var(--color-surface) 16%);
       border-radius: var(--radius-lg);
@@ -160,7 +160,7 @@
 
     .workspace-page-frame__filters .workspace-context-controls__filters-grid--sheet {
       grid-template-columns: minmax(0, 1fr);
-      gap: 8px;
+      gap: var(--space-2);
     }
 
     .workspace-page-frame__filters .workspace-context-controls__filters-grid--sheet .workspace-context-select--city .dc-city-search-input,
@@ -170,14 +170,14 @@
 
     .workspace-page-frame__filters .workspace-context-controls__mobile-footer {
       display: grid;
-      gap: 8px;
+      gap: var(--space-2);
     }
 
     .workspace-page-frame__filters .workspace-context-controls__footer-row--mobile {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: 8px;
+      gap: var(--space-2);
       min-height: 38px;
     }
 
@@ -185,7 +185,7 @@
       display: flex;
       align-items: center;
       flex-wrap: nowrap;
-      gap: 8px;
+      gap: var(--space-2);
       min-width: 0;
     }
 
@@ -205,7 +205,7 @@
     }
 
     .workspace-page-frame__filters .workspace-context-controls__footer-label {
-      font-size: 12px;
+      font-size: var(--fs-12);
       font-weight: 600;
       color: var(--color-text-muted);
       white-space: nowrap;
@@ -213,7 +213,7 @@
     }
 
     .workspace-page-frame__filters .workspace-context-controls__footer-actions {
-      gap: 6px;
+      gap: var(--space-1-5);
     }
 
     .workspace-page-frame__filters .workspace-view-toggle {
@@ -229,7 +229,7 @@
       height: 38px;
       padding-inline: 12px;
       border-radius: var(--radius-md);
-      font-size: 12px;
+      font-size: var(--fs-12);
       font-weight: 600;
       line-height: 1.2;
       box-shadow: none;
@@ -251,7 +251,7 @@
       background: var(--color-surface);
       color: var(--color-text);
       justify-content: center;
-      gap: 8px;
+      gap: var(--space-2);
       white-space: nowrap;
     }
 
@@ -273,7 +273,7 @@
     }
 
     .workspace-page-frame__filters .workspace-context-controls__sort-group--mobile {
-      gap: 8px;
+      gap: var(--space-2);
     }
   }
 }

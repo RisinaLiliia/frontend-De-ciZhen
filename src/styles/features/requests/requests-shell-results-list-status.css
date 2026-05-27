@@ -76,7 +76,7 @@
   .offer-actions__btn {
     min-height: 36px;
     padding: var(--space-2) var(--space-3);
-    font-size: 13px;
+    font-size: var(--fs-13);
     gap: var(--space-1-5);
     border-radius: var(--radius-md);
     text-decoration: none;
@@ -84,7 +84,7 @@
 
   .offer-actions__btn:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+    box-shadow: var(--shadow-focus);
   }
 
 

@@ -174,7 +174,7 @@
     padding: 0 var(--space-1);
     border-radius: inherit;
     text-align: center;
-    font-size: 11px;
+    font-size: var(--fs-11);
     line-height: 1.2;
     font-weight: 600;
     color: var(--c-primary-contrast);

@@ -24,7 +24,7 @@
   .app-control-sm {
     min-height: 38px;
     padding-inline: 12px;
-    font-size: 13px;
+    font-size: var(--fs-13);
   }
 
   :is(.field, .dc-select-trigger, .dc-city-search-input):hover {
@@ -58,7 +58,7 @@
     min-height: 44px;
     padding: 0 16px;
     border-radius: var(--radius-md);
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 650;
     line-height: 1;
     text-decoration: none;

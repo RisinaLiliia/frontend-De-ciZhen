@@ -3,7 +3,7 @@
 @layer components {
   .request-meta-inline {
     display: grid;
-    gap: 8px;
+    gap: var(--space-2);
     padding: 10px 12px;
     border-radius: var(--radius-md);
     border: 1px solid var(--surface-soft-border);
@@ -14,11 +14,11 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 
   .request-meta-inline__title {
-    font-size: 14px;
+    font-size: var(--fs-14);
     font-weight: 700;
     line-height: 1.25;
   }
@@ -34,14 +34,14 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 
   .request-meta-inline__item {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 13px;
+    gap: var(--space-1-5);
+    font-size: var(--fs-13);
     color: var(--c-text-muted);
   }
 

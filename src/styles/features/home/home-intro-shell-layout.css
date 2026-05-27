@@ -120,11 +120,11 @@
   }
 
   .home-intro-shell .home-combined-top {
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .home-intro-shell .home-combined-top__left.stack-md {
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .hero-experiment--subtle {

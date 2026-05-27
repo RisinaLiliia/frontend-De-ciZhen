@@ -3,17 +3,17 @@
 @layer components {
   .profile-settings {
     display: grid;
-    gap: 14px;
+    gap: var(--space-3-5);
   }
 
   .profile-settings__header {
     display: grid;
-    gap: 4px;
+    gap: var(--space-1);
   }
 
   .profile-settings__grid {
     display: grid;
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   @media (min-width: 1024px) {
@@ -38,13 +38,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 
   .profile-settings__row {
     display: grid;
     grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
-    gap: 12px;
+    gap: var(--space-3);
     align-items: center;
   }
 
@@ -55,7 +55,7 @@
   .profile-settings__choices {
     display: inline-flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-2);
     padding: 4px;
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
@@ -68,7 +68,7 @@
     border: 0;
     padding: 7px 14px;
     border-radius: var(--radius-pill);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 600;
     color: var(--c-text-muted);
     background: transparent;
@@ -102,7 +102,7 @@
   .profile-settings__inline-actions {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     width: 100%;
     justify-content: flex-end;
   }
@@ -112,7 +112,7 @@
     min-width: 0;
     height: 36px;
     padding-inline: 12px;
-    font-size: 13px;
+    font-size: var(--fs-13);
   }
 
   .profile-settings__save-btn {
@@ -120,7 +120,7 @@
     min-width: 0;
     height: 36px;
     padding-inline: 12px;
-    font-size: 13px;
+    font-size: var(--fs-13);
   }
 
   .profile-settings__password-field {
@@ -170,11 +170,11 @@
   .profile-settings__password-hint {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: var(--space-1-5);
   }
 
   .profile-settings__password-hint span {
-    font-size: 11px;
+    font-size: var(--fs-11);
     border-radius: var(--radius-pill);
     padding: 4px 8px;
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);

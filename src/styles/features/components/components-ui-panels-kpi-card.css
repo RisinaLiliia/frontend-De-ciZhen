@@ -78,7 +78,7 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    gap: 2px;
+    gap: var(--space-0-5);
     min-width: 56px;
     line-height: 1;
     text-align: right;

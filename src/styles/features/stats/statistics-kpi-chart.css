@@ -72,7 +72,7 @@
   }
 
   .requests-stats-chart__delta {
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
   }
@@ -115,7 +115,7 @@
   .requests-mini-chart__label {
     position: absolute;
     bottom: -16px;
-    font-size: 10px;
+    font-size: var(--fs-10);
     color: var(--c-text-muted);
   }
 

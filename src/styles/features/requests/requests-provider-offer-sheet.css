@@ -30,7 +30,7 @@
     border: 1px solid color-mix(in oklab, var(--c-border) 68%, transparent);
     background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
     color: var(--c-text);
-    font-size: 14px;
+    font-size: var(--fs-14);
     line-height: 1;
     display: inline-flex;
     align-items: center;

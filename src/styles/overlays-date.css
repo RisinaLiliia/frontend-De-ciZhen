@@ -58,7 +58,7 @@
   }
 
   .dc-date .rdp-head_cell {
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 600;
     color: var(--color-text-muted);
     text-transform: none;

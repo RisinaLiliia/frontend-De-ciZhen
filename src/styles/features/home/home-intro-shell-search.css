@@ -11,7 +11,7 @@
 
   .home-panel-heading {
     display: grid;
-    gap: 4px;
+    gap: var(--space-1);
     min-width: 0;
     flex: 1 1 auto;
   }
@@ -64,19 +64,19 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
     align-items: end;
-    gap: 8px;
+    gap: var(--space-2);
     margin-top: 4px;
   }
 
   .home-quick-search__chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-2);
     margin-top: 4px;
   }
 
   .home-intro-shell .home-quick-search-panel {
-    gap: 14px;
+    gap: var(--space-3-5);
     min-height: 0;
     border-color: color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
     background: linear-gradient(
@@ -125,7 +125,7 @@
   .home-quick-search__city-option {
     text-align: left;
     padding: 10px 12px;
-    font-size: 13px;
+    font-size: var(--fs-13);
     color: var(--c-text);
     border-bottom: 1px solid color-mix(in oklab, var(--c-border) 72%, transparent);
     background: transparent;

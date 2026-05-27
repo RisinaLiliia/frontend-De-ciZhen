@@ -9,7 +9,7 @@
     border-radius: var(--radius-md);
     border: 1px solid var(--surface-soft-border);
     background: var(--surface-soft-bg);
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 600;
     color: var(--c-text);
     width: fit-content;

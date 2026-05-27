@@ -35,28 +35,28 @@
     margin: 0;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     color: var(--c-text-muted);
     white-space: nowrap;
   }
 
   .consent-manage-footer__brand-name {
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 700;
     letter-spacing: 0.01em;
     color: color-mix(in oklab, var(--c-text) 88%, var(--c-primary) 12%);
   }
 
   .consent-manage-footer__brand-copy {
-    font-size: 12px;
+    font-size: var(--fs-12);
   }
 
   .consent-manage-footer__links {
     display: inline-flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
-    font-size: 12px;
+    gap: var(--space-2);
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 
@@ -82,7 +82,7 @@
     border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
     background: transparent;
     color: var(--c-text);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     padding: 0 12px;
     transition:
@@ -107,7 +107,7 @@
     .consent-manage-footer__inner {
       flex-direction: column;
       align-items: flex-start;
-      gap: 10px;
+      gap: var(--space-2-5);
       padding: 8px max(12px, var(--shell-inline-padding, 12px));
     }
 

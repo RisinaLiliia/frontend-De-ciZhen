@@ -10,7 +10,7 @@
 
     .provider-decision-metric {
       padding: 0;
-      font-size: 11px;
+      font-size: var(--fs-11);
       gap: var(--space-0-75);
     }
 
@@ -83,7 +83,7 @@
     }
 
     .provider-sub {
-      font-size: 10px;
+      font-size: var(--fs-10);
       line-height: 1.25;
     }
 

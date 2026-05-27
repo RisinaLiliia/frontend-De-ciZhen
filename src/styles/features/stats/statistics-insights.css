@@ -19,7 +19,7 @@
     --workspace-insight-action-line-height: 1.3;
     --workspace-insight-badge-height: 28px;
     --workspace-insight-badge-pad-inline: 12px;
-    --workspace-insight-badge-font-size: 12px;
+    --workspace-insight-badge-font-size: var(--fs-12);
     display: grid;
     gap: var(--workspace-insights-panel-gap);
     align-content: start;
@@ -47,7 +47,7 @@
     --workspace-insight-action-line-height: 1.3;
     --workspace-insight-badge-height: 28px;
     --workspace-insight-badge-pad-inline: 12px;
-    --workspace-insight-badge-font-size: 12px;
+    --workspace-insight-badge-font-size: var(--fs-12);
     --workspace-insights-balanced-head-min-height: calc(var(--workspace-statistics-section-header-min-h) + var(--space-4));
     --workspace-insights-balanced-title-lines: 2;
     --workspace-insights-balanced-text-lines: 3;
@@ -811,7 +811,7 @@
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, white 58%, transparent),
       0 4px 10px color-mix(in oklab, var(--c-text) 8%, transparent);
-    font-size: 11px;
+    font-size: var(--fs-11);
     line-height: 1;
     font-weight: 700;
     color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text) 30%);

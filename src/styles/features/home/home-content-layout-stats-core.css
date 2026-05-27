@@ -22,7 +22,7 @@
   }
 
   .home-stats__live-badge {
-    font-size: 10px;
+    font-size: var(--fs-10);
     letter-spacing: 0.02em;
     flex-shrink: 0;
     align-self: center;
@@ -61,7 +61,7 @@
   }
 
   .home-stats__label {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 
@@ -74,7 +74,7 @@
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--c-accent);
-    font-size: 12px;
+    font-size: var(--fs-12);
   }
 
 

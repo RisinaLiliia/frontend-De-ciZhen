@@ -7,7 +7,7 @@
     display: grid;
     grid-template-rows: auto 1fr auto auto;
     align-content: stretch;
-    gap: 12px;
+    gap: var(--space-3);
     min-height: 100%;
     min-block-size: clamp(420px, 46vw, 560px);
     padding: var(--home-panel-padding, 16px);
@@ -39,7 +39,7 @@
     position: relative;
     z-index: 2;
     display: grid;
-    gap: 6px;
+    gap: var(--space-1-5);
     text-align: center;
     align-content: start;
   }

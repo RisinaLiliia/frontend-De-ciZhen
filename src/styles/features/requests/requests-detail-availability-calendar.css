@@ -16,7 +16,7 @@
   .request-detail__meta {
     display: grid;
     gap: var(--space-2);
-    font-size: 14px;
+    font-size: var(--fs-14);
     color: var(--c-text);
   }
 
@@ -75,7 +75,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: var(--space-1-5);
-    font-size: 13px;
+    font-size: var(--fs-13);
     color: var(--c-text-muted);
   }
 
@@ -143,7 +143,7 @@
 
   .request-detail__availability-calendar-title {
     margin: 0;
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     color: var(--c-text);
   }
@@ -170,7 +170,7 @@
     flex-wrap: wrap;
     gap: var(--space-2);
     margin-top: var(--space-1);
-    font-size: 11px;
+    font-size: var(--fs-11);
     color: var(--c-text-muted);
   }
 

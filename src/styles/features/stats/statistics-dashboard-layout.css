@@ -226,7 +226,7 @@
 
   .workspace-statistics-context__trend-card {
     display: grid;
-    gap: 6px;
+    gap: var(--space-1-5);
     min-width: 0;
     min-height: 100%;
     align-content: start;

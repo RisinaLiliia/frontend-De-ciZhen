@@ -463,7 +463,7 @@
     border-radius: var(--radius-pill);
     background: color-mix(in oklab, var(--c-primary) 12%, white 88%);
     color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     line-height: 1;
     box-shadow: inset 0 1px 0 color-mix(in oklab, white 70%, transparent);
@@ -1085,7 +1085,7 @@
   .workspace-decision-panel__overview-grid > div {
     display: flex;
     justify-content: space-between;
-    gap: 12px;
+    gap: var(--space-3);
     padding-top: var(--my-work-item-gap);
     border-top: 1px solid var(--color-border-soft);
   }
@@ -1110,7 +1110,7 @@
 
   .my-decision-mode__copy {
     display: grid;
-    gap: 4px;
+    gap: var(--space-1);
   }
 
   .my-requests-rail {
@@ -1129,7 +1129,7 @@
 
   .my-requests-rail__panel {
     display: grid;
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .my-requests-rail__eyebrow {
@@ -1231,13 +1231,13 @@
 
   .my-requests-rail__meta {
     display: grid;
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 
   .my-requests-rail__meta > div {
     display: flex;
     justify-content: space-between;
-    gap: 12px;
+    gap: var(--space-3);
     padding-top: 10px;
     border-top: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
   }
@@ -1255,7 +1255,7 @@
   .my-requests-empty,
   .my-requests-auth-gate {
     display: grid;
-    gap: 12px;
+    gap: var(--space-3);
     padding: 20px;
   }
 
@@ -1273,7 +1273,7 @@
   .my-requests-empty__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 
   .my-requests-view__mobile-rail {
@@ -1877,7 +1877,7 @@
     padding: 0 10px;
     border-radius: var(--radius-pill);
     background: color-mix(in srgb, var(--surface) 82%, white 18%);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     color: var(--muted-foreground);
   }
@@ -2058,7 +2058,7 @@
   .my-request-dialog__photos {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .my-request-dialog__photo {

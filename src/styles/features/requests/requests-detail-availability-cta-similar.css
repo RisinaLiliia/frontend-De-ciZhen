@@ -49,7 +49,7 @@
 
   .request-detail__cta-subtext {
     margin-top: calc(var(--space-1) * -1);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 600;
     color: color-mix(in oklab, var(--c-accent) 72%, var(--c-text) 28%);
     text-align: center;
@@ -107,7 +107,7 @@
   }
 
   .request-detail__similar-note {
-    font-size: 13px;
+    font-size: var(--fs-13);
     color: var(--c-text-muted);
   }
 

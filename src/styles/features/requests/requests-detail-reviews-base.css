@@ -92,18 +92,18 @@
   }
 
   .request-detail__review-rating {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 
   .request-detail__review-date {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 
   .request-detail__review-body {
     margin-top: var(--space-2);
-    font-size: 13px;
+    font-size: var(--fs-13);
     color: var(--c-text);
   }
 

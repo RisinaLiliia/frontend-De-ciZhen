@@ -29,7 +29,7 @@
 
     .request-detail--provider .request-detail__client-card--provider-hero .provider-decision-metrics {
       display: grid;
-      gap: 2px;
+      gap: var(--space-0-5);
     }
 
     .request-detail--provider .request-detail__client-card--provider-hero .provider-decision-metric {
@@ -50,7 +50,7 @@
     }
 
     .request-detail--provider .request-detail__provider-mobile-availability .request-detail__availability-date {
-      font-size: 12px;
+      font-size: var(--fs-12);
     }
 
     .request-detail--provider .request-detail__aside .request-detail__similar-footer {

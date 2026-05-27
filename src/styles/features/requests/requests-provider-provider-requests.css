@@ -42,7 +42,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-1-5);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 600;
     color: color-mix(in oklab, var(--c-success) 75%, var(--c-text) 25%);
     padding: var(--space-2) var(--space-2-5);

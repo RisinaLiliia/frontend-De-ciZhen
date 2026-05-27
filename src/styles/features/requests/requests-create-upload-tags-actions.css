@@ -76,7 +76,7 @@
     gap: var(--space-1-5);
     padding: var(--space-1-5) var(--space-2-5);
     border-radius: var(--radius-pill);
-    font-size: 12px;
+    font-size: var(--fs-12);
     background: var(--surface-soft-bg);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     color: var(--c-text);
@@ -86,7 +86,7 @@
     border: none;
     background: transparent;
     color: inherit;
-    font-size: 14px;
+    font-size: var(--fs-14);
     cursor: pointer;
   }
 

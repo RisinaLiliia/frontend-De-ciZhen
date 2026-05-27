@@ -25,7 +25,7 @@
     justify-content: center;
     background: color-mix(in oklab, var(--c-primary) 25%, var(--c-panel) 75%);
     color: var(--c-text);
-    font-size: 14px;
+    font-size: var(--fs-14);
     font-weight: 700;
     overflow: hidden;
   }
@@ -86,7 +86,7 @@
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     padding: var(--space-1) var(--space-1-5);
     border-radius: var(--radius-sm);
-    font-size: 10px;
+    font-size: var(--fs-10);
     white-space: nowrap;
     opacity: 0;
     transform: translateY(2px);

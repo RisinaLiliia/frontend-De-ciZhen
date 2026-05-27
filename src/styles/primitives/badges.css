@@ -14,7 +14,7 @@
     border: 1px solid var(--badge-border);
     background: var(--badge-bg);
     color: var(--badge-text);
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.01em;
@@ -35,13 +35,13 @@
   .ui-badge--sm {
     min-height: 28px;
     padding-inline: 12px;
-    font-size: 12px;
+    font-size: var(--fs-12);
   }
 
   .ui-badge--md {
     min-height: 32px;
     padding-inline: 14px;
-    font-size: 13px;
+    font-size: var(--fs-13);
   }
 
   :is(.ui-badge--soft, .badge, .status-badge) {

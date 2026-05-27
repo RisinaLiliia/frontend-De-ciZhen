@@ -7,7 +7,7 @@
     }
 
     .request-detail--provider .request-detail__client-card--provider-hero .provider-main {
-      gap: 2px;
+      gap: var(--space-0-5);
     }
 
     .request-detail--provider .request-detail__client-card--provider-hero .provider-decision-metrics {
@@ -15,7 +15,7 @@
     }
 
     .request-detail--provider .request-detail__client-card--provider-hero .provider-decision-metric {
-      font-size: 11px;
+      font-size: var(--fs-11);
     }
 
     .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-actions {

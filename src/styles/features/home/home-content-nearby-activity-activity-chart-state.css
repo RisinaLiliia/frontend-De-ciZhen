@@ -80,12 +80,12 @@
   .home-activity__meta {
     margin-top: 10px;
     display: grid;
-    gap: 8px;
+    gap: var(--space-2);
     min-height: 64px;
   }
 
   .home-activity__point-time {
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 600;
     color: var(--c-text);
     min-height: 16px;
@@ -94,14 +94,14 @@
   .home-activity__legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .home-activity__metric {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 12px;
+    gap: var(--space-1-5);
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
     padding: 4px 8px;
     border-radius: var(--radius-pill);
@@ -161,7 +161,7 @@
   }
 
   .home-activity__updated {
-    font-size: 11px;
+    font-size: var(--fs-11);
     color: var(--c-text-muted);
     min-height: 16px;
   }
@@ -179,7 +179,7 @@
   }
 
   .home-activity__state {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
     padding: 10px;
     border-radius: var(--radius-sm);

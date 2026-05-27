@@ -18,7 +18,7 @@
   .rating-summary__stars {
     position: relative;
     display: inline-block;
-    font-size: 12px;
+    font-size: var(--fs-12);
     letter-spacing: 0.06em;
     line-height: 1;
   }
@@ -42,7 +42,7 @@
   }
 
   .rating-summary__reviews {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 

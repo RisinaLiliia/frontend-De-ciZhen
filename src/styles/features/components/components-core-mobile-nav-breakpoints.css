@@ -3,7 +3,7 @@
 @layer components {
   @media (max-width: 640px) {
     .brand {
-      gap: 8px;
+      gap: var(--space-2);
     }
 
     .brand__text {
@@ -11,11 +11,11 @@
     }
 
     .page-shell__topbar-actions {
-      gap: 6px;
+      gap: var(--space-1-5);
     }
 
     .page-shell__topbar-actions > .flex {
-      gap: 6px;
+      gap: var(--space-1-5);
     }
 
     .auth-actions__register {
@@ -25,7 +25,7 @@
 
   @media (max-width: 420px) {
     .workspace-mobile-dock {
-      gap: 4px;
+      gap: var(--space-1);
       padding-inline: 8px;
     }
 
@@ -34,11 +34,11 @@
     }
 
     .page-shell__topbar-actions {
-      gap: 4px;
+      gap: var(--space-1);
     }
 
     .page-shell__topbar-actions > .flex {
-      gap: 4px;
+      gap: var(--space-1);
     }
 
     .icon-button--topbar {

@@ -51,7 +51,7 @@
   .requests-page-nav__label {
     min-width: 48px;
     text-align: center;
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
     font-weight: 600;
   }

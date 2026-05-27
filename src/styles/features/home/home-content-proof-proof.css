@@ -30,7 +30,7 @@
     background: var(--surface-soft-bg);
     padding: 12px 14px;
     display: grid;
-    gap: 6px;
+    gap: var(--space-1-5);
     transition:
       transform 300ms ease,
       opacity 300ms ease,
@@ -70,7 +70,7 @@
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 
   .proof-avatars {
@@ -87,7 +87,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     color: var(--c-text-muted);
   }
@@ -112,43 +112,43 @@
   }
 
   .proof-title {
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 600;
   }
 
   .proof-price {
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     color: var(--c-accent);
     white-space: nowrap;
   }
 
   .proof-info {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 
   .proof-rating {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-1-5);
   }
 
   .proof-stars {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-accent);
     letter-spacing: 1px;
     animation: none;
   }
 
   .proof-score {
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 600;
     color: var(--c-text);
   }
 
   .proof-review {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 

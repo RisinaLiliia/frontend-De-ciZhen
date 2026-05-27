@@ -38,7 +38,7 @@
 
   .provider-reviews-hub__rating-meta {
     margin: 0;
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 
@@ -56,7 +56,7 @@
 
   .provider-reviews-hub__distribution-score,
   .provider-reviews-hub__distribution-count {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 
@@ -93,7 +93,7 @@
   }
 
   .provider-reviews-hub__toolbar-label {
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 
@@ -108,7 +108,7 @@
     border-radius: var(--radius-pill);
     background: var(--surface-soft-bg-strong);
     color: color-mix(in oklab, var(--c-text) 68%, var(--c-text-muted) 32%);
-    font-size: 12px;
+    font-size: var(--fs-12);
     padding: 6px 10px;
   }
 
@@ -142,20 +142,20 @@
 
   .provider-reviews-hub__item-author {
     margin: 0;
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 700;
     color: var(--c-text);
   }
 
   .provider-reviews-hub__item-date {
     margin: 0;
-    font-size: 12px;
+    font-size: var(--fs-12);
     color: var(--c-text-muted);
   }
 
   .provider-reviews-hub__item-stars {
     margin: 0;
-    font-size: 13px;
+    font-size: var(--fs-13);
     letter-spacing: 0.06em;
     color: var(--c-accent);
   }
@@ -189,7 +189,7 @@
 
   .provider-reviews-hub__item-text {
     margin: 0;
-    font-size: 13px;
+    font-size: var(--fs-13);
     line-height: 1.45;
     color: var(--c-text);
   }
@@ -264,11 +264,11 @@
   }
 
   #platform-reviews .provider-reviews-hub__rating-stars {
-    font-size: 14px;
+    font-size: var(--fs-14);
   }
 
   #platform-reviews .provider-reviews-hub__rating-meta {
-    font-size: 11px;
+    font-size: var(--fs-11);
   }
 
   #platform-reviews .provider-reviews-hub__distribution {
@@ -282,7 +282,7 @@
 
   #platform-reviews .provider-reviews-hub__distribution-score,
   #platform-reviews .provider-reviews-hub__distribution-count {
-    font-size: 11px;
+    font-size: var(--fs-11);
   }
 
   #platform-reviews .provider-reviews-hub__distribution-track {
@@ -328,7 +328,7 @@
   }
 
   #platform-reviews .provider-reviews-hub__toolbar-label {
-    font-size: 13px;
+    font-size: var(--fs-13);
   }
 
   #platform-reviews .provider-reviews-hub__sort {
@@ -359,11 +359,11 @@
   }
 
   #platform-reviews .provider-reviews-hub__item-date {
-    font-size: 12px;
+    font-size: var(--fs-12);
   }
 
   #platform-reviews .provider-reviews-hub__item-text {
-    font-size: 14px;
+    font-size: var(--fs-14);
     line-height: 1.55;
     max-width: 78ch;
   }
