@@ -1,0 +1,55 @@
+src/styles/features/home/home-content-nearby-activity-nearby.css:31:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/home/home-content-nearby-activity-nearby.css:55:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 18%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:81:    box-shadow: 0 12px 28px color-mix(in oklab, var(--c-primary) 22%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:94:    box-shadow: 0 16px 34px color-mix(in oklab, var(--c-primary) 26%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:99:    box-shadow:
+src/styles/features/home/home-intro-shell-search.css:87:    box-shadow:
+src/styles/features/home/home-intro-shell-search.css:122:    box-shadow: 0 12px 24px color-mix(in oklab, var(--c-ink) 44%, transparent);
+src/styles/features/home/home-content-proof-motion-theme.css:42:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
+src/styles/features/home/home-content-proof-motion-theme.css:52:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-content-proof-motion-theme.css:58:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-ink) 5%, transparent);
+src/styles/features/home/home-content-providers-profile-identity-decision-metrics.css:55:    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 34%, transparent);
+src/styles/features/home/home-content-proof-proof.css:45:    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-primary) 15%, transparent);
+src/styles/features/home/home-content-proof-proof.css:56:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-ink) 5%, transparent);
+src/styles/features/home/home-content-proof-proof.css:61:    box-shadow: 0 12px 24px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-content-proof-howitworks.css:33:    box-shadow: 0 0 0 3px var(--focus-ring-primary);
+src/styles/features/home/home-content-proof-howitworks.css:39:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
+src/styles/features/home/home-content-proof-howitworks.css:62:    box-shadow: 0 12px 26px color-mix(in oklab, var(--c-panel) 60%, transparent);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:45:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:105:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
+src/styles/features/home/home-intro-shell-layout.css:33:    box-shadow:
+src/styles/features/home/home-intro-shell-layout.css:71:    box-shadow: none;
+src/styles/features/home/home-intro-shell-layout.css:82:    box-shadow: none !important;
+src/styles/features/home/home-intro-shell-layout.css:94:    box-shadow: none;
+src/styles/features/home/home-intro-shell-layout.css:110:    box-shadow:
+src/styles/features/home/home-intro-shell-layout.css:117:    box-shadow:
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:197:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-content-providers-badges-responsive-responsive.css:60:      box-shadow: var(--shadow-card-hover);
+src/styles/features/home/home-intro-shell-theme-light.css:16:    box-shadow:
+src/styles/features/home/home-intro-shell-theme-light.css:35:    box-shadow: none;
+src/styles/features/home/home-intro-shell-theme-light.css:48:    box-shadow: none !important;
+src/styles/features/home/home-intro-shell-theme-light.css:60:    box-shadow:
+src/styles/features/home/home-intro-shell-theme-light.css:96:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+src/styles/features/home/home-intro-shell-theme-light.css:136:    box-shadow:
+src/styles/features/home/home-intro-shell-theme-light.css:165:    box-shadow:
+src/styles/features/home/home-actions-catalog-cta.css:90:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 18%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:96:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:123:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:128:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:158:    box-shadow: 0 10px 22px color-mix(in oklab, var(--c-primary) 22%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:172:    box-shadow: 0 14px 28px color-mix(in oklab, var(--c-primary) 26%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:178:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:183:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/home/home-content-layout-stats-core.css:54:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/home/home-content-layout-shell.css:40:    box-shadow: var(--shadow-card);
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:47:    box-shadow:
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:66:    box-shadow: 0 10px 22px color-mix(in oklab, var(--c-primary) 11%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:71:    box-shadow: 0 14px 28px color-mix(in oklab, var(--c-primary) 14%, transparent);
+src/styles/features/home/home-content-providers-shell.css:55:    box-shadow:
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:63:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:70:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:75:    box-shadow: none;
+src/styles/features/home/home-content-providers-effects.css:13:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+src/styles/features/home/home-content-providers-effects.css:16:      box-shadow: 0 0 0 8px color-mix(in oklab, var(--c-online) 0%, transparent);
+src/styles/features/home/home-content-providers-effects.css:19:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 0%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-shell.css:23:    box-shadow:
