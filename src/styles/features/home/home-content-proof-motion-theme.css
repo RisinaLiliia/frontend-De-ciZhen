@@ -55,7 +55,7 @@
   html:not(.dark) .howitworks-step {
     border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
     background: linear-gradient(180deg, var(--c-panel) 0%, color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%);
-    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-ink) 5%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .howitworks-steps::after {

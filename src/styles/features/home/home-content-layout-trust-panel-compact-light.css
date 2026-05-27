@@ -68,7 +68,7 @@
 
   html:not(.dark) .home-trust-live-panel__cta:hover {
     background: color-mix(in oklab, var(--c-primary) 15%, var(--c-panel) 85%);
-    box-shadow: 0 14px 28px color-mix(in oklab, var(--c-primary) 14%, transparent);
+    box-shadow: var(--shadow-card-hover);
   }
 
 
