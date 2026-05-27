@@ -1,5 +1,5 @@
 import type { AuthSnapshot } from '@/hooks/useAuthSnapshot';
-import type { useWorkspaceRouteState } from '@/features/workspace/page/useWorkspaceRouteState';
+import type { useWorkspaceRouteState } from '@/features/workspace/orchestration/useWorkspaceRouteState';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 

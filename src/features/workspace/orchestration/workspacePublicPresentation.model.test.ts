@@ -6,7 +6,7 @@ import {
   buildWorkspacePublicRenderMetricPayload,
   buildWorkspacePublicSeenArgs,
   buildWorkspacePublicStateArgs,
-} from '@/features/workspace/page/workspacePublicPresentation.model';
+} from '@/features/workspace/orchestration/workspacePublicPresentation.model';
 
 describe('workspacePublicPresentation.model', () => {
   it('builds stable navigation args for the public workspace branch', () => {

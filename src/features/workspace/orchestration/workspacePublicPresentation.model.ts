@@ -14,9 +14,9 @@ import {
   EMPTY_PROVIDER_IDS,
   NOOP_PROVIDER_TOGGLE,
   WORKSPACE_PATH,
-} from '@/features/workspace/page/workspacePage.constants';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import { shouldAutoMarkPublicRequestsSeen } from '@/features/workspace/page/workspacePublicBranch.model';
+} from '@/features/workspace/orchestration/workspacePage.constants';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
+import { shouldAutoMarkPublicRequestsSeen } from '@/features/workspace/orchestration/workspacePublicBranch.model';
 
 type WorkspacePublicStateArgs = Parameters<typeof useWorkspacePublicState>[0];
 

@@ -7,8 +7,8 @@ import {
   useWorkspacePublicFilters,
   useWorkspacePublicRequestsState,
 } from '@/features/workspace';
-import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspacePrivateSources';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import { useWorkspacePrivateSources } from '@/features/workspace/orchestration/useWorkspacePrivateSources';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import { useWorkspaceData } from '@/features/workspace/data/useWorkspaceData';
 import { useWorkspaceProviderSupportData } from '@/features/workspace/providers/useWorkspaceProviderSupportData';
 import { useCatalogIndex } from '@/hooks/useCatalogIndex';

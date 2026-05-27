@@ -23,7 +23,7 @@ import {
   shouldBuildWorkspacePrivateRequestInteractions,
   type WorkspacePrivateInteractionsParams,
   type WorkspacePrivateInteractionsResult,
-} from '@/features/workspace/page/workspacePrivateInteractions.model';
+} from '@/features/workspace/orchestration/workspacePrivateInteractions.model';
 
 type InteractionsParams = WorkspacePrivateInteractionsParams;
 

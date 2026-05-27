@@ -14,9 +14,9 @@ import {
   buildWorkspaceRequestsSurfaceModel,
   buildWorkspaceRequestsViewModelFromResponse,
 } from '@/features/workspace/requests/workspaceRequestsView.model';
-import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
+import { useWorkspaceRequestUserInteractions } from '@/features/workspace/orchestration/useWorkspaceRequestUserInteractions';
 import { useWorkspacePublicFilters } from '@/features/workspace';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import type { ActiveDecisionState } from '@/features/workspace/requests/requestsDecision.model';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { resolveRequestsListDensityForPageSize } from '@/lib/requests/pagination';

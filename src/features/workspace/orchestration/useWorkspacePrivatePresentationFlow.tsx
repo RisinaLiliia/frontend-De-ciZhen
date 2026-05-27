@@ -40,9 +40,9 @@ import {
   buildWorkspaceStandardSectionModel,
   resolveWorkspaceExploreSection,
   resolveWorkspaceStandardSection,
-} from '@/features/workspace/page/sections/workspaceSectionAdapters';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
+} from '@/features/workspace/orchestration/sections/workspaceSectionAdapters';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
+import { useWorkspacePrivateDataFlow } from '@/features/workspace/orchestration/useWorkspacePrivateDataFlow';
 import { isWorkspaceTab } from '@/features/workspace/state';
 import {
   buildWorkspacePrivateOverviewListPropsArgs,
@@ -52,7 +52,7 @@ import {
   buildWorkspacePrivatePresentationArgs,
   buildWorkspacePrivateStateArgs,
   buildWorkspacePublicIntroProps,
-} from '@/features/workspace/page/workspacePrivatePresentation.model';
+} from '@/features/workspace/orchestration/workspacePrivatePresentation.model';
 
 type UseWorkspacePrivatePresentationFlowParams = {
   branch: WorkspaceBranchProps;

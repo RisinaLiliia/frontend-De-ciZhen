@@ -11,8 +11,8 @@ import type {
   useWorkspaceNavigation,
   useWorkspaceTabPersistence,
 } from '@/features/workspace';
-import { WORKSPACE_PATH } from '@/features/workspace/page/workspacePage.constants';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import { WORKSPACE_PATH } from '@/features/workspace/orchestration/workspacePage.constants';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceRequestsScope, WorkspaceTab } from '@/features/workspace/state';
 

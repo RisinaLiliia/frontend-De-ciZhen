@@ -14,10 +14,10 @@ import {
   type PublicWorkspaceSection,
   type WorkspaceTab,
 } from '@/features/workspace';
-import { WORKSPACE_PATH } from '@/features/workspace/page/workspacePage.constants';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import { useWorkspacePrivateBranchModel } from '@/features/workspace/page/useWorkspacePrivateBranchModel';
-import { useWorkspacePublicBranchModel } from '@/features/workspace/page/useWorkspacePublicBranchModel';
+import { WORKSPACE_PATH } from '@/features/workspace/orchestration/workspacePage.constants';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
+import { useWorkspacePrivateBranchModel } from '@/features/workspace/orchestration/useWorkspacePrivateBranchModel';
+import { useWorkspacePublicBranchModel } from '@/features/workspace/orchestration/useWorkspacePublicBranchModel';
 
 type WorkspacePageClientProps = {
   activePublicSection?: PublicWorkspaceSection | null;

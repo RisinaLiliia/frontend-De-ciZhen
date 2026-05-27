@@ -11,7 +11,7 @@ import {
   buildWorkspaceStandardSectionModel,
   resolveWorkspaceExploreSection,
   resolveWorkspaceStandardSection,
-} from '@/features/workspace/page/sections/workspaceSectionAdapters';
+} from '@/features/workspace/orchestration/sections/workspaceSectionAdapters';
 
 describe('workspaceSectionAdapters', () => {
   it('builds public requests section with rail layout', () => {

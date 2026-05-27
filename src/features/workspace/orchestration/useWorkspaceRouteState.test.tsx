@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 
-import { useWorkspaceRouteState } from '@/features/workspace/page/useWorkspaceRouteState';
+import { useWorkspaceRouteState } from '@/features/workspace/orchestration/useWorkspaceRouteState';
 
 type ProbeProps = {
   query: string;

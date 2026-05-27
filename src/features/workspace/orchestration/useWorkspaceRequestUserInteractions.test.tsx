@@ -12,8 +12,8 @@ import {
   useWorkspaceNavigation,
   useWorkspaceTabPersistence,
 } from '@/features/workspace';
-import { useWorkspaceRequestUserInteractions } from '@/features/workspace/page/useWorkspaceRequestUserInteractions';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import { useWorkspaceRequestUserInteractions } from '@/features/workspace/orchestration/useWorkspaceRequestUserInteractions';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: vi.fn(),

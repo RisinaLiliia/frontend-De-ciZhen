@@ -4,8 +4,8 @@ import type { ComponentProps } from 'react';
 
 import { buildRequestsListProps } from '@/components/requests/requestsListProps';
 import type { WorkspacePublicIntro } from '@/features/workspace/intro';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import type { useWorkspacePrivateDataFlow } from '@/features/workspace/page/useWorkspacePrivateDataFlow';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
+import type { useWorkspacePrivateDataFlow } from '@/features/workspace/orchestration/useWorkspacePrivateDataFlow';
 import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import type { useWorkspacePresentation } from '@/features/workspace';
 import type { useWorkspacePrivateState } from '@/features/workspace/state/useWorkspacePrivateState';

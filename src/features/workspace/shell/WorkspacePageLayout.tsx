@@ -20,7 +20,7 @@ import {
   buildWorkspaceStandardSectionModel,
   resolveWorkspaceExploreSection,
   resolveWorkspaceStandardSection,
-} from '@/features/workspace/page/sections/workspaceSectionAdapters';
+} from '@/features/workspace/orchestration/sections/workspaceSectionAdapters';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';

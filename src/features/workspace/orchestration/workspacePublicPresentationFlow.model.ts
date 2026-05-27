@@ -3,12 +3,12 @@
 import type { ReactNode } from 'react';
 
 import type { WorkspaceSectionRenderModel } from '@/features/workspace';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import type { useWorkspacePublicDataFlow } from '@/features/workspace/page/useWorkspacePublicDataFlow';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
+import type { useWorkspacePublicDataFlow } from '@/features/workspace/orchestration/useWorkspacePublicDataFlow';
 import {
   buildWorkspacePublicLayoutProps,
   buildWorkspacePublicRenderMetricPayload,
-} from '@/features/workspace/page/workspacePublicPresentation.model';
+} from '@/features/workspace/orchestration/workspacePublicPresentation.model';
 
 type WorkspacePublicDataFlowResult = ReturnType<typeof useWorkspacePublicDataFlow>;
 

@@ -19,7 +19,7 @@ import {
 } from '@/features/workspace/profile';
 import { WorkspaceLegalSection } from '@/features/workspace/legal';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import { StatisticsExperience } from '@/features/workspace/stats';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 import type { ProofCase } from '@/types/home';

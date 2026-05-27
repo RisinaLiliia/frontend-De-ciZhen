@@ -1,8 +1,8 @@
 'use client';
 
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
-import { useWorkspacePrivateInteractions } from '@/features/workspace/page/useWorkspacePrivateInteractions';
-import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspacePrivateSources';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
+import { useWorkspacePrivateInteractions } from '@/features/workspace/orchestration/useWorkspacePrivateInteractions';
+import { useWorkspacePrivateSources } from '@/features/workspace/orchestration/useWorkspacePrivateSources';
 
 type Options = {
   enabled?: boolean;

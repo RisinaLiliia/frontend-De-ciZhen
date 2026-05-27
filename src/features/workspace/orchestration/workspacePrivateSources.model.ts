@@ -8,7 +8,7 @@ import type {
   useWorkspacePublicFilters,
   useWorkspacePublicRequestsState,
 } from '@/features/workspace';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT } from '@/features/workspace/data';
 
 type WorkspacePublicFiltersResult = ReturnType<typeof useWorkspacePublicFilters>;

@@ -94,11 +94,11 @@ vi.mock('@/features/workspace', async () => {
   };
 });
 
-vi.mock('@/features/workspace/page/useWorkspacePublicBranchModel', () => ({
+vi.mock('@/features/workspace/orchestration/useWorkspacePublicBranchModel', () => ({
   useWorkspacePublicBranchModel: (...args: unknown[]) => publicBranchModelMock(...args),
 }));
 
-vi.mock('@/features/workspace/page/useWorkspacePrivateBranchModel', () => ({
+vi.mock('@/features/workspace/orchestration/useWorkspacePrivateBranchModel', () => ({
   useWorkspacePrivateBranchModel: (...args: unknown[]) => privateBranchModelMock(...args),
 }));
 

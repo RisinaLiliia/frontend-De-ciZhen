@@ -11,8 +11,8 @@ import {
 import {
   buildWorkspacePrivateActionsArgs,
   buildWorkspacePrivateFavoriteToggleArgs,
-} from '@/features/workspace/page/workspacePrivateInteractions.model';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+} from '@/features/workspace/orchestration/workspacePrivateInteractions.model';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 
 type Params = {
   t: WorkspaceBranchProps['t'];

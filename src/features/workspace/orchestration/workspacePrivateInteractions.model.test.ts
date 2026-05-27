@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { WORKSPACE_PATH } from '@/features/workspace/page/workspacePage.constants';
+import { WORKSPACE_PATH } from '@/features/workspace/orchestration/workspacePage.constants';
 
 import {
   buildWorkspacePrivateActionsArgs,

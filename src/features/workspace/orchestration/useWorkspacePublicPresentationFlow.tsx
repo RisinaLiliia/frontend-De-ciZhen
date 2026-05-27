@@ -4,23 +4,23 @@ import * as React from 'react';
 
 import type { WorkspaceSectionRenderModel } from '@/features/workspace';
 import { WorkspacePublicIntro } from '@/features/workspace';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import {
   buildWorkspaceExploreSectionModel,
   buildWorkspaceLegalSectionModel,
   buildWorkspacePublicRequestsSectionModel,
   resolveWorkspaceExploreSection,
-} from '@/features/workspace/page/sections/workspaceSectionAdapters';
-import { useWorkspacePublicDataFlow } from '@/features/workspace/page/useWorkspacePublicDataFlow';
+} from '@/features/workspace/orchestration/sections/workspaceSectionAdapters';
+import { useWorkspacePublicDataFlow } from '@/features/workspace/orchestration/useWorkspacePublicDataFlow';
 import {
   buildWorkspacePublicIntroProps,
-} from '@/features/workspace/page/workspacePublicBranch.model';
+} from '@/features/workspace/orchestration/workspacePublicBranch.model';
 import { WorkspaceLegalIntro } from '@/features/workspace/legal';
 import {
   buildWorkspacePublicIntroArgs,
   resolveWorkspacePublicPresentationFlowResult,
-} from '@/features/workspace/page/workspacePublicPresentationFlow.model';
-import { useWorkspacePublicRequestsSection } from '@/features/workspace/page/useWorkspacePublicRequestsSection';
+} from '@/features/workspace/orchestration/workspacePublicPresentationFlow.model';
+import { useWorkspacePublicRequestsSection } from '@/features/workspace/orchestration/useWorkspacePublicRequestsSection';
 
 type UseWorkspacePublicPresentationFlowParams = {
   branch: WorkspaceBranchProps;

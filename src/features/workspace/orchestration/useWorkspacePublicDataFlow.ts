@@ -10,20 +10,20 @@ import {
   useWorkspaceNavigation,
 } from '@/features/workspace';
 import { useWorkspacePublicState } from '@/features/workspace/state/useWorkspacePublicState';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import {
   buildWorkspacePublicExploreWithSeed,
   buildWorkspacePublicReviewsQuery,
   buildWorkspacePublicSnapshotQuery,
   resolveWorkspacePublicBranchSnapshot,
   shouldLoadWorkspacePublicShellSnapshot,
-} from '@/features/workspace/page/workspacePublicBranch.model';
-import { resolveWorkspacePublicDataFlowResult } from '@/features/workspace/page/workspacePublicDataFlow.model';
+} from '@/features/workspace/orchestration/workspacePublicBranch.model';
+import { resolveWorkspacePublicDataFlowResult } from '@/features/workspace/orchestration/workspacePublicDataFlow.model';
 import {
   buildWorkspacePublicNavigationArgs,
   buildWorkspacePublicSeenArgs,
   buildWorkspacePublicStateArgs,
-} from '@/features/workspace/page/workspacePublicPresentation.model';
+} from '@/features/workspace/orchestration/workspacePublicPresentation.model';
 
 type Options = {
   enabled?: boolean;

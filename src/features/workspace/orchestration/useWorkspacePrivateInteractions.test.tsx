@@ -12,8 +12,8 @@ import {
   useWorkspaceNavigation,
   useWorkspaceTabPersistence,
 } from '@/features/workspace';
-import { useWorkspacePrivateInteractions } from '@/features/workspace/page/useWorkspacePrivateInteractions';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import { useWorkspacePrivateInteractions } from '@/features/workspace/orchestration/useWorkspacePrivateInteractions';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 

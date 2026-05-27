@@ -17,8 +17,8 @@ import {
 } from '@/features/workspace';
 import {
   PUBLIC_REQUESTS_SEED_LIMIT,
-} from '@/features/workspace/page/workspacePage.constants';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+} from '@/features/workspace/orchestration/workspacePage.constants';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 
 type PublicIntroProps = ComponentProps<typeof WorkspacePublicIntro>;
 

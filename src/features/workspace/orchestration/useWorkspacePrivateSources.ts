@@ -8,7 +8,7 @@ import {
   useWorkspacePublicFilters,
   useWorkspacePublicRequestsState,
 } from '@/features/workspace';
-import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import {
   buildWorkspacePrivateCatalogIndexArgs,
   buildWorkspacePrivateSourcesCollectionsArgs,
@@ -18,7 +18,7 @@ import {
   buildWorkspacePrivateSourcesDataArgs,
   buildWorkspacePrivateSourcesRequestsStateArgs,
   resolveWorkspacePrivateSourcesResult,
-} from '@/features/workspace/page/workspacePrivateSources.model';
+} from '@/features/workspace/orchestration/workspacePrivateSources.model';
 
 type SourcesParams = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isAuthed' | 'isWorkspaceAuthed'> & {
   enabled?: boolean;
