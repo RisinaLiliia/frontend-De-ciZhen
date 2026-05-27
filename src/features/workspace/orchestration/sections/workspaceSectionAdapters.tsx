@@ -6,7 +6,7 @@ import {
   WorkspaceExploreRail,
   WorkspaceExploreSection,
   isWorkspaceExploreRailSection,
-} from '@/features/workspace/explore';
+} from '@/features/workspace/market';
 import { buildWorkspaceSectionRenderModel } from '@/features/workspace/navigation/workspaceSection.contract';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import {

@@ -25,7 +25,7 @@ vi.mock('@/features/workspace/shared', () => ({
   useMediaMatch: () => isMobileMock,
 }));
 
-vi.mock('@/features/workspace/explore', () => ({
+vi.mock('@/features/workspace/market', () => ({
   WorkspaceExploreSection: () => <div data-testid="workspace-explore-section" />,
   WorkspaceExploreRail: () => <div data-testid="workspace-explore-rail" />,
   isWorkspaceExploreRailSection: (section: string) => section === 'requests',

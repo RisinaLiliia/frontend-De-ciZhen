@@ -3,7 +3,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
-import { usePublicRequestsSeenTotal } from '@/features/workspace/explore/usePublicRequestsSeenTotal';
+import { usePublicRequestsSeenTotal } from '@/features/workspace/market/usePublicRequestsSeenTotal';
 import { useWorkspacePublicRequestsState } from '@/features/workspace/public/useWorkspacePublicRequestsState';
 
 afterEach(() => {

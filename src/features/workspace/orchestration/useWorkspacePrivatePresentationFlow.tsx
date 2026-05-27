@@ -28,7 +28,7 @@ import { WorkspaceChatIntro } from '@/features/workspace/chat/WorkspaceChatIntro
 import { WorkspaceChatRail } from '@/features/workspace/chat/WorkspaceChatRail';
 import { WorkspaceSettingsIntro } from '@/features/workspace/profile/WorkspaceSettingsIntro';
 import { WorkspaceSettingsPage } from '@/features/workspace/profile/WorkspaceSettingsPage';
-import { useExploreSidebar } from '@/features/workspace/explore/useExploreSidebar';
+import { useExploreSidebar } from '@/features/workspace/market/useExploreSidebar';
 import { WorkspaceHelpIntro } from '@/features/workspace/help/WorkspaceHelpIntro';
 import { WorkspaceHelpPage } from '@/features/workspace/help/WorkspaceHelpPage';
 import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';

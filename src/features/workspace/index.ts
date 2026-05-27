@@ -59,8 +59,8 @@ export type {
   WorkspaceSurfaceVariant,
 } from './shared';
 
-export { useExploreSidebar } from './explore/useExploreSidebar';
-export { usePublicRequestsSeenTotal } from './explore/usePublicRequestsSeenTotal';
+export { useExploreSidebar } from './market/useExploreSidebar';
+export { usePublicRequestsSeenTotal } from './market/usePublicRequestsSeenTotal';
 
 export { useWorkspaceTabPersistence } from './private/useWorkspaceTabPersistence';
 export { useWorkspaceNavigation } from './private/useWorkspaceNavigation';
