@@ -69,11 +69,21 @@ export type WorkspaceRequestsSurfaceModel = {
   secondaryCtaHref?: string;
 };
 
-function resolveEmptyMode(response: WorkspaceRequestsResponseDto | null): WorkspaceRequestsViewModel['emptyMode'] {
+function resolveEmptyMode(
+  response: WorkspaceRequestsResponseDto | null,
+): WorkspaceRequestsViewModel['emptyMode'] {
   if (!response) return 'none';
-  const allCount = response.summary.items.find((item) => item.key === 'all')?.value ?? response.list.total;
+
+  const summaryItems = response.summary?.items ?? [];
+  const listItems = response.list?.items ?? [];
+  const listTotal = response.list?.total ?? listItems.length;
+
+  const allCount =
+    summaryItems.find((item) => item.key === 'all')?.value ?? listTotal;
+
   if (allCount === 0) return 'empty';
-  return response.list.items.length === 0 ? 'filtered' : 'none';
+
+  return listItems.length === 0 ? 'filtered' : 'none';
 }
 
 function resolveWorkspaceRequestStatusBadgeVariant(
@@ -102,9 +112,11 @@ function normalizeWorkspaceRequestCard(card: WorkspaceMyRequestCardDto): Workspa
 export function buildWorkspaceRequestsViewModelFromResponse(
   response: WorkspaceRequestsResponseDto | null | undefined,
 ): WorkspaceRequestsViewModel {
+  const listItems = response?.list?.items ?? [];
+
   return {
     response: response ?? null,
-    cards: response?.list.items.map(normalizeWorkspaceRequestCard) ?? [],
+    cards: listItems.map(normalizeWorkspaceRequestCard),
     emptyMode: resolveEmptyMode(response ?? null),
   };
 }

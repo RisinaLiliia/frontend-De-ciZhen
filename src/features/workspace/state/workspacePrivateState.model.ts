@@ -40,20 +40,25 @@ export function resolveWorkspacePrivateOverviewState(
 ): WorkspacePrivateOverviewState {
   const resolvedOverview = resolveWorkspacePrivateOverview(overview);
   const ratingAverage = Number(resolvedOverview.ratingSummary?.average ?? 0);
-  const ratingCount = Number(
-    resolvedOverview.ratingSummary?.count ?? resolvedOverview.reviews.asProvider ?? 0,
-  );
+  const reviewCount =
+  resolvedOverview.ratingSummary?.count
+  ?? resolvedOverview.reviews?.asProvider
+  ?? 0;
 
   return {
-    activityProgress: clampPercent(resolvedOverview.kpis.activityProgress),
-    navRatingValue: ratingAverage.toFixed(1),
-    navReviewsCount: Math.max(0, ratingCount),
-    preferredRequestsRole: resolvedOverview.preferredRole ?? null,
-    myRequestsTotal: resolvedOverview.requestsByStatus.total,
-    sentCount: resolvedOverview.providerOffersByStatus.sent,
-    completedJobsCount: resolvedOverview.providerContractsByStatus.completed,
-    favoriteRequestCount: resolvedOverview.favorites.requests,
-  };
+  activityProgress: clampPercent(
+    resolvedOverview.kpis?.activityProgress ?? 0,
+  ),
+  navRatingValue: ratingAverage.toFixed(1),
+  navReviewsCount: Math.max(0, reviewCount),
+  preferredRequestsRole: resolvedOverview.preferredRole ?? null,
+  myRequestsTotal: resolvedOverview.requestsByStatus?.total ?? 0,
+  sentCount: resolvedOverview.providerOffersByStatus?.sent ?? 0,
+  completedJobsCount:
+    resolvedOverview.providerContractsByStatus?.completed ?? 0,
+  favoriteRequestCount:
+    resolvedOverview.favorites?.requests ?? 0,
+};
 }
 
 export function buildWorkspacePrivateNavModelArgs(params: {

@@ -185,22 +185,22 @@ export function useWorkspacePrivatePresentationFlow({
     () => buildMyRequestsViewModelFromResponse(data.workspaceRequests),
     [data.workspaceRequests],
   );
-  const privateTotalPages = React.useMemo(() => {
-    if (!privateRequestsModel.response) return 1;
-    return Math.max(
-      1,
-      Math.ceil(privateRequestsModel.response.list.total / Math.max(1, privateRequestsModel.response.list.limit)),
-    );
-  }, [privateRequestsModel.response]);
-  const privatePagination = React.useMemo(() => {
-    if (!privateRequestsModel.response) return null;
-    return {
-      page: privateRequestsModel.response.list.page,
-      totalPages: privateTotalPages,
-      onPageChange: setRequestsPage,
-    };
-  }, [privateRequestsModel.response, privateTotalPages, setRequestsPage]);
+const privateTotalPages = React.useMemo(() => {
+  const total = privateRequestsModel.response?.list?.total ?? 0;
+  const limit = privateRequestsModel.response?.list?.limit ?? 1;
 
+  return Math.max(1, Math.ceil(total / Math.max(1, limit)));
+}, [privateRequestsModel.response]);
+
+const privatePagination = React.useMemo(() => {
+  if (!privateRequestsModel.response?.list) return null;
+
+  return {
+    page: privateRequestsModel.response.list.page ?? 1,
+    totalPages: privateTotalPages,
+    onPageChange: setRequestsPage,
+  };
+}, [privateRequestsModel.response, privateTotalPages, setRequestsPage]);
   React.useEffect(() => {
     if (!privateRequestsModel.response) return;
     if (requestsPage <= privateTotalPages) return;

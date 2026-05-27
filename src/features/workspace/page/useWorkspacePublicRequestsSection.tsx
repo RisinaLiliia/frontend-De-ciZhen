@@ -100,10 +100,12 @@ export function useWorkspacePublicRequestsSection({
     () => resolveRequestsListDensityForPageSize(filters.limit),
     [filters.limit],
   );
-  const marketTotalPages = React.useMemo(() => {
-    if (!marketResponse) return 1;
-    return Math.max(1, Math.ceil(marketResponse.list.total / Math.max(1, marketResponse.list.limit)));
-  }, [marketResponse]);
+const marketTotalPages = React.useMemo(() => {
+  const total = marketResponse?.list?.total ?? 0;
+  const limit = marketResponse?.list?.limit ?? 1;
+
+  return Math.max(1, Math.ceil(total / Math.max(1, limit)));
+}, [marketResponse]);
   const decisionPanel = marketResponse?.decisionPanel ?? null;
   const marketDecisionState = React.useMemo<ActiveDecisionState>(
     () => ({
@@ -114,13 +116,14 @@ export function useWorkspacePublicRequestsSection({
     [],
   );
   const marketPagination = React.useMemo(() => {
-    if (!marketResponse) return null;
-    return {
-      page: marketResponse.list.page,
-      totalPages: marketTotalPages,
-      onPageChange: setPublicPage,
-    };
-  }, [marketResponse, marketTotalPages, setPublicPage]);
+  if (!marketResponse?.list) return null;
+
+  return {
+    page: marketResponse.list.page ?? 1,
+    totalPages: marketTotalPages,
+    onPageChange: setPublicPage,
+  };
+}, [marketResponse, marketTotalPages, setPublicPage]);
 
   React.useEffect(() => {
     if (!marketResponse) return;
@@ -213,7 +216,7 @@ export function useWorkspacePublicRequestsSection({
     <WorkspaceRequestsSectionRail
       locale={locale}
       variant="market"
-      summaryItems={marketResponse?.summary.items}
+      summaryItems={marketResponse?.summary?.items ?? null}
       isSummaryLoading={contractData.isWorkspaceRequestsLoading}
       panel={decisionPanel}
       onStartDecisionMode={openMarketStats}

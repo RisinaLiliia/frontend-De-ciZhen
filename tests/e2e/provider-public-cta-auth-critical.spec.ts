@@ -4,7 +4,9 @@ import { dismissCookieConsentIfPresent } from './helpers/consent';
 const providerId = 'provider-1';
 const providerUserId = 'provider-user-1';
 
-test('@critical unauthenticated provider CTAs redirect to login with next path', async ({ page }) => {
+test('@critical unauthenticated provider CTAs redirect to login with next path', async ({
+  page,
+}) => {
   await page.route('**/api/**', async (route) => {
     const url = new URL(route.request().url());
     const path = url.pathname;
@@ -82,10 +84,7 @@ test('@critical unauthenticated provider CTAs redirect to login with next path',
     });
   });
 
-  const checks = [
-    /Angebot abgeben|Send offer/i,
-    /Chat starten|Start chat/i,
-  ];
+  const checks = [/Angebot abgeben|Send offer/i, /Chat starten|Start chat/i];
 
   for (const buttonLabel of checks) {
     await page.goto(`/providers/${providerId}`);
@@ -95,11 +94,11 @@ test('@critical unauthenticated provider CTAs redirect to login with next path',
     const cta = page.locator('.request-detail__aside').getByRole('button', { name: buttonLabel });
     await cta.click();
 
-    await expect
-      .poll(() => new URL(page.url()).pathname)
-      .toBe('/auth/login');
+    await expect.poll(() => new URL(page.url()).pathname).toBe('/auth/login');
 
     const url = new URL(page.url());
-    expect(url.searchParams.get('next')).toBe(`/providers/${providerId}`);
+    expect(url.searchParams.get('next')).toBe(
+      `/workspace?section=providers&providerId=${providerId}`,
+    );
   }
 });
