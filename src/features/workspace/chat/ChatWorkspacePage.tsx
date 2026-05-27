@@ -65,7 +65,7 @@ import {
   resolveConversationRequestId,
   resolveConversationSubline,
   resolveConversationUnreadCount,
-} from '@/features/chat/chat.model';
+} from '@/features/workspace/chat/model/chat.model';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
 import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import styles from './ChatWorkspacePage.module.css';

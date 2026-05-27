@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { RequestOfferSheet } from '@/components/requests/details';
-import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
+import { ChatWorkspacePage } from '@/features/workspace/chat/ChatWorkspacePage';
 import {
   useWorkspaceProviderOfferSheetActions,
 } from '@/features/workspace/overlays/useWorkspaceRequestOverlayActions';

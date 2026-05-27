@@ -23,9 +23,9 @@ import {
   useWorkspacePresentation,
   type WorkspaceSectionRenderModel,
 } from '@/features/workspace';
-import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
-import { WorkspaceChatIntro } from '@/features/chat/WorkspaceChatIntro';
-import { WorkspaceChatRail } from '@/features/chat/WorkspaceChatRail';
+import { ChatWorkspacePage } from '@/features/workspace/chat/ChatWorkspacePage';
+import { WorkspaceChatIntro } from '@/features/workspace/chat/WorkspaceChatIntro';
+import { WorkspaceChatRail } from '@/features/workspace/chat/WorkspaceChatRail';
 import { WorkspaceSettingsIntro } from '@/features/workspace/profile/WorkspaceSettingsIntro';
 import { WorkspaceSettingsPage } from '@/features/workspace/profile/WorkspaceSettingsPage';
 import { useExploreSidebar } from '@/features/workspace/explore/useExploreSidebar';

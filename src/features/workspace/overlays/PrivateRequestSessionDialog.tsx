@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { BackButton } from '@/components/layout/BackButton';
-import { ChatWorkspacePage } from '@/features/chat/ChatWorkspacePage';
+import { ChatWorkspacePage } from '@/features/workspace/chat/ChatWorkspacePage';
 import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
 import {
   WorkspaceManagedOfferSheet,
