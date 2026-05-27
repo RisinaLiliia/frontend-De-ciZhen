@@ -7,7 +7,7 @@ import type {
   ProviderReviewsDistribution,
   ProviderReviewsUi,
   ProviderReviewSort,
-} from '@/features/providers/publicProfile/useProviderReviewsModel';
+} from '@/features/providers/profile/useProviderReviewsModel';
 
 type Translate = (key: I18nKey) => string;
 

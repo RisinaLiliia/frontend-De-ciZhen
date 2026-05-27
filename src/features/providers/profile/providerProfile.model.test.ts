@@ -10,7 +10,7 @@ import {
   getPrimaryProviderServiceKey,
   rankProviderPublicProfileCandidates,
   resolveProviderTargetUserId,
-} from '@/features/providers/publicProfile/providerPublicProfile.model';
+} from '@/features/providers/profile/providerProfile.model';
 
 function provider(overrides: Partial<ProviderPublicDto> = {}): ProviderPublicDto {
   return {
@@ -26,7 +26,7 @@ function provider(overrides: Partial<ProviderPublicDto> = {}): ProviderPublicDto
   };
 }
 
-describe('providerPublicProfile.model', () => {
+describe('providerProfile.model', () => {
   it('resolves provider target user id and primary service key', () => {
     expect(resolveProviderTargetUserId(provider({ userId: 'user-1' }))).toBe('user-1');
     expect(resolveProviderTargetUserId(provider({ userId: ' ' }))).toBe('provider-1');

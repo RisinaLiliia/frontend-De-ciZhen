@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import type { ProviderReviewSort } from '@/features/providers/publicProfile/useProviderReviewsModel';
+import type { ProviderReviewSort } from '@/features/providers/profile/useProviderReviewsModel';
 import type { ReviewRange } from '@/lib/api/dto/reviews';
 import {
   DEFAULT_WORKSPACE_REVIEW_RANGE,

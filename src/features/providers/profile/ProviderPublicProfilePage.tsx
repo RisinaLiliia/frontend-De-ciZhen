@@ -2,7 +2,7 @@
 
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
-import { ProviderPublicProfileContent } from '@/features/providers/publicProfile/ProviderPublicProfileContent';
+import { ProviderPublicProfileContent } from '@/features/providers/profile/ProviderPublicProfileContent';
 
 export function ProviderPublicProfilePage() {
   return (

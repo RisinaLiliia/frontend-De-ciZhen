@@ -4,13 +4,13 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { ProviderReviewsSection } from '@/features/providers/publicProfile/ProviderReviewsSection';
+import { ProviderReviewsSection } from '@/features/providers/profile/ProviderReviewsSection';
 import type {
   NormalizedProviderReview,
   ProviderReviewSort,
   ProviderReviewsDistribution,
   ProviderReviewsUi,
-} from '@/features/providers/publicProfile/useProviderReviewsModel';
+} from '@/features/providers/profile/useProviderReviewsModel';
 import { listAllMyBookings } from '@/lib/api/bookings';
 import {
   createClientReview,

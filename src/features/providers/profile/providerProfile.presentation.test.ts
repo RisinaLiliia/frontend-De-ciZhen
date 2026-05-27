@@ -7,7 +7,7 @@ import {
   getNextSlotStartAt,
   getProviderCityKey,
   getProviderServiceKeys,
-} from '@/features/providers/publicProfile/providerPublicProfile.presentation';
+} from '@/features/providers/profile/providerProfile.presentation';
 
 function provider(overrides: Partial<ProviderPublicDto> = {}): ProviderPublicDto {
   return {
@@ -19,7 +19,7 @@ function provider(overrides: Partial<ProviderPublicDto> = {}): ProviderPublicDto
   };
 }
 
-describe('providerPublicProfile.presentation', () => {
+describe('providerProfile.presentation', () => {
   it('builds deduplicated normalized service keys', () => {
     const result = getProviderServiceKeys(
       provider({

@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProviderReviewSort } from '@/features/providers/publicProfile/useProviderReviewsModel';
+import type { ProviderReviewSort } from '@/features/providers/profile/useProviderReviewsModel';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { ReviewRange } from '@/lib/api/dto/reviews';
 

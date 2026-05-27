@@ -2,7 +2,7 @@
 
 import { IconFilter } from '@/components/ui/icons/icons';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
-import type { ProviderReviewSort } from '@/features/providers/publicProfile/useProviderReviewsModel';
+import type { ProviderReviewSort } from '@/features/providers/profile/useProviderReviewsModel';
 import { WorkspaceButton } from '@/features/workspace/shared/WorkspaceButton';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
 import {

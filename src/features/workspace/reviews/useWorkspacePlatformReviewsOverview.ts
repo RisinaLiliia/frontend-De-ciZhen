@@ -9,7 +9,7 @@ import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type {
   NormalizedProviderReview,
   ProviderReviewsDistribution,
-} from '@/features/providers/publicProfile/useProviderReviewsModel';
+} from '@/features/providers/profile/useProviderReviewsModel';
 import { workspaceQK } from '@/features/workspace/data';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
 

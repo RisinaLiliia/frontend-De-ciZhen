@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { BackButton } from '@/components/layout/BackButton';
-import { ProviderPublicProfileContent } from '@/features/providers/publicProfile/ProviderPublicProfileContent';
+import { ProviderPublicProfileContent } from '@/features/providers/profile/ProviderPublicProfileContent';
 import {
   buildWorkspaceProviderDetailHref,
   clearWorkspaceProviderDetailHref,

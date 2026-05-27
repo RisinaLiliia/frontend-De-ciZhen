@@ -11,12 +11,12 @@ import {
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { ProviderAvailabilityMeta } from '@/components/providers/ProviderAvailabilityMeta';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import { ProviderReviewsSection } from '@/features/providers/publicProfile/ProviderReviewsSection';
-import { ProviderSimilarSection } from '@/features/providers/publicProfile/ProviderSimilarSection';
+import { ProviderReviewsSection } from '@/features/providers/profile/ProviderReviewsSection';
+import { ProviderSimilarSection } from '@/features/providers/profile/ProviderSimilarSection';
 import {
   useProviderPublicProfileModel,
   type UseProviderPublicProfileModelArgs,
-} from '@/features/providers/publicProfile/useProviderPublicProfileModel';
+} from '@/features/providers/profile/useProviderPublicProfileModel';
 
 type ProviderPublicProfileContentProps = UseProviderPublicProfileModelArgs;
 

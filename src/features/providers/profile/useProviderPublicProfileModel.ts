@@ -32,8 +32,8 @@ import {
   getAvailableIsoDays,
   getNextSlotStartAt,
   getProviderCityKey,
-} from '@/features/providers/publicProfile/providerPublicProfile.presentation';
-import { useProviderReviewsModel } from '@/features/providers/publicProfile/useProviderReviewsModel';
+} from '@/features/providers/profile/providerProfile.presentation';
+import { useProviderReviewsModel } from '@/features/providers/profile/useProviderReviewsModel';
 import {
   buildProviderPublicProfileAvailabilityCalendarConfig,
   buildProviderPublicProfileCard,
@@ -42,7 +42,7 @@ import {
   buildProviderPublicProfileViewModel,
   getPrimaryProviderServiceKey,
   resolveProviderTargetUserId,
-} from '@/features/providers/publicProfile/providerPublicProfile.model';
+} from '@/features/providers/profile/providerProfile.model';
 
 export type UseProviderPublicProfileModelArgs = {
   providerId?: string | null;
