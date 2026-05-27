@@ -11,7 +11,7 @@ import {
   buildWorkspaceAsideBaseProps,
   buildWorkspacePrivateIntroProps,
   type WorkspaceAsideBaseProps,
-} from '@/features/workspace/private/workspacePresentation.model';
+} from '@/features/workspace/personal/workspacePresentation.model';
 
 type Translator = (key: I18nKey) => string;
 

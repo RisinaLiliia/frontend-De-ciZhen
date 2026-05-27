@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
 import { usePublicRequestsSeenTotal } from '@/features/workspace/market/usePublicRequestsSeenTotal';
-import { useWorkspacePublicRequestsState } from '@/features/workspace/public/useWorkspacePublicRequestsState';
+import { useWorkspacePublicRequestsState } from '@/features/workspace/market-state/useWorkspacePublicRequestsState';
 
 afterEach(() => {
   cleanup();

@@ -10,7 +10,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import {
   buildWorkspaceFavoriteToggleHandlers,
   buildWorkspaceFavoriteTogglesResult,
-} from '@/features/workspace/private/workspaceFavoriteToggles.model';
+} from '@/features/workspace/personal/workspaceFavoriteToggles.model';
 
 type RouterLike = {
   push: (href: string) => void;

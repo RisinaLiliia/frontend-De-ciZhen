@@ -4,7 +4,7 @@ import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { toast } from 'sonner';
 
-import { useWorkspaceActions } from '@/features/workspace/private/useWorkspaceActions';
+import { useWorkspaceActions } from '@/features/workspace/personal/useWorkspaceActions';
 import { createConversation } from '@/lib/api/chat';
 import { deleteOffer } from '@/lib/api/offers';
 import { duplicateMyRequest, publishMyRequest, unpublishMyRequest } from '@/lib/api/requests';

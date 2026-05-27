@@ -16,7 +16,7 @@ import {
   buildProviderById,
   buildProviderFavoriteLookup,
   buildRequestById,
-} from '@/features/workspace/private/workspaceCollections.selectors';
+} from '@/features/workspace/personal/workspaceCollections.selectors';
 
 type WorkspaceCollectionsCatalog = {
   cityById: ReadonlyMap<string, { i18n: I18nMap }>;

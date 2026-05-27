@@ -6,7 +6,7 @@ import { ProviderCard } from '@/components/providers/ProviderCard';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { buildWorkspaceFavoriteProviderCardModels } from '@/features/workspace/private/workspaceCards.model';
+import { buildWorkspaceFavoriteProviderCardModels } from '@/features/workspace/personal/workspaceCards.model';
 
 type Translator = (key: I18nKey) => string;
 

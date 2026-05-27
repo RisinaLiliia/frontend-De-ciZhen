@@ -15,7 +15,7 @@ import {
   buildWorkspaceFavoritesViewHref,
   buildWorkspaceStatusFilterHref,
   buildWorkspaceTabHref,
-} from '@/features/workspace/private/workspaceNavigation.model';
+} from '@/features/workspace/personal/workspaceNavigation.model';
 
 type Args = {
   activeWorkspaceTab: WorkspaceTab;

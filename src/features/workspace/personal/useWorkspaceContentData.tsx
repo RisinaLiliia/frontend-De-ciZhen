@@ -2,8 +2,8 @@
 
 import { useWorkspaceContractRequestsData } from '@/features/workspace/contracts/useWorkspaceContractRequestsData';
 import { useWorkspaceDerived } from '@/features/workspace/data/useWorkspaceDerived';
-import { useWorkspaceCards } from '@/features/workspace/private/useWorkspaceCards';
-import { buildWorkspaceContentDataResult } from '@/features/workspace/private/workspaceContentData.model';
+import { useWorkspaceCards } from '@/features/workspace/personal/useWorkspaceCards';
+import { buildWorkspaceContentDataResult } from '@/features/workspace/personal/workspaceContentData.model';
 
 type WorkspaceDerivedArgs = Parameters<typeof useWorkspaceDerived>[0];
 type ContractRequestsDataArgs = Omit<Parameters<typeof useWorkspaceContractRequestsData>[0], 'filteredContracts'>;

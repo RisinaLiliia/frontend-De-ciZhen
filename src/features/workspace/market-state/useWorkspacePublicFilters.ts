@@ -13,7 +13,7 @@ import {
 import {
   hasWorkspacePublicActiveFilters,
   resolveWorkspacePublicSearchEventPayload,
-} from '@/features/workspace/public/workspacePublicFilters.model';
+} from '@/features/workspace/market-state/workspacePublicFilters.model';
 import { useRequestsFilters } from '@/hooks/useRequestsFilters';
 import { trackUXEvent } from '@/lib/analytics';
 import { trackSearchEvent as postSearchEvent } from '@/lib/api/analytics';

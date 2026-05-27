@@ -62,17 +62,17 @@ export type {
 export { useExploreSidebar } from './market/useExploreSidebar';
 export { usePublicRequestsSeenTotal } from './market/usePublicRequestsSeenTotal';
 
-export { useWorkspaceTabPersistence } from './private/useWorkspaceTabPersistence';
-export { useWorkspaceNavigation } from './private/useWorkspaceNavigation';
-export { useWorkspaceActions } from './private/useWorkspaceActions';
-export { useWorkspaceFavoriteToggles } from './private/useWorkspaceFavoriteToggles';
-export { useWorkspaceCollections } from './private/useWorkspaceCollections';
-export { useWorkspacePresentation } from './private/useWorkspacePresentation';
-export { useWorkspaceContentData } from './private/useWorkspaceContentData';
-export { WorkspaceMobilePrimaryAction } from './private/WorkspaceMobilePrimaryAction';
+export { useWorkspaceTabPersistence } from './personal/useWorkspaceTabPersistence';
+export { useWorkspaceNavigation } from './personal/useWorkspaceNavigation';
+export { useWorkspaceActions } from './personal/useWorkspaceActions';
+export { useWorkspaceFavoriteToggles } from './personal/useWorkspaceFavoriteToggles';
+export { useWorkspaceCollections } from './personal/useWorkspaceCollections';
+export { useWorkspacePresentation } from './personal/useWorkspacePresentation';
+export { useWorkspaceContentData } from './personal/useWorkspaceContentData';
+export { WorkspaceMobilePrimaryAction } from './personal/WorkspaceMobilePrimaryAction';
 
-export { useWorkspacePublicFilters } from './public/useWorkspacePublicFilters';
-export { useWorkspacePublicRequestsState } from './public/useWorkspacePublicRequestsState';
+export { useWorkspacePublicFilters } from './market-state/useWorkspacePublicFilters';
+export { useWorkspacePublicRequestsState } from './market-state/useWorkspacePublicRequestsState';
 export { WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT, workspaceQK } from './data';
 
 export type { WorkspaceTab } from './state';

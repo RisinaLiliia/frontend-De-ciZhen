@@ -30,7 +30,7 @@ import {
   RANGE_OPTIONS,
   rangeLabelShort,
 } from '@/features/workspace/stats';
-import { useWorkspacePublicFilters } from '@/features/workspace/public/useWorkspacePublicFilters';
+import { useWorkspacePublicFilters } from '@/features/workspace/market-state/useWorkspacePublicFilters';
 import { WorkspaceViewToggle } from '@/features/workspace/shared/WorkspaceViewToggle';
 import { WorkspaceContextPanel } from '@/features/workspace/context/contextPanel';
 import {

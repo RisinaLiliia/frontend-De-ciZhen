@@ -4,7 +4,7 @@ import {
   resolveWorkspacePublicEmptyResultPayload,
   resolveWorkspacePublicRequestsPageClamp,
   resolveWorkspacePublicRequestsState,
-} from '@/features/workspace/public/workspacePublicRequestsState.model';
+} from '@/features/workspace/market-state/workspacePublicRequestsState.model';
 
 describe('workspacePublicRequestsState.model', () => {
   it('resolves public requests state with safe total pages', () => {

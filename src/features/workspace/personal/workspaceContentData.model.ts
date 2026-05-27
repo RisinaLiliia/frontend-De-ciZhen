@@ -2,7 +2,7 @@
 
 import type { useWorkspaceContractRequestsData } from '@/features/workspace/contracts/useWorkspaceContractRequestsData';
 import type { useWorkspaceDerived } from '@/features/workspace/data/useWorkspaceDerived';
-import type { useWorkspaceCards } from '@/features/workspace/private/useWorkspaceCards';
+import type { useWorkspaceCards } from '@/features/workspace/personal/useWorkspaceCards';
 
 type WorkspaceDerivedResult = ReturnType<typeof useWorkspaceDerived>;
 type ContractRequestsDataResult = ReturnType<typeof useWorkspaceContractRequestsData>;

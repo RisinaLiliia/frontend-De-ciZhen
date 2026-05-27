@@ -4,7 +4,7 @@ import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import {
   buildWorkspaceFavoriteProviderCardModels,
   buildWorkspaceFavoriteProviderCardProps,
-} from '@/features/workspace/private/workspaceCards.model';
+} from '@/features/workspace/personal/workspaceCards.model';
 
 function provider(overrides: Partial<ProviderPublicDto> = {}): ProviderPublicDto {
   return {

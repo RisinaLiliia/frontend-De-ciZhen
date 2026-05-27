@@ -4,7 +4,7 @@ import {
   hasWorkspacePublicActiveFilters,
   resolveWorkspacePublicSearchEventPayload,
   resolveWorkspacePublicSearchSelection,
-} from '@/features/workspace/public/workspacePublicFilters.model';
+} from '@/features/workspace/market-state/workspacePublicFilters.model';
 
 describe('workspacePublicFilters.model', () => {
   it('normalizes all-option values out of public search selection', () => {

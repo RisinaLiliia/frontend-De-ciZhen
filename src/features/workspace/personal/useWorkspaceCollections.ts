@@ -5,7 +5,7 @@ import * as React from 'react';
 import {
   buildWorkspaceCollections,
   type WorkspaceCollectionsArgs as Args,
-} from '@/features/workspace/private/workspaceCollections.model';
+} from '@/features/workspace/personal/workspaceCollections.model';
 
 export function useWorkspaceCollections({
   includeRequestCollections = true,
