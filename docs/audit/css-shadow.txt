@@ -1,0 +1,317 @@
+src/features/workspace/chat/ChatWorkspacePage.module.css:11:  box-shadow: var(--shadow-card);
+src/features/workspace/chat/ChatWorkspacePage.module.css:21:  box-shadow: none;
+src/features/workspace/chat/ChatWorkspacePage.module.css:504:  box-shadow: var(--shadow-card);
+src/features/workspace/chat/ChatWorkspacePage.module.css:614:  box-shadow: -16px 0 40px color-mix(in oklab, var(--color-text) 10%, transparent);
+src/features/workspace/chat/ChatWorkspacePage.module.css:767:    box-shadow: 0 -16px 40px color-mix(in oklab, var(--color-text) 10%, transparent);
+src/features/legal/LegalDocumentPage.module.css:20:  box-shadow:
+src/features/legal/LegalDocumentPage.module.css:362:    box-shadow: none;
+src/styles/request-card-tags-status.css:61:    box-shadow:
+src/styles/overlays-modal.css:37:    box-shadow: var(--shadow-card);
+src/styles/features/home/home-content-nearby-activity-nearby.css:31:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/home/home-content-nearby-activity-nearby.css:55:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 18%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:81:    box-shadow: 0 12px 28px color-mix(in oklab, var(--c-primary) 22%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:94:    box-shadow: 0 16px 34px color-mix(in oklab, var(--c-primary) 26%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:99:    box-shadow:
+src/styles/features/home/home-intro-shell-search.css:87:    box-shadow:
+src/styles/features/home/home-intro-shell-search.css:122:    box-shadow: 0 12px 24px color-mix(in oklab, var(--c-ink) 44%, transparent);
+src/styles/features/home/home-content-proof-motion-theme.css:42:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
+src/styles/features/home/home-content-proof-motion-theme.css:52:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-content-proof-motion-theme.css:58:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-ink) 5%, transparent);
+src/styles/features/home/home-content-providers-profile-identity-decision-metrics.css:55:    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 34%, transparent);
+src/styles/features/home/home-content-proof-proof.css:45:    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-primary) 15%, transparent);
+src/styles/features/home/home-content-proof-proof.css:56:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-ink) 5%, transparent);
+src/styles/features/home/home-content-proof-proof.css:61:    box-shadow: 0 12px 24px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-content-proof-howitworks.css:33:    box-shadow: 0 0 0 3px var(--focus-ring-primary);
+src/styles/features/home/home-content-proof-howitworks.css:39:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
+src/styles/features/home/home-content-proof-howitworks.css:62:    box-shadow: 0 12px 26px color-mix(in oklab, var(--c-panel) 60%, transparent);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:45:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:105:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
+src/styles/features/home/home-intro-shell-layout.css:33:    box-shadow:
+src/styles/features/home/home-intro-shell-layout.css:71:    box-shadow: none;
+src/styles/features/home/home-intro-shell-layout.css:82:    box-shadow: none !important;
+src/styles/features/home/home-intro-shell-layout.css:94:    box-shadow: none;
+src/styles/features/home/home-intro-shell-layout.css:110:    box-shadow:
+src/styles/features/home/home-intro-shell-layout.css:117:    box-shadow:
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:197:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-content-providers-badges-responsive-responsive.css:60:      box-shadow: var(--shadow-card-hover);
+src/styles/features/home/home-intro-shell-theme-light.css:16:    box-shadow:
+src/styles/features/home/home-intro-shell-theme-light.css:35:    box-shadow: none;
+src/styles/features/home/home-intro-shell-theme-light.css:48:    box-shadow: none !important;
+src/styles/features/home/home-intro-shell-theme-light.css:60:    box-shadow:
+src/styles/features/home/home-intro-shell-theme-light.css:96:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+src/styles/features/home/home-intro-shell-theme-light.css:136:    box-shadow:
+src/styles/features/home/home-intro-shell-theme-light.css:165:    box-shadow:
+src/styles/features/home/home-actions-catalog-cta.css:90:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 18%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:96:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:123:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:128:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:158:    box-shadow: 0 10px 22px color-mix(in oklab, var(--c-primary) 22%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:172:    box-shadow: 0 14px 28px color-mix(in oklab, var(--c-primary) 26%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:178:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:183:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/home/home-content-layout-stats-core.css:54:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/home/home-content-layout-shell.css:40:    box-shadow: var(--shadow-card);
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:47:    box-shadow:
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:66:    box-shadow: 0 10px 22px color-mix(in oklab, var(--c-primary) 11%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:71:    box-shadow: 0 14px 28px color-mix(in oklab, var(--c-primary) 14%, transparent);
+src/styles/features/home/home-content-providers-shell.css:55:    box-shadow:
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:63:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:70:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:75:    box-shadow: none;
+src/styles/features/home/home-content-providers-effects.css:13:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+src/styles/features/home/home-content-providers-effects.css:16:      box-shadow: 0 0 0 8px color-mix(in oklab, var(--c-online) 0%, transparent);
+src/styles/features/home/home-content-providers-effects.css:19:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 0%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-shell.css:23:    box-shadow:
+src/styles/features/workspace/workspace-profile.css:124:    box-shadow: none;
+src/styles/features/workspace/workspace-profile.css:129:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/workspace/workspace-profile.css:140:    box-shadow: none;
+src/styles/features/workspace/workspace-profile.css:159:    box-shadow: none;
+src/styles/features/workspace/workspace-context.css:39:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-context.css:60:    box-shadow: none;
+src/styles/features/workspace/workspace-sidebar.css:76:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-overview.css:158:    box-shadow: none;
+src/styles/features/workspace/workspace-overview.css:225:    box-shadow: none;
+src/styles/features/workspace/workspace-overview.css:603:    box-shadow: none;
+src/styles/features/workspace/workspace-overlay.css:35:    box-shadow: none;
+src/styles/features/workspace/workspace-overlay.css:56:    box-shadow: none;
+src/styles/features/workspace/workspace-overlay.css:95:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-overlay.css:209:    box-shadow: none;
+src/styles/features/workspace/workspace-overlay.css:239:    box-shadow: none;
+src/styles/features/workspace/workspace-overlay.css:311:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-overlay.css:459:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-navigation.css:24:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-navigation.css:40:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-navigation.css:47:    box-shadow: none;
+src/styles/features/workspace/workspace-navigation.css:115:    box-shadow: 0 24px 48px color-mix(in oklab, var(--color-ink) 16%, transparent);
+src/styles/features/workspace/workspace-controls.css:32:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-controls.css:42:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:49:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:59:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:207:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:225:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:254:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:261:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:340:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:409:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:424:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:454:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:467:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:515:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:534:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:578:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:589:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-mobile-context.css:23:      box-shadow: none;
+src/styles/features/workspace/workspace-mobile-context.css:43:      box-shadow: none;
+src/styles/features/workspace/workspace-mobile-context.css:66:      box-shadow: none;
+src/styles/features/workspace/workspace-mobile-context.css:114:      box-shadow: none;
+src/styles/features/workspace/workspace-mobile-context.css:152:      box-shadow: 0 16px 34px rgb(15 23 42 / 0.08);
+src/styles/features/workspace/workspace-mobile-context.css:235:      box-shadow: none;
+src/styles/features/workspace/workspace-layout.css:211:    box-shadow: none;
+src/styles/features/workspace/workspace-layout.css:223:    box-shadow: none;
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:30:    box-shadow: var(--shadow-card);
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:38:    box-shadow: none;
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:149:    box-shadow: var(--control-focus-ring);
+src/styles/features/requests/requests-shell-results-list-status.css:58:    box-shadow: none;
+src/styles/features/requests/requests-shell-results-list-status.css:66:    box-shadow: none;
+src/styles/features/requests/requests-shell-results-list-status.css:87:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/requests/requests-detail-core-layout.css:241:    box-shadow: none;
+src/styles/features/requests/requests-detail-availability-cta-similar.css:41:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 20%, transparent);
+src/styles/features/requests/requests-detail-availability-cta-similar.css:47:    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-accent) 28%, transparent);
+src/styles/features/requests/requests-detail-mobile-provider-mobile-layout.css:58:      box-shadow:
+src/styles/features/requests/requests-detail-mobile-provider-mobile-layout.css:85:      box-shadow: none;
+src/styles/features/requests/requests-detail-core-owner-content.css:143:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 28%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:71:    box-shadow: var(--control-focus-ring);
+src/styles/features/requests/requests-shell-my-work.css:78:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:88:    box-shadow: var(--control-focus-ring);
+src/styles/features/requests/requests-shell-my-work.css:95:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:132:    box-shadow: var(--shadow-card);
+src/styles/features/requests/requests-shell-my-work.css:144:    box-shadow: var(--shadow-card-hover);
+src/styles/features/requests/requests-shell-my-work.css:150:    box-shadow: var(--shadow-card-hover);
+src/styles/features/requests/requests-shell-my-work.css:156:    box-shadow:
+src/styles/features/requests/requests-shell-my-work.css:469:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 70%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:658:    box-shadow: var(--shadow-card);
+src/styles/features/requests/requests-shell-my-work.css:730:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:738:    box-shadow: var(--shadow-card);
+src/styles/features/requests/requests-shell-my-work.css:759:    box-shadow: var(--shadow-floating);
+src/styles/features/requests/requests-shell-my-work.css:819:    box-shadow: var(--shadow-floating);
+src/styles/features/requests/requests-shell-my-work.css:912:    box-shadow:
+src/styles/features/requests/requests-shell-my-work.css:939:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:946:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:997:    box-shadow: var(--control-focus-ring);
+src/styles/features/requests/requests-shell-my-work.css:1034:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:1164:    box-shadow:
+src/styles/features/requests/requests-shell-my-work.css:1188:    box-shadow:
+src/styles/features/requests/requests-shell-my-work.css:1227:    box-shadow:
+src/styles/features/requests/requests-shell-my-work.css:1679:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:1999:    box-shadow: 0 0 0 1px color-mix(in srgb, var(--success) 18%, transparent);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:74:    box-shadow: var(--workspace-control-shell-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:113:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:123:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:174:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:344:    box-shadow: var(--workspace-control-embedded-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:354:    box-shadow: var(--workspace-control-embedded-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:383:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:391:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:414:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:432:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:444:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:465:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:481:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:490:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:510:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:526:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 68%, transparent);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:559:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:567:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:579:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:586:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:614:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:633:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:645:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:661:      box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:668:      box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:795:    box-shadow: var(--surface-card-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:802:    box-shadow: none;
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:897:    box-shadow: var(--personal-nav-item-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:990:    box-shadow: var(--personal-nav-dock-item-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1007:    box-shadow: var(--personal-nav-dock-item-shadow-hover);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1015:    box-shadow: var(--personal-nav-dock-item-shadow-active);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1024:    box-shadow: var(--personal-nav-dock-item-shadow-hover);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1060:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 74%, transparent);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1095:    box-shadow: none;
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1102:    box-shadow: none;
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:68:    box-shadow: var(--workspace-mobile-nav-surface-shadow);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:149:    box-shadow:
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:230:    box-shadow: var(--workspace-mobile-nav-card-shadow);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:243:    box-shadow: var(--workspace-mobile-nav-card-shadow-hover);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:250:    box-shadow: var(--workspace-mobile-nav-card-shadow-active);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:284:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 74%, transparent);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:309:    box-shadow: none;
+src/styles/features/requests/requests-provider-provider-requests.css:72:    box-shadow:
+src/styles/features/requests/requests-provider-provider-requests.css:79:    box-shadow:
+src/styles/features/requests/requests-detail-reviews-actions.css:137:    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 22%, transparent);
+src/styles/features/requests/requests-shell-map.css:17:    box-shadow: none;
+src/styles/features/requests/requests-shell-map.css:102:    box-shadow:
+src/styles/features/requests/requests-shell-map.css:141:    box-shadow:
+src/styles/features/requests/requests-shell-map.css:156:    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-overlay) 16%, transparent);
+src/styles/features/requests/requests-shell-map.css:187:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 54%, transparent);
+src/styles/features/components/components-core-topbar-shell.css:59:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-core-topbar-shell.css:79:    box-shadow: var(--shadow-card-hover);
+src/styles/features/components/components-core-topbar-shell.css:85:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-core-topbar-shell.css:91:    box-shadow: var(--shadow-card-hover);
+src/styles/features/components/components-core-topbar-shell.css:128:    box-shadow: none;
+src/styles/features/components/components-core-topbar-shell.css:135:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-core-topbar-shell.css:141:    box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-core-topbar-shell.css:147:    box-shadow: none;
+src/styles/features/components/components-core-topbar-shell.css:153:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-core-topbar-shell.css:159:    box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-growth-consent-ui-footer.css:18:    box-shadow: none;
+src/styles/features/components/components-ui-profile-typography.css:55:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-accent) 18%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:62:    box-shadow: var(--topbar-nav-surface-shadow);
+src/styles/features/components/components-core-workspace-nav.css:91:    box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:112:    box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:148:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 48%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:156:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:163:    box-shadow: none;
+src/styles/features/components/components-core-workspace-nav.css:168:    box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:175:    box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:315:      box-shadow: none;
+src/styles/features/components/components-core-workspace-nav.css:320:      box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-core-workspace-nav.css:325:      box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-core-workspace-nav.css:345:      box-shadow: inset 0 0 0 1px color-mix(in oklab, white 12%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:360:      box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:366:      box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-ui-base-icon-meta.css:31:    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 36%, transparent);
+src/styles/features/components/components-ui-base-icon-meta.css:36:    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 46%, transparent);
+src/styles/features/components/components-ui-base-icon-meta.css:59:      box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 12%, transparent);
+src/styles/features/components/components-ui-profile-settings-settings.css:93:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 25%, transparent);
+src/styles/features/components/components-ui-profile-settings-settings.css:145:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-accent) 24%, transparent);
+src/styles/features/components/components-core-auth-form-consent-validation.css:26:    box-shadow:
+src/styles/features/components/components-ui-panels-kpi-card.css:51:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/components/components-ui-panels-kpi-card.css:58:    box-shadow:
+src/styles/features/components/components-ui-panels-panel-stat.css:19:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/components/components-ui-panels-panel-stat.css:93:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
+src/styles/features/components/components-ui-panels-panel-stat.css:111:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/components/components-core-auth-form-modal-social-social.css:100:    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-hi) 10%, transparent);
+src/styles/features/components/components-growth-consent-ui-banner.css:24:    box-shadow:
+src/styles/features/components/components-growth-consent-ui-banner.css:128:    box-shadow:
+src/styles/features/components/components-growth-consent-ui-banner.css:145:    box-shadow:
+src/styles/features/components/components-ui-base-effects.css:22:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/components/components-ui-base-effects.css:26:      box-shadow: 0 0 0 6px color-mix(in oklab, var(--c-accent) 12%, transparent);
+src/styles/features/components/components-ui-base-effects.css:30:      box-shadow: 0 0 0 0 transparent;
+src/styles/features/components/components-ui-base-effects.css:51:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/components/components-ui-base-effects.css:54:      box-shadow: 0 0 0 10px transparent;
+src/styles/features/components/components-ui-base-effects.css:57:      box-shadow: 0 0 0 0 transparent;
+src/styles/features/components/components-growth-hero.css:62:    box-shadow: 0 18px 40px color-mix(in oklab, var(--c-panel) 55%, transparent);
+src/styles/features/components/components-growth-hero.css:83:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-growth-create-card-core.css:23:    box-shadow:
+src/styles/features/components/components-growth-create-card-core.css:89:    box-shadow:
+src/styles/features/components/components-growth-create-card-core.css:98:    box-shadow:
+src/styles/features/components/components-growth-create-card-core.css:113:    box-shadow:
+src/styles/features/components/components-core-auth-shell.css:59:      box-shadow:
+src/styles/features/components/components-core-auth-shell.css:85:      box-shadow: var(--shadow-card);
+src/styles/features/components/components-ui-panels-chips-actions.css:36:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+src/styles/features/components/components-ui-panels-chips-actions.css:42:    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 10%, transparent);
+src/styles/features/components/components-ui-panels-chips-actions.css:48:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
+src/styles/features/components/components-ui-panels-chips-actions.css:59:    box-shadow: 0 10px 18px color-mix(in oklab, var(--c-ink) 8%, transparent);
+src/styles/features/components/components-ui-panels-chips-actions.css:87:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+src/styles/features/stats/statistics-funnel-panel.css:112:    box-shadow: var(--surface-card-shadow);
+src/styles/features/stats/statistics-funnel-panel.css:170:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/stats/statistics-funnel-panel.css:179:    box-shadow:
+src/styles/features/stats/statistics-dashboard-layout.css:342:    box-shadow: var(--control-focus-ring);
+src/styles/features/stats/statistics-dashboard-layout.css:711:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/stats/statistics-dashboard-layout.css:718:    box-shadow:
+src/styles/features/stats/statistics-kpi-chart.css:13:    box-shadow: none;
+src/styles/features/stats/statistics-insights.css:155:    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 6%, transparent);
+src/styles/features/stats/statistics-insights.css:164:    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-ink) 10%, transparent);
+src/styles/features/stats/statistics-insights.css:171:    box-shadow:
+src/styles/features/stats/statistics-insights.css:409:    box-shadow:
+src/styles/features/stats/statistics-insights.css:450:    box-shadow:
+src/styles/features/stats/statistics-insights.css:586:    box-shadow:
+src/styles/features/stats/statistics-insights.css:604:    box-shadow:
+src/styles/features/stats/statistics-insights.css:618:    box-shadow:
+src/styles/features/stats/statistics-insights.css:626:    box-shadow:
+src/styles/features/stats/statistics-insights.css:633:    box-shadow:
+src/styles/features/stats/statistics-insights.css:640:    box-shadow:
+src/styles/features/stats/statistics-insights.css:811:    box-shadow:
+src/styles/features/stats/statistics-opportunity-price.css:83:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/stats/statistics-opportunity-price.css:89:    box-shadow:
+src/styles/features/stats/statistics-opportunity-price.css:408:    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 7%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:476:    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 38%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:522:    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 34%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:537:    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 32%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:609:    box-shadow:
+src/styles/features/stats/statistics-opportunity-price.css:683:    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-panel) 72%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:726:    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:753:    box-shadow: 0 0 0 1px color-mix(in oklab, var(--c-panel) 66%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:1155:    box-shadow:
+src/styles/features/stats/statistics-demand-cities.css:175:    box-shadow:
+src/styles/features/stats/statistics-demand-cities.css:182:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/stats/statistics-demand-cities.css:196:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 60%, transparent);
+src/styles/features/stats/statistics-demand-cities.css:201:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 60%, transparent);
+src/styles/features/stats/statistics-demand-cities.css:213:    box-shadow:
+src/styles/features/stats/statistics-demand-cities.css:226:    box-shadow:
+src/styles/overlays-select-popover.css:37:    box-shadow: var(--shadow-panel);
+src/styles/overlays-select-popover.css:121:    box-shadow: var(--shadow-panel);
+src/styles/overlays-select-popover.css:208:    box-shadow: var(--shadow-panel);
+src/styles/overlays-select-popover.css:218:    box-shadow: var(--shadow-card);
+src/styles/primitives/surface.css:6:    box-shadow: var(--shadow-card);
+src/styles/primitives/surface.css:14:    box-shadow: var(--shadow-card);
+src/styles/primitives/surface.css:26:    box-shadow: var(--shadow-card);
+src/styles/primitives/surface.css:39:    box-shadow: var(--shadow-card);
+src/styles/primitives/surface.css:56:    box-shadow: var(--shadow-card-hover);
+src/styles/primitives/surface.css:64:    box-shadow:
+src/styles/primitives/controls.css:39:    box-shadow: var(--control-focus-ring);
+src/styles/primitives/controls.css:44:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-danger) 22%, transparent);
+src/styles/primitives/controls.css:83:    box-shadow: none;
+src/styles/primitives/controls.css:88:    box-shadow: 0 8px 18px color-mix(in oklab, var(--color-primary) 16%, transparent);
+src/styles/primitives/controls.css:94:    box-shadow:
+src/styles/primitives/controls.css:103:    box-shadow: none;
+src/styles/primitives/controls.css:109:    box-shadow: var(--shadow-card);
+src/styles/primitives/controls.css:123:    box-shadow: none;
+src/styles/primitives/controls.css:129:    box-shadow: var(--control-focus-ring);
+src/styles/primitives/badges.css:32:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 65%, transparent);
+src/styles/primitives/badges.css:63:    box-shadow: 0 8px 18px color-mix(in oklab, var(--badge-accent) 14%, transparent);
+src/styles/primitives/badges.css:92:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 22%, transparent);
+src/styles/request-card-shell-media.css:81:    box-shadow: var(--shadow-card);
+src/styles/request-card-shell-media.css:99:    box-shadow:
+src/styles/globals.css:21:    box-shadow:
