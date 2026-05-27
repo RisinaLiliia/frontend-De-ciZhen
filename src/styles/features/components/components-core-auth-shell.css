@@ -81,7 +81,7 @@
       max-height: calc(100dvh - 68px);
       overflow: auto;
       padding: 12px;
-      border-radius: 14px;
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow-card);
     }
 

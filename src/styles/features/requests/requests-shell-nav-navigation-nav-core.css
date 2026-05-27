@@ -169,7 +169,7 @@
   }
 
   .workspace-control-shell[data-condensed='true'] {
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     border-color: color-mix(in oklab, var(--c-primary) 18%, var(--workspace-control-shell-border) 82%);
     box-shadow:
       0 24px 40px color-mix(in oklab, var(--c-ink) 12%, transparent),
@@ -678,11 +678,11 @@
       --workspace-control-shell-section-gap: var(--space-2);
       --workspace-control-shell-condensed-pad-y: var(--space-2-5);
       --workspace-control-shell-condensed-pad-x: var(--space-3);
-      border-radius: 18px;
+      border-radius: var(--radius-xl);
     }
 
     .workspace-control-shell[data-condensed='true'] {
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
     }
 
     .workspace-control-shell .requests-filters--surface-embedded .dc-select-trigger,
@@ -1051,7 +1051,7 @@
   .personal-nav__track--dock .personal-nav__icon {
     width: calc(var(--space-6) + var(--space-0-5));
     height: calc(var(--space-6) + var(--space-0-5));
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--personal-nav-dock-icon-border);
     background: var(--personal-nav-dock-icon-bg);
     display: inline-flex;
@@ -1085,7 +1085,7 @@
     min-width: calc(var(--space-4) + var(--space-0-5));
     height: calc(var(--space-4) + var(--space-0-25));
     padding: 0 var(--space-1-25);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--personal-nav-dock-badge-border);
     background: var(--personal-nav-dock-badge-bg);
     color: var(--personal-nav-dock-badge-color);

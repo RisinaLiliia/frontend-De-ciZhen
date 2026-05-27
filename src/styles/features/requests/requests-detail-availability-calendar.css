@@ -65,7 +65,7 @@
   .request-detail__availability-dot {
     width: 6px;
     height: 6px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: currentColor;
     opacity: 0.9;
   }
@@ -97,7 +97,7 @@
 
   .request-detail__availability-date--interactive {
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     text-decoration: underline;
     text-decoration-style: dotted;
     text-decoration-color: color-mix(in oklab, var(--c-primary) 40%, transparent);
@@ -199,7 +199,7 @@
   .request-detail__availability-legend-dot {
     width: 9px;
     height: 9px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
   }
 

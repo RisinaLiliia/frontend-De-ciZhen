@@ -26,7 +26,7 @@
   .nearby-dot {
     width: 8px;
     height: 8px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--c-accent);
     box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
     animation: radar-pulse 2.6s ease-out infinite;
@@ -41,7 +41,7 @@
     align-items: center;
     gap: 6px;
     padding: 6px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     background: color-mix(in oklab, var(--c-panel) 80%, transparent);
     transition:
@@ -59,7 +59,7 @@
   .nearby-dot-item {
     width: 6px;
     height: 6px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in oklab, var(--c-border) 70%, transparent);
     animation: nearby-dot-pulse 1.8s ease-in-out infinite;
   }

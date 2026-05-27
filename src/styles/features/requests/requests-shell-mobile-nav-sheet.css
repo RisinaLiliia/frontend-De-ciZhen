@@ -61,7 +61,7 @@
     align-items: stretch;
     gap: var(--space-3-5);
     box-sizing: border-box;
-    border-radius: 28px;
+    border-radius: var(--radius-xl);
     padding: var(--space-3);
     border: 1px solid var(--workspace-mobile-nav-surface-border);
     background: var(--workspace-mobile-nav-surface-bg);
@@ -142,7 +142,7 @@
     width: calc(var(--space-6) + var(--space-2));
     min-width: calc(var(--space-6) + var(--space-2));
     height: calc(var(--space-6) + var(--space-2));
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--workspace-mobile-nav-close-border);
     background: var(--workspace-mobile-nav-close-bg);
     color: color-mix(in oklab, var(--c-text-muted) 68%, var(--c-text) 32%);
@@ -182,13 +182,13 @@
     min-height: 0;
     padding: 12px;
     gap: 10px;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
   }
 
   .workspace-mode-nav--sheet .workspace-mode-nav__icon {
     width: 40px;
     height: 40px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
   }
 
   .workspace-mode-nav--sheet .workspace-mode-nav__label {
@@ -275,7 +275,7 @@
   .workspace-mobile-nav-sheet__card-icon {
     width: calc(var(--space-6) + var(--space-0-5));
     height: calc(var(--space-6) + var(--space-0-5));
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--workspace-mobile-nav-card-icon-border);
     background: var(--workspace-mobile-nav-card-icon-bg);
     display: inline-flex;
@@ -360,7 +360,7 @@
       min-height: 0;
       align-self: stretch;
       margin: 0 auto;
-      border-radius: 28px;
+      border-radius: var(--radius-xl);
       padding: var(--space-3);
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
@@ -382,20 +382,20 @@
     }
 
     .workspace-mobile-nav-sheet__surface {
-      border-radius: 22px;
+      border-radius: var(--radius-xl);
       padding: 12px;
     }
 
     .workspace-mode-nav--sheet .workspace-mode-nav__item {
       padding: 11px;
       gap: 9px;
-      border-radius: 14px;
+      border-radius: var(--radius-lg);
     }
 
     .workspace-mode-nav--sheet .workspace-mode-nav__icon {
       width: 36px;
       height: 36px;
-      border-radius: 11px;
+      border-radius: var(--radius-md);
     }
 
     .workspace-mode-nav--sheet .workspace-mode-nav__label {

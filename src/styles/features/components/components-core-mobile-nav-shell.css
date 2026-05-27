@@ -10,7 +10,7 @@
   @media (max-width: 767px) {
     .topbar__inner {
       padding-inline: var(--shell-inline-padding, 12px);
-      border-radius: 20px;
+      border-radius: var(--radius-xl);
     }
 
     .topbar__inner--with-center {

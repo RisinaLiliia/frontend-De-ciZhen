@@ -42,7 +42,7 @@
     justify-content: center;
     width: 14px;
     height: 14px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     font-size: 11px;
     font-weight: 700;
     line-height: 1;
@@ -62,7 +62,7 @@
   .auth-form-note {
     margin-top: 2px;
     padding: 10px 12px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     border: 1px solid var(--focus-ring-primary);
     background: color-mix(in oklab, var(--c-primary) 10%, transparent);
     display: grid;

@@ -30,7 +30,7 @@
     }
 
     .workspace-mobile-dock__item {
-      border-radius: 12px;
+      border-radius: var(--radius-md);
     }
 
     .page-shell__topbar-actions {
@@ -44,7 +44,7 @@
     .icon-button--topbar {
       width: 32px;
       height: 32px;
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
     }
   }
 

@@ -28,7 +28,7 @@
     align-items: center;
     gap: 6px;
     padding: 4px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 60%, var(--c-accent) 40%);
     background: color-mix(in oklab, var(--c-surface) 88%, transparent);
     color: var(--c-text-muted);
@@ -86,7 +86,7 @@
     content: "";
     width: 6px;
     height: 6px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in oklab, var(--c-primary) 82%, var(--c-hero-tint-primary) 18%);
     animation: hero-trust-pulse var(--hero-shot-duration) ease-in-out var(--hero-shot-iterations);
     will-change: transform, opacity;

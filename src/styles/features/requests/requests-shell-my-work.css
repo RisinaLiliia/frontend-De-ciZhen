@@ -189,7 +189,7 @@
   .workspace-summary-grid__accent {
     width: 100%;
     height: 4px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--color-border);
     transition: background-color 160ms ease, transform 160ms ease;
   }
@@ -321,7 +321,7 @@
     align-items: center;
     min-height: var(--my-work-chip-min-height);
     padding: 0 var(--my-work-chip-pad-inline);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 84%, white 16%);
     background: color-mix(in oklab, var(--surface-base) 92%, white 8%);
     color: var(--text-muted);
@@ -460,7 +460,7 @@
     width: 22px;
     height: 22px;
     flex: 0 0 auto;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in oklab, var(--c-primary) 12%, white 88%);
     color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
     font-size: 12px;
@@ -584,7 +584,7 @@
   .my-request-card__progress-dot {
     width: 10px;
     height: 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in srgb, var(--border-default) 82%, white 18%);
     flex: 0 0 auto;
   }
@@ -629,14 +629,14 @@
     left: calc(100% + 4px);
     width: 20px;
     height: 2px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in oklab, var(--c-border) 72%, white 28%);
   }
 
   .my-request-card__progress-rail {
     position: relative;
     height: 5px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in oklab, var(--c-border) 72%, white 28%);
     overflow: hidden;
   }
@@ -768,7 +768,7 @@
     min-height: calc(var(--space-8) + var(--space-2));
     padding: 0 var(--space-3);
     border: 0;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     background: transparent;
     color: var(--text-default);
     font-size: var(--my-work-body-muted-size);
@@ -986,7 +986,7 @@
     width: 100%;
     min-width: 0;
     min-height: var(--my-work-button-min-height);
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     box-sizing: border-box;
   }
 
@@ -1019,7 +1019,7 @@
     width: 100%;
     padding: var(--my-work-pad-compact) var(--density-comfortable-pad);
     border: 1px solid var(--color-border-soft);
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     background: color-mix(in oklab, var(--color-surface) 78%, var(--color-surface-muted) 22%);
     text-align: left;
     transition:
@@ -1058,7 +1058,7 @@
     align-items: center;
     min-height: var(--space-6);
     padding: 0 var(--space-2-5);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--color-surface-muted);
     color: var(--text-muted);
     font-size: var(--my-work-caption-size);
@@ -1104,7 +1104,7 @@
     align-items: center;
     padding: var(--my-work-pad) var(--density-comfortable-pad-lg);
     border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
-    border-radius: 18px;
+    border-radius: var(--radius-xl);
     background: var(--color-surface-muted);
   }
 
@@ -1545,7 +1545,7 @@
 
     .my-request-card__insight {
       padding: var(--my-work-pad-compact);
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
     }
 
     .my-request-card__footer-bar {
@@ -1724,7 +1724,7 @@
   .my-request-dialog__meta span,
   .my-request-dialog__badge {
     padding: var(--space-1-5) var(--space-2-5);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in srgb, var(--surface-2) 80%, transparent);
   }
 
@@ -1736,7 +1736,7 @@
     width: 40px;
     height: 40px;
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in srgb, var(--surface-2) 82%, transparent);
     color: var(--foreground);
     font-size: 24px;
@@ -1822,7 +1822,7 @@
 
   .my-request-dialog__section--decision {
     padding: 18px;
-    border-radius: 22px;
+    border-radius: var(--radius-xl);
     background:
       linear-gradient(180deg, color-mix(in srgb, var(--surface-2) 92%, white 8%), color-mix(in srgb, var(--surface-2) 78%, transparent));
     border: 1px solid color-mix(in srgb, var(--border) 68%, transparent);
@@ -1841,7 +1841,7 @@
     min-width: 38px;
     min-height: 38px;
     padding: 0 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in srgb, var(--surface-2) 88%, transparent);
     font-weight: 700;
   }
@@ -1852,7 +1852,7 @@
     gap: var(--my-work-content-gap);
     align-items: start;
     padding: var(--density-compact-pad) var(--space-4);
-    border-radius: 18px;
+    border-radius: var(--radius-xl);
     border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
     background: color-mix(in srgb, var(--surface-2) 74%, transparent);
   }
@@ -1875,7 +1875,7 @@
     min-width: 32px;
     min-height: 32px;
     padding: 0 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in srgb, var(--surface) 82%, white 18%);
     font-size: 12px;
     font-weight: 700;
@@ -1919,7 +1919,7 @@
     display: grid;
     gap: var(--my-work-content-gap);
     padding: var(--space-4);
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
     background: color-mix(in srgb, var(--surface) 88%, transparent);
   }
@@ -1989,7 +1989,7 @@
     display: grid;
     gap: var(--layout-gap-sm);
     padding: var(--space-4);
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
     background: color-mix(in srgb, var(--surface-2) 72%, transparent);
   }
@@ -2065,7 +2065,7 @@
     position: relative;
     min-height: 132px;
     overflow: hidden;
-    border-radius: 18px;
+    border-radius: var(--radius-xl);
     background: color-mix(in srgb, var(--surface-2) 76%, transparent);
   }
 

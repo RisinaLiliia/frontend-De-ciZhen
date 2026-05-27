@@ -87,7 +87,7 @@
     margin-left: auto;
     min-width: 22px;
     height: 22px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--color-border-soft);
     background: var(--color-surface-muted);
     color: var(--color-text-muted);
@@ -192,7 +192,7 @@
   .workspace-sidebar__avatar {
     width: 34px;
     height: 34px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--color-primary-border);
     background: var(--color-primary-soft);
     color: var(--color-primary);

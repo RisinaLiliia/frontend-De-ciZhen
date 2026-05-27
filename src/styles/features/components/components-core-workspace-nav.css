@@ -56,7 +56,7 @@
     gap: 6px;
     max-width: 100%;
     padding: 4px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--topbar-nav-surface-border);
     background: var(--topbar-nav-surface-bg);
     box-shadow: var(--topbar-nav-surface-shadow);
@@ -80,7 +80,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, white 80%, var(--c-border) 20%);
     background:
       linear-gradient(
@@ -118,7 +118,7 @@
   .topbar-nav__item {
     min-height: 34px;
     padding: 0 12px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid transparent;
     background: transparent;
     color: var(--c-text-muted);
@@ -211,7 +211,7 @@
 
     .workspace-mobile-dock__item {
       min-height: 58px;
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       border: 1px solid transparent;
       background: transparent;
       color: var(--color-text-muted);
@@ -242,7 +242,7 @@
       justify-content: center;
       width: 40px;
       height: 40px;
-      border-radius: 999px;
+      border-radius: var(--radius-pill);
       border: 1px solid var(--color-border-soft);
       background: var(--color-surface);
       color: inherit;

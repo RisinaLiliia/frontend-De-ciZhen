@@ -31,7 +31,7 @@
     min-width: 40px;
     height: 40px;
     padding: 0;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     display: inline-flex;
     align-items: center;
     justify-content: center;

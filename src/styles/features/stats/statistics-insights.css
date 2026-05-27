@@ -212,7 +212,7 @@
     align-items: center;
     min-height: var(--workspace-insight-badge-height);
     padding-inline: var(--workspace-insight-badge-pad-inline);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-warning) 48%, var(--surface-soft-border) 52%);
     background: color-mix(in oklab, var(--c-warning) 16%, var(--c-panel) 84%);
     color: color-mix(in oklab, var(--c-warning) 84%, var(--c-text) 16%);
@@ -519,7 +519,7 @@
     gap: var(--space-0-5);
     min-width: 0;
     padding: var(--space-2-5) var(--space-3);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     border: 1px solid color-mix(in oklab, var(--surface-soft-border) 78%, transparent);
     background:
       linear-gradient(
@@ -800,7 +800,7 @@
     place-items: center;
     width: 24px;
     height: 24px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-primary) 24%, var(--surface-soft-border) 76%);
     background:
       linear-gradient(

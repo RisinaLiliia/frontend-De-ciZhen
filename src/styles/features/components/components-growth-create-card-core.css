@@ -11,7 +11,7 @@
     width: 100%;
     min-width: 0;
     padding: 16px;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     border: 1px dashed color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
     background:
       linear-gradient(
@@ -62,7 +62,7 @@
     display: grid;
     place-items: center;
     min-width: 0;
-    border-radius: 14px;
+    border-radius: var(--radius-lg);
     border: 1px solid color-mix(in oklab, var(--c-accent) 52%, var(--c-border) 48%);
     background:
       radial-gradient(circle at 24% 18%, color-mix(in oklab, var(--c-hi-strong) 26%, transparent) 0%, transparent 48%),
@@ -79,7 +79,7 @@
     place-items: center;
     width: 58px;
     height: 58px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-accent) 58%, var(--c-border) 42%);
     background: color-mix(in oklab, var(--c-panel) 84%, var(--c-accent) 16%);
     color: var(--c-accent);

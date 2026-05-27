@@ -30,6 +30,6 @@
     height: var(--icon-only-size);
     min-height: var(--icon-only-size);
     padding: 0;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
   }
 }

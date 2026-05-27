@@ -37,7 +37,7 @@
     right: 0;
     width: 40px;
     height: 40px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     background: var(--surface-soft-bg);
     color: var(--c-text-muted);
@@ -79,7 +79,7 @@
       max-width: 400px;
       max-height: calc(100dvh - 76px);
       height: auto;
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       border: 1px solid color-mix(in oklab, var(--c-border) 68%, transparent);
       padding: 10px 9px 14px;
       gap: 10px;

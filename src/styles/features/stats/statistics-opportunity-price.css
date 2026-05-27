@@ -1034,7 +1034,7 @@
   }
 
   .workspace-statistics-price-modal__decision-ai .workspace-statistics-ki__avatar {
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
   }
 
   .workspace-statistics-price-modal__decision-ai .workspace-statistics-ki__role {

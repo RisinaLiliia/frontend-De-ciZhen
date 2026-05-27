@@ -87,7 +87,7 @@
 
     .workspace-context-rail__panel {
       padding: 14px;
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
     }
   }
 }

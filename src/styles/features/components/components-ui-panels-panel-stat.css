@@ -24,7 +24,7 @@
     align-items: center;
     gap: var(--space-2);
     padding: 6px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     color: var(--c-text);
   }
 
@@ -106,7 +106,7 @@
     position: relative;
     width: 8px;
     height: 8px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--c-accent);
     box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
     animation: radar-pulse 2s ease-out infinite;
@@ -116,7 +116,7 @@
     content: "";
     position: absolute;
     inset: -6px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-accent) 35%, transparent);
     opacity: 0.5;
   }
@@ -132,7 +132,7 @@
     justify-content: center;
     width: 22px;
     height: 22px;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     background: transparent;
     color: var(--c-accent);
     font-size: 12px;

@@ -67,7 +67,7 @@
   .dc-date .rdp-day {
     height: 40px;
     width: 40px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid transparent;
     color: var(--color-text);
     background: transparent;
@@ -110,7 +110,7 @@
   .dc-date .rdp-day_range_middle {
     background: var(--color-primary-soft);
     color: var(--color-primary);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
   }
 
   .dc-date .rdp-day_disabled,

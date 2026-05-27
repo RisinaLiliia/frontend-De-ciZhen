@@ -418,7 +418,7 @@
     min-height: 38px;
     padding: 0;
     border: 1px solid var(--workspace-context-control-border);
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     background: var(--workspace-context-control-bg);
     color: var(--color-text-muted);
     box-shadow: none;
@@ -573,7 +573,7 @@
     min-width: 168px;
     padding: 0 var(--space-2-5);
     border: 1px solid var(--workspace-context-control-border);
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     background: var(--workspace-context-control-bg);
     box-shadow: none;
     color: var(--color-text);

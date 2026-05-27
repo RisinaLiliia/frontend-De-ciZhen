@@ -71,7 +71,7 @@
     text-transform: uppercase;
     color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
     border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     padding: 4px 10px;
   }
 

@@ -28,7 +28,7 @@
     display: inline-flex;
     width: 14px;
     height: 14px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     align-items: center;
     justify-content: center;
     color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);

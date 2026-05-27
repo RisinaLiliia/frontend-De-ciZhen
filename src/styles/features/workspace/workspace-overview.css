@@ -130,7 +130,7 @@
     padding: 0;
     justify-content: center;
     gap: 4px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     background: var(--color-surface-muted);
     flex-shrink: 0;
   }
@@ -205,7 +205,7 @@
     justify-content: center;
     font-size: var(--fs-small);
     line-height: 1;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
   }
 
   .workspace-overview__list {
@@ -827,7 +827,7 @@
     .workspace-overview__panel .nearby-more {
       width: 30px;
       height: 30px;
-      border-radius: 9px;
+      border-radius: var(--radius-sm);
     }
 
     .workspace-overview__providers .provider-card,
@@ -1122,7 +1122,7 @@
       grid-template-columns: minmax(0, 1fr) 72px;
       gap: 8px;
       padding: 9px 10px;
-      border-radius: 14px;
+      border-radius: var(--radius-lg);
     }
 
     .workspace-overview .request-create-card--compact .request-create-card__title {
@@ -1150,7 +1150,7 @@
       min-height: 40px;
       justify-content: flex-start;
       padding: 9px 11px;
-      border-radius: 14px;
+      border-radius: var(--radius-lg);
       font-size: 12px;
       line-height: 1.2;
     }

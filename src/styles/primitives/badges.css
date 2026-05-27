@@ -10,7 +10,7 @@
     gap: var(--space-1);
     min-height: 28px;
     padding-inline: 12px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--badge-border);
     background: var(--badge-bg);
     color: var(--badge-text);

@@ -40,7 +40,7 @@
 
   .requests-stats-secondary__track {
     height: 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
     overflow: hidden;

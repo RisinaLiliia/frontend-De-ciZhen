@@ -57,7 +57,7 @@
     flex-wrap: wrap;
     gap: 8px;
     padding: 4px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     background: color-mix(in oklab, var(--c-surface) 78%, transparent);
     width: fit-content;
@@ -67,7 +67,7 @@
   .profile-settings__choice {
     border: 0;
     padding: 7px 14px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     font-size: 12px;
     font-weight: 600;
     color: var(--c-text-muted);
@@ -152,7 +152,7 @@
     transform: translateY(-50%);
     width: 28px;
     height: 28px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
     color: color-mix(in oklab, var(--c-accent) 82%, var(--c-text) 18%);
@@ -175,7 +175,7 @@
 
   .profile-settings__password-hint span {
     font-size: 11px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     padding: 4px 8px;
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     color: var(--c-text-muted);

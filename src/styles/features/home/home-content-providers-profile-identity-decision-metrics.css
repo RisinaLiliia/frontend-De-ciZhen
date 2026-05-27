@@ -40,7 +40,7 @@
     justify-content: center;
     width: 15px;
     height: 15px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
     outline: none;
   }

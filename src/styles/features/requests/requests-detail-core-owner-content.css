@@ -141,7 +141,7 @@
   .request-detail__text-toggle:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 28%, transparent);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
   }
 
   /* Provider public profile: keep desktop/tablet two-column composition stable. */

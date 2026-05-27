@@ -26,7 +26,7 @@
     top: 0;
     width: 28px;
     height: 28px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 68%, transparent);
     background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
     color: var(--c-text);
@@ -63,7 +63,7 @@
   .request-offer-sheet__success-icon {
     width: 28px;
     height: 28px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     display: inline-flex;
     align-items: center;
     justify-content: center;

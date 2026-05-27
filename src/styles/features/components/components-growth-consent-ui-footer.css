@@ -78,7 +78,7 @@
 
   .consent-manage-footer__button {
     height: 32px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
     background: transparent;
     color: var(--c-text);
