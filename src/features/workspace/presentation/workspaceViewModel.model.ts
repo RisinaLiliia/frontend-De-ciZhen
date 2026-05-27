@@ -3,16 +3,16 @@
 import type {
   PrivateInput,
   PublicInput,
-} from '@/features/workspace/view-model/workspaceViewModel.types';
+} from '@/features/workspace/presentation/workspaceViewModel.types';
 import type { WorkspaceStatusFilter } from '@/features/workspace/state';
 import type { PublicContentProps } from '@/features/workspace/requests/PublicContent';
 import type { WorkspaceContentProps } from '@/features/workspace/requests/workspaceContent.types';
-import { buildWorkspacePager } from '@/features/workspace/view-model/workspaceViewModel.helpers';
-import { buildWorkspacePrivateContentProps } from '@/features/workspace/view-model/workspaceViewModel.private';
+import { buildWorkspacePager } from '@/features/workspace/presentation/workspaceViewModel.helpers';
+import { buildWorkspacePrivateContentProps } from '@/features/workspace/presentation/workspaceViewModel.private';
 import {
   buildWorkspacePublicContentProps,
   buildWorkspacePublicFiltersProps,
-} from '@/features/workspace/view-model/workspaceViewModel.public';
+} from '@/features/workspace/presentation/workspaceViewModel.public';
 
 export function buildWorkspacePrivateViewModel(params: PrivateInput): {
   workspaceContentProps: WorkspaceContentProps;

@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 
-import { buildWorkspacePublicViewModel } from '@/features/workspace/view-model/workspaceViewModel.model';
-import type { PublicInput } from '@/features/workspace/view-model/workspaceViewModel.types';
+import { buildWorkspacePublicViewModel } from '@/features/workspace/presentation/workspaceViewModel.model';
+import type { PublicInput } from '@/features/workspace/presentation/workspaceViewModel.types';
 
 export function useWorkspacePublicViewModel(params: PublicInput) {
   const {
