@@ -3,7 +3,7 @@ import * as React from 'react';
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useRequestOwnerEdit } from '@/features/requests/details/useRequestOwnerEdit';
+import { useRequestOwnerEdit } from '@/features/workspace/requests/details/useRequestOwnerEdit';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { publishMyRequest, updateMyRequest, uploadRequestPhotos } from '@/lib/api/requests';
 

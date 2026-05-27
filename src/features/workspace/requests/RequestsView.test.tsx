@@ -112,7 +112,7 @@ vi.mock('@/features/workspace/overlays/useWorkspaceRequestOverlayFlow', () => ({
   }),
 }));
 
-vi.mock('@/features/request/CreateRequestPage', () => ({
+vi.mock('@/features/workspace/requests/create/WorkspaceCreateRequestOverlay', () => ({
   WorkspaceCreateRequestOverlay: () => null,
 }));
 

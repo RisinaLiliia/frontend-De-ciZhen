@@ -6,9 +6,9 @@ import {
   readRequestDraft,
   writeRequestDraft,
   type RequestDraft,
-} from '@/features/request/createDraft';
-import { buildCreateRequestSchema, type CreateRequestValues } from '@/features/request/create.schema';
-import { useRequestPhotoItems } from '@/features/request/useRequestPhotoItems';
+} from '@/features/workspace/requests/create/createRequestDraft';
+import { buildCreateRequestSchema, type CreateRequestValues } from '@/features/workspace/requests/create/createRequest.schema';
+import { useRequestPhotoItems } from '@/features/workspace/requests/create/useRequestPhotoItems';
 import type { I18nKey } from '@/lib/i18n/keys';
 
 type Translate = (key: I18nKey) => string;

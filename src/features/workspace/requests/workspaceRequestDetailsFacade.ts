@@ -1,7 +1,7 @@
 'use client';
 
-export { RequestDetailsContent } from '@/features/requests/details/RequestDetailsContent';
-export { useRequestDetailsContentState } from '@/features/requests/details/useRequestDetailsContentState';
-export { useRequestDetailsPageData } from '@/features/requests/details/useRequestDetailsPageData';
-export { resolveOfferCardState } from '@/features/requests/uiState';
-export { fetchManagedRequestDetails } from '@/features/requests/details/requestDetails.data';
+export { RequestDetailsContent } from '@/features/workspace/requests/details/RequestDetailsContent';
+export { useRequestDetailsContentState } from '@/features/workspace/requests/details/useRequestDetailsContentState';
+export { useRequestDetailsPageData } from '@/features/workspace/requests/details/useRequestDetailsPageData';
+export { resolveOfferCardState } from '@/features/workspace/requests/shared/requestUiState';
+export { fetchManagedRequestDetails } from '@/features/workspace/requests/details/requestDetails.data';

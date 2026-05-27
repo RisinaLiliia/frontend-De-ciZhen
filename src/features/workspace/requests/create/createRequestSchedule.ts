@@ -1,5 +1,5 @@
 // src/features/request/schedule.ts
-import { scheduleSchema, type Schedule } from './when.schema';
+import { scheduleSchema, type Schedule } from './requestWhen.schema';
 
 export function serializeSchedule(value: Schedule): string {
   const parsed = scheduleSchema.safeParse(value);

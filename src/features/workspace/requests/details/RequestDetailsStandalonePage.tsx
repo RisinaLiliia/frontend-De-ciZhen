@@ -16,11 +16,11 @@ import { useAuthMe, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
-import { useRequestDetailsContentState } from '@/features/requests/details/useRequestDetailsContentState';
-import { useRequestOfferActions } from '@/features/requests/details/useRequestOfferActions';
-import { useRequestDetailsUrlAction } from '@/features/requests/details/useRequestDetailsUrlAction';
-import { useRequestDetailsPageData } from '@/features/requests/details/useRequestDetailsPageData';
-import { RequestDetailsContent } from '@/features/requests/details/RequestDetailsContent';
+import { useRequestDetailsContentState } from '@/features/workspace/requests/details/useRequestDetailsContentState';
+import { useRequestOfferActions } from '@/features/workspace/requests/details/useRequestOfferActions';
+import { useRequestDetailsUrlAction } from '@/features/workspace/requests/details/useRequestDetailsUrlAction';
+import { useRequestDetailsPageData } from '@/features/workspace/requests/details/useRequestDetailsPageData';
+import { RequestDetailsContent } from '@/features/workspace/requests/details/RequestDetailsContent';
 import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 const WORKSPACE_MY_REQUESTS_URL = '/workspace?section=requests&scope=my&period=90d&range=90d';

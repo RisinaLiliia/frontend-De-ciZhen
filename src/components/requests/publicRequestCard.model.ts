@@ -1,6 +1,6 @@
 'use client';
 
-import { resolveOfferCardState, type OfferCardState } from '@/features/requests/uiState';
+import { resolveOfferCardState, type OfferCardState } from '@/features/workspace/requests/shared/requestUiState';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { pickRequestImage } from '@/lib/requests/images';

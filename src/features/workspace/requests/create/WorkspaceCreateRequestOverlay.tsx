@@ -6,17 +6,17 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
-import { parseScheduleParam } from '@/features/request/schedule';
+import { parseScheduleParam } from '@/features/workspace/requests/create/createRequestSchedule';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import {
   CreateRequestFormContent,
   CreateRequestPageView,
   type CreateRequestPageViewProps,
-} from '@/features/request/page/CreateRequestPageView';
-import { useCreateRequestCatalogModel } from '@/features/request/page/useCreateRequestCatalogModel';
-import { useCreateRequestFormModel } from '@/features/request/page/useCreateRequestFormModel';
-import { useCreateRequestAvailabilityModel } from '@/features/request/page/useCreateRequestAvailabilityModel';
-import { useCreateRequestSubmit } from '@/features/request/page/useCreateRequestSubmit';
+} from '@/features/workspace/requests/create/page/CreateRequestPageView';
+import { useCreateRequestCatalogModel } from '@/features/workspace/requests/create/page/useCreateRequestCatalogModel';
+import { useCreateRequestFormModel } from '@/features/workspace/requests/create/page/useCreateRequestFormModel';
+import { useCreateRequestAvailabilityModel } from '@/features/workspace/requests/create/page/useCreateRequestAvailabilityModel';
+import { useCreateRequestSubmit } from '@/features/workspace/requests/create/page/useCreateRequestSubmit';
 import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
 
 type CreateRequestContentSurface = 'page' | 'overlay';

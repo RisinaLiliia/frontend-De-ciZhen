@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { I18nKey } from '@/lib/i18n/keys';
-import { buildCreateRequestSchema } from '@/features/request/create.schema';
+import { buildCreateRequestSchema } from '@/features/workspace/requests/create/createRequest.schema';
 
 const MESSAGES = {
   'request.errorTitleRequired': 'title-required',

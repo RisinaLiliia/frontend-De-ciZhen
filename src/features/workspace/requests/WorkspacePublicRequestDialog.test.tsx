@@ -47,7 +47,7 @@ const defaultRequestDetailsPageData = {
 let requestDetailsPageDataValue: unknown = defaultRequestDetailsPageData;
 const requestDetailsPageDataMock = vi.fn(() => requestDetailsPageDataValue);
 
-vi.mock('@/features/requests/details/useRequestDetailsPageData', () => ({
+vi.mock('@/features/workspace/requests/details/useRequestDetailsPageData', () => ({
   useRequestDetailsPageData: () => requestDetailsPageDataMock(),
 }));
 
@@ -85,11 +85,11 @@ const defaultRequestDetailsContentState = {
 let requestDetailsContentStateValue: unknown = defaultRequestDetailsContentState;
 const requestDetailsContentStateMock = vi.fn(() => requestDetailsContentStateValue);
 
-vi.mock('@/features/requests/details/useRequestDetailsContentState', () => ({
+vi.mock('@/features/workspace/requests/details/useRequestDetailsContentState', () => ({
   useRequestDetailsContentState: () => requestDetailsContentStateMock(),
 }));
 
-vi.mock('@/features/requests/details/RequestDetailsContent', () => ({
+vi.mock('@/features/workspace/requests/details/RequestDetailsContent', () => ({
   RequestDetailsContent: ({
     onApply,
     headerActionSlot,

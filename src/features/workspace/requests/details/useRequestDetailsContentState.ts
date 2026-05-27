@@ -6,10 +6,10 @@ import type { ProviderProfileDto } from '@/lib/api/dto/providers';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { useRequestDetailsPresentation } from '@/features/requests/details/useRequestDetailsPresentation';
-import { useRequestDetailsRelated } from '@/features/requests/details/useRequestDetailsRelated';
-import { useRequestDetailsViewModel } from '@/features/requests/details/useRequestDetailsViewModel';
-import { useRequestOwnerEdit } from '@/features/requests/details/useRequestOwnerEdit';
+import { useRequestDetailsPresentation } from '@/features/workspace/requests/details/useRequestDetailsPresentation';
+import { useRequestDetailsRelated } from '@/features/workspace/requests/details/useRequestDetailsRelated';
+import { useRequestDetailsViewModel } from '@/features/workspace/requests/details/useRequestDetailsViewModel';
+import { useRequestOwnerEdit } from '@/features/workspace/requests/details/useRequestOwnerEdit';
 
 type Translate = (key: I18nKey) => string;
 

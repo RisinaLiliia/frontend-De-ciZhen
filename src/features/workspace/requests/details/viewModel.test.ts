@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildRequestDetailsViewModel } from '@/features/requests/details/viewModel';
+import { buildRequestDetailsViewModel } from '@/features/workspace/requests/details/viewModel';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 

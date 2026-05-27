@@ -9,8 +9,8 @@ import { Textarea } from '@/components/ui/Textarea';
 import { IconChevronDown } from '@/components/ui/icons/icons';
 import { IconBriefcase } from '@/components/ui/Icons';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
-import type { CreateRequestValues } from '@/features/request/create.schema';
-import type { RequestPhotoItem } from '@/features/request/useRequestPhotoItems';
+import type { CreateRequestValues } from '@/features/workspace/requests/create/createRequest.schema';
+import type { RequestPhotoItem } from '@/features/workspace/requests/create/useRequestPhotoItems';
 
 type Translate = (key: I18nKey) => string;
 

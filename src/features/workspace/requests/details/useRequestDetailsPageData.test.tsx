@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useRequestDetailsPageData } from '@/features/requests/details/useRequestDetailsPageData';
+import { useRequestDetailsPageData } from '@/features/workspace/requests/details/useRequestDetailsPageData';
 import { getMyRequestById, getPublicRequestById } from '@/lib/api/requests';
 import { useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import { ApiError } from '@/lib/api/http-error';

@@ -44,7 +44,7 @@ import {
   type WorkspaceRequestOverlayListContext,
   useWorkspaceRequestOverlayFlow,
 } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
-import { WorkspaceCreateRequestOverlay } from '@/features/request/CreateRequestPage';
+import { WorkspaceCreateRequestOverlay } from '@/features/workspace/requests/create/WorkspaceCreateRequestOverlay';
 import type {
   WorkspaceRequestsSurfaceModel,
   WorkspaceRequestsViewCard,

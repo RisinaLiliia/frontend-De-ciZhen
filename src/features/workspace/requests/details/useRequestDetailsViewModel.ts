@@ -5,7 +5,7 @@ import type { Locale } from '@/lib/i18n/t';
 import {
   buildRequestDetailsViewModel,
   type RequestDetailsViewModel,
-} from '@/features/requests/details/viewModel';
+} from '@/features/workspace/requests/details/viewModel';
 
 type Translate = (key: I18nKey) => string;
 

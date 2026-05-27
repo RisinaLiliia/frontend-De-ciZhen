@@ -2,12 +2,12 @@ import * as React from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 import { PageShell } from '@/components/layout/PageShell';
 import { AuthActions } from '@/components/layout/AuthActions';
-import { CreateRequestBasicsSection } from '@/features/request/components/CreateRequestBasicsSection';
-import { CreateRequestDetailsSection } from '@/features/request/components/CreateRequestDetailsSection';
-import { CreateRequestActions } from '@/features/request/components/CreateRequestActions';
-import type { CreateRequestValues } from '@/features/request/create.schema';
+import { CreateRequestBasicsSection } from '@/features/workspace/requests/create/components/CreateRequestBasicsSection';
+import { CreateRequestDetailsSection } from '@/features/workspace/requests/create/components/CreateRequestDetailsSection';
+import { CreateRequestActions } from '@/features/workspace/requests/create/components/CreateRequestActions';
+import type { CreateRequestValues } from '@/features/workspace/requests/create/createRequest.schema';
 import type { Option } from '@/components/ui/Select';
-import type { RequestPhotoItem } from '@/features/request/useRequestPhotoItems';
+import type { RequestPhotoItem } from '@/features/workspace/requests/create/useRequestPhotoItems';
 import type { I18nKey } from '@/lib/i18n/keys';
 
 type Translate = (key: I18nKey) => string;

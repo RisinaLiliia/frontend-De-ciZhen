@@ -3,8 +3,8 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, render } from '@testing-library/react';
 
-import { useCreateRequestSubmit } from '@/features/request/page/useCreateRequestSubmit';
-import type { CreateRequestValues } from '@/features/request/create.schema';
+import { useCreateRequestSubmit } from '@/features/workspace/requests/create/page/useCreateRequestSubmit';
+import type { CreateRequestValues } from '@/features/workspace/requests/create/createRequest.schema';
 import { ApiError } from '@/lib/api/http-error';
 import { createRequest, publishMyRequest, uploadRequestPhotos } from '@/lib/api/requests';
 import { toast } from 'sonner';

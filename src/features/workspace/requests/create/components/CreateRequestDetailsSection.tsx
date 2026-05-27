@@ -9,7 +9,7 @@ import { IconChevronDown, IconPin } from '@/components/ui/icons/icons';
 import { IconCoins } from '@/components/ui/Icons';
 import { ProviderAvailabilityMeta } from '@/components/providers/ProviderAvailabilityMeta';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
-import type { CreateRequestValues } from '@/features/request/create.schema';
+import type { CreateRequestValues } from '@/features/workspace/requests/create/createRequest.schema';
 
 type Translate = (key: I18nKey) => string;
 

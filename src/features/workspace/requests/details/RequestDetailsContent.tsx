@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
-import type { RequestDetailsViewModel } from '@/features/requests/details/viewModel';
+import type { RequestDetailsViewModel } from '@/features/workspace/requests/details/viewModel';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';

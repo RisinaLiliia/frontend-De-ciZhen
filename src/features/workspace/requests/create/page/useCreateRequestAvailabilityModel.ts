@@ -6,7 +6,7 @@ import { listProviderSlots } from '@/lib/api/availability';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { createLongDateFormatter, parseDateSafe, toIsoDayLocal } from '@/lib/utils/date';
-import type { CreateRequestValues } from '@/features/request/create.schema';
+import type { CreateRequestValues } from '@/features/workspace/requests/create/createRequest.schema';
 import {
   collectAvailableIsoDays,
   createInclusiveIsoDayRange,
@@ -14,7 +14,7 @@ import {
   resolveProviderSlotsTimezone,
   resolveProviderTargetUserId,
   toPreferredDateValue,
-} from '@/features/request/createRequestDate';
+} from '@/features/workspace/requests/create/createRequestDate';
 
 type Translate = (key: I18nKey) => string;
 

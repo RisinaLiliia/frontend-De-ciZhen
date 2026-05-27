@@ -1,4 +1,4 @@
-import type { CreateRequestValues } from './create.schema';
+import type { CreateRequestValues } from './createRequest.schema';
 
 export const REQUEST_DRAFT_STORAGE_KEY = 'dc_request_create_draft_v1';
 

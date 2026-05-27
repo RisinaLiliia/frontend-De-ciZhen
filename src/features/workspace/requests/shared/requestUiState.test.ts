@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { resolveOfferCardState } from './uiState';
+import { resolveOfferCardState } from './requestUiState';
 
 describe('resolveOfferCardState', () => {
   it('returns none when offer is missing', () => {

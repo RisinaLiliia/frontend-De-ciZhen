@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import type { I18nKey } from '@/lib/i18n/keys';
 import { ApiError } from '@/lib/api/http-error';
 import { createRequest, publishMyRequest, uploadRequestPhotos } from '@/lib/api/requests';
-import type { CreateRequestValues } from '@/features/request/create.schema';
+import type { CreateRequestValues } from '@/features/workspace/requests/create/createRequest.schema';
 import { parseDateSafe, toIsoDayLocal } from '@/lib/utils/date';
 import { buildWorkspaceCreateRequestHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
