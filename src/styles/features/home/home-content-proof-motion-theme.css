@@ -49,7 +49,7 @@
   html:not(.dark) .howitworks-tab.is-active {
     color: var(--c-primary);
     background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
-    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .howitworks-step {

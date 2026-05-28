@@ -30,10 +30,10 @@
     flex-direction: column;
     align-items: center;
     gap: var(--space-2);
-    padding: 8px 6px;
+    padding: var(--space-2) var(--space-1-5);
     border-radius: var(--radius-md);
     background: var(--surface-soft-bg-strong);
-    border: 1px solid var(--c-border);
+    border: 1px solid var(--surface-soft-border);
     text-align: center;
     font-size: var(--fs-12);
     font-weight: 600;
@@ -87,7 +87,7 @@
 
   .home-popular-services__link:hover {
     border-color: color-mix(in oklab, var(--c-accent) 40%, var(--c-border) 60%);
-    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 18%, transparent);
+    box-shadow: var(--shadow-card);
     transform: translateY(-1px);
   }
 
@@ -101,9 +101,9 @@
     align-items: center;
     justify-content: center;
     min-height: 28px;
-    padding: 6px 12px;
+    padding: var(--space-1-5) var(--space-3);
     border-radius: var(--radius-pill);
-    border: 1px solid var(--c-border);
+    border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
     color: var(--c-text-muted);
     font-size: var(--fs-12);
@@ -120,7 +120,7 @@
     color: var(--c-text);
     border-color: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
     background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
-    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-primary) 10%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   .home-popular__cta:focus-visible {
@@ -155,7 +155,7 @@
       color-mix(in oklab, var(--c-primary) 88%, var(--c-ink) 12%)
     );
     color: var(--c-primary-contrast);
-    box-shadow: 0 10px 22px color-mix(in oklab, var(--c-primary) 22%, transparent);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .home-hero__cta--secondary {
@@ -169,13 +169,13 @@
   }
 
   .home-hero__cta--primary:hover {
-    box-shadow: 0 14px 28px color-mix(in oklab, var(--c-primary) 26%, transparent);
+    box-shadow: var(--shadow-floating);
   }
 
   .home-hero__cta--secondary:hover {
     border-color: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
     background: color-mix(in oklab, var(--c-panel) 82%, var(--c-border) 18%);
-    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   .home-hero__cta:focus-visible {
