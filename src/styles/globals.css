@@ -19,7 +19,6 @@
 @import './primitives/controls.css';
 @import './primitives/button.css';
 @import './primitives/badges.css';
-@import './primitives/badge.css';
 
 @layer utilities {
   .dc-glow {

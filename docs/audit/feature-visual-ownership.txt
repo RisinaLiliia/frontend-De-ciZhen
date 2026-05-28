@@ -1,0 +1,1185 @@
+src/styles/features/home/home-intro-hero-shot-visual-hero-experiment.css:8:    background:
+src/styles/features/home/home-intro-hero-shot-visual-hero-experiment.css:31:    border-radius: var(--radius-pill);
+src/styles/features/home/home-intro-hero-shot-visual-hero-experiment.css:33:    background: color-mix(in oklab, var(--c-surface) 88%, transparent);
+src/styles/features/home/home-intro-hero-shot-visual-hero-experiment.css:45:    border-radius: inherit;
+src/styles/features/home/home-intro-hero-shot-visual-hero-experiment.css:89:    border-radius: var(--radius-pill);
+src/styles/features/home/home-intro-hero-shot-visual-hero-experiment.css:90:    background: color-mix(in oklab, var(--c-primary) 82%, var(--c-hero-tint-primary) 18%);
+src/styles/features/home/home-intro-hero-shot-visual-hero-experiment.css:106:    background:
+src/styles/features/home/home-content-nearby-activity-nearby.css:29:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-nearby-activity-nearby.css:30:    background: var(--c-accent);
+src/styles/features/home/home-content-nearby-activity-nearby.css:31:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/home/home-content-nearby-activity-nearby.css:44:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-nearby-activity-nearby.css:46:    background: color-mix(in oklab, var(--c-panel) 80%, transparent);
+src/styles/features/home/home-content-nearby-activity-nearby.css:55:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 18%, transparent);
+src/styles/features/home/home-content-nearby-activity-nearby.css:62:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-nearby-activity-nearby.css:63:    background: color-mix(in oklab, var(--c-border) 70%, transparent);
+src/styles/features/home/home-content-nearby-activity-motion.css:8:      background: color-mix(in oklab, var(--c-border) 70%, transparent);
+src/styles/features/home/home-content-nearby-activity-motion.css:12:      background: color-mix(in oklab, var(--c-primary) 65%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:70:    border-radius: var(--radius-md);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:72:    background: linear-gradient(
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:81:    box-shadow: 0 12px 28px color-mix(in oklab, var(--c-primary) 22%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:94:    box-shadow: 0 16px 34px color-mix(in oklab, var(--c-primary) 26%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-motion-cta.css:99:    box-shadow:
+src/styles/features/home/home-intro-shell-search.css:82:    background: linear-gradient(
+src/styles/features/home/home-intro-shell-search.css:87:    box-shadow:
+src/styles/features/home/home-intro-shell-search.css:120:    border-radius: var(--radius-md);
+src/styles/features/home/home-intro-shell-search.css:121:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-ink) 8%);
+src/styles/features/home/home-intro-shell-search.css:122:    box-shadow: 0 12px 24px color-mix(in oklab, var(--c-ink) 44%, transparent);
+src/styles/features/home/home-intro-shell-search.css:131:    background: transparent;
+src/styles/features/home/home-intro-shell-search.css:140:    background: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
+src/styles/features/home/home-intro-shell-search.css:145:    background: color-mix(in oklab, var(--c-primary) 18%, var(--c-panel) 82%);
+src/styles/features/home/home-content-layout-stats-mobile.css:34:      background: transparent;
+src/styles/features/home/home-content-layout-stats-mobile.css:36:      border-radius: 0;
+src/styles/features/home/home-content-layout-stats-mobile.css:46:      background: var(--c-border);
+src/styles/features/home/home-content-proof-motion-theme.css:41:    background: var(--c-panel);
+src/styles/features/home/home-content-proof-motion-theme.css:42:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
+src/styles/features/home/home-content-proof-motion-theme.css:51:    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+src/styles/features/home/home-content-proof-motion-theme.css:52:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-content-proof-motion-theme.css:57:    background: linear-gradient(180deg, var(--c-panel) 0%, color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%);
+src/styles/features/home/home-content-proof-motion-theme.css:58:    box-shadow: var(--shadow-card);
+src/styles/features/home/home-content-proof-motion-theme.css:62:    background: linear-gradient(
+src/styles/features/home/home-content-proof-motion-theme.css:72:    background: linear-gradient(
+src/styles/features/home/home-content-providers-profile-rating.css:336:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-providers-profile-rating.css:338:    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+src/styles/features/home/home-content-providers-profile-identity-decision-metrics.css:27:    border-radius: 0;
+src/styles/features/home/home-content-providers-profile-identity-decision-metrics.css:29:    background: transparent;
+src/styles/features/home/home-content-providers-profile-identity-decision-metrics.css:43:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-providers-profile-identity-decision-metrics.css:55:    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 34%, transparent);
+src/styles/features/home/home-content-proof-proof.css:28:    border-radius: var(--radius-md);
+src/styles/features/home/home-content-proof-proof.css:30:    background: var(--surface-soft-bg);
+src/styles/features/home/home-content-proof-proof.css:45:    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-primary) 15%, transparent);
+src/styles/features/home/home-content-proof-proof.css:55:    background: linear-gradient(180deg, var(--c-panel) 0%, color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%);
+src/styles/features/home/home-content-proof-proof.css:56:    box-shadow: var(--shadow-card);
+src/styles/features/home/home-content-proof-proof.css:61:    box-shadow: var(--shadow-card);
+src/styles/features/home/home-content-proof-proof.css:84:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-proof-proof.css:86:    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+src/styles/features/home/home-content-proof-proof.css:100:    background:
+src/styles/features/home/home-content-proof-proof.css:108:    background:
+src/styles/features/home/home-content-providers-profile-identity-identity-meta.css:31:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-providers-profile-identity-identity-meta.css:35:    background: color-mix(in oklab, var(--c-primary) 16%, var(--c-panel) 84%);
+src/styles/features/home/home-content-providers-profile-identity-identity-meta.css:46:    background: color-mix(in oklab, var(--c-success) 16%, var(--c-panel) 84%);
+src/styles/features/home/home-content-proof-howitworks.css:14:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-proof-howitworks.css:16:    background: color-mix(in oklab, var(--c-panel) 80%, transparent);
+src/styles/features/home/home-content-proof-howitworks.css:21:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-proof-howitworks.css:33:    box-shadow: var(--shadow-focus);
+src/styles/features/home/home-content-proof-howitworks.css:38:    background: var(--btn-secondary-bg);
+src/styles/features/home/home-content-proof-howitworks.css:39:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
+src/styles/features/home/home-content-proof-howitworks.css:59:    border-radius: var(--radius-md);
+src/styles/features/home/home-content-proof-howitworks.css:61:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+src/styles/features/home/home-content-proof-howitworks.css:62:    box-shadow: 0 12px 26px color-mix(in oklab, var(--c-panel) 60%, transparent);
+src/styles/features/home/home-content-proof-howitworks.css:72:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-proof-howitworks.css:78:    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+src/styles/features/home/home-content-proof-howitworks.css:101:    background: linear-gradient(
+src/styles/features/home/home-content-proof-howitworks.css:118:    background: linear-gradient(
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:34:    border-radius: var(--radius-md);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:45:    box-shadow: var(--shadow-focus);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:80:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:81:    background: color-mix(in oklab, var(--c-panel) 86%, transparent);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:89:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:93:    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-info-soft) 10%);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:104:    background: color-mix(in oklab, var(--c-primary) 74%, var(--c-panel) 26%);
+src/styles/features/home/home-content-nearby-activity-activity-list-ranges.css:105:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
+src/styles/features/home/home-intro-shell-layout.css:16:    background:
+src/styles/features/home/home-intro-shell-layout.css:26:    background:
+src/styles/features/home/home-intro-shell-layout.css:33:    box-shadow:
+src/styles/features/home/home-intro-shell-layout.css:44:    background:
+src/styles/features/home/home-intro-shell-layout.css:68:    border-radius: 0 0 calc(var(--radius-lg) + 2px) calc(var(--radius-lg) + 2px);
+src/styles/features/home/home-intro-shell-layout.css:69:    background: var(--color-background);
+src/styles/features/home/home-intro-shell-layout.css:71:    box-shadow: none;
+src/styles/features/home/home-intro-shell-layout.css:76:    background: none;
+src/styles/features/home/home-intro-shell-layout.css:81:    border-radius: 0 !important;
+src/styles/features/home/home-intro-shell-layout.css:82:    box-shadow: none !important;
+src/styles/features/home/home-intro-shell-layout.css:83:    background: transparent !important;
+src/styles/features/home/home-intro-shell-layout.css:94:    box-shadow: none;
+src/styles/features/home/home-intro-shell-layout.css:96:    background: linear-gradient(
+src/styles/features/home/home-intro-shell-layout.css:105:    background: linear-gradient(
+src/styles/features/home/home-intro-shell-layout.css:110:    box-shadow:
+src/styles/features/home/home-intro-shell-layout.css:117:    box-shadow:
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:6:    border-radius: var(--radius-md);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:8:    background:
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:107:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:109:    background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:117:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:118:    background: currentColor;
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:126:    background: color-mix(in oklab, var(--c-primary) 80%, var(--c-hero-tint-primary) 20%);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:134:    background: color-mix(in oklab, var(--c-accent) 86%, var(--c-hero-tint-accent) 14%);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:139:    background: color-mix(in oklab, var(--c-success) 10%, var(--c-panel) 90%);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:147:    background: color-mix(in oklab, var(--c-success) 84%, var(--c-text) 16%);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:152:    background: color-mix(in oklab, var(--c-warning) 10%, var(--c-panel) 90%);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:160:    background: color-mix(in oklab, var(--c-warning) 82%, var(--c-text) 18%);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:185:    border-radius: var(--radius-sm);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:187:    background: color-mix(in oklab, var(--c-panel) 90%, transparent);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:191:    background: var(--c-panel);
+src/styles/features/home/home-content-nearby-activity-activity-chart-state.css:197:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-content-providers-badges-responsive-responsive.css:60:      box-shadow: var(--shadow-card-hover);
+src/styles/features/home/home-intro-shell-theme-light.css:7:    background:
+src/styles/features/home/home-intro-shell-theme-light.css:16:    box-shadow:
+src/styles/features/home/home-intro-shell-theme-light.css:22:    background:
+src/styles/features/home/home-intro-shell-theme-light.css:33:    background: var(--color-background);
+src/styles/features/home/home-intro-shell-theme-light.css:35:    box-shadow: none;
+src/styles/features/home/home-intro-shell-theme-light.css:40:    background: none;
+src/styles/features/home/home-intro-shell-theme-light.css:45:    border-radius: 0 !important;
+src/styles/features/home/home-intro-shell-theme-light.css:46:    background: transparent !important;
+src/styles/features/home/home-intro-shell-theme-light.css:48:    box-shadow: none !important;
+src/styles/features/home/home-intro-shell-theme-light.css:55:    background: linear-gradient(
+src/styles/features/home/home-intro-shell-theme-light.css:60:    box-shadow:
+src/styles/features/home/home-intro-shell-theme-light.css:84:    background: var(--c-panel);
+src/styles/features/home/home-intro-shell-theme-light.css:91:    background: linear-gradient(
+src/styles/features/home/home-intro-shell-theme-light.css:96:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+src/styles/features/home/home-intro-shell-theme-light.css:100:    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-surface) 10%);
+src/styles/features/home/home-intro-shell-theme-light.css:124:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-accent) 8%);
+src/styles/features/home/home-intro-shell-theme-light.css:129:    background:
+src/styles/features/home/home-intro-shell-theme-light.css:136:    box-shadow:
+src/styles/features/home/home-intro-shell-theme-light.css:152:    background:
+src/styles/features/home/home-intro-shell-theme-light.css:163:    background: color-mix(in oklab, var(--c-panel) 68%, var(--c-accent) 32%);
+src/styles/features/home/home-intro-shell-theme-light.css:165:    box-shadow:
+src/styles/features/home/home-actions-catalog-cta.css:34:    border-radius: var(--radius-md);
+src/styles/features/home/home-actions-catalog-cta.css:35:    background: var(--surface-soft-bg-strong);
+src/styles/features/home/home-actions-catalog-cta.css:48:    border-radius: 0;
+src/styles/features/home/home-actions-catalog-cta.css:49:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+src/styles/features/home/home-actions-catalog-cta.css:57:    border-radius: 0;
+src/styles/features/home/home-actions-catalog-cta.css:90:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 18%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:96:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:105:    border-radius: var(--radius-pill);
+src/styles/features/home/home-actions-catalog-cta.css:107:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+src/styles/features/home/home-actions-catalog-cta.css:122:    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
+src/styles/features/home/home-actions-catalog-cta.css:123:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:128:    box-shadow: var(--shadow-focus);
+src/styles/features/home/home-actions-catalog-cta.css:138:    border-radius: var(--radius-md);
+src/styles/features/home/home-actions-catalog-cta.css:152:    background: linear-gradient(
+src/styles/features/home/home-actions-catalog-cta.css:158:    box-shadow: 0 10px 22px color-mix(in oklab, var(--c-primary) 22%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:163:    background: var(--surface-soft-bg);
+src/styles/features/home/home-actions-catalog-cta.css:172:    box-shadow: 0 14px 28px color-mix(in oklab, var(--c-primary) 26%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:177:    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-border) 18%);
+src/styles/features/home/home-actions-catalog-cta.css:178:    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/home/home-actions-catalog-cta.css:183:    box-shadow: var(--shadow-focus);
+src/styles/features/home/home-content-layout-stats-core.css:46:    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-primary) 18%);
+src/styles/features/home/home-content-layout-stats-core.css:51:  box-shadow: var(--shadow-focus);
+src/styles/features/home/home-content-layout-stats-core.css:74:    border-radius: var(--radius-sm);
+src/styles/features/home/home-content-layout-stats-core.css:75:    background: transparent;
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:43:    background:
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:47:    box-shadow:
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:53:    background:
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:64:    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:66:    box-shadow: 0 10px 22px color-mix(in oklab, var(--c-primary) 11%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:70:    background: color-mix(in oklab, var(--c-primary) 15%, var(--c-panel) 85%);
+src/styles/features/home/home-content-layout-trust-panel-compact-light.css:71:    box-shadow: var(--shadow-card-hover);
+src/styles/features/home/home-content-providers-shell.css:32:    border-radius: inherit;
+src/styles/features/home/home-content-providers-shell.css:49:    border-radius: inherit;
+src/styles/features/home/home-content-providers-shell.css:55:    box-shadow:
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:22:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:26:    background: color-mix(in oklab, var(--c-primary) 25%, var(--c-panel) 75%);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:34:    background:
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:42:    background:
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:61:    border-radius: var(--radius-pill);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:63:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:69:    background: var(--c-online);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:70:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:74:    background: var(--c-offline);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:75:    box-shadow: none;
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:84:    background: color-mix(in oklab, var(--c-panel) 85%, var(--c-border) 15%);
+src/styles/features/home/home-content-providers-profile-identity-avatar-status.css:88:    border-radius: var(--radius-sm);
+src/styles/features/home/home-content-layout-stats-desktop.css:18:      background: transparent;
+src/styles/features/home/home-content-layout-stats-desktop.css:20:      border-radius: 0;
+src/styles/features/home/home-content-layout-stats-desktop.css:30:      background: var(--c-border);
+src/styles/features/home/home-content-providers-effects.css:13:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+src/styles/features/home/home-content-providers-effects.css:16:      box-shadow: 0 0 0 8px color-mix(in oklab, var(--c-online) 0%, transparent);
+src/styles/features/home/home-content-providers-effects.css:19:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 0%, transparent);
+src/styles/features/home/home-content-layout-trust-panel-shell.css:15:    background:
+src/styles/features/home/home-content-layout-trust-panel-shell.css:23:    box-shadow:
+src/styles/features/home/home-content-layout-trust-panel-shell.css:32:    background:
+src/styles/features/workspace/workspace-profile.css:35:    background: var(--surface-card-bg);
+src/styles/features/workspace/workspace-profile.css:81:    border-radius: 0;
+src/styles/features/workspace/workspace-profile.css:82:    background: transparent;
+src/styles/features/workspace/workspace-profile.css:93:    border-radius: 0;
+src/styles/features/workspace/workspace-profile.css:94:    background: transparent;
+src/styles/features/workspace/workspace-profile.css:124:    box-shadow: none;
+src/styles/features/workspace/workspace-profile.css:129:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/workspace/workspace-profile.css:140:    box-shadow: none;
+src/styles/features/workspace/workspace-profile.css:155:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-profile.css:157:    background: var(--surface-card-bg);
+src/styles/features/workspace/workspace-profile.css:159:    box-shadow: none;
+src/styles/features/workspace/workspace-profile.css:175:    border-radius: inherit;
+src/styles/features/workspace/workspace-profile.css:181:    background: color-mix(in oklab, var(--c-ink) 44%, transparent);
+src/styles/features/workspace/workspace-profile.css:219:    background: transparent;
+src/styles/features/workspace/workspace-context.css:16:    border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-context.css:18:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-context.css:36:    border-radius: var(--radius-lg);
+src/styles/features/workspace/workspace-context.css:38:    background: var(--color-surface);
+src/styles/features/workspace/workspace-context.css:39:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-context.css:57:    border-radius: var(--radius-lg);
+src/styles/features/workspace/workspace-context.css:59:    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-surface-muted) 8%);
+src/styles/features/workspace/workspace-context.css:60:    box-shadow: none;
+src/styles/features/workspace/workspace-context.css:90:      border-radius: var(--radius-lg);
+src/styles/features/workspace/workspace-sidebar.css:8:    background: var(--color-surface);
+src/styles/features/workspace/workspace-sidebar.css:21:    background: transparent;
+src/styles/features/workspace/workspace-sidebar.css:49:    border-radius: var(--radius-lg);
+src/styles/features/workspace/workspace-sidebar.css:58:    background: transparent;
+src/styles/features/workspace/workspace-sidebar.css:67:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-sidebar.css:75:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-sidebar.css:76:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-sidebar.css:80:    background: var(--color-primary-soft);
+src/styles/features/workspace/workspace-sidebar.css:90:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-sidebar.css:92:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-sidebar.css:131:    background: var(--color-surface);
+src/styles/features/workspace/workspace-sidebar.css:142:    background: var(--color-primary);
+src/styles/features/workspace/workspace-sidebar.css:147:    background: var(--color-primary-hover);
+src/styles/features/workspace/workspace-sidebar.css:155:    border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-sidebar.css:167:    background: var(--color-primary);
+src/styles/features/workspace/workspace-sidebar.css:172:    background: var(--color-primary-hover);
+src/styles/features/workspace/workspace-sidebar.css:176:    background: var(--color-surface);
+src/styles/features/workspace/workspace-sidebar.css:181:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-sidebar.css:195:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-sidebar.css:197:    background: var(--color-primary-soft);
+src/styles/features/workspace/workspace-overview.css:73:    border-radius: var(--workspace-overview-panel-radius, var(--radius-lg));
+src/styles/features/workspace/workspace-overview.css:133:    border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-overview.css:134:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-overview.css:141:    background: color-mix(in oklab, var(--c-text-muted) 76%, transparent);
+src/styles/features/workspace/workspace-overview.css:156:    border-radius: var(--workspace-overview-panel-radius);
+src/styles/features/workspace/workspace-overview.css:157:    background: color-mix(in oklab, var(--c-panel) 96%, var(--surface-soft-bg) 4%);
+src/styles/features/workspace/workspace-overview.css:158:    box-shadow: none;
+src/styles/features/workspace/workspace-overview.css:208:    border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-overview.css:223:    border-radius: calc(var(--workspace-overview-panel-radius) - 4px);
+src/styles/features/workspace/workspace-overview.css:224:    background: color-mix(in oklab, var(--color-surface-muted) 78%, var(--color-background));
+src/styles/features/workspace/workspace-overview.css:225:    box-shadow: none;
+src/styles/features/workspace/workspace-overview.css:239:    border-radius: var(--workspace-ai-card-radius-md);
+src/styles/features/workspace/workspace-overview.css:240:    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+src/styles/features/workspace/workspace-overview.css:251:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/workspace/workspace-overview.css:253:    background: var(--surface-soft-bg);
+src/styles/features/workspace/workspace-overview.css:267:    border-radius: var(--workspace-ai-card-radius-md);
+src/styles/features/workspace/workspace-overview.css:270:    background:
+src/styles/features/workspace/workspace-overview.css:285:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/workspace/workspace-overview.css:287:    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
+src/styles/features/workspace/workspace-overview.css:527:    border-radius: var(--workspace-overview-panel-radius, var(--radius-lg));
+src/styles/features/workspace/workspace-overview.css:592:    border-radius: var(--workspace-insight-card-radius);
+src/styles/features/workspace/workspace-overview.css:597:    background:
+src/styles/features/workspace/workspace-overview.css:603:    box-shadow: none;
+src/styles/features/workspace/workspace-overview.css:609:    background:
+src/styles/features/workspace/workspace-overview.css:676:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/workspace/workspace-overview.css:678:    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+src/styles/features/workspace/workspace-overview.css:739:    background: transparent;
+src/styles/features/workspace/workspace-overview.css:753:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/workspace/workspace-overview.css:755:    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+src/styles/features/workspace/workspace-overview.css:762:    border-radius: inherit;
+src/styles/features/workspace/workspace-overview.css:763:    background: linear-gradient(
+src/styles/features/workspace/workspace-overview.css:830:      border-radius: var(--radius-sm);
+src/styles/features/workspace/workspace-overview.css:1125:      border-radius: var(--radius-lg);
+src/styles/features/workspace/workspace-overview.css:1153:      border-radius: var(--radius-lg);
+src/styles/features/workspace/workspace-overlay.css:34:    background: transparent;
+src/styles/features/workspace/workspace-overlay.css:35:    box-shadow: none;
+src/styles/features/workspace/workspace-overlay.css:53:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-overlay.css:55:    background: color-mix(in oklab, var(--color-surface) 88%, var(--color-surface-muted) 12%);
+src/styles/features/workspace/workspace-overlay.css:56:    box-shadow: none;
+src/styles/features/workspace/workspace-overlay.css:76:    background: transparent;
+src/styles/features/workspace/workspace-overlay.css:89:    background: var(--color-surface);
+src/styles/features/workspace/workspace-overlay.css:94:    background: var(--color-surface);
+src/styles/features/workspace/workspace-overlay.css:95:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-overlay.css:109:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-overlay.css:111:    background: var(--color-surface);
+src/styles/features/workspace/workspace-overlay.css:130:    background: var(--color-primary);
+src/styles/features/workspace/workspace-overlay.css:151:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-overlay.css:156:    background: var(--color-primary-hover);
+src/styles/features/workspace/workspace-overlay.css:163:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-overlay.css:167:    background: var(--color-primary);
+src/styles/features/workspace/workspace-overlay.css:184:    background: var(--color-surface);
+src/styles/features/workspace/workspace-overlay.css:202:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-overlay.css:204:    background: var(--color-primary);
+src/styles/features/workspace/workspace-overlay.css:209:    box-shadow: none;
+src/styles/features/workspace/workspace-overlay.css:224:    background: transparent;
+src/styles/features/workspace/workspace-overlay.css:237:    background: var(--color-primary-hover);
+src/styles/features/workspace/workspace-overlay.css:239:    box-shadow: none;
+src/styles/features/workspace/workspace-overlay.css:308:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-overlay.css:310:    background: var(--color-surface);
+src/styles/features/workspace/workspace-overlay.css:311:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-overlay.css:393:    border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-overlay.css:394:    background: transparent;
+src/styles/features/workspace/workspace-overlay.css:407:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-overlay.css:417:    background: color-mix(in oklab, var(--color-danger) 8%, var(--color-surface) 92%);
+src/styles/features/workspace/workspace-overlay.css:423:    background: var(--color-border-soft);
+src/styles/features/workspace/workspace-overlay.css:432:    background: var(--color-surface);
+src/styles/features/workspace/workspace-overlay.css:443:    background: var(--color-primary);
+src/styles/features/workspace/workspace-overlay.css:448:    background: var(--color-primary-hover);
+src/styles/features/workspace/workspace-overlay.css:456:    border-radius: var(--radius-lg);
+src/styles/features/workspace/workspace-overlay.css:458:    background: var(--color-surface);
+src/styles/features/workspace/workspace-overlay.css:459:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-overlay.css:479:    border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-overlay.css:481:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-navigation.css:19:    border-radius: var(--radius-lg);
+src/styles/features/workspace/workspace-navigation.css:21:    background: var(--color-surface);
+src/styles/features/workspace/workspace-navigation.css:24:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-navigation.css:32:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-navigation.css:40:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-navigation.css:44:    background: var(--color-primary-soft);
+src/styles/features/workspace/workspace-navigation.css:47:    box-shadow: none;
+src/styles/features/workspace/workspace-navigation.css:53:    border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-navigation.css:58:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-navigation.css:63:    background: var(--color-surface);
+src/styles/features/workspace/workspace-navigation.css:100:    background: color-mix(in oklab, var(--color-ink) 18%, transparent);
+src/styles/features/workspace/workspace-navigation.css:114:    background: color-mix(in oklab, var(--color-surface) 94%, var(--color-surface-muted) 6%);
+src/styles/features/workspace/workspace-navigation.css:115:    box-shadow: 0 24px 48px color-mix(in oklab, var(--color-ink) 16%, transparent);
+src/styles/features/workspace/workspace-navigation.css:142:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-navigation.css:144:    background: var(--color-surface);
+src/styles/features/workspace/workspace-navigation.css:173:      border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-navigation.css:179:      border-radius: var(--radius-sm);
+src/styles/features/workspace/workspace-controls.css:29:    border-radius: var(--radius-xl);
+src/styles/features/workspace/workspace-controls.css:31:    background: var(--color-surface);
+src/styles/features/workspace/workspace-controls.css:32:    box-shadow: var(--shadow-card);
+src/styles/features/workspace/workspace-controls.css:40:    border-radius: 0;
+src/styles/features/workspace/workspace-controls.css:41:    background: transparent;
+src/styles/features/workspace/workspace-controls.css:42:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:48:    background: transparent;
+src/styles/features/workspace/workspace-controls.css:49:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:57:    border-radius: 0;
+src/styles/features/workspace/workspace-controls.css:58:    background: transparent;
+src/styles/features/workspace/workspace-controls.css:59:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:120:    background: transparent;
+src/styles/features/workspace/workspace-controls.css:184:    border-radius: 10px 10px 0 0;
+src/styles/features/workspace/workspace-controls.css:199:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-controls.css:207:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:213:    background: var(--color-primary-soft);
+src/styles/features/workspace/workspace-controls.css:223:    border-radius: 0;
+src/styles/features/workspace/workspace-controls.css:224:    background: transparent;
+src/styles/features/workspace/workspace-controls.css:225:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:237:    border-radius: 0;
+src/styles/features/workspace/workspace-controls.css:238:    background: transparent;
+src/styles/features/workspace/workspace-controls.css:254:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:259:    background: transparent;
+src/styles/features/workspace/workspace-controls.css:261:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:316:    border-radius: 10px 10px 0 0;
+src/styles/features/workspace/workspace-controls.css:317:    background: transparent;
+src/styles/features/workspace/workspace-controls.css:332:    background: var(--color-surface-muted);
+src/styles/features/workspace/workspace-controls.css:340:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:347:    background: var(--color-primary-soft);
+src/styles/features/workspace/workspace-controls.css:407:    border-radius: 0;
+src/styles/features/workspace/workspace-controls.css:408:    background: transparent;
+src/styles/features/workspace/workspace-controls.css:409:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:421:    border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-controls.css:422:    background: var(--workspace-context-control-bg);
+src/styles/features/workspace/workspace-controls.css:424:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:444:    background: var(--workspace-context-control-bg-hover);
+src/styles/features/workspace/workspace-controls.css:454:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:465:    background: var(--color-primary-soft);
+src/styles/features/workspace/workspace-controls.css:467:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:511:    border-radius: var(--workspace-context-control-radius);
+src/styles/features/workspace/workspace-controls.css:513:    background: var(--workspace-context-control-bg);
+src/styles/features/workspace/workspace-controls.css:515:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:526:    background: var(--workspace-context-control-bg-hover);
+src/styles/features/workspace/workspace-controls.css:533:    background: var(--workspace-context-control-bg-hover);
+src/styles/features/workspace/workspace-controls.css:534:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:576:    border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-controls.css:577:    background: var(--workspace-context-control-bg);
+src/styles/features/workspace/workspace-controls.css:578:    box-shadow: none;
+src/styles/features/workspace/workspace-controls.css:583:    background: var(--workspace-context-control-bg-hover);
+src/styles/features/workspace/workspace-controls.css:589:    box-shadow: var(--control-focus-ring);
+src/styles/features/workspace/workspace-controls.css:654:      border-radius: 0;
+src/styles/features/workspace/workspace-mobile-context.css:21:      border-radius: 0;
+src/styles/features/workspace/workspace-mobile-context.css:22:      background: transparent;
+src/styles/features/workspace/workspace-mobile-context.css:23:      box-shadow: none;
+src/styles/features/workspace/workspace-mobile-context.css:41:      border-radius: 0;
+src/styles/features/workspace/workspace-mobile-context.css:42:      background: transparent;
+src/styles/features/workspace/workspace-mobile-context.css:43:      box-shadow: none;
+src/styles/features/workspace/workspace-mobile-context.css:63:      border-radius: 0;
+src/styles/features/workspace/workspace-mobile-context.css:64:      background: transparent;
+src/styles/features/workspace/workspace-mobile-context.css:66:      box-shadow: none;
+src/styles/features/workspace/workspace-mobile-context.css:78:      background: transparent;
+src/styles/features/workspace/workspace-mobile-context.css:111:      border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-mobile-context.css:113:      background: var(--color-surface);
+src/styles/features/workspace/workspace-mobile-context.css:114:      box-shadow: none;
+src/styles/features/workspace/workspace-mobile-context.css:133:      background: color-mix(in oklab, var(--color-surface) 90%, var(--color-surface-muted) 10%);
+src/styles/features/workspace/workspace-mobile-context.css:150:      border-radius: var(--radius-lg);
+src/styles/features/workspace/workspace-mobile-context.css:151:      background: var(--color-surface);
+src/styles/features/workspace/workspace-mobile-context.css:152:      box-shadow: 0 16px 34px rgb(15 23 42 / 0.08);
+src/styles/features/workspace/workspace-mobile-context.css:231:      border-radius: var(--radius-md);
+src/styles/features/workspace/workspace-mobile-context.css:235:      box-shadow: none;
+src/styles/features/workspace/workspace-mobile-context.css:245:      background: var(--color-surface);
+src/styles/features/workspace/workspace-mobile-context.css:251:      background: var(--color-surface);
+src/styles/features/workspace/workspace-mobile-context.css:260:      background: color-mix(in oklab, var(--color-surface) 90%, var(--color-surface-muted) 10%);
+src/styles/features/workspace/workspace-layout.css:10:    background: var(--color-background);
+src/styles/features/workspace/workspace-layout.css:21:    background: var(--color-surface);
+src/styles/features/workspace/workspace-layout.css:31:    background: var(--color-background);
+src/styles/features/workspace/workspace-layout.css:39:    background: var(--color-background);
+src/styles/features/workspace/workspace-layout.css:68:    border-radius: var(--radius-pill);
+src/styles/features/workspace/workspace-layout.css:70:    background: var(--color-surface);
+src/styles/features/workspace/workspace-layout.css:184:    background: var(--color-background);
+src/styles/features/workspace/workspace-layout.css:189:    background: var(--color-surface);
+src/styles/features/workspace/workspace-layout.css:209:    background: var(--color-background);
+src/styles/features/workspace/workspace-layout.css:211:    box-shadow: none;
+src/styles/features/workspace/workspace-layout.css:221:    background: var(--color-background);
+src/styles/features/workspace/workspace-layout.css:223:    box-shadow: none;
+src/styles/features/workspace/workspace-layout.css:229:    background: none;
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:9:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:11:    background: var(--surface-soft-bg);
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:27:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:29:    background: var(--color-surface);
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:30:    box-shadow: var(--shadow-card);
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:37:    background: transparent;
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:38:    box-shadow: none;
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:134:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:135:    background: var(--color-surface);
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:145:    background: var(--color-surface-muted);
+src/styles/features/requests/requests-shell-filters-core-layout-select.css:149:    box-shadow: var(--control-focus-ring);
+src/styles/features/requests/requests-shell-results-list-status.css:57:    background: transparent;
+src/styles/features/requests/requests-shell-results-list-status.css:58:    box-shadow: none;
+src/styles/features/requests/requests-shell-results-list-status.css:65:    background: transparent;
+src/styles/features/requests/requests-shell-results-list-status.css:66:    box-shadow: none;
+src/styles/features/requests/requests-shell-results-list-status.css:81:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-results-list-status.css:87:    box-shadow: var(--shadow-focus);
+src/styles/features/requests/requests-detail-core-layout.css:128:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-detail-core-layout.css:130:    background: color-mix(in oklab, var(--c-surface) 85%, transparent);
+src/styles/features/requests/requests-detail-core-layout.css:239:    border-radius: 0;
+src/styles/features/requests/requests-detail-core-layout.css:240:    background: transparent;
+src/styles/features/requests/requests-detail-core-layout.css:241:    box-shadow: none;
+src/styles/features/requests/requests-detail-core-layout.css:289:    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+src/styles/features/requests/requests-detail-core-layout.css:302:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-detail-core-layout.css:304:    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+src/styles/features/requests/requests-detail-core-layout.css:389:      border-radius: var(--radius-lg);
+src/styles/features/requests/requests-detail-availability-cta-similar.css:32:    background: color-mix(in oklab, var(--c-primary) 78%, var(--c-ink) 22%);
+src/styles/features/requests/requests-detail-availability-cta-similar.css:38:    background: color-mix(in oklab, var(--c-accent) 22%, var(--c-panel) 78%);
+src/styles/features/requests/requests-detail-availability-cta-similar.css:41:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 20%, transparent);
+src/styles/features/requests/requests-detail-availability-cta-similar.css:46:    background: color-mix(in oklab, var(--c-accent) 30%, var(--c-panel) 70%);
+src/styles/features/requests/requests-detail-availability-cta-similar.css:47:    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-accent) 28%, transparent);
+src/styles/features/requests/requests-detail-mobile-provider-mobile-layout.css:55:      border-radius: var(--radius-lg);
+src/styles/features/requests/requests-detail-mobile-provider-mobile-layout.css:57:      background: color-mix(in oklab, var(--c-panel) 96%, var(--c-border) 4%);
+src/styles/features/requests/requests-detail-mobile-provider-mobile-layout.css:58:      box-shadow:
+src/styles/features/requests/requests-detail-mobile-provider-mobile-layout.css:83:      border-radius: 0;
+src/styles/features/requests/requests-detail-mobile-provider-mobile-layout.css:84:      background: transparent;
+src/styles/features/requests/requests-detail-mobile-provider-mobile-layout.css:85:      box-shadow: none;
+src/styles/features/requests/requests-detail-mobile-provider-mobile-layout.css:111:      border-radius: var(--radius-md);
+src/styles/features/requests/requests-detail-mobile-provider-mobile-provider-profile.css:65:      border-radius: var(--radius-md);
+src/styles/features/requests/requests-detail-reviews-hub.css:17:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-detail-reviews-hub.css:66:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-detail-reviews-hub.css:67:    background: color-mix(in oklab, var(--c-border) 58%, transparent);
+src/styles/features/requests/requests-detail-reviews-hub.css:74:    border-radius: inherit;
+src/styles/features/requests/requests-detail-reviews-hub.css:75:    background: linear-gradient(
+src/styles/features/requests/requests-detail-reviews-hub.css:108:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-detail-reviews-hub.css:109:    background: var(--surface-soft-bg-strong);
+src/styles/features/requests/requests-detail-reviews-hub.css:118:    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+src/styles/features/requests/requests-detail-reviews-hub.css:132:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-detail-reviews-hub.css:178:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-detail-reviews-hub.css:308:    background: color-mix(in oklab, var(--c-accent) 14%, transparent);
+src/styles/features/requests/requests-detail-reviews-hub.css:382:    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg-strong) 92%);
+src/styles/features/requests/requests-summary-grid.css:30:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-summary-grid.css:31:    background: var(--color-surface);
+src/styles/features/requests/requests-summary-grid.css:32:    box-shadow: var(--shadow-card);
+src/styles/features/requests/requests-summary-grid.css:44:    box-shadow: var(--shadow-card-hover);
+src/styles/features/requests/requests-summary-grid.css:49:    background: var(--color-primary-soft);
+src/styles/features/requests/requests-summary-grid.css:50:    box-shadow: var(--shadow-card-hover);
+src/styles/features/requests/requests-summary-grid.css:56:    box-shadow:
+src/styles/features/requests/requests-summary-grid.css:88:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-summary-grid.css:89:    background: var(--color-border);
+src/styles/features/requests/requests-summary-grid.css:104:    background: var(--color-border);
+src/styles/features/requests/requests-summary-grid.css:109:    background: color-mix(in oklab, var(--c-warning) 6%, var(--color-surface) 94%);
+src/styles/features/requests/requests-summary-grid.css:113:    background: var(--c-warning);
+src/styles/features/requests/requests-summary-grid.css:118:    background: color-mix(in oklab, var(--c-primary) 6%, var(--color-surface) 94%);
+src/styles/features/requests/requests-summary-grid.css:122:    background: var(--c-primary);
+src/styles/features/requests/requests-summary-grid.css:127:    background: color-mix(in oklab, var(--c-success) 6%, var(--color-surface) 94%);
+src/styles/features/requests/requests-summary-grid.css:131:    background: var(--c-success);
+src/styles/features/requests/requests-shell-results-controls-nav.css:11:    background: transparent;
+src/styles/features/requests/requests-shell-results-controls-nav.css:48:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-nav-provider-summary.css:26:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-detail-availability-calendar.css:68:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-detail-availability-calendar.css:69:    background: currentColor;
+src/styles/features/requests/requests-detail-availability-calendar.css:100:    border-radius: var(--radius-sm);
+src/styles/features/requests/requests-detail-availability-calendar.css:152:    background: color-mix(in oklab, var(--c-success) 22%, transparent);
+src/styles/features/requests/requests-detail-availability-calendar.css:157:    background: color-mix(in oklab, var(--c-danger) 18%, transparent);
+src/styles/features/requests/requests-detail-availability-calendar.css:163:    background: color-mix(in oklab, var(--c-success) 78%, var(--c-panel) 22%) !important;
+src/styles/features/requests/requests-detail-availability-calendar.css:202:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-detail-availability-calendar.css:207:    background: color-mix(in oklab, var(--c-success) 62%, var(--c-panel) 38%);
+src/styles/features/requests/requests-detail-availability-calendar.css:211:    background: color-mix(in oklab, var(--c-danger) 56%, var(--c-panel) 44%);
+src/styles/features/requests/requests-detail-availability-calendar.css:215:    background: color-mix(in oklab, var(--c-border) 70%, transparent);
+src/styles/features/requests/requests-my-work-card.css:96:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-my-work-card.css:98:    background: color-mix(in oklab, var(--surface-base) 92%, white 8%);
+src/styles/features/requests/requests-my-work-card.css:107:    background: color-mix(in oklab, var(--c-accent) 14%, white 86%);
+src/styles/features/requests/requests-my-work-card.css:113:    background: color-mix(in oklab, var(--c-danger, #d96b5f) 12%, white 88%);
+src/styles/features/requests/requests-my-work-card.css:119:    background: color-mix(in oklab, var(--c-accent) 12%, white 88%);
+src/styles/features/requests/requests-my-work-card.css:125:    background: color-mix(in oklab, var(--surface-base) 92%, white 8%);
+src/styles/features/requests/requests-my-work-card.css:176:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-my-work-card.css:178:    background: var(--color-surface-muted);
+src/styles/features/requests/requests-my-work-card.css:183:    background: color-mix(in oklab, var(--c-primary) 8%, white 92%);
+src/styles/features/requests/requests-my-work-card.css:188:    background: color-mix(in oklab, var(--c-accent) 9%, white 91%);
+src/styles/features/requests/requests-my-work-card.css:193:    background: color-mix(in oklab, var(--c-success) 8%, white 92%);
+src/styles/features/requests/requests-my-work-card.css:235:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-my-work-card.css:236:    background: color-mix(in oklab, var(--c-primary) 12%, white 88%);
+src/styles/features/requests/requests-my-work-card.css:241:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 70%, transparent);
+src/styles/features/requests/requests-my-work-card.css:245:    background: color-mix(in oklab, var(--c-accent) 14%, white 86%);
+src/styles/features/requests/requests-my-work-card.css:250:    background: color-mix(in oklab, var(--c-success) 14%, white 86%);
+src/styles/features/requests/requests-my-work-card.css:274:    background: color-mix(in oklab, var(--c-primary) 10%, white 90%);
+src/styles/features/requests/requests-my-work-card.css:280:    background: color-mix(in oklab, var(--c-accent) 12%, white 88%);
+src/styles/features/requests/requests-my-work-card.css:286:    background: color-mix(in oklab, var(--c-success) 12%, white 88%);
+src/styles/features/requests/requests-my-work-card.css:291:    background: color-mix(in oklab, var(--surface-base) 88%, var(--c-border) 12%);
+src/styles/features/requests/requests-my-work-card.css:359:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-my-work-card.css:360:    background: color-mix(in srgb, var(--border-default) 82%, white 18%);
+src/styles/features/requests/requests-my-work-card.css:386:    background: color-mix(in oklab, var(--c-success) 62%, white 38%);
+src/styles/features/requests/requests-shell-filters-mobile.css:7:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-filters-mobile.css:9:    background: var(--color-surface);
+src/styles/features/requests/requests-shell-filters-mobile.css:22:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-filters-mobile.css:34:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-filters-mobile.css:43:    background: var(--color-primary-soft);
+src/styles/features/requests/requests-detail-core-owner-content.css:60:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-detail-core-owner-content.css:63:    background: var(--surface-soft-bg);
+src/styles/features/requests/requests-detail-core-owner-content.css:82:    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+src/styles/features/requests/requests-detail-core-owner-content.css:127:    background: transparent;
+src/styles/features/requests/requests-detail-core-owner-content.css:143:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 28%, transparent);
+src/styles/features/requests/requests-detail-core-owner-content.css:144:    border-radius: var(--radius-sm);
+src/styles/features/requests/requests-shell-my-work.css:49:    border-radius: 12px 12px 0 0;
+src/styles/features/requests/requests-shell-my-work.css:63:    background: var(--color-surface-muted);
+src/styles/features/requests/requests-shell-my-work.css:71:    box-shadow: var(--control-focus-ring);
+src/styles/features/requests/requests-shell-my-work.css:77:    background: var(--color-primary-soft);
+src/styles/features/requests/requests-shell-my-work.css:78:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:82:    background: var(--color-surface-muted);
+src/styles/features/requests/requests-shell-my-work.css:88:    box-shadow: var(--control-focus-ring);
+src/styles/features/requests/requests-shell-my-work.css:94:    background: var(--color-primary-soft);
+src/styles/features/requests/requests-shell-my-work.css:95:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:105:    background: color-mix(in oklab, var(--c-accent) 66%, white 34%);
+src/styles/features/requests/requests-shell-my-work.css:115:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-my-work.css:116:    background: color-mix(in oklab, var(--c-border) 72%, white 28%);
+src/styles/features/requests/requests-shell-my-work.css:122:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-my-work.css:123:    background: color-mix(in oklab, var(--c-border) 72%, white 28%);
+src/styles/features/requests/requests-shell-my-work.css:130:    border-radius: inherit;
+src/styles/features/requests/requests-shell-my-work.css:131:    background: color-mix(in oklab, var(--c-primary) 74%, white 26%);
+src/styles/features/requests/requests-shell-my-work.css:139:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-my-work.css:141:    box-shadow: var(--shadow-card);
+src/styles/features/requests/requests-shell-my-work.css:185:    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+src/styles/features/requests/requests-shell-my-work.css:212:    background: color-mix(in oklab, var(--surface-base) 94%, white 6%);
+src/styles/features/requests/requests-shell-my-work.css:213:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:220:    background: color-mix(in oklab, var(--c-primary) 8%, white 92%);
+src/styles/features/requests/requests-shell-my-work.css:221:    box-shadow: var(--shadow-card);
+src/styles/features/requests/requests-shell-my-work.css:228:    background: color-mix(in oklab, var(--c-text) 62%, var(--c-text-muted) 38%);
+src/styles/features/requests/requests-shell-my-work.css:240:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-my-work.css:241:    background: color-mix(in oklab, var(--c-panel) 97%, var(--c-border) 3%);
+src/styles/features/requests/requests-shell-my-work.css:242:    box-shadow: var(--shadow-floating);
+src/styles/features/requests/requests-shell-my-work.css:254:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-my-work.css:255:    background: transparent;
+src/styles/features/requests/requests-shell-my-work.css:289:    background: color-mix(in oklab, var(--c-primary) 8%, white 92%);
+src/styles/features/requests/requests-shell-my-work.css:295:    background: color-mix(in oklab, var(--c-danger, #d96b5f) 10%, white 90%);
+src/styles/features/requests/requests-shell-my-work.css:301:    background: color-mix(in oklab, var(--c-panel) 97%, var(--c-border) 3%);
+src/styles/features/requests/requests-shell-my-work.css:302:    box-shadow: var(--shadow-floating);
+src/styles/features/requests/requests-shell-my-work.css:306:    background: color-mix(in oklab, var(--surface-base) 82%, white 18%);
+src/styles/features/requests/requests-shell-my-work.css:312:    background: color-mix(in oklab, var(--c-primary) 24%, var(--surface-base) 76%);
+src/styles/features/requests/requests-shell-my-work.css:330:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-my-work.css:395:    box-shadow:
+src/styles/features/requests/requests-shell-my-work.css:420:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-my-work.css:421:    background: color-mix(in oklab, var(--color-surface) 94%, var(--color-primary-soft) 6%);
+src/styles/features/requests/requests-shell-my-work.css:422:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:428:    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-surface-muted) 8%);
+src/styles/features/requests/requests-shell-my-work.css:429:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:472:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-my-work.css:480:    box-shadow: var(--control-focus-ring);
+src/styles/features/requests/requests-shell-my-work.css:505:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-my-work.css:506:    background: color-mix(in oklab, var(--color-surface) 78%, var(--color-surface-muted) 22%);
+src/styles/features/requests/requests-shell-my-work.css:517:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:544:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-my-work.css:545:    background: var(--color-surface-muted);
+src/styles/features/requests/requests-shell-my-work.css:554:    background: color-mix(in oklab, var(--c-danger, #d96b5f) 18%, white 82%);
+src/styles/features/requests/requests-shell-my-work.css:559:    background: color-mix(in oklab, var(--c-accent) 16%, white 84%);
+src/styles/features/requests/requests-shell-my-work.css:590:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-my-work.css:591:    background: var(--color-surface-muted);
+src/styles/features/requests/requests-shell-my-work.css:640:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-my-work.css:641:    background:
+src/styles/features/requests/requests-shell-my-work.css:647:    box-shadow:
+src/styles/features/requests/requests-shell-my-work.css:663:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-my-work.css:665:    background:
+src/styles/features/requests/requests-shell-my-work.css:671:    box-shadow:
+src/styles/features/requests/requests-shell-my-work.css:710:    box-shadow:
+src/styles/features/requests/requests-shell-my-work.css:935:      border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-my-work.css:1066:    box-shadow: none;
+src/styles/features/requests/requests-shell-my-work.css:1077:    background:
+src/styles/features/requests/requests-shell-my-work.css:1114:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-my-work.css:1115:    background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:1126:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-my-work.css:1127:    background: color-mix(in srgb, var(--surface-2) 82%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:1188:    background:
+src/styles/features/requests/requests-shell-my-work.css:1212:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-my-work.css:1213:    background:
+src/styles/features/requests/requests-shell-my-work.css:1231:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-my-work.css:1232:    background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:1242:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-my-work.css:1244:    background: color-mix(in srgb, var(--surface-2) 74%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:1249:    background: color-mix(in srgb, var(--danger) 8%, var(--surface-2) 92%);
+src/styles/features/requests/requests-shell-my-work.css:1254:    background: color-mix(in srgb, var(--accent) 7%, var(--surface-2) 93%);
+src/styles/features/requests/requests-shell-my-work.css:1265:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-my-work.css:1266:    background: color-mix(in srgb, var(--surface) 82%, white 18%);
+src/styles/features/requests/requests-shell-my-work.css:1309:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-my-work.css:1311:    background: color-mix(in srgb, var(--surface) 88%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:1379:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-my-work.css:1381:    background: color-mix(in srgb, var(--surface-2) 72%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:1386:    box-shadow: 0 0 0 1px color-mix(in srgb, var(--success) 18%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:1390:    background:
+src/styles/features/requests/requests-shell-my-work.css:1455:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-my-work.css:1456:    background: color-mix(in srgb, var(--surface-2) 76%, transparent);
+src/styles/features/requests/requests-shell-my-work.css:1472:    background: var(--surface);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:71:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:73:    background: var(--workspace-control-shell-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:74:    box-shadow: var(--workspace-control-shell-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:92:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:107:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:113:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:123:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:172:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:174:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:252:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:332:    border-radius: calc(var(--radius-md) + 1px);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:333:    background: var(--workspace-control-embedded-highlight);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:341:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:343:    background: var(--workspace-control-embedded-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:344:    box-shadow: var(--workspace-control-embedded-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:351:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:353:    background: var(--workspace-control-embedded-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:354:    box-shadow: var(--workspace-control-embedded-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:361:    border-radius: calc(var(--radius-md) + var(--space-0-5));
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:366:    border-radius: calc(var(--radius-md) + var(--space-0-5));
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:371:    background: var(--workspace-control-embedded-bg-hover);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:377:    background: var(--workspace-control-embedded-bg-hover);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:383:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:391:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:408:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:414:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:426:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:432:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:438:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:444:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:450:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:462:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:464:    background: var(--workspace-control-action-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:465:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:475:    border-radius: calc(var(--radius-md) + var(--space-0-5));
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:480:    background: var(--workspace-control-action-bg-hover);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:481:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:490:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:504:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:510:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:524:    background: color-mix(in oklab, white 88%, var(--surface-card-bg) 12%);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:526:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 68%, transparent);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:553:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:559:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:566:    background: var(--workspace-control-action-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:567:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:573:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:579:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:585:    background: color-mix(in oklab, var(--c-panel) 88%, white 12%);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:586:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:590:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:608:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:614:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:627:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:633:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:639:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:645:    box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:651:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:661:      box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:668:      box-shadow:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:681:      border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:685:      border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:691:      border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:697:      border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:705:      border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:792:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:794:    background: var(--surface-card-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:795:    box-shadow: var(--surface-card-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:801:    background: transparent;
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:802:    box-shadow: none;
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:888:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:890:    background:
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:897:    box-shadow: var(--personal-nav-item-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:987:    border-radius: calc(var(--radius-xl, var(--radius-lg)) + var(--space-0-5));
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:989:    background: var(--personal-nav-dock-item-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:990:    box-shadow: var(--personal-nav-dock-item-shadow);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1006:    background: var(--personal-nav-dock-item-bg-hover);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1007:    box-shadow: var(--personal-nav-dock-item-shadow-hover);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1014:    background: var(--personal-nav-dock-item-bg-active);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1015:    box-shadow: var(--personal-nav-dock-item-shadow-active);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1023:    background: var(--personal-nav-dock-item-bg-hover);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1024:    box-shadow: var(--personal-nav-dock-item-shadow-hover);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1033:    background: color-mix(in oklab, white 22%, transparent);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1054:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1056:    background: var(--personal-nav-dock-icon-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1060:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 74%, transparent);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1088:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1090:    background: var(--personal-nav-dock-badge-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1095:    box-shadow: none;
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1100:    background: var(--personal-nav-dock-badge-active-bg);
+src/styles/features/requests/requests-shell-nav-navigation-nav-core.css:1102:    box-shadow: none;
+src/styles/features/requests/requests-provider-offer-sheet.css:29:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-provider-offer-sheet.css:31:    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
+src/styles/features/requests/requests-provider-offer-sheet.css:41:    background: color-mix(in oklab, var(--c-panel) 72%, var(--c-border) 28%);
+src/styles/features/requests/requests-provider-offer-sheet.css:66:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-provider-offer-sheet.css:71:    background: color-mix(in oklab, var(--c-primary) 22%, var(--c-panel) 78%);
+src/styles/features/requests/requests-provider-offer-sheet.css:88:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-provider-offer-sheet.css:90:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:21:    background: transparent;
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:64:    border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:67:    background: var(--workspace-mobile-nav-surface-bg);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:68:    box-shadow: var(--workspace-mobile-nav-surface-shadow);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:145:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:147:    background: var(--workspace-mobile-nav-close-bg);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:149:    box-shadow:
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:185:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:191:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:220:    border-radius: calc(var(--radius-xl, var(--radius-lg)) + var(--space-0-5));
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:222:    background: var(--workspace-mobile-nav-card-bg);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:230:    box-shadow: var(--workspace-mobile-nav-card-shadow);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:242:    background: var(--workspace-mobile-nav-card-bg-hover);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:243:    box-shadow: var(--workspace-mobile-nav-card-shadow-hover);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:249:    background: var(--workspace-mobile-nav-card-bg-active);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:250:    box-shadow: var(--workspace-mobile-nav-card-shadow-active);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:258:    background: color-mix(in oklab, white 22%, transparent);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:278:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:280:    background: var(--workspace-mobile-nav-card-icon-bg);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:284:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 74%, transparent);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:306:    background: var(--workspace-mobile-nav-card-badge-bg);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:309:    box-shadow: none;
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:363:      border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:385:      border-radius: var(--radius-xl);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:392:      border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-mobile-nav-sheet.css:398:      border-radius: var(--radius-md);
+src/styles/features/requests/requests-provider-provider-requests.css:49:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-provider-provider-requests.css:51:    background: color-mix(in oklab, var(--c-success) 12%, transparent);
+src/styles/features/requests/requests-provider-provider-requests.css:72:    box-shadow:
+src/styles/features/requests/requests-provider-provider-requests.css:79:    box-shadow:
+src/styles/features/requests/requests-detail-mobile-compact-loading.css:30:      border-radius: var(--radius-md);
+src/styles/features/requests/requests-detail-reviews-actions.css:88:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+src/styles/features/requests/requests-detail-reviews-actions.css:101:    background: color-mix(in oklab, var(--c-danger) 12%, var(--c-panel) 88%);
+src/styles/features/requests/requests-detail-reviews-actions.css:110:    background: color-mix(in oklab, var(--c-danger) 12%, var(--c-panel) 88%);
+src/styles/features/requests/requests-detail-reviews-actions.css:132:    border-radius: var(--radius-sm);
+src/styles/features/requests/requests-detail-reviews-actions.css:133:    background: color-mix(in oklab, var(--c-text) 88%, black 12%);
+src/styles/features/requests/requests-detail-reviews-actions.css:137:    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 22%, transparent);
+src/styles/features/requests/requests-create-layout-calendar.css:54:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-create-layout-calendar.css:56:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+src/styles/features/requests/requests-shell-filters-core-geo-motion.css:8:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-detail-reviews-base.css:7:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-detail-reviews-base.css:9:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+src/styles/features/requests/requests-detail-reviews-base.css:77:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-detail-reviews-base.css:79:    background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+src/styles/features/requests/requests-create-upload-tags-actions.css:6:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-create-upload-tags-actions.css:10:    background: color-mix(in oklab, var(--c-surface) 92%, transparent);
+src/styles/features/requests/requests-create-upload-tags-actions.css:38:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-create-upload-tags-actions.css:41:    background: color-mix(in oklab, var(--c-panel) 88%, transparent);
+src/styles/features/requests/requests-create-upload-tags-actions.css:55:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-create-upload-tags-actions.css:57:    background: color-mix(in oklab, var(--c-ink) 60%, transparent);
+src/styles/features/requests/requests-create-upload-tags-actions.css:78:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-create-upload-tags-actions.css:80:    background: var(--surface-soft-bg);
+src/styles/features/requests/requests-create-upload-tags-actions.css:87:    background: transparent;
+src/styles/features/requests/requests-shell-status.css:17:    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
+src/styles/features/requests/requests-shell-status.css:21:    background: color-mix(in oklab, var(--c-accent) 24%, var(--c-panel) 76%);
+src/styles/features/requests/requests-shell-status.css:27:    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
+src/styles/features/requests/requests-shell-status.css:33:    background: color-mix(in oklab, var(--c-danger) 10%, var(--c-panel) 90%);
+src/styles/features/requests/requests-shell-status.css:39:    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
+src/styles/features/requests/requests-shell-status.css:45:    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+src/styles/features/requests/requests-shell-status.css:63:    background: linear-gradient(
+src/styles/features/requests/requests-shell-map.css:16:    background: transparent;
+src/styles/features/requests/requests-shell-map.css:17:    box-shadow: none;
+src/styles/features/requests/requests-shell-map.css:35:    border-radius: var(--radius-lg);
+src/styles/features/requests/requests-shell-map.css:37:    background:
+src/styles/features/requests/requests-shell-map.css:56:    border-radius: inherit;
+src/styles/features/requests/requests-shell-map.css:67:    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+src/styles/features/requests/requests-shell-map.css:73:    background: color-mix(in oklab, var(--c-panel) 88%, transparent);
+src/styles/features/requests/requests-shell-map.css:78:    background: var(--surface-soft-bg-strong);
+src/styles/features/requests/requests-shell-map.css:83:    background: transparent;
+src/styles/features/requests/requests-shell-map.css:88:    background: transparent;
+src/styles/features/requests/requests-shell-map.css:95:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-map.css:99:    background:
+src/styles/features/requests/requests-shell-map.css:102:    box-shadow:
+src/styles/features/requests/requests-shell-map.css:124:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-map.css:125:    background: color-mix(in oklab, var(--c-accent) 58%, transparent);
+src/styles/features/requests/requests-shell-map.css:138:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-map.css:139:    background: color-mix(in oklab, var(--c-accent) 82%, var(--c-panel) 18%);
+src/styles/features/requests/requests-shell-map.css:141:    box-shadow:
+src/styles/features/requests/requests-shell-map.css:148:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-map.css:150:    background:
+src/styles/features/requests/requests-shell-map.css:156:    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-overlay) 16%, transparent);
+src/styles/features/requests/requests-shell-map.css:179:    border-radius: var(--radius-md);
+src/styles/features/requests/requests-shell-map.css:180:    background:
+src/styles/features/requests/requests-shell-map.css:187:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 54%, transparent);
+src/styles/features/requests/requests-shell-map.css:227:    border-radius: var(--radius-pill);
+src/styles/features/requests/requests-shell-map.css:228:    background: color-mix(in oklab, var(--c-panel) 90%, transparent);
+src/styles/features/components/components-core-auth-modal.css:40:    border-radius: var(--radius-pill);
+src/styles/features/components/components-core-auth-modal.css:42:    background: var(--surface-soft-bg);
+src/styles/features/components/components-core-auth-modal.css:58:    background: color-mix(in oklab, var(--c-primary) 15%, var(--c-panel) 85%);
+src/styles/features/components/components-core-auth-modal.css:68:      background:
+src/styles/features/components/components-core-auth-modal.css:82:      border-radius: var(--radius-lg);
+src/styles/features/components/components-core-topbar-shell.css:22:    background: transparent;
+src/styles/features/components/components-core-topbar-shell.css:54:    border-radius: var(--radius-xl);
+src/styles/features/components/components-core-topbar-shell.css:56:    background: color-mix(in oklab, var(--color-surface) 88%, transparent);
+src/styles/features/components/components-core-topbar-shell.css:59:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-core-topbar-shell.css:78:    background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+src/styles/features/components/components-core-topbar-shell.css:79:    box-shadow: var(--shadow-card-hover);
+src/styles/features/components/components-core-topbar-shell.css:84:    background: color-mix(in oklab, var(--c-topbar) 94%, transparent);
+src/styles/features/components/components-core-topbar-shell.css:85:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-core-topbar-shell.css:90:    background: color-mix(in oklab, var(--c-topbar) 98%, transparent);
+src/styles/features/components/components-core-topbar-shell.css:91:    box-shadow: var(--shadow-card-hover);
+src/styles/features/components/components-core-topbar-shell.css:127:    background: var(--color-surface);
+src/styles/features/components/components-core-topbar-shell.css:128:    box-shadow: none;
+src/styles/features/components/components-core-topbar-shell.css:134:    background: var(--color-surface-muted);
+src/styles/features/components/components-core-topbar-shell.css:135:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-core-topbar-shell.css:141:    box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-core-topbar-shell.css:146:    background: var(--c-panel);
+src/styles/features/components/components-core-topbar-shell.css:147:    box-shadow: none;
+src/styles/features/components/components-core-topbar-shell.css:152:    background: color-mix(in oklab, var(--c-panel) 92%, white 8%);
+src/styles/features/components/components-core-topbar-shell.css:153:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-core-topbar-shell.css:159:    box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-growth-consent-ui-footer.css:14:    border-radius: 0;
+src/styles/features/components/components-growth-consent-ui-footer.css:16:    background: transparent;
+src/styles/features/components/components-growth-consent-ui-footer.css:18:    box-shadow: none;
+src/styles/features/components/components-growth-consent-ui-footer.css:81:    border-radius: var(--radius-pill);
+src/styles/features/components/components-growth-consent-ui-footer.css:83:    background: transparent;
+src/styles/features/components/components-growth-consent-ui-footer.css:96:    background: transparent;
+src/styles/features/components/components-core-mobile-nav-shell.css:13:      border-radius: var(--radius-xl);
+src/styles/features/components/components-ui-profile-typography.css:48:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-profile-typography.css:50:    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
+src/styles/features/components/components-ui-profile-typography.css:55:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-accent) 18%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:59:    border-radius: var(--radius-pill);
+src/styles/features/components/components-core-workspace-nav.css:61:    background: var(--topbar-nav-surface-bg);
+src/styles/features/components/components-core-workspace-nav.css:62:    box-shadow: var(--topbar-nav-surface-shadow);
+src/styles/features/components/components-core-workspace-nav.css:83:    border-radius: var(--radius-pill);
+src/styles/features/components/components-core-workspace-nav.css:85:    background:
+src/styles/features/components/components-core-workspace-nav.css:91:    box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:106:    background:
+src/styles/features/components/components-core-workspace-nav.css:112:    box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:121:    border-radius: var(--radius-pill);
+src/styles/features/components/components-core-workspace-nav.css:123:    background: transparent;
+src/styles/features/components/components-core-workspace-nav.css:147:    background: color-mix(in oklab, white 20%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:148:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 48%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:155:    background: color-mix(in oklab, white 4%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:156:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:162:    background: transparent;
+src/styles/features/components/components-core-workspace-nav.css:163:    box-shadow: none;
+src/styles/features/components/components-core-workspace-nav.css:168:    box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:175:    box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:192:      background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:214:      border-radius: var(--radius-lg);
+src/styles/features/components/components-core-workspace-nav.css:216:      background: transparent;
+src/styles/features/components/components-core-workspace-nav.css:245:      border-radius: var(--radius-pill);
+src/styles/features/components/components-core-workspace-nav.css:247:      background: var(--color-surface);
+src/styles/features/components/components-core-workspace-nav.css:276:      background: var(--color-primary-soft);
+src/styles/features/components/components-core-workspace-nav.css:282:      background: var(--color-primary);
+src/styles/features/components/components-core-workspace-nav.css:294:      background: var(--color-primary);
+src/styles/features/components/components-core-workspace-nav.css:304:      background: var(--color-surface-muted);
+src/styles/features/components/components-core-workspace-nav.css:310:      background: var(--color-primary-hover);
+src/styles/features/components/components-core-workspace-nav.css:315:      box-shadow: none;
+src/styles/features/components/components-core-workspace-nav.css:320:      box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-core-workspace-nav.css:325:      box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-core-workspace-nav.css:345:      box-shadow: inset 0 0 0 1px color-mix(in oklab, white 12%, transparent);
+src/styles/features/components/components-core-workspace-nav.css:360:      box-shadow:
+src/styles/features/components/components-core-workspace-nav.css:366:      box-shadow: var(--control-focus-ring);
+src/styles/features/components/components-core-auth-form-modal-social-modal-core.css:45:    border-radius: var(--radius-pill);
+src/styles/features/components/components-core-auth-form-modal-social-modal-core.css:51:    background: color-mix(in oklab, var(--c-warning) 18%, transparent);
+src/styles/features/components/components-core-auth-form-modal-social-modal-core.css:65:    border-radius: var(--radius-md);
+src/styles/features/components/components-core-auth-form-modal-social-modal-core.css:67:    background: color-mix(in oklab, var(--c-primary) 10%, transparent);
+src/styles/features/components/components-ui-base-icon-meta.css:5:    background: transparent;
+src/styles/features/components/components-ui-base-icon-meta.css:15:    border-radius: var(--radius-md);
+src/styles/features/components/components-ui-base-icon-meta.css:21:    border-radius: var(--radius-md);
+src/styles/features/components/components-ui-base-icon-meta.css:25:    background: color-mix(in oklab, var(--c-border) 55%, transparent);
+src/styles/features/components/components-ui-base-icon-meta.css:31:    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 36%, transparent);
+src/styles/features/components/components-ui-base-icon-meta.css:36:    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 46%, transparent);
+src/styles/features/components/components-ui-base-icon-meta.css:52:      border-radius: var(--radius-sm);
+src/styles/features/components/components-ui-base-icon-meta.css:54:      background: var(--surface-soft-bg-strong);
+src/styles/features/components/components-ui-base-icon-meta.css:59:      box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 12%, transparent);
+src/styles/features/components/components-ui-profile-settings-settings.css:27:    border-radius: var(--radius-lg);
+src/styles/features/components/components-ui-profile-settings-settings.css:29:    background:
+src/styles/features/components/components-ui-profile-settings-settings.css:60:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-profile-settings-settings.css:62:    background: color-mix(in oklab, var(--c-surface) 78%, transparent);
+src/styles/features/components/components-ui-profile-settings-settings.css:70:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-profile-settings-settings.css:74:    background: transparent;
+src/styles/features/components/components-ui-profile-settings-settings.css:83:    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-border) 18%);
+src/styles/features/components/components-ui-profile-settings-settings.css:88:    background: linear-gradient(
+src/styles/features/components/components-ui-profile-settings-settings.css:93:    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 25%, transparent);
+src/styles/features/components/components-ui-profile-settings-settings.css:139:    background: color-mix(in oklab, var(--c-accent) 9%, var(--c-panel) 91%);
+src/styles/features/components/components-ui-profile-settings-settings.css:145:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-accent) 24%, transparent);
+src/styles/features/components/components-ui-profile-settings-settings.css:155:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-profile-settings-settings.css:157:    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+src/styles/features/components/components-ui-profile-settings-settings.css:167:    background: color-mix(in oklab, var(--c-accent) 20%, var(--c-panel) 80%);
+src/styles/features/components/components-ui-profile-settings-settings.css:178:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-profile-settings-settings.css:182:    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+src/styles/features/components/components-ui-profile-settings-settings.css:188:    background: var(--c-success-soft);
+src/styles/features/components/components-core-auth-form-consent-validation.css:26:    box-shadow:
+src/styles/features/components/components-core-auth-form-consent-validation.css:52:    border-radius: var(--radius-pill);
+src/styles/features/components/components-core-auth-form-consent-validation.css:55:    background: var(--surface-soft-bg);
+src/styles/features/components/components-core-auth-form-consent-validation.css:63:    background: var(--c-success-soft);
+src/styles/features/components/components-ui-profile-settings-avatar.css:8:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-profile-settings-avatar.css:17:    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
+src/styles/features/components/components-ui-profile-settings-avatar.css:21:    background:
+src/styles/features/components/components-ui-profile-settings-avatar.css:44:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-panels-kpi-card.css:19:    border-radius: var(--radius-md);
+src/styles/features/components/components-ui-panels-kpi-card.css:21:    background: var(--surface-soft-bg);
+src/styles/features/components/components-ui-panels-kpi-card.css:31:    background: var(--surface-decision-active-bg);
+src/styles/features/components/components-ui-panels-kpi-card.css:41:    background: transparent;
+src/styles/features/components/components-ui-panels-kpi-card.css:46:    background: transparent;
+src/styles/features/components/components-ui-panels-kpi-card.css:51:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/components/components-ui-panels-kpi-card.css:58:    box-shadow:
+src/styles/features/components/components-ui-base-buttons-ghost-meta.css:8:    border-radius: var(--radius-md);
+src/styles/features/components/components-ui-base-buttons-ghost-meta.css:10:    background: var(--surface-soft-bg);
+src/styles/features/components/components-ui-base-buttons-ghost-meta.css:57:    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+src/styles/features/components/components-ui-base-buttons-ghost-meta.css:61:    background: color-mix(in oklab, var(--c-primary) 16%, var(--c-panel) 84%);
+src/styles/features/components/components-growth-consent-ui-modal.css:44:    border-radius: var(--radius-md);
+src/styles/features/components/components-growth-consent-ui-modal.css:46:    background:
+src/styles/features/components/components-growth-consent-ui-modal.css:74:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-base-buttons-primary-secondary-skeleton.css:7:    border-radius: var(--radius-md);
+src/styles/features/components/components-ui-base-buttons-primary-secondary-skeleton.css:8:    background: color-mix(in oklab, var(--c-surface) 70%, var(--c-border) 30%);
+src/styles/features/components/components-ui-base-buttons-primary-secondary-skeleton.css:16:    background: linear-gradient(
+src/styles/features/components/components-ui-base-buttons-primary-secondary-skeleton.css:26:    background: linear-gradient(
+src/styles/features/components/components-ui-panels-panel-stat.css:19:    box-shadow: var(--shadow-focus);
+src/styles/features/components/components-ui-panels-panel-stat.css:27:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-panels-panel-stat.css:72:    background: var(--surface-soft-bg);
+src/styles/features/components/components-ui-panels-panel-stat.css:74:    border-radius: var(--radius-md);
+src/styles/features/components/components-ui-panels-panel-stat.css:88:    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-primary) 18%);
+src/styles/features/components/components-ui-panels-panel-stat.css:93:    box-shadow: var(--shadow-focus);
+src/styles/features/components/components-ui-panels-panel-stat.css:109:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-panels-panel-stat.css:110:    background: var(--c-accent);
+src/styles/features/components/components-ui-panels-panel-stat.css:111:    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/components/components-ui-panels-panel-stat.css:119:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-panels-panel-stat.css:135:    border-radius: var(--radius-sm);
+src/styles/features/components/components-ui-panels-panel-stat.css:136:    background: transparent;
+src/styles/features/components/components-core-auth-form-modal-social-social.css:24:    background: color-mix(in oklab, var(--c-border) 62%, transparent);
+src/styles/features/components/components-core-auth-form-modal-social-social.css:44:    border-radius: var(--radius-md);
+src/styles/features/components/components-core-auth-form-modal-social-social.css:91:    background:
+src/styles/features/components/components-core-auth-form-modal-social-social.css:100:    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-hi) 10%, transparent);
+src/styles/features/components/components-core-auth-form-modal-social-social.css:105:    background:
+src/styles/features/components/components-patterns.css:23:    background: var(--soft-surface-bg, var(--surface-soft-bg-strong));
+src/styles/features/components/components-patterns.css:33:    border-radius: var(--radius-pill);
+src/styles/features/components/components-growth-consent-ui-banner.css:13:    border-radius: var(--radius-lg);
+src/styles/features/components/components-growth-consent-ui-banner.css:15:    background:
+src/styles/features/components/components-growth-consent-ui-banner.css:24:    box-shadow:
+src/styles/features/components/components-growth-consent-ui-banner.css:72:    border-radius: var(--radius-pill);
+src/styles/features/components/components-growth-consent-ui-banner.css:75:    background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+src/styles/features/components/components-growth-consent-ui-banner.css:87:    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+src/styles/features/components/components-growth-consent-ui-banner.css:116:    background:
+src/styles/features/components/components-growth-consent-ui-banner.css:128:    box-shadow:
+src/styles/features/components/components-growth-consent-ui-banner.css:134:    background:
+src/styles/features/components/components-growth-consent-ui-banner.css:145:    box-shadow:
+src/styles/features/components/components-ui-base-effects.css:13:    border-radius: inherit;
+src/styles/features/components/components-ui-base-effects.css:22:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/components/components-ui-base-effects.css:26:      box-shadow: 0 0 0 6px color-mix(in oklab, var(--c-accent) 12%, transparent);
+src/styles/features/components/components-ui-base-effects.css:30:      box-shadow: 0 0 0 0 transparent;
+src/styles/features/components/components-ui-base-effects.css:51:      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
+src/styles/features/components/components-ui-base-effects.css:54:      box-shadow: 0 0 0 10px transparent;
+src/styles/features/components/components-ui-base-effects.css:57:      box-shadow: 0 0 0 0 transparent;
+src/styles/features/components/components-core-mobile-nav-breakpoints.css:33:      border-radius: var(--radius-md);
+src/styles/features/components/components-core-mobile-nav-breakpoints.css:47:      border-radius: var(--radius-sm);
+src/styles/features/components/components-growth-hero.css:9:    border-radius: 0;
+src/styles/features/components/components-growth-hero.css:11:    background: linear-gradient(
+src/styles/features/components/components-growth-hero.css:58:    border-radius: 0;
+src/styles/features/components/components-growth-hero.css:61:    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+src/styles/features/components/components-growth-hero.css:62:    box-shadow: 0 18px 40px color-mix(in oklab, var(--c-panel) 55%, transparent);
+src/styles/features/components/components-growth-hero.css:71:    background: linear-gradient(90deg, color-mix(in oklab, var(--c-ink) 60%, transparent), color-mix(in oklab, var(--c-ink) 10%, transparent));
+src/styles/features/components/components-growth-hero.css:76:    background: linear-gradient(
+src/styles/features/components/components-growth-hero.css:82:    border-radius: var(--radius-lg);
+src/styles/features/components/components-growth-hero.css:83:    box-shadow: var(--shadow-card);
+src/styles/features/components/components-growth-hero.css:87:    background: linear-gradient(90deg, color-mix(in oklab, var(--c-panel) 35%, transparent), color-mix(in oklab, var(--c-panel) 10%, transparent));
+src/styles/features/components/components-growth-create-card-core.css:14:    border-radius: var(--radius-lg);
+src/styles/features/components/components-growth-create-card-core.css:16:    background:
+src/styles/features/components/components-growth-create-card-core.css:23:    box-shadow:
+src/styles/features/components/components-growth-create-card-core.css:65:    border-radius: var(--radius-lg);
+src/styles/features/components/components-growth-create-card-core.css:67:    background:
+src/styles/features/components/components-growth-create-card-core.css:82:    border-radius: var(--radius-pill);
+src/styles/features/components/components-growth-create-card-core.css:84:    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-accent) 16%);
+src/styles/features/components/components-growth-create-card-core.css:89:    box-shadow:
+src/styles/features/components/components-growth-create-card-core.css:98:    box-shadow:
+src/styles/features/components/components-growth-create-card-core.css:113:    box-shadow:
+src/styles/features/components/components-core-auth-shell.css:50:      background: var(--c-overlay);
+src/styles/features/components/components-core-auth-shell.css:58:      background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+src/styles/features/components/components-core-auth-shell.css:59:      box-shadow:
+src/styles/features/components/components-core-auth-shell.css:84:      border-radius: var(--radius-lg);
+src/styles/features/components/components-core-auth-shell.css:85:      box-shadow: var(--shadow-card);
+src/styles/features/components/components-ui-panels-chips-actions.css:21:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-panels-chips-actions.css:22:    background: var(--surface-soft-bg-strong);
+src/styles/features/components/components-ui-panels-chips-actions.css:36:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+src/styles/features/components/components-ui-panels-chips-actions.css:41:    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-accent) 12%);
+src/styles/features/components/components-ui-panels-chips-actions.css:42:    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 10%, transparent);
+src/styles/features/components/components-ui-panels-chips-actions.css:46:    background: var(--c-panel);
+src/styles/features/components/components-ui-panels-chips-actions.css:48:    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
+src/styles/features/components/components-ui-panels-chips-actions.css:52:    background: linear-gradient(
+src/styles/features/components/components-ui-panels-chips-actions.css:59:    box-shadow: 0 10px 18px color-mix(in oklab, var(--c-ink) 8%, transparent);
+src/styles/features/components/components-ui-panels-chips-actions.css:68:    border-radius: var(--radius-pill);
+src/styles/features/components/components-ui-panels-chips-actions.css:81:    background: color-mix(in oklab, var(--c-surface) 85%, var(--c-border) 15%);
+src/styles/features/components/components-ui-panels-chips-actions.css:87:    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+src/styles/features/stats/statistics-ki.css:19:    border-radius: var(--workspace-ai-card-radius-md);
+src/styles/features/stats/statistics-ki.css:20:    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+src/styles/features/stats/statistics-ki.css:26:    border-radius: 0;
+src/styles/features/stats/statistics-ki.css:27:    background: transparent;
+src/styles/features/stats/statistics-ki.css:37:    border-radius: var(--workspace-ai-card-chip-radius);
+src/styles/features/stats/statistics-ki.css:39:    background: var(--surface-soft-bg);
+src/styles/features/stats/statistics-ki.css:72:    border-radius: var(--workspace-ai-card-radius-md);
+src/styles/features/stats/statistics-ki.css:75:    background:
+src/styles/features/stats/statistics-ki.css:86:    border-radius: 0;
+src/styles/features/stats/statistics-ki.css:87:    background: transparent;
+src/styles/features/stats/statistics-ki.css:96:    border-radius: var(--workspace-ai-card-chip-radius);
+src/styles/features/stats/statistics-ki.css:98:    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
+src/styles/features/stats/statistics-ki.css:143:    border-radius: var(--workspace-ai-card-radius-md);
+src/styles/features/stats/statistics-funnel-panel.css:55:    border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
+src/styles/features/stats/statistics-funnel-panel.css:57:    background: color-mix(in oklab, var(--surface-soft-bg) 90%, var(--c-panel) 10%);
+src/styles/features/stats/statistics-funnel-panel.css:112:    box-shadow: var(--surface-card-shadow);
+src/styles/features/stats/statistics-funnel-panel.css:113:    background:
+src/styles/features/stats/statistics-funnel-panel.css:163:    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 60%);
+src/styles/features/stats/statistics-funnel-panel.css:170:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/stats/statistics-funnel-panel.css:179:    box-shadow:
+src/styles/features/stats/statistics-funnel-panel.css:293:    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--c-panel) 14%);
+src/styles/features/stats/statistics-funnel-panel.css:330:    background: transparent;
+src/styles/features/stats/statistics-funnel-panel.css:356:    border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
+src/styles/features/stats/statistics-funnel-panel.css:358:    background: color-mix(in oklab, var(--c-primary) 6%, var(--c-panel) 94%);
+src/styles/features/stats/statistics-funnel-panel.css:388:    border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
+src/styles/features/stats/statistics-funnel-panel.css:390:    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+src/styles/features/stats/statistics-funnel-panel.css:408:    background: color-mix(in oklab, var(--c-success) 9%, var(--surface-soft-bg) 91%);
+src/styles/features/stats/statistics-funnel-panel.css:413:    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+src/styles/features/stats/statistics-funnel-panel.css:420:    border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
+src/styles/features/stats/statistics-funnel-panel.css:422:    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+src/styles/features/stats/statistics-funnel-panel.css:462:    background: color-mix(in oklab, var(--c-success) 9%, var(--surface-soft-bg) 91%);
+src/styles/features/stats/statistics-funnel-panel.css:467:    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
+src/styles/features/stats/statistics-funnel-panel.css:472:    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+src/styles/features/stats/statistics-dashboard-layout.css:114:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-dashboard-layout.css:116:    background: color-mix(in oklab, var(--c-primary) 12%, var(--surface-soft-bg) 88%);
+src/styles/features/stats/statistics-dashboard-layout.css:134:    border-radius: var(--radius-md);
+src/styles/features/stats/statistics-dashboard-layout.css:136:    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+src/styles/features/stats/statistics-dashboard-layout.css:251:    background: color-mix(in oklab, var(--c-success) 9%, var(--surface-soft-bg) 91%);
+src/styles/features/stats/statistics-dashboard-layout.css:256:    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
+src/styles/features/stats/statistics-dashboard-layout.css:261:    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+src/styles/features/stats/statistics-dashboard-layout.css:327:    border-radius: var(--radius-md);
+src/styles/features/stats/statistics-dashboard-layout.css:328:    background: var(--control-bg);
+src/styles/features/stats/statistics-dashboard-layout.css:338:    background: var(--control-bg-hover);
+src/styles/features/stats/statistics-dashboard-layout.css:342:    box-shadow: var(--control-focus-ring);
+src/styles/features/stats/statistics-dashboard-layout.css:355:    border-radius: var(--radius-md);
+src/styles/features/stats/statistics-dashboard-layout.css:427:    background: color-mix(in oklab, var(--c-primary) 9%, var(--surface-soft-bg) 91%);
+src/styles/features/stats/statistics-dashboard-layout.css:432:    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+src/styles/features/stats/statistics-dashboard-layout.css:439:    border-radius: var(--workspace-statistics-radius-md);
+src/styles/features/stats/statistics-dashboard-layout.css:441:    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+src/styles/features/stats/statistics-dashboard-layout.css:711:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/stats/statistics-dashboard-layout.css:718:    box-shadow:
+src/styles/features/stats/statistics-dashboard-layout.css:776:    background: var(--surface-decision-active-bg);
+src/styles/features/stats/statistics-dashboard-layout.css:782:    background: color-mix(in oklab, var(--c-warn) 8%, var(--surface-soft-bg) 92%);
+src/styles/features/stats/statistics-dashboard-layout.css:786:    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--c-panel) 14%);
+src/styles/features/stats/statistics-secondary-hint.css:8:    border-radius: var(--radius-md);
+src/styles/features/stats/statistics-secondary-hint.css:10:    background: var(--surface-soft-bg);
+src/styles/features/stats/statistics-secondary-hint.css:43:    border-radius: var(--radius-pill);
+src/styles/features/stats/statistics-secondary-hint.css:45:    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+src/styles/features/stats/statistics-secondary-hint.css:52:    border-radius: inherit;
+src/styles/features/stats/statistics-secondary-hint.css:53:    background: linear-gradient(90deg, var(--c-success) 0%, var(--c-accent) 100%);
+src/styles/features/stats/statistics-secondary-hint.css:71:    border-radius: var(--radius-md);
+src/styles/features/stats/statistics-secondary-hint.css:73:    background: var(--surface-soft-bg);
+src/styles/features/stats/statistics-kpi-chart.css:12:    background: transparent;
+src/styles/features/stats/statistics-kpi-chart.css:13:    box-shadow: none;
+src/styles/features/stats/statistics-kpi-chart.css:24:    border-radius: var(--radius-md);
+src/styles/features/stats/statistics-kpi-chart.css:26:    background: var(--surface-soft-bg);
+src/styles/features/stats/statistics-kpi-chart.css:32:    border-radius: var(--radius-sm);
+src/styles/features/stats/statistics-kpi-chart.css:40:    background: var(--btn-primary-bg);
+src/styles/features/stats/statistics-kpi-chart.css:106:    border-radius: 8px 8px 3px 3px;
+src/styles/features/stats/statistics-kpi-chart.css:107:    background: linear-gradient(
+src/styles/features/stats/statistics-insights.css:144:    border-radius: var(--workspace-insight-card-radius);
+src/styles/features/stats/statistics-insights.css:149:    background:
+src/styles/features/stats/statistics-insights.css:155:    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 6%, transparent);
+src/styles/features/stats/statistics-insights.css:164:    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-ink) 10%, transparent);
+src/styles/features/stats/statistics-insights.css:171:    box-shadow:
+src/styles/features/stats/statistics-insights.css:179:    background:
+src/styles/features/stats/statistics-insights.css:215:    border-radius: var(--radius-pill);
+src/styles/features/stats/statistics-insights.css:217:    background: color-mix(in oklab, var(--c-warning) 16%, var(--c-panel) 84%);
+src/styles/features/stats/statistics-insights.css:262:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-insights.css:264:    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+src/styles/features/stats/statistics-insights.css:400:    background:
+src/styles/features/stats/statistics-insights.css:409:    box-shadow:
+src/styles/features/stats/statistics-insights.css:425:    background:
+src/styles/features/stats/statistics-insights.css:443:    border-radius: var(--workspace-statistics-radius-lg);
+src/styles/features/stats/statistics-insights.css:444:    background:
+src/styles/features/stats/statistics-insights.css:450:    box-shadow:
+src/styles/features/stats/statistics-insights.css:522:    border-radius: var(--radius-md);
+src/styles/features/stats/statistics-insights.css:524:    background:
+src/styles/features/stats/statistics-insights.css:580:    background:
+src/styles/features/stats/statistics-insights.css:586:    box-shadow:
+src/styles/features/stats/statistics-insights.css:597:    background:
+src/styles/features/stats/statistics-insights.css:604:    box-shadow:
+src/styles/features/stats/statistics-insights.css:611:    background:
+src/styles/features/stats/statistics-insights.css:618:    box-shadow:
+src/styles/features/stats/statistics-insights.css:626:    box-shadow:
+src/styles/features/stats/statistics-insights.css:633:    box-shadow:
+src/styles/features/stats/statistics-insights.css:640:    box-shadow:
+src/styles/features/stats/statistics-insights.css:803:    border-radius: var(--radius-pill);
+src/styles/features/stats/statistics-insights.css:805:    background:
+src/styles/features/stats/statistics-insights.css:811:    box-shadow:
+src/styles/features/stats/statistics-insights.css:827:    background: color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
+src/styles/features/stats/statistics-opportunity-price.css:52:    border-radius: var(--workspace-statistics-radius-lg);
+src/styles/features/stats/statistics-opportunity-price.css:53:    background: color-mix(in oklab, var(--c-panel) 96%, var(--surface-soft-bg) 4%);
+src/styles/features/stats/statistics-opportunity-price.css:83:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/stats/statistics-opportunity-price.css:89:    box-shadow:
+src/styles/features/stats/statistics-opportunity-price.css:172:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-opportunity-price.css:183:    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
+src/styles/features/stats/statistics-opportunity-price.css:189:    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
+src/styles/features/stats/statistics-opportunity-price.css:195:    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+src/styles/features/stats/statistics-opportunity-price.css:201:    background: color-mix(in oklab, var(--c-warn) 12%, var(--c-panel) 88%);
+src/styles/features/stats/statistics-opportunity-price.css:401:    border-radius: var(--workspace-statistics-radius-lg);
+src/styles/features/stats/statistics-opportunity-price.css:402:    background:
+src/styles/features/stats/statistics-opportunity-price.css:408:    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 7%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:418:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-opportunity-price.css:420:    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
+src/styles/features/stats/statistics-opportunity-price.css:470:    border-radius: var(--workspace-statistics-radius-md);
+src/styles/features/stats/statistics-opportunity-price.css:472:    background: color-mix(in oklab, var(--c-panel) 95%, var(--surface-soft-bg) 5%);
+src/styles/features/stats/statistics-opportunity-price.css:476:    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 38%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:481:    background: color-mix(in oklab, var(--c-warning) 9%, var(--surface-soft-bg) 91%);
+src/styles/features/stats/statistics-opportunity-price.css:486:    background: color-mix(in oklab, var(--c-success) 9%, var(--surface-soft-bg) 91%);
+src/styles/features/stats/statistics-opportunity-price.css:491:    background: color-mix(in oklab, var(--c-primary) 7%, var(--surface-soft-bg) 93%);
+src/styles/features/stats/statistics-opportunity-price.css:521:    background: color-mix(in oklab, var(--c-panel) 95%, var(--surface-soft-bg) 5%);
+src/styles/features/stats/statistics-opportunity-price.css:522:    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 34%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:535:    border-radius: var(--workspace-statistics-radius-md);
+src/styles/features/stats/statistics-opportunity-price.css:536:    background: color-mix(in oklab, var(--c-panel) 95%, var(--surface-soft-bg) 5%);
+src/styles/features/stats/statistics-opportunity-price.css:537:    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 32%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:571:    border-radius: inherit;
+src/styles/features/stats/statistics-opportunity-price.css:575:    background: linear-gradient(
+src/styles/features/stats/statistics-opportunity-price.css:583:    background: linear-gradient(
+src/styles/features/stats/statistics-opportunity-price.css:601:    border-radius: var(--workspace-statistics-radius-lg);
+src/styles/features/stats/statistics-opportunity-price.css:603:    background:
+src/styles/features/stats/statistics-opportunity-price.css:609:    box-shadow:
+src/styles/features/stats/statistics-opportunity-price.css:659:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-opportunity-price.css:660:    background: color-mix(in oklab, var(--surface-soft-bg) 82%, var(--c-panel) 18%);
+src/styles/features/stats/statistics-opportunity-price.css:669:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-opportunity-price.css:670:    background: color-mix(in oklab, var(--c-border) 72%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:679:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-opportunity-price.css:681:    background: color-mix(in oklab, var(--c-text-muted) 54%, var(--c-panel) 46%);
+src/styles/features/stats/statistics-opportunity-price.css:683:    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-panel) 72%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:690:    background: color-mix(in oklab, var(--c-text) 72%, var(--c-primary) 28%);
+src/styles/features/stats/statistics-opportunity-price.css:695:    background: color-mix(in oklab, var(--c-accent) 52%, var(--c-panel) 48%);
+src/styles/features/stats/statistics-opportunity-price.css:702:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-opportunity-price.css:703:    background: linear-gradient(
+src/styles/features/stats/statistics-opportunity-price.css:720:    border-radius: var(--workspace-statistics-radius-sm);
+src/styles/features/stats/statistics-opportunity-price.css:722:    background: color-mix(in oklab, var(--c-panel) 94%, var(--c-accent) 6%);
+src/styles/features/stats/statistics-opportunity-price.css:726:    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:750:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-opportunity-price.css:751:    background: color-mix(in oklab, var(--c-text) 74%, var(--c-primary) 26%);
+src/styles/features/stats/statistics-opportunity-price.css:753:    box-shadow: 0 0 0 1px color-mix(in oklab, var(--c-panel) 66%, transparent);
+src/styles/features/stats/statistics-opportunity-price.css:832:    background: transparent;
+src/styles/features/stats/statistics-opportunity-price.css:882:    border-radius: var(--workspace-statistics-radius-md);
+src/styles/features/stats/statistics-opportunity-price.css:883:    background: color-mix(in oklab, var(--surface-soft-bg) 82%, var(--c-panel) 18%);
+src/styles/features/stats/statistics-opportunity-price.css:916:    background:
+src/styles/features/stats/statistics-opportunity-price.css:1027:    border-radius: var(--workspace-ai-card-radius-md, var(--radius-md));
+src/styles/features/stats/statistics-opportunity-price.css:1028:    background:
+src/styles/features/stats/statistics-opportunity-price.css:1037:    border-radius: var(--radius-pill);
+src/styles/features/stats/statistics-opportunity-price.css:1063:    border-radius: calc(var(--workspace-statistics-radius-lg) + var(--space-0-5));
+src/styles/features/stats/statistics-opportunity-price.css:1064:    background:
+src/styles/features/stats/statistics-opportunity-price.css:1150:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-opportunity-price.css:1152:    background:
+src/styles/features/stats/statistics-opportunity-price.css:1155:    box-shadow:
+src/styles/features/stats/statistics-opportunity-price.css:1166:    background:
+src/styles/features/stats/statistics-signal.css:40:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-signal.css:41:    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+src/styles/features/stats/statistics-signal.css:47:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-signal.css:48:    background: linear-gradient(
+src/styles/features/stats/statistics-signal.css:97:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-signal.css:108:    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
+src/styles/features/stats/statistics-signal.css:114:    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
+src/styles/features/stats/statistics-signal.css:120:    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+src/styles/features/stats/statistics-signal.css:127:    background: color-mix(in oklab, var(--c-warn) 12%, var(--c-panel) 88%);
+src/styles/features/stats/statistics-demand-cities.css:27:    background: transparent;
+src/styles/features/stats/statistics-demand-cities.css:41:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-demand-cities.css:43:    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+src/styles/features/stats/statistics-demand-cities.css:50:    border-radius: inherit;
+src/styles/features/stats/statistics-demand-cities.css:51:    background: linear-gradient(
+src/styles/features/stats/statistics-demand-cities.css:149:    background: color-mix(in oklab, var(--c-panel) 92%, var(--surface-soft-bg) 8%);
+src/styles/features/stats/statistics-demand-cities.css:175:    box-shadow:
+src/styles/features/stats/statistics-demand-cities.css:182:    box-shadow: var(--surface-card-shadow-hover);
+src/styles/features/stats/statistics-demand-cities.css:190:    background:
+src/styles/features/stats/statistics-demand-cities.css:196:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 60%, transparent);
+src/styles/features/stats/statistics-demand-cities.css:201:    box-shadow: inset 0 1px 0 color-mix(in oklab, white 60%, transparent);
+src/styles/features/stats/statistics-demand-cities.css:207:    background:
+src/styles/features/stats/statistics-demand-cities.css:213:    box-shadow:
+src/styles/features/stats/statistics-demand-cities.css:220:    background:
+src/styles/features/stats/statistics-demand-cities.css:226:    box-shadow:
+src/styles/features/stats/statistics-demand-cities.css:328:    border-radius: var(--workspace-statistics-chip-radius);
+src/styles/features/stats/statistics-demand-cities.css:344:    background: color-mix(in oklab, var(--c-success) 10%, var(--c-panel) 90%);
+src/styles/features/stats/statistics-demand-cities.css:350:    background: color-mix(in oklab, var(--c-primary) 9%, var(--c-panel) 91%);
+src/styles/features/stats/statistics-demand-cities.css:356:    background: color-mix(in oklab, var(--c-warn) 10%, var(--c-panel) 90%);
+src/styles/features/stats/statistics-demand-cities.css:362:    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
