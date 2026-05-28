@@ -19,6 +19,7 @@
 @import './workspace-controls-tabs.css';
 @import './workspace-controls-responsive.css';
 @import './workspace-controls-filters.css';
+@import './workspace-overlay-responsive.css';
 
 @layer components {
   .workspace-route-shell {
