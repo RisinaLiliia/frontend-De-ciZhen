@@ -1,0 +1,127 @@
+4:  .workspace-overview,
+5:  .workspace-context-rail--overview {
+38:  .workspace-overview {
+43:  .workspace-overview__mobile-rail {
+47:  .workspace-overview__hero,
+48:  .workspace-overview__grid {
+54:  .workspace-context-rail--overview {
+61:  .workspace-overview__panel {
+68:  .workspace-overview__panel,
+69:  .workspace-context-rail--overview > .workspace-public-demand-map,
+70:  .workspace-context-rail--overview > .workspace-insights-panel,
+71:  .workspace-context-rail--overview > .workspace-context-rail__panel {
+76:  .workspace-overview__panel .section-heading {
+80:  .workspace-overview__panel .panel-header {
+85:  .workspace-overview__tile-header {
+91:  .workspace-overview__tile-header .section-title,
+92:  .workspace-public-demand-map__header.workspace-overview__tile-header .section-title {
+100:  .workspace-overview__tile-header .section-subtitle,
+101:  .workspace-public-demand-map__header.workspace-overview__tile-header .section-subtitle {
+110:  .workspace-overview__panel .section-title,
+111:  .workspace-context-rail--overview .section-title {
+118:  .workspace-overview__panel .section-subtitle,
+119:  .workspace-context-rail--overview .section-subtitle {
+127:  .workspace-overview__panel .nearby-more {
+138:  .workspace-overview__panel .nearby-dot-item {
+144:  .workspace-overview__kpis {
+150:  .workspace-overview__kpis .workspace-statistics__activity-signal {
+161:  .workspace-overview__kpis .workspace-statistics__activity-signal-label {
+167:  .workspace-overview__kpis .workspace-statistics__activity-signal-value {
+175:  .workspace-overview__kpis .workspace-statistics__activity-signal-hint {
+181:  .workspace-overview__actions {
+189:  .workspace-overview__focus-row,
+190:  .workspace-overview__opportunities {
+196:  .workspace-overview__action-links {
+203:  .workspace-overview__action-links > .btn-ghost {
+211:  .workspace-overview__list {
+215:  .workspace-overview__panel--snapshot {
+219:  .workspace-overview__snapshot-ai {
+228:  .workspace-overview__snapshot-ai.workspace-ai-card--decision,
+229:  .workspace-context-rail--overview .workspace-context-rail__decision.workspace-statistics-ki,
+230:  .workspace-overview__insights-panel .workspace-statistics-ki__head {
+234:  .workspace-overview__snapshot-ai.workspace-ai-card--decision,
+235:  .workspace-context-rail--overview .workspace-context-rail__decision.workspace-statistics-ki {
+243:  .workspace-overview .workspace-statistics-ki__stamp,
+244:  .workspace-context-rail--overview .workspace-statistics-ki__stamp {
+261:  .workspace-overview .workspace-statistics-ki__head,
+262:  .workspace-context-rail--overview .workspace-statistics-ki__head {
+278:  .workspace-overview .workspace-statistics-ki__avatar,
+279:  .workspace-context-rail--overview .workspace-statistics-ki__avatar {
+296:  .workspace-overview .workspace-statistics-ki__copy,
+297:  .workspace-context-rail--overview .workspace-statistics-ki__copy {
+303:  .workspace-overview .workspace-statistics-ki__name,
+304:  .workspace-context-rail--overview .workspace-statistics-ki__name {
+310:  .workspace-overview .workspace-statistics-ki__role,
+311:  .workspace-context-rail--overview .workspace-statistics-ki__role {
+317:  .workspace-overview .workspace-statistics-ki__text,
+318:  .workspace-context-rail--overview .workspace-statistics-ki__text {
+325:  .workspace-overview .workspace-statistics-ki__actions,
+326:  .workspace-context-rail--overview .workspace-statistics-ki__actions {
+333:  .workspace-overview__snapshot-ai .workspace-statistics-ki__head {
+337:  .workspace-overview__snapshot-ai .workspace-statistics-ki__text {
+342:  .workspace-overview__panel--actions,
+343:  .workspace-context-rail--overview > .workspace-context-rail__panel {
+347:  .workspace-overview__providers {
+352:  .workspace-overview__panel--actions .request-create-card--compact {
+357:  .workspace-overview__panel--actions .request-create-card__body {
+363:  .workspace-overview__panel--actions .request-create-card__title {
+371:  .workspace-overview__panel--actions .request-create-card__subtitle {
+377:  .workspace-overview__providers .provider-card,
+378:  .workspace-overview__opportunities .request-card,
+379:  .workspace-guest-request-card {
+384:  .workspace-guest-request-card-shell {
+391:  .workspace-guest-request-card {
+397:  .workspace-guest-request-card .request-card__body {
+403:  .workspace-guest-request-card__footer {
+408:  .workspace-guest-request-card__action-row {
+416:  .workspace-guest-request-card .my-request-card__action-btn {
+427:  .workspace-context-rail--overview .workspace-overview__rail-panel--insights {
+452:  .workspace-context-rail--overview .workspace-overview__rail-panel--map,
+453:  .workspace-context-rail--overview .workspace-overview__rail-panel--insights,
+454:  .workspace-context-rail--overview .workspace-context-rail__panel--focus {
+458:  .workspace-context-rail--overview > .workspace-public-demand-map,
+459:  .workspace-context-rail--overview > .workspace-context-rail__panel {
+463:  .workspace-context-rail--overview > .workspace-context-rail__panel > .workspace-environment__eyebrow {
+467:  .workspace-context-rail--overview > .workspace-public-demand-map {
+475:  .workspace-context-rail--overview > .workspace-public-demand-map .workspace-public-demand-map__canvas {
+483:  .workspace-context-rail--overview .workspace-context-rail__decision.workspace-statistics-ki {
+490:  .workspace-context-rail--overview .workspace-context-rail__decision .workspace-statistics-ki__head {
+494:  .workspace-context-rail--overview .workspace-context-rail__decision .workspace-statistics-ki__copy {
+498:  .workspace-context-rail--overview .workspace-context-rail__decision .workspace-statistics-ki__text {
+504:  .workspace-context-rail--overview .workspace-context-rail__decision .workspace-statistics-ki__actions {
+510:  .workspace-context-rail--overview .workspace-context-rail__decision .workspace-ai-card__action.auth-social__btn {
+516:  .workspace-overview .workspace-insights-panel,
+517:  .workspace-insights-panel.workspace-overview__panel,
+518:  .workspace-overview__insights-panel {
+524:  .workspace-insights-panel.workspace-overview__panel,
+525:  .workspace-overview__insights-panel {
+530:  .workspace-overview__insights-panel {
+557:  .workspace-overview__insights-panel .workspace-statistics-insights {
+566:  .workspace-overview__insights-panel.workspace-insights-panel--items-2 .workspace-statistics-insights {
+570:  .workspace-overview__insights-panel.workspace-insights-panel--items-1 .workspace-statistics-insights {
+574:  .workspace-overview__insights-panel.workspace-insights-panel--items-3 .workspace-statistics-insights {
+578:  .workspace-overview__insights-panel.workspace-insights-panel--items-4 .workspace-statistics-insights {
+582:  .workspace-overview__insights-panel .workspace-statistics-insights__item {
+606:  .workspace-overview__insights-panel .workspace-statistics-insights__item.is-featured {
+617:  .workspace-overview__insights-panel .workspace-statistics-insights__content {
+625:  .workspace-overview__insights-panel .workspace-statistics-insights__eyebrow {
+633:  .workspace-overview__insights-panel .workspace-statistics-insights__title {
+645:  .workspace-overview__insights-panel .workspace-statistics-insights__text {
+655:  .workspace-overview__insights-panel .workspace-statistics-insights__evidence {
+665:  .workspace-overview__insights-panel .workspace-statistics-insights__metrics {
+671:  .workspace-overview__insights-panel .workspace-statistics-insights__metric {
+684:  .workspace-overview__insights-panel .workspace-statistics-insights__action {
+694:  .workspace-overview__insights-panel .workspace-statistics-insights__secondary.requests-list {
+703:  .workspace-overview__insights-panel .workspace-statistics-insights__secondary.requests-list > li {
+708:  .workspace-overview__insights-panel .workspace-statistics__empty,
+709:  .workspace-overview__demand-panel .workspace-statistics__empty {
+716:  .workspace-overview__demand-panel.workspace-statistics__demand-panel {
+722:  .workspace-overview__demand-panel .workspace-statistics-demand {
+728:  .workspace-overview__demand-panel .workspace-statistics-demand__row {
+733:  .workspace-overview__demand-panel .workspace-statistics-demand__row-button {
+743:  .workspace-overview__demand-panel .workspace-statistics-demand__meta {
+751:  .workspace-overview__demand-panel .workspace-statistics-demand__track {
+759:  .workspace-overview__demand-panel .workspace-statistics-demand__fill {
+770:  .workspace-overview__demand-panel .workspace-statistics-demand__insight {
+780:  .workspace-overview__demand-panel .workspace-statistics-demand__insight strong {
+784:  .workspace-overview__demand-panel .workspace-statistics__demand-pagination {
