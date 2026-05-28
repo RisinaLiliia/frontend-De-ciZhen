@@ -178,10 +178,10 @@
     justify-content: center;
     min-height: 36px;
     margin-bottom: -1px;
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
     border: 1px solid transparent;
     border-bottom-color: transparent;
-    border-radius: 10px 10px 0 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
     color: var(--color-text-muted);
     text-decoration: none;
     font-size: var(--fs-12);
