@@ -5,13 +5,13 @@
 @import './workspace-overlay.css';
 @import './workspace-navigation.css';
 @import './workspace-context.css';
-@import './workspace-overview.css';
 @import './workspace-providers.css';
 @import './workspace-profile.css';
 @import './workspace-controls.css';
 @import './workspace-mobile-context.css';
 @import './workspace-overview.css';
 @import './workspace-overview-guest-card.css';
+@import './workspace-overview-responsive.css';
 
 @layer components {
   .workspace-route-shell {
