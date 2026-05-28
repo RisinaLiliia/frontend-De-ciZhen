@@ -9,7 +9,7 @@
     justify-content: center;
     gap: var(--space-1);
     min-height: 28px;
-    padding-inline: 12px;
+    padding-inline: var(--space-3);
     border-radius: var(--radius-pill);
     border: 1px solid var(--badge-border);
     background: var(--badge-bg);
@@ -34,13 +34,13 @@
 
   .ui-badge--sm {
     min-height: 28px;
-    padding-inline: 12px;
+    padding-inline: var(--space-3);
     font-size: var(--fs-12);
   }
 
   .ui-badge--md {
     min-height: 32px;
-    padding-inline: 14px;
+    padding-inline: var(--space-3-5);
     font-size: var(--fs-13);
   }
 
@@ -60,7 +60,7 @@
     --badge-bg: color-mix(in oklab, var(--badge-accent) 84%, white 16%);
     --badge-border: color-mix(in oklab, var(--badge-accent) 90%, black 10%);
     --badge-text: white;
-    box-shadow: 0 8px 18px color-mix(in oklab, var(--badge-accent) 14%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   .ui-badge--neutral {
@@ -89,6 +89,6 @@
 
   :is(.ui-badge, .badge, .status-badge):focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 22%, transparent);
+    box-shadow: var(--shadow-focus);
   }
 }
