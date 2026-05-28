@@ -18,6 +18,7 @@
 @import './workspace-overview-insights.css';
 @import './workspace-controls-tabs.css';
 @import './workspace-controls-responsive.css';
+@import './workspace-controls-filters.css';
 
 @layer components {
   .workspace-route-shell {
