@@ -1,3 +1,5 @@
+/* Badges */
+
 @layer components {
   :is(.ui-badge, .badge, .status-badge) {
     --badge-accent: color-mix(in oklab, var(--c-text-muted) 78%, var(--c-border) 22%);

@@ -1,0 +1,236 @@
+src/components/ui/RangeActionToolbar.tsx:35:    <div className={`chip-row ${className ?? ''}`.trim()}>
+src/components/ui/CountBadge.tsx:20:        'count-badge',
+src/components/ui/CountBadge.tsx:21:        size === 'sm' ? 'count-badge--sm' : '',
+src/components/ui/Badge.tsx:5:const badgeVariants = cva('ui-badge', {
+src/components/ui/Badge.tsx:8:      default: 'ui-badge--neutral',
+src/components/ui/Badge.tsx:9:      neutral: 'ui-badge--neutral',
+src/components/ui/Badge.tsx:10:      info: 'ui-badge--info',
+src/components/ui/Badge.tsx:11:      success: 'ui-badge--success',
+src/components/ui/Badge.tsx:12:      warning: 'ui-badge--warning',
+src/components/ui/Badge.tsx:13:      danger: 'ui-badge--risk',
+src/components/ui/Badge.tsx:14:      risk: 'ui-badge--risk',
+src/components/ui/Badge.tsx:15:      opportunity: 'ui-badge--opportunity',
+src/components/ui/Badge.tsx:18:      sm: 'ui-badge--sm',
+src/components/ui/Badge.tsx:19:      md: 'ui-badge--md',
+src/components/ui/Badge.tsx:22:      soft: 'ui-badge--soft',
+src/components/ui/Badge.tsx:23:      outline: 'ui-badge--outline',
+src/components/ui/Badge.tsx:24:      solid: 'ui-badge--solid',
+src/components/ui/Badge.tsx:34:export type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>['variant']>;
+src/components/ui/Badge.tsx:35:export type BadgeSize = NonNullable<VariantProps<typeof badgeVariants>['size']>;
+src/components/ui/Badge.tsx:36:export type BadgeTone = NonNullable<VariantProps<typeof badgeVariants>['tone']>;
+src/components/ui/Badge.tsx:38:type BadgeProps = React.HTMLAttributes<HTMLSpanElement> & VariantProps<typeof badgeVariants>;
+src/components/ui/Badge.tsx:41:  return <span className={cn(badgeVariants({ variant, size, tone }), className)} {...props} />;
+src/components/ui/UserHeaderCard.tsx:228:        {secondaryBadge ? <span className="provider-sub-row__badge">{secondaryBadge}</span> : null}
+src/components/home/HomeStatsPanel.tsx:27:        <Badge className="home-stats__live-badge">{t(I18N_KEYS.homePublic.live)}</Badge>
+src/components/home/HomeNearbyPanel.tsx:278:                  badgeLabel={view.card.recurringLabel}
+src/components/home/HomeQuickSearchPanel.tsx:143:      <div className="chip-row home-quick-search__chips" role="group" aria-label={t(I18N_KEYS.homePublic.quickSearch)}>
+src/components/home/HomeQuickSearchPanel.tsx:150:              className={`chip ${isActive ? 'is-active' : ''}`.trim()}
+src/components/home/HomeHeroAnimatedPreview.tsx:22:        <Badge className="hero-experiment__preview-badge">{t(I18N_KEYS.homePublic.heroAnimatedBadge)}</Badge>
+src/components/home/HomePopularServicesPanel.tsx:55:              className="home-popular-services__badge"
+src/components/providers/ProviderCard.tsx:16:  badges: ProviderBadgeItem[];
+src/components/providers/ProviderCard.tsx:66:  const primaryBadge = provider.badges[0] ?? null;
+src/components/providers/ProviderCard.tsx:67:  const secondaryBadge = provider.badges[1] ?? null;
+src/components/providers/ProviderCard.tsx:72:      className={`provider-card app-card ${variant === 'grid' ? 'is-grid' : 'is-list'} ${canToggleFavorite ? 'has-favorite-toggle' : ''} ${showCornerBadge ? 'has-corner-badge' : ''} ${className ?? ''}`.trim()}
+src/components/providers/ProviderCard.tsx:92:        <div className="provider-badges provider-badges--corner">
+src/components/providers/ProviderAvailabilityMeta.tsx:154:        <span className={`status-badge request-detail__availability-status ${tone === 'warning' ? 'status-badge--warning' : 'status-badge--success'}`.trim()}>
+src/components/requests/PublicRequestsCardList.tsx:81:              badgeLabel={hideRecurringBadge ? null : view.card.recurringLabel}
+src/components/requests/RequestsListItem.tsx:93:      badges={hideRecurringBadge ? [] : [{ label: view.card.recurringLabel, variant: 'neutral', tone: 'outline', size: 'sm' }]}
+src/components/requests/RequestsFilterControlsContent.tsx:133:          className={`chip-row requests-filters__chips requests-filters__chips--${variant}`.trim()}
+src/components/requests/RequestsFilterControlsContent.tsx:137:          {appliedChips.map((chip) => (
+src/components/requests/RequestsFilterControlsContent.tsx:139:              key={chip.key}
+src/components/requests/RequestsFilterControlsContent.tsx:141:              className="chip is-active"
+src/components/requests/RequestsFilterControlsContent.tsx:143:              onClick={chip.onRemove}
+src/components/requests/RequestsFilterControlsContent.tsx:144:              aria-label={`${chip.label} ${t(I18N_KEYS.requestsPage.removeFilterSuffix)}`}
+src/components/requests/RequestsFilterControlsContent.tsx:146:              {chip.label} ×
+src/components/requests/PublicRequestCardStatusSlot.tsx:39:  if (!status.badgeStatus && status.offerCardState === 'none') {
+src/components/requests/PublicRequestCardStatusSlot.tsx:57:  if (!status.statusLabel || !status.badgeStatus) return null;
+src/components/requests/PublicRequestCardStatusSlot.tsx:62:        className={`${getStatusBadgeClass(status.badgeStatus)} capitalize`}
+src/components/requests/PublicRequestCardStatusSlot.tsx:64:          status.badgeStatus === 'sent'
+src/components/requests/RequestListOfferStatusActions.tsx:31:  if (!status.badgeStatus && status.offerCardState === 'none') {
+src/components/requests/RequestListOfferStatusActions.tsx:49:  if (!status.statusLabel || !status.badgeStatus) return null;
+src/components/requests/RequestListOfferStatusActions.tsx:54:        className={`${getStatusBadgeClass(status.badgeStatus)} capitalize`}
+src/components/requests/RequestListOfferStatusActions.tsx:56:          status.badgeStatus === 'sent'
+src/components/requests/details/RequestDetailHeader.tsx:13:  badgeLabel?: string;
+src/components/requests/details/RequestDetailHeader.tsx:30:  badgeLabel,
+src/components/requests/details/RequestDetailHeader.tsx:42:            <div className="request-detail__badges">
+src/components/requests/details/RequestDetailHeader.tsx:43:              {badgeLabel ? <span className="badge request-detail__badge">{badgeLabel}</span> : null}
+src/components/requests/details/RequestDetailHeader.tsx:61:              <span className={`status-badge ${priceTrend === 'up' ? 'status-badge--success' : 'status-badge--warning'}`}>
+src/components/requests/details/RequestDetailSimilar.tsx:64:                  badgeLabel={item.isRecurring ? recurringLabel : onceLabel}
+src/components/requests/details/RequestOwnerEditPanel.tsx:165:            className={`status-badge ${priceTrend === 'up' ? 'status-badge--success' : 'status-badge--warning'}`}
+src/components/requests/WorkspaceGuestRequestCard.tsx:24:  badgeLabel?: string | null;
+src/components/requests/WorkspaceGuestRequestCard.tsx:52:  badgeLabel = null,
+src/components/requests/WorkspaceGuestRequestCard.tsx:89:      badges={[]}
+src/components/requests/WorkspaceGuestRequestCard.tsx:103:      statusSlot={statusSlot ?? (badgeLabel ? (
+src/components/requests/WorkspaceGuestRequestCard.tsx:105:          {badgeLabel}
+src/components/requests/RequestCard.tsx:26:  badges: Array<string | RequestCardBadge>;
+src/components/requests/RequestCard.tsx:61:  badges,
+src/components/requests/RequestCard.tsx:94:  const visibleBadges = badges
+src/components/requests/RequestCard.tsx:96:    .map<RequestCardBadge>((badge) => (
+src/components/requests/RequestCard.tsx:97:      typeof badge === 'string'
+src/components/requests/RequestCard.tsx:98:        ? { label: badge, variant: 'neutral', tone: 'outline', size: 'sm' }
+src/components/requests/RequestCard.tsx:103:            ...badge,
+src/components/requests/RequestCard.tsx:205:            <div className="request-badges" aria-hidden="true">
+src/components/requests/RequestCard.tsx:206:              {visibleBadges.map((badge) => (
+src/components/requests/RequestCard.tsx:208:                  key={badge.label}
+src/components/requests/RequestCard.tsx:209:                  variant={badge.variant}
+src/components/requests/RequestCard.tsx:210:                  tone={badge.tone}
+src/components/requests/RequestCard.tsx:211:                  size={badge.size}
+src/components/requests/RequestCard.tsx:212:                  className={badge.className}
+src/components/requests/RequestCard.tsx:213:                  title={badge.title}
+src/components/requests/RequestCard.tsx:214:                  aria-label={badge.ariaLabel}
+src/components/requests/RequestCard.tsx:216:                  {badge.label}
+src/components/requests/RequestCard.tsx:256:        <div className="request-badges request-badges--media" aria-hidden="true">
+src/components/requests/RequestCard.tsx:257:          {visibleBadges.map((badge) => (
+src/components/requests/RequestCard.tsx:259:              key={badge.label}
+src/components/requests/RequestCard.tsx:260:              variant={badge.variant}
+src/components/requests/RequestCard.tsx:261:              tone={badge.tone}
+src/components/requests/RequestCard.tsx:262:              size={badge.size}
+src/components/requests/RequestCard.tsx:263:              className={badge.className}
+src/components/requests/RequestCard.tsx:264:              title={badge.title}
+src/components/requests/RequestCard.tsx:265:              aria-label={badge.ariaLabel}
+src/components/requests/RequestCard.tsx:267:              {badge.label}
+src/components/requests/RequestsFilters.tsx:107:      <span className="workspace-mobile-filters__summary-chip">{cityLabel}</span>
+src/components/requests/RequestsFilters.tsx:108:      <span className="workspace-mobile-filters__summary-chip">{mobileSummaryLabel}</span>
+src/components/requests/RequestsExplorerProvidersContent.tsx:122:              badges: item.card.badges.map((badge) => ({
+src/components/requests/RequestsExplorerProvidersContent.tsx:123:                ...badge,
+src/components/requests/RequestsExplorerProvidersContent.tsx:124:                tooltip: badge.tooltip ?? undefined,
+src/components/legal/CookieConsentLayer.tsx:111:                <span className="cookie-consent-option__badge">{t(I18N_KEYS.consent.alwaysActive)}</span>
+src/components/reviews/WorkspaceReviewRatingField.tsx:21:          className="chip-row provider-reviews-hub__star-picker"
+src/features/providers/profile/ProviderPublicProfileContent.tsx:43:          badgeLabel={model.t(I18N_KEYS.requestsPage.favoritesTabProviders)}
+src/features/workspace/ai-rail/WorkspaceInsightsPanel.tsx:13:  badgeLabel: string;
+src/features/workspace/ai-rail/WorkspaceInsightsPanel.tsx:14:  badgeTone: WorkspaceBadgeVariant;
+src/features/workspace/ai-rail/WorkspaceInsightsPanel.tsx:155:                    variant={featuredItem.badgeTone}
+src/features/workspace/ai-rail/WorkspaceInsightsPanel.tsx:156:                    className="workspace-statistics-insights__chip"
+src/features/workspace/ai-rail/WorkspaceInsightsPanel.tsx:158:                    {featuredItem.badgeLabel}
+src/features/workspace/ai-rail/WorkspaceInsightsPanel.tsx:192:                        variant={item.badgeTone}
+src/features/workspace/ai-rail/WorkspaceInsightsPanel.tsx:193:                        className="workspace-statistics-insights__chip"
+src/features/workspace/ai-rail/WorkspaceInsightsPanel.tsx:195:                        {item.badgeLabel}
+src/features/workspace/ai-rail/WorkspaceDecisionRecommendationSection.tsx:10:  badgeLabel: string;
+src/features/workspace/ai-rail/WorkspaceDecisionRecommendationSection.tsx:11:  badgeTone: WorkspaceBadgeVariant;
+src/features/workspace/ai-rail/WorkspaceDecisionRecommendationSection.tsx:21:  badgeLabel,
+src/features/workspace/ai-rail/WorkspaceDecisionRecommendationSection.tsx:22:  badgeTone,
+src/features/workspace/ai-rail/WorkspaceDecisionRecommendationSection.tsx:41:          <WorkspaceBadge variant={badgeTone} className="workspace-statistics-insights__chip">
+src/features/workspace/ai-rail/WorkspaceDecisionRecommendationSection.tsx:42:            {badgeLabel}
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:58:  const cityValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'city'), [model.chips]);
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:59:  const categoryValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'category'), [model.chips]);
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:60:  const serviceValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'service'), [model.chips]);
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:61:  const rangeValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'range'), [model.chips]);
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:145:            badgeLabel={focusCopy.recommendationLabel}
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:146:            badgeTone="info"
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:155:            badgeLabel={focusCopy.scopeLabel}
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:156:            badgeTone="info"
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:163:            badgeLabel={focusCopy.actionLabel}
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:164:            badgeTone="success"
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:170:            badgeLabel={focusCopy.switchLabel}
+src/features/workspace/ai-rail/WorkspaceFocusRailPanel.tsx:171:            badgeTone="warning"
+src/features/workspace/context/useContext.tsx:105:  chips: Array<{
+src/features/workspace/context/useContext.tsx:150:  chips: WorkspaceContextModel['chips'],
+src/features/workspace/context/useContext.tsx:151:  key: WorkspaceContextModel['chips'][number]['key'],
+src/features/workspace/context/useContext.tsx:153:  return chips.find((chip) => chip.key === key)?.value ?? '';
+src/features/workspace/context/useContext.tsx:169:  const cityChip = model.chips.find((chip) => chip.key === 'city');
+src/features/workspace/context/useContext.tsx:170:  const categoryChip = model.chips.find((chip) => chip.key === 'category');
+src/features/workspace/context/useContext.tsx:171:  const serviceChip = model.chips.find((chip) => chip.key === 'service');
+src/features/workspace/context/useContext.tsx:172:  const rangeChip = model.chips.find((chip) => chip.key === 'range');
+src/features/workspace/context/useContext.tsx:410:  const chipLabels = React.useMemo(() => getWorkspaceChipLabels(locale), [locale]);
+src/features/workspace/context/useContext.tsx:531:  const chips = React.useMemo(
+src/features/workspace/context/useContext.tsx:535:        label: chipLabels.city,
+src/features/workspace/context/useContext.tsx:541:        label: chipLabels.category,
+src/features/workspace/context/useContext.tsx:547:        label: chipLabels.range,
+src/features/workspace/context/useContext.tsx:553:        label: chipLabels.service,
+src/features/workspace/context/useContext.tsx:559:      chipLabels,
+src/features/workspace/context/useContext.tsx:627:      chips,
+src/features/workspace/context/useContext.tsx:670:      chips,
+src/features/workspace/context/contextInlineControls.tsx:33:            filter.display === 'chips' ? 'workspace-context-controls__chip-filter' : undefined
+src/features/workspace/context/contextInlineControls.tsx:36:          {filter.display === 'chips' ? (
+src/features/workspace/context/contextInlineControls.tsx:45:              className="workspace-context-controls__chip-group"
+src/features/workspace/context/useContext.test.tsx:32:    chips: [
+src/features/workspace/chat/ChatWorkspacePage.test.tsx:305:  it('renders the sidebar list with unread badge and active conversation', async () => {
+src/features/workspace/shell/WorkspaceSidebar.tsx:71:              {'badge' in item ? (
+src/features/workspace/shell/WorkspaceSidebar.tsx:72:                <span className="workspace-sidebar__badge">{item.badge}</span>
+src/features/workspace/navigation/workspaceState.personalNav.tsx:64:      badgeValue: normalizeWorkspaceNavCount(myRequestsTotal),
+src/features/workspace/navigation/workspaceState.personalNav.tsx:77:      badgeValue: normalizeWorkspaceNavCount(favoriteRequestCount),
+src/features/workspace/navigation/workspaceState.personalNav.tsx:119:      badgeValue: 0,
+src/features/workspace/navigation/workspaceState.publicNav.tsx:39:      badgeValue: publicRequestsCount,
+src/features/workspace/navigation/workspaceState.publicNav.tsx:50:      badgeValue: publicProvidersCount,
+src/features/workspace/navigation/workspaceState.publicNav.tsx:60:      badgeValue: publicStatsCount,
+src/features/workspace/shared/WorkspaceBadge.tsx:33:    '--badge-bg': 'var(--dc-surface-muted)',
+src/features/workspace/shared/WorkspaceBadge.tsx:34:    '--badge-border': 'var(--dc-border)',
+src/features/workspace/shared/WorkspaceBadge.tsx:35:    '--badge-text': 'var(--dc-text-muted)',
+src/features/workspace/shared/WorkspaceBadge.tsx:36:    '--badge-accent': 'var(--dc-text-muted)',
+src/features/workspace/shared/WorkspaceBadge.tsx:39:    '--badge-bg': 'var(--dc-blue-soft)',
+src/features/workspace/shared/WorkspaceBadge.tsx:40:    '--badge-border': 'var(--color-info-border)',
+src/features/workspace/shared/WorkspaceBadge.tsx:41:    '--badge-text': 'var(--dc-blue)',
+src/features/workspace/shared/WorkspaceBadge.tsx:42:    '--badge-accent': 'var(--dc-blue)',
+src/features/workspace/shared/WorkspaceBadge.tsx:45:    '--badge-bg': 'var(--dc-sage-soft)',
+src/features/workspace/shared/WorkspaceBadge.tsx:46:    '--badge-border': 'var(--color-success-border)',
+src/features/workspace/shared/WorkspaceBadge.tsx:47:    '--badge-text': 'var(--dc-sage)',
+src/features/workspace/shared/WorkspaceBadge.tsx:48:    '--badge-accent': 'var(--dc-sage)',
+src/features/workspace/shared/WorkspaceBadge.tsx:51:    '--badge-bg': 'var(--dc-sand-soft)',
+src/features/workspace/shared/WorkspaceBadge.tsx:52:    '--badge-border': 'var(--color-warning-border)',
+src/features/workspace/shared/WorkspaceBadge.tsx:53:    '--badge-text': 'var(--dc-sand)',
+src/features/workspace/shared/WorkspaceBadge.tsx:54:    '--badge-accent': 'var(--dc-sand)',
+src/features/workspace/shared/WorkspaceBadge.tsx:57:    '--badge-bg': 'var(--dc-primary-soft)',
+src/features/workspace/shared/WorkspaceBadge.tsx:58:    '--badge-border': 'var(--color-primary-border)',
+src/features/workspace/shared/WorkspaceBadge.tsx:59:    '--badge-text': 'var(--dc-primary)',
+src/features/workspace/shared/WorkspaceBadge.tsx:60:    '--badge-accent': 'var(--dc-primary)',
+src/features/workspace/shared/WorkspaceBadge.tsx:63:    '--badge-bg': 'var(--dc-danger-soft)',
+src/features/workspace/shared/WorkspaceBadge.tsx:64:    '--badge-border': 'var(--color-danger-border)',
+src/features/workspace/shared/WorkspaceBadge.tsx:65:    '--badge-text': 'var(--dc-danger)',
+src/features/workspace/shared/WorkspaceBadge.tsx:66:    '--badge-accent': 'var(--dc-danger)',
+src/features/workspace/shared/WorkspaceBadge.tsx:69:    '--badge-bg': 'var(--dc-blue-soft)',
+src/features/workspace/shared/WorkspaceBadge.tsx:70:    '--badge-border': 'var(--color-info-border)',
+src/features/workspace/shared/WorkspaceBadge.tsx:71:    '--badge-text': 'var(--dc-blue)',
+src/features/workspace/shared/WorkspaceBadge.tsx:72:    '--badge-accent': 'var(--dc-blue)',
+src/features/workspace/shared/WorkspaceChipToggleGroup.tsx:29:      className={`chip-row workspace-chip-toggle ${className ?? ''}`.trim()}
+src/features/workspace/shared/WorkspaceChipToggleGroup.tsx:40:            className={`chip workspace-chip-toggle__chip ${isActive ? 'is-active' : ''}`.trim()}
+src/features/workspace/requests/RequestsView.tsx:349:  const statusVariant: WorkspaceBadgeVariant = card.status.badgeVariant ?? 'neutral';
+src/features/workspace/requests/RequestsView.tsx:354:      {(card.status.badgeLabel || chrome.priorityLabel || showOwnerMenu) ? (
+src/features/workspace/requests/RequestsView.tsx:357:            {card.status.badgeLabel ? (
+src/features/workspace/requests/RequestsView.tsx:358:              <WorkspaceBadge variant={statusVariant} className="my-request-card__state-chip">
+src/features/workspace/requests/RequestsView.tsx:359:                {card.status.badgeLabel}
+src/features/workspace/requests/RequestsView.tsx:387:            <span key={item} className="my-request-card__context-pill">
+src/features/workspace/requests/RequestsView.tsx:668:          badgeLabel={preview.badgeLabel ?? null}
+src/features/workspace/requests/RequestsView.tsx:719:        badges={[]}
+src/features/workspace/requests/details/RequestDetailsContent.tsx:170:          badgeLabel={showOwnerBadge ? t(I18N_KEYS.requestDetails.ownerBadge) : undefined}
+src/features/workspace/requests/WorkspaceMobileSectionSheetCard.tsx:23:  const badgeValue = resolveWorkspaceMobileSheetBadgeValue(item);
+src/features/workspace/requests/WorkspaceMobileSectionSheetCard.tsx:30:        {badgeValue !== null ? (
+src/features/workspace/requests/WorkspaceMobileSectionSheetCard.tsx:34:            className="workspace-mobile-nav-sheet__card-badge"
+src/features/workspace/requests/WorkspaceMobileSectionSheetCard.tsx:35:            value={formatWorkspaceMobileSheetBadgeValue(badgeValue)}
+src/features/workspace/requests/create/components/CreateRequestDetailsSection.tsx:271:            <span key={tag} className="request-tag-chip">
+src/features/workspace/requests/RequestsView.test.tsx:208:            badgeLabel: null,
+src/features/workspace/requests/RequestsView.test.tsx:211:            badgeLabel: 'In Bearbeitung',
+src/features/workspace/requests/RequestsView.test.tsx:212:            badgeVariant: 'warning',
+src/features/workspace/profile/onboarding/WorkspaceProfileOnboardingAvatarField.tsx:53:            <span className="workspace-profile-onboarding__avatar-badge">
+src/features/workspace/overview/WorkspaceOverviewMain.tsx:275:          badgeLabel={copy.opportunityBadge}
+src/features/workspace/overview/WorkspaceOverviewMain.tsx:356:                <div className="chip-row workspace-overview__focus-row">
+src/features/workspace/overview/WorkspaceOverviewInsightsPanel.tsx:38:          const badge = resolveInsightBadge(item, statisticsModel.copy);
+src/features/workspace/overview/WorkspaceOverviewInsightsPanel.tsx:43:            badgeLabel: badge.label,
+src/features/workspace/overview/WorkspaceOverviewInsightsPanel.tsx:44:            badgeTone: badge.tone,
+src/features/workspace/stats/sections/StatisticsInsightsPanel.tsx:23:    const badge = resolveInsightBadge(item, copy);
+src/features/workspace/stats/sections/StatisticsInsightsPanel.tsx:28:      badgeLabel: badge.label,
+src/features/workspace/stats/sections/StatisticsInsightsPanel.tsx:29:      badgeTone: badge.tone,
+src/features/workspace/stats/sections/StatisticsPriceRecommendationPanel.tsx:125:            badgeLabel={copy.pricePositionLabel}
+src/features/workspace/stats/sections/StatisticsPriceRecommendationPanel.tsx:126:            badgeTone="info"
+src/features/workspace/stats/sections/StatisticsPriceRecommendationPanel.tsx:135:            badgeLabel={copy.priceStrategyObservationLabel}
+src/features/workspace/stats/sections/StatisticsPriceRecommendationPanel.tsx:136:            badgeTone="info"
+src/features/workspace/stats/sections/StatisticsPriceRecommendationPanel.tsx:143:            badgeLabel={copy.priceStrategyActionLabel}
+src/features/workspace/stats/sections/StatisticsPriceRecommendationPanel.tsx:144:            badgeTone="success"
+src/features/workspace/stats/sections/StatisticsPriceRecommendationPanel.tsx:150:            badgeLabel={copy.priceStrategyPremiumLabel}
+src/features/workspace/stats/sections/StatisticsPriceRecommendationPanel.tsx:151:            badgeTone="warning"
+src/features/workspace/stats/sections/StatisticsDecisionLayer.tsx:119:            badgeLabel={copy.decisionWhyLabel}
+src/features/workspace/stats/sections/StatisticsDecisionLayer.tsx:120:            badgeTone="info"
+src/features/workspace/stats/sections/StatisticsDecisionLayer.tsx:130:              badgeLabel={copy.decisionWhyLabel}
+src/features/workspace/stats/sections/StatisticsDecisionLayer.tsx:131:              badgeTone="info"
+src/features/workspace/stats/sections/StatisticsDecisionLayer.tsx:139:            badgeLabel={copy.decisionNextStepsLabel}
+src/features/workspace/stats/sections/StatisticsDecisionLayer.tsx:140:            badgeTone="success"
+src/features/workspace/stats/sections/StatisticsRecommendationsPanel.tsx:16:  badgeLabel: string;
+src/features/workspace/stats/sections/StatisticsRecommendationsPanel.tsx:17:  badgeVariant: WorkspaceBadgeVariant;
+src/features/workspace/stats/sections/StatisticsRecommendationsPanel.tsx:55:                    <WorkspaceBadge variant={group.badgeVariant}>{group.badgeLabel}</WorkspaceBadge>
+src/features/workspace/stats/sections/StatisticsGrowthPanel.tsx:70:            <div className="workspace-statistics-growth__badges">
+src/features/workspace/stats/components/OpportunityToneBadge.tsx:22:        'workspace-opportunity-tone-badge',
+src/features/workspace/stats/StatisticsView.tsx:391:                <span className="workspace-statistics__mode-badge">{modeLabel}</span>
+src/features/workspace/stats/StatisticsView.tsx:648:                      badgeLabel: copy.insightsTypeRiskLabel,
+src/features/workspace/stats/StatisticsView.tsx:649:                      badgeVariant: 'risk',
+src/features/workspace/stats/StatisticsView.tsx:655:                      badgeLabel: copy.insightsTypeChanceLabel,
+src/features/workspace/stats/StatisticsView.tsx:656:                      badgeVariant: 'opportunity',
+src/features/workspace/reviews/WorkspaceReviewsComposer.tsx:81:            <div className="chip-row provider-reviews-hub__star-picker" role="group" aria-label={t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}>
