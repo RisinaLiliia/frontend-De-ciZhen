@@ -10,6 +10,8 @@
 @import './workspace-profile.css';
 @import './workspace-controls.css';
 @import './workspace-mobile-context.css';
+@import './workspace-overview.css';
+@import './workspace-overview-guest-card.css';
 
 @layer components {
   .workspace-route-shell {
