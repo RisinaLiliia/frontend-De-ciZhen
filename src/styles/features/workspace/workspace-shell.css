@@ -15,6 +15,7 @@
 @import './workspace-overview-kpis.css';
 @import './workspace-overview-demand.css';
 @import './workspace-overview-ai.css';
+@import './workspace-overview-insights.css';
 
 @layer components {
   .workspace-route-shell {
