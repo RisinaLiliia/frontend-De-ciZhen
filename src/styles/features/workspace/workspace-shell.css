@@ -13,6 +13,7 @@
 @import './workspace-overview-guest-card.css';
 @import './workspace-overview-responsive.css';
 @import './workspace-overview-kpis.css';
+@import './workspace-overview-demand.css';
 
 @layer components {
   .workspace-route-shell {
