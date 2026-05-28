@@ -90,7 +90,7 @@
       color-mix(in oklab, var(--c-primary) 92%, white 8%),
       color-mix(in oklab, var(--c-primary) 82%, black 18%)
     );
-    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 25%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   .profile-settings__meta {

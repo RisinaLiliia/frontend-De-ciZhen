@@ -39,7 +39,7 @@
   html:not(.dark) .howitworks-tabs {
     border-color: color-mix(in oklab, var(--c-hero-tint-primary) 20%, var(--c-border) 80%);
     background: var(--c-panel);
-    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .howitworks-tab {

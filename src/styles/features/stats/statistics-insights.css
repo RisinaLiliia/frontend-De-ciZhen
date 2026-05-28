@@ -161,7 +161,7 @@
 
   .workspace-statistics-insights__item:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-ink) 10%, transparent);
+    box-shadow: var(--shadow-card-hover);
     border-color: color-mix(in oklab, var(--surface-card-border) 52%, var(--c-primary) 48%);
   }
 

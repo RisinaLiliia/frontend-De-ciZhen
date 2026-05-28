@@ -405,7 +405,7 @@
         color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%) 0%,
         color-mix(in oklab, var(--c-accent) 8%, var(--c-panel) 92%) 100%
       );
-    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 7%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   .workspace-statistics-price__signal {

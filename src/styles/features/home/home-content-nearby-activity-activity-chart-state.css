@@ -194,7 +194,7 @@
 
   html:not(.dark) .home-nearby-panel .nearby-more:hover {
     border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
-    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 10%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
 

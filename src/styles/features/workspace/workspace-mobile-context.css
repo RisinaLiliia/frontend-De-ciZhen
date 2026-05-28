@@ -149,7 +149,7 @@
       border: 1px solid color-mix(in oklab, var(--color-border-soft) 84%, var(--color-surface) 16%);
       border-radius: var(--radius-lg);
       background: var(--color-surface);
-      box-shadow: 0 16px 34px rgb(15 23 42 / 0.08);
+      box-shadow: var(--shadow-floating);
       backdrop-filter: none;
     }
 

@@ -134,7 +134,7 @@
     color: var(--c-primary-contrast);
     font-size: var(--fs-12);
     line-height: 1.2;
-    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 22%, transparent);
+    box-shadow: var(--shadow-card);
     pointer-events: none;
     z-index: 2;
     white-space: nowrap;

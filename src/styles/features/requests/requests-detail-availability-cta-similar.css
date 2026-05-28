@@ -38,13 +38,13 @@
     background: color-mix(in oklab, var(--c-accent) 22%, var(--c-panel) 78%);
     border: 1px solid color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
     color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
-    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 20%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   .request-detail__cta-btn.is-edit:hover {
     filter: none;
     background: color-mix(in oklab, var(--c-accent) 30%, var(--c-panel) 70%);
-    box-shadow: 0 10px 24px color-mix(in oklab, var(--c-accent) 28%, transparent);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .request-detail__cta-subtext {

@@ -78,7 +78,7 @@
     font-size: var(--btn-font);
     font-weight: 600;
     text-decoration: none;
-    box-shadow: 0 12px 28px color-mix(in oklab, var(--c-primary) 22%, transparent);
+    box-shadow: var(--shadow-card-hover);
     transition:
       transform var(--transition-fast),
       box-shadow var(--transition-fast),
@@ -91,7 +91,7 @@
   .home-trust-live-panel__cta:hover {
     transform: translateY(-1px);
     border-color: color-mix(in oklab, var(--c-primary) 35%, var(--c-border) 65%);
-    box-shadow: 0 16px 34px color-mix(in oklab, var(--c-primary) 26%, transparent);
+    box-shadow: var(--shadow-floating);
   }
 
   .home-trust-live-panel__cta:focus-visible {

@@ -56,7 +56,7 @@
       font-size: var(--fs-11);
       line-height: 1.1;
       white-space: nowrap;
-      box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 12%, transparent);
+      box-shadow: var(--shadow-card);
       pointer-events: none;
       z-index: 50;
     }
