@@ -5,3 +5,6 @@
 @import './statistics-funnel.css';
 @import './statistics-opportunity.css';
 @import './statistics-price.css';
+@import './statistics-opportunity-list.css';
+@import './statistics-price-panel.css';
+@import './statistics-price-modal.css';
