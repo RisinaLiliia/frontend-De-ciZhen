@@ -33,7 +33,7 @@
     justify-content: center;
     color: color-mix(in oklab, var(--color-primary) 80%, var(--color-text) 20%);
     background: color-mix(in oklab, var(--color-primary) 16%, var(--color-surface) 84%);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 38%, var(--c-border) 62%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 38%, var(--color-border) 62%);
   }
 
   .provider-verified-icon svg {
@@ -44,7 +44,7 @@
   .provider-verified-icon.is-online {
     color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
     background: color-mix(in oklab, var(--c-success) 16%, var(--color-surface) 84%);
-    border-color: color-mix(in oklab, var(--c-success) 42%, var(--c-border) 58%);
+    border-color: color-mix(in oklab, var(--c-success) 42%, var(--color-border) 58%);
   }
 
   .provider-sub {

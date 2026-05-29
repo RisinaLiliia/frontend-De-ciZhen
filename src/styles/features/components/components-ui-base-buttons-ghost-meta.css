@@ -52,7 +52,7 @@
   }
 
   :is(.btn-ghost, .app-button-ghost).is-primary {
-    border-color: color-mix(in oklab, var(--color-primary) 26%, var(--c-border) 74%);
+    border-color: color-mix(in oklab, var(--color-primary) 26%, var(--color-border) 74%);
     color: var(--color-primary);
     background: color-mix(in oklab, var(--color-primary) 8%, var(--color-surface) 92%);
   }

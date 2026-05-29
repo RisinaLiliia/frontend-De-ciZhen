@@ -5,8 +5,8 @@
     display: block;
     padding: var(--space-3);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
-    background: color-mix(in oklab, var(--color-surface) 92%, var(--c-border) 8%);
+    border: 1px solid color-mix(in oklab, var(--color-border) 60%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%);
   }
 
   .request-detail__client-card--provider-hero {

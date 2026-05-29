@@ -667,7 +667,7 @@
     inset: 50% 10px auto;
     height: 2px;
     border-radius: var(--workspace-statistics-chip-radius);
-    background: color-mix(in oklab, var(--c-border) 72%, transparent);
+    background: color-mix(in oklab, var(--color-border) 72%, transparent);
     transform: translateY(-50%);
   }
 

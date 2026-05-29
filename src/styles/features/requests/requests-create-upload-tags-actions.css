@@ -2,7 +2,7 @@
 
 @layer components {
   .request-upload {
-    border: 1px dashed color-mix(in oklab, var(--c-border) 70%, transparent);
+    border: 1px dashed color-mix(in oklab, var(--color-border) 70%, transparent);
     border-radius: var(--radius-lg);
     padding: var(--space-4);
     display: grid;
@@ -37,7 +37,7 @@
     position: relative;
     border-radius: var(--radius-md);
     overflow: hidden;
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     background: color-mix(in oklab, var(--color-surface) 88%, transparent);
     aspect-ratio: 4 / 3;
   }
@@ -78,7 +78,7 @@
     border-radius: var(--radius-pill);
     font-size: var(--fs-12);
     background: var(--surface-soft-bg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     color: var(--color-text);
   }
 

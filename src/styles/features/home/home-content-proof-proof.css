@@ -26,7 +26,7 @@
 
   .proof-card {
     border-radius: var(--radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     background: var(--surface-soft-bg);
     padding: 12px 14px;
     display: grid;
@@ -41,7 +41,7 @@
   .proof-card.is-active {
     opacity: 1;
     transform: translateY(0);
-    border-color: color-mix(in oklab, var(--color-primary) 35%, var(--c-border) 65%);
+    border-color: color-mix(in oklab, var(--color-primary) 35%, var(--color-border) 65%);
     box-shadow: var(--shadow-card-hover);
   }
 
@@ -51,13 +51,13 @@
   }
 
   html:not(.dark) .home-proof-panel .proof-card {
-    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--color-border) 82%);
     background: linear-gradient(180deg, var(--color-surface) 0%, color-mix(in oklab, var(--color-surface) 92%, var(--c-hero-tint-primary) 8%) 100%);
     box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .home-proof-panel .proof-card.is-active {
-    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--c-border) 70%);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--color-border) 70%);
     box-shadow: var(--shadow-card);
   }
 
@@ -83,7 +83,7 @@
     height: 28px;
     border-radius: var(--radius-pill);
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 88%, var(--c-border) 12%);
+    background: color-mix(in oklab, var(--color-surface) 88%, var(--color-border) 12%);
     display: inline-flex;
     align-items: center;
     justify-content: center;

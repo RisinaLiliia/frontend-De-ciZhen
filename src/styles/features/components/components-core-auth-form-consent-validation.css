@@ -51,7 +51,7 @@
     font-size: var(--fs-10);
     border-radius: var(--radius-pill);
     padding: 3px 7px;
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     background: var(--surface-soft-bg);
     color: var(--c-text-muted);
     flex: 0 0 auto;

@@ -68,14 +68,14 @@
   }
 
   .provider-profile-highlight {
-    border-color: color-mix(in oklab, var(--color-primary) 45%, var(--c-border) 55%);
+    border-color: color-mix(in oklab, var(--color-primary) 45%, var(--color-border) 55%);
     box-shadow:
       0 0 0 1px color-mix(in oklab, var(--color-primary) 28%, transparent),
       0 14px 30px color-mix(in oklab, var(--color-primary) 18%, transparent);
   }
 
   .provider-profile-form--highlight {
-    border-color: color-mix(in oklab, var(--color-primary) 50%, var(--c-border) 50%);
+    border-color: color-mix(in oklab, var(--color-primary) 50%, var(--color-border) 50%);
     box-shadow:
       0 0 0 2px var(--focus-ring-primary),
       var(--shadow-card);

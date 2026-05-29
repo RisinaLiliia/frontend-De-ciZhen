@@ -27,7 +27,7 @@
       top: 14px;
       bottom: 14px;
       width: 2px;
-      background: var(--c-border);
+      background: var(--color-border);
       opacity: 0.7;
     }
 

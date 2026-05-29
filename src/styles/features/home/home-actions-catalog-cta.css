@@ -46,7 +46,7 @@
     flex: 0 0 56px;
     overflow: hidden;
     border-radius: 0;
-    background: color-mix(in oklab, var(--color-surface) 92%, var(--c-border) 8%);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%);
   }
 
   .home-popular-services__image {
@@ -86,7 +86,7 @@
   }
 
   .home-popular-services__link:hover {
-    border-color: color-mix(in oklab, var(--c-accent) 40%, var(--c-border) 60%);
+    border-color: color-mix(in oklab, var(--c-accent) 40%, var(--color-border) 60%);
     box-shadow: var(--shadow-card);
     transform: translateY(-1px);
   }
@@ -104,7 +104,7 @@
     padding: var(--space-1-5) var(--space-3);
     border-radius: var(--radius-pill);
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 92%, var(--c-border) 8%);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%);
     color: var(--c-text-muted);
     font-size: var(--fs-12);
     font-weight: 600;
@@ -118,8 +118,8 @@
 
   .home-popular__cta:hover {
     color: var(--color-text);
-    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--c-border) 70%);
-    background: color-mix(in oklab, var(--color-surface) 84%, var(--c-border) 16%);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--color-border) 70%);
+    background: color-mix(in oklab, var(--color-surface) 84%, var(--color-border) 16%);
     box-shadow: var(--shadow-card);
   }
 
@@ -159,7 +159,7 @@
   }
 
   .home-hero__cta--secondary {
-    border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 75%, transparent);
     background: var(--surface-soft-bg);
     color: var(--color-text);
   }
@@ -173,8 +173,8 @@
   }
 
   .home-hero__cta--secondary:hover {
-    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--c-border) 70%);
-    background: color-mix(in oklab, var(--color-surface) 82%, var(--c-border) 18%);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--color-border) 70%);
+    background: color-mix(in oklab, var(--color-surface) 82%, var(--color-border) 18%);
     box-shadow: var(--shadow-card);
   }
 

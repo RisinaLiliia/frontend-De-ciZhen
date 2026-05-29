@@ -22,7 +22,7 @@
   }
 
   .icon-button:hover {
-    background: color-mix(in oklab, var(--c-border) 55%, transparent);
+    background: color-mix(in oklab, var(--color-border) 55%, transparent);
     transform: translateY(-1px);
   }
 

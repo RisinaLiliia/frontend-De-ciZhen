@@ -78,7 +78,7 @@
   }
 
   .request-detail__owner-photo-slot:hover:not(:disabled) {
-    border-color: color-mix(in oklab, var(--color-primary) 40%, var(--c-border) 60%);
+    border-color: color-mix(in oklab, var(--color-primary) 40%, var(--color-border) 60%);
     background: color-mix(in oklab, var(--color-primary) 12%, var(--color-surface) 88%);
     transform: translateY(-1px);
   }

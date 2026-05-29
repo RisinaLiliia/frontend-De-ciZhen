@@ -20,7 +20,7 @@
   }
 
   .request-section + .request-section {
-    border-top: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    border-top: 1px solid color-mix(in oklab, var(--color-border) 60%, transparent);
   }
 
   .request-section__header {
@@ -53,7 +53,7 @@
     padding: var(--space-3);
     border-radius: var(--radius-lg);
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 92%, var(--c-border) 8%);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%);
   }
 
   .request-provider-calendar__head {

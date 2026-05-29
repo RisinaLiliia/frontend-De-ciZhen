@@ -39,7 +39,7 @@
   }
 
   html:not(.dark) .home-trust-live-panel {
-    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 24%, var(--c-border) 76%);
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 24%, var(--color-border) 76%);
     background:
       radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--color-primary) 8%, transparent), transparent 56%),
       radial-gradient(115% 90% at 84% 10%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 60%),
@@ -60,7 +60,7 @@
   }
 
   html:not(.dark) .home-trust-live-panel__cta {
-    border-color: color-mix(in oklab, var(--color-primary) 24%, var(--c-border) 76%);
+    border-color: color-mix(in oklab, var(--color-primary) 24%, var(--color-border) 76%);
     background: color-mix(in oklab, var(--color-primary) 11%, var(--color-surface) 89%);
     color: var(--color-primary);
     box-shadow: var(--shadow-card);

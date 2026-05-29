@@ -40,7 +40,7 @@
     height: var(--workspace-statistics-track-height);
     border-radius: var(--workspace-statistics-chip-radius);
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 90%, var(--c-border) 10%);
+    background: color-mix(in oklab, var(--color-surface) 90%, var(--color-border) 10%);
     overflow: hidden;
   }
 

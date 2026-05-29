@@ -13,8 +13,8 @@
     font-size: 20px;
     font-weight: 700;
     color: var(--c-ink);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background: color-mix(in oklab, var(--color-surface) 84%, var(--c-border) 16%);
+    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 84%, var(--color-border) 16%);
   }
 
   .profile-settings__avatar--placeholder {

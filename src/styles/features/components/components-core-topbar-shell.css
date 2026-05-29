@@ -80,13 +80,13 @@
   }
 
   html.dark .topbar__inner {
-    border-color: color-mix(in oklab, var(--c-border) 82%, white 18%);
+    border-color: color-mix(in oklab, var(--color-border) 82%, white 18%);
     background: color-mix(in oklab, var(--c-topbar) 94%, transparent);
     box-shadow: var(--shadow-card);
   }
 
   html.dark .topbar.is-elevated .topbar__inner {
-    border-color: color-mix(in oklab, var(--c-border) 72%, white 28%);
+    border-color: color-mix(in oklab, var(--color-border) 72%, white 28%);
     background: color-mix(in oklab, var(--c-topbar) 98%, transparent);
     box-shadow: var(--shadow-card-hover);
   }
@@ -142,19 +142,19 @@
   }
 
   html.dark .topbar .icon-button--topbar {
-    border-color: color-mix(in oklab, var(--c-border) 82%, white 18%);
+    border-color: color-mix(in oklab, var(--color-border) 82%, white 18%);
     background: var(--color-surface);
     box-shadow: none;
   }
 
   html.dark .topbar .icon-button--topbar:hover {
-    border-color: color-mix(in oklab, white 14%, var(--c-border) 86%);
+    border-color: color-mix(in oklab, white 14%, var(--color-border) 86%);
     background: color-mix(in oklab, var(--color-surface) 92%, white 8%);
     box-shadow: var(--shadow-card);
   }
 
   html.dark .topbar .icon-button--topbar:focus-visible {
-    border-color: color-mix(in oklab, white 20%, var(--c-border) 80%);
+    border-color: color-mix(in oklab, white 20%, var(--color-border) 80%);
     outline: none;
     box-shadow: var(--control-focus-ring);
   }

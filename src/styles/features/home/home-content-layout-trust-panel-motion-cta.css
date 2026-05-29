@@ -68,7 +68,7 @@
     min-height: var(--btn-h);
     padding: 0 var(--btn-pad-x);
     border-radius: var(--radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-border) 66%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 66%, transparent);
     background: linear-gradient(
       180deg,
       color-mix(in oklab, var(--color-primary) 36%, var(--color-surface) 64%),
@@ -90,7 +90,7 @@
 
   .home-trust-live-panel__cta:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--color-primary) 35%, var(--c-border) 65%);
+    border-color: color-mix(in oklab, var(--color-primary) 35%, var(--color-border) 65%);
     box-shadow: var(--shadow-floating);
   }
 

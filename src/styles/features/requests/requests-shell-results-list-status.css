@@ -44,7 +44,7 @@
   }
 
   .workspace-list-item {
-    border-color: color-mix(in oklab, var(--c-border) 72%, transparent);
+    border-color: color-mix(in oklab, var(--color-border) 72%, transparent);
   }
 
   .workspace-empty {

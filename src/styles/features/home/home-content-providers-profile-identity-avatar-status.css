@@ -81,9 +81,9 @@
     position: absolute;
     bottom: 14px;
     right: -4px;
-    background: color-mix(in oklab, var(--color-surface) 85%, var(--c-border) 15%);
+    background: color-mix(in oklab, var(--color-surface) 85%, var(--color-border) 15%);
     color: var(--color-text);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     padding: var(--space-1) var(--space-1-5);
     border-radius: var(--radius-sm);
     font-size: var(--fs-10);

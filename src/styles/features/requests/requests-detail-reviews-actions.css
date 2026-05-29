@@ -85,7 +85,7 @@
 
   .offer-action-btn--icon-only {
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 92%, var(--c-border) 8%);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%);
   }
 
   .offer-action-btn--icon-only .offer-action-btn__icon {
@@ -102,7 +102,7 @@
   }
 
   .offer-action-btn--delete {
-    border-color: color-mix(in oklab, var(--c-danger) 45%, var(--c-border) 55%);
+    border-color: color-mix(in oklab, var(--c-danger) 45%, var(--color-border) 55%);
     color: color-mix(in oklab, var(--c-danger) 78%, var(--color-text) 22%);
   }
 

@@ -31,9 +31,9 @@
       0 18px 36px color-mix(in oklab, var(--c-ink) 10%, transparent),
       0 6px 18px color-mix(in oklab, var(--color-primary) 6%, transparent),
       inset 0 1px 0 color-mix(in oklab, white 32%, transparent);
-    --workspace-mobile-nav-close-border: color-mix(in oklab, white 52%, var(--c-border) 48%);
+    --workspace-mobile-nav-close-border: color-mix(in oklab, white 52%, var(--color-border) 48%);
     --workspace-mobile-nav-close-bg: color-mix(in oklab, white 30%, transparent);
-    --workspace-mobile-nav-card-border: color-mix(in oklab, white 42%, var(--c-border) 58%);
+    --workspace-mobile-nav-card-border: color-mix(in oklab, white 42%, var(--color-border) 58%);
     --workspace-mobile-nav-card-bg: color-mix(in oklab, white 30%, transparent);
     --workspace-mobile-nav-card-bg-hover: color-mix(in oklab, white 40%, transparent);
     --workspace-mobile-nav-card-bg-active: color-mix(in oklab, white 54%, var(--color-primary) 6%);
@@ -46,9 +46,9 @@
     --workspace-mobile-nav-card-shadow-active:
       inset 0 1px 0 color-mix(in oklab, white 62%, transparent),
       0 12px 24px color-mix(in oklab, var(--color-primary) 9%, transparent);
-    --workspace-mobile-nav-card-icon-border: color-mix(in oklab, white 38%, var(--c-border) 62%);
+    --workspace-mobile-nav-card-icon-border: color-mix(in oklab, white 38%, var(--color-border) 62%);
     --workspace-mobile-nav-card-icon-bg: color-mix(in oklab, white 46%, transparent);
-    --workspace-mobile-nav-card-badge-border: color-mix(in oklab, var(--color-primary) 10%, var(--c-border) 90%);
+    --workspace-mobile-nav-card-badge-border: color-mix(in oklab, var(--color-primary) 10%, var(--color-border) 90%);
     --workspace-mobile-nav-card-badge-bg: color-mix(in oklab, white 48%, transparent);
     position: relative;
     z-index: 1;
@@ -73,15 +73,15 @@
   }
 
   html.dark .workspace-mobile-nav-sheet__surface {
-    --workspace-mobile-nav-surface-border: color-mix(in oklab, var(--color-primary) 14%, var(--c-border) 86%);
+    --workspace-mobile-nav-surface-border: color-mix(in oklab, var(--color-primary) 14%, var(--color-border) 86%);
     --workspace-mobile-nav-surface-bg: color-mix(in oklab, var(--color-surface) 92%, var(--color-primary) 8%);
     --workspace-mobile-nav-surface-shadow:
       0 22px 40px color-mix(in oklab, var(--c-ink) 26%, transparent),
       0 8px 22px color-mix(in oklab, var(--color-primary) 8%, transparent),
       inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
-    --workspace-mobile-nav-close-border: color-mix(in oklab, var(--c-border) 82%, white 18%);
+    --workspace-mobile-nav-close-border: color-mix(in oklab, var(--color-border) 82%, white 18%);
     --workspace-mobile-nav-close-bg: color-mix(in oklab, white 10%, transparent);
-    --workspace-mobile-nav-card-border: color-mix(in oklab, white 18%, var(--c-border) 82%);
+    --workspace-mobile-nav-card-border: color-mix(in oklab, white 18%, var(--color-border) 82%);
     --workspace-mobile-nav-card-bg: color-mix(in oklab, white 8%, transparent);
     --workspace-mobile-nav-card-bg-hover: color-mix(in oklab, white 12%, transparent);
     --workspace-mobile-nav-card-bg-active: color-mix(in oklab, var(--color-primary) 16%, white 8%);
@@ -94,9 +94,9 @@
     --workspace-mobile-nav-card-shadow-active:
       inset 0 1px 0 color-mix(in oklab, white 14%, transparent),
       0 14px 24px color-mix(in oklab, var(--color-primary) 14%, transparent);
-    --workspace-mobile-nav-card-icon-border: color-mix(in oklab, white 16%, var(--c-border) 84%);
+    --workspace-mobile-nav-card-icon-border: color-mix(in oklab, white 16%, var(--color-border) 84%);
     --workspace-mobile-nav-card-icon-bg: color-mix(in oklab, white 12%, transparent);
-    --workspace-mobile-nav-card-badge-border: color-mix(in oklab, var(--color-primary) 18%, var(--c-border) 82%);
+    --workspace-mobile-nav-card-badge-border: color-mix(in oklab, var(--color-primary) 18%, var(--color-border) 82%);
     --workspace-mobile-nav-card-badge-bg: color-mix(in oklab, white 12%, transparent);
   }
 

@@ -11,7 +11,7 @@
     display: grid;
     gap: var(--space-3);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 24%, var(--c-border) 76%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 24%, var(--color-border) 76%);
     background:
       radial-gradient(320px 170px at -10% -16%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 64%),
       radial-gradient(280px 160px at 112% -12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
@@ -23,7 +23,7 @@
     backdrop-filter: blur(6px) saturate(1.01);
     box-shadow:
       0 8px 20px color-mix(in oklab, var(--c-ink) 10%, transparent),
-      0 0 0 1px color-mix(in oklab, var(--c-border) 42%, transparent);
+      0 0 0 1px color-mix(in oklab, var(--color-border) 42%, transparent);
     padding: 12px;
   }
 
@@ -71,7 +71,7 @@
     min-height: 26px;
     border-radius: var(--radius-pill);
     padding: 0 9px;
-    border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--c-border) 84%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--color-border) 84%);
     background: color-mix(in oklab, var(--color-surface) 92%, transparent);
     color: color-mix(in oklab, var(--color-primary) 72%, var(--color-text) 28%);
     text-decoration: none;
@@ -83,7 +83,7 @@
 
   .cookie-consent-banner__links a:hover,
   .cookie-consent-banner__links a:focus-visible {
-    border-color: color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
+    border-color: color-mix(in oklab, var(--color-primary) 28%, var(--color-border) 72%);
     background: color-mix(in oklab, var(--color-primary) 8%, var(--color-surface) 92%);
     outline: none;
   }
@@ -112,7 +112,7 @@
   .cookie-consent-banner__action--accept.btn-primary {
     position: relative;
     overflow: hidden;
-    border: 1px solid color-mix(in oklab, var(--c-accent) 44%, var(--c-border) 56%);
+    border: 1px solid color-mix(in oklab, var(--c-accent) 44%, var(--color-border) 56%);
     background:
       radial-gradient(
         circle at 24% 18%,

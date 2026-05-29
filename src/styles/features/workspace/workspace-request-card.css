@@ -13,14 +13,14 @@
     width: 20px;
     height: 2px;
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--c-border) 72%, white 28%);
+    background: color-mix(in oklab, var(--color-border) 72%, white 28%);
   }
 
   .my-request-card__progress-rail {
     position: relative;
     height: 5px;
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--c-border) 72%, white 28%);
+    background: color-mix(in oklab, var(--color-border) 72%, white 28%);
     overflow: hidden;
   }
 
@@ -37,7 +37,7 @@
     max-width: none;
     min-width: 0;
     border-radius: var(--radius-xl);
-    border-color: color-mix(in oklab, var(--c-border) 84%, white 16%);
+    border-color: color-mix(in oklab, var(--color-border) 84%, white 16%);
     box-shadow: var(--shadow-card);
     overflow: hidden;
   }
@@ -51,7 +51,7 @@
 
   .my-request-card .request-card__top {
     padding-bottom: 2px;
-    border-bottom: 1px solid color-mix(in oklab, var(--c-border) 72%, white 28%);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-border) 72%, white 28%);
   }
 
   .my-request-card .request-card--media-inline .request-card__body {
@@ -108,7 +108,7 @@
     gap: var(--space-0-75);
     justify-content: center;
     flex-direction: column;
-    border-color: color-mix(in oklab, var(--c-border) 76%, white 24%);
+    border-color: color-mix(in oklab, var(--color-border) 76%, white 24%);
     background: color-mix(in oklab, var(--surface-base) 94%, white 6%);
     box-shadow: none;
     transform: none;
@@ -116,7 +116,7 @@
 
   .my-request-card__owner-menu-trigger.nearby-more:hover,
   .my-request-card__owner-menu-trigger.nearby-more.is-open {
-    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--c-border) 70%);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--color-border) 70%);
     background: color-mix(in oklab, var(--color-primary) 8%, white 92%);
     box-shadow: var(--shadow-card);
   }
@@ -136,9 +136,9 @@
     display: grid;
     min-width: 228px;
     padding: var(--space-2);
-    border: 1px solid color-mix(in oklab, var(--c-border) 64%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 64%, transparent);
     border-radius: var(--radius-lg);
-    background: color-mix(in oklab, var(--color-surface) 97%, var(--c-border) 3%);
+    background: color-mix(in oklab, var(--color-surface) 97%, var(--color-border) 3%);
     box-shadow: var(--shadow-floating);
   }
 
@@ -197,8 +197,8 @@
   }
 
   html.dark .my-request-card__owner-menu-surface {
-    border-color: color-mix(in oklab, var(--c-border) 64%, transparent);
-    background: color-mix(in oklab, var(--color-surface) 97%, var(--c-border) 3%);
+    border-color: color-mix(in oklab, var(--color-border) 64%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 97%, var(--color-border) 3%);
     box-shadow: var(--shadow-floating);
   }
 

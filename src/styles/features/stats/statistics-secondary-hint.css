@@ -42,7 +42,7 @@
     height: 10px;
     border-radius: var(--radius-pill);
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 90%, var(--c-border) 10%);
+    background: color-mix(in oklab, var(--color-surface) 90%, var(--color-border) 10%);
     overflow: hidden;
   }
 

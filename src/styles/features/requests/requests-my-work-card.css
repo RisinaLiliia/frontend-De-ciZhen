@@ -94,7 +94,7 @@
     min-height: var(--my-work-chip-min-height);
     padding: 0 var(--my-work-chip-pad-inline);
     border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, var(--c-border) 84%, white 16%);
+    border: 1px solid color-mix(in oklab, var(--color-border) 84%, white 16%);
     background: color-mix(in oklab, var(--surface-base) 92%, white 8%);
     color: var(--text-muted);
     font-size: var(--my-work-chip-font-size);
@@ -121,7 +121,7 @@
 
   .my-request-card__priority.is-low,
   .my-request-card__priority.is-none {
-    border-color: color-mix(in oklab, var(--c-border) 84%, var(--c-white)16%);
+    border-color: color-mix(in oklab, var(--color-border) 84%, var(--c-white)16%);
     background: color-mix(in oklab, var(--surface-base) 92%, var(--c-white)8%);
     color: var(--text-default);
   }
@@ -174,7 +174,7 @@
     min-width: 0;
     padding: var(--my-work-pad-compact) var(--density-comfortable-pad);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 84%, white 16%);
+    border: 1px solid color-mix(in oklab, var(--color-border) 84%, white 16%);
     background: var(--color-surface-muted);
   }
 
@@ -288,7 +288,7 @@
   }
 
   .my-request-card__signal.is-neutral {
-    background: color-mix(in oklab, var(--surface-base) 88%, var(--c-border) 12%);
+    background: color-mix(in oklab, var(--surface-base) 88%, var(--color-border) 12%);
   }
 
   .my-request-card__signal-copy {

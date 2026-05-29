@@ -36,7 +36,7 @@
 
   .request-detail__cta-btn.is-edit {
     background: color-mix(in oklab, var(--c-accent) 22%, var(--color-surface) 78%);
-    border: 1px solid color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
+    border: 1px solid color-mix(in oklab, var(--c-accent) 56%, var(--color-border) 44%);
     color: color-mix(in oklab, var(--c-accent) 78%, var(--color-text) 22%);
     box-shadow: var(--shadow-card);
   }

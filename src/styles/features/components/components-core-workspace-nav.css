@@ -39,7 +39,7 @@
   }
 
   .topbar-nav--desktop {
-    --topbar-nav-surface-border: color-mix(in oklab, white 72%, var(--c-border) 28%);
+    --topbar-nav-surface-border: color-mix(in oklab, white 72%, var(--color-border) 28%);
     --topbar-nav-surface-bg:
       linear-gradient(
         180deg,
@@ -64,7 +64,7 @@
   }
 
   html.dark .topbar-nav--desktop {
-    --topbar-nav-surface-border: color-mix(in oklab, var(--c-border) 88%, white 12%);
+    --topbar-nav-surface-border: color-mix(in oklab, var(--color-border) 88%, white 12%);
     --topbar-nav-surface-bg:
       linear-gradient(
         180deg,
@@ -81,7 +81,7 @@
     left: 0;
     top: 0;
     border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, white 80%, var(--c-border) 20%);
+    border: 1px solid color-mix(in oklab, white 80%, var(--color-border) 20%);
     background:
       linear-gradient(
         180deg,
@@ -102,7 +102,7 @@
   }
 
   html.dark .topbar-nav__indicator {
-    border-color: color-mix(in oklab, var(--c-border) 78%, white 22%);
+    border-color: color-mix(in oklab, var(--color-border) 78%, white 22%);
     background:
       linear-gradient(
         180deg,
@@ -164,14 +164,14 @@
   }
 
   .topbar-nav__item:focus-visible {
-    border-color: color-mix(in oklab, white 26%, var(--c-border) 74%);
+    border-color: color-mix(in oklab, white 26%, var(--color-border) 74%);
     box-shadow:
       0 0 0 3px color-mix(in oklab, white 12%, transparent),
       inset 0 1px 0 color-mix(in oklab, white 52%, transparent);
   }
 
   html.dark .topbar-nav__item:focus-visible {
-    border-color: color-mix(in oklab, white 12%, var(--c-border) 88%);
+    border-color: color-mix(in oklab, white 12%, var(--color-border) 88%);
     box-shadow:
       0 0 0 3px color-mix(in oklab, white 7%, transparent),
       inset 0 1px 0 color-mix(in oklab, white 10%, transparent);

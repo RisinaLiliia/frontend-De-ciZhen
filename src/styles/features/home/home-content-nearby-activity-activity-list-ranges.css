@@ -76,7 +76,7 @@
     display: inline-flex;
     gap: var(--space-1-5);
     padding: 4px;
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     border-radius: var(--radius-pill);
     background: color-mix(in oklab, var(--color-surface) 86%, transparent);
   }
@@ -85,7 +85,7 @@
     min-width: 44px;
     height: 28px;
     padding: 0 10px;
-    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--color-border) 72%);
     border-radius: var(--radius-pill);
     font-size: var(--fs-11);
     font-weight: 600;
@@ -100,7 +100,7 @@
 
   .home-activity__range.is-active {
     color: var(--c-primary-contrast);
-    border-color: color-mix(in oklab, var(--color-primary) 52%, var(--c-border) 48%);
+    border-color: color-mix(in oklab, var(--color-primary) 52%, var(--color-border) 48%);
     background: color-mix(in oklab, var(--color-primary) 74%, var(--color-surface) 26%);
     box-shadow: var(--shadow-card);
   }

@@ -20,7 +20,7 @@
     padding: 8px 12px;
     border-radius: var(--radius-pill);
     background: var(--surface-soft-bg-strong);
-    border: 1px solid var(--c-border);
+    border: 1px solid var(--color-border);
     font-size: var(--fs-14);
     font-weight: 600;
     transition: transform var(--transition-fast), border-color var(--transition-fast);
@@ -28,7 +28,7 @@
 
   .chip:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--c-border) 72%, var(--color-text) 28%);
+    border-color: color-mix(in oklab, var(--color-border) 72%, var(--color-text) 28%);
   }
 
   .chip:focus-visible {
@@ -37,14 +37,14 @@
   }
 
   .chip.is-active {
-    border-color: color-mix(in oklab, var(--c-border) 68%, var(--c-accent) 32%);
+    border-color: color-mix(in oklab, var(--color-border) 68%, var(--c-accent) 32%);
     background: color-mix(in oklab, var(--color-surface) 88%, var(--c-accent) 12%);
     box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .chip {
     background: var(--color-surface);
-    border-color: var(--c-border);
+    border-color: var(--color-border);
     box-shadow: var(--shadow-card);
   }
 
@@ -54,7 +54,7 @@
       color-mix(in oklab, var(--color-surface) 94%, var(--c-surface) 6%),
       color-mix(in oklab, var(--color-surface) 86%, var(--c-accent) 14%)
     );
-    border-color: color-mix(in oklab, var(--c-border) 74%, var(--c-accent) 26%);
+    border-color: color-mix(in oklab, var(--color-border) 74%, var(--c-accent) 26%);
     color: var(--color-text);
     box-shadow: var(--shadow-card);
   }
@@ -66,7 +66,7 @@
     width: 28px;
     height: 28px;
     border-radius: var(--radius-pill);
-    border: 1px solid var(--c-border);
+    border: 1px solid var(--color-border);
     color: var(--c-text-muted);
     transition:
       border-color var(--transition-fast),
@@ -77,8 +77,8 @@
 
   .panel-action:hover {
     color: var(--color-text);
-    border-color: color-mix(in oklab, var(--c-border) 72%, var(--color-text) 28%);
-    background: color-mix(in oklab, var(--c-surface) 85%, var(--c-border) 15%);
+    border-color: color-mix(in oklab, var(--color-border) 72%, var(--color-text) 28%);
+    background: color-mix(in oklab, var(--c-surface) 85%, var(--color-border) 15%);
     transform: translateY(-1px);
   }
 

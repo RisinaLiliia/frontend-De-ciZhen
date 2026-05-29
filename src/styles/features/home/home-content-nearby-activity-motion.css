@@ -5,7 +5,7 @@
     0%,
     100% {
       transform: scale(0.9);
-      background: color-mix(in oklab, var(--c-border) 70%, transparent);
+      background: color-mix(in oklab, var(--color-border) 70%, transparent);
     }
     50% {
       transform: scale(1.35);

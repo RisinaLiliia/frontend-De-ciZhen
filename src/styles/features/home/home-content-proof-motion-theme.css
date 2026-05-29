@@ -37,7 +37,7 @@
   }
 
   html:not(.dark) .howitworks-tabs {
-    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 20%, var(--c-border) 80%);
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 20%, var(--color-border) 80%);
     background: var(--color-surface);
     box-shadow: var(--shadow-card);
   }
@@ -53,7 +53,7 @@
   }
 
   html:not(.dark) .howitworks-step {
-    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--color-border) 82%);
     background: linear-gradient(180deg, var(--color-surface) 0%, color-mix(in oklab, var(--color-surface) 92%, var(--c-hero-tint-primary) 8%) 100%);
     box-shadow: var(--shadow-card);
   }

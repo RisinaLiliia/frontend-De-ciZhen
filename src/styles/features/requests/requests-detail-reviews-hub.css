@@ -9,8 +9,8 @@
   }
 
   .provider-reviews-hub__summary {
-    --soft-surface-border: color-mix(in oklab, var(--c-border) 62%, transparent);
-    --soft-surface-bg: color-mix(in oklab, var(--color-surface) 95%, var(--c-border) 5%);
+    --soft-surface-border: color-mix(in oklab, var(--color-border) 62%, transparent);
+    --soft-surface-bg: color-mix(in oklab, var(--color-surface) 95%, var(--color-border) 5%);
     display: grid;
     gap: var(--space-3);
     padding: var(--space-3);
@@ -64,7 +64,7 @@
     position: relative;
     height: 8px;
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--c-border) 58%, transparent);
+    background: color-mix(in oklab, var(--color-border) 58%, transparent);
     overflow: hidden;
   }
 
@@ -113,7 +113,7 @@
   }
 
   .provider-reviews-hub__sort-btn.is-active {
-    border-color: color-mix(in oklab, var(--color-primary) 42%, var(--c-border) 58%);
+    border-color: color-mix(in oklab, var(--color-primary) 42%, var(--color-border) 58%);
     color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
     background: color-mix(in oklab, var(--color-primary) 12%, var(--color-surface) 88%);
   }
@@ -124,8 +124,8 @@
   }
 
   .provider-reviews-hub__item {
-    --soft-surface-border: color-mix(in oklab, var(--c-border) 60%, transparent);
-    --soft-surface-bg: color-mix(in oklab, var(--color-surface) 95%, var(--c-border) 5%);
+    --soft-surface-border: color-mix(in oklab, var(--color-border) 60%, transparent);
+    --soft-surface-bg: color-mix(in oklab, var(--color-surface) 95%, var(--color-border) 5%);
     display: grid;
     gap: var(--space-1-5);
     padding: var(--space-3);
@@ -184,7 +184,7 @@
   }
 
   .provider-reviews-hub__star-btn.typo-muted {
-    color: color-mix(in oklab, var(--c-border) 74%, var(--c-text-muted) 26%);
+    color: color-mix(in oklab, var(--color-border) 74%, var(--c-text-muted) 26%);
   }
 
   .provider-reviews-hub__item-text {
@@ -347,7 +347,7 @@
 
   #platform-reviews .provider-reviews-hub__list .provider-reviews-hub__item {
     padding: var(--space-3-5);
-    border-color: color-mix(in oklab, var(--c-border) 68%, transparent);
+    border-color: color-mix(in oklab, var(--color-border) 68%, transparent);
   }
 
   #platform-reviews .provider-reviews-hub__item-head {
@@ -374,11 +374,11 @@
   }
 
   #platform-reviews .provider-reviews-hub__composer-reset {
-    border-color: color-mix(in oklab, var(--c-border) 72%, var(--color-primary) 28%);
+    border-color: color-mix(in oklab, var(--color-border) 72%, var(--color-primary) 28%);
   }
 
   #platform-reviews .provider-reviews-hub__composer-reset:hover {
-    border-color: color-mix(in oklab, var(--color-primary) 44%, var(--c-border) 56%);
+    border-color: color-mix(in oklab, var(--color-primary) 44%, var(--color-border) 56%);
     background: color-mix(in oklab, var(--color-primary) 8%, var(--surface-soft-bg-strong) 92%);
   }
 

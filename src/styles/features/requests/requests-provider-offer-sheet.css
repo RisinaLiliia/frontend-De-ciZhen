@@ -15,8 +15,8 @@
   .request-offer-sheet__preview {
     color: var(--c-text-muted);
     padding-right: var(--space-8);
-    border-top: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
-    border-bottom: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
+    border-top: 1px solid color-mix(in oklab, var(--color-border) 62%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-border) 62%, transparent);
     padding-block: var(--space-3-5);
   }
 
@@ -27,8 +27,8 @@
     width: 28px;
     height: 28px;
     border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, var(--c-border) 68%, transparent);
-    background: color-mix(in oklab, var(--color-surface) 84%, var(--c-border) 16%);
+    border: 1px solid color-mix(in oklab, var(--color-border) 68%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 84%, var(--color-border) 16%);
     color: var(--color-text);
     font-size: var(--fs-14);
     line-height: 1;
@@ -38,7 +38,7 @@
   }
 
   .request-offer-sheet__close:hover {
-    background: color-mix(in oklab, var(--color-surface) 72%, var(--c-border) 28%);
+    background: color-mix(in oklab, var(--color-surface) 72%, var(--color-border) 28%);
   }
 
   .request-offer-sheet__success {
@@ -86,8 +86,8 @@
     align-items: start;
     padding: var(--space-3-5);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
-    background: color-mix(in oklab, var(--color-surface) 92%, var(--c-border) 8%);
+    border: 1px solid color-mix(in oklab, var(--color-border) 62%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%);
   }
 
   .request-offer-sheet__success-tip-person {

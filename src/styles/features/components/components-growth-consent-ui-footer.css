@@ -5,7 +5,7 @@
     width: 100%;
     margin-top: var(--space-4);
     padding: 8px 0 16px;
-    border-top: 1px solid color-mix(in oklab, var(--c-border) 72%, transparent);
+    border-top: 1px solid color-mix(in oklab, var(--color-border) 72%, transparent);
   }
 
   .consent-manage-footer__inner {
@@ -79,7 +79,7 @@
   .consent-manage-footer__button {
     height: 32px;
     border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--color-border) 72%);
     background: transparent;
     color: var(--color-text);
     font-size: var(--fs-12);
@@ -94,7 +94,7 @@
 
   .consent-manage-footer__button:hover {
     background: transparent;
-    border-color: color-mix(in oklab, var(--color-primary) 42%, var(--c-border) 58%);
+    border-color: color-mix(in oklab, var(--color-primary) 42%, var(--color-border) 58%);
     transform: translateY(-1px);
   }
 

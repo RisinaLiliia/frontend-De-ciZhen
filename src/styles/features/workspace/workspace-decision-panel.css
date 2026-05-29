@@ -186,7 +186,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     padding: var(--my-work-pad) var(--density-comfortable-pad-lg);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 18%, var(--c-border) 82%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 18%, var(--color-border) 82%);
     border-radius: var(--radius-xl);
     background: var(--color-surface-muted);
   }
