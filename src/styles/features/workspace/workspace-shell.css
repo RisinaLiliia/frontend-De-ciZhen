@@ -22,6 +22,7 @@
 @import './workspace-controls-filters.css';
 @import './workspace-overlay-responsive.css';
 @import './workspace-request-card.css';
+@import './workspace-request-card-responsive.css';
 @import './workspace-request-dialog.css';
 @import './workspace-requests-rail.css';
 @import './workspace-overlay-auth.css';
