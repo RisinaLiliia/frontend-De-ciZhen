@@ -40,9 +40,9 @@
   }
 
   .request-card__status-action.request-card__status-action--chat.offer-action-btn--icon-only {
-    color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
-    border-color: color-mix(in oklab, var(--c-primary) 46%, var(--c-border) 54%);
-    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+    color: color-mix(in oklab, var(--color-primary) 78%, var(--c-text) 22%);
+    border-color: color-mix(in oklab, var(--color-primary) 46%, var(--c-border) 54%);
+    background: color-mix(in oklab, var(--color-primary) 12%, var(--c-panel) 88%);
   }
 
   .requests-pagination {

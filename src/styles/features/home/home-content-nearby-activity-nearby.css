@@ -51,7 +51,7 @@
   }
 
   .nearby-more:hover {
-    border-color: color-mix(in oklab, var(--c-primary) 55%, var(--c-border) 45%);
+    border-color: color-mix(in oklab, var(--color-primary) 55%, var(--c-border) 45%);
     box-shadow: var(--shadow-card);
     transform: translateY(-1px);
   }

@@ -43,7 +43,7 @@
   }
 
   .home-stats__link:hover {
-    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-primary) 18%);
+    background: color-mix(in oklab, var(--c-panel) 82%, var(--color-primary) 18%);
   }
 
 .home-stats__link:focus-visible {

@@ -114,12 +114,12 @@
   }
 
   .workspace-summary-grid__card.is-execution {
-    border-color: color-mix(in oklab, var(--c-primary) 20%, var(--color-border-soft) 80%);
-    background: color-mix(in oklab, var(--c-primary) 6%, var(--color-surface) 94%);
+    border-color: color-mix(in oklab, var(--color-primary) 20%, var(--color-border-soft) 80%);
+    background: color-mix(in oklab, var(--color-primary) 6%, var(--color-surface) 94%);
   }
 
   .workspace-summary-grid__card.is-execution .workspace-summary-grid__accent {
-    background: var(--c-primary);
+    background: var(--color-primary);
   }
 
   .workspace-summary-grid__card.is-completed {

@@ -118,7 +118,7 @@
 
   .home-popular__cta:hover {
     color: var(--c-text);
-    border-color: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--c-border) 70%);
     background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
     box-shadow: var(--shadow-card);
   }
@@ -148,11 +148,11 @@
   }
 
   .home-hero__cta--primary {
-    border: 1px solid color-mix(in oklab, var(--c-primary) 46%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 46%, transparent);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--c-primary) 78%, var(--c-hero-tint-primary) 22%),
-      color-mix(in oklab, var(--c-primary) 88%, var(--c-ink) 12%)
+      color-mix(in oklab, var(--color-primary) 78%, var(--c-hero-tint-primary) 22%),
+      color-mix(in oklab, var(--color-primary) 88%, var(--c-ink) 12%)
     );
     color: var(--c-primary-contrast);
     box-shadow: var(--shadow-card-hover);
@@ -173,7 +173,7 @@
   }
 
   .home-hero__cta--secondary:hover {
-    border-color: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--c-border) 70%);
     background: color-mix(in oklab, var(--c-panel) 82%, var(--c-border) 18%);
     box-shadow: var(--shadow-card);
   }

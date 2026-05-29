@@ -12,9 +12,9 @@
     display: grid;
     gap: var(--space-4);
     padding: clamp(16px, 2.2vw, 24px);
-    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    border-color: color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
     background:
-      radial-gradient(120% 100% at 0% 0%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent),
+      radial-gradient(120% 100% at 0% 0%, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent),
       linear-gradient(180deg, color-mix(in oklab, var(--c-panel) 96%, transparent), var(--surface-soft-bg));
   }
 
@@ -24,7 +24,7 @@
     overflow: hidden;
     border: 0;
     background:
-      radial-gradient(120% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 12%, transparent), transparent 48%),
+      radial-gradient(120% 110% at 0% 0%, color-mix(in oklab, var(--color-primary) 12%, transparent), transparent 48%),
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--c-panel) 84%, var(--c-ink) 16%),
@@ -32,7 +32,7 @@
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-panel) 10%, transparent),
-      0 14px 34px color-mix(in oklab, var(--c-primary) 8%, transparent);
+      0 14px 34px color-mix(in oklab, var(--color-primary) 8%, transparent);
   }
 
   :is(.home-intro-shell, .workspace-overlay-surface)::before {
@@ -42,7 +42,7 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 11%, transparent), transparent 52%),
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--color-primary) 11%, transparent), transparent 52%),
       radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
       linear-gradient(
         180deg,
@@ -101,7 +101,7 @@
   }
 
   .home-intro-shell .home-activity-panel {
-    border-color: color-mix(in oklab, var(--c-primary) 32%, var(--c-ink) 68%);
+    border-color: color-mix(in oklab, var(--color-primary) 32%, var(--c-ink) 68%);
     background: linear-gradient(
       180deg,
       color-mix(in oklab, var(--c-panel) 70%, var(--c-ink) 30%),

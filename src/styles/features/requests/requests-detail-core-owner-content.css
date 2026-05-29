@@ -71,15 +71,15 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--c-primary);
+    color: var(--color-primary);
     font-size: 28px;
     line-height: 1;
     transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
   }
 
   .request-detail__owner-photo-slot:hover:not(:disabled) {
-    border-color: color-mix(in oklab, var(--c-primary) 40%, var(--c-border) 60%);
-    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+    border-color: color-mix(in oklab, var(--color-primary) 40%, var(--c-border) 60%);
+    background: color-mix(in oklab, var(--color-primary) 12%, var(--c-panel) 88%);
     transform: translateY(-1px);
   }
 
@@ -125,17 +125,17 @@
     justify-self: start;
     border: 0;
     background: transparent;
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
     font-size: var(--fs-12);
     font-weight: 600;
     text-decoration: underline;
-    text-decoration-color: color-mix(in oklab, var(--c-primary) 48%, transparent);
+    text-decoration-color: color-mix(in oklab, var(--color-primary) 48%, transparent);
     text-underline-offset: 3px;
     padding: 0;
   }
 
   .request-detail__text-toggle:hover {
-    text-decoration-color: var(--c-primary);
+    text-decoration-color: var(--color-primary);
   }
 
   .request-detail__text-toggle:focus-visible {

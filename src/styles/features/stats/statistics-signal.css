@@ -47,8 +47,8 @@
     border-radius: var(--workspace-statistics-chip-radius);
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--c-primary) 54%, var(--c-accent) 46%),
-      color-mix(in oklab, var(--c-accent) 74%, var(--c-primary) 26%)
+      color-mix(in oklab, var(--color-primary) 54%, var(--c-accent) 46%),
+      color-mix(in oklab, var(--c-accent) 74%, var(--color-primary) 26%)
     );
     transition: width 220ms ease-out;
   }
@@ -74,12 +74,12 @@
 
   .workspace-statistics-signal__semantic.is-good,
   .workspace-statistics-signal__semantic.is-high {
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
   }
 
   .workspace-statistics-signal__semantic.is-balanced,
   .workspace-statistics-signal__semantic.is-medium {
-    color: color-mix(in oklab, var(--c-primary) 62%, var(--c-text-muted) 38%);
+    color: color-mix(in oklab, var(--color-primary) 62%, var(--c-text-muted) 38%);
   }
 
   .workspace-statistics-signal__semantic.is-competitive,
@@ -109,9 +109,9 @@
   }
 
   .workspace-opportunity-tone-badge.is-good {
-    color: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
-    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
+    color: color-mix(in oklab, var(--color-primary) 84%, var(--c-text) 16%);
+    border-color: color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--color-primary) 11%, var(--c-panel) 89%);
   }
 
   .workspace-opportunity-tone-badge.is-balanced {

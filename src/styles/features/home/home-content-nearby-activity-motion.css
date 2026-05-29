@@ -9,7 +9,7 @@
     }
     50% {
       transform: scale(1.35);
-      background: color-mix(in oklab, var(--c-primary) 65%, transparent);
+      background: color-mix(in oklab, var(--color-primary) 65%, transparent);
     }
   }
 

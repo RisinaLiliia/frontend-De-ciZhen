@@ -15,7 +15,7 @@
     display: grid;
     gap: var(--space-1-5);
     padding: var(--space-2);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--surface-soft-border) 84%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--surface-soft-border) 84%);
     border-radius: var(--workspace-ai-card-radius-md);
     background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
   }
@@ -94,9 +94,9 @@
     width: var(--workspace-statistics-icon-md);
     height: var(--workspace-statistics-icon-md);
     border-radius: var(--workspace-ai-card-chip-radius);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--c-primary) 8%, var(--surface-soft-bg) 92%);
-    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--surface-soft-border) 72%);
+    background: color-mix(in oklab, var(--color-primary) 8%, var(--surface-soft-bg) 92%);
+    color: color-mix(in oklab, var(--color-primary) 80%, var(--c-text) 20%);
     font-size: var(--workspace-ai-card-chip-font-size);
     font-weight: var(--workspace-ai-card-chip-font-weight);
     letter-spacing: 0.02em;
@@ -191,7 +191,7 @@
     display: grid;
     gap: var(--space-1-5);
     padding-top: var(--space-1-5);
-    border-top: 1px solid color-mix(in oklab, var(--surface-soft-border) 90%, var(--c-primary) 10%);
+    border-top: 1px solid color-mix(in oklab, var(--surface-soft-border) 90%, var(--color-primary) 10%);
   }
 
   .workspace-statistics-ki--plain .workspace-statistics-ki__text {

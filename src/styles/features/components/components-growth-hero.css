@@ -75,7 +75,7 @@
   html:not(.dark) .hero {
     background: linear-gradient(
       135deg,
-      color-mix(in oklab, var(--c-panel) 92%, var(--c-primary) 8%),
+      color-mix(in oklab, var(--c-panel) 92%, var(--color-primary) 8%),
       color-mix(in oklab, var(--c-panel) 96%, var(--c-accent) 4%)
     );
     border: 1px solid var(--c-border);

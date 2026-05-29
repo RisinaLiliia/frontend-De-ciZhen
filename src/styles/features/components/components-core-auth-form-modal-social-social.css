@@ -93,7 +93,7 @@
         148deg,
         color-mix(in oklab, var(--c-accent) 10%, var(--c-panel) 90%) 0%,
         color-mix(in oklab, var(--c-panel) 96%, var(--c-border) 4%) 62%,
-        color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%) 100%
+        color-mix(in oklab, var(--color-primary) 8%, var(--c-panel) 92%) 100%
       );
     color: var(--c-text);
     border-color: color-mix(in oklab, var(--c-accent) 54%, var(--c-border) 46%);
@@ -107,7 +107,7 @@
         148deg,
         color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%) 0%,
         var(--surface-soft-bg-strong) 62%,
-        color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%) 100%
+        color-mix(in oklab, var(--color-primary) 12%, var(--c-panel) 88%) 100%
       );
     border-color: color-mix(in oklab, var(--c-accent) 64%, var(--c-border) 36%);
     transform: translateY(-1px);

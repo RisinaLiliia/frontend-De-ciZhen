@@ -78,7 +78,7 @@
   .home-intro-shell .home-quick-search-panel {
     gap: var(--space-3-5);
     min-height: 0;
-    border-color: color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
+    border-color: color-mix(in oklab, var(--color-primary) 22%, var(--c-border) 78%);
     background: linear-gradient(
       180deg,
       color-mix(in oklab, var(--c-panel) 76%, var(--c-ink) 24%),
@@ -116,7 +116,7 @@
     display: grid;
     max-height: 220px;
     overflow-y: auto;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
     border-radius: var(--radius-md);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-ink) 8%);
     box-shadow: var(--shadow-floating);
@@ -137,12 +137,12 @@
 
   .home-quick-search__city-option:hover,
   .home-quick-search__city-option:focus-visible {
-    background: color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%);
+    background: color-mix(in oklab, var(--color-primary) 14%, var(--c-panel) 86%);
     outline: none;
   }
 
   .home-quick-search__city-option[aria-selected="true"] {
-    background: color-mix(in oklab, var(--c-primary) 18%, var(--c-panel) 82%);
+    background: color-mix(in oklab, var(--color-primary) 18%, var(--c-panel) 82%);
   }
 
   .home-quick-search__button {

@@ -162,7 +162,7 @@
     min-height: 34px;
     margin-top: var(--space-0-5);
     padding-top: var(--space-1);
-    border-top: 1px dashed color-mix(in oklab, var(--c-primary) 32%, transparent);
+    border-top: 1px dashed color-mix(in oklab, var(--color-primary) 32%, transparent);
   }
 
   .kpi-grid--decision .kpi-card__meta {

@@ -47,8 +47,8 @@
   }
 
   html:not(.dark) .howitworks-tab.is-active {
-    color: var(--c-primary);
-    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+    color: var(--color-primary);
+    background: color-mix(in oklab, var(--color-primary) 12%, var(--c-panel) 88%);
     box-shadow: var(--shadow-card);
   }
 
@@ -62,7 +62,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      color-mix(in oklab, var(--c-primary) 18%, transparent),
+      color-mix(in oklab, var(--color-primary) 18%, transparent),
       transparent
     );
     opacity: 0.28;
@@ -72,7 +72,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      color-mix(in oklab, var(--c-primary) 10%, transparent),
+      color-mix(in oklab, var(--color-primary) 10%, transparent),
       transparent
     );
     opacity: 0.24;

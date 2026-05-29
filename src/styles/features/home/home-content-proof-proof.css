@@ -41,7 +41,7 @@
   .proof-card.is-active {
     opacity: 1;
     transform: translateY(0);
-    border-color: color-mix(in oklab, var(--c-primary) 35%, var(--c-border) 65%);
+    border-color: color-mix(in oklab, var(--color-primary) 35%, var(--c-border) 65%);
     box-shadow: var(--shadow-card-hover);
   }
 
@@ -57,7 +57,7 @@
   }
 
   html:not(.dark) .home-proof-panel .proof-card.is-active {
-    border-color: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--c-border) 70%);
     box-shadow: var(--shadow-card);
   }
 

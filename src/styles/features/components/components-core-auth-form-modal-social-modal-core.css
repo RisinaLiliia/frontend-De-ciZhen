@@ -64,7 +64,7 @@
     padding: 10px 12px;
     border-radius: var(--radius-md);
     border: 1px solid var(--focus-ring-primary);
-    background: color-mix(in oklab, var(--c-primary) 10%, transparent);
+    background: color-mix(in oklab, var(--color-primary) 10%, transparent);
     display: grid;
     gap: var(--space-1-5);
     font-size: var(--fs-12);

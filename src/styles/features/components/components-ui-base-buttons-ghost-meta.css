@@ -48,16 +48,16 @@
   .request-meta-inline__item svg {
     width: 14px;
     height: 14px;
-    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
+    color: color-mix(in oklab, var(--color-primary) 70%, var(--c-text-muted) 30%);
   }
 
   :is(.btn-ghost, .app-button-ghost).is-primary {
-    border-color: color-mix(in oklab, var(--c-primary) 26%, var(--c-border) 74%);
-    color: var(--c-primary);
-    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+    border-color: color-mix(in oklab, var(--color-primary) 26%, var(--c-border) 74%);
+    color: var(--color-primary);
+    background: color-mix(in oklab, var(--color-primary) 8%, var(--c-panel) 92%);
   }
 
   :is(.btn-ghost, .app-button-ghost).is-primary:hover {
-    background: color-mix(in oklab, var(--c-primary) 16%, var(--c-panel) 84%);
+    background: color-mix(in oklab, var(--color-primary) 16%, var(--c-panel) 84%);
   }
 }

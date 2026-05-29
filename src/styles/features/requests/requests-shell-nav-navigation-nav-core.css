@@ -9,16 +9,16 @@
   }
 
   .workspace-control-shell {
-    --workspace-control-shell-border: color-mix(in oklab, var(--c-primary) 14%, var(--surface-card-border) 86%);
+    --workspace-control-shell-border: color-mix(in oklab, var(--color-primary) 14%, var(--surface-card-border) 86%);
     --workspace-control-shell-bg:
       linear-gradient(
         135deg,
-        color-mix(in oklab, var(--surface-card-bg) 88%, var(--c-primary) 12%),
+        color-mix(in oklab, var(--surface-card-bg) 88%, var(--color-primary) 12%),
         var(--surface-card-bg)
       );
     --workspace-control-shell-shadow:
       0 18px 36px color-mix(in oklab, var(--c-ink) 10%, transparent),
-      0 6px 18px color-mix(in oklab, var(--c-primary) 6%, transparent),
+      0 6px 18px color-mix(in oklab, var(--color-primary) 6%, transparent),
       inset 0 1px 0 color-mix(in oklab, white 42%, transparent);
     --workspace-control-embedded-border: color-mix(in oklab, white 74%, var(--c-border) 26%);
     --workspace-control-embedded-bg:
@@ -97,46 +97,46 @@
       ),
       radial-gradient(
         120% 100% at 0% 0%,
-        color-mix(in oklab, var(--c-primary) 10%, transparent) 0%,
+        color-mix(in oklab, var(--color-primary) 10%, transparent) 0%,
         transparent 62%
       );
   }
 
   .workspace-control-shell:hover {
-    border-color: color-mix(in oklab, var(--c-primary) 20%, var(--surface-card-border-hover) 80%);
+    border-color: color-mix(in oklab, var(--color-primary) 20%, var(--surface-card-border-hover) 80%);
     background:
       linear-gradient(
         135deg,
-        color-mix(in oklab, var(--surface-card-bg-hover) 86%, var(--c-primary) 14%),
+        color-mix(in oklab, var(--surface-card-bg-hover) 86%, var(--color-primary) 14%),
         var(--surface-card-bg-hover)
       );
     box-shadow:
       0 22px 40px color-mix(in oklab, var(--c-ink) 12%, transparent),
-      0 8px 20px color-mix(in oklab, var(--c-primary) 7%, transparent),
+      0 8px 20px color-mix(in oklab, var(--color-primary) 7%, transparent),
       inset 0 1px 0 color-mix(in oklab, white 48%, transparent);
     transform: translateY(-2px);
   }
 
   .workspace-control-shell:focus-within,
   .workspace-control-shell:focus-visible {
-    border-color: color-mix(in oklab, var(--c-primary) 26%, var(--surface-card-border-focus) 74%);
+    border-color: color-mix(in oklab, var(--color-primary) 26%, var(--surface-card-border-focus) 74%);
     box-shadow:
       0 20px 38px color-mix(in oklab, var(--c-ink) 11%, transparent),
-      0 0 0 3px color-mix(in oklab, var(--c-primary) 12%, transparent),
+      0 0 0 3px color-mix(in oklab, var(--color-primary) 12%, transparent),
       inset 0 1px 0 color-mix(in oklab, white 42%, transparent);
   }
 
   html.dark .workspace-control-shell {
-    --workspace-control-shell-border: color-mix(in oklab, var(--c-primary) 16%, var(--c-border) 84%);
+    --workspace-control-shell-border: color-mix(in oklab, var(--color-primary) 16%, var(--c-border) 84%);
     --workspace-control-shell-bg:
       linear-gradient(
         135deg,
-        color-mix(in oklab, var(--c-panel) 94%, var(--c-primary) 6%),
+        color-mix(in oklab, var(--c-panel) 94%, var(--color-primary) 6%),
         color-mix(in oklab, var(--c-panel) 97%, var(--c-ink) 3%)
       );
     --workspace-control-shell-shadow:
       0 24px 44px color-mix(in oklab, var(--c-ink) 28%, transparent),
-      0 8px 22px color-mix(in oklab, var(--c-primary) 8%, transparent),
+      0 8px 22px color-mix(in oklab, var(--color-primary) 8%, transparent),
       inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
     --workspace-control-embedded-border: color-mix(in oklab, var(--c-border) 84%, white 16%);
     --workspace-control-embedded-bg:
@@ -170,10 +170,10 @@
 
   .workspace-control-shell[data-condensed='true'] {
     border-radius: var(--radius-xl);
-    border-color: color-mix(in oklab, var(--c-primary) 18%, var(--workspace-control-shell-border) 82%);
+    border-color: color-mix(in oklab, var(--color-primary) 18%, var(--workspace-control-shell-border) 82%);
     box-shadow:
       0 24px 40px color-mix(in oklab, var(--c-ink) 12%, transparent),
-      0 10px 24px color-mix(in oklab, var(--c-primary) 8%, transparent),
+      0 10px 24px color-mix(in oklab, var(--color-primary) 8%, transparent),
       inset 0 1px 0 color-mix(in oklab, white 46%, transparent);
   }
 
@@ -293,7 +293,7 @@
   }
 
   .workspace-control-shell__section + .workspace-control-shell__section {
-    border-top: 1px solid color-mix(in oklab, var(--c-primary) 10%, var(--surface-soft-border) 90%);
+    border-top: 1px solid color-mix(in oklab, var(--color-primary) 10%, var(--surface-soft-border) 90%);
   }
 
   .workspace-control-shell__layout.has-aside {
@@ -301,7 +301,7 @@
   }
 
   .workspace-control-shell__layout.has-aside .workspace-control-shell__aside {
-    border-left: 1px solid color-mix(in oklab, var(--c-primary) 10%, var(--surface-soft-border) 90%);
+    border-left: 1px solid color-mix(in oklab, var(--color-primary) 10%, var(--surface-soft-border) 90%);
   }
 
   .workspace-control-shell__section--context {
@@ -379,17 +379,17 @@
   }
 
   .workspace-control-shell .requests-filters--surface-embedded .dc-select-trigger:focus-visible {
-    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--workspace-control-embedded-border) 66%);
+    border-color: color-mix(in oklab, var(--color-primary) 34%, var(--workspace-control-embedded-border) 66%);
     box-shadow:
-      0 0 0 3px color-mix(in oklab, var(--c-primary) 14%, transparent),
+      0 0 0 3px color-mix(in oklab, var(--color-primary) 14%, transparent),
       var(--workspace-control-embedded-shadow);
   }
 
   .workspace-control-shell .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input:focus-visible,
   .workspace-control-shell .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input:focus {
-    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--workspace-control-embedded-border) 66%);
+    border-color: color-mix(in oklab, var(--color-primary) 34%, var(--workspace-control-embedded-border) 66%);
     box-shadow:
-      0 0 0 3px color-mix(in oklab, var(--c-primary) 14%, transparent),
+      0 0 0 3px color-mix(in oklab, var(--color-primary) 14%, transparent),
       var(--workspace-control-embedded-shadow);
   }
 
@@ -488,7 +488,7 @@
   .workspace-control-shell .workspace-control-shell__action:focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 3px color-mix(in oklab, var(--c-primary) 12%, transparent),
+      0 0 0 3px color-mix(in oklab, var(--color-primary) 12%, transparent),
       0 8px 16px color-mix(in oklab, var(--c-ink) 7%, transparent);
   }
 
@@ -520,9 +520,9 @@
     min-width: calc(var(--space-8) + var(--space-5));
     height: var(--space-8);
     padding: 0 var(--space-3);
-    border-color: color-mix(in oklab, var(--workspace-control-embedded-border) 76%, var(--c-primary) 24%);
+    border-color: color-mix(in oklab, var(--workspace-control-embedded-border) 76%, var(--color-primary) 24%);
     background: color-mix(in oklab, white 88%, var(--surface-card-bg) 12%);
-    color: color-mix(in oklab, var(--c-primary) 54%, var(--c-text) 46%);
+    color: color-mix(in oklab, var(--color-primary) 54%, var(--c-text) 46%);
     box-shadow: inset 0 1px 0 color-mix(in oklab, white 68%, transparent);
   }
 
@@ -549,16 +549,16 @@
 
   .workspace-control-shell .home-activity__range.is-active {
     color: var(--c-text);
-    border-color: color-mix(in oklab, var(--c-primary) 44%, var(--workspace-control-embedded-border) 56%);
+    border-color: color-mix(in oklab, var(--color-primary) 44%, var(--workspace-control-embedded-border) 56%);
     background:
       linear-gradient(
         180deg,
-        color-mix(in oklab, white 88%, var(--c-primary) 12%),
-        color-mix(in oklab, white 76%, var(--c-primary) 24%)
+        color-mix(in oklab, white 88%, var(--color-primary) 12%),
+        color-mix(in oklab, white 76%, var(--color-primary) 24%)
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, white 76%, transparent),
-      0 8px 16px color-mix(in oklab, var(--c-primary) 14%, transparent);
+      0 8px 16px color-mix(in oklab, var(--color-primary) 14%, transparent);
   }
 
   html.dark .workspace-control-shell .workspace-control-shell__action {
@@ -591,7 +591,7 @@
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--c-panel) 74%, white 26%),
-        color-mix(in oklab, var(--c-panel) 86%, var(--c-primary) 14%)
+        color-mix(in oklab, var(--c-panel) 86%, var(--color-primary) 14%)
       );
   }
 
@@ -660,14 +660,14 @@
     .workspace-control-shell {
       box-shadow:
         0 14px 28px color-mix(in oklab, var(--c-ink) 10%, transparent),
-        0 6px 16px color-mix(in oklab, var(--c-primary) 6%, transparent),
+        0 6px 16px color-mix(in oklab, var(--color-primary) 6%, transparent),
         inset 0 1px 0 color-mix(in oklab, white 40%, transparent);
     }
 
     .workspace-control-shell[data-condensed='true'] {
       box-shadow:
         0 18px 30px color-mix(in oklab, var(--c-ink) 12%, transparent),
-        0 8px 18px color-mix(in oklab, var(--c-primary) 8%, transparent),
+        0 8px 18px color-mix(in oklab, var(--color-primary) 8%, transparent),
         inset 0 1px 0 color-mix(in oklab, white 42%, transparent);
     }
   }
@@ -912,7 +912,7 @@
     --personal-nav-dock-item-border: color-mix(in oklab, white 42%, var(--c-border) 58%);
     --personal-nav-dock-item-bg: color-mix(in oklab, white 30%, transparent);
     --personal-nav-dock-item-bg-hover: color-mix(in oklab, white 40%, transparent);
-    --personal-nav-dock-item-bg-active: color-mix(in oklab, white 54%, var(--c-primary) 6%);
+    --personal-nav-dock-item-bg-active: color-mix(in oklab, white 54%, var(--color-primary) 6%);
     --personal-nav-dock-item-shadow:
       inset 0 1px 0 color-mix(in oklab, white 48%, transparent),
       0 8px 18px color-mix(in oklab, var(--c-ink) 5%, transparent);
@@ -921,13 +921,13 @@
       0 10px 20px color-mix(in oklab, var(--c-ink) 7%, transparent);
     --personal-nav-dock-item-shadow-active:
       inset 0 1px 0 color-mix(in oklab, white 62%, transparent),
-      0 12px 24px color-mix(in oklab, var(--c-primary) 9%, transparent);
+      0 12px 24px color-mix(in oklab, var(--color-primary) 9%, transparent);
     --personal-nav-dock-icon-border: color-mix(in oklab, white 38%, var(--c-border) 62%);
     --personal-nav-dock-icon-bg: color-mix(in oklab, white 46%, transparent);
-    --personal-nav-dock-badge-border: color-mix(in oklab, var(--c-primary) 10%, var(--c-border) 90%);
+    --personal-nav-dock-badge-border: color-mix(in oklab, var(--color-primary) 10%, var(--c-border) 90%);
     --personal-nav-dock-badge-bg: color-mix(in oklab, white 48%, transparent);
     --personal-nav-dock-badge-color: color-mix(in oklab, var(--c-text-muted) 72%, var(--c-text) 28%);
-    --personal-nav-dock-badge-active-border: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+    --personal-nav-dock-badge-active-border: color-mix(in oklab, var(--color-primary) 18%, var(--c-border) 82%);
     --personal-nav-dock-badge-active-bg: color-mix(in oklab, white 56%, transparent);
     --personal-nav-dock-badge-active-color: var(--c-text);
     --control-gap: var(--space-1-5);
@@ -946,7 +946,7 @@
     --personal-nav-dock-item-border: color-mix(in oklab, white 42%, var(--surface-soft-border) 58%);
     --personal-nav-dock-item-bg: color-mix(in oklab, white 30%, transparent);
     --personal-nav-dock-item-bg-hover: color-mix(in oklab, white 40%, transparent);
-    --personal-nav-dock-item-bg-active: color-mix(in oklab, white 54%, var(--c-primary) 6%);
+    --personal-nav-dock-item-bg-active: color-mix(in oklab, white 54%, var(--color-primary) 6%);
     --personal-nav-dock-icon-border: color-mix(in oklab, white 38%, var(--surface-soft-border) 62%);
     --personal-nav-dock-icon-bg: color-mix(in oklab, white 46%, transparent);
   }
@@ -956,7 +956,7 @@
     --personal-nav-dock-item-border: color-mix(in oklab, white 18%, var(--c-border) 82%);
     --personal-nav-dock-item-bg: color-mix(in oklab, white 8%, transparent);
     --personal-nav-dock-item-bg-hover: color-mix(in oklab, white 12%, transparent);
-    --personal-nav-dock-item-bg-active: color-mix(in oklab, var(--c-primary) 16%, white 8%);
+    --personal-nav-dock-item-bg-active: color-mix(in oklab, var(--color-primary) 16%, white 8%);
     --personal-nav-dock-item-shadow:
       inset 0 1px 0 color-mix(in oklab, white 10%, transparent),
       0 10px 20px color-mix(in oklab, var(--c-ink) 18%, transparent);
@@ -965,13 +965,13 @@
       0 12px 22px color-mix(in oklab, var(--c-ink) 20%, transparent);
     --personal-nav-dock-item-shadow-active:
       inset 0 1px 0 color-mix(in oklab, white 14%, transparent),
-      0 14px 24px color-mix(in oklab, var(--c-primary) 14%, transparent);
+      0 14px 24px color-mix(in oklab, var(--color-primary) 14%, transparent);
     --personal-nav-dock-icon-border: color-mix(in oklab, white 16%, var(--c-border) 84%);
     --personal-nav-dock-icon-bg: color-mix(in oklab, white 12%, transparent);
-    --personal-nav-dock-badge-border: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+    --personal-nav-dock-badge-border: color-mix(in oklab, var(--color-primary) 18%, var(--c-border) 82%);
     --personal-nav-dock-badge-bg: color-mix(in oklab, white 12%, transparent);
     --personal-nav-dock-badge-color: color-mix(in oklab, white 88%, var(--c-text-muted) 12%);
-    --personal-nav-dock-badge-active-border: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+    --personal-nav-dock-badge-active-border: color-mix(in oklab, var(--color-primary) 18%, var(--c-border) 82%);
     --personal-nav-dock-badge-active-bg: color-mix(in oklab, white 14%, transparent);
     --personal-nav-dock-badge-active-color: var(--c-text);
   }
@@ -1002,7 +1002,7 @@
   }
 
   .personal-nav__track--dock .personal-nav__item:hover {
-    border-color: color-mix(in oklab, var(--c-primary) 20%, var(--personal-nav-dock-item-border) 80%);
+    border-color: color-mix(in oklab, var(--color-primary) 20%, var(--personal-nav-dock-item-border) 80%);
     background: var(--personal-nav-dock-item-bg-hover);
     box-shadow: var(--personal-nav-dock-item-shadow-hover);
     color: var(--c-text);
@@ -1010,7 +1010,7 @@
   }
 
   .personal-nav__track--dock .personal-nav__item.is-active {
-    border-color: color-mix(in oklab, var(--c-primary) 24%, var(--personal-nav-dock-item-border) 76%);
+    border-color: color-mix(in oklab, var(--color-primary) 24%, var(--personal-nav-dock-item-border) 76%);
     background: var(--personal-nav-dock-item-bg-active);
     box-shadow: var(--personal-nav-dock-item-shadow-active);
     color: var(--c-text);
@@ -1019,7 +1019,7 @@
 
   .personal-nav__track--dock .personal-nav__item:focus-visible {
     outline: none;
-    border-color: color-mix(in oklab, var(--c-primary) 20%, var(--personal-nav-dock-item-border) 80%);
+    border-color: color-mix(in oklab, var(--color-primary) 20%, var(--personal-nav-dock-item-border) 80%);
     background: var(--personal-nav-dock-item-bg-hover);
     box-shadow: var(--personal-nav-dock-item-shadow-hover);
     color: var(--c-text);

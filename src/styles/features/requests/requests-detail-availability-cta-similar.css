@@ -29,8 +29,8 @@
   }
 
   .request-detail__cta-btn.is-done {
-    background: color-mix(in oklab, var(--c-primary) 78%, var(--c-ink) 22%);
-    border-color: color-mix(in oklab, var(--c-primary) 66%, transparent);
+    background: color-mix(in oklab, var(--color-primary) 78%, var(--c-ink) 22%);
+    border-color: color-mix(in oklab, var(--color-primary) 66%, transparent);
     color: var(--c-primary-contrast);
   }
 

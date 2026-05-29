@@ -56,7 +56,7 @@
       border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
       background: color-mix(in oklab, var(--c-panel) 96%, var(--c-border) 4%);
       box-shadow:
-        0 -8px 24px color-mix(in oklab, var(--c-primary) 12%, transparent),
+        0 -8px 24px color-mix(in oklab, var(--color-primary) 12%, transparent),
         0 0 0 1px color-mix(in oklab, var(--c-border) 45%, transparent);
       z-index: 20;
     }

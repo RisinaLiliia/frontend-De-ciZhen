@@ -41,7 +41,7 @@
     width: 15px;
     height: 15px;
     border-radius: var(--radius-pill);
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
     outline: none;
   }
 
@@ -61,7 +61,7 @@
 
   .provider-decision-metric__value {
     font-weight: 700;
-    color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
+    color: color-mix(in oklab, var(--color-primary) 78%, var(--c-text) 22%);
   }
 
 

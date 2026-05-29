@@ -87,8 +87,8 @@
     color: var(--c-primary-contrast);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--c-primary) 92%, white 8%),
-      color-mix(in oklab, var(--c-primary) 82%, black 18%)
+      color-mix(in oklab, var(--color-primary) 92%, white 8%),
+      color-mix(in oklab, var(--color-primary) 82%, black 18%)
     );
     box-shadow: var(--shadow-card);
   }

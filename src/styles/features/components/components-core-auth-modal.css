@@ -54,8 +54,8 @@
 
   .auth-route-modal__close:hover {
     color: var(--c-text);
-    border-color: color-mix(in oklab, var(--c-primary) 48%, var(--c-border) 52%);
-    background: color-mix(in oklab, var(--c-primary) 15%, var(--c-panel) 85%);
+    border-color: color-mix(in oklab, var(--color-primary) 48%, var(--c-border) 52%);
+    background: color-mix(in oklab, var(--color-primary) 15%, var(--c-panel) 85%);
   }
 
   @media (max-width: 767px) {
@@ -68,7 +68,7 @@
       background:
         radial-gradient(
           72% 52% at 50% 8%,
-          color-mix(in oklab, var(--c-primary) 24%, transparent),
+          color-mix(in oklab, var(--color-primary) 24%, transparent),
           transparent 70%
         ),
         color-mix(in oklab, var(--c-overlay) 92%, transparent);

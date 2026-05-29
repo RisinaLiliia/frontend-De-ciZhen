@@ -2,16 +2,16 @@
 
 @layer components {
   .link-accent {
-    color: var(--c-primary);
+    color: var(--color-primary);
     text-decoration: underline;
     text-underline-offset: 4px;
-    text-decoration-color: color-mix(in oklab, var(--c-primary) 45%, transparent);
+    text-decoration-color: color-mix(in oklab, var(--color-primary) 45%, transparent);
     transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
   }
 
   .link-accent:hover {
-    color: color-mix(in oklab, var(--c-primary) 85%, black 15%);
-    text-decoration-color: var(--c-primary);
+    color: color-mix(in oklab, var(--color-primary) 85%, black 15%);
+    text-decoration-color: var(--color-primary);
   }
 
   .link-accent:focus-visible {
@@ -85,7 +85,7 @@
   }
 
   .stat-link:hover {
-    background: color-mix(in oklab, var(--c-panel) 82%, var(--c-primary) 18%);
+    background: color-mix(in oklab, var(--c-panel) 82%, var(--color-primary) 18%);
   }
 
   .stat-link:focus-visible {

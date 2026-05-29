@@ -11,9 +11,9 @@
     display: grid;
     gap: var(--space-3);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 24%, var(--c-border) 76%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 24%, var(--c-border) 76%);
     background:
-      radial-gradient(320px 170px at -10% -16%, color-mix(in oklab, var(--c-primary) 10%, transparent), transparent 64%),
+      radial-gradient(320px 170px at -10% -16%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 64%),
       radial-gradient(280px 160px at 112% -12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
       linear-gradient(
         128deg,
@@ -38,7 +38,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--c-primary) 68%, var(--c-text) 32%);
+    color: color-mix(in oklab, var(--color-primary) 68%, var(--c-text) 32%);
   }
 
   .cookie-consent-banner__title {
@@ -71,9 +71,9 @@
     min-height: 26px;
     border-radius: var(--radius-pill);
     padding: 0 9px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--c-border) 84%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--c-border) 84%);
     background: color-mix(in oklab, var(--c-panel) 92%, transparent);
-    color: color-mix(in oklab, var(--c-primary) 72%, var(--c-text) 28%);
+    color: color-mix(in oklab, var(--color-primary) 72%, var(--c-text) 28%);
     text-decoration: none;
     transition:
       transform var(--transition-fast),
@@ -83,8 +83,8 @@
 
   .cookie-consent-banner__links a:hover,
   .cookie-consent-banner__links a:focus-visible {
-    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
-    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+    border-color: color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
+    background: color-mix(in oklab, var(--color-primary) 8%, var(--c-panel) 92%);
     outline: none;
   }
 
@@ -122,7 +122,7 @@
       linear-gradient(
         160deg,
         color-mix(in oklab, var(--c-accent) 36%, var(--c-panel) 64%) 0%,
-        color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%) 100%
+        color-mix(in oklab, var(--color-primary) 14%, var(--c-panel) 86%) 100%
       );
     color: color-mix(in oklab, var(--c-accent) 88%, var(--c-text) 12%);
     box-shadow:
@@ -140,7 +140,7 @@
       linear-gradient(
         160deg,
         color-mix(in oklab, var(--c-accent) 42%, var(--c-panel) 58%) 0%,
-        color-mix(in oklab, var(--c-primary) 18%, var(--c-panel) 82%) 100%
+        color-mix(in oklab, var(--color-primary) 18%, var(--c-panel) 82%) 100%
       );
     box-shadow:
       0 8px 18px color-mix(in oklab, var(--c-accent) 20%, transparent),

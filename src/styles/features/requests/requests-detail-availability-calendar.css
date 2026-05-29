@@ -44,7 +44,7 @@
   }
 
   .request-detail__meta-item svg {
-    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
+    color: color-mix(in oklab, var(--color-primary) 70%, var(--c-text-muted) 30%);
   }
 
   .request-detail__availability-meta {
@@ -92,7 +92,7 @@
   .request-detail__availability-date svg {
     width: 14px;
     height: 14px;
-    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
+    color: color-mix(in oklab, var(--color-primary) 70%, var(--c-text-muted) 30%);
   }
 
   .request-detail__availability-date--interactive {
@@ -100,7 +100,7 @@
     border-radius: var(--radius-sm);
     text-decoration: underline;
     text-decoration-style: dotted;
-    text-decoration-color: color-mix(in oklab, var(--c-primary) 40%, transparent);
+    text-decoration-color: color-mix(in oklab, var(--color-primary) 40%, transparent);
     text-underline-offset: 3px;
   }
 
@@ -112,12 +112,12 @@
   }
 
   .request-detail__availability-calendar-popover > .dc-popover-trigger:hover .request-detail__availability-date--interactive {
-    color: color-mix(in oklab, var(--c-primary) 72%, var(--c-text) 28%);
-    text-decoration-color: color-mix(in oklab, var(--c-primary) 64%, transparent);
+    color: color-mix(in oklab, var(--color-primary) 72%, var(--c-text) 28%);
+    text-decoration-color: color-mix(in oklab, var(--color-primary) 64%, transparent);
   }
 
   .request-detail__availability-calendar-popover > .dc-popover-trigger:focus-visible .request-detail__availability-date--interactive {
-    outline: 2px solid color-mix(in oklab, var(--c-primary) 45%, transparent);
+    outline: 2px solid color-mix(in oklab, var(--color-primary) 45%, transparent);
     outline-offset: 2px;
   }
 

@@ -34,7 +34,7 @@
   }
 
   .home-activity__line.is-requests {
-    stroke: color-mix(in oklab, var(--c-primary) 85%, var(--c-hero-tint-primary) 15%);
+    stroke: color-mix(in oklab, var(--color-primary) 85%, var(--c-hero-tint-primary) 15%);
   }
 
   .home-activity__line.is-offers {
@@ -58,7 +58,7 @@
   }
 
   .home-activity__dot.is-requests {
-    fill: color-mix(in oklab, var(--c-primary) 80%, var(--c-hero-tint-primary) 20%);
+    fill: color-mix(in oklab, var(--color-primary) 80%, var(--c-hero-tint-primary) 20%);
   }
 
   .home-activity__dot.is-offers {
@@ -119,11 +119,11 @@
   }
 
   .home-activity__metric.is-requests strong {
-    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-hero-tint-primary) 20%);
+    color: color-mix(in oklab, var(--color-primary) 80%, var(--c-hero-tint-primary) 20%);
   }
 
   .home-activity__metric.is-requests::before {
-    background: color-mix(in oklab, var(--c-primary) 80%, var(--c-hero-tint-primary) 20%);
+    background: color-mix(in oklab, var(--color-primary) 80%, var(--c-hero-tint-primary) 20%);
   }
 
   .home-activity__metric.is-offers strong {
@@ -193,7 +193,7 @@
   }
 
   html:not(.dark) .home-nearby-panel .nearby-more:hover {
-    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
+    border-color: color-mix(in oklab, var(--color-primary) 34%, var(--c-border) 66%);
     box-shadow: var(--shadow-card);
   }
 

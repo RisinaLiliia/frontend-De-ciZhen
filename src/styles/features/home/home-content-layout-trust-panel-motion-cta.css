@@ -71,8 +71,8 @@
     border: 1px solid color-mix(in oklab, var(--c-border) 66%, transparent);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--c-primary) 36%, var(--c-panel) 64%),
-      color-mix(in oklab, var(--c-primary) 54%, var(--c-panel) 46%)
+      color-mix(in oklab, var(--color-primary) 36%, var(--c-panel) 64%),
+      color-mix(in oklab, var(--color-primary) 54%, var(--c-panel) 46%)
     );
     color: var(--c-primary-contrast);
     font-size: var(--btn-font);
@@ -90,7 +90,7 @@
 
   .home-trust-live-panel__cta:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--c-primary) 35%, var(--c-border) 65%);
+    border-color: color-mix(in oklab, var(--color-primary) 35%, var(--c-border) 65%);
     box-shadow: var(--shadow-floating);
   }
 
@@ -98,7 +98,7 @@
     outline: none;
     box-shadow:
       0 0 0 3px var(--focus-ring-primary),
-      0 12px 28px color-mix(in oklab, var(--c-primary) 22%, transparent);
+      0 12px 28px color-mix(in oklab, var(--color-primary) 22%, transparent);
   }
 
   .home-trust-live-panel__cta-note {

@@ -48,7 +48,7 @@
     min-height: 0;
     height: 100%;
     padding: var(--space-2) var(--space-2-5);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 18%, var(--surface-soft-border) 82%);
     border-radius: var(--workspace-statistics-radius-lg);
     background: color-mix(in oklab, var(--c-panel) 96%, var(--surface-soft-bg) 4%);
     transition:
@@ -88,7 +88,7 @@
     border-color: var(--surface-card-border-hover);
     box-shadow:
       var(--surface-card-shadow),
-      0 0 0 2px color-mix(in oklab, var(--c-primary) 18%, transparent);
+      0 0 0 2px color-mix(in oklab, var(--color-primary) 18%, transparent);
   }
 
   .workspace-statistics-opportunity__top {
@@ -158,7 +158,7 @@
     margin: var(--space-0-5) 0 0;
     font-size: var(--fs-small);
     font-weight: 700;
-    color: color-mix(in oklab, var(--c-text) 88%, var(--c-primary) 12%);
+    color: color-mix(in oklab, var(--c-text) 88%, var(--color-primary) 12%);
     font-variant-numeric: tabular-nums;
   }
 
@@ -184,9 +184,9 @@
   }
 
   .workspace-statistics-opportunity__tone.is-high {
-    color: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
-    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
+    color: color-mix(in oklab, var(--color-primary) 84%, var(--c-text) 16%);
+    border-color: color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--color-primary) 11%, var(--c-panel) 89%);
   }
 
   .workspace-statistics-opportunity__tone.is-balanced {
@@ -244,7 +244,7 @@
     font-size: var(--fs-h3);
     font-weight: 700;
     line-height: 1.1;
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
@@ -285,12 +285,12 @@
 
   .workspace-statistics-opportunity__radar-ring {
     fill: none;
-    stroke: color-mix(in oklab, var(--surface-soft-border) 84%, var(--c-primary) 16%);
+    stroke: color-mix(in oklab, var(--surface-soft-border) 84%, var(--color-primary) 16%);
     stroke-width: 1;
   }
 
   .workspace-statistics-opportunity__radar-axis {
-    stroke: color-mix(in oklab, var(--surface-soft-border) 72%, var(--c-primary) 28%);
+    stroke: color-mix(in oklab, var(--surface-soft-border) 72%, var(--color-primary) 28%);
     stroke-width: 1;
   }
 
@@ -298,7 +298,7 @@
   .workspace-statistics-opportunity__radar-axis-label {
     font-size: var(--workspace-statistics-micro-size);
     font-weight: 700;
-    fill: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-primary) 10%);
+    fill: color-mix(in oklab, var(--c-text-muted) 90%, var(--color-primary) 10%);
     font-variant-numeric: tabular-nums;
     pointer-events: none;
     user-select: none;
@@ -315,13 +315,13 @@
   }
 
   .workspace-statistics-opportunity__radar-shape {
-    fill: color-mix(in oklab, var(--c-primary) 14%, transparent);
-    stroke: color-mix(in oklab, var(--c-primary) 74%, var(--c-text) 26%);
+    fill: color-mix(in oklab, var(--color-primary) 14%, transparent);
+    stroke: color-mix(in oklab, var(--color-primary) 74%, var(--c-text) 26%);
     stroke-width: 1.6;
   }
 
   .workspace-statistics-opportunity__radar-dot {
-    fill: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
+    fill: color-mix(in oklab, var(--color-primary) 84%, var(--c-text) 16%);
   }
 
   .workspace-statistics-opportunity__analysis-axes {
@@ -397,12 +397,12 @@
     align-content: start;
     padding: var(--workspace-statistics-feature-card-pad);
     min-height: var(--workspace-statistics-feature-card-min-h);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 22%, var(--surface-soft-border) 78%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 22%, var(--surface-soft-border) 78%);
     border-radius: var(--workspace-statistics-radius-lg);
     background:
       linear-gradient(
         160deg,
-        color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%) 0%,
+        color-mix(in oklab, var(--color-primary) 10%, var(--c-panel) 90%) 0%,
         color-mix(in oklab, var(--c-accent) 8%, var(--c-panel) 92%) 100%
       );
     box-shadow: var(--shadow-card);
@@ -416,9 +416,9 @@
     width: fit-content;
     padding: 0 var(--workspace-statistics-chip-pad-inline);
     border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--color-primary) 10%, var(--c-panel) 90%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
     font-size: var(--workspace-statistics-chip-font-size);
     font-weight: var(--workspace-statistics-chip-font-weight);
     letter-spacing: 0.04em;
@@ -449,7 +449,7 @@
     display: block;
     font-size: var(--workspace-statistics-display-size-lg);
     font-weight: 700;
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
     line-height: var(--lh-tight);
     font-variant-numeric: tabular-nums;
     word-break: break-word;
@@ -487,8 +487,8 @@
   }
 
   .workspace-statistics-price__summary-card--gap.is-neutral {
-    border-color: color-mix(in oklab, var(--c-primary) 22%, var(--surface-soft-border) 78%);
-    background: color-mix(in oklab, var(--c-primary) 7%, var(--surface-soft-bg) 93%);
+    border-color: color-mix(in oklab, var(--color-primary) 22%, var(--surface-soft-border) 78%);
+    background: color-mix(in oklab, var(--color-primary) 7%, var(--surface-soft-bg) 93%);
   }
 
   .workspace-statistics-price__summary-label {
@@ -574,16 +574,16 @@
   .workspace-statistics-price__comparison-fill--profile {
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--c-primary) 56%, var(--c-accent) 44%),
-      color-mix(in oklab, var(--c-accent) 74%, var(--c-primary) 26%)
+      color-mix(in oklab, var(--color-primary) 56%, var(--c-accent) 44%),
+      color-mix(in oklab, var(--c-accent) 74%, var(--color-primary) 26%)
     );
   }
 
   .workspace-statistics-price__comparison-fill--market {
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--c-text-muted) 52%, var(--c-primary) 48%),
-      color-mix(in oklab, var(--c-primary) 68%, var(--surface-soft-border) 32%)
+      color-mix(in oklab, var(--c-text-muted) 52%, var(--color-primary) 48%),
+      color-mix(in oklab, var(--color-primary) 68%, var(--surface-soft-border) 32%)
     );
     opacity: 0.9;
   }
@@ -687,7 +687,7 @@
   .workspace-statistics-price__bar-node--avg {
     width: 11px;
     height: 11px;
-    background: color-mix(in oklab, var(--c-text) 72%, var(--c-primary) 28%);
+    background: color-mix(in oklab, var(--c-text) 72%, var(--color-primary) 28%);
   }
 
   .workspace-statistics-price__bar-node--optimal-min,
@@ -702,7 +702,7 @@
     border-radius: var(--workspace-statistics-chip-radius);
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--c-primary) 72%, var(--c-accent) 28%),
+      color-mix(in oklab, var(--color-primary) 72%, var(--c-accent) 28%),
       color-mix(in oklab, var(--c-accent) 78%, var(--c-warn) 22%)
     );
     opacity: 0.92;
@@ -720,7 +720,7 @@
     border-radius: var(--workspace-statistics-radius-sm);
     border: 1px solid color-mix(in oklab, var(--c-accent) 28%, var(--surface-soft-border) 72%);
     background: color-mix(in oklab, var(--c-panel) 94%, var(--c-accent) 6%);
-    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
+    color: color-mix(in oklab, var(--color-primary) 80%, var(--c-text) 20%);
     pointer-events: none;
     white-space: nowrap;
     box-shadow: var(--shadow-card);
@@ -748,7 +748,7 @@
     bottom: -5px;
     width: 2px;
     border-radius: var(--workspace-statistics-chip-radius);
-    background: color-mix(in oklab, var(--c-text) 74%, var(--c-primary) 26%);
+    background: color-mix(in oklab, var(--c-text) 74%, var(--color-primary) 26%);
     transform: translateX(-50%);
     box-shadow: 0 0 0 1px color-mix(in oklab, var(--c-panel) 66%, transparent);
   }
@@ -878,7 +878,7 @@
     display: grid;
     gap: var(--space-1);
     padding: var(--space-2);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--surface-soft-border) 84%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--surface-soft-border) 84%);
     border-radius: var(--workspace-statistics-radius-md);
     background: color-mix(in oklab, var(--surface-soft-bg) 82%, var(--c-panel) 18%);
   }
@@ -912,7 +912,7 @@
     align-content: start;
     min-height: var(--workspace-statistics-price-strategy-min-height);
     padding: var(--space-2-5);
-    border-color: color-mix(in oklab, var(--c-primary) 14%, var(--surface-soft-border) 86%);
+    border-color: color-mix(in oklab, var(--color-primary) 14%, var(--surface-soft-border) 86%);
     background:
       linear-gradient(
         180deg,
@@ -933,7 +933,7 @@
     font-size: var(--workspace-statistics-display-size);
     line-height: var(--lh-tight);
     font-variant-numeric: tabular-nums;
-    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
+    color: color-mix(in oklab, var(--color-primary) 80%, var(--c-text) 20%);
   }
 
   .workspace-statistics-price__strategy-copy {
@@ -1119,7 +1119,7 @@
     font-size: var(--workspace-statistics-copy-size);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
+    color: color-mix(in oklab, var(--color-primary) 76%, var(--c-text) 24%);
   }
 
   .workspace-statistics-price-modal__close {
@@ -1148,10 +1148,10 @@
     width: 44px;
     height: 44px;
     border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 24%, var(--surface-soft-border) 76%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 24%, var(--surface-soft-border) 76%);
     background:
       radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-accent) 34%, transparent), transparent 58%),
-      color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
+      color-mix(in oklab, var(--color-primary) 10%, var(--c-panel) 90%);
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-white) 32%, transparent),
       0 10px 24px color-mix(in oklab, var(--c-ink) 10%, transparent);
@@ -1167,9 +1167,9 @@
       linear-gradient(
         90deg,
         transparent 0%,
-        color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%) 32%,
+        color-mix(in oklab, var(--color-primary) 28%, var(--surface-soft-border) 72%) 32%,
         color-mix(in oklab, var(--c-accent) 36%, var(--surface-soft-border) 64%) 50%,
-        color-mix(in oklab, var(--c-primary) 28%, var(--surface-soft-border) 72%) 68%,
+        color-mix(in oklab, var(--color-primary) 28%, var(--surface-soft-border) 72%) 68%,
         transparent 100%
       );
     transform-origin: center;

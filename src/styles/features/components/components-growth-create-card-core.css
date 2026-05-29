@@ -18,11 +18,11 @@
         148deg,
         color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%) 0%,
         color-mix(in oklab, var(--c-panel) 96%, var(--c-border) 4%) 62%,
-        color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%) 100%
+        color-mix(in oklab, var(--color-primary) 10%, var(--c-panel) 90%) 100%
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-hi) 10%, transparent),
-      0 10px 28px color-mix(in oklab, var(--c-primary) 9%, transparent);
+      0 10px 28px color-mix(in oklab, var(--color-primary) 9%, transparent);
     text-decoration: none;
     color: inherit;
     box-sizing: border-box;
@@ -69,7 +69,7 @@
       linear-gradient(
         160deg,
         color-mix(in oklab, var(--c-accent) 34%, var(--c-panel) 66%) 0%,
-        color-mix(in oklab, var(--c-primary) 18%, var(--c-panel) 82%) 100%
+        color-mix(in oklab, var(--color-primary) 18%, var(--c-panel) 82%) 100%
       );
     overflow: hidden;
   }
@@ -87,7 +87,7 @@
     line-height: 1;
     font-weight: 500;
     box-shadow:
-      0 10px 20px color-mix(in oklab, var(--c-primary) 14%, transparent),
+      0 10px 20px color-mix(in oklab, var(--color-primary) 14%, transparent),
       inset 0 1px 0 color-mix(in oklab, var(--c-hi-strong) 16%, transparent);
     transition: transform 180ms ease;
   }
@@ -97,7 +97,7 @@
     transform: translateY(-1px);
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-hi) 12%, transparent),
-      0 14px 30px color-mix(in oklab, var(--c-primary) 12%, transparent);
+      0 14px 30px color-mix(in oklab, var(--color-primary) 12%, transparent);
   }
 
   .request-create-card:hover .request-create-card__plus {
@@ -111,9 +111,9 @@
   .request-create-card:focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 3px color-mix(in oklab, var(--c-primary) 42%, transparent),
+      0 0 0 3px color-mix(in oklab, var(--color-primary) 42%, transparent),
       inset 0 1px 0 color-mix(in oklab, var(--c-hi) 10%, transparent),
-      0 10px 20px color-mix(in oklab, var(--c-primary) 10%, transparent);
+      0 10px 20px color-mix(in oklab, var(--color-primary) 10%, transparent);
   }
 
   .request-create-card--compact {

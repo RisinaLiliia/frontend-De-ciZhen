@@ -16,7 +16,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--c-primary);
+    color: var(--color-primary);
   }
 
   .cookie-consent-modal__title {
@@ -69,8 +69,8 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    color: color-mix(in oklab, var(--color-primary) 76%, var(--c-text) 24%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
     border-radius: var(--radius-pill);
     padding: 4px 10px;
   }
@@ -78,7 +78,7 @@
   .cookie-consent-option input[type='checkbox'] {
     width: 18px;
     height: 18px;
-    accent-color: var(--c-primary);
+    accent-color: var(--color-primary);
   }
 
   .cookie-consent-modal__actions {

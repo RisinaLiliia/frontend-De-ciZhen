@@ -179,8 +179,8 @@
   }
 
   .my-request-card__insight.is-info {
-    border-color: color-mix(in oklab, var(--c-primary) 18%, transparent);
-    background: color-mix(in oklab, var(--c-primary) 8%, white 92%);
+    border-color: color-mix(in oklab, var(--color-primary) 18%, transparent);
+    background: color-mix(in oklab, var(--color-primary) 8%, white 92%);
   }
 
   .my-request-card__insight.is-warning {
@@ -233,8 +233,8 @@
     height: 22px;
     flex: 0 0 auto;
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--c-primary) 12%, white 88%);
-    color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
+    background: color-mix(in oklab, var(--color-primary) 12%, white 88%);
+    color: color-mix(in oklab, var(--color-primary) 76%, var(--c-text) 24%);
     font-size: var(--fs-12);
     font-weight: 700;
     line-height: 1;
@@ -270,9 +270,9 @@
   }
 
   .my-request-card__signal.is-info {
-    border-color: color-mix(in oklab, var(--c-primary) 18%, transparent);
-    background: color-mix(in oklab, var(--c-primary) 10%, white 90%);
-    color: color-mix(in oklab, var(--c-primary) 72%, var(--c-text) 28%);
+    border-color: color-mix(in oklab, var(--color-primary) 18%, transparent);
+    background: color-mix(in oklab, var(--color-primary) 10%, white 90%);
+    color: color-mix(in oklab, var(--color-primary) 72%, var(--c-text) 28%);
   }
 
   .my-request-card__signal.is-warning {
@@ -300,7 +300,7 @@
   }
 
   .my-request-card__signal-copy.is-info {
-    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text) 30%);
+    color: color-mix(in oklab, var(--color-primary) 70%, var(--c-text) 30%);
   }
 
   .my-request-card__signal-copy.is-warning {

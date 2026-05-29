@@ -76,14 +76,14 @@
   }
 
   .provider-avatar-stack .rating-summary__reviews {
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
     text-decoration: underline;
     text-underline-offset: 3px;
     font-weight: 600;
   }
 
   .provider-avatar-stack .rating-summary:hover .rating-summary__reviews {
-    color: var(--c-primary);
+    color: var(--color-primary);
   }
 
   .provider-main-review {
@@ -169,7 +169,7 @@
 
   .provider-main__trust-reviews {
     display: inline-flex;
-    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
     text-decoration: underline;
     text-underline-offset: 3px;
     font-size: var(--fs-11);
@@ -323,7 +323,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
+    color: color-mix(in oklab, var(--color-primary) 70%, var(--c-text-muted) 30%);
     flex: 0 0 18px;
   }
 
@@ -334,8 +334,8 @@
 
   .provider-main__detail-icon--price {
     border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
-    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 22%, var(--c-border) 78%);
+    background: color-mix(in oklab, var(--color-primary) 8%, var(--c-panel) 92%);
     font-size: var(--fs-12);
     font-weight: 700;
     line-height: 1;

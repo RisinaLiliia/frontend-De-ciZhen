@@ -23,7 +23,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: color-mix(in oklab, var(--c-primary) 25%, var(--c-panel) 75%);
+    background: color-mix(in oklab, var(--color-primary) 25%, var(--c-panel) 75%);
     color: var(--c-text);
     font-size: var(--fs-14);
     font-weight: 700;

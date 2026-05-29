@@ -11,9 +11,9 @@
     min-height: 100%;
     min-block-size: clamp(420px, 46vw, 560px);
     padding: var(--home-panel-padding, 16px);
-    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    border-color: color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
     background:
-      radial-gradient(140% 120% at 0% 0%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent 56%),
+      radial-gradient(140% 120% at 0% 0%, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent 56%),
       radial-gradient(120% 90% at 85% 8%, color-mix(in oklab, var(--c-accent) 10%, transparent), transparent 58%),
       linear-gradient(
         180deg,
@@ -30,7 +30,7 @@
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(180px 90px at 78% 18%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent),
+      radial-gradient(180px 90px at 78% 18%, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent),
       radial-gradient(220px 120px at 85% 26%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent);
     z-index: 0;
   }

@@ -41,7 +41,7 @@
   html:not(.dark) .home-trust-live-panel {
     border-color: color-mix(in oklab, var(--c-hero-tint-primary) 24%, var(--c-border) 76%);
     background:
-      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 8%, transparent), transparent 56%),
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--color-primary) 8%, transparent), transparent 56%),
       radial-gradient(115% 90% at 84% 10%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 60%),
       linear-gradient(180deg, var(--c-panel) 0%, color-mix(in oklab, var(--c-panel) 90%, var(--c-hero-tint-primary) 10%) 100%);
     box-shadow:
@@ -51,7 +51,7 @@
 
   html:not(.dark) .home-trust-live-panel__glass {
     background:
-      radial-gradient(180px 90px at 78% 18%, color-mix(in oklab, var(--c-primary) 9%, transparent), transparent),
+      radial-gradient(180px 90px at 78% 18%, color-mix(in oklab, var(--color-primary) 9%, transparent), transparent),
       radial-gradient(220px 120px at 85% 26%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent);
   }
 
@@ -60,14 +60,14 @@
   }
 
   html:not(.dark) .home-trust-live-panel__cta {
-    border-color: color-mix(in oklab, var(--c-primary) 24%, var(--c-border) 76%);
-    background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
-    color: var(--c-primary);
+    border-color: color-mix(in oklab, var(--color-primary) 24%, var(--c-border) 76%);
+    background: color-mix(in oklab, var(--color-primary) 11%, var(--c-panel) 89%);
+    color: var(--color-primary);
     box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .home-trust-live-panel__cta:hover {
-    background: color-mix(in oklab, var(--c-primary) 15%, var(--c-panel) 85%);
+    background: color-mix(in oklab, var(--color-primary) 15%, var(--c-panel) 85%);
     box-shadow: var(--shadow-card-hover);
   }
 
