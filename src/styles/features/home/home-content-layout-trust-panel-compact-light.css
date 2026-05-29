@@ -63,7 +63,7 @@
     border-color: color-mix(in oklab, var(--c-primary) 24%, var(--c-border) 76%);
     background: color-mix(in oklab, var(--c-primary) 11%, var(--c-panel) 89%);
     color: var(--c-primary);
-    box-shadow: 0 10px 22px color-mix(in oklab, var(--c-primary) 11%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .home-trust-live-panel__cta:hover {

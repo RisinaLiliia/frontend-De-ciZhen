@@ -723,7 +723,7 @@
     color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
     pointer-events: none;
     white-space: nowrap;
-    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   .workspace-statistics-price__bar-sweet-label span {

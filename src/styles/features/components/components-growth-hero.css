@@ -59,7 +59,7 @@
     overflow: hidden;
     min-height: 200px;
     background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
-    box-shadow: 0 18px 40px color-mix(in oklab, var(--c-panel) 55%, transparent);
+    box-shadow: var(--shadow-floating);
     height: 100%;
     align-self: stretch;
   }

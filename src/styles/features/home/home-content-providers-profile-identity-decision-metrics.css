@@ -52,7 +52,7 @@
   }
 
   .provider-decision-metric__icon:focus-visible {
-    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 34%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
   .provider-decision-metric__label {

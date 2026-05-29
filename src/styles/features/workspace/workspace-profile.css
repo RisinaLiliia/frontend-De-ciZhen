@@ -126,7 +126,7 @@
 
   .workspace-profile-onboarding .profile-settings__avatar:hover {
     border-color: color-mix(in oklab, var(--c-primary) 30%, var(--surface-card-border) 70%);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 10%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
   .workspace-profile-onboarding .profile-settings__avatar:focus-visible {

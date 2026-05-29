@@ -142,7 +142,7 @@
   .profile-settings__password-field--accent .input:focus,
   .profile-settings__password-field--accent .field:focus {
     border-color: color-mix(in oklab, var(--c-accent) 72%, var(--c-border) 28%);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-accent) 24%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
   .profile-settings__password-toggle {

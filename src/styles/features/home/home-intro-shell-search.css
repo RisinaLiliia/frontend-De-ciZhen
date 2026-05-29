@@ -119,7 +119,7 @@
     border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
     border-radius: var(--radius-md);
     background: color-mix(in oklab, var(--c-panel) 92%, var(--c-ink) 8%);
-    box-shadow: 0 12px 24px color-mix(in oklab, var(--c-ink) 44%, transparent);
+    box-shadow: var(--shadow-floating);
   }
 
   .home-quick-search__city-option {

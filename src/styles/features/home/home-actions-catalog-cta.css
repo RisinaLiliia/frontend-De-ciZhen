@@ -93,7 +93,7 @@
 
   .home-popular-services__link:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-accent) 35%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
   .home-popular__cta {

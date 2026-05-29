@@ -93,7 +93,7 @@
       color-mix(in oklab, var(--c-panel) 94%, var(--c-surface) 6%),
       color-mix(in oklab, var(--c-panel) 86%, var(--c-accent) 14%)
     );
-    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .field {

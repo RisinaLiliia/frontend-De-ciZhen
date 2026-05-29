@@ -102,7 +102,7 @@
     color: var(--c-primary-contrast);
     border-color: color-mix(in oklab, var(--c-primary) 52%, var(--c-border) 48%);
     background: color-mix(in oklab, var(--c-primary) 74%, var(--c-panel) 26%);
-    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
 

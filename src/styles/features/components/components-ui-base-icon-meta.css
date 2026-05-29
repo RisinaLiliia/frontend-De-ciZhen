@@ -28,12 +28,12 @@
 
   .icon-button:focus {
     outline: none;
-    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 36%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
   .icon-button:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 46%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
   .icon-button--hint {

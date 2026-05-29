@@ -33,13 +33,13 @@
 
   .chip:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
   .chip.is-active {
     border-color: color-mix(in oklab, var(--c-border) 68%, var(--c-accent) 32%);
     background: color-mix(in oklab, var(--c-panel) 88%, var(--c-accent) 12%);
-    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 10%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .chip {
@@ -84,7 +84,7 @@
 
   .panel-action:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
 

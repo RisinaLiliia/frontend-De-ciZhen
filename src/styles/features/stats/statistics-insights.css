@@ -152,7 +152,7 @@
         color-mix(in oklab, var(--c-panel) 95%, white 5%) 0%,
         color-mix(in oklab, var(--surface-soft-bg) 94%, var(--c-panel) 6%) 100%
       );
-    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 6%, transparent);
+    box-shadow: var(--shadow-card);
     transition:
       transform var(--transition-fast),
       box-shadow var(--transition-fast),

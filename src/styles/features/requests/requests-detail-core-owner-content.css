@@ -140,7 +140,7 @@
 
   .request-detail__text-toggle:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 28%, transparent);
+    box-shadow: var(--control-focus-ring);
     border-radius: var(--radius-sm);
   }
 
