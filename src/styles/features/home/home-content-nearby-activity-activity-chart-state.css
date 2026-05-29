@@ -38,7 +38,7 @@
   }
 
   .home-activity__line.is-offers {
-    stroke: color-mix(in oklab, var(--c-accent) 78%, var(--c-hero-tint-accent) 22%);
+    stroke: color-mix(in oklab, var(--color-warning) 78%, var(--c-hero-tint-accent) 22%);
   }
 
   .home-activity__line.is-client-activity {
@@ -62,7 +62,7 @@
   }
 
   .home-activity__dot.is-offers {
-    fill: color-mix(in oklab, var(--c-accent) 85%, var(--c-hero-tint-accent) 15%);
+    fill: color-mix(in oklab, var(--color-warning) 85%, var(--c-hero-tint-accent) 15%);
   }
 
   .home-activity__dot.is-client-activity {
@@ -127,11 +127,11 @@
   }
 
   .home-activity__metric.is-offers strong {
-    color: color-mix(in oklab, var(--c-accent) 86%, var(--c-hero-tint-accent) 14%);
+    color: color-mix(in oklab, var(--color-warning) 86%, var(--c-hero-tint-accent) 14%);
   }
 
   .home-activity__metric.is-offers::before {
-    background: color-mix(in oklab, var(--c-accent) 86%, var(--c-hero-tint-accent) 14%);
+    background: color-mix(in oklab, var(--color-warning) 86%, var(--c-hero-tint-accent) 14%);
   }
 
   .home-activity__metric.is-client-activity {

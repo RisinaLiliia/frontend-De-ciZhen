@@ -140,7 +140,7 @@
   }
 
   .kpi-card__meta.is-accent {
-    color: var(--c-accent);
+    color: var(--color-warning);
   }
 
   .kpi-card__meta.is-neutral {

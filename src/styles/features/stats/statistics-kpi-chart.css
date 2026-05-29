@@ -130,7 +130,7 @@
 
   .requests-mini-chart__line path {
     fill: none;
-    stroke: var(--c-accent);
+    stroke: var(--color-warning);
     stroke-width: 2.3;
     stroke-linecap: round;
     stroke-linejoin: round;

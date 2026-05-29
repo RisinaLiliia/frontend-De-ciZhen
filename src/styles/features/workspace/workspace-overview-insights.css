@@ -100,7 +100,7 @@
     background: linear-gradient(
       160deg,
       color-mix(in oklab, var(--color-primary) 9%, var(--color-surface) 91%) 0%,
-      color-mix(in oklab, var(--c-accent) 8%, var(--color-surface) 92%) 100%
+      color-mix(in oklab, var(--color-warning) 8%, var(--color-surface) 92%) 100%
     );
   }
 

@@ -76,7 +76,7 @@
     background: linear-gradient(
       135deg,
       color-mix(in oklab, var(--color-surface) 92%, var(--color-primary) 8%),
-      color-mix(in oklab, var(--color-surface) 96%, var(--c-accent) 4%)
+      color-mix(in oklab, var(--color-surface) 96%, var(--color-warning) 4%)
     );
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);

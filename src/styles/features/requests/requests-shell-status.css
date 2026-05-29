@@ -12,13 +12,13 @@
   }
 
   .request-card__status-action.offer-action-btn--icon-only {
-    color: var(--c-accent);
-    border-color: color-mix(in oklab, var(--c-accent) 58%, var(--color-border) 42%);
-    background: color-mix(in oklab, var(--c-accent) 18%, var(--color-surface) 82%);
+    color: var(--color-warning);
+    border-color: color-mix(in oklab, var(--color-warning) 58%, var(--color-border) 42%);
+    background: color-mix(in oklab, var(--color-warning) 18%, var(--color-surface) 82%);
   }
 
   .request-card__status-action.request-card__status-action--submit.offer-action-btn--icon-only {
-    background: color-mix(in oklab, var(--c-accent) 24%, var(--color-surface) 76%);
+    background: color-mix(in oklab, var(--color-warning) 24%, var(--color-surface) 76%);
   }
 
   .request-card__status-action.request-card__status-action--edit.offer-action-btn--icon-only {
@@ -34,9 +34,9 @@
   }
 
   .request-card__status-action.request-card__status-action--contract.offer-action-btn--icon-only {
-    color: color-mix(in oklab, var(--c-accent) 86%, var(--color-text) 14%);
-    border-color: color-mix(in oklab, var(--c-accent) 56%, var(--color-border) 44%);
-    background: color-mix(in oklab, var(--c-accent) 18%, var(--color-surface) 82%);
+    color: color-mix(in oklab, var(--color-warning) 86%, var(--color-text) 14%);
+    border-color: color-mix(in oklab, var(--color-warning) 56%, var(--color-border) 44%);
+    background: color-mix(in oklab, var(--color-warning) 18%, var(--color-surface) 82%);
   }
 
   .request-card__status-action.request-card__status-action--chat.offer-action-btn--icon-only {

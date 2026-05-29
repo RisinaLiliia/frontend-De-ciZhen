@@ -73,7 +73,7 @@
     height: 22px;
     border-radius: var(--radius-sm);
     background: transparent;
-    color: var(--c-accent);
+    color: var(--color-warning);
     font-size: var(--fs-12);
   }
 

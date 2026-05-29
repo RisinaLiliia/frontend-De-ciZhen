@@ -180,7 +180,7 @@
       linear-gradient(
         160deg,
         color-mix(in oklab, var(--color-primary) 9%, var(--color-surface) 91%) 0%,
-        color-mix(in oklab, var(--c-accent) 8%, var(--color-surface) 92%) 100%
+        color-mix(in oklab, var(--color-warning) 8%, var(--color-surface) 92%) 100%
       );
   }
 
@@ -297,7 +297,7 @@
   }
 
   .workspace-statistics-insights__item.is-promotion {
-    border-color: color-mix(in oklab, var(--c-accent) 32%, var(--surface-card-border) 68%);
+    border-color: color-mix(in oklab, var(--color-warning) 32%, var(--surface-card-border) 68%);
   }
 
   .workspace-insights-panel--rail-balanced .workspace-statistics-insights {
@@ -399,7 +399,7 @@
     border-color: color-mix(in oklab, var(--color-primary) 16%, var(--surface-card-border) 84%);
     background:
       radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--color-primary) 6%, transparent), transparent 56%),
-      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 4%, transparent), transparent 66%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--color-warning) 4%, transparent), transparent 66%),
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--color-surface) 98%, var(--c-surface) 2%) 0%,
@@ -424,7 +424,7 @@
     pointer-events: none;
     background:
       radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--color-primary) 5%, transparent), transparent 58%),
-      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 4%, transparent), transparent 66%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--color-warning) 4%, transparent), transparent 66%),
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--color-surface) 10%, transparent),

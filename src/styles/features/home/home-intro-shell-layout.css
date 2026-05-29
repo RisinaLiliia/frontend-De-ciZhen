@@ -43,7 +43,7 @@
     z-index: 0;
     background:
       radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--color-primary) 11%, transparent), transparent 52%),
-      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--color-warning) 8%, transparent), transparent 62%),
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--color-surface) 16%, transparent),

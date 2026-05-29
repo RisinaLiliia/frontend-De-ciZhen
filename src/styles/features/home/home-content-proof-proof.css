@@ -119,7 +119,7 @@
   .proof-price {
     font-size: var(--fs-12);
     font-weight: 700;
-    color: var(--c-accent);
+    color: var(--color-warning);
     white-space: nowrap;
   }
 
@@ -136,7 +136,7 @@
 
   .proof-stars {
     font-size: var(--fs-12);
-    color: var(--c-accent);
+    color: var(--color-warning);
     letter-spacing: 1px;
     animation: none;
   }

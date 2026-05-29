@@ -103,9 +103,9 @@
   }
 
   .my-request-card__priority {
-    border-color: color-mix(in oklab, var(--c-accent) 20%, transparent);
-    background: color-mix(in oklab, var(--c-accent) 14%, white 86%);
-    color: color-mix(in oklab, var(--c-accent) 70%, var(--color-text) 30%);
+    border-color: color-mix(in oklab, var(--color-warning) 20%, transparent);
+    background: color-mix(in oklab, var(--color-warning) 14%, white 86%);
+    color: color-mix(in oklab, var(--color-warning) 70%, var(--color-text) 30%);
   }
 
   .my-request-card__priority.is-high {
@@ -115,8 +115,8 @@
   }
 
   .my-request-card__priority.is-medium {
-    border-color: color-mix(in oklab, var(--c-accent) 22%, transparent);
-    background: color-mix(in oklab, var(--c-accent) 12%, var(--c-white) 88%);
+    border-color: color-mix(in oklab, var(--color-warning) 22%, transparent);
+    background: color-mix(in oklab, var(--color-warning) 12%, var(--c-white) 88%);
   }
 
   .my-request-card__priority.is-low,
@@ -184,8 +184,8 @@
   }
 
   .my-request-card__insight.is-warning {
-    border-color: color-mix(in oklab, var(--c-accent) 20%, transparent);
-    background: color-mix(in oklab, var(--c-accent) 9%, white 91%);
+    border-color: color-mix(in oklab, var(--color-warning) 20%, transparent);
+    background: color-mix(in oklab, var(--color-warning) 9%, white 91%);
   }
 
   .my-request-card__insight.is-success {
@@ -242,8 +242,8 @@
   }
 
   .my-request-card__footer-note.is-warning .my-request-card__footer-note-icon {
-    background: color-mix(in oklab, var(--c-accent) 14%, white 86%);
-    color: color-mix(in oklab, var(--c-accent) 82%, var(--color-text) 18%);
+    background: color-mix(in oklab, var(--color-warning) 14%, white 86%);
+    color: color-mix(in oklab, var(--color-warning) 82%, var(--color-text) 18%);
   }
 
   .my-request-card__footer-note.is-success .my-request-card__footer-note-icon {
@@ -276,9 +276,9 @@
   }
 
   .my-request-card__signal.is-warning {
-    border-color: color-mix(in oklab, var(--c-accent) 20%, transparent);
-    background: color-mix(in oklab, var(--c-accent) 12%, white 88%);
-    color: color-mix(in oklab, var(--c-accent) 72%, var(--color-text) 28%);
+    border-color: color-mix(in oklab, var(--color-warning) 20%, transparent);
+    background: color-mix(in oklab, var(--color-warning) 12%, white 88%);
+    color: color-mix(in oklab, var(--color-warning) 72%, var(--color-text) 28%);
   }
 
   .my-request-card__signal.is-success {
@@ -304,7 +304,7 @@
   }
 
   .my-request-card__signal-copy.is-warning {
-    color: color-mix(in oklab, var(--c-accent) 76%, var(--color-text) 24%);
+    color: color-mix(in oklab, var(--color-warning) 76%, var(--color-text) 24%);
   }
 
   .my-request-card__signal-copy.is-success {

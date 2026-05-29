@@ -47,8 +47,8 @@
     border-radius: var(--workspace-statistics-chip-radius);
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--color-primary) 54%, var(--c-accent) 46%),
-      color-mix(in oklab, var(--c-accent) 74%, var(--color-primary) 26%)
+      color-mix(in oklab, var(--color-primary) 54%, var(--color-warning) 46%),
+      color-mix(in oklab, var(--color-warning) 74%, var(--color-primary) 26%)
     );
     transition: width 220ms ease-out;
   }

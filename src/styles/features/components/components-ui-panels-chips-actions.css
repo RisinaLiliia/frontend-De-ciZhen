@@ -37,8 +37,8 @@
   }
 
   .chip.is-active {
-    border-color: color-mix(in oklab, var(--color-border) 68%, var(--c-accent) 32%);
-    background: color-mix(in oklab, var(--color-surface) 88%, var(--c-accent) 12%);
+    border-color: color-mix(in oklab, var(--color-border) 68%, var(--color-warning) 32%);
+    background: color-mix(in oklab, var(--color-surface) 88%, var(--color-warning) 12%);
     box-shadow: var(--shadow-card);
   }
 
@@ -52,9 +52,9 @@
     background: linear-gradient(
       180deg,
       color-mix(in oklab, var(--color-surface) 94%, var(--c-surface) 6%),
-      color-mix(in oklab, var(--color-surface) 86%, var(--c-accent) 14%)
+      color-mix(in oklab, var(--color-surface) 86%, var(--color-warning) 14%)
     );
-    border-color: color-mix(in oklab, var(--color-border) 74%, var(--c-accent) 26%);
+    border-color: color-mix(in oklab, var(--color-border) 74%, var(--color-warning) 26%);
     color: var(--color-text);
     box-shadow: var(--shadow-card);
   }

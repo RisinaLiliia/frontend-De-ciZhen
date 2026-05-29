@@ -403,7 +403,7 @@
       linear-gradient(
         160deg,
         color-mix(in oklab, var(--color-primary) 10%, var(--color-surface) 90%) 0%,
-        color-mix(in oklab, var(--c-accent) 8%, var(--color-surface) 92%) 100%
+        color-mix(in oklab, var(--color-warning) 8%, var(--color-surface) 92%) 100%
       );
     box-shadow: var(--shadow-card);
   }
@@ -574,8 +574,8 @@
   .workspace-statistics-price__comparison-fill--profile {
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--color-primary) 56%, var(--c-accent) 44%),
-      color-mix(in oklab, var(--c-accent) 74%, var(--color-primary) 26%)
+      color-mix(in oklab, var(--color-primary) 56%, var(--color-warning) 44%),
+      color-mix(in oklab, var(--color-warning) 74%, var(--color-primary) 26%)
     );
   }
 
@@ -599,12 +599,12 @@
     gap: var(--space-2-5);
     padding: var(--space-3);
     border-radius: var(--workspace-statistics-radius-lg);
-    border: 1px solid color-mix(in oklab, var(--c-accent) 18%, var(--surface-soft-border) 82%);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 18%, var(--surface-soft-border) 82%);
     background:
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--color-surface) 96%, var(--surface-soft-bg) 4%),
-        color-mix(in oklab, var(--color-surface) 92%, var(--c-accent) 8%)
+        color-mix(in oklab, var(--color-surface) 92%, var(--color-warning) 8%)
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-white) 34%, transparent),
@@ -629,7 +629,7 @@
   .workspace-statistics-price__position-range {
     font-size: var(--workspace-statistics-copy-size-tight);
     font-weight: 700;
-    color: color-mix(in oklab, var(--color-text) 92%, var(--c-accent) 8%);
+    color: color-mix(in oklab, var(--color-text) 92%, var(--color-warning) 8%);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
@@ -692,7 +692,7 @@
 
   .workspace-statistics-price__bar-node--optimal-min,
   .workspace-statistics-price__bar-node--optimal-max {
-    background: color-mix(in oklab, var(--c-accent) 52%, var(--color-surface) 48%);
+    background: color-mix(in oklab, var(--color-warning) 52%, var(--color-surface) 48%);
   }
 
   .workspace-statistics-price__bar-sweet-spot {
@@ -702,8 +702,8 @@
     border-radius: var(--workspace-statistics-chip-radius);
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--color-primary) 72%, var(--c-accent) 28%),
-      color-mix(in oklab, var(--c-accent) 78%, var(--c-warn) 22%)
+      color-mix(in oklab, var(--color-primary) 72%, var(--color-warning) 28%),
+      color-mix(in oklab, var(--color-warning) 78%, var(--c-warn) 22%)
     );
     opacity: 0.92;
   }
@@ -718,8 +718,8 @@
     justify-items: center;
     padding: var(--space-1) var(--space-2);
     border-radius: var(--workspace-statistics-radius-sm);
-    border: 1px solid color-mix(in oklab, var(--c-accent) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--color-surface) 94%, var(--c-accent) 6%);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 28%, var(--surface-soft-border) 72%);
+    background: color-mix(in oklab, var(--color-surface) 94%, var(--color-warning) 6%);
     color: color-mix(in oklab, var(--color-primary) 80%, var(--color-text) 20%);
     pointer-events: none;
     white-space: nowrap;
@@ -800,7 +800,7 @@
   }
 
   .workspace-statistics-price__position-legend span:nth-child(2) {
-    color: color-mix(in oklab, var(--c-accent) 72%, var(--color-text) 28%);
+    color: color-mix(in oklab, var(--color-warning) 72%, var(--color-text) 28%);
   }
 
   .workspace-statistics-price__position-legend span:last-child {
@@ -1150,7 +1150,7 @@
     border-radius: var(--workspace-statistics-chip-radius);
     border: 1px solid color-mix(in oklab, var(--color-primary) 24%, var(--surface-soft-border) 76%);
     background:
-      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-accent) 34%, transparent), transparent 58%),
+      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--color-warning) 34%, transparent), transparent 58%),
       color-mix(in oklab, var(--color-primary) 10%, var(--color-surface) 90%);
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-white) 32%, transparent),
@@ -1168,7 +1168,7 @@
         90deg,
         transparent 0%,
         color-mix(in oklab, var(--color-primary) 28%, var(--surface-soft-border) 72%) 32%,
-        color-mix(in oklab, var(--c-accent) 36%, var(--surface-soft-border) 64%) 50%,
+        color-mix(in oklab, var(--color-warning) 36%, var(--surface-soft-border) 64%) 50%,
         color-mix(in oklab, var(--color-primary) 28%, var(--surface-soft-border) 72%) 68%,
         transparent 100%
       );

@@ -86,7 +86,7 @@
   }
 
   .home-popular-services__link:hover {
-    border-color: color-mix(in oklab, var(--c-accent) 40%, var(--color-border) 60%);
+    border-color: color-mix(in oklab, var(--color-warning) 40%, var(--color-border) 60%);
     box-shadow: var(--shadow-card);
     transform: translateY(-1px);
   }

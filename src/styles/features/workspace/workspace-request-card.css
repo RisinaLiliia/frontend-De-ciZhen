@@ -2,7 +2,7 @@
 
 @layer components {
   .my-request-card__progress-step.is-current .my-request-card__progress-dot {
-    background: color-mix(in oklab, var(--c-accent) 66%, white 34%);
+    background: color-mix(in oklab, var(--color-warning) 66%, white 34%);
   }
 
   .my-request-card__progress-step:not(:last-child)::after {

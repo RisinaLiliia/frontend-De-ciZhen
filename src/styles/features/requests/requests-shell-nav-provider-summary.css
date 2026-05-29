@@ -44,7 +44,7 @@
   }
 
   .requests-provider-summary__stats strong {
-    color: var(--c-accent);
+    color: var(--color-warning);
     font-size: var(--fs-14);
     font-weight: 700;
     margin-right: var(--space-1);

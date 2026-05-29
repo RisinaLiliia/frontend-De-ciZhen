@@ -135,13 +135,13 @@
 
   .profile-settings__password-field--accent .input,
   .profile-settings__password-field--accent .field {
-    border-color: color-mix(in oklab, var(--c-accent) 58%, var(--color-border) 42%);
-    background: color-mix(in oklab, var(--c-accent) 9%, var(--color-surface) 91%);
+    border-color: color-mix(in oklab, var(--color-warning) 58%, var(--color-border) 42%);
+    background: color-mix(in oklab, var(--color-warning) 9%, var(--color-surface) 91%);
   }
 
   .profile-settings__password-field--accent .input:focus,
   .profile-settings__password-field--accent .field:focus {
-    border-color: color-mix(in oklab, var(--c-accent) 72%, var(--color-border) 28%);
+    border-color: color-mix(in oklab, var(--color-warning) 72%, var(--color-border) 28%);
     box-shadow: var(--control-focus-ring);
   }
 
@@ -155,16 +155,16 @@
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     background: color-mix(in oklab, var(--color-surface) 88%, var(--color-border) 12%);
-    color: color-mix(in oklab, var(--c-accent) 82%, var(--color-text) 18%);
+    color: color-mix(in oklab, var(--color-warning) 82%, var(--color-text) 18%);
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
 
   .profile-settings__password-toggle:hover {
-    color: var(--c-accent);
-    border-color: color-mix(in oklab, var(--c-accent) 56%, var(--color-border) 44%);
-    background: color-mix(in oklab, var(--c-accent) 20%, var(--color-surface) 80%);
+    color: var(--color-warning);
+    border-color: color-mix(in oklab, var(--color-warning) 56%, var(--color-border) 44%);
+    background: color-mix(in oklab, var(--color-warning) 20%, var(--color-surface) 80%);
   }
 
   .profile-settings__password-hint {

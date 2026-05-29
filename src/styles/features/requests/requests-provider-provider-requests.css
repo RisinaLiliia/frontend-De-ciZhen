@@ -34,7 +34,7 @@
   }
 
   .provider-request-card__favorite.is-saved .icon-heart {
-    color: var(--c-accent);
+    color: var(--color-warning);
     fill: currentColor;
   }
 

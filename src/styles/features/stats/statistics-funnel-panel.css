@@ -182,27 +182,27 @@
   }
 
   .workspace-statistics-funnel__layer.is-tone-1 {
-    --funnel-tone: color-mix(in oklab, var(--c-accent) 78%, var(--color-primary) 22%);
+    --funnel-tone: color-mix(in oklab, var(--color-warning) 78%, var(--color-primary) 22%);
   }
 
   .workspace-statistics-funnel__layer.is-tone-2 {
-    --funnel-tone: color-mix(in oklab, var(--c-accent) 58%, var(--color-primary) 42%);
+    --funnel-tone: color-mix(in oklab, var(--color-warning) 58%, var(--color-primary) 42%);
   }
 
   .workspace-statistics-funnel__layer.is-tone-3 {
-    --funnel-tone: color-mix(in oklab, var(--c-accent) 40%, var(--color-primary) 60%);
+    --funnel-tone: color-mix(in oklab, var(--color-warning) 40%, var(--color-primary) 60%);
   }
 
   .workspace-statistics-funnel__layer.is-tone-4 {
-    --funnel-tone: color-mix(in oklab, var(--c-accent) 22%, var(--color-primary) 78%);
+    --funnel-tone: color-mix(in oklab, var(--color-warning) 22%, var(--color-primary) 78%);
   }
 
   .workspace-statistics-funnel__layer.is-tone-5 {
-    --funnel-tone: color-mix(in oklab, var(--c-accent) 16%, var(--color-primary) 84%);
+    --funnel-tone: color-mix(in oklab, var(--color-warning) 16%, var(--color-primary) 84%);
   }
 
   .workspace-statistics-funnel__layer.is-tone-6 {
-    --funnel-tone: color-mix(in oklab, var(--c-accent) 10%, var(--color-primary) 90%);
+    --funnel-tone: color-mix(in oklab, var(--color-warning) 10%, var(--color-primary) 90%);
   }
 
   .workspace-statistics-funnel__layer-label {

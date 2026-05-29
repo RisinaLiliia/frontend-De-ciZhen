@@ -14,7 +14,7 @@
     border-color: color-mix(in oklab, var(--color-primary) 28%, var(--color-border) 72%);
     background:
       radial-gradient(140% 120% at 0% 0%, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent 56%),
-      radial-gradient(120% 90% at 85% 8%, color-mix(in oklab, var(--c-accent) 10%, transparent), transparent 58%),
+      radial-gradient(120% 90% at 85% 8%, color-mix(in oklab, var(--color-warning) 10%, transparent), transparent 58%),
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--color-surface) 84%, var(--c-ink) 16%),
@@ -31,7 +31,7 @@
     pointer-events: none;
     background:
       radial-gradient(180px 90px at 78% 18%, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent),
-      radial-gradient(220px 120px at 85% 26%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent);
+      radial-gradient(220px 120px at 85% 26%, color-mix(in oklab, var(--color-warning) 8%, transparent), transparent);
     z-index: 0;
   }
 

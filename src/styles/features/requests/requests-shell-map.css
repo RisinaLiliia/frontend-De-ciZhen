@@ -97,10 +97,10 @@
     align-items: center;
     justify-content: center;
     background:
-      radial-gradient(circle at 30% 24%, color-mix(in oklab, var(--c-accent) 78%, var(--color-surface) 22%), color-mix(in oklab, var(--c-accent) 88%, var(--color-primary) 12%));
+      radial-gradient(circle at 30% 24%, color-mix(in oklab, var(--color-warning) 78%, var(--color-surface) 22%), color-mix(in oklab, var(--color-warning) 88%, var(--color-primary) 12%));
     border: 2px solid color-mix(in oklab, var(--color-surface) 88%, var(--color-primary) 12%);
     box-shadow:
-      0 0 0 2px color-mix(in oklab, var(--c-accent) 20%, transparent),
+      0 0 0 2px color-mix(in oklab, var(--color-warning) 20%, transparent),
       0 10px 20px color-mix(in oklab, var(--c-overlay) 22%, transparent);
   }
 
@@ -122,7 +122,7 @@
     position: absolute;
     inset: 0;
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--c-accent) 58%, transparent);
+    background: color-mix(in oklab, var(--color-warning) 58%, transparent);
     opacity: 0.32;
     animation: workspace-demand-map-pulse 2.2s ease-out infinite;
     animation-delay: var(--pulse-delay);
@@ -136,10 +136,10 @@
     top: 50%;
     transform: translate(-50%, -50%);
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--c-accent) 82%, var(--color-surface) 18%);
+    background: color-mix(in oklab, var(--color-warning) 82%, var(--color-surface) 18%);
     border: 1.8px solid color-mix(in oklab, var(--color-surface) 86%, var(--color-primary) 14%);
     box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--c-accent) 26%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--color-warning) 26%, transparent),
       0 4px 10px color-mix(in oklab, var(--c-overlay) 18%, transparent);
   }
 

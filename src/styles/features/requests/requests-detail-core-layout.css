@@ -189,7 +189,7 @@
   .request-detail__price .proof-price {
     font-size: 24px;
     font-weight: 700;
-    color: color-mix(in oklab, var(--c-accent) 36%, var(--color-text) 64%);
+    color: color-mix(in oklab, var(--color-warning) 36%, var(--color-text) 64%);
   }
 
   .request-detail__summary-row {
