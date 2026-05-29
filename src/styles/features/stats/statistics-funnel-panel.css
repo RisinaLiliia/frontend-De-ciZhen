@@ -41,11 +41,11 @@
   }
 
   .workspace-statistics-funnel__layer.is-placeholder .workspace-statistics-funnel__layer-label {
-    color: color-mix(in oklab, var(--c-text-muted) 76%, var(--c-text) 24%);
+    color: color-mix(in oklab, var(--c-text-muted) 76%, var(--color-text) 24%);
   }
 
   .workspace-statistics-funnel__layer.is-placeholder .workspace-statistics-funnel__layer-value {
-    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--color-text) 18%);
   }
 
   .workspace-statistics-funnel__empty-note {
@@ -61,7 +61,7 @@
     margin: 0;
     font-size: var(--fs-body);
     font-weight: 700;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics-funnel__empty-body {
@@ -122,7 +122,7 @@
       calc((100% + var(--funnel-bottom-width, 100%)) / 2) 100%,
       calc((100% - var(--funnel-bottom-width, 100%)) / 2) 100%
     );
-    color: var(--c-text);
+    color: var(--color-text);
     transition:
       transform 360ms ease-out,
       box-shadow 360ms ease-out,
@@ -213,7 +213,7 @@
     max-width: none;
     font-size: var(--fs-small);
     font-weight: 700;
-    color: color-mix(in oklab, var(--c-text) 88%, var(--color-primary) 12%);
+    color: color-mix(in oklab, var(--color-text) 88%, var(--color-primary) 12%);
     text-align: center;
     line-height: 1.2;
     white-space: nowrap;
@@ -229,7 +229,7 @@
     z-index: 2;
     font-size: var(--fs-h3);
     font-weight: 700;
-    color: color-mix(in oklab, var(--c-text) 90%, var(--color-primary) 10%);
+    color: color-mix(in oklab, var(--color-text) 90%, var(--color-primary) 10%);
     line-height: 1;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
@@ -304,7 +304,7 @@
   }
 
   .workspace-statistics-funnel__layer-hint-value {
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
     font-weight: 700;
     font-size: var(--fs-small);
     white-space: nowrap;
@@ -323,7 +323,7 @@
     font-weight: 700;
     line-height: var(--app-caption-line-height);
     letter-spacing: 0.01em;
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
     font-variant-numeric: tabular-nums;
     text-align: center;
     white-space: nowrap;
@@ -335,11 +335,11 @@
   }
 
   .workspace-statistics-funnel__layer-hint-compare.is-highlighted {
-    color: color-mix(in oklab, var(--color-primary) 88%, var(--c-text) 12%);
+    color: color-mix(in oklab, var(--color-primary) 88%, var(--color-text) 12%);
   }
 
   .workspace-statistics-funnel__layer-hint-compare.is-dropoff {
-    color: color-mix(in oklab, var(--c-warning) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--c-warning) 82%, var(--color-text) 18%);
   }
 
   .workspace-statistics-funnel__summary {
@@ -361,7 +361,7 @@
   .workspace-statistics-funnel__profile-lead strong {
     font-size: var(--fs-body);
     line-height: var(--lh-title);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics-funnel__profile-lead p,
@@ -377,7 +377,7 @@
   }
 
   .workspace-statistics-funnel__profile-lead-lines p span {
-    color: var(--c-text);
+    color: var(--color-text);
     font-weight: 700;
   }
 
@@ -393,7 +393,7 @@
   .workspace-statistics-funnel__gap strong {
     font-size: var(--fs-body);
     line-height: var(--lh-title);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics-funnel__gap p {
@@ -433,7 +433,7 @@
   .workspace-statistics-funnel__dropoff strong {
     font-size: var(--workspace-statistics-display-size);
     line-height: var(--lh-tight);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics-funnel__dropoff p {
@@ -454,7 +454,7 @@
     font-weight: 700;
     text-transform: none;
     letter-spacing: 0;
-    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--color-text) 18%);
   }
 
   .workspace-statistics-funnel__dropoff.is-positive {
@@ -484,11 +484,11 @@
   }
 
   .workspace-statistics-funnel__conversion strong {
-    color: color-mix(in oklab, var(--color-primary) 78%, var(--c-text) 22%);
+    color: color-mix(in oklab, var(--color-primary) 78%, var(--color-text) 22%);
   }
 
   .workspace-statistics-funnel__conversion--empty strong {
-    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--color-text) 18%);
   }
 
   @keyframes workspace-statistics-funnel-enter {

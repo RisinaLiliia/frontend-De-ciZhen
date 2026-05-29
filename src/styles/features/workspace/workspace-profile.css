@@ -219,12 +219,12 @@
     background: transparent;
     padding: 0;
     font-size: var(--fs-small);
-    color: color-mix(in oklab, var(--c-text) 74%, var(--color-primary) 26%);
+    color: color-mix(in oklab, var(--color-text) 74%, var(--color-primary) 26%);
     text-decoration: none;
   }
 
   .workspace-profile-onboarding__avatar-action:hover {
-    color: color-mix(in oklab, var(--c-text) 56%, var(--color-primary) 44%);
+    color: color-mix(in oklab, var(--color-text) 56%, var(--color-primary) 44%);
   }
 
   .workspace-profile-onboarding__avatar-action:disabled {
@@ -233,11 +233,11 @@
   }
 
   .workspace-profile-onboarding__avatar-action--danger {
-    color: color-mix(in oklab, var(--c-danger) 74%, var(--c-text) 26%);
+    color: color-mix(in oklab, var(--c-danger) 74%, var(--color-text) 26%);
   }
 
   .workspace-profile-onboarding__avatar-action--danger:hover {
-    color: color-mix(in oklab, var(--c-danger) 86%, var(--c-text) 14%);
+    color: color-mix(in oklab, var(--c-danger) 86%, var(--color-text) 14%);
   }
 
   @media (min-width: 820px) {

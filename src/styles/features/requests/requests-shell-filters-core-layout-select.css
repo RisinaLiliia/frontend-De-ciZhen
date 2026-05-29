@@ -11,7 +11,7 @@
     background: var(--surface-soft-bg);
     font-size: var(--fs-13);
     font-weight: 600;
-    color: var(--c-text);
+    color: var(--color-text);
     width: fit-content;
   }
 

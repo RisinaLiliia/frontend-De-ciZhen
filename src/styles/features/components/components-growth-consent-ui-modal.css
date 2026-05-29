@@ -69,7 +69,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--color-primary) 76%, var(--c-text) 24%);
+    color: color-mix(in oklab, var(--color-primary) 76%, var(--color-text) 24%);
     border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
     border-radius: var(--radius-pill);
     padding: 4px 10px;

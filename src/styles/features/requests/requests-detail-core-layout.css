@@ -133,7 +133,7 @@
   .request-detail__notice-title {
     font-size: var(--fs-13);
     font-weight: 600;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .request-detail__notice-text {
@@ -189,7 +189,7 @@
   .request-detail__price .proof-price {
     font-size: 24px;
     font-weight: 700;
-    color: color-mix(in oklab, var(--c-accent) 36%, var(--c-text) 64%);
+    color: color-mix(in oklab, var(--c-accent) 36%, var(--color-text) 64%);
   }
 
   .request-detail__summary-row {

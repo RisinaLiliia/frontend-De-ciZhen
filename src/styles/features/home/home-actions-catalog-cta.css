@@ -64,7 +64,7 @@
     width: 100%;
     min-height: 30px;
     line-height: 1.2;
-    color: var(--c-text);
+    color: var(--color-text);
     text-align: center;
     word-break: break-word;
   }
@@ -117,7 +117,7 @@
   }
 
   .home-popular__cta:hover {
-    color: var(--c-text);
+    color: var(--color-text);
     border-color: color-mix(in oklab, var(--color-primary) 30%, var(--c-border) 70%);
     background: color-mix(in oklab, var(--color-surface) 84%, var(--c-border) 16%);
     box-shadow: var(--shadow-card);
@@ -161,7 +161,7 @@
   .home-hero__cta--secondary {
     border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
     background: var(--surface-soft-bg);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .home-hero__cta:hover {

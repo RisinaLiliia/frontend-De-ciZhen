@@ -89,7 +89,7 @@
     border-radius: var(--radius-pill);
     font-size: var(--fs-11);
     font-weight: 600;
-    color: color-mix(in oklab, var(--color-primary) 60%, var(--c-text) 40%);
+    color: color-mix(in oklab, var(--color-primary) 60%, var(--color-text) 40%);
     background: color-mix(in oklab, var(--color-surface) 90%, var(--c-info-soft) 10%);
     transition:
       color var(--transition-fast),

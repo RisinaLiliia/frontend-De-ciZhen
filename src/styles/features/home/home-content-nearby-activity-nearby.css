@@ -33,7 +33,7 @@
   }
 
   .nearby-text {
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .nearby-more {

@@ -152,12 +152,12 @@
 
   .workspace-decision-panel__priority.is-high {
     background: color-mix(in oklab, var(--c-danger) 18%, white 82%);
-    color: color-mix(in oklab, var(--c-danger) 70%, var(--c-text) 30%);
+    color: color-mix(in oklab, var(--c-danger) 70%, var(--color-text) 30%);
   }
 
   .workspace-decision-panel__priority.is-medium {
     background: color-mix(in oklab, var(--c-accent) 16%, white 84%);
-    color: color-mix(in oklab, var(--c-accent) 72%, var(--c-text) 28%);
+    color: color-mix(in oklab, var(--c-accent) 72%, var(--color-text) 28%);
   }
 
   .workspace-decision-panel__overview-grid {

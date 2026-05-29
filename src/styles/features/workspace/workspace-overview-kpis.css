@@ -25,7 +25,7 @@
   }
 
   .workspace-overview__kpis .workspace-statistics__activity-signal-value {
-    color: var(--c-text);
+    color: var(--color-text);
     font-size: clamp(24px, 2vw, 30px);
     line-height: 1;
     font-weight: 700;

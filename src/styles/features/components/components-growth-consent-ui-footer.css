@@ -44,7 +44,7 @@
     font-size: var(--fs-13);
     font-weight: 700;
     letter-spacing: 0.01em;
-    color: color-mix(in oklab, var(--c-text) 88%, var(--color-primary) 12%);
+    color: color-mix(in oklab, var(--color-text) 88%, var(--color-primary) 12%);
   }
 
   .consent-manage-footer__brand-copy {
@@ -61,7 +61,7 @@
   }
 
   .consent-manage-footer__links a {
-    color: color-mix(in oklab, var(--color-primary) 70%, var(--c-text) 30%);
+    color: color-mix(in oklab, var(--color-primary) 70%, var(--color-text) 30%);
     text-decoration: none;
     border-bottom: 1px solid color-mix(in oklab, var(--color-primary) 28%, transparent);
     transition:
@@ -71,7 +71,7 @@
 
   .consent-manage-footer__links a:hover,
   .consent-manage-footer__links a:focus-visible {
-    color: color-mix(in oklab, var(--color-primary) 86%, var(--c-text) 14%);
+    color: color-mix(in oklab, var(--color-primary) 86%, var(--color-text) 14%);
     border-color: color-mix(in oklab, var(--color-primary) 52%, transparent);
     outline: none;
   }
@@ -81,7 +81,7 @@
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
     background: transparent;
-    color: var(--c-text);
+    color: var(--color-text);
     font-size: var(--fs-12);
     font-weight: 700;
     padding: 0 12px;

@@ -28,7 +28,7 @@
 
   .chip:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
+    border-color: color-mix(in oklab, var(--c-border) 72%, var(--color-text) 28%);
   }
 
   .chip:focus-visible {
@@ -55,7 +55,7 @@
       color-mix(in oklab, var(--color-surface) 86%, var(--c-accent) 14%)
     );
     border-color: color-mix(in oklab, var(--c-border) 74%, var(--c-accent) 26%);
-    color: var(--c-text);
+    color: var(--color-text);
     box-shadow: var(--shadow-card);
   }
 
@@ -76,8 +76,8 @@
   }
 
   .panel-action:hover {
-    color: var(--c-text);
-    border-color: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
+    color: var(--color-text);
+    border-color: color-mix(in oklab, var(--c-border) 72%, var(--color-text) 28%);
     background: color-mix(in oklab, var(--c-surface) 85%, var(--c-border) 15%);
     transform: translateY(-1px);
   }

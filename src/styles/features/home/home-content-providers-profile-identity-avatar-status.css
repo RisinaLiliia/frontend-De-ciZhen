@@ -24,7 +24,7 @@
     align-items: center;
     justify-content: center;
     background: color-mix(in oklab, var(--color-primary) 25%, var(--color-surface) 75%);
-    color: var(--c-text);
+    color: var(--color-text);
     font-size: var(--fs-14);
     font-weight: 700;
     overflow: hidden;
@@ -82,7 +82,7 @@
     bottom: 14px;
     right: -4px;
     background: color-mix(in oklab, var(--color-surface) 85%, var(--c-border) 15%);
-    color: var(--c-text);
+    color: var(--color-text);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     padding: var(--space-1) var(--space-1-5);
     border-radius: var(--radius-sm);

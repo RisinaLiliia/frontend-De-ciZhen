@@ -107,14 +107,14 @@
     border: 1px solid var(--surface-soft-border);
     border-radius: var(--radius-pill);
     background: var(--surface-soft-bg-strong);
-    color: color-mix(in oklab, var(--c-text) 68%, var(--c-text-muted) 32%);
+    color: color-mix(in oklab, var(--color-text) 68%, var(--c-text-muted) 32%);
     font-size: var(--fs-12);
     padding: 6px 10px;
   }
 
   .provider-reviews-hub__sort-btn.is-active {
     border-color: color-mix(in oklab, var(--color-primary) 42%, var(--c-border) 58%);
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
     background: color-mix(in oklab, var(--color-primary) 12%, var(--color-surface) 88%);
   }
 
@@ -144,7 +144,7 @@
     margin: 0;
     font-size: var(--fs-13);
     font-weight: 700;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .provider-reviews-hub__item-date {
@@ -191,7 +191,7 @@
     margin: 0;
     font-size: var(--fs-13);
     line-height: 1.45;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   @media (min-width: 768px) {
@@ -312,7 +312,7 @@
   #platform-reviews .provider-reviews-hub__star-value {
     min-width: 3ch;
     font-weight: 700;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   #platform-reviews .provider-reviews-hub__composer-actions {
@@ -338,7 +338,7 @@
   #platform-reviews .provider-reviews-hub__sort-btn {
     min-height: 34px;
     padding-inline: 12px;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   #platform-reviews .provider-reviews-hub__list {

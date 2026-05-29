@@ -52,7 +52,7 @@
       border-radius: var(--radius-sm);
       border: 1px solid var(--surface-soft-border);
       background: var(--surface-soft-bg-strong);
-      color: var(--c-text);
+      color: var(--color-text);
       font-size: var(--fs-11);
       line-height: 1.1;
       white-space: nowrap;

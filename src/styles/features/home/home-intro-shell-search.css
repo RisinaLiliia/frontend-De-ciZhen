@@ -126,7 +126,7 @@
     text-align: left;
     padding: 10px 12px;
     font-size: var(--fs-13);
-    color: var(--c-text);
+    color: var(--color-text);
     border-bottom: 1px solid color-mix(in oklab, var(--c-border) 72%, transparent);
     background: transparent;
   }

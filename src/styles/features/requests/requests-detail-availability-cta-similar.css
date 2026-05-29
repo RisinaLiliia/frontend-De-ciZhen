@@ -37,7 +37,7 @@
   .request-detail__cta-btn.is-edit {
     background: color-mix(in oklab, var(--c-accent) 22%, var(--color-surface) 78%);
     border: 1px solid color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
-    color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
+    color: color-mix(in oklab, var(--c-accent) 78%, var(--color-text) 22%);
     box-shadow: var(--shadow-card);
   }
 
@@ -51,7 +51,7 @@
     margin-top: calc(var(--space-1) * -1);
     font-size: var(--fs-12);
     font-weight: 600;
-    color: color-mix(in oklab, var(--c-accent) 72%, var(--c-text) 28%);
+    color: color-mix(in oklab, var(--c-accent) 72%, var(--color-text) 28%);
     text-align: center;
   }
 

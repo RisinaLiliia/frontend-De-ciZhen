@@ -104,7 +104,7 @@
   .request-detail__review-body {
     margin-top: var(--space-2);
     font-size: var(--fs-13);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .provider-reviews-hub {

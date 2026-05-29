@@ -74,7 +74,7 @@
   }
 
   .workspace-public-demand-map__leaflet .leaflet-control-zoom a {
-    color: var(--c-text);
+    color: var(--color-text);
     background: var(--surface-soft-bg-strong);
     border-color: color-mix(in oklab, var(--c-border) 58%, transparent);
   }
@@ -146,7 +146,7 @@
   .workspace-demand-map-tooltip {
     border: 1px solid color-mix(in oklab, var(--c-border) 56%, transparent);
     border-radius: var(--radius-md);
-    color: var(--c-text);
+    color: var(--color-text);
     background:
       linear-gradient(
         180deg,
@@ -230,7 +230,7 @@
   }
 
   .workspace-public-demand-map__state--error {
-    color: color-mix(in oklab, var(--c-text) 84%, var(--c-danger) 16%);
+    color: color-mix(in oklab, var(--color-text) 84%, var(--c-danger) 16%);
   }
 
   @media (max-width: 767px) {

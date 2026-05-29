@@ -33,7 +33,7 @@
     justify-content: space-between;
     gap: var(--space-2);
     font-size: var(--fs-small);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics-demand__track {
@@ -66,7 +66,7 @@
   }
 
   .workspace-statistics-demand__insight strong {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
   }
 
   .workspace-statistics__cities-tools {
@@ -272,7 +272,7 @@
     flex-wrap: wrap;
     gap: var(--space-1);
     font-size: var(--fs-small);
-    color: var(--c-text);
+    color: var(--color-text);
     min-width: 0;
   }
 
@@ -285,7 +285,7 @@
     justify-content: center;
     font-size: var(--fs-small);
     font-weight: 700;
-    color: color-mix(in oklab, var(--color-primary) 78%, var(--c-text) 22%);
+    color: color-mix(in oklab, var(--color-primary) 78%, var(--color-text) 22%);
     font-variant-numeric: tabular-nums;
   }
 
@@ -312,7 +312,7 @@
   .workspace-statistics-city-list__balance strong {
     font-size: var(--fs-small);
     font-weight: 700;
-    color: color-mix(in oklab, var(--color-primary) 78%, var(--c-text) 22%);
+    color: color-mix(in oklab, var(--color-primary) 78%, var(--color-text) 22%);
     line-height: 1;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
@@ -340,19 +340,19 @@
 
   .workspace-statistics-city-list__signal.is-high {
     border-color: color-mix(in oklab, var(--c-success) 36%, var(--surface-soft-border) 64%);
-    color: color-mix(in oklab, var(--c-success) 88%, var(--c-text) 12%);
+    color: color-mix(in oklab, var(--c-success) 88%, var(--color-text) 12%);
     background: color-mix(in oklab, var(--c-success) 10%, var(--color-surface) 90%);
   }
 
   .workspace-statistics-city-list__signal.is-medium {
     border-color: color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
-    color: color-mix(in oklab, var(--color-primary) 84%, var(--c-text) 16%);
+    color: color-mix(in oklab, var(--color-primary) 84%, var(--color-text) 16%);
     background: color-mix(in oklab, var(--color-primary) 9%, var(--color-surface) 91%);
   }
 
   .workspace-statistics-city-list__signal.is-low {
     border-color: color-mix(in oklab, var(--c-warn) 30%, var(--surface-soft-border) 70%);
-    color: color-mix(in oklab, var(--c-warn) 74%, var(--c-text) 26%);
+    color: color-mix(in oklab, var(--c-warn) 74%, var(--color-text) 26%);
     background: color-mix(in oklab, var(--c-warn) 10%, var(--color-surface) 90%);
   }
 
@@ -364,7 +364,7 @@
 
   .workspace-statistics-city-list__personal-note {
     font-size: var(--fs-small);
-    color: color-mix(in oklab, var(--color-primary) 72%, var(--c-text) 28%);
+    color: color-mix(in oklab, var(--color-primary) 72%, var(--color-text) 28%);
     line-height: 1.4;
   }
 

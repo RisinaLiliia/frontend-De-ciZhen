@@ -65,7 +65,7 @@
     margin: 0;
     font-size: var(--fs-13);
     font-weight: 700;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .request-provider-calendar__provider {
@@ -75,7 +75,7 @@
   }
 
   .request-provider-calendar__provider strong {
-    color: var(--c-text);
+    color: var(--color-text);
     font-weight: 600;
   }
 
@@ -99,11 +99,11 @@
   }
 
   .request-provider-calendar__selected-label {
-    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--c-text) 12%);
+    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--color-text) 12%);
   }
 
   .request-provider-calendar__selected-value {
-    color: var(--c-text);
+    color: var(--color-text);
     font-weight: 600;
     font-variant-numeric: tabular-nums;
   }

@@ -125,7 +125,7 @@
     justify-self: start;
     border: 0;
     background: transparent;
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
     font-size: var(--fs-12);
     font-weight: 600;
     text-decoration: underline;

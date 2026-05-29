@@ -59,14 +59,14 @@
   }
 
   .requests-scope-switch__item:hover {
-    color: var(--c-text);
+    color: var(--color-text);
     background: var(--color-surface-muted);
     border-color: var(--color-border-soft);
   }
 
   .requests-scope-switch__item:focus-visible {
     outline: none;
-    color: var(--c-text);
+    color: var(--color-text);
     border-color: var(--color-primary-border);
     box-shadow: var(--control-focus-ring);
   }

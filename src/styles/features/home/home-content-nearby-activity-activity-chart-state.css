@@ -42,13 +42,13 @@
   }
 
   .home-activity__line.is-client-activity {
-    stroke: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
+    stroke: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
     stroke-width: 2.2;
     stroke-dasharray: 4 2.2;
   }
 
   .home-activity__line.is-provider-activity {
-    stroke: color-mix(in oklab, var(--c-warning) 76%, var(--c-text) 24%);
+    stroke: color-mix(in oklab, var(--c-warning) 76%, var(--color-text) 24%);
     stroke-width: 2.2;
     stroke-dasharray: 8 3;
   }
@@ -87,7 +87,7 @@
   .home-activity__point-time {
     font-size: var(--fs-12);
     font-weight: 600;
-    color: var(--c-text);
+    color: var(--color-text);
     min-height: 16px;
   }
 
@@ -140,11 +140,11 @@
   }
 
   .home-activity__metric.is-client-activity strong {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
   }
 
   .home-activity__metric.is-client-activity::before {
-    background: color-mix(in oklab, var(--c-success) 84%, var(--c-text) 16%);
+    background: color-mix(in oklab, var(--c-success) 84%, var(--color-text) 16%);
   }
 
   .home-activity__metric.is-provider-activity {
@@ -153,11 +153,11 @@
   }
 
   .home-activity__metric.is-provider-activity strong {
-    color: color-mix(in oklab, var(--c-warning) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--c-warning) 82%, var(--color-text) 18%);
   }
 
   .home-activity__metric.is-provider-activity::before {
-    background: color-mix(in oklab, var(--c-warning) 82%, var(--c-text) 18%);
+    background: color-mix(in oklab, var(--c-warning) 82%, var(--color-text) 18%);
   }
 
   .home-activity__updated {

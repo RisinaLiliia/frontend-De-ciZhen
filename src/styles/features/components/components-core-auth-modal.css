@@ -21,7 +21,7 @@
     line-height: 1.08;
     letter-spacing: -0.02em;
     font-weight: 700;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .auth-route-modal__subtitle {
@@ -53,7 +53,7 @@
   }
 
   .auth-route-modal__close:hover {
-    color: var(--c-text);
+    color: var(--color-text);
     border-color: color-mix(in oklab, var(--color-primary) 48%, var(--c-border) 52%);
     background: color-mix(in oklab, var(--color-primary) 15%, var(--color-surface) 85%);
   }

@@ -144,7 +144,7 @@
   .proof-score {
     font-size: var(--fs-12);
     font-weight: 600;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .proof-review {

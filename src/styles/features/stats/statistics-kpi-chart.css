@@ -68,13 +68,13 @@
   .requests-stats-chart__title {
     font-size: var(--fs-body);
     font-weight: 600;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .requests-stats-chart__delta {
     font-size: var(--fs-12);
     font-weight: 700;
-    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
+    color: color-mix(in oklab, var(--c-success) 85%, var(--color-text) 15%);
   }
 
   .requests-mini-chart {

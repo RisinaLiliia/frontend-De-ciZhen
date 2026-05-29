@@ -65,7 +65,7 @@
   html:not(.dark) .home-intro-shell .home-stats__title,
   html:not(.dark) .home-intro-shell .home-quick-search__title,
   html:not(.dark) .home-intro-shell .home-activity__title {
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .home-activity__subtitle,
@@ -77,13 +77,13 @@
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .home-stats__value {
-    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
+    color: color-mix(in oklab, var(--color-text) 96%, var(--c-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .chip {
     background: var(--color-surface);
     border-color: color-mix(in oklab, var(--c-border) 82%, var(--c-surface) 18%);
-    color: color-mix(in oklab, var(--c-text) 94%, var(--c-border) 6%);
+    color: color-mix(in oklab, var(--color-text) 94%, var(--c-border) 6%);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .chip.is-active {
@@ -99,7 +99,7 @@
   html:not(.dark) .home-intro-shell .home-combined-top .field {
     background: color-mix(in oklab, var(--color-surface) 90%, var(--c-surface) 10%);
     border-color: color-mix(in oklab, var(--c-border) 80%, var(--c-surface) 20%);
-    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
+    color: color-mix(in oklab, var(--color-text) 96%, var(--c-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .field::placeholder {
@@ -107,7 +107,7 @@
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__title {
-    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
+    color: color-mix(in oklab, var(--color-text) 96%, var(--c-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__subtitle {
@@ -115,7 +115,7 @@
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__trust li {
-    color: color-mix(in oklab, var(--c-text) 88%, var(--c-border) 12%);
+    color: color-mix(in oklab, var(--color-text) 88%, var(--c-border) 12%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__preview-badge {
@@ -140,7 +140,7 @@
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__title {
-    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
+    color: color-mix(in oklab, var(--color-text) 96%, var(--c-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__subtitle {

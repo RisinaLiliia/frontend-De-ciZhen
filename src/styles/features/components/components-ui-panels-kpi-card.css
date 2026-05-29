@@ -57,7 +57,7 @@
     border-color: var(--surface-card-border-focus);
     box-shadow:
       var(--surface-card-shadow),
-      0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+      0 0 0 3px color-mix(in oklab, var(--color-text) 10%, transparent);
   }
 
   .kpi-card__top {
@@ -99,11 +99,11 @@
   }
 
   .kpi-card__trend.is-up {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
+    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
   }
 
   .kpi-card__trend.is-down {
-    color: color-mix(in oklab, var(--c-warn) 78%, var(--c-text) 22%);
+    color: color-mix(in oklab, var(--c-warn) 78%, var(--color-text) 22%);
   }
 
   .kpi-card__trend.is-flat {
@@ -119,7 +119,7 @@
     font-size: clamp(28px, 2vw, 32px);
     line-height: 1.1;
     font-weight: 700;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .kpi-card__bottom {
@@ -136,7 +136,7 @@
   }
 
   .kpi-card__meta.is-success {
-    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
+    color: color-mix(in oklab, var(--c-success) 85%, var(--color-text) 15%);
   }
 
   .kpi-card__meta.is-accent {

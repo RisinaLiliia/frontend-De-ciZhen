@@ -125,7 +125,7 @@
     width: 4px;
     height: 4px;
     animation: none;
-    background: color-mix(in oklab, var(--c-text) 62%, var(--c-text-muted) 38%);
+    background: color-mix(in oklab, var(--color-text) 62%, var(--c-text-muted) 38%);
   }
 
   .my-request-card__owner-menu-surface {
@@ -187,13 +187,13 @@
   .my-request-card__owner-menu-item:focus-visible {
     outline: none;
     background: color-mix(in oklab, var(--color-primary) 8%, white 92%);
-    color: color-mix(in oklab, var(--color-primary) 76%, var(--c-text) 24%);
+    color: color-mix(in oklab, var(--color-primary) 76%, var(--color-text) 24%);
   }
 
   .my-request-card__owner-menu-item.is-danger:hover,
   .my-request-card__owner-menu-item.is-danger:focus-visible {
     background: color-mix(in oklab, var(--c-danger) 10%, white 90%);
-    color: color-mix(in oklab, var(--c-danger) 78%, var(--c-text) 22%);
+    color: color-mix(in oklab, var(--c-danger) 78%, var(--color-text) 22%);
   }
 
   html.dark .my-request-card__owner-menu-surface {
@@ -204,7 +204,7 @@
 
   html.dark .my-request-card__owner-menu-item {
     background: color-mix(in oklab, var(--surface-base) 82%, white 18%);
-    color: color-mix(in oklab, white 88%, var(--c-text) 12%);
+    color: color-mix(in oklab, white 88%, var(--color-text) 12%);
   }
 
   html.dark .my-request-card__owner-menu-item:hover,

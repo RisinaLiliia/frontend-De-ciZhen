@@ -38,7 +38,7 @@
   .rating-summary__value {
     font-size: 15px;
     font-weight: 700;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .rating-summary__reviews {

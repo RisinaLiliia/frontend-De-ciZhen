@@ -79,7 +79,7 @@
     font-size: var(--fs-12);
     background: var(--surface-soft-bg);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .request-tag-chip button {

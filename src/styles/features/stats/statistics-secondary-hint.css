@@ -20,7 +20,7 @@
   }
 
   .requests-stats-secondary__top strong {
-    color: var(--c-text);
+    color: var(--color-text);
     margin-right: var(--space-1);
   }
 
@@ -59,7 +59,7 @@
   }
 
   .requests-stats-secondary__response strong {
-    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
+    color: color-mix(in oklab, var(--c-success) 85%, var(--color-text) 15%);
   }
 
   .requests-stats-hint {
@@ -75,7 +75,7 @@
 
   .requests-stats-hint__text {
     font-size: var(--fs-small);
-    color: var(--c-text);
+    color: var(--color-text);
     line-height: 1.3;
   }
 

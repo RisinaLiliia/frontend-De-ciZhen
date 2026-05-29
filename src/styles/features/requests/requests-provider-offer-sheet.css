@@ -29,7 +29,7 @@
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 68%, transparent);
     background: color-mix(in oklab, var(--color-surface) 84%, var(--c-border) 16%);
-    color: var(--c-text);
+    color: var(--color-text);
     font-size: var(--fs-14);
     line-height: 1;
     display: inline-flex;
@@ -108,7 +108,7 @@
   }
 
   .request-offer-sheet__success-advice {
-    color: var(--c-text);
+    color: var(--color-text);
     margin: 0;
   }
 

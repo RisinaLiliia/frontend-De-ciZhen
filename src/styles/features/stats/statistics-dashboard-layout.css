@@ -118,7 +118,7 @@
     font-weight: var(--workspace-statistics-chip-font-weight);
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--color-primary) 78%, var(--c-text) 22%);
+    color: color-mix(in oklab, var(--color-primary) 78%, var(--color-text) 22%);
   }
 
   .workspace-statistics__loading,
@@ -140,7 +140,7 @@
     font-size: var(--fs-body);
     font-weight: var(--font-weight-semibold);
     line-height: var(--lh-title);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics__background-error p {
@@ -212,7 +212,7 @@
     font-size: var(--workspace-statistics-summary-title-size);
     line-height: 1.05;
     font-weight: 600;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics-context__summary-text {
@@ -243,7 +243,7 @@
     font-size: var(--workspace-statistics-context-metric-size);
     line-height: var(--lh-title);
     font-weight: 700;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics-context__trend-card.is-positive {
@@ -419,7 +419,7 @@
     font-size: var(--workspace-statistics-context-metric-size);
     line-height: var(--lh-title);
     font-weight: 700;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics-context__health-card.is-positive {
@@ -443,7 +443,7 @@
 
   .workspace-statistics-context__notice strong {
     font-size: var(--workspace-statistics-copy-size);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics-context__notice p {
@@ -605,7 +605,7 @@
   .workspace-statistics__rail .section-subtitle {
     max-width: 34ch;
     line-height: 1.45;
-    color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
+    color: color-mix(in oklab, var(--c-text-muted) 92%, var(--color-text) 8%);
   }
 
   .workspace-statistics__decision-layer {
@@ -728,7 +728,7 @@
   .workspace-statistics__activity-signal-value {
     font-size: var(--fs-h3);
     line-height: 1.15;
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics__activity-signal-compare {
@@ -754,11 +754,11 @@
   }
 
   .workspace-statistics__activity-signal-compare-value.is-user {
-    color: color-mix(in oklab, var(--color-primary) 84%, var(--c-text) 16%);
+    color: color-mix(in oklab, var(--color-primary) 84%, var(--color-text) 16%);
   }
 
   .workspace-statistics__activity-signal-compare-value.is-market {
-    color: color-mix(in oklab, var(--c-text) 72%, var(--c-text-muted) 28%);
+    color: color-mix(in oklab, var(--color-text) 72%, var(--c-text-muted) 28%);
   }
 
   .workspace-statistics__activity-signal-hint {
@@ -768,7 +768,7 @@
   }
 
   .workspace-statistics__activity-signal-hint strong {
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics__activity-signal.is-positive {
@@ -803,7 +803,7 @@
 
   .workspace-statistics__meta-grid strong {
     font-size: var(--fs-small);
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   .workspace-statistics__activity-summary {

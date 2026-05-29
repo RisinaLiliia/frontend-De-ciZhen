@@ -84,7 +84,7 @@
     border-radius: var(--workspace-insight-card-radius);
     font-size: var(--fs-small);
     line-height: 1.45;
-    color: var(--c-text);
+    color: var(--color-text);
     border: 1px solid color-mix(in oklab, var(--surface-card-border) 82%, transparent);
     background: linear-gradient(
       160deg,
@@ -128,7 +128,7 @@
     font-size: var(--workspace-insight-title-size);
     font-weight: 700;
     letter-spacing: -0.01em;
-    color: var(--c-text);
+    color: var(--color-text);
     line-height: var(--workspace-insight-title-line-height);
   }
 
@@ -137,7 +137,7 @@
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: var(--workspace-insights-balanced-text-lines);
-    color: var(--c-text);
+    color: var(--color-text);
     font-size: var(--workspace-insight-copy-size);
     line-height: var(--workspace-insight-copy-line-height);
   }
@@ -178,7 +178,7 @@
     font-size: var(--workspace-insight-action-size);
     line-height: var(--workspace-insight-action-line-height);
     font-weight: 700;
-    color: color-mix(in oklab, var(--color-primary) 74%, var(--c-text) 26%);
+    color: color-mix(in oklab, var(--color-primary) 74%, var(--color-text) 26%);
   }
 
   .workspace-overview__insights-panel .workspace-statistics-insights__secondary.requests-list {
