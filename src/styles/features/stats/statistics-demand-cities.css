@@ -258,7 +258,7 @@
   }
 
   .workspace-statistics-city-list__rank-cup.is-bronze {
-    color: color-mix(in oklab, var(--c-warn) 66%, var(--color-warning) 34%);
+    color: color-mix(in oklab, var(--color-warning) 66%, var(--color-warning) 34%);
   }
 
   .workspace-statistics-city-list__rank-cup svg {
@@ -351,9 +351,9 @@
   }
 
   .workspace-statistics-city-list__signal.is-low {
-    border-color: color-mix(in oklab, var(--c-warn) 30%, var(--surface-soft-border) 70%);
-    color: color-mix(in oklab, var(--c-warn) 74%, var(--color-text) 26%);
-    background: color-mix(in oklab, var(--c-warn) 10%, var(--color-surface) 90%);
+    border-color: color-mix(in oklab, var(--color-warning) 30%, var(--surface-soft-border) 70%);
+    color: color-mix(in oklab, var(--color-warning) 74%, var(--color-text) 26%);
+    background: color-mix(in oklab, var(--color-warning) 10%, var(--color-surface) 90%);
   }
 
   .workspace-statistics-city-list__signal.is-none {

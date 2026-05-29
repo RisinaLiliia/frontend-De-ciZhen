@@ -103,7 +103,7 @@
   }
 
   .kpi-card__trend.is-down {
-    color: color-mix(in oklab, var(--c-warn) 78%, var(--color-text) 22%);
+    color: color-mix(in oklab, var(--color-warning) 78%, var(--color-text) 22%);
   }
 
   .kpi-card__trend.is-flat {

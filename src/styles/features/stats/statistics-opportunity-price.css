@@ -196,9 +196,9 @@
   }
 
   .workspace-statistics-opportunity__tone.is-supply-heavy {
-    color: color-mix(in oklab, var(--c-warn) 80%, var(--color-text) 20%);
-    border-color: color-mix(in oklab, var(--c-warn) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-warn) 12%, var(--color-surface) 88%);
+    color: color-mix(in oklab, var(--color-warning) 80%, var(--color-text) 20%);
+    border-color: color-mix(in oklab, var(--color-warning) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--color-warning) 12%, var(--color-surface) 88%);
   }
 
   .workspace-statistics-opportunity__item--analysis {
@@ -703,7 +703,7 @@
     background: linear-gradient(
       90deg,
       color-mix(in oklab, var(--color-primary) 72%, var(--color-warning) 28%),
-      color-mix(in oklab, var(--color-warning) 78%, var(--c-warn) 22%)
+      color-mix(in oklab, var(--color-warning) 78%, var(--color-warning) 22%)
     );
     opacity: 0.92;
   }

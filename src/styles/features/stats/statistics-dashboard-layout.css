@@ -779,7 +779,7 @@
   }
 
   .workspace-statistics__activity-signal.is-warning {
-    background: color-mix(in oklab, var(--c-warn) 8%, var(--surface-soft-bg) 92%);
+    background: color-mix(in oklab, var(--color-warning) 8%, var(--surface-soft-bg) 92%);
   }
 
   .workspace-statistics__activity-signal.is-neutral {
