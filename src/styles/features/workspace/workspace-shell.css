@@ -21,6 +21,7 @@
 @import './workspace-controls-responsive.css';
 @import './workspace-controls-filters.css';
 @import './workspace-overlay-responsive.css';
+@import './workspace-request-card.css';
 
 @layer components {
   .workspace-route-shell {
