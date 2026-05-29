@@ -1,0 +1,144 @@
+src/features/workspace/ai-rail/WorkspaceRequestsActionRail.tsx:21:    <div className={['my-requests-rail', className ?? ''].filter(Boolean).join(' ')}>
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:62:    <div className="workspace-decision-panel">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:63:      <section className={workspaceRightRailPanelShell('workspace-decision-panel__summary')}>
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:64:        <span className="workspace-decision-panel__eyebrow">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:67:        <strong className="workspace-decision-panel__count">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:70:        <h3 className="workspace-decision-panel__title">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:83:        <p className="workspace-decision-panel__text">{summaryText}</p>
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:86:          className="app-button-primary workspace-ai-card__action workspace-decision-panel__primary"
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:94:      <section className={workspaceRightRailPanelShell('workspace-decision-panel__queue')}>
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:95:        <div className="workspace-decision-panel__section-head">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:96:          <span className="workspace-decision-panel__eyebrow">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:101:          <ul className="workspace-decision-panel__queue-list">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:107:                    'workspace-decision-panel__queue-item',
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:112:                  <span className="workspace-decision-panel__queue-copy">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:116:                  <span className={`workspace-decision-panel__priority is-${item.actionPriorityLevel}`}>
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:124:          <p className="workspace-decision-panel__empty">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:131:          <p className="workspace-decision-panel__hint">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:137:      <section className={workspaceRightRailPanelShell('workspace-decision-panel__overview')}>
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:138:        <span className="workspace-decision-panel__eyebrow">
+src/features/workspace/ai-rail/WorkspaceDecisionPanel.tsx:141:        <dl className="workspace-decision-panel__overview-grid">
+src/features/workspace/overlays/PrivateRequestSessionDialog.tsx:99:        <div className="my-request-dialog__scene my-request-dialog__scene--offer-edit">
+src/features/workspace/overlays/PrivateRequestSessionDialog.tsx:100:          <div className="my-request-dialog__toolbar">
+src/features/workspace/overlays/PrivateRequestSessionDialog.tsx:114:          <div className="my-request-dialog__toolbar">
+src/features/workspace/overlays/RequestOverlays.tsx:227:        <div className="my-request-dialog__state">
+src/features/workspace/overlays/RequestOverlays.tsx:237:        <div className="my-request-dialog__state">
+src/features/workspace/overlays/RequestSecondaryOverlays.tsx:92:      <div className="my-request-dialog__state">
+src/features/workspace/overlays/RequestSecondaryOverlays.tsx:102:        <div className="my-request-dialog__state">
+src/features/workspace/overlays/RequestSecondaryOverlays.tsx:112:      <div className="my-request-dialog__state">
+src/features/workspace/overlays/RequestSecondaryOverlays.tsx:126:        <div className="my-request-dialog__state">
+src/features/workspace/overlays/PublicRequestDialog.tsx:41:      className={`my-request-card__owner-menu-item ${className ?? ''}`.trim()}
+src/features/workspace/overlays/PublicRequestDialog.tsx:43:      <span className="my-request-card__owner-menu-item-label">{children}</span>
+src/features/workspace/overlays/PublicRequestDialog.tsx:44:      <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">{icon}</span>
+src/features/workspace/overlays/PublicRequestDialog.tsx:99:    <div ref={menuRef} className="my-request-card__owner-menu request-detail__interaction-menu" data-card-action="true">
+src/features/workspace/overlays/PublicRequestDialog.tsx:102:        className={`my-request-card__owner-menu-trigger ${isOpen ? 'is-open' : ''}`.trim()}
+src/features/workspace/overlays/PublicRequestDialog.tsx:106:        <div className="my-request-card__owner-menu-surface" role="menu">
+src/features/workspace/overlays/PublicRequestDialog.tsx:491:        <div className="my-request-dialog__state">
+src/features/workspace/overlays/PublicRequestDialog.tsx:501:        <div className="my-request-dialog__state">
+src/features/workspace/overlays/PublicRequestSessionDialog.tsx:99:        <div className="my-request-dialog__scene my-request-dialog__scene--offer-edit">
+src/features/workspace/overlays/PublicRequestSessionDialog.tsx:100:          <div className="my-request-dialog__toolbar">
+src/features/workspace/overlays/PublicRequestSessionDialog.tsx:114:          <div className="my-request-dialog__toolbar">
+src/features/workspace/overlays/WorkspaceOverlayPrimitives.tsx:79:    <div className="dc-modal my-request-dialog" role="dialog" aria-modal="true" aria-label={ariaLabel}>
+src/features/workspace/overlays/WorkspaceOverlayPrimitives.tsx:86:      <div className={workspacePanelShell('my-request-dialog__panel', 'dc-modal__panel--compact')}>
+src/features/workspace/overlays/RequestDialogShell.tsx:144:      className={presentation === 'inline' ? 'my-request-dialog my-request-dialog--inline' : 'dc-modal my-request-dialog'}
+src/features/workspace/overlays/RequestDialogShell.tsx:162:            : workspacePanelShell('my-request-dialog__panel--inline-shell'),
+src/features/workspace/overlays/RequestDialogShell.tsx:163:          'my-request-dialog__panel',
+src/features/workspace/overlays/RequestDialogShell.tsx:164:          'my-request-dialog__panel--details',
+src/features/workspace/overlays/RequestDialogShell.tsx:165:          presentation === 'inline' ? 'my-request-dialog__panel--inline' : '',
+src/features/workspace/overlays/RequestDialogShell.tsx:171:          className="my-request-dialog__close my-request-dialog__close--floating"
+src/features/workspace/overlays/RequestDialogShell.tsx:179:          <div className="my-request-dialog__state">
+src/features/workspace/overlays/RequestDialogShell.tsx:187:          <div className="my-request-dialog__state">
+src/features/workspace/overlays/RequestDialogShell.tsx:193:          <div className={`my-request-dialog__body ${bodyVariant === 'details' ? 'my-request-dialog__body--details' : ''}`.trim()}>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:57:    <div className="workspace-decision-panel">
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:58:      <section className={workspaceRightRailPanelShell('workspace-decision-panel__summary')}>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:59:        <span className="workspace-decision-panel__eyebrow">{panel.eyebrow}</span>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:60:        <strong className="workspace-decision-panel__count">{panel.totalNeedsAction}</strong>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:61:        <h3 className="workspace-decision-panel__title">{panel.title}</h3>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:62:        <p className="workspace-decision-panel__text">{panel.text}</p>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:65:          className="app-button-primary workspace-ai-card__action workspace-decision-panel__primary"
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:71:      <section className={workspaceRightRailPanelShell('workspace-decision-panel__queue')}>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:72:        <div className="workspace-decision-panel__section-head">
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:73:          <span className="workspace-decision-panel__eyebrow">{panel.queueTitle}</span>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:76:          <ul className="workspace-decision-panel__queue-list">
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:83:                    'workspace-decision-panel__queue-item',
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:87:                  <span className="workspace-decision-panel__queue-copy">
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:92:                  <span className={`workspace-decision-panel__priority is-${item.actionPriorityLevel}`}>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:100:          <p className="workspace-decision-panel__empty">{panel.emptyText}</p>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:104:      <section className={workspaceRightRailPanelShell('workspace-decision-panel__overview')}>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:105:        <span className="workspace-decision-panel__eyebrow">{panel.overviewEyebrow}</span>
+src/features/workspace/shared/WorkspaceSectionDecisionPanel.tsx:106:        <dl className="workspace-decision-panel__overview-grid">
+src/features/workspace/requests/RequestsView.tsx:147:      className={`my-request-card__owner-menu-item ${className ?? ''}`.trim()}
+src/features/workspace/requests/RequestsView.tsx:149:      <span className="my-request-card__owner-menu-item-label">{children}</span>
+src/features/workspace/requests/RequestsView.tsx:151:        <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">{icon}</span>
+src/features/workspace/requests/RequestsView.tsx:168:      className={`my-request-card__owner-menu-item ${className ?? ''}`.trim()}
+src/features/workspace/requests/RequestsView.tsx:170:      <span className="my-request-card__owner-menu-item-label">{children}</span>
+src/features/workspace/requests/RequestsView.tsx:172:        <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">{icon}</span>
+src/features/workspace/requests/RequestsView.tsx:191:    'my-request-card__action-btn',
+src/features/workspace/requests/RequestsView.tsx:192:    `my-request-card__action-btn--${variant}`,
+src/features/workspace/requests/RequestsView.tsx:353:    <div className="my-request-card__topslot">
+src/features/workspace/requests/RequestsView.tsx:355:        <div className="my-request-card__topbar">
+src/features/workspace/requests/RequestsView.tsx:356:          <div className="my-request-card__topbar-start">
+src/features/workspace/requests/RequestsView.tsx:358:              <WorkspaceBadge variant={statusVariant} className="my-request-card__state-chip">
+src/features/workspace/requests/RequestsView.tsx:363:              <span className={`my-request-card__priority is-${chrome.priorityTone}`.trim()}>
+src/features/workspace/requests/RequestsView.tsx:368:          <div className="my-request-card__topbar-end">
+src/features/workspace/requests/RequestsView.tsx:381:      <div className="my-request-card__header-main">
+src/features/workspace/requests/RequestsView.tsx:385:        <div className="my-request-card__context my-request-card__context--top">
+src/features/workspace/requests/RequestsView.tsx:387:            <span key={item} className="my-request-card__context-pill">
+src/features/workspace/requests/RequestsView.tsx:483:    <div ref={menuRef} className="my-request-card__owner-menu" data-card-action="true">
+src/features/workspace/requests/RequestsView.tsx:486:        className={`my-request-card__owner-menu-trigger ${isOpen ? 'is-open' : ''}`.trim()}
+src/features/workspace/requests/RequestsView.tsx:490:        <div className="my-request-card__owner-menu-surface" role="menu">
+src/features/workspace/requests/RequestsView.tsx:704:        'my-request-card',
+src/features/workspace/requests/RequestsView.tsx:705:        mode === 'decision' ? 'my-request-card--decision' : '',
+src/features/workspace/requests/RequestsView.tsx:706:        isActive ? 'my-request-card--active' : '',
+src/features/workspace/requests/RequestsView.tsx:707:        mode === 'decision' && !isActive ? 'my-request-card--idle' : '',
+src/features/workspace/requests/RequestsView.tsx:714:        className="my-request-card__surface"
+src/features/workspace/requests/RequestsView.tsx:746:          <div className="my-request-card__footer-stack">
+src/features/workspace/requests/RequestsView.tsx:748:            <div className="my-request-card__footer-bar">
+src/features/workspace/requests/RequestsView.tsx:756:                <div className="my-request-card__action-row">
+src/features/workspace/requests/RequestsView.tsx:767:                      className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary"
+src/features/workspace/requests/management/ManagedRequestSections.tsx:160:    <div className="my-request-dialog__section">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:161:      <div className="my-request-dialog__section-head">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:164:          <p className="my-request-dialog__section-subtitle">{t(I18N_KEYS.requestDetails.workspaceOffersSubtitle)}</p>
+src/features/workspace/requests/management/ManagedRequestSections.tsx:166:        <span className="my-request-dialog__section-count">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:172:        <div className="my-request-dialog__offer-list">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:202:        <div className="my-request-dialog__offer-list">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:396:    <div className="my-request-dialog__section my-request-dialog__section--decision">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:397:      <div className="my-request-dialog__section-head">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:400:          <p className="my-request-dialog__section-subtitle">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:405:        <span className="my-request-dialog__section-count">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:411:        <p className="my-request-dialog__section-subtitle">{effectiveContractMeta}</p>
+src/features/workspace/requests/management/ManagedRequestSections.tsx:424:        <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:467:            <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
+src/features/workspace/requests/management/ManagedRequestSections.tsx:517:            <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
+src/features/workspace/requests/details/RequestDetailsContent.tsx:337:              <div className="my-request-card__footer-bar request-detail__dialog-footer-bar">
+src/features/workspace/requests/details/RequestDetailsContent.tsx:338:                <div className="my-request-card__footer-note is-info request-detail__dialog-advice">
+src/features/workspace/requests/details/RequestDetailsContent.tsx:339:                  <span className="my-request-card__footer-note-icon" aria-hidden="true">
+src/features/workspace/requests/details/RequestDetailsContent.tsx:342:                  <p className="my-request-card__footer-note-copy">{dialogAiAdvice}</p>
+src/features/workspace/requests/details/RequestDetailsContent.tsx:345:                <div className="my-request-card__action-row request-detail__dialog-actions">
+src/features/workspace/requests/details/RequestDetailsContent.tsx:349:                      className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary"
+src/features/workspace/requests/details/RequestDetailsContent.tsx:358:                      className="btn-ghost is-primary my-request-card__action-btn my-request-card__action-btn--primary"
+src/features/workspace/requests/RequestsViewInsights.tsx:20:    <div className="my-request-card__signals">
+src/features/workspace/requests/RequestsViewInsights.tsx:22:        <span key={signal.key} className={`my-request-card__signal is-${signal.tone}`.trim()}>
+src/features/workspace/requests/RequestsViewInsights.tsx:40:    <div className="my-request-card__owner-content">
+src/features/workspace/requests/RequestsViewInsights.tsx:43:        <div className={`my-request-card__insights my-request-card__insights--${Math.min(chrome.insights.length, 2)}`.trim()}>
+src/features/workspace/requests/RequestsViewInsights.tsx:45:            <article key={item.key} className={`my-request-card__insight is-${item.tone}`.trim()}>
+src/features/workspace/requests/RequestsViewInsights.tsx:46:              <strong className="my-request-card__insight-title">{item.title}</strong>
+src/features/workspace/requests/RequestsViewInsights.tsx:47:              <p className="my-request-card__insight-copy">{item.description}</p>
+src/features/workspace/requests/RequestsViewInsights.tsx:95:    <div className={`my-request-card__footer-note is-${chrome.insights[0]?.tone ?? 'neutral'}`.trim()}>
+src/features/workspace/requests/RequestsViewInsights.tsx:96:      <span className="my-request-card__footer-note-icon" aria-hidden="true">
+src/features/workspace/requests/RequestsViewInsights.tsx:99:      <p className="my-request-card__footer-note-copy">{note}</p>
+src/features/workspace/requests/RequestsViewStates.tsx:16:        <article key={`card-skeleton-${index}`} className={workspaceMutedPanelShell('my-request-card', 'my-request-card--skeleton')}>
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:97:    <div className="my-request-card__progress-scroll">
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:98:      <div className="my-request-card__progress-shell">
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:100:          className="my-request-card__progress"
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:107:              className={`my-request-card__progress-step is-${step.status}`.trim()}
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:110:              <span className="my-request-card__progress-dot" />
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:111:              <span className="my-request-card__progress-copy">
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:112:                <span className="my-request-card__progress-label">{step.label}</span>
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:113:                <span className="my-request-card__progress-meta">{resolveStepMeta(step)}</span>
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:118:        <div className="my-request-card__progress-rail" aria-hidden="true">
+src/features/workspace/requests/RequestsWorkflowProgress.tsx:120:            className="my-request-card__progress-rail-fill"
+src/components/requests/PublicRequestCardActionRow.tsx:35:    'my-request-card__action-btn',
+src/components/requests/PublicRequestCardActionRow.tsx:36:    `my-request-card__action-btn--${variant}`,
+src/components/requests/PublicRequestCardActionRow.tsx:57:    'my-request-card__action-btn',
+src/components/requests/PublicRequestCardActionRow.tsx:58:    `my-request-card__action-btn--${variant}`,

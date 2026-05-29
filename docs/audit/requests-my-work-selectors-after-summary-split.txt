@@ -1,0 +1,190 @@
+3:  .my-requests-view,
+4:  .my-requests-rail,
+5:  .workspace-decision-panel {
+30:  .requests-scope-switch {
+40:  .requests-scope-switch__item {
+61:  .requests-scope-switch__item:hover {
+67:  .requests-scope-switch__item:focus-visible {
+74:  .requests-scope-switch__item.is-active {
+98:  .my-requests-view {
+108:  .my-request-card__progress-step:not(:last-child)::after {
+119:  .my-request-card__progress-rail {
+127:  .my-request-card__progress-rail-fill {
+135:  .my-request-card .request-card {
+145:  .my-request-card__surface,
+146:  .my-request-card .request-card__body {
+152:  .my-request-card .request-card__top {
+157:  .my-request-card .request-card--media-inline .request-card__body {
+161:  .my-request-card .request-card__main--with-media {
+171:  .my-request-card .request-card__copy {
+175:  .my-request-card .request-card--media-inline .request-card__copy .request-card__price {
+179:  .my-request-card .request-card__media--inline {
+188:  .my-request-card__state-chip {
+197:  .my-request-card__owner-menu {
+204:  .my-request-card__owner-menu-trigger.nearby-more {
+217:  .my-request-card__owner-menu-trigger.nearby-more:hover,
+218:  .my-request-card__owner-menu-trigger.nearby-more.is-open {
+224:  .my-request-card__owner-menu-trigger .nearby-dot-item {
+231:  .my-request-card__owner-menu-surface {
+245:  .my-request-card__owner-menu-item {
+267:  .my-request-card__owner-menu-item-label {
+273:  .my-request-card__owner-menu-item-icon {
+281:  .my-request-card__owner-menu-item-icon svg {
+286:  .my-request-card__owner-menu-item:hover,
+287:  .my-request-card__owner-menu-item:focus-visible {
+293:  .my-request-card__owner-menu-item.is-danger:hover,
+294:  .my-request-card__owner-menu-item.is-danger:focus-visible {
+316:  .my-request-card__action-row {
+326:  .my-request-card__action-btn {
+338:  .my-request-card__action-btn--secondary {
+344:  .my-request-card__action-btn--primary {
+385:  .my-request-card--decision {
+393:  .my-request-card--active .request-card {
+400:  .my-request-card--idle {
+404:  .workspace-decision-panel {
+409:  .workspace-decision-panel__summary,
+410:  .workspace-decision-panel__queue,
+411:  .workspace-decision-panel__overview,
+412:  .my-decision-mode {
+417:  .workspace-decision-panel__summary {
+425:  .workspace-decision-panel__queue,
+426:  .workspace-decision-panel__overview {
+432:  .workspace-decision-panel__eyebrow,
+433:  .my-decision-mode__eyebrow {
+442:  .workspace-decision-panel__count {
+448:  .workspace-decision-panel__title,
+449:  .my-decision-mode__title {
+455:  .workspace-decision-panel__text,
+456:  .workspace-decision-panel__empty,
+457:  .workspace-decision-panel__hint,
+458:  .my-decision-mode__progress {
+463:  .workspace-decision-panel__primary {
+468:  .workspace-decision-panel__primary.workspace-ai-card__action {
+476:  .workspace-decision-panel__primary:focus-visible,
+477:  .workspace-decision-panel__queue-item:focus-visible {
+483:  .workspace-decision-panel__section-head {
+490:  .workspace-decision-panel__queue-list {
+498:  .workspace-decision-panel__queue-item {
+514:  .workspace-decision-panel__queue-item:hover,
+515:  .workspace-decision-panel__queue-item.is-active {
+521:  .workspace-decision-panel__queue-copy {
+527:  .workspace-decision-panel__queue-copy strong {
+532:  .workspace-decision-panel__queue-copy span {
+538:  .workspace-decision-panel__priority {
+553:  .workspace-decision-panel__priority.is-high {
+558:  .workspace-decision-panel__priority.is-medium {
+563:  .workspace-decision-panel__overview-grid {
+568:  .workspace-decision-panel__overview-grid > div {
+576:  .workspace-decision-panel__overview-grid dt {
+580:  .workspace-decision-panel__overview-grid dd {
+585:  .my-decision-mode {
+594:  .my-decision-mode__copy {
+599:  .my-requests-rail {
+613:  .my-requests-rail__panel {
+618:  .my-requests-rail__eyebrow {
+626:  .my-requests-rail__panel h3 {
+631:  .my-requests-rail__panel p {
+636:  .my-requests-rail__panel--recommendation {
+652:  .my-requests-rail__panel--recommendation .my-requests-rail__eyebrow {
+658:  .my-requests-rail__decision.workspace-statistics-ki {
+676:  .my-requests-rail__decision .workspace-statistics-ki__head {
+684:  .my-requests-rail__decision .workspace-statistics-ki__copy {
+689:  .my-requests-rail__decision .workspace-statistics-ki__avatar {
+693:  .my-requests-rail__decision .workspace-statistics-ki__text {
+700:  .my-requests-rail__decision .workspace-statistics-ki__actions {
+705:  .my-requests-rail__decision .workspace-ai-card__action.auth-social__btn {
+715:  .my-requests-rail__meta {
+720:  .my-requests-rail__meta > div {
+728:  .my-requests-rail__meta dt,
+729:  .my-requests-rail__steps {
+733:  .my-requests-rail__steps {
+738:  .my-requests-empty,
+739:  .my-requests-auth-gate {
+745:  .my-requests-empty h3,
+746:  .my-requests-auth-gate h3 {
+750:  .my-requests-empty p,
+751:  .my-requests-auth-gate p {
+756:  .my-requests-empty__actions {
+762:  .my-requests-view__mobile-rail {
+1043:  .my-request-dialog__panel,
+1044:  .my-request-chat-dialog__panel {
+1050:  .my-requests-inline-stage {
+1054:  .my-request-dialog--inline {
+1058:  .my-request-dialog__panel--inline-shell {
+1063:  .my-request-dialog__panel--inline {
+1069:  .my-request-dialog__header,
+1070:  .my-request-chat-dialog__header {
+1081:  .my-request-dialog__header-copy,
+1082:  .my-request-chat-dialog__header > div {
+1087:  .my-request-dialog__eyebrow,
+1088:  .my-request-chat-dialog__eyebrow {
+1096:  .my-request-dialog__title,
+1097:  .my-request-chat-dialog__title {
+1103:  .my-request-dialog__meta {
+1111:  .my-request-dialog__meta span,
+1112:  .my-request-dialog__badge {
+1118:  .my-request-dialog__close,
+1119:  .my-request-chat-dialog__close {
+1133:  .my-request-dialog__close--floating {
+1140:  .my-request-dialog__body {
+1148:  .my-request-dialog--inline .my-request-dialog__body {
+1152:  .my-request-dialog__panel--details {
+1156:  .my-request-dialog__body--details {
+1163:  .my-request-dialog__toolbar,
+1164:  .my-request-dialog__actions {
+1172:  .my-request-dialog__scene {
+1176:  .my-request-dialog__scene--offer-edit {
+1180:  .my-request-dialog__actions--sticky {
+1193:  .my-request-dialog__section {
+1198:  .my-request-dialog__section h3 {
+1203:  .my-request-dialog__section-head {
+1210:  .my-request-dialog__section--decision {
+1218:  .my-request-dialog__section-subtitle {
+1224:  .my-request-dialog__section-count {
+1236:  .my-request-inline-state {
+1247:  .my-request-inline-state--error {
+1252:  .my-request-inline-state--empty {
+1257:  .my-request-inline-state__icon,
+1258:  .my-request-inline-state__meta {
+1272:  .my-request-inline-state__copy {
+1277:  .my-request-inline-state__copy strong {
+1282:  .my-request-inline-state__copy p {
+1288:  .my-request-dialog__section p {
+1294:  .my-request-dialog__offer-list {
+1299:  .my-request-decision-form {
+1304:  .my-request-contract-card,
+1305:  .my-request-review-card {
+1314:  .my-request-contract-card__head,
+1315:  .my-request-review-card__head,
+1316:  .my-request-review-card__actions {
+1323:  .my-request-contract-card__identity {
+1328:  .my-request-contract-card__price {
+1334:  .my-request-contract-card__message,
+1335:  .my-request-contract-card__note,
+1336:  .my-request-review-card__head p {
+1342:  .my-request-contract-card__meta {
+1350:  .my-request-review-card__head {
+1354:  .my-request-review-card__head h4 {
+1359:  .my-request-review-card__actions {
+1364:  .my-request-decision-form__field {
+1369:  .my-request-decision-form__field > span {
+1375:  .my-request-offer-card {
+1384:  .my-request-offer-card.is-accepted {
+1389:  .my-request-offer-card:has(.btn-ghost[disabled]) {
+1394:  .my-request-offer-card__head,
+1395:  .my-request-offer-card__status,
+1396:  .my-request-offer-card__actions {
+1403:  .my-request-offer-card__identity {
+1408:  .my-request-offer-card__identity span,
+1409:  .my-request-offer-card__meta {
+1414:  .my-request-offer-card__status {
+1419:  .my-request-offer-card__price {
+1424:  .my-request-offer-card__body {
+1429:  .my-request-offer-card__message {
+1434:  .my-request-offer-card__meta {
+1440:  .my-request-offer-card__actions {
+1445:  .my-request-dialog__photos {
+1451:  .my-request-dialog__photo {
+1459:  .my-request-dialog__photo-img {
+1463:  .my-request-dialog__state {
+1469:  .my-request-chat-dialog__content {
