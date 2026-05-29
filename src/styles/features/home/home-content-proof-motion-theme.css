@@ -43,7 +43,7 @@
   }
 
   html:not(.dark) .howitworks-tab {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   html:not(.dark) .howitworks-tab.is-active {

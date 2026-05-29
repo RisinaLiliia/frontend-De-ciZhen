@@ -2,7 +2,7 @@
 
 @layer components {
   .auth-consent__text {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .auth-consent__link {
@@ -17,7 +17,7 @@
 
   .auth-consent__link.is-disabled {
     text-decoration: none;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     opacity: 0.9;
   }
 
@@ -53,7 +53,7 @@
     padding: 3px 7px;
     border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     background: var(--surface-soft-bg);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     flex: 0 0 auto;
   }
 

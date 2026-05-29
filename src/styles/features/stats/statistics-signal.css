@@ -15,7 +15,7 @@
     min-width: 0;
     font-size: var(--workspace-statistics-label-size);
     line-height: 1.25;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-signal__label {
@@ -61,7 +61,7 @@
     font-style: normal;
     font-size: var(--workspace-statistics-chip-font-size);
     font-weight: 700;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-signal__semantic.is-start {
@@ -79,7 +79,7 @@
 
   .workspace-statistics-signal__semantic.is-balanced,
   .workspace-statistics-signal__semantic.is-medium {
-    color: color-mix(in oklab, var(--color-primary) 62%, var(--c-text-muted) 38%);
+    color: color-mix(in oklab, var(--color-primary) 62%, var(--color-text-muted) 38%);
   }
 
   .workspace-statistics-signal__semantic.is-competitive,
@@ -115,7 +115,7 @@
   }
 
   .workspace-opportunity-tone-badge.is-balanced {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     border-color: var(--surface-soft-border);
     background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--color-surface) 16%);
   }

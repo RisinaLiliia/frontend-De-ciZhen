@@ -23,7 +23,7 @@
   }
 
   .workspace-public-demand-map__header .typo-small {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-public-demand-map__canvas {
@@ -207,7 +207,7 @@
     margin: 0;
     z-index: 1200;
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     text-align: center;
     max-width: 240px;
   }
@@ -220,7 +220,7 @@
     margin: 0;
     z-index: 1200;
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     text-align: center;
     max-width: 240px;
     padding: var(--space-1-5) var(--space-2);

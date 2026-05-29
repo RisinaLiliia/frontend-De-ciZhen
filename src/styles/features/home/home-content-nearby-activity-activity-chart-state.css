@@ -102,7 +102,7 @@
     align-items: center;
     gap: var(--space-1-5);
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     padding: 4px 8px;
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--color-border) 82%, transparent);
@@ -162,7 +162,7 @@
 
   .home-activity__updated {
     font-size: var(--fs-11);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     min-height: 16px;
   }
 
@@ -180,7 +180,7 @@
 
   .home-activity__state {
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     padding: 10px;
     border-radius: var(--radius-sm);
     border: 1px dashed color-mix(in oklab, var(--color-border) 75%, transparent);

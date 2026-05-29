@@ -125,7 +125,7 @@
     width: 4px;
     height: 4px;
     animation: none;
-    background: color-mix(in oklab, var(--color-text) 62%, var(--c-text-muted) 38%);
+    background: color-mix(in oklab, var(--color-text) 62%, var(--color-text-muted) 38%);
   }
 
   .my-request-card__owner-menu-surface {

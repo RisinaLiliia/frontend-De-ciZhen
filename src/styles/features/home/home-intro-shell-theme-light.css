@@ -73,7 +73,7 @@
   html:not(.dark) .home-intro-shell .home-combined-top .home-activity__updated,
   html:not(.dark) .home-intro-shell .home-combined-top .home-activity__point-time,
   html:not(.dark) .home-intro-shell .home-combined-top .home-quick-search__location {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .home-stats__value {
@@ -103,7 +103,7 @@
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .field::placeholder {
-    color: color-mix(in oklab, var(--c-text-muted) 94%, var(--color-border) 6%);
+    color: color-mix(in oklab, var(--color-text-muted) 94%, var(--color-border) 6%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__title {
@@ -111,7 +111,7 @@
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__subtitle {
-    color: color-mix(in oklab, var(--c-text-muted) 94%, var(--color-border) 6%);
+    color: color-mix(in oklab, var(--color-text-muted) 94%, var(--color-border) 6%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__trust li {
@@ -119,7 +119,7 @@
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__preview-badge {
-    color: color-mix(in oklab, var(--c-text-muted) 84%, var(--c-accent) 16%);
+    color: color-mix(in oklab, var(--color-text-muted) 84%, var(--c-accent) 16%);
     border-color: color-mix(in oklab, var(--c-accent) 36%, var(--color-border) 64%);
     background: color-mix(in oklab, var(--color-surface) 92%, var(--c-accent) 8%);
   }
@@ -144,7 +144,7 @@
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__subtitle {
-    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-accent) 10%);
+    color: color-mix(in oklab, var(--color-text-muted) 90%, var(--c-accent) 10%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__media {

@@ -143,7 +143,7 @@
   .workspace-overview__panel .nearby-dot-item {
     width: 4px;
     height: 4px;
-    background: color-mix(in oklab, var(--c-text-muted) 76%, transparent);
+    background: color-mix(in oklab, var(--color-text-muted) 76%, transparent);
   }
 
   .workspace-overview__actions {

@@ -62,7 +62,7 @@
     gap: var(--space-2);
     flex-wrap: wrap;
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-demand__insight strong {
@@ -125,7 +125,7 @@
     font-weight: 700;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-city-list__head > span:first-child,
@@ -239,14 +239,14 @@
   .workspace-statistics-city-list__rank {
     font-size: var(--fs-small);
     font-weight: 700;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-city-list__rank-cup {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-city-list__rank-cup.is-gold {
@@ -277,7 +277,7 @@
   }
 
   .workspace-statistics-city-list__name--placeholder {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-city-list__count {
@@ -294,7 +294,7 @@
     justify-content: center;
     font-size: var(--fs-small);
     font-weight: 700;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
@@ -358,7 +358,7 @@
 
   .workspace-statistics-city-list__signal.is-none {
     border-color: var(--surface-soft-border);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--color-surface) 12%);
   }
 

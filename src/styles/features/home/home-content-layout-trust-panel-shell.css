@@ -57,7 +57,7 @@
     margin: 0;
     font-size: clamp(14px, 1.4vw, 17px);
     line-height: 1.35;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .home-trust-live-panel__hero-shot {

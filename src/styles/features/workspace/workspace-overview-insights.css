@@ -148,7 +148,7 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: var(--workspace-insights-balanced-evidence-lines);
     font-size: var(--workspace-insight-copy-size);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: var(--workspace-insight-support-line-height);
   }
 
@@ -166,7 +166,7 @@
     border-radius: var(--workspace-statistics-chip-radius);
     border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--color-surface) 12%);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     font-size: var(--workspace-statistics-label-size);
     font-weight: 600;
   }

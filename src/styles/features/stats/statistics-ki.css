@@ -37,7 +37,7 @@
     border-radius: var(--workspace-ai-card-chip-radius);
     border: 1px solid var(--surface-soft-border);
     background: var(--surface-soft-bg);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     font-size: var(--workspace-ai-card-chip-font-size);
     font-weight: var(--workspace-ai-card-chip-font-weight);
     line-height: var(--app-caption-line-height);
@@ -118,7 +118,7 @@
 
   .workspace-statistics-ki__role {
     font-size: var(--app-text-muted-size);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: var(--app-text-muted-line-height);
   }
 
@@ -126,7 +126,7 @@
     margin: 0;
     font-size: var(--app-text-muted-size);
     line-height: var(--app-text-muted-line-height);
-    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--color-text) 10%);
+    color: color-mix(in oklab, var(--color-text-muted) 90%, var(--color-text) 10%);
   }
 
   .workspace-ai-card--decision .workspace-statistics-ki__head,
@@ -195,7 +195,7 @@
   }
 
   .workspace-statistics-ki--plain .workspace-statistics-ki__text {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-ki--plain .workspace-statistics-ki__details {
@@ -226,7 +226,7 @@
     gap: var(--space-1);
     margin: 0;
     padding-left: var(--space-3);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     font-size: var(--fs-small);
     line-height: 1.45;
   }

@@ -62,7 +62,7 @@
 
   .home-stats__label {
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .home-stats__icon {

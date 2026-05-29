@@ -107,12 +107,12 @@
   }
 
   .kpi-card__trend.is-flat {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .kpi-card__label {
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .kpi-card__value {
@@ -144,7 +144,7 @@
   }
 
   .kpi-card__meta.is-neutral {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .kpi-grid--decision .kpi-card {

@@ -133,7 +133,7 @@
   }
 
   .my-request-card__context-pill {
-    color: color-mix(in oklab, var(--color-text) 82%, var(--c-text-muted) 18%);
+    color: color-mix(in oklab, var(--color-text) 82%, var(--color-text-muted) 18%);
     font-weight: 600;
   }
 
@@ -376,7 +376,7 @@
   }
 
   .my-request-card__progress-meta {
-    color: color-mix(in oklab, var(--c-text-muted) 88%, var(--color-text) 12%);
+    color: color-mix(in oklab, var(--color-text-muted) 88%, var(--color-text) 12%);
     font-size: var(--my-work-caption-size);
     line-height: var(--my-work-caption-line-height);
     white-space: nowrap;

@@ -27,7 +27,7 @@
   .auth-route-modal__subtitle {
     margin: 0;
     font-size: var(--fs-13);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: 1.35;
   }
 
@@ -40,7 +40,7 @@
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
     background: var(--surface-soft-bg);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     font-size: 22px;
     line-height: 1;
     display: inline-flex;

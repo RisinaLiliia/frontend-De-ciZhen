@@ -24,7 +24,7 @@
   }
 
   .rating-summary__stars-base {
-    color: color-mix(in oklab, var(--color-border) 70%, var(--c-text-muted) 30%);
+    color: color-mix(in oklab, var(--color-border) 70%, var(--color-text-muted) 30%);
   }
 
   .rating-summary__stars-fill {
@@ -43,7 +43,7 @@
 
   .rating-summary__reviews {
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .requests-panel {

@@ -123,7 +123,7 @@
 
   .workspace-statistics-opportunity__category {
     font-size: var(--workspace-statistics-label-size);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: 1.3;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -151,7 +151,7 @@
     margin: 0;
     font-size: var(--workspace-statistics-chip-font-size);
     line-height: 1.2;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-opportunity__metrics dd {
@@ -190,7 +190,7 @@
   }
 
   .workspace-statistics-opportunity__tone.is-balanced {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     border-color: var(--surface-soft-border);
     background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--color-surface) 16%);
   }
@@ -298,7 +298,7 @@
   .workspace-statistics-opportunity__radar-axis-label {
     font-size: var(--workspace-statistics-micro-size);
     font-weight: 700;
-    fill: color-mix(in oklab, var(--c-text-muted) 90%, var(--color-primary) 10%);
+    fill: color-mix(in oklab, var(--color-text-muted) 90%, var(--color-primary) 10%);
     font-variant-numeric: tabular-nums;
     pointer-events: none;
     user-select: none;
@@ -347,7 +347,7 @@
     margin: 0;
     font-size: var(--workspace-statistics-copy-size-tight);
     line-height: 1.45;
-    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--color-text) 10%);
+    color: color-mix(in oklab, var(--color-text-muted) 90%, var(--color-text) 10%);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -430,7 +430,7 @@
     margin: 0;
     font-size: var(--workspace-statistics-context-metric-size);
     font-weight: 600;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: 1.35;
     word-break: break-word;
   }
@@ -442,7 +442,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__range {
@@ -496,7 +496,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__summary-value {
@@ -511,7 +511,7 @@
   .workspace-statistics-price__summary-note {
     font-size: var(--workspace-statistics-copy-size-tight);
     line-height: 1.45;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__profit {
@@ -554,7 +554,7 @@
   }
 
   .workspace-statistics-price__comparison-label {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__comparison-value {
@@ -582,7 +582,7 @@
   .workspace-statistics-price__comparison-fill--market {
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--c-text-muted) 52%, var(--color-primary) 48%),
+      color-mix(in oklab, var(--color-text-muted) 52%, var(--color-primary) 48%),
       color-mix(in oklab, var(--color-primary) 68%, var(--surface-soft-border) 32%)
     );
     opacity: 0.9;
@@ -623,7 +623,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__position-range {
@@ -638,7 +638,7 @@
     margin: 0;
     font-size: var(--workspace-statistics-copy-size-tight);
     line-height: 1.45;
-    color: color-mix(in oklab, var(--c-text-muted) 92%, var(--color-text) 8%);
+    color: color-mix(in oklab, var(--color-text-muted) 92%, var(--color-text) 8%);
   }
 
   .workspace-statistics-price__position-scale {
@@ -678,7 +678,7 @@
     height: 9px;
     border-radius: var(--workspace-statistics-chip-radius);
     border: 1px solid color-mix(in oklab, var(--color-surface) 82%, transparent);
-    background: color-mix(in oklab, var(--c-text-muted) 54%, var(--color-surface) 46%);
+    background: color-mix(in oklab, var(--color-text-muted) 54%, var(--color-surface) 46%);
     transform: translate(-50%, -50%);
     box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-surface) 72%, transparent);
     z-index: 1;
@@ -767,7 +767,7 @@
     transform: translateX(-50%);
     font-size: var(--workspace-statistics-chip-font-size);
     font-weight: 600;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: 1.2;
     max-width: 72px;
     text-align: center;
@@ -796,7 +796,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__position-legend span:nth-child(2) {
@@ -896,7 +896,7 @@
     padding-left: var(--space-3);
     font-size: var(--fs-small);
     line-height: 1.45;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__strategy-grid {
@@ -926,7 +926,7 @@
     font-weight: var(--workspace-statistics-chip-font-weight);
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__strategy-value {
@@ -940,7 +940,7 @@
     margin: 0;
     font-size: var(--fs-small);
     line-height: 1.45;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price-modal {
@@ -1102,7 +1102,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price-modal__title {
@@ -1187,7 +1187,7 @@
     margin: 0;
     font-size: var(--workspace-statistics-copy-size);
     line-height: 1.5;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price-modal__loading-lines {

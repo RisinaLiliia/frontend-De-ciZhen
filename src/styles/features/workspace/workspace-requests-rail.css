@@ -55,7 +55,7 @@
 
   .my-requests-rail__panel--recommendation .my-requests-rail__eyebrow {
     margin: 0;
-    color: color-mix(in oklab, var(--c-text-muted) 84%, var(--color-text) 16%);
+    color: color-mix(in oklab, var(--color-text-muted) 84%, var(--color-text) 16%);
     letter-spacing: 0.12em;
   }
 
@@ -97,7 +97,7 @@
     margin: 0;
     font-size: var(--fs-body);
     line-height: 1.45;
-    color: color-mix(in oklab, var(--c-text-muted) 86%, var(--color-text) 14%);
+    color: color-mix(in oklab, var(--color-text-muted) 86%, var(--color-text) 14%);
   }
 
   .my-requests-rail__decision .workspace-statistics-ki__actions {

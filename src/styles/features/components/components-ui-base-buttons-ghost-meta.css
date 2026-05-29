@@ -42,13 +42,13 @@
     align-items: center;
     gap: var(--space-1-5);
     font-size: var(--fs-13);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .request-meta-inline__item svg {
     width: 14px;
     height: 14px;
-    color: color-mix(in oklab, var(--color-primary) 70%, var(--c-text-muted) 30%);
+    color: color-mix(in oklab, var(--color-primary) 70%, var(--color-text-muted) 30%);
   }
 
   :is(.btn-ghost, .app-button-ghost).is-primary {

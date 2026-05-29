@@ -108,7 +108,7 @@
 
   .request-detail__similar-note {
     font-size: var(--fs-13);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .request-detail__similar-list {

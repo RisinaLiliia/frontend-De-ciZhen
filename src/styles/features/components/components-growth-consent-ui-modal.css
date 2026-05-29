@@ -27,7 +27,7 @@
 
   .cookie-consent-modal__text {
     margin: 0;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .cookie-consent-options {
@@ -61,7 +61,7 @@
   .cookie-consent-option p {
     margin: 4px 0 0;
     font-size: var(--fs-13);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .cookie-consent-option__badge {

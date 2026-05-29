@@ -41,11 +41,11 @@
   }
 
   .workspace-statistics-funnel__layer.is-placeholder .workspace-statistics-funnel__layer-label {
-    color: color-mix(in oklab, var(--c-text-muted) 76%, var(--color-text) 24%);
+    color: color-mix(in oklab, var(--color-text-muted) 76%, var(--color-text) 24%);
   }
 
   .workspace-statistics-funnel__layer.is-placeholder .workspace-statistics-funnel__layer-value {
-    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--color-text) 18%);
+    color: color-mix(in oklab, var(--color-text-muted) 82%, var(--color-text) 18%);
   }
 
   .workspace-statistics-funnel__empty-note {
@@ -67,7 +67,7 @@
   .workspace-statistics-funnel__empty-body {
     margin: 0;
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: 1.45;
   }
 
@@ -255,7 +255,7 @@
     padding-inline: 0;
     font-size: var(--fs-small);
     font-weight: 600;
-    color: color-mix(in oklab, var(--c-text-muted) 84%, var(--color-primary) 16%);
+    color: color-mix(in oklab, var(--color-text-muted) 84%, var(--color-primary) 16%);
     line-height: var(--lh-title);
     animation: workspace-statistics-funnel-hint-enter 420ms ease-out both;
     animation-delay: calc(var(--funnel-layer-index, 0) * 50ms + 80ms);
@@ -295,7 +295,7 @@
   }
 
   .workspace-statistics-funnel__layer-hint-label {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     font-weight: 600;
     max-width: none;
     white-space: nowrap;
@@ -345,7 +345,7 @@
   .workspace-statistics-funnel__summary {
     margin: 0;
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     text-align: left;
   }
 
@@ -368,7 +368,7 @@
   .workspace-statistics-funnel__profile-lead span {
     margin: 0;
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-funnel__profile-lead-lines {
@@ -400,7 +400,7 @@
     margin: 0;
     font-size: var(--fs-small);
     line-height: 1.45;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-funnel__gap.is-positive {
@@ -427,7 +427,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-funnel__dropoff strong {
@@ -440,7 +440,7 @@
     margin: 0;
     font-size: var(--fs-small);
     line-height: 1.4;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-funnel__dropoff-metrics {
@@ -454,7 +454,7 @@
     font-weight: 700;
     text-transform: none;
     letter-spacing: 0;
-    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--color-text) 18%);
+    color: color-mix(in oklab, var(--color-text-muted) 82%, var(--color-text) 18%);
   }
 
   .workspace-statistics-funnel__dropoff.is-positive {
@@ -488,7 +488,7 @@
   }
 
   .workspace-statistics-funnel__conversion--empty strong {
-    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--color-text) 18%);
+    color: color-mix(in oklab, var(--color-text-muted) 82%, var(--color-text) 18%);
   }
 
   @keyframes workspace-statistics-funnel-enter {

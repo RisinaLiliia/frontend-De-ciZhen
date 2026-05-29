@@ -36,7 +36,7 @@
     align-items: center;
     gap: var(--space-2-5);
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .requests-provider-summary--aside .requests-provider-summary__stats {

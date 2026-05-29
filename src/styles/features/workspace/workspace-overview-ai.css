@@ -36,7 +36,7 @@
     border-radius: var(--workspace-statistics-chip-radius);
     border: 1px solid var(--surface-soft-border);
     background: var(--surface-soft-bg);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     font-size: var(--workspace-statistics-chip-font-size);
     font-weight: var(--workspace-statistics-chip-font-weight);
     line-height: var(--app-caption-line-height);
@@ -94,7 +94,7 @@
   .workspace-overview .workspace-statistics-ki__role,
   .workspace-context-rail--overview .workspace-statistics-ki__role {
     font-size: var(--app-text-muted-size);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: var(--app-text-muted-line-height);
   }
 
@@ -103,7 +103,7 @@
     margin: 0;
     font-size: var(--app-text-muted-size);
     line-height: var(--app-text-muted-line-height);
-    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--color-text) 10%);
+    color: color-mix(in oklab, var(--color-text-muted) 90%, var(--color-text) 10%);
   }
 
   .workspace-overview .workspace-statistics-ki__actions,

@@ -21,7 +21,7 @@
   .workspace-overview__kpis .workspace-statistics__activity-signal-label {
     font-size: var(--workspace-statistics-label-size);
     line-height: 1.25;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-overview__kpis .workspace-statistics__activity-signal-value {
@@ -35,6 +35,6 @@
   .workspace-overview__kpis .workspace-statistics__activity-signal-hint {
     font-size: var(--fs-12);
     line-height: 1.4;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 }

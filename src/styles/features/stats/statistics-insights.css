@@ -239,7 +239,7 @@
 
   .workspace-statistics-insights__evidence {
     font-size: var(--workspace-insight-copy-size);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: var(--workspace-insight-support-line-height);
   }
 
@@ -262,7 +262,7 @@
     border-radius: var(--workspace-statistics-chip-radius);
     border: 1px solid var(--surface-soft-border);
     background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--color-surface) 12%);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     font-size: var(--workspace-statistics-label-size);
     font-weight: 600;
   }
@@ -279,7 +279,7 @@
 
   .workspace-statistics-insights__debug {
     font-size: var(--workspace-statistics-chip-font-size);
-    color: color-mix(in oklab, var(--c-text-muted) 82%, var(--color-primary) 18%);
+    color: color-mix(in oklab, var(--color-text-muted) 82%, var(--color-primary) 18%);
   }
 
   .workspace-statistics-insights__item.is-opportunity,
@@ -480,7 +480,7 @@
     margin: 0;
     font-size: var(--app-text-muted-size);
     line-height: var(--app-text-muted-line-height);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-growth__section-label {
@@ -489,7 +489,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--c-text-muted) 74%, var(--color-text) 26%);
+    color: color-mix(in oklab, var(--color-text-muted) 74%, var(--color-text) 26%);
   }
 
   .workspace-statistics-growth__effect,
@@ -532,7 +532,7 @@
   .workspace-statistics-growth__position-item span {
     font-size: var(--app-caption-size);
     line-height: var(--app-caption-line-height);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-growth__position-item strong {
@@ -548,7 +548,7 @@
     padding-left: var(--space-2-5);
     font-size: var(--app-text-muted-size);
     line-height: var(--app-text-muted-line-height);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-growth__why-list li {
@@ -659,7 +659,7 @@
   .workspace-statistics-growth__body {
     margin: 0;
     font-size: var(--app-text-muted-size);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     line-height: var(--app-text-muted-line-height);
   }
 
@@ -711,7 +711,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--c-text-muted) 74%, var(--color-text) 26%);
+    color: color-mix(in oklab, var(--color-text-muted) 74%, var(--color-text) 26%);
   }
 
   .workspace-statistics-growth__market-focus-value {
@@ -730,7 +730,7 @@
   .workspace-statistics-growth__market-focus-icon {
     display: inline-flex;
     align-items: center;
-    color: color-mix(in oklab, var(--color-primary) 62%, var(--c-text-muted) 38%);
+    color: color-mix(in oklab, var(--color-primary) 62%, var(--color-text-muted) 38%);
   }
 
   .workspace-statistics-growth__market-focus-icon svg {
@@ -751,7 +751,7 @@
   }
 
   .workspace-statistics-growth__meta-item dt {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-growth__meta-item dd {
@@ -780,7 +780,7 @@
     padding: 0;
     font-size: var(--fs-small);
     line-height: 1.45;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     list-style: none;
   }
 
@@ -860,7 +860,7 @@
   .workspace-statistics-user-position__summary {
     margin: 0;
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-user-position__grid {
@@ -875,7 +875,7 @@
 
   .workspace-statistics-user-position__metric span {
     font-size: var(--workspace-statistics-label-size);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-user-position__metric strong {
@@ -918,7 +918,7 @@
   .workspace-statistics-user-priority__group-subtitle {
     margin: 0;
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-user-priority__item,
@@ -953,14 +953,14 @@
   .workspace-statistics-user-actions__detail {
     margin: 0;
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-user-actions__meta {
     display: grid;
     gap: var(--space-1);
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-user-actions__meta strong {
@@ -973,7 +973,7 @@
 
   .workspace-statistics-price__summary-note {
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__summary-definition {
@@ -989,7 +989,7 @@
 
   .workspace-statistics-price__summary-definition dt {
     font-size: var(--fs-small);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .workspace-statistics-price__summary-definition dd {

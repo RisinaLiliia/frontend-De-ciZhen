@@ -93,12 +93,12 @@
 
   .request-detail__review-rating {
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .request-detail__review-date {
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .request-detail__review-body {

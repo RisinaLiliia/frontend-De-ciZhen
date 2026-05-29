@@ -138,7 +138,7 @@
 
   .request-detail__notice-text {
     font-size: var(--fs-13);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .request-detail--dialog .request-detail__title-wrap {
@@ -183,7 +183,7 @@
   .request-detail__price-suffix {
     font-size: var(--fs-14);
     font-weight: 500;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .request-detail__price .proof-price {

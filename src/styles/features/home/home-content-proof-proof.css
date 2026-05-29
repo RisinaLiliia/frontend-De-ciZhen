@@ -89,7 +89,7 @@
     justify-content: center;
     font-size: var(--fs-12);
     font-weight: 700;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .proof-avatar + .proof-avatar {
@@ -125,7 +125,7 @@
 
   .proof-info {
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .proof-rating {
@@ -149,7 +149,7 @@
 
   .proof-review {
     font-size: var(--fs-12);
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
 
