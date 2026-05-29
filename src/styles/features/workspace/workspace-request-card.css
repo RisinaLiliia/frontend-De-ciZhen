@@ -28,7 +28,7 @@
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: color-mix(in oklab, var(--c-primary) 74%, white 26%);
+    background: color-mix(in oklab, var(--color-primary) 74%, white 26%);
     transition: width 180ms ease;
   }
 
@@ -116,8 +116,8 @@
 
   .my-request-card__owner-menu-trigger.nearby-more:hover,
   .my-request-card__owner-menu-trigger.nearby-more.is-open {
-    border-color: color-mix(in oklab, var(--c-primary) 30%, var(--c-border) 70%);
-    background: color-mix(in oklab, var(--c-primary) 8%, white 92%);
+    border-color: color-mix(in oklab, var(--color-primary) 30%, var(--c-border) 70%);
+    background: color-mix(in oklab, var(--color-primary) 8%, white 92%);
     box-shadow: var(--shadow-card);
   }
 
@@ -186,8 +186,8 @@
   .my-request-card__owner-menu-item:hover,
   .my-request-card__owner-menu-item:focus-visible {
     outline: none;
-    background: color-mix(in oklab, var(--c-primary) 8%, white 92%);
-    color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
+    background: color-mix(in oklab, var(--color-primary) 8%, white 92%);
+    color: color-mix(in oklab, var(--color-primary) 76%, var(--c-text) 24%);
   }
 
   .my-request-card__owner-menu-item.is-danger:hover,
@@ -209,8 +209,8 @@
 
   html.dark .my-request-card__owner-menu-item:hover,
   html.dark .my-request-card__owner-menu-item:focus-visible {
-    background: color-mix(in oklab, var(--c-primary) 24%, var(--surface-base) 76%);
-    color: color-mix(in oklab, white 92%, var(--c-primary) 8%);
+    background: color-mix(in oklab, var(--color-primary) 24%, var(--surface-base) 76%);
+    color: color-mix(in oklab, white 92%, var(--color-primary) 8%);
   }
 
   .my-request-card__action-row {
@@ -293,7 +293,7 @@
   .my-request-card--active .request-card {
     border-color: var(--color-primary-border);
     box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--c-primary) 14%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--color-primary) 14%, transparent),
       var(--shadow-card-hover);
   }
 
