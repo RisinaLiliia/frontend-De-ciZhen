@@ -192,8 +192,8 @@
 
   .my-request-card__owner-menu-item.is-danger:hover,
   .my-request-card__owner-menu-item.is-danger:focus-visible {
-    background: color-mix(in oklab, var(--c-danger, #d96b5f) 10%, white 90%);
-    color: color-mix(in oklab, var(--c-danger, #d96b5f) 78%, var(--c-text) 22%);
+    background: color-mix(in oklab, var(--c-danger) 10%, white 90%);
+    color: color-mix(in oklab, var(--c-danger) 78%, var(--c-text) 22%);
   }
 
   html.dark .my-request-card__owner-menu-surface {

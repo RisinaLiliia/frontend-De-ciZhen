@@ -109,20 +109,20 @@
   }
 
   .my-request-card__priority.is-high {
-    border-color: color-mix(in oklab, var(--c-danger, #d96b5f) 26%, transparent);
-    background: color-mix(in oklab, var(--c-danger, #d96b5f) 12%, white 88%);
-    color: color-mix(in oklab, var(--c-danger, #d96b5f) 72%, var(--c-text) 28%);
+    border-color: color-mix(in oklab, var(--c-danger) 26%, transparent);
+    background: color-mix(in oklab, var(--c-danger) 12%, var(--c-white)88%);
+    color: color-mix(in oklab, var(--c-danger) 72%, var(--c-text) 28%);
   }
 
   .my-request-card__priority.is-medium {
     border-color: color-mix(in oklab, var(--c-accent) 22%, transparent);
-    background: color-mix(in oklab, var(--c-accent) 12%, white 88%);
+    background: color-mix(in oklab, var(--c-accent) 12%, var(--c-white) 88%);
   }
 
   .my-request-card__priority.is-low,
   .my-request-card__priority.is-none {
-    border-color: color-mix(in oklab, var(--c-border) 84%, white 16%);
-    background: color-mix(in oklab, var(--surface-base) 92%, white 8%);
+    border-color: color-mix(in oklab, var(--c-border) 84%, var(--c-white)16%);
+    background: color-mix(in oklab, var(--surface-base) 92%, var(--c-white)8%);
     color: var(--text-default);
   }
 

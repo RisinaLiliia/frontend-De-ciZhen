@@ -151,8 +151,8 @@
   }
 
   .workspace-decision-panel__priority.is-high {
-    background: color-mix(in oklab, var(--c-danger, #d96b5f) 18%, white 82%);
-    color: color-mix(in oklab, var(--c-danger, #d96b5f) 70%, var(--c-text) 30%);
+    background: color-mix(in oklab, var(--c-danger) 18%, white 82%);
+    color: color-mix(in oklab, var(--c-danger) 70%, var(--c-text) 30%);
   }
 
   .workspace-decision-panel__priority.is-medium {

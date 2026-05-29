@@ -250,15 +250,15 @@
   }
 
   .workspace-statistics-city-list__rank-cup.is-gold {
-    color: color-mix(in oklab, var(--c-accent) 88%, #d4af37 12%);
+    color: color-mix(in oklab, var(--c-accent) 88%, var(--c-warning) 12%);
   }
 
   .workspace-statistics-city-list__rank-cup.is-silver {
-    color: color-mix(in oklab, var(--c-primary) 48%, #c0c0c0 52%);
+    color: color-mix(in oklab, var(--c-primary) 48%, var(--c-text-soft) 52%);
   }
 
   .workspace-statistics-city-list__rank-cup.is-bronze {
-    color: color-mix(in oklab, var(--c-warn) 66%, #cd7f32 34%);
+    color: color-mix(in oklab, var(--c-warn) 66%, var(--c-warning) 34%);
   }
 
   .workspace-statistics-city-list__rank-cup svg {

@@ -230,7 +230,7 @@
   }
 
   .workspace-public-demand-map__state--error {
-    color: color-mix(in oklab, var(--c-text) 84%, #8d3a3a);
+    color: color-mix(in oklab, var(--c-text) 84%, var(--c-danger) 16%);
   }
 
   @media (max-width: 767px) {

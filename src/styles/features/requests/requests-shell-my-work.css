@@ -46,7 +46,7 @@
     padding: var(--space-2-5) var(--space-4);
     border: 1px solid transparent;
     border-bottom-color: transparent;
-    border-radius: 12px 12px 0 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
     color: var(--c-text-muted);
     text-decoration: none;
     font-size: var(--app-caption-size);
