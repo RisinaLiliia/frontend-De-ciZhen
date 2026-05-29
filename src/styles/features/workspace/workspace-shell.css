@@ -23,6 +23,7 @@
 @import './workspace-overlay-responsive.css';
 @import './workspace-request-card.css';
 @import './workspace-request-dialog.css';
+@import './workspace-requests-rail.css';
 
 @layer components {
   .workspace-route-shell {
