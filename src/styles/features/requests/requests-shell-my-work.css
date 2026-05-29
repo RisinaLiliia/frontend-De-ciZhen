@@ -151,9 +151,5 @@
     .my-requests-list--market-single {
       grid-template-columns: minmax(0, 1fr);
     }
-
-    .workspace-decision-panel__queue-item {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
 }

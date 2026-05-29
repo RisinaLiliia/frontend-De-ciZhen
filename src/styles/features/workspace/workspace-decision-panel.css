@@ -196,3 +196,11 @@
     gap: var(--space-1);
   }
 }
+
+@layer components {
+  @media (max-width: 899px) {
+    .workspace-decision-panel__queue-item {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
