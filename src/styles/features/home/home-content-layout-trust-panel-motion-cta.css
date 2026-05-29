@@ -71,8 +71,8 @@
     border: 1px solid color-mix(in oklab, var(--c-border) 66%, transparent);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--color-primary) 36%, var(--c-panel) 64%),
-      color-mix(in oklab, var(--color-primary) 54%, var(--c-panel) 46%)
+      color-mix(in oklab, var(--color-primary) 36%, var(--color-surface) 64%),
+      color-mix(in oklab, var(--color-primary) 54%, var(--color-surface) 46%)
     );
     color: var(--c-primary-contrast);
     font-size: var(--btn-font);

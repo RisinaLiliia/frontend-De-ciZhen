@@ -335,7 +335,7 @@
   .provider-main__detail-icon--price {
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--color-primary) 22%, var(--c-border) 78%);
-    background: color-mix(in oklab, var(--color-primary) 8%, var(--c-panel) 92%);
+    background: color-mix(in oklab, var(--color-primary) 8%, var(--color-surface) 92%);
     font-size: var(--fs-12);
     font-weight: 700;
     line-height: 1;

@@ -301,7 +301,7 @@
     position: relative;
     border-radius: var(--radius-md);
     overflow: hidden;
-    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-border) 12%);
+    background: color-mix(in oklab, var(--color-surface) 88%, var(--c-border) 12%);
     padding-top: 72%;
   }
 

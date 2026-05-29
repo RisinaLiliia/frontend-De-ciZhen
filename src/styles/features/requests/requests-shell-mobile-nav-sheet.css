@@ -74,7 +74,7 @@
 
   html.dark .workspace-mobile-nav-sheet__surface {
     --workspace-mobile-nav-surface-border: color-mix(in oklab, var(--color-primary) 14%, var(--c-border) 86%);
-    --workspace-mobile-nav-surface-bg: color-mix(in oklab, var(--c-panel) 92%, var(--color-primary) 8%);
+    --workspace-mobile-nav-surface-bg: color-mix(in oklab, var(--color-surface) 92%, var(--color-primary) 8%);
     --workspace-mobile-nav-surface-shadow:
       0 22px 40px color-mix(in oklab, var(--c-ink) 26%, transparent),
       0 8px 22px color-mix(in oklab, var(--color-primary) 8%, transparent),

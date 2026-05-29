@@ -38,7 +38,7 @@
     margin-top: 0;
     border: 1px solid color-mix(in oklab, var(--surface-soft-border) 88%, transparent);
     border-radius: var(--workspace-statistics-chip-radius);
-    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--color-surface) 16%);
   }
 
   .workspace-statistics-signal__fill {
@@ -105,25 +105,25 @@
   .workspace-opportunity-tone-badge.is-very-high {
     color: color-mix(in oklab, var(--c-success) 84%, var(--c-text) 16%);
     border-color: color-mix(in oklab, var(--c-success) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
+    background: color-mix(in oklab, var(--c-success) 12%, var(--color-surface) 88%);
   }
 
   .workspace-opportunity-tone-badge.is-good {
     color: color-mix(in oklab, var(--color-primary) 84%, var(--c-text) 16%);
     border-color: color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--color-primary) 11%, var(--c-panel) 89%);
+    background: color-mix(in oklab, var(--color-primary) 11%, var(--color-surface) 89%);
   }
 
   .workspace-opportunity-tone-badge.is-balanced {
     color: var(--c-text-muted);
     border-color: var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--c-panel) 16%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--color-surface) 16%);
   }
 
   .workspace-opportunity-tone-badge.is-competitive,
   .workspace-opportunity-tone-badge.is-low {
     color: color-mix(in oklab, var(--c-warn) 80%, var(--c-text) 20%);
     border-color: color-mix(in oklab, var(--c-warn) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-warn) 12%, var(--c-panel) 88%);
+    background: color-mix(in oklab, var(--c-warn) 12%, var(--color-surface) 88%);
   }
 }

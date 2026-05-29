@@ -17,7 +17,7 @@
       radial-gradient(280px 160px at 112% -12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
       linear-gradient(
         128deg,
-        color-mix(in oklab, var(--c-panel) 94%, transparent),
+        color-mix(in oklab, var(--color-surface) 94%, transparent),
         color-mix(in oklab, var(--c-surface) 90%, transparent)
       );
     backdrop-filter: blur(6px) saturate(1.01);
@@ -72,7 +72,7 @@
     border-radius: var(--radius-pill);
     padding: 0 9px;
     border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--c-border) 84%);
-    background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 92%, transparent);
     color: color-mix(in oklab, var(--color-primary) 72%, var(--c-text) 28%);
     text-decoration: none;
     transition:
@@ -84,7 +84,7 @@
   .cookie-consent-banner__links a:hover,
   .cookie-consent-banner__links a:focus-visible {
     border-color: color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
-    background: color-mix(in oklab, var(--color-primary) 8%, var(--c-panel) 92%);
+    background: color-mix(in oklab, var(--color-primary) 8%, var(--color-surface) 92%);
     outline: none;
   }
 
@@ -121,8 +121,8 @@
       ),
       linear-gradient(
         160deg,
-        color-mix(in oklab, var(--c-accent) 36%, var(--c-panel) 64%) 0%,
-        color-mix(in oklab, var(--color-primary) 14%, var(--c-panel) 86%) 100%
+        color-mix(in oklab, var(--c-accent) 36%, var(--color-surface) 64%) 0%,
+        color-mix(in oklab, var(--color-primary) 14%, var(--color-surface) 86%) 100%
       );
     color: color-mix(in oklab, var(--c-accent) 88%, var(--c-text) 12%);
     box-shadow:
@@ -139,8 +139,8 @@
       ),
       linear-gradient(
         160deg,
-        color-mix(in oklab, var(--c-accent) 42%, var(--c-panel) 58%) 0%,
-        color-mix(in oklab, var(--color-primary) 18%, var(--c-panel) 82%) 100%
+        color-mix(in oklab, var(--c-accent) 42%, var(--color-surface) 58%) 0%,
+        color-mix(in oklab, var(--color-primary) 18%, var(--color-surface) 82%) 100%
       );
     box-shadow:
       0 8px 18px color-mix(in oklab, var(--c-accent) 20%, transparent),

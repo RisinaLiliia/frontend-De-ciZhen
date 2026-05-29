@@ -17,11 +17,11 @@
       radial-gradient(120% 90% at 85% 8%, color-mix(in oklab, var(--c-accent) 10%, transparent), transparent 58%),
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--c-panel) 84%, var(--c-ink) 16%),
-        color-mix(in oklab, var(--c-panel) 72%, var(--c-ink) 28%)
+        color-mix(in oklab, var(--color-surface) 84%, var(--c-ink) 16%),
+        color-mix(in oklab, var(--color-surface) 72%, var(--c-ink) 28%)
       );
     box-shadow:
-      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, var(--color-surface) 8%, transparent),
       0 10px 24px color-mix(in oklab, var(--c-ink) 40%, transparent);
   }
 

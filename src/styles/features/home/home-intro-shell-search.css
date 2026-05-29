@@ -81,11 +81,11 @@
     border-color: color-mix(in oklab, var(--color-primary) 22%, var(--c-border) 78%);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--c-panel) 76%, var(--c-ink) 24%),
-      color-mix(in oklab, var(--c-panel) 68%, var(--c-ink) 32%)
+      color-mix(in oklab, var(--color-surface) 76%, var(--c-ink) 24%),
+      color-mix(in oklab, var(--color-surface) 68%, var(--c-ink) 32%)
     );
     box-shadow:
-      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 7%, transparent),
+      inset 0 1px 0 color-mix(in oklab, var(--color-surface) 7%, transparent),
       0 10px 24px color-mix(in oklab, var(--c-ink) 38%, transparent);
   }
 
@@ -118,7 +118,7 @@
     overflow-y: auto;
     border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--c-border) 72%);
     border-radius: var(--radius-md);
-    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-ink) 8%);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--c-ink) 8%);
     box-shadow: var(--shadow-floating);
   }
 
@@ -137,12 +137,12 @@
 
   .home-quick-search__city-option:hover,
   .home-quick-search__city-option:focus-visible {
-    background: color-mix(in oklab, var(--color-primary) 14%, var(--c-panel) 86%);
+    background: color-mix(in oklab, var(--color-primary) 14%, var(--color-surface) 86%);
     outline: none;
   }
 
   .home-quick-search__city-option[aria-selected="true"] {
-    background: color-mix(in oklab, var(--color-primary) 18%, var(--c-panel) 82%);
+    background: color-mix(in oklab, var(--color-primary) 18%, var(--color-surface) 82%);
   }
 
   .home-quick-search__button {

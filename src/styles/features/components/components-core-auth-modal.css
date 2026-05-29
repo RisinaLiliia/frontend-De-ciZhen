@@ -55,7 +55,7 @@
   .auth-route-modal__close:hover {
     color: var(--c-text);
     border-color: color-mix(in oklab, var(--color-primary) 48%, var(--c-border) 52%);
-    background: color-mix(in oklab, var(--color-primary) 15%, var(--c-panel) 85%);
+    background: color-mix(in oklab, var(--color-primary) 15%, var(--color-surface) 85%);
   }
 
   @media (max-width: 767px) {

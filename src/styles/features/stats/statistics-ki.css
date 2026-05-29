@@ -17,7 +17,7 @@
     padding: var(--space-2);
     border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--surface-soft-border) 84%);
     border-radius: var(--workspace-ai-card-radius-md);
-    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--color-surface) 12%);
   }
 
   .workspace-statistics-ki--plain {
@@ -75,8 +75,8 @@
     background:
       linear-gradient(
         150deg,
-        color-mix(in oklab, var(--c-panel) 95%, white 5%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 92%, var(--c-panel) 8%) 100%
+        color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
+        color-mix(in oklab, var(--surface-soft-bg) 92%, var(--color-surface) 8%) 100%
       );
   }
 

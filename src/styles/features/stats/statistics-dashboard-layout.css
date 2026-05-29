@@ -783,7 +783,7 @@
   }
 
   .workspace-statistics__activity-signal.is-neutral {
-    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--c-panel) 14%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--color-surface) 14%);
   }
 
   .workspace-statistics__activity-signal.is-positive .workspace-statistics__activity-signal-value {

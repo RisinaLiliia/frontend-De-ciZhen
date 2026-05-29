@@ -54,7 +54,7 @@
     padding: var(--workspace-statistics-container-pad);
     border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
     border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--surface-soft-border) 84%);
-    background: color-mix(in oklab, var(--surface-soft-bg) 90%, var(--c-panel) 10%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 90%, var(--color-surface) 10%);
   }
 
   .workspace-statistics-funnel__empty-title {
@@ -113,7 +113,7 @@
     background:
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--funnel-tone) 20%, var(--c-panel) 80%) 0%,
+        color-mix(in oklab, var(--funnel-tone) 20%, var(--color-surface) 80%) 0%,
         color-mix(in oklab, var(--funnel-tone) 12%, var(--surface-soft-bg) 88%) 100%
       );
     clip-path: polygon(
@@ -290,7 +290,7 @@
     line-height: 1.2;
     position: relative;
     z-index: 1;
-    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--c-panel) 14%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--color-surface) 14%);
     pointer-events: auto;
   }
 
@@ -355,7 +355,7 @@
     padding: var(--workspace-statistics-container-pad);
     border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
     border: 1px solid color-mix(in oklab, var(--color-primary) 18%, var(--surface-soft-border) 82%);
-    background: color-mix(in oklab, var(--color-primary) 6%, var(--c-panel) 94%);
+    background: color-mix(in oklab, var(--color-primary) 6%, var(--color-surface) 94%);
   }
 
   .workspace-statistics-funnel__profile-lead strong {
@@ -387,7 +387,7 @@
     padding: var(--workspace-statistics-container-pad);
     border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--color-surface) 12%);
   }
 
   .workspace-statistics-funnel__gap strong {
@@ -419,7 +419,7 @@
     padding: var(--workspace-statistics-container-pad);
     border-radius: var(--workspace-statistics-radius-md, var(--radius-md));
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--color-surface) 12%);
   }
 
   .workspace-statistics-funnel__dropoff span {

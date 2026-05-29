@@ -14,7 +14,7 @@
     padding: 14px;
     border: 1px solid color-mix(in oklab, var(--surface-card-border) 82%, transparent);
     border-radius: var(--workspace-overview-panel-radius);
-    background: color-mix(in oklab, var(--c-panel) 96%, var(--surface-soft-bg) 4%);
+    background: color-mix(in oklab, var(--color-surface) 96%, var(--surface-soft-bg) 4%);
     box-shadow: none;
   }
 

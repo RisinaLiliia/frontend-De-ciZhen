@@ -46,7 +46,7 @@
     background:
       linear-gradient(
         132deg,
-        color-mix(in oklab, var(--c-panel) 88%, transparent),
+        color-mix(in oklab, var(--color-surface) 88%, transparent),
         color-mix(in oklab, var(--c-surface) 86%, transparent)
       );
     backdrop-filter: blur(4px) saturate(1.02);

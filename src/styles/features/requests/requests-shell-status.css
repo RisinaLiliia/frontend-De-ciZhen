@@ -14,35 +14,35 @@
   .request-card__status-action.offer-action-btn--icon-only {
     color: var(--c-accent);
     border-color: color-mix(in oklab, var(--c-accent) 58%, var(--c-border) 42%);
-    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
+    background: color-mix(in oklab, var(--c-accent) 18%, var(--color-surface) 82%);
   }
 
   .request-card__status-action.request-card__status-action--submit.offer-action-btn--icon-only {
-    background: color-mix(in oklab, var(--c-accent) 24%, var(--c-panel) 76%);
+    background: color-mix(in oklab, var(--c-accent) 24%, var(--color-surface) 76%);
   }
 
   .request-card__status-action.request-card__status-action--edit.offer-action-btn--icon-only {
     color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
     border-color: color-mix(in oklab, var(--c-success) 46%, var(--c-border) 54%);
-    background: color-mix(in oklab, var(--c-success) 12%, var(--c-panel) 88%);
+    background: color-mix(in oklab, var(--c-success) 12%, var(--color-surface) 88%);
   }
 
   .request-card__status-action.request-card__status-action--danger.offer-action-btn--icon-only {
     color: color-mix(in oklab, var(--c-danger) 78%, var(--c-text) 22%);
     border-color: color-mix(in oklab, var(--c-danger) 48%, var(--c-border) 52%);
-    background: color-mix(in oklab, var(--c-danger) 10%, var(--c-panel) 90%);
+    background: color-mix(in oklab, var(--c-danger) 10%, var(--color-surface) 90%);
   }
 
   .request-card__status-action.request-card__status-action--contract.offer-action-btn--icon-only {
     color: color-mix(in oklab, var(--c-accent) 86%, var(--c-text) 14%);
     border-color: color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
-    background: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
+    background: color-mix(in oklab, var(--c-accent) 18%, var(--color-surface) 82%);
   }
 
   .request-card__status-action.request-card__status-action--chat.offer-action-btn--icon-only {
     color: color-mix(in oklab, var(--color-primary) 78%, var(--c-text) 22%);
     border-color: color-mix(in oklab, var(--color-primary) 46%, var(--c-border) 54%);
-    background: color-mix(in oklab, var(--color-primary) 12%, var(--c-panel) 88%);
+    background: color-mix(in oklab, var(--color-primary) 12%, var(--color-surface) 88%);
   }
 
   .requests-pagination {

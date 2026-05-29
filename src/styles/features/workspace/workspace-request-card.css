@@ -138,7 +138,7 @@
     padding: var(--space-2);
     border: 1px solid color-mix(in oklab, var(--c-border) 64%, transparent);
     border-radius: var(--radius-lg);
-    background: color-mix(in oklab, var(--c-panel) 97%, var(--c-border) 3%);
+    background: color-mix(in oklab, var(--color-surface) 97%, var(--c-border) 3%);
     box-shadow: var(--shadow-floating);
   }
 
@@ -198,7 +198,7 @@
 
   html.dark .my-request-card__owner-menu-surface {
     border-color: color-mix(in oklab, var(--c-border) 64%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 97%, var(--c-border) 3%);
+    background: color-mix(in oklab, var(--color-surface) 97%, var(--c-border) 3%);
     box-shadow: var(--shadow-floating);
   }
 

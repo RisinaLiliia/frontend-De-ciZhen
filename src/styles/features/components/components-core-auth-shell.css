@@ -55,11 +55,11 @@
       width: min(86vw, 440px);
       max-width: 440px;
       border-color: color-mix(in oklab, var(--color-primary) 26%, var(--c-border) 74%);
-      background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+      background: color-mix(in oklab, var(--color-surface) 92%, transparent);
       box-shadow:
         var(--c-elev-shadow),
         0 0 0 1px color-mix(in oklab, var(--color-primary) 14%, transparent),
-        inset 0 1px 0 color-mix(in oklab, var(--c-panel) 90%, transparent);
+        inset 0 1px 0 color-mix(in oklab, var(--color-surface) 90%, transparent);
     }
   }
 

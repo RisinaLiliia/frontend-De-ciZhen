@@ -88,8 +88,8 @@
     border: 1px solid color-mix(in oklab, var(--surface-card-border) 82%, transparent);
     background: linear-gradient(
       160deg,
-      color-mix(in oklab, var(--c-panel) 95%, white 5%) 0%,
-      color-mix(in oklab, var(--surface-soft-bg) 94%, var(--c-panel) 6%) 100%
+      color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
+      color-mix(in oklab, var(--surface-soft-bg) 94%, var(--color-surface) 6%) 100%
     );
     box-shadow: none;
   }
@@ -99,8 +99,8 @@
     border-color: color-mix(in oklab, var(--color-primary) 40%, var(--surface-card-border) 60%);
     background: linear-gradient(
       160deg,
-      color-mix(in oklab, var(--color-primary) 9%, var(--c-panel) 91%) 0%,
-      color-mix(in oklab, var(--c-accent) 8%, var(--c-panel) 92%) 100%
+      color-mix(in oklab, var(--color-primary) 9%, var(--color-surface) 91%) 0%,
+      color-mix(in oklab, var(--c-accent) 8%, var(--color-surface) 92%) 100%
     );
   }
 
@@ -165,7 +165,7 @@
     padding: 0 var(--workspace-statistics-chip-pad-inline);
     border-radius: var(--workspace-statistics-chip-radius);
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--c-panel) 12%);
+    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--color-surface) 12%);
     color: var(--c-text-muted);
     font-size: var(--workspace-statistics-label-size);
     font-weight: 600;

@@ -143,13 +143,13 @@
 
   html.dark .topbar .icon-button--topbar {
     border-color: color-mix(in oklab, var(--c-border) 82%, white 18%);
-    background: var(--c-panel);
+    background: var(--color-surface);
     box-shadow: none;
   }
 
   html.dark .topbar .icon-button--topbar:hover {
     border-color: color-mix(in oklab, white 14%, var(--c-border) 86%);
-    background: color-mix(in oklab, var(--c-panel) 92%, white 8%);
+    background: color-mix(in oklab, var(--color-surface) 92%, white 8%);
     box-shadow: var(--shadow-card);
   }
 

@@ -38,7 +38,7 @@
     border-radius: var(--radius-md);
     overflow: hidden;
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 88%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 88%, transparent);
     aspect-ratio: 4 / 3;
   }
 

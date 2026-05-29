@@ -43,7 +43,7 @@
     padding: 6px 10px;
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 80%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 80%, transparent);
     transition:
       border-color var(--transition-fast),
       box-shadow var(--transition-fast),

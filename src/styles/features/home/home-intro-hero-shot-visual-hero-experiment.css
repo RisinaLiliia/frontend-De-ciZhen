@@ -107,7 +107,7 @@
       linear-gradient(
         148deg,
         color-mix(in oklab, var(--c-accent) 18%, var(--c-ink) 82%) 0%,
-        color-mix(in oklab, var(--c-panel) 84%, var(--c-ink) 16%) 62%,
+        color-mix(in oklab, var(--color-surface) 84%, var(--c-ink) 16%) 62%,
         color-mix(in oklab, var(--color-primary) 20%, var(--c-ink) 80%) 100%
       );
   }

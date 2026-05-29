@@ -14,12 +14,12 @@
     font-weight: 700;
     color: var(--c-ink);
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
+    background: color-mix(in oklab, var(--color-surface) 84%, var(--c-border) 16%);
   }
 
   .profile-settings__avatar--placeholder {
     background:
-      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--c-panel) 90%, transparent), transparent),
+      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--color-surface) 90%, transparent), transparent),
       linear-gradient(135deg, var(--c-avatar-provider), var(--c-avatar-provider-light));
   }
 

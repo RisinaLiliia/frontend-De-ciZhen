@@ -8,8 +8,8 @@
     background:
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--c-panel) 92%, transparent),
-        color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%)
+        color-mix(in oklab, var(--color-surface) 92%, transparent),
+        color-mix(in oklab, var(--color-surface) 84%, var(--c-border) 16%)
       );
     padding: 10px;
   }
@@ -66,14 +66,14 @@
   }
 
   .home-activity__dot.is-client-activity {
-    fill: color-mix(in oklab, var(--c-success) 84%, var(--c-panel) 16%);
-    stroke: color-mix(in oklab, var(--c-panel) 86%, white 14%);
+    fill: color-mix(in oklab, var(--c-success) 84%, var(--color-surface) 16%);
+    stroke: color-mix(in oklab, var(--color-surface) 86%, white 14%);
     stroke-width: 0.55;
   }
 
   .home-activity__dot.is-provider-activity {
-    fill: color-mix(in oklab, var(--c-warning) 82%, var(--c-panel) 18%);
-    stroke: color-mix(in oklab, var(--c-panel) 86%, white 14%);
+    fill: color-mix(in oklab, var(--c-warning) 82%, var(--color-surface) 18%);
+    stroke: color-mix(in oklab, var(--color-surface) 86%, white 14%);
     stroke-width: 0.55;
   }
 
@@ -106,7 +106,7 @@
     padding: 4px 8px;
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--c-border) 82%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 92%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 92%, transparent);
   }
 
   .home-activity__metric::before {
@@ -136,7 +136,7 @@
 
   .home-activity__metric.is-client-activity {
     border-color: color-mix(in oklab, var(--c-success) 32%, var(--c-border) 68%);
-    background: color-mix(in oklab, var(--c-success) 10%, var(--c-panel) 90%);
+    background: color-mix(in oklab, var(--c-success) 10%, var(--color-surface) 90%);
   }
 
   .home-activity__metric.is-client-activity strong {
@@ -149,7 +149,7 @@
 
   .home-activity__metric.is-provider-activity {
     border-color: color-mix(in oklab, var(--c-warning) 34%, var(--c-border) 66%);
-    background: color-mix(in oklab, var(--c-warning) 10%, var(--c-panel) 90%);
+    background: color-mix(in oklab, var(--c-warning) 10%, var(--color-surface) 90%);
   }
 
   .home-activity__metric.is-provider-activity strong {
@@ -184,11 +184,11 @@
     padding: 10px;
     border-radius: var(--radius-sm);
     border: 1px dashed color-mix(in oklab, var(--c-border) 75%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 90%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 90%, transparent);
   }
 
   html:not(.dark) .home-nearby-panel .nearby-more {
-    background: var(--c-panel);
+    background: var(--color-surface);
     border-color: color-mix(in oklab, var(--c-hero-tint-primary) 20%, var(--c-border) 80%);
   }
 
