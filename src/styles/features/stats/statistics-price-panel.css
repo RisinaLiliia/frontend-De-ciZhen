@@ -369,14 +369,5 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .workspace-statistics-price__bar-average-marker {
-    position: absolute;
-    top: -5px;
-    bottom: -5px;
-    width: 2px;
-    border-radius: var(--workspace-statistics-chip-radius);
-    background: color-mix(in oklab, var(--color-text) 74%, var(--color-primary) 26%);
-    transform: translateX(-50%);
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-surface) 66%, transparent);
-  }
+  
 }

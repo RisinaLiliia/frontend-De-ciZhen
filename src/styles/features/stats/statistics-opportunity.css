@@ -1,3 +1,6 @@
 /* src/styles/features/stats/statistics-opportunity.css */
 
 @import './statistics-opportunity-price.css';
+@import './statistics-opportunity-list.css';
+@import './statistics-price-panel.css';
+@import './statistics-price-modal.css';
