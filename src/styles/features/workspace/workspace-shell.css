@@ -24,6 +24,7 @@
 @import './workspace-request-card.css';
 @import './workspace-request-dialog.css';
 @import './workspace-requests-rail.css';
+@import './workspace-overlay-auth.css';
 
 @layer components {
   .workspace-route-shell {
