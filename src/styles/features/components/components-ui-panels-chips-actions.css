@@ -51,7 +51,7 @@
   html:not(.dark) .chip.is-active {
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--color-surface) 94%, var(--c-surface) 6%),
+      color-mix(in oklab, var(--color-surface) 94%, var(--color-surface-muted) 6%),
       color-mix(in oklab, var(--color-surface) 86%, var(--color-warning) 14%)
     );
     border-color: color-mix(in oklab, var(--color-border) 74%, var(--color-warning) 26%);
@@ -78,7 +78,7 @@
   .panel-action:hover {
     color: var(--color-text);
     border-color: color-mix(in oklab, var(--color-border) 72%, var(--color-text) 28%);
-    background: color-mix(in oklab, var(--c-surface) 85%, var(--color-border) 15%);
+    background: color-mix(in oklab, var(--color-surface-muted) 85%, var(--color-border) 15%);
     transform: translateY(-1px);
   }
 

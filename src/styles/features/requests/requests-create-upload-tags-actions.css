@@ -7,7 +7,7 @@
     padding: var(--space-4);
     display: grid;
     gap: var(--space-3);
-    background: color-mix(in oklab, var(--c-surface) 92%, transparent);
+    background: color-mix(in oklab, var(--color-surface-muted) 92%, transparent);
   }
 
   .request-upload__actions {

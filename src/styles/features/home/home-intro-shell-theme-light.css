@@ -9,7 +9,7 @@
       radial-gradient(100% 90% at 88% 12%, var(--c-glow-accent), transparent 62%),
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--color-surface) 98%, var(--c-surface) 2%) 0%,
+        color-mix(in oklab, var(--color-surface) 98%, var(--color-surface-muted) 2%) 0%,
         color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%) 58%,
         color-mix(in oklab, var(--c-bg) 92%, var(--color-surface) 8%) 100%
       );
@@ -20,7 +20,7 @@
 
   html:not(.dark) :is(.home-intro-shell, .workspace-overlay-surface)::before {
     background:
-      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-surface) 32%, transparent), transparent 56%),
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--color-surface-muted) 32%, transparent), transparent 56%),
       radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--color-warning) 6%, transparent), transparent 64%),
       linear-gradient(
         180deg,
@@ -51,10 +51,10 @@
   html:not(.dark) .home-intro-shell .home-stats-panel,
   html:not(.dark) .home-intro-shell .home-quick-search-panel,
   html:not(.dark) .home-intro-shell .home-activity-panel {
-    border-color: color-mix(in oklab, var(--color-border) 82%, var(--c-surface) 18%);
+    border-color: color-mix(in oklab, var(--color-border) 82%, var(--color-surface-muted) 18%);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--color-surface) 98%, var(--c-surface) 2%) 0%,
+      color-mix(in oklab, var(--color-surface) 98%, var(--color-surface-muted) 2%) 0%,
       color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%) 100%
     );
     box-shadow:
@@ -82,7 +82,7 @@
 
   html:not(.dark) .home-intro-shell .home-combined-top .chip {
     background: var(--color-surface);
-    border-color: color-mix(in oklab, var(--color-border) 82%, var(--c-surface) 18%);
+    border-color: color-mix(in oklab, var(--color-border) 82%, var(--color-surface-muted) 18%);
     color: color-mix(in oklab, var(--color-text) 94%, var(--color-border) 6%);
   }
 
@@ -90,15 +90,15 @@
     border-color: color-mix(in oklab, var(--color-border) 70%, var(--color-warning) 30%);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--color-surface) 94%, var(--c-surface) 6%),
+      color-mix(in oklab, var(--color-surface) 94%, var(--color-surface-muted) 6%),
       color-mix(in oklab, var(--color-surface) 86%, var(--color-warning) 14%)
     );
     box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .field {
-    background: color-mix(in oklab, var(--color-surface) 90%, var(--c-surface) 10%);
-    border-color: color-mix(in oklab, var(--color-border) 80%, var(--c-surface) 20%);
+    background: color-mix(in oklab, var(--color-surface) 90%, var(--color-surface-muted) 10%);
+    border-color: color-mix(in oklab, var(--color-border) 80%, var(--color-surface-muted) 20%);
     color: color-mix(in oklab, var(--color-text) 96%, var(--color-border) 4%);
   }
 
@@ -131,7 +131,7 @@
         148deg,
         color-mix(in oklab, var(--color-warning) 16%, var(--color-surface) 84%) 0%,
         color-mix(in oklab, var(--color-surface) 90%, var(--color-border) 10%) 58%,
-        color-mix(in oklab, var(--c-surface) 14%, var(--color-surface) 86%) 100%
+        color-mix(in oklab, var(--color-surface-muted) 14%, var(--color-surface) 86%) 100%
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 90%, transparent),
@@ -154,7 +154,7 @@
       linear-gradient(
         160deg,
         color-mix(in oklab, var(--color-warning) 28%, var(--color-surface) 72%) 0%,
-        color-mix(in oklab, var(--c-surface) 16%, var(--color-surface) 84%) 100%
+        color-mix(in oklab, var(--color-surface-muted) 16%, var(--color-surface) 84%) 100%
       );
   }
 

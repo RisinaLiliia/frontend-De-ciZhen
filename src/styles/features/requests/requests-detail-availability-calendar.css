@@ -149,8 +149,8 @@
   }
 
   .request-detail__availability-day-available {
-    background: color-mix(in oklab, var(--c-success) 22%, transparent);
-    border-color: color-mix(in oklab, var(--c-success) 42%, transparent);
+    background: color-mix(in oklab, var(--color-success) 22%, transparent);
+    border-color: color-mix(in oklab, var(--color-success) 42%, transparent);
   }
 
   .request-detail__availability-day-busy {
@@ -160,8 +160,8 @@
   }
 
   .request-detail__availability-day-selected {
-    background: color-mix(in oklab, var(--c-success) 78%, var(--color-surface) 22%) !important;
-    border-color: color-mix(in oklab, var(--c-success) 70%, var(--color-border) 30%) !important;
+    background: color-mix(in oklab, var(--color-success) 78%, var(--color-surface) 22%) !important;
+    border-color: color-mix(in oklab, var(--color-success) 70%, var(--color-border) 30%) !important;
     color: var(--c-success-contrast) !important;
   }
 
@@ -204,7 +204,7 @@
   }
 
   .request-detail__availability-legend-dot.is-free {
-    background: color-mix(in oklab, var(--c-success) 62%, var(--color-surface) 38%);
+    background: color-mix(in oklab, var(--color-success) 62%, var(--color-surface) 38%);
   }
 
   .request-detail__availability-legend-dot.is-busy {

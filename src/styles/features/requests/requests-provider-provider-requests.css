@@ -44,11 +44,11 @@
     gap: var(--space-1-5);
     font-size: var(--fs-12);
     font-weight: 600;
-    color: color-mix(in oklab, var(--c-success) 75%, var(--color-text) 25%);
+    color: color-mix(in oklab, var(--color-success) 75%, var(--color-text) 25%);
     padding: var(--space-2) var(--space-2-5);
     border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, var(--c-success) 50%, transparent);
-    background: color-mix(in oklab, var(--c-success) 12%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-success) 50%, transparent);
+    background: color-mix(in oklab, var(--color-success) 12%, transparent);
   }
 
   .provider-request-card__form {

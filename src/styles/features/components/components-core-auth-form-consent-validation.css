@@ -32,7 +32,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: color-mix(in oklab, var(--c-success) 85%, var(--color-text) 15%);
+    color: color-mix(in oklab, var(--color-success) 85%, var(--color-text) 15%);
   }
 
   .auth-valid-icon svg {
@@ -58,8 +58,8 @@
   }
 
   .auth-password-rules span.is-ok {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
-    border-color: color-mix(in oklab, var(--c-success) 55%, transparent);
+    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
+    border-color: color-mix(in oklab, var(--color-success) 55%, transparent);
     background: var(--c-success-soft);
   }
 

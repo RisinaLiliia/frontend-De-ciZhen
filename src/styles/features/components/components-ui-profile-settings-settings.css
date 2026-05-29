@@ -59,7 +59,7 @@
     padding: 4px;
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
-    background: color-mix(in oklab, var(--c-surface) 78%, transparent);
+    background: color-mix(in oklab, var(--color-surface-muted) 78%, transparent);
     width: fit-content;
     max-width: 100%;
   }
@@ -183,8 +183,8 @@
   }
 
   .profile-settings__password-hint span.is-ok {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
-    border-color: color-mix(in oklab, var(--c-success) 55%, var(--color-border) 45%);
+    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
+    border-color: color-mix(in oklab, var(--color-success) 55%, var(--color-border) 45%);
     background: var(--c-success-soft);
   }
 

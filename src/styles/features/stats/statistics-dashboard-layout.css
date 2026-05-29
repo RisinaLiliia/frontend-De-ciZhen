@@ -132,8 +132,8 @@
     gap: var(--space-1);
     padding: var(--space-3);
     border-radius: var(--radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-warning) 24%, var(--surface-soft-border) 76%);
-    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 24%, var(--surface-soft-border) 76%);
+    background: color-mix(in oklab, var(--color-warning) 10%, var(--surface-soft-bg) 90%);
   }
 
   .workspace-statistics__background-error strong {
@@ -247,8 +247,8 @@
   }
 
   .workspace-statistics-context__trend-card.is-positive {
-    border-color: color-mix(in oklab, var(--c-success) 30%, var(--surface-soft-border) 70%);
-    background: color-mix(in oklab, var(--c-success) 9%, var(--surface-soft-bg) 91%);
+    border-color: color-mix(in oklab, var(--color-success) 30%, var(--surface-soft-border) 70%);
+    background: color-mix(in oklab, var(--color-success) 9%, var(--surface-soft-bg) 91%);
   }
 
   .workspace-statistics-context__trend-card.is-neutral {
@@ -257,8 +257,8 @@
   }
 
   .workspace-statistics-context__trend-card.is-warning {
-    border-color: color-mix(in oklab, var(--c-warning) 30%, var(--surface-soft-border) 70%);
-    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+    border-color: color-mix(in oklab, var(--color-warning) 30%, var(--surface-soft-border) 70%);
+    background: color-mix(in oklab, var(--color-warning) 10%, var(--surface-soft-bg) 90%);
   }
 
   .workspace-statistics-context__mobile-range-row {
@@ -428,8 +428,8 @@
   }
 
   .workspace-statistics-context__health-card.is-warning {
-    border-color: color-mix(in oklab, var(--c-warning) 24%, var(--surface-soft-border) 76%);
-    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+    border-color: color-mix(in oklab, var(--color-warning) 24%, var(--surface-soft-border) 76%);
+    background: color-mix(in oklab, var(--color-warning) 10%, var(--surface-soft-bg) 90%);
   }
 
   .workspace-statistics-context__notice {
@@ -437,8 +437,8 @@
     gap: var(--space-2);
     padding: var(--space-3);
     border-radius: var(--workspace-statistics-radius-md);
-    border: 1px solid color-mix(in oklab, var(--c-warning) 24%, var(--surface-soft-border) 76%);
-    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 24%, var(--surface-soft-border) 76%);
+    background: color-mix(in oklab, var(--color-warning) 10%, var(--surface-soft-bg) 90%);
   }
 
   .workspace-statistics-context__notice strong {

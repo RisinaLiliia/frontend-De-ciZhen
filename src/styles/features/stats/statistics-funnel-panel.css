@@ -339,7 +339,7 @@
   }
 
   .workspace-statistics-funnel__layer-hint-compare.is-dropoff {
-    color: color-mix(in oklab, var(--c-warning) 82%, var(--color-text) 18%);
+    color: color-mix(in oklab, var(--color-warning) 82%, var(--color-text) 18%);
   }
 
   .workspace-statistics-funnel__summary {
@@ -404,13 +404,13 @@
   }
 
   .workspace-statistics-funnel__gap.is-positive {
-    border-color: color-mix(in oklab, var(--c-success) 24%, var(--surface-soft-border) 76%);
-    background: color-mix(in oklab, var(--c-success) 9%, var(--surface-soft-bg) 91%);
+    border-color: color-mix(in oklab, var(--color-success) 24%, var(--surface-soft-border) 76%);
+    background: color-mix(in oklab, var(--color-success) 9%, var(--surface-soft-bg) 91%);
   }
 
   .workspace-statistics-funnel__gap.is-warning {
-    border-color: color-mix(in oklab, var(--c-warning) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+    border-color: color-mix(in oklab, var(--color-warning) 28%, var(--surface-soft-border) 72%);
+    background: color-mix(in oklab, var(--color-warning) 10%, var(--surface-soft-bg) 90%);
   }
 
   .workspace-statistics-funnel__dropoff {
@@ -458,8 +458,8 @@
   }
 
   .workspace-statistics-funnel__dropoff.is-positive {
-    border-color: color-mix(in oklab, var(--c-success) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--c-success) 9%, var(--surface-soft-bg) 91%);
+    border-color: color-mix(in oklab, var(--color-success) 28%, var(--surface-soft-border) 72%);
+    background: color-mix(in oklab, var(--color-success) 9%, var(--surface-soft-bg) 91%);
   }
 
   .workspace-statistics-funnel__dropoff.is-neutral {
@@ -468,8 +468,8 @@
   }
 
   .workspace-statistics-funnel__dropoff.is-warning {
-    border-color: color-mix(in oklab, var(--c-warning) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--c-warning) 10%, var(--surface-soft-bg) 90%);
+    border-color: color-mix(in oklab, var(--color-warning) 28%, var(--surface-soft-border) 72%);
+    background: color-mix(in oklab, var(--color-warning) 10%, var(--surface-soft-bg) 90%);
   }
 
   .workspace-statistics-funnel__conversion {

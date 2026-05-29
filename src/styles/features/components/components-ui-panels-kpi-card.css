@@ -99,7 +99,7 @@
   }
 
   .kpi-card__trend.is-up {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
+    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
   }
 
   .kpi-card__trend.is-down {
@@ -136,7 +136,7 @@
   }
 
   .kpi-card__meta.is-success {
-    color: color-mix(in oklab, var(--c-success) 85%, var(--color-text) 15%);
+    color: color-mix(in oklab, var(--color-success) 85%, var(--color-text) 15%);
   }
 
   .kpi-card__meta.is-accent {

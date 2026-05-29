@@ -42,9 +42,9 @@
   }
 
   .provider-verified-icon.is-online {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
-    background: color-mix(in oklab, var(--c-success) 16%, var(--color-surface) 84%);
-    border-color: color-mix(in oklab, var(--c-success) 42%, var(--color-border) 58%);
+    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
+    background: color-mix(in oklab, var(--color-success) 16%, var(--color-surface) 84%);
+    border-color: color-mix(in oklab, var(--color-success) 42%, var(--color-border) 58%);
   }
 
   .provider-sub {

@@ -73,7 +73,7 @@
   }
 
   .workspace-overview__demand-panel .workspace-statistics-demand__insight strong {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
+    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
   }
   
   .workspace-overview__insights-panel .workspace-statistics__empty,

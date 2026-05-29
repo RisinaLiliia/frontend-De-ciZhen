@@ -178,9 +178,9 @@
   }
 
   .workspace-statistics-opportunity__tone.is-very-high {
-    color: color-mix(in oklab, var(--c-success) 84%, var(--color-text) 16%);
-    border-color: color-mix(in oklab, var(--c-success) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-success) 12%, var(--color-surface) 88%);
+    color: color-mix(in oklab, var(--color-success) 84%, var(--color-text) 16%);
+    border-color: color-mix(in oklab, var(--color-success) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--color-success) 12%, var(--color-surface) 88%);
   }
 
   .workspace-statistics-opportunity__tone.is-high {
@@ -477,13 +477,13 @@
   }
 
   .workspace-statistics-price__summary-card--gap.is-warning {
-    border-color: color-mix(in oklab, var(--c-warning) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--c-warning) 9%, var(--surface-soft-bg) 91%);
+    border-color: color-mix(in oklab, var(--color-warning) 28%, var(--surface-soft-border) 72%);
+    background: color-mix(in oklab, var(--color-warning) 9%, var(--surface-soft-bg) 91%);
   }
 
   .workspace-statistics-price__summary-card--gap.is-positive {
-    border-color: color-mix(in oklab, var(--c-success) 26%, var(--surface-soft-border) 74%);
-    background: color-mix(in oklab, var(--c-success) 9%, var(--surface-soft-bg) 91%);
+    border-color: color-mix(in oklab, var(--color-success) 26%, var(--surface-soft-border) 74%);
+    background: color-mix(in oklab, var(--color-success) 9%, var(--surface-soft-bg) 91%);
   }
 
   .workspace-statistics-price__summary-card--gap.is-neutral {

@@ -189,8 +189,8 @@
   }
 
   .my-request-card__insight.is-success {
-    border-color: color-mix(in oklab, var(--c-success) 18%, transparent);
-    background: color-mix(in oklab, var(--c-success) 8%, white 92%);
+    border-color: color-mix(in oklab, var(--color-success) 18%, transparent);
+    background: color-mix(in oklab, var(--color-success) 8%, white 92%);
   }
 
   .my-request-card__insight-title {
@@ -247,8 +247,8 @@
   }
 
   .my-request-card__footer-note.is-success .my-request-card__footer-note-icon {
-    background: color-mix(in oklab, var(--c-success) 14%, white 86%);
-    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
+    background: color-mix(in oklab, var(--color-success) 14%, white 86%);
+    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
   }
 
   .my-request-card__footer-note-copy {
@@ -282,9 +282,9 @@
   }
 
   .my-request-card__signal.is-success {
-    border-color: color-mix(in oklab, var(--c-success) 20%, transparent);
-    background: color-mix(in oklab, var(--c-success) 12%, white 88%);
-    color: color-mix(in oklab, var(--c-success) 76%, var(--color-text) 24%);
+    border-color: color-mix(in oklab, var(--color-success) 20%, transparent);
+    background: color-mix(in oklab, var(--color-success) 12%, white 88%);
+    color: color-mix(in oklab, var(--color-success) 76%, var(--color-text) 24%);
   }
 
   .my-request-card__signal.is-neutral {
@@ -308,7 +308,7 @@
   }
 
   .my-request-card__signal-copy.is-success {
-    color: color-mix(in oklab, var(--c-success) 76%, var(--color-text) 24%);
+    color: color-mix(in oklab, var(--color-success) 76%, var(--color-text) 24%);
   }
 
   .my-request-card__signal-copy.is-neutral {
@@ -383,7 +383,7 @@
   }
 
   .my-request-card__progress-step.is-done .my-request-card__progress-dot {
-    background: color-mix(in oklab, var(--c-success) 62%, white 38%);
+    background: color-mix(in oklab, var(--color-success) 62%, white 38%);
   }
 
   .my-request-card__progress-step.is-current {

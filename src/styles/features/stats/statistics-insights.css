@@ -213,9 +213,9 @@
     min-height: var(--workspace-insight-badge-height);
     padding-inline: var(--workspace-insight-badge-pad-inline);
     border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, var(--c-warning) 48%, var(--surface-soft-border) 52%);
-    background: color-mix(in oklab, var(--c-warning) 16%, var(--color-surface) 84%);
-    color: color-mix(in oklab, var(--c-warning) 84%, var(--color-text) 16%);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 48%, var(--surface-soft-border) 52%);
+    background: color-mix(in oklab, var(--color-warning) 16%, var(--color-surface) 84%);
+    color: color-mix(in oklab, var(--color-warning) 84%, var(--color-text) 16%);
     font-size: var(--workspace-insight-badge-font-size);
     font-weight: 700;
     line-height: 1;
@@ -284,7 +284,7 @@
 
   .workspace-statistics-insights__item.is-opportunity,
   .workspace-statistics-insights__item.is-demand {
-    border-color: color-mix(in oklab, var(--c-success) 26%, var(--surface-card-border) 74%);
+    border-color: color-mix(in oklab, var(--color-success) 26%, var(--surface-card-border) 74%);
   }
 
   .workspace-statistics-insights__item.is-growth,
@@ -293,7 +293,7 @@
   }
 
   .workspace-statistics-insights__item.is-risk {
-    border-color: color-mix(in oklab, var(--c-warning) 32%, var(--surface-card-border) 68%);
+    border-color: color-mix(in oklab, var(--color-warning) 32%, var(--surface-card-border) 68%);
   }
 
   .workspace-statistics-insights__item.is-promotion {
@@ -402,7 +402,7 @@
       radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--color-warning) 4%, transparent), transparent 66%),
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--color-surface) 98%, var(--c-surface) 2%) 0%,
+        color-mix(in oklab, var(--color-surface) 98%, var(--color-surface-muted) 2%) 0%,
         color-mix(in oklab, var(--color-surface) 95%, var(--color-primary) 5%) 60%,
         color-mix(in oklab, var(--surface-soft-bg) 96%, var(--color-surface) 4%) 100%
       );

@@ -47,9 +47,9 @@
     font-weight: 700;
     line-height: 1;
     cursor: help;
-    color: color-mix(in oklab, var(--c-warning) 86%, var(--color-text) 14%);
-    background: color-mix(in oklab, var(--c-warning) 18%, transparent);
-    border: 1px solid color-mix(in oklab, var(--c-warning) 35%, transparent);
+    color: color-mix(in oklab, var(--color-warning) 86%, var(--color-text) 14%);
+    background: color-mix(in oklab, var(--color-warning) 18%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 35%, transparent);
   }
 
   .auth-form-error {

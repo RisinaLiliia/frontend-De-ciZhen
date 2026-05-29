@@ -18,7 +18,7 @@
       linear-gradient(
         128deg,
         color-mix(in oklab, var(--color-surface) 94%, transparent),
-        color-mix(in oklab, var(--c-surface) 90%, transparent)
+        color-mix(in oklab, var(--color-surface-muted) 90%, transparent)
       );
     backdrop-filter: blur(6px) saturate(1.01);
     box-shadow:

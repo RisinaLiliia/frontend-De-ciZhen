@@ -30,7 +30,7 @@
     padding: 4px 10px;
     border-radius: var(--radius-pill);
     border: 1px solid color-mix(in oklab, var(--color-border) 60%, var(--color-warning) 40%);
-    background: color-mix(in oklab, var(--c-surface) 88%, transparent);
+    background: color-mix(in oklab, var(--color-surface-muted) 88%, transparent);
     color: var(--color-text-muted);
     font-size: var(--fs-small);
     animation: hero-badge-float 2.2s ease-in-out infinite;

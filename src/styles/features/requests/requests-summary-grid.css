@@ -105,12 +105,12 @@
   }
 
   .workspace-summary-grid__card.is-attention {
-    border-color: color-mix(in oklab, var(--c-warning) 22%, var(--color-border-soft) 78%);
-    background: color-mix(in oklab, var(--c-warning) 6%, var(--color-surface) 94%);
+    border-color: color-mix(in oklab, var(--color-warning) 22%, var(--color-border-soft) 78%);
+    background: color-mix(in oklab, var(--color-warning) 6%, var(--color-surface) 94%);
   }
 
   .workspace-summary-grid__card.is-attention .workspace-summary-grid__accent {
-    background: var(--c-warning);
+    background: var(--color-warning);
   }
 
   .workspace-summary-grid__card.is-execution {
@@ -123,12 +123,12 @@
   }
 
   .workspace-summary-grid__card.is-completed {
-    border-color: color-mix(in oklab, var(--c-success) 20%, var(--color-border-soft) 80%);
-    background: color-mix(in oklab, var(--c-success) 6%, var(--color-surface) 94%);
+    border-color: color-mix(in oklab, var(--color-success) 20%, var(--color-border-soft) 80%);
+    background: color-mix(in oklab, var(--color-success) 6%, var(--color-surface) 94%);
   }
 
   .workspace-summary-grid__card.is-completed .workspace-summary-grid__accent {
-    background: var(--c-success);
+    background: var(--color-success);
   }
 
   .workspace-summary-grid--rail .workspace-summary-grid__card {

@@ -69,7 +69,7 @@
   }
 
   .workspace-statistics-signal__semantic.is-very-high {
-    color: color-mix(in oklab, var(--c-success) 84%, var(--color-text) 16%);
+    color: color-mix(in oklab, var(--color-success) 84%, var(--color-text) 16%);
   }
 
   .workspace-statistics-signal__semantic.is-good,
@@ -103,9 +103,9 @@
   }
 
   .workspace-opportunity-tone-badge.is-very-high {
-    color: color-mix(in oklab, var(--c-success) 84%, var(--color-text) 16%);
-    border-color: color-mix(in oklab, var(--c-success) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--c-success) 12%, var(--color-surface) 88%);
+    color: color-mix(in oklab, var(--color-success) 84%, var(--color-text) 16%);
+    border-color: color-mix(in oklab, var(--color-success) 34%, var(--surface-soft-border) 66%);
+    background: color-mix(in oklab, var(--color-success) 12%, var(--color-surface) 88%);
   }
 
   .workspace-opportunity-tone-badge.is-good {

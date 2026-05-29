@@ -66,7 +66,7 @@
   }
 
   .workspace-statistics-demand__insight strong {
-    color: color-mix(in oklab, var(--c-success) 82%, var(--color-text) 18%);
+    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
   }
 
   .workspace-statistics__cities-tools {
@@ -250,7 +250,7 @@
   }
 
   .workspace-statistics-city-list__rank-cup.is-gold {
-    color: color-mix(in oklab, var(--color-warning) 88%, var(--c-warning) 12%);
+    color: color-mix(in oklab, var(--color-warning) 88%, var(--color-warning) 12%);
   }
 
   .workspace-statistics-city-list__rank-cup.is-silver {
@@ -258,7 +258,7 @@
   }
 
   .workspace-statistics-city-list__rank-cup.is-bronze {
-    color: color-mix(in oklab, var(--c-warn) 66%, var(--c-warning) 34%);
+    color: color-mix(in oklab, var(--c-warn) 66%, var(--color-warning) 34%);
   }
 
   .workspace-statistics-city-list__rank-cup svg {
@@ -339,9 +339,9 @@
   }
 
   .workspace-statistics-city-list__signal.is-high {
-    border-color: color-mix(in oklab, var(--c-success) 36%, var(--surface-soft-border) 64%);
-    color: color-mix(in oklab, var(--c-success) 88%, var(--color-text) 12%);
-    background: color-mix(in oklab, var(--c-success) 10%, var(--color-surface) 90%);
+    border-color: color-mix(in oklab, var(--color-success) 36%, var(--surface-soft-border) 64%);
+    color: color-mix(in oklab, var(--color-success) 88%, var(--color-text) 12%);
+    background: color-mix(in oklab, var(--color-success) 10%, var(--color-surface) 90%);
   }
 
   .workspace-statistics-city-list__signal.is-medium {
