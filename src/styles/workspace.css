@@ -1,7 +1,4 @@
 /* src/styles/workspace.css - workspace shell and stats style entrypoints */
 
 @import './features/workspace/workspace-shell.css';
-@import './features/stats/statistics-layout.css';
-@import './features/stats/statistics-cards.css';
-@import './features/stats/statistics-funnel.css';
-@import './features/stats/statistics-opportunity.css';
+@import './features/stats/statistics.css';
