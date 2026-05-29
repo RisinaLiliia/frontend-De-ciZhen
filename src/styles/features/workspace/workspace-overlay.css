@@ -239,66 +239,6 @@
     box-shadow: none;
   }
 
-  .workspace-environment__hero {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: clamp(14px, 2vw, 24px);
-  }
-
-  .workspace-environment__copy {
-    flex: 1 1 auto;
-    min-width: 0;
-    max-width: min(100%, 900px);
-  }
-
-  .workspace-environment__copy,
-  .workspace-environment__heading {
-    display: grid;
-    gap: var(--space-1-5);
-  }
-
-  .workspace-environment__eyebrow,
-  .workspace-context-brief__eyebrow {
-    margin: 0;
-    font-size: var(--workspace-environment-label-size);
-    line-height: var(--workspace-environment-tight-line-height);
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .workspace-environment__title,
-  .workspace-context-brief__title,
-  .workspace-context-rail__title {
-    margin: 0;
-    font-size: var(--workspace-environment-title-size);
-    line-height: var(--workspace-environment-title-line-height);
-    font-weight: 750;
-    letter-spacing: -0.02em;
-    color: var(--color-text);
-  }
-
-  .workspace-environment__description,
-  .workspace-context-brief__description,
-  .workspace-context-rail__description {
-    margin: 0;
-    font-size: var(--workspace-environment-body-size);
-    line-height: var(--workspace-environment-body-line-height);
-    color: var(--color-text-muted);
-    text-wrap: pretty;
-  }
-
-  .workspace-environment__description {
-    max-width: 100%;
-  }
-
-  .workspace-context-brief__description,
-  .workspace-context-rail__description {
-    max-width: 72ch;
-  }
-
   .workspace-context-brief__badge {
     display: inline-flex;
     align-items: center;
