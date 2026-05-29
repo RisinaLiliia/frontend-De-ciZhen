@@ -445,49 +445,4 @@
     background: var(--surface);
   }
 
-  @media (max-width: 767px) {
-    .my-request-dialog__header,
-    .my-request-chat-dialog__header,
-    .my-request-dialog__body {
-      padding-inline: 16px;
-    }
-
-    .my-request-dialog__toolbar,
-    .my-request-dialog__actions {
-      align-items: stretch;
-    }
-
-    .my-request-dialog__actions--sticky {
-      bottom: -16px;
-      margin-inline: -16px;
-      margin-bottom: -16px;
-      padding-inline: 16px;
-      padding-bottom: 16px;
-    }
-
-    .my-request-dialog__toolbar .btn-secondary,
-    .my-request-dialog__toolbar .back-button,
-    .my-request-dialog__actions .btn-primary,
-    .my-request-dialog__actions .btn-secondary,
-    .my-request-offer-card__actions .btn-ghost,
-    .my-request-offer-card__actions .btn-secondary {
-      width: 100%;
-    }
-
-    .my-request-offer-card__head,
-    .my-request-offer-card__status,
-    .my-request-contract-card__head,
-    .my-request-review-card__actions {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-
-    .my-request-chat-dialog__content {
-      min-height: 72vh;
-    }
-
-    .my-request-inline-state {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
 }
