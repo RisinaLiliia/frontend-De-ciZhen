@@ -1,0 +1,426 @@
+/* src/styles/features/requests/personal-nav.css */
+
+@layer components {
+    .personal-nav {
+      display: grid;
+      gap: var(--space-3);
+      padding: var(--home-panel-padding, var(--space-4));
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--surface-card-border);
+      background: var(--surface-card-bg);
+      box-shadow: var(--surface-card-shadow);
+    }
+  
+    .personal-nav.personal-nav--embedded {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+  
+    .personal-nav__header-slot {
+      display: inline-flex;
+      align-items: stretch;
+      justify-content: flex-start;
+      flex-shrink: 0;
+      align-self: stretch;
+    }
+  
+    .personal-nav__title-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: stretch;
+      gap: var(--space-2);
+      min-width: 0;
+    }
+  
+    .personal-nav__title-copy {
+      display: grid;
+      gap: var(--space-1);
+      min-width: 0;
+      align-content: start;
+    }
+  
+    .personal-nav__title {
+      font-size: var(--fs-h2);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: var(--lh-title);
+      color: var(--color-text);
+      margin: 0;
+      min-width: 0;
+    }
+  
+    .personal-nav__subtitle {
+      margin: 0;
+      font-size: var(--fs-small);
+      line-height: 1.35;
+      color: color-mix(in oklab, var(--color-text-muted) 92%, var(--color-text) 8%);
+      max-width: 62ch;
+    }
+  
+    @media (min-width: 1024px) {
+      .workspace-intro-shell .requests-grid--balanced > aside.stack-md {
+        display: grid;
+        align-self: stretch;
+        min-height: 0;
+      }
+  
+      .workspace-intro-shell .requests-grid--balanced > aside.stack-md > :only-child {
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        align-self: stretch;
+        margin: 0;
+      }
+    }
+  
+    .personal-nav__track {
+      display: grid;
+      gap: var(--space-2);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  
+    @media (min-width: 980px) {
+      .personal-nav__track {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  
+    @media (min-width: 980px) {
+      .personal-nav--left .personal-nav__track {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  
+    .personal-nav__item {
+      --personal-nav-item-color: var(--color-text);
+      --personal-nav-item-border: var(--surface-soft-border);
+      --personal-nav-item-bg-start: color-mix(in oklab, var(--surface-soft-bg) 96%, var(--color-surface) 4%);
+      --personal-nav-item-bg-end: var(--surface-soft-bg);
+      --personal-nav-item-shadow: none;
+      min-height: calc((var(--space-8) * 2) + var(--space-1));
+      padding: var(--space-2-5) var(--space-3);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--personal-nav-item-border);
+      background:
+        linear-gradient(
+          180deg,
+          var(--personal-nav-item-bg-start),
+          var(--personal-nav-item-bg-end)
+        );
+      color: var(--personal-nav-item-color);
+      box-shadow: var(--personal-nav-item-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      text-decoration: none;
+      transition:
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        background var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast);
+    }
+  
+    .personal-nav__track--dock {
+      --personal-nav-dock-item-color: var(--color-text);
+      --personal-nav-dock-item-border: color-mix(in oklab, white 42%, var(--color-border) 58%);
+      --personal-nav-dock-item-bg: color-mix(in oklab, white 30%, transparent);
+      --personal-nav-dock-item-bg-hover: color-mix(in oklab, white 40%, transparent);
+      --personal-nav-dock-item-bg-active: color-mix(in oklab, white 54%, var(--color-primary) 6%);
+      --personal-nav-dock-item-shadow:
+        inset 0 1px 0 color-mix(in oklab, white 48%, transparent),
+        0 8px 18px color-mix(in oklab, var(--c-ink) 5%, transparent);
+      --personal-nav-dock-item-shadow-hover:
+        inset 0 1px 0 color-mix(in oklab, white 56%, transparent),
+        0 10px 20px color-mix(in oklab, var(--c-ink) 7%, transparent);
+      --personal-nav-dock-item-shadow-active:
+        inset 0 1px 0 color-mix(in oklab, white 62%, transparent),
+        0 12px 24px color-mix(in oklab, var(--color-primary) 9%, transparent);
+      --personal-nav-dock-icon-border: color-mix(in oklab, white 38%, var(--color-border) 62%);
+      --personal-nav-dock-icon-bg: color-mix(in oklab, white 46%, transparent);
+      --personal-nav-dock-badge-border: color-mix(in oklab, var(--color-primary) 10%, var(--color-border) 90%);
+      --personal-nav-dock-badge-bg: color-mix(in oklab, white 48%, transparent);
+      --personal-nav-dock-badge-color: color-mix(in oklab, var(--color-text-muted) 72%, var(--color-text) 28%);
+      --personal-nav-dock-badge-active-border: color-mix(in oklab, var(--color-primary) 18%, var(--color-border) 82%);
+      --personal-nav-dock-badge-active-bg: color-mix(in oklab, white 56%, transparent);
+      --personal-nav-dock-badge-active-color: var(--color-text);
+      --control-gap: var(--space-1-5);
+      --control-pad: 0;
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      align-items: stretch;
+      gap: var(--control-gap);
+      min-width: 0;
+      width: 100%;
+      padding: var(--control-pad);
+    }
+  
+    .personal-nav.personal-nav--embedded .personal-nav__track--dock {
+      --personal-nav-dock-item-border: color-mix(in oklab, white 42%, var(--surface-soft-border) 58%);
+      --personal-nav-dock-item-bg: color-mix(in oklab, white 30%, transparent);
+      --personal-nav-dock-item-bg-hover: color-mix(in oklab, white 40%, transparent);
+      --personal-nav-dock-item-bg-active: color-mix(in oklab, white 54%, var(--color-primary) 6%);
+      --personal-nav-dock-icon-border: color-mix(in oklab, white 38%, var(--surface-soft-border) 62%);
+      --personal-nav-dock-icon-bg: color-mix(in oklab, white 46%, transparent);
+    }
+  
+    html.dark .personal-nav__track--dock {
+      --personal-nav-dock-item-color: color-mix(in oklab, var(--color-text-muted) 92%, var(--color-text) 8%);
+      --personal-nav-dock-item-border: color-mix(in oklab, white 18%, var(--color-border) 82%);
+      --personal-nav-dock-item-bg: color-mix(in oklab, white 8%, transparent);
+      --personal-nav-dock-item-bg-hover: color-mix(in oklab, white 12%, transparent);
+      --personal-nav-dock-item-bg-active: color-mix(in oklab, var(--color-primary) 16%, white 8%);
+      --personal-nav-dock-item-shadow:
+        inset 0 1px 0 color-mix(in oklab, white 10%, transparent),
+        0 10px 20px color-mix(in oklab, var(--c-ink) 18%, transparent);
+      --personal-nav-dock-item-shadow-hover:
+        inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+        0 12px 22px color-mix(in oklab, var(--c-ink) 20%, transparent);
+      --personal-nav-dock-item-shadow-active:
+        inset 0 1px 0 color-mix(in oklab, white 14%, transparent),
+        0 14px 24px color-mix(in oklab, var(--color-primary) 14%, transparent);
+      --personal-nav-dock-icon-border: color-mix(in oklab, white 16%, var(--color-border) 84%);
+      --personal-nav-dock-icon-bg: color-mix(in oklab, white 12%, transparent);
+      --personal-nav-dock-badge-border: color-mix(in oklab, var(--color-primary) 18%, var(--color-border) 82%);
+      --personal-nav-dock-badge-bg: color-mix(in oklab, white 12%, transparent);
+      --personal-nav-dock-badge-color: color-mix(in oklab, white 88%, var(--color-text-muted) 12%);
+      --personal-nav-dock-badge-active-border: color-mix(in oklab, var(--color-primary) 18%, var(--color-border) 82%);
+      --personal-nav-dock-badge-active-bg: color-mix(in oklab, white 14%, transparent);
+      --personal-nav-dock-badge-active-color: var(--color-text);
+    }
+  
+    .personal-nav__track--dock .personal-nav__item,
+    .personal-nav__track--dock .personal-nav__item:hover,
+    .personal-nav__track--dock .personal-nav__item.is-active,
+    .personal-nav__track--dock .personal-nav__item--secondary,
+    .personal-nav__track--dock .personal-nav__item--secondary:hover,
+    .personal-nav__track--dock .personal-nav__item--secondary.is-active {
+      min-height: calc(var(--space-8) + var(--space-5));
+      padding: var(--space-2);
+      border-radius: calc(var(--radius-xl, var(--radius-lg)) + var(--space-0-5));
+      border: 1px solid var(--personal-nav-dock-item-border);
+      background: var(--personal-nav-dock-item-bg);
+      box-shadow: var(--personal-nav-dock-item-shadow);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-content: start;
+      justify-items: start;
+      gap: var(--space-1-5);
+      color: var(--personal-nav-dock-item-color);
+      position: relative;
+      z-index: 1;
+      flex: 1 1 0;
+      min-width: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+  
+    .personal-nav__track--dock .personal-nav__item:hover {
+      border-color: color-mix(in oklab, var(--color-primary) 20%, var(--personal-nav-dock-item-border) 80%);
+      background: var(--personal-nav-dock-item-bg-hover);
+      box-shadow: var(--personal-nav-dock-item-shadow-hover);
+      color: var(--color-text);
+      transform: translateY(-1px) scale(1.01);
+    }
+  
+    .personal-nav__track--dock .personal-nav__item.is-active {
+      border-color: color-mix(in oklab, var(--color-primary) 24%, var(--personal-nav-dock-item-border) 76%);
+      background: var(--personal-nav-dock-item-bg-active);
+      box-shadow: var(--personal-nav-dock-item-shadow-active);
+      color: var(--color-text);
+      transform: none;
+    }
+  
+    .personal-nav__track--dock .personal-nav__item:focus-visible {
+      outline: none;
+      border-color: color-mix(in oklab, var(--color-primary) 20%, var(--personal-nav-dock-item-border) 80%);
+      background: var(--personal-nav-dock-item-bg-hover);
+      box-shadow: var(--personal-nav-dock-item-shadow-hover);
+      color: var(--color-text);
+    }
+  
+    .personal-nav__track--dock .personal-nav__item.is-active .personal-nav__label {
+      font-weight: 650;
+    }
+  
+    .personal-nav__track--dock .personal-nav__item--secondary {
+      background: color-mix(in oklab, white 22%, transparent);
+    }
+  
+    .personal-nav__track--dock .personal-nav__top {
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: start;
+      gap: var(--space-2);
+    }
+  
+    .personal-nav__track--dock .personal-nav__icon,
+    .personal-nav__track--dock .personal-nav__icon svg {
+      width: calc(var(--space-4) + var(--space-0-5));
+      height: calc(var(--space-4) + var(--space-0-5));
+    }
+  
+    .personal-nav__track--dock .personal-nav__icon {
+      width: calc(var(--space-6) + var(--space-0-5));
+      height: calc(var(--space-6) + var(--space-0-5));
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--personal-nav-dock-icon-border);
+      background: var(--personal-nav-dock-icon-bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 0 color-mix(in oklab, white 74%, transparent);
+    }
+  
+    .personal-nav__track--dock .personal-nav__label {
+      min-width: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      white-space: normal;
+      text-align: left;
+      font-size: var(--fs-12);
+      font-weight: 650;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+  
+    .personal-nav__track--dock .personal-nav__hint,
+    .personal-nav__track--dock .personal-nav__rating {
+      display: none;
+    }
+  
+    .personal-nav__track--dock .personal-nav__value--dock {
+      justify-self: end;
+      margin-left: 0;
+      min-width: calc(var(--space-4) + var(--space-0-5));
+      height: calc(var(--space-4) + var(--space-0-25));
+      padding: 0 var(--space-1-25);
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--personal-nav-dock-badge-border);
+      background: var(--personal-nav-dock-badge-bg);
+      color: var(--personal-nav-dock-badge-color);
+      font-size: var(--fs-10);
+      font-weight: 700;
+      line-height: 1;
+      box-shadow: none;
+    }
+  
+    .personal-nav__track--dock .personal-nav__item.is-active .personal-nav__value--dock {
+      border-color: var(--personal-nav-dock-badge-active-border);
+      background: var(--personal-nav-dock-badge-active-bg);
+      color: var(--personal-nav-dock-badge-active-color);
+      box-shadow: none;
+    }
+  
+    @media (prefers-reduced-motion: reduce) {
+      .personal-nav__track--dock .personal-nav__item {
+        transition: none;
+      }
+    }
+  
+    .personal-nav__item--secondary {
+      min-height: calc(var(--space-8) + var(--space-6));
+      padding: var(--space-2) var(--space-2-5);
+    }
+  
+    .personal-nav__item:hover,
+    .personal-nav__item.is-active {
+      --personal-nav-item-color: var(--color-text);
+      --personal-nav-item-border: color-mix(in oklab, white 18%, var(--color-border) 82%);
+      --personal-nav-item-bg-start: color-mix(in oklab, white 8%, var(--color-surface) 92%);
+      --personal-nav-item-bg-end: color-mix(in oklab, white 4%, var(--color-surface) 96%);
+      --personal-nav-item-shadow: var(--surface-card-shadow-hover);
+    }
+  
+    .personal-nav__item:hover {
+      transform: translateY(-1px);
+    }
+  
+    .personal-nav__item.is-disabled {
+      opacity: 0.52;
+      cursor: not-allowed;
+      pointer-events: none;
+      --personal-nav-item-border: color-mix(in oklab, var(--color-border) 72%, transparent);
+      --personal-nav-item-bg-start: color-mix(in oklab, var(--color-surface) 94%, transparent);
+      --personal-nav-item-bg-end: var(--surface-soft-bg);
+      --personal-nav-item-shadow: none;
+      transform: none;
+    }
+  
+    .personal-nav__item.is-disabled.is-locked {
+      cursor: pointer;
+      pointer-events: auto;
+      opacity: 0.72;
+    }
+  
+    .personal-nav__item.is-disabled.is-locked:hover {
+      transform: none;
+      --personal-nav-item-border: color-mix(in oklab, white 18%, var(--color-border) 82%);
+      --personal-nav-item-bg-start: color-mix(in oklab, white 8%, var(--color-surface) 92%);
+      --personal-nav-item-bg-end: color-mix(in oklab, white 4%, var(--color-surface) 96%);
+      --personal-nav-item-shadow: 0 8px 18px color-mix(in oklab, var(--c-ink) 12%, transparent);
+    }
+  
+    .personal-nav__icon {
+      width: var(--space-4);
+      height: var(--space-4);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .personal-nav__item--secondary .personal-nav__icon,
+    .personal-nav__item--secondary .personal-nav__icon svg {
+      width: var(--space-3-5);
+      height: var(--space-3-5);
+    }
+  
+    .personal-nav__icon svg {
+      width: var(--space-4);
+      height: var(--space-4);
+    }
+  
+    .personal-nav__top {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+  
+    .personal-nav__label {
+      font-size: var(--fs-body);
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  
+    .personal-nav__item--secondary .personal-nav__label {
+      font-size: var(--fs-small);
+    }
+  
+    .personal-nav__value {
+      margin-left: auto;
+    }
+  
+    .personal-nav__hint {
+      font-size: var(--fs-small);
+      color: var(--color-text-muted);
+      line-height: 1.35;
+    }
+  
+    .personal-nav__item--secondary .personal-nav__hint {
+      display: none;
+    }
+  
+    .personal-nav__item--secondary .personal-nav__rating {
+      margin-top: 0;
+    }
+  }
