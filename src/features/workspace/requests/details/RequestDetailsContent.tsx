@@ -20,6 +20,7 @@ import {
 } from '@/components/requests/details';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { buildRequestImageList } from '@/lib/requests/images';
+import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 
 type RequestStatusView = {
   token: string;
@@ -156,7 +157,7 @@ export function RequestDetailsContent({
 
   return (
     <div className={`request-detail ${isDialogSurface ? 'request-detail--dialog' : ''}`.trim()}>
-      <section className="panel request-detail__panel">
+      <section className={workspacePanelShell('request-detail__panel')}>
         <RequestDetailHeader
           title={isOwnerEditMode ? ownerTitle || viewModel.title : viewModel.title}
           eyebrowLabel={viewModel.categoryLabel}
