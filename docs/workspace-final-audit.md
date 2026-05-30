@@ -2,141 +2,306 @@
 
 ## Summary
 
-- `PASS` `/workspace` и связанные legacy entry routes (`/orders`, `/client`, `/provider/requests`) сходятся в один route shell: `WorkspaceRoutePage -> WorkspaceRouteShell -> WorkspacePageClient -> WorkspacePageLayout -> WorkspaceShell`.
-- `PASS` Основные section ownership boundary для `overview`, `requests`, `providers`, `profile`, `context`, `ai-rail`, `navigation` и `shell` стали заметно чище и предсказуемее после последних refactor-pass.
-- `PASS` Verification suite для этого audit pass прошла:
-  - `npm run typecheck`
-  - `npm run lint:styles`
-  - `npm run lint`
-  - `npm run test:ci`
-  - `npx vitest run src/features/workspace/shell/WorkspaceRouteShell.test.tsx src/features/workspace/shell/WorkspacePageLayout.test.tsx`
-  - `npm run build`
-- `PASS` Route flow упрощён до реального execution path без ложных branch wrappers: `WorkspacePageClient` использует `useWorkspacePublicBranchModel` / `useWorkspacePrivateBranchModel` напрямую.
-- `PASS` CSS ownership стал чище: statistics partials больше не живут в `src/styles/features/requests/requests-shell-statistics-*`.
-- `DOCUMENTED EXCEPTION` Часть legacy alias / fallback логики пока намеренно сохранена для route compatibility и безопасного перехода со старых query/state path.
+### Pass
 
-## Checked routes
+* `/workspace` and related legacy entry routes (`/orders`, `/client`, `/provider/requests`) converge into a single route shell:
 
-- `PASS` `/workspace?section=overview`
-- `PASS` `/workspace?section=requests`
-- `PASS` `/workspace?section=requests&scope=my`
-- `PASS` `/workspace?section=providers`
-- `PASS` `/workspace?section=profile`
-- `PASS` `/workspace?section=offers`
-- `PASS` `/workspace?section=contracts`
-- `PASS` `/workspace?section=analysis`
-- `PASS` `/workspace?section=actions`
-- `PASS` `/workspace?section=chat`
-- `PASS` `/orders`
-- `PASS` `/client`
-- `PASS` `/provider/requests`
+  `WorkspaceRoutePage → WorkspaceRouteShell → WorkspacePageClient → WorkspacePageLayout → WorkspaceShell`
 
-Notes:
+* Section ownership boundaries for `overview`, `requests`, `providers`, `profile`, `context`, `ai-rail`, `navigation`, and `shell` are significantly cleaner and more predictable after the latest refactor passes.
 
-- Route audit выполнялся статически по route entrypoints, shell composition, section adapters и query-state flow.
-- Полный browser smoke-check всех route/section переходов в sandbox не выполнялся.
+* Verification suite completed successfully:
 
-## Checked breakpoints
+  * `npm run typecheck`
+  * `npm run lint:styles`
+  * `npm run lint`
+  * `npm run test:ci`
+  * `npx vitest run src/features/workspace/shell/WorkspaceRouteShell.test.tsx src/features/workspace/shell/WorkspacePageLayout.test.tsx`
+  * `npm run build`
 
-- `PASS` Статически проверен shell contract для:
-  - mobile `<768px`
-  - tablet `768px–1279px`
-  - desktop `>=1280px`
-- `NEEDS CLEANUP` Ручной viewport smoke-check на `375`, `425`, `768`, `1024`, `1280`, `1440` не выполнялся в этом audit pass.
+* Route flow has been simplified into a real execution path without unnecessary wrapper layers. `WorkspacePageClient` now uses:
 
-## Architecture status
+  * `useWorkspacePublicBranchModel`
+  * `useWorkspacePrivateBranchModel`
 
-- `PASS` `/workspace` остаётся canonical working shell, а не набором независимых pages.
-- `PASS` `/orders`, `/client`, `/provider/requests` монтируют тот же route page entrypoint, а не отдельные shell implementations.
-- `PASS` Topbar, sidebar, bottom navigation и page frame контролируются через один layout contract: `WorkspacePageLayout` + `WorkspaceShell`.
-- `PASS` Public/private mode используют один shell path и расходятся на уровне branch model/data composition, а не на уровне независимых page shells.
-- `PASS` URL query state остаётся центральным driver для section/scope/filter state.
-- `PASS` `useWorkspaceRouteState` теперь живёт в `src/features/workspace/page/useWorkspaceRouteState.ts`, то есть рядом с route/page state composition, а не внутри `context`.
-- `DOCUMENTED EXCEPTION` `useWorkspaceShellLegacyRouting.tsx` и alias mapping в workspace state intentionally keep old route/query aliases alive.
+* CSS ownership is cleaner. Statistics styles no longer reside under:
 
-## Responsive shell status
+  * `src/styles/features/requests/requests-shell-statistics-*`
 
-- `PASS` Mobile shell contract разделён от tablet/desktop:
-  - mobile использует lower dock navigation
-  - tablet использует burger/drawer path
-  - desktop использует visible sidebar
-- `PASS` Workspace topbar не монтируется на mobile shell path, когда используется нижняя mobile navigation.
-- `PASS` Providers/profile/context ownership cleanup уменьшил риск duplicated right-rail/render paths.
-- `NEEDS CLEANUP` Без ручной viewport QA нельзя окончательно подтвердить отсутствие всех duplicated branches, horizontal scroll и one-off overflow regressions во всех sections.
-- `DOCUMENTED EXCEPTION` Некоторые duplicated render paths на уровне responsive composition могут оставаться намеренно ради stacked rail/mobile slots; они должны оцениваться визуально, а не только статически.
+* Statistics and workspace styles were further decomposed into dedicated domain-oriented stylesheets, reducing ownership overlap and stylesheet complexity.
 
-## Design-system status
+### Documented Exception
 
-- `PASS` `src/features/workspace/shared/workspaceSurfaceShell.ts` остаётся canonical surface helper API.
-- `PASS` Surface helpers покрывают expected shell variants:
-  - `workspacePanelShell`
-  - `workspaceCardShell`
-  - `workspaceRequestsPanelShell`
-  - `workspaceRightRailPanelShell`
-  - `workspaceMutedPanelShell`
-  - `workspaceElevatedCardShell`
-  - `workspaceStatCardShell`
-  - `workspaceStatLinkCardShell`
-- `NEEDS CLEANUP` В workspace TSX всё ещё есть raw `panel/card` class usage вместо системного surface helper contract.
-- `NEEDS CLEANUP` В feature CSS остаются локальные gradients/shadows/color-like declarations; часть из них token-driven и допустима, но overall design-system discipline ещё не везде одинаково строгая.
-- `PASS` Statistics CSS ownership живёт в `src/styles/features/stats/`.
-- `DOCUMENTED EXCEPTION` Не каждый grep hit по `box-shadow`, `rgba`, `linear-gradient` является bug: часть правил intentional и token-based.
+Certain legacy aliases and fallback paths are intentionally preserved for route compatibility and safe migration from older query/state contracts.
 
-## Legacy/dead-code findings
+---
 
-- `DOCUMENTED EXCEPTION` `useWorkspaceShellLegacyRouting.tsx`
-- `DOCUMENTED EXCEPTION` `workspaceRequestsScope.model.ts` legacy alias support
-- `DOCUMENTED EXCEPTION` `legacyPublicOverviewData` compatibility path в data/public overview flow
-- `DOCUMENTED EXCEPTION` stats compatibility/fallback notes в stats README/model/tests
+## Checked Routes
 
-Reason:
+### Pass
 
-- Эти compatibility branches ещё выглядят сознательными transitional adapters, а не случайным мусором.
+* `/workspace?section=overview`
+* `/workspace?section=requests`
+* `/workspace?section=requests&scope=my`
+* `/workspace?section=providers`
+* `/workspace?section=profile`
+* `/workspace?section=offers`
+* `/workspace?section=contracts`
+* `/workspace?section=analysis`
+* `/workspace?section=actions`
+* `/workspace?section=chat`
+* `/orders`
+* `/client`
+* `/provider/requests`
 
-## Duplicated render findings
+### Notes
 
-- `PASS` Providers больше не живут одновременно в `explore` и `providers`.
-- `PASS` Profile больше не живёт одновременно в `explore` и `profile`.
-- `PASS` Contextual rail ownership лучше разделён между `shell`, `ai-rail`, `overview`, `demand-map`.
-- `NEEDS CLEANUP` Полное отсутствие duplicated mobile/desktop content trees нельзя закрыть без ручного responsive smoke-check.
+* Route audit was performed statically through route entrypoints, shell composition, section adapters, and query-state flow.
+* Full browser-based route transition testing was not performed during this audit pass.
 
-## Folder/naming findings
+---
 
-- `PASS` `src/features/workspace/shell/`
-- `PASS` `src/features/workspace/page/`
-- `PASS` `src/features/workspace/context/`
-- `PASS` `src/features/workspace/navigation/`
-- `PASS` `src/features/workspace/requests/`
-- `PASS` `src/features/workspace/overview/`
-- `PASS` `src/features/workspace/ai-rail/`
-- `PASS` `src/features/workspace/shared/`
-- `PASS` `src/features/workspace/providers/`
-- `PASS` `src/features/workspace/profile/`
-- `DOCUMENTED EXCEPTION` `src/features/workspace/demand-map/` is a valid shared feature split even though it was not listed in the original target folder map.
+## Checked Breakpoints
 
-- `NEEDS CLEANUP` Suspicious-but-intentional naming hits remain:
-  - `context/context.copy.ts`
-  - `navigation/workspaceMode.copy.ts`
-  - `stats/*copy.ts`
+### Pass
 
-Reason:
+Shell contracts were statically reviewed for:
 
-- Эти `copy` files выглядят нормально, если команда считает them canonical text catalogs. Их стоит воспринимать как intentional copy ownership, а не как legacy leftovers.
+* Mobile `<768px`
+* Tablet `768px–1279px`
+* Desktop `>=1280px`
 
-- `PASS` Route/page naming теперь отражает реальный flow: `WorkspaceRoutePage`, `WorkspaceRouteShell`, `WorkspacePageClient`, `WorkspacePageLayout`.
+### Needs Cleanup
 
-## Remaining risks
+Manual viewport smoke testing was not performed for:
 
-- Нет ручного browser QA на обязательных viewport widths.
-- Некоторые raw `panel/card` wrappers ещё обходят central surface helper API.
-- Legacy alias routing всё ещё существует; это снижает архитектурную чистоту, хотя и помогает compatibility.
-- Remaining route-state ownership smell по `context` слою в этом audit pass не обнаружен.
+* 375px
+* 425px
+* 768px
+* 1024px
+* 1280px
+* 1440px
 
-## Recommended next PRs
+---
 
-1. `refactor(workspace): normalize remaining raw panel/card wrappers`
-   - постепенно свести section-level surfaces к `workspaceSurfaceShell.ts`
+## Architecture Status
 
-2. `test(workspace): run manual responsive QA matrix`
-   - проверить `375`, `425`, `768`, `1024`, `1280`, `1440`
-   - отдельно подтвердить отсутствие duplicated rail/context blocks и overflow regressions
+### Pass
+
+* `/workspace` remains the canonical working shell rather than a collection of independent pages.
+
+* `/orders`, `/client`, and `/provider/requests` mount the same route page entrypoint instead of separate shell implementations.
+
+* Topbar, sidebar, bottom navigation, and page frame are controlled through a single layout contract:
+
+  * `WorkspacePageLayout`
+  * `WorkspaceShell`
+
+* Public and private modes share the same shell path and diverge only at the branch model and data composition layers.
+
+* URL query state remains the central driver for section, scope, and filter state.
+
+* `useWorkspaceRouteState` now lives in:
+
+  `src/features/workspace/orchestration/useWorkspaceRouteState.ts`
+
+  instead of the context layer.
+
+### Documented Exception
+
+The following compatibility paths remain intentionally active:
+
+* `useWorkspaceShellLegacyRouting.tsx`
+* workspace state alias mappings
+
+---
+
+## Responsive Shell Status
+
+### Pass
+
+* Mobile shell contract is separated from tablet and desktop:
+
+  * Mobile uses bottom dock navigation
+  * Tablet uses drawer navigation
+  * Desktop uses persistent sidebar navigation
+
+* Workspace topbar is not mounted on mobile routes that use bottom navigation.
+
+* Provider, profile, and context ownership cleanup reduced the risk of duplicated right-rail rendering paths.
+
+### Needs Cleanup
+
+Without manual viewport QA, the following cannot be fully verified:
+
+* Absence of duplicated responsive render paths
+* Horizontal scrolling regressions
+* Overflow issues across all sections
+
+### Documented Exception
+
+Some duplicated render paths may remain intentionally for stacked rail and mobile slot compositions and should be evaluated visually rather than through static analysis.
+
+---
+
+## Design System Status
+
+### Pass
+
+`src/features/workspace/shared/workspaceSurfaceShell.ts` remains the canonical surface helper API.
+
+Supported shell variants:
+
+* `workspacePanelShell`
+* `workspaceCardShell`
+* `workspaceRequestsPanelShell`
+* `workspaceRightRailPanelShell`
+* `workspaceMutedPanelShell`
+* `workspaceElevatedCardShell`
+* `workspaceStatCardShell`
+* `workspaceStatLinkCardShell`
+
+Statistics style ownership now resides under:
+
+`src/styles/features/stats/`
+
+### Needs Cleanup
+
+* Some TSX components still use raw panel/card classes instead of the centralized surface helper contract.
+* Feature CSS still contains localized gradients, shadows, and color declarations. Many are token-driven and acceptable, but design-system consistency is not yet fully enforced.
+
+### Documented Exception
+
+Not every occurrence of:
+
+* `box-shadow`
+* `rgba`
+* `linear-gradient`
+
+should be treated as a design-system violation. Many implementations are token-driven and intentional.
+
+---
+
+## Legacy and Dead Code Findings
+
+### Documented Exception
+
+The following compatibility layers remain intentionally active:
+
+* `useWorkspaceShellLegacyRouting.tsx`
+* `workspaceRequestsScope.model.ts`
+* `legacyPublicOverviewData`
+* Statistics compatibility and fallback contracts
+
+These appear to be transitional adapters rather than accidental legacy code.
+
+---
+
+## Duplicated Render Findings
+
+### Pass
+
+* Providers no longer exist simultaneously in both `explore` and `providers`.
+* Profile no longer exists simultaneously in both `explore` and `profile`.
+* Contextual rail ownership is more clearly separated between:
+
+  * shell
+  * ai-rail
+  * overview
+  * demand-map
+
+### Needs Cleanup
+
+Complete verification of responsive content duplication still requires manual browser testing.
+
+---
+
+## Folder and Naming Findings
+
+### Pass
+
+The following feature boundaries are well-structured:
+
+* `workspace/shell`
+* `workspace/context`
+* `workspace/navigation`
+* `workspace/requests`
+* `workspace/overview`
+* `workspace/ai-rail`
+* `workspace/shared`
+* `workspace/providers`
+* `workspace/profile`
+
+### Documented Exception
+
+`workspace/demand-map` is considered a valid shared feature even though it was not included in the original target folder structure.
+
+The following files appear intentional rather than legacy:
+
+* `context/context.copy.ts`
+* `navigation/workspaceMode.copy.ts`
+* `stats/*copy.ts`
+
+These should be treated as canonical content catalogs rather than technical debt.
+
+### Pass
+
+Route naming now accurately reflects the execution flow:
+
+* `WorkspaceRoutePage`
+* `WorkspaceRouteShell`
+* `WorkspacePageClient`
+* `WorkspacePageLayout`
+
+---
+
+## Remaining Risks
+
+* No manual browser QA has been performed across the required viewport widths.
+* Surface helper adoption has significantly improved, but a complete workspace-wide verification has not yet been completed.
+* Legacy route alias mappings remain in place for compatibility and migration safety.
+* No significant route-state ownership issues were identified during this audit pass.
+
+---
+
+## Recommended Next PRs
+
+### 1. Decompose Statistics Dashboard Layout
+
+`refactor(styles): decompose statistics dashboard layout styles`
+
+Goals:
+
+* Separate dashboard layout ownership
+* Separate statistics context controls
+* Separate responsive dashboard behavior
+* Reduce `statistics-dashboard-layout.css` complexity
+
+### 2. Decompose Workspace Control Shell
+
+`refactor(styles): decompose workspace control shell styles`
+
+Goals:
+
+* Isolate workspace control shell ownership
+* Reduce navigation stylesheet complexity
+* Extract remaining control-shell subdomains into dedicated stylesheets
+
+### 3. Execute Responsive QA Matrix
+
+`test(workspace): run manual responsive QA matrix`
+
+Required viewport validation:
+
+* 375px
+* 425px
+* 768px
+* 1024px
+* 1280px
+* 1440px
+
+Validation goals:
+
+* Confirm absence of duplicated rail/context blocks
+* Confirm absence of horizontal overflow regressions
+* Validate one-window workspace behavior across all breakpoints
