@@ -1,0 +1,104 @@
+/* src/styles/features/stats/statistics-price-modal-motion.css */
+
+@layer components {
+    @keyframes workspace-statistics-price-modal-pulse {
+      from {
+        transform: scale(1);
+        opacity: 0.78;
+      }
+  
+      to {
+        transform: scale(1.04);
+        opacity: 1;
+      }
+    }
+  
+    @keyframes workspace-statistics-price-modal-scan {
+      0% {
+        opacity: 0.32;
+        transform: scaleX(0.72);
+      }
+  
+      50% {
+        opacity: 0.78;
+        transform: scaleX(1);
+      }
+  
+      100% {
+        opacity: 0.32;
+        transform: scaleX(0.72);
+      }
+    }
+  
+    @keyframes workspace-statistics-price-modal-fade-up {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+  
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  
+    @media (max-width: 639px) {
+      .workspace-statistics-price__ticks {
+        min-height: 36px;
+      }
+  
+      .workspace-statistics-price__tick {
+        max-width: 56px;
+      }
+  
+      .workspace-statistics-price__position-scale,
+      .workspace-statistics-price__position-range {
+        font-size: var(--workspace-statistics-copy-size-tight);
+      }
+  
+      .workspace-statistics-price__bar-sweet-label {
+        top: -32px;
+        padding-inline: 6px;
+      }
+  
+      .workspace-statistics-price__bar-sweet-label strong {
+        font-size: var(--workspace-statistics-chip-font-size);
+      }
+  
+      .workspace-statistics-price-modal__header {
+        gap: var(--space-2);
+      }
+    }
+  
+    @media (max-width: 1023px) {
+      .workspace-statistics-opportunity__item--compact,
+      .workspace-statistics-price__hero {
+        min-height: 0;
+      }
+  
+    }
+  
+    @media (prefers-reduced-motion: reduce) {
+      .workspace-statistics-price-modal,
+      .workspace-statistics-price-modal__backdrop,
+      .workspace-statistics-price-modal__panel,
+      .workspace-statistics-price-modal__intro,
+      .workspace-statistics-price-modal__header,
+      .workspace-statistics-price-modal__loading,
+      .workspace-statistics-price-modal__content,
+      .workspace-statistics-price-modal__loading-orb,
+      .workspace-statistics-price-modal__loading-beam,
+      .workspace-statistics-price-modal__close {
+        animation: none;
+        transition: none;
+        transform: none;
+      }
+    }
+  
+    @media (max-width: 768px) {
+      .workspace-statistics-price-modal__panel {
+        min-height: 0;
+        margin: 0;
+      }
+    }
+  }}
