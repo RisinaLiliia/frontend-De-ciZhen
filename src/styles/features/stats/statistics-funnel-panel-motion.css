@@ -1,0 +1,57 @@
+/* src/styles/features/stats/statistics-funnel-panel-motion.css */
+
+@layer components {
+    @keyframes workspace-statistics-funnel-enter {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  
+    @keyframes workspace-statistics-funnel-hint-enter {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  
+    @media (max-width: 767px) {
+      .workspace-statistics-funnel {
+        --workspace-funnel-layer-min-height: 54px;
+        --workspace-funnel-layer-min-height-tall: 62px;
+      }
+  
+      .workspace-statistics-funnel--empty-visual {
+        min-height: 360px;
+      }
+  
+      .workspace-statistics-funnel--personalized {
+        --workspace-funnel-layer-min-height: 68px;
+        --workspace-funnel-layer-min-height-tall: 76px;
+      }
+  
+      .workspace-statistics-funnel__layer {
+        gap: var(--space-2);
+      }
+  
+      .workspace-statistics-funnel__layer-hint {
+        font-size: var(--workspace-statistics-chip-font-size);
+        gap: var(--space-1-5);
+        top: 79%;
+      }
+  
+      .workspace-statistics-funnel__layer-hint-compare {
+        font-size: var(--fs-10);
+        top: 83%;
+        padding-inline: 4px;
+      }
+    }
+  
+  }
+}
