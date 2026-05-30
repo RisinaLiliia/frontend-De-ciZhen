@@ -490,4 +490,4 @@
   .workspace-statistics-funnel__conversion--empty strong {
     color: color-mix(in oklab, var(--color-text-muted) 82%, var(--color-text) 18%);
   }
-
+}

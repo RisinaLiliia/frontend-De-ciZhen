@@ -457,4 +457,4 @@
     padding: clamp(var(--space-3), 2vw, var(--space-4));
     animation: workspace-statistics-price-modal-fade-up 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
-
+}
