@@ -57,7 +57,7 @@ export function WorkspaceReviewsComposer({
         className="workspace-platform-reviews__header workspace-platform-reviews__subheader"
       />
       <form
-        className="form-stack provider-reviews-hub__composer-form"
+        className="form-stack public-profile-reviews__composer-form"
         onSubmit={(event) => {
           event.preventDefault();
           if (createReviewMutation.isPending) return;
@@ -77,13 +77,13 @@ export function WorkspaceReviewsComposer({
         ) : null}
         <div className="form-group">
           <p className="typo-small">{t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}</p>
-          <div className="provider-reviews-hub__star-line">
-            <div className="chip-row provider-reviews-hub__star-picker" role="group" aria-label={t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}>
+          <div className="public-profile-reviews__star-line">
+            <div className="chip-row public-profile-reviews__star-picker" role="group" aria-label={t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}>
               {[1, 2, 3, 4, 5].map((score) => (
                 <button
                   key={score}
                   type="button"
-                  className={`icon-button icon-button--md provider-reviews-hub__star-btn ${score <= draftRating ? '' : 'typo-muted'}`.trim()}
+                  className={`icon-button icon-button--md public-profile-reviews__star-btn ${score <= draftRating ? '' : 'typo-muted'}`.trim()}
                   aria-pressed={draftRating === score}
                   onClick={() => setDraftRating(score)}
                   aria-label={`${score}`}
@@ -92,7 +92,7 @@ export function WorkspaceReviewsComposer({
                 </button>
               ))}
             </div>
-            <span className="typo-body provider-reviews-hub__star-value" aria-live="polite">
+            <span className="typo-body public-profile-reviews__star-value" aria-live="polite">
               {draftRating.toFixed(1)}
             </span>
           </div>
@@ -107,10 +107,10 @@ export function WorkspaceReviewsComposer({
             rows={3}
           />
         </div>
-        <div className="auth-social__row provider-reviews-hub__composer-actions">
+        <div className="auth-social__row public-profile-reviews__composer-actions">
           <button
             type="submit"
-            className="auth-social__btn auth-social__btn--google provider-reviews-hub__composer-submit"
+            className="auth-social__btn auth-social__btn--google public-profile-reviews__composer-submit"
             disabled={createReviewMutation.isPending}
           >
             {t(I18N_KEYS.requestsPage.platformReviewFormSubmit)}

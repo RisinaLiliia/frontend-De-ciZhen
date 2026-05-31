@@ -16,15 +16,20 @@
     display: block;
   }
 
-  .my-request-dialog__panel--inline-shell {
-    width: 100%;
-    max-width: none;
-  }
-
   .my-request-dialog__panel--inline {
     min-height: min(72vh, 920px);
-    border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border) 38%, transparent);
+    box-shadow:
+      0 1px 0 color-mix(in srgb, white 72%, transparent) inset,
+      0 12px 32px color-mix(in srgb, var(--shadow) 8%, transparent);
+  }
+
+  .my-request-dialog__panel--inline-details {
+    min-height: 0;
+    border: 0;
+    background: transparent;
     box-shadow: none;
+    overflow: visible;
   }
 
   .my-request-dialog__header,
@@ -101,6 +106,13 @@
     z-index: 4;
   }
 
+  .my-request-dialog__nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 0 var(--space-3);
+  }
+
   .my-request-dialog__body {
     display: grid;
     gap: var(--my-work-dialog-gap);
@@ -118,7 +130,9 @@
   }
 
   .my-request-dialog__body--details {
-    padding-top: 72px;
+    padding-inline: 0;
+    padding-top: 0;
+    padding-bottom: 0;
     max-height: none;
     overflow: visible;
     gap: 0;

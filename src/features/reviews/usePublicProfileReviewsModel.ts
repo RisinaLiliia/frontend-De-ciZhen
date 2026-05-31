@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-import { getReviewsOverview } from '@/lib/api/reviews';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
+import { getReviewsOverview } from '@/lib/api/reviews';
+import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { withStatusFallback } from '@/lib/api/withStatusFallback';
 
-const PROVIDER_REVIEWS_PAGE_SIZE = 4;
+const PUBLIC_PROFILE_REVIEWS_PAGE_SIZE = 4;
 const EMPTY_REVIEWS_OVERVIEW = {
   items: [] as ReviewDto[],
   total: 0,
-  limit: PROVIDER_REVIEWS_PAGE_SIZE,
+  limit: PUBLIC_PROFILE_REVIEWS_PAGE_SIZE,
   offset: 0,
   summary: {
     total: 0,
@@ -28,18 +28,19 @@ const EMPTY_REVIEWS_OVERVIEW = {
 
 type Translate = (key: I18nKey) => string;
 
-type UseProviderReviewsModelParams = {
-  providerId?: string | null;
-  providerTargetUserId: string | null;
-  providerRatingAvg?: number | null;
-  providerRatingCount?: number | null;
+type UsePublicProfileReviewsModelParams = {
+  profileId?: string | null;
+  targetUserId: string | null;
+  ratingAvg?: number | null;
+  ratingCount?: number | null;
+  targetRole?: 'provider' | 'client';
   locale: Locale;
   t: Translate;
 };
 
-export type ProviderReviewSort = 'latest' | 'top';
+export type PublicProfileReviewSort = 'latest' | 'top';
 
-export type ProviderReviewsUi = {
+export type PublicProfileReviewsUi = {
   sortLatest: string;
   sortTop: string;
   noText: string;
@@ -49,7 +50,7 @@ export type ProviderReviewsUi = {
   collapseAbout: string;
 };
 
-export type NormalizedProviderReview = {
+export type NormalizedPublicProfileReview = {
   id: string;
   rating: number;
   text: string;
@@ -57,39 +58,40 @@ export type NormalizedProviderReview = {
   createdAtTs: number | null;
 };
 
-export type ProviderReviewsDistribution = {
+export type PublicProfileReviewsDistribution = {
   stats: Map<number, number>;
   max: number;
 };
 
-export function useProviderReviewsModel({
-  providerId,
-  providerTargetUserId,
-  providerRatingAvg,
-  providerRatingCount,
+export function usePublicProfileReviewsModel({
+  profileId,
+  targetUserId,
+  ratingAvg,
+  ratingCount,
+  targetRole = 'provider',
   locale,
   t,
-}: UseProviderReviewsModelParams) {
-  const [reviewSort, setReviewSort] = React.useState<ProviderReviewSort>('latest');
+}: UsePublicProfileReviewsModelParams) {
+  const [reviewSort, setReviewSort] = React.useState<PublicProfileReviewSort>('latest');
   const [reviewPage, setReviewPage] = React.useState(1);
 
   React.useEffect(() => {
     setReviewPage(1);
-  }, [providerId, reviewSort]);
+  }, [profileId, reviewSort, targetRole]);
 
-  const reviewsOffset = (reviewPage - 1) * PROVIDER_REVIEWS_PAGE_SIZE;
+  const reviewsOffset = (reviewPage - 1) * PUBLIC_PROFILE_REVIEWS_PAGE_SIZE;
   const reviewsSortValue = reviewSort === 'top' ? 'rating_desc' : 'created_desc';
 
   const reviewsOverviewQuery = useQuery({
-    queryKey: ['provider-reviews-overview', providerTargetUserId, reviewsSortValue, reviewPage],
-    enabled: Boolean(providerTargetUserId),
+    queryKey: ['public-reviews-overview', targetRole, targetUserId, reviewsSortValue, reviewPage],
+    enabled: Boolean(targetUserId),
     queryFn: () =>
       withStatusFallback(
         () =>
           getReviewsOverview({
-            targetUserId: String(providerTargetUserId),
-            targetRole: 'provider',
-            limit: PROVIDER_REVIEWS_PAGE_SIZE,
+            targetUserId: String(targetUserId),
+            targetRole,
+            limit: PUBLIC_PROFILE_REVIEWS_PAGE_SIZE,
             offset: reviewsOffset,
             sort: reviewsSortValue,
           }),
@@ -100,7 +102,7 @@ export function useProviderReviewsModel({
     staleTime: 60_000,
   });
 
-  const reviewsUi: ProviderReviewsUi = locale === 'de'
+  const reviewsUi: PublicProfileReviewsUi = locale === 'de'
     ? {
         sortLatest: 'Neueste',
         sortTop: 'Top bewertet',
@@ -132,17 +134,19 @@ export function useProviderReviewsModel({
   );
 
   const normalizeReviews = React.useCallback(
-    (rows: ReviewDto[]): NormalizedProviderReview[] =>
+    (rows: ReviewDto[]): NormalizedPublicProfileReview[] =>
       rows.map((item) => {
         const rawRating = Number(item.rating ?? 0);
-        const rating = Number.isFinite(rawRating) ? Math.max(1, Math.min(5, Math.round(rawRating))) : 0;
+        const normalizedRating = Number.isFinite(rawRating)
+          ? Math.max(1, Math.min(5, Math.round(rawRating)))
+          : 0;
         const text = item.text?.trim() || item.comment?.trim() || '';
         const createdAtRaw = item.createdAt ? new Date(item.createdAt) : null;
         const createdAtTs =
           createdAtRaw && Number.isFinite(createdAtRaw.getTime()) ? createdAtRaw.getTime() : null;
         return {
           id: item.id,
-          rating,
+          rating: normalizedRating,
           text,
           authorName: item.authorName?.trim() || t(I18N_KEYS.provider.unnamed),
           createdAtTs,
@@ -161,14 +165,14 @@ export function useProviderReviewsModel({
     return Math.round((sum / pageReviews.length) * 10) / 10;
   }, [pageReviews]);
   const displayRatingAvg = React.useMemo(() => {
-    const raw = Number(providerRatingAvg);
+    const raw = Number(ratingAvg);
     if (Number.isFinite(raw) && raw >= 0) return raw;
     const summaryAvg = Number(reviewsOverviewQuery.data?.summary?.averageRating);
     if (Number.isFinite(summaryAvg) && summaryAvg >= 0) return summaryAvg;
     return fallbackReviewsAverage;
-  }, [fallbackReviewsAverage, providerRatingAvg, reviewsOverviewQuery.data?.summary?.averageRating]);
+  }, [fallbackReviewsAverage, ratingAvg, reviewsOverviewQuery.data?.summary?.averageRating]);
   const displayRatingCount = (() => {
-    const raw = Number(providerRatingCount);
+    const raw = Number(ratingCount);
     if (Number.isFinite(raw) && raw >= 0) return Math.round(raw);
     const summaryTotal = Number(reviewsOverviewQuery.data?.summary?.total);
     if (Number.isFinite(summaryTotal) && summaryTotal >= 0) return Math.round(summaryTotal);
@@ -176,7 +180,7 @@ export function useProviderReviewsModel({
     return pageReviews.length;
   })();
   const hasRecentReview = displayRatingCount > 0;
-  const reviewsDistribution: ProviderReviewsDistribution = React.useMemo(() => {
+  const reviewsDistribution: PublicProfileReviewsDistribution = React.useMemo(() => {
     const stats = new Map<number, number>();
     for (let score = 1; score <= 5; score += 1) stats.set(score, 0);
     const summary = reviewsOverviewQuery.data?.summary?.distribution;
@@ -210,12 +214,12 @@ export function useProviderReviewsModel({
     if (typeof reviewsOverviewQuery.data?.total === 'number') return Math.max(0, Math.floor(reviewsOverviewQuery.data.total));
     const summaryTotal = Number(reviewsOverviewQuery.data?.summary?.total);
     if (Number.isFinite(summaryTotal) && summaryTotal >= 0) return Math.max(0, Math.floor(summaryTotal));
-    const raw = Number(providerRatingCount);
+    const raw = Number(ratingCount);
     if (Number.isFinite(raw) && raw >= 0) return Math.max(0, Math.floor(raw));
     return pageReviews.length;
   })();
   const totalReviewPages = React.useMemo(
-    () => Math.max(1, Math.ceil(reviewsTotalForPagination / PROVIDER_REVIEWS_PAGE_SIZE)),
+    () => Math.max(1, Math.ceil(reviewsTotalForPagination / PUBLIC_PROFILE_REVIEWS_PAGE_SIZE)),
     [reviewsTotalForPagination],
   );
 
@@ -224,7 +228,7 @@ export function useProviderReviewsModel({
   }, [totalReviewPages]);
 
   const isReviewsLoading = reviewsOverviewQuery.isLoading && visibleReviews.length === 0;
-  const hasReviewsPagination = reviewsTotalForPagination > PROVIDER_REVIEWS_PAGE_SIZE;
+  const hasReviewsPagination = reviewsTotalForPagination > PUBLIC_PROFILE_REVIEWS_PAGE_SIZE;
 
   return {
     reviewSort,

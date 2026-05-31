@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 
-import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+import { BackButton } from '@/components/layout/BackButton';
 import { focusIfPresent, getTrapFocusTarget, resolveInitialFocusTarget } from '@/lib/a11y/focusTrap';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
@@ -72,6 +72,7 @@ export function RequestDialogShell({
   const panelRef = React.useRef<HTMLDivElement | null>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement | null>(null);
   const [isMounted, setIsMounted] = React.useState(false);
+  const showInlineDetailBackButton = presentation === 'inline' && bodyVariant === 'details';
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -159,21 +160,28 @@ export function RequestDialogShell({
         className={[
           presentation === 'modal'
             ? 'dc-modal__panel dc-modal__panel--wide'
-            : workspacePanelShell('my-request-dialog__panel--inline-shell'),
+            : '',
           'my-request-dialog__panel',
           'my-request-dialog__panel--details',
           presentation === 'inline' ? 'my-request-dialog__panel--inline' : '',
+          showInlineDetailBackButton ? 'my-request-dialog__panel--inline-details' : '',
         ].filter(Boolean).join(' ')}
       >
-        <button
-          ref={closeButtonRef}
-          type="button"
-          className="my-request-dialog__close my-request-dialog__close--floating"
-          onClick={onClose}
-          aria-label={translate(I18N_KEYS.workspace.dialogCloseLabel, locale)}
-        >
-          ×
-        </button>
+        {showInlineDetailBackButton ? (
+          <div className="my-request-dialog__nav">
+            <BackButton onClick={onClose} />
+          </div>
+        ) : (
+          <button
+            ref={closeButtonRef}
+            type="button"
+            className="my-request-dialog__close my-request-dialog__close--floating"
+            onClick={onClose}
+            aria-label={translate(I18N_KEYS.workspace.dialogCloseLabel, locale)}
+          >
+            ×
+          </button>
+        )}
 
         {isLoading ? (
           <div className="my-request-dialog__state">

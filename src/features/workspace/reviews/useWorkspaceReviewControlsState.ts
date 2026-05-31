@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import type { ProviderReviewSort } from '@/features/providers/profile/useProviderReviewsModel';
+import type { PublicProfileReviewSort } from '@/features/reviews/usePublicProfileReviewsModel';
 import type { ReviewRange } from '@/lib/api/dto/reviews';
 import {
   DEFAULT_WORKSPACE_REVIEW_RANGE,
@@ -13,7 +13,7 @@ import {
 const REVIEW_SORT_QUERY_KEY = 'reviewSort';
 const REVIEW_RANGE_QUERY_KEY = 'reviewRange';
 
-function parseReviewSort(value: string | null): ProviderReviewSort {
+function parseReviewSort(value: string | null): PublicProfileReviewSort {
   return value === 'top' ? 'top' : DEFAULT_WORKSPACE_REVIEW_SORT;
 }
 
@@ -36,7 +36,7 @@ export function useWorkspaceReviewControlsState() {
     router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
   }, [pathname, router, searchParams]);
 
-  const setReviewSort = React.useCallback((next: ProviderReviewSort) => {
+  const setReviewSort = React.useCallback((next: PublicProfileReviewSort) => {
     replaceParams((params) => {
       if (next === DEFAULT_WORKSPACE_REVIEW_SORT) {
         params.delete(REVIEW_SORT_QUERY_KEY);

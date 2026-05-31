@@ -33,7 +33,7 @@ import {
   getNextSlotStartAt,
   getProviderCityKey,
 } from '@/features/providers/profile/providerProfile.presentation';
-import { useProviderReviewsModel } from '@/features/providers/profile/useProviderReviewsModel';
+import { usePublicProfileReviewsModel } from '@/features/reviews/usePublicProfileReviewsModel';
 import {
   buildProviderPublicProfileAvailabilityCalendarConfig,
   buildProviderPublicProfileCard,
@@ -301,11 +301,11 @@ export function useProviderPublicProfileModel({
     totalReviewPages,
     isReviewsLoading,
     hasReviewsPagination,
-  } = useProviderReviewsModel({
-    providerId: typeof id === 'string' ? id : null,
-    providerTargetUserId,
-    providerRatingAvg: provider?.ratingAvg,
-    providerRatingCount: provider?.ratingCount,
+  } = usePublicProfileReviewsModel({
+    profileId: typeof id === 'string' ? id : null,
+    targetUserId: providerTargetUserId,
+    ratingAvg: provider?.ratingAvg,
+    ratingCount: provider?.ratingCount,
     locale,
     t,
   });
@@ -348,7 +348,6 @@ export function useProviderPublicProfileModel({
 
   const {
     statusLabel,
-    headerTags,
     priceLabel,
     pricePrefixLabel,
     priceSuffixLabel,
@@ -407,7 +406,6 @@ export function useProviderPublicProfileModel({
     availabilityCalendarConfig,
     hasRecentReview,
     statusLabel,
-    headerTags,
     priceLabel,
     pricePrefixLabel,
     priceSuffixLabel,

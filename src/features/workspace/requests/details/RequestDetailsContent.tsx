@@ -3,6 +3,7 @@
 import * as React from 'react';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { RequestDetailsViewModel } from '@/features/workspace/requests/details/viewModel';
+import { DetailActionBar } from '@/components/details/DetailActionBar';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -15,6 +16,7 @@ import {
   RequestDetailHeader,
   RequestDetailMetaRows,
   RequestDetailMobileCta,
+  RequestDetailPrice,
   RequestDetailSimilar,
   RequestOwnerEditPanel,
 } from '@/components/requests/details';
@@ -79,6 +81,7 @@ type Props = {
   similarFallbackMessage?: string;
   similarForRender?: RequestResponseDto[];
   similarHref?: string;
+  clientProfileHref?: string | null;
   onOpenSimilarRequest?: (requestId: string) => void;
   showSimilarSection?: boolean;
   asideChildren?: React.ReactNode;
@@ -136,6 +139,7 @@ export function RequestDetailsContent({
   similarFallbackMessage,
   similarForRender = [],
   similarHref,
+  clientProfileHref = null,
   onOpenSimilarRequest,
   showSimilarSection = true,
   asideChildren,
@@ -204,18 +208,12 @@ export function RequestDetailsContent({
                   dateLabel={viewModel.preferredDateLabel}
                   className="request-detail__summary-meta"
                 />
-                <div className="request-card__price request-detail__summary-price">
-                  <span className="proof-price">{priceLabel}</span>
-                  {requestPriceTrend ? (
-                    <span
-                      className={`request-card__price-trend ${
-                        requestPriceTrend === 'down' ? 'is-down' : 'is-up'
-                      }`.trim()}
-                    >
-                      {requestPriceTrend === 'down' ? '↓' : '↑'} {requestPriceTrendLabel}
-                    </span>
-                  ) : null}
-                </div>
+                <RequestDetailPrice
+                  className="request-detail__summary-price"
+                  priceLabel={priceLabel}
+                  priceTrend={requestPriceTrend}
+                  priceTrendLabel={requestPriceTrendLabel}
+                />
               </div>
 
               {viewModel.tagList.length > 0 ? (
@@ -231,7 +229,7 @@ export function RequestDetailsContent({
               {!showOwnerBadge && viewModel.hasClientInfo ? (
                 <RequestDetailClient
                   title=""
-                  profileHref={viewModel.clientProfileHref}
+                  profileHref={clientProfileHref}
                   name={viewModel.clientName}
                   avatarUrl={viewModel.clientAvatarUrl}
                   status={viewModel.clientStatus}
@@ -321,7 +319,7 @@ export function RequestDetailsContent({
         {!isDialogSurface && !showOwnerBadge && viewModel.hasClientInfo ? (
           <RequestDetailClient
             title={t(I18N_KEYS.requestDetails.clientTitle)}
-            profileHref={viewModel.clientProfileHref}
+            profileHref={clientProfileHref}
             name={viewModel.clientName}
             avatarUrl={viewModel.clientAvatarUrl}
             status={viewModel.clientStatus}
@@ -335,19 +333,15 @@ export function RequestDetailsContent({
         {isDialogSurface ? (
           <>
             {(showOfferCta || showChatCta) ? (
-              <div className="my-request-card__footer-bar request-detail__dialog-footer-bar">
-                <div className="my-request-card__footer-note is-info request-detail__dialog-advice">
-                  <span className="my-request-card__footer-note-icon" aria-hidden="true">
-                    i
-                  </span>
-                  <p className="my-request-card__footer-note-copy">{dialogAiAdvice}</p>
-                </div>
-
-                <div className="my-request-card__action-row request-detail__dialog-actions">
+              <DetailActionBar
+                className="request-detail__dialog-action-bar"
+                advice={dialogAiAdvice}
+                actions={(
+                  <>
                   {showChatCta ? (
                     <button
                       type="button"
-                      className="btn-secondary my-request-card__action-btn my-request-card__action-btn--secondary"
+                      className="btn-secondary request-detail__action-btn request-detail__action-btn--secondary"
                       onClick={onChat}
                     >
                       {t(I18N_KEYS.requestDetails.ctaChat)}
@@ -356,15 +350,16 @@ export function RequestDetailsContent({
                   {showOfferCta ? (
                     <button
                       type="button"
-                      className="btn-ghost is-primary my-request-card__action-btn my-request-card__action-btn--primary"
+                      className="btn-ghost is-primary request-detail__action-btn request-detail__action-btn--primary"
                       onClick={onApply}
                       title={applyTitle}
                     >
                       {applyLabel}
                     </button>
                   ) : null}
-                </div>
-              </div>
+                  </>
+                )}
+              />
             ) : null}
           </>
         ) : (

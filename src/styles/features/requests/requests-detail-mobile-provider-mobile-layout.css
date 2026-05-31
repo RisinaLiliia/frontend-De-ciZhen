@@ -10,36 +10,11 @@
       padding-bottom: var(--space-4);
     }
 
-    .request-detail--provider {
-      padding-bottom: var(--space-4);
-    }
-
-    .request-detail--provider .request-detail__price {
-      gap: 5px;
-      line-height: 1.2;
-      font-size: 16px;
-    }
-
-    .request-detail--provider .request-detail__price .proof-price {
-      font-size: 18px;
-      line-height: 1.1;
-    }
-
-    .request-detail--provider .request-detail__price-prefix,
-    .request-detail--provider .request-detail__price-suffix {
-      font-size: var(--fs-12);
-      line-height: 1.2;
-    }
-
     .request-detail__aside .request-detail__cta {
       display: none;
     }
 
     .request-detail__aside .request-detail__meta {
-      display: none;
-    }
-
-    .request-detail--provider .request-detail__aside .request-detail__availability-actions {
       display: none;
     }
 

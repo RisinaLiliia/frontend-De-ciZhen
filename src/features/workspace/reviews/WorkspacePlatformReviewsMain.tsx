@@ -106,18 +106,18 @@ export function WorkspacePlatformReviewsMain({
       emptyHint={t(I18N_KEYS.requestsPage.platformReviewsEmptyHint)}
     >
       {visibleReviews.map((review) => (
-        <article key={review.id} className={workspaceCardShell('provider-reviews-hub__item')}>
-          <div className="provider-reviews-hub__item-head">
-            <p className="provider-reviews-hub__item-author">{review.authorName}</p>
-            <p className="provider-reviews-hub__item-date">
+        <article key={review.id} className={workspaceCardShell('public-profile-reviews__item')}>
+          <div className="public-profile-reviews__item-head">
+            <p className="public-profile-reviews__item-author">{review.authorName}</p>
+            <p className="public-profile-reviews__item-date">
               {review.createdAtTs ? reviewDateFormatter.format(new Date(review.createdAtTs)) : ''}
             </p>
           </div>
-          <p className="provider-reviews-hub__item-stars" aria-label={`${review.rating} of 5`}>
+          <p className="public-profile-reviews__item-stars" aria-label={`${review.rating} of 5`}>
             {'★'.repeat(review.rating)}
             {'☆'.repeat(Math.max(0, 5 - review.rating))}
           </p>
-          <p className="provider-reviews-hub__item-text">{review.text}</p>
+          <p className="public-profile-reviews__item-text">{review.text}</p>
         </article>
       ))}
     </RequestsPaginatedPanel>

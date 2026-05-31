@@ -14,7 +14,7 @@ export { WorkspaceSectionDecisionPanel } from './WorkspaceSectionDecisionPanel';
 export { WorkspaceSectionErrorBoundary } from './WorkspaceSectionErrorBoundary';
 export { WorkspaceSummaryGrid } from './WorkspaceSummaryGrid';
 export { WorkspaceViewToggle } from './WorkspaceViewToggle';
-export { useIsDesktop, useIsWideDesktop, useMediaMatch } from './useIsDesktop';
+export { useIsDesktop, useMediaMatch } from './useIsDesktop';
 export { useWorkspaceFormatters } from './useWorkspaceFormatters';
 export {
   ALL_OPTION_KEY,

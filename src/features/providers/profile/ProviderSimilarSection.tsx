@@ -15,7 +15,7 @@ type ProviderSimilarSectionProps = {
 
 export function ProviderSimilarSection({ t, title, hint, cards }: ProviderSimilarSectionProps) {
   return (
-    <div className="request-detail__section request-detail__similar">
+    <div className="request-detail__section request-detail__similar provider-detail__similar-section">
       <h3 className="request-detail__section-title">{title}</h3>
       {hint ? <p className="request-detail__similar-note">{hint}</p> : null}
       {cards.length === 0 ? (

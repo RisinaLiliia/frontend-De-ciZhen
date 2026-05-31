@@ -2,7 +2,7 @@
 
 import { IconFilter } from '@/components/ui/icons/icons';
 import { RangeActionToolbar } from '@/components/ui/RangeActionToolbar';
-import type { ProviderReviewSort } from '@/features/providers/profile/useProviderReviewsModel';
+import type { PublicProfileReviewSort } from '@/features/reviews/usePublicProfileReviewsModel';
 import { WorkspaceButton } from '@/features/workspace/shared/WorkspaceButton';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
 import {
@@ -41,7 +41,7 @@ export function WorkspaceReviewsShellControls({
       </div>
 
       <div className="workspace-reviews-shell-controls__group workspace-reviews-shell-controls__group--sort">
-        <RangeActionToolbar<ProviderReviewSort>
+        <RangeActionToolbar<PublicProfileReviewSort>
           groupLabel={t(I18N_KEYS.requestsPage.sortLabel)}
           options={[
             { value: 'latest', label: t(I18N_KEYS.workspace.reviewSortLatest) },

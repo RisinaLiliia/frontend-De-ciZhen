@@ -7,9 +7,9 @@ import { getPlatformReviewsOverview } from '@/lib/api/reviews';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type {
-  NormalizedProviderReview,
-  ProviderReviewsDistribution,
-} from '@/features/providers/profile/useProviderReviewsModel';
+  NormalizedPublicProfileReview,
+  PublicProfileReviewsDistribution,
+} from '@/features/reviews/usePublicProfileReviewsModel';
 import { workspaceQK } from '@/features/workspace/data';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
 
@@ -67,7 +67,7 @@ function toNormalizedReview(
     text,
     authorName: item.authorName?.trim() || fallbackAuthor,
     createdAtTs,
-  } satisfies NormalizedProviderReview;
+  } satisfies NormalizedPublicProfileReview;
 }
 
 export function useWorkspacePlatformReviewsOverview({
@@ -110,7 +110,7 @@ export function useWorkspacePlatformReviewsOverview({
     staleTime: 60_000,
   });
 
-  const visibleReviews = React.useMemo<NormalizedProviderReview[]>(
+  const visibleReviews = React.useMemo<NormalizedPublicProfileReview[]>(
     () =>
       (platformQuery.data?.items ?? []).map((item) =>
         toNormalizedReview(
@@ -131,7 +131,7 @@ export function useWorkspacePlatformReviewsOverview({
     return Number.isFinite(summaryAvg) && summaryAvg >= 0 ? summaryAvg : 0;
   }, [platformQuery.data?.summary.averageRating]);
 
-  const reviewsDistribution: ProviderReviewsDistribution = React.useMemo(() => {
+  const reviewsDistribution: PublicProfileReviewsDistribution = React.useMemo(() => {
     const stats = new Map<number, number>();
     for (let score = 1; score <= 5; score += 1) stats.set(score, 0);
     const distribution = platformQuery.data?.summary.distribution;

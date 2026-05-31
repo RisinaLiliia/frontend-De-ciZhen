@@ -1,44 +1,6 @@
 /* src/styles/features/requests/requests-detail-reviews-actions.css */
 
 @layer components {
-  .request-detail--provider .provider-reviews-hub__sort-btn {
-    color: var(--color-text);
-  }
-
-  @media (max-width: 767px) {
-    .request-detail--provider .request-detail__panel,
-    .request-detail--provider .request-detail__section,
-    .request-detail--provider .provider-reviews-hub,
-    .request-detail--provider .provider-reviews-hub__feed,
-    .request-detail--provider .provider-reviews-hub__summary {
-      min-width: 0;
-    }
-
-    .request-detail--provider .request-detail__panel {
-      overflow-x: clip;
-    }
-
-    .request-detail--provider .provider-reviews-hub__toolbar {
-      align-items: flex-start;
-    }
-
-    .request-detail--provider .provider-reviews-hub__sort {
-      flex-wrap: wrap;
-      max-width: 100%;
-    }
-
-    .request-detail--provider .provider-reviews-hub__sort-btn {
-      max-width: 100%;
-      white-space: normal;
-      text-align: center;
-    }
-
-    .request-detail--provider .provider-reviews-hub__page-nav {
-      margin-inline: auto;
-    }
-
-  }
-
   .request-detail__mobile-cta {
     display: none;
   }

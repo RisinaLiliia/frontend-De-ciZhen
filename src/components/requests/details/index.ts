@@ -1,6 +1,7 @@
 export { RequestDetailLoading } from './RequestDetailLoading';
 export { RequestDetailError } from './RequestDetailError';
 export { RequestDetailHeader } from './RequestDetailHeader';
+export { RequestDetailPrice } from './RequestDetailPrice';
 export { RequestDetailGallery } from './RequestDetailGallery';
 export { RequestDetailAbout } from './RequestDetailAbout';
 export { RequestDetailClient } from './RequestDetailClient';

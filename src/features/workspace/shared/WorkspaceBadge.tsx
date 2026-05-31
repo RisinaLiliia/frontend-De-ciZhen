@@ -11,6 +11,7 @@ export type WorkspaceBadgeVariant =
   | 'neutral'
   | 'success'
   | 'warning'
+  | 'danger'
   | 'risk'
   | 'opportunity'
   | 'priority'
@@ -20,6 +21,7 @@ const WORKSPACE_BADGE_VARIANT_MAP: Record<WorkspaceBadgeVariant, BadgeVariant> =
   neutral: 'neutral',
   success: 'success',
   warning: 'warning',
+  danger: 'risk',
   risk: 'risk',
   opportunity: 'opportunity',
   priority: 'warning',
@@ -52,6 +54,12 @@ const WORKSPACE_BADGE_STYLE_MAP: Record<WorkspaceBadgeVariant, WorkspaceBadgeSty
     '--badge-border': 'var(--color-warning-border)',
     '--badge-text': 'var(--dc-sand)',
     '--badge-accent': 'var(--dc-sand)',
+  },
+  danger: {
+    '--badge-bg': 'var(--dc-danger-soft)',
+    '--badge-border': 'var(--color-danger-border)',
+    '--badge-text': 'var(--dc-danger)',
+    '--badge-accent': 'var(--dc-danger)',
   },
   priority: {
     '--badge-bg': 'var(--dc-primary-soft)',

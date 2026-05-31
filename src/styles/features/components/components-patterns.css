@@ -16,8 +16,8 @@
   }
 
   :is(
-      .provider-reviews-hub__summary,
-      .provider-reviews-hub__item
+      .public-profile-reviews__summary,
+      .public-profile-reviews__item
     ) {
     border: 1px solid var(--soft-surface-border, var(--surface-soft-border));
     background: var(--soft-surface-bg, var(--surface-soft-bg-strong));

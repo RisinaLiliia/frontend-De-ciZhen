@@ -1,10 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-import { BackButton } from '@/components/layout/BackButton';
+import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
 import { ProviderPublicProfileContent } from '@/features/providers/profile/ProviderPublicProfileContent';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { useI18n } from '@/lib/i18n/I18nProvider';
+import { useT } from '@/lib/i18n/useT';
 import {
   buildWorkspaceProviderDetailHref,
   clearWorkspaceProviderDetailHref,
@@ -15,7 +18,10 @@ export function WorkspaceProviderDetailStage({
 }: {
   providerId: string;
 }) {
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const { locale } = useI18n();
+  const t = useT();
 
   const nextPath = React.useMemo(
     () => buildWorkspaceProviderDetailHref({ currentSearch: searchParams, providerId }),
@@ -37,18 +43,28 @@ export function WorkspaceProviderDetailStage({
     (nextProviderId: string) => `${profileHrefBuilder(nextProviderId)}#reviews`,
     [profileHrefBuilder],
   );
+  const handleClose = React.useCallback(() => {
+    router.push(backHref);
+  }, [backHref, router]);
 
   return (
-    <div className="workspace-provider-detail-stage">
-      <div className="workspace-provider-detail-stage__toolbar">
-        <BackButton fallbackHref={backHref} />
-      </div>
+    <RequestDialogShell
+      locale={locale}
+      ariaLabel={t(I18N_KEYS.provider.unnamed)}
+      onClose={handleClose}
+      isLoading={false}
+      isError={false}
+      errorTitle=""
+      errorBody=""
+      presentation="inline"
+    >
       <ProviderPublicProfileContent
         providerId={providerId}
         nextPath={nextPath}
         profileHrefBuilder={profileHrefBuilder}
         reviewsHrefBuilder={reviewsHrefBuilder}
+        surface="dialog"
       />
-    </div>
+    </RequestDialogShell>
   );
 }
