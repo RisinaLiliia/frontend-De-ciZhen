@@ -66,9 +66,6 @@ export function PrivateRequestSessionDialog({
       : activeRequestState && activeRequestCard
         ? 'detail'
         : null;
-
-  if (!scene) return null;
-
   const t = (key: typeof I18N_KEYS.workspace[keyof typeof I18N_KEYS.workspace] | typeof I18N_KEYS.requestDetails[keyof typeof I18N_KEYS.requestDetails] | typeof I18N_KEYS.auth[keyof typeof I18N_KEYS.auth] | typeof I18N_KEYS.requestsPage[keyof typeof I18N_KEYS.requestsPage]) => translate(key, locale);
   const ariaLabel = scene === 'chat'
     ? activeChatState?.title || t(I18N_KEYS.workspace.messagesTitle)
@@ -85,6 +82,8 @@ export function PrivateRequestSessionDialog({
     }
     onDismissSession();
   }, [isCustomerProfileView, onDismissSession, router, scene, searchParams]);
+
+  if (!scene) return null;
 
   return (
     <RequestDialogShell

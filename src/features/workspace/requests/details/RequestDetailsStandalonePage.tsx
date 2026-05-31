@@ -204,21 +204,14 @@ export function RequestDetailsStandalonePage() {
     },
   });
 
-  if (!isHydrated || isLoading) {
-    return <RequestDetailLoading />;
-  }
-  if (isError || !request || !viewModel) {
-    return <RequestDetailError message={t(I18N_KEYS.requestsPage.error)} />;
-  }
-
   const isCustomerProfileView = activeRequestProfile === 'customer';
   const clientProfileHref = React.useMemo(() => {
-    if (!(request.clientId || request.clientName)) return null;
+    if (!(request?.clientId || request?.clientName)) return null;
     const nextParams = new URLSearchParams(searchParams?.toString());
     nextParams.set(WORKSPACE_REQUEST_PROFILE_QUERY_KEY, 'customer');
     const qs = nextParams.toString();
     return `${pathname}${qs ? `?${qs}` : ''}`;
-  }, [pathname, request.clientId, request.clientName, searchParams]);
+  }, [pathname, request?.clientId, request?.clientName, searchParams]);
   const backHref = React.useMemo(() => {
     if (!isCustomerProfileView) {
       return isAuthed ? WORKSPACE_MY_REQUESTS_URL : WORKSPACE_GUEST_REQUESTS_URL;
@@ -228,6 +221,13 @@ export function RequestDetailsStandalonePage() {
     const qs = nextParams.toString();
     return `${pathname}${qs ? `?${qs}` : ''}`;
   }, [isAuthed, isCustomerProfileView, pathname, searchParams]);
+
+  if (!isHydrated || isLoading) {
+    return <RequestDetailLoading />;
+  }
+  if (isError || !request || !viewModel) {
+    return <RequestDetailError message={t(I18N_KEYS.requestsPage.error)} />;
+  }
 
   return (
     <PageShell

@@ -2,7 +2,6 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-import { RequestDetailError, RequestDetailLoading } from '@/components/requests/details';
 import { usePublicProfileReviewsModel } from '@/features/reviews/usePublicProfileReviewsModel';
 import type { CustomerPublicProfileSnapshot } from '@/features/customers/profile/customerPublicProfile.model';
 import { getPublicCustomerById } from '@/lib/api/customers';

@@ -13,7 +13,7 @@ import {
 } from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useProviderFavoriteToggle } from '@/hooks/useFavoriteToggles';
-import { useAuthMe, useAuthStatus } from '@/hooks/useAuthSnapshot';
+import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
@@ -60,7 +60,6 @@ export function useProviderPublicProfileModel({
   const t = useT();
   const { locale } = useI18n();
   const authStatus = useAuthStatus();
-  const authMe = useAuthMe();
   const qc = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();

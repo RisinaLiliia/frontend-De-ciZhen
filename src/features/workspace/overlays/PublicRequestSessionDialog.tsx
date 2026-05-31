@@ -63,9 +63,6 @@ export function PublicRequestSessionDialog({
       : activeRequestState
         ? 'detail'
         : null;
-
-  if (!scene) return null;
-
   const requestId = activeRequestState?.requestId ?? activeOfferRequestId ?? null;
   const requestIntent = activeRequestState?.intent ?? 'view';
   const t = (key: typeof I18N_KEYS.workspace[keyof typeof I18N_KEYS.workspace] | typeof I18N_KEYS.requestDetails[keyof typeof I18N_KEYS.requestDetails] | typeof I18N_KEYS.requestsPage[keyof typeof I18N_KEYS.requestsPage]) => translate(key, locale);
@@ -84,6 +81,8 @@ export function PublicRequestSessionDialog({
     }
     onDismissSession();
   }, [isCustomerProfileView, onDismissSession, router, scene, searchParams]);
+
+  if (!scene) return null;
 
   return (
     <RequestDialogShell
