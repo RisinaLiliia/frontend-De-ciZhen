@@ -5,11 +5,25 @@
     --form-max: 560px;
   }
 
+  .request-create--workspace {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    display: grid;
+    gap: var(--space-4);
+  }
+
   .request-form {
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
     padding: 0;
+  }
+
+  .request-form--workspace {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
   }
 
   .request-section {
@@ -37,6 +51,16 @@
   @media (min-width: 768px) {
     .request-form__row.is-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .request-create--workspace {
+      gap: var(--space-3);
+    }
+
+    .request-create--workspace .request-section {
+      padding: var(--space-4);
     }
   }
 

@@ -51,22 +51,6 @@
     align-items: flex-start;
   }
 
-  .requests-panel--plain {
-    padding: 0;
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .requests-panel--plain:hover,
-  .requests-panel--plain:focus-within,
-  .requests-panel--plain:focus-visible {
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-    transform: none;
-  }
-
   .offer-actions {
     display: flex;
     flex-wrap: wrap;

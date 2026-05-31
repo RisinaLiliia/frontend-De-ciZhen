@@ -71,6 +71,7 @@ export type CreateRequestPageViewProps = {
   onTagRemove: (tag: string) => void;
   isSubmitting: boolean;
   activeSubmitIntent: 'draft' | 'publish' | null;
+  layoutVariant?: 'page' | 'workspace';
 };
 
 export function CreateRequestFormContent({
@@ -125,15 +126,20 @@ export function CreateRequestFormContent({
   onTagRemove,
   isSubmitting,
   activeSubmitIntent,
+  layoutVariant = 'page',
 }: CreateRequestPageViewProps) {
+  const rootClassName = layoutVariant === 'workspace'
+    ? 'request-create request-create--workspace'
+    : 'container-mobile request-create request-create--page';
+
   return (
-    <div className="container-mobile request-create">
+    <div className={rootClassName}>
       <section className="text-center stack-sm">
         <h1 className="typo-h1">{t('request.title')}</h1>
         <p className="typo-muted">{t('request.subtitle')}</p>
       </section>
 
-      <form className="card request-form" onSubmit={onSubmit}>
+      <form className={`card request-form ${layoutVariant === 'workspace' ? 'request-form--workspace' : ''}`.trim()} onSubmit={onSubmit}>
         <CreateRequestBasicsSection
           t={t}
           requiredHint={requiredHint}
@@ -204,7 +210,7 @@ export function CreateRequestFormContent({
 export function CreateRequestPageView(props: CreateRequestPageViewProps) {
   return (
     <PageShell right={<AuthActions />} withSpacer={false}>
-      <CreateRequestFormContent {...props} />
+      <CreateRequestFormContent {...props} layoutVariant="page" />
     </PageShell>
   );
 }

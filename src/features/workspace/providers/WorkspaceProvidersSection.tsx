@@ -43,36 +43,34 @@ export const WorkspaceProvidersSection = React.memo(function WorkspaceProvidersS
 }: WorkspaceProvidersSectionProps) {
   const searchParams = useSearchParams();
   const activeProviderId = searchParams.get(WORKSPACE_PROVIDER_ID_QUERY_KEY)?.trim() || null;
+  const rootClassName = 'workspace-section-pane workspace-explore-grid workspace-explore-grid--single';
 
   if (activeProviderId) {
     return (
-      <div className="workspace-providers-section workspace-explore-grid workspace-explore-grid--single">
-        <div>
-          <WorkspaceProviderDetailStage providerId={activeProviderId} />
-        </div>
+      <div className={rootClassName}>
+        <WorkspaceProviderDetailStage providerId={activeProviderId} />
       </div>
     );
   }
 
   return (
-    <div className="workspace-providers-section workspace-explore-grid workspace-explore-grid--single">
-      <div>
-        <ExploreRequestsPanel
-          t={t}
-          locale={locale}
-          contentType="providers"
-          providerLinkMode="workspace"
-          showHeading={false}
-          showBack={false}
-          backHref="/"
-          onListDensityChange={onListDensityChange}
-          showTopFilters={false}
-          initialPublicRequests={initialPublicRequests}
-          preferInitialPublicRequests={preferInitialPublicRequests}
-          initialPublicRequestsLoading={initialPublicRequestsLoading}
-          initialPublicRequestsError={initialPublicRequestsError}
-        />
-      </div>
+    <div className={rootClassName}>
+      <ExploreRequestsPanel
+        t={t}
+        locale={locale}
+        layoutVariant="workspace"
+        contentType="providers"
+        providerLinkMode="workspace"
+        showHeading={false}
+        showBack={false}
+        backHref="/"
+        onListDensityChange={onListDensityChange}
+        showTopFilters={false}
+        initialPublicRequests={initialPublicRequests}
+        preferInitialPublicRequests={preferInitialPublicRequests}
+        initialPublicRequestsLoading={initialPublicRequestsLoading}
+        initialPublicRequestsError={initialPublicRequestsError}
+      />
     </div>
   );
 });

@@ -27,8 +27,3 @@ export function useIsDesktop() {
   // Desktop breakpoint matches the workspace layout threshold.
   return useMediaMatch('(min-width: 1024px)');
 }
-
-export function useIsWideDesktop() {
-  // Wide desktop keeps the sidebar pinned without squeezing content.
-  return useMediaMatch('(min-width: 1280px)');
-}

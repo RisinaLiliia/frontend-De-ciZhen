@@ -29,6 +29,7 @@ export type { RequestsExplorerProps } from '@/components/requests/requestsExplor
 export function RequestsExplorer({
   t,
   locale,
+  layoutVariant = 'default',
   contentType = 'requests',
   providerLinkMode = 'standalone',
   backHref = '/',
@@ -222,6 +223,7 @@ export function RequestsExplorer({
 
   return (
     <RequestsExplorerView
+      layoutVariant={layoutVariant}
       isProvidersView={isProvidersView}
       showBack={showBack}
       backHref={backHref}

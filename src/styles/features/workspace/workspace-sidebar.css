@@ -154,7 +154,7 @@
     color: var(--color-text-muted);
   }
 
-  @media (max-width: 1279px) {
+  @media (max-width: 1023px) {
     .workspace-sidebar {
       display: none;
     }

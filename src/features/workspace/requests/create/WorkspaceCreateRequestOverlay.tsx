@@ -175,7 +175,7 @@ function CreateRequestContent({
         bodyVariant="default"
         presentation="inline"
       >
-        <CreateRequestFormContent {...viewProps} />
+        <CreateRequestFormContent {...viewProps} layoutVariant="workspace" />
       </RequestDialogShell>
     );
   }

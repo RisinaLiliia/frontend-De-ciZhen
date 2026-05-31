@@ -13,6 +13,7 @@ import type { RequestsListShellHeaderMode } from '@/components/requests/Requests
 export type RequestsExplorerProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
+  layoutVariant?: 'default' | 'workspace';
   contentType?: 'requests' | 'providers';
   providerLinkMode?: 'standalone' | 'workspace';
   backHref?: string;

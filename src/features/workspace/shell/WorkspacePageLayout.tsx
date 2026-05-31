@@ -9,7 +9,6 @@ import {
 import {
   WorkspaceContextRail,
   useIsDesktop,
-  useIsWideDesktop,
   useMediaMatch,
 } from '@/features/workspace/shared';
 import { WorkspaceTopProvidersAside } from '@/features/workspace/providers';
@@ -130,7 +129,6 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isDesktop = useIsDesktop();
-  const isWideDesktop = useIsWideDesktop();
   const isMobile = useMediaMatch('(max-width: 767px)');
   const isOverviewPrivateMode =
     !isWorkspacePublicSection &&
@@ -151,7 +149,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     [activePublicSection, intro, isDesktop],
   );
 
-  const workspaceSidebar = isDesktop && isWideDesktop ? (
+  const workspaceSidebar = isDesktop ? (
     <WorkspaceSidebar
       t={t}
       locale={locale}
@@ -162,8 +160,8 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   ) : null;
   const workspaceTopBar = isMobile ? null : (
     <WorkspaceTopBar
-      showNavigationToggle={!isWideDesktop}
-      compactUtility={!isWideDesktop}
+      showNavigationToggle={!isDesktop}
+      compactUtility={!isDesktop}
     />
   );
 
@@ -264,7 +262,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     </WorkspaceContextRail>
   );
 
-  const overlayNavigationMode = isWideDesktop ? null : (isMobile ? 'bottomDock' : 'drawer');
+  const overlayNavigationMode = isDesktop ? null : (isMobile ? 'bottomDock' : 'drawer');
   const workspaceMobileNavigation = overlayNavigationMode ? (
     <WorkspaceMobileNavigation
       mode={overlayNavigationMode}

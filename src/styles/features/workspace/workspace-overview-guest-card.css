@@ -8,13 +8,6 @@
     align-content: start;
   }
 
-  .workspace-guest-request-card-shell {
-    display: grid;
-    width: 100%;
-    min-width: 0;
-    container-type: inline-size;
-  }
-
   .workspace-guest-request-card {
     width: 100%;
     max-width: none;

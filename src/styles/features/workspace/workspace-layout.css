@@ -133,6 +133,48 @@
     gap: clamp(18px, 1.8vw, 24px);
   }
 
+  .workspace-section-body > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .workspace-section-pane,
+  .workspace-explorer-shell {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .workspace-list-card-shell {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    container-type: inline-size;
+  }
+
+  :is(.workspace-guest-request-card, .workspace-provider-card, .workspace-list-card) {
+    --workspace-list-card-min-height: var(--workspace-overview-card-min-height, 184px);
+    --workspace-list-card-inline-pad: 16px;
+    --workspace-list-card-block-pad: 16px;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    align-content: start;
+  }
+
+  .workspace-list-card__badge-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .workspace-list-card__badge-group .ui-badge {
+    max-width: 100%;
+  }
+
   .workspace-section-rail {
     display: flex;
     flex-direction: column;
@@ -229,7 +271,7 @@
     background: none;
   }
 
-  @media (max-width: 1279px) {
+  @media (max-width: 1023px) {
     .workspace-shell,
     .workspace-frame__body {
       width: 100%;
@@ -253,7 +295,7 @@
     }
   }
 
-  @media (min-width: 1280px) {
+  @media (min-width: 1024px) {
     .workspace-topbar__menu {
       display: none;
     }

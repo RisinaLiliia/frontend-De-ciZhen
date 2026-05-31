@@ -88,7 +88,8 @@ function areWorkspaceRequestRouteStatesEqual(
   return left.requestCreate === right.requestCreate
     && left.requestId === right.requestId
     && left.requestIntent === right.requestIntent
-    && left.requestPanel === right.requestPanel;
+    && left.requestPanel === right.requestPanel
+    && left.requestProfile === right.requestProfile;
 }
 
 function resolveRequestDialogIntent(action: { key: string }): RequestDialogIntent {
@@ -643,7 +644,7 @@ function WorkspaceRequestCard({
     const marketActions = [chrome.secondaryAction, chrome.primaryAction].filter(Boolean) as PrivateRequestCardAction[];
 
     return (
-      <div className="workspace-guest-request-card-shell" data-request-id={card.requestId}>
+      <div className="workspace-list-card-shell workspace-guest-request-card-shell" data-request-id={card.requestId}>
         <WorkspaceGuestRequestCard
           prefetch={index < 2}
           href={requestHref}

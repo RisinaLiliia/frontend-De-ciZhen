@@ -61,7 +61,7 @@ export function PublicRequestsCardList({
         });
 
         return (
-          <div key={item.id} className="workspace-guest-request-card-shell">
+          <div key={item.id} className="workspace-list-card-shell workspace-guest-request-card-shell">
             <WorkspaceGuestRequestCard
               prefetch={index < 2}
               href={view.card.detailsHref}

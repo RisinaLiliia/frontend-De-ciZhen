@@ -42,23 +42,22 @@ export const WorkspaceExploreSection = React.memo(function WorkspaceExploreSecti
   initialPublicRequestsError,
 }: WorkspaceExploreSectionProps) {
   return (
-    <div className="workspace-explore-grid workspace-explore-grid--single">
-      <div>
-        <ExploreRequestsPanel
-          t={t}
-          locale={locale}
-          contentType={activeSection === 'providers' ? 'providers' : 'requests'}
-          showHeading={false}
-          showBack={false}
-          backHref="/"
-          onListDensityChange={onListDensityChange}
-          showTopFilters={false}
-          initialPublicRequests={initialPublicRequests}
-          preferInitialPublicRequests={preferInitialPublicRequests}
-          initialPublicRequestsLoading={initialPublicRequestsLoading}
-          initialPublicRequestsError={initialPublicRequestsError}
-        />
-      </div>
+    <div className="workspace-section-pane workspace-explore-grid workspace-explore-grid--single">
+      <ExploreRequestsPanel
+        t={t}
+        locale={locale}
+        layoutVariant="workspace"
+        contentType={activeSection === 'providers' ? 'providers' : 'requests'}
+        showHeading={false}
+        showBack={false}
+        backHref="/"
+        onListDensityChange={onListDensityChange}
+        showTopFilters={false}
+        initialPublicRequests={initialPublicRequests}
+        preferInitialPublicRequests={preferInitialPublicRequests}
+        initialPublicRequestsLoading={initialPublicRequestsLoading}
+        initialPublicRequestsError={initialPublicRequestsError}
+      />
     </div>
   );
 });
