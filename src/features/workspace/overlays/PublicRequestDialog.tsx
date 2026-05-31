@@ -25,6 +25,13 @@ import { workspaceQK } from '@/features/workspace/data';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
 import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
 import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
+import { CustomerPublicProfileContent } from '@/features/customers/profile/CustomerPublicProfileContent';
+import { buildCustomerPublicProfileSnapshotFromRequest } from '@/features/customers/profile/customerPublicProfile.model';
+import {
+  buildWorkspaceRequestCustomerProfileHref,
+  clearWorkspaceRequestProfileHref,
+  WORKSPACE_REQUEST_PROFILE_QUERY_KEY,
+} from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 function RequestDetailInteractionMenuItem({
   children,
@@ -192,6 +199,7 @@ export function PublicRequestDialog({
 
   const isAuthed = authStatus === 'authenticated';
   const currentUserId = authUser?.id ?? authMe?.id ?? null;
+  const activeRequestProfile = searchParams?.get(WORKSPACE_REQUEST_PROFILE_QUERY_KEY);
   const {
     request,
     isLoading,
@@ -275,6 +283,21 @@ export function PublicRequestDialog({
   const hasResolvedContent = Boolean(resolvedRequest && resolvedViewModel);
   const hasDialogError = !isPending && (isError || !hasResolvedContent);
   const [isDeletingOffer, setIsDeletingOffer] = React.useState(false);
+  const isCustomerProfileView = activeRequestProfile === 'customer';
+  const clientProfileHref = React.useMemo(() => {
+    if (!requestId) return null;
+    if (!(resolvedRequest?.clientId || resolvedRequest?.clientName)) return null;
+
+    return buildWorkspaceRequestCustomerProfileHref({
+      currentSearch: searchParams,
+      requestId,
+      scope: 'market',
+      intent: initialIntent,
+    });
+  }, [initialIntent, requestId, resolvedRequest?.clientId, resolvedRequest?.clientName, searchParams]);
+  const handleCloseProfile = React.useCallback(() => {
+    router.push(clearWorkspaceRequestProfileHref({ currentSearch: searchParams }));
+  }, [router, searchParams]);
 
   const replaceWithOfferSheet = React.useCallback((targetRequestId: string) => {
     onOpenOfferSheet(targetRequestId);
@@ -408,81 +431,89 @@ export function PublicRequestDialog({
   }, [offerCardState, t]);
 
   const content = hasResolvedContent ? (
-    <RequestDetailsContent
-      t={t}
-      locale={locale}
-      request={resolvedRequest!}
-      viewModel={resolvedViewModel!}
-      surface="dialog"
-      statusBadgeContent={offerStatusBadge ?? undefined}
-      headerActionSlot={!isOwner ? (
-        <RequestDetailInteractionMenu
-          t={t}
-          isSaved={isSaved}
-          isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
-          canEditOffer={offerCardState === 'sent'}
-          canDeleteOffer={offerCardState === 'sent'}
-          isDeletingOffer={isDeletingOffer}
-          onToggleFavorite={handleFavorite}
-          onEditOffer={handleEditOffer}
-          onDeleteOffer={() => {
-            void handleDeleteOffer();
-          }}
-          onShare={() => {
-            void handleShare();
-          }}
-        />
-      ) : undefined}
-      requestStatusView={requestStatusView}
-      requestPriceTrend={requestPriceTrend}
-      requestPriceTrendLabel={requestPriceTrendLabel}
-      applyLabel={applyLabel}
-      applyState={applyState}
-      applyTitle={applyTitle}
-      showOfferCta={!isOwner}
-      showChatCta={!isOwner}
-      showFavoriteCta={!isOwner}
-      showOwnerBadge={showOwnerBadge}
-      isSaved={isSaved}
-      isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
-      onApply={handleApply}
-      onChat={handleChat}
-      onFavorite={handleFavorite}
-      isOwnerEditMode={isOwnerEditMode}
-      ownerTitle={ownerTitle}
-      ownerDescription={ownerDescription}
-      ownerPrice={ownerPrice}
-      ownerCityId={ownerCityId}
-      ownerPreferredDate={ownerPreferredDate}
-      ownerPhotos={ownerPhotos}
-      isSavingOwner={isSavingOwner}
-      isUploadingOwnerPhoto={isUploadingOwnerPhoto}
-      activeOwnerSubmitIntent={activeOwnerSubmitIntent}
-      ownerPriceTrend={ownerPriceTrend}
-      onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
-      onOwnerClearText={handleOwnerClearText}
-      onOwnerTitleChange={setOwnerTitle}
-      onOwnerDescriptionChange={setOwnerDescription}
-      onOwnerPriceChange={setOwnerPrice}
-      onOwnerCityChange={setOwnerCityId}
-      onOwnerPreferredDateChange={setOwnerPreferredDate}
-      onOwnerPhotoPick={(files) => {
-        void handleOwnerPhotoPick(files);
-      }}
-      onOwnerPhotoRemove={(index) => {
-        setOwnerPhotos((prev) => prev.filter((_, photoIndex) => photoIndex !== index));
-      }}
-      onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
-      onOwnerSave={(intent) => {
-        void handleOwnerSave(intent);
-      }}
-      formatPriceValue={formatPriceValue}
-      similarTitle={similarTitle}
-      similarFallbackMessage={similarFallbackMessage}
-      similarForRender={similarForRender}
-      similarHref={similarHref}
-      onOpenSimilarRequest={(nextRequestId) => onOpenRequest(nextRequestId, 'view')}
-    />
+    isCustomerProfileView ? (
+      <CustomerPublicProfileContent
+        customerId={resolvedRequest!.clientId ?? null}
+        snapshot={buildCustomerPublicProfileSnapshotFromRequest(resolvedRequest!)}
+      />
+    ) : (
+      <RequestDetailsContent
+        t={t}
+        locale={locale}
+        request={resolvedRequest!}
+        viewModel={resolvedViewModel!}
+        surface="dialog"
+        clientProfileHref={clientProfileHref}
+        statusBadgeContent={offerStatusBadge ?? undefined}
+        headerActionSlot={!isOwner ? (
+          <RequestDetailInteractionMenu
+            t={t}
+            isSaved={isSaved}
+            isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
+            canEditOffer={offerCardState === 'sent'}
+            canDeleteOffer={offerCardState === 'sent'}
+            isDeletingOffer={isDeletingOffer}
+            onToggleFavorite={handleFavorite}
+            onEditOffer={handleEditOffer}
+            onDeleteOffer={() => {
+              void handleDeleteOffer();
+            }}
+            onShare={() => {
+              void handleShare();
+            }}
+          />
+        ) : undefined}
+        requestStatusView={requestStatusView}
+        requestPriceTrend={requestPriceTrend}
+        requestPriceTrendLabel={requestPriceTrendLabel}
+        applyLabel={applyLabel}
+        applyState={applyState}
+        applyTitle={applyTitle}
+        showOfferCta={!isOwner}
+        showChatCta={!isOwner}
+        showFavoriteCta={!isOwner}
+        showOwnerBadge={showOwnerBadge}
+        isSaved={isSaved}
+        isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
+        onApply={handleApply}
+        onChat={handleChat}
+        onFavorite={handleFavorite}
+        isOwnerEditMode={isOwnerEditMode}
+        ownerTitle={ownerTitle}
+        ownerDescription={ownerDescription}
+        ownerPrice={ownerPrice}
+        ownerCityId={ownerCityId}
+        ownerPreferredDate={ownerPreferredDate}
+        ownerPhotos={ownerPhotos}
+        isSavingOwner={isSavingOwner}
+        isUploadingOwnerPhoto={isUploadingOwnerPhoto}
+        activeOwnerSubmitIntent={activeOwnerSubmitIntent}
+        ownerPriceTrend={ownerPriceTrend}
+        onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
+        onOwnerClearText={handleOwnerClearText}
+        onOwnerTitleChange={setOwnerTitle}
+        onOwnerDescriptionChange={setOwnerDescription}
+        onOwnerPriceChange={setOwnerPrice}
+        onOwnerCityChange={setOwnerCityId}
+        onOwnerPreferredDateChange={setOwnerPreferredDate}
+        onOwnerPhotoPick={(files) => {
+          void handleOwnerPhotoPick(files);
+        }}
+        onOwnerPhotoRemove={(index) => {
+          setOwnerPhotos((prev) => prev.filter((_, photoIndex) => photoIndex !== index));
+        }}
+        onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
+        onOwnerSave={(intent) => {
+          void handleOwnerSave(intent);
+        }}
+        formatPriceValue={formatPriceValue}
+        similarTitle={similarTitle}
+        similarFallbackMessage={similarFallbackMessage}
+        similarForRender={similarForRender}
+        similarHref={similarHref}
+        onOpenSimilarRequest={(nextRequestId) => onOpenRequest(nextRequestId, 'view')}
+      />
+    )
   ) : null;
 
   if (surface === 'embedded') {
@@ -520,7 +551,7 @@ export function PublicRequestDialog({
     <RequestDialogShell
       locale={locale}
       ariaLabel={request?.title?.trim() || viewModel?.title || t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle)}
-      onClose={onClose}
+      onClose={isCustomerProfileView ? handleCloseProfile : onClose}
       isLoading={isPending}
       isError={hasDialogError}
       errorTitle={t(I18N_KEYS.requestDetails.workspaceLoadErrorTitle)}

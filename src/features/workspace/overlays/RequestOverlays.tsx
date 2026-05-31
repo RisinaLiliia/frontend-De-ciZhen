@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import {
   RequestDetailsContent,
@@ -26,6 +27,13 @@ import type { WorkspaceChatConversationInput } from '@/features/workspace/action
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
+import { CustomerPublicProfileContent } from '@/features/customers/profile/CustomerPublicProfileContent';
+import { buildCustomerPublicProfileSnapshotFromRequest } from '@/features/customers/profile/customerPublicProfile.model';
+import {
+  buildWorkspaceRequestCustomerProfileHref,
+  clearWorkspaceRequestProfileHref,
+  WORKSPACE_REQUEST_PROFILE_QUERY_KEY,
+} from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 export { WorkspaceChatDialog, WorkspaceManagedOfferSheet } from '@/features/workspace/overlays/RequestSecondaryOverlays';
 
@@ -48,7 +56,10 @@ export function WorkspaceManagedRequestDialog({
 }) {
   const t = useT();
   const qc = useQueryClient();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const isCustomerRequest = card.role === 'customer';
+  const activeRequestProfile = searchParams?.get(WORKSPACE_REQUEST_PROFILE_QUERY_KEY);
   const canManageRequest = React.useMemo(
     () => hasOwnerRequestManagementCapability(card),
     [card],
@@ -118,6 +129,20 @@ export function WorkspaceManagedRequestDialog({
   const resolvedRequest = request ?? null;
   const resolvedViewModel = viewModel ?? null;
   const hasResolvedContent = Boolean(resolvedRequest && resolvedViewModel);
+  const isCustomerProfileView = activeRequestProfile === 'customer';
+  const clientProfileHref = React.useMemo(() => {
+    if (!(resolvedRequest?.clientId || resolvedRequest?.clientName)) return null;
+
+    return buildWorkspaceRequestCustomerProfileHref({
+      currentSearch: searchParams,
+      requestId: card.requestId,
+      scope: 'my',
+      intent: initialIntent,
+    });
+  }, [card.requestId, initialIntent, resolvedRequest?.clientId, resolvedRequest?.clientName, searchParams]);
+  const handleCloseProfile = React.useCallback(() => {
+    router.push(clearWorkspaceRequestProfileHref({ currentSearch: searchParams }));
+  }, [router, searchParams]);
   const showManagedRequestSidebar = isCustomerRequest && !isOwnerEditMode;
   const decisionSection = (
     <WorkspaceRequestDecisionSection
@@ -135,90 +160,98 @@ export function WorkspaceManagedRequestDialog({
     />
   );
   const content = hasResolvedContent ? (
-    <RequestDetailsContent
-      t={t}
-      locale={locale}
-      request={resolvedRequest!}
-      viewModel={resolvedViewModel!}
-      surface="dialog"
-      requestStatusView={requestStatusView}
-      requestPriceTrend={requestPriceTrend}
-      requestPriceTrendLabel={requestPriceTrendLabel}
-      applyLabel={effectiveApplyLabel}
-      applyState={effectiveApplyState}
-      applyTitle={effectiveApplyTitle}
-      showOfferCta={!isOwner && Boolean(offerAction)}
-      showChatCta={!isOwner && Boolean(chatInput)}
-      showFavoriteCta={false}
-      showOwnerBadge={isOwner}
-      isSaved={false}
-      isSavePending={false}
-      onApply={() => {
-        if (!offerAction) return;
-        onOpenOfferSheet(card.requestId);
-      }}
-      onChat={() => {
-        if (!chatInput) return;
-        onOpenChatConversation(chatInput);
-      }}
-      onFavorite={() => {}}
-      isOwnerEditMode={isOwnerEditMode}
-      ownerTitle={ownerTitle}
-      ownerDescription={ownerDescription}
-      ownerPrice={ownerPrice}
-      ownerCityId={ownerCityId}
-      ownerPreferredDate={ownerPreferredDate}
-      ownerPhotos={ownerPhotos}
-      isSavingOwner={isSavingOwner}
-      isUploadingOwnerPhoto={isUploadingOwnerPhoto}
-      activeOwnerSubmitIntent={activeOwnerSubmitIntent}
-      ownerPriceTrend={ownerPriceTrend}
-      onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
-      onOwnerClearText={handleOwnerClearText}
-      onOwnerTitleChange={setOwnerTitle}
-      onOwnerDescriptionChange={setOwnerDescription}
-      onOwnerPriceChange={setOwnerPrice}
-      onOwnerCityChange={setOwnerCityId}
-      onOwnerPreferredDateChange={setOwnerPreferredDate}
-      onOwnerPhotoPick={(files) => {
-        void handleOwnerPhotoPick(files);
-      }}
-      onOwnerPhotoRemove={(index) => {
-        setOwnerPhotos((prev) => prev.filter((_, currentIndex) => currentIndex !== index));
-      }}
-      onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
-      onOwnerSave={(intent) => {
-        void handleOwnerSave(intent);
-      }}
-      formatPriceValue={formatPriceValue}
-      similarTitle={similarTitle}
-      similarFallbackMessage={similarFallbackMessage}
-      similarForRender={similarForRender}
-      similarHref={similarHref}
-      showSimilarSection={!showManagedRequestSidebar && !isOwner}
-      asideChildren={showManagedRequestSidebar ? (
-        initialIntent === 'responses'
-          ? (
-            <>
-              {offersSection}
-              {decisionSection}
-            </>
-          )
-          : initialIntent === 'review'
+    isCustomerProfileView ? (
+      <CustomerPublicProfileContent
+        customerId={resolvedRequest!.clientId ?? null}
+        snapshot={buildCustomerPublicProfileSnapshotFromRequest(resolvedRequest!)}
+      />
+    ) : (
+      <RequestDetailsContent
+        t={t}
+        locale={locale}
+        request={resolvedRequest!}
+        viewModel={resolvedViewModel!}
+        surface="dialog"
+        clientProfileHref={clientProfileHref}
+        requestStatusView={requestStatusView}
+        requestPriceTrend={requestPriceTrend}
+        requestPriceTrendLabel={requestPriceTrendLabel}
+        applyLabel={effectiveApplyLabel}
+        applyState={effectiveApplyState}
+        applyTitle={effectiveApplyTitle}
+        showOfferCta={!isOwner && Boolean(offerAction)}
+        showChatCta={!isOwner && Boolean(chatInput)}
+        showFavoriteCta={false}
+        showOwnerBadge={isOwner}
+        isSaved={false}
+        isSavePending={false}
+        onApply={() => {
+          if (!offerAction) return;
+          onOpenOfferSheet(card.requestId);
+        }}
+        onChat={() => {
+          if (!chatInput) return;
+          onOpenChatConversation(chatInput);
+        }}
+        onFavorite={() => {}}
+        isOwnerEditMode={isOwnerEditMode}
+        ownerTitle={ownerTitle}
+        ownerDescription={ownerDescription}
+        ownerPrice={ownerPrice}
+        ownerCityId={ownerCityId}
+        ownerPreferredDate={ownerPreferredDate}
+        ownerPhotos={ownerPhotos}
+        isSavingOwner={isSavingOwner}
+        isUploadingOwnerPhoto={isUploadingOwnerPhoto}
+        activeOwnerSubmitIntent={activeOwnerSubmitIntent}
+        ownerPriceTrend={ownerPriceTrend}
+        onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
+        onOwnerClearText={handleOwnerClearText}
+        onOwnerTitleChange={setOwnerTitle}
+        onOwnerDescriptionChange={setOwnerDescription}
+        onOwnerPriceChange={setOwnerPrice}
+        onOwnerCityChange={setOwnerCityId}
+        onOwnerPreferredDateChange={setOwnerPreferredDate}
+        onOwnerPhotoPick={(files) => {
+          void handleOwnerPhotoPick(files);
+        }}
+        onOwnerPhotoRemove={(index) => {
+          setOwnerPhotos((prev) => prev.filter((_, currentIndex) => currentIndex !== index));
+        }}
+        onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
+        onOwnerSave={(intent) => {
+          void handleOwnerSave(intent);
+        }}
+        formatPriceValue={formatPriceValue}
+        similarTitle={similarTitle}
+        similarFallbackMessage={similarFallbackMessage}
+        similarForRender={similarForRender}
+        similarHref={similarHref}
+        showSimilarSection={!showManagedRequestSidebar && !isOwner}
+        asideChildren={showManagedRequestSidebar ? (
+          initialIntent === 'responses'
             ? (
+              <>
+                {offersSection}
+                {decisionSection}
+              </>
+            )
+            : initialIntent === 'review'
+              ? (
+                <>
+                  {decisionSection}
+                  {offersSection}
+                </>
+              )
+            : (
               <>
                 {decisionSection}
                 {offersSection}
               </>
             )
-          : (
-            <>
-              {decisionSection}
-              {offersSection}
-            </>
-          )
-      ) : null}
-    />
+        ) : null}
+      />
+    )
   ) : null;
 
   if (surface === 'embedded') {
@@ -256,7 +289,7 @@ export function WorkspaceManagedRequestDialog({
     <RequestDialogShell
       locale={locale}
       ariaLabel={card.requestPreview.title}
-      onClose={onClose}
+      onClose={isCustomerProfileView ? handleCloseProfile : onClose}
       isLoading={isLoading}
       isError={!isLoading && (isError || !hasResolvedContent)}
       errorTitle={t(I18N_KEYS.requestDetails.workspaceLoadErrorTitle)}

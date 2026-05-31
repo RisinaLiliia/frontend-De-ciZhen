@@ -7,7 +7,7 @@ import { useAuthMe } from '@/hooks/useAuthSnapshot';
 import { providerQK } from '@/features/providers/queries';
 import { workspaceQK } from '@/features/workspace/data';
 import { listFavorites } from '@/lib/api/favorites';
-import { listPublicProviders } from '@/lib/api/providers';
+import { getPublicProviderById, listPublicProviders } from '@/lib/api/providers';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { backfillOwnProviderAvatars } from '@/lib/providers/publicProvider';
 
@@ -42,13 +42,21 @@ export function useWorkspaceProviderSupportData({
     refetchOnMount: true,
     refetchOnWindowFocus: true,
   });
+  const ownProviderProfileId = authMe?.providerProfile?.id?.trim() || null;
+  const ownProviderDetailQuery = useQuery({
+    queryKey: providerQK.publicById(ownProviderProfileId),
+    enabled: enabled && isAuthed && Boolean(ownProviderProfileId),
+    queryFn: () => withStatusFallback(() => getPublicProviderById(ownProviderProfileId!), null, [404]),
+    staleTime: PROVIDERS_STALE_TIME_MS,
+    refetchOnWindowFocus: false,
+  });
   const favoriteProviders = React.useMemo(
-    () => backfillOwnProviderAvatars(favoriteProvidersQuery.data ?? [], authMe),
-    [authMe, favoriteProvidersQuery.data],
+    () => backfillOwnProviderAvatars(favoriteProvidersQuery.data ?? [], authMe, ownProviderDetailQuery.data),
+    [authMe, favoriteProvidersQuery.data, ownProviderDetailQuery.data],
   );
   const providers = React.useMemo(
-    () => backfillOwnProviderAvatars(providersQuery.data ?? [], authMe),
-    [authMe, providersQuery.data],
+    () => backfillOwnProviderAvatars(providersQuery.data ?? [], authMe, ownProviderDetailQuery.data),
+    [authMe, ownProviderDetailQuery.data, providersQuery.data],
   );
 
   return {

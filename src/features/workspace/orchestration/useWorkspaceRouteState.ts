@@ -24,6 +24,7 @@ import {
   WORKSPACE_REQUEST_ID_QUERY_KEY,
   WORKSPACE_REQUEST_INTENT_QUERY_KEY,
   WORKSPACE_REQUEST_PANEL_QUERY_KEY,
+  WORKSPACE_REQUEST_PROFILE_QUERY_KEY,
 } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -35,6 +36,7 @@ const WORKSPACE_OVERLAY_QUERY_KEYS = [
   WORKSPACE_REQUEST_ID_QUERY_KEY,
   WORKSPACE_REQUEST_INTENT_QUERY_KEY,
   WORKSPACE_REQUEST_PANEL_QUERY_KEY,
+  WORKSPACE_REQUEST_PROFILE_QUERY_KEY,
 ] as const;
 
 type Args = {

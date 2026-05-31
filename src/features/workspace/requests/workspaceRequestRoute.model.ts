@@ -8,12 +8,14 @@ import {
 export type WorkspaceRequestRouteIntent = 'view' | 'edit' | 'responses' | 'contract' | 'review';
 export type WorkspaceRequestRoutePanel = 'detail' | 'offer';
 export type WorkspaceRequestRouteMode = 'create' | 'edit';
+export type WorkspaceRequestRouteProfile = 'customer';
 
 export const WORKSPACE_REQUEST_CREATE_QUERY_KEY = 'requestCreate';
 export const WORKSPACE_REQUEST_ID_QUERY_KEY = 'requestId';
 export const WORKSPACE_REQUEST_INTENT_QUERY_KEY = 'requestIntent';
 export const WORKSPACE_REQUEST_PANEL_QUERY_KEY = 'requestPanel';
 export const WORKSPACE_REQUEST_MODE_QUERY_KEY = 'mode';
+export const WORKSPACE_REQUEST_PROFILE_QUERY_KEY = 'requestProfile';
 
 export const DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF =
   '/workspace?section=requests&scope=my&period=90d&range=90d&mode=create';
@@ -62,6 +64,12 @@ export function resolveWorkspaceRequestRoutePanel(
   return value === 'offer' ? 'offer' : 'detail';
 }
 
+export function resolveWorkspaceRequestRouteProfile(
+  value: string | null,
+): WorkspaceRequestRouteProfile | null {
+  return value === 'customer' ? 'customer' : null;
+}
+
 export function readWorkspaceRequestRouteState(searchParams: SearchReader) {
   const mode = searchParams.get(WORKSPACE_REQUEST_MODE_QUERY_KEY);
 
@@ -77,6 +85,9 @@ export function readWorkspaceRequestRouteState(searchParams: SearchReader) {
           ),
     requestPanel: resolveWorkspaceRequestRoutePanel(
       searchParams.get(WORKSPACE_REQUEST_PANEL_QUERY_KEY),
+    ),
+    requestProfile: resolveWorkspaceRequestRouteProfile(
+      searchParams.get(WORKSPACE_REQUEST_PROFILE_QUERY_KEY),
     ),
   };
 }
@@ -197,6 +208,50 @@ export function clearWorkspaceRequestOverlayHref(params: {
       [WORKSPACE_REQUEST_ID_QUERY_KEY]: null,
       [WORKSPACE_REQUEST_INTENT_QUERY_KEY]: null,
       [WORKSPACE_REQUEST_PANEL_QUERY_KEY]: null,
+      [WORKSPACE_REQUEST_PROFILE_QUERY_KEY]: null,
+    },
+  });
+}
+
+export function buildWorkspaceRequestCustomerProfileHref(params: {
+  currentSearch: SearchSource;
+  requestId: string;
+  scope?: WorkspaceRequestsScope;
+  intent?: WorkspaceRequestRouteIntent;
+}) {
+  const searchParams = normalizeSearchParams(params.currentSearch);
+  const scope = params.scope ?? 'market';
+
+  if (scope === 'my') {
+    ensurePrivateRequestsDefaults(searchParams);
+  }
+
+  return buildWorkspaceHref({
+    currentSearch: searchParams,
+    section: 'requests',
+    patch: {
+      scope,
+      [WORKSPACE_REQUEST_MODE_QUERY_KEY]:
+        params.intent === 'edit' ? 'edit' : null,
+      [WORKSPACE_REQUEST_ID_QUERY_KEY]: params.requestId,
+      [WORKSPACE_REQUEST_INTENT_QUERY_KEY]:
+        params.intent && params.intent !== 'view' && params.intent !== 'edit' ? params.intent : null,
+      [WORKSPACE_REQUEST_PANEL_QUERY_KEY]: null,
+      [WORKSPACE_REQUEST_CREATE_QUERY_KEY]: null,
+      [WORKSPACE_REQUEST_PROFILE_QUERY_KEY]: 'customer',
+    },
+  });
+}
+
+export function clearWorkspaceRequestProfileHref(params: {
+  currentSearch: SearchSource;
+}) {
+  const searchParams = normalizeSearchParams(params.currentSearch);
+
+  return buildWorkspaceHref({
+    currentSearch: searchParams,
+    patch: {
+      [WORKSPACE_REQUEST_PROFILE_QUERY_KEY]: null,
     },
   });
 }

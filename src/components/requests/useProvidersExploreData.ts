@@ -10,12 +10,17 @@ import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { getWorkspaceProviders } from '@/lib/api/workspace';
 import { workspaceQK } from '@/features/workspace/data';
 import { ALL_OPTION_KEY } from '@/features/workspace/shared';
+import { useAuthMe } from '@/hooks/useAuthSnapshot';
 import { resolveWorkspaceRequestsPeriod, type WorkspaceViewerMode } from '@/features/workspace/state';
 import {
   resolveRequestsListDensityForPageSize,
   type RequestsListDensity,
 } from '@/lib/requests/pagination';
-import { backfillProviderCardAvatarsFromCandidates } from '@/lib/providers/publicProvider';
+import {
+  backfillProviderCardAvatarsFromCandidates,
+  hasUsableProviderAvatarUrl,
+  resolveWorkspaceProviderItemIdentity,
+} from '@/lib/providers/publicProvider';
 
 type Args = {
   isProvidersView: boolean;
@@ -42,7 +47,9 @@ export function useProvidersExploreData({
   period,
   viewerMode,
 }: Args) {
+  const authMe = useAuthMe();
   const normalizedPeriod = resolveWorkspaceRequestsPeriod(period);
+  const ownProviderProfileId = authMe?.providerProfile?.id?.trim() || null;
   const {
     data: contractData,
     isLoading: isProvidersLoading,
@@ -79,12 +86,21 @@ export function useProvidersExploreData({
       Array.from(
         new Set(
           (contractData?.list.items ?? [])
-            .filter((item) => !item.card.avatarUrl?.trim())
-            .map((item) => item.id),
+            .filter((item) => !hasUsableProviderAvatarUrl(item.card.avatarUrl))
+            .map((item) => resolveWorkspaceProviderItemIdentity(item).id)
+            .filter(Boolean),
         ),
       ),
     [contractData?.list.items],
   );
+  const ownProviderDetailQuery = useQuery({
+    queryKey: providerQK.publicById(ownProviderProfileId),
+    enabled: isProvidersView && Boolean(ownProviderProfileId),
+    queryFn: () => withStatusFallback(() => getPublicProviderById(ownProviderProfileId!), null, [404]),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
   const publicProviderDetailResults = useQueries({
     queries: missingAvatarProviderIds.map((providerId) => ({
       queryKey: providerQK.publicById(providerId),
@@ -97,10 +113,11 @@ export function useProvidersExploreData({
   });
   const publicProviderDetailCandidates = React.useMemo(
     () =>
-      publicProviderDetailResults
-        .map((result) => result.data)
-        .filter((item): item is ProviderPublicDto => Boolean(item)),
-    [publicProviderDetailResults],
+      [
+        ownProviderDetailQuery.data,
+        ...publicProviderDetailResults.map((result) => result.data),
+      ].filter((item): item is ProviderPublicDto => Boolean(item)),
+    [ownProviderDetailQuery.data, publicProviderDetailResults],
   );
   const providerCards = React.useMemo(
     () => backfillProviderCardAvatarsFromCandidates(contractData?.list.items ?? [], publicProviderDetailCandidates),
@@ -110,13 +127,13 @@ export function useProvidersExploreData({
   const providerById = React.useMemo(
     () =>
       new Map(
-        (contractData?.list.items ?? []).map((item) => [
-          item.id,
-          {
-            id: item.id,
-            userId: item.userId ?? undefined,
-          },
-        ]),
+        (contractData?.list.items ?? []).map((item) => {
+          const identity = resolveWorkspaceProviderItemIdentity(item);
+          return [
+            identity.id,
+            identity,
+          ];
+        }),
       ),
     [contractData],
   );
@@ -126,7 +143,8 @@ export function useProvidersExploreData({
       new Set(
         (contractData?.list.items ?? [])
           .filter((item) => item.isFavorite)
-          .map((item) => item.id),
+          .map((item) => resolveWorkspaceProviderItemIdentity(item).id)
+          .filter(Boolean),
       ),
     [contractData],
   );

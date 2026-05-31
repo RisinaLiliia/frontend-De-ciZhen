@@ -80,6 +80,7 @@ describe('workspaceProfileOnboarding.model', () => {
 
   it('builds workspace profile save form data', () => {
     const formData = buildWorkspaceProfileSaveFormData({
+      viewerMode: 'provider',
       name: ' Maria ',
       city: ' Berlin ',
       phone: ' +49123 ',
@@ -92,6 +93,7 @@ describe('workspaceProfileOnboarding.model', () => {
     });
 
     expect(formData.get('name')).toBe('Maria');
+    expect(formData.get('viewerMode')).toBe('provider');
     expect(formData.get('city')).toBe('Berlin');
     expect(formData.get('phone')).toBe('+49123');
     expect(formData.get('customerBio')).toBe('Customer bio');

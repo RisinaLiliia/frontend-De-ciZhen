@@ -86,7 +86,6 @@ describe('buildRequestDetailsViewModel', () => {
     });
     expect(online.clientStatus).toBe('online');
     expect(online.clientStatusLabel).toBe(I18N_KEYS.requestDetails.clientOnline);
-    expect(online.clientProfileHref).toBeNull();
     expect(offline.clientStatus).toBe('offline');
     expect(offline.clientStatusLabel).toBe(I18N_KEYS.requestDetails.clientActive);
   });

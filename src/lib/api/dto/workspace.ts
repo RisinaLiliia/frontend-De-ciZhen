@@ -68,6 +68,7 @@ export type WorkspaceProfileDto = {
   provider: {
     displayName: string | null;
     bio: string | null;
+    avatarUrl: string | null;
     cityId: string | null;
     selectedCategoryKey: string | null;
     selectedServiceKey: string | null;

@@ -78,7 +78,7 @@ describe('publicProvider avatar fallback', () => {
   });
 
   it('keeps backend avatar when it is already present', () => {
-    const existingAvatar = 'https://cdn.example.com/provider-avatar.jpg';
+    const existingAvatar = 'https://cdn.example.com/profile-avatar.jpg';
 
     expect(
       resolvePublicProviderAvatarUrl(provider({ avatarUrl: existingAvatar }), me()),

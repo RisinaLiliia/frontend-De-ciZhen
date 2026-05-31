@@ -27,6 +27,8 @@ import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
 import { getWorkspaceProfile, registerWorkspaceProfile, saveWorkspaceProfile } from '@/lib/api/workspace';
 import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+import { workspaceQK } from '@/features/workspace/data';
+import { providerQK } from '@/features/providers/queries';
 import { WorkspaceProfileOnboardingAccountSection } from './WorkspaceProfileOnboardingAccountSection';
 import { WorkspaceProfileOnboardingAvatarField } from './WorkspaceProfileOnboardingAvatarField';
 import { WorkspaceProfileOnboardingProfileSection } from './WorkspaceProfileOnboardingProfileSection';
@@ -303,7 +305,10 @@ function AuthenticatedWorkspaceProfileForm({
     services,
   ]);
 
-  const effectiveAvatarUrl = avatarPreviewUrl ?? profile?.common.avatarUrl ?? null;
+  const effectiveAvatarUrl = avatarPreviewUrl
+    ?? (viewerMode === 'provider'
+      ? (profile?.provider.avatarUrl ?? null)
+      : (profile?.common.avatarUrl ?? null));
   const avatarActionLabel = effectiveAvatarUrl
     ? t(I18N_KEYS.client.profilePhotoChangeAction)
     : t(I18N_KEYS.client.profilePhotoAddAction);
@@ -389,6 +394,7 @@ function AuthenticatedWorkspaceProfileForm({
     setIsSavingProfile(true);
     try {
       const saved = await saveWorkspaceProfile(buildWorkspaceProfileSaveFormData({
+        viewerMode,
         name,
         city: commonForm.city,
         phone: commonForm.phone,
@@ -402,6 +408,15 @@ function AuthenticatedWorkspaceProfileForm({
       }));
       qc.setQueryData(workspaceProfileQK.current(), saved);
       await fetchMe();
+      if (viewerMode === 'provider') {
+        await Promise.all([
+          qc.invalidateQueries({ queryKey: workspaceQK.workspaceProvidersMainPrefix() }),
+          qc.invalidateQueries({ queryKey: workspaceQK.workspaceProvidersOverviewPrefix() }),
+          qc.invalidateQueries({ queryKey: workspaceQK.favoriteProviders() }),
+          qc.invalidateQueries({ queryKey: providerQK.publicList() }),
+          qc.invalidateQueries({ queryKey: ['providers-public', 'detail'] }),
+        ]);
+      }
       setLastMode(viewerMode === 'provider' ? 'provider' : 'client');
       if (avatarFile) {
         resetAvatarSelection();

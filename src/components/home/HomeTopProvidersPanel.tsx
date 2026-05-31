@@ -29,6 +29,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { backfillOwnProviderAvatars } from '@/lib/providers/publicProvider';
+import { getPublicProviderById } from '@/lib/api/providers';
 
 type HomeTopProvidersPanelProps = {
   t: (key: I18nKey) => string;
@@ -58,13 +59,21 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
+  const ownProviderProfileId = authMe?.providerProfile?.id?.trim() || null;
+  const ownProviderDetailQuery = useQuery({
+    queryKey: providerQK.publicById(ownProviderProfileId),
+    enabled: isAuthed && Boolean(ownProviderProfileId),
+    queryFn: () => withStatusFallback(() => getPublicProviderById(ownProviderProfileId!), null, [404]),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
   const resolvedProviders = React.useMemo(
-    () => backfillOwnProviderAvatars(providers, authMe),
-    [authMe, providers],
+    () => backfillOwnProviderAvatars(providers, authMe, ownProviderDetailQuery.data),
+    [authMe, ownProviderDetailQuery.data, providers],
   );
   const resolvedFavoriteProviders = React.useMemo(
-    () => backfillOwnProviderAvatars(favoriteProviders, authMe),
-    [authMe, favoriteProviders],
+    () => backfillOwnProviderAvatars(favoriteProviders, authMe, ownProviderDetailQuery.data),
+    [authMe, favoriteProviders, ownProviderDetailQuery.data],
   );
   const sortedProviders = React.useMemo(
     () => rankHomeTopProviders(resolvedProviders, limit),

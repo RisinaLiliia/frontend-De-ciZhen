@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { BackButton } from '@/components/layout/BackButton';
 import { ChatWorkspacePage } from '@/features/workspace/chat/ChatWorkspacePage';
@@ -11,6 +12,10 @@ import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorks
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/actions/workspaceActions.model';
+import {
+  clearWorkspaceRequestProfileHref,
+  WORKSPACE_REQUEST_PROFILE_QUERY_KEY,
+} from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 type ChatState = {
   conversationId: string;
@@ -49,6 +54,8 @@ export function PublicRequestSessionDialog({
   onOpenOfferSheet,
   onOpenChatConversation,
 }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const scene = activeChatState
     ? 'chat'
     : activeOfferRequestId
@@ -69,12 +76,20 @@ export function PublicRequestSessionDialog({
       : t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle);
   const sceneTitle = t(I18N_KEYS.requestsPage.navChat);
   const sceneSubtitle = activeChatState?.title || t(I18N_KEYS.workspace.requestConversationSubtitle);
+  const isCustomerProfileView = searchParams?.get(WORKSPACE_REQUEST_PROFILE_QUERY_KEY) === 'customer';
+  const handleDialogClose = React.useCallback(() => {
+    if (scene === 'detail' && isCustomerProfileView) {
+      router.push(clearWorkspaceRequestProfileHref({ currentSearch: searchParams }));
+      return;
+    }
+    onDismissSession();
+  }, [isCustomerProfileView, onDismissSession, router, scene, searchParams]);
 
   return (
     <RequestDialogShell
       locale={locale}
       ariaLabel={ariaLabel}
-      onClose={onDismissSession}
+      onClose={handleDialogClose}
       isLoading={false}
       isError={false}
       errorTitle=""

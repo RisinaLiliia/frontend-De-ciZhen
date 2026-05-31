@@ -11,6 +11,29 @@ type Translate = (key: I18nKey) => string;
 
 const SIMILAR_LIMIT = 2;
 
+function prettifyProviderServiceKey(value: string) {
+  return value
+    .split(/[_-]+/g)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(' ');
+}
+
+function resolveProviderRoleLabel(provider: ProviderPublicDto, t: Translate) {
+  const primaryServiceKey = getPrimaryProviderServiceKey(provider);
+  if (!primaryServiceKey) return undefined;
+
+  const normalized = primaryServiceKey.trim().toLowerCase();
+  if (normalized === 'cleaning') return t(I18N_KEYS.homePublic.serviceCleaning);
+  if (normalized === 'electric') return t(I18N_KEYS.homePublic.serviceElectric);
+  if (normalized === 'plumbing') return t(I18N_KEYS.homePublic.servicePlumbing);
+  if (normalized === 'repair') return t(I18N_KEYS.homePublic.serviceRepair);
+  if (normalized === 'moving') return t(I18N_KEYS.homePublic.serviceMoving);
+  if (normalized === 'assembly') return t(I18N_KEYS.homePublic.serviceAssembly);
+
+  return prettifyProviderServiceKey(primaryServiceKey);
+}
+
 export function resolveProviderTargetUserId(provider: ProviderPublicDto | undefined) {
   return provider?.userId && provider.userId.trim().length > 0
     ? provider.userId
@@ -29,6 +52,8 @@ export function buildProviderPublicProfileCard(params: {
     t,
     locale,
     provider,
+    roleLabel: resolveProviderRoleLabel(provider, t),
+    cityLabel: provider.cityName?.trim() || undefined,
     profileHref:
       profileHrefBuilder?.(provider.id)
       ?? buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id }),
@@ -134,11 +159,6 @@ export function buildProviderPublicProfileViewModel(params: {
     ? t(I18N_KEYS.requestDetails.clientOnline)
     : t(I18N_KEYS.requestDetails.clientActive);
 
-  const headerTags = [
-    ...(profileCard?.servicePreview ?? []),
-    provider?.cityName?.trim() || profileCard?.cityLabel,
-  ].filter((item): item is string => Boolean(item));
-
   const priceLabel =
     typeof provider?.basePrice === 'number'
       ? formatPrice.format(provider.basePrice)
@@ -163,7 +183,6 @@ export function buildProviderPublicProfileViewModel(params: {
 
   return {
     statusLabel,
-    headerTags,
     priceLabel,
     pricePrefixLabel,
     priceSuffixLabel,

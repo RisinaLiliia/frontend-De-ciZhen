@@ -21,6 +21,7 @@ export type ProfileOnboardingValues = {
 };
 
 type WorkspaceProfileSaveFormInput = {
+  viewerMode: 'provider' | 'customer';
   name: string;
   city: string;
   phone: string;
@@ -151,6 +152,7 @@ function appendFormValue(formData: FormData, key: string, value: string | boolea
 
 export function buildWorkspaceProfileSaveFormData(input: WorkspaceProfileSaveFormInput) {
   const formData = new FormData();
+  appendFormValue(formData, 'viewerMode', input.viewerMode);
   appendFormValue(formData, 'name', input.name.trim());
   appendFormValue(formData, 'city', input.city.trim());
   appendFormValue(formData, 'phone', input.phone.trim());

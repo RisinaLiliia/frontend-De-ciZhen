@@ -21,7 +21,12 @@ import { useRequestOfferActions } from '@/features/workspace/requests/details/us
 import { useRequestDetailsUrlAction } from '@/features/workspace/requests/details/useRequestDetailsUrlAction';
 import { useRequestDetailsPageData } from '@/features/workspace/requests/details/useRequestDetailsPageData';
 import { RequestDetailsContent } from '@/features/workspace/requests/details/RequestDetailsContent';
-import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
+import { CustomerPublicProfileContent } from '@/features/customers/profile/CustomerPublicProfileContent';
+import { buildCustomerPublicProfileSnapshotFromRequest } from '@/features/customers/profile/customerPublicProfile.model';
+import {
+  buildWorkspaceRequestDetailHref,
+  WORKSPACE_REQUEST_PROFILE_QUERY_KEY,
+} from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 const WORKSPACE_MY_REQUESTS_URL = '/workspace?section=requests&scope=my&period=90d&range=90d';
 const WORKSPACE_PUBLIC_REQUESTS_URL = '/workspace?section=requests';
@@ -49,6 +54,7 @@ export function RequestDetailsStandalonePage() {
   const currentUserId = authUser?.id ?? authMe?.id ?? null;
   const profileHref = '/workspace?section=profile';
   const shouldOpenOwnerEdit = searchParams?.get('edit') === '1';
+  const activeRequestProfile = searchParams?.get(WORKSPACE_REQUEST_PROFILE_QUERY_KEY);
 
   const {
     request,
@@ -205,67 +211,93 @@ export function RequestDetailsStandalonePage() {
     return <RequestDetailError message={t(I18N_KEYS.requestsPage.error)} />;
   }
 
+  const isCustomerProfileView = activeRequestProfile === 'customer';
+  const clientProfileHref = React.useMemo(() => {
+    if (!(request.clientId || request.clientName)) return null;
+    const nextParams = new URLSearchParams(searchParams?.toString());
+    nextParams.set(WORKSPACE_REQUEST_PROFILE_QUERY_KEY, 'customer');
+    const qs = nextParams.toString();
+    return `${pathname}${qs ? `?${qs}` : ''}`;
+  }, [pathname, request.clientId, request.clientName, searchParams]);
+  const backHref = React.useMemo(() => {
+    if (!isCustomerProfileView) {
+      return isAuthed ? WORKSPACE_MY_REQUESTS_URL : WORKSPACE_GUEST_REQUESTS_URL;
+    }
+    const nextParams = new URLSearchParams(searchParams?.toString());
+    nextParams.delete(WORKSPACE_REQUEST_PROFILE_QUERY_KEY);
+    const qs = nextParams.toString();
+    return `${pathname}${qs ? `?${qs}` : ''}`;
+  }, [isAuthed, isCustomerProfileView, pathname, searchParams]);
+
   return (
     <PageShell
       right={<AuthActions />}
       showBack
-      backHref={isAuthed ? WORKSPACE_MY_REQUESTS_URL : WORKSPACE_GUEST_REQUESTS_URL}
+      backHref={backHref}
       mainClassName="pb-6"
     >
-      <RequestDetailsContent
-        t={t}
-        locale={locale}
-        request={request}
-        viewModel={viewModel}
-        requestStatusView={requestStatusView}
-        requestPriceTrend={requestPriceTrend}
-        requestPriceTrendLabel={requestPriceTrendLabel}
-        applyLabel={applyLabel}
-        applyState={applyState}
-        applyTitle={applyTitle}
-        showOfferCta={showOfferCta}
-        showChatCta={showChatCta}
-        showFavoriteCta={showFavoriteCta}
-        showOwnerBadge={showOwnerBadge}
-        isSaved={isSaved}
-        isSavePending={pendingFavoriteRequestIds.has(request.id)}
-        onApply={handleApply}
-        onChat={handleChat}
-        onFavorite={handleFavorite}
-        isOwnerEditMode={isOwnerEditMode}
-        ownerTitle={ownerTitle}
-        ownerDescription={ownerDescription}
-        ownerPrice={ownerPrice}
-        ownerCityId={ownerCityId}
-        ownerPreferredDate={ownerPreferredDate}
-        ownerPhotos={ownerPhotos}
-        isSavingOwner={isSavingOwner}
-        isUploadingOwnerPhoto={isUploadingOwnerPhoto}
-        activeOwnerSubmitIntent={activeOwnerSubmitIntent}
-        ownerPriceTrend={ownerPriceTrend}
-        onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
-        onOwnerClearText={handleOwnerClearText}
-        onOwnerTitleChange={setOwnerTitle}
-        onOwnerDescriptionChange={setOwnerDescription}
-        onOwnerPriceChange={setOwnerPrice}
-        onOwnerCityChange={setOwnerCityId}
-        onOwnerPreferredDateChange={setOwnerPreferredDate}
-        onOwnerPhotoPick={(files) => {
-          void handleOwnerPhotoPick(files);
-        }}
-        onOwnerPhotoRemove={(index) =>
-          setOwnerPhotos((prev) => prev.filter((_, photoIndex) => photoIndex !== index))
-        }
-        onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
-        onOwnerSave={() => {
-          void handleOwnerSave();
-        }}
-        formatPriceValue={formatPriceValue}
-        similarTitle={similarTitle}
-        similarFallbackMessage={similarFallbackMessage}
-        similarForRender={similarForRender}
-        similarHref={similarHref}
-      />
+      {isCustomerProfileView ? (
+        <CustomerPublicProfileContent
+          customerId={request.clientId ?? null}
+          snapshot={buildCustomerPublicProfileSnapshotFromRequest(request)}
+        />
+      ) : (
+        <RequestDetailsContent
+          t={t}
+          locale={locale}
+          request={request}
+          viewModel={viewModel}
+          clientProfileHref={clientProfileHref}
+          requestStatusView={requestStatusView}
+          requestPriceTrend={requestPriceTrend}
+          requestPriceTrendLabel={requestPriceTrendLabel}
+          applyLabel={applyLabel}
+          applyState={applyState}
+          applyTitle={applyTitle}
+          showOfferCta={showOfferCta}
+          showChatCta={showChatCta}
+          showFavoriteCta={showFavoriteCta}
+          showOwnerBadge={showOwnerBadge}
+          isSaved={isSaved}
+          isSavePending={pendingFavoriteRequestIds.has(request.id)}
+          onApply={handleApply}
+          onChat={handleChat}
+          onFavorite={handleFavorite}
+          isOwnerEditMode={isOwnerEditMode}
+          ownerTitle={ownerTitle}
+          ownerDescription={ownerDescription}
+          ownerPrice={ownerPrice}
+          ownerCityId={ownerCityId}
+          ownerPreferredDate={ownerPreferredDate}
+          ownerPhotos={ownerPhotos}
+          isSavingOwner={isSavingOwner}
+          isUploadingOwnerPhoto={isUploadingOwnerPhoto}
+          activeOwnerSubmitIntent={activeOwnerSubmitIntent}
+          ownerPriceTrend={ownerPriceTrend}
+          onToggleOwnerEdit={() => setIsOwnerEditMode((prev) => !prev)}
+          onOwnerClearText={handleOwnerClearText}
+          onOwnerTitleChange={setOwnerTitle}
+          onOwnerDescriptionChange={setOwnerDescription}
+          onOwnerPriceChange={setOwnerPrice}
+          onOwnerCityChange={setOwnerCityId}
+          onOwnerPreferredDateChange={setOwnerPreferredDate}
+          onOwnerPhotoPick={(files) => {
+            void handleOwnerPhotoPick(files);
+          }}
+          onOwnerPhotoRemove={(index) =>
+            setOwnerPhotos((prev) => prev.filter((_, photoIndex) => photoIndex !== index))
+          }
+          onOwnerCancelEdit={() => setIsOwnerEditMode(false)}
+          onOwnerSave={() => {
+            void handleOwnerSave();
+          }}
+          formatPriceValue={formatPriceValue}
+          similarTitle={similarTitle}
+          similarFallbackMessage={similarFallbackMessage}
+          similarForRender={similarForRender}
+          similarHref={similarHref}
+        />
+      )}
 
       <RequestOfferSheet
         isOpen={isOfferSheetOpen}

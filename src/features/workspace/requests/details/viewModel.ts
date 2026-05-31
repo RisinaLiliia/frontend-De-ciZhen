@@ -12,7 +12,6 @@ export type RequestDetailsViewModel = {
   priceLabel: string;
   preferredDateLabel: string;
   images: string[];
-  clientProfileHref: string | null;
   clientName: string;
   clientAvatarUrl?: string;
   hasClientInfo: boolean;
@@ -54,7 +53,6 @@ export function buildRequestDetailsViewModel({
       ? new Date(request.preferredDate)
       : null;
   const images = buildRequestImageList(request);
-  const clientProfileHref = null;
   const clientName = request.clientName ?? t(I18N_KEYS.requestDetails.clientUnknown);
   const clientAvatarUrl =
     request.clientAvatarUrl && request.clientAvatarUrl.startsWith('http')
@@ -96,7 +94,6 @@ export function buildRequestDetailsViewModel({
     priceLabel,
     preferredDateLabel: preferredDate ? formatDate(preferredDate) : '—',
     images,
-    clientProfileHref,
     clientName,
     clientAvatarUrl,
     hasClientInfo,
