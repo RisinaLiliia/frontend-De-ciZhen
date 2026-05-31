@@ -79,8 +79,8 @@ export function useProviderPublicProfileModel({
     queryFn: () => getPublicProviderById(String(id)),
   });
   const baseProvider = React.useMemo(
-    () => backfillOwnProviderAvatar(providerData, authMe),
-    [authMe, providerData],
+    () => backfillOwnProviderAvatar(providerData),
+    [providerData],
   );
 
   const providerTargetUserId = React.useMemo(

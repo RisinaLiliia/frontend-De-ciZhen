@@ -81,24 +81,36 @@ describe('publicProvider avatar fallback', () => {
     const existingAvatar = 'https://cdn.example.com/profile-avatar.jpg';
 
     expect(
-      resolvePublicProviderAvatarUrl(provider({ avatarUrl: existingAvatar }), me()),
+      resolvePublicProviderAvatarUrl(
+        provider({ avatarUrl: existingAvatar }),
+        provider({ avatarUrl: 'https://cdn.example.com/own-provider.jpg' }),
+      ),
     ).toBe(existingAvatar);
   });
 
-  it('backfills missing avatar from auth me only for the own provider profile', () => {
-    expect(resolvePublicProviderAvatarUrl(provider(), me())).toBe('https://cdn.example.com/avatar.jpg');
-    expect(resolvePublicProviderAvatarUrl(provider({ id: 'provider-2', userId: 'user-2' }), me())).toBeNull();
+  it('backfills missing avatar only from the matching own provider profile', () => {
+    const ownProviderProfile = provider({ avatarUrl: 'https://cdn.example.com/own-provider.jpg' });
+
+    expect(resolvePublicProviderAvatarUrl(provider(), ownProviderProfile)).toBe('https://cdn.example.com/own-provider.jpg');
+    expect(
+      resolvePublicProviderAvatarUrl(
+        provider({ id: 'provider-2', userId: 'user-2' }),
+        ownProviderProfile,
+      ),
+    ).toBeNull();
   });
 
   it('applies avatar fallback to single providers and provider lists', () => {
-    expect(backfillOwnProviderAvatar(provider(), me())?.avatarUrl).toBe('https://cdn.example.com/avatar.jpg');
+    const ownProviderProfile = provider({ avatarUrl: 'https://cdn.example.com/own-provider.jpg' });
+
+    expect(backfillOwnProviderAvatar(provider(), ownProviderProfile)?.avatarUrl).toBe('https://cdn.example.com/own-provider.jpg');
 
     expect(
       backfillOwnProviderAvatars(
         [provider(), provider({ id: 'provider-2', userId: 'user-2' })],
-        me(),
+        ownProviderProfile,
       ).map((item) => item.avatarUrl),
-    ).toEqual(['https://cdn.example.com/avatar.jpg', null]);
+    ).toEqual(['https://cdn.example.com/own-provider.jpg', null]);
   });
 
   it('backfills missing public avatars from public provider candidates', () => {

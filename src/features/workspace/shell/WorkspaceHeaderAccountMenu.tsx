@@ -103,6 +103,8 @@ export function WorkspaceHeaderAccountMenu({
       open={open}
       onOpenChange={setOpen}
       align="end"
+      triggerAriaLabel={t(I18N_KEYS.auth.profileLabel)}
+      triggerTitle={t(I18N_KEYS.auth.profileLabel)}
       className={[
         'workspace-account-menu',
         isMobileDockTrigger ? 'workspace-account-menu--mobile-dock' : '',

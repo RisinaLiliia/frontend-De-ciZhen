@@ -58,6 +58,8 @@ export function ProviderDetailHeroActions({
         onOpenChange={setOpen}
         align="end"
         className="provider-detail-hero__menu-popover"
+        triggerAriaLabel={t(I18N_KEYS.requestDetails.workspaceActionsOpen)}
+        triggerTitle={t(I18N_KEYS.requestDetails.workspaceActionsOpen)}
         trigger={(
           <span
             className={`nearby-more my-request-card__owner-menu-trigger ${open ? 'is-open' : ''}`.trim()}

@@ -55,7 +55,6 @@ export function isOwnPublicProvider(provider: ProviderPublicDto | null | undefin
 
 export function resolvePublicProviderAvatarUrl(
   provider: ProviderPublicDto | null | undefined,
-  me: AppMeDto | null | undefined,
   ownProviderProfile?: ProviderPublicDto | null | undefined,
 ) {
   const providerAvatarUrl = trimToNull(provider?.avatarUrl);
@@ -74,12 +73,11 @@ export function resolvePublicProviderAvatarUrl(
 
 export function backfillOwnProviderAvatar(
   provider: ProviderPublicDto | null | undefined,
-  me: AppMeDto | null | undefined,
   ownProviderProfile?: ProviderPublicDto | null | undefined,
 ) {
   if (!provider) return undefined;
 
-  const avatarUrl = resolvePublicProviderAvatarUrl(provider, me, ownProviderProfile);
+  const avatarUrl = resolvePublicProviderAvatarUrl(provider, ownProviderProfile);
   if (avatarUrl === provider.avatarUrl) return provider;
 
   return {
@@ -90,10 +88,9 @@ export function backfillOwnProviderAvatar(
 
 export function backfillOwnProviderAvatars(
   providers: ProviderPublicDto[],
-  me: AppMeDto | null | undefined,
   ownProviderProfile?: ProviderPublicDto | null | undefined,
 ) {
-  return providers.map((provider) => backfillOwnProviderAvatar(provider, me, ownProviderProfile) ?? provider);
+  return providers.map((provider) => backfillOwnProviderAvatar(provider, ownProviderProfile) ?? provider);
 }
 
 export function backfillProviderAvatarFromCandidates(

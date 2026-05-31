@@ -68,12 +68,12 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     refetchOnWindowFocus: false,
   });
   const resolvedProviders = React.useMemo(
-    () => backfillOwnProviderAvatars(providers, authMe, ownProviderDetailQuery.data),
-    [authMe, ownProviderDetailQuery.data, providers],
+    () => backfillOwnProviderAvatars(providers, ownProviderDetailQuery.data),
+    [ownProviderDetailQuery.data, providers],
   );
   const resolvedFavoriteProviders = React.useMemo(
-    () => backfillOwnProviderAvatars(favoriteProviders, authMe, ownProviderDetailQuery.data),
-    [authMe, favoriteProviders, ownProviderDetailQuery.data],
+    () => backfillOwnProviderAvatars(favoriteProviders, ownProviderDetailQuery.data),
+    [favoriteProviders, ownProviderDetailQuery.data],
   );
   const sortedProviders = React.useMemo(
     () => rankHomeTopProviders(resolvedProviders, limit),

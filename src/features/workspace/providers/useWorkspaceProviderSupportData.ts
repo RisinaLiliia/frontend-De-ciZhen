@@ -51,12 +51,12 @@ export function useWorkspaceProviderSupportData({
     refetchOnWindowFocus: false,
   });
   const favoriteProviders = React.useMemo(
-    () => backfillOwnProviderAvatars(favoriteProvidersQuery.data ?? [], authMe, ownProviderDetailQuery.data),
-    [authMe, favoriteProvidersQuery.data, ownProviderDetailQuery.data],
+    () => backfillOwnProviderAvatars(favoriteProvidersQuery.data ?? [], ownProviderDetailQuery.data),
+    [favoriteProvidersQuery.data, ownProviderDetailQuery.data],
   );
   const providers = React.useMemo(
-    () => backfillOwnProviderAvatars(providersQuery.data ?? [], authMe, ownProviderDetailQuery.data),
-    [authMe, ownProviderDetailQuery.data, providersQuery.data],
+    () => backfillOwnProviderAvatars(providersQuery.data ?? [], ownProviderDetailQuery.data),
+    [ownProviderDetailQuery.data, providersQuery.data],
   );
 
   return {

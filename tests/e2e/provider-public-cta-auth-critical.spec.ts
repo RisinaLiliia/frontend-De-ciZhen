@@ -91,7 +91,7 @@ test('@critical unauthenticated provider CTAs redirect to login with next path',
     await dismissCookieConsentIfPresent(page);
     await expect(page.getByText('Test Provider')).toBeVisible();
 
-    const cta = page.locator('.request-detail__aside').getByRole('button', { name: buttonLabel });
+    const cta = page.locator('.request-detail').getByRole('button', { name: buttonLabel }).first();
     await cta.click();
 
     await expect.poll(() => new URL(page.url()).pathname).toBe('/auth/login');
