@@ -1263,14 +1263,16 @@ export function RequestsView({
             ))}
           </div>
           {decisionPanel ? (
-            <WorkspaceRequestsActionRail
-              {...buildRequestsWorkspaceDecisionRailProps({
-                locale,
-                panel: decisionPanel,
-                mode: decisionState.mode,
-                activeRequestId: decisionState.activeRequestId,
-                onStartDecisionMode: () => onEnterDecisionMode(),
-                onOpenQueueItem:
+              <WorkspaceRequestsActionRail
+                {...buildRequestsWorkspaceDecisionRailProps({
+                  locale,
+                  summaryItems: model.response?.summary.items ?? null,
+                  panel: decisionPanel,
+                  sidePanel: model.response?.sidePanel ?? null,
+                  mode: decisionState.mode,
+                  activeRequestId: decisionState.activeRequestId,
+                  onStartDecisionMode: () => onEnterDecisionMode(),
+                  onOpenQueueItem:
                   variant === 'market'
                     ? (requestId) => openMarketRequestRoute(requestId, 'view')
                     : onOpenDecisionItem,

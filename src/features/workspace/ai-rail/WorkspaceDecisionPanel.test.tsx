@@ -41,9 +41,10 @@ describe('WorkspaceDecisionPanel', () => {
 
     expect(html).toContain('Decision Panel');
     expect(html).toContain('Action Queue');
-    expect(html).toContain('Marktlage');
+    expect(html).toContain('Aufträge im aktuellen Markt');
     expect(html).toContain('Hohe Nachfrage');
     expect(html).toContain('In Ausführung');
     expect(html).toContain('Abgeschlossen');
+    expect(html).toContain('Empfehlungen');
   });
 });

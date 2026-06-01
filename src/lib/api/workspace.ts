@@ -6,6 +6,7 @@ import type {
   WorkspaceProfileDto,
   WorkspacePrivateOverviewDto,
   WorkspaceActionsResponseDto,
+  WorkspaceChatResponseDto,
   WorkspaceProvidersResponseDto,
   WorkspaceProvidersViewerModeDto,
   WorkspacePublicOverviewDto,
@@ -138,6 +139,10 @@ export function getWorkspaceReviews(query: WorkspaceReviewsQuery = {}) {
 
 export function getWorkspaceActions() {
   return apiGet<WorkspaceActionsResponseDto>('/workspace/actions');
+}
+
+export function getWorkspaceChat() {
+  return apiGet<WorkspaceChatResponseDto>('/workspace/chat');
 }
 
 export type WorkspaceStatisticsQuery = {

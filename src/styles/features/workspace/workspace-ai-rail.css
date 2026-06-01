@@ -1,0 +1,412 @@
+@layer components {
+  .workspace-unified-rail {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .workspace-unified-rail__panel {
+    display: grid;
+    gap: var(--space-3);
+    box-shadow: none;
+  }
+
+  .workspace-unified-rail__panel--decision {
+    padding: var(--space-4);
+    border-color: color-mix(in oklab, var(--color-primary) 18%, var(--color-border-soft) 82%);
+    background:
+      radial-gradient(circle at top right, color-mix(in oklab, var(--color-primary) 7%, transparent) 0, transparent 56%),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--color-surface) 97%, white 3%) 0%,
+        color-mix(in oklab, var(--color-surface-muted) 90%, var(--color-surface) 10%) 100%
+      );
+    --workspace-rail-chart-tone-1: color-mix(in oklab, var(--c-danger) 86%, var(--color-text) 14%);
+    --workspace-rail-chart-tone-2: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
+    --workspace-rail-chart-tone-3: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
+    --workspace-rail-chart-tone-4: color-mix(in oklab, var(--color-border) 72%, var(--color-surface) 28%);
+  }
+
+  .workspace-unified-rail__eyebrow {
+    color: var(--text-muted);
+    font-size: var(--my-work-caption-size);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: var(--my-work-caption-line-height);
+    text-transform: uppercase;
+  }
+
+  .workspace-unified-rail__value {
+    font-size: clamp(38px, 4vw, 56px);
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+  }
+
+  .workspace-unified-rail__decision-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-3);
+  }
+
+  .workspace-unified-rail__decision-copy {
+    display: grid;
+    gap: var(--space-1-5);
+    min-width: 0;
+  }
+
+  .workspace-unified-rail__decision-visual {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-top: var(--space-1);
+  }
+
+  .workspace-unified-rail__chart {
+    position: relative;
+    width: 86px;
+    height: 86px;
+    border-radius: 999px;
+    background: var(--workspace-rail-chart-gradient);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 72%, transparent),
+      0 10px 24px color-mix(in oklab, var(--color-text) 8%, transparent);
+  }
+
+  .workspace-unified-rail__chart-core {
+    position: absolute;
+    inset: 11px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--color-surface) 96%, white 4%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-border-soft) 80%, transparent);
+  }
+
+  .workspace-unified-rail__context,
+  .workspace-unified-rail__description,
+  .workspace-unified-rail__empty,
+  .workspace-unified-rail__queue-copy span,
+  .workspace-unified-rail__recommendation-copy span {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .workspace-unified-rail__context {
+    font-size: var(--app-text-size);
+    line-height: 1.35;
+  }
+
+  .workspace-unified-rail__title,
+  .workspace-unified-rail__section-title {
+    margin: 0;
+    font-size: var(--app-title-md-size);
+    line-height: var(--app-title-md-line-height);
+  }
+
+  .workspace-unified-rail__section-title {
+    font-size: var(--fs-18);
+  }
+
+  .workspace-unified-rail__metrics,
+  .workspace-unified-rail__queue-list,
+  .workspace-unified-rail__recommendations-list {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .workspace-unified-rail__metrics > div {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-2);
+    border-top: 1px solid color-mix(in oklab, var(--color-border-soft) 80%, transparent);
+  }
+
+  .workspace-unified-rail__metrics > div::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--workspace-rail-chart-tone-2);
+    box-shadow: 0 0 0 4px color-mix(in oklab, currentColor 6%, transparent);
+  }
+
+  .workspace-unified-rail__metrics > div.is-tone-1::before {
+    background: var(--workspace-rail-chart-tone-1);
+  }
+
+  .workspace-unified-rail__metrics > div.is-tone-2::before {
+    background: var(--workspace-rail-chart-tone-2);
+  }
+
+  .workspace-unified-rail__metrics > div.is-tone-3::before {
+    background: var(--workspace-rail-chart-tone-3);
+  }
+
+  .workspace-unified-rail__metrics > div.is-tone-4::before {
+    background: var(--workspace-rail-chart-tone-4);
+  }
+
+  .workspace-unified-rail__metrics dt {
+    grid-column: 2;
+    color: var(--text-muted);
+    font-size: var(--fs-14);
+  }
+
+  .workspace-unified-rail__metrics dd {
+    grid-column: 3;
+    margin: 0;
+    font-weight: 700;
+    font-size: var(--fs-15);
+  }
+
+  .workspace-unified-rail__actions {
+    display: grid;
+    gap: var(--space-2);
+    padding-top: var(--space-2);
+  }
+
+  .workspace-unified-rail__primary {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  .workspace-unified-rail__secondary,
+  .workspace-unified-rail__footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-text);
+    font-size: var(--fs-14);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .workspace-unified-rail__secondary::after,
+  .workspace-unified-rail__footer-link::after {
+    content: '→';
+  }
+
+  .workspace-unified-rail__queue-item,
+  .workspace-unified-rail__recommendation {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--space-3);
+    align-items: start;
+    width: 100%;
+    padding: var(--space-3);
+    border: 1px solid color-mix(in oklab, var(--color-border-soft) 82%, transparent);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--color-surface) 88%, var(--color-surface-muted) 12%);
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      border-color 160ms ease,
+      background 160ms ease,
+      transform 160ms ease;
+  }
+
+  .workspace-unified-rail__queue-item:hover,
+  .workspace-unified-rail__queue-item.is-active,
+  .workspace-unified-rail__recommendation:hover {
+    border-color: var(--color-primary-border);
+    background: color-mix(in oklab, var(--color-primary-soft) 34%, var(--color-surface) 66%);
+    transform: translateY(-1px);
+  }
+
+  .workspace-unified-rail__queue-item:focus-visible,
+  .workspace-unified-rail__secondary:focus-visible,
+  .workspace-unified-rail__footer-link:focus-visible {
+    outline: none;
+    box-shadow: var(--control-focus-ring);
+    border-radius: var(--radius-lg);
+  }
+
+  .workspace-unified-rail__queue-list {
+    gap: var(--space-1-5);
+  }
+
+  .workspace-unified-rail__queue-item {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    padding: var(--space-2-5) var(--space-3);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-surface-muted) 8%);
+  }
+
+  .workspace-unified-rail__queue-dot,
+  .workspace-unified-rail__recommendation-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--workspace-rail-chart-tone-4);
+    box-shadow: 0 0 0 4px color-mix(in oklab, currentColor 7%, transparent);
+    margin-top: 6px;
+  }
+
+  .workspace-unified-rail__queue-dot.is-high,
+  .workspace-unified-rail__recommendation-icon.is-attention {
+    background: var(--workspace-rail-chart-tone-1);
+  }
+
+  .workspace-unified-rail__queue-dot.is-medium {
+    background: color-mix(in oklab, var(--color-warning) 82%, var(--color-text) 18%);
+  }
+
+  .workspace-unified-rail__queue-dot.is-low,
+  .workspace-unified-rail__recommendation-icon.is-positive {
+    background: var(--workspace-rail-chart-tone-3);
+  }
+
+  .workspace-unified-rail__queue-dot.is-neutral,
+  .workspace-unified-rail__recommendation-icon.is-neutral {
+    background: var(--workspace-rail-chart-tone-4);
+  }
+
+  .workspace-unified-rail__recommendation-icon.is-opportunity {
+    background: var(--workspace-rail-chart-tone-2);
+  }
+
+  .workspace-unified-rail__queue-copy,
+  .workspace-unified-rail__recommendation-copy {
+    display: grid;
+    gap: var(--space-0-75);
+    min-width: 0;
+  }
+
+  .workspace-unified-rail__queue-copy strong,
+  .workspace-unified-rail__recommendation-copy strong {
+    font-size: var(--fs-14);
+    line-height: 1.3;
+  }
+
+  .workspace-unified-rail__queue-copy span,
+  .workspace-unified-rail__recommendation-copy span {
+    font-size: var(--fs-13);
+    line-height: 1.35;
+  }
+
+  .workspace-unified-rail__queue-side {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-self: end;
+  }
+
+  .workspace-unified-rail__queue-chevron {
+    color: var(--text-muted);
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .workspace-unified-rail__priority,
+  .workspace-unified-rail__recommendation-metric {
+    align-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--space-6);
+    padding: 0 var(--space-2-5);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-muted);
+    color: var(--text-muted);
+    font-size: var(--my-work-caption-size);
+    font-weight: 700;
+  }
+
+  .workspace-unified-rail__recommendations-list {
+    gap: var(--space-2);
+  }
+
+  .workspace-unified-rail__recommendation {
+    align-items: start;
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
+        color-mix(in oklab, var(--color-surface-muted) 88%, var(--color-surface) 12%) 100%
+      );
+  }
+
+  .workspace-unified-rail__recommendation-copy {
+    gap: var(--space-1);
+  }
+
+  .workspace-unified-rail__recommendation-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .workspace-unified-rail__recommendation-head strong {
+    min-width: 0;
+  }
+
+  .workspace-unified-rail__priority.is-high {
+    background: color-mix(in oklab, var(--c-danger) 18%, white 82%);
+    color: color-mix(in oklab, var(--c-danger) 72%, var(--color-text) 28%);
+  }
+
+  .workspace-unified-rail__priority.is-medium {
+    background: color-mix(in oklab, var(--color-warning) 16%, white 84%);
+    color: color-mix(in oklab, var(--color-warning) 72%, var(--color-text) 28%);
+  }
+
+  .workspace-unified-rail__priority.is-low,
+  .workspace-unified-rail__recommendation.is-positive .workspace-unified-rail__recommendation-metric {
+    background: color-mix(in oklab, var(--color-success) 16%, white 84%);
+    color: color-mix(in oklab, var(--color-success) 72%, var(--color-text) 28%);
+  }
+
+  .workspace-unified-rail__recommendation.is-attention .workspace-unified-rail__recommendation-metric {
+    background: color-mix(in oklab, var(--color-warning) 16%, white 84%);
+    color: color-mix(in oklab, var(--color-warning) 72%, var(--color-text) 28%);
+  }
+
+  .workspace-unified-rail__recommendation.is-opportunity .workspace-unified-rail__recommendation-metric {
+    background: color-mix(in oklab, var(--color-primary) 16%, white 84%);
+    color: color-mix(in oklab, var(--color-primary) 72%, var(--color-text) 28%);
+  }
+
+  .workspace-unified-rail__recommendation.is-attention {
+    border-color: color-mix(in oklab, var(--c-danger) 18%, var(--color-border-soft) 82%);
+  }
+
+  .workspace-unified-rail__recommendation.is-opportunity {
+    border-color: color-mix(in oklab, var(--color-primary) 18%, var(--color-border-soft) 82%);
+  }
+
+  .workspace-unified-rail__recommendation.is-positive {
+    border-color: color-mix(in oklab, var(--color-success) 18%, var(--color-border-soft) 82%);
+  }
+
+  @media (max-width: 1120px) {
+    .workspace-unified-rail__decision-head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-unified-rail__decision-visual {
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+  }
+
+  @media (max-width: 699px) {
+    .workspace-unified-rail__queue-item,
+    .workspace-unified-rail__recommendation {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .workspace-unified-rail__queue-side,
+    .workspace-unified-rail__recommendation-metric {
+      justify-self: start;
+      margin-left: calc(10px + var(--space-3));
+    }
+  }
+}

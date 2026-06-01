@@ -9,7 +9,9 @@ export type WorkspaceRequestsActionRailProps = Omit<WorkspaceDecisionPanelProps,
 
 export function WorkspaceRequestsActionRail({
   locale,
+  summaryItems,
   panel,
+  sidePanel,
   mode,
   activeRequestId,
   onStartDecisionMode,
@@ -21,7 +23,9 @@ export function WorkspaceRequestsActionRail({
     <div className={['my-requests-rail', className ?? ''].filter(Boolean).join(' ')}>
       <WorkspaceDecisionPanel
         locale={locale}
+        summaryItems={summaryItems}
         panel={panel}
+        sidePanel={sidePanel}
         isDecisionMode={mode === 'decision'}
         activeRequestId={activeRequestId}
         onStartDecisionMode={onStartDecisionMode}

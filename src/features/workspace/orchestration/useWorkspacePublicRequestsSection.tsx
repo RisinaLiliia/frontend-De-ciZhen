@@ -219,6 +219,7 @@ const marketTotalPages = React.useMemo(() => {
       summaryItems={marketResponse?.summary?.items ?? null}
       isSummaryLoading={contractData.isWorkspaceRequestsLoading}
       panel={decisionPanel}
+      sidePanel={marketResponse?.sidePanel ?? null}
       onStartDecisionMode={openMarketStats}
       onOpenQueueItem={openQueueItem}
     />

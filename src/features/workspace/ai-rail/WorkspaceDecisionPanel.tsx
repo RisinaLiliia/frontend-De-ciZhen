@@ -3,14 +3,24 @@
 import * as React from 'react';
 
 import { buildDecisionPanelSummaryText } from '@/features/workspace/requests/requestsDecision.model';
-import { workspaceRightRailPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
-import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
+import {
+  buildLinkedWorkspaceRailModel,
+  WorkspaceUnifiedRail,
+  type WorkspaceUnifiedRailRecommendationItem,
+} from '@/features/workspace/shared';
+import type {
+  WorkspaceRequestsDecisionPanelDto,
+  WorkspaceRequestsSidePanelDto,
+  WorkspaceRequestsSummaryDto,
+} from '@/lib/api/dto/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 
 export type WorkspaceDecisionPanelProps = {
   locale: Locale;
+  summaryItems?: WorkspaceRequestsSummaryDto['items'] | null;
   panel: WorkspaceRequestsDecisionPanelDto;
+  sidePanel?: WorkspaceRequestsSidePanelDto | null;
   isDecisionMode: boolean;
   activeRequestId: string | null;
   onStartDecisionMode: () => void;
@@ -20,7 +30,9 @@ export type WorkspaceDecisionPanelProps = {
 
 export function WorkspaceDecisionPanel({
   locale,
+  summaryItems = null,
   panel,
+  sidePanel = null,
   isDecisionMode,
   activeRequestId,
   onStartDecisionMode,
@@ -32,7 +44,7 @@ export function WorkspaceDecisionPanel({
     () => buildDecisionPanelSummaryText({ locale, panel, variant }),
     [locale, panel, variant],
   );
-  const priorityLabel = (level: 'high' | 'medium' | 'low') => {
+  const priorityLabel = React.useCallback((level: 'high' | 'medium' | 'low') => {
     if (variant === 'market') {
       if (level === 'high') return t(I18N_KEYS.requestsPage.decisionPanelPriorityHigh);
       if (level === 'medium') return t(I18N_KEYS.requestsPage.decisionPanelPriorityMedium);
@@ -42,10 +54,7 @@ export function WorkspaceDecisionPanel({
     if (level === 'high') return t(I18N_KEYS.requestsPage.decisionPanelPriorityHigh);
     if (level === 'medium') return t(I18N_KEYS.requestsPage.decisionPanelPriorityMedium);
     return t(I18N_KEYS.requestsPage.decisionPanelPriorityLow);
-  };
-  const overviewEyebrow = variant === 'market'
-    ? t(I18N_KEYS.requestsPage.decisionPanelMarketOverviewEyebrow)
-    : t(I18N_KEYS.requestsPage.decisionPanelPrivateOverviewEyebrow);
+  }, [t, variant]);
   const overviewLabels = variant === 'market'
     ? {
         highUrgency: t(I18N_KEYS.requestsPage.decisionPanelOverviewHighDemand),
@@ -57,102 +66,165 @@ export function WorkspaceDecisionPanel({
         inProgress: t(I18N_KEYS.requestsPage.statusInProgress),
         completedThisPeriod: t(I18N_KEYS.requestsPage.statusCompleted),
       };
+  const totalValue = summaryItems?.find((item) => item.key === 'all')?.value ?? panel.summary.totalNeedsAction;
+  const contextLabel = variant === 'market'
+    ? t(I18N_KEYS.requestsPage.workspaceRailRequestsMarketContext)
+    : t(I18N_KEYS.requestsPage.workspaceRailRequestsPrivateContext);
+  const recommendationItems = React.useMemo<WorkspaceUnifiedRailRecommendationItem[]>(() => {
+    const items: WorkspaceUnifiedRailRecommendationItem[] = [];
+
+    if (sidePanel?.focus) {
+      items.push({
+        id: 'focus',
+        title: sidePanel.focus.title,
+        description: sidePanel.focus.description,
+        tone: 'opportunity',
+      });
+    }
+
+    if (sidePanel?.recommendation) {
+      items.push({
+        id: 'recommendation',
+        title: sidePanel.recommendation.title,
+        description: sidePanel.recommendation.description,
+        tone: 'positive',
+      });
+    }
+
+    if (sidePanel?.contextItems?.length) {
+      items.push(
+        ...sidePanel.contextItems.slice(0, 3).map((item, index) => ({
+          id: `context-${index}`,
+          title: item.title,
+          description: item.description ?? item.meta?.map((entry) => `${entry.label}: ${entry.value}`).join(' · ') ?? item.title,
+          tone: 'neutral' as const,
+        })),
+      );
+    }
+
+    if (items.length > 0) {
+      return items.slice(0, 3);
+    }
+
+    return [
+      {
+        id: 'needs-action',
+        title: variant === 'market'
+          ? t(I18N_KEYS.requestsPage.workspaceRailMarketRecommendationDemandTitle)
+          : t(I18N_KEYS.requestsPage.workspaceRailPrivateRecommendationAttentionTitle),
+        description: summaryText,
+        metric: panel.summary.totalNeedsAction,
+        tone: 'attention',
+      },
+      {
+        id: 'in-progress',
+        title: overviewLabels.inProgress,
+        description: variant === 'market'
+          ? t(I18N_KEYS.requestsPage.workspaceRailMarketRecommendationExecutionBody)
+          : t(I18N_KEYS.requestsPage.workspaceRailPrivateRecommendationExecutionBody),
+        metric: panel.overview.inProgress,
+        tone: 'opportunity',
+      },
+      {
+        id: 'completed',
+        title: overviewLabels.completedThisPeriod,
+        description: variant === 'market'
+          ? t(I18N_KEYS.requestsPage.workspaceRailMarketRecommendationCompletedBody)
+          : t(I18N_KEYS.requestsPage.workspaceRailPrivateRecommendationCompletedBody),
+        metric: panel.overview.completedThisPeriod,
+        tone: 'positive',
+      },
+    ];
+  }, [overviewLabels.completedThisPeriod, overviewLabels.inProgress, panel.overview.completedThisPeriod, panel.overview.inProgress, panel.summary.totalNeedsAction, sidePanel, summaryText, t, variant]);
+  const model = React.useMemo(
+    () => buildLinkedWorkspaceRailModel({
+      locale,
+      contextLabel,
+      summaryItems: summaryItems ?? null,
+      panel: {
+        eyebrow: t(I18N_KEYS.requestsPage.decisionPanelTitle),
+        totalValue,
+        title: variant === 'market'
+          ? (
+            panel.summary.totalNeedsAction > 0
+              ? t(I18N_KEYS.requestsPage.decisionPanelMarketNeedsAttention)
+              : t(I18N_KEYS.requestsPage.decisionPanelMarketNoOpenItems)
+          )
+          : (
+            panel.summary.totalNeedsAction > 0
+              ? t(I18N_KEYS.requestsPage.decisionPanelPrivateNeedsDecision)
+              : t(I18N_KEYS.requestsPage.decisionPanelPrivateNoOpenItems)
+          ),
+        text: summaryText,
+        visualization: 'donut',
+        overview: [
+          { key: 'highUrgency', label: overviewLabels.highUrgency, value: panel.overview.highUrgency },
+          { key: 'inProgress', label: overviewLabels.inProgress, value: panel.overview.inProgress },
+          { key: 'completed', label: overviewLabels.completedThisPeriod, value: panel.overview.completedThisPeriod },
+        ],
+        primaryAction: {
+          kind: 'button',
+          label: panel.primaryAction.label,
+          onClick: onStartDecisionMode,
+          disabled: panel.summary.totalNeedsAction === 0,
+        },
+        queueTitle: t(I18N_KEYS.requestsPage.decisionPanelQueueTitle),
+        queue: panel.queue.slice(0, 5).map((item) => ({
+          id: item.requestId,
+          title: item.title,
+          actionLabel: item.actionLabel,
+          actionPriorityLevel: item.actionPriorityLevel,
+          priorityLabel: priorityLabel(item.actionPriorityLevel),
+          actionReason: item.actionReason,
+          action: {
+            kind: 'button',
+            label: item.title,
+            onClick: () => onOpenQueueItem(item.requestId),
+          },
+        })),
+        emptyText: variant === 'market'
+          ? t(I18N_KEYS.requestsPage.decisionPanelMarketMoving)
+          : t(I18N_KEYS.requestsPage.decisionPanelPrivateMoving),
+      },
+      activeItemId: activeRequestId,
+      recommendations: recommendationItems,
+      analysisHref: '/workspace?section=stats',
+      queueFooterHref: panel.queue.length > 0 ? '/workspace?section=requests' : undefined,
+      recommendationsFooterHref: '/workspace?section=stats',
+    }),
+    [
+      activeRequestId,
+      contextLabel,
+      locale,
+      onOpenQueueItem,
+      onStartDecisionMode,
+      overviewLabels.completedThisPeriod,
+      overviewLabels.highUrgency,
+      overviewLabels.inProgress,
+      panel.overview.completedThisPeriod,
+      panel.overview.highUrgency,
+      panel.overview.inProgress,
+      panel.primaryAction.label,
+      panel.queue,
+      panel.summary.totalNeedsAction,
+      priorityLabel,
+      recommendationItems,
+      summaryItems,
+      summaryText,
+      t,
+      totalValue,
+      variant,
+    ],
+  );
 
   return (
-    <div className="workspace-decision-panel">
-      <section className={workspaceRightRailPanelShell('workspace-decision-panel__summary')}>
-        <span className="workspace-decision-panel__eyebrow">
-          {t(I18N_KEYS.requestsPage.decisionPanelTitle)}
-        </span>
-        <strong className="workspace-decision-panel__count">
-          {panel.summary.totalNeedsAction}
-        </strong>
-        <h3 className="workspace-decision-panel__title">
-          {variant === 'market'
-            ? (
-              panel.summary.totalNeedsAction > 0
-                ? t(I18N_KEYS.requestsPage.decisionPanelMarketNeedsAttention)
-                : t(I18N_KEYS.requestsPage.decisionPanelMarketNoOpenItems)
-            )
-            : (
-              panel.summary.totalNeedsAction > 0
-                ? t(I18N_KEYS.requestsPage.decisionPanelPrivateNeedsDecision)
-                : t(I18N_KEYS.requestsPage.decisionPanelPrivateNoOpenItems)
-            )}
-        </h3>
-        <p className="workspace-decision-panel__text">{summaryText}</p>
-        <button
-          type="button"
-          className="app-button-primary workspace-ai-card__action workspace-decision-panel__primary"
-          onClick={onStartDecisionMode}
-          disabled={panel.summary.totalNeedsAction === 0}
-        >
-          {panel.primaryAction.label}
-        </button>
-      </section>
-
-      <section className={workspaceRightRailPanelShell('workspace-decision-panel__queue')}>
-        <div className="workspace-decision-panel__section-head">
-          <span className="workspace-decision-panel__eyebrow">
-            {t(I18N_KEYS.requestsPage.decisionPanelQueueTitle)}
-          </span>
-        </div>
-        {panel.queue.length > 0 ? (
-          <ul className="workspace-decision-panel__queue-list">
-            {panel.queue.slice(0, 5).map((item) => (
-              <li key={item.requestId}>
-                <button
-                  type="button"
-                  className={[
-                    'workspace-decision-panel__queue-item',
-                    item.requestId === activeRequestId ? 'is-active' : '',
-                  ].filter(Boolean).join(' ')}
-                  onClick={() => onOpenQueueItem(item.requestId)}
-                >
-                  <span className="workspace-decision-panel__queue-copy">
-                    <strong>{item.title}</strong>
-                    <span>{item.actionLabel}</span>
-                  </span>
-                  <span className={`workspace-decision-panel__priority is-${item.actionPriorityLevel}`}>
-                    {priorityLabel(item.actionPriorityLevel)}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="workspace-decision-panel__empty">
-            {variant === 'market'
-              ? t(I18N_KEYS.requestsPage.decisionPanelMarketMoving)
-              : t(I18N_KEYS.requestsPage.decisionPanelPrivateMoving)}
-          </p>
-        )}
-        {variant === 'private' && isDecisionMode && panel.queue.length > 0 ? (
-          <p className="workspace-decision-panel__hint">
-            {t(I18N_KEYS.requestsPage.decisionPanelAutoPriorityHint)}
-          </p>
-        ) : null}
-      </section>
-
-      <section className={workspaceRightRailPanelShell('workspace-decision-panel__overview')}>
-        <span className="workspace-decision-panel__eyebrow">
-          {overviewEyebrow}
-        </span>
-        <dl className="workspace-decision-panel__overview-grid">
-          <div>
-            <dt>{overviewLabels.highUrgency}</dt>
-            <dd>{panel.overview.highUrgency}</dd>
-          </div>
-          <div>
-            <dt>{overviewLabels.inProgress}</dt>
-            <dd>{panel.overview.inProgress}</dd>
-          </div>
-          <div>
-            <dt>{overviewLabels.completedThisPeriod}</dt>
-            <dd>{panel.overview.completedThisPeriod}</dd>
-          </div>
-        </dl>
-      </section>
-    </div>
+    <>
+      <WorkspaceUnifiedRail model={model} />
+      {variant === 'private' && isDecisionMode && panel.queue.length > 0 ? (
+        <p className="workspace-decision-panel__hint">
+          {t(I18N_KEYS.requestsPage.decisionPanelAutoPriorityHint)}
+        </p>
+      ) : null}
+    </>
   );
 }

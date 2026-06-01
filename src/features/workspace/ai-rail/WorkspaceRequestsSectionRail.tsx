@@ -2,11 +2,10 @@
 
 import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
 import type { WorkspaceRequestsSummaryItem, WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
-import type { WorkspaceRequestsDecisionPanelDto } from '@/lib/api/dto/workspace';
+import type { WorkspaceRequestsDecisionPanelDto, WorkspaceRequestsSidePanelDto } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
-import { WorkspaceRightRailStack, useMediaMatch } from '@/features/workspace/shared';
+import { WorkspaceRightRailStack, WorkspaceUnifiedRail, useMediaMatch } from '@/features/workspace/shared';
 import { WorkspaceRequestsActionRail } from './WorkspaceRequestsActionRail';
-import { WorkspaceRequestsSectionSummary } from './WorkspaceRequestsSectionSummary';
 
 type Props = {
   locale: Locale;
@@ -14,6 +13,7 @@ type Props = {
   summaryItems?: WorkspaceRequestsSummaryItem[] | null;
   isSummaryLoading?: boolean;
   panel?: WorkspaceRequestsDecisionPanelDto | null;
+  sidePanel?: WorkspaceRequestsSidePanelDto | null;
   mode?: WorkQueueMode;
   activeRequestId?: string | null;
   onStartDecisionMode: () => void;
@@ -26,6 +26,7 @@ export function WorkspaceRequestsSectionRail({
   summaryItems,
   isSummaryLoading = false,
   panel = null,
+  sidePanel = null,
   mode = 'default',
   activeRequestId = null,
   onStartDecisionMode,
@@ -43,23 +44,20 @@ export function WorkspaceRequestsSectionRail({
 
   return (
     <WorkspaceRightRailStack>
-      <WorkspaceRequestsSectionSummary
-        locale={locale}
-        items={summaryItems}
-        variant={variant}
-        isLoading={isSummaryLoading}
-        className="workspace-summary-grid--rail"
-      />
       {panel ? (
         <WorkspaceRequestsActionRail
           locale={locale}
+          summaryItems={summaryItems}
           panel={panel}
+          sidePanel={sidePanel}
           mode={mode}
           activeRequestId={activeRequestId}
           onStartDecisionMode={onStartDecisionMode}
           onOpenQueueItem={onOpenQueueItem}
           variant={variant}
         />
+      ) : isSummaryLoading ? (
+        <WorkspaceUnifiedRail isLoading />
       ) : null}
     </WorkspaceRightRailStack>
   );

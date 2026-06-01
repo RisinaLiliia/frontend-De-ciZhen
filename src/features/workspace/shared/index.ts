@@ -10,9 +10,17 @@ export { WorkspaceOverlaySurface } from './WorkspaceOverlaySurface';
 export { WorkspaceRightRailPanel } from './WorkspaceRightRailPanel';
 export { WorkspaceRightRailStack } from './WorkspaceRightRailStack';
 export { WorkspaceSectionAside } from './WorkspaceSectionAside';
-export { WorkspaceSectionDecisionPanel } from './WorkspaceSectionDecisionPanel';
 export { WorkspaceSectionErrorBoundary } from './WorkspaceSectionErrorBoundary';
-export { WorkspaceSummaryGrid } from './WorkspaceSummaryGrid';
+export {
+  WorkspaceUnifiedRail,
+} from './WorkspaceUnifiedRail';
+export type {
+  WorkspaceUnifiedRailAction,
+  WorkspaceUnifiedRailModel,
+  WorkspaceUnifiedRailQueueItem,
+  WorkspaceUnifiedRailRecommendationItem,
+  WorkspaceUnifiedRailVisualization,
+} from './WorkspaceUnifiedRail';
 export { WorkspaceViewToggle } from './WorkspaceViewToggle';
 export { useIsDesktop, useMediaMatch } from './useIsDesktop';
 export { useWorkspaceFormatters } from './useWorkspaceFormatters';
@@ -36,3 +44,7 @@ export {
   workspaceSurfaceShell,
 } from './workspaceSurfaceShell';
 export type { WorkspaceSurfaceVariant } from './workspaceSurfaceShell';
+export {
+  buildLinkedWorkspaceRailModel,
+  buildSummaryRecommendations,
+} from './workspaceUnifiedRail.model';

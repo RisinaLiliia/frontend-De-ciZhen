@@ -353,6 +353,52 @@ export type WorkspaceActionsResponseDto = {
   };
 };
 
+export type WorkspaceChatResponseDto = {
+  section: 'chat';
+  header: {
+    title: string;
+    subtitle?: string | null;
+  };
+  summary: {
+    items: Array<{
+      key: 'all' | 'unread' | 'active' | 'archived';
+      label: string;
+      value: number;
+      helper: string;
+      tone: 'all' | 'attention' | 'execution' | 'completed';
+    }>;
+  };
+  decisionPanel: {
+    eyebrow: string;
+    totalNeedsAction: number;
+    title: string;
+    text: string;
+    primaryAction: {
+      label: string;
+      href: string;
+      targetFilter: 'all' | 'unread';
+    };
+    queueTitle: string;
+    queue: Array<{
+      conversationId: string;
+      title: string;
+      actionType: 'reply' | 'review_context' | 'follow_up';
+      actionLabel: string;
+      actionPriority: number;
+      actionPriorityLevel: 'high' | 'medium' | 'low';
+      actionReason?: string | null;
+      href: string;
+    }>;
+    emptyText: string;
+    overviewEyebrow: string;
+    overview: Array<{
+      key: 'unread' | 'active' | 'archived';
+      label: string;
+      value: number;
+    }>;
+  };
+};
+
 export type WorkspaceRequestsSummaryDto = {
   items: Array<{
     key: 'all' | 'attention' | 'execution' | 'completed' | 'pending';

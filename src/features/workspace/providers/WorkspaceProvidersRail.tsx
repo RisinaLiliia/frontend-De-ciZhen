@@ -5,7 +5,11 @@ import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 
 import { workspaceQK } from '@/features/workspace/data';
-import { ALL_OPTION_KEY, WorkspaceSectionAside } from '@/features/workspace/shared';
+import {
+  ALL_OPTION_KEY,
+  WorkspaceSectionAside,
+  buildLinkedWorkspaceRailModel,
+} from '@/features/workspace/shared';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { resolveWorkspaceRequestsPeriod } from '@/features/workspace/state';
 import { getWorkspaceProviders } from '@/lib/api/workspace';
@@ -76,24 +80,48 @@ export function WorkspaceProvidersRail({
       })) ?? null,
     [contractData],
   );
-
-  return (
-    <WorkspaceSectionAside
-      locale={locale}
-      className="workspace-providers-rail"
-      summaryItems={summaryItems}
-      isLoading={isContractLoading}
-      panel={contractData ? {
-        ...contractData.decisionPanel,
+  const railModel = React.useMemo(
+    () => buildLinkedWorkspaceRailModel({
+      locale,
+      contextLabel: t(I18N_KEYS.requestsPage.workspaceRailProvidersContext),
+      summaryItems,
+      panel: contractData ? {
+        eyebrow: contractData.decisionPanel.eyebrow,
+        totalValue: contractData.decisionPanel.totalNeedsAction,
+        title: contractData.decisionPanel.title,
+        text: contractData.decisionPanel.text,
+        visualization: 'donut',
+        primaryAction: {
+          kind: 'link',
+          label: contractData.decisionPanel.primaryAction.label,
+          href: contractData.decisionPanel.primaryAction.href,
+        },
+        queueTitle: contractData.decisionPanel.queueTitle,
         queue: contractData.decisionPanel.queue.map((item) => ({
           id: item.providerId,
           title: item.title,
           actionLabel: item.actionLabel,
           actionPriorityLevel: item.actionPriorityLevel,
           actionReason: item.actionReason,
-          href: item.href,
+          action: {
+            kind: 'link',
+            href: item.href,
+            label: item.title,
+          },
         })),
-      } : null}
+        emptyText: contractData.decisionPanel.emptyText,
+        overview: contractData.decisionPanel.overview,
+      } : null,
+      queueFooterHref: '/workspace?section=providers',
+    }),
+    [contractData, locale, summaryItems, t],
+  );
+
+  return (
+    <WorkspaceSectionAside
+      className="workspace-providers-rail"
+      model={railModel}
+      isLoading={isContractLoading}
     >
       {isContractError ? (
         <section className={workspacePanelShell()}>

@@ -222,6 +222,7 @@ const privatePagination = React.useMemo(() => {
       summaryItems={privateRequestsModel.response?.summary.items}
       isSummaryLoading={privateRequestsLoading}
       panel={privateRequestsModel.response?.decisionPanel}
+      sidePanel={privateRequestsModel.response?.sidePanel ?? null}
       mode={decisionState.mode}
       activeRequestId={decisionState.activeRequestId}
       onStartDecisionMode={() => enterDecisionMode()}

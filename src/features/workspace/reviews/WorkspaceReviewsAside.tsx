@@ -6,9 +6,13 @@ import { getWorkspaceReviews } from '@/lib/api/workspace';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { WorkspaceSectionAside } from '@/features/workspace/shared';
+import {
+  WorkspaceSectionAside,
+  buildLinkedWorkspaceRailModel,
+} from '@/features/workspace/shared';
 import { WorkspaceReviewsComposer } from '@/features/workspace/reviews/WorkspaceReviewsComposer';
 import { useWorkspaceReviewControlsState } from '@/features/workspace/reviews/useWorkspaceReviewControlsState';
+import { I18N_KEYS } from '@/lib/i18n/keys';
 
 type Props = {
   t: (key: I18nKey) => string;
@@ -43,23 +47,45 @@ export function WorkspaceReviewsAside({
     return null;
   }
 
+  const model = buildLinkedWorkspaceRailModel({
+    locale,
+    contextLabel: t(I18N_KEYS.requestsPage.workspaceRailReviewsContext),
+    summaryItems: data?.summary.items ?? null,
+    panel: data ? {
+      eyebrow: data.decisionPanel.eyebrow,
+      totalValue: data.decisionPanel.totalNeedsAction,
+      title: data.decisionPanel.title,
+      text: data.decisionPanel.text,
+      visualization: 'none',
+      primaryAction: {
+        kind: 'link',
+        label: data.decisionPanel.primaryAction.label,
+        href: data.decisionPanel.primaryAction.href,
+      },
+      queueTitle: data.decisionPanel.queueTitle,
+      queue: data.decisionPanel.queue.map((item) => ({
+        id: item.reviewId,
+        title: item.title,
+        actionLabel: item.actionLabel,
+        actionPriorityLevel: item.actionPriorityLevel,
+        actionReason: item.actionReason,
+        action: {
+          kind: 'link',
+          href: item.href,
+          label: item.title,
+        },
+      })),
+      emptyText: data.decisionPanel.emptyText,
+      overview: data.decisionPanel.overview,
+    } : null,
+    queueFooterHref: '/workspace?section=profile&tab=reviews',
+  });
+
   return (
     <WorkspaceSectionAside
-      locale={locale}
-      summaryItems={data?.summary.items ?? null}
+      model={model}
       isLoading={isLoading}
       hideBelowTablet={hideBelowTablet}
-      panel={data ? {
-        ...data.decisionPanel,
-        queue: data.decisionPanel.queue.map((item) => ({
-          id: item.reviewId,
-          title: item.title,
-          actionLabel: item.actionLabel,
-          actionPriorityLevel: item.actionPriorityLevel,
-          actionReason: item.actionReason,
-          href: item.href,
-        })),
-      } : null}
     >
       {data?.composer.enabled ? (
         <WorkspaceReviewsComposer
