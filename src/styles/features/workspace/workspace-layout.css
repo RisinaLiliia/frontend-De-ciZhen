@@ -2,18 +2,20 @@
 
 @layer components {
   .workspace-shell {
+    --workspace-shell-header-height: var(--shell-topbar-height, 72px);
+    --workspace-shell-content-offset: calc(var(--workspace-shell-header-height) + var(--space-3));
     width: min(100%, var(--shell-max-width));
+    height: 100dvh;
     min-height: 100dvh;
     margin-inline: auto;
     display: grid;
     grid-template-columns: var(--shell-sidebar-width) minmax(0, 1fr);
     background: var(--color-background);
     color: var(--color-text);
+    overflow: hidden;
   }
 
   .workspace-shell__sidebar {
-    position: sticky;
-    top: 0;
     height: 100dvh;
     min-width: 0;
     overflow-y: auto;
@@ -26,14 +28,16 @@
   .workspace-shell__main {
     min-width: 0;
     width: 100%;
-    display: flex;
-    flex-direction: column;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     background: var(--color-background);
+    overflow: hidden;
   }
 
   .workspace-shell__topbar {
-    position: sticky;
-    top: 0;
+    position: relative;
+    top: auto;
     z-index: 24;
     border-bottom: 1px solid var(--color-border-soft);
     background: var(--color-background);
@@ -81,19 +85,22 @@
   .workspace-main {
     min-width: 0;
     width: 100%;
-    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
   }
 
   .workspace-page-frame {
     width: 100%;
+    height: 100%;
+    min-height: 0;
     max-width: var(--workspace-content-max-width);
     margin-inline: auto;
     display: grid;
     grid-template-columns: minmax(0, 1fr) var(--workspace-rail-width);
     gap: clamp(20px, 2vw, 28px);
-    align-items: start;
+    align-items: stretch;
     padding-inline: var(--shell-inline-padding);
-    padding-bottom: var(--space-8);
   }
 
   .workspace-page-frame--inside-overlay {
@@ -115,6 +122,34 @@
     display: flex;
     flex-direction: column;
     gap: clamp(18px, 1.8vw, 24px);
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding-bottom: var(--space-8);
+  }
+
+  .workspace-context-bar,
+  .workspace-page-frame__filters {
+    position: sticky;
+    top: 0;
+    z-index: 16;
+    margin-bottom: calc(var(--space-2) * -1);
+    padding-bottom: var(--space-2);
+    background:
+      linear-gradient(
+        180deg,
+        var(--color-background) 0%,
+        var(--color-background) calc(100% - var(--space-2)),
+        transparent 100%
+      );
+  }
+
+  .workspace-context-bar::after {
+    content: '';
+    display: block;
+    margin-top: var(--space-2);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-border-soft) 90%, transparent 10%);
   }
 
   .workspace-page-frame__filters {
@@ -204,19 +239,52 @@
   }
 
   .workspace-page-frame__rail {
-    align-self: start;
-    position: sticky;
-    top: 80px;
-    max-height: calc(100dvh - 100px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-gutter: stable;
+    align-self: stretch;
+    min-height: 0;
+    max-height: none;
+    position: static;
+    top: auto;
+    overflow: hidden;
   }
 
   .workspace-shell__main .workspace-primary-overlay-shell {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     gap: clamp(16px, 1.8vw, 22px);
     padding-top: calc(var(--space-4) + var(--section-top-offset, 0px));
     padding-bottom: clamp(18px, 1.8vw, 24px);
+  }
+
+  .workspace-primary-overlay-shell__body {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .workspace-primary-overlay-shell__body > * {
+    min-height: 0;
+  }
+
+  .workspace-page-frame__rail:has(.workspace-section-aside--viewport) {
+    overflow: hidden;
+  }
+
+  .workspace-page-frame__rail:has(.workspace-unified-rail) {
+    overflow: hidden;
+  }
+
+  .workspace-section-aside--viewport,
+  .workspace-page-frame__rail > .workspace-section-rail > .workspace-right-rail-stack,
+  .workspace-page-frame__rail > .workspace-section-rail > .my-requests-rail,
+  .workspace-page-frame__rail > .workspace-section-rail > .workspace-unified-rail,
+  .workspace-page-frame__rail > .workspace-section-rail > .workspace-context-rail,
+  .workspace-page-frame__rail > .workspace-section-rail > .workspace-statistics__rail {
+    position: sticky;
+    top: var(--workspace-shell-content-offset);
+    align-self: start;
+    max-height: calc(100dvh - var(--workspace-shell-content-offset) - var(--space-4));
+    overflow: hidden;
   }
 
   .workspace-intro-shell > .stack-md {
@@ -279,8 +347,10 @@
     .workspace-shell,
     .workspace-frame__body {
       width: 100%;
+      height: auto;
       max-width: none;
       display: block;
+      overflow: visible;
     }
 
     .workspace-shell__sidebar,
@@ -289,13 +359,43 @@
     }
 
     .workspace-page-frame {
+      height: auto;
       max-width: var(--workspace-content-max-width);
       grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      padding-bottom: var(--space-8);
+    }
+
+    .workspace-main,
+    .workspace-shell__main,
+    .workspace-page-frame__content,
+    .workspace-context-bar,
+    .workspace-page-frame__rail {
+      overflow: visible;
+      max-height: none;
     }
 
     .workspace-page-frame__rail {
       position: static;
       margin-top: var(--space-4);
+    }
+
+    .workspace-context-bar,
+    .workspace-page-frame__filters,
+    .workspace-section-aside--viewport,
+    .workspace-page-frame__rail > .workspace-section-rail > .workspace-right-rail-stack,
+    .workspace-page-frame__rail > .workspace-section-rail > .my-requests-rail,
+    .workspace-page-frame__rail > .workspace-section-rail > .workspace-unified-rail,
+    .workspace-page-frame__rail > .workspace-section-rail > .workspace-context-rail,
+    .workspace-page-frame__rail > .workspace-section-rail > .workspace-statistics__rail {
+      position: static;
+      top: auto;
+      max-height: none;
+      overflow: visible;
+    }
+
+    .workspace-context-bar::after {
+      content: none;
     }
   }
 
@@ -308,11 +408,14 @@
   @media (max-width: 767px) {
     .workspace-shell {
       overflow-x: hidden;
+      height: auto;
     }
 
     .workspace-shell__main {
       min-width: 0;
       overflow-x: hidden;
+      overflow-y: visible;
+      display: block;
     }
 
     .workspace-page-frame {
@@ -337,6 +440,7 @@
     }
 
     .workspace-shell__main .workspace-primary-overlay-shell {
+      display: block;
       gap: var(--space-4);
       padding-top: calc(var(--space-3) + var(--section-top-offset, 0px));
       padding-bottom: var(--space-4);

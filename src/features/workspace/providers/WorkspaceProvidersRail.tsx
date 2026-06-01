@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 
 import { workspaceQK } from '@/features/workspace/data';
+import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
 import {
   ALL_OPTION_KEY,
   WorkspaceSectionAside,
@@ -30,11 +31,32 @@ function normalizeFilter(value: string | null) {
   return normalized;
 }
 
+export function buildProvidersRailDecisionLinks(currentSearch: string | URLSearchParams) {
+  return {
+    overviewHref: buildWorkspaceHref({
+      currentSearch,
+      section: 'overview',
+    }),
+    analysisHref: buildWorkspaceHref({
+      currentSearch,
+      section: 'stats',
+    }),
+    providersHref: buildWorkspaceHref({
+      currentSearch,
+      section: 'providers',
+    }),
+  };
+}
+
 export function WorkspaceProvidersRail({
   t,
   locale,
 }: WorkspaceProvidersRailProps) {
   const searchParams = useSearchParams();
+  const railLinks = React.useMemo(
+    () => buildProvidersRailDecisionLinks(searchParams),
+    [searchParams],
+  );
   const cityId = normalizeFilter(searchParams.get('cityId'));
   const categoryKey = normalizeFilter(searchParams.get('categoryKey'));
   const subcategoryKey = normalizeFilter(searchParams.get('subcategoryKey'));
@@ -88,13 +110,18 @@ export function WorkspaceProvidersRail({
       panel: contractData ? {
         eyebrow: contractData.decisionPanel.eyebrow,
         totalValue: contractData.decisionPanel.totalNeedsAction,
-        title: contractData.decisionPanel.title,
+        title: t(I18N_KEYS.requestsPage.workspaceRailProvidersContext),
         text: contractData.decisionPanel.text,
         visualization: 'donut',
         primaryAction: {
           kind: 'link',
-          label: contractData.decisionPanel.primaryAction.label,
-          href: contractData.decisionPanel.primaryAction.href,
+          label: t(I18N_KEYS.requestsPage.workspaceRailProvidersPrimaryCta),
+          href: railLinks.overviewHref,
+        },
+        secondaryAction: {
+          kind: 'link',
+          label: t(I18N_KEYS.requestsPage.workspaceRailAnalysisCta),
+          href: railLinks.analysisHref,
         },
         queueTitle: contractData.decisionPanel.queueTitle,
         queue: contractData.decisionPanel.queue.map((item) => ({
@@ -112,9 +139,12 @@ export function WorkspaceProvidersRail({
         emptyText: contractData.decisionPanel.emptyText,
         overview: contractData.decisionPanel.overview,
       } : null,
-      queueFooterHref: '/workspace?section=providers',
+      analysisHref: railLinks.analysisHref,
+      queueCountTemplate: t(I18N_KEYS.requestsPage.workspaceRailProvidersQueueCountTemplate),
+      queueFooterHref: railLinks.providersHref,
+      recommendationsFooterHref: railLinks.analysisHref,
     }),
-    [contractData, locale, summaryItems, t],
+    [contractData, locale, railLinks.analysisHref, railLinks.overviewHref, railLinks.providersHref, summaryItems, t],
   );
 
   return (

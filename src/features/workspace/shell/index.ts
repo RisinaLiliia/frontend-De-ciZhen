@@ -12,6 +12,7 @@ export { WorkspacePageLayout } from '@/features/workspace/shell/WorkspacePageLay
 export { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
 export { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
 export { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
+export { WorkspaceContextBar } from '@/features/workspace/shell/WorkspaceContextBar';
 export { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 export { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
 export { useWorkspaceSectionHeaderCopy } from '@/features/workspace/shell/useWorkspaceSectionHeaderCopy';

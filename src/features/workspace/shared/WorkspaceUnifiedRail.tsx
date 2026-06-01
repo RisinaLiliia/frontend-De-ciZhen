@@ -45,7 +45,6 @@ export type WorkspaceUnifiedRailModel = {
     value: string | number;
     contextLabel: string;
     title: string;
-    description?: string | null;
     visualization?: WorkspaceUnifiedRailVisualization;
     metrics: Array<{
       key: string;
@@ -207,56 +206,67 @@ export function WorkspaceUnifiedRail({
 
   const showsDecisionChart =
     model.decisionPanel.visualization === 'donut' && model.decisionPanel.metrics.length > 0;
+  const decisionHeading = model.decisionPanel.contextLabel || model.decisionPanel.title;
+  const primaryDecisionAction = model.decisionPanel.primaryAction
+    ? renderInlineAction(
+      model.decisionPanel.primaryAction,
+      'app-button-primary workspace-ai-card__action workspace-unified-rail__primary',
+    )
+    : null;
+  const secondaryDecisionAction = model.decisionPanel.secondaryAction
+    ? renderInlineAction(
+      model.decisionPanel.secondaryAction,
+      'workspace-unified-rail__secondary',
+    )
+    : null;
+  const decisionMetrics = model.decisionPanel.metrics.length > 0 ? (
+    <dl className="workspace-unified-rail__metrics">
+      {model.decisionPanel.metrics.map((item, index) => (
+        <div key={item.key} className={`is-tone-${index + 1}`}>
+          <dt>{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  ) : null;
 
   return (
     <div className={['workspace-unified-rail', className ?? ''].filter(Boolean).join(' ')}>
       <WorkspaceRightRailPanel className="workspace-unified-rail__panel workspace-unified-rail__panel--decision">
-        <span className="workspace-unified-rail__eyebrow">{model.decisionPanel.eyebrow}</span>
         <div className="workspace-unified-rail__decision-head">
           <div className="workspace-unified-rail__decision-copy">
-            <strong className="workspace-unified-rail__value">{model.decisionPanel.value}</strong>
-            <h3 className="workspace-unified-rail__title">{model.decisionPanel.title}</h3>
-            <p className="workspace-unified-rail__context">{model.decisionPanel.contextLabel}</p>
-            {model.decisionPanel.description ? (
-              <p className="workspace-unified-rail__description">{model.decisionPanel.description}</p>
-            ) : null}
+            <span className="workspace-unified-rail__eyebrow">{model.decisionPanel.eyebrow}</span>
+            <div className="workspace-unified-rail__decision-main">
+              <strong className="workspace-unified-rail__value">{model.decisionPanel.value}</strong>
+              {decisionHeading ? (
+                <h3 className="workspace-unified-rail__title">{decisionHeading}</h3>
+              ) : null}
+            </div>
+            {showsDecisionChart ? primaryDecisionAction : null}
           </div>
           {showsDecisionChart ? (
-            <div className="workspace-unified-rail__decision-visual">
-              <div
-                className="workspace-unified-rail__chart"
-                style={buildDecisionChartStyle(model.decisionPanel.metrics)}
-                aria-hidden="true"
-              >
-                <span className="workspace-unified-rail__chart-core" />
+            <div className="workspace-unified-rail__decision-side">
+              <div className="workspace-unified-rail__decision-side-body">
+                <div className="workspace-unified-rail__decision-visual">
+                  <div
+                    className="workspace-unified-rail__chart"
+                    style={buildDecisionChartStyle(model.decisionPanel.metrics)}
+                    aria-hidden="true"
+                  >
+                    <span className="workspace-unified-rail__chart-core" />
+                  </div>
+                </div>
+                {decisionMetrics}
               </div>
+              {secondaryDecisionAction}
             </div>
           ) : null}
         </div>
-        {model.decisionPanel.metrics.length > 0 ? (
-          <dl className="workspace-unified-rail__metrics">
-            {model.decisionPanel.metrics.map((item, index) => (
-              <div key={item.key} className={`is-tone-${index + 1}`}>
-                <dt>{item.label}</dt>
-                <dd>{item.value}</dd>
-              </div>
-            ))}
-          </dl>
-        ) : null}
-        {model.decisionPanel.primaryAction || model.decisionPanel.secondaryAction ? (
+        {!showsDecisionChart ? decisionMetrics : null}
+        {!showsDecisionChart && (model.decisionPanel.primaryAction || model.decisionPanel.secondaryAction) ? (
           <div className="workspace-unified-rail__actions">
-            {model.decisionPanel.primaryAction
-              ? renderInlineAction(
-                model.decisionPanel.primaryAction,
-                'app-button-primary workspace-ai-card__action workspace-unified-rail__primary',
-              )
-              : null}
-            {model.decisionPanel.secondaryAction
-              ? renderInlineAction(
-                model.decisionPanel.secondaryAction,
-                'workspace-unified-rail__secondary',
-              )
-              : null}
+            {primaryDecisionAction}
+            {secondaryDecisionAction}
           </div>
         ) : null}
       </WorkspaceRightRailPanel>

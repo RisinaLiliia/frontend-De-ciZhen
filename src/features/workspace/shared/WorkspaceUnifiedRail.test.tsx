@@ -13,7 +13,6 @@ describe('WorkspaceUnifiedRail', () => {
             value: 3,
             contextLabel: 'Conversations in focus',
             title: 'No replies pending',
-            description: '3 active threads currently have no pending reply.',
             visualization: 'none',
             metrics: [
               { key: 'unread', label: 'Unread', value: 0 },
@@ -36,6 +35,8 @@ describe('WorkspaceUnifiedRail', () => {
       />,
     );
 
+    expect(html).toContain('Conversations in focus');
+    expect(html).not.toContain('No replies pending');
     expect(html).toContain('Unread');
     expect(html).toContain('Active');
     expect(html).not.toContain('workspace-unified-rail__chart');

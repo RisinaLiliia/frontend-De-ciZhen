@@ -29,6 +29,8 @@ export function WorkspaceSectionAside({
     <WorkspaceRightRailStack
       as="aside"
       className={[
+        'workspace-section-aside',
+        'workspace-section-aside--viewport',
         hideBelowTablet ? 'hide-below-tablet' : '',
         className ?? '',
       ].filter(Boolean).join(' ')}

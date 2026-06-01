@@ -52,6 +52,7 @@ type BuildLinkedWorkspaceRailModelParams = {
   analysisHref?: string;
   queueFooterHref?: string;
   recommendationsFooterHref?: string;
+  queueCountTemplate?: string;
 };
 
 function toneToRecommendationTone(
@@ -91,6 +92,7 @@ export function buildLinkedWorkspaceRailModel({
   analysisHref = '/workspace?section=stats',
   queueFooterHref,
   recommendationsFooterHref,
+  queueCountTemplate,
 }: BuildLinkedWorkspaceRailModelParams): WorkspaceUnifiedRailModel | null {
   if (!panel && (!summaryItems || summaryItems.length === 0)) {
     return null;
@@ -106,7 +108,6 @@ export function buildLinkedWorkspaceRailModel({
       value: totalValue,
       contextLabel,
       title: panel?.title ?? contextLabel,
-      description: panel?.text ?? null,
       visualization: panel?.visualization ?? 'none',
       metrics: panel?.overview ?? [],
       primaryAction: panel?.primaryAction ?? null,
@@ -118,8 +119,11 @@ export function buildLinkedWorkspaceRailModel({
     },
     actionQueue: {
       eyebrow: panel?.queueTitle ?? t(I18N_KEYS.requestsPage.decisionPanelQueueTitle),
-      title: withCount(t(I18N_KEYS.requestsPage.workspaceRailQueueCountTemplate), queueCount),
-      items: (panel?.queue ?? []).map((item) => ({
+      title: withCount(
+        queueCountTemplate ?? t(I18N_KEYS.requestsPage.workspaceRailQueueCountTemplate),
+        queueCount,
+      ),
+      items: (panel?.queue ?? []).slice(0, 3).map((item) => ({
         id: item.id,
         title: item.title,
         meta: item.actionLabel,
@@ -147,7 +151,7 @@ export function buildLinkedWorkspaceRailModel({
     recommendations: {
       eyebrow: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEyebrow),
       title: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsTitle),
-      items: recommendations?.length ? recommendations : buildSummaryRecommendations(summaryItems),
+      items: (recommendations?.length ? recommendations : buildSummaryRecommendations(summaryItems)).slice(0, 3),
       emptyText: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEmpty),
       footerAction: {
         kind: 'link',

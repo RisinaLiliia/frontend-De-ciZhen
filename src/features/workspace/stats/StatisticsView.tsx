@@ -25,7 +25,6 @@ import {
   StatisticsGrowthPanel,
   StatisticsInsightsPanel,
   StatisticsOpportunityPanel,
-  StatisticsPerformancePositionPanel,
   StatisticsPricePanel,
   StatisticsPriceRecommendationPanel,
   StatisticsRecommendationsPanel,
@@ -635,10 +634,6 @@ export function StatisticsView({
           <>
             {isPersonalizedMode ? (
               <>
-                <StatisticsPerformancePositionPanel
-                  copy={copy}
-                  position={userIntelligence?.performancePosition ?? null}
-                />
                 <StatisticsRecommendationsPanel
                   copy={copy}
                   groups={[
