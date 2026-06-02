@@ -1,7 +1,4 @@
-import type { ComponentProps } from 'react';
-
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
-import type { WorkspaceRequestsSummaryStrip } from '@/features/workspace/ai-rail/WorkspaceRequestsSummaryStrip';
 import type { WorkspaceProvidersResponseDto } from '@/lib/api/dto/workspace';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';
@@ -107,6 +104,4 @@ export type RequestsExplorerRequestsContentProps = {
   formatPrice: Intl.NumberFormat;
   listDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
-  summaryStripProps?: ComponentProps<typeof WorkspaceRequestsSummaryStrip>;
-  isSummaryStripLoading?: boolean;
 } & RequestsExplorerSharedFilters & RequestsExplorerCatalogIndex;

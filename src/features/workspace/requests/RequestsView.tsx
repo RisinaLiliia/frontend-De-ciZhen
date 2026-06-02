@@ -21,7 +21,6 @@ import {
 } from '@/components/ui/icons/icons';
 import { WorkspaceRequestsActionRail } from '@/features/workspace/ai-rail/WorkspaceRequestsActionRail';
 import { WorkspaceDecisionModeBar } from '@/features/workspace/ai-rail/WorkspaceDecisionModeBar';
-import { WorkspaceRequestsSectionSummary } from '@/features/workspace/ai-rail/WorkspaceRequestsSectionSummary';
 import {
   buildRequestsWorkspaceDecisionRailProps,
 } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
@@ -1188,14 +1187,6 @@ export function RequestsView({
 
   return (
     <section className="my-requests-view">
-      <WorkspaceRequestsSectionSummary
-        locale={locale}
-        items={model.response?.summary.items}
-        variant={variant}
-        isLoading={isLoading}
-        className="workspace-summary-grid--mobile-only"
-      />
-
       {isLoading ? <CardSkeletonList /> : null}
       {!isLoading && activeInlineOverlay ? (
         <div className="my-requests-inline-stage">

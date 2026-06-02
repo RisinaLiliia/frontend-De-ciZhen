@@ -56,8 +56,6 @@ export function RequestsExplorerRequestsContent({
   setPage,
   listDensity,
   onListDensityChange,
-  summaryStripProps,
-  isSummaryStripLoading,
 }: RequestsExplorerRequestsContentProps) {
   const onPrevPage = () => setPage(Math.max(1, page - 1));
   const onNextPage = () => setPage(Math.min(totalPages, page + 1));
@@ -128,8 +126,6 @@ export function RequestsExplorerRequestsContent({
         listDensity: listDensity ?? resolveRequestsListDensityForPageSize(limit),
         onListDensityChange,
         header: topBar,
-        summaryStripProps,
-        isSummaryStripLoading,
       })}
     />
   );

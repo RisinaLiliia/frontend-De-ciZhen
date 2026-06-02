@@ -95,8 +95,6 @@ type BuildRequestsContentArgs = {
   formatPrice: Intl.NumberFormat;
   onListDensityChange?: (value: RequestsListDensity) => void;
   showTopFilters: boolean;
-  summaryStripProps?: RequestsExplorerRequestsContentProps['summaryStripProps'];
-  isSummaryStripLoading?: boolean;
 };
 
 export function buildRequestsExplorerNextPath(pathname: string, searchParams: SearchParamsLike) {
@@ -174,8 +172,6 @@ export function buildRequestsExplorerRequestsContentProps({
   formatPrice,
   onListDensityChange,
   showTopFilters,
-  summaryStripProps,
-  isSummaryStripLoading,
 }: BuildRequestsContentArgs): RequestsExplorerRequestsContentProps {
   return {
     t,
@@ -203,7 +199,5 @@ export function buildRequestsExplorerRequestsContentProps({
     formatDate,
     formatPrice,
     onListDensityChange,
-    summaryStripProps,
-    isSummaryStripLoading,
   };
 }

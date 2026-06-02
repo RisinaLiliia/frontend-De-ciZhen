@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import type { ComponentProps } from 'react';
 
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { RequestsListShellHeader } from '@/components/requests/RequestsListShellHeader';
@@ -15,10 +14,6 @@ import {
   DEFAULT_REQUESTS_LIST_DENSITY,
   type RequestsListDensity,
 } from '@/lib/requests/pagination';
-import {
-  WorkspaceRequestsSummaryStrip,
-  WorkspaceRequestsSummaryStripSkeleton,
-} from '@/features/workspace/ai-rail/WorkspaceRequestsSummaryStrip';
 import { WorkspaceChipToggleGroup } from '@/features/workspace/shared';
 import { PublicRequestSessionDialog } from '@/features/workspace/overlays/PublicRequestSessionDialog';
 import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/overlays/useWorkspacePublicRequestOverlayFlow';
@@ -47,8 +42,6 @@ export type PublicContentProps = {
   listDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
   header?: RequestsListShellHeaderMode;
-  summaryStripProps?: ComponentProps<typeof WorkspaceRequestsSummaryStrip>;
-  isSummaryStripLoading?: boolean;
 };
 
 export function PublicContent({
@@ -71,8 +64,6 @@ export function PublicContent({
   listDensity = DEFAULT_REQUESTS_LIST_DENSITY,
   onListDensityChange,
   header = { kind: 'filters' },
-  summaryStripProps,
-  isSummaryStripLoading = false,
 }: PublicContentProps) {
   const authStatus = useAuthStatus();
   const {
@@ -117,10 +108,6 @@ export function PublicContent({
 
   return (
     <>
-      {isSummaryStripLoading && !summaryStripProps ? (
-        <WorkspaceRequestsSummaryStripSkeleton />
-      ) : null}
-      {summaryStripProps ? <WorkspaceRequestsSummaryStrip {...summaryStripProps} /> : null}
       <RequestsPaginatedPanel
         t={t}
         page={page}

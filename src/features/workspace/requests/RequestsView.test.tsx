@@ -69,10 +69,6 @@ vi.mock('@/features/workspace/ai-rail/WorkspaceDecisionModeBar', () => ({
   WorkspaceDecisionModeBar: () => null,
 }));
 
-vi.mock('@/features/workspace/ai-rail/WorkspaceRequestsSectionSummary', () => ({
-  WorkspaceRequestsSectionSummary: () => null,
-}));
-
 vi.mock('@/features/workspace/overlays/PrivateRequestSessionDialog', () => ({
   PrivateRequestSessionDialog: () => null,
 }));

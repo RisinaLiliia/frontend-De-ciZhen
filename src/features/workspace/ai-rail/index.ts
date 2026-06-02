@@ -8,8 +8,5 @@ export { WorkspaceFocusRailPanel } from './WorkspaceFocusRailPanel';
 export { WorkspaceInsightsPanel } from './WorkspaceInsightsPanel';
 export { WorkspaceRequestsActionRail } from './WorkspaceRequestsActionRail';
 export { WorkspaceRequestsSectionRail } from './WorkspaceRequestsSectionRail';
-export { WorkspaceRequestsSectionSummary } from './WorkspaceRequestsSectionSummary';
-export { WorkspaceRequestsSummaryStrip, WorkspaceRequestsSummaryStripSkeleton } from './WorkspaceRequestsSummaryStrip';
 export type { WorkspaceInsightsPanelItem } from './WorkspaceInsightsPanel';
 export type { WorkspaceDecisionModeBarProps } from './WorkspaceDecisionModeBar';
-export type { WorkspaceRequestsSummaryStripProps } from './WorkspaceRequestsSummaryStrip';
