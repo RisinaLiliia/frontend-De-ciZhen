@@ -12,12 +12,10 @@
 @import './workspace-overview.css';
 @import './workspace-overview-guest-card.css';
 @import './workspace-overview-responsive.css';
-@import './workspace-overview-kpis.css';
 @import './workspace-overview-demand.css';
 @import './workspace-overview-ai.css';
 @import './workspace-ai-rail.css';
 @import './workspace-decision-panel.css';
-@import './workspace-overview-insights.css';
 @import './workspace-controls-tabs.css';
 @import './workspace-controls-responsive.css';
 @import './workspace-controls-filters.css';

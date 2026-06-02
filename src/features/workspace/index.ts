@@ -17,7 +17,7 @@ export type {
 } from './navigation/workspaceSection.contract';
 
 export { PublicContent, ProofReviewCard, WorkspaceContent, WorkspacePrivateIntro, WorkspacePublicIntro } from './workspace.lazy';
-export { WorkspaceOverviewInsightsPanel, WorkspaceOverviewMain } from './overview';
+export { WorkspaceOverviewMain } from './overview';
 export { WorkspacePublicDemandMapPanel } from './demand-map';
 export { StatisticsExperience, useWorkspaceStatisticsModel } from './stats';
 export { WorkspaceProvidersRail, WorkspaceProvidersSection, WorkspaceTopProvidersAside } from './providers';

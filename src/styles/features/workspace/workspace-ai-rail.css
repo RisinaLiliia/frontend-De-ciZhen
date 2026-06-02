@@ -36,6 +36,10 @@
       );
   }
 
+  .workspace-unified-rail__panel--decision.has-metric-grid {
+    gap: var(--space-2-5);
+  }
+
   .workspace-unified-rail__eyebrow {
     color: var(--text-muted);
     font-size: var(--workspace-rail-eyebrow-size);
@@ -100,6 +104,11 @@
     gap: var(--space-2);
   }
 
+  .workspace-unified-rail__panel--decision.has-no-visualization
+    .workspace-unified-rail__decision-side-body {
+    padding-top: calc(var(--workspace-rail-eyebrow-line-height) * var(--workspace-rail-eyebrow-size) + var(--space-8));
+  }
+
   .workspace-unified-rail__decision-visual {
     display: flex;
     align-items: flex-start;
@@ -152,6 +161,7 @@
   }
 
   .workspace-unified-rail__metrics,
+  .workspace-unified-rail__metric-grid,
   .workspace-unified-rail__queue-list,
   .workspace-unified-rail__recommendations-list {
     display: grid;
@@ -159,6 +169,86 @@
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  .workspace-unified-rail__metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .workspace-unified-rail__metric-grid > div {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-content: start;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 78px;
+    padding: var(--space-2-5);
+    border: 1px solid color-mix(in oklab, var(--color-border-soft) 86%, transparent);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--color-surface) 95%, var(--color-surface-muted) 5%);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 58%, transparent);
+  }
+
+  .workspace-unified-rail__metric-grid > div.is-primary {
+    border-color: color-mix(in oklab, var(--workspace-rail-chart-tone-2) 18%, var(--color-border-soft) 82%);
+  }
+
+  .workspace-unified-rail__metric-grid > div.is-success {
+    border-color: color-mix(in oklab, var(--workspace-rail-chart-tone-3) 18%, var(--color-border-soft) 82%);
+  }
+
+  .workspace-unified-rail__metric-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 17px;
+    height: 17px;
+    color: var(--workspace-rail-chart-tone-2);
+  }
+
+  .workspace-unified-rail__metric-icon svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .workspace-unified-rail__metric-grid > div.is-primary .workspace-unified-rail__metric-icon {
+    color: var(--workspace-rail-chart-tone-2);
+  }
+
+  .workspace-unified-rail__metric-grid > div.is-accent .workspace-unified-rail__metric-icon {
+    color: var(--workspace-rail-chart-tone-1);
+  }
+
+  .workspace-unified-rail__metric-grid > div.is-success .workspace-unified-rail__metric-icon {
+    color: var(--workspace-rail-chart-tone-3);
+  }
+
+  .workspace-unified-rail__metric-grid > div.is-warning .workspace-unified-rail__metric-icon {
+    color: var(--color-accent, var(--color-primary));
+  }
+
+  .workspace-unified-rail__metric-grid dd {
+    grid-column: 2;
+    margin: 0;
+    color: var(--color-text);
+    font-size: clamp(24px, 2vw, 30px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .workspace-unified-rail__metric-grid dt {
+    grid-column: 1 / -1;
+    color: var(--color-text);
+    font-size: var(--workspace-rail-meta-size);
+    font-weight: 700;
+    line-height: var(--workspace-rail-meta-line-height);
   }
 
   .workspace-unified-rail__metrics > div {
@@ -210,18 +300,6 @@
     line-height: var(--workspace-rail-meta-line-height);
   }
 
-  .workspace-unified-rail__actions {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(116px, 132px);
-    align-items: center;
-    gap: var(--space-2);
-    padding-top: var(--space-1);
-  }
-
-  .workspace-unified-rail__actions > :only-child {
-    grid-column: 1 / -1;
-  }
-
   .workspace-unified-rail__primary {
     width: 100%;
     box-sizing: border-box;
@@ -236,6 +314,19 @@
   .workspace-unified-rail__decision-copy > .workspace-unified-rail__primary {
     margin-top: auto;
     align-self: stretch;
+  }
+
+  .workspace-unified-rail__metric-grid-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(112px, 128px);
+    align-items: center;
+    gap: var(--space-2);
+    padding-top: var(--space-0-5);
+  }
+
+  .workspace-unified-rail__metric-grid-actions > .workspace-unified-rail__secondary {
+    justify-self: end;
+    padding-left: 0;
   }
 
   .workspace-unified-rail__secondary,
@@ -339,15 +430,22 @@
   }
 
   .workspace-unified-rail__queue-dot.is-high,
+  .workspace-unified-rail__queue-dot.is-risk,
   .workspace-unified-rail__recommendation-icon.is-attention {
     background: var(--workspace-rail-chart-tone-1);
   }
 
-  .workspace-unified-rail__queue-dot.is-medium {
+  .workspace-unified-rail__queue-dot.is-chance {
+    background: var(--workspace-rail-chart-tone-2);
+  }
+
+  .workspace-unified-rail__queue-dot.is-medium,
+  .workspace-unified-rail__queue-dot.is-trend {
     background: color-mix(in oklab, var(--color-warning) 82%, var(--color-text) 18%);
   }
 
   .workspace-unified-rail__queue-dot.is-low,
+  .workspace-unified-rail__queue-dot.is-success,
   .workspace-unified-rail__recommendation-icon.is-positive {
     background: var(--workspace-rail-chart-tone-3);
   }
@@ -439,17 +537,25 @@
     min-width: 0;
   }
 
-  .workspace-unified-rail__priority.is-high {
+  .workspace-unified-rail__priority.is-high,
+  .workspace-unified-rail__priority.is-risk {
     background: color-mix(in oklab, var(--c-danger) 18%, white 82%);
     color: color-mix(in oklab, var(--c-danger) 72%, var(--color-text) 28%);
   }
 
-  .workspace-unified-rail__priority.is-medium {
+  .workspace-unified-rail__priority.is-chance {
+    background: color-mix(in oklab, var(--color-primary) 16%, white 84%);
+    color: color-mix(in oklab, var(--color-primary) 72%, var(--color-text) 28%);
+  }
+
+  .workspace-unified-rail__priority.is-medium,
+  .workspace-unified-rail__priority.is-trend {
     background: color-mix(in oklab, var(--color-warning) 16%, white 84%);
     color: color-mix(in oklab, var(--color-warning) 72%, var(--color-text) 28%);
   }
 
   .workspace-unified-rail__priority.is-low,
+  .workspace-unified-rail__priority.is-success,
   .workspace-unified-rail__recommendation.is-positive .workspace-unified-rail__recommendation-metric {
     background: color-mix(in oklab, var(--color-success) 16%, white 84%);
     color: color-mix(in oklab, var(--color-success) 72%, var(--color-text) 28%);
@@ -565,6 +671,11 @@
       align-items: start;
     }
 
+    .workspace-unified-rail__panel--decision.has-no-visualization
+      .workspace-unified-rail__decision-side-body {
+      padding-top: 0;
+    }
+
     .workspace-unified-rail__decision-visual {
       justify-content: flex-start;
       padding-top: 0;
@@ -573,10 +684,6 @@
 
   @media (max-width: 699px) {
     .workspace-unified-rail__decision-side {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .workspace-unified-rail__actions {
       grid-template-columns: minmax(0, 1fr);
     }
 

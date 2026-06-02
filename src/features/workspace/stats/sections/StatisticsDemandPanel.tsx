@@ -119,7 +119,7 @@ export function StatisticsDemandPanel({
   );
 }
 
-const DEFAULT_DEMAND_PAGE_SIZE = 7;
+const DEFAULT_DEMAND_PAGE_SIZE = 5;
 
 function resolveDemandSubtitle(model: Pick<WorkspaceStatisticsModel, 'copy' | 'context' | 'sectionMeta'>) {
   if (model.sectionMeta.demandSubtitle) return model.sectionMeta.demandSubtitle;

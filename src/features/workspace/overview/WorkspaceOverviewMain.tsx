@@ -20,23 +20,14 @@ import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLin
 import { buildWorkspaceRequestDetailHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { WorkspaceStatisticsModel } from '@/features/workspace/stats';
-import { StatisticsDecisionAiCard } from '@/features/workspace/stats/components/StatisticsDecisionAiCard';
-import { StatisticsMetricSignalCard } from '@/features/workspace/stats/components/StatisticsMetricSignalCard';
 import { StatisticsDemandPanelSection } from '@/features/workspace/stats/StatisticsSections';
-import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 
 type WorkspaceOverviewMainProps = {
   locale: Locale;
   t: (key: I18nKey) => string;
   currentSearch: string;
   statisticsModel: WorkspaceStatisticsModel;
-  heroRef?: React.Ref<HTMLDivElement>;
-  offersPanelRef?: React.Ref<HTMLElement>;
-  actionsStyle?: React.CSSProperties;
-  mobileRail?: {
-    top?: React.ReactNode;
-    bottom?: React.ReactNode;
-  };
+  mapPanel?: React.ReactNode;
   primaryAction: {
     href: string;
     label: string;
@@ -54,9 +45,6 @@ type WorkspaceOverviewMainProps = {
 
 function getOverviewCopy(t: WorkspaceOverviewMainProps['t']) {
   return {
-    snapshotTitle: t(I18N_KEYS.workspace.overviewSnapshotTitle),
-    snapshotSubtitle: t(I18N_KEYS.workspace.overviewSnapshotSubtitle),
-    focusLabel: t(I18N_KEYS.workspace.overviewFocusLabel),
     quickActionsTitle: t(I18N_KEYS.workspace.overviewQuickActionsTitle),
     quickActionsSubtitle: t(I18N_KEYS.workspace.overviewQuickActionsSubtitle),
     quickActionsSecondary: {
@@ -87,49 +75,6 @@ function sortRequestsByCreatedAtDesc(requests: RequestResponseDto[]) {
   return requests
     .slice()
     .sort((left, right) => getRequestCreatedAtTs(right) - getRequestCreatedAtTs(left));
-}
-
-function buildPlatformSnapshotItems(model: WorkspaceStatisticsModel) {
-  const liveItems = model.kpis.slice(0, 4).map((item) => ({
-    key: item.key,
-    label: item.label,
-    value: item.value,
-    hint: item.hint,
-    tone: item.tone,
-  }));
-
-  if (liveItems.length > 0) return liveItems;
-
-  return [
-    {
-      key: 'requests-total',
-      label: model.copy.requestsLabel,
-      value: '—',
-      hint: model.copy.kpiActiveRequestsHintSuffix,
-      tone: 'neutral' as const,
-    },
-    {
-      key: 'offers-total',
-      label: model.copy.offersLabel,
-      value: '—',
-      hint: model.copy.kpiLast7DaysHintSuffix,
-      tone: 'neutral' as const,
-    },
-    {
-      key: 'completed-total',
-      label: model.copy.stage4LabelPlatform,
-      value: '—',
-      hint: model.copy.kpiNoCompletedJobs,
-      tone: 'neutral' as const,
-    },
-    {
-      key: 'active-providers',
-      label: model.copy.kpiActiveProvidersLabel,
-      value: '—',
-      hint: model.copy.kpiWithDemandHint,
-      tone: 'neutral' as const,
-    },
-  ];
 }
 
 function resolveRequestCategoryKey(request: RequestResponseDto, listProps: RequestsListProps) {
@@ -170,22 +115,6 @@ function resolveCompetitionLabel(params: {
   if (opportunity.providers !== null && opportunity.providers <= 3) return copy.competitionLow;
   if (opportunity.tone === 'balanced' || opportunity.tone === 'high') return copy.competitionBalanced;
   return copy.competitionHigh;
-}
-
-function WorkspaceOverviewMobileRail({
-  position,
-  children,
-}: {
-  position: 'top' | 'bottom';
-  children?: React.ReactNode;
-}) {
-  if (!children) return null;
-
-  return (
-    <div className={`workspace-overview__mobile-rail workspace-overview__mobile-rail--${position}`}>
-      {children}
-    </div>
-  );
 }
 
 function WorkspaceOpportunityCards({
@@ -295,10 +224,7 @@ export function WorkspaceOverviewMain({
   t,
   currentSearch,
   statisticsModel,
-  heroRef,
-  offersPanelRef,
-  actionsStyle,
-  mobileRail,
+  mapPanel,
   primaryAction,
   onPrimaryActionClick,
   activeOffersListProps,
@@ -311,10 +237,6 @@ export function WorkspaceOverviewMain({
   onToggleProviderFavorite,
 }: WorkspaceOverviewMainProps) {
   const copy = React.useMemo(() => getOverviewCopy(t), [t]);
-  const snapshotItems = React.useMemo(
-    () => buildPlatformSnapshotItems(statisticsModel),
-    [statisticsModel],
-  );
   const topProviderItems = React.useMemo(
     () => topProviders.slice(0, 3),
     [topProviders],
@@ -340,45 +262,11 @@ export function WorkspaceOverviewMain({
     ],
     [analysisHref, copy.quickActionsSecondary.analysis, copy.quickActionsSecondary.providers, copy.quickActionsSecondary.requests, providersHref, requestsHref],
   );
-  const isFocusMode = statisticsModel.context.mode === 'focus';
 
   return (
     <section className="workspace-overview">
-      <div ref={heroRef} className="workspace-overview__hero">
-        <section className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--snapshot')}>
-          <div className="panel-header">
-            <div className="section-heading workspace-overview__tile-header">
-              <p className="section-title">{copy.snapshotTitle}</p>
-              <p className="section-subtitle">
-                {isFocusMode ? statisticsModel.context.subtitle : copy.snapshotSubtitle}
-              </p>
-              {isFocusMode ? (
-                <div className="chip-row workspace-overview__focus-row">
-                  <WorkspaceBadge variant="info">
-                    {copy.focusLabel}: {statisticsModel.context.stickyLabel}
-                  </WorkspaceBadge>
-                </div>
-              ) : null}
-            </div>
-          </div>
-          <div className="workspace-overview__kpis">
-            {snapshotItems.map((item) => (
-              <StatisticsMetricSignalCard
-                key={item.key}
-                label={item.label}
-                value={item.value}
-                hint={item.hint}
-                tone={item.tone}
-              />
-            ))}
-          </div>
-          <StatisticsDecisionAiCard
-            copy={statisticsModel.copy}
-            decisionInsight={statisticsModel.decisionInsight}
-            className="workspace-overview__snapshot-ai"
-          />
-        </section>
-
+      <div className="workspace-overview__hero">
+        {mapPanel}
         <StatisticsDemandPanelSection
           model={statisticsModel}
           t={t}
@@ -387,10 +275,6 @@ export function WorkspaceOverviewMain({
           onSelectCategory={statisticsModel.setCategoryKey}
         />
       </div>
-
-      <WorkspaceOverviewMobileRail position="top">
-        {mobileRail?.top}
-      </WorkspaceOverviewMobileRail>
 
       <div className="workspace-overview__grid">
         <section className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--providers')}>
@@ -411,7 +295,6 @@ export function WorkspaceOverviewMain({
         </section>
 
         <section
-          ref={offersPanelRef}
           className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--offers')}
         >
           <div className="panel-header">
@@ -432,7 +315,6 @@ export function WorkspaceOverviewMain({
 
       <section
         className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--actions')}
-        style={actionsStyle}
       >
         <div className="panel-header">
           <div className="section-heading workspace-overview__tile-header">
@@ -451,10 +333,6 @@ export function WorkspaceOverviewMain({
           </div>
         </div>
       </section>
-
-      <WorkspaceOverviewMobileRail position="bottom">
-        {mobileRail?.bottom}
-      </WorkspaceOverviewMobileRail>
     </section>
   );
 }

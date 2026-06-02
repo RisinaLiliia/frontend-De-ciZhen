@@ -90,11 +90,13 @@ export function WorkspacePublicDemandMapView({
       </div>
       {!isLoading && !isError ? (
         <div className="workspace-public-demand-map__meta workspace-public-demand-map__meta--footer">
-          <article className={workspaceStatCardShell('workspace-public-demand-map__metric')}>
+          <article className={workspaceStatCardShell('workspace-public-demand-map__metric workspace-public-demand-map__metric--requests')}>
+            <span className="workspace-public-demand-map__metric-dot" aria-hidden="true" />
             <strong className="stat-value">{formatNumber.format(activeRequestsCount)}</strong>
             <span className="stat-label">{t(I18N_KEYS.homePublic.demandMapActiveRequests)}</span>
           </article>
-          <article className={workspaceStatCardShell('workspace-public-demand-map__metric')}>
+          <article className={workspaceStatCardShell('workspace-public-demand-map__metric workspace-public-demand-map__metric--providers')}>
+            <span className="workspace-public-demand-map__metric-dot" aria-hidden="true" />
             <strong className="stat-value">{formatNumber.format(activeProvidersCount)}</strong>
             <span className="stat-label">{t(I18N_KEYS.homePublic.demandMapActiveProviders)}</span>
           </article>

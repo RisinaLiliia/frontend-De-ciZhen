@@ -739,9 +739,6 @@ export const en: DeDictionary = {
   workspace: {
     modeNavAriaLabel: 'Workspace modes',
     openAnalysisCta: 'Open analysis',
-    overviewSnapshotTitle: 'Platform overview',
-    overviewSnapshotSubtitle: 'What matters now, where the opportunity is, and what to do next.',
-    overviewFocusLabel: 'Focus mode',
     overviewQuickActionsTitle: 'Quick actions',
     overviewQuickActionsSubtitle: 'Jump to the next decision without leaving this workspace.',
     overviewQuickActionRequests: 'Open requests',

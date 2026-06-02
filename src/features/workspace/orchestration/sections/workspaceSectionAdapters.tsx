@@ -200,8 +200,6 @@ export function buildWorkspaceOverviewSectionModel({
     aiRail,
     frameClassName: 'workspace-frame--overview',
     contentClassName: 'workspace-frame__flow--overview',
-    contextualAiRailClassName: 'workspace-context-rail--overview',
-    contextualAiRailUsesStatisticsLayout: false,
   });
 }
 

@@ -1,136 +1,33 @@
 /* src/styles/features/workspace/workspace-overview-ai.css */
 
 @layer components {
-  .workspace-overview__snapshot-ai {
-    align-self: end;
-    padding: var(--space-2);
-    border: 1px solid var(--color-border-soft);
-    border-radius: calc(var(--workspace-overview-panel-radius) - 4px);
-    background: color-mix(in oklab, var(--color-surface-muted) 78%, var(--color-background));
-    box-shadow: none;
+  .workspace-overview__panel--map {
+    grid-template-rows: auto minmax(var(--workspace-overview-map-canvas-height), 1fr) auto;
+    align-content: stretch;
+    gap: var(--workspace-overview-panel-gap);
+    min-height: 0;
   }
 
-  .workspace-overview__snapshot-ai.workspace-ai-card--decision,
-  .workspace-context-rail--overview .workspace-context-rail__decision.workspace-statistics-ki,
-  .workspace-overview__insights-panel .workspace-statistics-ki__head {
-    --workspace-ai-card-radius-md: var(--workspace-statistics-radius-md);
+  .workspace-overview__panel--map .workspace-public-demand-map__header {
+    position: relative;
+    z-index: 1;
   }
 
-  .workspace-overview__snapshot-ai.workspace-ai-card--decision,
-  .workspace-context-rail--overview .workspace-context-rail__decision.workspace-statistics-ki {
-    display: grid;
-    gap: var(--space-1-5);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--surface-soft-border) 84%);
-    border-radius: var(--workspace-ai-card-radius-md);
-    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--color-surface) 12%);
-  }
-
-  .workspace-overview .workspace-statistics-ki__stamp,
-  .workspace-context-rail--overview .workspace-statistics-ki__stamp {
-    display: inline-flex;
-    align-items: center;
-    align-self: start;
-    width: fit-content;
-    min-height: var(--workspace-statistics-chip-height);
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid var(--surface-soft-border);
-    background: var(--surface-soft-bg);
-    color: var(--color-text-muted);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: var(--workspace-statistics-chip-font-weight);
-    line-height: var(--app-caption-line-height);
-    letter-spacing: 0.01em;
-  }
-
-  .workspace-overview .workspace-statistics-ki__head,
-  .workspace-context-rail--overview .workspace-statistics-ki__head {
-    display: grid;
-    grid-template-columns: var(--workspace-statistics-icon-md) minmax(0, 1fr);
-    align-items: center;
-    gap: var(--space-1-5);
-    border-radius: var(--workspace-ai-card-radius-md);
-    padding: var(--space-1) var(--space-1-5);
-    border: 1px solid var(--surface-soft-border);
-    background: linear-gradient(
-      150deg,
-      color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
-      color-mix(in oklab, var(--surface-soft-bg) 92%, var(--color-surface) 8%) 100%
-    );
-  }
-
-  .workspace-overview .workspace-statistics-ki__avatar,
-  .workspace-context-rail--overview .workspace-statistics-ki__avatar {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--workspace-statistics-icon-md);
-    height: var(--workspace-statistics-icon-md);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--color-primary) 8%, var(--surface-soft-bg) 92%);
-    color: color-mix(in oklab, var(--color-primary) 80%, var(--color-text) 20%);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: var(--workspace-statistics-chip-font-weight);
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    line-height: 1;
-  }
-
-  .workspace-overview .workspace-statistics-ki__copy,
-  .workspace-context-rail--overview .workspace-statistics-ki__copy {
-    display: grid;
-    gap: var(--space-0-5);
-    min-width: 0;
-  }
-
-  .workspace-overview .workspace-statistics-ki__name,
-  .workspace-context-rail--overview .workspace-statistics-ki__name {
-    font-size: var(--fs-small);
-    font-weight: 700;
-    color: var(--color-text);
-  }
-
-  .workspace-overview .workspace-statistics-ki__role,
-  .workspace-context-rail--overview .workspace-statistics-ki__role {
-    font-size: var(--app-text-muted-size);
-    color: var(--color-text-muted);
-    line-height: var(--app-text-muted-line-height);
-  }
-
-  .workspace-overview .workspace-statistics-ki__text,
-  .workspace-context-rail--overview .workspace-statistics-ki__text {
-    margin: 0;
-    font-size: var(--app-text-muted-size);
-    line-height: var(--app-text-muted-line-height);
-    color: color-mix(in oklab, var(--color-text-muted) 90%, var(--color-text) 10%);
-  }
-
-  .workspace-overview .workspace-statistics-ki__actions,
-  .workspace-context-rail--overview .workspace-statistics-ki__actions {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding-top: var(--space-0-5);
-  }
-
-  .workspace-overview__snapshot-ai .workspace-statistics-ki__head {
-    padding: var(--space-1-5) var(--space-2);
-  }
-
-  .workspace-overview__snapshot-ai .workspace-statistics-ki__text {
-    font-size: var(--app-text-muted-size);
-    line-height: var(--app-text-muted-line-height);
-  }
-
-  .workspace-overview__panel--actions,
-  .workspace-context-rail--overview > .workspace-context-rail__panel {
-    grid-template-rows: auto minmax(0, 1fr);
+  .workspace-overview__panel--map .workspace-public-demand-map__canvas {
+    min-height: var(--workspace-overview-map-canvas-height);
+    height: auto;
+    max-height: none;
+    align-self: stretch;
+    overflow: hidden;
   }
 
   .workspace-overview__providers {
     gap: var(--workspace-overview-content-gap);
     align-content: start;
+  }
+
+  .workspace-overview__panel--actions {
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
   .workspace-overview__panel--actions .request-create-card--compact {
@@ -156,102 +53,5 @@
     font-size: var(--fs-small);
     line-height: 1.35;
     text-align: left;
-  }
-
-  .workspace-context-rail--overview .workspace-overview__rail-panel--insights {
-    --workspace-insights-panel-gap: var(--workspace-overview-panel-gap);
-    --workspace-insights-list-gap: var(--workspace-overview-content-gap);
-    --workspace-insights-header-gap: var(--workspace-overview-content-gap);
-    --workspace-insight-card-gap: var(--workspace-overview-insights-item-gap);
-    --workspace-insight-card-pad: var(--workspace-overview-insights-card-pad);
-    --workspace-insight-card-pad-featured: var(--workspace-overview-insights-card-pad);
-    --workspace-insight-card-radius: var(--radius-lg);
-    --workspace-insight-content-gap: var(--workspace-overview-insights-stack-gap);
-    --workspace-insight-title-size: 16px;
-    --workspace-insight-title-line-height: 1.28;
-    --workspace-insight-copy-size: 12px;
-    --workspace-insight-copy-line-height: 1.4;
-    --workspace-insight-support-line-height: var(--workspace-overview-insights-support-line-height);
-    --workspace-insight-action-size: 12px;
-    --workspace-insight-action-line-height: 1.3;
-    --workspace-insight-badge-height: 28px;
-    --workspace-insight-badge-pad-inline: 12px;
-    --workspace-insight-badge-font-size: var(--fs-12);
-    --workspace-insights-balanced-head-min-height: var(
-      --workspace-overview-insights-head-min-height
-    );
-    --workspace-insights-balanced-title-lines: var(--workspace-overview-insights-title-lines);
-    --workspace-insights-balanced-text-lines: var(--workspace-overview-insights-text-lines);
-    --workspace-insights-balanced-evidence-lines: var(--workspace-overview-insights-evidence-lines);
-  }
-
-  .workspace-context-rail--overview .workspace-overview__rail-panel--map,
-  .workspace-context-rail--overview .workspace-overview__rail-panel--insights,
-  .workspace-context-rail--overview .workspace-context-rail__panel--focus {
-    min-width: 0;
-  }
-
-  .workspace-context-rail--overview > .workspace-public-demand-map,
-  .workspace-context-rail--overview > .workspace-context-rail__panel {
-    gap: var(--workspace-overview-panel-gap);
-  }
-
-  .workspace-context-rail--overview
-    > .workspace-context-rail__panel
-    > .workspace-environment__eyebrow {
-    margin: 0;
-  }
-
-  .workspace-context-rail--overview > .workspace-public-demand-map {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    align-content: stretch;
-    min-height: 0;
-    height: 100%;
-  }
-
-  .workspace-context-rail--overview
-    > .workspace-public-demand-map
-    .workspace-public-demand-map__canvas {
-    min-height: var(--workspace-overview-map-canvas-height);
-    height: 100%;
-    max-height: none;
-    flex: 1 1 auto;
-    align-self: stretch;
-  }
-
-  .workspace-context-rail--overview .workspace-context-rail__decision.workspace-statistics-ki {
-    min-height: 100%;
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
-    gap: var(--workspace-overview-content-gap);
-    padding: 14px;
-  }
-
-  .workspace-context-rail--overview
-    .workspace-context-rail__decision
-    .workspace-statistics-ki__head {
-    padding: var(--space-1-5) var(--space-2);
-  }
-
-  .workspace-context-rail--overview
-    .workspace-context-rail__decision
-    .workspace-statistics-ki__copy {
-    gap: var(--space-1);
-  }
-
-  .workspace-context-rail--overview
-    .workspace-context-rail__decision
-    .workspace-statistics-ki__text {
-    margin: 0;
-    font-size: var(--workspace-overview-insights-copy-size);
-    line-height: var(--workspace-overview-insights-copy-line-height);
-  }
-
-  .workspace-context-rail--overview
-    .workspace-context-rail__decision
-    .workspace-statistics-ki__actions {
-    grid-row: 4;
-    align-self: end;
-    padding-top: var(--space-1);
   }
 }

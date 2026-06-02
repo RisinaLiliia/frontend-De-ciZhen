@@ -23,6 +23,7 @@ export type WorkspaceUnifiedRailQueueItem = {
   title: string;
   meta: string;
   priorityTone?: 'high' | 'medium' | 'low' | 'neutral';
+  priorityVariant?: 'risk' | 'chance' | 'trend' | 'success' | 'neutral';
   priorityLabel?: string | null;
   action: WorkspaceUnifiedRailAction;
   isActive?: boolean;
@@ -37,6 +38,8 @@ export type WorkspaceUnifiedRailRecommendationItem = {
 };
 
 export type WorkspaceUnifiedRailVisualization = 'donut' | 'none';
+export type WorkspaceUnifiedRailMetricIcon = 'requests' | 'providers' | 'responseRate' | 'responseTime';
+export type WorkspaceUnifiedRailMetricTone = 'primary' | 'success' | 'warning' | 'accent' | 'neutral';
 
 export type WorkspaceUnifiedRailModel = {
   decisionPanel: {
@@ -44,11 +47,14 @@ export type WorkspaceUnifiedRailModel = {
     value: string | number;
     contextLabel: string;
     title: string;
+    layout?: 'default' | 'metricGrid';
     visualization?: WorkspaceUnifiedRailVisualization;
     metrics: Array<{
       key: string;
       label: string;
       value: string | number;
+      icon?: WorkspaceUnifiedRailMetricIcon;
+      tone?: WorkspaceUnifiedRailMetricTone;
     }>;
     primaryAction?: WorkspaceUnifiedRailAction | null;
     secondaryAction?: WorkspaceUnifiedRailAction | null;
@@ -102,6 +108,47 @@ function buildDecisionChartStyle(metrics: WorkspaceUnifiedRailModel['decisionPan
   } as React.CSSProperties;
 }
 
+function renderMetricIcon(icon: WorkspaceUnifiedRailMetricIcon | undefined) {
+  if (icon === 'providers') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8.5 11a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z" />
+        <path d="M15.5 10.5a2.7 2.7 0 1 0 0-5.4 2.7 2.7 0 0 0 0 5.4Z" />
+        <path d="M3.8 19.5a5.2 5.2 0 0 1 9.4-3.1" />
+        <path d="M12.3 19.5a4.4 4.4 0 0 1 7.9-2.7" />
+      </svg>
+    );
+  }
+
+  if (icon === 'responseRate') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m4 15 4-4 3 3 7-8" />
+        <path d="M16 6h2v2" />
+        <path d="M4 20h16" />
+      </svg>
+    );
+  }
+
+  if (icon === 'responseTime') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 21a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Z" />
+        <path d="M12 8v4.4l3 1.8" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 5.5h9.5L18 8v10.5H6v-13Z" />
+      <path d="M15.5 5.5V8H18" />
+      <path d="M8.5 12h7" />
+      <path d="M8.5 15h5" />
+    </svg>
+  );
+}
+
 function renderInlineAction(
   action: WorkspaceUnifiedRailAction,
   className: string,
@@ -127,16 +174,17 @@ function renderInlineAction(
 }
 
 function renderQueueItem(item: WorkspaceUnifiedRailQueueItem) {
+  const priorityClassName = item.priorityVariant ?? item.priorityTone ?? 'neutral';
   const content = (
     <>
-      <span className={`workspace-unified-rail__queue-dot is-${item.priorityTone ?? 'neutral'}`} aria-hidden="true" />
+      <span className={`workspace-unified-rail__queue-dot is-${priorityClassName}`} aria-hidden="true" />
       <span className="workspace-unified-rail__queue-copy">
         <strong>{item.title}</strong>
         <span>{item.meta}</span>
       </span>
       <span className="workspace-unified-rail__queue-side">
         {item.priorityLabel ? (
-          <span className={`workspace-unified-rail__priority is-${item.priorityTone ?? 'neutral'}`}>
+          <span className={`workspace-unified-rail__priority is-${priorityClassName}`}>
             {item.priorityLabel}
           </span>
         ) : null}
@@ -204,6 +252,8 @@ export function WorkspaceUnifiedRail({
 
   const showsDecisionChart =
     model.decisionPanel.visualization === 'donut' && model.decisionPanel.metrics.length > 0;
+  const showsMetricGrid =
+    model.decisionPanel.layout === 'metricGrid' && model.decisionPanel.metrics.length > 0;
   const decisionHeading = model.decisionPanel.contextLabel || model.decisionPanel.title;
   const primaryDecisionAction = model.decisionPanel.primaryAction
     ? renderInlineAction(
@@ -227,46 +277,72 @@ export function WorkspaceUnifiedRail({
       ))}
     </dl>
   ) : null;
+  const decisionMetricGrid = showsMetricGrid ? (
+    <dl className="workspace-unified-rail__metric-grid">
+      {model.decisionPanel.metrics.slice(0, 4).map((item, index) => (
+        <div
+          key={item.key}
+          className={`is-tone-${index + 1} is-${item.tone ?? 'neutral'}`}
+        >
+          <span className="workspace-unified-rail__metric-icon">
+            {renderMetricIcon(item.icon)}
+          </span>
+          <dd>{item.value}</dd>
+          <dt>{item.label}</dt>
+        </div>
+      ))}
+    </dl>
+  ) : null;
+  const decisionPanelClassName = [
+    'workspace-unified-rail__panel',
+    'workspace-unified-rail__panel--decision',
+    showsMetricGrid ? 'has-metric-grid' : '',
+    showsDecisionChart ? 'has-visualization' : 'has-no-visualization',
+  ].filter(Boolean).join(' ');
 
   return (
     <div className={['workspace-unified-rail', className ?? ''].filter(Boolean).join(' ')}>
-      <WorkspaceRightRailPanel className="workspace-unified-rail__panel workspace-unified-rail__panel--decision">
-        <div className="workspace-unified-rail__decision-head">
-          <div className="workspace-unified-rail__decision-copy">
+      <WorkspaceRightRailPanel className={decisionPanelClassName}>
+        {showsMetricGrid ? (
+          <>
             <span className="workspace-unified-rail__eyebrow">{model.decisionPanel.eyebrow}</span>
-            <div className="workspace-unified-rail__decision-main">
-              <strong className="workspace-unified-rail__value">{model.decisionPanel.value}</strong>
-              {decisionHeading ? (
-                <h3 className="workspace-unified-rail__title">{decisionHeading}</h3>
-              ) : null}
+            {decisionMetricGrid}
+            <div className="workspace-unified-rail__metric-grid-actions">
+              {primaryDecisionAction}
+              {secondaryDecisionAction}
             </div>
-            {showsDecisionChart ? primaryDecisionAction : null}
-          </div>
-          {showsDecisionChart ? (
+          </>
+        ) : (
+          <div className="workspace-unified-rail__decision-head">
+            <div className="workspace-unified-rail__decision-copy">
+              <span className="workspace-unified-rail__eyebrow">{model.decisionPanel.eyebrow}</span>
+              <div className="workspace-unified-rail__decision-main">
+                <strong className="workspace-unified-rail__value">{model.decisionPanel.value}</strong>
+                {decisionHeading ? (
+                  <h3 className="workspace-unified-rail__title">{decisionHeading}</h3>
+                ) : null}
+              </div>
+              {primaryDecisionAction}
+            </div>
             <div className="workspace-unified-rail__decision-side">
               <div className="workspace-unified-rail__decision-side-body">
-                <div className="workspace-unified-rail__decision-visual">
-                  <div
-                    className="workspace-unified-rail__chart"
-                    style={buildDecisionChartStyle(model.decisionPanel.metrics)}
-                    aria-hidden="true"
-                  >
-                    <span className="workspace-unified-rail__chart-core" />
+                {showsDecisionChart ? (
+                  <div className="workspace-unified-rail__decision-visual">
+                    <div
+                      className="workspace-unified-rail__chart"
+                      style={buildDecisionChartStyle(model.decisionPanel.metrics)}
+                      aria-hidden="true"
+                    >
+                      <span className="workspace-unified-rail__chart-core" />
+                    </div>
                   </div>
-                </div>
+                ) : null}
                 {decisionMetrics}
               </div>
               {secondaryDecisionAction}
             </div>
-          ) : null}
-        </div>
-        {!showsDecisionChart ? decisionMetrics : null}
-        {!showsDecisionChart && (model.decisionPanel.primaryAction || model.decisionPanel.secondaryAction) ? (
-          <div className="workspace-unified-rail__actions">
-            {primaryDecisionAction}
-            {secondaryDecisionAction}
           </div>
-        ) : null}
+        )}
       </WorkspaceRightRailPanel>
 
       <WorkspaceRightRailPanel className="workspace-unified-rail__panel">

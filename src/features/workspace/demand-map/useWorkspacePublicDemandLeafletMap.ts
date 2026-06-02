@@ -321,14 +321,14 @@ function renderCityMarker(params: {
     onSelectCity,
   } = params;
   const ratio = item.count / Math.max(1, maxCount);
-  const size = Math.round(18 + ratio * 14);
+  const size = Math.round(24 + ratio * 20);
   const markerLabel = `${item.name}: ${formatNumber.format(item.count)} ${activeRequestsLabel}`;
   const icon = L.divIcon({
-    className: 'workspace-demand-map-marker-icon',
+    className: 'workspace-demand-marker-icon',
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
     tooltipAnchor: [0, -(size / 2 + 4)],
-    html: `<span class="workspace-demand-map-marker workspace-demand-map-marker--${(index % 4) + 1}" style="--marker-size:${size}px"></span>`,
+    html: `<span class="workspace-demand-marker workspace-demand-marker--${(index % 4) + 1}" style="--pulse-size:${size}px;--dot-size:${Math.max(10, Math.round(size * 0.42))}px;--pulse-delay:${index * 120}ms"><span class="workspace-demand-marker__pulse"></span><span class="workspace-demand-marker__dot"></span></span>`,
   });
   const marker = L.marker([item.lat, item.lng], {
     icon,

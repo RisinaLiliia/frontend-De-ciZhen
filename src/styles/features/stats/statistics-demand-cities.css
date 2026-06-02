@@ -16,6 +16,10 @@
   .workspace-statistics-demand__row {
     display: grid;
     gap: var(--space-1);
+    transition:
+      border-color 160ms ease,
+      background 160ms ease,
+      transform 160ms ease;
   }
 
   .workspace-statistics-demand__row-button {
@@ -26,6 +30,18 @@
     cursor: pointer;
     background: transparent;
     border: 0;
+  }
+
+  .workspace-statistics-demand__row-button:hover,
+  .workspace-statistics-demand__row-button:focus-visible {
+    border-color: var(--color-primary-border);
+    background: color-mix(in oklab, var(--color-primary-soft) 34%, var(--color-surface) 66%);
+    transform: translateY(-1px);
+  }
+
+  .workspace-statistics-demand__row-button:focus-visible {
+    outline: none;
+    box-shadow: var(--control-focus-ring);
   }
 
   .workspace-statistics-demand__meta {

@@ -40,8 +40,7 @@
   }
 
   @media (max-width: 767px) {
-    .workspace-overview,
-    .workspace-context-rail--overview {
+    .workspace-overview {
       --workspace-overview-section-gap: var(--space-3);
       --workspace-overview-cluster-gap: var(--space-3);
       --workspace-overview-panel-gap: var(--space-3);
@@ -49,11 +48,6 @@
       --workspace-overview-heading-gap: var(--space-1-5);
       --workspace-overview-panel-pad: 14px;
       --workspace-overview-card-min-height: 158px;
-    }
-
-    .workspace-overview__mobile-rail {
-      display: grid;
-      gap: var(--space-3);
     }
 
     .workspace-overview__grid {
@@ -67,17 +61,6 @@
 
     .workspace-overview__grid > .workspace-overview__panel--providers {
       order: 2;
-    }
-
-    .workspace-overview__mobile-rail > .workspace-overview__rail-panel--map,
-    .workspace-overview__mobile-rail > .workspace-overview__rail-panel--insights,
-    .workspace-overview__mobile-rail > .workspace-context-rail__panel--focus {
-      height: auto;
-      min-height: 0;
-    }
-
-    .workspace-overview__kpis {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .workspace-overview__action-links {
@@ -96,14 +79,9 @@
   }
 
   @media (max-width: 420px) {
-    .workspace-overview,
-    .workspace-context-rail--overview {
+    .workspace-overview {
       --workspace-overview-panel-pad: 12px;
       --workspace-overview-card-min-height: 148px;
-    }
-
-    .workspace-overview__kpis {
-      gap: var(--space-2);
     }
   }
 }

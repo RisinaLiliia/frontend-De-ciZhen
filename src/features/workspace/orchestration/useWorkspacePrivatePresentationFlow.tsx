@@ -132,12 +132,8 @@ export function useWorkspacePrivatePresentationFlow({
   const privateExplore = useExploreSidebar(branch.t);
   const {
     statisticsModel: overviewStatisticsModel,
-    heroRef: overviewHeroRef,
-    offersPanelRef: overviewOffersPanelRef,
-    focusPanelRef: overviewFocusPanelRef,
-    actionsStyle: overviewActionsStyle,
-    asideTopSlot: overviewAsideTopSlot,
-    mobileRail: overviewMobileRail,
+    mapPanel: overviewMapPanel,
+    aiRail: overviewAiRail,
   } = useWorkspaceOverviewRail({
     isOverviewMode,
     t: branch.t,
@@ -236,10 +232,7 @@ const privatePagination = React.useMemo(() => {
       t={branch.t}
       currentSearch={currentSearch}
       statisticsModel={overviewStatisticsModel}
-      heroRef={overviewHeroRef}
-      offersPanelRef={overviewOffersPanelRef}
-      actionsStyle={overviewActionsStyle}
-      mobileRail={overviewMobileRail}
+      mapPanel={overviewMapPanel}
       primaryAction={primaryAction}
       onPrimaryActionClick={onPrimaryActionClick}
       activeOffersListProps={activeOffersListProps}
@@ -340,7 +333,7 @@ const privatePagination = React.useMemo(() => {
     if (isOverviewMode) {
       return buildWorkspaceOverviewSectionModel({
         content: privateMain,
-        aiRail: privateAside,
+        aiRail: overviewAiRail,
       });
     }
 
@@ -364,9 +357,9 @@ const privatePagination = React.useMemo(() => {
           ? <WorkspaceHelpIntro />
         : resolvedWorkspaceIntroNode,
     workspaceAsideBaseProps,
-    asideTopSlot: overviewAsideTopSlot,
+    asideTopSlot: undefined,
     preferredRequestsRole,
-    overviewDecisionPanelRef: overviewFocusPanelRef,
+    overviewDecisionPanelRef: undefined,
     sectionModel,
     primaryAction,
     isLoading: overviewRequestsListState.isLoading,

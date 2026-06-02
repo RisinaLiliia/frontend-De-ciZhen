@@ -8,6 +8,8 @@
     padding: var(--home-panel-padding, 18px);
     height: auto;
     min-height: 0;
+    --workspace-rail-chart-tone-1: color-mix(in oklab, var(--c-danger) 86%, var(--color-text) 14%);
+    --workspace-rail-chart-tone-2: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
   }
 
   .workspace-public-demand-map--embedded {
@@ -97,11 +99,11 @@
     align-items: center;
     justify-content: center;
     background:
-      radial-gradient(circle at 30% 24%, color-mix(in oklab, var(--color-warning) 78%, var(--color-surface) 22%), color-mix(in oklab, var(--color-warning) 88%, var(--color-primary) 12%));
+      radial-gradient(circle at 30% 24%, color-mix(in oklab, var(--color-primary) 70%, var(--color-surface) 30%), color-mix(in oklab, var(--color-primary) 88%, var(--color-info, var(--color-primary)) 12%));
     border: 2px solid color-mix(in oklab, var(--color-surface) 88%, var(--color-primary) 12%);
     box-shadow:
-      0 0 0 2px color-mix(in oklab, var(--color-warning) 20%, transparent),
-      0 10px 20px color-mix(in oklab, var(--c-overlay) 22%, transparent);
+      0 0 0 5px color-mix(in oklab, var(--color-primary) 18%, transparent),
+      0 12px 24px color-mix(in oklab, var(--color-primary) 22%, transparent);
   }
 
   .workspace-demand-cluster-marker__value {
@@ -122,9 +124,9 @@
     position: absolute;
     inset: 0;
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--color-warning) 58%, transparent);
-    opacity: 0.32;
-    animation: workspace-demand-map-pulse 2.2s ease-out infinite;
+    background: color-mix(in oklab, var(--color-primary) 62%, transparent);
+    opacity: 0.42;
+    animation: workspace-demand-map-pulse 2.4s ease-out infinite;
     animation-delay: var(--pulse-delay);
   }
 
@@ -136,11 +138,11 @@
     top: 50%;
     transform: translate(-50%, -50%);
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--color-warning) 82%, var(--color-surface) 18%);
+    background: color-mix(in oklab, var(--color-primary) 84%, var(--color-surface) 16%);
     border: 1.8px solid color-mix(in oklab, var(--color-surface) 86%, var(--color-primary) 14%);
     box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--color-warning) 26%, transparent),
-      0 4px 10px color-mix(in oklab, var(--c-overlay) 18%, transparent);
+      0 0 0 2px color-mix(in oklab, var(--color-primary) 24%, transparent),
+      0 6px 14px color-mix(in oklab, var(--color-primary) 24%, transparent);
   }
 
   .workspace-demand-map-tooltip {
@@ -172,8 +174,10 @@
   }
 
   .workspace-public-demand-map__metric {
-    display: grid;
-    gap: var(--space-0-5);
+    display: inline-grid;
+    grid-template-columns: auto auto minmax(0, max-content);
+    align-items: center;
+    gap: var(--space-1);
     min-width: 0;
     padding: 8px 10px;
     border-radius: var(--radius-md);
@@ -187,6 +191,18 @@
     box-shadow: inset 0 1px 0 color-mix(in oklab, white 54%, transparent);
   }
 
+  .workspace-public-demand-map__metric-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    background: var(--workspace-rail-chart-tone-2, color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%));
+    box-shadow: 0 0 0 4px color-mix(in oklab, currentColor 6%, transparent);
+  }
+
+  .workspace-public-demand-map__metric--providers .workspace-public-demand-map__metric-dot {
+    background: var(--workspace-rail-chart-tone-1, color-mix(in oklab, var(--c-danger) 86%, var(--color-text) 14%));
+  }
+
   .workspace-public-demand-map__metric .stat-value {
     font-size: 15px;
     line-height: 1.1;
@@ -196,7 +212,8 @@
 
   .workspace-public-demand-map__metric .stat-label {
     font-size: var(--fs-11);
-    line-height: 1.3;
+    line-height: 1.1;
+    white-space: nowrap;
   }
 
   .workspace-public-demand-map__empty {

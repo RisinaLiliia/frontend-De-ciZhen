@@ -131,7 +131,7 @@
   .request-card__price .proof-price {
     font-size: 17px;
     font-weight: 700;
-    color: var(--color-warning);
+    color: var(--color-warning-text);
   }
 
   .request-card__price-trend {

@@ -738,9 +738,6 @@ export const de = {
   workspace: {
     modeNavAriaLabel: 'Workspace-Modi',
     openAnalysisCta: 'Analyse ansehen',
-    overviewSnapshotTitle: 'Plattformüberblick',
-    overviewSnapshotSubtitle: 'Was jetzt passiert, wo Chancen liegen und was als Nächstes zu tun ist.',
-    overviewFocusLabel: 'Focus Mode',
     overviewQuickActionsTitle: 'Schnellaktionen',
     overviewQuickActionsSubtitle: 'Direkt zur nächsten Entscheidung, ohne den Workspace-Kontext zu verlassen.',
     overviewQuickActionRequests: 'Aufträge öffnen',

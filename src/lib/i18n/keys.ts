@@ -771,9 +771,6 @@ export const I18N_KEYS = {
   workspace: {
     modeNavAriaLabel: 'workspace.modeNavAriaLabel',
     openAnalysisCta: 'workspace.openAnalysisCta',
-    overviewSnapshotTitle: 'workspace.overviewSnapshotTitle',
-    overviewSnapshotSubtitle: 'workspace.overviewSnapshotSubtitle',
-    overviewFocusLabel: 'workspace.overviewFocusLabel',
     overviewQuickActionsTitle: 'workspace.overviewQuickActionsTitle',
     overviewQuickActionsSubtitle: 'workspace.overviewQuickActionsSubtitle',
     overviewQuickActionRequests: 'workspace.overviewQuickActionRequests',
