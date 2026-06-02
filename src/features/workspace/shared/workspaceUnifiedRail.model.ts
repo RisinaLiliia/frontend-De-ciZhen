@@ -31,7 +31,6 @@ type LinkedDecisionPanel = {
     actionLabel: string;
     actionPriorityLevel: 'high' | 'medium' | 'low';
     priorityLabel?: string | null;
-    actionReason?: string | null;
     action: WorkspaceUnifiedRailAction;
   }>;
   emptyText: string;
@@ -55,6 +54,9 @@ type BuildLinkedWorkspaceRailModelParams = {
   queueCountTemplate?: string;
 };
 
+const MAX_RAIL_QUEUE_ITEMS = 4;
+const MAX_RAIL_RECOMMENDATIONS = 4;
+
 function toneToRecommendationTone(
   tone?: SummaryItem['tone'],
 ): WorkspaceUnifiedRailRecommendationItem['tone'] {
@@ -72,7 +74,7 @@ export function buildSummaryRecommendations(
   items?: SummaryItem[] | null,
 ): WorkspaceUnifiedRailRecommendationItem[] {
   return (items ?? [])
-    .slice(1, 4)
+    .slice(1, MAX_RAIL_RECOMMENDATIONS + 1)
     .map((item) => ({
       id: item.key,
       title: item.label,
@@ -123,11 +125,10 @@ export function buildLinkedWorkspaceRailModel({
         queueCountTemplate ?? t(I18N_KEYS.requestsPage.workspaceRailQueueCountTemplate),
         queueCount,
       ),
-      items: (panel?.queue ?? []).slice(0, 3).map((item) => ({
+      items: (panel?.queue ?? []).slice(0, MAX_RAIL_QUEUE_ITEMS).map((item) => ({
         id: item.id,
         title: item.title,
         meta: item.actionLabel,
-        detail: item.actionReason,
         priorityTone: item.actionPriorityLevel,
         priorityLabel: item.priorityLabel ?? (
           item.actionPriorityLevel === 'high'
@@ -151,7 +152,8 @@ export function buildLinkedWorkspaceRailModel({
     recommendations: {
       eyebrow: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEyebrow),
       title: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsTitle),
-      items: (recommendations?.length ? recommendations : buildSummaryRecommendations(summaryItems)).slice(0, 3),
+      items: (recommendations?.length ? recommendations : buildSummaryRecommendations(summaryItems))
+        .slice(0, MAX_RAIL_RECOMMENDATIONS),
       emptyText: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEmpty),
       footerAction: {
         kind: 'link',

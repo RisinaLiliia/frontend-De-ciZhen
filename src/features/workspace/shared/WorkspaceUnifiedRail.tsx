@@ -22,7 +22,6 @@ export type WorkspaceUnifiedRailQueueItem = {
   id: string;
   title: string;
   meta: string;
-  detail?: string | null;
   priorityTone?: 'high' | 'medium' | 'low' | 'neutral';
   priorityLabel?: string | null;
   action: WorkspaceUnifiedRailAction;
@@ -134,7 +133,6 @@ function renderQueueItem(item: WorkspaceUnifiedRailQueueItem) {
       <span className="workspace-unified-rail__queue-copy">
         <strong>{item.title}</strong>
         <span>{item.meta}</span>
-        {item.detail ? <span>{item.detail}</span> : null}
       </span>
       <span className="workspace-unified-rail__queue-side">
         {item.priorityLabel ? (

@@ -68,7 +68,6 @@ export function WorkspaceReviewsAside({
         title: item.title,
         actionLabel: item.actionLabel,
         actionPriorityLevel: item.actionPriorityLevel,
-        actionReason: item.actionReason,
         action: {
           kind: 'link',
           href: item.href,

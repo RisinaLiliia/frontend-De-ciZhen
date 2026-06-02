@@ -59,17 +59,17 @@ describe('workspaceUnifiedRail.model', () => {
       ],
     });
 
-    expect(model?.actionQueue.items).toHaveLength(3);
-    expect(model?.recommendations.items).toHaveLength(3);
-    expect(model?.actionQueue.items.map((item) => item.id)).toEqual(['1', '2', '3']);
-    expect(model?.recommendations.items.map((item) => item.id)).toEqual(['r1', 'r2', 'r3']);
+    expect(model?.actionQueue.items).toHaveLength(4);
+    expect(model?.recommendations.items).toHaveLength(4);
+    expect(model?.actionQueue.items.map((item) => item.id)).toEqual(['1', '2', '3', '4']);
+    expect(model?.recommendations.items.map((item) => item.id)).toEqual(['r1', 'r2', 'r3', 'r4']);
   });
 
   it('allows a section-specific queue count template override', () => {
     const model = buildLinkedWorkspaceRailModel({
       locale: 'de',
       contextLabel: '',
-      queueCountTemplate: '{count} Vorgänge brauchen Aufmerksamkeit',
+      queueCountTemplate: '{count} Vorgänge erfordern Aufmerksamkeit',
       panel: {
         eyebrow: 'Decision Panel',
         title: 'Anbieter im aktuellen Markt',
@@ -91,6 +91,6 @@ describe('workspaceUnifiedRail.model', () => {
       },
     });
 
-    expect(model?.actionQueue.title).toBe('1 Vorgänge brauchen Aufmerksamkeit');
+    expect(model?.actionQueue.title).toBe('1 Vorgänge erfordern Aufmerksamkeit');
   });
 });

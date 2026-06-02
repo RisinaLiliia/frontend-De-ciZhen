@@ -3,8 +3,9 @@
 @layer components {
   .workspace-shell {
     --workspace-shell-header-height: var(--shell-topbar-height, 72px);
-    --workspace-shell-content-offset: calc(var(--workspace-shell-header-height) + var(--space-3));
     --workspace-shell-row-gap: clamp(14px, 1.6vw, 20px);
+    --workspace-shell-content-offset: calc(var(--workspace-shell-header-height) + var(--workspace-shell-row-gap));
+    --workspace-rail-viewport-height: calc(100dvh - var(--workspace-shell-content-offset) - var(--space-4));
     width: min(100%, var(--shell-max-width));
     height: 100dvh;
     min-height: 100dvh;
@@ -276,7 +277,7 @@
     position: sticky;
     top: var(--workspace-shell-content-offset);
     align-self: start;
-    max-height: calc(100dvh - var(--workspace-shell-content-offset) - var(--space-4));
+    max-height: var(--workspace-rail-viewport-height);
     overflow: hidden;
   }
 
@@ -355,12 +356,8 @@
       width: 100%;
       height: auto;
       max-width: none;
-      overflow: visible;
-    }
-
-    .workspace-shell,
-    .workspace-frame__body {
       display: block;
+      overflow: visible;
     }
 
     .workspace-shell__sidebar,

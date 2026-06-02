@@ -39,7 +39,7 @@ export function WorkspaceDecisionPanel({
   onOpenQueueItem,
   variant = 'private',
 }: WorkspaceDecisionPanelProps) {
-  const t = (key: string) => translate(key as never, locale);
+  const t = React.useCallback((key: string) => translate(key as never, locale), [locale]);
   const summaryText = React.useMemo(
     () => buildDecisionPanelSummaryText({ locale, panel, variant }),
     [locale, panel, variant],
@@ -55,17 +55,20 @@ export function WorkspaceDecisionPanel({
     if (level === 'medium') return t(I18N_KEYS.requestsPage.decisionPanelPriorityMedium);
     return t(I18N_KEYS.requestsPage.decisionPanelPriorityLow);
   }, [t, variant]);
-  const overviewLabels = variant === 'market'
-    ? {
-        highUrgency: t(I18N_KEYS.requestsPage.decisionPanelOverviewHighDemand),
-        inProgress: t(I18N_KEYS.requestsPage.decisionPanelOverviewInExecution),
-        completedThisPeriod: t(I18N_KEYS.requestsPage.statusCompleted),
-      }
-    : {
-        highUrgency: t(I18N_KEYS.requestsPage.decisionPanelOverviewHighUrgency),
-        inProgress: t(I18N_KEYS.requestsPage.statusInProgress),
-        completedThisPeriod: t(I18N_KEYS.requestsPage.statusCompleted),
-      };
+  const overviewLabels = React.useMemo(
+    () => (variant === 'market'
+      ? {
+          highUrgency: t(I18N_KEYS.requestsPage.decisionPanelOverviewHighDemand),
+          inProgress: t(I18N_KEYS.requestsPage.decisionPanelOverviewInExecution),
+          completedThisPeriod: t(I18N_KEYS.requestsPage.statusCompleted),
+        }
+      : {
+          highUrgency: t(I18N_KEYS.requestsPage.decisionPanelOverviewHighUrgency),
+          inProgress: t(I18N_KEYS.requestsPage.statusInProgress),
+          completedThisPeriod: t(I18N_KEYS.requestsPage.statusCompleted),
+        }),
+    [t, variant],
+  );
   const totalValue = summaryItems?.find((item) => item.key === 'all')?.value ?? panel.summary.totalNeedsAction;
   const contextLabel = variant === 'market'
     ? t(I18N_KEYS.requestsPage.workspaceRailRequestsMarketContext)
@@ -175,7 +178,6 @@ export function WorkspaceDecisionPanel({
           actionLabel: item.actionLabel,
           actionPriorityLevel: item.actionPriorityLevel,
           priorityLabel: priorityLabel(item.actionPriorityLevel),
-          actionReason: item.actionReason,
           action: {
             kind: 'button',
             label: item.title,

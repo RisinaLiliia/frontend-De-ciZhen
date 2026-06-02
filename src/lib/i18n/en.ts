@@ -563,7 +563,7 @@ export const en: DeDictionary = {
     decisionPanelPriorityLow: 'Low',
     decisionPanelPriorityNew: 'New',
     workspaceRailAnalysisCta: 'Open analysis',
-    workspaceRailQueueCountTemplate: '{count} tasks',
+    workspaceRailQueueCountTemplate: '{count} tasks need attention',
     workspaceRailProvidersQueueCountTemplate: '{count} items need attention',
     workspaceRailQueueCta: 'View all',
     workspaceRailRecommendationsEyebrow: 'Recommendations',
