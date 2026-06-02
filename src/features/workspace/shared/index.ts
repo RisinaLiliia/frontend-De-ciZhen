@@ -22,7 +22,7 @@ export type {
   WorkspaceUnifiedRailVisualization,
 } from './WorkspaceUnifiedRail';
 export { WorkspaceViewToggle } from './WorkspaceViewToggle';
-export { useIsDesktop, useMediaMatch } from './useIsDesktop';
+export { useIsDesktop, useMediaMatch, useWorkspaceWideShell } from './useIsDesktop';
 export { useWorkspaceFormatters } from './useWorkspaceFormatters';
 export {
   ALL_OPTION_KEY,

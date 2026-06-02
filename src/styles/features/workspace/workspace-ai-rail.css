@@ -27,8 +27,8 @@
     --workspace-rail-eyebrow-size: var(--provider-card-eyebrow-size, var(--fs-10));
     --workspace-rail-eyebrow-line-height: var(--provider-card-eyebrow-line-height, 1.2);
     --workspace-rail-eyebrow-tracking: var(--provider-card-eyebrow-tracking, 0.06em);
-    --workspace-rail-title-size: var(--provider-card-title-size, 17px);
-    --workspace-rail-title-line-height: var(--provider-card-title-line-height, 1.25);
+    --workspace-rail-title-size: 16px;
+    --workspace-rail-title-line-height: 1.28;
     --workspace-rail-copy-size: var(--provider-card-body-size, var(--fs-12));
     --workspace-rail-copy-line-height: var(--provider-card-body-line-height, 1.4);
     --workspace-rail-meta-size: var(--provider-card-meta-size, var(--fs-12));
@@ -459,7 +459,23 @@
     border-color: color-mix(in oklab, var(--color-success) 18%, var(--color-border-soft) 82%);
   }
 
-  @media (max-width: 1120px) {
+  @media (min-width: 1024px) and (max-width: 1179px) {
+    .workspace-unified-rail__panel--decision {
+      --workspace-rail-title-size: 15px;
+      --workspace-rail-copy-size: var(--fs-12);
+      --workspace-rail-meta-size: var(--fs-11);
+    }
+
+    .workspace-unified-rail__value {
+      font-size: 28px;
+    }
+
+    .workspace-unified-rail__decision-main > .workspace-unified-rail__title {
+      font-size: var(--workspace-rail-title-size);
+    }
+  }
+
+  @media (max-width: 1023px) {
     .workspace-unified-rail__decision-head {
       grid-template-columns: minmax(0, 1fr);
     }

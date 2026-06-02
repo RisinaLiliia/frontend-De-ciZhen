@@ -27,3 +27,8 @@ export function useIsDesktop() {
   // Desktop breakpoint matches the workspace layout threshold.
   return useMediaMatch('(min-width: 1024px)');
 }
+
+export function useWorkspaceWideShell() {
+  // Full workspace shell with persistent left navigation starts at 1180px.
+  return useMediaMatch('(min-width: 1180px)');
+}

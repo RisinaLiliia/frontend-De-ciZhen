@@ -5,7 +5,7 @@
     display: none;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 1179px) {
     .workspace-page-frame__filters {
       display: block;
       margin-bottom: var(--space-3);
@@ -75,13 +75,12 @@
     .workspace-page-frame__filters .workspace-context-controls__state-tab.is-active {
       color: var(--color-primary);
       border-bottom-color: var(--color-primary);
-      background: transparent;
     }
 
     .workspace-page-frame__filters .workspace-context-controls__mobile-toolbar {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(132px, 0.92fr);
-      gap: var(--space-2);
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2-5);
       align-items: stretch;
     }
 
@@ -173,47 +172,44 @@
       gap: var(--space-2);
     }
 
-    .workspace-page-frame__filters .workspace-context-controls__footer-row--mobile {
+    .workspace-page-frame__filters .workspace-context-controls__footer-row--compact {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(124px, 1fr) auto auto;
       align-items: center;
       gap: var(--space-2);
       min-height: 38px;
     }
 
-    .workspace-page-frame__filters .workspace-context-controls__sort-group--mobile {
-      display: flex;
-      align-items: center;
-      flex-wrap: nowrap;
-      gap: var(--space-2);
+    .workspace-page-frame__filters .workspace-context-controls__period-filter--compact,
+    .workspace-page-frame__filters .workspace-context-controls__sort-filter--compact {
       min-width: 0;
     }
 
-    .workspace-page-frame__filters .workspace-context-select--sort-inline {
+    .workspace-page-frame__filters .workspace-context-controls__period-filter--compact .workspace-context-select,
+    .workspace-page-frame__filters .workspace-context-controls__period-filter--compact .workspace-context-select-wrap {
       width: 100%;
-      min-width: 0;
     }
 
-    .workspace-page-frame__filters .workspace-context-select--sort-inline .dc-select-trigger__label {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .workspace-page-frame__filters .workspace-context-controls__sort-filter--compact {
+      width: 38px;
+      min-width: 38px;
     }
 
-    .workspace-page-frame__filters .workspace-context-controls__footer-spacer {
-      min-height: 1px;
+    .workspace-page-frame__filters .workspace-context-controls__sort-filter--compact .workspace-context-select-wrap,
+    .workspace-page-frame__filters .workspace-context-controls__sort-filter--compact .workspace-context-select,
+    .workspace-page-frame__filters .workspace-context-controls__sort-filter--compact .workspace-context-select--sort-icon {
+      width: 100%;
+      min-width: 100%;
     }
 
-    .workspace-page-frame__filters .workspace-context-controls__footer-label {
-      font-size: var(--fs-12);
-      font-weight: 600;
-      color: var(--color-text-muted);
-      white-space: nowrap;
-      flex: 0 0 auto;
-    }
-
-    .workspace-page-frame__filters .workspace-context-controls__footer-actions {
+    .workspace-page-frame__filters .workspace-context-controls__footer-actions--compact {
       gap: var(--space-1-5);
+    }
+
+    .workspace-page-frame__filters .workspace-context-controls__action,
+    .workspace-page-frame__filters .workspace-context-controls__secondary-button {
+      width: 38px;
+      min-width: 38px;
     }
 
     .workspace-page-frame__filters .workspace-view-toggle {
@@ -223,11 +219,10 @@
     .workspace-mobile-filters__apply,
     .workspace-page-frame__filters .workspace-view-toggle__btn,
     .workspace-page-frame__filters .workspace-context-controls__action,
-    .workspace-page-frame__filters .workspace-context-controls__secondary-button,
-    .workspace-page-frame__filters .workspace-context-controls__reset-button {
+    .workspace-page-frame__filters .workspace-context-controls__secondary-button {
       min-height: 38px;
       height: 38px;
-      padding-inline: 12px;
+      padding-inline: 0;
       border-radius: var(--radius-md);
       font-size: var(--fs-12);
       font-weight: 600;
@@ -245,8 +240,7 @@
       background: var(--color-surface);
     }
 
-    .workspace-mobile-filters__apply,
-    .workspace-page-frame__filters .workspace-context-controls__reset-button {
+    .workspace-mobile-filters__apply {
       border: 1px solid color-mix(in oklab, var(--color-border-soft) 84%, var(--color-surface) 16%);
       background: var(--color-surface);
       color: var(--color-text);
@@ -255,25 +249,32 @@
       white-space: nowrap;
     }
 
-    .workspace-mobile-filters__apply:hover,
-    .workspace-page-frame__filters .workspace-context-controls__reset-button:hover {
+    .workspace-mobile-filters__apply:hover {
       background: color-mix(in oklab, var(--color-surface) 90%, var(--color-surface-muted) 10%);
       border-color: color-mix(in oklab, var(--color-border) 82%, var(--color-surface) 18%);
     }
   }
 
   @media (max-width: 420px) {
-    .workspace-page-frame__filters .workspace-context-controls__mobile-toolbar,
-    .workspace-page-frame__filters .workspace-context-controls__footer-row--mobile {
-      grid-template-columns: minmax(0, 1fr);
+    .workspace-page-frame__filters .workspace-context-controls__footer-row--compact {
+      grid-template-columns: minmax(112px, 1fr) auto auto;
     }
 
     .workspace-page-frame__filters .workspace-context-controls__footer-actions {
       justify-content: flex-start;
     }
+  }
 
-    .workspace-page-frame__filters .workspace-context-controls__sort-group--mobile {
-      gap: var(--space-2);
+  @media (max-width: 1179px) {
+    .workspace-page-frame__filters .workspace-context-controls__footer-row--compact {
+      grid-template-columns: minmax(112px, 1fr) minmax(148px, auto) auto;
+    }
+
+    .workspace-page-frame__filters .workspace-context-controls__sort-filter--compact,
+    .workspace-page-frame__filters .workspace-context-controls__sort-filter--compact .workspace-context-select,
+    .workspace-page-frame__filters .workspace-context-controls__sort-filter--compact .workspace-context-select-wrap {
+      width: auto;
+      min-width: 148px;
     }
   }
 }

@@ -206,12 +206,14 @@
   --control-bg-hover: var(--color-surface-muted);
   --control-border: var(--color-border);
   --control-border-hover: color-mix(in oklab, var(--color-border) 68%, var(--color-primary) 32%);
-  --control-focus-ring: 0 0 0 3px color-mix(in oklab, var(--color-primary) 16%, transparent);
+  --control-focus-ring:
+    0 0 0 1px color-mix(in oklab, var(--color-primary) 22%, var(--color-border) 78%),
+    0 6px 16px color-mix(in oklab, var(--color-text) 5%, transparent);
 
   --surface-soft-border: var(--color-border-soft);
   --surface-soft-bg: var(--color-surface-muted);
   --surface-soft-bg-strong: var(--color-surface-soft);
-  --focus-ring-primary: color-mix(in oklab, var(--color-primary) 18%, transparent);
+  --focus-ring-primary: color-mix(in oklab, var(--color-primary) 12%, transparent);
 
   --surface-decision-active-border: color-mix(
     in oklab,
@@ -223,7 +225,9 @@
 
   /* Global shell geometry shared by topbar/main/footer */
   --shell-sidebar-width: 232px;
+  --shell-sidebar-compact-width: 72px;
   --shell-rail-width: 320px;
+  --shell-rail-compact-width: 288px;
   --shell-content-max-width: 1440px;
   --workspace-content-max-width: var(--shell-content-max-width);
   --workspace-rail-width: var(--shell-rail-width);
@@ -238,10 +242,16 @@
 
 @media (max-width: 1199px) {
   :root {
-    --shell-content-max-width: 920px;
+    --shell-content-max-width: 1440px;
     --workspace-content-max-width: var(--shell-content-max-width);
     --shell-inline-padding: 20px;
     --workspace-grid-gap: var(--layout-gap-md);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1179px) {
+  :root {
+    --workspace-rail-width: var(--shell-rail-compact-width);
   }
 }
 

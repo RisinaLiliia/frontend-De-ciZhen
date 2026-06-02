@@ -1,5 +1,6 @@
 'use client';
 
+import { IconBriefcase, IconCalendar, IconFilter } from '@/components/ui/icons/icons';
 import { CitySearchSelect } from '@/components/ui/CitySearchSelect';
 import { WorkspaceFilterBar, WorkspaceFilterSelect } from '@/features/workspace/shared';
 import type { Locale } from '@/lib/i18n/t';
@@ -18,6 +19,7 @@ type Props = {
   service?: WorkspaceContextSelectControl;
   range: WorkspaceContextRangeControl;
   mobile: boolean;
+  compact?: boolean;
   title?: string;
   applyLabel?: string;
   mobileTriggerLabel?: string;
@@ -30,6 +32,7 @@ export function WorkspaceContextFilters({
   service,
   range,
   mobile,
+  compact = false,
   title,
   applyLabel,
   mobileTriggerLabel,
@@ -64,6 +67,7 @@ export function WorkspaceContextFilters({
           onChange={category.onChange}
           className="workspace-context-select workspace-context-controls__select"
           ariaLabel={category.ariaLabel}
+          triggerIcon={<IconFilter />}
         />
       </div>
 
@@ -76,6 +80,7 @@ export function WorkspaceContextFilters({
             className="workspace-context-select workspace-context-controls__select"
             ariaLabel={service.ariaLabel}
             disabled={service.disabled}
+            triggerIcon={<IconBriefcase />}
           />
         </div>
       ) : null}
@@ -95,18 +100,12 @@ export function WorkspaceContextFilters({
             {baseFields}
           </WorkspaceFilterBar>
         </WorkspaceContextMobileSheet>
-
-        <div className="workspace-context-controls__filter workspace-context-controls__period-filter">
-          <WorkspaceFilterSelect
-            options={rangeSelectOptions}
-            value={range.value}
-            onChange={(next) => range.onChange(resolveRangeValue(next))}
-            className="workspace-context-select workspace-context-controls__select"
-            ariaLabel={range.groupLabel}
-          />
-        </div>
       </div>
     );
+  }
+
+  if (compact) {
+    return <WorkspaceFilterBar className="workspace-context-controls__filters-grid">{baseFields}</WorkspaceFilterBar>;
   }
 
   return (
@@ -120,6 +119,7 @@ export function WorkspaceContextFilters({
           onChange={(next) => range.onChange(resolveRangeValue(next))}
           className="workspace-context-select workspace-context-controls__select"
           ariaLabel={range.groupLabel}
+          triggerIcon={<IconCalendar />}
         />
       </div>
     </WorkspaceFilterBar>

@@ -10,6 +10,7 @@ import {
   WorkspaceContextRail,
   useIsDesktop,
   useMediaMatch,
+  useWorkspaceWideShell,
 } from '@/features/workspace/shared';
 import { WorkspaceTopProvidersAside } from '@/features/workspace/providers';
 import {
@@ -31,6 +32,7 @@ import { WorkspaceSectionSharedContext } from '@/features/workspace/shell/Worksp
 import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
 import { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
+import { ConsentManageFooter } from '@/components/legal/ConsentManageFooter';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import { isWorkspaceOverviewMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
 import { isWorkspaceTab } from '@/features/workspace/state';
@@ -129,6 +131,8 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isDesktop = useIsDesktop();
+  const isWideShell = useWorkspaceWideShell();
+  const hasCompactSidebar = useMediaMatch('(min-width: 768px)');
   const isMobile = useMediaMatch('(max-width: 767px)');
   const isOverviewPrivateMode =
     !isWorkspacePublicSection &&
@@ -149,7 +153,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     [activePublicSection, intro, isDesktop],
   );
 
-  const workspaceSidebar = isDesktop ? (
+  const workspaceSidebar = isWideShell ? (
     <WorkspaceSidebar
       t={t}
       locale={locale}
@@ -157,11 +161,19 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       activeWorkspaceTab={activeWorkspaceTab}
       preferredRequestsRole={preferredRequestsRole}
     />
+  ) : hasCompactSidebar ? (
+    <WorkspaceSidebar
+      t={t}
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
+      variant="compact"
+    />
   ) : null;
   const workspaceTopBar = isMobile ? null : (
     <WorkspaceTopBar
-      showNavigationToggle={!isDesktop}
-      compactUtility={!isDesktop}
+      compactUtility={!isWideShell}
     />
   );
 
@@ -262,7 +274,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     </WorkspaceContextRail>
   );
 
-  const overlayNavigationMode = isDesktop ? null : (isMobile ? 'bottomDock' : 'drawer');
+  const overlayNavigationMode = isWideShell ? null : (isMobile ? 'bottomDock' : 'drawer');
   const workspaceMobileNavigation = overlayNavigationMode ? (
     <WorkspaceMobileNavigation
       mode={overlayNavigationMode}
@@ -307,7 +319,10 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       frameClassName={resolvedSectionModel.frameClassName}
       contentClassName={resolvedSectionModel.contentClassName}
     >
-      {resolvedSectionModel.content}
+      <>
+        {resolvedSectionModel.content}
+        <ConsentManageFooter />
+      </>
     </WorkspaceShell>
   );
 });

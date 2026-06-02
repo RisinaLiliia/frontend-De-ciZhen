@@ -1,9 +1,9 @@
 /* src/styles/features/workspace/workspace-controls-responsive.css */
 
 @layer components {
-  @media (min-width: 768px) and (max-width: 1023px) {
+  @media (min-width: 768px) and (max-width: 1179px) {
     .workspace-context-controls__filters-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: var(--space-2-5);
     }
 

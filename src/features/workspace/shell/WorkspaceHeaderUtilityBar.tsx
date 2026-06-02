@@ -32,18 +32,16 @@ export function WorkspaceHeaderUtilityBar({
       ].filter(Boolean).join(' ')}
       aria-label="Workspace tools"
     >
-      {!compact ? (
-        <label className="workspace-environment__search" aria-label={t(I18N_KEYS.homePublic.searchPlaceholder)}>
-          <span className="workspace-environment__search-icon" aria-hidden="true">
-            <IconSearch />
-          </span>
-          <input
-            type="search"
-            className="workspace-environment__search-input"
-            placeholder={t(I18N_KEYS.homePublic.searchPlaceholder)}
-          />
-        </label>
-      ) : null}
+      <label className="workspace-environment__search" aria-label={t(I18N_KEYS.homePublic.searchPlaceholder)}>
+        <span className="workspace-environment__search-icon" aria-hidden="true">
+          <IconSearch />
+        </span>
+        <input
+          type="search"
+          className="workspace-environment__search-input"
+          placeholder={t(I18N_KEYS.homePublic.searchPlaceholder)}
+        />
+      </label>
 
       {authStatus === 'authenticated' ? (
         <div className="workspace-environment__utility-actions">

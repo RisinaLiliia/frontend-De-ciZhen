@@ -16,32 +16,25 @@ export function WorkspaceViewToggle({
   listDensity,
   onChange,
 }: Props) {
+  const nextDensity = listDensity === 'double' ? 'single' : 'double';
+  const nextLabel = t(
+    nextDensity === 'double'
+      ? I18N_KEYS.requestsPage.viewModeDouble
+      : I18N_KEYS.requestsPage.viewModeSingle,
+  );
+
   return (
-    <div
-      className="workspace-view-toggle"
-      role="group"
-      aria-label={t(I18N_KEYS.requestsPage.viewModeLabel)}
-    >
+    <div className="workspace-view-toggle" aria-label={t(I18N_KEYS.requestsPage.viewModeLabel)}>
       <button
         type="button"
-        className={`workspace-view-toggle__btn workspace-view-toggle__btn--double ${listDensity === 'double' ? 'is-active' : ''}`.trim()}
-        aria-label={t(I18N_KEYS.requestsPage.viewModeDouble)}
-        aria-pressed={listDensity === 'double'}
-        onClick={() => onChange('double')}
+        className="workspace-view-toggle__btn workspace-view-toggle__btn--toggle"
+        aria-label={nextLabel}
+        title={nextLabel}
+        data-current-density={listDensity}
+        onClick={() => onChange(nextDensity)}
       >
         <span className="workspace-view-toggle__icon" aria-hidden="true">
-          <IconLayoutColumns />
-        </span>
-      </button>
-      <button
-        type="button"
-        className={`workspace-view-toggle__btn workspace-view-toggle__btn--single ${listDensity === 'single' ? 'is-active' : ''}`.trim()}
-        aria-label={t(I18N_KEYS.requestsPage.viewModeSingle)}
-        aria-pressed={listDensity === 'single'}
-        onClick={() => onChange('single')}
-      >
-        <span className="workspace-view-toggle__icon" aria-hidden="true">
-          <IconLayoutRows />
+          {listDensity === 'double' ? <IconLayoutColumns /> : <IconLayoutRows />}
         </span>
       </button>
     </div>

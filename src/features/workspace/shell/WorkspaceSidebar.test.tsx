@@ -1,9 +1,10 @@
 /** @vitest-environment happy-dom */
 
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
+import { WORKSPACE_MOBILE_NAV_OPEN_EVENT } from '@/lib/workspaceMobileNavigation';
 
 const pushMock = vi.fn();
 const replaceMock = vi.fn();
@@ -79,5 +80,48 @@ describe('WorkspaceSidebar', () => {
     expect(contractsLink).toBeTruthy();
     expect(screen.getByText('Lilia Müller')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'auth.logoutLabel' })).toBeNull();
+  });
+
+  it('opens drawer navigation from the compact brand button', () => {
+    useAuthStatusMock.mockReturnValue('unauthenticated');
+    useAuthUserMock.mockReturnValue(null);
+    useAuthMeMock.mockReturnValue(null);
+    const openHandler = vi.fn();
+    window.addEventListener(WORKSPACE_MOBILE_NAV_OPEN_EVENT, openHandler);
+
+    render(
+      <WorkspaceSidebar
+        t={(key: string) => key}
+        locale="de"
+        activePublicSection="requests"
+        activeWorkspaceTab="my-requests"
+        variant="compact"
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'auth.navigationLabel' }));
+
+    expect(openHandler).toHaveBeenCalledTimes(1);
+    window.removeEventListener(WORKSPACE_MOBILE_NAV_OPEN_EVENT, openHandler);
+  });
+
+  it('can render drawer navigation without a duplicate brand', () => {
+    useAuthStatusMock.mockReturnValue('unauthenticated');
+    useAuthUserMock.mockReturnValue(null);
+    useAuthMeMock.mockReturnValue(null);
+
+    render(
+      <WorkspaceSidebar
+        t={(key: string) => key}
+        locale="de"
+        activePublicSection="requests"
+        activeWorkspaceTab="my-requests"
+        variant="drawer"
+        showBrand={false}
+      />,
+    );
+
+    expect(screen.queryByRole('link', { name: /De.ciZhen/i })).toBeNull();
+    expect(screen.getByRole('link', { name: /Dashboard/i })).toBeTruthy();
   });
 });

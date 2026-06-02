@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { WorkspaceContextResultControls } from '@/features/workspace/context/contextResultControls';
 
 vi.mock('@/features/workspace/shared', () => ({
+  useMediaMatch: () => false,
   WorkspaceButton: (
     props: React.ButtonHTMLAttributes<HTMLButtonElement> & { fullWidth?: boolean },
   ) => {
@@ -31,6 +32,14 @@ afterEach(() => {
 
 function createProps() {
   return {
+    range: {
+      value: '30d' as const,
+      options: [{ value: '30d' as const, label: '30 Tage' }],
+      mobileOptions: [{ value: '30d' as const, label: '30 Tage' }],
+      groupLabel: 'Zeitraum',
+      onChange: vi.fn(),
+      summaryLabel: '30 Tage',
+    },
     sort: {
       options: [{ value: 'activity', label: 'Aktivitaet' }],
       value: 'activity',
@@ -51,7 +60,7 @@ describe('WorkspaceContextResultControls', () => {
   it('renders one reset action in mobile mode', () => {
     render(<WorkspaceContextResultControls mobile {...createProps()} />);
 
-    expect(screen.getByTestId('workspace-filter-select')).toBeTruthy();
+    expect(screen.getAllByTestId('workspace-filter-select')).toHaveLength(2);
     expect(screen.getAllByRole('button', { name: 'Filter zuruecksetzen' })).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Karte' })).toBeTruthy();
   });

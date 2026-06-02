@@ -1,8 +1,10 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { Bell, Menu } from 'lucide-react';
+import { Bell, Menu, X } from 'lucide-react';
 
 import {
   WorkspaceNavigationDock,
@@ -133,6 +135,29 @@ export function WorkspaceMobileNavigation({
     previousRouteRef.current = routeSignature;
   }, [open, routeSignature, setOpen]);
 
+  const drawerHeader = (
+    <header className="workspace-navigation-drawer__header">
+      <Link
+        href="/"
+        prefetch={false}
+        className="workspace-navigation-drawer__brand brand"
+        onClick={() => setOpen(false)}
+      >
+        <Image src="/logo.svg" alt="De’ciZhen" className="brand__logo" width={26} height={26} />
+        <span id={titleId} className="brand__text truncate">De’ciZhen</span>
+      </Link>
+      <button
+        ref={closeButtonRef}
+        type="button"
+        className="workspace-navigation-drawer__close"
+        aria-label={t(I18N_KEYS.auth.closeDialog)}
+        onClick={() => setOpen(false)}
+      >
+        <X aria-hidden="true" size={18} strokeWidth={1.9} />
+      </button>
+    </header>
+  );
+
   if (mode === 'drawer') {
     return open ? (
       <div className="workspace-navigation-drawer" role="dialog" aria-modal="true" aria-labelledby={titleId}>
@@ -143,18 +168,7 @@ export function WorkspaceMobileNavigation({
           onClick={() => setOpen(false)}
         />
         <section ref={panelRef} className="workspace-navigation-drawer__surface">
-          <header className="workspace-navigation-drawer__header">
-            <h2 id={titleId} className="workspace-navigation-drawer__title">{t(I18N_KEYS.auth.workspaceLabel)}</h2>
-            <button
-              ref={closeButtonRef}
-              type="button"
-              className="workspace-navigation-drawer__close"
-              aria-label={t(I18N_KEYS.auth.closeDialog)}
-              onClick={() => setOpen(false)}
-            >
-              ×
-            </button>
-          </header>
+          {drawerHeader}
           <WorkspaceSidebar
             t={t}
             locale={locale}
@@ -162,6 +176,7 @@ export function WorkspaceMobileNavigation({
             activeWorkspaceTab={activeWorkspaceTab}
             preferredRequestsRole={preferredRequestsRole}
             variant="drawer"
+            showBrand={false}
             onNavigate={() => setOpen(false)}
           />
         </section>
@@ -182,18 +197,7 @@ export function WorkspaceMobileNavigation({
             onClick={() => setOpen(false)}
           />
           <section ref={panelRef} className="workspace-navigation-drawer__surface">
-            <header className="workspace-navigation-drawer__header">
-              <h2 id={titleId} className="workspace-navigation-drawer__title">{t(I18N_KEYS.auth.workspaceLabel)}</h2>
-              <button
-                ref={closeButtonRef}
-                type="button"
-                className="workspace-navigation-drawer__close"
-                aria-label={t(I18N_KEYS.auth.closeDialog)}
-                onClick={() => setOpen(false)}
-              >
-                ×
-              </button>
-            </header>
+            {drawerHeader}
             <WorkspaceSidebar
               t={t}
               locale={locale}
@@ -201,6 +205,7 @@ export function WorkspaceMobileNavigation({
               activeWorkspaceTab={activeWorkspaceTab}
               preferredRequestsRole={preferredRequestsRole}
               variant="drawer"
+              showBrand={false}
               onNavigate={() => setOpen(false)}
             />
           </section>

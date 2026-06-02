@@ -12,6 +12,8 @@ type WorkspaceFilterSelectProps = {
   disabled?: boolean;
   className?: string;
   contentClassName?: string;
+  triggerIcon?: React.ReactNode;
+  iconOnly?: boolean;
 };
 
 export function WorkspaceFilterSelect({
@@ -22,6 +24,8 @@ export function WorkspaceFilterSelect({
   disabled = false,
   className,
   contentClassName,
+  triggerIcon,
+  iconOnly = false,
 }: WorkspaceFilterSelectProps) {
   const resolvedValue = React.useMemo(
     () => (options.some((option) => option.value === value) ? value : undefined),
@@ -36,6 +40,8 @@ export function WorkspaceFilterSelect({
         onChange={onChange}
         className={className}
         contentClassName={contentClassName}
+        triggerIcon={triggerIcon}
+        iconOnly={iconOnly}
         aria-label={ariaLabel}
         disabled={disabled}
       />

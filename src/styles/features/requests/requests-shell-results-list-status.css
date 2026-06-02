@@ -37,7 +37,7 @@
     }
   }
 
-  @media (max-width: 980px) {
+  @media (max-width: 767px) {
     .requests-list.is-double {
       grid-template-columns: minmax(0, 1fr);
     }

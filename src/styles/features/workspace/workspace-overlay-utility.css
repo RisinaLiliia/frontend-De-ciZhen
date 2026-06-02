@@ -14,9 +14,9 @@
   }
 
   .workspace-environment__utility--compact {
-    min-height: 0;
-    gap: var(--space-2);
-    justify-content: flex-end;
+    min-height: 48px;
+    gap: var(--space-3);
+    justify-content: space-between;
   }
 
   .workspace-environment__search {

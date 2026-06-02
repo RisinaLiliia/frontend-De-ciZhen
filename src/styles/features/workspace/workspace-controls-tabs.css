@@ -13,7 +13,7 @@
     display: inline-flex;
     align-items: flex-end;
     flex-wrap: nowrap;
-    gap: var(--space-1);
+    gap: var(--space-4);
     padding: 0;
     border-bottom: 1px solid var(--color-border-soft);
     white-space: nowrap;
@@ -23,47 +23,42 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 36px;
+    min-height: 32px;
     margin-bottom: -1px;
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid transparent;
-    border-bottom-color: transparent;
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    padding: 0 0 var(--space-2);
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
     color: var(--color-text-muted);
     text-decoration: none;
     font-size: var(--fs-12);
-    font-weight: 600;
+    font-weight: 650;
     line-height: 1.2;
     transition:
       color var(--transition-fast),
-      background var(--transition-fast),
       border-color var(--transition-fast),
       box-shadow var(--transition-fast);
   }
 
   .workspace-context-scope-switch__item:hover {
     color: var(--color-text);
-    background: var(--color-surface-muted);
-    border-color: var(--workspace-context-control-border-hover);
   }
 
   .workspace-context-scope-switch__item:focus-visible {
     outline: none;
     color: var(--color-text);
-    border-color: var(--color-primary-border);
     box-shadow: var(--control-focus-ring);
   }
 
   .workspace-context-scope-switch__item.is-active {
     color: var(--color-primary);
-    border-color: var(--color-primary-border);
-    background: var(--color-primary-soft);
+    border-bottom-color: var(--color-primary);
   }
 
   .workspace-context-toggle-tabs {
     display: inline-flex;
     align-items: flex-end;
-    gap: var(--space-6);
+    gap: var(--space-4);
     padding: 0;
     border: 0;
     border-bottom: 1px solid color-mix(in oklab, var(--color-border-soft) 72%, transparent);
@@ -76,9 +71,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(var(--space-8) + var(--space-0-5));
+    min-height: 32px;
     margin-bottom: -1px;
-    padding: 0 0 var(--space-2-5);
+    padding: 0 0 var(--space-2);
     border: 0;
     border-bottom: 2px solid transparent;
     border-radius: 0;

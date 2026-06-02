@@ -7,6 +7,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { WorkspacePageLayout } from '@/features/workspace/shell/WorkspacePageLayout';
 
 let isDesktopMock = true;
+let isWideShellMock = true;
+let hasCompactSidebarMock = true;
 let isMobileMock = false;
 
 vi.mock('next/navigation', () => ({
@@ -20,7 +22,14 @@ vi.mock('@/features/workspace/shared', () => ({
     <aside data-testid="workspace-context-rail">{children}</aside>
   ),
   useIsDesktop: () => isDesktopMock,
-  useMediaMatch: () => isMobileMock,
+  useWorkspaceWideShell: () => isWideShellMock,
+  useMediaMatch: (query: string) => {
+    if (query.includes('min-width: 768px')) {
+      return hasCompactSidebarMock;
+    }
+
+    return isMobileMock;
+  },
 }));
 
 vi.mock('@/features/workspace/market', () => ({
@@ -71,9 +80,15 @@ vi.mock('@/features/workspace/shell/WorkspaceMobileNavigation', () => ({
   WorkspaceMobileNavigation: () => <div data-testid="workspace-mobile-navigation" />,
 }));
 
+vi.mock('@/components/legal/ConsentManageFooter', () => ({
+  ConsentManageFooter: () => <div data-testid="workspace-consent-footer" />,
+}));
+
 describe('WorkspacePageLayout', () => {
   it('renders public explore sections through WorkspaceShell', () => {
     isDesktopMock = true;
+    isWideShellMock = true;
+    hasCompactSidebarMock = true;
     isMobileMock = false;
 
     render(
@@ -115,10 +130,13 @@ describe('WorkspacePageLayout', () => {
     expect(shell.getAttribute('data-has-bottom-nav')).toBe('false');
     expect(shell.getAttribute('data-has-topbar')).toBe('true');
     expect(screen.getByTestId('workspace-providers-section')).toBeTruthy();
+    expect(screen.getByTestId('workspace-consent-footer')).toBeTruthy();
   });
 
   it('mounts the workspace bottom nav on mobile widths', () => {
     isDesktopMock = false;
+    isWideShellMock = false;
+    hasCompactSidebarMock = false;
     isMobileMock = true;
 
     render(
@@ -164,6 +182,8 @@ describe('WorkspacePageLayout', () => {
 
   it('keeps tablet widths on the topbar-plus-overlay navigation path', () => {
     isDesktopMock = false;
+    isWideShellMock = false;
+    hasCompactSidebarMock = true;
     isMobileMock = false;
 
     render(
@@ -202,7 +222,54 @@ describe('WorkspacePageLayout', () => {
 
     const shell = screen.getAllByTestId('workspace-shell').at(-1);
     expect(shell).toBeTruthy();
-    expect(shell?.getAttribute('data-has-sidebar')).toBe('false');
+    expect(shell?.getAttribute('data-has-sidebar')).toBe('true');
+    expect(shell?.getAttribute('data-has-bottom-nav')).toBe('true');
+    expect(shell?.getAttribute('data-has-topbar')).toBe('true');
+  });
+
+  it('keeps 1024px widths on desktop content with compact sidebar navigation', () => {
+    isDesktopMock = true;
+    isWideShellMock = false;
+    hasCompactSidebarMock = true;
+    isMobileMock = false;
+
+    render(
+      <WorkspacePageLayout
+        isWorkspacePublicSection={true}
+        isWorkspaceAuthed={false}
+        activePublicSection="providers"
+        activeWorkspaceTab="my-requests"
+        t={(key) => key}
+        locale="de"
+        intro={<div>intro</div>}
+        explore={{
+          exploreListDensity: 'double',
+          setExploreListDensity: vi.fn(),
+          sidebarNearbyLimit: 3,
+          sidebarTopProvidersLimit: 3,
+          sidebarProofCases: [],
+          proofIndex: 0,
+        }}
+        privateMain={null}
+        publicMain={null}
+        workspaceAsideBaseProps={{
+          isLoading: false,
+          isError: false,
+          errorLabel: '',
+          title: '',
+          subtitle: '',
+          ctaLabel: '',
+          providers: [],
+          favoriteProviderIds: new Set(),
+        }}
+        pendingFavoriteProviderIds={new Set()}
+        onToggleProviderFavorite={vi.fn()}
+      />,
+    );
+
+    const shell = screen.getAllByTestId('workspace-shell').at(-1);
+    expect(shell).toBeTruthy();
+    expect(shell?.getAttribute('data-has-sidebar')).toBe('true');
     expect(shell?.getAttribute('data-has-bottom-nav')).toBe('true');
     expect(shell?.getAttribute('data-has-topbar')).toBe('true');
   });

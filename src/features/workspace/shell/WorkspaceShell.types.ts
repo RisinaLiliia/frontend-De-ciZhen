@@ -22,7 +22,8 @@ export type WorkspaceSidebarProps = WorkspaceResponsiveContextProps & {
   activeNavigationSection?: WorkspaceNavigationSection | null;
   className?: string;
   onNavigate?: () => void;
-  variant?: 'static' | 'drawer';
+  showBrand?: boolean;
+  variant?: 'static' | 'compact' | 'drawer';
 };
 
 export type WorkspaceMobileNavigationProps = WorkspaceResponsiveContextProps & {
