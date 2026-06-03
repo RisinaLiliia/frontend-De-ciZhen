@@ -249,20 +249,8 @@
     padding-top: 0;
     height: auto;
     display: grid;
-    grid-template-rows:
-      auto
-      auto
-      minmax(18px, auto)
-      minmax(calc(2 * 1.35em), auto)
-      minmax(calc(2 * 1.35em), auto)
-      minmax(18px, auto);
-    align-content: start;
-    gap: var(--space-1);
-  }
-
-  .user-header-card--inline-proof .profile-main {
-    grid-template-rows: none;
     grid-auto-rows: max-content;
+    align-content: start;
     gap: var(--space-1);
   }
 

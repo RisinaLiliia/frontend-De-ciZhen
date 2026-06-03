@@ -168,11 +168,6 @@
       font-size: 16px;
     }
 
-    .request-detail--provider .request-detail__price .proof-price {
-      font-size: 18px;
-      line-height: 1.1;
-    }
-
     .request-detail--provider .request-detail__price-prefix,
     .request-detail--provider .request-detail__price-suffix {
       font-size: var(--fs-12);

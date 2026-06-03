@@ -1,7 +1,6 @@
 /* src/styles/features/workspace/workspace-overview-guest-card.css */
 
 @layer components {
-  .workspace-overview__providers .provider-card,
   .workspace-overview__opportunities .request-card,
   .workspace-guest-request-card {
     min-height: var(--workspace-overview-card-min-height, 184px);

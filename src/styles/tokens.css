@@ -84,6 +84,7 @@
   --color-warning-text: #8a5f18;
   --color-warning-soft: #faf1e2;
   --color-warning-border: #eeddbf;
+  --color-price-text: #9b6b14;
 
   --color-info: #5b7c99;
   --color-info-soft: #eef4f8;
@@ -182,6 +183,9 @@
   --app-text-muted-line-height: 1.45;
   --app-caption-size: 12px;
   --app-caption-line-height: 1.35;
+  --app-price-size: 17px;
+  --app-price-line-height: 1.1;
+  --app-price-weight: 700;
 
   --dc-radius-sm: var(--radius-sm);
   --dc-radius-md: var(--radius-md);

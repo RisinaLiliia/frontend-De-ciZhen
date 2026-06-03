@@ -1,5 +1,13 @@
 /* src/styles/request-card-body-meta-price.css */
 @layer components {
+  .proof-price {
+    font-size: var(--app-price-size);
+    font-weight: var(--app-price-weight);
+    line-height: var(--app-price-line-height);
+    color: var(--color-price-text);
+    white-space: nowrap;
+  }
+
   .request-card__body {
     display: grid;
     grid-template-rows:
@@ -126,12 +134,6 @@
     font-size: var(--fs-13);
     padding-top: var(--space-1);
     min-width: 0;
-  }
-
-  .request-card__price .proof-price {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--color-warning-text);
   }
 
   .request-card__price-trend {

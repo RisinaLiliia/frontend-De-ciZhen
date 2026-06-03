@@ -116,13 +116,6 @@
     font-weight: 600;
   }
 
-  .proof-price {
-    font-size: var(--fs-12);
-    font-weight: 700;
-    color: var(--color-warning-text);
-    white-space: nowrap;
-  }
-
   .proof-info {
     font-size: var(--fs-12);
     color: var(--color-text-muted);

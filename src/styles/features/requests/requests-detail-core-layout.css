@@ -186,12 +186,6 @@
     color: var(--color-text-muted);
   }
 
-  .request-detail__price .proof-price {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--color-warning-text);
-  }
-
   .request-detail__summary-row {
     display: flex;
     align-items: flex-start;

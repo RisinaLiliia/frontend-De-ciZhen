@@ -119,11 +119,13 @@ function resolveCompetitionLabel(params: {
 
 function WorkspaceOpportunityCards({
   locale,
+  currentSearch,
   copy,
   requestsListProps,
   statisticsModel,
 }: {
   locale: Locale;
+  currentSearch: string;
   copy: ReturnType<typeof getOverviewCopy>;
   requestsListProps: RequestsListProps;
   statisticsModel: WorkspaceStatisticsModel;
@@ -160,14 +162,14 @@ function WorkspaceOpportunityCards({
         return {
           key: request.id,
           prefetch: index < 2,
-          href: buildWorkspaceRequestDetailHref({ currentSearch: '', requestId: request.id }),
+          href: buildWorkspaceRequestDetailHref({ currentSearch, requestId: request.id }),
           preferredDate: request.preferredDate,
           presentation,
           demandLabel: resolveDemandLabel({ copy, opportunity }),
           competitionLabel: resolveCompetitionLabel({ copy, opportunity }),
         };
       }),
-    [copy, locale, recentRequests, requestsListProps, statisticsModel.opportunityRadar],
+    [copy, currentSearch, locale, recentRequests, requestsListProps, statisticsModel.opportunityRadar],
   );
 
   if (requestsListProps.isLoading || requestsListProps.isError || recentRequests.length === 0) {
@@ -306,6 +308,7 @@ export function WorkspaceOverviewMain({
           </div>
           <WorkspaceOpportunityCards
             locale={locale}
+            currentSearch={currentSearch}
             copy={copy}
             requestsListProps={activeOffersListProps}
             statisticsModel={statisticsModel}
@@ -323,7 +326,13 @@ export function WorkspaceOverviewMain({
           </div>
         </div>
         <div className="workspace-overview__actions">
-          <CreateRequestCard href={primaryAction.href} variant="compact" onClick={onPrimaryActionClick} />
+          <CreateRequestCard
+            href={primaryAction.href}
+            title={primaryAction.label}
+            variant="compact"
+            className="workspace-overview__primary-action"
+            onClick={onPrimaryActionClick}
+          />
           <div className="workspace-overview__action-links">
             {quickActionLinks.map((action) => (
               <Link key={action.href} href={action.href} prefetch={false} className="btn-ghost is-primary">

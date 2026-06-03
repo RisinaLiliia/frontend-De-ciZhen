@@ -74,13 +74,11 @@
   }
 
   .workspace-profile-onboarding__section {
-    padding-top: 0;
-    padding: 0;
+    padding: var(--space-3-5) 0 0;
     border: 0;
     border-top: 1px solid color-mix(in oklab, var(--surface-card-border) 88%, transparent);
     border-radius: 0;
     background: transparent;
-    padding-top: var(--space-3-5);
   }
 
   .workspace-profile-onboarding__identity {
