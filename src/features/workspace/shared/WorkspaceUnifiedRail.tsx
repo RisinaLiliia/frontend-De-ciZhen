@@ -2,6 +2,10 @@
 
 import Link from 'next/link';
 
+import {
+  WorkspaceBadge,
+  type WorkspaceBadgeVariant,
+} from './WorkspaceBadge';
 import { WorkspaceRightRailPanel } from './WorkspaceRightRailPanel';
 
 export type WorkspaceUnifiedRailAction =
@@ -23,7 +27,7 @@ export type WorkspaceUnifiedRailQueueItem = {
   title: string;
   meta: string;
   priorityTone?: 'high' | 'medium' | 'low' | 'neutral';
-  priorityVariant?: 'risk' | 'chance' | 'trend' | 'success' | 'neutral';
+  priorityBadgeVariant?: WorkspaceBadgeVariant;
   priorityLabel?: string | null;
   action: WorkspaceUnifiedRailAction;
   isActive?: boolean;
@@ -174,19 +178,28 @@ function renderInlineAction(
 }
 
 function renderQueueItem(item: WorkspaceUnifiedRailQueueItem) {
-  const priorityClassName = item.priorityVariant ?? item.priorityTone ?? 'neutral';
+  const priorityBadgeVariant = item.priorityBadgeVariant ?? (
+    item.priorityTone === 'high'
+      ? 'risk'
+      : item.priorityTone === 'medium'
+        ? 'warning'
+        : item.priorityTone === 'low'
+          ? 'success'
+          : 'neutral'
+  );
+  const priorityDotClassName = item.priorityBadgeVariant ?? item.priorityTone ?? 'neutral';
   const content = (
     <>
-      <span className={`workspace-unified-rail__queue-dot is-${priorityClassName}`} aria-hidden="true" />
+      <span className={`workspace-unified-rail__queue-dot is-${priorityDotClassName}`} aria-hidden="true" />
       <span className="workspace-unified-rail__queue-copy">
         <strong>{item.title}</strong>
         <span>{item.meta}</span>
       </span>
       <span className="workspace-unified-rail__queue-side">
         {item.priorityLabel ? (
-          <span className={`workspace-unified-rail__priority is-${priorityClassName}`}>
+          <WorkspaceBadge variant={priorityBadgeVariant} className="workspace-unified-rail__priority">
             {item.priorityLabel}
-          </span>
+          </WorkspaceBadge>
         ) : null}
         <span className="workspace-unified-rail__queue-chevron" aria-hidden="true">›</span>
       </span>

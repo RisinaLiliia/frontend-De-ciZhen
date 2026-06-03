@@ -178,7 +178,7 @@ function buildOverviewMarketOpportunities(params: {
       title: `${labels.demandPrefix} ${topCity.name}`,
       meta: `${formatOverviewNumber(topCity.count, locale)} ${labels.requestsMetric}`,
       priorityTone: 'high',
-      priorityVariant: 'chance',
+      priorityBadgeVariant: 'opportunity',
       priorityLabel: 'Chance',
       action: { kind: 'link', label: labels.opportunitiesEyebrow, href: analysisHref },
     });
@@ -190,7 +190,7 @@ function buildOverviewMarketOpportunities(params: {
       title: `${labels.providerGapPrefix} ${providerGapCity.name}`,
       meta: `${formatOverviewNumber(providerGapCity.count, locale)} ${labels.requestsMetric}`,
       priorityTone: 'medium',
-      priorityVariant: 'chance',
+      priorityBadgeVariant: 'opportunity',
       priorityLabel: 'Chance',
       action: { kind: 'link', label: labels.opportunitiesEyebrow, href: analysisHref },
     });
@@ -202,7 +202,7 @@ function buildOverviewMarketOpportunities(params: {
       title: labels.demandTrend,
       meta: trendValue,
       priorityTone: trendValue.includes('↓') ? 'low' : 'medium',
-      priorityVariant: 'trend',
+      priorityBadgeVariant: 'warning',
       priorityLabel: 'Trend',
       action: { kind: 'link', label: labels.opportunitiesEyebrow, href: analysisHref },
     });

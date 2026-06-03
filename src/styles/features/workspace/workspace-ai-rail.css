@@ -435,12 +435,13 @@
     background: var(--workspace-rail-chart-tone-1);
   }
 
-  .workspace-unified-rail__queue-dot.is-chance {
+  .workspace-unified-rail__queue-dot.is-opportunity,
+  .workspace-unified-rail__queue-dot.is-info {
     background: var(--workspace-rail-chart-tone-2);
   }
 
   .workspace-unified-rail__queue-dot.is-medium,
-  .workspace-unified-rail__queue-dot.is-trend {
+  .workspace-unified-rail__queue-dot.is-warning {
     background: color-mix(in oklab, var(--color-warning) 82%, var(--color-text) 18%);
   }
 
@@ -492,7 +493,6 @@
     line-height: 1;
   }
 
-  .workspace-unified-rail__priority,
   .workspace-unified-rail__recommendation-metric {
     align-self: start;
     display: inline-flex;
@@ -505,6 +505,10 @@
     font-size: var(--workspace-rail-eyebrow-size);
     font-weight: 700;
     line-height: var(--workspace-rail-eyebrow-line-height);
+  }
+
+  .workspace-unified-rail__priority {
+    align-self: start;
   }
 
   .workspace-unified-rail__recommendations-list {
@@ -537,25 +541,6 @@
     min-width: 0;
   }
 
-  .workspace-unified-rail__priority.is-high,
-  .workspace-unified-rail__priority.is-risk {
-    background: color-mix(in oklab, var(--c-danger) 18%, white 82%);
-    color: color-mix(in oklab, var(--c-danger) 72%, var(--color-text) 28%);
-  }
-
-  .workspace-unified-rail__priority.is-chance {
-    background: color-mix(in oklab, var(--color-primary) 16%, white 84%);
-    color: color-mix(in oklab, var(--color-primary) 72%, var(--color-text) 28%);
-  }
-
-  .workspace-unified-rail__priority.is-medium,
-  .workspace-unified-rail__priority.is-trend {
-    background: color-mix(in oklab, var(--color-warning) 16%, white 84%);
-    color: color-mix(in oklab, var(--color-warning) 72%, var(--color-text) 28%);
-  }
-
-  .workspace-unified-rail__priority.is-low,
-  .workspace-unified-rail__priority.is-success,
   .workspace-unified-rail__recommendation.is-positive .workspace-unified-rail__recommendation-metric {
     background: color-mix(in oklab, var(--color-success) 16%, white 84%);
     color: color-mix(in oklab, var(--color-success) 72%, var(--color-text) 28%);
