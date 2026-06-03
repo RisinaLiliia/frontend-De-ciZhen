@@ -66,11 +66,24 @@ function formatOverviewNumber(value: number | null | undefined, locale: Locale) 
   return new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US').format(Math.max(0, value ?? 0));
 }
 
+function formatOverviewPeriodHelper(periodLabel: string, locale: Locale) {
+  const normalized = periodLabel.trim();
+  if (!normalized) {
+    return locale === 'de' ? 'im aktuellen Zeitraum' : 'in the current period';
+  }
+
+  if (locale !== 'de') {
+    return `in the last ${normalized}`;
+  }
+
+  return `in den letzten ${normalized.replace(/\bTage\b/u, 'Tagen')}`;
+}
+
 function getOverviewMarketLabels(locale: Locale) {
   if (locale !== 'de') {
     return {
-      activeRequests: 'Active requests',
-      activeProviders: 'Active providers',
+      activeRequests: 'Requests',
+      activeProviders: 'Providers',
       responseRate: 'Response rate',
       averageReply: 'Avg reply',
       marketSize: 'Market size',
@@ -84,12 +97,14 @@ function getOverviewMarketLabels(locale: Locale) {
       bestWindow: 'Best time',
       noMarketSignals: 'No market signals available yet.',
       requestsMetric: 'active requests',
+      responseRateHelper: 'avg across all requests',
+      averageReplyHelper: 'until first response',
     };
   }
 
   return {
-    activeRequests: 'Aktive Anfragen',
-    activeProviders: 'Aktive Anbieter',
+    activeRequests: 'Anfragen',
+    activeProviders: 'Anbieter',
     responseRate: 'Antwortquote',
     averageReply: 'Ø Antwortzeit',
     marketSize: 'Marktgröße',
@@ -103,6 +118,8 @@ function getOverviewMarketLabels(locale: Locale) {
     bestWindow: 'Beste Zeit',
     noMarketSignals: 'Noch keine Marktsignale verfügbar.',
     requestsMetric: 'aktive Anfragen',
+    responseRateHelper: 'Ø aller Anfragen',
+    averageReplyHelper: 'auf erste Antwort',
   };
 }
 
@@ -125,12 +142,14 @@ function buildOverviewDecisionMetrics(params: {
     statisticsModel.activitySignals.find((item) => item.key === 'offer-rate')?.value ?? '—';
   const averageReply =
     statisticsModel.activitySignals.find((item) => item.key === 'response-median')?.value ?? '—';
+  const periodHelper = formatOverviewPeriodHelper(statisticsModel.context.periodLabel, locale);
 
   return [
     {
       key: 'active-requests',
       label: labels.activeRequests,
       value: formatOverviewNumber(requestCount, locale),
+      helper: periodHelper,
       icon: 'requests' as const,
       tone: 'primary' as const,
     },
@@ -138,6 +157,7 @@ function buildOverviewDecisionMetrics(params: {
       key: 'active-providers',
       label: labels.activeProviders,
       value: typeof providerCount === 'number' ? formatOverviewNumber(providerCount, locale) : providerCount,
+      helper: periodHelper,
       icon: 'providers' as const,
       tone: 'accent' as const,
     },
@@ -145,6 +165,7 @@ function buildOverviewDecisionMetrics(params: {
       key: 'response-rate',
       label: labels.responseRate,
       value: responseRate,
+      helper: labels.responseRateHelper,
       icon: 'responseRate' as const,
       tone: 'success' as const,
     },
@@ -152,6 +173,7 @@ function buildOverviewDecisionMetrics(params: {
       key: 'average-reply',
       label: labels.averageReply,
       value: averageReply,
+      helper: labels.averageReplyHelper,
       icon: 'responseTime' as const,
       tone: 'warning' as const,
     },

@@ -57,6 +57,7 @@ export type WorkspaceUnifiedRailModel = {
       key: string;
       label: string;
       value: string | number;
+      helper?: string | null;
       icon?: WorkspaceUnifiedRailMetricIcon;
       tone?: WorkspaceUnifiedRailMetricTone;
     }>;
@@ -236,6 +237,15 @@ function renderQueueItem(item: WorkspaceUnifiedRailQueueItem) {
   );
 }
 
+function recommendationToneToBadgeVariant(
+  tone: WorkspaceUnifiedRailRecommendationItem['tone'],
+): WorkspaceBadgeVariant {
+  if (tone === 'attention') return 'warning';
+  if (tone === 'positive') return 'success';
+  if (tone === 'opportunity') return 'opportunity';
+  return 'neutral';
+}
+
 function renderSkeleton() {
   return Array.from({ length: 3 }).map((_, index) => (
     <WorkspaceRightRailPanel key={`workspace-unified-rail-skeleton-${index}`}>
@@ -302,6 +312,9 @@ export function WorkspaceUnifiedRail({
           </span>
           <dd>{item.value}</dd>
           <dt>{item.label}</dt>
+          {item.helper ? (
+            <span className="workspace-unified-rail__metric-helper">{item.helper}</span>
+          ) : null}
         </div>
       ))}
     </dl>
@@ -396,7 +409,12 @@ export function WorkspaceUnifiedRail({
                   <span>{item.description}</span>
                 </div>
                 {item.metric != null ? (
-                  <span className="workspace-unified-rail__recommendation-metric">{item.metric}</span>
+                  <WorkspaceBadge
+                    variant={recommendationToneToBadgeVariant(item.tone)}
+                    className="workspace-unified-rail__recommendation-metric"
+                  >
+                    {item.metric}
+                  </WorkspaceBadge>
                 ) : null}
               </li>
             ))}

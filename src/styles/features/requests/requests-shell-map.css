@@ -8,8 +8,8 @@
     padding: var(--home-panel-padding, 18px);
     height: auto;
     min-height: 0;
-    --workspace-rail-chart-tone-1: color-mix(in oklab, var(--c-danger) 86%, var(--color-text) 14%);
-    --workspace-rail-chart-tone-2: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
+    --workspace-rail-chart-tone-1: var(--c-danger);
+    --workspace-rail-chart-tone-2: var(--c-info);
   }
 
   .workspace-public-demand-map--embedded {
@@ -37,7 +37,7 @@
     border-radius: var(--radius-lg);
     border: 1px solid color-mix(in oklab, var(--color-border) 62%, transparent);
     background:
-      radial-gradient(120% 100% at 12% 0%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent),
+      radial-gradient(120% 100% at 12% 0%, color-mix(in oklab, var(--c-info) 10%, transparent), transparent),
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--color-surface) 95%, transparent),
@@ -99,11 +99,11 @@
     align-items: center;
     justify-content: center;
     background:
-      radial-gradient(circle at 30% 24%, color-mix(in oklab, var(--color-primary) 70%, var(--color-surface) 30%), color-mix(in oklab, var(--color-primary) 88%, var(--color-info, var(--color-primary)) 12%));
-    border: 2px solid color-mix(in oklab, var(--color-surface) 88%, var(--color-primary) 12%);
+      radial-gradient(circle at 30% 24%, color-mix(in oklab, var(--c-info) 70%, var(--color-surface) 30%), color-mix(in oklab, var(--c-info) 88%, var(--color-surface) 12%));
+    border: 2px solid color-mix(in oklab, var(--color-surface) 88%, var(--c-info) 12%);
     box-shadow:
-      0 0 0 5px color-mix(in oklab, var(--color-primary) 18%, transparent),
-      0 12px 24px color-mix(in oklab, var(--color-primary) 22%, transparent);
+      0 0 0 5px color-mix(in oklab, var(--c-info) 18%, transparent),
+      0 12px 24px color-mix(in oklab, var(--c-info) 22%, transparent);
   }
 
   .workspace-demand-cluster-marker__value {
@@ -124,7 +124,7 @@
     position: absolute;
     inset: 0;
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--color-primary) 62%, transparent);
+    background: color-mix(in oklab, var(--c-info) 62%, transparent);
     opacity: 0.42;
     animation: workspace-demand-map-pulse 2.4s ease-out infinite;
     animation-delay: var(--pulse-delay);
@@ -138,11 +138,11 @@
     top: 50%;
     transform: translate(-50%, -50%);
     border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--color-primary) 84%, var(--color-surface) 16%);
-    border: 1.8px solid color-mix(in oklab, var(--color-surface) 86%, var(--color-primary) 14%);
+    background: color-mix(in oklab, var(--c-info) 84%, var(--color-surface) 16%);
+    border: 1.8px solid color-mix(in oklab, var(--color-surface) 86%, var(--c-info) 14%);
     box-shadow:
-      0 0 0 2px color-mix(in oklab, var(--color-primary) 24%, transparent),
-      0 6px 14px color-mix(in oklab, var(--color-primary) 24%, transparent);
+      0 0 0 2px color-mix(in oklab, var(--c-info) 24%, transparent),
+      0 6px 14px color-mix(in oklab, var(--c-info) 24%, transparent);
   }
 
   .workspace-demand-map-tooltip {
@@ -195,12 +195,12 @@
     width: 8px;
     height: 8px;
     border-radius: var(--radius-pill);
-    background: var(--workspace-rail-chart-tone-2, color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%));
+    background: var(--workspace-rail-chart-tone-2, var(--c-info));
     box-shadow: 0 0 0 4px color-mix(in oklab, currentColor 6%, transparent);
   }
 
   .workspace-public-demand-map__metric--providers .workspace-public-demand-map__metric-dot {
-    background: var(--workspace-rail-chart-tone-1, color-mix(in oklab, var(--c-danger) 86%, var(--color-text) 14%));
+    background: var(--workspace-rail-chart-tone-1, var(--c-danger));
   }
 
   .workspace-public-demand-map__metric .stat-value {
