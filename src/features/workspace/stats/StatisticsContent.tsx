@@ -42,7 +42,6 @@ export function StatisticsContent({
   funnelContainerRef,
   funnelVisualRows,
   isPersonalizedMode,
-  showInsightsDebug,
 }: StatisticsContentProps) {
   const {
     copy,
@@ -63,13 +62,8 @@ export function StatisticsContent({
     cityComparison,
     opportunityRadar,
     funnelPeriodLabel,
-    insights,
-    growthCards,
     categoryFit,
     personalizedPricing,
-    rightRailRisks,
-    rightRailOpportunities,
-    rightRailNextSteps,
   } = model;
 
   const {
@@ -77,41 +71,30 @@ export function StatisticsContent({
     primaryGridRef,
     profilePanelRef,
     citiesPanelRef,
-    insightsPanelRef,
-    growthPanelRef,
     opportunityPanelRef,
-    introPanelMinHeight,
     primaryGridMinHeight,
-    insightsPanelMinHeight,
-    growthPanelMinHeight,
-    focusLabel,
     resolvedCitiesSubtitle,
     resolvedOpportunityTitle,
-    resolvedGrowthSubtitle,
-    personalizedDecisionLayerSubtitle,
-    decisionSubtitle,
-    growthMarketContext,
   } = useStatisticsContentState({
     model,
-    locale,
     t,
     selectedOpportunity,
-    isPersonalizedMode,
-    funnelVisualRows,
   });
 
   return (
     <section className="workspace-statistics workspace-statistics__column">
       <StatisticsIntroSection
-        t={t}
-        locale={locale}
         model={model}
         statisticsPanelRef={statisticsPanelRef}
-        introPanelMinHeight={introPanelMinHeight}
         decisionPlan={decisionPlan}
         selectedOpportunity={selectedOpportunity}
         applySelectedOpportunityFocus={applySelectedOpportunityFocus}
-        subtitle={isPersonalizedMode ? personalizedDecisionLayerSubtitle : decisionSubtitle}
+        profilePanelRef={profilePanelRef}
+        funnelContainerRef={funnelContainerRef}
+        funnelVisualRows={funnelVisualRows}
+        isPersonalizedMode={isPersonalizedMode}
+        mode={mode}
+        funnelPeriodLabel={funnelPeriodLabel}
       />
 
       {isLoading ? (
@@ -131,7 +114,6 @@ export function StatisticsContent({
           funnelContainerRef={funnelContainerRef}
           funnelVisualRows={funnelVisualRows}
           isPersonalizedMode={isPersonalizedMode}
-          showInsightsDebug={showInsightsDebug}
           activityTitle={activityTitle}
           activitySubtitle={activitySubtitle}
           activityPoints={activityPoints}
@@ -146,21 +128,9 @@ export function StatisticsContent({
           cityComparison={cityComparison}
           opportunityRadar={opportunityRadar}
           funnelPeriodLabel={funnelPeriodLabel}
-          insights={insights}
-          growthCards={growthCards}
           personalizedPricing={personalizedPricing}
-          rightRailRisks={rightRailRisks}
-          rightRailOpportunities={rightRailOpportunities}
-          rightRailNextSteps={rightRailNextSteps}
           resolvedCitiesSubtitle={resolvedCitiesSubtitle}
           resolvedOpportunityTitle={resolvedOpportunityTitle}
-          resolvedGrowthSubtitle={resolvedGrowthSubtitle}
-          focusLabel={focusLabel}
-          growthMarketContext={growthMarketContext}
-          insightsPanelRef={insightsPanelRef}
-          insightsPanelMinHeight={insightsPanelMinHeight}
-          growthPanelRef={growthPanelRef}
-          growthPanelMinHeight={growthPanelMinHeight}
           profilePanelRef={profilePanelRef}
           primaryGridRef={primaryGridRef}
           primaryGridMinHeight={primaryGridMinHeight}

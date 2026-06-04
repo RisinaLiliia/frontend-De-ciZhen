@@ -9,7 +9,6 @@ import {
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 import type { WorkspaceDecisionPlan } from '../statisticsDecisionEngine.utils';
 import { StatisticsDecisionAiCard } from '../components/StatisticsDecisionAiCard';
-import { StatisticsMetricSignalCard } from '../components/StatisticsMetricSignalCard';
 
 export function StatisticsDecisionLayer({
   copy,
@@ -18,8 +17,6 @@ export function StatisticsDecisionLayer({
   selectedOpportunity,
   priceIntelligence,
   onActionClick,
-  activitySignals,
-  subtitle,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
   decisionInsight: WorkspaceStatisticsModel['decisionInsight'];
@@ -27,8 +24,6 @@ export function StatisticsDecisionLayer({
   selectedOpportunity: WorkspaceStatisticsModel['opportunityRadar'][number] | null;
   priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
   onActionClick?: () => void;
-  activitySignals: WorkspaceStatisticsModel['activitySignals'];
-  subtitle?: string;
 }) {
   const [isStrategyOpen, setIsStrategyOpen] = React.useState(false);
   const [isAnalyzingStrategy, setIsAnalyzingStrategy] = React.useState(false);
@@ -65,33 +60,8 @@ export function StatisticsDecisionLayer({
     return () => window.clearTimeout(timeoutId);
   }, [isAnalyzingStrategy, isStrategyOpen]);
 
-  if (activitySignals.length === 0) return null;
-
   return (
     <section className="workspace-statistics__decision-layer">
-      <div className="section-heading workspace-statistics__tile-header workspace-statistics__activity-signals-head">
-        <p className="section-title">{copy.activitySignalsTitle}</p>
-        <p className="section-subtitle">{subtitle ?? copy.activitySignalsSubtitle}</p>
-      </div>
-      <ul className="workspace-statistics__activity-signals" aria-label={copy.activitySignalsTitle}>
-        {activitySignals.map((item) => (
-          <StatisticsMetricSignalCard
-            key={item.key}
-            as="li"
-            label={item.label}
-            value={item.value}
-            hint={item.hint}
-            tone={item.tone}
-            comparison={item.marketValue && item.userValue ? {
-              userLabel: copy.comparisonUserLabel,
-              userValue: item.userValue,
-              marketLabel: copy.comparisonMarketLabel,
-              marketValue: item.marketValue,
-              gapLabel: copy.comparisonGapLabel,
-            } : null}
-          />
-        ))}
-      </ul>
       <StatisticsDecisionAiCard
         className="workspace-statistics__decision-ai"
         copy={copy}
@@ -100,6 +70,7 @@ export function StatisticsDecisionLayer({
         onActionClick={openStrategy}
         showDetails={false}
       />
+
       <WorkspaceDecisionRecommendationModal
         assistantAvatarLabel={copy.insightsAssistantAvatarLabel}
         assistantName={copy.insightsAssistantName}

@@ -106,19 +106,7 @@
   }
 
   .workspace-statistics__mode-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: var(--workspace-statistics-chip-height-lg);
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--color-primary) 12%, var(--surface-soft-bg) 88%);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: var(--workspace-statistics-chip-font-weight);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: color-mix(in oklab, var(--color-primary) 78%, var(--color-text) 22%);
+    flex: 0 0 auto;
   }
 
   .workspace-statistics__loading,
@@ -264,128 +252,6 @@
     padding-top: var(--space-1);
   }
 
-  .workspace-statistics__activity-signals-head {
-    display: grid;
-    gap: var(--space-1);
-  }
-
-  .workspace-statistics__activity-signals {
-    --workspace-statistics-decision-divider: color-mix(in oklab, var(--color-primary) 52%, transparent);
-    --workspace-statistics-decision-gap-x: var(--space-3);
-    --workspace-statistics-decision-gap-y: var(--space-5);
-    --workspace-statistics-decision-divider-inset: var(--space-3);
-    position: relative;
-    isolation: isolate;
-    display: grid;
-    column-gap: var(--workspace-statistics-decision-gap-x);
-    row-gap: var(--workspace-statistics-decision-gap-y);
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin: 0;
-    padding:
-      var(--space-2)
-      var(--workspace-statistics-container-pad)
-      var(--workspace-statistics-container-pad);
-    list-style: none;
-  }
-
-  .workspace-statistics__activity-signal {
-    position: relative;
-    z-index: 1;
-    border: 0;
-    gap: var(--space-1);
-    min-height: var(--workspace-statistics-activity-card-min-height);
-    padding: var(--workspace-statistics-container-pad);
-    transition:
-      border-color var(--transition-fast),
-      box-shadow var(--transition-fast),
-      transform var(--transition-fast),
-      background var(--transition-fast);
-  }
-
-  .workspace-statistics__activity-signal:hover {
-    border-color: transparent;
-    box-shadow: var(--surface-card-shadow-hover);
-    transform: translateY(-1px);
-  }
-
-  .workspace-statistics__activity-signal:focus-visible {
-    outline: none;
-    border-color: transparent;
-    box-shadow:
-      var(--surface-card-shadow),
-      0 0 0 var(--workspace-statistics-focus-ring-size) color-mix(in oklab, var(--color-primary) 18%, transparent);
-  }
-
-  .workspace-statistics__activity-signal-label {
-    font-size: var(--fs-small);
-    color: var(--color-text-muted);
-  }
-
-  .workspace-statistics__activity-signal-value {
-    font-size: var(--fs-h3);
-    line-height: 1.15;
-    color: var(--color-text);
-  }
-
-  .workspace-statistics__activity-signal-compare {
-    display: grid;
-    gap: var(--space-1);
-  }
-
-  .workspace-statistics__activity-signal-compare-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-
-  .workspace-statistics__activity-signal-compare-label {
-    font-size: var(--fs-small);
-    color: var(--color-text-muted);
-  }
-
-  .workspace-statistics__activity-signal-compare-value {
-    font-size: var(--fs-h3);
-    line-height: 1.1;
-  }
-
-  .workspace-statistics__activity-signal-compare-value.is-user {
-    color: color-mix(in oklab, var(--color-primary) 84%, var(--color-text) 16%);
-  }
-
-  .workspace-statistics__activity-signal-compare-value.is-market {
-    color: color-mix(in oklab, var(--color-text) 72%, var(--color-text-muted) 28%);
-  }
-
-  .workspace-statistics__activity-signal-hint {
-    font-size: var(--fs-small);
-    color: var(--color-text-muted);
-    line-height: var(--lh-body);
-  }
-
-  .workspace-statistics__activity-signal-hint strong {
-    color: var(--color-text);
-  }
-
-  .workspace-statistics__activity-signal.is-positive {
-    border-color: var(--surface-decision-active-border);
-    background: var(--surface-decision-active-bg);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-  }
-
-  .workspace-statistics__activity-signal.is-warning {
-    background: color-mix(in oklab, var(--color-warning) 8%, var(--surface-soft-bg) 92%);
-  }
-
-  .workspace-statistics__activity-signal.is-neutral {
-    background: color-mix(in oklab, var(--surface-soft-bg) 86%, var(--color-surface) 14%);
-  }
-
-  .workspace-statistics__activity-signal.is-positive .workspace-statistics__activity-signal-value {
-    color: var(--surface-decision-active-value);
-  }
-
   .workspace-statistics__decision-ai {
     margin-top: var(--space-1);
   }
@@ -420,4 +286,108 @@
     color: var(--color-text-muted);
   }
 
+  .workspace-statistics__hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(420px, 460px);
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .workspace-statistics__hero-main,
+  .workspace-statistics__hero-stack {
+    display: grid;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+
+  .workspace-statistics__profile-panel {
+    display: grid;
+    gap: var(--workspace-statistics-section-gap);
+    align-content: start;
+  }
+
+  .workspace-statistics-market-state,
+  .workspace-statistics-opportunities {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .workspace-statistics-market-state__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  .workspace-statistics-market-state__head .section-title,
+  .workspace-statistics-market-state__head .section-subtitle {
+    margin: 0;
+  }
+
+  .workspace-statistics-market-state__grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .workspace-statistics-opportunities__list {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .workspace-statistics-market-state__metric {
+    display: grid;
+    align-content: start;
+    gap: var(--space-1-5);
+    min-width: 0;
+    min-height: 104px;
+    padding: var(--space-3);
+  }
+
+  .workspace-statistics-opportunities__item {
+    display: grid;
+    align-content: start;
+    gap: var(--space-1-5);
+    min-width: 0;
+    padding: var(--space-3);
+  }
+
+  .workspace-statistics-market-state__metric-label,
+  .workspace-statistics-market-state__metric-delta {
+    color: var(--color-text-muted);
+    font-size: var(--fs-small);
+    line-height: var(--lh-body);
+  }
+
+  .workspace-statistics-market-state__metric-value {
+    color: var(--color-text);
+    font-size: var(--app-title-lg-size);
+    font-weight: 700;
+    line-height: var(--app-title-lg-line-height);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .workspace-statistics-opportunities__item > strong {
+    color: var(--color-text);
+    font-size: var(--app-title-md-size);
+    line-height: var(--app-title-md-line-height);
+  }
+
+  .workspace-statistics-opportunities__item > span:not(.ui-badge) {
+    color: var(--color-text-muted);
+    font-size: var(--app-text-muted-size);
+    line-height: var(--app-text-muted-line-height);
+  }
+
+  .workspace-statistics-opportunities__badge {
+    justify-self: start;
+  }
 }

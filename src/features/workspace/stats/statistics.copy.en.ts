@@ -44,8 +44,10 @@ export const COPY_EN: WorkspaceStatisticsCopy = {
   kpiTitle: 'KPI overview',
   activityTitle: 'Platform activity',
   activitySubtitle: 'New requests and offers over time',
-  activitySignalsTitle: 'Decision layer',
-  activitySignalsSubtitle: 'Operational metrics for market and growth decisions',
+  marketHealthTitle: 'Market Health',
+  marketHealthSubtitle: 'Operational metrics for market and growth decisions',
+  marketOpportunitiesTitle: 'Opportunities',
+  marketOpportunitiesSubtitle: 'Risks, chances, and concrete action signals.',
   decisionKiFallbackInsight:
     'Operational metrics reflect current platform health. Faster responses and clearer positioning can improve close rates.',
   activitySignalsUpdatedPrefix: 'Updated',
@@ -421,4 +423,3 @@ export const COPY_EN: WorkspaceStatisticsCopy = {
   conversionLabel: 'Conversion',
   growthCta: 'Discover more',
 };
-

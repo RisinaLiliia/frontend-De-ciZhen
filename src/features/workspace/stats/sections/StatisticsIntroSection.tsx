@@ -1,42 +1,47 @@
 'use client';
 
 import * as React from 'react';
-import type { I18nKey } from '@/lib/i18n/keys';
-import type { Locale } from '@/lib/i18n/t';
+
+import { workspaceRequestsPanelShell } from '@/features/workspace/shared';
+import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 import type { WorkspaceDecisionPlan } from '../statisticsDecisionEngine.utils';
+import { mapActivitySignalsToOpportunities } from '../mappers/statisticsOpportunities.mapper';
 import { StatisticsDecisionLayer } from '../StatisticsSections';
-import { StatisticsContextPanel } from '../components/StatisticsContextPanel';
-import { workspaceRequestsPanelShell } from '@/features/workspace/shared';
+import { StatisticsMarketStateStrip } from './StatisticsMarketStateStrip';
+import { StatisticsOpportunitiesSection } from './StatisticsOpportunitiesSection';
+import { StatisticsProfileSection } from './StatisticsProfileSection';
 
 type StatisticsIntroSectionProps = {
-  t: (key: I18nKey) => string;
-  locale: Locale;
   model: WorkspaceStatisticsModel;
   statisticsPanelRef: React.RefObject<HTMLElement | null>;
-  introPanelMinHeight?: number | null;
   decisionPlan: WorkspaceDecisionPlan;
   selectedOpportunity: WorkspaceStatisticsModel['opportunityRadar'][number] | null;
   applySelectedOpportunityFocus: () => void;
-  subtitle: string;
+  profilePanelRef: React.RefObject<HTMLElement | null>;
+  funnelContainerRef: React.RefObject<HTMLOListElement | null>;
+  funnelVisualRows: ReturnType<typeof import('../statisticsFunnel.utils').buildFunnelVisualRows>;
+  isPersonalizedMode: boolean;
+  mode: WorkspaceStatisticsModel['mode'];
+  funnelPeriodLabel: WorkspaceStatisticsModel['funnelPeriodLabel'];
 };
 
 export function StatisticsIntroSection({
-  t,
-  locale,
   model,
   statisticsPanelRef,
-  introPanelMinHeight,
   decisionPlan,
   selectedOpportunity,
   applySelectedOpportunityFocus,
-  subtitle,
+  profilePanelRef,
+  funnelContainerRef,
+  funnelVisualRows,
+  isPersonalizedMode,
+  mode,
+  funnelPeriodLabel,
 }: StatisticsIntroSectionProps) {
   const {
     copy,
-    filters,
     context,
-    activityTrend,
     modeLabel,
     hasBackgroundError,
     isLoading,
@@ -45,56 +50,119 @@ export function StatisticsIntroSection({
     activitySignals,
   } = model;
 
+  const marketStateMetrics = [
+    {
+      key: 'offer-rate',
+      label: copy.activityOfferRateLabel,
+      value: activitySignals.find((item) => item.key === 'offer-rate')?.value ?? '—',
+      delta: null,
+      tone: 'neutral' as const,
+    },
+    {
+      key: 'response-median',
+      label: copy.activityResponseMedianLabel,
+      value: activitySignals.find((item) => item.key === 'response-median')?.value ?? '—',
+      delta: null,
+      tone: 'warning' as const,
+    },
+    {
+      key: 'unanswered',
+      label: copy.activityUnansweredLabel,
+      value: activitySignals.find((item) => item.key === 'unanswered')?.value ?? '—',
+      delta: null,
+      tone: 'warning' as const,
+    },
+    {
+      key: 'cancellation',
+      label: copy.activityCancellationLabel,
+      value: activitySignals.find((item) => item.key === 'cancellation')?.value ?? '—',
+      delta: null,
+      tone: 'neutral' as const,
+    },
+    {
+      key: 'completed',
+      label: copy.activityCompletedLabel,
+      value: activitySignals.find((item) => item.key === 'completed')?.value ?? '—',
+      delta: null,
+      tone: 'positive' as const,
+    },
+    {
+      key: 'revenue',
+      label: copy.activityRevenueLabel,
+      value: activitySignals.find((item) => item.key === 'revenue')?.value ?? '—',
+      delta: null,
+      tone: 'positive' as const,
+    },
+  ];
+
+  const opportunityItems = mapActivitySignalsToOpportunities(activitySignals);
+
   return (
     <section
       ref={statisticsPanelRef}
       className={workspaceRequestsPanelShell('workspace-statistics__intro')}
-      style={introPanelMinHeight ? { minHeight: `${introPanelMinHeight}px` } : undefined}
     >
-      <StatisticsContextPanel
-        copy={copy}
-        locale={locale}
-        filters={filters}
-        cityOptions={model.cityOptions}
-        categoryOptions={model.categoryOptions}
-        context={context}
-        activityTrend={activityTrend}
-        onRangeChange={model.setRange}
-        onCityChange={model.setCityId}
-        onCategoryChange={model.setCategoryKey}
-        onReset={model.resetFilters}
-        onExport={model.onExport}
-        surface="embedded"
-        showControls={false}
-      />
+      <div className="workspace-statistics__hero-stack">
+        <StatisticsMarketStateStrip
+          title={copy.marketHealthTitle}
+          subtitle={copy.marketHealthSubtitle}
+          metrics={marketStateMetrics}
+        />
 
-      <div className="workspace-statistics__decision-cluster">
-        <div className="panel-header workspace-statistics__mode-row">
-          <div className="workspace-statistics__mode-meta">
-            <span className="workspace-statistics__mode-badge">{modeLabel}</span>
-            <span className="section-subtitle">{copy.kpiTitle} · {context.scopeLabel}</span>
+        <div className="workspace-statistics__hero-grid">
+          {!isLoading && !isError && funnelVisualRows.length ? (
+            <StatisticsProfileSection
+              profilePanelRef={profilePanelRef}
+              copy={copy}
+              mode={mode}
+              funnelPeriodLabel={funnelPeriodLabel}
+              hasFunnelData={model.hasFunnelData}
+              funnelVisualRows={funnelVisualRows}
+              isPersonalizedMode={isPersonalizedMode}
+              funnelContainerRef={funnelContainerRef}
+            />
+          ) : null}
+
+          <div className="workspace-statistics__decision-cluster">
+            <div className="panel-header workspace-statistics__mode-row">
+              <div className="workspace-statistics__mode-meta">
+                <WorkspaceBadge
+                  variant="info"
+                  size="sm"
+                  className="workspace-statistics__mode-badge"
+                >
+                  {modeLabel}
+                </WorkspaceBadge>
+                <span className="section-subtitle">{copy.kpiTitle} · {context.scopeLabel}</span>
+              </div>
+            </div>
+
+            {hasBackgroundError && !isLoading && !isError ? (
+              <div className="workspace-statistics__background-error" role="status" aria-live="polite">
+                <strong>{copy.backgroundErrorTitle}</strong>
+                <p>{copy.backgroundErrorBody}</p>
+              </div>
+            ) : null}
+
+            <StatisticsOpportunitiesSection
+              title={copy.marketOpportunitiesTitle}
+              subtitle={copy.marketOpportunitiesSubtitle}
+              items={opportunityItems}
+              copy={copy}
+            />
+
+            {!isLoading && !isError ? (
+              <StatisticsDecisionLayer
+                copy={copy}
+                decisionInsight={model.decisionInsight}
+                decisionPlan={decisionPlan}
+                selectedOpportunity={selectedOpportunity}
+                priceIntelligence={priceIntelligence}
+                onActionClick={applySelectedOpportunityFocus}
+              />
+            ) : null}
           </div>
         </div>
-
-        {hasBackgroundError && !isLoading && !isError ? (
-          <div className="workspace-statistics__background-error" role="status" aria-live="polite">
-            <strong>{copy.backgroundErrorTitle}</strong>
-            <p>{copy.backgroundErrorBody}</p>
-          </div>
-        ) : null}
-
-        {!isLoading && !isError ? (
-          <StatisticsDecisionLayer
-            copy={copy}
-            decisionInsight={model.decisionInsight}
-            decisionPlan={decisionPlan}
-            selectedOpportunity={selectedOpportunity}
-            priceIntelligence={priceIntelligence}
-            onActionClick={applySelectedOpportunityFocus}
-            activitySignals={activitySignals}
-            subtitle={subtitle}
-          />
-        ) : null}
       </div>
     </section>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { buildEmptyFunnelItems, buildFunnelVisualRows } from '../statisticsFunnel.utils';
+import { buildFunnelVisualRows } from '../statisticsFunnel.utils';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 
 type UseStatisticsFunnelLayoutParams = {

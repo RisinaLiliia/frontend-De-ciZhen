@@ -79,12 +79,6 @@
     --workspace-insights-balanced-evidence-lines: 1;
   }
 
-  .workspace-statistics__profile-panel {
-    display: grid;
-    gap: var(--workspace-statistics-section-gap);
-    align-content: start;
-  }
-
   .workspace-statistics-insights {
     display: grid;
     gap: var(--workspace-insights-list-gap);
@@ -361,21 +355,18 @@
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: var(--workspace-insights-balanced-title-lines);
   }
 
   .workspace-insights-panel--rail-balanced .workspace-statistics-insights__text {
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: var(--workspace-insights-balanced-text-lines);
   }
 
   .workspace-insights-panel--rail-balanced .workspace-statistics-insights__evidence {
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: var(--workspace-insights-balanced-evidence-lines);
   }
 
   @media (min-width: 1120px) {

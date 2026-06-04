@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import type { I18nKey } from '@/lib/i18n/keys';
-import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 import { StatisticsDemandPanelSection } from '../StatisticsSections';
 import { ActivityTrendChart } from '../ActivityTrendChart';
@@ -10,7 +9,6 @@ import { workspaceStatsChartPanelShell } from '@/features/workspace/shared';
 
 type StatisticsPerformanceSectionProps = {
   t: (key: I18nKey) => string;
-  locale: Locale;
   model: WorkspaceStatisticsModel;
   activityTitle: string;
   activitySubtitle: string;
@@ -24,7 +22,6 @@ type StatisticsPerformanceSectionProps = {
 
 export function StatisticsPerformanceSection({
   t,
-  locale,
   model,
   activityTitle,
   activitySubtitle,

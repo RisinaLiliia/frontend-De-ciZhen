@@ -3,38 +3,28 @@
 import * as React from 'react';
 import { useSyncedPanelMinHeight } from '@/hooks/useSyncedPanelMinHeight';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
-import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 import { resolveGrowthMarketContext } from '../statisticsGrowthContext.model';
 
 type UseStatisticsContentStateArgs = {
   model: WorkspaceStatisticsModel;
-  locale: Locale;
   t: (key: I18nKey) => string;
   selectedOpportunity: WorkspaceStatisticsModel['opportunityRadar'][number] | null;
-  isPersonalizedMode: boolean;
-  funnelVisualRows: ReturnType<typeof import('../statisticsFunnel.utils').buildFunnelVisualRows>;
 };
 
 export function useStatisticsContentState({
   model,
-  locale,
   t,
   selectedOpportunity,
-  isPersonalizedMode,
-  funnelVisualRows,
 }: UseStatisticsContentStateArgs) {
   const {
     copy,
     filters,
     context,
     sectionMeta,
-    activitySignals,
     cityRows,
     cityListRows,
     cityListPage,
-    decisionLayerSubtitle,
-    mode,
     funnelPeriodLabel,
     insights,
     growthCards,
@@ -68,18 +58,6 @@ export function useStatisticsContentState({
     ? `${copy.growthSubtitle} · ${focusLabel}`
     : copy.growthSubtitle;
 
-  const decisionSubtitle = focusLabel
-    ? `${copy.activitySignalsSubtitle} · ${focusLabel}`
-    : copy.activitySignalsSubtitle;
-
-  const personalizedDecisionSubtitle = focusLabel
-    ? `${copy.userDecisionSubtitle} · ${focusLabel}`
-    : copy.userDecisionSubtitle;
-
-  const personalizedDecisionLayerSubtitle = mode === 'personalized'
-    ? (decisionLayerSubtitle ?? sectionMeta.decisionSubtitle ?? personalizedDecisionSubtitle)
-    : personalizedDecisionSubtitle;
-
   const citiesSubtitle = context.mode === 'focus'
     ? `${copy.citiesSubtitle} · ${context.periodLabel}`
     : copy.citiesSubtitle;
@@ -87,12 +65,6 @@ export function useStatisticsContentState({
   const resolvedCitiesSubtitle = sectionMeta.citiesSubtitle ?? citiesSubtitle;
   const resolvedOpportunityTitle = sectionMeta.opportunityTitle ?? opportunityTitle;
   const resolvedGrowthSubtitle = sectionMeta.growthSubtitle ?? growthSubtitle;
-
-  const introPanelMinHeight = useSyncedPanelMinHeight({
-    sourceRef: statisticsPanelRef,
-    mode: 'sourceHeight',
-    watchKey: `${activitySignals.length}-${model.isError ? 1 : 0}-${model.isLoading ? 1 : 0}`,
-  });
 
   const growthPanelMinHeight = useSyncedPanelMinHeight({
     sourceRef: citiesPanelRef,
@@ -148,7 +120,6 @@ export function useStatisticsContentState({
     insightsPanelRef,
     growthPanelRef,
     opportunityPanelRef,
-    introPanelMinHeight,
     primaryGridMinHeight,
     insightsPanelMinHeight,
     growthPanelMinHeight,
@@ -156,8 +127,6 @@ export function useStatisticsContentState({
     resolvedCitiesSubtitle,
     resolvedOpportunityTitle,
     resolvedGrowthSubtitle,
-    personalizedDecisionLayerSubtitle,
-    decisionSubtitle,
     growthMarketContext,
   };
 }

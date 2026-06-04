@@ -44,8 +44,10 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   kpiTitle: 'KPI Übersicht',
   activityTitle: 'Aktivität der Plattform',
   activitySubtitle: 'Neue Anfragen und Angebote im Zeitverlauf',
-  activitySignalsTitle: 'Decision Layer',
-  activitySignalsSubtitle: 'Operative Kennzahlen für Markt- und Wachstumsentscheidungen',
+  marketHealthTitle: 'Market Health',
+  marketHealthSubtitle: 'Operative Kennzahlen für Markt- und Wachstumsentscheidungen',
+  marketOpportunitiesTitle: 'Opportunities',
+  marketOpportunitiesSubtitle: 'Risiken, Chancen und konkrete Handlungssignale.',
   decisionKiFallbackInsight:
     'Operative Kennzahlen zeigen den aktuellen Plattformzustand. Nutze schnelle Reaktionen und klare Positionierung, um Abschlusschancen zu verbessern.',
   activitySignalsUpdatedPrefix: 'Aktualisiert',
@@ -421,4 +423,3 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   conversionLabel: 'Conversion',
   growthCta: 'Mehr entdecken',
 };
-

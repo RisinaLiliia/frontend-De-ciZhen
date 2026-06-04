@@ -47,8 +47,10 @@ export type WorkspaceStatisticsCopy = {
   kpiTitle: string;
   activityTitle: string;
   activitySubtitle: string;
-  activitySignalsTitle: string;
-  activitySignalsSubtitle: string;
+  marketHealthTitle: string;
+  marketHealthSubtitle: string;
+  marketOpportunitiesTitle: string;
+  marketOpportunitiesSubtitle: string;
   decisionKiFallbackInsight: string;
   activitySignalsUpdatedPrefix: string;
   activitySignalsBasedOnPrefix: string;

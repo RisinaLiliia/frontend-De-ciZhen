@@ -55,8 +55,8 @@ export function StatisticsView({
   }, [context.categoryLabel, context.cityLabel, filters.categoryKey, filters.cityId]);
 
   const decisionSubtitle = focusLabel
-    ? `${copy.activitySignalsSubtitle} · ${focusLabel}`
-    : copy.activitySignalsSubtitle;
+    ? `${copy.marketHealthSubtitle} · ${focusLabel}`
+    : copy.marketHealthSubtitle;
 
   const decisionPlan = React.useMemo(() => {
     const withActionLabel = (plan: StatisticsDecisionPlan) => (

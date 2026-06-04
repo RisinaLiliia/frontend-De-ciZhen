@@ -1,6 +1,5 @@
 'use client';
 
-import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 import { StatisticsFunnelStack } from '../StatisticsFunnelStack';
 import { workspaceStatsChartPanelShell } from '@/features/workspace/shared';
@@ -41,13 +40,19 @@ export function StatisticsProfileSection({
         <p className="section-subtitle">{mode === 'personalized' ? copy.profileSubtitlePersonalized : copy.profileSubtitlePlatform}</p>
       </header>
       {!hasFunnelData ? null : (
-        <StatisticsFunnelStack
-          rows={funnelVisualRows}
-          copy={copy}
-          isPersonalizedMode={isPersonalizedMode}
-          funnelContainerRef={funnelContainerRef}
-        />
-      )}
+  <div
+    className={`workspace-statistics-funnel${
+      isPersonalizedMode ? ' workspace-statistics-funnel--personalized' : ''
+    }`}
+  >
+    <StatisticsFunnelStack
+      rows={funnelVisualRows}
+      copy={copy}
+      isPersonalizedMode={isPersonalizedMode}
+      funnelContainerRef={funnelContainerRef}
+    />
+  </div>
+)}
     </section>
   );
 }

@@ -182,27 +182,27 @@
   }
 
   .workspace-statistics-funnel__layer.is-tone-1 {
-    --funnel-tone: color-mix(in oklab, var(--color-warning) 78%, var(--color-primary) 22%);
+    --funnel-tone: var(--color-primary);
   }
 
   .workspace-statistics-funnel__layer.is-tone-2 {
-    --funnel-tone: color-mix(in oklab, var(--color-warning) 58%, var(--color-primary) 42%);
+    --funnel-tone: color-mix(in oklab, var(--color-primary) 88%, var(--c-info, var(--color-primary)) 12%);
   }
 
   .workspace-statistics-funnel__layer.is-tone-3 {
-    --funnel-tone: color-mix(in oklab, var(--color-warning) 40%, var(--color-primary) 60%);
+    --funnel-tone: var(--c-info, var(--color-primary));
   }
 
   .workspace-statistics-funnel__layer.is-tone-4 {
-    --funnel-tone: color-mix(in oklab, var(--color-warning) 22%, var(--color-primary) 78%);
+    --funnel-tone: color-mix(in oklab, var(--c-info, var(--color-primary)) 70%, var(--c-success, var(--color-primary)) 30%);
   }
 
   .workspace-statistics-funnel__layer.is-tone-5 {
-    --funnel-tone: color-mix(in oklab, var(--color-warning) 16%, var(--color-primary) 84%);
+    --funnel-tone: var(--c-success, var(--color-primary));
   }
 
   .workspace-statistics-funnel__layer.is-tone-6 {
-    --funnel-tone: color-mix(in oklab, var(--color-warning) 10%, var(--color-primary) 90%);
+    --funnel-tone: color-mix(in oklab, var(--color-border-soft) 72%, var(--color-surface) 28%);
   }
 
   .workspace-statistics-funnel__layer-label {
@@ -489,5 +489,55 @@
 
   .workspace-statistics-funnel__conversion--empty strong {
     color: color-mix(in oklab, var(--color-text-muted) 82%, var(--color-text) 18%);
+  }
+
+  .workspace-statistics__hero-grid .workspace-statistics__profile-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: var(--workspace-statistics-context-gap);
+    align-content: start;
+    min-height: 520px;
+  }
+
+  .workspace-statistics__hero-grid .workspace-statistics-funnel__stack {
+    display: grid;
+    gap: var(--workspace-statistics-context-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-items: stretch;
+  }
+
+  .workspace-statistics__hero-grid .workspace-statistics-funnel__layer {
+    position: relative;
+    width: 100%;
+    min-height: var(--workspace-funnel-layer-min-height);
+    display: grid;
+    align-items: start;
+    gap: 0;
+  }
+
+  .workspace-statistics__hero-grid .workspace-statistics-funnel__layer-content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: block;
+    min-height: var(--workspace-funnel-layer-min-height);
+    padding: var(--space-1-5) var(--space-3);
+    pointer-events: none;
+  }
+
+  .workspace-statistics__hero-grid .workspace-statistics-funnel__layer-value {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    white-space: nowrap;
+  }
+
+  .workspace-statistics__hero-grid .workspace-statistics-funnel__layer-hint,
+  .workspace-statistics__hero-grid .workspace-statistics-funnel__layer-hint-compare {
+    position: absolute;
   }
 }
