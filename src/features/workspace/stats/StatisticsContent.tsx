@@ -62,11 +62,9 @@ export function StatisticsContent({
 
   const {
     statisticsPanelRef,
-    primaryGridRef,
     profilePanelRef,
     citiesPanelRef,
     opportunityPanelRef,
-    primaryGridMinHeight,
     resolvedCitiesSubtitle,
     resolvedOpportunityTitle,
   } = useStatisticsContentState({
@@ -123,8 +121,6 @@ export function StatisticsContent({
           resolvedCitiesSubtitle={resolvedCitiesSubtitle}
           resolvedOpportunityTitle={resolvedOpportunityTitle}
           profilePanelRef={profilePanelRef}
-          primaryGridRef={primaryGridRef}
-          primaryGridMinHeight={primaryGridMinHeight}
           citiesPanelRef={citiesPanelRef}
           opportunityPanelRef={opportunityPanelRef}
           priceIntelligence={model.priceIntelligence}

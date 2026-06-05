@@ -14,8 +14,6 @@ type StatisticsPerformanceSectionProps = {
   activityMeta: { peak: string; bestWindow: string; updatedAt: string };
   activitySummary: string | null;
   locale: Locale;
-  primaryGridRef: React.RefObject<HTMLDivElement | null>;
-  primaryGridMinHeight?: number | null;
 };
 
 export function StatisticsPerformanceSection({
@@ -26,15 +24,9 @@ export function StatisticsPerformanceSection({
   activityMeta,
   activitySummary,
   locale,
-  primaryGridRef,
-  primaryGridMinHeight,
 }: StatisticsPerformanceSectionProps) {
   return (
-    <div
-      ref={primaryGridRef}
-      className="workspace-statistics__activity-section"
-      style={primaryGridMinHeight ? { minHeight: `${primaryGridMinHeight}px` } : undefined}
-    >
+    <div className="workspace-statistics__activity-section">
       <section className={workspaceStatsChartPanelShell()}>
         <header className="section-heading workspace-statistics__tile-header">
           <p className="section-title">{activityTitle}</p>

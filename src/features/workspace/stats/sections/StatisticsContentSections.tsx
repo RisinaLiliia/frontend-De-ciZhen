@@ -41,8 +41,6 @@ type StatisticsContentSectionsProps = {
   resolvedCitiesSubtitle: string;
   resolvedOpportunityTitle: string;
   profilePanelRef: React.RefObject<HTMLElement | null>;
-  primaryGridRef: React.RefObject<HTMLDivElement | null>;
-  primaryGridMinHeight?: number | null;
   citiesPanelRef: React.RefObject<HTMLElement | null>;
   opportunityPanelRef: React.RefObject<HTMLElement | null>;
   priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
@@ -71,8 +69,6 @@ export function StatisticsContentSections({
   personalizedPricing,
   resolvedCitiesSubtitle,
   resolvedOpportunityTitle,
-  primaryGridRef,
-  primaryGridMinHeight,
   citiesPanelRef,
   opportunityPanelRef,
   priceIntelligence,
@@ -93,8 +89,6 @@ export function StatisticsContentSections({
         activityMeta={activityMeta}
         activitySummary={activitySummary}
         locale={locale}
-        primaryGridRef={primaryGridRef}
-        primaryGridMinHeight={primaryGridMinHeight}
       />
 
       <StatisticsOpportunitySection

@@ -25,16 +25,13 @@ export function useStatisticsContentState({
     cityRows,
     cityListRows,
     cityListPage,
-    funnelPeriodLabel,
     insights,
     growthCards,
     opportunityRadar,
     userIntelligence,
-    demandRows,
   } = model;
 
   const statisticsPanelRef = React.useRef<HTMLElement | null>(null);
-  const primaryGridRef = React.useRef<HTMLDivElement | null>(null);
   const profilePanelRef = React.useRef<HTMLElement | null>(null);
   const citiesPanelRef = React.useRef<HTMLElement | null>(null);
   const insightsPanelRef = React.useRef<HTMLElement | null>(null);
@@ -80,13 +77,6 @@ export function useStatisticsContentState({
     watchKey: `${cityListRows.length}-${cityListPage}-${insights.length}-${model.isError ? 1 : 0}-${model.isLoading ? 1 : 0}`,
   });
 
-  const primaryGridMinHeight = useSyncedPanelMinHeight({
-    sourceRef: profilePanelRef,
-    targetRef: primaryGridRef,
-    mode: 'sourceHeight',
-    watchKey: `${Boolean(funnelPeriodLabel) ? 1 : 0}-${model.activityPoints.length}-${demandRows.length}-${model.isError ? 1 : 0}-${model.isLoading ? 1 : 0}`,
-  });
-
   const growthMarketContext = React.useMemo(
     () => resolveGrowthMarketContext({
       copy,
@@ -114,13 +104,11 @@ export function useStatisticsContentState({
 
   return {
     statisticsPanelRef,
-    primaryGridRef,
     profilePanelRef,
     citiesPanelRef,
     insightsPanelRef,
     growthPanelRef,
     opportunityPanelRef,
-    primaryGridMinHeight,
     insightsPanelMinHeight,
     growthPanelMinHeight,
     focusLabel,

@@ -54,11 +54,11 @@ export function ActivityTrendChart({
     return <p className="workspace-statistics__empty">{emptyLabel}</p>;
   }
 
-  const width = 100;
+  const width = 520;
   const height = 100;
   const plot = {
-    left: 8,
-    right: 98,
+    left: 32,
+    right: 508,
     top: 8,
     bottom: 76,
   };
@@ -139,7 +139,7 @@ export function ActivityTrendChart({
       <div className="home-activity__chart">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          preserveAspectRatio="none"
+          preserveAspectRatio="xMidYMid meet"
           className="home-activity__svg"
           role="img"
           aria-label={`${requestsLabel} / ${offersLabel}`}
