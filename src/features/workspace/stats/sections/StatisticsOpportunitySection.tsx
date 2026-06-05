@@ -5,7 +5,6 @@ import type { WorkspaceStatisticsModel } from '../statistics.model';
 import {
   StatisticsOpportunityPanel,
   StatisticsPricePanel,
-  StatisticsPriceRecommendationPanel,
 } from '../StatisticsSections';
 
 type StatisticsOpportunitySectionProps = {
@@ -34,30 +33,24 @@ export function StatisticsOpportunitySection({
   personalizedPricing,
 }: StatisticsOpportunitySectionProps) {
   return (
-    <>
-      <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
-        <StatisticsOpportunityPanel
-          panelRef={panelRef}
-          copy={copy}
-          locale={locale}
-          title={title}
-          opportunityRadar={opportunityRadar}
-          selectedRank={selectedRank}
-          onSelectRank={onSelectRank}
-        />
-        <StatisticsPricePanel
-          className="workspace-statistics-price--secondary"
-          copy={copy}
-          title={copy.priceTitle}
-          priceIntelligence={priceIntelligence}
-          pricing={pricing?.pricing ?? null}
-          personalizedPricing={personalizedPricing}
-        />
-      </div>
-      <StatisticsPriceRecommendationPanel
+    <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
+      <StatisticsOpportunityPanel
+        panelRef={panelRef}
         copy={copy}
-        priceIntelligence={priceIntelligence}
+        locale={locale}
+        title={title}
+        opportunityRadar={opportunityRadar}
+        selectedRank={selectedRank}
+        onSelectRank={onSelectRank}
       />
-    </>
+      <StatisticsPricePanel
+        className="workspace-statistics-price--secondary"
+        copy={copy}
+        title={copy.priceTitle}
+        priceIntelligence={priceIntelligence}
+        pricing={pricing?.pricing ?? null}
+        personalizedPricing={personalizedPricing}
+      />
+    </div>
   );
 }

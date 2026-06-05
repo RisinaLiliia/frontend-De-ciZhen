@@ -5,7 +5,6 @@ import {
   buildDecisionPlan,
   buildPersonalizedDecisionPlan,
   buildOpportunityReasons,
-  buildPriceStrategyOptions,
 } from './statisticsDecisionEngine.utils';
 import type {
   WorkspaceStatisticsActionSectionView,
@@ -215,20 +214,6 @@ describe('statisticsDecisionEngine.utils', () => {
     expect(decisionPlan.steps[1]).toContain('Marktfokus schärfen');
     expect(decisionPlan.actionLabel).toBe(copy.decisionApplyStrategyLabel);
     expect(decisionPlan.shouldApplyFocus).toBe(true);
-  });
-
-  it('builds strategy price options from the recommended corridor', () => {
-    const copy = getWorkspaceStatisticsCopy('de');
-    const strategyOptions = buildPriceStrategyOptions({
-      copy,
-      priceIntelligence: makePriceIntelligence(),
-    });
-
-    expect(strategyOptions).toEqual([
-      expect.objectContaining({ key: 'entry', priceLabel: '74 €', label: copy.priceStrategyEntryLabel }),
-      expect.objectContaining({ key: 'growth', priceLabel: '74 € – 83 €', label: copy.priceStrategyGrowthLabel }),
-      expect.objectContaining({ key: 'scale', priceLabel: '83 €', label: copy.priceStrategyScaleLabel }),
-    ]);
   });
 
   it('explains why an opportunity is attractive based on market balance and pricing', () => {

@@ -64,7 +64,6 @@
     text-align: right;
   }
 
-  .workspace-statistics-price__strategy-panel,
   .workspace-decision-modal__content-stack {
     --workspace-insight-card-gap: var(--space-2);
     --workspace-insight-card-pad: var(--provider-card-inline-pad, 16px);
@@ -89,12 +88,10 @@
     background: transparent;
   }
 
-  .workspace-statistics-price__strategy-hero,
   .workspace-decision-modal__hero {
     margin: 0;
   }
 
-  .workspace-statistics-price__strategy-hero-range,
   .workspace-decision-modal__hero .workspace-statistics-insights__title {
     font-size: var(--workspace-insight-title-size);
     line-height: var(--workspace-insight-title-line-height);
@@ -102,18 +99,15 @@
     color: var(--color-text);
   }
 
-  .workspace-statistics-price__strategy-hero-text,
   .workspace-decision-modal__hero .workspace-statistics-insights__text {
     font-size: var(--workspace-insight-copy-size);
     line-height: var(--workspace-insight-copy-line-height);
   }
 
-  .workspace-statistics-price__strategy-section,
   .workspace-decision-modal__section {
     margin: 0;
   }
 
-  .workspace-statistics-price__strategy-section-text,
   .workspace-decision-modal__section .workspace-statistics-insights__text {
     font-size: var(--workspace-insight-copy-size);
     line-height: var(--workspace-insight-copy-line-height);
@@ -151,50 +145,6 @@
     gap: var(--space-1);
     margin: 0;
     padding-left: var(--space-3);
-    font-size: var(--fs-small);
-    line-height: 1.45;
-    color: var(--color-text-muted);
-  }
-
-  .workspace-statistics-price__strategy-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-2);
-    margin-top: var(--space-3);
-  }
-
-  .workspace-statistics-price__strategy-card {
-    display: grid;
-    gap: var(--space-1);
-    align-content: start;
-    min-height: var(--workspace-statistics-price-strategy-min-height);
-    padding: var(--space-2-5);
-    border-color: color-mix(in oklab, var(--color-primary) 14%, var(--surface-soft-border) 86%);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--surface-soft-bg) 76%, var(--color-surface) 24%) 0%,
-        color-mix(in oklab, var(--color-surface) 94%, var(--surface-soft-bg) 6%) 100%
-      );
-  }
-
-  .workspace-statistics-price__strategy-label {
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: var(--workspace-statistics-chip-font-weight);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .workspace-statistics-price__strategy-value {
-    font-size: var(--workspace-statistics-display-size);
-    line-height: var(--lh-tight);
-    font-variant-numeric: tabular-nums;
-    color: color-mix(in oklab, var(--color-primary) 80%, var(--color-text) 20%);
-  }
-
-  .workspace-statistics-price__strategy-copy {
-    margin: 0;
     font-size: var(--fs-small);
     line-height: 1.45;
     color: var(--color-text-muted);

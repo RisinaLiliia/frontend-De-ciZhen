@@ -2,8 +2,6 @@
 
 import Link from 'next/link';
 
-import { StatisticsKiCard } from '@/features/workspace/stats/components/StatisticsKiCard';
-
 type WorkspaceDecisionActionCardProps = {
   stamp?: string;
   avatarLabel: string;
@@ -32,20 +30,32 @@ export function WorkspaceDecisionActionCard({
   layout = 'inline',
 }: WorkspaceDecisionActionCardProps) {
   const rootClassName = [
+    'workspace-statistics-ki',
     'workspace-ai-card',
     'workspace-ai-card--decision',
     'workspace-ai-card--action',
     className ?? '',
   ].filter(Boolean).join(' ');
 
+  const actionClassName = 'auth-social__btn auth-social__btn--google workspace-ai-card__action';
+  const articleClassName = [
+    rootClassName,
+    stamp ? 'workspace-statistics-ki--meta' : '',
+    layout === 'inline' ? 'workspace-statistics-ki--inline-action' : '',
+  ].filter(Boolean).join(' ');
+
   const actionNode = actionHref ? (
-    <Link href={actionHref} prefetch={false} className="auth-social__btn auth-social__btn--google workspace-ai-card__action">
+    <Link
+      href={actionHref}
+      prefetch={false}
+      className={actionClassName}
+    >
       {actionLabel}
     </Link>
   ) : (
     <button
       type="button"
-      className="auth-social__btn auth-social__btn--google workspace-ai-card__action"
+      className={actionClassName}
       onClick={onActionClick}
       aria-haspopup={actionAriaHasPopup ? 'dialog' : undefined}
     >
@@ -54,16 +64,19 @@ export function WorkspaceDecisionActionCard({
   );
 
   return (
-    <StatisticsKiCard
-      className={rootClassName}
-      metaStamp={Boolean(stamp)}
-      layout={layout === 'inline' ? 'inline-action' : 'default'}
-      stamp={stamp}
-      avatarLabel={avatarLabel}
-      name={name}
-      role={role}
-      description={description}
-      actions={actionNode}
-    />
+    <article className={articleClassName}>
+      {stamp ? <span className="workspace-statistics-ki__stamp">{stamp}</span> : null}
+      <div className="workspace-statistics-ki__head">
+        <span className="workspace-statistics-ki__avatar" aria-hidden="true">
+          {avatarLabel.slice(0, 2).toUpperCase()}
+        </span>
+        <span className="workspace-statistics-ki__copy">
+          <strong className="workspace-statistics-ki__name">{name}</strong>
+          <span className="workspace-statistics-ki__role">{role}</span>
+        </span>
+      </div>
+      <p className="workspace-statistics-ki__text">{description}</p>
+      <div className="workspace-statistics-ki__actions">{actionNode}</div>
+    </article>
   );
 }

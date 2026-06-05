@@ -76,10 +76,6 @@
       gap: var(--space-1-5);
     }
 
-    .workspace-statistics-price__strategy-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
     .workspace-statistics__cities-tools {
       flex-wrap: wrap;
     }

@@ -16,13 +16,6 @@ export type WorkspaceDecisionPlan = {
   shouldApplyFocus: boolean;
 };
 
-export type WorkspacePriceStrategyOption = {
-  key: 'entry' | 'growth' | 'scale';
-  label: string;
-  priceLabel: string;
-  description: string;
-};
-
 type DecisionPlanArgs = {
   locale: Locale;
   copy: WorkspaceStatisticsCopy;
@@ -31,11 +24,6 @@ type DecisionPlanArgs = {
   priceIntelligence: WorkspaceStatisticsPriceIntelligenceView;
   currentCityId: string | null;
   currentCategoryKey: string | null;
-};
-
-type PriceStrategyArgs = {
-  copy: WorkspaceStatisticsCopy;
-  priceIntelligence: WorkspaceStatisticsPriceIntelligenceView;
 };
 
 type PersonalizedDecisionPlanArgs = {
@@ -202,34 +190,4 @@ export function buildPersonalizedDecisionPlan({
     actionLabel: shouldApplyFocus ? copy.decisionApplyStrategyLabel : copy.decisionOpenRequestsLabel,
     shouldApplyFocus,
   };
-}
-
-export function buildPriceStrategyOptions({
-  copy,
-  priceIntelligence,
-}: PriceStrategyArgs): WorkspacePriceStrategyOption[] {
-  const entryPrice = priceIntelligence.optimalMinLabel ?? priceIntelligence.recommendedRangeLabel ?? '—';
-  const growthPrice = formatPriceRangeLabel(priceIntelligence) ?? '—';
-  const scalePrice = priceIntelligence.optimalMaxLabel ?? priceIntelligence.marketAverageLabel ?? '—';
-
-  return [
-    {
-      key: 'entry',
-      label: copy.priceStrategyEntryLabel,
-      priceLabel: entryPrice,
-      description: copy.priceStrategyEntryDescription,
-    },
-    {
-      key: 'growth',
-      label: copy.priceStrategyGrowthLabel,
-      priceLabel: growthPrice,
-      description: copy.priceStrategyGrowthDescription,
-    },
-    {
-      key: 'scale',
-      label: copy.priceStrategyScaleLabel,
-      priceLabel: scalePrice,
-      description: copy.priceStrategyScaleDescription,
-    },
-  ];
 }
