@@ -88,6 +88,8 @@ export function ActivityTrendChart({
   };
   const requestsValues = points.map((point) => point.requests);
   const offersValues = points.map((point) => point.offers);
+  const latestRequestsValue = requestsValues[requestsValues.length - 1] ?? 0;
+  const latestOffersValue = offersValues[offersValues.length - 1] ?? 0;
   const hasClientActivity = points.some((point) => typeof point.clientActivity === 'number' && point.clientActivity > 0);
   const hasProviderActivity = points.some(
     (point) => typeof point.providerActivity === 'number' && point.providerActivity > 0,
@@ -98,14 +100,14 @@ export function ActivityTrendChart({
     {
       key: 'requests',
       label: requestsLabel,
-      value: requestsValues.reduce((sum, value) => sum + value, 0),
+      value: latestRequestsValue,
       path: buildPath(requestsValues),
       points: requestsValues,
     },
     {
       key: 'offers',
       label: offersLabel,
-      value: offersValues.reduce((sum, value) => sum + value, 0),
+      value: latestOffersValue,
       path: buildPath(offersValues),
       points: offersValues,
     },
