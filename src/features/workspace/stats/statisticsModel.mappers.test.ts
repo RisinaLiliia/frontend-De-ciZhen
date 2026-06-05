@@ -59,15 +59,15 @@ describe('statisticsModel.mappers', () => {
       { timestamp: '2026-03-03T10:00:00.000Z', requests: 3, offers: 2 },
     ];
     const totals = toActivityTotals(points);
-    expect(totals.requestsTotal).toBe(13);
-    expect(totals.offersTotal).toBe(7);
+    expect(totals.requestsTotal).toBe(3);
+    expect(totals.offersTotal).toBe(2);
     expect(totals.latestRequests).toBe(3);
     expect(totals.previousRequests).toBe(8);
     expect(totals.peakTimestamp).toBe('2026-03-02T10:00:00.000Z');
     expect(totals.bestWindowTimestamp).toBe('2026-03-02T10:00:00.000Z');
 
     const metrics = toFallbackActivityMetrics({ totals, completedJobs: 5, takeRatePercent: 12 });
-    expect(metrics.offerRatePercent).toBe(54);
+    expect(metrics.offerRatePercent).toBe(67);
     expect(metrics.completedJobs).toBe(5);
     expect(metrics.takeRatePercent).toBe(12);
     expect(metrics.offerRateTone).toBe('neutral');

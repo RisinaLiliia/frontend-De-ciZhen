@@ -5,7 +5,7 @@ import {
   IconTrophyGold,
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
-import { workspaceStatCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../../statistics.model';
 import { StatisticsSignalMeter } from '../../components/StatisticsSignalMeter';
@@ -34,7 +34,7 @@ export function OpportunityTopCards({
           >
             <button
               type="button"
-              className={workspaceStatCardShell(
+              className={workspaceCardShell(
                 'workspace-statistics-opportunity__item',
                 'workspace-statistics-opportunity__item--compact',
                 `is-${item.tone}`,

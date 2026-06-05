@@ -5,7 +5,7 @@ import {
   IconTrophyGold,
   IconTrophySilver,
 } from '@/components/ui/icons/icons';
-import { workspaceStatCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import { useT } from '@/lib/i18n/useT';
@@ -18,17 +18,14 @@ import {
   buildOpportunityRadarAxisValueLabelPositions,
   buildOpportunityRadarPoints,
   buildOpportunityRadarSmoothPath,
-  buildOpportunityReasons,
   opportunityStatusClassName,
   opportunityStatusLabel,
 } from './opportunity.utils';
 
 export function OpportunityAnalysisCard({
   copy,
-  locale,
   item,
   axes,
-  summary,
 }: {
   copy: WorkspaceStatisticsModel['copy'];
   locale: Locale;
@@ -54,14 +51,10 @@ export function OpportunityAnalysisCard({
   const rankTone = item.rank === 1 ? 'gold' : item.rank === 2 ? 'silver' : 'bronze';
   const featuredStatus = item.rank === 1 && item.status === 'balanced' ? 'good' : item.status;
   const statusClass = opportunityStatusClassName(featuredStatus);
-  const reasons = React.useMemo(
-    () => buildOpportunityReasons({ copy, locale, item }),
-    [copy, item, locale],
-  );
 
   return (
     <article
-      className={workspaceStatCardShell(
+      className={workspaceCardShell(
         'workspace-statistics-opportunity__item',
         'workspace-statistics-opportunity__item--analysis',
         `is-${item.tone}`,
@@ -171,21 +164,6 @@ export function OpportunityAnalysisCard({
           ))}
         </ul>
       </div>
-
-      <p className="workspace-statistics-opportunity__summary" aria-label={t(I18N_KEYS.workspace.statsOpportunitySummaryAriaLabel)}>
-        {summary}
-      </p>
-
-      {reasons.length > 0 ? (
-        <div className="workspace-statistics-opportunity__reasons">
-          <strong className="workspace-statistics-opportunity__reasons-title">{copy.opportunityWhyLabel}</strong>
-          <ul className="workspace-statistics-opportunity__reasons-list">
-            {reasons.map((reason) => (
-              <li key={reason}>{reason}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
 
       <dl className="workspace-statistics-opportunity__metrics">
         <div>

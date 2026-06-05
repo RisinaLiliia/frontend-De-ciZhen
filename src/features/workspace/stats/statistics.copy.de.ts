@@ -43,7 +43,7 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   viewerModeCustomerLabel: 'Für Auftraggeber',
   kpiTitle: 'KPI Übersicht',
   activityTitle: 'Aktivität der Plattform',
-  activitySubtitle: 'Neue Anfragen und Angebote im Zeitverlauf',
+  activitySubtitle: 'Gesamtbestand von Anfragen und Angeboten im Zeitverlauf',
   marketHealthTitle: 'Market Health',
   marketHealthSubtitle: 'Operative Kennzahlen für Markt- und Wachstumsentscheidungen',
   decisionKiFallbackInsight:

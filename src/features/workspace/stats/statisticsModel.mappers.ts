@@ -305,10 +305,10 @@ export function formatFallbackRangeLabel(range: WorkspaceStatisticsRange): strin
 }
 
 export function toActivityTotals(points: WorkspaceStatisticsActivityPointDto[]): WorkspaceStatisticsActivityTotalsDto {
-  const requestsTotal = points.reduce((sum, point) => sum + point.requests, 0);
-  const offersTotal = points.reduce((sum, point) => sum + point.offers, 0);
   const latest = points[points.length - 1] ?? null;
   const previous = points[points.length - 2] ?? null;
+  const requestsTotal = latest?.requests ?? 0;
+  const offersTotal = latest?.offers ?? 0;
 
   const peak = points.reduce<{ timestamp: string; score: number } | null>((acc, point) => {
     const score = point.requests + point.offers;

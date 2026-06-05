@@ -1,8 +1,8 @@
 @layer components {
-.workspace-statistics-opportunity__list {
+  .workspace-statistics-opportunity__list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--workspace-statistics-feature-stack-gap);
+    gap: var(--space-3);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -15,28 +15,22 @@
 
   .workspace-statistics-opportunity__item-wrap.is-last {
     grid-column: 1 / -1;
-    display: block;
-  }
-
-  .workspace-statistics-opportunity__item-wrap.is-last .workspace-statistics-opportunity__item {
-    width: 100%;
-    max-width: none;
   }
 
   .workspace-statistics-opportunity__item {
     display: grid;
     align-content: start;
     gap: var(--space-2);
-    min-height: 0;
     height: 100%;
-    padding: var(--space-2) var(--space-2-5);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 18%, var(--surface-soft-border) 82%);
-    border-radius: var(--workspace-statistics-radius-lg);
-    background: color-mix(in oklab, var(--color-surface) 96%, var(--surface-soft-bg) 4%);
+    padding: var(--space-3);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: none;
     transition:
+      border-color var(--transition-fast),
       box-shadow var(--transition-fast),
-      transform var(--transition-fast),
-      border-color var(--transition-fast);
+      transform var(--transition-fast);
   }
 
   button.workspace-statistics-opportunity__item {
@@ -47,18 +41,6 @@
     cursor: pointer;
   }
 
-  .workspace-statistics-opportunity__item--compact {
-    min-height: var(--workspace-statistics-feature-card-min-h);
-    padding: var(--workspace-statistics-feature-card-pad);
-    gap: var(--workspace-statistics-feature-card-gap);
-    grid-template-rows: auto auto 1fr auto;
-  }
-
-  .workspace-statistics-opportunity__item--compact .workspace-statistics-opportunity__metrics {
-    grid-row: 4;
-    align-self: end;
-  }
-
   .workspace-statistics-opportunity__item:hover {
     transform: translateY(-1px);
     border-color: var(--surface-card-border-hover);
@@ -67,72 +49,70 @@
 
   .workspace-statistics-opportunity__item:focus-visible {
     outline: none;
-    border-color: var(--surface-card-border-hover);
+    border-color: var(--surface-card-border-focus);
     box-shadow:
       var(--surface-card-shadow),
-      0 0 0 2px color-mix(in oklab, var(--color-primary) 18%, transparent);
+      0 0 0 3px color-mix(in oklab, var(--color-primary) 14%, transparent);
   }
 
-  .workspace-statistics-opportunity__top {
+  .workspace-statistics-opportunity__top,
+  .workspace-statistics-opportunity__analysis-identity {
     display: grid;
-    grid-template-columns: 34px minmax(0, 1fr);
+    grid-template-columns: 30px minmax(0, 1fr);
     align-items: start;
     gap: var(--space-2);
   }
 
-  .workspace-statistics-opportunity__top .workspace-statistics-city-list__rank-cup {
-    width: 30px;
-    height: 30px;
-  }
-
-  .workspace-statistics-opportunity__top .workspace-statistics-city-list__rank-cup svg {
-    width: 30px;
-    height: 30px;
-  }
-
   .workspace-statistics-opportunity__identity {
     display: grid;
-    gap: var(--space-0-75);
+    gap: var(--space-0-5);
     min-width: 0;
   }
 
   .workspace-statistics-opportunity__city {
-    font-size: var(--workspace-statistics-title-size);
+    font-size: var(--fs-body);
     font-weight: 700;
+    line-height: var(--lh-title);
     color: var(--color-text);
-    line-height: 1.25;
   }
 
   .workspace-statistics-opportunity__category {
-    font-size: var(--workspace-statistics-label-size);
+    font-size: var(--fs-small);
+    line-height: 1.35;
     color: var(--color-text-muted);
-    line-height: 1.3;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .workspace-statistics-opportunity__score {
-    min-width: 0;
+  .workspace-statistics-opportunity__tone,
+  .workspace-statistics-opportunity__tone.is-very-high,
+  .workspace-statistics-opportunity__tone.is-high,
+  .workspace-statistics-opportunity__tone.is-balanced,
+  .workspace-statistics-opportunity__tone.is-supply-heavy {
+    width: fit-content;
+    min-height: var(--workspace-statistics-chip-height);
+    padding: 0 var(--workspace-statistics-chip-pad-inline);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--workspace-statistics-chip-radius);
+    background: transparent;
+    color: var(--color-text-muted);
+    font-size: var(--workspace-statistics-chip-font-size);
+    font-weight: 600;
   }
 
   .workspace-statistics-opportunity__metrics {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-1-5);
+    gap: var(--space-2);
     margin: 0;
-    padding-top: var(--space-1-5);
-    border-top: 1px dashed var(--surface-soft-border);
-  }
-
-  .workspace-statistics-opportunity__metrics div {
-    min-width: 0;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-border-soft);
   }
 
   .workspace-statistics-opportunity__metrics dt {
     margin: 0;
-    font-size: var(--workspace-statistics-chip-font-size);
-    line-height: 1.2;
+    font-size: var(--fs-small);
     color: var(--color-text-muted);
   }
 
@@ -140,118 +120,39 @@
     margin: var(--space-0-5) 0 0;
     font-size: var(--fs-small);
     font-weight: 700;
-    color: color-mix(in oklab, var(--color-text) 88%, var(--color-primary) 12%);
+    color: var(--color-text);
     font-variant-numeric: tabular-nums;
-  }
-
-  .workspace-statistics-opportunity__tone {
-    margin: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: var(--workspace-statistics-chip-height-lg);
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid var(--surface-soft-border);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: var(--workspace-statistics-chip-font-weight);
-    line-height: 1;
-    width: fit-content;
-  }
-
-  .workspace-statistics-opportunity__tone.is-very-high {
-    color: color-mix(in oklab, var(--color-success) 84%, var(--color-text) 16%);
-    border-color: color-mix(in oklab, var(--color-success) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--color-success) 12%, var(--color-surface) 88%);
-  }
-
-  .workspace-statistics-opportunity__tone.is-high {
-    color: color-mix(in oklab, var(--color-primary) 84%, var(--color-text) 16%);
-    border-color: color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--color-primary) 11%, var(--color-surface) 89%);
-  }
-
-  .workspace-statistics-opportunity__tone.is-balanced {
-    color: var(--color-text-muted);
-    border-color: var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--color-surface) 16%);
-  }
-
-  .workspace-statistics-opportunity__tone.is-supply-heavy {
-    color: color-mix(in oklab, var(--color-warning) 80%, var(--color-text) 20%);
-    border-color: color-mix(in oklab, var(--color-warning) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--color-warning) 12%, var(--color-surface) 88%);
   }
 
   .workspace-statistics-opportunity__item--analysis {
-    gap: var(--space-2-5);
-    padding: var(--space-2-5);
+    gap: var(--space-3);
     cursor: default;
   }
 
-  .workspace-statistics-opportunity__analysis-overview {
+  .workspace-statistics-opportunity__analysis-overview,
+  .workspace-statistics-opportunity__analysis-body {
     display: grid;
-    grid-template-columns: minmax(0, 188px) minmax(0, 1fr);
-    gap: var(--space-2-5);
+    grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+    gap: var(--space-3);
     align-items: start;
-    padding-bottom: var(--space-2);
-    border-bottom: 1px dashed var(--surface-soft-border);
-  }
-
-  .workspace-statistics-opportunity__analysis-identity {
-    display: grid;
-    grid-template-columns: 34px minmax(0, 1fr);
-    align-items: start;
-    gap: var(--space-1-5);
-    min-width: 0;
-    margin-left: calc(var(--space-1) * -1);
-  }
-
-  .workspace-statistics-opportunity__analysis-identity .workspace-statistics-city-list__rank-cup {
-    width: 30px;
-    height: 30px;
-    justify-self: start;
-  }
-
-  .workspace-statistics-opportunity__analysis-identity .workspace-statistics-city-list__rank-cup svg {
-    width: 30px;
-    height: 30px;
+    padding: 0;
+    border: 0;
+    background: transparent;
   }
 
   .workspace-statistics-opportunity__analysis-score {
-    display: grid;
-    gap: var(--space-1);
-    min-width: 0;
-    align-content: start;
-    font-size: var(--fs-h3);
+    font-size: var(--fs-body);
     font-weight: 700;
-    line-height: 1.1;
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
+    color: var(--color-text);
     font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .workspace-statistics-opportunity__analysis-body {
-    display: grid;
-    grid-template-columns: minmax(0, 188px) minmax(0, 1fr);
-    gap: var(--space-2-5);
-    align-items: start;
-    padding-top: var(--space-1);
   }
 
   .workspace-statistics-opportunity__radar-block {
     display: grid;
-    gap: var(--space-1-5);
-    align-content: start;
-  }
-
-  .workspace-statistics-opportunity__status--analysis {
-    justify-self: start;
-    margin-top: calc(var(--space-0-5) * -1);
-  }
-
-  .workspace-statistics-opportunity__status--radar {
-    justify-self: start;
+    gap: var(--space-2);
+    padding: 0;
+    border: 0;
+    background: transparent;
   }
 
   .workspace-statistics-opportunity__radar {
@@ -267,43 +168,30 @@
 
   .workspace-statistics-opportunity__radar-ring {
     fill: none;
-    stroke: color-mix(in oklab, var(--surface-soft-border) 84%, var(--color-primary) 16%);
+    stroke: var(--color-border-soft);
     stroke-width: 1;
   }
 
   .workspace-statistics-opportunity__radar-axis {
-    stroke: color-mix(in oklab, var(--surface-soft-border) 72%, var(--color-primary) 28%);
+    stroke: color-mix(in oklab, var(--color-border-soft) 78%, var(--color-primary) 22%);
     stroke-width: 1;
+  }
+
+  .workspace-statistics-opportunity__radar-shape {
+    fill: color-mix(in oklab, var(--color-primary) 8%, transparent);
+    stroke: var(--color-primary);
+    stroke-width: 1.5;
+  }
+
+  .workspace-statistics-opportunity__radar-dot {
+    fill: var(--color-primary);
   }
 
   .workspace-statistics-opportunity__radar-ring-label,
   .workspace-statistics-opportunity__radar-axis-label {
     font-size: var(--workspace-statistics-micro-size);
     font-weight: 700;
-    fill: color-mix(in oklab, var(--color-text-muted) 90%, var(--color-primary) 10%);
-    font-variant-numeric: tabular-nums;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  .workspace-statistics-opportunity__radar-ring-label {
-    text-anchor: start;
-    dominant-baseline: middle;
-  }
-
-  .workspace-statistics-opportunity__radar-axis-label {
-    text-anchor: middle;
-    dominant-baseline: middle;
-  }
-
-  .workspace-statistics-opportunity__radar-shape {
-    fill: color-mix(in oklab, var(--color-primary) 14%, transparent);
-    stroke: color-mix(in oklab, var(--color-primary) 74%, var(--color-text) 26%);
-    stroke-width: 1.6;
-  }
-
-  .workspace-statistics-opportunity__radar-dot {
-    fill: color-mix(in oklab, var(--color-primary) 84%, var(--color-text) 16%);
+    fill: var(--color-text-muted);
   }
 
   .workspace-statistics-opportunity__analysis-axes {
@@ -312,28 +200,10 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    min-width: 0;
-  }
-
-  .workspace-statistics-opportunity__analysis-axes li {
-    display: grid;
-    gap: var(--space-1);
-    min-width: 0;
-  }
-
-  .workspace-statistics-opportunity__axis-signal {
-    min-width: 0;
   }
 
   .workspace-statistics-opportunity__summary {
-    margin: 0;
-    font-size: var(--workspace-statistics-copy-size-tight);
-    line-height: 1.45;
-    color: color-mix(in oklab, var(--color-text-muted) 90%, var(--color-text) 10%);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    display: none;
   }
 
   .workspace-statistics__grid--secondary {
@@ -341,15 +211,6 @@
   }
 
   .workspace-statistics__grid--secondary > .workspace-statistics-opportunity,
-  .workspace-statistics__grid--secondary > .workspace-statistics-price {
-    align-self: stretch;
-  }
-
-  .workspace-statistics__grid--secondary > .workspace-statistics-opportunity {
-    height: 100%;
-    align-content: start;
-  }
-
   .workspace-statistics__grid--secondary > .workspace-statistics-price {
     height: 100%;
     align-content: start;
