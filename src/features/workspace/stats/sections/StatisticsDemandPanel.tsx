@@ -66,7 +66,10 @@ export function StatisticsDemandPanel({
                         <span className="workspace-statistics-demand__value">{row.sharePercent}%</span>
                       </div>
                       <div className="workspace-statistics-demand__track" aria-hidden="true">
-                        <span className="workspace-statistics-demand__fill" style={{ width: `${row.sharePercent}%` }} />
+                        <span
+                          className="workspace-statistics-demand__fill"
+                          style={{ width: `${row.sharePercent}%`, inlineSize: `${row.sharePercent}%` }}
+                        />
                       </div>
                       {matchedOpportunity ? (
                         <div className="workspace-statistics-demand__insight">

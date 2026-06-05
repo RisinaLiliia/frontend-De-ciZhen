@@ -126,7 +126,8 @@ export function useWorkspaceStatsViewModel({
   const isFocusMode = Boolean(selectedCityId || selectedCategoryKey);
 
   const activityPoints = (() => {
-    const points = (data?.activity.points ?? []).slice(-12);
+    const activityPointLimit = range === '24h' ? 24 : range === '7d' ? 7 : range === '30d' ? 30 : 90;
+    const points = (data?.activity.points ?? []).slice(-activityPointLimit);
     const comparisonPointsByTimestamp = new Map(
       (data?.activityComparison?.points ?? []).map((point) => [point.timestamp, point]),
     );
@@ -147,6 +148,7 @@ export function useWorkspaceStatsViewModel({
       const comparisonPoint = comparisonPointsByTimestamp.get(point.timestamp);
       if (comparisonPoint) {
         return {
+          timestamp: point.timestamp,
           label: formatDateLabel(point.timestamp, range, locale),
           requests: point.requests,
           offers: point.offers,
@@ -173,6 +175,7 @@ export function useWorkspaceStatsViewModel({
           : 0;
 
       return {
+        timestamp: point.timestamp,
         label: formatDateLabel(point.timestamp, range, locale),
         requests: point.requests,
         offers: point.offers,

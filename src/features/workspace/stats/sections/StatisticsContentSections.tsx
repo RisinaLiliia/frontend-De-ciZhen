@@ -29,7 +29,6 @@ type StatisticsContentSectionsProps = {
   activityPoints: WorkspaceStatisticsModel['activityPoints'];
   activityMeta: WorkspaceStatisticsModel['activityMeta'];
   activitySummary: WorkspaceStatisticsModel['activitySummary'];
-  categoryFit: WorkspaceStatisticsModel['categoryFit'];
   cityRows: WorkspaceStatisticsModel['cityRows'];
   cityListRows: WorkspaceStatisticsModel['cityListRows'];
   cityListPage: WorkspaceStatisticsModel['cityListPage'];
@@ -62,7 +61,6 @@ export function StatisticsContentSections({
   activityPoints,
   activityMeta,
   activitySummary,
-  categoryFit,
   cityRows,
   cityListRows,
   cityListPage,
@@ -87,6 +85,18 @@ export function StatisticsContentSections({
 
   return (
     <div className="workspace-statistics__sections stack-md">
+      <StatisticsPerformanceSection
+        model={model}
+        activityTitle={activityTitle}
+        activitySubtitle={activitySubtitle}
+        activityPoints={activityPoints}
+        activityMeta={activityMeta}
+        activitySummary={activitySummary}
+        locale={locale}
+        primaryGridRef={primaryGridRef}
+        primaryGridMinHeight={primaryGridMinHeight}
+      />
+
       <StatisticsOpportunitySection
         panelRef={opportunityPanelRef}
         copy={copy}
@@ -119,19 +129,6 @@ export function StatisticsContentSections({
         t={t}
         formatNumber={formatNumber}
         formatMarketBalance={formatMarketBalance}
-      />
-
-      <StatisticsPerformanceSection
-        t={t}
-        model={model}
-        activityTitle={activityTitle}
-        activitySubtitle={activitySubtitle}
-        activityPoints={activityPoints}
-        activityMeta={activityMeta}
-        activitySummary={activitySummary}
-        categoryFit={categoryFit}
-        primaryGridRef={primaryGridRef}
-        primaryGridMinHeight={primaryGridMinHeight}
       />
     </div>
   );

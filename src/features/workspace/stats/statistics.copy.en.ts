@@ -46,8 +46,6 @@ export const COPY_EN: WorkspaceStatisticsCopy = {
   activitySubtitle: 'New requests and offers over time',
   marketHealthTitle: 'Market Health',
   marketHealthSubtitle: 'Operational metrics for market and growth decisions',
-  marketOpportunitiesTitle: 'Opportunities',
-  marketOpportunitiesSubtitle: 'Risks, chances, and concrete action signals.',
   decisionKiFallbackInsight:
     'Operational metrics reflect current platform health. Faster responses and clearer positioning can improve close rates.',
   activitySignalsUpdatedPrefix: 'Updated',
@@ -220,9 +218,6 @@ export const COPY_EN: WorkspaceStatisticsCopy = {
   decisionWhyLabel: 'Why now',
   decisionNextStepsLabel: 'Next steps',
   decisionStrategyTitle: 'Strategy recommendation',
-  decisionStrategyCloseLabel: 'Close strategy',
-  decisionStrategyLoadingLabel: 'De\'ci AI is analyzing your strategy…',
-  decisionStrategyLoadingBody: 'Focus, pricing, and response speed are being prepared from demand, competition, and conversion signals.',
   decisionApplyStrategyLabel: 'Apply strategy',
   decisionOpenRequestsLabel: 'Open matching requests',
   decisionReasonMarketBalanceTemplate: 'Strong demand with relatively low provider pressure ({ratio}x market balance).',

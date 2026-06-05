@@ -46,8 +46,6 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   activitySubtitle: 'Neue Anfragen und Angebote im Zeitverlauf',
   marketHealthTitle: 'Market Health',
   marketHealthSubtitle: 'Operative Kennzahlen für Markt- und Wachstumsentscheidungen',
-  marketOpportunitiesTitle: 'Opportunities',
-  marketOpportunitiesSubtitle: 'Risiken, Chancen und konkrete Handlungssignale.',
   decisionKiFallbackInsight:
     'Operative Kennzahlen zeigen den aktuellen Plattformzustand. Nutze schnelle Reaktionen und klare Positionierung, um Abschlusschancen zu verbessern.',
   activitySignalsUpdatedPrefix: 'Aktualisiert',
@@ -220,9 +218,6 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   decisionWhyLabel: 'Warum jetzt',
   decisionNextStepsLabel: 'Nächste Schritte',
   decisionStrategyTitle: 'Strategie-Empfehlung',
-  decisionStrategyCloseLabel: 'Strategie schließen',
-  decisionStrategyLoadingLabel: "De'ci KI analysiert deine Strategie…",
-  decisionStrategyLoadingBody: 'Fokus, Preis und Reaktionszeit werden auf Basis von Nachfrage, Wettbewerb und Conversion-Signalen vorbereitet.',
   decisionApplyStrategyLabel: 'Strategie anwenden',
   decisionOpenRequestsLabel: 'Passende Aufträge öffnen',
   decisionReasonMarketBalanceTemplate: 'Hohe Nachfrage bei relativ niedriger Anbieterzahl ({ratio}x Marktbalance).',

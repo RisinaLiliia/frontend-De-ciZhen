@@ -6,7 +6,6 @@ type MarketStateMetric = {
   key: string;
   label: string;
   value: string;
-  delta?: string | null;
   tone?: 'positive' | 'neutral' | 'warning';
 };
 
@@ -48,9 +47,15 @@ export function StatisticsMarketStateStrip({
           >
             <span className="workspace-statistics-market-state__metric-label">{item.label}</span>
             <strong className="workspace-statistics-market-state__metric-value">{item.value}</strong>
-            {item.delta ? (
-              <span className="workspace-statistics-market-state__metric-delta">{item.delta}</span>
-            ) : null}
+            <span
+              className="workspace-statistics-market-state__metric-indicator"
+              data-tone={item.tone ?? 'neutral'}
+            >
+              <span className="workspace-statistics-market-state__metric-indicator-icon" aria-hidden="true">
+                {item.tone === 'positive' ? '↗' : item.tone === 'warning' ? '↘' : '—'}
+              </span>
+              <span>0%</span>
+            </span>
           </li>
         ))}
       </ul>

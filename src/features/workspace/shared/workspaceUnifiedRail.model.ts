@@ -54,8 +54,8 @@ type BuildLinkedWorkspaceRailModelParams = {
   queueCountTemplate?: string;
 };
 
-const MAX_RAIL_QUEUE_ITEMS = 4;
-const MAX_RAIL_RECOMMENDATIONS = 4;
+export const MAX_RAIL_QUEUE_ITEMS = 4;
+export const MAX_RAIL_RECOMMENDATIONS = 4;
 
 function toneToRecommendationTone(
   tone?: SummaryItem['tone'],

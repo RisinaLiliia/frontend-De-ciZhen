@@ -6,7 +6,6 @@ import * as React from 'react';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from './statistics.model';
-import type { WorkspaceDecisionPlan } from './statisticsDecisionEngine.utils';
 import { useStatisticsContentState } from './hooks/useStatisticsContentState';
 import { StatisticsLoadingState } from './StatisticsLoadingState';
 import { StatisticsErrorState } from './StatisticsErrorState';
@@ -17,13 +16,11 @@ type StatisticsContentProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   model: WorkspaceStatisticsModel;
-  decisionPlan: WorkspaceDecisionPlan;
   selectedOpportunity: WorkspaceStatisticsModel['opportunityRadar'][number] | null;
   selectedOpportunityRank: WorkspaceStatisticsModel['opportunityRadar'][number]['rank'] | null;
   setSelectedOpportunityRank: React.Dispatch<
     React.SetStateAction<WorkspaceStatisticsModel['opportunityRadar'][number]['rank'] | null>
   >;
-  applySelectedOpportunityFocus: () => void;
   funnelContainerRef: React.RefObject<HTMLOListElement | null>;
   funnelVisualRows: ReturnType<typeof import('./statisticsFunnel.utils').buildFunnelVisualRows>;
   isPersonalizedMode: boolean;
@@ -34,11 +31,9 @@ export function StatisticsContent({
   t,
   locale,
   model,
-  decisionPlan,
   selectedOpportunity,
   selectedOpportunityRank,
   setSelectedOpportunityRank,
-  applySelectedOpportunityFocus,
   funnelContainerRef,
   funnelVisualRows,
   isPersonalizedMode,
@@ -62,7 +57,6 @@ export function StatisticsContent({
     cityComparison,
     opportunityRadar,
     funnelPeriodLabel,
-    categoryFit,
     personalizedPricing,
   } = model;
 
@@ -84,11 +78,9 @@ export function StatisticsContent({
   return (
     <section className="workspace-statistics workspace-statistics__column">
       <StatisticsIntroSection
+        t={t}
         model={model}
         statisticsPanelRef={statisticsPanelRef}
-        decisionPlan={decisionPlan}
-        selectedOpportunity={selectedOpportunity}
-        applySelectedOpportunityFocus={applySelectedOpportunityFocus}
         profilePanelRef={profilePanelRef}
         funnelContainerRef={funnelContainerRef}
         funnelVisualRows={funnelVisualRows}
@@ -119,7 +111,6 @@ export function StatisticsContent({
           activityPoints={activityPoints}
           activityMeta={activityMeta}
           activitySummary={activitySummary}
-          categoryFit={categoryFit}
           cityRows={cityRows}
           cityListRows={cityListRows}
           cityListPage={cityListPage}

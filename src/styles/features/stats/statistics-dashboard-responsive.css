@@ -1,12 +1,6 @@
 /* src/styles/features/stats/statistics-dashboard-responsive.css */
 
 @layer components {
-  @media (min-width: 900px) {
-    .workspace-statistics__decision-layer {
-      --workspace-statistics-decision-gap-x: var(--space-4);
-    }
-  }
-
   @media (max-width: 1023px) {
     .workspace-statistics-context--controls-only .workspace-statistics-context__body {
       grid-template-columns: minmax(0, 1fr);
@@ -46,8 +40,8 @@
       flex-wrap: wrap;
     }
 
-    .workspace-statistics__grid--primary,
-    .workspace-statistics__grid--secondary {
+    .workspace-statistics__grid--secondary,
+    .workspace-statistics__intro-grid {
       grid-template-columns: minmax(0, 1fr);
     }
 
@@ -90,9 +84,6 @@
       flex-wrap: wrap;
     }
 
-    .workspace-statistics__hero-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
 
   @media (max-width: 639px) {

@@ -1,6 +1,5 @@
 'use client';
 
-export { StatisticsDecisionLayer } from './sections/StatisticsDecisionLayer';
 export { StatisticsDemandPanel } from './sections/StatisticsDemandPanel';
 export { StatisticsDemandPanelSection } from './sections/StatisticsDemandPanel';
 export { StatisticsCitiesPanel } from './sections/StatisticsCitiesPanel';

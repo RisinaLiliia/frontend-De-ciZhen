@@ -49,8 +49,6 @@ export type WorkspaceStatisticsCopy = {
   activitySubtitle: string;
   marketHealthTitle: string;
   marketHealthSubtitle: string;
-  marketOpportunitiesTitle: string;
-  marketOpportunitiesSubtitle: string;
   decisionKiFallbackInsight: string;
   activitySignalsUpdatedPrefix: string;
   activitySignalsBasedOnPrefix: string;
@@ -212,9 +210,6 @@ export type WorkspaceStatisticsCopy = {
   decisionWhyLabel: string;
   decisionNextStepsLabel: string;
   decisionStrategyTitle: string;
-  decisionStrategyCloseLabel: string;
-  decisionStrategyLoadingLabel: string;
-  decisionStrategyLoadingBody: string;
   decisionApplyStrategyLabel: string;
   decisionOpenRequestsLabel: string;
   decisionReasonMarketBalanceTemplate: string;

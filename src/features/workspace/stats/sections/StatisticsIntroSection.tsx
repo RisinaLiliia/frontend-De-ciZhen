@@ -3,21 +3,16 @@
 import * as React from 'react';
 
 import { workspaceRequestsPanelShell } from '@/features/workspace/shared';
-import { WorkspaceBadge } from '@/features/workspace/shared/WorkspaceBadge';
+import type { I18nKey } from '@/lib/i18n/keys';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
-import type { WorkspaceDecisionPlan } from '../statisticsDecisionEngine.utils';
-import { mapActivitySignalsToOpportunities } from '../mappers/statisticsOpportunities.mapper';
-import { StatisticsDecisionLayer } from '../StatisticsSections';
+import { StatisticsDemandPanelSection } from '../StatisticsSections';
 import { StatisticsMarketStateStrip } from './StatisticsMarketStateStrip';
-import { StatisticsOpportunitiesSection } from './StatisticsOpportunitiesSection';
 import { StatisticsProfileSection } from './StatisticsProfileSection';
 
 type StatisticsIntroSectionProps = {
+  t: (key: I18nKey) => string;
   model: WorkspaceStatisticsModel;
   statisticsPanelRef: React.RefObject<HTMLElement | null>;
-  decisionPlan: WorkspaceDecisionPlan;
-  selectedOpportunity: WorkspaceStatisticsModel['opportunityRadar'][number] | null;
-  applySelectedOpportunityFocus: () => void;
   profilePanelRef: React.RefObject<HTMLElement | null>;
   funnelContainerRef: React.RefObject<HTMLOListElement | null>;
   funnelVisualRows: ReturnType<typeof import('../statisticsFunnel.utils').buildFunnelVisualRows>;
@@ -27,11 +22,9 @@ type StatisticsIntroSectionProps = {
 };
 
 export function StatisticsIntroSection({
+  t,
   model,
   statisticsPanelRef,
-  decisionPlan,
-  selectedOpportunity,
-  applySelectedOpportunityFocus,
   profilePanelRef,
   funnelContainerRef,
   funnelVisualRows,
@@ -41,61 +34,53 @@ export function StatisticsIntroSection({
 }: StatisticsIntroSectionProps) {
   const {
     copy,
-    context,
-    modeLabel,
     hasBackgroundError,
     isLoading,
     isError,
-    priceIntelligence,
     activitySignals,
   } = model;
+
+  const getActivitySignal = (key: string) => activitySignals.find((item) => item.key === key);
+  const getActivitySignalValue = (key: string) => getActivitySignal(key)?.value ?? '—';
 
   const marketStateMetrics = [
     {
       key: 'offer-rate',
       label: copy.activityOfferRateLabel,
-      value: activitySignals.find((item) => item.key === 'offer-rate')?.value ?? '—',
-      delta: null,
-      tone: 'neutral' as const,
+      value: getActivitySignalValue('offer-rate'),
+      tone: getActivitySignal('offer-rate')?.tone ?? 'neutral',
     },
     {
       key: 'response-median',
       label: copy.activityResponseMedianLabel,
-      value: activitySignals.find((item) => item.key === 'response-median')?.value ?? '—',
-      delta: null,
-      tone: 'warning' as const,
+      value: getActivitySignalValue('response-median'),
+      tone: getActivitySignal('response-median')?.tone ?? 'neutral',
     },
     {
       key: 'unanswered',
       label: copy.activityUnansweredLabel,
-      value: activitySignals.find((item) => item.key === 'unanswered')?.value ?? '—',
-      delta: null,
-      tone: 'warning' as const,
+      value: getActivitySignalValue('unanswered'),
+      tone: getActivitySignal('unanswered')?.tone ?? 'neutral',
     },
     {
       key: 'cancellation',
       label: copy.activityCancellationLabel,
-      value: activitySignals.find((item) => item.key === 'cancellation')?.value ?? '—',
-      delta: null,
-      tone: 'neutral' as const,
+      value: getActivitySignalValue('cancellation'),
+      tone: getActivitySignal('cancellation')?.tone ?? 'neutral',
     },
     {
       key: 'completed',
       label: copy.activityCompletedLabel,
-      value: activitySignals.find((item) => item.key === 'completed')?.value ?? '—',
-      delta: null,
-      tone: 'positive' as const,
+      value: getActivitySignalValue('completed'),
+      tone: getActivitySignal('completed')?.tone ?? 'neutral',
     },
     {
       key: 'revenue',
       label: copy.activityRevenueLabel,
-      value: activitySignals.find((item) => item.key === 'revenue')?.value ?? '—',
-      delta: null,
-      tone: 'positive' as const,
+      value: getActivitySignalValue('revenue'),
+      tone: getActivitySignal('revenue')?.tone ?? 'neutral',
     },
   ];
-
-  const opportunityItems = mapActivitySignalsToOpportunities(activitySignals);
 
   return (
     <section
@@ -109,7 +94,7 @@ export function StatisticsIntroSection({
           metrics={marketStateMetrics}
         />
 
-        <div className="workspace-statistics__hero-grid">
+        <div className="workspace-statistics__intro-grid">
           {!isLoading && !isError && funnelVisualRows.length ? (
             <StatisticsProfileSection
               profilePanelRef={profilePanelRef}
@@ -123,46 +108,22 @@ export function StatisticsIntroSection({
             />
           ) : null}
 
-          <div className="workspace-statistics__decision-cluster">
-            <div className="panel-header workspace-statistics__mode-row">
-              <div className="workspace-statistics__mode-meta">
-                <WorkspaceBadge
-                  variant="info"
-                  size="sm"
-                  className="workspace-statistics__mode-badge"
-                >
-                  {modeLabel}
-                </WorkspaceBadge>
-                <span className="section-subtitle">{copy.kpiTitle} · {context.scopeLabel}</span>
-              </div>
-            </div>
-
-            {hasBackgroundError && !isLoading && !isError ? (
-              <div className="workspace-statistics__background-error" role="status" aria-live="polite">
-                <strong>{copy.backgroundErrorTitle}</strong>
-                <p>{copy.backgroundErrorBody}</p>
-              </div>
-            ) : null}
-
-            <StatisticsOpportunitiesSection
-              title={copy.marketOpportunitiesTitle}
-              subtitle={copy.marketOpportunitiesSubtitle}
-              items={opportunityItems}
-              copy={copy}
-            />
-
-            {!isLoading && !isError ? (
-              <StatisticsDecisionLayer
-                copy={copy}
-                decisionInsight={model.decisionInsight}
-                decisionPlan={decisionPlan}
-                selectedOpportunity={selectedOpportunity}
-                priceIntelligence={priceIntelligence}
-                onActionClick={applySelectedOpportunityFocus}
-              />
-            ) : null}
-          </div>
+          <StatisticsDemandPanelSection
+            model={model}
+            t={t}
+            categoryFit={model.categoryFit}
+            className="workspace-overview__panel workspace-overview__panel--demand workspace-overview__demand-panel workspace-statistics__intro-demand"
+            headerClassName="workspace-overview__tile-header"
+            onSelectCategory={model.setCategoryKey}
+          />
         </div>
+
+        {hasBackgroundError && !isLoading && !isError ? (
+          <div className="workspace-statistics__background-error" role="status" aria-live="polite">
+            <strong>{copy.backgroundErrorTitle}</strong>
+            <p>{copy.backgroundErrorBody}</p>
+          </div>
+        ) : null}
       </div>
     </section>
   );

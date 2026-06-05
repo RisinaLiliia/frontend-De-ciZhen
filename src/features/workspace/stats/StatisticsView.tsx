@@ -33,8 +33,7 @@ export function StatisticsView({
     filters,
     mode,
     userIntelligence,
-    sectionMeta,
-    context,
+    activitySignals,
     rightRailNextSteps,
     funnel,
   } = model;
@@ -46,17 +45,6 @@ export function StatisticsView({
   } = useStatisticsOpportunitySelection({ opportunityRadar: model.opportunityRadar });
 
   const activePriceIntelligence = selectedOpportunity?.priceIntelligence ?? model.priceIntelligence;
-
-  const focusLabel = React.useMemo(() => {
-    if (filters.categoryKey && filters.cityId) return `${context.categoryLabel} in ${context.cityLabel}`;
-    if (filters.categoryKey) return context.categoryLabel;
-    if (filters.cityId) return context.cityLabel;
-    return null;
-  }, [context.categoryLabel, context.cityLabel, filters.categoryKey, filters.cityId]);
-
-  const decisionSubtitle = focusLabel
-    ? `${copy.marketHealthSubtitle} · ${focusLabel}`
-    : copy.marketHealthSubtitle;
 
   const decisionPlan = React.useMemo(() => {
     const withActionLabel = (plan: StatisticsDecisionPlan) => (
@@ -114,28 +102,30 @@ export function StatisticsView({
     mode,
   });
 
-  const resolvedDecisionSubtitle = sectionMeta.decisionSubtitle ?? decisionSubtitle;
-
   const railModel = React.useMemo(
     () => mapStatisticsRailModel({
+      locale,
       copy,
       decisionPlan,
       activePriceIntelligence,
       selectedOpportunity,
-      rightRailNextSteps,
-      resolvedDecisionSubtitle,
-      contextScopeLabel: context.scopeLabel,
+      activitySignals,
+      kpis: model.kpis,
+      rightRailRisks: model.rightRailRisks,
+      rightRailOpportunities: model.rightRailOpportunities,
       onPrimaryAction: applySelectedOpportunityFocus,
       onQueueItemAction: applySelectedOpportunityFocus,
     }),
     [
       activePriceIntelligence,
+      activitySignals,
       applySelectedOpportunityFocus,
-      context.scopeLabel,
       copy,
       decisionPlan,
-      rightRailNextSteps,
-      resolvedDecisionSubtitle,
+      locale,
+      model.kpis,
+      model.rightRailOpportunities,
+      model.rightRailRisks,
       selectedOpportunity,
     ],
   );
@@ -145,11 +135,9 @@ export function StatisticsView({
       t={t}
       locale={locale}
       model={model}
-      decisionPlan={decisionPlan}
       selectedOpportunity={selectedOpportunity}
       selectedOpportunityRank={selectedOpportunityRank}
       setSelectedOpportunityRank={setSelectedOpportunityRank}
-      applySelectedOpportunityFocus={applySelectedOpportunityFocus}
       funnelContainerRef={funnelContainerRef}
       funnelVisualRows={funnelVisualRows}
       isPersonalizedMode={mode === 'personalized' && Boolean(userIntelligence)}

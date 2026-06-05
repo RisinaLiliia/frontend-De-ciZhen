@@ -360,6 +360,7 @@ export type WorkspaceStatisticsModel = {
   activitySubtitle: string;
   activitySummary: string | null;
   activityPoints: Array<{
+    timestamp: string;
     label: string;
     requests: number;
     offers: number;
