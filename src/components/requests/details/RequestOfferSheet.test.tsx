@@ -45,7 +45,7 @@ function createProps(overrides?: Partial<React.ComponentProps<typeof RequestOffe
     successTipCardBody: 'Tip card body',
     successProfileCta: 'Open profile',
     successContinueCta: 'Continue',
-    successProfileHref: '/profile/test',
+    successProfileHref: '/workspace?section=profile',
     showProfileAdvice: false,
     profileStatusLabel: 'Offline',
     isSubmitting: false,
@@ -136,4 +136,3 @@ describe('RequestOfferSheet', () => {
     expect(document.activeElement).toBe(screen.getByTestId('outside-focus'));
   });
 });
-

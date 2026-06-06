@@ -12,10 +12,10 @@
     display: grid;
     gap: var(--space-4);
     padding: clamp(16px, 2.2vw, 24px);
-    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    border-color: color-mix(in oklab, var(--color-primary) 28%, var(--color-border) 72%);
     background:
-      radial-gradient(120% 100% at 0% 0%, color-mix(in oklab, var(--c-primary) 14%, transparent), transparent),
-      linear-gradient(180deg, color-mix(in oklab, var(--c-panel) 96%, transparent), var(--surface-soft-bg));
+      radial-gradient(120% 100% at 0% 0%, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent),
+      linear-gradient(180deg, color-mix(in oklab, var(--color-surface) 96%, transparent), var(--surface-soft-bg));
   }
 
   :is(.home-intro-shell, .workspace-overlay-surface) {
@@ -24,15 +24,15 @@
     overflow: hidden;
     border: 0;
     background:
-      radial-gradient(120% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 12%, transparent), transparent 48%),
+      radial-gradient(120% 110% at 0% 0%, color-mix(in oklab, var(--color-primary) 12%, transparent), transparent 48%),
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--c-panel) 84%, var(--c-ink) 16%),
-        color-mix(in oklab, var(--c-panel) 72%, var(--c-ink) 28%)
+        color-mix(in oklab, var(--color-surface) 84%, var(--c-ink) 16%),
+        color-mix(in oklab, var(--color-surface) 72%, var(--c-ink) 28%)
       );
     box-shadow:
-      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 10%, transparent),
-      0 14px 34px color-mix(in oklab, var(--c-primary) 8%, transparent);
+      inset 0 1px 0 color-mix(in oklab, var(--color-surface) 10%, transparent),
+      0 14px 34px color-mix(in oklab, var(--color-primary) 8%, transparent);
   }
 
   :is(.home-intro-shell, .workspace-overlay-surface)::before {
@@ -42,12 +42,12 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-primary) 11%, transparent), transparent 52%),
-      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--color-primary) 11%, transparent), transparent 52%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--color-warning) 8%, transparent), transparent 62%),
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--c-panel) 16%, transparent),
-        color-mix(in oklab, var(--c-panel) 8%, transparent)
+        color-mix(in oklab, var(--color-surface) 16%, transparent),
+        color-mix(in oklab, var(--color-surface) 8%, transparent)
     );
     backdrop-filter: blur(10px) saturate(1.05);
   }
@@ -66,6 +66,14 @@
     padding: var(--home-intro-padding);
     padding-top: calc(var(--shell-topbar-height) + var(--shell-topbar-offset, 0px) + var(--home-intro-padding));
     border-radius: 0 0 calc(var(--radius-lg) + 2px) calc(var(--radius-lg) + 2px);
+    background: var(--color-background);
+    background-image: none;
+    box-shadow: none;
+  }
+
+  .home-intro-shell::before {
+    content: none;
+    background: none;
   }
 
   .home-intro-shell .hero-experiment {
@@ -84,39 +92,39 @@
   .home-intro-shell .home-quick-search-panel,
   .home-intro-shell .home-activity-panel {
     box-shadow: none;
-    border-color: color-mix(in oklab, var(--c-border) 54%, var(--c-ink) 46%);
+    border-color: color-mix(in oklab, var(--color-border) 54%, var(--c-ink) 46%);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--c-panel) 74%, var(--c-ink) 26%),
-      color-mix(in oklab, var(--c-panel) 68%, var(--c-ink) 32%)
+      color-mix(in oklab, var(--color-surface) 74%, var(--c-ink) 26%),
+      color-mix(in oklab, var(--color-surface) 68%, var(--c-ink) 32%)
     );
   }
 
   .home-intro-shell .home-activity-panel {
-    border-color: color-mix(in oklab, var(--c-primary) 32%, var(--c-ink) 68%);
+    border-color: color-mix(in oklab, var(--color-primary) 32%, var(--c-ink) 68%);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--c-panel) 70%, var(--c-ink) 30%),
-      color-mix(in oklab, var(--c-panel) 64%, var(--c-ink) 36%)
+      color-mix(in oklab, var(--color-surface) 70%, var(--c-ink) 30%),
+      color-mix(in oklab, var(--color-surface) 64%, var(--c-ink) 36%)
     );
     box-shadow:
-      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 7%, transparent),
+      inset 0 1px 0 color-mix(in oklab, var(--color-surface) 7%, transparent),
       0 10px 24px color-mix(in oklab, var(--c-ink) 45%, transparent);
   }
 
   .home-intro-shell .home-stats-panel,
   .home-intro-shell .home-quick-search-panel {
     box-shadow:
-      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 6%, transparent),
+      inset 0 1px 0 color-mix(in oklab, var(--color-surface) 6%, transparent),
       0 8px 20px color-mix(in oklab, var(--c-ink) 34%, transparent);
   }
 
   .home-intro-shell .home-combined-top {
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .home-intro-shell .home-combined-top__left.stack-md {
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .hero-experiment--subtle {

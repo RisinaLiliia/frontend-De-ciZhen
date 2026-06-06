@@ -1,0 +1,131 @@
+'use client';
+
+import * as React from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
+import { createConversation } from '@/lib/api/chat';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import { useT } from '@/lib/i18n/useT';
+import { workspaceQK } from '@/features/workspace/data';
+import type { WorkspaceChatConversationInput } from '@/features/workspace/actions/workspaceActions.model';
+import { isWorkspaceChatConversationInput } from '@/features/workspace/actions/workspaceActions.model';
+import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
+
+type WorkspaceChatDialogState = {
+  conversationId: string;
+  title: string;
+};
+
+type ManagedRequestState = {
+  requestId: string;
+  intent: RequestDialogIntent;
+};
+
+type PublicRequestOverlaySeed = {
+  id: string;
+  title?: string | null;
+};
+
+export function useWorkspacePublicRequestOverlayFlow({
+  requests,
+  initialRequestState = null,
+  initialOfferRequestId = null,
+}: {
+  requests: PublicRequestOverlaySeed[];
+  initialRequestState?: ManagedRequestState | null;
+  initialOfferRequestId?: string | null;
+}) {
+  const t = useT();
+  const qc = useQueryClient();
+  const requestsById = React.useMemo(
+    () => new Map(requests.map((request) => [request.id, request])),
+    [requests],
+  );
+  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(initialRequestState);
+  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(initialOfferRequestId);
+  const [activeChatState, setActiveChatState] = React.useState<WorkspaceChatDialogState | null>(null);
+  const [returnRequestState, setReturnRequestState] = React.useState<ManagedRequestState | null>(null);
+  const activeRequestStateRef = React.useRef<ManagedRequestState | null>(null);
+
+  React.useEffect(() => {
+    activeRequestStateRef.current = activeRequestState;
+  }, [activeRequestState]);
+
+  const openRequest = React.useCallback((requestId: string, intent: RequestDialogIntent = 'view') => {
+    setReturnRequestState(null);
+    setActiveOfferRequestId(null);
+    setActiveChatState(null);
+    setActiveRequestState({ requestId, intent });
+  }, []);
+
+  const closeRequest = React.useCallback(() => {
+    setReturnRequestState(null);
+    setActiveRequestState(null);
+  }, []);
+
+  const openOfferSheet = React.useCallback((requestId: string) => {
+    setReturnRequestState(activeRequestStateRef.current);
+    setActiveRequestState(null);
+    setActiveChatState(null);
+    setActiveOfferRequestId(requestId);
+  }, []);
+
+  const closeOfferSheet = React.useCallback(() => {
+    setActiveOfferRequestId(null);
+    setActiveRequestState(returnRequestState);
+    setReturnRequestState(null);
+  }, [returnRequestState]);
+
+  const openChatConversation = React.useCallback(async (payload: WorkspaceChatConversationInput, title?: string) => {
+    try {
+      if (!isWorkspaceChatConversationInput(payload)) {
+        toast.error(t(I18N_KEYS.workspace.chatOpenError));
+        return;
+      }
+
+      const conversation = await createConversation(payload);
+      await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
+      const fallbackTitle = payload.requestId
+        ? requestsById.get(payload.requestId)?.title?.trim()
+        : '';
+
+      setReturnRequestState(activeRequestStateRef.current);
+      setActiveRequestState(null);
+      setActiveOfferRequestId(null);
+      setActiveChatState({
+        conversationId: conversation.id,
+        title: title?.trim() || fallbackTitle || t(I18N_KEYS.workspace.messagesTitle),
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+      toast.error(message);
+    }
+  }, [qc, requestsById, t]);
+
+  const closeChat = React.useCallback(() => {
+    setActiveChatState(null);
+    setActiveRequestState(returnRequestState);
+    setReturnRequestState(null);
+  }, [returnRequestState]);
+
+  const dismissSession = React.useCallback(() => {
+    setReturnRequestState(null);
+    setActiveChatState(null);
+    setActiveOfferRequestId(null);
+    setActiveRequestState(null);
+  }, []);
+
+  return {
+    activeChatState,
+    activeOfferRequestId,
+    activeRequestState,
+    closeChat,
+    closeOfferSheet,
+    closeRequest,
+    dismissSession,
+    openChatConversation,
+    openOfferSheet,
+    openRequest,
+  };
+}

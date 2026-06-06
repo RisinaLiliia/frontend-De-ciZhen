@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
+import type { WorkspaceNavItem } from '@/features/workspace/navigation/workspaceNavItem.types';
 
 import {
   formatWorkspaceMobileSheetBadgeValue,
@@ -47,7 +47,7 @@ describe('workspaceMobileSectionSheet.model', () => {
     expect(
       isWorkspaceMobileSheetItemActive(
         { ...baseItem, href: '/workspace', match: 'prefix' },
-        '/workspace/profile',
+        '/workspace',
         new URLSearchParams(),
       ),
     ).toBe(true);

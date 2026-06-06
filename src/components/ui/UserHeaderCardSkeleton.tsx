@@ -4,11 +4,11 @@ type UserHeaderCardSkeletonProps = {
 
 export function UserHeaderCardSkeleton({ className }: UserHeaderCardSkeletonProps) {
   return (
-    <div className={`provider-info ${className ?? ''}`.trim()}>
-      <div className="provider-avatar-wrap">
+    <div className={`profile-card ${className ?? ''}`.trim()}>
+      <div className="profile-avatar-wrap">
         <div className="skeleton is-wide h-12 w-12 rounded-full" />
       </div>
-      <div className="provider-main">
+      <div className="profile-main">
         <div className="skeleton is-wide h-4 w-24" />
         <div className="skeleton is-wide h-3 w-20" />
         <div className="skeleton is-wide h-3 w-16" />
@@ -16,4 +16,3 @@ export function UserHeaderCardSkeleton({ className }: UserHeaderCardSkeletonProp
     </div>
   );
 }
-

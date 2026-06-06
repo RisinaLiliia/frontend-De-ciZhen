@@ -112,6 +112,57 @@ export function IconFilter() {
   );
 }
 
+export function IconSort() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M7 6h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M7 12h7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M7 18h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="m16 9 3 3 3-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M19 6v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconRotateCcw() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M3 12a9 9 0 1 0 3-6.7"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M3 4v5h5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconLayoutRows() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <rect x="5" y="4.5" width="14" height="15" rx="2.5" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8 9.5h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M8 14h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconLayoutColumns() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <rect x="4.5" y="4.5" width="6.5" height="15" rx="2.25" stroke="currentColor" strokeWidth="1.8" />
+      <rect x="13" y="4.5" width="6.5" height="15" rx="2.25" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
 export function IconCamera() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

@@ -1,7 +1,7 @@
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
-import type { ProviderBadgeItem } from '@/components/providers/ProviderCard';
+import type { ProviderBadgeItem } from '@/components/providers/ProviderBadgeGroup';
 
 type Translator = (key: I18nKey) => string;
 
@@ -115,7 +115,7 @@ export function buildProviderCardBadges(params: {
     });
     if (isSchnelleAntwort) {
       badges.push({
-        variant: 'opportunity',
+        variant: 'success',
         size: 'sm',
         tone: 'soft',
         label: t(I18N_KEYS.homePublic.providerBadgeFastReply),
@@ -124,7 +124,7 @@ export function buildProviderCardBadges(params: {
     }
   } else if (isSchnelleAntwort) {
     badges.push({
-      variant: 'opportunity',
+      variant: 'success',
       size: 'sm',
       tone: 'soft',
       label: t(I18N_KEYS.homePublic.providerBadgeFastReply),

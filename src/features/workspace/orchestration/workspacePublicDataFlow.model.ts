@@ -1,0 +1,46 @@
+'use client';
+
+import type { useWorkspacePublicState } from '@/features/workspace/state/useWorkspacePublicState';
+import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
+import type { buildWorkspacePublicExploreWithSeed, resolveWorkspacePublicBranchSnapshot } from '@/features/workspace/orchestration/workspacePublicBranch.model';
+
+type WorkspacePublicStateResult = ReturnType<typeof useWorkspacePublicState>;
+type WorkspacePublicSnapshotResult = ReturnType<typeof resolveWorkspacePublicBranchSnapshot>;
+type WorkspacePublicExploreWithSeedResult = ReturnType<typeof buildWorkspacePublicExploreWithSeed>;
+
+type ResolveWorkspacePublicDataFlowResultArgs = {
+  routeState: Pick<
+    WorkspaceBranchProps['routeState'],
+    | 'activePublicSection'
+    | 'activeWorkspaceTab'
+  >;
+  snapshot: WorkspacePublicSnapshotResult;
+  localeTag: string;
+  exploreWithSeed?: WorkspacePublicExploreWithSeedResult | null;
+  isSummaryLoading: boolean;
+  isSummaryError: boolean;
+  publicState: WorkspacePublicStateResult;
+};
+
+export function resolveWorkspacePublicDataFlowResult({
+  routeState,
+  snapshot,
+  localeTag,
+  exploreWithSeed,
+  isSummaryLoading,
+  isSummaryError,
+  publicState,
+}: ResolveWorkspacePublicDataFlowResultArgs) {
+  return {
+    activePublicSection: routeState.activePublicSection,
+    activeWorkspaceTab: routeState.activeWorkspaceTab,
+    platformRequestsTotal: snapshot.platformRequestsTotal,
+    localeTag,
+    exploreWithSeed: routeState.activePublicSection === 'requests' ? null : (exploreWithSeed ?? null),
+    cityActivity: snapshot.cityActivity,
+    platformSummary: snapshot.platformSummary,
+    isSummaryLoading,
+    isSummaryError,
+    ...publicState,
+  };
+}

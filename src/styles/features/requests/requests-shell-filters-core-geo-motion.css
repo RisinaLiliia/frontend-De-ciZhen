@@ -1,12 +1,12 @@
 /* src/styles/features/requests/requests-shell-filters-core-geo-motion.css */
 
 @layer components {
-  .requests-select-icon--city::after {
+  .dc-leading-icon--city::after {
     content: '';
     position: absolute;
     inset: -2px;
-    border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 24%, transparent);
+    border-radius: var(--radius-pill);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 24%, transparent);
     opacity: 0;
     transform: scale(0.7);
     animation: requests-geo-pulse 2.8s ease-out infinite;
@@ -27,7 +27,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .requests-select-icon--city::after {
+    .dc-leading-icon--city::after {
       animation: none;
     }
   }

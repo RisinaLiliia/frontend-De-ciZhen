@@ -11,7 +11,7 @@
   }
 
   .auth-route-modal__panel {
-    gap: 14px;
+    gap: var(--space-3-5);
     overflow-x: hidden;
   }
 
@@ -30,27 +30,10 @@
     overflow-wrap: anywhere;
   }
 
-  .auth-form__link-btn {
-    width: fit-content;
-    align-self: flex-end;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: color-mix(in oklab, var(--c-primary) 80%, var(--c-text) 20%);
-    font-size: 12px;
-    line-height: 1.2;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .auth-form__link-btn:hover {
-    color: var(--c-primary);
-  }
-
   .form-label {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--space-1);
   }
 
   .form-label__required {
@@ -59,34 +42,34 @@
     justify-content: center;
     width: 14px;
     height: 14px;
-    border-radius: 999px;
-    font-size: 11px;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-11);
     font-weight: 700;
     line-height: 1;
     cursor: help;
-    color: color-mix(in oklab, var(--c-warning) 86%, var(--c-text) 14%);
-    background: color-mix(in oklab, var(--c-warning) 18%, transparent);
-    border: 1px solid color-mix(in oklab, var(--c-warning) 35%, transparent);
+    color: color-mix(in oklab, var(--color-warning) 86%, var(--color-text) 14%);
+    background: color-mix(in oklab, var(--color-warning) 18%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 35%, transparent);
   }
 
   .auth-form-error {
     margin-top: 4px;
-    font-size: 12px;
+    font-size: var(--fs-12);
     line-height: 1.35;
-    color: color-mix(in oklab, var(--c-danger) 85%, var(--c-text) 15%);
+    color: color-mix(in oklab, var(--c-danger) 85%, var(--color-text) 15%);
   }
 
   .auth-form-note {
     margin-top: 2px;
     padding: 10px 12px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     border: 1px solid var(--focus-ring-primary);
-    background: color-mix(in oklab, var(--c-primary) 10%, transparent);
+    background: color-mix(in oklab, var(--color-primary) 10%, transparent);
     display: grid;
-    gap: 6px;
-    font-size: 12px;
+    gap: var(--space-1-5);
+    font-size: var(--fs-12);
     line-height: 1.4;
-    color: color-mix(in oklab, var(--c-text) 90%, white 10%);
+    color: color-mix(in oklab, var(--color-text) 90%, white 10%);
   }
 
 

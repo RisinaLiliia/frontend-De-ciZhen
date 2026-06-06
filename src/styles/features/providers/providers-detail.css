@@ -1,0 +1,212 @@
+@layer components {
+  .request-detail--dialog.request-detail--provider .request-detail__summary-row {
+    padding-top: 0;
+    align-items: center;
+  }
+
+  .request-detail--dialog.request-detail--provider .request-detail__section.request-detail__similar {
+    gap: var(--space-3);
+  }
+
+  .request-detail--dialog.request-detail--provider .provider-detail__similar-section {
+    gap: var(--space-2-5);
+  }
+
+  .request-detail--dialog.request-detail--provider .provider-detail__similar-section .provider-list {
+    gap: var(--space-3);
+  }
+
+  .request-detail--dialog.request-detail--provider .provider-detail-hero__menu-popover > .dc-popover-trigger {
+    display: inline-flex;
+  }
+
+  .request-detail--dialog.request-detail--provider .provider-detail-hero__menu {
+    margin-left: auto;
+    position: relative;
+    z-index: 5;
+  }
+
+  .request-detail--dialog.request-detail--provider .provider-detail-hero__menu-surface {
+    min-width: 220px;
+  }
+
+  .request-detail--dialog.request-detail--provider .provider-detail-hero__menu-popover .dc-popover-panel {
+    z-index: 120;
+  }
+
+  .request-detail--dialog.request-detail--provider .provider-detail-hero__menu .icon-heart.is-active {
+    color: var(--color-warning);
+    fill: currentColor;
+  }
+
+  .request-detail--provider .request-detail__client {
+    margin-bottom: var(--space-2);
+  }
+
+  .request-detail--provider .public-profile-reviews__sort-btn {
+    color: var(--color-text);
+  }
+
+  @media (min-width: 768px) {
+    .request-detail--provider .request-detail__section--about {
+      align-content: start;
+    }
+
+    .request-detail--provider .public-profile-reviews__list {
+      min-block-size: clamp(300px, 36vh, 420px);
+    }
+
+    .request-detail--provider .request-detail__aside .request-detail__similar {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .request-detail--provider .request-detail__aside .provider-list {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .request-detail--provider .request-detail__aside .request-detail__similar-footer {
+      margin-top: auto;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .request-detail--provider .request-detail__client-card--provider-hero .user-header-card__identity {
+      gap: var(--space-1-5);
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .profile-main {
+      gap: var(--space-0-5);
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .profile-decision-metrics {
+      gap: 1px;
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .profile-decision-metric {
+      font-size: var(--fs-11);
+    }
+
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-actions {
+      gap: var(--space-1-5);
+    }
+
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-action.offer-action-btn--icon-only {
+      width: 38px;
+      min-width: 38px;
+      height: 38px;
+      min-height: 38px;
+      border-radius: var(--radius-md);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .request-detail--provider .request-detail__client-card--provider-hero .profile-decision-metrics {
+      display: grid;
+      gap: var(--space-0-5);
+    }
+
+    .request-detail--provider .request-detail__client-card--provider-hero .profile-decision-metric {
+      white-space: nowrap;
+      font-size: 11.5px;
+      line-height: 1.25;
+    }
+
+    .request-detail--provider .request-detail__client {
+      gap: var(--space-2);
+    }
+
+    .request-detail--provider .request-detail__provider-mobile-availability {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .request-detail--provider .request-detail__provider-mobile-availability .request-detail__availability-date,
+    .request-detail--provider .request-detail__provider-mobile-availability .profile-main__availability {
+      font-size: var(--fs-12);
+    }
+
+    .request-detail--provider .request-detail__aside .request-detail__similar-footer {
+      margin-bottom: calc(var(--space-2) + var(--shell-mobile-nav-height, 0px) + env(safe-area-inset-bottom));
+    }
+
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-action.offer-action-btn--icon-only {
+      width: 40px;
+      min-width: 40px;
+      height: 40px;
+      min-height: 40px;
+      border-radius: var(--radius-md);
+    }
+
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .offer-action-btn__icon svg,
+    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-detail__save .icon-heart {
+      width: 16px;
+      height: 16px;
+    }
+
+    .request-detail--provider .request-detail__aside .provider-card--similar-mobile-minimal .profile-city,
+    .request-detail--provider .request-detail__aside .provider-card--similar-mobile-minimal .profile-decision-metrics {
+      display: none;
+    }
+
+    .request-detail--provider .request-detail__aside .provider-card--similar-mobile-minimal .profile-main {
+      gap: var(--space-1);
+    }
+
+    .request-detail--provider {
+      padding-bottom: var(--space-4);
+    }
+
+    .request-detail--provider .request-detail__price {
+      gap: 5px;
+      line-height: 1.2;
+      font-size: 16px;
+    }
+
+    .request-detail--provider .request-detail__price-prefix,
+    .request-detail--provider .request-detail__price-suffix {
+      font-size: var(--fs-12);
+      line-height: 1.2;
+    }
+
+    .request-detail--provider .request-detail__aside .request-detail__availability-actions {
+      display: none;
+    }
+
+    .request-detail--provider .request-detail__panel,
+    .request-detail--provider .request-detail__section,
+    .request-detail--provider .public-profile-reviews,
+    .request-detail--provider .public-profile-reviews__feed,
+    .request-detail--provider .public-profile-reviews__summary {
+      min-width: 0;
+    }
+
+    .request-detail--provider .request-detail__panel {
+      overflow-x: clip;
+    }
+
+    .request-detail--provider .public-profile-reviews__toolbar {
+      align-items: flex-start;
+    }
+
+    .request-detail--provider .public-profile-reviews__sort {
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .request-detail--provider .public-profile-reviews__sort-btn {
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .request-detail--provider .public-profile-reviews__page-nav {
+      margin-inline: auto;
+    }
+  }
+}

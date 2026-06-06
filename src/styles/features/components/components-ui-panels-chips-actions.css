@@ -4,7 +4,7 @@
   .btn-icon {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .chip-row {
@@ -16,60 +16,47 @@
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     padding: 8px 12px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--surface-soft-bg-strong);
-    border: 1px solid var(--c-border);
-    font-size: 14px;
+    border: 1px solid var(--color-border);
+    font-size: var(--fs-14);
     font-weight: 600;
     transition: transform var(--transition-fast), border-color var(--transition-fast);
   }
 
   .chip:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
+    border-color: color-mix(in oklab, var(--color-border) 72%, var(--color-text) 28%);
   }
 
   .chip:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
   .chip.is-active {
-    border-color: color-mix(in oklab, var(--c-border) 68%, var(--c-accent) 32%);
-    background: color-mix(in oklab, var(--c-panel) 88%, var(--c-accent) 12%);
-    box-shadow: 0 6px 16px color-mix(in oklab, var(--c-ink) 10%, transparent);
+    border-color: color-mix(in oklab, var(--color-border) 68%, var(--color-warning) 32%);
+    background: color-mix(in oklab, var(--color-surface) 88%, var(--color-warning) 12%);
+    box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .chip {
-    background: var(--c-panel);
-    border-color: var(--c-border);
-    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .chip.is-active {
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--c-panel) 94%, var(--c-surface) 6%),
-      color-mix(in oklab, var(--c-panel) 86%, var(--c-accent) 14%)
+      color-mix(in oklab, var(--color-surface) 94%, var(--color-surface-muted) 6%),
+      color-mix(in oklab, var(--color-surface) 86%, var(--color-warning) 14%)
     );
-    border-color: color-mix(in oklab, var(--c-border) 74%, var(--c-accent) 26%);
-    color: var(--c-text);
-    box-shadow: 0 10px 18px color-mix(in oklab, var(--c-ink) 8%, transparent);
-  }
-
-  .list-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-    padding: 10px 0;
-    border-bottom: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
-  }
-
-  .list-item:last-child {
-    border-bottom: none;
+    border-color: color-mix(in oklab, var(--color-border) 74%, var(--color-warning) 26%);
+    color: var(--color-text);
+    box-shadow: var(--shadow-card);
   }
 
   .panel-action {
@@ -78,9 +65,9 @@
     justify-content: center;
     width: 28px;
     height: 28px;
-    border-radius: 999px;
-    border: 1px solid var(--c-border);
-    color: var(--c-text-muted);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
     transition:
       border-color var(--transition-fast),
       color var(--transition-fast),
@@ -89,15 +76,15 @@
   }
 
   .panel-action:hover {
-    color: var(--c-text);
-    border-color: color-mix(in oklab, var(--c-border) 72%, var(--c-text) 28%);
-    background: color-mix(in oklab, var(--c-surface) 85%, var(--c-border) 15%);
+    color: var(--color-text);
+    border-color: color-mix(in oklab, var(--color-border) 72%, var(--color-text) 28%);
+    background: color-mix(in oklab, var(--color-surface-muted) 85%, var(--color-border) 15%);
     transform: translateY(-1px);
   }
 
   .panel-action:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
 

@@ -2,12 +2,12 @@
 
 @layer components {
   .request-upload {
-    border: 1px dashed color-mix(in oklab, var(--c-border) 70%, transparent);
+    border: 1px dashed color-mix(in oklab, var(--color-border) 70%, transparent);
     border-radius: var(--radius-lg);
     padding: var(--space-4);
     display: grid;
     gap: var(--space-3);
-    background: color-mix(in oklab, var(--c-surface) 92%, transparent);
+    background: color-mix(in oklab, var(--color-surface-muted) 92%, transparent);
   }
 
   .request-upload__actions {
@@ -37,8 +37,8 @@
     position: relative;
     border-radius: var(--radius-md);
     overflow: hidden;
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 88%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+    background: color-mix(in oklab, var(--color-surface) 88%, transparent);
     aspect-ratio: 4 / 3;
   }
 
@@ -52,7 +52,7 @@
     position: absolute;
     top: 8px;
     right: 8px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: none;
     background: color-mix(in oklab, var(--c-ink) 60%, transparent);
     color: var(--c-primary-contrast);
@@ -75,18 +75,18 @@
     align-items: center;
     gap: var(--space-1-5);
     padding: var(--space-1-5) var(--space-2-5);
-    border-radius: 999px;
-    font-size: 12px;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-12);
     background: var(--surface-soft-bg);
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    color: var(--c-text);
+    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+    color: var(--color-text);
   }
 
   .request-tag-chip button {
     border: none;
     background: transparent;
     color: inherit;
-    font-size: 14px;
+    font-size: var(--fs-14);
     cursor: pointer;
   }
 

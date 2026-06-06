@@ -1,0 +1,60 @@
+/* src/styles/features/workspace/workspace-overlay-responsive.css */
+
+@layer components {
+  @media (max-width: 767px) {
+    .workspace-environment,
+    .workspace-context-brief,
+    .workspace-context-rail {
+      --workspace-environment-section-gap: var(--space-3);
+      --workspace-environment-card-gap: var(--space-2);
+      --workspace-environment-card-pad: 14px;
+      --workspace-environment-title-size: var(--app-title-lg-size);
+      --workspace-environment-body-size: var(--app-text-muted-size);
+      --workspace-environment-label-size: var(--app-caption-size);
+      --workspace-environment-body-line-height: var(--app-text-muted-line-height);
+    }
+
+    .workspace-environment__hero,
+    .workspace-context-brief__head {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .workspace-environment__utility:not(.workspace-environment__utility--compact) {
+      display: none;
+    }
+
+    .workspace-environment__copy {
+      max-width: 100%;
+    }
+
+    .workspace-context-brief__metrics {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .workspace-environment {
+      --workspace-environment-card-pad: 12px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .workspace-environment__utility:not(.workspace-environment__utility--compact) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .workspace-environment__title {
+      line-height: 1.04;
+    }
+
+    .workspace-environment__description {
+      max-width: 96ch;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+  }
+}

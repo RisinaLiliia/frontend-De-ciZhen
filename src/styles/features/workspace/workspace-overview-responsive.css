@@ -1,0 +1,87 @@
+/* src/styles/features/workspace/workspace-overview-responsive.css */
+
+@layer components {
+  @media (min-width: 1024px) {
+    .requests-grid--equal-cols > .workspace-frame__flow--overview > .workspace-overview {
+      flex: 0 0 auto;
+      min-height: 0;
+      height: auto;
+    }
+
+    .workspace-overview__hero {
+      grid-template-columns: minmax(0, 1.7fr) minmax(320px, 0.9fr);
+      align-items: stretch;
+    }
+
+    .workspace-overview__hero > .workspace-overview__panel {
+      min-height: 100%;
+    }
+
+    .workspace-overview__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: stretch;
+    }
+
+    .workspace-overview__grid > .workspace-overview__panel--providers,
+    .workspace-overview__grid > .workspace-overview__panel--offers {
+      grid-template-rows: auto minmax(0, 1fr);
+      min-height: 100%;
+    }
+
+    .workspace-overview__grid
+      > .workspace-overview__panel--providers
+      > .workspace-overview__providers,
+    .workspace-overview__grid
+      > .workspace-overview__panel--offers
+      > .workspace-overview__opportunities,
+    .workspace-overview__grid > .workspace-overview__panel--offers > .workspace-overview__list {
+      min-height: 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .workspace-overview {
+      --workspace-overview-section-gap: var(--space-3);
+      --workspace-overview-cluster-gap: var(--space-3);
+      --workspace-overview-panel-gap: var(--space-3);
+      --workspace-overview-content-gap: var(--space-2-5);
+      --workspace-overview-heading-gap: var(--space-1-5);
+      --workspace-overview-panel-pad: 14px;
+      --workspace-overview-card-min-height: 158px;
+    }
+
+    .workspace-overview__grid {
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .workspace-overview__grid > .workspace-overview__panel--offers {
+      order: 1;
+    }
+
+    .workspace-overview__grid > .workspace-overview__panel--providers {
+      order: 2;
+    }
+
+    .workspace-overview__action-links {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
+    }
+
+    .workspace-overview__action-links .btn-ghost {
+      min-height: 40px;
+      justify-content: flex-start;
+      padding: 9px 11px;
+      border-radius: var(--radius-lg);
+      font-size: var(--fs-12);
+      line-height: 1.2;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .workspace-overview {
+      --workspace-overview-panel-pad: 12px;
+      --workspace-overview-card-min-height: 148px;
+    }
+  }
+}

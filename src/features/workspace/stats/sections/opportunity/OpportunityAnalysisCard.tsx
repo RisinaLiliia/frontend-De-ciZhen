@@ -1,0 +1,191 @@
+'use client';
+import * as React from 'react';
+import { LocationMeta } from '@/components/ui/LocationMeta';
+import {
+  IconTrophyBronze,
+  IconTrophyGold,
+  IconTrophySilver,
+} from '@/components/ui/icons/icons';
+import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
+import { useT } from '@/lib/i18n/useT';
+import type { WorkspaceStatisticsModel } from '../../statistics.model';
+import { OpportunityToneBadge } from '../../components/OpportunityToneBadge';
+import { StatisticsSignalMeter } from '../../components/StatisticsSignalMeter';
+import type { OpportunityAxis, OpportunityItem } from './opportunity.utils';
+import {
+  buildOpportunityRadarAxisEndpoints,
+  buildOpportunityRadarAxisValueLabelPositions,
+  buildOpportunityRadarPoints,
+  buildOpportunityRadarSmoothPath,
+  opportunityStatusClassName,
+  opportunityStatusLabel,
+} from './opportunity.utils';
+
+export function OpportunityAnalysisCard({
+  copy,
+  item,
+  axes,
+}: {
+  copy: WorkspaceStatisticsModel['copy'];
+  locale: Locale;
+  item: OpportunityItem;
+  axes: OpportunityAxis[];
+  summary: string;
+}) {
+  const t = useT();
+  const radarPoints = React.useMemo(
+    () => buildOpportunityRadarPoints(axes.map((axis) => axis.value)),
+    [axes],
+  );
+  const radarPath = React.useMemo(
+    () => buildOpportunityRadarSmoothPath(radarPoints),
+    [radarPoints],
+  );
+  const radarAxisValueLabels = React.useMemo(
+    () => buildOpportunityRadarAxisValueLabelPositions(axes.map((axis) => axis.value)),
+    [axes],
+  );
+  const radarRingLevels = React.useMemo(() => [2.5, 5, 7.5, 10], []);
+  const radarAxisEndpoints = React.useMemo(() => buildOpportunityRadarAxisEndpoints(), []);
+  const rankTone = item.rank === 1 ? 'gold' : item.rank === 2 ? 'silver' : 'bronze';
+  const featuredStatus = item.rank === 1 && item.status === 'balanced' ? 'good' : item.status;
+  const statusClass = opportunityStatusClassName(featuredStatus);
+
+  return (
+    <article
+      className={workspaceCardShell(
+        'workspace-statistics-opportunity__item',
+        'workspace-statistics-opportunity__item--analysis',
+        `is-${item.tone}`,
+      )}
+      aria-label={t(I18N_KEYS.workspace.statsOpportunityDetailAnalysisTemplate)
+        .replace('{city}', item.city)}
+    >
+      <div className="workspace-statistics-opportunity__analysis-overview">
+        <div className="workspace-statistics-opportunity__analysis-identity workspace-statistics-opportunity__top">
+          <span
+            className={`workspace-statistics-city-list__rank-cup workspace-statistics-opportunity__rank-cup is-${rankTone}`.trim()}
+            aria-hidden="true"
+          >
+            {item.rank === 1 ? <IconTrophyGold size={30} /> : null}
+            {item.rank === 2 ? <IconTrophySilver size={30} /> : null}
+            {item.rank === 3 ? <IconTrophyBronze size={30} /> : null}
+          </span>
+          <div className="workspace-statistics-opportunity__identity">
+            <span className="request-category workspace-statistics-opportunity__category">{item.category}</span>
+            <LocationMeta
+              label={item.city}
+              className="workspace-statistics-opportunity__city"
+            />
+          </div>
+        </div>
+        <div
+          className="workspace-statistics-opportunity__analysis-score"
+          aria-label={`${copy.opportunityScoreLabel}: ${item.score.toFixed(1)} / 10`}
+        >
+          <StatisticsSignalMeter
+            className="workspace-statistics-opportunity__score workspace-statistics-opportunity__score--analysis"
+            label={copy.opportunityScoreLabel}
+            value={`${item.score.toFixed(1)} / 10`}
+            progressPercent={item.score * 10}
+          />
+        </div>
+      </div>
+
+      <OpportunityToneBadge
+        className="workspace-statistics-opportunity__status workspace-statistics-opportunity__status--analysis"
+        tone={statusClass}
+        label={opportunityStatusLabel(featuredStatus, copy)}
+      />
+
+      <div className="workspace-statistics-opportunity__analysis-body">
+        <div className="workspace-statistics-opportunity__radar-block">
+          <div className="workspace-statistics-opportunity__radar" aria-hidden="true">
+            <svg viewBox="0 0 180 180" role="presentation">
+              {radarRingLevels.map((level) => (
+                <circle
+                  key={`ring-${level}`}
+                  cx="90"
+                  cy="90"
+                  r={(62 * level) / 10}
+                  className="workspace-statistics-opportunity__radar-ring"
+                />
+              ))}
+              {radarRingLevels.map((level) => (
+                <text
+                  key={`ring-label-${level}`}
+                  x="94"
+                  y={90 - ((62 * level) / 10) + 3}
+                  className="workspace-statistics-opportunity__radar-ring-label"
+                >
+                  {level}
+                </text>
+              ))}
+              {radarAxisEndpoints.map((endpoint, index) => (
+                <line
+                  key={`axis-${index}`}
+                  x1="90"
+                  y1="90"
+                  x2={endpoint.x}
+                  y2={endpoint.y}
+                  className="workspace-statistics-opportunity__radar-axis"
+                />
+              ))}
+              {radarPath ? <path d={radarPath} className="workspace-statistics-opportunity__radar-shape" /> : null}
+              {radarPoints.map((point, index) => (
+                <circle
+                  key={`dot-${index}`}
+                  cx={point.x}
+                  cy={point.y}
+                  r="2.5"
+                  className="workspace-statistics-opportunity__radar-dot"
+                />
+              ))}
+              {radarAxisValueLabels.map((valueLabel, index) => (
+                <text
+                  key={`axis-value-${index}`}
+                  x={valueLabel.x}
+                  y={valueLabel.y}
+                  className="workspace-statistics-opportunity__radar-axis-label"
+                >
+                  {valueLabel.label}
+                </text>
+              ))}
+            </svg>
+          </div>
+        </div>
+        <ul className="workspace-statistics-opportunity__analysis-axes">
+          {axes.map((axis) => (
+            <li key={axis.key}>
+              <StatisticsSignalMeter
+                className="workspace-statistics-opportunity__axis-signal"
+                label={axis.label}
+                value={`${axis.value.toFixed(1)} / 10`}
+                progressPercent={axis.value * 10}
+                semanticLabel={axis.semanticLabel}
+                semanticTone={axis.semanticTone}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <dl className="workspace-statistics-opportunity__metrics">
+        <div>
+          <dt>{copy.opportunityDemandLabel}</dt>
+          <dd>{item.demand.toLocaleString()}</dd>
+        </div>
+        <div>
+          <dt>{copy.opportunityProvidersLabel}</dt>
+          <dd>{item.providers === null ? '—' : item.providers.toLocaleString()}</dd>
+        </div>
+        <div>
+          <dt>{copy.opportunityBalanceLabel}</dt>
+          <dd>{item.marketBalanceRatio === null ? '—' : item.marketBalanceRatio.toFixed(2)}</dd>
+        </div>
+      </dl>
+    </article>
+  );
+}

@@ -6,23 +6,23 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) 132px;
     align-items: stretch;
-    gap: 14px;
+    gap: var(--space-3-5);
     min-height: 142px;
     width: 100%;
     min-width: 0;
     padding: 16px;
-    border-radius: 16px;
-    border: 1px dashed color-mix(in oklab, var(--c-accent) 56%, var(--c-border) 44%);
+    border-radius: var(--radius-lg);
+    border: 1px dashed color-mix(in oklab, var(--color-warning) 56%, var(--color-border) 44%);
     background:
       linear-gradient(
         148deg,
-        color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%) 0%,
-        color-mix(in oklab, var(--c-panel) 96%, var(--c-border) 4%) 62%,
-        color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%) 100%
+        color-mix(in oklab, var(--color-warning) 14%, var(--color-surface) 86%) 0%,
+        color-mix(in oklab, var(--color-surface) 96%, var(--color-border) 4%) 62%,
+        color-mix(in oklab, var(--color-primary) 10%, var(--color-surface) 90%) 100%
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-hi) 10%, transparent),
-      0 10px 28px color-mix(in oklab, var(--c-primary) 9%, transparent);
+      0 10px 28px color-mix(in oklab, var(--color-primary) 9%, transparent);
     text-decoration: none;
     color: inherit;
     box-sizing: border-box;
@@ -35,7 +35,7 @@
 
   .request-create-card__body {
     display: grid;
-    gap: 8px;
+    gap: var(--space-2);
     align-content: center;
     min-width: 0;
   }
@@ -45,7 +45,7 @@
     font-size: var(--fs-h3);
     line-height: var(--lh-title);
     font-weight: 600;
-    color: var(--c-text);
+    color: var(--color-text);
     overflow-wrap: anywhere;
   }
 
@@ -53,7 +53,7 @@
     margin: 0;
     font-size: var(--fs-small);
     line-height: 1.35;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     overflow-wrap: anywhere;
   }
 
@@ -62,14 +62,14 @@
     display: grid;
     place-items: center;
     min-width: 0;
-    border-radius: 14px;
-    border: 1px solid color-mix(in oklab, var(--c-accent) 52%, var(--c-border) 48%);
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 52%, var(--color-border) 48%);
     background:
       radial-gradient(circle at 24% 18%, color-mix(in oklab, var(--c-hi-strong) 26%, transparent) 0%, transparent 48%),
       linear-gradient(
         160deg,
-        color-mix(in oklab, var(--c-accent) 34%, var(--c-panel) 66%) 0%,
-        color-mix(in oklab, var(--c-primary) 18%, var(--c-panel) 82%) 100%
+        color-mix(in oklab, var(--color-warning) 34%, var(--color-surface) 66%) 0%,
+        color-mix(in oklab, var(--color-primary) 18%, var(--color-surface) 82%) 100%
       );
     overflow: hidden;
   }
@@ -79,25 +79,25 @@
     place-items: center;
     width: 58px;
     height: 58px;
-    border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--c-accent) 58%, var(--c-border) 42%);
-    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-accent) 16%);
-    color: var(--c-accent);
+    border-radius: var(--radius-pill);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 58%, var(--color-border) 42%);
+    background: color-mix(in oklab, var(--color-surface) 84%, var(--color-warning) 16%);
+    color: var(--color-warning);
     font-size: 38px;
     line-height: 1;
     font-weight: 500;
     box-shadow:
-      0 10px 20px color-mix(in oklab, var(--c-primary) 14%, transparent),
+      0 10px 20px color-mix(in oklab, var(--color-primary) 14%, transparent),
       inset 0 1px 0 color-mix(in oklab, var(--c-hi-strong) 16%, transparent);
     transition: transform 180ms ease;
   }
 
   .request-create-card:hover {
-    border-color: color-mix(in oklab, var(--c-accent) 66%, var(--c-border) 34%);
+    border-color: color-mix(in oklab, var(--color-warning) 66%, var(--color-border) 34%);
     transform: translateY(-1px);
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-hi) 12%, transparent),
-      0 14px 30px color-mix(in oklab, var(--c-primary) 12%, transparent);
+      0 14px 30px color-mix(in oklab, var(--color-primary) 12%, transparent);
   }
 
   .request-create-card:hover .request-create-card__plus {
@@ -111,9 +111,9 @@
   .request-create-card:focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 3px color-mix(in oklab, var(--c-primary) 42%, transparent),
+      0 0 0 3px color-mix(in oklab, var(--color-primary) 42%, transparent),
       inset 0 1px 0 color-mix(in oklab, var(--c-hi) 10%, transparent),
-      0 10px 20px color-mix(in oklab, var(--c-primary) 10%, transparent);
+      0 10px 20px color-mix(in oklab, var(--color-primary) 10%, transparent);
   }
 
   .request-create-card--compact {
@@ -121,7 +121,7 @@
     min-height: 112px;
     grid-template-columns: minmax(0, 1fr) 108px;
     padding: 12px;
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .request-create-card--compact .request-create-card__title {

@@ -4,13 +4,13 @@ import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { ProviderReviewsSection } from '@/features/providers/publicProfile/ProviderReviewsSection';
+import { PublicProfileReviewsSection } from '@/features/reviews/PublicProfileReviewsSection';
 import type {
-  NormalizedProviderReview,
-  ProviderReviewSort,
-  ProviderReviewsDistribution,
-  ProviderReviewsUi,
-} from '@/features/providers/publicProfile/useProviderReviewsModel';
+  NormalizedPublicProfileReview,
+  PublicProfileReviewSort,
+  PublicProfileReviewsDistribution,
+  PublicProfileReviewsUi,
+} from '@/features/reviews/usePublicProfileReviewsModel';
 import { listAllMyBookings } from '@/lib/api/bookings';
 import {
   createClientReview,
@@ -28,7 +28,7 @@ import { useI18n } from '@/lib/i18n/I18nProvider';
 import type { ReviewDto } from '@/lib/api/dto/reviews';
 import { WorkspacePlatformReviewComposer } from '@/components/reviews/WorkspacePlatformReviewComposer';
 import { WorkspaceUserReviewComposer } from '@/components/reviews/WorkspaceUserReviewComposer';
-import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { workspaceQK } from '@/features/workspace/data';
 import {
   buildWorkspaceLocaleTag,
   buildWorkspacePlatformReviewDistribution,
@@ -95,7 +95,7 @@ export function WorkspaceReviewsPanel({
   const resolvedLocale = locale ?? i18nLocale;
   const isAuthenticated = authStatus === 'authenticated';
 
-  const [reviewSort, setReviewSort] = React.useState<ProviderReviewSort>('latest');
+  const [reviewSort, setReviewSort] = React.useState<PublicProfileReviewSort>('latest');
   const [reviewPage, setReviewPage] = React.useState(1);
   const [draftRating, setDraftRating] = React.useState(5);
   const [draftText, setDraftText] = React.useState('');
@@ -172,12 +172,12 @@ export function WorkspaceReviewsPanel({
     staleTime: 60_000,
   });
 
-  const platformReviews = React.useMemo<NormalizedProviderReview[]>(
+  const platformReviews = React.useMemo<NormalizedPublicProfileReview[]>(
     () => buildWorkspacePlatformReviews(platformQuery.data?.items ?? [], t),
     [platformQuery.data?.items, t],
   );
 
-  const sortedUserReviews = React.useMemo<NormalizedProviderReview[]>(
+  const sortedUserReviews = React.useMemo<NormalizedPublicProfileReview[]>(
     () => buildWorkspaceSortedUserReviews(userReviews, reviewSort, t),
     [reviewSort, t, userReviews],
   );
@@ -205,7 +205,7 @@ export function WorkspaceReviewsPanel({
     });
   }, [platformQuery.data?.summary.total, sortedUserReviews.length, source]);
 
-  const reviewsDistribution: ProviderReviewsDistribution = React.useMemo(() => {
+  const reviewsDistribution: PublicProfileReviewsDistribution = React.useMemo(() => {
     if (source === 'platform') {
       return buildWorkspacePlatformReviewDistribution(platformQuery.data?.summary.distribution);
     }
@@ -219,7 +219,7 @@ export function WorkspaceReviewsPanel({
     setReviewPage((prev) => Math.min(prev, totalReviewPages));
   }, [totalReviewPages]);
 
-  const reviewsUi: ProviderReviewsUi = React.useMemo(
+  const reviewsUi: PublicProfileReviewsUi = React.useMemo(
     () => buildWorkspaceReviewsUi(resolvedLocale, t),
     [resolvedLocale, t],
   );
@@ -393,7 +393,7 @@ export function WorkspaceReviewsPanel({
 
   return (
     <section className="panel">
-      <ProviderReviewsSection
+      <PublicProfileReviewsSection
         t={t}
         sectionId={source === 'platform' ? 'platform-reviews' : 'my-reviews'}
         sectionTitle={source === 'platform' ? t(I18N_KEYS.requestsPage.platformReviewsTitle) : t(I18N_KEYS.requestsPage.navReviews)}

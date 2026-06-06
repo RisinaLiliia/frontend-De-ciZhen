@@ -1,10 +1,11 @@
 'use client';
 
+import type { Option } from '@/components/ui/Select';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { RequestsListDensity } from '@/lib/requests/pagination';
 
-export type FilterOption = { value: string; label: string };
+export type FilterOption = Option;
 
 export type RequestsFilterChip = {
   key: string;

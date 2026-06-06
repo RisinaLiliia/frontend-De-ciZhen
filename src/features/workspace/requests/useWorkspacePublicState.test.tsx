@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
-import { useWorkspacePublicState } from '@/features/workspace/requests/useWorkspacePublicState';
+import { useWorkspacePublicState } from '@/features/workspace/state/useWorkspacePublicState';
 
 type StateArgs = Parameters<typeof useWorkspacePublicState>[0];
 

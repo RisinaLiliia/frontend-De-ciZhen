@@ -1,13 +1,36 @@
-export { WorkspaceContextAside, WorkspaceContextFocusPanel } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
-export { WorkspaceModeHeader, WorkspaceMobileContextSection } from '@/features/workspace/shell/WorkspaceModeHeader';
-export { WorkspacePageLayout } from '@/features/workspace/shell/WorkspacePageLayout';
-export { WorkspaceSharedContextControls } from '@/features/workspace/shell/WorkspaceSharedContextControls';
+export { WorkspaceMobileNavigation } from '@/features/workspace/shell/WorkspaceMobileNavigation';
 export {
-  buildSharedContextControlsProps,
+  WorkspaceHeaderAccountMenu,
+  WorkspaceHeaderNotificationsButton,
+} from '@/features/workspace/shell/WorkspaceHeaderAccountMenu';
+export { WorkspaceHeaderAuthActions } from '@/features/workspace/shell/WorkspaceHeaderAuthActions';
+export { WorkspaceHeaderUtilityBar } from '@/features/workspace/shell/WorkspaceHeaderUtilityBar';
+export { WorkspaceModeNav } from '@/features/workspace/shell/WorkspaceModeNav';
+export { WorkspacePageFrame } from '@/features/workspace/shell/WorkspacePageFrame';
+export { WorkspaceModeHeader } from '@/features/workspace/shell/WorkspaceModeHeader';
+export { WorkspacePageLayout } from '@/features/workspace/shell/WorkspacePageLayout';
+export { WorkspaceSectionHeader } from '@/features/workspace/shell/WorkspaceSectionHeader';
+export { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
+export { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
+export { WorkspaceContextBar } from '@/features/workspace/shell/WorkspaceContextBar';
+export { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
+export { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
+export { useWorkspaceSectionHeaderCopy } from '@/features/workspace/shell/useWorkspaceSectionHeaderCopy';
+export {
+  WorkspaceContextPanel,
+  buildContextControlsProps,
   fillWorkspaceModeTemplate,
   getWorkspaceChipValue,
   joinWorkspaceContext,
-  useWorkspaceSharedContext,
-} from '@/features/workspace/shell/useWorkspaceSharedContext';
-export { resolveActiveWorkspaceMode } from '@/features/workspace/shell/workspaceModes';
-export type { WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
+  useWorkspaceContext,
+} from '@/features/workspace/context';
+export { resolveActiveWorkspaceMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
+export type { WorkspaceModeKey } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
+export type {
+  WorkspaceMobileNavigationProps,
+  WorkspacePageFrameProps,
+  WorkspaceSectionLayout,
+  WorkspaceSectionRenderModel,
+  WorkspaceShellProps,
+  WorkspaceSidebarProps,
+} from '@/features/workspace/shell/WorkspaceShell.types';

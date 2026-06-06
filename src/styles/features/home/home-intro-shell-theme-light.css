@@ -9,9 +9,9 @@
       radial-gradient(100% 90% at 88% 12%, var(--c-glow-accent), transparent 62%),
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--c-panel) 98%, var(--c-surface) 2%) 0%,
-        color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%) 58%,
-        color-mix(in oklab, var(--c-bg) 92%, var(--c-panel) 8%) 100%
+        color-mix(in oklab, var(--color-surface) 98%, var(--color-surface-muted) 2%) 0%,
+        color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%) 58%,
+        color-mix(in oklab, var(--c-bg) 92%, var(--color-surface) 8%) 100%
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 78%, transparent),
@@ -20,13 +20,24 @@
 
   html:not(.dark) :is(.home-intro-shell, .workspace-overlay-surface)::before {
     background:
-      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--c-surface) 32%, transparent), transparent 56%),
-      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--c-accent) 6%, transparent), transparent 64%),
+      radial-gradient(130% 110% at 0% 0%, color-mix(in oklab, var(--color-surface-muted) 32%, transparent), transparent 56%),
+      radial-gradient(100% 90% at 88% 12%, color-mix(in oklab, var(--color-warning) 6%, transparent), transparent 64%),
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--c-panel) 22%, transparent),
-        color-mix(in oklab, var(--c-panel) 14%, transparent)
+        color-mix(in oklab, var(--color-surface) 22%, transparent),
+        color-mix(in oklab, var(--color-surface) 14%, transparent)
       );
+  }
+
+  html:not(.dark) .home-intro-shell {
+    background: var(--color-background);
+    background-image: none;
+    box-shadow: none;
+  }
+
+  html:not(.dark) .home-intro-shell::before {
+    content: none;
+    background: none;
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment {
@@ -40,11 +51,11 @@
   html:not(.dark) .home-intro-shell .home-stats-panel,
   html:not(.dark) .home-intro-shell .home-quick-search-panel,
   html:not(.dark) .home-intro-shell .home-activity-panel {
-    border-color: color-mix(in oklab, var(--c-border) 82%, var(--c-surface) 18%);
+    border-color: color-mix(in oklab, var(--color-border) 82%, var(--color-surface-muted) 18%);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--c-panel) 98%, var(--c-surface) 2%) 0%,
-      color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%) 100%
+      color-mix(in oklab, var(--color-surface) 98%, var(--color-surface-muted) 2%) 0%,
+      color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%) 100%
     );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 92%, transparent),
@@ -54,7 +65,7 @@
   html:not(.dark) .home-intro-shell .home-stats__title,
   html:not(.dark) .home-intro-shell .home-quick-search__title,
   html:not(.dark) .home-intro-shell .home-activity__title {
-    color: var(--c-text);
+    color: var(--color-text);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .home-activity__subtitle,
@@ -62,98 +73,98 @@
   html:not(.dark) .home-intro-shell .home-combined-top .home-activity__updated,
   html:not(.dark) .home-intro-shell .home-combined-top .home-activity__point-time,
   html:not(.dark) .home-intro-shell .home-combined-top .home-quick-search__location {
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .home-stats__value {
-    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
+    color: color-mix(in oklab, var(--color-text) 96%, var(--color-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .chip {
-    background: var(--c-panel);
-    border-color: color-mix(in oklab, var(--c-border) 82%, var(--c-surface) 18%);
-    color: color-mix(in oklab, var(--c-text) 94%, var(--c-border) 6%);
+    background: var(--color-surface);
+    border-color: color-mix(in oklab, var(--color-border) 82%, var(--color-surface-muted) 18%);
+    color: color-mix(in oklab, var(--color-text) 94%, var(--color-border) 6%);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .chip.is-active {
-    border-color: color-mix(in oklab, var(--c-border) 70%, var(--c-accent) 30%);
+    border-color: color-mix(in oklab, var(--color-border) 70%, var(--color-warning) 30%);
     background: linear-gradient(
       180deg,
-      color-mix(in oklab, var(--c-panel) 94%, var(--c-surface) 6%),
-      color-mix(in oklab, var(--c-panel) 86%, var(--c-accent) 14%)
+      color-mix(in oklab, var(--color-surface) 94%, var(--color-surface-muted) 6%),
+      color-mix(in oklab, var(--color-surface) 86%, var(--color-warning) 14%)
     );
-    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-ink) 8%, transparent);
+    box-shadow: var(--shadow-card);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .field {
-    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-surface) 10%);
-    border-color: color-mix(in oklab, var(--c-border) 80%, var(--c-surface) 20%);
-    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
+    background: color-mix(in oklab, var(--color-surface) 90%, var(--color-surface-muted) 10%);
+    border-color: color-mix(in oklab, var(--color-border) 80%, var(--color-surface-muted) 20%);
+    color: color-mix(in oklab, var(--color-text) 96%, var(--color-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .home-combined-top .field::placeholder {
-    color: color-mix(in oklab, var(--c-text-muted) 94%, var(--c-border) 6%);
+    color: color-mix(in oklab, var(--color-text-muted) 94%, var(--color-border) 6%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__title {
-    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
+    color: color-mix(in oklab, var(--color-text) 96%, var(--color-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__subtitle {
-    color: color-mix(in oklab, var(--c-text-muted) 94%, var(--c-border) 6%);
+    color: color-mix(in oklab, var(--color-text-muted) 94%, var(--color-border) 6%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__trust li {
-    color: color-mix(in oklab, var(--c-text) 88%, var(--c-border) 12%);
+    color: color-mix(in oklab, var(--color-text) 88%, var(--color-border) 12%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__preview-badge {
-    color: color-mix(in oklab, var(--c-text-muted) 84%, var(--c-accent) 16%);
-    border-color: color-mix(in oklab, var(--c-accent) 36%, var(--c-border) 64%);
-    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-accent) 8%);
+    color: color-mix(in oklab, var(--color-text-muted) 84%, var(--color-warning) 16%);
+    border-color: color-mix(in oklab, var(--color-warning) 36%, var(--color-border) 64%);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-warning) 8%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card {
-    border-color: color-mix(in oklab, var(--c-accent) 52%, var(--c-border) 48%);
+    border-color: color-mix(in oklab, var(--color-warning) 52%, var(--color-border) 48%);
     background:
       linear-gradient(
         148deg,
-        color-mix(in oklab, var(--c-accent) 16%, var(--c-panel) 84%) 0%,
-        color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%) 58%,
-        color-mix(in oklab, var(--c-surface) 14%, var(--c-panel) 86%) 100%
+        color-mix(in oklab, var(--color-warning) 16%, var(--color-surface) 84%) 0%,
+        color-mix(in oklab, var(--color-surface) 90%, var(--color-border) 10%) 58%,
+        color-mix(in oklab, var(--color-surface-muted) 14%, var(--color-surface) 86%) 100%
       );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 90%, transparent),
       0 12px 26px color-mix(in oklab, var(--c-ink) 10%, transparent),
-      0 4px 10px color-mix(in oklab, var(--c-accent) 10%, transparent);
+      0 4px 10px color-mix(in oklab, var(--color-warning) 10%, transparent);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__title {
-    color: color-mix(in oklab, var(--c-text) 96%, var(--c-border) 4%);
+    color: color-mix(in oklab, var(--color-text) 96%, var(--color-border) 4%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__subtitle {
-    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-accent) 10%);
+    color: color-mix(in oklab, var(--color-text-muted) 90%, var(--color-warning) 10%);
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__media {
-    border-color: color-mix(in oklab, var(--c-accent) 58%, var(--c-border) 42%);
+    border-color: color-mix(in oklab, var(--color-warning) 58%, var(--color-border) 42%);
     background:
-      radial-gradient(circle at 22% 18%, color-mix(in oklab, var(--c-panel) 62%, transparent), transparent 52%),
+      radial-gradient(circle at 22% 18%, color-mix(in oklab, var(--color-surface) 62%, transparent), transparent 52%),
       linear-gradient(
         160deg,
-        color-mix(in oklab, var(--c-accent) 28%, var(--c-panel) 72%) 0%,
-        color-mix(in oklab, var(--c-surface) 16%, var(--c-panel) 84%) 100%
+        color-mix(in oklab, var(--color-warning) 28%, var(--color-surface) 72%) 0%,
+        color-mix(in oklab, var(--color-surface-muted) 16%, var(--color-surface) 84%) 100%
       );
   }
 
   html:not(.dark) .home-intro-shell .hero-experiment__create-card .request-create-card__plus {
-    border-color: color-mix(in oklab, var(--c-accent) 66%, var(--c-border) 34%);
-    background: color-mix(in oklab, var(--c-panel) 68%, var(--c-accent) 32%);
-    color: color-mix(in oklab, var(--c-accent) 90%, var(--c-ink) 10%);
+    border-color: color-mix(in oklab, var(--color-warning) 66%, var(--color-border) 34%);
+    background: color-mix(in oklab, var(--color-surface) 68%, var(--color-warning) 32%);
+    color: color-mix(in oklab, var(--color-warning) 90%, var(--c-ink) 10%);
     box-shadow:
       0 10px 20px color-mix(in oklab, var(--c-ink) 10%, transparent),
-      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 88%, transparent);
+      inset 0 1px 0 color-mix(in oklab, var(--color-surface) 88%, transparent);
   }
 
 

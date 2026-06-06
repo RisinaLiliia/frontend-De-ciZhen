@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import type { ComponentProps } from 'react';
 
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { RequestsListShellHeader } from '@/components/requests/RequestsListShellHeader';
@@ -15,14 +14,12 @@ import {
   DEFAULT_REQUESTS_LIST_DENSITY,
   type RequestsListDensity,
 } from '@/lib/requests/pagination';
-import { WorkspacePublicRequestSessionDialog } from '@/features/workspace/requests/WorkspacePublicRequestSessionDialog';
-import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/requests/useWorkspacePublicRequestOverlayFlow';
-import { RequestsWorkspaceSummary } from '@/features/workspace/requests/components/RequestsWorkspaceSummary';
-import type { WorkspaceRequestsSummaryStrip } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
-import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
+import { WorkspaceChipToggleGroup } from '@/features/workspace/shared';
+import { PublicRequestSessionDialog } from '@/features/workspace/overlays/PublicRequestSessionDialog';
+import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/overlays/useWorkspacePublicRequestOverlayFlow';
 import type { RequestsListShellHeaderMode } from '@/components/requests/RequestsListShellHeader';
 
-type Props = {
+export type PublicContentProps = {
   t: (key: I18nKey) => string;
   filtersProps: React.ComponentProps<typeof RequestsFilters>;
   statusFilters: Array<{
@@ -45,8 +42,6 @@ type Props = {
   listDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
   header?: RequestsListShellHeaderMode;
-  summaryStripProps?: ComponentProps<typeof WorkspaceRequestsSummaryStrip>;
-  isSummaryStripLoading?: boolean;
 };
 
 export function PublicContent({
@@ -69,9 +64,7 @@ export function PublicContent({
   listDensity = DEFAULT_REQUESTS_LIST_DENSITY,
   onListDensityChange,
   header = { kind: 'filters' },
-  summaryStripProps,
-  isSummaryStripLoading = false,
-}: Props) {
+}: PublicContentProps) {
   const authStatus = useAuthStatus();
   const {
     activeChatState,
@@ -115,10 +108,6 @@ export function PublicContent({
 
   return (
     <>
-      <RequestsWorkspaceSummary
-        summaryStripProps={summaryStripProps}
-        isLoading={isSummaryStripLoading}
-      />
       <RequestsPaginatedPanel
         t={t}
         page={page}
@@ -162,7 +151,7 @@ export function PublicContent({
       </RequestsPaginatedPanel>
 
       {(activeRequestState || activeOfferRequestId || activeChatState) ? (
-        <WorkspacePublicRequestSessionDialog
+        <PublicRequestSessionDialog
           locale={requestsListProps.locale}
           activeRequestState={activeRequestState}
           activeOfferRequestId={activeOfferRequestId}

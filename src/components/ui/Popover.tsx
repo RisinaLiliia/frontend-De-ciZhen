@@ -9,6 +9,8 @@ type Props = {
   onOpenChange: (v: boolean) => void;
   align?: 'start' | 'end';
   trigger: React.ReactNode;
+  triggerAriaLabel?: string;
+  triggerTitle?: string;
   children: React.ReactNode;
   className?: string;
   disabled?: boolean;
@@ -19,6 +21,8 @@ export function Popover({
   onOpenChange,
   align = 'start',
   trigger,
+  triggerAriaLabel,
+  triggerTitle,
   children,
   className,
   disabled = false,
@@ -59,6 +63,8 @@ export function Popover({
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={panelId}
+        aria-label={triggerAriaLabel}
+        title={triggerTitle}
         disabled={disabled}
       >
         {trigger}

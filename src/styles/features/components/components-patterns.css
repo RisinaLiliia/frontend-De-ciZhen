@@ -1,7 +1,6 @@
 /* src/styles/features/components/components-patterns.css */
 
 @layer components {
-  .ui-inline-center,
   :is(
       .offer-actions__btn,
       .request-detail__cta .btn-primary,
@@ -16,17 +15,14 @@
     justify-content: center;
   }
 
-  .ui-soft-surface,
   :is(
-      .requests-provider-summary,
-      .provider-reviews-hub__summary,
-      .provider-reviews-hub__item
+      .public-profile-reviews__summary,
+      .public-profile-reviews__item
     ) {
     border: 1px solid var(--soft-surface-border, var(--surface-soft-border));
     background: var(--soft-surface-bg, var(--surface-soft-bg-strong));
   }
 
-  .ui-icon-only-action,
   .offer-action-btn--icon-only {
     --icon-only-size: 24px;
     width: var(--icon-only-size);
@@ -34,6 +30,6 @@
     height: var(--icon-only-size);
     min-height: var(--icon-only-size);
     padding: 0;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
   }
 }

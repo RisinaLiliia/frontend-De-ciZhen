@@ -43,7 +43,7 @@
   width: fit-content;
   align-items: center;
   padding: 3px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -104,7 +104,7 @@
   display: inline-flex;
   align-items: center;
   border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px 10px;
   color: var(--c-text-muted);
   font-size: var(--fs-small);

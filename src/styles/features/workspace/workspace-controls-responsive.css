@@ -1,0 +1,57 @@
+/* src/styles/features/workspace/workspace-controls-responsive.css */
+
+@layer components {
+  @media (min-width: 768px) and (max-width: 1179px) {
+    .workspace-context-controls__filters-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-2-5);
+    }
+
+    .workspace-context-controls__footer-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-2-5);
+    }
+
+    .workspace-context-controls__footer-meta {
+      width: 100%;
+    }
+
+    .workspace-context-controls__sort-group {
+      display: grid;
+      grid-template-columns: max-content minmax(180px, 220px);
+      align-items: center;
+      gap: var(--space-2);
+      width: max-content;
+      max-width: 100%;
+    }
+
+    .workspace-context-controls__footer-actions {
+      align-self: start;
+    }
+
+    .workspace-context-controls__filter,
+    .workspace-context-controls__sort-filter {
+      min-width: 0;
+    }
+
+    .workspace-context-controls--column .workspace-context-controls__surface {
+      padding: 0;
+      border-radius: 0;
+      gap: var(--space-2-5);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .workspace-context-controls {
+      --workspace-context-control-height: 38px;
+      --workspace-context-control-radius: 12px;
+      --workspace-context-control-padding-inline: 12px;
+    }
+
+    .workspace-view-toggle {
+      display: none;
+    }
+  }
+}

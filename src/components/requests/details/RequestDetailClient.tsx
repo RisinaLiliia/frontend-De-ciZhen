@@ -29,6 +29,7 @@ export function RequestDetailClient({
       {title ? <h3 className="request-detail__section-title">{title}</h3> : null}
       <div className="request-detail__client-card">
         <UserHeaderCard
+          layoutVariant="detail"
           name={name}
           avatarUrl={avatarUrl}
           avatarRole="client"

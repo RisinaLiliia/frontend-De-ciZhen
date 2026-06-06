@@ -1,0 +1,140 @@
+@layer components {
+  :is(.field, .dc-select-trigger, .dc-city-search-input) {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    border: 1px solid var(--control-border);
+    border-radius: var(--radius-md);
+    background: var(--control-bg);
+    color: var(--color-text);
+    padding: 0 14px;
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  textarea.field {
+    min-height: 120px;
+    padding: 12px 14px;
+    resize: vertical;
+  }
+
+  .app-control-sm {
+    min-height: 38px;
+    padding-inline: 12px;
+    font-size: var(--fs-13);
+  }
+
+  :is(.field, .dc-select-trigger, .dc-city-search-input):hover {
+    border-color: var(--control-border-hover);
+    background: var(--control-bg-hover);
+  }
+
+  :is(.field, .dc-select-trigger, .dc-city-search-input):focus,
+  :is(.field, .dc-select-trigger, .dc-city-search-input):focus-visible {
+    outline: none;
+    border-color: var(--color-primary-border);
+    box-shadow: var(--control-focus-ring);
+  }
+
+  :is(.field, .dc-select-trigger, .dc-city-search-input)[aria-invalid='true'] {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-danger) 22%, transparent);
+  }
+
+  :is(.field, .dc-select-trigger, .dc-city-search-input):disabled,
+  .dc-city-search-trigger.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  :is(.app-button-primary, .app-button-secondary, .app-button-ghost, .btn-primary, .btn-secondary, .btn-ghost) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    font-size: var(--fs-13);
+    font-weight: 650;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost {
+    width: 100%;
+  }
+
+  :is(.app-button-primary, .btn-primary) {
+    border: 1px solid transparent;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    box-shadow: none;
+  }
+
+  :is(.app-button-primary, .btn-primary):hover {
+    background: var(--color-primary-hover);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--color-primary) 16%, transparent);
+    transform: translateY(-1px);
+  }
+
+  :is(.app-button-primary, .btn-primary):focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--color-primary) 18%, transparent),
+      0 8px 18px color-mix(in oklab, var(--color-primary) 12%, transparent);
+  }
+
+  :is(.app-button-secondary, .btn-secondary) {
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: none;
+  }
+
+  :is(.app-button-secondary, .btn-secondary):hover {
+    border-color: var(--color-border);
+    background: var(--color-surface-muted);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-1px);
+  }
+
+  :is(.app-button-ghost, .btn-ghost) {
+    border: 1px solid var(--color-border-soft);
+    background: transparent;
+    color: var(--color-text-muted);
+  }
+
+  :is(.app-button-ghost, .btn-ghost):hover {
+    border-color: var(--color-border);
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+    box-shadow: none;
+    transform: translateY(-1px);
+  }
+
+  :is(.app-button-secondary, .btn-secondary, .app-button-ghost, .btn-ghost):focus-visible {
+    outline: none;
+    box-shadow: var(--control-focus-ring);
+  }
+
+  :is(.app-button-primary, .btn-primary, .app-button-secondary, .btn-secondary, .app-button-ghost, .btn-ghost):active {
+    transform: translateY(0);
+  }
+
+  :is(.app-button-primary, .btn-primary, .app-button-secondary, .btn-secondary, .app-button-ghost, .btn-ghost):disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

@@ -5,7 +5,7 @@ import {
   buildRequestsPublicContentProps,
   buildRequestsPublicFiltersProps,
 } from '@/components/requests/requestsPublicContent.model';
-import { PublicContent } from '@/features/workspace/requests';
+import { PublicContent } from '@/features/workspace/requests/PublicContent';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { resolveRequestsListDensityForPageSize } from '@/lib/requests/pagination';
 import type { RequestsExplorerRequestsContentProps } from '@/components/requests/requestsExplorer.types';
@@ -56,8 +56,6 @@ export function RequestsExplorerRequestsContent({
   setPage,
   listDensity,
   onListDensityChange,
-  summaryStripProps,
-  isSummaryStripLoading,
 }: RequestsExplorerRequestsContentProps) {
   const onPrevPage = () => setPage(Math.max(1, page - 1));
   const onNextPage = () => setPage(Math.min(totalPages, page + 1));
@@ -128,8 +126,6 @@ export function RequestsExplorerRequestsContent({
         listDensity: listDensity ?? resolveRequestsListDensityForPageSize(limit),
         onListDensityChange,
         header: topBar,
-        summaryStripProps,
-        isSummaryStripLoading,
       })}
     />
   );

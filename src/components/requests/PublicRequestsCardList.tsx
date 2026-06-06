@@ -4,9 +4,9 @@ import * as React from 'react';
 
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { PublicRequestCardActionRow } from '@/components/requests/PublicRequestCardActionRow';
+import { WorkspaceGuestRequestCard } from '@/components/requests/WorkspaceGuestRequestCard';
 import { buildPublicRequestCardPresentation } from '@/components/requests/publicRequestCard.model';
 import type { RequestsListProps } from '@/components/requests/requestsList.types';
-import { WorkspaceGuestRequestCard } from '@/features/workspace/requests/components/WorkspaceGuestRequestCard';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 
 export function PublicRequestsCardList({
@@ -61,7 +61,7 @@ export function PublicRequestsCardList({
         });
 
         return (
-          <div key={item.id} className="workspace-guest-request-card-shell">
+          <div key={item.id} className="workspace-list-card-shell workspace-guest-request-card-shell">
             <WorkspaceGuestRequestCard
               prefetch={index < 2}
               href={view.card.detailsHref}

@@ -21,12 +21,15 @@ import {
   listFavorites,
 } from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
-import { useAuthStatus } from '@/hooks/useAuthSnapshot';
+import { useAuthMe, useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { useProviderFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import { useCities } from '@/features/catalog/queries';
+import { providerQK } from '@/features/providers/queries';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
+import { backfillOwnProviderAvatars } from '@/lib/providers/publicProvider';
+import { getPublicProviderById } from '@/lib/api/providers';
 
 type HomeTopProvidersPanelProps = {
   t: (key: I18nKey) => string;
@@ -36,13 +39,14 @@ type HomeTopProvidersPanelProps = {
 
 export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProvidersPanelProps) {
   const authStatus = useAuthStatus();
+  const authMe = useAuthMe();
   const isAuthed = authStatus === 'authenticated';
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const qc = useQueryClient();
   const { data: providers = [] } = useQuery({
-    queryKey: ['providers-public-top'],
+    queryKey: providerQK.publicList(),
     queryFn: () => listPublicProviders(),
     staleTime: 5 * 60 * 1000,
     gcTime: 15 * 60 * 1000,
@@ -55,9 +59,25 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
+  const ownProviderProfileId = authMe?.providerProfile?.id?.trim() || null;
+  const ownProviderDetailQuery = useQuery({
+    queryKey: providerQK.publicById(ownProviderProfileId),
+    enabled: isAuthed && Boolean(ownProviderProfileId),
+    queryFn: () => withStatusFallback(() => getPublicProviderById(ownProviderProfileId!), null, [404]),
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const resolvedProviders = React.useMemo(
+    () => backfillOwnProviderAvatars(providers, ownProviderDetailQuery.data),
+    [ownProviderDetailQuery.data, providers],
+  );
+  const resolvedFavoriteProviders = React.useMemo(
+    () => backfillOwnProviderAvatars(favoriteProviders, ownProviderDetailQuery.data),
+    [favoriteProviders, ownProviderDetailQuery.data],
+  );
   const sortedProviders = React.useMemo(
-    () => rankHomeTopProviders(providers, limit),
-    [limit, providers],
+    () => rankHomeTopProviders(resolvedProviders, limit),
+    [limit, resolvedProviders],
   );
   const providerCityIds = React.useMemo(
     () =>
@@ -80,8 +100,8 @@ export function HomeTopProvidersPanel({ t, locale, limit = 5 }: HomeTopProviders
     limit: providerCityIds.length || 1,
   });
   const favoriteProviderLookup = React.useMemo(
-    () => buildProviderFavoriteLookup(favoriteProviders),
-    [favoriteProviders],
+    () => buildProviderFavoriteLookup(resolvedFavoriteProviders),
+    [resolvedFavoriteProviders],
   );
   const favoriteProviderIds = React.useMemo(
     () =>

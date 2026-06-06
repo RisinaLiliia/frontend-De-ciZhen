@@ -1,0 +1,206 @@
+/* src/styles/features/workspace/workspace-decision-panel.css */
+
+@layer components {
+  .workspace-decision-panel {
+    display: grid;
+    gap: var(--my-work-content-gap);
+  }
+
+  .workspace-decision-panel__summary,
+  .workspace-decision-panel__queue,
+  .workspace-decision-panel__overview,
+  .my-decision-mode {
+    display: grid;
+    gap: var(--my-work-content-gap);
+  }
+
+  .workspace-decision-panel__summary {
+    padding: var(--my-work-pad);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 18%, var(--color-border-soft) 82%);
+    border-radius: var(--radius-xl);
+    background: color-mix(in oklab, var(--color-surface) 94%, var(--color-primary-soft) 6%);
+    box-shadow: none;
+  }
+
+  .workspace-decision-panel__queue,
+  .workspace-decision-panel__overview {
+    border-color: var(--color-border-soft);
+    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-surface-muted) 8%);
+    box-shadow: none;
+  }
+
+  .workspace-decision-panel__eyebrow,
+  .my-decision-mode__eyebrow {
+    color: var(--text-muted);
+    font-size: var(--my-work-caption-size);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: var(--my-work-caption-line-height);
+    text-transform: uppercase;
+  }
+
+  .workspace-decision-panel__count {
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+
+  .workspace-decision-panel__title,
+  .my-decision-mode__title {
+    margin: 0;
+    font-size: var(--app-title-md-size);
+    line-height: var(--app-title-md-line-height);
+  }
+
+  .workspace-decision-panel__text,
+  .workspace-decision-panel__empty,
+  .workspace-decision-panel__hint,
+  .my-decision-mode__progress {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .workspace-decision-panel__primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .workspace-decision-panel__primary.workspace-ai-card__action {
+    width: 100%;
+    min-width: 0;
+    min-height: var(--my-work-button-min-height);
+    border-radius: var(--radius-lg);
+    box-sizing: border-box;
+  }
+
+  .workspace-decision-panel__primary:focus-visible,
+  .workspace-decision-panel__queue-item:focus-visible {
+    outline: none;
+    border-color: var(--color-primary-border);
+    box-shadow: var(--control-focus-ring);
+  }
+
+  .workspace-decision-panel__section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--my-work-content-gap);
+  }
+
+  .workspace-decision-panel__queue-list {
+    display: grid;
+    gap: var(--my-work-item-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .workspace-decision-panel__queue-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--my-work-content-gap);
+    width: 100%;
+    padding: var(--my-work-pad-compact) var(--density-comfortable-pad);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--color-surface) 78%, var(--color-surface-muted) 22%);
+    text-align: left;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease,
+      transform 160ms ease;
+  }
+
+  .workspace-decision-panel__queue-item:hover,
+  .workspace-decision-panel__queue-item.is-active {
+    border-color: var(--color-primary-border);
+    box-shadow: none;
+    transform: none;
+  }
+
+  .workspace-decision-panel__queue-copy {
+    display: grid;
+    gap: var(--space-0-75);
+    min-width: 0;
+  }
+
+  .workspace-decision-panel__queue-copy strong {
+    font-size: var(--app-text-size);
+    line-height: 1.3;
+  }
+
+  .workspace-decision-panel__queue-copy span {
+    color: var(--text-muted);
+    font-size: var(--app-caption-size);
+    line-height: var(--app-caption-line-height);
+  }
+
+  .workspace-decision-panel__priority {
+    align-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--space-6);
+    padding: 0 var(--space-2-5);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-muted);
+    color: var(--text-muted);
+    font-size: var(--my-work-caption-size);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .workspace-decision-panel__priority.is-high {
+    background: color-mix(in oklab, var(--c-danger) 18%, white 82%);
+    color: color-mix(in oklab, var(--c-danger) 70%, var(--color-text) 30%);
+  }
+
+  .workspace-decision-panel__priority.is-medium {
+    background: color-mix(in oklab, var(--color-warning) 16%, white 84%);
+    color: color-mix(in oklab, var(--color-warning) 72%, var(--color-text) 28%);
+  }
+
+  .workspace-decision-panel__overview-grid {
+    display: grid;
+    gap: var(--my-work-item-gap);
+  }
+
+  .workspace-decision-panel__overview-grid > div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-top: var(--my-work-item-gap);
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .workspace-decision-panel__overview-grid dt {
+    color: var(--text-muted);
+  }
+
+  .workspace-decision-panel__overview-grid dd {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .my-decision-mode {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    padding: var(--my-work-pad) var(--density-comfortable-pad-lg);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 18%, var(--color-border) 82%);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface-muted);
+  }
+
+  .my-decision-mode__copy {
+    display: grid;
+    gap: var(--space-1);
+  }
+}
+
+@layer components {
+  @media (max-width: 899px) {
+    .workspace-decision-panel__queue-item {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
