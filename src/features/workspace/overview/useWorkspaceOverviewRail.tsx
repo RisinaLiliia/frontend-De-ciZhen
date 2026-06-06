@@ -200,7 +200,7 @@ function buildOverviewMarketOpportunities(params: {
       title: `${labels.demandPrefix} ${topCity.name}`,
       meta: `${formatOverviewNumber(topCity.count, locale)} ${labels.requestsMetric}`,
       priorityTone: 'high',
-      priorityBadgeVariant: 'opportunity',
+      priorityBadgeVariant: 'success',
       priorityLabel: 'Chance',
       action: { kind: 'link', label: labels.opportunitiesEyebrow, href: analysisHref },
     });
@@ -212,7 +212,7 @@ function buildOverviewMarketOpportunities(params: {
       title: `${labels.providerGapPrefix} ${providerGapCity.name}`,
       meta: `${formatOverviewNumber(providerGapCity.count, locale)} ${labels.requestsMetric}`,
       priorityTone: 'medium',
-      priorityBadgeVariant: 'opportunity',
+      priorityBadgeVariant: 'success',
       priorityLabel: 'Chance',
       action: { kind: 'link', label: labels.opportunitiesEyebrow, href: analysisHref },
     });

@@ -101,7 +101,7 @@ export function WorkspaceGuestRequestCard({
       onOpen={onOpen}
       isActive={isActive}
       statusSlot={statusSlot ?? (badgeLabel ? (
-        <WorkspaceBadge variant="opportunity">
+        <WorkspaceBadge variant="success">
           {badgeLabel}
         </WorkspaceBadge>
       ) : null)}

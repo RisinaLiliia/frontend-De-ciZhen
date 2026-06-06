@@ -25,7 +25,7 @@ Assign stable business meaning to existing tokens and variants:
 | Action | Required user action, pending decision, follow-up, next step, attention required | `--color-warning`, `--color-warning-soft`, `--color-warning-border`, `--dc-sand` | `WorkspaceBadge variant="warning"` |
 | Neutral | Supporting information, filters, dates, labels, settings, informational metrics | `--color-text-muted`, `--color-border`, `--color-surface-muted` | `WorkspaceBadge variant="neutral"` |
 
-Important implementation note: `WorkspaceBadge variant="opportunity"` currently maps to the info/blue palette. Until that variant is remapped or renamed in a dedicated design-system PR, semantic Opportunity must use `WorkspaceBadge variant="success"`.
+`WorkspaceBadge variant="opportunity"` is deprecated and removed from the workspace badge primitive because it conflicted with the established semantic language. Semantic Opportunity uses `WorkspaceBadge variant="success"`.
 
 ## Usage Rules
 - Color represents meaning, not component type.
@@ -134,4 +134,4 @@ Use this table for the next "Semantic Indicator Audit" pass:
 
 ### Trade-offs
 - Some existing components may need follow-up refactors where old color usage conflicts with semantic meaning.
-- The current `WorkspaceBadge variant="opportunity"` naming conflicts with its blue/info mapping and should be resolved in a dedicated primitive cleanup.
+- Domain models may still use `opportunity` as a business concept or rail tone, but conversion to badge color must resolve to `success`.

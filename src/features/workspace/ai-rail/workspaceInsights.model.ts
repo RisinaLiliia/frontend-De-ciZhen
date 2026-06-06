@@ -16,7 +16,7 @@ export function resolveInsightBadge(
   copy: WorkspaceStatisticsModel['copy'],
 ): { label: string; tone: WorkspaceBadgeVariant } {
   if (item.kind === 'opportunity' || item.kind === 'demand') {
-    return { label: copy.insightsTypeChanceLabel, tone: 'opportunity' };
+    return { label: copy.insightsTypeChanceLabel, tone: 'success' };
   }
   if (item.kind === 'growth' || item.kind === 'performance') {
     return { label: copy.insightsTypeTrendLabel, tone: 'info' };

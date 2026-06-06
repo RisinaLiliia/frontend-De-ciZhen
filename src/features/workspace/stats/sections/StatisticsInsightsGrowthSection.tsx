@@ -60,7 +60,7 @@ export function StatisticsInsightsGrowthSection({
               title: rightRailOpportunities?.title ?? copy.userOpportunitiesTitle,
               subtitle: rightRailOpportunities?.subtitle ?? copy.userOpportunitiesSubtitle,
               badgeLabel: copy.insightsTypeChanceLabel,
-              badgeVariant: 'opportunity',
+              badgeVariant: 'success',
               items: rightRailOpportunities?.items ?? [],
             },
           ]}

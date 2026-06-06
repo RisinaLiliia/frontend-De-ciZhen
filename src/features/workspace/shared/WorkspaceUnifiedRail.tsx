@@ -242,7 +242,7 @@ function recommendationToneToBadgeVariant(
 ): WorkspaceBadgeVariant {
   if (tone === 'attention') return 'warning';
   if (tone === 'positive') return 'success';
-  if (tone === 'opportunity') return 'opportunity';
+  if (tone === 'opportunity') return 'success';
   return 'neutral';
 }
 
