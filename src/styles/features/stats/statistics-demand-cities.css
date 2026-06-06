@@ -166,12 +166,7 @@
     text-align: left;
     font: inherit;
     color: inherit;
-    background: color-mix(in oklab, var(--color-surface) 92%, var(--surface-soft-bg) 8%);
     cursor: pointer;
-    transition:
-      border-color var(--transition-fast),
-      box-shadow var(--transition-fast),
-      transform var(--transition-fast);
   }
 
   .workspace-statistics-city-list__item-shell {
@@ -191,15 +186,13 @@
 
   .workspace-statistics-city-list__item:focus-visible {
     outline: none;
-    border-color: var(--surface-card-border-focus);
-    box-shadow:
-      var(--surface-card-shadow-hover),
-      0 0 0 var(--workspace-statistics-focus-ring-size) color-mix(in oklab, var(--color-primary) 20%, transparent);
+    box-shadow: var(--control-focus-ring);
   }
 
-  .workspace-statistics-city-list__item:hover {
-    border-color: var(--surface-card-border-hover);
-    box-shadow: var(--surface-card-shadow-hover);
+  .workspace-statistics-city-list__item:hover,
+  .workspace-statistics-city-list__item:focus-visible {
+    border-color: var(--color-primary-border);
+    background: color-mix(in oklab, var(--color-primary-soft) 34%, var(--color-surface) 66%);
     transform: translateY(-1px);
   }
 
@@ -224,27 +217,17 @@
 
   .workspace-statistics-city-list__item.is-active {
     border-color: color-mix(in oklab, var(--color-primary) 42%, var(--surface-card-border-hover) 58%);
-    background:
-      linear-gradient(
-        135deg,
-        color-mix(in oklab, var(--color-primary) 12%, var(--color-surface) 88%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 86%, var(--color-primary) 14%) 100%
-      );
+    background: color-mix(in oklab, var(--color-primary) 8%, var(--surface-soft-bg) 92%);
     box-shadow:
-      var(--surface-card-shadow-hover),
+      var(--shadow-card),
       0 0 0 1px color-mix(in oklab, var(--color-primary) 12%, transparent);
   }
 
   .workspace-statistics-city-list__item.is-competitor:not(.is-active) {
     border-color: color-mix(in oklab, var(--color-warning) 26%, var(--surface-card-border-hover) 74%);
-    background:
-      linear-gradient(
-        135deg,
-        color-mix(in oklab, var(--color-warning) 7%, var(--color-surface) 93%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 90%, var(--color-warning) 10%) 100%
-      );
+    background: color-mix(in oklab, var(--color-warning) 7%, var(--surface-soft-bg) 93%);
     box-shadow:
-      var(--surface-card-shadow-hover),
+      var(--shadow-card),
       0 0 0 1px color-mix(in oklab, var(--color-warning) 10%, transparent);
   }
 
@@ -339,47 +322,12 @@
   }
 
   .workspace-statistics-city-list__signal {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     gap: var(--space-1);
-    min-height: var(--workspace-statistics-chip-height);
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid var(--surface-soft-border);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: var(--workspace-statistics-chip-font-weight);
-    line-height: 1;
-    white-space: nowrap;
   }
 
   .workspace-statistics-city-list__signal-icon {
     font-size: var(--fs-small);
     line-height: 1;
-  }
-
-  .workspace-statistics-city-list__signal.is-high {
-    border-color: color-mix(in oklab, var(--color-success) 36%, var(--surface-soft-border) 64%);
-    color: color-mix(in oklab, var(--color-success) 88%, var(--color-text) 12%);
-    background: color-mix(in oklab, var(--color-success) 10%, var(--color-surface) 90%);
-  }
-
-  .workspace-statistics-city-list__signal.is-medium {
-    border-color: color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
-    color: color-mix(in oklab, var(--color-primary) 84%, var(--color-text) 16%);
-    background: color-mix(in oklab, var(--color-primary) 9%, var(--color-surface) 91%);
-  }
-
-  .workspace-statistics-city-list__signal.is-low {
-    border-color: color-mix(in oklab, var(--color-warning) 30%, var(--surface-soft-border) 70%);
-    color: color-mix(in oklab, var(--color-warning) 74%, var(--color-text) 26%);
-    background: color-mix(in oklab, var(--color-warning) 10%, var(--color-surface) 90%);
-  }
-
-  .workspace-statistics-city-list__signal.is-none {
-    border-color: var(--surface-soft-border);
-    color: var(--color-text-muted);
-    background: color-mix(in oklab, var(--surface-soft-bg) 88%, var(--color-surface) 12%);
   }
 
   .workspace-statistics-city-list__personal-note {

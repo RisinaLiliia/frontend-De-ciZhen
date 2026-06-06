@@ -87,43 +87,4 @@
     color: color-mix(in oklab, var(--color-warning) 72%, var(--color-text) 28%);
   }
 
-  .workspace-opportunity-tone-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: var(--workspace-statistics-chip-height);
-    width: fit-content;
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid var(--surface-soft-border);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: var(--workspace-statistics-chip-font-weight);
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  .workspace-opportunity-tone-badge.is-very-high {
-    color: color-mix(in oklab, var(--color-success) 84%, var(--color-text) 16%);
-    border-color: color-mix(in oklab, var(--color-success) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--color-success) 12%, var(--color-surface) 88%);
-  }
-
-  .workspace-opportunity-tone-badge.is-good {
-    color: color-mix(in oklab, var(--color-primary) 84%, var(--color-text) 16%);
-    border-color: color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--color-primary) 11%, var(--color-surface) 89%);
-  }
-
-  .workspace-opportunity-tone-badge.is-balanced {
-    color: var(--color-text-muted);
-    border-color: var(--surface-soft-border);
-    background: color-mix(in oklab, var(--surface-soft-bg) 84%, var(--color-surface) 16%);
-  }
-
-  .workspace-opportunity-tone-badge.is-competitive,
-  .workspace-opportunity-tone-badge.is-low {
-    color: color-mix(in oklab, var(--color-warning) 80%, var(--color-text) 20%);
-    border-color: color-mix(in oklab, var(--color-warning) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--color-warning) 12%, var(--color-surface) 88%);
-  }
 }

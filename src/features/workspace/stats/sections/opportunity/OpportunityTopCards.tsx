@@ -1,5 +1,6 @@
 'use client';
 
+import { LocationMeta } from '@/components/ui/LocationMeta';
 import {
   IconTrophyBronze,
   IconTrophyGold,
@@ -10,7 +11,7 @@ import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../../statistics.model';
 import { StatisticsSignalMeter } from '../../components/StatisticsSignalMeter';
 import type { OpportunityItem } from './opportunity.utils';
-import { opportunityCardAriaLabel, opportunityStatusClassName, opportunityStatusLabel } from './opportunity.utils';
+import { opportunityCardAriaLabel } from './opportunity.utils';
 
 export function OpportunityTopCards({
   copy,
@@ -43,14 +44,20 @@ export function OpportunityTopCards({
               onClick={() => onSelect(item.rank)}
             >
               <div className="workspace-statistics-opportunity__top">
-                <span className={`workspace-statistics-city-list__rank-cup is-${rankTone}`.trim()} aria-hidden="true">
+                <span
+                  className={`workspace-statistics-city-list__rank-cup workspace-statistics-opportunity__rank-cup is-${rankTone}`.trim()}
+                  aria-hidden="true"
+                >
                   {item.rank === 1 ? <IconTrophyGold size={30} /> : null}
                   {item.rank === 2 ? <IconTrophySilver size={30} /> : null}
                   {item.rank === 3 ? <IconTrophyBronze size={30} /> : null}
                 </span>
                 <div className="workspace-statistics-opportunity__identity">
-                  <strong className="workspace-statistics-opportunity__city">{item.city}</strong>
-                  <span className="workspace-statistics-opportunity__category">{item.category}</span>
+                  <span className="request-category workspace-statistics-opportunity__category">{item.category}</span>
+                  <LocationMeta
+                    label={item.city}
+                    className="workspace-statistics-opportunity__city"
+                  />
                 </div>
               </div>
               <StatisticsSignalMeter
@@ -58,24 +65,7 @@ export function OpportunityTopCards({
                 label={copy.opportunityScoreLabel}
                 value={`${item.score.toFixed(1)} / 10`}
                 progressPercent={item.score * 10}
-                semanticLabel={opportunityStatusLabel(item.status, copy)}
-                semanticTone={opportunityStatusClassName(item.status)}
               />
-
-              <dl className="workspace-statistics-opportunity__metrics">
-                <div>
-                  <dt>{copy.opportunityDemandLabel}</dt>
-                  <dd>{item.demand.toLocaleString()}</dd>
-                </div>
-                <div>
-                  <dt>{copy.opportunityProvidersLabel}</dt>
-                  <dd>{item.providers === null ? '—' : item.providers.toLocaleString()}</dd>
-                </div>
-                <div>
-                  <dt>{copy.opportunityBalanceLabel}</dt>
-                  <dd>{item.marketBalanceRatio === null ? '—' : item.marketBalanceRatio.toFixed(2)}</dd>
-                </div>
-              </dl>
             </button>
           </li>
         );

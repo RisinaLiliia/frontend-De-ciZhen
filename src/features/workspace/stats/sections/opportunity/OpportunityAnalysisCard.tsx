@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { LocationMeta } from '@/components/ui/LocationMeta';
 import {
   IconTrophyBronze,
   IconTrophyGold,
@@ -63,15 +64,21 @@ export function OpportunityAnalysisCard({
         .replace('{city}', item.city)}
     >
       <div className="workspace-statistics-opportunity__analysis-overview">
-        <div className="workspace-statistics-opportunity__analysis-identity">
-          <span className={`workspace-statistics-city-list__rank-cup is-${rankTone}`.trim()} aria-hidden="true">
+        <div className="workspace-statistics-opportunity__analysis-identity workspace-statistics-opportunity__top">
+          <span
+            className={`workspace-statistics-city-list__rank-cup workspace-statistics-opportunity__rank-cup is-${rankTone}`.trim()}
+            aria-hidden="true"
+          >
             {item.rank === 1 ? <IconTrophyGold size={30} /> : null}
             {item.rank === 2 ? <IconTrophySilver size={30} /> : null}
             {item.rank === 3 ? <IconTrophyBronze size={30} /> : null}
           </span>
           <div className="workspace-statistics-opportunity__identity">
-            <strong className="workspace-statistics-opportunity__city">{item.city}</strong>
-            <span className="workspace-statistics-opportunity__category">{item.category}</span>
+            <span className="request-category workspace-statistics-opportunity__category">{item.category}</span>
+            <LocationMeta
+              label={item.city}
+              className="workspace-statistics-opportunity__city"
+            />
           </div>
         </div>
         <div
@@ -79,7 +86,7 @@ export function OpportunityAnalysisCard({
           aria-label={`${copy.opportunityScoreLabel}: ${item.score.toFixed(1)} / 10`}
         >
           <StatisticsSignalMeter
-            className="workspace-statistics-opportunity__score"
+            className="workspace-statistics-opportunity__score workspace-statistics-opportunity__score--analysis"
             label={copy.opportunityScoreLabel}
             value={`${item.score.toFixed(1)} / 10`}
             progressPercent={item.score * 10}

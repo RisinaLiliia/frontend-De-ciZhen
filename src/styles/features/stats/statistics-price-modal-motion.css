@@ -43,39 +43,9 @@
     }
   
     @media (max-width: 639px) {
-      .workspace-statistics-price__ticks {
-        min-height: 36px;
-      }
-  
-      .workspace-statistics-price__tick {
-        max-width: 56px;
-      }
-  
-      .workspace-statistics-price__position-scale,
-      .workspace-statistics-price__position-range {
-        font-size: var(--workspace-statistics-copy-size-tight);
-      }
-  
-      .workspace-statistics-price__bar-sweet-label {
-        top: -32px;
-        padding-inline: 6px;
-      }
-  
-      .workspace-statistics-price__bar-sweet-label strong {
-        font-size: var(--workspace-statistics-chip-font-size);
-      }
-  
       .workspace-statistics-price-modal__header {
         gap: var(--space-2);
       }
-    }
-  
-    @media (max-width: 1023px) {
-      .workspace-statistics-opportunity__item--compact,
-      .workspace-statistics-price__hero {
-        min-height: 0;
-      }
-  
     }
   
     @media (prefers-reduced-motion: reduce) {

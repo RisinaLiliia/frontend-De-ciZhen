@@ -157,11 +157,11 @@ describe('opportunity.utils', () => {
 
     const label = opportunityCardAriaLabel({ item, copy, locale: 'de' });
 
-    expect(label).toContain('Berlin · Cleaning & Housekeeping');
+    expect(label).toContain('Cleaning & Housekeeping · Berlin');
     expect(label).toContain('Chance Score: 5.4 / 10');
-    expect(label).toContain('Nachfrage: 12');
-    expect(label).toContain('Anbieter: 5');
-    expect(label).toContain('Marktbalance: 2.40');
-    expect(label).toContain('Ausgeglichen');
+    expect(label).not.toContain('Nachfrage');
+    expect(label).not.toContain('Anbieter');
+    expect(label).not.toContain('Marktbalance');
+    expect(label).not.toContain('Ausgeglichen');
   });
 });

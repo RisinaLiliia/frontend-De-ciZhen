@@ -15,9 +15,17 @@ import {
   workspacePanelShell,
   workspaceStatCardShell,
 } from '@/features/workspace/shared/workspaceSurfaceShell';
+import { WorkspaceBadge, type WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 import type { TranslateFn } from './statisticsSections.types';
 import { citySignalIcon, citySignalLabel } from './statisticsSections.utils';
+
+const CITY_SIGNAL_BADGE_VARIANT: Record<WorkspaceStatisticsModel['cityRows'][number]['signal'], WorkspaceBadgeVariant> = {
+  high: 'success',
+  medium: 'info',
+  low: 'warning',
+  none: 'neutral',
+};
 
 export function StatisticsCitiesPanel({
   panelRef,
@@ -122,6 +130,7 @@ export function StatisticsCitiesPanel({
                   type="button"
                   className={workspaceStatCardShell(
                     'workspace-statistics-city-list__item',
+                    'stat-link',
                     activeCityId === item.cityId && 'is-active',
                     isCompetitor && 'is-competitor',
                   )}
@@ -149,12 +158,17 @@ export function StatisticsCitiesPanel({
                   </span>
                   <span className="workspace-statistics-city-list__balance">
                     <strong>{marketBalanceLabel}</strong>
-                    <span className={`workspace-statistics-city-list__signal is-${item.signal}`.trim()}>
+                    <WorkspaceBadge
+                      variant={CITY_SIGNAL_BADGE_VARIANT[item.signal]}
+                      size="sm"
+                      tone="soft"
+                      className="workspace-statistics-city-list__signal"
+                    >
                       <span className="workspace-statistics-city-list__signal-icon" aria-hidden="true">
                         {citySignalIcon(item.signal)}
                       </span>
                       {signalLabel}
-                    </span>
+                    </WorkspaceBadge>
                     {matchedCityComparison?.recommendation ? (
                       <span className="workspace-statistics-city-list__personal-note">
                         {copy.userRecommendationLabel}: {matchedCityComparison.recommendation}
@@ -183,9 +197,14 @@ export function StatisticsCitiesPanel({
                 <span className="workspace-statistics-city-list__share">—</span>
                 <span className="workspace-statistics-city-list__balance">
                   <strong>—</strong>
-                  <span className="workspace-statistics-city-list__signal is-none">
+                  <WorkspaceBadge
+                    variant="neutral"
+                    size="sm"
+                    tone="soft"
+                    className="workspace-statistics-city-list__signal"
+                  >
                     {placeholderSignalLabel}
-                  </span>
+                  </WorkspaceBadge>
                 </span>
               </div>
             </li>

@@ -1,291 +1,77 @@
 @layer components {
-
-  .workspace-statistics-price-recommendation {
+  .workspace-statistics-price__radar-card {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-6);
     align-content: start;
-  }
-
-  .workspace-statistics-price-recommendation .workspace-statistics__decision-ai {
-    margin-top: 0;
-  }
-
-  .workspace-statistics-price__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--workspace-statistics-feature-stack-gap);
-    min-height: 100%;
-  }
-
-  .workspace-statistics-price__hero {
-    position: relative;
-    display: grid;
-    gap: var(--workspace-statistics-feature-card-gap);
-    align-content: start;
+    min-width: 0;
     padding: var(--workspace-statistics-feature-card-pad);
-    min-height: var(--workspace-statistics-feature-card-min-h);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 22%, var(--surface-soft-border) 78%);
+    border: 1px solid var(--color-border-soft);
     border-radius: var(--workspace-statistics-radius-lg);
-    background:
-      linear-gradient(
-        160deg,
-        color-mix(in oklab, var(--color-primary) 10%, var(--color-surface) 90%) 0%,
-        color-mix(in oklab, var(--color-warning) 8%, var(--color-surface) 92%) 100%
-      );
-    box-shadow: var(--shadow-card);
+    background: var(--color-surface);
   }
 
-  .workspace-statistics-price__signal {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: var(--workspace-statistics-chip-height);
-    width: fit-content;
-    padding: 0 var(--workspace-statistics-chip-pad-inline);
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 34%, var(--surface-soft-border) 66%);
-    background: color-mix(in oklab, var(--color-primary) 10%, var(--color-surface) 90%);
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
-    font-size: var(--workspace-statistics-chip-font-size);
-    font-weight: var(--workspace-statistics-chip-font-weight);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    line-height: 1;
-  }
-
-  .workspace-statistics-price__context {
-    margin: 0;
-    font-size: var(--workspace-statistics-context-metric-size);
-    font-weight: 600;
-    color: var(--color-text-muted);
-    line-height: 1.35;
-    word-break: break-word;
-  }
-
-  .workspace-statistics-price__label {
-    display: block;
-    margin: 0;
-    font-size: var(--workspace-statistics-label-size);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .workspace-statistics-price__range {
-    display: block;
-    font-size: var(--workspace-statistics-display-size-lg);
-    font-weight: 700;
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
-    line-height: var(--lh-tight);
-    font-variant-numeric: tabular-nums;
-    word-break: break-word;
-  }
-
-  .workspace-statistics-price__summary-grid {
+  .workspace-statistics-price__radar-head {
     display: grid;
-    gap: var(--workspace-statistics-feature-stack-gap);
-    grid-template-columns: minmax(0, 1fr);
-    padding-top: var(--workspace-statistics-feature-stack-gap);
-  }
-
-  .workspace-statistics-price__summary-card {
-    display: grid;
-    gap: var(--workspace-statistics-feature-card-gap);
-    align-content: start;
-    padding: var(--workspace-statistics-feature-card-pad);
-    border-radius: var(--workspace-statistics-radius-md);
-    border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 95%, var(--surface-soft-bg) 5%);
-  }
-
-  .workspace-statistics-price__summary-card--average {
-    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 38%, transparent);
-  }
-
-  .workspace-statistics-price__summary-card--gap.is-warning {
-    border-color: color-mix(in oklab, var(--color-warning) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--color-warning) 9%, var(--surface-soft-bg) 91%);
-  }
-
-  .workspace-statistics-price__summary-card--gap.is-positive {
-    border-color: color-mix(in oklab, var(--color-success) 26%, var(--surface-soft-border) 74%);
-    background: color-mix(in oklab, var(--color-success) 9%, var(--surface-soft-bg) 91%);
-  }
-
-  .workspace-statistics-price__summary-card--gap.is-neutral {
-    border-color: color-mix(in oklab, var(--color-primary) 22%, var(--surface-soft-border) 78%);
-    background: color-mix(in oklab, var(--color-primary) 7%, var(--surface-soft-bg) 93%);
-  }
-
-  .workspace-statistics-price__summary-label {
-    font-size: var(--workspace-statistics-label-size);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .workspace-statistics-price__summary-value {
-    color: var(--color-text);
-    font-size: var(--workspace-statistics-display-size);
-    font-weight: 700;
-    line-height: var(--lh-tight);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .workspace-statistics-price__summary-note {
-    font-size: var(--workspace-statistics-copy-size-tight);
-    line-height: 1.45;
-    color: var(--color-text-muted);
-  }
-
-  .workspace-statistics-price__profit {
-    display: grid;
-    gap: var(--space-1-5);
-    border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 95%, var(--surface-soft-bg) 5%);
-    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 34%, transparent);
-  }
-
-  .workspace-statistics-price__profit-signal {
-    gap: var(--space-1-5);
-  }
-
-  .workspace-statistics-price__comparison {
-    display: grid;
-    gap: var(--space-1-5);
-    margin-top: auto;
-    padding: var(--space-2) var(--workspace-statistics-feature-card-pad);
-    border: 1px solid var(--surface-soft-border);
-    border-radius: var(--workspace-statistics-radius-md);
-    background: color-mix(in oklab, var(--color-surface) 95%, var(--surface-soft-bg) 5%);
-    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-white) 32%, transparent);
-  }
-
-  .workspace-statistics-price__comparison-row {
-    display: grid;
-    grid-template-columns: minmax(72px, auto) minmax(0, 1fr) auto;
-    align-items: center;
     gap: var(--space-2);
     min-width: 0;
   }
 
-  .workspace-statistics-price__comparison-label,
-  .workspace-statistics-price__comparison-value {
-    font-size: var(--workspace-statistics-copy-size-tight);
-    line-height: 1.35;
-    font-variant-numeric: tabular-nums;
+  .workspace-statistics-price__market-line {
+    display: grid;
+    gap: var(--space-1-5);
+    min-width: 0;
+  }
+
+  .workspace-statistics-price__context {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .workspace-statistics-price__comparison-label {
+  .workspace-statistics-price__location {
+    min-width: 0;
     color: var(--color-text-muted);
+    font-size: var(--workspace-statistics-copy-size-tight);
+    line-height: 1.3;
   }
 
-  .workspace-statistics-price__comparison-value {
-    color: var(--color-text);
-    font-weight: 700;
-    text-align: right;
+  .workspace-statistics-price__location span {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .workspace-statistics-price__comparison-track {
-    height: 10px;
+  .workspace-statistics-price__range {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    font-size: var(--workspace-statistics-display-size);
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
-  .workspace-statistics-price__comparison-fill {
-    border-radius: inherit;
-  }
-
-  .workspace-statistics-price__comparison-fill--profile {
-    background: linear-gradient(
-      90deg,
-      color-mix(in oklab, var(--color-primary) 56%, var(--color-warning) 44%),
-      color-mix(in oklab, var(--color-warning) 74%, var(--color-primary) 26%)
-    );
-  }
-
-  .workspace-statistics-price__comparison-fill--market {
-    background: linear-gradient(
-      90deg,
-      color-mix(in oklab, var(--color-text-muted) 52%, var(--color-primary) 48%),
-      color-mix(in oklab, var(--color-primary) 68%, var(--surface-soft-border) 32%)
-    );
-    opacity: 0.9;
+  .workspace-statistics-price__radar-body {
+    display: grid;
+    gap: var(--space-5);
+    min-width: 0;
   }
 
   .workspace-statistics-price__bar-wrap {
     position: relative;
     display: grid;
     gap: var(--space-2);
-  }
-
-  .workspace-statistics-price__position {
-    display: grid;
-    gap: var(--space-2-5);
-    padding: var(--space-3);
-    border-radius: var(--workspace-statistics-radius-lg);
-    border: 1px solid color-mix(in oklab, var(--color-warning) 18%, var(--surface-soft-border) 82%);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--color-surface) 96%, var(--surface-soft-bg) 4%),
-        color-mix(in oklab, var(--color-surface) 92%, var(--color-warning) 8%)
-      );
-    box-shadow:
-      inset 0 1px 0 color-mix(in oklab, var(--c-white) 34%, transparent),
-      0 10px 24px color-mix(in oklab, var(--c-ink) 5%, transparent);
-  }
-
-  .workspace-statistics-price__position-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-
-  .workspace-statistics-price__position-label {
-    font-size: var(--workspace-statistics-label-size);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .workspace-statistics-price__position-range {
-    font-size: var(--workspace-statistics-copy-size-tight);
-    font-weight: 700;
-    color: color-mix(in oklab, var(--color-text) 92%, var(--color-warning) 8%);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .workspace-statistics-price__position-hint {
-    margin: 0;
-    font-size: var(--workspace-statistics-copy-size-tight);
-    line-height: 1.45;
-    color: color-mix(in oklab, var(--color-text-muted) 92%, var(--color-text) 8%);
-  }
-
-  .workspace-statistics-price__position-scale {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-    padding-inline: var(--space-0-5);
-    font-size: var(--workspace-statistics-copy-size);
-    font-weight: 700;
-    color: var(--color-text);
-    font-variant-numeric: tabular-nums;
+    min-width: 0;
+    padding-block: var(--space-3) var(--space-1-5);
   }
 
   .workspace-statistics-price__bar {
     position: relative;
     height: 22px;
+    min-width: 0;
     border-radius: var(--workspace-statistics-chip-radius);
-    background: color-mix(in oklab, var(--surface-soft-bg) 82%, var(--color-surface) 18%);
     border: 1px solid var(--surface-soft-border);
+    background: color-mix(in oklab, var(--surface-soft-bg) 82%, var(--color-surface) 18%);
     overflow: hidden;
   }
 
@@ -298,30 +84,6 @@
     transform: translateY(-50%);
   }
 
-  .workspace-statistics-price__bar-node {
-    position: absolute;
-    top: 50%;
-    width: 9px;
-    height: 9px;
-    border-radius: var(--workspace-statistics-chip-radius);
-    border: 1px solid color-mix(in oklab, var(--color-surface) 82%, transparent);
-    background: color-mix(in oklab, var(--color-text-muted) 54%, var(--color-surface) 46%);
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-surface) 72%, transparent);
-    z-index: 1;
-  }
-
-  .workspace-statistics-price__bar-node--avg {
-    width: 11px;
-    height: 11px;
-    background: color-mix(in oklab, var(--color-text) 72%, var(--color-primary) 28%);
-  }
-
-  .workspace-statistics-price__bar-node--optimal-min,
-  .workspace-statistics-price__bar-node--optimal-max {
-    background: color-mix(in oklab, var(--color-warning) 52%, var(--color-surface) 48%);
-  }
-
   .workspace-statistics-price__bar-sweet-spot {
     position: absolute;
     top: 3px;
@@ -329,45 +91,113 @@
     border-radius: var(--workspace-statistics-chip-radius);
     background: linear-gradient(
       90deg,
-      color-mix(in oklab, var(--color-primary) 72%, var(--color-warning) 28%),
-      color-mix(in oklab, var(--color-warning) 78%, var(--color-warning) 22%)
+      color-mix(in oklab, var(--color-warning) 78%, var(--color-surface) 22%) 0%,
+      color-mix(in oklab, var(--color-success) 76%, var(--color-surface) 24%) 50%,
+      color-mix(in oklab, var(--color-danger) 70%, var(--color-surface) 30%) 100%
     );
     opacity: 0.92;
   }
 
-  .workspace-statistics-price__bar-sweet-label {
+  .workspace-statistics-price__bar-node,
+  .workspace-statistics-price__bar-average-marker {
     position: absolute;
-    top: -38px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    border-radius: var(--workspace-statistics-chip-radius);
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+
+  .workspace-statistics-price__bar-node {
+    width: 10px;
+    height: 10px;
+    border: 1px solid color-mix(in oklab, var(--color-surface) 82%, transparent);
+    background: color-mix(in oklab, var(--color-success) 78%, var(--color-surface) 22%);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-surface) 72%, transparent);
+  }
+
+  .workspace-statistics-price__bar-average-marker {
+    width: 2px;
+    height: 28px;
+    background: color-mix(in oklab, var(--color-text) 74%, var(--color-primary) 26%);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-surface) 66%, transparent);
+  }
+
+  .workspace-statistics-price__position-legend {
     display: grid;
-    gap: var(--space-0-5);
-    justify-items: center;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--workspace-statistics-radius-sm);
-    border: 1px solid color-mix(in oklab, var(--color-warning) 28%, var(--surface-soft-border) 72%);
-    background: color-mix(in oklab, var(--color-surface) 94%, var(--color-warning) 6%);
-    color: color-mix(in oklab, var(--color-primary) 80%, var(--color-text) 20%);
-    pointer-events: none;
-    white-space: nowrap;
-    box-shadow: var(--shadow-card);
-  }
-
-  .workspace-statistics-price__bar-sweet-label span {
-    font-size: var(--workspace-statistics-chip-font-size);
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-0-5);
+    margin-bottom: var(--space-4);
+    font-size: var(--fs-10);
     font-weight: 700;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    line-height: 1;
+    color: var(--color-text-muted);
   }
 
-  .workspace-statistics-price__bar-sweet-label strong {
-    font-size: var(--workspace-statistics-label-size);
+  .workspace-statistics-price__position-legend span:nth-child(2) {
+    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
+  }
+
+  .workspace-statistics-price__position-legend span:first-child {
+    color: color-mix(in oklab, var(--color-warning) 84%, var(--color-text) 16%);
+  }
+
+  .workspace-statistics-price__position-legend span:last-child {
+    color: color-mix(in oklab, var(--color-danger) 78%, var(--color-text) 22%);
+    text-align: right;
+  }
+
+  .workspace-statistics-price__ticks {
+    position: relative;
+    min-height: calc(var(--space-5) + var(--space-0-5));
+    margin: 0;
+    padding: var(--space-1-5) 0 0;
+    list-style: none;
+  }
+
+  .workspace-statistics-price__tick {
+    position: absolute;
+    top: var(--space-1-5);
+    max-width: 70px;
+    color: var(--color-text-muted);
+    font-size: var(--fs-10);
     font-weight: 700;
-    line-height: 1.1;
-    color: var(--color-text);
+    line-height: 1.2;
     font-variant-numeric: tabular-nums;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transform: translateX(-50%);
   }
 
-  
+  .workspace-statistics-price__tick:first-child {
+    text-align: left;
+    transform: none;
+  }
+
+  .workspace-statistics-price__tick:last-child {
+    text-align: right;
+    transform: translateX(-100%);
+  }
+
+  .workspace-statistics-price__average {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-width: 0;
+    padding-top: var(--space-1);
+    border-top: 1px solid var(--color-border-soft);
+    color: var(--color-text-muted);
+    font-size: var(--app-text-muted-size);
+    line-height: var(--app-text-muted-line-height);
+  }
+
+  .workspace-statistics-price__average strong {
+    font-size: var(--fs-body);
+    white-space: nowrap;
+  }
 }

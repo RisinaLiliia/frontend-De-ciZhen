@@ -37,7 +37,6 @@ type StatisticsContentSectionsProps = {
   cityComparison: WorkspaceStatisticsModel['cityComparison'];
   opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'];
   funnelPeriodLabel: WorkspaceStatisticsModel['funnelPeriodLabel'];
-  personalizedPricing: WorkspaceStatisticsModel['personalizedPricing'];
   resolvedCitiesSubtitle: string;
   resolvedOpportunityTitle: string;
   profilePanelRef: React.RefObject<HTMLElement | null>;
@@ -66,7 +65,6 @@ export function StatisticsContentSections({
   cityListTotalPages,
   cityComparison,
   opportunityRadar,
-  personalizedPricing,
   resolvedCitiesSubtitle,
   resolvedOpportunityTitle,
   citiesPanelRef,
@@ -100,8 +98,6 @@ export function StatisticsContentSections({
         selectedRank={selectedOpportunityRank}
         onSelectRank={setSelectedOpportunityRank}
         priceIntelligence={priceIntelligence}
-        pricing={model.userIntelligence}
-        personalizedPricing={personalizedPricing}
       />
 
       <StatisticsCitiesSection

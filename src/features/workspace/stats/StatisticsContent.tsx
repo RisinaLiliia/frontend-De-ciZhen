@@ -57,7 +57,6 @@ export function StatisticsContent({
     cityComparison,
     opportunityRadar,
     funnelPeriodLabel,
-    personalizedPricing,
   } = model;
 
   const {
@@ -117,7 +116,6 @@ export function StatisticsContent({
           cityComparison={cityComparison}
           opportunityRadar={opportunityRadar}
           funnelPeriodLabel={funnelPeriodLabel}
-          personalizedPricing={personalizedPricing}
           resolvedCitiesSubtitle={resolvedCitiesSubtitle}
           resolvedOpportunityTitle={resolvedOpportunityTitle}
           profilePanelRef={profilePanelRef}

@@ -379,26 +379,4 @@
     }
   }
 
-  .workspace-statistics-price__summary-definition {
-    display: grid;
-    gap: var(--space-1-5);
-    margin: 0;
-  }
-
-  .workspace-statistics-price__summary-definition > div {
-    display: grid;
-    gap: var(--space-0-5);
-  }
-
-  .workspace-statistics-price__summary-definition dt {
-    font-size: var(--fs-small);
-    color: var(--color-text-muted);
-  }
-
-  .workspace-statistics-price__summary-definition dd {
-    margin: 0;
-    font-size: var(--fs-small);
-    color: var(--color-text);
-  }
-
 }

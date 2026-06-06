@@ -212,13 +212,8 @@ export function opportunityCardAriaLabel(params: {
   copy: WorkspaceStatisticsModel['copy'];
   locale: Locale;
 }): string {
-  const { item, copy, locale } = params;
-  const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
-  const status = opportunityStatusLabel(item.status, copy);
-  const demand = item.demand.toLocaleString(localeTag);
-  const providers = item.providers === null ? '—' : item.providers.toLocaleString(localeTag);
-  const balance = item.marketBalanceRatio === null ? '—' : item.marketBalanceRatio.toFixed(2);
-  return `${item.city} · ${item.category}. ${copy.opportunityScoreLabel}: ${item.score.toFixed(1)} / 10. ${copy.opportunityDemandLabel}: ${demand}. ${copy.opportunityProvidersLabel}: ${providers}. ${copy.opportunityBalanceLabel}: ${balance}. ${status}.`;
+  const { item, copy } = params;
+  return `${item.category} · ${item.city}. ${copy.opportunityScoreLabel}: ${item.score.toFixed(1)} / 10.`;
 }
 
 function opportunityAxisLabel(

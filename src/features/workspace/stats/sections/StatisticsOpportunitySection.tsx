@@ -16,8 +16,6 @@ type StatisticsOpportunitySectionProps = {
   selectedRank: WorkspaceStatisticsModel['opportunityRadar'][number]['rank'] | null;
   onSelectRank: (rank: WorkspaceStatisticsModel['opportunityRadar'][number]['rank'] | null) => void;
   priceIntelligence: WorkspaceStatisticsModel['priceIntelligence'];
-  pricing: WorkspaceStatisticsModel['userIntelligence'] | null;
-  personalizedPricing: WorkspaceStatisticsModel['personalizedPricing'];
 };
 
 export function StatisticsOpportunitySection({
@@ -29,8 +27,6 @@ export function StatisticsOpportunitySection({
   selectedRank,
   onSelectRank,
   priceIntelligence,
-  pricing,
-  personalizedPricing,
 }: StatisticsOpportunitySectionProps) {
   return (
     <div className="workspace-statistics__grid workspace-statistics__grid--secondary">
@@ -48,8 +44,6 @@ export function StatisticsOpportunitySection({
         copy={copy}
         title={copy.priceTitle}
         priceIntelligence={priceIntelligence}
-        pricing={pricing?.pricing ?? null}
-        personalizedPricing={personalizedPricing}
       />
     </div>
   );

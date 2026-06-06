@@ -132,13 +132,4 @@
       color: var(--color-text);
     }
   
-    .workspace-statistics-price__summary-card--personal {
-      gap: var(--space-1);
-    }
-  
-    .workspace-statistics-price__summary-note {
-      font-size: var(--fs-small);
-      color: var(--color-text-muted);
-    }
-  
 }

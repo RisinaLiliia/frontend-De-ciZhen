@@ -14,5 +14,7 @@
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     gap: var(--workspace-statistics-feature-stack-gap);
+    height: 100%;
+    align-content: start;
   }
 }
