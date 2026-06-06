@@ -77,12 +77,12 @@ function mapOpportunityPriorityTone(
   return 'neutral';
 }
 
-function mapOpportunityBadgeVariant(
+export function mapOpportunityBadgeVariant(
   tone: StatisticsOpportunityItem['tone'],
 ): WorkspaceUnifiedRailQueueItem['priorityBadgeVariant'] {
   if (tone === 'risk') return 'risk';
   if (tone === 'chance') return 'success';
-  if (tone === 'action') return 'info';
+  if (tone === 'action') return 'warning';
   return 'warning';
 }
 
