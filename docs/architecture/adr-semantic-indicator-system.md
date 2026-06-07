@@ -18,11 +18,11 @@ Assign stable business meaning to existing tokens and variants:
 | Semantic category | Business meaning | Primary existing tokens | Preferred badge/use |
 | --- | --- | --- | --- |
 | Demand | Market demand, requests, customers, leads, demand signals, market activity | `--color-info`, `--color-info-soft`, `--color-info-border`, `--dc-blue` | `WorkspaceBadge variant="info"` |
-| Supply | Providers, availability, provider density, market capacity, competition context | `--color-warning`, `--color-warning-soft`, `--color-warning-border`, `--dc-sand` | supply metric icon/accent; avoid risk red |
+| Supply | Providers, availability, provider density, market capacity, competition context | `--color-primary`, `--color-primary-soft`, `--color-primary-border` | primary icon/accent; avoid risk red |
 | Opportunity | Growth, revenue potential, good market chance, conversion upside | `--color-success`, `--color-success-soft`, `--color-success-border`, `--dc-sage` | `WorkspaceBadge variant="success"` |
 | Risk | Threats, lost leads, high competition risk, negative trends, low conversion | `--color-danger`, `--color-danger-soft`, `--color-danger-border`, `--dc-danger` | `WorkspaceBadge variant="risk"` or `danger` |
 | AI | System-generated intelligence, recommendations, predictions, AI scores | `--color-primary` with explicit AI icon/label; neutral surface | AI icon/stamp plus primary accent |
-| Action | Required user action, pending decision, follow-up, next step, attention required | existing warning/orange treatment; can mix `--color-warning` with existing risk tone for stronger action emphasis | `WorkspaceBadge variant="warning"` |
+| Action | Required user action, pending decision, follow-up, next step, attention required | `--color-warning`, `--color-warning-soft`, `--color-warning-border`, `--dc-sand` | `WorkspaceBadge variant="warning"` |
 | Neutral | Supporting information, filters, dates, labels, settings, informational metrics | `--color-text-muted`, `--color-border`, `--color-surface-muted` | `WorkspaceBadge variant="neutral"` |
 
 `WorkspaceBadge variant="opportunity"` is deprecated and removed from the workspace badge primitive because it conflicted with the established semantic language. Semantic Opportunity uses `WorkspaceBadge variant="success"`.
@@ -84,9 +84,9 @@ Existing global primitives to reuse:
 | Primitive | Current role |
 | --- | --- |
 | `--color-info` / `--dc-blue` | Demand indicators and informational blue accents |
-| `--color-primary` / `--dc-primary` | Primary product accent and AI identity accent |
+| `--color-primary` / `--dc-primary` | Primary product/action accent and AI identity accent |
 | `--color-success` / `--dc-sage` | Opportunity, healthy state, positive outcome |
-| `--color-warning` / `--dc-sand` | Supply/provider indicators and the base tone for action-required indicators |
+| `--color-warning` / `--dc-sand` | Action required, caution, pending decision, signal |
 | `--color-danger` / `--dc-danger` | Risk, negative state, lost/critical issue |
 | `WorkspaceBadge` | Canonical badge primitive for workspace semantic labels |
 | `workspaceSurfaceShell` primitives | Canonical neutral surfaces for cards, panels, rails |
@@ -111,7 +111,7 @@ Use this table for the next "Semantic Indicator Audit" pass:
 | Component | Current token / variant | Current meaning | Target semantic category | Action |
 | --- | --- | --- | --- | --- |
 | Request KPI | `info` / blue | Demand | Demand | Keep |
-| Provider KPI | warning/sand supply accent | Supply | Supply | Keep |
+| Provider KPI | primary/supply accent | Supply | Supply | Verify |
 | Opportunity badge | `success` / sage | Opportunity | Opportunity | Keep |
 | Risk alert | `risk` / danger | Risk | Risk | Keep |
 | AI recommendation | primary + AI label | AI | AI | Verify AI label/icon |
