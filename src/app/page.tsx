@@ -1,10 +1,6 @@
-import { HomePageShell } from '@/components/layout/HomePageShell';
-import { HomePageContentContainer } from '@/features/home/HomePageContent.container';
+// src/app/page.tsx
+import { ProductEntryScreen } from '@/features/product-entry';
 
 export default function HomePage() {
-  return (
-    <HomePageShell>
-      <HomePageContentContainer />
-    </HomePageShell>
-  );
+  return <ProductEntryScreen />;
 }

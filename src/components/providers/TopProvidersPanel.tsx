@@ -1,7 +1,8 @@
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
 import { ProviderList } from '@/components/providers/ProviderList';
 import type { ProviderCardItem } from '@/components/providers/ProviderCard';
-import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardHeader } from '@/components/ui/Card';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 
 export type TopProviderItem = ProviderCardItem;
 
@@ -30,11 +31,8 @@ export function TopProvidersPanel({
 }: TopProvidersPanelProps) {
   return (
     <Card className={`hide-mobile top-providers-panel ${className ?? ''}`.trim()}>
-      <CardHeader className="home-panel-header">
-        <div className="home-panel-heading">
-          <CardTitle className="home-panel-title">{title}</CardTitle>
-          <p className="home-panel-subtitle">{subtitle}</p>
-        </div>
+      <CardHeader>
+        <SectionHeader title={title} subtitle={subtitle} titleAs="h3" />
       </CardHeader>
       <ProviderList
         providers={providers}

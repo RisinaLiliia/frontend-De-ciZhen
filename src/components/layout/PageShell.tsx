@@ -4,7 +4,10 @@
 import * as React from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { BackButton } from '@/components/layout/BackButton';
-import { WorkspacePrimaryNavDesktop, WorkspacePrimaryNavMobile } from '@/components/layout/WorkspacePrimaryNav';
+import {
+  WorkspacePrimaryNavigationDesktop,
+  WorkspacePrimaryNavigationMobile,
+} from '@/components/layout/workspace-navigation';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { cn } from '@/lib/utils/cn';
@@ -99,7 +102,7 @@ export function PageShell({
     <div className={cn('min-h-dvh page-shell motion-reduce-transition', hasWorkspaceNav ? 'page-shell--with-mobile-nav' : null)}>
       <TopBar
         title={title}
-        center={hasWorkspaceNav ? <WorkspacePrimaryNavDesktop /> : null}
+        center={hasWorkspaceNav ? <WorkspacePrimaryNavigationDesktop /> : null}
         right={headerRight}
         elevated={isTopbarElevated}
       />
@@ -129,7 +132,7 @@ export function PageShell({
         {withSpacer ? <div className="flex-1" /> : null}
       </main>
 
-      {hasWorkspaceNav ? <WorkspacePrimaryNavMobile /> : null}
+      {hasWorkspaceNav ? <WorkspacePrimaryNavigationMobile /> : null}
     </div>
   );
 }

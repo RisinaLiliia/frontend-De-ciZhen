@@ -1,7 +1,5 @@
-'use client';
-
-import { WorkspaceShellPage } from '@/features/workspace/shell/WorkspaceShellPage';
+import { redirect } from 'next/navigation';
 
 export default function RequestsAliasPage() {
-  return <WorkspaceShellPage forcedPublicSection="requests" />;
+  redirect('/workspace?section=requests');
 }

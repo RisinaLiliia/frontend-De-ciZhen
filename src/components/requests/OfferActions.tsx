@@ -29,7 +29,7 @@ export function OfferActions({
   browseLabel,
   detailsLabel,
   detailsHref,
-  contractHref = '/provider/contracts',
+  contractHref = '/workspace?section=requests&scope=my&state=execution&period=90d&range=90d',
   chatHref,
   onSend,
   onEdit,

@@ -1,0 +1,30 @@
+@layer components {
+  @media (max-width: 1023px) {
+    .home-trust-live-panel {
+      min-block-size: clamp(360px, 78vw, 460px);
+    }
+
+    .home-trust-live-panel__title {
+      font-size: clamp(22px, 7vw, 30px);
+    }
+
+    .home-trust-live-panel__hero-shot {
+      --hero-shot-iterations: 1;
+      opacity: 0.62;
+      transform: scale(1.04);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-shot__trace,
+    .hero-shot__dribble-mark,
+    .hero-shot__ball-wrap,
+    .hero-shot__ball-phase,
+    .hero-shot__ball-roll,
+    .hero-shot__ball-rebound,
+    .hero-shot__ball-spin,
+    .hero-shot__pulse {
+      animation: none;
+    }
+  }
+}

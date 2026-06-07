@@ -7,7 +7,7 @@ import {
   buildRequestsExplorerServiceOptions,
   buildRequestsExplorerSortOptions,
 } from '@/components/requests/requestsExplorerFilters.model';
-import { ALL_OPTION_KEY } from '@/features/workspace/requests';
+import { ALL_OPTION_KEY } from '@/features/workspace/shared';
 
 const t = (key: string) => key;
 

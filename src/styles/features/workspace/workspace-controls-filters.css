@@ -1,0 +1,199 @@
+/* src/styles/features/workspace/workspace-controls-filters.css */
+
+@layer components {
+  .workspace-context-select-wrap {
+    position: relative;
+  }
+
+  .workspace-context-select {
+    position: relative;
+    min-width: 180px;
+    width: 100%;
+  }
+
+  .workspace-context-controls__surface .dc-select-trigger,
+  .workspace-context-controls__surface .dc-city-search-input {
+    height: var(--workspace-context-control-height);
+    min-height: var(--workspace-context-control-height);
+    padding-inline: var(--workspace-context-control-padding-inline);
+    border-radius: var(--workspace-context-control-radius);
+    border-color: var(--workspace-context-control-border);
+    background: color-mix(in oklab, var(--workspace-context-control-bg) 95%, white 5%);
+    color: var(--color-text);
+    box-shadow: none;
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .workspace-context-controls__surface .dc-select-trigger {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .workspace-context-controls__surface .dc-select-trigger:hover,
+  .workspace-context-controls__surface .dc-city-search-input:hover {
+    border-color: var(--workspace-context-control-border-hover);
+    background: var(--workspace-context-control-bg-hover);
+  }
+
+  .workspace-context-controls__surface .dc-select-trigger:focus-visible,
+  .workspace-context-controls__surface .dc-city-search-input:focus-visible,
+  .workspace-context-controls__surface .dc-city-search-input:focus {
+    border-color: var(--workspace-context-control-border-hover);
+    background: var(--workspace-context-control-bg-hover);
+    box-shadow: var(--control-focus-ring);
+  }
+
+  .workspace-context-controls__surface .dc-select-trigger__label,
+  .workspace-context-controls__surface .dc-city-search-input {
+    font-size: var(--fs-12);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .workspace-context-controls__surface .dc-select-trigger__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .workspace-context-controls__surface .dc-select-trigger__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-muted);
+  }
+
+  .workspace-context-controls__surface .dc-select-trigger__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .workspace-context-controls__surface .workspace-context-select--city .dc-leading-icon {
+    left: var(--workspace-context-control-padding-inline);
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-muted);
+  }
+
+  .workspace-context-controls__surface .workspace-context-select--city .dc-leading-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .workspace-context-controls__surface .dc-select-trigger > svg {
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-muted);
+  }
+
+  .workspace-context-controls__surface .dc-city-search-input {
+    padding-left: calc(var(--workspace-context-control-padding-inline) + 32px);
+    padding-right: var(--workspace-context-control-padding-inline);
+  }
+
+  .workspace-context-controls__surface .workspace-context-select--sort-inline.dc-select-trigger {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--workspace-context-control-height);
+    height: var(--workspace-context-control-height);
+    min-width: 152px;
+    padding: 0 var(--space-2);
+    border: 1px solid var(--workspace-context-control-border);
+    border-radius: var(--radius-md);
+    background: var(--workspace-context-control-bg);
+    box-shadow: none;
+    color: var(--color-text);
+  }
+
+  @media (min-width: 1024px) {
+    .workspace-context-controls__surface .workspace-context-select--sort-icon.dc-select-trigger,
+    .workspace-context-controls__surface .dc-select-trigger[data-icon-only='true'] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      min-width: 36px;
+      padding: 0;
+      gap: 0;
+    }
+
+    .workspace-context-controls__surface .workspace-context-select--sort-icon .dc-select-trigger__icon,
+    .workspace-context-controls__surface .dc-select-trigger[data-icon-only='true'] .dc-select-trigger__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+    }
+
+    .workspace-context-controls__surface .workspace-context-select--sort-icon .dc-select-trigger__icon svg,
+    .workspace-context-controls__surface .dc-select-trigger[data-icon-only='true'] .dc-select-trigger__icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .workspace-context-controls__surface .workspace-context-select--sort-icon .dc-select-trigger__label,
+    .workspace-context-controls__surface .dc-select-trigger[data-icon-only='true'] .dc-select-trigger__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .workspace-context-controls__surface .workspace-context-select--sort-icon > svg,
+    .workspace-context-controls__surface .dc-select-trigger[data-icon-only='true'] > svg {
+      display: none;
+    }
+  }
+
+  .workspace-context-controls__surface .workspace-context-select--sort-inline.dc-select-trigger:hover {
+    background: var(--workspace-context-control-bg-hover);
+    border-color: var(--workspace-context-control-border-hover);
+    color: var(--color-text);
+  }
+
+  .workspace-context-controls__surface {
+    white-space: nowrap;
+  }
+
+  .workspace-context-select--sort-inline.dc-select-trigger:focus-visible {
+    border-color: var(--workspace-context-control-border-hover);
+    background: var(--workspace-context-control-bg-hover);
+    box-shadow: var(--control-focus-ring);
+  }
+
+  .workspace-context-controls__surface
+    .workspace-context-select--sort-inline
+    .dc-select-trigger__label {
+    font-size: var(--fs-12);
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+
+  .workspace-context-select-content--sort {
+    width: max(var(--radix-select-trigger-width), 228px);
+    min-width: 228px;
+    max-width: min(280px, calc(100vw - 32px));
+  }
+
+  .workspace-context-select-content--sort .dc-select-item {
+    white-space: nowrap;
+  }
+}

@@ -1,15 +1,7 @@
 import Link from 'next/link';
-import { Badge, type BadgeSize, type BadgeTone, type BadgeVariant } from '@/components/ui/Badge';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
-
-export type ProviderBadgeItem = {
-  variant: BadgeVariant;
-  size: BadgeSize;
-  label: string;
-  tone?: BadgeTone;
-  tooltip?: string;
-};
+import { ProviderBadgeGroup, type ProviderBadgeItem } from '@/components/providers/ProviderBadgeGroup';
 
 export type ProviderCardItem = {
   id: string;
@@ -63,13 +55,21 @@ export function ProviderCard({
   onToggleFavorite,
   className,
 }: ProviderCardProps) {
-  const primaryBadge = provider.badges[0] ?? null;
-  const secondaryBadge = provider.badges[1] ?? null;
-  const showCornerBadge = Boolean(primaryBadge);
+  const favoriteSlot = canToggleFavorite ? (
+    <FavoriteButton
+      className="provider-card__favorite"
+      variant="icon"
+      isFavorite={isFavorite}
+      isPending={isFavoritePending}
+      ariaLabel={favoriteAriaLabel ?? `Favorite ${provider.name}`}
+      onToggle={() => onToggleFavorite?.(provider.id)}
+    />
+  ) : null;
+  const badgeSlot = <ProviderBadgeGroup providerId={provider.id} badges={provider.badges} />;
 
   return (
     <div
-      className={`provider-card ${variant === 'grid' ? 'is-grid' : 'is-list'} ${canToggleFavorite ? 'has-favorite-toggle' : ''} ${showCornerBadge ? 'has-corner-badge' : ''} ${className ?? ''}`.trim()}
+      className={`provider-card app-card workspace-list-card ${variant === 'grid' ? 'is-grid' : 'is-list'} ${canToggleFavorite ? 'has-favorite-toggle' : ''} ${className ?? ''}`.trim()}
     >
       <Link
         href={provider.profileHref}
@@ -77,46 +77,11 @@ export function ProviderCard({
         className="provider-card__overlay-link"
         aria-label={provider.name}
       />
-      {canToggleFavorite ? (
-        <FavoriteButton
-          className="provider-card__favorite"
-          variant="icon"
-          isFavorite={isFavorite}
-          isPending={isFavoritePending}
-          ariaLabel={favoriteAriaLabel ?? `Favorite ${provider.name}`}
-          onToggle={() => onToggleFavorite?.(provider.id)}
-        />
-      ) : null}
-
-      {showCornerBadge && primaryBadge ? (
-        <div className="provider-badges provider-badges--corner">
-          <Badge
-            variant={primaryBadge.variant}
-            tone={primaryBadge.tone ?? 'soft'}
-            size={primaryBadge.size}
-            title={primaryBadge.tooltip}
-            aria-label={primaryBadge.tooltip ?? primaryBadge.label}
-          >
-            {primaryBadge.label}
-          </Badge>
-          {secondaryBadge ? (
-            <Badge
-              variant={secondaryBadge.variant}
-              tone={secondaryBadge.tone ?? 'soft'}
-              size={secondaryBadge.size}
-              title={secondaryBadge.tooltip}
-              aria-label={secondaryBadge.tooltip ?? secondaryBadge.label}
-            >
-              {secondaryBadge.label}
-            </Badge>
-          ) : null}
-        </div>
-      ) : null}
-
       <UserHeaderCard
         className="provider-card__top"
         name={provider.name}
         avatarUrl={provider.avatarUrl}
+        avatarTopSlot={favoriteSlot}
         avatarRole="provider"
         hasProviderProfile
         isVerified={provider.isVerified}
@@ -141,6 +106,7 @@ export function ProviderCard({
         pricingValueLabel={provider.pricingValueLabel}
         pricingSuffixLabel={provider.pricingSuffixLabel}
         ratingPlacement="avatar"
+        secondaryBadge={badgeSlot}
       />
     </div>
   );

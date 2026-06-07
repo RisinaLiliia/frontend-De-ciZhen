@@ -2,7 +2,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import type { ProviderCardItem } from '@/components/providers/ProviderCard';
-import { buildProviderAvailabilityModel } from '@/features/providers/publicProfile/providerPublicProfile.presentation';
+import { buildProviderAvailabilityModel } from '@/features/providers/profile/providerProfile.presentation';
 import {
   buildProviderCardBadges,
   buildProviderServicePreview,

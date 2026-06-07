@@ -1,8 +1,10 @@
 /* src/styles/overlays-modal.css */
+
 @layer components {
   .dc-modal {
     --dc-modal-max-width: 620px;
     --dc-modal-max-height: min(88vh, 760px);
+
     position: fixed;
     inset: 0;
     z-index: 1600;
@@ -16,7 +18,8 @@
     position: absolute;
     inset: 0;
     border: 0;
-    background: color-mix(in oklab, var(--c-ink) 52%, transparent);
+    background: color-mix(in oklab, var(--color-ink) 46%, transparent);
+    backdrop-filter: blur(8px);
   }
 
   .dc-modal__panel {
@@ -28,12 +31,15 @@
     display: grid;
     gap: var(--space-4);
     padding: var(--space-4-5);
-    border-radius: 18px;
-    border: 1px solid color-mix(in oklab, var(--c-border) 64%, transparent);
-    background: color-mix(in oklab, var(--c-panel) 97%, var(--c-border) 3%);
-    box-shadow:
-      0 24px 56px color-mix(in oklab, var(--c-ink) 34%, transparent),
-      0 0 0 1px color-mix(in oklab, var(--c-border) 55%, transparent);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
   }
 
   .dc-modal__panel--compact {
@@ -53,10 +59,8 @@
     .dc-modal__panel {
       width: 100%;
       max-height: 90vh;
-      border-radius: 18px 18px 0 0;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
       padding: var(--space-4);
     }
-
   }
-
 }

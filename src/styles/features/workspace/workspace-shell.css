@@ -1,0 +1,45 @@
+/* src/styles/features/workspace/workspace-shell.css */
+
+@import './workspace-layout.css';
+@import './workspace-sidebar.css';
+@import './workspace-overlay.css';
+@import './workspace-navigation.css';
+@import './workspace-context.css';
+@import './workspace-providers.css';
+@import './workspace-profile.css';
+@import './workspace-controls.css';
+@import './workspace-mobile-context.css';
+@import './workspace-overview.css';
+@import './workspace-overview-guest-card.css';
+@import './workspace-overview-responsive.css';
+@import './workspace-overview-demand.css';
+@import './workspace-overview-ai.css';
+@import './workspace-ai-rail.css';
+@import './workspace-decision-panel.css';
+@import './workspace-controls-tabs.css';
+@import './workspace-controls-responsive.css';
+@import './workspace-controls-filters.css';
+@import './workspace-overlay-responsive.css';
+@import './workspace-request-card.css';
+@import './workspace-request-card-responsive.css';
+@import './workspace-request-dialog.css';
+@import './workspace-request-offer-card.css';
+@import './workspace-request-dialog-responsive.css';
+@import './workspace-requests-rail.css';
+@import './workspace-overlay-auth.css';
+@import './workspace-overlay-utility.css';
+
+@layer components {
+  .workspace-route-shell {
+    --shell-topbar-height: 72px;
+    --shell-topbar-offset: 0px;
+    --shell-mobile-nav-height: 0px;
+    min-height: 100dvh;
+  }
+
+  @media (max-width: 767px) {
+    .workspace-route-shell {
+      --shell-topbar-height: 64px;
+    }
+  }
+}

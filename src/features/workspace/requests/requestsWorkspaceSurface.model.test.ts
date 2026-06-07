@@ -2,41 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   buildRequestsWorkspaceDecisionRailProps,
-  buildRequestsWorkspaceSummaryStripProps,
 } from './requestsWorkspaceSurface.model';
 
 describe('requestsWorkspaceSurface.model', () => {
-  it('builds shared summary strip props for market and private variants', () => {
-    const onSelect = vi.fn();
-
-    expect(
-      buildRequestsWorkspaceSummaryStripProps({
-        locale: 'de',
-        items: [{ key: 'all', label: 'Alle', value: 12, isHighlighted: true }],
-        onSelect,
-      }),
-    ).toEqual({
-      locale: 'de',
-      items: [{ key: 'all', label: 'Alle', value: 12, isHighlighted: true }],
-      onSelect,
-      variant: 'private',
-    });
-
-    expect(
-      buildRequestsWorkspaceSummaryStripProps({
-        locale: 'de',
-        items: [{ key: 'all', label: 'Alle', value: 12, isHighlighted: true }],
-        onSelect,
-        variant: 'market',
-      }),
-    ).toEqual({
-      locale: 'de',
-      items: [{ key: 'all', label: 'Alle', value: 12, isHighlighted: true }],
-      onSelect,
-      variant: 'market',
-    });
-  });
-
   it('builds shared decision rail props for market and private variants', () => {
     const panel = {
       summary: {

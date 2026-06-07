@@ -17,7 +17,7 @@ const INFINITE_MOTION_SELECTORS = [
   '.home-stats-panel',
   '.top-providers-panel',
   '.requests-filters',
-  '.requests-select-icon--city',
+  '.dc-leading-icon--city',
   '.request-card-link.is-active',
   '.provider-status-dot',
   '.nearby-dot',

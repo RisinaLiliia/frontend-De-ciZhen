@@ -1,0 +1,34 @@
+/* src/styles/tokens/shadows.css */
+:root {
+  --shadow-none: none;
+
+  --shadow-card:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 12px 28px rgba(15, 23, 42, 0.06);
+
+  --shadow-card-hover: 0 8px 24px rgba(15, 23, 42, 0.1);
+
+  --shadow-floating: 0 24px 48px rgba(15, 23, 42, 0.14);
+
+  --shadow-focus: 0 0 0 3px
+    color-mix(in oklab, var(--color-primary) 24%, transparent);
+
+  --surface-card-shadow: var(--shadow-card);
+  --surface-card-shadow-hover: var(--shadow-card-hover);
+
+  --shadow-panel: var(--shadow-card);
+
+  --workspace-control-shell-shadow: var(--shadow-card);
+  --workspace-control-embedded-shadow: var(--shadow-card);
+
+  --workspace-mobile-nav-card-shadow: var(--shadow-card);
+  --workspace-mobile-nav-card-shadow-hover: var(--shadow-card-hover);
+  --workspace-mobile-nav-card-shadow-active: var(--shadow-card-hover);
+
+  --topbar-nav-surface-shadow: var(--shadow-card);
+
+  --personal-nav-item-shadow: var(--shadow-card);
+  --personal-nav-dock-item-shadow: var(--shadow-card);
+  --personal-nav-dock-item-shadow-hover: var(--shadow-card-hover);
+  --personal-nav-dock-item-shadow-active: var(--shadow-card-hover);
+}

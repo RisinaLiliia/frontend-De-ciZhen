@@ -4,18 +4,18 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
 import { useWorkspaceRequestUserStateData } from './useWorkspaceRequestUserStateData';
-import { useWorkspaceLegacyOfferData } from './useWorkspaceLegacyOfferData';
+import { useWorkspaceOfferData } from './useWorkspaceOfferData';
 import { useWorkspaceFavoriteRequestData } from './useWorkspaceFavoriteRequestData';
 
-vi.mock('./useWorkspaceLegacyOfferData', () => ({
-  useWorkspaceLegacyOfferData: vi.fn(),
+vi.mock('./useWorkspaceOfferData', () => ({
+  useWorkspaceOfferData: vi.fn(),
 }));
 
 vi.mock('./useWorkspaceFavoriteRequestData', () => ({
   useWorkspaceFavoriteRequestData: vi.fn(),
 }));
 
-const useWorkspaceLegacyOfferDataMock = vi.mocked(useWorkspaceLegacyOfferData);
+const useWorkspaceOfferDataMock = vi.mocked(useWorkspaceOfferData);
 const useWorkspaceFavoriteRequestDataMock = vi.mocked(useWorkspaceFavoriteRequestData);
 
 function Probe() {
@@ -41,7 +41,7 @@ describe('useWorkspaceRequestUserStateData', () => {
   });
 
   it('combines offer and favorite-request user state into a dedicated slice', () => {
-    useWorkspaceLegacyOfferDataMock.mockReturnValue({
+    useWorkspaceOfferDataMock.mockReturnValue({
       myOffers: [{ id: 'offer-1', requestId: 'req-1' }],
       isMyOffersLoading: false,
       myOfferRequestsById: new Map(),

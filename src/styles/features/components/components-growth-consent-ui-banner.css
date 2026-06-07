@@ -10,20 +10,20 @@
     z-index: 75;
     display: grid;
     gap: var(--space-3);
-    border-radius: 16px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 24%, var(--c-border) 76%);
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 24%, var(--color-border) 76%);
     background:
-      radial-gradient(320px 170px at -10% -16%, color-mix(in oklab, var(--c-primary) 10%, transparent), transparent 64%),
-      radial-gradient(280px 160px at 112% -12%, color-mix(in oklab, var(--c-accent) 8%, transparent), transparent 62%),
+      radial-gradient(320px 170px at -10% -16%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 64%),
+      radial-gradient(280px 160px at 112% -12%, color-mix(in oklab, var(--color-warning) 8%, transparent), transparent 62%),
       linear-gradient(
         128deg,
-        color-mix(in oklab, var(--c-panel) 94%, transparent),
-        color-mix(in oklab, var(--c-surface) 90%, transparent)
+        color-mix(in oklab, var(--color-surface) 94%, transparent),
+        color-mix(in oklab, var(--color-surface-muted) 90%, transparent)
       );
     backdrop-filter: blur(6px) saturate(1.01);
     box-shadow:
       0 8px 20px color-mix(in oklab, var(--c-ink) 10%, transparent),
-      0 0 0 1px color-mix(in oklab, var(--c-border) 42%, transparent);
+      0 0 0 1px color-mix(in oklab, var(--color-border) 42%, transparent);
     padding: 12px;
   }
 
@@ -34,11 +34,11 @@
 
   .cookie-consent-banner__eyebrow {
     margin: 0;
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--c-primary) 68%, var(--c-text) 32%);
+    color: color-mix(in oklab, var(--color-primary) 68%, var(--color-text) 32%);
   }
 
   .cookie-consent-banner__title {
@@ -49,9 +49,9 @@
 
   .cookie-consent-banner__text {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--fs-14);
     line-height: 1.45;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
     max-width: 44ch;
   }
 
@@ -61,19 +61,19 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
-    font-size: 13px;
-    color: var(--c-text-muted);
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
   }
 
   .cookie-consent-banner__links a {
     display: inline-flex;
     align-items: center;
     min-height: 26px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     padding: 0 9px;
-    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--c-border) 84%);
-    background: color-mix(in oklab, var(--c-panel) 92%, transparent);
-    color: color-mix(in oklab, var(--c-primary) 72%, var(--c-text) 28%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 16%, var(--color-border) 84%);
+    background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+    color: color-mix(in oklab, var(--color-primary) 72%, var(--color-text) 28%);
     text-decoration: none;
     transition:
       transform var(--transition-fast),
@@ -83,8 +83,8 @@
 
   .cookie-consent-banner__links a:hover,
   .cookie-consent-banner__links a:focus-visible {
-    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
-    background: color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%);
+    border-color: color-mix(in oklab, var(--color-primary) 28%, var(--color-border) 72%);
+    background: color-mix(in oklab, var(--color-primary) 8%, var(--color-surface) 92%);
     outline: none;
   }
 
@@ -112,7 +112,7 @@
   .cookie-consent-banner__action--accept.btn-primary {
     position: relative;
     overflow: hidden;
-    border: 1px solid color-mix(in oklab, var(--c-accent) 44%, var(--c-border) 56%);
+    border: 1px solid color-mix(in oklab, var(--color-warning) 44%, var(--color-border) 56%);
     background:
       radial-gradient(
         circle at 24% 18%,
@@ -121,12 +121,12 @@
       ),
       linear-gradient(
         160deg,
-        color-mix(in oklab, var(--c-accent) 36%, var(--c-panel) 64%) 0%,
-        color-mix(in oklab, var(--c-primary) 14%, var(--c-panel) 86%) 100%
+        color-mix(in oklab, var(--color-warning) 36%, var(--color-surface) 64%) 0%,
+        color-mix(in oklab, var(--color-primary) 14%, var(--color-surface) 86%) 100%
       );
-    color: color-mix(in oklab, var(--c-accent) 88%, var(--c-text) 12%);
+    color: color-mix(in oklab, var(--color-warning) 88%, var(--color-text) 12%);
     box-shadow:
-      0 6px 14px color-mix(in oklab, var(--c-accent) 16%, transparent),
+      0 6px 14px color-mix(in oklab, var(--color-warning) 16%, transparent),
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 80%, transparent);
   }
 
@@ -139,11 +139,11 @@
       ),
       linear-gradient(
         160deg,
-        color-mix(in oklab, var(--c-accent) 42%, var(--c-panel) 58%) 0%,
-        color-mix(in oklab, var(--c-primary) 18%, var(--c-panel) 82%) 100%
+        color-mix(in oklab, var(--color-warning) 42%, var(--color-surface) 58%) 0%,
+        color-mix(in oklab, var(--color-primary) 18%, var(--color-surface) 82%) 100%
       );
     box-shadow:
-      0 8px 18px color-mix(in oklab, var(--c-accent) 20%, transparent),
+      0 8px 18px color-mix(in oklab, var(--color-warning) 20%, transparent),
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 88%, transparent);
   }
 

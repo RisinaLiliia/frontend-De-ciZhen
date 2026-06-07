@@ -70,7 +70,7 @@ describe('requestListItem.model', () => {
     expect(view.card.priceTrend).toBe('down');
     expect(view.card.tags).toEqual(['urgent', 'insured']);
 
-    expect(view.status.detailsHref).toBe('/requests/req-1');
+    expect(view.status.detailsHref).toBe('/workspace?section=requests&scope=market&requestId=req-1');
     expect(view.status.itemOffer?.id).toBe('offer-1');
     expect(view.status.offerCardState).toBe('sent');
     expect(view.status.statusLabel).toBe(I18N_KEYS.requestDetails.statusReview);

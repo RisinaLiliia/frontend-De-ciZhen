@@ -1,9 +1,10 @@
 /* src/styles/overlays-calendar.css */
+
 @layer components {
   .dc-calendar {
-    --rdp-accent-color: var(--c-accent);
-    --rdp-background-color: color-mix(in oklab, var(--c-accent) 16%, transparent);
-    --rdp-outline: 2px solid color-mix(in oklab, var(--c-primary) 40%, transparent);
+    --rdp-accent-color: var(--color-primary);
+    --rdp-background-color: var(--color-primary-soft);
+    --rdp-outline: 2px solid color-mix(in oklab, var(--color-primary) 28%, transparent);
     width: 100%;
   }
 
@@ -16,8 +17,8 @@
 
   .dc-calendar .rdp-caption_label {
     font-weight: 700;
-    font-size: 14px;
-    color: var(--c-text);
+    font-size: var(--fs-14);
+    color: var(--color-text);
   }
 
   .dc-calendar .rdp-nav {
@@ -26,22 +27,24 @@
   }
 
   .dc-calendar .rdp-button {
-    border-radius: 10px;
+    border-radius: var(--radius-md);
   }
 
   .dc-calendar .rdp-nav_button {
     height: 36px;
     width: 36px;
-    border: 1px solid var(--c-border);
-    background: var(--c-surface);
-    color: var(--c-text);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
     transition:
       background var(--transition-fast),
+      border-color var(--transition-fast),
       transform var(--transition-fast);
   }
 
   .dc-calendar .rdp-nav_button:hover {
-    background: color-mix(in oklab, var(--c-border) 45%, transparent);
+    background: var(--color-surface-muted);
+    border-color: var(--color-border-strong);
   }
 
   .dc-calendar .rdp-nav_button:active {
@@ -49,8 +52,8 @@
   }
 
   .dc-calendar .rdp-head_cell {
-    font-size: 12px;
-    color: var(--c-muted);
+    font-size: var(--fs-12);
+    color: var(--color-text-muted);
     font-weight: 600;
     padding: var(--space-1-5) 0;
     text-transform: uppercase;
@@ -64,56 +67,47 @@
   .dc-calendar .rdp-day {
     height: 40px;
     width: 40px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     border: 1px solid transparent;
     background: transparent;
-    color: var(--c-text);
-    font-size: 14px;
+    color: var(--color-text);
+    font-size: var(--fs-14);
     transition:
       background var(--transition-fast),
-      border-color var(--transition-fast);
+      border-color var(--transition-fast),
+      color var(--transition-fast);
   }
 
   .dc-calendar .rdp-day:hover {
-    background: color-mix(in oklab, var(--c-border) 45%, transparent);
+    background: var(--color-surface-muted);
+    border-color: var(--color-border-soft);
   }
 
   .dc-calendar .rdp-day_today {
-    border-color: color-mix(in oklab, var(--c-primary) 35%, transparent);
+    border-color: color-mix(in oklab, var(--color-primary) 32%, var(--color-border) 68%);
+    background: var(--color-surface-muted);
   }
 
   .dc-calendar .rdp-day_selected {
-    background: var(--rdp-background-color);
-    border-color: color-mix(in oklab, var(--c-accent) 40%, transparent);
-    color: var(--c-text);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-surface);
   }
 
   .dc-calendar .rdp-day_range_start,
   .dc-calendar .rdp-day_range_end {
-    background: color-mix(in oklab, var(--c-accent) 28%, transparent);
-    border-color: color-mix(in oklab, var(--c-accent) 50%, transparent);
-    color: var(--c-text);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-surface);
   }
 
   .dc-calendar .rdp-day_range_middle {
-    background: color-mix(in oklab, var(--c-accent) 14%, transparent);
-    color: var(--c-text);
+    background: var(--color-primary-soft);
+    border-color: transparent;
+    color: var(--color-primary);
   }
 
   .dc-calendar .rdp-day_disabled {
     opacity: 0.35;
   }
-
-  .dc-date-hint {
-    margin-top: var(--space-2-5);
-    padding-top: var(--space-2-5);
-    border-top: 1px solid var(--c-border);
-    display: flex;
-    gap: var(--space-2);
-    flex-wrap: wrap;
-    color: var(--c-muted);
-    font-size: var(--fs-small);
-  }
-
-
 }

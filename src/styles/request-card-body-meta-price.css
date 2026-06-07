@@ -1,5 +1,13 @@
 /* src/styles/request-card-body-meta-price.css */
 @layer components {
+  .proof-price {
+    font-size: var(--app-price-size);
+    font-weight: var(--app-price-weight);
+    line-height: var(--app-price-line-height);
+    color: var(--color-price-text);
+    white-space: nowrap;
+  }
+
   .request-card__body {
     display: grid;
     grid-template-rows:
@@ -29,17 +37,19 @@
     line-height: 1.28;
     letter-spacing: -0.01em;
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-height: calc(2 * 1.28em);
     min-height: calc(2 * var(--lh-title) * 1em);
   }
 
   .request-card__excerpt {
     margin: 0;
-    color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
-    font-size: 12px;
+    color: var(--color-text-muted);
+    font-size: var(--fs-12);
     line-height: 1.4;
     min-height: calc(2 * 1.4em);
     max-height: calc(2 * 1.4em);
@@ -64,8 +74,8 @@
     align-items: flex-start;
     align-content: flex-start;
     min-width: 0;
-    color: var(--c-text-muted);
-    font-size: 12px;
+    color: var(--color-text-muted);
+    font-size: var(--fs-12);
     line-height: 1.3;
     min-height: calc((2 * 1.3em) + var(--space-1));
     padding-top: var(--space-0-5);
@@ -112,7 +122,7 @@
   .request-meta-item svg {
     width: 15px;
     height: 15px;
-    color: color-mix(in oklab, var(--c-primary) 64%, var(--c-text-muted) 36%);
+    color: color-mix(in oklab, var(--color-primary) 48%, var(--color-text-muted) 52%);
   }
 
   .request-card__price {
@@ -121,14 +131,9 @@
     align-items: baseline;
     align-content: flex-start;
     gap: var(--space-1-5);
-    font-size: 13px;
+    font-size: var(--fs-13);
     padding-top: var(--space-1);
     min-width: 0;
-  }
-
-  .request-card__price .proof-price {
-    font-size: 17px;
-    font-weight: 700;
   }
 
   .request-card__price-trend {
@@ -136,25 +141,23 @@
     align-items: center;
     gap: var(--space-1);
     padding: 2px var(--space-2);
-    border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
-    font-size: 11px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border-soft);
+    font-size: var(--fs-11);
     font-weight: 700;
     line-height: 1.2;
     white-space: nowrap;
   }
 
   .request-card__price-trend.is-down {
-    color: var(--c-text);
-    border-color: color-mix(in oklab, var(--c-warning) 46%, var(--c-border) 54%);
-    background: color-mix(in oklab, var(--c-warning) 22%, var(--c-panel) 78%);
+    color: var(--color-text);
+    border-color: var(--color-warning-border);
+    background: var(--color-warning-soft);
   }
 
   .request-card__price-trend.is-up {
-    color: var(--c-text);
-    border-color: color-mix(in oklab, var(--c-success) 45%, var(--c-border) 55%);
-    background: color-mix(in oklab, var(--c-success) 22%, var(--c-panel) 78%);
+    color: var(--color-text);
+    border-color: var(--color-success-border);
+    background: var(--color-success-soft);
   }
-
-
 }

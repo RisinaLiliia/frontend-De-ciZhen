@@ -12,7 +12,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(queryString),
 }));
 
-vi.mock('@/features/workspace/requests/WorkspaceProfileOnboardingForm', () => ({
+vi.mock('@/features/workspace/profile/onboarding', () => ({
   WorkspaceProfileOnboardingForm: ({ viewerMode }: { viewerMode: 'provider' | 'customer' }) => (
     <div data-testid="workspace-profile-form" data-viewer-mode={viewerMode} />
   ),
@@ -52,14 +52,14 @@ function renderPanels() {
 
 describe('WorkspaceContentPanels', () => {
   it('renders provider profile form by default', () => {
-    queryString = 'section=actions';
+    queryString = 'section=profile';
     renderPanels();
 
     expect(screen.getByTestId('workspace-profile-form').getAttribute('data-viewer-mode')).toBe('provider');
   });
 
   it('renders customer profile form when viewerMode=customer', () => {
-    queryString = 'section=actions&viewerMode=customer';
+    queryString = 'section=profile&viewerMode=customer';
     renderPanels();
 
     expect(screen.getByTestId('workspace-profile-form').getAttribute('data-viewer-mode')).toBe('customer');

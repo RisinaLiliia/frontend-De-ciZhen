@@ -1,7 +1,7 @@
 'use client';
 
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
-import { RequestsViewToggle } from '@/components/requests/RequestsViewToggle';
+import { WorkspaceViewToggle } from '@/features/workspace/shared/WorkspaceViewToggle';
 import { CountBadge } from '@/components/ui/CountBadge';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { hasRequestsPagination } from './requestsFilters.model';
@@ -43,7 +43,7 @@ export function RequestsResultsSummary({
       {(hasDensityToggle || hasPagination) ? (
         <div className="requests-filter-summary__controls">
           {hasDensityToggle ? (
-            <RequestsViewToggle
+            <WorkspaceViewToggle
               t={t}
               listDensity={listDensity}
               onChange={(value) => onListDensityChange?.(value)}

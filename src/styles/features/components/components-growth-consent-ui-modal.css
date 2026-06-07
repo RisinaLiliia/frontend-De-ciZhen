@@ -12,11 +12,11 @@
 
   .cookie-consent-modal__eyebrow {
     margin: 0;
-    font-size: 12px;
+    font-size: var(--fs-12);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--c-primary);
+    color: var(--color-primary);
   }
 
   .cookie-consent-modal__title {
@@ -27,7 +27,7 @@
 
   .cookie-consent-modal__text {
     margin: 0;
-    color: var(--c-text-muted);
+    color: var(--color-text-muted);
   }
 
   .cookie-consent-options {
@@ -40,14 +40,14 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--space-3);
-    border: 1px solid color-mix(in oklab, var(--c-border) 66%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border) 66%, transparent);
     border-radius: var(--radius-md);
     padding: var(--space-3);
     background:
       linear-gradient(
         132deg,
-        color-mix(in oklab, var(--c-panel) 88%, transparent),
-        color-mix(in oklab, var(--c-surface) 86%, transparent)
+        color-mix(in oklab, var(--color-surface) 88%, transparent),
+        color-mix(in oklab, var(--color-surface-muted) 86%, transparent)
       );
     backdrop-filter: blur(4px) saturate(1.02);
   }
@@ -60,25 +60,25 @@
 
   .cookie-consent-option p {
     margin: 4px 0 0;
-    font-size: 13px;
-    color: var(--c-text-muted);
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
   }
 
   .cookie-consent-option__badge {
-    font-size: 11px;
+    font-size: var(--fs-11);
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--c-primary) 76%, var(--c-text) 24%);
-    border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
-    border-radius: 999px;
+    color: color-mix(in oklab, var(--color-primary) 76%, var(--color-text) 24%);
+    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--color-border) 72%);
+    border-radius: var(--radius-pill);
     padding: 4px 10px;
   }
 
   .cookie-consent-option input[type='checkbox'] {
     width: 18px;
     height: 18px;
-    accent-color: var(--c-primary);
+    accent-color: var(--color-primary);
   }
 
   .cookie-consent-modal__actions {
@@ -114,7 +114,7 @@
     .consent-manage-footer__inner {
       flex-direction: column;
       align-items: flex-start;
-      gap: 10px;
+      gap: var(--space-2-5);
       padding: 10px;
     }
 

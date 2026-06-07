@@ -2,18 +2,40 @@
 
 import * as React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-
-import { WorkspaceExploreSection, WorkspaceFrame, WorkspaceTopProvidersAside } from '@/features/workspace/requests';
-import type { WorkspaceTab } from '@/features/workspace/requests';
+import {
+  resolveWorkspacePublicIntroDecorations,
+  type WorkspaceSectionKey,
+} from '@/features/workspace/navigation/workspaceSection.contract';
+import {
+  WorkspaceContextRail,
+  useIsDesktop,
+  useMediaMatch,
+  useWorkspaceWideShell,
+} from '@/features/workspace/shared';
+import { WorkspaceTopProvidersAside } from '@/features/workspace/providers';
+import {
+  buildWorkspaceExploreSectionModel,
+  buildWorkspaceOverviewSectionModel,
+  buildWorkspacePublicRequestsSectionModel,
+  buildWorkspaceStandardSectionModel,
+  resolveWorkspaceExploreSection,
+  resolveWorkspaceStandardSection,
+} from '@/features/workspace/orchestration/sections/workspaceSectionAdapters';
+import type { WorkspaceTab } from '@/features/workspace/state';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { ProofCase } from '@/types/home';
-import type { PublicWorkspaceSection } from '@/features/workspace/shell/workspace.types';
+import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
-import { WorkspaceContextAside } from '@/features/workspace/shell/WorkspaceContextFocusPanel';
-import { WorkspaceModeHeader } from '@/features/workspace/shell/WorkspaceModeHeader';
-import { isWorkspaceTab } from '@/features/workspace/requests';
-import { isWorkspaceOverviewMode } from '@/features/workspace/shell/workspaceModes';
+import { WorkspaceMobileNavigation } from '@/features/workspace/shell/WorkspaceMobileNavigation';
+import { WorkspaceSectionSharedContext } from '@/features/workspace/shell/WorkspaceSectionSharedContext';
+import { WorkspaceShell } from '@/features/workspace/shell/WorkspaceShell';
+import { WorkspaceSidebar } from '@/features/workspace/shell/WorkspaceSidebar';
+import { WorkspaceTopBar } from '@/features/workspace/shell/WorkspaceTopBar';
+import { ConsentManageFooter } from '@/components/legal/ConsentManageFooter';
+import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
+import { isWorkspaceOverviewMode } from '@/features/workspace/navigation/resolveActiveWorkspaceMode';
+import { isWorkspaceTab } from '@/features/workspace/state';
 
 type Translator = (key: I18nKey) => string;
 
@@ -45,9 +67,10 @@ type Props = {
   t: Translator;
   locale: Locale;
   intro: React.ReactNode;
+  sectionModel?: WorkspaceSectionRenderModel | null;
   explore?: ExploreProps | null;
-  privateMain: React.ReactNode;
-  publicMain: React.ReactNode;
+  privateMain?: React.ReactNode;
+  publicMain?: React.ReactNode;
   privateAside?: React.ReactNode;
   publicAside?: React.ReactNode;
   asideTopSlot?: React.ReactNode;
@@ -56,6 +79,33 @@ type Props = {
   pendingFavoriteProviderIds: Set<string>;
   onToggleProviderFavorite: (providerId: string) => void;
 };
+
+function decorateWorkspacePublicIntro({
+  intro,
+  activeSection,
+  isDesktop,
+}: {
+  intro: React.ReactNode;
+  activeSection: WorkspaceSectionKey;
+  isDesktop: boolean;
+}) {
+  if (!React.isValidElement(intro)) return intro;
+  const decoration = resolveWorkspacePublicIntroDecorations({
+    section: activeSection,
+    isDesktop,
+  });
+
+  return React.cloneElement(
+    intro as React.ReactElement<{
+      showDemandMap?: boolean;
+      showQuickAction?: boolean;
+    }>,
+    {
+      showDemandMap: decoration.showDemandMap,
+      showQuickAction: decoration.showQuickAction,
+    },
+  );
+}
 
 export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   isWorkspacePublicSection,
@@ -66,9 +116,10 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
   t,
   locale,
   intro,
+  sectionModel,
   explore,
-  privateMain,
-  publicMain,
+  privateMain = null,
+  publicMain = null,
   privateAside,
   publicAside,
   asideTopSlot,
@@ -79,6 +130,10 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
 }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isDesktop = useIsDesktop();
+  const isWideShell = useWorkspaceWideShell();
+  const hasCompactSidebar = useMediaMatch('(min-width: 768px)');
+  const isMobile = useMediaMatch('(max-width: 767px)');
   const isOverviewPrivateMode =
     !isWorkspacePublicSection &&
     isWorkspaceOverviewMode({
@@ -88,112 +143,186 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       sectionParam: searchParams.get('section'),
       hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
     });
-  const overviewFrameClassName = isOverviewPrivateMode ? 'workspace-frame__flow--overview' : undefined;
-  const overviewGridClassName = isOverviewPrivateMode ? 'workspace-frame--overview' : undefined;
+  const publicShellIntro = React.useMemo(
+    () =>
+      decorateWorkspacePublicIntro({
+        intro,
+        activeSection: resolveWorkspaceStandardSection(activePublicSection),
+        isDesktop,
+      }),
+    [activePublicSection, intro, isDesktop],
+  );
 
-  const introWithWorkspaceChrome = React.useMemo(() => {
-    if (!React.isValidElement(intro)) return intro;
-
-    return React.cloneElement(
-      intro as React.ReactElement<{
-        navHeaderSlot?: React.ReactNode;
-        leftColumnSlot?: React.ReactNode;
-        preferredRequestsRole?: 'customer' | 'provider' | null;
-      }>,
-      {
-        navHeaderSlot: (
-          <WorkspaceModeHeader
-            t={t}
-            locale={locale}
-            activePublicSection={activePublicSection}
-            activeWorkspaceTab={activeWorkspaceTab}
-            preferredRequestsRole={preferredRequestsRole}
-          />
-        ),
-      },
-    );
-  }, [activePublicSection, activeWorkspaceTab, intro, locale, preferredRequestsRole, t]);
-
-  const contextualAside = (
-    <WorkspaceContextAside
+  const workspaceSidebar = isWideShell ? (
+    <WorkspaceSidebar
       t={t}
       locale={locale}
       activePublicSection={activePublicSection}
       activeWorkspaceTab={activeWorkspaceTab}
       preferredRequestsRole={preferredRequestsRole}
-      className={isOverviewPrivateMode ? 'workspace-context-rail--overview' : undefined}
+    />
+  ) : hasCompactSidebar ? (
+    <WorkspaceSidebar
+      t={t}
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
+      variant="compact"
+    />
+  ) : null;
+  const workspaceTopBar = isMobile ? null : (
+    <WorkspaceTopBar
+      compactUtility={!isWideShell}
+    />
+  );
+
+  const resolvedSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(() => {
+    if (sectionModel) {
+      return sectionModel;
+    }
+
+    if (isWorkspacePublicSection && publicMain == null) {
+      if (!explore) {
+        return null;
+      }
+
+      return buildWorkspaceExploreSectionModel({
+        branch: {
+          isWorkspaceAuthed,
+          t,
+          locale,
+        },
+        section: resolveWorkspaceExploreSection(activePublicSection),
+        explore,
+      });
+    }
+
+    if (isWorkspacePublicSection) {
+      if (resolveWorkspaceStandardSection(activePublicSection) === 'requests') {
+        return buildWorkspacePublicRequestsSectionModel({
+          content: publicMain,
+          aiRail: publicAside,
+        });
+      }
+
+      return buildWorkspaceStandardSectionModel({
+        section: resolveWorkspaceStandardSection(activePublicSection),
+        content: publicMain,
+        aiRail: publicAside,
+      });
+    }
+
+    if (isWorkspaceAuthed) {
+      return isOverviewPrivateMode
+        ? buildWorkspaceOverviewSectionModel({
+          content: privateMain,
+          aiRail: privateAside,
+        })
+        : buildWorkspaceStandardSectionModel({
+          section: resolveWorkspaceStandardSection(activePublicSection),
+          content: privateMain,
+          aiRail: privateAside,
+        });
+    }
+
+    return buildWorkspaceStandardSectionModel({
+      section: resolveWorkspaceStandardSection(activePublicSection),
+      content: publicMain,
+    });
+  }, [
+    activePublicSection,
+    explore,
+    isOverviewPrivateMode,
+    isWorkspaceAuthed,
+    isWorkspacePublicSection,
+    locale,
+    privateAside,
+    privateMain,
+    publicAside,
+    publicMain,
+    sectionModel,
+    t,
+  ]);
+
+  if (!resolvedSectionModel) {
+    return null;
+  }
+
+  const contextualRail = (
+    <WorkspaceContextRail
+      t={t}
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
+      className={resolvedSectionModel.contextualAiRailClassName}
+      useStatisticsLayout={resolvedSectionModel.contextualAiRailUsesStatisticsLayout ?? true}
       topSlot={asideTopSlot}
       panelRef={isOverviewPrivateMode ? overviewDecisionPanelRef : undefined}
     >
       {!isOverviewPrivateMode ? (
         <WorkspaceTopProvidersAside
           {...workspaceAsideBaseProps}
-          ctaHref={isWorkspaceAuthed ? '/workspace?section=requests' : '/workspace?section=providers'}
+          ctaHref={
+            isWorkspaceAuthed ? '/workspace?section=requests' : '/workspace?section=providers'
+          }
           pendingFavoriteProviderIds={pendingFavoriteProviderIds}
           onToggleFavorite={onToggleProviderFavorite}
         />
       ) : null}
-    </WorkspaceContextAside>
+    </WorkspaceContextRail>
   );
 
-  if (isWorkspacePublicSection && publicMain == null) {
-    if (!explore) {
-      return null;
-    }
+  const overlayNavigationMode = isWideShell ? null : (isMobile ? 'bottomDock' : 'drawer');
+  const workspaceMobileNavigation = overlayNavigationMode ? (
+    <WorkspaceMobileNavigation
+      mode={overlayNavigationMode}
+      locale={locale}
+      activePublicSection={activePublicSection}
+      activeWorkspaceTab={activeWorkspaceTab}
+      preferredRequestsRole={preferredRequestsRole}
+    />
+  ) : null;
 
-    return (
-      <WorkspaceExploreSection
-        intro={introWithWorkspaceChrome}
-        activeSection={activePublicSection ?? 'requests'}
-        isWorkspaceAuthed={isWorkspaceAuthed}
-        t={t}
+  const resolvedIntro =
+    isWorkspacePublicSection && resolvedSectionModel.layout === 'singleColumn'
+      ? publicShellIntro
+      : intro;
+  const shouldUseContextualRail =
+    resolvedSectionModel.layout !== 'singleColumn'
+      && resolvedSectionModel.railPolicy !== 'none'
+      && resolvedSectionModel.aiRail == null;
+  const resolvedAiRail =
+    shouldUseContextualRail
+      ? contextualRail
+      : (resolvedSectionModel.layout === 'singleColumn' ? undefined : resolvedSectionModel.aiRail);
+  const resolvedFilters =
+    resolvedSectionModel.filters
+    ?? (resolvedSectionModel.filterPolicy === 'sharedContext' ? (
+      <WorkspaceSectionSharedContext
         locale={locale}
-        onListDensityChange={explore.setExploreListDensity}
-        exploreListDensity={explore.exploreListDensity}
-        sidebarNearbyLimit={explore.sidebarNearbyLimit}
-        sidebarTopProvidersLimit={explore.sidebarTopProvidersLimit}
-        sidebarProofCases={explore.sidebarProofCases}
-        proofIndex={explore.proofIndex}
-        trustPanelClassName={explore.trustPanelClassName}
-        initialPublicRequests={explore.initialPublicRequests}
-        preferInitialPublicRequests={explore.preferInitialPublicRequests}
-        initialPublicRequestsLoading={explore.initialPublicRequestsLoading}
-        initialPublicRequestsError={explore.initialPublicRequestsError}
+        activePublicSection={activePublicSection}
+        activeWorkspaceTab={activeWorkspaceTab}
+        preferredRequestsRole={preferredRequestsRole}
       />
-    );
-  }
-
-  if (isWorkspacePublicSection) {
-    return (
-      <WorkspaceFrame
-        intro={introWithWorkspaceChrome}
-        main={publicMain}
-        aside={publicAside ?? contextualAside}
-        frameClassName={overviewGridClassName}
-        contentClassName={overviewFrameClassName}
-      />
-    );
-  }
-
-  if (isWorkspaceAuthed) {
-    return (
-      <WorkspaceFrame
-        intro={introWithWorkspaceChrome}
-        main={privateMain}
-        aside={privateAside ?? contextualAside}
-        frameClassName={overviewGridClassName}
-        contentClassName={overviewFrameClassName}
-      />
-    );
-  }
+    ) : undefined);
 
   return (
-    <WorkspaceFrame
-      intro={introWithWorkspaceChrome}
-      main={publicMain}
-      aside={contextualAside}
-      frameClassName={overviewGridClassName}
-      contentClassName={overviewFrameClassName}
-    />
+    <WorkspaceShell
+      topBar={workspaceTopBar}
+      intro={resolvedIntro}
+      filters={resolvedFilters}
+      sidebar={workspaceSidebar}
+      aiRail={resolvedAiRail}
+      bottomNav={workspaceMobileNavigation}
+      frameClassName={resolvedSectionModel.frameClassName}
+      contentClassName={resolvedSectionModel.contentClassName}
+    >
+      <>
+        {resolvedSectionModel.content}
+        <ConsentManageFooter />
+      </>
+    </WorkspaceShell>
   );
 });

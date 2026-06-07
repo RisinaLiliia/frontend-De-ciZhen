@@ -1,0 +1,136 @@
+/* src/styles/features/workspace/workspace-overlay-auth.css */
+
+@layer components {
+  .workspace-environment__auth-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: nowrap;
+  }
+
+  .workspace-account-menu {
+    z-index: 70;
+  }
+
+  .workspace-account-menu--mobile-dock .dc-popover-panel {
+    left: 50%;
+    top: auto;
+    bottom: calc(100% + var(--space-2));
+    margin-top: 0;
+    transform: translateX(-50%);
+  }
+
+  .workspace-account-menu .dc-popover-panel {
+    min-width: 252px;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .workspace-account-menu__panel {
+    display: grid;
+    gap: 0;
+  }
+
+  .workspace-account-menu__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 14px;
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .workspace-account-menu__summary-copy {
+    display: grid;
+    gap: var(--space-0-5);
+    min-width: 0;
+  }
+
+  .workspace-account-menu__summary-copy strong,
+  .workspace-account-menu__summary-copy span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .workspace-account-menu__summary-copy strong {
+    font-size: var(--fs-13);
+    color: var(--color-text);
+  }
+
+  .workspace-account-menu__summary-copy span {
+    font-size: var(--fs-12);
+    color: var(--color-text-muted);
+  }
+
+  .workspace-account-menu__nav {
+    display: grid;
+    padding: 8px;
+  }
+
+  .workspace-account-menu__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2-5);
+    min-height: 38px;
+    width: 100%;
+    padding: 0 10px;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--fs-13);
+    font-weight: 550;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .workspace-account-menu__item:hover {
+    background: var(--color-surface-muted);
+    color: var(--color-primary);
+  }
+
+  .workspace-account-menu__item--danger {
+    color: var(--color-danger);
+  }
+
+  .workspace-account-menu__item--danger:hover {
+    color: var(--color-danger);
+    background: color-mix(in oklab, var(--color-danger) 8%, var(--color-surface) 92%);
+  }
+
+  .workspace-account-menu__divider {
+    height: 1px;
+    margin: 0 8px;
+    background: var(--color-border-soft);
+  }
+
+  .workspace-account-menu__panel > .workspace-account-menu__item--danger {
+    margin: 8px;
+  }
+
+  .workspace-environment__auth-button {
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+  }
+
+  .workspace-environment__auth-button:hover {
+    border-color: var(--color-primary-border);
+    color: var(--color-text);
+  }
+
+  .workspace-environment__auth-button--primary {
+    border-color: transparent;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+  }
+
+  .workspace-environment__auth-button--primary:hover {
+    background: var(--color-primary-hover);
+    color: var(--color-primary-contrast);
+  }
+}

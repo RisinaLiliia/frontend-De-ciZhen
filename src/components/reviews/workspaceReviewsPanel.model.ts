@@ -5,11 +5,11 @@ import type { ReviewDto } from '@/lib/api/dto/reviews';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type {
-  NormalizedProviderReview,
-  ProviderReviewSort,
-  ProviderReviewsDistribution,
-  ProviderReviewsUi,
-} from '@/features/providers/publicProfile/useProviderReviewsModel';
+  NormalizedPublicProfileReview,
+  PublicProfileReviewSort,
+  PublicProfileReviewsDistribution,
+  PublicProfileReviewsUi,
+} from '@/features/reviews/usePublicProfileReviewsModel';
 
 type Translate = (key: I18nKey) => string;
 
@@ -48,7 +48,7 @@ export function toNormalizedWorkspaceReview(
   item: ReviewLike,
   fallbackAuthor: string,
   fallbackText: string,
-): NormalizedProviderReview {
+): NormalizedPublicProfileReview {
   const rawRating = Number(item.rating ?? 0);
   const text = item.text?.trim() || item.comment?.trim() || fallbackText;
   const createdAtRaw = item.createdAt ? new Date(item.createdAt) : null;
@@ -65,8 +65,8 @@ export function toNormalizedWorkspaceReview(
 }
 
 export function buildWorkspaceReviewDistribution(
-  items: NormalizedProviderReview[],
-): ProviderReviewsDistribution {
+  items: NormalizedPublicProfileReview[],
+): PublicProfileReviewsDistribution {
   const stats = new Map<number, number>();
   for (let score = 1; score <= 5; score += 1) stats.set(score, 0);
   items.forEach((item) => {
@@ -78,7 +78,7 @@ export function buildWorkspaceReviewDistribution(
 
 export function buildWorkspacePlatformReviewDistribution(
   distribution: ReviewDistributionLike | null | undefined,
-): ProviderReviewsDistribution {
+): PublicProfileReviewsDistribution {
   const stats = new Map<number, number>();
   for (let score = 1; score <= 5; score += 1) {
     const key = String(score) as keyof ReviewDistributionLike;
@@ -88,7 +88,7 @@ export function buildWorkspacePlatformReviewDistribution(
   return { stats, max: Math.max(1, ...Array.from(stats.values())) };
 }
 
-export function buildWorkspaceReviewsUi(locale: Locale, t: Translate): ProviderReviewsUi {
+export function buildWorkspaceReviewsUi(locale: Locale, t: Translate): PublicProfileReviewsUi {
   if (locale === 'de') {
     return {
       sortLatest: 'Neueste',
@@ -168,7 +168,7 @@ export function buildWorkspacePlatformReviews(items: ReviewLike[], t: Translate)
 
 export function buildWorkspaceSortedUserReviews(
   items: ReviewLike[],
-  reviewSort: ProviderReviewSort,
+  reviewSort: PublicProfileReviewSort,
   t: Translate,
 ) {
   const mapped = items.map((item) =>
@@ -187,7 +187,7 @@ export function buildWorkspaceSortedUserReviews(
 export function buildWorkspaceReviewsAverage(params: {
   source: 'platform' | 'user';
   platformAverageRating: number | null | undefined;
-  userReviews: NormalizedProviderReview[];
+  userReviews: NormalizedPublicProfileReview[];
 }) {
   if (params.source === 'platform') {
     const summaryAvg = Number(params.platformAverageRating ?? 0);

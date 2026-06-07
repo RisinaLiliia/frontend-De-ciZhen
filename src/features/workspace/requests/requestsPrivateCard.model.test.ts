@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { buildPrivateRequestCardChrome } from '@/features/workspace/requests/requestsPrivateCard.model';
+import {
+  buildWorkspaceRequestEditHref,
+  buildWorkspaceRequestOverlayHref,
+} from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 describe('requestsPrivateCard.model', () => {
   it('prefers backend decision primary action and keeps one calmer secondary action', () => {
@@ -333,7 +337,10 @@ describe('requestsPrivateCard.model', () => {
     expect(chrome.primaryAction).toEqual(
       expect.objectContaining({
         key: 'edit-request',
-        href: '/requests/req-3',
+        href: buildWorkspaceRequestEditHref({
+          currentSearch: '',
+          requestId: 'req-3',
+        }),
       }),
     );
   });
@@ -453,7 +460,12 @@ describe('requestsPrivateCard.model', () => {
       expect.objectContaining({
         key: 'contract',
         label: 'Vertrag ansehen',
-        href: '/requests/req-4',
+        href: buildWorkspaceRequestOverlayHref({
+          currentSearch: '',
+          requestId: 'req-4',
+          scope: 'my',
+          intent: 'contract',
+        }),
       }),
     );
     expect(contractChrome.secondaryAction).toEqual(

@@ -113,7 +113,7 @@ export function RequestCard({
   const showsFooterPrice = !hideFooterPrice && pricePlacement !== 'body';
   const hasInlineBadges = visibleBadges.length > 0 && !hasImage;
   const hasContentSection = hasInlineBadges || Boolean(contentSlot);
-  const cardClassName = `request-card request-card--media-right request-card-link ${
+  const cardClassName = `request-card app-card request-card--media-right request-card-link ${
     !hasImage ? 'request-card--no-media' : ''
   } ${usesInlineMedia ? 'request-card--media-inline' : ''} ${isActive ? 'is-active' : ''} ${isLinkMode ? 'request-card--link' : ''} ${className ?? ''}`.trim();
   const prefetchedRef = React.useRef(false);
