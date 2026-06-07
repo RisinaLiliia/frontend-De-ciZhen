@@ -29,7 +29,7 @@ import {
   resolveRequestsExplorerLoginHref,
   resolveRequestsExplorerOfferHref,
 } from '@/components/requests/requestsExplorerRequestsData.model';
-import { workspaceQK } from '@/features/workspace/data';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type Params = {
   t: (key: I18nKey) => string;

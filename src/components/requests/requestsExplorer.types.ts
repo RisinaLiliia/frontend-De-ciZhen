@@ -1,4 +1,7 @@
+import type { ComponentProps } from 'react';
+
 import type { FilterOption } from '@/components/requests/requestsFilters.types';
+import type { WorkspaceRequestsSummaryStrip } from '@/features/workspace/requests/components/WorkspaceRequestsSummaryStrip';
 import type { WorkspaceProvidersResponseDto } from '@/lib/api/dto/workspace';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';
@@ -10,9 +13,7 @@ import type { RequestsListShellHeaderMode } from '@/components/requests/Requests
 export type RequestsExplorerProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
-  layoutVariant?: 'default' | 'workspace';
   contentType?: 'requests' | 'providers';
-  providerLinkMode?: 'standalone' | 'workspace';
   backHref?: string;
   emptyCtaHref?: string;
   showBack?: boolean;
@@ -77,8 +78,6 @@ export type RequestsExplorerProvidersContentProps = {
   pendingFavoriteProviderIds: Set<string>;
   onToggleProviderFavorite: (providerId: string) => void | Promise<void>;
   showFilterControls?: boolean;
-  providerProfileHrefResolver?: (providerId: string) => string;
-  providerReviewsHrefResolver?: (providerId: string) => string;
 } & RequestsExplorerSharedFilters;
 
 export type RequestsExplorerRequestsContentProps = {
@@ -104,4 +103,6 @@ export type RequestsExplorerRequestsContentProps = {
   formatPrice: Intl.NumberFormat;
   listDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
+  summaryStripProps?: ComponentProps<typeof WorkspaceRequestsSummaryStrip>;
+  isSummaryStripLoading?: boolean;
 } & RequestsExplorerSharedFilters & RequestsExplorerCatalogIndex;

@@ -89,6 +89,6 @@ describe('homeTopProvidersPanel.model', () => {
     expect(cards[0]?.reviewPreview).toBe('homePublic.providerReviewPreviewDefault');
     expect(cards[0]?.aboutPreview).toBe('Backend bio for home top provider.');
     expect(cards[0]?.cityLabel).toBe('Berlin');
-    expect(cards[0]?.profileHref).toBe('/workspace?section=providers&providerId=provider-2');
+    expect(cards[0]?.profileHref).toBe('/providers/provider-2');
   });
 });

@@ -3,7 +3,7 @@
 @layer components {
   @media (max-width: 640px) {
     .brand {
-      gap: var(--space-2);
+      gap: 8px;
     }
 
     .brand__text {
@@ -11,11 +11,11 @@
     }
 
     .page-shell__topbar-actions {
-      gap: var(--space-1-5);
+      gap: 6px;
     }
 
     .page-shell__topbar-actions > .flex {
-      gap: var(--space-1-5);
+      gap: 6px;
     }
 
     .auth-actions__register {
@@ -24,27 +24,27 @@
   }
 
   @media (max-width: 420px) {
-    .workspace-mobile-dock {
-      gap: var(--space-1);
+    .topbar-nav--mobile {
+      gap: 4px;
       padding-inline: 8px;
     }
 
-    .workspace-mobile-dock__item {
-      border-radius: var(--radius-md);
+    .topbar-nav__mobile-item {
+      border-radius: 12px;
     }
 
     .page-shell__topbar-actions {
-      gap: var(--space-1);
+      gap: 4px;
     }
 
     .page-shell__topbar-actions > .flex {
-      gap: var(--space-1);
+      gap: 4px;
     }
 
     .icon-button--topbar {
       width: 32px;
       height: 32px;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
     }
   }
 

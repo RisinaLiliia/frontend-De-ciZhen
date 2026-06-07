@@ -10,9 +10,7 @@ import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 export type HomeRequestsExplorePanelProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
-  layoutVariant?: 'default' | 'workspace';
   contentType?: 'requests' | 'providers';
-  providerLinkMode?: 'standalone' | 'workspace';
   backHref?: string;
   showBack?: boolean;
   showHeading?: boolean;
@@ -27,9 +25,7 @@ export type HomeRequestsExplorePanelProps = {
 export function HomeRequestsExplorePanel({
   t,
   locale,
-  layoutVariant = 'default',
   contentType = 'requests',
-  providerLinkMode = 'standalone',
   backHref = '/',
   showBack = true,
   showHeading = true,
@@ -40,8 +36,8 @@ export function HomeRequestsExplorePanel({
   initialPublicRequestsLoading = false,
   initialPublicRequestsError = false,
 }: HomeRequestsExplorePanelProps) {
-  const content = (
-    <>
+  return (
+    <section className="stack-sm">
       {showHeading ? (
         <SectionHeader
           title={t(I18N_KEYS.requestsPage.title)}
@@ -52,9 +48,7 @@ export function HomeRequestsExplorePanel({
       <RequestsExplorer
         t={t}
         locale={locale}
-        layoutVariant={layoutVariant}
         contentType={contentType}
-        providerLinkMode={providerLinkMode}
         showBack={showBack}
         backHref={backHref}
         emptyCtaHref={contentType === 'providers' ? '/workspace?section=providers' : '/workspace?section=requests'}
@@ -65,14 +59,6 @@ export function HomeRequestsExplorePanel({
         initialPublicRequestsLoading={initialPublicRequestsLoading}
         initialPublicRequestsError={initialPublicRequestsError}
       />
-    </>
-  );
-
-  if (layoutVariant === 'workspace') return content;
-
-  return (
-    <section className="stack-sm">
-      {content}
     </section>
   );
 }

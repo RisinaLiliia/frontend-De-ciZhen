@@ -40,10 +40,10 @@ export function WorkspaceUserReviewComposer({
   onReset,
 }: WorkspaceUserReviewComposerProps) {
   return (
-    <article className="public-profile-reviews__item public-profile-reviews__item--composer card">
-      <form className="form-stack public-profile-reviews__composer-form" onSubmit={onSubmit}>
-        <p className="typo-h3 public-profile-reviews__composer-title">{t(I18N_KEYS.requestsPage.userReviewFormTitle)}</p>
-        <p className="typo-muted public-profile-reviews__composer-hint">{t(I18N_KEYS.requestsPage.userReviewFormHint)}</p>
+    <article className="provider-reviews-hub__item provider-reviews-hub__item--composer card">
+      <form className="form-stack provider-reviews-hub__composer-form" onSubmit={onSubmit}>
+        <p className="typo-h3 provider-reviews-hub__composer-title">{t(I18N_KEYS.requestsPage.userReviewFormTitle)}</p>
+        <p className="typo-muted provider-reviews-hub__composer-hint">{t(I18N_KEYS.requestsPage.userReviewFormHint)}</p>
         <div className="form-group">
           <p className="typo-small">{t(I18N_KEYS.requestsPage.userReviewFormBookingLabel)}</p>
           <Select
@@ -73,17 +73,17 @@ export function WorkspaceUserReviewComposer({
             rows={3}
           />
         </div>
-        <div className="auth-social__row public-profile-reviews__composer-actions">
+        <div className="auth-social__row provider-reviews-hub__composer-actions">
           <button
             type="submit"
-            className="auth-social__btn auth-social__btn--google public-profile-reviews__composer-submit"
+            className="auth-social__btn auth-social__btn--google provider-reviews-hub__composer-submit"
             disabled={isSubmitDisabled}
           >
             {t(I18N_KEYS.requestsPage.userReviewFormSubmit)}
           </button>
           <button
             type="button"
-            className="btn-ghost public-profile-reviews__composer-reset"
+            className="btn-ghost provider-reviews-hub__composer-reset"
             onClick={onReset}
             disabled={isPending}
           >

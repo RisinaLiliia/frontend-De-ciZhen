@@ -1,7 +1,7 @@
 /* src/styles/features/home/home-content-providers-profile-identity-decision-metrics.css */
 
 @layer components {
-  .profile-decision-metrics {
+  .provider-decision-metrics {
     display: flex;
     align-items: flex-start;
     align-content: flex-start;
@@ -12,14 +12,14 @@
     overflow: hidden;
   }
 
-  .profile-main__metrics {
+  .provider-main__metrics {
     min-width: 0;
     min-height: calc((2 * 1.3em) + var(--space-0-5));
     display: flex;
     align-items: flex-start;
   }
 
-  .profile-decision-metric {
+  .provider-decision-metric {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
@@ -27,43 +27,41 @@
     border-radius: 0;
     border: 0;
     background: transparent;
-    color: color-mix(in oklab, var(--color-text-muted) 90%, var(--color-text) 10%);
-    font-size: var(--provider-card-meta-size, var(--fs-12));
-    line-height: var(--provider-card-meta-line-height, 1.3);
+    color: color-mix(in oklab, var(--c-text-muted) 90%, var(--c-text) 10%);
+    font-size: 12px;
+    line-height: 1.3;
     white-space: nowrap;
     max-width: 100%;
   }
 
-  .profile-decision-metric__icon {
+  .provider-decision-metric__icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: var(--provider-card-meta-icon-size, 15px);
-    height: var(--provider-card-meta-icon-size, 15px);
-    border-radius: var(--radius-pill);
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
+    width: 15px;
+    height: 15px;
+    border-radius: 999px;
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
     outline: none;
-    flex: 0 0 var(--provider-card-meta-icon-size, 15px);
   }
 
-  .profile-decision-metric__icon svg {
-    width: var(--provider-card-meta-icon-size, 15px);
-    height: var(--provider-card-meta-icon-size, 15px);
+  .provider-decision-metric__icon svg {
+    width: 15px;
+    height: 15px;
     display: block;
   }
 
-  .profile-decision-metric__icon:focus-visible {
-    box-shadow: var(--control-focus-ring);
+  .provider-decision-metric__icon:focus-visible {
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--c-primary) 34%, transparent);
   }
 
-  .profile-decision-metric__label {
-    color: color-mix(in oklab, var(--color-text-muted) 92%, var(--color-text) 8%);
+  .provider-decision-metric__label {
+    color: color-mix(in oklab, var(--c-text-muted) 92%, var(--c-text) 8%);
   }
 
-  .profile-decision-metric__value {
+  .provider-decision-metric__value {
     font-weight: 700;
-    color: color-mix(in oklab, var(--color-primary) 78%, var(--color-text) 22%);
-    font-variant-numeric: tabular-nums;
+    color: color-mix(in oklab, var(--c-primary) 78%, var(--c-text) 22%);
   }
 
 

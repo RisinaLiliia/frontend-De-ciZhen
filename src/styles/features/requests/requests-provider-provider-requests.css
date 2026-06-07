@@ -34,7 +34,7 @@
   }
 
   .provider-request-card__favorite.is-saved .icon-heart {
-    color: var(--color-warning);
+    color: var(--c-accent);
     fill: currentColor;
   }
 
@@ -42,13 +42,13 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-1-5);
-    font-size: var(--fs-12);
+    font-size: 12px;
     font-weight: 600;
-    color: color-mix(in oklab, var(--color-success) 75%, var(--color-text) 25%);
+    color: color-mix(in oklab, var(--c-success) 75%, var(--c-text) 25%);
     padding: var(--space-2) var(--space-2-5);
-    border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, var(--color-success) 50%, transparent);
-    background: color-mix(in oklab, var(--color-success) 12%, transparent);
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-success) 50%, transparent);
+    background: color-mix(in oklab, var(--c-success) 12%, transparent);
   }
 
   .provider-request-card__form {
@@ -68,14 +68,14 @@
   }
 
   .provider-profile-highlight {
-    border-color: color-mix(in oklab, var(--color-primary) 45%, var(--color-border) 55%);
+    border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
     box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--color-primary) 28%, transparent),
-      0 14px 30px color-mix(in oklab, var(--color-primary) 18%, transparent);
+      0 0 0 1px color-mix(in oklab, var(--c-primary) 28%, transparent),
+      0 14px 30px color-mix(in oklab, var(--c-primary) 18%, transparent);
   }
 
   .provider-profile-form--highlight {
-    border-color: color-mix(in oklab, var(--color-primary) 50%, var(--color-border) 50%);
+    border-color: color-mix(in oklab, var(--c-primary) 50%, var(--c-border) 50%);
     box-shadow:
       0 0 0 2px var(--focus-ring-primary),
       var(--shadow-card);

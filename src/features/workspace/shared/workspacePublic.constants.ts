@@ -1,7 +1,0 @@
-export const ALL_OPTION_KEY = 'all';
-
-export const WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX =
-  'dc_workspace_public_orders_seen_total_v1';
-
-export const WORKSPACE_PUBLIC_ORDERS_SEEN_TOTAL_KEY_PREFIX =
-  WORKSPACE_PUBLIC_REQUESTS_SEEN_TOTAL_KEY_PREFIX;

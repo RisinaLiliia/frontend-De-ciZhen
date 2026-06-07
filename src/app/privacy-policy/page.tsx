@@ -1,5 +1,5 @@
-import { WorkspaceRoutePage } from '@/features/workspace/shell/WorkspaceRoutePage';
+import { LegalDocumentPage } from '@/features/legal/LegalDocumentPage';
 
 export default function PrivacyPolicyPage() {
-  return <WorkspaceRoutePage forcedPublicSection="privacy" />;
+  return <LegalDocumentPage title="Datenschutzerklärung" type="privacy" />;
 }

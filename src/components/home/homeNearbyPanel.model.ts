@@ -5,7 +5,6 @@ import type { OfferDto } from '@/lib/api/dto/offers';
 import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dto/requests';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
-import { buildWorkspaceRequestOverlayHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
 export function resolveHomeNearbyCityId(cities: City[], region?: string | null) {
   if (!region) return undefined;
@@ -85,12 +84,7 @@ export function buildHomeNearbyPanelStyle(params: {
 }
 
 export function resolveHomeNearbyOfferHref(requestId: string) {
-  return buildWorkspaceRequestOverlayHref({
-    currentSearch: '',
-    requestId,
-    scope: 'market',
-    panel: 'offer',
-  });
+  return `/requests/${requestId}?offer=1`;
 }
 
 export function resolveHomeNearbyLoginHref(requestId: string) {

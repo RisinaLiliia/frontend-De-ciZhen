@@ -62,8 +62,6 @@ type BuildProvidersContentArgs = {
     favoriteProviderIds: Set<string>;
     pendingFavoriteProviderIds: Set<string>;
     toggleProviderFavorite: (providerId: string) => void | Promise<void>;
-    providerProfileHrefResolver?: RequestsExplorerProvidersContentProps['providerProfileHrefResolver'];
-    providerReviewsHrefResolver?: RequestsExplorerProvidersContentProps['providerReviewsHrefResolver'];
   };
   onListDensityChange?: (value: RequestsListDensity) => void;
   showFilterControls: boolean;
@@ -95,6 +93,8 @@ type BuildRequestsContentArgs = {
   formatPrice: Intl.NumberFormat;
   onListDensityChange?: (value: RequestsListDensity) => void;
   showTopFilters: boolean;
+  summaryStripProps?: RequestsExplorerRequestsContentProps['summaryStripProps'];
+  isSummaryStripLoading?: boolean;
 };
 
 export function buildRequestsExplorerNextPath(pathname: string, searchParams: SearchParamsLike) {
@@ -155,8 +155,6 @@ export function buildRequestsExplorerProvidersContentProps({
     favoriteProviderIds: providersData.favoriteProviderIds,
     pendingFavoriteProviderIds: providersData.pendingFavoriteProviderIds,
     onToggleProviderFavorite: providersData.toggleProviderFavorite,
-    providerProfileHrefResolver: providersData.providerProfileHrefResolver,
-    providerReviewsHrefResolver: providersData.providerReviewsHrefResolver,
     showFilterControls,
   };
 }
@@ -172,6 +170,8 @@ export function buildRequestsExplorerRequestsContentProps({
   formatPrice,
   onListDensityChange,
   showTopFilters,
+  summaryStripProps,
+  isSummaryStripLoading,
 }: BuildRequestsContentArgs): RequestsExplorerRequestsContentProps {
   return {
     t,
@@ -199,5 +199,7 @@ export function buildRequestsExplorerRequestsContentProps({
     formatDate,
     formatPrice,
     onListDensityChange,
+    summaryStripProps,
+    isSummaryStripLoading,
   };
 }

@@ -3,7 +3,7 @@
   .request-card__favorite-btn {
     width: 30px;
     height: 30px;
-    border-radius: var(--radius-pill);
+    border-radius: 999px;
     border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
     color: var(--c-text-muted);
@@ -51,7 +51,7 @@
     top: 50%;
     width: 4px;
     height: 4px;
-    border-radius: var(--radius-pill);
+    border-radius: 999px;
     background: color-mix(in oklab, var(--c-primary) 60%, var(--c-border) 40%);
     transform: translateY(-50%);
   }

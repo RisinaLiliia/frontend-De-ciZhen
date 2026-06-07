@@ -1,18 +1,10 @@
 openapi: 3.1.0
-servers:
-  - url: /
-    description: Frontend-relative backend API base
 info:
   title: Workspace Statistics Decision Dashboard
   version: 1.0.0
-  license:
-    name: Proprietary
-    identifier: LicenseRef-Proprietary
   description: |
     Aggregated backend contract for `/workspace?section=stats`.
     One response must drive the full decision dashboard for the selected analysis context.
-security:
-  - cookieAuth: []
 paths:
   /workspace/statistics:
     get:
@@ -29,28 +21,21 @@ paths:
           name: cityId
           required: false
           schema:
-            type:
-              - string
-              - "null"
+            type: string
+            nullable: true
         - in: query
           name: regionId
           required: false
           schema:
-            type:
-              - string
-              - "null"
+            type: string
+            nullable: true
         - in: query
           name: categoryKey
           required: false
           schema:
-            type:
-              - string
-              - "null"
+            type: string
+            nullable: true
       responses:
-        '400':
-          description: Invalid request parameters
-        '401':
-          description: Authentication required
         '200':
           description: Aggregated decision dashboard response
           content:
@@ -58,11 +43,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkspaceStatisticsDecisionDashboard'
 components:
-  securitySchemes:
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: access_token
   schemas:
     FilterOption:
       type: object
@@ -79,9 +59,8 @@ components:
       required: [value, label]
       properties:
         value:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         label:
           type: string
     ContextHealthMetric:
@@ -110,31 +89,27 @@ components:
         city:
           $ref: '#/components/schemas/SelectedFilter'
         region:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/SelectedFilter'
-            - type: "null"
+          nullable: true
         category:
           $ref: '#/components/schemas/SelectedFilter'
         service:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/SelectedFilter'
-            - type: "null"
+          nullable: true
         scopeLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         title:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         subtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         stickyLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         health:
           type: array
           items:
@@ -145,13 +120,11 @@ components:
             isLowData:
               type: boolean
             title:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
             body:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
     FilterOptions:
       type: object
       required: [cities, categories, services]
@@ -172,33 +145,26 @@ components:
       type: object
       properties:
         decisionSubtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         demandSubtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         citiesSubtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         opportunityTitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         priceTitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         insightsSubtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         growthSubtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
     OpportunityMetric:
       type: object
       required: [key, value, semanticTone, semanticKey]
@@ -222,9 +188,8 @@ components:
           type: string
           enum: [focus, competitor]
         distanceKm:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         reason:
           type: string
           enum: [selected_city, nearby_competitor, top_ranked]
@@ -249,71 +214,55 @@ components:
         - profitPotentialStatus
       properties:
         citySlug:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         city:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         categoryKey:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         category:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         recommendedMin:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         recommendedMax:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         marketAverage:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         optimalMin:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         optimalMax:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         smartRecommendedPrice:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         smartSignalTone:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [visibility, balanced, premium]
         analyzedRequestsCount:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         confidenceLevel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [high, medium, low]
         recommendation:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         profitPotentialScore:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         profitPotentialStatus:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [high, medium, low]
     ActivityComparisonPoint:
       type: object
@@ -322,41 +271,33 @@ components:
         timestamp:
           type: string
         clientActivity:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         providerActivity:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
     ActivityComparison:
       type: object
       required: [hasReliableSeries, points]
       properties:
         title:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         subtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         summary:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         peakTimestamp:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         bestWindowTimestamp:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         updatedAt:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         hasReliableSeries:
           type: boolean
         points:
@@ -388,29 +329,24 @@ components:
           type: integer
           enum: [1, 2, 3]
         cityId:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         city:
           type: string
         categoryKey:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         category:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         demand:
           type: number
         providers:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         marketBalanceRatio:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         score:
           type: number
         demandScore:
@@ -435,13 +371,13 @@ components:
           items:
             $ref: '#/components/schemas/OpportunityMetric'
         peerContext:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/OpportunityPeerContext'
-            - type: "null"
+          nullable: true
         priceIntelligence:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/PriceIntelligence'
-            - type: "null"
+          nullable: true
     UserComparisonMetric:
       type: object
       required: [key, unit, userValue, marketValue, direction, tone, status]
@@ -453,13 +389,11 @@ components:
           type: string
           enum: [percent, minutes, count]
         userValue:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         marketValue:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         direction:
           type: string
           enum: [up, down, flat]
@@ -467,9 +401,8 @@ components:
           type: string
           enum: [positive, neutral, warning]
         status:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [high, medium, low]
     UserFormulaMetric:
       type: object
@@ -501,17 +434,14 @@ components:
           type: string
           enum: [percent, minutes, currency]
         userValue:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         marketValue:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         gap:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         direction:
           type: string
           enum: [up, down, flat]
@@ -542,9 +472,8 @@ components:
           type: string
           enum: [high, medium, low]
         metricKey:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum:
             - offer_rate
             - response_rate
@@ -557,37 +486,31 @@ components:
             - response_time
             - unanswered
         actionCode:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
     UserPerformancePosition:
       type: object
       required: [percentile, categoryPercentile, cityPercentile, bucket]
       properties:
         percentile:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         categoryPercentile:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         cityPercentile:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         bucket:
           type: string
           enum: [top, average, below]
         categoryLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         cityLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
     UserProfileGap:
       type: object
       required: [fromStage, toStage, lossPercent, lostCount, tone]
@@ -599,13 +522,11 @@ components:
           type: string
           enum: [confirmations]
         lossPercent:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         lostCount:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         tone:
           type: string
           enum: [positive, neutral, warning]
@@ -631,41 +552,33 @@ components:
           type: string
           enum: [high, medium, low]
         cityLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         categoryLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         value:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         secondaryValue:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
     UserPricing:
       type: object
       required: [currentPrice, recommendedMin, recommendedMax, marketAverage, status, conversionImpact]
       properties:
         currentPrice:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         recommendedMin:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         recommendedMax:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         marketAverage:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         status:
           type: string
           enum: [below, within, above, unknown]
@@ -685,17 +598,14 @@ components:
           type: string
           enum: [high, medium, low]
         targetValue:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         cityLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         categoryLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
     DecisionLayerMetric:
       type: object
       required: [id, label, marketValue, userValue, gapAbsolute, gapPercent, unit, direction, status, signalCodes, primaryActionCode, summary]
@@ -706,21 +616,17 @@ components:
         label:
           type: string
         marketValue:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         userValue:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         gapAbsolute:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         gapPercent:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         unit:
           type: string
           enum: [percent, minutes, currency, count]
@@ -735,14 +641,12 @@ components:
           items:
             type: string
         primaryActionCode:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
         summary:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
     DecisionLayerAction:
       type: object
       required: [code, label, target]
@@ -753,69 +657,57 @@ components:
         label:
           type: string
         target:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
     DecisionLayer:
       type: object
       required: [title, subtitle, metrics, primaryInsight, primaryAction]
       properties:
         title:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         subtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         metrics:
           type: array
           items:
             $ref: '#/components/schemas/DecisionLayerMetric'
         primaryInsight:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         primaryAction:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/DecisionLayerAction'
-            - type: "null"
+          nullable: true
     PersonalizedPricing:
       type: object
       required: [title, subtitle, contextLabel, marketAverage, recommendedMin, recommendedMax, userPrice, gapAbsolute, position, effect, actionCode, summary]
       properties:
         title:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         subtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         contextLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         marketAverage:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         recommendedMin:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         recommendedMax:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         userPrice:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         gapAbsolute:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         position:
           type: string
           enum: [below, within, above, unknown]
@@ -823,28 +715,24 @@ components:
           type: string
           enum: [positive, neutral, warning]
         actionCode:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
         summary:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
     CategoryFitItem:
       type: object
       required: [categoryKey, label, marketDemandShare, userFit, opportunity, actionCode, summary]
       properties:
         categoryKey:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         label:
           type: string
         marketDemandShare:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         userFit:
           type: string
           enum: [high, medium, low, unknown]
@@ -852,26 +740,22 @@ components:
           type: string
           enum: [high, medium, low, unknown]
         actionCode:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
         summary:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
     CategoryFit:
       type: object
       required: [title, subtitle, items]
       properties:
         title:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         subtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         items:
           type: array
           items:
@@ -881,43 +765,36 @@ components:
       required: [cityId, city, marketRequests, userActivity, userConversion, actionCode, recommendation]
       properties:
         cityId:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         city:
           type: string
         marketRequests:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         userActivity:
           type: string
           enum: [high, medium, low, unknown]
         userConversion:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         actionCode:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
         recommendation:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
     CityComparison:
       type: object
       required: [title, subtitle, items]
       properties:
         title:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         subtitle:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         items:
           type: array
           items:
@@ -932,67 +809,54 @@ components:
         label:
           type: string
         marketCount:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         userCount:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         marketRateFromPrev:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         userRateFromPrev:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         gapRate:
-          type:
-            - number
-            - "null"
+          type: number
+          nullable: true
         status:
           type: string
           enum: [above_market, below_market, at_market, insufficient_data]
         dropOffSeverity:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [high, medium, low]
         recommendation:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
     FunnelComparison:
       type: object
       required: [largestGapStage, largestDropOffStage, primaryBottleneck, nextAction, stages]
       properties:
         comparisonLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         summary:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         largestGapStage:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [requests, offers, responses, contracts, completed]
         largestDropOffStage:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum: [requests, offers, responses, contracts, completed]
         primaryBottleneck:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         nextAction:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         stages:
           type: array
           items:
@@ -1011,9 +875,8 @@ components:
         - nextSteps
       properties:
         comparisonLabel:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         formulaMetrics:
           type: array
           items:
@@ -1029,9 +892,9 @@ components:
         performancePosition:
           $ref: '#/components/schemas/UserPerformancePosition'
         profileGap:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/UserProfileGap'
-            - type: "null"
+          nullable: true
         risks:
           type: array
           items:
@@ -1041,9 +904,9 @@ components:
           items:
             $ref: '#/components/schemas/UserPriorityItem'
         pricing:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/UserPricing'
-            - type: "null"
+          nullable: true
         nextSteps:
           type: array
           items:
@@ -1080,25 +943,24 @@ components:
         sectionMeta:
           $ref: '#/components/schemas/SectionMeta'
         decisionInsight:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
         decisionLayer:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/DecisionLayer'
-            - type: "null"
+          nullable: true
         personalizedPricing:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/PersonalizedPricing'
-            - type: "null"
+          nullable: true
         categoryFit:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/CategoryFit'
-            - type: "null"
+          nullable: true
         cityComparison:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/CityComparison'
-            - type: "null"
+          nullable: true
         summary:
           type: object
           additionalProperties: true
@@ -1109,9 +971,9 @@ components:
           type: object
           additionalProperties: true
         activityComparison:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/ActivityComparison'
-            - type: "null"
+          nullable: true
         demand:
           type: object
           additionalProperties: true
@@ -1120,9 +982,8 @@ components:
           items:
             $ref: '#/components/schemas/OpportunityRadarItem'
         priceIntelligence:
-          anyOf:
-            - $ref: '#/components/schemas/PriceIntelligence'
-            - type: "null"
+          $ref: '#/components/schemas/PriceIntelligence'
+          nullable: true
         profileFunnel:
           type: object
           additionalProperties: true
@@ -1140,14 +1001,13 @@ components:
           type: object
           properties:
             filename:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
         funnelComparison:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/FunnelComparison'
-            - type: "null"
+          nullable: true
         userIntelligence:
-          anyOf:
+          allOf:
             - $ref: '#/components/schemas/UserIntelligence'
-            - type: "null"
+          nullable: true

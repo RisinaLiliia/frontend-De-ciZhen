@@ -1,6 +1,6 @@
 'use client';
 
-import { useWorkspaceOfferData } from '@/features/workspace/requests/useWorkspaceOfferData';
+import { useWorkspaceLegacyOfferData } from '@/features/workspace/requests/useWorkspaceLegacyOfferData';
 import { useWorkspaceFavoriteRequestData } from '@/features/workspace/requests/useWorkspaceFavoriteRequestData';
 import type { buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 
@@ -17,7 +17,7 @@ export function useWorkspaceRequestUserStateData({
   locale,
   shouldLoadOfferRequests,
 }: Args) {
-  const offerData = useWorkspaceOfferData({
+  const offerData = useWorkspaceLegacyOfferData({
     workspaceRequestUserStateQueries,
     locale,
     shouldLoadOfferRequests,

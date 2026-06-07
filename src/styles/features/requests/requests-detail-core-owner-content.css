@@ -18,8 +18,8 @@
   }
 
   .request-detail__owner-label {
-    color: var(--color-text-muted);
-    font-size: var(--fs-12);
+    color: var(--c-text-muted);
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.01em;
   }
@@ -71,15 +71,15 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-primary);
+    color: var(--c-primary);
     font-size: 28px;
     line-height: 1;
     transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
   }
 
   .request-detail__owner-photo-slot:hover:not(:disabled) {
-    border-color: color-mix(in oklab, var(--color-primary) 40%, var(--color-border) 60%);
-    background: color-mix(in oklab, var(--color-primary) 12%, var(--color-surface) 88%);
+    border-color: color-mix(in oklab, var(--c-primary) 40%, var(--c-border) 60%);
+    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
     transform: translateY(-1px);
   }
 
@@ -100,7 +100,7 @@
     min-width: 0;
     padding-inline: var(--space-3);
     height: 36px;
-    font-size: var(--fs-13);
+    font-size: 13px;
   }
 
   @media (max-width: 640px) {
@@ -110,7 +110,7 @@
   }
 
   .request-detail__text {
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
     line-height: 1.6;
   }
 
@@ -125,23 +125,23 @@
     justify-self: start;
     border: 0;
     background: transparent;
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--color-text) 18%);
-    font-size: var(--fs-12);
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-text) 18%);
+    font-size: 12px;
     font-weight: 600;
     text-decoration: underline;
-    text-decoration-color: color-mix(in oklab, var(--color-primary) 48%, transparent);
+    text-decoration-color: color-mix(in oklab, var(--c-primary) 48%, transparent);
     text-underline-offset: 3px;
     padding: 0;
   }
 
   .request-detail__text-toggle:hover {
-    text-decoration-color: var(--color-primary);
+    text-decoration-color: var(--c-primary);
   }
 
   .request-detail__text-toggle:focus-visible {
     outline: none;
-    box-shadow: var(--control-focus-ring);
-    border-radius: var(--radius-sm);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 28%, transparent);
+    border-radius: 6px;
   }
 
   /* Provider public profile: keep desktop/tablet two-column composition stable. */

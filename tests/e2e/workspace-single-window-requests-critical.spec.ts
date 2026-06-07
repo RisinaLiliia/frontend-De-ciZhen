@@ -19,22 +19,8 @@ function buildPrivateOverview() {
     },
     providerOffersByStatus: { sent: 0, accepted: 0, declined: 0, withdrawn: 0, total: 0 },
     clientOffersByStatus: { sent: 1, accepted: 0, declined: 0, withdrawn: 0, total: 1 },
-    providerContractsByStatus: {
-      pending: 0,
-      confirmed: 0,
-      in_progress: 0,
-      completed: 0,
-      cancelled: 0,
-      total: 0,
-    },
-    clientContractsByStatus: {
-      pending: 1,
-      confirmed: 0,
-      in_progress: 0,
-      completed: 0,
-      cancelled: 0,
-      total: 1,
-    },
+    providerContractsByStatus: { pending: 0, confirmed: 0, in_progress: 0, completed: 0, cancelled: 0, total: 0 },
+    clientContractsByStatus: { pending: 1, confirmed: 0, in_progress: 0, completed: 0, cancelled: 0, total: 1 },
     favorites: { requests: 0, providers: 0 },
     reviews: { asProvider: 0, asClient: 0 },
     ratingSummary: { average: 0, count: 0 },
@@ -60,18 +46,16 @@ function buildPrivateOverview() {
 }
 
 function buildWorkspaceRequestCard(stage: DecisionStage) {
-  const actionType =
-    stage === 'review_offers'
-      ? 'review_offers'
-      : stage === 'confirm_contract'
-        ? 'confirm_contract'
-        : 'confirm_completion';
-  const actionLabel =
-    stage === 'review_offers'
-      ? 'Angebote prüfen'
-      : stage === 'confirm_contract'
-        ? 'Vertrag bestätigen'
-        : 'Abschluss bestätigen';
+  const actionType = stage === 'review_offers'
+    ? 'review_offers'
+    : stage === 'confirm_contract'
+      ? 'confirm_contract'
+      : 'confirm_completion';
+  const actionLabel = stage === 'review_offers'
+    ? 'Angebote prüfen'
+    : stage === 'confirm_contract'
+      ? 'Vertrag bestätigen'
+      : 'Abschluss bestätigen';
 
   return {
     id: 'workspace-card-1',
@@ -92,30 +76,17 @@ function buildWorkspaceRequestCard(stage: DecisionStage) {
       tone: 'warning',
     },
     progress: {
-      currentStep:
-        stage === 'review_offers' ? 'offers' : stage === 'confirm_contract' ? 'contract' : 'done',
+      currentStep: stage === 'review_offers'
+        ? 'offers'
+        : stage === 'confirm_contract'
+          ? 'contract'
+          : 'done',
       steps: [
         { key: 'request', label: 'Anfrage', status: 'done' },
-        {
-          key: 'offers',
-          label: 'Angebote',
-          status: stage === 'review_offers' ? 'current' : 'done',
-        },
-        {
-          key: 'selection',
-          label: 'Auswahl',
-          status: stage === 'review_offers' ? 'upcoming' : 'done',
-        },
-        {
-          key: 'contract',
-          label: 'Vertrag',
-          status: stage === 'confirm_contract' ? 'current' : 'done',
-        },
-        {
-          key: 'done',
-          label: 'Fertig',
-          status: stage === 'confirm_completion' || stage === 'completed' ? 'current' : 'upcoming',
-        },
+        { key: 'offers', label: 'Angebote', status: stage === 'review_offers' ? 'current' : 'done' },
+        { key: 'selection', label: 'Auswahl', status: stage === 'review_offers' ? 'upcoming' : 'done' },
+        { key: 'contract', label: 'Vertrag', status: stage === 'confirm_contract' ? 'current' : 'done' },
+        { key: 'done', label: 'Fertig', status: stage === 'confirm_completion' || stage === 'completed' ? 'current' : 'upcoming' },
       ],
     },
     quickActions: [],
@@ -171,12 +142,7 @@ function buildWorkspaceRequestsResponse(stage: DecisionStage) {
         { key: 'all', label: 'Alle', value: 1, isHighlighted: false },
         { key: 'attention', label: 'Aktiv', value: 1, isHighlighted: true },
         { key: 'execution', label: 'In Ausführung', value: 0, isHighlighted: false },
-        {
-          key: 'completed',
-          label: 'Abgeschlossen',
-          value: stage === 'completed' ? 1 : 0,
-          isHighlighted: false,
-        },
+        { key: 'completed', label: 'Abgeschlossen', value: stage === 'completed' ? 1 : 0, isHighlighted: false },
       ],
     },
     list: {
@@ -204,10 +170,7 @@ function buildWorkspaceRequestsResponse(stage: DecisionStage) {
         {
           requestId: 'req-1',
           title: 'Rohr reinigen',
-          actionType:
-            stage === 'completed'
-              ? 'confirm_completion'
-              : buildWorkspaceRequestCard(stage).decision.actionType,
+          actionType: stage === 'completed' ? 'confirm_completion' : buildWorkspaceRequestCard(stage).decision.actionType,
           actionLabel: buildWorkspaceRequestCard(stage).decision.actionLabel,
           actionPriority: 100,
           actionPriorityLevel: 'high',
@@ -266,12 +229,11 @@ function buildContracts(stage: DecisionStage) {
       requestId: 'req-1',
       offerId: 'offer-1',
       clientId: 'client-user-1',
-      status:
-        stage === 'confirm_contract'
-          ? 'pending'
-          : stage === 'confirm_completion'
-            ? 'confirmed'
-            : 'completed',
+      status: stage === 'confirm_contract'
+        ? 'pending'
+        : stage === 'confirm_completion'
+          ? 'confirmed'
+          : 'completed',
       priceAmount: 150,
       priceType: 'fixed',
       priceDetails: null,
@@ -286,9 +248,7 @@ function buildContracts(stage: DecisionStage) {
   ];
 }
 
-test('@critical keeps request management inside workspace modal through decision flow', async ({
-  page,
-}) => {
+test('@critical keeps request management inside workspace modal through decision flow', async ({ page }) => {
   let stage: DecisionStage = 'review_offers';
 
   await page.addInitScript(() => {
@@ -386,11 +346,7 @@ test('@critical keeps request management inside workspace modal through decision
       });
     }
 
-    if (
-      path === '/api/contracts/my' &&
-      method === 'GET' &&
-      url.searchParams.get('role') === 'client'
-    ) {
+    if (path === '/api/contracts/my' && method === 'GET' && url.searchParams.get('role') === 'client') {
       return route.fulfill({
         status: 200,
         headers: jsonHeaders,
@@ -462,39 +418,30 @@ test('@critical keeps request management inside workspace modal through decision
   await expect(openRequestCard).toBeVisible();
   await openRequestCard.click();
 
-  const dialog = page.getByRole('region', { name: 'Rohr reinigen' });
+  const dialog = page.getByRole('dialog', { name: 'Rohr reinigen' });
   await expect(dialog).toBeVisible();
-  await expect.poll(() => new URL(page.url()).pathname).toBe('/workspace');
+  await expect
+    .poll(() => new URL(page.url()).pathname)
+    .toBe('/workspace');
   await expect(dialog.getByRole('heading', { name: /Angebote|Offers/i })).toBeVisible();
 
   await dialog.getByRole('button', { name: /Annehmen|Accept/i }).click();
   await expect(dialog.getByText(/Angenommen|Accepted/i)).toBeVisible();
-  await expect(
-    dialog.getByRole('button', { name: /Vertrag bestätigen|Confirm contract/i }),
-  ).toBeVisible();
+  await expect(dialog.getByRole('button', { name: /Vertrag bestätigen|Confirm contract/i })).toBeVisible();
 
   const stickyFooter = dialog.locator('.my-request-dialog__actions--sticky').first();
   await expect(stickyFooter).toBeVisible();
-  await expect(
-    stickyFooter.evaluate((node) => window.getComputedStyle(node).position),
-  ).resolves.toBe('sticky');
+  await expect(stickyFooter.evaluate((node) => window.getComputedStyle(node).position)).resolves.toBe('sticky');
 
   await dialog.getByRole('button', { name: /Vertrag bestätigen|Confirm contract/i }).click();
-  await expect(
-    dialog.getByRole('button', { name: /Abschluss bestätigen|Confirm completion/i }),
-  ).toBeVisible();
+  await expect(dialog.getByRole('button', { name: /Abschluss bestätigen|Confirm completion/i })).toBeVisible();
 
   await dialog.getByRole('button', { name: /Abschluss bestätigen|Confirm completion/i }).click();
-  await expect(
-    dialog
-      .locator('.my-request-dialog__section-subtitle')
-      .filter({ hasText: /Abgeschlossen|Completed/i })
-      .first(),
-  ).toBeVisible();
-  await expect(
-    dialog.getByRole('button', { name: /Abschluss bestätigen|Confirm completion/i }),
-  ).toBeDisabled();
+  await expect(dialog.locator('.my-request-dialog__section-subtitle').filter({ hasText: /Abgeschlossen|Completed/i }).first()).toBeVisible();
+  await expect(dialog.getByRole('button', { name: /Abschluss bestätigen|Confirm completion/i })).toBeDisabled();
 
-  await expect.poll(() => new URL(page.url()).pathname).toBe('/workspace');
+  await expect
+    .poll(() => new URL(page.url()).pathname)
+    .toBe('/workspace');
   await expect(page).not.toHaveURL(/\/requests\/req-1/);
 });

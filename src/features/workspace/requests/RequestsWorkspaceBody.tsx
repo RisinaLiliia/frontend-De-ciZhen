@@ -1,6 +1,6 @@
 'use client';
 
-import { RequestsView } from './RequestsView';
+import { WorkspaceRequestsView } from '@/features/workspace/requests/RequestsPrivateView';
 import type { WorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 
 export type RequestsWorkspaceBodyVariant =
@@ -36,5 +36,5 @@ export function RequestsWorkspaceBody({
 }: {
   body: RequestsWorkspaceBodyVariant;
 }) {
-  return <RequestsView surface={body.surface} />;
+  return <WorkspaceRequestsView surface={body.surface} />;
 }

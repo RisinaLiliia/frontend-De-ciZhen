@@ -1,6 +1,40 @@
 /* src/styles/features/requests/requests-detail-reviews-actions.css */
 
 @layer components {
+  @media (max-width: 767px) {
+    .request-detail--provider .request-detail__panel,
+    .request-detail--provider .request-detail__section,
+    .request-detail--provider .provider-reviews-hub,
+    .request-detail--provider .provider-reviews-hub__feed,
+    .request-detail--provider .provider-reviews-hub__summary {
+      min-width: 0;
+    }
+
+    .request-detail--provider .request-detail__panel {
+      overflow-x: clip;
+    }
+
+    .request-detail--provider .provider-reviews-hub__toolbar {
+      align-items: flex-start;
+    }
+
+    .request-detail--provider .provider-reviews-hub__sort {
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .request-detail--provider .provider-reviews-hub__sort-btn {
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .request-detail--provider .provider-reviews-hub__page-nav {
+      margin-inline: auto;
+    }
+
+  }
+
   .request-detail__mobile-cta {
     display: none;
   }
@@ -47,7 +81,7 @@
 
   .offer-action-btn--icon-only {
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
   }
 
   .offer-action-btn--icon-only .offer-action-btn__icon {
@@ -60,16 +94,16 @@
   }
 
   .offer-action-btn--icon-only.offer-action-btn--delete:hover {
-    background: color-mix(in oklab, var(--c-danger) 12%, var(--color-surface) 88%);
+    background: color-mix(in oklab, var(--c-danger) 12%, var(--c-panel) 88%);
   }
 
   .offer-action-btn--delete {
-    border-color: color-mix(in oklab, var(--c-danger) 45%, var(--color-border) 55%);
-    color: color-mix(in oklab, var(--c-danger) 78%, var(--color-text) 22%);
+    border-color: color-mix(in oklab, var(--c-danger) 45%, var(--c-border) 55%);
+    color: color-mix(in oklab, var(--c-danger) 78%, var(--c-text) 22%);
   }
 
   .offer-action-btn--delete:hover {
-    background: color-mix(in oklab, var(--c-danger) 12%, var(--color-surface) 88%);
+    background: color-mix(in oklab, var(--c-danger) 12%, var(--c-panel) 88%);
   }
 
   .request-detail__icon-wrap {
@@ -91,12 +125,12 @@
     min-width: max-content;
     max-width: 220px;
     padding: var(--space-1-5) var(--space-2);
-    border-radius: var(--radius-sm);
-    background: color-mix(in oklab, var(--color-text) 88%, black 12%);
+    border-radius: 8px;
+    background: color-mix(in oklab, var(--c-text) 88%, black 12%);
     color: var(--c-primary-contrast);
-    font-size: var(--fs-12);
+    font-size: 12px;
     line-height: 1.2;
-    box-shadow: var(--shadow-card);
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 22%, transparent);
     pointer-events: none;
     z-index: 2;
     white-space: nowrap;

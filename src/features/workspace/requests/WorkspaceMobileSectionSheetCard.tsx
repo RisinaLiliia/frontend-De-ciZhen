@@ -7,7 +7,7 @@ import {
   formatWorkspaceMobileSheetBadgeValue,
   resolveWorkspaceMobileSheetBadgeValue,
 } from '@/features/workspace/requests/workspaceMobileSectionSheet.model';
-import type { WorkspaceNavItem } from '@/features/workspace/navigation/workspaceNavItem.types';
+import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
 
 type WorkspaceMobileSectionSheetCardProps = {
   item: WorkspaceNavItem;

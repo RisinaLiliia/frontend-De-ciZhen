@@ -5,12 +5,66 @@
     display: block;
     padding: var(--space-3);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--color-border) 34%, transparent);
-    background: color-mix(in oklab, var(--color-surface) 97%, var(--color-border) 3%);
+    border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
   }
 
   .request-detail__client-card--provider-hero {
     border-top: 0;
+  }
+
+  .request-detail__client-header .user-header-card--adaptive {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .request-detail__client-header .user-header-card__identity {
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: center;
+  }
+
+  .request-detail__client-header .provider-main {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .request-detail__client-header .provider-main__eyebrow,
+  .request-detail__client-header .provider-main__city,
+  .request-detail__client-header .provider-main__metrics,
+  .request-detail__client-header .provider-main__about,
+  .request-detail__client-header .provider-main__proof,
+  .request-detail__client-header .provider-main__footer-row {
+    display: none;
+    min-height: 0;
+  }
+
+  .request-detail__client-header .provider-name {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .request-detail__client-header .user-header-card__rating {
+    min-width: 112px;
+    justify-items: end;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .request-detail__client-header .provider-rating-summary {
+    gap: 0;
+  }
+
+  .request-detail__client-header .provider-rating-summary .rating-summary__line {
+    justify-content: flex-end;
+  }
+
+  .request-detail--provider .request-detail__client {
+    margin-bottom: var(--space-2);
   }
 
   .request-detail__reviews-list {
@@ -22,7 +76,7 @@
     padding: var(--space-3) var(--space-3-5);
     border-radius: var(--radius-md);
     border: 1px solid var(--surface-soft-border);
-    background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 92%, transparent);
   }
 
   .request-detail__review-header {
@@ -38,23 +92,25 @@
   }
 
   .request-detail__review-rating {
-    font-size: var(--fs-12);
-    color: var(--color-text-muted);
+    font-size: 12px;
+    color: var(--c-text-muted);
   }
 
   .request-detail__review-date {
-    font-size: var(--fs-12);
-    color: var(--color-text-muted);
+    font-size: 12px;
+    color: var(--c-text-muted);
   }
 
   .request-detail__review-body {
     margin-top: var(--space-2);
-    font-size: var(--fs-13);
-    color: var(--color-text);
+    font-size: 13px;
+    color: var(--c-text);
   }
 
-  .public-profile-reviews {
+  .provider-reviews-hub {
     display: grid;
     gap: var(--layout-section-gap);
   }
+
+
 }

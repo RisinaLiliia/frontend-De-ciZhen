@@ -3,20 +3,20 @@
 @layer components {
   .micro-proof {
     display: grid;
-    gap: var(--space-1-5);
+    gap: 6px;
     margin-top: var(--space-2);
-    font-size: var(--fs-11);
-    color: var(--color-text-muted);
+    font-size: 11px;
+    color: var(--c-text-muted);
   }
 
   .nearby-item {
     display: flex;
     align-items: center;
-    gap: var(--space-2-5);
+    gap: 10px;
     padding: 8px 0;
-    border-bottom: 1px solid color-mix(in oklab, var(--color-border) 55%, transparent);
-    font-size: var(--fs-12);
-    color: var(--color-text-muted);
+    border-bottom: 1px solid color-mix(in oklab, var(--c-border) 55%, transparent);
+    font-size: 12px;
+    color: var(--c-text-muted);
   }
 
   .nearby-item:last-child {
@@ -26,24 +26,24 @@
   .nearby-dot {
     width: 8px;
     height: 8px;
-    border-radius: var(--radius-pill);
-    background: var(--color-warning);
-    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-warning) 35%, transparent);
+    border-radius: 999px;
+    background: var(--c-accent);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
     animation: radar-pulse 2.6s ease-out infinite;
   }
 
   .nearby-text {
-    color: var(--color-text);
+    color: var(--c-text);
   }
 
   .nearby-more {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-1-5);
+    gap: 6px;
     padding: 6px 10px;
-    border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
-    background: color-mix(in oklab, var(--color-surface) 80%, transparent);
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 80%, transparent);
     transition:
       border-color var(--transition-fast),
       box-shadow var(--transition-fast),
@@ -51,16 +51,16 @@
   }
 
   .nearby-more:hover {
-    border-color: color-mix(in oklab, var(--color-primary) 55%, var(--color-border) 45%);
-    box-shadow: var(--shadow-card);
+    border-color: color-mix(in oklab, var(--c-primary) 55%, var(--c-border) 45%);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 18%, transparent);
     transform: translateY(-1px);
   }
 
   .nearby-dot-item {
     width: 6px;
     height: 6px;
-    border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--color-border) 70%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-border) 70%, transparent);
     animation: nearby-dot-pulse 1.8s ease-in-out infinite;
   }
 

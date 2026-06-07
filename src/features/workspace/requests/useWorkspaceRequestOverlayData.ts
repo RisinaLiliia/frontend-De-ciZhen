@@ -1,0 +1,263 @@
+'use client';
+
+import * as React from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
+import { resolveWorkspaceRequestChatAction } from '@/features/workspace/requests/workspaceRequestActionResolvers';
+import { fetchWorkspaceManagedRequest } from '@/features/workspace/requests/useWorkspaceRequestOverlayActions';
+import { listMyContracts } from '@/lib/api/contracts';
+import type { ContractDto } from '@/lib/api/dto/contracts';
+import type { OfferDto } from '@/lib/api/dto/offers';
+import { listMyProviderOffers, listOffersByRequest } from '@/lib/api/offers';
+import { withStatusFallback } from '@/lib/api/withStatusFallback';
+import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
+import type { Locale } from '@/lib/i18n/t';
+import { useT } from '@/lib/i18n/useT';
+import type { WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
+
+export type WorkspaceStatusBadgeView = {
+  label: string;
+  variant: WorkspaceBadgeVariant;
+};
+
+export function formatDialogDate(locale: Locale, value?: string | null) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return null;
+  return new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+}
+
+export function formatDialogPrice(locale: Locale, value?: number | null) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+  return new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US', {
+    style: 'currency',
+    currency: 'EUR',
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+export function formatOfferTimestamp(locale: Locale, value?: string | null) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return null;
+  return new Intl.DateTimeFormat(locale === 'de' ? 'de-DE' : 'en-US', {
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+}
+
+export function toDateTimeLocalValue(value?: string | null) {
+  const date = value ? new Date(value) : new Date(Date.now() + 60 * 60 * 1000);
+  if (!Number.isFinite(date.getTime())) return '';
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60 * 1000);
+  return localDate.toISOString().slice(0, 16);
+}
+
+export function resolveOfferStatusBadge(
+  t: (key: I18nKey) => string,
+  status: OfferDto['status'],
+): WorkspaceStatusBadgeView {
+  if (status === 'accepted') {
+    return {
+      label: t(I18N_KEYS.requestDetails.statusAccepted),
+      variant: 'success',
+    };
+  }
+  if (status === 'declined') {
+    return {
+      label: t(I18N_KEYS.requestDetails.statusDeclined),
+      variant: 'risk',
+    };
+  }
+  if (status === 'withdrawn') {
+    return {
+      label: t(I18N_KEYS.requestDetails.statusWithdrawn),
+      variant: 'warning',
+    };
+  }
+  return {
+    label: t(I18N_KEYS.requestsPage.decisionPanelPriorityNew),
+    variant: 'info',
+  };
+}
+
+export function resolveContractStatusBadge(
+  t: (key: I18nKey) => string,
+  status: ContractDto['status'],
+): WorkspaceStatusBadgeView {
+  if (status === 'completed') {
+    return {
+      label: t(I18N_KEYS.workspace.stateCompletedLabel),
+      variant: 'success',
+    };
+  }
+  if (status === 'confirmed' || status === 'in_progress') {
+    return {
+      label: t(I18N_KEYS.requestDetails.statusConfirmed),
+      variant: 'success',
+    };
+  }
+  if (status === 'cancelled') {
+    return {
+      label: t(I18N_KEYS.requestDetails.statusCancelled),
+      variant: 'risk',
+    };
+  }
+  return {
+    label: t(I18N_KEYS.requestDetails.statusPending),
+    variant: 'warning',
+  };
+}
+
+export function cardlessTitle(t: (key: I18nKey) => string) {
+  return t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle);
+}
+
+export function useWorkspaceManagedRequestData({
+  locale,
+  requestId,
+  attemptOwner = false,
+  preferOwner = false,
+}: {
+  locale: Locale;
+  requestId: string;
+  attemptOwner?: boolean;
+  preferOwner?: boolean;
+}) {
+  const qc = useQueryClient();
+
+  return useQuery({
+    queryKey: workspaceQK.managedRequest({
+      requestId,
+      locale,
+      attemptOwner,
+      preferOwner,
+    }),
+    queryFn: () => fetchWorkspaceManagedRequest({
+      requestId,
+      locale,
+      qc,
+      attemptOwner,
+      preferOwner,
+    }),
+    staleTime: 60_000,
+    retry: 0,
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useWorkspaceRequestOffersData(requestId: string) {
+  const query = useQuery({
+    queryKey: ['workspace-request-offers', requestId],
+    queryFn: () => withStatusFallback(() => listOffersByRequest(requestId), [] as OfferDto[]),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
+  });
+  const offers = query.data ?? [];
+  const acceptedOfferId = offers.find((offer) => offer.status === 'accepted')?.id ?? null;
+  const actionableOffers = offers.filter((offer) => offer.status !== 'withdrawn');
+
+  return {
+    ...query,
+    acceptedOfferId,
+    actionableOffers,
+    offers,
+  };
+}
+
+export function useWorkspaceRequestDecisionData({
+  card,
+  locale,
+}: {
+  card: MyRequestsViewCard;
+  locale: Locale;
+}) {
+  const t = useT();
+  const { offers = [] } = useWorkspaceRequestOffersData(card.requestId);
+  const shouldLoadClientContracts = card.role === 'customer';
+  const { data: contracts = [] } = useQuery({
+    queryKey: workspaceQK.contractsMyClient(),
+    enabled: shouldLoadClientContracts,
+    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), [] as ContractDto[]),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
+  });
+
+  const contract = React.useMemo(
+    () => contracts.find((item) => item.requestId === card.requestId) ?? null,
+    [card.requestId, contracts],
+  );
+  const selectedOffer = React.useMemo(
+    () => offers.find((item) => item.status === 'accepted')
+      ?? offers.find((item) => Boolean(contract?.offerId) && item.id === contract?.offerId)
+      ?? null,
+    [contract?.offerId, offers],
+  );
+  const booking = contract?.booking ?? null;
+  const suggestedStartAt = React.useMemo(
+    () => booking?.startAt
+      ?? selectedOffer?.availableAt
+      ?? selectedOffer?.requestPreferredDate
+      ?? null,
+    [booking?.startAt, selectedOffer?.availableAt, selectedOffer?.requestPreferredDate],
+  );
+  const chatAction = React.useMemo(
+    () => resolveWorkspaceRequestChatAction(card),
+    [card],
+  );
+  const chatInput = chatAction?.chatInput ?? null;
+  const chatLabel = chatAction?.label ?? t(I18N_KEYS.requestDetails.ctaChat);
+  const contractPrice = contract?.priceAmount != null
+    ? formatDialogPrice(locale, contract.priceAmount)
+    : null;
+  const contractMeta = [
+    contractPrice,
+    contract?.status ? resolveContractStatusBadge(t, contract.status).label : null,
+  ].filter(Boolean).join(' · ');
+
+  return {
+    chatInput,
+    chatLabel,
+    booking,
+    contract,
+    contractMeta,
+    reviewStatus: contract?.reviewStatus ?? null,
+    selectedOffer,
+    suggestedStartAt,
+  };
+}
+
+export function useWorkspaceProviderOfferSheetData({
+  locale,
+  requestId,
+}: {
+  locale: Locale;
+  requestId: string;
+}) {
+  const requestQuery = useWorkspaceManagedRequestData({ locale, requestId, attemptOwner: false });
+  const { data: myOffers = [] } = useQuery({
+    queryKey: workspaceQK.offersMy(),
+    queryFn: () => withStatusFallback(() => listMyProviderOffers(), [] as OfferDto[]),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
+  });
+  const existingResponse = React.useMemo(
+    () => myOffers.find((item) => item.requestId === requestId) ?? null,
+    [myOffers, requestId],
+  );
+
+  return {
+    ...requestQuery,
+    existingResponse,
+    request: requestQuery.data?.request ?? null,
+  };
+}

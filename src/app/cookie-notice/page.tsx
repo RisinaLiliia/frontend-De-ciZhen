@@ -1,5 +1,5 @@
-import { WorkspaceRoutePage } from '@/features/workspace/shell/WorkspaceRoutePage';
+import { LegalDocumentPage } from '@/features/legal/LegalDocumentPage';
 
 export default function CookieNoticePage() {
-  return <WorkspaceRoutePage forcedPublicSection="cookies" />;
+  return <LegalDocumentPage title="Cookie-Richtlinie" type="cookies" />;
 }

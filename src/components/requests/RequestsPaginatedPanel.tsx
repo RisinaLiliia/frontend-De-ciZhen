@@ -18,7 +18,6 @@ type RequestsPaginatedPanelProps = {
   listDensity?: RequestsListDensity;
   topSlot?: React.ReactNode;
   secondarySlot?: React.ReactNode;
-  surface?: 'panel' | 'bare';
   panelClassName?: string;
   listClassName?: string;
   isLoading: boolean;
@@ -44,7 +43,6 @@ export function RequestsPaginatedPanel({
   listDensity = 'single',
   topSlot,
   secondarySlot,
-  surface = 'panel',
   panelClassName,
   listClassName,
   isLoading,
@@ -59,7 +57,7 @@ export function RequestsPaginatedPanel({
   children,
 }: RequestsPaginatedPanelProps) {
   const densityClassName = listDensity === 'double' ? 'is-double' : 'is-single';
-  const resolvedPanelClassName = `${surface === 'panel' ? 'panel ' : ''}requests-panel ${panelClassName ?? ''}`.trim();
+  const resolvedPanelClassName = `panel requests-panel ${panelClassName ?? ''}`.trim();
   const resolvedListClassName = `requests-list requests-list--stable ${densityClassName} ${listClassName ?? ''}`.trim();
 
   return (

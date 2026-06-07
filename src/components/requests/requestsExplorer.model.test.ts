@@ -168,8 +168,14 @@ describe('requestsExplorer.model', () => {
     expect(requestsContent.topBar).toEqual({ kind: 'filters' });
   });
 
-  it('keeps summary top bar mode without legacy summary strip props', () => {
+  it('passes summary strip surface props through the shared requests content builder', () => {
     const setPage = () => {};
+    const summaryStripProps = {
+      locale: 'de' as const,
+      items: [{ key: 'all' as const, label: 'Alle', value: 8, isHighlighted: true }],
+      onSelect: () => {},
+      variant: 'market' as const,
+    };
 
     const requestsContent = buildRequestsExplorerRequestsContentProps({
       t: (key) => key,
@@ -215,8 +221,12 @@ describe('requestsExplorer.model', () => {
       formatDate: new Intl.DateTimeFormat('de-DE'),
       formatPrice: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }),
       showTopFilters: false,
+      summaryStripProps,
+      isSummaryStripLoading: true,
     });
 
+    expect(requestsContent.summaryStripProps).toEqual(summaryStripProps);
+    expect(requestsContent.isSummaryStripLoading).toBe(true);
     expect(requestsContent.topBar).toEqual({ kind: 'summary' });
   });
 });

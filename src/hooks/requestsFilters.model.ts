@@ -1,4 +1,4 @@
-import { ALL_OPTION_KEY } from '@/features/workspace/shared';
+import { ALL_OPTION_KEY } from '@/features/workspace/requests';
 import type { PublicRequestsSort } from '@/lib/api/requests';
 import {
   REQUESTS_PAGE_SIZE,

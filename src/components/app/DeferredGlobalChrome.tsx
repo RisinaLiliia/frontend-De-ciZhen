@@ -1,7 +1,6 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { usePathname } from 'next/navigation';
 import { useDeferredMount } from '@/hooks/useDeferredMount';
 
 const DeferredPresenceProvider = dynamic(
@@ -26,16 +25,14 @@ const DeferredAppToaster = dynamic(
 );
 
 export function DeferredGlobalChrome() {
-  const pathname = usePathname();
   const isUiReady = useDeferredMount(1200);
   const isPresenceReady = useDeferredMount(2400);
-  const shouldRenderGlobalConsentFooter = isUiReady && !pathname.startsWith('/workspace');
 
   return (
     <>
       {isPresenceReady ? <DeferredPresenceProvider /> : null}
       {isUiReady ? <DeferredGoogleAnalyticsManager /> : null}
-      {shouldRenderGlobalConsentFooter ? <DeferredConsentManageFooter /> : null}
+      {isUiReady ? <DeferredConsentManageFooter /> : null}
       {isUiReady ? <DeferredCookieConsentLayer /> : null}
       {isUiReady ? <DeferredAppToaster /> : null}
     </>

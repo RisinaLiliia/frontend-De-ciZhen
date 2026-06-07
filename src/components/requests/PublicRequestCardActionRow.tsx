@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { I18nKey } from '@/lib/i18n/keys';

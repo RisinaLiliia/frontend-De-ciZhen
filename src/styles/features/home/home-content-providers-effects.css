@@ -1,0 +1,23 @@
+/* src/styles/features/home/home-content-providers-effects.css */
+
+@layer components {
+  .top-providers-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+
+  @keyframes status-pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 35%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 8px color-mix(in oklab, var(--c-online) 0%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-online) 0%, transparent);
+    }
+  }
+
+}

@@ -2,22 +2,22 @@
 
 @layer components {
   .auth-consent__text {
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
   }
 
   .auth-consent__link {
-    color: color-mix(in oklab, var(--color-primary) 84%, var(--color-text) 16%);
+    color: color-mix(in oklab, var(--c-primary) 84%, var(--c-text) 16%);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
   .auth-consent__link:hover {
-    color: var(--color-primary);
+    color: var(--c-primary);
   }
 
   .auth-consent__link.is-disabled {
     text-decoration: none;
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
     opacity: 0.9;
   }
 
@@ -25,14 +25,14 @@
     outline: none;
     box-shadow:
       0 0 0 2px color-mix(in oklab, var(--c-bg) 75%, transparent),
-      0 0 0 4px color-mix(in oklab, var(--color-primary) 68%, transparent);
+      0 0 0 4px color-mix(in oklab, var(--c-primary) 68%, transparent);
   }
 
   .auth-valid-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: color-mix(in oklab, var(--color-success) 85%, var(--color-text) 15%);
+    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
   }
 
   .auth-valid-icon svg {
@@ -40,26 +40,43 @@
     height: 14px;
   }
 
+  .auth-field-valid-icon {
+    position: absolute;
+    right: 36px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .auth-field-valid-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+
   .auth-password-rules {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-1);
+    gap: 4px;
     white-space: normal;
   }
 
   .auth-password-rules span {
-    font-size: var(--fs-10);
-    border-radius: var(--radius-pill);
+    font-size: 10px;
+    border-radius: 999px;
     padding: 3px 7px;
-    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
     background: var(--surface-soft-bg);
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
     flex: 0 0 auto;
   }
 
   .auth-password-rules span.is-ok {
-    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
-    border-color: color-mix(in oklab, var(--color-success) 55%, transparent);
+    color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
+    border-color: color-mix(in oklab, var(--c-success) 55%, transparent);
     background: var(--c-success-soft);
   }
 

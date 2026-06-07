@@ -117,12 +117,8 @@ describe('homeNearbyPanel.model', () => {
 
   it('builds routing, subtitle and panel style helpers', () => {
     expect(buildHomeNearbyNextPath('/workspace', 'section=requests')).toBe('/workspace?section=requests');
-    expect(resolveHomeNearbyOfferHref('request-1')).toBe(
-      '/workspace?section=requests&scope=market&requestId=request-1&requestPanel=offer',
-    );
-    expect(resolveHomeNearbyLoginHref('request-1')).toBe(
-      '/auth/login?next=%2Fworkspace%3Fsection%3Drequests%26scope%3Dmarket%26requestId%3Drequest-1%26requestPanel%3Doffer',
-    );
+    expect(resolveHomeNearbyOfferHref('request-1')).toBe('/requests/request-1?offer=1');
+    expect(resolveHomeNearbyLoginHref('request-1')).toBe('/auth/login?next=%2Frequests%2Frequest-1%3Foffer%3D1');
     expect(resolveHomeNearbySubtitleKey(true)).toBe('homePublic.nearbyFallbackHint');
     expect(resolveHomeNearbySubtitleKey(false)).toBe('homePublic.nearbySubtitle');
     expect(buildHomeNearbyPanelStyle({ targetItems: 3, visibleRows: 0 })).toEqual({

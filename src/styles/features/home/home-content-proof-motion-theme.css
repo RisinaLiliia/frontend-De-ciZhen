@@ -37,32 +37,32 @@
   }
 
   html:not(.dark) .howitworks-tabs {
-    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 20%, var(--color-border) 80%);
-    background: var(--color-surface);
-    box-shadow: var(--shadow-card);
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 20%, var(--c-border) 80%);
+    background: var(--c-panel);
+    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 4%, transparent);
   }
 
   html:not(.dark) .howitworks-tab {
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
   }
 
   html:not(.dark) .howitworks-tab.is-active {
-    color: var(--color-primary);
-    background: color-mix(in oklab, var(--color-primary) 12%, var(--color-surface) 88%);
-    box-shadow: var(--shadow-card);
+    color: var(--c-primary);
+    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
+    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 10%, transparent);
   }
 
   html:not(.dark) .howitworks-step {
-    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--color-border) 82%);
-    background: linear-gradient(180deg, var(--color-surface) 0%, color-mix(in oklab, var(--color-surface) 92%, var(--c-hero-tint-primary) 8%) 100%);
-    box-shadow: var(--shadow-card);
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
+    background: linear-gradient(180deg, var(--c-panel) 0%, color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-ink) 5%, transparent);
   }
 
   html:not(.dark) .howitworks-steps::after {
     background: linear-gradient(
       90deg,
       transparent,
-      color-mix(in oklab, var(--color-primary) 18%, transparent),
+      color-mix(in oklab, var(--c-primary) 18%, transparent),
       transparent
     );
     opacity: 0.28;
@@ -72,7 +72,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      color-mix(in oklab, var(--color-primary) 10%, transparent),
+      color-mix(in oklab, var(--c-primary) 10%, transparent),
       transparent
     );
     opacity: 0.24;

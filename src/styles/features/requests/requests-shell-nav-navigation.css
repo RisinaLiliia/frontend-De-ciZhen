@@ -1,6 +1,5 @@
 /* src/styles/features/requests/requests-shell-nav-navigation.css */
 
 @import './requests-shell-nav-navigation-nav-core.css';
-@import './personal-nav.css';
-@import './requests-shell-review-controls.css';
-@import './workspace-chip-toggle.css';
+@import './requests-shell-mobile-nav-sheet.css';
+@import './requests-shell-mobile-filters-sheet.css';

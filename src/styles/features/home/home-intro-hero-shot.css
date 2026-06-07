@@ -1,0 +1,5 @@
+/* src/styles/features/home/home-intro-hero-shot.css */
+
+@import './home-intro-hero-shot-visual.css';
+@import './home-intro-hero-shot-keyframes.css';
+@import './home-intro-hero-shot-mobile-keyframes.css';
