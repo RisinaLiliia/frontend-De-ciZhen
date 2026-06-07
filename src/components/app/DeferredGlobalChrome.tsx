@@ -29,7 +29,8 @@ export function DeferredGlobalChrome() {
   const pathname = usePathname();
   const isUiReady = useDeferredMount(1200);
   const isPresenceReady = useDeferredMount(2400);
-  const shouldRenderGlobalConsentFooter = isUiReady && !pathname.startsWith('/workspace');
+  const shouldRenderGlobalConsentFooter =
+  isUiReady && pathname !== '/' && !pathname.startsWith('/workspace');
 
   return (
     <>

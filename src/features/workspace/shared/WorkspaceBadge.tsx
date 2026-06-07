@@ -13,7 +13,6 @@ export type WorkspaceBadgeVariant =
   | 'warning'
   | 'danger'
   | 'risk'
-  | 'opportunity'
   | 'priority'
   | 'info';
 
@@ -23,7 +22,6 @@ const WORKSPACE_BADGE_VARIANT_MAP: Record<WorkspaceBadgeVariant, BadgeVariant> =
   warning: 'warning',
   danger: 'risk',
   risk: 'risk',
-  opportunity: 'opportunity',
   priority: 'warning',
   info: 'info',
 };
@@ -72,12 +70,6 @@ const WORKSPACE_BADGE_STYLE_MAP: Record<WorkspaceBadgeVariant, WorkspaceBadgeSty
     '--badge-border': 'var(--color-danger-border)',
     '--badge-text': 'var(--dc-danger)',
     '--badge-accent': 'var(--dc-danger)',
-  },
-  opportunity: {
-    '--badge-bg': 'var(--dc-blue-soft)',
-    '--badge-border': 'var(--color-info-border)',
-    '--badge-text': 'var(--dc-blue)',
-    '--badge-accent': 'var(--dc-blue)',
   },
 };
 

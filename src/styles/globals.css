@@ -21,6 +21,7 @@
 @import './primitives/controls.css';
 @import './primitives/button.css';
 @import './primitives/badges.css';
+@import './features/product-entry/productEntry.css';
 
 @layer utilities {
   .dc-glow {

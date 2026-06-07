@@ -22,7 +22,12 @@ export function HomePageShell({ children }: { children: ReactNode }) {
         )}
       />
 
-      <main className="container-mobile min-h-[calc(100dvh-var(--shell-topbar-height)-var(--shell-topbar-offset,0px))] pt-0 pb-8 flex flex-col page-shell__main--with-mobile-nav page-shell__main--topbar-overlay home-screen">
+      <main
+        style={{
+          paddingTop: 'calc(var(--space-8) + var(--shell-topbar-height) + var(--shell-topbar-offset, 0px))',
+        }}
+        className="container-mobile min-h-[calc(100dvh-var(--shell-topbar-height)-var(--shell-topbar-offset,0px))] pt-0 pb-8 flex flex-col page-shell__main--with-mobile-nav home-screen"
+      >
         {children}
         <div className="flex-1" />
       </main>

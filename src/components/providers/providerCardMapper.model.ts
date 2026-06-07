@@ -115,7 +115,7 @@ export function buildProviderCardBadges(params: {
     });
     if (isSchnelleAntwort) {
       badges.push({
-        variant: 'opportunity',
+        variant: 'success',
         size: 'sm',
         tone: 'soft',
         label: t(I18N_KEYS.homePublic.providerBadgeFastReply),
@@ -124,7 +124,7 @@ export function buildProviderCardBadges(params: {
     }
   } else if (isSchnelleAntwort) {
     badges.push({
-      variant: 'opportunity',
+      variant: 'success',
       size: 'sm',
       tone: 'soft',
       label: t(I18N_KEYS.homePublic.providerBadgeFastReply),
