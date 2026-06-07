@@ -3,8 +3,9 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { ProofCase } from '@/types/home';
 import { ProofReviewCard } from '@/components/reviews/ProofReviewCard';
-import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardHeader } from '@/components/ui/Card';
 import { MoreDotsLink } from '@/components/ui/MoreDotsLink';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 
 type HomeProofPanelProps = {
   t: (key: I18nKey) => string;
@@ -15,8 +16,8 @@ type HomeProofPanelProps = {
 export function HomeProofPanel({ t, proofCases, proofIndex }: HomeProofPanelProps) {
   return (
     <Card className="home-proof-panel">
-      <CardHeader className="home-panel-header home-proof-panel__header">
-        <CardTitle className="home-panel-title home-proof-panel__title">{t(I18N_KEYS.homePublic.proofTitle)}</CardTitle>
+      <CardHeader className="home-proof-panel__header">
+        <SectionHeader title={t(I18N_KEYS.homePublic.proofTitle)} titleAs="h3" />
       </CardHeader>
       <div className="home-proof-panel__feed">
         {proofCases.map((item, index) => (
