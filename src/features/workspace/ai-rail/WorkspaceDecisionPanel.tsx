@@ -161,9 +161,24 @@ export function WorkspaceDecisionPanel({
         text: summaryText,
         visualization: 'donut',
         overview: [
-          { key: 'highUrgency', label: overviewLabels.highUrgency, value: panel.overview.highUrgency },
-          { key: 'inProgress', label: overviewLabels.inProgress, value: panel.overview.inProgress },
-          { key: 'completed', label: overviewLabels.completedThisPeriod, value: panel.overview.completedThisPeriod },
+          {
+            key: 'highUrgency',
+            label: overviewLabels.highUrgency,
+            value: panel.overview.highUrgency,
+            tone: variant === 'market' ? 'demand' : 'action',
+          },
+          {
+            key: 'inProgress',
+            label: overviewLabels.inProgress,
+            value: panel.overview.inProgress,
+            tone: 'supply',
+          },
+          {
+            key: 'completed',
+            label: overviewLabels.completedThisPeriod,
+            value: panel.overview.completedThisPeriod,
+            tone: 'opportunity',
+          },
         ],
         primaryAction: {
           kind: 'button',

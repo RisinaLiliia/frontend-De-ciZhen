@@ -43,7 +43,22 @@ export type WorkspaceUnifiedRailRecommendationItem = {
 
 export type WorkspaceUnifiedRailVisualization = 'donut' | 'none';
 export type WorkspaceUnifiedRailMetricIcon = 'requests' | 'providers' | 'responseRate' | 'responseTime';
-export type WorkspaceUnifiedRailMetricTone = 'primary' | 'success' | 'warning' | 'accent' | 'neutral';
+export type WorkspaceUnifiedRailMetricTone =
+  | 'demand'
+  | 'supply'
+  | 'opportunity'
+  | 'risk'
+  | 'action'
+  | 'ai'
+  | 'neutral'
+  /**
+   * Legacy aliases kept for callers that have not been migrated yet.
+   * They are normalized before rendering so CSS never depends on order.
+   */
+  | 'primary'
+  | 'success'
+  | 'warning'
+  | 'accent';
 
 export type WorkspaceUnifiedRailModel = {
   decisionPanel: {
@@ -95,6 +110,29 @@ function normalizeMetricValue(value: string | number) {
   return Number.isFinite(normalized) ? Math.max(0, normalized) : 0;
 }
 
+function normalizeMetricTone(
+  tone: WorkspaceUnifiedRailMetricTone | undefined,
+  icon: WorkspaceUnifiedRailMetricIcon | undefined,
+): Exclude<WorkspaceUnifiedRailMetricTone, 'primary' | 'success' | 'warning' | 'accent'> {
+  if (tone === 'primary') return 'demand';
+  if (tone === 'success') return 'opportunity';
+  if (tone === 'warning') return 'action';
+  if (tone === 'accent') return 'supply';
+  if (tone) return tone;
+  if (icon === 'providers') return 'supply';
+  if (icon === 'responseRate') return 'opportunity';
+  if (icon === 'responseTime') return 'action';
+  if (icon === 'requests') return 'demand';
+  return 'neutral';
+}
+
+function getMetricToneVariable(
+  tone: WorkspaceUnifiedRailMetricTone | undefined,
+  icon: WorkspaceUnifiedRailMetricIcon | undefined,
+) {
+  return `var(--workspace-rail-tone-${normalizeMetricTone(tone, icon)})`;
+}
+
 function buildDecisionChartStyle(metrics: WorkspaceUnifiedRailModel['decisionPanel']['metrics']) {
   const normalizedValues = metrics.map((item) => normalizeMetricValue(item.value));
   const total = normalizedValues.reduce((sum, value) => sum + value, 0);
@@ -105,7 +143,7 @@ function buildDecisionChartStyle(metrics: WorkspaceUnifiedRailModel['decisionPan
     const start = offset;
     const end = offset + share;
     offset = end;
-    return `var(--workspace-rail-chart-tone-${index + 1}) ${start}% ${end}%`;
+    return `${getMetricToneVariable(metrics[index]?.tone, metrics[index]?.icon)} ${start}% ${end}%`;
   });
 
   return {
@@ -292,8 +330,8 @@ export function WorkspaceUnifiedRail({
     : null;
   const decisionMetrics = model.decisionPanel.metrics.length > 0 ? (
     <dl className="workspace-unified-rail__metrics">
-      {model.decisionPanel.metrics.map((item, index) => (
-        <div key={item.key} className={`is-tone-${index + 1}`}>
+      {model.decisionPanel.metrics.map((item) => (
+        <div key={item.key} className={`is-${normalizeMetricTone(item.tone, item.icon)}`}>
           <dt>{item.label}</dt>
           <dd>{item.value}</dd>
         </div>
@@ -302,10 +340,10 @@ export function WorkspaceUnifiedRail({
   ) : null;
   const decisionMetricGrid = showsMetricGrid ? (
     <dl className="workspace-unified-rail__metric-grid">
-      {model.decisionPanel.metrics.slice(0, 4).map((item, index) => (
+      {model.decisionPanel.metrics.slice(0, 4).map((item) => (
         <div
           key={item.key}
-          className={`is-tone-${index + 1} is-${item.tone ?? 'neutral'}`}
+          className={`is-${normalizeMetricTone(item.tone, item.icon)}`}
         >
           <span className="workspace-unified-rail__metric-icon">
             {renderMetricIcon(item.icon)}
