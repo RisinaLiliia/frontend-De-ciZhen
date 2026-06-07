@@ -100,11 +100,16 @@ function getKpiMetricIcon(key: string): WorkspaceUnifiedRailMetricIcon {
   return 'requests';
 }
 
-function getKpiMetricTone(key: string, index: number): WorkspaceUnifiedRailMetricTone {
-  if (key.includes('completed') || key.includes('success')) return 'success';
-  if (key.includes('response')) return 'accent';
-  if (index === 1) return 'warning';
-  return index === 0 ? 'primary' : 'neutral';
+function getKpiMetricTone(key: string): WorkspaceUnifiedRailMetricTone {
+  const normalized = key.toLowerCase();
+  if (normalized.includes('provider') || normalized.includes('offer')) return 'supply';
+  if (normalized.includes('completed') || normalized.includes('success') || normalized.includes('conversion')) {
+    return 'opportunity';
+  }
+  if (normalized.includes('unanswered') || normalized.includes('cancel') || normalized.includes('lost')) return 'risk';
+  if (normalized.includes('response')) return 'action';
+  if (normalized.includes('request') || normalized.includes('demand')) return 'demand';
+  return 'neutral';
 }
 
 export function mapStatisticsRailModel({
@@ -134,30 +139,30 @@ export function mapStatisticsRailModel({
           label: copy.opportunityDemandLabel,
           value: selectedOpportunity.demand,
           icon: 'requests' as const,
-          tone: 'primary' as const,
+          tone: 'demand' as const,
         },
         {
           key: 'providers',
           label: copy.opportunityProvidersLabel,
           value: selectedOpportunity.providers ?? '—',
           icon: 'providers' as const,
-          tone: 'warning' as const,
+          tone: 'supply' as const,
         },
         {
           key: 'opportunity-score',
           label: copy.opportunityScoreLabel,
           value: selectedOpportunity.score.toFixed(1),
           icon: 'responseRate' as const,
-          tone: 'success' as const,
+          tone: 'opportunity' as const,
         },
       ]
-    : primaryKpis.map((item, index) => ({
+    : primaryKpis.map((item) => ({
         key: item.key,
         label: item.label,
         value: item.value,
         helper: item.hint,
         icon: getKpiMetricIcon(item.key),
-        tone: getKpiMetricTone(item.key, index),
+        tone: getKpiMetricTone(item.key),
       }));
 
   const marketOpportunities = mapActivitySignalsToOpportunities(activitySignals);
