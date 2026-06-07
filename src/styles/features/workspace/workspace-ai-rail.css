@@ -2,17 +2,10 @@
   .workspace-unified-rail {
     display: grid;
     gap: var(--space-3);
-    --workspace-rail-tone-demand: var(--c-info);
-    --workspace-rail-tone-supply: var(--c-warning);
-    --workspace-rail-tone-opportunity: var(--c-success);
-    --workspace-rail-tone-risk: var(--c-danger);
-    --workspace-rail-tone-action: color-mix(in oklab, var(--c-warning) 82%, var(--c-danger) 18%);
-    --workspace-rail-tone-ai: var(--color-primary);
-    --workspace-rail-tone-neutral: color-mix(in oklab, var(--c-border) 72%, var(--c-panel) 28%);
-    --workspace-rail-chart-tone-1: var(--workspace-rail-tone-risk);
-    --workspace-rail-chart-tone-2: var(--workspace-rail-tone-demand);
-    --workspace-rail-chart-tone-3: var(--workspace-rail-tone-opportunity);
-    --workspace-rail-chart-tone-4: var(--workspace-rail-tone-neutral);
+    --workspace-rail-chart-tone-1: var(--c-danger);
+    --workspace-rail-chart-tone-2: var(--c-info);
+    --workspace-rail-chart-tone-3: var(--c-success);
+    --workspace-rail-chart-tone-4: color-mix(in oklab, var(--c-border) 72%, var(--c-panel) 28%);
     --workspace-rail-eyebrow-size: var(--provider-card-eyebrow-size, var(--fs-10));
     --workspace-rail-eyebrow-line-height: var(--provider-card-eyebrow-line-height, 1.2);
     --workspace-rail-eyebrow-tracking: var(--provider-card-eyebrow-tracking, 0.06em);
@@ -199,28 +192,12 @@
     box-shadow: inset 0 1px 0 color-mix(in oklab, white 58%, transparent);
   }
 
-  .workspace-unified-rail__metric-grid > div.is-demand {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-demand) 18%, var(--color-border-soft) 82%);
+  .workspace-unified-rail__metric-grid > div.is-primary {
+    border-color: color-mix(in oklab, var(--workspace-rail-chart-tone-2) 18%, var(--color-border-soft) 82%);
   }
 
-  .workspace-unified-rail__metric-grid > div.is-supply {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-supply) 18%, var(--color-border-soft) 82%);
-  }
-
-  .workspace-unified-rail__metric-grid > div.is-opportunity {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-opportunity) 18%, var(--color-border-soft) 82%);
-  }
-
-  .workspace-unified-rail__metric-grid > div.is-risk {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-risk) 18%, var(--color-border-soft) 82%);
-  }
-
-  .workspace-unified-rail__metric-grid > div.is-action {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-action) 18%, var(--color-border-soft) 82%);
-  }
-
-  .workspace-unified-rail__metric-grid > div.is-ai {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-ai) 18%, var(--color-border-soft) 82%);
+  .workspace-unified-rail__metric-grid > div.is-success {
+    border-color: color-mix(in oklab, var(--workspace-rail-chart-tone-3) 18%, var(--color-border-soft) 82%);
   }
 
   .workspace-unified-rail__metric-icon {
@@ -228,7 +205,7 @@
     place-items: center;
     width: 17px;
     height: 17px;
-    color: var(--workspace-rail-tone-demand);
+    color: var(--workspace-rail-chart-tone-2);
   }
 
   .workspace-unified-rail__metric-icon svg {
@@ -241,28 +218,20 @@
     stroke-linejoin: round;
   }
 
-  .workspace-unified-rail__metric-grid > div.is-demand .workspace-unified-rail__metric-icon {
-    color: var(--workspace-rail-tone-demand);
+  .workspace-unified-rail__metric-grid > div.is-primary .workspace-unified-rail__metric-icon {
+    color: var(--workspace-rail-chart-tone-2);
   }
 
-  .workspace-unified-rail__metric-grid > div.is-supply .workspace-unified-rail__metric-icon {
-    color: var(--workspace-rail-tone-supply);
+  .workspace-unified-rail__metric-grid > div.is-accent .workspace-unified-rail__metric-icon {
+    color: var(--workspace-rail-chart-tone-1);
   }
 
-  .workspace-unified-rail__metric-grid > div.is-opportunity .workspace-unified-rail__metric-icon {
-    color: var(--workspace-rail-tone-opportunity);
+  .workspace-unified-rail__metric-grid > div.is-success .workspace-unified-rail__metric-icon {
+    color: var(--workspace-rail-chart-tone-3);
   }
 
-  .workspace-unified-rail__metric-grid > div.is-risk .workspace-unified-rail__metric-icon {
-    color: var(--workspace-rail-tone-risk);
-  }
-
-  .workspace-unified-rail__metric-grid > div.is-action .workspace-unified-rail__metric-icon {
-    color: var(--workspace-rail-tone-action);
-  }
-
-  .workspace-unified-rail__metric-grid > div.is-ai .workspace-unified-rail__metric-icon {
-    color: var(--workspace-rail-tone-ai);
+  .workspace-unified-rail__metric-grid > div.is-warning .workspace-unified-rail__metric-icon {
+    color: var(--c-warning);
   }
 
   .workspace-unified-rail__metric-grid dd {
@@ -307,36 +276,24 @@
     width: 8px;
     height: 8px;
     border-radius: 999px;
-    background: var(--workspace-rail-tone-demand);
+    background: var(--workspace-rail-chart-tone-2);
     box-shadow: 0 0 0 4px color-mix(in oklab, currentColor 6%, transparent);
   }
 
-  .workspace-unified-rail__metrics > div.is-demand::before {
-    background: var(--workspace-rail-tone-demand);
+  .workspace-unified-rail__metrics > div.is-tone-1::before {
+    background: var(--workspace-rail-chart-tone-1);
   }
 
-  .workspace-unified-rail__metrics > div.is-supply::before {
-    background: var(--workspace-rail-tone-supply);
+  .workspace-unified-rail__metrics > div.is-tone-2::before {
+    background: var(--workspace-rail-chart-tone-2);
   }
 
-  .workspace-unified-rail__metrics > div.is-opportunity::before {
-    background: var(--workspace-rail-tone-opportunity);
+  .workspace-unified-rail__metrics > div.is-tone-3::before {
+    background: var(--workspace-rail-chart-tone-3);
   }
 
-  .workspace-unified-rail__metrics > div.is-risk::before {
-    background: var(--workspace-rail-tone-risk);
-  }
-
-  .workspace-unified-rail__metrics > div.is-action::before {
-    background: var(--workspace-rail-tone-action);
-  }
-
-  .workspace-unified-rail__metrics > div.is-ai::before {
-    background: var(--workspace-rail-tone-ai);
-  }
-
-  .workspace-unified-rail__metrics > div.is-neutral::before {
-    background: var(--workspace-rail-tone-neutral);
+  .workspace-unified-rail__metrics > div.is-tone-4::before {
+    background: var(--workspace-rail-chart-tone-4);
   }
 
   .workspace-unified-rail__metrics dt {
@@ -478,28 +435,25 @@
     width: 8px;
     height: 8px;
     border-radius: 999px;
-    background: var(--workspace-rail-tone-neutral);
+    background: var(--workspace-rail-chart-tone-4);
     box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 7%, transparent);
     margin-top: 5px;
   }
 
   .workspace-unified-rail__queue-dot.is-high,
-  .workspace-unified-rail__queue-dot.is-risk {
+  .workspace-unified-rail__queue-dot.is-risk,
+  .workspace-unified-rail__recommendation-icon.is-attention {
     background: var(--workspace-rail-chart-tone-1);
   }
 
+  .workspace-unified-rail__queue-dot.is-opportunity,
   .workspace-unified-rail__queue-dot.is-info {
-    background: var(--workspace-rail-tone-demand);
-  }
-
-  .workspace-unified-rail__queue-dot.is-opportunity {
-    background: var(--workspace-rail-tone-opportunity);
+    background: var(--workspace-rail-chart-tone-2);
   }
 
   .workspace-unified-rail__queue-dot.is-medium,
-  .workspace-unified-rail__queue-dot.is-warning,
-  .workspace-unified-rail__recommendation-icon.is-attention {
-    background: var(--workspace-rail-tone-action);
+  .workspace-unified-rail__queue-dot.is-warning {
+    background: var(--c-warning);
   }
 
   .workspace-unified-rail__queue-dot.is-low,
@@ -514,7 +468,7 @@
   }
 
   .workspace-unified-rail__recommendation-icon.is-opportunity {
-    background: var(--workspace-rail-tone-opportunity);
+    background: var(--workspace-rail-chart-tone-2);
   }
 
   .workspace-unified-rail__queue-copy,

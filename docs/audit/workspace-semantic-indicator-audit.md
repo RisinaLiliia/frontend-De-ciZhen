@@ -18,11 +18,11 @@ This pass focuses on:
 | Semantic category | Expected primitive |
 | --- | --- |
 | Demand | `info` / blue |
-| Supply | warning/sand provider accent |
+| Supply | primary/provider accent |
 | Opportunity | `success` / green |
 | Risk | `risk` or `danger` / red |
 | AI | primary accent + explicit AI label/icon |
-| Action | `warning` / orange action treatment |
+| Action | `warning` / sand |
 | Neutral | `neutral` / muted |
 
 ## Findings
@@ -42,35 +42,28 @@ This pass focuses on:
 | Unified Rail recommendation tone `positive` | maps to `success` | Positive / opportunity-like recommendation | Opportunity | Keep |
 | Unified Rail recommendation tone `attention` | maps to `warning` | Attention / user action | Action | Keep |
 | Unified Rail recommendation tone `opportunity` | maps to `success` | Domain opportunity tone | Opportunity | Keep |
-| Decision Panel metric icon `requests` | semantic `demand` tone | Demand/request metric | Demand | Fixed in this PR |
-| Decision Panel metric icon `providers` | semantic `supply` tone using warning/sand | Supply/provider metric | Supply | Fixed in this PR |
-| Decision Panel metric icon `completed` | semantic `opportunity` tone | Completion / positive outcome | Opportunity | Fixed in this PR |
-| Decision Panel metric icon `response time` | semantic `action` tone | Required attention / response timing | Action | Fixed in this PR |
+| Decision Panel metric icon `requests` | chart tone currently index-based | Demand/request metric | Demand | Follow-up: move donut tones to semantic keys instead of index order |
+| Decision Panel metric icon `providers` | chart tone currently index-based | Supply/provider metric | Supply | Follow-up: move donut tones to semantic keys instead of index order |
 | Workspace activity chart requests | blue/info activity tone | Demand | Demand | Keep |
-| Workspace activity chart offers | warning/sand supply tone | Provider/offer activity | Supply | Keep |
+| Workspace activity chart offers | warning/sand activity tone | Action / pending offer activity | Action | Keep |
 | City signal high | `success` | Strong market chance | Opportunity | Keep |
 | City signal medium | `info` | Informational city signal | Neutral or Demand | Follow-up: decide if medium means Demand or Neutral |
 
 ## Changes In This PR
-- `WorkspaceUnifiedRail`: render Decision Panel donut and metric dots from semantic metric tones instead of metric index order.
-- `WorkspaceUnifiedRail`: keep Attention recommendation indicators on Action semantics, not Risk.
-- `statisticsRail.mapper.ts`: emit semantic metric tones (`demand`, `supply`, `opportunity`, `risk`, `action`) for rail metrics.
-- `WorkspaceDecisionPanel`: tag request/provider/completed metrics with explicit semantic tones.
-- `useWorkspaceOverviewRail`: tag overview Decision Panel metrics with explicit semantic tones.
 - `statisticsRail.mapper.ts`: map Market Opportunity `action` items to `warning` instead of `info`.
 
 ## Follow-up Work
-1. Audit `WorkspaceDecisionPanel` recommendation tones:
+1. Replace index-based Decision Panel donut color assignment with semantic-key assignment.
+2. Audit `WorkspaceDecisionPanel` recommendation tones:
    - `focus` uses domain tone `opportunity`
    - `in-progress` uses domain tone `opportunity`
    - verify whether each should remain Opportunity or become Supply/Action.
-2. Split generic `signal` into explicit `action`, `risk`, `demand`, or `neutral` when backend can provide stronger semantic metadata.
-3. Add a test around `mapOpportunityBadgeVariant` to prevent `action -> info` regressions.
+3. Split generic `signal` into explicit `action`, `risk`, `demand`, or `neutral` when backend can provide stronger semantic metadata.
+4. Add a test around `mapOpportunityBadgeVariant` to prevent `action -> info` regressions.
 
 ## Acceptance Criteria For This Pass
 - No workspace badge uses deprecated `variant="opportunity"`.
 - Market chance badges resolve to `success`.
 - Required action badges resolve to `warning`.
 - Risk badges resolve to `risk`.
-- Decision Panel chart segments and metric dots resolve from semantic metric tones, not array index.
 - No hardcoded colors are introduced.

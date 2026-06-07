@@ -3,7 +3,6 @@ import { t as translate, type Locale } from '@/lib/i18n/t';
 
 import type {
   WorkspaceUnifiedRailAction,
-  WorkspaceUnifiedRailMetricTone,
   WorkspaceUnifiedRailModel,
   WorkspaceUnifiedRailRecommendationItem,
   WorkspaceUnifiedRailVisualization,
@@ -39,7 +38,6 @@ type LinkedDecisionPanel = {
     key: string;
     label: string;
     value: string | number;
-    tone?: WorkspaceUnifiedRailMetricTone;
   }>;
 };
 

@@ -151,7 +151,7 @@ function buildOverviewDecisionMetrics(params: {
       value: formatOverviewNumber(requestCount, locale),
       helper: periodHelper,
       icon: 'requests' as const,
-      tone: 'demand' as const,
+      tone: 'primary' as const,
     },
     {
       key: 'active-providers',
@@ -159,7 +159,7 @@ function buildOverviewDecisionMetrics(params: {
       value: typeof providerCount === 'number' ? formatOverviewNumber(providerCount, locale) : providerCount,
       helper: periodHelper,
       icon: 'providers' as const,
-      tone: 'supply' as const,
+      tone: 'accent' as const,
     },
     {
       key: 'response-rate',
@@ -167,7 +167,7 @@ function buildOverviewDecisionMetrics(params: {
       value: responseRate,
       helper: labels.responseRateHelper,
       icon: 'responseRate' as const,
-      tone: 'opportunity' as const,
+      tone: 'success' as const,
     },
     {
       key: 'average-reply',
@@ -175,7 +175,7 @@ function buildOverviewDecisionMetrics(params: {
       value: averageReply,
       helper: labels.averageReplyHelper,
       icon: 'responseTime' as const,
-      tone: 'action' as const,
+      tone: 'warning' as const,
     },
   ];
 }
