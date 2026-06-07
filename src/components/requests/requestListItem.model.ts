@@ -6,11 +6,6 @@ import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import {
-  buildWorkspaceOwnRequestDetailHref,
-  buildWorkspaceRequestDetailHref,
-  buildWorkspaceRequestEditHref,
-} from '@/features/workspace/requests/workspaceRequestRoute.model';
 import type { RequestListStatusPresentation } from './requestListStatus.types';
 import type { OwnerRequestActions, RequestsListProps } from './requestsList.types';
 
@@ -88,21 +83,11 @@ export function buildRequestListPresentation({
     pendingFavoriteRequestIds,
   });
   const isOwnerRequestList = Boolean(ownerRequestActions);
-  const detailsHref = isOwnerRequestList
-    ? buildWorkspaceOwnRequestDetailHref({ currentSearch: '', requestId: item.id })
-    : publicPresentation.card.detailsHref;
-  const editHref = isOwnerRequestList
-    ? buildWorkspaceRequestEditHref({ currentSearch: '', requestId: item.id })
-    : buildWorkspaceRequestDetailHref({ currentSearch: '', requestId: item.id });
 
   return {
-    card: {
-      ...publicPresentation.card,
-      detailsHref,
-    },
+    card: publicPresentation.card,
     status: {
-      detailsHref,
-      editHref,
+      detailsHref: publicPresentation.card.detailsHref,
       itemId: item.id,
       itemStatus: item.status,
       itemOffer: publicPresentation.status.itemOffer,

@@ -10,14 +10,7 @@ type Props = {
 
 export function Field({ leftIcon, rightIcon, children, className }: Props) {
   return (
-    <div
-      className={cn(
-        'field-shell relative w-full',
-        leftIcon ? 'field-shell--with-left-icon' : '',
-        rightIcon ? 'field-shell--with-right-icon' : '',
-        className,
-      )}
-    >
+    <div className={cn('relative w-full', className)}>
       {leftIcon ? (
         <div
           className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -28,7 +21,13 @@ export function Field({ leftIcon, rightIcon, children, className }: Props) {
         </div>
       ) : null}
 
-      <div className="w-full">
+      <div
+        className={cn(
+          'w-full',
+          leftIcon ? '[&_.field]:pl-11' : '',
+          rightIcon ? '[&_.field]:pr-11' : '',
+        )}
+      >
         {children}
       </div>
 

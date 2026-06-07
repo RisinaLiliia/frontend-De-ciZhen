@@ -11,7 +11,7 @@
     position: absolute;
     inset: -3px;
     border-radius: inherit;
-    border: 1px solid color-mix(in oklab, var(--color-warning) 40%, transparent);
+    border: 1px solid color-mix(in oklab, var(--c-accent) 40%, transparent);
     opacity: 0.4;
     pointer-events: none;
   }
@@ -19,11 +19,11 @@
   @keyframes badge-pulse {
     0% {
       transform: translateY(0);
-      box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-warning) 35%, transparent);
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
     }
     50% {
       transform: translateY(-1px);
-      box-shadow: 0 0 0 6px color-mix(in oklab, var(--color-warning) 12%, transparent);
+      box-shadow: 0 0 0 6px color-mix(in oklab, var(--c-accent) 12%, transparent);
     }
     100% {
       transform: translateY(0);
@@ -48,7 +48,7 @@
 
   @keyframes radar-pulse {
     0% {
-      box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-warning) 35%, transparent);
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--c-accent) 35%, transparent);
     }
     70% {
       box-shadow: 0 0 0 10px transparent;

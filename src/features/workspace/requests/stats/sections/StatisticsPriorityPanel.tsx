@@ -1,0 +1,53 @@
+'use client';
+
+import {
+  WorkspaceBadge,
+  type WorkspaceBadgeVariant,
+} from '@/features/workspace/shared/WorkspaceBadge';
+import {
+  workspacePanelShell,
+  workspaceStatCardShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
+import type { WorkspaceStatisticsModel } from '../workspaceStatistics.model';
+
+export function StatisticsPriorityPanel({
+  title,
+  subtitle,
+  badgeLabel,
+  badgeVariant,
+  items,
+}: {
+  title: string;
+  subtitle: string;
+  badgeLabel: string;
+  badgeVariant: WorkspaceBadgeVariant;
+  items: NonNullable<WorkspaceStatisticsModel['userIntelligence']>['risks'];
+}) {
+  if (!items || !Array.isArray(items) || items.length === 0) return null;
+
+  return (
+    <section className={workspacePanelShell('workspace-statistics-user-panel')}>
+      <header className="section-heading workspace-statistics__tile-header">
+        <p className="section-title">{title}</p>
+        <p className="section-subtitle">{subtitle}</p>
+      </header>
+      <div className="workspace-statistics-user-priority__list">
+        {items.map((item) => (
+          <article
+            key={item.key}
+            className={workspaceStatCardShell('workspace-statistics-user-priority__item', `is-${item.tone}`)}
+          >
+            <div className="workspace-statistics-user-priority__head">
+              <WorkspaceBadge variant={badgeVariant}>{badgeLabel}</WorkspaceBadge>
+              {item.metric ? (
+                <span className="workspace-statistics-user-priority__metric">{item.metric}</span>
+              ) : null}
+            </div>
+            <strong className="workspace-statistics-user-priority__title">{item.title}</strong>
+            <p className="workspace-statistics-user-priority__body">{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,76 @@
+'use client';
+
+import type { WorkspaceBranchProps } from '@/features/workspace/page/workspacePage.types';
+import { useWorkspacePrivateInteractions } from '@/features/workspace/page/useWorkspacePrivateInteractions';
+import { useWorkspacePrivateSources } from '@/features/workspace/page/useWorkspacePrivateSources';
+
+export function useWorkspacePrivateDataFlow({
+  t,
+  locale,
+  auth,
+  isAuthed,
+  isWorkspaceAuthed,
+  routeState,
+}: WorkspaceBranchProps) {
+  const {
+    activePublicSection,
+    activeWorkspaceTab,
+    activeStatusFilter,
+    activeFavoritesView,
+    requestsScope,
+    activeRequestsRole,
+    activeRequestsState,
+    activeRequestsPeriod,
+    activeRequestsSort,
+    nextPath,
+    guestLoginHref,
+    onGuestLockedAction,
+  } = routeState;
+
+  const sources = useWorkspacePrivateSources({
+    t,
+    locale,
+    isAuthed,
+    isWorkspaceAuthed,
+    activePublicSection,
+    activeWorkspaceTab,
+    requestsScope,
+    activeRequestsRole,
+    activeRequestsState,
+    activeRequestsPeriod,
+    activeRequestsSort,
+  });
+
+  const interactions = useWorkspacePrivateInteractions({
+    t,
+    locale,
+    isAuthed,
+    isWorkspaceAuthed,
+    authUserId: auth.user?.id,
+    activePublicSection,
+    activeWorkspaceTab,
+    requestsScope,
+    nextPath,
+    platformRequestsTotal: sources.platformRequestsTotal,
+    favoriteRequestIds: sources.favoriteRequestIds,
+    requestById: sources.requestById,
+    favoriteProviderLookup: sources.favoriteProvidersState.lookup,
+    providerById: sources.providerDirectoryState.byId,
+  });
+
+  return {
+    activePublicSection,
+    activeWorkspaceTab,
+    activeStatusFilter,
+    activeFavoritesView,
+    requestsScope,
+    activeRequestsRole,
+    activeRequestsState,
+    activeRequestsPeriod,
+    activeRequestsSort,
+    guestLoginHref,
+    onGuestLockedAction,
+    ...sources,
+    ...interactions,
+  };
+}

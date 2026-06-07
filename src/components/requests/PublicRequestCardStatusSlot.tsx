@@ -6,7 +6,7 @@ import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { IconBriefcase, IconChat } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
-import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
+import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/requests';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { PublicRequestCardStatusView } from '@/components/requests/publicRequestCard.model';

@@ -1,0 +1,262 @@
+/* src/styles/features/requests/requests-shell-mobile-filters-sheet.css */
+
+@layer components {
+  .workspace-mobile-filters {
+    display: none;
+  }
+
+  .workspace-mobile-filters__trigger {
+    width: 100%;
+    min-width: 0;
+    padding: var(--space-1-5) var(--space-2);
+    border-radius: calc(var(--radius-lg) - var(--space-0-25));
+    border: 1px solid color-mix(in oklab, var(--surface-soft-border) 64%, transparent);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 94%, var(--surface-card-bg) 6%),
+        color-mix(in oklab, white 90%, var(--surface-card-bg) 10%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 78%, transparent),
+      0 6px 14px color-mix(in oklab, var(--c-ink) 6%, transparent);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+    text-align: left;
+    color: var(--c-text);
+  }
+
+  .workspace-mobile-filters__summary {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .workspace-mobile-filters__summary::-webkit-scrollbar {
+    display: none;
+  }
+
+  .workspace-mobile-filters__summary-chip {
+    flex: 0 0 auto;
+    min-height: calc(var(--space-5) + var(--space-1));
+    padding: 0 var(--space-1-5);
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--surface-soft-border) 60%, transparent);
+    background: color-mix(in oklab, white 68%, transparent);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    color: color-mix(in oklab, var(--c-text-muted) 84%, var(--c-text) 16%);
+  }
+
+  .workspace-mobile-filters__summary-chip:first-child {
+    border-color: color-mix(in oklab, var(--c-primary) 18%, var(--surface-soft-border) 82%);
+    background: color-mix(in oklab, var(--c-primary) 8%, white 92%);
+    color: color-mix(in oklab, var(--c-text) 84%, var(--c-primary) 16%);
+  }
+
+  .workspace-mobile-filters__cta {
+    flex: 0 0 auto;
+    min-height: calc(var(--space-5) + var(--space-0-5));
+    padding: 0 var(--space-1);
+    border-radius: 999px;
+    border: 0;
+    background: transparent;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-0-75);
+    color: color-mix(in oklab, var(--c-primary) 58%, var(--c-text-muted) 42%);
+  }
+
+  .workspace-mobile-filters__cta::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translateY(-1px);
+  }
+
+  .workspace-mobile-filters-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 41;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: var(--space-3);
+    pointer-events: none;
+  }
+
+  .workspace-mobile-filters-sheet__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: color-mix(in oklab, var(--c-ink) 28%, transparent);
+    -webkit-backdrop-filter: blur(8px) saturate(115%);
+    backdrop-filter: blur(8px) saturate(115%);
+    pointer-events: auto;
+  }
+
+  .workspace-mobile-filters-sheet__surface {
+    --workspace-mobile-filters-surface-border: color-mix(in oklab, var(--c-primary) 12%, var(--surface-card-border) 88%);
+    --workspace-mobile-filters-surface-bg:
+      linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--surface-card-bg) 88%, var(--c-primary) 12%),
+        var(--surface-card-bg)
+      );
+    --workspace-mobile-filters-surface-shadow:
+      0 18px 36px color-mix(in oklab, var(--c-ink) 10%, transparent),
+      0 6px 18px color-mix(in oklab, var(--c-primary) 6%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 42%, transparent);
+    --workspace-mobile-filters-close-border: color-mix(in oklab, white 52%, var(--c-border) 48%);
+    --workspace-mobile-filters-close-bg:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 92%, var(--surface-card-bg) 8%),
+        color-mix(in oklab, white 80%, var(--surface-card-bg) 20%)
+      );
+    position: relative;
+    z-index: 1;
+    width: min(100%, 720px);
+    max-height: min(82dvh, 760px);
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-3-5);
+    border-radius: 24px 24px 0 0;
+    border: 1px solid var(--workspace-mobile-filters-surface-border);
+    background: var(--workspace-mobile-filters-surface-bg);
+    box-shadow: var(--workspace-mobile-filters-surface-shadow);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+    overflow: hidden;
+    pointer-events: auto;
+  }
+
+  html.dark .workspace-mobile-filters-sheet__surface {
+    --workspace-mobile-filters-surface-border: color-mix(in oklab, var(--c-primary) 16%, var(--c-border) 84%);
+    --workspace-mobile-filters-surface-bg:
+      linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--c-panel) 94%, var(--c-primary) 6%),
+        color-mix(in oklab, var(--c-panel) 97%, var(--c-ink) 3%)
+      );
+    --workspace-mobile-filters-surface-shadow:
+      0 24px 44px color-mix(in oklab, var(--c-ink) 28%, transparent),
+      0 8px 22px color-mix(in oklab, var(--c-primary) 8%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+    --workspace-mobile-filters-close-border: color-mix(in oklab, var(--c-border) 82%, white 18%);
+    --workspace-mobile-filters-close-bg:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 88%, white 12%),
+        color-mix(in oklab, var(--c-panel) 94%, white 6%)
+      );
+  }
+
+  .workspace-mobile-filters-sheet__surface::before {
+    content: '';
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-text-muted) 18%, transparent);
+    justify-self: center;
+  }
+
+  .workspace-mobile-filters-sheet__surface > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .workspace-mobile-filters-sheet__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .workspace-mobile-filters-sheet__title {
+    margin: 0;
+    font-size: clamp(18px, 4.5vw, 22px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--c-text);
+  }
+
+  .workspace-mobile-filters-sheet__close {
+    width: calc(var(--space-7) + var(--space-0-5));
+    min-width: calc(var(--space-7) + var(--space-0-5));
+    height: calc(var(--space-7) + var(--space-0-5));
+    border-radius: 999px;
+    border: 1px solid var(--workspace-mobile-filters-close-border);
+    background: var(--workspace-mobile-filters-close-bg);
+    color: color-mix(in oklab, var(--c-text-muted) 74%, var(--c-text) 26%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .workspace-mobile-filters-sheet__body {
+    display: grid;
+    gap: var(--space-3);
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  @media (min-width: 821px) {
+    .workspace-mobile-filters-sheet {
+      display: none;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .workspace-mobile-filters {
+      display: grid;
+    }
+
+    .workspace-mobile-filters-sheet {
+      --workspace-mobile-filters-top-clearance:
+        calc(
+          env(safe-area-inset-top) +
+          var(--shell-topbar-height) +
+          var(--shell-topbar-offset, 0px) +
+          var(--space-2)
+        );
+      inset:
+        var(--workspace-mobile-filters-top-clearance)
+        0
+        0
+        0;
+      padding:
+        var(--space-3)
+        var(--space-3)
+        calc(var(--shell-mobile-nav-height) + env(safe-area-inset-bottom) + var(--space-2));
+    }
+
+    .workspace-mobile-filters-sheet__surface {
+      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      padding:
+        var(--space-2-5)
+        var(--space-3)
+        calc(var(--space-5) + env(safe-area-inset-bottom));
+    }
+  }
+}

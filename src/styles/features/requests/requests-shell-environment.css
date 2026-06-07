@@ -1,0 +1,1109 @@
+/* src/styles/features/requests/requests-shell-environment.css */
+
+@layer components {
+  .workspace-shared-context-controls {
+    --workspace-context-control-font-size: 12px;
+    display: grid;
+    gap: var(--workspace-environment-card-gap);
+  }
+
+  .workspace-environment,
+  .workspace-context-brief,
+  .workspace-context-rail {
+    --workspace-environment-section-gap: var(--layout-section-gap);
+    --workspace-environment-card-gap: var(--space-2);
+    --workspace-environment-card-pad: var(--home-panel-padding, var(--space-4));
+    --workspace-environment-chip-pad: var(--space-2);
+    --workspace-environment-title-size: var(--fs-h2);
+    --workspace-environment-body-size: var(--fs-body);
+    --workspace-environment-label-size: var(--fs-small);
+    --workspace-environment-title-line-height: var(--lh-title);
+    --workspace-environment-body-line-height: var(--lh-body);
+    --workspace-environment-tight-line-height: var(--lh-tight);
+  }
+
+  .workspace-environment {
+    display: grid;
+    gap: calc(var(--workspace-environment-section-gap) - var(--space-1));
+    position: relative;
+    padding-top: var(--space-2);
+  }
+
+  .workspace-environment__hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--workspace-environment-section-gap);
+    padding-inline: var(--space-1);
+  }
+
+  .workspace-environment__copy {
+    display: grid;
+    gap: var(--workspace-environment-card-gap);
+  }
+
+  .workspace-environment__eyebrow,
+  .workspace-context-brief__eyebrow {
+    margin: 0;
+    font-size: var(--workspace-environment-label-size);
+    line-height: var(--workspace-environment-tight-line-height);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-environment__heading {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .workspace-environment__title,
+  .workspace-context-brief__title,
+  .workspace-context-rail__title {
+    margin: 0;
+    font-size: var(--workspace-environment-title-size);
+    line-height: var(--workspace-environment-title-line-height);
+    font-weight: 750;
+    color: var(--c-text);
+  }
+
+  .workspace-environment__description,
+  .workspace-context-brief__description,
+  .workspace-context-rail__description {
+    margin: 0;
+    max-width: 68ch;
+    font-size: var(--workspace-environment-body-size);
+    line-height: var(--workspace-environment-body-line-height);
+    color: var(--c-text-muted);
+  }
+
+  .workspace-environment__shell-hint,
+  .workspace-context-brief__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(var(--space-8) + var(--space-1));
+    padding-inline: var(--workspace-environment-card-pad);
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 84%, var(--c-panel) 16%),
+        color-mix(in oklab, white 72%, var(--c-panel) 28%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 72%, transparent),
+      0 10px 24px color-mix(in oklab, var(--c-ink) 7%, transparent);
+    font-size: var(--workspace-environment-label-size);
+    line-height: 1;
+    font-weight: 650;
+    color: var(--c-text);
+    white-space: nowrap;
+  }
+
+  .workspace-mode-nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-2);
+    align-items: stretch;
+  }
+
+  .workspace-mode-nav__item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--workspace-environment-card-gap);
+    align-items: flex-start;
+    min-width: 0;
+    padding: var(--workspace-environment-card-pad);
+    min-height: 118px;
+    border-radius: 28px;
+    border: 1px solid color-mix(in oklab, white 76%, var(--c-border) 24%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 96%, var(--c-panel) 4%),
+        color-mix(in oklab, white 88%, var(--c-panel) 12%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 86%, transparent),
+      0 20px 42px color-mix(in oklab, var(--c-ink) 10%, transparent);
+    text-decoration: none;
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast),
+      background var(--transition-fast);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  .workspace-mode-nav__item:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, var(--c-primary) 24%, var(--c-border) 76%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 88%, transparent),
+      0 24px 44px color-mix(in oklab, var(--c-ink) 12%, transparent);
+  }
+
+  .workspace-mode-nav__item.is-active {
+    border-color: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-primary) 12%, white 88%),
+        color-mix(in oklab, var(--c-primary) 20%, white 80%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 90%, transparent),
+      0 26px 48px color-mix(in oklab, var(--c-primary) 16%, transparent);
+  }
+
+  .workspace-mode-nav__icon,
+  .workspace-context-strip__chip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--space-8) + var(--space-1));
+    height: calc(var(--space-8) + var(--space-1));
+    border-radius: var(--radius-md);
+    color: var(--c-text);
+    background: color-mix(in oklab, white 72%, var(--c-panel) 28%);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 66%, transparent);
+    flex: 0 0 auto;
+  }
+
+  .workspace-mode-nav__copy,
+  .workspace-context-strip__chip-copy {
+    display: grid;
+    gap: var(--space-0-5);
+    min-width: 0;
+  }
+
+  .workspace-mode-nav__label,
+  .workspace-context-strip__chip-value,
+  .workspace-context-brief__metric-value {
+    color: var(--c-text);
+    font-weight: 700;
+  }
+
+  .workspace-mode-nav__description,
+  .workspace-context-strip__chip-label,
+  .workspace-context-brief__metric-label {
+    color: var(--c-text-muted);
+    font-size: var(--workspace-environment-label-size);
+    line-height: var(--workspace-environment-body-line-height);
+  }
+
+  .workspace-context-strip {
+    display: grid;
+    gap: var(--workspace-environment-card-gap);
+    padding: clamp(18px, 2vw, 28px);
+    border-radius: 28px;
+    border: 1px solid color-mix(in oklab, var(--c-primary) 12%, var(--c-border) 88%);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in oklab, white 96%, var(--c-primary) 4%),
+        color-mix(in oklab, white 92%, var(--c-panel) 8%)
+      );
+    box-shadow:
+      0 22px 48px color-mix(in oklab, var(--c-ink) 9%, transparent),
+      inset 0 1px 0 color-mix(in oklab, white 84%, transparent);
+  }
+
+  .workspace-context-strip__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .workspace-context-strip__label {
+    font-size: var(--workspace-environment-label-size);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+  }
+
+  .workspace-mobile-context-section {
+    display: none;
+  }
+
+  .workspace-mobile-context-section__controls {
+    width: 100%;
+  }
+
+  .workspace-shared-context-controls--embedded {
+    gap: var(--space-3);
+  }
+
+  .workspace-shared-context-controls__desktop {
+    display: block;
+  }
+
+  .workspace-shared-context-controls__mobile {
+    display: none;
+  }
+
+  .workspace-shared-context-controls__mobile--inline {
+    display: none;
+    gap: var(--space-2);
+  }
+
+  .workspace-shared-context-controls__summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .workspace-shared-context-controls__surface {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .workspace-shared-context-controls__body {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .workspace-shared-context-controls__filters-grid {
+    gap: var(--space-2);
+    align-items: start;
+  }
+
+  .workspace-shared-context-controls__control-row {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .workspace-shared-context-controls__control-cluster {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    flex-wrap: nowrap;
+    padding: 8px;
+    border-radius: 16px;
+    border: 1px solid color-mix(in oklab, white 68%, var(--c-border) 32%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, white 80%, var(--c-panel) 20%),
+        color-mix(in oklab, white 72%, var(--c-panel) 28%)
+      );
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 76%, transparent);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-padding-inline: 8px;
+  }
+
+  .workspace-shared-context-controls__control-cluster::-webkit-scrollbar {
+    display: none;
+  }
+
+  .workspace-shared-context-controls__inline-control {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .workspace-shared-context-controls__combined-row {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    align-items: end;
+    gap: var(--space-3);
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .workspace-shared-context-controls__combined-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .workspace-shared-context-controls__combined-row > .requests-scope-switch {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .workspace-shared-context-controls__combined-row > .howitworks-tabs {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    grid-column: 2;
+    justify-self: center;
+    min-width: 0;
+  }
+
+  .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab,
+  .workspace-shared-context-controls__slash-tab,
+  .workspace-shared-context-controls__surface .dc-select-trigger,
+  .workspace-shared-context-controls__surface .dc-city-search-input,
+  .workspace-shared-context-controls__range-toolbar .home-activity__range {
+    font-size: var(--workspace-context-control-font-size);
+  }
+
+  .workspace-shared-context-controls__combined-states,
+  .workspace-shared-context-controls__chip-group {
+    width: auto;
+    flex-wrap: nowrap;
+  }
+
+  .workspace-shared-context-controls__combined-states {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .workspace-shared-context-controls__slash-tabs {
+    display: inline-flex;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    gap: 8px;
+    grid-column: 3;
+    justify-self: end;
+    padding: 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    white-space: nowrap;
+  }
+
+  .workspace-shared-context-controls__slash-tab {
+    position: relative;
+    align-self: flex-end;
+    margin-bottom: -1px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-bottom-color: transparent;
+    border-radius: 12px 12px 0 0;
+    background: transparent;
+    color: var(--c-text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .workspace-shared-context-controls__slash-tab:hover {
+    color: var(--c-text);
+    background: color-mix(in oklab, white 92%, var(--c-panel) 8%);
+    border-color: color-mix(in oklab, var(--control-border-hover) 78%, transparent);
+  }
+
+  .workspace-shared-context-controls__slash-tab:focus-visible {
+    outline: none;
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c-primary) 34%, transparent);
+  }
+
+  .workspace-shared-context-controls__slash-tab.is-active {
+    color: var(--c-text);
+    font-weight: 700;
+    border-color: color-mix(in oklab, var(--c-primary) 36%, var(--c-border) 64%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-primary) 10%, white 90%),
+        color-mix(in oklab, var(--c-primary) 16%, white 84%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 84%, transparent),
+      0 18px 34px color-mix(in oklab, var(--c-primary) 12%, transparent);
+  }
+
+  .workspace-shared-context-controls__range-row {
+    display: grid;
+    gap: var(--space-2);
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 240px) auto auto;
+  }
+
+  .workspace-shared-context-controls__sort-filter {
+    min-width: min(100%, 240px);
+  }
+
+  .workspace-shared-context-controls__action-row-control {
+    display: inline-flex;
+    align-items: center;
+    justify-self: end;
+  }
+
+  .workspace-shared-context-controls__range-toolbar {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .workspace-shared-context-controls__range-toolbar .home-activity__ranges {
+    flex-wrap: wrap;
+  }
+
+  .workspace-shared-context-controls__action,
+  .workspace-shared-context-controls__secondary-button {
+    min-height: 44px;
+    width: 44px;
+    min-width: 44px;
+    padding: 0;
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in oklab, white 68%, var(--c-border) 32%);
+    background: color-mix(in oklab, white 78%, var(--c-panel) 22%);
+    color: var(--c-text);
+    font-size: var(--workspace-environment-label-size);
+    font-weight: 650;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .workspace-shared-context-controls__action:hover,
+  .workspace-shared-context-controls__secondary-button:hover {
+    border-color: color-mix(in oklab, var(--c-primary) 22%, var(--c-border) 78%);
+    background: color-mix(in oklab, white 72%, var(--c-panel) 28%);
+    transform: translateY(-1px);
+  }
+
+  .workspace-shared-context-controls__mobile--inline .workspace-shared-context-controls__surface {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .workspace-shared-context-controls__mobile--inline .workspace-shared-context-controls__action {
+    justify-self: start;
+  }
+
+  .workspace-context-strip__chips {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .workspace-context-strip__chip {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--workspace-environment-card-gap);
+    align-items: center;
+    min-width: 0;
+    padding: var(--workspace-environment-chip-pad);
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in oklab, white 70%, var(--c-border) 30%);
+    background: color-mix(in oklab, white 78%, var(--c-panel) 22%);
+  }
+
+  .workspace-context-brief {
+    display: grid;
+    gap: var(--workspace-environment-section-gap);
+    padding: var(--workspace-environment-card-pad);
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 16%, var(--c-border) 84%);
+    background:
+      linear-gradient(
+        145deg,
+        color-mix(in oklab, white 90%, var(--c-primary) 10%),
+        color-mix(in oklab, white 82%, var(--c-panel) 18%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 76%, transparent),
+      0 18px 32px color-mix(in oklab, var(--c-ink) 8%, transparent);
+  }
+
+  .workspace-context-brief__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--workspace-environment-section-gap);
+  }
+
+  .workspace-context-brief__metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .workspace-context-brief__metric {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-2-5);
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in oklab, white 68%, var(--c-border) 32%);
+    background: color-mix(in oklab, white 76%, var(--c-panel) 24%);
+  }
+
+  .workspace-context-rail {
+    display: grid;
+    gap: var(--workspace-environment-section-gap);
+  }
+
+  .workspace-context-rail__panel {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .workspace-context-rail__subtitle-placeholder {
+    display: -webkit-box;
+    min-height: calc(2 * 1.35em);
+    margin: 0;
+    visibility: hidden;
+    pointer-events: none;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  html.dark .workspace-environment__shell-hint,
+  html.dark .workspace-context-brief__badge {
+    border-color: color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 88%, white 12%),
+        color-mix(in oklab, var(--c-panel) 94%, white 6%)
+      );
+  }
+
+  html.dark .workspace-mode-nav__item,
+  html.dark .workspace-context-strip,
+  html.dark .workspace-context-strip__chip,
+  html.dark .workspace-context-brief,
+  html.dark .workspace-context-brief__metric {
+    border-color: color-mix(in oklab, var(--c-border) 84%, white 16%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 90%, white 10%),
+        color-mix(in oklab, var(--c-panel) 96%, white 4%)
+      );
+  }
+
+  html.dark .workspace-mode-nav__item.is-active {
+    border-color: color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 78%, var(--c-primary) 22%),
+        color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%)
+      );
+  }
+
+  html.dark .workspace-mode-nav__icon,
+  html.dark .workspace-context-strip__chip-icon {
+    background: color-mix(in oklab, var(--c-panel) 82%, white 18%);
+  }
+
+  html.dark .workspace-shared-context-controls__action,
+  html.dark .workspace-shared-context-controls__secondary-button {
+    border-color: color-mix(in oklab, var(--c-border) 84%, white 16%);
+    background: color-mix(in oklab, var(--c-panel) 92%, white 8%);
+  }
+
+  html.dark .workspace-shared-context-controls__control-cluster {
+    border-color: color-mix(in oklab, var(--c-border) 84%, white 16%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 88%, white 12%),
+        color-mix(in oklab, var(--c-panel) 94%, white 6%)
+      );
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+  }
+
+  html.dark .workspace-shared-context-controls__slash-tab {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  html.dark .workspace-shared-context-controls__slash-tab:hover {
+    background: color-mix(in oklab, var(--c-panel) 88%, white 12%);
+    border-color: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+  }
+
+  html.dark .workspace-shared-context-controls__slash-tab:focus-visible {
+    border-color: color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c-primary) 38%, transparent);
+  }
+
+  html.dark .workspace-shared-context-controls__slash-tab.is-active {
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 78%, var(--c-primary) 22%),
+        color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%)
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+      0 18px 34px color-mix(in oklab, var(--c-primary) 12%, transparent);
+  }
+
+  @media (max-width: 1199px) {
+    .workspace-mode-nav {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .workspace-mode-nav__item,
+    .workspace-mode-nav__item[data-mode-key='analysis'],
+    .workspace-mode-nav__item[data-mode-key='actions'] {
+      grid-column: span 1;
+      min-height: 108px;
+    }
+
+    .workspace-context-strip__chips {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .workspace-environment,
+    .workspace-context-brief,
+    .workspace-context-rail {
+      --workspace-environment-section-gap: var(--space-3);
+      --workspace-environment-card-gap: 10px;
+      --workspace-environment-card-pad: 12px;
+      --workspace-environment-title-size: clamp(22px, 6vw, 28px);
+      --workspace-environment-body-size: 13px;
+      --workspace-environment-label-size: 11px;
+    }
+
+    .workspace-environment__hero,
+    .workspace-context-strip__header,
+    .workspace-context-brief__head {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .workspace-environment__heading {
+      gap: 6px;
+    }
+
+    .workspace-environment__shell-hint {
+      min-height: 36px;
+      padding-inline: 12px;
+    }
+
+    .workspace-mode-nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .workspace-mode-nav__item,
+    .workspace-mode-nav__item[data-mode-key='analysis'],
+    .workspace-mode-nav__item[data-mode-key='actions'] {
+      border-radius: 16px;
+      min-height: 100%;
+      grid-column: span 1;
+    }
+
+    .workspace-mode-nav__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+    }
+
+    .workspace-mode-nav__label {
+      font-size: 13px;
+      line-height: 1.15;
+    }
+
+    .workspace-mode-nav__description {
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .workspace-context-strip__chips,
+    .workspace-context-brief__metrics {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-shared-context-controls--header {
+      display: none;
+    }
+
+    .workspace-mobile-context-section {
+      display: grid;
+      gap: 10px;
+      margin-top: -2px;
+    }
+
+    .workspace-shared-context-controls__desktop {
+      display: none;
+    }
+
+    .workspace-shared-context-controls__mobile {
+      display: block;
+    }
+
+    .workspace-shared-context-controls__mobile--inline {
+      display: grid;
+    }
+
+    .workspace-mobile-context-section__controls {
+      --workspace-mobile-context-border: color-mix(in oklab, var(--c-primary) 14%, var(--surface-card-border) 86%);
+      --workspace-mobile-context-bg:
+        linear-gradient(
+          180deg,
+          color-mix(in oklab, white 96%, var(--surface-card-bg) 4%) 0%,
+          color-mix(in oklab, white 88%, var(--surface-card-bg) 12%) 100%
+        );
+      --workspace-mobile-context-shadow:
+        0 12px 28px color-mix(in oklab, var(--c-ink) 7%, transparent),
+        inset 0 1px 0 color-mix(in oklab, white 78%, transparent);
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--workspace-mobile-context-border);
+      background: var(--workspace-mobile-context-bg);
+      box-shadow: var(--workspace-mobile-context-shadow);
+    }
+
+    html.dark .workspace-mobile-context-section__controls {
+      --workspace-mobile-context-border: color-mix(in oklab, var(--c-primary) 16%, var(--c-border) 84%);
+      --workspace-mobile-context-bg:
+        linear-gradient(
+          180deg,
+          color-mix(in oklab, var(--c-panel) 90%, white 10%) 0%,
+          color-mix(in oklab, var(--c-panel) 96%, white 4%) 100%
+        );
+      --workspace-mobile-context-shadow:
+        0 14px 28px color-mix(in oklab, var(--c-ink) 20%, transparent),
+        inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+    }
+
+    .workspace-mobile-context-section__controls.workspace-context-strip {
+      gap: 12px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-strip__header {
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-context-strip__label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__summary {
+      gap: 6px;
+      margin-top: -2px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
+      min-height: 28px;
+      padding-inline: 10px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in oklab, var(--surface-soft-border) 62%, transparent);
+      background: color-mix(in oklab, white 72%, var(--c-panel) 28%);
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      color: color-mix(in oklab, var(--c-text-muted) 76%, var(--c-text) 24%);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip:first-child {
+      background: color-mix(in oklab, var(--c-primary) 10%, white 90%);
+      border-color: color-mix(in oklab, var(--c-primary) 22%, var(--surface-soft-border) 78%);
+      color: color-mix(in oklab, var(--c-primary) 52%, var(--c-text) 48%);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__body {
+      gap: 10px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__filters-grid,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-row {
+      gap: 10px;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__control-cluster {
+      padding: 6px;
+      border-radius: 14px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+      overflow: visible;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__inline-control {
+      display: block;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .workspace-shared-context-controls__slash-tabs {
+      grid-column: auto;
+      justify-self: stretch;
+      width: 100%;
+      min-width: 0;
+      padding: 6px;
+      border: 1px solid color-mix(in oklab, white 34%, var(--c-border) 66%);
+      border-radius: 14px;
+      background: color-mix(in oklab, white 52%, transparent);
+      box-shadow: inset 0 1px 0 color-mix(in oklab, white 72%, transparent);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      border-bottom: 0;
+      white-space: normal;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch .requests-scope-switch__item {
+      min-width: 0;
+      min-height: 38px;
+      margin-bottom: 0;
+      padding: 8px 10px;
+      border-width: 1px;
+      border-bottom-color: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+      border-radius: 12px;
+      background: color-mix(in oklab, white 88%, var(--c-panel) 12%);
+      color: color-mix(in oklab, var(--c-text-muted) 84%, var(--c-text) 16%);
+      text-align: center;
+      line-height: 1.2;
+      box-shadow: inset 0 1px 0 color-mix(in oklab, white 74%, transparent);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      padding: 6px;
+      border-radius: 14px;
+      white-space: normal;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 38px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: color-mix(in oklab, white 86%, var(--c-panel) 14%);
+      color: color-mix(in oklab, var(--c-text-muted) 84%, var(--c-text) 16%);
+      text-align: center;
+      line-height: 1.2;
+      white-space: normal;
+      box-shadow: inset 0 1px 0 color-mix(in oklab, white 72%, transparent);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tabs {
+      margin-left: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      padding: 0;
+      border-bottom: 0;
+      white-space: normal;
+      overflow: visible;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tab {
+      align-self: stretch;
+      min-width: 0;
+      min-height: 38px;
+      margin-bottom: 0;
+      padding: 8px 10px;
+      border-width: 1px;
+      border-bottom-color: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+      border-radius: 12px;
+      background: color-mix(in oklab, white 88%, var(--c-panel) 12%);
+      color: color-mix(in oklab, var(--c-text-muted) 84%, var(--c-text) 16%);
+      text-align: center;
+      line-height: 1.2;
+      box-shadow: inset 0 1px 0 color-mix(in oklab, white 74%, transparent);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch .requests-scope-switch__item.is-active,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab.is-active,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tab.is-active {
+      color: var(--c-text);
+      border-color: color-mix(in oklab, var(--c-primary) 32%, var(--c-border) 68%);
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in oklab, var(--c-primary) 12%, white 88%),
+          color-mix(in oklab, var(--c-primary) 18%, white 82%)
+        );
+      box-shadow:
+        inset 0 1px 0 color-mix(in oklab, white 84%, transparent),
+        0 12px 22px color-mix(in oklab, var(--c-primary) 10%, transparent);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch .requests-scope-switch__item:not(.is-active):hover,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab:not(.is-active):hover,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tab:not(.is-active):hover {
+      color: var(--c-text);
+      border-color: color-mix(in oklab, var(--control-border-hover) 76%, transparent);
+      background: color-mix(in oklab, white 92%, var(--c-panel) 8%);
+    }
+
+    html.dark .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch .requests-scope-switch__item,
+    html.dark .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab,
+    html.dark .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tab {
+      background: color-mix(in oklab, var(--c-panel) 90%, white 10%);
+      color: color-mix(in oklab, var(--c-text-muted) 82%, var(--c-text) 18%);
+      box-shadow: inset 0 1px 0 color-mix(in oklab, white 10%, transparent);
+    }
+
+    html.dark .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch .requests-scope-switch__item.is-active,
+    html.dark .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab.is-active,
+    html.dark .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tab.is-active {
+      color: var(--c-text);
+      border-color: color-mix(in oklab, var(--c-primary) 38%, var(--c-border) 62%);
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in oklab, var(--c-panel) 78%, var(--c-primary) 22%),
+          color-mix(in oklab, var(--c-panel) 90%, var(--c-primary) 10%)
+        );
+      box-shadow:
+        inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+        0 12px 22px color-mix(in oklab, var(--c-primary) 12%, transparent);
+    }
+
+    html.dark .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch .requests-scope-switch__item:not(.is-active):hover,
+    html.dark .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs .howitworks-tab:not(.is-active):hover,
+    html.dark .workspace-mobile-context-section__controls .workspace-shared-context-controls__slash-tab:not(.is-active):hover {
+      background: color-mix(in oklab, var(--c-panel) 84%, white 16%);
+      border-color: color-mix(in oklab, var(--c-primary) 18%, var(--c-border) 82%);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__select {
+      min-height: 44px;
+      border-radius: 14px;
+      font-size: 13px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-toolbar {
+      padding: 8px;
+      border-radius: 14px;
+      border: 1px solid color-mix(in oklab, white 34%, var(--c-border) 66%);
+      background: color-mix(in oklab, white 52%, transparent);
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-toolbar .home-activity__ranges {
+      gap: 6px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__action {
+      width: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      border-radius: 12px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__sort-filter {
+      min-width: 0;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-row {
+      gap: 12px;
+    }
+
+  }
+
+  @media (max-width: 420px) {
+    .workspace-environment {
+      --workspace-environment-card-pad: 10px;
+      --workspace-environment-body-size: 12px;
+      --workspace-environment-label-size: 10px;
+    }
+
+    .workspace-mode-nav {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .workspace-mode-nav__item,
+    .workspace-mode-nav__item[data-mode-key='analysis'],
+    .workspace-mode-nav__item[data-mode-key='actions'] {
+      border-radius: 14px;
+      grid-column: auto;
+    }
+
+    .workspace-mode-nav__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+    }
+
+    .workspace-mode-nav__label {
+      font-size: 12px;
+    }
+
+    .workspace-mode-nav__description {
+      font-size: 10px;
+    }
+
+    .workspace-shared-context-controls__summary {
+      gap: 6px;
+    }
+
+    .workspace-mobile-context-section {
+      gap: 8px;
+    }
+
+    .workspace-mobile-context-section__controls {
+      padding: 10px;
+      border-radius: 16px;
+    }
+
+    .workspace-mobile-context-section__controls.workspace-context-strip {
+      gap: 10px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-mobile-filters__summary-chip {
+      min-height: 26px;
+      padding-inline: 9px;
+      font-size: 9px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row {
+      gap: 10px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .requests-scope-switch,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .howitworks-tabs,
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__combined-row > .workspace-shared-context-controls__slash-tabs {
+      padding: 5px;
+      border-radius: 12px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__select {
+      min-height: 42px;
+      font-size: 12px;
+    }
+
+    .workspace-mobile-context-section__controls .workspace-shared-context-controls__range-toolbar {
+      padding: 7px;
+      border-radius: 12px;
+    }
+  }
+}

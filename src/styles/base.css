@@ -1,38 +1,19 @@
 /* src/styles/base.css */
-
 @layer base {
   html {
-    min-height: 100%;
+    font-family: var(--font-sans);
     margin: 0;
     padding: 0;
-    font-family: var(--font-sans);
-    background: var(--color-background);
-    color: var(--color-text);
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     min-height: 100dvh;
     margin: 0;
     padding: 0;
-    background: var(--color-background);
-    color: var(--color-text);
-  }
-
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  p {
-    margin: 0;
+    background: var(--c-bg);
+    background-image: var(--c-bg-gradient);
+    background-attachment: fixed;
+    color: var(--c-text);
   }
 
   h1 {
@@ -40,50 +21,23 @@
     line-height: var(--lh-tight);
     font-weight: 800;
     letter-spacing: -0.01em;
-    color: var(--color-text);
   }
 
   h2 {
     font-size: var(--fs-h2);
     line-height: var(--lh-title);
     font-weight: 700;
-    color: var(--color-text);
   }
 
   h3 {
     font-size: var(--fs-h3);
     line-height: var(--lh-title);
     font-weight: 600;
-    color: var(--color-text);
   }
 
   p {
     font-size: var(--fs-body);
     line-height: var(--lh-body);
-    color: inherit;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  button,
-  input,
-  select,
-  textarea {
-    font: inherit;
-  }
-
-  button {
-    cursor: pointer;
-  }
-
-  button:disabled,
-  input:disabled,
-  select:disabled,
-  textarea:disabled {
-    cursor: not-allowed;
   }
 
   select.field {
@@ -97,20 +51,15 @@
     display: none;
   }
 
-  img,
-  svg,
-  video,
-  canvas,
-  iframe {
-    max-width: 100%;
-  }
-
   @media (max-width: 768px) {
     html,
     body {
+      overflow-x: clip;
+    }
+
+    body {
       width: 100%;
       max-width: 100%;
-      overflow-x: clip;
     }
 
     main,
@@ -153,6 +102,14 @@
     textarea,
     button {
       min-width: 0;
+      max-width: 100%;
+    }
+
+    img,
+    svg,
+    video,
+    canvas,
+    iframe {
       max-width: 100%;
     }
   }

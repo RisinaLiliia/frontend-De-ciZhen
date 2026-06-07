@@ -8,7 +8,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { RequestResponseDto } from '@/lib/api/dto/requests';
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
-import { workspaceQK } from '@/features/workspace/data';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type RouterLike = {
   push: (href: string) => void;

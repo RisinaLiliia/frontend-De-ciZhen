@@ -33,9 +33,13 @@
     grid-area: main;
   }
 
-.home-skeleton-card {
-  padding: var(--home-panel-padding);
-}
+  .home-skeleton-card {
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
+    box-shadow: var(--shadow-card);
+    padding: var(--home-panel-padding);
+  }
 
   .home-combined-top,
   .home-combined,

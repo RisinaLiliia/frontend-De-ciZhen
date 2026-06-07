@@ -93,11 +93,9 @@ describe('requestsExplorerRequestsData.model', () => {
   });
 
   it('resolves offer and login hrefs consistently', () => {
-    expect(resolveRequestsExplorerOfferHref('request-123')).toBe(
-      '/workspace?section=requests&scope=market&requestId=request-123&requestPanel=offer',
-    );
+    expect(resolveRequestsExplorerOfferHref('request-123')).toBe('/requests/request-123?offer=1');
     expect(resolveRequestsExplorerLoginHref('request-123')).toBe(
-      '/auth/login?next=%2Fworkspace%3Fsection%3Drequests%26scope%3Dmarket%26requestId%3Drequest-123%26requestPanel%3Doffer',
+      '/auth/login?next=%2Frequests%2Frequest-123%3Foffer%3D1',
     );
   });
 

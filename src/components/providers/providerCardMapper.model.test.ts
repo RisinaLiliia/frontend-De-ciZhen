@@ -88,7 +88,7 @@ describe('providerCardMapper.model', () => {
       }),
     ).toEqual([
       expect.objectContaining({ variant: 'info', tone: 'soft' }),
-      expect.objectContaining({ variant: 'success', tone: 'soft' }),
+      expect.objectContaining({ variant: 'opportunity', tone: 'soft' }),
     ]);
 
     expect(resolveProviderIsVerified(provider({ ratingCount: 31 }))).toBe(true);

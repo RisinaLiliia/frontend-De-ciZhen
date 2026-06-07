@@ -1,9 +1,25 @@
 /* src/styles/features/components/components-ui-base-buttons-ghost-meta.css */
 
 @layer components {
+  .btn-ghost {
+    @apply w-full font-semibold inline-flex items-center justify-center;
+    border-radius: var(--radius-md);
+    height: calc(var(--btn-h) - 10px);
+    font-size: calc(var(--btn-font) - 1px);
+    padding: 0 calc(var(--btn-pad-x) - 6px);
+    background: var(--control-bg);
+    border: 1px solid var(--control-border);
+    color: var(--c-text);
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
   .request-meta-inline {
     display: grid;
-    gap: var(--space-2);
+    gap: 8px;
     padding: 10px 12px;
     border-radius: var(--radius-md);
     border: 1px solid var(--surface-soft-border);
@@ -14,11 +30,11 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: var(--space-2-5);
+    gap: 10px;
   }
 
   .request-meta-inline__title {
-    font-size: var(--fs-14);
+    font-size: 14px;
     font-weight: 700;
     line-height: 1.25;
   }
@@ -26,7 +42,7 @@
   .request-meta-inline__price {
     font-size: 16px;
     font-weight: 700;
-    color: color-mix(in oklab, var(--color-warning) 78%, var(--color-text) 22%);
+    color: color-mix(in oklab, var(--c-accent) 78%, var(--c-text) 22%);
     white-space: nowrap;
   }
 
@@ -34,30 +50,60 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-2-5);
+    gap: 10px;
   }
 
   .request-meta-inline__item {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-1-5);
-    font-size: var(--fs-13);
-    color: var(--color-text-muted);
+    gap: 6px;
+    font-size: 13px;
+    color: var(--c-text-muted);
   }
 
   .request-meta-inline__item svg {
     width: 14px;
     height: 14px;
-    color: color-mix(in oklab, var(--color-primary) 70%, var(--color-text-muted) 30%);
+    color: color-mix(in oklab, var(--c-primary) 70%, var(--c-text-muted) 30%);
   }
 
-  :is(.btn-ghost, .app-button-ghost).is-primary {
-    border-color: color-mix(in oklab, var(--color-primary) 26%, var(--color-border) 74%);
-    color: var(--color-primary);
-    background: color-mix(in oklab, var(--color-primary) 8%, var(--color-surface) 92%);
+  .btn-ghost:hover {
+    transform: translateY(-1px);
+    border-color: var(--control-border-hover);
+    background: var(--control-bg-hover);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 12%, transparent);
   }
 
-  :is(.btn-ghost, .app-button-ghost).is-primary:hover {
-    background: color-mix(in oklab, var(--color-primary) 16%, var(--color-surface) 84%);
+  .btn-ghost:active {
+    transform: translateY(0);
   }
+
+  .btn-ghost:focus-visible {
+    outline: none;
+    box-shadow: var(--control-focus-ring);
+  }
+
+  .btn-ghost.is-accent {
+    border-color: color-mix(in oklab, var(--c-accent) 34%, var(--c-border) 66%);
+    color: var(--c-accent);
+    background: color-mix(in oklab, var(--c-accent) 8%, var(--c-panel) 92%);
+  }
+
+  .btn-ghost.is-accent:hover {
+    background: color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 16%, transparent);
+  }
+
+  .btn-ghost.is-primary {
+    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
+    color: var(--c-text);
+    background: color-mix(in oklab, var(--c-primary) 10%, var(--c-panel) 90%);
+  }
+
+  .btn-ghost.is-primary:hover {
+    background: color-mix(in oklab, var(--c-primary) 16%, var(--c-panel) 84%);
+    box-shadow: 0 8px 18px color-mix(in oklab, var(--c-primary) 14%, transparent);
+  }
+
+
 }

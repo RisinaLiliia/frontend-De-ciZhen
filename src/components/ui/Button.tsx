@@ -53,7 +53,7 @@ export function Button({
       aria-busy={loading || undefined}
       {...props}
     >
-      <span className={cn('inline-flex items-center justify-center gap-2', loading && 'min-w-20')}>
+      <span className={cn('inline-flex items-center justify-center gap-2', loading && 'min-w-[80px]')}>
         {loading ? (
           <>
             <span aria-hidden="true">

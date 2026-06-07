@@ -17,29 +17,35 @@
   }
 
   .provider-card {
-    --provider-card-min-height: var(--workspace-list-card-min-height, 184px);
-    --provider-card-inline-pad: var(--workspace-list-card-inline-pad, 16px);
-    --provider-card-block-pad: var(--workspace-list-card-block-pad, 16px);
-    --provider-card-avatar-column-width: 118px;
-    --profile-avatar-size: calc(var(--provider-card-avatar-column-width) - 22px);
-    --profile-avatar-font-size: var(--fs-20);
-    --profile-avatar-status-size: 13px;
-    --provider-card-avatar-block-offset: 30px;
-    --provider-card-favorite-size: 30px;
-    --provider-card-eyebrow-size: var(--fs-10);
-    --provider-card-eyebrow-line-height: 1.2;
-    --provider-card-eyebrow-tracking: 0.06em;
-    --provider-card-title-size: 16px;
-    --provider-card-title-line-height: 1.28;
-    --provider-card-body-size: var(--fs-12);
-    --provider-card-body-line-height: 1.4;
-    --provider-card-meta-size: var(--fs-12);
-    --provider-card-meta-line-height: 1.3;
-    --provider-card-meta-icon-size: 15px;
+    --provider-card-min-height: 194px;
+    --provider-card-inline-pad: 16px;
+    --provider-card-block-pad: 16px;
+    --provider-card-corner-offset: 14px;
+    --provider-card-badge-strip-height: 28px;
+    --provider-card-top-gap: var(--space-2-5);
+    --provider-card-top-reserve: calc(
+      var(--provider-card-corner-offset) + var(--provider-card-badge-strip-height) + var(--provider-card-top-gap)
+    );
     display: grid;
     gap: var(--space-3);
     padding: 0;
-    border-radius: inherit;
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--c-panel) 98%, transparent) 0%,
+        color-mix(in oklab, var(--c-panel) 94%, transparent) 45%,
+        color-mix(in oklab, var(--c-ink) 85%, transparent) 100%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 98%, transparent),
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%)
+      );
+    box-shadow:
+      var(--shadow-card),
+      0 10px 24px color-mix(in oklab, var(--c-primary) 8%, transparent);
     position: relative;
     container-type: inline-size;
     min-width: 0;
@@ -52,8 +58,14 @@
       box-shadow var(--transition);
   }
 
-  .provider-card.has-favorite-toggle {
-    --provider-card-avatar-block-offset: 0px;
+  html:not(.dark) .provider-card {
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 18%, var(--c-border) 82%);
+    background: linear-gradient(
+      180deg,
+      var(--c-panel) 0%,
+      color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%
+    );
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--c-ink) 18%, transparent);
   }
 
   .provider-card__overlay-link {
@@ -65,39 +77,39 @@
   }
 
   .provider-card:focus-within {
-    border-color: var(--color-primary-border);
+    border-color: color-mix(in oklab, var(--c-primary) 45%, var(--c-border) 55%);
     box-shadow:
       var(--shadow-card),
-      0 0 0 3px color-mix(in oklab, var(--color-primary) 14%, transparent);
+      0 0 0 3px var(--focus-ring-primary);
   }
 
   .provider-card__favorite {
-    position: static;
-    transform: none;
-    width: var(--provider-card-favorite-size);
-    height: var(--provider-card-favorite-size);
+    position: absolute;
+    top: var(--provider-card-corner-offset);
+    right: var(--provider-card-inline-pad);
+    width: 30px;
+    height: 30px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    z-index: auto;
-    flex: 0 0 auto;
+    z-index: 3;
   }
 
-  .profile-card,
-  .profile-avatar-stack {
+  .provider-info,
+  .provider-avatar-stack {
     position: relative;
     z-index: 2;
   }
 
-  .profile-card {
+  .provider-info {
     display: flex;
     align-items: center;
     gap: var(--space-3);
   }
 
-  .provider-card .profile-card {
+  .provider-card .provider-info {
     display: grid;
-    grid-template-columns: var(--provider-card-avatar-column-width) minmax(0, 1fr);
+    grid-template-columns: minmax(56px, auto) minmax(0, 1fr);
     align-items: start;
     gap: var(--space-3);
     min-height: 100%;
@@ -106,7 +118,10 @@
 
   .provider-card__top {
     height: 100%;
-    padding: var(--provider-card-block-pad) var(--provider-card-inline-pad);
+    padding:
+      var(--provider-card-top-reserve)
+      var(--provider-card-inline-pad)
+      var(--provider-card-block-pad);
     pointer-events: none;
   }
 
@@ -116,13 +131,5 @@
     pointer-events: auto;
   }
 
-  @container (max-width: 430px) {
-    .provider-card {
-      --provider-card-avatar-column-width: 104px;
-      --profile-avatar-font-size: var(--fs-18);
-      --profile-avatar-status-size: 12px;
-      --provider-card-avatar-block-offset: 26px;
-      --provider-card-favorite-size: 28px;
-    }
-  }
+
 }

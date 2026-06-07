@@ -1,16 +1,16 @@
 /* src/styles/features/components/components-core-mobile-nav-shell.css */
 
 @layer components {
-  @media (min-width: 768px) {
-    .workspace-mobile-dock {
+  @media (min-width: 821px) {
+    .topbar-nav--mobile {
       display: none;
     }
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 820px) {
     .topbar__inner {
       padding-inline: var(--shell-inline-padding, 12px);
-      border-radius: var(--radius-xl);
+      border-radius: 20px;
     }
 
     .topbar__inner--with-center {
@@ -33,7 +33,7 @@
   .page-shell__topbar-actions {
     display: inline-flex;
     align-items: center;
-    gap: var(--layout-gap-xs);
+    gap: 8px;
     min-width: 0;
     max-width: 100%;
     flex-wrap: nowrap;
@@ -41,7 +41,7 @@
   }
 
   .page-shell__topbar-actions > .flex {
-    gap: var(--layout-gap-xs);
+    gap: 8px;
     min-width: 0;
     max-width: 100%;
     flex-wrap: nowrap;

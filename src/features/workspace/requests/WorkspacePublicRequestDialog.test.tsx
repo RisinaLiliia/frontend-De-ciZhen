@@ -3,7 +3,7 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { PublicRequestDialog } from '@/features/workspace/overlays/PublicRequestDialog';
+import { WorkspacePublicRequestDialog } from '@/features/workspace/requests/WorkspacePublicRequestDialog';
 
 let authStatusValue: 'guest' | 'authenticated' = 'guest';
 let authUserValue: { id: string } | null = null;
@@ -47,7 +47,7 @@ const defaultRequestDetailsPageData = {
 let requestDetailsPageDataValue: unknown = defaultRequestDetailsPageData;
 const requestDetailsPageDataMock = vi.fn(() => requestDetailsPageDataValue);
 
-vi.mock('@/features/workspace/requests/details/useRequestDetailsPageData', () => ({
+vi.mock('@/features/requests/details/useRequestDetailsPageData', () => ({
   useRequestDetailsPageData: () => requestDetailsPageDataMock(),
 }));
 
@@ -85,11 +85,11 @@ const defaultRequestDetailsContentState = {
 let requestDetailsContentStateValue: unknown = defaultRequestDetailsContentState;
 const requestDetailsContentStateMock = vi.fn(() => requestDetailsContentStateValue);
 
-vi.mock('@/features/workspace/requests/details/useRequestDetailsContentState', () => ({
+vi.mock('@/features/requests/details/useRequestDetailsContentState', () => ({
   useRequestDetailsContentState: () => requestDetailsContentStateMock(),
 }));
 
-vi.mock('@/features/workspace/requests/details/RequestDetailsContent', () => ({
+vi.mock('@/features/requests/details/RequestDetailsContent', () => ({
   RequestDetailsContent: ({
     onApply,
     headerActionSlot,
@@ -109,7 +109,7 @@ vi.mock('@/features/workspace/requests/details/RequestDetailsContent', () => ({
   ),
 }));
 
-describe('PublicRequestDialog', () => {
+describe('WorkspacePublicRequestDialog', () => {
   afterEach(() => {
     cleanup();
     authStatusValue = 'guest';
@@ -164,7 +164,7 @@ describe('PublicRequestDialog', () => {
     };
 
     render(
-      <PublicRequestDialog
+      <WorkspacePublicRequestDialog
         locale="de"
         requestId="req-1"
         initialIntent="view"
@@ -239,7 +239,7 @@ describe('PublicRequestDialog', () => {
     };
 
     render(
-      <PublicRequestDialog
+      <WorkspacePublicRequestDialog
         locale="de"
         requestId="req-1"
         initialIntent="view"
@@ -294,7 +294,7 @@ describe('PublicRequestDialog', () => {
     };
 
     render(
-      <PublicRequestDialog
+      <WorkspacePublicRequestDialog
         locale="de"
         requestId="req-1"
         initialIntent="view"

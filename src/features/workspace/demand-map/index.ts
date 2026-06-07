@@ -1,1 +1,0 @@
-export { WorkspacePublicDemandMapPanel } from './WorkspacePublicDemandMapPanel';

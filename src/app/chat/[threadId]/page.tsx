@@ -6,5 +6,5 @@ export default async function LegacyChatThreadPage({
   params: Promise<{ threadId: string }>;
 }) {
   const resolved = await params;
-  redirect(`/workspace?section=chat&conversation=${encodeURIComponent(resolved.threadId)}`);
+  redirect(`/chat?conversation=${encodeURIComponent(resolved.threadId)}`);
 }
