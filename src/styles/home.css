@@ -1,5 +1,4 @@
 /* src/styles/home.css */
-@import './features/home/home-product-entry.css';
 @import './features/home/home-content-proof-proof.css';
 @import './features/home/home-content-proof-responsive.css';
 @import './features/home/home-content-layout-trust-panel-shell.css';
@@ -9,4 +8,4 @@
 @import './features/home/home-intro-hero-shot-keyframes.css';
 @import './features/home/home-intro-hero-shot-mobile-keyframes.css';
 @import './features/home/home-trust-responsive.css';
-@import './features/home/home-product-entry.css';
+
