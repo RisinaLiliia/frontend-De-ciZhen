@@ -5,8 +5,8 @@
     flex-wrap: wrap;
     gap: var(--space-1-5);
     min-width: 0;
-    color: var(--color-text-muted);
-    font-size: var(--fs-12);
+    color: var(--c-text-muted);
+    font-size: 12px;
     line-height: 1.3;
   }
 
@@ -22,11 +22,11 @@
 
   .request-tag {
     padding: var(--space-1-5) var(--space-2-5);
-    border-radius: var(--radius-pill);
-    font-size: var(--fs-12);
-    background: var(--color-surface-muted);
-    border: 1px solid var(--color-border-soft);
-    color: var(--color-text);
+    border-radius: 999px;
+    font-size: 12px;
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    color: var(--c-text);
   }
 
   .request-card__actions {
@@ -53,14 +53,15 @@
   }
 
   .request-card--skeleton .request-card__media {
-    background: var(--color-surface-soft);
+    background: color-mix(in oklab, var(--c-panel) 85%, var(--c-border) 15%);
   }
 
   .request-card-link.is-active {
-    border-color: var(--color-primary-border);
+    border-color: color-mix(in oklab, var(--c-primary) 46%, var(--c-border) 54%);
     box-shadow:
       var(--shadow-card),
-      0 0 0 1px color-mix(in oklab, var(--color-primary) 18%, transparent);
+      0 8px 18px color-mix(in oklab, var(--c-primary) 12%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--c-primary) 18%, transparent);
     transform: translateY(-1px);
   }
 
@@ -78,11 +79,11 @@
   }
 
   .request-category {
-    font-size: var(--fs-10);
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
   }
 
   .request-badges {
@@ -105,5 +106,9 @@
   .request-badges .ui-badge {
     min-height: 26px;
     padding-inline: 10px;
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, white 72%, transparent),
+      0 6px 14px color-mix(in oklab, var(--c-shadow) 10%, transparent);
   }
+
 }

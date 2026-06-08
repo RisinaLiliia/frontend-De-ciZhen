@@ -1,124 +1,85 @@
 /* src/styles/themes-tokens-dark.css */
-
 .dark {
-  --bg: 225 17% 7%;
-  --surface: 222 18% 11%;
-  --panel: 222 18% 14%;
-  --text: 48 22% 94%;
-  --muted: 220 10% 68%;
-  --border: 222 16% 22%;
-  --primary: 231 38% 76%;
-  --accent: 38 48% 68%;
+  --bg: 222 26% 11%;
+  --surface: 222 24% 14%;
+  --panel: 222 24% 18%;
+  --text: 210 40% 96%;
+  --muted: 215 20% 65%;
+  --border: 220 20% 25%;
+  --primary: 221 100% 74%;
+  --accent: 38 90% 65%;
   --background: var(--bg);
   --foreground: var(--text);
 
-  --color-ivory: #0f1115;
-  --color-stone: #171a21;
-  --color-ink: #f5f5f2;
+  --c-bg: #141a24;
+  --c-bg-gradient: radial-gradient(
+      circle at 20% 0%,
+      color-mix(in oklab, var(--c-panel) 42%, transparent),
+      transparent
+    ),
+    linear-gradient(180deg, #161c27 0%, #101621 100%);
+  --c-surface: #1b2230;
+  --c-panel: #232c3d;
+  --c-text: #f1f5f9;
+  --c-muted: #a7b2c6;
+  --c-text-muted: #a7b2c6;
+  --c-border: #2f3a4f;
 
-  --color-background: #0f1115;
-  --color-surface: #171a21;
-  --color-surface-muted: #1c2028;
-  --color-surface-soft: #20242d;
+  --c-primary: #7aa1ff;
+  --c-primary-contrast: #0f131a;
+  --c-accent: #f4b454;
+  --c-accent-contrast: #1b2230;
+  --c-success: #22c55e;
+  --c-danger: #f87171;
+  --c-warning: var(--c-accent);
+  --c-info: var(--c-primary);
+  --c-success-soft: color-mix(in oklab, var(--c-success) 16%, var(--c-panel) 84%);
+  --c-danger-soft: color-mix(in oklab, var(--c-danger) 16%, var(--c-panel) 84%);
+  --c-warning-soft: color-mix(in oklab, var(--c-warning) 16%, var(--c-panel) 84%);
+  --c-info-soft: color-mix(in oklab, var(--c-info) 14%, var(--c-panel) 86%);
+  --c-ink: #0a1222;
+  --c-hero-tint-primary: color-mix(in oklab, var(--c-primary) 24%, var(--c-panel) 76%);
+  --c-hero-tint-accent: color-mix(in oklab, var(--c-accent) 18%, var(--c-panel) 82%);
+  --c-glow-primary: color-mix(in oklab, var(--c-primary) 28%, transparent);
+  --c-glow-accent: color-mix(in oklab, var(--c-accent) 24%, transparent);
+  --c-hero-shot-stroke: color-mix(in oklab, var(--c-primary) 84%, var(--c-hero-tint-primary) 16%);
+  --c-hero-shot-floor: color-mix(in oklab, var(--c-border) 62%, transparent);
+  --c-hero-shot-hoop: color-mix(in oklab, var(--c-accent) 78%, var(--c-hero-tint-accent) 22%);
+  --c-hero-shot-backboard-fill: color-mix(in oklab, var(--c-panel) 88%, transparent);
+  --c-hero-shot-backboard-stroke: var(--c-border);
+  --c-hero-shot-net: color-mix(in oklab, var(--c-hero-tint-primary) 78%, var(--c-panel) 22%);
+  --c-hero-shot-ball-fill: color-mix(in oklab, var(--c-accent) 84%, var(--c-hero-tint-accent) 16%);
+  --c-hero-shot-ball-stroke: color-mix(in oklab, var(--c-primary) 84%, var(--c-hero-tint-primary) 16%);
+  --c-hero-shot-ball-line: color-mix(in oklab, var(--c-ink) 74%, transparent);
+  --hero-shot-floor-opacity: 0.52;
+  --hero-shot-trace-opacity: 0.28;
+  --c-glass-hi: color-mix(in oklab, var(--c-panel) 12%, transparent);
+  --c-glass-shadow: color-mix(in oklab, var(--c-ink) 40%, transparent);
+  --c-hi: color-mix(in oklab, var(--c-panel) 10%, transparent);
+  --c-hi-strong: color-mix(in oklab, var(--c-panel) 16%, transparent);
+  --c-online: #22c55e;
+  --c-offline: #9ca3af;
+  --c-overlay: color-mix(in oklab, #081021 40%, transparent);
+  --c-topbar: color-mix(in oklab, var(--c-bg) 70%, transparent);
+  --c-avatar-provider: #3a6df0;
+  --c-avatar-provider-light: #78b3ff;
+  --c-avatar-client: #ffb347;
+  --c-avatar-client-light: #ff7a59;
 
-  --color-border: #2a2f3a;
-  --color-border-soft: #232832;
-  --color-border-strong: #3a414f;
-
-  --color-text: #f5f5f2;
-  --color-text-muted: #a4aab5;
-  --color-text-soft: #7f8794;
-
-  --color-primary: #d9dee8;
-  --color-primary-hover: #ffffff;
-  --color-primary-soft: #232a3a;
-  --color-primary-border: #394257;
-
-  --color-success: #9cb998;
-  --color-success-soft: #1f2b22;
-  --color-success-border: #334538;
-
-  --color-warning: #e0bb75;
-  --color-warning-text: #f0cf8c;
-  --color-warning-soft: #302719;
-  --color-warning-border: #514228;
-  --color-price-text: #f0cf8c;
-
-  --color-info: #82a6c2;
-  --color-info-soft: #1d2a34;
-  --color-info-border: #314557;
-
-  --c-bg: var(--color-background);
-  --c-bg-gradient: linear-gradient(180deg, var(--color-background) 0%, #11141a 100%);
-
-  --c-surface: var(--color-surface-muted);
-  --c-panel: var(--color-surface);
-  --c-text: var(--color-text);
-  --c-muted: var(--color-text-muted);
-  --c-text-muted: var(--color-text-muted);
-  --c-border: var(--color-border);
-
-  --c-primary: var(--color-primary);
-  --c-primary-contrast: #0f1115;
-
-  --c-accent: var(--color-warning);
-  --c-accent-contrast: #0f1115;
-
-  --c-success: var(--color-success);
-  --c-danger: #d68b8b;
-  --c-warning: var(--color-warning);
-  --c-info: var(--color-info);
-
-  --c-success-soft: var(--color-success-soft);
-  --c-danger-soft: #352323;
-  --c-warning-soft: var(--color-warning-soft);
-  --c-info-soft: var(--color-info-soft);
-
-  --c-ink: #05070a;
-
-  --c-hero-tint-primary: color-mix(in oklab, var(--color-primary) 16%, var(--color-surface) 84%);
-  --c-hero-tint-accent: color-mix(in oklab, var(--color-warning) 14%, var(--color-surface) 86%);
-
-  --c-glow-primary: color-mix(in oklab, var(--color-primary) 20%, transparent);
-  --c-glow-accent: color-mix(in oklab, var(--color-warning) 18%, transparent);
-
-  --c-hero-shot-stroke: color-mix(in oklab, var(--color-primary) 78%, var(--color-surface) 22%);
-  --c-hero-shot-floor: color-mix(in oklab, var(--color-border) 70%, transparent);
-  --c-hero-shot-hoop: color-mix(in oklab, var(--color-warning) 78%, var(--color-surface) 22%);
-  --c-hero-shot-backboard-fill: color-mix(in oklab, var(--color-surface) 88%, transparent);
-  --c-hero-shot-backboard-stroke: var(--color-border);
-  --c-hero-shot-net: color-mix(in oklab, var(--color-primary) 55%, var(--color-surface) 45%);
-  --c-hero-shot-ball-fill: color-mix(in oklab, var(--color-warning) 78%, var(--color-surface) 22%);
-  --c-hero-shot-ball-stroke: color-mix(in oklab, var(--color-primary) 74%, var(--color-surface) 26%);
-  --c-hero-shot-ball-line: color-mix(in oklab, var(--c-ink) 70%, transparent);
-
-  --hero-shot-floor-opacity: 0.5;
-  --hero-shot-trace-opacity: 0.24;
-
-  --c-glass-hi: color-mix(in oklab, var(--color-surface) 12%, transparent);
-  --c-glass-shadow: color-mix(in oklab, var(--c-ink) 42%, transparent);
-  --c-hi: color-mix(in oklab, var(--color-surface) 10%, transparent);
-  --c-hi-strong: color-mix(in oklab, var(--color-surface) 16%, transparent);
-
-  --c-online: var(--color-success);
-  --c-offline: #7f8794;
-  --c-overlay: color-mix(in oklab, #05070a 46%, transparent);
-  --c-topbar: color-mix(in oklab, var(--color-background) 72%, transparent);
-
-  --c-avatar-provider: var(--color-info);
-  --c-avatar-provider-light: color-mix(in oklab, var(--color-info) 60%, white 40%);
-  --c-avatar-client: var(--color-warning);
-  --c-avatar-client-light: color-mix(in oklab, var(--color-warning) 60%, white 40%);
-
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.32);
-  --shadow-card-hover: 0 10px 28px rgba(0, 0, 0, 0.38);
-  --shadow-panel: 0 18px 48px rgba(0, 0, 0, 0.34);
-  --c-elev-shadow: 0 32px 72px rgba(0, 0, 0, 0.5);
-
-  --btn-primary-bg: var(--color-primary);
-  --btn-primary-shadow: 0 8px 18px color-mix(in oklab, var(--color-primary) 18%, transparent);
-
-  --btn-secondary-bg: var(--color-surface);
-  --btn-secondary-border: 1px solid var(--color-border);
-  --btn-secondary-shadow-hover: 0 10px 24px rgba(0, 0, 0, 0.32);
+  --shadow-card: 0 10px 22px color-mix(in oklab, var(--c-ink) 50%, transparent);
+  --shadow-card-hover: 0 14px 30px color-mix(in oklab, var(--c-ink) 58%, transparent);
+  --c-elev-shadow: 0 32px 72px color-mix(in oklab, #040810 60%, transparent);
+  --btn-primary-bg: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--c-accent) 86%, white 14%) 0%,
+    color-mix(in oklab, var(--c-accent) 76%, black 24%) 100%
+  );
+  --btn-primary-shadow: 0 8px 18px color-mix(in oklab, var(--c-accent) 30%, transparent);
+  --btn-secondary-bg: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--c-panel) 92%, white 8%),
+    color-mix(in oklab, var(--c-panel) 86%, var(--c-ink) 14%)
+  );
+  --btn-secondary-border: 1px solid color-mix(in oklab, var(--c-border) 82%, white 18%);
+  --btn-secondary-shadow-hover: 0 10px 22px color-mix(in oklab, var(--c-ink) 26%, transparent);
 }

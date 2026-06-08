@@ -1,11 +1,10 @@
 /* src/styles/overlays-date.css */
-
 @layer components {
   .dc-date {
-    --rdp-accent: var(--color-primary);
-    --rdp-primary: var(--color-primary);
-    --rdp-muted: var(--color-text-muted);
-    --rdp-border: var(--color-border);
+    --rdp-accent: var(--c-accent);
+    --rdp-primary: var(--c-primary);
+    --rdp-muted: var(--c-muted);
+    --rdp-border: var(--c-border);
   }
 
   .dc-date .rdp {
@@ -25,30 +24,29 @@
 
   .dc-date .rdp-caption_label {
     font-weight: 700;
-    color: var(--color-text);
+    color: var(--c-text);
   }
 
   .dc-date .rdp-nav button {
     height: 36px;
     width: 36px;
     border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    color: var(--color-text);
+    border: 1px solid var(--c-border);
+    background: var(--c-surface);
+    color: var(--c-text);
     transition:
       background var(--transition-fast),
-      border-color var(--transition-fast),
-      color var(--transition-fast);
+      border-color var(--transition-fast);
   }
 
   .dc-date .rdp-nav button:focus-visible {
-    outline: 2px solid color-mix(in oklab, var(--color-primary) 36%, transparent);
+    outline: 2px solid color-mix(in oklab, var(--c-primary) 55%, transparent);
     outline-offset: 2px;
   }
 
   .dc-date .rdp-nav button:hover {
-    background: var(--color-surface-muted);
-    border-color: var(--color-border-strong);
+    background: color-mix(in oklab, var(--c-accent) 14%, transparent);
+    border-color: color-mix(in oklab, var(--c-accent) 30%, var(--c-border));
   }
 
   .dc-date .rdp-table {
@@ -58,64 +56,59 @@
   }
 
   .dc-date .rdp-head_cell {
-    font-size: var(--fs-12);
+    font-size: 12px;
     font-weight: 600;
-    color: var(--color-text-muted);
+    color: var(--c-muted);
     text-transform: none;
   }
 
   .dc-date .rdp-day {
     height: 40px;
     width: 40px;
-    border-radius: var(--radius-pill);
+    border-radius: 999px;
     border: 1px solid transparent;
-    color: var(--color-text);
+    color: var(--c-text);
     background: transparent;
     transition:
       background var(--transition-fast),
-      border-color var(--transition-fast),
-      color var(--transition-fast);
+      border-color var(--transition-fast);
   }
 
   .dc-date .rdp-day:focus-visible {
-    outline: 2px solid color-mix(in oklab, var(--color-primary) 36%, transparent);
+    outline: 2px solid color-mix(in oklab, var(--c-primary) 55%, transparent);
     outline-offset: 2px;
   }
 
   .dc-date .rdp-day:hover {
-    background: var(--color-surface-muted);
-    border-color: var(--color-border-soft);
+    background: color-mix(in oklab, var(--c-accent) 16%, transparent);
   }
 
   .dc-date .rdp-day_today {
-    border-color: color-mix(in oklab, var(--color-primary) 34%, var(--color-border) 66%);
-    background: var(--color-surface-muted);
-    color: var(--color-primary);
+    border-color: color-mix(in oklab, var(--c-primary) 45%, transparent);
+    color: var(--c-primary);
   }
 
   .dc-date .rdp-day_selected,
   .dc-date .rdp-day_selected:hover {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-surface);
+    background: var(--c-accent);
+    color: var(--c-primary-contrast);
   }
 
   .dc-date .rdp-day_range_start,
   .dc-date .rdp-day_range_end {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-surface);
+    background: var(--c-accent);
+    color: var(--c-primary-contrast);
   }
 
   .dc-date .rdp-day_range_middle {
-    background: var(--color-primary-soft);
-    color: var(--color-primary);
-    border-radius: var(--radius-pill);
+    background: color-mix(in oklab, var(--c-accent) 22%, transparent);
+    color: var(--c-text);
+    border-radius: 999px;
   }
 
   .dc-date .rdp-day_disabled,
   .dc-date .rdp-day_outside {
-    color: color-mix(in oklab, var(--color-text-muted) 65%, transparent);
+    color: color-mix(in oklab, var(--c-muted) 65%, transparent);
     opacity: 0.6;
   }
 
@@ -129,4 +122,6 @@
       border-spacing: 5px;
     }
   }
+
+
 }

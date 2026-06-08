@@ -16,9 +16,9 @@ export function WorkspaceReviewRatingField({
   return (
     <div className="form-group">
       <p className="typo-small">{label}</p>
-      <div className="public-profile-reviews__star-line">
+      <div className="provider-reviews-hub__star-line">
         <div
-          className="chip-row public-profile-reviews__star-picker"
+          className="chip-row provider-reviews-hub__star-picker"
           role="group"
           aria-label={label}
         >
@@ -26,7 +26,7 @@ export function WorkspaceReviewRatingField({
             <button
               key={score}
               type="button"
-              className={`icon-button icon-button--md public-profile-reviews__star-btn ${score <= value ? '' : 'typo-muted'}`.trim()}
+              className={`icon-button icon-button--md provider-reviews-hub__star-btn ${score <= value ? '' : 'typo-muted'}`.trim()}
               aria-pressed={value === score}
               onClick={() => {
                 if (disabled) return;
@@ -39,7 +39,7 @@ export function WorkspaceReviewRatingField({
             </button>
           ))}
         </div>
-        <span className="typo-body public-profile-reviews__star-value" aria-live="polite">
+        <span className="typo-body provider-reviews-hub__star-value" aria-live="polite">
           {value.toFixed(1)}
         </span>
       </div>

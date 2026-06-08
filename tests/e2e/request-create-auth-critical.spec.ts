@@ -1,9 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { dismissCookieConsentIfPresent } from './helpers/consent';
 
-test('@critical unauthenticated create-request opens login with resumable workspace next', async ({
-  page,
-}) => {
+test('@critical unauthenticated create-request submit redirects to login with resumable next', async ({ page }) => {
   await page.route('**/api/**', async (route) => {
     const url = new URL(route.request().url());
     const path = url.pathname;
@@ -77,25 +75,19 @@ test('@critical unauthenticated create-request opens login with resumable worksp
   });
 
   const schedule = encodeURIComponent(JSON.stringify({ mode: 'once', date: '2026-04-10' }));
+  await page.goto(`/request/create?service=window-cleaning&city=berlin&schedule=${schedule}`);
 
-  await page.goto(
-    `/workspace?section=requests&scope=my&mode=create&service=window-cleaning&city=berlin&schedule=${schedule}`,
-  );
   await dismissCookieConsentIfPresent(page);
 
-const myWorkLink = page.getByRole('link', { name: /my work|meine arbeit/i });
+  await page.locator('input[name="title"]').fill('Window cleaning in apartment');
+  await page.locator('button[type="submit"][value="draft"]').click();
 
-await expect(myWorkLink).toBeVisible();
-await myWorkLink.click();
-
-
-  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth/login');
+  await expect
+    .poll(() => new URL(page.url()).pathname)
+    .toBe('/auth/login');
 
   const url = new URL(page.url());
   const nextValue = url.searchParams.get('next') ?? '';
-
-  expect(nextValue).toContain('/workspace');
-  expect(nextValue).toContain('section=requests');
-  expect(nextValue).toContain('scope=my');
-  expect(nextValue).toContain('mode=create');
+  expect(nextValue).toContain('/request/create');
+  expect(nextValue).toContain('intent=draft');
 });

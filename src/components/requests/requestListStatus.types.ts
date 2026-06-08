@@ -1,13 +1,12 @@
 'use client';
 
-import type { OfferCardState } from '@/features/workspace/requests/shared/requestUiState';
+import type { OfferCardState } from '@/features/requests/uiState';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { OwnerRequestActions } from './requestsList.types';
 
 export type RequestListStatusPresentation = {
   detailsHref: string;
-  editHref: string;
   itemId: string;
   itemStatus: string | undefined;
   itemOffer: OfferDto | undefined;

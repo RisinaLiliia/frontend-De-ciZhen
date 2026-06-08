@@ -1,7 +1,7 @@
 'use client';
 
-import { WorkspaceRoutePage } from '@/features/workspace/shell/WorkspaceRoutePage';
+import { WorkspaceShellPage } from '@/features/workspace/shell/WorkspaceShellPage';
 
 export default function WorkspacePage() {
-  return <WorkspaceRoutePage />;
+  return <WorkspaceShellPage />;
 }

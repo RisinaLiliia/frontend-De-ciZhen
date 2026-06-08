@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import { WorkspaceShellPage } from '@/features/workspace/shell/WorkspaceShellPage';
 
 export default function ClientHomeLegacyPage() {
-  redirect('/workspace?section=requests&scope=my&period=90d&range=90d');
+  return <WorkspaceShellPage forcedPublicSection="requests" />;
 }

@@ -1,7 +1,5 @@
 // src/components/requests/details/RequestDetailHeader.tsx
-import { Badge } from '@/components/ui/Badge';
 import type { ReactNode } from 'react';
-import { RequestDetailPrice } from './RequestDetailPrice';
 
 type RequestDetailHeaderProps = {
   title: string;
@@ -42,11 +40,7 @@ export function RequestDetailHeader({
         <div className="request-detail__title-wrap">
           <div className="request-detail__header-top">
             <div className="request-detail__badges">
-              {badgeLabel ? (
-                <Badge variant="neutral" size="sm" tone="soft" className="request-detail__badge">
-                  {badgeLabel}
-                </Badge>
-              ) : null}
+              {badgeLabel ? <span className="badge request-detail__badge">{badgeLabel}</span> : null}
               {statusBadge}
             </div>
             {headerAction ? <div className="request-detail__header-action">{headerAction}</div> : null}
@@ -59,21 +53,24 @@ export function RequestDetailHeader({
           ) : null}
         </div>
         {showPrice ? (
-          <RequestDetailPrice
-            priceLabel={priceLabel}
-            pricePrefixLabel={pricePrefixLabel}
-            priceSuffixLabel={priceSuffixLabel}
-            priceTrend={priceTrend}
-            priceTrendLabel={priceTrendLabel}
-          />
+          <div className="request-detail__price">
+            {pricePrefixLabel ? <span className="request-detail__price-prefix">{pricePrefixLabel}</span> : null}
+            <span className="proof-price">{priceLabel}</span>
+            {priceSuffixLabel ? <span className="request-detail__price-suffix">{priceSuffixLabel}</span> : null}
+            {priceTrend ? (
+              <span className={`status-badge ${priceTrend === 'up' ? 'status-badge--success' : 'status-badge--warning'}`}>
+                {priceTrend === 'down' ? '↓' : '↑'} {priceTrendLabel}
+              </span>
+            ) : null}
+          </div>
         ) : null}
       </div>
       {showTags ? (
         <div className="request-detail__tags">
           {tags.map((tag) => (
-            <Badge key={tag} variant="neutral" size="sm" tone="outline" className="request-tag">
+            <span key={tag} className="request-tag">
               {tag}
-            </Badge>
+            </span>
           ))}
         </div>
       ) : null}

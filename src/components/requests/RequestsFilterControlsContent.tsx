@@ -65,7 +65,7 @@ export function RequestsFilterControlsContent({
       <div className="requests-filter-grid requests-filter-grid--primary">
         <div className="requests-filter">
           <div className="requests-select-wrap">
-            <span className="dc-leading-icon dc-leading-icon--city" aria-hidden="true">
+            <span className="requests-select-icon requests-select-icon--city" aria-hidden="true">
               <IconPin />
             </span>
             <CitySearchSelect

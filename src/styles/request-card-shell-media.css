@@ -6,7 +6,23 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, clamp(72px, 22%, 180px));
     gap: var(--space-3);
     padding: 0;
-    border-radius: inherit;
+    border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--c-panel) 98%, transparent) 0%,
+        color-mix(in oklab, var(--c-panel) 94%, transparent) 45%,
+        color-mix(in oklab, var(--c-ink) 85%, transparent) 100%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--c-panel) 98%, transparent),
+        color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%)
+      );
+    box-shadow:
+      var(--shadow-card),
+      0 8px 18px color-mix(in oklab, var(--c-primary) 6%, transparent);
     align-items: stretch;
     transition:
       transform var(--transition),
@@ -17,6 +33,16 @@
     overflow: hidden;
     container-type: inline-size;
     min-height: 184px;
+  }
+
+  html:not(.dark) .request-card {
+    border-color: color-mix(in oklab, var(--c-hero-tint-primary) 14%, var(--c-border) 86%);
+    background: linear-gradient(
+      180deg,
+      var(--c-panel) 0%,
+      color-mix(in oklab, var(--c-panel) 92%, var(--c-hero-tint-primary) 8%) 100%
+    );
+    box-shadow: 0 6px 14px color-mix(in oklab, var(--c-ink) 10%, transparent);
   }
 
   .request-card--media-right .request-card__media {
@@ -71,6 +97,14 @@
     gap: var(--space-2);
   }
 
+  .request-card:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, var(--c-primary) 34%, var(--c-border) 66%);
+    box-shadow:
+      var(--shadow-card),
+      0 10px 22px color-mix(in oklab, var(--c-primary) 10%, transparent);
+  }
+
   .request-card--inactive {
     opacity: 0.72;
     filter: saturate(0.72);
@@ -78,6 +112,7 @@
 
   .request-card--inactive:hover {
     transform: none;
+    border-color: color-mix(in oklab, var(--c-border) 72%, transparent);
     box-shadow: var(--shadow-card);
   }
 
@@ -107,7 +142,7 @@
     overflow: hidden;
     position: relative;
     border-radius: 0;
-    background: var(--color-surface-muted);
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-border) 10%);
     z-index: 0;
   }
 
@@ -123,4 +158,6 @@
     object-position: center;
     z-index: 0;
   }
+
+
 }

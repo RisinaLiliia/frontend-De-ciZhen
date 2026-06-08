@@ -36,10 +36,10 @@ export function WorkspacePlatformReviewComposer({
   onReset,
 }: WorkspacePlatformReviewComposerProps) {
   return (
-    <article className="public-profile-reviews__item public-profile-reviews__item--composer card">
-      <form className="form-stack public-profile-reviews__composer-form" onSubmit={onSubmit}>
-        <p className="typo-h3 public-profile-reviews__composer-title">{t(I18N_KEYS.requestsPage.platformReviewFormTitle)}</p>
-        <p className="typo-muted public-profile-reviews__composer-hint">{t(I18N_KEYS.requestsPage.platformReviewFormHint)}</p>
+    <article className="provider-reviews-hub__item provider-reviews-hub__item--composer card">
+      <form className="form-stack provider-reviews-hub__composer-form" onSubmit={onSubmit}>
+        <p className="typo-h3 provider-reviews-hub__composer-title">{t(I18N_KEYS.requestsPage.platformReviewFormTitle)}</p>
+        <p className="typo-muted provider-reviews-hub__composer-hint">{t(I18N_KEYS.requestsPage.platformReviewFormHint)}</p>
         {!isAuthenticated ? (
           <div className="form-group">
             <Input
@@ -66,17 +66,17 @@ export function WorkspacePlatformReviewComposer({
             rows={3}
           />
         </div>
-        <div className="auth-social__row public-profile-reviews__composer-actions">
+        <div className="auth-social__row provider-reviews-hub__composer-actions">
           <button
             type="submit"
-            className="auth-social__btn auth-social__btn--google public-profile-reviews__composer-submit"
+            className="auth-social__btn auth-social__btn--google provider-reviews-hub__composer-submit"
             disabled={isPending}
           >
             {t(I18N_KEYS.requestsPage.platformReviewFormSubmit)}
           </button>
           <button
             type="button"
-            className="btn-ghost public-profile-reviews__composer-reset"
+            className="btn-ghost provider-reviews-hub__composer-reset"
             onClick={onReset}
             disabled={isPending}
           >

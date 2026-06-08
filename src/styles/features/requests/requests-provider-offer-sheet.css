@@ -13,10 +13,10 @@
   }
 
   .request-offer-sheet__preview {
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
     padding-right: var(--space-8);
-    border-top: 1px solid color-mix(in oklab, var(--color-border) 62%, transparent);
-    border-bottom: 1px solid color-mix(in oklab, var(--color-border) 62%, transparent);
+    border-top: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
     padding-block: var(--space-3-5);
   }
 
@@ -26,11 +26,11 @@
     top: 0;
     width: 28px;
     height: 28px;
-    border-radius: var(--radius-pill);
-    border: 1px solid color-mix(in oklab, var(--color-border) 68%, transparent);
-    background: color-mix(in oklab, var(--color-surface) 84%, var(--color-border) 16%);
-    color: var(--color-text);
-    font-size: var(--fs-14);
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--c-border) 68%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 84%, var(--c-border) 16%);
+    color: var(--c-text);
+    font-size: 14px;
     line-height: 1;
     display: inline-flex;
     align-items: center;
@@ -38,7 +38,7 @@
   }
 
   .request-offer-sheet__close:hover {
-    background: color-mix(in oklab, var(--color-surface) 72%, var(--color-border) 28%);
+    background: color-mix(in oklab, var(--c-panel) 72%, var(--c-border) 28%);
   }
 
   .request-offer-sheet__success {
@@ -63,13 +63,13 @@
   .request-offer-sheet__success-icon {
     width: 28px;
     height: 28px;
-    border-radius: var(--radius-pill);
+    border-radius: 999px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: color-mix(in oklab, var(--color-primary) 82%, var(--c-ink) 18%);
-    background: color-mix(in oklab, var(--color-primary) 22%, var(--color-surface) 78%);
-    border: 1px solid color-mix(in oklab, var(--color-primary) 44%, transparent);
+    color: color-mix(in oklab, var(--c-primary) 82%, var(--c-ink) 18%);
+    background: color-mix(in oklab, var(--c-primary) 22%, var(--c-panel) 78%);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 44%, transparent);
   }
 
   .request-offer-sheet__success-tip {
@@ -86,8 +86,8 @@
     align-items: start;
     padding: var(--space-3-5);
     border-radius: var(--radius-lg);
-    border: 1px solid color-mix(in oklab, var(--color-border) 62%, transparent);
-    background: color-mix(in oklab, var(--color-surface) 92%, var(--color-border) 8%);
+    border: 1px solid color-mix(in oklab, var(--c-border) 62%, transparent);
+    background: color-mix(in oklab, var(--c-panel) 92%, var(--c-border) 8%);
   }
 
   .request-offer-sheet__success-tip-person {
@@ -108,7 +108,7 @@
   }
 
   .request-offer-sheet__success-advice {
-    color: var(--color-text);
+    color: var(--c-text);
     margin: 0;
   }
 

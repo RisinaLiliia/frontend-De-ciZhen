@@ -60,7 +60,7 @@
   }
 
   .hero-shot__dribble-mark {
-    fill: var(--color-warning);
+    fill: var(--c-accent);
     opacity: 0;
   }
 
@@ -102,7 +102,7 @@
   }
 
   .hero-shot__pulse {
-    fill: var(--color-warning);
+    fill: var(--c-accent);
     opacity: 0;
     transform-origin: center;
     animation: hero-shot-pulse var(--hero-shot-duration) var(--motion-ease-shot) var(--hero-shot-iterations);

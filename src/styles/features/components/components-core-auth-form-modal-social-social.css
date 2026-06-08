@@ -8,8 +8,8 @@
   .auth-social__divider {
     margin: 2px 0;
     text-align: center;
-    font-size: var(--fs-10);
-    color: color-mix(in oklab, var(--color-text-muted) 80%, transparent);
+    font-size: 10px;
+    color: color-mix(in oklab, var(--c-text-muted) 80%, transparent);
     position: relative;
     letter-spacing: 0.01em;
   }
@@ -21,7 +21,7 @@
     top: 50%;
     width: 28%;
     height: 1px;
-    background: color-mix(in oklab, var(--color-border) 62%, transparent);
+    background: color-mix(in oklab, var(--c-border) 62%, transparent);
   }
 
   .auth-social__divider::before {
@@ -35,20 +35,20 @@
   .auth-social__row {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-2);
+    gap: 8px;
   }
 
   .auth-social__btn {
     width: 100%;
     height: 40px;
-    border-radius: var(--radius-md);
+    border-radius: 10px;
     border: 1px solid transparent;
     padding: 0 12px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-2-5);
-    font-size: var(--fs-13);
+    gap: 10px;
+    font-size: 13px;
     font-weight: 600;
     line-height: 1;
     text-align: center;
@@ -91,12 +91,12 @@
     background:
       linear-gradient(
         148deg,
-        color-mix(in oklab, var(--color-warning) 10%, var(--color-surface) 90%) 0%,
-        color-mix(in oklab, var(--color-surface) 96%, var(--color-border) 4%) 62%,
-        color-mix(in oklab, var(--color-primary) 8%, var(--color-surface) 92%) 100%
+        color-mix(in oklab, var(--c-accent) 10%, var(--c-panel) 90%) 0%,
+        color-mix(in oklab, var(--c-panel) 96%, var(--c-border) 4%) 62%,
+        color-mix(in oklab, var(--c-primary) 8%, var(--c-panel) 92%) 100%
       );
-    color: var(--color-text);
-    border-color: color-mix(in oklab, var(--color-warning) 54%, var(--color-border) 46%);
+    color: var(--c-text);
+    border-color: color-mix(in oklab, var(--c-accent) 54%, var(--c-border) 46%);
     box-shadow: inset 0 1px 0 color-mix(in oklab, var(--c-hi) 10%, transparent);
   }
 
@@ -105,11 +105,11 @@
     background:
       linear-gradient(
         148deg,
-        color-mix(in oklab, var(--color-warning) 14%, var(--color-surface) 86%) 0%,
+        color-mix(in oklab, var(--c-accent) 14%, var(--c-panel) 86%) 0%,
         var(--surface-soft-bg-strong) 62%,
-        color-mix(in oklab, var(--color-primary) 12%, var(--color-surface) 88%) 100%
+        color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%) 100%
       );
-    border-color: color-mix(in oklab, var(--color-warning) 64%, var(--color-border) 36%);
+    border-color: color-mix(in oklab, var(--c-accent) 64%, var(--c-border) 36%);
     transform: translateY(-1px);
   }
 

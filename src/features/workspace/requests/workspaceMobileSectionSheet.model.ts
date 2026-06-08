@@ -1,6 +1,6 @@
 'use client';
 
-import type { WorkspaceNavItem } from '@/features/workspace/navigation/workspaceNavItem.types';
+import type { WorkspaceNavItem } from '@/features/workspace/requests/workspaceNavItem.types';
 
 type SearchParamsLike = Pick<URLSearchParams, 'get'>;
 

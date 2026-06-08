@@ -11,6 +11,8 @@ type RequestsFilterSelectProps = {
   ariaLabel: string;
   disabled?: boolean;
   className?: string;
+  icon?: React.ReactNode;
+  iconClassName?: string;
 };
 
 export function RequestsFilterSelect({
@@ -20,6 +22,8 @@ export function RequestsFilterSelect({
   ariaLabel,
   disabled = false,
   className,
+  icon,
+  iconClassName,
 }: RequestsFilterSelectProps) {
   const resolvedValue = React.useMemo(
     () => (options.some((option) => option.value === value) ? value : undefined),
@@ -28,6 +32,11 @@ export function RequestsFilterSelect({
 
   return (
     <div className="requests-select-wrap">
+      {icon ? (
+        <span className={`requests-select-icon ${iconClassName ?? ''}`.trim()} aria-hidden="true">
+          {icon}
+        </span>
+      ) : null}
       <Select
         options={options}
         value={resolvedValue}

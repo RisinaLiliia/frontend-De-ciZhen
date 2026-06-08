@@ -1,6 +1,4 @@
 /* src/styles/themes.css */
 @import './themes-tokens-light.css';
 @import './themes-tokens-scale.css';
-@import './tokens/radius.css';
-@import './tokens/shadows.css';
 @import './themes-tokens-dark.css';

@@ -57,7 +57,7 @@
     border-color: var(--surface-card-border-focus);
     box-shadow:
       var(--surface-card-shadow),
-      0 0 0 3px color-mix(in oklab, var(--color-text) 10%, transparent);
+      0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
   }
 
   .kpi-card__top {
@@ -78,7 +78,7 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    gap: var(--space-0-5);
+    gap: 2px;
     min-width: 56px;
     line-height: 1;
     text-align: right;
@@ -99,27 +99,27 @@
   }
 
   .kpi-card__trend.is-up {
-    color: color-mix(in oklab, var(--color-success) 82%, var(--color-text) 18%);
+    color: color-mix(in oklab, var(--c-success) 82%, var(--c-text) 18%);
   }
 
   .kpi-card__trend.is-down {
-    color: color-mix(in oklab, var(--color-warning) 78%, var(--color-text) 22%);
+    color: color-mix(in oklab, var(--c-warn) 78%, var(--c-text) 22%);
   }
 
   .kpi-card__trend.is-flat {
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
   }
 
   .kpi-card__label {
     font-size: var(--fs-small);
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
   }
 
   .kpi-card__value {
     font-size: clamp(28px, 2vw, 32px);
     line-height: 1.1;
     font-weight: 700;
-    color: var(--color-text);
+    color: var(--c-text);
   }
 
   .kpi-card__bottom {
@@ -136,15 +136,15 @@
   }
 
   .kpi-card__meta.is-success {
-    color: color-mix(in oklab, var(--color-success) 85%, var(--color-text) 15%);
+    color: color-mix(in oklab, var(--c-success) 85%, var(--c-text) 15%);
   }
 
   .kpi-card__meta.is-accent {
-    color: var(--color-warning);
+    color: var(--c-accent);
   }
 
   .kpi-card__meta.is-neutral {
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
   }
 
   .kpi-grid--decision .kpi-card {
@@ -162,7 +162,7 @@
     min-height: 34px;
     margin-top: var(--space-0-5);
     padding-top: var(--space-1);
-    border-top: 1px dashed color-mix(in oklab, var(--color-primary) 32%, transparent);
+    border-top: 1px dashed color-mix(in oklab, var(--c-primary) 32%, transparent);
   }
 
   .kpi-grid--decision .kpi-card__meta {

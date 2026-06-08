@@ -2,12 +2,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 
-import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/state/workspacePrivateState.constants';
-import { useWorkspacePrivateState } from '@/features/workspace/state/useWorkspacePrivateState';
+import { EMPTY_WORKSPACE_PRIVATE_OVERVIEW } from '@/features/workspace/requests/workspacePrivateState.constants';
+import { useWorkspacePrivateState } from '@/features/workspace/requests/useWorkspacePrivateState';
 import {
   resolveWorkspacePrivateOverviewState,
   shouldBuildWorkspacePrivateTopProviders,
-} from '@/features/workspace/state/workspacePrivateState.model';
+} from '@/features/workspace/requests/workspacePrivateState.model';
 
 type StateArgs = Parameters<typeof useWorkspacePrivateState>[0];
 

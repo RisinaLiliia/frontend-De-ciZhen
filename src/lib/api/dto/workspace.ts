@@ -68,7 +68,6 @@ export type WorkspaceProfileDto = {
   provider: {
     displayName: string | null;
     bio: string | null;
-    avatarUrl: string | null;
     cityId: string | null;
     selectedCategoryKey: string | null;
     selectedServiceKey: string | null;
@@ -349,52 +348,6 @@ export type WorkspaceActionsResponseDto = {
       key: 'account' | 'customer' | 'provider';
       label: string;
       value: string;
-    }>;
-  };
-};
-
-export type WorkspaceChatResponseDto = {
-  section: 'chat';
-  header: {
-    title: string;
-    subtitle?: string | null;
-  };
-  summary: {
-    items: Array<{
-      key: 'all' | 'unread' | 'active' | 'archived';
-      label: string;
-      value: number;
-      helper: string;
-      tone: 'all' | 'attention' | 'execution' | 'completed';
-    }>;
-  };
-  decisionPanel: {
-    eyebrow: string;
-    totalNeedsAction: number;
-    title: string;
-    text: string;
-    primaryAction: {
-      label: string;
-      href: string;
-      targetFilter: 'all' | 'unread';
-    };
-    queueTitle: string;
-    queue: Array<{
-      conversationId: string;
-      title: string;
-      actionType: 'reply' | 'review_context' | 'follow_up';
-      actionLabel: string;
-      actionPriority: number;
-      actionPriorityLevel: 'high' | 'medium' | 'low';
-      actionReason?: string | null;
-      href: string;
-    }>;
-    emptyText: string;
-    overviewEyebrow: string;
-    overview: Array<{
-      key: 'unread' | 'active' | 'archived';
-      label: string;
-      value: number;
     }>;
   };
 };
@@ -767,7 +720,7 @@ export type WorkspacePrivateOverviewDto = {
 };
 
 export type WorkspaceStatisticsRange = WorkspacePublicActivityRange;
-export type StatisticsViewerMode = 'provider' | 'customer';
+export type WorkspaceStatisticsViewerMode = 'provider' | 'customer';
 
 export type WorkspaceStatisticsSummaryDto = {
   totalPublishedRequests: number;
@@ -1347,7 +1300,7 @@ export type WorkspaceStatisticsOverviewDto = {
   updatedAt: string;
   mode: 'platform' | 'personalized';
   range: WorkspaceStatisticsRange;
-  viewerMode?: StatisticsViewerMode | null;
+  viewerMode?: WorkspaceStatisticsViewerMode | null;
   decisionContext?: WorkspaceStatisticsDecisionContextDto;
   filterOptions?: WorkspaceStatisticsFilterOptionsDto;
   sectionMeta?: WorkspaceStatisticsSectionMetaDto;

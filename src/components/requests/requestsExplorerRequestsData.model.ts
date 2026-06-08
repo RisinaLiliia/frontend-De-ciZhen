@@ -3,8 +3,7 @@ import type { PublicRequestsResponseDto, RequestResponseDto } from '@/lib/api/dt
 import type { PublicRequestsFilter } from '@/lib/api/requests';
 import type { Locale } from '@/lib/i18n/t';
 import { hasDefaultPublicFilter } from '@/components/requests/requestsExplorer.model';
-import { workspaceQK } from '@/features/workspace/data';
-import { buildWorkspaceRequestOverlayHref } from '@/features/workspace/requests/workspaceRequestRoute.model';
+import { workspaceQK } from '@/features/workspace/requests/queryKeys';
 
 type BuildPublicRequestsQueryStateArgs = {
   filter: PublicRequestsFilter;
@@ -80,12 +79,7 @@ export function findOfferRequestId(myOffers: OfferDto[], offerId: string) {
 }
 
 export function resolveRequestsExplorerOfferHref(requestId: string) {
-  return buildWorkspaceRequestOverlayHref({
-    currentSearch: '',
-    requestId,
-    scope: 'market',
-    panel: 'offer',
-  });
+  return `/requests/${requestId}?offer=1`;
 }
 
 export function resolveRequestsExplorerLoginHref(requestId: string) {

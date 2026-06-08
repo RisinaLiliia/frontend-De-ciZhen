@@ -10,11 +10,36 @@
       padding-bottom: var(--space-4);
     }
 
+    .request-detail--provider {
+      padding-bottom: var(--space-4);
+    }
+
+    .request-detail--provider .request-detail__price {
+      gap: 5px;
+      line-height: 1.2;
+      font-size: 16px;
+    }
+
+    .request-detail--provider .request-detail__price .proof-price {
+      font-size: 18px;
+      line-height: 1.1;
+    }
+
+    .request-detail--provider .request-detail__price-prefix,
+    .request-detail--provider .request-detail__price-suffix {
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
     .request-detail__aside .request-detail__cta {
       display: none;
     }
 
     .request-detail__aside .request-detail__meta {
+      display: none;
+    }
+
+    .request-detail--provider .request-detail__aside .request-detail__availability-actions {
       display: none;
     }
 
@@ -28,11 +53,11 @@
       padding: var(--space-3) var(--space-4);
       margin-inline: var(--space-4);
       border-radius: var(--radius-lg);
-      border: 1px solid color-mix(in oklab, var(--color-border) 60%, transparent);
-      background: color-mix(in oklab, var(--color-surface) 96%, var(--color-border) 4%);
+      border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
+      background: color-mix(in oklab, var(--c-panel) 96%, var(--c-border) 4%);
       box-shadow:
-        0 -8px 24px color-mix(in oklab, var(--color-primary) 12%, transparent),
-        0 0 0 1px color-mix(in oklab, var(--color-border) 45%, transparent);
+        0 -8px 24px color-mix(in oklab, var(--c-primary) 12%, transparent),
+        0 0 0 1px color-mix(in oklab, var(--c-border) 45%, transparent);
       z-index: 20;
     }
 
@@ -83,7 +108,7 @@
       min-width: 44px;
       height: 44px;
       min-height: 44px;
-      border-radius: var(--radius-md);
+      border-radius: 12px;
     }
 
     .request-detail__mobile-cta--compact .offer-action-btn__icon svg,

@@ -4,10 +4,10 @@
   .requests-clear {
     align-self: flex-end;
     width: auto;
-    border-radius: var(--radius-md);
+    border-radius: 999px;
     padding-inline: var(--space-4);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-soft);
+    background: var(--surface-soft-bg);
+    border: 1px solid var(--surface-soft-border);
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
@@ -31,16 +31,16 @@
     min-width: 40px;
     height: 40px;
     padding: 0;
-    border-radius: var(--radius-pill);
+    border-radius: 999px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
 
   .requests-mobile-toolbar__btn.is-active {
-    border-color: var(--color-primary-border);
-    color: var(--color-primary);
-    background: var(--color-primary-soft);
+    border-color: color-mix(in oklab, var(--c-primary) 40%, var(--c-border) 60%);
+    color: var(--c-primary);
+    background: color-mix(in oklab, var(--c-primary) 12%, var(--c-panel) 88%);
   }
 
   .requests-filters__controls {
@@ -88,4 +88,6 @@
       min-height: 0;
     }
   }
+
+
 }

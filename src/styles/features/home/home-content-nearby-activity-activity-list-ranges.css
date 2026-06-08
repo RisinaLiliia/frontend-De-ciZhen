@@ -42,7 +42,7 @@
 
   .home-cta:focus-visible {
     outline: none;
-    box-shadow: var(--shadow-focus);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-primary) 35%, transparent);
   }
 
   .home-activity-panel {
@@ -51,14 +51,14 @@
 
   .home-activity__header {
     display: grid;
-    gap: var(--space-1-5);
+    gap: 6px;
   }
 
   .home-activity__header-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-2);
+    gap: 8px;
   }
 
   .home-activity__title {
@@ -69,28 +69,28 @@
     margin: 0;
     font-size: var(--fs-small);
     line-height: 1.35;
-    color: var(--color-text-muted);
+    color: var(--c-text-muted);
   }
 
   .home-activity__ranges {
     display: inline-flex;
-    gap: var(--space-1-5);
+    gap: 6px;
     padding: 4px;
-    border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
-    border-radius: var(--radius-pill);
-    background: color-mix(in oklab, var(--color-surface) 86%, transparent);
+    border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--c-panel) 86%, transparent);
   }
 
   .home-activity__range {
     min-width: 44px;
     height: 28px;
     padding: 0 10px;
-    border: 1px solid color-mix(in oklab, var(--color-primary) 28%, var(--color-border) 72%);
-    border-radius: var(--radius-pill);
-    font-size: var(--fs-11);
+    border: 1px solid color-mix(in oklab, var(--c-primary) 28%, var(--c-border) 72%);
+    border-radius: 999px;
+    font-size: 11px;
     font-weight: 600;
-    color: color-mix(in oklab, var(--color-primary) 60%, var(--color-text) 40%);
-    background: color-mix(in oklab, var(--color-surface) 90%, var(--c-info-soft) 10%);
+    color: color-mix(in oklab, var(--c-primary) 60%, var(--c-text) 40%);
+    background: color-mix(in oklab, var(--c-panel) 90%, var(--c-info-soft) 10%);
     transition:
       color var(--transition-fast),
       background var(--transition-fast),
@@ -100,9 +100,9 @@
 
   .home-activity__range.is-active {
     color: var(--c-primary-contrast);
-    border-color: color-mix(in oklab, var(--color-primary) 52%, var(--color-border) 48%);
-    background: color-mix(in oklab, var(--color-primary) 74%, var(--color-surface) 26%);
-    box-shadow: var(--shadow-card);
+    border-color: color-mix(in oklab, var(--c-primary) 52%, var(--c-border) 48%);
+    background: color-mix(in oklab, var(--c-primary) 74%, var(--c-panel) 26%);
+    box-shadow: 0 8px 16px color-mix(in oklab, var(--c-primary) 25%, transparent);
   }
 
 

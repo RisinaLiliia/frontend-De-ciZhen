@@ -1,5 +1,5 @@
 import { pickI18n } from '@/lib/i18n/helpers';
-import { ALL_OPTION_KEY, SORT_OPTIONS } from '@/features/workspace/shared';
+import { ALL_OPTION_KEY, SORT_OPTIONS } from '@/features/workspace/requests';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { FilterOption } from '@/components/requests/requestsFilters.types';

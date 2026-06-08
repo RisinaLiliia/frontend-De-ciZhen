@@ -3,7 +3,6 @@
 
 import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { IconChevronDown } from '@/components/ui/icons/icons';
 import { cn } from '@/lib/utils/cn';
 
 export type Option = { value: string; label: string; key?: string };
@@ -17,9 +16,6 @@ type Props = {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-  contentClassName?: string;
-  triggerIcon?: React.ReactNode;
-  iconOnly?: boolean;
   'aria-label'?: string;
 };
 
@@ -32,9 +28,6 @@ export function Select({
   placeholder = 'Auswählen…',
   disabled,
   className,
-  contentClassName,
-  triggerIcon,
-  iconOnly = false,
   ...a11y
 }: Props) {
   const items = React.useMemo(() => options.filter((o) => o.value !== ''), [options]);
@@ -46,24 +39,13 @@ export function Select({
       onValueChange={onChange}
       disabled={disabled}
     >
-      <SelectPrimitive.Trigger
-        id={id}
-        className={cn('field dc-select-trigger', className)}
-        data-icon-only={iconOnly ? 'true' : undefined}
-        {...a11y}
-      >
-        {triggerIcon ? <span className="dc-select-trigger__icon" aria-hidden="true">{triggerIcon}</span> : null}
-        {iconOnly ? null : (
-          <>
-            <SelectPrimitive.Value placeholder={placeholder} className="dc-select-trigger__label" />
-            <IconChevronDown />
-          </>
-        )}
+      <SelectPrimitive.Trigger id={id} className={cn('field dc-select-trigger', className)} {...a11y}>
+        <SelectPrimitive.Value placeholder={placeholder} />
       </SelectPrimitive.Trigger>
 
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
-          className={cn('dc-select-content', contentClassName)}
+          className="dc-select-content"
           position="popper"
           side="bottom"
           align="start"

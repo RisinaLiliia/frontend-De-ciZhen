@@ -1,12 +1,65 @@
 /* src/styles/features/components/components-ui-base-card-field.css */
 
 @layer components {
-  .field-shell--with-left-icon :is(.field, .dc-select-trigger, .dc-city-search-input) {
-    padding-left: calc(var(--spacing) * 11);
+  .card,
+  .panel {
+    --card-border-base: var(--surface-card-border);
+    --card-border-hover: var(--surface-card-border-hover);
+    --card-border-focus: var(--surface-card-border-focus);
+    --card-shadow-base: var(--surface-card-shadow);
+    --card-shadow-hover: var(--surface-card-shadow-hover);
+    --card-focus-ring: 0 0 0 3px color-mix(in oklab, var(--c-text) 10%, transparent);
+    --card-shadow-focus:
+      var(--card-shadow-base),
+      var(--card-focus-ring),
+      inset 0 1px 0 color-mix(in oklab, var(--c-panel) 42%, transparent);
+    background: var(--surface-card-bg);
+    border: 1px solid var(--card-border-base);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow-base);
+    padding: 18px;
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
   }
 
-  .field-shell--with-right-icon :is(.field, .dc-select-trigger, .dc-city-search-input) {
-    padding-right: calc(var(--spacing) * 11);
+  .card {
+    @apply w-full;
+  }
+
+  .card:hover,
+  .panel:hover {
+    border-color: var(--card-border-hover);
+    background: var(--surface-card-bg-hover);
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  .card:focus-within,
+  .panel:focus-within {
+    border-color: var(--card-border-focus);
+    box-shadow: var(--card-shadow-focus);
+  }
+
+  .card:focus-visible,
+  .panel:focus-visible {
+    outline: none;
+    border-color: var(--card-border-focus);
+    box-shadow: var(--card-shadow-focus);
+  }
+
+  .field {
+    @apply w-full h-11 text-sm;
+    background: var(--control-bg);
+    border: 1px solid var(--control-border);
+    border-radius: var(--radius-md);
+    padding: 0 14px;
+    transition:
+      box-shadow var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast);
   }
 
   .field-textarea {
@@ -31,4 +84,27 @@
     flex-direction: column;
     gap: var(--space-2);
   }
+
+  .field:hover {
+    border-color: var(--control-border-hover);
+    background: var(--control-bg-hover);
+  }
+
+  .field:focus {
+    outline: none;
+    box-shadow: var(--control-focus-ring);
+    border-color: var(--control-border-hover);
+  }
+
+  .field[aria-invalid='true'] {
+    border-color: var(--c-danger);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--c-danger) 30%, transparent);
+  }
+
+  .field:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+
 }

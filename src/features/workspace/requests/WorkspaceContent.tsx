@@ -1,10 +1,70 @@
 'use client';
 
+import * as React from 'react';
+import Link from 'next/link';
+
+import { RequestsList } from '@/components/requests/RequestsList';
+import { SectionHeader } from '@/components/ui/SectionHeader';
+import { I18N_KEYS } from '@/lib/i18n/keys';
+import type { I18nKey } from '@/lib/i18n/keys';
+import type { ReviewDto } from '@/lib/api/dto/reviews';
 import { workspaceRequestsPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
-import { WorkspaceContentHeader } from './components/WorkspaceContentHeader';
-import { WorkspaceContentStatusFilters } from './components/WorkspaceContentStatusFilters';
+import { WorkspaceChipToggleGroup } from './WorkspaceChipToggleGroup';
 import { WorkspaceContentPanels } from './WorkspaceContentPanels';
-import type { WorkspaceContentProps } from './workspaceContent.types';
+import type { FavoritesView, WorkspaceStatusFilter, WorkspaceTab } from './workspace.types';
+import { getWorkspaceSectionSubtitle, getWorkspaceTabTitles } from './workspace.content';
+
+type ChipFilter = {
+  key: WorkspaceStatusFilter;
+  label: string;
+};
+
+type PrimaryAction = {
+  href: string;
+  label: string;
+};
+
+type Props = {
+  t: (key: I18nKey) => string;
+  isWorkspaceAuthed: boolean;
+  activeWorkspaceTab: WorkspaceTab;
+  showWorkspaceHeader: boolean;
+  showWorkspaceHeading: boolean;
+  primaryAction: PrimaryAction;
+  onPrimaryActionClick: () => void;
+  statusFilters: ChipFilter[];
+  activeStatusFilter: WorkspaceStatusFilter;
+  setStatusFilter: (status: WorkspaceStatusFilter) => void;
+  myRequestsState: {
+    isLoading: boolean;
+    isEmpty: boolean;
+  };
+  myRequestsListProps: React.ComponentProps<typeof RequestsList>;
+  myOffersState: {
+    isLoading: boolean;
+    isEmpty: boolean;
+  };
+  myOffersListProps: React.ComponentProps<typeof RequestsList>;
+  contractsState: {
+    isLoading: boolean;
+    isEmpty: boolean;
+  };
+  contractsListProps: React.ComponentProps<typeof RequestsList>;
+  favoritesState: {
+    isLoading: boolean;
+    isEmpty: boolean;
+    hasFavoriteRequests: boolean;
+    hasFavoriteProviders: boolean;
+    resolvedView: FavoritesView;
+  };
+  onFavoritesViewChange: (view: FavoritesView) => void;
+  favoriteRequestsListProps: React.ComponentProps<typeof RequestsList>;
+  favoriteProvidersNode: React.ReactNode;
+  reviewsState: {
+    isLoading: boolean;
+    items: ReviewDto[];
+  };
+};
 
 export function WorkspaceContent({
   t,
@@ -28,27 +88,44 @@ export function WorkspaceContent({
   favoriteRequestsListProps,
   favoriteProvidersNode,
   reviewsState,
-}: WorkspaceContentProps) {
+}: Props) {
+  const workspaceTabTitles = React.useMemo(() => getWorkspaceTabTitles(t), [t]);
+  const workspaceSectionSubtitle = React.useMemo(
+    () => getWorkspaceSectionSubtitle(t, activeWorkspaceTab),
+    [activeWorkspaceTab, t],
+  );
+
   return (
     <section
       className={workspaceRequestsPanelShell()}
       aria-labelledby={showWorkspaceHeading ? 'workspace-section-title' : undefined}
     >
       {showWorkspaceHeader ? (
-        <WorkspaceContentHeader
-          t={t}
-          activeWorkspaceTab={activeWorkspaceTab}
-          showWorkspaceHeading={showWorkspaceHeading}
-          primaryAction={primaryAction}
-          onPrimaryActionClick={onPrimaryActionClick}
+        <SectionHeader
+          className="requests-header"
+          title={workspaceTabTitles[activeWorkspaceTab] ?? t(I18N_KEYS.requestsPage.navReviews)}
+          subtitle={showWorkspaceHeading ? workspaceSectionSubtitle : undefined}
+          titleId={showWorkspaceHeading ? 'workspace-section-title' : undefined}
+          subtitleId={showWorkspaceHeading ? 'workspace-section-subtitle' : undefined}
+          hideHeading={!showWorkspaceHeading}
+          actions={
+            activeWorkspaceTab !== 'my-requests' &&
+            activeWorkspaceTab !== 'my-offers' &&
+            activeWorkspaceTab !== 'profile' &&
+            activeWorkspaceTab !== 'reviews' ? (
+              <Link href={primaryAction.href} prefetch={false} className="btn-primary requests-primary-cta" onClick={onPrimaryActionClick}>
+                {primaryAction.label}
+              </Link>
+            ) : null
+          }
         />
       ) : null}
 
-      <WorkspaceContentStatusFilters
-        t={t}
-        statusFilters={statusFilters}
-        activeStatusFilter={activeStatusFilter}
-        setStatusFilter={setStatusFilter}
+      <WorkspaceChipToggleGroup
+        items={statusFilters}
+        selectedKey={activeStatusFilter}
+        onSelect={(key) => setStatusFilter(key as WorkspaceStatusFilter)}
+        ariaLabel={t(I18N_KEYS.requestsPage.statusFiltersLabel)}
       />
 
       <WorkspaceContentPanels

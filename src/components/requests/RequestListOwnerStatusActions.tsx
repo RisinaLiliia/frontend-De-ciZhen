@@ -39,7 +39,7 @@ export function RequestListOwnerStatusActions({
         </i>
       </Link>
       <Link
-        href={status.editHref}
+        href={`${status.detailsHref}?edit=1`}
         prefetch={false}
         className="btn-secondary offer-action-btn offer-action-btn--icon-only request-card__status-action request-card__status-action--edit"
         aria-label={t(I18N_KEYS.requestDetails.responseEditTooltip)}
