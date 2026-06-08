@@ -6,13 +6,8 @@
 @import './base.css';
 @import './components.css';
 @import './request-card.css';
-@import './home.css';
 @import './requests.css';
 @import './overlays.css';
-@import './primitives/surface.css';
-@import './primitives/controls.css';
-@import './primitives/button.css';
-@import './primitives/badges.css';
 @import './features/product-entry/productEntry.css';
 
 @layer base {
