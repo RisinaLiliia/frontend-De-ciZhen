@@ -11,3 +11,4 @@ export {
 } from '@/features/workspace/shell/useWorkspaceSharedContext';
 export { resolveActiveWorkspaceMode } from '@/features/workspace/shell/workspaceModes';
 export type { WorkspaceModeKey } from '@/features/workspace/shell/workspaceModes';
+export { WorkspaceTopBar } from './WorkspaceTopBar';
