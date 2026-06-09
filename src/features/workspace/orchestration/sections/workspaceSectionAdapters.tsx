@@ -3,9 +3,7 @@
 import type * as React from 'react';
 
 import {
-  WorkspaceExploreRail,
   WorkspaceExploreSection,
-  isWorkspaceExploreRailSection,
 } from '@/features/workspace/market';
 import { buildWorkspaceSectionRenderModel } from '@/features/workspace/navigation/workspaceSection.contract';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
@@ -158,19 +156,7 @@ export function buildWorkspaceExploreSectionModel({
     });
   }
 
-  const rail = explore && isWorkspaceExploreRailSection(section) ? (
-    <WorkspaceExploreRail
-      activeSection={section}
-      t={branch.t}
-      locale={branch.locale}
-      exploreListDensity={explore.exploreListDensity}
-      sidebarNearbyLimit={explore.sidebarNearbyLimit}
-      sidebarTopProvidersLimit={explore.sidebarTopProvidersLimit}
-      sidebarProofCases={explore.sidebarProofCases}
-      proofIndex={explore.proofIndex}
-      trustPanelClassName={explore.trustPanelClassName}
-    />
-  ) : undefined;
+  
 
   return buildWorkspaceSectionRenderModel({
     section,
@@ -186,7 +172,7 @@ export function buildWorkspaceExploreSectionModel({
         initialPublicRequestsError={explore.initialPublicRequestsError}
       />
     ) : null,
-    aiRail: rail,
+aiRail: undefined,
   });
 }
 
