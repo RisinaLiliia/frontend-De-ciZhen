@@ -7,7 +7,7 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { PublicRequestsResponseDto } from '@/lib/api/dto/requests';
 
-export type HomeRequestsExplorePanelProps = {
+export type RequestsExplorePanelProps = {
   t: (key: I18nKey) => string;
   locale: Locale;
   layoutVariant?: 'default' | 'workspace';
@@ -24,7 +24,7 @@ export type HomeRequestsExplorePanelProps = {
   initialPublicRequestsError?: boolean;
 };
 
-export function HomeRequestsExplorePanel({
+export function RequestsExplorePanel({
   t,
   locale,
   layoutVariant = 'default',
@@ -39,7 +39,7 @@ export function HomeRequestsExplorePanel({
   preferInitialPublicRequests = false,
   initialPublicRequestsLoading = false,
   initialPublicRequestsError = false,
-}: HomeRequestsExplorePanelProps) {
+}: RequestsExplorePanelProps) {
   const content = (
     <>
       {showHeading ? (

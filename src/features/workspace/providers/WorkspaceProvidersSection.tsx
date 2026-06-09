@@ -12,7 +12,10 @@ import { WorkspaceProviderDetailStage } from '@/features/workspace/providers/Wor
 import { WORKSPACE_PROVIDER_ID_QUERY_KEY } from '@/features/workspace/providers/workspaceProviderRoute.model';
 
 const ExploreRequestsPanel = dynamic(
-  () => import('@/components/home/HomeRequestsExplorePanel').then((mod) => mod.HomeRequestsExplorePanel),
+  () =>
+    import('@/components/requests/RequestsExplorePanel').then(
+      (mod) => mod.RequestsExplorePanel,
+    ),
   {
     loading: () => (
       <section className={workspacePanelShell()}>

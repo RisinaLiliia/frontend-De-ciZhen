@@ -10,7 +10,10 @@ import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 
 const ExploreRequestsPanel = dynamic(
-  () => import('@/components/home/HomeRequestsExplorePanel').then((mod) => mod.HomeRequestsExplorePanel),
+  () =>
+    import('@/components/requests/RequestsExplorePanel').then(
+      (mod) => mod.RequestsExplorePanel,
+    ),
   {
     loading: () => (
       <section className={workspacePanelShell()}>
