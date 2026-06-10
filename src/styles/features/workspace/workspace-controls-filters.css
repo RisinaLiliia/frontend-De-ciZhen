@@ -127,8 +127,12 @@
       gap: 0;
     }
 
-    .workspace-context-controls__surface .workspace-context-select--sort-icon .dc-select-trigger__icon,
-    .workspace-context-controls__surface .dc-select-trigger[data-icon-only='true'] .dc-select-trigger__icon {
+    .workspace-context-controls__surface
+      .workspace-context-select--sort-icon
+      .dc-select-trigger__icon,
+    .workspace-context-controls__surface
+      .dc-select-trigger[data-icon-only='true']
+      .dc-select-trigger__icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -137,14 +141,24 @@
       color: var(--color-text-muted);
     }
 
-    .workspace-context-controls__surface .workspace-context-select--sort-icon .dc-select-trigger__icon svg,
-    .workspace-context-controls__surface .dc-select-trigger[data-icon-only='true'] .dc-select-trigger__icon svg {
+    .workspace-context-controls__surface
+      .workspace-context-select--sort-icon
+      .dc-select-trigger__icon
+      svg,
+    .workspace-context-controls__surface
+      .dc-select-trigger[data-icon-only='true']
+      .dc-select-trigger__icon
+      svg {
       width: 16px;
       height: 16px;
     }
 
-    .workspace-context-controls__surface .workspace-context-select--sort-icon .dc-select-trigger__label,
-    .workspace-context-controls__surface .dc-select-trigger[data-icon-only='true'] .dc-select-trigger__label {
+    .workspace-context-controls__surface
+      .workspace-context-select--sort-icon
+      .dc-select-trigger__label,
+    .workspace-context-controls__surface
+      .dc-select-trigger[data-icon-only='true']
+      .dc-select-trigger__label {
       position: absolute;
       width: 1px;
       height: 1px;
@@ -162,7 +176,8 @@
     }
   }
 
-  .workspace-context-controls__surface .workspace-context-select--sort-inline.dc-select-trigger:hover {
+  .workspace-context-controls__surface
+    .workspace-context-select--sort-inline.dc-select-trigger:hover {
     background: var(--workspace-context-control-bg-hover);
     border-color: var(--workspace-context-control-border-hover);
     color: var(--color-text);

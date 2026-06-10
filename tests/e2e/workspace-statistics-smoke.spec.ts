@@ -33,13 +33,14 @@ function createCities(count: number) {
 function createWorkspaceStatistics(range: string) {
   const categories = createCategories(9);
   const cities = createCities(18);
-  const insightBody = range === '7d'
-    ? 'Insight body 7d'
-    : range === '24h'
-      ? 'Insight body 24h'
-      : range === '90d'
-        ? 'Insight body 90d'
-        : 'Insight body 30d';
+  const insightBody =
+    range === '7d'
+      ? 'Insight body 7d'
+      : range === '24h'
+        ? 'Insight body 24h'
+        : range === '90d'
+          ? 'Insight body 90d'
+          : 'Insight body 30d';
 
   return {
     updatedAt: '2026-03-11T10:00:00.000Z',
@@ -223,7 +224,13 @@ test('workspace stats smoke: range switch + demand/city pagination', async ({ pa
       });
     }
 
-    if (path === '/api/services' || path === '/api/catalog/services' || path === '/api/cities' || path === '/api/catalog/cities' || path === '/api/providers') {
+    if (
+      path === '/api/services' ||
+      path === '/api/catalog/services' ||
+      path === '/api/cities' ||
+      path === '/api/catalog/cities' ||
+      path === '/api/providers'
+    ) {
       return route.fulfill({ status: 200, headers: jsonHeaders, body: JSON.stringify([]) });
     }
 
@@ -252,14 +259,20 @@ test('workspace stats smoke: range switch + demand/city pagination', async ({ pa
   const demandPanel = page.locator('.workspace-statistics__demand-pagination');
   await expect(demandPanel).toBeVisible();
   await demandPanel.locator('button').nth(1).click();
-  await expect(page.locator('.workspace-statistics-demand__label').first()).toContainText('Category 8');
+  await expect(page.locator('.workspace-statistics-demand__label').first()).toContainText(
+    'Category 8',
+  );
 
   const cityPanel = page.locator('.workspace-statistics__cities-pagination');
   await expect(cityPanel).toBeVisible();
   await cityPanel.locator('button').nth(1).click();
-  await expect(page.locator('.workspace-statistics-city-list__item').first()).toContainText('City 11');
+  await expect(page.locator('.workspace-statistics-city-list__item').first()).toContainText(
+    'City 11',
+  );
 
-  const rangeToolbar = page.locator('.workspace-shared-context-controls__desktop .home-activity__ranges').first();
+  const rangeToolbar = page
+    .locator('.workspace-shared-context-controls__desktop .home-activity__ranges')
+    .first();
   await expect(rangeToolbar).toBeVisible();
   await rangeToolbar.getByRole('button', { name: /7 Tage|7 days/i }).click();
   await expect(page.locator('.skeleton')).toHaveCount(0);

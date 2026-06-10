@@ -26,7 +26,9 @@ export function getCompactFunnelLabel(
   return copy.funnelRequestsCompactLabel;
 }
 
-export function buildEmptyFunnelItems(copy: WorkspaceStatisticsCopy): WorkspaceStatisticsFunnelItemView[] {
+export function buildEmptyFunnelItems(
+  copy: WorkspaceStatisticsCopy,
+): WorkspaceStatisticsFunnelItemView[] {
   return [
     {
       key: 'requests',
@@ -89,21 +91,21 @@ export function buildFunnelVisualRows(params: {
 }): WorkspaceStatisticsFunnelVisualRow[] {
   const { funnel, copy, isNarrowViewport, funnelContainerWidth, mode = 'platform' } = params;
   const minVisualWidth = isNarrowViewport
-    ? (mode === 'personalized'
+    ? mode === 'personalized'
       ? FUNNEL_MIN_WIDTH_PERCENT_MOBILE_PERSONALIZED
-      : FUNNEL_MIN_WIDTH_PERCENT_MOBILE_PLATFORM)
+      : FUNNEL_MIN_WIDTH_PERCENT_MOBILE_PLATFORM
     : FUNNEL_MIN_WIDTH_PERCENT_DESKTOP;
   const completedWidth = funnel.find((step) => step.key === 'completed')?.widthPercent ?? null;
   const shouldForceCompactByWidth = funnelContainerWidth > 0 && funnelContainerWidth < 420;
   const visualWidths = funnel.map((step) => {
-    const sourceWidth = step.isCurrency && completedWidth !== null ? completedWidth : step.widthPercent;
+    const sourceWidth =
+      step.isCurrency && completedWidth !== null ? completedWidth : step.widthPercent;
     return Math.max(minVisualWidth, Math.min(100, Number(sourceWidth || 0)));
   });
 
   return funnel.map((step, index) => {
-    const topWidthPercent = index === 0
-      ? (visualWidths[0] ?? 100)
-      : (visualWidths[index - 1] ?? visualWidths[0] ?? 100);
+    const topWidthPercent =
+      index === 0 ? (visualWidths[0] ?? 100) : (visualWidths[index - 1] ?? visualWidths[0] ?? 100);
     const bottomWidthPercent = visualWidths[index] ?? topWidthPercent;
     const compactLabel = getCompactFunnelLabel(step.key, copy);
     const isLongLabel = step.label.length > 24;

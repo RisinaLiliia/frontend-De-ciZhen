@@ -143,7 +143,9 @@ describe('workspaceViewModel.model', () => {
       isCategoriesLoading: false,
       isServicesLoading: false,
       isFiltersPending: false,
-      appliedFilterChips: [{ key: 'city', label: 'Berlin', onRemove: vi.fn() }] satisfies FilterChip[],
+      appliedFilterChips: [
+        { key: 'city', label: 'Berlin', onRemove: vi.fn() },
+      ] satisfies FilterChip[],
       onCategoryChangeTracked: vi.fn(),
       onSubcategoryChangeTracked: vi.fn(),
       onCityChangeTracked: vi.fn(),

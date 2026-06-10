@@ -49,11 +49,15 @@ export function RequestDetailHeader({
               ) : null}
               {statusBadge}
             </div>
-            {headerAction ? <div className="request-detail__header-action">{headerAction}</div> : null}
+            {headerAction ? (
+              <div className="request-detail__header-action">{headerAction}</div>
+            ) : null}
           </div>
           {showIdentity ? (
             <>
-              {eyebrowLabel ? <p className="request-category request-detail__eyebrow">{eyebrowLabel}</p> : null}
+              {eyebrowLabel ? (
+                <p className="request-category request-detail__eyebrow">{eyebrowLabel}</p>
+              ) : null}
               {title ? <h1 className="request-detail__title">{title}</h1> : null}
             </>
           ) : null}

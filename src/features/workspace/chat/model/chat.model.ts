@@ -68,7 +68,8 @@ const COPY: Record<Locale, ChatPageCopy> = {
     filterProvider: 'Anbieter',
     filterArchived: 'Archiviert',
     listEmptyTitle: 'Noch keine Unterhaltungen',
-    listEmptyHint: 'Sobald Sie mit einem Anbieter oder Kunden schreiben, erscheint die Konversation hier.',
+    listEmptyHint:
+      'Sobald Sie mit einem Anbieter oder Kunden schreiben, erscheint die Konversation hier.',
     listSearchEmptyTitle: 'Keine Chats gefunden',
     listSearchEmptyHint: 'Versuchen Sie einen anderen Namen oder Suchbegriff.',
     threadIdleTitle: 'Wählen Sie einen Chat',
@@ -179,11 +180,11 @@ export function resolveChatListFilter(
   legacyState?: string | null | undefined,
 ): ChatListFilter {
   if (
-    value === 'all'
-    || value === 'unread'
-    || value === 'customer'
-    || value === 'provider'
-    || value === 'archived'
+    value === 'all' ||
+    value === 'unread' ||
+    value === 'customer' ||
+    value === 'provider' ||
+    value === 'archived'
   ) {
     return value;
   }
@@ -235,9 +236,9 @@ export function resolveConversationCounterpart(
     };
   }
   return (
-    conversation.participants.find((participant) => participant.userId !== currentUserId)
-    ?? conversation.participants[0]
-    ?? null
+    conversation.participants.find((participant) => participant.userId !== currentUserId) ??
+    conversation.participants[0] ??
+    null
   );
 }
 
@@ -284,8 +285,10 @@ export function filterVisibleConversations(
 }
 
 export function resolveConversationRequestId(conversation: ChatConversationDto) {
-  return conversation.relatedEntity.requestId
-    ?? (conversation.relatedEntity.type === 'request' ? conversation.relatedEntity.id : null);
+  return (
+    conversation.relatedEntity.requestId ??
+    (conversation.relatedEntity.type === 'request' ? conversation.relatedEntity.id : null)
+  );
 }
 
 export function resolveConversationEntityLabel(
@@ -303,17 +306,14 @@ export function resolveConversationDisplayName(
   copy: ChatPageCopy,
 ) {
   return (
-    resolveConversationCounterpart(conversation, currentUserId)?.displayName
-    ?? resolveConversationCounterpart(conversation, currentUserId)?.name
-    ?? conversation.relatedEntity.title
-    ?? `${resolveConversationEntityLabel(copy, conversation)} #${conversation.relatedEntity.id.slice(-6)}`
+    resolveConversationCounterpart(conversation, currentUserId)?.displayName ??
+    resolveConversationCounterpart(conversation, currentUserId)?.name ??
+    conversation.relatedEntity.title ??
+    `${resolveConversationEntityLabel(copy, conversation)} #${conversation.relatedEntity.id.slice(-6)}`
   );
 }
 
-export function resolveConversationPreview(
-  conversation: ChatConversationDto,
-  copy: ChatPageCopy,
-) {
+export function resolveConversationPreview(conversation: ChatConversationDto, copy: ChatPageCopy) {
   const text = conversation.lastMessagePreview?.trim() || conversation.lastMessage?.text?.trim();
   return text || copy.previewFallback;
 }
@@ -329,9 +329,7 @@ export function resolveConversationSubline(
   return conversation.relatedEntity.title ?? roleLabel;
 }
 
-export function flattenChatMessagePages(
-  pages: ChatMessagesResponseDto[] | undefined,
-) {
+export function flattenChatMessagePages(pages: ChatMessagesResponseDto[] | undefined) {
   if (!pages?.length) return [] as ChatMessageDto[];
   return pages
     .slice()
@@ -347,9 +345,7 @@ export function createChatMessageDayGroups(
 
   messages.forEach((message) => {
     const date = new Date(message.createdAt);
-    const dayKey = Number.isFinite(date.getTime())
-      ? date.toISOString().slice(0, 10)
-      : 'unknown';
+    const dayKey = Number.isFinite(date.getTime()) ? date.toISOString().slice(0, 10) : 'unknown';
     const own = message.senderId === currentUserId;
     const lastDay = result[result.length - 1];
 

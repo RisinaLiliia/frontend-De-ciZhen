@@ -3,10 +3,7 @@ import type {
   WorkspaceStatisticsCityDemandDto,
   WorkspaceStatisticsInsightDto,
 } from '@/lib/api/dto/workspace';
-import {
-  resolveCitySignal,
-  resolveMarketBalanceRatio,
-} from './statisticsModel.mappers';
+import { resolveCitySignal, resolveMarketBalanceRatio } from './statisticsModel.mappers';
 
 type InsightGroup = 'market' | 'performance' | 'growth' | 'risk' | 'promotion' | 'other';
 
@@ -17,9 +14,15 @@ export function inferInsightType(
   if (insight.code.includes('promotion') || insight.code.includes('ads')) return 'promotion';
   if (insight.code.includes('opportunity')) return 'opportunity';
   if (insight.code.includes('profile_')) return 'growth';
-  if (insight.code.includes('response') || insight.code.includes('conversion')) return 'performance';
+  if (insight.code.includes('response') || insight.code.includes('conversion'))
+    return 'performance';
   if (insight.code.includes('risk') || insight.code.includes('unanswered')) return 'risk';
-  if (insight.code.includes('demand') || insight.code.includes('city') || insight.code.includes('category')) return 'demand';
+  if (
+    insight.code.includes('demand') ||
+    insight.code.includes('city') ||
+    insight.code.includes('category')
+  )
+    return 'demand';
   return 'other';
 }
 
@@ -93,7 +96,9 @@ export function selectInsightsForDisplay(
 
   for (const group of targetGroups) {
     if (selected.length >= 4) break;
-    const candidate = ranked.find((item) => !selected.includes(item) && toInsightGroup(item) === group && canTake(item));
+    const candidate = ranked.find(
+      (item) => !selected.includes(item) && toInsightGroup(item) === group && canTake(item),
+    );
     if (candidate) take(candidate);
   }
 
@@ -139,35 +144,39 @@ export function mergeFullCityRanking(params: {
       const byName = statsByName.get(city.cityName.trim().toLowerCase());
       const statsCity = bySlug ?? byName;
       const auftragSuchenCount =
-        typeof statsCity?.auftragSuchenCount === 'number' && Number.isFinite(statsCity.auftragSuchenCount)
+        typeof statsCity?.auftragSuchenCount === 'number' &&
+        Number.isFinite(statsCity.auftragSuchenCount)
           ? Math.max(0, Math.round(statsCity.auftragSuchenCount))
           : undefined;
       const anbieterSuchenCount =
-        typeof statsCity?.anbieterSuchenCount === 'number' && Number.isFinite(statsCity.anbieterSuchenCount)
+        typeof statsCity?.anbieterSuchenCount === 'number' &&
+        Number.isFinite(statsCity.anbieterSuchenCount)
           ? Math.max(0, Math.round(statsCity.anbieterSuchenCount))
           : undefined;
       const hasSearchSignals =
-        typeof auftragSuchenCount === 'number' &&
-        typeof anbieterSuchenCount === 'number';
+        typeof auftragSuchenCount === 'number' && typeof anbieterSuchenCount === 'number';
       const marketBalanceRatio =
-        typeof statsCity?.marketBalanceRatio === 'number' && Number.isFinite(statsCity.marketBalanceRatio)
+        typeof statsCity?.marketBalanceRatio === 'number' &&
+        Number.isFinite(statsCity.marketBalanceRatio)
           ? statsCity.marketBalanceRatio
           : hasSearchSignals
-            ? Number(resolveMarketBalanceRatio({
+            ? Number(
+                resolveMarketBalanceRatio({
+                  requestCount: city.requestCount,
+                  auftragSuchenCount,
+                  anbieterSuchenCount,
+                }).toFixed(2),
+              )
+            : null;
+      const signal =
+        statsCity?.signal ??
+        (hasSearchSignals
+          ? resolveCitySignal({
               requestCount: city.requestCount,
               auftragSuchenCount,
               anbieterSuchenCount,
-            }).toFixed(2))
-            : null;
-      const signal = statsCity?.signal ?? (
-        hasSearchSignals
-          ? resolveCitySignal({
-            requestCount: city.requestCount,
-            auftragSuchenCount,
-            anbieterSuchenCount,
-          })
-          : 'none'
-      );
+            })
+          : 'none');
 
       return {
         citySlug: city.citySlug,

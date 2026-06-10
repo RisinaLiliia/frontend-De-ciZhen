@@ -73,7 +73,10 @@ export function register(payload: RegisterDto) {
 }
 
 export function completeOauthRegister(payload: OauthCompleteRegisterDto) {
-  return authPost<OauthCompleteRegisterDto, AuthResponseDto>('/auth/oauth/complete-register', payload);
+  return authPost<OauthCompleteRegisterDto, AuthResponseDto>(
+    '/auth/oauth/complete-register',
+    payload,
+  );
 }
 
 export function logout() {

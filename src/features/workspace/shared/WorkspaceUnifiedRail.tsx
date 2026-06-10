@@ -2,10 +2,7 @@
 
 import Link from 'next/link';
 
-import {
-  WorkspaceBadge,
-  type WorkspaceBadgeVariant,
-} from './WorkspaceBadge';
+import { WorkspaceBadge, type WorkspaceBadgeVariant } from './WorkspaceBadge';
 import { WorkspaceRightRailPanel } from './WorkspaceRightRailPanel';
 
 export type WorkspaceUnifiedRailAction =
@@ -42,7 +39,11 @@ export type WorkspaceUnifiedRailRecommendationItem = {
 };
 
 export type WorkspaceUnifiedRailVisualization = 'donut' | 'none';
-export type WorkspaceUnifiedRailMetricIcon = 'requests' | 'providers' | 'responseRate' | 'responseTime';
+export type WorkspaceUnifiedRailMetricIcon =
+  | 'requests'
+  | 'providers'
+  | 'responseRate'
+  | 'responseTime';
 export type WorkspaceUnifiedRailMetricTone =
   | 'demand'
   | 'supply'
@@ -106,7 +107,11 @@ function normalizeMetricValue(value: string | number) {
     return Math.max(0, value);
   }
 
-  const normalized = Number(String(value).replace(',', '.').replace(/[^\d.]/g, ''));
+  const normalized = Number(
+    String(value)
+      .replace(',', '.')
+      .replace(/[^\d.]/g, ''),
+  );
   return Number.isFinite(normalized) ? Math.max(0, normalized) : 0;
 }
 
@@ -192,10 +197,7 @@ function renderMetricIcon(icon: WorkspaceUnifiedRailMetricIcon | undefined) {
   );
 }
 
-function renderInlineAction(
-  action: WorkspaceUnifiedRailAction,
-  className: string,
-) {
+function renderInlineAction(action: WorkspaceUnifiedRailAction, className: string) {
   if (action.kind === 'link') {
     return (
       <Link href={action.href} prefetch={action.prefetch ?? false} className={className}>
@@ -205,49 +207,51 @@ function renderInlineAction(
   }
 
   return (
-    <button
-      type="button"
-      className={className}
-      onClick={action.onClick}
-      disabled={action.disabled}
-    >
+    <button type="button" className={className} onClick={action.onClick} disabled={action.disabled}>
       {action.label}
     </button>
   );
 }
 
 function renderQueueItem(item: WorkspaceUnifiedRailQueueItem) {
-  const priorityBadgeVariant = item.priorityBadgeVariant ?? (
-    item.priorityTone === 'high'
+  const priorityBadgeVariant =
+    item.priorityBadgeVariant ??
+    (item.priorityTone === 'high'
       ? 'risk'
       : item.priorityTone === 'medium'
         ? 'warning'
         : item.priorityTone === 'low'
           ? 'success'
-          : 'neutral'
-  );
+          : 'neutral');
   const priorityDotClassName = item.priorityBadgeVariant ?? item.priorityTone ?? 'neutral';
   const content = (
     <>
-      <span className={`workspace-unified-rail__queue-dot is-${priorityDotClassName}`} aria-hidden="true" />
+      <span
+        className={`workspace-unified-rail__queue-dot is-${priorityDotClassName}`}
+        aria-hidden="true"
+      />
       <span className="workspace-unified-rail__queue-copy">
         <strong>{item.title}</strong>
         <span>{item.meta}</span>
       </span>
       <span className="workspace-unified-rail__queue-side">
         {item.priorityLabel ? (
-          <WorkspaceBadge variant={priorityBadgeVariant} className="workspace-unified-rail__priority">
+          <WorkspaceBadge
+            variant={priorityBadgeVariant}
+            className="workspace-unified-rail__priority"
+          >
             {item.priorityLabel}
           </WorkspaceBadge>
         ) : null}
-        <span className="workspace-unified-rail__queue-chevron" aria-hidden="true">›</span>
+        <span className="workspace-unified-rail__queue-chevron" aria-hidden="true">
+          ›
+        </span>
       </span>
     </>
   );
-  const className = [
-    'workspace-unified-rail__queue-item',
-    item.isActive ? 'is-active' : '',
-  ].filter(Boolean).join(' ');
+  const className = ['workspace-unified-rail__queue-item', item.isActive ? 'is-active' : '']
+    .filter(Boolean)
+    .join(' ');
 
   if (item.action.kind === 'link') {
     return (
@@ -298,11 +302,7 @@ function renderSkeleton() {
   ));
 }
 
-export function WorkspaceUnifiedRail({
-  model,
-  isLoading = false,
-  className,
-}: Props) {
+export function WorkspaceUnifiedRail({ model, isLoading = false, className }: Props) {
   if (!model && isLoading) {
     return renderSkeleton();
   }
@@ -318,36 +318,29 @@ export function WorkspaceUnifiedRail({
   const decisionHeading = model.decisionPanel.contextLabel || model.decisionPanel.title;
   const primaryDecisionAction = model.decisionPanel.primaryAction
     ? renderInlineAction(
-      model.decisionPanel.primaryAction,
-      'app-button-primary workspace-ai-card__action workspace-unified-rail__primary',
-    )
+        model.decisionPanel.primaryAction,
+        'app-button-primary workspace-ai-card__action workspace-unified-rail__primary',
+      )
     : null;
   const secondaryDecisionAction = model.decisionPanel.secondaryAction
-    ? renderInlineAction(
-      model.decisionPanel.secondaryAction,
-      'workspace-unified-rail__secondary',
-    )
+    ? renderInlineAction(model.decisionPanel.secondaryAction, 'workspace-unified-rail__secondary')
     : null;
-  const decisionMetrics = model.decisionPanel.metrics.length > 0 ? (
-    <dl className="workspace-unified-rail__metrics">
-      {model.decisionPanel.metrics.map((item) => (
-        <div key={item.key} className={`is-${normalizeMetricTone(item.tone, item.icon)}`}>
-          <dt>{item.label}</dt>
-          <dd>{item.value}</dd>
-        </div>
-      ))}
-    </dl>
-  ) : null;
+  const decisionMetrics =
+    model.decisionPanel.metrics.length > 0 ? (
+      <dl className="workspace-unified-rail__metrics">
+        {model.decisionPanel.metrics.map((item) => (
+          <div key={item.key} className={`is-${normalizeMetricTone(item.tone, item.icon)}`}>
+            <dt>{item.label}</dt>
+            <dd>{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+    ) : null;
   const decisionMetricGrid = showsMetricGrid ? (
     <dl className="workspace-unified-rail__metric-grid">
       {model.decisionPanel.metrics.slice(0, 4).map((item) => (
-        <div
-          key={item.key}
-          className={`is-${normalizeMetricTone(item.tone, item.icon)}`}
-        >
-          <span className="workspace-unified-rail__metric-icon">
-            {renderMetricIcon(item.icon)}
-          </span>
+        <div key={item.key} className={`is-${normalizeMetricTone(item.tone, item.icon)}`}>
+          <span className="workspace-unified-rail__metric-icon">{renderMetricIcon(item.icon)}</span>
           <dd>{item.value}</dd>
           <dt>{item.label}</dt>
           {item.helper ? (
@@ -362,7 +355,9 @@ export function WorkspaceUnifiedRail({
     'workspace-unified-rail__panel--decision',
     showsMetricGrid ? 'has-metric-grid' : '',
     showsDecisionChart ? 'has-visualization' : 'has-no-visualization',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={['workspace-unified-rail', className ?? ''].filter(Boolean).join(' ')}>
@@ -381,7 +376,9 @@ export function WorkspaceUnifiedRail({
             <div className="workspace-unified-rail__decision-copy">
               <span className="workspace-unified-rail__eyebrow">{model.decisionPanel.eyebrow}</span>
               <div className="workspace-unified-rail__decision-main">
-                <strong className="workspace-unified-rail__value">{model.decisionPanel.value}</strong>
+                <strong className="workspace-unified-rail__value">
+                  {model.decisionPanel.value}
+                </strong>
                 {decisionHeading ? (
                   <h3 className="workspace-unified-rail__title">{decisionHeading}</h3>
                 ) : null}
@@ -423,9 +420,9 @@ export function WorkspaceUnifiedRail({
         )}
         {model.actionQueue.footerAction
           ? renderInlineAction(
-            model.actionQueue.footerAction,
-            'workspace-unified-rail__footer-link',
-          )
+              model.actionQueue.footerAction,
+              'workspace-unified-rail__footer-link',
+            )
           : null}
       </WorkspaceRightRailPanel>
 
@@ -441,7 +438,10 @@ export function WorkspaceUnifiedRail({
               >
                 <div className="workspace-unified-rail__recommendation-copy">
                   <div className="workspace-unified-rail__recommendation-head">
-                    <span className={`workspace-unified-rail__recommendation-icon is-${item.tone ?? 'neutral'}`} aria-hidden="true" />
+                    <span
+                      className={`workspace-unified-rail__recommendation-icon is-${item.tone ?? 'neutral'}`}
+                      aria-hidden="true"
+                    />
                     <strong>{item.title}</strong>
                   </div>
                   <span>{item.description}</span>
@@ -464,9 +464,9 @@ export function WorkspaceUnifiedRail({
         )}
         {model.recommendations.footerAction
           ? renderInlineAction(
-            model.recommendations.footerAction,
-            'workspace-unified-rail__footer-link',
-          )
+              model.recommendations.footerAction,
+              'workspace-unified-rail__footer-link',
+            )
           : null}
       </WorkspaceRightRailPanel>
     </div>

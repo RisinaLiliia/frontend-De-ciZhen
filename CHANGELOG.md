@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [0.3.2] - 2026-03-06
 
 ### Added
+
 - Workspace private flow hook tests:
   - `useWorkspacePrivateSources.test.tsx`
   - `useWorkspacePrivateInteractions.test.tsx`
@@ -20,6 +21,7 @@ All notable changes to this project will be documented in this file.
   - `components-ui-location-picker.css`
 
 ### Changed
+
 - Refactored large files into smaller orchestration + section/model modules:
   - `ProfileWorkspacePage.tsx`
   - `providers/[id]/page.tsx`
@@ -29,5 +31,5 @@ All notable changes to this project will be documented in this file.
 - Tightened type contracts in workspace interactions (`ReadonlySet`).
 
 ### Fixed
-- Restored deterministic PR checks flow (`quality`) for branch protection.
 
+- Restored deterministic PR checks flow (`quality`) for branch protection.

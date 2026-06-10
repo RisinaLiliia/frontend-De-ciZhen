@@ -9,10 +9,11 @@ import {
 import type { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { buildWorkspacePublicRequestsListProps } from '@/features/workspace/presentation/workspaceViewModel.helpers';
 import { buildWorkspaceListContext } from '@/features/workspace/presentation/workspaceViewModel.shared';
-import { resolveRequestsListDensityForPageSize, resolveRequestsPageSizeForDensity } from '@/lib/requests/pagination';
-import type {
-  PublicInput,
-} from '@/features/workspace/presentation/workspaceViewModel.types';
+import {
+  resolveRequestsListDensityForPageSize,
+  resolveRequestsPageSizeForDensity,
+} from '@/lib/requests/pagination';
+import type { PublicInput } from '@/features/workspace/presentation/workspaceViewModel.types';
 import type { PublicContentProps } from '@/features/workspace/requests/PublicContent';
 
 type BuildPublicFiltersArgs = Pick<

@@ -82,7 +82,9 @@ function Harness({ enabled }: { enabled?: boolean }) {
     enabled,
   });
 
-  return <div data-testid="workspace-content-state">{workspaceContentProps ? 'ready' : 'idle'}</div>;
+  return (
+    <div data-testid="workspace-content-state">{workspaceContentProps ? 'ready' : 'idle'}</div>
+  );
 }
 
 describe('useWorkspacePrivateViewModel', () => {

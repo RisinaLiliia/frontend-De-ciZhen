@@ -7,9 +7,7 @@ import { WorkspacePublicDemandMapPanel } from '@/features/workspace/demand-map';
 import { WorkspaceIntroShell } from '@/features/workspace/intro/WorkspaceIntroShell';
 import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
 import { workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
-import {
-  WorkspaceModeHeader,
-} from '@/features/workspace/shell/WorkspaceModeHeader';
+import { WorkspaceModeHeader } from '@/features/workspace/shell/WorkspaceModeHeader';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspacePublicCityActivityDto } from '@/lib/api/dto/workspace';
@@ -52,12 +50,13 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
   hideDemandMapOnMobile = true,
   preferredRequestsRole = null,
 }: WorkspacePublicIntroProps) {
-  const showMarketMap = showDemandMap && Boolean(cityActivity || summary || isMapLoading || isMapError);
+  const showMarketMap =
+    showDemandMap && Boolean(cityActivity || summary || isMapLoading || isMapError);
 
   return (
     <WorkspaceIntroShell
       navHeaderSlot={navHeaderSlot}
-      header={(
+      header={
         <WorkspaceModeHeader
           t={t}
           locale={locale}
@@ -65,7 +64,7 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
           activeWorkspaceTab={activeWorkspaceTab}
           preferredRequestsRole={preferredRequestsRole}
         />
-      )}
+      }
       leftColumnSlot={leftColumnSlot}
     >
       {showMarketMap ? (
@@ -81,7 +80,10 @@ export const WorkspacePublicIntro = React.memo(function WorkspacePublicIntro({
         </div>
       ) : null}
       {showQuickAction ? (
-        <section className={workspacePanelShell('stack-sm', 'workspace-intro__mobile-hidden')} aria-label="Workspace quick action">
+        <section
+          className={workspacePanelShell('stack-sm', 'workspace-intro__mobile-hidden')}
+          aria-label="Workspace quick action"
+        >
           <CreateRequestCard href={quickActionHref} />
         </section>
       ) : null}

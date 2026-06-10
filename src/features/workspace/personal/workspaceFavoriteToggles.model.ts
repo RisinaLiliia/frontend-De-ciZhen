@@ -1,6 +1,9 @@
 'use client';
 
-import type { useProviderFavoriteToggle, useRequestFavoriteToggle } from '@/hooks/useFavoriteToggles';
+import type {
+  useProviderFavoriteToggle,
+  useRequestFavoriteToggle,
+} from '@/hooks/useFavoriteToggles';
 
 type RequestFavoriteToggleResult = ReturnType<typeof useRequestFavoriteToggle>;
 type ProviderFavoriteToggleResult = ReturnType<typeof useProviderFavoriteToggle>;

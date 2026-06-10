@@ -11,9 +11,7 @@ import { buildWorkspaceListContext } from '@/features/workspace/presentation/wor
 import type { PrivateInput } from '@/features/workspace/presentation/workspaceViewModel.types';
 import type { WorkspaceContentProps } from '@/features/workspace/requests/workspaceContent.types';
 
-export function buildWorkspacePrivateContentProps(
-  params: PrivateInput,
-): WorkspaceContentProps {
+export function buildWorkspacePrivateContentProps(params: PrivateInput): WorkspaceContentProps {
   const {
     t,
     isWorkspaceAuthed,
@@ -51,32 +49,36 @@ export function buildWorkspacePrivateContentProps(
   const listContext = buildWorkspaceListContext(params);
   const contractsLoading = isProviderContractsLoading || isClientContractsLoading;
   const emptyListProps = buildEmptyWorkspaceListProps(listContext);
-  const myRequestsListProps = activeWorkspaceTab === 'my-requests'
-    ? buildWorkspaceOwnerRequestsListProps(listContext, {
-      requests: filteredMyRequests,
-      isLoading: isMyRequestsLoading,
-      ownerRequestActions,
-    })
-    : emptyListProps;
-  const myOffersListProps = activeWorkspaceTab === 'my-offers'
-    ? buildWorkspaceOfferRequestsListProps(listContext, {
-      requests: myOfferRequests,
-      isLoading: isMyOffersLoading,
-    })
-    : emptyListProps;
-  const contractsListProps = activeWorkspaceTab === 'completed-jobs'
-    ? buildWorkspaceOfferRequestsListProps(listContext, {
-      requests: contractRequests,
-      isLoading: contractsLoading,
-      offersByRequest: contractOffersByRequest,
-    })
-    : emptyListProps;
-  const favoriteRequestsListProps = activeWorkspaceTab === 'favorites'
-    ? buildWorkspaceFavoriteRequestsListProps(listContext, {
-      requests: favoriteRequests,
-      isLoading: isFavoriteRequestsLoading,
-    })
-    : emptyListProps;
+  const myRequestsListProps =
+    activeWorkspaceTab === 'my-requests'
+      ? buildWorkspaceOwnerRequestsListProps(listContext, {
+          requests: filteredMyRequests,
+          isLoading: isMyRequestsLoading,
+          ownerRequestActions,
+        })
+      : emptyListProps;
+  const myOffersListProps =
+    activeWorkspaceTab === 'my-offers'
+      ? buildWorkspaceOfferRequestsListProps(listContext, {
+          requests: myOfferRequests,
+          isLoading: isMyOffersLoading,
+        })
+      : emptyListProps;
+  const contractsListProps =
+    activeWorkspaceTab === 'completed-jobs'
+      ? buildWorkspaceOfferRequestsListProps(listContext, {
+          requests: contractRequests,
+          isLoading: contractsLoading,
+          offersByRequest: contractOffersByRequest,
+        })
+      : emptyListProps;
+  const favoriteRequestsListProps =
+    activeWorkspaceTab === 'favorites'
+      ? buildWorkspaceFavoriteRequestsListProps(listContext, {
+          requests: favoriteRequests,
+          isLoading: isFavoriteRequestsLoading,
+        })
+      : emptyListProps;
 
   return {
     t,

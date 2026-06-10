@@ -59,8 +59,10 @@ export function RequestsPaginatedPanel({
   children,
 }: RequestsPaginatedPanelProps) {
   const densityClassName = listDensity === 'double' ? 'is-double' : 'is-single';
-  const resolvedPanelClassName = `${surface === 'panel' ? 'panel ' : ''}requests-panel ${panelClassName ?? ''}`.trim();
-  const resolvedListClassName = `requests-list requests-list--stable ${densityClassName} ${listClassName ?? ''}`.trim();
+  const resolvedPanelClassName =
+    `${surface === 'panel' ? 'panel ' : ''}requests-panel ${panelClassName ?? ''}`.trim();
+  const resolvedListClassName =
+    `requests-list requests-list--stable ${densityClassName} ${listClassName ?? ''}`.trim();
 
   return (
     <section className={resolvedPanelClassName}>

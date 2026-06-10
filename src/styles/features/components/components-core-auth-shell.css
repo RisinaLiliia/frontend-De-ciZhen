@@ -126,10 +126,10 @@
       font-size: var(--fs-12);
     }
 
-  .auth-shell .profile-settings__password-field .field,
-  .auth-shell .profile-settings__password-field .input {
-    padding-right: 38px;
-  }
+    .auth-shell .profile-settings__password-field .field,
+    .auth-shell .profile-settings__password-field .input {
+      padding-right: 38px;
+    }
 
     .auth-shell .profile-settings__password-toggle {
       width: 24px;
@@ -137,6 +137,4 @@
       right: 6px;
     }
   }
-
-
 }

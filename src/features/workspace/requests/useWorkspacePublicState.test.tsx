@@ -65,13 +65,13 @@ describe('useWorkspacePublicState', () => {
 
   it('keeps personalized mode compatible with the same public-state contract', () => {
     render(
-        <StateProbe
-          {...makeArgs({
-            isPersonalized: true,
-            activePublicSection: 'stats',
-          })}
-        />,
-      );
+      <StateProbe
+        {...makeArgs({
+          isPersonalized: true,
+          activePublicSection: 'stats',
+        })}
+      />,
+    );
 
     const node = screen.getByTestId('state');
     expect(node.getAttribute('data-nav-count')).toBe('5');

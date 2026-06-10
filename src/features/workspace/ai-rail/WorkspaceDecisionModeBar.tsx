@@ -36,8 +36,8 @@ export function WorkspaceDecisionModeBar({
         <span className="my-decision-mode__progress">
           {totalCount > 0
             ? t(I18N_KEYS.requestsPage.decisionModeProgressTemplate)
-              .replace('{completed}', String(completedInSession))
-              .replace('{total}', String(totalCount))
+                .replace('{completed}', String(completedInSession))
+                .replace('{total}', String(totalCount))
             : t(I18N_KEYS.requestsPage.decisionModeNoOpen)}
         </span>
       </div>

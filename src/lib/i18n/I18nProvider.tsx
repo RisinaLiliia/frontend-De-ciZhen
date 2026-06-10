@@ -1,8 +1,8 @@
 // src/lib/i18n/I18nProvider.tsx
-"use client";
+'use client';
 
-import * as React from "react";
-import { getCurrentLocale, setCurrentLocale, type Locale } from "./t";
+import * as React from 'react';
+import { getCurrentLocale, setCurrentLocale, type Locale } from './t';
 
 type I18nContextValue = {
   locale: Locale;
@@ -11,23 +11,23 @@ type I18nContextValue = {
 
 const I18nContext = React.createContext<I18nContextValue | undefined>(undefined);
 
-const STORAGE_KEY = "app.locale";
+const STORAGE_KEY = 'app.locale';
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocale] = React.useState<Locale>(getCurrentLocale());
 
   React.useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "de" || stored === "en") {
+    if (stored === 'de' || stored === 'en') {
       setLocale(stored);
       return;
     }
 
     const browserLocale = navigator.language.toLowerCase();
-    if (browserLocale.startsWith("de")) {
-      setLocale("de");
-    } else if (browserLocale.startsWith("en")) {
-      setLocale("en");
+    if (browserLocale.startsWith('de')) {
+      setLocale('de');
+    } else if (browserLocale.startsWith('en')) {
+      setLocale('en');
     }
   }, []);
 
@@ -45,7 +45,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 export function useI18n() {
   const ctx = React.useContext(I18nContext);
   if (!ctx) {
-    throw new Error("useI18n must be used within I18nProvider");
+    throw new Error('useI18n must be used within I18nProvider');
   }
   return ctx;
 }

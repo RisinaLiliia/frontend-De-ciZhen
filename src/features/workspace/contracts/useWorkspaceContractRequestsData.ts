@@ -23,9 +23,10 @@ export function useWorkspaceContractRequestsData({
   locale,
 }: Params) {
   const contractRequestIds = React.useMemo(
-    () => (enabled
-      ? Array.from(new Set(filteredContracts.map((item) => item.requestId).filter(Boolean)))
-      : []),
+    () =>
+      enabled
+        ? Array.from(new Set(filteredContracts.map((item) => item.requestId).filter(Boolean)))
+        : [],
     [enabled, filteredContracts],
   );
 
@@ -34,7 +35,9 @@ export function useWorkspaceContractRequestsData({
     enabled: enabled && isWorkspaceAuthed && contractRequestIds.length > 0,
     queryFn: async () => {
       const batch = await getWorkspacePublicRequestsBatch(contractRequestIds);
-      return new Map<string, RequestResponseDto>(batch.items.map((request) => [request.id, request]));
+      return new Map<string, RequestResponseDto>(
+        batch.items.map((request) => [request.id, request]),
+      );
     },
   });
 

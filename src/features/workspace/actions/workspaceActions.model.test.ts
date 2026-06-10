@@ -48,7 +48,9 @@ describe('workspaceActions.model', () => {
         participantUserId: 'provider-user-2',
       }),
     ).toBe(true);
-    expect(isWorkspaceChatConversationInput({ relatedEntity: { type: 'offer', id: '' } })).toBe(false);
+    expect(isWorkspaceChatConversationInput({ relatedEntity: { type: 'offer', id: '' } })).toBe(
+      false,
+    );
   });
 
   it('builds owner actions and final workspace actions result', () => {

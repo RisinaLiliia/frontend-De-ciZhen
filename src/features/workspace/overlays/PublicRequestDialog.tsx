@@ -48,7 +48,9 @@ function RequestDetailInteractionMenuItem({
       className={`my-request-card__owner-menu-item ${className ?? ''}`.trim()}
     >
       <span className="my-request-card__owner-menu-item-label">{children}</span>
-      <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">{icon}</span>
+      <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">
+        {icon}
+      </span>
     </button>
   );
 }
@@ -103,7 +105,11 @@ function RequestDetailInteractionMenu({
   }, [isOpen]);
 
   return (
-    <div ref={menuRef} className="my-request-card__owner-menu request-detail__interaction-menu" data-card-action="true">
+    <div
+      ref={menuRef}
+      className="my-request-card__owner-menu request-detail__interaction-menu"
+      data-card-action="true"
+    >
       <MoreDotsLink
         label={t(I18N_KEYS.requestDetails.workspaceActionsOpen)}
         className={`my-request-card__owner-menu-trigger ${isOpen ? 'is-open' : ''}`.trim()}
@@ -294,14 +300,23 @@ export function PublicRequestDialog({
       scope: 'market',
       intent: initialIntent,
     });
-  }, [initialIntent, requestId, resolvedRequest?.clientId, resolvedRequest?.clientName, searchParams]);
+  }, [
+    initialIntent,
+    requestId,
+    resolvedRequest?.clientId,
+    resolvedRequest?.clientName,
+    searchParams,
+  ]);
   const handleCloseProfile = React.useCallback(() => {
     router.push(clearWorkspaceRequestProfileHref({ currentSearch: searchParams }));
   }, [router, searchParams]);
 
-  const replaceWithOfferSheet = React.useCallback((targetRequestId: string) => {
-    onOpenOfferSheet(targetRequestId);
-  }, [onOpenOfferSheet]);
+  const replaceWithOfferSheet = React.useCallback(
+    (targetRequestId: string) => {
+      onOpenOfferSheet(targetRequestId);
+    },
+    [onOpenOfferSheet],
+  );
 
   const handleEditOffer = React.useCallback(() => {
     replaceWithOfferSheet(requestId);
@@ -329,7 +344,20 @@ export function PublicRequestDialog({
       return;
     }
     replaceWithOfferSheet(request.id);
-  }, [applyState, handleEditOffer, isAuthed, isOfferAccepted, isOwner, pathname, replaceWithOfferSheet, request, router, searchParams, setIsOwnerEditMode, t]);
+  }, [
+    applyState,
+    handleEditOffer,
+    isAuthed,
+    isOfferAccepted,
+    isOwner,
+    pathname,
+    replaceWithOfferSheet,
+    request,
+    router,
+    searchParams,
+    setIsOwnerEditMode,
+    t,
+  ]);
 
   const handleChat = React.useCallback(() => {
     if (!request) return;
@@ -349,13 +377,26 @@ export function PublicRequestDialog({
       toast.message(t(I18N_KEYS.requestDetails.chatSoon));
       return;
     }
-    onOpenChatConversation({
-      relatedEntity: { type: 'request', id: request.id },
-      participantUserId,
-      participantRole: 'customer',
-      requestId: request.id,
-    }, request.title?.trim() || viewModel?.title);
-  }, [isAuthed, isOwner, onOpenChatConversation, pathname, request, router, searchParams, t, viewModel?.title]);
+    onOpenChatConversation(
+      {
+        relatedEntity: { type: 'request', id: request.id },
+        participantUserId,
+        participantRole: 'customer',
+        requestId: request.id,
+      },
+      request.title?.trim() || viewModel?.title,
+    );
+  }, [
+    isAuthed,
+    isOwner,
+    onOpenChatConversation,
+    pathname,
+    request,
+    router,
+    searchParams,
+    t,
+    viewModel?.title,
+  ]);
 
   const handleFavorite = React.useCallback(() => {
     if (!request) return;
@@ -395,7 +436,10 @@ export function PublicRequestDialog({
     try {
       if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
         await navigator.share({
-          title: request?.title?.trim() || viewModel?.title || t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle),
+          title:
+            request?.title?.trim() ||
+            viewModel?.title ||
+            t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle),
           url: shareUrl,
         });
       } else if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
@@ -412,20 +456,20 @@ export function PublicRequestDialog({
   const offerStatusBadge = React.useMemo(() => {
     if (offerCardState === 'none') return null;
 
-    const statusLabel = offerCardState === 'accepted'
-      ? t(I18N_KEYS.requestDetails.statusAccepted)
-      : offerCardState === 'declined'
-        ? t(I18N_KEYS.requestDetails.statusDeclined)
-        : t(I18N_KEYS.requestDetails.statusReview);
-    const statusVariant = offerCardState === 'accepted'
-      ? 'success'
-      : offerCardState === 'declined'
-        ? 'risk'
-        : 'info';
+    const statusLabel =
+      offerCardState === 'accepted'
+        ? t(I18N_KEYS.requestDetails.statusAccepted)
+        : offerCardState === 'declined'
+          ? t(I18N_KEYS.requestDetails.statusDeclined)
+          : t(I18N_KEYS.requestDetails.statusReview);
+    const statusVariant =
+      offerCardState === 'accepted' ? 'success' : offerCardState === 'declined' ? 'risk' : 'info';
 
     return (
       <span className="request-card__status-actions request-detail__status-actions">
-        <WorkspaceBadge variant={statusVariant} className="capitalize">{statusLabel}</WorkspaceBadge>
+        <WorkspaceBadge variant={statusVariant} className="capitalize">
+          {statusLabel}
+        </WorkspaceBadge>
       </span>
     );
   }, [offerCardState, t]);
@@ -445,24 +489,26 @@ export function PublicRequestDialog({
         surface="dialog"
         clientProfileHref={clientProfileHref}
         statusBadgeContent={offerStatusBadge ?? undefined}
-        headerActionSlot={!isOwner ? (
-          <RequestDetailInteractionMenu
-            t={t}
-            isSaved={isSaved}
-            isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
-            canEditOffer={offerCardState === 'sent'}
-            canDeleteOffer={offerCardState === 'sent'}
-            isDeletingOffer={isDeletingOffer}
-            onToggleFavorite={handleFavorite}
-            onEditOffer={handleEditOffer}
-            onDeleteOffer={() => {
-              void handleDeleteOffer();
-            }}
-            onShare={() => {
-              void handleShare();
-            }}
-          />
-        ) : undefined}
+        headerActionSlot={
+          !isOwner ? (
+            <RequestDetailInteractionMenu
+              t={t}
+              isSaved={isSaved}
+              isSavePending={pendingFavoriteRequestIds.has(resolvedRequest!.id)}
+              canEditOffer={offerCardState === 'sent'}
+              canDeleteOffer={offerCardState === 'sent'}
+              isDeletingOffer={isDeletingOffer}
+              onToggleFavorite={handleFavorite}
+              onEditOffer={handleEditOffer}
+              onDeleteOffer={() => {
+                void handleDeleteOffer();
+              }}
+              onShare={() => {
+                void handleShare();
+              }}
+            />
+          ) : undefined
+        }
         requestStatusView={requestStatusView}
         requestPriceTrend={requestPriceTrend}
         requestPriceTrendLabel={requestPriceTrendLabel}
@@ -531,7 +577,9 @@ export function PublicRequestDialog({
       return (
         <div className="my-request-dialog__state">
           <div className="my-request-inline-state my-request-inline-state--error" role="alert">
-            <span className="my-request-inline-state__icon" aria-hidden="true">!</span>
+            <span className="my-request-inline-state__icon" aria-hidden="true">
+              !
+            </span>
             <div className="my-request-inline-state__copy">
               <strong>{t(I18N_KEYS.requestDetails.workspaceLoadErrorTitle)}</strong>
               <p>{t(I18N_KEYS.requestDetails.workspaceLoadErrorBody)}</p>
@@ -550,7 +598,11 @@ export function PublicRequestDialog({
   return (
     <RequestDialogShell
       locale={locale}
-      ariaLabel={request?.title?.trim() || viewModel?.title || t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle)}
+      ariaLabel={
+        request?.title?.trim() ||
+        viewModel?.title ||
+        t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle)
+      }
       onClose={isCustomerProfileView ? handleCloseProfile : onClose}
       isLoading={isPending}
       isError={hasDialogError}

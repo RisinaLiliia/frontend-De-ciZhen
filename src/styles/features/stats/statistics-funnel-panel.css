@@ -95,7 +95,9 @@
     margin-top: calc(var(--workspace-statistics-context-gap) * -0.5);
   }
 
-  .workspace-statistics-funnel--personalized .workspace-statistics-funnel__layer + .workspace-statistics-funnel__layer {
+  .workspace-statistics-funnel--personalized
+    .workspace-statistics-funnel__layer
+    + .workspace-statistics-funnel__layer {
     margin-top: calc(var(--workspace-statistics-context-gap) * -0.2);
   }
 
@@ -110,12 +112,11 @@
     text-align: center;
     border: 1px solid color-mix(in oklab, var(--color-primary) 22%, var(--surface-soft-border) 78%);
     box-shadow: var(--surface-card-shadow);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--funnel-tone) 20%, var(--color-surface) 80%) 0%,
-        color-mix(in oklab, var(--funnel-tone) 12%, var(--surface-soft-bg) 88%) 100%
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--funnel-tone) 20%, var(--color-surface) 80%) 0%,
+      color-mix(in oklab, var(--funnel-tone) 12%, var(--surface-soft-bg) 88%) 100%
+    );
     clip-path: polygon(
       calc((100% - var(--funnel-top-width, 100%)) / 2) 0,
       calc((100% + var(--funnel-top-width, 100%)) / 2) 0,
@@ -157,10 +158,14 @@
   }
 
   .workspace-statistics-funnel__shape::before {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 60%);
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0) 60%
+    );
     pointer-events: none;
   }
 
@@ -186,7 +191,11 @@
   }
 
   .workspace-statistics-funnel__layer.is-tone-2 {
-    --funnel-tone: color-mix(in oklab, var(--color-primary) 88%, var(--c-info, var(--color-primary)) 12%);
+    --funnel-tone: color-mix(
+      in oklab,
+      var(--color-primary) 88%,
+      var(--c-info, var(--color-primary)) 12%
+    );
   }
 
   .workspace-statistics-funnel__layer.is-tone-3 {
@@ -194,7 +203,11 @@
   }
 
   .workspace-statistics-funnel__layer.is-tone-4 {
-    --funnel-tone: color-mix(in oklab, var(--c-info, var(--color-primary)) 70%, var(--c-success, var(--color-primary)) 30%);
+    --funnel-tone: color-mix(
+      in oklab,
+      var(--c-info, var(--color-primary)) 70%,
+      var(--c-success, var(--color-primary)) 30%
+    );
   }
 
   .workspace-statistics-funnel__layer.is-tone-5 {
@@ -490,5 +503,4 @@
   .workspace-statistics-funnel__conversion--empty strong {
     color: color-mix(in oklab, var(--color-text-muted) 82%, var(--color-text) 18%);
   }
-
 }

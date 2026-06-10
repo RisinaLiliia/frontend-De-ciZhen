@@ -5,7 +5,11 @@ export function parsePageParam(value: string | null): number | null {
   return parsed;
 }
 
-export function paginateItems<T>(items: T[], page: number, pageSize: number): {
+export function paginateItems<T>(
+  items: T[],
+  page: number,
+  pageSize: number,
+): {
   totalPages: number;
   safePage: number;
   startIndex: number;

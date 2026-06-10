@@ -15,7 +15,12 @@ export function useWorkspaceFavoriteRequestData({ workspaceRequestUserStateQueri
   const queryEntries = React.useMemo(
     () =>
       workspaceRequestUserStateQueries.favoriteRequests.enabled
-        ? [{ key: 'favoriteRequests' as const, query: workspaceRequestUserStateQueries.favoriteRequests }]
+        ? [
+            {
+              key: 'favoriteRequests' as const,
+              query: workspaceRequestUserStateQueries.favoriteRequests,
+            },
+          ]
         : [],
     [workspaceRequestUserStateQueries.favoriteRequests],
   );
@@ -25,7 +30,11 @@ export function useWorkspaceFavoriteRequestData({ workspaceRequestUserStateQueri
   });
 
   const favoriteRequests =
-    (queryResults[0]?.data as ReturnType<typeof workspaceRequestUserStateQueries.favoriteRequests.queryFn> extends Promise<infer TResult> ? TResult : never) ?? [];
+    (queryResults[0]?.data as ReturnType<
+      typeof workspaceRequestUserStateQueries.favoriteRequests.queryFn
+    > extends Promise<infer TResult>
+      ? TResult
+      : never) ?? [];
   const isFavoriteRequestsLoading = queryResults[0]?.isLoading ?? false;
 
   return {

@@ -3,10 +3,7 @@
 import type { OfferDto } from '@/lib/api/dto/offers';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceTab } from '@/features/workspace/state';
-import type {
-  WorkspaceRequestsRole,
-  WorkspaceRequestsScope,
-} from '@/features/workspace/state';
+import type { WorkspaceRequestsRole, WorkspaceRequestsScope } from '@/features/workspace/state';
 
 type WorkspaceDataPlanArgs = {
   enabled?: boolean;
@@ -61,31 +58,22 @@ export function resolveWorkspaceDataPlan({
     requestsScope === 'my' &&
     activePublicSection === 'requests';
   const shouldLoadUnifiedMarketRequests =
-    isWorkspacePublicSection &&
-    activePublicSection === 'requests' &&
-    requestsScope === 'market';
+    isWorkspacePublicSection && activePublicSection === 'requests' && requestsScope === 'market';
   const shouldLoadPrivateOverviewRequests =
     isWorkspaceAuthed &&
     shouldLoadPrivateData &&
     activePublicSection === null &&
     activeWorkspaceTab === 'my-requests';
   const shouldLoadLegacyPublicOverview =
-    !shouldLoadUnifiedMarketRequests && (
-      isWorkspacePublicSection ||
-      !isWorkspaceAuthed ||
-      shouldLoadPrivateOverviewRequests
-    );
+    !shouldLoadUnifiedMarketRequests &&
+    (isWorkspacePublicSection || !isWorkspaceAuthed || shouldLoadPrivateOverviewRequests);
   const isLegacyPrivateTabMode = activePublicSection === null;
   const shouldLoadPrivateOverview = isWorkspaceAuthed && shouldLoadPrivateData && hasAccessToken;
-  const shouldLoadWorkspaceRequests = shouldLoadUnifiedPrivateRequests || shouldLoadUnifiedMarketRequests;
-  const shouldLoadMyOffers =
-    isLegacyPrivateTabMode &&
-    isWorkspaceAuthed &&
-    shouldLoadPrivateData;
+  const shouldLoadWorkspaceRequests =
+    shouldLoadUnifiedPrivateRequests || shouldLoadUnifiedMarketRequests;
+  const shouldLoadMyOffers = isLegacyPrivateTabMode && isWorkspaceAuthed && shouldLoadPrivateData;
   const shouldLoadFavoriteRequests =
-    isLegacyPrivateTabMode &&
-    isWorkspaceAuthed &&
-    shouldLoadPrivateData;
+    isLegacyPrivateTabMode && isWorkspaceAuthed && shouldLoadPrivateData;
   const shouldLoadOfferRequests = shouldLoadMyOffers;
 
   return {

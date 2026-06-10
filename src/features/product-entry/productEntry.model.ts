@@ -102,8 +102,7 @@ export const productEntryRailModel = buildLinkedWorkspaceRailModel({
     {
       id: 'ai-recommendation',
       title: 'Anbieter A priorisieren.',
-      description:
-        'Hohe Bewertung, schnelle Antwortzeit und passender Preis für deine Anfrage.',
+      description: 'Hohe Bewertung, schnelle Antwortzeit und passender Preis für deine Anfrage.',
       tone: 'positive',
     },
   ],

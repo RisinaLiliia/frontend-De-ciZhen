@@ -19,10 +19,7 @@ type Args = {
   isAuthed: boolean;
 };
 
-export function useWorkspaceProviderSupportData({
-  enabled = true,
-  isAuthed,
-}: Args) {
+export function useWorkspaceProviderSupportData({ enabled = true, isAuthed }: Args) {
   const authMe = useAuthMe();
   const favoriteProvidersQuery = useQuery({
     queryKey: workspaceQK.favoriteProviders(),
@@ -46,12 +43,14 @@ export function useWorkspaceProviderSupportData({
   const ownProviderDetailQuery = useQuery({
     queryKey: providerQK.publicById(ownProviderProfileId),
     enabled: enabled && isAuthed && Boolean(ownProviderProfileId),
-    queryFn: () => withStatusFallback(() => getPublicProviderById(ownProviderProfileId!), null, [404]),
+    queryFn: () =>
+      withStatusFallback(() => getPublicProviderById(ownProviderProfileId!), null, [404]),
     staleTime: PROVIDERS_STALE_TIME_MS,
     refetchOnWindowFocus: false,
   });
   const favoriteProviders = React.useMemo(
-    () => backfillOwnProviderAvatars(favoriteProvidersQuery.data ?? [], ownProviderDetailQuery.data),
+    () =>
+      backfillOwnProviderAvatars(favoriteProvidersQuery.data ?? [], ownProviderDetailQuery.data),
     [favoriteProvidersQuery.data, ownProviderDetailQuery.data],
   );
   const providers = React.useMemo(

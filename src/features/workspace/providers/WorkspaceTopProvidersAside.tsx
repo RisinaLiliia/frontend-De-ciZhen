@@ -2,7 +2,10 @@
 
 import { TopProvidersPanel, type TopProviderItem } from '@/components/providers/TopProvidersPanel';
 import { UserHeaderCardSkeleton } from '@/components/ui/UserHeaderCardSkeleton';
-import { workspaceCardShell, workspacePanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+import {
+  workspaceCardShell,
+  workspacePanelShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 
 type WorkspaceTopProvidersAsideProps = {
   isLoading: boolean;
@@ -59,7 +62,10 @@ export function WorkspaceTopProvidersAside({
         <div className="skeleton is-wide h-4 w-48" />
         <div className="provider-list">
           {Array.from({ length: 2 }).map((_, index) => (
-            <div key={`provider-error-skeleton-${index}`} className={workspaceCardShell('provider-card')}>
+            <div
+              key={`provider-error-skeleton-${index}`}
+              className={workspaceCardShell('provider-card')}
+            >
               <UserHeaderCardSkeleton />
               <div className="skeleton is-wide h-10 w-full rounded-lg" />
             </div>

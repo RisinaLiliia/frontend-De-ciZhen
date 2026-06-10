@@ -22,10 +22,7 @@ export function WorkspaceRouteShell({
   const auth = useAuthSnapshot();
   const [bootstrapRefreshIntent, setBootstrapRefreshIntent] = React.useState(true);
 
-  const {
-    resolvedPublicSection,
-    isGuestChatSection,
-  } = useWorkspaceShellLegacyRouting({
+  const { resolvedPublicSection, isGuestChatSection } = useWorkspaceShellLegacyRouting({
     authStatus: auth.status,
     forcedPublicSection,
     forcedWorkspaceTab,

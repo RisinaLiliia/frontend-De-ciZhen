@@ -64,12 +64,17 @@ function extractPostalSearchToken(value: string): string {
   return value.match(/\b\d{3,10}\b/)?.[0] ?? '';
 }
 
-function buildCityOptionMeta(postalCodes: string[], stateName: string | null, districtName: string | null, query: string) {
+function buildCityOptionMeta(
+  postalCodes: string[],
+  stateName: string | null,
+  districtName: string | null,
+  query: string,
+) {
   const postalToken = extractPostalSearchToken(query);
   const matchedPostalCode =
-    postalCodes.find((postalCode) => postalToken && postalCode.startsWith(postalToken))
-    ?? postalCodes[0]
-    ?? '';
+    postalCodes.find((postalCode) => postalToken && postalCode.startsWith(postalToken)) ??
+    postalCodes[0] ??
+    '';
   const regionLabel = stateName?.trim() || districtName?.trim() || '';
 
   return [matchedPostalCode, regionLabel].filter(Boolean).join(' · ');
@@ -104,15 +109,9 @@ export function CitySearchSelect({
   const listboxId = React.useId();
   const stateId = React.useId();
   const debouncedQuery = useDebouncedValue(query.trim(), 180);
-  const selectedIds =
-    value && (!allOption || value !== allOption.value)
-      ? [value]
-      : [];
+  const selectedIds = value && (!allOption || value !== allOption.value) ? [value] : [];
 
-  const {
-    data: selectedCities = [],
-    isError: isSelectedCitiesError,
-  } = useCities(countryCode, {
+  const { data: selectedCities = [], isError: isSelectedCitiesError } = useCities(countryCode, {
     enabled: !disabled && selectedIds.length > 0,
     ids: selectedIds,
     limit: selectedIds.length || 1,
@@ -122,45 +121,64 @@ export function CitySearchSelect({
     isLoading,
     isError: isBrowseCitiesError,
   } = useCities(countryCode, {
-    enabled: !disabled && (
-      isInline
-        ? (isAutoResolveInline ? debouncedQuery.length > 0 : open || debouncedQuery.length > 0)
-        : open
-    ),
+    enabled:
+      !disabled &&
+      (isInline
+        ? isAutoResolveInline
+          ? debouncedQuery.length > 0
+          : open || debouncedQuery.length > 0
+        : open),
     query: debouncedQuery || undefined,
     limit: debouncedQuery ? searchLimit : initialLimit,
   });
   const isError = isSelectedCitiesError || isBrowseCitiesError;
 
-  const mappedSelectedOptions = React.useMemo<CitySearchOption[]>(() => (
-    selectedCities
-      .map((city) => ({
+  const mappedSelectedOptions = React.useMemo<CitySearchOption[]>(
+    () =>
+      selectedCities.map((city) => ({
         value: city.id,
         label: pickI18n(city.i18n, locale) || city.name || city.key,
-        meta: buildCityOptionMeta(city.postalCodes, city.stateName, city.districtName, debouncedQuery),
-      }))
-  ), [debouncedQuery, locale, selectedCities]);
-  const mappedBrowseOptions = React.useMemo<CitySearchOption[]>(() => (
-    browseCities.map((city) => ({
-      value: city.id,
-      label: pickI18n(city.i18n, locale) || city.name || city.key,
-      meta: buildCityOptionMeta(city.postalCodes, city.stateName, city.districtName, debouncedQuery),
-    }))
-  ), [browseCities, debouncedQuery, locale]);
+        meta: buildCityOptionMeta(
+          city.postalCodes,
+          city.stateName,
+          city.districtName,
+          debouncedQuery,
+        ),
+      })),
+    [debouncedQuery, locale, selectedCities],
+  );
+  const mappedBrowseOptions = React.useMemo<CitySearchOption[]>(
+    () =>
+      browseCities.map((city) => ({
+        value: city.id,
+        label: pickI18n(city.i18n, locale) || city.name || city.key,
+        meta: buildCityOptionMeta(
+          city.postalCodes,
+          city.stateName,
+          city.districtName,
+          debouncedQuery,
+        ),
+      })),
+    [browseCities, debouncedQuery, locale],
+  );
 
   const selectedOption = React.useMemo(
-    () => dedupeOptions([...mappedSelectedOptions, ...mappedBrowseOptions]).find((option) => option.value === value) ?? null,
+    () =>
+      dedupeOptions([...mappedSelectedOptions, ...mappedBrowseOptions]).find(
+        (option) => option.value === value,
+      ) ?? null,
     [mappedBrowseOptions, mappedSelectedOptions, value],
   );
 
   const cityOptions = React.useMemo<CitySearchOption[]>(() => {
-    const baseOptions = debouncedQuery.length > 0
-      ? mappedBrowseOptions
-      : [...mappedSelectedOptions, ...mappedBrowseOptions].sort((a, b) => a.label.localeCompare(b.label, locale));
+    const baseOptions =
+      debouncedQuery.length > 0
+        ? mappedBrowseOptions
+        : [...mappedSelectedOptions, ...mappedBrowseOptions].sort((a, b) =>
+            a.label.localeCompare(b.label, locale),
+          );
 
-    return allOption
-      ? [allOption, ...dedupeOptions(baseOptions)]
-      : dedupeOptions(baseOptions);
+    return allOption ? [allOption, ...dedupeOptions(baseOptions)] : dedupeOptions(baseOptions);
   }, [allOption, debouncedQuery.length, locale, mappedBrowseOptions, mappedSelectedOptions]);
 
   React.useEffect(() => {
@@ -183,10 +201,8 @@ export function CitySearchSelect({
     () => (allOption ? cityOptions : cityOptions.filter((option) => option.value !== '')),
     [allOption, cityOptions],
   );
-  const activeOption = activeIndex >= 0 ? visibleOptions[activeIndex] ?? null : null;
-  const activeOptionId = activeOption
-    ? `${listboxId}-option-${activeIndex}`
-    : undefined;
+  const activeOption = activeIndex >= 0 ? (visibleOptions[activeIndex] ?? null) : null;
+  const activeOptionId = activeOption ? `${listboxId}-option-${activeIndex}` : undefined;
   const previewId = React.useId();
   const stateMessage = isLoading
     ? loadingLabel
@@ -195,18 +211,22 @@ export function CitySearchSelect({
       : visibleOptions.length === 0
         ? emptyLabel
         : null;
-  const bestInlineOption = isAutoResolveInline && debouncedQuery.length > 0
-    ? visibleOptions.find((option) => !allOption || option.value !== allOption.value) ?? null
-    : null;
+  const bestInlineOption =
+    isAutoResolveInline && debouncedQuery.length > 0
+      ? (visibleOptions.find((option) => !allOption || option.value !== allOption.value) ?? null)
+      : null;
 
-  const commitInlineOption = React.useCallback((option: CitySearchOption | null) => {
-    if (!option) return;
-    onChange(option.value);
-    onSelectOption?.(option);
-    setQuery('');
-    setOpen(false);
-    setActiveIndex(-1);
-  }, [onChange, onSelectOption]);
+  const commitInlineOption = React.useCallback(
+    (option: CitySearchOption | null) => {
+      if (!option) return;
+      onChange(option.value);
+      onSelectOption?.(option);
+      setQuery('');
+      setOpen(false);
+      setActiveIndex(-1);
+    },
+    [onChange, onSelectOption],
+  );
 
   React.useEffect(() => {
     if (!open || isLoading || isError || visibleOptions.length === 0) {
@@ -230,144 +250,179 @@ export function CitySearchSelect({
   }, [activeOptionId]);
 
   const triggerLabel = selectedOption?.label ?? placeholder;
-  const selectOption = React.useCallback((option: CitySearchOption) => {
-    onChange(option.value);
-    onSelectOption?.(option);
-    setQuery('');
-    setOpen(false);
-  }, [onChange, onSelectOption]);
-  const handleInputKeyDown = React.useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!open && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
-      event.preventDefault();
-      setOpen(true);
-      return;
-    }
-
-    if (event.key === 'Escape') {
-      event.preventDefault();
+  const selectOption = React.useCallback(
+    (option: CitySearchOption) => {
+      onChange(option.value);
+      onSelectOption?.(option);
       setQuery('');
       setOpen(false);
-      setActiveIndex(-1);
-      return;
-    }
-
-    if (isAutoResolveInline) {
-      if (event.key === 'Enter' && bestInlineOption) {
+    },
+    [onChange, onSelectOption],
+  );
+  const handleInputKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (!open && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
         event.preventDefault();
-        commitInlineOption(bestInlineOption);
+        setOpen(true);
+        return;
       }
-      return;
-    }
 
-    if (visibleOptions.length === 0 || isLoading || isError) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setQuery('');
+        setOpen(false);
+        setActiveIndex(-1);
+        return;
+      }
 
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      setActiveIndex((current) => (current + 1) % visibleOptions.length);
-      return;
-    }
+      if (isAutoResolveInline) {
+        if (event.key === 'Enter' && bestInlineOption) {
+          event.preventDefault();
+          commitInlineOption(bestInlineOption);
+        }
+        return;
+      }
 
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      setActiveIndex((current) => (current <= 0 ? visibleOptions.length - 1 : current - 1));
-      return;
-    }
+      if (visibleOptions.length === 0 || isLoading || isError) return;
 
-    if (event.key === 'Home') {
-      event.preventDefault();
-      setActiveIndex(0);
-      return;
-    }
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setActiveIndex((current) => (current + 1) % visibleOptions.length);
+        return;
+      }
 
-    if (event.key === 'End') {
-      event.preventDefault();
-      setActiveIndex(visibleOptions.length - 1);
-      return;
-    }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        setActiveIndex((current) => (current <= 0 ? visibleOptions.length - 1 : current - 1));
+        return;
+      }
 
-    if (event.key === 'Enter' && activeOption) {
-      event.preventDefault();
-      selectOption(activeOption);
-    }
-  }, [activeOption, bestInlineOption, commitInlineOption, isAutoResolveInline, isError, isLoading, open, selectOption, visibleOptions]);
+      if (event.key === 'Home') {
+        event.preventDefault();
+        setActiveIndex(0);
+        return;
+      }
+
+      if (event.key === 'End') {
+        event.preventDefault();
+        setActiveIndex(visibleOptions.length - 1);
+        return;
+      }
+
+      if (event.key === 'Enter' && activeOption) {
+        event.preventDefault();
+        selectOption(activeOption);
+      }
+    },
+    [
+      activeOption,
+      bestInlineOption,
+      commitInlineOption,
+      isAutoResolveInline,
+      isError,
+      isLoading,
+      open,
+      selectOption,
+      visibleOptions,
+    ],
+  );
 
   const inputValue = isInline
-    ? (query.length > 0 || open ? query : selectedOption?.label ?? '')
+    ? query.length > 0 || open
+      ? query
+      : (selectedOption?.label ?? '')
     : query;
 
   const renderResults = open ? (
     isAutoResolveInline ? null : (
-    <div
-      id={listboxId}
-      className="dc-city-search-results"
-      role="listbox"
-      aria-label={ariaLabel}
-      aria-busy={isLoading}
-    >
-      {stateMessage ? (
-        <p id={stateId} className="dc-city-search-state" role="status" aria-live="polite">
-          {stateMessage}
-        </p>
-      ) : (
-        visibleOptions.map((option, index) => {
-          const isSelected = option.value === value;
-          const isActive = option.value === activeOption?.value;
-          const optionId = `${listboxId}-option-${index}`;
-          return (
-            <button
-              id={optionId}
-              key={option.value}
-              type="button"
-              className={cn('dc-city-search-option', isSelected && 'is-selected', isActive && 'is-active')}
-              role="option"
-              aria-selected={isSelected}
-              onMouseDown={(event) => event.preventDefault()}
-              onMouseEnter={() => setActiveIndex(visibleOptions.findIndex((item) => item.value === option.value))}
-              onClick={() => selectOption(option)}
-            >
-              <span className="dc-city-search-option__body">
-                <span className="dc-city-search-option__label">{option.label}</span>
-                {option.meta ? <span className="dc-city-search-option__meta">{option.meta}</span> : null}
-              </span>
-            </button>
-          );
-        })
-      )}
-    </div>
+      <div
+        id={listboxId}
+        className="dc-city-search-results"
+        role="listbox"
+        aria-label={ariaLabel}
+        aria-busy={isLoading}
+      >
+        {stateMessage ? (
+          <p id={stateId} className="dc-city-search-state" role="status" aria-live="polite">
+            {stateMessage}
+          </p>
+        ) : (
+          visibleOptions.map((option, index) => {
+            const isSelected = option.value === value;
+            const isActive = option.value === activeOption?.value;
+            const optionId = `${listboxId}-option-${index}`;
+            return (
+              <button
+                id={optionId}
+                key={option.value}
+                type="button"
+                className={cn(
+                  'dc-city-search-option',
+                  isSelected && 'is-selected',
+                  isActive && 'is-active',
+                )}
+                role="option"
+                aria-selected={isSelected}
+                onMouseDown={(event) => event.preventDefault()}
+                onMouseEnter={() =>
+                  setActiveIndex(visibleOptions.findIndex((item) => item.value === option.value))
+                }
+                onClick={() => selectOption(option)}
+              >
+                <span className="dc-city-search-option__body">
+                  <span className="dc-city-search-option__label">{option.label}</span>
+                  {option.meta ? (
+                    <span className="dc-city-search-option__meta">{option.meta}</span>
+                  ) : null}
+                </span>
+              </button>
+            );
+          })
+        )}
+      </div>
     )
   ) : null;
 
-  const renderInlineFeedback = isAutoResolveInline && open ? (
-    stateMessage ? (
-      <p id={stateId} className="dc-city-search-state dc-city-search-state--inline" role="status" aria-live="polite">
-        {stateMessage}
-      </p>
-    ) : bestInlineOption ? (
-      <button
-        id={previewId}
-        type="button"
-        className="dc-city-search-preview"
-        onMouseDown={(event) => event.preventDefault()}
-        onClick={() => selectOption(bestInlineOption)}
-      >
-        <span className="dc-city-search-preview__icon" aria-hidden="true">
-          <IconCheck />
-        </span>
-        <span className="dc-city-search-preview__body">
-          <span className="dc-city-search-preview__label">{bestInlineOption.label}</span>
-          {bestInlineOption.meta ? (
-            <span className="dc-city-search-preview__meta">{bestInlineOption.meta}</span>
-          ) : null}
-        </span>
-      </button>
-    ) : null
-  ) : null;
+  const renderInlineFeedback =
+    isAutoResolveInline && open ? (
+      stateMessage ? (
+        <p
+          id={stateId}
+          className="dc-city-search-state dc-city-search-state--inline"
+          role="status"
+          aria-live="polite"
+        >
+          {stateMessage}
+        </p>
+      ) : bestInlineOption ? (
+        <button
+          id={previewId}
+          type="button"
+          className="dc-city-search-preview"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => selectOption(bestInlineOption)}
+        >
+          <span className="dc-city-search-preview__icon" aria-hidden="true">
+            <IconCheck />
+          </span>
+          <span className="dc-city-search-preview__body">
+            <span className="dc-city-search-preview__label">{bestInlineOption.label}</span>
+            {bestInlineOption.meta ? (
+              <span className="dc-city-search-preview__meta">{bestInlineOption.meta}</span>
+            ) : null}
+          </span>
+        </button>
+      ) : null
+    ) : null;
 
   if (isInline) {
     return (
       <div className={cn('dc-city-search', 'dc-city-search--inline', className)}>
         <div className="dc-city-search-input-wrap">
-          <span className="dc-leading-icon dc-leading-icon--city dc-city-search-input__icon" aria-hidden="true">
+          <span
+            className="dc-leading-icon dc-leading-icon--city dc-city-search-input__icon"
+            aria-hidden="true"
+          >
             <IconPin />
           </span>
           <Input
@@ -379,15 +434,24 @@ export function CitySearchSelect({
               setOpen(true);
             }}
             onBlur={() => {
-              window.setTimeout(() => {
-                if (isAutoResolveInline && query.trim().length > 0 && bestInlineOption && !isLoading && !isError) {
-                  commitInlineOption(bestInlineOption);
-                  return;
-                }
-                setOpen(false);
-                setQuery('');
-                setActiveIndex(-1);
-              }, isAutoResolveInline ? 0 : 120);
+              window.setTimeout(
+                () => {
+                  if (
+                    isAutoResolveInline &&
+                    query.trim().length > 0 &&
+                    bestInlineOption &&
+                    !isLoading &&
+                    !isError
+                  ) {
+                    commitInlineOption(bestInlineOption);
+                    return;
+                  }
+                  setOpen(false);
+                  setQuery('');
+                  setActiveIndex(-1);
+                },
+                isAutoResolveInline ? 0 : 120,
+              );
             }}
             onChange={(event) => {
               const nextQuery = event.target.value;
@@ -405,7 +469,9 @@ export function CitySearchSelect({
             aria-expanded={isAutoResolveInline ? undefined : open}
             aria-controls={isAutoResolveInline ? undefined : listboxId}
             aria-activedescendant={isAutoResolveInline ? undefined : activeOptionId}
-            aria-describedby={open ? (stateMessage ? stateId : bestInlineOption ? previewId : undefined) : undefined}
+            aria-describedby={
+              open ? (stateMessage ? stateId : bestInlineOption ? previewId : undefined) : undefined
+            }
             className="dc-city-search-input"
             autoComplete="off"
             disabled={disabled}
@@ -423,14 +489,21 @@ export function CitySearchSelect({
       onOpenChange={setOpen}
       disabled={disabled}
       className={cn('dc-city-search', className)}
-      trigger={(
-        <div className={cn('field dc-select-trigger dc-city-search-trigger', disabled && 'is-disabled')}>
-          <span className={cn('dc-city-search-trigger__label', !selectedOption && 'is-placeholder')}>
+      trigger={
+        <div
+          className={cn(
+            'field dc-select-trigger dc-city-search-trigger',
+            disabled && 'is-disabled',
+          )}
+        >
+          <span
+            className={cn('dc-city-search-trigger__label', !selectedOption && 'is-placeholder')}
+          >
             {triggerLabel}
           </span>
           <IconChevronDown />
         </div>
-      )}
+      }
     >
       <div className="dc-city-search-panel">
         <Input

@@ -22,15 +22,18 @@ function resolveMatchingInitialPublicRequests({
   BuildPublicRequestsQueryStateArgs,
   'filter' | 'preferInitialPublicRequests' | 'initialPublicRequests'
 >) {
-  const shouldUseInitialPublicRequests = preferInitialPublicRequests && hasDefaultPublicFilter(filter);
+  const shouldUseInitialPublicRequests =
+    preferInitialPublicRequests && hasDefaultPublicFilter(filter);
   if (!shouldUseInitialPublicRequests || !initialPublicRequests) {
     return undefined;
   }
 
-  const initialPage = typeof initialPublicRequests.page === 'number' ? initialPublicRequests.page : 1;
-  const initialLimit = typeof initialPublicRequests.limit === 'number'
-    ? initialPublicRequests.limit
-    : initialPublicRequests.items.length;
+  const initialPage =
+    typeof initialPublicRequests.page === 'number' ? initialPublicRequests.page : 1;
+  const initialLimit =
+    typeof initialPublicRequests.limit === 'number'
+      ? initialPublicRequests.limit
+      : initialPublicRequests.items.length;
 
   if (initialPage !== (filter.page ?? 1) || initialLimit !== (filter.limit ?? initialLimit)) {
     return undefined;
@@ -59,10 +62,10 @@ export function buildRequestsExplorerPublicRequestsQueryState({
     enabled: !isProvidersView,
     placeholderData: !isProvidersView
       ? resolveMatchingInitialPublicRequests({
-        filter,
-        preferInitialPublicRequests,
-        initialPublicRequests,
-      })
+          filter,
+          preferInitialPublicRequests,
+          initialPublicRequests,
+        })
       : undefined,
   };
 }

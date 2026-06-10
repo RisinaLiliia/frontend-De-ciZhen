@@ -4,7 +4,10 @@ import { mapPublicProviderToCard } from '@/components/providers/providerCardMapp
 import type { ProviderPublicDto } from '@/lib/api/dto/providers';
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
-import { getProviderCityKey, getProviderServiceKeys } from '@/features/providers/profile/providerProfile.presentation';
+import {
+  getProviderCityKey,
+  getProviderServiceKeys,
+} from '@/features/providers/profile/providerProfile.presentation';
 import { buildWorkspaceProviderDetailHref } from '@/features/workspace/providers/workspaceProviderRoute.model';
 
 type Translate = (key: I18nKey) => string;
@@ -37,7 +40,7 @@ function resolveProviderRoleLabel(provider: ProviderPublicDto, t: Translate) {
 export function resolveProviderTargetUserId(provider: ProviderPublicDto | undefined) {
   return provider?.userId && provider.userId.trim().length > 0
     ? provider.userId
-    : provider?.id ?? null;
+    : (provider?.id ?? null);
 }
 
 export function buildProviderPublicProfileCard(params: {
@@ -55,11 +58,11 @@ export function buildProviderPublicProfileCard(params: {
     roleLabel: resolveProviderRoleLabel(provider, t),
     cityLabel: provider.cityName?.trim() || undefined,
     profileHref:
-      profileHrefBuilder?.(provider.id)
-      ?? buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id }),
+      profileHrefBuilder?.(provider.id) ??
+      buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id }),
     reviewsHref:
-      reviewsHrefBuilder?.(provider.id)
-      ?? `${buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id })}#reviews`,
+      reviewsHrefBuilder?.(provider.id) ??
+      `${buildWorkspaceProviderDetailHref({ currentSearch: '', providerId: provider.id })}#reviews`,
     ctaLabel: t(I18N_KEYS.homePublic.topProvider1Cta),
     status: 'online',
   });
@@ -84,10 +87,7 @@ export function buildProviderPublicProfileSimilarProviders(params: {
     : [];
   const source = sameCityProviders.length > 0 ? sameCityProviders : candidates;
 
-  return source
-    .slice()
-    .sort(rankProviderPublicProfileCandidates)
-    .slice(0, limit);
+  return source.slice().sort(rankProviderPublicProfileCandidates).slice(0, limit);
 }
 
 export function buildProviderPublicProfileSimilarCards(params: {
@@ -153,7 +153,16 @@ export function buildProviderPublicProfileViewModel(params: {
   similarCardsLength: number;
   hasSameCityProviders: boolean;
 }) {
-  const { provider, profileCard, hasRecentReview, locale, formatPrice, t, similarCardsLength, hasSameCityProviders } = params;
+  const {
+    provider,
+    profileCard,
+    hasRecentReview,
+    locale,
+    formatPrice,
+    t,
+    similarCardsLength,
+    hasSameCityProviders,
+  } = params;
 
   const statusLabel = hasRecentReview
     ? t(I18N_KEYS.requestDetails.clientOnline)

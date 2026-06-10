@@ -31,21 +31,21 @@ paths:
           schema:
             type:
               - string
-              - "null"
+              - 'null'
         - in: query
           name: regionId
           required: false
           schema:
             type:
               - string
-              - "null"
+              - 'null'
         - in: query
           name: categoryKey
           required: false
           schema:
             type:
               - string
-              - "null"
+              - 'null'
       responses:
         '400':
           description: Invalid request parameters
@@ -81,7 +81,7 @@ components:
         value:
           type:
             - string
-            - "null"
+            - 'null'
         label:
           type: string
     ContextHealthMetric:
@@ -112,29 +112,29 @@ components:
         region:
           anyOf:
             - $ref: '#/components/schemas/SelectedFilter'
-            - type: "null"
+            - type: 'null'
         category:
           $ref: '#/components/schemas/SelectedFilter'
         service:
           anyOf:
             - $ref: '#/components/schemas/SelectedFilter'
-            - type: "null"
+            - type: 'null'
         scopeLabel:
           type:
             - string
-            - "null"
+            - 'null'
         title:
           type:
             - string
-            - "null"
+            - 'null'
         subtitle:
           type:
             - string
-            - "null"
+            - 'null'
         stickyLabel:
           type:
             - string
-            - "null"
+            - 'null'
         health:
           type: array
           items:
@@ -147,11 +147,11 @@ components:
             title:
               type:
                 - string
-                - "null"
+                - 'null'
             body:
               type:
                 - string
-                - "null"
+                - 'null'
     FilterOptions:
       type: object
       required: [cities, categories, services]
@@ -174,31 +174,31 @@ components:
         decisionSubtitle:
           type:
             - string
-            - "null"
+            - 'null'
         demandSubtitle:
           type:
             - string
-            - "null"
+            - 'null'
         citiesSubtitle:
           type:
             - string
-            - "null"
+            - 'null'
         opportunityTitle:
           type:
             - string
-            - "null"
+            - 'null'
         priceTitle:
           type:
             - string
-            - "null"
+            - 'null'
         insightsSubtitle:
           type:
             - string
-            - "null"
+            - 'null'
         growthSubtitle:
           type:
             - string
-            - "null"
+            - 'null'
     OpportunityMetric:
       type: object
       required: [key, value, semanticTone, semanticKey]
@@ -224,7 +224,7 @@ components:
         distanceKm:
           type:
             - number
-            - "null"
+            - 'null'
         reason:
           type: string
           enum: [selected_city, nearby_competitor, top_ranked]
@@ -251,69 +251,69 @@ components:
         citySlug:
           type:
             - string
-            - "null"
+            - 'null'
         city:
           type:
             - string
-            - "null"
+            - 'null'
         categoryKey:
           type:
             - string
-            - "null"
+            - 'null'
         category:
           type:
             - string
-            - "null"
+            - 'null'
         recommendedMin:
           type:
             - number
-            - "null"
+            - 'null'
         recommendedMax:
           type:
             - number
-            - "null"
+            - 'null'
         marketAverage:
           type:
             - number
-            - "null"
+            - 'null'
         optimalMin:
           type:
             - number
-            - "null"
+            - 'null'
         optimalMax:
           type:
             - number
-            - "null"
+            - 'null'
         smartRecommendedPrice:
           type:
             - number
-            - "null"
+            - 'null'
         smartSignalTone:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [visibility, balanced, premium]
         analyzedRequestsCount:
           type:
             - number
-            - "null"
+            - 'null'
         confidenceLevel:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [high, medium, low]
         recommendation:
           type:
             - string
-            - "null"
+            - 'null'
         profitPotentialScore:
           type:
             - number
-            - "null"
+            - 'null'
         profitPotentialStatus:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [high, medium, low]
     ActivityComparisonPoint:
       type: object
@@ -324,11 +324,11 @@ components:
         clientActivity:
           type:
             - number
-            - "null"
+            - 'null'
         providerActivity:
           type:
             - number
-            - "null"
+            - 'null'
     ActivityComparison:
       type: object
       required: [hasReliableSeries, points]
@@ -336,27 +336,27 @@ components:
         title:
           type:
             - string
-            - "null"
+            - 'null'
         subtitle:
           type:
             - string
-            - "null"
+            - 'null'
         summary:
           type:
             - string
-            - "null"
+            - 'null'
         peakTimestamp:
           type:
             - string
-            - "null"
+            - 'null'
         bestWindowTimestamp:
           type:
             - string
-            - "null"
+            - 'null'
         updatedAt:
           type:
             - string
-            - "null"
+            - 'null'
         hasReliableSeries:
           type: boolean
         points:
@@ -390,27 +390,27 @@ components:
         cityId:
           type:
             - string
-            - "null"
+            - 'null'
         city:
           type: string
         categoryKey:
           type:
             - string
-            - "null"
+            - 'null'
         category:
           type:
             - string
-            - "null"
+            - 'null'
         demand:
           type: number
         providers:
           type:
             - number
-            - "null"
+            - 'null'
         marketBalanceRatio:
           type:
             - number
-            - "null"
+            - 'null'
         score:
           type: number
         demandScore:
@@ -437,11 +437,11 @@ components:
         peerContext:
           anyOf:
             - $ref: '#/components/schemas/OpportunityPeerContext'
-            - type: "null"
+            - type: 'null'
         priceIntelligence:
           anyOf:
             - $ref: '#/components/schemas/PriceIntelligence'
-            - type: "null"
+            - type: 'null'
     UserComparisonMetric:
       type: object
       required: [key, unit, userValue, marketValue, direction, tone, status]
@@ -455,11 +455,11 @@ components:
         userValue:
           type:
             - number
-            - "null"
+            - 'null'
         marketValue:
           type:
             - number
-            - "null"
+            - 'null'
         direction:
           type: string
           enum: [up, down, flat]
@@ -469,7 +469,7 @@ components:
         status:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [high, medium, low]
     UserFormulaMetric:
       type: object
@@ -503,15 +503,15 @@ components:
         userValue:
           type:
             - number
-            - "null"
+            - 'null'
         marketValue:
           type:
             - number
-            - "null"
+            - 'null'
         gap:
           type:
             - number
-            - "null"
+            - 'null'
         direction:
           type: string
           enum: [up, down, flat]
@@ -544,7 +544,7 @@ components:
         metricKey:
           type:
             - string
-            - "null"
+            - 'null'
           enum:
             - offer_rate
             - response_rate
@@ -559,7 +559,7 @@ components:
         actionCode:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
     UserPerformancePosition:
       type: object
@@ -568,26 +568,26 @@ components:
         percentile:
           type:
             - number
-            - "null"
+            - 'null'
         categoryPercentile:
           type:
             - number
-            - "null"
+            - 'null'
         cityPercentile:
           type:
             - number
-            - "null"
+            - 'null'
         bucket:
           type: string
           enum: [top, average, below]
         categoryLabel:
           type:
             - string
-            - "null"
+            - 'null'
         cityLabel:
           type:
             - string
-            - "null"
+            - 'null'
     UserProfileGap:
       type: object
       required: [fromStage, toStage, lossPercent, lostCount, tone]
@@ -601,11 +601,11 @@ components:
         lossPercent:
           type:
             - number
-            - "null"
+            - 'null'
         lostCount:
           type:
             - number
-            - "null"
+            - 'null'
         tone:
           type: string
           enum: [positive, neutral, warning]
@@ -633,39 +633,40 @@ components:
         cityLabel:
           type:
             - string
-            - "null"
+            - 'null'
         categoryLabel:
           type:
             - string
-            - "null"
+            - 'null'
         value:
           type:
             - number
-            - "null"
+            - 'null'
         secondaryValue:
           type:
             - number
-            - "null"
+            - 'null'
     UserPricing:
       type: object
-      required: [currentPrice, recommendedMin, recommendedMax, marketAverage, status, conversionImpact]
+      required:
+        [currentPrice, recommendedMin, recommendedMax, marketAverage, status, conversionImpact]
       properties:
         currentPrice:
           type:
             - number
-            - "null"
+            - 'null'
         recommendedMin:
           type:
             - number
-            - "null"
+            - 'null'
         recommendedMax:
           type:
             - number
-            - "null"
+            - 'null'
         marketAverage:
           type:
             - number
-            - "null"
+            - 'null'
         status:
           type: string
           enum: [below, within, above, unknown]
@@ -687,40 +688,62 @@ components:
         targetValue:
           type:
             - number
-            - "null"
+            - 'null'
         cityLabel:
           type:
             - string
-            - "null"
+            - 'null'
         categoryLabel:
           type:
             - string
-            - "null"
+            - 'null'
     DecisionLayerMetric:
       type: object
-      required: [id, label, marketValue, userValue, gapAbsolute, gapPercent, unit, direction, status, signalCodes, primaryActionCode, summary]
+      required:
+        [
+          id,
+          label,
+          marketValue,
+          userValue,
+          gapAbsolute,
+          gapPercent,
+          unit,
+          direction,
+          status,
+          signalCodes,
+          primaryActionCode,
+          summary,
+        ]
       properties:
         id:
           type: string
-          enum: [offer_rate, avg_response_time, unanswered_over_24h, completed_jobs, revenue, average_order_value]
+          enum:
+            [
+              offer_rate,
+              avg_response_time,
+              unanswered_over_24h,
+              completed_jobs,
+              revenue,
+              average_order_value,
+            ]
         label:
           type: string
         marketValue:
           type:
             - number
-            - "null"
+            - 'null'
         userValue:
           type:
             - number
-            - "null"
+            - 'null'
         gapAbsolute:
           type:
             - number
-            - "null"
+            - 'null'
         gapPercent:
           type:
             - number
-            - "null"
+            - 'null'
         unit:
           type: string
           enum: [percent, minutes, currency, count]
@@ -737,12 +760,12 @@ components:
         primaryActionCode:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
         summary:
           type:
             - string
-            - "null"
+            - 'null'
     DecisionLayerAction:
       type: object
       required: [code, label, target]
@@ -755,7 +778,7 @@ components:
         target:
           type:
             - string
-            - "null"
+            - 'null'
     DecisionLayer:
       type: object
       required: [title, subtitle, metrics, primaryInsight, primaryAction]
@@ -763,11 +786,11 @@ components:
         title:
           type:
             - string
-            - "null"
+            - 'null'
         subtitle:
           type:
             - string
-            - "null"
+            - 'null'
         metrics:
           type: array
           items:
@@ -775,47 +798,61 @@ components:
         primaryInsight:
           type:
             - string
-            - "null"
+            - 'null'
         primaryAction:
           anyOf:
             - $ref: '#/components/schemas/DecisionLayerAction'
-            - type: "null"
+            - type: 'null'
     PersonalizedPricing:
       type: object
-      required: [title, subtitle, contextLabel, marketAverage, recommendedMin, recommendedMax, userPrice, gapAbsolute, position, effect, actionCode, summary]
+      required:
+        [
+          title,
+          subtitle,
+          contextLabel,
+          marketAverage,
+          recommendedMin,
+          recommendedMax,
+          userPrice,
+          gapAbsolute,
+          position,
+          effect,
+          actionCode,
+          summary,
+        ]
       properties:
         title:
           type:
             - string
-            - "null"
+            - 'null'
         subtitle:
           type:
             - string
-            - "null"
+            - 'null'
         contextLabel:
           type:
             - string
-            - "null"
+            - 'null'
         marketAverage:
           type:
             - number
-            - "null"
+            - 'null'
         recommendedMin:
           type:
             - number
-            - "null"
+            - 'null'
         recommendedMax:
           type:
             - number
-            - "null"
+            - 'null'
         userPrice:
           type:
             - number
-            - "null"
+            - 'null'
         gapAbsolute:
           type:
             - number
-            - "null"
+            - 'null'
         position:
           type: string
           enum: [below, within, above, unknown]
@@ -825,12 +862,12 @@ components:
         actionCode:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
         summary:
           type:
             - string
-            - "null"
+            - 'null'
     CategoryFitItem:
       type: object
       required: [categoryKey, label, marketDemandShare, userFit, opportunity, actionCode, summary]
@@ -838,13 +875,13 @@ components:
         categoryKey:
           type:
             - string
-            - "null"
+            - 'null'
         label:
           type: string
         marketDemandShare:
           type:
             - number
-            - "null"
+            - 'null'
         userFit:
           type: string
           enum: [high, medium, low, unknown]
@@ -854,12 +891,12 @@ components:
         actionCode:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
         summary:
           type:
             - string
-            - "null"
+            - 'null'
     CategoryFit:
       type: object
       required: [title, subtitle, items]
@@ -867,45 +904,46 @@ components:
         title:
           type:
             - string
-            - "null"
+            - 'null'
         subtitle:
           type:
             - string
-            - "null"
+            - 'null'
         items:
           type: array
           items:
             $ref: '#/components/schemas/CategoryFitItem'
     CityComparisonItem:
       type: object
-      required: [cityId, city, marketRequests, userActivity, userConversion, actionCode, recommendation]
+      required:
+        [cityId, city, marketRequests, userActivity, userConversion, actionCode, recommendation]
       properties:
         cityId:
           type:
             - string
-            - "null"
+            - 'null'
         city:
           type: string
         marketRequests:
           type:
             - number
-            - "null"
+            - 'null'
         userActivity:
           type: string
           enum: [high, medium, low, unknown]
         userConversion:
           type:
             - number
-            - "null"
+            - 'null'
         actionCode:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [respond_faster, adjust_price, focus_market, complete_profile, follow_up_unanswered]
         recommendation:
           type:
             - string
-            - "null"
+            - 'null'
     CityComparison:
       type: object
       required: [title, subtitle, items]
@@ -913,18 +951,30 @@ components:
         title:
           type:
             - string
-            - "null"
+            - 'null'
         subtitle:
           type:
             - string
-            - "null"
+            - 'null'
         items:
           type: array
           items:
             $ref: '#/components/schemas/CityComparisonItem'
     FunnelComparisonStage:
       type: object
-      required: [key, label, marketCount, userCount, marketRateFromPrev, userRateFromPrev, gapRate, status, dropOffSeverity, recommendation]
+      required:
+        [
+          key,
+          label,
+          marketCount,
+          userCount,
+          marketRateFromPrev,
+          userRateFromPrev,
+          gapRate,
+          status,
+          dropOffSeverity,
+          recommendation,
+        ]
       properties:
         key:
           type: string
@@ -934,35 +984,35 @@ components:
         marketCount:
           type:
             - number
-            - "null"
+            - 'null'
         userCount:
           type:
             - number
-            - "null"
+            - 'null'
         marketRateFromPrev:
           type:
             - number
-            - "null"
+            - 'null'
         userRateFromPrev:
           type:
             - number
-            - "null"
+            - 'null'
         gapRate:
           type:
             - number
-            - "null"
+            - 'null'
         status:
           type: string
           enum: [above_market, below_market, at_market, insufficient_data]
         dropOffSeverity:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [high, medium, low]
         recommendation:
           type:
             - string
-            - "null"
+            - 'null'
     FunnelComparison:
       type: object
       required: [largestGapStage, largestDropOffStage, primaryBottleneck, nextAction, stages]
@@ -970,29 +1020,29 @@ components:
         comparisonLabel:
           type:
             - string
-            - "null"
+            - 'null'
         summary:
           type:
             - string
-            - "null"
+            - 'null'
         largestGapStage:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [requests, offers, responses, contracts, completed]
         largestDropOffStage:
           type:
             - string
-            - "null"
+            - 'null'
           enum: [requests, offers, responses, contracts, completed]
         primaryBottleneck:
           type:
             - string
-            - "null"
+            - 'null'
         nextAction:
           type:
             - string
-            - "null"
+            - 'null'
         stages:
           type: array
           items:
@@ -1013,7 +1063,7 @@ components:
         comparisonLabel:
           type:
             - string
-            - "null"
+            - 'null'
         formulaMetrics:
           type: array
           items:
@@ -1031,7 +1081,7 @@ components:
         profileGap:
           anyOf:
             - $ref: '#/components/schemas/UserProfileGap'
-            - type: "null"
+            - type: 'null'
         risks:
           type: array
           items:
@@ -1043,7 +1093,7 @@ components:
         pricing:
           anyOf:
             - $ref: '#/components/schemas/UserPricing'
-            - type: "null"
+            - type: 'null'
         nextSteps:
           type: array
           items:
@@ -1082,23 +1132,23 @@ components:
         decisionInsight:
           type:
             - string
-            - "null"
+            - 'null'
         decisionLayer:
           anyOf:
             - $ref: '#/components/schemas/DecisionLayer'
-            - type: "null"
+            - type: 'null'
         personalizedPricing:
           anyOf:
             - $ref: '#/components/schemas/PersonalizedPricing'
-            - type: "null"
+            - type: 'null'
         categoryFit:
           anyOf:
             - $ref: '#/components/schemas/CategoryFit'
-            - type: "null"
+            - type: 'null'
         cityComparison:
           anyOf:
             - $ref: '#/components/schemas/CityComparison'
-            - type: "null"
+            - type: 'null'
         summary:
           type: object
           additionalProperties: true
@@ -1111,7 +1161,7 @@ components:
         activityComparison:
           anyOf:
             - $ref: '#/components/schemas/ActivityComparison'
-            - type: "null"
+            - type: 'null'
         demand:
           type: object
           additionalProperties: true
@@ -1122,7 +1172,7 @@ components:
         priceIntelligence:
           anyOf:
             - $ref: '#/components/schemas/PriceIntelligence'
-            - type: "null"
+            - type: 'null'
         profileFunnel:
           type: object
           additionalProperties: true
@@ -1142,12 +1192,12 @@ components:
             filename:
               type:
                 - string
-                - "null"
+                - 'null'
         funnelComparison:
           anyOf:
             - $ref: '#/components/schemas/FunnelComparison'
-            - type: "null"
+            - type: 'null'
         userIntelligence:
           anyOf:
             - $ref: '#/components/schemas/UserIntelligence'
-            - type: "null"
+            - type: 'null'

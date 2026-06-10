@@ -8,9 +8,7 @@ import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 
-import type {
-  ProfileOnboardingValues,
-} from './workspaceProfileOnboarding.model';
+import type { ProfileOnboardingValues } from './workspaceProfileOnboarding.model';
 
 type WorkspaceProfileOnboardingAccountSectionProps = {
   t: (key: I18nKey) => string;
@@ -91,11 +89,21 @@ export function WorkspaceProfileOnboardingAccountSection({
           </div>
         </div>
         <div className="auth-password-rules">
-          <span className={passwordChecks.length ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLength)}</span>
-          <span className={passwordChecks.upper ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleUpper)}</span>
-          <span className={passwordChecks.lower ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLower)}</span>
-          <span className={passwordChecks.digit ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleDigit)}</span>
-          <span className={passwordChecks.symbol ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleSymbol)}</span>
+          <span className={passwordChecks.length ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleLength)}
+          </span>
+          <span className={passwordChecks.upper ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleUpper)}
+          </span>
+          <span className={passwordChecks.lower ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleLower)}
+          </span>
+          <span className={passwordChecks.digit ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleDigit)}
+          </span>
+          <span className={passwordChecks.symbol ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleSymbol)}
+          </span>
         </div>
       </section>
 
@@ -108,17 +116,29 @@ export function WorkspaceProfileOnboardingAccountSection({
         />
         <span className="auth-consent__text">
           {t(I18N_KEYS.auth.acceptPolicyPrefix)}{' '}
-          <a href={consentPrivacyHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
+          <a
+            href={consentPrivacyHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="auth-consent__link"
+          >
             {t(I18N_KEYS.auth.acceptPolicyPrivacyLink)}
           </a>{' '}
           {t(I18N_KEYS.auth.acceptPolicyAnd)}{' '}
-          <a href={consentCookieHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
+          <a
+            href={consentCookieHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="auth-consent__link"
+          >
             {t(I18N_KEYS.auth.acceptPolicyCookieLink)}
           </a>{' '}
           {t(I18N_KEYS.auth.acceptPolicySuffix)}
         </span>
       </label>
-      {errors.acceptPrivacyPolicy ? <p className="auth-form-error">{errors.acceptPrivacyPolicy.message}</p> : null}
+      {errors.acceptPrivacyPolicy ? (
+        <p className="auth-form-error">{errors.acceptPrivacyPolicy.message}</p>
+      ) : null}
 
       <div className="workspace-profile-onboarding__actions">
         <button

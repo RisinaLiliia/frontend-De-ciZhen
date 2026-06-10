@@ -9,7 +9,11 @@ type RequestDetailMetaRowsProps = {
   className?: string;
 };
 
-export function RequestDetailMetaRows({ cityLabel, dateLabel, className }: RequestDetailMetaRowsProps) {
+export function RequestDetailMetaRows({
+  cityLabel,
+  dateLabel,
+  className,
+}: RequestDetailMetaRowsProps) {
   return (
     <div className={`request-detail__meta ${className ?? ''}`.trim()}>
       <div className="request-detail__meta-item">
@@ -70,7 +74,15 @@ export function RequestDetailAside({
 
   return (
     <aside className="panel request-detail__panel request-detail__aside">
-      {showMeta ? (metaContent ?? <RequestDetailMetaRows cityLabel={cityLabel} dateLabel={dateLabel} className={metaClassName} />) : null}
+      {showMeta
+        ? (metaContent ?? (
+            <RequestDetailMetaRows
+              cityLabel={cityLabel}
+              dateLabel={dateLabel}
+              className={metaClassName}
+            />
+          ))
+        : null}
 
       {notice ? <div className="request-detail__notice">{notice}</div> : null}
 
@@ -101,11 +113,7 @@ export function RequestDetailAside({
         ) : null}
         {showApply && applyHint ? <p className="request-detail__cta-subtext">{applyHint}</p> : null}
         {showChat ? (
-          <button
-            type="button"
-            className="btn-secondary request-detail__cta-btn"
-            onClick={onChat}
-          >
+          <button type="button" className="btn-secondary request-detail__cta-btn" onClick={onChat}>
             <span>{ctaChatLabel}</span>
             <IconChat />
           </button>

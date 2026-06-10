@@ -74,7 +74,9 @@ describe('publicProvider avatar fallback', () => {
   it('detects the current user provider by user id or provider profile id', () => {
     expect(isOwnPublicProvider(provider(), me())).toBe(true);
     expect(isOwnPublicProvider(provider({ userId: 'other-user' }), me())).toBe(true);
-    expect(isOwnPublicProvider(provider({ id: 'provider-2', userId: 'other-user' }), me())).toBe(false);
+    expect(isOwnPublicProvider(provider({ id: 'provider-2', userId: 'other-user' }), me())).toBe(
+      false,
+    );
   });
 
   it('keeps backend avatar when it is already present', () => {
@@ -91,7 +93,9 @@ describe('publicProvider avatar fallback', () => {
   it('backfills missing avatar only from the matching own provider profile', () => {
     const ownProviderProfile = provider({ avatarUrl: 'https://cdn.example.com/own-provider.jpg' });
 
-    expect(resolvePublicProviderAvatarUrl(provider(), ownProviderProfile)).toBe('https://cdn.example.com/own-provider.jpg');
+    expect(resolvePublicProviderAvatarUrl(provider(), ownProviderProfile)).toBe(
+      'https://cdn.example.com/own-provider.jpg',
+    );
     expect(
       resolvePublicProviderAvatarUrl(
         provider({ id: 'provider-2', userId: 'user-2' }),
@@ -103,7 +107,9 @@ describe('publicProvider avatar fallback', () => {
   it('applies avatar fallback to single providers and provider lists', () => {
     const ownProviderProfile = provider({ avatarUrl: 'https://cdn.example.com/own-provider.jpg' });
 
-    expect(backfillOwnProviderAvatar(provider(), ownProviderProfile)?.avatarUrl).toBe('https://cdn.example.com/own-provider.jpg');
+    expect(backfillOwnProviderAvatar(provider(), ownProviderProfile)?.avatarUrl).toBe(
+      'https://cdn.example.com/own-provider.jpg',
+    );
 
     expect(
       backfillOwnProviderAvatars(
@@ -115,18 +121,33 @@ describe('publicProvider avatar fallback', () => {
 
   it('backfills missing public avatars from public provider candidates', () => {
     expect(
-      backfillProviderAvatarFromCandidates(
-        provider({ id: 'provider-2', userId: 'user-2' }),
-        [provider({ id: 'provider-2', userId: 'user-2', avatarUrl: 'https://cdn.example.com/provider-2.jpg' })],
-      )?.avatarUrl,
+      backfillProviderAvatarFromCandidates(provider({ id: 'provider-2', userId: 'user-2' }), [
+        provider({
+          id: 'provider-2',
+          userId: 'user-2',
+          avatarUrl: 'https://cdn.example.com/provider-2.jpg',
+        }),
+      ])?.avatarUrl,
     ).toBe('https://cdn.example.com/provider-2.jpg');
   });
 
   it('backfills workspace provider cards from public provider candidates', () => {
     expect(
       backfillProviderCardAvatarsFromCandidates(
-        [providerCardItem({ id: 'provider-2', userId: 'user-2', card: { ...providerCardItem().card, id: 'provider-2' } })],
-        [provider({ id: 'provider-2', userId: 'user-2', avatarUrl: 'https://cdn.example.com/provider-2.jpg' })],
+        [
+          providerCardItem({
+            id: 'provider-2',
+            userId: 'user-2',
+            card: { ...providerCardItem().card, id: 'provider-2' },
+          }),
+        ],
+        [
+          provider({
+            id: 'provider-2',
+            userId: 'user-2',
+            avatarUrl: 'https://cdn.example.com/provider-2.jpg',
+          }),
+        ],
       )[0]?.card.avatarUrl,
     ).toBe('https://cdn.example.com/provider-2.jpg');
   });

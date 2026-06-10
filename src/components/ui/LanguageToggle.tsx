@@ -13,7 +13,11 @@ export function LanguageToggle() {
   const next = locale === 'de' ? 'en' : 'de';
 
   return (
-    <IconButton label={t(I18N_KEYS.auth.languageLabel)} onClick={() => setLocale(next)} className="icon-button--topbar">
+    <IconButton
+      label={t(I18N_KEYS.auth.languageLabel)}
+      onClick={() => setLocale(next)}
+      className="icon-button--topbar"
+    >
       <IconGlobe />
     </IconButton>
   );

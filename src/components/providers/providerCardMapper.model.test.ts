@@ -31,8 +31,16 @@ describe('providerCardMapper.model', () => {
     expect(seed).toBe(hashProviderCardSeed('provider-1'));
     expect(resolveProviderResponseMinutes(seed)).toBeGreaterThanOrEqual(10);
     expect(resolveProviderResponseMinutes(seed)).toBeLessThanOrEqual(25);
-    expect(computeProviderResponseRate(provider({ ratingAvg: 4.9, ratingCount: 120, completedJobs: 400 }))).toBe(77);
-    expect(computeProviderResponseRate(provider({ ratingAvg: 5, ratingCount: 9999, completedJobs: 9999 }))).toBe(78);
+    expect(
+      computeProviderResponseRate(
+        provider({ ratingAvg: 4.9, ratingCount: 120, completedJobs: 400 }),
+      ),
+    ).toBe(77);
+    expect(
+      computeProviderResponseRate(
+        provider({ ratingAvg: 5, ratingCount: 9999, completedJobs: 9999 }),
+      ),
+    ).toBe(78);
   });
 
   it('builds pricing, availability, city and preview fallbacks', () => {
@@ -75,9 +83,7 @@ describe('providerCardMapper.model', () => {
         responseRate: 82,
         responseMinutes: 18,
       }),
-    ).toEqual([
-      expect.objectContaining({ variant: 'info', tone: 'soft' }),
-    ]);
+    ).toEqual([expect.objectContaining({ variant: 'info', tone: 'soft' })]);
 
     expect(
       buildProviderCardBadges({

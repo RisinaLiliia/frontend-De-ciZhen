@@ -41,7 +41,8 @@ export function resolveFavoritesView(value: string | null): FavoritesView {
 export function mapRequestStatusToFilter(status?: string): WorkspaceStatusFilter {
   if (!status) return 'all';
   if (status === 'completed') return 'completed';
-  if (status === 'in_progress' || status === 'assigned' || status === 'matched') return 'in_progress';
+  if (status === 'in_progress' || status === 'assigned' || status === 'matched')
+    return 'in_progress';
   return 'open';
 }
 

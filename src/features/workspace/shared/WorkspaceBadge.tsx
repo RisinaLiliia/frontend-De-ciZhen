@@ -1,11 +1,6 @@
 import * as React from 'react';
 
-import {
-  Badge,
-  type BadgeSize,
-  type BadgeTone,
-  type BadgeVariant,
-} from '@/components/ui/Badge';
+import { Badge, type BadgeSize, type BadgeTone, type BadgeVariant } from '@/components/ui/Badge';
 
 export type WorkspaceBadgeVariant =
   | 'neutral'

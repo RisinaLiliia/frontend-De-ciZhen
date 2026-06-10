@@ -61,12 +61,7 @@ async function apiRequest<T>(
     method,
     headers,
     credentials: 'include',
-    body:
-      body === undefined
-        ? undefined
-        : body instanceof FormData
-          ? body
-          : JSON.stringify(body),
+    body: body === undefined ? undefined : body instanceof FormData ? body : JSON.stringify(body),
   });
 
   if (res.status === 401 && retry && !init?.skipAuthRefresh && Boolean(accessToken)) {

@@ -6,7 +6,10 @@ import { useWorkspaceCards } from '@/features/workspace/personal/useWorkspaceCar
 import { buildWorkspaceContentDataResult } from '@/features/workspace/personal/workspaceContentData.model';
 
 type WorkspaceDerivedArgs = Parameters<typeof useWorkspaceDerived>[0];
-type ContractRequestsDataArgs = Omit<Parameters<typeof useWorkspaceContractRequestsData>[0], 'filteredContracts'>;
+type ContractRequestsDataArgs = Omit<
+  Parameters<typeof useWorkspaceContractRequestsData>[0],
+  'filteredContracts'
+>;
 type WorkspaceCardsArgs = Parameters<typeof useWorkspaceCards>[0];
 
 type Args = {

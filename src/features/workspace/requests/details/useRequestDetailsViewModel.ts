@@ -48,7 +48,10 @@ export function useRequestDetailsViewModel({
     [localeTag],
   );
   const isClientOnline = React.useMemo(() => resolveClientOnline(request), [request]);
-  const formatPriceValue = React.useCallback((value: number) => formatPrice.format(value), [formatPrice]);
+  const formatPriceValue = React.useCallback(
+    (value: number) => formatPrice.format(value),
+    [formatPrice],
+  );
 
   const viewModel = React.useMemo<RequestDetailsViewModel | null>(() => {
     if (!request) return null;
@@ -66,4 +69,3 @@ export function useRequestDetailsViewModel({
     formatPriceValue,
   };
 }
-

@@ -74,16 +74,14 @@ export function useRequestsExplorerRequestsData({
         preferInitialPublicRequests,
         initialPublicRequests,
       }),
-    [
-      filter,
-      initialPublicRequests,
-      isProvidersView,
-      locale,
-      preferInitialPublicRequests,
-    ],
+    [filter, initialPublicRequests, isProvidersView, locale, preferInitialPublicRequests],
   );
 
-  const { data: publicRequests, isLoading, isError } = useQuery({
+  const {
+    data: publicRequests,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: publicRequestsQueryState.queryKey,
     enabled: publicRequestsQueryState.enabled,
     queryFn: async () => {
@@ -113,21 +111,21 @@ export function useRequestsExplorerRequestsData({
     () =>
       !isProvidersView && isAuthed
         ? [
-          {
-            key: 'myOffers' as const,
-            query: {
-              queryKey: workspaceQK.offersMy(),
-              queryFn: () => withStatusFallback(() => listMyProviderOffers(), [], [401, 403]),
+            {
+              key: 'myOffers' as const,
+              query: {
+                queryKey: workspaceQK.offersMy(),
+                queryFn: () => withStatusFallback(() => listMyProviderOffers(), [], [401, 403]),
+              },
             },
-          },
-          {
-            key: 'favoriteRequests' as const,
-            query: {
-              queryKey: workspaceQK.favoriteRequests(),
-              queryFn: () => withStatusFallback(() => listFavorites('request'), [], [401, 403]),
+            {
+              key: 'favoriteRequests' as const,
+              query: {
+                queryKey: workspaceQK.favoriteRequests(),
+                queryFn: () => withStatusFallback(() => listFavorites('request'), [], [401, 403]),
+              },
             },
-          },
-        ]
+          ]
         : [],
     [isAuthed, isProvidersView],
   );
@@ -137,7 +135,8 @@ export function useRequestsExplorerRequestsData({
   });
 
   const privateQueryResultByKey = React.useMemo(
-    () => new Map(privateQueryEntries.map((entry, index) => [entry.key, privateQueryResults[index]])),
+    () =>
+      new Map(privateQueryEntries.map((entry, index) => [entry.key, privateQueryResults[index]])),
     [privateQueryEntries, privateQueryResults],
   );
 
@@ -147,13 +146,11 @@ export function useRequestsExplorerRequestsData({
     () => buildOffersByRequestMap(myOffersData ?? []),
     [myOffersData],
   );
-  const requestById = React.useMemo(
-    () => buildRequestByIdMap(requests),
-    [requests],
-  );
+  const requestById = React.useMemo(() => buildRequestByIdMap(requests), [requests]);
 
-  const favoriteRequestsData =
-    privateQueryResultByKey.get('favoriteRequests')?.data as RequestResponseDto[] | undefined;
+  const favoriteRequestsData = privateQueryResultByKey.get('favoriteRequests')?.data as
+    | RequestResponseDto[]
+    | undefined;
 
   const favoriteRequestIds = React.useMemo(
     () => buildFavoriteRequestIds(favoriteRequestsData ?? []),
@@ -164,10 +161,7 @@ export function useRequestsExplorerRequestsData({
     return buildRequestsExplorerNextPath(pathname, searchParams);
   }, [pathname, searchParams]);
 
-  const {
-    pendingFavoriteRequestIds,
-    toggleRequestFavorite,
-  } = useRequestFavoriteToggle({
+  const { pendingFavoriteRequestIds, toggleRequestFavorite } = useRequestFavoriteToggle({
     isAuthed,
     nextPath,
     router,
@@ -209,9 +203,12 @@ export function useRequestsExplorerRequestsData({
     [myOffersData, qc, t],
   );
 
-  const onWithdrawOffer = React.useCallback((offerId: string, requestId?: string) => {
-    void withdrawOffer(offerId, requestId);
-  }, [withdrawOffer]);
+  const onWithdrawOffer = React.useCallback(
+    (offerId: string, requestId?: string) => {
+      void withdrawOffer(offerId, requestId);
+    },
+    [withdrawOffer],
+  );
 
   const totalResults = publicRequests?.total ?? requests.length;
   const totalPages = resolveTotalPages(totalResults, limit);

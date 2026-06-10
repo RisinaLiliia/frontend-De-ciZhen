@@ -38,8 +38,12 @@ export function WorkspacePlatformReviewComposer({
   return (
     <article className="public-profile-reviews__item public-profile-reviews__item--composer card">
       <form className="form-stack public-profile-reviews__composer-form" onSubmit={onSubmit}>
-        <p className="typo-h3 public-profile-reviews__composer-title">{t(I18N_KEYS.requestsPage.platformReviewFormTitle)}</p>
-        <p className="typo-muted public-profile-reviews__composer-hint">{t(I18N_KEYS.requestsPage.platformReviewFormHint)}</p>
+        <p className="typo-h3 public-profile-reviews__composer-title">
+          {t(I18N_KEYS.requestsPage.platformReviewFormTitle)}
+        </p>
+        <p className="typo-muted public-profile-reviews__composer-hint">
+          {t(I18N_KEYS.requestsPage.platformReviewFormHint)}
+        </p>
         {!isAuthenticated ? (
           <div className="form-group">
             <Input

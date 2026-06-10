@@ -25,17 +25,12 @@ export function buildPriceIntelligence(params: {
   localeTag: string;
   formatCurrency: Intl.NumberFormat;
 }): WorkspaceStatisticsPriceIntelligenceView {
-  const {
-    copy,
-    source,
-    contextCityFallback,
-    contextCategoryFallback,
-    localeTag,
-    formatCurrency,
-  } = params;
-  const fallbackContextLabel = contextCategoryFallback && contextCityFallback
-    ? `${contextCategoryFallback} · ${contextCityFallback}`
-    : contextCityFallback ?? contextCategoryFallback ?? null;
+  const { copy, source, contextCityFallback, contextCategoryFallback, localeTag, formatCurrency } =
+    params;
+  const fallbackContextLabel =
+    contextCategoryFallback && contextCityFallback
+      ? `${contextCategoryFallback} · ${contextCityFallback}`
+      : (contextCityFallback ?? contextCategoryFallback ?? null);
 
   if (!source) {
     return {
@@ -61,7 +56,9 @@ export function buildPriceIntelligence(params: {
   const cityLabel = source.city ?? contextCityFallback ?? null;
   const categoryLabel = source.category ?? contextCategoryFallback ?? null;
   const contextLabel =
-    categoryLabel && cityLabel ? `${categoryLabel} · ${cityLabel}` : cityLabel ?? categoryLabel ?? fallbackContextLabel;
+    categoryLabel && cityLabel
+      ? `${categoryLabel} · ${cityLabel}`
+      : (cityLabel ?? categoryLabel ?? fallbackContextLabel);
   const recommendedMin =
     typeof source.recommendedMin === 'number' && Number.isFinite(source.recommendedMin)
       ? source.recommendedMin

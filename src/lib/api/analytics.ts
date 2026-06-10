@@ -94,8 +94,12 @@ function normalizeResponse(
   };
 }
 
-async function fetchPlatformActivityReal(range: PlatformActivityRange): Promise<PlatformActivityResponse> {
-  const url = buildApiUrl(`/analytics/platform-activity?range=${range}&interval=${toInterval(range)}`);
+async function fetchPlatformActivityReal(
+  range: PlatformActivityRange,
+): Promise<PlatformActivityResponse> {
+  const url = buildApiUrl(
+    `/analytics/platform-activity?range=${range}&interval=${toInterval(range)}`,
+  );
   const res = await fetch(url, {
     method: 'GET',
     credentials: 'include',
@@ -113,7 +117,9 @@ async function fetchPlatformActivityReal(range: PlatformActivityRange): Promise<
   return normalized;
 }
 
-export async function getPlatformActivity(range: PlatformActivityRange): Promise<PlatformActivityResponse> {
+export async function getPlatformActivity(
+  range: PlatformActivityRange,
+): Promise<PlatformActivityResponse> {
   return fetchPlatformActivityReal(range);
 }
 
@@ -170,7 +176,9 @@ export async function getPlatformLiveFeed(limit = 4): Promise<PlatformLiveFeedRe
   return fetchPlatformLiveFeedReal(limit);
 }
 
-export async function trackSearchEvent(payload: CreateSearchEventDto): Promise<SearchEventResponseDto> {
+export async function trackSearchEvent(
+  payload: CreateSearchEventDto,
+): Promise<SearchEventResponseDto> {
   return apiPost<CreateSearchEventDto, SearchEventResponseDto>('/analytics/search-event', payload, {
     skipAuthRefresh: true,
   });

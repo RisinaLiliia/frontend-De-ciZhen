@@ -57,8 +57,8 @@ export function WorkspaceAccountSettingsSection() {
   );
   const passwordsMatch = React.useMemo(
     () =>
-      passwordForm.confirmPassword.length > 0
-      && passwordForm.confirmPassword === passwordForm.newPassword,
+      passwordForm.confirmPassword.length > 0 &&
+      passwordForm.confirmPassword === passwordForm.newPassword,
     [passwordForm.confirmPassword, passwordForm.newPassword],
   );
 
@@ -193,7 +193,12 @@ export function WorkspaceAccountSettingsSection() {
           >
             {t(I18N_KEYS.client.profileEmailLabel)}
           </FormLabel>
-          <input id="workspace-settings-email" className="input" value={authMe?.email ?? ''} readOnly />
+          <input
+            id="workspace-settings-email"
+            className="input"
+            value={authMe?.email ?? ''}
+            readOnly
+          />
         </div>
         {isProfileEditing ? (
           <div className="profile-settings__inline-actions">
@@ -205,7 +210,9 @@ export function WorkspaceAccountSettingsSection() {
               }}
               disabled={isSavingProfile}
             >
-              {isSavingProfile ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.client.profileSaveCta)}
+              {isSavingProfile
+                ? t(I18N_KEYS.common.refreshing)
+                : t(I18N_KEYS.client.profileSaveCta)}
             </button>
             <button
               type="button"
@@ -241,7 +248,12 @@ export function WorkspaceAccountSettingsSection() {
           >
             {t(I18N_KEYS.client.profileLoginLabel)}
           </FormLabel>
-          <input id="workspace-settings-login" className="input" value={authMe?.email ?? ''} disabled />
+          <input
+            id="workspace-settings-login"
+            className="input"
+            value={authMe?.email ?? ''}
+            disabled
+          />
         </div>
         <div className="profile-settings__row">
           <FormLabel
@@ -259,21 +271,37 @@ export function WorkspaceAccountSettingsSection() {
                 className="input"
                 type={showCurrentPassword ? 'text' : 'password'}
                 value={passwordForm.currentPassword}
-                onChange={(event) => handlePasswordFieldChange('currentPassword', event.target.value)}
+                onChange={(event) =>
+                  handlePasswordFieldChange('currentPassword', event.target.value)
+                }
                 autoComplete="current-password"
               />
               <button
                 type="button"
                 className="profile-settings__password-toggle"
                 onClick={() => setShowCurrentPassword((prev) => !prev)}
-                aria-label={showCurrentPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
-                title={showCurrentPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
+                aria-label={
+                  showCurrentPassword
+                    ? t(I18N_KEYS.client.profilePasswordHide)
+                    : t(I18N_KEYS.client.profilePasswordShow)
+                }
+                title={
+                  showCurrentPassword
+                    ? t(I18N_KEYS.client.profilePasswordHide)
+                    : t(I18N_KEYS.client.profilePasswordShow)
+                }
               >
                 {showCurrentPassword ? <IconEye /> : <IconEyeOff />}
               </button>
             </span>
           ) : (
-            <input id="workspace-settings-current-password-readonly" className="input" type="password" value="••••••••••••" readOnly />
+            <input
+              id="workspace-settings-current-password-readonly"
+              className="input"
+              type="password"
+              value="••••••••••••"
+              readOnly
+            />
           )}
         </div>
         {isSecurityEditing ? (
@@ -300,8 +328,16 @@ export function WorkspaceAccountSettingsSection() {
                   type="button"
                   className="profile-settings__password-toggle"
                   onClick={() => setShowNewPassword((prev) => !prev)}
-                  aria-label={showNewPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
-                  title={showNewPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
+                  aria-label={
+                    showNewPassword
+                      ? t(I18N_KEYS.client.profilePasswordHide)
+                      : t(I18N_KEYS.client.profilePasswordShow)
+                  }
+                  title={
+                    showNewPassword
+                      ? t(I18N_KEYS.client.profilePasswordHide)
+                      : t(I18N_KEYS.client.profilePasswordShow)
+                  }
                 >
                   {showNewPassword ? <IconEye /> : <IconEyeOff />}
                 </button>
@@ -322,26 +358,46 @@ export function WorkspaceAccountSettingsSection() {
                   className={`input ${passwordForm.confirmPassword.length > 0 && !passwordsMatch ? 'is-error' : ''}`.trim()}
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={passwordForm.confirmPassword}
-                  onChange={(event) => handlePasswordFieldChange('confirmPassword', event.target.value)}
+                  onChange={(event) =>
+                    handlePasswordFieldChange('confirmPassword', event.target.value)
+                  }
                   autoComplete="new-password"
                 />
                 <button
                   type="button"
                   className="profile-settings__password-toggle"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  aria-label={showConfirmPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
-                  title={showConfirmPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow)}
+                  aria-label={
+                    showConfirmPassword
+                      ? t(I18N_KEYS.client.profilePasswordHide)
+                      : t(I18N_KEYS.client.profilePasswordShow)
+                  }
+                  title={
+                    showConfirmPassword
+                      ? t(I18N_KEYS.client.profilePasswordHide)
+                      : t(I18N_KEYS.client.profilePasswordShow)
+                  }
                 >
                   {showConfirmPassword ? <IconEye /> : <IconEyeOff />}
                 </button>
               </span>
             </div>
             <div className="profile-settings__password-hint">
-              <span className={passwordChecks.length ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLength)}</span>
-              <span className={passwordChecks.upper ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleUpper)}</span>
-              <span className={passwordChecks.lower ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLower)}</span>
-              <span className={passwordChecks.digit ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleDigit)}</span>
-              <span className={passwordChecks.symbol ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleSymbol)}</span>
+              <span className={passwordChecks.length ? 'is-ok' : ''}>
+                {t(I18N_KEYS.auth.passwordRuleLength)}
+              </span>
+              <span className={passwordChecks.upper ? 'is-ok' : ''}>
+                {t(I18N_KEYS.auth.passwordRuleUpper)}
+              </span>
+              <span className={passwordChecks.lower ? 'is-ok' : ''}>
+                {t(I18N_KEYS.auth.passwordRuleLower)}
+              </span>
+              <span className={passwordChecks.digit ? 'is-ok' : ''}>
+                {t(I18N_KEYS.auth.passwordRuleDigit)}
+              </span>
+              <span className={passwordChecks.symbol ? 'is-ok' : ''}>
+                {t(I18N_KEYS.auth.passwordRuleSymbol)}
+              </span>
             </div>
             <div className="profile-settings__inline-actions">
               <button
@@ -352,7 +408,9 @@ export function WorkspaceAccountSettingsSection() {
                 }}
                 disabled={isSavingPassword}
               >
-                {isSavingPassword ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.client.profileSaveCta)}
+                {isSavingPassword
+                  ? t(I18N_KEYS.common.refreshing)
+                  : t(I18N_KEYS.client.profileSaveCta)}
               </button>
               <button
                 type="button"

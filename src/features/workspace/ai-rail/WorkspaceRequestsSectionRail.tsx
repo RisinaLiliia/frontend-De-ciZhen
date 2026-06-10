@@ -1,10 +1,20 @@
 'use client';
 
 import type { WorkQueueMode } from '@/features/workspace/requests/requestsDecision.model';
-import type { WorkspaceRequestsSummaryItem, WorkspaceRequestsViewVariant } from '@/features/workspace/requests/workspaceRequestsView.model';
-import type { WorkspaceRequestsDecisionPanelDto, WorkspaceRequestsSidePanelDto } from '@/lib/api/dto/workspace';
+import type {
+  WorkspaceRequestsSummaryItem,
+  WorkspaceRequestsViewVariant,
+} from '@/features/workspace/requests/workspaceRequestsView.model';
+import type {
+  WorkspaceRequestsDecisionPanelDto,
+  WorkspaceRequestsSidePanelDto,
+} from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
-import { WorkspaceRightRailStack, WorkspaceUnifiedRail, useMediaMatch } from '@/features/workspace/shared';
+import {
+  WorkspaceRightRailStack,
+  WorkspaceUnifiedRail,
+  useMediaMatch,
+} from '@/features/workspace/shared';
 import { WorkspaceRequestsActionRail } from './WorkspaceRequestsActionRail';
 
 type Props = {

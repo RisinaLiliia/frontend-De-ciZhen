@@ -11,7 +11,10 @@ import { getWorkspaceProviders } from '@/lib/api/workspace';
 import { workspaceQK } from '@/features/workspace/data';
 import { ALL_OPTION_KEY } from '@/features/workspace/shared';
 import { useAuthMe } from '@/hooks/useAuthSnapshot';
-import { resolveWorkspaceRequestsPeriod, type WorkspaceViewerMode } from '@/features/workspace/state';
+import {
+  resolveWorkspaceRequestsPeriod,
+  type WorkspaceViewerMode,
+} from '@/features/workspace/state';
 import {
   resolveRequestsListDensityForPageSize,
   type RequestsListDensity,
@@ -96,7 +99,8 @@ export function useProvidersExploreData({
   const ownProviderDetailQuery = useQuery({
     queryKey: providerQK.publicById(ownProviderProfileId),
     enabled: isProvidersView && Boolean(ownProviderProfileId),
-    queryFn: () => withStatusFallback(() => getPublicProviderById(ownProviderProfileId!), null, [404]),
+    queryFn: () =>
+      withStatusFallback(() => getPublicProviderById(ownProviderProfileId!), null, [404]),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
     retry: false,
@@ -120,7 +124,11 @@ export function useProvidersExploreData({
     [ownProviderDetailQuery.data, publicProviderDetailResults],
   );
   const providerCards = React.useMemo(
-    () => backfillProviderCardAvatarsFromCandidates(contractData?.list.items ?? [], publicProviderDetailCandidates),
+    () =>
+      backfillProviderCardAvatarsFromCandidates(
+        contractData?.list.items ?? [],
+        publicProviderDetailCandidates,
+      ),
     [contractData?.list.items, publicProviderDetailCandidates],
   );
 
@@ -129,10 +137,7 @@ export function useProvidersExploreData({
       new Map(
         (contractData?.list.items ?? []).map((item) => {
           const identity = resolveWorkspaceProviderItemIdentity(item);
-          return [
-            identity.id,
-            identity,
-          ];
+          return [identity.id, identity];
         }),
       ),
     [contractData],

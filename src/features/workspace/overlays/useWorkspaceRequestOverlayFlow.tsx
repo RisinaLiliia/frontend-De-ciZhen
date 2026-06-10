@@ -4,7 +4,10 @@ import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
+import type {
+  OwnerRequestActions,
+  RequestsListProps,
+} from '@/components/requests/requestsList.types';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { workspaceQK } from '@/features/workspace/data';
 import {
@@ -56,39 +59,53 @@ export function useWorkspaceRequestOverlayFlow({
     () => new Map(cards.map((card) => [card.requestId, card])),
     [cards],
   );
-  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(initialRequestState);
-  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(initialOfferRequestId);
-  const [activeChatState, setActiveChatState] = React.useState<WorkspaceChatDialogState | null>(null);
-  const [returnRequestState, setReturnRequestState] = React.useState<ManagedRequestState | null>(null);
+  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(
+    initialRequestState,
+  );
+  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(
+    initialOfferRequestId,
+  );
+  const [activeChatState, setActiveChatState] = React.useState<WorkspaceChatDialogState | null>(
+    null,
+  );
+  const [returnRequestState, setReturnRequestState] = React.useState<ManagedRequestState | null>(
+    null,
+  );
   const activeRequestStateRef = React.useRef<ManagedRequestState | null>(null);
   const activeRequestCard = activeRequestState
-    ? requestsById.get(activeRequestState.requestId) ?? null
+    ? (requestsById.get(activeRequestState.requestId) ?? null)
     : null;
 
   React.useEffect(() => {
     activeRequestStateRef.current = activeRequestState;
   }, [activeRequestState]);
 
-  const openRequest = React.useCallback((requestId: string, intent: RequestDialogIntent = 'view') => {
-    if (!requestsById.has(requestId)) return;
-    setReturnRequestState(null);
-    setActiveOfferRequestId(null);
-    setActiveChatState(null);
-    setActiveRequestState({ requestId, intent });
-  }, [requestsById]);
+  const openRequest = React.useCallback(
+    (requestId: string, intent: RequestDialogIntent = 'view') => {
+      if (!requestsById.has(requestId)) return;
+      setReturnRequestState(null);
+      setActiveOfferRequestId(null);
+      setActiveChatState(null);
+      setActiveRequestState({ requestId, intent });
+    },
+    [requestsById],
+  );
 
   const closeRequest = React.useCallback(() => {
     setReturnRequestState(null);
     setActiveRequestState(null);
   }, []);
 
-  const openOfferSheet = React.useCallback((requestId: string) => {
-    if (!requestsById.has(requestId)) return;
-    setReturnRequestState(activeRequestStateRef.current);
-    setActiveRequestState(null);
-    setActiveChatState(null);
-    setActiveOfferRequestId(requestId);
-  }, [requestsById]);
+  const openOfferSheet = React.useCallback(
+    (requestId: string) => {
+      if (!requestsById.has(requestId)) return;
+      setReturnRequestState(activeRequestStateRef.current);
+      setActiveRequestState(null);
+      setActiveChatState(null);
+      setActiveOfferRequestId(requestId);
+    },
+    [requestsById],
+  );
 
   const closeOfferSheet = React.useCallback(() => {
     setActiveOfferRequestId(null);
@@ -96,31 +113,34 @@ export function useWorkspaceRequestOverlayFlow({
     setReturnRequestState(null);
   }, [returnRequestState]);
 
-  const openChatConversation = React.useCallback(async (payload: WorkspaceChatConversationInput) => {
-    try {
-      if (!isWorkspaceChatConversationInput(payload)) {
-        toast.error(t(I18N_KEYS.workspace.chatOpenError));
-        return;
+  const openChatConversation = React.useCallback(
+    async (payload: WorkspaceChatConversationInput) => {
+      try {
+        if (!isWorkspaceChatConversationInput(payload)) {
+          toast.error(t(I18N_KEYS.workspace.chatOpenError));
+          return;
+        }
+
+        const conversation = await createConversation(payload);
+        await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
+        const requestTitle = payload.requestId
+          ? requestsById.get(payload.requestId)?.requestPreview.title?.trim()
+          : '';
+
+        setReturnRequestState(activeRequestStateRef.current);
+        setActiveRequestState(null);
+        setActiveOfferRequestId(null);
+        setActiveChatState({
+          conversationId: conversation.id,
+          title: requestTitle || t(I18N_KEYS.workspace.messagesTitle),
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
       }
-
-      const conversation = await createConversation(payload);
-      await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
-      const requestTitle = payload.requestId
-        ? requestsById.get(payload.requestId)?.requestPreview.title?.trim()
-        : '';
-
-      setReturnRequestState(activeRequestStateRef.current);
-      setActiveRequestState(null);
-      setActiveOfferRequestId(null);
-      setActiveChatState({
-        conversationId: conversation.id,
-        title: requestTitle || t(I18N_KEYS.workspace.messagesTitle),
-      });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    }
-  }, [qc, requestsById, t]);
+    },
+    [qc, requestsById, t],
+  );
 
   const closeChat = React.useCallback(() => {
     setActiveChatState(null);

@@ -34,10 +34,15 @@ export function StatisticsOpportunityPanel({
   const analysisItem = selectOpportunityAnalysisItem(opportunityRadar, selectedRank);
   const topCards = selectOpportunityTopCards({ opportunityRadar, analysisItem });
   const analysisAxes = buildOpportunityAnalysisAxes({ analysisItem, copy });
-  const analysisSummary = analysisItem ? opportunitySummaryLabel(analysisItem.summaryKey, copy) : '';
+  const analysisSummary = analysisItem
+    ? opportunitySummaryLabel(analysisItem.summaryKey, copy)
+    : '';
 
   return (
-    <section ref={panelRef} className={workspaceStatsChartPanelShell('workspace-statistics-opportunity')}>
+    <section
+      ref={panelRef}
+      className={workspaceStatsChartPanelShell('workspace-statistics-opportunity')}
+    >
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{title ?? copy.opportunityTitle}</p>
         <p className="section-subtitle">{copy.opportunitySubtitle}</p>

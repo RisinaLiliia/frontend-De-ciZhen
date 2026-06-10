@@ -63,9 +63,7 @@ describe('useWorkspaceOfferData', () => {
   });
 
   it('does not subscribe to disabled legacy offer queries', () => {
-    useQueriesMock
-      .mockReturnValueOnce([] as never)
-      .mockReturnValueOnce([] as never);
+    useQueriesMock.mockReturnValueOnce([] as never).mockReturnValueOnce([] as never);
 
     render(<DisabledProbe />);
 
@@ -82,8 +80,12 @@ describe('useWorkspaceOfferData', () => {
 
   it('subscribes only to enabled offer queries and derived request batch', () => {
     useQueriesMock
-      .mockReturnValueOnce([{ data: [{ id: 'offer-1', requestId: 'req-1' }], isLoading: false }] as never)
-      .mockReturnValueOnce([{ data: new Map([['req-1', { id: 'req-1' }]]), isLoading: false }] as never);
+      .mockReturnValueOnce([
+        { data: [{ id: 'offer-1', requestId: 'req-1' }], isLoading: false },
+      ] as never)
+      .mockReturnValueOnce([
+        { data: new Map([['req-1', { id: 'req-1' }]]), isLoading: false },
+      ] as never);
 
     render(<EnabledProbe />);
 
@@ -94,9 +96,7 @@ describe('useWorkspaceOfferData', () => {
       queries: Array<{ queryKey: readonly unknown[] }>;
     };
 
-    expect(firstCall.queries.map((query) => query.queryKey)).toEqual([
-      ['offers-my'],
-    ]);
+    expect(firstCall.queries.map((query) => query.queryKey)).toEqual([['offers-my']]);
     expect(secondCall.queries.map((query) => query.queryKey)).toEqual([
       ['requests-by-my-offer-ids', 'de', 'req-1'],
     ]);

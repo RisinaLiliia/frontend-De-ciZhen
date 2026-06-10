@@ -1,6 +1,10 @@
 'use client';
 
-import type { ChartPoint, PayloadViewModel, TabPayload } from '@/components/requests/requestsStatsPanel.types';
+import type {
+  ChartPoint,
+  PayloadViewModel,
+  TabPayload,
+} from '@/components/requests/requestsStatsPanel.types';
 
 export const FALLBACK_POINTS: ChartPoint[] = [
   { label: 'Nov', bars: 0, line: 0 },
@@ -14,7 +18,8 @@ export const FALLBACK_POINTS: ChartPoint[] = [
 export function toPayloadViewModel(payload: TabPayload): PayloadViewModel {
   return {
     payload,
-    hasData: payload.hasData ?? payload.kpis.some((item) => item.value !== '0' && item.value !== '—'),
+    hasData:
+      payload.hasData ?? payload.kpis.some((item) => item.value !== '0' && item.value !== '—'),
     chartPoints: payload.chartPoints.length > 0 ? payload.chartPoints : FALLBACK_POINTS,
   };
 }

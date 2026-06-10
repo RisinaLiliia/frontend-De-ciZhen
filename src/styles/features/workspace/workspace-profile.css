@@ -118,7 +118,9 @@
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
-    transition: border-color 180ms ease, box-shadow 180ms ease;
+    transition:
+      border-color 180ms ease,
+      box-shadow 180ms ease;
     box-shadow: none;
   }
 
@@ -181,8 +183,12 @@
     transition: opacity 180ms ease;
   }
 
-  .workspace-profile-onboarding .profile-settings__avatar:hover .workspace-profile-onboarding__avatar-overlay,
-  .workspace-profile-onboarding .profile-settings__avatar:focus-visible .workspace-profile-onboarding__avatar-overlay {
+  .workspace-profile-onboarding
+    .profile-settings__avatar:hover
+    .workspace-profile-onboarding__avatar-overlay,
+  .workspace-profile-onboarding
+    .profile-settings__avatar:focus-visible
+    .workspace-profile-onboarding__avatar-overlay {
     opacity: 1;
   }
 

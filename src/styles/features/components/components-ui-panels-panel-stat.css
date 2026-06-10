@@ -6,7 +6,9 @@
     text-decoration: underline;
     text-underline-offset: 4px;
     text-decoration-color: color-mix(in oklab, var(--color-primary) 45%, transparent);
-    transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
+    transition:
+      color var(--transition-fast),
+      text-decoration-color var(--transition-fast);
   }
 
   .link-accent:hover {
@@ -113,7 +115,7 @@
   }
 
   .radar-dot::after {
-    content: "";
+    content: '';
     position: absolute;
     inset: -6px;
     border-radius: var(--radius-pill);
@@ -137,6 +139,4 @@
     color: var(--color-warning);
     font-size: var(--fs-12);
   }
-
-
 }

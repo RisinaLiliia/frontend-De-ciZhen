@@ -7,10 +7,7 @@ import { toast } from 'sonner';
 
 import { listProviderSlots } from '@/lib/api/availability';
 import { getPublicProviderById, listPublicProviders } from '@/lib/api/providers';
-import {
-  buildProviderFavoriteLookup,
-  listFavorites,
-} from '@/lib/api/favorites';
+import { buildProviderFavoriteLookup, listFavorites } from '@/lib/api/favorites';
 import { withStatusFallback } from '@/lib/api/withStatusFallback';
 import { useProviderFavoriteToggle } from '@/hooks/useFavoriteToggles';
 import { useAuthStatus } from '@/hooks/useAuthSnapshot';
@@ -77,10 +74,7 @@ export function useProviderPublicProfileModel({
     enabled: Boolean(id),
     queryFn: () => getPublicProviderById(String(id)),
   });
-  const baseProvider = React.useMemo(
-    () => backfillOwnProviderAvatar(providerData),
-    [providerData],
-  );
+  const baseProvider = React.useMemo(() => backfillOwnProviderAvatar(providerData), [providerData]);
 
   const providerTargetUserId = React.useMemo(
     () => resolveProviderTargetUserId(baseProvider),
@@ -98,7 +92,13 @@ export function useProviderPublicProfileModel({
     return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Berlin';
   }, []);
   const { data: providerSlots = [] } = useQuery({
-    queryKey: ['provider-availability-slots', providerTargetUserId, providerSlotsRange.from, providerSlotsRange.to, providerSlotsTimezone],
+    queryKey: [
+      'provider-availability-slots',
+      providerTargetUserId,
+      providerSlotsRange.from,
+      providerSlotsRange.to,
+      providerSlotsTimezone,
+    ],
     enabled: Boolean(providerTargetUserId),
     queryFn: () =>
       withStatusFallback(
@@ -129,27 +129,25 @@ export function useProviderPublicProfileModel({
     if (baseProvider) map.set(baseProvider.id, baseProvider);
     return map;
   }, [baseProvider]);
-  const nextPath = nextPathOverride
-    || pathname
-    || (id
+  const nextPath =
+    nextPathOverride ||
+    pathname ||
+    (id
       ? buildWorkspaceProviderDetailHref({
           currentSearch: '',
           providerId: String(id),
         })
       : '/workspace?section=providers');
-  const {
-    pendingFavoriteProviderIds,
-    isProviderSaved,
-    toggleProviderFavorite,
-  } = useProviderFavoriteToggle({
-    isAuthed,
-    nextPath,
-    router,
-    t,
-    qc,
-    favoriteProviderLookup,
-    providerById,
-  });
+  const { pendingFavoriteProviderIds, isProviderSaved, toggleProviderFavorite } =
+    useProviderFavoriteToggle({
+      isAuthed,
+      nextPath,
+      router,
+      t,
+      qc,
+      favoriteProviderLookup,
+      providerById,
+    });
   const isSaved = React.useMemo(() => {
     if (!baseProvider) return false;
     return isProviderSaved(baseProvider.id);
@@ -168,9 +166,7 @@ export function useProviderPublicProfileModel({
     }
     router.push(
       buildWorkspaceCreateRequestHref({
-        currentSearch: new URLSearchParams([
-          ['providerId', id],
-        ]),
+        currentSearch: new URLSearchParams([['providerId', id]]),
       }),
     );
   }, [id, isAuthed, requireAuth, router]);
@@ -183,9 +179,7 @@ export function useProviderPublicProfileModel({
     }
     router.push(
       buildWorkspaceHref({
-        currentSearch: new URLSearchParams([
-          ['provider', id],
-        ]),
+        currentSearch: new URLSearchParams([['provider', id]]),
         section: 'chat',
       }),
     );
@@ -197,10 +191,7 @@ export function useProviderPublicProfileModel({
   }, [baseProvider, toggleProviderFavorite]);
 
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
-  const longDateFormatter = React.useMemo(
-    () => createLongDateFormatter(localeTag),
-    [localeTag],
-  );
+  const longDateFormatter = React.useMemo(() => createLongDateFormatter(localeTag), [localeTag]);
   const formatPrice = React.useMemo(
     () =>
       new Intl.NumberFormat(localeTag, {
@@ -211,10 +202,19 @@ export function useProviderPublicProfileModel({
     [localeTag],
   );
 
-  const primaryServiceKey = React.useMemo(() => getPrimaryProviderServiceKey(baseProvider), [baseProvider]);
+  const primaryServiceKey = React.useMemo(
+    () => getPrimaryProviderServiceKey(baseProvider),
+    [baseProvider],
+  );
 
   const { data: providers = [] } = useQuery({
-    queryKey: ['provider-similar-candidates', baseProvider?.id, baseProvider?.cityId, baseProvider?.cityName, primaryServiceKey],
+    queryKey: [
+      'provider-similar-candidates',
+      baseProvider?.id,
+      baseProvider?.cityId,
+      baseProvider?.cityName,
+      primaryServiceKey,
+    ],
     enabled: Boolean(baseProvider?.id),
     queryFn: async () => {
       if (!baseProvider) return [];
@@ -252,15 +252,15 @@ export function useProviderPublicProfileModel({
   );
   const profileCard = React.useMemo(
     () =>
-      (provider
+      provider
         ? buildProviderPublicProfileCard({
-          provider,
-          t,
-          locale,
-          profileHrefBuilder,
-          reviewsHrefBuilder,
-        })
-        : null),
+            provider,
+            t,
+            locale,
+            profileHrefBuilder,
+            reviewsHrefBuilder,
+          })
+        : null,
     [locale, profileHrefBuilder, provider, reviewsHrefBuilder, t],
   );
 
@@ -309,14 +309,8 @@ export function useProviderPublicProfileModel({
     t,
   });
 
-  const nextSlotStartAt = React.useMemo(
-    () => getNextSlotStartAt(providerSlots),
-    [providerSlots],
-  );
-  const availableIsoDays = React.useMemo(
-    () => getAvailableIsoDays(providerSlots),
-    [providerSlots],
-  );
+  const nextSlotStartAt = React.useMemo(() => getNextSlotStartAt(providerSlots), [providerSlots]);
+  const availableIsoDays = React.useMemo(() => getAvailableIsoDays(providerSlots), [providerSlots]);
 
   const availabilityCalendarConfig = React.useMemo(
     () =>
@@ -326,12 +320,7 @@ export function useProviderPublicProfileModel({
         rangeStartIso: providerSlotsRange.from,
         rangeEndIso: providerSlotsRange.to,
       }),
-    [
-      availableIsoDays,
-      locale,
-      providerSlotsRange.from,
-      providerSlotsRange.to,
-    ],
+    [availableIsoDays, locale, providerSlotsRange.from, providerSlotsRange.to],
   );
   const availabilityModel = React.useMemo(() => {
     return buildProviderAvailabilityModel({
@@ -343,7 +332,13 @@ export function useProviderPublicProfileModel({
       busyLabel: t(I18N_KEYS.homePublic.providerAvailabilityStateBusy),
       nextSlotLabel: t(I18N_KEYS.homePublic.providerAvailabilityNextSlot),
     });
-  }, [longDateFormatter, nextSlotStartAt, provider?.availabilityState, provider?.nextAvailableAt, t]);
+  }, [
+    longDateFormatter,
+    nextSlotStartAt,
+    provider?.availabilityState,
+    provider?.nextAvailableAt,
+    t,
+  ]);
 
   const {
     statusLabel,
@@ -371,7 +366,16 @@ export function useProviderPublicProfileModel({
             )
           : false,
       }),
-    [formatPrice, hasRecentReview, locale, profileCard, provider, providers, similarCards.length, t],
+    [
+      formatPrice,
+      hasRecentReview,
+      locale,
+      profileCard,
+      provider,
+      providers,
+      similarCards.length,
+      t,
+    ],
   );
 
   return {
@@ -413,8 +417,8 @@ export function useProviderPublicProfileModel({
     similarProvidersHint,
     similarCards,
     reviewsHref:
-      reviewsHrefBuilder?.(String(id))
-      ?? `${buildWorkspaceProviderDetailHref({
+      reviewsHrefBuilder?.(String(id)) ??
+      `${buildWorkspaceProviderDetailHref({
         currentSearch: '',
         providerId: String(id),
       })}#reviews`,

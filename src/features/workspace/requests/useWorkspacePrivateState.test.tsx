@@ -46,7 +46,9 @@ function StateProbe(props: StateArgs) {
   const state = useWorkspacePrivateState(props);
   const myRequestsItem = state.personalNavItems.find((item) => item.key === 'my-requests');
   const primaryItemsCount = state.personalNavItems.filter((item) => item.tier === 'primary').length;
-  const secondaryItemsCount = state.personalNavItems.filter((item) => item.tier === 'secondary').length;
+  const secondaryItemsCount = state.personalNavItems.filter(
+    (item) => item.tier === 'secondary',
+  ).length;
 
   return (
     <div
@@ -123,15 +125,19 @@ describe('useWorkspacePrivateState', () => {
   });
 
   it('skips top providers in unified private requests mode', () => {
-    expect(shouldBuildWorkspacePrivateTopProviders({
-      activePublicSection: 'requests',
-      requestsScope: 'my',
-    })).toBe(false);
+    expect(
+      shouldBuildWorkspacePrivateTopProviders({
+        activePublicSection: 'requests',
+        requestsScope: 'my',
+      }),
+    ).toBe(false);
 
-    expect(shouldBuildWorkspacePrivateTopProviders({
-      activePublicSection: 'requests',
-      requestsScope: 'market',
-    })).toBe(true);
+    expect(
+      shouldBuildWorkspacePrivateTopProviders({
+        activePublicSection: 'requests',
+        requestsScope: 'market',
+      }),
+    ).toBe(true);
 
     render(
       <StateProbe

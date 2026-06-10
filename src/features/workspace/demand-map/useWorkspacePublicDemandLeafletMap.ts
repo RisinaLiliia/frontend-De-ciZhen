@@ -102,7 +102,11 @@ export function useWorkspacePublicDemandLeafletMap({
           className: 'workspace-demand-map-tooltip',
         });
         marker.on('click', () => {
-          const expandedZoom = getDemandClusterExpansionZoom(clusterIndex, item.clusterId, MAP_MAX_ZOOM);
+          const expandedZoom = getDemandClusterExpansionZoom(
+            clusterIndex,
+            item.clusterId,
+            MAP_MAX_ZOOM,
+          );
           map.setView([item.lat, item.lng], expandedZoom, { animate: true });
         });
         marker.addTo(layer);
@@ -215,7 +219,9 @@ export function useWorkspacePublicDemandLeafletMap({
       const scheduleInvalidateSize = () => {
         invalidateSize();
         clearInvalidateTimers();
-        invalidateTimeoutsRef.current = MAP_INVALIDATE_DELAYS_MS.map((delay) => window.setTimeout(invalidateSize, delay));
+        invalidateTimeoutsRef.current = MAP_INVALIDATE_DELAYS_MS.map((delay) =>
+          window.setTimeout(invalidateSize, delay),
+        );
       };
 
       if (typeof ResizeObserver !== 'undefined') {
@@ -310,16 +316,8 @@ function renderCityMarker(params: {
   activeRequestsLabel: string;
   onSelectCity?: (cityId: string) => void;
 }) {
-  const {
-    L,
-    layer,
-    item,
-    index,
-    maxCount,
-    formatNumber,
-    activeRequestsLabel,
-    onSelectCity,
-  } = params;
+  const { L, layer, item, index, maxCount, formatNumber, activeRequestsLabel, onSelectCity } =
+    params;
   const ratio = item.count / Math.max(1, maxCount);
   const size = Math.round(24 + ratio * 20);
   const markerLabel = `${item.name}: ${formatNumber.format(item.count)} ${activeRequestsLabel}`;

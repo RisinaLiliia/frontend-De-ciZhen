@@ -103,10 +103,19 @@ function getKpiMetricIcon(key: string): WorkspaceUnifiedRailMetricIcon {
 function getKpiMetricTone(key: string): WorkspaceUnifiedRailMetricTone {
   const normalized = key.toLowerCase();
   if (normalized.includes('provider') || normalized.includes('offer')) return 'supply';
-  if (normalized.includes('completed') || normalized.includes('success') || normalized.includes('conversion')) {
+  if (
+    normalized.includes('completed') ||
+    normalized.includes('success') ||
+    normalized.includes('conversion')
+  ) {
     return 'opportunity';
   }
-  if (normalized.includes('unanswered') || normalized.includes('cancel') || normalized.includes('lost')) return 'risk';
+  if (
+    normalized.includes('unanswered') ||
+    normalized.includes('cancel') ||
+    normalized.includes('lost')
+  )
+    return 'risk';
   if (normalized.includes('response')) return 'action';
   if (normalized.includes('request') || normalized.includes('demand')) return 'demand';
   return 'neutral';
@@ -193,20 +202,26 @@ export function mapStatisticsRailModel({
     tone: mapPriorityTone(item.tone),
   }));
 
-  const priceRecommendation: WorkspaceUnifiedRailRecommendationItem[] = activePriceIntelligence.recommendation
-    ? [{
-        id: 'price-reco',
-        title: activePriceIntelligence.recommendation,
-        description: activePriceIntelligence.contextLabel
-          ?? activePriceIntelligence.recommendedRangeLabel
-          ?? copy.priceRecommendationLabel,
-        metric: activePriceIntelligence.recommendedRangeLabel,
-        tone: 'positive',
-      }]
-    : [];
+  const priceRecommendation: WorkspaceUnifiedRailRecommendationItem[] =
+    activePriceIntelligence.recommendation
+      ? [
+          {
+            id: 'price-reco',
+            title: activePriceIntelligence.recommendation,
+            description:
+              activePriceIntelligence.contextLabel ??
+              activePriceIntelligence.recommendedRangeLabel ??
+              copy.priceRecommendationLabel,
+            metric: activePriceIntelligence.recommendedRangeLabel,
+            tone: 'positive',
+          },
+        ]
+      : [];
 
-  const recommendations = [...priorityRecommendations, ...priceRecommendation]
-    .slice(0, MAX_RAIL_RECOMMENDATIONS);
+  const recommendations = [...priorityRecommendations, ...priceRecommendation].slice(
+    0,
+    MAX_RAIL_RECOMMENDATIONS,
+  );
 
   return {
     decisionPanel: {

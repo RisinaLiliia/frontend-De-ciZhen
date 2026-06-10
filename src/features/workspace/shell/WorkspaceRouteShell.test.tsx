@@ -54,9 +54,7 @@ function mockSearchParams(query: string) {
 function mockAuth(status: 'authenticated' | 'unauthenticated' | 'loading' | 'idle') {
   useAuthSnapshotMock.mockReturnValue({
     status,
-    user: status === 'authenticated'
-      ? { id: 'user-1', name: 'Test User', role: 'client' }
-      : null,
+    user: status === 'authenticated' ? { id: 'user-1', name: 'Test User', role: 'client' } : null,
   } as never);
 }
 
@@ -107,10 +105,7 @@ describe('WorkspaceRouteShell', () => {
 
     const node = screen.getByTestId('workspace-page-client');
     expect(node.getAttribute('data-public-section')).toBe('stats');
-    expect(replace).toHaveBeenCalledWith(
-      '/workspace?section=stats&period=90d',
-      { scroll: false },
-    );
+    expect(replace).toHaveBeenCalledWith('/workspace?section=stats&period=90d', { scroll: false });
   });
 
   it('keeps chat as a canonical workspace section', () => {
@@ -181,10 +176,9 @@ describe('WorkspaceRouteShell', () => {
 
     render(<WorkspaceRouteShell />);
 
-    expect(replace).toHaveBeenCalledWith(
-      '/workspace?section=requests&scope=market',
-      { scroll: false },
-    );
+    expect(replace).toHaveBeenCalledWith('/workspace?section=requests&scope=market', {
+      scroll: false,
+    });
   });
 
   it('keeps bootstrap loading screen while refresh intent is active', () => {

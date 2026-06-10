@@ -197,8 +197,16 @@
 
   /* Global surface system */
   --surface-card-border: color-mix(in oklab, var(--color-border) 88%, transparent);
-  --surface-card-border-hover: color-mix(in oklab, var(--color-border) 76%, var(--color-primary) 24%);
-  --surface-card-border-focus: color-mix(in oklab, var(--color-primary) 32%, var(--color-border) 68%);
+  --surface-card-border-hover: color-mix(
+    in oklab,
+    var(--color-border) 76%,
+    var(--color-primary) 24%
+  );
+  --surface-card-border-focus: color-mix(
+    in oklab,
+    var(--color-primary) 32%,
+    var(--color-border) 68%
+  );
   --surface-card-bg: var(--color-surface);
   --surface-card-bg-hover: var(--color-surface);
   --surface-card-shadow: var(--shadow-card);

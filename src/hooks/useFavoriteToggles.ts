@@ -50,7 +50,9 @@ export function useRequestFavoriteToggle({
   favoriteRequestIds,
   requestById,
 }: UseRequestFavoriteToggleParams) {
-  const [pendingFavoriteRequestIds, setPendingFavoriteRequestIds] = React.useState<Set<string>>(() => new Set());
+  const [pendingFavoriteRequestIds, setPendingFavoriteRequestIds] = React.useState<Set<string>>(
+    () => new Set(),
+  );
 
   const toggleRequestFavorite = React.useCallback(
     async (requestId: string) => {
@@ -87,7 +89,17 @@ export function useRequestFavoriteToggle({
         });
       }
     },
-    [enabled, favoriteRequestIds, isAuthed, nextPath, pendingFavoriteRequestIds, qc, requestById, router, t],
+    [
+      enabled,
+      favoriteRequestIds,
+      isAuthed,
+      nextPath,
+      pendingFavoriteRequestIds,
+      qc,
+      requestById,
+      router,
+      t,
+    ],
   );
 
   return {
@@ -107,7 +119,9 @@ export function useProviderFavoriteToggle({
   favoriteProviderLookup,
   providerById,
 }: UseProviderFavoriteToggleParams) {
-  const [pendingFavoriteProviderIds, setPendingFavoriteProviderIds] = React.useState<Set<string>>(() => new Set());
+  const [pendingFavoriteProviderIds, setPendingFavoriteProviderIds] = React.useState<Set<string>>(
+    () => new Set(),
+  );
 
   const isProviderSaved = React.useCallback(
     (providerId: string) => {
@@ -117,7 +131,7 @@ export function useProviderFavoriteToggle({
       const provider = providerById.get(providerId);
       return provider && favoriteProviderLookup
         ? isProviderInFavoriteLookup(favoriteProviderLookup, provider)
-        : favoriteProviderLookup?.has(providerId) ?? false;
+        : (favoriteProviderLookup?.has(providerId) ?? false);
     },
     [favoriteProviderIds, favoriteProviderLookup, providerById],
   );
@@ -161,7 +175,17 @@ export function useProviderFavoriteToggle({
         });
       }
     },
-    [enabled, isAuthed, isProviderSaved, nextPath, pendingFavoriteProviderIds, providerById, qc, router, t],
+    [
+      enabled,
+      isAuthed,
+      isProviderSaved,
+      nextPath,
+      pendingFavoriteProviderIds,
+      providerById,
+      qc,
+      router,
+      t,
+    ],
   );
 
   return {

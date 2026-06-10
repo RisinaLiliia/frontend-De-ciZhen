@@ -128,7 +128,8 @@ export const de = {
     proofCase12Price: '€ 130',
     nearby: 'Neue Aufträge in deiner Nähe',
     nearbySubtitle: 'Aktualisiert in Echtzeit',
-    nearbyFallbackHint: 'Entschuldigung, in deiner Nähe haben wir keine Aufträge gefunden. Vielleicht passen diese.',
+    nearbyFallbackHint:
+      'Entschuldigung, in deiner Nähe haben wir keine Aufträge gefunden. Vielleicht passen diese.',
     nearbyEmptyHint: 'Aktuell sind keine Aufträge verfügbar. Bitte später erneut prüfen.',
     nearbyItem1Category: 'Elektrik',
     nearbyItem1Desc: 'Steckdose montieren',
@@ -170,7 +171,8 @@ export const de = {
     topProvider1Name: 'Anna K.',
     topProvider1Role: 'Reinigung',
     topProvider1City: 'Mannheim',
-    topProvider1About: 'Spezialisiert auf gründliche Wohnungsreinigung und flexible Termine am Abend.',
+    topProvider1About:
+      'Spezialisiert auf gründliche Wohnungsreinigung und flexible Termine am Abend.',
     topProvider1Meta: '4.9',
     topProvider1Rating: '4.9',
     topProvider1Reviews: '128 Bewertungen',
@@ -181,7 +183,8 @@ export const de = {
     topProvider2Name: 'Markus S.',
     topProvider2Role: 'Elektrik',
     topProvider2City: 'Heidelberg',
-    topProvider2About: 'Zertifizierter Elektriker für Reparaturen, Installationen und schnelle Notfalltermine.',
+    topProvider2About:
+      'Zertifizierter Elektriker für Reparaturen, Installationen und schnelle Notfalltermine.',
     topProvider2Meta: '4.8',
     topProvider2Rating: '4.8',
     topProvider2Reviews: '96 Bewertungen',
@@ -194,7 +197,8 @@ export const de = {
     topProvider3Name: 'Sofia M.',
     topProvider3Role: 'Sanitär',
     topProvider3City: 'Karlsruhe',
-    topProvider3About: 'Sanitär-Service für Küche und Bad mit sauberer Ausführung und transparenter Kommunikation.',
+    topProvider3About:
+      'Sanitär-Service für Küche und Bad mit sauberer Ausführung und transparenter Kommunikation.',
     topProvider3Meta: '4.9',
     topProvider3Rating: '4.9',
     topProvider3Reviews: '142 Bewertungen',
@@ -205,7 +209,8 @@ export const de = {
     topProvider4Name: 'Lukas B.',
     topProvider4Role: 'Umzug',
     topProvider4City: 'Ludwigshafen',
-    topProvider4About: 'Umzugshilfe inklusive Tragen, Verpacken und Transport mit zuverlässiger Terminplanung.',
+    topProvider4About:
+      'Umzugshilfe inklusive Tragen, Verpacken und Transport mit zuverlässiger Terminplanung.',
     topProvider4Meta: '4.7',
     topProvider4Rating: '4.7',
     topProvider4Reviews: '87 Bewertungen',
@@ -216,7 +221,8 @@ export const de = {
     topProvider5Name: 'Nina T.',
     topProvider5Role: 'Malerarbeiten',
     topProvider5City: 'Darmstadt',
-    topProvider5About: 'Malerarbeiten innen und außen mit Fokus auf saubere Kanten und langlebige Ergebnisse.',
+    topProvider5About:
+      'Malerarbeiten innen und außen mit Fokus auf saubere Kanten und langlebige Ergebnisse.',
     topProvider5Meta: '4.8',
     topProvider5Rating: '4.8',
     topProvider5Reviews: '104 Bewertungen',
@@ -399,7 +405,8 @@ export const de = {
     workspaceMyRequestsEmptyHint: 'Erstelle eine neue Anfrage oder wechsle den Statusfilter.',
     workspaceMyRequestsEmptyCta: 'Neue Anfrage erstellen',
     workspaceMyOffersEmptyTitle: 'Noch keine passenden Angebote.',
-    workspaceMyOffersEmptyHint: 'Noch keine Angebote. Anfrage erstellen oder offene Aufträge ansehen.',
+    workspaceMyOffersEmptyHint:
+      'Noch keine Angebote. Anfrage erstellen oder offene Aufträge ansehen.',
     workspaceMyOffersEmptyCta: 'Aufträge ansehen',
     workspaceContractsEmptyTitle: 'Noch keine passenden Verträge.',
     workspaceContractsEmptyHint: 'Sobald ein Angebot angenommen wird, erscheint es hier.',
@@ -410,7 +417,8 @@ export const de = {
     favoritesEmptyCategoryTitle: 'Keine Elemente in dieser Kategorie.',
     favoritesEmptyAllTitle: 'Du hast noch keine Favoriten.',
     favoritesEmptyCategoryHint: 'Wechsle zwischen Anfragen und Anbietern.',
-    favoritesEmptyAllHint: 'Markiere Aufträge oder Anbieter mit dem Herzsymbol, um sie hier zu speichern.',
+    favoritesEmptyAllHint:
+      'Markiere Aufträge oder Anbieter mit dem Herzsymbol, um sie hier zu speichern.',
     reviewsViewLabel: 'Bewertungen Ansicht',
     reviewsTabProvider: 'Als Anbieter',
     reviewsTabClient: 'Als Kunde',
@@ -447,7 +455,8 @@ export const de = {
     userReviewFormError: 'Bewertung konnte nicht gesendet werden. Bitte erneut versuchen.',
     userReviewFormRoleUnsupported: 'Aktuelle Rolle kann keine Nutzerbewertung senden.',
     reviewsWorkspaceTitle: 'Bewertungen & Feedback',
-    reviewsWorkspaceSubtitle: 'Sieh, wie Kunden deine Arbeit bewerten und baue Vertrauen auf der Plattform auf.',
+    reviewsWorkspaceSubtitle:
+      'Sieh, wie Kunden deine Arbeit bewerten und baue Vertrauen auf der Plattform auf.',
     workspaceSectionSubtitle: 'Workspace-Ansicht für deine eigenen Daten und Aktionen.',
     statusAll: 'Alle',
     primaryActionFindNewOrders: 'Neue Aufträge finden',
@@ -456,17 +465,21 @@ export const de = {
     providerHintProfilePrefix: 'Profil zu',
     providerHintProfileSuffix: '% ausgefüllt. Vervollständige es für bessere Annahmequoten.',
     providerHintProfileCta: 'Profil vervollständigen',
-    providerHintNoOffersText: 'Seit 7 Tagen keine neuen Angebote. Prüfe Services, Standort und Verfügbarkeit.',
+    providerHintNoOffersText:
+      'Seit 7 Tagen keine neuen Angebote. Prüfe Services, Standort und Verfügbarkeit.',
     providerHintNoOffersCta: 'Aufträge ansehen',
-    providerHintLowAcceptanceText: 'Deine Annahmequote ist niedrig. Optimiere Preis und Nachricht für mehr Zusagen.',
+    providerHintLowAcceptanceText:
+      'Deine Annahmequote ist niedrig. Optimiere Preis und Nachricht für mehr Zusagen.',
     providerHintLowAcceptanceCta: 'Angebote verbessern',
-    providerHintStrongText: 'Starke Performance. Halte Profil und Preise aktuell für stabile Auslastung.',
+    providerHintStrongText:
+      'Starke Performance. Halte Profil und Preise aktuell für stabile Auslastung.',
     providerHintStrongCta: 'Meine Verträge',
     clientHintNoRequestsText: 'Noch keine Anfrage erstellt. Starte mit deinem ersten Auftrag.',
     clientHintNoRequestsCta: 'Anfrage erstellen',
     clientHintHasOpenText: 'Du hast aktive Anfragen. Vergleiche Angebote und entscheide schneller.',
     clientHintHasOpenCta: 'Meine Anfragen',
-    clientHintStableText: 'Deine Anfragen laufen stabil. Lege neue Aufgaben an, wenn du weitere Hilfe brauchst.',
+    clientHintStableText:
+      'Deine Anfragen laufen stabil. Lege neue Aufgaben an, wenn du weitere Hilfe brauchst.',
     clientHintStableCta: 'Neue Anfrage',
     navUserFallback: 'Freund',
     profileOnboardingStep: 'Schritt 3 von 4',
@@ -479,13 +492,16 @@ export const de = {
     profileOnboardingDescriptionHint: 'Erzähle kurz über deine Erfahrung und Arbeitsweise.',
     profileOnboardingDescriptionMax: 'Die Beschreibung darf maximal 500 Zeichen enthalten.',
     profileOnboardingSuccess: 'Profil erstellt. Du bist jetzt registriert und eingeloggt.',
-    profileOnboardingAuthedHint: 'Du bist bereits eingeloggt. Öffne dein Profil, um Daten zu bearbeiten.',
+    profileOnboardingAuthedHint:
+      'Du bist bereits eingeloggt. Öffne dein Profil, um Daten zu bearbeiten.',
     profileOnboardingAuthedCta: 'Profil öffnen',
     favoritesGuestGateTitle: 'Favoriten sind nach Profilerstellung verfügbar.',
-    favoritesGuestGateHint: 'Erstelle ein Profil, um Favoriten zu speichern und später schnell wiederzufinden.',
+    favoritesGuestGateHint:
+      'Erstelle ein Profil, um Favoriten zu speichern und später schnell wiederzufinden.',
     favoritesGuestGateCta: 'Profil erstellen',
     reviewsGuestGateTitle: 'Bewertungen werden nach Profilerstellung freigeschaltet.',
-    reviewsGuestGateHint: 'Erstelle ein Profil, um Bewertungen zu sammeln und Vertrauen sichtbar aufzubauen.',
+    reviewsGuestGateHint:
+      'Erstelle ein Profil, um Bewertungen zu sammeln und Vertrauen sichtbar aufzubauen.',
     reviewsGuestGateCta: 'Profil erstellen',
     workspaceRequestPageNavigationLabel: 'Seitennavigation für Anfragen',
     workspaceWorkflowCreatedMeta: 'Erstellt',
@@ -499,12 +515,18 @@ export const de = {
     workspaceWorkflowNotCreatedMeta: 'Noch nicht erstellt',
     workspaceWorkflowProgressLabel: 'Fortschritt der Anfrage',
     workspaceFooterNoteMarket: 'Öffne die Details, um diesen Marktvorgang im Kontext zu prüfen.',
-    workspaceFooterNoteReviewOffers: 'Du hast offene Entscheidungen. Wir helfen dir bei der Auswahl.',
-    workspaceFooterNoteConfirmContract: 'Die nächsten Schritte hängen von deiner Vertragsbestätigung ab.',
-    workspaceFooterNoteReplyRequired: 'Es gibt offene Rückmeldungen. Antworte, damit der Vorgang weiterläuft.',
-    workspaceFooterNoteConfirmCompletion: 'Bestätige den Abschluss, damit der Vorgang sauber beendet wird.',
-    workspaceFooterNoteReviewCompletion: 'Der Auftrag ist abgeschlossen. Hinterlasse jetzt dein Feedback zum Anbieter.',
-    workspaceFooterNoteDefault: 'Behalte diesen Vorgang im Blick und steuere die nächsten Schritte direkt hier.',
+    workspaceFooterNoteReviewOffers:
+      'Du hast offene Entscheidungen. Wir helfen dir bei der Auswahl.',
+    workspaceFooterNoteConfirmContract:
+      'Die nächsten Schritte hängen von deiner Vertragsbestätigung ab.',
+    workspaceFooterNoteReplyRequired:
+      'Es gibt offene Rückmeldungen. Antworte, damit der Vorgang weiterläuft.',
+    workspaceFooterNoteConfirmCompletion:
+      'Bestätige den Abschluss, damit der Vorgang sauber beendet wird.',
+    workspaceFooterNoteReviewCompletion:
+      'Der Auftrag ist abgeschlossen. Hinterlasse jetzt dein Feedback zum Anbieter.',
+    workspaceFooterNoteDefault:
+      'Behalte diesen Vorgang im Blick und steuere die nächsten Schritte direkt hier.',
     workspaceOpenRequestMenu: 'Anfrage-Menü öffnen',
     workspaceSaveRequest: 'Anfrage merken',
     workspaceOpenDetails: 'Details öffnen',
@@ -512,19 +534,23 @@ export const de = {
     workspacePrivateEmptyTitle: 'Noch keine eigenen Vorgänge',
     workspaceMarketFilteredTitle: 'Keine Marktvorgänge für diesen Filter',
     workspacePrivateFilteredTitle: 'Keine Vorgänge für diesen Filter',
-    workspaceMarketEmptyHint: 'Sobald neue Anfragen im Markt eintreffen, erscheinen sie hier in derselben Arbeitsoberfläche.',
-    workspacePrivateEmptyHint: 'Sobald du eine Anfrage erstellst oder auf passende Aufträge reagierst, erscheint deine Arbeit hier.',
+    workspaceMarketEmptyHint:
+      'Sobald neue Anfragen im Markt eintreffen, erscheinen sie hier in derselben Arbeitsoberfläche.',
+    workspacePrivateEmptyHint:
+      'Sobald du eine Anfrage erstellst oder auf passende Aufträge reagierst, erscheint deine Arbeit hier.',
     workspaceFilteredHint: 'Passe Status, Rolle oder Zeitraum an.',
     workspaceRefreshMarketCta: 'Markt aktualisieren',
     workspaceGoToProvidersCta: 'Zu Anbietern',
     workspaceGoToMarketCta: 'Zum Markt',
     workspaceAuthGateTitle: 'Meine Arbeit ist nur nach Anmeldung verfügbar',
-    workspaceAuthGateHint: 'Melde dich an, um deine eigenen Anfragen, Vorgänge und Abschlüsse im Workspace zu verwalten.',
+    workspaceAuthGateHint:
+      'Melde dich an, um deine eigenen Anfragen, Vorgänge und Abschlüsse im Workspace zu verwalten.',
     workspaceMarketLoadErrorTitle: 'Die Marktansicht konnte nicht geladen werden.',
     workspacePrivateLoadErrorTitle: 'Deine Arbeitsansicht konnte nicht geladen werden.',
     workspaceReloadHint: 'Bitte versuche es erneut.',
     workspaceDecisionDoneTitle: 'Alle offenen Entscheidungen erledigt',
-    workspaceDecisionDoneHint: 'Deine Decision Queue ist leer. Du kannst zum normalen Listenmodus zurückkehren.',
+    workspaceDecisionDoneHint:
+      'Deine Decision Queue ist leer. Du kannst zum normalen Listenmodus zurückkehren.',
     workspaceDecisionDoneCta: 'Modus beenden',
     workspaceDeleteRequestConfirm: 'Diese Anfrage endgültig löschen?',
     workspacePriorityActionRequired: 'Handlungsbedarf',
@@ -576,11 +602,15 @@ export const de = {
     workspaceRailProfileContext: 'Setup im Workspace',
     workspaceRailChatContext: 'Konversationen im Fokus',
     workspaceRailMarketRecommendationDemandTitle: 'Hohe Nachfrage',
-    workspaceRailMarketRecommendationExecutionBody: 'Behalte laufende Marktbewegungen und neue Signale im Blick.',
-    workspaceRailMarketRecommendationCompletedBody: 'Abgeschlossene Vorgänge zeigen, wie schnell der Markt gerade dreht.',
+    workspaceRailMarketRecommendationExecutionBody:
+      'Behalte laufende Marktbewegungen und neue Signale im Blick.',
+    workspaceRailMarketRecommendationCompletedBody:
+      'Abgeschlossene Vorgänge zeigen, wie schnell der Markt gerade dreht.',
     workspaceRailPrivateRecommendationAttentionTitle: 'Offene Entscheidungen',
-    workspaceRailPrivateRecommendationExecutionBody: 'Halte aktive Vorgänge in Bewegung und blockiere keine nächsten Schritte.',
-    workspaceRailPrivateRecommendationCompletedBody: 'Abgeschlossene Vorgänge sichern Fortschritt und machen Kapazität frei.',
+    workspaceRailPrivateRecommendationExecutionBody:
+      'Halte aktive Vorgänge in Bewegung und blockiere keine nächsten Schritte.',
+    workspaceRailPrivateRecommendationCompletedBody:
+      'Abgeschlossene Vorgänge sichern Fortschritt und machen Kapazität frei.',
     decisionModeLabel: 'Decision Mode',
     decisionModeHandleOpen: 'Bearbeite offene Vorgänge',
     decisionModeNoOpen: 'Keine offenen Entscheidungen',
@@ -643,8 +673,7 @@ export const de = {
     responseEditSubmit: 'Änderungen speichern',
     responseUpdated: 'Angebot aktualisiert.',
     responseCancelled: 'Angebot abgebrochen.',
-    responseEditUnavailable:
-      'Bearbeiten ist noch nicht verfügbar. Bitte später erneut versuchen.',
+    responseEditUnavailable: 'Bearbeiten ist noch nicht verfügbar. Bitte später erneut versuchen.',
     responseEditCta: 'Angebot bearbeiten',
     responseEditTooltip: 'Angebot bearbeiten',
     responseSentHint: 'Angebot gesendet',
@@ -654,8 +683,7 @@ export const de = {
     responseSuccessSubline: 'Bitte warte auf die Rückmeldung des Auftraggebers.',
     responseSuccessTipTitle: 'Tipp für höhere Chancen',
     responseSuccessTipCardTitle: 'Vollständige Profile werden häufiger ausgewählt.',
-    responseSuccessTipCardBody:
-      'Ergänze deine Angaben und erhöhe deine Chancen auf Zusage.',
+    responseSuccessTipCardBody: 'Ergänze deine Angaben und erhöhe deine Chancen auf Zusage.',
     responseContinueCta: 'Weiter Anfragen ansehen',
     responseYourPrice: 'Ihr Preis:',
     responseProfileCta: 'Profil schnell ausfüllen',
@@ -680,12 +708,14 @@ export const de = {
     workspaceShareLink: 'Link teilen',
     workspaceShareFailed: 'Link konnte nicht geteilt werden.',
     workspaceLoadErrorTitle: 'Anfrage konnte nicht geladen werden',
-    workspaceLoadErrorBody: 'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.',
+    workspaceLoadErrorBody:
+      'Der Workspace bleibt an derselben Stelle. Versuche es erneut, ohne die Seite zu verlassen.',
     workspaceInlineMeta: 'Inline',
     workspaceOfferFallbackTitle: 'Angebot',
     workspaceOfferLoadErrorTitle: 'Angebot konnte nicht geladen werden',
     workspaceOfferLoadErrorBody: 'Bitte versuche es erneut, ohne den Workspace zu verlassen.',
-    workspaceOfferSuccessTipCardBody: 'Vervollständige dein Profil später im Workspace, falls du mehr Vertrauen aufbauen willst.',
+    workspaceOfferSuccessTipCardBody:
+      'Vervollständige dein Profil später im Workspace, falls du mehr Vertrauen aufbauen willst.',
     workspaceProfileStatusLabel: 'Workspace',
     workspaceChatCloseLabel: 'Chat schließen',
     workspaceSelectedProviderFallback: 'Gewählter Anbieter',
@@ -697,9 +727,11 @@ export const de = {
     workspaceOffersTitle: 'Angebote',
     workspaceOffersSubtitle: 'Treffe die Entscheidung direkt in diesem Workspace.',
     workspaceOffersLoadErrorTitle: 'Angebote konnten nicht geladen werden',
-    workspaceOffersLoadErrorBody: 'Der Entscheidungsbereich bleibt geöffnet. Bitte versuche es erneut oder öffne den Chat direkt aus der Karte.',
+    workspaceOffersLoadErrorBody:
+      'Der Entscheidungsbereich bleibt geöffnet. Bitte versuche es erneut oder öffne den Chat direkt aus der Karte.',
     workspaceOffersEmptyTitle: 'Noch keine aktiven Angebote',
-    workspaceOffersEmptyBody: 'Sobald Dienstleister reagieren, kannst du Annahme oder Ablehnung direkt hier erledigen.',
+    workspaceOffersEmptyBody:
+      'Sobald Dienstleister reagieren, kannst du Annahme oder Ablehnung direkt hier erledigen.',
     workspaceAvailabilityTemplate: 'Verfügbarkeit: {value}',
     workspaceCompletedJobsTemplate: '{value} Aufträge abgeschlossen',
     workspaceRatingTemplate: 'Bewertung {value}',
@@ -714,38 +746,46 @@ export const de = {
     workspaceContractNotePlaceholder: 'Optionaler Hinweis für den Vertrag',
     workspaceConfirmContractCta: 'Vertrag bestätigen',
     workspaceContractMissingTitle: 'Vertragsdaten fehlen noch',
-    workspaceContractMissingBody: 'Sobald das Angebot in einen Vertrag überführt wurde, kannst du Start, Dauer und Bestätigung direkt hier abschließen.',
+    workspaceContractMissingBody:
+      'Sobald das Angebot in einen Vertrag überführt wurde, kannst du Start, Dauer und Bestätigung direkt hier abschließen.',
     workspaceConfirmCompletionCta: 'Leistung bestätigen',
     workspaceLeaveReviewTitle: 'Bewertung hinterlassen',
-    workspaceLeaveReviewBody: 'Der Auftrag ist abgeschlossen. Bewerte die Zusammenarbeit mit dem gewählten Anbieter direkt hier.',
+    workspaceLeaveReviewBody:
+      'Der Auftrag ist abgeschlossen. Bewerte die Zusammenarbeit mit dem gewählten Anbieter direkt hier.',
     workspaceReviewLabel: 'Bewertung',
     workspaceFeedbackLabel: 'Feedback',
     workspaceFeedbackPlaceholder: 'Wie lief die Zusammenarbeit? Was war besonders gut?',
     workspaceReviewLaterCta: 'Später',
     workspaceSubmitReviewCta: 'Bewertung senden',
     workspaceReviewSubmittedTitle: 'Bewertung gespeichert',
-    workspaceReviewSubmittedBody: 'Danke. Dein Feedback wurde gespeichert und ist jetzt Teil des Qualitätsverlaufs.',
+    workspaceReviewSubmittedBody:
+      'Danke. Dein Feedback wurde gespeichert und ist jetzt Teil des Qualitätsverlaufs.',
     workspaceNoContractTitle: 'Noch kein Vertrag gefunden',
-    workspaceNoContractBody: 'Die Abschlussbestätigung wird hier sichtbar, sobald der Auftrag aktiv als Vertrag geführt wird.',
+    workspaceNoContractBody:
+      'Die Abschlussbestätigung wird hier sichtbar, sobald der Auftrag aktiv als Vertrag geführt wird.',
     workspaceYourReviewTitle: 'Deine Bewertung',
     workspaceReviewSavedAt: 'Gespeichert am {value}',
     workspaceReviewAlreadySaved: 'Dein Feedback wurde bereits gespeichert.',
     workspaceReviewAvailableTitle: 'Bewertung verfügbar, sobald der Auftrag abgeschlossen ist',
-    workspaceReviewAvailableBody: 'Sobald die Leistung bestätigt ist, kannst du hier direkt eine Bewertung hinterlassen.',
+    workspaceReviewAvailableBody:
+      'Sobald die Leistung bestätigt ist, kannst du hier direkt eine Bewertung hinterlassen.',
     workspaceNoReviewDataTitle: 'Noch keine Bewertungsdaten verfügbar',
-    workspaceNoReviewDataBody: 'Öffne diesen Schritt erneut, sobald ein Vertrag und eine abgeschlossene Leistung vorliegen.',
+    workspaceNoReviewDataBody:
+      'Öffne diesen Schritt erneut, sobald ein Vertrag und eine abgeschlossene Leistung vorliegen.',
   },
   workspace: {
     modeNavAriaLabel: 'Workspace-Modi',
     openAnalysisCta: 'Analyse ansehen',
     overviewQuickActionsTitle: 'Schnellaktionen',
-    overviewQuickActionsSubtitle: 'Direkt zur nächsten Entscheidung, ohne den Workspace-Kontext zu verlassen.',
+    overviewQuickActionsSubtitle:
+      'Direkt zur nächsten Entscheidung, ohne den Workspace-Kontext zu verlassen.',
     overviewQuickActionRequests: 'Aufträge öffnen',
     overviewQuickActionProviders: 'Anbieter suchen',
     overviewQuickActionAnalysis: 'Analyse öffnen',
     overviewOffersTitle: 'Aktive Angebote',
     overviewOffersSubtitle: 'Neue Nachfrage mit Marktsignalen für den direkten Analyse-Einstieg.',
-    overviewTopProvidersSubtitle: 'Verifiziert, schnell in der Antwort und aktiv im aktuellen Kontext.',
+    overviewTopProvidersSubtitle:
+      'Verifiziert, schnell in der Antwort und aktiv im aktuellen Kontext.',
     overviewOpportunityBadge: 'Chance',
     overviewDemandHigh: 'Hohe Nachfrage',
     overviewDemandMedium: 'Stabile Nachfrage',
@@ -753,7 +793,8 @@ export const de = {
     overviewCompetitionLow: 'Wenig Anbieter',
     overviewCompetitionBalanced: 'Ausgeglichen',
     overviewCompetitionHigh: 'Mehr Wettbewerb',
-    focusScopeTextTemplate: 'Der aktuelle Workspace-Kontext bleibt über alle Modi hinweg aktiv: {context}. {scope}.',
+    focusScopeTextTemplate:
+      'Der aktuelle Workspace-Kontext bleibt über alle Modi hinweg aktiv: {context}. {scope}.',
     dialogCloseLabel: 'Dialog schließen',
     messagesTitle: 'Nachrichten',
     requestConversationSubtitle: 'Unterhaltung zur Anfrage',
@@ -793,12 +834,16 @@ export const de = {
     statsOpportunityDetailAnalysisTemplate: 'Detailanalyse für {city}',
     statsOpportunitySummaryAriaLabel: 'Opportunity Zusammenfassung',
     myScopeTitle: 'Meine Arbeit',
-    myScopeDescription: 'Verwalte deine Anfragen, laufenden Vorgänge, Rückmeldungen und Abschlüsse in einer Arbeitsumgebung.',
-    myScopeRailDescription: 'Arbeite offene Vorgänge, Rückmeldungen und Abschlüsse im gleichen Kontext ab.',
+    myScopeDescription:
+      'Verwalte deine Anfragen, laufenden Vorgänge, Rückmeldungen und Abschlüsse in einer Arbeitsumgebung.',
+    myScopeRailDescription:
+      'Arbeite offene Vorgänge, Rückmeldungen und Abschlüsse im gleichen Kontext ab.',
     myScopeContext: 'Operativer Modus für deine eigenen Vorgänge',
     marketScopeTitle: 'Aufträge entdecken',
-    marketScopeDescription: 'Finde passende Anfragen, vergleiche Regionen und beobachte den Markt im aktuellen Kontext.',
-    marketScopeRailDescription: 'Nutze denselben Kontext, um Nachfrage, Regionen und Marktbewegung zu vergleichen.',
+    marketScopeDescription:
+      'Finde passende Anfragen, vergleiche Regionen und beobachte den Markt im aktuellen Kontext.',
+    marketScopeRailDescription:
+      'Nutze denselben Kontext, um Nachfrage, Regionen und Marktbewegung zu vergleichen.',
     marketScopeContext: 'Marktmodus für öffentliche Nachfrage',
     summaryStripMarketAllHelper: 'Gesamter Markt',
     summaryStripMarketAttentionHelper: 'Aktuelle Nachfrage',
@@ -857,7 +902,8 @@ export const de = {
     preferredDate: 'Wunschtermin',
     directCalendarTitle: 'Verfügbare Termine',
     directCalendarHintLoading: 'Lade verfügbare Termine...',
-    directCalendarHintReady: 'Nur freie Tage sind auswählbar. Ausgewählter Tag wird beim Auftrag fixiert.',
+    directCalendarHintReady:
+      'Nur freie Tage sind auswählbar. Ausgewählter Tag wird beim Auftrag fixiert.',
     directCalendarHintEmpty: 'Aktuell keine freien Termine im Zeitraum von 14 Tagen.',
     directSelectedDateLabel: 'Ausgewählter Termin',
     directSelectedDateEmpty: 'Bitte Tag im Kalender auswählen',
@@ -926,10 +972,12 @@ export const de = {
     toLogin: 'Schon registriert? Anmelden',
     forgotPassword: 'Passwort vergessen?',
     forgotPasswordTitle: 'Passwort zurücksetzen',
-    forgotPasswordSubtitle: 'Gib die E-Mail deines Kontos ein. Wenn ein Konto existiert, senden wir dir einen Reset-Link.',
+    forgotPasswordSubtitle:
+      'Gib die E-Mail deines Kontos ein. Wenn ein Konto existiert, senden wir dir einen Reset-Link.',
     forgotPasswordCta: 'Reset-Link senden',
     forgotPasswordSoon: 'Passwort-Reset folgt in Kürze',
-    forgotPasswordEmailSent: 'Wenn ein Konto mit dieser E-Mail existiert, haben wir einen Link zum Zurücksetzen gesendet.',
+    forgotPasswordEmailSent:
+      'Wenn ein Konto mit dieser E-Mail existiert, haben wir einen Link zum Zurücksetzen gesendet.',
     forgotPasswordOpenReset: 'Reset-Seite öffnen (nur Test/Dev)',
     resetPasswordTitle: 'Passwort zurücksetzen',
     resetPasswordSubtitle: 'Lege ein neues Passwort für dein Konto fest',
@@ -942,7 +990,8 @@ export const de = {
     continueWithApple: 'Apple',
     oauthUnavailable: 'Social Login ist derzeit nicht verfügbar.',
     oauthFailed: 'Social Login fehlgeschlagen. Bitte versuche es erneut.',
-    oauthConsentRequired: 'Bitte akzeptiere zuerst Datenschutz und Cookies, um Social Login abzuschließen.',
+    oauthConsentRequired:
+      'Bitte akzeptiere zuerst Datenschutz und Cookies, um Social Login abzuschließen.',
     closeDialog: 'Schließen',
     errorNameRequired: 'Bitte gib deinen vollständigen Namen ein.',
     errorNameMin: 'Der Name muss mindestens 2 Zeichen lang sein.',
@@ -984,7 +1033,8 @@ export const de = {
     requiredDescription: 'Erforderlich für Login, Sicherheit und Kernfunktionen.',
     alwaysActive: 'Immer aktiv',
     analyticsTitle: 'Analytics (Google Analytics)',
-    analyticsDescription: 'Hilft uns zu verstehen, welche Seiten genutzt werden, um UX und Performance zu verbessern.',
+    analyticsDescription:
+      'Hilft uns zu verstehen, welche Seiten genutzt werden, um UX und Performance zu verbessern.',
     marketingTitle: 'Marketing',
     marketingDescription: 'Erlaubt zukünftige Kampagnenmessung und personalisierte Anzeigen.',
     saveSelection: 'Auswahl speichern',

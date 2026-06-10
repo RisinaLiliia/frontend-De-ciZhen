@@ -24,7 +24,9 @@ export function roundToNearestStep(value: number, step: number): number {
 }
 
 export function average(values: Array<number | null | undefined>): number | null {
-  const normalized = values.filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
+  const normalized = values.filter(
+    (value): value is number => typeof value === 'number' && Number.isFinite(value),
+  );
   if (normalized.length === 0) return null;
   return normalized.reduce((sum, value) => sum + value, 0) / normalized.length;
 }

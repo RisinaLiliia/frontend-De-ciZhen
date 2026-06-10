@@ -33,7 +33,9 @@ export function HeroSection({
               <Link
                 key={cta.href + cta.label}
                 href={cta.href}
-                className={cta.variant === 'primary' ? 'btn-primary btn-icon' : 'btn-secondary btn-icon'}
+                className={
+                  cta.variant === 'primary' ? 'btn-primary btn-icon' : 'btn-secondary btn-icon'
+                }
               >
                 {cta.label}
               </Link>

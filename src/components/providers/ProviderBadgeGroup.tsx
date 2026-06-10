@@ -29,7 +29,9 @@ export function ProviderBadgeGroup({
   if (visibleBadges.length === 0) return null;
 
   return (
-    <span className={['workspace-list-card__badge-group', className ?? ''].filter(Boolean).join(' ')}>
+    <span
+      className={['workspace-list-card__badge-group', className ?? ''].filter(Boolean).join(' ')}
+    >
       {visibleBadges.map((badge) => (
         <WorkspaceBadge
           key={`${providerId}-${badge.label}`}

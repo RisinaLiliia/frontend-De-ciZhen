@@ -16,9 +16,10 @@ export function parseWorkspaceMobileSheetNumericValue(value: WorkspaceNavItem['v
 }
 
 export function resolveWorkspaceMobileSheetBadgeValue(item: WorkspaceNavItem) {
-  const count = typeof item.badgeValue === 'number'
-    ? Math.max(0, Math.round(item.badgeValue))
-    : parseWorkspaceMobileSheetNumericValue(item.value);
+  const count =
+    typeof item.badgeValue === 'number'
+      ? Math.max(0, Math.round(item.badgeValue))
+      : parseWorkspaceMobileSheetNumericValue(item.value);
   if (count === null) return null;
 
   const showAlways =
@@ -26,9 +27,7 @@ export function resolveWorkspaceMobileSheetBadgeValue(item: WorkspaceNavItem) {
     item.key === 'public-providers' ||
     item.key === 'public-stats' ||
     item.key === 'my-requests';
-  const showWhenPositive =
-    item.key === 'my-offers' ||
-    item.key === 'my-favorites';
+  const showWhenPositive = item.key === 'my-offers' || item.key === 'my-favorites';
 
   if (showAlways) return count;
   if (showWhenPositive) return count > 0 ? count : null;
@@ -58,7 +57,8 @@ export function hasWorkspaceMobileSheetHrefMatch(
   const normalizedHrefPath = hrefPath || '';
   if (normalizedHrefPath && normalizedHrefPath !== pathname) {
     if (item.match === 'prefix') {
-      if (!(pathname === normalizedHrefPath || pathname.startsWith(`${normalizedHrefPath}/`))) return false;
+      if (!(pathname === normalizedHrefPath || pathname.startsWith(`${normalizedHrefPath}/`)))
+        return false;
     } else {
       return false;
     }
@@ -82,6 +82,7 @@ export function isWorkspaceMobileSheetItemActive(
   if (item.forceActive === true) return true;
   if (hasWorkspaceMobileSheetHrefMatch(item, pathname, searchParams)) return true;
   if (item.forceActive === false) return false;
-  if (item.match === 'prefix') return pathname === item.href || pathname.startsWith(`${item.href}/`);
+  if (item.match === 'prefix')
+    return pathname === item.href || pathname.startsWith(`${item.href}/`);
   return pathname === item.href;
 }

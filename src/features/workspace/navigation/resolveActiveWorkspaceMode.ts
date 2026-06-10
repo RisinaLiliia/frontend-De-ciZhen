@@ -1,7 +1,13 @@
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceTab } from '@/features/workspace/state';
 
-export type WorkspaceModeKey = 'overview' | 'requests' | 'providers' | 'analysis' | 'profile' | 'chat';
+export type WorkspaceModeKey =
+  | 'overview'
+  | 'requests'
+  | 'providers'
+  | 'analysis'
+  | 'profile'
+  | 'chat';
 
 type ResolveActiveWorkspaceModeArgs = {
   activePublicSection: PublicWorkspaceSection | null;
@@ -28,12 +34,18 @@ export function resolveActiveWorkspaceMode({
   if (isWorkspaceRoot && sectionParam === 'overview') {
     return 'overview';
   }
-  if (activeWorkspaceTab === 'my-requests' && isWorkspaceRoot && !hasExplicitWorkspaceTab && !sectionParam) {
+  if (
+    activeWorkspaceTab === 'my-requests' &&
+    isWorkspaceRoot &&
+    !hasExplicitWorkspaceTab &&
+    !sectionParam
+  ) {
     return 'overview';
   }
   if (activeWorkspaceTab === 'my-requests') return 'requests';
 
-  if (activeWorkspaceTab === 'my-offers' || activeWorkspaceTab === 'completed-jobs') return 'requests';
+  if (activeWorkspaceTab === 'my-offers' || activeWorkspaceTab === 'completed-jobs')
+    return 'requests';
   if (activeWorkspaceTab === 'reviews') return 'analysis';
   if (activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'profile') return 'profile';
   return 'overview';

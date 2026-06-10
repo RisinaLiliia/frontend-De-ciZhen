@@ -22,7 +22,13 @@ describe('workspaceReviewsPanel.model', () => {
     const ui = buildWorkspaceReviewsUi('de', t as never);
     const reviews = buildWorkspacePlatformReviews(
       [
-        { id: 'review-1', rating: 4.6, text: 'Great', authorName: 'Anna', createdAt: '2026-03-20T10:00:00.000Z' },
+        {
+          id: 'review-1',
+          rating: 4.6,
+          text: 'Great',
+          authorName: 'Anna',
+          createdAt: '2026-03-20T10:00:00.000Z',
+        },
       ] as never,
       t as never,
     );
@@ -38,11 +44,13 @@ describe('workspaceReviewsPanel.model', () => {
       { id: 'req-1', title: 'Bathroom repair', cityName: 'Berlin' },
     ]);
     const bookingOptions = buildWorkspaceReviewableBookingOptions({
-      bookings: [
-        { id: 'booking-1', requestId: 'req-1', startAt: '2026-03-22T10:00:00.000Z' },
-      ],
+      bookings: [{ id: 'booking-1', requestId: 'req-1', startAt: '2026-03-22T10:00:00.000Z' }],
       reviewableRequestById: requestById,
-      bookingDateFormatter: new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'short', year: 'numeric' }),
+      bookingDateFormatter: new Intl.DateTimeFormat('de-DE', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }),
       t: ((key: string) => key) as never,
     });
     const userReviews = buildWorkspaceSortedUserReviews(
@@ -60,8 +68,12 @@ describe('workspaceReviewsPanel.model', () => {
     expect(userReviews[0]?.id).toBe('review-2');
     expect(distribution.stats.get(5)).toBe(1);
     expect(platformDistribution.stats.get(5)).toBe(3);
-    expect(buildWorkspaceReviewsAverage({ source: 'user', platformAverageRating: null, userReviews })).toBe(4);
-    expect(buildWorkspaceReviewsCount({ source: 'platform', platformTotal: 7, userReviewsCount: 2 })).toBe(7);
+    expect(
+      buildWorkspaceReviewsAverage({ source: 'user', platformAverageRating: null, userReviews }),
+    ).toBe(4);
+    expect(
+      buildWorkspaceReviewsCount({ source: 'platform', platformTotal: 7, userReviewsCount: 2 }),
+    ).toBe(7);
   });
 
   it('resolves loading, submit disabled and user-review mutation error key', () => {

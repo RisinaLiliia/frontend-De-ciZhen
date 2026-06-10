@@ -104,6 +104,4 @@
     background: color-mix(in oklab, var(--color-primary) 74%, var(--color-surface) 26%);
     box-shadow: var(--shadow-card);
   }
-
-
 }

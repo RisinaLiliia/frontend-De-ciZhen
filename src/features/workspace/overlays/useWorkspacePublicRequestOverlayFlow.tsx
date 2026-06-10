@@ -42,22 +42,33 @@ export function useWorkspacePublicRequestOverlayFlow({
     () => new Map(requests.map((request) => [request.id, request])),
     [requests],
   );
-  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(initialRequestState);
-  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(initialOfferRequestId);
-  const [activeChatState, setActiveChatState] = React.useState<WorkspaceChatDialogState | null>(null);
-  const [returnRequestState, setReturnRequestState] = React.useState<ManagedRequestState | null>(null);
+  const [activeRequestState, setActiveRequestState] = React.useState<ManagedRequestState | null>(
+    initialRequestState,
+  );
+  const [activeOfferRequestId, setActiveOfferRequestId] = React.useState<string | null>(
+    initialOfferRequestId,
+  );
+  const [activeChatState, setActiveChatState] = React.useState<WorkspaceChatDialogState | null>(
+    null,
+  );
+  const [returnRequestState, setReturnRequestState] = React.useState<ManagedRequestState | null>(
+    null,
+  );
   const activeRequestStateRef = React.useRef<ManagedRequestState | null>(null);
 
   React.useEffect(() => {
     activeRequestStateRef.current = activeRequestState;
   }, [activeRequestState]);
 
-  const openRequest = React.useCallback((requestId: string, intent: RequestDialogIntent = 'view') => {
-    setReturnRequestState(null);
-    setActiveOfferRequestId(null);
-    setActiveChatState(null);
-    setActiveRequestState({ requestId, intent });
-  }, []);
+  const openRequest = React.useCallback(
+    (requestId: string, intent: RequestDialogIntent = 'view') => {
+      setReturnRequestState(null);
+      setActiveOfferRequestId(null);
+      setActiveChatState(null);
+      setActiveRequestState({ requestId, intent });
+    },
+    [],
+  );
 
   const closeRequest = React.useCallback(() => {
     setReturnRequestState(null);
@@ -77,31 +88,34 @@ export function useWorkspacePublicRequestOverlayFlow({
     setReturnRequestState(null);
   }, [returnRequestState]);
 
-  const openChatConversation = React.useCallback(async (payload: WorkspaceChatConversationInput, title?: string) => {
-    try {
-      if (!isWorkspaceChatConversationInput(payload)) {
-        toast.error(t(I18N_KEYS.workspace.chatOpenError));
-        return;
+  const openChatConversation = React.useCallback(
+    async (payload: WorkspaceChatConversationInput, title?: string) => {
+      try {
+        if (!isWorkspaceChatConversationInput(payload)) {
+          toast.error(t(I18N_KEYS.workspace.chatOpenError));
+          return;
+        }
+
+        const conversation = await createConversation(payload);
+        await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
+        const fallbackTitle = payload.requestId
+          ? requestsById.get(payload.requestId)?.title?.trim()
+          : '';
+
+        setReturnRequestState(activeRequestStateRef.current);
+        setActiveRequestState(null);
+        setActiveOfferRequestId(null);
+        setActiveChatState({
+          conversationId: conversation.id,
+          title: title?.trim() || fallbackTitle || t(I18N_KEYS.workspace.messagesTitle),
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
       }
-
-      const conversation = await createConversation(payload);
-      await qc.invalidateQueries({ queryKey: workspaceQK.chatInbox() });
-      const fallbackTitle = payload.requestId
-        ? requestsById.get(payload.requestId)?.title?.trim()
-        : '';
-
-      setReturnRequestState(activeRequestStateRef.current);
-      setActiveRequestState(null);
-      setActiveOfferRequestId(null);
-      setActiveChatState({
-        conversationId: conversation.id,
-        title: title?.trim() || fallbackTitle || t(I18N_KEYS.workspace.messagesTitle),
-      });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    }
-  }, [qc, requestsById, t]);
+    },
+    [qc, requestsById, t],
+  );
 
   const closeChat = React.useCallback(() => {
     setActiveChatState(null);

@@ -2,10 +2,7 @@
 
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
-import {
-  StatisticsOpportunityPanel,
-  StatisticsPricePanel,
-} from '../StatisticsSections';
+import { StatisticsOpportunityPanel, StatisticsPricePanel } from '../StatisticsSections';
 
 type StatisticsOpportunitySectionProps = {
   panelRef: React.RefObject<HTMLElement | null>;

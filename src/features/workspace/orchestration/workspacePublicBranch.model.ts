@@ -15,9 +15,7 @@ import {
   WorkspacePageLayout,
   WorkspacePublicIntro,
 } from '@/features/workspace';
-import {
-  PUBLIC_REQUESTS_SEED_LIMIT,
-} from '@/features/workspace/orchestration/workspacePage.constants';
+import { PUBLIC_REQUESTS_SEED_LIMIT } from '@/features/workspace/orchestration/workspacePage.constants';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 
 type PublicIntroProps = ComponentProps<typeof WorkspacePublicIntro>;
@@ -103,7 +101,7 @@ export function buildWorkspacePublicSnapshotQuery() {
         limit: PUBLIC_REQUESTS_SEED_LIMIT,
         activityRange: '30d',
         cityActivityLimit: WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT,
-    }),
+      }),
     staleTime: 60_000,
     refetchOnWindowFocus: false as const,
     placeholderData: (previousData: WorkspacePublicOverviewDto | undefined) => previousData,
@@ -183,9 +181,9 @@ export function buildWorkspacePublicIntroProps({
 }: BuildPublicIntroArgs): PublicIntroProps {
   const isRequestsSection = activePublicSection === 'requests';
   const isExploreSectionWithoutLegacyQuickAction =
-    activePublicSection === 'providers'
-    || activePublicSection === 'profile'
-    || activePublicSection === 'stats';
+    activePublicSection === 'providers' ||
+    activePublicSection === 'profile' ||
+    activePublicSection === 'stats';
 
   return {
     t: branch.t,

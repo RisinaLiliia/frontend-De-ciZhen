@@ -45,10 +45,7 @@ export function WorkspaceContextPanel({
         <span className="workspace-context-controls__label">{title}</span>
       </div>
 
-      <WorkspaceContextInlineControls
-        inlineControl={inlineControl}
-        extraFilters={extraFilters}
-      />
+      <WorkspaceContextInlineControls inlineControl={inlineControl} extraFilters={extraFilters} />
 
       <div className="workspace-context-controls__surface">
         <div className="workspace-context-controls__body">

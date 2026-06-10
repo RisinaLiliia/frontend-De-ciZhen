@@ -9,7 +9,9 @@ function trimToNull(value: string | null | undefined) {
 
 export function hasUsableProviderAvatarUrl(value: string | null | undefined) {
   const trimmed = trimToNull(value);
-  return Boolean(trimmed && trimmed !== '/avatars/default.png' && !trimmed.endsWith('/avatars/default.png'));
+  return Boolean(
+    trimmed && trimmed !== '/avatars/default.png' && !trimmed.endsWith('/avatars/default.png'),
+  );
 }
 
 export function resolveWorkspaceProviderItemIdentity(
@@ -27,19 +29,18 @@ function hasMatchingProviderIdentity(
 ) {
   if (!provider || !candidate) return false;
 
-  const providerIds = new Set([
-    trimToNull(provider.id),
-    trimToNull(provider.userId),
-  ].filter(Boolean));
-  const candidateIds = [
-    trimToNull(candidate.id),
-    trimToNull(candidate.userId),
-  ].filter(Boolean);
+  const providerIds = new Set(
+    [trimToNull(provider.id), trimToNull(provider.userId)].filter(Boolean),
+  );
+  const candidateIds = [trimToNull(candidate.id), trimToNull(candidate.userId)].filter(Boolean);
 
   return candidateIds.some((value) => providerIds.has(value));
 }
 
-export function isOwnPublicProvider(provider: ProviderPublicDto | null | undefined, me: AppMeDto | null | undefined) {
+export function isOwnPublicProvider(
+  provider: ProviderPublicDto | null | undefined,
+  me: AppMeDto | null | undefined,
+) {
   if (!provider || !me) return false;
 
   const providerUserId = trimToNull(provider.userId);
@@ -49,7 +50,7 @@ export function isOwnPublicProvider(provider: ProviderPublicDto | null | undefin
 
   return Boolean(
     (providerUserId && meUserId && providerUserId === meUserId) ||
-      (providerId && meProviderProfileId && providerId === meProviderProfileId),
+    (providerId && meProviderProfileId && providerId === meProviderProfileId),
   );
 }
 
@@ -62,8 +63,8 @@ export function resolvePublicProviderAvatarUrl(
 
   const ownProviderAvatarUrl = trimToNull(ownProviderProfile?.avatarUrl);
   if (
-    hasUsableProviderAvatarUrl(ownProviderAvatarUrl)
-    && hasMatchingProviderIdentity(provider, ownProviderProfile)
+    hasUsableProviderAvatarUrl(ownProviderAvatarUrl) &&
+    hasMatchingProviderIdentity(provider, ownProviderProfile)
   ) {
     return ownProviderAvatarUrl;
   }
@@ -90,7 +91,9 @@ export function backfillOwnProviderAvatars(
   providers: ProviderPublicDto[],
   ownProviderProfile?: ProviderPublicDto | null | undefined,
 ) {
-  return providers.map((provider) => backfillOwnProviderAvatar(provider, ownProviderProfile) ?? provider);
+  return providers.map(
+    (provider) => backfillOwnProviderAvatar(provider, ownProviderProfile) ?? provider,
+  );
 }
 
 export function backfillProviderAvatarFromCandidates(
@@ -119,10 +122,8 @@ export function backfillProviderCardAvatarsFromCandidates(
     const identity = resolveWorkspaceProviderItemIdentity(item);
 
     const candidate = candidates.find((provider) =>
-      hasMatchingProviderIdentity(
-        identity,
-        provider,
-      ));
+      hasMatchingProviderIdentity(identity, provider),
+    );
     const avatarUrl = trimToNull(candidate?.avatarUrl);
     if (!hasUsableProviderAvatarUrl(avatarUrl)) return item;
 

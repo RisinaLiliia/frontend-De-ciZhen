@@ -83,11 +83,22 @@ export function WorkspaceHeaderAccountMenu({
 
   const isMobileDockTrigger = triggerVariant === 'mobileDock';
   const trigger = isMobileDockTrigger ? (
-    <span className={['workspace-mobile-dock__profile-trigger', active || open ? 'is-active' : ''].filter(Boolean).join(' ')}>
-      <span className="workspace-account-menu__avatar workspace-account-menu__avatar--dock" aria-hidden="true">
+    <span
+      className={['workspace-mobile-dock__profile-trigger', active || open ? 'is-active' : '']
+        .filter(Boolean)
+        .join(' ')}
+    >
+      <span
+        className="workspace-account-menu__avatar workspace-account-menu__avatar--dock"
+        aria-hidden="true"
+      >
         {profileInitial}
       </span>
-      {dockLabel ? <span className="workspace-mobile-dock__label workspace-mobile-dock__profile-label">{dockLabel}</span> : null}
+      {dockLabel ? (
+        <span className="workspace-mobile-dock__label workspace-mobile-dock__profile-label">
+          {dockLabel}
+        </span>
+      ) : null}
     </span>
   ) : (
     <span className="workspace-account-menu__trigger-surface">
@@ -109,12 +120,17 @@ export function WorkspaceHeaderAccountMenu({
         'workspace-account-menu',
         isMobileDockTrigger ? 'workspace-account-menu--mobile-dock' : '',
         className,
-      ].filter(Boolean).join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       trigger={trigger}
     >
       <div className="workspace-account-menu__panel">
         <div className="workspace-account-menu__summary">
-          <div className="workspace-account-menu__avatar workspace-account-menu__avatar--large" aria-hidden="true">
+          <div
+            className="workspace-account-menu__avatar workspace-account-menu__avatar--large"
+            aria-hidden="true"
+          >
             {profileInitial}
           </div>
           <div className="workspace-account-menu__summary-copy">
@@ -124,23 +140,43 @@ export function WorkspaceHeaderAccountMenu({
         </div>
 
         <nav className="workspace-account-menu__nav" aria-label={t(I18N_KEYS.auth.profileLabel)}>
-          <Link href="/workspace?section=profile" className="workspace-account-menu__item" onClick={() => setOpen(false)}>
+          <Link
+            href="/workspace?section=profile"
+            className="workspace-account-menu__item"
+            onClick={() => setOpen(false)}
+          >
             <IconUser />
             <span>{t(I18N_KEYS.auth.profileLabel)}</span>
           </Link>
-          <Link href="/workspace?section=settings" className="workspace-account-menu__item" onClick={() => setOpen(false)}>
+          <Link
+            href="/workspace?section=settings"
+            className="workspace-account-menu__item"
+            onClick={() => setOpen(false)}
+          >
             <IconSettings />
             <span>{t(I18N_KEYS.client.settingsTitle)}</span>
           </Link>
-          <Link href="/workspace?section=settings#billing" className="workspace-account-menu__item" onClick={() => setOpen(false)}>
+          <Link
+            href="/workspace?section=settings#billing"
+            className="workspace-account-menu__item"
+            onClick={() => setOpen(false)}
+          >
             <CreditCard size={16} strokeWidth={1.9} />
             <span>{copy.billing}</span>
           </Link>
-          <Link href="/workspace?section=chat" className="workspace-account-menu__item" onClick={() => setOpen(false)}>
+          <Link
+            href="/workspace?section=chat"
+            className="workspace-account-menu__item"
+            onClick={() => setOpen(false)}
+          >
             <IconChat />
             <span>{t(I18N_KEYS.requestsPage.navChat)}</span>
           </Link>
-          <Link href="/workspace?section=help" className="workspace-account-menu__item" onClick={() => setOpen(false)}>
+          <Link
+            href="/workspace?section=help"
+            className="workspace-account-menu__item"
+            onClick={() => setOpen(false)}
+          >
             <CircleHelp size={16} strokeWidth={1.9} />
             <span>{copy.help}</span>
           </Link>

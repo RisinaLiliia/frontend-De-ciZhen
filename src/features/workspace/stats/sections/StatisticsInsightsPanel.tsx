@@ -2,8 +2,14 @@
 
 import type { Ref } from 'react';
 
-import { WorkspaceInsightsPanel, type WorkspaceInsightsPanelItem } from '@/features/workspace/ai-rail';
-import { resolveInsightBadge, splitInsightEvidence } from '@/features/workspace/ai-rail/workspaceInsights.model';
+import {
+  WorkspaceInsightsPanel,
+  type WorkspaceInsightsPanelItem,
+} from '@/features/workspace/ai-rail';
+import {
+  resolveInsightBadge,
+  splitInsightEvidence,
+} from '@/features/workspace/ai-rail/workspaceInsights.model';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 
 export function StatisticsInsightsPanel({
@@ -34,11 +40,13 @@ export function StatisticsInsightsPanel({
       actionLabel: item === insights[0] ? copy.insightsFeaturedActionLabel : undefined,
       debugText: showInsightsDebug
         ? [
-          item.code,
-          typeof item.score === 'number' ? `score ${item.score}` : '',
-          item.priority ?? '',
-          item.context ?? '',
-        ].filter(Boolean).join(' · ')
+            item.code,
+            typeof item.score === 'number' ? `score ${item.score}` : '',
+            item.priority ?? '',
+            item.context ?? '',
+          ]
+            .filter(Boolean)
+            .join(' · ')
         : undefined,
     };
   });
@@ -55,7 +63,11 @@ export function StatisticsInsightsPanel({
       items={items}
       className="workspace-statistics-layout workspace-insights-panel--rail-balanced workspace-statistics__rail-panel workspace-statistics__rail-panel--insights"
       panelRef={panelRef}
-      style={panelMinHeight ? { minHeight: `${panelMinHeight}px`, height: `${panelMinHeight}px` } : undefined}
+      style={
+        panelMinHeight
+          ? { minHeight: `${panelMinHeight}px`, height: `${panelMinHeight}px` }
+          : undefined
+      }
       showHeader={false}
     />
   );

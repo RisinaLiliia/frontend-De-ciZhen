@@ -50,7 +50,14 @@
     cursor: not-allowed;
   }
 
-  :is(.app-button-primary, .app-button-secondary, .app-button-ghost, .btn-primary, .btn-secondary, .btn-ghost) {
+  :is(
+    .app-button-primary,
+    .app-button-secondary,
+    .app-button-ghost,
+    .btn-primary,
+    .btn-secondary,
+    .btn-ghost
+  ) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -129,11 +136,25 @@
     box-shadow: var(--control-focus-ring);
   }
 
-  :is(.app-button-primary, .btn-primary, .app-button-secondary, .btn-secondary, .app-button-ghost, .btn-ghost):active {
+  :is(
+    .app-button-primary,
+    .btn-primary,
+    .app-button-secondary,
+    .btn-secondary,
+    .app-button-ghost,
+    .btn-ghost
+  ):active {
     transform: translateY(0);
   }
 
-  :is(.app-button-primary, .btn-primary, .app-button-secondary, .btn-secondary, .app-button-ghost, .btn-ghost):disabled {
+  :is(
+    .app-button-primary,
+    .btn-primary,
+    .app-button-secondary,
+    .btn-secondary,
+    .app-button-ghost,
+    .btn-ghost
+  ):disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }

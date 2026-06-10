@@ -34,8 +34,12 @@ describe('workspaceInvalidation.model', () => {
 
   it('builds owner request mutation query keys', () => {
     expect(buildWorkspaceOwnerRequestMutationQueryKeys()).toContainEqual(['requests-my']);
-    expect(buildWorkspaceOwnerRequestMutationQueryKeys()).toContainEqual(['workspace-private-overview']);
-    expect(buildWorkspaceOwnerRequestMutationQueryKeys()).toContainEqual(['workspace-public-overview']);
+    expect(buildWorkspaceOwnerRequestMutationQueryKeys()).toContainEqual([
+      'workspace-private-overview',
+    ]);
+    expect(buildWorkspaceOwnerRequestMutationQueryKeys()).toContainEqual([
+      'workspace-public-overview',
+    ]);
   });
 
   it('builds request-scoped decision and offer review query keys', () => {

@@ -10,10 +10,7 @@ import type { RequestsListProps } from '@/components/requests/requestsList.types
 import type { RequestsFilters } from '@/components/requests/RequestsFilters';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
-import {
-  DEFAULT_REQUESTS_LIST_DENSITY,
-  type RequestsListDensity,
-} from '@/lib/requests/pagination';
+import { DEFAULT_REQUESTS_LIST_DENSITY, type RequestsListDensity } from '@/lib/requests/pagination';
 import { WorkspaceChipToggleGroup } from '@/features/workspace/shared';
 import { PublicRequestSessionDialog } from '@/features/workspace/overlays/PublicRequestSessionDialog';
 import { useWorkspacePublicRequestOverlayFlow } from '@/features/workspace/overlays/useWorkspacePublicRequestOverlayFlow';
@@ -79,32 +76,38 @@ export function PublicContent({
   } = useWorkspacePublicRequestOverlayFlow({
     requests: requestsListProps.requests,
   });
-  const handleListDensityChange = React.useCallback((nextDensity: RequestsListDensity) => {
-    onListDensityChange?.(nextDensity);
-  }, [onListDensityChange]);
+  const handleListDensityChange = React.useCallback(
+    (nextDensity: RequestsListDensity) => {
+      onListDensityChange?.(nextDensity);
+    },
+    [onListDensityChange],
+  );
 
   const requestsListPropsWithOverlay = React.useMemo(
     () => ({
       ...requestsListProps,
       onOpenRequest: (requestId: string) => openRequest(requestId, 'view'),
-      onSendOffer: authStatus === 'authenticated'
-        ? (requestId: string) => openOfferSheet(requestId)
-        : requestsListProps.onSendOffer,
-      onEditOffer: authStatus === 'authenticated'
-        ? (requestId: string) => openOfferSheet(requestId)
-        : requestsListProps.onEditOffer,
+      onSendOffer:
+        authStatus === 'authenticated'
+          ? (requestId: string) => openOfferSheet(requestId)
+          : requestsListProps.onSendOffer,
+      onEditOffer:
+        authStatus === 'authenticated'
+          ? (requestId: string) => openOfferSheet(requestId)
+          : requestsListProps.onEditOffer,
     }),
     [authStatus, openOfferSheet, openRequest, requestsListProps],
   );
 
-  const secondarySlot = statusFilters.length > 0 ? (
-    <WorkspaceChipToggleGroup
-      items={statusFilters}
-      selectedKey={activeStatusFilter}
-      onSelect={onStatusFilterChange}
-      ariaLabel={t(I18N_KEYS.requestsPage.statusFiltersLabel)}
-    />
-  ) : null;
+  const secondarySlot =
+    statusFilters.length > 0 ? (
+      <WorkspaceChipToggleGroup
+        items={statusFilters}
+        selectedKey={activeStatusFilter}
+        onSelect={onStatusFilterChange}
+        ariaLabel={t(I18N_KEYS.requestsPage.statusFiltersLabel)}
+      />
+    ) : null;
 
   return (
     <>
@@ -114,7 +117,7 @@ export function PublicContent({
         totalPages={totalPages}
         onPrevPage={onPrevPage}
         onNextPage={onNextPage}
-        topSlot={(
+        topSlot={
           <RequestsListShellHeader
             t={t}
             filtersProps={filtersProps}
@@ -127,7 +130,7 @@ export function PublicContent({
             onListDensityChange={handleListDensityChange}
             header={header}
           />
-        )}
+        }
         secondarySlot={secondarySlot}
         listId="requests-list"
         listAriaLabel={t(I18N_KEYS.requestsPage.resultsLabel)}
@@ -150,7 +153,7 @@ export function PublicContent({
         <PublicRequestsCardList {...requestsListPropsWithOverlay} />
       </RequestsPaginatedPanel>
 
-      {(activeRequestState || activeOfferRequestId || activeChatState) ? (
+      {activeRequestState || activeOfferRequestId || activeChatState ? (
         <PublicRequestSessionDialog
           locale={requestsListProps.locale}
           activeRequestState={activeRequestState}

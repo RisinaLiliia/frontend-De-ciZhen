@@ -202,7 +202,8 @@ function createPayload(): WorkspaceStatisticsOverviewSourceDto {
       smartSignalTone: 'balanced',
       analyzedRequestsCount: 126,
       confidenceLevel: 'high',
-      recommendation: 'Preise im Bereich von 74 € – 83 € erzielen aktuell die höchste Abschlussrate in Berlin.',
+      recommendation:
+        'Preise im Bereich von 74 € – 83 € erzielen aktuell die höchste Abschlussrate in Berlin.',
       profitPotentialScore: 7.4,
       profitPotentialStatus: 'medium',
     },
@@ -314,7 +315,8 @@ function createPrivateOverview(): WorkspacePrivateOverviewDto {
 describe('normalizeWorkspaceDecisionDashboardResponse', () => {
   it('does not synthesize personalized funnel data from private overview when backend has not sent a contextual personalized contract', () => {
     const hydrated = hydrateAuthenticatedStatisticsPayload({
-      payload: createPayload() as unknown as import('@/lib/api/dto/workspace').WorkspaceStatisticsOverviewDto,
+      payload:
+        createPayload() as unknown as import('@/lib/api/dto/workspace').WorkspaceStatisticsOverviewDto,
       privateOverview: createPrivateOverview(),
     });
 
@@ -392,8 +394,15 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
       categoryKey: null,
     });
 
-    expect(result.filterOptions.cities.map((item) => item.value)).toEqual(['berlin-id', 'karlsruhe-id', 'mannheim-id']);
-    expect(result.filterOptions.categories.map((item) => item.value)).toEqual(['cleaning', 'plumbing']);
+    expect(result.filterOptions.cities.map((item) => item.value)).toEqual([
+      'berlin-id',
+      'karlsruhe-id',
+      'mannheim-id',
+    ]);
+    expect(result.filterOptions.categories.map((item) => item.value)).toEqual([
+      'cleaning',
+      'plumbing',
+    ]);
     expect(result.decisionContext.mode).toBe('global');
     expect(result.decisionContext.city.label).toBe('Alle Städte');
     expect(result.decisionContext.category.label).toBe('Alle Kategorien');
@@ -567,8 +576,12 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
       categoryKey: null,
     });
 
-    const offerRate = normalized.decisionLayer?.metrics.find((metric) => metric.id === 'offer_rate');
-    const completedJobs = normalized.decisionLayer?.metrics.find((metric) => metric.id === 'completed_jobs');
+    const offerRate = normalized.decisionLayer?.metrics.find(
+      (metric) => metric.id === 'offer_rate',
+    );
+    const completedJobs = normalized.decisionLayer?.metrics.find(
+      (metric) => metric.id === 'completed_jobs',
+    );
 
     expect(offerRate?.marketValue).toBe(12);
     expect(offerRate?.userValue).toBe(99);
@@ -610,19 +623,23 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
         lostCount: 12,
         tone: 'warning',
       },
-      risks: [{
-        id: 'risk-high-unanswered',
-        code: 'high_unanswered',
-        severity: 'high',
-        value: 18,
-        secondaryValue: 54,
-      }],
-      opportunities: [{
-        id: 'opportunity-high-demand-city',
-        code: 'high_demand_city',
-        severity: 'medium',
-        cityLabel: 'Berlin',
-      }],
+      risks: [
+        {
+          id: 'risk-high-unanswered',
+          code: 'high_unanswered',
+          severity: 'high',
+          value: 18,
+          secondaryValue: 54,
+        },
+      ],
+      opportunities: [
+        {
+          id: 'opportunity-high-demand-city',
+          code: 'high_demand_city',
+          severity: 'medium',
+          cityLabel: 'Berlin',
+        },
+      ],
       pricing: {
         currentPrice: 95,
         recommendedMin: 65,
@@ -631,12 +648,14 @@ describe('normalizeWorkspaceDecisionDashboardResponse', () => {
         status: 'above',
         conversionImpact: 'warning',
       },
-      nextSteps: [{
-        id: 'step-respond-faster',
-        code: 'respond_faster',
-        priority: 'high',
-        cityLabel: 'Berlin',
-      }],
+      nextSteps: [
+        {
+          id: 'step-respond-faster',
+          code: 'respond_faster',
+          priority: 'high',
+          cityLabel: 'Berlin',
+        },
+      ],
     };
 
     const normalized = normalizeWorkspaceDecisionDashboardResponse(personalized, {

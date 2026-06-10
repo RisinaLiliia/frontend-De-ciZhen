@@ -9,15 +9,17 @@ import type { WorkspaceMyRequestCardDto } from '@/lib/api/dto/workspace';
 
 type CardAction = WorkspaceMyRequestCardDto['status']['actions'][number];
 
-export type WorkspaceRequestCardAction = CardAction | {
-  key: string;
-  kind: 'link';
-  tone: 'primary' | 'secondary';
-  icon: 'briefcase';
-  label: string;
-  href: string;
-  requestId: string | null;
-};
+export type WorkspaceRequestCardAction =
+  | CardAction
+  | {
+      key: string;
+      kind: 'link';
+      tone: 'primary' | 'secondary';
+      icon: 'briefcase';
+      label: string;
+      href: string;
+      requestId: string | null;
+    };
 
 function normalizeCardLinkHref(args: {
   key: string;

@@ -1,8 +1,6 @@
 'use client';
 
-import {
-  buildLegacyWorkspaceTabRedirectHref,
-} from '@/features/workspace/state';
+import { buildLegacyWorkspaceTabRedirectHref } from '@/features/workspace/state';
 import type {
   FavoritesView,
   WorkspaceStatusFilter,
@@ -35,11 +33,7 @@ export function buildWorkspaceCurrentHref({
   return search ? `${workspacePath}?${search}` : workspacePath;
 }
 
-export function buildWorkspaceTabHref({
-  search,
-  workspacePath,
-  tab,
-}: BuildWorkspaceTabHrefArgs) {
+export function buildWorkspaceTabHref({ search, workspacePath, tab }: BuildWorkspaceTabHrefArgs) {
   const next = new URLSearchParams(search);
   next.set('tab', tab);
   next.set('status', 'all');
@@ -79,9 +73,7 @@ export function buildWorkspaceFavoritesViewHref({
   return buildWorkspaceHref({
     currentSearch: search,
     section: view === 'providers' ? 'providers' : 'requests',
-    patch: view === 'providers'
-      ? undefined
-      : { scope: 'market' },
+    patch: view === 'providers' ? undefined : { scope: 'market' },
     removeKeys: ['tab', 'status', 'reviewRole', 'fav'],
   }).replace('/workspace', workspacePath);
 }

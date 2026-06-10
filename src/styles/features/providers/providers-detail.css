@@ -4,7 +4,8 @@
     align-items: center;
   }
 
-  .request-detail--dialog.request-detail--provider .request-detail__section.request-detail__similar {
+  .request-detail--dialog.request-detail--provider
+    .request-detail__section.request-detail__similar {
     gap: var(--space-3);
   }
 
@@ -12,11 +13,15 @@
     gap: var(--space-2-5);
   }
 
-  .request-detail--dialog.request-detail--provider .provider-detail__similar-section .provider-list {
+  .request-detail--dialog.request-detail--provider
+    .provider-detail__similar-section
+    .provider-list {
     gap: var(--space-3);
   }
 
-  .request-detail--dialog.request-detail--provider .provider-detail-hero__menu-popover > .dc-popover-trigger {
+  .request-detail--dialog.request-detail--provider
+    .provider-detail-hero__menu-popover
+    > .dc-popover-trigger {
     display: inline-flex;
   }
 
@@ -30,11 +35,15 @@
     min-width: 220px;
   }
 
-  .request-detail--dialog.request-detail--provider .provider-detail-hero__menu-popover .dc-popover-panel {
+  .request-detail--dialog.request-detail--provider
+    .provider-detail-hero__menu-popover
+    .dc-popover-panel {
     z-index: 120;
   }
 
-  .request-detail--dialog.request-detail--provider .provider-detail-hero__menu .icon-heart.is-active {
+  .request-detail--dialog.request-detail--provider
+    .provider-detail-hero__menu
+    .icon-heart.is-active {
     color: var(--color-warning);
     fill: currentColor;
   }
@@ -74,7 +83,9 @@
   }
 
   @media (max-width: 420px) {
-    .request-detail--provider .request-detail__client-card--provider-hero .user-header-card__identity {
+    .request-detail--provider
+      .request-detail__client-card--provider-hero
+      .user-header-card__identity {
       gap: var(--space-1-5);
     }
 
@@ -82,7 +93,9 @@
       gap: var(--space-0-5);
     }
 
-    .request-detail--provider .request-detail__client-card--provider-hero .profile-decision-metrics {
+    .request-detail--provider
+      .request-detail__client-card--provider-hero
+      .profile-decision-metrics {
       gap: 1px;
     }
 
@@ -90,11 +103,15 @@
       font-size: var(--fs-11);
     }
 
-    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-actions {
+    .request-detail--provider
+      .request-detail__mobile-cta--provider-inline
+      .request-card__status-actions {
       gap: var(--space-1-5);
     }
 
-    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-action.offer-action-btn--icon-only {
+    .request-detail--provider
+      .request-detail__mobile-cta--provider-inline
+      .request-card__status-action.offer-action-btn--icon-only {
       width: 38px;
       min-width: 38px;
       height: 38px;
@@ -104,7 +121,9 @@
   }
 
   @media (max-width: 768px) {
-    .request-detail--provider .request-detail__client-card--provider-hero .profile-decision-metrics {
+    .request-detail--provider
+      .request-detail__client-card--provider-hero
+      .profile-decision-metrics {
       display: grid;
       gap: var(--space-0-5);
     }
@@ -126,16 +145,24 @@
       gap: var(--space-2);
     }
 
-    .request-detail--provider .request-detail__provider-mobile-availability .request-detail__availability-date,
-    .request-detail--provider .request-detail__provider-mobile-availability .profile-main__availability {
+    .request-detail--provider
+      .request-detail__provider-mobile-availability
+      .request-detail__availability-date,
+    .request-detail--provider
+      .request-detail__provider-mobile-availability
+      .profile-main__availability {
       font-size: var(--fs-12);
     }
 
     .request-detail--provider .request-detail__aside .request-detail__similar-footer {
-      margin-bottom: calc(var(--space-2) + var(--shell-mobile-nav-height, 0px) + env(safe-area-inset-bottom));
+      margin-bottom: calc(
+        var(--space-2) + var(--shell-mobile-nav-height, 0px) + env(safe-area-inset-bottom)
+      );
     }
 
-    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-card__status-action.offer-action-btn--icon-only {
+    .request-detail--provider
+      .request-detail__mobile-cta--provider-inline
+      .request-card__status-action.offer-action-btn--icon-only {
       width: 40px;
       min-width: 40px;
       height: 40px;
@@ -143,18 +170,33 @@
       border-radius: var(--radius-md);
     }
 
-    .request-detail--provider .request-detail__mobile-cta--provider-inline .offer-action-btn__icon svg,
-    .request-detail--provider .request-detail__mobile-cta--provider-inline .request-detail__save .icon-heart {
+    .request-detail--provider
+      .request-detail__mobile-cta--provider-inline
+      .offer-action-btn__icon
+      svg,
+    .request-detail--provider
+      .request-detail__mobile-cta--provider-inline
+      .request-detail__save
+      .icon-heart {
       width: 16px;
       height: 16px;
     }
 
-    .request-detail--provider .request-detail__aside .provider-card--similar-mobile-minimal .profile-city,
-    .request-detail--provider .request-detail__aside .provider-card--similar-mobile-minimal .profile-decision-metrics {
+    .request-detail--provider
+      .request-detail__aside
+      .provider-card--similar-mobile-minimal
+      .profile-city,
+    .request-detail--provider
+      .request-detail__aside
+      .provider-card--similar-mobile-minimal
+      .profile-decision-metrics {
       display: none;
     }
 
-    .request-detail--provider .request-detail__aside .provider-card--similar-mobile-minimal .profile-main {
+    .request-detail--provider
+      .request-detail__aside
+      .provider-card--similar-mobile-minimal
+      .profile-main {
       gap: var(--space-1);
     }
 

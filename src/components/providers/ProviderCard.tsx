@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
-import { ProviderBadgeGroup, type ProviderBadgeItem } from '@/components/providers/ProviderBadgeGroup';
+import {
+  ProviderBadgeGroup,
+  type ProviderBadgeItem,
+} from '@/components/providers/ProviderBadgeGroup';
 
 export type ProviderCardItem = {
   id: string;

@@ -45,7 +45,12 @@ export function WorkspaceProfileOnboardingAvatarField({
           disabled={loading}
         >
           {avatarPreviewUrl ? (
-            <Image src={avatarPreviewUrl} alt={t(I18N_KEYS.client.profileAvatarAlt)} width={64} height={64} />
+            <Image
+              src={avatarPreviewUrl}
+              alt={t(I18N_KEYS.client.profileAvatarAlt)}
+              width={64}
+              height={64}
+            />
           ) : (
             avatarInitial
           )}

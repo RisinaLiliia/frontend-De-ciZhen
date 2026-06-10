@@ -48,14 +48,18 @@
   }
 
   .page-shell__main--with-mobile-nav {
-    padding-bottom: calc(var(--space-6) + var(--shell-mobile-nav-height) + env(safe-area-inset-bottom));
+    padding-bottom: calc(
+      var(--space-6) + var(--shell-mobile-nav-height) + env(safe-area-inset-bottom)
+    );
   }
 
   .page-shell > main {
     width: 100%;
     min-width: 0;
     overflow-x: hidden;
-    padding-top: calc(var(--space-8) + var(--shell-topbar-height) + var(--shell-topbar-offset, 0px));
+    padding-top: calc(
+      var(--space-8) + var(--shell-topbar-height) + var(--shell-topbar-offset, 0px)
+    );
   }
 
   .page-shell > main.page-shell__main--topbar-overlay {
@@ -68,7 +72,8 @@
   }
 
   .page-shell__back-row--overlay {
-    padding-top: calc(var(--shell-topbar-height) + var(--shell-topbar-offset, 0px) + var(--space-2));
+    padding-top: calc(
+      var(--shell-topbar-height) + var(--shell-topbar-offset, 0px) + var(--space-2)
+    );
   }
-
 }

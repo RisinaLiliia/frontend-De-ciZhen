@@ -52,8 +52,16 @@ export function exportWorkspaceStatisticsCsv(params: {
   const rows: string[][] = [
     ['section', 'metric', 'value'],
     ...kpis.map((item) => ['kpi', item.label, item.value]),
-    ...activitySignals.map((item) => ['activity-signal', item.label, `${serializeActivitySignalValue(item)} (${item.hint})`]),
-    ...data.demand.categories.map((item) => ['category-demand', item.categoryName, `${item.sharePercent}% (${item.requestCount})`]),
+    ...activitySignals.map((item) => [
+      'activity-signal',
+      item.label,
+      `${serializeActivitySignalValue(item)} (${item.hint})`,
+    ]),
+    ...data.demand.categories.map((item) => [
+      'category-demand',
+      item.categoryName,
+      `${item.sharePercent}% (${item.requestCount})`,
+    ]),
     ...cityRows.map((item) => [
       'city-demand',
       item.name,
@@ -63,7 +71,7 @@ export function exportWorkspaceStatisticsCsv(params: {
   ];
 
   const filename =
-    data.exportMeta?.filename?.trim()
-    || `workspace-statistics-${range}-${new Date().toISOString().slice(0, 10)}.csv`;
+    data.exportMeta?.filename?.trim() ||
+    `workspace-statistics-${range}-${new Date().toISOString().slice(0, 10)}.csv`;
   exportCsv(rows, filename);
 }

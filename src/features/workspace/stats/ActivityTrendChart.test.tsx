@@ -42,7 +42,11 @@ describe('ActivityTrendChart', () => {
       />,
     );
 
-    expect(container.querySelector('.home-activity__metric.is-requests strong')?.textContent).toBe('108');
-    expect(container.querySelector('.home-activity__metric.is-offers strong')?.textContent).toBe('82');
+    expect(container.querySelector('.home-activity__metric.is-requests strong')?.textContent).toBe(
+      '108',
+    );
+    expect(container.querySelector('.home-activity__metric.is-offers strong')?.textContent).toBe(
+      '82',
+    );
   });
 });

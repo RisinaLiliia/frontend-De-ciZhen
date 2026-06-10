@@ -16,14 +16,21 @@ export function ConsentManageFooter() {
   if (!ready || !decisionMade) return null;
 
   return (
-    <footer className="consent-manage-footer" role="contentinfo" aria-label={t(I18N_KEYS.consent.manageSettings)}>
+    <footer
+      className="consent-manage-footer"
+      role="contentinfo"
+      aria-label={t(I18N_KEYS.consent.manageSettings)}
+    >
       <div className="consent-manage-footer__inner">
         <div className="consent-manage-footer__meta">
           <p className="consent-manage-footer__brand">
             <span className="consent-manage-footer__brand-name">De&apos;ciZhen</span>
             <span className="consent-manage-footer__brand-copy">© {currentYear}</span>
           </p>
-          <nav className="consent-manage-footer__links" aria-label={t(I18N_KEYS.consent.manageSettings)}>
+          <nav
+            className="consent-manage-footer__links"
+            aria-label={t(I18N_KEYS.consent.manageSettings)}
+          >
             <Link href={privacyHref} prefetch={false}>
               {t(I18N_KEYS.consent.privacyPolicy)}
             </Link>

@@ -28,7 +28,9 @@ export function SocialAuthButtons() {
           onClick={() => goToProvider('google')}
           disabled={activeProvider !== null}
         >
-          <span className="auth-social__icon" aria-hidden="true"><IconBrandGoogle /></span>
+          <span className="auth-social__icon" aria-hidden="true">
+            <IconBrandGoogle />
+          </span>
           <span className="auth-social__label">{t(I18N_KEYS.auth.continueWithGoogle)}</span>
         </button>
         <button
@@ -41,7 +43,9 @@ export function SocialAuthButtons() {
           disabled={activeProvider !== null || !isAppleEnabled}
           aria-disabled={!isAppleEnabled}
         >
-          <span className="auth-social__icon" aria-hidden="true"><IconBrandApple /></span>
+          <span className="auth-social__icon" aria-hidden="true">
+            <IconBrandApple />
+          </span>
           <span className="auth-social__label">{t(I18N_KEYS.auth.continueWithApple)}</span>
         </button>
       </div>

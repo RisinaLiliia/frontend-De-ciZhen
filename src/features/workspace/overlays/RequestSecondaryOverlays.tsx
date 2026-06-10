@@ -4,9 +4,7 @@ import * as React from 'react';
 
 import { RequestOfferSheet } from '@/components/requests/details';
 import { ChatWorkspacePage } from '@/features/workspace/chat/ChatWorkspacePage';
-import {
-  useWorkspaceProviderOfferSheetActions,
-} from '@/features/workspace/overlays/useWorkspaceRequestOverlayActions';
+import { useWorkspaceProviderOfferSheetActions } from '@/features/workspace/overlays/useWorkspaceRequestOverlayActions';
 import {
   cardlessTitle,
   formatDialogDate,
@@ -70,17 +68,14 @@ export function WorkspaceManagedOfferSheet({
     setOfferComment('');
     setOfferAvailability('');
   }, []);
-  const {
-    cancelProviderOffer,
-    isSubmittingOffer,
-    submitProviderOffer,
-  } = useWorkspaceProviderOfferSheetActions({
-    onClose,
-    onResetDraft: resetDraft,
-    request,
-    requestId,
-    existingResponse,
-  });
+  const { cancelProviderOffer, isSubmittingOffer, submitProviderOffer } =
+    useWorkspaceProviderOfferSheetActions({
+      onClose,
+      onResetDraft: resetDraft,
+      request,
+      requestId,
+      existingResponse,
+    });
 
   const handleSuccessBack = React.useCallback(() => {
     resetDraft();
@@ -143,9 +138,11 @@ export function WorkspaceManagedOfferSheet({
     <RequestOfferSheet
       isOpen={true}
       mode={offerSheetMode}
-      title={existingResponse
-        ? t(I18N_KEYS.requestDetails.responseEditTitle)
-        : t(I18N_KEYS.requestDetails.responseFormTitle)}
+      title={
+        existingResponse
+          ? t(I18N_KEYS.requestDetails.responseEditTitle)
+          : t(I18N_KEYS.requestDetails.responseFormTitle)
+      }
       previewTitle={request.title?.trim() || cardlessTitle(t)}
       previewCity={request.cityName?.trim() || '—'}
       previewDate={formatDialogDate(locale, request.preferredDate) || '—'}
@@ -159,13 +156,15 @@ export function WorkspaceManagedOfferSheet({
       availabilityLabel={t(I18N_KEYS.requestDetails.responseAvailabilityLabel)}
       availabilityValue={offerAvailability}
       availabilityPlaceholder={t(I18N_KEYS.requestDetails.responseAvailabilityPlaceholder)}
-      submitLabel={existingResponse
-        ? t(I18N_KEYS.requestDetails.responseEditSubmit)
-        : t(I18N_KEYS.requestDetails.responseSubmit)}
+      submitLabel={
+        existingResponse
+          ? t(I18N_KEYS.requestDetails.responseEditSubmit)
+          : t(I18N_KEYS.requestDetails.responseSubmit)
+      }
       submitKind={existingResponse ? 'edit' : 'submit'}
-      cancelLabel={existingResponse
-        ? t(I18N_KEYS.requestDetails.responseCancel)
-        : t(I18N_KEYS.common.back)}
+      cancelLabel={
+        existingResponse ? t(I18N_KEYS.requestDetails.responseCancel) : t(I18N_KEYS.common.back)
+      }
       cancelKind={existingResponse ? 'delete' : 'back'}
       closeLabel={t(I18N_KEYS.requestDetails.responseClose)}
       successTitle={t(I18N_KEYS.requestDetails.responseSuccessTitle)}
@@ -235,7 +234,10 @@ export function WorkspaceChatDialog({
             <span className="my-request-chat-dialog__eyebrow">
               {t(I18N_KEYS.workspace.messagesTitle)}
             </span>
-            <h2 id={`workspace-chat-dialog-${conversationId}`} className="my-request-chat-dialog__title">
+            <h2
+              id={`workspace-chat-dialog-${conversationId}`}
+              className="my-request-chat-dialog__title"
+            >
               {title}
             </h2>
           </div>

@@ -7,7 +7,10 @@ import {
   writeRequestDraft,
   type RequestDraft,
 } from '@/features/workspace/requests/create/createRequestDraft';
-import { buildCreateRequestSchema, type CreateRequestValues } from '@/features/workspace/requests/create/createRequest.schema';
+import {
+  buildCreateRequestSchema,
+  type CreateRequestValues,
+} from '@/features/workspace/requests/create/createRequest.schema';
 import { useRequestPhotoItems } from '@/features/workspace/requests/create/useRequestPhotoItems';
 import type { I18nKey } from '@/lib/i18n/keys';
 
@@ -68,7 +71,9 @@ export function useCreateRequestFormModel({
 
   const [tagInput, setTagInput] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);
-  const [activeSubmitIntent, setActiveSubmitIntent] = React.useState<'draft' | 'publish' | null>(null);
+  const [activeSubmitIntent, setActiveSubmitIntent] = React.useState<'draft' | 'publish' | null>(
+    null,
+  );
   const [categoryKey, setCategoryKey] = React.useState('');
   const draftRestoredRef = React.useRef(false);
 
@@ -89,7 +94,8 @@ export function useCreateRequestFormModel({
     if (values.propertyType === 'apartment' || values.propertyType === 'house') {
       setValue('propertyType', values.propertyType);
     }
-    if (typeof values.area === 'number' && Number.isFinite(values.area)) setValue('area', values.area);
+    if (typeof values.area === 'number' && Number.isFinite(values.area))
+      setValue('area', values.area);
     if (typeof values.price === 'number' && Number.isFinite(values.price)) {
       setValue('price', values.price);
     } else if (values.price === null || values.price === undefined) {

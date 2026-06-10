@@ -21,7 +21,9 @@ type Params = {
   nextPath: string;
   favoriteRequestIds: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteRequestIds'];
   requestById: Parameters<typeof useWorkspaceFavoriteToggles>[0]['requestById'];
-  favoriteProviderLookup: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteProviderLookup'];
+  favoriteProviderLookup: Parameters<
+    typeof useWorkspaceFavoriteToggles
+  >[0]['favoriteProviderLookup'];
   providerById: Parameters<typeof useWorkspaceFavoriteToggles>[0]['providerById'];
 };
 

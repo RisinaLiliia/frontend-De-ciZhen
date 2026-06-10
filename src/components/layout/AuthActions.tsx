@@ -37,7 +37,11 @@ export function AuthActions() {
   if (status === 'authenticated' && user) {
     return (
       <div className="flex items-center gap-2">
-        <IconButton label={t(I18N_KEYS.auth.logoutLabel)} onClick={onLogout} className="icon-button--topbar">
+        <IconButton
+          label={t(I18N_KEYS.auth.logoutLabel)}
+          onClick={onLogout}
+          className="icon-button--topbar"
+        >
           <IconLogout />
         </IconButton>
       </div>

@@ -36,15 +36,9 @@ export function useCreateRequestAvailabilityModel({
   setValue,
 }: Params) {
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
-  const longDateFormatter = React.useMemo(
-    () => createLongDateFormatter(localeTag),
-    [localeTag],
-  );
+  const longDateFormatter = React.useMemo(() => createLongDateFormatter(localeTag), [localeTag]);
 
-  const {
-    data: directProvider,
-    isLoading: isDirectProviderLoading,
-  } = useQuery({
+  const { data: directProvider, isLoading: isDirectProviderLoading } = useQuery({
     queryKey: ['request-create-provider', providerId],
     enabled: isDirectProviderFlow,
     queryFn: () => getPublicProviderById(providerId),
@@ -58,10 +52,7 @@ export function useCreateRequestAvailabilityModel({
   const requestCalendarRange = React.useMemo(() => createIsoRangeFromToday(180), []);
   const providerSlotsTimezone = React.useMemo(() => resolveProviderSlotsTimezone(), []);
 
-  const {
-    data: providerSlots = [],
-    isLoading: isProviderSlotsLoading,
-  } = useQuery({
+  const { data: providerSlots = [], isLoading: isProviderSlotsLoading } = useQuery({
     queryKey: [
       'request-create-provider-slots',
       directProviderTargetUserId,
@@ -85,7 +76,10 @@ export function useCreateRequestAvailabilityModel({
     staleTime: 60_000,
   });
 
-  const availableDaysSorted = React.useMemo(() => collectAvailableIsoDays(providerSlots), [providerSlots]);
+  const availableDaysSorted = React.useMemo(
+    () => collectAvailableIsoDays(providerSlots),
+    [providerSlots],
+  );
   const availableDaySet = React.useMemo(() => new Set(availableDaysSorted), [availableDaysSorted]);
   const selectedDay = React.useMemo(() => {
     const parsed = parseDateSafe(preferredDateValue);

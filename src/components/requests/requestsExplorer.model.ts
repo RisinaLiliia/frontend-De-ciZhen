@@ -32,7 +32,10 @@ export function hasDefaultPublicFilter(filter: PublicFilter) {
 export function buildOffersByRequestMap(myOffers: OfferDto[]) {
   const map = new Map<string, OfferDto>();
   myOffers.forEach((offer) => {
-    if (!map.has(offer.requestId) || offer.updatedAt > (map.get(offer.requestId)?.updatedAt ?? '')) {
+    if (
+      !map.has(offer.requestId) ||
+      offer.updatedAt > (map.get(offer.requestId)?.updatedAt ?? '')
+    ) {
       map.set(offer.requestId, offer);
     }
   });
@@ -177,9 +180,7 @@ export function buildRequestsExplorerRequestsContentProps({
     t,
     locale,
     emptyCtaHref,
-    topBar: showTopFilters
-      ? { kind: 'filters' }
-      : { kind: 'summary' },
+    topBar: showTopFilters ? { kind: 'filters' } : { kind: 'summary' },
     ...sharedFilters,
     totalResultsLabel: requestsData.totalResultsLabel,
     requests: requestsData.requests,

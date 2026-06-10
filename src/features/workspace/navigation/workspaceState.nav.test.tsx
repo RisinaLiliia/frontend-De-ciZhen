@@ -79,7 +79,9 @@ describe('workspaceState.nav', () => {
       onGuestLockedAction: vi.fn(),
     });
 
-    expect(buildWorkspaceNavHeader({ t: (key) => String(key), userName: 'Anna' }).navTitle).toContain('Anna');
+    expect(
+      buildWorkspaceNavHeader({ t: (key) => String(key), userName: 'Anna' }).navTitle,
+    ).toContain('Anna');
     expect(items.find((item) => item.key === 'guest-profile')?.tier).toBe('secondary');
     expect(items.find((item) => item.key === 'my-requests')?.lockedHref).toBe('/auth/login');
     expect(items.find((item) => item.key === 'my-favorites')?.lockedHref).toBeUndefined();

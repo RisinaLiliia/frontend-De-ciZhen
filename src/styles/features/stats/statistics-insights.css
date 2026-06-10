@@ -48,7 +48,9 @@
     --workspace-insight-badge-height: 28px;
     --workspace-insight-badge-pad-inline: 12px;
     --workspace-insight-badge-font-size: var(--fs-12);
-    --workspace-insights-balanced-head-min-height: calc(var(--workspace-statistics-section-header-min-h) + var(--space-4));
+    --workspace-insights-balanced-head-min-height: calc(
+      var(--workspace-statistics-section-header-min-h) + var(--space-4)
+    );
     --workspace-insights-balanced-title-lines: 2;
     --workspace-insights-balanced-text-lines: 3;
     --workspace-insights-balanced-evidence-lines: 2;
@@ -58,14 +60,17 @@
     height: 100%;
   }
 
-  .workspace-insights-panel--rail-balanced.workspace-insights-panel--compact-head .workspace-statistics-ki__head {
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--compact-head
+    .workspace-statistics-ki__head {
     min-height: var(--workspace-insights-balanced-head-min-height);
     align-items: start;
     align-content: start;
   }
 
   .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-2 {
-    --workspace-insights-balanced-head-min-height: calc(var(--workspace-statistics-section-header-min-h) + var(--space-5));
+    --workspace-insights-balanced-head-min-height: calc(
+      var(--workspace-statistics-section-header-min-h) + var(--space-5)
+    );
   }
 
   .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-4 {
@@ -89,8 +94,8 @@
     gap: var(--workspace-insights-header-gap);
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "heading"
-      "ki";
+      'heading'
+      'ki';
   }
 
   .workspace-insights-panel--compact-head .workspace-statistics__tile-header {
@@ -140,12 +145,11 @@
     line-height: 1.45;
     color: var(--color-text);
     border: 1px solid color-mix(in oklab, var(--surface-card-border) 82%, transparent);
-    background:
-      linear-gradient(
-        160deg,
-        color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 94%, var(--color-surface) 6%) 100%
-      );
+    background: linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
+      color-mix(in oklab, var(--surface-soft-bg) 94%, var(--color-surface) 6%) 100%
+    );
     box-shadow: var(--shadow-card);
     transition:
       transform var(--transition-fast),
@@ -170,12 +174,11 @@
   .workspace-statistics-insights__item.is-featured {
     padding: var(--workspace-insight-card-pad-featured);
     border-color: color-mix(in oklab, var(--color-primary) 40%, var(--surface-card-border) 60%);
-    background:
-      linear-gradient(
-        160deg,
-        color-mix(in oklab, var(--color-primary) 9%, var(--color-surface) 91%) 0%,
-        color-mix(in oklab, var(--color-warning) 8%, var(--color-surface) 92%) 100%
-      );
+    background: linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--color-primary) 9%, var(--color-surface) 91%) 0%,
+      color-mix(in oklab, var(--color-warning) 8%, var(--color-surface) 92%) 100%
+    );
   }
 
   .workspace-statistics-insights__content {
@@ -301,19 +304,23 @@
     grid-template-rows: minmax(0, 1.02fr) minmax(0, 0.98fr);
   }
 
-  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-2 .workspace-statistics-insights {
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-2
+    .workspace-statistics-insights {
     grid-template-rows: repeat(2, minmax(0, 1fr));
   }
 
-  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-1 .workspace-statistics-insights {
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-1
+    .workspace-statistics-insights {
     grid-template-rows: minmax(0, 1fr);
   }
 
-  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-3 .workspace-statistics-insights {
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-3
+    .workspace-statistics-insights {
     grid-template-rows: minmax(0, 1.08fr) minmax(0, 0.92fr);
   }
 
-  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-4 .workspace-statistics-insights {
+  .workspace-insights-panel--rail-balanced.workspace-insights-panel--items-4
+    .workspace-statistics-insights {
     grid-template-rows: minmax(0, 0.9fr) minmax(0, 1.1fr);
   }
 
@@ -335,13 +342,20 @@
     height: 100%;
   }
 
-  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__secondary.requests-list > li {
+  .workspace-insights-panel--rail-balanced
+    .workspace-statistics-insights__secondary.requests-list
+    > li {
     min-height: 0;
     height: 100%;
   }
 
-  .workspace-insights-panel--rail-balanced .workspace-statistics-insights__secondary.requests-list > li > .workspace-statistics-insights__item,
-  .workspace-insights-panel--rail-balanced .workspace-statistics-insights > .workspace-statistics-insights__item.is-featured {
+  .workspace-insights-panel--rail-balanced
+    .workspace-statistics-insights__secondary.requests-list
+    > li
+    > .workspace-statistics-insights__item,
+  .workspace-insights-panel--rail-balanced
+    .workspace-statistics-insights
+    > .workspace-statistics-insights__item.is-featured {
     height: 100%;
   }
 
@@ -373,10 +387,9 @@
     .workspace-statistics-insights__header {
       grid-template-columns: minmax(0, 1fr);
       grid-template-areas:
-        "heading"
-        "ki";
+        'heading'
+        'ki';
       align-items: start;
     }
   }
-
 }

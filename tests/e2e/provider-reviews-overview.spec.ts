@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-test('provider page uses single reviews overview request (no list/summary split)', async ({ page }) => {
+test('provider page uses single reviews overview request (no list/summary split)', async ({
+  page,
+}) => {
   const providerId = 'provider-1';
   const providerUserId = 'provider-user-1';
 

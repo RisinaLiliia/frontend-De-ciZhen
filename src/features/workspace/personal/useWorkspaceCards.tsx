@@ -47,13 +47,7 @@ export function useWorkspaceCards({
       onToggleProviderFavorite,
       favoriteProviderRoleLabelById,
       favoriteProviderCityLabelById,
-    }).map((item) => (
-      <ProviderCard
-        key={item.key}
-        variant="list"
-        {...item.props}
-      />
-    ));
+    }).map((item) => <ProviderCard key={item.key} variant="list" {...item.props} />);
   }, [
     enabled,
     favoriteProviderCityLabelById,

@@ -2,10 +2,7 @@
 
 import * as React from 'react';
 
-import {
-  getWorkspaceChipValue,
-  useWorkspaceContext,
-} from '@/features/workspace/context';
+import { getWorkspaceChipValue, useWorkspaceContext } from '@/features/workspace/context';
 import { WorkspacePublicDemandMapPanel } from '@/features/workspace/demand-map';
 import { buildWorkspaceHref } from '@/features/workspace/navigation/workspaceLinks';
 import {
@@ -14,13 +11,19 @@ import {
   type WorkspaceUnifiedRailQueueItem,
   type WorkspaceUnifiedRailRecommendationItem,
 } from '@/features/workspace/shared';
-import type { WorkspacePublicCityActivityDto, WorkspacePublicSummaryDto } from '@/lib/api/dto/workspace';
+import type {
+  WorkspacePublicCityActivityDto,
+  WorkspacePublicSummaryDto,
+} from '@/lib/api/dto/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceTab } from '@/features/workspace/state';
-import { useWorkspaceStatisticsModel, type WorkspaceStatisticsModel } from '@/features/workspace/stats';
+import {
+  useWorkspaceStatisticsModel,
+  type WorkspaceStatisticsModel,
+} from '@/features/workspace/stats';
 
 type Translator = (key: I18nKey) => string;
 
@@ -156,7 +159,10 @@ function buildOverviewDecisionMetrics(params: {
     {
       key: 'active-providers',
       label: labels.activeProviders,
-      value: typeof providerCount === 'number' ? formatOverviewNumber(providerCount, locale) : providerCount,
+      value:
+        typeof providerCount === 'number'
+          ? formatOverviewNumber(providerCount, locale)
+          : providerCount,
       helper: periodHelper,
       icon: 'providers' as const,
       tone: 'supply' as const,
@@ -188,7 +194,8 @@ function buildOverviewMarketOpportunities(params: {
 }): WorkspaceUnifiedRailQueueItem[] {
   const { analysisHref, labels, locale, statisticsModel } = params;
   const opportunities: WorkspaceUnifiedRailQueueItem[] = [];
-  const topCity = statisticsModel.cityRows.find((city) => city.count > 0) ?? statisticsModel.cityRows[0] ?? null;
+  const topCity =
+    statisticsModel.cityRows.find((city) => city.count > 0) ?? statisticsModel.cityRows[0] ?? null;
   const providerGapCity =
     statisticsModel.cityRows.find((city) => city.count > 0 && (city.providersActive ?? 0) <= 3) ??
     topCity;
@@ -259,21 +266,23 @@ export function useWorkspaceOverviewRail({
   );
   const marketLabels = React.useMemo(() => getOverviewMarketLabels(locale), [locale]);
   const decisionMetrics = React.useMemo(
-    () => buildOverviewDecisionMetrics({
-      labels: marketLabels,
-      locale,
-      publicSummaryView,
-      statisticsModel,
-    }),
+    () =>
+      buildOverviewDecisionMetrics({
+        labels: marketLabels,
+        locale,
+        publicSummaryView,
+        statisticsModel,
+      }),
     [locale, marketLabels, publicSummaryView, statisticsModel],
   );
   const actionQueueItems = React.useMemo<WorkspaceUnifiedRailQueueItem[]>(
-    () => buildOverviewMarketOpportunities({
-      analysisHref,
-      labels: marketLabels,
-      locale,
-      statisticsModel,
-    }),
+    () =>
+      buildOverviewMarketOpportunities({
+        analysisHref,
+        labels: marketLabels,
+        locale,
+        statisticsModel,
+      }),
     [analysisHref, locale, marketLabels, statisticsModel],
   );
   const recommendationItems = React.useMemo<WorkspaceUnifiedRailRecommendationItem[]>(() => {
@@ -281,8 +290,15 @@ export function useWorkspaceOverviewRail({
     const categoryValue = getWorkspaceChipValue(focusModel.chips, 'category');
     const serviceValue = getWorkspaceChipValue(focusModel.chips, 'service');
     const bestCategory = statisticsModel.demandRows[0] ?? null;
-    const bestCity = statisticsModel.cityRows.find((city) => city.count > 0) ?? statisticsModel.cityRows[0] ?? null;
-    const categoryLabel = serviceValue || categoryValue || bestCategory?.categoryName || focusModel.copy.contextFallbacks.category;
+    const bestCity =
+      statisticsModel.cityRows.find((city) => city.count > 0) ??
+      statisticsModel.cityRows[0] ??
+      null;
+    const categoryLabel =
+      serviceValue ||
+      categoryValue ||
+      bestCategory?.categoryName ||
+      focusModel.copy.contextFallbacks.category;
     const regionLabel = cityValue || bestCity?.name || statisticsModel.context.cityLabel;
 
     return [
@@ -331,62 +347,65 @@ export function useWorkspaceOverviewRail({
     statisticsModel.cityRows,
     statisticsModel.demandRows,
   ]);
-  const railModel = React.useMemo<WorkspaceUnifiedRailModel>(() => ({
-    decisionPanel: {
-      eyebrow: t(I18N_KEYS.requestsPage.decisionPanelTitle),
-      value: decisionMetrics[0]?.value ?? '—',
-      contextLabel: marketLabels.marketSize,
-      title: marketLabels.activeRequests,
-      layout: 'metricGrid',
-      visualization: 'none',
-      metrics: decisionMetrics,
-      primaryAction: {
-        kind: 'link',
-        label: getOverviewRailPrimaryLabel(locale),
-        href: overviewHref,
+  const railModel = React.useMemo<WorkspaceUnifiedRailModel>(
+    () => ({
+      decisionPanel: {
+        eyebrow: t(I18N_KEYS.requestsPage.decisionPanelTitle),
+        value: decisionMetrics[0]?.value ?? '—',
+        contextLabel: marketLabels.marketSize,
+        title: marketLabels.activeRequests,
+        layout: 'metricGrid',
+        visualization: 'none',
+        metrics: decisionMetrics,
+        primaryAction: {
+          kind: 'link',
+          label: getOverviewRailPrimaryLabel(locale),
+          href: overviewHref,
+        },
+        secondaryAction: {
+          kind: 'link',
+          label: t(I18N_KEYS.requestsPage.workspaceRailAnalysisCta),
+          href: analysisHref,
+        },
       },
-      secondaryAction: {
-        kind: 'link',
-        label: t(I18N_KEYS.requestsPage.workspaceRailAnalysisCta),
-        href: analysisHref,
+      actionQueue: {
+        eyebrow: marketLabels.opportunitiesEyebrow,
+        title: getOverviewQueueTitle(locale, actionQueueItems.length),
+        items: actionQueueItems,
+        emptyText: marketLabels.noMarketSignals,
+        footerAction: {
+          kind: 'link',
+          label: t(I18N_KEYS.requestsPage.workspaceRailQueueCta),
+          href: analysisHref,
+        },
       },
-    },
-    actionQueue: {
-      eyebrow: marketLabels.opportunitiesEyebrow,
-      title: getOverviewQueueTitle(locale, actionQueueItems.length),
-      items: actionQueueItems,
-      emptyText: marketLabels.noMarketSignals,
-      footerAction: {
-        kind: 'link',
-        label: t(I18N_KEYS.requestsPage.workspaceRailQueueCta),
-        href: analysisHref,
+      recommendations: {
+        eyebrow: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEyebrow),
+        title: marketLabels.recommendationsTitle,
+        items: recommendationItems,
+        emptyText: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEmpty),
+        footerAction: {
+          kind: 'link',
+          label: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsCta),
+          href: analysisHref,
+        },
       },
-    },
-    recommendations: {
-      eyebrow: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEyebrow),
-      title: marketLabels.recommendationsTitle,
-      items: recommendationItems,
-      emptyText: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEmpty),
-      footerAction: {
-        kind: 'link',
-        label: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsCta),
-        href: analysisHref,
-      },
-    },
-  }), [
-    actionQueueItems,
-    analysisHref,
-    decisionMetrics,
-    locale,
-    marketLabels.activeRequests,
-    marketLabels.marketSize,
-    marketLabels.noMarketSignals,
-    marketLabels.opportunitiesEyebrow,
-    marketLabels.recommendationsTitle,
-    overviewHref,
-    recommendationItems,
-    t,
-  ]);
+    }),
+    [
+      actionQueueItems,
+      analysisHref,
+      decisionMetrics,
+      locale,
+      marketLabels.activeRequests,
+      marketLabels.marketSize,
+      marketLabels.noMarketSignals,
+      marketLabels.opportunitiesEyebrow,
+      marketLabels.recommendationsTitle,
+      overviewHref,
+      recommendationItems,
+      t,
+    ],
+  );
 
   const mapPanel = isOverviewMode ? (
     <WorkspacePublicDemandMapPanel
@@ -402,9 +421,7 @@ export function useWorkspaceOverviewRail({
     />
   ) : null;
 
-  const aiRail = isOverviewMode ? (
-    <WorkspaceSectionAside model={railModel} />
-  ) : undefined;
+  const aiRail = isOverviewMode ? <WorkspaceSectionAside model={railModel} /> : undefined;
 
   return {
     statisticsModel,

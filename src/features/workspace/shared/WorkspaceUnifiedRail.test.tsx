@@ -55,7 +55,13 @@ describe('WorkspaceUnifiedRail', () => {
             metrics: [
               { key: 'requests', label: 'Anfragen', value: 12, icon: 'requests', tone: 'demand' },
               { key: 'providers', label: 'Anbieter', value: 7, icon: 'providers', tone: 'supply' },
-              { key: 'completed', label: 'Abgeschlossen', value: 4, icon: 'responseRate', tone: 'opportunity' },
+              {
+                key: 'completed',
+                label: 'Abgeschlossen',
+                value: 4,
+                icon: 'responseRate',
+                tone: 'opportunity',
+              },
             ],
           },
           actionQueue: {

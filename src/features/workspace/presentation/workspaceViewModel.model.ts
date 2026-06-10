@@ -25,7 +25,8 @@ export function buildWorkspacePrivateViewModel(params: PrivateInput): {
 export function buildWorkspacePublicViewModel(params: PublicInput): {
   publicContentProps: PublicContentProps;
 } {
-  const onStatusFilterChange = (status: string) => params.setStatusFilter(status as WorkspaceStatusFilter);
+  const onStatusFilterChange = (status: string) =>
+    params.setStatusFilter(status as WorkspaceStatusFilter);
   const { onPrevPage, onNextPage } = buildWorkspacePager({
     page: params.page,
     totalPages: params.totalPages,

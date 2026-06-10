@@ -196,7 +196,8 @@ function createStatsOverview(range: WorkspaceStatisticsRange): WorkspaceStatisti
       smartSignalTone: 'balanced',
       analyzedRequestsCount: 126,
       confidenceLevel: 'high',
-      recommendation: 'Preise im Bereich von 345 € – 400 € erzielen aktuell die höchste Abschlussrate in Berlin.',
+      recommendation:
+        'Preise im Bereich von 345 € – 400 € erzielen aktuell die höchste Abschlussrate in Berlin.',
       profitPotentialScore: 8.1,
       profitPotentialStatus: 'high',
     },
@@ -253,9 +254,15 @@ function createProbe(useWorkspaceStatisticsModel: StatsHook) {
           data-opportunity-count={String(model.opportunityRadar.length)}
           data-price-context={model.priceIntelligence.contextLabel ?? ''}
         />
-        <button type="button" onClick={() => model.setRange('7d')}>set-7d</button>
-        <button type="button" onClick={() => model.setRange('90d')}>set-90d</button>
-        <button type="button" onClick={() => model.setViewerMode('customer')}>set-customer</button>
+        <button type="button" onClick={() => model.setRange('7d')}>
+          set-7d
+        </button>
+        <button type="button" onClick={() => model.setRange('90d')}>
+          set-90d
+        </button>
+        <button type="button" onClick={() => model.setViewerMode('customer')}>
+          set-customer
+        </button>
       </div>
     );
   };

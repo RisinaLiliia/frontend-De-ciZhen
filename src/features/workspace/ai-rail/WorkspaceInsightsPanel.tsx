@@ -44,7 +44,11 @@ function renderInsightAction(item: WorkspaceInsightsPanelItem) {
 
   if (item.actionHref) {
     return (
-      <Link href={item.actionHref} prefetch={false} className="workspace-statistics-insights__action">
+      <Link
+        href={item.actionHref}
+        prefetch={false}
+        className="workspace-statistics-insights__action"
+      >
         {item.actionLabel}
         <span aria-hidden="true">→</span>
       </Link>
@@ -65,7 +69,9 @@ function buildInsightClassName(item: WorkspaceInsightsPanelItem, featured = fals
     featured ? 'is-featured' : '',
     item.level ? `is-${item.level}` : '',
     item.kind ? `is-${item.kind}` : '',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 }
 
 export function WorkspaceInsightsPanel({
@@ -89,14 +95,17 @@ export function WorkspaceInsightsPanel({
   const secondaryItems = items.slice(1);
   const hasHeading = showHeader && Boolean(title?.trim() || subtitle?.trim());
   const panelLabel = title?.trim() || assistantRole || emptyLabel;
-  const itemsCountClassName = items.length > 0 ? `workspace-insights-panel--items-${Math.min(items.length, 4)}` : '';
+  const itemsCountClassName =
+    items.length > 0 ? `workspace-insights-panel--items-${Math.min(items.length, 4)}` : '';
   const rootClassName = [
     hasHeading || showHeader ? 'panel' : 'panel workspace-statistics-ki-tokens',
     'workspace-insights-panel',
     itemsCountClassName,
     showHeader && hasHeading ? '' : 'workspace-insights-panel--compact-head',
     className ?? '',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
   const assistantDescriptionText = assistantDescription?.trim() || assistantRole;
   const assistantHead = (
     <div className="workspace-statistics-ki__head">
@@ -111,34 +120,32 @@ export function WorkspaceInsightsPanel({
   );
 
   return (
-    <section
-      ref={panelRef}
-      style={style}
-      className={rootClassName}
-    >
+    <section ref={panelRef} style={style} className={rootClassName}>
       {showHeader ? (
         hasHeading ? (
-        <header
-          className={[
-            'section-heading',
-            headerClassName ?? 'workspace-statistics__tile-header',
-            'workspace-statistics-insights__header',
-          ].filter(Boolean).join(' ')}
-        >
-          <span className="workspace-statistics-insights__heading">
-            {title?.trim() ? <p className="section-title">{title}</p> : null}
-            {subtitle?.trim() ? <p className="section-subtitle">{subtitle}</p> : null}
-          </span>
-          <div className="workspace-statistics-insights__ki">
+          <header
+            className={[
+              'section-heading',
+              headerClassName ?? 'workspace-statistics__tile-header',
+              'workspace-statistics-insights__header',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+          >
+            <span className="workspace-statistics-insights__heading">
+              {title?.trim() ? <p className="section-title">{title}</p> : null}
+              {subtitle?.trim() ? <p className="section-subtitle">{subtitle}</p> : null}
+            </span>
+            <div className="workspace-statistics-insights__ki">
+              <span className="workspace-statistics-ki__stamp">{generatedLabel}</span>
+              {assistantHead}
+            </div>
+          </header>
+        ) : (
+          <>
             <span className="workspace-statistics-ki__stamp">{generatedLabel}</span>
             {assistantHead}
-          </div>
-        </header>
-        ) : (
-        <>
-          <span className="workspace-statistics-ki__stamp">{generatedLabel}</span>
-          {assistantHead}
-        </>
+          </>
         )
       ) : (
         assistantHead
@@ -158,32 +165,49 @@ export function WorkspaceInsightsPanel({
                     {featuredItem.badgeLabel}
                   </WorkspaceBadge>
                   {featuredLabel ? (
-                    <span className="workspace-statistics-insights__featured-label">{featuredLabel}</span>
+                    <span className="workspace-statistics-insights__featured-label">
+                      {featuredLabel}
+                    </span>
                   ) : null}
                 </span>
-                {featuredItem.title ? <strong className="workspace-statistics-insights__title">{featuredItem.title}</strong> : null}
+                {featuredItem.title ? (
+                  <strong className="workspace-statistics-insights__title">
+                    {featuredItem.title}
+                  </strong>
+                ) : null}
                 <span className="workspace-statistics-insights__text">{featuredItem.text}</span>
                 {featuredItem.metrics && featuredItem.metrics.length > 0 ? (
                   <span className="workspace-statistics-insights__metrics">
                     {featuredItem.metrics.map((token) => (
-                      <span key={`${featuredItem.key}-${token}`} className="workspace-statistics-insights__metric">
+                      <span
+                        key={`${featuredItem.key}-${token}`}
+                        className="workspace-statistics-insights__metric"
+                      >
                         {token}
                       </span>
                     ))}
                   </span>
                 ) : null}
-                {featuredItem.evidence && (!featuredItem.metrics || featuredItem.metrics.length === 0) ? (
-                  <span className="workspace-statistics-insights__evidence">{featuredItem.evidence}</span>
+                {featuredItem.evidence &&
+                (!featuredItem.metrics || featuredItem.metrics.length === 0) ? (
+                  <span className="workspace-statistics-insights__evidence">
+                    {featuredItem.evidence}
+                  </span>
                 ) : null}
                 {renderInsightAction(featuredItem)}
                 {featuredItem.debugText ? (
-                  <span className="workspace-statistics-insights__debug">{featuredItem.debugText}</span>
+                  <span className="workspace-statistics-insights__debug">
+                    {featuredItem.debugText}
+                  </span>
                 ) : null}
               </span>
             </article>
           ) : null}
           {secondaryItems.length > 0 ? (
-            <ul className="workspace-statistics-insights__secondary requests-list" aria-label={panelLabel}>
+            <ul
+              className="workspace-statistics-insights__secondary requests-list"
+              aria-label={panelLabel}
+            >
               {secondaryItems.map((item) => (
                 <li key={item.key} className={buildInsightClassName(item)}>
                   <span className="workspace-statistics-insights__content">
@@ -195,10 +219,14 @@ export function WorkspaceInsightsPanel({
                         {item.badgeLabel}
                       </WorkspaceBadge>
                     </span>
-                    {item.title ? <strong className="workspace-statistics-insights__title">{item.title}</strong> : null}
+                    {item.title ? (
+                      <strong className="workspace-statistics-insights__title">{item.title}</strong>
+                    ) : null}
                     <span className="workspace-statistics-insights__text">{item.text}</span>
                     {item.evidence ? (
-                      <span className="workspace-statistics-insights__evidence">{item.evidence}</span>
+                      <span className="workspace-statistics-insights__evidence">
+                        {item.evidence}
+                      </span>
                     ) : null}
                     {renderInsightAction(item)}
                     {item.debugText ? (

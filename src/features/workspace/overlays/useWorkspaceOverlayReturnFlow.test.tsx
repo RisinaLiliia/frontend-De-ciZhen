@@ -10,7 +10,7 @@ import { useWorkspaceRequestOverlayFlow } from '@/features/workspace/overlays/us
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 
 vi.mock('@/lib/i18n/useT', () => ({
-  useT: () => ((key: string) => key),
+  useT: () => (key: string) => key,
 }));
 
 vi.mock('@/lib/api/chat', () => ({
@@ -34,11 +34,7 @@ function createQueryClient() {
 function renderWithClient(node: React.ReactNode) {
   const queryClient = createQueryClient();
 
-  return render(
-    <QueryClientProvider client={queryClient}>
-      {node}
-    </QueryClientProvider>,
-  );
+  return render(<QueryClientProvider client={queryClient}>{node}</QueryClientProvider>);
 }
 
 function PublicFlowProbe() {
@@ -48,9 +44,15 @@ function PublicFlowProbe() {
 
   return (
     <>
-      <button type="button" onClick={() => flow.openRequest('req-1', 'view')}>open-request</button>
-      <button type="button" onClick={() => flow.openOfferSheet('req-1')}>open-offer</button>
-      <button type="button" onClick={flow.closeOfferSheet}>close-offer</button>
+      <button type="button" onClick={() => flow.openRequest('req-1', 'view')}>
+        open-request
+      </button>
+      <button type="button" onClick={() => flow.openOfferSheet('req-1')}>
+        open-offer
+      </button>
+      <button type="button" onClick={flow.closeOfferSheet}>
+        close-offer
+      </button>
       <div
         data-testid="public-flow-state"
         data-request-id={flow.activeRequestState?.requestId ?? ''}
@@ -62,18 +64,26 @@ function PublicFlowProbe() {
 
 function PrivateFlowProbe() {
   const flow = useWorkspaceRequestOverlayFlow({
-    cards: [{
-      requestId: 'req-1',
-      requestPreview: { title: 'Anfrage 1' },
-    }] as unknown as MyRequestsViewCard[],
+    cards: [
+      {
+        requestId: 'req-1',
+        requestPreview: { title: 'Anfrage 1' },
+      },
+    ] as unknown as MyRequestsViewCard[],
     listContext: {},
   });
 
   return (
     <>
-      <button type="button" onClick={() => flow.openRequest('req-1', 'view')}>open-request</button>
-      <button type="button" onClick={() => flow.openOfferSheet('req-1')}>open-offer</button>
-      <button type="button" onClick={flow.closeOfferSheet}>close-offer</button>
+      <button type="button" onClick={() => flow.openRequest('req-1', 'view')}>
+        open-request
+      </button>
+      <button type="button" onClick={() => flow.openOfferSheet('req-1')}>
+        open-offer
+      </button>
+      <button type="button" onClick={flow.closeOfferSheet}>
+        close-offer
+      </button>
       <button
         type="button"
         onClick={() => {
@@ -87,7 +97,9 @@ function PrivateFlowProbe() {
       >
         open-chat
       </button>
-      <button type="button" onClick={flow.closeChat}>close-chat</button>
+      <button type="button" onClick={flow.closeChat}>
+        close-chat
+      </button>
       <div
         data-testid="private-flow-state"
         data-request-id={flow.activeRequestState?.requestId ?? ''}
@@ -131,7 +143,9 @@ describe('workspace overlay return flow', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('private-flow-state').getAttribute('data-request-id')).toBe('');
-      expect(screen.getByTestId('private-flow-state').getAttribute('data-chat-id')).toBe('conversation-1');
+      expect(screen.getByTestId('private-flow-state').getAttribute('data-chat-id')).toBe(
+        'conversation-1',
+      );
     });
 
     fireEvent.click(screen.getByText('close-chat'));

@@ -68,7 +68,11 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, color-mix(in oklab, var(--c-ink) 60%, transparent), color-mix(in oklab, var(--c-ink) 10%, transparent));
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--c-ink) 60%, transparent),
+      color-mix(in oklab, var(--c-ink) 10%, transparent)
+    );
     pointer-events: none;
   }
 
@@ -84,7 +88,11 @@
   }
 
   html:not(.dark) .hero__media::after {
-    background: linear-gradient(90deg, color-mix(in oklab, var(--color-surface) 35%, transparent), color-mix(in oklab, var(--color-surface) 10%, transparent));
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--color-surface) 35%, transparent),
+      color-mix(in oklab, var(--color-surface) 10%, transparent)
+    );
   }
 
   .hero__media img {
@@ -121,5 +129,4 @@
       min-height: 320px;
     }
   }
-
 }

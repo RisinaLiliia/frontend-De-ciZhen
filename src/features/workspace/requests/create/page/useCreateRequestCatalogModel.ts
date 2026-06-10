@@ -16,24 +16,21 @@ export function useCreateRequestCatalogModel({ locale, t, categoryKey }: Params)
   const { data: categories } = useServiceCategories();
   const { data: services } = useServices();
 
-  const serviceOptions = React.useMemo<Option[]>(
-    () => {
-      const filtered = categoryKey
-        ? (services ?? []).filter((service) => service.categoryKey === categoryKey)
-        : [];
-      return [
-        { value: '', label: t('request.subcategoryPlaceholder') },
-        ...filtered
-          .slice()
-          .sort((a, b) => a.sortOrder - b.sortOrder)
-          .map((service) => ({
-            value: service.key,
-            label: pickI18n(service.i18n, locale),
-          })),
-      ];
-    },
-    [categoryKey, locale, services, t],
-  );
+  const serviceOptions = React.useMemo<Option[]>(() => {
+    const filtered = categoryKey
+      ? (services ?? []).filter((service) => service.categoryKey === categoryKey)
+      : [];
+    return [
+      { value: '', label: t('request.subcategoryPlaceholder') },
+      ...filtered
+        .slice()
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .map((service) => ({
+          value: service.key,
+          label: pickI18n(service.i18n, locale),
+        })),
+    ];
+  }, [categoryKey, locale, services, t]);
 
   const categoryOptions = React.useMemo<Option[]>(
     () => [

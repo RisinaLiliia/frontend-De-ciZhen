@@ -27,9 +27,7 @@ function toSearchParams(input: Record<string, string | string[] | undefined>) {
   return searchParams;
 }
 
-export default async function RequestCreatePage({
-  searchParams,
-}: RequestCreatePageProps) {
+export default async function RequestCreatePage({ searchParams }: RequestCreatePageProps) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
   redirect(
     buildWorkspaceCreateRequestHref({

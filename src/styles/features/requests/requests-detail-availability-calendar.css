@@ -115,12 +115,16 @@
     text-underline-offset: inherit;
   }
 
-  .request-detail__availability-calendar-popover > .dc-popover-trigger:hover .request-detail__availability-date--interactive {
+  .request-detail__availability-calendar-popover
+    > .dc-popover-trigger:hover
+    .request-detail__availability-date--interactive {
     color: color-mix(in oklab, var(--color-primary) 72%, var(--color-text) 28%);
     text-decoration-color: color-mix(in oklab, var(--color-primary) 64%, transparent);
   }
 
-  .request-detail__availability-calendar-popover > .dc-popover-trigger:focus-visible .request-detail__availability-date--interactive {
+  .request-detail__availability-calendar-popover
+    > .dc-popover-trigger:focus-visible
+    .request-detail__availability-date--interactive {
     outline: 2px solid color-mix(in oklab, var(--color-primary) 45%, transparent);
     outline-offset: 2px;
   }
@@ -218,6 +222,4 @@
   .request-detail__availability-legend-dot.is-out {
     background: color-mix(in oklab, var(--color-border) 70%, transparent);
   }
-
-
 }

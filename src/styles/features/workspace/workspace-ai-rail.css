@@ -36,7 +36,11 @@
     padding: var(--space-4);
     border-color: color-mix(in oklab, var(--color-primary) 18%, var(--color-border-soft) 82%);
     background:
-      radial-gradient(circle at top right, color-mix(in oklab, var(--color-primary) 7%, transparent) 0, transparent 56%),
+      radial-gradient(
+        circle at top right,
+        color-mix(in oklab, var(--color-primary) 7%, transparent) 0,
+        transparent 56%
+      ),
       linear-gradient(
         180deg,
         color-mix(in oklab, var(--color-surface) 97%, white 3%) 0%,
@@ -114,7 +118,10 @@
 
   .workspace-unified-rail__panel--decision.has-no-visualization
     .workspace-unified-rail__decision-side-body {
-    padding-top: calc(var(--workspace-rail-eyebrow-line-height) * var(--workspace-rail-eyebrow-size) + var(--space-8));
+    padding-top: calc(
+      var(--workspace-rail-eyebrow-line-height) * var(--workspace-rail-eyebrow-size) +
+        var(--space-8)
+    );
   }
 
   .workspace-unified-rail__decision-visual {
@@ -200,27 +207,51 @@
   }
 
   .workspace-unified-rail__metric-grid > div.is-demand {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-demand) 18%, var(--color-border-soft) 82%);
+    border-color: color-mix(
+      in oklab,
+      var(--workspace-rail-tone-demand) 18%,
+      var(--color-border-soft) 82%
+    );
   }
 
   .workspace-unified-rail__metric-grid > div.is-supply {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-supply) 18%, var(--color-border-soft) 82%);
+    border-color: color-mix(
+      in oklab,
+      var(--workspace-rail-tone-supply) 18%,
+      var(--color-border-soft) 82%
+    );
   }
 
   .workspace-unified-rail__metric-grid > div.is-opportunity {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-opportunity) 18%, var(--color-border-soft) 82%);
+    border-color: color-mix(
+      in oklab,
+      var(--workspace-rail-tone-opportunity) 18%,
+      var(--color-border-soft) 82%
+    );
   }
 
   .workspace-unified-rail__metric-grid > div.is-risk {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-risk) 18%, var(--color-border-soft) 82%);
+    border-color: color-mix(
+      in oklab,
+      var(--workspace-rail-tone-risk) 18%,
+      var(--color-border-soft) 82%
+    );
   }
 
   .workspace-unified-rail__metric-grid > div.is-action {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-action) 18%, var(--color-border-soft) 82%);
+    border-color: color-mix(
+      in oklab,
+      var(--workspace-rail-tone-action) 18%,
+      var(--color-border-soft) 82%
+    );
   }
 
   .workspace-unified-rail__metric-grid > div.is-ai {
-    border-color: color-mix(in oklab, var(--workspace-rail-tone-ai) 18%, var(--color-border-soft) 82%);
+    border-color: color-mix(
+      in oklab,
+      var(--workspace-rail-tone-ai) 18%,
+      var(--color-border-soft) 82%
+    );
   }
 
   .workspace-unified-rail__metric-icon {
@@ -567,12 +598,11 @@
   .workspace-unified-rail__recommendation {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
-        color-mix(in oklab, var(--color-surface-muted) 88%, var(--color-surface) 12%) 100%
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
+      color-mix(in oklab, var(--color-surface-muted) 88%, var(--color-surface) 12%) 100%
+    );
   }
 
   .workspace-unified-rail__recommendation-copy {

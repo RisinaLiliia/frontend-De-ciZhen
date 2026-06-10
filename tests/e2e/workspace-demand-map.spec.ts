@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-test('workspace public map renders full map with footer stats and active markers', async ({ page }) => {
+test('workspace public map renders full map with footer stats and active markers', async ({
+  page,
+}) => {
   await page.route('**/api/**', async (route) => {
     const url = new URL(route.request().url());
     const path = url.pathname;
@@ -116,7 +118,5 @@ test('workspace public map renders full map with footer stats and active markers
   const markers = page.locator('.workspace-demand-marker');
   await expect(markers).toHaveCount(3);
 
-  await expect
-    .poll(() => new URL(page.url()).pathname)
-    .toBe('/workspace');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/workspace');
 });

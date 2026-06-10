@@ -141,14 +141,18 @@ export function LegalDocumentContent({ title, type }: Props) {
           <div className={styles.legalHeaderMeta}>
             <span className={styles.eyebrow}>Rechtliches</span>
             <h1 className={styles.title}>{title}</h1>
-            <p className={styles.subtitle}>Transparenz, Datenschutz und klare Regeln fuer die Nutzung der Plattform.</p>
+            <p className={styles.subtitle}>
+              Transparenz, Datenschutz und klare Regeln fuer die Nutzung der Plattform.
+            </p>
           </div>
           <div className={styles.brandBadge}>De&apos;ciZhen Legal</div>
         </header>
 
         <div className={styles.metaBar}>
           <span className={styles.metaPill}>Zuletzt aktualisiert: {lastUpdatedLabel}</span>
-          {readingMinutes ? <span className={styles.metaPill}>Lesezeit: ~{readingMinutes} Min</span> : null}
+          {readingMinutes ? (
+            <span className={styles.metaPill}>Lesezeit: ~{readingMinutes} Min</span>
+          ) : null}
           <div className={styles.metaActions}>
             <button type="button" className={styles.metaButton} onClick={handleCopyLink}>
               {copied ? 'Link kopiert' : 'Link kopieren'}
@@ -180,7 +184,10 @@ export function LegalDocumentContent({ title, type }: Props) {
                   {toc.map((item) => {
                     const isActive = item.id === activeSectionId;
                     return (
-                      <li key={`${item.level}-${item.id}`} className={item.level === 3 ? styles.tocSubItem : styles.tocItem}>
+                      <li
+                        key={`${item.level}-${item.id}`}
+                        className={item.level === 3 ? styles.tocSubItem : styles.tocItem}
+                      >
                         <a
                           href={`#${item.id}`}
                           className={`${styles.tocLink} ${isActive ? styles.tocLinkActive : ''}`}
@@ -199,9 +206,15 @@ export function LegalDocumentContent({ title, type }: Props) {
               <div className={styles.markdown}>
                 <ReactMarkdown
                   components={{
-                    h1: ({ children }) => <h1 id={slugify(childrenToText(children))}>{children}</h1>,
-                    h2: ({ children }) => <h2 id={slugify(childrenToText(children))}>{children}</h2>,
-                    h3: ({ children }) => <h3 id={slugify(childrenToText(children))}>{children}</h3>,
+                    h1: ({ children }) => (
+                      <h1 id={slugify(childrenToText(children))}>{children}</h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 id={slugify(childrenToText(children))}>{children}</h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 id={slugify(childrenToText(children))}>{children}</h3>
+                    ),
                   }}
                 >
                   {content}

@@ -7,7 +7,11 @@ import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { RequestMetaInline } from '@/components/ui/RequestMetaInline';
 import { IconUser } from '@/components/ui/icons/icons';
 import { UserHeaderCard } from '@/components/ui/UserHeaderCard';
-import { focusIfPresent, getTrapFocusTarget, resolveInitialFocusTarget } from '@/lib/a11y/focusTrap';
+import {
+  focusIfPresent,
+  getTrapFocusTarget,
+  resolveInitialFocusTarget,
+} from '@/lib/a11y/focusTrap';
 
 type RequestOfferSheetProps = {
   isOpen: boolean;
@@ -134,7 +138,8 @@ export function RequestOfferSheet({
     if (!isOpen || !isMounted || surface !== 'modal') return;
 
     const panel = panelRef.current;
-    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     const previousPaddingRight = document.body.style.paddingRight;
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -185,13 +190,22 @@ export function RequestOfferSheet({
 
   const content = (
     <div
-      className={surface === 'modal' ? 'dc-modal request-offer-sheet' : 'request-offer-sheet request-offer-sheet--embedded'}
+      className={
+        surface === 'modal'
+          ? 'dc-modal request-offer-sheet'
+          : 'request-offer-sheet request-offer-sheet--embedded'
+      }
       role={surface === 'modal' ? 'dialog' : 'group'}
       aria-modal={surface === 'modal' ? 'true' : undefined}
       aria-labelledby={dialogTitleId}
     >
       {surface === 'modal' ? (
-        <button type="button" className="dc-modal__backdrop request-offer-sheet__backdrop" onClick={onClose} aria-label={closeLabel} />
+        <button
+          type="button"
+          className="dc-modal__backdrop request-offer-sheet__backdrop"
+          onClick={onClose}
+          aria-label={closeLabel}
+        />
       ) : null}
       <div
         ref={panelRef}
@@ -199,7 +213,9 @@ export function RequestOfferSheet({
       >
         <div className="request-offer-sheet__header">
           {mode === 'form' ? (
-            <h2 id={dialogTitleId} className="typo-h3">{title}</h2>
+            <h2 id={dialogTitleId} className="typo-h3">
+              {title}
+            </h2>
           ) : null}
           {showCloseButton ? (
             <button
@@ -224,7 +240,9 @@ export function RequestOfferSheet({
         {mode === 'success' ? (
           <div className="request-offer-sheet__success">
             <div className="request-offer-sheet__success-main">
-              <h3 id={dialogTitleId} className="typo-h3 request-offer-sheet__success-title">{successTitle}</h3>
+              <h3 id={dialogTitleId} className="typo-h3 request-offer-sheet__success-title">
+                {successTitle}
+              </h3>
               <p className="typo-muted">{successBody}</p>
               <p className="typo-muted request-offer-sheet__success-subline">{successSubline}</p>
             </div>
@@ -246,13 +264,21 @@ export function RequestOfferSheet({
                   />
                   <div className="request-offer-sheet__success-tip-copy">
                     <p className="request-offer-sheet__success-tip-title">{successTipCardTitle}</p>
-                    <p className="typo-small request-offer-sheet__success-advice">{successTipCardBody}</p>
+                    <p className="typo-small request-offer-sheet__success-advice">
+                      {successTipCardBody}
+                    </p>
                   </div>
                 </div>
               </div>
             ) : null}
-            <div className={`request-offer-sheet__actions ${showProfileAdvice ? '' : 'request-offer-sheet__actions--single'}`.trim()}>
-              <button type="button" className="btn-secondary request-detail__cta-btn" onClick={onSuccessBack}>
+            <div
+              className={`request-offer-sheet__actions ${showProfileAdvice ? '' : 'request-offer-sheet__actions--single'}`.trim()}
+            >
+              <button
+                type="button"
+                className="btn-secondary request-detail__cta-btn"
+                onClick={onSuccessBack}
+              >
                 <span>{successContinueCta}</span>
               </button>
               {showProfileAdvice ? (
@@ -270,7 +296,9 @@ export function RequestOfferSheet({
         ) : (
           <>
             <div className="request-offer-sheet__body">
-              <label className="typo-small" htmlFor={amountInputId}>{amountLabel}</label>
+              <label className="typo-small" htmlFor={amountInputId}>
+                {amountLabel}
+              </label>
               <Input
                 id={amountInputId}
                 type="number"
@@ -281,7 +309,9 @@ export function RequestOfferSheet({
                 placeholder={amountPlaceholder}
               />
 
-              <label className="typo-small" htmlFor={commentInputId}>{commentLabel}</label>
+              <label className="typo-small" htmlFor={commentInputId}>
+                {commentLabel}
+              </label>
               <Textarea
                 id={commentInputId}
                 value={commentValue}
@@ -290,7 +320,9 @@ export function RequestOfferSheet({
                 rows={3}
               />
 
-              <label className="typo-small" htmlFor={availabilityInputId}>{availabilityLabel}</label>
+              <label className="typo-small" htmlFor={availabilityInputId}>
+                {availabilityLabel}
+              </label>
               <Input
                 id={availabilityInputId}
                 value={availabilityValue}

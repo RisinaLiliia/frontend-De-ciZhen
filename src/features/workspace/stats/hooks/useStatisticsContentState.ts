@@ -39,7 +39,8 @@ export function useStatisticsContentState({
   const opportunityPanelRef = React.useRef<HTMLElement | null>(null);
 
   const focusLabel = React.useMemo(() => {
-    if (filters.categoryKey && filters.cityId) return `${context.categoryLabel} in ${context.cityLabel}`;
+    if (filters.categoryKey && filters.cityId)
+      return `${context.categoryLabel} in ${context.cityLabel}`;
     if (filters.categoryKey) return context.categoryLabel;
     if (filters.cityId) return context.cityLabel;
     return null;
@@ -55,9 +56,10 @@ export function useStatisticsContentState({
     ? `${copy.growthSubtitle} · ${focusLabel}`
     : copy.growthSubtitle;
 
-  const citiesSubtitle = context.mode === 'focus'
-    ? `${copy.citiesSubtitle} · ${context.periodLabel}`
-    : copy.citiesSubtitle;
+  const citiesSubtitle =
+    context.mode === 'focus'
+      ? `${copy.citiesSubtitle} · ${context.periodLabel}`
+      : copy.citiesSubtitle;
 
   const resolvedCitiesSubtitle = sectionMeta.citiesSubtitle ?? citiesSubtitle;
   const resolvedOpportunityTitle = sectionMeta.opportunityTitle ?? opportunityTitle;
@@ -78,17 +80,18 @@ export function useStatisticsContentState({
   });
 
   const growthMarketContext = React.useMemo(
-    () => resolveGrowthMarketContext({
-      copy,
-      filters,
-      context,
-      cityRows,
-      selectedOpportunity,
-      opportunityRadar,
-      userIntelligence,
-      growthCards,
-      fallbackFocusLabel: focusLabel,
-    }),
+    () =>
+      resolveGrowthMarketContext({
+        copy,
+        filters,
+        context,
+        cityRows,
+        selectedOpportunity,
+        opportunityRadar,
+        userIntelligence,
+        growthCards,
+        fallbackFocusLabel: focusLabel,
+      }),
     [
       cityRows,
       context,

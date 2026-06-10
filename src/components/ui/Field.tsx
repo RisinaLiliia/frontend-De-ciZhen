@@ -28,9 +28,7 @@ export function Field({ leftIcon, rightIcon, children, className }: Props) {
         </div>
       ) : null}
 
-      <div className="w-full">
-        {children}
-      </div>
+      <div className="w-full">{children}</div>
 
       {rightIcon ? (
         <div

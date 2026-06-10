@@ -29,11 +29,7 @@ export function WorkspacePageFrame({
         <section className="workspace-page-frame__content workspace-main-scroll">
           {intro || filters ? (
             <div className="workspace-page-frame__controls">
-              {intro ? (
-                <div className="workspace-page-frame__header">
-                  {intro}
-                </div>
-              ) : null}
+              {intro ? <div className="workspace-page-frame__header">{intro}</div> : null}
               {filters ? (
                 <WorkspaceContextBar className="workspace-page-frame__filters">
                   {filters}

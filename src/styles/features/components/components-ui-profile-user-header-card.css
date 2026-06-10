@@ -89,7 +89,9 @@
     gap: 0;
   }
 
-  .user-header-card--detail-provider.user-header-card--adaptive .profile-rating-summary .rating-summary__line {
+  .user-header-card--detail-provider.user-header-card--adaptive
+    .profile-rating-summary
+    .rating-summary__line {
     justify-content: flex-end;
   }
 
@@ -133,7 +135,9 @@
     gap: 0;
   }
 
-  .user-header-card--detail-client.user-header-card--adaptive .profile-rating-summary .rating-summary__line {
+  .user-header-card--detail-client.user-header-card--adaptive
+    .profile-rating-summary
+    .rating-summary__line {
     justify-content: flex-end;
   }
 

@@ -9,7 +9,10 @@ const toQuery = (params: Record<string, string | undefined>) => {
   return parts.length ? `?${parts.join('&')}` : '';
 };
 
-export async function listMyContracts(params?: { role?: 'client' | 'provider' | 'all'; status?: string }) {
+export async function listMyContracts(params?: {
+  role?: 'client' | 'provider' | 'all';
+  status?: string;
+}) {
   const q = toQuery({ role: params?.role, status: params?.status });
   return apiGet<ContractDto[]>(`/contracts/my${q}`);
 }

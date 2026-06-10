@@ -60,7 +60,10 @@ function createProps(overrides?: Partial<React.ComponentProps<typeof RequestOffe
   };
 }
 
-function renderHarness(open: boolean, overrides?: Partial<React.ComponentProps<typeof RequestOfferSheet>>) {
+function renderHarness(
+  open: boolean,
+  overrides?: Partial<React.ComponentProps<typeof RequestOfferSheet>>,
+) {
   return render(
     <div>
       <button type="button" data-testid="outside-focus">
@@ -95,7 +98,9 @@ describe('RequestOfferSheet', () => {
   it('traps focus with Tab/Shift+Tab inside sheet', () => {
     renderHarness(true);
 
-    const closeButton = document.querySelector('.request-offer-sheet__close') as HTMLButtonElement | null;
+    const closeButton = document.querySelector(
+      '.request-offer-sheet__close',
+    ) as HTMLButtonElement | null;
     const submitButton = screen.getByRole('button', { name: 'Submit' });
     expect(closeButton).not.toBeNull();
 

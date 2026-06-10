@@ -27,15 +27,18 @@ export function resolveWorkspacePublicSearchSelection(
   current: SearchSelection,
   next?: Partial<SearchSelection>,
 ) {
-  const cityId = (next?.cityId ?? current.cityId) === ALL_OPTION_KEY
-    ? undefined
-    : (next?.cityId ?? current.cityId);
-  const categoryKey = (next?.categoryKey ?? current.categoryKey) === ALL_OPTION_KEY
-    ? undefined
-    : (next?.categoryKey ?? current.categoryKey);
-  const subcategoryKey = (next?.subcategoryKey ?? current.subcategoryKey) === ALL_OPTION_KEY
-    ? undefined
-    : (next?.subcategoryKey ?? current.subcategoryKey);
+  const cityId =
+    (next?.cityId ?? current.cityId) === ALL_OPTION_KEY
+      ? undefined
+      : (next?.cityId ?? current.cityId);
+  const categoryKey =
+    (next?.categoryKey ?? current.categoryKey) === ALL_OPTION_KEY
+      ? undefined
+      : (next?.categoryKey ?? current.categoryKey);
+  const subcategoryKey =
+    (next?.subcategoryKey ?? current.subcategoryKey) === ALL_OPTION_KEY
+      ? undefined
+      : (next?.subcategoryKey ?? current.subcategoryKey);
 
   return { cityId, categoryKey, subcategoryKey };
 }
@@ -58,7 +61,8 @@ export function resolveWorkspacePublicSearchEventPayload({
     source: activePublicSection === 'providers' ? 'workspace_providers' : 'workspace_requests',
     cityId: selection.cityId,
     cityName: selection.cityId
-      ? pickI18n(cities.find((city) => city.id === selection.cityId)?.i18n ?? {}, locale) || undefined
+      ? pickI18n(cities.find((city) => city.id === selection.cityId)?.i18n ?? {}, locale) ||
+        undefined
       : undefined,
     categoryKey: selection.categoryKey,
     subcategoryKey: selection.subcategoryKey,

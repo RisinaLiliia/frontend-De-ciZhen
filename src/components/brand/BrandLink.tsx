@@ -9,11 +9,7 @@ type BrandLinkProps = {
   compact?: boolean;
 };
 
-export function BrandLink({
-  className,
-  href = '/',
-  compact = false,
-}: BrandLinkProps) {
+export function BrandLink({ className, href = '/', compact = false }: BrandLinkProps) {
   return (
     <Link
       href={href}
@@ -21,18 +17,9 @@ export function BrandLink({
       className={['brand', className ?? ''].filter(Boolean).join(' ')}
       aria-label="De’ciZhen"
     >
-      <Image
-        src="/logo.svg"
-        alt=""
-        width={26}
-        height={26}
-        className="brand__logo"
-        priority
-      />
+      <Image src="/logo.svg" alt="" width={26} height={26} className="brand__logo" priority />
 
-      {!compact ? (
-        <span className="brand__text truncate">De&apos;ciZhen</span>
-      ) : null}
+      {!compact ? <span className="brand__text truncate">De&apos;ciZhen</span> : null}
     </Link>
   );
 }

@@ -7,19 +7,15 @@ import { getMyRequestById, getPublicRequestById, listMyRequests } from '@/lib/ap
 
 function isRequestResponseDto(value: unknown): value is RequestResponseDto {
   return Boolean(
-    value
-    && typeof value === 'object'
-    && 'id' in value
-    && 'status' in value
-    && 'preferredDate' in value,
+    value &&
+    typeof value === 'object' &&
+    'id' in value &&
+    'status' in value &&
+    'preferredDate' in value,
   );
 }
 
-export function getCachedOwnerRequest(
-  qc: QueryClient,
-  requestId: string,
-  locale?: Locale,
-) {
+export function getCachedOwnerRequest(qc: QueryClient, requestId: string, locale?: Locale) {
   const directKeys: Array<readonly unknown[]> = [
     locale ? ['request-detail', requestId, locale] : [],
     ['request-detail', requestId],
@@ -45,18 +41,13 @@ export function getCachedOwnerRequest(
   return null;
 }
 
-async function loadOwnerRequestFromBackendList(
-  qc: QueryClient,
-  requestId: string,
-) {
+async function loadOwnerRequestFromBackendList(qc: QueryClient, requestId: string) {
   const list = await qc.ensureQueryData({
     queryKey: ['requests-my'],
     queryFn: () => listMyRequests(),
   });
 
-  return Array.isArray(list)
-    ? list.find((item) => item.id === requestId) ?? null
-    : null;
+  return Array.isArray(list) ? (list.find((item) => item.id === requestId) ?? null) : null;
 }
 
 export async function fetchManagedRequestDetails(params: {
@@ -66,13 +57,7 @@ export async function fetchManagedRequestDetails(params: {
   attemptOwner: boolean;
   preferOwner?: boolean;
 }) {
-  const {
-    requestId,
-    locale,
-    qc,
-    attemptOwner,
-    preferOwner = false,
-  } = params;
+  const { requestId, locale, qc, attemptOwner, preferOwner = false } = params;
 
   if (attemptOwner) {
     try {
@@ -102,7 +87,10 @@ export async function fetchManagedRequestDetails(params: {
           };
         }
       } catch (listError) {
-        if (!(listError instanceof ApiError) || (listError.status !== 401 && listError.status !== 403 && listError.status !== 404)) {
+        if (
+          !(listError instanceof ApiError) ||
+          (listError.status !== 401 && listError.status !== 403 && listError.status !== 404)
+        ) {
           throw listError;
         }
       }

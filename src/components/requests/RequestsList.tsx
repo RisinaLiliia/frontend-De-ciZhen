@@ -56,19 +56,11 @@ function RequestsListComponent({
   }
 
   if (isError) {
-    return (
-      <div className="card text-center typo-muted">
-        {t(I18N_KEYS.requestsPage.error)}
-      </div>
-    );
+    return <div className="card text-center typo-muted">{t(I18N_KEYS.requestsPage.error)}</div>;
   }
 
   if (requests.length === 0) {
-    return (
-      <div className="card text-center typo-muted">
-        {t(I18N_KEYS.requestsPage.empty)}
-      </div>
-    );
+    return <div className="card text-center typo-muted">{t(I18N_KEYS.requestsPage.empty)}</div>;
   }
 
   return (

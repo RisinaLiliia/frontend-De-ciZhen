@@ -250,12 +250,13 @@ export function WorkspaceReviewsPanel({
   );
 
   const reviewableBookingOptions = React.useMemo<Option[]>(
-    () => buildWorkspaceReviewableBookingOptions({
-      bookings: userCompletedBookingsQuery.data ?? [],
-      reviewableRequestById,
-      bookingDateFormatter,
-      t,
-    }),
+    () =>
+      buildWorkspaceReviewableBookingOptions({
+        bookings: userCompletedBookingsQuery.data ?? [],
+        reviewableRequestById,
+        bookingDateFormatter,
+        t,
+      }),
     [bookingDateFormatter, reviewableRequestById, t, userCompletedBookingsQuery.data],
   );
 
@@ -278,7 +279,9 @@ export function WorkspaceReviewsPanel({
       setDraftText('');
       if (!isAuthenticated) setDraftAuthorName('');
       toast.success(t(I18N_KEYS.requestsPage.platformReviewFormSuccess));
-      await queryClient.invalidateQueries({ queryKey: workspaceQK.platformReviewsOverviewPrefix() });
+      await queryClient.invalidateQueries({
+        queryKey: workspaceQK.platformReviewsOverviewPrefix(),
+      });
     },
     onError: () => {
       toast.error(t(I18N_KEYS.requestsPage.platformReviewFormError));
@@ -387,16 +390,21 @@ export function WorkspaceReviewsPanel({
   );
 
   const feedTopSlot = source === 'platform' ? platformComposer : userComposer;
-  const isLoading = source === 'platform'
-    ? platformQuery.isLoading && platformReviews.length === 0
-    : isUserReviewsLoading && visibleUserReviews.length === 0;
+  const isLoading =
+    source === 'platform'
+      ? platformQuery.isLoading && platformReviews.length === 0
+      : isUserReviewsLoading && visibleUserReviews.length === 0;
 
   return (
     <section className="panel">
       <PublicProfileReviewsSection
         t={t}
         sectionId={source === 'platform' ? 'platform-reviews' : 'my-reviews'}
-        sectionTitle={source === 'platform' ? t(I18N_KEYS.requestsPage.platformReviewsTitle) : t(I18N_KEYS.requestsPage.navReviews)}
+        sectionTitle={
+          source === 'platform'
+            ? t(I18N_KEYS.requestsPage.platformReviewsTitle)
+            : t(I18N_KEYS.requestsPage.navReviews)
+        }
         isReviewsLoading={isLoading}
         displayRatingAvg={displayRatingAvg}
         displayRatingCount={displayRatingCount}
@@ -405,7 +413,11 @@ export function WorkspaceReviewsPanel({
         reviewSort={reviewSort}
         onReviewSortChange={setReviewSort}
         feedTopSlot={feedTopSlot}
-        emptyHint={source === 'platform' ? t(I18N_KEYS.requestsPage.platformReviewsEmptyHint) : t(I18N_KEYS.requestsPage.reviewsEmptyHint)}
+        emptyHint={
+          source === 'platform'
+            ? t(I18N_KEYS.requestsPage.platformReviewsEmptyHint)
+            : t(I18N_KEYS.requestsPage.reviewsEmptyHint)
+        }
         visibleReviews={visibleReviews}
         reviewsTotalForPagination={displayRatingCount}
         hasReviewsPagination={hasReviewsPagination}

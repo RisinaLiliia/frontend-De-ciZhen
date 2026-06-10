@@ -64,8 +64,7 @@ export function RequestsStatsPanelBody({ viewModel }: { viewModel: PayloadViewMo
         </div>
         <div className="requests-stats-secondary__progress">
           <div className="requests-stats-secondary__progress-label">
-            {payload.secondary.progressLabel}{' '}
-            <strong>{payload.secondary.progressValue}%</strong>
+            {payload.secondary.progressLabel} <strong>{payload.secondary.progressValue}%</strong>
           </div>
           <div className="requests-stats-secondary__track">
             <span
@@ -109,11 +108,7 @@ function MiniChart({ points }: { points: ChartPoint[] }) {
             <span className="requests-mini-chart__label">{point.label}</span>
           </div>
         ))}
-        <svg
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          className="requests-mini-chart__line"
-        >
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="requests-mini-chart__line">
           <path d={linePath} />
         </svg>
       </div>

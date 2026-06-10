@@ -20,8 +20,10 @@ export function RequestsResultsSummary({
   onListDensityChange,
   controls,
 }: RequestsResultsSummaryProps) {
-  const hasPagination = (controls?.pagination ?? true) && hasRequestsPagination({ onPrevPage, onNextPage });
-  const hasDensityToggle = (controls?.densityToggle ?? true) && typeof onListDensityChange === 'function';
+  const hasPagination =
+    (controls?.pagination ?? true) && hasRequestsPagination({ onPrevPage, onNextPage });
+  const hasDensityToggle =
+    (controls?.densityToggle ?? true) && typeof onListDensityChange === 'function';
   const controlsDisabled = isPending;
   const hasVisibleResultsCount = controls?.resultsCount ?? true;
 
@@ -35,12 +37,14 @@ export function RequestsResultsSummary({
         <div className="requests-results" aria-live="polite">
           <span className="typo-small">{resultsLabel ?? t(I18N_KEYS.requestsPage.countLabel)}</span>
           <CountBadge as="strong" value={totalResults} />
-          {isPending ? <span className="sr-only">{t(I18N_KEYS.requestsPage.updatingLabel)}</span> : null}
+          {isPending ? (
+            <span className="sr-only">{t(I18N_KEYS.requestsPage.updatingLabel)}</span>
+          ) : null}
         </div>
       ) : (
         <div aria-hidden="true" />
       )}
-      {(hasDensityToggle || hasPagination) ? (
+      {hasDensityToggle || hasPagination ? (
         <div className="requests-filter-summary__controls">
           {hasDensityToggle ? (
             <WorkspaceViewToggle

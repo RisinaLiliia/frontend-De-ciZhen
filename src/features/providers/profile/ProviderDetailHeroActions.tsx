@@ -60,7 +60,7 @@ export function ProviderDetailHeroActions({
         className="provider-detail-hero__menu-popover"
         triggerAriaLabel={t(I18N_KEYS.requestDetails.workspaceActionsOpen)}
         triggerTitle={t(I18N_KEYS.requestDetails.workspaceActionsOpen)}
-        trigger={(
+        trigger={
           <span
             className={`nearby-more my-request-card__owner-menu-trigger ${open ? 'is-open' : ''}`.trim()}
             aria-hidden="true"
@@ -69,15 +69,13 @@ export function ProviderDetailHeroActions({
             <span className="nearby-dot-item" />
             <span className="nearby-dot-item" />
           </span>
-        )}
+        }
       >
         <div className="my-request-card__owner-menu-surface provider-detail-hero__menu-surface">
-          <button
-            type="button"
-            className="my-request-card__owner-menu-item"
-            onClick={handleShare}
-          >
-            <span className="my-request-card__owner-menu-item-label">{t(I18N_KEYS.requestDetails.workspaceShareLink)}</span>
+          <button type="button" className="my-request-card__owner-menu-item" onClick={handleShare}>
+            <span className="my-request-card__owner-menu-item-label">
+              {t(I18N_KEYS.requestDetails.workspaceShareLink)}
+            </span>
             <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">
               <IconShare />
             </span>
@@ -88,7 +86,9 @@ export function ProviderDetailHeroActions({
             onClick={handleFavorite}
             disabled={isFavoritePending}
           >
-            <span className="my-request-card__owner-menu-item-label">{t(I18N_KEYS.requestDetails.ctaSave)}</span>
+            <span className="my-request-card__owner-menu-item-label">
+              {t(I18N_KEYS.requestDetails.ctaSave)}
+            </span>
             <span className="my-request-card__owner-menu-item-icon" aria-hidden="true">
               <IconHeart className={isFavorite ? 'is-active' : undefined} />
             </span>

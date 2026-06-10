@@ -75,15 +75,13 @@ function withCount(template: string, count: number) {
 export function buildSummaryRecommendations(
   items?: SummaryItem[] | null,
 ): WorkspaceUnifiedRailRecommendationItem[] {
-  return (items ?? [])
-    .slice(1, MAX_RAIL_RECOMMENDATIONS + 1)
-    .map((item) => ({
-      id: item.key,
-      title: item.label,
-      description: item.helper?.trim() || item.label,
-      metric: item.value,
-      tone: toneToRecommendationTone(item.tone),
-    }));
+  return (items ?? []).slice(1, MAX_RAIL_RECOMMENDATIONS + 1).map((item) => ({
+    id: item.key,
+    title: item.label,
+    description: item.helper?.trim() || item.label,
+    metric: item.value,
+    tone: toneToRecommendationTone(item.tone),
+  }));
 }
 
 export function buildLinkedWorkspaceRailModel({
@@ -132,13 +130,13 @@ export function buildLinkedWorkspaceRailModel({
         title: item.title,
         meta: item.actionLabel,
         priorityTone: item.actionPriorityLevel,
-        priorityLabel: item.priorityLabel ?? (
-          item.actionPriorityLevel === 'high'
+        priorityLabel:
+          item.priorityLabel ??
+          (item.actionPriorityLevel === 'high'
             ? t(I18N_KEYS.requestsPage.decisionPanelPriorityHigh)
             : item.actionPriorityLevel === 'medium'
               ? t(I18N_KEYS.requestsPage.decisionPanelPriorityMedium)
-              : t(I18N_KEYS.requestsPage.decisionPanelPriorityLow)
-        ),
+              : t(I18N_KEYS.requestsPage.decisionPanelPriorityLow)),
         action: item.action,
         isActive: item.id === activeItemId,
       })),
@@ -154,8 +152,10 @@ export function buildLinkedWorkspaceRailModel({
     recommendations: {
       eyebrow: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEyebrow),
       title: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsTitle),
-      items: (recommendations?.length ? recommendations : buildSummaryRecommendations(summaryItems))
-        .slice(0, MAX_RAIL_RECOMMENDATIONS),
+      items: (recommendations?.length
+        ? recommendations
+        : buildSummaryRecommendations(summaryItems)
+      ).slice(0, MAX_RAIL_RECOMMENDATIONS),
       emptyText: t(I18N_KEYS.requestsPage.workspaceRailRecommendationsEmpty),
       footerAction: {
         kind: 'link',

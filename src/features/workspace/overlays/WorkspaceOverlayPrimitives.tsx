@@ -18,15 +18,16 @@ export function WorkspaceInlineStateCard({
   body: string;
   tone: 'empty' | 'error' | 'info';
 }) {
-  const icon = tone === 'error'
-    ? '!'
-    : tone === 'empty'
-      ? '0'
-      : 'i';
+  const icon = tone === 'error' ? '!' : tone === 'empty' ? '0' : 'i';
 
   return (
-    <div className={`my-request-inline-state my-request-inline-state--${tone}`.trim()} role={tone === 'error' ? 'alert' : 'status'}>
-      <span className="my-request-inline-state__icon" aria-hidden="true">{icon}</span>
+    <div
+      className={`my-request-inline-state my-request-inline-state--${tone}`.trim()}
+      role={tone === 'error' ? 'alert' : 'status'}
+    >
+      <span className="my-request-inline-state__icon" aria-hidden="true">
+        {icon}
+      </span>
       <div className="my-request-inline-state__copy">
         <strong>{title}</strong>
         <p>{body}</p>
@@ -75,8 +76,13 @@ export function WorkspaceCompactModalPortal({
 
   if (!isMounted) return null;
 
-  return createPortal((
-    <div className="dc-modal my-request-dialog" role="dialog" aria-modal="true" aria-label={ariaLabel}>
+  return createPortal(
+    <div
+      className="dc-modal my-request-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label={ariaLabel}
+    >
       <button
         type="button"
         className="dc-modal__backdrop"
@@ -86,6 +92,7 @@ export function WorkspaceCompactModalPortal({
       <div className={workspacePanelShell('my-request-dialog__panel', 'dc-modal__panel--compact')}>
         {children}
       </div>
-    </div>
-  ), document.body);
+    </div>,
+    document.body,
+  );
 }

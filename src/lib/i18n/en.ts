@@ -130,7 +130,8 @@ export const en: DeDictionary = {
     proofCase12Price: '€ 130',
     nearby: 'New orders near you',
     nearbySubtitle: 'Updated in real time',
-    nearbyFallbackHint: 'Sorry, we did not find requests in your area. These might suit you instead.',
+    nearbyFallbackHint:
+      'Sorry, we did not find requests in your area. These might suit you instead.',
     nearbyEmptyHint: 'No requests are available right now. Please check back later.',
     nearbyItem1Category: 'Electric',
     nearbyItem1Desc: 'Install outlet',
@@ -183,7 +184,8 @@ export const en: DeDictionary = {
     topProvider2Name: 'Markus S.',
     topProvider2Role: 'Electrician',
     topProvider2City: 'Heidelberg',
-    topProvider2About: 'Certified electrician for repairs, installations, and quick emergency visits.',
+    topProvider2About:
+      'Certified electrician for repairs, installations, and quick emergency visits.',
     topProvider2Meta: '4.8',
     topProvider2Rating: '4.8',
     topProvider2Reviews: '96 reviews',
@@ -196,7 +198,8 @@ export const en: DeDictionary = {
     topProvider3Name: 'Sofia M.',
     topProvider3Role: 'Plumber',
     topProvider3City: 'Karlsruhe',
-    topProvider3About: 'Plumbing support for kitchen and bathroom with clean execution and clear updates.',
+    topProvider3About:
+      'Plumbing support for kitchen and bathroom with clean execution and clear updates.',
     topProvider3Meta: '4.9',
     topProvider3Rating: '4.9',
     topProvider3Reviews: '142 reviews',
@@ -207,7 +210,8 @@ export const en: DeDictionary = {
     topProvider4Name: 'Lukas B.',
     topProvider4Role: 'Moving',
     topProvider4City: 'Ludwigshafen',
-    topProvider4About: 'Moving help including packing, carrying, and transport with reliable scheduling.',
+    topProvider4About:
+      'Moving help including packing, carrying, and transport with reliable scheduling.',
     topProvider4Meta: '4.7',
     topProvider4Rating: '4.7',
     topProvider4Reviews: '87 reviews',
@@ -218,7 +222,8 @@ export const en: DeDictionary = {
     topProvider5Name: 'Nina T.',
     topProvider5Role: 'Painting',
     topProvider5City: 'Darmstadt',
-    topProvider5About: 'Interior and exterior painting focused on clean edges and durable finishes.',
+    topProvider5About:
+      'Interior and exterior painting focused on clean edges and durable finishes.',
     topProvider5Meta: '4.8',
     topProvider5Rating: '4.8',
     topProvider5Reviews: '104 reviews',
@@ -458,9 +463,11 @@ export const en: DeDictionary = {
     providerHintProfilePrefix: 'Profile',
     providerHintProfileSuffix: '% complete. Finish it to improve acceptance rates.',
     providerHintProfileCta: 'Complete profile',
-    providerHintNoOffersText: 'No new offers in the last 7 days. Check services, location, and availability.',
+    providerHintNoOffersText:
+      'No new offers in the last 7 days. Check services, location, and availability.',
     providerHintNoOffersCta: 'View orders',
-    providerHintLowAcceptanceText: 'Your acceptance rate is low. Improve pricing and message for more wins.',
+    providerHintLowAcceptanceText:
+      'Your acceptance rate is low. Improve pricing and message for more wins.',
     providerHintLowAcceptanceCta: 'Improve offers',
     providerHintStrongText: 'Strong performance. Keep profile and pricing updated for stable load.',
     providerHintStrongCta: 'My contracts',
@@ -478,10 +485,12 @@ export const en: DeDictionary = {
     profileOnboardingPhoneRequired: 'Please enter a valid phone number.',
     profileOnboardingCityRequired: 'Please select a city.',
     profileOnboardingServiceRequired: 'Please select a category.',
-    profileOnboardingDescriptionHint: 'Briefly describe your service, experience, and working style.',
+    profileOnboardingDescriptionHint:
+      'Briefly describe your service, experience, and working style.',
     profileOnboardingDescriptionMax: 'Description must be 500 characters or less.',
     profileOnboardingSuccess: 'Profile created. You are now registered and signed in.',
-    profileOnboardingAuthedHint: 'You are already signed in. Open your profile to edit your information.',
+    profileOnboardingAuthedHint:
+      'You are already signed in. Open your profile to edit your information.',
     profileOnboardingAuthedCta: 'Open profile',
     favoritesGuestGateTitle: 'Favorites are available after profile setup.',
     favoritesGuestGateHint: 'Create a profile to save favorites and access them later.',
@@ -503,9 +512,11 @@ export const en: DeDictionary = {
     workspaceFooterNoteMarket: 'Open the details to review this market item in context.',
     workspaceFooterNoteReviewOffers: 'You have open decisions. We help you with the selection.',
     workspaceFooterNoteConfirmContract: 'The next steps depend on your contract confirmation.',
-    workspaceFooterNoteReplyRequired: 'There are open replies pending. Respond to keep the workflow moving.',
+    workspaceFooterNoteReplyRequired:
+      'There are open replies pending. Respond to keep the workflow moving.',
     workspaceFooterNoteConfirmCompletion: 'Confirm completion to close the workflow cleanly.',
-    workspaceFooterNoteReviewCompletion: 'The job is completed. Leave your feedback for the provider now.',
+    workspaceFooterNoteReviewCompletion:
+      'The job is completed. Leave your feedback for the provider now.',
     workspaceFooterNoteDefault: 'Keep this workflow in view and manage the next steps here.',
     workspaceOpenRequestMenu: 'Open request menu',
     workspaceSaveRequest: 'Save request',
@@ -514,19 +525,23 @@ export const en: DeDictionary = {
     workspacePrivateEmptyTitle: 'No own workflows yet',
     workspaceMarketFilteredTitle: 'No market items for this filter',
     workspacePrivateFilteredTitle: 'No items for this filter',
-    workspaceMarketEmptyHint: 'As new requests enter the market, they will appear here in the same workspace surface.',
-    workspacePrivateEmptyHint: 'Once you create a request or respond to matching jobs, your work will appear here.',
+    workspaceMarketEmptyHint:
+      'As new requests enter the market, they will appear here in the same workspace surface.',
+    workspacePrivateEmptyHint:
+      'Once you create a request or respond to matching jobs, your work will appear here.',
     workspaceFilteredHint: 'Adjust status, role, or period.',
     workspaceRefreshMarketCta: 'Refresh market',
     workspaceGoToProvidersCta: 'Go to providers',
     workspaceGoToMarketCta: 'Go to market',
     workspaceAuthGateTitle: 'My work is only available after sign-in',
-    workspaceAuthGateHint: 'Sign in to manage your requests, workflows, and completions inside the workspace.',
+    workspaceAuthGateHint:
+      'Sign in to manage your requests, workflows, and completions inside the workspace.',
     workspaceMarketLoadErrorTitle: 'The market view could not be loaded.',
     workspacePrivateLoadErrorTitle: 'Your work view could not be loaded.',
     workspaceReloadHint: 'Please try again.',
     workspaceDecisionDoneTitle: 'All open decisions completed',
-    workspaceDecisionDoneHint: 'Your decision queue is empty. You can return to the default list mode.',
+    workspaceDecisionDoneHint:
+      'Your decision queue is empty. You can return to the default list mode.',
     workspaceDecisionDoneCta: 'Exit mode',
     workspaceDeleteRequestConfirm: 'Delete this request permanently?',
     workspacePriorityActionRequired: 'Action required',
@@ -578,11 +593,15 @@ export const en: DeDictionary = {
     workspaceRailProfileContext: 'Workspace setup',
     workspaceRailChatContext: 'Conversations in focus',
     workspaceRailMarketRecommendationDemandTitle: 'High demand',
-    workspaceRailMarketRecommendationExecutionBody: 'Keep active market movement and new signals in view.',
-    workspaceRailMarketRecommendationCompletedBody: 'Completed workflows show how fast the market is moving right now.',
+    workspaceRailMarketRecommendationExecutionBody:
+      'Keep active market movement and new signals in view.',
+    workspaceRailMarketRecommendationCompletedBody:
+      'Completed workflows show how fast the market is moving right now.',
     workspaceRailPrivateRecommendationAttentionTitle: 'Open decisions',
-    workspaceRailPrivateRecommendationExecutionBody: 'Keep active workflows moving and avoid blocking the next step.',
-    workspaceRailPrivateRecommendationCompletedBody: 'Completed workflows secure progress and free up capacity.',
+    workspaceRailPrivateRecommendationExecutionBody:
+      'Keep active workflows moving and avoid blocking the next step.',
+    workspaceRailPrivateRecommendationCompletedBody:
+      'Completed workflows secure progress and free up capacity.',
     decisionModeLabel: 'Decision mode',
     decisionModeHandleOpen: 'Handle open workflows',
     decisionModeNoOpen: 'No open decisions',
@@ -681,12 +700,14 @@ export const en: DeDictionary = {
     workspaceShareLink: 'Share link',
     workspaceShareFailed: 'Could not share link.',
     workspaceLoadErrorTitle: 'Request could not be loaded',
-    workspaceLoadErrorBody: 'The workspace stays in place. Please try again without leaving this page.',
+    workspaceLoadErrorBody:
+      'The workspace stays in place. Please try again without leaving this page.',
     workspaceInlineMeta: 'Inline',
     workspaceOfferFallbackTitle: 'Offer',
     workspaceOfferLoadErrorTitle: 'Offer could not be loaded',
     workspaceOfferLoadErrorBody: 'Please try again without leaving the workspace.',
-    workspaceOfferSuccessTipCardBody: 'You can complete your profile later in the workspace if you want to build more trust.',
+    workspaceOfferSuccessTipCardBody:
+      'You can complete your profile later in the workspace if you want to build more trust.',
     workspaceProfileStatusLabel: 'Workspace',
     workspaceChatCloseLabel: 'Close chat',
     workspaceSelectedProviderFallback: 'Selected provider',
@@ -698,9 +719,11 @@ export const en: DeDictionary = {
     workspaceOffersTitle: 'Offers',
     workspaceOffersSubtitle: 'Make the decision directly in this workspace.',
     workspaceOffersLoadErrorTitle: 'Offers could not be loaded',
-    workspaceOffersLoadErrorBody: 'The decision area stays open. Please try again or open the chat directly from the card.',
+    workspaceOffersLoadErrorBody:
+      'The decision area stays open. Please try again or open the chat directly from the card.',
     workspaceOffersEmptyTitle: 'No active offers yet',
-    workspaceOffersEmptyBody: 'As soon as providers respond, you can accept or decline directly here.',
+    workspaceOffersEmptyBody:
+      'As soon as providers respond, you can accept or decline directly here.',
     workspaceAvailabilityTemplate: 'Availability: {value}',
     workspaceCompletedJobsTemplate: '{value} jobs completed',
     workspaceRatingTemplate: 'Rating {value}',
@@ -715,26 +738,32 @@ export const en: DeDictionary = {
     workspaceContractNotePlaceholder: 'Optional note for the contract',
     workspaceConfirmContractCta: 'Confirm contract',
     workspaceContractMissingTitle: 'Contract details are not available yet',
-    workspaceContractMissingBody: 'As soon as the offer is converted into a contract, you can confirm start, duration, and completion directly here.',
+    workspaceContractMissingBody:
+      'As soon as the offer is converted into a contract, you can confirm start, duration, and completion directly here.',
     workspaceConfirmCompletionCta: 'Confirm completion',
     workspaceLeaveReviewTitle: 'Leave a review',
-    workspaceLeaveReviewBody: 'The job is completed. Rate your collaboration with the selected provider right here.',
+    workspaceLeaveReviewBody:
+      'The job is completed. Rate your collaboration with the selected provider right here.',
     workspaceReviewLabel: 'Rating',
     workspaceFeedbackLabel: 'Feedback',
     workspaceFeedbackPlaceholder: 'How did the collaboration go? What stood out?',
     workspaceReviewLaterCta: 'Later',
     workspaceSubmitReviewCta: 'Submit review',
     workspaceReviewSubmittedTitle: 'Review submitted',
-    workspaceReviewSubmittedBody: 'Thanks. Your feedback has been saved and is now part of the quality history.',
+    workspaceReviewSubmittedBody:
+      'Thanks. Your feedback has been saved and is now part of the quality history.',
     workspaceNoContractTitle: 'No contract found yet',
-    workspaceNoContractBody: 'Completion confirmation will appear here as soon as the request is tracked as an active contract.',
+    workspaceNoContractBody:
+      'Completion confirmation will appear here as soon as the request is tracked as an active contract.',
     workspaceYourReviewTitle: 'Your review',
     workspaceReviewSavedAt: 'Saved on {value}',
     workspaceReviewAlreadySaved: 'Your feedback has already been saved.',
     workspaceReviewAvailableTitle: 'Review available once the job is completed',
-    workspaceReviewAvailableBody: 'As soon as the work is confirmed, you can leave your review right here.',
+    workspaceReviewAvailableBody:
+      'As soon as the work is confirmed, you can leave your review right here.',
     workspaceNoReviewDataTitle: 'No review data available yet',
-    workspaceNoReviewDataBody: 'Open this step again once a contract and a completed job are available.',
+    workspaceNoReviewDataBody:
+      'Open this step again once a contract and a completed job are available.',
   },
   workspace: {
     modeNavAriaLabel: 'Workspace modes',
@@ -754,7 +783,8 @@ export const en: DeDictionary = {
     overviewCompetitionLow: 'Few providers',
     overviewCompetitionBalanced: 'Balanced supply',
     overviewCompetitionHigh: 'Higher competition',
-    focusScopeTextTemplate: 'The current workspace context stays active across modes: {context}. {scope}.',
+    focusScopeTextTemplate:
+      'The current workspace context stays active across modes: {context}. {scope}.',
     dialogCloseLabel: 'Close dialog',
     messagesTitle: 'Messages',
     requestConversationSubtitle: 'Conversation for this request',
@@ -794,12 +824,16 @@ export const en: DeDictionary = {
     statsOpportunityDetailAnalysisTemplate: 'Detailed analysis for {city}',
     statsOpportunitySummaryAriaLabel: 'Opportunity summary',
     myScopeTitle: 'My work',
-    myScopeDescription: 'Manage your requests, workflows, replies, and completions in one operating environment.',
-    myScopeRailDescription: 'Process open workflows, replies, and completions inside the same context.',
+    myScopeDescription:
+      'Manage your requests, workflows, replies, and completions in one operating environment.',
+    myScopeRailDescription:
+      'Process open workflows, replies, and completions inside the same context.',
     myScopeContext: 'Operational mode for your own workflows',
     marketScopeTitle: 'Discover requests',
-    marketScopeDescription: 'Find matching requests, compare regions, and observe the market inside the current context.',
-    marketScopeRailDescription: 'Use the same context to compare demand, regions, and market movement.',
+    marketScopeDescription:
+      'Find matching requests, compare regions, and observe the market inside the current context.',
+    marketScopeRailDescription:
+      'Use the same context to compare demand, regions, and market movement.',
     marketScopeContext: 'Market mode for public demand',
     summaryStripMarketAllHelper: 'Full market',
     summaryStripMarketAttentionHelper: 'Current demand',
@@ -857,7 +891,8 @@ export const en: DeDictionary = {
     preferredDate: 'Preferred date',
     directCalendarTitle: 'Available dates',
     directCalendarHintLoading: 'Loading available dates...',
-    directCalendarHintReady: 'Only free days are selectable. The selected date will be fixed for this request.',
+    directCalendarHintReady:
+      'Only free days are selectable. The selected date will be fixed for this request.',
     directCalendarHintEmpty: 'No free slots available in the next 14 days.',
     directSelectedDateLabel: 'Selected date',
     directSelectedDateEmpty: 'Select a day in the calendar',
@@ -926,7 +961,8 @@ export const en: DeDictionary = {
     toLogin: 'Already have an account? Sign in',
     forgotPassword: 'Forgot password?',
     forgotPasswordTitle: 'Reset password',
-    forgotPasswordSubtitle: 'Enter your account email. If an account exists, we will send a reset link.',
+    forgotPasswordSubtitle:
+      'Enter your account email. If an account exists, we will send a reset link.',
     forgotPasswordCta: 'Send reset link',
     forgotPasswordSoon: 'Password reset is coming soon',
     forgotPasswordEmailSent: 'If an account with this email exists, we sent a password reset link.',
@@ -1085,7 +1121,8 @@ export const en: DeDictionary = {
     profileUpdated: 'Profile updated',
     profileBioUpdated: 'Bio updated',
     profilePhotoUpdated: 'Profile photo updated',
-    profilePasswordPolicyError: 'Password must include 8+ chars, upper/lower case, number, and symbol',
+    profilePasswordPolicyError:
+      'Password must include 8+ chars, upper/lower case, number, and symbol',
     profilePasswordMismatchError: 'Passwords do not match',
     profilePasswordUpdated: 'Password updated',
     profileOverviewRequestsLabel: 'My requests',

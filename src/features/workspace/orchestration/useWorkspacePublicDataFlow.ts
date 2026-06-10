@@ -29,19 +29,22 @@ type Options = {
   enabled?: boolean;
 };
 
-export function useWorkspacePublicDataFlow({
-  t,
-  locale,
-  auth,
-  isAuthed,
-  isWorkspaceAuthed,
-  isPersonalized,
-  routeState,
-}: WorkspaceBranchProps, {
-  enabled = true,
-}: Options = {}) {
-  const { activePublicSection, activeWorkspaceTab, guestLoginHref, onGuestLockedAction } = routeState;
-  const shouldLoadShellSnapshot = enabled && shouldLoadWorkspacePublicShellSnapshot(activePublicSection);
+export function useWorkspacePublicDataFlow(
+  {
+    t,
+    locale,
+    auth,
+    isAuthed,
+    isWorkspaceAuthed,
+    isPersonalized,
+    routeState,
+  }: WorkspaceBranchProps,
+  { enabled = true }: Options = {},
+) {
+  const { activePublicSection, activeWorkspaceTab, guestLoginHref, onGuestLockedAction } =
+    routeState;
+  const shouldLoadShellSnapshot =
+    enabled && shouldLoadWorkspacePublicShellSnapshot(activePublicSection);
 
   const { data: platformReviewsOverview } = useQuery({
     ...buildWorkspacePublicReviewsQuery(),
@@ -71,13 +74,14 @@ export function useWorkspacePublicDataFlow({
   const { localeTag, formatNumber } = useWorkspaceFormatters(locale);
   const explore = useExploreSidebar(t);
   const exploreWithSeed = React.useMemo(
-    () => buildWorkspacePublicExploreWithSeed({
-      explore,
-      platformSnapshot,
-      isSummaryLoading,
-      isSummaryError,
-      enableSeed: shouldLoadShellSnapshot,
-    }),
+    () =>
+      buildWorkspacePublicExploreWithSeed({
+        explore,
+        platformSnapshot,
+        isSummaryLoading,
+        isSummaryError,
+        enableSeed: shouldLoadShellSnapshot,
+      }),
     [explore, isSummaryError, isSummaryLoading, platformSnapshot, shouldLoadShellSnapshot],
   );
 

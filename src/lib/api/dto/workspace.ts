@@ -527,7 +527,14 @@ export type WorkspaceMyRequestCardDto = {
       offerId?: string | null;
       chatInput?: Pick<
         CreateConversationDto,
-        'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+        | 'relatedEntity'
+        | 'participantUserId'
+        | 'participantRole'
+        | 'requestId'
+        | 'providerUserId'
+        | 'offerId'
+        | 'orderId'
+        | 'contractId'
       > | null;
     }>;
   };
@@ -542,7 +549,14 @@ export type WorkspaceMyRequestCardDto = {
     offerId?: string | null;
     chatInput?: Pick<
       CreateConversationDto,
-      'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+      | 'relatedEntity'
+      | 'participantUserId'
+      | 'participantRole'
+      | 'requestId'
+      | 'providerUserId'
+      | 'offerId'
+      | 'orderId'
+      | 'contractId'
     > | null;
   }>;
   primaryAction?: {
@@ -556,7 +570,14 @@ export type WorkspaceMyRequestCardDto = {
     offerId?: string | null;
     chatInput?: Pick<
       CreateConversationDto,
-      'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+      | 'relatedEntity'
+      | 'participantUserId'
+      | 'participantRole'
+      | 'requestId'
+      | 'providerUserId'
+      | 'offerId'
+      | 'orderId'
+      | 'contractId'
     > | null;
   } | null;
   secondaryAction?: {
@@ -570,7 +591,14 @@ export type WorkspaceMyRequestCardDto = {
     offerId?: string | null;
     chatInput?: Pick<
       CreateConversationDto,
-      'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+      | 'relatedEntity'
+      | 'participantUserId'
+      | 'participantRole'
+      | 'requestId'
+      | 'providerUserId'
+      | 'offerId'
+      | 'orderId'
+      | 'contractId'
     > | null;
   } | null;
   decision: {
@@ -592,7 +620,14 @@ export type WorkspaceMyRequestCardDto = {
       offerId?: string | null;
       chatInput?: Pick<
         CreateConversationDto,
-        'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+        | 'relatedEntity'
+        | 'participantUserId'
+        | 'participantRole'
+        | 'requestId'
+        | 'providerUserId'
+        | 'offerId'
+        | 'orderId'
+        | 'contractId'
       > | null;
     } | null;
   };
@@ -998,7 +1033,14 @@ export type WorkspaceStatisticsOpportunityRadarItemDto = {
   activityScore: number;
   status: 'very_high' | 'good' | 'balanced' | 'competitive' | 'low';
   tone: 'very-high' | 'high' | 'balanced' | 'supply-heavy';
-  summaryKey: 'very_high' | 'good' | 'balanced_competitive' | 'balanced' | 'competitive' | 'low_demand' | 'low';
+  summaryKey:
+    | 'very_high'
+    | 'good'
+    | 'balanced_competitive'
+    | 'balanced'
+    | 'competitive'
+    | 'low_demand'
+    | 'low';
   metrics: WorkspaceStatisticsOpportunityMetricDto[];
   peerContext?: WorkspaceStatisticsOpportunityPeerContextDto | null;
   priceIntelligence?: WorkspaceStatisticsPriceIntelligenceDto | null;
@@ -1126,7 +1168,10 @@ export type WorkspaceStatisticsUserSignalDto = {
     | 'price_above_market'
     | 'price_below_market';
   severity: 'high' | 'medium' | 'low';
-  metricKey?: WorkspaceStatisticsUserFormulaMetricDto['key'] | WorkspaceStatisticsUserComparisonMetricDto['key'] | null;
+  metricKey?:
+    | WorkspaceStatisticsUserFormulaMetricDto['key']
+    | WorkspaceStatisticsUserComparisonMetricDto['key']
+    | null;
   actionCode?: WorkspaceStatisticsUserActionStepDto['code'] | null;
 };
 

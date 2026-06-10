@@ -8,7 +8,9 @@ type UseStatisticsOpportunitySelectionArgs = {
   opportunityRadar: WorkspaceStatisticsModel['opportunityRadar'];
 };
 
-export function useStatisticsOpportunitySelection({ opportunityRadar }: UseStatisticsOpportunitySelectionArgs) {
+export function useStatisticsOpportunitySelection({
+  opportunityRadar,
+}: UseStatisticsOpportunitySelectionArgs) {
   const defaultOpportunityRank = React.useMemo(
     () => selectOpportunityAnalysisItem(opportunityRadar)?.rank ?? null,
     [opportunityRadar],
@@ -24,7 +26,10 @@ export function useStatisticsOpportunitySelection({ opportunityRadar }: UseStati
   );
 
   React.useEffect(() => {
-    if (selectedOpportunityRank !== null && opportunityRadar.some((item) => item.rank === selectedOpportunityRank)) {
+    if (
+      selectedOpportunityRank !== null &&
+      opportunityRadar.some((item) => item.rank === selectedOpportunityRank)
+    ) {
       return;
     }
 

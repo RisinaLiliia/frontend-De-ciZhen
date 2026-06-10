@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/workspace/requests/workspaceRequestRoute.model';
-import { buildWorkspaceContentDataResult, buildWorkspaceViewModelPatch } from './workspaceContentData.model';
+import {
+  buildWorkspaceContentDataResult,
+  buildWorkspaceViewModelPatch,
+} from './workspaceContentData.model';
 
 function createArgs() {
   const primaryAction = { href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF, label: 'Create' };

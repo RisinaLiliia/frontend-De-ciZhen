@@ -152,7 +152,8 @@
     display: none;
   }
 
-  .workspace-statistics-context:not(.workspace-statistics-context--embedded) .workspace-statistics-context__body {
+  .workspace-statistics-context:not(.workspace-statistics-context--embedded)
+    .workspace-statistics-context__body {
     padding: 0 var(--workspace-statistics-context-pad) var(--workspace-statistics-context-pad);
     border-top: 1px solid color-mix(in oklab, var(--color-border-soft) 70%, transparent);
   }
@@ -341,17 +342,22 @@
       width: 100%;
     }
 
-    .workspace-statistics-context--controls-only .workspace-statistics-context__range-toolbar.chip-row {
+    .workspace-statistics-context--controls-only
+      .workspace-statistics-context__range-toolbar.chip-row {
       width: 100%;
       justify-content: flex-start;
     }
 
-    .workspace-statistics-context--controls-only .workspace-statistics-context__range-toolbar .home-activity__ranges {
+    .workspace-statistics-context--controls-only
+      .workspace-statistics-context__range-toolbar
+      .home-activity__ranges {
       gap: var(--space-1);
       padding: var(--space-1);
     }
 
-    .workspace-statistics-context--controls-only .workspace-statistics-context__range-toolbar .home-activity__range {
+    .workspace-statistics-context--controls-only
+      .workspace-statistics-context__range-toolbar
+      .home-activity__range {
       min-width: calc(var(--space-5) + var(--space-4));
       height: calc(var(--space-6) + var(--space-1));
       padding: 0 var(--space-2-5);
@@ -368,8 +374,12 @@
       min-width: 0;
     }
 
-    .workspace-statistics-context--controls-only .workspace-statistics-context__filters-grid .requests-filter,
-    .workspace-statistics-context--controls-only .workspace-statistics-context__filters-shell .requests-select {
+    .workspace-statistics-context--controls-only
+      .workspace-statistics-context__filters-grid
+      .requests-filter,
+    .workspace-statistics-context--controls-only
+      .workspace-statistics-context__filters-shell
+      .requests-select {
       min-width: 0;
     }
 

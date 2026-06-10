@@ -163,13 +163,12 @@ export function useRequestOfferActions({
         message: offerComment.trim() || undefined,
         availabilityNote: offerAvailability.trim() || undefined,
       };
-      const response =
-        existingResponse?.id
-          ? await updateOffer(existingResponse.id, payload)
-          : await createOffer({
-              requestId: request.id,
-              ...payload,
-            });
+      const response = existingResponse?.id
+        ? await updateOffer(existingResponse.id, payload)
+        : await createOffer({
+            requestId: request.id,
+            ...payload,
+          });
       setSubmittedOfferAmount(response.offer.amount ?? parsedAmount);
       if (existingResponse?.id) {
         setOfferSheetInUrl(false);
@@ -220,7 +219,9 @@ export function useRequestOfferActions({
         setOfferSheetMode,
       );
       setOfferSheetInUrl(false);
-      router.push(authStatus === 'authenticated' ? workspacePublicRequestsUrl : workspaceGuestRequestsUrl);
+      router.push(
+        authStatus === 'authenticated' ? workspacePublicRequestsUrl : workspaceGuestRequestsUrl,
+      );
       return;
     }
 

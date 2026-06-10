@@ -30,12 +30,12 @@ export function resolveActiveWorkspaceNavigationSection({
   }
 
   if (
-    activePublicSection === 'providers'
-    || activePublicSection === 'stats'
-    || activePublicSection === 'chat'
-    || activePublicSection === 'profile'
-    || activePublicSection === 'settings'
-    || activePublicSection === 'help'
+    activePublicSection === 'providers' ||
+    activePublicSection === 'stats' ||
+    activePublicSection === 'chat' ||
+    activePublicSection === 'profile' ||
+    activePublicSection === 'settings' ||
+    activePublicSection === 'help'
   ) {
     return activePublicSection;
   }

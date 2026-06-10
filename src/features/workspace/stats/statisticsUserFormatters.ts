@@ -25,7 +25,8 @@ export function formatDelta(params: {
   const delta = userValue - marketValue;
   if (Math.abs(delta) < 0.01) return copy.userAtMarketLevelLabel;
   if (unit === 'percent') return `${delta > 0 ? '+' : ''}${Math.round(delta)} pp`;
-  if (unit === 'minutes') return `${delta > 0 ? '+' : ''}${Math.round(delta)} ${copy.activityMinutesShortLabel}`;
+  if (unit === 'minutes')
+    return `${delta > 0 ? '+' : ''}${Math.round(delta)} ${copy.activityMinutesShortLabel}`;
   return `${delta > 0 ? '+' : ''}${formatNumber.format(Math.round(delta))}`;
 }
 
@@ -47,4 +48,3 @@ export function formatCurrencyDelta(params: {
   const absLabel = formatCurrency.format(Math.abs(delta));
   return delta > 0 ? `+${absLabel}` : `-${absLabel}`;
 }
-

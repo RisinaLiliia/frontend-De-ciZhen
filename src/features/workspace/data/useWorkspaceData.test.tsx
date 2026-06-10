@@ -68,7 +68,9 @@ function Probe() {
     <div
       data-testid="workspace-data"
       data-contract-keys={Object.keys(result.contractData).sort().join(',')}
-      data-legacy-public-overview-keys={Object.keys(result.legacyPublicOverviewData).sort().join(',')}
+      data-legacy-public-overview-keys={Object.keys(result.legacyPublicOverviewData)
+        .sort()
+        .join(',')}
       data-request-user-state-keys={Object.keys(result.requestUserStateData).sort().join(',')}
       data-has-legacy-my-requests={String('legacyMyRequestsData' in result)}
       data-has-legacy-contracts={String('legacyContractSupportData' in result)}
@@ -92,7 +94,10 @@ describe('useWorkspaceData', () => {
       shouldLoadOfferRequests: false,
     } as never);
     buildWorkspaceDataQueriesMock.mockReturnValue({ workspaceRequests: {} } as never);
-    buildWorkspaceRequestUserStateQueriesMock.mockReturnValue({ myOffers: {}, favoriteRequests: {} } as never);
+    buildWorkspaceRequestUserStateQueriesMock.mockReturnValue({
+      myOffers: {},
+      favoriteRequests: {},
+    } as never);
     useWorkspaceContractDataMock.mockReturnValue({
       workspaceRequests: { requests: [] },
       isWorkspaceRequestsLoading: false,

@@ -18,7 +18,9 @@ export function ProofReviewCard({
   hideMobile = false,
 }: ProofReviewCardProps) {
   return (
-    <article className={`proof-card ${isActive ? 'is-active' : 'is-dim'} ${hideMobile ? 'hide-mobile' : ''}`.trim()}>
+    <article
+      className={`proof-card ${isActive ? 'is-active' : 'is-dim'} ${hideMobile ? 'hide-mobile' : ''}`.trim()}
+    >
       <div className="proof-header">
         <div className="proof-avatars">
           <span className="proof-avatar avatar-spark" />

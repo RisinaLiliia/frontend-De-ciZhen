@@ -14,7 +14,10 @@ import {
   type WorkspaceStatusFilter,
   type WorkspaceTab,
 } from '@/features/workspace/state';
-import { getWorkspacePrimaryActionByTab, getWorkspaceStatusFilters } from '@/features/workspace/requests/requests.content';
+import {
+  getWorkspacePrimaryActionByTab,
+  getWorkspaceStatusFilters,
+} from '@/features/workspace/requests/requests.content';
 
 type Params = {
   enabled?: boolean;
@@ -47,11 +50,14 @@ export function useWorkspaceDerived({
   isFavoriteRequestsLoading,
   isFavoriteProvidersLoading,
 }: Params) {
-  const showWorkspaceHeader = activeWorkspaceTab !== 'favorites' && activeWorkspaceTab !== 'profile';
+  const showWorkspaceHeader =
+    activeWorkspaceTab !== 'favorites' && activeWorkspaceTab !== 'profile';
   const showWorkspaceHeading = showWorkspaceHeader;
   const statusFilters = React.useMemo(
     () =>
-      activeWorkspaceTab === 'favorites' || activeWorkspaceTab === 'reviews' || activeWorkspaceTab === 'profile'
+      activeWorkspaceTab === 'favorites' ||
+      activeWorkspaceTab === 'reviews' ||
+      activeWorkspaceTab === 'profile'
         ? []
         : getWorkspaceStatusFilters(t),
     [activeWorkspaceTab, t],
@@ -66,23 +72,26 @@ export function useWorkspaceDerived({
   const shouldBuildFavorites = enabled && activeWorkspaceTab === 'favorites';
 
   const filteredMyRequests = React.useMemo(
-    () => !shouldBuildMyRequests
-      ? []
-      :
-      myRequests.filter(
-        (item) =>
-          activeStatusFilter === 'all' || mapRequestStatusToFilter(item.status) === activeStatusFilter,
-      ),
+    () =>
+      !shouldBuildMyRequests
+        ? []
+        : myRequests.filter(
+            (item) =>
+              activeStatusFilter === 'all' ||
+              mapRequestStatusToFilter(item.status) === activeStatusFilter,
+          ),
     [activeStatusFilter, myRequests, shouldBuildMyRequests],
   );
 
   const filteredMyOffers = React.useMemo(
-    () => !shouldBuildMyOffers
-      ? []
-      :
-      myOffers.filter(
-        (item) => activeStatusFilter === 'all' || mapOfferStatusToFilter(item.status) === activeStatusFilter,
-      ),
+    () =>
+      !shouldBuildMyOffers
+        ? []
+        : myOffers.filter(
+            (item) =>
+              activeStatusFilter === 'all' ||
+              mapOfferStatusToFilter(item.status) === activeStatusFilter,
+          ),
     [activeStatusFilter, myOffers, shouldBuildMyOffers],
   );
 
@@ -105,19 +114,21 @@ export function useWorkspaceDerived({
   }, [filteredMyOffers, myOfferRequestsById, shouldBuildMyOffers]);
 
   const filteredContracts = React.useMemo(
-    () => !shouldBuildContracts
-      ? []
-      :
-      allMyContracts.filter(
-        (item) =>
-          activeStatusFilter === 'all' || mapContractStatusToFilter(item.status) === activeStatusFilter,
-      ),
+    () =>
+      !shouldBuildContracts
+        ? []
+        : allMyContracts.filter(
+            (item) =>
+              activeStatusFilter === 'all' ||
+              mapContractStatusToFilter(item.status) === activeStatusFilter,
+          ),
     [activeStatusFilter, allMyContracts, shouldBuildContracts],
   );
 
   const hasFavoriteRequests = shouldBuildFavorites && favoriteRequests.length > 0;
   const hasFavoriteProviders = shouldBuildFavorites && favoriteProviders.length > 0;
-  const areFavoritesLoaded = shouldBuildFavorites && !isFavoriteRequestsLoading && !isFavoriteProvidersLoading;
+  const areFavoritesLoaded =
+    shouldBuildFavorites && !isFavoriteRequestsLoading && !isFavoriteProvidersLoading;
 
   const resolvedFavoritesView = React.useMemo<FavoritesView>(() => {
     if (
@@ -136,10 +147,11 @@ export function useWorkspaceDerived({
     : resolvedFavoritesView === 'requests'
       ? favoriteRequests
       : favoriteProviders;
-  const isFavoritesLoading =
-    shouldBuildFavorites
-      ? (resolvedFavoritesView === 'requests' ? isFavoriteRequestsLoading : isFavoriteProvidersLoading)
-      : false;
+  const isFavoritesLoading = shouldBuildFavorites
+    ? resolvedFavoritesView === 'requests'
+      ? isFavoriteRequestsLoading
+      : isFavoriteProvidersLoading
+    : false;
 
   return {
     filteredMyRequests,

@@ -37,10 +37,7 @@ export function ensureSelectedFilterOption(params: {
   const normalizedLabel = String(selectedLabel ?? '').trim();
   if (normalizedLabel.length === 0) return options.slice();
 
-  return [
-    { value: selectedValue, label: normalizedLabel },
-    ...options,
-  ];
+  return [{ value: selectedValue, label: normalizedLabel }, ...options];
 }
 
 function resolveHealthMetricValue(
@@ -66,7 +63,9 @@ function resolveHealthMetricValue(
 
 export function resolveContextPeriodLabel(params: {
   copy: WorkspaceStatisticsCopy;
-  decisionContextPeriod: WorkspaceStatisticsDecisionDashboardDto['decisionContext']['period'] | undefined;
+  decisionContextPeriod:
+    | WorkspaceStatisticsDecisionDashboardDto['decisionContext']['period']
+    | undefined;
   range: WorkspaceStatisticsRange;
 }) {
   const { copy, decisionContextPeriod, range } = params;
@@ -119,16 +118,18 @@ export function buildInsights(params: {
   } = params;
 
   if (isLowDataContext) {
-    return [{
-      key: 'context-low-data',
-      level: 'warning',
-      kind: 'risk',
-      code: 'focus_low_data',
-      context: `${contextCityLabel} · ${contextCategoryLabel}`,
-      title: data?.decisionContext.lowData?.title ?? copy.contextLowDataTitle,
-      text: data?.decisionContext.lowData?.body ?? copy.contextLowDataBody,
-      evidence: `${contextPeriodLabel} · ${contextScopeLabel}`,
-    }];
+    return [
+      {
+        key: 'context-low-data',
+        level: 'warning',
+        kind: 'risk',
+        code: 'focus_low_data',
+        context: `${contextCityLabel} · ${contextCategoryLabel}`,
+        title: data?.decisionContext.lowData?.title ?? copy.contextLowDataTitle,
+        text: data?.decisionContext.lowData?.body ?? copy.contextLowDataBody,
+        evidence: `${contextPeriodLabel} · ${contextScopeLabel}`,
+      },
+    ];
   }
 
   if (!data) return [];
@@ -206,16 +207,17 @@ export function buildContext(params: {
   } = params;
 
   const stickyLabel =
-    data?.decisionContext.stickyLabel?.trim()
-    || `${contextPeriodLabel} · ${contextCityLabel} · ${contextCategoryLabel}`;
+    data?.decisionContext.stickyLabel?.trim() ||
+    `${contextPeriodLabel} · ${contextCityLabel} · ${contextCategoryLabel}`;
   const mode = data?.decisionContext.mode ?? (isFocusMode ? 'focus' : 'global');
-  const title = data?.decisionContext.title?.trim()
-    || (mode === 'focus'
+  const title =
+    data?.decisionContext.title?.trim() ||
+    (mode === 'focus'
       ? `${copy.contextScopeFocusLabel}: ${contextCityLabel} · ${contextCategoryLabel}`
       : copy.contextScopeGlobalLabel);
   const subtitle = isLowDataContext
     ? (data?.decisionContext.lowData?.body ?? copy.contextLowDataBody)
-    : (data?.decisionContext.subtitle?.trim() || copy.contextSubtitle);
+    : data?.decisionContext.subtitle?.trim() || copy.contextSubtitle;
 
   return {
     mode,
@@ -228,8 +230,12 @@ export function buildContext(params: {
     subtitle,
     healthMetrics: contextHealthMetrics,
     isLowData: isLowDataContext,
-    lowDataTitle: isLowDataContext ? (data?.decisionContext.lowData?.title ?? copy.contextLowDataTitle) : null,
-    lowDataBody: isLowDataContext ? (data?.decisionContext.lowData?.body ?? copy.contextLowDataBody) : null,
+    lowDataTitle: isLowDataContext
+      ? (data?.decisionContext.lowData?.title ?? copy.contextLowDataTitle)
+      : null,
+    lowDataBody: isLowDataContext
+      ? (data?.decisionContext.lowData?.body ?? copy.contextLowDataBody)
+      : null,
   };
 }
 

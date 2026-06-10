@@ -5,7 +5,9 @@ import { buildProvidersRailDecisionLinks } from './WorkspaceProvidersRail';
 describe('WorkspaceProvidersRail', () => {
   it('preserves current filters and sorting when building decision links', () => {
     const links = buildProvidersRailDecisionLinks(
-      new URLSearchParams('section=providers&cityId=karlsruhe&categoryKey=cleaning&sort=price_desc&period=90d'),
+      new URLSearchParams(
+        'section=providers&cityId=karlsruhe&categoryKey=cleaning&sort=price_desc&period=90d',
+      ),
     );
 
     expect(links.overviewHref).toBe(

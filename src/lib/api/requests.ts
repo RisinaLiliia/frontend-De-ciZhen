@@ -28,11 +28,7 @@ export function uploadRequestPhotos(files: File[]) {
   return apiPostForm<{ urls: string[] }>('/requests/my/photos', formData);
 }
 
-export type PublicRequestsSort =
-  | 'date_desc'
-  | 'date_asc'
-  | 'price_asc'
-  | 'price_desc';
+export type PublicRequestsSort = 'date_desc' | 'date_asc' | 'price_asc' | 'price_desc';
 
 export type PublicRequestsFilter = {
   locale?: string;
@@ -52,9 +48,7 @@ export function buildPublicRequestsQuery(filter: PublicRequestsFilter) {
   const page = Math.max(1, Math.trunc(filter.page ?? 1));
   const limit = Math.min(100, Math.max(1, Math.trunc(filter.limit ?? REQUESTS_PAGE_SIZE)));
   const offset =
-    filter.offset == null
-      ? (page - 1) * limit
-      : Math.max(0, Math.trunc(filter.offset));
+    filter.offset == null ? (page - 1) * limit : Math.max(0, Math.trunc(filter.offset));
   const qs = new URLSearchParams();
   if (filter.cityId) qs.set('cityId', filter.cityId);
   if (filter.categoryKey) qs.set('categoryKey', filter.categoryKey);
@@ -131,5 +125,8 @@ export function duplicateMyRequest(requestId: string) {
 }
 
 export function archiveMyRequest(requestId: string) {
-  return apiPost<undefined, ArchiveMyRequestResponseDto>(`/requests/my/${requestId}/archive`, undefined);
+  return apiPost<undefined, ArchiveMyRequestResponseDto>(
+    `/requests/my/${requestId}/archive`,
+    undefined,
+  );
 }

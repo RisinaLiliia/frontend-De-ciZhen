@@ -32,14 +32,20 @@ type Args = {
   activePublicSection: PublicWorkspaceSection | null;
 };
 
-export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog, activePublicSection }: Args) {
-  const { data: categories = [], isLoading: isCategoriesLoading } = useServiceCategories(shouldLoadCatalog);
-  const { data: services = [], isLoading: isServicesLoading } = useServices(undefined, shouldLoadCatalog);
-
-  const sortOptions = React.useMemo(
-    () => buildRequestsExplorerSortOptions(t),
-    [t],
+export function useWorkspacePublicFilters({
+  t,
+  locale,
+  shouldLoadCatalog,
+  activePublicSection,
+}: Args) {
+  const { data: categories = [], isLoading: isCategoriesLoading } =
+    useServiceCategories(shouldLoadCatalog);
+  const { data: services = [], isLoading: isServicesLoading } = useServices(
+    undefined,
+    shouldLoadCatalog,
   );
+
+  const sortOptions = React.useMemo(() => buildRequestsExplorerSortOptions(t), [t]);
 
   const {
     categoryKey,
@@ -68,49 +74,60 @@ export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog, active
     limit: 8,
   });
 
-  const sendSearchEvent = React.useCallback((next: {
-    cityId?: string;
-    categoryKey?: string;
-    subcategoryKey?: string;
-  }) => {
-    if (!isAnalyticsConsentGranted()) return;
-    const payload = resolveWorkspacePublicSearchEventPayload({
-      activePublicSection,
-      locale,
-      cities,
-      current: {
-        cityId,
-        categoryKey,
-        subcategoryKey,
-      },
-      next,
-    });
-    if (!payload) return;
-    void postSearchEvent(payload).catch(() => undefined);
-  }, [activePublicSection, categoryKey, cities, cityId, locale, subcategoryKey]);
+  const sendSearchEvent = React.useCallback(
+    (next: { cityId?: string; categoryKey?: string; subcategoryKey?: string }) => {
+      if (!isAnalyticsConsentGranted()) return;
+      const payload = resolveWorkspacePublicSearchEventPayload({
+        activePublicSection,
+        locale,
+        cities,
+        current: {
+          cityId,
+          categoryKey,
+          subcategoryKey,
+        },
+        next,
+      });
+      if (!payload) return;
+      void postSearchEvent(payload).catch(() => undefined);
+    },
+    [activePublicSection, categoryKey, cities, cityId, locale, subcategoryKey],
+  );
 
-  const onCategoryChangeTracked = React.useCallback((value: string) => {
-    onCategoryChange(value);
-    trackUXEvent('workspace_filter_change', { filter: 'category', value });
-    sendSearchEvent({ categoryKey: value, subcategoryKey: ALL_OPTION_KEY });
-  }, [onCategoryChange, sendSearchEvent]);
+  const onCategoryChangeTracked = React.useCallback(
+    (value: string) => {
+      onCategoryChange(value);
+      trackUXEvent('workspace_filter_change', { filter: 'category', value });
+      sendSearchEvent({ categoryKey: value, subcategoryKey: ALL_OPTION_KEY });
+    },
+    [onCategoryChange, sendSearchEvent],
+  );
 
-  const onSubcategoryChangeTracked = React.useCallback((value: string) => {
-    onSubcategoryChange(value);
-    trackUXEvent('workspace_filter_change', { filter: 'service', value });
-    sendSearchEvent({ subcategoryKey: value });
-  }, [onSubcategoryChange, sendSearchEvent]);
+  const onSubcategoryChangeTracked = React.useCallback(
+    (value: string) => {
+      onSubcategoryChange(value);
+      trackUXEvent('workspace_filter_change', { filter: 'service', value });
+      sendSearchEvent({ subcategoryKey: value });
+    },
+    [onSubcategoryChange, sendSearchEvent],
+  );
 
-  const onCityChangeTracked = React.useCallback((value: string) => {
-    onCityChange(value);
-    trackUXEvent('workspace_filter_change', { filter: 'city', value });
-    sendSearchEvent({ cityId: value });
-  }, [onCityChange, sendSearchEvent]);
+  const onCityChangeTracked = React.useCallback(
+    (value: string) => {
+      onCityChange(value);
+      trackUXEvent('workspace_filter_change', { filter: 'city', value });
+      sendSearchEvent({ cityId: value });
+    },
+    [onCityChange, sendSearchEvent],
+  );
 
-  const onSortChangeTracked = React.useCallback((value: string) => {
-    onSortChange(value);
-    trackUXEvent('workspace_filter_change', { filter: 'sort', value });
-  }, [onSortChange]);
+  const onSortChangeTracked = React.useCallback(
+    (value: string) => {
+      onSortChange(value);
+      trackUXEvent('workspace_filter_change', { filter: 'sort', value });
+    },
+    [onSortChange],
+  );
 
   const onResetTracked = React.useCallback(() => {
     onReset();
@@ -132,34 +149,37 @@ export function useWorkspacePublicFilters({ t, locale, shouldLoadCatalog, active
     [cities, locale, t],
   );
 
-  const appliedFilterChips = React.useMemo(() =>
-    buildRequestsExplorerFilterChips({
-      cityId,
-      cityOptions,
-      onCityReset: () => onCityChangeTracked(ALL_OPTION_KEY),
+  const appliedFilterChips = React.useMemo(
+    () =>
+      buildRequestsExplorerFilterChips({
+        cityId,
+        cityOptions,
+        onCityReset: () => onCityChangeTracked(ALL_OPTION_KEY),
+        categoryKey,
+        categoryOptions,
+        onCategoryReset: () => onCategoryChangeTracked(ALL_OPTION_KEY),
+        subcategoryKey,
+        serviceOptions,
+        onSubcategoryReset: () => onSubcategoryChangeTracked(ALL_OPTION_KEY),
+        sortBy,
+        sortOptions,
+        onSortReset: () => onSortChangeTracked('date_desc'),
+      }),
+    [
       categoryKey,
       categoryOptions,
-      onCategoryReset: () => onCategoryChangeTracked(ALL_OPTION_KEY),
-      subcategoryKey,
+      cityId,
+      cityOptions,
+      onCategoryChangeTracked,
+      onCityChangeTracked,
+      onSortChangeTracked,
+      onSubcategoryChangeTracked,
       serviceOptions,
-      onSubcategoryReset: () => onSubcategoryChangeTracked(ALL_OPTION_KEY),
       sortBy,
       sortOptions,
-      onSortReset: () => onSortChangeTracked('date_desc'),
-    }), [
-    categoryKey,
-    categoryOptions,
-    cityId,
-    cityOptions,
-    onCategoryChangeTracked,
-    onCityChangeTracked,
-    onSortChangeTracked,
-    onSubcategoryChangeTracked,
-    serviceOptions,
-    sortBy,
-    sortOptions,
-    subcategoryKey,
-  ]);
+      subcategoryKey,
+    ],
+  );
 
   const hasActivePublicFilter = React.useMemo(
     () => hasWorkspacePublicActiveFilters(appliedFilterChips),

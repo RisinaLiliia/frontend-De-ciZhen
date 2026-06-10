@@ -83,10 +83,7 @@ describe('requestsExplorerRequestsData.model', () => {
   });
 
   it('builds request maps and favorite ids', () => {
-    const requests = [
-      { id: 'request-1' },
-      { id: 'request-2' },
-    ] as RequestResponseDto[];
+    const requests = [{ id: 'request-1' }, { id: 'request-2' }] as RequestResponseDto[];
 
     expect(buildRequestByIdMap(requests).get('request-2')?.id).toBe('request-2');
     expect(buildFavoriteRequestIds(requests)).toEqual(new Set(['request-1', 'request-2']));

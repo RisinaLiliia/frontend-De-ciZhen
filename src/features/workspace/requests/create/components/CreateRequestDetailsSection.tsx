@@ -122,9 +122,7 @@ export function CreateRequestDetailsSection({
             errorLabel={t(I18N_KEYS.common.loadErrorShort)}
           />
         </Field>
-        {cityError ? (
-          <p className="text-red-600 text-sm">{cityError}</p>
-        ) : null}
+        {cityError ? <p className="text-red-600 text-sm">{cityError}</p> : null}
       </div>
 
       <div className="request-form__row is-2">
@@ -156,7 +154,9 @@ export function CreateRequestDetailsSection({
                 <span className="request-provider-calendar__selected-label">
                   {directFlowText.selectedDateLabel}:
                 </span>{' '}
-                <span className="request-provider-calendar__selected-value">{selectedDateLabel}</span>
+                <span className="request-provider-calendar__selected-value">
+                  {selectedDateLabel}
+                </span>
               </p>
               <p className="request-provider-calendar__hint">
                 {isDirectProviderLoading || isProviderSlotsLoading
@@ -165,7 +165,12 @@ export function CreateRequestDetailsSection({
                     ? directFlowText.calendarHintReady
                     : directFlowText.calendarHintEmpty}
               </p>
-              <input type="hidden" value={selectedDayIso ? `${selectedDayIso}T09:00` : ''} readOnly {...register('preferredDate')} />
+              <input
+                type="hidden"
+                value={selectedDayIso ? `${selectedDayIso}T09:00` : ''}
+                readOnly
+                {...register('preferredDate')}
+              />
             </div>
           ) : (
             <div className="request-provider-calendar">
@@ -183,30 +188,33 @@ export function CreateRequestDetailsSection({
                 className="request-provider-calendar__availability"
                 onSelectIsoDay={onSelectRequestIsoDay}
               />
-              <input type="hidden" value={selectedDayIso ? `${selectedDayIso}T09:00` : ''} readOnly {...register('preferredDate')} />
+              <input
+                type="hidden"
+                value={selectedDayIso ? `${selectedDayIso}T09:00` : ''}
+                readOnly
+                {...register('preferredDate')}
+              />
             </div>
           )}
-          {preferredDateError ? (
-            <p className="text-red-600 text-sm">{preferredDateError}</p>
-          ) : null}
+          {preferredDateError ? <p className="text-red-600 text-sm">{preferredDateError}</p> : null}
         </div>
         <div className="form-group">
           <label className="typo-small">{t(I18N_KEYS.request.priceLabel)}</label>
           <Field leftIcon={<IconCoins />}>
-              <Input
-                type="number"
-                min={1}
-                placeholder={t(I18N_KEYS.request.pricePlaceholder)}
-                {...register('price', {
-                  setValueAs: (value) => {
-                    if (value === '' || value === undefined || value === null) return undefined;
-                    const parsed = Number(value);
-                    return Number.isFinite(parsed) ? parsed : undefined;
-                  },
-                })}
-              />
-            </Field>
-          </div>
+            <Input
+              type="number"
+              min={1}
+              placeholder={t(I18N_KEYS.request.pricePlaceholder)}
+              {...register('price', {
+                setValueAs: (value) => {
+                  if (value === '' || value === undefined || value === null) return undefined;
+                  const parsed = Number(value);
+                  return Number.isFinite(parsed) ? parsed : undefined;
+                },
+              })}
+            />
+          </Field>
+        </div>
       </div>
 
       {isCleaningCategory ? (
@@ -242,9 +250,7 @@ export function CreateRequestDetailsSection({
                   })}
                 />
               </Field>
-              {areaError ? (
-                <p className="text-red-600 text-sm">{areaError}</p>
-              ) : null}
+              {areaError ? <p className="text-red-600 text-sm">{areaError}</p> : null}
             </div>
           </div>
 

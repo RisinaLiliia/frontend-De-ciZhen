@@ -9,10 +9,7 @@ import { useT } from '@/lib/i18n/useT';
 export default function LoginPage() {
   const t = useT();
   return (
-    <AuthShell
-      title={t(I18N_KEYS.auth.loginTitle)}
-      subtitle={t(I18N_KEYS.auth.loginSubtitle)}
-    >
+    <AuthShell title={t(I18N_KEYS.auth.loginTitle)} subtitle={t(I18N_KEYS.auth.loginSubtitle)}>
       <React.Suspense fallback={null}>
         <LoginForm />
       </React.Suspense>

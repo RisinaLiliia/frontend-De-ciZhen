@@ -32,9 +32,11 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   contextHealthActivityStable: 'Stabil',
   contextHealthActivityLow: 'Ruhig',
   contextLowDataTitle: 'Zu wenig Daten für eine verlässliche Segmentanalyse',
-  contextLowDataBody: 'Erweitern Sie den Zeitraum oder wechseln Sie zu Alle Städte bzw. Alle Kategorien.',
+  contextLowDataBody:
+    'Erweitern Sie den Zeitraum oder wechseln Sie zu Alle Städte bzw. Alle Kategorien.',
   backgroundErrorTitle: 'Aktualisierung fehlgeschlagen',
-  backgroundErrorBody: 'Die sichtbaren Daten stammen noch aus dem vorherigen Analysekontext. Bitte versuchen Sie die Aktualisierung erneut.',
+  backgroundErrorBody:
+    'Die sichtbaren Daten stammen noch aus dem vorherigen Analysekontext. Bitte versuchen Sie die Aktualisierung erneut.',
   exportLabel: 'Export CSV',
   modePlatform: 'Plattform',
   modePersonalized: 'Personalisiert',
@@ -69,7 +71,8 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   activityCancellationStableHint: 'Signal: stabile Abschlussqualität',
   activityCancellationUnstableHint: 'Risiko: instabile Abschlussqualität',
   activityCompletedSignalHint: 'Signal: bewiesene Lieferfähigkeit im aktuellen Markt',
-  activityRevenueSignalTemplate: 'Signal: Monetarisierung funktioniert. {gmv} · {takeRate}% {suffix}',
+  activityRevenueSignalTemplate:
+    'Signal: Monetarisierung funktioniert. {gmv} · {takeRate}% {suffix}',
   trendStableLabel: 'Trend stabil',
   trendNewTemplate: '+{value} neu {context}',
   trendSinceLastPeriodTemplate: '{delta} seit letzter Periode',
@@ -158,7 +161,8 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   priceProfitHighLabel: 'Sehr gute Marktchance',
   priceProfitMediumLabel: 'Solide Marktchance',
   priceProfitLowLabel: 'Vorsichtige Marktchance',
-  priceRecommendationFallbackTemplate: 'Der Preisbereich {range} zeigt aktuell die höchste Abschlussrate{citySuffix}.',
+  priceRecommendationFallbackTemplate:
+    'Der Preisbereich {range} zeigt aktuell die höchste Abschlussrate{citySuffix}.',
   priceNoData: 'Noch keine Preisdaten verfügbar.',
   profileTitle: 'Profil Performance',
   profileRevenueLabel: 'Umsatz',
@@ -190,23 +194,30 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   decisionStrategyTitle: 'Strategie-Empfehlung',
   decisionApplyStrategyLabel: 'Strategie anwenden',
   decisionOpenRequestsLabel: 'Passende Aufträge öffnen',
-  decisionReasonMarketBalanceTemplate: 'Hohe Nachfrage bei relativ niedriger Anbieterzahl ({ratio}x Marktbalance).',
-  decisionReasonDemandProvidersTemplate: '{demand} Nachfrage-Signale treffen auf nur {providers} aktive Anbieter.',
+  decisionReasonMarketBalanceTemplate:
+    'Hohe Nachfrage bei relativ niedriger Anbieterzahl ({ratio}x Marktbalance).',
+  decisionReasonDemandProvidersTemplate:
+    '{demand} Nachfrage-Signale treffen auf nur {providers} aktive Anbieter.',
   decisionReasonGrowth: 'Das Segment zeigt zusätzlich klares Wachstum.',
-  decisionReasonActivity: 'Die Marktaktivität ist hoch genug für schnelle Reaktionen und Abschlüsse.',
+  decisionReasonActivity:
+    'Die Marktaktivität ist hoch genug für schnelle Reaktionen und Abschlüsse.',
   decisionReasonDemand: 'Die Nachfrage ist im aktuellen Zeitraum überdurchschnittlich stark.',
-  decisionReasonPriceCorridorTemplate: 'Der Preis-Korridor {range} wird aktuell durch Marktdaten gestützt.',
-  decisionSummaryFallback: 'Nutze den aktuellen Kontext, um Fokus, Preis und Reaktionszeit sauber auszurichten.',
+  decisionReasonPriceCorridorTemplate:
+    'Der Preis-Korridor {range} wird aktuell durch Marktdaten gestützt.',
+  decisionSummaryFallback:
+    'Nutze den aktuellen Kontext, um Fokus, Preis und Reaktionszeit sauber auszurichten.',
   decisionFocusStepTemplate: 'Fokus: {value}',
   decisionFocusFallback: 'Fokus: Globalen Markt beobachten und dann Opportunity wählen',
   decisionPriceStepTemplate: 'Preis: {value}',
   decisionPriceFallback: 'Preis: Erst nach belastbaren Marktpreisen skalieren',
   decisionResponseTimeStep: 'Reaktionszeit: unter 2h halten',
-  personalizedDecisionSummaryFallback: 'Priorisiert Chancen, Risiken und nächste Schritte für dein aktuelles Markt-Setup.',
+  personalizedDecisionSummaryFallback:
+    'Priorisiert Chancen, Risiken und nächste Schritte für dein aktuelles Markt-Setup.',
   userComparisonLabel: 'User vs Markt',
   userDecisionSubtitle: 'Vergleicht deine Performance mit dem aktuellen Markt',
   userGapTitle: 'Gap Analysis',
-  userGapSummaryTemplate: 'Du verlierst {percent}% zwischen Angebot → Antwort. Das betrifft aktuell {count} Vorgänge.',
+  userGapSummaryTemplate:
+    'Du verlierst {percent}% zwischen Angebot → Antwort. Das betrifft aktuell {count} Vorgänge.',
   userAtMarketLevelLabel: 'Auf Marktniveau',
   userPositionTitle: 'Performance vs Market',
   userPositionSubtitle: 'Deine Position im aktuellen Marktumfeld',
@@ -214,7 +225,8 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   userPositionTopSuffix: 'Anbieter',
   userPositionAverageLabel: 'Marktdurchschnitt',
   userPositionBelowLabel: 'Unterdurchschnittlich',
-  userPositionSummaryTemplate: 'Du liegst aktuell auf dem {percentile}. Perzentil im Vergleich zum Markt.',
+  userPositionSummaryTemplate:
+    'Du liegst aktuell auf dem {percentile}. Perzentil im Vergleich zum Markt.',
   userPositionSummaryFallback: 'Noch nicht genug Daten für eine belastbare Marktposition.',
   userPositionOverallLabel: 'Gesamt',
   userPositionCategoryLabel: 'Kategorie',
@@ -230,15 +242,18 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   userRiskSeverityMedium: 'Mittel',
   userRiskSeverityLow: 'Niedrig',
   userRiskSlowResponseTitle: 'Reaktionszeit zu hoch',
-  userRiskSlowResponseBody: 'Du antwortest mit {user} Min. deutlich langsamer als der Markt mit {market} Min.',
+  userRiskSlowResponseBody:
+    'Du antwortest mit {user} Min. deutlich langsamer als der Markt mit {market} Min.',
   userRiskUnansweredTitle: 'Zu viele offene Anfragen',
   userRiskUnansweredBody: '{count} offene Vorgänge warten noch auf eine klare Reaktion.',
   userRiskVisibilityTitle: 'Niedrige Sichtbarkeit',
-  userRiskVisibilityBody: 'Dein Profil ist erst zu {profile}% vollständig. Das drückt Sichtbarkeit und Vertrauen.',
+  userRiskVisibilityBody:
+    'Dein Profil ist erst zu {profile}% vollständig. Das drückt Sichtbarkeit und Vertrauen.',
   userOpportunityDemandTitle: 'Hohe Nachfrage in deinem Zielmarkt',
   userOpportunityDemandBody: '{city} · {category} zeigt aktuell starke Nachfrage für dein Setup.',
   userOpportunityCompetitionTitle: 'Wenig Anbieter im Segment',
-  userOpportunityCompetitionBody: '{city} · {category} hat aktuell ein günstiges Nachfrage-Konkurrenz-Verhältnis.',
+  userOpportunityCompetitionBody:
+    '{city} · {category} hat aktuell ein günstiges Nachfrage-Konkurrenz-Verhältnis.',
   userOpportunityCategoryTitle: 'Kategorie wächst',
   userOpportunityCategoryBody: '{category} entwickelt sich aktuell stärker als andere Segmente.',
   userPricingCurrentLabel: 'Dein Preis',
@@ -278,7 +293,8 @@ export const COPY_DE: WorkspaceStatisticsCopy = {
   userActionPriceDetail: 'Positioniere neue Angebote näher bei {price}€.',
   userActionPriceEffect: 'Bessere Conversion im empfohlenen Preisfenster.',
   userActionFocusTitle: 'Marktfokus schärfen',
-  userActionFocusDetail: 'Fokus auf {city} · {category} legen, solange Nachfrage und Balance stark sind.',
+  userActionFocusDetail:
+    'Fokus auf {city} · {category} legen, solange Nachfrage und Balance stark sind.',
   userActionFocusEffect: 'Mehr Sichtbarkeit im stärksten Marktsegment.',
   userActionProfileTitle: 'Profil vervollständigen',
   userActionProfileDetail: 'Profil auf mindestens {target}% Vollständigkeit bringen.',

@@ -69,9 +69,7 @@ export function CustomerPublicProfileContent({
       <section className={workspacePanelShell('request-detail__panel')}>
         <div className="request-detail__dialog-main request-detail__dialog-main--single-column">
           <div className="request-detail__dialog-copy">
-            <div className="request-detail__dialog-heading">
-              {heroCard}
-            </div>
+            <div className="request-detail__dialog-heading">{heroCard}</div>
             {model.displayBio ? (
               <RequestDetailAbout
                 title={model.t(I18N_KEYS.requestDetails.about)}
@@ -103,7 +101,9 @@ export function CustomerPublicProfileContent({
           reviewPage={model.reviewPage}
           totalReviewPages={model.totalReviewPages}
           onPrevPage={() => model.setReviewPage((prev) => Math.max(1, prev - 1))}
-          onNextPage={() => model.setReviewPage((prev) => Math.min(model.totalReviewPages, prev + 1))}
+          onNextPage={() =>
+            model.setReviewPage((prev) => Math.min(model.totalReviewPages, prev + 1))
+          }
           formatReviewDate={(value) => model.reviewDateFormatter.format(new Date(value))}
         />
       </section>

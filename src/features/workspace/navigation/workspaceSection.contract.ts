@@ -155,7 +155,9 @@ const WORKSPACE_SECTION_CONTRACTS: Record<WorkspaceSectionKey, WorkspaceSectionC
   },
 };
 
-export function getWorkspaceSectionContract(section: WorkspaceSectionKey): WorkspaceSectionContract {
+export function getWorkspaceSectionContract(
+  section: WorkspaceSectionKey,
+): WorkspaceSectionContract {
   return WORKSPACE_SECTION_CONTRACTS[section];
 }
 

@@ -1,9 +1,6 @@
 import { ALL_OPTION_KEY } from '@/features/workspace/shared';
 import type { PublicRequestsSort } from '@/lib/api/requests';
-import {
-  REQUESTS_PAGE_SIZE,
-  REQUESTS_PAGE_SIZE_SINGLE,
-} from '@/lib/requests/pagination';
+import { REQUESTS_PAGE_SIZE, REQUESTS_PAGE_SIZE_SINGLE } from '@/lib/requests/pagination';
 
 export const REQUESTS_FILTER_QUERY_KEYS = new Set([
   'city',
@@ -44,7 +41,11 @@ type RequestsService = {
   categoryKey: string;
 };
 
-export function readPositiveInt(value: string | null, fallback: number, max = Number.MAX_SAFE_INTEGER) {
+export function readPositiveInt(
+  value: string | null,
+  fallback: number,
+  max = Number.MAX_SAFE_INTEGER,
+) {
   const parsed = Number(value ?? '');
   if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
   return Math.min(max, Math.trunc(parsed));
@@ -54,15 +55,22 @@ export function resolveRequestsFilterQueryParams(
   searchParams: SearchParamsLike,
   defaultSort: PublicRequestsSort,
 ) {
-  const requestedLimit = readPositiveInt(searchParams.get('limit'), DEFAULT_REQUESTS_FILTER_LIMIT, REQUESTS_PAGE_SIZE);
-  const limit = requestedLimit <= REQUESTS_PAGE_SIZE_SINGLE ? REQUESTS_PAGE_SIZE_SINGLE : REQUESTS_PAGE_SIZE;
+  const requestedLimit = readPositiveInt(
+    searchParams.get('limit'),
+    DEFAULT_REQUESTS_FILTER_LIMIT,
+    REQUESTS_PAGE_SIZE,
+  );
+  const limit =
+    requestedLimit <= REQUESTS_PAGE_SIZE_SINGLE ? REQUESTS_PAGE_SIZE_SINGLE : REQUESTS_PAGE_SIZE;
 
   return {
-    categoryParam: searchParams.get('category') ?? searchParams.get('categoryKey') ?? ALL_OPTION_KEY,
-    subcategoryParam: searchParams.get('service')
-      ?? searchParams.get('subcategoryKey')
-      ?? searchParams.get('serviceKey')
-      ?? ALL_OPTION_KEY,
+    categoryParam:
+      searchParams.get('category') ?? searchParams.get('categoryKey') ?? ALL_OPTION_KEY,
+    subcategoryParam:
+      searchParams.get('service') ??
+      searchParams.get('subcategoryKey') ??
+      searchParams.get('serviceKey') ??
+      ALL_OPTION_KEY,
     cityId: searchParams.get('city') ?? searchParams.get('cityId') ?? ALL_OPTION_KEY,
     sortBy: (searchParams.get('sort') as PublicRequestsSort | null) ?? defaultSort,
     page: readPositiveInt(searchParams.get('page'), 1),
@@ -70,7 +78,9 @@ export function resolveRequestsFilterQueryParams(
   };
 }
 
-export function buildRequestsServiceByKeyMap<TService extends RequestsService>(services: TService[]) {
+export function buildRequestsServiceByKeyMap<TService extends RequestsService>(
+  services: TService[],
+) {
   return new Map(services.map((service) => [service.key, service]));
 }
 

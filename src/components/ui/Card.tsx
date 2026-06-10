@@ -33,10 +33,18 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn('text-[var(--fs-h3)] leading-[var(--lh-title)] font-semibold', className)} {...props} />;
+  return (
+    <h3
+      className={cn('text-[var(--fs-h3)] leading-[var(--lh-title)] font-semibold', className)}
+      {...props}
+    />
+  );
 }
 
-export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
+export function CardDescription({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
   return <p className={cn('text-[var(--fs-body)] text-muted', className)} {...props} />;
 }
 

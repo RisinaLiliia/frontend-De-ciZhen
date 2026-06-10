@@ -32,18 +32,15 @@ export function WorkspacePlatformReviewsMain({
 }: WorkspacePlatformReviewsMainProps) {
   const { reviewRange, reviewSort } = useWorkspaceReviewControlsState();
   const [reviewPage, setReviewPage] = React.useState(1);
-  const [listDensity, setListDensity] = React.useState<RequestsListDensity>(DEFAULT_REQUESTS_LIST_DENSITY);
-  const {
-    visibleReviews,
-    displayRatingCount,
-    totalPages,
-    isLoading,
-    isPending,
-  } = useWorkspacePlatformReviewsOverview({
-    t,
-    page: reviewPage,
-    limit: REQUESTS_PAGE_SIZE,
-  });
+  const [listDensity, setListDensity] = React.useState<RequestsListDensity>(
+    DEFAULT_REQUESTS_LIST_DENSITY,
+  );
+  const { visibleReviews, displayRatingCount, totalPages, isLoading, isPending } =
+    useWorkspacePlatformReviewsOverview({
+      t,
+      page: reviewPage,
+      limit: REQUESTS_PAGE_SIZE,
+    });
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const reviewDateFormatter = React.useMemo(
     () =>

@@ -3,9 +3,7 @@
 import type { ComponentProps } from 'react';
 
 import { WorkspaceRequestsActionRail } from '@/features/workspace/ai-rail/WorkspaceRequestsActionRail';
-import {
-  buildRequestsWorkspaceDecisionRailProps,
-} from '@/features/workspace/requests/requestsWorkspaceSurface.model';
+import { buildRequestsWorkspaceDecisionRailProps } from '@/features/workspace/requests/requestsWorkspaceSurface.model';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
 import type { WorkspaceRequestsResponseDto } from '@/lib/api/dto/workspace';
 

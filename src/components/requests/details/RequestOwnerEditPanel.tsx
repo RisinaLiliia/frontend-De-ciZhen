@@ -164,7 +164,8 @@ export function RequestOwnerEditPanel({
           <span
             className={`status-badge ${priceTrend === 'up' ? 'status-badge--success' : 'status-badge--warning'}`}
           >
-            {priceTrend === 'down' ? '↓' : '↑'} {priceTrend === 'down' ? priceTrendDownLabel : priceTrendUpLabel}
+            {priceTrend === 'down' ? '↓' : '↑'}{' '}
+            {priceTrend === 'down' ? priceTrendDownLabel : priceTrendUpLabel}
           </span>
         ) : null}
       </div>
@@ -257,12 +258,7 @@ export function RequestOwnerEditPanel({
 
       {isEditMode ? (
         <div className="request-detail__owner-cta">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={onCancelEdit}
-            disabled={isSaving}
-          >
+          <Button type="button" variant="ghost" onClick={onCancelEdit} disabled={isSaving}>
             {cancelLabel}
           </Button>
           <Button

@@ -15,7 +15,9 @@ import type { RequestsExplorerSharedFilters } from '@/components/requests/reques
 describe('requestsExplorer.model', () => {
   it('detects default public filter state', () => {
     expect(hasDefaultPublicFilter({ sort: 'date_desc', page: 1, limit: 20 })).toBe(true);
-    expect(hasDefaultPublicFilter({ cityId: 'berlin', sort: 'date_desc', page: 1, limit: 20 })).toBe(false);
+    expect(
+      hasDefaultPublicFilter({ cityId: 'berlin', sort: 'date_desc', page: 1, limit: 20 }),
+    ).toBe(false);
     expect(hasDefaultPublicFilter({ sort: 'price_desc', page: 1, limit: 20 })).toBe(false);
   });
 
@@ -51,9 +53,9 @@ describe('requestsExplorer.model', () => {
 
   it('builds next path with an optional query string', () => {
     expect(buildRequestsExplorerNextPath('/workspace', null)).toBe('/workspace');
-    expect(buildRequestsExplorerNextPath('/workspace', new URLSearchParams('tab=requests&page=2'))).toBe(
-      '/workspace?tab=requests&page=2',
-    );
+    expect(
+      buildRequestsExplorerNextPath('/workspace', new URLSearchParams('tab=requests&page=2')),
+    ).toBe('/workspace?tab=requests&page=2');
   });
 
   it('projects shared explorer filters and builds providers content props', () => {

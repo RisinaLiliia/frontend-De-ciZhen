@@ -28,4 +28,3 @@ export function RequestMetaInline({ title, city, date, price, className }: Reque
     </div>
   );
 }
-

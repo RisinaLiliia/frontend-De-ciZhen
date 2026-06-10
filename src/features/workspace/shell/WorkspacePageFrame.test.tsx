@@ -18,12 +18,18 @@ describe('WorkspacePageFrame', () => {
       />,
     );
 
-    const content = screen.getByTestId('workspace-page-main').closest('.workspace-page-frame__content');
+    const content = screen
+      .getByTestId('workspace-page-main')
+      .closest('.workspace-page-frame__content');
     expect(content).toBeTruthy();
     const controls = content?.firstElementChild;
     expect(controls).toBeTruthy();
     expect(controls?.classList.contains('workspace-page-frame__controls')).toBe(true);
-    expect(controls?.firstElementChild).toBe(screen.getByTestId('workspace-page-header').parentElement);
-    expect(controls?.children.item(1)).toBe(screen.getByTestId('workspace-page-filters').parentElement);
+    expect(controls?.firstElementChild).toBe(
+      screen.getByTestId('workspace-page-header').parentElement,
+    );
+    expect(controls?.children.item(1)).toBe(
+      screen.getByTestId('workspace-page-filters').parentElement,
+    );
   });
 });

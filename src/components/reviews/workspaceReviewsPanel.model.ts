@@ -163,7 +163,8 @@ export function buildWorkspacePlatformReviews(items: ReviewLike[], t: Translate)
       item,
       t(I18N_KEYS.requestsPage.platformReviewAnonymous),
       t(I18N_KEYS.requestsPage.platformReviewNoText),
-    ));
+    ),
+  );
 }
 
 export function buildWorkspaceSortedUserReviews(
@@ -176,7 +177,8 @@ export function buildWorkspaceSortedUserReviews(
       item,
       t(I18N_KEYS.requestsPage.navUserFallback),
       t(I18N_KEYS.requestsPage.platformReviewNoText),
-    ));
+    ),
+  );
 
   return mapped.sort((a, b) => {
     if (reviewSort === 'top' && b.rating !== a.rating) return b.rating - a.rating;

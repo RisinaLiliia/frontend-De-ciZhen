@@ -24,7 +24,7 @@ for (let index = 0; index < lines.length; index += 1) {
   violations.push({
     line: index + 1,
     matches: [...new Set(matches)],
-    context
+    context,
   });
 }
 

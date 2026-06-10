@@ -171,11 +171,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       variant="compact"
     />
   ) : null;
-  const workspaceTopBar = isMobile ? null : (
-    <WorkspaceTopBar
-      compactUtility={!isWideShell}
-    />
-  );
+  const workspaceTopBar = isMobile ? null : <WorkspaceTopBar compactUtility={!isWideShell} />;
 
   const resolvedSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(() => {
     if (sectionModel) {
@@ -216,14 +212,14 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     if (isWorkspaceAuthed) {
       return isOverviewPrivateMode
         ? buildWorkspaceOverviewSectionModel({
-          content: privateMain,
-          aiRail: privateAside,
-        })
+            content: privateMain,
+            aiRail: privateAside,
+          })
         : buildWorkspaceStandardSectionModel({
-          section: resolveWorkspaceStandardSection(activePublicSection),
-          content: privateMain,
-          aiRail: privateAside,
-        });
+            section: resolveWorkspaceStandardSection(activePublicSection),
+            content: privateMain,
+            aiRail: privateAside,
+          });
     }
 
     return buildWorkspaceStandardSectionModel({
@@ -274,7 +270,7 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
     </WorkspaceContextRail>
   );
 
-  const overlayNavigationMode = isWideShell ? null : (isMobile ? 'bottomDock' : 'drawer');
+  const overlayNavigationMode = isWideShell ? null : isMobile ? 'bottomDock' : 'drawer';
   const workspaceMobileNavigation = overlayNavigationMode ? (
     <WorkspaceMobileNavigation
       mode={overlayNavigationMode}
@@ -290,16 +286,17 @@ export const WorkspacePageLayout = React.memo(function WorkspacePageLayout({
       ? publicShellIntro
       : intro;
   const shouldUseContextualRail =
-    resolvedSectionModel.layout !== 'singleColumn'
-      && resolvedSectionModel.railPolicy !== 'none'
-      && resolvedSectionModel.aiRail == null;
-  const resolvedAiRail =
-    shouldUseContextualRail
-      ? contextualRail
-      : (resolvedSectionModel.layout === 'singleColumn' ? undefined : resolvedSectionModel.aiRail);
+    resolvedSectionModel.layout !== 'singleColumn' &&
+    resolvedSectionModel.railPolicy !== 'none' &&
+    resolvedSectionModel.aiRail == null;
+  const resolvedAiRail = shouldUseContextualRail
+    ? contextualRail
+    : resolvedSectionModel.layout === 'singleColumn'
+      ? undefined
+      : resolvedSectionModel.aiRail;
   const resolvedFilters =
-    resolvedSectionModel.filters
-    ?? (resolvedSectionModel.filterPolicy === 'sharedContext' ? (
+    resolvedSectionModel.filters ??
+    (resolvedSectionModel.filterPolicy === 'sharedContext' ? (
       <WorkspaceSectionSharedContext
         locale={locale}
         activePublicSection={activePublicSection}

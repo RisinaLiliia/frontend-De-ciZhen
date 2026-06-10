@@ -65,9 +65,9 @@ export function useRequestDetailsRelated({
   }, [request, similarQuery.data?.items]);
 
   const shouldLoadLatest =
-    enabled
-    && Boolean(request?.id)
-    && (!hasSimilarSeed || (similarQuery.isFetched && similar.length === 0));
+    enabled &&
+    Boolean(request?.id) &&
+    (!hasSimilarSeed || (similarQuery.isFetched && similar.length === 0));
   const { data: latestData } = useQuery({
     queryKey: workspaceQK.requestsLatest(locale),
     enabled: isHydrated && shouldLoadLatest,

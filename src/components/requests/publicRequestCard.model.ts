@@ -1,6 +1,9 @@
 'use client';
 
-import { resolveOfferCardState, type OfferCardState } from '@/features/workspace/requests/shared/requestUiState';
+import {
+  resolveOfferCardState,
+  type OfferCardState,
+} from '@/features/workspace/requests/shared/requestUiState';
 import { pickI18n } from '@/lib/i18n/helpers';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { pickRequestImage } from '@/lib/requests/images';
@@ -94,17 +97,19 @@ export function buildPublicRequestCardPresentation({
 }: BuildPublicRequestCardPresentationParams): PublicRequestCardPresentation {
   const localizedServiceLabel = pickServiceLabel(item.serviceKey, serviceByKey, locale);
   const serviceLabel = localizedServiceLabel || item.subcategoryName || item.serviceKey;
-  const fallbackCategoryKey = item.categoryKey ?? serviceByKey.get(item.serviceKey)?.categoryKey ?? '';
+  const fallbackCategoryKey =
+    item.categoryKey ?? serviceByKey.get(item.serviceKey)?.categoryKey ?? '';
   const localizedCategoryLabel = pickCategoryLabel(fallbackCategoryKey, categoryByKey, locale);
   const categoryLabel = localizedCategoryLabel || item.categoryName || fallbackCategoryKey;
   const cityLabel = cityById.has(item.cityId)
     ? pickI18n(cityById.get(item.cityId)!.i18n, locale)
-    : item.cityName ?? item.cityId;
+    : (item.cityName ?? item.cityId);
   const recurringLabel = item.isRecurring
     ? t(I18N_KEYS.client.recurringLabel)
     : t(I18N_KEYS.client.onceLabel);
   const priceValue = item.price ?? estimatePrice(item.area, item.propertyType);
-  const priceTrend = item.priceTrend === 'down' || item.priceTrend === 'up' ? item.priceTrend : null;
+  const priceTrend =
+    item.priceTrend === 'down' || item.priceTrend === 'up' ? item.priceTrend : null;
   const priceTrendLabel =
     priceTrend === 'down'
       ? t(I18N_KEYS.request.priceTrendDown)
@@ -112,7 +117,9 @@ export function buildPublicRequestCardPresentation({
         ? t(I18N_KEYS.request.priceTrendUp)
         : null;
   const imageSrc =
-    (item.photos?.length ? item.photos[0] : null) || item.imageUrl || pickRequestImage(item.categoryKey ?? '');
+    (item.photos?.length ? item.photos[0] : null) ||
+    item.imageUrl ||
+    pickRequestImage(item.categoryKey ?? '');
   const title = item.title?.trim() || item.description?.trim() || serviceLabel;
   const excerptSource = item.description?.trim() ?? '';
   const detailsHref = buildWorkspaceRequestDetailHref({
@@ -132,9 +139,10 @@ export function buildPublicRequestCardPresentation({
       categoryLabel,
       serviceLabel,
       cityLabel,
-      dateLabel: preferredDate && !Number.isNaN(preferredDate.getTime()) && formatDate
-        ? formatDate.format(preferredDate)
-        : null,
+      dateLabel:
+        preferredDate && !Number.isNaN(preferredDate.getTime()) && formatDate
+          ? formatDate.format(preferredDate)
+          : null,
       recurringLabel,
       priceLabel: formatPrice.format(priceValue),
       priceTrend,
@@ -158,10 +166,7 @@ export function buildPublicRequestCardPresentation({
   };
 }
 
-function mapOfferStatusLabel(
-  offerCardState: OfferCardState,
-  t: (key: I18nKey) => string,
-) {
+function mapOfferStatusLabel(offerCardState: OfferCardState, t: (key: I18nKey) => string) {
   if (offerCardState === 'accepted') return t(I18N_KEYS.requestDetails.statusAccepted);
   if (offerCardState === 'declined') return t(I18N_KEYS.requestDetails.statusDeclined);
   if (offerCardState === 'sent') return t(I18N_KEYS.requestDetails.statusReview);

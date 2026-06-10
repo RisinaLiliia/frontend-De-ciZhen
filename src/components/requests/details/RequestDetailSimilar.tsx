@@ -44,8 +44,7 @@ export function RequestDetailSimilar({
               const itemTitle = item.title?.trim() || item.subcategoryName || item.serviceKey;
               const excerptSource = item.description?.trim() ?? '';
               const excerpt = excerptSource && excerptSource !== itemTitle ? excerptSource : null;
-              const itemPrice =
-                item.price != null ? formatPrice(item.price) : priceOnRequestLabel;
+              const itemPrice = item.price != null ? formatPrice(item.price) : priceOnRequestLabel;
               return (
                 <WorkspaceGuestRequestCard
                   key={item.id}

@@ -4,7 +4,9 @@ import * as React from 'react';
 
 import { RequestsFilterControlsContent } from '@/components/requests/RequestsFilterControlsContent';
 
-type RequestsFilterControlsBodyProps = React.ComponentProps<typeof RequestsFilterControlsContent> & {
+type RequestsFilterControlsBodyProps = React.ComponentProps<
+  typeof RequestsFilterControlsContent
+> & {
   id?: string;
   className?: string;
 };

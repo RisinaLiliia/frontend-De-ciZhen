@@ -19,7 +19,9 @@ type StatisticsInsightsGrowthSectionProps = {
   growthCards: WorkspaceStatisticsModel['growthCards'];
   subtitle: string;
   fallbackFocusLabel: string | null;
-  growthMarketContext: ReturnType<typeof import('../statisticsGrowthContext.model').resolveGrowthMarketContext>;
+  growthMarketContext: ReturnType<
+    typeof import('../statisticsGrowthContext.model').resolveGrowthMarketContext
+  >;
   insightsPanelRef: React.RefObject<HTMLElement | null>;
   insightsPanelMinHeight?: number | null;
   growthPanelRef: React.RefObject<HTMLElement | null>;

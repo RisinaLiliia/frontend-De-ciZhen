@@ -60,9 +60,18 @@ export function WorkspacePublicDemandMapView({
         'workspace-public-demand-map',
         surface === 'embedded' ? 'workspace-public-demand-map--embedded' : '',
         className ?? '',
-      ].filter(Boolean).join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
-      <header className={['workspace-public-demand-map__header', headerClassName ?? 'workspace-statistics__tile-header'].filter(Boolean).join(' ')}>
+      <header
+        className={[
+          'workspace-public-demand-map__header',
+          headerClassName ?? 'workspace-statistics__tile-header',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      >
         <p className="section-title">{t(I18N_KEYS.homePublic.demandMapTitle)}</p>
         <p className="section-subtitle">{t(I18N_KEYS.homePublic.demandMapSubtitle)}</p>
       </header>
@@ -81,21 +90,35 @@ export function WorkspacePublicDemandMapView({
           </p>
         ) : null}
         {isError ? (
-          <p className="workspace-public-demand-map__state workspace-public-demand-map__state--error" role="alert">
+          <p
+            className="workspace-public-demand-map__state workspace-public-demand-map__state--error"
+            role="alert"
+          >
             {t(I18N_KEYS.homePublic.demandMapError)}
           </p>
         ) : null}
-        {showEmptyState ? <p className="workspace-public-demand-map__empty">{t(I18N_KEYS.homePublic.demandMapEmpty)}</p> : null}
-
+        {showEmptyState ? (
+          <p className="workspace-public-demand-map__empty">
+            {t(I18N_KEYS.homePublic.demandMapEmpty)}
+          </p>
+        ) : null}
       </div>
       {!isLoading && !isError ? (
         <div className="workspace-public-demand-map__meta workspace-public-demand-map__meta--footer">
-          <article className={workspaceStatCardShell('workspace-public-demand-map__metric workspace-public-demand-map__metric--requests')}>
+          <article
+            className={workspaceStatCardShell(
+              'workspace-public-demand-map__metric workspace-public-demand-map__metric--requests',
+            )}
+          >
             <span className="workspace-public-demand-map__metric-dot" aria-hidden="true" />
             <strong className="stat-value">{formatNumber.format(activeRequestsCount)}</strong>
             <span className="stat-label">{t(I18N_KEYS.homePublic.demandMapActiveRequests)}</span>
           </article>
-          <article className={workspaceStatCardShell('workspace-public-demand-map__metric workspace-public-demand-map__metric--providers')}>
+          <article
+            className={workspaceStatCardShell(
+              'workspace-public-demand-map__metric workspace-public-demand-map__metric--providers',
+            )}
+          >
             <span className="workspace-public-demand-map__metric-dot" aria-hidden="true" />
             <strong className="stat-value">{formatNumber.format(activeProvidersCount)}</strong>
             <span className="stat-label">{t(I18N_KEYS.homePublic.demandMapActiveProviders)}</span>
@@ -108,7 +131,8 @@ export function WorkspacePublicDemandMapView({
           <ul>
             {topAccessibleCities.map((city, index) => (
               <li key={`${city.id}-${index}`}>
-                {city.name}: {formatNumber.format(city.count)} {t(I18N_KEYS.homePublic.demandMapActiveRequests)}
+                {city.name}: {formatNumber.format(city.count)}{' '}
+                {t(I18N_KEYS.homePublic.demandMapActiveRequests)}
               </li>
             ))}
           </ul>

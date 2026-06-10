@@ -5,7 +5,10 @@ import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { RequestsView } from '@/features/workspace/requests/RequestsView';
-import { buildWorkspaceRequestsSurfaceModel, type WorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
+import {
+  buildWorkspaceRequestsSurfaceModel,
+  type WorkspaceRequestsSurfaceModel,
+} from '@/features/workspace/requests/workspaceRequestsView.model';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({

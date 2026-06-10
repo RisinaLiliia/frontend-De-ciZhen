@@ -29,15 +29,21 @@ describe('workspaceNavigationItems', () => {
 
     expect(offersItem).toBeDefined();
     expect(offersItem?.section).toBe('offers');
-    expect(offersItem?.href).toBe('/workspace?section=requests&scope=my&role=provider&period=90d&range=90d');
+    expect(offersItem?.href).toBe(
+      '/workspace?section=requests&scope=my&role=provider&period=90d&range=90d',
+    );
 
     expect(contractsItem).toBeDefined();
     expect(contractsItem?.section).toBe('contracts');
-    expect(contractsItem?.href).toBe('/workspace?section=requests&scope=my&state=execution&period=90d&range=90d');
+    expect(contractsItem?.href).toBe(
+      '/workspace?section=requests&scope=my&state=execution&period=90d&range=90d',
+    );
   });
 
   it('hides Angebote and Aufträge from guest navigation and restores them for authenticated users', () => {
-    const guestLabels = resolveVisibleWorkspaceNavigationItems({ isAuthed: false }).map((item) => item.label);
+    const guestLabels = resolveVisibleWorkspaceNavigationItems({ isAuthed: false }).map(
+      (item) => item.label,
+    );
     const providerLabels = resolveVisibleWorkspaceNavigationItems({
       isAuthed: true,
       role: 'provider',

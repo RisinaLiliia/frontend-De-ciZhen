@@ -13,8 +13,16 @@
     border-radius: var(--radius-lg);
     border: 1px solid color-mix(in oklab, var(--color-primary) 24%, var(--color-border) 76%);
     background:
-      radial-gradient(320px 170px at -10% -16%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 64%),
-      radial-gradient(280px 160px at 112% -12%, color-mix(in oklab, var(--color-warning) 8%, transparent), transparent 62%),
+      radial-gradient(
+        320px 170px at -10% -16%,
+        color-mix(in oklab, var(--color-primary) 10%, transparent),
+        transparent 64%
+      ),
+      radial-gradient(
+        280px 160px at 112% -12%,
+        color-mix(in oklab, var(--color-warning) 8%, transparent),
+        transparent 62%
+      ),
       linear-gradient(
         128deg,
         color-mix(in oklab, var(--color-surface) 94%, transparent),
@@ -146,6 +154,4 @@
       0 8px 18px color-mix(in oklab, var(--color-warning) 20%, transparent),
       inset 0 1px 0 color-mix(in oklab, var(--c-glass-hi) 88%, transparent);
   }
-
-
 }

@@ -10,9 +10,7 @@ import {
 } from '@/features/workspace/requests/workspaceRequestDetailsFacade';
 import type { MyRequestsViewCard } from '@/features/workspace/requests/myRequestsView.model';
 import { RequestDialogShell } from '@/features/workspace/overlays/RequestDialogShell';
-import {
-  useWorkspaceManagedRequestData,
-} from '@/features/workspace/overlays/useWorkspaceRequestOverlayData';
+import { useWorkspaceManagedRequestData } from '@/features/workspace/overlays/useWorkspaceRequestOverlayData';
 import {
   WorkspaceRequestDecisionSection,
   WorkspaceRequestOffersSection,
@@ -35,7 +33,10 @@ import {
   WORKSPACE_REQUEST_PROFILE_QUERY_KEY,
 } from '@/features/workspace/requests/workspaceRequestRoute.model';
 
-export { WorkspaceChatDialog, WorkspaceManagedOfferSheet } from '@/features/workspace/overlays/RequestSecondaryOverlays';
+export {
+  WorkspaceChatDialog,
+  WorkspaceManagedOfferSheet,
+} from '@/features/workspace/overlays/RequestSecondaryOverlays';
 
 export function WorkspaceManagedRequestDialog({
   locale,
@@ -60,10 +61,7 @@ export function WorkspaceManagedRequestDialog({
   const searchParams = useSearchParams();
   const isCustomerRequest = card.role === 'customer';
   const activeRequestProfile = searchParams?.get(WORKSPACE_REQUEST_PROFILE_QUERY_KEY);
-  const canManageRequest = React.useMemo(
-    () => hasOwnerRequestManagementCapability(card),
-    [card],
-  );
+  const canManageRequest = React.useMemo(() => hasOwnerRequestManagementCapability(card), [card]);
   const { data, isLoading, isError } = useWorkspaceManagedRequestData({
     locale,
     requestId: card.requestId,
@@ -123,9 +121,7 @@ export function WorkspaceManagedRequestDialog({
   const chatInput = chatAction?.chatInput ?? null;
   const effectiveApplyLabel = offerAction?.label ?? applyLabel;
   const effectiveApplyState = offerAction?.kind === 'edit_offer' ? 'edit' : applyState;
-  const effectiveApplyTitle = offerAction?.kind === 'edit_offer'
-    ? offerAction.label
-    : applyTitle;
+  const effectiveApplyTitle = offerAction?.kind === 'edit_offer' ? offerAction.label : applyTitle;
   const resolvedRequest = request ?? null;
   const resolvedViewModel = viewModel ?? null;
   const hasResolvedContent = Boolean(resolvedRequest && resolvedViewModel);
@@ -139,7 +135,13 @@ export function WorkspaceManagedRequestDialog({
       scope: 'my',
       intent: initialIntent,
     });
-  }, [card.requestId, initialIntent, resolvedRequest?.clientId, resolvedRequest?.clientName, searchParams]);
+  }, [
+    card.requestId,
+    initialIntent,
+    resolvedRequest?.clientId,
+    resolvedRequest?.clientName,
+    searchParams,
+  ]);
   const handleCloseProfile = React.useCallback(() => {
     router.push(clearWorkspaceRequestProfileHref({ currentSearch: searchParams }));
   }, [router, searchParams]);
@@ -228,28 +230,26 @@ export function WorkspaceManagedRequestDialog({
         similarForRender={similarForRender}
         similarHref={similarHref}
         showSimilarSection={!showManagedRequestSidebar && !isOwner}
-        asideChildren={showManagedRequestSidebar ? (
-          initialIntent === 'responses'
-            ? (
+        asideChildren={
+          showManagedRequestSidebar ? (
+            initialIntent === 'responses' ? (
               <>
                 {offersSection}
                 {decisionSection}
               </>
-            )
-            : initialIntent === 'review'
-              ? (
-                <>
-                  {decisionSection}
-                  {offersSection}
-                </>
-              )
-            : (
+            ) : initialIntent === 'review' ? (
+              <>
+                {decisionSection}
+                {offersSection}
+              </>
+            ) : (
               <>
                 {decisionSection}
                 {offersSection}
               </>
             )
-        ) : null}
+          ) : null
+        }
       />
     )
   ) : null;
@@ -269,7 +269,9 @@ export function WorkspaceManagedRequestDialog({
       return (
         <div className="my-request-dialog__state">
           <div className="my-request-inline-state my-request-inline-state--error" role="alert">
-            <span className="my-request-inline-state__icon" aria-hidden="true">!</span>
+            <span className="my-request-inline-state__icon" aria-hidden="true">
+              !
+            </span>
             <div className="my-request-inline-state__copy">
               <strong>{t(I18N_KEYS.requestDetails.workspaceLoadErrorTitle)}</strong>
               <p>{t(I18N_KEYS.requestDetails.workspaceLoadErrorBody)}</p>

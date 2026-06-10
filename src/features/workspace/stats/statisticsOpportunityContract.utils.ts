@@ -10,7 +10,9 @@ import {
 } from './statisticsOpportunityMath';
 import { calculateDistanceKm } from './statisticsOpportunityGeo';
 
-type OpportunityItem = NonNullable<WorkspaceStatisticsOverviewSourceDto['opportunityRadar']>[number];
+type OpportunityItem = NonNullable<
+  WorkspaceStatisticsOverviewSourceDto['opportunityRadar']
+>[number];
 type OpportunityMetric = OpportunityItem['metrics'][number];
 type OpportunityStatus = OpportunityItem['status'];
 type OpportunityTone = OpportunityItem['tone'];
@@ -36,7 +38,6 @@ export type OpportunityClusterFilters = {
   limit?: number;
 };
 
-
 function resolveCityKeyFromCity(city: CityRow): string {
   return city.cityId ?? city.citySlug;
 }
@@ -56,14 +57,18 @@ function resolvePriceSmartSignalTone(params: {
   return 'balanced';
 }
 
-function resolvePriceConfidenceLevel(analyzedRequestsCount: number | null): PriceConfidenceLevel | null {
+function resolvePriceConfidenceLevel(
+  analyzedRequestsCount: number | null,
+): PriceConfidenceLevel | null {
   if (analyzedRequestsCount === null || analyzedRequestsCount <= 0) return null;
   if (analyzedRequestsCount >= 100) return 'high';
   if (analyzedRequestsCount >= 40) return 'medium';
   return 'low';
 }
 
-function resolveProfitPotentialStatus(score: number | null): PriceIntelligence['profitPotentialStatus'] {
+function resolveProfitPotentialStatus(
+  score: number | null,
+): PriceIntelligence['profitPotentialStatus'] {
   if (score === null) return null;
   if (score >= 7.5) return 'high';
   if (score >= 5) return 'medium';
@@ -89,13 +94,25 @@ function mergePriceIntelligence(
     marketAverage: coalesceNullable(preferred.marketAverage, fallback.marketAverage),
     optimalMin: coalesceNullable(preferred.optimalMin, fallback.optimalMin),
     optimalMax: coalesceNullable(preferred.optimalMax, fallback.optimalMax),
-    smartRecommendedPrice: coalesceNullable(preferred.smartRecommendedPrice, fallback.smartRecommendedPrice),
+    smartRecommendedPrice: coalesceNullable(
+      preferred.smartRecommendedPrice,
+      fallback.smartRecommendedPrice,
+    ),
     smartSignalTone: coalesceNullable(preferred.smartSignalTone, fallback.smartSignalTone),
-    analyzedRequestsCount: coalesceNullable(preferred.analyzedRequestsCount, fallback.analyzedRequestsCount),
+    analyzedRequestsCount: coalesceNullable(
+      preferred.analyzedRequestsCount,
+      fallback.analyzedRequestsCount,
+    ),
     confidenceLevel: coalesceNullable(preferred.confidenceLevel, fallback.confidenceLevel),
     recommendation: coalesceNullable(preferred.recommendation, fallback.recommendation),
-    profitPotentialScore: coalesceNullable(preferred.profitPotentialScore, fallback.profitPotentialScore),
-    profitPotentialStatus: coalesceNullable(preferred.profitPotentialStatus, fallback.profitPotentialStatus),
+    profitPotentialScore: coalesceNullable(
+      preferred.profitPotentialScore,
+      fallback.profitPotentialScore,
+    ),
+    profitPotentialStatus: coalesceNullable(
+      preferred.profitPotentialStatus,
+      fallback.profitPotentialStatus,
+    ),
   };
 }
 
@@ -142,7 +159,8 @@ function resolveOpportunitySummaryKey(params: {
 }): OpportunitySummaryKey {
   if (params.status === 'very_high') return 'very_high';
   if (params.status === 'good') return 'good';
-  if (params.status === 'balanced') return params.competition >= 7 ? 'balanced_competitive' : 'balanced';
+  if (params.status === 'balanced')
+    return params.competition >= 7 ? 'balanced_competitive' : 'balanced';
   if (params.status === 'competitive') return 'competitive';
   if (params.demand < 4 || params.growth < 4 || params.activity < 4) return 'low_demand';
   return 'low';
@@ -152,13 +170,20 @@ function resolveCategoryContext(
   payload: WorkspaceStatisticsOverviewSourceDto,
   preferredCategoryKey: string | null | undefined,
 ): { key: string | null; label: string | null } {
-  const categories: { categoryKey: string | null; categoryName: string; requestCount: number; sharePercent: number }[] = (payload.demand.categories ?? [])
+  const categories: {
+    categoryKey: string | null;
+    categoryName: string;
+    requestCount: number;
+    sharePercent: number;
+  }[] = (payload.demand.categories ?? [])
     .slice()
-    .sort((a, b) => (b.sharePercent - a.sharePercent) || (b.requestCount - a.requestCount));
+    .sort((a, b) => b.sharePercent - a.sharePercent || b.requestCount - a.requestCount);
   const normalizedPreferred = normalizeText(preferredCategoryKey);
 
   if (normalizedPreferred) {
-    const selectedDemandCategory = categories.find((item) => normalizeText(item.categoryKey) === normalizedPreferred);
+    const selectedDemandCategory = categories.find(
+      (item) => normalizeText(item.categoryKey) === normalizedPreferred,
+    );
     if (selectedDemandCategory) {
       return {
         key: selectedDemandCategory.categoryKey ?? normalizedPreferred,
@@ -194,7 +219,9 @@ function resolveCategoryContext(
     };
   }
 
-  const opportunityCategory = (payload.opportunityRadar ?? []).find((item) => normalizeText(item.category) !== null);
+  const opportunityCategory = (payload.opportunityRadar ?? []).find(
+    (item) => normalizeText(item.category) !== null,
+  );
   return {
     key: normalizeText(opportunityCategory?.categoryKey),
     label: normalizeText(opportunityCategory?.category),
@@ -206,7 +233,9 @@ function findCityRow(
   item: Pick<OpportunityItem, 'cityId' | 'city'>,
 ): CityRow | null {
   return (
-    payload.demand.cities.find((city) => city.cityId && item.cityId && city.cityId === item.cityId) ??
+    payload.demand.cities.find(
+      (city) => city.cityId && item.cityId && city.cityId === item.cityId,
+    ) ??
     payload.demand.cities.find((city) => city.cityName === item.city) ??
     null
   );
@@ -222,104 +251,118 @@ function buildDerivedOpportunityCandidates(
   const categoryContext = resolveCategoryContext(payload, preferredCategoryKey);
   const growthIndex = clampUnit((payload.activity.metrics?.offerRatePercent ?? 0) / 100);
   const responseSpeedIndex =
-    typeof payload.activity.metrics?.responseMedianMinutes === 'number' && Number.isFinite(payload.activity.metrics.responseMedianMinutes)
-      ? clampUnit(1 - (payload.activity.metrics.responseMedianMinutes / 180))
+    typeof payload.activity.metrics?.responseMedianMinutes === 'number' &&
+    Number.isFinite(payload.activity.metrics.responseMedianMinutes)
+      ? clampUnit(1 - payload.activity.metrics.responseMedianMinutes / 180)
       : 0.5;
-  const demandByCity = cities.map((city) => Math.max(0, city.requestCount, city.anbieterSuchenCount ?? 0));
+  const demandByCity = cities.map((city) =>
+    Math.max(0, city.requestCount, city.anbieterSuchenCount ?? 0),
+  );
   const maxDemand = Math.max(1, ...demandByCity);
   const sourceByCityKey = new Map(
     (payload.opportunityRadar ?? []).map((item) => [resolveCityKeyFromOpportunity(item), item]),
   );
 
-  const cityCandidates = cities
-    .map((city) => {
-      const demand = Math.max(0, city.requestCount, city.anbieterSuchenCount ?? 0);
-      const providers = typeof city.auftragSuchenCount === 'number' && Number.isFinite(city.auftragSuchenCount)
+  const cityCandidates = cities.map((city) => {
+    const demand = Math.max(0, city.requestCount, city.anbieterSuchenCount ?? 0);
+    const providers =
+      typeof city.auftragSuchenCount === 'number' && Number.isFinite(city.auftragSuchenCount)
         ? Math.max(0, Math.round(city.auftragSuchenCount))
         : 0;
-      const marketBalanceRatio =
-        typeof city.marketBalanceRatio === 'number' && Number.isFinite(city.marketBalanceRatio)
-          ? city.marketBalanceRatio
-          : (demand <= 0 && providers <= 0)
-            ? null
-            : roundRatio(demand / Math.max(1, providers));
+    const marketBalanceRatio =
+      typeof city.marketBalanceRatio === 'number' && Number.isFinite(city.marketBalanceRatio)
+        ? city.marketBalanceRatio
+        : demand <= 0 && providers <= 0
+          ? null
+          : roundRatio(demand / Math.max(1, providers));
 
-      const demandIndex = clampUnit(demand / maxDemand);
-      const competitionOpportunityIndex = marketBalanceRatio === null ? 0.5 : clampUnit(marketBalanceRatio / 1.5);
-      const demandScore = roundScore(demandIndex * 10);
-      const competitionScore = roundScore(competitionOpportunityIndex * 10);
-      const growthScore = roundScore(growthIndex * 10);
-      const activityScore = roundScore(responseSpeedIndex * 10);
-      const competitionPressureScore = roundScore(10 - competitionScore);
-      const score = roundScore(10 * (
-        (demandIndex * 0.4) +
-        (competitionOpportunityIndex * 0.3) +
-        (growthIndex * 0.2) +
-        (responseSpeedIndex * 0.1)
-      ));
-      const status = resolveOpportunityStatus(score);
-      const metricsBase: Array<{ key: OpportunityMetricKey; value: number }> = [
-        { key: 'demand', value: demandScore },
-        { key: 'competition', value: competitionPressureScore },
-        { key: 'growth', value: growthScore },
-        { key: 'activity', value: activityScore },
-      ];
-      const metrics: OpportunityMetric[] = metricsBase.map((metric) => ({
-        ...metric,
-        ...resolveOpportunityMetricSemantic(metric.key, metric.value),
-      }));
+    const demandIndex = clampUnit(demand / maxDemand);
+    const competitionOpportunityIndex =
+      marketBalanceRatio === null ? 0.5 : clampUnit(marketBalanceRatio / 1.5);
+    const demandScore = roundScore(demandIndex * 10);
+    const competitionScore = roundScore(competitionOpportunityIndex * 10);
+    const growthScore = roundScore(growthIndex * 10);
+    const activityScore = roundScore(responseSpeedIndex * 10);
+    const competitionPressureScore = roundScore(10 - competitionScore);
+    const score = roundScore(
+      10 *
+        (demandIndex * 0.4 +
+          competitionOpportunityIndex * 0.3 +
+          growthIndex * 0.2 +
+          responseSpeedIndex * 0.1),
+    );
+    const status = resolveOpportunityStatus(score);
+    const metricsBase: Array<{ key: OpportunityMetricKey; value: number }> = [
+      { key: 'demand', value: demandScore },
+      { key: 'competition', value: competitionPressureScore },
+      { key: 'growth', value: growthScore },
+      { key: 'activity', value: activityScore },
+    ];
+    const metrics: OpportunityMetric[] = metricsBase.map((metric) => ({
+      ...metric,
+      ...resolveOpportunityMetricSemantic(metric.key, metric.value),
+    }));
 
-      const derived: OpportunityCandidate = {
-        cityId: city.cityId ?? null,
-        city: city.cityName,
-        citySlug: city.citySlug,
-        categoryKey: categoryContext.key,
-        category: categoryContext.label,
-        demand,
-        providers,
-        marketBalanceRatio,
-        score,
-        demandScore,
-        competitionScore,
-        growthScore,
-        activityScore,
+    const derived: OpportunityCandidate = {
+      cityId: city.cityId ?? null,
+      city: city.cityName,
+      citySlug: city.citySlug,
+      categoryKey: categoryContext.key,
+      category: categoryContext.label,
+      demand,
+      providers,
+      marketBalanceRatio,
+      score,
+      demandScore,
+      competitionScore,
+      growthScore,
+      activityScore,
+      status,
+      tone: resolveOpportunityTone(status),
+      summaryKey: resolveOpportunitySummaryKey({
         status,
-        tone: resolveOpportunityTone(status),
-        summaryKey: resolveOpportunitySummaryKey({
-          status,
-          demand: demandScore,
-          competition: competitionPressureScore,
-          growth: growthScore,
-          activity: activityScore,
-        }),
-        metrics,
-        lat: city.lat,
-        lng: city.lng,
-      };
+        demand: demandScore,
+        competition: competitionPressureScore,
+        growth: growthScore,
+        activity: activityScore,
+      }),
+      metrics,
+      lat: city.lat,
+      lng: city.lng,
+    };
 
-      const sourceItem = sourceByCityKey.get(resolveCityKeyFromCity(city));
-      if (!sourceItem) return derived;
+    const sourceItem = sourceByCityKey.get(resolveCityKeyFromCity(city));
+    if (!sourceItem) return derived;
 
-      return {
-        ...derived,
-        cityId: sourceItem.cityId ?? derived.cityId,
-        city: sourceItem.city ?? derived.city,
-        categoryKey: categoryContext.key ?? sourceItem.categoryKey ?? null,
-        category: categoryContext.label ?? sourceItem.category ?? null,
-        demand: typeof sourceItem.demand === 'number' ? sourceItem.demand : derived.demand,
-        providers: typeof sourceItem.providers === 'number' ? sourceItem.providers : derived.providers,
-        marketBalanceRatio: sourceItem.marketBalanceRatio ?? derived.marketBalanceRatio,
-        score: typeof sourceItem.score === 'number' ? sourceItem.score : derived.score,
-        demandScore: typeof sourceItem.demandScore === 'number' ? sourceItem.demandScore : derived.demandScore,
-        competitionScore: typeof sourceItem.competitionScore === 'number' ? sourceItem.competitionScore : derived.competitionScore,
-        growthScore: typeof sourceItem.growthScore === 'number' ? sourceItem.growthScore : derived.growthScore,
-        activityScore: typeof sourceItem.activityScore === 'number' ? sourceItem.activityScore : derived.activityScore,
-        status: sourceItem.status ?? derived.status,
-        tone: sourceItem.tone ?? derived.tone,
-        summaryKey: sourceItem.summaryKey ?? derived.summaryKey,
-        metrics: sourceItem.metrics?.length ? sourceItem.metrics : derived.metrics,
-      };
-    });
+    return {
+      ...derived,
+      cityId: sourceItem.cityId ?? derived.cityId,
+      city: sourceItem.city ?? derived.city,
+      categoryKey: categoryContext.key ?? sourceItem.categoryKey ?? null,
+      category: categoryContext.label ?? sourceItem.category ?? null,
+      demand: typeof sourceItem.demand === 'number' ? sourceItem.demand : derived.demand,
+      providers:
+        typeof sourceItem.providers === 'number' ? sourceItem.providers : derived.providers,
+      marketBalanceRatio: sourceItem.marketBalanceRatio ?? derived.marketBalanceRatio,
+      score: typeof sourceItem.score === 'number' ? sourceItem.score : derived.score,
+      demandScore:
+        typeof sourceItem.demandScore === 'number' ? sourceItem.demandScore : derived.demandScore,
+      competitionScore:
+        typeof sourceItem.competitionScore === 'number'
+          ? sourceItem.competitionScore
+          : derived.competitionScore,
+      growthScore:
+        typeof sourceItem.growthScore === 'number' ? sourceItem.growthScore : derived.growthScore,
+      activityScore:
+        typeof sourceItem.activityScore === 'number'
+          ? sourceItem.activityScore
+          : derived.activityScore,
+      status: sourceItem.status ?? derived.status,
+      tone: sourceItem.tone ?? derived.tone,
+      summaryKey: sourceItem.summaryKey ?? derived.summaryKey,
+      metrics: sourceItem.metrics?.length ? sourceItem.metrics : derived.metrics,
+    };
+  });
   const seenCityKeys = new Set(cityCandidates.map((item) => resolveCityKeyFromOpportunity(item)));
   const extraSourceCandidates = (payload.opportunityRadar ?? [])
     .filter((item) => !seenCityKeys.has(resolveCityKeyFromOpportunity(item)))
@@ -345,15 +388,15 @@ function buildDerivedOpportunityCandidates(
       lng: null,
     }));
 
-  return [...cityCandidates, ...extraSourceCandidates]
-    .sort((a, b) =>
-      (b.score - a.score) ||
-      (b.demand - a.demand) ||
-      a.city.localeCompare(b.city, 'de-DE')
-    );
+  return [...cityCandidates, ...extraSourceCandidates].sort(
+    (a, b) => b.score - a.score || b.demand - a.demand || a.city.localeCompare(b.city, 'de-DE'),
+  );
 }
 
-function matchesScopedCategory(candidate: OpportunityCandidate, selectedCategoryKey: string | null | undefined) {
+function matchesScopedCategory(
+  candidate: OpportunityCandidate,
+  selectedCategoryKey: string | null | undefined,
+) {
   const normalizedSelected = normalizeText(selectedCategoryKey);
   if (!normalizedSelected) return true;
   return normalizeText(candidate.categoryKey) === normalizedSelected;
@@ -365,7 +408,10 @@ function resolveOpportunityAnchor(
 ): OpportunityCandidate | null {
   if (filters.cityId) {
     return (
-      candidates.find((item) => item.cityId === filters.cityId && matchesScopedCategory(item, filters.categoryKey)) ??
+      candidates.find(
+        (item) =>
+          item.cityId === filters.cityId && matchesScopedCategory(item, filters.categoryKey),
+      ) ??
       candidates.find((item) => item.cityId === filters.cityId) ??
       null
     );
@@ -384,13 +430,11 @@ function buildOpportunityPriceIntelligence(params: {
   const opportunityCity = findCityRow(payload, opportunity);
   const completedJobs = Number(payload.activity.metrics?.completedJobs ?? 0);
   const gmvAmount = Number(payload.activity.metrics?.gmvAmount ?? 0);
-  const avgRevenue = completedJobs > 0 && Number.isFinite(gmvAmount)
-    ? gmvAmount / completedJobs
-    : null;
+  const avgRevenue =
+    completedJobs > 0 && Number.isFinite(gmvAmount) ? gmvAmount / completedJobs : null;
 
-  const analyzedRequestsCount = opportunity.demand + Math.round(
-    peerGroup.reduce((sum, item) => sum + item.demand, 0) * 0.35,
-  );
+  const analyzedRequestsCount =
+    opportunity.demand + Math.round(peerGroup.reduce((sum, item) => sum + item.demand, 0) * 0.35);
   const confidenceLevel = resolvePriceConfidenceLevel(analyzedRequestsCount);
   const baseFallback: PriceIntelligence = {
     citySlug: opportunityCity?.citySlug ?? null,
@@ -416,18 +460,22 @@ function buildOpportunityPriceIntelligence(params: {
   }
 
   const peerDemandAverage = average(peerGroup.map((item) => item.demand)) ?? opportunity.demand;
-  const peerBalanceAverage = average(peerGroup.map((item) => item.marketBalanceRatio)) ?? (opportunity.marketBalanceRatio ?? 1);
+  const peerBalanceAverage =
+    average(peerGroup.map((item) => item.marketBalanceRatio)) ??
+    opportunity.marketBalanceRatio ??
+    1;
   const peerScoreAverage = average(peerGroup.map((item) => item.score)) ?? opportunity.score;
-  const demandDelta = peerDemandAverage > 0 ? (opportunity.demand - peerDemandAverage) / peerDemandAverage : 0;
+  const demandDelta =
+    peerDemandAverage > 0 ? (opportunity.demand - peerDemandAverage) / peerDemandAverage : 0;
   const balanceDelta =
     peerBalanceAverage > 0 && typeof opportunity.marketBalanceRatio === 'number'
       ? (opportunity.marketBalanceRatio - peerBalanceAverage) / peerBalanceAverage
       : 0;
   const scoreDelta = (opportunity.score - peerScoreAverage) / 10;
   const marketAdjustment = clampNumber(
-    (clampNumber(demandDelta, -1, 1) * 0.05) +
-      (clampNumber(balanceDelta, -1, 1) * 0.04) +
-      (clampNumber(scoreDelta, -0.5, 0.5) * 0.03),
+    clampNumber(demandDelta, -1, 1) * 0.05 +
+      clampNumber(balanceDelta, -1, 1) * 0.04 +
+      clampNumber(scoreDelta, -0.5, 0.5) * 0.03,
     -0.08,
     0.12,
   );
@@ -458,7 +506,7 @@ function buildOpportunityPriceIntelligence(params: {
     analyzedRequestsCount,
     confidenceLevel,
     recommendation: null,
-    profitPotentialScore: roundScore(clampNumber(opportunity.score + (marketAdjustment * 5), 0, 10)),
+    profitPotentialScore: roundScore(clampNumber(opportunity.score + marketAdjustment * 5, 0, 10)),
     profitPotentialStatus: resolveProfitPotentialStatus(opportunity.score),
   };
 
@@ -497,7 +545,9 @@ export function buildFocusedOpportunityRadar(
   if (!anchor) return [];
 
   const anchorCity = findCityRow(payload, anchor);
-  const peerPool = candidates.filter((item) => resolveCityKeyFromOpportunity(item) !== resolveCityKeyFromOpportunity(anchor));
+  const peerPool = candidates.filter(
+    (item) => resolveCityKeyFromOpportunity(item) !== resolveCityKeyFromOpportunity(anchor),
+  );
   const orderedCluster = filters.cityId
     ? [
         anchor,
@@ -506,11 +556,13 @@ export function buildFocusedOpportunityRadar(
             item,
             distanceKm: calculateDistanceKm(anchorCity, findCityRow(payload, item)),
           }))
-          .sort((a, b) =>
-            ((a.distanceKm ?? Number.POSITIVE_INFINITY) - (b.distanceKm ?? Number.POSITIVE_INFINITY)) ||
-            (b.item.score - a.item.score) ||
-            (b.item.demand - a.item.demand) ||
-            a.item.city.localeCompare(b.item.city, 'de-DE')
+          .sort(
+            (a, b) =>
+              (a.distanceKm ?? Number.POSITIVE_INFINITY) -
+                (b.distanceKm ?? Number.POSITIVE_INFINITY) ||
+              b.item.score - a.item.score ||
+              b.item.demand - a.item.demand ||
+              a.item.city.localeCompare(b.item.city, 'de-DE'),
           )
           .map((entry) => entry.item)
           .slice(0, Math.max(0, limit - 1)),
@@ -518,7 +570,10 @@ export function buildFocusedOpportunityRadar(
     : [anchor, ...peerPool.slice(0, Math.max(0, limit - 1))];
 
   return orderedCluster.slice(0, limit).map((item, index, cluster) => {
-    const peerGroup = cluster.filter((candidate) => resolveCityKeyFromOpportunity(candidate) !== resolveCityKeyFromOpportunity(item));
+    const peerGroup = cluster.filter(
+      (candidate) =>
+        resolveCityKeyFromOpportunity(candidate) !== resolveCityKeyFromOpportunity(item),
+    );
     const distanceKm =
       filters.cityId && index > 0
         ? calculateDistanceKm(anchorCity, findCityRow(payload, item))
@@ -546,7 +601,9 @@ export function buildFocusedOpportunityRadar(
         role: index === 0 ? 'focus' : 'competitor',
         distanceKm,
         reason: filters.cityId
-          ? (index === 0 ? 'selected_city' : 'nearby_competitor')
+          ? index === 0
+            ? 'selected_city'
+            : 'nearby_competitor'
           : 'top_ranked',
       },
       priceIntelligence: buildOpportunityPriceIntelligence({
@@ -595,24 +652,26 @@ function buildPriceIntelligence(
     limit: 3,
   })[0];
 
-  return derivedTop?.priceIntelligence ?? {
-    citySlug: null,
-    city: topOpportunity.city,
-    categoryKey: topOpportunity.categoryKey,
-    category: topOpportunity.category,
-    recommendedMin: null,
-    recommendedMax: null,
-    marketAverage: null,
-    optimalMin: null,
-    optimalMax: null,
-    smartRecommendedPrice: null,
-    smartSignalTone: null,
-    analyzedRequestsCount: topOpportunity.demand,
-    confidenceLevel: resolvePriceConfidenceLevel(topOpportunity.demand),
-    recommendation: null,
-    profitPotentialScore: topOpportunity.score,
-    profitPotentialStatus: resolveProfitPotentialStatus(topOpportunity.score),
-  };
+  return (
+    derivedTop?.priceIntelligence ?? {
+      citySlug: null,
+      city: topOpportunity.city,
+      categoryKey: topOpportunity.categoryKey,
+      category: topOpportunity.category,
+      recommendedMin: null,
+      recommendedMax: null,
+      marketAverage: null,
+      optimalMin: null,
+      optimalMax: null,
+      smartRecommendedPrice: null,
+      smartSignalTone: null,
+      analyzedRequestsCount: topOpportunity.demand,
+      confidenceLevel: resolvePriceConfidenceLevel(topOpportunity.demand),
+      recommendation: null,
+      profitPotentialScore: topOpportunity.score,
+      profitPotentialStatus: resolveProfitPotentialStatus(topOpportunity.score),
+    }
+  );
 }
 
 export function ensureStatisticsOpportunityContract(

@@ -9,9 +9,7 @@ type RequestDetailsPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-function resolveQueryValue(
-  value: string | string[] | undefined,
-) {
+function resolveQueryValue(value: string | string[] | undefined) {
   if (Array.isArray(value)) {
     return value[0] ?? null;
   }

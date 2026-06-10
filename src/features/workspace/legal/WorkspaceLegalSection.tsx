@@ -1,6 +1,9 @@
 'use client';
 
-import { LegalDocumentContent, type LegalDocumentType } from '@/features/legal/LegalDocumentContent';
+import {
+  LegalDocumentContent,
+  type LegalDocumentType,
+} from '@/features/legal/LegalDocumentContent';
 
 type WorkspaceLegalSectionProps = {
   type: LegalDocumentType;

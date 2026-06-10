@@ -91,18 +91,16 @@ export function RequestCard({
 }: RequestCardProps) {
   const router = useRouter();
   const hasImage = Boolean(imageSrc);
-  const visibleBadges = badges
-    .slice(0, 1)
-    .map<RequestCardBadge>((badge) => (
-      typeof badge === 'string'
-        ? { label: badge, variant: 'neutral', tone: 'outline', size: 'sm' }
-        : {
-            size: 'sm',
-            tone: 'soft',
-            variant: 'neutral',
-            ...badge,
-          }
-    ));
+  const visibleBadges = badges.slice(0, 1).map<RequestCardBadge>((badge) =>
+    typeof badge === 'string'
+      ? { label: badge, variant: 'neutral', tone: 'outline', size: 'sm' }
+      : {
+          size: 'sm',
+          tone: 'soft',
+          variant: 'neutral',
+          ...badge,
+        },
+  );
   const excerptText = excerpt?.trim() ?? '';
   const safeImageSrc = normalizeAppImageSrc(imageSrc);
   const optimizedImageSrc = optimizeAppImageSrc(safeImageSrc, 'card');
@@ -305,7 +303,7 @@ export function RequestCard({
           mainCopyContent
         )}
 
-        {(actionSlot || showsFooterPrice || (bottomMeta.length && !showsBodyPrice)) ? (
+        {actionSlot || showsFooterPrice || (bottomMeta.length && !showsBodyPrice) ? (
           <div className="request-card__footer">
             {showsFooterPrice ? (
               <div className="request-card__price">

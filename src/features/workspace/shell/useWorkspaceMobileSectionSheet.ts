@@ -42,7 +42,8 @@ export function useWorkspaceMobileSectionSheet() {
     const previousBodyRight = body.style.right;
     const previousBodyWidth = body.style.width;
     const previousRootOverflow = root.style.overflow;
-    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
     root.setAttribute(WORKSPACE_MOBILE_NAV_OPEN_ATTR, 'true');
     root.style.overflow = 'hidden';

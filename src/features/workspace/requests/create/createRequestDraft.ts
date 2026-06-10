@@ -26,7 +26,8 @@ function sanitizeDraftValues(values: Partial<RequestDraft['values']>): RequestDr
     title: typeof values.title === 'string' ? values.title : '',
     propertyType: values.propertyType === 'house' ? 'house' : 'apartment',
     area: typeof values.area === 'number' && Number.isFinite(values.area) ? values.area : 50,
-    price: typeof values.price === 'number' && Number.isFinite(values.price) ? values.price : undefined,
+    price:
+      typeof values.price === 'number' && Number.isFinite(values.price) ? values.price : undefined,
     preferredDate: typeof values.preferredDate === 'string' ? values.preferredDate : '',
     isRecurring: Boolean(values.isRecurring),
     description: typeof values.description === 'string' ? values.description : '',
@@ -65,4 +66,3 @@ export function clearRequestDraft() {
   if (typeof window === 'undefined') return;
   window.localStorage.removeItem(REQUEST_DRAFT_STORAGE_KEY);
 }
-

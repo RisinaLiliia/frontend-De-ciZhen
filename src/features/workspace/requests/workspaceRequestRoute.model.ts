@@ -42,7 +42,9 @@ function normalizeSearchParams(currentSearch: SearchSource) {
 
 function ensurePrivateRequestsDefaults(searchParams: URLSearchParams) {
   const period = resolveWorkspaceRequestsPeriod(
-    searchParams.get('period') ?? searchParams.get('range') ?? DEFAULT_PRIVATE_WORKSPACE_REQUESTS_PERIOD,
+    searchParams.get('period') ??
+      searchParams.get('range') ??
+      DEFAULT_PRIVATE_WORKSPACE_REQUESTS_PERIOD,
   );
   searchParams.set('period', period);
   searchParams.set('range', period);
@@ -80,9 +82,7 @@ export function readWorkspaceRequestRouteState(searchParams: SearchReader) {
     requestIntent:
       mode === 'edit'
         ? 'edit'
-        : resolveWorkspaceRequestRouteIntent(
-            searchParams.get(WORKSPACE_REQUEST_INTENT_QUERY_KEY),
-          ),
+        : resolveWorkspaceRequestRouteIntent(searchParams.get(WORKSPACE_REQUEST_INTENT_QUERY_KEY)),
     requestPanel: resolveWorkspaceRequestRoutePanel(
       searchParams.get(WORKSPACE_REQUEST_PANEL_QUERY_KEY),
     ),
@@ -92,9 +92,7 @@ export function readWorkspaceRequestRouteState(searchParams: SearchReader) {
   };
 }
 
-export function buildWorkspaceCreateRequestHref(params: {
-  currentSearch: SearchSource;
-}) {
+export function buildWorkspaceCreateRequestHref(params: { currentSearch: SearchSource }) {
   const searchParams = normalizeSearchParams(params.currentSearch);
   ensurePrivateRequestsDefaults(searchParams);
 
@@ -144,11 +142,12 @@ export function buildWorkspaceRequestOverlayHref(params: {
     section: 'requests',
     patch: {
       scope,
-      [WORKSPACE_REQUEST_MODE_QUERY_KEY]:
-        params.intent === 'edit' ? 'edit' : null,
+      [WORKSPACE_REQUEST_MODE_QUERY_KEY]: params.intent === 'edit' ? 'edit' : null,
       [WORKSPACE_REQUEST_ID_QUERY_KEY]: params.requestId,
       [WORKSPACE_REQUEST_INTENT_QUERY_KEY]:
-        params.intent && params.intent !== 'view' && params.intent !== 'edit' ? params.intent : null,
+        params.intent && params.intent !== 'view' && params.intent !== 'edit'
+          ? params.intent
+          : null,
       [WORKSPACE_REQUEST_PANEL_QUERY_KEY]:
         params.panel && params.panel !== 'detail' ? params.panel : null,
       [WORKSPACE_REQUEST_CREATE_QUERY_KEY]: null,
@@ -195,9 +194,7 @@ export function buildWorkspaceRequestEditHref(params: {
   });
 }
 
-export function clearWorkspaceRequestOverlayHref(params: {
-  currentSearch: SearchSource;
-}) {
+export function clearWorkspaceRequestOverlayHref(params: { currentSearch: SearchSource }) {
   const searchParams = normalizeSearchParams(params.currentSearch);
 
   return buildWorkspaceHref({
@@ -231,11 +228,12 @@ export function buildWorkspaceRequestCustomerProfileHref(params: {
     section: 'requests',
     patch: {
       scope,
-      [WORKSPACE_REQUEST_MODE_QUERY_KEY]:
-        params.intent === 'edit' ? 'edit' : null,
+      [WORKSPACE_REQUEST_MODE_QUERY_KEY]: params.intent === 'edit' ? 'edit' : null,
       [WORKSPACE_REQUEST_ID_QUERY_KEY]: params.requestId,
       [WORKSPACE_REQUEST_INTENT_QUERY_KEY]:
-        params.intent && params.intent !== 'view' && params.intent !== 'edit' ? params.intent : null,
+        params.intent && params.intent !== 'view' && params.intent !== 'edit'
+          ? params.intent
+          : null,
       [WORKSPACE_REQUEST_PANEL_QUERY_KEY]: null,
       [WORKSPACE_REQUEST_CREATE_QUERY_KEY]: null,
       [WORKSPACE_REQUEST_PROFILE_QUERY_KEY]: 'customer',
@@ -243,9 +241,7 @@ export function buildWorkspaceRequestCustomerProfileHref(params: {
   });
 }
 
-export function clearWorkspaceRequestProfileHref(params: {
-  currentSearch: SearchSource;
-}) {
+export function clearWorkspaceRequestProfileHref(params: { currentSearch: SearchSource }) {
   const searchParams = normalizeSearchParams(params.currentSearch);
 
   return buildWorkspaceHref({

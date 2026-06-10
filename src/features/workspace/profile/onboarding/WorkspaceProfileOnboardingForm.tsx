@@ -17,15 +17,16 @@ import { Textarea } from '@/components/ui/Textarea';
 import { useServiceCategories, useServices } from '@/features/catalog/queries';
 import { useAuthStore } from '@/features/auth/store';
 import { getRegisterErrorMessage, isEmailExistsError } from '@/features/auth/mapAuthError';
-import {
-  useAuthSetLastMode,
-  useAuthStatus,
-} from '@/hooks/useAuthSnapshot';
+import { useAuthSetLastMode, useAuthStatus } from '@/hooks/useAuthSnapshot';
 import { setAccessToken } from '@/lib/auth/token';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 import { useT } from '@/lib/i18n/useT';
-import { getWorkspaceProfile, registerWorkspaceProfile, saveWorkspaceProfile } from '@/lib/api/workspace';
+import {
+  getWorkspaceProfile,
+  registerWorkspaceProfile,
+  saveWorkspaceProfile,
+} from '@/lib/api/workspace';
 import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { workspaceQK } from '@/features/workspace/data';
 import { providerQK } from '@/features/providers/queries';
@@ -144,7 +145,11 @@ function WorkspaceProfileOnboardingRoleSection({
               options={categoryOptions}
               value={categoryKey || undefined}
               onChange={(value) => onCategoryChange?.(value)}
-              placeholder={isCategoriesLoading ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.request.categoryPlaceholder)}
+              placeholder={
+                isCategoriesLoading
+                  ? t(I18N_KEYS.common.refreshing)
+                  : t(I18N_KEYS.request.categoryPlaceholder)
+              }
               disabled={loading || isCategoriesLoading || isCategoriesError}
               aria-label={t(I18N_KEYS.request.categoryLabel)}
             />
@@ -171,9 +176,7 @@ function WorkspaceProfileOnboardingRoleSection({
 
       <div className="form-group">
         <div className="request-form__meta">
-          <FormLabel htmlFor="workspace-profile-description">
-            {t(I18N_KEYS.provider.bio)}
-          </FormLabel>
+          <FormLabel htmlFor="workspace-profile-description">{t(I18N_KEYS.provider.bio)}</FormLabel>
           <span className="form-counter">{description.length}/500</span>
         </div>
         <Textarea
@@ -279,19 +282,26 @@ function AuthenticatedWorkspaceProfileForm({
       phone: profile?.common.phone ?? '',
     });
     setCustomerBioDraft(profile?.customer.bio ?? '');
-  }, [profile?.common.city, profile?.common.cityId, profile?.common.name, profile?.common.phone, profile?.customer.bio]);
+  }, [
+    profile?.common.city,
+    profile?.common.cityId,
+    profile?.common.name,
+    profile?.common.phone,
+    profile?.customer.bio,
+  ]);
 
   React.useEffect(() => {
     setProviderForm({
       displayName: profile?.provider.displayName ?? profile?.common.name ?? '',
       bio: profile?.provider.bio ?? '',
       basePrice:
-        typeof profile?.provider.basePrice === 'number' && Number.isFinite(profile.provider.basePrice)
+        typeof profile?.provider.basePrice === 'number' &&
+        Number.isFinite(profile.provider.basePrice)
           ? String(profile.provider.basePrice)
           : '',
       categoryKey:
-        profile?.provider.selectedCategoryKey
-        ?? resolveProfileServiceCategoryKey(profile?.provider.selectedServiceKey, services ?? []),
+        profile?.provider.selectedCategoryKey ??
+        resolveProfileServiceCategoryKey(profile?.provider.selectedServiceKey, services ?? []),
       serviceKey: profile?.provider.selectedServiceKey ?? '',
     });
   }, [
@@ -305,8 +315,9 @@ function AuthenticatedWorkspaceProfileForm({
     services,
   ]);
 
-  const effectiveAvatarUrl = avatarPreviewUrl
-    ?? (viewerMode === 'provider'
+  const effectiveAvatarUrl =
+    avatarPreviewUrl ??
+    (viewerMode === 'provider'
       ? (profile?.provider.avatarUrl ?? null)
       : (profile?.common.avatarUrl ?? null));
   const avatarActionLabel = effectiveAvatarUrl
@@ -345,7 +356,8 @@ function AuthenticatedWorkspaceProfileForm({
       providerForm.displayName !== (profile?.provider.displayName ?? profile?.common.name ?? '') ||
       providerForm.bio !== (profile?.provider.bio ?? '') ||
       providerForm.basePrice !==
-        (typeof profile?.provider.basePrice === 'number' && Number.isFinite(profile.provider.basePrice)
+        (typeof profile?.provider.basePrice === 'number' &&
+        Number.isFinite(profile.provider.basePrice)
           ? String(profile.provider.basePrice)
           : '') ||
       providerForm.categoryKey !== (profile?.provider.selectedCategoryKey ?? '') ||
@@ -378,11 +390,12 @@ function AuthenticatedWorkspaceProfileForm({
 
     const normalizedBasePrice = providerForm.basePrice.trim();
     const parsedBasePrice =
-      normalizedBasePrice.length > 0
-        ? Number(normalizedBasePrice.replace(',', '.'))
-        : undefined;
+      normalizedBasePrice.length > 0 ? Number(normalizedBasePrice.replace(',', '.')) : undefined;
 
-    if (normalizedBasePrice.length > 0 && (!Number.isFinite(parsedBasePrice) || Number(parsedBasePrice) < 0)) {
+    if (
+      normalizedBasePrice.length > 0 &&
+      (!Number.isFinite(parsedBasePrice) || Number(parsedBasePrice) < 0)
+    ) {
       toast.error(t(I18N_KEYS.client.requestPriceInvalidError));
       return;
     }
@@ -393,19 +406,21 @@ function AuthenticatedWorkspaceProfileForm({
 
     setIsSavingProfile(true);
     try {
-      const saved = await saveWorkspaceProfile(buildWorkspaceProfileSaveFormData({
-        viewerMode,
-        name,
-        city: commonForm.city,
-        phone: commonForm.phone,
-        customerBio: viewerMode === 'customer' ? customerBioDraft : undefined,
-        providerDisplayName: viewerMode === 'provider' ? providerForm.displayName : undefined,
-        providerBio: viewerMode === 'provider' ? providerForm.bio : undefined,
-        providerCategoryKey: viewerMode === 'provider' ? providerForm.categoryKey : undefined,
-        providerServiceKey: viewerMode === 'provider' ? providerForm.serviceKey : undefined,
-        providerBasePrice: viewerMode === 'provider' ? providerForm.basePrice : undefined,
-        avatarFile,
-      }));
+      const saved = await saveWorkspaceProfile(
+        buildWorkspaceProfileSaveFormData({
+          viewerMode,
+          name,
+          city: commonForm.city,
+          phone: commonForm.phone,
+          customerBio: viewerMode === 'customer' ? customerBioDraft : undefined,
+          providerDisplayName: viewerMode === 'provider' ? providerForm.displayName : undefined,
+          providerBio: viewerMode === 'provider' ? providerForm.bio : undefined,
+          providerCategoryKey: viewerMode === 'provider' ? providerForm.categoryKey : undefined,
+          providerServiceKey: viewerMode === 'provider' ? providerForm.serviceKey : undefined,
+          providerBasePrice: viewerMode === 'provider' ? providerForm.basePrice : undefined,
+          avatarFile,
+        }),
+      );
       qc.setQueryData(workspaceProfileQK.current(), saved);
       await fetchMe();
       if (viewerMode === 'provider') {
@@ -476,21 +491,31 @@ function AuthenticatedWorkspaceProfileForm({
 
             <div className="workspace-profile-onboarding__identity-fields workspace-profile-onboarding__identity-fields--wide">
               <div className="form-group">
-                <FormLabel htmlFor="workspace-profile-auth-name" required requiredHint={requiredHint}>
+                <FormLabel
+                  htmlFor="workspace-profile-auth-name"
+                  required
+                  requiredHint={requiredHint}
+                >
                   {t(I18N_KEYS.auth.nameLabel)}
                 </FormLabel>
                 <Field>
                   <Input
                     id="workspace-profile-auth-name"
                     value={commonForm.name}
-                    onChange={(event) => setCommonForm((prev) => ({ ...prev, name: event.target.value }))}
+                    onChange={(event) =>
+                      setCommonForm((prev) => ({ ...prev, name: event.target.value }))
+                    }
                     disabled={isBusy}
                   />
                 </Field>
               </div>
 
               <div className="form-group">
-                <FormLabel htmlFor="workspace-profile-auth-city" required requiredHint={requiredHint}>
+                <FormLabel
+                  htmlFor="workspace-profile-auth-city"
+                  required
+                  requiredHint={requiredHint}
+                >
                   {t(I18N_KEYS.provider.city)}
                 </FormLabel>
                 <Field>
@@ -543,7 +568,9 @@ function AuthenticatedWorkspaceProfileForm({
                     type="tel"
                     autoComplete="tel"
                     value={commonForm.phone}
-                    onChange={(event) => setCommonForm((prev) => ({ ...prev, phone: event.target.value }))}
+                    onChange={(event) =>
+                      setCommonForm((prev) => ({ ...prev, phone: event.target.value }))
+                    }
                     disabled={isBusy}
                   />
                 </Field>
@@ -568,12 +595,11 @@ function AuthenticatedWorkspaceProfileForm({
               setProviderForm((prev) => ({
                 ...prev,
                 categoryKey: value,
-                serviceKey:
-                  services?.some(
-                    (service) => service.key === prev.serviceKey && service.categoryKey === value,
-                  )
-                    ? prev.serviceKey
-                    : '',
+                serviceKey: services?.some(
+                  (service) => service.key === prev.serviceKey && service.categoryKey === value,
+                )
+                  ? prev.serviceKey
+                  : '',
               }));
             }}
             onServiceChange={(value) => {
@@ -603,13 +629,13 @@ function AuthenticatedWorkspaceProfileForm({
                   void handleSaveAuthenticatedProfile();
                 }}
                 disabled={
-                  isBusy
-                  || !(commonIsDirty || (viewerMode === 'provider' ? providerIsDirty : customerIsDirty))
+                  isBusy ||
+                  !(
+                    commonIsDirty || (viewerMode === 'provider' ? providerIsDirty : customerIsDirty)
+                  )
                 }
               >
-                {isBusy
-                  ? t(I18N_KEYS.common.refreshing)
-                  : t(I18N_KEYS.provider.onboardingCta)}
+                {isBusy ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.provider.onboardingCta)}
               </button>
             </div>
           </section>
@@ -681,7 +707,8 @@ function AnonymousWorkspaceProfileForm({
     },
   });
 
-  const consentPrivacyHref = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL?.trim() || '/privacy-policy';
+  const consentPrivacyHref =
+    process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL?.trim() || '/privacy-policy';
   const consentCookieHref = process.env.NEXT_PUBLIC_COOKIE_NOTICE_URL?.trim() || '/cookie-notice';
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const passwordToggleLabel = showPassword
@@ -705,29 +732,28 @@ function AnonymousWorkspaceProfileForm({
     () => buildProfileServiceOptions(services ?? [], categoryKeyValue, locale),
     [categoryKeyValue, locale, services],
   );
-  const passwordChecks = React.useMemo(
-    () => buildPasswordChecks(passwordValue),
-    [passwordValue],
-  );
+  const passwordChecks = React.useMemo(() => buildPasswordChecks(passwordValue), [passwordValue]);
 
   const onSubmit = React.useCallback(
     async (values: ProfileOnboardingValues) => {
       setIsSubmittingFlow(true);
       try {
-        const auth = await registerWorkspaceProfile(buildWorkspaceProfileRegisterFormData({
-          viewerMode,
-          name: values.name,
-          email: values.email,
-          password: values.password,
-          cityId: values.cityId,
-          acceptPrivacyPolicy: values.acceptPrivacyPolicy,
-          customerBio: viewerMode === 'customer' ? values.description : undefined,
-          providerDisplayName: viewerMode === 'provider' ? values.name : undefined,
-          providerBio: viewerMode === 'provider' ? values.description : undefined,
-          providerCategoryKey: viewerMode === 'provider' ? values.categoryKey : undefined,
-          providerServiceKey: viewerMode === 'provider' ? values.serviceKey : undefined,
-          avatarFile,
-        }));
+        const auth = await registerWorkspaceProfile(
+          buildWorkspaceProfileRegisterFormData({
+            viewerMode,
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            cityId: values.cityId,
+            acceptPrivacyPolicy: values.acceptPrivacyPolicy,
+            customerBio: viewerMode === 'customer' ? values.description : undefined,
+            providerDisplayName: viewerMode === 'provider' ? values.name : undefined,
+            providerBio: viewerMode === 'provider' ? values.description : undefined,
+            providerCategoryKey: viewerMode === 'provider' ? values.categoryKey : undefined,
+            providerServiceKey: viewerMode === 'provider' ? values.serviceKey : undefined,
+            avatarFile,
+          }),
+        );
         setAccessToken(auth.accessToken);
         await fetchMe();
         setLastMode(viewerMode === 'provider' ? 'provider' : 'client');
@@ -749,7 +775,11 @@ function AnonymousWorkspaceProfileForm({
 
   return (
     <article className={workspaceCardShell('stack-md', 'workspace-profile-onboarding')}>
-      <form className="workspace-profile-onboarding__form" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form
+        className="workspace-profile-onboarding__form"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
         <WorkspaceProfileOnboardingProfileSection
           t={t}
           locale={locale}
@@ -811,7 +841,9 @@ function AnonymousWorkspaceProfileForm({
             });
           }}
         />
-        {errors.description ? <p className="auth-form-error">{errors.description.message}</p> : null}
+        {errors.description ? (
+          <p className="auth-form-error">{errors.description.message}</p>
+        ) : null}
 
         <WorkspaceProfileOnboardingAccountSection
           t={t}
@@ -844,10 +876,7 @@ export function WorkspaceProfileOnboardingForm({
     isLoading: isCategoriesLoading,
     isError: isCategoriesError,
   } = useServiceCategories();
-  const {
-    data: services = [],
-    isLoading: isServicesLoading,
-  } = useServices();
+  const { data: services = [], isLoading: isServicesLoading } = useServices();
   const {
     avatarFile,
     avatarPreviewUrl,

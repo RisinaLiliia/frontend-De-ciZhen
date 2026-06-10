@@ -34,7 +34,9 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
-  const passwordToggleLabel = showPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow);
+  const passwordToggleLabel = showPassword
+    ? t(I18N_KEYS.client.profilePasswordHide)
+    : t(I18N_KEYS.client.profilePasswordShow);
   const confirmPasswordToggleLabel = showConfirmPassword
     ? t(I18N_KEYS.client.profilePasswordHide)
     : t(I18N_KEYS.client.profilePasswordShow);
@@ -66,7 +68,10 @@ export function RegisterForm() {
     try {
       const { confirmPassword, ...payload } = values;
       void confirmPassword;
-      await registerUser({ ...payload, ...(oauthSignupToken ? { signupToken: oauthSignupToken } : {}) });
+      await registerUser({
+        ...payload,
+        ...(oauthSignupToken ? { signupToken: oauthSignupToken } : {}),
+      });
       toast.success(t(I18N_KEYS.auth.registerSuccess));
       navigateAfterAuth(nextPath);
     } catch (error) {
@@ -145,7 +150,8 @@ export function RegisterForm() {
     setFocus,
   ]);
 
-  const consentPrivacyHref = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL?.trim() || '/privacy-policy';
+  const consentPrivacyHref =
+    process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL?.trim() || '/privacy-policy';
   const consentCookieHref = process.env.NEXT_PUBLIC_COOKIE_NOTICE_URL?.trim() || '/cookie-notice';
   const errorSummary =
     errors.name?.message ||
@@ -157,7 +163,9 @@ export function RegisterForm() {
 
   return (
     <form className="form-stack" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <p className="sr-only" aria-live="polite">{errorSummary}</p>
+      <p className="sr-only" aria-live="polite">
+        {errorSummary}
+      </p>
       <div className="form-group">
         <FormLabel htmlFor="name" required requiredHint={requiredHint}>
           {t(I18N_KEYS.auth.nameLabel)}
@@ -179,7 +187,11 @@ export function RegisterForm() {
             {...register('name')}
           />
         </Field>
-        {errors.name ? <p id="register-name-error" className="auth-form-error" role="alert">{errors.name.message}</p> : null}
+        {errors.name ? (
+          <p id="register-name-error" className="auth-form-error" role="alert">
+            {errors.name.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="form-group">
@@ -204,7 +216,11 @@ export function RegisterForm() {
             {...register('email')}
           />
         </Field>
-        {errors.email ? <p id="register-email-error" className="auth-form-error" role="alert">{errors.email.message}</p> : null}
+        {errors.email ? (
+          <p id="register-email-error" className="auth-form-error" role="alert">
+            {errors.email.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="form-group">
@@ -230,13 +246,27 @@ export function RegisterForm() {
             {showPassword ? <IconEye /> : <IconEyeOff />}
           </button>
         </Field>
-        {errors.password ? <p id="register-password-error" className="auth-form-error" role="alert">{errors.password.message}</p> : null}
+        {errors.password ? (
+          <p id="register-password-error" className="auth-form-error" role="alert">
+            {errors.password.message}
+          </p>
+        ) : null}
         <div className="auth-password-rules">
-          <span className={passwordChecks.length ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLength)}</span>
-          <span className={passwordChecks.upper ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleUpper)}</span>
-          <span className={passwordChecks.lower ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLower)}</span>
-          <span className={passwordChecks.digit ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleDigit)}</span>
-          <span className={passwordChecks.symbol ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleSymbol)}</span>
+          <span className={passwordChecks.length ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleLength)}
+          </span>
+          <span className={passwordChecks.upper ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleUpper)}
+          </span>
+          <span className={passwordChecks.lower ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleLower)}
+          </span>
+          <span className={passwordChecks.digit ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleDigit)}
+          </span>
+          <span className={passwordChecks.symbol ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleSymbol)}
+          </span>
         </div>
       </div>
 
@@ -250,7 +280,9 @@ export function RegisterForm() {
             type={showConfirmPassword ? 'text' : 'password'}
             autoComplete="new-password"
             aria-invalid={errors.confirmPassword ? 'true' : 'false'}
-            aria-describedby={errors.confirmPassword ? 'register-confirm-password-error' : undefined}
+            aria-describedby={
+              errors.confirmPassword ? 'register-confirm-password-error' : undefined
+            }
             {...register('confirmPassword')}
           />
           <button
@@ -263,7 +295,11 @@ export function RegisterForm() {
             {showConfirmPassword ? <IconEye /> : <IconEyeOff />}
           </button>
         </Field>
-        {errors.confirmPassword ? <p id="register-confirm-password-error" className="auth-form-error" role="alert">{errors.confirmPassword.message}</p> : null}
+        {errors.confirmPassword ? (
+          <p id="register-confirm-password-error" className="auth-form-error" role="alert">
+            {errors.confirmPassword.message}
+          </p>
+        ) : null}
       </div>
 
       <label className="flex items-start gap-3 text-sm">
@@ -276,18 +312,30 @@ export function RegisterForm() {
         />
         <span className="auth-consent__text">
           {t(I18N_KEYS.auth.acceptPolicyPrefix)}{' '}
-          <a href={consentPrivacyHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
-              {t(I18N_KEYS.auth.acceptPolicyPrivacyLink)}
-            </a>{' '}
+          <a
+            href={consentPrivacyHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="auth-consent__link"
+          >
+            {t(I18N_KEYS.auth.acceptPolicyPrivacyLink)}
+          </a>{' '}
           {t(I18N_KEYS.auth.acceptPolicyAnd)}{' '}
-          <a href={consentCookieHref} target="_blank" rel="noopener noreferrer" className="auth-consent__link">
-              {t(I18N_KEYS.auth.acceptPolicyCookieLink)}
-            </a>{' '}
+          <a
+            href={consentCookieHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="auth-consent__link"
+          >
+            {t(I18N_KEYS.auth.acceptPolicyCookieLink)}
+          </a>{' '}
           {t(I18N_KEYS.auth.acceptPolicySuffix)}
         </span>
       </label>
       {errors.acceptPrivacyPolicy ? (
-        <p id="register-consent-error" className="auth-form-error" role="alert">{errors.acceptPrivacyPolicy.message}</p>
+        <p id="register-consent-error" className="auth-form-error" role="alert">
+          {errors.acceptPrivacyPolicy.message}
+        </p>
       ) : null}
 
       <Button type="submit" loading={loading}>

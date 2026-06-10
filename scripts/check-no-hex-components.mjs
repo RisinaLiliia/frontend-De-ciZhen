@@ -12,7 +12,7 @@ const hexAllowlist = new Set(
   (process.env.CSS_HEX_ALLOWLIST ?? '')
     .split(',')
     .map((value) => value.trim().toLowerCase())
-    .filter(Boolean)
+    .filter(Boolean),
 );
 
 const hexPattern = /#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
@@ -44,7 +44,7 @@ for (let index = 0; index < lines.length; index += 1) {
   violations.push({
     line: index + 1,
     matches,
-    context
+    context,
   });
 }
 

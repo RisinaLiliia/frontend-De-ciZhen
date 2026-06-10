@@ -72,10 +72,10 @@ export function buildOpportunityRadarAxisEndpoints(): Array<{ x: number; y: numb
   const center = 90;
   const radius = 62;
   return Array.from({ length: count }, (_, index) => {
-    const angle = (-Math.PI / 2) + ((Math.PI * 2) / count) * index;
+    const angle = -Math.PI / 2 + ((Math.PI * 2) / count) * index;
     return {
-      x: center + (Math.cos(angle) * radius),
-      y: center + (Math.sin(angle) * radius),
+      x: center + Math.cos(angle) * radius,
+      y: center + Math.sin(angle) * radius,
     };
   });
 }
@@ -86,11 +86,11 @@ export function buildOpportunityRadarPoints(values: number[]): Array<{ x: number
   const maxRadius = 62;
   return Array.from({ length: count }, (_, index) => {
     const normalized = Math.max(0, Math.min(10, values[index] ?? 0)) / 10;
-    const angle = (-Math.PI / 2) + ((Math.PI * 2) / count) * index;
+    const angle = -Math.PI / 2 + ((Math.PI * 2) / count) * index;
     const radius = maxRadius * normalized;
     return {
-      x: center + (Math.cos(angle) * radius),
-      y: center + (Math.sin(angle) * radius),
+      x: center + Math.cos(angle) * radius,
+      y: center + Math.sin(angle) * radius,
     };
   });
 }
@@ -123,11 +123,11 @@ export function buildOpportunityRadarAxisValueLabelPositions(
   const center = 90;
   const radius = 74;
   return Array.from({ length: count }, (_, index) => {
-    const angle = (-Math.PI / 2) + ((Math.PI * 2) / count) * index;
+    const angle = -Math.PI / 2 + ((Math.PI * 2) / count) * index;
     const value = Math.max(0, Math.min(10, values[index] ?? 0));
     return {
-      x: center + (Math.cos(angle) * radius),
-      y: center + (Math.sin(angle) * radius) + 3,
+      x: center + Math.cos(angle) * radius,
+      y: center + Math.sin(angle) * radius + 3,
       label: value.toFixed(1),
     };
   });
@@ -178,8 +178,10 @@ export function buildOpportunityReasons(params: {
 
   if (typeof item.marketBalanceRatio === 'number' && item.marketBalanceRatio >= 2) {
     reasons.push(
-      copy.decisionReasonMarketBalanceTemplate
-        .replace('{ratio}', item.marketBalanceRatio.toFixed(1)),
+      copy.decisionReasonMarketBalanceTemplate.replace(
+        '{ratio}',
+        item.marketBalanceRatio.toFixed(1),
+      ),
     );
   }
 

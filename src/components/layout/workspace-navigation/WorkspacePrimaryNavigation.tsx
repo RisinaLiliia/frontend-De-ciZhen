@@ -46,9 +46,7 @@ function useWorkspacePrimaryNavigationItems(
       label: t(I18N_KEYS.auth.workspaceLabel),
       icon: <IconBriefcase />,
       isActive: (pathname) =>
-        isAuthenticated
-          ? isPathPrefix(pathname, '/workspace')
-          : pathname === '/workspace',
+        isAuthenticated ? isPathPrefix(pathname, '/workspace') : pathname === '/workspace',
     },
     {
       key: 'request-create',
@@ -58,9 +56,9 @@ function useWorkspacePrimaryNavigationItems(
       variant: 'create',
       iconPosition: 'trailing',
       isActive: (pathname, searchParams) =>
-        pathname === '/workspace'
-        && searchParams.get('section') === 'requests'
-        && searchParams.get('mode') === 'create',
+        pathname === '/workspace' &&
+        searchParams.get('section') === 'requests' &&
+        searchParams.get('mode') === 'create',
     },
     {
       key: 'chat',
@@ -97,8 +95,7 @@ function WorkspacePrimaryNavigation({
   const searchParams = useSearchParams();
   const t = useT();
   const isAuthenticated = status === 'authenticated';
-  const profileHref =
-    isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
+  const profileHref = isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
   const items = useWorkspacePrimaryNavigationItems(isAuthenticated, profileHref);
   const params = new URLSearchParams(searchParams?.toString());
   const activeItemKey = items.find((item) => item.isActive(pathname, params))?.key ?? '';
@@ -110,10 +107,15 @@ function WorkspacePrimaryNavigation({
 
   return (
     <nav className={className} aria-label={t(I18N_KEYS.auth.navigationLabel)} ref={containerRef}>
-      {indicatorStyle ? <span className="topbar-nav__indicator" aria-hidden="true" style={indicatorStyle} /> : null}
+      {indicatorStyle ? (
+        <span className="topbar-nav__indicator" aria-hidden="true" style={indicatorStyle} />
+      ) : null}
       {items.map((item) => {
         const active = item.isActive(pathname, params);
-        const iconClassName = item.iconPosition === 'trailing' ? 'topbar-nav__icon topbar-nav__icon--trailing' : 'topbar-nav__icon';
+        const iconClassName =
+          item.iconPosition === 'trailing'
+            ? 'topbar-nav__icon topbar-nav__icon--trailing'
+            : 'topbar-nav__icon';
         const itemClasses = [
           itemClassName,
           item.variant === 'create' ? `${itemClassName}--create` : null,
@@ -157,8 +159,7 @@ export function WorkspacePrimaryNavigationMobile() {
   const searchParams = useSearchParams();
   const t = useT();
   const isAuthenticated = status === 'authenticated';
-  const profileHref =
-    isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
+  const profileHref = isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
   const items = useWorkspacePrimaryNavigationItems(isAuthenticated, profileHref)
     .filter((item) => item.key !== 'profile')
     .map((item) => ({
@@ -171,13 +172,8 @@ export function WorkspacePrimaryNavigationMobile() {
         item.key === 'workspace' && isPathPrefix(pathname, '/workspace')
           ? () => window.dispatchEvent(new Event(WORKSPACE_MOBILE_NAV_OPEN_EVENT))
           : undefined,
-      variant: item.variant === 'create' ? 'primary' as const : 'default' as const,
+      variant: item.variant === 'create' ? ('primary' as const) : ('default' as const),
     }));
 
-  return (
-    <WorkspaceNavigationDock
-      items={items}
-      ariaLabel={t(I18N_KEYS.auth.navigationLabel)}
-    />
-  );
+  return <WorkspaceNavigationDock items={items} ariaLabel={t(I18N_KEYS.auth.navigationLabel)} />;
 }

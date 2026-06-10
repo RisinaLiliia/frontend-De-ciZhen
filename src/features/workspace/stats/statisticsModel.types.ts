@@ -7,7 +7,14 @@ export type WorkspaceStatisticsSource = 'bff';
 
 export type WorkspaceStatisticsCitySourceDto = Omit<
   WorkspaceStatisticsCityDemandDto,
-  'auftragSuchenCount' | 'anbieterSuchenCount' | 'providersActive' | 'marketBalanceRatio' | 'score' | 'rank' | 'signal' | 'peerContext'
+  | 'auftragSuchenCount'
+  | 'anbieterSuchenCount'
+  | 'providersActive'
+  | 'marketBalanceRatio'
+  | 'score'
+  | 'rank'
+  | 'signal'
+  | 'peerContext'
 > & {
   auftragSuchenCount?: number | null;
   anbieterSuchenCount?: number | null;

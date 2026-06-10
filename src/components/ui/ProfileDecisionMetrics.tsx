@@ -20,13 +20,15 @@ export function ProfileDecisionMetrics({
   if (!hasTime && !hasRate) return null;
 
   return (
-      <div className={`profile-decision-metrics ${className ?? ''}`.trim()}>
+    <div className={`profile-decision-metrics ${className ?? ''}`.trim()}>
       {hasTime ? (
         <span className="profile-decision-metric">
           <span className="profile-decision-metric__icon" aria-hidden="true">
             <IconClock />
           </span>
-          {responseTimeLabel ? <span className="profile-decision-metric__label">{responseTimeLabel}:</span> : null}
+          {responseTimeLabel ? (
+            <span className="profile-decision-metric__label">{responseTimeLabel}:</span>
+          ) : null}
           <span className="profile-decision-metric__value">{responseTime}</span>
         </span>
       ) : null}
@@ -35,7 +37,9 @@ export function ProfileDecisionMetrics({
           <span className="profile-decision-metric__icon" aria-hidden="true">
             <IconCheck />
           </span>
-          {responseRateLabel ? <span className="profile-decision-metric__label">{responseRateLabel}:</span> : null}
+          {responseRateLabel ? (
+            <span className="profile-decision-metric__label">{responseRateLabel}:</span>
+          ) : null}
           <span className="profile-decision-metric__value">{responseRate}%</span>
         </span>
       ) : null}

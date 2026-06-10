@@ -33,7 +33,9 @@ export function WorkspaceSectionAside({
         'workspace-section-aside--viewport',
         hideBelowTablet ? 'hide-below-tablet' : '',
         className ?? '',
-      ].filter(Boolean).join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <WorkspaceUnifiedRail model={model} isLoading={isLoading} />
       {children}

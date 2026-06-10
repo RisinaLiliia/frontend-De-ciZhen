@@ -32,12 +32,11 @@ export function useCustomerPublicProfileModel({
     queryFn: () => getPublicCustomerById(String(customerId)),
   });
 
-  const displayName = customer?.displayName?.trim()
-    || snapshot?.displayName?.trim()
-    || t(I18N_KEYS.requestDetails.clientUnknown);
-  const displayCity = customer?.cityName?.trim()
-    || snapshot?.cityName?.trim()
-    || undefined;
+  const displayName =
+    customer?.displayName?.trim() ||
+    snapshot?.displayName?.trim() ||
+    t(I18N_KEYS.requestDetails.clientUnknown);
+  const displayCity = customer?.cityName?.trim() || snapshot?.cityName?.trim() || undefined;
   const displayAvatarUrl = customer?.avatarUrl ?? snapshot?.avatarUrl ?? undefined;
   const displayIsOnline = customer?.isOnline ?? snapshot?.isOnline ?? false;
   const displayStatus: 'online' | 'offline' = displayIsOnline ? 'online' : 'offline';

@@ -32,13 +32,7 @@ export function StatisticsIntroSection({
   mode,
   funnelPeriodLabel,
 }: StatisticsIntroSectionProps) {
-  const {
-    copy,
-    hasBackgroundError,
-    isLoading,
-    isError,
-    activitySignals,
-  } = model;
+  const { copy, hasBackgroundError, isLoading, isError, activitySignals } = model;
 
   const getActivitySignal = (key: string) => activitySignals.find((item) => item.key === key);
   const getActivitySignalValue = (key: string) => getActivitySignal(key)?.value ?? '—';

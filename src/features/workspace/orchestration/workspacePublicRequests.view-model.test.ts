@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  buildWorkspacePublicRequestsAsideProps,
-} from './workspacePublicRequests.view-model';
+import { buildWorkspacePublicRequestsAsideProps } from './workspacePublicRequests.view-model';
 
 describe('workspacePublicRequests.view-model', () => {
   it('builds a market decision rail contract for the shared requests surface', () => {
@@ -28,11 +26,13 @@ describe('workspacePublicRequests.view-model', () => {
       },
     };
 
-    expect(buildWorkspacePublicRequestsAsideProps({
-      locale: 'de',
-      panel,
-      onStartDecisionMode: vi.fn(),
-      onOpenQueueItem: vi.fn(),
-    }).variant).toBe('market');
+    expect(
+      buildWorkspacePublicRequestsAsideProps({
+        locale: 'de',
+        panel,
+        onStartDecisionMode: vi.fn(),
+        onOpenQueueItem: vi.fn(),
+      }).variant,
+    ).toBe('market');
   });
 });

@@ -8,16 +8,10 @@ type Options = {
   enabled?: boolean;
 };
 
-export function useWorkspacePrivateDataFlow({
-  t,
-  locale,
-  auth,
-  isAuthed,
-  isWorkspaceAuthed,
-  routeState,
-}: WorkspaceBranchProps, {
-  enabled = true,
-}: Options = {}) {
+export function useWorkspacePrivateDataFlow(
+  { t, locale, auth, isAuthed, isWorkspaceAuthed, routeState }: WorkspaceBranchProps,
+  { enabled = true }: Options = {},
+) {
   const {
     activePublicSection,
     activeWorkspaceTab,

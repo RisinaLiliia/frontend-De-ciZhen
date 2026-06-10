@@ -63,15 +63,30 @@ export function buildDecisionPanelSummaryText(params: {
     const parts: string[] = [];
 
     if (panel.summary.overdueCount > 0) {
-      parts.push(t(I18N_KEYS.requestsPage.decisionPanelMarketOverdueTemplate).replace('{count}', String(panel.summary.overdueCount)));
+      parts.push(
+        t(I18N_KEYS.requestsPage.decisionPanelMarketOverdueTemplate).replace(
+          '{count}',
+          String(panel.summary.overdueCount),
+        ),
+      );
     }
 
     if (panel.summary.highPriorityCount > 0) {
-      parts.push(t(I18N_KEYS.requestsPage.decisionPanelMarketHighPriorityTemplate).replace('{count}', String(panel.summary.highPriorityCount)));
+      parts.push(
+        t(I18N_KEYS.requestsPage.decisionPanelMarketHighPriorityTemplate).replace(
+          '{count}',
+          String(panel.summary.highPriorityCount),
+        ),
+      );
     }
 
     if (panel.summary.newOffersCount > 0) {
-      parts.push(t(I18N_KEYS.requestsPage.decisionPanelMarketNewTemplate).replace('{count}', String(panel.summary.newOffersCount)));
+      parts.push(
+        t(I18N_KEYS.requestsPage.decisionPanelMarketNewTemplate).replace(
+          '{count}',
+          String(panel.summary.newOffersCount),
+        ),
+      );
     }
 
     return parts.slice(0, 2).join(', ');
@@ -84,19 +99,39 @@ export function buildDecisionPanelSummaryText(params: {
   const parts: string[] = [];
 
   if (panel.summary.newOffersCount > 0) {
-    parts.push(t(I18N_KEYS.requestsPage.decisionPanelPrivateNewOffersTemplate).replace('{count}', String(panel.summary.newOffersCount)));
+    parts.push(
+      t(I18N_KEYS.requestsPage.decisionPanelPrivateNewOffersTemplate).replace(
+        '{count}',
+        String(panel.summary.newOffersCount),
+      ),
+    );
   }
 
   if (panel.summary.replyRequiredCount > 0) {
-    parts.push(t(I18N_KEYS.requestsPage.decisionPanelPrivateReplyRequiredTemplate).replace('{count}', String(panel.summary.replyRequiredCount)));
+    parts.push(
+      t(I18N_KEYS.requestsPage.decisionPanelPrivateReplyRequiredTemplate).replace(
+        '{count}',
+        String(panel.summary.replyRequiredCount),
+      ),
+    );
   }
 
   if (panel.summary.confirmCompletionCount > 0) {
-    parts.push(t(I18N_KEYS.requestsPage.decisionPanelPrivateConfirmCompletionTemplate).replace('{count}', String(panel.summary.confirmCompletionCount)));
+    parts.push(
+      t(I18N_KEYS.requestsPage.decisionPanelPrivateConfirmCompletionTemplate).replace(
+        '{count}',
+        String(panel.summary.confirmCompletionCount),
+      ),
+    );
   }
 
   if (panel.summary.overdueCount > 0) {
-    parts.push(t(I18N_KEYS.requestsPage.decisionPanelPrivateOverdueTemplate).replace('{count}', String(panel.summary.overdueCount)));
+    parts.push(
+      t(I18N_KEYS.requestsPage.decisionPanelPrivateOverdueTemplate).replace(
+        '{count}',
+        String(panel.summary.overdueCount),
+      ),
+    );
   }
 
   return parts.slice(0, 2).join(', ');

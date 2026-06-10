@@ -25,13 +25,14 @@ vi.mock('@/hooks/useAuthSnapshot', () => ({
 }));
 
 vi.mock('@/lib/i18n/useT', () => ({
-  useT: () => ((key: string) => ({
-    'requestDetails.workspaceActionsOpen': 'Aktionen öffnen',
-    'requestDetails.workspaceEditOffer': 'Angebot bearbeiten',
-    'requestDetails.workspaceDeleteOffer': 'Angebot löschen',
-    'requestDetails.saved': 'Gespeichert',
-    'requestDetails.workspaceShare': 'Teilen',
-  }[key] ?? key)),
+  useT: () => (key: string) =>
+    ({
+      'requestDetails.workspaceActionsOpen': 'Aktionen öffnen',
+      'requestDetails.workspaceEditOffer': 'Angebot bearbeiten',
+      'requestDetails.workspaceDeleteOffer': 'Angebot löschen',
+      'requestDetails.saved': 'Gespeichert',
+      'requestDetails.workspaceShare': 'Teilen',
+    })[key] ?? key,
 }));
 
 const defaultRequestDetailsPageData = {

@@ -45,10 +45,7 @@ export function useWorkspaceFavoriteToggles({
   favoriteProviderLookup,
   providerById,
 }: Args) {
-  const {
-    pendingFavoriteRequestIds,
-    toggleRequestFavorite,
-  } = useRequestFavoriteToggle({
+  const { pendingFavoriteRequestIds, toggleRequestFavorite } = useRequestFavoriteToggle({
     enabled: includeRequestToggle,
     isAuthed,
     nextPath,
@@ -59,10 +56,7 @@ export function useWorkspaceFavoriteToggles({
     requestById,
   });
 
-  const {
-    pendingFavoriteProviderIds,
-    toggleProviderFavorite,
-  } = useProviderFavoriteToggle({
+  const { pendingFavoriteProviderIds, toggleProviderFavorite } = useProviderFavoriteToggle({
     enabled: includeProviderToggle,
     isAuthed,
     nextPath,
@@ -73,10 +67,7 @@ export function useWorkspaceFavoriteToggles({
     providerById,
   });
 
-  const {
-    onToggleRequestFavorite,
-    onToggleProviderFavorite,
-  } = React.useMemo(
+  const { onToggleRequestFavorite, onToggleProviderFavorite } = React.useMemo(
     () =>
       buildWorkspaceFavoriteToggleHandlers({
         toggleRequestFavorite,

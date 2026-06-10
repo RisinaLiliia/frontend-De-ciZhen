@@ -14,13 +14,7 @@ import {
 import { completeContract, confirmContract } from '@/lib/api/contracts';
 import type { OfferDto } from '@/lib/api/dto/offers';
 import { createProviderReview } from '@/lib/api/reviews';
-import {
-  acceptOffer,
-  createOffer,
-  declineOffer,
-  deleteOffer,
-  updateOffer,
-} from '@/lib/api/offers';
+import { acceptOffer, createOffer, declineOffer, deleteOffer, updateOffer } from '@/lib/api/offers';
 import { ApiError } from '@/lib/api/http-error';
 import { fetchManagedRequestDetails } from '@/features/workspace/requests/workspaceRequestDetailsFacade';
 import { I18N_KEYS } from '@/lib/i18n/keys';
@@ -32,7 +26,10 @@ type ManagedRequestPreview = {
   price?: number | null;
 };
 
-type ExistingProviderOffer = Pick<OfferDto, 'id' | 'amount' | 'message' | 'availabilityNote' | 'availableAt'> | null;
+type ExistingProviderOffer = Pick<
+  OfferDto,
+  'id' | 'amount' | 'message' | 'availabilityNote' | 'availableAt'
+> | null;
 
 function useWorkspaceRequestOverlayInvalidation(requestId: string) {
   const qc = useQueryClient();
@@ -40,21 +37,24 @@ function useWorkspaceRequestOverlayInvalidation(requestId: string) {
   const invalidateOfferReviewState = React.useCallback(async () => {
     await Promise.all([
       ...buildWorkspaceOfferReviewMutationQueryKeys(requestId).map((queryKey) =>
-        qc.invalidateQueries({ queryKey })),
+        qc.invalidateQueries({ queryKey }),
+      ),
     ]);
   }, [qc, requestId]);
 
   const invalidateDecisionState = React.useCallback(async () => {
     await Promise.all([
       ...buildWorkspaceDecisionMutationQueryKeys(requestId).map((queryKey) =>
-        qc.invalidateQueries({ queryKey })),
+        qc.invalidateQueries({ queryKey }),
+      ),
     ]);
   }, [qc, requestId]);
 
   const invalidateProviderOfferState = React.useCallback(async () => {
     await Promise.all([
       ...buildWorkspaceProviderOfferMutationQueryKeys().map((queryKey) =>
-        qc.invalidateQueries({ queryKey })),
+        qc.invalidateQueries({ queryKey }),
+      ),
       qc.invalidateQueries({ queryKey: providerQK.myProfile() }),
     ]);
   }, [qc]);
@@ -82,48 +82,50 @@ export async function fetchWorkspaceManagedRequest(params: {
   });
 }
 
-export function useWorkspaceRequestOfferActions({
-  requestId,
-}: {
-  requestId: string;
-}) {
+export function useWorkspaceRequestOfferActions({ requestId }: { requestId: string }) {
   const t = useT();
   const { invalidateOfferReviewState } = useWorkspaceRequestOverlayInvalidation(requestId);
   const [pendingOfferActionId, setPendingOfferActionId] = React.useState<string | null>(null);
 
-  const acceptRequestOffer = React.useCallback(async (offerId: string) => {
-    if (pendingOfferActionId === offerId) return false;
-    setPendingOfferActionId(offerId);
-    try {
-      await acceptOffer(offerId);
-      toast.success(t(I18N_KEYS.offers.accepted));
-      await invalidateOfferReviewState();
-      return true;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-      return false;
-    } finally {
-      setPendingOfferActionId(null);
-    }
-  }, [invalidateOfferReviewState, pendingOfferActionId, t]);
+  const acceptRequestOffer = React.useCallback(
+    async (offerId: string) => {
+      if (pendingOfferActionId === offerId) return false;
+      setPendingOfferActionId(offerId);
+      try {
+        await acceptOffer(offerId);
+        toast.success(t(I18N_KEYS.offers.accepted));
+        await invalidateOfferReviewState();
+        return true;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+        return false;
+      } finally {
+        setPendingOfferActionId(null);
+      }
+    },
+    [invalidateOfferReviewState, pendingOfferActionId, t],
+  );
 
-  const declineRequestOffer = React.useCallback(async (offerId: string) => {
-    if (pendingOfferActionId === offerId) return false;
-    setPendingOfferActionId(offerId);
-    try {
-      await declineOffer(offerId);
-      toast.success(t(I18N_KEYS.offers.declined));
-      await invalidateOfferReviewState();
-      return true;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-      return false;
-    } finally {
-      setPendingOfferActionId(null);
-    }
-  }, [invalidateOfferReviewState, pendingOfferActionId, t]);
+  const declineRequestOffer = React.useCallback(
+    async (offerId: string) => {
+      if (pendingOfferActionId === offerId) return false;
+      setPendingOfferActionId(offerId);
+      try {
+        await declineOffer(offerId);
+        toast.success(t(I18N_KEYS.offers.declined));
+        await invalidateOfferReviewState();
+        return true;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+        return false;
+      } finally {
+        setPendingOfferActionId(null);
+      }
+    },
+    [invalidateOfferReviewState, pendingOfferActionId, t],
+  );
 
   return {
     acceptRequestOffer,
@@ -132,60 +134,62 @@ export function useWorkspaceRequestOfferActions({
   };
 }
 
-export function useWorkspaceRequestDecisionActions({
-  requestId,
-}: {
-  requestId: string;
-}) {
+export function useWorkspaceRequestDecisionActions({ requestId }: { requestId: string }) {
   const t = useT();
   const { invalidateDecisionState } = useWorkspaceRequestOverlayInvalidation(requestId);
   const [isSubmittingDecision, setIsSubmittingDecision] = React.useState(false);
 
-  const confirmRequestContract = React.useCallback(async ({
-    contractId,
-    startAt,
-    durationMin,
-    note,
-  }: {
-    contractId: string;
-    startAt: string;
-    durationMin: string;
-    note: string;
-  }) => {
-    setIsSubmittingDecision(true);
-    try {
-      await confirmContract(contractId, {
-        startAt: new Date(startAt).toISOString(),
-        durationMin: durationMin.trim() ? Number(durationMin) : undefined,
-        note: note.trim() || undefined,
-      });
-      toast.success(t(I18N_KEYS.contracts.confirmed));
-      await invalidateDecisionState();
-      return true;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-      return false;
-    } finally {
-      setIsSubmittingDecision(false);
-    }
-  }, [invalidateDecisionState, t]);
+  const confirmRequestContract = React.useCallback(
+    async ({
+      contractId,
+      startAt,
+      durationMin,
+      note,
+    }: {
+      contractId: string;
+      startAt: string;
+      durationMin: string;
+      note: string;
+    }) => {
+      setIsSubmittingDecision(true);
+      try {
+        await confirmContract(contractId, {
+          startAt: new Date(startAt).toISOString(),
+          durationMin: durationMin.trim() ? Number(durationMin) : undefined,
+          note: note.trim() || undefined,
+        });
+        toast.success(t(I18N_KEYS.contracts.confirmed));
+        await invalidateDecisionState();
+        return true;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+        return false;
+      } finally {
+        setIsSubmittingDecision(false);
+      }
+    },
+    [invalidateDecisionState, t],
+  );
 
-  const completeRequestContract = React.useCallback(async (contractId: string) => {
-    setIsSubmittingDecision(true);
-    try {
-      await completeContract(contractId);
-      toast.success(t(I18N_KEYS.contracts.completed));
-      await invalidateDecisionState();
-      return true;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-      return false;
-    } finally {
-      setIsSubmittingDecision(false);
-    }
-  }, [invalidateDecisionState, t]);
+  const completeRequestContract = React.useCallback(
+    async (contractId: string) => {
+      setIsSubmittingDecision(true);
+      try {
+        await completeContract(contractId);
+        toast.success(t(I18N_KEYS.contracts.completed));
+        await invalidateDecisionState();
+        return true;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+        return false;
+      } finally {
+        setIsSubmittingDecision(false);
+      }
+    },
+    [invalidateDecisionState, t],
+  );
 
   return {
     completeRequestContract,
@@ -199,36 +203,32 @@ export function useWorkspaceCompletionReviewActions() {
   const qc = useQueryClient();
   const [isSubmittingReview, setIsSubmittingReview] = React.useState(false);
 
-  const submitCompletionReview = React.useCallback(async ({
-    bookingId,
-    rating,
-    text,
-  }: {
-    bookingId: string;
-    rating: number;
-    text: string;
-  }) => {
-    setIsSubmittingReview(true);
-    try {
-      await createProviderReview({
-        bookingId,
-        rating,
-        text: text.trim() || undefined,
-      });
-      toast.success(t(I18N_KEYS.requestsPage.userReviewFormSuccess));
-      await Promise.all([
-        ...buildWorkspaceCompletionReviewMutationQueryKeys().map((queryKey) =>
-          qc.invalidateQueries({ queryKey })),
-      ]);
-      return true;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : '';
-      toast.error(message || t(I18N_KEYS.requestsPage.userReviewFormError));
-      return false;
-    } finally {
-      setIsSubmittingReview(false);
-    }
-  }, [qc, t]);
+  const submitCompletionReview = React.useCallback(
+    async ({ bookingId, rating, text }: { bookingId: string; rating: number; text: string }) => {
+      setIsSubmittingReview(true);
+      try {
+        await createProviderReview({
+          bookingId,
+          rating,
+          text: text.trim() || undefined,
+        });
+        toast.success(t(I18N_KEYS.requestsPage.userReviewFormSuccess));
+        await Promise.all([
+          ...buildWorkspaceCompletionReviewMutationQueryKeys().map((queryKey) =>
+            qc.invalidateQueries({ queryKey }),
+          ),
+        ]);
+        return true;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : '';
+        toast.error(message || t(I18N_KEYS.requestsPage.userReviewFormError));
+        return false;
+      } finally {
+        setIsSubmittingReview(false);
+      }
+    },
+    [qc, t],
+  );
 
   return {
     isSubmittingReview,
@@ -253,63 +253,66 @@ export function useWorkspaceProviderOfferSheetActions({
   const { invalidateProviderOfferState } = useWorkspaceRequestOverlayInvalidation(requestId);
   const [isSubmittingOffer, setIsSubmittingOffer] = React.useState(false);
 
-  const submitProviderOffer = React.useCallback(async ({
-    amountValue,
-    commentValue,
-    availabilityValue,
-  }: {
-    amountValue: string;
-    commentValue: string;
-    availabilityValue: string;
-  }) => {
-    if (!request) return 'noop' as const;
+  const submitProviderOffer = React.useCallback(
+    async ({
+      amountValue,
+      commentValue,
+      availabilityValue,
+    }: {
+      amountValue: string;
+      commentValue: string;
+      availabilityValue: string;
+    }) => {
+      if (!request) return 'noop' as const;
 
-    const parsedAmount = Number(amountValue);
-    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-      toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
-      return 'invalid' as const;
-    }
-
-    setIsSubmittingOffer(true);
-    try {
-      const payload = {
-        amount: parsedAmount,
-        message: commentValue.trim() || undefined,
-        availabilityNote: availabilityValue.trim() || undefined,
-      };
-
-      if (existingResponse?.id) {
-        await updateOffer(existingResponse.id, payload);
-        toast.success(t(I18N_KEYS.requestDetails.responseUpdated));
-        await invalidateProviderOfferState();
-        onClose();
-        return 'updated' as const;
+      const parsedAmount = Number(amountValue);
+      if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+        toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
+        return 'invalid' as const;
       }
 
-      await createOffer({
-        requestId: request.id,
-        ...payload,
-      });
-      await invalidateProviderOfferState();
-      return 'created' as const;
-    } catch (error) {
-      if (error instanceof ApiError && (error.status === 404 || error.status === 405)) {
-        toast.message(t(I18N_KEYS.requestDetails.responseEditUnavailable));
-      } else if (error instanceof ApiError && error.status === 409) {
-        toast.message(t(I18N_KEYS.requestDetails.responseAlready));
+      setIsSubmittingOffer(true);
+      try {
+        const payload = {
+          amount: parsedAmount,
+          message: commentValue.trim() || undefined,
+          availabilityNote: availabilityValue.trim() || undefined,
+        };
+
+        if (existingResponse?.id) {
+          await updateOffer(existingResponse.id, payload);
+          toast.success(t(I18N_KEYS.requestDetails.responseUpdated));
+          await invalidateProviderOfferState();
+          onClose();
+          return 'updated' as const;
+        }
+
+        await createOffer({
+          requestId: request.id,
+          ...payload,
+        });
         await invalidateProviderOfferState();
-        onClose();
-        return 'updated' as const;
-      } else if (error instanceof ApiError && error.status === 403) {
-        toast.error(error.message || t(I18N_KEYS.requestDetails.responseFailed));
-      } else {
-        toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+        return 'created' as const;
+      } catch (error) {
+        if (error instanceof ApiError && (error.status === 404 || error.status === 405)) {
+          toast.message(t(I18N_KEYS.requestDetails.responseEditUnavailable));
+        } else if (error instanceof ApiError && error.status === 409) {
+          toast.message(t(I18N_KEYS.requestDetails.responseAlready));
+          await invalidateProviderOfferState();
+          onClose();
+          return 'updated' as const;
+        } else if (error instanceof ApiError && error.status === 403) {
+          toast.error(error.message || t(I18N_KEYS.requestDetails.responseFailed));
+        } else {
+          toast.error(t(I18N_KEYS.requestDetails.responseFailed));
+        }
+        return 'failed' as const;
+      } finally {
+        setIsSubmittingOffer(false);
       }
-      return 'failed' as const;
-    } finally {
-      setIsSubmittingOffer(false);
-    }
-  }, [existingResponse?.id, invalidateProviderOfferState, onClose, request, t]);
+    },
+    [existingResponse?.id, invalidateProviderOfferState, onClose, request, t],
+  );
 
   const cancelProviderOffer = React.useCallback(async () => {
     if (!existingResponse?.id) {

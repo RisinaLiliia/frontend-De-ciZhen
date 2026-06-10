@@ -4,21 +4,30 @@ import type {
   WorkspaceStatisticsPriorityItemView,
 } from './statistics.model';
 
-export function resolveFitLabel(copy: WorkspaceStatisticsCopy, value: 'high' | 'medium' | 'low' | 'unknown') {
+export function resolveFitLabel(
+  copy: WorkspaceStatisticsCopy,
+  value: 'high' | 'medium' | 'low' | 'unknown',
+) {
   if (value === 'high') return copy.userFitHighLabel;
   if (value === 'medium') return copy.userRiskSeverityMedium;
   if (value === 'low') return copy.userRiskSeverityLow;
   return '—';
 }
 
-export function resolveOpportunityLabel(copy: WorkspaceStatisticsCopy, value: 'high' | 'medium' | 'low' | 'unknown') {
+export function resolveOpportunityLabel(
+  copy: WorkspaceStatisticsCopy,
+  value: 'high' | 'medium' | 'low' | 'unknown',
+) {
   if (value === 'high') return copy.userRiskSeverityHigh;
   if (value === 'medium') return copy.userRiskSeverityMedium;
   if (value === 'low') return copy.userRiskSeverityLow;
   return '—';
 }
 
-export function resolveActivityLabel(copy: WorkspaceStatisticsCopy, value: 'high' | 'medium' | 'low' | 'unknown') {
+export function resolveActivityLabel(
+  copy: WorkspaceStatisticsCopy,
+  value: 'high' | 'medium' | 'low' | 'unknown',
+) {
   if (value === 'high') return copy.contextHealthActivityHigh;
   if (value === 'medium') return copy.contextHealthActivityStable;
   if (value === 'low') return copy.contextHealthActivityLow;

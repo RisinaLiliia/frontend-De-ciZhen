@@ -34,11 +34,7 @@ export function PublicRequestsCardList({
   pendingFavoriteRequestIds,
 }: RequestsListProps) {
   if (isError) {
-    return (
-      <div className="card text-center typo-muted">
-        {t(I18N_KEYS.requestsPage.error)}
-      </div>
-    );
+    return <div className="card text-center typo-muted">{t(I18N_KEYS.requestsPage.error)}</div>;
   }
 
   return (
@@ -61,7 +57,10 @@ export function PublicRequestsCardList({
         });
 
         return (
-          <div key={item.id} className="workspace-list-card-shell workspace-guest-request-card-shell">
+          <div
+            key={item.id}
+            className="workspace-list-card-shell workspace-guest-request-card-shell"
+          >
             <WorkspaceGuestRequestCard
               prefetch={index < 2}
               href={view.card.detailsHref}
@@ -80,33 +79,37 @@ export function PublicRequestsCardList({
               priceTrendLabel={view.card.priceTrendLabel}
               badgeLabel={hideRecurringBadge ? null : view.card.recurringLabel}
               onOpen={onOpenRequest ? () => onOpenRequest(item.id) : undefined}
-              contentSlot={view.card.isInactive && view.card.inactiveMessage ? (
-                <div className="request-card__inactive-message">
-                  {view.card.inactiveMessage}
-                </div>
-              ) : null}
-              actionSlot={enableOfferActions ? (
-                <PublicRequestCardActionRow
-                  status={view.status}
-                  actions={{
-                    t,
-                    onSendOffer,
-                    onEditOffer,
-                    onWithdrawOffer,
-                    onOpenChatThread,
-                  }}
-                />
-              ) : null}
-              overlaySlot={showFavoriteButton ? (
-                <FavoriteButton
-                  variant="icon"
-                  isFavorite={view.favorite.isFavorite}
-                  isPending={view.favorite.isFavoritePending}
-                  onToggle={() => onToggleFavorite?.(item.id)}
-                  ariaLabel={t(I18N_KEYS.requestDetails.ctaSave)}
-                  title={t(I18N_KEYS.requestDetails.ctaSave)}
-                />
-              ) : null}
+              contentSlot={
+                view.card.isInactive && view.card.inactiveMessage ? (
+                  <div className="request-card__inactive-message">{view.card.inactiveMessage}</div>
+                ) : null
+              }
+              actionSlot={
+                enableOfferActions ? (
+                  <PublicRequestCardActionRow
+                    status={view.status}
+                    actions={{
+                      t,
+                      onSendOffer,
+                      onEditOffer,
+                      onWithdrawOffer,
+                      onOpenChatThread,
+                    }}
+                  />
+                ) : null
+              }
+              overlaySlot={
+                showFavoriteButton ? (
+                  <FavoriteButton
+                    variant="icon"
+                    isFavorite={view.favorite.isFavorite}
+                    isPending={view.favorite.isFavoritePending}
+                    onToggle={() => onToggleFavorite?.(item.id)}
+                    ariaLabel={t(I18N_KEYS.requestDetails.ctaSave)}
+                    title={t(I18N_KEYS.requestDetails.ctaSave)}
+                  />
+                ) : null
+              }
             />
           </div>
         );

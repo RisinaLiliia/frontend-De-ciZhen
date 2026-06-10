@@ -110,7 +110,11 @@ describe('CitySearchSelect', () => {
     fireEvent.keyDown(input, { key: 'Enter' });
 
     expect(onChange).toHaveBeenCalledWith('muc');
-    expect(onSelectOption).toHaveBeenCalledWith({ value: 'muc', label: 'Munich', meta: '80331 · Bavaria' });
+    expect(onSelectOption).toHaveBeenCalledWith({
+      value: 'muc',
+      label: 'Munich',
+      meta: '80331 · Bavaria',
+    });
     await waitFor(() => {
       expect(screen.queryByRole('combobox', { name: 'City' })).toBeNull();
     });
@@ -183,7 +187,11 @@ describe('CitySearchSelect', () => {
     await waitFor(() => {
       expect(onChange).toHaveBeenCalledWith('ber');
     });
-    expect(onSelectOption).toHaveBeenCalledWith({ value: 'ber', label: 'Berlin', meta: '10115 · Berlin' });
+    expect(onSelectOption).toHaveBeenCalledWith({
+      value: 'ber',
+      label: 'Berlin',
+      meta: '10115 · Berlin',
+    });
     expect(screen.queryByRole('option')).toBeNull();
   });
 

@@ -6,7 +6,10 @@ import { OfferActionButton } from '@/components/ui/OfferActionButton';
 import { IconBriefcase, IconEdit } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
-import type { RequestListStatusActions, RequestListStatusPresentation } from './requestListStatus.types';
+import type {
+  RequestListStatusActions,
+  RequestListStatusPresentation,
+} from './requestListStatus.types';
 
 type RequestListOwnerStatusActionsProps = {
   status: RequestListStatusPresentation;

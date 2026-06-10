@@ -5,7 +5,9 @@ export type LegalDocumentResponse = {
   lastModified: string | null;
 };
 
-async function fetchLegal(path: '/legal/privacy' | '/legal/cookies'): Promise<LegalDocumentResponse> {
+async function fetchLegal(
+  path: '/legal/privacy' | '/legal/cookies',
+): Promise<LegalDocumentResponse> {
   const res = await fetch(buildApiUrl(path), {
     method: 'GET',
     credentials: 'include',

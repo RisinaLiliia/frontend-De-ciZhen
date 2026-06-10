@@ -32,7 +32,10 @@ export type DemandClusterItem =
 
 export type DemandClusterIndex = Supercluster<DemandClusterPointProps, Supercluster.AnyProps>;
 
-type DemandClusterOptions = Pick<Supercluster.Options<DemandClusterPointProps, Supercluster.AnyProps>, 'radius' | 'maxZoom' | 'minPoints'>;
+type DemandClusterOptions = Pick<
+  Supercluster.Options<DemandClusterPointProps, Supercluster.AnyProps>,
+  'radius' | 'maxZoom' | 'minPoints'
+>;
 
 const DEFAULT_CLUSTER_OPTIONS: DemandClusterOptions = {
   radius: 58,
@@ -49,20 +52,22 @@ export function createDemandClusterIndex(
     ...options,
   });
 
-  const features: Array<Supercluster.PointFeature<DemandClusterPointProps>> = cities.map((city) => ({
-    type: 'Feature',
-    properties: {
-      cityId: city.id,
-      name: city.name,
-      count: city.count,
-      lat: city.lat,
-      lng: city.lng,
-    },
-    geometry: {
-      type: 'Point',
-      coordinates: [city.lng, city.lat],
-    },
-  }));
+  const features: Array<Supercluster.PointFeature<DemandClusterPointProps>> = cities.map(
+    (city) => ({
+      type: 'Feature',
+      properties: {
+        cityId: city.id,
+        name: city.name,
+        count: city.count,
+        lat: city.lat,
+        lng: city.lng,
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [city.lng, city.lat],
+      },
+    }),
+  );
 
   clusterIndex.load(features);
   return clusterIndex;
@@ -73,7 +78,9 @@ function clampZoom(zoom: number): number {
 }
 
 function isClusterFeature(
-  feature: Supercluster.ClusterFeature<Supercluster.AnyProps> | Supercluster.PointFeature<DemandClusterPointProps>,
+  feature:
+    | Supercluster.ClusterFeature<Supercluster.AnyProps>
+    | Supercluster.PointFeature<DemandClusterPointProps>,
 ): feature is Supercluster.ClusterFeature<Supercluster.AnyProps> {
   return 'cluster' in feature.properties && feature.properties.cluster === true;
 }

@@ -2,7 +2,11 @@
 
 import * as React from 'react';
 
-import type { PayloadViewModel, RequestsStatsPanelProps, StatsTab } from '@/components/requests/requestsStatsPanel.types';
+import type {
+  PayloadViewModel,
+  RequestsStatsPanelProps,
+  StatsTab,
+} from '@/components/requests/requestsStatsPanel.types';
 
 type Args = Pick<
   RequestsStatsPanelProps,
@@ -78,7 +82,9 @@ export function useRequestsStatsPanelState({
     if (nodes.length === 0) return;
 
     const measure = () => {
-      const nextHeight = Math.max(...nodes.map((node) => Math.ceil(node.getBoundingClientRect().height)));
+      const nextHeight = Math.max(
+        ...nodes.map((node) => Math.ceil(node.getBoundingClientRect().height)),
+      );
       if (nextHeight <= 0) return;
       setStableContentMinHeight((prev) => (prev === nextHeight ? prev : nextHeight));
     };

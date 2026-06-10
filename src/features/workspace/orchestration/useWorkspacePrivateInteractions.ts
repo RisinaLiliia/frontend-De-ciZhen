@@ -50,15 +50,19 @@ export function useWorkspacePrivateInteractions({
   const qc = useQueryClient();
   const shouldBuildRequestInteractions =
     enabled && shouldBuildWorkspacePrivateRequestInteractions(activeWorkspaceTab);
-  const shouldBuildRequestFavoriteInteractions = enabled && shouldBuildWorkspacePrivateRequestFavoriteInteractions({
-    activePublicSection,
-    activeWorkspaceTab,
-    requestsScope,
-  });
-  const shouldBuildProviderInteractions = enabled && shouldBuildWorkspacePrivateProviderInteractions({
-    activePublicSection,
-    requestsScope,
-  });
+  const shouldBuildRequestFavoriteInteractions =
+    enabled &&
+    shouldBuildWorkspacePrivateRequestFavoriteInteractions({
+      activePublicSection,
+      activeWorkspaceTab,
+      requestsScope,
+    });
+  const shouldBuildProviderInteractions =
+    enabled &&
+    shouldBuildWorkspacePrivateProviderInteractions({
+      activePublicSection,
+      requestsScope,
+    });
 
   const favoriteToggles = useWorkspaceFavoriteToggles(
     buildWorkspacePrivateFavoriteToggleArgs({

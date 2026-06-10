@@ -30,7 +30,11 @@ export function RequestsMobileFilterToolbar({
   onNextPage,
 }: Props) {
   return (
-    <div className="requests-mobile-toolbar" role="group" aria-label={t(I18N_KEYS.requestsPage.mobileControlsLabel)}>
+    <div
+      className="requests-mobile-toolbar"
+      role="group"
+      aria-label={t(I18N_KEYS.requestsPage.mobileControlsLabel)}
+    >
       <IconButton
         label={t(I18N_KEYS.requestsPage.mobileFilterLabel)}
         title={t(I18N_KEYS.requestsPage.mobileFilterLabel)}

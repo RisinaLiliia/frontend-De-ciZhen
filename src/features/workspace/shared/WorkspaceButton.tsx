@@ -2,11 +2,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
-export type WorkspaceButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'ghost'
-  | 'softActive';
+export type WorkspaceButtonVariant = 'primary' | 'secondary' | 'ghost' | 'softActive';
 
 export type WorkspaceButtonSize = 'sm' | 'md' | 'lg';
 

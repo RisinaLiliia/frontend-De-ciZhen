@@ -6,7 +6,13 @@ import { toast } from 'sonner';
 
 import type { OfferDto } from '@/lib/api/dto/offers';
 import { deleteOffer } from '@/lib/api/offers';
-import { archiveMyRequest, deleteMyRequest, duplicateMyRequest, publishMyRequest, unpublishMyRequest } from '@/lib/api/requests';
+import {
+  archiveMyRequest,
+  deleteMyRequest,
+  duplicateMyRequest,
+  publishMyRequest,
+  unpublishMyRequest,
+} from '@/lib/api/requests';
 import { createConversation } from '@/lib/api/chat';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
@@ -37,26 +43,22 @@ type Args = {
   router: RouterLike;
 };
 
-export function useWorkspaceActions({
-  enabled = true,
-  isAuthed,
-  t,
-  qc,
-  router,
-}: Args) {
+export function useWorkspaceActions({ enabled = true, isAuthed, t, qc, router }: Args) {
   const [pendingOfferRequestId, setPendingOfferRequestId] = React.useState<string | null>(null);
   const [pendingPublishRequestId, setPendingPublishRequestId] = React.useState<string | null>(null);
-  const [pendingUnpublishRequestId, setPendingUnpublishRequestId] = React.useState<string | null>(null);
+  const [pendingUnpublishRequestId, setPendingUnpublishRequestId] = React.useState<string | null>(
+    null,
+  );
   const [pendingArchiveRequestId, setPendingArchiveRequestId] = React.useState<string | null>(null);
-  const [pendingDuplicateRequestId, setPendingDuplicateRequestId] = React.useState<string | null>(null);
+  const [pendingDuplicateRequestId, setPendingDuplicateRequestId] = React.useState<string | null>(
+    null,
+  );
   const [pendingDeleteRequestId, setPendingDeleteRequestId] = React.useState<string | null>(null);
 
   const invalidateWorkspaceRequests = React.useCallback(async () => {
     const queryKeys: QueryKey[] = buildWorkspaceOwnerRequestMutationQueryKeys();
 
-    await Promise.all([
-      ...queryKeys.map((queryKey) => qc.invalidateQueries({ queryKey })),
-    ]);
+    await Promise.all([...queryKeys.map((queryKey) => qc.invalidateQueries({ queryKey }))]);
   }, [qc]);
 
   const onOpenOfferSheet = React.useCallback(
@@ -149,9 +151,12 @@ export function useWorkspaceActions({
     [enabled, invalidateWorkspaceRequests, pendingArchiveRequestId, t],
   );
 
-  const onArchiveMyRequestVoid = React.useCallback((requestId: string) => {
-    void onArchiveMyRequest(requestId);
-  }, [onArchiveMyRequest]);
+  const onArchiveMyRequestVoid = React.useCallback(
+    (requestId: string) => {
+      void onArchiveMyRequest(requestId);
+    },
+    [onArchiveMyRequest],
+  );
 
   const onPublishMyRequest = React.useCallback(
     async (requestId: string) => {
@@ -172,9 +177,12 @@ export function useWorkspaceActions({
     [enabled, invalidateWorkspaceRequests, pendingPublishRequestId, t],
   );
 
-  const onPublishMyRequestVoid = React.useCallback((requestId: string) => {
-    void onPublishMyRequest(requestId);
-  }, [onPublishMyRequest]);
+  const onPublishMyRequestVoid = React.useCallback(
+    (requestId: string) => {
+      void onPublishMyRequest(requestId);
+    },
+    [onPublishMyRequest],
+  );
 
   const onUnpublishMyRequest = React.useCallback(
     async (requestId: string) => {
@@ -195,9 +203,12 @@ export function useWorkspaceActions({
     [enabled, invalidateWorkspaceRequests, pendingUnpublishRequestId, t],
   );
 
-  const onUnpublishMyRequestVoid = React.useCallback((requestId: string) => {
-    void onUnpublishMyRequest(requestId);
-  }, [onUnpublishMyRequest]);
+  const onUnpublishMyRequestVoid = React.useCallback(
+    (requestId: string) => {
+      void onUnpublishMyRequest(requestId);
+    },
+    [onUnpublishMyRequest],
+  );
 
   const onDuplicateMyRequest = React.useCallback(
     async (requestId: string) => {
@@ -218,9 +229,12 @@ export function useWorkspaceActions({
     [enabled, invalidateWorkspaceRequests, pendingDuplicateRequestId, t],
   );
 
-  const onDuplicateMyRequestVoid = React.useCallback((requestId: string) => {
-    void onDuplicateMyRequest(requestId);
-  }, [onDuplicateMyRequest]);
+  const onDuplicateMyRequestVoid = React.useCallback(
+    (requestId: string) => {
+      void onDuplicateMyRequest(requestId);
+    },
+    [onDuplicateMyRequest],
+  );
 
   const onDeleteMyRequest = React.useCallback(
     async (requestId: string) => {
@@ -241,9 +255,12 @@ export function useWorkspaceActions({
     [enabled, invalidateWorkspaceRequests, pendingDeleteRequestId, t],
   );
 
-  const onDeleteMyRequestVoid = React.useCallback((requestId: string) => {
-    void onDeleteMyRequest(requestId);
-  }, [onDeleteMyRequest]);
+  const onDeleteMyRequestVoid = React.useCallback(
+    (requestId: string) => {
+      void onDeleteMyRequest(requestId);
+    },
+    [onDeleteMyRequest],
+  );
 
   const ownerRequestActions = React.useMemo(
     () =>

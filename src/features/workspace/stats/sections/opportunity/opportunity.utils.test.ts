@@ -103,7 +103,11 @@ describe('opportunity.utils', () => {
     expect(axes.map((axis) => axis.key)).toEqual(['demand', 'competition', 'growth', 'activity']);
     expect(axes[0]?.semanticLabel).toBe(copy.opportunitySemanticVeryHigh);
     expect(axes[1]?.semanticLabel).toBe(copy.opportunitySemanticNoticeable);
-    expect(axes[3]).toMatchObject({ value: 0, semanticTone: 'low', semanticLabel: copy.opportunitySemanticLow });
+    expect(axes[3]).toMatchObject({
+      value: 0,
+      semanticTone: 'low',
+      semanticLabel: copy.opportunitySemanticLow,
+    });
   });
 
   it('builds radar geometry with clamped values and smooth path', () => {
@@ -128,7 +132,9 @@ describe('opportunity.utils', () => {
     expect(opportunityStatusClassName('very_high')).toBe('very-high');
     expect(opportunityStatusLabel('competitive', copy)).toBe(copy.opportunityStatusCompetitive);
     expect(opportunityStatusLabel('competitive', copyEn)).toBe(copyEn.opportunityStatusCompetitive);
-    expect(opportunitySummaryLabel('balanced_competitive', copy)).toBe(copy.opportunitySummaryBalancedCompetitive);
+    expect(opportunitySummaryLabel('balanced_competitive', copy)).toBe(
+      copy.opportunitySummaryBalancedCompetitive,
+    );
   });
 
   it('builds radar axis endpoints and value labels with fixed formatting', () => {

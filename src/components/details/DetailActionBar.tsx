@@ -6,11 +6,7 @@ type DetailActionBarProps = {
   className?: string;
 };
 
-export function DetailActionBar({
-  advice,
-  actions,
-  className,
-}: DetailActionBarProps) {
+export function DetailActionBar({ advice, actions, className }: DetailActionBarProps) {
   return (
     <div className={`request-detail__action-bar ${className ?? ''}`.trim()}>
       <div className="request-detail__action-note" role="note">
@@ -20,9 +16,7 @@ export function DetailActionBar({
         <p className="request-detail__action-note-copy">{advice}</p>
       </div>
 
-      <div className="request-detail__action-buttons">
-        {actions}
-      </div>
+      <div className="request-detail__action-buttons">{actions}</div>
     </div>
   );
 }

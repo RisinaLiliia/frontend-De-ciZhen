@@ -7,10 +7,7 @@ type WorkspaceContextBarProps = {
   className?: string;
 };
 
-export function WorkspaceContextBar({
-  children,
-  className,
-}: WorkspaceContextBarProps) {
+export function WorkspaceContextBar({ children, className }: WorkspaceContextBarProps) {
   return (
     <div className={['workspace-context-bar', className ?? ''].filter(Boolean).join(' ')}>
       {children}

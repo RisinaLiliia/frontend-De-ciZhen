@@ -1,6 +1,9 @@
 'use client';
 
-import type { OwnerRequestActions, RequestsListProps } from '@/components/requests/requestsList.types';
+import type {
+  OwnerRequestActions,
+  RequestsListProps,
+} from '@/components/requests/requestsList.types';
 import type { WorkspaceChatConversationInput } from '@/features/workspace/actions/workspaceActions.model';
 import type { ActiveDecisionState } from '@/features/workspace/requests/requestsDecision.model';
 import type { RequestDialogIntent } from '@/features/workspace/overlays/useWorkspaceRequestOverlayFlow';
@@ -17,7 +20,9 @@ export type WorkspaceRequestsViewCard = Omit<WorkspaceMyRequestCardDto, 'status'
     badgeVariant?: WorkspaceBadgeVariant | null;
   };
 };
-export type WorkspaceRequestsSummaryItem = NonNullable<WorkspaceRequestsResponseDto['summary']>['items'][number];
+export type WorkspaceRequestsSummaryItem = NonNullable<
+  WorkspaceRequestsResponseDto['summary']
+>['items'][number];
 export type WorkspaceRequestsViewVariant = 'private' | 'market';
 
 export type WorkspaceRequestsViewModel = {
@@ -78,8 +83,7 @@ function resolveEmptyMode(
   const listItems = response.list?.items ?? [];
   const listTotal = response.list?.total ?? listItems.length;
 
-  const allCount =
-    summaryItems.find((item) => item.key === 'all')?.value ?? listTotal;
+  const allCount = summaryItems.find((item) => item.key === 'all')?.value ?? listTotal;
 
   if (allCount === 0) return 'empty';
 

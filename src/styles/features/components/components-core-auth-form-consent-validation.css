@@ -62,7 +62,4 @@
     border-color: color-mix(in oklab, var(--color-success) 55%, transparent);
     background: var(--c-success-soft);
   }
-
-
-
 }

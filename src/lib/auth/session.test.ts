@@ -36,10 +36,12 @@ describe('auth session refresh', () => {
     fetchMock
       .mockRejectedValueOnce(new TypeError('network'))
       .mockResolvedValueOnce(new Response(null, { status: 502 }))
-      .mockResolvedValueOnce(new Response(JSON.stringify({ accessToken: 'token-1' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }));
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ accessToken: 'token-1' }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+      );
 
     const pending = refreshAccessToken();
     await vi.runAllTimersAsync();
@@ -84,10 +86,12 @@ describe('auth session refresh', () => {
 
     clearSessionHint();
     allowRefreshAttempts();
-    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify({ accessToken: 'token-2' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    }));
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ accessToken: 'token-2' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
 
     await expect(refreshAccessToken()).resolves.toEqual({
       status: 'success',

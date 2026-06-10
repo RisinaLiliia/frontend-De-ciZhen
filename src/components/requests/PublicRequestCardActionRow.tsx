@@ -65,17 +65,8 @@ function ActionLink({
   );
 }
 
-export function PublicRequestCardActionRow({
-  status,
-  actions,
-}: Props) {
-  const {
-    t,
-    onSendOffer,
-    onEditOffer,
-    onWithdrawOffer,
-    onOpenChatThread,
-  } = actions;
+export function PublicRequestCardActionRow({ status, actions }: Props) {
+  const { t, onSendOffer, onEditOffer, onWithdrawOffer, onOpenChatThread } = actions;
   const offerId = status.itemOffer?.id;
   const chatOffer = status.itemOffer;
 

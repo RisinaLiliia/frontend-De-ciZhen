@@ -72,21 +72,31 @@ function UseWorkspaceActionsProbe() {
       <button
         type="button"
         data-testid="chat-thread"
-        onClick={() => actions.onOpenChatThread({ id: 'offer-1', requestId: 'req-1', providerUserId: 'provider-1' } as never)}
+        onClick={() =>
+          actions.onOpenChatThread({
+            id: 'offer-1',
+            requestId: 'req-1',
+            providerUserId: 'provider-1',
+          } as never)
+        }
       >
         chat-thread
       </button>
       <button
         type="button"
         data-testid="chat-missing"
-        onClick={() => actions.onOpenChatThread({ id: 'offer-missing', requestId: 'req-2' } as never)}
+        onClick={() =>
+          actions.onOpenChatThread({ id: 'offer-missing', requestId: 'req-2' } as never)
+        }
       >
         chat-missing
       </button>
       <button
         type="button"
         data-testid="chat-invalid"
-        onClick={() => actions.onOpenChatConversation({ relatedEntity: { type: 'offer', id: '' } } as never)}
+        onClick={() =>
+          actions.onOpenChatConversation({ relatedEntity: { type: 'offer', id: '' } } as never)
+        }
       >
         chat-invalid
       </button>
@@ -151,7 +161,9 @@ describe('useWorkspaceActions', () => {
       expect(publishMyRequestMock).toHaveBeenCalledWith('req-1');
       expect(toastSuccessMock).toHaveBeenCalledWith(I18N_KEYS.client.requestPublished);
       expect(invalidateQueriesSpy).toHaveBeenCalledWith({ queryKey: ['requests-explorer-public'] });
-      expect(invalidateQueriesSpy).toHaveBeenCalledWith({ queryKey: ['workspace-public-overview'] });
+      expect(invalidateQueriesSpy).toHaveBeenCalledWith({
+        queryKey: ['workspace-public-overview'],
+      });
       expect(invalidateQueriesSpy).toHaveBeenCalledWith({ queryKey: ['home-nearby-requests'] });
     });
   });

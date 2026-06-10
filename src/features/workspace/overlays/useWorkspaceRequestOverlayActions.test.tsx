@@ -53,11 +53,7 @@ vi.mock('@/lib/api/reviews', () => ({
 }));
 
 import { completeContract, confirmContract } from '@/lib/api/contracts';
-import {
-  acceptOffer,
-  createOffer,
-  deleteOffer,
-} from '@/lib/api/offers';
+import { acceptOffer, createOffer, deleteOffer } from '@/lib/api/offers';
 import { createProviderReview } from '@/lib/api/reviews';
 import { getMyRequestById, getPublicRequestById, listMyRequests } from '@/lib/api/requests';
 
@@ -98,11 +94,7 @@ function deferred<T>() {
 
 function renderWithClient(node: React.ReactNode, queryClient = createQueryClient()) {
   return {
-    ...render(
-      <QueryClientProvider client={queryClient}>
-        {node}
-      </QueryClientProvider>,
-    ),
+    ...render(<QueryClientProvider client={queryClient}>{node}</QueryClientProvider>),
     queryClient,
   };
 }
@@ -131,19 +123,18 @@ function DecisionActionsProbe() {
     <>
       <button
         type="button"
-        onClick={() => void state.confirmRequestContract({
-          contractId: 'contract-1',
-          startAt: '2026-04-18T10:30',
-          durationMin: '90',
-          note: 'Werkzeug mitbringen',
-        })}
+        onClick={() =>
+          void state.confirmRequestContract({
+            contractId: 'contract-1',
+            startAt: '2026-04-18T10:30',
+            durationMin: '90',
+            note: 'Werkzeug mitbringen',
+          })
+        }
       >
         confirm
       </button>
-      <button
-        type="button"
-        onClick={() => void state.completeRequestContract('contract-1')}
-      >
+      <button type="button" onClick={() => void state.completeRequestContract('contract-1')}>
         complete
       </button>
       <div data-testid="pending-decision">{String(state.isSubmittingDecision)}</div>
@@ -176,11 +167,13 @@ function ProviderOfferActionsProbe({
       <button
         type="button"
         onClick={() => {
-          void state.submitProviderOffer({
-            amountValue: '150',
-            commentValue: 'Ich bin bereit',
-            availabilityValue: 'Morgen 10 Uhr',
-          }).then((value) => setResult(value));
+          void state
+            .submitProviderOffer({
+              amountValue: '150',
+              commentValue: 'Ich bin bereit',
+              availabilityValue: 'Morgen 10 Uhr',
+            })
+            .then((value) => setResult(value));
         }}
       >
         submit
@@ -248,19 +241,24 @@ describe('useWorkspaceRequestOverlayActions', () => {
 
   it('uses cached owner request for edit intent instead of calling public endpoint', async () => {
     const queryClient = createQueryClient();
-    queryClient.setQueryData(['requests-my'], [{
-      id: 'req-1',
-      title: 'Cached owner request',
-      serviceKey: 'home_cleaning',
-      cityId: 'c1',
-      propertyType: 'apartment',
-      area: 55,
-      preferredDate: '2026-04-22T10:00:00.000Z',
-      isRecurring: false,
-      status: 'draft',
-      createdAt: '2026-04-17T10:00:00.000Z',
-      clientId: 'u1',
-    }]);
+    queryClient.setQueryData(
+      ['requests-my'],
+      [
+        {
+          id: 'req-1',
+          title: 'Cached owner request',
+          serviceKey: 'home_cleaning',
+          cityId: 'c1',
+          propertyType: 'apartment',
+          area: 55,
+          preferredDate: '2026-04-22T10:00:00.000Z',
+          isRecurring: false,
+          status: 'draft',
+          createdAt: '2026-04-17T10:00:00.000Z',
+          clientId: 'u1',
+        },
+      ],
+    );
     getMyRequestByIdMock.mockRejectedValueOnce(new ApiError('forbidden', 404));
 
     const result = await fetchWorkspaceManagedRequest({

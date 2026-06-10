@@ -28,7 +28,10 @@ type Params = {
   clearDraft: () => void;
 };
 
-function buildCreateRequestNextPath(searchParams: { toString: () => string }, submitIntent: SubmitIntent) {
+function buildCreateRequestNextPath(
+  searchParams: { toString: () => string },
+  submitIntent: SubmitIntent,
+) {
   const currentParams = new URLSearchParams(searchParams.toString());
   currentParams.set('intent', submitIntent);
   return buildWorkspaceCreateRequestHref({

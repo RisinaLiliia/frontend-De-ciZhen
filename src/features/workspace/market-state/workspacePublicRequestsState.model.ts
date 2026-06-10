@@ -69,7 +69,10 @@ export function resolveWorkspacePublicRequestsState({
   };
 }
 
-export function resolveWorkspacePublicRequestsPageClamp(page: number | undefined, totalPages: number) {
+export function resolveWorkspacePublicRequestsPageClamp(
+  page: number | undefined,
+  totalPages: number,
+) {
   if (typeof page !== 'number') return null;
   return page > totalPages ? totalPages : null;
 }

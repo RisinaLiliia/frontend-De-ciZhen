@@ -22,17 +22,8 @@ type Props = {
   };
 };
 
-export function PublicRequestCardStatusSlot({
-  status,
-  actions,
-}: Props) {
-  const {
-    t,
-    onSendOffer,
-    onEditOffer,
-    onWithdrawOffer,
-    onOpenChatThread,
-  } = actions;
+export function PublicRequestCardStatusSlot({ status, actions }: Props) {
+  const { t, onSendOffer, onEditOffer, onWithdrawOffer, onOpenChatThread } = actions;
   const offerId = status.itemOffer?.id;
   const chatOffer = status.itemOffer;
 

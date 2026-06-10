@@ -4,34 +4,37 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils/cn';
 import { Spinner } from '@/components/ui/Spinner';
 
-const buttonVariants = cva('inline-flex items-center justify-center font-semibold transition disabled:opacity-60 disabled:pointer-events-none', {
-  variants: {
-    variant: {
-      primary: 'btn-primary',
-      secondary: 'btn-secondary',
-      ghost: 'btn-ghost',
+const buttonVariants = cva(
+  'inline-flex items-center justify-center font-semibold transition disabled:opacity-60 disabled:pointer-events-none',
+  {
+    variants: {
+      variant: {
+        primary: 'btn-primary',
+        secondary: 'btn-secondary',
+        ghost: 'btn-ghost',
+      },
+      size: {
+        sm: 'text-xs',
+        md: '',
+        lg: 'text-base',
+      },
+      fullWidth: {
+        true: 'w-full',
+        false: 'w-fit',
+      },
     },
-    size: {
-      sm: 'text-xs',
-      md: '',
-      lg: 'text-base',
-    },
-    fullWidth: {
-      true: 'w-full',
-      false: 'w-fit',
+    defaultVariants: {
+      variant: 'primary',
+      size: 'md',
+      fullWidth: true,
     },
   },
-  defaultVariants: {
-    variant: 'primary',
-    size: 'md',
-    fullWidth: true,
-  },
-});
+);
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & {
-  loading?: boolean;
-};
+    loading?: boolean;
+  };
 
 export function Button({
   className,
@@ -48,7 +51,11 @@ export function Button({
   return (
     <button
       type={type ?? 'button'}
-      className={cn(buttonVariants({ variant, size, fullWidth }), loading && 'cursor-progress gap-2', className)}
+      className={cn(
+        buttonVariants({ variant, size, fullWidth }),
+        loading && 'cursor-progress gap-2',
+        className,
+      )}
       disabled={isDisabled}
       aria-busy={loading || undefined}
       {...props}

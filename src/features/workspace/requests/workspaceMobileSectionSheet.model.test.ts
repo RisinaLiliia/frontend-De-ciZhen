@@ -29,8 +29,12 @@ describe('workspaceMobileSectionSheet.model', () => {
 
   it('resolves badge visibility by item semantics', () => {
     expect(resolveWorkspaceMobileSheetBadgeValue({ ...baseItem, badgeValue: 0 })).toBe(0);
-    expect(resolveWorkspaceMobileSheetBadgeValue({ ...baseItem, key: 'my-offers', badgeValue: 0 })).toBeNull();
-    expect(resolveWorkspaceMobileSheetBadgeValue({ ...baseItem, key: 'my-favorites', value: '14 new' })).toBe(14);
+    expect(
+      resolveWorkspaceMobileSheetBadgeValue({ ...baseItem, key: 'my-offers', badgeValue: 0 }),
+    ).toBeNull();
+    expect(
+      resolveWorkspaceMobileSheetBadgeValue({ ...baseItem, key: 'my-favorites', value: '14 new' }),
+    ).toBe(14);
   });
 
   it('splits items and resolves active href matches with query subset support', () => {
@@ -52,11 +56,7 @@ describe('workspaceMobileSectionSheet.model', () => {
       ),
     ).toBe(true);
     expect(
-      isWorkspaceMobileSheetItemActive(
-        { ...baseItem, disabled: true },
-        '/workspace',
-        searchParams,
-      ),
+      isWorkspaceMobileSheetItemActive({ ...baseItem, disabled: true }, '/workspace', searchParams),
     ).toBe(false);
   });
 });

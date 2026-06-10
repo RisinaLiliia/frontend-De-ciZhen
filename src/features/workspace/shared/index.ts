@@ -11,9 +11,7 @@ export { WorkspaceRightRailPanel } from './WorkspaceRightRailPanel';
 export { WorkspaceRightRailStack } from './WorkspaceRightRailStack';
 export { WorkspaceSectionAside } from './WorkspaceSectionAside';
 export { WorkspaceSectionErrorBoundary } from './WorkspaceSectionErrorBoundary';
-export {
-  WorkspaceUnifiedRail,
-} from './WorkspaceUnifiedRail';
+export { WorkspaceUnifiedRail } from './WorkspaceUnifiedRail';
 export type {
   WorkspaceUnifiedRailAction,
   WorkspaceUnifiedRailModel,

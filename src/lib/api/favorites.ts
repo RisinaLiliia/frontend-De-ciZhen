@@ -34,18 +34,24 @@ export function getProviderFavoriteCandidateIds(
   return unique;
 }
 
-export function resolveProviderFavoriteTargetId(provider: Pick<ProviderPublicDto, 'id' | 'userId'> | string): string {
+export function resolveProviderFavoriteTargetId(
+  provider: Pick<ProviderPublicDto, 'id' | 'userId'> | string,
+): string {
   const candidates = getProviderFavoriteCandidateIds(provider);
   const preferred = candidates.find((id) => isValidObjectId(id));
   return preferred ?? '';
 }
 
-export function resolveRequestFavoriteTargetId(request: Pick<RequestResponseDto, 'id'> | string): string {
+export function resolveRequestFavoriteTargetId(
+  request: Pick<RequestResponseDto, 'id'> | string,
+): string {
   const id = typeof request === 'string' ? normalizeId(request) : normalizeId(request.id);
   return isValidObjectId(id) ? id : '';
 }
 
-export function buildProviderFavoriteLookup(items: Array<Pick<ProviderPublicDto, 'id' | 'userId'>>): Set<string> {
+export function buildProviderFavoriteLookup(
+  items: Array<Pick<ProviderPublicDto, 'id' | 'userId'>>,
+): Set<string> {
   const ids = new Set<string>();
   for (const item of items) {
     for (const id of getProviderFavoriteCandidateIds(item)) ids.add(id);

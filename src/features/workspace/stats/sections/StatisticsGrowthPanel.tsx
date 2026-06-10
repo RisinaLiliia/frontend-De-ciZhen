@@ -41,7 +41,8 @@ export function StatisticsGrowthPanel({
 }) {
   if (growthCards.length === 0) return null;
 
-  const featuredCard = growthCards.find((item) => item.tone === 'primary') ?? growthCards[0] ?? null;
+  const featuredCard =
+    growthCards.find((item) => item.tone === 'primary') ?? growthCards[0] ?? null;
   const secondaryCards = growthCards.filter((item) => item.key !== featuredCard?.key).slice(0, 2);
   const focusLabel = featuredCard?.recommendedFor ?? recommendedForFallback ?? null;
   const heroTitle = featuredCard ? resolveHeroTitle(copy, featuredCard, focusLabel) : '';
@@ -52,7 +53,12 @@ export function StatisticsGrowthPanel({
   return (
     <section
       ref={panelRef}
-      className={workspacePanelShell('stack-sm', 'workspace-statistics__growth', 'workspace-statistics__rail-panel', 'workspace-statistics__rail-panel--growth')}
+      className={workspacePanelShell(
+        'stack-sm',
+        'workspace-statistics__growth',
+        'workspace-statistics__rail-panel',
+        'workspace-statistics__rail-panel--growth',
+      )}
       style={panelMinHeight ? { minHeight: `${panelMinHeight}px` } : undefined}
     >
       <header className="section-heading workspace-statistics__tile-header">
@@ -79,12 +85,18 @@ export function StatisticsGrowthPanel({
           </div>
 
           <div className="workspace-statistics-growth__effect">
-            <span className="workspace-statistics-growth__section-label">{copy.growthExpectedEffectLabel}</span>
-            <strong className="workspace-statistics-growth__effect-value">{featuredCard.benefit}</strong>
+            <span className="workspace-statistics-growth__section-label">
+              {copy.growthExpectedEffectLabel}
+            </span>
+            <strong className="workspace-statistics-growth__effect-value">
+              {featuredCard.benefit}
+            </strong>
           </div>
 
           <div className="workspace-statistics-growth__position">
-            <span className="workspace-statistics-growth__section-label">{copy.growthPositionTitle}</span>
+            <span className="workspace-statistics-growth__section-label">
+              {copy.growthPositionTitle}
+            </span>
             <div className="workspace-statistics-growth__position-grid">
               {heroPosition.map((item) => (
                 <div key={item.label} className="workspace-statistics-growth__position-item">
@@ -96,7 +108,9 @@ export function StatisticsGrowthPanel({
           </div>
 
           <div className="workspace-statistics-growth__why">
-            <span className="workspace-statistics-growth__section-label">{copy.growthWhyNowTitle}</span>
+            <span className="workspace-statistics-growth__section-label">
+              {copy.growthWhyNowTitle}
+            </span>
             <ul className="workspace-statistics-growth__why-list">
               {heroReasons.map((reason) => (
                 <li key={reason}>{reason}</li>
@@ -111,10 +125,13 @@ export function StatisticsGrowthPanel({
       ) : null}
 
       {secondaryCards.length > 0 ? (
-        <div className={`workspace-statistics-growth__grid${secondaryCards.length === 1 ? ' workspace-statistics-growth__grid--single' : ''}`.trim()}>
+        <div
+          className={`workspace-statistics-growth__grid${secondaryCards.length === 1 ? ' workspace-statistics-growth__grid--single' : ''}`.trim()}
+        >
           {secondaryCards.map((card) => {
             const marketMeta = {
-              focusLabel: marketContext?.focusLabel ?? card.recommendedFor ?? recommendedForFallback ?? null,
+              focusLabel:
+                marketContext?.focusLabel ?? card.recommendedFor ?? recommendedForFallback ?? null,
               demand: marketContext?.demand ?? {
                 label: copy.growthDemandHighValue,
                 tone: 'positive' as const,
@@ -133,7 +150,10 @@ export function StatisticsGrowthPanel({
                 key={card.key}
                 href={card.href}
                 prefetch={false}
-                className={workspaceStatLinkCardShell('workspace-statistics-growth__card', `is-${card.key}`)}
+                className={workspaceStatLinkCardShell(
+                  'workspace-statistics-growth__card',
+                  `is-${card.key}`,
+                )}
               >
                 <div className="workspace-statistics-growth__card-copy">
                   <p className="workspace-statistics-growth__title">{card.title}</p>
@@ -143,24 +163,41 @@ export function StatisticsGrowthPanel({
                 {isMarketGrid ? (
                   <div className="workspace-statistics-growth__market-meta">
                     <div className="workspace-statistics-growth__market-focus">
-                      <span className="workspace-statistics-growth__market-focus-label">{copy.growthFocusLabel}</span>
+                      <span className="workspace-statistics-growth__market-focus-label">
+                        {copy.growthFocusLabel}
+                      </span>
                       <strong className="workspace-statistics-growth__market-focus-value">
                         {marketMeta.focusLabel ? (
                           <>
-                            <span className="workspace-statistics-growth__market-focus-icon" aria-hidden="true">
+                            <span
+                              className="workspace-statistics-growth__market-focus-icon"
+                              aria-hidden="true"
+                            >
                               <IconPin />
                             </span>
                             <span>{marketMeta.focusLabel}</span>
                           </>
-                        ) : '—'}
+                        ) : (
+                          '—'
+                        )}
                       </strong>
                     </div>
                     <div className="workspace-statistics-context__health-grid workspace-statistics-growth__market-health-grid">
-                      <article className={workspaceStatCardShell('workspace-statistics-context__health-card', `is-${marketMeta.demand.tone}`)}>
+                      <article
+                        className={workspaceStatCardShell(
+                          'workspace-statistics-context__health-card',
+                          `is-${marketMeta.demand.tone}`,
+                        )}
+                      >
                         <span className="stat-label">{copy.growthDemandLabel}</span>
                         <strong className="stat-value">{marketMeta.demand.label}</strong>
                       </article>
-                      <article className={workspaceStatCardShell('workspace-statistics-context__health-card', `is-${marketMeta.competition.tone}`)}>
+                      <article
+                        className={workspaceStatCardShell(
+                          'workspace-statistics-context__health-card',
+                          `is-${marketMeta.competition.tone}`,
+                        )}
+                      >
                         <span className="stat-label">{copy.growthCompetitionLabel}</span>
                         <strong className="stat-value">{marketMeta.competition.label}</strong>
                       </article>
@@ -169,7 +206,10 @@ export function StatisticsGrowthPanel({
                 ) : (
                   <dl className="workspace-statistics-growth__meta-list">
                     {meta.map((item) => (
-                      <div key={`${card.key}-${item.label}`} className="workspace-statistics-growth__meta-item">
+                      <div
+                        key={`${card.key}-${item.label}`}
+                        className="workspace-statistics-growth__meta-item"
+                      >
                         <dt>{item.label}</dt>
                         <dd>{item.value}</dd>
                       </div>
@@ -177,9 +217,7 @@ export function StatisticsGrowthPanel({
                   </dl>
                 )}
 
-                <span className="link-accent workspace-statistics-growth__cta">
-                  {ctaLabel}
-                </span>
+                <span className="link-accent workspace-statistics-growth__cta">{ctaLabel}</span>
               </Link>
             );
           })}
@@ -188,7 +226,9 @@ export function StatisticsGrowthPanel({
 
       {nextSteps.length > 0 ? (
         <div className="workspace-statistics-growth__steps">
-          <strong className="workspace-statistics-growth__steps-title">{copy.growthNextStepsTitle}</strong>
+          <strong className="workspace-statistics-growth__steps-title">
+            {copy.growthNextStepsTitle}
+          </strong>
           <ol className="workspace-statistics-growth__steps-list">
             {nextSteps.map((step) => (
               <li key={step}>{step}</li>
@@ -221,10 +261,7 @@ function buildHeroPosition(copy: WorkspaceStatisticsModel['copy']) {
   ];
 }
 
-function buildHeroReasons(
-  copy: WorkspaceStatisticsModel['copy'],
-  focusLabel: string | null,
-) {
+function buildHeroReasons(copy: WorkspaceStatisticsModel['copy'], focusLabel: string | null) {
   return [
     focusLabel
       ? copy.growthDemandInContext.replace('{context}', focusLabel)
@@ -269,10 +306,7 @@ function resolveGrowthCtaLabel(
   return copy.growthCta;
 }
 
-function buildGrowthNextSteps(
-  copy: WorkspaceStatisticsModel['copy'],
-  focusLabel: string | null,
-) {
+function buildGrowthNextSteps(copy: WorkspaceStatisticsModel['copy'], focusLabel: string | null) {
   return [
     copy.growthNextStepVisibility,
     focusLabel

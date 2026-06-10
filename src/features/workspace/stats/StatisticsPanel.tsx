@@ -20,14 +20,7 @@ export function StatisticsPanel({
   slot = 'full',
 }: StatisticsPanelProps) {
   if (providedModel) {
-    return (
-      <StatisticsView
-        t={t}
-        locale={locale}
-        model={providedModel}
-        slot={slot}
-      />
-    );
+    return <StatisticsView t={t} locale={locale} model={providedModel} slot={slot} />;
   }
 
   return <StatisticsPanelWithModel t={t} locale={locale} slot={slot} />;
@@ -39,12 +32,5 @@ function StatisticsPanelWithModel({
   slot = 'full',
 }: Omit<StatisticsPanelProps, 'model'>) {
   const model = useDecisionDashboardModel({ locale });
-  return (
-    <StatisticsView
-      t={t}
-      locale={locale}
-      model={model}
-      slot={slot}
-    />
-  );
+  return <StatisticsView t={t} locale={locale} model={model} slot={slot} />;
 }

@@ -48,9 +48,7 @@ export function WorkspaceHeaderAuthActions({
 
   if (variant === 'buttons') {
     return (
-      <div
-        className={['workspace-environment__auth-actions', className].filter(Boolean).join(' ')}
-      >
+      <div className={['workspace-environment__auth-actions', className].filter(Boolean).join(' ')}>
         <button
           type="button"
           className="workspace-environment__text-action"
@@ -70,9 +68,7 @@ export function WorkspaceHeaderAuthActions({
   }
 
   return (
-    <div
-      className={['workspace-environment__auth-actions', className].filter(Boolean).join(' ')}
-    >
+    <div className={['workspace-environment__auth-actions', className].filter(Boolean).join(' ')}>
       <IconButton
         label={t('auth.loginCta')}
         className="icon-button--topbar workspace-environment__auth-button"

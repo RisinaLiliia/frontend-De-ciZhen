@@ -42,8 +42,12 @@ export function WorkspaceUserReviewComposer({
   return (
     <article className="public-profile-reviews__item public-profile-reviews__item--composer card">
       <form className="form-stack public-profile-reviews__composer-form" onSubmit={onSubmit}>
-        <p className="typo-h3 public-profile-reviews__composer-title">{t(I18N_KEYS.requestsPage.userReviewFormTitle)}</p>
-        <p className="typo-muted public-profile-reviews__composer-hint">{t(I18N_KEYS.requestsPage.userReviewFormHint)}</p>
+        <p className="typo-h3 public-profile-reviews__composer-title">
+          {t(I18N_KEYS.requestsPage.userReviewFormTitle)}
+        </p>
+        <p className="typo-muted public-profile-reviews__composer-hint">
+          {t(I18N_KEYS.requestsPage.userReviewFormHint)}
+        </p>
         <div className="form-group">
           <p className="typo-small">{t(I18N_KEYS.requestsPage.userReviewFormBookingLabel)}</p>
           <Select
@@ -55,7 +59,9 @@ export function WorkspaceUserReviewComposer({
             aria-label={t(I18N_KEYS.requestsPage.userReviewFormBookingLabel)}
           />
           {!isReviewableBookingsLoading && reviewableBookingOptions.length === 0 ? (
-            <p className="typo-small typo-muted">{t(I18N_KEYS.requestsPage.userReviewFormNoEligibleHint)}</p>
+            <p className="typo-small typo-muted">
+              {t(I18N_KEYS.requestsPage.userReviewFormNoEligibleHint)}
+            </p>
           ) : null}
         </div>
         <WorkspaceReviewRatingField

@@ -17,7 +17,9 @@ export const EMPTY_EXPLORE: ComponentProps<typeof WorkspacePageLayout>['explore'
   proofIndex: 0,
 };
 
-export const EMPTY_ASIDE_BASE_PROPS: ComponentProps<typeof WorkspacePageLayout>['workspaceAsideBaseProps'] = {
+export const EMPTY_ASIDE_BASE_PROPS: ComponentProps<
+  typeof WorkspacePageLayout
+>['workspaceAsideBaseProps'] = {
   isLoading: false,
   isError: false,
   errorLabel: '',

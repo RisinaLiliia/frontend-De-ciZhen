@@ -81,14 +81,16 @@
     white-space: nowrap;
   }
 
-  .workspace-statistics-opportunity__analysis-identity.workspace-statistics-opportunity__top .workspace-statistics-opportunity__city {
+  .workspace-statistics-opportunity__analysis-identity.workspace-statistics-opportunity__top
+    .workspace-statistics-opportunity__city {
     color: var(--color-text-muted);
     font-size: var(--fs-small);
     font-weight: 500;
     line-height: 1.35;
   }
 
-  .workspace-statistics-opportunity__analysis-identity.workspace-statistics-opportunity__top .workspace-statistics-opportunity__category {
+  .workspace-statistics-opportunity__analysis-identity.workspace-statistics-opportunity__top
+    .workspace-statistics-opportunity__category {
     color: var(--color-text-muted);
     font-size: var(--fs-small);
     font-weight: 700;

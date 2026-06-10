@@ -7,7 +7,7 @@
   }
 
   .badge-live::after {
-    content: "";
+    content: '';
     position: absolute;
     inset: -3px;
     border-radius: inherit;
@@ -57,5 +57,4 @@
       box-shadow: 0 0 0 0 transparent;
     }
   }
-
 }

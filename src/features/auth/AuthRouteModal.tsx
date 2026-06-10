@@ -2,7 +2,11 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { focusIfPresent, getTrapFocusTarget, resolveInitialFocusTarget } from '@/lib/a11y/focusTrap';
+import {
+  focusIfPresent,
+  getTrapFocusTarget,
+  resolveInitialFocusTarget,
+} from '@/lib/a11y/focusTrap';
 
 type Props = {
   title: string;
@@ -28,7 +32,8 @@ export function AuthRouteModal({ title, subtitle, closeLabel = 'Close', children
   React.useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
-    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
     const getFocusable = () =>
       Array.from(
@@ -70,20 +75,36 @@ export function AuthRouteModal({ title, subtitle, closeLabel = 'Close', children
   }, [close]);
 
   return (
-    <div className="dc-modal auth-route-modal" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+    <div
+      className="dc-modal auth-route-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+    >
       <button
         type="button"
         className="dc-modal__backdrop auth-route-modal__backdrop"
         aria-label={closeLabel}
         onClick={close}
       />
-      <section ref={panelRef} className="dc-modal__panel dc-modal__panel--compact auth-route-modal__panel">
+      <section
+        ref={panelRef}
+        className="dc-modal__panel dc-modal__panel--compact auth-route-modal__panel"
+      >
         <header className="auth-route-modal__header">
           <div className="auth-route-modal__title-wrap">
-            <h1 id={titleId} className="auth-route-modal__title">{title}</h1>
+            <h1 id={titleId} className="auth-route-modal__title">
+              {title}
+            </h1>
             {subtitle ? <p className="auth-route-modal__subtitle">{subtitle}</p> : null}
           </div>
-          <button ref={closeButtonRef} type="button" className="auth-route-modal__close" aria-label={closeLabel} onClick={close}>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            className="auth-route-modal__close"
+            aria-label={closeLabel}
+            onClick={close}
+          >
             ×
           </button>
         </header>

@@ -86,9 +86,7 @@ export function CreateRequestBasicsSection({
             disabled={!categoryKey}
           />
         </Field>
-        {serviceError ? (
-          <p className="text-red-600 text-sm">{serviceError}</p>
-        ) : null}
+        {serviceError ? <p className="text-red-600 text-sm">{serviceError}</p> : null}
       </div>
 
       <div className="form-group">

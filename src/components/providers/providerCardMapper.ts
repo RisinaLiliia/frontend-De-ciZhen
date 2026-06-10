@@ -67,7 +67,10 @@ export function mapPublicProviderToCard({
   const badges = buildProviderCardBadges({ t, provider, responseRate, responseMinutes });
   const servicePreview = buildProviderServicePreview({ t, seed });
   const reviewPreview = resolveProviderReviewPreview(seed);
-  const bioPreview = resolveProviderBioPreview({ aboutPreview: aboutPreview ?? provider.bio ?? undefined, seed });
+  const bioPreview = resolveProviderBioPreview({
+    aboutPreview: aboutPreview ?? provider.bio ?? undefined,
+    seed,
+  });
   const isVerified = resolveProviderIsVerified(provider);
 
   return {
@@ -75,7 +78,10 @@ export function mapPublicProviderToCard({
     badges,
     isVerified,
     status,
-    statusLabel: status === 'online' ? t(I18N_KEYS.homePublic.topProviderStatus) : t(I18N_KEYS.homePublic.topProviderStatusOffline),
+    statusLabel:
+      status === 'online'
+        ? t(I18N_KEYS.homePublic.topProviderStatus)
+        : t(I18N_KEYS.homePublic.topProviderStatusOffline),
     avatarUrl: provider.avatarUrl,
     name,
     role: roleLabel?.trim() || servicePreview[0],

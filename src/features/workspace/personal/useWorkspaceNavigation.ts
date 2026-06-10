@@ -22,10 +22,7 @@ type Args = {
   workspacePath: string;
 };
 
-export function useWorkspaceNavigation({
-  activeWorkspaceTab,
-  workspacePath,
-}: Args) {
+export function useWorkspaceNavigation({ activeWorkspaceTab, workspacePath }: Args) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const rafIdRef = React.useRef<number | null>(null);
@@ -40,33 +37,36 @@ export function useWorkspaceNavigation({
     });
   }, [searchParams, workspacePath]);
 
-  const scheduleReplace = React.useCallback((nextHref: string) => {
-    if (nextHref === currentHref) {
-      devPerfLog('workspace.nav', 'skip_same_href', { nextHref });
-      return false;
-    }
-    if (nextHref === lastRequestedHrefRef.current) {
-      devPerfLog('workspace.nav', 'skip_duplicate_href', { nextHref });
-      return false;
-    }
+  const scheduleReplace = React.useCallback(
+    (nextHref: string) => {
+      if (nextHref === currentHref) {
+        devPerfLog('workspace.nav', 'skip_same_href', { nextHref });
+        return false;
+      }
+      if (nextHref === lastRequestedHrefRef.current) {
+        devPerfLog('workspace.nav', 'skip_duplicate_href', { nextHref });
+        return false;
+      }
 
-    queuedHrefRef.current = nextHref;
-    queuedAtRef.current = devPerfNow();
-    devPerfLog('workspace.nav', 'queue_replace', { nextHref });
-    if (rafIdRef.current !== null) return true;
+      queuedHrefRef.current = nextHref;
+      queuedAtRef.current = devPerfNow();
+      devPerfLog('workspace.nav', 'queue_replace', { nextHref });
+      if (rafIdRef.current !== null) return true;
 
-    rafIdRef.current = window.requestAnimationFrame(() => {
-      rafIdRef.current = null;
-      const href = queuedHrefRef.current;
-      queuedHrefRef.current = null;
-      if (!href || href === lastRequestedHrefRef.current) return;
-      lastRequestedHrefRef.current = href;
-      devPerfDuration('workspace.nav', 'flush_replace', queuedAtRef.current, { href });
-      router.replace(href, { scroll: false });
-    });
+      rafIdRef.current = window.requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        const href = queuedHrefRef.current;
+        queuedHrefRef.current = null;
+        if (!href || href === lastRequestedHrefRef.current) return;
+        lastRequestedHrefRef.current = href;
+        devPerfDuration('workspace.nav', 'flush_replace', queuedAtRef.current, { href });
+        router.replace(href, { scroll: false });
+      });
 
-    return true;
-  }, [currentHref, router]);
+      return true;
+    },
+    [currentHref, router],
+  );
 
   React.useEffect(() => {
     if (currentHref === lastRequestedHrefRef.current) {
@@ -74,12 +74,15 @@ export function useWorkspaceNavigation({
     }
   }, [currentHref]);
 
-  React.useEffect(() => () => {
-    if (rafIdRef.current !== null) {
-      window.cancelAnimationFrame(rafIdRef.current);
-      rafIdRef.current = null;
-    }
-  }, []);
+  React.useEffect(
+    () => () => {
+      if (rafIdRef.current !== null) {
+        window.cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+    },
+    [],
+  );
 
   const setWorkspaceTab = React.useCallback(
     (tab: WorkspaceTab) => {

@@ -46,7 +46,11 @@
 
   .profile-avatar--placeholder {
     background:
-      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--color-surface) 90%, transparent), transparent),
+      radial-gradient(
+        circle at 30% 30%,
+        color-mix(in oklab, var(--color-surface) 90%, transparent),
+        transparent
+      ),
       linear-gradient(135deg, var(--c-avatar-provider), var(--c-avatar-provider-light));
     border-color: color-mix(in oklab, var(--c-avatar-provider-light) 70%, transparent);
     color: var(--c-ink);
@@ -54,7 +58,11 @@
 
   .profile-avatar--placeholder-client {
     background:
-      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--color-surface) 88%, transparent), transparent),
+      radial-gradient(
+        circle at 30% 30%,
+        color-mix(in oklab, var(--color-surface) 88%, transparent),
+        transparent
+      ),
       linear-gradient(135deg, var(--c-avatar-client), var(--c-avatar-client-light));
     border-color: color-mix(in oklab, var(--c-avatar-client) 65%, transparent);
     color: var(--c-ink);
@@ -116,6 +124,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-
-
 }

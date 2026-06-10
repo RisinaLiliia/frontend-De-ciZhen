@@ -71,6 +71,4 @@
     line-height: 1.4;
     color: color-mix(in oklab, var(--color-text) 90%, white 10%);
   }
-
-
 }

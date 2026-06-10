@@ -156,8 +156,8 @@ export function RequestDetailsContent({
     : viewModel.priceLabel;
   const dialogGallery = showOwnerBadge ? ownerImages : viewModel.images;
   const dialogAiAdvice = showOwnerBadge
-    ? (t(I18N_KEYS.requestDetails.ownerHint))
-    : (t(I18N_KEYS.requestDetails.responseSuccessTipCardBody));
+    ? t(I18N_KEYS.requestDetails.ownerHint)
+    : t(I18N_KEYS.requestDetails.responseSuccessTipCardBody);
 
   return (
     <div className={`request-detail ${isDialogSurface ? 'request-detail--dialog' : ''}`.trim()}>
@@ -173,18 +173,25 @@ export function RequestDetailsContent({
           showIdentity={!isDialogSurface}
           tags={viewModel.tagList}
           badgeLabel={showOwnerBadge ? t(I18N_KEYS.requestDetails.ownerBadge) : undefined}
-          statusBadge={statusBadgeContent ?? (
-            <span className={getStatusBadgeClass(requestStatusView.token)}>{requestStatusView.label}</span>
-          )}
-          headerAction={headerActionSlot ?? (showFavoriteCta ? (
-            <FavoriteButton
-              isFavorite={isSaved}
-              isPending={isSavePending}
-              ariaLabel={t(I18N_KEYS.requestDetails.ctaSave)}
-              onToggle={onFavorite}
-              className="request-detail__header-favorite"
-            />
-          ) : undefined)}
+          statusBadge={
+            statusBadgeContent ?? (
+              <span className={getStatusBadgeClass(requestStatusView.token)}>
+                {requestStatusView.label}
+              </span>
+            )
+          }
+          headerAction={
+            headerActionSlot ??
+            (showFavoriteCta ? (
+              <FavoriteButton
+                isFavorite={isSaved}
+                isPending={isSavePending}
+                ariaLabel={t(I18N_KEYS.requestDetails.ctaSave)}
+                onToggle={onFavorite}
+                className="request-detail__header-favorite"
+              />
+            ) : undefined)
+          }
         />
 
         {isDialogSurface && !isOwnerEditMode ? (
@@ -192,9 +199,13 @@ export function RequestDetailsContent({
             <div className="request-detail__dialog-copy request-card__copy">
               <div className="request-detail__dialog-heading">
                 {viewModel.categoryLabel ? (
-                  <p className="request-category request-detail__eyebrow">{viewModel.categoryLabel}</p>
+                  <p className="request-category request-detail__eyebrow">
+                    {viewModel.categoryLabel}
+                  </p>
                 ) : null}
-                <h1 className="request-detail__title">{showOwnerBadge ? ownerTitle || viewModel.title : viewModel.title}</h1>
+                <h1 className="request-detail__title">
+                  {showOwnerBadge ? ownerTitle || viewModel.title : viewModel.title}
+                </h1>
               </div>
 
               <RequestDetailAbout
@@ -242,7 +253,11 @@ export function RequestDetailsContent({
             </div>
 
             {dialogGallery.length > 0 ? (
-              <RequestDetailGallery images={dialogGallery} title={viewModel.title} surface="dialog" />
+              <RequestDetailGallery
+                images={dialogGallery}
+                title={viewModel.title}
+                surface="dialog"
+              />
             ) : null}
           </div>
         ) : showOwnerBadge ? (
@@ -276,9 +291,11 @@ export function RequestDetailsContent({
               addPhotoLabel={t(I18N_KEYS.request.photosButton)}
               photosHintLabel={t(I18N_KEYS.requestDetails.ownerPhotosHint)}
               cancelLabel={t(I18N_KEYS.requestDetails.ownerCancel)}
-              saveLabel={request.status === 'draft'
-                ? t(I18N_KEYS.request.submitDraft)
-                : t(I18N_KEYS.requestDetails.ownerSave)}
+              saveLabel={
+                request.status === 'draft'
+                  ? t(I18N_KEYS.request.submitDraft)
+                  : t(I18N_KEYS.requestDetails.ownerSave)
+              }
               publishLabel={t(I18N_KEYS.request.submitPublish)}
               priceTrendDownLabel={t(I18N_KEYS.requestDetails.ownerPriceTrendDown)}
               priceTrendUpLabel={t(I18N_KEYS.requestDetails.ownerPriceTrendUp)}
@@ -332,33 +349,33 @@ export function RequestDetailsContent({
 
         {isDialogSurface ? (
           <>
-            {(showOfferCta || showChatCta) ? (
+            {showOfferCta || showChatCta ? (
               <DetailActionBar
                 className="request-detail__dialog-action-bar"
                 advice={dialogAiAdvice}
-                actions={(
+                actions={
                   <>
-                  {showChatCta ? (
-                    <button
-                      type="button"
-                      className="btn-secondary request-detail__action-btn request-detail__action-btn--secondary"
-                      onClick={onChat}
-                    >
-                      {t(I18N_KEYS.requestDetails.ctaChat)}
-                    </button>
-                  ) : null}
-                  {showOfferCta ? (
-                    <button
-                      type="button"
-                      className="btn-ghost is-primary request-detail__action-btn request-detail__action-btn--primary"
-                      onClick={onApply}
-                      title={applyTitle}
-                    >
-                      {applyLabel}
-                    </button>
-                  ) : null}
+                    {showChatCta ? (
+                      <button
+                        type="button"
+                        className="btn-secondary request-detail__action-btn request-detail__action-btn--secondary"
+                        onClick={onChat}
+                      >
+                        {t(I18N_KEYS.requestDetails.ctaChat)}
+                      </button>
+                    ) : null}
+                    {showOfferCta ? (
+                      <button
+                        type="button"
+                        className="btn-ghost is-primary request-detail__action-btn request-detail__action-btn--primary"
+                        onClick={onApply}
+                        title={applyTitle}
+                      >
+                        {applyLabel}
+                      </button>
+                    ) : null}
                   </>
-                )}
+                }
               />
             ) : null}
           </>

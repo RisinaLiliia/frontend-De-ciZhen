@@ -91,14 +91,14 @@ Stable findings from code:
 
 ### Shell matrix by viewport
 
-| Viewport | Expected shell | Current shell from code | Status | Notes |
-| --- | --- | --- | --- | --- |
-| `375px` | mobile single-column, dock/sheet navigation, inline or sheet filters, no duplicate nav | matches mobile contract: no topbar, bottom dock mounted, main column stacked | Pass on static contract / Pending visual QA | Still needs browser checks for overflow, modal height, CTA reachability |
-| `425px` | mobile single-column, dock/sheet navigation, inline or sheet filters, no duplicate nav | matches mobile contract: no topbar, bottom dock mounted, main column stacked | Pass on static contract / Pending visual QA | Same manual checks as `375px` |
-| `768px` | tablet drawer/burger nav, visible topbar, stacked rail, compact filters | matches tablet contract: topbar + drawer path, single-column page frame | Pass on static contract / Pending visual QA | Needs browser check for drawer, filters sheet, and rail order |
-| `1024px` | desktop persistent left sidebar, visible topbar, right rail beside content | matches desktop contract: sidebar rendered, drawer hidden, rail beside content | Pass on static contract / Pending visual QA | Needs browser checks for spacing rhythm and sticky rail behavior |
-| `1280px` | desktop persistent sidebar and right rail | matches desktop contract: sidebar rendered, drawer hidden, rail sticky | Pass on static contract / Pending visual QA | Needs browser checks for spacing rhythm and sticky rail behavior |
-| `1440px` | desktop persistent sidebar and right rail | matches desktop contract: sidebar rendered, drawer hidden, rail sticky | Pass on static contract / Pending visual QA | Needs browser checks for max-width, balance, and whitespace |
+| Viewport | Expected shell                                                                         | Current shell from code                                                        | Status                                      | Notes                                                                   |
+| -------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------- | ----------------------------------------------------------------------- |
+| `375px`  | mobile single-column, dock/sheet navigation, inline or sheet filters, no duplicate nav | matches mobile contract: no topbar, bottom dock mounted, main column stacked   | Pass on static contract / Pending visual QA | Still needs browser checks for overflow, modal height, CTA reachability |
+| `425px`  | mobile single-column, dock/sheet navigation, inline or sheet filters, no duplicate nav | matches mobile contract: no topbar, bottom dock mounted, main column stacked   | Pass on static contract / Pending visual QA | Same manual checks as `375px`                                           |
+| `768px`  | tablet drawer/burger nav, visible topbar, stacked rail, compact filters                | matches tablet contract: topbar + drawer path, single-column page frame        | Pass on static contract / Pending visual QA | Needs browser check for drawer, filters sheet, and rail order           |
+| `1024px` | desktop persistent left sidebar, visible topbar, right rail beside content             | matches desktop contract: sidebar rendered, drawer hidden, rail beside content | Pass on static contract / Pending visual QA | Needs browser checks for spacing rhythm and sticky rail behavior        |
+| `1280px` | desktop persistent sidebar and right rail                                              | matches desktop contract: sidebar rendered, drawer hidden, rail sticky         | Pass on static contract / Pending visual QA | Needs browser checks for spacing rhythm and sticky rail behavior        |
+| `1440px` | desktop persistent sidebar and right rail                                              | matches desktop contract: sidebar rendered, drawer hidden, rail sticky         | Pass on static contract / Pending visual QA | Needs browser checks for max-width, balance, and whitespace             |
 
 ### Shared route applicability
 

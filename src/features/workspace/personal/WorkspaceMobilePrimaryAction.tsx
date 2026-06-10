@@ -33,7 +33,9 @@ export function WorkspaceMobilePrimaryAction({
         href={href}
         prefetch={false}
         className="btn-primary workspace-mobile-action__btn"
-        onClick={() => trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab, mobile: true })}
+        onClick={() =>
+          trackUXEvent('workspace_primary_cta_click', { tab: activeWorkspaceTab, mobile: true })
+        }
       >
         {label}
       </Link>

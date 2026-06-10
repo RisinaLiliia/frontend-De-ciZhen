@@ -95,52 +95,67 @@ export function useWorkspaceStatsQuery({
     [pathname, router, searchParams],
   );
 
-  const setRange = React.useCallback((next: WorkspaceStatisticsRange) => {
-    replaceSearchParams((params) => {
-      params.set('range', next);
-      params.delete('statsCityPage');
-    });
-  }, [replaceSearchParams]);
+  const setRange = React.useCallback(
+    (next: WorkspaceStatisticsRange) => {
+      replaceSearchParams((params) => {
+        params.set('range', next);
+        params.delete('statsCityPage');
+      });
+    },
+    [replaceSearchParams],
+  );
 
-  const setCityId = React.useCallback((next: string | null) => {
-    replaceSearchParams((params) => {
-      if (next) {
-        params.set('cityId', next);
-      } else {
-        params.delete('cityId');
-      }
-      params.delete('statsCityPage');
-    });
-  }, [replaceSearchParams]);
+  const setCityId = React.useCallback(
+    (next: string | null) => {
+      replaceSearchParams((params) => {
+        if (next) {
+          params.set('cityId', next);
+        } else {
+          params.delete('cityId');
+        }
+        params.delete('statsCityPage');
+      });
+    },
+    [replaceSearchParams],
+  );
 
-  const setCategoryKey = React.useCallback((next: string | null) => {
-    replaceSearchParams((params) => {
-      if (next) {
-        params.set('categoryKey', next);
-      } else {
-        params.delete('categoryKey');
-      }
-      params.delete('subcategoryKey');
-      params.delete('statsCityPage');
-    });
-  }, [replaceSearchParams]);
+  const setCategoryKey = React.useCallback(
+    (next: string | null) => {
+      replaceSearchParams((params) => {
+        if (next) {
+          params.set('categoryKey', next);
+        } else {
+          params.delete('categoryKey');
+        }
+        params.delete('subcategoryKey');
+        params.delete('statsCityPage');
+      });
+    },
+    [replaceSearchParams],
+  );
 
-  const setCityListPage = React.useCallback((next: number) => {
-    replaceSearchParams((params) => {
-      const safeNext = Math.max(1, Math.trunc(next));
-      if (safeNext <= 1) {
-        params.delete(CITY_PAGE_QUERY_KEY);
-      } else {
-        params.set(CITY_PAGE_QUERY_KEY, String(safeNext));
-      }
-    });
-  }, [replaceSearchParams]);
+  const setCityListPage = React.useCallback(
+    (next: number) => {
+      replaceSearchParams((params) => {
+        const safeNext = Math.max(1, Math.trunc(next));
+        if (safeNext <= 1) {
+          params.delete(CITY_PAGE_QUERY_KEY);
+        } else {
+          params.set(CITY_PAGE_QUERY_KEY, String(safeNext));
+        }
+      });
+    },
+    [replaceSearchParams],
+  );
 
-  const setViewerMode = React.useCallback((next: StatisticsViewerMode) => {
-    replaceSearchParams((params) => {
-      params.set('viewerMode', next);
-    });
-  }, [replaceSearchParams]);
+  const setViewerMode = React.useCallback(
+    (next: StatisticsViewerMode) => {
+      replaceSearchParams((params) => {
+        params.set('viewerMode', next);
+      });
+    },
+    [replaceSearchParams],
+  );
 
   const resetFilters = React.useCallback(() => {
     replaceSearchParams((params) => {
@@ -151,7 +166,9 @@ export function useWorkspaceStatsQuery({
     });
   }, [replaceSearchParams]);
 
-  const [lastSuccessfulData, setLastSuccessfulData] = React.useState<WorkspaceStatisticsDecisionDashboardDto | undefined>(undefined);
+  const [lastSuccessfulData, setLastSuccessfulData] = React.useState<
+    WorkspaceStatisticsDecisionDashboardDto | undefined
+  >(undefined);
 
   const query = useQuery<WorkspaceStatisticsDecisionDashboardDto>({
     queryKey: [
@@ -181,10 +198,13 @@ export function useWorkspaceStatsQuery({
         payload,
         privateOverview,
       });
-      const normalized = normalizeWorkspaceDecisionDashboardResponse({
-        ...hydratedPayload,
-        __source: 'bff',
-      }, filters);
+      const normalized = normalizeWorkspaceDecisionDashboardResponse(
+        {
+          ...hydratedPayload,
+          __source: 'bff',
+        },
+        filters,
+      );
       const parsed = workspaceStatisticsDecisionDashboardSchema.safeParse(normalized);
       if (!parsed.success) {
         if (process.env.NODE_ENV !== 'production') {

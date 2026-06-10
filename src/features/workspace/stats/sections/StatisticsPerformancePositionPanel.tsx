@@ -26,7 +26,9 @@ export function StatisticsPerformancePositionPanel({
         <p className="section-subtitle">{copy.userPositionSubtitle}</p>
       </header>
       <div className={`workspace-statistics-user-position is-${position.bucket}`.trim()}>
-        <strong className="workspace-statistics-user-position__headline">{position.headline}</strong>
+        <strong className="workspace-statistics-user-position__headline">
+          {position.headline}
+        </strong>
         <p className="workspace-statistics-user-position__summary">{position.summary}</p>
         <div className="workspace-statistics-user-position__grid">
           <article className={workspaceStatCardShell('workspace-statistics-user-position__metric')}>

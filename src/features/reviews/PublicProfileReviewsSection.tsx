@@ -70,7 +70,9 @@ export function PublicProfileReviewsSection({
       id={sectionId}
       className={`request-detail__section request-detail__similar public-profile-detail__reviews-section ${sectionClassName ?? ''}`.trim()}
     >
-      <h3 className="request-detail__section-title">{sectionTitle ?? t(I18N_KEYS.requestsPage.reviewsViewLabel)}</h3>
+      <h3 className="request-detail__section-title">
+        {sectionTitle ?? t(I18N_KEYS.requestsPage.reviewsViewLabel)}
+      </h3>
       {isReviewsLoading ? <p className="request-detail__similar-note">...</p> : null}
       {!isReviewsLoading ? (
         <div
@@ -101,7 +103,10 @@ export function PublicProfileReviewsSection({
                   <div key={score} className="public-profile-reviews__distribution-row">
                     <span className="public-profile-reviews__distribution-score">{score}★</span>
                     <span className="public-profile-reviews__distribution-track">
-                      <span className="public-profile-reviews__distribution-fill" style={{ width }} />
+                      <span
+                        className="public-profile-reviews__distribution-fill"
+                        style={{ width }}
+                      />
                     </span>
                     <span className="public-profile-reviews__distribution-count">{count}</span>
                   </div>
@@ -151,16 +156,23 @@ export function PublicProfileReviewsSection({
                       {review.createdAtTs ? formatReviewDate(review.createdAtTs) : ''}
                     </p>
                   </div>
-                  <p className="public-profile-reviews__item-stars" aria-label={`${review.rating} of 5`}>
+                  <p
+                    className="public-profile-reviews__item-stars"
+                    aria-label={`${review.rating} of 5`}
+                  >
                     {'★'.repeat(review.rating)}
                     {'☆'.repeat(Math.max(0, 5 - review.rating))}
                   </p>
-                  <p className="public-profile-reviews__item-text">{review.text || reviewsUi.noText}</p>
+                  <p className="public-profile-reviews__item-text">
+                    {review.text || reviewsUi.noText}
+                  </p>
                 </article>
               ))}
               {isEmpty ? (
                 <article className="public-profile-reviews__item public-profile-reviews__item--empty card">
-                  <p className="public-profile-reviews__item-text">{emptyHint ?? t(I18N_KEYS.requestsPage.reviewsEmptyHint)}</p>
+                  <p className="public-profile-reviews__item-text">
+                    {emptyHint ?? t(I18N_KEYS.requestsPage.reviewsEmptyHint)}
+                  </p>
                 </article>
               ) : null}
             </div>

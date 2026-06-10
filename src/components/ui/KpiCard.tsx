@@ -49,7 +49,9 @@ export function KpiCard({
         tone === 'positive' ? 'kpi-card--positive' : '',
         interactive ? 'stat-link' : '',
         className ?? '',
-      ].join(' ').trim()}
+      ]
+        .join(' ')
+        .trim()}
       tabIndex={interactive || focusable ? 0 : undefined}
     >
       <div className="kpi-card__top">
@@ -67,7 +69,10 @@ export function KpiCard({
         <div className="kpi-card__bottom">
           {meta ? <span className={`kpi-card__meta is-${resolvedTone}`.trim()}>{meta}</span> : null}
           {trend ? (
-            <span className={`kpi-card__trend is-${trendDirection}`.trim()} aria-label={`Trend ${trendSign}${trendPercent}%`}>
+            <span
+              className={`kpi-card__trend is-${trendDirection}`.trim()}
+              aria-label={`Trend ${trendSign}${trendPercent}%`}
+            >
               <span className="kpi-card__trend-icon" aria-hidden="true">
                 {trendDirection === 'up' ? '↑' : trendDirection === 'down' ? '↓' : '•'}
               </span>

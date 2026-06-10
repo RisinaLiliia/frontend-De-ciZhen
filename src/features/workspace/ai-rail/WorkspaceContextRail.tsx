@@ -35,7 +35,15 @@ export function WorkspaceContextRail({
   children?: React.ReactNode;
 }) {
   return (
-    <div className={[useStatisticsLayout ? 'workspace-statistics-layout' : '', 'workspace-context-rail', className ?? ''].filter(Boolean).join(' ')}>
+    <div
+      className={[
+        useStatisticsLayout ? 'workspace-statistics-layout' : '',
+        'workspace-context-rail',
+        className ?? '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
       {topSlot}
 
       <WorkspaceFocusRailPanel

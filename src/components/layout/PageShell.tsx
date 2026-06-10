@@ -93,13 +93,20 @@ export function PageShell({
 
   const shellMainStyle = React.useMemo<React.CSSProperties>(
     () => ({
-      paddingTop: topbarOverlay ? '0px' : 'calc(var(--space-8) + var(--shell-topbar-height) + var(--shell-topbar-offset, 0px))',
+      paddingTop: topbarOverlay
+        ? '0px'
+        : 'calc(var(--space-8) + var(--shell-topbar-height) + var(--shell-topbar-offset, 0px))',
     }),
     [topbarOverlay],
   );
 
   return (
-    <div className={cn('min-h-dvh page-shell motion-reduce-transition', hasWorkspaceNav ? 'page-shell--with-mobile-nav' : null)}>
+    <div
+      className={cn(
+        'min-h-dvh page-shell motion-reduce-transition',
+        hasWorkspaceNav ? 'page-shell--with-mobile-nav' : null,
+      )}
+    >
       <TopBar
         title={title}
         center={hasWorkspaceNav ? <WorkspacePrimaryNavigationDesktop /> : null}

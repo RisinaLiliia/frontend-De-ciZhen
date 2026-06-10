@@ -1,9 +1,7 @@
 'use client';
 
 import { useI18n } from '@/lib/i18n/I18nProvider';
-import {
-  WorkspaceSectionHeader,
-} from '@/features/workspace/shell';
+import { WorkspaceSectionHeader } from '@/features/workspace/shell';
 import { getChatPageCopy } from '@/features/workspace/chat/model/chat.model';
 
 function getChatWorkspaceDescription(locale: string) {

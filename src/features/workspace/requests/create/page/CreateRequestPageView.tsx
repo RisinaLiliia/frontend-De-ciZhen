@@ -52,8 +52,12 @@ export type CreateRequestPageViewProps = {
   selectedDateLabel: string;
   selectedDayIso: string;
   requestSelectedDateLabel: string;
-  directFlowCalendarConfig: React.ComponentProps<typeof CreateRequestDetailsSection>['directFlowCalendarConfig'];
-  requestCalendarConfig: React.ComponentProps<typeof CreateRequestDetailsSection>['requestCalendarConfig'];
+  directFlowCalendarConfig: React.ComponentProps<
+    typeof CreateRequestDetailsSection
+  >['directFlowCalendarConfig'];
+  requestCalendarConfig: React.ComponentProps<
+    typeof CreateRequestDetailsSection
+  >['requestCalendarConfig'];
   isDirectProviderLoading: boolean;
   isProviderSlotsLoading: boolean;
   availableDaysCount: number;
@@ -128,9 +132,10 @@ export function CreateRequestFormContent({
   activeSubmitIntent,
   layoutVariant = 'page',
 }: CreateRequestPageViewProps) {
-  const rootClassName = layoutVariant === 'workspace'
-    ? 'request-create request-create--workspace'
-    : 'container-mobile request-create request-create--page';
+  const rootClassName =
+    layoutVariant === 'workspace'
+      ? 'request-create request-create--workspace'
+      : 'container-mobile request-create request-create--page';
 
   return (
     <div className={rootClassName}>
@@ -139,7 +144,10 @@ export function CreateRequestFormContent({
         <p className="typo-muted">{t('request.subtitle')}</p>
       </section>
 
-      <form className={`card request-form ${layoutVariant === 'workspace' ? 'request-form--workspace' : ''}`.trim()} onSubmit={onSubmit}>
+      <form
+        className={`card request-form ${layoutVariant === 'workspace' ? 'request-form--workspace' : ''}`.trim()}
+        onSubmit={onSubmit}
+      >
         <CreateRequestBasicsSection
           t={t}
           requiredHint={requiredHint}

@@ -79,7 +79,6 @@
     .workspace-statistics__cities-tools {
       flex-wrap: wrap;
     }
-
   }
 
   @media (max-width: 639px) {

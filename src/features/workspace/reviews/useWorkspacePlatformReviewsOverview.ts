@@ -117,7 +117,8 @@ export function useWorkspacePlatformReviewsOverview({
           item,
           t(I18N_KEYS.requestsPage.platformReviewAnonymous),
           t(I18N_KEYS.requestsPage.platformReviewNoText),
-        )),
+        ),
+      ),
     [platformQuery.data?.items, t],
   );
 

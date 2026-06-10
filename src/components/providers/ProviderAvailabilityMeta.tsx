@@ -74,7 +74,9 @@ export function ProviderAvailabilityMeta({
   }, [autoSelectFirstAvailable, availableSet, calendar, dateIso]);
 
   const triggerNode = (
-    <span className={`request-detail__availability-date ${calendar ? 'request-detail__availability-date--interactive' : ''}`.trim()}>
+    <span
+      className={`request-detail__availability-date ${calendar ? 'request-detail__availability-date--interactive' : ''}`.trim()}
+    >
       <IconCalendar />
       {showDatePrefix ? (
         <span className="request-detail__availability-date-prefix">{datePrefix}:</span>
@@ -116,7 +118,11 @@ export function ProviderAvailabilityMeta({
               },
               busy: (day) => {
                 const iso = toIsoDayLocal(day);
-                return iso >= calendar.rangeStartIso && iso <= calendar.rangeEndIso && !availableSet.has(iso);
+                return (
+                  iso >= calendar.rangeStartIso &&
+                  iso <= calendar.rangeEndIso &&
+                  !availableSet.has(iso)
+                );
               },
             }}
             modifiersClassNames={{
@@ -146,12 +152,16 @@ export function ProviderAvailabilityMeta({
         </div>
       </div>
     </Popover>
-  ) : triggerNode;
+  ) : (
+    triggerNode
+  );
 
   return (
     <div className={`request-detail__availability-meta ${className ?? ''}`.trim()}>
       {showStateBadge ? (
-        <span className={`status-badge request-detail__availability-status ${tone === 'warning' ? 'status-badge--warning' : 'status-badge--success'}`.trim()}>
+        <span
+          className={`status-badge request-detail__availability-status ${tone === 'warning' ? 'status-badge--warning' : 'status-badge--success'}`.trim()}
+        >
           <span className="request-detail__availability-dot" aria-hidden="true" />
           {stateLabel}
         </span>

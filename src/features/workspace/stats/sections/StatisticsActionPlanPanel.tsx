@@ -19,7 +19,12 @@ export function StatisticsActionPlanPanel({
   steps: NonNullable<WorkspaceStatisticsModel['userIntelligence']>['nextSteps'];
 }) {
   return (
-    <section className={workspacePanelShell('workspace-statistics-user-panel', 'workspace-statistics-user-panel--actions')}>
+    <section
+      className={workspacePanelShell(
+        'workspace-statistics-user-panel',
+        'workspace-statistics-user-panel--actions',
+      )}
+    >
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{title ?? copy.userActionsTitle}</p>
         <p className="section-subtitle">{subtitle ?? copy.userActionsSubtitle}</p>
@@ -27,10 +32,21 @@ export function StatisticsActionPlanPanel({
       {steps.length > 0 ? (
         <ol className="workspace-statistics-user-actions">
           {steps.map((step, index) => (
-            <li key={step.key} className={workspaceStatCardShell('workspace-statistics-user-actions__item')}>
+            <li
+              key={step.key}
+              className={workspaceStatCardShell('workspace-statistics-user-actions__item')}
+            >
               <div className="workspace-statistics-user-actions__head">
                 <span className="workspace-statistics-user-actions__index">{index + 1}.</span>
-                <WorkspaceBadge variant={step.priorityTone === 'warning' ? 'priority' : step.priorityTone === 'info' ? 'info' : 'success'}>
+                <WorkspaceBadge
+                  variant={
+                    step.priorityTone === 'warning'
+                      ? 'priority'
+                      : step.priorityTone === 'info'
+                        ? 'info'
+                        : 'success'
+                  }
+                >
                   {step.priorityLabel}
                 </WorkspaceBadge>
               </div>

@@ -37,7 +37,9 @@ import {
   resolveStatusLabel,
 } from './statisticsUserMeta';
 
-type UserIntelligenceSource = NonNullable<WorkspaceStatisticsDecisionDashboardDto['userIntelligence']>;
+type UserIntelligenceSource = NonNullable<
+  WorkspaceStatisticsDecisionDashboardDto['userIntelligence']
+>;
 
 function resolveRiskItem(
   copy: WorkspaceStatisticsCopy,
@@ -51,7 +53,10 @@ function resolveRiskItem(
       body: copy.userRiskSlowResponseBody
         .replace('{user}', String(Math.round(item.value ?? 0)))
         .replace('{market}', String(Math.round(item.secondaryValue ?? 0))),
-      metric: item.value !== null && item.value !== undefined ? `${Math.round(item.value)} ${copy.activityMinutesShortLabel}` : null,
+      metric:
+        item.value !== null && item.value !== undefined
+          ? `${Math.round(item.value)} ${copy.activityMinutesShortLabel}`
+          : null,
       tone: 'warning',
     };
   }
@@ -69,7 +74,8 @@ function resolveRiskItem(
       key: item.id,
       title: copy.userActionPriceTitle,
       body: copy.userPricingEffectAbove,
-      metric: item.value !== null && item.value !== undefined ? formatCurrency.format(item.value) : null,
+      metric:
+        item.value !== null && item.value !== undefined ? formatCurrency.format(item.value) : null,
       tone: 'warning',
     };
   }
@@ -95,7 +101,10 @@ function resolveOpportunityItem(
       body: copy.userOpportunityDemandBody
         .replace('{city}', item.cityLabel ?? copy.contextAllCitiesLabel)
         .replace('{category}', item.categoryLabel ?? copy.contextAllCategoriesLabel),
-      metric: item.value !== null && item.value !== undefined ? formatNumber.format(Math.round(item.value)) : null,
+      metric:
+        item.value !== null && item.value !== undefined
+          ? formatNumber.format(Math.round(item.value))
+          : null,
       tone: 'positive',
       cityLabel: item.cityLabel ?? null,
       categoryLabel: item.categoryLabel ?? null,
@@ -108,7 +117,10 @@ function resolveOpportunityItem(
       body: copy.userOpportunityCompetitionBody
         .replace('{city}', item.cityLabel ?? copy.contextAllCitiesLabel)
         .replace('{category}', item.categoryLabel ?? copy.contextAllCategoriesLabel),
-      metric: item.secondaryValue !== null && item.secondaryValue !== undefined ? `${item.secondaryValue.toFixed(1)}x` : null,
+      metric:
+        item.secondaryValue !== null && item.secondaryValue !== undefined
+          ? `${item.secondaryValue.toFixed(1)}x`
+          : null,
       tone: 'positive',
       cityLabel: item.cityLabel ?? null,
       categoryLabel: item.categoryLabel ?? null,
@@ -119,7 +131,8 @@ function resolveOpportunityItem(
       key: item.id,
       title: copy.userActionPriceTitle,
       body: copy.userPricingEffectBelow,
-      metric: item.value !== null && item.value !== undefined ? formatCurrency.format(item.value) : null,
+      metric:
+        item.value !== null && item.value !== undefined ? formatCurrency.format(item.value) : null,
       tone: 'positive',
       cityLabel: item.cityLabel ?? null,
       categoryLabel: item.categoryLabel ?? null,
@@ -129,7 +142,10 @@ function resolveOpportunityItem(
     return {
       key: item.id,
       title: copy.userPositionTitle,
-      body: copy.userPositionSummaryTemplate.replace('{percentile}', String(Math.round(item.value ?? 0))),
+      body: copy.userPositionSummaryTemplate.replace(
+        '{percentile}',
+        String(Math.round(item.value ?? 0)),
+      ),
       metric: item.value !== null && item.value !== undefined ? `${Math.round(item.value)}%` : null,
       tone: 'positive',
       cityLabel: item.cityLabel ?? null,
@@ -139,33 +155,48 @@ function resolveOpportunityItem(
   return {
     key: item.id,
     title: copy.userOpportunityCategoryTitle,
-    body: copy.userOpportunityCategoryBody.replace('{category}', item.categoryLabel ?? copy.contextAllCategoriesLabel),
-    metric: item.secondaryValue !== null && item.secondaryValue !== undefined ? `${Math.round(item.secondaryValue)}%` : null,
+    body: copy.userOpportunityCategoryBody.replace(
+      '{category}',
+      item.categoryLabel ?? copy.contextAllCategoriesLabel,
+    ),
+    metric:
+      item.secondaryValue !== null && item.secondaryValue !== undefined
+        ? `${Math.round(item.secondaryValue)}%`
+        : null,
     tone: 'positive',
     cityLabel: item.cityLabel ?? null,
     categoryLabel: item.categoryLabel ?? null,
   };
 }
 
-function resolveActionStep(copy: WorkspaceStatisticsCopy, item: UserIntelligenceSource['nextSteps'][number]): WorkspaceStatisticsActionStepView {
-  const priorityTone = item.priority === 'high' ? 'warning' : item.priority === 'medium' ? 'info' : 'success';
-  const priorityLabel = item.priority === 'high'
-    ? copy.userActionPriorityHigh
-    : item.priority === 'medium'
-      ? copy.userActionPriorityMedium
-      : copy.userActionPriorityLow;
-  const impactLabel = item.priority === 'high'
-    ? copy.userActionImpactHigh
-    : item.priority === 'medium'
-      ? copy.userActionImpactMedium
-      : copy.userActionImpactLow;
+function resolveActionStep(
+  copy: WorkspaceStatisticsCopy,
+  item: UserIntelligenceSource['nextSteps'][number],
+): WorkspaceStatisticsActionStepView {
+  const priorityTone =
+    item.priority === 'high' ? 'warning' : item.priority === 'medium' ? 'info' : 'success';
+  const priorityLabel =
+    item.priority === 'high'
+      ? copy.userActionPriorityHigh
+      : item.priority === 'medium'
+        ? copy.userActionPriorityMedium
+        : copy.userActionPriorityLow;
+  const impactLabel =
+    item.priority === 'high'
+      ? copy.userActionImpactHigh
+      : item.priority === 'medium'
+        ? copy.userActionImpactMedium
+        : copy.userActionImpactLow;
 
   if (item.code === 'respond_faster') {
     return {
       key: item.id,
       code: item.code,
       title: copy.userActionRespondTitle,
-      detail: copy.userActionRespondDetail.replace('{target}', String(Math.round(item.targetValue ?? 120))),
+      detail: copy.userActionRespondDetail.replace(
+        '{target}',
+        String(Math.round(item.targetValue ?? 120)),
+      ),
       priorityLabel,
       priorityTone,
       impactLabel,
@@ -177,7 +208,10 @@ function resolveActionStep(copy: WorkspaceStatisticsCopy, item: UserIntelligence
       key: item.id,
       code: item.code,
       title: copy.userActionPriceTitle,
-      detail: copy.userActionPriceDetail.replace('{price}', item.targetValue ? String(Math.round(item.targetValue)) : '—'),
+      detail: copy.userActionPriceDetail.replace(
+        '{price}',
+        item.targetValue ? String(Math.round(item.targetValue)) : '—',
+      ),
       priorityLabel,
       priorityTone,
       impactLabel,
@@ -203,7 +237,10 @@ function resolveActionStep(copy: WorkspaceStatisticsCopy, item: UserIntelligence
       key: item.id,
       code: item.code,
       title: copy.userActionProfileTitle,
-      detail: copy.userActionProfileDetail.replace('{target}', String(Math.round(item.targetValue ?? 90))),
+      detail: copy.userActionProfileDetail.replace(
+        '{target}',
+        String(Math.round(item.targetValue ?? 90)),
+      ),
       priorityLabel,
       priorityTone,
       impactLabel,
@@ -214,7 +251,10 @@ function resolveActionStep(copy: WorkspaceStatisticsCopy, item: UserIntelligence
     key: item.id,
     code: item.code,
     title: copy.userActionFollowUpTitle,
-    detail: copy.userActionFollowUpDetail.replace('{count}', String(Math.round(item.targetValue ?? 0))),
+    detail: copy.userActionFollowUpDetail.replace(
+      '{count}',
+      String(Math.round(item.targetValue ?? 0)),
+    ),
     priorityLabel,
     priorityTone,
     impactLabel,
@@ -222,7 +262,10 @@ function resolveActionStep(copy: WorkspaceStatisticsCopy, item: UserIntelligence
   };
 }
 
-function resolveSignalActionLabel(copy: WorkspaceStatisticsCopy, signal: UserIntelligenceSource['signals'][number]): string | null {
+function resolveSignalActionLabel(
+  copy: WorkspaceStatisticsCopy,
+  signal: UserIntelligenceSource['signals'][number],
+): string | null {
   if (signal.actionCode === 'respond_faster') return copy.userActionRespondTitle;
   if (signal.actionCode === 'adjust_price') return copy.userActionPriceTitle;
   if (signal.actionCode === 'focus_market') return copy.userActionFocusTitle;
@@ -233,12 +276,16 @@ function resolveSignalActionLabel(copy: WorkspaceStatisticsCopy, signal: UserInt
   return null;
 }
 
-function resolveActionCodeLabel(copy: WorkspaceStatisticsCopy, actionCode: UserIntelligenceSource['nextSteps'][number]['code'] | null | undefined): string | null {
+function resolveActionCodeLabel(
+  copy: WorkspaceStatisticsCopy,
+  actionCode: UserIntelligenceSource['nextSteps'][number]['code'] | null | undefined,
+): string | null {
   if (actionCode === 'respond_faster') return copy.userActionRespondTitle;
   if (actionCode === 'adjust_price') return copy.userActionPriceTitle;
   if (actionCode === 'focus_market') return copy.userActionFocusTitle;
   if (actionCode === 'complete_profile') return copy.userActionProfileTitle;
-  if (actionCode === 'follow_up_unanswered' || actionCode === 'follow_up_requests') return copy.userActionFollowUpTitle;
+  if (actionCode === 'follow_up_unanswered' || actionCode === 'follow_up_requests')
+    return copy.userActionFollowUpTitle;
   return null;
 }
 
@@ -251,75 +298,92 @@ export function buildDecisionLayerSignals(params: {
   const { copy, source, formatCurrency, formatNumber } = params;
   if (!source) return [];
 
-  return source.metrics.map((metric) => {
-    const unit = metric.unit === 'currency' ? 'currency' : metric.unit === 'minutes' ? 'minutes' : metric.unit === 'percent' ? 'percent' : 'count';
-    const marketValue = unit === 'currency'
-      ? formatCurrencyMetric(metric.marketValue, formatCurrency)
-      : formatMetricValue({
-        copy,
-        value: metric.marketValue,
-        unit,
-        formatNumber,
-      });
-    const userValue = unit === 'currency'
-      ? formatCurrencyMetric(metric.userValue, formatCurrency)
-      : formatMetricValue({
-        copy,
-        value: metric.userValue,
-        unit,
-        formatNumber,
-      });
+  return source.metrics
+    .map((metric) => {
+      const unit =
+        metric.unit === 'currency'
+          ? 'currency'
+          : metric.unit === 'minutes'
+            ? 'minutes'
+            : metric.unit === 'percent'
+              ? 'percent'
+              : 'count';
+      const marketValue =
+        unit === 'currency'
+          ? formatCurrencyMetric(metric.marketValue, formatCurrency)
+          : formatMetricValue({
+              copy,
+              value: metric.marketValue,
+              unit,
+              formatNumber,
+            });
+      const userValue =
+        unit === 'currency'
+          ? formatCurrencyMetric(metric.userValue, formatCurrency)
+          : formatMetricValue({
+              copy,
+              value: metric.userValue,
+              unit,
+              formatNumber,
+            });
 
-    const gapLabel = metric.gapPercent !== null && metric.unit === 'percent'
-      ? `${metric.gapPercent > 0 ? '+' : ''}${Math.round(metric.gapPercent)} pp`
-      : unit === 'currency'
-        ? formatCurrencyDelta({
-          copy,
-          userValue: metric.userValue,
-          marketValue: metric.marketValue,
-          formatCurrency,
-        })
-        : formatDelta({
-          copy,
-          userValue: metric.userValue,
-          marketValue: metric.marketValue,
-          unit,
-          formatNumber,
-        });
-    const actionLabel = resolveActionCodeLabel(copy, metric.primaryActionCode);
-    const tone: WorkspaceStatisticsActivitySignalView['tone'] = metric.status === 'good'
-      ? 'positive'
-      : metric.status === 'critical' || metric.status === 'warning'
-        ? 'warning'
-        : 'neutral';
+      const gapLabel =
+        metric.gapPercent !== null && metric.unit === 'percent'
+          ? `${metric.gapPercent > 0 ? '+' : ''}${Math.round(metric.gapPercent)} pp`
+          : unit === 'currency'
+            ? formatCurrencyDelta({
+                copy,
+                userValue: metric.userValue,
+                marketValue: metric.marketValue,
+                formatCurrency,
+              })
+            : formatDelta({
+                copy,
+                userValue: metric.userValue,
+                marketValue: metric.marketValue,
+                unit,
+                formatNumber,
+              });
+      const actionLabel = resolveActionCodeLabel(copy, metric.primaryActionCode);
+      const tone: WorkspaceStatisticsActivitySignalView['tone'] =
+        metric.status === 'good'
+          ? 'positive'
+          : metric.status === 'critical' || metric.status === 'warning'
+            ? 'warning'
+            : 'neutral';
 
-    return {
-      key: metric.id,
-      label: metric.label?.trim() || (
-        metric.id === 'average_order_value'
-          ? copy.activityAverageOrderValueLabel
-          : metric.id === 'completed_jobs'
-            ? copy.activityCompletedLabel
-            : metric.id === 'unanswered_over_24h'
-              ? copy.activityUnansweredLabel
-              : metric.id === 'avg_response_time'
-                ? copy.activityResponseMedianLabel
-                : metric.id === 'revenue'
-                  ? copy.activityRevenueLabel
-                  : copy.activityOfferRateLabel
-      ),
-      value: userValue,
-      marketValue,
-      userValue,
-      hint: metric.summary?.trim() || `${gapLabel}${actionLabel ? ` · ${actionLabel}` : ''}`,
-      tone,
-    };
-  }).slice(0, 6);
+      return {
+        key: metric.id,
+        label:
+          metric.label?.trim() ||
+          (metric.id === 'average_order_value'
+            ? copy.activityAverageOrderValueLabel
+            : metric.id === 'completed_jobs'
+              ? copy.activityCompletedLabel
+              : metric.id === 'unanswered_over_24h'
+                ? copy.activityUnansweredLabel
+                : metric.id === 'avg_response_time'
+                  ? copy.activityResponseMedianLabel
+                  : metric.id === 'revenue'
+                    ? copy.activityRevenueLabel
+                    : copy.activityOfferRateLabel),
+        value: userValue,
+        marketValue,
+        userValue,
+        hint: metric.summary?.trim() || `${gapLabel}${actionLabel ? ` · ${actionLabel}` : ''}`,
+        tone,
+      };
+    })
+    .slice(0, 6);
 }
 
 export function buildRecommendationPrioritySection(params: {
   copy: WorkspaceStatisticsCopy;
-  source: WorkspaceStatisticsDecisionDashboardDto['risks'] | WorkspaceStatisticsDecisionDashboardDto['opportunities'] | undefined | null;
+  source:
+    | WorkspaceStatisticsDecisionDashboardDto['risks']
+    | WorkspaceStatisticsDecisionDashboardDto['opportunities']
+    | undefined
+    | null;
   fallbackTitle: string;
   fallbackSubtitle: string;
   fallbackItems: WorkspaceStatisticsPriorityItemView[];
@@ -328,11 +392,11 @@ export function buildRecommendationPrioritySection(params: {
   if (!source) {
     return fallbackItems.length > 0
       ? {
-        title: fallbackTitle,
-        subtitle: fallbackSubtitle,
-        hasReliableItems: true,
-        items: fallbackItems,
-      }
+          title: fallbackTitle,
+          subtitle: fallbackSubtitle,
+          hasReliableItems: true,
+          items: fallbackItems,
+        }
       : null;
   }
 
@@ -365,11 +429,11 @@ export function buildRecommendationActionSection(params: {
   if (!source) {
     return fallbackSteps.length > 0
       ? {
-        title: fallbackTitle,
-        subtitle: fallbackSubtitle,
-        hasReliableItems: true,
-        steps: fallbackSteps,
-      }
+          title: fallbackTitle,
+          subtitle: fallbackSubtitle,
+          hasReliableItems: true,
+          steps: fallbackSteps,
+        }
       : null;
   }
 
@@ -382,12 +446,16 @@ export function buildRecommendationActionSection(params: {
       detail: item.description,
       priorityLabel: resolveRecommendationPriorityLabel(copy, item.priority),
       priorityTone,
-      impactLabel: item.priority === 'high'
-        ? copy.userActionImpactHigh
-        : item.priority === 'medium'
-          ? copy.userActionImpactMedium
-          : copy.userActionImpactLow,
-      effectLabel: item.action?.label?.trim() || item.context?.trim() || resolveRecommendationReliabilityLabel(copy, item.reliability),
+      impactLabel:
+        item.priority === 'high'
+          ? copy.userActionImpactHigh
+          : item.priority === 'medium'
+            ? copy.userActionImpactMedium
+            : copy.userActionImpactLow,
+      effectLabel:
+        item.action?.label?.trim() ||
+        item.context?.trim() ||
+        resolveRecommendationReliabilityLabel(copy, item.reliability),
     };
   });
 
@@ -421,7 +489,8 @@ export function buildPersonalizedPricingSection(params: {
     currentPrice: source.userPrice === null ? '—' : formatCurrency.format(source.userPrice),
     currentPriceValue: source.userPrice,
     recommendedRange,
-    marketAverage: source.marketAverage === null ? '—' : formatCurrency.format(source.marketAverage),
+    marketAverage:
+      source.marketAverage === null ? '—' : formatCurrency.format(source.marketAverage),
     marketAverageValue: source.marketAverage,
     statusLabel:
       source.position === 'above'
@@ -438,9 +507,17 @@ export function buildPersonalizedPricingSection(params: {
         : source.effect === 'positive'
           ? copy.userPricingEffectWithin
           : copy.userPricingEffectUnknown,
-    gap: source.gapAbsolute === null ? '—' : `${source.gapAbsolute > 0 ? '+' : ''}${formatCurrency.format(source.gapAbsolute)}`,
+    gap:
+      source.gapAbsolute === null
+        ? '—'
+        : `${source.gapAbsolute > 0 ? '+' : ''}${formatCurrency.format(source.gapAbsolute)}`,
     action: resolveActionCodeLabel(copy, source.actionCode),
-    tone: source.effect === 'warning' ? 'warning' : source.effect === 'positive' ? 'positive' : 'neutral',
+    tone:
+      source.effect === 'warning'
+        ? 'warning'
+        : source.effect === 'positive'
+          ? 'positive'
+          : 'neutral',
   };
 }
 
@@ -455,7 +532,10 @@ export function buildCategoryFit(params: {
   return source.items.map((item) => ({
     key: item.categoryKey ?? item.label,
     label: item.label,
-    marketDemandShare: item.marketDemandShare === null ? '—' : `${formatNumber.format(Math.round(item.marketDemandShare))}%`,
+    marketDemandShare:
+      item.marketDemandShare === null
+        ? '—'
+        : `${formatNumber.format(Math.round(item.marketDemandShare))}%`,
     userFitLabel: resolveFitLabel(copy, item.userFit),
     opportunityLabel: resolveOpportunityLabel(copy, item.opportunity),
     recommendation: item.summary ?? resolveActionCodeLabel(copy, item.actionCode),
@@ -481,7 +561,9 @@ export function buildCityComparison(params: {
   }));
 }
 
-function resolveActionTone(priorityTone: WorkspaceStatisticsActionStepView['priorityTone']): WorkspaceStatisticsActivitySignalView['tone'] {
+function resolveActionTone(
+  priorityTone: WorkspaceStatisticsActionStepView['priorityTone'],
+): WorkspaceStatisticsActivitySignalView['tone'] {
   if (priorityTone === 'warning') return 'warning';
   if (priorityTone === 'success') return 'positive';
   return 'neutral';
@@ -503,7 +585,8 @@ export function buildPersonalizedActivitySignals(params: {
   const buildFormulaCard = (key: string): WorkspaceStatisticsActivitySignalView | null => {
     const metric = formulaMetrics.find((item) => item.key === key) ?? null;
     if (!metric || metric.marketValue === '—') return null;
-    const relatedSignal = Array.from(signalMap.values()).find((signal) => signal.key === metric.key) ?? null;
+    const relatedSignal =
+      Array.from(signalMap.values()).find((signal) => signal.key === metric.key) ?? null;
     const actionLabel = relatedSignal?.actionLabel;
     return {
       key: metric.key,
@@ -518,28 +601,29 @@ export function buildPersonalizedActivitySignals(params: {
 
   const unansweredMetric = decisionMetrics.find((metric) => metric.key === 'unanswered');
   const unansweredSignal = signalMap.get('high_unanswered');
-  const unansweredCard = unansweredMetric && unansweredSignal
-    ? {
-      key: unansweredMetric.key,
-      label: unansweredMetric.label,
-      value: unansweredMetric.userValue,
-      marketValue: unansweredMetric.marketValue,
-      userValue: unansweredMetric.userValue,
-      hint: `${unansweredMetric.delta}${unansweredSignal.actionLabel ? ` · ${unansweredSignal.actionLabel}` : ''}${unansweredMetric.statusLabel ? ` · ${unansweredMetric.statusLabel}` : ''}`,
-      tone: unansweredMetric.tone,
-    }
-    : null;
+  const unansweredCard =
+    unansweredMetric && unansweredSignal
+      ? {
+          key: unansweredMetric.key,
+          label: unansweredMetric.label,
+          value: unansweredMetric.userValue,
+          marketValue: unansweredMetric.marketValue,
+          userValue: unansweredMetric.userValue,
+          hint: `${unansweredMetric.delta}${unansweredSignal.actionLabel ? ` · ${unansweredSignal.actionLabel}` : ''}${unansweredMetric.statusLabel ? ` · ${unansweredMetric.statusLabel}` : ''}`,
+          tone: unansweredMetric.tone,
+        }
+      : null;
 
   const completedCard = completedJobs
     ? {
-      key: 'completed_jobs',
-      label: copy.activityCompletedLabel,
-      value: completedJobs.userValue,
-      marketValue: completedJobs.marketValue,
-      userValue: completedJobs.userValue,
-      hint: completedJobs.delta,
-      tone: 'positive' as const,
-    }
+        key: 'completed_jobs',
+        label: copy.activityCompletedLabel,
+        value: completedJobs.userValue,
+        marketValue: completedJobs.marketValue,
+        userValue: completedJobs.userValue,
+        hint: completedJobs.delta,
+        tone: 'positive' as const,
+      }
     : null;
 
   return [
@@ -550,7 +634,9 @@ export function buildPersonalizedActivitySignals(params: {
     buildFormulaCard('revenue'),
     buildFormulaCard('avg_order_value'),
     buildFormulaCard('cancellation_rate'),
-  ].filter((item): item is WorkspaceStatisticsActivitySignalView => Boolean(item)).slice(0, 6);
+  ]
+    .filter((item): item is WorkspaceStatisticsActivitySignalView => Boolean(item))
+    .slice(0, 6);
 }
 
 function buildFunnelSignals(params: {
@@ -590,11 +676,12 @@ function buildFunnelSignals(params: {
     metrics.push({
       key: 'funnel-gap',
       label: profileGap.title,
-      value: profileGap.tone === 'warning'
-        ? copy.userRiskSeverityHigh
-        : profileGap.tone === 'positive'
-          ? copy.userRiskSeverityLow
-          : copy.userRiskSeverityMedium,
+      value:
+        profileGap.tone === 'warning'
+          ? copy.userRiskSeverityHigh
+          : profileGap.tone === 'positive'
+            ? copy.userRiskSeverityLow
+            : copy.userRiskSeverityMedium,
       hint: profileGap.summary,
       tone: profileGap.tone,
     });
@@ -622,68 +709,75 @@ export function buildUserIntelligence(params: {
   const { copy, source, formatCurrency, formatNumber } = params;
   if (!source) return null;
 
-  const formulaMetrics: WorkspaceStatisticsBenchmarkMetricView[] = source.formulaMetrics.map((metric) => ({
-    key: metric.key,
-    label: resolveComparisonLabel(copy, metric.key),
-    userValue: metric.unit === 'currency'
-      ? formatCurrencyMetric(metric.userValue, formatCurrency)
-      : formatMetricValue({
+  const formulaMetrics: WorkspaceStatisticsBenchmarkMetricView[] = source.formulaMetrics.map(
+    (metric) => ({
+      key: metric.key,
+      label: resolveComparisonLabel(copy, metric.key),
+      userValue:
+        metric.unit === 'currency'
+          ? formatCurrencyMetric(metric.userValue, formatCurrency)
+          : formatMetricValue({
+              copy,
+              value: metric.userValue,
+              unit: metric.unit,
+              formatNumber,
+            }),
+      marketValue:
+        metric.unit === 'currency'
+          ? formatCurrencyMetric(metric.marketValue, formatCurrency)
+          : formatMetricValue({
+              copy,
+              value: metric.marketValue,
+              unit: metric.unit,
+              formatNumber,
+            }),
+      delta:
+        metric.unit === 'currency'
+          ? formatCurrencyDelta({
+              copy,
+              userValue: metric.userValue,
+              marketValue: metric.marketValue,
+              formatCurrency,
+            })
+          : formatDelta({
+              copy,
+              userValue: metric.userValue,
+              marketValue: metric.marketValue,
+              unit: metric.unit,
+              formatNumber,
+            }),
+      tone: metric.tone,
+      statusLabel: null,
+    }),
+  );
+
+  const decisionMetrics: WorkspaceStatisticsBenchmarkMetricView[] = source.decisionMetrics.map(
+    (metric) => ({
+      key: metric.key,
+      label: resolveComparisonLabel(copy, metric.key),
+      userValue: formatMetricValue({
         copy,
         value: metric.userValue,
         unit: metric.unit,
         formatNumber,
       }),
-    marketValue: metric.unit === 'currency'
-      ? formatCurrencyMetric(metric.marketValue, formatCurrency)
-      : formatMetricValue({
+      marketValue: formatMetricValue({
         copy,
         value: metric.marketValue,
         unit: metric.unit,
         formatNumber,
       }),
-    delta: metric.unit === 'currency'
-      ? formatCurrencyDelta({
-        copy,
-        userValue: metric.userValue,
-        marketValue: metric.marketValue,
-        formatCurrency,
-      })
-      : formatDelta({
+      delta: formatDelta({
         copy,
         userValue: metric.userValue,
         marketValue: metric.marketValue,
         unit: metric.unit,
         formatNumber,
       }),
-    tone: metric.tone,
-    statusLabel: null,
-  }));
-
-  const decisionMetrics: WorkspaceStatisticsBenchmarkMetricView[] = source.decisionMetrics.map((metric) => ({
-    key: metric.key,
-    label: resolveComparisonLabel(copy, metric.key),
-    userValue: formatMetricValue({
-      copy,
-      value: metric.userValue,
-      unit: metric.unit,
-      formatNumber,
+      tone: metric.tone,
+      statusLabel: resolveStatusLabel(copy, metric.status),
     }),
-    marketValue: formatMetricValue({
-      copy,
-      value: metric.marketValue,
-      unit: metric.unit,
-      formatNumber,
-    }),
-    delta: formatDelta({
-      copy,
-      userValue: metric.userValue,
-      marketValue: metric.marketValue,
-      unit: metric.unit,
-      formatNumber,
-    }),
-    tone: metric.tone,
-    statusLabel: resolveStatusLabel(copy, metric.status),
-  }));
+  );
 
   const signals: WorkspaceStatisticsDecisionSignalView[] = source.signals.map((signal) => ({
     key: signal.metricKey ?? signal.code,
@@ -693,82 +787,100 @@ export function buildUserIntelligence(params: {
     actionLabel: resolveSignalActionLabel(copy, signal),
   }));
 
-  const performancePosition = source.performancePosition ? {
-    headline: resolvePositionHeadline(copy, source.performancePosition.percentile, source.performancePosition.bucket),
-    summary: resolvePositionSummary(copy, source.performancePosition.percentile),
-    overall: source.performancePosition.percentile === null
-      ? '—'
-      : `${copy.userPositionOverallLabel}: ${Math.round(source.performancePosition.percentile)}%`,
-    category: source.performancePosition.categoryPercentile === null
-      ? '—'
-      : `${copy.userPositionCategoryLabel}: ${Math.round(source.performancePosition.categoryPercentile)}%${source.performancePosition.categoryLabel ? ` · ${source.performancePosition.categoryLabel}` : ''}`,
-    city: source.performancePosition.cityPercentile === null
-      ? '—'
-      : `${copy.userPositionCityLabel}: ${Math.round(source.performancePosition.cityPercentile)}%${source.performancePosition.cityLabel ? ` · ${source.performancePosition.cityLabel}` : ''}`,
-    bucket: source.performancePosition.bucket,
-  } : null;
+  const performancePosition = source.performancePosition
+    ? {
+        headline: resolvePositionHeadline(
+          copy,
+          source.performancePosition.percentile,
+          source.performancePosition.bucket,
+        ),
+        summary: resolvePositionSummary(copy, source.performancePosition.percentile),
+        overall:
+          source.performancePosition.percentile === null
+            ? '—'
+            : `${copy.userPositionOverallLabel}: ${Math.round(source.performancePosition.percentile)}%`,
+        category:
+          source.performancePosition.categoryPercentile === null
+            ? '—'
+            : `${copy.userPositionCategoryLabel}: ${Math.round(source.performancePosition.categoryPercentile)}%${source.performancePosition.categoryLabel ? ` · ${source.performancePosition.categoryLabel}` : ''}`,
+        city:
+          source.performancePosition.cityPercentile === null
+            ? '—'
+            : `${copy.userPositionCityLabel}: ${Math.round(source.performancePosition.cityPercentile)}%${source.performancePosition.cityLabel ? ` · ${source.performancePosition.cityLabel}` : ''}`,
+        bucket: source.performancePosition.bucket,
+      }
+    : null;
 
   const profileGap: WorkspaceStatisticsProfileGapView | null = source.profileGap
     ? {
-      title: copy.userGapTitle,
-      summary: copy.userGapSummaryTemplate
-        .replace('{percent}', String(Math.round(source.profileGap.lossPercent ?? 0)))
-        .replace('{count}', String(Math.round(source.profileGap.lostCount ?? 0))),
-      tone: source.profileGap.tone,
-    }
+        title: copy.userGapTitle,
+        summary: copy.userGapSummaryTemplate
+          .replace('{percent}', String(Math.round(source.profileGap.lossPercent ?? 0)))
+          .replace('{count}', String(Math.round(source.profileGap.lostCount ?? 0))),
+        tone: source.profileGap.tone,
+      }
     : null;
 
   const risks = source.risks.map((item) => resolveRiskItem(copy, item, formatCurrency));
-  const opportunities = source.opportunities.map((item) => resolveOpportunityItem(copy, item, formatNumber, formatCurrency));
+  const opportunities = source.opportunities.map((item) =>
+    resolveOpportunityItem(copy, item, formatNumber, formatCurrency),
+  );
   const nextSteps = source.nextSteps.map((item) => resolveActionStep(copy, item));
   const pricing: WorkspaceStatisticsPricingGapView | null = source.pricing
     ? (() => {
-      const priceGap = source.pricing.currentPrice !== null && source.pricing.marketAverage !== null
-        ? formatCurrencyDelta({
-          copy,
-          userValue: source.pricing.currentPrice,
-          marketValue: source.pricing.marketAverage,
-          formatCurrency,
-        })
-        : '—';
-      const adjustPriceStep = nextSteps.find((item) => item.code === 'adjust_price') ?? null;
+        const priceGap =
+          source.pricing.currentPrice !== null && source.pricing.marketAverage !== null
+            ? formatCurrencyDelta({
+                copy,
+                userValue: source.pricing.currentPrice,
+                marketValue: source.pricing.marketAverage,
+                formatCurrency,
+              })
+            : '—';
+        const adjustPriceStep = nextSteps.find((item) => item.code === 'adjust_price') ?? null;
 
-      return {
-      currentPrice: source.pricing.currentPrice === null ? '—' : formatCurrency.format(source.pricing.currentPrice),
-      currentPriceValue: source.pricing.currentPrice,
-      recommendedRange:
-        source.pricing.recommendedMin === null || source.pricing.recommendedMax === null
-          ? '—'
-          : `${formatCurrency.format(source.pricing.recommendedMin)} – ${formatCurrency.format(source.pricing.recommendedMax)}`,
-      marketAverage: source.pricing.marketAverage === null ? '—' : formatCurrency.format(source.pricing.marketAverage),
-      marketAverageValue: source.pricing.marketAverage,
-      statusLabel:
-        source.pricing.status === 'above'
-          ? copy.userPricingStatusAbove
-          : source.pricing.status === 'below'
-            ? copy.userPricingStatusBelow
-            : source.pricing.status === 'within'
-              ? copy.userPricingStatusWithin
-              : copy.userPricingStatusUnknown,
-      summary: copy.userPricingSummary,
-      effect:
-        source.pricing.status === 'above'
-          ? copy.userPricingEffectAbove
-          : source.pricing.status === 'below'
-            ? copy.userPricingEffectBelow
-            : source.pricing.status === 'within'
-            ? copy.userPricingEffectWithin
-            : copy.userPricingEffectUnknown,
-      gap: priceGap,
-      action: adjustPriceStep ? `${adjustPriceStep.title}: ${adjustPriceStep.detail}` : null,
-      tone:
-        source.pricing.conversionImpact === 'warning'
-          ? 'warning'
-          : source.pricing.conversionImpact === 'positive'
-            ? 'positive'
-            : 'neutral',
-    };
-    })()
+        return {
+          currentPrice:
+            source.pricing.currentPrice === null
+              ? '—'
+              : formatCurrency.format(source.pricing.currentPrice),
+          currentPriceValue: source.pricing.currentPrice,
+          recommendedRange:
+            source.pricing.recommendedMin === null || source.pricing.recommendedMax === null
+              ? '—'
+              : `${formatCurrency.format(source.pricing.recommendedMin)} – ${formatCurrency.format(source.pricing.recommendedMax)}`,
+          marketAverage:
+            source.pricing.marketAverage === null
+              ? '—'
+              : formatCurrency.format(source.pricing.marketAverage),
+          marketAverageValue: source.pricing.marketAverage,
+          statusLabel:
+            source.pricing.status === 'above'
+              ? copy.userPricingStatusAbove
+              : source.pricing.status === 'below'
+                ? copy.userPricingStatusBelow
+                : source.pricing.status === 'within'
+                  ? copy.userPricingStatusWithin
+                  : copy.userPricingStatusUnknown,
+          summary: copy.userPricingSummary,
+          effect:
+            source.pricing.status === 'above'
+              ? copy.userPricingEffectAbove
+              : source.pricing.status === 'below'
+                ? copy.userPricingEffectBelow
+                : source.pricing.status === 'within'
+                  ? copy.userPricingEffectWithin
+                  : copy.userPricingEffectUnknown,
+          gap: priceGap,
+          action: adjustPriceStep ? `${adjustPriceStep.title}: ${adjustPriceStep.detail}` : null,
+          tone:
+            source.pricing.conversionImpact === 'warning'
+              ? 'warning'
+              : source.pricing.conversionImpact === 'positive'
+                ? 'positive'
+                : 'neutral',
+        };
+      })()
     : null;
   const funnelSignals = buildFunnelSignals({
     copy,

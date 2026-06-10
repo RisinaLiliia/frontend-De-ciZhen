@@ -138,8 +138,10 @@ export function RequestsExplorerProvidersContent({
               }}
               provider={{
                 ...item.card,
-                profileHref: providerProfileHrefResolver?.(providerIdentity.id) ?? item.card.profileHref,
-                reviewsHref: providerReviewsHrefResolver?.(providerIdentity.id) ?? item.card.reviewsHref,
+                profileHref:
+                  providerProfileHrefResolver?.(providerIdentity.id) ?? item.card.profileHref,
+                reviewsHref:
+                  providerReviewsHrefResolver?.(providerIdentity.id) ?? item.card.reviewsHref,
                 badges: item.card.badges.map((badge) => ({
                   ...badge,
                   variant: normalizeWorkspaceBadgeVariant(badge.variant),

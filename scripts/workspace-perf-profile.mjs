@@ -109,7 +109,8 @@ const rows = [...grouped.values()]
 
 const apiRows = rows.filter((row) => row.key.includes(' /api/'));
 const duplicateRows = rows.filter(
-  (row) => row.count > 1 && !row.key.includes('/_next/static/') && !row.key.includes('/__nextjs_font/'),
+  (row) =>
+    row.count > 1 && !row.key.includes('/_next/static/') && !row.key.includes('/__nextjs_font/'),
 );
 
 const summary = {

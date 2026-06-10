@@ -59,7 +59,8 @@ export function useSlidingIndicator<T extends HTMLElement>({
 
     window.addEventListener('resize', onResize);
     const container = containerRef.current;
-    const observer = typeof ResizeObserver !== 'undefined' && container ? new ResizeObserver(syncIndicator) : null;
+    const observer =
+      typeof ResizeObserver !== 'undefined' && container ? new ResizeObserver(syncIndicator) : null;
     if (observer && container) observer.observe(container);
 
     return () => {

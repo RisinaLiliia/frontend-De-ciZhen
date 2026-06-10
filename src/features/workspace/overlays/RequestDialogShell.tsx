@@ -4,7 +4,11 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 
 import { BackButton } from '@/components/layout/BackButton';
-import { focusIfPresent, getTrapFocusTarget, resolveInitialFocusTarget } from '@/lib/a11y/focusTrap';
+import {
+  focusIfPresent,
+  getTrapFocusTarget,
+  resolveInitialFocusTarget,
+} from '@/lib/a11y/focusTrap';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 
@@ -19,7 +23,8 @@ function getFocusableElements(container: HTMLElement) {
   ];
 
   return Array.from(container.querySelectorAll<HTMLElement>(selectors.join(','))).filter(
-    (element) => !element.hasAttribute('disabled') && element.getAttribute('aria-hidden') !== 'true',
+    (element) =>
+      !element.hasAttribute('disabled') && element.getAttribute('aria-hidden') !== 'true',
   );
 }
 
@@ -34,7 +39,9 @@ function WorkspaceInlineErrorState({
 }) {
   return (
     <div className="my-request-inline-state my-request-inline-state--error" role="alert">
-      <span className="my-request-inline-state__icon" aria-hidden="true">!</span>
+      <span className="my-request-inline-state__icon" aria-hidden="true">
+        !
+      </span>
       <div className="my-request-inline-state__copy">
         <strong>{title}</strong>
         <p>{body}</p>
@@ -82,7 +89,8 @@ export function RequestDialogShell({
     if (presentation !== 'modal' || !isMounted) return;
 
     const panel = panelRef.current;
-    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     const previousPaddingRight = document.body.style.paddingRight;
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -142,7 +150,11 @@ export function RequestDialogShell({
 
   const content = (
     <section
-      className={presentation === 'inline' ? 'my-request-dialog my-request-dialog--inline' : 'dc-modal my-request-dialog'}
+      className={
+        presentation === 'inline'
+          ? 'my-request-dialog my-request-dialog--inline'
+          : 'dc-modal my-request-dialog'
+      }
       role={presentation === 'inline' ? 'region' : 'dialog'}
       aria-modal={presentation === 'modal' ? 'true' : undefined}
       aria-label={ariaLabel}
@@ -158,14 +170,14 @@ export function RequestDialogShell({
       <div
         ref={panelRef}
         className={[
-          presentation === 'modal'
-            ? 'dc-modal__panel dc-modal__panel--wide'
-            : '',
+          presentation === 'modal' ? 'dc-modal__panel dc-modal__panel--wide' : '',
           'my-request-dialog__panel',
           'my-request-dialog__panel--details',
           presentation === 'inline' ? 'my-request-dialog__panel--inline' : '',
           showInlineDetailBackButton ? 'my-request-dialog__panel--inline-details' : '',
-        ].filter(Boolean).join(' ')}
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         {showInlineDetailBackButton ? (
           <div className="my-request-dialog__nav">
@@ -198,7 +210,9 @@ export function RequestDialogShell({
         ) : null}
 
         {!isLoading && !isError ? (
-          <div className={`my-request-dialog__body ${bodyVariant === 'details' ? 'my-request-dialog__body--details' : ''}`.trim()}>
+          <div
+            className={`my-request-dialog__body ${bodyVariant === 'details' ? 'my-request-dialog__body--details' : ''}`.trim()}
+          >
             {children}
           </div>
         ) : null}

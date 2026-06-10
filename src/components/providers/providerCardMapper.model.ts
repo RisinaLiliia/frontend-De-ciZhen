@@ -68,8 +68,10 @@ export function resolveProviderAvailabilityLabel(params: {
   seed: number;
 }) {
   const { t, provider, seed } = params;
-  const hasExplicitAvailability = provider.availabilityState === 'open' || provider.availabilityState === 'busy';
-  const nextAvailableRaw = typeof provider.nextAvailableAt === 'string' ? provider.nextAvailableAt : '';
+  const hasExplicitAvailability =
+    provider.availabilityState === 'open' || provider.availabilityState === 'busy';
+  const nextAvailableRaw =
+    typeof provider.nextAvailableAt === 'string' ? provider.nextAvailableAt : '';
 
   if (hasExplicitAvailability) {
     if (provider.availabilityState === 'busy') {
@@ -92,7 +94,8 @@ export function buildProviderCardBadges(params: {
   responseMinutes: number;
 }): ProviderBadgeItem[] {
   const { t, provider, responseRate, responseMinutes } = params;
-  const isTopAnbieter = provider.ratingAvg >= 4.8 && provider.ratingCount >= 30 && responseRate >= 80;
+  const isTopAnbieter =
+    provider.ratingAvg >= 4.8 && provider.ratingCount >= 30 && responseRate >= 80;
   const isTopService = provider.ratingAvg >= 4.7 && provider.ratingCount >= 15;
   const isSchnelleAntwort = responseMinutes <= 20;
 
@@ -135,10 +138,7 @@ export function buildProviderCardBadges(params: {
   return badges;
 }
 
-export function buildProviderServicePreview(params: {
-  t: Translator;
-  seed: number;
-}) {
+export function buildProviderServicePreview(params: { t: Translator; seed: number }) {
   const servicesPool = [
     params.t(I18N_KEYS.homePublic.serviceCleaning),
     params.t(I18N_KEYS.homePublic.serviceElectric),
@@ -158,11 +158,11 @@ export function resolveProviderReviewPreview(seed: number) {
   return REVIEW_PREVIEWS[seed % REVIEW_PREVIEWS.length]!;
 }
 
-export function resolveProviderBioPreview(params: {
-  aboutPreview?: string;
-  seed: number;
-}) {
-  return params.aboutPreview?.trim() || PROVIDER_BIO_PREVIEWS[params.seed % PROVIDER_BIO_PREVIEWS.length]!;
+export function resolveProviderBioPreview(params: { aboutPreview?: string; seed: number }) {
+  return (
+    params.aboutPreview?.trim() ||
+    PROVIDER_BIO_PREVIEWS[params.seed % PROVIDER_BIO_PREVIEWS.length]!
+  );
 }
 
 export function resolveProviderCityLabel(params: {

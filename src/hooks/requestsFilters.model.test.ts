@@ -35,17 +35,11 @@ describe('requestsFilters.model', () => {
 
   it('normalizes limit to supported page sizes', () => {
     expect(
-      resolveRequestsFilterQueryParams(
-        new URLSearchParams('limit=10'),
-        'date_desc',
-      ).limit,
+      resolveRequestsFilterQueryParams(new URLSearchParams('limit=10'), 'date_desc').limit,
     ).toBe(10);
 
     expect(
-      resolveRequestsFilterQueryParams(
-        new URLSearchParams('limit=17'),
-        'date_desc',
-      ).limit,
+      resolveRequestsFilterQueryParams(new URLSearchParams('limit=17'), 'date_desc').limit,
     ).toBe(20);
   });
 

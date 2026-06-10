@@ -71,7 +71,13 @@ export function Popover({
       </button>
 
       {open ? (
-        <div id={panelId} className="dc-popover-panel" data-align={align} role="dialog" aria-modal="false">
+        <div
+          id={panelId}
+          className="dc-popover-panel"
+          data-align={align}
+          role="dialog"
+          aria-modal="false"
+        >
           {children}
         </div>
       ) : null}

@@ -29,12 +29,15 @@ export function StatisticsExperience({
     const value = searchParams.get('period') ?? searchParams.get('range');
     return value === '24h' || value === '7d' || value === '90d' ? value : '30d';
   })();
-  const {
-    data: workspacePrivateOverview,
-  } = useQuery({
+  const { data: workspacePrivateOverview } = useQuery({
     queryKey: workspaceQK.workspacePrivateOverview(privateOverviewPeriod),
     enabled: isWorkspaceAuthed,
-    queryFn: () => withStatusFallback(() => getWorkspacePrivateOverview({ period: privateOverviewPeriod }), null, [401, 403, 404]),
+    queryFn: () =>
+      withStatusFallback(
+        () => getWorkspacePrivateOverview({ period: privateOverviewPeriod }),
+        null,
+        [401, 403, 404],
+      ),
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
@@ -45,12 +48,7 @@ export function StatisticsExperience({
 
   return (
     <div className="workspace-statistics-experience__content">
-      <StatisticsPanel
-        t={t}
-        locale={locale}
-        model={model}
-        slot={slot}
-      />
+      <StatisticsPanel t={t} locale={locale} model={model} slot={slot} />
     </div>
   );
 }

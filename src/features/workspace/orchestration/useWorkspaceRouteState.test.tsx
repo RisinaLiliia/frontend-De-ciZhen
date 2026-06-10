@@ -7,7 +7,15 @@ import { useWorkspaceRouteState } from '@/features/workspace/orchestration/useWo
 
 type ProbeProps = {
   query: string;
-  forcedPublicSection?: 'requests' | 'providers' | 'stats' | 'profile' | 'chat' | 'settings' | 'help' | null;
+  forcedPublicSection?:
+    | 'requests'
+    | 'providers'
+    | 'stats'
+    | 'profile'
+    | 'chat'
+    | 'settings'
+    | 'help'
+    | null;
   isAuthed?: boolean;
 };
 
@@ -154,6 +162,8 @@ describe('useWorkspaceRouteState', () => {
     );
     const node = screen.getByTestId('state');
 
-    expect(node.getAttribute('data-next-path')).toBe('/workspace?section=requests&scope=market&period=90d&range=90d');
+    expect(node.getAttribute('data-next-path')).toBe(
+      '/workspace?section=requests&scope=market&period=90d&range=90d',
+    );
   });
 });

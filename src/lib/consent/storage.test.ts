@@ -42,7 +42,11 @@ afterEach(() => {
 
 describe('consent storage', () => {
   it('saves and reads consent record', () => {
-    const record = createConsentRecord({ analytics: true, marketing: false }, 'banner', new Date('2026-03-02T12:00:00.000Z'));
+    const record = createConsentRecord(
+      { analytics: true, marketing: false },
+      'banner',
+      new Date('2026-03-02T12:00:00.000Z'),
+    );
 
     saveConsentRecord(record);
 
@@ -51,7 +55,10 @@ describe('consent storage', () => {
   });
 
   it('returns null for malformed storage payload', () => {
-    window.localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify({ version: CONSENT_VERSION, invalid: true }));
+    window.localStorage.setItem(
+      CONSENT_STORAGE_KEY,
+      JSON.stringify({ version: CONSENT_VERSION, invalid: true }),
+    );
 
     expect(readConsentRecord()).toBeNull();
   });

@@ -56,15 +56,17 @@ export function ProviderPublicProfileContent({
         avatarRole="provider"
         subtitle={model.profileCard.role}
         cityLabel={model.profileCard.cityLabel}
-        headerAction={isDialogSurface ? (
-          <ProviderDetailHeroActions
-            t={model.t}
-            title={model.provider.displayName || model.t(I18N_KEYS.provider.unnamed)}
-            isFavorite={model.isSaved}
-            isFavoritePending={model.pendingFavoriteProviderIds.has(model.provider.id)}
-            onToggleFavorite={model.handleFavorite}
-          />
-        ) : undefined}
+        headerAction={
+          isDialogSurface ? (
+            <ProviderDetailHeroActions
+              t={model.t}
+              title={model.provider.displayName || model.t(I18N_KEYS.provider.unnamed)}
+              isFavorite={model.isSaved}
+              isFavoritePending={model.pendingFavoriteProviderIds.has(model.provider.id)}
+              onToggleFavorite={model.handleFavorite}
+            />
+          ) : undefined
+        }
         status={model.hasRecentReview ? 'online' : 'offline'}
         statusLabel={model.statusLabel}
         responseTime={model.profileCard.responseTime}
@@ -84,7 +86,9 @@ export function ProviderPublicProfileContent({
   );
 
   return (
-    <div className={`request-detail request-detail--provider ${isDialogSurface ? 'request-detail--dialog' : ''}`.trim()}>
+    <div
+      className={`request-detail request-detail--provider ${isDialogSurface ? 'request-detail--dialog' : ''}`.trim()}
+    >
       <section className={workspacePanelShell('request-detail__panel')}>
         {!isDialogSurface ? (
           <>
@@ -95,7 +99,7 @@ export function ProviderPublicProfileContent({
               pricePrefixLabel={model.pricePrefixLabel}
               priceSuffixLabel={model.priceSuffixLabel}
               tags={[]}
-              headerAction={(
+              headerAction={
                 <FavoriteButton
                   isFavorite={model.isSaved}
                   isPending={model.pendingFavoriteProviderIds.has(model.provider.id)}
@@ -103,12 +107,10 @@ export function ProviderPublicProfileContent({
                   onToggle={model.handleFavorite}
                   className="request-detail__header-favorite"
                 />
-              )}
+              }
             />
 
-            <div className="request-detail__section request-detail__client">
-              {heroCard}
-            </div>
+            <div className="request-detail__section request-detail__client">{heroCard}</div>
             <div className="request-detail__provider-mobile-availability request-detail__availability-actions">
               <ProviderAvailabilityMeta
                 stateLabel={model.availabilityModel.stateLabel}
@@ -143,9 +145,7 @@ export function ProviderPublicProfileContent({
         ) : (
           <div className="request-detail__dialog-main request-detail__dialog-main--single-column">
             <div className="request-detail__dialog-copy">
-              <div className="request-detail__dialog-heading">
-                {heroCard}
-              </div>
+              <div className="request-detail__dialog-heading">{heroCard}</div>
 
               <RequestDetailAbout
                 title={model.t(I18N_KEYS.requestDetails.about)}
@@ -185,24 +185,24 @@ export function ProviderPublicProfileContent({
             <DetailActionBar
               className="request-detail__dialog-action-bar"
               advice={model.t(I18N_KEYS.requestDetails.responseSuccessTipCardBody)}
-              actions={(
+              actions={
                 <>
-                <button
-                  type="button"
-                  className="btn-ghost is-primary request-detail__action-btn request-detail__action-btn--primary"
-                  onClick={model.handleApply}
-                >
-                  {model.t(I18N_KEYS.requestDetails.ctaApply)}
-                </button>
-                <button
-                  type="button"
-                  className="btn-secondary request-detail__action-btn request-detail__action-btn--secondary"
-                  onClick={model.handleChat}
-                >
-                  {model.t(I18N_KEYS.requestDetails.ctaChat)}
-                </button>
+                  <button
+                    type="button"
+                    className="btn-ghost is-primary request-detail__action-btn request-detail__action-btn--primary"
+                    onClick={model.handleApply}
+                  >
+                    {model.t(I18N_KEYS.requestDetails.ctaApply)}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary request-detail__action-btn request-detail__action-btn--secondary"
+                    onClick={model.handleChat}
+                  >
+                    {model.t(I18N_KEYS.requestDetails.ctaChat)}
+                  </button>
                 </>
-              )}
+              }
             />
           </>
         ) : null}
@@ -210,7 +210,9 @@ export function ProviderPublicProfileContent({
         <PublicProfileReviewsSection
           t={model.t}
           isReviewsLoading={model.isReviewsLoading}
-          sectionClassName={isDialogSurface ? 'public-profile-detail__reviews-section--dialog' : undefined}
+          sectionClassName={
+            isDialogSurface ? 'public-profile-detail__reviews-section--dialog' : undefined
+          }
           displayRatingAvg={model.displayRatingAvg}
           displayRatingCount={model.displayRatingCount}
           reviewsDistribution={model.reviewsDistribution}
@@ -224,7 +226,9 @@ export function ProviderPublicProfileContent({
           reviewPage={model.reviewPage}
           totalReviewPages={model.totalReviewPages}
           onPrevPage={() => model.setReviewPage((prev) => Math.max(1, prev - 1))}
-          onNextPage={() => model.setReviewPage((prev) => Math.min(model.totalReviewPages, prev + 1))}
+          onNextPage={() =>
+            model.setReviewPage((prev) => Math.min(model.totalReviewPages, prev + 1))
+          }
           formatReviewDate={(value) => model.reviewDateFormatter.format(new Date(value))}
         />
 
@@ -241,7 +245,9 @@ export function ProviderPublicProfileContent({
       {!isDialogSurface ? (
         <RequestDetailAside
           cityLabel={model.profileCard.cityLabel || model.provider.cityName || '—'}
-          dateLabel={model.profileCard.responseTime || model.t(I18N_KEYS.requestDetails.clientActive)}
+          dateLabel={
+            model.profileCard.responseTime || model.t(I18N_KEYS.requestDetails.clientActive)
+          }
           metaClassName="request-detail__meta--provider-availability"
           metaContent={
             <div className="request-detail__availability-actions">

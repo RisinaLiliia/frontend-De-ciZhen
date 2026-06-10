@@ -12,7 +12,11 @@ type RequestDetailGalleryProps = {
   surface?: 'default' | 'dialog';
 };
 
-export function RequestDetailGallery({ images, title, surface = 'default' }: RequestDetailGalleryProps) {
+export function RequestDetailGallery({
+  images,
+  title,
+  surface = 'default',
+}: RequestDetailGalleryProps) {
   const safeAlt = title?.trim() || 'Request image';
 
   if (surface === 'dialog') {

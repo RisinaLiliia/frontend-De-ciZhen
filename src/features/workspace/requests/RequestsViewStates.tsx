@@ -13,7 +13,10 @@ export function CardSkeletonList() {
   return (
     <div className="my-requests-list">
       {Array.from({ length: 4 }).map((_, index) => (
-        <article key={`card-skeleton-${index}`} className={workspaceMutedPanelShell('my-request-card', 'my-request-card--skeleton')}>
+        <article
+          key={`card-skeleton-${index}`}
+          className={workspaceMutedPanelShell('my-request-card', 'my-request-card--skeleton')}
+        >
           <div className="skeleton h-5 w-40" />
           <div className="skeleton h-8 w-full" />
           <div className="skeleton h-4 w-72" />
@@ -42,19 +45,20 @@ export function EmptyState({
 
   return (
     <section className={workspaceMutedPanelShell('my-requests-empty')}>
-      <h3>{mode === 'empty'
-        ? (isMarket
-          ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketEmptyTitle)
-          : tx(locale, I18N_KEYS.requestsPage.workspacePrivateEmptyTitle))
-        : (isMarket
-          ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketFilteredTitle)
-          : tx(locale, I18N_KEYS.requestsPage.workspacePrivateFilteredTitle))}
+      <h3>
+        {mode === 'empty'
+          ? isMarket
+            ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketEmptyTitle)
+            : tx(locale, I18N_KEYS.requestsPage.workspacePrivateEmptyTitle)
+          : isMarket
+            ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketFilteredTitle)
+            : tx(locale, I18N_KEYS.requestsPage.workspacePrivateFilteredTitle)}
       </h3>
       <p>
         {mode === 'empty'
-          ? (isMarket
+          ? isMarket
             ? tx(locale, I18N_KEYS.requestsPage.workspaceMarketEmptyHint)
-            : tx(locale, I18N_KEYS.requestsPage.workspacePrivateEmptyHint))
+            : tx(locale, I18N_KEYS.requestsPage.workspacePrivateEmptyHint)
           : tx(locale, I18N_KEYS.requestsPage.workspaceFilteredHint)}
       </p>
       <div className="my-requests-empty__actions">
@@ -77,13 +81,7 @@ export function EmptyState({
   );
 }
 
-export function AuthGate({
-  locale,
-  guestLoginHref,
-}: {
-  locale: Locale;
-  guestLoginHref: string;
-}) {
+export function AuthGate({ locale, guestLoginHref }: { locale: Locale; guestLoginHref: string }) {
   return (
     <section className={workspaceMutedPanelShell('my-requests-auth-gate')}>
       <h3>{tx(locale, I18N_KEYS.requestsPage.workspaceAuthGateTitle)}</h3>
@@ -92,7 +90,11 @@ export function AuthGate({
         <Link href={guestLoginHref} prefetch={false} className="btn-primary">
           {tx(locale, I18N_KEYS.auth.loginCta)}
         </Link>
-        <Link href="/workspace?section=requests&scope=market" prefetch={false} className="btn-secondary">
+        <Link
+          href="/workspace?section=requests&scope=market"
+          prefetch={false}
+          className="btn-secondary"
+        >
           {tx(locale, I18N_KEYS.requestsPage.workspaceGoToMarketCta)}
         </Link>
       </div>

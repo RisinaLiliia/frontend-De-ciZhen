@@ -1,6 +1,4 @@
-
-  @layer components {
-  
+@layer components {
   .workspace-chip-toggle {
     align-items: center;
     gap: var(--space-1-5);
@@ -11,12 +9,11 @@
     min-height: calc(var(--space-4) + var(--space-5));
     padding: var(--space-2) calc(var(--space-2-5) + var(--space-0-75));
     border-color: color-mix(in oklab, var(--surface-soft-border) 72%, transparent);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, white 92%, var(--surface-card-bg) 8%),
-        color-mix(in oklab, white 82%, var(--surface-card-bg) 18%)
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, white 92%, var(--surface-card-bg) 8%),
+      color-mix(in oklab, white 82%, var(--surface-card-bg) 18%)
+    );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, white 76%, transparent),
       0 8px 16px color-mix(in oklab, var(--c-ink) 6%, transparent);
@@ -30,36 +27,33 @@
 
   .workspace-chip-toggle__chip.is-active {
     border-color: color-mix(in oklab, var(--color-warning) 34%, var(--surface-soft-border) 66%);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, white 94%, var(--color-warning) 6%),
-        color-mix(in oklab, white 82%, var(--color-warning) 18%)
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, white 94%, var(--color-warning) 6%),
+      color-mix(in oklab, white 82%, var(--color-warning) 18%)
+    );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, white 84%, transparent),
       0 12px 20px color-mix(in oklab, var(--c-ink) 8%, transparent);
   }
 
   html.dark .workspace-chip-toggle__chip {
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--color-surface) 86%, white 14%),
-        color-mix(in oklab, var(--color-surface) 94%, white 6%)
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-surface) 86%, white 14%),
+      color-mix(in oklab, var(--color-surface) 94%, white 6%)
+    );
     box-shadow:
       inset 0 1px 0 color-mix(in oklab, white 10%, transparent),
       0 8px 16px color-mix(in oklab, var(--c-ink) 20%, transparent);
   }
 
   html.dark .workspace-chip-toggle__chip.is-active {
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--color-surface) 76%, white 24%),
-        color-mix(in oklab, var(--color-surface) 88%, var(--color-warning) 12%)
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-surface) 76%, white 24%),
+      color-mix(in oklab, var(--color-surface) 88%, var(--color-warning) 12%)
+    );
   }
 
   @media (max-width: 1023px) {
@@ -92,13 +86,21 @@
     }
 
     .workspace-control-shell .requests-filters--surface-embedded .dc-select-trigger,
-    .workspace-control-shell[data-condensed='true'] .requests-filters--surface-embedded .dc-select-trigger {
+    .workspace-control-shell[data-condensed='true']
+      .requests-filters--surface-embedded
+      .dc-select-trigger {
       height: calc(var(--space-8) + var(--space-2-5));
       border-radius: var(--radius-md);
     }
 
-    .workspace-control-shell .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input,
-    .workspace-control-shell[data-condensed='true'] .requests-filters--surface-embedded .dc-city-search--inline .dc-city-search-input {
+    .workspace-control-shell
+      .requests-filters--surface-embedded
+      .dc-city-search--inline
+      .dc-city-search-input,
+    .workspace-control-shell[data-condensed='true']
+      .requests-filters--surface-embedded
+      .dc-city-search--inline
+      .dc-city-search-input {
       min-height: calc(var(--space-8) + var(--space-2-5));
       border-radius: var(--radius-md);
     }

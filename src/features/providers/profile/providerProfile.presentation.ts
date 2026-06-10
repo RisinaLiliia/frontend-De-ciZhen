@@ -78,11 +78,7 @@ export function buildProviderAvailabilityModel({
   const firstSlotDate = parseDateSafe(nextSlotStartAt);
   const nextAvailableDate = parseDateSafe(nextAvailableAt);
   const resolvedDate = firstSlotDate ?? nextAvailableDate ?? new Date();
-  const resolvedState = availabilityState
-    ? availabilityState
-    : firstSlotDate
-      ? 'open'
-      : 'busy';
+  const resolvedState = availabilityState ? availabilityState : firstSlotDate ? 'open' : 'busy';
   const isBusy = resolvedState === 'busy';
 
   return {

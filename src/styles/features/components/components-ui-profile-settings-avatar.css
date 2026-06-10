@@ -19,7 +19,11 @@
 
   .profile-settings__avatar--placeholder {
     background:
-      radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--color-surface) 90%, transparent), transparent),
+      radial-gradient(
+        circle at 30% 30%,
+        color-mix(in oklab, var(--color-surface) 90%, transparent),
+        transparent
+      ),
       linear-gradient(135deg, var(--c-avatar-provider), var(--c-avatar-provider-light));
   }
 

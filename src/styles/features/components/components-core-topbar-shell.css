@@ -41,7 +41,10 @@
       calc(100% - (var(--shell-inline-padding, 16px) * 2)),
       var(--shell-topbar-max-width, calc(var(--shell-max-width, var(--page-max, 1120px)) - 16px))
     );
-    max-width: var(--shell-topbar-max-width, calc(var(--shell-max-width, var(--page-max, 1120px)) - 16px));
+    max-width: var(
+      --shell-topbar-max-width,
+      calc(var(--shell-max-width, var(--page-max, 1120px)) - 16px)
+    );
     height: var(--shell-topbar-height);
     margin-inline: auto;
     padding-inline: var(--shell-inline-padding, 16px);

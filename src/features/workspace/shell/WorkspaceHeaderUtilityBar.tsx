@@ -29,10 +29,15 @@ export function WorkspaceHeaderUtilityBar({
         'workspace-environment__utility',
         compact ? 'workspace-environment__utility--compact' : '',
         className ?? '',
-      ].filter(Boolean).join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       aria-label="Workspace tools"
     >
-      <label className="workspace-environment__search" aria-label={t(I18N_KEYS.homePublic.searchPlaceholder)}>
+      <label
+        className="workspace-environment__search"
+        aria-label={t(I18N_KEYS.homePublic.searchPlaceholder)}
+      >
         <span className="workspace-environment__search-icon" aria-hidden="true">
           <IconSearch />
         </span>
@@ -63,7 +68,10 @@ export function WorkspaceHeaderUtilityBar({
               <IconPlus />
             </Link>
           ) : (
-            <Link href={DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF} className="workspace-environment__primary-cta">
+            <Link
+              href={DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF}
+              className="workspace-environment__primary-cta"
+            >
               <span aria-hidden="true">
                 <IconPlus />
               </span>

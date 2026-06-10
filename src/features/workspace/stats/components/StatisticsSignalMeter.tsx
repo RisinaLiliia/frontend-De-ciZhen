@@ -46,7 +46,9 @@ export function StatisticsSignalMeter({
             'workspace-statistics-signal__semantic',
             semanticTone ? `is-${semanticTone}` : '',
             semanticAlign === 'start' ? 'is-start' : '',
-          ].filter(Boolean).join(' ')}
+          ]
+            .filter(Boolean)
+            .join(' ')}
         >
           {semanticLabel}
         </p>

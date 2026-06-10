@@ -19,10 +19,7 @@ export function buildWorkspacePublicRequestLifecycleQueryKeys(): QueryKey[] {
 }
 
 export function buildWorkspacePrivateShellQueryKeys(): QueryKey[] {
-  return [
-    workspaceQK.workspaceRequestsPrefix(),
-    workspaceQK.workspacePrivateOverviewPrefix(),
-  ];
+  return [workspaceQK.workspaceRequestsPrefix(), workspaceQK.workspacePrivateOverviewPrefix()];
 }
 
 export function buildWorkspaceOwnerRequestMutationQueryKeys(): QueryKey[] {

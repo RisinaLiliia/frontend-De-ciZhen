@@ -102,25 +102,26 @@ export function usePublicProfileReviewsModel({
     staleTime: 60_000,
   });
 
-  const reviewsUi: PublicProfileReviewsUi = locale === 'de'
-    ? {
-        sortLatest: 'Neueste',
-        sortTop: 'Top bewertet',
-        noText: 'Kein Kommentar hinterlassen.',
-        basedOn: 'aus',
-        ratingsLabel: 'Bewertungen',
-        expandAbout: 'Mehr lesen',
-        collapseAbout: 'Weniger anzeigen',
-      }
-    : {
-        sortLatest: 'Latest',
-        sortTop: 'Top rated',
-        noText: 'No text provided.',
-        basedOn: 'from',
-        ratingsLabel: 'ratings',
-        expandAbout: 'Read more',
-        collapseAbout: 'Show less',
-      };
+  const reviewsUi: PublicProfileReviewsUi =
+    locale === 'de'
+      ? {
+          sortLatest: 'Neueste',
+          sortTop: 'Top bewertet',
+          noText: 'Kein Kommentar hinterlassen.',
+          basedOn: 'aus',
+          ratingsLabel: 'Bewertungen',
+          expandAbout: 'Mehr lesen',
+          collapseAbout: 'Weniger anzeigen',
+        }
+      : {
+          sortLatest: 'Latest',
+          sortTop: 'Top rated',
+          noText: 'No text provided.',
+          basedOn: 'from',
+          ratingsLabel: 'ratings',
+          expandAbout: 'Read more',
+          collapseAbout: 'Show less',
+        };
 
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
   const reviewDateFormatter = React.useMemo(
@@ -176,7 +177,8 @@ export function usePublicProfileReviewsModel({
     if (Number.isFinite(raw) && raw >= 0) return Math.round(raw);
     const summaryTotal = Number(reviewsOverviewQuery.data?.summary?.total);
     if (Number.isFinite(summaryTotal) && summaryTotal >= 0) return Math.round(summaryTotal);
-    if (typeof reviewsOverviewQuery.data?.total === 'number') return Math.round(reviewsOverviewQuery.data.total);
+    if (typeof reviewsOverviewQuery.data?.total === 'number')
+      return Math.round(reviewsOverviewQuery.data.total);
     return pageReviews.length;
   })();
   const hasRecentReview = displayRatingCount > 0;
@@ -211,9 +213,11 @@ export function usePublicProfileReviewsModel({
     return list;
   }, [pageReviews, reviewSort]);
   const reviewsTotalForPagination = (() => {
-    if (typeof reviewsOverviewQuery.data?.total === 'number') return Math.max(0, Math.floor(reviewsOverviewQuery.data.total));
+    if (typeof reviewsOverviewQuery.data?.total === 'number')
+      return Math.max(0, Math.floor(reviewsOverviewQuery.data.total));
     const summaryTotal = Number(reviewsOverviewQuery.data?.summary?.total);
-    if (Number.isFinite(summaryTotal) && summaryTotal >= 0) return Math.max(0, Math.floor(summaryTotal));
+    if (Number.isFinite(summaryTotal) && summaryTotal >= 0)
+      return Math.max(0, Math.floor(summaryTotal));
     const raw = Number(ratingCount);
     if (Number.isFinite(raw) && raw >= 0) return Math.max(0, Math.floor(raw));
     return pageReviews.length;

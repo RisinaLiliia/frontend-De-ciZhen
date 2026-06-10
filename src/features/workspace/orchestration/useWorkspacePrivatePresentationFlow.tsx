@@ -13,16 +13,11 @@ import {
   buildRequestsWorkspacePrivateBody,
   RequestsWorkspaceBody,
 } from '@/features/workspace/requests/RequestsWorkspaceBody';
-import {
-  buildMyRequestsViewModelFromResponse,
-} from '@/features/workspace/requests/myRequestsView.model';
+import { buildMyRequestsViewModelFromResponse } from '@/features/workspace/requests/myRequestsView.model';
 import { useWorkspacePrivateState } from '@/features/workspace/state/useWorkspacePrivateState';
 import { buildWorkspaceRequestsSurfaceModel } from '@/features/workspace/requests/workspaceRequestsView.model';
 import { useDecisionMode } from '@/features/workspace/requests/useDecisionMode';
-import {
-  useWorkspacePresentation,
-  type WorkspaceSectionRenderModel,
-} from '@/features/workspace';
+import { useWorkspacePresentation, type WorkspaceSectionRenderModel } from '@/features/workspace';
 import { ChatWorkspacePage } from '@/features/workspace/chat/ChatWorkspacePage';
 import { WorkspaceChatIntro } from '@/features/workspace/chat/WorkspaceChatIntro';
 import { WorkspaceChatRail } from '@/features/workspace/chat/WorkspaceChatRail';
@@ -75,15 +70,14 @@ export function useWorkspacePrivatePresentationFlow({
     overviewRequestsListState,
     overviewRequestsCount,
   } = data;
-  const { isOverviewMode, isUnifiedPrivateRequests } =
-    resolveWorkspacePrivateRenderModes({
-      activePublicSection,
-      activeWorkspaceTab,
-      pathname,
-      sectionParam: searchParams.get('section'),
-      hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
-      requestsScope: data.requestsScope,
-    });
+  const { isOverviewMode, isUnifiedPrivateRequests } = resolveWorkspacePrivateRenderModes({
+    activePublicSection,
+    activeWorkspaceTab,
+    pathname,
+    sectionParam: searchParams.get('section'),
+    hasExplicitWorkspaceTab: isWorkspaceTab(searchParams.get('tab')),
+    requestsScope: data.requestsScope,
+  });
   const primaryAction = React.useMemo(
     () => ({
       href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
@@ -92,9 +86,7 @@ export function useWorkspacePrivatePresentationFlow({
     [branch],
   );
 
-  const privateState = useWorkspacePrivateState(
-    buildWorkspacePrivateStateArgs({ branch, data }),
-  );
+  const privateState = useWorkspacePrivateState(buildWorkspacePrivateStateArgs({ branch, data }));
 
   const { workspaceIntroNode, workspaceAsideBaseProps } = useWorkspacePresentation(
     buildWorkspacePrivatePresentationArgs({
@@ -108,8 +100,7 @@ export function useWorkspacePrivatePresentationFlow({
 
   const resolvedWorkspaceIntroNode = isWorkspaceAuthed
     ? workspaceIntroNode
-    : (
-      (() => {
+    : (() => {
         const publicIntroProps = buildWorkspacePublicIntroProps({
           branch,
           data: {
@@ -119,14 +110,13 @@ export function useWorkspacePrivatePresentationFlow({
         });
 
         return (
-      <WorkspacePublicIntro
+          <WorkspacePublicIntro
             {...publicIntroProps}
             showDemandMap={isOverviewMode ? false : publicIntroProps.showDemandMap}
             showQuickAction={isOverviewMode ? false : publicIntroProps.showQuickAction}
           />
         );
-      })()
-    );
+      })();
 
   const publicSummaryView = buildWorkspacePublicSummaryView(data);
   const privateExplore = useExploreSidebar(branch.t);
@@ -151,11 +141,13 @@ export function useWorkspacePrivatePresentationFlow({
 
   const activeOffersListProps = React.useMemo(
     () =>
-      buildRequestsListProps(buildWorkspacePrivateOverviewListPropsArgs({
-        branch,
-        data,
-        isOverviewMode,
-      })),
+      buildRequestsListProps(
+        buildWorkspacePrivateOverviewListPropsArgs({
+          branch,
+          data,
+          isOverviewMode,
+        }),
+      ),
     [branch, data, isOverviewMode],
   );
 
@@ -164,13 +156,10 @@ export function useWorkspacePrivatePresentationFlow({
   const isSettingsSection = activePublicSection === 'settings';
   const isHelpSection = activePublicSection === 'help';
   const isExploreSection =
-    activePublicSection === 'providers'
-    || activePublicSection === 'stats'
-    || activePublicSection === 'profile';
-  const {
-    requestsPage,
-    setRequestsPage,
-  } = data;
+    activePublicSection === 'providers' ||
+    activePublicSection === 'stats' ||
+    activePublicSection === 'profile';
+  const { requestsPage, setRequestsPage } = data;
   const privateRequestsLoading = resolveWorkspacePrivateRequestsLoading({
     workspaceRequests: data.workspaceRequests,
     isWorkspaceRequestsLoading: data.isWorkspaceRequestsLoading,
@@ -181,22 +170,22 @@ export function useWorkspacePrivatePresentationFlow({
     () => buildMyRequestsViewModelFromResponse(data.workspaceRequests),
     [data.workspaceRequests],
   );
-const privateTotalPages = React.useMemo(() => {
-  const total = privateRequestsModel.response?.list?.total ?? 0;
-  const limit = privateRequestsModel.response?.list?.limit ?? 1;
+  const privateTotalPages = React.useMemo(() => {
+    const total = privateRequestsModel.response?.list?.total ?? 0;
+    const limit = privateRequestsModel.response?.list?.limit ?? 1;
 
-  return Math.max(1, Math.ceil(total / Math.max(1, limit)));
-}, [privateRequestsModel.response]);
+    return Math.max(1, Math.ceil(total / Math.max(1, limit)));
+  }, [privateRequestsModel.response]);
 
-const privatePagination = React.useMemo(() => {
-  if (!privateRequestsModel.response?.list) return null;
+  const privatePagination = React.useMemo(() => {
+    if (!privateRequestsModel.response?.list) return null;
 
-  return {
-    page: privateRequestsModel.response.list.page ?? 1,
-    totalPages: privateTotalPages,
-    onPageChange: setRequestsPage,
-  };
-}, [privateRequestsModel.response, privateTotalPages, setRequestsPage]);
+    return {
+      page: privateRequestsModel.response.list.page ?? 1,
+      totalPages: privateTotalPages,
+      onPageChange: setRequestsPage,
+    };
+  }, [privateRequestsModel.response, privateTotalPages, setRequestsPage]);
   React.useEffect(() => {
     if (!privateRequestsModel.response) return;
     if (requestsPage <= privateTotalPages) return;
@@ -246,67 +235,66 @@ const privatePagination = React.useMemo(() => {
     />
   ) : isUnifiedPrivateRequests ? (
     <RequestsWorkspaceBody
-      body={buildRequestsWorkspacePrivateBody(buildWorkspaceRequestsSurfaceModel({
-        variant: 'private',
-        locale: branch.locale,
-        isWorkspaceAuthed: branch.isWorkspaceAuthed,
-        guestLoginHref: data.guestLoginHref,
-        pagination: privatePagination,
-        model: privateRequestsModel,
-        isLoading: privateRequestsLoading,
-        isError: data.isWorkspaceRequestsError,
-        decisionState,
-        decisionQueueIds,
-        onEnterDecisionMode: enterDecisionMode,
-        onOpenDecisionItem: openDecisionItem,
-        onExitDecisionMode: exitDecisionMode,
-        listContext: {
-          onSendOffer: data.onOpenOfferSheet,
-          onEditOffer: data.onOpenOfferSheet,
-          onWithdrawOffer: data.onWithdrawOffer,
-          onOpenChatConversation: data.onOpenChatConversation,
-          pendingOfferRequestId: data.pendingOfferRequestId,
-          ownerRequestActions: data.ownerRequestActions,
-        },
-      }))}
+      body={buildRequestsWorkspacePrivateBody(
+        buildWorkspaceRequestsSurfaceModel({
+          variant: 'private',
+          locale: branch.locale,
+          isWorkspaceAuthed: branch.isWorkspaceAuthed,
+          guestLoginHref: data.guestLoginHref,
+          pagination: privatePagination,
+          model: privateRequestsModel,
+          isLoading: privateRequestsLoading,
+          isError: data.isWorkspaceRequestsError,
+          decisionState,
+          decisionQueueIds,
+          onEnterDecisionMode: enterDecisionMode,
+          onOpenDecisionItem: openDecisionItem,
+          onExitDecisionMode: exitDecisionMode,
+          listContext: {
+            onSendOffer: data.onOpenOfferSheet,
+            onEditOffer: data.onOpenOfferSheet,
+            onWithdrawOffer: data.onWithdrawOffer,
+            onOpenChatConversation: data.onOpenChatConversation,
+            pendingOfferRequestId: data.pendingOfferRequestId,
+            ownerRequestActions: data.ownerRequestActions,
+          },
+        }),
+      )}
     />
   ) : null;
   const chatSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
-    () => (
+    () =>
       isChatSection
         ? buildWorkspaceStandardSectionModel({
-          section: 'chat',
-          content: (
-            <ChatWorkspacePage
-              basePath="/workspace"
-              className="workspace-chat-page"
-              preferDesktopSplit
-            />
-          ),
-          aiRail: <WorkspaceChatRail />,
-        })
-        : null
-    ),
+            section: 'chat',
+            content: (
+              <ChatWorkspacePage
+                basePath="/workspace"
+                className="workspace-chat-page"
+                preferDesktopSplit
+              />
+            ),
+            aiRail: <WorkspaceChatRail />,
+          })
+        : null,
     [isChatSection],
   );
   const settingsSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
-    () => (
+    () =>
       isSettingsSection
         ? buildWorkspaceSettingsSectionModel({
-          content: <WorkspaceSettingsPage />,
-        })
-        : null
-    ),
+            content: <WorkspaceSettingsPage />,
+          })
+        : null,
     [isSettingsSection],
   );
   const helpSectionModel = React.useMemo<WorkspaceSectionRenderModel | null>(
-    () => (
+    () =>
       isHelpSection
         ? buildWorkspaceHelpSectionModel({
-          content: <WorkspaceHelpPage />,
-        })
-        : null
-    ),
+            content: <WorkspaceHelpPage />,
+          })
+        : null,
     [isHelpSection],
   );
   const sectionModel: WorkspaceSectionRenderModel = (() => {
@@ -349,13 +337,15 @@ const privatePagination = React.useMemo(() => {
     activeWorkspaceTab,
     pendingFavoriteProviderIds,
     onToggleProviderFavorite,
-    workspaceIntroNode: isChatSection
-      ? <WorkspaceChatIntro />
-      : isSettingsSection
-        ? <WorkspaceSettingsIntro />
-        : isHelpSection
-          ? <WorkspaceHelpIntro />
-        : resolvedWorkspaceIntroNode,
+    workspaceIntroNode: isChatSection ? (
+      <WorkspaceChatIntro />
+    ) : isSettingsSection ? (
+      <WorkspaceSettingsIntro />
+    ) : isHelpSection ? (
+      <WorkspaceHelpIntro />
+    ) : (
+      resolvedWorkspaceIntroNode
+    ),
     workspaceAsideBaseProps,
     asideTopSlot: undefined,
     preferredRequestsRole,

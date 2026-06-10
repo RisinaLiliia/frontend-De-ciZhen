@@ -19,15 +19,15 @@ export function useCatalogIndex({
   cities: CityItem[];
 }) {
   const serviceByKey = React.useMemo(
-    () => enabled ? new Map(services.map((service) => [service.key, service])) : new Map(),
+    () => (enabled ? new Map(services.map((service) => [service.key, service])) : new Map()),
     [enabled, services],
   );
   const categoryByKey = React.useMemo(
-    () => enabled ? new Map(categories.map((category) => [category.key, category])) : new Map(),
+    () => (enabled ? new Map(categories.map((category) => [category.key, category])) : new Map()),
     [categories, enabled],
   );
   const cityById = React.useMemo(
-    () => enabled ? new Map(cities.map((city) => [city.id, city])) : new Map(),
+    () => (enabled ? new Map(cities.map((city) => [city.id, city])) : new Map()),
     [cities, enabled],
   );
 

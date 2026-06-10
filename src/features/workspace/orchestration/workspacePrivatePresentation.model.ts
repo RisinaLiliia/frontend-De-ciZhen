@@ -28,8 +28,7 @@ type BuildPresentationArgs = {
   preferredRequestsRole?: 'customer' | 'provider' | null;
   privateState: Pick<
     ReturnType<typeof useWorkspacePrivateState>,
-    | 'topProviders'
-    | 'preferredRequestsRole'
+    'topProviders' | 'preferredRequestsRole'
   >;
 };
 
@@ -111,9 +110,7 @@ export function resolveWorkspacePrivateRenderModes({
     sectionParam,
     hasExplicitWorkspaceTab,
   });
-  const isUnifiedPrivateRequests =
-    activePublicSection === 'requests' &&
-    requestsScope === 'my';
+  const isUnifiedPrivateRequests = activePublicSection === 'requests' && requestsScope === 'my';
 
   return {
     isOverviewMode,
@@ -171,9 +168,8 @@ export function buildWorkspacePrivateStateArgs({
   branch,
   data,
 }: BuildArgs): WorkspacePrivateStateArgs {
-  const privateOverviewState: WorkspacePrivateOverviewState | null =
-    data.privateOverviewState
-      ? {
+  const privateOverviewState: WorkspacePrivateOverviewState | null = data.privateOverviewState
+    ? {
         ...data.privateOverviewState,
         preferredRequestsRole:
           data.activePublicSection === 'requests' &&
@@ -182,7 +178,7 @@ export function buildWorkspacePrivateStateArgs({
             ? data.activeRequestsRole
             : data.privateOverviewState.preferredRequestsRole,
       }
-      : null;
+    : null;
 
   return {
     t: branch.t,
@@ -194,7 +190,8 @@ export function buildWorkspacePrivateStateArgs({
     userName: branch.auth.user?.name,
     providers: data.providerDirectoryState.items,
     publicRequestsCount: data.platformRequestsTotal,
-    publicProvidersCount: data.allRequestsSummary?.totalActiveProviders ?? data.providerDirectoryState.items.length,
+    publicProvidersCount:
+      data.allRequestsSummary?.totalActiveProviders ?? data.providerDirectoryState.items.length,
     publicStatsCount: data.platformRequestsTotal,
     privateOverviewState,
     setWorkspaceTab: data.setWorkspaceTab,
@@ -240,14 +237,13 @@ export function buildWorkspacePublicIntroProps({
     ...publicSummaryView,
     hideDemandMapOnMobile: data.activePublicSection !== 'stats',
     quickActionHref: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
-    showQuickAction: data.activePublicSection !== 'stats' && data.activePublicSection !== 'requests',
+    showQuickAction:
+      data.activePublicSection !== 'stats' && data.activePublicSection !== 'requests',
     preferredRequestsRole: data.preferredRequestsRole ?? null,
   };
 }
 
-export function buildWorkspacePublicSummaryView(
-  data: BuildWorkspacePublicSummaryViewArgs,
-) {
+export function buildWorkspacePublicSummaryView(data: BuildWorkspacePublicSummaryViewArgs) {
   return {
     cityActivity: data.publicCityActivity,
     summary: data.allRequestsSummary,
@@ -260,9 +256,7 @@ export function resolveWorkspaceEffectiveRequestsRole({
   activeRequestsRole,
   preferredRequestsRole,
 }: ResolveWorkspaceEffectiveRequestsRoleArgs) {
-  return activeRequestsRole === 'all'
-    ? preferredRequestsRole
-    : activeRequestsRole;
+  return activeRequestsRole === 'all' ? preferredRequestsRole : activeRequestsRole;
 }
 
 export function resolveWorkspacePrivateRequestsLoading({
@@ -275,8 +269,8 @@ export function resolveWorkspacePrivateRequestsLoading({
     return isWorkspaceRequestsLoading;
   }
 
-  return isWorkspaceRequestsLoading || (
-    activeRequestsRole === 'all' &&
-    isWorkspacePrivateRequestsFallbackLoading
+  return (
+    isWorkspaceRequestsLoading ||
+    (activeRequestsRole === 'all' && isWorkspacePrivateRequestsFallbackLoading)
   );
 }

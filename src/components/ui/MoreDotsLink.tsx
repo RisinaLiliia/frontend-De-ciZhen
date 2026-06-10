@@ -46,7 +46,13 @@ export function MoreDotsLink(props: MoreDotsLinkProps) {
 
   const { href, label, className } = props;
   return (
-    <Link href={href} prefetch={false} className={`nearby-more ${className ?? ''}`.trim()} aria-label={label} title={label}>
+    <Link
+      href={href}
+      prefetch={false}
+      className={`nearby-more ${className ?? ''}`.trim()}
+      aria-label={label}
+      title={label}
+    >
       {content}
     </Link>
   );

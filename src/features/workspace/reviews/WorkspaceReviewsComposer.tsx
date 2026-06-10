@@ -17,10 +17,7 @@ type Props = {
   requiresAuthorName: boolean;
 };
 
-export function WorkspaceReviewsComposer({
-  t,
-  requiresAuthorName,
-}: Props) {
+export function WorkspaceReviewsComposer({ t, requiresAuthorName }: Props) {
   const queryClient = useQueryClient();
   const [draftRating, setDraftRating] = React.useState(5);
   const [draftText, setDraftText] = React.useState('');
@@ -78,7 +75,11 @@ export function WorkspaceReviewsComposer({
         <div className="form-group">
           <p className="typo-small">{t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}</p>
           <div className="public-profile-reviews__star-line">
-            <div className="chip-row public-profile-reviews__star-picker" role="group" aria-label={t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}>
+            <div
+              className="chip-row public-profile-reviews__star-picker"
+              role="group"
+              aria-label={t(I18N_KEYS.requestsPage.platformReviewFormRatingLabel)}
+            >
               {[1, 2, 3, 4, 5].map((score) => (
                 <button
                   key={score}

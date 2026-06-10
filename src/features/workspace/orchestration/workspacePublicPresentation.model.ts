@@ -24,7 +24,10 @@ type BuildPublicNavigationArgsParams = {
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
 };
 
-type BuildPublicSeenArgsParams = Pick<WorkspaceBranchProps, 'auth' | 'isAuthed' | 'isWorkspaceAuthed'> & {
+type BuildPublicSeenArgsParams = Pick<
+  WorkspaceBranchProps,
+  'auth' | 'isAuthed' | 'isWorkspaceAuthed'
+> & {
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   platformRequestsTotal: number;
   isSummaryLoading: boolean;
@@ -54,7 +57,10 @@ type BuildPublicRenderMetricPayloadArgs = {
   localeTag: string;
 };
 
-type BuildPublicLayoutPropsArgs = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isWorkspaceAuthed'> & {
+type BuildPublicLayoutPropsArgs = Pick<
+  WorkspaceBranchProps,
+  't' | 'locale' | 'isWorkspaceAuthed'
+> & {
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   workspaceIntroNode: ReactNode;

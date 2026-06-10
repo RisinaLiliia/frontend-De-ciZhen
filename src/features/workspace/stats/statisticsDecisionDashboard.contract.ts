@@ -39,23 +39,29 @@ function normalizeFilterValue(value: string | null | undefined): string | null {
   return normalized.length > 0 ? normalized : null;
 }
 
-function compareOptions(a: WorkspaceStatisticsFilterOptionDto, b: WorkspaceStatisticsFilterOptionDto) {
+function compareOptions(
+  a: WorkspaceStatisticsFilterOptionDto,
+  b: WorkspaceStatisticsFilterOptionDto,
+) {
   return a.label.localeCompare(b.label, 'de-DE');
 }
 
-function buildFilterOptions(payload: WorkspaceStatisticsOverviewSourceDto): WorkspaceStatisticsDecisionDashboardDto['filterOptions'] {
+function buildFilterOptions(
+  payload: WorkspaceStatisticsOverviewSourceDto,
+): WorkspaceStatisticsDecisionDashboardDto['filterOptions'] {
   const explicitCities = payload.filterOptions?.cities ?? [];
   const explicitCategories = payload.filterOptions?.categories ?? [];
   const explicitServices = payload.filterOptions?.services ?? [];
 
-  const cities = explicitCities.length > 0
-    ? explicitCities
-    : (payload.demand.cities ?? [])
-      .map((city) => ({
-        value: city.cityId ?? city.citySlug,
-        label: city.cityName,
-      }))
-      .sort(compareOptions);
+  const cities =
+    explicitCities.length > 0
+      ? explicitCities
+      : (payload.demand.cities ?? [])
+          .map((city) => ({
+            value: city.cityId ?? city.citySlug,
+            label: city.cityName,
+          }))
+          .sort(compareOptions);
 
   const categoryMap = new Map<string, WorkspaceStatisticsFilterOptionDto>();
   explicitCategories.forEach((option) => categoryMap.set(option.value, option));
@@ -104,8 +110,8 @@ function scopeDemandRows(
   const rows = (payload.demand.categories ?? []).slice();
   rows.sort(
     (a, b) =>
-      (b.sharePercent - a.sharePercent) ||
-      (b.requestCount - a.requestCount) ||
+      b.sharePercent - a.sharePercent ||
+      b.requestCount - a.requestCount ||
       a.categoryName.localeCompare(b.categoryName, 'de-DE'),
   );
   if (!filters.categoryKey) return rows;
@@ -120,11 +126,11 @@ function scopeCityRows(
   const hasBackendScopedCityContract = filters.cityId
     ? rows.some((row) => row.peerContext?.reason === 'selected_city')
     : rows.some(
-      (row) =>
-        typeof row.rank === 'number' ||
-        typeof row.score === 'number' ||
-        row.peerContext !== undefined,
-    );
+        (row) =>
+          typeof row.rank === 'number' ||
+          typeof row.score === 'number' ||
+          row.peerContext !== undefined,
+      );
   if (hasBackendScopedCityContract) return rows;
   if (!filters.cityId) return rows;
   return rows.filter((row) => (row.cityId ?? row.citySlug) === filters.cityId);
@@ -137,9 +143,10 @@ function scopeOpportunityRadar(
   const backendOpportunityRadar = (payload.opportunityRadar ?? []).slice();
   const hasBackendScopedOpportunityContract = filters.cityId
     ? backendOpportunityRadar[0]?.peerContext?.reason === 'selected_city'
-    : backendOpportunityRadar.length > 0 && backendOpportunityRadar.some(
-      (item) => item.peerContext !== undefined || item.priceIntelligence !== undefined,
-    );
+    : backendOpportunityRadar.length > 0 &&
+      backendOpportunityRadar.some(
+        (item) => item.peerContext !== undefined || item.priceIntelligence !== undefined,
+      );
   if (hasBackendScopedOpportunityContract) return backendOpportunityRadar.slice(0, 3);
 
   return buildFocusedOpportunityRadar(payload, {
@@ -174,13 +181,15 @@ function normalizeFunnelComparisonContract(
     primaryAction?: { code?: string | null } | null;
   };
   const rawLargestDropOffStage = (source as { largestDropOffStage?: unknown }).largestDropOffStage;
-  const largestDropOffStageObject = (
+  const largestDropOffStageObject =
     rawLargestDropOffStage &&
     typeof rawLargestDropOffStage === 'object' &&
     !Array.isArray(rawLargestDropOffStage)
-  )
-    ? rawLargestDropOffStage as { key?: string | null; severity?: 'low' | 'medium' | 'high' | 'critical' | null }
-    : null;
+      ? (rawLargestDropOffStage as {
+          key?: string | null;
+          severity?: 'low' | 'medium' | 'high' | 'critical' | null;
+        })
+      : null;
 
   const largestDropOffStageKey = normalizeFunnelStageKey(
     typeof rawLargestDropOffStage === 'string'
@@ -198,19 +207,18 @@ function normalizeFunnelComparisonContract(
         ? stage.status
         : 'neutral',
     dropOffSeverity:
-      largestDropOffStageObject &&
-      largestDropOffStageObject.key === stage.key
+      largestDropOffStageObject && largestDropOffStageObject.key === stage.key
         ? (largestDropOffStageObject.severity ?? null)
-        : stage.dropOffSeverity ?? null,
-    recommendation:
-      stage.recommendation ??
-      (extendedSource.primaryAction?.code ?? null),
+        : (stage.dropOffSeverity ?? null),
+    recommendation: stage.recommendation ?? extendedSource.primaryAction?.code ?? null,
   }));
 
   return {
     ...source,
     comparisonLabel: source.comparisonLabel ?? extendedSource.title ?? null,
-    largestGapStage: normalizeFunnelStageKey(typeof source.largestGapStage === 'string' ? source.largestGapStage : null),
+    largestGapStage: normalizeFunnelStageKey(
+      typeof source.largestGapStage === 'string' ? source.largestGapStage : null,
+    ),
     largestDropOffStage: largestDropOffStageKey,
     stages: normalizedStages,
   };
@@ -219,9 +227,7 @@ function normalizeFunnelComparisonContract(
 function sortOpportunityRadar(
   items: NonNullable<WorkspaceStatisticsOverviewSourceDto['opportunityRadar']>,
 ) {
-  return items
-    .slice()
-    .slice(0, 3);
+  return items.slice().slice(0, 3);
 }
 
 function scopePriceIntelligence(params: {
@@ -253,29 +259,27 @@ function buildHealthMetrics(params: {
   return [
     {
       key: 'demand',
-      value: leadingDemand
-        ? leadingDemand.sharePercent >= 45 ? 'rising' : 'stable'
-        : 'limited',
-      tone: leadingDemand
-        ? leadingDemand.sharePercent >= 45 ? 'positive' : 'neutral'
-        : 'warning',
+      value: leadingDemand ? (leadingDemand.sharePercent >= 45 ? 'rising' : 'stable') : 'limited',
+      tone: leadingDemand ? (leadingDemand.sharePercent >= 45 ? 'positive' : 'neutral') : 'warning',
     },
     {
       key: 'competition',
-      value: competitionRatio === null
-        ? 'balanced'
-        : competitionRatio >= 2
-          ? 'low'
-          : competitionRatio >= 1
-            ? 'balanced'
-            : 'high',
-      tone: competitionRatio === null
-        ? 'neutral'
-        : competitionRatio >= 2
-          ? 'positive'
-          : competitionRatio >= 1
-            ? 'neutral'
-            : 'warning',
+      value:
+        competitionRatio === null
+          ? 'balanced'
+          : competitionRatio >= 2
+            ? 'low'
+            : competitionRatio >= 1
+              ? 'balanced'
+              : 'high',
+      tone:
+        competitionRatio === null
+          ? 'neutral'
+          : competitionRatio >= 2
+            ? 'positive'
+            : competitionRatio >= 1
+              ? 'neutral'
+              : 'warning',
     },
     {
       key: 'activity',
@@ -302,8 +306,12 @@ function buildDecisionContext(params: {
     };
   }
 
-  const selectedCity = params.filterOptions.cities.find((item) => item.value === params.filters.cityId);
-  const selectedCategory = params.filterOptions.categories.find((item) => item.value === params.filters.categoryKey);
+  const selectedCity = params.filterOptions.cities.find(
+    (item) => item.value === params.filters.cityId,
+  );
+  const selectedCategory = params.filterOptions.categories.find(
+    (item) => item.value === params.filters.categoryKey,
+  );
   const cityLabel = selectedCity?.label ?? 'Alle Städte';
   const categoryLabel = selectedCategory?.label ?? 'Alle Kategorien';
   const isFocusMode = Boolean(params.filters.cityId || params.filters.categoryKey);
@@ -312,12 +320,12 @@ function buildDecisionContext(params: {
     params.priceIntelligence?.recommendedMax !== null ||
     params.priceIntelligence?.marketAverage !== null,
   );
-  const isLowData = isFocusMode && (
-    (params.filters.cityId && params.cityRows.length === 0) ||
-    (params.filters.categoryKey && params.demandRows.length === 0) ||
-    params.opportunityRadar.length === 0 ||
-    !hasScopedPriceData
-  );
+  const isLowData =
+    isFocusMode &&
+    ((params.filters.cityId && params.cityRows.length === 0) ||
+      (params.filters.categoryKey && params.demandRows.length === 0) ||
+      params.opportunityRadar.length === 0 ||
+      !hasScopedPriceData);
 
   return {
     mode: isFocusMode ? 'focus' : 'global',
@@ -344,7 +352,9 @@ function buildDecisionContext(params: {
     lowData: {
       isLowData,
       title: isLowData ? 'Zu wenig Daten für eine verlässliche Segmentanalyse' : null,
-      body: isLowData ? 'Erweitern Sie den Zeitraum oder wechseln Sie zu Alle Städte bzw. Alle Kategorien.' : null,
+      body: isLowData
+        ? 'Erweitern Sie den Zeitraum oder wechseln Sie zu Alle Städte bzw. Alle Kategorien.'
+        : null,
     },
   };
 }
@@ -357,9 +367,12 @@ function buildSectionMeta(
 
   const focusLabel =
     context.mode === 'focus'
-      ? [context.category.value ? context.category.label : null, context.city.value ? context.city.label : null]
-        .filter(Boolean)
-        .join(' · ')
+      ? [
+          context.category.value ? context.category.label : null,
+          context.city.value ? context.city.label : null,
+        ]
+          .filter(Boolean)
+          .join(' · ')
       : null;
 
   return {
@@ -398,15 +411,17 @@ export function normalizeWorkspaceDecisionDashboardResponse(
     payload: normalizedPayload,
     opportunityRadar,
   });
-  const decisionContext = payload.decisionContext ?? buildDecisionContext({
-    payload: normalizedPayload,
-    filters,
-    filterOptions,
-    demandRows,
-    cityRows,
-    opportunityRadar,
-    priceIntelligence,
-  });
+  const decisionContext =
+    payload.decisionContext ??
+    buildDecisionContext({
+      payload: normalizedPayload,
+      filters,
+      filterOptions,
+      demandRows,
+      cityRows,
+      opportunityRadar,
+      priceIntelligence,
+    });
   const userIntelligence = payload.userIntelligence ?? null;
   const funnelComparison = normalizeFunnelComparisonContract(payload.funnelComparison ?? null);
   const decisionLayer = payload.decisionLayer ?? null;

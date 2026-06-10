@@ -160,29 +160,30 @@ export function UserHeaderCard({
       {reviewsCount} {reviewsLabel}
     </span>
   );
-  const trustBlock = isInlineProofLayout && showRating ? (
-    <div className="profile-main__trust">
-      <div className="profile-main__trust-top">
-        <div className="profile-main__trust-rating" aria-label={`${rating} out of 5`}>
-          <span className="rating-summary__stars" aria-hidden="true">
-            <span className="rating-summary__stars-base">★★★★★</span>
-            <span className="rating-summary__stars-fill" style={{ width: starsFillWidth }}>
-              ★★★★★
+  const trustBlock =
+    isInlineProofLayout && showRating ? (
+      <div className="profile-main__trust">
+        <div className="profile-main__trust-top">
+          <div className="profile-main__trust-rating" aria-label={`${rating} out of 5`}>
+            <span className="rating-summary__stars" aria-hidden="true">
+              <span className="rating-summary__stars-base">★★★★★</span>
+              <span className="rating-summary__stars-fill" style={{ width: starsFillWidth }}>
+                ★★★★★
+              </span>
             </span>
-          </span>
-          <span className="rating-summary__value">{rating}</span>
-          {reviewsNode}
+            <span className="rating-summary__value">{rating}</span>
+            {reviewsNode}
+          </div>
+          <p
+            className="profile-main-review profile-rating-review profile-main__trust-quote"
+            title={reviewText || undefined}
+            aria-hidden={reviewText ? undefined : true}
+          >
+            {reviewText ? `“${reviewText}”` : ''}
+          </p>
         </div>
-        <p
-          className="profile-main-review profile-rating-review profile-main__trust-quote"
-          title={reviewText || undefined}
-          aria-hidden={reviewText ? undefined : true}
-        >
-          {reviewText ? `“${reviewText}”` : ''}
-        </p>
       </div>
-    </div>
-  ) : null;
+    ) : null;
   const proofRow = (
     <div className="profile-main__proof">
       <div className="profile-main__proof-review">
@@ -225,9 +226,13 @@ export function UserHeaderCard({
   const priceRow = hasStructuredInsights ? (
     <div className="profile-main__detail-row profile-main__detail-row--price">
       <span className="profile-main__detail-text profile-main__detail-text--price">
-        {pricingPrefixLabel ? <span className="profile-main__price-prefix">{pricingPrefixLabel}</span> : null}
+        {pricingPrefixLabel ? (
+          <span className="profile-main__price-prefix">{pricingPrefixLabel}</span>
+        ) : null}
         {pricingValueLabel ? <span className="proof-price">{pricingValueLabel}</span> : null}
-        {pricingSuffixLabel ? <span className="profile-main__price-suffix">{pricingSuffixLabel}</span> : null}
+        {pricingSuffixLabel ? (
+          <span className="profile-main__price-suffix">{pricingSuffixLabel}</span>
+        ) : null}
       </span>
     </div>
   ) : null;
@@ -258,7 +263,9 @@ export function UserHeaderCard({
       {hasEyebrowContent ? (
         <div className="profile-sub-row profile-main__eyebrow">
           <div className="profile-sub-row__main">
-            {eyebrowLeading ? <span className="profile-sub-row__leading">{eyebrowLeading}</span> : null}
+            {eyebrowLeading ? (
+              <span className="profile-sub-row__leading">{eyebrowLeading}</span>
+            ) : null}
             {subtitle ? <p className="profile-subtitle">{subtitle}</p> : null}
           </div>
           {secondaryBadge ? <span className="profile-sub-row__badge">{secondaryBadge}</span> : null}
@@ -297,9 +304,7 @@ export function UserHeaderCard({
       {hasAboutContent ? aboutRow : null}
       {!isInlineProofLayout && hasReviewContent ? proofRow : null}
       {!isInlineProofLayout && showRating && !adaptiveDesktop ? (
-        <div className="profile-rating-stack">
-          {ratingNode}
-        </div>
+        <div className="profile-rating-stack">{ratingNode}</div>
       ) : null}
       {!isInlineProofLayout ? footerRow : null}
     </div>
@@ -310,31 +315,46 @@ export function UserHeaderCard({
       {mainContent}
     </div>
   );
-  const detailVariantClasses = layoutVariant === 'detail'
-    ? [
-      'user-header-card--detail',
-      resolvedAvatarRole === 'provider' ? 'user-header-card--detail-provider' : 'user-header-card--detail-client',
-    ]
-    : [];
+  const detailVariantClasses =
+    layoutVariant === 'detail'
+      ? [
+          'user-header-card--detail',
+          resolvedAvatarRole === 'provider'
+            ? 'user-header-card--detail-provider'
+            : 'user-header-card--detail-client',
+        ]
+      : [];
 
   const card = isInlineProofLayout ? (
-    <div className={['profile-card', 'user-header-card', 'user-header-card--inline-proof', ...detailVariantClasses].join(' ')}>
+    <div
+      className={[
+        'profile-card',
+        'user-header-card',
+        'user-header-card--inline-proof',
+        ...detailVariantClasses,
+      ].join(' ')}
+    >
       {headerAction ? <div className="user-header-card__header-action">{headerAction}</div> : null}
       {mainRow}
       {trustBlock}
       {footerRow}
     </div>
   ) : adaptiveDesktop ? (
-    <div className={['profile-card', 'user-header-card', 'user-header-card--adaptive', ...detailVariantClasses].join(' ')}>
+    <div
+      className={[
+        'profile-card',
+        'user-header-card',
+        'user-header-card--adaptive',
+        ...detailVariantClasses,
+      ].join(' ')}
+    >
       {headerAction ? <div className="user-header-card__header-action">{headerAction}</div> : null}
       <div className="user-header-card__identity">
         {avatarNode}
         {mainContent}
       </div>
       {showRating ? (
-        <div className="profile-rating-stack user-header-card__rating">
-          {ratingNode}
-        </div>
+        <div className="profile-rating-stack user-header-card__rating">{ratingNode}</div>
       ) : null}
     </div>
   ) : (
@@ -347,7 +367,11 @@ export function UserHeaderCard({
 
   if (href) {
     return (
-      <Link href={href} prefetch={false} className={`user-header-card__link ${className ?? ''}`.trim()}>
+      <Link
+        href={href}
+        prefetch={false}
+        className={`user-header-card__link ${className ?? ''}`.trim()}
+      >
         {card}
       </Link>
     );

@@ -30,7 +30,7 @@
 
 @layer components {
   .dc-surface,
-.surface-card {
+  .surface-card {
     background: var(--color-surface);
     border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-xl);
@@ -77,7 +77,7 @@
   }
 
   .app-muted,
-.surface-muted {
+  .surface-muted {
     background: var(--color-surface-muted);
     border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-xl);

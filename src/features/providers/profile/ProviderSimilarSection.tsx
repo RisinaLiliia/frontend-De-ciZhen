@@ -19,16 +19,25 @@ export function ProviderSimilarSection({ t, title, hint, cards }: ProviderSimila
       <h3 className="request-detail__section-title">{title}</h3>
       {hint ? <p className="request-detail__similar-note">{hint}</p> : null}
       {cards.length === 0 ? (
-        <p className="request-detail__similar-note">{t(I18N_KEYS.requestsPage.emptyProvidersFilteredHint)}</p>
+        <p className="request-detail__similar-note">
+          {t(I18N_KEYS.requestsPage.emptyProvidersFilteredHint)}
+        </p>
       ) : (
         <>
           <div className="provider-list">
             {cards.map((item) => (
-              <ProviderCard key={item.id} provider={item} className="provider-card--similar-mobile-minimal" />
+              <ProviderCard
+                key={item.id}
+                provider={item}
+                className="provider-card--similar-mobile-minimal"
+              />
             ))}
           </div>
           <div className="request-detail__similar-footer">
-            <MoreDotsLink href="/workspace?section=providers" label={t(I18N_KEYS.requestDetails.showAll)} />
+            <MoreDotsLink
+              href="/workspace?section=providers"
+              label={t(I18N_KEYS.requestDetails.showAll)}
+            />
           </div>
         </>
       )}

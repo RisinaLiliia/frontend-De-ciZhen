@@ -2,7 +2,10 @@ export { useWorkspaceRouteState } from './orchestration/useWorkspaceRouteState';
 export { WorkspacePageLayout } from './shell/WorkspacePageLayout';
 export type { PublicWorkspaceSection } from './navigation/resolveActiveWorkspaceSection';
 export { workspaceNavigationItems } from './navigation/workspaceNavigation.config';
-export type { WorkspaceNavigationItem, WorkspaceNavigationSection } from './navigation/workspaceNavigation.config';
+export type {
+  WorkspaceNavigationItem,
+  WorkspaceNavigationSection,
+} from './navigation/workspaceNavigation.config';
 export {
   buildWorkspaceSectionRenderModel,
   getWorkspaceSectionContract,
@@ -16,11 +19,21 @@ export type {
   WorkspaceSectionRailPolicy,
 } from './navigation/workspaceSection.contract';
 
-export { PublicContent, ProofReviewCard, WorkspaceContent, WorkspacePrivateIntro, WorkspacePublicIntro } from './workspace.lazy';
+export {
+  PublicContent,
+  ProofReviewCard,
+  WorkspaceContent,
+  WorkspacePrivateIntro,
+  WorkspacePublicIntro,
+} from './workspace.lazy';
 export { WorkspaceOverviewMain } from './overview';
 export { WorkspacePublicDemandMapPanel } from './demand-map';
 export { StatisticsExperience, useWorkspaceStatisticsModel } from './stats';
-export { WorkspaceProvidersRail, WorkspaceProvidersSection, WorkspaceTopProvidersAside } from './providers';
+export {
+  WorkspaceProvidersRail,
+  WorkspaceProvidersSection,
+  WorkspaceTopProvidersAside,
+} from './providers';
 export { WorkspaceProfileRail, WorkspaceProfileSection } from './profile';
 export {
   WorkspaceMobileNavigation,
@@ -30,10 +43,7 @@ export {
   WorkspaceSectionHeader,
   WorkspaceTopBar,
 } from './shell';
-export type {
-  WorkspaceSectionLayout,
-  WorkspaceSectionRenderModel,
-} from './shell';
+export type { WorkspaceSectionLayout, WorkspaceSectionRenderModel } from './shell';
 
 export {
   WorkspaceBadge,

@@ -4,9 +4,15 @@
   .workspace-statistics-ki,
   .workspace-statistics-ki-tokens {
     --workspace-ai-card-chip-height: var(--workspace-statistics-chip-height, 20px);
-    --workspace-ai-card-chip-pad-inline: var(--workspace-statistics-chip-pad-inline, var(--space-1-5));
+    --workspace-ai-card-chip-pad-inline: var(
+      --workspace-statistics-chip-pad-inline,
+      var(--space-1-5)
+    );
     --workspace-ai-card-chip-radius: var(--workspace-statistics-chip-radius, 999px);
-    --workspace-ai-card-chip-font-size: var(--workspace-statistics-chip-font-size, var(--app-caption-size));
+    --workspace-ai-card-chip-font-size: var(
+      --workspace-statistics-chip-font-size,
+      var(--app-caption-size)
+    );
     --workspace-ai-card-chip-font-weight: var(--workspace-statistics-chip-font-weight, 700);
     --workspace-ai-card-radius-md: var(--workspace-statistics-radius-md, var(--radius-md));
   }
@@ -72,12 +78,11 @@
     border-radius: var(--workspace-ai-card-radius-md);
     padding: var(--space-1) var(--space-1-5);
     border: 1px solid var(--surface-soft-border);
-    background:
-      linear-gradient(
-        150deg,
-        color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
-        color-mix(in oklab, var(--surface-soft-bg) 92%, var(--color-surface) 8%) 100%
-      );
+    background: linear-gradient(
+      150deg,
+      color-mix(in oklab, var(--color-surface) 95%, white 5%) 0%,
+      color-mix(in oklab, var(--surface-soft-bg) 92%, var(--color-surface) 8%) 100%
+    );
   }
 
   .workspace-statistics-ki--plain .workspace-statistics-ki__head {
@@ -154,9 +159,9 @@
   .workspace-statistics-ki--inline-action {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "stamp stamp"
-      "head head"
-      "text actions";
+      'stamp stamp'
+      'head head'
+      'text actions';
     align-items: center;
     column-gap: var(--space-3);
   }
@@ -182,7 +187,8 @@
     padding-top: 0;
   }
 
-  .workspace-ai-card--decision.workspace-statistics-ki--inline-action .workspace-ai-card__action.auth-social__btn {
+  .workspace-ai-card--decision.workspace-statistics-ki--inline-action
+    .workspace-ai-card__action.auth-social__btn {
     min-width: 0;
     white-space: nowrap;
   }
@@ -191,7 +197,8 @@
     display: grid;
     gap: var(--space-1-5);
     padding-top: var(--space-1-5);
-    border-top: 1px solid color-mix(in oklab, var(--surface-soft-border) 90%, var(--color-primary) 10%);
+    border-top: 1px solid
+      color-mix(in oklab, var(--surface-soft-border) 90%, var(--color-primary) 10%);
   }
 
   .workspace-statistics-ki--plain .workspace-statistics-ki__text {
@@ -207,10 +214,10 @@
     .workspace-statistics-ki--inline-action {
       grid-template-columns: minmax(0, 1fr);
       grid-template-areas:
-        "stamp"
-        "head"
-        "text"
-        "actions";
+        'stamp'
+        'head'
+        'text'
+        'actions';
     }
 
     .workspace-statistics-ki--inline-action .workspace-statistics-ki__actions {

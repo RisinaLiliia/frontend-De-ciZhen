@@ -34,8 +34,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20.20.0"
-          cache: "npm"
+          node-version: '20.20.0'
+          cache: 'npm'
 
       - name: Install
         run: npm ci
@@ -71,8 +71,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20.20.0"
-          cache: "npm"
+          node-version: '20.20.0'
+          cache: 'npm'
 
       - name: Install
         run: npm ci
@@ -106,8 +106,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20.20.0"
-          cache: "npm"
+          node-version: '20.20.0'
+          cache: 'npm'
 
       - name: Install
         run: npm ci

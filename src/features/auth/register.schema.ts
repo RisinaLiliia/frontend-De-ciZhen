@@ -28,9 +28,7 @@ export function buildRegisterSchema(t: Translate) {
         .regex(/[a-zа-яё]/, t('auth.passwordRuleLower'))
         .regex(/\d/, t('auth.passwordRuleDigit'))
         .regex(/[^A-Za-zА-Яа-яЁё0-9]/, t('auth.passwordRuleSymbol')),
-      confirmPassword: z
-        .string()
-        .min(1, t('auth.errorConfirmPasswordRequired')),
+      confirmPassword: z.string().min(1, t('auth.errorConfirmPasswordRequired')),
       acceptPrivacyPolicy: z
         .boolean()
         .refine((v) => v === true, t('auth.errorAcceptPolicyRequired')),

@@ -104,4 +104,5 @@ export type RequestsExplorerRequestsContentProps = {
   formatPrice: Intl.NumberFormat;
   listDensity?: RequestsListDensity;
   onListDensityChange?: (value: RequestsListDensity) => void;
-} & RequestsExplorerSharedFilters & RequestsExplorerCatalogIndex;
+} & RequestsExplorerSharedFilters &
+  RequestsExplorerCatalogIndex;

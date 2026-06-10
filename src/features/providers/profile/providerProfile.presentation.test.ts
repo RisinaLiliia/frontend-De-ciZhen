@@ -31,7 +31,9 @@ describe('providerProfile.presentation', () => {
   });
 
   it('builds city keys by cityId first, then cityName', () => {
-    expect(getProviderCityKey(provider({ cityId: 'Berlin-Id', cityName: 'Berlin' }))).toBe('id:berlin-id');
+    expect(getProviderCityKey(provider({ cityId: 'Berlin-Id', cityName: 'Berlin' }))).toBe(
+      'id:berlin-id',
+    );
     expect(getProviderCityKey(provider({ cityName: 'Berlin' }))).toBe('name:berlin');
     expect(getProviderCityKey(provider({}))).toBe('');
   });

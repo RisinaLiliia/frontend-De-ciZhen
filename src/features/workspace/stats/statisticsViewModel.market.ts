@@ -31,10 +31,7 @@ export function buildCityRows(
       typeof item.marketBalanceRatio === 'number' && Number.isFinite(item.marketBalanceRatio)
         ? item.marketBalanceRatio
         : null,
-    score:
-      typeof item.score === 'number' && Number.isFinite(item.score)
-        ? item.score
-        : null,
+    score: typeof item.score === 'number' && Number.isFinite(item.score) ? item.score : null,
     rank:
       typeof item.rank === 'number' && Number.isFinite(item.rank)
         ? Math.max(1, Math.round(item.rank))
@@ -50,12 +47,7 @@ export function buildOpportunityRadar(params: {
   formatCurrency: Intl.NumberFormat;
   source: WorkspaceStatisticsDecisionDashboardDto['opportunityRadar'] | undefined;
 }): WorkspaceStatisticsOpportunityRadarItemView[] {
-  const {
-    copy,
-    localeTag,
-    formatCurrency,
-    source,
-  } = params;
+  const { copy, localeTag, formatCurrency, source } = params;
   if (!source?.length) return [];
 
   const fallbackCategory = copy.fallbackGeneralCategoryLabel;

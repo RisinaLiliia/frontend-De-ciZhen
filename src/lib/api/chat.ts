@@ -24,8 +24,7 @@ function sortMessagesAscending<T extends { createdAt: string }>(items: T[]) {
   return items
     .slice()
     .sort(
-      (left, right) =>
-        new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime(),
+      (left, right) => new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime(),
     );
 }
 

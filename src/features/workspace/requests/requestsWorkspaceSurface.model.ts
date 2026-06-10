@@ -2,7 +2,10 @@ import type { ComponentProps } from 'react';
 
 import { WorkspaceRequestsActionRail } from '@/features/workspace/ai-rail/WorkspaceRequestsActionRail';
 import type { MyRequestsSummaryItem } from '@/features/workspace/requests/myRequestsView.model';
-import type { WorkspaceRequestsDecisionPanelDto, WorkspaceRequestsSidePanelDto } from '@/lib/api/dto/workspace';
+import type {
+  WorkspaceRequestsDecisionPanelDto,
+  WorkspaceRequestsSidePanelDto,
+} from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 
 export type RequestsWorkspaceSurfaceVariant = 'private' | 'market';

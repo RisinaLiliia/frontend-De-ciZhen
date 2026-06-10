@@ -57,7 +57,9 @@ describe('AuthRouteModal', () => {
   it('traps focus with Tab/Shift+Tab inside modal', () => {
     renderHarness(true);
 
-    const closeButton = document.querySelector('.auth-route-modal__close') as HTMLButtonElement | null;
+    const closeButton = document.querySelector(
+      '.auth-route-modal__close',
+    ) as HTMLButtonElement | null;
     const saveButton = screen.getByRole('button', { name: 'Save' });
     expect(closeButton).not.toBeNull();
 
@@ -100,4 +102,3 @@ describe('AuthRouteModal', () => {
     expect(document.activeElement).toBe(screen.getByTestId('outside-focus'));
   });
 });
-

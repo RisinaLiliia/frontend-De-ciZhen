@@ -38,13 +38,7 @@ export function useWorkspacePublicRequestsSection({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const {
-    t,
-    locale,
-    isAuthed,
-    isWorkspaceAuthed,
-    routeState,
-  } = branch;
+  const { t, locale, isAuthed, isWorkspaceAuthed, routeState } = branch;
   const {
     activePublicSection,
     activeWorkspaceTab,
@@ -61,10 +55,7 @@ export function useWorkspacePublicRequestsSection({
     shouldLoadCatalog: enabled,
     activePublicSection,
   });
-  const {
-    page: publicPage,
-    setPage: setPublicPage,
-  } = filters;
+  const { page: publicPage, setPage: setPublicPage } = filters;
 
   const data = useWorkspaceData({
     enabled,
@@ -100,12 +91,12 @@ export function useWorkspacePublicRequestsSection({
     () => resolveRequestsListDensityForPageSize(filters.limit),
     [filters.limit],
   );
-const marketTotalPages = React.useMemo(() => {
-  const total = marketResponse?.list?.total ?? 0;
-  const limit = marketResponse?.list?.limit ?? 1;
+  const marketTotalPages = React.useMemo(() => {
+    const total = marketResponse?.list?.total ?? 0;
+    const limit = marketResponse?.list?.limit ?? 1;
 
-  return Math.max(1, Math.ceil(total / Math.max(1, limit)));
-}, [marketResponse]);
+    return Math.max(1, Math.ceil(total / Math.max(1, limit)));
+  }, [marketResponse]);
   const decisionPanel = marketResponse?.decisionPanel ?? null;
   const marketDecisionState = React.useMemo<ActiveDecisionState>(
     () => ({
@@ -116,14 +107,14 @@ const marketTotalPages = React.useMemo(() => {
     [],
   );
   const marketPagination = React.useMemo(() => {
-  if (!marketResponse?.list) return null;
+    if (!marketResponse?.list) return null;
 
-  return {
-    page: marketResponse.list.page ?? 1,
-    totalPages: marketTotalPages,
-    onPageChange: setPublicPage,
-  };
-}, [marketResponse, marketTotalPages, setPublicPage]);
+    return {
+      page: marketResponse.list.page ?? 1,
+      totalPages: marketTotalPages,
+      onPageChange: setPublicPage,
+    };
+  }, [marketResponse, marketTotalPages, setPublicPage]);
 
   React.useEffect(() => {
     if (!marketResponse) return;
@@ -160,15 +151,18 @@ const marketTotalPages = React.useMemo(() => {
     router.replace(buildWorkspaceHref(pathname, nextParams), { scroll: false });
   }, [pathname, router, searchParams]);
 
-  const openQueueItem = React.useCallback((requestId: string) => {
-    router.push(
-      buildWorkspaceRequestOverlayHref({
-        currentSearch: searchParams,
-        requestId,
-        scope: 'market',
-      }),
-    );
-  }, [router, searchParams]);
+  const openQueueItem = React.useCallback(
+    (requestId: string) => {
+      router.push(
+        buildWorkspaceRequestOverlayHref({
+          currentSearch: searchParams,
+          requestId,
+          scope: 'market',
+        }),
+      );
+    },
+    [router, searchParams],
+  );
 
   if (!enabled) {
     return {
@@ -180,34 +174,36 @@ const marketTotalPages = React.useMemo(() => {
   const publicMain = (
     <div className="stack-md">
       <RequestsWorkspaceBody
-        body={buildRequestsWorkspacePublicBody(buildWorkspaceRequestsSurfaceModel({
-          variant: 'market',
-          locale,
-          isWorkspaceAuthed,
-          guestLoginHref,
-          listDensity: marketListDensity,
-          pagination: marketPagination,
-          favoriteState: {
-            favoriteRequestIds,
-            pendingFavoriteRequestIds: requestUserInteractions.pendingFavoriteRequestIds,
-            onToggleRequestFavorite: requestUserInteractions.onToggleRequestFavorite,
-          },
-          model: marketModel,
-          isLoading: contractData.isWorkspaceRequestsLoading,
-          isError: contractData.isWorkspaceRequestsError,
-          decisionState: marketDecisionState,
-          decisionQueueIds: [],
-          onEnterDecisionMode: openMarketStats,
-          onOpenDecisionItem: openQueueItem,
-          onExitDecisionMode: () => {},
-          listContext: {
-            onOpenRequest: (requestId) => openQueueItem(requestId),
-            onSendOffer: (requestId) => openQueueItem(requestId),
-            onEditOffer: (requestId) => openQueueItem(requestId),
-          },
-          emptyCtaHref: '/workspace?section=requests&scope=market',
-          secondaryCtaHref: '/workspace?section=providers',
-        }))}
+        body={buildRequestsWorkspacePublicBody(
+          buildWorkspaceRequestsSurfaceModel({
+            variant: 'market',
+            locale,
+            isWorkspaceAuthed,
+            guestLoginHref,
+            listDensity: marketListDensity,
+            pagination: marketPagination,
+            favoriteState: {
+              favoriteRequestIds,
+              pendingFavoriteRequestIds: requestUserInteractions.pendingFavoriteRequestIds,
+              onToggleRequestFavorite: requestUserInteractions.onToggleRequestFavorite,
+            },
+            model: marketModel,
+            isLoading: contractData.isWorkspaceRequestsLoading,
+            isError: contractData.isWorkspaceRequestsError,
+            decisionState: marketDecisionState,
+            decisionQueueIds: [],
+            onEnterDecisionMode: openMarketStats,
+            onOpenDecisionItem: openQueueItem,
+            onExitDecisionMode: () => {},
+            listContext: {
+              onOpenRequest: (requestId) => openQueueItem(requestId),
+              onSendOffer: (requestId) => openQueueItem(requestId),
+              onEditOffer: (requestId) => openQueueItem(requestId),
+            },
+            emptyCtaHref: '/workspace?section=requests&scope=market',
+            secondaryCtaHref: '/workspace?section=providers',
+          }),
+        )}
       />
     </div>
   );

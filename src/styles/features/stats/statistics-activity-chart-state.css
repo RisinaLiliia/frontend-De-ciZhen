@@ -5,12 +5,11 @@
     height: 132px;
     border-radius: var(--radius-md);
     border: 1px solid var(--surface-soft-border);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--color-surface) 92%, transparent),
-        color-mix(in oklab, var(--color-surface) 84%, var(--color-border) 16%)
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-surface) 92%, transparent),
+      color-mix(in oklab, var(--color-surface) 84%, var(--color-border) 16%)
+    );
     padding: 10px;
   }
 
@@ -196,6 +195,4 @@
     border-color: color-mix(in oklab, var(--color-primary) 34%, var(--color-border) 66%);
     box-shadow: var(--shadow-card);
   }
-
-
 }

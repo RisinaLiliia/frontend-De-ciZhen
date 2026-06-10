@@ -3,7 +3,10 @@
 import * as React from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
-import { buildDecisionPlan, buildPersonalizedDecisionPlan } from '../statisticsDecisionEngine.utils';
+import {
+  buildDecisionPlan,
+  buildPersonalizedDecisionPlan,
+} from '../statisticsDecisionEngine.utils';
 
 export type StatisticsDecisionPlan =
   | ReturnType<typeof buildDecisionPlan>
@@ -15,7 +18,11 @@ type UseStatisticsNavigationParams = {
   selectedOpportunity: WorkspaceStatisticsModel['opportunityRadar'][number] | null;
 };
 
-export function useStatisticsNavigation({ model, decisionPlan, selectedOpportunity }: UseStatisticsNavigationParams) {
+export function useStatisticsNavigation({
+  model,
+  decisionPlan,
+  selectedOpportunity,
+}: UseStatisticsNavigationParams) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

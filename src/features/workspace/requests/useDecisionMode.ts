@@ -22,9 +22,7 @@ type UseDecisionModeResult = {
   exitDecisionMode: () => void;
 };
 
-export function useDecisionMode({
-  panel,
-}: UseDecisionModeParams): UseDecisionModeResult {
+export function useDecisionMode({ panel }: UseDecisionModeParams): UseDecisionModeResult {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -42,12 +40,15 @@ export function useDecisionMode({
     queueIds,
   });
 
-  const replaceSearch = React.useCallback((mutate: (params: URLSearchParams) => void) => {
-    const params = new URLSearchParams(searchParams.toString());
-    mutate(params);
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [pathname, router, searchParams]);
+  const replaceSearch = React.useCallback(
+    (mutate: (params: URLSearchParams) => void) => {
+      const params = new URLSearchParams(searchParams.toString());
+      mutate(params);
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
 
   React.useEffect(() => {
     if (mode !== 'decision') {
@@ -100,28 +101,34 @@ export function useDecisionMode({
     });
   }, [activeRequestIdParam, mode, queueIds, replaceSearch]);
 
-  const enterDecisionMode = React.useCallback((requestId?: string | null) => {
-    const nextActiveRequestId = requestId ?? queueIds[0] ?? null;
-    replaceSearch((params) => {
-      params.set('section', 'requests');
-      params.set('scope', 'my');
-      params.set('mode', 'decision');
-      if (nextActiveRequestId) {
-        params.set('activeRequestId', nextActiveRequestId);
-      } else {
-        params.delete('activeRequestId');
-      }
-    });
-  }, [queueIds, replaceSearch]);
+  const enterDecisionMode = React.useCallback(
+    (requestId?: string | null) => {
+      const nextActiveRequestId = requestId ?? queueIds[0] ?? null;
+      replaceSearch((params) => {
+        params.set('section', 'requests');
+        params.set('scope', 'my');
+        params.set('mode', 'decision');
+        if (nextActiveRequestId) {
+          params.set('activeRequestId', nextActiveRequestId);
+        } else {
+          params.delete('activeRequestId');
+        }
+      });
+    },
+    [queueIds, replaceSearch],
+  );
 
-  const openDecisionItem = React.useCallback((requestId: string) => {
-    replaceSearch((params) => {
-      params.set('section', 'requests');
-      params.set('scope', 'my');
-      params.set('mode', 'decision');
-      params.set('activeRequestId', requestId);
-    });
-  }, [replaceSearch]);
+  const openDecisionItem = React.useCallback(
+    (requestId: string) => {
+      replaceSearch((params) => {
+        params.set('section', 'requests');
+        params.set('scope', 'my');
+        params.set('mode', 'decision');
+        params.set('activeRequestId', requestId);
+      });
+    },
+    [replaceSearch],
+  );
 
   const exitDecisionMode = React.useCallback(() => {
     replaceSearch((params) => {

@@ -108,7 +108,10 @@ export function RequestsStatsPanel({
           <p className="typo-small">{errorLabel}</p>
         </div>
       ) : (
-        <div ref={activeContentRef} style={stableContentMinHeight ? { minHeight: stableContentMinHeight } : undefined}>
+        <div
+          ref={activeContentRef}
+          style={stableContentMinHeight ? { minHeight: stableContentMinHeight } : undefined}
+        >
           <RequestsStatsPanelBody viewModel={activeViewModel} />
         </div>
       )}

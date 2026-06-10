@@ -4,9 +4,7 @@ import * as React from 'react';
 import { useQueries } from '@tanstack/react-query';
 import type { OfferDto } from '@/lib/api/dto/offers';
 
-import {
-  buildWorkspaceOfferRequestsQuery,
-} from '@/features/workspace/data/workspaceData.queries';
+import { buildWorkspaceOfferRequestsQuery } from '@/features/workspace/data/workspaceData.queries';
 import { type buildWorkspaceRequestUserStateQueries } from '@/features/workspace/requests/workspaceRequestUserState.queries';
 import { buildWorkspaceOfferRequestIds } from '@/features/workspace/data/workspaceData.model';
 
@@ -58,9 +56,7 @@ export function useWorkspaceOfferData({
 
   const offerRequestQueryEntries = React.useMemo(
     (): Array<{ key: 'myOfferRequests'; query: WorkspaceLegacyOfferRequestsQuery }> =>
-      myOfferRequestsQuery.enabled
-        ? [{ key: 'myOfferRequests', query: myOfferRequestsQuery }]
-        : [],
+      myOfferRequestsQuery.enabled ? [{ key: 'myOfferRequests', query: myOfferRequestsQuery }] : [],
     [myOfferRequestsQuery],
   );
 
@@ -69,7 +65,11 @@ export function useWorkspaceOfferData({
   });
 
   const myOfferRequestsById =
-    (offerRequestQueryResults[0]?.data as ReturnType<typeof myOfferRequestsQuery.queryFn> extends Promise<infer TResult> ? TResult : never) ?? new Map();
+    (offerRequestQueryResults[0]?.data as ReturnType<
+      typeof myOfferRequestsQuery.queryFn
+    > extends Promise<infer TResult>
+      ? TResult
+      : never) ?? new Map();
   const isMyOfferRequestsLoading = offerRequestQueryResults[0]?.isLoading ?? false;
 
   return {

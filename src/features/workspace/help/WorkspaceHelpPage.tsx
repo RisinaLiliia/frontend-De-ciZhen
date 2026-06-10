@@ -37,15 +37,18 @@ function getWorkspaceHelpContent(locale: string) {
       faqItems: [
         {
           question: 'Where do I change theme and language?',
-          answer: 'Open Einstellungen in the left sidebar. Theme, language, and privacy now live there.',
+          answer:
+            'Open Einstellungen in the left sidebar. Theme, language, and privacy now live there.',
         },
         {
           question: 'Why does chat stay inside workspace?',
-          answer: 'Messages are part of the same operating shell so request context, navigation, and AI rail remain visible.',
+          answer:
+            'Messages are part of the same operating shell so request context, navigation, and AI rail remain visible.',
         },
         {
           question: 'Where should I start when I am unsure?',
-          answer: 'Use Dashboard or Requests first. They give the cleanest entry into active work and pending decisions.',
+          answer:
+            'Use Dashboard or Requests first. They give the cleanest entry into active work and pending decisions.',
         },
       ],
     };
@@ -79,15 +82,18 @@ function getWorkspaceHelpContent(locale: string) {
     faqItems: [
       {
         question: 'Wo ändere ich Theme und Sprache?',
-        answer: 'Öffne Einstellungen in der linken Sidebar. Theme, Sprache und Datenschutz liegen jetzt dort.',
+        answer:
+          'Öffne Einstellungen in der linken Sidebar. Theme, Sprache und Datenschutz liegen jetzt dort.',
       },
       {
         question: 'Warum bleibt der Chat im Workspace?',
-        answer: 'Nachrichten sind Teil desselben Arbeits-Shells, damit Kontext, Navigation und AI-Rail sichtbar bleiben.',
+        answer:
+          'Nachrichten sind Teil desselben Arbeits-Shells, damit Kontext, Navigation und AI-Rail sichtbar bleiben.',
       },
       {
         question: 'Wo sollte ich anfangen, wenn ich unsicher bin?',
-        answer: 'Starte mit Dashboard oder Anfragen. Dort siehst du den klarsten Einstieg in aktive Arbeit und offene Entscheidungen.',
+        answer:
+          'Starte mit Dashboard oder Anfragen. Dort siehst du den klarsten Einstieg in aktive Arbeit und offene Entscheidungen.',
       },
     ],
   };

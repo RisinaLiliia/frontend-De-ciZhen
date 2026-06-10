@@ -24,14 +24,12 @@ type WorkspacePageClientProps = {
   activeWorkspaceTab?: WorkspaceTab | null;
 };
 
-function WorkspacePageShellContent({
-  branch,
-}: {
-  branch: WorkspaceBranchProps;
-}) {
+function WorkspacePageShellContent({ branch }: { branch: WorkspaceBranchProps }) {
   const isWorkspacePublicSection = branch.routeState.isWorkspacePublicSection;
   const publicModel = useWorkspacePublicBranchModel(branch, { enabled: isWorkspacePublicSection });
-  const privateModel = useWorkspacePrivateBranchModel(branch, { enabled: !isWorkspacePublicSection });
+  const privateModel = useWorkspacePrivateBranchModel(branch, {
+    enabled: !isWorkspacePublicSection,
+  });
 
   const privateRenderMetricPayload = React.useMemo(
     () => ({
@@ -50,13 +48,13 @@ function WorkspacePageShellContent({
 
   const renderMetric = isWorkspacePublicSection
     ? {
-      scope: 'workspace.public',
-      payload: publicModel.renderMetricPayload,
-    }
+        scope: 'workspace.public',
+        payload: publicModel.renderMetricPayload,
+      }
     : {
-      scope: 'workspace.private',
-      payload: privateRenderMetricPayload,
-    };
+        scope: 'workspace.private',
+        payload: privateRenderMetricPayload,
+      };
 
   useDevRenderMetric(renderMetric.scope, () => renderMetric.payload);
 

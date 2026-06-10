@@ -90,9 +90,10 @@ function formatSidebarTime(value: string, localeTag: string) {
 
   const now = new Date();
   const sameDay = now.toDateString() === date.toDateString();
-  return new Intl.DateTimeFormat(localeTag, sameDay
-    ? { hour: '2-digit', minute: '2-digit' }
-    : { day: '2-digit', month: 'short' }).format(date);
+  return new Intl.DateTimeFormat(
+    localeTag,
+    sameDay ? { hour: '2-digit', minute: '2-digit' } : { day: '2-digit', month: 'short' },
+  ).format(date);
 }
 
 function formatMessageTime(value: string, localeTag: string) {
@@ -214,11 +215,13 @@ export function ChatWorkspacePage({
   const filter = isEmbedded
     ? 'all'
     : resolveChatListFilter(
-      searchParams.get('filter'),
-      searchParams.get('role'),
-      searchParams.get('state'),
-    );
-  const [searchInput, setSearchInput] = React.useState(isEmbedded ? '' : (searchParams.get('search') ?? ''));
+        searchParams.get('filter'),
+        searchParams.get('role'),
+        searchParams.get('state'),
+      );
+  const [searchInput, setSearchInput] = React.useState(
+    isEmbedded ? '' : (searchParams.get('search') ?? ''),
+  );
   const deferredSearch = React.useDeferredValue(searchInput.trim());
   const [isInfoOpen, setInfoOpen] = React.useState(false);
   const [composerValue, setComposerValue] = React.useState('');
@@ -267,15 +270,12 @@ export function ChatWorkspacePage({
     [conversationsQuery.data?.items, isEmbedded],
   );
   const selectedConversationFromList = React.useMemo(
-    () => (
+    () =>
       isEmbedded
         ? null
-        : (
-      conversationParam
-        ? allConversations.find((item) => item.id === conversationParam) ?? null
-        : allConversations[0] ?? null
-        )
-    ),
+        : conversationParam
+          ? (allConversations.find((item) => item.id === conversationParam) ?? null)
+          : (allConversations[0] ?? null),
     [allConversations, conversationParam, isEmbedded],
   );
   const selectedConversationQuery = useQuery({
@@ -298,21 +298,24 @@ export function ChatWorkspacePage({
     () => countUnreadConversations(allConversationsWithSelected, currentUserId),
     [allConversationsWithSelected, currentUserId],
   );
-  const selectedConversation = selectedConversationFromList ?? selectedConversationQuery.data ?? null;
+  const selectedConversation =
+    selectedConversationFromList ?? selectedConversationQuery.data ?? null;
   const firstVisibleConversationId = conversations[0]?.id ?? null;
   const selectedConversationId = selectedConversation?.id ?? null;
   const selectedUnreadCount = selectedConversation
     ? resolveConversationUnreadCount(selectedConversation, currentUserId)
     : 0;
-  const requestId = selectedConversation ? resolveConversationRequestId(selectedConversation) : null;
+  const requestId = selectedConversation
+    ? resolveConversationRequestId(selectedConversation)
+    : null;
   const offerId =
-    selectedConversation?.relatedEntity.offerId
-    ?? (selectedConversation?.relatedEntity.type === 'offer'
+    selectedConversation?.relatedEntity.offerId ??
+    (selectedConversation?.relatedEntity.type === 'offer'
       ? selectedConversation.relatedEntity.id
       : null);
   const orderId =
-    selectedConversation?.relatedEntity.orderId
-    ?? (selectedConversation?.relatedEntity.type === 'order'
+    selectedConversation?.relatedEntity.orderId ??
+    (selectedConversation?.relatedEntity.type === 'order'
       ? selectedConversation.relatedEntity.id
       : null);
 
@@ -350,7 +353,8 @@ export function ChatWorkspacePage({
       setComposerValue('');
       return;
     }
-    const nextDraft = window.localStorage.getItem(buildChatDraftStorageKey(selectedConversationId)) ?? '';
+    const nextDraft =
+      window.localStorage.getItem(buildChatDraftStorageKey(selectedConversationId)) ?? '';
     setComposerValue(nextDraft);
   }, [selectedConversationId]);
 
@@ -415,30 +419,27 @@ export function ChatWorkspacePage({
 
   const replaceOptimisticMessage = React.useCallback(
     (conversationId: string, optimisticId: string, nextMessage: ChatMessageDto) => {
-      queryClient.setQueryData<MessagesCache>(
-        ['chat', 'messages', conversationId],
-        (current) => {
-          if (!current) {
-            return {
-              pages: [{ items: [nextMessage] }],
-              pageParams: [undefined],
-            };
-          }
-
+      queryClient.setQueryData<MessagesCache>(['chat', 'messages', conversationId], (current) => {
+        if (!current) {
           return {
-            ...current,
-            pages: current.pages.map((page, pageIndex) => {
-              if (pageIndex !== 0) return page;
-              return {
-                ...page,
-                items: page.items.map((item) =>
-                  item.id === optimisticId ? { ...nextMessage, pending: false } : item,
-                ),
-              };
-            }),
+            pages: [{ items: [nextMessage] }],
+            pageParams: [undefined],
           };
-        },
-      );
+        }
+
+        return {
+          ...current,
+          pages: current.pages.map((page, pageIndex) => {
+            if (pageIndex !== 0) return page;
+            return {
+              ...page,
+              items: page.items.map((item) =>
+                item.id === optimisticId ? { ...nextMessage, pending: false } : item,
+              ),
+            };
+          }),
+        };
+      });
     },
     [queryClient],
   );
@@ -450,9 +451,10 @@ export function ChatWorkspacePage({
         (current) => {
           if (!current) return current;
           const existingIndex = current.items.findIndex((item) => item.id === conversation.id);
-          const nextItems = existingIndex >= 0
-            ? current.items.map((item) => (item.id === conversation.id ? conversation : item))
-            : [conversation, ...current.items];
+          const nextItems =
+            existingIndex >= 0
+              ? current.items.map((item) => (item.id === conversation.id ? conversation : item))
+              : [conversation, ...current.items];
 
           nextItems.sort(
             (left, right) =>
@@ -494,10 +496,10 @@ export function ChatWorkspacePage({
 
             const items = page.items.map((item) => {
               if (
-                !replacedPending
-                && item.pending
-                && item.senderId === message.senderId
-                && item.text === message.text
+                !replacedPending &&
+                item.pending &&
+                item.senderId === message.senderId &&
+                item.text === message.text
               ) {
                 replacedPending = true;
                 return { ...message, pending: false };
@@ -545,9 +547,9 @@ export function ChatWorkspacePage({
               ...page,
               items: page.items.map((item) => {
                 if (
-                  item.senderId === event.userId
-                  || new Date(item.createdAt).getTime() > readAt
-                  || item.deliveryStatus === 'read'
+                  item.senderId === event.userId ||
+                  new Date(item.createdAt).getTime() > readAt ||
+                  item.deliveryStatus === 'read'
                 ) {
                   return item;
                 }
@@ -621,8 +623,12 @@ export function ChatWorkspacePage({
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY });
       if (selectedConversationId) {
-        await queryClient.invalidateQueries({ queryKey: ['chat', 'conversation', selectedConversationId] });
-        await queryClient.invalidateQueries({ queryKey: ['chat', 'messages', selectedConversationId] });
+        await queryClient.invalidateQueries({
+          queryKey: ['chat', 'conversation', selectedConversationId],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: ['chat', 'messages', selectedConversationId],
+        });
       }
     },
   });
@@ -632,7 +638,9 @@ export function ChatWorkspacePage({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: CONVERSATIONS_QUERY_KEY });
       if (selectedConversationId) {
-        await queryClient.invalidateQueries({ queryKey: ['chat', 'conversation', selectedConversationId] });
+        await queryClient.invalidateQueries({
+          queryKey: ['chat', 'conversation', selectedConversationId],
+        });
       }
     },
   });
@@ -642,20 +650,22 @@ export function ChatWorkspacePage({
     markReadMutation.mutate(selectedConversationId);
   }, [markReadMutation, markReadMutation.isPending, selectedConversationId, selectedUnreadCount]);
 
-  const handleSocketConversationUpdated = React.useEffectEvent((conversation: ChatConversationDto) => {
-    upsertConversationInCache(conversation);
-    queryClient.setQueryData(['chat', 'conversation', conversation.id], conversation);
-    if (conversation.id !== selectedConversationId) return;
-    if (requestId) {
-      void queryClient.invalidateQueries({ queryKey: ['chat', 'request', requestId] });
-    }
-    if (offerId) {
-      void queryClient.invalidateQueries({ queryKey: ['chat', 'offer', requestId, offerId] });
-    }
-    if (orderId) {
-      void queryClient.invalidateQueries({ queryKey: ['chat', 'order', orderId] });
-    }
-  });
+  const handleSocketConversationUpdated = React.useEffectEvent(
+    (conversation: ChatConversationDto) => {
+      upsertConversationInCache(conversation);
+      queryClient.setQueryData(['chat', 'conversation', conversation.id], conversation);
+      if (conversation.id !== selectedConversationId) return;
+      if (requestId) {
+        void queryClient.invalidateQueries({ queryKey: ['chat', 'request', requestId] });
+      }
+      if (offerId) {
+        void queryClient.invalidateQueries({ queryKey: ['chat', 'offer', requestId, offerId] });
+      }
+      if (orderId) {
+        void queryClient.invalidateQueries({ queryKey: ['chat', 'order', orderId] });
+      }
+    },
+  );
 
   const handleSocketMessageCreated = React.useEffectEvent((message: ChatMessageDto) => {
     applyIncomingMessage(message);
@@ -714,7 +724,9 @@ export function ChatWorkspacePage({
 
   const handleSend = React.useCallback(async () => {
     const trimmed = composerValue.trim();
-    const canSend = Boolean(trimmed && selectedConversationId && selectedConversation?.state !== 'closed');
+    const canSend = Boolean(
+      trimmed && selectedConversationId && selectedConversation?.state !== 'closed',
+    );
     if (!canSend || sendMessageMutation.isPending) return;
 
     if (selectedConversationId && typeof window !== 'undefined') {
@@ -736,29 +748,26 @@ export function ChatWorkspacePage({
   const counterpartName = selectedConversation
     ? resolveConversationDisplayName(selectedConversation, currentUserId, copy)
     : '—';
-  const counterpartPresence =
-    counterpart?.isOnline
-      ? copy.onlineNow
-      : counterpart?.lastSeenAt
-        ? formatLastSeen(counterpart.lastSeenAt, localeTag, copy.lastSeen)
-        : selectedConversation
-          ? resolveConversationSubline(selectedConversation, currentUserId, copy)
-          : copy.threadIdleHint;
+  const counterpartPresence = counterpart?.isOnline
+    ? copy.onlineNow
+    : counterpart?.lastSeenAt
+      ? formatLastSeen(counterpart.lastSeenAt, localeTag, copy.lastSeen)
+      : selectedConversation
+        ? resolveConversationSubline(selectedConversation, currentUserId, copy)
+        : copy.threadIdleHint;
   const relatedEntityTitle =
-    requestQuery.data?.title
-    ?? selectedConversation?.relatedEntity.title
-    ?? null;
+    requestQuery.data?.title ?? selectedConversation?.relatedEntity.title ?? null;
   const contextStatus =
-    orderQuery.data?.status
-    ?? offerQuery.data?.status
-    ?? requestQuery.data?.status
-    ?? selectedConversation?.relatedEntity.status
-    ?? copy.statusUnknown;
+    orderQuery.data?.status ??
+    offerQuery.data?.status ??
+    requestQuery.data?.status ??
+    selectedConversation?.relatedEntity.status ??
+    copy.statusUnknown;
   const contextAmount =
-    offerQuery.data?.amount
-    ?? requestQuery.data?.price
-    ?? selectedConversation?.relatedEntity.amount
-    ?? null;
+    offerQuery.data?.amount ??
+    requestQuery.data?.price ??
+    selectedConversation?.relatedEntity.amount ??
+    null;
   const requestHref = requestId
     ? buildWorkspaceRequestDetailHref({ currentSearch: '', requestId })
     : null;
@@ -788,116 +797,119 @@ export function ChatWorkspacePage({
   const showSearchEmpty =
     conversations.length === 0 && (Boolean(deferredSearch) || filter !== 'all');
   const composerDisabled = !selectedConversation || selectedConversation.state === 'closed';
-  const infoDrawerOverlay = selectedConversation && isInfoOpen && typeof document !== 'undefined'
-    ? createPortal(
-        <>
-          <button
-            type="button"
-            className={styles.drawerBackdrop}
-            aria-label={copy.close}
-            onClick={() => setInfoOpen(false)}
-          />
-          <aside className={styles.infoDrawer} role="dialog" aria-modal="true" aria-label={copy.infoTitle}>
-            <div className={styles.infoDrawerHeader}>
-              <h2 className={styles.infoDrawerTitle}>{copy.infoTitle}</h2>
-              <Button
-                variant="ghost"
-                fullWidth={false}
-                onClick={() => setInfoOpen(false)}
-                className={styles.infoDrawerClose}
-              >
-                {copy.close}
-              </Button>
-            </div>
+  const infoDrawerOverlay =
+    selectedConversation && isInfoOpen && typeof document !== 'undefined'
+      ? createPortal(
+          <>
+            <button
+              type="button"
+              className={styles.drawerBackdrop}
+              aria-label={copy.close}
+              onClick={() => setInfoOpen(false)}
+            />
+            <aside
+              className={styles.infoDrawer}
+              role="dialog"
+              aria-modal="true"
+              aria-label={copy.infoTitle}
+            >
+              <div className={styles.infoDrawerHeader}>
+                <h2 className={styles.infoDrawerTitle}>{copy.infoTitle}</h2>
+                <Button
+                  variant="ghost"
+                  fullWidth={false}
+                  onClick={() => setInfoOpen(false)}
+                  className={styles.infoDrawerClose}
+                >
+                  {copy.close}
+                </Button>
+              </div>
 
-            <div className={styles.infoDrawerBody}>
-              <section className={styles.infoSection}>
-                <p className={styles.infoLabel}>{copy.relatedTo}</p>
-                <h3 className={styles.infoHeadline}>
-                  {relatedEntityTitle ?? selectedConversation.relatedEntity.id}
-                </h3>
-                <div className={styles.infoMetaList}>
-                  <div className={styles.infoMetaRow}>
-                    <span className={styles.infoMetaIcon} aria-hidden="true">
-                      <IconCheck />
-                    </span>
-                    <div>
-                      <p className={styles.infoLabel}>Status</p>
-                      <p className={styles.infoValue}>{contextStatus}</p>
+              <div className={styles.infoDrawerBody}>
+                <section className={styles.infoSection}>
+                  <p className={styles.infoLabel}>{copy.relatedTo}</p>
+                  <h3 className={styles.infoHeadline}>
+                    {relatedEntityTitle ?? selectedConversation.relatedEntity.id}
+                  </h3>
+                  <div className={styles.infoMetaList}>
+                    <div className={styles.infoMetaRow}>
+                      <span className={styles.infoMetaIcon} aria-hidden="true">
+                        <IconCheck />
+                      </span>
+                      <div>
+                        <p className={styles.infoLabel}>Status</p>
+                        <p className={styles.infoValue}>{contextStatus}</p>
+                      </div>
+                    </div>
+
+                    <div className={styles.infoMetaRow}>
+                      <span className={styles.infoMetaIcon} aria-hidden="true">
+                        <IconCalendar />
+                      </span>
+                      <div>
+                        <p className={styles.infoLabel}>Aktualisiert</p>
+                        <p className={styles.infoValue}>
+                          {formatSidebarTime(selectedConversation.updatedAt, localeTag)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className={styles.infoMetaRow}>
+                      <span className={styles.infoMetaIcon} aria-hidden="true">
+                        <IconPin />
+                      </span>
+                      <div>
+                        <p className={styles.infoLabel}>Budget</p>
+                        <p className={styles.infoValue}>
+                          {contextAmount != null
+                            ? new Intl.NumberFormat(localeTag, {
+                                style: 'currency',
+                                currency: 'EUR',
+                                maximumFractionDigits: 0,
+                              }).format(contextAmount)
+                            : copy.amountOpen}
+                        </p>
+                      </div>
                     </div>
                   </div>
+                </section>
 
-                  <div className={styles.infoMetaRow}>
-                    <span className={styles.infoMetaIcon} aria-hidden="true">
-                      <IconCalendar />
-                    </span>
-                    <div>
-                      <p className={styles.infoLabel}>Aktualisiert</p>
-                      <p className={styles.infoValue}>
-                        {formatSidebarTime(selectedConversation.updatedAt, localeTag)}
-                      </p>
+                <section className={styles.infoSection}>
+                  <p className={styles.infoLabel}>{copy.participantTitle}</p>
+                  <div className={styles.participantCard}>
+                    <ConversationAvatar name={counterpartName} isOnline={counterpart?.isOnline} />
+                    <div className={styles.participantBody}>
+                      <h3 className={styles.participantName}>{counterpartName}</h3>
+                      <p className={styles.participantMeta}>{counterpartPresence}</p>
                     </div>
                   </div>
+                </section>
 
-                  <div className={styles.infoMetaRow}>
-                    <span className={styles.infoMetaIcon} aria-hidden="true">
-                      <IconPin />
-                    </span>
-                    <div>
-                      <p className={styles.infoLabel}>Budget</p>
-                      <p className={styles.infoValue}>
-                        {contextAmount != null
-                          ? new Intl.NumberFormat(localeTag, {
-                              style: 'currency',
-                              currency: 'EUR',
-                              maximumFractionDigits: 0,
-                            }).format(contextAmount)
-                          : copy.amountOpen}
-                      </p>
-                    </div>
+                {!isEmbedded ? (
+                  <div className={styles.infoActions}>
+                    {requestHref ? (
+                      <Link href={requestHref} prefetch={false} className="btn-secondary">
+                        {copy.openRequest}
+                      </Link>
+                    ) : null}
+                    {profileHref ? (
+                      <Link href={profileHref} prefetch={false} className="btn-ghost">
+                        {copy.openProfile}
+                      </Link>
+                    ) : null}
+                    {secondaryHref && secondaryLabel ? (
+                      <Link href={secondaryHref} prefetch={false} className="btn-ghost">
+                        {secondaryLabel}
+                      </Link>
+                    ) : null}
                   </div>
-                </div>
-              </section>
-
-              <section className={styles.infoSection}>
-                <p className={styles.infoLabel}>{copy.participantTitle}</p>
-                <div className={styles.participantCard}>
-                  <ConversationAvatar
-                    name={counterpartName}
-                    isOnline={counterpart?.isOnline}
-                  />
-                  <div className={styles.participantBody}>
-                    <h3 className={styles.participantName}>{counterpartName}</h3>
-                    <p className={styles.participantMeta}>{counterpartPresence}</p>
-                  </div>
-                </div>
-              </section>
-
-              {!isEmbedded ? (
-                <div className={styles.infoActions}>
-                  {requestHref ? (
-                    <Link href={requestHref} prefetch={false} className="btn-secondary">
-                      {copy.openRequest}
-                    </Link>
-                  ) : null}
-                  {profileHref ? (
-                    <Link href={profileHref} prefetch={false} className="btn-ghost">
-                      {copy.openProfile}
-                    </Link>
-                  ) : null}
-                  {secondaryHref && secondaryLabel ? (
-                    <Link href={secondaryHref} prefetch={false} className="btn-ghost">
-                      {secondaryLabel}
-                    </Link>
-                  ) : null}
-                </div>
-              ) : null}
-            </div>
-          </aside>
-        </>,
-        document.body,
-      )
-    : null;
+                ) : null}
+              </div>
+            </aside>
+          </>,
+          document.body,
+        )
+      : null;
 
   return (
     <RequireAuth>
@@ -908,134 +920,158 @@ export function ChatWorkspacePage({
           selectedConversation ? styles.shellThreadSelected : '',
           isEmbedded ? styles.shellEmbedded : '',
           className ?? '',
-        ].filter(Boolean).join(' ')}
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         {!isEmbedded ? (
-        <aside className={styles.sidebarPane}>
-          <div className={styles.sidebarHeader}>
-            <div className={styles.sidebarTitleRow}>
-              <h1 className={styles.sidebarTitle}>{copy.title}</h1>
-              {totalUnread > 0 ? (
-                <span className={styles.sidebarBadge}>{Math.min(totalUnread, 99)}{totalUnread > 99 ? '+' : ''}</span>
-              ) : null}
+          <aside className={styles.sidebarPane}>
+            <div className={styles.sidebarHeader}>
+              <div className={styles.sidebarTitleRow}>
+                <h1 className={styles.sidebarTitle}>{copy.title}</h1>
+                {totalUnread > 0 ? (
+                  <span className={styles.sidebarBadge}>
+                    {Math.min(totalUnread, 99)}
+                    {totalUnread > 99 ? '+' : ''}
+                  </span>
+                ) : null}
+              </div>
+
+              <label className={styles.searchField}>
+                <span className={styles.searchIcon} aria-hidden="true">
+                  <IconSearch />
+                </span>
+                <Input
+                  aria-label={copy.searchLabel}
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  placeholder={copy.searchPlaceholder}
+                  className={styles.searchInput}
+                />
+              </label>
+
+              <div className={styles.filterRow} role="tablist" aria-label={copy.title}>
+                {listFilters.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={filter === item.key}
+                    className={`${styles.filterChip} ${filter === item.key ? styles.filterChipActive : ''}`.trim()}
+                    onClick={() =>
+                      updateRoute({ filter: item.key, conversation: selectedConversationId })
+                    }
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <label className={styles.searchField}>
-              <span className={styles.searchIcon} aria-hidden="true">
-                <IconSearch />
-              </span>
-              <Input
-                aria-label={copy.searchLabel}
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-                placeholder={copy.searchPlaceholder}
-                className={styles.searchInput}
-              />
-            </label>
+            <div className={styles.sidebarBody}>
+              {conversationsQuery.isLoading ? (
+                <SidebarSkeleton />
+              ) : showSearchEmpty ? (
+                <div className={styles.sidebarEmptyState}>
+                  <h2 className={styles.emptyTitle}>{copy.listSearchEmptyTitle}</h2>
+                  <p className={styles.emptyHint}>{copy.listSearchEmptyHint}</p>
+                </div>
+              ) : !hasConversations ? (
+                <div className={styles.sidebarEmptyState}>
+                  <h2 className={styles.emptyTitle}>{copy.listEmptyTitle}</h2>
+                  <p className={styles.emptyHint}>{copy.listEmptyHint}</p>
+                </div>
+              ) : (
+                <div className={styles.sidebarList} role="listbox" aria-label={copy.title}>
+                  {conversations.map((conversation, index) => {
+                    const unread = resolveConversationUnreadCount(conversation, currentUserId);
+                    const active = conversation.id === selectedConversationId;
+                    const displayName = resolveConversationDisplayName(
+                      conversation,
+                      currentUserId,
+                      copy,
+                    );
+                    const preview = resolveConversationPreview(conversation, copy);
+                    const subline = resolveConversationSubline(conversation, currentUserId, copy);
+                    const counterpartParticipant = resolveConversationCounterpart(
+                      conversation,
+                      currentUserId,
+                    );
+                    const nameId = `conversation-name-${conversation.id}`;
+                    const previewId = `conversation-preview-${conversation.id}`;
+                    const sublineId = `conversation-subline-${conversation.id}`;
+                    return (
+                      <button
+                        key={conversation.id}
+                        type="button"
+                        role="option"
+                        aria-selected={active}
+                        aria-labelledby={nameId}
+                        aria-describedby={`${previewId} ${sublineId}`}
+                        className={`${styles.conversationItem} ${active ? styles.conversationItemActive : ''}`.trim()}
+                        onClick={() => updateRoute({ conversation: conversation.id, filter })}
+                        onKeyDown={(event) => {
+                          if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+                          event.preventDefault();
+                          const delta = event.key === 'ArrowDown' ? 1 : -1;
+                          const next = conversations[index + delta];
+                          if (next) updateRoute({ conversation: next.id, filter });
+                        }}
+                      >
+                        <ConversationAvatar
+                          name={displayName}
+                          isOnline={counterpartParticipant?.isOnline}
+                        />
 
-            <div className={styles.filterRow} role="tablist" aria-label={copy.title}>
-              {listFilters.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  role="tab"
-                  aria-selected={filter === item.key}
-                  className={`${styles.filterChip} ${filter === item.key ? styles.filterChipActive : ''}`.trim()}
-                  onClick={() => updateRoute({ filter: item.key, conversation: selectedConversationId })}
-                >
-                  {item.label}
-                </button>
-              ))}
+                        <div className={styles.conversationBody}>
+                          <div className={styles.conversationTopRow}>
+                            <p
+                              id={nameId}
+                              className={`${styles.conversationName} ${unread > 0 ? styles.conversationNameUnread : ''}`.trim()}
+                            >
+                              {displayName}
+                            </p>
+                            <span className={styles.conversationTime}>
+                              {formatSidebarTime(
+                                conversation.lastMessage?.createdAt ?? conversation.updatedAt,
+                                localeTag,
+                              )}
+                            </span>
+                          </div>
+
+                          <div className={styles.conversationBottomRow}>
+                            <p id={previewId} className={styles.conversationPreview}>
+                              <span className={styles.conversationTag}>
+                                {resolveConversationEntityLabel(copy, conversation)}
+                              </span>
+                              <span className={styles.conversationPreviewText}>{preview}</span>
+                            </p>
+                            {unread > 0 ? (
+                              <span
+                                className={styles.unreadBadge}
+                                aria-label={`${unread} ${copy.unreadShort}`}
+                              >
+                                {Math.min(unread, 99)}
+                              </span>
+                            ) : null}
+                          </div>
+
+                          <p id={sublineId} className={styles.conversationSubline}>
+                            {subline}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          </div>
-
-          <div className={styles.sidebarBody}>
-            {conversationsQuery.isLoading ? (
-              <SidebarSkeleton />
-            ) : showSearchEmpty ? (
-              <div className={styles.sidebarEmptyState}>
-                <h2 className={styles.emptyTitle}>{copy.listSearchEmptyTitle}</h2>
-                <p className={styles.emptyHint}>{copy.listSearchEmptyHint}</p>
-              </div>
-            ) : !hasConversations ? (
-              <div className={styles.sidebarEmptyState}>
-                <h2 className={styles.emptyTitle}>{copy.listEmptyTitle}</h2>
-                <p className={styles.emptyHint}>{copy.listEmptyHint}</p>
-              </div>
-            ) : (
-              <div className={styles.sidebarList} role="listbox" aria-label={copy.title}>
-                {conversations.map((conversation, index) => {
-                  const unread = resolveConversationUnreadCount(conversation, currentUserId);
-                  const active = conversation.id === selectedConversationId;
-                  const displayName = resolveConversationDisplayName(conversation, currentUserId, copy);
-                  const preview = resolveConversationPreview(conversation, copy);
-                  const subline = resolveConversationSubline(conversation, currentUserId, copy);
-                  const counterpartParticipant = resolveConversationCounterpart(conversation, currentUserId);
-                  const nameId = `conversation-name-${conversation.id}`;
-                  const previewId = `conversation-preview-${conversation.id}`;
-                  const sublineId = `conversation-subline-${conversation.id}`;
-                  return (
-                    <button
-                      key={conversation.id}
-                      type="button"
-                      role="option"
-                      aria-selected={active}
-                      aria-labelledby={nameId}
-                      aria-describedby={`${previewId} ${sublineId}`}
-                      className={`${styles.conversationItem} ${active ? styles.conversationItemActive : ''}`.trim()}
-                      onClick={() => updateRoute({ conversation: conversation.id, filter })}
-                      onKeyDown={(event) => {
-                        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
-                        event.preventDefault();
-                        const delta = event.key === 'ArrowDown' ? 1 : -1;
-                        const next = conversations[index + delta];
-                        if (next) updateRoute({ conversation: next.id, filter });
-                      }}
-                    >
-                      <ConversationAvatar
-                        name={displayName}
-                        isOnline={counterpartParticipant?.isOnline}
-                      />
-
-                      <div className={styles.conversationBody}>
-                        <div className={styles.conversationTopRow}>
-                          <p
-                            id={nameId}
-                            className={`${styles.conversationName} ${unread > 0 ? styles.conversationNameUnread : ''}`.trim()}
-                          >
-                            {displayName}
-                          </p>
-                          <span className={styles.conversationTime}>
-                            {formatSidebarTime(conversation.lastMessage?.createdAt ?? conversation.updatedAt, localeTag)}
-                          </span>
-                        </div>
-
-                        <div className={styles.conversationBottomRow}>
-                          <p id={previewId} className={styles.conversationPreview}>
-                            <span className={styles.conversationTag}>
-                              {resolveConversationEntityLabel(copy, conversation)}
-                            </span>
-                            <span className={styles.conversationPreviewText}>{preview}</span>
-                          </p>
-                          {unread > 0 ? (
-                            <span className={styles.unreadBadge} aria-label={`${unread} ${copy.unreadShort}`}>
-                              {Math.min(unread, 99)}
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <p id={sublineId} className={styles.conversationSubline}>{subline}</p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </aside>
+          </aside>
         ) : null}
 
-        <section className={`${styles.threadPane} ${isEmbedded ? styles.threadPaneEmbedded : ''}`.trim()}>
+        <section
+          className={`${styles.threadPane} ${isEmbedded ? styles.threadPaneEmbedded : ''}`.trim()}
+        >
           {!selectedConversation ? (
             <div className={`${styles.threadEmptyState} ${styles.threadEmptyStateCentered}`.trim()}>
               <h2 className={styles.emptyTitle}>
@@ -1059,10 +1095,7 @@ export function ChatWorkspacePage({
                     <IconChevronLeft />
                   </button>
 
-                  <ConversationAvatar
-                    name={counterpartName}
-                    isOnline={counterpart?.isOnline}
-                  />
+                  <ConversationAvatar name={counterpartName} isOnline={counterpart?.isOnline} />
 
                   <div className={styles.threadHeaderBody}>
                     <h2 className={styles.threadTitle}>{counterpartName}</h2>
@@ -1081,7 +1114,7 @@ export function ChatWorkspacePage({
                 </Button>
               </header>
 
-              {(relatedEntityTitle || contextStatus) ? (
+              {relatedEntityTitle || contextStatus ? (
                 <div className={styles.contextBar}>
                   <span className={styles.contextBarLabel}>{copy.relatedTo}</span>
                   <span className={styles.contextBarText}>
@@ -1092,7 +1125,12 @@ export function ChatWorkspacePage({
                 </div>
               ) : null}
 
-              <div ref={messagesViewportRef} className={styles.messagesScroll} role="log" aria-live="polite">
+              <div
+                ref={messagesViewportRef}
+                className={styles.messagesScroll}
+                role="log"
+                aria-live="polite"
+              >
                 {messagesQuery.isLoading ? (
                   <MessageSkeleton />
                 ) : (
@@ -1127,7 +1165,9 @@ export function ChatWorkspacePage({
                               key={`${day.dayKey}-${group.senderId}-${groupIndex}`}
                               className={`${styles.messageRow} ${group.own ? styles.messageRowOwn : ''}`.trim()}
                             >
-                              <div className={`${styles.messageStack} ${group.own ? styles.messageStackOwn : ''}`.trim()}>
+                              <div
+                                className={`${styles.messageStack} ${group.own ? styles.messageStackOwn : ''}`.trim()}
+                              >
                                 {group.messages.map((message, messageIndex) => {
                                   const isLast = messageIndex === group.messages.length - 1;
                                   return (
@@ -1157,7 +1197,9 @@ export function ChatWorkspacePage({
 
                                       {isLast ? (
                                         <div className={styles.messageMeta}>
-                                          <span>{formatMessageTime(message.createdAt, localeTag)}</span>
+                                          <span>
+                                            {formatMessageTime(message.createdAt, localeTag)}
+                                          </span>
                                           {group.own ? (
                                             <span>
                                               {message.pending
@@ -1206,7 +1248,9 @@ export function ChatWorkspacePage({
                     type="button"
                     className={styles.sendButton}
                     onClick={() => void handleSend()}
-                    disabled={composerDisabled || !composerValue.trim() || sendMessageMutation.isPending}
+                    disabled={
+                      composerDisabled || !composerValue.trim() || sendMessageMutation.isPending
+                    }
                     aria-label={copy.composerCta}
                   >
                     <IconSend />

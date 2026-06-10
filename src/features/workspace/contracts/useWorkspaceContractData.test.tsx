@@ -72,8 +72,8 @@ describe('useWorkspaceContractData', () => {
 
     render(<Probe />);
 
-    expect(
-      screen.getByTestId('contract-data').getAttribute('data-private-fallback-loading'),
-    ).toBe('true');
+    expect(screen.getByTestId('contract-data').getAttribute('data-private-fallback-loading')).toBe(
+      'true',
+    );
   });
 });

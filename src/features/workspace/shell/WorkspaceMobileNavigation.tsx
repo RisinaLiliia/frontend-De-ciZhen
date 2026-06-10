@@ -71,8 +71,8 @@ export function WorkspaceMobileNavigation({
   const isAuthenticated = authStatus === 'authenticated';
   const chatHref = isAuthenticated ? '/workspace?section=chat' : LOGIN_CHAT_URL;
   const profileHref = isAuthenticated ? '/workspace?section=profile' : AUTH_PROFILE_FALLBACK_URL;
-  const isCreateOverlayActive = searchParams.get('mode') === 'create'
-    || searchParams.get('requestCreate') === '1';
+  const isCreateOverlayActive =
+    searchParams.get('mode') === 'create' || searchParams.get('requestCreate') === '1';
   const dockItems: WorkspaceNavigationDockItem[] = [
     {
       key: 'dashboard',
@@ -144,7 +144,9 @@ export function WorkspaceMobileNavigation({
         onClick={() => setOpen(false)}
       >
         <Image src="/logo.svg" alt="De’ciZhen" className="brand__logo" width={26} height={26} />
-        <span id={titleId} className="brand__text truncate">De’ciZhen</span>
+        <span id={titleId} className="brand__text truncate">
+          De’ciZhen
+        </span>
       </Link>
       <button
         ref={closeButtonRef}
@@ -160,7 +162,12 @@ export function WorkspaceMobileNavigation({
 
   if (mode === 'drawer') {
     return open ? (
-      <div className="workspace-navigation-drawer" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+      <div
+        className="workspace-navigation-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
         <button
           type="button"
           className="workspace-navigation-drawer__backdrop"
@@ -189,7 +196,12 @@ export function WorkspaceMobileNavigation({
       <WorkspaceNavigationDock items={dockItems} ariaLabel={t(I18N_KEYS.auth.navigationLabel)} />
 
       {open ? (
-        <div className="workspace-navigation-drawer" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+        <div
+          className="workspace-navigation-drawer"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+        >
           <button
             type="button"
             className="workspace-navigation-drawer__backdrop"

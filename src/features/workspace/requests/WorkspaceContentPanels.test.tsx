@@ -55,13 +55,17 @@ describe('WorkspaceContentPanels', () => {
     queryString = 'section=profile';
     renderPanels();
 
-    expect(screen.getByTestId('workspace-profile-form').getAttribute('data-viewer-mode')).toBe('provider');
+    expect(screen.getByTestId('workspace-profile-form').getAttribute('data-viewer-mode')).toBe(
+      'provider',
+    );
   });
 
   it('renders customer profile form when viewerMode=customer', () => {
     queryString = 'section=profile&viewerMode=customer';
     renderPanels();
 
-    expect(screen.getByTestId('workspace-profile-form').getAttribute('data-viewer-mode')).toBe('customer');
+    expect(screen.getByTestId('workspace-profile-form').getAttribute('data-viewer-mode')).toBe(
+      'customer',
+    );
   });
 });

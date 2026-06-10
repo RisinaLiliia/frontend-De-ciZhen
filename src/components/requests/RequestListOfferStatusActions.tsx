@@ -7,7 +7,10 @@ import { IconBriefcase, IconChat } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { getStatusBadgeClass } from '@/lib/statusBadge';
 import { DEFAULT_PRIVATE_WORKSPACE_REQUESTS_HREF } from '@/features/workspace/state';
-import type { RequestListStatusActions, RequestListStatusPresentation } from './requestListStatus.types';
+import type {
+  RequestListStatusActions,
+  RequestListStatusPresentation,
+} from './requestListStatus.types';
 
 type RequestListOfferStatusActionsProps = {
   status: RequestListStatusPresentation;
@@ -18,13 +21,7 @@ export function RequestListOfferStatusActions({
   status,
   actions,
 }: RequestListOfferStatusActionsProps) {
-  const {
-    t,
-    onSendOffer,
-    onEditOffer,
-    onWithdrawOffer,
-    onOpenChatThread,
-  } = actions;
+  const { t, onSendOffer, onEditOffer, onWithdrawOffer, onOpenChatThread } = actions;
   const offerId = status.itemOffer?.id;
   const chatOffer = status.itemOffer;
 

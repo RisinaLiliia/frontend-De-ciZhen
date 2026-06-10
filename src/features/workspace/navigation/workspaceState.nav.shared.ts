@@ -16,11 +16,13 @@ export function normalizeWorkspaceNavCount(value: number) {
 }
 
 export function isWorkspacePublicSection(value: PublicWorkspaceSection | null) {
-  return value === 'requests'
-    || value === 'providers'
-    || value === 'stats'
-    || value === 'profile'
-    || value === 'chat';
+  return (
+    value === 'requests' ||
+    value === 'providers' ||
+    value === 'stats' ||
+    value === 'profile' ||
+    value === 'chat'
+  );
 }
 
 export function buildWorkspaceNavHeader({ t, userName }: BuildWorkspaceNavHeaderArgs) {

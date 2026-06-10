@@ -34,16 +34,21 @@ describe('api http client', () => {
     setAccessToken('expired-token');
 
     const fetchMock = vi.mocked(fetch);
-    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify({
-      message: 'Unauthorized',
-      error: 'Unauthorized',
-      statusCode: 401,
-      timestamp: new Date().toISOString(),
-      path: '/api/workspace/private',
-    }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    }));
+    fetchMock.mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          message: 'Unauthorized',
+          error: 'Unauthorized',
+          statusCode: 401,
+          timestamp: new Date().toISOString(),
+          path: '/api/workspace/private',
+        }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      ),
+    );
     refreshAccessTokenMock.mockResolvedValue({ status: 'unavailable' });
 
     await expect(apiGet('/workspace/private')).rejects.toMatchObject({
@@ -61,16 +66,21 @@ describe('api http client', () => {
     setAccessToken('expired-token');
 
     const fetchMock = vi.mocked(fetch);
-    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify({
-      message: 'Unauthorized',
-      error: 'Unauthorized',
-      statusCode: 401,
-      timestamp: new Date().toISOString(),
-      path: '/api/workspace/private',
-    }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    }));
+    fetchMock.mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          message: 'Unauthorized',
+          error: 'Unauthorized',
+          statusCode: 401,
+          timestamp: new Date().toISOString(),
+          path: '/api/workspace/private',
+        }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      ),
+    );
     refreshAccessTokenMock.mockResolvedValue({ status: 'unauthorized' });
 
     await expect(apiGet('/workspace/private')).rejects.toMatchObject({

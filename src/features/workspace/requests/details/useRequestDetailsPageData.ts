@@ -63,13 +63,16 @@ export function useRequestDetailsPageData({
       preferOwner,
     }),
     enabled: isHydrated && Boolean(requestId),
-    queryFn: async () => (await fetchManagedRequestDetails({
-      requestId: String(requestId),
-      locale,
-      qc,
-      attemptOwner,
-      preferOwner,
-    })).request,
+    queryFn: async () =>
+      (
+        await fetchManagedRequestDetails({
+          requestId: String(requestId),
+          locale,
+          qc,
+          attemptOwner,
+          preferOwner,
+        })
+      ).request,
     staleTime: 60_000,
     retry: 0,
     refetchOnWindowFocus: false,
@@ -118,10 +121,7 @@ export function useRequestDetailsPageData({
     return `${pathname}${qs ? `?${qs}` : ''}`;
   }, [pathname, searchParams]);
 
-  const {
-    pendingFavoriteRequestIds,
-    toggleRequestFavorite,
-  } = useRequestFavoriteToggle({
+  const { pendingFavoriteRequestIds, toggleRequestFavorite } = useRequestFavoriteToggle({
     isAuthed,
     nextPath,
     router,

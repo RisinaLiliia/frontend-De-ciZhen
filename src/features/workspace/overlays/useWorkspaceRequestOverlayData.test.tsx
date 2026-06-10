@@ -30,18 +30,19 @@ vi.mock('@/lib/api/withStatusFallback', () => ({
 }));
 
 vi.mock('@/lib/i18n/useT', () => ({
-  useT: () => ((key: string) => ({
-    'requestDetails.statusAccepted': 'Akzeptiert',
-    'requestDetails.statusDeclined': 'Abgelehnt',
-    'requestDetails.statusWithdrawn': 'Zurückgezogen',
-    'requestDetails.statusConfirmed': 'Bestätigt',
-    'requestDetails.statusCancelled': 'Storniert',
-    'requestDetails.statusPending': 'Ausstehend',
-    'requestDetails.ctaChat': 'Zum Chat',
-    'requestsPage.decisionPanelPriorityNew': 'Neu',
-    'workspace.stateCompletedLabel': 'Abgeschlossen',
-    'requestDetails.workspaceRequestFallbackTitle': 'Anfrage',
-  }[key] ?? key)),
+  useT: () => (key: string) =>
+    ({
+      'requestDetails.statusAccepted': 'Akzeptiert',
+      'requestDetails.statusDeclined': 'Abgelehnt',
+      'requestDetails.statusWithdrawn': 'Zurückgezogen',
+      'requestDetails.statusConfirmed': 'Bestätigt',
+      'requestDetails.statusCancelled': 'Storniert',
+      'requestDetails.statusPending': 'Ausstehend',
+      'requestDetails.ctaChat': 'Zum Chat',
+      'requestsPage.decisionPanelPriorityNew': 'Neu',
+      'workspace.stateCompletedLabel': 'Abgeschlossen',
+      'requestDetails.workspaceRequestFallbackTitle': 'Anfrage',
+    })[key] ?? key,
 }));
 
 import { fetchWorkspaceManagedRequest } from '@/features/workspace/overlays/useWorkspaceRequestOverlayActions';
@@ -68,11 +69,7 @@ function createQueryClient() {
 function renderWithQueryClient(node: React.ReactNode) {
   const queryClient = createQueryClient();
 
-  return render(
-    <QueryClientProvider client={queryClient}>
-      {node}
-    </QueryClientProvider>,
-  );
+  return render(<QueryClientProvider client={queryClient}>{node}</QueryClientProvider>);
 }
 
 function OffersProbe() {
@@ -293,10 +290,12 @@ describe('useWorkspaceRequestOverlayData', () => {
       expect(node.getAttribute('data-existing-offer-id')).toBe('offer-mine');
     });
 
-    expect(fetchWorkspaceManagedRequestMock).toHaveBeenCalledWith(expect.objectContaining({
-      requestId: 'req-1',
-      locale: 'de',
-      attemptOwner: false,
-    }));
+    expect(fetchWorkspaceManagedRequestMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestId: 'req-1',
+        locale: 'de',
+        attemptOwner: false,
+      }),
+    );
   });
 });

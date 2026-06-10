@@ -270,10 +270,14 @@ beforeEach(() => {
     if (params?.search) {
       return { items: [] };
     }
-    return { items: conversations.map((item) => ({ ...item, participants: [...item.participants] })) };
+    return {
+      items: conversations.map((item) => ({ ...item, participants: [...item.participants] })),
+    };
   });
   getMessagesMock.mockImplementation(async (conversationId) => {
-    return messagesByConversation[conversationId as keyof typeof messagesByConversation] ?? { items: [] };
+    return (
+      messagesByConversation[conversationId as keyof typeof messagesByConversation] ?? { items: [] }
+    );
   });
   sendMessageMock.mockResolvedValue({
     id: 'msg-server',
@@ -325,7 +329,9 @@ describe('ChatWorkspacePage', () => {
 
     fireEvent.click(screen.getByRole('option', { name: /Chris Plumbing/i }));
 
-    expect(navigationState.replace).toHaveBeenCalledWith('/chat?conversation=conv-2', { scroll: false });
+    expect(navigationState.replace).toHaveBeenCalledWith('/chat?conversation=conv-2', {
+      scroll: false,
+    });
   });
 
   it('shows an optimistic message immediately while sending is still pending', async () => {
@@ -378,7 +384,11 @@ describe('ChatWorkspacePage', () => {
     renderPage();
 
     expect(await screen.findByText('Noch keine Unterhaltungen')).not.toBeNull();
-    expect(screen.getByText('Sobald Sie mit einem Anbieter oder Kunden schreiben, erscheint die Konversation hier.')).not.toBeNull();
+    expect(
+      screen.getByText(
+        'Sobald Sie mit einem Anbieter oder Kunden schreiben, erscheint die Konversation hier.',
+      ),
+    ).not.toBeNull();
     expect(screen.queryByRole('link', { name: /anfragen/i })).toBeNull();
   });
 

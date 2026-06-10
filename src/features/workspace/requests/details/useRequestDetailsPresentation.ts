@@ -44,9 +44,7 @@ function resolveRequestStatusView(request: RequestResponseDto, t: Translate): Re
 }
 
 function resolveRequestPriceTrend(request: RequestResponseDto): 'up' | 'down' | null {
-  return request.priceTrend === 'down' || request.priceTrend === 'up'
-    ? request.priceTrend
-    : null;
+  return request.priceTrend === 'down' || request.priceTrend === 'up' ? request.priceTrend : null;
 }
 
 function resolveRequestPriceTrendLabel(request: RequestResponseDto, t: Translate): string | null {
@@ -61,9 +59,12 @@ function resolveProviderProfileComplete(providerProfile: ProviderProfileDto | nu
   if (typeof providerProfile.isProfileComplete === 'boolean') {
     return providerProfile.isProfileComplete;
   }
-  const hasServices = Array.isArray(providerProfile.serviceKeys) && providerProfile.serviceKeys.length > 0;
-  const hasBasePrice = typeof providerProfile.basePrice === 'number' && !Number.isNaN(providerProfile.basePrice);
-  const hasIdentity = Boolean(providerProfile.displayName?.trim()) && Boolean(providerProfile.cityId?.trim());
+  const hasServices =
+    Array.isArray(providerProfile.serviceKeys) && providerProfile.serviceKeys.length > 0;
+  const hasBasePrice =
+    typeof providerProfile.basePrice === 'number' && !Number.isNaN(providerProfile.basePrice);
+  const hasIdentity =
+    Boolean(providerProfile.displayName?.trim()) && Boolean(providerProfile.cityId?.trim());
   return hasServices && hasBasePrice && hasIdentity;
 }
 

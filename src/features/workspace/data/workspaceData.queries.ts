@@ -119,7 +119,11 @@ function buildWorkspaceContractQueries({
       enabled: loadPlan.shouldLoadPrivateOverview && includePrivateOverview,
       queryFn: () =>
         hasAccessToken
-          ? withStatusFallback(() => getWorkspacePrivateOverview({ period: activeRequestsPeriod }), null, [401, 403])
+          ? withStatusFallback(
+              () => getWorkspacePrivateOverview({ period: activeRequestsPeriod }),
+              null,
+              [401, 403],
+            )
           : Promise.resolve(null),
     }),
     workspaceRequests: buildStableWorkspaceQuery({
@@ -141,34 +145,33 @@ function buildWorkspaceContractQueries({
           return Promise.resolve(null);
         }
 
-        const query = requestsScope === 'market'
-          ? {
-            scope: requestsScope,
-            state: activeRequestsState,
-            period: activeRequestsPeriod,
-            city: filter.cityId ?? null,
-            category: filter.categoryKey ?? null,
-            service: filter.subcategoryKey ?? null,
-            sort: activeRequestsSort,
-            page: filter.page,
-            limit: filter.limit,
-          }
-          : {
-            scope: requestsScope,
-            role: activeRequestsRole,
-            state: activeRequestsState,
-            period: activeRequestsPeriod,
-            sort: activeRequestsSort,
-            page: filter.page,
-            limit: filter.limit,
-          };
+        const query =
+          requestsScope === 'market'
+            ? {
+                scope: requestsScope,
+                state: activeRequestsState,
+                period: activeRequestsPeriod,
+                city: filter.cityId ?? null,
+                category: filter.categoryKey ?? null,
+                service: filter.subcategoryKey ?? null,
+                sort: activeRequestsSort,
+                page: filter.page,
+                limit: filter.limit,
+              }
+            : {
+                scope: requestsScope,
+                role: activeRequestsRole,
+                state: activeRequestsState,
+                period: activeRequestsPeriod,
+                sort: activeRequestsSort,
+                page: filter.page,
+                limit: filter.limit,
+              };
         return requestsScope === 'market'
           ? getWorkspaceRequests(query)
-          : (
-            hasAccessToken
-              ? withStatusFallback(() => getWorkspaceRequests(query), null, [401, 403])
-              : Promise.resolve(null)
-          );
+          : hasAccessToken
+            ? withStatusFallback(() => getWorkspaceRequests(query), null, [401, 403])
+            : Promise.resolve(null);
       },
     }),
   };
@@ -194,7 +197,9 @@ export function buildWorkspaceOfferRequestsQuery({
     enabled: enabled && requestIds.length > 0,
     queryFn: async () => {
       const batch = await getWorkspacePublicRequestsBatch(requestIds);
-      return new Map<string, RequestResponseDto>(batch.items.map((request) => [request.id, request]));
+      return new Map<string, RequestResponseDto>(
+        batch.items.map((request) => [request.id, request]),
+      );
     },
   };
 }

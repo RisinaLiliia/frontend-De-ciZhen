@@ -26,17 +26,20 @@ export function WorkspaceSidebar(props: WorkspaceSidebarProps) {
   const authStatus = useAuthStatus();
   const authUser = useAuthUser();
   const authMe = useAuthMe();
-  const activeSection = activeNavigationSection ?? resolveActiveWorkspaceNavigationSection({
-    sectionParam: searchParams.get('section'),
-    activePublicSection,
-    activeWorkspaceTab,
-    requestsScope: searchParams.get('scope'),
-    requestsRole: searchParams.get('role'),
-    requestsState: searchParams.get('state'),
-  });
+  const activeSection =
+    activeNavigationSection ??
+    resolveActiveWorkspaceNavigationSection({
+      sectionParam: searchParams.get('section'),
+      activePublicSection,
+      activeWorkspaceTab,
+      requestsScope: searchParams.get('scope'),
+      requestsRole: searchParams.get('role'),
+      requestsState: searchParams.get('state'),
+    });
   const visibleNavigationItems = resolveVisibleWorkspaceNavigationItems({
     isAuthed: authStatus === 'authenticated',
-    role: authUser?.role === 'provider' ? 'provider' : authUser?.role === 'client' ? 'client' : null,
+    role:
+      authUser?.role === 'provider' ? 'provider' : authUser?.role === 'client' ? 'client' : null,
   });
   const primaryItems = visibleNavigationItems.filter((item) => item.group === 'main');
   const supportItems = visibleNavigationItems.filter((item) => item.group === 'support');
@@ -67,7 +70,12 @@ export function WorkspaceSidebar(props: WorkspaceSidebarProps) {
             <span className="brand__text truncate">De’ciZhen</span>
           </button>
         ) : (
-          <Link href="/" prefetch={false} className="workspace-sidebar__brand brand" onClick={onNavigate}>
+          <Link
+            href="/"
+            prefetch={false}
+            className="workspace-sidebar__brand brand"
+            onClick={onNavigate}
+          >
             <Image src="/logo.svg" alt="De’ciZhen" className="brand__logo" width={26} height={26} />
             <span className="brand__text truncate">De’ciZhen</span>
           </Link>

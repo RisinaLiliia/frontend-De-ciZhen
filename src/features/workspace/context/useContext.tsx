@@ -4,12 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import {
-  IconBriefcase,
-  IconCalendar,
-  IconFilter,
-  IconPin,
-} from '@/components/ui/icons/icons';
+import { IconBriefcase, IconCalendar, IconFilter, IconPin } from '@/components/ui/icons/icons';
 import type { Option as FilterOption } from '@/components/ui/Select';
 import {
   buildWorkspaceModeItems,

@@ -142,13 +142,14 @@ export function useWorkspaceManagedRequestData({
       attemptOwner,
       preferOwner,
     }),
-    queryFn: () => fetchWorkspaceManagedRequest({
-      requestId,
-      locale,
-      qc,
-      attemptOwner,
-      preferOwner,
-    }),
+    queryFn: () =>
+      fetchWorkspaceManagedRequest({
+        requestId,
+        locale,
+        qc,
+        attemptOwner,
+        preferOwner,
+      }),
     staleTime: 60_000,
     retry: 0,
     refetchOnWindowFocus: false,
@@ -187,7 +188,8 @@ export function useWorkspaceRequestDecisionData({
   const { data: contracts = [] } = useQuery({
     queryKey: workspaceQK.contractsMyClient(),
     enabled: shouldLoadClientContracts,
-    queryFn: () => withStatusFallback(() => listMyContracts({ role: 'client' }), [] as ContractDto[]),
+    queryFn: () =>
+      withStatusFallback(() => listMyContracts({ role: 'client' }), [] as ContractDto[]),
     staleTime: 30_000,
     refetchOnWindowFocus: false,
   });
@@ -197,32 +199,29 @@ export function useWorkspaceRequestDecisionData({
     [card.requestId, contracts],
   );
   const selectedOffer = React.useMemo(
-    () => offers.find((item) => item.status === 'accepted')
-      ?? offers.find((item) => Boolean(contract?.offerId) && item.id === contract?.offerId)
-      ?? null,
+    () =>
+      offers.find((item) => item.status === 'accepted') ??
+      offers.find((item) => Boolean(contract?.offerId) && item.id === contract?.offerId) ??
+      null,
     [contract?.offerId, offers],
   );
   const booking = contract?.booking ?? null;
   const suggestedStartAt = React.useMemo(
-    () => booking?.startAt
-      ?? selectedOffer?.availableAt
-      ?? selectedOffer?.requestPreferredDate
-      ?? null,
+    () =>
+      booking?.startAt ?? selectedOffer?.availableAt ?? selectedOffer?.requestPreferredDate ?? null,
     [booking?.startAt, selectedOffer?.availableAt, selectedOffer?.requestPreferredDate],
   );
-  const chatAction = React.useMemo(
-    () => resolveWorkspaceRequestChatAction(card),
-    [card],
-  );
+  const chatAction = React.useMemo(() => resolveWorkspaceRequestChatAction(card), [card]);
   const chatInput = chatAction?.chatInput ?? null;
   const chatLabel = chatAction?.label ?? t(I18N_KEYS.requestDetails.ctaChat);
-  const contractPrice = contract?.priceAmount != null
-    ? formatDialogPrice(locale, contract.priceAmount)
-    : null;
+  const contractPrice =
+    contract?.priceAmount != null ? formatDialogPrice(locale, contract.priceAmount) : null;
   const contractMeta = [
     contractPrice,
     contract?.status ? resolveContractStatusBadge(t, contract.status).label : null,
-  ].filter(Boolean).join(' · ');
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
   return {
     chatInput,

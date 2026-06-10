@@ -115,10 +115,7 @@ describe('workspaceData.queries', () => {
       activeRequestsSort: null,
     });
 
-    expect(queries.publicSummary.queryKey).toEqual([
-      'workspace-public-summary',
-      1,
-    ]);
+    expect(queries.publicSummary.queryKey).toEqual(['workspace-public-summary', 1]);
   });
 
   it('can disable optional contract queries in the query plan', () => {

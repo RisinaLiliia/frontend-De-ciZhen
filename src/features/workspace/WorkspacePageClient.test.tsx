@@ -43,7 +43,7 @@ vi.mock('@/lib/i18n/I18nProvider', () => ({
 }));
 
 vi.mock('@/lib/i18n/useT', () => ({
-  useT: () => ((key: string) => key),
+  useT: () => (key: string) => key,
 }));
 
 vi.mock('@/lib/perf/useDevRenderMetric', () => ({
@@ -76,7 +76,9 @@ vi.mock('@/features/workspace', async () => {
   return {
     WorkspacePageLayout,
     WorkspaceMobilePrimaryAction: ({ label }: { label: string }) => (
-      <button type="button" data-testid="workspace-mobile-primary-action">{label}</button>
+      <button type="button" data-testid="workspace-mobile-primary-action">
+        {label}
+      </button>
     ),
     useWorkspaceRouteState: () => ({
       ...routeStateRef.current,

@@ -12,7 +12,9 @@ export type UseCitiesOptions = {
   ids?: string[];
 };
 
-function normalizeUseCitiesOptions(optionsOrEnabled?: boolean | UseCitiesOptions): Required<UseCitiesOptions> {
+function normalizeUseCitiesOptions(
+  optionsOrEnabled?: boolean | UseCitiesOptions,
+): Required<UseCitiesOptions> {
   if (typeof optionsOrEnabled === 'boolean') {
     return {
       enabled: optionsOrEnabled,
@@ -26,7 +28,9 @@ function normalizeUseCitiesOptions(optionsOrEnabled?: boolean | UseCitiesOptions
     enabled: optionsOrEnabled?.enabled ?? true,
     query: optionsOrEnabled?.query?.trim() ?? '',
     limit: optionsOrEnabled?.limit ?? 50,
-    ids: Array.from(new Set((optionsOrEnabled?.ids ?? []).map((id) => id.trim()).filter(Boolean))).sort(),
+    ids: Array.from(
+      new Set((optionsOrEnabled?.ids ?? []).map((id) => id.trim()).filter(Boolean)),
+    ).sort(),
   };
 }
 

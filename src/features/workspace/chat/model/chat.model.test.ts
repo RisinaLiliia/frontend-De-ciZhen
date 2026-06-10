@@ -50,7 +50,9 @@ describe('chat.model', () => {
   });
 
   it('patches URL params and normalizes back to the simplified query model', () => {
-    const current = new URLSearchParams('conversation=conv-1&role=customer&state=archived&search=berlin');
+    const current = new URLSearchParams(
+      'conversation=conv-1&role=customer&state=archived&search=berlin',
+    );
     const next = patchChatSearchParams(current, {
       filter: 'unread',
       search: '  ',

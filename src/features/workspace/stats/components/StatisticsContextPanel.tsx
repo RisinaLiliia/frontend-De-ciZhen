@@ -61,16 +61,26 @@ export function StatisticsContextPanel({
   const loadingLabel = t(I18N_KEYS.common.refreshing);
   const emptyLabel = t(I18N_KEYS.common.noResults);
   const errorLabel = t(I18N_KEYS.common.loadErrorShort);
-  const selectedCityLabel = cityOptions.find((option) => option.value === cityValue)?.label ?? copy.contextAllCitiesLabel;
-  const selectedCategoryLabel = categoryOptions.find((option) => option.value === categoryValue)?.label ?? copy.contextAllCategoriesLabel;
+  const selectedCityLabel =
+    cityOptions.find((option) => option.value === cityValue)?.label ?? copy.contextAllCitiesLabel;
+  const selectedCategoryLabel =
+    categoryOptions.find((option) => option.value === categoryValue)?.label ??
+    copy.contextAllCategoriesLabel;
   const summaryBlock = showSummary ? (
     <>
       <div className="workspace-statistics-context__summary-head">
         <div className="workspace-statistics-context__summary-copy">
-          <strong className="workspace-statistics-context__summary-value">{context.stickyLabel}</strong>
+          <strong className="workspace-statistics-context__summary-value">
+            {context.stickyLabel}
+          </strong>
           <p className="workspace-statistics-context__summary-text">{context.subtitle}</p>
         </div>
-        <article className={workspaceStatCardShell('workspace-statistics-context__trend-card', `is-${activityTrend.tone}`)}>
+        <article
+          className={workspaceStatCardShell(
+            'workspace-statistics-context__trend-card',
+            `is-${activityTrend.tone}`,
+          )}
+        >
           <span className="stat-label">{activityTrend.label}</span>
           <strong className="stat-value">{activityTrend.value}</strong>
         </article>
@@ -80,7 +90,10 @@ export function StatisticsContextPanel({
         {context.healthMetrics.map((metric) => (
           <article
             key={metric.key}
-            className={workspaceStatCardShell('workspace-statistics-context__health-card', `is-${metric.tone}`)}
+            className={workspaceStatCardShell(
+              'workspace-statistics-context__health-card',
+              `is-${metric.tone}`,
+            )}
           >
             <span className="stat-label">{metric.label}</span>
             <strong className="stat-value">{metric.value}</strong>
@@ -151,45 +164,40 @@ export function StatisticsContextPanel({
   );
 
   const controlsBlock = showControls ? (
-    <div className="workspace-statistics-context__controls-desktop">
-      {controlsInner}
-    </div>
+    <div className="workspace-statistics-context__controls-desktop">{controlsInner}</div>
   ) : null;
 
-  const bodyContent = controlsPosition === 'top'
-    ? (
+  const bodyContent =
+    controlsPosition === 'top' ? (
       <>
         {controlsBlock}
         {summaryBlock}
       </>
-    )
-    : (
+    ) : (
       <>
         {summaryBlock}
         {controlsBlock}
       </>
     );
 
-  const body = (
-    <div className="workspace-statistics-context__body">
-      {bodyContent}
-    </div>
-  );
+  const body = <div className="workspace-statistics-context__body">{bodyContent}</div>;
 
-  const sectionModifiers = `${surface === 'embedded' ? ' workspace-statistics-context--embedded' : ''}${showSummary ? '' : ' workspace-statistics-context--controls-only'}${showControls ? '' : ' workspace-statistics-context--summary-only'}`.trim();
+  const sectionModifiers =
+    `${surface === 'embedded' ? ' workspace-statistics-context--embedded' : ''}${showSummary ? '' : ' workspace-statistics-context--controls-only'}${showControls ? '' : ' workspace-statistics-context--summary-only'}`.trim();
   const baseSectionClass = [
     surface === 'panel'
-      ? (showSummary && !showControls ? workspaceStatsChartPanelShell() : workspacePanelShell())
+      ? showSummary && !showControls
+        ? workspaceStatsChartPanelShell()
+        : workspacePanelShell()
       : '',
     'workspace-statistics-context',
     sectionModifiers,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <section
-      className={baseSectionClass}
-      aria-label={copy.contextTitle}
-    >
+    <section className={baseSectionClass} aria-label={copy.contextTitle}>
       {body}
     </section>
   );

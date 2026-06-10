@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  buildRequestsWorkspaceDecisionRailProps,
-} from './requestsWorkspaceSurface.model';
+import { buildRequestsWorkspaceDecisionRailProps } from './requestsWorkspaceSurface.model';
 
 describe('requestsWorkspaceSurface.model', () => {
   it('builds shared decision rail props for market and private variants', () => {

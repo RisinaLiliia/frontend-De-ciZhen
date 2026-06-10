@@ -17,17 +17,22 @@ export function buildLastSixMonthSeries(
   return out;
 }
 
-export function computeProfileCompleteness(profile: {
-  displayName?: string | null;
-  bio?: string | null;
-  cityId?: string | null;
-  serviceKeys?: string[];
-  basePrice?: number | null;
-  companyName?: string | null;
-  vatId?: string | null;
-  status?: string;
-  isBlocked?: boolean;
-} | null | undefined) {
+export function computeProfileCompleteness(
+  profile:
+    | {
+        displayName?: string | null;
+        bio?: string | null;
+        cityId?: string | null;
+        serviceKeys?: string[];
+        basePrice?: number | null;
+        companyName?: string | null;
+        vatId?: string | null;
+        status?: string;
+        isBlocked?: boolean;
+      }
+    | null
+    | undefined,
+) {
   if (!profile) return 0;
   let score = 0;
   if (profile.displayName?.trim()) score += 15;
@@ -40,15 +45,17 @@ export function computeProfileCompleteness(profile: {
   return Math.max(0, Math.min(100, score));
 }
 
-export function computeClientCompleteness(me: {
-  name?: string;
-  email?: string;
-  city?: string;
-  phone?: string;
-  avatar?: { url?: string };
-  acceptedPrivacyPolicy?: boolean;
-  clientProfile?: { id?: string; status?: string } | null;
-} | null) {
+export function computeClientCompleteness(
+  me: {
+    name?: string;
+    email?: string;
+    city?: string;
+    phone?: string;
+    avatar?: { url?: string };
+    acceptedPrivacyPolicy?: boolean;
+    clientProfile?: { id?: string; status?: string } | null;
+  } | null,
+) {
   if (!me) return 0;
   let score = 0;
   if (me.name?.trim()) score += 20;
@@ -61,10 +68,7 @@ export function computeClientCompleteness(me: {
   return Math.max(0, Math.min(100, score));
 }
 
-export type DeltaResult =
-  | { kind: 'percent'; value: number }
-  | { kind: 'new' }
-  | { kind: 'none' };
+export type DeltaResult = { kind: 'percent'; value: number } | { kind: 'new' } | { kind: 'none' };
 
 export function calcMoMDeltaPercent(current: number, previous: number): DeltaResult {
   if (previous <= 0) {
@@ -86,7 +90,9 @@ export function formatMoMDeltaLabel(delta: DeltaResult, locale: string): string 
     return isDe ? '0% zum letzten Monat.' : '0% vs last month.';
   }
   const sign = delta.value > 0 ? '+' : '';
-  return isDe ? `${sign}${delta.value}% zum letzten Monat.` : `${sign}${delta.value}% vs last month.`;
+  return isDe
+    ? `${sign}${delta.value}% zum letzten Monat.`
+    : `${sign}${delta.value}% vs last month.`;
 }
 
 export function countCompletedInMonth(
@@ -104,4 +110,3 @@ export function countCompletedInMonth(
     return Number.isFinite(ts) && ts >= startTs && ts < endTs;
   }).length;
 }
-

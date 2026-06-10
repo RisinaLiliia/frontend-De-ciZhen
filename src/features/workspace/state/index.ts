@@ -9,11 +9,7 @@ export {
   REQUESTS_TAB_STORAGE_KEY,
   ORDERS_TAB_STORAGE_KEY,
 } from './workspaceTabs.model';
-export type {
-  FavoritesView,
-  WorkspaceStatusFilter,
-  WorkspaceTab,
-} from './workspaceTabs.model';
+export type { FavoritesView, WorkspaceStatusFilter, WorkspaceTab } from './workspaceTabs.model';
 
 export {
   buildLegacyWorkspaceTabRedirectHref,

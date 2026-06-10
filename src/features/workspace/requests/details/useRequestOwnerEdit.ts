@@ -19,9 +19,7 @@ type UseRequestOwnerEditParams = {
 };
 
 function resolveRequestPriceTrend(request: RequestResponseDto) {
-  return request.priceTrend === 'down' || request.priceTrend === 'up'
-    ? request.priceTrend
-    : null;
+  return request.priceTrend === 'down' || request.priceTrend === 'up' ? request.priceTrend : null;
 }
 
 function toDateInputValue(value?: string | null) {
@@ -58,7 +56,9 @@ function patchRequestCollectionPayload(
   if (!Array.isArray(currentItems)) return payload;
   return {
     ...(payload as Record<string, unknown>),
-    items: currentItems.map((item) => (item.id === requestId ? { ...item, ...patchedRequest } : item)),
+    items: currentItems.map((item) =>
+      item.id === requestId ? { ...item, ...patchedRequest } : item,
+    ),
   };
 }
 
@@ -99,7 +99,9 @@ export function useRequestOwnerEdit({
   const [ownerPhotos, setOwnerPhotos] = React.useState<string[]>([]);
   const [isSavingOwner, setIsSavingOwner] = React.useState(false);
   const [isUploadingOwnerPhoto, setIsUploadingOwnerPhoto] = React.useState(false);
-  const [activeOwnerSubmitIntent, setActiveOwnerSubmitIntent] = React.useState<'draft' | 'publish' | null>(null);
+  const [activeOwnerSubmitIntent, setActiveOwnerSubmitIntent] = React.useState<
+    'draft' | 'publish' | null
+  >(null);
   const [ownerPriceTrend, setOwnerPriceTrend] = React.useState<'up' | 'down' | null>(null);
 
   React.useEffect(() => {
@@ -107,7 +109,9 @@ export function useRequestOwnerEdit({
     setOwnerTitle(request.title?.trim() || '');
     setOwnerDescription(request.description?.trim() || '');
     setOwnerPrice(
-      typeof request.price === 'number' && Number.isFinite(request.price) ? String(Math.round(request.price)) : '',
+      typeof request.price === 'number' && Number.isFinite(request.price)
+        ? String(Math.round(request.price))
+        : '',
     );
     setOwnerCityId(request.cityId ?? '');
     setOwnerPreferredDate(toDateInputValue(request.preferredDate));
@@ -156,81 +160,98 @@ export function useRequestOwnerEdit({
     [ownerPhotos.length, t],
   );
 
-  const handleOwnerSave = React.useCallback(async (intent: 'draft' | 'publish' = 'draft') => {
-    if (!request || !isOwner) return;
-    const nextTitle = ownerTitle.trim();
-    if (!nextTitle) return;
-    const nextDescription = ownerDescription.trim();
-    const nextCityId = ownerCityId.trim();
-    if (!nextCityId) {
-      toast.message(t(I18N_KEYS.request.errorCityRequired));
-      return;
-    }
-    const nextPreferredDate = toPreferredDateIso(ownerPreferredDate);
-    if (!nextPreferredDate) {
-      toast.message(t(I18N_KEYS.request.errorDateRequired));
-      return;
-    }
-    const parsedPrice = ownerPrice.trim() === '' ? undefined : Number(ownerPrice);
-    if (parsedPrice !== undefined && (!Number.isFinite(parsedPrice) || parsedPrice <= 0)) {
-      toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
-      return;
-    }
+  const handleOwnerSave = React.useCallback(
+    async (intent: 'draft' | 'publish' = 'draft') => {
+      if (!request || !isOwner) return;
+      const nextTitle = ownerTitle.trim();
+      if (!nextTitle) return;
+      const nextDescription = ownerDescription.trim();
+      const nextCityId = ownerCityId.trim();
+      if (!nextCityId) {
+        toast.message(t(I18N_KEYS.request.errorCityRequired));
+        return;
+      }
+      const nextPreferredDate = toPreferredDateIso(ownerPreferredDate);
+      if (!nextPreferredDate) {
+        toast.message(t(I18N_KEYS.request.errorDateRequired));
+        return;
+      }
+      const parsedPrice = ownerPrice.trim() === '' ? undefined : Number(ownerPrice);
+      if (parsedPrice !== undefined && (!Number.isFinite(parsedPrice) || parsedPrice <= 0)) {
+        toast.message(t(I18N_KEYS.requestDetails.responseAmountInvalid));
+        return;
+      }
 
-    setIsSavingOwner(true);
-    setActiveOwnerSubmitIntent(intent);
-    try {
-      const updated = await updateMyRequest(request.id, {
-        title: nextTitle,
-        cityId: nextCityId,
-        preferredDate: nextPreferredDate,
-        description: nextDescription || undefined,
-        price: parsedPrice,
-        photos: ownerPhotos,
-      });
+      setIsSavingOwner(true);
+      setActiveOwnerSubmitIntent(intent);
+      try {
+        const updated = await updateMyRequest(request.id, {
+          title: nextTitle,
+          cityId: nextCityId,
+          preferredDate: nextPreferredDate,
+          description: nextDescription || undefined,
+          price: parsedPrice,
+          photos: ownerPhotos,
+        });
 
-      const finalRequest =
-        intent === 'publish' && updated.status === 'draft'
-          ? await publishMyRequest(request.id)
-          : updated;
-      setOwnerPriceTrend(resolveRequestPriceTrend(finalRequest));
-      qc.setQueriesData({ queryKey: workspaceQK.requestDetail(request.id) }, finalRequest);
-      qc.setQueriesData(
-        { queryKey: workspaceQK.managedRequestPrefix(request.id) },
-        (current) => patchWorkspaceManagedRequestPayload(current, request.id, finalRequest),
-      );
+        const finalRequest =
+          intent === 'publish' && updated.status === 'draft'
+            ? await publishMyRequest(request.id)
+            : updated;
+        setOwnerPriceTrend(resolveRequestPriceTrend(finalRequest));
+        qc.setQueriesData({ queryKey: workspaceQK.requestDetail(request.id) }, finalRequest);
+        qc.setQueriesData({ queryKey: workspaceQK.managedRequestPrefix(request.id) }, (current) =>
+          patchWorkspaceManagedRequestPayload(current, request.id, finalRequest),
+        );
 
-      const patchCollection = (payload: unknown) => patchRequestCollectionPayload(payload, request.id, finalRequest);
-      qc.setQueriesData({ queryKey: workspaceQK.requestsExplorerPublicPrefix() }, patchCollection);
-      qc.setQueriesData({ queryKey: workspaceQK.requestsPublicPrefix() }, patchCollection);
-      qc.setQueriesData({ queryKey: workspaceQK.requestsMy() }, patchCollection);
-      qc.setQueriesData({ queryKey: workspaceQK.homeNearbyRequestsPrefix() }, patchCollection);
-      qc.setQueriesData({ queryKey: workspaceQK.requestsLatestPrefix() }, patchCollection);
-      qc.setQueriesData({ queryKey: workspaceQK.requestSimilarPrefix() }, patchCollection);
+        const patchCollection = (payload: unknown) =>
+          patchRequestCollectionPayload(payload, request.id, finalRequest);
+        qc.setQueriesData(
+          { queryKey: workspaceQK.requestsExplorerPublicPrefix() },
+          patchCollection,
+        );
+        qc.setQueriesData({ queryKey: workspaceQK.requestsPublicPrefix() }, patchCollection);
+        qc.setQueriesData({ queryKey: workspaceQK.requestsMy() }, patchCollection);
+        qc.setQueriesData({ queryKey: workspaceQK.homeNearbyRequestsPrefix() }, patchCollection);
+        qc.setQueriesData({ queryKey: workspaceQK.requestsLatestPrefix() }, patchCollection);
+        qc.setQueriesData({ queryKey: workspaceQK.requestSimilarPrefix() }, patchCollection);
 
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsExplorerPublicPrefix() });
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsPublicPrefix() });
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() });
-      qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() });
-      qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() });
-      qc.invalidateQueries({ queryKey: workspaceQK.requestsLatestPrefix() });
-      qc.invalidateQueries({ queryKey: workspaceQK.requestSimilarPrefix() });
-      qc.invalidateQueries({ queryKey: workspaceQK.homeNearbyRequestsPrefix() });
+        qc.invalidateQueries({ queryKey: workspaceQK.requestsExplorerPublicPrefix() });
+        qc.invalidateQueries({ queryKey: workspaceQK.requestsPublicPrefix() });
+        qc.invalidateQueries({ queryKey: workspaceQK.requestsMy() });
+        qc.invalidateQueries({ queryKey: workspaceQK.workspaceRequestsPrefix() });
+        qc.invalidateQueries({ queryKey: workspaceQK.workspacePrivateOverviewPrefix() });
+        qc.invalidateQueries({ queryKey: workspaceQK.requestsLatestPrefix() });
+        qc.invalidateQueries({ queryKey: workspaceQK.requestSimilarPrefix() });
+        qc.invalidateQueries({ queryKey: workspaceQK.homeNearbyRequestsPrefix() });
 
-      setIsOwnerEditMode(false);
-      toast.success(
-        intent === 'publish'
-          ? t(I18N_KEYS.request.published)
-          : t(I18N_KEYS.requestDetails.ownerUpdated),
-      );
-    } catch (error) {
-      const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
-      toast.error(message);
-    } finally {
-      setIsSavingOwner(false);
-      setActiveOwnerSubmitIntent(null);
-    }
-  }, [isOwner, ownerCityId, ownerDescription, ownerPhotos, ownerPreferredDate, ownerPrice, ownerTitle, qc, request, t]);
+        setIsOwnerEditMode(false);
+        toast.success(
+          intent === 'publish'
+            ? t(I18N_KEYS.request.published)
+            : t(I18N_KEYS.requestDetails.ownerUpdated),
+        );
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t(I18N_KEYS.common.loadError);
+        toast.error(message);
+      } finally {
+        setIsSavingOwner(false);
+        setActiveOwnerSubmitIntent(null);
+      }
+    },
+    [
+      isOwner,
+      ownerCityId,
+      ownerDescription,
+      ownerPhotos,
+      ownerPreferredDate,
+      ownerPrice,
+      ownerTitle,
+      qc,
+      request,
+      t,
+    ],
+  );
 
   return {
     isOwnerEditMode,

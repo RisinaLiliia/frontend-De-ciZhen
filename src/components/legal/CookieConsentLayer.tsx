@@ -93,8 +93,18 @@ export function CookieConsentLayer() {
       ) : null}
 
       {isPreferencesOpen ? (
-        <div className="dc-modal cookie-consent-modal" role="dialog" aria-modal="true" aria-label={t(I18N_KEYS.consent.modalTitle)}>
-          <button type="button" className="dc-modal__backdrop" onClick={closePreferences} aria-label={t(I18N_KEYS.auth.closeDialog)} />
+        <div
+          className="dc-modal cookie-consent-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t(I18N_KEYS.consent.modalTitle)}
+        >
+          <button
+            type="button"
+            className="dc-modal__backdrop"
+            onClick={closePreferences}
+            aria-label={t(I18N_KEYS.auth.closeDialog)}
+          />
           <div className="dc-modal__panel dc-modal__panel--compact cookie-consent-modal__panel">
             <header className="cookie-consent-modal__header">
               <p className="cookie-consent-modal__eyebrow">De&apos;ciZhen</p>
@@ -108,7 +118,9 @@ export function CookieConsentLayer() {
                   <h3>{t(I18N_KEYS.consent.requiredTitle)}</h3>
                   <p>{t(I18N_KEYS.consent.requiredDescription)}</p>
                 </div>
-                <span className="cookie-consent-option__badge">{t(I18N_KEYS.consent.alwaysActive)}</span>
+                <span className="cookie-consent-option__badge">
+                  {t(I18N_KEYS.consent.alwaysActive)}
+                </span>
               </article>
 
               <label className="cookie-consent-option">

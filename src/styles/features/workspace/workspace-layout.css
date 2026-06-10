@@ -4,8 +4,12 @@
   .workspace-shell {
     --workspace-shell-header-height: var(--shell-topbar-height, 72px);
     --workspace-shell-row-gap: clamp(14px, 1.6vw, 20px);
-    --workspace-shell-content-offset: calc(var(--workspace-shell-header-height) + var(--workspace-shell-row-gap));
-    --workspace-rail-viewport-height: calc(100dvh - var(--workspace-shell-content-offset) - var(--space-4));
+    --workspace-shell-content-offset: calc(
+      var(--workspace-shell-header-height) + var(--workspace-shell-row-gap)
+    );
+    --workspace-rail-viewport-height: calc(
+      100dvh - var(--workspace-shell-content-offset) - var(--space-4)
+    );
     width: min(100%, var(--shell-max-width));
     height: 100dvh;
     min-height: 100dvh;
@@ -121,13 +125,12 @@
     display: grid;
     gap: var(--space-2);
     padding-bottom: var(--space-1);
-    background:
-      linear-gradient(
-        180deg,
-        var(--color-background) 0%,
-        var(--color-background) calc(100% - var(--space-1)),
-        transparent 100%
-      );
+    background: linear-gradient(
+      180deg,
+      var(--color-background) 0%,
+      var(--color-background) calc(100% - var(--space-1)),
+      transparent 100%
+    );
   }
 
   .workspace-page-frame__header {
@@ -413,7 +416,6 @@
       padding-bottom: 0;
       background: transparent;
     }
-
   }
 
   @media (min-width: 768px) and (max-width: 1023px) {

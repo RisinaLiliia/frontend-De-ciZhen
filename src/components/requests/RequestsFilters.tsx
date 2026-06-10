@@ -8,10 +8,7 @@ import { WorkspaceContextMobileSheet } from '@/features/workspace/context/contex
 import { useRequestsFilterControls } from '@/components/requests/useRequestsFilterControls';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import { buildRequestsFilterControlsViewModel } from './requestsFilterControls.model';
-import type {
-  RequestsFilterControlsProps,
-  RequestsFiltersProps,
-} from './requestsFilters.types';
+import type { RequestsFilterControlsProps, RequestsFiltersProps } from './requestsFilters.types';
 
 export type { FilterOption } from './requestsFilters.types';
 export { RequestsResultsSummary } from './RequestsResultsSummary';
@@ -46,12 +43,8 @@ export function RequestsFilterControls({
   mobileMode = 'inline',
 }: RequestsFilterControlsProps) {
   const cityQuery = '';
-  const {
-    isMobileControlsOpen,
-    sortControlRef,
-    toggleMobileControls,
-    openSortControl,
-  } = useRequestsFilterControls();
+  const { isMobileControlsOpen, sortControlRef, toggleMobileControls, openSortControl } =
+    useRequestsFilterControls();
   const {
     filteredCityOptions,
     controlsDisabled,

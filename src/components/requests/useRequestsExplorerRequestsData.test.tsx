@@ -27,13 +27,7 @@ const useQueryMock = vi.mocked(useQuery);
 const useQueriesMock = vi.mocked(useQueries);
 const useQueryClientMock = vi.mocked(useQueryClient);
 
-function Probe({
-  isProvidersView,
-  isAuthed,
-}: {
-  isProvidersView: boolean;
-  isAuthed: boolean;
-}) {
+function Probe({ isProvidersView, isAuthed }: { isProvidersView: boolean; isAuthed: boolean }) {
   const result = useRequestsExplorerRequestsData({
     t: (key) => String(key),
     locale: 'de',

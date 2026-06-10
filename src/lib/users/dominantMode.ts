@@ -19,4 +19,3 @@ export function getUserDominantMode(
 
   return providerScore > clientScore ? 'provider' : 'client';
 }
-

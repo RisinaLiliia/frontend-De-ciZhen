@@ -32,7 +32,9 @@ export function WorkspaceDecisionRecommendationSection({
     featured ? 'is-featured' : '',
     `is-${tone}`,
     className ?? '',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <section className={rootClassName}>
@@ -41,13 +43,9 @@ export function WorkspaceDecisionRecommendationSection({
           <WorkspaceBadge variant={badgeTone} className="workspace-statistics-insights__chip">
             {badgeLabel}
           </WorkspaceBadge>
-          {metric ? (
-            <span className="workspace-statistics-insights__metric">{metric}</span>
-          ) : null}
+          {metric ? <span className="workspace-statistics-insights__metric">{metric}</span> : null}
         </div>
-        {title ? (
-          <strong className="workspace-statistics-insights__title">{title}</strong>
-        ) : null}
+        {title ? <strong className="workspace-statistics-insights__title">{title}</strong> : null}
         <div className="workspace-statistics-insights__text">{text}</div>
       </div>
     </section>

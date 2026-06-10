@@ -8,8 +8,16 @@
   border: 1px solid color-mix(in oklab, var(--c-border) 70%, transparent);
   border-radius: var(--radius-lg);
   background:
-    radial-gradient(1040px 520px at -8% -26%, color-mix(in oklab, var(--c-primary) 16%, transparent), transparent 64%),
-    radial-gradient(860px 420px at 108% -18%, color-mix(in oklab, var(--c-accent) 15%, transparent), transparent 58%),
+    radial-gradient(
+      1040px 520px at -8% -26%,
+      color-mix(in oklab, var(--c-primary) 16%, transparent),
+      transparent 64%
+    ),
+    radial-gradient(
+      860px 420px at 108% -18%,
+      color-mix(in oklab, var(--c-accent) 15%, transparent),
+      transparent 58%
+    ),
     linear-gradient(
       178deg,
       color-mix(in oklab, var(--c-surface) 86%, transparent),
@@ -80,12 +88,11 @@
   padding: 6px 10px;
   border-radius: var(--radius-sm);
   border: 1px solid color-mix(in oklab, var(--c-border) 60%, transparent);
-  background:
-    linear-gradient(
-      136deg,
-      color-mix(in oklab, var(--c-panel) 84%, transparent),
-      color-mix(in oklab, var(--c-surface) 80%, transparent)
-    );
+  background: linear-gradient(
+    136deg,
+    color-mix(in oklab, var(--c-panel) 84%, transparent),
+    color-mix(in oklab, var(--c-surface) 80%, transparent)
+  );
   color: var(--c-text-muted);
   font-size: var(--fs-small);
   font-weight: 600;
@@ -109,12 +116,11 @@
   color: var(--c-text-muted);
   font-size: var(--fs-small);
   line-height: 1.2;
-  background:
-    linear-gradient(
-      130deg,
-      color-mix(in oklab, var(--c-panel) 82%, transparent),
-      color-mix(in oklab, var(--c-surface) 78%, transparent)
-    );
+  background: linear-gradient(
+    130deg,
+    color-mix(in oklab, var(--c-panel) 82%, transparent),
+    color-mix(in oklab, var(--c-surface) 78%, transparent)
+  );
 }
 
 .metaActions {
@@ -126,19 +132,21 @@
 
 .metaButton {
   border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
-  background:
-    linear-gradient(
-      132deg,
-      color-mix(in oklab, var(--c-panel) 82%, transparent),
-      color-mix(in oklab, var(--c-surface) 76%, transparent)
-    );
+  background: linear-gradient(
+    132deg,
+    color-mix(in oklab, var(--c-panel) 82%, transparent),
+    color-mix(in oklab, var(--c-surface) 76%, transparent)
+  );
   color: var(--c-text);
   border-radius: var(--radius-sm);
   padding: 5px 10px;
   font-size: var(--fs-small);
   font-weight: 600;
   cursor: pointer;
-  transition: transform var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
 .metaButton:hover,
@@ -181,12 +189,11 @@
   align-self: start;
   border: 1px solid color-mix(in oklab, var(--c-border) 75%, transparent);
   border-radius: var(--radius-md);
-  background:
-    linear-gradient(
-      132deg,
-      color-mix(in oklab, var(--c-panel) 80%, transparent),
-      color-mix(in oklab, var(--c-surface) 78%, transparent)
-    );
+  background: linear-gradient(
+    132deg,
+    color-mix(in oklab, var(--c-panel) 80%, transparent),
+    color-mix(in oklab, var(--c-surface) 78%, transparent)
+  );
   backdrop-filter: blur(6px) saturate(1.02);
   padding: 12px;
 }
@@ -223,7 +230,9 @@
   font-size: var(--fs-small);
   line-height: 1.35;
   border-bottom: 1px solid transparent;
-  transition: color var(--transition-fast), border-color var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 .tocLink:hover,
@@ -241,12 +250,11 @@
 .markdownWrap {
   border-radius: var(--radius-md);
   border: 1px solid color-mix(in oklab, var(--c-border) 65%, transparent);
-  background:
-    linear-gradient(
-      138deg,
-      color-mix(in oklab, var(--c-panel) 82%, transparent),
-      color-mix(in oklab, var(--c-surface) 80%, transparent)
-    );
+  background: linear-gradient(
+    138deg,
+    color-mix(in oklab, var(--c-panel) 82%, transparent),
+    color-mix(in oklab, var(--c-surface) 80%, transparent)
+  );
   backdrop-filter: blur(6px) saturate(1.02);
 }
 

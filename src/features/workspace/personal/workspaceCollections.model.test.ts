@@ -8,9 +8,7 @@ describe('workspaceCollections.model', () => {
       requests: [{ id: 'req-1' }] as never,
       favoriteRequests: [{ id: 'req-2' }] as never,
       providers: [{ id: 'provider-1' }, { id: 'provider-2' }] as never,
-      favoriteProviders: [
-        { id: 'provider-1', cityId: 'city-1', serviceKey: 'svc-1' },
-      ] as never,
+      favoriteProviders: [{ id: 'provider-1', cityId: 'city-1', serviceKey: 'svc-1' }] as never,
       myOffers: [
         { id: 'offer-1', requestId: 'req-1', updatedAt: '2026-03-20T10:00:00.000Z' },
         { id: 'offer-2', requestId: 'req-1', updatedAt: '2026-03-21T10:00:00.000Z' },
@@ -66,9 +64,7 @@ describe('workspaceCollections.model', () => {
       requests: [] as never,
       favoriteRequests: [] as never,
       providers: [{ id: 'provider-1' }] as never,
-      favoriteProviders: [
-        { id: 'provider-1', cityId: 'city-1', serviceKey: 'svc-1' },
-      ] as never,
+      favoriteProviders: [{ id: 'provider-1', cityId: 'city-1', serviceKey: 'svc-1' }] as never,
       myOffers: [] as never,
       myProviderContracts: [] as never,
       myClientContracts: [] as never,

@@ -95,21 +95,22 @@ function makePrioritySection(
   type: 'risks' | 'opportunities',
   overrides: Partial<WorkspaceStatisticsPrioritySectionView> = {},
 ): WorkspaceStatisticsPrioritySectionView {
-  const item = type === 'risks'
-    ? {
-      key: 'slow-response',
-      title: 'Reaktionszeit zu hoch',
-      body: 'Du antwortest deutlich langsamer als der Markt.',
-      metric: '930 Min.',
-      tone: 'warning' as const,
-    }
-    : {
-      key: 'high-demand-city',
-      title: 'Hohe Nachfrage in deinem Zielmarkt',
-      body: 'Berlin · Cleaning & Housekeeping zeigt aktuell starke Nachfrage für dein Setup.',
-      metric: '12',
-      tone: 'positive' as const,
-    };
+  const item =
+    type === 'risks'
+      ? {
+          key: 'slow-response',
+          title: 'Reaktionszeit zu hoch',
+          body: 'Du antwortest deutlich langsamer als der Markt.',
+          metric: '930 Min.',
+          tone: 'warning' as const,
+        }
+      : {
+          key: 'high-demand-city',
+          title: 'Hohe Nachfrage in deinem Zielmarkt',
+          body: 'Berlin · Cleaning & Housekeeping zeigt aktuell starke Nachfrage für dein Setup.',
+          metric: '12',
+          tone: 'positive' as const,
+        };
 
   return {
     title: type === 'risks' ? 'Risiken' : 'Chancen',
@@ -142,7 +143,8 @@ function makeActionSection(
         key: 'focus-market',
         code: 'focus_market',
         title: 'Marktfokus schärfen',
-        detail: 'Fokus auf Berlin · Cleaning & Housekeeping legen, solange Nachfrage und Balance stark sind.',
+        detail:
+          'Fokus auf Berlin · Cleaning & Housekeeping legen, solange Nachfrage und Balance stark sind.',
         priorityLabel: 'Medium',
         priorityTone: 'info',
         impactLabel: 'Mittel',

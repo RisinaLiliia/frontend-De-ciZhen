@@ -16,11 +16,7 @@ export function CountBadge<T extends ElementType = 'span'>({
   const Component = (as ?? 'span') as ElementType;
   return (
     <Component
-      className={[
-        'count-badge',
-        size === 'sm' ? 'count-badge--sm' : '',
-        className ?? '',
-      ]
+      className={['count-badge', size === 'sm' ? 'count-badge--sm' : '', className ?? '']
         .filter(Boolean)
         .join(' ')}
     >

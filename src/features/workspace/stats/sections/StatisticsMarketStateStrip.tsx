@@ -46,12 +46,17 @@ export function StatisticsMarketStateStrip({
             )}
           >
             <span className="workspace-statistics-market-state__metric-label">{item.label}</span>
-            <strong className="workspace-statistics-market-state__metric-value">{item.value}</strong>
+            <strong className="workspace-statistics-market-state__metric-value">
+              {item.value}
+            </strong>
             <span
               className="workspace-statistics-market-state__metric-indicator"
               data-tone={item.tone ?? 'neutral'}
             >
-              <span className="workspace-statistics-market-state__metric-indicator-icon" aria-hidden="true">
+              <span
+                className="workspace-statistics-market-state__metric-indicator-icon"
+                aria-hidden="true"
+              >
                 {item.tone === 'positive' ? '↗' : item.tone === 'warning' ? '↘' : '—'}
               </span>
               <span>0%</span>

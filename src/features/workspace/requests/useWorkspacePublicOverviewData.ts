@@ -11,7 +11,11 @@ type Args = {
 };
 
 export function useWorkspacePublicOverviewData({ workspaceDataQueries }: Args) {
-  const { data: publicOverview, isLoading, isError } = useQuery(workspaceDataQueries.publicOverview);
+  const {
+    data: publicOverview,
+    isLoading,
+    isError,
+  } = useQuery(workspaceDataQueries.publicOverview);
 
   return {
     overviewRequests: publicOverview?.requests,

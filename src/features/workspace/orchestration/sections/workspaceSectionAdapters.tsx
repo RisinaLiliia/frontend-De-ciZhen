@@ -2,19 +2,11 @@
 
 import type * as React from 'react';
 
-import {
-  WorkspaceExploreSection,
-} from '@/features/workspace/market';
+import { WorkspaceExploreSection } from '@/features/workspace/market';
 import { buildWorkspaceSectionRenderModel } from '@/features/workspace/navigation/workspaceSection.contract';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
-import {
-  WorkspaceProvidersRail,
-  WorkspaceProvidersSection,
-} from '@/features/workspace/providers';
-import {
-  WorkspaceProfileRail,
-  WorkspaceProfileSection,
-} from '@/features/workspace/profile';
+import { WorkspaceProvidersRail, WorkspaceProvidersSection } from '@/features/workspace/providers';
+import { WorkspaceProfileRail, WorkspaceProfileSection } from '@/features/workspace/profile';
 import { WorkspaceLegalSection } from '@/features/workspace/legal';
 import type { WorkspaceSectionRenderModel } from '@/features/workspace/shell/WorkspaceShell.types';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
@@ -156,8 +148,6 @@ export function buildWorkspaceExploreSectionModel({
     });
   }
 
-  
-
   return buildWorkspaceSectionRenderModel({
     section,
     content: explore ? (
@@ -172,7 +162,7 @@ export function buildWorkspaceExploreSectionModel({
         initialPublicRequestsError={explore.initialPublicRequestsError}
       />
     ) : null,
-aiRail: undefined,
+    aiRail: undefined,
   });
 }
 

@@ -8,80 +8,90 @@ import {
 
 describe('requestOwnerMenu.model', () => {
   it('detects edit capability only from canEdit or edit action', () => {
-    expect(hasOwnerRequestEditCapability({
-      role: 'customer',
-      canEdit: true,
-      status: { actions: [] },
-    } as never)).toBe(true);
+    expect(
+      hasOwnerRequestEditCapability({
+        role: 'customer',
+        canEdit: true,
+        status: { actions: [] },
+      } as never),
+    ).toBe(true);
 
-    expect(hasOwnerRequestEditCapability({
-      role: 'customer',
-      canEdit: false,
-      status: {
-        actions: [
-          {
-            key: 'duplicate-request',
-            kind: 'duplicate_request',
-            tone: 'secondary',
-            icon: 'copy',
-            label: 'Duplizieren',
-            requestId: 'req-1',
-          },
-        ],
-      },
-    } as never)).toBe(false);
+    expect(
+      hasOwnerRequestEditCapability({
+        role: 'customer',
+        canEdit: false,
+        status: {
+          actions: [
+            {
+              key: 'duplicate-request',
+              kind: 'duplicate_request',
+              tone: 'secondary',
+              icon: 'copy',
+              label: 'Duplizieren',
+              requestId: 'req-1',
+            },
+          ],
+        },
+      } as never),
+    ).toBe(false);
   });
 
   it('detects owner management capability from card-level permissions first', () => {
-    expect(hasOwnerRequestManagementCapability({
-      role: 'customer',
-      capabilities: {
-        canManage: true,
-      },
-      canEdit: true,
-      canDelete: false,
-      canDuplicate: false,
-      canRestore: false,
-      status: {
-        actions: [],
-      },
-    } as never)).toBe(true);
+    expect(
+      hasOwnerRequestManagementCapability({
+        role: 'customer',
+        capabilities: {
+          canManage: true,
+        },
+        canEdit: true,
+        canDelete: false,
+        canDuplicate: false,
+        canRestore: false,
+        status: {
+          actions: [],
+        },
+      } as never),
+    ).toBe(true);
   });
 
   it('falls back to backend owner management actions when permissions are absent', () => {
-    expect(hasOwnerRequestManagementCapability({
-      role: 'customer',
-      status: {
-        actions: [
-          {
-            key: 'edit-request',
-            kind: 'link',
-            tone: 'secondary',
-            icon: 'edit',
-            label: 'Bearbeiten',
-            href: '/requests/req-1/edit',
-            requestId: 'req-1',
-          },
-        ],
-      },
-    } as never)).toBe(true);
+    expect(
+      hasOwnerRequestManagementCapability({
+        role: 'customer',
+        status: {
+          actions: [
+            {
+              key: 'edit-request',
+              kind: 'link',
+              tone: 'secondary',
+              icon: 'edit',
+              label: 'Bearbeiten',
+              href: '/requests/req-1/edit',
+              requestId: 'req-1',
+            },
+          ],
+        },
+      } as never),
+    ).toBe(true);
 
-    expect(hasOwnerRequestManagementCapability({
-      role: 'customer',
-      status: {
-        actions: [
-          {
-            key: 'open',
-            kind: 'link',
-            tone: 'secondary',
-            icon: 'briefcase',
-            label: 'Öffnen',
-            href: '/requests/req-1',
-            requestId: 'req-1',
-          },
-        ],
-      },
-    } as never)).toBe(false);
+    expect(
+      hasOwnerRequestManagementCapability({
+        role: 'customer',
+        status: {
+          actions: [
+            {
+              key: 'open',
+              kind: 'link',
+              tone: 'secondary',
+              icon: 'briefcase',
+              label: 'Öffnen',
+              href: '/requests/req-1',
+              requestId: 'req-1',
+            },
+          ],
+        },
+      } as never),
+    ).toBe(false);
   });
 
   it('prefers backend menuActions and keeps backend order', () => {

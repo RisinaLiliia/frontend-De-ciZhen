@@ -65,15 +65,23 @@ export function PublicRequestSessionDialog({
         : null;
   const requestId = activeRequestState?.requestId ?? activeOfferRequestId ?? null;
   const requestIntent = activeRequestState?.intent ?? 'view';
-  const t = (key: typeof I18N_KEYS.workspace[keyof typeof I18N_KEYS.workspace] | typeof I18N_KEYS.requestDetails[keyof typeof I18N_KEYS.requestDetails] | typeof I18N_KEYS.requestsPage[keyof typeof I18N_KEYS.requestsPage]) => translate(key, locale);
-  const ariaLabel = scene === 'chat'
-    ? activeChatState?.title || t(I18N_KEYS.workspace.messagesTitle)
-    : scene === 'offer_edit'
-      ? t(I18N_KEYS.requestDetails.workspaceEditOffer)
-      : t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle);
+  const t = (
+    key:
+      | (typeof I18N_KEYS.workspace)[keyof typeof I18N_KEYS.workspace]
+      | (typeof I18N_KEYS.requestDetails)[keyof typeof I18N_KEYS.requestDetails]
+      | (typeof I18N_KEYS.requestsPage)[keyof typeof I18N_KEYS.requestsPage],
+  ) => translate(key, locale);
+  const ariaLabel =
+    scene === 'chat'
+      ? activeChatState?.title || t(I18N_KEYS.workspace.messagesTitle)
+      : scene === 'offer_edit'
+        ? t(I18N_KEYS.requestDetails.workspaceEditOffer)
+        : t(I18N_KEYS.requestDetails.workspaceRequestFallbackTitle);
   const sceneTitle = t(I18N_KEYS.requestsPage.navChat);
-  const sceneSubtitle = activeChatState?.title || t(I18N_KEYS.workspace.requestConversationSubtitle);
-  const isCustomerProfileView = searchParams?.get(WORKSPACE_REQUEST_PROFILE_QUERY_KEY) === 'customer';
+  const sceneSubtitle =
+    activeChatState?.title || t(I18N_KEYS.workspace.requestConversationSubtitle);
+  const isCustomerProfileView =
+    searchParams?.get(WORKSPACE_REQUEST_PROFILE_QUERY_KEY) === 'customer';
   const handleDialogClose = React.useCallback(() => {
     if (scene === 'detail' && isCustomerProfileView) {
       router.push(clearWorkspaceRequestProfileHref({ currentSearch: searchParams }));

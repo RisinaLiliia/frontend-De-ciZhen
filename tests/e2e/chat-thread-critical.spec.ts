@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { dismissCookieConsentIfPresent } from './helpers/consent';
 
-test('@critical authenticated user can open, read, inspect, and send messages in chat', async ({ page }) => {
+test('@critical authenticated user can open, read, inspect, and send messages in chat', async ({
+  page,
+}) => {
   const conversationId = 'conv-1';
   let markReadCalls = 0;
   let sendCalls = 0;
@@ -107,7 +109,10 @@ test('@critical authenticated user can open, read, inspect, and send messages in
       });
     }
 
-    if (path === `/api/chat/conversations/${conversationId}` && route.request().method() === 'GET') {
+    if (
+      path === `/api/chat/conversations/${conversationId}` &&
+      route.request().method() === 'GET'
+    ) {
       return route.fulfill({
         status: 200,
         headers: jsonHeaders,
@@ -116,8 +121,8 @@ test('@critical authenticated user can open, read, inspect, and send messages in
     }
 
     if (
-      path === `/api/chat/conversations/${conversationId}/messages`
-      && route.request().method() === 'GET'
+      path === `/api/chat/conversations/${conversationId}/messages` &&
+      route.request().method() === 'GET'
     ) {
       return route.fulfill({
         status: 200,
@@ -127,8 +132,8 @@ test('@critical authenticated user can open, read, inspect, and send messages in
     }
 
     if (
-      path === `/api/chat/conversations/${conversationId}/read`
-      && route.request().method() === 'POST'
+      path === `/api/chat/conversations/${conversationId}/read` &&
+      route.request().method() === 'POST'
     ) {
       markReadCalls += 1;
       conversation.unread = 0;
@@ -141,8 +146,8 @@ test('@critical authenticated user can open, read, inspect, and send messages in
     }
 
     if (
-      path === `/api/chat/conversations/${conversationId}/messages`
-      && route.request().method() === 'POST'
+      path === `/api/chat/conversations/${conversationId}/messages` &&
+      route.request().method() === 'POST'
     ) {
       sendCalls += 1;
       const body = route.request().postDataJSON() as { text?: string };

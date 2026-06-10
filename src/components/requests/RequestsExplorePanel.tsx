@@ -57,7 +57,11 @@ export function RequestsExplorePanel({
         providerLinkMode={providerLinkMode}
         showBack={showBack}
         backHref={backHref}
-        emptyCtaHref={contentType === 'providers' ? '/workspace?section=providers' : '/workspace?section=requests'}
+        emptyCtaHref={
+          contentType === 'providers'
+            ? '/workspace?section=providers'
+            : '/workspace?section=requests'
+        }
         onListDensityChange={onListDensityChange}
         showTopFilters={showTopFilters}
         initialPublicRequests={initialPublicRequests}
@@ -70,9 +74,5 @@ export function RequestsExplorePanel({
 
   if (layoutVariant === 'workspace') return content;
 
-  return (
-    <section className="stack-sm">
-      {content}
-    </section>
-  );
+  return <section className="stack-sm">{content}</section>;
 }

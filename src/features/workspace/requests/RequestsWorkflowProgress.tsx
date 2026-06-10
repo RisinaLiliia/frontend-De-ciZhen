@@ -25,7 +25,11 @@ export function WorkflowProgress({
   steps: WorkspaceRequestsViewCard['progress']['steps'];
 }) {
   const activeIndex = React.useMemo(
-    () => Math.max(0, steps.findIndex((step) => step.status === 'current')),
+    () =>
+      Math.max(
+        0,
+        steps.findIndex((step) => step.status === 'current'),
+      ),
     [steps],
   );
   const progressPercent = React.useMemo(() => {
@@ -34,64 +38,70 @@ export function WorkflowProgress({
     return Math.round(((activeIndex + 1) / steps.length) * 100);
   }, [activeIndex, steps]);
 
-  const resolveStepMeta = React.useCallback((step: WorkspaceRequestsViewCard['progress']['steps'][number]) => {
-    if (step.key === 'request') {
-      return card.createdAt?.trim()
-        || tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowCreatedMeta);
-    }
-
-    if (step.key === 'offers') {
-      if (card.decision.actionType === 'review_offers' && card.decision.actionLabel?.trim()) {
-        return card.decision.actionLabel.trim();
+  const resolveStepMeta = React.useCallback(
+    (step: WorkspaceRequestsViewCard['progress']['steps'][number]) => {
+      if (step.key === 'request') {
+        return (
+          card.createdAt?.trim() || tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowCreatedMeta)
+        );
       }
 
-      if (step.status === 'done') {
-        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowReceivedMeta);
+      if (step.key === 'offers') {
+        if (card.decision.actionType === 'review_offers' && card.decision.actionLabel?.trim()) {
+          return card.decision.actionLabel.trim();
+        }
+
+        if (step.status === 'done') {
+          return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowReceivedMeta);
+        }
+
+        if (step.status === 'current') {
+          return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowPendingMeta);
+        }
+
+        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotStartedMeta);
       }
 
-      if (step.status === 'current') {
-        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowPendingMeta);
+      if (step.key === 'selection') {
+        if (step.status === 'done') {
+          return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowSelectedMeta);
+        }
+
+        if (step.status === 'current') {
+          return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowPendingMeta);
+        }
+
+        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotStartedMeta);
+      }
+
+      if (step.key === 'contract') {
+        if (step.status === 'done') {
+          return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowConfirmedMeta);
+        }
+
+        if (step.status === 'current') {
+          return card.nextEventAt?.trim()
+            ? fillLocaleTemplate(locale, I18N_KEYS.requestsPage.workspaceWorkflowActiveWithDate, {
+                date: card.nextEventAt,
+              })
+            : tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowActiveMeta);
+        }
+
+        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotCreatedMeta);
+      }
+
+      if (card.state === 'completed') {
+        return tx(locale, I18N_KEYS.requestsPage.statusCompleted);
+      }
+
+      if (card.state === 'active') {
+        return tx(locale, I18N_KEYS.requestsPage.statusInProgress);
       }
 
       return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotStartedMeta);
-    }
-
-    if (step.key === 'selection') {
-      if (step.status === 'done') {
-        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowSelectedMeta);
-      }
-
-      if (step.status === 'current') {
-        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowPendingMeta);
-      }
-
-      return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotStartedMeta);
-    }
-
-    if (step.key === 'contract') {
-      if (step.status === 'done') {
-        return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowConfirmedMeta);
-      }
-
-      if (step.status === 'current') {
-        return card.nextEventAt?.trim()
-          ? fillLocaleTemplate(locale, I18N_KEYS.requestsPage.workspaceWorkflowActiveWithDate, { date: card.nextEventAt })
-          : tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowActiveMeta);
-      }
-
-      return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotCreatedMeta);
-    }
-
-    if (card.state === 'completed') {
-      return tx(locale, I18N_KEYS.requestsPage.statusCompleted);
-    }
-
-    if (card.state === 'active') {
-      return tx(locale, I18N_KEYS.requestsPage.statusInProgress);
-    }
-
-    return tx(locale, I18N_KEYS.requestsPage.workspaceWorkflowNotStartedMeta);
-  }, [card, locale]);
+    },
+    [card, locale],
+  );
 
   return (
     <div className="my-request-card__progress-scroll">

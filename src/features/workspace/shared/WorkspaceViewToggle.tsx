@@ -11,11 +11,7 @@ type Props = {
   onChange: (value: RequestsListDensity) => void;
 };
 
-export function WorkspaceViewToggle({
-  t,
-  listDensity,
-  onChange,
-}: Props) {
+export function WorkspaceViewToggle({ t, listDensity, onChange }: Props) {
   const nextDensity = listDensity === 'double' ? 'single' : 'double';
   const nextLabel = t(
     nextDensity === 'double'

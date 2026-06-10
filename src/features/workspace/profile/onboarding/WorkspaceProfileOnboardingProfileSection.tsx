@@ -96,7 +96,9 @@ export function WorkspaceProfileOnboardingProfileSection({
                   shouldValidate: true,
                 });
               }}
-              placeholder={isCitiesLoading ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.home.cityPlaceholder)}
+              placeholder={
+                isCitiesLoading ? t(I18N_KEYS.common.refreshing) : t(I18N_KEYS.home.cityPlaceholder)
+              }
               disabled={isCitiesLoading || isCitiesError || loading}
               ariaLabel={t(I18N_KEYS.requestsPage.cityLabel)}
               searchPlaceholder={t(I18N_KEYS.home.cityPlaceholder)}

@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  IconBriefcase,
-  IconCheck,
-  IconUser,
-} from '@/components/ui/icons/icons';
+import { IconBriefcase, IconCheck, IconUser } from '@/components/ui/icons/icons';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceNavItem } from '@/features/workspace/navigation/workspaceNavItem.types';
 import type { WorkspaceNavTranslator } from '@/features/workspace/navigation/workspaceState.nav.shared';

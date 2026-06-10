@@ -31,10 +31,7 @@ function setSessionHintCookie(value: '1' | '', maxAgeSeconds: number) {
 function isProtectedPath(pathname: string): boolean {
   const isSegment = (prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
   return (
-    isSegment('/chat') ||
-    isSegment('/profile') ||
-    isSegment('/client') ||
-    isSegment('/provider')
+    isSegment('/chat') || isSegment('/profile') || isSegment('/client') || isSegment('/provider')
   );
 }
 

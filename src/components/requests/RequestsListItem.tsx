@@ -90,7 +90,11 @@ export function RequestsListItem({
       imageSrc={view.card.imageSrc}
       imageAlt=""
       imagePriority={index === 0 && !hideRecurringBadge && !view.status.isOwnerRequestList}
-      badges={hideRecurringBadge ? [] : [{ label: view.card.recurringLabel, variant: 'neutral', tone: 'outline', size: 'sm' }]}
+      badges={
+        hideRecurringBadge
+          ? []
+          : [{ label: view.card.recurringLabel, variant: 'neutral', tone: 'outline', size: 'sm' }]
+      }
       category={view.card.categoryLabel}
       title={view.card.title}
       excerpt={view.card.excerpt}
@@ -107,12 +111,12 @@ export function RequestsListItem({
       tags={[view.card.categoryLabel, view.card.serviceLabel, ...view.card.tags.slice(0, 2)]}
       mode="link"
       onOpen={onOpenRequest ? () => onOpenRequest(item.id) : undefined}
-      contentSlot={view.card.isInactive && view.card.inactiveMessage ? (
-        <div className="request-card__inactive-message">
-          {view.card.inactiveMessage}
-        </div>
-      ) : null}
-      statusSlot={(
+      contentSlot={
+        view.card.isInactive && view.card.inactiveMessage ? (
+          <div className="request-card__inactive-message">{view.card.inactiveMessage}</div>
+        ) : null
+      }
+      statusSlot={
         <RequestListStatusSlot
           status={view.status}
           actions={{
@@ -124,7 +128,7 @@ export function RequestsListItem({
             onOpenChatThread,
           }}
         />
-      )}
+      }
       overlaySlot={
         showFavoriteButton ? (
           <FavoriteButton

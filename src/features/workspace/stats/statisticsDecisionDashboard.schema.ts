@@ -34,11 +34,14 @@ const cityDemandSchema = z.object({
   signal: z.enum(['high', 'medium', 'low', 'none']).optional(),
   lat: z.number().nullable(),
   lng: z.number().nullable(),
-  peerContext: z.object({
-    role: z.enum(['focus', 'competitor']),
-    distanceKm: z.number().nullable(),
-    reason: z.enum(['selected_city', 'nearby_competitor', 'top_ranked']),
-  }).nullable().optional(),
+  peerContext: z
+    .object({
+      role: z.enum(['focus', 'competitor']),
+      distanceKm: z.number().nullable(),
+      reason: z.enum(['selected_city', 'nearby_competitor', 'top_ranked']),
+    })
+    .nullable()
+    .optional(),
 });
 
 const cityListSchema = z.object({
@@ -72,36 +75,52 @@ const opportunitySchema = z.object({
   activityScore: z.number(),
   status: z.enum(['very_high', 'good', 'balanced', 'competitive', 'low']),
   tone: z.enum(['very-high', 'high', 'balanced', 'supply-heavy']),
-  summaryKey: z.enum(['very_high', 'good', 'balanced_competitive', 'balanced', 'competitive', 'low_demand', 'low']),
-  metrics: z.array(z.object({
-    key: z.enum(['demand', 'competition', 'growth', 'activity']),
-    value: z.number(),
-    semanticTone: z.enum(['very-high', 'high', 'medium', 'low']),
-    semanticKey: z.enum(['very_high', 'high', 'noticeable', 'medium', 'low']),
-  })),
-  peerContext: z.object({
-    role: z.enum(['focus', 'competitor']),
-    distanceKm: z.number().nullable(),
-    reason: z.enum(['selected_city', 'nearby_competitor', 'top_ranked']),
-  }).nullable().optional(),
-  priceIntelligence: z.object({
-    citySlug: z.string().nullable(),
-    city: z.string().nullable(),
-    categoryKey: z.string().nullable(),
-    category: z.string().nullable(),
-    recommendedMin: z.number().nullable(),
-    recommendedMax: z.number().nullable(),
-    marketAverage: z.number().nullable(),
-    optimalMin: z.number().nullable(),
-    optimalMax: z.number().nullable(),
-    smartRecommendedPrice: z.number().nullable(),
-    smartSignalTone: z.enum(['visibility', 'balanced', 'premium']).nullable(),
-    analyzedRequestsCount: z.number().nullable(),
-    confidenceLevel: z.enum(['high', 'medium', 'low']).nullable(),
-    recommendation: z.string().nullable(),
-    profitPotentialScore: z.number().nullable(),
-    profitPotentialStatus: z.enum(['high', 'medium', 'low']).nullable(),
-  }).nullable().optional(),
+  summaryKey: z.enum([
+    'very_high',
+    'good',
+    'balanced_competitive',
+    'balanced',
+    'competitive',
+    'low_demand',
+    'low',
+  ]),
+  metrics: z.array(
+    z.object({
+      key: z.enum(['demand', 'competition', 'growth', 'activity']),
+      value: z.number(),
+      semanticTone: z.enum(['very-high', 'high', 'medium', 'low']),
+      semanticKey: z.enum(['very_high', 'high', 'noticeable', 'medium', 'low']),
+    }),
+  ),
+  peerContext: z
+    .object({
+      role: z.enum(['focus', 'competitor']),
+      distanceKm: z.number().nullable(),
+      reason: z.enum(['selected_city', 'nearby_competitor', 'top_ranked']),
+    })
+    .nullable()
+    .optional(),
+  priceIntelligence: z
+    .object({
+      citySlug: z.string().nullable(),
+      city: z.string().nullable(),
+      categoryKey: z.string().nullable(),
+      category: z.string().nullable(),
+      recommendedMin: z.number().nullable(),
+      recommendedMax: z.number().nullable(),
+      marketAverage: z.number().nullable(),
+      optimalMin: z.number().nullable(),
+      optimalMax: z.number().nullable(),
+      smartRecommendedPrice: z.number().nullable(),
+      smartSignalTone: z.enum(['visibility', 'balanced', 'premium']).nullable(),
+      analyzedRequestsCount: z.number().nullable(),
+      confidenceLevel: z.enum(['high', 'medium', 'low']).nullable(),
+      recommendation: z.string().nullable(),
+      profitPotentialScore: z.number().nullable(),
+      profitPotentialStatus: z.enum(['high', 'medium', 'low']).nullable(),
+    })
+    .nullable()
+    .optional(),
 });
 
 const userComparisonMetricSchema = z.object({
@@ -160,26 +179,32 @@ const userSignalSchema = z.object({
     'price_below_market',
   ]),
   severity: z.enum(['high', 'medium', 'low']),
-  metricKey: z.enum([
-    'offer_rate',
-    'response_rate',
-    'conversion_rate',
-    'completion_rate',
-    'cancellation_rate',
-    'avg_response_time',
-    'revenue',
-    'avg_order_value',
-    'response_time',
-    'unanswered',
-  ]).nullable().optional(),
-  actionCode: z.enum([
-    'respond_faster',
-    'adjust_price',
-    'focus_market',
-    'complete_profile',
-    'follow_up_unanswered',
-    'follow_up_requests',
-  ]).nullable().optional(),
+  metricKey: z
+    .enum([
+      'offer_rate',
+      'response_rate',
+      'conversion_rate',
+      'completion_rate',
+      'cancellation_rate',
+      'avg_response_time',
+      'revenue',
+      'avg_order_value',
+      'response_time',
+      'unanswered',
+    ])
+    .nullable()
+    .optional(),
+  actionCode: z
+    .enum([
+      'respond_faster',
+      'adjust_price',
+      'focus_market',
+      'complete_profile',
+      'follow_up_unanswered',
+      'follow_up_requests',
+    ])
+    .nullable()
+    .optional(),
 });
 
 const funnelStageStatusSchema = z.enum([
@@ -256,7 +281,14 @@ const userActionStepSchema = z.object({
 });
 
 const decisionLayerMetricSchema = z.object({
-  id: z.enum(['offer_rate', 'avg_response_time', 'unanswered_over_24h', 'completed_jobs', 'revenue', 'average_order_value']),
+  id: z.enum([
+    'offer_rate',
+    'avg_response_time',
+    'unanswered_over_24h',
+    'completed_jobs',
+    'revenue',
+    'average_order_value',
+  ]),
   label: z.string(),
   marketValue: z.number().nullable(),
   userValue: z.number().nullable(),
@@ -324,11 +356,13 @@ const recommendationItemSchema = z.object({
   reliability: z.enum(['high', 'medium', 'low']),
   context: z.string().nullable(),
   actionCode: z.string().nullable(),
-  action: z.object({
-    code: z.string(),
-    label: z.string(),
-    target: z.string().nullable(),
-  }).nullable(),
+  action: z
+    .object({
+      code: z.string(),
+      label: z.string(),
+      target: z.string().nullable(),
+    })
+    .nullable(),
 });
 
 const recommendationSectionSchema = z.object({
@@ -369,11 +403,13 @@ export const workspaceStatisticsDecisionDashboardSchema = z.object({
     subtitle: z.string().nullable().optional(),
     stickyLabel: z.string().nullable().optional(),
     health: z.array(contextHealthSchema),
-    lowData: z.object({
-      isLowData: z.boolean(),
-      title: z.string().nullable().optional(),
-      body: z.string().nullable().optional(),
-    }).optional(),
+    lowData: z
+      .object({
+        isLowData: z.boolean(),
+        title: z.string().nullable().optional(),
+        body: z.string().nullable().optional(),
+      })
+      .optional(),
   }),
   filterOptions: z.object({
     cities: z.array(filterOptionSchema),
@@ -415,46 +451,58 @@ export const workspaceStatisticsDecisionDashboardSchema = z.object({
     cityList: cityListSchema.optional(),
   }),
   opportunityRadar: z.array(opportunitySchema),
-  profileFunnel: z.object({
-    periodLabel: z.string(),
-    stages: z.array(z.object({
-      id: z.enum(['requests', 'offers', 'confirmations', 'contracts', 'completed', 'revenue']),
-      label: z.string(),
-      value: z.number(),
-      displayValue: z.string(),
-      widthPercent: z.number(),
-      rateLabel: z.string().nullable(),
-      ratePercent: z.number().nullable(),
-      helperText: z.string().nullable(),
-    })),
-    summaryText: z.string(),
-    totalConversionPercent: z.number(),
-    conversionRate: z.number(),
-    profitAmount: z.number(),
-  }).passthrough(),
-  insights: z.array(z.object({
-    code: z.string(),
-    level: z.enum(['info', 'trend', 'warning']),
-    context: z.string().nullable(),
-  }).passthrough()),
-  growthCards: z.array(z.object({
-    key: z.string(),
-    href: z.string(),
-    title: z.string().optional(),
-    body: z.string().optional(),
-    benefit: z.string().optional(),
-    tone: z.enum(['primary', 'default']).optional(),
-    badge: z.string().optional(),
-    recommendedFor: z.string().optional(),
-  })),
+  profileFunnel: z
+    .object({
+      periodLabel: z.string(),
+      stages: z.array(
+        z.object({
+          id: z.enum(['requests', 'offers', 'confirmations', 'contracts', 'completed', 'revenue']),
+          label: z.string(),
+          value: z.number(),
+          displayValue: z.string(),
+          widthPercent: z.number(),
+          rateLabel: z.string().nullable(),
+          ratePercent: z.number().nullable(),
+          helperText: z.string().nullable(),
+        }),
+      ),
+      summaryText: z.string(),
+      totalConversionPercent: z.number(),
+      conversionRate: z.number(),
+      profitAmount: z.number(),
+    })
+    .passthrough(),
+  insights: z.array(
+    z
+      .object({
+        code: z.string(),
+        level: z.enum(['info', 'trend', 'warning']),
+        context: z.string().nullable(),
+      })
+      .passthrough(),
+  ),
+  growthCards: z.array(
+    z.object({
+      key: z.string(),
+      href: z.string(),
+      title: z.string().optional(),
+      body: z.string().optional(),
+      benefit: z.string().optional(),
+      tone: z.enum(['primary', 'default']).optional(),
+      badge: z.string().optional(),
+      recommendedFor: z.string().optional(),
+    }),
+  ),
   activity: z.object({
     range: rangeSchema,
     interval: z.enum(['hour', 'day']),
-    points: z.array(z.object({
-      timestamp: z.string(),
-      requests: z.number(),
-      offers: z.number(),
-    })),
+    points: z.array(
+      z.object({
+        timestamp: z.string(),
+        requests: z.number(),
+        offers: z.number(),
+      }),
+    ),
     totals: z.object({
       requestsTotal: z.number(),
       offersTotal: z.number(),
@@ -482,83 +530,111 @@ export const workspaceStatisticsDecisionDashboardSchema = z.object({
       revenueTone: toneSchema,
     }),
   }),
-  priceIntelligence: z.object({
-    citySlug: z.string().nullable(),
-    city: z.string().nullable(),
-    categoryKey: z.string().nullable(),
-    category: z.string().nullable(),
-    recommendedMin: z.number().nullable(),
-    recommendedMax: z.number().nullable(),
-    marketAverage: z.number().nullable(),
-    optimalMin: z.number().nullable(),
-    optimalMax: z.number().nullable(),
-    smartRecommendedPrice: z.number().nullable(),
-    smartSignalTone: z.enum(['visibility', 'balanced', 'premium']).nullable(),
-    analyzedRequestsCount: z.number().nullable(),
-    confidenceLevel: z.enum(['high', 'medium', 'low']).nullable(),
-    recommendation: z.string().nullable(),
-    profitPotentialScore: z.number().nullable(),
-    profitPotentialStatus: z.enum(['high', 'medium', 'low']).nullable(),
-  }).optional(),
+  priceIntelligence: z
+    .object({
+      citySlug: z.string().nullable(),
+      city: z.string().nullable(),
+      categoryKey: z.string().nullable(),
+      category: z.string().nullable(),
+      recommendedMin: z.number().nullable(),
+      recommendedMax: z.number().nullable(),
+      marketAverage: z.number().nullable(),
+      optimalMin: z.number().nullable(),
+      optimalMax: z.number().nullable(),
+      smartRecommendedPrice: z.number().nullable(),
+      smartSignalTone: z.enum(['visibility', 'balanced', 'premium']).nullable(),
+      analyzedRequestsCount: z.number().nullable(),
+      confidenceLevel: z.enum(['high', 'medium', 'low']).nullable(),
+      recommendation: z.string().nullable(),
+      profitPotentialScore: z.number().nullable(),
+      profitPotentialStatus: z.enum(['high', 'medium', 'low']).nullable(),
+    })
+    .optional(),
   decisionInsight: z.string().nullable().optional(),
-  decisionLayer: z.object({
-    title: z.string().nullable(),
-    subtitle: z.string().nullable(),
-    metrics: z.array(decisionLayerMetricSchema),
-    primaryInsight: z.string().nullable(),
-    primaryAction: z.object({
-      code: userActionStepSchema.shape.code,
-      label: z.string(),
-      target: z.string().nullable(),
-    }).nullable(),
-  }).nullable().optional(),
+  decisionLayer: z
+    .object({
+      title: z.string().nullable(),
+      subtitle: z.string().nullable(),
+      metrics: z.array(decisionLayerMetricSchema),
+      primaryInsight: z.string().nullable(),
+      primaryAction: z
+        .object({
+          code: userActionStepSchema.shape.code,
+          label: z.string(),
+          target: z.string().nullable(),
+        })
+        .nullable(),
+    })
+    .nullable()
+    .optional(),
   personalizedPricing: personalizedPricingSchema.nullable().optional(),
-  categoryFit: z.object({
-    title: z.string().nullable(),
-    subtitle: z.string().nullable(),
-    hasReliableItems: z.boolean(),
-    items: z.array(categoryFitItemSchema),
-  }).nullable().optional(),
-  cityComparison: z.object({
-    title: z.string().nullable(),
-    subtitle: z.string().nullable(),
-    hasReliableItems: z.boolean(),
-    items: z.array(cityComparisonItemSchema),
-  }).nullable().optional(),
+  categoryFit: z
+    .object({
+      title: z.string().nullable(),
+      subtitle: z.string().nullable(),
+      hasReliableItems: z.boolean(),
+      items: z.array(categoryFitItemSchema),
+    })
+    .nullable()
+    .optional(),
+  cityComparison: z
+    .object({
+      title: z.string().nullable(),
+      subtitle: z.string().nullable(),
+      hasReliableItems: z.boolean(),
+      items: z.array(cityComparisonItemSchema),
+    })
+    .nullable()
+    .optional(),
   risks: recommendationSectionSchema.nullable().optional(),
   opportunities: recommendationSectionSchema.nullable().optional(),
   nextSteps: recommendationSectionSchema.nullable().optional(),
-  activityComparison: z.object({
-    title: z.string().nullable().optional(),
-    subtitle: z.string().nullable().optional(),
-    summary: z.string().nullable().optional(),
-    peakTimestamp: z.string().nullable().optional(),
-    bestWindowTimestamp: z.string().nullable().optional(),
-    updatedAt: z.string().nullable().optional(),
-    hasReliableSeries: z.boolean(),
-    points: z.array(activityComparisonPointSchema),
-  }).nullable().optional(),
-  funnelComparison: z.object({
-    comparisonLabel: z.string().nullable().optional(),
-    summary: z.string().nullable().optional(),
-    largestGapStage: z.enum(['requests', 'offers', 'responses', 'contracts', 'completed']).nullable(),
-    largestDropOffStage: z.enum(['requests', 'offers', 'responses', 'contracts', 'completed']).nullable(),
-    primaryBottleneck: z.string().nullable(),
-    nextAction: z.string().nullable(),
-    stages: z.array(funnelComparisonStageSchema),
-  }).nullable().optional(),
-  userIntelligence: z.object({
-    comparisonLabel: z.string().nullable().optional(),
-    formulaMetrics: z.array(userFormulaMetricSchema),
-    decisionMetrics: z.array(userComparisonMetricSchema),
-    signals: z.array(userSignalSchema),
-    performancePosition: userPerformancePositionSchema,
-    profileGap: userProfileGapSchema.nullable(),
-    risks: z.array(userPriorityItemSchema),
-    opportunities: z.array(userPriorityItemSchema),
-    pricing: userPricingSchema.nullable(),
-    nextSteps: z.array(userActionStepSchema),
-  }).nullable().optional(),
+  activityComparison: z
+    .object({
+      title: z.string().nullable().optional(),
+      subtitle: z.string().nullable().optional(),
+      summary: z.string().nullable().optional(),
+      peakTimestamp: z.string().nullable().optional(),
+      bestWindowTimestamp: z.string().nullable().optional(),
+      updatedAt: z.string().nullable().optional(),
+      hasReliableSeries: z.boolean(),
+      points: z.array(activityComparisonPointSchema),
+    })
+    .nullable()
+    .optional(),
+  funnelComparison: z
+    .object({
+      comparisonLabel: z.string().nullable().optional(),
+      summary: z.string().nullable().optional(),
+      largestGapStage: z
+        .enum(['requests', 'offers', 'responses', 'contracts', 'completed'])
+        .nullable(),
+      largestDropOffStage: z
+        .enum(['requests', 'offers', 'responses', 'contracts', 'completed'])
+        .nullable(),
+      primaryBottleneck: z.string().nullable(),
+      nextAction: z.string().nullable(),
+      stages: z.array(funnelComparisonStageSchema),
+    })
+    .nullable()
+    .optional(),
+  userIntelligence: z
+    .object({
+      comparisonLabel: z.string().nullable().optional(),
+      formulaMetrics: z.array(userFormulaMetricSchema),
+      decisionMetrics: z.array(userComparisonMetricSchema),
+      signals: z.array(userSignalSchema),
+      performancePosition: userPerformancePositionSchema,
+      profileGap: userProfileGapSchema.nullable(),
+      risks: z.array(userPriorityItemSchema),
+      opportunities: z.array(userPriorityItemSchema),
+      pricing: userPricingSchema.nullable(),
+      nextSteps: z.array(userActionStepSchema),
+    })
+    .nullable()
+    .optional(),
 });
 
-export type WorkspaceStatisticsDecisionDashboardSchema = z.infer<typeof workspaceStatisticsDecisionDashboardSchema>;
+export type WorkspaceStatisticsDecisionDashboardSchema = z.infer<
+  typeof workspaceStatisticsDecisionDashboardSchema
+>;

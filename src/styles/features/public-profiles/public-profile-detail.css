@@ -4,79 +4,101 @@
     border-top: 0;
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .request-detail__panel {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .request-detail__panel {
     gap: var(--space-4);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .request-detail__dialog-copy {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .request-detail__dialog-copy {
     gap: var(--space-4);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .request-detail__dialog-heading {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .request-detail__dialog-heading {
     gap: var(--space-2);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-detail__reviews-section {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-detail__reviews-section {
     gap: var(--space-3);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews--stacked {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-reviews--stacked {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews__summary--stacked {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-reviews__summary--stacked {
     grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
     align-items: start;
     gap: var(--space-3);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews__feed {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-reviews__feed {
     gap: var(--space-3);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews__feed--empty {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-reviews__feed--empty {
     gap: var(--space-2);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews__list {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-reviews__list {
     gap: var(--space-2-5);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews__item--empty {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-reviews__item--empty {
     min-height: 0;
     padding: var(--space-4);
     align-content: start;
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews--empty .public-profile-reviews__toolbar {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-reviews--empty
+    .public-profile-reviews__toolbar {
     justify-content: flex-start;
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews--empty .public-profile-reviews__toolbar-label {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-reviews--empty
+    .public-profile-reviews__toolbar-label {
     font-size: var(--fs-13);
   }
 
-  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews--empty .public-profile-reviews__list {
+  .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+    .public-profile-reviews--empty
+    .public-profile-reviews__list {
     min-block-size: 0;
   }
 
   @media (max-width: 768px) {
-    .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .request-detail__panel {
+    .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+      .request-detail__panel {
       gap: var(--space-3);
     }
 
-    .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .request-detail__dialog-copy {
+    .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+      .request-detail__dialog-copy {
       gap: var(--space-3);
     }
 
-    .request-detail--dialog:is(.request-detail--provider, .request-detail--customer) .public-profile-reviews__summary--stacked {
+    .request-detail--dialog:is(.request-detail--provider, .request-detail--customer)
+      .public-profile-reviews__summary--stacked {
       grid-template-columns: minmax(0, 1fr);
       gap: var(--space-2-5);
     }
 
     .request-detail:is(.request-detail--provider, .request-detail--customer)
-      .request-detail__client-card:is(.request-detail__client-card--provider-hero, .request-detail__client-card--customer-profile)
+      .request-detail__client-card:is(
+        .request-detail__client-card--provider-hero,
+        .request-detail__client-card--customer-profile
+      )
       .user-header-card__identity {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
@@ -86,7 +108,10 @@
     }
 
     .request-detail:is(.request-detail--provider, .request-detail--customer)
-      .request-detail__client-card:is(.request-detail__client-card--provider-hero, .request-detail__client-card--customer-profile)
+      .request-detail__client-card:is(
+        .request-detail__client-card--provider-hero,
+        .request-detail__client-card--customer-profile
+      )
       .profile-avatar-stack {
       height: auto;
       justify-content: flex-start;
@@ -94,7 +119,10 @@
     }
 
     .request-detail:is(.request-detail--provider, .request-detail--customer)
-      .request-detail__client-card:is(.request-detail__client-card--provider-hero, .request-detail__client-card--customer-profile)
+      .request-detail__client-card:is(
+        .request-detail__client-card--provider-hero,
+        .request-detail__client-card--customer-profile
+      )
       .profile-main {
       min-width: 0;
       gap: var(--space-1);
@@ -102,7 +130,10 @@
     }
 
     .request-detail:is(.request-detail--provider, .request-detail--customer)
-      .request-detail__client-card:is(.request-detail__client-card--provider-hero, .request-detail__client-card--customer-profile)
+      .request-detail__client-card:is(
+        .request-detail__client-card--provider-hero,
+        .request-detail__client-card--customer-profile
+      )
       .profile-avatar {
       width: 52px;
       height: 52px;

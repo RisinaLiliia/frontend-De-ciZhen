@@ -21,7 +21,9 @@ export function listCities(countryCode: string, params?: ListCitiesParams) {
     qs.set('limit', String(Math.max(1, Math.round(params.limit))));
   }
 
-  const ids = Array.from(new Set((params?.ids ?? []).map((id) => id.trim()).filter(Boolean))).sort();
+  const ids = Array.from(
+    new Set((params?.ids ?? []).map((id) => id.trim()).filter(Boolean)),
+  ).sort();
   if (ids.length > 0) {
     qs.set('ids', ids.join(','));
   }

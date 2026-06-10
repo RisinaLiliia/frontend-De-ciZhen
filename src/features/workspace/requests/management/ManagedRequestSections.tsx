@@ -52,13 +52,21 @@ function WorkspaceSelectedProviderSummary({
   const statusBadge = contract
     ? resolveContractStatusBadge(t, contract.status)
     : resolveOfferStatusBadge(t, offer.status);
-  const assignedAt = formatOfferTimestamp(locale, contract?.confirmedAt ?? contract?.createdAt ?? offer.updatedAt ?? offer.createdAt);
-  const scheduledAt = formatOfferTimestamp(locale, bookingStartAt ?? offer.availableAt ?? offer.requestPreferredDate);
+  const assignedAt = formatOfferTimestamp(
+    locale,
+    contract?.confirmedAt ?? contract?.createdAt ?? offer.updatedAt ?? offer.createdAt,
+  );
+  const scheduledAt = formatOfferTimestamp(
+    locale,
+    bookingStartAt ?? offer.availableAt ?? offer.requestPreferredDate,
+  );
   const availability = offer.availabilityNote?.trim() || null;
   const message = offer.message?.trim() || null;
   const metaItems = [
     assignedAt
-      ? fillTemplate(t(I18N_KEYS.requestDetails.workspaceMetaInProgressSince), { value: assignedAt })
+      ? fillTemplate(t(I18N_KEYS.requestDetails.workspaceMetaInProgressSince), {
+          value: assignedAt,
+        })
       : null,
     scheduledAt
       ? fillTemplate(t(I18N_KEYS.requestDetails.workspaceMetaPlannedDate), { value: scheduledAt })
@@ -72,10 +80,15 @@ function WorkspaceSelectedProviderSummary({
     <article className="my-request-contract-card">
       <div className="my-request-contract-card__head">
         <div className="my-request-contract-card__identity">
-          <strong>{offer.providerDisplayName?.trim() || t(I18N_KEYS.requestDetails.workspaceSelectedProviderFallback)}</strong>
+          <strong>
+            {offer.providerDisplayName?.trim() ||
+              t(I18N_KEYS.requestDetails.workspaceSelectedProviderFallback)}
+          </strong>
           <WorkspaceBadge variant={statusBadge.variant}>{statusBadge.label}</WorkspaceBadge>
         </div>
-        {priceLabel ? <strong className="my-request-contract-card__price">{priceLabel}</strong> : null}
+        {priceLabel ? (
+          <strong className="my-request-contract-card__price">{priceLabel}</strong>
+        ) : null}
       </div>
 
       {message ? <p className="my-request-contract-card__message">{message}</p> : null}
@@ -107,15 +120,16 @@ export function WorkspaceRequestOffersSection({
   onOpenChatConversation: (payload: WorkspaceChatConversationInput) => void;
 }) {
   const t = useT();
-  const { actionableOffers, acceptedOfferId, isError, isLoading } = useWorkspaceRequestOffersData(requestId);
-  const {
-    acceptRequestOffer,
-    declineRequestOffer,
-    pendingOfferActionId,
-  } = useWorkspaceRequestOfferActions({ requestId });
+  const { actionableOffers, acceptedOfferId, isError, isLoading } =
+    useWorkspaceRequestOffersData(requestId);
+  const { acceptRequestOffer, declineRequestOffer, pendingOfferActionId } =
+    useWorkspaceRequestOfferActions({ requestId });
   const [optimisticOffers, setOptimisticOffers] = React.useState(actionableOffers);
   const actionableOffersSignature = React.useMemo(
-    () => actionableOffers.map((offer) => `${offer.id}:${offer.status}:${offer.updatedAt ?? offer.createdAt ?? ''}`).join('|'),
+    () =>
+      actionableOffers
+        .map((offer) => `${offer.id}:${offer.status}:${offer.updatedAt ?? offer.createdAt ?? ''}`)
+        .join('|'),
     [actionableOffers],
   );
 
@@ -129,43 +143,52 @@ export function WorkspaceRequestOffersSection({
   }, [actionableOffers, actionableOffersSignature]);
 
   const activeOffers = optimisticOffers;
-  const optimisticAcceptedOfferId = activeOffers.find((offer) => offer.status === 'accepted')?.id ?? acceptedOfferId ?? null;
+  const optimisticAcceptedOfferId =
+    activeOffers.find((offer) => offer.status === 'accepted')?.id ?? acceptedOfferId ?? null;
 
-  const handleAccept = React.useCallback(async (offerId: string) => {
-    const previous = activeOffers;
-    setOptimisticOffers((current) => current.map((offer) => {
-      if (offer.id === offerId) {
-        return { ...offer, status: 'accepted' };
+  const handleAccept = React.useCallback(
+    async (offerId: string) => {
+      const previous = activeOffers;
+      setOptimisticOffers((current) =>
+        current.map((offer) => {
+          if (offer.id === offerId) {
+            return { ...offer, status: 'accepted' };
+          }
+          return offer.status === 'withdrawn' ? offer : { ...offer };
+        }),
+      );
+      const ok = await acceptRequestOffer(offerId);
+      if (!ok) {
+        setOptimisticOffers(previous);
       }
-      return offer.status === 'withdrawn' ? offer : { ...offer };
-    }));
-    const ok = await acceptRequestOffer(offerId);
-    if (!ok) {
-      setOptimisticOffers(previous);
-    }
-  }, [acceptRequestOffer, activeOffers]);
+    },
+    [acceptRequestOffer, activeOffers],
+  );
 
-  const handleDecline = React.useCallback(async (offerId: string) => {
-    const previous = activeOffers;
-    setOptimisticOffers((current) => current.map((offer) => (
-      offer.id === offerId ? { ...offer, status: 'declined' } : offer
-    )));
-    const ok = await declineRequestOffer(offerId);
-    if (!ok) {
-      setOptimisticOffers(previous);
-    }
-  }, [activeOffers, declineRequestOffer]);
+  const handleDecline = React.useCallback(
+    async (offerId: string) => {
+      const previous = activeOffers;
+      setOptimisticOffers((current) =>
+        current.map((offer) => (offer.id === offerId ? { ...offer, status: 'declined' } : offer)),
+      );
+      const ok = await declineRequestOffer(offerId);
+      if (!ok) {
+        setOptimisticOffers(previous);
+      }
+    },
+    [activeOffers, declineRequestOffer],
+  );
 
   return (
     <div className="my-request-dialog__section">
       <div className="my-request-dialog__section-head">
         <div>
           <h3>{t(I18N_KEYS.requestDetails.workspaceOffersTitle)}</h3>
-          <p className="my-request-dialog__section-subtitle">{t(I18N_KEYS.requestDetails.workspaceOffersSubtitle)}</p>
+          <p className="my-request-dialog__section-subtitle">
+            {t(I18N_KEYS.requestDetails.workspaceOffersSubtitle)}
+          </p>
         </div>
-        <span className="my-request-dialog__section-count">
-          {activeOffers.length}
-        </span>
+        <span className="my-request-dialog__section-count">{activeOffers.length}</span>
       </div>
 
       {isLoading ? (
@@ -205,45 +228,68 @@ export function WorkspaceRequestOffersSection({
             const isAccepted = offer.status === 'accepted';
             const isDeclined = offer.status === 'declined';
             const isBusy = pendingOfferActionId === offer.id;
-            const isDecisionLocked = Boolean(optimisticAcceptedOfferId && optimisticAcceptedOfferId !== offer.id);
+            const isDecisionLocked = Boolean(
+              optimisticAcceptedOfferId && optimisticAcceptedOfferId !== offer.id,
+            );
             const canAccept = !isAccepted && !isDeclined && !isDecisionLocked;
             const canDecline = !isAccepted && !isDeclined;
             const offerAmount = formatDialogPrice(locale, offer.amount);
             const sentAt = formatOfferTimestamp(locale, offer.createdAt);
-            const availability = offer.availabilityNote?.trim() || formatOfferTimestamp(locale, offer.availableAt);
+            const availability =
+              offer.availabilityNote?.trim() || formatOfferTimestamp(locale, offer.availableAt);
 
             return (
-              <article key={offer.id} className={`my-request-offer-card ${isAccepted ? 'is-accepted' : ''}`.trim()}>
+              <article
+                key={offer.id}
+                className={`my-request-offer-card ${isAccepted ? 'is-accepted' : ''}`.trim()}
+              >
                 <div className="my-request-offer-card__head">
                   <div className="my-request-offer-card__identity">
-                    <strong>{offer.providerDisplayName?.trim() || t(I18N_KEYS.requestDetails.workspaceProviderFallback)}</strong>
+                    <strong>
+                      {offer.providerDisplayName?.trim() ||
+                        t(I18N_KEYS.requestDetails.workspaceProviderFallback)}
+                    </strong>
                     <span>{sentAt || '—'}</span>
                   </div>
                   <div className="my-request-offer-card__status">
                     {offerAmount ? (
                       <strong className="my-request-offer-card__price">{offerAmount}</strong>
                     ) : null}
-                    <WorkspaceBadge variant={statusBadge.variant}>{statusBadge.label}</WorkspaceBadge>
+                    <WorkspaceBadge variant={statusBadge.variant}>
+                      {statusBadge.label}
+                    </WorkspaceBadge>
                   </div>
                 </div>
 
-                {(offer.message?.trim() || availability || offer.providerCompletedJobs || offer.providerRatingAvg) ? (
+                {offer.message?.trim() ||
+                availability ||
+                offer.providerCompletedJobs ||
+                offer.providerRatingAvg ? (
                   <div className="my-request-offer-card__body">
                     {offer.message?.trim() ? (
                       <p className="my-request-offer-card__message">{offer.message.trim()}</p>
                     ) : null}
                     <div className="my-request-offer-card__meta">
                       {availability ? (
-                        <span>{fillTemplate(t(I18N_KEYS.requestDetails.workspaceAvailabilityTemplate), { value: availability })}</span>
+                        <span>
+                          {fillTemplate(t(I18N_KEYS.requestDetails.workspaceAvailabilityTemplate), {
+                            value: availability,
+                          })}
+                        </span>
                       ) : null}
                       {typeof offer.providerCompletedJobs === 'number' ? (
                         <span>
-                          {fillTemplate(t(I18N_KEYS.requestDetails.workspaceCompletedJobsTemplate), { value: String(offer.providerCompletedJobs) })}
+                          {fillTemplate(
+                            t(I18N_KEYS.requestDetails.workspaceCompletedJobsTemplate),
+                            { value: String(offer.providerCompletedJobs) },
+                          )}
                         </span>
                       ) : null}
                       {typeof offer.providerRatingAvg === 'number' ? (
                         <span>
-                          {fillTemplate(t(I18N_KEYS.requestDetails.workspaceRatingTemplate), { value: offer.providerRatingAvg.toFixed(1) })}
+                          {fillTemplate(t(I18N_KEYS.requestDetails.workspaceRatingTemplate), {
+                            value: offer.providerRatingAvg.toFixed(1),
+                          })}
                         </span>
                       ) : null}
                     </div>
@@ -255,14 +301,16 @@ export function WorkspaceRequestOffersSection({
                     type="button"
                     className="btn-secondary"
                     disabled={!offer.providerUserId || isBusy}
-                    onClick={() => onOpenChatConversation({
-                      relatedEntity: { type: 'offer', id: offer.id },
-                      participantUserId: offer.providerUserId,
-                      participantRole: 'provider',
-                      requestId: offer.requestId,
-                      providerUserId: offer.providerUserId,
-                      offerId: offer.id,
-                    })}
+                    onClick={() =>
+                      onOpenChatConversation({
+                        relatedEntity: { type: 'offer', id: offer.id },
+                        participantUserId: offer.providerUserId,
+                        participantRole: 'provider',
+                        requestId: offer.requestId,
+                        providerUserId: offer.providerUserId,
+                        offerId: offer.id,
+                      })
+                    }
                   >
                     {t(I18N_KEYS.requestsPage.navChat)}
                   </button>
@@ -317,13 +365,10 @@ export function WorkspaceRequestDecisionSection({
   const [reviewText, setReviewText] = React.useState('');
   const [reviewPromptDismissed, setReviewPromptDismissed] = React.useState(false);
   const [reviewSubmitted, setReviewSubmitted] = React.useState(false);
-  const {
-    completeRequestContract,
-    confirmRequestContract,
-    isSubmittingDecision,
-  } = useWorkspaceRequestDecisionActions({
-    requestId: card.requestId,
-  });
+  const { completeRequestContract, confirmRequestContract, isSubmittingDecision } =
+    useWorkspaceRequestDecisionActions({
+      requestId: card.requestId,
+    });
   const {
     booking,
     chatInput,
@@ -334,11 +379,10 @@ export function WorkspaceRequestDecisionSection({
     selectedOffer,
     suggestedStartAt,
   } = useWorkspaceRequestDecisionData({ card, locale });
-  const {
-    isSubmittingReview,
-    submitCompletionReview,
-  } = useWorkspaceCompletionReviewActions();
-  const [optimisticContractStatus, setOptimisticContractStatus] = React.useState<NonNullable<typeof contract>['status'] | null>(contract?.status ?? null);
+  const { isSubmittingReview, submitCompletionReview } = useWorkspaceCompletionReviewActions();
+  const [optimisticContractStatus, setOptimisticContractStatus] = React.useState<
+    NonNullable<typeof contract>['status'] | null
+  >(contract?.status ?? null);
 
   React.useEffect(() => {
     setOptimisticContractStatus(contract?.status ?? null);
@@ -359,47 +403,55 @@ export function WorkspaceRequestDecisionSection({
   }, [optimisticContractStatus]);
 
   const hasSavedClientReview = Boolean(reviewStatus?.clientReviewId);
-  const shouldShowReviewScene = initialIntent === 'review'
-    || card.decision.actionType === 'review_completion'
-    || hasSavedClientReview;
+  const shouldShowReviewScene =
+    initialIntent === 'review' ||
+    card.decision.actionType === 'review_completion' ||
+    hasSavedClientReview;
 
   React.useEffect(() => {
     if (!reviewStatus?.clientReviewId) return;
     setReviewSubmitted(true);
   }, [reviewStatus?.clientReviewId]);
 
-  if (card.decision.actionType === 'review_offers' || (card.decision.actionType === 'none' && !shouldShowReviewScene)) {
+  if (
+    card.decision.actionType === 'review_offers' ||
+    (card.decision.actionType === 'none' && !shouldShowReviewScene)
+  ) {
     return null;
   }
 
   const effectiveContract = contract
     ? { ...contract, status: optimisticContractStatus ?? contract.status }
     : null;
-  const effectiveContractMeta = effectiveContract?.priceAmount != null
-    ? [
-      formatDialogPrice(locale, effectiveContract.priceAmount),
-      resolveContractStatusBadge(t, effectiveContract.status).label,
-    ]
-      .filter(Boolean)
-      .join(' · ')
-    : contractMeta;
+  const effectiveContractMeta =
+    effectiveContract?.priceAmount != null
+      ? [
+          formatDialogPrice(locale, effectiveContract.priceAmount),
+          resolveContractStatusBadge(t, effectiveContract.status).label,
+        ]
+          .filter(Boolean)
+          .join(' · ')
+      : contractMeta;
   const shouldShowReviewPrompt = Boolean(
-    effectiveContract?.status === 'completed'
-    && booking?.bookingId
-    && (reviewStatus?.canClientReviewProvider || initialIntent === 'review')
-    && !hasSavedClientReview
-    && !reviewPromptDismissed
-    && !reviewSubmitted,
+    effectiveContract?.status === 'completed' &&
+    booking?.bookingId &&
+    (reviewStatus?.canClientReviewProvider || initialIntent === 'review') &&
+    !hasSavedClientReview &&
+    !reviewPromptDismissed &&
+    !reviewSubmitted,
   );
 
   return (
     <div className="my-request-dialog__section my-request-dialog__section--decision">
       <div className="my-request-dialog__section-head">
         <div>
-          <h3>{card.decision.actionLabel?.trim() || t(I18N_KEYS.requestDetails.workspaceNextStepTitle)}</h3>
+          <h3>
+            {card.decision.actionLabel?.trim() ||
+              t(I18N_KEYS.requestDetails.workspaceNextStepTitle)}
+          </h3>
           <p className="my-request-dialog__section-subtitle">
-            {card.decision.actionReason?.trim()
-              || t(I18N_KEYS.requestDetails.workspaceNextStepBody)}
+            {card.decision.actionReason?.trim() ||
+              t(I18N_KEYS.requestDetails.workspaceNextStepBody)}
           </p>
         </div>
         <span className="my-request-dialog__section-count">
@@ -420,7 +472,9 @@ export function WorkspaceRequestDecisionSection({
         />
       ) : null}
 
-      {(card.decision.actionType === 'reply_required' || card.decision.actionType === 'overdue_followup') && chatInput ? (
+      {(card.decision.actionType === 'reply_required' ||
+        card.decision.actionType === 'overdue_followup') &&
+      chatInput ? (
         <div className="my-request-dialog__actions my-request-dialog__actions--sticky">
           <button
             type="button"
@@ -493,7 +547,9 @@ export function WorkspaceRequestDecisionSection({
                     }
                   });
                 }}
-                disabled={isSubmittingDecision || effectiveContract.status !== 'pending' || !startAt}
+                disabled={
+                  isSubmittingDecision || effectiveContract.status !== 'pending' || !startAt
+                }
               >
                 {isSubmittingDecision
                   ? t(I18N_KEYS.requestDetails.workspaceSavingCta)
@@ -540,7 +596,11 @@ export function WorkspaceRequestDecisionSection({
                     setReviewPromptDismissed(false);
                   });
                 }}
-                disabled={isSubmittingDecision || effectiveContract.status === 'completed' || effectiveContract.status === 'cancelled'}
+                disabled={
+                  isSubmittingDecision ||
+                  effectiveContract.status === 'completed' ||
+                  effectiveContract.status === 'cancelled'
+                }
               >
                 {isSubmittingDecision
                   ? t(I18N_KEYS.requestDetails.workspaceSavingCta)
@@ -631,7 +691,11 @@ export function WorkspaceRequestDecisionSection({
                   <h4>{t(I18N_KEYS.requestDetails.workspaceYourReviewTitle)}</h4>
                   <p>
                     {reviewStatus?.clientReviewedProviderAt
-                      ? fillTemplate(t(I18N_KEYS.requestDetails.workspaceReviewSavedAt), { value: formatOfferTimestamp(locale, reviewStatus.clientReviewedProviderAt) || '—' })
+                      ? fillTemplate(t(I18N_KEYS.requestDetails.workspaceReviewSavedAt), {
+                          value:
+                            formatOfferTimestamp(locale, reviewStatus.clientReviewedProviderAt) ||
+                            '—',
+                        })
                       : t(I18N_KEYS.requestDetails.workspaceReviewAlreadySaved)}
                   </p>
                 </div>

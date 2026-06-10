@@ -15,16 +15,9 @@ type WorkspaceReviewsShellControlsProps = {
   t: (key: I18nKey) => string;
 };
 
-export function WorkspaceReviewsShellControls({
-  t,
-}: WorkspaceReviewsShellControlsProps) {
-  const {
-    reviewSort,
-    setReviewSort,
-    reviewRange,
-    setReviewRange,
-    resetReviewControls,
-  } = useWorkspaceReviewControlsState();
+export function WorkspaceReviewsShellControls({ t }: WorkspaceReviewsShellControlsProps) {
+  const { reviewSort, setReviewSort, reviewRange, setReviewRange, resetReviewControls } =
+    useWorkspaceReviewControlsState();
 
   const controlsContent = (
     <div className="workspace-reviews-shell-controls">
@@ -66,9 +59,7 @@ export function WorkspaceReviewsShellControls({
 
   return (
     <>
-      <div className="workspace-reviews-shell-controls__desktop">
-        {controlsContent}
-      </div>
+      <div className="workspace-reviews-shell-controls__desktop">{controlsContent}</div>
     </>
   );
 }

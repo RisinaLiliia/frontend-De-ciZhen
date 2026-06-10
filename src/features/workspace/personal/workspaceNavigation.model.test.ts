@@ -9,9 +9,15 @@ import {
 
 describe('workspaceNavigation.model', () => {
   it('builds current href from workspace path and search string', () => {
-    expect(buildWorkspaceCurrentHref({ search: '', workspacePath: '/workspace' })).toBe('/workspace');
-    expect(buildWorkspaceCurrentHref({ search: 'tab=my-offers&status=all', workspacePath: '/workspace' }))
-      .toBe('/workspace?tab=my-offers&status=all');
+    expect(buildWorkspaceCurrentHref({ search: '', workspacePath: '/workspace' })).toBe(
+      '/workspace',
+    );
+    expect(
+      buildWorkspaceCurrentHref({
+        search: 'tab=my-offers&status=all',
+        workspacePath: '/workspace',
+      }),
+    ).toBe('/workspace?tab=my-offers&status=all');
   });
 
   it('builds workspace tab href and clears section/reviewRole with favorites-specific policy', () => {
@@ -40,7 +46,9 @@ describe('workspaceNavigation.model', () => {
         activeWorkspaceTab: 'my-offers',
         status: 'in_progress',
       }),
-    ).toBe('/workspace?section=requests&scope=my&period=30d&range=30d&role=provider&state=execution');
+    ).toBe(
+      '/workspace?section=requests&scope=my&period=30d&range=30d&role=provider&state=execution',
+    );
 
     expect(
       buildWorkspaceFavoritesViewHref({

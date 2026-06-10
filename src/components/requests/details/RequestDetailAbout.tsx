@@ -61,7 +61,11 @@ export function RequestDetailAbout({
       <p
         id={textId}
         ref={textRef}
-        className={cn('request-detail__text', clamped ? 'request-detail__text--clamped' : null, textClassName)}
+        className={cn(
+          'request-detail__text',
+          clamped ? 'request-detail__text--clamped' : null,
+          textClassName,
+        )}
         style={
           clampLines
             ? ({ '--request-detail-text-lines': String(clampLines) } as React.CSSProperties)

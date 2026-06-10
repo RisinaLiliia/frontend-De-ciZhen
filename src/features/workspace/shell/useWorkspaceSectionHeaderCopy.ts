@@ -1,8 +1,6 @@
 'use client';
 
-import {
-  useWorkspaceContext,
-} from '@/features/workspace/context';
+import { useWorkspaceContext } from '@/features/workspace/context';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceSectionHeaderCopy } from '@/features/workspace/shell/WorkspaceSectionHeader';
 import type { WorkspaceTab } from '@/features/workspace/state';

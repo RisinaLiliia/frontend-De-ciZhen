@@ -21,7 +21,9 @@ async function mockUnauthenticatedSession(page: Page) {
   });
 }
 
-test('@critical @a11y login form focuses first invalid field and toggles password label', async ({ page }) => {
+test('@critical @a11y login form focuses first invalid field and toggles password label', async ({
+  page,
+}) => {
   await mockUnauthenticatedSession(page);
   await page.goto('/auth/login');
 

@@ -74,7 +74,10 @@
     color: var(--color-primary);
     font-size: 28px;
     line-height: 1;
-    transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      transform var(--transition-fast);
   }
 
   .request-detail__owner-photo-slot:hover:not(:disabled) {
@@ -145,5 +148,4 @@
   }
 
   /* Provider public profile: keep desktop/tablet two-column composition stable. */
-
 }

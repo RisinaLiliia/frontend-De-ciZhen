@@ -89,7 +89,11 @@
   --c-hero-shot-backboard-stroke: var(--color-border);
   --c-hero-shot-net: color-mix(in oklab, var(--color-primary) 55%, var(--color-surface) 45%);
   --c-hero-shot-ball-fill: color-mix(in oklab, var(--color-warning) 78%, var(--color-surface) 22%);
-  --c-hero-shot-ball-stroke: color-mix(in oklab, var(--color-primary) 74%, var(--color-surface) 26%);
+  --c-hero-shot-ball-stroke: color-mix(
+    in oklab,
+    var(--color-primary) 74%,
+    var(--color-surface) 26%
+  );
   --c-hero-shot-ball-line: color-mix(in oklab, var(--c-ink) 70%, transparent);
 
   --hero-shot-floor-opacity: 0.5;

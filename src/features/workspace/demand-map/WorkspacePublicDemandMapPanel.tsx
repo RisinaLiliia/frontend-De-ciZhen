@@ -2,7 +2,10 @@
 
 import * as React from 'react';
 
-import type { WorkspacePublicCityActivityDto, WorkspacePublicSummaryDto } from '@/lib/api/dto/workspace';
+import type {
+  WorkspacePublicCityActivityDto,
+  WorkspacePublicSummaryDto,
+} from '@/lib/api/dto/workspace';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { I18nKey } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -45,9 +48,15 @@ export function WorkspacePublicDemandMapPanel({
     [locale],
   );
 
-  const visibleCityActivity = React.useMemo(() => normalizeCityActivity(cityActivity?.items ?? []), [cityActivity]);
+  const visibleCityActivity = React.useMemo(
+    () => normalizeCityActivity(cityActivity?.items ?? []),
+    [cityActivity],
+  );
   const hasCoordinates = visibleCityActivity.length > 0;
-  const topAccessibleCities = React.useMemo(() => visibleCityActivity.slice(0, 5), [visibleCityActivity]);
+  const topAccessibleCities = React.useMemo(
+    () => visibleCityActivity.slice(0, 5),
+    [visibleCityActivity],
+  );
 
   const activeProvidersCount = summary?.totalActiveProviders ?? 0;
   const activeRequestsCount =

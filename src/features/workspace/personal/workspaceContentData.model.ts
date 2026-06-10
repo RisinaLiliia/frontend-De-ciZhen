@@ -25,11 +25,7 @@ type BuildWorkspaceContentDataResultArgs = {
     | 'favoritesItems'
     | 'isFavoritesLoading'
   >;
-  contract: Pick<
-    ContractRequestsDataResult,
-    | 'contractRequests'
-    | 'contractOffersByRequest'
-  >;
+  contract: Pick<ContractRequestsDataResult, 'contractRequests' | 'contractOffersByRequest'>;
   cards: Pick<WorkspaceCardsResult, 'favoriteProviderCards'>;
 };
 

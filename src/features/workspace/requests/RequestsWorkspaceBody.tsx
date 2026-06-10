@@ -5,13 +5,13 @@ import type { WorkspaceRequestsSurfaceModel } from '@/features/workspace/request
 
 export type RequestsWorkspaceBodyVariant =
   | {
-    kind: 'public';
-    surface: WorkspaceRequestsSurfaceModel;
-  }
+      kind: 'public';
+      surface: WorkspaceRequestsSurfaceModel;
+    }
   | {
-    kind: 'private';
-    surface: WorkspaceRequestsSurfaceModel;
-  };
+      kind: 'private';
+      surface: WorkspaceRequestsSurfaceModel;
+    };
 
 export function buildRequestsWorkspacePublicBody(
   surface: WorkspaceRequestsSurfaceModel,
@@ -31,10 +31,6 @@ export function buildRequestsWorkspacePrivateBody(
   };
 }
 
-export function RequestsWorkspaceBody({
-  body,
-}: {
-  body: RequestsWorkspaceBodyVariant;
-}) {
+export function RequestsWorkspaceBody({ body }: { body: RequestsWorkspaceBodyVariant }) {
   return <RequestsView surface={body.surface} />;
 }

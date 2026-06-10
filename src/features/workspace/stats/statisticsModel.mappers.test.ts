@@ -46,10 +46,18 @@ describe('statisticsModel.mappers', () => {
   });
 
   it('computes city signal and market balance ratio', () => {
-    expect(resolveCitySignal({ requestCount: 10, auftragSuchenCount: 3, anbieterSuchenCount: 9 })).toBe('high');
-    expect(resolveCitySignal({ requestCount: 2, auftragSuchenCount: 10, anbieterSuchenCount: 2 })).toBe('low');
-    expect(resolveCitySignal({ requestCount: 0, auftragSuchenCount: 0, anbieterSuchenCount: 0 })).toBe('none');
-    expect(resolveMarketBalanceRatio({ requestCount: 6, auftragSuchenCount: 3, anbieterSuchenCount: 6 })).toBe(2);
+    expect(
+      resolveCitySignal({ requestCount: 10, auftragSuchenCount: 3, anbieterSuchenCount: 9 }),
+    ).toBe('high');
+    expect(
+      resolveCitySignal({ requestCount: 2, auftragSuchenCount: 10, anbieterSuchenCount: 2 }),
+    ).toBe('low');
+    expect(
+      resolveCitySignal({ requestCount: 0, auftragSuchenCount: 0, anbieterSuchenCount: 0 }),
+    ).toBe('none');
+    expect(
+      resolveMarketBalanceRatio({ requestCount: 6, auftragSuchenCount: 3, anbieterSuchenCount: 6 }),
+    ).toBe(2);
   });
 
   it('builds activity totals and fallback metrics', () => {
@@ -146,17 +154,21 @@ describe('statisticsModel.mappers', () => {
         },
       },
       demand: {
-        categories: [{ categoryKey: 'cleaning', categoryName: 'Cleaning', requestCount: 7, sharePercent: 70 }],
-        cities: [{
-          citySlug: 'berlin',
-          cityName: 'Berlin',
-          cityId: 'berlin-id',
-          requestCount: 7,
-          lat: 52.52,
-          lng: 13.405,
-          auftragSuchenCount: 2,
-          anbieterSuchenCount: 6,
-        }],
+        categories: [
+          { categoryKey: 'cleaning', categoryName: 'Cleaning', requestCount: 7, sharePercent: 70 },
+        ],
+        cities: [
+          {
+            citySlug: 'berlin',
+            cityName: 'Berlin',
+            cityId: 'berlin-id',
+            requestCount: 7,
+            lat: 52.52,
+            lng: 13.405,
+            auftragSuchenCount: 2,
+            anbieterSuchenCount: 6,
+          },
+        ],
       },
       profileFunnel: {
         periodLabel: '30 Tage',

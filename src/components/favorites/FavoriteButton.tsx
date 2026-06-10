@@ -74,4 +74,3 @@ export function FavoriteButton({
     </button>
   );
 }
-

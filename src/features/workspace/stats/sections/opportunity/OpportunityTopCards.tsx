@@ -1,11 +1,7 @@
 'use client';
 
 import { LocationMeta } from '@/components/ui/LocationMeta';
-import {
-  IconTrophyBronze,
-  IconTrophyGold,
-  IconTrophySilver,
-} from '@/components/ui/icons/icons';
+import { IconTrophyBronze, IconTrophyGold, IconTrophySilver } from '@/components/ui/icons/icons';
 import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsModel } from '../../statistics.model';
@@ -53,7 +49,9 @@ export function OpportunityTopCards({
                   {item.rank === 3 ? <IconTrophyBronze size={30} /> : null}
                 </span>
                 <div className="workspace-statistics-opportunity__identity">
-                  <span className="request-category workspace-statistics-opportunity__category">{item.category}</span>
+                  <span className="request-category workspace-statistics-opportunity__category">
+                    {item.category}
+                  </span>
                   <LocationMeta
                     label={item.city}
                     className="workspace-statistics-opportunity__city"

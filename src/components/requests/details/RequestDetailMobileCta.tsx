@@ -36,10 +36,14 @@ export function RequestDetailMobileCta({
   className,
 }: RequestDetailMobileCtaProps) {
   const isEditState = applyState === 'edit';
-  const applyActionStateClass = isEditState ? 'request-card__status-action--edit' : 'request-card__status-action--submit';
+  const applyActionStateClass = isEditState
+    ? 'request-card__status-action--edit'
+    : 'request-card__status-action--submit';
 
   return (
-    <div className={`request-detail__mobile-cta ${compactIcons ? 'request-detail__mobile-cta--compact' : ''} ${className ?? ''}`.trim()}>
+    <div
+      className={`request-detail__mobile-cta ${compactIcons ? 'request-detail__mobile-cta--compact' : ''} ${className ?? ''}`.trim()}
+    >
       {notice ? <div className="request-detail__notice">{notice}</div> : null}
       <div className={compactIcons ? 'request-card__status-actions' : 'request-detail__cta'}>
         {extraActions}
@@ -67,7 +71,9 @@ export function RequestDetailMobileCta({
             />
           )
         ) : null}
-        {showApply && applyHint && !compactIcons ? <p className="request-detail__cta-subtext">{applyHint}</p> : null}
+        {showApply && applyHint && !compactIcons ? (
+          <p className="request-detail__cta-subtext">{applyHint}</p>
+        ) : null}
         {showChat ? (
           compactIcons ? (
             <button

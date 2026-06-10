@@ -30,10 +30,5 @@ export function WorkspaceModeHeader({
     preferredRequestsRole,
   });
 
-  return (
-    <WorkspaceSectionHeader
-      title={header.title}
-      description={header.description}
-    />
-  );
+  return <WorkspaceSectionHeader title={header.title} description={header.description} />;
 }

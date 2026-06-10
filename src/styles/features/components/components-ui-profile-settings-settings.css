@@ -26,12 +26,11 @@
     padding: 14px;
     border-radius: var(--radius-lg);
     border: 1px solid var(--surface-soft-border);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in oklab, var(--color-surface) 95%, var(--color-border) 5%),
-        color-mix(in oklab, var(--color-surface) 89%, var(--color-border) 11%)
-      );
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-surface) 95%, var(--color-border) 5%),
+      color-mix(in oklab, var(--color-surface) 89%, var(--color-border) 11%)
+    );
   }
 
   .profile-settings__card-head {
@@ -187,6 +186,4 @@
     border-color: color-mix(in oklab, var(--color-success) 55%, var(--color-border) 45%);
     background: var(--c-success-soft);
   }
-
-
 }

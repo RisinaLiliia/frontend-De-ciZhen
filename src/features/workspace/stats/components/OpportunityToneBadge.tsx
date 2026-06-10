@@ -1,13 +1,11 @@
 'use client';
 
-import { WorkspaceBadge, type WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
+import {
+  WorkspaceBadge,
+  type WorkspaceBadgeVariant,
+} from '@/features/workspace/shared/WorkspaceBadge';
 
-export type OpportunityToneBadgeTone =
-  | 'very-high'
-  | 'good'
-  | 'balanced'
-  | 'competitive'
-  | 'low';
+export type OpportunityToneBadgeTone = 'very-high' | 'good' | 'balanced' | 'competitive' | 'low';
 
 const OPPORTUNITY_TONE_VARIANT_MAP: Record<OpportunityToneBadgeTone, WorkspaceBadgeVariant> = {
   'very-high': 'success',

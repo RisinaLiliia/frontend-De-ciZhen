@@ -4,23 +4,25 @@ import type { Ref } from 'react';
 
 import { RequestsPageNav } from '@/components/requests/RequestsPageNav';
 import { CitySearchSelect, type CitySearchOption } from '@/components/ui/CitySearchSelect';
-import {
-  IconTrophyBronze,
-  IconTrophyGold,
-  IconTrophySilver,
-} from '@/components/ui/icons/icons';
+import { IconTrophyBronze, IconTrophyGold, IconTrophySilver } from '@/components/ui/icons/icons';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
 import {
   workspacePanelShell,
   workspaceStatCardShell,
 } from '@/features/workspace/shared/workspaceSurfaceShell';
-import { WorkspaceBadge, type WorkspaceBadgeVariant } from '@/features/workspace/shared/WorkspaceBadge';
+import {
+  WorkspaceBadge,
+  type WorkspaceBadgeVariant,
+} from '@/features/workspace/shared/WorkspaceBadge';
 import type { WorkspaceStatisticsModel } from '../statistics.model';
 import type { TranslateFn } from './statisticsSections.types';
 import { citySignalIcon, citySignalLabel } from './statisticsSections.utils';
 
-const CITY_SIGNAL_BADGE_VARIANT: Record<WorkspaceStatisticsModel['cityRows'][number]['signal'], WorkspaceBadgeVariant> = {
+const CITY_SIGNAL_BADGE_VARIANT: Record<
+  WorkspaceStatisticsModel['cityRows'][number]['signal'],
+  WorkspaceBadgeVariant
+> = {
   high: 'success',
   medium: 'info',
   low: 'warning',
@@ -70,14 +72,18 @@ export function StatisticsCitiesPanel({
   const loadingLabel = t(I18N_KEYS.common.refreshing);
   const emptyLabel = t(I18N_KEYS.common.noResults);
   const errorLabel = t(I18N_KEYS.common.loadErrorShort);
-  const selectedCityLabel = cityOptions.find((option) => option.value === cityValue)?.label ?? copy.citiesFilterPlaceholder;
+  const selectedCityLabel =
+    cityOptions.find((option) => option.value === cityValue)?.label ?? copy.citiesFilterPlaceholder;
   const placeholderCityLabel = t(I18N_KEYS.workspace.statsAdditionalComparisonUnavailable);
   const placeholderSignalLabel = t(I18N_KEYS.workspace.statsNoDataLabel);
   const minimumVisibleRows = 3;
   const placeholderRowCount = Math.max(0, minimumVisibleRows - visibleCityRows.length);
 
   return (
-    <section ref={panelRef} className={workspacePanelShell('requests-stats-chart', 'workspace-statistics__cities-panel')}>
+    <section
+      ref={panelRef}
+      className={workspacePanelShell('requests-stats-chart', 'workspace-statistics__cities-panel')}
+    >
       <header className="section-heading workspace-statistics__tile-header">
         <p className="section-title">{copy.citiesTitle}</p>
         <p className="section-subtitle">{subtitle ?? copy.citiesSubtitle}</p>
@@ -112,14 +118,25 @@ export function StatisticsCitiesPanel({
             <span>{copy.citiesColumnMarketBalance}</span>
           </li>
           {visibleCityRows.map((item, index) => {
-            const rank = item.rank ?? ((cityListPage - 1) * cityListLimit) + index + 1;
-            const rankTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : null;
+            const rank = item.rank ?? (cityListPage - 1) * cityListLimit + index + 1;
+            const rankTone =
+              rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : null;
             const requestsLabel = formatNumber.format(item.count);
-            const jobSearchesLabel = item.auftragSuchenCount === null ? '—' : formatNumber.format(item.auftragSuchenCount);
-            const providerSearchesLabel = item.anbieterSuchenCount === null ? '—' : formatNumber.format(item.anbieterSuchenCount);
-            const marketBalanceLabel = item.marketBalanceRatio === null ? '—' : `${formatMarketBalance.format(item.marketBalanceRatio)}x`;
+            const jobSearchesLabel =
+              item.auftragSuchenCount === null ? '—' : formatNumber.format(item.auftragSuchenCount);
+            const providerSearchesLabel =
+              item.anbieterSuchenCount === null
+                ? '—'
+                : formatNumber.format(item.anbieterSuchenCount);
+            const marketBalanceLabel =
+              item.marketBalanceRatio === null
+                ? '—'
+                : `${formatMarketBalance.format(item.marketBalanceRatio)}x`;
             const signalLabel = citySignalLabel(item.signal, copy);
-            const matchedCityComparison = cityComparison?.find((city) => city.city.trim().toLowerCase() === item.name.trim().toLowerCase()) ?? null;
+            const matchedCityComparison =
+              cityComparison?.find(
+                (city) => city.city.trim().toLowerCase() === item.name.trim().toLowerCase(),
+              ) ?? null;
             const isCompetitor = item.peerContext?.role === 'competitor';
             return (
               <li
@@ -140,19 +157,24 @@ export function StatisticsCitiesPanel({
                 >
                   <span className="workspace-statistics-city-list__rank-cell">
                     {rankTone ? (
-                      <span className={`workspace-statistics-city-list__rank-cup is-${rankTone}`.trim()} aria-hidden="true">
+                      <span
+                        className={`workspace-statistics-city-list__rank-cup is-${rankTone}`.trim()}
+                        aria-hidden="true"
+                      >
                         {rank === 1 ? <IconTrophyGold size={20} /> : null}
                         {rank === 2 ? <IconTrophySilver size={20} /> : null}
                         {rank === 3 ? <IconTrophyBronze size={20} /> : null}
                       </span>
                     ) : null}
-                    {!rankTone ? <span className="workspace-statistics-city-list__rank">{rank}</span> : null}
+                    {!rankTone ? (
+                      <span className="workspace-statistics-city-list__rank">{rank}</span>
+                    ) : null}
                   </span>
                   <span className="workspace-statistics-city-list__name">{item.name}</span>
-                  <span className="workspace-statistics-city-list__count">{formatNumber.format(item.count)}</span>
-                  <span className="workspace-statistics-city-list__share">
-                    {jobSearchesLabel}
+                  <span className="workspace-statistics-city-list__count">
+                    {formatNumber.format(item.count)}
                   </span>
+                  <span className="workspace-statistics-city-list__share">{jobSearchesLabel}</span>
                   <span className="workspace-statistics-city-list__share">
                     {providerSearchesLabel}
                   </span>
@@ -164,7 +186,10 @@ export function StatisticsCitiesPanel({
                       tone="soft"
                       className="workspace-statistics-city-list__signal"
                     >
-                      <span className="workspace-statistics-city-list__signal-icon" aria-hidden="true">
+                      <span
+                        className="workspace-statistics-city-list__signal-icon"
+                        aria-hidden="true"
+                      >
                         {citySignalIcon(item.signal)}
                       </span>
                       {signalLabel}
@@ -185,7 +210,12 @@ export function StatisticsCitiesPanel({
               className="workspace-statistics-city-list__item-shell workspace-statistics-city-list__item-shell--placeholder"
               aria-hidden="true"
             >
-              <div className={workspaceStatCardShell('workspace-statistics-city-list__item', 'workspace-statistics-city-list__item--placeholder')}>
+              <div
+                className={workspaceStatCardShell(
+                  'workspace-statistics-city-list__item',
+                  'workspace-statistics-city-list__item--placeholder',
+                )}
+              >
                 <span className="workspace-statistics-city-list__rank-cell">
                   <span className="workspace-statistics-city-list__rank">—</span>
                 </span>

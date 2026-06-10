@@ -26,14 +26,7 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
   const searchParams = useSearchParams();
   const [isPending, startTransition] = React.useTransition();
 
-  const {
-    categoryParam,
-    subcategoryParam,
-    cityId,
-    sortBy,
-    page,
-    limit,
-  } = React.useMemo(
+  const { categoryParam, subcategoryParam, cityId, sortBy, page, limit } = React.useMemo(
     () => resolveRequestsFilterQueryParams(searchParams, defaultSort),
     [defaultSort, searchParams],
   );
@@ -54,7 +47,15 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
   );
 
   const filter = React.useMemo(
-    () => buildPublicRequestsFilterPayload({ cityId, categoryKey, subcategoryKey, sortBy, page, limit }),
+    () =>
+      buildPublicRequestsFilterPayload({
+        cityId,
+        categoryKey,
+        subcategoryKey,
+        sortBy,
+        page,
+        limit,
+      }),
     [categoryKey, cityId, limit, page, sortBy, subcategoryKey],
   );
 
@@ -90,7 +91,19 @@ export function useRequestsFilters<TService extends { key: string; categoryKey: 
         router.replace(nextHref, { scroll: false });
       });
     },
-    [categoryKey, cityId, currentHref, defaultSort, limit, page, pathname, router, searchParams, sortBy, subcategoryKey],
+    [
+      categoryKey,
+      cityId,
+      currentHref,
+      defaultSort,
+      limit,
+      page,
+      pathname,
+      router,
+      searchParams,
+      sortBy,
+      subcategoryKey,
+    ],
   );
 
   const onCategoryChange = React.useCallback(

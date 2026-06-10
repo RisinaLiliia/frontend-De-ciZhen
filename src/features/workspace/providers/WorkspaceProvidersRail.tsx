@@ -48,10 +48,7 @@ export function buildProvidersRailDecisionLinks(currentSearch: string | URLSearc
   };
 }
 
-export function WorkspaceProvidersRail({
-  t,
-  locale,
-}: WorkspaceProvidersRailProps) {
+export function WorkspaceProvidersRail({ t, locale }: WorkspaceProvidersRailProps) {
   const searchParams = useSearchParams();
   const railLinks = React.useMemo(
     () => buildProvidersRailDecisionLinks(searchParams),
@@ -61,10 +58,11 @@ export function WorkspaceProvidersRail({
   const categoryKey = normalizeFilter(searchParams.get('categoryKey'));
   const subcategoryKey = normalizeFilter(searchParams.get('subcategoryKey'));
   const viewerModeParam = searchParams.get('viewerMode');
-  const viewerMode = viewerModeParam === 'customer' || viewerModeParam === 'provider'
-    ? viewerModeParam
-    : undefined;
-  const period = resolveWorkspaceRequestsPeriod(searchParams.get('period') ?? searchParams.get('range'));
+  const viewerMode =
+    viewerModeParam === 'customer' || viewerModeParam === 'provider' ? viewerModeParam : undefined;
+  const period = resolveWorkspaceRequestsPeriod(
+    searchParams.get('period') ?? searchParams.get('range'),
+  );
 
   const {
     data: contractData,
@@ -103,47 +101,58 @@ export function WorkspaceProvidersRail({
     [contractData],
   );
   const railModel = React.useMemo(
-    () => buildLinkedWorkspaceRailModel({
+    () =>
+      buildLinkedWorkspaceRailModel({
+        locale,
+        contextLabel: t(I18N_KEYS.requestsPage.workspaceRailProvidersContext),
+        summaryItems,
+        panel: contractData
+          ? {
+              eyebrow: contractData.decisionPanel.eyebrow,
+              totalValue: contractData.decisionPanel.totalNeedsAction,
+              title: t(I18N_KEYS.requestsPage.workspaceRailProvidersContext),
+              text: contractData.decisionPanel.text,
+              visualization: 'donut',
+              primaryAction: {
+                kind: 'link',
+                label: t(I18N_KEYS.requestsPage.workspaceRailProvidersPrimaryCta),
+                href: railLinks.overviewHref,
+              },
+              secondaryAction: {
+                kind: 'link',
+                label: t(I18N_KEYS.requestsPage.workspaceRailAnalysisCta),
+                href: railLinks.analysisHref,
+              },
+              queueTitle: contractData.decisionPanel.queueTitle,
+              queue: contractData.decisionPanel.queue.map((item) => ({
+                id: item.providerId,
+                title: item.title,
+                actionLabel: item.actionLabel,
+                actionPriorityLevel: item.actionPriorityLevel,
+                action: {
+                  kind: 'link',
+                  href: item.href,
+                  label: item.title,
+                },
+              })),
+              emptyText: contractData.decisionPanel.emptyText,
+              overview: contractData.decisionPanel.overview,
+            }
+          : null,
+        analysisHref: railLinks.analysisHref,
+        queueCountTemplate: t(I18N_KEYS.requestsPage.workspaceRailProvidersQueueCountTemplate),
+        queueFooterHref: railLinks.providersHref,
+        recommendationsFooterHref: railLinks.analysisHref,
+      }),
+    [
+      contractData,
       locale,
-      contextLabel: t(I18N_KEYS.requestsPage.workspaceRailProvidersContext),
+      railLinks.analysisHref,
+      railLinks.overviewHref,
+      railLinks.providersHref,
       summaryItems,
-      panel: contractData ? {
-        eyebrow: contractData.decisionPanel.eyebrow,
-        totalValue: contractData.decisionPanel.totalNeedsAction,
-        title: t(I18N_KEYS.requestsPage.workspaceRailProvidersContext),
-        text: contractData.decisionPanel.text,
-        visualization: 'donut',
-        primaryAction: {
-          kind: 'link',
-          label: t(I18N_KEYS.requestsPage.workspaceRailProvidersPrimaryCta),
-          href: railLinks.overviewHref,
-        },
-        secondaryAction: {
-          kind: 'link',
-          label: t(I18N_KEYS.requestsPage.workspaceRailAnalysisCta),
-          href: railLinks.analysisHref,
-        },
-        queueTitle: contractData.decisionPanel.queueTitle,
-        queue: contractData.decisionPanel.queue.map((item) => ({
-          id: item.providerId,
-          title: item.title,
-          actionLabel: item.actionLabel,
-          actionPriorityLevel: item.actionPriorityLevel,
-          action: {
-            kind: 'link',
-            href: item.href,
-            label: item.title,
-          },
-        })),
-        emptyText: contractData.decisionPanel.emptyText,
-        overview: contractData.decisionPanel.overview,
-      } : null,
-      analysisHref: railLinks.analysisHref,
-      queueCountTemplate: t(I18N_KEYS.requestsPage.workspaceRailProvidersQueueCountTemplate),
-      queueFooterHref: railLinks.providersHref,
-      recommendationsFooterHref: railLinks.analysisHref,
-    }),
-    [contractData, locale, railLinks.analysisHref, railLinks.overviewHref, railLinks.providersHref, summaryItems, t],
+      t,
+    ],
   );
 
   return (

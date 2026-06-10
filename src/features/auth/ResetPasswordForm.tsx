@@ -13,7 +13,10 @@ import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
 import { IconEye, IconEyeOff } from '@/components/ui/icons/icons';
 import { resetPassword } from '@/lib/auth/api';
-import { buildResetPasswordSchema, type ResetPasswordValues } from '@/features/auth/reset-password.schema';
+import {
+  buildResetPasswordSchema,
+  type ResetPasswordValues,
+} from '@/features/auth/reset-password.schema';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 
@@ -30,7 +33,9 @@ export function ResetPasswordForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
-  const passwordToggleLabel = showPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow);
+  const passwordToggleLabel = showPassword
+    ? t(I18N_KEYS.client.profilePasswordHide)
+    : t(I18N_KEYS.client.profilePasswordShow);
   const confirmPasswordToggleLabel = showConfirmPassword
     ? t(I18N_KEYS.client.profilePasswordHide)
     : t(I18N_KEYS.client.profilePasswordShow);
@@ -88,7 +93,9 @@ export function ResetPasswordForm() {
 
   return (
     <form className="form-stack" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <p className="sr-only" aria-live="polite">{errorSummary}</p>
+      <p className="sr-only" aria-live="polite">
+        {errorSummary}
+      </p>
 
       <div className="form-group">
         <FormLabel htmlFor="password" required requiredHint={requiredHint}>
@@ -113,13 +120,27 @@ export function ResetPasswordForm() {
             {showPassword ? <IconEye /> : <IconEyeOff />}
           </button>
         </Field>
-        {errors.password ? <p id="reset-password-error" className="auth-form-error" role="alert">{errors.password.message}</p> : null}
+        {errors.password ? (
+          <p id="reset-password-error" className="auth-form-error" role="alert">
+            {errors.password.message}
+          </p>
+        ) : null}
         <div className="auth-password-rules">
-          <span className={passwordChecks.length ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLength)}</span>
-          <span className={passwordChecks.upper ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleUpper)}</span>
-          <span className={passwordChecks.lower ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleLower)}</span>
-          <span className={passwordChecks.digit ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleDigit)}</span>
-          <span className={passwordChecks.symbol ? 'is-ok' : ''}>{t(I18N_KEYS.auth.passwordRuleSymbol)}</span>
+          <span className={passwordChecks.length ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleLength)}
+          </span>
+          <span className={passwordChecks.upper ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleUpper)}
+          </span>
+          <span className={passwordChecks.lower ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleLower)}
+          </span>
+          <span className={passwordChecks.digit ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleDigit)}
+          </span>
+          <span className={passwordChecks.symbol ? 'is-ok' : ''}>
+            {t(I18N_KEYS.auth.passwordRuleSymbol)}
+          </span>
         </div>
       </div>
 
@@ -146,7 +167,11 @@ export function ResetPasswordForm() {
             {showConfirmPassword ? <IconEye /> : <IconEyeOff />}
           </button>
         </Field>
-        {errors.confirmPassword ? <p id="reset-confirm-password-error" className="auth-form-error" role="alert">{errors.confirmPassword.message}</p> : null}
+        {errors.confirmPassword ? (
+          <p id="reset-confirm-password-error" className="auth-form-error" role="alert">
+            {errors.confirmPassword.message}
+          </p>
+        ) : null}
       </div>
 
       <Button type="submit" loading={isSubmitting} disabled={!token}>

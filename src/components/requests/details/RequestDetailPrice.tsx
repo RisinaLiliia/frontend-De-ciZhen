@@ -21,11 +21,17 @@ export function RequestDetailPrice({
 }: RequestDetailPriceProps) {
   return (
     <div className={`request-detail__price ${className ?? ''}`.trim()}>
-      {pricePrefixLabel ? <span className="request-detail__price-prefix">{pricePrefixLabel}</span> : null}
+      {pricePrefixLabel ? (
+        <span className="request-detail__price-prefix">{pricePrefixLabel}</span>
+      ) : null}
       <span className="proof-price">{priceLabel}</span>
-      {priceSuffixLabel ? <span className="request-detail__price-suffix">{priceSuffixLabel}</span> : null}
+      {priceSuffixLabel ? (
+        <span className="request-detail__price-suffix">{priceSuffixLabel}</span>
+      ) : null}
       {priceTrend ? (
-        <span className={`status-badge ${priceTrend === 'up' ? 'status-badge--success' : 'status-badge--warning'}`}>
+        <span
+          className={`status-badge ${priceTrend === 'up' ? 'status-badge--success' : 'status-badge--warning'}`}
+        >
           {priceTrend === 'down' ? '↓' : '↑'} {priceTrendLabel}
         </span>
       ) : null}

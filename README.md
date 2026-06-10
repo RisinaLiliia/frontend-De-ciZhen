@@ -15,6 +15,7 @@
 De'ciZhen is a local services marketplace that connects clients and service providers.
 
 Users can:
+
 - create service requests
 - receive and compare multiple offers
 - communicate in chat
@@ -23,6 +24,7 @@ Users can:
 ## Quick Start
 
 Prerequisites:
+
 - Node.js `>=20.20.0` (`.nvmrc` is `20.20.0`)
 
 Setup:
@@ -34,17 +36,20 @@ npm run dev
 ```
 
 Open:
+
 - `http://localhost:3000`
 
 ## Core User Flows
 
 Client:
+
 1. Create a request (`/request/create`)
 2. Receive offers (`/offers/[requestId]` and workspace views)
 3. Choose a provider and continue in chat (`/chat`)
 4. Complete contract/review flow in workspace (`/workspace?tab=*`)
 
 Provider:
+
 1. Browse public requests (`/workspace?section=orders`)
 2. Send offers from request details/workspace
 3. Continue communication in chat (`/chat`)
@@ -62,6 +67,7 @@ Use one runtime data source (backend DB). Frontend runtime mock feeds were remov
    - `npm run seed:demo`
 
 Notes:
+
 - Favorites API accepts only Mongo ObjectId in `targetId`.
 - For provider favorites, backend contract is based on provider `userId` identity.
 - `seed:providers` fills DB with public provider cards (`seed-provider-<n>@test.com / Password1`).
@@ -83,37 +89,40 @@ Notes:
 
 ### Canonical Routes
 
-| Path | Access | Purpose |
-| --- | --- | --- |
-| `/` | Public | Home page |
-| `/workspace` | Public/Auth | Unified workspace surface |
-| `/requests/[id]` | Public/Auth | Request details |
-| `/providers/[id]` | Public/Auth | Public provider profile |
-| `/offers/[requestId]` | Public/Auth | Offers for a request |
-| `/request/create` | Public/Auth | Create request form (submit requires auth) |
-| `/chat` | Auth | Inbox |
-| `/chat/[threadId]` | Auth | Thread messages |
-| `/profile` | Auth | Redirects to `/profile/[id]` (or alias route) |
-| `/profile/[id]` | Auth | Profile/workspace settings |
-| `/auth/login` | Public | Login |
-| `/auth/register` | Public | Register |
-| `/auth/forgot-password` | Public | Forgot password |
-| `/auth/reset-password` | Public | Reset password |
-| `/provider/onboarding` | Auth | Provider onboarding |
-| `/privacy-policy` | Public | Legal |
-| `/cookie-notice` | Public | Legal |
+| Path                    | Access      | Purpose                                       |
+| ----------------------- | ----------- | --------------------------------------------- |
+| `/`                     | Public      | Home page                                     |
+| `/workspace`            | Public/Auth | Unified workspace surface                     |
+| `/requests/[id]`        | Public/Auth | Request details                               |
+| `/providers/[id]`       | Public/Auth | Public provider profile                       |
+| `/offers/[requestId]`   | Public/Auth | Offers for a request                          |
+| `/request/create`       | Public/Auth | Create request form (submit requires auth)    |
+| `/chat`                 | Auth        | Inbox                                         |
+| `/chat/[threadId]`      | Auth        | Thread messages                               |
+| `/profile`              | Auth        | Redirects to `/profile/[id]` (or alias route) |
+| `/profile/[id]`         | Auth        | Profile/workspace settings                    |
+| `/auth/login`           | Public      | Login                                         |
+| `/auth/register`        | Public      | Register                                      |
+| `/auth/forgot-password` | Public      | Forgot password                               |
+| `/auth/reset-password`  | Public      | Reset password                                |
+| `/provider/onboarding`  | Auth        | Provider onboarding                           |
+| `/privacy-policy`       | Public      | Legal                                         |
+| `/cookie-notice`        | Public      | Legal                                         |
 
 ### Workspace Query Contract
 
 Public mode:
+
 - `section=orders|requests|providers|stats|reviews|profile`
 
 Private mode:
+
 - `tab=my-requests|my-offers|completed-jobs|favorites|reviews|profile`
 - `status=all|open|in_progress|completed`
 - `fav=requests|providers`
 
 Shared listing filters:
+
 - `cityId`, `categoryKey`, `subcategoryKey` (or `serviceKey`)
 - `sort=date_desc|date_asc|price_asc|price_desc`
 - `page`, `limit`
@@ -130,9 +139,11 @@ Shared listing filters:
 ### Provider Reviews Contract
 
 Provider public profile (`/providers/[id]`) consumes one BFF endpoint:
+
 - `GET /reviews/overview?targetUserId=<id>&targetRole=provider&limit=<n>&offset=<n>&sort=created_desc|rating_desc`
 
 Response is already view-ready:
+
 - paged `items` (review feed)
 - `summary.total`
 - `summary.averageRating`
@@ -149,6 +160,7 @@ Response is already view-ready:
 ### Legacy Compatibility Routes
 
 Backward-compatible redirects are still present for older links:
+
 - `/client*`, `/provider*`, `/request/new`, `/profile/workspace`
 
 ## Architecture
@@ -198,6 +210,7 @@ cp .env.local.example .env.local
 ### Required (Production)
 
 At least one backend base must be available:
+
 - `API_BASE_URL`
 - `NEXT_PUBLIC_API_BASE` (fallback source in production scenarios)
 
@@ -239,6 +252,7 @@ The frontend emits UX events via `trackUXEvent` (`src/lib/analytics.ts`).
 Events are gated by user consent and are sent only when analytics consent is granted.
 
 Current tracked event names include:
+
 - `home_hero_cta_click`
 - `workspace_filter_change`
 - `workspace_filter_reset`
@@ -250,20 +264,24 @@ Current tracked event names include:
 ### Home activity widgets (backend analytics)
 
 Platform activity panels consume backend analytics endpoints:
+
 - `/analytics/platform-activity`
 
 ### Workspace Statistik (decision dashboard contract)
 
 `/workspace?section=stats` is implemented as one decision-dashboard query:
+
 - `GET /workspace/statistics?range=24h|7d|30d|90d&cityId?&regionId?&categoryKey?`
 
 Contract goals:
+
 - one request drives the whole stats page
 - backend owns analytical meaning and section consistency
 - frontend maps DTOs to UI and keeps only presentation formatting
 - `city/region/category` are not local widget filters; they are the global dashboard context
 
 Expected response shape:
+
 - `decisionContext`
 - `filterOptions`
 - `sectionMeta`
@@ -278,6 +296,7 @@ Expected response shape:
 - `growthCards`
 
 Behavior:
+
 - guest users receive `mode=platform`
 - authenticated users receive `mode=personalized`
 - UI layout is shared; payload changes by context/mode
@@ -311,6 +330,7 @@ npm run start
 ```
 
 Notes:
+
 - Node.js 20+ is required
 - Backend must be reachable through configured API base env vars
 - Next.js route handler proxies `/api/*`; `next.config.ts` keeps `/presence/*` rewrite
@@ -327,31 +347,33 @@ npm run release:check
 
 ## Scripts
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start dev server |
-| `npm run build` | Production build |
-| `npm run build:webpack` | Production build in webpack mode (release baseline) |
-| `npm run start` | Start production server |
-| `npm run lint` | ESLint |
-| `npm run lint:strict` | ESLint with `--max-warnings=0` |
-| `npm run lint:colors` | Combined design-token color checks |
-| `npm run test` | Vitest (unit/component) |
-| `npm run test:e2e` | Playwright e2e tests |
-| `npm run test:e2e:critical` | Playwright critical e2e flows (`@critical`) |
-| `npm run test:e2e:a11y` | Playwright accessibility smoke flows (`@a11y`) |
-| `npm run test:e2e:headed` | Playwright headed mode |
-| `npm run test:e2e:ui` | Playwright UI mode |
-| `npm run release:check` | Release quality gate (`lint + typecheck + tests + build`) |
-| `npm exec tsc --noEmit` | Type check |
+| Command                     | Purpose                                                   |
+| --------------------------- | --------------------------------------------------------- |
+| `npm run dev`               | Start dev server                                          |
+| `npm run build`             | Production build                                          |
+| `npm run build:webpack`     | Production build in webpack mode (release baseline)       |
+| `npm run start`             | Start production server                                   |
+| `npm run lint`              | ESLint                                                    |
+| `npm run lint:strict`       | ESLint with `--max-warnings=0`                            |
+| `npm run lint:colors`       | Combined design-token color checks                        |
+| `npm run test`              | Vitest (unit/component)                                   |
+| `npm run test:e2e`          | Playwright e2e tests                                      |
+| `npm run test:e2e:critical` | Playwright critical e2e flows (`@critical`)               |
+| `npm run test:e2e:a11y`     | Playwright accessibility smoke flows (`@a11y`)            |
+| `npm run test:e2e:headed`   | Playwright headed mode                                    |
+| `npm run test:e2e:ui`       | Playwright UI mode                                        |
+| `npm run release:check`     | Release quality gate (`lint + typecheck + tests + build`) |
+| `npm exec tsc --noEmit`     | Type check                                                |
 
 ## CI Branch Protection
 
 For `main`, keep these required status checks enabled:
+
 - `Frontend CI / quality`
 - `Frontend CI / e2e-critical`
 
 Optional but recommended:
+
 - `Frontend CI / a11y-smoke`
 
 ## Project Structure

@@ -90,11 +90,13 @@ export function buildActivitySignals(params: {
 }): WorkspaceStatisticsActivitySignalView[] {
   const { activityMetrics, copy, formatCurrency, formatNumber, locale } = params;
   const responseValue = formatMinutes(activityMetrics.responseMedianMinutes, locale, copy);
-  const responseHint = responseValue === '—'
-    ? copy.activityNoResponse
-    : copy.activityResponseFirstOfferHint;
+  const responseHint =
+    responseValue === '—' ? copy.activityNoResponse : copy.activityResponseFirstOfferHint;
   const revenueHint = copy.activityRevenueSignalTemplate
-    .replace('{gmv}', `${copy.activityGmvLabel}: ${formatCurrency.format(activityMetrics.gmvAmount)}`)
+    .replace(
+      '{gmv}',
+      `${copy.activityGmvLabel}: ${formatCurrency.format(activityMetrics.gmvAmount)}`,
+    )
     .replace('{takeRate}', String(activityMetrics.takeRatePercent))
     .replace('{suffix}', copy.activityTakeRateSuffix);
 
@@ -103,18 +105,17 @@ export function buildActivitySignals(params: {
       key: 'offer-rate',
       label: copy.activityOfferRateLabel,
       value: formatPercent(activityMetrics.offerRatePercent),
-      hint: activityMetrics.offerRatePercent >= 50
-        ? copy.activityOfferRateHintPositive
-        : copy.activityOfferRateHintNegative,
+      hint:
+        activityMetrics.offerRatePercent >= 50
+          ? copy.activityOfferRateHintPositive
+          : copy.activityOfferRateHintNegative,
       tone: activityMetrics.offerRateTone,
     },
     {
       key: 'response-median',
       label: copy.activityResponseMedianLabel,
       value: responseValue,
-      hint: responseValue === '—'
-        ? responseHint
-        : copy.activityResponseActionHint,
+      hint: responseValue === '—' ? responseHint : copy.activityResponseActionHint,
       tone: activityMetrics.responseMedianTone,
     },
     {
@@ -128,9 +129,10 @@ export function buildActivitySignals(params: {
       key: 'cancellation',
       label: copy.activityCancellationLabel,
       value: formatPercent(activityMetrics.cancellationRatePercent),
-      hint: activityMetrics.cancellationRatePercent <= 10
-        ? copy.activityCancellationStableHint
-        : copy.activityCancellationUnstableHint,
+      hint:
+        activityMetrics.cancellationRatePercent <= 10
+          ? copy.activityCancellationStableHint
+          : copy.activityCancellationUnstableHint,
       tone: activityMetrics.cancellationTone,
     },
     {
@@ -181,10 +183,12 @@ export function buildKpis(params: {
       key: 'completed-total',
       label: copy.stage4LabelPlatform,
       value: formatNumber.format(data.kpis.completedJobsTotal),
-      hint: data.kpis.completedJobsTotal > 0
-        ? `${copy.kpiSuccessRateLabel} ${formatPercent(data.kpis.successRate)}`
-        : copy.kpiNoCompletedJobs,
-      tone: data.kpis.completedJobsTotal > 0 && data.kpis.successRate >= 25 ? 'positive' : 'neutral',
+      hint:
+        data.kpis.completedJobsTotal > 0
+          ? `${copy.kpiSuccessRateLabel} ${formatPercent(data.kpis.successRate)}`
+          : copy.kpiNoCompletedJobs,
+      tone:
+        data.kpis.completedJobsTotal > 0 && data.kpis.successRate >= 25 ? 'positive' : 'neutral',
     },
     {
       key: 'active-providers',
@@ -225,47 +229,52 @@ export function buildKpis(params: {
       key: 'open-requests',
       label: copy.stage1LabelPersonalized,
       value: formatNumber.format(openRequests),
-      hint: openRequests > 0
-        ? `${formatNumber.format(data.kpis.requestsTotal)} ${copy.kpiTotalInRangeHintSuffix}`
-        : copy.kpiNoOpenRequests,
+      hint:
+        openRequests > 0
+          ? `${formatNumber.format(data.kpis.requestsTotal)} ${copy.kpiTotalInRangeHintSuffix}`
+          : copy.kpiNoOpenRequests,
       tone: 'neutral',
     },
     {
       key: 'recent-offers',
       label: copy.stage2LabelPersonalized,
       value: formatNumber.format(data.kpis.offersTotal),
-      hint: recentOffers7d > 0
-        ? `${formatNumber.format(recentOffers7d)} ${copy.kpiLast7DaysHintSuffix}`
-        : copy.kpiNoRecentOffers7d,
+      hint:
+        recentOffers7d > 0
+          ? `${formatNumber.format(recentOffers7d)} ${copy.kpiLast7DaysHintSuffix}`
+          : copy.kpiNoRecentOffers7d,
       tone: recentOffers7d > 0 ? 'positive' : 'neutral',
     },
     {
       key: 'completed-personal',
       label: copy.stage4LabelPersonalized,
       value: formatNumber.format(completedJobs),
-      hint: completedJobs > 0
-        ? `${copy.kpiSuccessRateLabel} ${formatPercent(data.kpis.successRate)}`
-        : copy.kpiNoCompletedJobs,
+      hint:
+        completedJobs > 0
+          ? `${copy.kpiSuccessRateLabel} ${formatPercent(data.kpis.successRate)}`
+          : copy.kpiNoCompletedJobs,
       tone: completedJobs > 0 && data.kpis.successRate >= 30 ? 'positive' : 'neutral',
     },
     {
       key: 'response-time',
       label: copy.kpiResponseTimeLabel,
       value: formatMinutes(data.kpis.avgResponseMinutes, locale, copy),
-      hint: typeof avgResponseMinutes !== 'number'
-        ? copy.kpiNoResponseTimeData
-        : isFastResponse
-          ? copy.kpiFastResponseHint
-          : copy.kpiResponseTargetHint,
+      hint:
+        typeof avgResponseMinutes !== 'number'
+          ? copy.kpiNoResponseTimeData
+          : isFastResponse
+            ? copy.kpiFastResponseHint
+            : copy.kpiResponseTargetHint,
       tone: typeof avgResponseMinutes === 'number' && isFastResponse ? 'positive' : 'neutral',
     },
     {
       key: 'success-rate',
       label: copy.kpiSuccessRateLabel,
       value: sentOffers > 0 ? formatPercent(data.kpis.successRate) : '—',
-      hint: sentOffers > 0
-        ? `${formatNumber.format(acceptedOffers)} ${copy.kpiAcceptedOffersHintSuffix}`
-        : copy.kpiNoSentOffers,
+      hint:
+        sentOffers > 0
+          ? `${formatNumber.format(acceptedOffers)} ${copy.kpiAcceptedOffersHintSuffix}`
+          : copy.kpiNoSentOffers,
       tone: sentOffers > 0 && data.kpis.successRate >= 30 ? 'positive' : 'neutral',
     },
     {

@@ -13,11 +13,15 @@ declare global {
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim() ?? '';
 const ANALYTICS_ENABLED =
-  process.env.NODE_ENV === 'production' &&
-  process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true';
+  process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true';
 
 function isLocalhostHost(hostname: string) {
-  return hostname === 'localhost' || hostname === '::1' || hostname === '[::1]' || hostname.startsWith('127.');
+  return (
+    hostname === 'localhost' ||
+    hostname === '::1' ||
+    hostname === '[::1]' ||
+    hostname.startsWith('127.')
+  );
 }
 
 function ensureGtagShim() {
@@ -52,7 +56,8 @@ export function GoogleAnalyticsManager() {
     setHostResolved(true);
   }, []);
 
-  const canRunAnalytics = ready && hostResolved && !isLocalhost && ANALYTICS_ENABLED && Boolean(GA_MEASUREMENT_ID);
+  const canRunAnalytics =
+    ready && hostResolved && !isLocalhost && ANALYTICS_ENABLED && Boolean(GA_MEASUREMENT_ID);
 
   React.useEffect(() => {
     if (!canRunAnalytics) return;
@@ -84,7 +89,10 @@ export function GoogleAnalyticsManager() {
 
       {choice.analytics ? (
         <>
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="afterInteractive" />
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            strategy="afterInteractive"
+          />
           <Script
             id="dc-ga-init"
             strategy="afterInteractive"

@@ -111,13 +111,20 @@ export function sortCitiesByActivity(cities: DemandCityActivity[]): DemandCityAc
   return [...cities].sort((a, b) => b.count - a.count);
 }
 
-export function normalizeCityActivity(items: WorkspacePublicCityActivityItemDto[]): DemandCityActivity[] {
+export function normalizeCityActivity(
+  items: WorkspacePublicCityActivityItemDto[],
+): DemandCityActivity[] {
   const normalized = items
     .map((entry, index) => {
       const rawEntry = entry as LooseCityActivityItem;
       const location = readLocation(rawEntry.location);
       const rawCitySlug = pickFirstNonEmptyString(rawEntry.citySlug, rawEntry.slug);
-      const rawCityName = pickFirstNonEmptyString(rawEntry.cityName, rawEntry.name, rawEntry.city, rawEntry.cityLabel);
+      const rawCityName = pickFirstNonEmptyString(
+        rawEntry.cityName,
+        rawEntry.name,
+        rawEntry.city,
+        rawEntry.cityLabel,
+      );
       const citySlugToken = normalizeCityToken(rawCitySlug);
       const cityNameToken = normalizeCityToken(rawCityName);
       const fallbackCoords =

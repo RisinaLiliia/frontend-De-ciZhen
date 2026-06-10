@@ -100,11 +100,10 @@ export function WorkspaceGuestRequestCard({
       mode="link"
       onOpen={onOpen}
       isActive={isActive}
-      statusSlot={statusSlot ?? (badgeLabel ? (
-        <WorkspaceBadge variant="success">
-          {badgeLabel}
-        </WorkspaceBadge>
-      ) : null)}
+      statusSlot={
+        statusSlot ??
+        (badgeLabel ? <WorkspaceBadge variant="success">{badgeLabel}</WorkspaceBadge> : null)
+      }
       overlaySlot={overlaySlot}
       contentSlot={contentSlot}
       actionSlot={actionSlot}

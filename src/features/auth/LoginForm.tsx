@@ -29,7 +29,9 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const nextPath = searchParams.get('next')?.trim();
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
-  const passwordToggleLabel = showPassword ? t(I18N_KEYS.client.profilePasswordHide) : t(I18N_KEYS.client.profilePasswordShow);
+  const passwordToggleLabel = showPassword
+    ? t(I18N_KEYS.client.profilePasswordHide)
+    : t(I18N_KEYS.client.profilePasswordShow);
   const schema = React.useMemo(() => buildLoginSchema(t), [t]);
 
   const login = useAuthLogin();
@@ -109,7 +111,9 @@ export function LoginForm() {
 
   return (
     <form className="form-stack" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <p className="sr-only" aria-live="polite">{errorSummary}</p>
+      <p className="sr-only" aria-live="polite">
+        {errorSummary}
+      </p>
       <div className="form-group">
         <FormLabel htmlFor="email" required requiredHint={requiredHint}>
           {t(I18N_KEYS.auth.emailLabel)}
@@ -132,7 +136,11 @@ export function LoginForm() {
             {...register('email')}
           />
         </Field>
-        {errors.email ? <p id="login-email-error" className="auth-form-error" role="alert">{errors.email.message}</p> : null}
+        {errors.email ? (
+          <p id="login-email-error" className="auth-form-error" role="alert">
+            {errors.email.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="form-group">
@@ -159,11 +167,17 @@ export function LoginForm() {
           </button>
         </Field>
         {errors.password ? (
-          <p id="login-password-error" className="auth-form-error" role="alert">{errors.password.message}</p>
+          <p id="login-password-error" className="auth-form-error" role="alert">
+            {errors.password.message}
+          </p>
         ) : null}
       </div>
 
-      <Link href={forgotHref} prefetch={false} className="typo-small ml-auto text-right link-accent">
+      <Link
+        href={forgotHref}
+        prefetch={false}
+        className="typo-small ml-auto text-right link-accent"
+      >
         {t(I18N_KEYS.auth.forgotPassword)}
       </Link>
 

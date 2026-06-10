@@ -39,7 +39,9 @@ export function listMyBookings(params: ListMyBookingsQuery = {}) {
   return apiGet<BookingDto[]>(`/bookings/my${suffix}`);
 }
 
-export async function listAllMyBookings(params: ListAllMyBookingsQuery = {}): Promise<BookingDto[]> {
+export async function listAllMyBookings(
+  params: ListAllMyBookingsQuery = {},
+): Promise<BookingDto[]> {
   const pageLimit = normalizeLimit(params.pageLimit ?? 100) ?? 100;
   const maxPagesRaw = Number.isFinite(params.maxPages) ? Number(params.maxPages) : 25;
   const maxPages = Math.min(Math.max(Math.trunc(maxPagesRaw), 1), 50);

@@ -45,9 +45,7 @@ export function buildRequestDetailsViewModel({
   const tags = (request.tags ?? []).filter(Boolean);
   const tagList = tags.length ? tags : [categoryLabel, serviceLabel].filter(Boolean);
   const priceLabel =
-    request.price != null
-      ? formatPrice(request.price)
-      : t(I18N_KEYS.requestDetails.priceOnRequest);
+    request.price != null ? formatPrice(request.price) : t(I18N_KEYS.requestDetails.priceOnRequest);
   const preferredDate =
     request.preferredDate && !Number.isNaN(new Date(request.preferredDate).getTime())
       ? new Date(request.preferredDate)

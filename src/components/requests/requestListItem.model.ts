@@ -122,7 +122,12 @@ function mapRequestStatusLabel(status: string | undefined, t: (key: I18nKey) => 
   if (!status) return t(I18N_KEYS.requestsPage.statusOpen);
   if (status === 'completed') return t(I18N_KEYS.requestsPage.statusCompleted);
   if (status === 'cancelled') return t(I18N_KEYS.requestsPage.statusCancelled);
-  if (status === 'in_progress' || status === 'assigned' || status === 'matched' || status === 'confirmed') {
+  if (
+    status === 'in_progress' ||
+    status === 'assigned' ||
+    status === 'matched' ||
+    status === 'confirmed'
+  ) {
     return t(I18N_KEYS.requestsPage.statusInProgress);
   }
   return t(I18N_KEYS.requestsPage.statusOpen);

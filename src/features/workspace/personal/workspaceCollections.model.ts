@@ -73,18 +73,10 @@ export function buildWorkspaceCollections({
     ? buildAllMyContracts(myProviderContracts, myClientContracts)
     : [];
   const favoriteProviderCityLabelById = includeFavoriteProviderPresentation
-    ? buildFavoriteProviderCityLabelById(
-      favoriteProviders,
-      cityById,
-      locale,
-    )
+    ? buildFavoriteProviderCityLabelById(favoriteProviders, cityById, locale)
     : new Map<string, string>();
   const favoriteProviderRoleLabelById = includeFavoriteProviderPresentation
-    ? buildFavoriteProviderRoleLabelById(
-      favoriteProviders,
-      serviceByKey,
-      locale,
-    )
+    ? buildFavoriteProviderRoleLabelById(favoriteProviders, serviceByKey, locale)
     : new Map<string, string>();
 
   return {

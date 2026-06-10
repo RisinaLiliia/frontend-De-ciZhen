@@ -20,7 +20,9 @@ function PublicRequestsSeenProbe() {
     <div
       data-testid="seen"
       data-has-new={String(typeof result.markPublicRequestsSeen === 'function')}
-      data-has-legacy={String('markPublicOrdersSeen' in (result as unknown as Record<string, unknown>))}
+      data-has-legacy={String(
+        'markPublicOrdersSeen' in (result as unknown as Record<string, unknown>),
+      )}
     />
   );
 }
@@ -48,16 +50,14 @@ function PublicRequestsStateProbe() {
     <div
       data-testid="state"
       data-total={String(result.platformRequestsTotal)}
-      data-has-legacy={String('platformOrdersTotal' in (result as unknown as Record<string, unknown>))}
+      data-has-legacy={String(
+        'platformOrdersTotal' in (result as unknown as Record<string, unknown>),
+      )}
     />
   );
 }
 
-function DisabledPublicRequestsStateProbe({
-  setPage,
-}: {
-  setPage: ReturnType<typeof vi.fn>;
-}) {
+function DisabledPublicRequestsStateProbe({ setPage }: { setPage: ReturnType<typeof vi.fn> }) {
   useWorkspacePublicRequestsState({
     publicRequests: { items: [], total: 0 },
     allRequestsSummary: { totalPublishedRequests: 24, totalActiveProviders: 8 },

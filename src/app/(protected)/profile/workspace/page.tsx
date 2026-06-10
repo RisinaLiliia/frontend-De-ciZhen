@@ -4,7 +4,9 @@ type ProfileWorkspaceAliasPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default async function ProfileWorkspaceAliasPage({ searchParams }: ProfileWorkspaceAliasPageProps) {
+export default async function ProfileWorkspaceAliasPage({
+  searchParams,
+}: ProfileWorkspaceAliasPageProps) {
   const params = await searchParams;
   const next = new URLSearchParams();
 

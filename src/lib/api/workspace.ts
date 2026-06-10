@@ -1,7 +1,5 @@
 import { apiGet, apiPatchForm, apiPost, apiPostForm } from '@/lib/api/http';
-import type {
-  AuthResponseDto,
-} from '@/lib/api/dto/auth';
+import type { AuthResponseDto } from '@/lib/api/dto/auth';
 import type {
   WorkspaceProfileDto,
   WorkspacePrivateOverviewDto,
@@ -53,7 +51,10 @@ function buildWorkspacePublicOverviewQuery(params: WorkspacePublicOverviewQuery 
   }
   if (params.activityRange) qs.set('activityRange', params.activityRange);
   if (typeof params.cityActivityLimit === 'number') {
-    qs.set('cityActivityLimit', String(Math.min(5000, Math.max(1, Math.trunc(params.cityActivityLimit)))));
+    qs.set(
+      'cityActivityLimit',
+      String(Math.min(5000, Math.max(1, Math.trunc(params.cityActivityLimit)))),
+    );
   }
   return qs.toString();
 }
@@ -70,7 +71,9 @@ export type WorkspacePrivateOverviewQuery = {
 export function getWorkspacePrivateOverview(query: WorkspacePrivateOverviewQuery = {}) {
   const qs = new URLSearchParams();
   if (query.period) qs.set('period', query.period);
-  return apiGet<WorkspacePrivateOverviewDto>(`/workspace/private${qs.toString() ? `?${qs.toString()}` : ''}`);
+  return apiGet<WorkspacePrivateOverviewDto>(
+    `/workspace/private${qs.toString() ? `?${qs.toString()}` : ''}`,
+  );
 }
 
 export type WorkspaceRequestsQuery = {
@@ -108,8 +111,11 @@ export function getWorkspaceRequests(query: WorkspaceRequestsQuery = {}) {
   if (query.period) qs.set('period', query.period);
   if (query.sort) qs.set('sort', query.sort);
   if (typeof query.page === 'number') qs.set('page', String(Math.max(1, Math.trunc(query.page))));
-  if (typeof query.limit === 'number') qs.set('limit', String(Math.min(100, Math.max(1, Math.trunc(query.limit)))));
-  return apiGet<WorkspaceRequestsResponseDto>(`/workspace/requests${qs.toString() ? `?${qs.toString()}` : ''}`);
+  if (typeof query.limit === 'number')
+    qs.set('limit', String(Math.min(100, Math.max(1, Math.trunc(query.limit)))));
+  return apiGet<WorkspaceRequestsResponseDto>(
+    `/workspace/requests${qs.toString() ? `?${qs.toString()}` : ''}`,
+  );
 }
 
 export function getWorkspaceProviders(query: WorkspaceProvidersQuery = {}) {
@@ -121,8 +127,11 @@ export function getWorkspaceProviders(query: WorkspaceProvidersQuery = {}) {
   if (query.viewerMode) qs.set('viewerMode', query.viewerMode);
   if (query.sort) qs.set('sort', query.sort);
   if (typeof query.page === 'number') qs.set('page', String(Math.max(1, Math.trunc(query.page))));
-  if (typeof query.limit === 'number') qs.set('limit', String(Math.min(100, Math.max(1, Math.trunc(query.limit)))));
-  return apiGet<WorkspaceProvidersResponseDto>(`/workspace/providers${qs.toString() ? `?${qs.toString()}` : ''}`);
+  if (typeof query.limit === 'number')
+    qs.set('limit', String(Math.min(100, Math.max(1, Math.trunc(query.limit)))));
+  return apiGet<WorkspaceProvidersResponseDto>(
+    `/workspace/providers${qs.toString() ? `?${qs.toString()}` : ''}`,
+  );
 }
 
 export type WorkspaceReviewsQuery = {
@@ -134,7 +143,9 @@ export function getWorkspaceReviews(query: WorkspaceReviewsQuery = {}) {
   const qs = new URLSearchParams();
   if (query.range) qs.set('range', query.range);
   if (query.sort) qs.set('sort', query.sort);
-  return apiGet<WorkspaceReviewsResponseDto>(`/workspace/reviews${qs.toString() ? `?${qs.toString()}` : ''}`);
+  return apiGet<WorkspaceReviewsResponseDto>(
+    `/workspace/reviews${qs.toString() ? `?${qs.toString()}` : ''}`,
+  );
 }
 
 export function getWorkspaceActions() {
@@ -156,10 +167,10 @@ export type WorkspaceStatisticsQuery = {
   citiesLimit?: number;
 };
 
-export function getWorkspaceStatistics(query: WorkspaceStatisticsRange | WorkspaceStatisticsQuery = '30d') {
-  const params: WorkspaceStatisticsQuery = typeof query === 'string'
-    ? { range: query }
-    : query;
+export function getWorkspaceStatistics(
+  query: WorkspaceStatisticsRange | WorkspaceStatisticsQuery = '30d',
+) {
+  const params: WorkspaceStatisticsQuery = typeof query === 'string' ? { range: query } : query;
   const qs = new URLSearchParams();
   qs.set('range', params.range ?? '30d');
   if (params.cityId) qs.set('cityId', params.cityId);
@@ -178,11 +189,7 @@ export function getWorkspaceStatistics(query: WorkspaceStatisticsRange | Workspa
 
 export function getWorkspacePublicRequestsBatch(ids: string[]) {
   const normalizedIds = Array.from(
-    new Set(
-      ids
-        .map((id) => String(id ?? '').trim())
-        .filter((id) => id.length > 0),
-    ),
+    new Set(ids.map((id) => String(id ?? '').trim()).filter((id) => id.length > 0)),
   ).slice(0, 100);
 
   if (normalizedIds.length === 0) {

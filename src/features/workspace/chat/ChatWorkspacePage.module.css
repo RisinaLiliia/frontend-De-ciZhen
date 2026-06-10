@@ -4,7 +4,9 @@
   grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
   container-type: inline-size;
   gap: 0;
-  min-height: calc(100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px) - var(--space-8));
+  min-height: calc(
+    100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px) - var(--space-8)
+  );
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-xl);
   background: var(--color-surface);
@@ -707,7 +709,9 @@
 @container (max-width: 767px) {
   .shell {
     grid-template-columns: minmax(0, 1fr);
-    min-height: calc(100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px) - var(--space-6));
+    min-height: calc(
+      100dvh - var(--shell-topbar-height) - var(--shell-topbar-offset, 0px) - var(--space-6)
+    );
     border-radius: var(--radius-xl);
   }
 

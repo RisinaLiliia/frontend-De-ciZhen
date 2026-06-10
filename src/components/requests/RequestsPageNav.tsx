@@ -29,7 +29,11 @@ export function RequestsPageNav({
   const safePage = Math.min(safeTotalPages, Math.max(1, page));
 
   return (
-    <div className={`requests-page-nav ${className ?? ''}`.trim()} role="group" aria-label={ariaLabel}>
+    <div
+      className={`requests-page-nav ${className ?? ''}`.trim()}
+      role="group"
+      aria-label={ariaLabel}
+    >
       <button
         type="button"
         className="btn-ghost requests-page-nav__btn"

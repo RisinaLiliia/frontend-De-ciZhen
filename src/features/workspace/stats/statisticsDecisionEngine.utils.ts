@@ -37,9 +37,7 @@ type PersonalizedDecisionPlanArgs = {
   currentCategoryKey: string | null;
 };
 
-function formatFocusLabel(
-  selectedOpportunity: WorkspaceStatisticsOpportunityRadarItemView | null,
-) {
+function formatFocusLabel(selectedOpportunity: WorkspaceStatisticsOpportunityRadarItemView | null) {
   if (!selectedOpportunity) return null;
   return `${selectedOpportunity.city} · ${selectedOpportunity.category}`;
 }
@@ -63,7 +61,10 @@ export function buildOpportunityReasons(params: {
 
   if (typeof item.marketBalanceRatio === 'number' && item.marketBalanceRatio >= 2) {
     reasons.push(
-      copy.decisionReasonMarketBalanceTemplate.replace('{ratio}', item.marketBalanceRatio.toFixed(1)),
+      copy.decisionReasonMarketBalanceTemplate.replace(
+        '{ratio}',
+        item.marketBalanceRatio.toFixed(1),
+      ),
     );
   } else if (typeof item.providers === 'number' && item.providers > 0) {
     reasons.push(
@@ -91,7 +92,10 @@ export function buildOpportunityReasons(params: {
 
   if (priceIntelligence?.recommendedRangeLabel) {
     reasons.push(
-      copy.decisionReasonPriceCorridorTemplate.replace('{range}', priceIntelligence.recommendedRangeLabel),
+      copy.decisionReasonPriceCorridorTemplate.replace(
+        '{range}',
+        priceIntelligence.recommendedRangeLabel,
+      ),
     );
   }
 
@@ -109,18 +113,13 @@ export function buildDecisionPlan({
 }: DecisionPlanArgs): WorkspaceDecisionPlan {
   const focusLabel = formatFocusLabel(selectedOpportunity);
   const priceLabel = formatPriceRangeLabel(priceIntelligence);
-  const summary = decisionInsight.trim().length > 0
-    ? decisionInsight
-    : copy.decisionSummaryFallback;
+  const summary =
+    decisionInsight.trim().length > 0 ? decisionInsight : copy.decisionSummaryFallback;
   const reasons = selectedOpportunity
     ? buildOpportunityReasons({ locale, copy, item: selectedOpportunity, priceIntelligence })
-    : (
-      priceLabel
-        ? [
-          copy.decisionReasonPriceCorridorTemplate.replace('{range}', priceLabel),
-        ]
-        : []
-    );
+    : priceLabel
+      ? [copy.decisionReasonPriceCorridorTemplate.replace('{range}', priceLabel)]
+      : [];
   const steps = [
     focusLabel
       ? copy.decisionFocusStepTemplate.replace('{value}', focusLabel)
@@ -131,10 +130,9 @@ export function buildDecisionPlan({
     copy.decisionResponseTimeStep,
   ];
   const shouldApplyFocus = Boolean(
-    selectedOpportunity && (
-      selectedOpportunity.cityId !== currentCityId ||
-      selectedOpportunity.categoryKey !== currentCategoryKey
-    ),
+    selectedOpportunity &&
+    (selectedOpportunity.cityId !== currentCityId ||
+      selectedOpportunity.categoryKey !== currentCategoryKey),
   );
 
   return {
@@ -163,10 +161,10 @@ export function buildPersonalizedDecisionPlan({
   const topOpportunity = opportunities?.items[0] ?? null;
   const hasFocusStep = nextSteps?.steps.some((step) => step.code === 'focus_market') ?? false;
   const shouldApplyFocus = Boolean(
-    hasFocusStep && selectedOpportunity && (
-      selectedOpportunity.cityId !== currentCityId ||
-      selectedOpportunity.categoryKey !== currentCategoryKey
-    ),
+    hasFocusStep &&
+    selectedOpportunity &&
+    (selectedOpportunity.cityId !== currentCityId ||
+      selectedOpportunity.categoryKey !== currentCategoryKey),
   );
 
   const summary = primaryStep
@@ -177,17 +175,19 @@ export function buildPersonalizedDecisionPlan({
     topRisk?.body ?? null,
     topOpportunity?.body ?? null,
     personalizedPricing?.effect ?? null,
-  ].filter((value): value is string => Boolean(value && value.trim().length > 0)).slice(0, 3);
+  ]
+    .filter((value): value is string => Boolean(value && value.trim().length > 0))
+    .slice(0, 3);
 
-  const steps = (nextSteps?.steps ?? [])
-    .map((step) => `${step.title}: ${step.detail}`)
-    .slice(0, 4);
+  const steps = (nextSteps?.steps ?? []).map((step) => `${step.title}: ${step.detail}`).slice(0, 4);
 
   return {
     summary,
     reasons,
     steps,
-    actionLabel: shouldApplyFocus ? copy.decisionApplyStrategyLabel : copy.decisionOpenRequestsLabel,
+    actionLabel: shouldApplyFocus
+      ? copy.decisionApplyStrategyLabel
+      : copy.decisionOpenRequestsLabel,
     shouldApplyFocus,
   };
 }

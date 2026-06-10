@@ -22,9 +22,7 @@ export function RequestsExplorerView({
 }: RequestsExplorerViewProps) {
   const content = (
     <>
-      {showBack ? (
-        <BackButton fallbackHref={backHref} />
-      ) : null}
+      {showBack ? <BackButton fallbackHref={backHref} /> : null}
       {isProvidersView ? providersContent : requestsContent}
     </>
   );
@@ -33,9 +31,5 @@ export function RequestsExplorerView({
     return <div className="workspace-explorer-shell">{content}</div>;
   }
 
-  return (
-    <section className="stack-sm">
-      {content}
-    </section>
-  );
+  return <section className="stack-sm">{content}</section>;
 }

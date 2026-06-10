@@ -3,7 +3,10 @@
 import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useStatisticsOpportunitySelection } from './hooks/useStatisticsOpportunitySelection';
-import { useStatisticsNavigation, type StatisticsDecisionPlan } from './hooks/useStatisticsNavigation';
+import {
+  useStatisticsNavigation,
+  type StatisticsDecisionPlan,
+} from './hooks/useStatisticsNavigation';
 import { useStatisticsFunnelLayout } from './hooks/useStatisticsFunnelLayout';
 import { mapStatisticsRailModel } from './mappers/statisticsRail.mapper';
 import { StatisticsContent } from './StatisticsContent';
@@ -20,48 +23,34 @@ type StatisticsViewProps = {
   slot?: 'full' | 'content' | 'rail';
 };
 
-export function StatisticsView({
-  t,
-  locale,
-  model,
-  slot = 'full',
-}: StatisticsViewProps) {
+export function StatisticsView({ t, locale, model, slot = 'full' }: StatisticsViewProps) {
   const searchParams = useSearchParams();
   const showInsightsDebug = searchParams.get('insightsDebug') === '1';
-  const {
-    copy,
-    filters,
-    mode,
-    userIntelligence,
-    activitySignals,
-    rightRailNextSteps,
-    funnel,
-  } = model;
+  const { copy, filters, mode, userIntelligence, activitySignals, rightRailNextSteps, funnel } =
+    model;
 
-  const {
-    selectedOpportunityRank,
-    setSelectedOpportunityRank,
-    selectedOpportunity,
-  } = useStatisticsOpportunitySelection({ opportunityRadar: model.opportunityRadar });
+  const { selectedOpportunityRank, setSelectedOpportunityRank, selectedOpportunity } =
+    useStatisticsOpportunitySelection({ opportunityRadar: model.opportunityRadar });
 
   const activePriceIntelligence = selectedOpportunity?.priceIntelligence ?? model.priceIntelligence;
 
   const decisionPlan = React.useMemo(() => {
-    const withActionLabel = (plan: StatisticsDecisionPlan) => (
-      model.decisionActionLabel ? { ...plan, actionLabel: model.decisionActionLabel } : plan
-    );
+    const withActionLabel = (plan: StatisticsDecisionPlan) =>
+      model.decisionActionLabel ? { ...plan, actionLabel: model.decisionActionLabel } : plan;
 
     if (mode === 'personalized' && userIntelligence) {
-      return withActionLabel(buildPersonalizedDecisionPlan({
-        copy,
-        personalizedPricing: model.personalizedPricing,
-        risks: model.rightRailRisks,
-        opportunities: model.rightRailOpportunities,
-        nextSteps: rightRailNextSteps,
-        selectedOpportunity,
-        currentCityId: filters.cityId,
-        currentCategoryKey: filters.categoryKey,
-      }));
+      return withActionLabel(
+        buildPersonalizedDecisionPlan({
+          copy,
+          personalizedPricing: model.personalizedPricing,
+          risks: model.rightRailRisks,
+          opportunities: model.rightRailOpportunities,
+          nextSteps: rightRailNextSteps,
+          selectedOpportunity,
+          currentCityId: filters.cityId,
+          currentCategoryKey: filters.categoryKey,
+        }),
+      );
     }
 
     return buildDecisionPlan({
@@ -103,19 +92,20 @@ export function StatisticsView({
   });
 
   const railModel = React.useMemo(
-    () => mapStatisticsRailModel({
-      locale,
-      copy,
-      decisionPlan,
-      activePriceIntelligence,
-      selectedOpportunity,
-      activitySignals,
-      kpis: model.kpis,
-      rightRailRisks: model.rightRailRisks,
-      rightRailOpportunities: model.rightRailOpportunities,
-      onPrimaryAction: applySelectedOpportunityFocus,
-      onQueueItemAction: applySelectedOpportunityFocus,
-    }),
+    () =>
+      mapStatisticsRailModel({
+        locale,
+        copy,
+        decisionPlan,
+        activePriceIntelligence,
+        selectedOpportunity,
+        activitySignals,
+        kpis: model.kpis,
+        rightRailRisks: model.rightRailRisks,
+        rightRailOpportunities: model.rightRailOpportunities,
+        onPrimaryAction: applySelectedOpportunityFocus,
+        onQueueItemAction: applySelectedOpportunityFocus,
+      }),
     [
       activePriceIntelligence,
       activitySignals,

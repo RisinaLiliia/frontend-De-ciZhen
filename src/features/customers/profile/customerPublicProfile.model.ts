@@ -19,7 +19,8 @@ export function buildCustomerPublicProfileSnapshotFromRequest(
     displayName: request.clientName?.trim() || null,
     bio: null,
     avatarUrl: request.clientAvatarUrl?.trim() || null,
-    cityName: request.clientCity?.trim() || request.cityName?.trim() || request.cityId?.trim() || null,
+    cityName:
+      request.clientCity?.trim() || request.cityName?.trim() || request.cityId?.trim() || null,
     ratingAvg: typeof request.clientRatingAvg === 'number' ? request.clientRatingAvg : null,
     ratingCount: typeof request.clientRatingCount === 'number' ? request.clientRatingCount : null,
     isOnline: typeof request.clientIsOnline === 'boolean' ? request.clientIsOnline : null,

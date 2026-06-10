@@ -1,8 +1,6 @@
 'use client';
 
-import {
-  WorkspaceModeHeader,
-} from '@/features/workspace/shell/WorkspaceModeHeader';
+import { WorkspaceModeHeader } from '@/features/workspace/shell/WorkspaceModeHeader';
 import { WorkspaceIntroShell } from '@/features/workspace/intro/WorkspaceIntroShell';
 import type { WorkspaceTab } from '@/features/workspace/state';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
@@ -31,7 +29,7 @@ export function WorkspacePrivateIntro({
   return (
     <WorkspaceIntroShell
       navHeaderSlot={navHeaderSlot}
-      header={(
+      header={
         <WorkspaceModeHeader
           t={t}
           locale={locale}
@@ -39,7 +37,7 @@ export function WorkspacePrivateIntro({
           activeWorkspaceTab={activeWorkspaceTab}
           preferredRequestsRole={preferredRequestsRole}
         />
-      )}
+      }
       leftColumnSlot={leftColumnSlot}
     />
   );

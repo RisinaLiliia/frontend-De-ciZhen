@@ -20,10 +20,9 @@ export function useWorkspaceContractData({ workspaceDataQueries }: Args) {
   const allRequestsSummary = publicSummaryOverview?.summary;
   const publicCityActivity = publicSummaryOverview?.cityActivity;
 
-  const {
-    data: workspacePrivateOverview,
-    isLoading: isWorkspacePrivateOverviewLoading,
-  } = useQuery(workspaceDataQueries.privateOverview);
+  const { data: workspacePrivateOverview, isLoading: isWorkspacePrivateOverviewLoading } = useQuery(
+    workspaceDataQueries.privateOverview,
+  );
   const {
     data: workspaceRequests,
     isLoading: isWorkspaceRequestsLoading,

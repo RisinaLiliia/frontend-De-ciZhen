@@ -45,18 +45,14 @@ export function useRequestDetailsContentState({
     locale,
     t,
   });
-  const {
-    similarTitle,
-    similarFallbackMessage,
-    similarForRender,
-    similarHref,
-  } = useRequestDetailsRelated({
-    request,
-    locale,
-    isHydrated,
-    enabled: includeRelated,
-    t,
-  });
+  const { similarTitle, similarFallbackMessage, similarForRender, similarHref } =
+    useRequestDetailsRelated({
+      request,
+      locale,
+      isHydrated,
+      enabled: includeRelated,
+      t,
+    });
   const ownerEdit = useRequestOwnerEdit({
     request,
     isOwner,

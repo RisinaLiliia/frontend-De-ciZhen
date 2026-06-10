@@ -22,14 +22,19 @@ export function getWorkspaceTabTitles(t: Translate): Partial<Record<WorkspaceTab
   };
 }
 
-export function getWorkspaceSectionSubtitle(t: Translate, activeWorkspaceTab: WorkspaceTab): string {
+export function getWorkspaceSectionSubtitle(
+  t: Translate,
+  activeWorkspaceTab: WorkspaceTab,
+): string {
   if (activeWorkspaceTab === 'reviews') {
     return t(I18N_KEYS.requestsPage.reviewsWorkspaceSubtitle);
   }
   return t(I18N_KEYS.requestsPage.workspaceSectionSubtitle);
 }
 
-export function getWorkspaceStatusFilters(t: Translate): Array<{ key: WorkspaceStatusFilter; label: string }> {
+export function getWorkspaceStatusFilters(
+  t: Translate,
+): Array<{ key: WorkspaceStatusFilter; label: string }> {
   return [
     { key: 'all', label: t(I18N_KEYS.requestsPage.statusAll) },
     { key: 'open', label: t(I18N_KEYS.requestsPage.statusOpen) },
@@ -42,12 +47,30 @@ export function getWorkspacePrimaryActionByTab(
   t: Translate,
 ): Partial<Record<WorkspaceTab, { href: string; label: string }>> {
   return {
-    'my-requests': { label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta), href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF },
-    'my-offers': { label: t(I18N_KEYS.requestsPage.primaryActionFindNewOrders), href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
-    'completed-jobs': { label: t(I18N_KEYS.requestsPage.primaryActionActiveOrders), href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
-    favorites: { label: t(I18N_KEYS.requestsPage.primaryActionNewFavorites), href: '/workspace?section=requests' },
-    reviews: { label: t(I18N_KEYS.requestsPage.navMyOrders), href: '/workspace?section=requests&scope=my&period=90d&range=90d' },
-    profile: { label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta), href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF },
+    'my-requests': {
+      label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta),
+      href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
+    },
+    'my-offers': {
+      label: t(I18N_KEYS.requestsPage.primaryActionFindNewOrders),
+      href: '/workspace?section=requests&scope=my&period=90d&range=90d',
+    },
+    'completed-jobs': {
+      label: t(I18N_KEYS.requestsPage.primaryActionActiveOrders),
+      href: '/workspace?section=requests&scope=my&period=90d&range=90d',
+    },
+    favorites: {
+      label: t(I18N_KEYS.requestsPage.primaryActionNewFavorites),
+      href: '/workspace?section=requests',
+    },
+    reviews: {
+      label: t(I18N_KEYS.requestsPage.navMyOrders),
+      href: '/workspace?section=requests&scope=my&period=90d&range=90d',
+    },
+    profile: {
+      label: t(I18N_KEYS.requestsPage.workspaceMyRequestsEmptyCta),
+      href: DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF,
+    },
   };
 }
 
@@ -87,7 +110,11 @@ export function getProviderHint(
   };
 }
 
-export function getClientHint(t: Translate, myRequestsCount: number, myOpenRequestsCount: number): HintContent {
+export function getClientHint(
+  t: Translate,
+  myRequestsCount: number,
+  myOpenRequestsCount: number,
+): HintContent {
   if (myRequestsCount === 0) {
     return {
       text: t(I18N_KEYS.requestsPage.clientHintNoRequestsText),

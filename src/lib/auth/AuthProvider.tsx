@@ -2,7 +2,13 @@
 'use client';
 
 import * as React from 'react';
-import { useAuthBootstrap, useAuthLastMode, useAuthSetLastMode, useAuthStatus, useAuthUser } from '@/hooks/useAuthSnapshot';
+import {
+  useAuthBootstrap,
+  useAuthLastMode,
+  useAuthSetLastMode,
+  useAuthStatus,
+  useAuthUser,
+} from '@/hooks/useAuthSnapshot';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const bootstrap = useAuthBootstrap();

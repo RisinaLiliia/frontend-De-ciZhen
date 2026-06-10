@@ -88,11 +88,15 @@ function resolveOpportunityMatch(params: {
 }) {
   const { request, categoryKey, opportunityRadar } = params;
 
-  return opportunityRadar.find((item) => item.cityId === request.cityId && item.categoryKey === categoryKey)
-    ?? opportunityRadar.find((item) => item.cityId === request.cityId)
-    ?? opportunityRadar.find((item) => item.categoryKey === categoryKey)
-    ?? opportunityRadar[0]
-    ?? null;
+  return (
+    opportunityRadar.find(
+      (item) => item.cityId === request.cityId && item.categoryKey === categoryKey,
+    ) ??
+    opportunityRadar.find((item) => item.cityId === request.cityId) ??
+    opportunityRadar.find((item) => item.categoryKey === categoryKey) ??
+    opportunityRadar[0] ??
+    null
+  );
 }
 
 function resolveDemandLabel(params: {
@@ -113,7 +117,8 @@ function resolveCompetitionLabel(params: {
   const { copy, opportunity } = params;
   if (!opportunity) return copy.competitionBalanced;
   if (opportunity.providers !== null && opportunity.providers <= 3) return copy.competitionLow;
-  if (opportunity.tone === 'balanced' || opportunity.tone === 'high') return copy.competitionBalanced;
+  if (opportunity.tone === 'balanced' || opportunity.tone === 'high')
+    return copy.competitionBalanced;
   return copy.competitionHigh;
 }
 
@@ -169,16 +174,20 @@ function WorkspaceOpportunityCards({
           competitionLabel: resolveCompetitionLabel({ copy, opportunity }),
         };
       }),
-    [copy, currentSearch, locale, recentRequests, requestsListProps, statisticsModel.opportunityRadar],
+    [
+      copy,
+      currentSearch,
+      locale,
+      recentRequests,
+      requestsListProps,
+      statisticsModel.opportunityRadar,
+    ],
   );
 
   if (requestsListProps.isLoading || requestsListProps.isError || recentRequests.length === 0) {
     return (
       <div className="requests-list is-single workspace-overview__list">
-        <RequestsList
-          {...requestsListProps}
-          requests={recentRequests}
-        />
+        <RequestsList {...requestsListProps} requests={recentRequests} />
       </div>
     );
   }
@@ -239,10 +248,7 @@ export function WorkspaceOverviewMain({
   onToggleProviderFavorite,
 }: WorkspaceOverviewMainProps) {
   const copy = React.useMemo(() => getOverviewCopy(t), [t]);
-  const topProviderItems = React.useMemo(
-    () => topProviders.slice(0, 3),
-    [topProviders],
-  );
+  const topProviderItems = React.useMemo(() => topProviders.slice(0, 3), [topProviders]);
   const resolvedTopProvidersSubtitle = copy.topProvidersSubtitle || topProvidersSubtitle;
   const requestsHref = React.useMemo(
     () => buildWorkspaceHref({ currentSearch, section: 'requests', removeKeys: ['page'] }),
@@ -262,7 +268,14 @@ export function WorkspaceOverviewMain({
       { href: providersHref, label: copy.quickActionsSecondary.providers },
       { href: analysisHref, label: copy.quickActionsSecondary.analysis },
     ],
-    [analysisHref, copy.quickActionsSecondary.analysis, copy.quickActionsSecondary.providers, copy.quickActionsSecondary.requests, providersHref, requestsHref],
+    [
+      analysisHref,
+      copy.quickActionsSecondary.analysis,
+      copy.quickActionsSecondary.providers,
+      copy.quickActionsSecondary.requests,
+      providersHref,
+      requestsHref,
+    ],
   );
 
   return (
@@ -279,7 +292,12 @@ export function WorkspaceOverviewMain({
       </div>
 
       <div className="workspace-overview__grid">
-        <section className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--providers')}>
+        <section
+          className={workspacePanelShell(
+            'workspace-overview__panel',
+            'workspace-overview__panel--providers',
+          )}
+        >
           <div className="panel-header">
             <div className="section-heading workspace-overview__tile-header">
               <p className="section-title">{topProvidersTitle}</p>
@@ -297,7 +315,10 @@ export function WorkspaceOverviewMain({
         </section>
 
         <section
-          className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--offers')}
+          className={workspacePanelShell(
+            'workspace-overview__panel',
+            'workspace-overview__panel--offers',
+          )}
         >
           <div className="panel-header">
             <div className="section-heading workspace-overview__tile-header">
@@ -317,7 +338,10 @@ export function WorkspaceOverviewMain({
       </div>
 
       <section
-        className={workspacePanelShell('workspace-overview__panel', 'workspace-overview__panel--actions')}
+        className={workspacePanelShell(
+          'workspace-overview__panel',
+          'workspace-overview__panel--actions',
+        )}
       >
         <div className="panel-header">
           <div className="section-heading workspace-overview__tile-header">
@@ -335,7 +359,12 @@ export function WorkspaceOverviewMain({
           />
           <div className="workspace-overview__action-links">
             {quickActionLinks.map((action) => (
-              <Link key={action.href} href={action.href} prefetch={false} className="btn-ghost is-primary">
+              <Link
+                key={action.href}
+                href={action.href}
+                prefetch={false}
+                className="btn-ghost is-primary"
+              >
                 {action.label}
               </Link>
             ))}

@@ -39,7 +39,9 @@ export function mapMonthlySeries(
   return (series ?? []).map((point) => {
     const ts = new Date(point.monthStart);
     return {
-      label: Number.isFinite(ts.getTime()) ? chartMonthLabel.format(ts) : point.monthStart.slice(0, 7),
+      label: Number.isFinite(ts.getTime())
+        ? chartMonthLabel.format(ts)
+        : point.monthStart.slice(0, 7),
       bars: Math.max(0, point.bars),
       line: Math.max(0, point.line),
     };

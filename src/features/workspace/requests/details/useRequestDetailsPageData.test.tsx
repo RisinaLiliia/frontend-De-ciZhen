@@ -138,19 +138,24 @@ describe('useRequestDetailsPageData', () => {
 
   it('keeps owner edit on cached my-request data instead of falling back to public', async () => {
     const queryClient = createQueryClient();
-    queryClient.setQueryData(['requests-my'], [{
-      id: 'req-1',
-      title: 'Cached owner request',
-      serviceKey: 'home_cleaning',
-      cityId: 'c1',
-      propertyType: 'apartment',
-      area: 55,
-      preferredDate: '2026-04-22T10:00:00.000Z',
-      isRecurring: false,
-      status: 'draft',
-      createdAt: '2026-04-17T10:00:00.000Z',
-      clientId: 'u1',
-    }]);
+    queryClient.setQueryData(
+      ['requests-my'],
+      [
+        {
+          id: 'req-1',
+          title: 'Cached owner request',
+          serviceKey: 'home_cleaning',
+          cityId: 'c1',
+          propertyType: 'apartment',
+          area: 55,
+          preferredDate: '2026-04-22T10:00:00.000Z',
+          isRecurring: false,
+          status: 'draft',
+          createdAt: '2026-04-17T10:00:00.000Z',
+          clientId: 'u1',
+        },
+      ],
+    );
     getMyRequestByIdMock.mockRejectedValueOnce(new ApiError('not found', 404));
 
     render(

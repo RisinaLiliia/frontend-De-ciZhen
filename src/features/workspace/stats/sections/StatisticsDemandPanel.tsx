@@ -42,8 +42,18 @@ export function StatisticsDemandPanel({
   headerClassName?: string;
 }) {
   return (
-    <section className={workspacePanelShell('requests-stats-chart', 'workspace-statistics__demand-panel', className)}>
-      <header className={['section-heading', headerClassName ?? 'workspace-statistics__tile-header'].filter(Boolean).join(' ')}>
+    <section
+      className={workspacePanelShell(
+        'requests-stats-chart',
+        'workspace-statistics__demand-panel',
+        className,
+      )}
+    >
+      <header
+        className={['section-heading', headerClassName ?? 'workspace-statistics__tile-header']
+          .filter(Boolean)
+          .join(' ')}
+      >
         <p className="section-title">{copy.demandTitle}</p>
         <p className="section-subtitle">{subtitle ?? copy.demandSubtitle}</p>
       </header>
@@ -55,26 +65,42 @@ export function StatisticsDemandPanel({
             {visibleDemandRows.map((row, index) => (
               <li key={`${row.categoryKey ?? row.categoryName}-${index}`}>
                 {(() => {
-                  const matchedOpportunity = categoryFit?.find((item) => {
-                    return item.label.trim().toLowerCase() === row.categoryName.trim().toLowerCase();
-                  }) ?? null;
+                  const matchedOpportunity =
+                    categoryFit?.find((item) => {
+                      return (
+                        item.label.trim().toLowerCase() === row.categoryName.trim().toLowerCase()
+                      );
+                    }) ?? null;
 
                   const content = (
                     <>
                       <div className="workspace-statistics-demand__meta">
-                        <span className="workspace-statistics-demand__label request-category">{row.categoryName}</span>
-                        <span className="workspace-statistics-demand__value">{row.sharePercent}%</span>
+                        <span className="workspace-statistics-demand__label request-category">
+                          {row.categoryName}
+                        </span>
+                        <span className="workspace-statistics-demand__value">
+                          {row.sharePercent}%
+                        </span>
                       </div>
                       <div className="workspace-statistics-demand__track" aria-hidden="true">
                         <span
                           className="workspace-statistics-demand__fill"
-                          style={{ width: `${row.sharePercent}%`, inlineSize: `${row.sharePercent}%` }}
+                          style={{
+                            width: `${row.sharePercent}%`,
+                            inlineSize: `${row.sharePercent}%`,
+                          }}
                         />
                       </div>
                       {matchedOpportunity ? (
                         <div className="workspace-statistics-demand__insight">
-                          <span>{copy.userForYouLabel}: {matchedOpportunity.recommendation ?? matchedOpportunity.opportunityLabel}</span>
-                          <strong>{copy.userFitLabel}: {matchedOpportunity.userFitLabel}</strong>
+                          <span>
+                            {copy.userForYouLabel}:{' '}
+                            {matchedOpportunity.recommendation ??
+                              matchedOpportunity.opportunityLabel}
+                          </span>
+                          <strong>
+                            {copy.userFitLabel}: {matchedOpportunity.userFitLabel}
+                          </strong>
                         </div>
                       ) : null}
                     </>
@@ -83,7 +109,10 @@ export function StatisticsDemandPanel({
                   return onSelectCategory && row.categoryKey ? (
                     <button
                       type="button"
-                      className={workspaceStatLinkCardShell('workspace-statistics-demand__row', 'workspace-statistics-demand__row-button')}
+                      className={workspaceStatLinkCardShell(
+                        'workspace-statistics-demand__row',
+                        'workspace-statistics-demand__row-button',
+                      )}
                       aria-label={`${row.categoryName}. ${copy.citiesColumnRequests}: ${row.requestCount}. ${row.sharePercent}%.`}
                       onClick={() => onSelectCategory(row.categoryKey ?? null)}
                     >
@@ -124,7 +153,9 @@ export function StatisticsDemandPanel({
 
 const DEFAULT_DEMAND_PAGE_SIZE = 5;
 
-function resolveDemandSubtitle(model: Pick<WorkspaceStatisticsModel, 'copy' | 'context' | 'sectionMeta'>) {
+function resolveDemandSubtitle(
+  model: Pick<WorkspaceStatisticsModel, 'copy' | 'context' | 'sectionMeta'>,
+) {
   if (model.sectionMeta.demandSubtitle) return model.sectionMeta.demandSubtitle;
   if (model.context.mode === 'focus') {
     return `${model.copy.demandSubtitle} · ${model.context.periodLabel}`;
@@ -155,11 +186,7 @@ export function StatisticsDemandPanelSection({
     () => paginateItems(model.demandRows, page, pageSize),
     [model.demandRows, page, pageSize],
   );
-  const {
-    totalPages,
-    safePage,
-    visibleItems,
-  } = demandPagination;
+  const { totalPages, safePage, visibleItems } = demandPagination;
 
   React.useEffect(() => {
     setPage(1);

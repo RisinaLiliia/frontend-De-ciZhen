@@ -62,7 +62,10 @@ export function buildProfileOnboardingSchema(t: (key: I18nKey) => string) {
     cityId: z.string().trim().min(1, t(I18N_KEYS.requestsPage.profileOnboardingCityRequired)),
     categoryKey: z.string().trim(),
     serviceKey: z.string().trim(),
-    description: z.string().trim().max(500, t(I18N_KEYS.requestsPage.profileOnboardingDescriptionMax)),
+    description: z
+      .string()
+      .trim()
+      .max(500, t(I18N_KEYS.requestsPage.profileOnboardingDescriptionMax)),
     email: z
       .string()
       .trim()
@@ -78,7 +81,9 @@ export function buildProfileOnboardingSchema(t: (key: I18nKey) => string) {
       .regex(/[a-zа-яё]/, t(I18N_KEYS.auth.passwordRuleLower))
       .regex(/\d/, t(I18N_KEYS.auth.passwordRuleDigit))
       .regex(/[^A-Za-zА-Яа-яЁё0-9]/, t(I18N_KEYS.auth.passwordRuleSymbol)),
-    acceptPrivacyPolicy: z.boolean().refine((value) => value === true, t(I18N_KEYS.auth.errorAcceptPolicyRequired)),
+    acceptPrivacyPolicy: z
+      .boolean()
+      .refine((value) => value === true, t(I18N_KEYS.auth.errorAcceptPolicyRequired)),
   });
 }
 
@@ -92,7 +97,10 @@ export function buildProfileCityOptions(cities: City[], locale: Locale): Option[
     }));
 }
 
-export function buildProfileCategoryOptions(categories: ServiceCategory[], locale: Locale): Option[] {
+export function buildProfileCategoryOptions(
+  categories: ServiceCategory[],
+  locale: Locale,
+): Option[] {
   return categories
     .slice()
     .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -119,7 +127,10 @@ export function buildProfileServiceOptions(
     }));
 }
 
-export function resolveProfileServiceCategoryKey(serviceKey: string | undefined | null, services: Service[]) {
+export function resolveProfileServiceCategoryKey(
+  serviceKey: string | undefined | null,
+  services: Service[],
+) {
   if (!serviceKey) return '';
   return services.find((service) => service.key === serviceKey)?.categoryKey ?? '';
 }
@@ -145,7 +156,11 @@ export function resolveCategoryServiceKeys(categoryKey: string, services: Servic
     .map((service) => service.key);
 }
 
-function appendFormValue(formData: FormData, key: string, value: string | boolean | null | undefined) {
+function appendFormValue(
+  formData: FormData,
+  key: string,
+  value: string | boolean | null | undefined,
+) {
   if (value === undefined || value === null) return;
   formData.append(key, typeof value === 'boolean' ? String(value) : value);
 }

@@ -29,17 +29,19 @@ afterEach(() => {
 
 describe('workspace api proxy route', () => {
   it('drops upstream content-encoding headers before returning proxied responses', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(
-      JSON.stringify({ ok: true }),
-      {
-        status: 200,
-        headers: {
-          'content-type': 'application/json; charset=utf-8',
-          'content-encoding': 'gzip',
-          'content-length': '999',
-        },
-      },
-    )));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ ok: true }), {
+          status: 200,
+          headers: {
+            'content-type': 'application/json; charset=utf-8',
+            'content-encoding': 'gzip',
+            'content-length': '999',
+          },
+        }),
+      ),
+    );
 
     const request = new NextRequest('http://localhost:3000/api/providers');
 
@@ -67,12 +69,14 @@ describe('workspace api proxy route', () => {
     });
 
     expect(response.status).toBe(503);
-    await expect(response.json()).resolves.toEqual(expect.objectContaining({
-      statusCode: 503,
-      errorCode: 'UPSTREAM_UNAVAILABLE',
-      message: 'Backend temporarily unavailable',
-      path: '/api/catalog/services',
-      requestId: 'req-123',
-    }));
+    await expect(response.json()).resolves.toEqual(
+      expect.objectContaining({
+        statusCode: 503,
+        errorCode: 'UPSTREAM_UNAVAILABLE',
+        message: 'Backend temporarily unavailable',
+        path: '/api/catalog/services',
+        requestId: 'req-123',
+      }),
+    );
   });
 });

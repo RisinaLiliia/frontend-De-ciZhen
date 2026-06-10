@@ -20,22 +20,30 @@ describe('workspaceSection.contract', () => {
   });
 
   it('resolves desktop intro decorations from section contract', () => {
-    expect(resolveWorkspacePublicIntroDecorations({ section: 'providers', isDesktop: true })).toEqual({
+    expect(
+      resolveWorkspacePublicIntroDecorations({ section: 'providers', isDesktop: true }),
+    ).toEqual({
       showDemandMap: false,
       showQuickAction: false,
     });
-    expect(resolveWorkspacePublicIntroDecorations({ section: 'requests', isDesktop: true })).toEqual({
+    expect(
+      resolveWorkspacePublicIntroDecorations({ section: 'requests', isDesktop: true }),
+    ).toEqual({
       showDemandMap: true,
       showQuickAction: true,
     });
   });
 
   it('keeps providers and profile intros free from legacy quick actions on mobile too', () => {
-    expect(resolveWorkspacePublicIntroDecorations({ section: 'providers', isDesktop: false })).toEqual({
+    expect(
+      resolveWorkspacePublicIntroDecorations({ section: 'providers', isDesktop: false }),
+    ).toEqual({
       showDemandMap: false,
       showQuickAction: false,
     });
-    expect(resolveWorkspacePublicIntroDecorations({ section: 'profile', isDesktop: false })).toEqual({
+    expect(
+      resolveWorkspacePublicIntroDecorations({ section: 'profile', isDesktop: false }),
+    ).toEqual({
       showDemandMap: false,
       showQuickAction: false,
     });

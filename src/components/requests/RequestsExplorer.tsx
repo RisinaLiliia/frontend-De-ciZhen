@@ -136,10 +136,7 @@ export function RequestsExplorer({
     () => buildRequestsExplorerNextPath(pathname, searchParams),
     [pathname, searchParams],
   );
-  const {
-    pendingFavoriteProviderIds,
-    toggleProviderFavorite,
-  } = useProviderFavoriteToggle({
+  const { pendingFavoriteProviderIds, toggleProviderFavorite } = useProviderFavoriteToggle({
     isAuthed,
     nextPath,
     router,
@@ -151,18 +148,18 @@ export function RequestsExplorer({
   const providerProfileHrefResolver = React.useMemo(
     () =>
       providerLinkMode === 'workspace' && isProvidersView
-        ? ((providerId: string) =>
-          buildWorkspaceProviderDetailHref({
-            currentSearch: searchParams,
-            providerId,
-          }))
+        ? (providerId: string) =>
+            buildWorkspaceProviderDetailHref({
+              currentSearch: searchParams,
+              providerId,
+            })
         : undefined,
     [isProvidersView, providerLinkMode, searchParams],
   );
   const providerReviewsHrefResolver = React.useMemo(
     () =>
       providerProfileHrefResolver
-        ? ((providerId: string) => `${providerProfileHrefResolver(providerId)}#reviews`)
+        ? (providerId: string) => `${providerProfileHrefResolver(providerId)}#reviews`
         : undefined,
     [providerProfileHrefResolver],
   );

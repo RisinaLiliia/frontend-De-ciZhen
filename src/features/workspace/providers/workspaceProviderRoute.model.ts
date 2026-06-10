@@ -32,9 +32,7 @@ export function buildWorkspaceProviderDetailHref(params: {
   });
 }
 
-export function clearWorkspaceProviderDetailHref(params: {
-  currentSearch: SearchSource;
-}) {
+export function clearWorkspaceProviderDetailHref(params: { currentSearch: SearchSource }) {
   const searchParams = normalizeSearchParams(params.currentSearch);
 
   return buildWorkspaceHref({

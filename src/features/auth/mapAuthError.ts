@@ -5,9 +5,7 @@ type Translate = (key: I18nKey) => string;
 
 function toMessageText(error: ApiError): string {
   if (!error.data?.message) return error.message || '';
-  return Array.isArray(error.data.message)
-    ? error.data.message.join(' ')
-    : error.data.message;
+  return Array.isArray(error.data.message) ? error.data.message.join(' ') : error.data.message;
 }
 
 function getErrorCode(error: ApiError): string | null {
@@ -20,7 +18,9 @@ function looksLikeEmailExists(message: string): boolean {
 }
 
 function looksLikeInvalidCredentials(message: string): boolean {
-  return /(invalid|wrong|incorrect|ungültig|falsch).*(credential|login|password|passwort|email|e-mail)/i.test(message);
+  return /(invalid|wrong|incorrect|ungültig|falsch).*(credential|login|password|passwort|email|e-mail)/i.test(
+    message,
+  );
 }
 
 export function isInvalidCredentialsError(error: unknown): boolean {

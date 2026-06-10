@@ -2,7 +2,10 @@
 
 import type { useWorkspacePublicState } from '@/features/workspace/state/useWorkspacePublicState';
 import type { WorkspaceBranchProps } from '@/features/workspace/orchestration/workspacePage.types';
-import type { buildWorkspacePublicExploreWithSeed, resolveWorkspacePublicBranchSnapshot } from '@/features/workspace/orchestration/workspacePublicBranch.model';
+import type {
+  buildWorkspacePublicExploreWithSeed,
+  resolveWorkspacePublicBranchSnapshot,
+} from '@/features/workspace/orchestration/workspacePublicBranch.model';
 
 type WorkspacePublicStateResult = ReturnType<typeof useWorkspacePublicState>;
 type WorkspacePublicSnapshotResult = ReturnType<typeof resolveWorkspacePublicBranchSnapshot>;
@@ -11,8 +14,7 @@ type WorkspacePublicExploreWithSeedResult = ReturnType<typeof buildWorkspacePubl
 type ResolveWorkspacePublicDataFlowResultArgs = {
   routeState: Pick<
     WorkspaceBranchProps['routeState'],
-    | 'activePublicSection'
-    | 'activeWorkspaceTab'
+    'activePublicSection' | 'activeWorkspaceTab'
   >;
   snapshot: WorkspacePublicSnapshotResult;
   localeTag: string;
@@ -36,7 +38,8 @@ export function resolveWorkspacePublicDataFlowResult({
     activeWorkspaceTab: routeState.activeWorkspaceTab,
     platformRequestsTotal: snapshot.platformRequestsTotal,
     localeTag,
-    exploreWithSeed: routeState.activePublicSection === 'requests' ? null : (exploreWithSeed ?? null),
+    exploreWithSeed:
+      routeState.activePublicSection === 'requests' ? null : (exploreWithSeed ?? null),
     cityActivity: snapshot.cityActivity,
     platformSummary: snapshot.platformSummary,
     isSummaryLoading,

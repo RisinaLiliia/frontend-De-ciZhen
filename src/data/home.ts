@@ -173,7 +173,6 @@ export const HOME_PROOF_CASES: Array<{
   },
 ];
 
-
 export const HOME_TOP_PROVIDERS: Array<{
   id: string;
   badgeKeys: I18nKey[];

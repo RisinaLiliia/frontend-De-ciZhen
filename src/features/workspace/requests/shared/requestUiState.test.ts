@@ -23,4 +23,3 @@ describe('resolveOfferCardState', () => {
     expect(resolveOfferCardState({ status: 'declined' } as const)).toBe('declined');
   });
 });
-

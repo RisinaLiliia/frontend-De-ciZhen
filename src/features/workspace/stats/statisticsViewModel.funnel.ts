@@ -6,12 +6,16 @@ import type {
 } from './statistics.model';
 import type { WorkspaceStatisticsCopy } from './statistics.copy';
 
-function resolveActionLabel(copy: WorkspaceStatisticsCopy, actionCode: string | null): string | null {
+function resolveActionLabel(
+  copy: WorkspaceStatisticsCopy,
+  actionCode: string | null,
+): string | null {
   if (actionCode === 'respond_faster') return copy.userActionRespondTitle;
   if (actionCode === 'adjust_price') return copy.userActionPriceTitle;
   if (actionCode === 'focus_market') return copy.userActionFocusTitle;
   if (actionCode === 'complete_profile') return copy.userActionProfileTitle;
-  if (actionCode === 'follow_up_unanswered' || actionCode === 'follow_up_requests') return copy.userActionFollowUpTitle;
+  if (actionCode === 'follow_up_unanswered' || actionCode === 'follow_up_requests')
+    return copy.userActionFollowUpTitle;
   return null;
 }
 
@@ -20,18 +24,21 @@ export function buildFunnel(
 ): WorkspaceStatisticsFunnelItemView[] {
   if (!data) return [];
 
-  if (data.mode === 'personalized' && Array.isArray(data.funnelComparison?.stages) && data.funnelComparison.stages.length > 0) {
+  if (
+    data.mode === 'personalized' &&
+    Array.isArray(data.funnelComparison?.stages) &&
+    data.funnelComparison.stages.length > 0
+  ) {
     const stageLabelByKey = new Map(
       (data.profileFunnel.stages ?? []).map((stage) => {
-        const normalizedKey = stage.id === 'confirmations'
-          ? 'responses'
-          : stage.id;
+        const normalizedKey = stage.id === 'confirmations' ? 'responses' : stage.id;
         return [normalizedKey, stage];
       }),
     );
-    const rootCount = data.funnelComparison.stages.find((stage) => stage.key === 'requests')?.marketCount
-      ?? data.funnelComparison.stages[0]?.marketCount
-      ?? 0;
+    const rootCount =
+      data.funnelComparison.stages.find((stage) => stage.key === 'requests')?.marketCount ??
+      data.funnelComparison.stages[0]?.marketCount ??
+      0;
     const safeRootCount = typeof rootCount === 'number' && rootCount > 0 ? rootCount : 0;
     const largestGapStageKey = data.funnelComparison.largestGapStage;
     const largestDropOffStageKey = data.funnelComparison.largestDropOffStage;
@@ -46,34 +53,46 @@ export function buildFunnel(
       const widthPercent = safeRootCount > 0 ? (count / safeRootCount) * 100 : 0;
 
       return {
-        key: stage.key === 'responses'
-          ? 'confirmed'
-          : stage.key === 'contracts'
-            ? 'closed'
-            : stage.key,
+        key:
+          stage.key === 'responses'
+            ? 'confirmed'
+            : stage.key === 'contracts'
+              ? 'closed'
+              : stage.key,
         label: legacyStage?.label ?? stage.label,
         count,
         value: String(count),
         widthPercent: Math.max(0, Math.min(100, Math.round(widthPercent))),
         rateFromPreviousPercent: ratePercent,
         railLabel: stage.key === 'requests' ? undefined : (legacyStage?.rateLabel ?? undefined),
-        railValue: stage.key === 'requests'
-          ? undefined
-          : (ratePercent !== null ? formatPercent(ratePercent) : undefined),
+        railValue:
+          stage.key === 'requests'
+            ? undefined
+            : ratePercent !== null
+              ? formatPercent(ratePercent)
+              : undefined,
         isCurrency: false,
         compare: {
-          userCount: stage.userCount === null ? '—' : String(Math.max(0, Math.round(stage.userCount))),
-          userRate: stage.key === 'requests'
-            ? null
-            : (typeof stage.userRateFromPrev === 'number' ? formatPercent(stage.userRateFromPrev) : '—'),
-          marketRate: stage.key === 'requests'
-            ? null
-            : (typeof stage.marketRateFromPrev === 'number' ? formatPercent(stage.marketRateFromPrev) : '—'),
-          gapRate: stage.key === 'requests'
-            ? null
-            : (typeof stage.gapRate === 'number'
-              ? `${stage.gapRate > 0 ? '+' : ''}${Math.round(stage.gapRate)} pp`
-              : '—'),
+          userCount:
+            stage.userCount === null ? '—' : String(Math.max(0, Math.round(stage.userCount))),
+          userRate:
+            stage.key === 'requests'
+              ? null
+              : typeof stage.userRateFromPrev === 'number'
+                ? formatPercent(stage.userRateFromPrev)
+                : '—',
+          marketRate:
+            stage.key === 'requests'
+              ? null
+              : typeof stage.marketRateFromPrev === 'number'
+                ? formatPercent(stage.marketRateFromPrev)
+                : '—',
+          gapRate:
+            stage.key === 'requests'
+              ? null
+              : typeof stage.gapRate === 'number'
+                ? `${stage.gapRate > 0 ? '+' : ''}${Math.round(stage.gapRate)} pp`
+                : '—',
           isLargestGap: stage.key === largestGapStageKey,
           isLargestDropoff: stage.key === largestDropOffStageKey,
         },
@@ -85,13 +104,14 @@ export function buildFunnel(
   if (!Array.isArray(stages) || stages.length === 0) return [];
 
   return stages.map((stage) => {
-    const normalizedId = stage.id === 'confirmations'
-      ? 'confirmed'
-      : stage.id === 'contracts'
-        ? 'closed'
-        : stage.id === 'revenue'
-          ? 'profit'
-          : stage.id;
+    const normalizedId =
+      stage.id === 'confirmations'
+        ? 'confirmed'
+        : stage.id === 'contracts'
+          ? 'closed'
+          : stage.id === 'revenue'
+            ? 'profit'
+            : stage.id;
     const ratePercent =
       typeof stage.ratePercent === 'number'
         ? Math.max(0, Math.min(100, Math.round(stage.ratePercent)))
@@ -122,12 +142,11 @@ export function buildFunnelDropoff(params: {
 }) {
   const comparisonSource = params.data?.funnelComparison;
   if (comparisonSource) {
-    const comparisonStage = (
+    const comparisonStage =
       comparisonSource.stages.find((item) => item.key === comparisonSource.largestDropOffStage) ??
       comparisonSource.stages
         .filter((item) => item.key !== 'requests' && typeof item.userRateFromPrev === 'number')
-        .sort((left, right) => (left.userRateFromPrev ?? 100) - (right.userRateFromPrev ?? 100))[0]
-    );
+        .sort((left, right) => (left.userRateFromPrev ?? 100) - (right.userRateFromPrev ?? 100))[0];
 
     if (comparisonStage && typeof comparisonStage.userRateFromPrev === 'number') {
       const dropoffPercent = Math.max(0, 100 - comparisonStage.userRateFromPrev);
@@ -161,7 +180,12 @@ export function buildFunnelDropoff(params: {
     label: params.copy.funnelDropoffLabel,
     value: `${candidate.dropoffPercent}%`,
     hint: `${candidate.label} · ${candidate.railValue ?? formatPercent(candidate.rateFromPreviousPercent ?? 0)}`,
-    tone: candidate.dropoffPercent >= 45 ? 'warning' : candidate.dropoffPercent >= 25 ? 'neutral' : 'positive',
+    tone:
+      candidate.dropoffPercent >= 45
+        ? 'warning'
+        : candidate.dropoffPercent >= 25
+          ? 'neutral'
+          : 'positive',
   } as const;
 }
 
@@ -186,11 +210,16 @@ export function buildFunnelComparison(params: {
       label: stage.label,
       marketCount: stage.marketCount === null ? '—' : formatNumber.format(stage.marketCount),
       userCount: stage.userCount === null ? '—' : formatNumber.format(stage.userCount),
-      marketRate: typeof stage.marketRateFromPrev === 'number' ? formatPercent(stage.marketRateFromPrev) : '—',
-      userRate: typeof stage.userRateFromPrev === 'number' ? formatPercent(stage.userRateFromPrev) : '—',
-      gapRate: typeof stage.gapRate === 'number'
-        ? `${stage.gapRate > 0 ? '+' : ''}${Math.round(stage.gapRate)} pp`
-        : '—',
+      marketRate:
+        typeof stage.marketRateFromPrev === 'number'
+          ? formatPercent(stage.marketRateFromPrev)
+          : '—',
+      userRate:
+        typeof stage.userRateFromPrev === 'number' ? formatPercent(stage.userRateFromPrev) : '—',
+      gapRate:
+        typeof stage.gapRate === 'number'
+          ? `${stage.gapRate > 0 ? '+' : ''}${Math.round(stage.gapRate)} pp`
+          : '—',
       status: stage.status,
       dropOffSeverity: stage.dropOffSeverity,
       recommendation: resolveActionLabel(copy, stage.recommendation),
@@ -210,7 +239,10 @@ export function buildFunnelSummary(params: {
   if (data?.mode === 'personalized' && funnelComparison) {
     const requestsStage = data.funnelComparison?.stages.find((item) => item.key === 'requests');
     const completedStage = data.funnelComparison?.stages.find((item) => item.key === 'completed');
-    if (typeof requestsStage?.userCount === 'number' && typeof completedStage?.userCount === 'number') {
+    if (
+      typeof requestsStage?.userCount === 'number' &&
+      typeof completedStage?.userCount === 'number'
+    ) {
       const safeCompletedCount = Math.min(completedStage.userCount, requestsStage.userCount);
       return `${copy.funnelSummaryPrefix} ${formatNumber.format(requestsStage.userCount)} ${copy.funnelSummaryMiddle} ${formatNumber.format(safeCompletedCount)} ${copy.funnelSummarySuffix}`;
     }

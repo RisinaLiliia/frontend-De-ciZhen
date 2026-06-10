@@ -20,7 +20,11 @@ describe('buildWorkspaceModeItems', () => {
       'chat',
     ]);
     expect(items.find((item) => item.key === 'providers')?.isActive).toBe(true);
-    expect(items.find((item) => item.key === 'analysis')?.href).toBe('/workspace?city=karlsruhe&period=90d&section=stats');
-    expect(items.find((item) => item.key === 'chat')?.href).toBe('/workspace?city=karlsruhe&period=90d&section=chat');
+    expect(items.find((item) => item.key === 'analysis')?.href).toBe(
+      '/workspace?city=karlsruhe&period=90d&section=stats',
+    );
+    expect(items.find((item) => item.key === 'chat')?.href).toBe(
+      '/workspace?city=karlsruhe&period=90d&section=chat',
+    );
   });
 });

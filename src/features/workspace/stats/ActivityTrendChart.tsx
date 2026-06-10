@@ -79,9 +79,10 @@ export function ActivityTrendChart({
   };
 
   const toX = (index: number) => plot.left + index * step;
-  const buildPath = (values: number[]) => values
-    .map((value, index) => `${index === 0 ? 'M' : 'L'} ${toX(index)} ${toY(value)}`)
-    .join(' ');
+  const buildPath = (values: number[]) =>
+    values
+      .map((value, index) => `${index === 0 ? 'M' : 'L'} ${toX(index)} ${toY(value)}`)
+      .join(' ');
   const buildAreaPath = (values: number[]) => {
     const linePath = buildPath(values);
     return `${linePath} L ${toX(values.length - 1)} ${plot.bottom} L ${toX(0)} ${plot.bottom} Z`;
@@ -90,7 +91,9 @@ export function ActivityTrendChart({
   const offersValues = points.map((point) => point.offers);
   const latestRequestsValue = requestsValues[requestsValues.length - 1] ?? 0;
   const latestOffersValue = offersValues[offersValues.length - 1] ?? 0;
-  const hasClientActivity = points.some((point) => typeof point.clientActivity === 'number' && point.clientActivity > 0);
+  const hasClientActivity = points.some(
+    (point) => typeof point.clientActivity === 'number' && point.clientActivity > 0,
+  );
   const hasProviderActivity = points.some(
     (point) => typeof point.providerActivity === 'number' && point.providerActivity > 0,
   );
@@ -156,7 +159,11 @@ export function ActivityTrendChart({
                   y1={y}
                   x2={plot.right}
                   y2={y}
-                  className={tick % 20 === 0 ? 'home-activity__grid-line is-major' : 'home-activity__grid-line'}
+                  className={
+                    tick % 20 === 0
+                      ? 'home-activity__grid-line is-major'
+                      : 'home-activity__grid-line'
+                  }
                 />
                 <text x="0" y={y + 0.7} className="home-activity__axis-label">
                   {tick}
@@ -171,31 +178,50 @@ export function ActivityTrendChart({
               y1={plot.bottom}
               x2={toX(index)}
               y2={plot.bottom + (markerIndexes.has(index) ? 3.4 : 2)}
-              className={markerIndexes.has(index) ? 'home-activity__x-tick is-major' : 'home-activity__x-tick'}
+              className={
+                markerIndexes.has(index)
+                  ? 'home-activity__x-tick is-major'
+                  : 'home-activity__x-tick'
+              }
             />
           ))}
-          <line x1={plot.left} y1={plot.bottom} x2={plot.right} y2={plot.bottom} className="home-activity__axis" />
+          <line
+            x1={plot.left}
+            y1={plot.bottom}
+            x2={plot.right}
+            y2={plot.bottom}
+            className="home-activity__axis"
+          />
           <path d={buildAreaPath(requestsValues)} className="home-activity__area is-requests" />
           {series.map((item) => (
-            <path key={item.key} d={item.path ?? ''} className={`home-activity__line is-${item.key}`} />
+            <path
+              key={item.key}
+              d={item.path ?? ''}
+              className={`home-activity__line is-${item.key}`}
+            />
           ))}
           {points.map((point, index) => (
             <g key={`${point.label}-${index}`}>
               {markerIndexes.has(index)
                 ? series.map((item) => (
-                  <circle
-                    key={`${item.key}-${point.label}`}
-                    cx={toX(index)}
-                    cy={toY(item.points[index] ?? 0)}
-                    r={activeIndex === index ? 1.3 : 1.1}
-                    className={`home-activity__dot is-${item.key}`}
-                  />
-                ))
+                    <circle
+                      key={`${item.key}-${point.label}`}
+                      cx={toX(index)}
+                      cy={toY(item.points[index] ?? 0)}
+                      r={activeIndex === index ? 1.3 : 1.1}
+                      className={`home-activity__dot is-${item.key}`}
+                    />
+                  ))
                 : null}
             </g>
           ))}
           {xAxisLabels.map((item) => (
-            <text key={`label-${item.label}-${item.index}`} x={toX(item.index)} y="93" className="home-activity__x-label">
+            <text
+              key={`label-${item.label}-${item.index}`}
+              x={toX(item.index)}
+              y="93"
+              className="home-activity__x-label"
+            >
               {item.label}
             </text>
           ))}
@@ -259,7 +285,10 @@ function buildChunkedAxisLabels(
   return labels;
 }
 
-function buildMonthlyAxisLabels(points: ActivityTrendPoint[], locale: Locale): ActivityTrendAxisLabel[] {
+function buildMonthlyAxisLabels(
+  points: ActivityTrendPoint[],
+  locale: Locale,
+): ActivityTrendAxisLabel[] {
   const groups = new Map<string, number[]>();
 
   points.forEach((point, index) => {

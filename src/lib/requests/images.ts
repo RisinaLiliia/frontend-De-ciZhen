@@ -56,12 +56,12 @@ function hasCloudinaryTransformSegment(pathname: string) {
   const afterUpload = pathname.slice(uploadIndex + marker.length);
   const firstSegment = afterUpload.split('/')[0] ?? '';
   return (
-    firstSegment.includes('w_')
-    || firstSegment.includes('h_')
-    || firstSegment.includes('q_')
-    || firstSegment.includes('f_')
-    || firstSegment.includes('c_')
-    || firstSegment.includes('g_')
+    firstSegment.includes('w_') ||
+    firstSegment.includes('h_') ||
+    firstSegment.includes('q_') ||
+    firstSegment.includes('f_') ||
+    firstSegment.includes('c_') ||
+    firstSegment.includes('g_')
   );
 }
 
@@ -77,10 +77,7 @@ export function optimizeAppImageSrc(
     if (!isCloudinaryUrl(url)) return normalized;
     if (hasCloudinaryTransformSegment(url.pathname)) return normalized;
 
-    url.pathname = url.pathname.replace(
-      '/upload/',
-      `/upload/${CLOUDINARY_TRANSFORMS[variant]}/`,
-    );
+    url.pathname = url.pathname.replace('/upload/', `/upload/${CLOUDINARY_TRANSFORMS[variant]}/`);
     return url.toString();
   } catch {
     return normalized;
@@ -91,9 +88,9 @@ export function shouldBypassNextImageOptimization(src: string | null | undefined
   if (!src) return false;
   const normalized = normalizeAppImageSrc(src).toLowerCase();
   return (
-    normalized.startsWith('http://')
-    || normalized.startsWith('https://')
-    || normalized.startsWith('blob:')
-    || normalized.startsWith('data:')
+    normalized.startsWith('http://') ||
+    normalized.startsWith('https://') ||
+    normalized.startsWith('blob:') ||
+    normalized.startsWith('data:')
   );
 }

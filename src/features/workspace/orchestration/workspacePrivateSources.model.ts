@@ -63,7 +63,10 @@ type BuildWorkspacePrivateSourcesRequestsStateArgsParams = {
     | 'sortBy'
   >;
   contractData: Pick<WorkspaceContractDataResult, 'allRequestsSummary'>;
-  legacyPublicOverviewData: Pick<WorkspaceLegacyPublicOverviewDataResult, 'overviewRequests' | 'isLoading' | 'isError'>;
+  legacyPublicOverviewData: Pick<
+    WorkspaceLegacyPublicOverviewDataResult,
+    'overviewRequests' | 'isLoading' | 'isError'
+  >;
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
 };
 
@@ -72,16 +75,8 @@ type BuildWorkspacePrivateSourcesCollectionsArgsParams = {
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
   requestsScope?: WorkspaceBranchProps['routeState']['requestsScope'];
   requests: WorkspacePublicRequestsStateResult['requests'];
-  requestUserStateData: Pick<
-    WorkspaceRequestUserStateDataResult,
-    | 'favoriteRequests'
-    | 'myOffers'
-  >;
-  providerSupportData: Pick<
-    WorkspaceProviderSupportDataResult,
-    | 'providers'
-    | 'favoriteProviders'
-  >;
+  requestUserStateData: Pick<WorkspaceRequestUserStateDataResult, 'favoriteRequests' | 'myOffers'>;
+  providerSupportData: Pick<WorkspaceProviderSupportDataResult, 'providers' | 'favoriteProviders'>;
   catalogIndex: Pick<CatalogIndexResult, 'cityById' | 'serviceByKey'>;
   locale: WorkspaceBranchProps['locale'];
 };
@@ -101,12 +96,7 @@ type ResolveWorkspacePrivateSourcesResultParams = {
   catalogIndex: CatalogIndexResult;
   collections: WorkspaceCollectionsResult;
   publicRequestsState: WorkspacePublicRequestsStateResult;
-  filters: Pick<
-    WorkspacePublicFiltersResult,
-    | 'page'
-    | 'limit'
-    | 'setPage'
-  >;
+  filters: Pick<WorkspacePublicFiltersResult, 'page' | 'limit' | 'setPage'>;
 };
 
 export function shouldLoadWorkspacePrivateCatalog({
@@ -144,12 +134,9 @@ export function resolveWorkspacePrivatePublicSummaryCityActivityLimit({
   activeWorkspaceTab,
 }: BuildWorkspacePrivatePublicRequestsStateLoadArgs) {
   const shouldLoadFullMapSummary =
-    activePublicSection === null &&
-    activeWorkspaceTab === 'my-requests';
+    activePublicSection === null && activeWorkspaceTab === 'my-requests';
 
-  return shouldLoadFullMapSummary
-    ? WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT
-    : 1;
+  return shouldLoadFullMapSummary ? WORKSPACE_PUBLIC_CITY_ACTIVITY_FETCH_LIMIT : 1;
 }
 
 export function buildWorkspacePrivateSourcesDataArgs({
@@ -196,7 +183,9 @@ export function buildWorkspacePrivateSourcesRequestsStateArgs({
   contractData,
   legacyPublicOverviewData,
   activePublicSection,
-}: BuildWorkspacePrivateSourcesRequestsStateArgsParams): Parameters<typeof useWorkspacePublicRequestsState>[0] {
+}: BuildWorkspacePrivateSourcesRequestsStateArgsParams): Parameters<
+  typeof useWorkspacePublicRequestsState
+>[0] {
   return {
     publicRequests: legacyPublicOverviewData.overviewRequests,
     allRequestsSummary: contractData.allRequestsSummary,
@@ -237,7 +226,7 @@ export function buildWorkspacePrivateSourcesIdleRequestsStateArgs(params: {
   page: number;
   setPage: (page: number) => void;
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
-}) : Parameters<typeof useWorkspacePublicRequestsState>[0] {
+}): Parameters<typeof useWorkspacePublicRequestsState>[0] {
   return {
     publicRequests: undefined,
     allRequestsSummary: params.allRequestsSummary,
@@ -266,13 +255,16 @@ export function buildWorkspacePrivateSourcesCollectionsArgs({
   providerSupportData,
   catalogIndex,
   locale,
-}: BuildWorkspacePrivateSourcesCollectionsArgsParams): Parameters<typeof useWorkspaceCollections>[0] {
+}: BuildWorkspacePrivateSourcesCollectionsArgsParams): Parameters<
+  typeof useWorkspaceCollections
+>[0] {
   const includeRequestCollections = shouldBuildWorkspacePrivateRequestCollections({
     activePublicSection,
     activeWorkspaceTab,
   });
   const includeFavoriteProviderBackfill = shouldBuildWorkspacePrivateFavoriteProviderBackfill();
-  const includeFavoriteProviderPresentation = shouldBuildWorkspacePrivateFavoriteProviderPresentation();
+  const includeFavoriteProviderPresentation =
+    shouldBuildWorkspacePrivateFavoriteProviderPresentation();
 
   return {
     includeRequestCollections,
@@ -318,7 +310,8 @@ export function resolveWorkspacePrivateSourcesResult({
       byId: collections.providerById,
     },
     privateOverviewState: contractData.privateOverviewState,
-    isWorkspacePrivateRequestsFallbackLoading: contractData.isWorkspacePrivateRequestsFallbackLoading,
+    isWorkspacePrivateRequestsFallbackLoading:
+      contractData.isWorkspacePrivateRequestsFallbackLoading,
     workspaceRequests: contractData.workspaceRequests,
     isWorkspaceRequestsLoading: contractData.isWorkspaceRequestsLoading,
     isWorkspaceRequestsError: contractData.isWorkspaceRequestsError,

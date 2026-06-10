@@ -9,7 +9,10 @@ const DeferredPresenceProvider = dynamic(
   { ssr: false },
 );
 const DeferredGoogleAnalyticsManager = dynamic(
-  () => import('@/components/analytics/GoogleAnalyticsManager').then((mod) => mod.GoogleAnalyticsManager),
+  () =>
+    import('@/components/analytics/GoogleAnalyticsManager').then(
+      (mod) => mod.GoogleAnalyticsManager,
+    ),
   { ssr: false },
 );
 const DeferredCookieConsentLayer = dynamic(
@@ -30,7 +33,7 @@ export function DeferredGlobalChrome() {
   const isUiReady = useDeferredMount(1200);
   const isPresenceReady = useDeferredMount(2400);
   const shouldRenderGlobalConsentFooter =
-  isUiReady && pathname !== '/' && !pathname.startsWith('/workspace');
+    isUiReady && pathname !== '/' && !pathname.startsWith('/workspace');
 
   return (
     <>

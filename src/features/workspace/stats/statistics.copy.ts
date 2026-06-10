@@ -1,4 +1,7 @@
-import type { WorkspaceStatisticsGrowthCardDto, WorkspaceStatisticsInsightDto } from '@/lib/api/dto/workspace';
+import type {
+  WorkspaceStatisticsGrowthCardDto,
+  WorkspaceStatisticsInsightDto,
+} from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 import { COPY_DE } from './statistics.copy.de';
 import { COPY_EN } from './statistics.copy.en';
@@ -387,7 +390,10 @@ export function getWorkspaceStatisticsCopy(locale: Locale): WorkspaceStatisticsC
   return locale === 'de' ? COPY_DE : COPY_EN;
 }
 
-export function resolveInsightText(copy: WorkspaceStatisticsCopy, insight: WorkspaceStatisticsInsightDto): string {
+export function resolveInsightText(
+  copy: WorkspaceStatisticsCopy,
+  insight: WorkspaceStatisticsInsightDto,
+): string {
   const backendBody = insight.body?.trim();
   if (backendBody) return backendBody;
 
@@ -460,9 +466,10 @@ export function resolveGrowthCard(
   if (card.key === 'highlight_profile') {
     return {
       title: copy === COPY_DE ? 'Profil hervorheben' : 'Boost profile visibility',
-      body: copy === COPY_DE
-        ? 'Mehr passende Anfragen durch bessere Positionierung in einem Markt mit aktiver Nachfrage.'
-        : 'More relevant requests through stronger positioning in an active market.',
+      body:
+        copy === COPY_DE
+          ? 'Mehr passende Anfragen durch bessere Positionierung in einem Markt mit aktiver Nachfrage.'
+          : 'More relevant requests through stronger positioning in an active market.',
       benefit: copy === COPY_DE ? '+18–40 % Profilaufrufe' : '+18–40% profile views',
       tone: 'primary',
       href: card.href,
@@ -471,22 +478,29 @@ export function resolveGrowthCard(
   if (card.key === 'local_ads') {
     return {
       title: copy === COPY_DE ? 'Lokale Werbung' : 'Local promotion',
-      body: copy === COPY_DE
-        ? 'Mehr Reichweite in Städten mit aktiver Nachfrage.'
-        : 'More reach in cities with active demand.',
-      benefit: copy === COPY_DE ? 'Mehr Reichweite im Fokusmarkt' : 'More reach in the focus market',
+      body:
+        copy === COPY_DE
+          ? 'Mehr Reichweite in Städten mit aktiver Nachfrage.'
+          : 'More reach in cities with active demand.',
+      benefit:
+        copy === COPY_DE ? 'Mehr Reichweite im Fokusmarkt' : 'More reach in the focus market',
       tone: 'default',
       href: card.href,
     };
   }
   return {
-    title: copy === COPY_DE ? 'Markt-Insights & Conversion-Analyse' : 'Market insights & conversion analysis',
-    body: copy === COPY_DE
-      ? 'Erkenne, warum Anfragen nicht zu Aufträgen werden, und verbessere deine Entscheidungen.'
-      : 'See why requests do not turn into jobs and improve your decisions.',
-    benefit: copy === COPY_DE
-      ? 'Klarere Entscheidungen im Marktvergleich'
-      : 'Clearer decisions with market comparison',
+    title:
+      copy === COPY_DE
+        ? 'Markt-Insights & Conversion-Analyse'
+        : 'Market insights & conversion analysis',
+    body:
+      copy === COPY_DE
+        ? 'Erkenne, warum Anfragen nicht zu Aufträgen werden, und verbessere deine Entscheidungen.'
+        : 'See why requests do not turn into jobs and improve your decisions.',
+    benefit:
+      copy === COPY_DE
+        ? 'Klarere Entscheidungen im Marktvergleich'
+        : 'Clearer decisions with market comparison',
     tone: 'default',
     badge: copy === COPY_DE ? 'Beta' : 'Beta',
     href: card.href,

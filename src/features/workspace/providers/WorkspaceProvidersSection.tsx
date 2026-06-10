@@ -13,9 +13,7 @@ import { WORKSPACE_PROVIDER_ID_QUERY_KEY } from '@/features/workspace/providers/
 
 const ExploreRequestsPanel = dynamic(
   () =>
-    import('@/components/requests/RequestsExplorePanel').then(
-      (mod) => mod.RequestsExplorePanel,
-    ),
+    import('@/components/requests/RequestsExplorePanel').then((mod) => mod.RequestsExplorePanel),
   {
     loading: () => (
       <section className={workspacePanelShell()}>
@@ -46,7 +44,8 @@ export const WorkspaceProvidersSection = React.memo(function WorkspaceProvidersS
 }: WorkspaceProvidersSectionProps) {
   const searchParams = useSearchParams();
   const activeProviderId = searchParams.get(WORKSPACE_PROVIDER_ID_QUERY_KEY)?.trim() || null;
-  const rootClassName = 'workspace-section-pane workspace-explore-grid workspace-explore-grid--single';
+  const rootClassName =
+    'workspace-section-pane workspace-explore-grid workspace-explore-grid--single';
 
   if (activeProviderId) {
     return (

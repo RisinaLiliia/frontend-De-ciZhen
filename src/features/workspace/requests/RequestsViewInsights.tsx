@@ -4,7 +4,6 @@ import type { WorkspaceRequestsViewCard } from '@/features/workspace/requests/wo
 import { I18N_KEYS, type I18nKey } from '@/lib/i18n/keys';
 import { t as translate, type Locale } from '@/lib/i18n/t';
 
-
 function tx(locale: Locale, key: I18nKey) {
   return translate(key, locale);
 }
@@ -34,13 +33,16 @@ export function RequestOwnerInsights({
   chrome: ReturnType<typeof buildPrivateRequestCardChrome>;
   includeSignals?: boolean;
 }) {
-  if ((!includeSignals || chrome.signalPills.length === 0) && chrome.insights.length === 0) return null;
+  if ((!includeSignals || chrome.signalPills.length === 0) && chrome.insights.length === 0)
+    return null;
 
   return (
     <div className="my-request-card__owner-content">
       {includeSignals ? <RequestSignalPills chrome={chrome} /> : null}
       {chrome.insights.length > 0 ? (
-        <div className={`my-request-card__insights my-request-card__insights--${Math.min(chrome.insights.length, 2)}`.trim()}>
+        <div
+          className={`my-request-card__insights my-request-card__insights--${Math.min(chrome.insights.length, 2)}`.trim()}
+        >
           {chrome.insights.map((item) => (
             <article key={item.key} className={`my-request-card__insight is-${item.tone}`.trim()}>
               <strong className="my-request-card__insight-title">{item.title}</strong>
@@ -64,9 +66,7 @@ export function RequestOwnerFooterNote({
   locale: Locale;
   workspaceVariant: WorkspaceRequestsViewVariant;
 }) {
-  const noteFromInsights = chrome.insights
-    .map((item) => item.description.trim())
-    .find(Boolean);
+  const noteFromInsights = chrome.insights.map((item) => item.description.trim()).find(Boolean);
   const noteFromDecision = card.decision.actionReason?.trim();
   const noteFromActivity = card.activity?.label?.trim();
 
@@ -92,7 +92,9 @@ export function RequestOwnerFooterNote({
   if (!note) return null;
 
   return (
-    <div className={`my-request-card__footer-note is-${chrome.insights[0]?.tone ?? 'neutral'}`.trim()}>
+    <div
+      className={`my-request-card__footer-note is-${chrome.insights[0]?.tone ?? 'neutral'}`.trim()}
+    >
       <span className="my-request-card__footer-note-icon" aria-hidden="true">
         i
       </span>
@@ -100,4 +102,3 @@ export function RequestOwnerFooterNote({
     </div>
   );
 }
-

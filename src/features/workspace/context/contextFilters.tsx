@@ -105,7 +105,11 @@ export function WorkspaceContextFilters({
   }
 
   if (compact) {
-    return <WorkspaceFilterBar className="workspace-context-controls__filters-grid">{baseFields}</WorkspaceFilterBar>;
+    return (
+      <WorkspaceFilterBar className="workspace-context-controls__filters-grid">
+        {baseFields}
+      </WorkspaceFilterBar>
+    );
   }
 
   return (

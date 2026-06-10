@@ -5,14 +5,9 @@ export {
   DEFAULT_ACTIVITY_METRICS,
 } from './statisticsViewModel.activity';
 
-export {
-  buildCityRows,
-  buildOpportunityRadar,
-} from './statisticsViewModel.market';
+export { buildCityRows, buildOpportunityRadar } from './statisticsViewModel.market';
 
-export {
-  buildPriceIntelligence,
-} from './statisticsViewModel.pricing';
+export { buildPriceIntelligence } from './statisticsViewModel.pricing';
 
 export {
   buildFunnel,

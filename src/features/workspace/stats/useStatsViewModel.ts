@@ -11,10 +11,7 @@ import type {
 } from '@/lib/api/dto/workspace';
 import type { Locale } from '@/lib/i18n/t';
 import { getWorkspaceStatisticsCopy } from './statistics.copy';
-import {
-  formatDateLabel,
-  formatDateTimeLabel,
-} from './statisticsModel.mappers';
+import { formatDateLabel, formatDateTimeLabel } from './statisticsModel.mappers';
 import { paginateItems } from './statisticsPagination.utils';
 import type { WorkspaceStatisticsDecisionDashboardDto } from './statisticsDecisionDashboard.contract';
 import type {
@@ -118,15 +115,15 @@ export function useWorkspaceStatsViewModel({
     [localeTag],
   );
   const mode = data?.mode ?? 'platform';
-  const viewerMode = mode === 'personalized'
-    ? (data?.viewerMode ?? filters.viewerMode ?? 'provider')
-    : null;
+  const viewerMode =
+    mode === 'personalized' ? (data?.viewerMode ?? filters.viewerMode ?? 'provider') : null;
   const selectedCityId = normalizeNullableFilterValue(filters.cityId);
   const selectedCategoryKey = normalizeNullableFilterValue(filters.categoryKey);
   const isFocusMode = Boolean(selectedCityId || selectedCategoryKey);
 
   const activityPoints = (() => {
-    const activityPointLimit = range === '24h' ? 24 : range === '7d' ? 7 : range === '30d' ? 30 : 90;
+    const activityPointLimit =
+      range === '24h' ? 24 : range === '7d' ? 7 : range === '30d' ? 30 : 90;
     const points = (data?.activity.points ?? []).slice(-activityPointLimit);
     const comparisonPointsByTimestamp = new Map(
       (data?.activityComparison?.points ?? []).map((point) => [point.timestamp, point]),
@@ -139,10 +136,14 @@ export function useWorkspaceStatsViewModel({
     );
     const providerTotal = Math.max(
       0,
-      Math.round(data?.profileFunnel.offersTotal ?? privateOverview?.providerOffersByStatus.total ?? 0),
+      Math.round(
+        data?.profileFunnel.offersTotal ?? privateOverview?.providerOffersByStatus.total ?? 0,
+      ),
     );
-    const canBuildClientOverlay = mode === 'personalized' && clientTotal > 0 && marketRequestsTotal > 0;
-    const canBuildProviderOverlay = mode === 'personalized' && providerTotal > 0 && marketOffersTotal > 0;
+    const canBuildClientOverlay =
+      mode === 'personalized' && clientTotal > 0 && marketRequestsTotal > 0;
+    const canBuildProviderOverlay =
+      mode === 'personalized' && providerTotal > 0 && marketOffersTotal > 0;
 
     return points.map((point) => {
       const comparisonPoint = comparisonPointsByTimestamp.get(point.timestamp);
@@ -160,19 +161,21 @@ export function useWorkspaceStatsViewModel({
       const rawClientActivity = canBuildClientOverlay
         ? (point.requests / marketRequestsTotal) * clientTotal
         : null;
-      const clientActivity = rawClientActivity === null
-        ? null
-        : point.requests > 0
-          ? Math.max(1, Math.round(rawClientActivity))
-          : 0;
+      const clientActivity =
+        rawClientActivity === null
+          ? null
+          : point.requests > 0
+            ? Math.max(1, Math.round(rawClientActivity))
+            : 0;
       const rawProviderActivity = canBuildProviderOverlay
         ? (point.offers / marketOffersTotal) * providerTotal
         : null;
-      const providerActivity = rawProviderActivity === null
-        ? null
-        : point.offers > 0
-          ? Math.max(1, Math.round(rawProviderActivity))
-          : 0;
+      const providerActivity =
+        rawProviderActivity === null
+          ? null
+          : point.offers > 0
+            ? Math.max(1, Math.round(rawProviderActivity))
+            : 0;
 
       return {
         timestamp: point.timestamp,
@@ -209,16 +212,19 @@ export function useWorkspaceStatsViewModel({
       });
     }
 
-    if (mode === 'personalized' && (userIntelligence?.formulaMetrics.length || userIntelligence?.decisionMetrics.length)) {
+    if (
+      mode === 'personalized' &&
+      (userIntelligence?.formulaMetrics.length || userIntelligence?.decisionMetrics.length)
+    ) {
       const marketCompletedJobs = data?.activity.metrics.completedJobs;
       const userCompletedJobs = data?.profileFunnel.completedJobsTotal;
       const completedJobsComparison =
         typeof marketCompletedJobs === 'number' && typeof userCompletedJobs === 'number'
           ? {
-            marketValue: formatNumber.format(marketCompletedJobs),
-            userValue: formatNumber.format(userCompletedJobs),
-            delta: `${userCompletedJobs - marketCompletedJobs > 0 ? '+' : ''}${formatNumber.format(userCompletedJobs - marketCompletedJobs)}`,
-          }
+              marketValue: formatNumber.format(marketCompletedJobs),
+              userValue: formatNumber.format(userCompletedJobs),
+              delta: `${userCompletedJobs - marketCompletedJobs > 0 ? '+' : ''}${formatNumber.format(userCompletedJobs - marketCompletedJobs)}`,
+            }
           : null;
 
       return buildPersonalizedActivitySignals({
@@ -239,11 +245,12 @@ export function useWorkspaceStatsViewModel({
   })();
 
   const activityTrend = React.useMemo(
-    () => buildActivityTrend({
-      copy,
-      latestRequests: data?.activity.totals.latestRequests ?? 0,
-      previousRequests: data?.activity.totals.previousRequests ?? 0,
-    }),
+    () =>
+      buildActivityTrend({
+        copy,
+        latestRequests: data?.activity.totals.latestRequests ?? 0,
+        previousRequests: data?.activity.totals.previousRequests ?? 0,
+      }),
     [copy, data?.activity.totals.latestRequests, data?.activity.totals.previousRequests],
   );
 
@@ -330,8 +337,10 @@ export function useWorkspaceStatsViewModel({
   }, [copy, data?.opportunityRadar, formatCurrency, localeTag]);
 
   const priceIntelligence = React.useMemo<WorkspaceStatisticsPriceIntelligenceView>(() => {
-    const contextCityFallback = data?.decisionContext.city.label ?? selectedCityOption?.label ?? null;
-    const contextCategoryFallback = data?.decisionContext.category.label ?? selectedCategoryOption?.label ?? null;
+    const contextCityFallback =
+      data?.decisionContext.city.label ?? selectedCityOption?.label ?? null;
+    const contextCategoryFallback =
+      data?.decisionContext.category.label ?? selectedCategoryOption?.label ?? null;
     return buildPriceIntelligence({
       copy,
       source: data?.priceIntelligence,
@@ -352,59 +361,65 @@ export function useWorkspaceStatsViewModel({
   ]);
 
   const personalizedPricing = React.useMemo(
-    () => buildPersonalizedPricingSection({
-      copy,
-      source: data?.personalizedPricing,
-      formatCurrency,
-    }),
+    () =>
+      buildPersonalizedPricingSection({
+        copy,
+        source: data?.personalizedPricing,
+        formatCurrency,
+      }),
     [copy, data?.personalizedPricing, formatCurrency],
   );
 
   const categoryFit = React.useMemo(
-    () => buildCategoryFit({
-      copy,
-      source: data?.categoryFit,
-      formatNumber,
-    }),
+    () =>
+      buildCategoryFit({
+        copy,
+        source: data?.categoryFit,
+        formatNumber,
+      }),
     [copy, data?.categoryFit, formatNumber],
   );
 
   const cityComparison = React.useMemo(
-    () => buildCityComparison({
-      copy,
-      source: data?.cityComparison,
-      formatNumber,
-    }),
+    () =>
+      buildCityComparison({
+        copy,
+        source: data?.cityComparison,
+        formatNumber,
+      }),
     [copy, data?.cityComparison, formatNumber],
   );
   const rightRailRisks = React.useMemo(
-    () => buildRecommendationPrioritySection({
-      copy,
-      source: data?.risks,
-      fallbackTitle: copy.userRisksTitle,
-      fallbackSubtitle: copy.userRisksSubtitle,
-      fallbackItems: userIntelligence?.risks ?? [],
-    }),
+    () =>
+      buildRecommendationPrioritySection({
+        copy,
+        source: data?.risks,
+        fallbackTitle: copy.userRisksTitle,
+        fallbackSubtitle: copy.userRisksSubtitle,
+        fallbackItems: userIntelligence?.risks ?? [],
+      }),
     [copy, data?.risks, userIntelligence?.risks],
   );
   const rightRailOpportunities = React.useMemo(
-    () => buildRecommendationPrioritySection({
-      copy,
-      source: data?.opportunities,
-      fallbackTitle: copy.userOpportunitiesTitle,
-      fallbackSubtitle: copy.userOpportunitiesSubtitle,
-      fallbackItems: userIntelligence?.opportunities ?? [],
-    }),
+    () =>
+      buildRecommendationPrioritySection({
+        copy,
+        source: data?.opportunities,
+        fallbackTitle: copy.userOpportunitiesTitle,
+        fallbackSubtitle: copy.userOpportunitiesSubtitle,
+        fallbackItems: userIntelligence?.opportunities ?? [],
+      }),
     [copy, data?.opportunities, userIntelligence?.opportunities],
   );
   const rightRailNextSteps = React.useMemo(
-    () => buildRecommendationActionSection({
-      copy,
-      source: data?.nextSteps,
-      fallbackTitle: copy.userActionsTitle,
-      fallbackSubtitle: copy.userActionsSubtitle,
-      fallbackSteps: userIntelligence?.nextSteps ?? [],
-    }),
+    () =>
+      buildRecommendationActionSection({
+        copy,
+        source: data?.nextSteps,
+        fallbackTitle: copy.userActionsTitle,
+        fallbackSubtitle: copy.userActionsSubtitle,
+        fallbackSteps: userIntelligence?.nextSteps ?? [],
+      }),
     [copy, data?.nextSteps, userIntelligence?.nextSteps],
   );
 
@@ -440,11 +455,16 @@ export function useWorkspaceStatsViewModel({
     });
   }, [copy, data?.decisionContext.period, range]);
 
-  const contextCityLabel = data?.decisionContext.city.label ?? selectedCityOption?.label ?? copy.contextAllCitiesLabel;
-  const contextCategoryLabel = data?.decisionContext.category.label ?? selectedCategoryOption?.label ?? copy.contextAllCategoriesLabel;
-  const contextScopeLabel = (data?.decisionContext.mode ?? (isFocusMode ? 'focus' : 'global')) === 'focus'
-    ? copy.contextScopeFocusLabel
-    : copy.contextScopeGlobalLabel;
+  const contextCityLabel =
+    data?.decisionContext.city.label ?? selectedCityOption?.label ?? copy.contextAllCitiesLabel;
+  const contextCategoryLabel =
+    data?.decisionContext.category.label ??
+    selectedCategoryOption?.label ??
+    copy.contextAllCategoriesLabel;
+  const contextScopeLabel =
+    (data?.decisionContext.mode ?? (isFocusMode ? 'focus' : 'global')) === 'focus'
+      ? copy.contextScopeFocusLabel
+      : copy.contextScopeGlobalLabel;
   const isLowDataContext = Boolean(data?.decisionContext.lowData?.isLowData);
 
   const contextHealthMetrics = React.useMemo<WorkspaceStatisticsContextMetricView[]>(() => {
@@ -452,37 +472,31 @@ export function useWorkspaceStatsViewModel({
       copy,
       source: data?.decisionContext.health,
     });
-  }, [
-    copy,
-    data?.decisionContext.health,
-  ]);
+  }, [copy, data?.decisionContext.health]);
 
-  const insights = React.useMemo<WorkspaceStatisticsInsightView[]>(
-    () => {
-      return buildInsights({
-        copy,
-        data,
-        contextCategoryLabel,
-        contextCityLabel,
-        contextPeriodLabel,
-        contextScopeLabel,
-        formatNumber,
-        isLowDataContext,
-        locale,
-      });
-    },
-    [
+  const insights = React.useMemo<WorkspaceStatisticsInsightView[]>(() => {
+    return buildInsights({
+      copy,
+      data,
       contextCategoryLabel,
       contextCityLabel,
       contextPeriodLabel,
       contextScopeLabel,
-      copy,
-      data,
       formatNumber,
       isLowDataContext,
       locale,
-    ],
-  );
+    });
+  }, [
+    contextCategoryLabel,
+    contextCityLabel,
+    contextPeriodLabel,
+    contextScopeLabel,
+    copy,
+    data,
+    formatNumber,
+    isLowDataContext,
+    locale,
+  ]);
 
   const decisionInsight = React.useMemo(() => {
     const personalizedInsight = data?.decisionLayer?.primaryInsight?.trim();
@@ -496,32 +510,27 @@ export function useWorkspaceStatsViewModel({
     });
   }, [copy, data, isLowDataContext, mode]);
 
-  const decisionActionLabel = React.useMemo(
-    () => {
-      const code = data?.decisionLayer?.primaryAction?.code;
-      if (code === 'respond_faster') return copy.userActionRespondTitle;
-      if (code === 'adjust_price') return copy.userActionPriceTitle;
-      if (code === 'focus_market') return copy.userActionFocusTitle;
-      if (code === 'complete_profile') return copy.userActionProfileTitle;
-      if (code === 'follow_up_unanswered' || code === 'follow_up_requests') return copy.userActionFollowUpTitle;
-      return data?.decisionLayer?.primaryAction?.label?.trim() || null;
-    },
-    [copy, data?.decisionLayer?.primaryAction?.code, data?.decisionLayer?.primaryAction?.label],
-  );
+  const decisionActionLabel = React.useMemo(() => {
+    const code = data?.decisionLayer?.primaryAction?.code;
+    if (code === 'respond_faster') return copy.userActionRespondTitle;
+    if (code === 'adjust_price') return copy.userActionPriceTitle;
+    if (code === 'focus_market') return copy.userActionFocusTitle;
+    if (code === 'complete_profile') return copy.userActionProfileTitle;
+    if (code === 'follow_up_unanswered' || code === 'follow_up_requests')
+      return copy.userActionFollowUpTitle;
+    return data?.decisionLayer?.primaryAction?.label?.trim() || null;
+  }, [copy, data?.decisionLayer?.primaryAction?.code, data?.decisionLayer?.primaryAction?.label]);
   const decisionLayerSubtitle = React.useMemo(
     () => data?.decisionLayer?.subtitle?.trim() || null,
     [data?.decisionLayer?.subtitle],
   );
 
-  const growthCards = React.useMemo<WorkspaceStatisticsGrowthCardView[]>(
-    () => {
-      return buildGrowthCards({
-        copy,
-        source: data?.growthCards,
-      });
-    },
-    [copy, data?.growthCards],
-  );
+  const growthCards = React.useMemo<WorkspaceStatisticsGrowthCardView[]>(() => {
+    return buildGrowthCards({
+      copy,
+      source: data?.growthCards,
+    });
+  }, [copy, data?.growthCards]);
 
   const onExport = React.useCallback(() => {
     exportWorkspaceStatisticsCsv({
@@ -535,28 +544,32 @@ export function useWorkspaceStatsViewModel({
   }, [activitySignals, cityRows, data, funnel, kpis, range]);
 
   const activityTitle = data?.activityComparison
-    ? data.activityComparison.title ?? copy.activityTitle
+    ? (data.activityComparison.title ?? copy.activityTitle)
     : copy.activityTitle;
 
   const activitySubtitle = data?.activityComparison
-    ? data.activityComparison.subtitle ?? copy.activitySubtitle
+    ? (data.activityComparison.subtitle ?? copy.activitySubtitle)
     : copy.activitySubtitle;
 
-  const activitySummary = data?.activityComparison ? data.activityComparison.summary ?? null : null;
+  const activitySummary = data?.activityComparison
+    ? (data.activityComparison.summary ?? null)
+    : null;
 
   const activityMeta = {
     peak: formatDateTimeLabel(
-      data?.activityComparison ? data.activityComparison.peakTimestamp ?? null : data?.activity.totals.peakTimestamp,
+      data?.activityComparison
+        ? (data.activityComparison.peakTimestamp ?? null)
+        : data?.activity.totals.peakTimestamp,
       locale,
     ),
     bestWindow: formatDateTimeLabel(
       data?.activityComparison
-        ? data.activityComparison.bestWindowTimestamp ?? null
+        ? (data.activityComparison.bestWindowTimestamp ?? null)
         : data?.activity.totals.bestWindowTimestamp,
       locale,
     ),
     updatedAt: formatDateTimeLabel(
-      data?.activityComparison ? data.activityComparison.updatedAt ?? null : data?.updatedAt,
+      data?.activityComparison ? (data.activityComparison.updatedAt ?? null) : data?.updatedAt,
       locale,
     ),
   };
@@ -585,10 +598,7 @@ export function useWorkspaceStatsViewModel({
     isLowDataContext,
   ]);
 
-  const sectionMeta = React.useMemo(
-    () => buildSectionMeta(data),
-    [data],
-  );
+  const sectionMeta = React.useMemo(() => buildSectionMeta(data), [data]);
 
   return {
     copy,

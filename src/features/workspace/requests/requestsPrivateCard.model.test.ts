@@ -123,7 +123,10 @@ describe('requestsPrivateCard.model', () => {
     expect(chrome.priorityLabel).toBe('Handlungsbedarf');
     expect(chrome.primaryAction?.label).toBe('Angebote prüfen');
     expect(chrome.secondaryAction?.label).toBe('Bearbeiten');
-    expect(chrome.signalPills.map((item) => item.label)).toEqual(['2 Angebote prüfen', 'Neue Antworten']);
+    expect(chrome.signalPills.map((item) => item.label)).toEqual([
+      '2 Angebote prüfen',
+      'Neue Antworten',
+    ]);
     expect(chrome.insights).toEqual([
       {
         key: 'decision',

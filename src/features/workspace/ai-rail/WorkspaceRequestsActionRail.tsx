@@ -2,7 +2,10 @@
 
 import { WorkspaceDecisionPanel, type WorkspaceDecisionPanelProps } from './WorkspaceDecisionPanel';
 
-export type WorkspaceRequestsActionRailProps = Omit<WorkspaceDecisionPanelProps, 'isDecisionMode'> & {
+export type WorkspaceRequestsActionRailProps = Omit<
+  WorkspaceDecisionPanelProps,
+  'isDecisionMode'
+> & {
   mode: 'default' | 'decision';
   className?: string;
 };

@@ -48,9 +48,8 @@ export function useSyncedPanelMinHeight({
 
         const sourceRect = source.getBoundingClientRect();
         const targetRect = target?.getBoundingClientRect() ?? null;
-        const rawHeight = mode === 'sourceHeight'
-          ? sourceRect.height
-          : sourceRect.bottom - (targetRect?.top ?? 0);
+        const rawHeight =
+          mode === 'sourceHeight' ? sourceRect.height : sourceRect.bottom - (targetRect?.top ?? 0);
         const nextHeight = Math.max(0, Math.round(rawHeight));
         setMinHeight((prev) => (prev === nextHeight ? prev : nextHeight));
       });

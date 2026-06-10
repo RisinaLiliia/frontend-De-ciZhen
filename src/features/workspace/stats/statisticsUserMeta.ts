@@ -12,14 +12,21 @@ export function resolveComparisonLabel(copy: WorkspaceStatisticsCopy, key: strin
   return copy.activityUnansweredLabel;
 }
 
-export function resolveStatusLabel(copy: WorkspaceStatisticsCopy, status: 'high' | 'medium' | 'low' | null) {
+export function resolveStatusLabel(
+  copy: WorkspaceStatisticsCopy,
+  status: 'high' | 'medium' | 'low' | null,
+) {
   if (status === 'high') return copy.userRiskSeverityHigh;
   if (status === 'medium') return copy.userRiskSeverityMedium;
   if (status === 'low') return copy.userRiskSeverityLow;
   return null;
 }
 
-export function resolvePositionHeadline(copy: WorkspaceStatisticsCopy, percentile: number | null, bucket: 'top' | 'average' | 'below') {
+export function resolvePositionHeadline(
+  copy: WorkspaceStatisticsCopy,
+  percentile: number | null,
+  bucket: 'top' | 'average' | 'below',
+) {
   if (bucket === 'top') {
     const topShare = percentile === null ? 30 : Math.max(5, 100 - Math.round(percentile));
     return `${copy.userPositionTopPrefix} ${topShare}% ${copy.userPositionTopSuffix}`;
@@ -32,4 +39,3 @@ export function resolvePositionSummary(copy: WorkspaceStatisticsCopy, percentile
   if (percentile === null) return copy.userPositionSummaryFallback;
   return copy.userPositionSummaryTemplate.replace('{percentile}', String(Math.round(percentile)));
 }
-

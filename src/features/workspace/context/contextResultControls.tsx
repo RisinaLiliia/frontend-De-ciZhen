@@ -74,7 +74,9 @@ export function WorkspaceContextResultControls({
 
             <div className="workspace-context-controls__footer-actions workspace-context-controls__footer-actions--compact">
               {actionRowControl ? (
-                <div className="workspace-context-controls__action-row-control">{actionRowControl}</div>
+                <div className="workspace-context-controls__action-row-control">
+                  {actionRowControl}
+                </div>
               ) : null}
 
               <WorkspaceButton

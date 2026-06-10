@@ -1,8 +1,6 @@
 'use client';
 
-import {
-  WorkspaceSectionHeader,
-} from '@/features/workspace/shell';
+import { WorkspaceSectionHeader } from '@/features/workspace/shell';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 
 function getWorkspaceHelpCopy(locale: string) {
@@ -25,10 +23,5 @@ export function WorkspaceHelpIntro() {
   const { locale } = useI18n();
   const copy = getWorkspaceHelpCopy(locale);
 
-  return (
-    <WorkspaceSectionHeader
-      title={copy.title}
-      description={copy.description}
-    />
-  );
+  return <WorkspaceSectionHeader title={copy.title} description={copy.description} />;
 }

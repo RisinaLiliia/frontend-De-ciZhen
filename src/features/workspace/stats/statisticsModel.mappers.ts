@@ -11,7 +11,11 @@ import type { Locale } from '@/lib/i18n/t';
 import type { WorkspaceStatisticsOverviewSourceDto } from './statisticsModel.types';
 import type { WorkspaceStatisticsCopy } from './statistics.copy';
 
-export function formatDateLabel(timestamp: string, range: WorkspaceStatisticsRange, locale: Locale) {
+export function formatDateLabel(
+  timestamp: string,
+  range: WorkspaceStatisticsRange,
+  locale: Locale,
+) {
   const date = new Date(timestamp);
   if (!Number.isFinite(date.getTime())) return timestamp;
   const localeTag = locale === 'de' ? 'de-DE' : 'en-US';
@@ -71,38 +75,19 @@ export function formatPercent(value: number) {
   return `${Math.max(0, Math.round(value))}%`;
 }
 
-export function formatMinutes(value: number | null, locale: Locale, copy?: Pick<WorkspaceStatisticsCopy, 'activityMinutesShortLabel'>) {
+export function formatMinutes(
+  value: number | null,
+  locale: Locale,
+  copy?: Pick<WorkspaceStatisticsCopy, 'activityMinutesShortLabel'>,
+) {
   if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return '—';
   return `~${Math.round(value)} ${copy?.activityMinutesShortLabel ?? (locale === 'de' ? 'Min.' : 'min')}`;
 }
 
-function formatInsightMetricKey(key: string, copy?: Pick<WorkspaceStatisticsCopy,
-  | 'insightMetricRequestsLabel'
-  | 'insightMetricProvidersLabel'
-  | 'insightMetricRatioLabel'
-  | 'insightMetricShareLabel'
-  | 'insightMetricResponseTimeLabel'
-  | 'insightMetricSuccessRateLabel'
-  | 'insightMetricProfileLabel'
-  | 'insightMetricProviderSearchesLabel'
-  | 'insightMetricUnansweredLabel'>): string {
-  if (key === 'requests') return copy?.insightMetricRequestsLabel ?? 'Requests';
-  if (key === 'providers') return copy?.insightMetricProvidersLabel ?? 'Providers';
-  if (key === 'ratio') return copy?.insightMetricRatioLabel ?? 'Ratio';
-  if (key === 'sharePercent') return copy?.insightMetricShareLabel ?? 'Share';
-  if (key === 'responseMinutes') return copy?.insightMetricResponseTimeLabel ?? 'Response time';
-  if (key === 'successRatePercent') return copy?.insightMetricSuccessRateLabel ?? 'Success rate';
-  if (key === 'profileCompleteness') return copy?.insightMetricProfileLabel ?? 'Profile';
-  if (key === 'providerSearchCount') return copy?.insightMetricProviderSearchesLabel ?? 'Provider searches';
-  if (key === 'unansweredRequests24h') return copy?.insightMetricUnansweredLabel ?? 'Open >24h';
-  return key;
-}
-
-export function formatInsightEvidence(
-  metrics: Array<{ key: string; value: string | number }> | undefined,
-  locale: Locale,
-  formatNumber: Intl.NumberFormat,
-  copy?: Pick<WorkspaceStatisticsCopy,
+function formatInsightMetricKey(
+  key: string,
+  copy?: Pick<
+    WorkspaceStatisticsCopy,
     | 'insightMetricRequestsLabel'
     | 'insightMetricProvidersLabel'
     | 'insightMetricRatioLabel'
@@ -111,12 +96,44 @@ export function formatInsightEvidence(
     | 'insightMetricSuccessRateLabel'
     | 'insightMetricProfileLabel'
     | 'insightMetricProviderSearchesLabel'
-    | 'insightMetricUnansweredLabel'>,
+    | 'insightMetricUnansweredLabel'
+  >,
+): string {
+  if (key === 'requests') return copy?.insightMetricRequestsLabel ?? 'Requests';
+  if (key === 'providers') return copy?.insightMetricProvidersLabel ?? 'Providers';
+  if (key === 'ratio') return copy?.insightMetricRatioLabel ?? 'Ratio';
+  if (key === 'sharePercent') return copy?.insightMetricShareLabel ?? 'Share';
+  if (key === 'responseMinutes') return copy?.insightMetricResponseTimeLabel ?? 'Response time';
+  if (key === 'successRatePercent') return copy?.insightMetricSuccessRateLabel ?? 'Success rate';
+  if (key === 'profileCompleteness') return copy?.insightMetricProfileLabel ?? 'Profile';
+  if (key === 'providerSearchCount')
+    return copy?.insightMetricProviderSearchesLabel ?? 'Provider searches';
+  if (key === 'unansweredRequests24h') return copy?.insightMetricUnansweredLabel ?? 'Open >24h';
+  return key;
+}
+
+export function formatInsightEvidence(
+  metrics: Array<{ key: string; value: string | number }> | undefined,
+  locale: Locale,
+  formatNumber: Intl.NumberFormat,
+  copy?: Pick<
+    WorkspaceStatisticsCopy,
+    | 'insightMetricRequestsLabel'
+    | 'insightMetricProvidersLabel'
+    | 'insightMetricRatioLabel'
+    | 'insightMetricShareLabel'
+    | 'insightMetricResponseTimeLabel'
+    | 'insightMetricSuccessRateLabel'
+    | 'insightMetricProfileLabel'
+    | 'insightMetricProviderSearchesLabel'
+    | 'insightMetricUnansweredLabel'
+  >,
 ): string | undefined {
   if (!Array.isArray(metrics) || metrics.length === 0) return undefined;
   const tokens = metrics.slice(0, 3).map((metric) => {
     const label = formatInsightMetricKey(metric.key, copy);
-    const value = typeof metric.value === 'number' ? formatNumber.format(metric.value) : metric.value;
+    const value =
+      typeof metric.value === 'number' ? formatNumber.format(metric.value) : metric.value;
     return `${label}: ${value}`;
   });
   return tokens.length > 0 ? tokens.join(' · ') : undefined;
@@ -151,9 +168,8 @@ export function buildSupplementalInsights(params: {
   if (topCity && topCity.requestCount > 0) {
     const auftragSuchenCount = Math.max(0, Math.round(topCity.auftragSuchenCount ?? 0));
     const anbieterSuchenCount = Math.max(0, Math.round(topCity.anbieterSuchenCount ?? 0));
-    const marketBalanceRatio = auftragSuchenCount > 0
-      ? anbieterSuchenCount / Math.max(1, auftragSuchenCount)
-      : null;
+    const marketBalanceRatio =
+      auftragSuchenCount > 0 ? anbieterSuchenCount / Math.max(1, auftragSuchenCount) : null;
 
     list.push({
       level: 'info',
@@ -166,7 +182,9 @@ export function buildSupplementalInsights(params: {
       body: `In ${topCity.cityName} ist die Nachfrage aktuell am höchsten.`,
       metrics: [
         { key: 'requests', value: topCity.requestCount },
-        ...(marketBalanceRatio !== null ? [{ key: 'ratio', value: Number(marketBalanceRatio.toFixed(2)) }] : []),
+        ...(marketBalanceRatio !== null
+          ? [{ key: 'ratio', value: Number(marketBalanceRatio.toFixed(2)) }]
+          : []),
       ],
     });
 
@@ -210,34 +228,43 @@ export function toHint(
   baseline: number,
   range: WorkspaceStatisticsRange,
   locale: Locale,
-  copy?: Pick<WorkspaceStatisticsCopy,
+  copy?: Pick<
+    WorkspaceStatisticsCopy,
     | 'trendStableLabel'
     | 'trendNewTemplate'
     | 'trendSinceLastPeriodTemplate'
     | 'trendContextTodayLabel'
     | 'trendContextWeekLabel'
     | 'trendContextMonthLabel'
-    | 'trendContext90DaysLabel'>,
+    | 'trendContext90DaysLabel'
+  >,
 ) {
   const context =
     range === '24h'
-      ? copy?.trendContextTodayLabel ?? (locale === 'de' ? 'heute' : 'today')
+      ? (copy?.trendContextTodayLabel ?? (locale === 'de' ? 'heute' : 'today'))
       : range === '7d'
-        ? copy?.trendContextWeekLabel ?? (locale === 'de' ? 'diese Woche' : 'this week')
+        ? (copy?.trendContextWeekLabel ?? (locale === 'de' ? 'diese Woche' : 'this week'))
         : range === '30d'
-          ? copy?.trendContextMonthLabel ?? (locale === 'de' ? 'diesen Monat' : 'this month')
-          : copy?.trendContext90DaysLabel ?? (locale === 'de' ? 'in 90 Tagen' : 'in 90 days');
+          ? (copy?.trendContextMonthLabel ?? (locale === 'de' ? 'diesen Monat' : 'this month'))
+          : (copy?.trendContext90DaysLabel ?? (locale === 'de' ? 'in 90 Tagen' : 'in 90 days'));
 
   if (baseline <= 0) {
-    if (value <= 0) return copy?.trendStableLabel ?? (locale === 'de' ? 'Trend stabil' : 'Trend stable');
-    return (copy?.trendNewTemplate ?? (locale === 'de' ? '+{value} neu {context}' : '+{value} new {context}'))
+    if (value <= 0)
+      return copy?.trendStableLabel ?? (locale === 'de' ? 'Trend stabil' : 'Trend stable');
+    return (
+      copy?.trendNewTemplate ??
+      (locale === 'de' ? '+{value} neu {context}' : '+{value} new {context}')
+    )
       .replace('{value}', String(value))
       .replace('{context}', context);
   }
   const delta = value - baseline;
-  if (delta === 0) return copy?.trendStableLabel ?? (locale === 'de' ? 'Trend stabil' : 'Trend stable');
-  return (copy?.trendSinceLastPeriodTemplate ?? (locale === 'de' ? '{delta} seit letzter Periode' : '{delta} since last period'))
-    .replace('{delta}', `${delta > 0 ? '+' : ''}${delta}`);
+  if (delta === 0)
+    return copy?.trendStableLabel ?? (locale === 'de' ? 'Trend stabil' : 'Trend stable');
+  return (
+    copy?.trendSinceLastPeriodTemplate ??
+    (locale === 'de' ? '{delta} seit letzter Periode' : '{delta} since last period')
+  ).replace('{delta}', `${delta > 0 ? '+' : ''}${delta}`);
 }
 
 export function toTrend(value: number, baseline: number): KpiCardTrend {
@@ -256,7 +283,8 @@ export function resolveCitySignal(params: {
   auftragSuchenCount: number;
   anbieterSuchenCount: number;
 }): 'high' | 'medium' | 'low' | 'none' {
-  const demandActivity = Math.max(0, params.anbieterSuchenCount) || Math.max(0, params.requestCount);
+  const demandActivity =
+    Math.max(0, params.anbieterSuchenCount) || Math.max(0, params.requestCount);
   const supplyActivity = Math.max(0, params.auftragSuchenCount);
   if (demandActivity <= 0 && supplyActivity <= 0) return 'none';
   const pressure = demandActivity / Math.max(1, supplyActivity);
@@ -270,7 +298,8 @@ export function resolveMarketBalanceRatio(params: {
   auftragSuchenCount: number;
   anbieterSuchenCount: number;
 }): number {
-  const demandActivity = Math.max(0, params.anbieterSuchenCount) || Math.max(0, params.requestCount);
+  const demandActivity =
+    Math.max(0, params.anbieterSuchenCount) || Math.max(0, params.requestCount);
   const supplyActivity = Math.max(0, params.auftragSuchenCount);
   if (demandActivity <= 0 && supplyActivity <= 0) return 0;
   return demandActivity / Math.max(1, supplyActivity);
@@ -304,7 +333,9 @@ export function formatFallbackRangeLabel(range: WorkspaceStatisticsRange): strin
   return '30 Tage';
 }
 
-export function toActivityTotals(points: WorkspaceStatisticsActivityPointDto[]): WorkspaceStatisticsActivityTotalsDto {
+export function toActivityTotals(
+  points: WorkspaceStatisticsActivityPointDto[],
+): WorkspaceStatisticsActivityTotalsDto {
   const latest = points[points.length - 1] ?? null;
   const previous = points[points.length - 2] ?? null;
   const requestsTotal = latest?.requests ?? 0;
@@ -376,7 +407,11 @@ export function buildInsightsFromFallback(params: {
 }): WorkspaceStatisticsInsightDto[] {
   const next: WorkspaceStatisticsInsightDto[] = [];
 
-  if (params.mode === 'personalized' && params.profileCompleteness !== null && params.profileCompleteness < 80) {
+  if (
+    params.mode === 'personalized' &&
+    params.profileCompleteness !== null &&
+    params.profileCompleteness < 80
+  ) {
     next.push({
       level: 'warning',
       code: 'profile_incomplete',
@@ -427,7 +462,9 @@ export function buildInsightsFromFallback(params: {
   }
 
   if (next.length === 0) {
-    return [{ level: 'info', code: 'insufficient_data', context: null, title: 'Noch nicht genug Daten' }];
+    return [
+      { level: 'info', code: 'insufficient_data', context: null, title: 'Noch nicht genug Daten' },
+    ];
   }
   return next.slice(0, 4);
 }

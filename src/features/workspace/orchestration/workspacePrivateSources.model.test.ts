@@ -218,7 +218,9 @@ describe('workspacePrivateSources.model', () => {
       } as never,
       catalogIndex: {
         cityById: new Map([['city-1', { id: 'city-1', i18n: { de: 'Berlin' } }]]),
-        serviceByKey: new Map([['svc-1', { key: 'svc-1', categoryKey: 'cat-1', i18n: { de: 'Painter' } }]]),
+        serviceByKey: new Map([
+          ['svc-1', { key: 'svc-1', categoryKey: 'cat-1', i18n: { de: 'Painter' } }],
+        ]),
       },
       locale: 'de',
     });

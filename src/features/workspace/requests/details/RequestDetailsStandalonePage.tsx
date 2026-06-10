@@ -230,12 +230,7 @@ export function RequestDetailsStandalonePage() {
   }
 
   return (
-    <PageShell
-      right={<AuthActions />}
-      showBack
-      backHref={backHref}
-      mainClassName="pb-6"
-    >
+    <PageShell right={<AuthActions />} showBack backHref={backHref} mainClassName="pb-6">
       {isCustomerProfileView ? (
         <CustomerPublicProfileContent
           customerId={request.clientId ?? null}

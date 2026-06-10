@@ -5,16 +5,9 @@ import { WorkspaceContentState } from '@/components/ui/WorkspaceContentState';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { WorkspaceContentPanelsProps } from '../workspaceContentPanels.types';
 
-type Props = Pick<
-  WorkspaceContentPanelsProps,
-  't' | 'contractsState' | 'contractsListProps'
->;
+type Props = Pick<WorkspaceContentPanelsProps, 't' | 'contractsState' | 'contractsListProps'>;
 
-export function WorkspaceContractsTabPanel({
-  t,
-  contractsState,
-  contractsListProps,
-}: Props) {
+export function WorkspaceContractsTabPanel({ t, contractsState, contractsListProps }: Props) {
   return (
     <div className="stack-sm">
       <WorkspaceContentState

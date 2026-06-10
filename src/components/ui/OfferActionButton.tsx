@@ -31,8 +31,7 @@ export function OfferActionButton({
       ? 'btn-secondary offer-action-btn offer-action-btn--delete'
       : 'btn-primary offer-action-btn offer-action-btn--accent';
 
-  const icon =
-    kind === 'edit' ? <IconEdit /> : kind === 'delete' ? <IconTrash /> : <IconSend />;
+  const icon = kind === 'edit' ? <IconEdit /> : kind === 'delete' ? <IconTrash /> : <IconSend />;
 
   return (
     <button

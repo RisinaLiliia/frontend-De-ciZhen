@@ -1,7 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { dismissCookieConsentIfPresent } from './helpers/consent';
 
-test('@critical authenticated user can login and create request from workspace', async ({ page }) => {  let createCalls = 0;
+test('@critical authenticated user can login and create request from workspace', async ({
+  page,
+}) => {
+  let createCalls = 0;
   let publishCalls = 0;
   let createdRequestId = '';
 

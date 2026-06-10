@@ -73,8 +73,12 @@ export function ProfilePreferencesCards({
           </button>
         </div>
         <div className="profile-settings__meta">
-          <p className="typo-small">{t(I18N_KEYS.client.profileLanguageCurrentPrefix)}: {locale.toUpperCase()}</p>
-          <p className="typo-small">{t(I18N_KEYS.client.profileFavoritesTotalPrefix)}: {favoritesTotal}</p>
+          <p className="typo-small">
+            {t(I18N_KEYS.client.profileLanguageCurrentPrefix)}: {locale.toUpperCase()}
+          </p>
+          <p className="typo-small">
+            {t(I18N_KEYS.client.profileFavoritesTotalPrefix)}: {favoritesTotal}
+          </p>
         </div>
       </article>
 
@@ -85,10 +89,16 @@ export function ProfilePreferencesCards({
         </header>
         <div className="profile-settings__meta">
           <p className="typo-small">
-            {t(I18N_KEYS.client.profileAnalyticsLabel)}: {consentChoice.analytics ? t(I18N_KEYS.client.profileEnabled) : t(I18N_KEYS.client.profileDisabled)}
+            {t(I18N_KEYS.client.profileAnalyticsLabel)}:{' '}
+            {consentChoice.analytics
+              ? t(I18N_KEYS.client.profileEnabled)
+              : t(I18N_KEYS.client.profileDisabled)}
           </p>
           <p className="typo-small">
-            {t(I18N_KEYS.client.profileMarketingLabel)}: {consentChoice.marketing ? t(I18N_KEYS.client.profileEnabled) : t(I18N_KEYS.client.profileDisabled)}
+            {t(I18N_KEYS.client.profileMarketingLabel)}:{' '}
+            {consentChoice.marketing
+              ? t(I18N_KEYS.client.profileEnabled)
+              : t(I18N_KEYS.client.profileDisabled)}
           </p>
         </div>
         <div className="profile-settings__inline-actions">

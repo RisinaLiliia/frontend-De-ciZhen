@@ -583,8 +583,10 @@ export const I18N_KEYS = {
     decisionPanelMarketHighPriorityTemplate: 'requestsPage.decisionPanelMarketHighPriorityTemplate',
     decisionPanelMarketNewTemplate: 'requestsPage.decisionPanelMarketNewTemplate',
     decisionPanelPrivateNewOffersTemplate: 'requestsPage.decisionPanelPrivateNewOffersTemplate',
-    decisionPanelPrivateReplyRequiredTemplate: 'requestsPage.decisionPanelPrivateReplyRequiredTemplate',
-    decisionPanelPrivateConfirmCompletionTemplate: 'requestsPage.decisionPanelPrivateConfirmCompletionTemplate',
+    decisionPanelPrivateReplyRequiredTemplate:
+      'requestsPage.decisionPanelPrivateReplyRequiredTemplate',
+    decisionPanelPrivateConfirmCompletionTemplate:
+      'requestsPage.decisionPanelPrivateConfirmCompletionTemplate',
     decisionPanelPrivateOverdueTemplate: 'requestsPage.decisionPanelPrivateOverdueTemplate',
     decisionPanelAutoPriorityHint: 'requestsPage.decisionPanelAutoPriorityHint',
     decisionPanelMarketOverviewEyebrow: 'requestsPage.decisionPanelMarketOverviewEyebrow',
@@ -598,7 +600,8 @@ export const I18N_KEYS = {
     decisionPanelPriorityNew: 'requestsPage.decisionPanelPriorityNew',
     workspaceRailAnalysisCta: 'requestsPage.workspaceRailAnalysisCta',
     workspaceRailQueueCountTemplate: 'requestsPage.workspaceRailQueueCountTemplate',
-    workspaceRailProvidersQueueCountTemplate: 'requestsPage.workspaceRailProvidersQueueCountTemplate',
+    workspaceRailProvidersQueueCountTemplate:
+      'requestsPage.workspaceRailProvidersQueueCountTemplate',
     workspaceRailQueueCta: 'requestsPage.workspaceRailQueueCta',
     workspaceRailRecommendationsEyebrow: 'requestsPage.workspaceRailRecommendationsEyebrow',
     workspaceRailRecommendationsTitle: 'requestsPage.workspaceRailRecommendationsTitle',
@@ -611,12 +614,18 @@ export const I18N_KEYS = {
     workspaceRailReviewsContext: 'requestsPage.workspaceRailReviewsContext',
     workspaceRailProfileContext: 'requestsPage.workspaceRailProfileContext',
     workspaceRailChatContext: 'requestsPage.workspaceRailChatContext',
-    workspaceRailMarketRecommendationDemandTitle: 'requestsPage.workspaceRailMarketRecommendationDemandTitle',
-    workspaceRailMarketRecommendationExecutionBody: 'requestsPage.workspaceRailMarketRecommendationExecutionBody',
-    workspaceRailMarketRecommendationCompletedBody: 'requestsPage.workspaceRailMarketRecommendationCompletedBody',
-    workspaceRailPrivateRecommendationAttentionTitle: 'requestsPage.workspaceRailPrivateRecommendationAttentionTitle',
-    workspaceRailPrivateRecommendationExecutionBody: 'requestsPage.workspaceRailPrivateRecommendationExecutionBody',
-    workspaceRailPrivateRecommendationCompletedBody: 'requestsPage.workspaceRailPrivateRecommendationCompletedBody',
+    workspaceRailMarketRecommendationDemandTitle:
+      'requestsPage.workspaceRailMarketRecommendationDemandTitle',
+    workspaceRailMarketRecommendationExecutionBody:
+      'requestsPage.workspaceRailMarketRecommendationExecutionBody',
+    workspaceRailMarketRecommendationCompletedBody:
+      'requestsPage.workspaceRailMarketRecommendationCompletedBody',
+    workspaceRailPrivateRecommendationAttentionTitle:
+      'requestsPage.workspaceRailPrivateRecommendationAttentionTitle',
+    workspaceRailPrivateRecommendationExecutionBody:
+      'requestsPage.workspaceRailPrivateRecommendationExecutionBody',
+    workspaceRailPrivateRecommendationCompletedBody:
+      'requestsPage.workspaceRailPrivateRecommendationCompletedBody',
     decisionModeLabel: 'requestsPage.decisionModeLabel',
     decisionModeHandleOpen: 'requestsPage.decisionModeHandleOpen',
     decisionModeNoOpen: 'requestsPage.decisionModeNoOpen',

@@ -1,6 +1,12 @@
 // src/features/auth/store.ts
 import { create } from 'zustand';
-import type { AppMeDto, CapabilitiesDto, MeResponseDto, SafeUserDto, UserMode } from '@/lib/api/dto/auth';
+import type {
+  AppMeDto,
+  CapabilitiesDto,
+  MeResponseDto,
+  SafeUserDto,
+  UserMode,
+} from '@/lib/api/dto/auth';
 import { completeOauthRegister, getMe, login, logout, register } from '@/lib/auth/api';
 import {
   allowRefreshAttempts,

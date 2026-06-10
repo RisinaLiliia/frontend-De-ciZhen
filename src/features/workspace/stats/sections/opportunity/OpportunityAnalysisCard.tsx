@@ -1,11 +1,7 @@
 'use client';
 import * as React from 'react';
 import { LocationMeta } from '@/components/ui/LocationMeta';
-import {
-  IconTrophyBronze,
-  IconTrophyGold,
-  IconTrophySilver,
-} from '@/components/ui/icons/icons';
+import { IconTrophyBronze, IconTrophyGold, IconTrophySilver } from '@/components/ui/icons/icons';
 import { workspaceCardShell } from '@/features/workspace/shared/workspaceSurfaceShell';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { Locale } from '@/lib/i18n/t';
@@ -60,8 +56,10 @@ export function OpportunityAnalysisCard({
         'workspace-statistics-opportunity__item--analysis',
         `is-${item.tone}`,
       )}
-      aria-label={t(I18N_KEYS.workspace.statsOpportunityDetailAnalysisTemplate)
-        .replace('{city}', item.city)}
+      aria-label={t(I18N_KEYS.workspace.statsOpportunityDetailAnalysisTemplate).replace(
+        '{city}',
+        item.city,
+      )}
     >
       <div className="workspace-statistics-opportunity__analysis-overview">
         <div className="workspace-statistics-opportunity__analysis-identity workspace-statistics-opportunity__top">
@@ -74,11 +72,10 @@ export function OpportunityAnalysisCard({
             {item.rank === 3 ? <IconTrophyBronze size={30} /> : null}
           </span>
           <div className="workspace-statistics-opportunity__identity">
-            <span className="request-category workspace-statistics-opportunity__category">{item.category}</span>
-            <LocationMeta
-              label={item.city}
-              className="workspace-statistics-opportunity__city"
-            />
+            <span className="request-category workspace-statistics-opportunity__category">
+              {item.category}
+            </span>
+            <LocationMeta label={item.city} className="workspace-statistics-opportunity__city" />
           </div>
         </div>
         <div
@@ -117,7 +114,7 @@ export function OpportunityAnalysisCard({
                 <text
                   key={`ring-label-${level}`}
                   x="94"
-                  y={90 - ((62 * level) / 10) + 3}
+                  y={90 - (62 * level) / 10 + 3}
                   className="workspace-statistics-opportunity__radar-ring-label"
                 >
                   {level}
@@ -133,7 +130,9 @@ export function OpportunityAnalysisCard({
                   className="workspace-statistics-opportunity__radar-axis"
                 />
               ))}
-              {radarPath ? <path d={radarPath} className="workspace-statistics-opportunity__radar-shape" /> : null}
+              {radarPath ? (
+                <path d={radarPath} className="workspace-statistics-opportunity__radar-shape" />
+              ) : null}
               {radarPoints.map((point, index) => (
                 <circle
                   key={`dot-${index}`}

@@ -102,11 +102,12 @@ export function useWorkspaceShellLegacyRouting({
     router.replace(`/auth/login?next=${encodeURIComponent(nextPath)}`, { scroll: false });
   }, [isGuestChatSection, router, searchParams]);
 
-  const activePublicSection = authStatus === 'loading' || authStatus === 'idle'
-    ? (forcedPublicSection ?? resolvedSection ?? (isOverviewRoute ? null : 'requests'))
-    : (forcedPublicSection
-      ?? resolvedSection
-      ?? (isOverviewRoute ? null : (authStatus === 'unauthenticated' ? 'requests' : null)));
+  const activePublicSection =
+    authStatus === 'loading' || authStatus === 'idle'
+      ? (forcedPublicSection ?? resolvedSection ?? (isOverviewRoute ? null : 'requests'))
+      : (forcedPublicSection ??
+        resolvedSection ??
+        (isOverviewRoute ? null : authStatus === 'unauthenticated' ? 'requests' : null));
 
   return {
     activePublicSection,

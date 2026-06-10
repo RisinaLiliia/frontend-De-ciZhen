@@ -38,26 +38,34 @@ describe('requestsFilters.model', () => {
   });
 
   it('resolves selected labels with fallback and detects pagination handlers', () => {
-    expect(resolveFilterOptionLabel({
-      options: [{ value: 'cleaning', label: 'Cleaning' }],
-      selectedValue: 'cleaning',
-      fallbackLabel: 'Service',
-    })).toBe('Cleaning');
+    expect(
+      resolveFilterOptionLabel({
+        options: [{ value: 'cleaning', label: 'Cleaning' }],
+        selectedValue: 'cleaning',
+        fallbackLabel: 'Service',
+      }),
+    ).toBe('Cleaning');
 
-    expect(resolveFilterOptionLabel({
-      options: [{ value: 'cleaning', label: 'Cleaning' }],
-      selectedValue: 'painting',
-      fallbackLabel: 'Service',
-    })).toBe('Service');
+    expect(
+      resolveFilterOptionLabel({
+        options: [{ value: 'cleaning', label: 'Cleaning' }],
+        selectedValue: 'painting',
+        fallbackLabel: 'Service',
+      }),
+    ).toBe('Service');
 
-    expect(hasRequestsPagination({
-      onPrevPage: vi.fn(),
-      onNextPage: vi.fn(),
-    })).toBe(true);
+    expect(
+      hasRequestsPagination({
+        onPrevPage: vi.fn(),
+        onNextPage: vi.fn(),
+      }),
+    ).toBe(true);
 
-    expect(hasRequestsPagination({
-      onPrevPage: vi.fn(),
-    })).toBe(false);
+    expect(
+      hasRequestsPagination({
+        onPrevPage: vi.fn(),
+      }),
+    ).toBe(false);
   });
 
   it('keeps sort chip only for requests content', () => {
@@ -67,6 +75,8 @@ describe('requestsFilters.model', () => {
     ];
 
     expect(selectRequestsAppliedChipsForContentType(chips, 'requests')).toBe(chips);
-    expect(selectRequestsAppliedChipsForContentType(chips, 'providers').map((chip) => chip.key)).toEqual(['city']);
+    expect(
+      selectRequestsAppliedChipsForContentType(chips, 'providers').map((chip) => chip.key),
+    ).toEqual(['city']);
   });
 });

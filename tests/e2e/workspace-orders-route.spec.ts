@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 
 test('uses canonical public orders route under /workspace', async ({ page }) => {
-  await page.goto('/workspace?section=orders&q=cleaning&cityId=berlin&subcategoryKey=window-cleaning');
+  await page.goto(
+    '/workspace?section=orders&q=cleaning&cityId=berlin&subcategoryKey=window-cleaning',
+  );
 
-  await expect
-    .poll(() => new URL(page.url()).pathname)
-    .toBe('/workspace');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/workspace');
 
   const url = new URL(page.url());
   expect(url.searchParams.get('section')).toBe('orders');
@@ -17,7 +17,5 @@ test('uses canonical public orders route under /workspace', async ({ page }) => 
 test('does not redirect from legacy view query on home', async ({ page }) => {
   await page.goto('/?view=orders');
 
-  await expect
-    .poll(() => new URL(page.url()).pathname)
-    .toBe('/');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/');
 });

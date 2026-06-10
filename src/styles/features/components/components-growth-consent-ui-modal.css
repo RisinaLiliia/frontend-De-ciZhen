@@ -43,12 +43,11 @@
     border: 1px solid color-mix(in oklab, var(--color-border) 66%, transparent);
     border-radius: var(--radius-md);
     padding: var(--space-3);
-    background:
-      linear-gradient(
-        132deg,
-        color-mix(in oklab, var(--color-surface) 88%, transparent),
-        color-mix(in oklab, var(--color-surface-muted) 86%, transparent)
-      );
+    background: linear-gradient(
+      132deg,
+      color-mix(in oklab, var(--color-surface) 88%, transparent),
+      color-mix(in oklab, var(--color-surface-muted) 86%, transparent)
+    );
     backdrop-filter: blur(4px) saturate(1.02);
   }
 
@@ -123,6 +122,4 @@
       justify-content: center;
     }
   }
-
-
 }

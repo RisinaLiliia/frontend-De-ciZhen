@@ -7,7 +7,14 @@ import { buildWorkspaceRequestOverlayHref } from '@/features/workspace/requests/
 
 export type WorkspaceChatConversationInput = Pick<
   CreateConversationDto,
-  'relatedEntity' | 'participantUserId' | 'participantRole' | 'requestId' | 'providerUserId' | 'offerId' | 'orderId' | 'contractId'
+  | 'relatedEntity'
+  | 'participantUserId'
+  | 'participantRole'
+  | 'requestId'
+  | 'providerUserId'
+  | 'offerId'
+  | 'orderId'
+  | 'contractId'
 >;
 
 export function buildWorkspaceOfferSheetHref(requestId: string) {
@@ -56,14 +63,16 @@ export function resolveWorkspaceChatNavigation(offer: OfferDto) {
   };
 }
 
-export function isWorkspaceChatConversationInput(value: unknown): value is WorkspaceChatConversationInput {
+export function isWorkspaceChatConversationInput(
+  value: unknown,
+): value is WorkspaceChatConversationInput {
   const candidate = value as Partial<WorkspaceChatConversationInput> | null;
   return Boolean(
-    candidate
-    && candidate.relatedEntity
-    && candidate.relatedEntity.type
-    && candidate.relatedEntity.id
-    && candidate.participantUserId,
+    candidate &&
+    candidate.relatedEntity &&
+    candidate.relatedEntity.type &&
+    candidate.relatedEntity.id &&
+    candidate.participantUserId,
   );
 }
 

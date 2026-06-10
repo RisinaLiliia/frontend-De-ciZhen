@@ -3,11 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 const strict = process.argv.includes('--strict');
 const checkRgb = process.argv.includes('--check-rgb');
 
-const targets = [
-  'src/styles/requests.css',
-  'src/styles/overlays.css',
-  'src/styles/order-card.css'
-];
+const targets = ['src/styles/requests.css', 'src/styles/overlays.css', 'src/styles/order-card.css'];
 
 const hexPattern = /#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
 const rgbPattern = /\brgba?\([^\n\r)]*\)/g;
@@ -16,7 +12,7 @@ const allowlist = new Set(
   (process.env.CSS_HEX_ALLOWLIST ?? '')
     .split(',')
     .map((value) => value.trim().toLowerCase())
-    .filter(Boolean)
+    .filter(Boolean),
 );
 
 const fileViolations = [];
@@ -79,7 +75,9 @@ for (const file of fileViolations) {
 }
 
 const totalLines = fileViolations.reduce((sum, file) => sum + file.violations.length, 0);
-console.error(`\nSummary: ${totalLines} violating line(s) across ${fileViolations.length} file(s).`);
+console.error(
+  `\nSummary: ${totalLines} violating line(s) across ${fileViolations.length} file(s).`,
+);
 if (allowlist.size > 0) {
   console.error(`Allowlist applied: ${[...allowlist].join(', ')}`);
 }

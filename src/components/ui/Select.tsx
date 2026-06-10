@@ -52,7 +52,11 @@ export function Select({
         data-icon-only={iconOnly ? 'true' : undefined}
         {...a11y}
       >
-        {triggerIcon ? <span className="dc-select-trigger__icon" aria-hidden="true">{triggerIcon}</span> : null}
+        {triggerIcon ? (
+          <span className="dc-select-trigger__icon" aria-hidden="true">
+            {triggerIcon}
+          </span>
+        ) : null}
         {iconOnly ? null : (
           <>
             <SelectPrimitive.Value placeholder={placeholder} className="dc-select-trigger__label" />

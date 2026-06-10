@@ -27,16 +27,8 @@ describe('workspacePrivateTopProviders.model', () => {
 
     const ranked = rankWorkspaceTopProviders(input);
 
-    expect(ranked.map((item) => item.id)).toEqual([
-      'provider-2',
-      'provider-3',
-      'provider-1',
-    ]);
-    expect(input.map((item) => item.id)).toEqual([
-      'provider-1',
-      'provider-2',
-      'provider-3',
-    ]);
+    expect(ranked.map((item) => item.id)).toEqual(['provider-2', 'provider-3', 'provider-1']);
+    expect(input.map((item) => item.id)).toEqual(['provider-1', 'provider-2', 'provider-3']);
   });
 
   it('builds only the top two workspace provider cards with workspace-specific hrefs', () => {
@@ -58,7 +50,9 @@ describe('workspacePrivateTopProviders.model', () => {
     expect(cards).toHaveLength(2);
     expect(cards.map((item) => item.id)).toEqual(['provider-2', 'provider-3']);
     expect(cards[0]?.profileHref).toBe('/workspace?section=providers&providerId=provider-2');
-    expect(cards[0]?.reviewsHref).toBe('/workspace?section=providers&providerId=provider-2#reviews');
+    expect(cards[0]?.reviewsHref).toBe(
+      '/workspace?section=providers&providerId=provider-2#reviews',
+    );
     expect(cards[0]?.status).toBe('online');
     expect(cards[0]?.ctaLabel).toBe('homePublic.topProvider1Cta');
     expect(cards[0]?.aboutPreview).toBe('Backend bio for workspace top provider.');

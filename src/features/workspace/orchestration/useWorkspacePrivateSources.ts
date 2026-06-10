@@ -20,7 +20,10 @@ import {
   resolveWorkspacePrivateSourcesResult,
 } from '@/features/workspace/orchestration/workspacePrivateSources.model';
 
-type SourcesParams = Pick<WorkspaceBranchProps, 't' | 'locale' | 'isAuthed' | 'isWorkspaceAuthed'> & {
+type SourcesParams = Pick<
+  WorkspaceBranchProps,
+  't' | 'locale' | 'isAuthed' | 'isWorkspaceAuthed'
+> & {
   enabled?: boolean;
   activePublicSection: WorkspaceBranchProps['routeState']['activePublicSection'];
   activeWorkspaceTab: WorkspaceBranchProps['routeState']['activeWorkspaceTab'];
@@ -45,15 +48,19 @@ export function useWorkspacePrivateSources({
   activeRequestsPeriod = '30d',
   activeRequestsSort = null,
 }: SourcesParams) {
-  const shouldLoadCatalog = enabled && shouldLoadWorkspacePrivateCatalog({
-    activePublicSection,
-    activeWorkspaceTab,
-    requestsScope,
-  });
-  const shouldLoadPublicRequestsState = enabled && shouldLoadWorkspacePrivatePublicRequestsState({
-    activePublicSection,
-    activeWorkspaceTab,
-  });
+  const shouldLoadCatalog =
+    enabled &&
+    shouldLoadWorkspacePrivateCatalog({
+      activePublicSection,
+      activeWorkspaceTab,
+      requestsScope,
+    });
+  const shouldLoadPublicRequestsState =
+    enabled &&
+    shouldLoadWorkspacePrivatePublicRequestsState({
+      activePublicSection,
+      activeWorkspaceTab,
+    });
   const {
     cities,
     categories,
@@ -102,11 +109,7 @@ export function useWorkspacePrivateSources({
       activeRequestsSort,
     }),
   );
-  const {
-    contractData,
-    legacyPublicOverviewData,
-    requestUserStateData,
-  } = data;
+  const { contractData, legacyPublicOverviewData, requestUserStateData } = data;
   const providerSupportData = useWorkspaceProviderSupportData({
     enabled: enabled && activePublicSection === null,
     isAuthed,
@@ -115,27 +118,27 @@ export function useWorkspacePrivateSources({
   const publicRequestsState = useWorkspacePublicRequestsState(
     shouldLoadPublicRequestsState
       ? buildWorkspacePrivateSourcesRequestsStateArgs({
-        filters: {
+          filters: {
+            limit,
+            page,
+            setPage,
+            hasActivePublicFilter,
+            cityId,
+            categoryKey,
+            subcategoryKey,
+            sortBy,
+          },
+          contractData,
+          legacyPublicOverviewData,
+          activePublicSection,
+        })
+      : buildWorkspacePrivateSourcesIdleRequestsStateArgs({
+          allRequestsSummary: contractData.allRequestsSummary,
           limit,
           page,
           setPage,
-          hasActivePublicFilter,
-          cityId,
-          categoryKey,
-          subcategoryKey,
-          sortBy,
-        },
-        contractData,
-        legacyPublicOverviewData,
-        activePublicSection,
-      })
-      : buildWorkspacePrivateSourcesIdleRequestsStateArgs({
-        allRequestsSummary: contractData.allRequestsSummary,
-        limit,
-        page,
-        setPage,
-        activePublicSection,
-      }),
+          activePublicSection,
+        }),
   );
 
   const catalogIndex = { serviceByKey, categoryByKey, cityById };

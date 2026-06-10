@@ -56,18 +56,30 @@ export function WorkspaceFocusRailPanel({
   const [isFocusOpen, setIsFocusOpen] = React.useState(false);
   const [isAnalyzingFocus, setIsAnalyzingFocus] = React.useState(false);
   const cityValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'city'), [model.chips]);
-  const categoryValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'category'), [model.chips]);
-  const serviceValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'service'), [model.chips]);
-  const rangeValue = React.useMemo(() => getWorkspaceChipValue(model.chips, 'range'), [model.chips]);
+  const categoryValue = React.useMemo(
+    () => getWorkspaceChipValue(model.chips, 'category'),
+    [model.chips],
+  );
+  const serviceValue = React.useMemo(
+    () => getWorkspaceChipValue(model.chips, 'service'),
+    [model.chips],
+  );
+  const rangeValue = React.useMemo(
+    () => getWorkspaceChipValue(model.chips, 'range'),
+    [model.chips],
+  );
   const selectedService = serviceValue !== model.copy.contextFallbacks.service ? serviceValue : '';
-  const selectedCategory = categoryValue !== model.copy.contextFallbacks.category ? categoryValue : '';
+  const selectedCategory =
+    categoryValue !== model.copy.contextFallbacks.category ? categoryValue : '';
   const selectedCity = cityValue !== model.copy.contextFallbacks.city ? cityValue : '';
   const focusContextLabel = React.useMemo(() => {
     const primaryScope = selectedService || selectedCategory;
     return joinWorkspaceContext([primaryScope, selectedCity]) || focusCopy.defaultContextLabel;
   }, [focusCopy.defaultContextLabel, selectedCategory, selectedCity, selectedService]);
   const focusScopeMetric = React.useMemo(
-    () => joinWorkspaceContext([selectedService || selectedCategory, selectedCity, rangeValue]) || model.scope,
+    () =>
+      joinWorkspaceContext([selectedService || selectedCategory, selectedCity, rangeValue]) ||
+      model.scope,
     [model.scope, rangeValue, selectedCategory, selectedCity, selectedService],
   );
   const focusModeCopy = focusCopy.modes[model.activeMode];
@@ -109,10 +121,15 @@ export function WorkspaceFocusRailPanel({
         'workspace-context-rail__panel',
         'workspace-context-rail__panel--focus',
         className ?? '',
-      ].filter(Boolean).join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <span className="workspace-environment__eyebrow">{model.copy.rail.nextStepTitle}</span>
-      <span className="section-subtitle workspace-context-rail__subtitle-placeholder" aria-hidden="true">
+      <span
+        className="section-subtitle workspace-context-rail__subtitle-placeholder"
+        aria-hidden="true"
+      >
         &nbsp;
       </span>
       <WorkspaceDecisionActionCard

@@ -83,11 +83,10 @@ test('@critical unauthenticated create-request opens login with resumable worksp
   );
   await dismissCookieConsentIfPresent(page);
 
-const myWorkLink = page.getByRole('link', { name: /my work|meine arbeit/i });
+  const myWorkLink = page.getByRole('link', { name: /my work|meine arbeit/i });
 
-await expect(myWorkLink).toBeVisible();
-await myWorkLink.click();
-
+  await expect(myWorkLink).toBeVisible();
+  await myWorkLink.click();
 
   await expect.poll(() => new URL(page.url()).pathname).toBe('/auth/login');
 

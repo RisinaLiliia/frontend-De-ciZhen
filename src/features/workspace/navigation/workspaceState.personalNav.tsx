@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  IconBriefcase,
-  IconHeart,
-  IconUser,
-} from '@/components/ui/icons/icons';
+import { IconBriefcase, IconHeart, IconUser } from '@/components/ui/icons/icons';
 import type { PublicWorkspaceSection } from '@/features/workspace/navigation/resolveActiveWorkspaceSection';
 import type { WorkspaceNavItem } from '@/features/workspace/navigation/workspaceNavItem.types';
 import { buildPublicNavItems } from '@/features/workspace/navigation/workspaceState.publicNav';
@@ -93,11 +89,7 @@ function buildWorkspaceGuestSecondaryNavItems({
   onGuestLockedAction,
 }: Pick<
   BuildWorkspacePersonalNavItemsArgs,
-  | 't'
-  | 'activeWorkspaceTab'
-  | 'activePublicSection'
-  | 'guestLoginHref'
-  | 'onGuestLockedAction'
+  't' | 'activeWorkspaceTab' | 'activePublicSection' | 'guestLoginHref' | 'onGuestLockedAction'
 > & {
   hasActivePublicSection: boolean;
 }): WorkspaceNavItem[] {

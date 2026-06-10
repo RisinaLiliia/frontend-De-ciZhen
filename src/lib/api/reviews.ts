@@ -1,6 +1,11 @@
 // src/lib/api/reviews.ts
 import { apiGet, apiPost } from '@/lib/api/http';
-import type { ReviewDto, ReviewOverviewDto, ReviewRange, ReviewSummaryDto } from '@/lib/api/dto/reviews';
+import type {
+  ReviewDto,
+  ReviewOverviewDto,
+  ReviewRange,
+  ReviewSummaryDto,
+} from '@/lib/api/dto/reviews';
 
 export type ReviewsSort = 'created_desc' | 'rating_desc';
 
@@ -65,7 +70,9 @@ function normalizeReviewSummary(input: Partial<ReviewSummaryDto>): ReviewSummary
   return {
     targetUserId: String(input.targetUserId ?? ''),
     targetRole:
-      input.targetRole === 'client' || input.targetRole === 'provider' || input.targetRole === 'platform'
+      input.targetRole === 'client' ||
+      input.targetRole === 'provider' ||
+      input.targetRole === 'platform'
         ? input.targetRole
         : null,
     total,
@@ -130,7 +137,9 @@ export async function getPlatformReviewsOverview(
   qs.set('sort', sort);
   if (params.range) qs.set('range', params.range);
 
-  const response = await apiGet<Partial<ReviewOverviewDto>>(`/reviews/platform/overview?${qs.toString()}`);
+  const response = await apiGet<Partial<ReviewOverviewDto>>(
+    `/reviews/platform/overview?${qs.toString()}`,
+  );
   const summary = normalizeReviewSummary({
     targetUserId: 'platform',
     targetRole: 'platform',

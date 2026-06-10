@@ -38,4 +38,3 @@ export function buildBackendRequestHeaders(source: Headers) {
   });
   return headers;
 }
-

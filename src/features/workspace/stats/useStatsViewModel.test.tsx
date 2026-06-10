@@ -200,7 +200,8 @@ function createOverviewData(): WorkspaceStatisticsOverviewSourceDto {
       smartSignalTone: 'balanced',
       analyzedRequestsCount: 126,
       confidenceLevel: 'high',
-      recommendation: 'Preise im Bereich von 74 € – 83 € erzielen aktuell die höchste Abschlussrate in Berlin.',
+      recommendation:
+        'Preise im Bereich von 74 € – 83 € erzielen aktuell die höchste Abschlussrate in Berlin.',
       profitPotentialScore: 7.4,
       profitPotentialStatus: 'medium',
     },
@@ -850,8 +851,12 @@ function Probe({
       data-activity-meta-peak={model.activityMeta.peak}
       data-activity-meta-best-window={model.activityMeta.bestWindow}
       data-activity-meta-updated={model.activityMeta.updatedAt}
-      data-activity-client-series={model.activityPoints.map((item) => String(item.clientActivity ?? '')).join('|')}
-      data-activity-provider-series={model.activityPoints.map((item) => String(item.providerActivity ?? '')).join('|')}
+      data-activity-client-series={model.activityPoints
+        .map((item) => String(item.clientActivity ?? ''))
+        .join('|')}
+      data-activity-provider-series={model.activityPoints
+        .map((item) => String(item.providerActivity ?? ''))
+        .join('|')}
       data-has-funnel={String(model.hasFunnelData)}
       data-funnel-requests={String(model.funnel.find((row) => row.key === 'requests')?.count ?? 0)}
       data-funnel-offers={String(model.funnel.find((row) => row.key === 'offers')?.count ?? 0)}
@@ -871,24 +876,38 @@ function Probe({
       data-funnel-dropoff-hint={model.funnelDropoff?.hint ?? ''}
       data-decision-insight={model.decisionInsight}
       data-activity-signal-labels={model.activitySignals.map((item) => item.label).join('|')}
-      data-activity-signal-values={model.activitySignals.map((item) => `${item.marketValue ?? ''}|${item.userValue ?? ''}|${item.value}`).join(';')}
+      data-activity-signal-values={model.activitySignals
+        .map((item) => `${item.marketValue ?? ''}|${item.userValue ?? ''}|${item.value}`)
+        .join(';')}
       data-activity-signal-hints={model.activitySignals.map((item) => item.hint).join('|')}
       data-user-comparison={model.userIntelligence?.comparisonLabel ?? ''}
-      data-user-formulas={model.userIntelligence?.formulaMetrics.map((item) => item.key).join('|') ?? ''}
+      data-user-formulas={
+        model.userIntelligence?.formulaMetrics.map((item) => item.key).join('|') ?? ''
+      }
       data-user-signals={model.userIntelligence?.signals.map((item) => item.code).join('|') ?? ''}
-      data-funnel-comparison-stages={model.funnelComparison?.stages.map((item) => item.key).join('|') ?? ''}
+      data-funnel-comparison-stages={
+        model.funnelComparison?.stages.map((item) => item.key).join('|') ?? ''
+      }
       data-funnel-comparison-summary={model.funnelComparison?.summary ?? ''}
       data-funnel-comparison-action={model.funnelComparison?.nextAction ?? ''}
-      data-user-funnel-signals={model.userIntelligence?.funnelSignals.map((item) => item.label).join('|') ?? ''}
-      data-user-funnel-hints={model.userIntelligence?.funnelSignals.map((item) => item.hint).join('|') ?? ''}
+      data-user-funnel-signals={
+        model.userIntelligence?.funnelSignals.map((item) => item.label).join('|') ?? ''
+      }
+      data-user-funnel-hints={
+        model.userIntelligence?.funnelSignals.map((item) => item.hint).join('|') ?? ''
+      }
       data-user-pricing-gap={model.userIntelligence?.pricing?.gap ?? ''}
       data-user-pricing-action={model.userIntelligence?.pricing?.action ?? ''}
       data-user-position={model.userIntelligence?.performancePosition?.headline ?? ''}
-      data-user-actions={model.userIntelligence?.nextSteps.map((item) => item.title).join('|') ?? ''}
+      data-user-actions={
+        model.userIntelligence?.nextSteps.map((item) => item.title).join('|') ?? ''
+      }
       data-right-rail-risks-title={model.rightRailRisks?.title ?? ''}
       data-right-rail-opportunities-title={model.rightRailOpportunities?.title ?? ''}
       data-right-rail-next-steps-title={model.rightRailNextSteps?.title ?? ''}
-      data-right-rail-next-steps-items={model.rightRailNextSteps?.steps.map((item) => item.title).join('|') ?? ''}
+      data-right-rail-next-steps-items={
+        model.rightRailNextSteps?.steps.map((item) => item.title).join('|') ?? ''
+      }
     />
   );
 }
@@ -926,7 +945,9 @@ function NormalizedProbe({
     <div
       data-testid="normalized-probe"
       data-city-options={model.cityOptions.map((item) => `${item.value}:${item.label}`).join('|')}
-      data-category-options={model.categoryOptions.map((item) => `${item.value}:${item.label}`).join('|')}
+      data-category-options={model.categoryOptions
+        .map((item) => `${item.value}:${item.label}`)
+        .join('|')}
     />
   );
 }
@@ -975,7 +996,9 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-user-formulas')).toContain('avg_response_time');
     expect(probe.getAttribute('data-user-signals')).toContain('slow_response');
     expect(probe.getAttribute('data-user-signals')).toContain('high_unanswered');
-    expect(probe.getAttribute('data-funnel-comparison-stages')).toBe('requests|offers|responses|contracts|completed');
+    expect(probe.getAttribute('data-funnel-comparison-stages')).toBe(
+      'requests|offers|responses|contracts|completed',
+    );
     expect(probe.getAttribute('data-funnel-comparison-summary')).toContain('Du verlierst');
     expect(probe.getAttribute('data-funnel-comparison-action')).toContain('Marktfokus schärfen');
     expect((probe.getAttribute('data-activity-signal-labels') ?? '').split('|')).toHaveLength(6);
@@ -984,7 +1007,9 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-activity-signal-labels')).toContain('Completed jobs');
     expect(probe.getAttribute('data-activity-signal-labels')).toContain('Revenue');
     expect(probe.getAttribute('data-activity-signal-values')).toContain('55%|31%|31%');
-    expect(probe.getAttribute('data-activity-signal-values')).toContain('45 Min.|930 Min.|930 Min.');
+    expect(probe.getAttribute('data-activity-signal-values')).toContain(
+      '45 Min.|930 Min.|930 Min.',
+    );
     expect(probe.getAttribute('data-activity-signal-hints')).toContain('unter dem Markt');
     expect(probe.getAttribute('data-activity-signal-hints')).toContain('langsamer als der Markt');
     expect(probe.getAttribute('data-user-funnel-signals')).toContain('Median Antwortzeit');
@@ -1078,7 +1103,9 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-right-rail-risks-title')).toBe('Backend Risiken');
     expect(probe.getAttribute('data-right-rail-opportunities-title')).toBe('Backend Chancen');
     expect(probe.getAttribute('data-right-rail-next-steps-title')).toBe('Backend Nächste Schritte');
-    expect(probe.getAttribute('data-right-rail-next-steps-items')).toContain('Antworte unter 2 Stunden');
+    expect(probe.getAttribute('data-right-rail-next-steps-items')).toContain(
+      'Antworte unter 2 Stunden',
+    );
   });
 
   it('prefers canonical funnelComparison summary over legacy profile gap fallback', () => {
@@ -1123,7 +1150,9 @@ describe('useWorkspaceStatsViewModel', () => {
     render(<Probe data={data} isLoading={false} isError={false} />);
 
     const probe = screen.getByTestId('probe');
-    expect(probe.getAttribute('data-funnel-summary')).toBe('Von 58 Anfragen wurden 7 erfolgreich abgeschlossen.');
+    expect(probe.getAttribute('data-funnel-summary')).toBe(
+      'Von 58 Anfragen wurden 7 erfolgreich abgeschlossen.',
+    );
     expect(probe.getAttribute('data-funnel-conversion')).toBe('12%');
   });
 
@@ -1152,20 +1181,17 @@ describe('useWorkspaceStatsViewModel', () => {
     render(<Probe data={data} isLoading={false} isError={false} />);
 
     const probe = screen.getByTestId('probe');
-    const marketRequests = data.funnelComparison?.stages.find((stage) => stage.key === 'requests')?.marketCount ?? 0;
-    const marketOffers = data.funnelComparison?.stages.find((stage) => stage.key === 'offers')?.marketCount ?? 0;
+    const marketRequests =
+      data.funnelComparison?.stages.find((stage) => stage.key === 'requests')?.marketCount ?? 0;
+    const marketOffers =
+      data.funnelComparison?.stages.find((stage) => stage.key === 'offers')?.marketCount ?? 0;
     expect(probe.getAttribute('data-funnel-requests')).toBe(String(marketRequests));
     expect(probe.getAttribute('data-funnel-offers')).toBe(String(marketOffers));
   });
 
   it('surfaces background refetch errors without switching the whole screen into blocking error mode', () => {
     render(
-      <Probe
-        data={createOverviewData()}
-        isLoading={false}
-        isError={false}
-        hasBackgroundError
-      />,
+      <Probe data={createOverviewData()} isLoading={false} isError={false} hasBackgroundError />,
     );
 
     const probe = screen.getByTestId('probe');
@@ -1213,7 +1239,9 @@ describe('useWorkspaceStatsViewModel', () => {
     expect(probe.getAttribute('data-price-context')).toBe('Cleaning & Housekeeping · Berlin');
     expect(probe.getAttribute('data-price-range')).not.toBe('');
     expect(probe.getAttribute('data-price-average')).not.toBe('');
-    expect(probe.getAttribute('data-opportunity-categories')).toBe('Cleaning & Housekeeping|Cleaning & Housekeeping');
+    expect(probe.getAttribute('data-opportunity-categories')).toBe(
+      'Cleaning & Housekeeping|Cleaning & Housekeeping',
+    );
   });
 
   it('filters context-sensitive sections by selected city and category', () => {
@@ -1299,7 +1327,9 @@ describe('useWorkspaceStatsViewModel', () => {
 
     const probe = screen.getByTestId('normalized-probe');
     expect(probe.getAttribute('data-city-options')).toContain('mannheim-id:Mannheim');
-    expect(probe.getAttribute('data-category-options')).toContain('cleaning:Cleaning & Housekeeping');
+    expect(probe.getAttribute('data-category-options')).toContain(
+      'cleaning:Cleaning & Housekeeping',
+    );
   });
 
   it('keeps funnel hidden when backend returns zero stages for platform 24h', () => {

@@ -29,7 +29,9 @@ export type WorkspacePrivateInteractionsParams = {
   platformRequestsTotal: number;
   favoriteRequestIds: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteRequestIds'];
   requestById: Parameters<typeof useWorkspaceFavoriteToggles>[0]['requestById'];
-  favoriteProviderLookup: Parameters<typeof useWorkspaceFavoriteToggles>[0]['favoriteProviderLookup'];
+  favoriteProviderLookup: Parameters<
+    typeof useWorkspaceFavoriteToggles
+  >[0]['favoriteProviderLookup'];
   providerById: Parameters<typeof useWorkspaceFavoriteToggles>[0]['providerById'];
 };
 
@@ -96,11 +98,7 @@ type BuildFavoriteToggleArgsParams = Pick<
   qc: QueryClient;
 };
 
-type BuildActionsArgsParams = Pick<
-  InteractionsParams,
-  | 'isAuthed'
-  | 't'
-> & {
+type BuildActionsArgsParams = Pick<InteractionsParams, 'isAuthed' | 't'> & {
   router: AppRouterInstance;
   qc: QueryClient;
 };
@@ -166,7 +164,9 @@ export function buildWorkspacePrivateSeenTotalArgs({
   isAuthed,
   authUserId,
   platformRequestsTotal,
-}: Pick<InteractionsParams, 'isAuthed' | 'authUserId' | 'platformRequestsTotal'>): Parameters<typeof usePublicRequestsSeenTotal>[0] {
+}: Pick<InteractionsParams, 'isAuthed' | 'authUserId' | 'platformRequestsTotal'>): Parameters<
+  typeof usePublicRequestsSeenTotal
+>[0] {
   return {
     isAuthed,
     userId: authUserId,
@@ -178,7 +178,9 @@ export function buildWorkspacePrivateSeenTotalArgs({
 export function buildWorkspacePrivateTabPersistenceArgs({
   isWorkspaceAuthed,
   activeWorkspaceTab,
-}: Pick<InteractionsParams, 'isWorkspaceAuthed' | 'activeWorkspaceTab'>): Parameters<typeof useWorkspaceTabPersistence>[0] {
+}: Pick<InteractionsParams, 'isWorkspaceAuthed' | 'activeWorkspaceTab'>): Parameters<
+  typeof useWorkspaceTabPersistence
+>[0] {
   return {
     isWorkspaceAuthed,
     isWorkspacePublicSection: false,

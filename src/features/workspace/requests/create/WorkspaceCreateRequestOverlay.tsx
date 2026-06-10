@@ -26,10 +26,7 @@ type CreateRequestContentProps = {
   onClose?: () => void;
 };
 
-function CreateRequestContent({
-  surface = 'page',
-  onClose,
-}: CreateRequestContentProps) {
+function CreateRequestContent({ surface = 'page', onClose }: CreateRequestContentProps) {
   const t = useT();
   const requiredHint = t(I18N_KEYS.common.requiredFieldHint);
   const router = useRouter();
@@ -63,11 +60,7 @@ function CreateRequestContent({
     t,
     categoryKey: formModel.categoryKey,
   });
-  const {
-    categoryKey,
-    serviceKey,
-    setCategoryKey,
-  } = formModel;
+  const { categoryKey, serviceKey, setCategoryKey } = formModel;
 
   React.useEffect(() => {
     if (categoryKey) return;
@@ -191,11 +184,7 @@ export function CreateRequestPage() {
   );
 }
 
-export function WorkspaceCreateRequestOverlay({
-  onClose,
-}: {
-  onClose: () => void;
-}) {
+export function WorkspaceCreateRequestOverlay({ onClose }: { onClose: () => void }) {
   return (
     <React.Suspense fallback={null}>
       <CreateRequestContent surface="overlay" onClose={onClose} />

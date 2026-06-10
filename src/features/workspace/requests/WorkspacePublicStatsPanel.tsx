@@ -61,15 +61,16 @@ export function WorkspacePublicStatsPanel({
     };
   }, [points]);
 
-  const offerConversion = totals.requests30d > 0
-    ? Math.round((totals.offers30d / totals.requests30d) * 100)
-    : 0;
+  const offerConversion =
+    totals.requests30d > 0 ? Math.round((totals.offers30d / totals.requests30d) * 100) : 0;
 
   const hasData = platformRequestsTotal > 0 || totals.requests30d > 0 || totals.offers30d > 0;
   const providersLabel = t(I18N_KEYS.homePublic.exploreAllProviders);
   const ordersLabel = t(I18N_KEYS.homePublic.exploreAllOrders);
 
-  const providerPayload = React.useMemo<React.ComponentProps<typeof RequestsStatsPanel>['provider']>(
+  const providerPayload = React.useMemo<
+    React.ComponentProps<typeof RequestsStatsPanel>['provider']
+  >(
     () => ({
       kpis: [],
       showKpis: false,

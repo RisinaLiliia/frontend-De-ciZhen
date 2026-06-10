@@ -26,10 +26,7 @@ export function useRequestsExplorerFilters({ t, locale }: Args) {
   const { data: services = [], isLoading: isServicesLoading } = useServices();
   const { formatDate, formatPrice } = useWorkspaceFormatters(locale);
 
-  const sortOptions = React.useMemo(
-    () => buildRequestsExplorerSortOptions(t),
-    [t],
-  );
+  const sortOptions = React.useMemo(() => buildRequestsExplorerSortOptions(t), [t]);
 
   const {
     categoryKey,
@@ -69,35 +66,50 @@ export function useRequestsExplorerFilters({ t, locale }: Args) {
     setPageState((current) => (current === normalized ? current : normalized));
   }, []);
 
-  const onCategoryChange = React.useCallback((value: string) => {
-    setPageState(1);
-    onCategoryChangeQuery(value);
-  }, [onCategoryChangeQuery]);
+  const onCategoryChange = React.useCallback(
+    (value: string) => {
+      setPageState(1);
+      onCategoryChangeQuery(value);
+    },
+    [onCategoryChangeQuery],
+  );
 
-  const onSubcategoryChange = React.useCallback((value: string) => {
-    setPageState(1);
-    onSubcategoryChangeQuery(value);
-  }, [onSubcategoryChangeQuery]);
+  const onSubcategoryChange = React.useCallback(
+    (value: string) => {
+      setPageState(1);
+      onSubcategoryChangeQuery(value);
+    },
+    [onSubcategoryChangeQuery],
+  );
 
-  const onCityChange = React.useCallback((value: string) => {
-    setPageState(1);
-    onCityChangeQuery(value);
-  }, [onCityChangeQuery]);
+  const onCityChange = React.useCallback(
+    (value: string) => {
+      setPageState(1);
+      onCityChangeQuery(value);
+    },
+    [onCityChangeQuery],
+  );
 
-  const onSortChange = React.useCallback((value: string) => {
-    setPageState(1);
-    onSortChangeQuery(value);
-  }, [onSortChangeQuery]);
+  const onSortChange = React.useCallback(
+    (value: string) => {
+      setPageState(1);
+      onSortChangeQuery(value);
+    },
+    [onSortChangeQuery],
+  );
 
   const onReset = React.useCallback(() => {
     setPageState(1);
     onResetQuery();
   }, [onResetQuery]);
 
-  const setLimit = React.useCallback((nextLimit: number) => {
-    setPageState(1);
-    setLimitQuery(nextLimit);
-  }, [setLimitQuery]);
+  const setLimit = React.useCallback(
+    (nextLimit: number) => {
+      setPageState(1);
+      setLimitQuery(nextLimit);
+    },
+    [setLimitQuery],
+  );
   const { data: cities = [] } = useCities('DE', {
     ids: cityId !== ALL_OPTION_KEY ? [cityId] : [],
     enabled: cityId !== ALL_OPTION_KEY,
@@ -119,34 +131,37 @@ export function useRequestsExplorerFilters({ t, locale }: Args) {
     [cities, locale, t],
   );
 
-  const appliedFilterChips = React.useMemo(() =>
-    buildRequestsExplorerFilterChips({
-      cityId,
-      cityOptions,
-      onCityReset: () => onCityChange(ALL_OPTION_KEY),
+  const appliedFilterChips = React.useMemo(
+    () =>
+      buildRequestsExplorerFilterChips({
+        cityId,
+        cityOptions,
+        onCityReset: () => onCityChange(ALL_OPTION_KEY),
+        categoryKey,
+        categoryOptions,
+        onCategoryReset: () => onCategoryChange(ALL_OPTION_KEY),
+        subcategoryKey,
+        serviceOptions,
+        onSubcategoryReset: () => onSubcategoryChange(ALL_OPTION_KEY),
+        sortBy,
+        sortOptions,
+        onSortReset: () => onSortChange('date_desc'),
+      }),
+    [
       categoryKey,
       categoryOptions,
-      onCategoryReset: () => onCategoryChange(ALL_OPTION_KEY),
-      subcategoryKey,
+      cityId,
+      cityOptions,
+      onCategoryChange,
+      onCityChange,
+      onSortChange,
+      onSubcategoryChange,
       serviceOptions,
-      onSubcategoryReset: () => onSubcategoryChange(ALL_OPTION_KEY),
       sortBy,
       sortOptions,
-      onSortReset: () => onSortChange('date_desc'),
-    }), [
-    categoryKey,
-    categoryOptions,
-    cityId,
-    cityOptions,
-    onCategoryChange,
-    onCityChange,
-    onSortChange,
-    onSubcategoryChange,
-    serviceOptions,
-    sortBy,
-    sortOptions,
-    subcategoryKey,
-  ]);
+      subcategoryKey,
+    ],
+  );
 
   return {
     cities,

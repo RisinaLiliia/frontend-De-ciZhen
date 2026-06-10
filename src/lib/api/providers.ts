@@ -30,8 +30,5 @@ export function getMyProviderProfile() {
 }
 
 export function updateMyProviderProfile(payload: UpdateMyProviderProfileDto) {
-  return apiPatch<UpdateMyProviderProfileDto, ProviderProfileDto>(
-    '/providers/me/profile',
-    payload,
-  );
+  return apiPatch<UpdateMyProviderProfileDto, ProviderProfileDto>('/providers/me/profile', payload);
 }

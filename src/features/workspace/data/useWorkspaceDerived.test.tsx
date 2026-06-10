@@ -78,7 +78,9 @@ describe('useWorkspaceDerived', () => {
     expect(node.getAttribute('data-my-offers')).toBe('0');
     expect(node.getAttribute('data-contracts')).toBe('0');
     expect(node.getAttribute('data-favorites')).toBe('0');
-    expect(node.getAttribute('data-primary-action')).toBe('/workspace?section=requests&scope=my&period=90d&range=90d');
+    expect(node.getAttribute('data-primary-action')).toBe(
+      '/workspace?section=requests&scope=my&period=90d&range=90d',
+    );
   });
 
   it('builds only the active tab collection when enabled', () => {

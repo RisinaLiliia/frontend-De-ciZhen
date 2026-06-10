@@ -2,7 +2,10 @@
 
 import dynamic from 'next/dynamic';
 
-import { workspacePanelShell, workspaceRequestsPanelShell } from '@/features/workspace/shared/workspaceSurfaceShell';
+import {
+  workspacePanelShell,
+  workspaceRequestsPanelShell,
+} from '@/features/workspace/shared/workspaceSurfaceShell';
 
 export const PublicContent = dynamic(
   () => import('@/features/workspace/requests/PublicContent').then((mod) => mod.PublicContent),
@@ -16,7 +19,8 @@ export const PublicContent = dynamic(
 );
 
 export const WorkspaceContent = dynamic(
-  () => import('@/features/workspace/requests/WorkspaceContent').then((mod) => mod.WorkspaceContent),
+  () =>
+    import('@/features/workspace/requests/WorkspaceContent').then((mod) => mod.WorkspaceContent),
   {
     loading: () => (
       <section className={workspaceRequestsPanelShell()}>
@@ -27,7 +31,10 @@ export const WorkspaceContent = dynamic(
 );
 
 export const WorkspacePrivateIntro = dynamic(
-  () => import('@/features/workspace/intro/WorkspacePrivateIntro').then((mod) => mod.WorkspacePrivateIntro),
+  () =>
+    import('@/features/workspace/intro/WorkspacePrivateIntro').then(
+      (mod) => mod.WorkspacePrivateIntro,
+    ),
   {
     loading: () => (
       <section className="workspace-intro-shell">
@@ -40,7 +47,10 @@ export const WorkspacePrivateIntro = dynamic(
 );
 
 export const WorkspacePublicIntro = dynamic(
-  () => import('@/features/workspace/intro/WorkspacePublicIntro').then((mod) => mod.WorkspacePublicIntro),
+  () =>
+    import('@/features/workspace/intro/WorkspacePublicIntro').then(
+      (mod) => mod.WorkspacePublicIntro,
+    ),
   {
     loading: () => (
       <section className="workspace-intro-shell">
@@ -52,6 +62,6 @@ export const WorkspacePublicIntro = dynamic(
   },
 );
 
-export const ProofReviewCard = dynamic(
-  () => import('@/components/reviews/ProofReviewCard').then((mod) => mod.ProofReviewCard),
+export const ProofReviewCard = dynamic(() =>
+  import('@/components/reviews/ProofReviewCard').then((mod) => mod.ProofReviewCard),
 );

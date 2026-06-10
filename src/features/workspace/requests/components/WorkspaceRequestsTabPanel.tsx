@@ -6,16 +6,9 @@ import { DEFAULT_PRIVATE_WORKSPACE_CREATE_REQUEST_HREF } from '@/features/worksp
 import { I18N_KEYS } from '@/lib/i18n/keys';
 import type { WorkspaceContentPanelsProps } from '../workspaceContentPanels.types';
 
-type Props = Pick<
-  WorkspaceContentPanelsProps,
-  't' | 'myRequestsState' | 'myRequestsListProps'
->;
+type Props = Pick<WorkspaceContentPanelsProps, 't' | 'myRequestsState' | 'myRequestsListProps'>;
 
-export function WorkspaceRequestsTabPanel({
-  t,
-  myRequestsState,
-  myRequestsListProps,
-}: Props) {
+export function WorkspaceRequestsTabPanel({ t, myRequestsState, myRequestsListProps }: Props) {
   return (
     <WorkspaceContentState
       isLoading={myRequestsState.isLoading}

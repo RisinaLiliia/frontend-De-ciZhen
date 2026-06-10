@@ -12,7 +12,10 @@ import { Field } from '@/components/ui/Field';
 import { FormLabel } from '@/components/ui/FormLabel';
 import { Input } from '@/components/ui/Input';
 import { forgotPassword } from '@/lib/auth/api';
-import { buildForgotPasswordSchema, type ForgotPasswordValues } from '@/features/auth/forgot-password.schema';
+import {
+  buildForgotPasswordSchema,
+  type ForgotPasswordValues,
+} from '@/features/auth/forgot-password.schema';
 import { useT } from '@/lib/i18n/useT';
 import { I18N_KEYS } from '@/lib/i18n/keys';
 
@@ -75,7 +78,11 @@ export function ForgotPasswordForm() {
             {...register('email')}
           />
         </Field>
-        {errors.email ? <p id="forgot-email-error" className="auth-form-error" role="alert">{errors.email.message}</p> : null}
+        {errors.email ? (
+          <p id="forgot-email-error" className="auth-form-error" role="alert">
+            {errors.email.message}
+          </p>
+        ) : null}
       </div>
 
       {done ? (

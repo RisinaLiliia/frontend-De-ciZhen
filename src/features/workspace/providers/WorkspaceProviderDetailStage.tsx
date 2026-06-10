@@ -13,11 +13,7 @@ import {
   clearWorkspaceProviderDetailHref,
 } from '@/features/workspace/providers/workspaceProviderRoute.model';
 
-export function WorkspaceProviderDetailStage({
-  providerId,
-}: {
-  providerId: string;
-}) {
+export function WorkspaceProviderDetailStage({ providerId }: { providerId: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { locale } = useI18n();

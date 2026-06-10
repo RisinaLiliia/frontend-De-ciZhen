@@ -35,21 +35,21 @@ export function WorkspaceDecisionActionCard({
     'workspace-ai-card--decision',
     'workspace-ai-card--action',
     className ?? '',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const actionClassName = 'auth-social__btn auth-social__btn--google workspace-ai-card__action';
   const articleClassName = [
     rootClassName,
     stamp ? 'workspace-statistics-ki--meta' : '',
     layout === 'inline' ? 'workspace-statistics-ki--inline-action' : '',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const actionNode = actionHref ? (
-    <Link
-      href={actionHref}
-      prefetch={false}
-      className={actionClassName}
-    >
+    <Link href={actionHref} prefetch={false} className={actionClassName}>
       {actionLabel}
     </Link>
   ) : (

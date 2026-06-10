@@ -49,17 +49,16 @@ function resolveContextPills() {
   return [];
 }
 
-function resolveSignalPills(card: WorkspaceRequestsViewCard): PrivateRequestCardChrome['signalPills'] {
+function resolveSignalPills(
+  card: WorkspaceRequestsViewCard,
+): PrivateRequestCardChrome['signalPills'] {
   const pills: PrivateRequestCardChrome['signalPills'] = [];
 
   if (card.decision.needsAction && card.decision.actionLabel) {
     pills.push({
       key: 'decision',
       label: card.decision.actionLabel,
-      tone:
-        card.decision.actionPriorityLevel === 'high'
-          ? 'warning'
-          : 'info',
+      tone: card.decision.actionPriorityLevel === 'high' ? 'warning' : 'info',
     });
   }
 
@@ -70,11 +69,11 @@ function resolveSignalPills(card: WorkspaceRequestsViewCard): PrivateRequestCard
       tone:
         card.status.badgeVariant === 'success'
           ? 'success'
-          : card.status.badgeVariant === 'warning'
-            || card.status.badgeVariant === 'risk'
-            || card.status.badgeVariant === 'priority'
-              ? 'warning'
-              : 'info',
+          : card.status.badgeVariant === 'warning' ||
+              card.status.badgeVariant === 'risk' ||
+              card.status.badgeVariant === 'priority'
+            ? 'warning'
+            : 'info',
     });
   }
 
@@ -119,10 +118,7 @@ function resolveInsights(args: {
       key: 'decision',
       title: resolveInsightTitle(locale, card),
       description: decisionDescription,
-      tone:
-        card.decision.actionPriorityLevel === 'high'
-          ? 'warning'
-          : 'info',
+      tone: card.decision.actionPriorityLevel === 'high' ? 'warning' : 'info',
     });
   }
 

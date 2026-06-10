@@ -34,25 +34,31 @@ export function StatisticsProfileSection({
         <div className="workspace-statistics__profile-title-row">
           <p className="section-title">{copy.profileTitle}</p>
           {funnelPeriodLabel ? (
-            <span className="workspace-statistics__profile-period">{copy.profileRevenueLabel} · {funnelPeriodLabel}</span>
+            <span className="workspace-statistics__profile-period">
+              {copy.profileRevenueLabel} · {funnelPeriodLabel}
+            </span>
           ) : null}
         </div>
-        <p className="section-subtitle">{mode === 'personalized' ? copy.profileSubtitlePersonalized : copy.profileSubtitlePlatform}</p>
+        <p className="section-subtitle">
+          {mode === 'personalized'
+            ? copy.profileSubtitlePersonalized
+            : copy.profileSubtitlePlatform}
+        </p>
       </header>
       {!hasFunnelData ? null : (
-  <div
-    className={`workspace-statistics-funnel${
-      isPersonalizedMode ? ' workspace-statistics-funnel--personalized' : ''
-    }`}
-  >
-    <StatisticsFunnelStack
-      rows={funnelVisualRows}
-      copy={copy}
-      isPersonalizedMode={isPersonalizedMode}
-      funnelContainerRef={funnelContainerRef}
-    />
-  </div>
-)}
+        <div
+          className={`workspace-statistics-funnel${
+            isPersonalizedMode ? ' workspace-statistics-funnel--personalized' : ''
+          }`}
+        >
+          <StatisticsFunnelStack
+            rows={funnelVisualRows}
+            copy={copy}
+            isPersonalizedMode={isPersonalizedMode}
+            funnelContainerRef={funnelContainerRef}
+          />
+        </div>
+      )}
     </section>
   );
 }

@@ -12,7 +12,10 @@ import { resolveWorkspaceViewerMode } from '@/features/workspace/state';
 import { useI18n } from '@/lib/i18n/I18nProvider';
 
 const WorkspaceProfileOnboardingPanel = dynamic(
-  () => import('@/features/workspace/profile/onboarding').then((mod) => mod.WorkspaceProfileOnboardingForm),
+  () =>
+    import('@/features/workspace/profile/onboarding').then(
+      (mod) => mod.WorkspaceProfileOnboardingForm,
+    ),
   {
     loading: () => (
       <section className={workspacePanelShell()}>
@@ -50,7 +53,11 @@ export const WorkspaceProfileSection = React.memo(function WorkspaceProfileSecti
   return (
     <div className="workspace-profile-section">
       <nav className="workspace-profile-section__toolbar" aria-label={statsCopy.viewerModeLabel}>
-        <div className="workspace-context-toggle-tabs" role="group" aria-label={statsCopy.viewerModeLabel}>
+        <div
+          className="workspace-context-toggle-tabs"
+          role="group"
+          aria-label={statsCopy.viewerModeLabel}
+        >
           {viewerModeItems.map((item) => (
             <Link
               key={item.value}

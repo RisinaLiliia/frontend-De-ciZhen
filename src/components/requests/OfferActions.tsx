@@ -1,5 +1,11 @@
 import Link from 'next/link';
-import { IconBriefcase, IconChat, IconEdit, IconSend, IconTrash } from '@/components/ui/icons/icons';
+import {
+  IconBriefcase,
+  IconChat,
+  IconEdit,
+  IconSend,
+  IconTrash,
+} from '@/components/ui/icons/icons';
 
 type OfferActionsProps = {
   state: 'none' | 'sent' | 'accepted' | 'declined';
